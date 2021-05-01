@@ -15,7 +15,6 @@ import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.*
 import info.nightscout.androidaps.extensions.*
 import info.nightscout.androidaps.interfaces.Config
-import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -44,7 +43,6 @@ class NSClientAddUpdateWorker(
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var config: Config
     @Inject lateinit var repository: AppRepository
-    @Inject lateinit var databaseHelper: DatabaseHelperInterface
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var uel: UserEntryLogger
 
@@ -306,7 +304,29 @@ class NSClientAddUpdateWorker(
                             }
                     } ?: aapsLogger.error("Error parsing TemporaryBasal json $json")
                 eventType == TherapyEvent.Type.PROFILE_SWITCH.text          ->
-                    databaseHelper.createProfileSwitchFromJsonIfNotExists(json)
+                    profileSwitchFromJson(json, dateUtil)?.let { profileSwitch ->
+                        repository.runTransactionForResult(SyncNsProfileSwitchTransaction(profileSwitch, invalidateByNsOnly = false))
+                            .doOnError {
+                                aapsLogger.error(LTag.DATABASE, "Error while saving ProfileSwitch", it)
+                                ret = Result.failure(workDataOf("Error" to it.toString()))
+                            }
+                            .blockingGet()
+                            .also { result ->
+                                result.inserted.forEach {
+                                    uel.log(Action.PROFILE_SWITCH, Sources.NSClient,
+                                        ValueWithUnit.Timestamp(it.timestamp))
+                                    aapsLogger.debug(LTag.DATABASE, "Inserted ProfileSwitch $it")
+                                }
+                                result.invalidated.forEach {
+                                    uel.log(Action.PROFILE_SWITCH_REMOVED, Sources.NSClient,
+                                        ValueWithUnit.Timestamp(it.timestamp))
+                                    aapsLogger.debug(LTag.DATABASE, "Invalidated ProfileSwitch $it")
+                                }
+                                result.updatedNsId.forEach {
+                                    aapsLogger.debug(LTag.DATABASE, "Updated nsId ProfileSwitch $it")
+                                }
+                            }
+                    } ?: aapsLogger.error("Error parsing TemporaryBasal json $json")
             }
             if (eventType == TherapyEvent.Type.ANNOUNCEMENT.text) {
                 val date = safeGetLong(json, "mills")

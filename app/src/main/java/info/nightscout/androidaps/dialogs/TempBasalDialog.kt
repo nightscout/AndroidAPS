@@ -71,7 +71,7 @@ class TempBasalDialog : DialogFragmentWithDate() {
             ?: 100.0, 0.0, maxTempPercent, tempPercentStep, DecimalFormat("0"), true, binding.okcancel.ok)
 
         binding.basalabsoluteinput.setParams(savedInstanceState?.getDouble("basalabsoluteinput")
-            ?: profile.basal, 0.0, pumpDescription.maxTempAbsolute, pumpDescription.tempAbsoluteStep, DecimalFormat("0.00"), true, binding.okcancel.ok)
+            ?: profile.getBasal(), 0.0, pumpDescription.maxTempAbsolute, pumpDescription.tempAbsoluteStep, DecimalFormat("0.00"), true, binding.okcancel.ok)
 
         val tempDurationStep = pumpDescription.tempDurationStep.toDouble()
         val tempMaxDuration = pumpDescription.tempMaxDuration.toDouble()

@@ -3,9 +3,6 @@ package info.nightscout.androidaps.plugins.treatments;
 import android.content.Context;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.List;
@@ -19,22 +16,17 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.activities.ErrorHelperActivity;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
-import info.nightscout.androidaps.data.ProfileIntervals;
 import info.nightscout.androidaps.database.AppRepository;
-import info.nightscout.androidaps.database.embedments.InterfaceIDs;
 import info.nightscout.androidaps.db.ExtendedBolus;
-import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
-import info.nightscout.androidaps.events.EventReloadProfileSwitchData;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
-import info.nightscout.androidaps.interfaces.ProfileStore;
 import info.nightscout.androidaps.interfaces.TreatmentServiceInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.interfaces.UpdateReturn;
@@ -42,8 +34,6 @@ import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
-import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
-import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.MedtronicHistoryData;
@@ -73,11 +63,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
     protected TreatmentServiceInterface service;
-
-    private final ProfileIntervals<ProfileSwitch> profiles = new ProfileIntervals<>();
-
     private final boolean useNewPumpSync = false;
-
 
 
     @Inject
@@ -125,14 +111,13 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     @Override
     protected void onStart() {
         this.service = new TreatmentService(getInjector());
-        initializeData(range());
         super.onStart();
-        disposable.add(rxBus
-                .toObservable(EventReloadProfileSwitchData.class)
-                .observeOn(aapsSchedulers.getIo())
-                .subscribe(event -> initializeProfileSwitchData(range()),
-                        fabricPrivacy::logException
-                ));
+//        disposable.add(rxBus
+//                .toObservable(EventReloadProfileSwitchData.class)
+//                .observeOn(aapsSchedulers.getIo())
+//                .subscribe(event -> initializeProfileSwitchData(range()),
+//                        fabricPrivacy::logException
+//                ));
     }
 
     @Override
@@ -151,17 +136,6 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         if (profileFunction.getProfile() != null)
             dia = profileFunction.getProfile().getDia();
         return (long) (60 * 60 * 1000L * (24 + dia));
-    }
-
-    public void initializeData(long range) {
-        initializeProfileSwitchData(range);
-    }
-
-    private void initializeProfileSwitchData(long range) {
-        getAapsLogger().debug(LTag.DATATREATMENTS, "initializeProfileSwitchData");
-        synchronized (profiles) {
-            profiles.reset().add(databaseHelper.getProfileSwitchData(dateUtil.now() - range, false));
-        }
     }
 
     /**
@@ -343,6 +317,8 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                 getService().createOrUpdateMedtronic(carbsTreatment, false);
             //log.debug("Adding new Treatment record" + carbsTreatment);
         }
+
+        getAapsLogger().error("nsUpload.uploadTreatmentRecord(detailedBolusInfo) not possible.");
 //        if (newRecordCreated && detailedBolusInfo.getBolusType() != DetailedBolusInfo.BolusType.PRIMING)
 //            nsUpload.uploadTreatmentRecord(detailedBolusInfo);
 
@@ -360,58 +336,6 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         }
 
         return newRecordCreated;
-
+ 
     }
-
-    @Override
-    @Nullable
-    public ProfileSwitch getProfileSwitchFromHistory(long time) {
-        synchronized (profiles) {
-            return (ProfileSwitch) profiles.getValueToTime(time);
-        }
-    }
-
-    @Override
-    public ProfileIntervals<ProfileSwitch> getProfileSwitchesFromHistory() {
-        synchronized (profiles) {
-            return new ProfileIntervals<>(profiles);
-        }
-    }
-
-    @Override
-    public void addToHistoryProfileSwitch(ProfileSwitch profileSwitch) {
-        //log.debug("Adding new TemporaryBasal record" + profileSwitch.log());
-        rxBus.send(new EventDismissNotification(Notification.PROFILE_SWITCH_MISSING));
-        databaseHelper.createOrUpdate(profileSwitch);
-        nsUpload.uploadProfileSwitch(profileSwitch, profileSwitch.date, dateUtil);
-    }
-
-    @Override
-    public void doProfileSwitch(@NonNull final ProfileStore profileStore, @NonNull final String profileName, final int duration, final int percentage, final int timeShift, final long date) {
-        ProfileSwitch profileSwitch = profileFunction.prepareProfileSwitch(profileStore, profileName, duration, percentage, timeShift, date);
-        addToHistoryProfileSwitch(profileSwitch);
-        if (percentage == 90 && duration == 10)
-            sp.putBoolean(R.string.key_objectiveuseprofileswitch, true);
-    }
-
-    @Override
-    public void doProfileSwitch(final int duration, final int percentage, final int timeShift) {
-        ProfileSwitch profileSwitch = getProfileSwitchFromHistory(System.currentTimeMillis());
-        if (profileSwitch != null) {
-            profileSwitch = new ProfileSwitch(getInjector());
-            profileSwitch.date = System.currentTimeMillis();
-            profileSwitch.source = Source.USER;
-            profileSwitch.profileName = profileFunction.getProfileName(System.currentTimeMillis(), false, false);
-            profileSwitch.profileJson = profileFunction.getProfile().getData().toString();
-            profileSwitch.profilePlugin = activePlugin.getActiveProfileSource().getClass().getName();
-            profileSwitch.durationInMinutes = duration;
-            profileSwitch.isCPP = percentage != 100 || timeShift != 0;
-            profileSwitch.timeshift = timeShift;
-            profileSwitch.percentage = percentage;
-            addToHistoryProfileSwitch(profileSwitch);
-        } else {
-            getAapsLogger().error(LTag.PROFILE, "No profile switch exists");
-        }
-    }
-
 }

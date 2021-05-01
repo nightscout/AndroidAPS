@@ -31,7 +31,7 @@ import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
-import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.InsightBolusID;
@@ -489,8 +489,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             if (profile.getBasalValues().length > i + 1)
                 nextValue = profile.getBasalValues()[i + 1];
             BasalProfileBlock profileBlock = new BasalProfileBlock();
-            profileBlock.setBasalAmount(basalValue.value > 5 ? Math.round(basalValue.value / 0.1) * 0.1 : Math.round(basalValue.value / 0.01) * 0.01);
-            profileBlock.setDuration((((nextValue != null ? nextValue.timeAsSeconds : 24 * 60 * 60) - basalValue.timeAsSeconds) / 60));
+            profileBlock.setBasalAmount(basalValue.getValue() > 5 ? Math.round(basalValue.getValue() / 0.1) * 0.1 : Math.round(basalValue.getValue() / 0.01) * 0.01);
+            profileBlock.setDuration((((nextValue != null ? nextValue.getTimeAsSeconds() : 24 * 60 * 60) - basalValue.getTimeAsSeconds()) / 60));
             profileBlocks.add(profileBlock);
         }
         try {
@@ -542,9 +542,9 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             Profile.ProfileValue nextValue = null;
             if (profile.getBasalValues().length > i + 1)
                 nextValue = profile.getBasalValues()[i + 1];
-            if (profileBlock.getDuration() * 60 != (nextValue != null ? nextValue.timeAsSeconds : 24 * 60 * 60) - basalValue.timeAsSeconds)
+            if (profileBlock.getDuration() * 60 != (nextValue != null ? nextValue.getTimeAsSeconds() : 24 * 60 * 60) - basalValue.getTimeAsSeconds())
                 return false;
-            if (Math.abs(profileBlock.getBasalAmount() - basalValue.value) > (basalValue.value > 5 ? 0.051 : 0.0051))
+            if (Math.abs(profileBlock.getBasalAmount() - basalValue.getValue()) > (basalValue.getValue() > 5 ? 0.051 : 0.0051))
                 return false;
         }
         return true;

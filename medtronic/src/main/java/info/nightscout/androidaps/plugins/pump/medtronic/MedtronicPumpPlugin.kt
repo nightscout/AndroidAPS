@@ -9,7 +9,6 @@ import androidx.preference.Preference
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.activities.ErrorHelperActivity.Companion.runAlarm
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.db.TemporaryBasal
@@ -496,7 +495,7 @@ class MedtronicPumpPlugin @Inject constructor(
         // int index = 0;
         if (basalsByHour == null) return true // we don't want to set profile again, unless we are sure
         val stringBuilder = StringBuilder("Requested Basals (h): ")
-        for (basalValue in profile.basalValues) {
+        for (basalValue in profile.getBasalValues()) {
             val basalValueValue = pumpDescription.pumpType.determineCorrectBasalSize(basalValue.value)
             val hour = basalValue.timeAsSeconds / (60 * 60)
             if (!isSame(basalsByHour[hour], basalValueValue)) {
@@ -787,7 +786,7 @@ class MedtronicPumpPlugin @Inject constructor(
         return if (percent == 0) {
             setTempBasalAbsolute(0.0, durationInMinutes, profile, enforceNew, tbrType)
         } else {
-            var absoluteValue = profile.basal * (percent / 100.0)
+            var absoluteValue = profile.getBasal() * (percent / 100.0)
             absoluteValue = pumpDescription.pumpType.determineCorrectBasalSize(absoluteValue)
             aapsLogger.warn(LTag.PUMP, "setTempBasalPercent [MedtronicPumpPlugin] - You are trying to use setTempBasalPercent with percent other then 0% ($percent). This will start setTempBasalAbsolute, with calculated value ($absoluteValue). Result might not be 100% correct.")
             setTempBasalAbsolute(absoluteValue, durationInMinutes, profile, enforceNew, tbrType)

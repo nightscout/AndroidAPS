@@ -116,6 +116,15 @@ class NSClientUpdateRemoveAckWorker(
                 dataSyncSelector.processChangedExtendedBolusesCompat()
                 ret = Result.success(workDataOf("ProcessedData" to pair.toString()))
             }
+
+            is PairProfileSwitch         -> {
+                val pair = ack.originalObject
+                dataSyncSelector.confirmLastProfileSwitchIdIfGreater(pair.updateRecordId)
+                rxBus.send(EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked ProfileSwitch " + ack._id))
+                // Send new if waiting
+                dataSyncSelector.processChangedProfileSwitchesCompat()
+                ret = Result.success(workDataOf("ProcessedData" to pair.toString()))
+            }
         }
         return ret
     }

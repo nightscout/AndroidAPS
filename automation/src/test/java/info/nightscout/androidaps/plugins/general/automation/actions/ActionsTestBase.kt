@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.general.automation.actions
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.TestBaseWithProfile
+import info.nightscout.androidaps.plugins.general.automation.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.interfaces.*
@@ -83,7 +83,7 @@ open class ActionsTestBase : TestBaseWithProfile() {
             }
             if (it is ActionProfileSwitchPercent) {
                 it.resourceHelper = resourceHelper
-                it.activePlugin = activePlugin
+                it.profileFunction = profileFunction
                 it.uel = uel
             }
             if (it is ActionNotification) {
@@ -132,7 +132,7 @@ open class ActionsTestBase : TestBaseWithProfile() {
     fun mock() {
         testPumpPlugin = TestPumpPlugin(pluginDescription, aapsLogger, resourceHelper, injector)
         `when`(activePlugin.activePump).thenReturn(testPumpPlugin)
-        `when`(profileFunction.getUnits()).thenReturn(Constants.MGDL)
+        `when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
         `when`(activePlugin.activeProfileSource).thenReturn(profilePlugin)
         `when`(profilePlugin.profile).thenReturn(getValidProfileStore())
     }

@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.common.sync
 
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 

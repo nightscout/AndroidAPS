@@ -124,7 +124,7 @@ class DataBroadcastPlugin @Inject constructor(
 
         bundle.putDouble("glucoseMgdl", lastBG.value)   // last BG in mgdl
         bundle.putLong("glucoseTimeStamp", lastBG.timestamp) // timestamp
-        bundle.putString("units", profileFunction.getUnits()) // units used in AAPS "mg/dl" or "mmol"
+        bundle.putString("units", profileFunction.getUnits().asText) // units used in AAPS "mg/dl" or "mmol"
         bundle.putString("slopeArrow", lastBG.trendArrow.text) // direction arrow as string
         bundle.putDouble("deltaMgdl", glucoseStatus.delta) // bg delta in mgdl
         bundle.putDouble("avgDeltaMgdl", glucoseStatus.shortAvgDelta) // average bg delta
@@ -175,7 +175,7 @@ class DataBroadcastPlugin @Inject constructor(
         val now = System.currentTimeMillis()
         val profile = profileFunction.getProfile() ?: return
         bundle.putLong("basalTimeStamp", now)
-        bundle.putDouble("baseBasal", profile.basal)
+        bundle.putDouble("baseBasal", profile.getBasal())
         bundle.putString("profile", profileFunction.getProfileName())
         iobCobCalculator.getTempBasalIncludingConvertedExtended(now)?.let {
             bundle.putLong("tempBasalStart", it.timestamp)

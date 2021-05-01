@@ -220,36 +220,18 @@ public class NSClientService extends DaggerService {
 
     public void processAddAck(NSAddAck ack) {
         lastAckTime = dateUtil.now();
-        // new room way
         dataWorker.enqueue(
                 new OneTimeWorkRequest.Builder(NSClientAddAckWorker.class)
                         .setInputData(dataWorker.storeInputData(ack, null))
                         .build());
-
-        // old way
-        if (ack.nsClientID != null) {
-            uploadQueue.removeByNsClientIdIfExists(ack.json);
-            rxBus.send(new EventNSClientNewLog("DBADD", "Acked " + ack.nsClientID));
-        } else {
-            rxBus.send(new EventNSClientNewLog("ERROR", "DBADD Unknown response"));
-        }
     }
 
     public void processUpdateAck(NSUpdateAck ack) {
         lastAckTime = dateUtil.now();
-        // new room way
         dataWorker.enqueue(
                 new OneTimeWorkRequest.Builder(NSClientUpdateRemoveAckWorker.class)
                         .setInputData(dataWorker.storeInputData(ack, null))
                         .build());
-
-        // old way
-        if (ack.getResult()) {
-            uploadQueue.removeByMongoId(ack.getAction(), ack.get_id());
-            rxBus.send(new EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked " + ack.get_id()));
-        } else {
-            rxBus.send(new EventNSClientNewLog("ERROR", "DBUPDATE/DBREMOVE Unknown response"));
-        }
     }
 
     public void processAuthAck(NSAuthAck ack) {
@@ -811,6 +793,7 @@ public class NSClientService extends DaggerService {
             dataSyncSelector.processChangedBolusCalculatorResultsCompat();
             dataSyncSelector.processChangedTemporaryBasalsCompat();
             dataSyncSelector.processChangedExtendedBolusesCompat();
+            dataSyncSelector.processChangedProfileSwitchesCompat();
             dataSyncSelector.processChangedGlucoseValuesCompat();
             dataSyncSelector.processChangedTempTargetsCompat();
             dataSyncSelector.processChangedFoodsCompat();

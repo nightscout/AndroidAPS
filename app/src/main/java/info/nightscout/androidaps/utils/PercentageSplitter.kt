@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.utils
 
-import info.nightscout.androidaps.utils.PercentageSplitter
 import java.util.regex.Pattern
 
 object PercentageSplitter {
@@ -10,7 +9,7 @@ object PercentageSplitter {
 
     /**
      * Removes the suffix for percentage and timeshift from a profile name. This is the inverse of what
-     * [info.nightscout.androidaps.db.ProfileSwitch.getCustomizedName] does.
+     * [ProfileSwitch.getCustomizedName()] does.
      * Since the customized name is used for the PS upload to NS, this is needed get the original profile name
      * when retrieving the PS from NS again.
      */

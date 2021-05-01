@@ -116,7 +116,7 @@ class IobCobThread @Inject internal constructor(
                 val profile = profileFunction.getProfile(bgTime)
                 if (profile == null) {
                     aapsLogger.debug(LTag.AUTOSENS, "Aborting calculation thread (no profile): $from")
-                    return  // profile not set yet
+                    continue  // profile not set yet
                 }
                 aapsLogger.debug(LTag.AUTOSENS, "Processing calculation thread: " + from + " (" + i + "/" + bucketedData.size + ")")
                 val sens = profile.getIsfMgdl(bgTime)

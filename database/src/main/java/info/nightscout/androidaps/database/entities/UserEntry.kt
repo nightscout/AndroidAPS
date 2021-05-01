@@ -46,6 +46,7 @@ data class UserEntry(
         CLEAR_PAIRING_KEYS (ColorGroup.Pump),
         ACCEPTS_TEMP_BASAL (ColorGroup.BasalTreatment),
         CANCEL_TEMP_BASAL (ColorGroup.BasalTreatment),
+        CANCEL_BOLUS (ColorGroup.InsulinTreatment),
         CANCEL_EXTENDED_BOLUS (ColorGroup.InsulinTreatment),
         CANCEL_TT (ColorGroup.TT),
         CAREPORTAL (ColorGroup.Careportal),

@@ -11,9 +11,13 @@ import java.text.DateFormat
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.ZoneId
+import java.time.ZoneOffset
 import java.util.*
 import java.util.concurrent.TimeUnit
 import java.util.regex.Pattern
+import java.util.stream.Collectors
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
@@ -292,6 +296,24 @@ open class DateUtil @Inject constructor(private val context: Context) {
         thisDf!!.maximumFractionDigits = digits
         return thisDf.format(x)
     }
+
+    fun format_HH_MM(timeAsSeconds: Int): String {
+        val hour = timeAsSeconds / 60 / 60
+        val minutes = (timeAsSeconds - hour * 60 * 60) / 60
+        val df = DecimalFormat("00")
+        return df.format(hour.toLong()) + ":" + df.format(minutes.toLong())
+    }
+
+    fun timeZoneByOffset(offsetInMilliseconds: Long): TimeZone =
+        TimeZone.getTimeZone(
+            if (offsetInMilliseconds == 0L) ZoneId.of("UTC")
+            else ZoneId.getAvailableZoneIds()
+                .stream()
+                .map(ZoneId::of)
+                .filter { z -> z.rules.getOffset(Instant.now()).totalSeconds == ZoneOffset.ofHours((offsetInMilliseconds / 1000 / 3600).toInt()).totalSeconds }
+                .collect(Collectors.toList())
+                .firstOrNull() ?: ZoneId.of("UTC")
+        )
 
     companion object {
 

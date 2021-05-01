@@ -4,10 +4,8 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
+import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.wizard.QuickWizard
 import info.nightscout.androidaps.utils.wizard.QuickWizardEntry
@@ -15,20 +13,14 @@ import org.json.JSONArray
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.powermock.api.mockito.PowerMockito
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
 
-@RunWith(PowerMockRunner::class)
-@PrepareForTest(Profile::class, IobCobCalculatorPlugin::class)
 class QuickWizardTest : TestBase() {
 
     @Mock lateinit var sp: SP
     @Mock lateinit var profileFunction: ProfileFunction
-    @Mock lateinit var treatmentsPlugin: TreatmentsPlugin
     @Mock lateinit var loopPlugin: LoopPlugin
 
     private val data1 = "{\"buttonText\":\"Meal\",\"carbs\":36,\"validFrom\":0,\"validTo\":18000," +
@@ -48,12 +40,11 @@ class QuickWizardTest : TestBase() {
         }
     }
 
-    private lateinit var quickWizard : QuickWizard
+    private lateinit var quickWizard: QuickWizard
 
     @Before
     fun mock() {
-        PowerMockito.mockStatic(Profile::class.java)
-        PowerMockito.`when`<Any>(Profile::class.java, "secondsFromMidnight").thenReturn(0)
+        PowerMockito.`when`(profileFunction.secondsFromMidnight()).thenReturn(0)
         `when`(sp.getString(R.string.key_quickwizard, "[]")).thenReturn("[]")
         quickWizard = QuickWizard(sp, injector)
     }

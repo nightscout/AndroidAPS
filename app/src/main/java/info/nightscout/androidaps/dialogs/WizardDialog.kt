@@ -18,15 +18,11 @@ import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.databinding.DialogWizardBinding
 import info.nightscout.androidaps.events.EventAutosensCalculationFinished
-import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.interfaces.IobCobCalculator
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -38,6 +34,7 @@ import info.nightscout.androidaps.utils.SafeParse
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.extensions.valueToUnits
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -128,7 +125,7 @@ class WizardDialog : DaggerDialogFragment() {
         val maxCarbs = constraintChecker.getMaxCarbsAllowed().value()
         val maxCorrection = constraintChecker.getMaxBolusAllowed().value()
 
-        if (profileFunction.getUnits() == Constants.MGDL)
+        if (profileFunction.getUnits() == GlucoseUnit.MGDL)
             binding.bgInput.setParams(savedInstanceState?.getDouble("bg_input")
                 ?: 0.0, 0.0, 500.0, 1.0, DecimalFormat("0"), false, binding.ok, timeTextWatcher)
         else
@@ -260,8 +257,8 @@ class WizardDialog : DaggerDialogFragment() {
         } ?: return
 
         val units = profileFunction.getUnits()
-        binding.bgunits.text = units
-        if (units == Constants.MGDL)
+        binding.bgunits.text = units.asText
+        if (units == GlucoseUnit.MGDL)
             binding.bgInput.setStep(1.0)
         else
             binding.bgInput.setStep(0.1)
@@ -292,7 +289,7 @@ class WizardDialog : DaggerDialogFragment() {
             specificProfile = profileFunction.getProfile()
             profileName = profileFunction.getProfileName()
         } else
-            specificProfile = profileStore.getSpecificProfile(profileName)
+            specificProfile = profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(it) }
 
         if (specificProfile == null) return
 
@@ -333,7 +330,7 @@ class WizardDialog : DaggerDialogFragment() {
             binding.notes.text.toString(), carbTime)
 
         wizard?.let { wizard ->
-            binding.bg.text = String.format(resourceHelper.gs(R.string.format_bg_isf), valueToUnitsToString(Profile.toMgdl(bg, profileFunction.getUnits()), profileFunction.getUnits()), wizard.sens)
+            binding.bg.text = String.format(resourceHelper.gs(R.string.format_bg_isf), valueToUnitsToString(Profile.toMgdl(bg, profileFunction.getUnits()), profileFunction.getUnits().asText), wizard.sens)
             binding.bginsulin.text = resourceHelper.gs(R.string.formatinsulinunits, wizard.insulinFromBG)
 
             binding.carbs.text = String.format(resourceHelper.gs(R.string.format_carbs_ic), carbs.toDouble(), wizard.ic)

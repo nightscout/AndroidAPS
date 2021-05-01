@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.pump.common.utils;
 
 import java.util.Locale;
 
-import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 
 public class ProfileUtil {
@@ -14,9 +14,9 @@ public class ProfileUtil {
 
         for (Profile.ProfileValue basalValue : profile.getBasalValues()) {
 
-            double basalValueValue = pumpType.determineCorrectBasalSize(basalValue.value);
+            double basalValueValue = pumpType.determineCorrectBasalSize(basalValue.getValue());
 
-            int hour = basalValue.timeAsSeconds / (60 * 60);
+            int hour = basalValue.getTimeAsSeconds() / (60 * 60);
 
             stringBuilder.append((hour < 10 ? "0" : "") + hour + ":00");
 
@@ -35,9 +35,9 @@ public class ProfileUtil {
 
         for (Profile.ProfileValue basalValue : profiles) {
 
-            double basalValueValue = pumpType.determineCorrectBasalSize(basalValue.value);
+            double basalValueValue = pumpType.determineCorrectBasalSize(basalValue.getValue());
 
-            int hour = basalValue.timeAsSeconds / (60 * 60);
+            int hour = basalValue.getTimeAsSeconds() / (60 * 60);
 
             stringBuilder.append((hour < 10 ? "0" : "") + hour + ":00");
 

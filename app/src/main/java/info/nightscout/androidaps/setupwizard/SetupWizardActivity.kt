@@ -9,7 +9,7 @@ import info.nightscout.androidaps.MainActivity
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.databinding.ActivitySetupwizardBinding
-import info.nightscout.androidaps.events.EventProfileNeedsUpdate
+import info.nightscout.androidaps.events.EventProfileSwitchChanged
 import info.nightscout.androidaps.events.EventProfileStoreChanged
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -94,7 +94,7 @@ class SetupWizardActivity : NoSplashAppCompatActivity() {
             .subscribe({ updateButtons() }, fabricPrivacy::logException)
         )
         disposable.add(rxBus
-            .toObservable(EventProfileNeedsUpdate::class.java)
+            .toObservable(EventProfileSwitchChanged::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ updateButtons() }, fabricPrivacy::logException)
         )
