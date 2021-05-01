@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod Dash - Description -->
+    <string name="omnipod_dash_pump_description">Integração para a Omnipod Dash (o novo modelo, habilitado para o Bluetooth com uma proteção de agulha azul).</string>
+    <!-- Omnipod Dash - Keys -->
+    <!-- Omnipod Dash - Overview -->
+    <string name="omnipod_dash_bluetooth_status">Estado do Bluetooth</string>
+    <string name="omnipod_dash_bluetooth_address">Endereço Bluetooth</string>
+</resources>

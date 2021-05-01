@@ -1,27 +1,21 @@
 package info.nightscout.androidaps.plugins.general.automation.elements
 
 import android.app.TimePickerDialog
-import android.content.Context
 import android.graphics.Typeface
 import android.text.format.DateFormat
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.automation.R
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.MidnightTime
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import java.util.*
-import javax.inject.Inject
 
-class InputTime(injector: HasAndroidInjector) : Element(injector) {
-    @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var context: Context
-    @Inject lateinit var dateUtil: DateUtil
+class InputTime(private val resourceHelper: ResourceHelper, private val dateUtil: DateUtil) : Element() {
 
-    var value: Int = getMinSinceMidnight(DateUtil.now())
+    var value: Int = getMinSinceMidnight(dateUtil.now())
 
     override fun addToLayout(root: LinearLayout) {
         val label = TextView(root.context)
@@ -40,7 +34,7 @@ class InputTime(injector: HasAndroidInjector) : Element(injector) {
                 TimePickerDialog(it, startTimeSetListener,
                     cal.get(Calendar.HOUR_OF_DAY),
                     cal.get(Calendar.MINUTE),
-                    DateFormat.is24HourFormat(context)
+                    DateFormat.is24HourFormat(it)
                 ).show()
             }
         }

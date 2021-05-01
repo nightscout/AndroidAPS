@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data.dto;
 
+import java.util.Locale;
+
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 
 /**
@@ -26,15 +28,15 @@ public class BolusWizardDTO extends PumpTimeStampedRecord {
     // public long atechDateTime;
 
     public String getValue() {
-        return String.format("BG=%d;CH=%d;CH_UNIT=%s;CH_INS_RATIO=%5.3f;BG_INS_RATIO=%5.3f;"
-            + "BG_TARGET_LOW=%d;BG_TARGET_HIGH=%d;BOLUS_TOTAL=%5.3f;"
-            + "BOLUS_CORRECTION=%5.3f;BOLUS_FOOD=%5.3f;UNABSORBED_INSULIN=%5.3f", //
-            bloodGlucose, carbs, chUnit, carbRatio, insulinSensitivity, bgTargetLow, //
-            bgTargetHigh, bolusTotal, correctionEstimate, foodEstimate, unabsorbedInsulin);
+        return String.format(Locale.ENGLISH, "BG=%d;CH=%d;CH_UNIT=%s;CH_INS_RATIO=%5.3f;BG_INS_RATIO=%5.3f;"
+                        + "BG_TARGET_LOW=%d;BG_TARGET_HIGH=%d;BOLUS_TOTAL=%5.3f;"
+                        + "BOLUS_CORRECTION=%5.3f;BOLUS_FOOD=%5.3f;UNABSORBED_INSULIN=%5.3f", //
+                bloodGlucose, carbs, chUnit, carbRatio, insulinSensitivity, bgTargetLow, //
+                bgTargetHigh, bolusTotal, correctionEstimate, foodEstimate, unabsorbedInsulin);
     }
 
     public String getDisplayableValue() {
-        return String.format("Bg=%d, CH=%d %s, Ch/Ins Ratio=%5.3f, Bg/Ins Ratio=%5.3f;"
+        return String.format(Locale.ENGLISH, "Bg=%d, CH=%d %s, Ch/Ins Ratio=%5.3f, Bg/Ins Ratio=%5.3f;"
                         + "Bg Target(L/H)=%d/%d, Bolus: Total=%5.3f, "
                         + "Correction=%5.3f, Food=%5.3f, IOB=%5.3f", //
                 bloodGlucose, carbs, chUnit, carbRatio, insulinSensitivity, bgTargetLow, //

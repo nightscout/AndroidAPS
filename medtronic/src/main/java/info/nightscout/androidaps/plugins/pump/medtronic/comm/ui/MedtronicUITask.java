@@ -2,6 +2,8 @@ package info.nightscout.androidaps.plugins.pump.medtronic.comm.ui;
 
 import org.joda.time.LocalDateTime;
 
+import java.util.Locale;
+
 import javax.inject.Inject;
 
 import dagger.android.HasAndroidInjector;
@@ -9,6 +11,7 @@ import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState;
+import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.MedtronicCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BasalProfile;
@@ -16,7 +19,6 @@ import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandType;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicUIResponseType;
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
-import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange;
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 
@@ -59,7 +61,7 @@ public class MedtronicUITask {
 
     public void execute(MedtronicCommunicationManager communicationManager) {
 
-        aapsLogger.debug(LTag.PUMP, "MedtronicUITask: @@@ In execute. {}", commandType);
+        aapsLogger.debug(LTag.PUMP, "MedtronicUITask: @@@ In execute. " + commandType);
 
         switch (commandType) {
             case PumpModel: {
@@ -141,7 +143,7 @@ public class MedtronicUITask {
             break;
 
             default: {
-                aapsLogger.warn(LTag.PUMP, "This commandType is not supported (yet) - {}.", commandType);
+                aapsLogger.warn(LTag.PUMP, String.format(Locale.ENGLISH, "This commandType is not supported (yet) - %s.", commandType));
                 // invalid = true;
                 responseType = MedtronicUIResponseType.Invalid;
             }
@@ -194,7 +196,7 @@ public class MedtronicUITask {
 
     void postProcess(MedtronicUIPostprocessor postprocessor) {
 
-        aapsLogger.debug(LTag.PUMP, "MedtronicUITask: @@@ In execute. {}", commandType);
+        aapsLogger.debug(LTag.PUMP, "MedtronicUITask: @@@ In execute. " + commandType);
 
         if (responseType == MedtronicUIResponseType.Data) {
             postprocessor.postProcessData(this);

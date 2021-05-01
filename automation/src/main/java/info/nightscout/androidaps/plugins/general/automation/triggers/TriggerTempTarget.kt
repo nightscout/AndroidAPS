@@ -4,6 +4,7 @@ import android.widget.LinearLayout
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.automation.R
+import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.general.automation.elements.ComparatorExists
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder
@@ -12,14 +13,15 @@ import info.nightscout.androidaps.utils.JsonHelper
 import org.json.JSONObject
 
 class TriggerTempTarget(injector: HasAndroidInjector) : Trigger(injector) {
-    var comparator = ComparatorExists(injector)
+
+    var comparator = ComparatorExists(resourceHelper)
 
     constructor(injector: HasAndroidInjector, compare: ComparatorExists.Compare) : this(injector) {
-        comparator = ComparatorExists(injector, compare)
+        comparator = ComparatorExists(resourceHelper, compare)
     }
 
     constructor(injector: HasAndroidInjector, triggerTempTarget: TriggerTempTarget) : this(injector) {
-        comparator = ComparatorExists(injector, triggerTempTarget.comparator.value)
+        comparator = ComparatorExists(resourceHelper, triggerTempTarget.comparator.value)
     }
 
     fun comparator(comparator: ComparatorExists.Compare): TriggerTempTarget {
@@ -28,12 +30,12 @@ class TriggerTempTarget(injector: HasAndroidInjector) : Trigger(injector) {
     }
 
     override fun shouldRun(): Boolean {
-        val tt = treatmentsInterface.tempTargetFromHistory
-        if (tt == null && comparator.value == ComparatorExists.Compare.NOT_EXISTS) {
+        val tt = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
+        if (tt is ValueWrapper.Absent && comparator.value == ComparatorExists.Compare.NOT_EXISTS) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
             return true
         }
-        if (tt != null && comparator.value == ComparatorExists.Compare.EXISTS) {
+        if (tt is ValueWrapper.Existing && comparator.value == ComparatorExists.Compare.EXISTS) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
             return true
         }
@@ -41,14 +43,9 @@ class TriggerTempTarget(injector: HasAndroidInjector) : Trigger(injector) {
         return false
     }
 
-    override fun toJSON(): String {
-        val data = JSONObject()
+    override fun dataJSON(): JSONObject =
+        JSONObject()
             .put("comparator", comparator.value.toString())
-        return JSONObject()
-            .put("type", TriggerTempTarget::class.java.name)
-            .put("data", data)
-            .toString()
-    }
 
     override fun fromJSON(data: String): Trigger {
         val d = JSONObject(data)
@@ -67,7 +64,7 @@ class TriggerTempTarget(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(injector, R.string.careportal_temporarytarget, this))
+            .add(StaticLabel(resourceHelper, R.string.careportal_temporarytarget, this))
             .add(comparator)
             .build(root)
     }

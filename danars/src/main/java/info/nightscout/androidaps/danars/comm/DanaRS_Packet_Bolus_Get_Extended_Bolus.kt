@@ -23,7 +23,7 @@ class DanaRS_Packet_Bolus_Get_Extended_Bolus(
         val error = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         dataIndex += dataSize
         dataSize = 2
-        danaPump.extendedBolusAbsoluteRate = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100.0
+        val extendedBolusAbsoluteRate = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100.0
         dataIndex += dataSize
         dataSize = 2
         danaPump.maxBolus = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100.0
@@ -32,7 +32,7 @@ class DanaRS_Packet_Bolus_Get_Extended_Bolus(
         danaPump.bolusStep = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100.0
         failed = error != 0
         aapsLogger.debug(LTag.PUMPCOMM, "Result: $error")
-        aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus running: " + danaPump.extendedBolusAbsoluteRate + " U/h")
+        aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus running: $extendedBolusAbsoluteRate U/h")
         aapsLogger.debug(LTag.PUMPCOMM, "Max bolus: " + danaPump.maxBolus + " U")
         aapsLogger.debug(LTag.PUMPCOMM, "Bolus step: " + danaPump.bolusStep + " U")
     }

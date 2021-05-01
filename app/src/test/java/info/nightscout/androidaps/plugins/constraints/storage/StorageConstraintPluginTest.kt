@@ -12,6 +12,9 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.anyInt
+import org.mockito.Mockito.anyLong
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
@@ -24,6 +27,7 @@ class StorageConstraintPluginTest : TestBase() {
 
     @Before fun prepareMock() {
         storageConstraintPlugin = StorageConstraintPlugin({ AndroidInjector { } }, aapsLogger, resourceHelper, rxBusWrapper)
+        `when`(resourceHelper.gs(anyInt(), anyLong())).thenReturn("")
     }
 
     class MockedStorageConstraintPlugin constructor(

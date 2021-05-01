@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition;
 
+import androidx.annotation.NonNull;
 import org.joda.time.Duration;
 
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
@@ -34,6 +35,7 @@ public class AlertConfiguration {
         return alertSlot;
     }
 
+    @SuppressWarnings("unused")
     public AlertTrigger<?> getAlertTrigger() {
         return alertTrigger;
     }
@@ -75,7 +77,7 @@ public class AlertConfiguration {
         return encodedData;
     }
 
-    @Override public String toString() {
+    @NonNull @Override public String toString() {
         return "AlertConfiguration{" +
                 "alertType=" + alertType +
                 ", alertSlot=" + alertSlot +

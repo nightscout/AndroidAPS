@@ -264,6 +264,6 @@ public class Steampunk extends BaseWatchFace {
             pointSize = 1;
         }
         setupCharts();
-        sharedPrefs.edit().putString("chart_timeframe", "" + timeframe).commit();
+        sharedPrefs.edit().putString("chart_timeframe", "" + timeframe).apply();
     }
 }

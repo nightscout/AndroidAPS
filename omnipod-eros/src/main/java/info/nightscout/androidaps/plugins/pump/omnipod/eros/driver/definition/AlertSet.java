@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -51,7 +53,7 @@ public class AlertSet {
         return Objects.hash(alertSlots);
     }
 
-    @Override
+    @NonNull @Override
     public String toString() {
         return "AlertSet{" +
                 "alertSlots=" + alertSlots +

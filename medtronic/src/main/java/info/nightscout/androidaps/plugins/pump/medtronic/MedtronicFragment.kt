@@ -12,8 +12,10 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.events.EventExtendedBolusChange
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.events.EventTempBasalChange
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.extensions.toStringFull
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -51,9 +53,10 @@ class MedtronicFragment : DaggerFragment() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var commandQueue: CommandQueueProvider
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var medtronicPumpPlugin: MedtronicPumpPlugin
     @Inject lateinit var warnColors: WarnColors
     @Inject lateinit var rileyLinkUtil: RileyLinkUtil
@@ -61,6 +64,7 @@ class MedtronicFragment : DaggerFragment() {
     @Inject lateinit var medtronicPumpStatus: MedtronicPumpStatus
     @Inject lateinit var rileyLinkServiceData: RileyLinkServiceData
     @Inject lateinit var aapsSchedulers: AapsSchedulers
+    @Inject lateinit var pumpSync: PumpSync
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -207,7 +211,7 @@ class MedtronicFragment : DaggerFragment() {
 
         when (medtronicPumpStatus.pumpDeviceState) {
             null,
-            PumpDeviceState.Sleeping -> binding.pumpStatusIcon.text = "{fa-bed}   " // + pumpStatus.pumpDeviceState.name());
+            PumpDeviceState.Sleeping             -> binding.pumpStatusIcon.text = "{fa-bed}   " // + pumpStatus.pumpDeviceState.name());
             PumpDeviceState.NeverContacted,
             PumpDeviceState.WakingUp,
             PumpDeviceState.PumpUnreachable,
@@ -215,7 +219,7 @@ class MedtronicFragment : DaggerFragment() {
             PumpDeviceState.TimeoutWhenCommunicating,
             PumpDeviceState.InvalidConfiguration -> binding.pumpStatusIcon.text = " " + resourceHelper.gs(medtronicPumpStatus.pumpDeviceState.resourceId)
 
-            PumpDeviceState.Active -> {
+            PumpDeviceState.Active               -> {
                 val cmd = medtronicUtil.currentCommand
                 if (cmd == null)
                     binding.pumpStatusIcon.text = " " + resourceHelper.gs(medtronicPumpStatus.pumpDeviceState.resourceId)
@@ -263,7 +267,7 @@ class MedtronicFragment : DaggerFragment() {
 
         // last connection
         if (medtronicPumpStatus.lastConnection != 0L) {
-            val minAgo = DateUtil.minAgo(resourceHelper, medtronicPumpStatus.lastConnection)
+            val minAgo = dateUtil.minAgo(resourceHelper, medtronicPumpStatus.lastConnection)
             val min = (System.currentTimeMillis() - medtronicPumpStatus.lastConnection) / 1000 / 60
             if (medtronicPumpStatus.lastConnection + 60 * 1000 > System.currentTimeMillis()) {
                 binding.lastConnection.setText(R.string.medtronic_pump_connected_now)
@@ -299,19 +303,20 @@ class MedtronicFragment : DaggerFragment() {
             val unit = resourceHelper.gs(R.string.insulin_unit_shortname)
             val ago = when {
                 agoMsc < 60 * 1000 -> resourceHelper.gs(R.string.medtronic_pump_connected_now)
-                bolusMinAgo < 60   -> DateUtil.minAgo(resourceHelper, medtronicPumpStatus.lastBolusTime.time)
-                else               -> DateUtil.hourAgo(medtronicPumpStatus.lastBolusTime.time, resourceHelper)
+                bolusMinAgo < 60   -> dateUtil.minAgo(resourceHelper, medtronicPumpStatus.lastBolusTime.time)
+                else               -> dateUtil.hourAgo(medtronicPumpStatus.lastBolusTime.time, resourceHelper)
             }
             binding.lastBolus.text = resourceHelper.gs(R.string.mdt_last_bolus, bolus, unit, ago)
         } else {
             binding.lastBolus.text = ""
         }
 
+        val pumpState = pumpSync.expectedPumpState()
         // base basal rate
         binding.baseBasalRate.text = ("(" + medtronicPumpStatus.activeProfileName + ")  "
             + resourceHelper.gs(R.string.pump_basebasalrate, medtronicPumpPlugin.baseBasalRate))
 
-        binding.tempBasal.text = activePlugin.activeTreatments.getTempBasalFromHistory(System.currentTimeMillis())?.toStringFull()
+        binding.tempBasal.text = pumpState.temporaryBasal?.toStringFull(dateUtil)
             ?: ""
 
         // battery
@@ -328,5 +333,27 @@ class MedtronicFragment : DaggerFragment() {
 
         medtronicPumpPlugin.rileyLinkService?.verifyConfiguration()
         binding.errors.text = medtronicPumpStatus.errorInfo
+
+        val showRileyLinkBatteryLevel: Boolean = rileyLinkServiceData.showBatteryLevel
+
+        if (showRileyLinkBatteryLevel) {
+            binding.rlBatteryView.visibility = View.VISIBLE
+            binding.rlBatteryLabel.visibility = View.VISIBLE
+            binding.rlBatteryState.visibility = View.VISIBLE
+            binding.rlBatteryLayout.visibility = View.VISIBLE
+            binding.rlBatterySemicolon.visibility = View.VISIBLE
+            if (rileyLinkServiceData.batteryLevel == null) {
+                binding.rlBatteryState.text = " ?"
+            } else {
+                binding.rlBatteryState.text = "{fa-battery-" + rileyLinkServiceData.batteryLevel / 25 + "}  " + rileyLinkServiceData.batteryLevel + "%"
+            }
+        } else {
+            binding.rlBatteryView.visibility = View.GONE
+            binding.rlBatteryLabel.visibility = View.GONE
+            binding.rlBatteryState.visibility = View.GONE
+            binding.rlBatteryLayout.visibility = View.GONE
+            binding.rlBatterySemicolon.visibility = View.GONE
+        }
+
     }
 }

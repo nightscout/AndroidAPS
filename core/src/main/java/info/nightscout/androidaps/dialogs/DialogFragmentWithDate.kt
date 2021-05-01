@@ -16,7 +16,7 @@ import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.extensions.toVisibility
+import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.util.*
 import javax.inject.Inject
@@ -27,7 +27,7 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
     @Inject lateinit var sp: SP
     @Inject lateinit var dateUtil: DateUtil
 
-    var eventTime = DateUtil.now()
+    var eventTime: Long = 0
     var eventTimeChanged = false
 
     //one shot guards
@@ -60,10 +60,10 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
         val eventDateView = view.findViewById(R.id.eventdate) as TextView?
         val eventTimeView = view.findViewById(R.id.eventtime) as TextView?
 
-        eventTime = savedInstanceState?.getLong("eventTime") ?: DateUtil.now()
+        eventTime = savedInstanceState?.getLong("eventTime") ?: dateUtil.nowWithoutMilliseconds()
         eventTimeChanged = savedInstanceState?.getBoolean("eventTimeChanged") ?: false
 
-        eventDateView?.text = DateUtil.dateString(eventTime)
+        eventDateView?.text = dateUtil.dateString(eventTime)
         eventTimeView?.text = dateUtil.timeString(eventTime)
 
         // create an OnDateSetListener
@@ -75,7 +75,7 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
             cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
             eventTime = cal.timeInMillis
             eventTimeChanged = true
-            eventDateView?.text = DateUtil.dateString(eventTime)
+            eventDateView?.text = dateUtil.dateString(eventTime)
         }
 
         eventDateView?.setOnClickListener {

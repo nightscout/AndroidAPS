@@ -24,7 +24,7 @@
     <string name="unsupportedfirmware">Firmware bomba não suportado</string>
     <string name="pumperror">Erro Bomba</string>
     <string name="lowbattery">Bateria fraca</string>
-    <string name="basalcompare">A administrar menos que a taxa de base predefinida</string>
+    <string name="basalcompare">A administrar menos insulina basal que a predefinida</string>
     <string name="pumpshutdown">Encerrar Bomba</string>
     <string name="batterydischarged">Bateria da Bomba Descarregada</string>
     <string name="occlusion">Oclusão</string>
@@ -92,8 +92,8 @@
     <string name="danarv2pump">DanaRv2</string>
     <string name="danar_disableeasymode">Desactivar modo EasyUI na bomba</string>
     <string name="profile_set_failed">Não foi possível configurar o perfil de basal</string>
-    <string name="danar_bluetooth_status">Estado Bluetooth</string>
-    <string name="danar_iob_label">IOB Bomba</string>
+    <string name="danar_bluetooth_status">Estado do Bluetooth</string>
+    <string name="danar_iob_label">IA Bomba</string>
     <string name="basal_step">Incremento Basal</string>
     <string name="bolus_step">Incremento Bólus</string>
     <string name="virtualpump_firmware_label">Firmware</string>

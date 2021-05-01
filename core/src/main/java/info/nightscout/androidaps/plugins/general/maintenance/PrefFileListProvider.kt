@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.general.maintenance
 
 import android.os.Environment
 import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.interfaces.ConfigInterface
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
 import info.nightscout.androidaps.plugins.general.maintenance.formats.*
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -20,7 +20,7 @@ import kotlin.math.abs
 @Singleton
 class PrefFileListProvider @Inject constructor(
     private val resourceHelper: ResourceHelper,
-    private val config: ConfigInterface,
+    private val config: Config,
     private val classicPrefsFormat: ClassicPrefsFormat,
     private val encryptedPrefsFormat: EncryptedPrefsFormat,
     private val storage: Storage,
@@ -31,6 +31,7 @@ class PrefFileListProvider @Inject constructor(
 
         private val path = File(Environment.getExternalStorageDirectory().toString())
         private val aapsPath = File(path, "AAPS" + File.separator + "preferences")
+        private val exportsPath = File(path, "AAPS" + File.separator + "exports")
         private const val IMPORT_AGE_NOT_YET_OLD_DAYS = 60
     }
 
@@ -93,11 +94,19 @@ class PrefFileListProvider @Inject constructor(
         if (!aapsPath.exists()) {
             aapsPath.mkdirs()
         }
+        if (!exportsPath.exists()) {
+            exportsPath.mkdirs()
+        }
     }
 
     fun newExportFile(): File {
         val timeLocal = LocalDateTime.now().toString(DateTimeFormat.forPattern("yyyy-MM-dd'_'HHmmss"))
         return File(aapsPath, timeLocal + "_" + config.FLAVOR + ".json")
+    }
+
+    fun newExportXmlFile(): File {
+        val timeLocal = LocalDateTime.now().toString(DateTimeFormat.forPattern("yyyy-MM-dd'_'HHmmss"))
+        return File(exportsPath, timeLocal + "_UserEntry.csv")
     }
 
     // check metadata for known issues, change their status and add info with explanations

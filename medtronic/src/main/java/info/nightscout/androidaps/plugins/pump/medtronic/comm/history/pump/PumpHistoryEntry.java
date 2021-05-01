@@ -70,13 +70,14 @@ public class PumpHistoryEntry extends MedtronicHistoryEntry {
 
 
     public String toString() {
-        Object object = this.getDecodedDataEntry("Object");
-
-        if (object == null) {
-            return super.toString();
-        } else {
-            return "PumpHistoryEntry [DT: " + DT + ", Object=" + object.toString() + "]";
-        }
+        return super.toString();
+//        Object object = this.getDecodedDataEntry("Object");
+//
+//        if (object == null) {
+//            return super.toString();
+//        } else {
+//            return super.toString() + "PumpHistoryEntry [type=" + StringUtil.getStringInLength(entryType.name(), 20) + ", DT: " + DT + ", Object=" + object.toString() + "]";
+//        }
     }
 
 

@@ -3,7 +3,7 @@ package info.nightscout.androidaps.skins
 import android.util.DisplayMetrics
 import android.view.View
 import android.widget.LinearLayout
-import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.R
 import javax.inject.Inject
 import javax.inject.Singleton

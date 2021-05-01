@@ -20,7 +20,7 @@ class TriggerRecurringTimeTest : TriggerTestBase() {
 
     @Before fun mock() {
         now = MidnightTime.calc() + T.mins(95).msecs() // 95 min from midnight
-        PowerMockito.`when`(dateUtil._now()).thenReturn(now)
+        PowerMockito.`when`(dateUtil.now()).thenReturn(now)
     }
 
     @Test fun shouldRunTest() {
@@ -35,7 +35,7 @@ class TriggerRecurringTimeTest : TriggerTestBase() {
         Assert.assertTrue(t.shouldRun())
     }
 
-    private var timeJson = "{\"data\":{\"WEDNESDAY\":false,\"MONDAY\":false,\"THURSDAY\":false,\"SUNDAY\":false,\"TUESDAY\":false,\"FRIDAY\":false,\"SATURDAY\":false,\"time\":4444},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerRecurringTime\"}"
+    private var timeJson = "{\"data\":{\"WEDNESDAY\":false,\"MONDAY\":false,\"THURSDAY\":false,\"SUNDAY\":false,\"TUESDAY\":false,\"FRIDAY\":false,\"SATURDAY\":false,\"time\":4444},\"type\":\"TriggerRecurringTime\"}"
 
     @Test
     fun toJSONTest() {

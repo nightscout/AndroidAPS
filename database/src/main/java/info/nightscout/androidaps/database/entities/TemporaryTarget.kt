@@ -57,11 +57,13 @@ data class TemporaryTarget(
         @SerializedName("Eating Soon")
         EATING_SOON("Eating Soon"),
         @SerializedName("Automation")
-        AUTOMATION("Automation")
+        AUTOMATION("Automation"),
+        @SerializedName("Wear")
+        WEAR("Wear")
         ;
 
         companion object {
-            fun fromString(direction: String?) = values().firstOrNull { it.text == direction }
+            fun fromString(reason: String?) = values().firstOrNull { it.text == reason }
                 ?: CUSTOM
         }
     }

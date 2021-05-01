@@ -10,17 +10,16 @@ import info.nightscout.androidaps.plugins.general.automation.elements.InputInsul
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder
 import info.nightscout.androidaps.plugins.general.automation.elements.StaticLabel
-import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
 import org.json.JSONObject
 
 class TriggerIob(injector: HasAndroidInjector) : Trigger(injector) {
-    var insulin = InputInsulin(injector)
-    var comparator: Comparator = Comparator(injector)
+    var insulin = InputInsulin()
+    var comparator: Comparator = Comparator(resourceHelper)
 
     constructor(injector: HasAndroidInjector, triggerIob: TriggerIob) : this(injector) {
-        insulin = InputInsulin(injector, triggerIob.insulin)
-        comparator = Comparator(injector, triggerIob.comparator.value)
+        insulin = InputInsulin(triggerIob.insulin)
+        comparator = Comparator(resourceHelper, triggerIob.comparator.value)
     }
 
     fun setValue(value: Double): TriggerIob {
@@ -35,7 +34,7 @@ class TriggerIob(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun shouldRun(): Boolean {
         val profile = profileFunction.getProfile() ?: return false
-        val iob = iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(DateUtil.now(), profile)
+        val iob = iobCobCalculator.calculateFromTreatmentsAndTemps(dateUtil.now(), profile)
         if (comparator.value.check(iob.iob, insulin.value)) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
             return true
@@ -44,15 +43,10 @@ class TriggerIob(injector: HasAndroidInjector) : Trigger(injector) {
         return false
     }
 
-    @Synchronized override fun toJSON(): String {
-        val data = JSONObject()
+    override fun dataJSON(): JSONObject =
+        JSONObject()
             .put("insulin", insulin.value)
             .put("comparator", comparator.value.toString())
-        return JSONObject()
-            .put("type", this::class.java.name)
-            .put("data", data)
-            .toString()
-    }
 
     override fun fromJSON(data: String): Trigger {
         val d = JSONObject(data)
@@ -72,9 +66,9 @@ class TriggerIob(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(injector, R.string.iob, this))
+            .add(StaticLabel(resourceHelper, R.string.iob, this))
             .add(comparator)
-            .add(LabelWithElement(injector, resourceHelper.gs(R.string.iob_u), "", insulin))
+            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.iob_u), "", insulin))
             .build(root)
     }
 }

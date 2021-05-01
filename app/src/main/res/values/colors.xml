@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="prediction">#ff00ff</color>
-    <color name="basal">#00ffff</color>
     <color name="iobPred">#00d2d2</color>
     <color name="bolus">#1ea3e5</color>
     <color name="ratio">#FFFFFF</color>
@@ -22,7 +21,6 @@
     <color name="ok_background">#323232</color>
 
     <color name="defaultbackground">#424242</color>
-    <color name="defaulttext">#BBBBBB</color>
     <color name="defaulttextcolor">#B3FFFFFF</color>
 
     <color name="tempTargetBackground">#77dd77</color>

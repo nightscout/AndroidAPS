@@ -31,7 +31,7 @@ class DanaRsPacketBolusGetExtendedBolusStateTest : DanaRSTestBase() {
         testValue = 1.0
         packet.handleMessage(createArray(11, testValue.toInt().toByte()))
         // is extended bolus in progress
-        Assert.assertEquals(testValue == 1.0, danaPump.isExtendedInProgress)
+        Assert.assertEquals(testValue == 1.0, packet.isExtendedInProgress)
         Assert.assertEquals(testValue != 0.0, packet.failed)
         Assert.assertEquals("BOLUS__GET_EXTENDED_BOLUS_STATE", packet.friendlyName)
     }

@@ -22,14 +22,13 @@ class TriggerCOBTest : TriggerTestBase() {
     var now = 1514766900000L
 
     @Before fun mock() {
-        PowerMockito.mockStatic(DateUtil::class.java)
-        PowerMockito.`when`(DateUtil.now()).thenReturn(now)
+        PowerMockito.`when`(dateUtil.now()).thenReturn(now)
         PowerMockito.`when`(sp.getInt(ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt())).thenReturn(48)
     }
 
     @Test fun shouldRunTest() {
         // COB value is 6
-        PowerMockito.`when`(iobCobCalculatorPlugin.getCobInfo(false, "AutomationTriggerCOB")).thenReturn(CobInfo(6.0, 2.0))
+        PowerMockito.`when`(iobCobCalculator.getCobInfo(false, "AutomationTriggerCOB")).thenReturn(CobInfo(6.0, 2.0))
         var t: TriggerCOB = TriggerCOB(injector).setValue(1.0).comparator(Comparator.Compare.IS_EQUAL)
         Assert.assertFalse(t.shouldRun())
         t = TriggerCOB(injector).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL)
@@ -54,7 +53,7 @@ class TriggerCOBTest : TriggerTestBase() {
         Assert.assertEquals(Comparator.Compare.IS_EQUAL_OR_LESSER, t.comparator.value)
     }
 
-    private var bgJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"carbs\":4},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerCOB\"}"
+    private var bgJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"carbs\":4},\"type\":\"TriggerCOB\"}"
     @Test fun toJSONTest() {
         val t: TriggerCOB = TriggerCOB(injector).setValue(4.0).comparator(Comparator.Compare.IS_EQUAL)
         Assert.assertEquals(bgJson, t.toJSON())

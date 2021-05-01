@@ -822,6 +822,16 @@ public class RuffyScripter implements RuffyCommands {
         throw new RuntimeException("Not supported");
     }
 
+    @Nullable
+    public String getMacAddress() {
+        try {
+            return ruffyService.getMacAddress();
+        } catch (RemoteException e) {
+            // ignore; ruffy version is probably old and doesn't support reading MAC address yet
+            return null;
+        }
+    }
+
     /**
      * Confirms and dismisses the given alert if it's raised before the timeout
      */

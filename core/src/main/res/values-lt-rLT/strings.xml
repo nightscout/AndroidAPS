@@ -263,6 +263,7 @@
     <string name="friday_short">Pn</string>
     <string name="saturday_short">Š</string>
     <string name="sunday_short">S</string>
+    <!-- User Entry -->
     <plurals name="days">
         <item quantity="one">%1$d d.</item>
         <item quantity="few">%1$d d.</item>

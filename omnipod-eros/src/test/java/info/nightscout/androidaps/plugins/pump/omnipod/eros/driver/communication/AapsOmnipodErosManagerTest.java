@@ -8,7 +8,7 @@ import org.powermock.api.mockito.PowerMockito;
 
 import java.util.List;
 
-import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule.BasalSchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule.BasalScheduleEntry;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodErosManager;
@@ -25,16 +25,16 @@ public class AapsOmnipodErosManagerTest {
         Profile profile = mock(Profile.class);
 
         Profile.ProfileValue value1 = mock(Profile.ProfileValue.class);
-        value1.timeAsSeconds = 0;
-        value1.value = 0.5D;
+        value1.setTimeAsSeconds(0);
+        value1.setValue(0.5D);
 
         Profile.ProfileValue value2 = mock(Profile.ProfileValue.class);
-        value2.timeAsSeconds = 18000;
-        value2.value = 1.0D;
+        value2.setTimeAsSeconds(18000);
+        value2.setValue(1.0D);
 
         Profile.ProfileValue value3 = mock(Profile.ProfileValue.class);
-        value3.timeAsSeconds = 50400;
-        value3.value = 3.05D;
+        value3.setTimeAsSeconds(50400);
+        value3.setValue(3.05D);
 
         PowerMockito.when(profile.getBasalValues()).thenReturn(new Profile.ProfileValue[]{
                 value1,
@@ -93,8 +93,8 @@ public class AapsOmnipodErosManagerTest {
         Profile profile = mock(Profile.class);
 
         Profile.ProfileValue value = mock(Profile.ProfileValue.class);
-        value.timeAsSeconds = 1800;
-        value.value = 0.5D;
+        value.setTimeAsSeconds(1800);
+        value.setValue(0.5D);
 
         PowerMockito.when(profile.getBasalValues()).thenReturn(new Profile.ProfileValue[]{
                 value,
@@ -111,12 +111,12 @@ public class AapsOmnipodErosManagerTest {
         Profile profile = mock(Profile.class);
 
         Profile.ProfileValue value1 = mock(Profile.ProfileValue.class);
-        value1.timeAsSeconds = 0;
-        value1.value = 0.5D;
+        value1.setTimeAsSeconds(0);
+        value1.setValue(0.5D);
 
         Profile.ProfileValue value2 = mock(Profile.ProfileValue.class);
-        value2.timeAsSeconds = 86400;
-        value2.value = 0.5D;
+        value2.setTimeAsSeconds(86400);
+        value2.setValue(0.5D);
 
         PowerMockito.when(profile.getBasalValues()).thenReturn(new Profile.ProfileValue[]{
                 value1,
@@ -134,8 +134,8 @@ public class AapsOmnipodErosManagerTest {
         Profile profile = mock(Profile.class);
 
         Profile.ProfileValue value = mock(Profile.ProfileValue.class);
-        value.timeAsSeconds = -1;
-        value.value = 0.5D;
+        value.setTimeAsSeconds(-1);
+        value.setValue(0.5D);
 
         PowerMockito.when(profile.getBasalValues()).thenReturn(new Profile.ProfileValue[]{
                 value,
@@ -149,8 +149,8 @@ public class AapsOmnipodErosManagerTest {
         Profile profile = mock(Profile.class);
 
         Profile.ProfileValue value = mock(Profile.ProfileValue.class);
-        value.timeAsSeconds = 0;
-        value.value = 0.04D;
+        value.setTimeAsSeconds(0);
+        value.setValue(0.04D);
 
         PowerMockito.when(profile.getBasalValues()).thenReturn(new Profile.ProfileValue[]{
                 value,

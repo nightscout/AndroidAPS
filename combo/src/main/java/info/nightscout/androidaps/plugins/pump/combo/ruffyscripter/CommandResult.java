@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.combo.ruffyscripter;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.LinkedList;
@@ -46,7 +47,7 @@ public class CommandResult {
         return this;
     }
 
-    @Override
+    @Override @NonNull
     public String toString() {
         return "CommandResult{" +
                 "success=" + success +

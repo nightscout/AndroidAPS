@@ -24,6 +24,7 @@
     <string name="medtronic_pump_battery_nizn">NiZn (utökad vy)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (utökad vy)</string>
     <string name="medtronic_bolus_debugging">Avlusning av Bolus/Behandlingar</string>
+    <!-- MDT Fragment -->
     <!-- MDT Errors -->
     <string name="medtronic_errors">Fel</string>
     <string name="medtronic_error_serial_not_set">Serienummer ej angett.</string>

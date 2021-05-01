@@ -22,12 +22,14 @@ class AuthRequest internal constructor(
     @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var otp: OneTimePassword
+    @Inject lateinit var dateUtil: DateUtil
 
-    private val date = DateUtil.now()
+    private var date = 0L
     private var processed = false
 
     init {
         injector.androidInjector().inject(this)
+        date = dateUtil.now()
         smsCommunicatorPlugin.sendSMS(Sms(requester.phoneNumber, requestText))
     }
 
@@ -45,7 +47,7 @@ class AuthRequest internal constructor(
             smsCommunicatorPlugin.sendSMS(Sms(requester.phoneNumber, resourceHelper.gs(R.string.sms_wrongcode)))
             return
         }
-        if (DateUtil.now() - date < Constants.SMS_CONFIRM_TIMEOUT) {
+        if (dateUtil.now() - date < Constants.SMS_CONFIRM_TIMEOUT) {
             processed = true
             aapsLogger.debug(LTag.SMS, "Processing confirmed SMS: " + requester.text)
             action.run()

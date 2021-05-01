@@ -12,11 +12,12 @@ import javax.inject.Singleton
 class TimerUtil @Inject constructor(
     private val context: Context,
     private val resourceHelper: ResourceHelper,
+    private val dateUtil: DateUtil
 ) {
 
     fun scheduleReminder(time: Long, text: String? = null) {
         Intent(AlarmClock.ACTION_SET_TIMER).apply {
-            val length: Int = ((time - DateUtil.now()) / 1000).toInt()
+            val length: Int = ((time - dateUtil.now()) / 1000).toInt()
             flags = flags or Intent.FLAG_ACTIVITY_NEW_TASK
             putExtra(AlarmClock.EXTRA_LENGTH, length)
             putExtra(AlarmClock.EXTRA_SKIP_UI, true)

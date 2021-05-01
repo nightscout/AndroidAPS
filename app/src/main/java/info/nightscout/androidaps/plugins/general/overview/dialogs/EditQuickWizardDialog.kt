@@ -83,7 +83,7 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
         // create an OnTimeSetListener
         val fromTimeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
             fromSeconds = (T.hours(hour.toLong()).secs() + T.mins(minute.toLong()).secs()).toInt()
-            binding.from.text = dateUtil.timeString(DateUtil.toDate(fromSeconds))
+            binding.from.text = dateUtil.timeString(dateUtil.secondsOfTheDayToMilliseconds(fromSeconds))
         }
 
         binding.from.setOnClickListener {
@@ -96,11 +96,11 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
             }
         }
         fromSeconds = entry.validFrom()
-        binding.from.text = dateUtil.timeString(DateUtil.toDate(fromSeconds))
+        binding.from.text = dateUtil.timeString(dateUtil.secondsOfTheDayToMilliseconds(fromSeconds))
 
         val toTimeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
             toSeconds = (T.hours(hour.toLong()).secs() + T.mins(minute.toLong()).secs()).toInt()
-            binding.from.text = dateUtil.timeString(DateUtil.toDate(toSeconds))
+            binding.from.text = dateUtil.timeString(dateUtil.secondsOfTheDayToMilliseconds(toSeconds))
         }
 
         binding.to.setOnClickListener {
@@ -113,7 +113,7 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
             }
         }
         toSeconds = entry.validFrom()
-        binding.to.text = dateUtil.timeString(DateUtil.toDate(toSeconds))
+        binding.to.text = dateUtil.timeString(dateUtil.secondsOfTheDayToMilliseconds(toSeconds))
 
         binding.buttonEdit.setText(entry.buttonText())
         binding.carbsEdit.setText(entry.carbs().toString())

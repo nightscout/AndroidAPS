@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule;
 
+import androidx.annotation.NonNull;
 import org.joda.time.Duration;
 
 import java.util.ArrayList;
@@ -90,7 +91,7 @@ public class BasalDeliveryTable {
         return numSegments;
     }
 
-    @Override
+    @NonNull @Override
     public String toString() {
         return "BasalDeliveryTable{" +
                 "entries=" + entries +

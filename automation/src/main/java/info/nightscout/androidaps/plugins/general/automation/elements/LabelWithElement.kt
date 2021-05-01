@@ -5,22 +5,14 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TableLayout
 import android.widget.TextView
-import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import javax.inject.Inject
 
-class LabelWithElement(injector: HasAndroidInjector) : Element(injector) {
-    @Inject lateinit var resourceHelper: ResourceHelper
-
-    var element: Element? = null
-    var textPre: String = ""
-    var textPost: String = ""
-
-    constructor(injector: HasAndroidInjector, textPre: String, textPost: String, element: Element) : this(injector) {
-        this.textPre = textPre
-        this.textPost = textPost
-        this.element = element
-    }
+class LabelWithElement(
+    private val resourceHelper: ResourceHelper,
+    var textPre: String = "",
+    var textPost: String = "",
+    var element: Element? = null,
+) : Element() {
 
     override fun addToLayout(root: LinearLayout) { // container layout
         val layout = LinearLayout(root.context)
@@ -33,7 +25,6 @@ class LabelWithElement(injector: HasAndroidInjector) : Element(injector) {
         textViewPre.text = textPre
         textViewPre.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT)
-        //textViewPre.setWidth(MainApp.dpToPx(120));
         textViewPre.setPadding(px, px, px, px)
         textViewPre.setTypeface(textViewPre.typeface, Typeface.BOLD)
         layout.addView(textViewPre)
@@ -48,7 +39,6 @@ class LabelWithElement(injector: HasAndroidInjector) : Element(injector) {
         textViewPost.text = textPost
         textViewPost.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT)
-        //textViewPost.setWidth(MainApp.dpToPx(45));
         textViewPost.setPadding(px, px, px, px)
         textViewPost.setTypeface(textViewPost.typeface, Typeface.BOLD)
         layout.addView(textViewPost)

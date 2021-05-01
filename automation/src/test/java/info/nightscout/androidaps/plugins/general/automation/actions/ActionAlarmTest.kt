@@ -10,6 +10,7 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.automation.elements.InputString
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.queue.Callback
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.TimerUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.junit.Assert
@@ -30,6 +31,7 @@ class ActionAlarmTest : TestBase() {
     @Mock lateinit var rxBus: RxBusWrapper
     @Mock lateinit var context: Context
     @Mock lateinit var timerUtil: TimerUtil
+    @Mock lateinit var dateUtil: DateUtil
 
     private lateinit var sut: ActionAlarm
     var injector: HasAndroidInjector = HasAndroidInjector {
@@ -39,9 +41,9 @@ class ActionAlarmTest : TestBase() {
                 it.rxBus = rxBus
                 it.context = context
                 it.timerUtil = timerUtil
+                it.dateUtil = dateUtil
             }
             if (it is PumpEnactResult) {
-                it.aapsLogger = aapsLogger
                 it.resourceHelper = resourceHelper
             }
         }
@@ -61,7 +63,7 @@ class ActionAlarmTest : TestBase() {
     }
 
     @Test fun shortDescriptionTest() {
-        sut.text = InputString(injector, "Asd")
+        sut.text = InputString("Asd")
         Assert.assertEquals("Alarm: %s", sut.shortDescription())
     }
 
@@ -82,12 +84,12 @@ class ActionAlarmTest : TestBase() {
     }
 
     @Test fun toJSONTest() {
-        sut.text = InputString(injector, "Asd")
+        sut.text = InputString("Asd")
         Assert.assertEquals("{\"data\":{\"text\":\"Asd\"},\"type\":\"info.nightscout.androidaps.plugins.general.automation.actions.ActionAlarm\"}", sut.toJSON())
     }
 
     @Test fun fromJSONTest() {
-        sut.text = InputString(injector, "Asd")
+        sut.text = InputString("Asd")
         sut.fromJSON("{\"text\":\"Asd\"}")
         Assert.assertEquals("Asd", sut.text.value)
     }

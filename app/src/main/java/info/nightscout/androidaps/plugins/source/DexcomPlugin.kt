@@ -6,29 +6,31 @@ import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.RequestDexcomPermissionActivity
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
+import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
-import info.nightscout.androidaps.interfaces.BgSourceInterface
+import info.nightscout.androidaps.interfaces.BgSource
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
-import info.nightscout.androidaps.receivers.BundleStore
-import info.nightscout.androidaps.receivers.DataReceiver
+import info.nightscout.androidaps.logging.UserEntryLogger
+import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.XDripBroadcast
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -37,6 +39,7 @@ class DexcomPlugin @Inject constructor(
     injector: HasAndroidInjector,
     resourceHelper: ResourceHelper,
     aapsLogger: AAPSLogger,
+    private val sp: SP,
     private val dexcomMediator: DexcomMediator,
     config: Config
 ) : PluginBase(PluginDescription()
@@ -48,9 +51,7 @@ class DexcomPlugin @Inject constructor(
     .preferencesId(R.xml.pref_bgsourcedexcom)
     .description(R.string.description_source_dexcom),
     aapsLogger, resourceHelper, injector
-), BgSourceInterface {
-
-    private val disposable = CompositeDisposable()
+), BgSource {
 
     init {
         if (!config.NSCLIENT) {
@@ -62,14 +63,15 @@ class DexcomPlugin @Inject constructor(
         return true
     }
 
+    override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean =
+        (glucoseValue.sourceSensor == GlucoseValue.SourceSensor.DEXCOM_G6_NATIVE ||
+            glucoseValue.sourceSensor == GlucoseValue.SourceSensor.DEXCOM_G5_NATIVE ||
+            glucoseValue.sourceSensor == GlucoseValue.SourceSensor.DEXCOM_NATIVE_UNKNOWN)
+            && sp.getBoolean(R.string.key_dexcomg5_nsupload, false)
+
     override fun onStart() {
         super.onStart()
         dexcomMediator.requestPermissionIfNeeded()
-    }
-
-    override fun onStop() {
-        disposable.clear()
-        super.onStop()
     }
 
     // cannot be inner class because of needed injection
@@ -81,20 +83,23 @@ class DexcomPlugin @Inject constructor(
         @Inject lateinit var aapsLogger: AAPSLogger
         @Inject lateinit var injector: HasAndroidInjector
         @Inject lateinit var dexcomPlugin: DexcomPlugin
-        @Inject lateinit var nsUpload: NSUpload
         @Inject lateinit var sp: SP
-        @Inject lateinit var bundleStore: BundleStore
+        @Inject lateinit var dateUtil: DateUtil
+        @Inject lateinit var dataWorker: DataWorker
         @Inject lateinit var broadcastToXDrip: XDripBroadcast
         @Inject lateinit var repository: AppRepository
+        @Inject lateinit var uel: UserEntryLogger
 
         init {
             (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
         }
 
         override fun doWork(): Result {
-            if (!dexcomPlugin.isEnabled(PluginType.BGSOURCE)) return Result.failure()
-            val bundle = bundleStore.pickup(inputData.getLong(DataReceiver.STORE_KEY, -1))
-                ?: return Result.failure()
+            var ret = Result.success()
+
+            if (!dexcomPlugin.isEnabled(PluginType.BGSOURCE)) return Result.success()
+            val bundle = dataWorker.pickupBundle(inputData.getLong(DataWorker.STORE_KEY, -1))
+                ?: return Result.failure(workDataOf("Error" to "missing input data"))
             try {
                 val sourceSensor = when (bundle.getString("sensorType") ?: "") {
                     "G6" -> GlucoseValue.SourceSensor.DEXCOM_G6_NATIVE
@@ -102,7 +107,7 @@ class DexcomPlugin @Inject constructor(
                     else -> GlucoseValue.SourceSensor.DEXCOM_NATIVE_UNKNOWN
                 }
                 val glucoseValuesBundle = bundle.getBundle("glucoseValues")
-                    ?: return Result.failure()
+                    ?: return Result.failure(workDataOf("Error" to "missing glucoseValues"))
                 val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
                 for (i in 0 until glucoseValuesBundle.size()) {
                     val glucoseValueBundle = glucoseValuesBundle.getBundle(i.toString())!!
@@ -120,10 +125,13 @@ class DexcomPlugin @Inject constructor(
                     for (i in 0 until meters.size()) {
                         meters.getBundle(i.toString())?.let {
                             val timestamp = it.getLong("timestamp") * 1000
-                            val now = DateUtil.now()
+                            val now = dateUtil.now()
                             if (timestamp > now - T.months(1).msecs() && timestamp < now) {
-                                calibrations.add(CgmSourceTransaction.Calibration(it.getLong("timestamp") * 1000,
-                                    it.getInt("meterValue").toDouble()))
+                                calibrations.add(CgmSourceTransaction.Calibration(
+                                    timestamp = it.getLong("timestamp") * 1000,
+                                    value = it.getInt("meterValue").toDouble(),
+                                    glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
+                                ))
                             }
                         }
                     }
@@ -133,28 +141,41 @@ class DexcomPlugin @Inject constructor(
                 } else {
                     null
                 }
-               dexcomPlugin.disposable += repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, calibrations, sensorStartTime)).subscribe({ result ->
-                    result.inserted.forEach {
-                        broadcastToXDrip(it)
-                        if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
-                            nsUpload.uploadBg(it, sourceSensor.text)
-                            //aapsLogger.debug("XXXXX: dbAdd $it")
+                repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, calibrations, sensorStartTime))
+                    .doOnError {
+                        aapsLogger.error(LTag.DATABASE, "Error while saving values from Dexcom App", it)
+                        ret = Result.failure(workDataOf("Error" to it.toString()))
+                    }
+                    .blockingGet()
+                    .also { result ->
+                        result.inserted.forEach {
+                            broadcastToXDrip(it)
+                            aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
+                        }
+                        result.updated.forEach {
+                            broadcastToXDrip(it)
+                            aapsLogger.debug(LTag.DATABASE, "Updated bg $it")
+                        }
+                        result.sensorInsertionsInserted.forEach {
+                            uel.log(Action.CAREPORTAL,
+                                Sources.BG,
+                                ValueWithUnit.Timestamp(it.timestamp),
+                                ValueWithUnit.TherapyEventType(it.type))
+                            aapsLogger.debug(LTag.DATABASE, "Inserted sensor insertion $it")
+                        }
+                        result.calibrationsInserted.forEach {
+                            uel.log(Action.CAREPORTAL,
+                                Sources.BG,
+                                ValueWithUnit.Timestamp(it.timestamp),
+                                ValueWithUnit.TherapyEventType(it.type))
+                            aapsLogger.debug(LTag.DATABASE, "Inserted calibration $it")
                         }
                     }
-                    result.updated.forEach {
-                        broadcastToXDrip(it)
-                        if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
-                            nsUpload.updateBg(it, sourceSensor.text)
-                            //aapsLogger.debug("XXXXX: dpUpdate $it")
-                        }
-                    }
-                }, {
-                    aapsLogger.error(LTag.BGSOURCE, "Error while saving values from Dexcom App", it)
-                })
             } catch (e: Exception) {
                 aapsLogger.error("Error while processing intent from Dexcom App", e)
+                ret = Result.failure(workDataOf("Error" to e.toString()))
             }
-            return Result.success()
+            return ret
         }
     }
 

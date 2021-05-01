@@ -24,6 +24,7 @@
     <string name="medtronic_pump_battery_nizn">Šarminė (išplėstinis vaizdas)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (išplėstinis vaizdas)</string>
     <string name="medtronic_bolus_debugging">Boluso/Terapijos Derinimas</string>
+    <!-- MDT Fragment -->
     <!-- MDT Errors -->
     <string name="medtronic_errors">Klaidos</string>
     <string name="medtronic_error_serial_not_set">Serijos Nr. nenustatytas.</string>

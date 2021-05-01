@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.command;
 
+import androidx.annotation.NonNull;
 import org.joda.time.Duration;
 
 import java.util.ArrayList;
@@ -112,7 +113,7 @@ public class BasalScheduleExtraCommand extends MessageBlock {
         return new ArrayList<>(rateEntries);
     }
 
-    @Override
+    @NonNull @Override
     public String toString() {
         return "BasalScheduleExtraCommand{" +
                 "acknowledgementBeep=" + acknowledgementBeep +

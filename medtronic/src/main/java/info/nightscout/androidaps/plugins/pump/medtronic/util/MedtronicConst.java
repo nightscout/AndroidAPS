@@ -22,7 +22,7 @@ public class MedtronicConst {
         public static final int BolusDebugEnabled = R.string.key_medtronic_bolus_debug;
     }
 
-    public class Statistics {
+    public static class Statistics {
 
         public static final String StatsPrefix = "medtronic_";
         public static final String FirstPumpStart = Prefix + "first_pump_use";
