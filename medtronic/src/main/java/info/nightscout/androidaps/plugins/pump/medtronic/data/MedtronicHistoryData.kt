@@ -42,6 +42,10 @@ import javax.inject.Singleton
 //  needs to include not returning any records if TZ goes into -x area. To fully support this AAPS would need to take note of
 //  all times that time changed (TZ, DST, etc.). Data needs to be returned in batches (time_changed batches, so that we can
 //  handle it. It would help to assign sort_ids to items (from oldest (1) to newest (x)
+//
+// TODO New Database changes, we need to read 35 minutes from history on each read and then compare if items have the same
+//   amounts, if not send them back to database changes. ALSO we need to remove and invalidate TBRs that are cancels from
+//   PumpSyncStorage
 @Suppress("DEPRECATION")
 @Singleton
 class MedtronicHistoryData @Inject constructor(

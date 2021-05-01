@@ -1,6 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.common.sync
 
 import info.nightscout.androidaps.data.DetailedBolusInfo
+import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 
 
@@ -21,6 +23,22 @@ data class PumpDbEntry constructor(var temporaryId: Long,
             detailedBolusInfo.carbs,
             detailedBolusInfo.bolusType)
     }
+
+    constructor(temporaryId: Long,
+                date: Long,
+                pumpType: PumpType,
+                serialNumber: String,
+                rate: Double,
+                isAbsolute: Boolean,
+                durationInMinutes: Int,
+                tbrType: PumpSync.TemporaryBasalType) : this(temporaryId, date, pumpType, serialNumber) {
+        this.tbrData = PumpDbEntryTBR(
+            rate,
+            isAbsolute,
+            durationInMinutes,
+            tbrType)
+    }
+
 }
 
 
@@ -40,4 +58,7 @@ data class PumpDbEntryCarbs(var date: Long,
                                                         creator.serialNumber())
 }
 
-data class PumpDbEntryTBR(var temporaryId: Long)
+data class PumpDbEntryTBR(var rate: Double,
+                          var isAbsolute: Boolean,
+                          var durationInMinutes: Int,
+                          var tbrType: PumpSync.TemporaryBasalType)

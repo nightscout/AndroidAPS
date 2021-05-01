@@ -130,19 +130,24 @@ class PumpSyncStorage @Inject constructor(
     }
 
     // TODO
-    fun addTemporaryBasalRateWithTempId(temporaryBasal: TemporaryBasal, writeToInternalHistory: Boolean, creator: PumpSyncEntriesCreator) : Boolean {
-        // val temporaryId = generateTempId(temporaryBasal.date)
-        // val response = pumpSync.addBolusWithTempId(temporaryBasal.timestamp, detailedBolusInfo.insulin,
+    fun addTemporaryBasalRateWithTempId(temporaryBasal: PumpDbEntryTBR, writeToInternalHistory: Boolean, creator: PumpSyncEntriesCreator) : Boolean {
+        val timenow : Long = System.currentTimeMillis()
+
+        val temporaryId = creator.generateTempId(timenow)
+        val response = false
+        //     pumpSync.addBolusWithTempId(temporaryBasal.timestamp, detailedBolusInfo.insulin,
         // generateTempId(detailedBolusInfo.timestamp), detailedBolusInfo.getBolusType(),
         // getPumpType(), serialNumber());
-        //
-        // if (response && writeToInternalHistory) {
-        //     driverHistory.put(temporaryId, new PumpDbEntry(temporaryId, model(), serialNumber(), detailedBolusInfo));
-        //     sp.putString(MedtronicConst.Statistics.InternalTemporaryDatabase, gson.toJson(driverHistory));
-        // }
-        //
-        // return response;
-        return false
+
+        if (response && writeToInternalHistory) {
+            var innerList: MutableList<PumpDbEntry> = pumpSyncStorage[TBR]!!
+
+            innerList.add(PumpDbEntry(temporaryId, timenow, creator.model(), creator.serialNumber(), null, temporaryBasal))
+            pumpSyncStorage[BOLUS] = innerList
+            saveStorage()
+        }
+
+        return response;
     }
 
 

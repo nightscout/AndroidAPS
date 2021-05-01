@@ -37,6 +37,8 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.Riley
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ResetRileyLinkConfigurationTask
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.WakeAndTuneTask
+import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntry
+import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryTBR
 import info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncEntriesCreator
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
 import info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncStorage
@@ -354,7 +356,7 @@ class MedtronicPumpPlugin @Inject constructor(
         }
 
         // execute
-        val refreshTypesNeededToReschedule: MutableSet<MedtronicStatusRefreshType?> = HashSet()
+        val refreshTypesNeededToReschedule: MutableSet<MedtronicStatusRefreshType?> = mutableSetOf()
         for ((key, value) in statusRefresh!!) {
             if (value!! > 0 && System.currentTimeMillis() > value) {
                 when (key) {
@@ -635,13 +637,6 @@ class MedtronicPumpPlugin @Inject constructor(
 
                 pumpSyncStorage.addBolusWithTempId(detailedBolusInfo, true, this)
 
-                // // TODO fix
-                // if (usePumpSync) {
-                //     pumpSyncStorage.addBolusWithTempId(detailedBolusInfo, true, this)
-                // } else {
-                //     activePlugin.activeTreatments.addToHistoryTreatment(detailedBolusInfo, true)
-                // }
-
                 // we subtract insulin, exact amount will be visible with next remainingInsulin update.
                 medtronicPumpStatus.reservoirRemainingUnits = medtronicPumpStatus.reservoirRemainingUnits - detailedBolusInfo.insulin
                 incrementStatistics(if (detailedBolusInfo.bolusType === DetailedBolusInfo.BolusType.SMB) MedtronicConst.Statistics.SMBBoluses else MedtronicConst.Statistics.StandardBoluses)
@@ -771,12 +766,12 @@ class MedtronicPumpPlugin @Inject constructor(
                 .absolute(absoluteRate) //
                 .source(Source.USER)
 
-            // TODO fix
-            if (usePumpSync) {
-                pumpSyncStorage.addTemporaryBasalRateWithTempId(tempStart, true, this)
-            } else {
-                activePlugin.activeTreatments.addToHistoryTempBasal(tempStart)
-            }
+            activePlugin.activeTreatments.addToHistoryTempBasal(tempStart)
+
+            // val tempData = PumpDbEntryTBR(absoluteRate, true, durationInMinutes, tbrType)
+            //
+            // pumpSyncStorage.addTemporaryBasalRateWithTempId(tempData, true, this)
+
             incrementStatistics(MedtronicConst.Statistics.TBRsSet)
             finishAction("TBR")
             PumpEnactResult(injector).success(true).enacted(true) //
@@ -1016,12 +1011,13 @@ class MedtronicPumpPlugin @Inject constructor(
                 .duration(0) //
                 .source(Source.USER)
 
-            // TODO fix
-            if (usePumpSync) {
-                pumpSyncStorage.addTemporaryBasalRateWithTempId(tempBasal, true, this)
-            } else {
-                activePlugin.activeTreatments.addToHistoryTempBasal(tempBasal)
-            }
+            activePlugin.activeTreatments.addToHistoryTempBasal(tempBasal)
+
+            // TODO need to find solution for this !?
+            // val tempData = PumpDbEntryTBR(absoluteRate, true, durationInMinutes, tbrType)
+            //
+            // pumpSyncStorage.addTemporaryBasalRateWithTempId(tempData, true, this)
+
             PumpEnactResult(injector).success(true).enacted(true) //
                 .isTempCancel(true)
         } else {
