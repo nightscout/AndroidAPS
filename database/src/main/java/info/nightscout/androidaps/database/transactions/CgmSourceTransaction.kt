@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.database.transactions
 
 import info.nightscout.androidaps.database.entities.GlucoseValue
+import info.nightscout.androidaps.database.entities.ProfileSwitch
 import info.nightscout.androidaps.database.entities.TherapyEvent
 
 /**
@@ -53,19 +54,25 @@ class CgmSourceTransaction(
         }
         calibrations.forEach {
             if (database.therapyEventDao.findByTimestamp(TherapyEvent.Type.FINGER_STICK_BG_VALUE, it.timestamp) == null) {
-                database.therapyEventDao.insertNewEntry(TherapyEvent(
-                    timestamp = it.timestamp,
-                    type = TherapyEvent.Type.FINGER_STICK_BG_VALUE,
-                    amount = it.value
-                ))
+                val therapyEvent = TherapyEvent(
+                timestamp = it.timestamp,
+                type = TherapyEvent.Type.FINGER_STICK_BG_VALUE,
+                glucose = it.value,
+                glucoseUnit = it.glucoseUnit
+                )
+                database.therapyEventDao.insertNewEntry(therapyEvent)
+                result.calibrationsInserted.add(therapyEvent)
             }
         }
         sensorInsertionTime?.let {
-            if (database.therapyEventDao.findByTimestamp(TherapyEvent.Type.SENSOR_INSERTED, it) == null) {
-                database.therapyEventDao.insertNewEntry(TherapyEvent(
+            if (database.therapyEventDao.findByTimestamp(TherapyEvent.Type.SENSOR_CHANGE, it) == null) {
+                val therapyEvent = TherapyEvent(
                     timestamp = it,
-                    type = TherapyEvent.Type.SENSOR_INSERTED
-                ))
+                    type = TherapyEvent.Type.SENSOR_CHANGE,
+                    glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
+                )
+                database.therapyEventDao.insertNewEntry(therapyEvent)
+                result.sensorInsertionsInserted.add(therapyEvent)
             }
         }
         return result
@@ -83,13 +90,17 @@ class CgmSourceTransaction(
 
     data class Calibration(
         val timestamp: Long,
-        val value: Double
+        val value: Double,
+        val glucoseUnit: TherapyEvent.GlucoseUnit
     )
 
     class TransactionResult {
 
         val inserted = mutableListOf<GlucoseValue>()
         val updated = mutableListOf<GlucoseValue>()
+
+        val calibrationsInserted = mutableListOf<TherapyEvent>()
+        val sensorInsertionsInserted = mutableListOf<TherapyEvent>()
 
         fun all(): MutableList<GlucoseValue> =
             mutableListOf<GlucoseValue>().also { result ->

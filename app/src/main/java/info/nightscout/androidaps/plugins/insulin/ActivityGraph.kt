@@ -6,8 +6,8 @@ import android.util.AttributeSet
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
-import info.nightscout.androidaps.db.Treatment
-import info.nightscout.androidaps.interfaces.InsulinInterface
+import info.nightscout.androidaps.database.entities.Bolus
+import info.nightscout.androidaps.interfaces.Insulin
 import info.nightscout.androidaps.utils.T
 import java.util.*
 import kotlin.math.floor
@@ -18,19 +18,20 @@ class ActivityGraph : GraphView {
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
 
-    fun show(insulin: InsulinInterface) {
+    fun show(insulin: Insulin) {
         removeAllSeries()
         mSecondScale = null
         val hours = floor(insulin.dia + 1).toLong()
-        val t = Treatment().also {
-            it.date = 0
-            it.insulin = 1.0
-        }
+        val bolus = Bolus(
+            timestamp = 0,
+            amount = 1.0,
+            type = Bolus.Type.NORMAL
+        )
         val activityArray: MutableList<DataPoint> = ArrayList()
         val iobArray: MutableList<DataPoint> = ArrayList()
         var time: Long = 0
         while (time <= T.hours(hours).msecs()) {
-            val iob = t.iobCalc(time, insulin.dia)
+            val iob = insulin.iobCalcForTreatment(bolus, time, insulin.dia)
             activityArray.add(DataPoint(T.msecs(time).mins().toDouble(), iob.activityContrib))
             iobArray.add(DataPoint(T.msecs(time).mins().toDouble(), iob.iobContrib))
             time += T.mins(5).msecs()

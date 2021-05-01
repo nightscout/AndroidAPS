@@ -21,6 +21,7 @@ abstract class Objective(injector: HasAndroidInjector, spName: String, @StringRe
 
     @Inject lateinit var sp: SP
     @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var dateUtil: DateUtil
 
     private val spName: String
     @StringRes val objective: Int
@@ -55,7 +56,7 @@ abstract class Objective(injector: HasAndroidInjector, spName: String, @StringRe
         this.gate = gate
         startedOn = sp.getLong("Objectives_" + spName + "_started", 0L)
         accomplishedOn = sp.getLong("Objectives_" + spName + "_accomplished", 0L)
-        if (accomplishedOn - DateUtil.now() > T.hours(3).msecs() || startedOn - DateUtil.now() > T.hours(3).msecs()) { // more than 3 hours in the future
+        if (accomplishedOn - dateUtil.now() > T.hours(3).msecs() || startedOn - dateUtil.now() > T.hours(3).msecs()) { // more than 3 hours in the future
             startedOn = 0
             accomplishedOn = 0
         }
@@ -69,7 +70,7 @@ abstract class Objective(injector: HasAndroidInjector, spName: String, @StringRe
     }
 
     val isAccomplished: Boolean
-        get() = accomplishedOn != 0L && accomplishedOn < DateUtil.now()
+        get() = accomplishedOn != 0L && accomplishedOn < dateUtil.now()
     val isStarted: Boolean
         get() = startedOn != 0L
 
@@ -144,7 +145,7 @@ abstract class Objective(injector: HasAndroidInjector, spName: String, @StringRe
 
         override fun isCompleted(): Boolean = answered
 
-        fun isEnabledAnswer(): Boolean = disabledTo < DateUtil.now()
+        fun isEnabledAnswer(): Boolean = disabledTo < dateUtil.now()
 
         fun option(option: Option): ExamTask {
             options.add(option)

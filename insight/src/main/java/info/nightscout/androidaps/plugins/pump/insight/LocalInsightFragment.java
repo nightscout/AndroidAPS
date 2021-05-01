@@ -279,7 +279,7 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
         if (cartridgeStatus == null) return;
         String status;
         if (cartridgeStatus.isInserted())
-            status = DecimalFormatter.to2Decimal(localInsightPlugin.getCartridgeStatus().getRemainingAmount()) + "U";
+            status = DecimalFormatter.INSTANCE.to2Decimal(localInsightPlugin.getCartridgeStatus().getRemainingAmount()) + "U";
         else status = resourceHelper.gs(R.string.not_inserted);
         statusItems.add(getStatusItem(resourceHelper.gs(R.string.reservoir_label), status));
     }
@@ -287,16 +287,16 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
     private void getTDDItems(List<View> statusItems) {
         if (localInsightPlugin.getTotalDailyDose() == null) return;
         TotalDailyDose tdd = localInsightPlugin.getTotalDailyDose();
-        statusItems.add(getStatusItem(resourceHelper.gs(R.string.tdd_bolus), DecimalFormatter.to2Decimal(tdd.getBolus())));
-        statusItems.add(getStatusItem(resourceHelper.gs(R.string.tdd_basal), DecimalFormatter.to2Decimal(tdd.getBasal())));
-        statusItems.add(getStatusItem(resourceHelper.gs(R.string.tdd_total), DecimalFormatter.to2Decimal(tdd.getBolusAndBasal())));
+        statusItems.add(getStatusItem(resourceHelper.gs(R.string.tdd_bolus), DecimalFormatter.INSTANCE.to2Decimal(tdd.getBolus())));
+        statusItems.add(getStatusItem(resourceHelper.gs(R.string.tdd_basal), DecimalFormatter.INSTANCE.to2Decimal(tdd.getBasal())));
+        statusItems.add(getStatusItem(resourceHelper.gs(R.string.tdd_total), DecimalFormatter.INSTANCE.to2Decimal(tdd.getBolusAndBasal())));
     }
 
     private void getBaseBasalRateItem(List<View> statusItems) {
         if (localInsightPlugin.getActiveBasalRate() == null) return;
         ActiveBasalRate activeBasalRate = localInsightPlugin.getActiveBasalRate();
         statusItems.add(getStatusItem(resourceHelper.gs(R.string.basebasalrate_label),
-                DecimalFormatter.to2Decimal(activeBasalRate.getActiveBasalRate()) + " U/h (" + activeBasalRate.getActiveBasalProfileName() + ")"));
+                DecimalFormatter.INSTANCE.to2Decimal(activeBasalRate.getActiveBasalRate()) + " U/h (" + activeBasalRate.getActiveBasalProfileName() + ")"));
     }
 
     private void getTBRItem(List<View> statusItems) {

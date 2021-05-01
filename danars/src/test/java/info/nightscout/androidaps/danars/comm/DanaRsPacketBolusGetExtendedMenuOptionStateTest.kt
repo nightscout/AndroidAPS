@@ -26,10 +26,10 @@ class DanaRsPacketBolusGetExtendedMenuOptionStateTest : DanaRSTestBase() {
         // test message decoding
         packet.handleMessage(createArray(34, 0.toByte()))
         // isExtendedInProgress should be false
-        Assert.assertEquals(false, danaPump.isExtendedInProgress)
+        Assert.assertEquals(false, packet.isExtendedInProgress)
         //        assertEquals(false, packet.failed);
         packet.handleMessage(createArray(34, 1.toByte()))
-        Assert.assertEquals(true, danaPump.isExtendedInProgress)
+        Assert.assertEquals(true, packet.isExtendedInProgress)
         Assert.assertEquals("BOLUS__GET_EXTENDED_MENU_OPTION_STATE", packet.friendlyName)
     }
 }

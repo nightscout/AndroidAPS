@@ -18,6 +18,10 @@
     <string name="key_omnipod_eros_tbrs_set" translatable="false">AAPS.Omnipod.tbrs_set</string>
     <string name="key_omnipod_eros_std_boluses_delivered" translatable="false">AAPS.Omnipod.std_boluses_delivered</string>
     <string name="key_omnipod_eros_smb_boluses_delivered" translatable="false">AAPS.Omnipod.smb_boluses_delivered</string>
+    <string name="key_common_preferences_category_confirmation_beeps_settings" translatable="false">common_preferences_category_confirmation_beeps_settings</string>
+    <string name="key_omnipod_eros_preferences_category_notifications_settings" translatable="false">omnipod_eros_preferences_category_notifications_settings</string>
+    <string name="key_omnipod_common_preferences_category_other_settings" translatable="false">omnipod_common_preferences_category_other_settings</string>
+    <string name="key_omnipod_preference_category_rileylink_settings" translatable="false">omnipod_preference_category_rileylink_settings</string>
 
     <!-- Omnipod Eros - Overview -->
     <string name="omnipod_eros_overview_firmware_version_value" translatable="false">PM %1$s / PI %2$s</string>
@@ -89,7 +93,7 @@
     <string name="omnipod_eros_pod_management_pulse_log_value">Pulse Log (copied to clipboard)</string>
 
     <!-- Omnipod Eros - Pod Activation Wizard -->
-    <string name="omnipod_eros_pod_activation_wizard_start_pod_activation_text">Fill a new Pod with enough insulin for 3 days.\n\nListen for two beeps from the Pod during the filling process. These indicate that the minimum amount of 85U has been inserted. Be sure to completely empty the fill syringe, even after hearing the two beeps.\n\nAfter filling the Pod, please press <b>Next</b>.\n\n<b>Note:</b> do not remove the Pod\'s needle cap at this time.\n<b>Note:</b> please place the RileyLink in an upright position and place the Pod a few inches away from it.</string>
+    <string name="omnipod_eros_pod_activation_wizard_start_pod_activation_text">Fill a new Pod with enough insulin for 3 days.\n\nListen for two beeps from the Pod during the filling process. These indicate that the minimum amount of 80U has been inserted. Be sure to completely empty the fill syringe, even after hearing the two beeps.\n\nAfter filling the Pod, please press <b>Next</b>.\n\n<b>Note:</b> do not remove the Pod\'s needle cap at this time.\n<b>Note:</b> please place the RileyLink in an upright position and place the Pod a few inches away from it.</string>
     <string name="omnipod_eros_pod_activation_wizard_initialize_pod_text">Trying to pair with the new Pod and prime it.\n\nWhen the initialization process has successfully been completed, you can press <b>Next</b>.\n\n<b>Note:</b> please place the RileyLink in an upright position and place the Pod a few inches away from it.</string>
 
     <!-- Omnipod Eros - Other -->

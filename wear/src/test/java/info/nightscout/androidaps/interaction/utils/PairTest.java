@@ -39,7 +39,7 @@ public class PairTest {
         assertNotEquals(no1, no3);
         assertEquals(no1, no4);
 
-        assertFalse(left.equals("aa bbb"));
+        assertNotEquals("aa bbb", left);
     }
 
     @Test
@@ -49,6 +49,7 @@ public class PairTest {
         Set<Pair> set = new HashSet<>();
 
         // THEN
+        //noinspection ConstantConditions
         assertFalse(set.contains(inserted));
         set.add(inserted);
         assertTrue(set.contains(inserted));

@@ -7,7 +7,7 @@ import android.os.SystemClock
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.events.*
-import info.nightscout.androidaps.interfaces.ConfigInterface
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.LoopInterface
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
@@ -50,7 +50,7 @@ class AutomationPlugin @Inject constructor(
     private val constraintChecker: ConstraintChecker,
     aapsLogger: AAPSLogger,
     private val aapsSchedulers: AapsSchedulers,
-    private val config: ConfigInterface,
+    private val config: Config,
     private val locationServiceHelper: LocationServiceHelper,
     private val dateUtil: DateUtil
 ) : PluginBase(PluginDescription()
@@ -203,11 +203,12 @@ class AutomationPlugin @Inject constructor(
                 if (event.systemAction || userEventsEnabled) {
                     val actions = event.actions
                     for (action in actions) {
+                        action.title = event.title
                         if (action.isValid())
                             action.doAction(object : Callback() {
                                 override fun run() {
                                     val sb = StringBuilder()
-                                    sb.append(dateUtil.timeString(DateUtil.now()))
+                                    sb.append(dateUtil.timeString(dateUtil.now()))
                                     sb.append(" ")
                                     sb.append(if (result.success) "☺" else "▼")
                                     sb.append(" <b>")
@@ -228,7 +229,7 @@ class AutomationPlugin @Inject constructor(
                         }
                     }
                     SystemClock.sleep(1100)
-                    event.lastRun = DateUtil.now()
+                    event.lastRun = dateUtil.now()
                     if (event.autoRemove) automationEvents.remove(event)
                 }
             }

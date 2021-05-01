@@ -13,6 +13,7 @@ jacoco {
 
 tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true
+    jacoco.excludes = ['jdk.internal.*']
 }
 
 repositories {
@@ -100,6 +101,7 @@ def allCommitted = { ->
 
 tasks.matching { it instanceof Test }.all {
     testLogging.events = ["failed", "skipped", "started"]
+    // testLogging.events = ["failed", "skipped", "started", "standard_out"] use to display stdout in travis
     testLogging.exceptionFormat = "full"
 }
 
@@ -109,7 +111,7 @@ android {
     defaultConfig {
         multiDexEnabled true
         versionCode 1500
-        version "2.8.2.1-dev-b"
+        version "2.8.2.1-dev-e3"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'

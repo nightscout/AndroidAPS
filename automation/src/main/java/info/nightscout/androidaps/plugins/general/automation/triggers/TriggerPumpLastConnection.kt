@@ -10,24 +10,24 @@ import info.nightscout.androidaps.plugins.general.automation.elements.InputDurat
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder
 import info.nightscout.androidaps.plugins.general.automation.elements.StaticLabel
-import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper.safeGetInt
 import info.nightscout.androidaps.utils.JsonHelper.safeGetString
 import org.json.JSONObject
 
 class TriggerPumpLastConnection(injector: HasAndroidInjector) : Trigger(injector) {
-    var minutesAgo = InputDuration(injector)
-    var comparator = Comparator(injector)
+
+    var minutesAgo = InputDuration()
+    var comparator = Comparator(resourceHelper)
 
     @Suppress("unused")
     constructor(injector: HasAndroidInjector, value: Int, unit: InputDuration.TimeUnit, compare: Comparator.Compare) : this(injector) {
-        minutesAgo = InputDuration(injector, value, unit)
-        comparator = Comparator(injector, compare)
+        minutesAgo = InputDuration(value, unit)
+        comparator = Comparator(resourceHelper, compare)
     }
 
     constructor(injector: HasAndroidInjector, triggerPumpLastConnection: TriggerPumpLastConnection) : this(injector) {
-        minutesAgo = InputDuration(injector, triggerPumpLastConnection.minutesAgo.value, triggerPumpLastConnection.minutesAgo.unit)
-        comparator = Comparator(injector, triggerPumpLastConnection.comparator.value)
+        minutesAgo = InputDuration(triggerPumpLastConnection.minutesAgo.value, triggerPumpLastConnection.minutesAgo.unit)
+        comparator = Comparator(resourceHelper, triggerPumpLastConnection.comparator.value)
     }
 
     fun setValue(value: Int): TriggerPumpLastConnection {
@@ -46,7 +46,7 @@ class TriggerPumpLastConnection(injector: HasAndroidInjector) : Trigger(injector
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
             return true
         }
-        val connectionAgo = (DateUtil.now() - lastConnection) / (60 * 1000)
+        val connectionAgo = (dateUtil.now() - lastConnection) / (60 * 1000)
         aapsLogger.debug(LTag.AUTOMATION, "Last connection min ago: $connectionAgo")
         if (comparator.value.check(connectionAgo.toInt(), minutesAgo.value)) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
@@ -56,15 +56,10 @@ class TriggerPumpLastConnection(injector: HasAndroidInjector) : Trigger(injector
         return false
     }
 
-    override fun toJSON(): String {
-        val data = JSONObject()
+    override fun dataJSON(): JSONObject =
+        JSONObject()
             .put("minutesAgo", minutesAgo.value)
             .put("comparator", comparator.value.toString())
-        return JSONObject()
-            .put("type", this::class.java.name)
-            .put("data", data)
-            .toString()
-    }
 
     override fun fromJSON(data: String): Trigger {
         val d = JSONObject(data)
@@ -84,9 +79,9 @@ class TriggerPumpLastConnection(injector: HasAndroidInjector) : Trigger(injector
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(injector, R.string.automation_trigger_pump_last_connection_label, this))
+            .add(StaticLabel(resourceHelper, R.string.automation_trigger_pump_last_connection_label, this))
             .add(comparator)
-            .add(LabelWithElement(injector, resourceHelper.gs(R.string.automation_trigger_pump_last_connection_description) + ": ", "", minutesAgo))
+            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.automation_trigger_pump_last_connection_description) + ": ", "", minutesAgo))
             .build(root)
     }
 }

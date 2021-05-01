@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.insulin
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interfaces.InsulinInterface
+import info.nightscout.androidaps.interfaces.Insulin
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -47,7 +47,7 @@ class InsulinLyumjevPluginTest {
 
     @Test
     fun getIdTest() {
-        assertEquals(InsulinInterface.InsulinType.OREF_LYUMJEV, sut.id)
+        assertEquals(Insulin.InsulinType.OREF_LYUMJEV, sut.id)
     }
 
     @Test

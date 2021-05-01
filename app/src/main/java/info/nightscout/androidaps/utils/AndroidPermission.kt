@@ -91,10 +91,10 @@ class AndroidPermission @Inject constructor(
             } else rxBus.send(EventDismissNotification(Notification.PERMISSION_SMS))
             // Following is a bug in Android 8
             if (permissionNotGranted(activity, Manifest.permission.READ_PHONE_STATE)) {
-                val notification = NotificationWithAction(injector, Notification.PERMISSION_PHONESTATE, resourceHelper.gs(R.string.smscommunicator_missingphonestatepermission), Notification.URGENT)
+                val notification = NotificationWithAction(injector, Notification.PERMISSION_PHONE_STATE, resourceHelper.gs(R.string.smscommunicator_missingphonestatepermission), Notification.URGENT)
                 notification.action(R.string.request) { askForPermission(activity, arrayOf(Manifest.permission.READ_PHONE_STATE)) }
                 rxBus.send(EventNewNotification(notification))
-            } else rxBus.send(EventDismissNotification(Notification.PERMISSION_PHONESTATE))
+            } else rxBus.send(EventDismissNotification(Notification.PERMISSION_PHONE_STATE))
         }
     }
 

@@ -44,27 +44,4 @@ abstract class AutomationModule {
     @ContributesAndroidInjector abstract fun actionStartTempTargetInjector(): ActionStartTempTarget
     @ContributesAndroidInjector abstract fun actionStopTempTargetInjector(): ActionStopTempTarget
     @ContributesAndroidInjector abstract fun actionDummyInjector(): ActionDummy
-
-    @ContributesAndroidInjector abstract fun elementInjector(): Element
-    @ContributesAndroidInjector abstract fun inputBgInjector(): InputBg
-    @ContributesAndroidInjector abstract fun inputButtonInjector(): InputButton
-    @ContributesAndroidInjector abstract fun comparatorInjector(): Comparator
-    @ContributesAndroidInjector abstract fun comparatorConnectInjector(): ComparatorConnect
-    @ContributesAndroidInjector abstract fun comparatorExistsInjector(): ComparatorExists
-    @ContributesAndroidInjector abstract fun inputDateTimeInjector(): InputDateTime
-    @ContributesAndroidInjector abstract fun inputDeltaInjector(): InputDelta
-    @ContributesAndroidInjector abstract fun inputDoubleInjector(): InputDouble
-    @ContributesAndroidInjector abstract fun inputDropdownMenuInjector(): InputDropdownMenu
-    @ContributesAndroidInjector abstract fun inputDurationInjector(): InputDuration
-    @ContributesAndroidInjector abstract fun inputInsulinInjector(): InputInsulin
-    @ContributesAndroidInjector abstract fun inputLocationModeInjector(): InputLocationMode
-    @ContributesAndroidInjector abstract fun inputPercentInjector(): InputPercent
-    @ContributesAndroidInjector abstract fun inputProfileNameInjector(): InputProfileName
-    @ContributesAndroidInjector abstract fun inputStringInjector(): InputString
-    @ContributesAndroidInjector abstract fun inputTempTargetInjector(): InputTempTarget
-    @ContributesAndroidInjector abstract fun inputTimeRangeInjector(): InputTimeRange
-    @ContributesAndroidInjector abstract fun inputTimeInjector(): InputTime
-    @ContributesAndroidInjector abstract fun inputWeekDayInjector(): InputWeekDay
-    @ContributesAndroidInjector abstract fun labelWithElementInjector(): LabelWithElement
-    @ContributesAndroidInjector abstract fun staticLabelInjector(): StaticLabel
 }

@@ -16,10 +16,10 @@ abstract class PumpPluginBase(
     override fun onStart() {
         super.onStart()
         if (getType() == PluginType.PUMP) {
-            Thread(Runnable {
+            Thread {
                 SystemClock.sleep(3000)
                 commandQueue.readStatus("Pump driver changed.", null)
-            }).start()
+            }.start()
         }
     }
 }

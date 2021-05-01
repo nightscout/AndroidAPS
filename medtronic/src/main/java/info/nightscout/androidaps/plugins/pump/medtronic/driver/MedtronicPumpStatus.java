@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.driver;
 
-import org.jetbrains.annotations.NotNull;
+import androidx.annotation.NonNull;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -14,17 +14,16 @@ import javax.inject.Singleton;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
+import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.BasalProfileStatus;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.BatteryType;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType;
-import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
-
 
 
 /**
@@ -32,7 +31,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
  */
 
 @Singleton
-public class MedtronicPumpStatus extends info.nightscout.androidaps.plugins.pump.common.data.PumpStatus  {
+public class MedtronicPumpStatus extends info.nightscout.androidaps.plugins.pump.common.data.PumpStatus {
 
     private final ResourceHelper resourceHelper;
     private final SP sp;
@@ -62,11 +61,11 @@ public class MedtronicPumpStatus extends info.nightscout.androidaps.plugins.pump
 
     @Inject
     public MedtronicPumpStatus(ResourceHelper resourceHelper,
-            SP sp,
-            RxBusWrapper rxBus,
-            RileyLinkUtil rileyLinkUtil
+                               SP sp,
+                               RxBusWrapper rxBus,
+                               RileyLinkUtil rileyLinkUtil
     ) {
-        super(PumpType.Medtronic_522_722);
+        super(PumpType.MEDTRONIC_522_722);
         this.resourceHelper = resourceHelper;
         this.sp = sp;
         this.rxBus = rxBus;
@@ -111,17 +110,17 @@ public class MedtronicPumpStatus extends info.nightscout.androidaps.plugins.pump
     private void createMedtronicPumpMap() {
 
         medtronicPumpMap = new HashMap<>();
-        medtronicPumpMap.put("512", PumpType.Medtronic_512_712);
-        medtronicPumpMap.put("712", PumpType.Medtronic_512_712);
-        medtronicPumpMap.put("515", PumpType.Medtronic_515_715);
-        medtronicPumpMap.put("715", PumpType.Medtronic_515_715);
+        medtronicPumpMap.put("512", PumpType.MEDTRONIC_512_712);
+        medtronicPumpMap.put("712", PumpType.MEDTRONIC_512_712);
+        medtronicPumpMap.put("515", PumpType.MEDTRONIC_515_715);
+        medtronicPumpMap.put("715", PumpType.MEDTRONIC_515_715);
 
-        medtronicPumpMap.put("522", PumpType.Medtronic_522_722);
-        medtronicPumpMap.put("722", PumpType.Medtronic_522_722);
-        medtronicPumpMap.put("523", PumpType.Medtronic_523_723_Revel);
-        medtronicPumpMap.put("723", PumpType.Medtronic_523_723_Revel);
-        medtronicPumpMap.put("554", PumpType.Medtronic_554_754_Veo);
-        medtronicPumpMap.put("754", PumpType.Medtronic_554_754_Veo);
+        medtronicPumpMap.put("522", PumpType.MEDTRONIC_522_722);
+        medtronicPumpMap.put("722", PumpType.MEDTRONIC_522_722);
+        medtronicPumpMap.put("523", PumpType.MEDTRONIC_523_723_REVEL);
+        medtronicPumpMap.put("723", PumpType.MEDTRONIC_523_723_REVEL);
+        medtronicPumpMap.put("554", PumpType.MEDTRONIC_554_754_VEO);
+        medtronicPumpMap.put("754", PumpType.MEDTRONIC_554_754_VEO);
 
     }
 
@@ -160,7 +159,7 @@ public class MedtronicPumpStatus extends info.nightscout.androidaps.plugins.pump
         return BatteryType.None;
     }
 
-    @NotNull
+    @NonNull
     public String getErrorInfo() {
         return (errorDescription == null) ? "-" : errorDescription;
     }

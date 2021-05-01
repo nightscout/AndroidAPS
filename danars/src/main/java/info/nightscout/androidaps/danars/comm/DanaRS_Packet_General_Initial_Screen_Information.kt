@@ -26,9 +26,9 @@ class DanaRS_Packet_General_Initial_Screen_Information(
         var dataSize = 1
         val status = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         danaPump.pumpSuspended = status and 0x01 == 0x01
-        danaPump.isTempBasalInProgress = status and 0x10 == 0x10
-        danaPump.isExtendedInProgress = status and 0x04 == 0x04
-        danaPump.isDualBolusInProgress = status and 0x08 == 0x08
+        val isTempBasalInProgress = status and 0x10 == 0x10
+        val isExtendedInProgress = status and 0x04 == 0x04
+        val isDualBolusInProgress = status and 0x08 == 0x08
         dataIndex += dataSize
         dataSize = 2
         danaPump.dailyTotalUnits = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100.0
@@ -43,13 +43,13 @@ class DanaRS_Packet_General_Initial_Screen_Information(
         danaPump.currentBasal = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100.0
         dataIndex += dataSize
         dataSize = 1
-        danaPump.tempBasalPercent = byteArrayToInt(getBytes(data, dataIndex, dataSize))
+        val tempBasalPercent = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         dataIndex += dataSize
         dataSize = 1
         danaPump.batteryRemaining = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         dataIndex += dataSize
         dataSize = 2
-        danaPump.extendedBolusAbsoluteRate = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100.0
+        val extendedBolusAbsoluteRate = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100.0
         dataIndex += dataSize
         dataSize = 2
         danaPump.iob = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100.0
@@ -62,16 +62,16 @@ class DanaRS_Packet_General_Initial_Screen_Information(
             aapsLogger.debug(LTag.PUMPCOMM, "ErrorState: " + danaPump.errorState.name)
         }
         aapsLogger.debug(LTag.PUMPCOMM, "Pump suspended: " + danaPump.pumpSuspended)
-        aapsLogger.debug(LTag.PUMPCOMM, "Temp basal in progress: " + danaPump.isTempBasalInProgress)
-        aapsLogger.debug(LTag.PUMPCOMM, "Extended in progress: " + danaPump.isExtendedInProgress)
-        aapsLogger.debug(LTag.PUMPCOMM, "Dual in progress: " + danaPump.isDualBolusInProgress)
+        aapsLogger.debug(LTag.PUMPCOMM, "Temp basal in progress: $isTempBasalInProgress")
+        aapsLogger.debug(LTag.PUMPCOMM, "Extended in progress: $isExtendedInProgress")
+        aapsLogger.debug(LTag.PUMPCOMM, "Dual in progress: $isDualBolusInProgress")
         aapsLogger.debug(LTag.PUMPCOMM, "Daily units: " + danaPump.dailyTotalUnits)
         aapsLogger.debug(LTag.PUMPCOMM, "Max daily units: " + danaPump.maxDailyTotalUnits)
         aapsLogger.debug(LTag.PUMPCOMM, "Reservoir remaining units: " + danaPump.reservoirRemainingUnits)
         aapsLogger.debug(LTag.PUMPCOMM, "Battery: " + danaPump.batteryRemaining)
         aapsLogger.debug(LTag.PUMPCOMM, "Current basal: " + danaPump.currentBasal)
-        aapsLogger.debug(LTag.PUMPCOMM, "Temp basal percent: " + danaPump.tempBasalPercent)
-        aapsLogger.debug(LTag.PUMPCOMM, "Extended absolute rate: " + danaPump.extendedBolusAbsoluteRate)
+        aapsLogger.debug(LTag.PUMPCOMM, "Temp basal percent: " + tempBasalPercent)
+        aapsLogger.debug(LTag.PUMPCOMM, "Extended absolute rate: $extendedBolusAbsoluteRate")
     }
 
     override fun getFriendlyName(): String {

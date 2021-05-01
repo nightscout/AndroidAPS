@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.general.automation.triggers
 
 import com.google.common.base.Optional
 import info.nightscout.androidaps.automation.R
+import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator
 import info.nightscout.androidaps.utils.DateUtil
 import org.json.JSONException
@@ -23,14 +24,19 @@ class TriggerBolusAgoTest : TriggerTestBase() {
 
     @Before
     fun mock() {
-        PowerMockito.mockStatic(DateUtil::class.java)
-        PowerMockito.`when`(DateUtil.now()).thenReturn(now)
+        PowerMockito.`when`(dateUtil.now()).thenReturn(now)
     }
 
     @Test
     fun shouldRunTest() {
-        `when`(treatmentsInterface.getLastBolusTime(true)).thenReturn(now) // Set last bolus time to now
-        `when`(DateUtil.now()).thenReturn(now + 10 * 60 * 1000) // set current time to now + 10 min
+        `when`(repository.getLastBolusRecordOfType(Bolus.Type.NORMAL)).thenReturn(
+            Bolus(
+                timestamp = now,
+                amount = 0.0,
+                type = Bolus.Type.NORMAL
+            )
+        ) // Set last bolus time to now
+        `when`(dateUtil.now()).thenReturn(now + 10 * 60 * 1000) // set current time to now + 10 min
         var t = TriggerBolusAgo(injector).setValue(110).comparator(Comparator.Compare.IS_EQUAL)
         Assert.assertEquals(110, t.minutesAgo.value)
         Assert.assertEquals(Comparator.Compare.IS_EQUAL, t.comparator.value)
@@ -52,7 +58,13 @@ class TriggerBolusAgoTest : TriggerTestBase() {
         Assert.assertTrue(t.shouldRun())
         t = TriggerBolusAgo(injector).setValue(390).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         Assert.assertTrue(t.shouldRun())
-        PowerMockito.`when`(treatmentsInterface.getLastBolusTime(true)).thenReturn(0L) // Set last bolus time to 0
+        `when`(repository.getLastBolusRecordOfType(Bolus.Type.NORMAL)).thenReturn(
+            Bolus(
+                timestamp = 0L,
+                amount = 0.0,
+                type = Bolus.Type.NORMAL
+            )
+        ) // Set last bolus time to 0
         t = TriggerBolusAgo(injector).comparator(Comparator.Compare.IS_NOT_AVAILABLE)
         Assert.assertTrue(t.shouldRun())
     }
@@ -64,7 +76,7 @@ class TriggerBolusAgoTest : TriggerTestBase() {
         Assert.assertEquals(Comparator.Compare.IS_EQUAL_OR_LESSER, t.comparator.value)
     }
 
-    private var lbJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"minutesAgo\":410},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerBolusAgo\"}"
+    private var lbJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"minutesAgo\":410},\"type\":\"TriggerBolusAgo\"}"
     @Test fun toJSONTest() {
         val t: TriggerBolusAgo = TriggerBolusAgo(injector).setValue(410).comparator(Comparator.Compare.IS_EQUAL)
         Assert.assertEquals(lbJson, t.toJSON())

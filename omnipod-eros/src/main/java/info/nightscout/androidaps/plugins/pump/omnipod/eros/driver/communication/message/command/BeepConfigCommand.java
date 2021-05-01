@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.command;
 
+import androidx.annotation.NonNull;
+
 import org.joda.time.Duration;
 
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
@@ -42,7 +44,7 @@ public class BeepConfigCommand extends MessageBlock {
         return MessageBlockType.BEEP_CONFIG;
     }
 
-    @Override
+    @Override @NonNull
     public String toString() {
         return "BeepConfigCommand{" +
                 "beepType=" + beepType +

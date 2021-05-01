@@ -5,7 +5,6 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.general.smsCommunicator.otp.OneTimePassword
 import info.nightscout.androidaps.plugins.general.smsCommunicator.otp.OneTimePasswordValidationResult
 import info.nightscout.androidaps.utils.DateUtil
@@ -30,6 +29,7 @@ class AuthRequestTest : TestBase() {
     @Mock lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var otp: OneTimePassword
+    @Mock lateinit var dateUtil: DateUtil
 
     var injector: HasAndroidInjector = HasAndroidInjector {
         AndroidInjector {
@@ -38,6 +38,7 @@ class AuthRequestTest : TestBase() {
                 it.resourceHelper = resourceHelper
                 it.smsCommunicatorPlugin = smsCommunicatorPlugin
                 it.otp = otp
+                it.dateUtil = dateUtil
             }
         }
     }
@@ -87,10 +88,10 @@ class AuthRequestTest : TestBase() {
         // test timed out message
         val now: Long = 10000
         PowerMockito.mockStatic(DateUtil::class.java)
-        PowerMockito.`when`(DateUtil.now()).thenReturn(now)
+        PowerMockito.`when`(dateUtil.now()).thenReturn(now)
         authRequest = AuthRequest(injector, requester, "Request text", "ABC", action)
         actionCalled = false
-        PowerMockito.`when`(DateUtil.now()).thenReturn(now + T.mins(Constants.SMS_CONFIRM_TIMEOUT).msecs() + 1)
+        PowerMockito.`when`(dateUtil.now()).thenReturn(now + T.mins(Constants.SMS_CONFIRM_TIMEOUT).msecs() + 1)
         authRequest.action("ABC")
         Assert.assertFalse(actionCalled)
     }

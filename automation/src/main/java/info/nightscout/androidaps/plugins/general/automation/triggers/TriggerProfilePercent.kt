@@ -14,17 +14,18 @@ import info.nightscout.androidaps.utils.JsonHelper
 import org.json.JSONObject
 
 class TriggerProfilePercent(injector: HasAndroidInjector) : Trigger(injector) {
-    var pct = InputPercent(injector)
-    var comparator = Comparator(injector)
+
+    var pct = InputPercent()
+    var comparator = Comparator(resourceHelper)
 
     constructor(injector: HasAndroidInjector, value: Double, compare: Comparator.Compare) : this(injector) {
-        pct = InputPercent(injector, value)
-        comparator = Comparator(injector, compare)
+        pct = InputPercent(value)
+        comparator = Comparator(resourceHelper, compare)
     }
 
     constructor(injector: HasAndroidInjector, triggerProfilePercent: TriggerProfilePercent) : this(injector) {
-        pct = InputPercent(injector, triggerProfilePercent.pct.value)
-        comparator = Comparator(injector, triggerProfilePercent.comparator.value)
+        pct = InputPercent(triggerProfilePercent.pct.value)
+        comparator = Comparator(resourceHelper, triggerProfilePercent.comparator.value)
     }
 
     fun setValue(value: Double): TriggerProfilePercent {
@@ -55,15 +56,10 @@ class TriggerProfilePercent(injector: HasAndroidInjector) : Trigger(injector) {
         return false
     }
 
-    @Synchronized override fun toJSON(): String {
-        val data = JSONObject()
+    override fun dataJSON(): JSONObject =
+        JSONObject()
             .put("percentage", pct.value)
             .put("comparator", comparator.value.toString())
-        return JSONObject()
-            .put("type", this::class.java.name)
-            .put("data", data)
-            .toString()
-    }
 
     override fun fromJSON(data: String): Trigger {
         val d = JSONObject(data)
@@ -83,9 +79,9 @@ class TriggerProfilePercent(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(injector, R.string.profilepercentage, this))
+            .add(StaticLabel(resourceHelper, R.string.profilepercentage, this))
             .add(comparator)
-            .add(LabelWithElement(injector, resourceHelper.gs(R.string.percent_u), "", pct))
+            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.percent_u), "", pct))
             .build(root)
     }
 }

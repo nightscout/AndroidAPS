@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.commands;
 
+import androidx.annotation.NonNull;
+
 import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +37,7 @@ public class CancelTbrCommand extends BaseCommand {
         result = setTbrCommand.result;
     }
 
-    @Override
+    @Override @NonNull
     public String toString() {
         return "CancelTbrCommand{}";
     }

@@ -8,7 +8,7 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
-import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
@@ -173,7 +173,7 @@ class MaintenancePlugin @Inject constructor(
         builder.append("Build: " + BuildConfig.BUILDVERSION + System.lineSeparator())
         builder.append("Remote: " + BuildConfig.REMOTE + System.lineSeparator())
         builder.append("Flavor: " + BuildConfig.FLAVOR + BuildConfig.BUILD_TYPE + System.lineSeparator())
-        builder.append(resourceHelper.gs(R.string.configbuilder_nightscoutversion_label) + " " + nsSettingsStatus.nightscoutVersionName + System.lineSeparator())
+        builder.append(resourceHelper.gs(R.string.configbuilder_nightscoutversion_label) + " " + nsSettingsStatus.getVersion() + System.lineSeparator())
         if (buildHelper.isEngineeringMode()) builder.append(resourceHelper.gs(R.string.engineering_mode_enabled))
         return sendMail(attachmentUri, recipient, subject, builder.toString())
     }

@@ -8,32 +8,39 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.data.ProfileSealed
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.databinding.NsprofileFragmentBinding
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.profile.ns.events.EventNSProfileUpdateGUI
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import io.reactivex.rxkotlin.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import javax.inject.Inject
 
 class NSProfileFragment : DaggerFragment() {
 
-    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var nsProfilePlugin: NSProfilePlugin
     @Inject lateinit var aapsSchedulers: AapsSchedulers
+    @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var activePlugin: ActivePlugin
+    @Inject lateinit var config: Config
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -61,8 +68,10 @@ class NSProfileFragment : DaggerFragment() {
                     activity?.let { activity ->
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.nsprofile),
                             resourceHelper.gs(R.string.activate_profile) + ": " + name + " ?", Runnable {
-                            uel.log("PROFILE SWITCH", name, i1 = 100)
-                            treatmentsPlugin.doProfileSwitch(store, name, 0, 100, 0, DateUtil.now())
+                            uel.log(Action.PROFILE_SWITCH, Sources.NSProfile,
+                                ValueWithUnit.SimpleString(name),
+                                ValueWithUnit.Percent(100))
+                            profileFunction.createProfileSwitch(store, name, 0, 100, 0, dateUtil.now())
                         })
                     }
                 }
@@ -94,16 +103,17 @@ class NSProfileFragment : DaggerFragment() {
                 nsProfilePlugin.profile?.let { store ->
                     store.getSpecificProfile(name)?.let { profile ->
                         if (_binding == null) return
-                        binding.profileviewer.units.text = profile.units
-                        binding.profileviewer.dia.text = resourceHelper.gs(R.string.format_hours, profile.dia)
+                        val pss = ProfileSealed.Pure(profile)
+                        binding.profileviewer.units.text = pss.units.asText
+                        binding.profileviewer.dia.text = resourceHelper.gs(R.string.format_hours, pss.dia)
                         binding.profileviewer.activeprofile.text = name
-                        binding.profileviewer.ic.text = profile.icList
-                        binding.profileviewer.isf.text = profile.isfList
-                        binding.profileviewer.basal.text = profile.basalList
-                        binding.profileviewer.basaltotal.text = String.format(resourceHelper.gs(R.string.profile_total), DecimalFormatter.to2Decimal(profile.baseBasalSum()))
-                        binding.profileviewer.target.text = profile.targetList
-                        binding.profileviewer.basalGraph.show(profile)
-                        if (profile.isValid("NSProfileFragment")) {
+                        binding.profileviewer.ic.text = pss.getIcList(resourceHelper, dateUtil)
+                        binding.profileviewer.isf.text = pss.getIsfList(resourceHelper, dateUtil)
+                        binding.profileviewer.basal.text = pss.getBasalList(resourceHelper, dateUtil)
+                        binding.profileviewer.basaltotal.text = String.format(resourceHelper.gs(R.string.profile_total), DecimalFormatter.to2Decimal(pss.baseBasalSum()))
+                        binding.profileviewer.target.text = pss.getTargetList(resourceHelper, dateUtil)
+                        binding.profileviewer.basalGraph.show(pss)
+                        if (pss.isValid("NSProfileFragment", activePlugin.activePump, config, resourceHelper, rxBus)) {
                             binding.profileviewer.invalidprofile.visibility = View.GONE
                             binding.profileswitch.visibility = View.VISIBLE
                         } else {

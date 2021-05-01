@@ -10,15 +10,18 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.TreatmentsFragmentBinding
 import info.nightscout.androidaps.events.EventExtendedBolusChange
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.treatments.fragments.*
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
-import io.reactivex.rxkotlin.plusAssign
-import info.nightscout.androidaps.utils.extensions.toVisibility
+import info.nightscout.androidaps.utils.buildHelper.BuildHelper
+import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import javax.inject.Inject
 
 class TreatmentsFragment : DaggerFragment() {
@@ -26,9 +29,11 @@ class TreatmentsFragment : DaggerFragment() {
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var activePlugin: ActivePluginProvider
-    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
+    @Inject lateinit var activePlugin: ActivePlugin
+    @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var aapsSchedulers: AapsSchedulers
+    @Inject lateinit var buildHelper: BuildHelper
+    @Inject lateinit var dateUtil: DateUtil
 
     private val disposable = CompositeDisposable()
 
@@ -44,8 +49,11 @@ class TreatmentsFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.tempBasals.visibility = buildHelper.isEngineeringMode().toVisibility()
+        binding.extendedBoluses.visibility = (buildHelper.isEngineeringMode() && !activePlugin.activePump.isFakingTempsByExtendedBoluses).toVisibility()
+
         binding.treatments.setOnClickListener {
-            setFragment(TreatmentsBolusFragment())
+            setFragment(TreatmentsBolusCarbsFragment())
             setBackgroundColorOnSelected(it)
         }
         binding.extendedBoluses.setOnClickListener {
@@ -72,7 +80,7 @@ class TreatmentsFragment : DaggerFragment() {
             setFragment(TreatmentsUserEntryFragment())
             setBackgroundColorOnSelected(it)
         }
-        setFragment(TreatmentsBolusFragment())
+        setFragment(TreatmentsBolusCarbsFragment())
         setBackgroundColorOnSelected(binding.treatments)
     }
 
@@ -119,6 +127,6 @@ class TreatmentsFragment : DaggerFragment() {
 
     private fun updateGui() {
         if (_binding == null) return
-        binding.extendedBoluses.visibility = (activePlugin.activePump.pumpDescription.isExtendedBolusCapable || treatmentsPlugin.extendedBolusesFromHistory.size() > 0).toVisibility()
+        binding.extendedBoluses.visibility = (activePlugin.activePump.pumpDescription.isExtendedBolusCapable || iobCobCalculator.getExtendedBolus(dateUtil.now()) != null).toVisibility()
     }
 }

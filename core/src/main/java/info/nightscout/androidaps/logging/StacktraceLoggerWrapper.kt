@@ -34,10 +34,6 @@ class StacktraceLoggerWrapper(private val delegate: Logger) : Logger by delegate
     companion object {
         @JvmStatic
         @Deprecated("please inject AAPSLogger")
-        fun getLogger(ltag: LTag) = StacktraceLoggerWrapper(LoggerFactory.getLogger(ltag.name))
-
-        @JvmStatic
-        @Deprecated("please inject AAPSLogger")
         fun getLogger(clazz: Class<*>) = StacktraceLoggerWrapper(LoggerFactory.getLogger(clazz))
     }
 }

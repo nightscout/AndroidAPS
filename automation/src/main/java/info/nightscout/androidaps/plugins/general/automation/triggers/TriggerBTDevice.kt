@@ -22,11 +22,11 @@ class TriggerBTDevice(injector: HasAndroidInjector) : Trigger(injector) {
     @Inject lateinit var context: Context
     @Inject lateinit var automationPlugin: AutomationPlugin
 
-    var btDevice = InputDropdownMenu(injector, "")
-    var comparator: ComparatorConnect = ComparatorConnect(injector)
+    var btDevice = InputDropdownMenu(resourceHelper, "")
+    var comparator: ComparatorConnect = ComparatorConnect(resourceHelper)
 
     private constructor(injector: HasAndroidInjector, triggerBTDevice: TriggerBTDevice) : this(injector) {
-        comparator = ComparatorConnect(injector, triggerBTDevice.comparator.value)
+        comparator = ComparatorConnect(resourceHelper, triggerBTDevice.comparator.value)
         btDevice.value = triggerBTDevice.btDevice.value
     }
 
@@ -39,15 +39,10 @@ class TriggerBTDevice(injector: HasAndroidInjector) : Trigger(injector) {
         return false
     }
 
-    @Synchronized override fun toJSON(): String {
-        val data = JSONObject()
+    override fun dataJSON(): JSONObject =
+        JSONObject()
             .put("comparator", comparator.value.toString())
             .put("name", btDevice.value)
-        return JSONObject()
-            .put("type", this::class.java.name)
-            .put("data", data)
-            .toString()
-    }
 
     override fun fromJSON(data: String): Trigger {
         val d = JSONObject(data)
@@ -69,7 +64,7 @@ class TriggerBTDevice(injector: HasAndroidInjector) : Trigger(injector) {
         val pairedDevices = devicesPaired()
         btDevice.setList(pairedDevices)
         LayoutBuilder()
-            .add(StaticLabel(injector, R.string.btdevice, this))
+            .add(StaticLabel(resourceHelper, R.string.btdevice, this))
             .add(btDevice)
             .add(comparator)
             .build(root)

@@ -1,33 +1,28 @@
 package info.nightscout.androidaps.plugins.general.tidepool.elements
 
 import com.google.gson.annotations.Expose
-import info.nightscout.androidaps.db.Treatment
+import info.nightscout.androidaps.database.entities.Bolus
+import info.nightscout.androidaps.database.entities.Carbs
+import info.nightscout.androidaps.utils.DateUtil
 import java.util.*
 
-class WizardElement(treatment: Treatment)
-    : BaseElement(treatment.date, UUID.nameUUIDFromBytes(("AAPS-wizard" + treatment.date).toByteArray()).toString()) {
+class WizardElement(carbs: Carbs, dateUtil: DateUtil)
+    : BaseElement(carbs.timestamp, UUID.nameUUIDFromBytes(("AAPS-wizard" + carbs.timestamp).toByteArray()).toString(), dateUtil) {
 
-    @Expose
-    var units = "mg/dL"
-    @Expose
-    var carbInput: Double = 0.toDouble()
-    @Expose
-    var insulinCarbRatio: Double = 0.toDouble()
-    @Expose
-    var bolus: BolusElement? = null
+    @Expose var units = "mg/dL"
+    @Expose var carbInput: Double = 0.toDouble()
+    @Expose var insulinCarbRatio: Double = 0.toDouble()
+    @Expose var bolus: BolusElement? = null
 
     init {
         type = "wizard"
-        carbInput = treatment.carbs
-        insulinCarbRatio = treatment.ic
-        if (treatment.insulin > 0) {
-            bolus = BolusElement(treatment)
-        } else {
-            val fake = Treatment()
-            fake.insulin = 0.0001
-            fake.date = treatment.date
-            bolus = BolusElement(fake) // fake insulin record
-        }
+        carbInput = carbs.amount
+        val fake = Bolus(
+            amount = 0.0001,
+            timestamp = carbs.timestamp,
+            type = Bolus.Type.NORMAL
+        )
+        bolus = BolusElement(fake, dateUtil) // fake insulin record
     }
 }
 
