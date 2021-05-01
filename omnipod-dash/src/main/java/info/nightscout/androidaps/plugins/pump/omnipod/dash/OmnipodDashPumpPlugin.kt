@@ -468,12 +468,12 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     private fun executeProgrammingCommand(
-        historyEntry: Single<String>,
+        historyId: Single<String>,
         command: Observable<PodEvent>
     ): PumpEnactResult {
         return Single.create<PumpEnactResult> { source ->
             Observable.concat(
-                historyEntry.flatMapObservable { recordId ->
+                historyId.flatMapObservable { recordId ->
                     podStateManager.createActiveCommand(recordId).toObservable()
                 },
                 command,
