@@ -66,7 +66,5 @@ sealed class PodEvent {
         }
     }
 
-    data class CommandConfirmed(val historyId: String) : PodEvent()
-
-    data class CommandDenied(val historyId: String) : PodEvent()
+    data class CommandConfirmed(val historyId: String, success: Boolean) : PodEvent()
 }

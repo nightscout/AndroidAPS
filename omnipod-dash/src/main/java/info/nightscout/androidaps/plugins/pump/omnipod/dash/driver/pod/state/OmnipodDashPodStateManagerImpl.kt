@@ -224,9 +224,9 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             else {
                 podState.activeCommand = null
                 if (sequenceNumberOfLastProgrammingCommand == sequence)
-                    source.onSuccess(PodEvent.CommandConfirmed(historyId))
+                    source.onSuccess(PodEvent.CommandConfirmed(historyId, true))
                 else
-                    source.onSuccess(PodEvent.CommandDenied(historyId))
+                    source.onSuccess(PodEvent.CommandConfirmed(historyId, false))
             }
         }
             ?: source.onComplete() // no active programming command
