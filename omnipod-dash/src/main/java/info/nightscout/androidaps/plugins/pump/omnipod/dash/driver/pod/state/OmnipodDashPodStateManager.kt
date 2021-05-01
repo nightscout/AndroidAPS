@@ -23,7 +23,6 @@ interface OmnipodDashPodStateManager {
     var lastConnection: Long
 
     val lastUpdatedSystem: Long // System.currentTimeMillis()
-    // TODO: set lastUpdatedRealtime to 0 on boot
     val lastStatusResponseReceived: Long
 
     val messageSequenceNumber: Short
