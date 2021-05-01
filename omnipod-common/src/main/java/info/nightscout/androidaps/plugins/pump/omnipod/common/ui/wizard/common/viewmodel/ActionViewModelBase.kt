@@ -30,7 +30,8 @@ abstract class ActionViewModelBase(
             onError = { throwable ->
                 logger.error(LTag.PUMP, "Caught exception in while executing action in ActionViewModelBase", throwable)
                 _isActionExecutingLiveData.postValue(false)
-                _actionResultLiveData.postValue(PumpEnactResult(injector).success(false).comment(throwable.message))
+                _actionResultLiveData.postValue(PumpEnactResult(injector).success(false).comment(
+                    throwable.message ?: "Caught exception in while executing action in ActionViewModelBase"))
             })
     }
 
