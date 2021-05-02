@@ -69,13 +69,30 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 /**
+ * Driver for the Roche Accu-Chek Combo pump, using the ruffy app for BT communication.
+ *
+ * For boluses, the logic is to request a bolus and then read it back from the history to see what was
+ * actually delivered.
+ *
+ * TBR-handling doesn't read the pump history. On the pump, TBR records are only created after a TBR has finished.
+ * So when a TBR is started on the pump, it can't be known when it started until the TBR ends or is cancelled.
+ * Cancelling would assume a user works against the loop, and creating a temporary TBR (AAPS-side) and updating it
+ * once a record exists on the pump has other problems, since there's no ID for TBRs, only timestamps.
+ * For the regular uses where the user doesn't set TBR (or rather infrequently for some special cases), TBRs are
+ * only changed on the pump for error conditions where the pump is stopped, those need to be synced.
+ * The approach taken is to create a TBR record in AAPS when AAPS requests a TBR and forego the TBR history on
+ * the pump entirely. The pump state is refreshed often enough to tolerate not seeing the full length of a TBR
+ * on the pump if it was changed. Thus, during a pump refresh a new TBR starting now is created in AAPS if a
+ * mismatch between expected state and actual pump state is detected see {@link #checkAndResolveTbrMismatch(PumpState)}.
+ * This approach skipped implementing edge-cases that pose no real risk, in part due to limited resources to
+ * implement every edge-case scenario. Insulin amount given via boluses are significantly higher, so the
+ * priority was there to make that as safe as possible.
+ *
  * Created by mike on 05.08.2016.
  */
 @Singleton
 public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
-    static final String COMBO_TBRS_SET = "combo_tbrs_set";
-    static final String COMBO_BOLUSES_DELIVERED = "combo_boluses_delivered";
-
+    // collaborators
     private final ProfileFunction profileFunction;
     private final SP sp;
     private RxBusWrapper rxBus;
@@ -401,6 +418,18 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
             }
         }
 
+        // read pump BT mac address and use it as the pump's serial
+        String macAddress = ruffyScripter.getMacAddress();
+        getAapsLogger().debug("Connected pump has MAC address: " + macAddress);
+        if (macAddress != null) {
+            String lastKnownSN = serialNumber();
+            if (!lastKnownSN.equals(fakeSerialNumber()) && !lastKnownSN.equals(macAddress)) {
+                getAapsLogger().info(LTag.PUMP, "Pump serial number changed " + lastKnownSN + " -> " + macAddress);
+                pumpSync.connectNewPump();
+            }
+            sp.putString(R.string.combo_pump_serial, macAddress);
+        }
+
         // ComboFragment updates state fully only after the pump has initialized,
         // so force an update after initialization completed
         rxBus.send(new EventComboPumpUpdateGUI());
@@ -617,7 +646,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
 
     private void incrementTbrCount() {
         try {
-            sp.putLong(COMBO_TBRS_SET, sp.getLong(COMBO_TBRS_SET, 0L) + 1);
+            sp.putLong(R.string.combo_tbrs_set, sp.getLong(R.string.combo_tbrs_set, 0L) + 1);
         } catch (Exception e) {
             // ignore
         }
@@ -625,10 +654,18 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
 
     private void incrementBolusCount() {
         try {
-            sp.putLong(COMBO_BOLUSES_DELIVERED, sp.getLong(COMBO_BOLUSES_DELIVERED, 0L) + 1);
+            sp.putLong(R.string.combo_boluses_delivered, sp.getLong(R.string.combo_boluses_delivered, 0L) + 1);
         } catch (Exception e) {
             // ignore
         }
+    }
+
+    public Long getTbrsSet() {
+        return sp.getLong(R.string.combo_tbrs_set, 0L);
+    }
+
+    public Long getBolusesDelivered() {
+        return sp.getLong(R.string.combo_boluses_delivered, 0L);
     }
 
     /**
@@ -1063,11 +1100,10 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
      * Checks the main screen to determine if TBR on pump matches app state.
      */
     private void checkAndResolveTbrMismatch(PumpState state) {
-        // compare with: info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgStatusTempBasal.updateTempBasalInDB()
         long now = System.currentTimeMillis();
         // Combo doesn't have nor uses IDs for TBRs, see note in #setTempBasalPercent
+        //noinspection UnnecessaryLocalVariable
         long tbrId = now;
-        //TemporaryBasal aapsTbr = treatmentsPlugin.getTempBasalFromHistoryIncludingConvertedExtended(now);
         PumpSync.PumpState.TemporaryBasal aapsTbr = pumpSync.expectedPumpState().getTemporaryBasal();
         if (aapsTbr == null && state.tbrActive && state.tbrRemainingDuration > 2) {
             getAapsLogger().debug(LTag.PUMP, "Creating temp basal from pump TBR");
@@ -1307,7 +1343,11 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
 
     @NonNull @Override
     public String serialNumber() {
-        return InstanceId.INSTANCE.instanceId(); // TODO replace by real serial
+        return sp.getString(R.string.combo_pump_serial, fakeSerialNumber());
+    }
+
+    private String fakeSerialNumber() {
+        return InstanceId.INSTANCE.instanceId();
     }
 
     @NonNull @Override
