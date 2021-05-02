@@ -591,6 +591,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 rxBus.send(bolusingEvent);
                 int trials = 0;
                 long timestamp = dateUtil.now();
+                aapsLogger.debug(LTag.PUMP, "XXXX set Bolus: " + dateUtil.dateAndTimeAndSecondsString(dateUtil.now()) + " amount: " + insulin);
                 pumpSync.syncBolusWithPumpId(
                         timestamp,
                         detailedBolusInfo.insulin,
@@ -662,6 +663,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     bolusCancelled = true;
                     confirmAlert(AlertType.WARNING_38);
                     alertService.ignore(null);
+                    aapsLogger.debug(LTag.PUMP, "XXXX Stop Bolus : " + dateUtil.dateAndTimeAndSecondsString(dateUtil.now()));
                 }
             } catch (AppLayerErrorException e) {
                 aapsLogger.info(LTag.PUMP, "Exception while canceling bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
@@ -730,6 +732,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         if (percent == 100) return cancelTempBasal(true);
         else if (percent > 250) percent = 250;
         try {
+            readHistory();
+            fetchStatus();
             if (activeTBR != null) {
                 ChangeTBRMessage message = new ChangeTBRMessage();
                 message.setDuration(durationInMinutes);
@@ -767,9 +771,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     now,
                     now + 2000                   // Offset +1500msec (I saw that we could have about 1s offset between time of action and time in history)
             );
-            aapsLogger.debug("XXXX Set Temp Basal timestamp: " + dateUtil.now() + " rate: " + percent + " duration: " + durationInMinutes);
-            readHistory();
-            fetchStatus();
+            aapsLogger.debug(LTag.PUMP, "XXXX Set Temp Basal timestamp: " + dateUtil.now() + " rate: " + percent + " duration: " + durationInMinutes);
         } catch (AppLayerErrorException e) {
             aapsLogger.info(LTag.PUMP, "Exception while setting TBR: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
             result.comment(ExceptionTranslator.getString(context, e));
@@ -810,7 +812,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             bolusMessage.setExtendedAmount(insulin);
             bolusMessage.setImmediateAmount(0);
             bolusMessage.setVibration(disableVibration);
-            connectionService.requestMessage(bolusMessage).await().getBolusId();
+            Integer bolusId = connectionService.requestMessage(bolusMessage).await().getBolusId();
+            aapsLogger.debug(LTag.PUMP, "XXXX Set Extended timestamp: " + dateUtil.now() + " amount: " + insulin + "U duration: " + durationInMinutes + "BolusId: " + bolusId);
             result.success(true).enacted(true).comment(R.string.virtualpump_resultok);
         } catch (AppLayerErrorException e) {
             aapsLogger.info(LTag.PUMP, "Exception while delivering extended bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
@@ -873,7 +876,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     PumpSync.TemporaryBasalType.NORMAL,
                     now,
                     now + 2000);
-            aapsLogger.debug("XXXX cancel Temp Basal timestamp: " + dateUtil.now());
+            aapsLogger.debug(LTag.PUMP, "XXXX cancel Temp Basal time: " + dateUtil.dateAndTimeAndSecondsString(dateUtil.now()));
         } catch (NoActiveTBRToCanceLException e) {
             result.success(true);
             result.comment(R.string.virtualpump_resultok);
@@ -918,6 +921,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     confirmAlert(AlertType.WARNING_38);
                     alertService.ignore(null);
                     result.enacted(true).success(true);
+                    aapsLogger.debug(LTag.PUMP, "XXXX cancel Extended Bolus time: " + dateUtil.dateAndTimeAndSecondsString(dateUtil.now()) + " BolusId: " + activeBolus.getBolusID());
                 }
             }
             result.success(true).comment(R.string.virtualpump_resultok);
@@ -1138,7 +1142,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             PumpTime pumpTime = connectionService.requestMessage(new GetDateTimeMessage()).await().getPumpTime();
             timeOffset = Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis() - parseDate(pumpTime.getYear(),
                     pumpTime.getMonth(), pumpTime.getDay(), pumpTime.getHour(), pumpTime.getMinute(), pumpTime.getSecond());
-            aapsLogger.debug("XXXX Start History Ref Timestamp Now: " + dateUtil.dateAndTimeAndSecondsString(dateUtil.now()));
+            aapsLogger.debug(LTag.PUMP, "XXXX Start History Ref Timestamp Now: " + dateUtil.dateAndTimeAndSecondsString(dateUtil.now()));
             try {
                 StartReadingHistoryMessage startMessage = new StartReadingHistoryMessage();
                 startMessage.setDirection(HistoryReadingDirection.BACKWARD);                    //event must be read in Backward direction
@@ -1147,7 +1151,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 List<HistoryEvent> historyEvents = connectionService.requestMessage(new ReadHistoryEventsMessage()).await().getHistoryEvents();
                 Collections.sort(historyEvents);
                 if (historyEvents.size() > 0) processHistoryEvents(serialNumber(), historyEvents);
-                aapsLogger.debug("XXXX End history HistorySize: " + historyEvents.size());
+                aapsLogger.debug(LTag.PUMP, "XXXX End history HistorySize: " + historyEvents.size());
             } catch (AppLayerErrorException e) {
                 aapsLogger.info(LTag.PUMP, "Exception while reading history: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
             } catch (InsightException e) {
@@ -1178,7 +1182,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             if (!processHistoryEvent(serial, temporaryBasals, historyEvent))
                 break;
         temporaryBasals.sort((o1, o2) -> (int) (o1.getTimestamp() - o2.getTimestamp()));
-        aapsLogger.debug("XXXX tbr size :" + temporaryBasals.size());
+        aapsLogger.debug(LTag.PUMP, "XXXX tbr size :" + temporaryBasals.size());
         if (lastTbr == null) lastTbr = pumpSync.expectedPumpState().getTemporaryBasal();
         if (lastTbr == null) lastTbr = new TemporaryBasal(dateUtil.now() - 10000L, 0, 100, false, PumpSync.TemporaryBasalType.NORMAL, 0, 0L);
         // Bloc below is only to include manual TBR done directly in pump since last action enacted by AAPS (on AAPS start history is ignored, only a resync is done with checkAndResolveTbrMismatch)
@@ -1191,7 +1195,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                             PumpType.ACCU_CHEK_INSIGHT,
                             serial);
                 }
-                aapsLogger.debug("XXXX Sync Stop " + temporaryBasal.getTimestamp() + " date: " + dateUtil.dateAndTimeAndSecondsString(temporaryBasal.getTimestamp()) + " pumpId: " + temporaryBasal.getPumpId());
+                aapsLogger.debug(LTag.PUMP, "XXXX Sync Stop " + temporaryBasal.getTimestamp() + " date: " + dateUtil.dateAndTimeAndSecondsString(temporaryBasal.getTimestamp()) + " pumpId: " + temporaryBasal.getPumpId());
                 lastTbr = temporaryBasal;
             }
             if (temporaryBasal.getRate() != 100.0 &&  temporaryBasal.getTimestamp() > lastTbr.getPumpId()){          // 1 s marging added (timestamp of same event from history could vary)
@@ -1204,23 +1208,35 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                         temporaryBasal.getPumpId(),
                         PumpType.ACCU_CHEK_INSIGHT,
                         serial);
-                aapsLogger.debug("XXXX sync starttbr: " + temporaryBasal.getTimestamp() + " date: " + dateUtil.dateAndTimeAndSecondsString(temporaryBasal.getTimestamp()) + " duration: " + temporaryBasal.getDuration() / 60000 + " pumpId: " + temporaryBasal.getPumpId() + " rate: " + temporaryBasal.getRate() + " resultdb: " + resultdb);
+                aapsLogger.debug(LTag.PUMP, "XXXX sync starttbr: " + temporaryBasal.getTimestamp() + " date: " + dateUtil.dateAndTimeAndSecondsString(temporaryBasal.getTimestamp()) + " duration: " + temporaryBasal.getDuration() / 60000 + " pumpId: " + temporaryBasal.getPumpId() + " rate: " + temporaryBasal.getRate() + " resultdb: " + resultdb);
                 lastTbr = temporaryBasal;
             }
         }
         // TODO remove log once Insight Driver Ok
         TemporaryBasal activeDbTBR = pumpSync.expectedPumpState().getTemporaryBasal();
+        PumpSync.PumpState.ExtendedBolus activeDbExt = pumpSync.expectedPumpState().getExtendedBolus();
+        activeBasalRate = connectionService.requestMessage(new GetActiveBasalRateMessage()).await().getActiveBasalRate();
         activeTBR = connectionService.requestMessage(new GetActiveTBRMessage()).await().getActiveTBR();
+        activeBoluses = connectionService.requestMessage(new GetActiveBolusesMessage()).await().getActiveBoluses();
+        aapsLogger.debug(LTag.PUMP, "XXXX Pump State :" + (activeBasalRate != null ? " Basal: " + activeBasalRate.getActiveBasalRate() + "U " : "") +
+                (activeTBR != null ? " TBR: " + activeTBR.getPercentage() + "% reste: " + activeTBR.getRemainingDuration() + "min " : "")+
+                (activeBoluses.size() > 0 ? " Bolus: " + activeBoluses.get(0).getBolusType() + " Remaining U " + activeBoluses.get(0).getRemainingAmount() + " Remaining Dur: "  + activeBoluses.get(0).getRemainingDuration() : ""));
+        aapsLogger.debug(LTag.PUMP, "XXXX Aaps State :" + (activeDbTBR != null ? " rate: "  + activeDbTBR.getRate() + (activeDbTBR.isAbsolute() ? "U " :"% ") + " Duration: " + (activeDbTBR.getTimestamp() + activeDbTBR.getDuration() -dateUtil.now() )/60000 : "") +
+                (activeDbExt != null ? " Extended amount: " + activeDbExt.getAmount() + " rate: " + activeDbExt.getRate() + " duration: " + (activeDbExt.getTimestamp() + activeDbExt.getDuration() - dateUtil.now())/60000 : "" ));
+
         if (activeTBR != null || activeDbTBR != null) {
             if (activeDbTBR == null)
-                aapsLogger.debug("XXXX INCONCISTENCY TBR running only in Pump: " + activeTBR.getPercentage() + "% started " + (activeTBR.getInitialDuration() - activeTBR.getRemainingDuration()) + "min ago " + activeTBR.getPercentage() + "% in pump (" + (activeTBR.getInitialDuration() - activeTBR.getRemainingDuration()) + "min ago Duration (min):" + activeTBR.getInitialDuration());
-            else if (activeTBR == null)
-                aapsLogger.debug("XXXX INCONCISTENCY TBR running only in AAPS: " + activeDbTBR.getRate() + "% started " + (dateUtil.now() - activeDbTBR.getTimestamp())/1000 + "s ago Duration (min):" + activeDbTBR.getDuration()/60000);
-            else if (activeTBR.getPercentage() != activeDbTBR.getRate())
-                aapsLogger.debug("XXXX INCONCISTENCY TBR Not the same %: " + activeDbTBR.getRate() + "% in AAPS ("+ (dateUtil.now() - activeDbTBR.getTimestamp())/1000 + "s ago) " + activeTBR.getPercentage() + "% in pump (" + (activeTBR.getInitialDuration() - activeTBR.getRemainingDuration()) + "min ago Duration (min):" + activeTBR.getInitialDuration());
+                aapsLogger.debug(LTag.PUMP, "XXXX INCONCISTENCY TBR running only in Pump: " + activeTBR.getPercentage() + "% started " + (activeTBR.getInitialDuration() - activeTBR.getRemainingDuration()) + "min ago " + activeTBR.getPercentage() + "% in pump (" + (activeTBR.getInitialDuration() - activeTBR.getRemainingDuration()) + "min ago Duration (min):" + activeTBR.getInitialDuration());
+            else if (activeTBR == null && activeDbExt == null)
+                aapsLogger.debug(LTag.PUMP, "XXXX INCONCISTENCY TBR running only in AAPS: " + activeDbTBR.getRate() + "% started " + (dateUtil.now() - activeDbTBR.getTimestamp())/1000 + "s ago Duration (min):" + activeDbTBR.getDuration()/60000);
+            else if (activeTBR.getPercentage() != activeDbTBR.getRate() && activeDbExt == null)
+                aapsLogger.debug(LTag.PUMP, "XXXX INCONCISTENCY TBR Not the same %: " + activeDbTBR.getRate() + "% in AAPS ("+ (dateUtil.now() - activeDbTBR.getTimestamp())/1000 + "s ago) " + activeTBR.getPercentage() + "% in pump (" + (activeTBR.getInitialDuration() - activeTBR.getRemainingDuration()) + "min ago Duration (min):" + activeTBR.getInitialDuration());
+            else if (activeDbExt != null)
+                aapsLogger.debug(LTag.PUMP, "XXXX Absolute running rate: " + activeDbExt.getRate() + "% amount: " + activeDbExt.getAmount() + "U in AAPS ("+ (dateUtil.now() - activeDbExt.getTimestamp())/1000 + "s ago) ");
         }
+        if((activeTBR != null || activeDbTBR != null) && activeDbExt == null)
+            checkAndResolveTbrMismatch(serial);           // on AAPS Start use to resynchro AAPS with current TBR running in pump
         // end of bloc to remove
-        checkAndResolveTbrMismatch(serial);           // on AAPS Start use to resynchro AAPS with current TBR running in pump
     }
 
     private boolean processHistoryEvent(String serial, List<TemporaryBasal> temporaryBasals, HistoryEvent event) {
@@ -1261,6 +1277,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
         uploadCareportalEvent(timestamp, DetailedBolusInfo.EventType.CANNULA_CHANGE);
+        aapsLogger.debug(LTag.PUMP, "XXXX event Site Change time: " + dateUtil.dateAndTimeAndSecondsString(timestamp));
         pumpSync.insertTherapyEventIfNewWithTimestamp(
                 timestamp,
                 DetailedBolusInfo.EventType.CANNULA_CHANGE,
@@ -1276,6 +1293,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         calendar.set(Calendar.YEAR, event.getTotalYear());
         calendar.set(Calendar.MONTH, event.getTotalMonth() - 1);
         calendar.set(Calendar.DAY_OF_MONTH, event.getTotalDay());
+        aapsLogger.debug(LTag.PUMP, "XXXX event Daily Dose event day: " + event.getTotalYear() + "/" + (event.getTotalMonth() - 1) + "/" + event.getTotalDay() + " Basal: " + event.getBasalTotal() + " Bolus: " + event.getBolusTotal());
         pumpSync.createOrUpdateTotalDailyDose(
                 calendar.getTimeInMillis(),
                 event.getBolusTotal(),
@@ -1292,6 +1310,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
         logNote(timestamp, resourceHelper.gs(R.string.tube_changed));
         long pumpID = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),0 , 0, 0);
+        aapsLogger.debug(LTag.PUMP, "XXXX event Tube Change time: " + dateUtil.dateAndTimeAndSecondsString(timestamp));
         pumpSync.insertTherapyEventIfNewWithTimestamp(
                 timestamp,
                 DetailedBolusInfo.EventType.INSULIN_CHANGE,
@@ -1307,6 +1326,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
         uploadCareportalEvent(timestamp, DetailedBolusInfo.EventType.INSULIN_CHANGE);
         long pumpID = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),0 , 0, 0);
+        aapsLogger.debug(LTag.PUMP, "XXXX event Reservoir Change time: " + dateUtil.dateAndTimeAndSecondsString(timestamp));
         pumpSync.insertTherapyEventIfNewWithTimestamp(
                 timestamp,
                 DetailedBolusInfo.EventType.INSULIN_CHANGE,
@@ -1321,6 +1341,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
         uploadCareportalEvent(timestamp, DetailedBolusInfo.EventType.PUMP_BATTERY_CHANGE);
+        aapsLogger.debug(LTag.PUMP, "XXXX event Battery Change time: " + dateUtil.dateAndTimeAndSecondsString(timestamp));
         pumpSync.insertTherapyEventIfNewWithTimestamp(
                 timestamp,
                 DetailedBolusInfo.EventType.PUMP_BATTERY_CHANGE,
@@ -1333,16 +1354,29 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     private void processOperatingModeChangedEvent(String serial, List<TemporaryBasal> temporaryBasals, OperatingModeChangedEvent event) {
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
+        long duration;
         switch (event.getNewValue()) {
             case STARTED:
                 lastStartEvent = timestamp + 10000L;                        // I don't now the reason of 10s offset, so I keep it as it was in original Insight Driver
                 if (sp.getBoolean(R.string.key_insight_log_operating_mode_changes, false))
                     logNote(timestamp, resourceHelper.gs(R.string.pump_started));
-                aapsLogger.debug("XXXX START Event TimeStamp: " + lastStartEvent + " HMS: " + dateUtil.dateAndTimeAndSecondsString(lastStartEvent));
+                duration = lastStartEvent - lastStopEvent;
+                if (duration > T.mins(1).msecs() && duration < T.hours(24).msecs())
+                    pumpSync.syncTemporaryBasalWithPumpId(
+                            lastStopEvent,
+                            0.0,
+                            duration,
+                            false,
+                            PumpSync.TemporaryBasalType.NORMAL,
+                            lastStopEvent,
+                            PumpType.ACCU_CHEK_INSIGHT,
+                            serial);
+                lastStartEvent = 0;
+                aapsLogger.debug(LTag.PUMP, "XXXX event START Event TimeStamp: " + lastStartEvent + " HMS: " + dateUtil.dateAndTimeAndSecondsString(lastStartEvent));
                 break;
             case STOPPED:
                 lastStopEvent = Math.abs(lastStopEvent - timestamp) < 10000 ? lastStopEvent : timestamp;                                            // timestamp could vary between 2 readhistory, always keep first value
-                long duration = lastStartEvent != 0 ? lastStartEvent - lastStopEvent : dateUtil.now() + T.mins(15).msecs() - lastStopEvent;         // record 15 min zero temp only if duration is more than 1 min
+                duration = dateUtil.now() + T.mins(15).msecs() - lastStopEvent;                                                                     // record 15 min zero temp only if duration is more than 1 min
                 if (duration > T.mins(1).msecs())                                                                                                   // set a zero temp if pump is stopped more than 1 min
                     pumpSync.syncTemporaryBasalWithPumpId(
                             lastStopEvent,
@@ -1355,11 +1389,12 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                             serial
                     );
                 lastStartEvent = 0;
-                aapsLogger.debug("XXXX STOP: " + lastStopEvent + " HMS: " + dateUtil.dateAndTimeAndSecondsString(lastStopEvent) + " ZeroTemp Duration (min): " + (duration)/60000);
+                aapsLogger.debug(LTag.PUMP, "XXXX event STOP: " + lastStopEvent + " HMS: " + dateUtil.dateAndTimeAndSecondsString(lastStopEvent) + " ZeroTemp Duration (min): " + (duration)/60000);
                 if (sp.getBoolean(R.string.key_insight_log_operating_mode_changes, false))
                     logNote(timestamp, resourceHelper.gs(R.string.pump_stopped));
                 break;
             case PAUSED:
+                aapsLogger.debug(LTag.PUMP, "XXXX event Pause: " + timestamp + " HMS: " + dateUtil.dateAndTimeAndSecondsString(timestamp));
                 if (sp.getBoolean(R.string.key_insight_log_operating_mode_changes, false))
                     logNote(timestamp, resourceHelper.gs(R.string.pump_paused));
                 break;
@@ -1369,8 +1404,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     private void processStartOfTBREvent(List<PumpSync.PumpState.TemporaryBasal> temporaryBasals, StartOfTBREvent event) {
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
-
-        aapsLogger.debug("XXXX event StartTbr history rec Timestamp: " + timestamp + " date: " + event.getEventYear() + "/" + event.getEventMonth() + "/" + event.getEventDay() + " " + event.getEventHour() + ":" + event.getEventMinute() + ":" + event.getEventSecond() + " Rate: " + event.getAmount() + " Duration(min): " + event.getDuration());
+        aapsLogger.debug(LTag.PUMP, "XXXX event StartTbr history rec Timestamp: " + timestamp + " date: " + event.getEventYear() + "/" + event.getEventMonth() + "/" + event.getEventDay() + " " + event.getEventHour() + ":" + event.getEventMinute() + ":" + event.getEventSecond() + " Rate: " + event.getAmount() + " Duration(min): " + event.getDuration());
         TemporaryBasal temporaryBasal = new TemporaryBasal(
                 timestamp,
                 T.mins(event.getDuration()).msecs(),
@@ -1385,7 +1419,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     private void processEndOfTBREvent(List<PumpSync.PumpState.TemporaryBasal> temporaryBasals, EndOfTBREvent event) {
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
-        aapsLogger.debug("XXXX event StopTbr history rec Timestamp: " + timestamp + " date: " + event.getEventYear() + "/" + event.getEventMonth() + "/" + event.getEventDay() + " " + event.getEventHour() + ":" + event.getEventMinute() + ":" + event.getEventSecond());
+        aapsLogger.debug(LTag.PUMP, "XXXX event StopTbr history rec Timestamp: " + timestamp + " date: " + event.getEventYear() + "/" + event.getEventMonth() + "/" + event.getEventDay() + " " + event.getEventHour() + ":" + event.getEventMinute() + ":" + event.getEventSecond());
             PumpSync.PumpState.TemporaryBasal temporaryBasal = new PumpSync.PumpState.TemporaryBasal(
                     timestamp - 1500L,
                     0L,
@@ -1399,13 +1433,14 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
 
     /**
      * Checks the main screen to determine if TBR on pump matches app state.
+     * TODO() Remove function below if tests OK
      */
-    private void checkAndResolveTbrMismatch(String serial) throws Exception {
+    private void checkAndResolveTbrMismatch(String serial) {
        long now = dateUtil.now();
         //Compoare only for TBR thats have no pumpId in pump
         PumpSync.PumpState.TemporaryBasal aapsTbr = pumpSync.expectedPumpState().getTemporaryBasal();
         if (aapsTbr == null && activeTBR != null && activeTBR.getRemainingDuration() > 1) {
-            aapsLogger.debug(LTag.PUMP, "XXXX Creating temp basal from pump TBR estimated timestamp: " + now + " duration: " + activeTBR.getInitialDuration() + " rate: " + activeTBR.getPercentage());
+            aapsLogger.debug(LTag.PUMP, "XXXX RESOLVE TBR Creating temp basal from pump TBR estimated timestamp: " + now + " duration: " + activeTBR.getInitialDuration() + " rate: " + activeTBR.getPercentage());
             pumpSync.syncTemporaryBasalWithPumpId(
                     now,
                     activeTBR.getPercentage(),
@@ -1417,7 +1452,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     serial
             );
         } else if (aapsTbr != null && PumpStateExtensionKt.getPlannedRemainingMinutes(aapsTbr) > 1 && activeTBR == null) {
-            aapsLogger.debug(LTag.PUMP, "XXXX Ending AAPS-TBR since pump has no TBR active");
+            aapsLogger.debug(LTag.PUMP, "XXXX RESOLVE TBR Ending AAPS-TBR since pump has no TBR active");
             pumpSync.syncStopTemporaryBasalWithPumpId(
                     now,
                     now,
@@ -1426,7 +1461,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         } else if (aapsTbr != null && activeTBR != null
                 && (aapsTbr.getRate() != activeTBR.getPercentage() ||
                 Math.abs(PumpStateExtensionKt.getPlannedRemainingMinutes(aapsTbr) - activeTBR.getRemainingDuration()) > 1)) {
-            aapsLogger.debug(LTag.PUMP, "XXXX AAPS and pump-TBR differ; ending AAPS-TBR and creating new TBR based on pump TBR duration: " + activeTBR.getRemainingDuration() + " rate: " + activeTBR.getPercentage());
+            aapsLogger.debug(LTag.PUMP, "XXXX RESOLVE TBR AAPS and pump-TBR differ; ending AAPS-TBR and creating new TBR based on pump TBR duration: " + activeTBR.getRemainingDuration() + " rate: " + activeTBR.getPercentage());
             // create TBR end record a second ago
             pumpSync.syncStopTemporaryBasalWithPumpId(
                     now - 1500,
@@ -1451,6 +1486,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     private void processBolusProgrammedEvent(String serial, BolusProgrammedEvent event) {
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
+        aapsLogger.debug(LTag.PUMP, "XXXX event programmed " + event.getBolusType() + " Immediate amount: " + event.getImmediateAmount() + "U extended amount: " + event.getExtendedAmount() + "U" +  " duration (min): " + event.getDuration());
         if (event.getBolusType() == BolusType.STANDARD || event.getBolusType() == BolusType.MULTIWAVE) {
             pumpSync.syncBolusWithPumpId(
                     timestamp,
@@ -1478,6 +1514,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
         long startTimestamp = parseRelativeDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(), event.getEventHour(),
                 event.getEventMinute(), event.getEventSecond(), event.getStartHour(), event.getStartMinute(), event.getStartSecond()) + timeOffset;
+        aapsLogger.debug(LTag.PUMP, "XXXX event delivered " + event.getBolusType() + " Immediate amount: " + event.getImmediateAmount() + "U extended amount: " + event.getExtendedAmount() + "U" +  " duration (min): " + event.getDuration());
         if (event.getBolusType() == BolusType.STANDARD || event.getBolusType() == BolusType.MULTIWAVE) {
             pumpSync.syncBolusWithPumpId(
                     startTimestamp,
@@ -1506,6 +1543,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
         Integer code = null;
         Integer title = null;
+        aapsLogger.debug(LTag.PUMP, "XXXX event Alert: " + dateUtil.dateAndTimeAndSecondsString(timestamp) + " Alert: " + event.getAlertType());
         switch (event.getAlertType()) {
             case ERROR_6:
                 code = R.string.alert_e6_code;
