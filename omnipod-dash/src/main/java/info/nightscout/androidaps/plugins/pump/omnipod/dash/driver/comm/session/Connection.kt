@@ -19,7 +19,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.CmdBl
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.DataBleIO
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.IncomingPackets
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageIO
-import info.nightscout.androidaps.utils.extensions.toHex
+import info.nightscout.androidaps.extensions.toHex
 
 sealed class ConnectionState
 

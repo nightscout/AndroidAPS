@@ -14,8 +14,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.StringLengthPrefixEncoding.Companion.parseKeys
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.RandomByteGenerator
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.X25519KeyGenerator
-import info.nightscout.androidaps.utils.extensions.hexStringToByteArray
-import info.nightscout.androidaps.utils.extensions.toHex
+import info.nightscout.androidaps.extensions.hexStringToByteArray
+import info.nightscout.androidaps.extensions.toHex
 
 internal class LTKExchanger(
     private val aapsLogger: AAPSLogger,

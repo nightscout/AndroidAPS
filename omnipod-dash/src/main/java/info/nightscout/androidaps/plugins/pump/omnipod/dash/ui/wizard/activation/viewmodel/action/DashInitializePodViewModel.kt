@@ -37,7 +37,7 @@ class DashInitializePodViewModel @Inject constructor(
                 },
                 onError = { throwable ->
                     logger.error(LTag.PUMP, "Error in Pod activation part 1", throwable)
-                    source.onSuccess(PumpEnactResult(injector).success(false).comment(throwable.message))
+                    source.onSuccess(PumpEnactResult(injector).success(false).comment(throwable.toString()))
                 },
                 onComplete = {
                     logger.debug("Pod activation part 1 completed")
