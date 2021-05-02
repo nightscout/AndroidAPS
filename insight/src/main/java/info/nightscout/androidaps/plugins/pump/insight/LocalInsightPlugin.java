@@ -922,6 +922,12 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     alertService.ignore(null);
                     result.enacted(true).success(true);
                     aapsLogger.debug(LTag.PUMP, "XXXX cancel Extended Bolus time: " + dateUtil.dateAndTimeAndSecondsString(dateUtil.now()) + " BolusId: " + activeBolus.getBolusID());
+                    long now = dateUtil.now();                          // syncStopExtendedBolusWithPumpId added here to avoid Extended Bolus shown in aaps before next readHistory
+                    pumpSync.syncStopExtendedBolusWithPumpId(
+                            now,
+                            now,
+                            PumpType.ACCU_CHEK_INSIGHT,
+                            serialNumber());
                 }
             }
             result.success(true).comment(R.string.virtualpump_resultok);
