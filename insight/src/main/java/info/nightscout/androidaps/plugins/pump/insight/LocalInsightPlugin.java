@@ -833,13 +833,13 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         PumpEnactResult result = new PumpEnactResult(getInjector());
         PumpEnactResult cancelEBResult = null;
         if (isFakingTempsByExtendedBoluses()) cancelEBResult = cancelExtendedBolusOnly();
+        readHistory();                                                                              // move readHistory before cancelTempBasalOnly
         PumpEnactResult cancelTBRResult = cancelTempBasalOnly();
         result.success((cancelEBResult == null || (cancelEBResult != null && cancelEBResult.getSuccess())) && cancelTBRResult.getSuccess());
         result.enacted((cancelEBResult != null && cancelEBResult.getEnacted()) || cancelTBRResult.getEnacted());
         result.comment(cancelEBResult != null ? cancelEBResult.getComment() : cancelTBRResult.getComment());
         try {
             fetchStatus();
-            readHistory();
         } catch (AppLayerErrorException e) {
             aapsLogger.info(LTag.PUMP, "Exception after canceling TBR: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
         } catch (InsightException e) {
