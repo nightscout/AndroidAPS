@@ -467,19 +467,25 @@ class OmnipodDashPumpPlugin @Inject constructor(
         commandQueue.customCommand(CommandHandleTimeChange(false), null)
     }
 
+    private fun observeAddNewActiveCommandToHistory(observeCreateHistoryEntry: Single<String>): Observable<PodEvent> {
+        return observeCreateHistoryEntry.flatMapObservable {
+            podStateManager.createActiveCommand(it).toObservable<PodEvent>()
+        }
+    }
+
     private fun executeProgrammingCommand(
-        historyId: Single<String>,
+        observeCreateHistoryEntry: Single<String>,
         command: Observable<PodEvent>
     ): PumpEnactResult {
         return Single.create<PumpEnactResult> { source ->
             Observable.concat(
-                podStateManager.observeNoActiveCommand(),
-                historyId.flatMapObservable { recordId ->
-                    podStateManager.createActiveCommand(recordId).toObservable()
-                },
-                command,
-                history.updateFromState(podStateManager).toObservable(),
-                podStateManager.updateActiveCommand().toObservable(),
+                listOf(
+                    podStateManager.observeNoActiveCommand(),
+                    observeAddNewActiveCommandToHistory(observeCreateHistoryEntry),
+                    command,
+                    history.updateFromState(podStateManager).toObservable(),
+                    podStateManager.updateActiveCommand().toObservable(),
+                )
             ).subscribeBy(
                 onNext = { podEvent ->
                     aapsLogger.debug(
