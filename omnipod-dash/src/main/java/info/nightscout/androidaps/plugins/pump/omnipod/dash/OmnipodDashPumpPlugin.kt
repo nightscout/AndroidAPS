@@ -53,7 +53,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             .preferencesId(R.xml.omnipod_dash_preferences)
             .description(R.string.omnipod_dash_pump_description)
 
-        private val pumpDescription = PumpDescription(PumpType.Omnipod_Dash)
+        private val pumpDescription = PumpDescription(PumpType.OMNIPOD_DASH)
     }
 
     override fun isInitialized(): Boolean {
@@ -132,7 +132,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 },
                 onError = { throwable ->
                     aapsLogger.error(LTag.PUMP, "Error in setNewBasalProfile", throwable)
-                    source.onSuccess(PumpEnactResult(injector).success(false).enacted(false).comment(throwable.message))
+                    source.onSuccess(PumpEnactResult(injector).success(false).enacted(false).comment(
+                        throwable.toString()))
                 },
                 onComplete = {
                     aapsLogger.debug("setNewBasalProfile completed")
@@ -192,7 +193,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 },
                 onError = { throwable ->
                     aapsLogger.error(LTag.PUMP, "Error in deliverTreatment", throwable)
-                    source.onSuccess(PumpEnactResult(injector).success(false).enacted(false).comment(throwable.message))
+                    source.onSuccess(PumpEnactResult(injector).success(false).enacted(false).comment(
+                        throwable.toString()))
                 },
                 onComplete = {
                     aapsLogger.debug("deliverTreatment completed")
@@ -248,7 +250,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 },
                 onError = { throwable ->
                     aapsLogger.error(LTag.PUMP, "Error in setTempBasalAbsolute", throwable)
-                    source.onSuccess(PumpEnactResult(injector).success(false).enacted(false).comment(throwable.message))
+                    source.onSuccess(PumpEnactResult(injector).success(false).enacted(false).comment(
+                        throwable.toString()))
                 },
                 onComplete = {
                     aapsLogger.debug("setTempBasalAbsolute completed")
@@ -293,7 +296,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 },
                 onError = { throwable ->
                     aapsLogger.error(LTag.PUMP, "Error in cancelTempBasal", throwable)
-                    source.onSuccess(PumpEnactResult(injector).success(false).enacted(false).comment(throwable.message))
+                    source.onSuccess(PumpEnactResult(injector).success(false).enacted(false).comment(
+                        throwable.toString()))
                 },
                 onComplete = {
                     aapsLogger.debug("cancelTempBasal completed")
@@ -319,7 +323,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     override val pumpDescription: PumpDescription = Companion.pumpDescription
 
     override fun manufacturer(): ManufacturerType {
-        return pumpDescription.pumpType.manufacturer
+        return ManufacturerType.Insulet
     }
 
     override fun model(): PumpType {
@@ -404,7 +408,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     },
                     onError = { throwable ->
                         aapsLogger.error(LTag.PUMP, "Error in silenceAlerts", throwable)
-                        source.onSuccess(PumpEnactResult(injector).success(false).comment(throwable.message))
+                        source.onSuccess(PumpEnactResult(injector).success(false).comment(
+                            throwable.toString()))
                     },
                     onComplete = {
                         aapsLogger.debug("silenceAlerts completed")
@@ -428,7 +433,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 },
                 onError = { throwable ->
                     aapsLogger.error(LTag.PUMP, "Error in suspendDelivery", throwable)
-                    source.onSuccess(PumpEnactResult(injector).success(false).comment(throwable.message))
+                    source.onSuccess(PumpEnactResult(injector).success(false).comment(throwable.toString()))
                 },
                 onComplete = {
                     aapsLogger.debug("suspendDelivery completed")
@@ -453,7 +458,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     },
                     onError = { throwable ->
                         aapsLogger.error(LTag.PUMP, "Error in resumeDelivery", throwable)
-                        source.onSuccess(PumpEnactResult(injector).success(false).comment(throwable.message))
+                        source.onSuccess(PumpEnactResult(injector).success(false).comment(throwable.toString()))
                     },
                     onComplete = {
                         aapsLogger.debug("resumeDelivery completed")
@@ -510,7 +515,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 },
                 onError = { throwable ->
                     aapsLogger.error(LTag.PUMP, "Error in playTestBeep", throwable)
-                    source.onSuccess(PumpEnactResult(injector).success(false).enacted(false).comment(throwable.message))
+                    source.onSuccess(PumpEnactResult(injector).success(false).enacted(false)
+                                         .comment(throwable.toString()))
                 },
                 onComplete = {
                     aapsLogger.debug("playTestBeep completed")
