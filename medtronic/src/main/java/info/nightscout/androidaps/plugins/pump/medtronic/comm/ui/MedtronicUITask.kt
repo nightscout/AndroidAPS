@@ -101,7 +101,8 @@ class MedtronicUITask {
                 result = communicationManager.cancelTBR()
             }
 
-            MedtronicCommandType.SetBasalProfileSTD, MedtronicCommandType.SetBasalProfileA -> {
+            MedtronicCommandType.SetBasalProfileSTD,
+            MedtronicCommandType.SetBasalProfileA -> {
                 val profile = parameters!![0] as BasalProfile
                 result = communicationManager.setBasalProfile(profile)
             }
@@ -128,7 +129,7 @@ class MedtronicUITask {
     }
 
     private fun getTbrSettings(): TempBasalPair? {
-        return TempBasalPair(getDoubleFromParameters(0),  //
+        return TempBasalPair(getDoubleFromParameters(0)!!,  //
             false,  //
             getIntegerFromParameters(1))
     }
@@ -137,8 +138,8 @@ class MedtronicUITask {
         return parameters!![index] as Float
     }
 
-    fun getDoubleFromParameters(index: Int): Double {
-        return parameters!![index] as Double
+    fun getDoubleFromParameters(index: Int): Double? {
+        return parameters!![index] as Double?
     }
 
     private fun getIntegerFromParameters(index: Int): Int {

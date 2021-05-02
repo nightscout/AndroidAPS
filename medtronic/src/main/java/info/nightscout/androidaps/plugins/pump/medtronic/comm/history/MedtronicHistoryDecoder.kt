@@ -35,7 +35,7 @@ abstract class MedtronicHistoryDecoder<T : MedtronicHistoryEntry?> : MedtronicHi
 
     // TODO_ extend this to also use bigger pages (for now we support only 1024 pages)
     @Throws(RuntimeException::class)
-    private fun checkPage(page: RawHistoryPage, partial: Boolean): MutableList<Byte> {
+    private fun checkPage(page: RawHistoryPage): MutableList<Byte> {
         //val byteList: MutableList<Byte> = mutableListOf()
 
         if (medtronicUtil.medtronicPumpModel == null) {
@@ -51,8 +51,14 @@ abstract class MedtronicHistoryDecoder<T : MedtronicHistoryEntry?> : MedtronicHi
         }
     }
 
-    fun processPageAndCreateRecords(rawHistoryPage: RawHistoryPage): List<T> {
-        return processPageAndCreateRecords(rawHistoryPage, false)
+    fun processPageAndCreateRecords(rawHistoryPage: RawHistoryPage): MutableList<T> {
+        val dataClear = checkPage(rawHistoryPage)
+        val records: MutableList<T> = createRecords(dataClear)
+        for (record in records) {
+            decodeRecord(record)
+        }
+        runPostDecodeTasks()
+        return records
     }
 
     protected fun prepareStatistics() {
@@ -117,13 +123,4 @@ abstract class MedtronicHistoryDecoder<T : MedtronicHistoryEntry?> : MedtronicHi
         return StringUtil.getFormatedValueUS(value, decimals)
     }
 
-    private fun processPageAndCreateRecords(rawHistoryPage: RawHistoryPage, partial: Boolean): MutableList<T> {
-        val dataClear = checkPage(rawHistoryPage, partial)
-        val records: MutableList<T> = createRecords(dataClear)
-        for (record in records) {
-            decodeRecord(record)
-        }
-        runPostDecodeTasks()
-        return records
-    }
 }

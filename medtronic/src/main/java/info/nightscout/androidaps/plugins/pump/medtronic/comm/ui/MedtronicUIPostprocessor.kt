@@ -55,6 +55,7 @@ class MedtronicUIPostprocessor @Inject constructor(
 
                 //aapsLogger.debug("D: basal profile on read: " + basalProfile);
                 try {
+                    // TODO need to refactor
                     val profilesByHour = basalProfile!!.getProfilesByHour(medtronicPumpPlugin.pumpDescription.pumpType)
                     if (profilesByHour != null) {
                         medtronicPumpStatus.basalsByHour = profilesByHour

@@ -43,9 +43,10 @@ import javax.inject.Singleton
 //  all times that time changed (TZ, DST, etc.). Data needs to be returned in batches (time_changed batches, so that we can
 //  handle it. It would help to assign sort_ids to items (from oldest (1) to newest (x)
 //
-// TODO New Database changes, we need to read 35 minutes from history on each read and then compare if items have the same
-//   amounts, if not send them back to database changes. ALSO we need to remove and invalidate TBRs that are cancels from
-//   PumpSyncStorage
+// TODO New Database changes:
+//   + we need to read 35 minutes from history on each read
+//   - compare all read items if they have the same amounts, if not send them back to database changes.
+//   - we need to remove and invalidate TBRs that are cancels from PumpSyncStorage
 @Suppress("DEPRECATION")
 @Singleton
 class MedtronicHistoryData @Inject constructor(
@@ -82,10 +83,33 @@ class MedtronicHistoryData @Inject constructor(
         for (validEntry in validEntries) {
             if (!allHistory.contains(validEntry)) {
                 newEntries.add(validEntry)
+            } else {
+                val entryByPumpId = getEntryByPumpId(validEntry.pumpId!!)
+
+                // TODO not implemented
+                if (entryByPumpId!=null && entryByPumpId.hasBolusOrTBRDataChanged(validEntry)) {
+                    newEntries.add(validEntry)
+                    allHistory.remove(entryByPumpId)
+                }
             }
         }
         newHistory = newEntries
         showLogs("List of history (before filtering): [" + newHistory.size + "]", gson.toJson(newHistory))
+    }
+
+    private fun getEntryByPumpId(pumpId: Long): PumpHistoryEntry? {
+        val findFirst = this.allHistory.stream()
+            .filter { f -> f.pumpId!! == pumpId }
+            .findFirst()
+
+        return if (findFirst.isPresent()) findFirst.get() else null
+        //
+        // for (pumpHistoryEntry in allHistory) {
+        //     if (pumpHistoryEntry.pumpId == pumpId) {
+        //         return pumpHistoryEntry
+        //     }
+        // }
+        // return null
     }
 
     private fun showLogs(header: String?, data: String) {
@@ -223,22 +247,21 @@ class MedtronicHistoryData @Inject constructor(
     }
 
 
-    val isPumpSuspended: Boolean
-        get() {
-            val items = getDataForPumpSuspends()
-            showLogs("isPumpSuspended: ", gson.toJson(items))
-            return if (isCollectionNotEmpty(items)) {
-                val pumpHistoryEntryType = items[0].entryType
-                val isSuspended = !(pumpHistoryEntryType === PumpHistoryEntryType.TempBasalCombined || //
-                    pumpHistoryEntryType === PumpHistoryEntryType.BasalProfileStart || //
-                    pumpHistoryEntryType === PumpHistoryEntryType.Bolus || //
-                    pumpHistoryEntryType === PumpHistoryEntryType.ResumePump || //
-                    pumpHistoryEntryType === PumpHistoryEntryType.BatteryChange || //
-                    pumpHistoryEntryType === PumpHistoryEntryType.Prime)
-                aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "isPumpSuspended. Last entry type=%s, isSuspended=%b", pumpHistoryEntryType, isSuspended))
-                isSuspended
-            } else false
-        }
+    fun isPumpSuspended(): Boolean {
+        val items = getDataForPumpSuspends()
+        showLogs("isPumpSuspended: ", gson.toJson(items))
+        return if (isCollectionNotEmpty(items)) {
+            val pumpHistoryEntryType = items[0].entryType
+            val isSuspended = !(pumpHistoryEntryType === PumpHistoryEntryType.TempBasalCombined || //
+                pumpHistoryEntryType === PumpHistoryEntryType.BasalProfileStart || //
+                pumpHistoryEntryType === PumpHistoryEntryType.Bolus || //
+                pumpHistoryEntryType === PumpHistoryEntryType.ResumePump || //
+                pumpHistoryEntryType === PumpHistoryEntryType.BatteryChange || //
+                pumpHistoryEntryType === PumpHistoryEntryType.Prime)
+            aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "isPumpSuspended. Last entry type=%s, isSuspended=%b", pumpHistoryEntryType, isSuspended))
+            isSuspended
+        } else false
+    }
 
     private fun getDataForPumpSuspends(): MutableList<PumpHistoryEntry> {
             val newAndAll: MutableList<PumpHistoryEntry> = mutableListOf()
@@ -246,7 +269,7 @@ class MedtronicHistoryData @Inject constructor(
                 newAndAll.addAll(allHistory)
             }
             if (isCollectionNotEmpty(newHistory)) {
-                for (pumpHistoryEntry in newHistory!!) {
+                for (pumpHistoryEntry in newHistory) {
                     if (!newAndAll.contains(pumpHistoryEntry)) {
                         newAndAll.add(pumpHistoryEntry)
                     }
@@ -563,7 +586,7 @@ class MedtronicHistoryData @Inject constructor(
         var processDTO: TempBasalProcessDTO? = null
         val processList: MutableList<TempBasalProcessDTO> = ArrayList()
         for (treatment in entryList) {
-            val tbr2 = treatment!!.getDecodedDataEntry("Object") as TempBasalPair?
+            val tbr2 = treatment.getDecodedDataEntry("Object") as TempBasalPair?
             if (tbr2!!.isCancelTBR) {
                 if (processDTO != null) {
                     processDTO.itemTwo = treatment

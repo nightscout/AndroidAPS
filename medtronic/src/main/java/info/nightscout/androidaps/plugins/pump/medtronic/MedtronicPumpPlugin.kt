@@ -466,7 +466,7 @@ class MedtronicPumpPlugin @Inject constructor(
     }
 
     private val basalProfiles: Unit
-        private get() {
+        get() {
             val medtronicUITask = rileyLinkMedtronicService!!.medtronicUIComm.executeCommand(MedtronicCommandType.GetBasalProfileSTD)
             if (medtronicUITask.responseType === MedtronicUIResponseType.Error) {
                 rileyLinkMedtronicService!!.medtronicUIComm.executeCommand(MedtronicCommandType.GetBasalProfileSTD)
@@ -816,7 +816,7 @@ class MedtronicPumpPlugin @Inject constructor(
             medtronicHistoryData.processLastBasalProfileChange(pumpDescription.pumpType, medtronicPumpStatus)
         }
         val previousState = pumpState
-        if (medtronicHistoryData.isPumpSuspended) {
+        if (medtronicHistoryData.isPumpSuspended()) {
             pumpState = PumpDriverState.Suspended
             aapsLogger.debug(LTag.PUMP, logPrefix + "isPumpSuspended: true")
         } else {
@@ -852,20 +852,19 @@ class MedtronicPumpPlugin @Inject constructor(
                 lastHistoryRecordTime = lastHistoryRecordTime.minusHours(12) // we get last 12 hours of history to
                 // determine pump state
                 // (we don't process that data), we process only
-                if (timeMinus36h.isAfter(lastHistoryRecordTime)) {
-                    targetDate = timeMinus36h
-                }
                 targetDate = if (timeMinus36h.isAfter(lastHistoryRecordTime)) timeMinus36h else lastHistoryRecordTime
                 if (debugHistory) aapsLogger.debug(LTag.PUMP, logPrefix + "readPumpHistoryLogic(): targetDate: " + targetDate)
             }
         } else { // all other reads
             if (debugHistory) aapsLogger.debug(LTag.PUMP, logPrefix + "readPumpHistoryLogic(): lastPumpHistoryEntry: not null - " + medtronicUtil.gsonInstance.toJson(lastPumpHistoryEntry))
             medtronicHistoryData.setIsInInit(false)
+            // we need to read 35 minutes in the past so that we can repair any TBR or Bolus values if neeeded
+            targetDate = LocalDateTime(DateTimeUtil.getMillisFromATDWithAddedMinutes(lastPumpHistoryEntry!!.atechDateTime!!, -35))
         }
 
         //aapsLogger.debug(LTag.PUMP, "HST: Target Date: " + targetDate);
         val responseTask2 = rileyLinkMedtronicService!!.medtronicUIComm.executeCommand(MedtronicCommandType.GetHistoryData,
-            arrayListOf(lastPumpHistoryEntry, targetDate) as ArrayList<Any>?)
+            arrayListOf(/*lastPumpHistoryEntry*/ null, targetDate) as ArrayList<Any>?)
         if (debugHistory) aapsLogger.debug(LTag.PUMP, "HST: After task")
         val historyResult = responseTask2.result as PumpHistoryResult?
         if (debugHistory) aapsLogger.debug(LTag.PUMP, "HST: History Result: " + historyResult.toString())
@@ -949,7 +948,6 @@ class MedtronicPumpPlugin @Inject constructor(
                 HashMap(statusRefreshMap)
             }
 
-            else                        -> null
         }
     }
 

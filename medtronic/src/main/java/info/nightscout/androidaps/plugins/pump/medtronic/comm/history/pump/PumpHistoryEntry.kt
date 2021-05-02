@@ -72,9 +72,10 @@ class PumpHistoryEntry : MedtronicHistoryEntry() {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is PumpHistoryEntry) return false
-        val that = other
-        return entryType == that.entryType &&  //
-            atechDateTime === that.atechDateTime // && //
+        val that = other as PumpHistoryEntry
+        return this.pumpId === that.pumpId
+        // return entryType == that.entryType &&  //
+        //     atechDateTime === that.atechDateTime // && //
         // Objects.equals(this.decodedData, that.decodedData);
     }
 
@@ -111,4 +112,12 @@ class PumpHistoryEntry : MedtronicHistoryEntry() {
         set(pumpId) {
             super.pumpId = pumpId
         }
+
+    fun hasBolusOrTBRDataChanged(entry: PumpHistoryEntry) : Boolean {
+        if (entryType!=null && (entryType!! == PumpHistoryEntryType.Bolus || entryType!! == PumpHistoryEntryType.TempBasalCombined)) {
+            return false // TODO needs to be implemented
+        }
+
+        return false
+    }
 }

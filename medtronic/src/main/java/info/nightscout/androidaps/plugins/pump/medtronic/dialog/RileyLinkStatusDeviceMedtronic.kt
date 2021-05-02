@@ -112,16 +112,17 @@ class RileyLinkStatusDeviceMedtronic : DaggerFragment(), RefreshableInterface {
             var view = viewIn
             val viewHolder: ViewHolder
             // General ListView optimization code.
-            if (view == null) {
+//            if (view == null) {
                 view = mInflator.inflate(R.layout.rileylink_status_device_item, null)
                 viewHolder = ViewHolder()
                 viewHolder.itemTime = view.findViewById(R.id.rileylink_history_time)
                 viewHolder.itemSource = view.findViewById(R.id.rileylink_history_source)
                 viewHolder.itemDescription = view.findViewById(R.id.rileylink_history_description)
                 view.tag = viewHolder
-            } else {
-                viewHolder = view.tag as ViewHolder
-            }
+            // }
+            // else {
+            //     viewHolder = view.tag as ViewHolder
+            // }
             val item = historyItemList[i]
             viewHolder.itemTime!!.text = StringUtil.toDateTimeString(dateUtil, item.dateTime)
             viewHolder.itemSource!!.text = "Riley Link" // for now
