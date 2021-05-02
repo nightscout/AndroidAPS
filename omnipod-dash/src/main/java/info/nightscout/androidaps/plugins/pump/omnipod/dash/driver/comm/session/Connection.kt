@@ -86,8 +86,10 @@ class Connection(
     val msgIO = MessageIO(aapsLogger, cmdBleIO, dataBleIO)
 
     fun connect() {
-        disconnect()
-
+        if (session != null) {
+            disconnect()
+        }
+        aapsLogger.debug("Connecting")
         if (!gattConnection.connect()) {
             throw FailedToConnectException("connect() returned false")
         }
@@ -167,6 +169,6 @@ class Connection(
 
     companion object {
 
-        private const val CONNECT_TIMEOUT_MS = 7000
+        private const val CONNECT_TIMEOUT_MS = 12000
     }
 }

@@ -6,7 +6,7 @@ import java.nio.ByteBuffer
 abstract class HeaderEnabledCommand protected constructor(
     override val commandType: CommandType,
     protected val uniqueId: Int,
-    protected val sequenceNumber: Short,
+    override val sequenceNumber: Short,
     protected val multiCommandFlag: Boolean
 ) : Command {
 
