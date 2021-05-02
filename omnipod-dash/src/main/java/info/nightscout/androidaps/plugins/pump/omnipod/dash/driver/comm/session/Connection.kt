@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothProfile
 import android.content.Context
+import info.nightscout.androidaps.extensions.toHex
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.BuildConfig
@@ -19,7 +20,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.CmdBl
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.DataBleIO
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.IncomingPackets
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageIO
-import info.nightscout.androidaps.extensions.toHex
 
 sealed class ConnectionState
 

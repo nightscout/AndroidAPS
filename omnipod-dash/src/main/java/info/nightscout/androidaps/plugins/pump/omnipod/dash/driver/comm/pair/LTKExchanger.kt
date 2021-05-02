@@ -1,21 +1,18 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair
 
+import info.nightscout.androidaps.extensions.hexStringToByteArray
+import info.nightscout.androidaps.extensions.toHex
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Ids
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.MessageIOException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.PairingException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageIO
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessagePacket
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageSendErrorSending
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageSendSuccess
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.StringLengthPrefixEncoding
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.StringLengthPrefixEncoding.Companion.parseKeys
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.RandomByteGenerator
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.X25519KeyGenerator
-import info.nightscout.androidaps.extensions.hexStringToByteArray
-import info.nightscout.androidaps.extensions.toHex
 
 internal class LTKExchanger(
     private val aapsLogger: AAPSLogger,
@@ -35,7 +32,7 @@ internal class LTKExchanger(
             keys = arrayOf(SP1, SP2),
             payloads = arrayOf(ids.podId.address, sp2())
         )
-        throwOnSendError(sp1sp2.messagePacket, SP1+SP2)
+        throwOnSendError(sp1sp2.messagePacket, SP1 + SP2)
 
         seq++
         val sps1 = PairMessage(
@@ -67,16 +64,16 @@ internal class LTKExchanger(
 
         seq++
         // send SP0GP0
-        val sp0gp0 = PairMessage (
-                sequenceNumber = seq,
-                source = ids.myId,
-                destination = podAddress,
-                keys = arrayOf(SP0GP0),
-                payloads = arrayOf(ByteArray(0))
-            )
+        val sp0gp0 = PairMessage(
+            sequenceNumber = seq,
+            source = ids.myId,
+            destination = podAddress,
+            keys = arrayOf(SP0GP0),
+            payloads = arrayOf(ByteArray(0))
+        )
         val result = msgIO.sendMessage(sp0gp0.messagePacket)
         if (result !is MessageSendSuccess) {
-            aapsLogger.warn(LTag.PUMPBTCOMM,"Error sending SP0GP0: $result")
+            aapsLogger.warn(LTag.PUMPBTCOMM, "Error sending SP0GP0: $result")
         }
 
         msgIO.receiveMessage()
@@ -96,7 +93,6 @@ internal class LTKExchanger(
             throw PairingException("Could not send or confirm $msgType: $result")
         }
     }
-
 
     private fun processSps1FromPod(msg: MessagePacket) {
         aapsLogger.debug(LTag.PUMPBTCOMM, "Received SPS1 from pod: ${msg.payload.toHex()}")

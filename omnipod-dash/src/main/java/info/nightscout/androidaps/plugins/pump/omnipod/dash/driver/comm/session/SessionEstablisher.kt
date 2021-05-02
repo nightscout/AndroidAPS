@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session
 
+import info.nightscout.androidaps.extensions.toHex
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Ids
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.endecrypt.Nonce
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.SessionEstablishmentException
@@ -10,7 +10,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessagePacket
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageSendSuccess
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageType
-import info.nightscout.androidaps.extensions.toHex
 import java.security.SecureRandom
 import java.util.*
 

@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.Context
+import info.nightscout.androidaps.extensions.toHex
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.BuildConfig
@@ -15,7 +16,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.event.PodEven
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.Command
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.Response
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
-import info.nightscout.androidaps.extensions.toHex
 import io.reactivex.Observable
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
@@ -83,7 +83,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
         val conn = assertConnected()
         return conn.session
             ?: throw NotConnectedException("Missing session")
-   }
+    }
 
     override fun getStatus(): ConnectionStatus {
         // TODO is this used?

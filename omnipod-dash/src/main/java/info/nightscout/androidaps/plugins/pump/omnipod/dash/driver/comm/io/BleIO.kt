@@ -5,13 +5,13 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io
 import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothGattDescriptor
+import info.nightscout.androidaps.extensions.toHex
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.callbacks.BleCommCallbacks
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.callbacks.WriteConfirmationError
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.callbacks.WriteConfirmationSuccess
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.*
-import info.nightscout.androidaps.extensions.toHex
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.TimeUnit
 
