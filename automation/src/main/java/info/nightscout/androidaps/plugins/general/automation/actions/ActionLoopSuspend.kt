@@ -5,8 +5,12 @@ import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.database.entities.UserEntry
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.interfaces.LoopInterface
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDuration
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement
@@ -21,8 +25,9 @@ class ActionLoopSuspend(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var loopPlugin: LoopInterface
     @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var uel: UserEntryLogger
 
-    var minutes = InputDuration(injector, 30, InputDuration.TimeUnit.MINUTES)
+    var minutes = InputDuration(30, InputDuration.TimeUnit.MINUTES)
 
     override fun friendlyName(): Int = R.string.suspendloop
     override fun shortDescription(): String = resourceHelper.gs(R.string.suspendloopforXmin, minutes.getMinutes())
@@ -32,6 +37,8 @@ class ActionLoopSuspend(injector: HasAndroidInjector) : Action(injector) {
         if (!loopPlugin.isSuspended) {
             loopPlugin.suspendLoop(minutes.getMinutes())
             rxBus.send(EventRefreshOverview("ActionLoopSuspend"))
+            uel.log(UserEntry.Action.SUSPEND, Sources.Automation, title + ": " + resourceHelper.gs(R.string.suspendloopforXmin, minutes.getMinutes()),
+                ValueWithUnit.Minute(minutes.getMinutes()))
             callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok))?.run()
         } else {
             callback.result(PumpEnactResult(injector).success(true).comment(R.string.alreadysuspended))?.run()
@@ -56,7 +63,7 @@ class ActionLoopSuspend(injector: HasAndroidInjector) : Action(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(LabelWithElement(injector, resourceHelper.gs(R.string.duration_min_label), "", minutes))
+            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.duration_min_label), "", minutes))
             .build(root)
     }
 

@@ -1,15 +1,16 @@
-package info.nightscout.androidaps
+package info.nightscout.androidaps.plugins.general.automation
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.db.ProfileSwitch
-import info.nightscout.androidaps.db.Treatment
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.interfaces.ConfigInterface
+import info.nightscout.androidaps.TestBase
+import info.nightscout.androidaps.data.ProfileSealed
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.extensions.pureProfileFromJson
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.ProfileStore
-import info.nightscout.androidaps.interfaces.TreatmentsInterface
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DefaultValueHelper
@@ -21,43 +22,22 @@ import org.mockito.Mock
 import org.powermock.core.classloader.annotations.PrepareForTest
 
 @Suppress("SpellCheckingInspection")
-@PrepareForTest(FabricPrivacy::class)
+@PrepareForTest(FabricPrivacy::class, AppRepository::class)
 open class TestBaseWithProfile : TestBase() {
 
-    @Mock lateinit var activePluginProvider: ActivePluginProvider
+    @Mock lateinit var activePluginProvider: ActivePlugin
     @Mock lateinit var resourceHelper: ResourceHelper
-    @Mock lateinit var treatmentsInterface: TreatmentsInterface
     @Mock lateinit var fabricPrivacy: FabricPrivacy
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var defaultValueHelper: DefaultValueHelper
     @Mock lateinit var dateUtil: DateUtil
-    @Mock lateinit var configInterface: ConfigInterface
+    @Mock lateinit var config: Config
+    @Mock lateinit var repository: AppRepository
 
     val rxBus = RxBusWrapper(aapsSchedulers)
 
     val profileInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is Profile) {
-                it.aapsLogger = aapsLogger
-                it.activePlugin = activePluginProvider
-                it.resourceHelper = resourceHelper
-                it.rxBus = rxBus
-                it.fabricPrivacy = fabricPrivacy
-                it.configInterface = configInterface
-            }
-            if (it is ProfileSwitch) {
-                it.treatmentsPlugin = treatmentsInterface
-                it.aapsLogger = aapsLogger
-                it.rxBus = rxBus
-                it.resourceHelper = resourceHelper
-                it.dateUtil = dateUtil
-            }
-            if (it is Treatment) {
-                it.activePlugin = activePluginProvider
-                it.profileFunction = profileFunction
-                it.defaultValueHelper = defaultValueHelper
-                it.resourceHelper = resourceHelper
-            }
         }
     }
 
@@ -68,7 +48,7 @@ open class TestBaseWithProfile : TestBase() {
     @Before
     fun prepareMock() {
         validProfileJSON = "{\"dia\":\"3\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"},{\"time\":\"2:00\",\"value\":\"110\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
-        validProfile = Profile(profileInjector, JSONObject(validProfileJSON), Constants.MGDL)
+        validProfile = ProfileSealed.Pure(pureProfileFromJson(JSONObject(validProfileJSON), dateUtil)!!)
     }
 
     fun getValidProfileStore(): ProfileStore {
@@ -77,6 +57,6 @@ open class TestBaseWithProfile : TestBase() {
         store.put(TESTPROFILENAME, JSONObject(validProfileJSON))
         json.put("defaultProfile", TESTPROFILENAME)
         json.put("store", store)
-        return ProfileStore(profileInjector, json)
+        return ProfileStore(profileInjector, json, dateUtil)
     }
 }

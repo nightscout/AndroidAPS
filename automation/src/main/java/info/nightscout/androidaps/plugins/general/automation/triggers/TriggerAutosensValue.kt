@@ -20,17 +20,17 @@ class TriggerAutosensValue(injector: HasAndroidInjector) : Trigger(injector) {
     private val maxValue = (sp.getDouble(R.string.key_openapsama_autosens_max, 1.2) * 100).toInt()
     private val step = 1.0
     private val decimalFormat = DecimalFormat("1")
-    var autosens: InputDouble = InputDouble(injector, 100.0, minValue.toDouble(), maxValue.toDouble(), step, decimalFormat)
+    var autosens: InputDouble = InputDouble(100.0, minValue.toDouble(), maxValue.toDouble(), step, decimalFormat)
 
-    var comparator: Comparator = Comparator(injector)
+    var comparator: Comparator = Comparator(resourceHelper)
 
     private constructor(injector: HasAndroidInjector, triggerAutosensValue: TriggerAutosensValue) : this(injector) {
-        autosens = InputDouble(injector, triggerAutosensValue.autosens)
-        comparator = Comparator(injector, triggerAutosensValue.comparator.value)
+        autosens = InputDouble(triggerAutosensValue.autosens)
+        comparator = Comparator(resourceHelper, triggerAutosensValue.comparator.value)
     }
 
     override fun shouldRun(): Boolean {
-        val autosensData = iobCobCalculatorPlugin.getLastAutosensData("Automation trigger")
+        val autosensData = iobCobCalculator.ads.getLastAutosensData("Automation trigger", aapsLogger, dateUtil)
             ?: return if (comparator.value == Comparator.Compare.IS_NOT_AVAILABLE) {
                 aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
                 true
@@ -46,15 +46,10 @@ class TriggerAutosensValue(injector: HasAndroidInjector) : Trigger(injector) {
         return false
     }
 
-    override fun toJSON(): String {
-        val data = JSONObject()
+    override fun dataJSON(): JSONObject =
+        JSONObject()
             .put("value", autosens.value)
             .put("comparator", comparator.value.toString())
-        return JSONObject()
-            .put("type", this::class.java.name)
-            .put("data", data)
-            .toString()
-    }
 
     override fun fromJSON(data: String): Trigger {
         val d = JSONObject(data)
@@ -74,9 +69,9 @@ class TriggerAutosensValue(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(injector, R.string.autosenslabel, this))
+            .add(StaticLabel(resourceHelper, R.string.autosenslabel, this))
             .add(comparator)
-            .add(LabelWithElement(injector, resourceHelper.gs(R.string.autosenslabel) + ": ", "", autosens))
+            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.autosenslabel) + ": ", "", autosens))
             .build(root)
     }
 }

@@ -3,6 +3,7 @@ package info.nightscout.androidaps.queue.commands
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.queue.Callback
@@ -17,6 +18,7 @@ abstract class Command(
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var repository: AppRepository
 
     enum class CommandType {
         BOLUS,

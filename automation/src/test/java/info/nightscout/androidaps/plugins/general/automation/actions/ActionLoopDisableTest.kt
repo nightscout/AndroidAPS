@@ -51,7 +51,7 @@ class ActionLoopDisableTest : ActionsTestBase() {
             override fun run() {}
         })
         Mockito.verify(loopPlugin, Mockito.times(1)).setPluginEnabled(PluginType.LOOP, false)
-        Mockito.verify(configBuilderPlugin, Mockito.times(1)).storeSettings("ActionLoopDisable")
+        Mockito.verify(configBuilder, Mockito.times(1)).storeSettings("ActionLoopDisable")
         Mockito.verify(commandQueue, Mockito.times(1)).cancelTempBasal(eq(true), anyObject())
 
         `when`(loopPlugin.isEnabled()).thenReturn(false)
@@ -61,7 +61,7 @@ class ActionLoopDisableTest : ActionsTestBase() {
             override fun run() {}
         })
         Mockito.verify(loopPlugin, Mockito.times(1)).setPluginEnabled(PluginType.LOOP, false)
-        Mockito.verify(configBuilderPlugin, Mockito.times(1)).storeSettings("ActionLoopDisable")
+        Mockito.verify(configBuilder, Mockito.times(1)).storeSettings("ActionLoopDisable")
         Mockito.verify(commandQueue, Mockito.times(1)).cancelTempBasal(eq(true), anyObject())
     }
 }

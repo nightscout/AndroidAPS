@@ -1,10 +1,13 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data.dto;
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.annotations.Expose;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import info.nightscout.androidaps.db.TDD;
+import java.util.Locale;
+
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
@@ -126,11 +129,11 @@ public class DailyTotalsDTO {
             int j1 = ByteUtil.toInt(body[i + 1], body[i]);
             int k1 = ByteUtil.toInt(body[i + 2], body[i + 1], body[i]);
 
-            System.out.println(String.format(
+            System.out.println(String.format(Locale.ENGLISH,
                     "index: %d, number=%d, del/40=%.3f, del/10=%.3f, singular=%d, sing_hex=%s", i, j, j / 40.0d, j / 10.0d,
                     body[i], ByteUtil.shortHexString(body[i])));
 
-            System.out.println(String.format("     number[k,j1,k1]=%d / %d /%d, del/40=%.3f, del/40=%.3f, del/40=%.3f",
+            System.out.println(String.format(Locale.ENGLISH, "     number[k,j1,k1]=%d / %d /%d, del/40=%.3f, del/40=%.3f, del/40=%.3f",
                     k, j1, k1, k / 40.0d, j1 / 40.0d, k1 / 40.0d));
 
         }
@@ -205,7 +208,7 @@ public class DailyTotalsDTO {
         //LOG.debug("523: {}", toString());
     }
 
-    @Override
+    @Override @NonNull
     public String toString() {
         return new ToStringBuilder(this)
                 .append("bgAvg", bgAvg)
@@ -236,16 +239,20 @@ public class DailyTotalsDTO {
                 .toString();
     }
 
-    public void setTDD(TDD tdd) {
-        tdd.date = DateTimeUtil.toMillisFromATD(this.entry.atechDateTime);
-        tdd.basal = insulinBasal;
-        tdd.bolus = insulinBolus;
-        tdd.total = insulinTotal;
+    public long timestamp() {
+        return DateTimeUtil.toMillisFromATD(this.entry.atechDateTime);
     }
 
-
-    public boolean doesEqual(TDD tdd) {
-        return tdd.total == this.insulinTotal && tdd.bolus == this.insulinBolus && tdd.basal == this.insulinBasal;
+    public double insulinBasal() {
+        return insulinBasal;
     }
+
+    public double insulinBolus() {
+        return insulinBolus;
+    }
+    public double insulinTotal() {
+        return insulinTotal;
+    }
+
 
 }

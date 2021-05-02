@@ -9,18 +9,17 @@ import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
 
-class StaticLabel(injector: HasAndroidInjector) : Element(injector) {
-    @Inject lateinit var resourceHelper: ResourceHelper
+class StaticLabel(private val resourceHelper: ResourceHelper) : Element() {
 
     var label = ""
     var trigger: Trigger? = null
 
-    constructor(injector: HasAndroidInjector, label: String, trigger: Trigger) : this(injector) {
+    constructor(resourceHelper: ResourceHelper, label: String, trigger: Trigger) : this(resourceHelper) {
         this.label = label
         this.trigger = trigger
     }
 
-    constructor(injector: HasAndroidInjector, resourceId: Int, trigger: Trigger) : this(injector) {
+    constructor(resourceHelper: ResourceHelper, resourceId: Int, trigger: Trigger) : this(resourceHelper) {
         label = resourceHelper.gs(resourceId)
         this.trigger = trigger
     }

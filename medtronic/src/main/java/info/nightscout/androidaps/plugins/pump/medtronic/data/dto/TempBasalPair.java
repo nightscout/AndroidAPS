@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data.dto;
 
-import org.jetbrains.annotations.NotNull;
+import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
  * <p>
  * Just need a class to keep the pair together, for parcel transport.
  */
-public class TempBasalPair extends info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair {
+public class TempBasalPair extends info.nightscout.androidaps.plugins.pump.common.defs.TempBasalPair {
 
     /**
      * This constructor is for use with PumpHistoryDecoder
@@ -30,36 +30,53 @@ public class TempBasalPair extends info.nightscout.androidaps.plugins.pump.commo
         int rateInt = ByteUtil.asUINT8(rateByte);
 
         if (isPercent)
-            this.insulinRate = rateByte;
+            this.setInsulinRate(rateByte);
         else
-            this.insulinRate = rateInt * 0.025;
-        this.durationMinutes = startTimeByte * 30;
-        this.isPercent = isPercent;
+            this.setInsulinRate(rateInt * 0.025);
+        this.setDurationMinutes(startTimeByte * 30);
+        this.setPercent(isPercent);
     }
 
+
+    /**
+     * This constructor is for use with PumpHistoryDecoder
+     *
+     * @param rateByte0
+     * @param startTimeByte
+     * @param isPercent
+     */
+    public TempBasalPair(byte rateByte0, byte rateByte1, int startTimeByte, boolean isPercent) {
+        if (isPercent) {
+            this.setInsulinRate(rateByte0);
+        } else {
+            this.setInsulinRate(ByteUtil.toInt(rateByte1, rateByte0) * 0.025);
+        }
+        this.setDurationMinutes(startTimeByte * 30);
+        this.setPercent(isPercent);
+    }
 
     public TempBasalPair(AAPSLogger aapsLogger, byte[] response) {
         super();
 
         aapsLogger.debug(LTag.PUMPBTCOMM, "Received TempBasal response: " + ByteUtil.getHex(response));
 
-        isPercent = response[0] == 1;
+        setPercent(response[0] == 1);
 
-        if (isPercent) {
-            insulinRate = response[1];
+        if (isPercent()) {
+            setInsulinRate(response[1]);
         } else {
             int strokes = MedtronicUtil.makeUnsignedShort(response[2], response[3]);
 
-            insulinRate = strokes / 40.0d;
+            setInsulinRate(strokes / 40.0d);
         }
 
         if (response.length < 6) {
-            durationMinutes = ByteUtil.asUINT8(response[4]);
+            setDurationMinutes(ByteUtil.asUINT8(response[4]));
         } else {
-            durationMinutes = MedtronicUtil.makeUnsignedShort(response[4], response[5]);
+            setDurationMinutes(MedtronicUtil.makeUnsignedShort(response[4], response[5]));
         }
 
-        aapsLogger.warn(LTag.PUMPBTCOMM, "TempBasalPair (with {} byte response): {}", response.length, toString());
+        aapsLogger.warn(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "TempBasalPair (with %d byte response): %s", response.length, toString()));
 
     }
 
@@ -75,8 +92,8 @@ public class TempBasalPair extends info.nightscout.androidaps.plugins.pump.commo
 
         list.add((byte) 5);
 
-        byte[] insulinRate = MedtronicUtil.getBasalStrokes(this.insulinRate, true);
-        byte timeMin = (byte) MedtronicUtil.getIntervalFromMinutes(durationMinutes);
+        byte[] insulinRate = MedtronicUtil.getBasalStrokes(this.getInsulinRate(), true);
+        byte timeMin = (byte) MedtronicUtil.getIntervalFromMinutes(getDurationMinutes());
 
         // list.add((byte) 0); // ?
 
@@ -103,7 +120,7 @@ public class TempBasalPair extends info.nightscout.androidaps.plugins.pump.commo
     }
 
     public boolean isCancelTBR() {
-        return (MedtronicUtil.isSame(insulinRate, 0.0d) && durationMinutes == 0);
+        return (MedtronicUtil.isSame(getInsulinRate(), 0.0d) && getDurationMinutes() == 0);
     }
 
 
@@ -112,17 +129,17 @@ public class TempBasalPair extends info.nightscout.androidaps.plugins.pump.commo
             return "Cancel TBR";
         }
 
-        if (isPercent) {
-            return String.format(Locale.ENGLISH, "Rate: %.0f%%, Duration: %d min", insulinRate, durationMinutes);
+        if (isPercent()) {
+            return String.format(Locale.ENGLISH, "Rate: %.0f%%, Duration: %d min", getInsulinRate(), getDurationMinutes());
         } else {
-            return String.format(Locale.ENGLISH, "Rate: %.3f U, Duration: %d min", insulinRate, durationMinutes);
+            return String.format(Locale.ENGLISH, "Rate: %.3f U, Duration: %d min", getInsulinRate(), getDurationMinutes());
         }
     }
 
 
-    @NotNull @Override
+    @NonNull @Override
     public String toString() {
-        return "TempBasalPair [" + "Rate=" + insulinRate + ", DurationMinutes=" + durationMinutes + ", IsPercent="
-                + isPercent + "]";
+        return "TempBasalPair [" + "Rate=" + getInsulinRate() + ", DurationMinutes=" + getDurationMinutes() + ", IsPercent="
+                + isPercent() + "]";
     }
 }

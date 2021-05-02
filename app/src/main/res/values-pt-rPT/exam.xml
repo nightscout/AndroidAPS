@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="dia_whatmeansdia">O que é verdade sobre DIA?</string>
-    <string name="dia_label_exam">Duração da Acção de Insulina (DIA)</string>
+    <string name="dia_label_exam">Duração da Acção da Insulina (DIA)</string>
     <string name="dia_profile">Deve definir o valor da DIA no seu perfil.</string>
     <string name="dia_minimumis5h">O valor mínimo permitido são 5 horas.</string>
     <string name="dia_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html?#insulin</string>
-    <string name="dia_meaningisequaltodiapump">Se estiver satisfeito com o valor para a DIA que utilizou na bomba antes do AndroidAPS e funcionou bem, não há necessidade de alterar isso quando inicia o loop.</string>
-    <string name="dia_valuemustbedetermined">Deve determinar para si mesmo o valor adequado para a DIA.</string>
+    <string name="dia_meaningisequaltodiapump">Se estiver satisfeito com o valor da DIA que utilizava na bomba antes da AndroidAPS e que funcionava bem, não há necessidade de o alterar quando iniciar o loop.</string>
+    <string name="dia_valuemustbedetermined">Deve determinar para o seu valor adequado para a DIA.</string>
     <string name="hypott_label">Hipo Alvo-Temp</string>
     <string name="hypott_whenhypott">Qual é a principal razão para definir um alvo temporário?</string>
     <string name="hypott_wrongbasal">Para corrigir hipos causadas por configurações de taxa de basal incorretas.</string>
@@ -110,7 +110,7 @@
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
     <string name="troubleshooting_hint3">https://gitter.im/MilosKozak/AndroidAPS</string>
     <string name="insulin_label">Plugins de Insulina</string>
-    <string name="insulin_ultrarapid">Qual insulina deve utilizar com o plugin Ultra-Rapid Oref?</string>
+    <string name="insulin_ultrarapid">Que insulina deve utilizar com o plugin Oref Ultra-Rápida ?</string>
     <string name="insulin_fiasp">Fiasp®</string>
     <string name="insulin_novorapid">NovoRapid®/Novolog®</string>
     <string name="insulin_humalog">Humalog ®</string>
@@ -126,7 +126,7 @@
     <string name="wrongcarbs_label">Erros de Entrada de Hidratos</string>
     <string name="wrongcarbs_whattodo">O que deve fazer se tiver feito uma entrada incorrecta de hidratos?</string>
     <string name="wrongcarbs_treatmentstab">Elimine a entrada incorreta em Tratamentos e insira o novo valor correto dos hidratos.</string>
-    <string name="wrongcarbs_addinsulin">Bólus com insulina usando o conjunto de infusão no meu purgar.</string>
+    <string name="wrongcarbs_addinsulin">Bólus com insulina usando o conjunto de infusão no menu purgar.</string>
     <string name="wrongcarbs_donothing">Fazer nada – o AndroidAPS fará os ajustes adequados.</string>
     <string name="wrongcarbs_bolus">Bólus com insulina usando o botão Insulina (bólus) na Visão Geral.</string>
     <string name="wronginsulin_label">Erros de entrada/administração de insulina</string>
@@ -135,16 +135,16 @@
     <string name="wronginsulin_compare">Compare valores no AndroidAPS e no histórico da bomba.</string>
     <string name="wronginsulin_prime">Bólus uma proporção de insulina calculada \'não administrada\' ou com seringa/caneta ou purgando.</string>
     <string name="wronginsulin_donothing">Faça nada e permita que o AndroidAPS corrija qualquer nível de glicose elevado que daí resulte.</string>
-    <string name="iob_label">Insulina a Bordo (IOB)</string>
-    <string name="iob_which">Marque todas as respostas correctas.</string>
-    <string name="iob_value">O valor do IOB é afectado por basais temporárias emitidas.</string>
-    <string name="iob_hightemp">Basal temp alta não será dada quando sua glicose e estiver abaixo do alvo.</string>
-    <string name="iob_negiob">IOB negativo por um período substancial na ausência de exercício, sugere que seu perfil é muito forte e é necessária menos insulina nas suas configurações.</string>
-    <string name="iob_posiob">IOB positivo durante um período substancial sugere resistência à insulina ou refeições não introduzidas.</string>
+    <string name="iob_label">Insulina ativa (IA )</string>
+    <string name="iob_which">Marque todas as respostas corretas.</string>
+    <string name="iob_value">O valor do IA é afectado por basais temporárias emitidas.</string>
+    <string name="iob_hightemp">Basal temporária alta não será dada quando a sua glicose estiver abaixo do alvo.</string>
+    <string name="iob_negiob">IA negativa por um período substancial na ausência de exercício, sugere que o seu perfil é muito alto e é necessária menos insulina nas suas configurações.</string>
+    <string name="iob_posiob">IA positiva durante um período substancial sugere resistência à insulina ou refeições não introduzidas.</string>
     <string name="breadgrams_label">Entrada de hidratos e bólus</string>
     <string name="breadgrams_grams">Apenas gramas devem ser utilizados para estimar e registar hidratos de carbonos consumidos.</string>
     <string name="breadgrams_exchange">Hidratos de Carbono consumidos podem ser registados usando um sistema de troca apropriado (por exemplo, DAFNE \"CHO\" ou \"Unidades de Pão\" Europeus).</string>
-    <string name="breadgrams_decay">AndroidAPS utiliza um modelo dinâmico para estimar a “degradação” de hidratos e calcular COB.</string>
+    <string name="breadgrams_decay">AndroidAPS utiliza um modelo dinâmico para estimar a “degradação” de hidratos e calcular os HCA.</string>
     <string name="breadgrams_calc">Se os níveis de glicose no sangue estiverem fora dos valores aceitáveis (muito baixos ou muito altos) a calculadora de bólus pode ser usada para fornecer sugestões para correções de hidratos ou insulina.</string>
     <string name="breadgrams_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="extendedcarbs_label">hidratos-e</string>
@@ -157,12 +157,12 @@
     <string name="nsclient_label">Monitorização Remota</string>
     <string name="nsclient_howcanyou">Como pode monitorizar o AndroidAPS (por exemplo, para o seu filho) remotamente?</string>
     <string name="nsclient_nightscout">App Cliente NS, app Nightscout e página web Nightscout permitem que siga remotamente o AndroidAPS.</string>
-    <string name="nsclient_dexcomfollow">Outras apps (por exemplo, Dexcom follow, xDrip em modo seguidor) permitem que siga alguns parâmetros (por exemplo, valores de glicose no sangue/sensor) remotamente, mas usam diferentes algoritmos, pode ter valores IOB ou COB imprecisos.</string>
+    <string name="nsclient_dexcomfollow">Outras apps (por exemplo, Dexcom follow, xDrip em modo seguidor) permitem que siga alguns parâmetros (por exemplo, valores de glicose no sangue/sensor) remotamente, mas usam diferentes algoritmos, pode ter valores IA ou HCA imprecisos.</string>
     <string name="nsclient_data">Para seguir o AndroidAPS remotamente, ambos os dispositivos devem ter acesso à Internet (por exemplo, via Wi-Fi ou dados móveis/redes móveis).</string>
     <string name="nsclient_fullcontrol">Cliente NS usado como seguidor remoto monitorizará e fornecerá controle total do AndroidAPS.</string>
     <string name="nsclient_hint1">https://androidaps.readthedocs.io/en/latest/EN/Children/Children.html</string>
     <string name="isf_label_exam">Factor Sensibilidade à Insulina (FSI)</string>
-    <string name="isf_increasingvalue">Aumento de valores de FSI leva a maior mais administração de insulina para cobrir uma quantidade específica de hidratos.</string>
+    <string name="isf_increasingvalue">Aumento dos valores de FSI leva a maior mais administração de insulina para uma quantidade específica de hidratos.</string>
     <string name="isf_decreasingvalue">Reduzir os valores de ISF leva a maior administração de insulina para corrigir para uma glicose acima do alvo.</string>
     <string name="isf_noeffect">Aumentar ou reduzir o FSI não tem efeito na administração de insulina quando os níveis de glicose estão abaixo do alvo.</string>
     <string name="isf_preferences">FSI deve ser inserido nas Preferências do AndroidAPS.</string>
@@ -174,7 +174,7 @@
     <string name="ic_label_exam">Rácio Insulina por Hidratos de Carbono (Rácio I:HC)</string>
     <string name="ic_increasingvalue">Rácios I:HC mais altos levam a menos insulina administrada para uma dada quantidade de hidratos.</string>
     <string name="ic_decreasingvalue">Rácios I:HC mais baixos levam a menos insulina administrada para uma dada quantidade de hidratos.</string>
-    <string name="ic_noeffect">Se tiver 0 COB, alterar o rácio IC irá levar a uma quantidade diferente de insulina para corrigir um determinado valor da Glic.</string>
+    <string name="ic_noeffect">Se tiver 0 HCA, alterar o rácio IHC irá levar a uma quantidade diferente de insulina para corrigir um determinado valor da GLIC.</string>
     <string name="ic_different">I:HC será diferente se contar a unidade de pão como 10g ou 12g.</string>
     <string name="ic_meaning">O significado do I:HC é: Quantas unidades de pão são cobertas por 1U de insulina.</string>
     <string name="ic_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#carbohydrate-to-insulin-ratio-cr-g-u</string>
@@ -193,8 +193,8 @@
     <string name="profileswitch2_isfhigher">FSI será 20% maior.</string>
     <string name="profileswitchtime_label">Troca de Perfil</string>
     <string name="profileswitchtime_iwant">Se você se levanta 2 horas mais cedo do que o normal, como deve notificar o AndroidAPS da alteração no seu horário?</string>
-    <string name="profileswitchtime_2">Iniciar uma mudança de perfil com uma alteração de turno de 2</string>
-    <string name="profileswitchtime__2">Iniciar uma mudança de perfil com uma alteração de turno de -2</string>
+    <string name="profileswitchtime_2">Iniciar uma mudança de perfil com um deslocamento temporal de 2</string>
+    <string name="profileswitchtime__2">Iniciar uma mudança de perfil com uma deslocamento temporal de -2</string>
     <string name="profileswitchtime_tt">Defina um alvo temporário de comer brevemente.</string>
     <string name="profileswitchtime_100">Faça troca de perfil para mais de 100%. </string>
     <string name="profileswitchtime_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#timeshift</string>

@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.testing.utils;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.Objects;
@@ -42,7 +43,7 @@ public class BgWatchDataExt extends BgWatchData {
 
     @Override
     public boolean equals(@Nullable Object obj) {
-        if ((obj instanceof BgWatchData)||(obj instanceof BgWatchDataExt)) {
+        if (obj instanceof BgWatchData) {
             return (this.sgv == ((BgWatchData) obj).sgv)
                     && (this.high == ((BgWatchData) obj).high)
                     && (this.low == ((BgWatchData) obj).low)
@@ -53,7 +54,7 @@ public class BgWatchDataExt extends BgWatchData {
         }
     }
 
-    @Override
+    @Override @NonNull
     public String toString() {
         return sgv+", "+high+", "+low+", "+timestamp+", "+color;
     }

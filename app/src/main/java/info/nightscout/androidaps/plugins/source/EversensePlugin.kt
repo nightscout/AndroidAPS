@@ -3,31 +3,25 @@ package info.nightscout.androidaps.plugins.source
 import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
+import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
-import info.nightscout.androidaps.db.CareportalEvent
-import info.nightscout.androidaps.interfaces.BgSourceInterface
+import info.nightscout.androidaps.database.transactions.InsertIfNewByTimestampTherapyEventTransaction
+import info.nightscout.androidaps.interfaces.BgSource
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
-import info.nightscout.androidaps.receivers.BundleStore
-import info.nightscout.androidaps.receivers.DataReceiver
+import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.XDripBroadcast
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
-import org.json.JSONException
-import org.json.JSONObject
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -36,7 +30,8 @@ import javax.inject.Singleton
 class EversensePlugin @Inject constructor(
     injector: HasAndroidInjector,
     resourceHelper: ResourceHelper,
-    aapsLogger: AAPSLogger
+    aapsLogger: AAPSLogger,
+    private val sp: SP
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
@@ -46,16 +41,12 @@ class EversensePlugin @Inject constructor(
     .preferencesId(R.xml.pref_bgsource)
     .description(R.string.description_source_eversense),
     aapsLogger, resourceHelper, injector
-), BgSourceInterface {
+), BgSource {
 
     override var sensorBatteryLevel = -1
 
-    private val disposable = CompositeDisposable()
-
-    override fun onStop() {
-        disposable.clear()
-        super.onStop()
-    }
+    override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean =
+        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.EVERSENSE && sp.getBoolean(R.string.key_dexcomg5_nsupload, false)
 
     // cannot be inner class because of needed injection
     class EversenseWorker(
@@ -66,10 +57,8 @@ class EversensePlugin @Inject constructor(
         @Inject lateinit var injector: HasAndroidInjector
         @Inject lateinit var eversensePlugin: EversensePlugin
         @Inject lateinit var aapsLogger: AAPSLogger
-        @Inject lateinit var sp: SP
-        @Inject lateinit var nsUpload: NSUpload
         @Inject lateinit var dateUtil: DateUtil
-        @Inject lateinit var bundleStore: BundleStore
+        @Inject lateinit var dataWorker: DataWorker
         @Inject lateinit var repository: AppRepository
         @Inject lateinit var broadcastToXDrip: XDripBroadcast
 
@@ -78,9 +67,11 @@ class EversensePlugin @Inject constructor(
         }
 
         override fun doWork(): Result {
-            if (!eversensePlugin.isEnabled(PluginType.BGSOURCE)) return Result.failure()
-            val bundle = bundleStore.pickup(inputData.getLong(DataReceiver.STORE_KEY, -1))
-                ?: return Result.failure()
+            var ret = Result.success()
+
+            if (!eversensePlugin.isEnabled(PluginType.BGSOURCE)) return Result.success()
+            val bundle = dataWorker.pickupBundle(inputData.getLong(DataWorker.STORE_KEY, -1))
+                ?: return Result.failure(workDataOf("Error" to "missing input data"))
             if (bundle.containsKey("currentCalibrationPhase")) aapsLogger.debug(LTag.BGSOURCE, "currentCalibrationPhase: " + bundle.getString("currentCalibrationPhase"))
             if (bundle.containsKey("placementModeInProgress")) aapsLogger.debug(LTag.BGSOURCE, "placementModeInProgress: " + bundle.getBoolean("placementModeInProgress"))
             if (bundle.containsKey("glucoseLevel")) aapsLogger.debug(LTag.BGSOURCE, "glucoseLevel: " + bundle.getInt("glucoseLevel"))
@@ -118,15 +109,18 @@ class EversensePlugin @Inject constructor(
                             trendArrow = GlucoseValue.TrendArrow.NONE,
                             sourceSensor = GlucoseValue.SourceSensor.EVERSENSE
                         )
-                    eversensePlugin.disposable += repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null)).subscribe({ savedValues ->
-                        savedValues.inserted.forEach {
-                            broadcastToXDrip(it)
-                            if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false))
-                                nsUpload.uploadBg(it, GlucoseValue.SourceSensor.EVERSENSE.text)
+                    repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
+                        .doOnError {
+                            aapsLogger.error(LTag.DATABASE, "Error while saving values from Eversense App", it)
+                            ret = Result.failure(workDataOf("Error" to it.toString()))
                         }
-                    }, {
-                        aapsLogger.error(LTag.BGSOURCE, "Error while saving values from Eversense App", it)
-                    })
+                        .blockingGet()
+                        .also { savedValues ->
+                            savedValues.inserted.forEach {
+                                broadcastToXDrip(it)
+                                aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
+                            }
+                        }
                 }
             }
             if (bundle.containsKey("calibrationGlucoseLevels")) {
@@ -138,24 +132,26 @@ class EversensePlugin @Inject constructor(
                     aapsLogger.debug(LTag.BGSOURCE, "calibrationTimestamps" + Arrays.toString(calibrationTimestamps))
                     aapsLogger.debug(LTag.BGSOURCE, "calibrationRecordNumbers" + Arrays.toString(calibrationRecordNumbers))
                     for (i in calibrationGlucoseLevels.indices) {
-                        try {
-                            if (MainApp.getDbHelper().getCareportalEventFromTimestamp(calibrationTimestamps[i]) == null) {
-                                val data = JSONObject()
-                                data.put("enteredBy", "AndroidAPS-Eversense")
-                                data.put("created_at", DateUtil.toISOString(calibrationTimestamps[i]))
-                                data.put("eventType", CareportalEvent.BGCHECK)
-                                data.put("glucoseType", "Finger")
-                                data.put("glucose", calibrationGlucoseLevels[i])
-                                data.put("units", Constants.MGDL)
-                                nsUpload.uploadCareportalEntryToNS(data)
+                        repository.runTransactionForResult(InsertIfNewByTimestampTherapyEventTransaction(
+                            timestamp = calibrationTimestamps[i],
+                            type = TherapyEvent.Type.FINGER_STICK_BG_VALUE,
+                            glucose = calibrationGlucoseLevels[i].toDouble(),
+                            glucoseType = TherapyEvent.MeterType.FINGER,
+                            glucoseUnit = TherapyEvent.GlucoseUnit.MGDL,
+                            enteredBy = "AndroidAPS-Eversense"
+                        ))
+                            .doOnError {
+                                aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it)
+                                ret = Result.failure(workDataOf("Error" to it.toString()))
                             }
-                        } catch (e: JSONException) {
-                            aapsLogger.error("Unhandled exception", e)
-                        }
+                            .blockingGet()
+                            .also { result ->
+                                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted therapy event $it") }
+                            }
                     }
                 }
             }
-            return Result.success()
+            return ret
         }
     }
 }

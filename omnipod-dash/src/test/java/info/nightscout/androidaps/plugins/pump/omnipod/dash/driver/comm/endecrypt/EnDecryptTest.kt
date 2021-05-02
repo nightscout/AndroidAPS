@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.endecry
 
 import info.nightscout.androidaps.logging.AAPSLoggerTest
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessagePacket
-import info.nightscout.androidaps.utils.extensions.toHex
+import info.nightscout.androidaps.extensions.toHex
 import org.junit.Assert
 import org.junit.Test
 import org.spongycastle.util.encoders.Hex

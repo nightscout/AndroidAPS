@@ -37,6 +37,7 @@ public class ComboFragment extends DaggerFragment {
     @Inject ResourceHelper resourceHelper;
     @Inject RxBusWrapper rxBus;
     @Inject SP sp;
+    @Inject DateUtil dateUtil;
     @Inject FabricPrivacy fabricPrivacy;
     @Inject AapsSchedulers aapsSchedulers;
 
@@ -192,7 +193,7 @@ public class ComboFragment extends DaggerFragment {
             }
 
             // last connection
-            String minAgo = DateUtil.minAgo(resourceHelper, comboPlugin.getPump().lastSuccessfulCmdTime);
+            String minAgo = dateUtil.minAgo(resourceHelper, comboPlugin.getPump().lastSuccessfulCmdTime);
             long min = (System.currentTimeMillis() - comboPlugin.getPump().lastSuccessfulCmdTime) / 1000 / 60;
             if (comboPlugin.getPump().lastSuccessfulCmdTime + 60 * 1000 > System.currentTimeMillis()) {
                 lastConnectionView.setText(R.string.combo_pump_connected_now);
@@ -215,9 +216,9 @@ public class ComboFragment extends DaggerFragment {
                 if ((agoMsc < 60 * 1000)) {
                     ago = resourceHelper.gs(R.string.combo_pump_connected_now);
                 } else if (bolusMinAgo < 60) {
-                    ago = DateUtil.minAgo(resourceHelper, bolus.timestamp);
+                    ago = dateUtil.minAgo(resourceHelper, bolus.timestamp);
                 } else {
-                    ago = DateUtil.hourAgo(bolus.timestamp, resourceHelper);
+                    ago = dateUtil.hourAgo(bolus.timestamp, resourceHelper);
                 }
                 lastBolusView.setText(resourceHelper.gs(R.string.combo_last_bolus, bolus.amount, unit, ago));
             } else {
@@ -239,8 +240,8 @@ public class ComboFragment extends DaggerFragment {
             tempBasalText.setText(tbrStr);
 
             // stats
-            bolusCount.setText(String.valueOf(sp.getLong(ComboPlugin.COMBO_BOLUSES_DELIVERED, 0L)));
-            tbrCount.setText(String.valueOf(sp.getLong(ComboPlugin.COMBO_TBRS_SET, 0L)));
+            bolusCount.setText(String.valueOf(comboPlugin.getBolusesDelivered()));
+            tbrCount.setText(String.valueOf(comboPlugin.getTbrsSet()));
         }
     }
 }

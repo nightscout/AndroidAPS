@@ -1,40 +1,13 @@
 package info.nightscout.androidaps
 
-import android.os.SystemClock
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import androidx.test.rule.ActivityTestRule
-import androidx.test.rule.GrantPermissionRule
-import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
-import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
-import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin
-import info.nightscout.androidaps.plugins.general.actions.ActionsPlugin
-import info.nightscout.androidaps.plugins.insulin.InsulinOrefUltraRapidActingPlugin
-import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
-import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
-import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
-import info.nightscout.androidaps.plugins.source.RandomBgPlugin
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.extensions.isRunningTest
-import info.nightscout.androidaps.utils.sharedPreferences.SP
-import org.json.JSONObject
-import org.junit.Assert
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
 import org.junit.runner.RunWith
-import javax.inject.Inject
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
 class RealPumpTest {
-
+/*
     companion object {
         const val R_PASSWORD = 1234
         const val R_SERIAL = "PBB00013LR_P"
@@ -89,7 +62,7 @@ class RealPumpTest {
         localProfilePlugin.numOfProfiles = 0
         val singleProfile = LocalProfilePlugin.SingleProfile().copyFrom(localProfilePlugin.rawProfile, profile, "TestProfile")
         localProfilePlugin.addProfile(singleProfile)
-        val profileSwitch = profileFunction.prepareProfileSwitch(localProfilePlugin.createProfileStore(), "TestProfile", 0, 100, 0, DateUtil.now())
+        val profileSwitch = profileFunction.prepareProfileSwitch(localProfilePlugin.createProfileStore(), "TestProfile", 0, 100, 0, dateUtil._now())
         treatmentsPlugin.addToHistoryProfileSwitch(profileSwitch)
         // Insulin
         configBuilderPlugin.performPluginSwitch(insulinOrefUltraRapidActingPlugin, true, PluginType.INSULIN)
@@ -125,4 +98,5 @@ class RealPumpTest {
             SystemClock.sleep(1000)
         }
     }
+ */
 }

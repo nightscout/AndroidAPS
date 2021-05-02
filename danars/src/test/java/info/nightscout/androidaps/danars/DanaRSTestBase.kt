@@ -5,27 +5,24 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danars.comm.DanaRS_Packet
-import info.nightscout.androidaps.db.TemporaryBasal
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Before
+import org.mockito.ArgumentMatchers
 import org.mockito.Mock
+import org.mockito.Mockito
 
 open class DanaRSTestBase : TestBaseWithProfile() {
 
     @Mock lateinit var sp: SP
 
-    val injector = HasAndroidInjector {
-        AndroidInjector {
-            if (it is TemporaryBasal) {
-                it.aapsLogger = aapsLogger
-                it.activePlugin = activePluginProvider
-                it.profileFunction = profileFunction
-                it.sp = sp
-            }
-        }
-    }
+    val injector = HasAndroidInjector { AndroidInjector { } }
 
     lateinit var danaPump: DanaPump
+
+    @Before
+    fun prepare() {
+        Mockito.`when`(resourceHelper.gs(ArgumentMatchers.anyInt())).thenReturn("AnyString")
+    }
 
     fun createArray(length: Int, fillWith: Byte): ByteArray {
         val ret = ByteArray(length)
@@ -57,6 +54,6 @@ open class DanaRSTestBase : TestBaseWithProfile() {
 
     @Before
     fun setup() {
-        danaPump = DanaPump(aapsLogger, sp, injector)
+        danaPump = DanaPump(aapsLogger, sp, dateUtil, injector)
     }
 }

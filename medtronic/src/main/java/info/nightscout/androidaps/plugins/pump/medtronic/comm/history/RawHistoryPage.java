@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.history;
 
 import java.util.Arrays;
+import java.util.Locale;
 
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
@@ -53,8 +54,8 @@ public class RawHistoryPage {
         int crcStored = ByteUtil.toInt(data[1022], data[1023]);
 
         if (crcCalculated != crcStored) {
-            aapsLogger.error(LTag.PUMPBTCOMM, "Stored CRC ({}) is different than calculated ({}), but ignored for now.", crcStored,
-                    crcCalculated);
+            aapsLogger.error(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "Stored CRC (%d) is different than calculated (%d), but ignored for now.", crcStored,
+                    crcCalculated));
         } else {
             if (MedtronicUtil.isLowLevelDebug())
                 aapsLogger.debug(LTag.PUMPBTCOMM, "CRC ok.");
@@ -81,6 +82,6 @@ public class RawHistoryPage {
             offset += linesize;
         }
 
-        aapsLogger.debug(LTag.PUMPBTCOMM, "History Page Data:\n{}", sb.toString());
+        aapsLogger.info(LTag.PUMPBTCOMM, "History Page Data:\n" + sb.toString());
     }
 }

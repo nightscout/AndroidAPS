@@ -20,7 +20,6 @@ class ActionProfileSwitchPercentTest : ActionsTestBase() {
     @Before
     fun setup() {
 
-        `when`(activePlugin.activeTreatments).thenReturn(treatmentsInterface)
         `when`(resourceHelper.gs(R.string.startprofileforever)).thenReturn("Start profile %d%%")
         `when`(resourceHelper.gs(R.string.startprofile)).thenReturn("Start profile %d%% for %d min")
 
@@ -32,8 +31,8 @@ class ActionProfileSwitchPercentTest : ActionsTestBase() {
     }
 
     @Test fun shortDescriptionTest() {
-        sut.pct = InputPercent(injector, 100.0)
-        sut.duration = InputDuration(injector, 30, InputDuration.TimeUnit.MINUTES)
+        sut.pct = InputPercent(100.0)
+        sut.duration = InputDuration(30, InputDuration.TimeUnit.MINUTES)
         Assert.assertNull(sut.shortDescription()) // not mocked
     }
 
@@ -42,14 +41,14 @@ class ActionProfileSwitchPercentTest : ActionsTestBase() {
     }
 
     @Test fun doActionTest() {
-        sut.pct = InputPercent(injector, 110.0)
-        sut.duration = InputDuration(injector, 30, InputDuration.TimeUnit.MINUTES)
+        sut.pct = InputPercent(110.0)
+        sut.duration = InputDuration(30, InputDuration.TimeUnit.MINUTES)
         sut.doAction(object : Callback() {
             override fun run() {
                 Assert.assertTrue(result.success)
             }
         })
-        Mockito.verify(treatmentsInterface, Mockito.times(1)).doProfileSwitch(30, 110, 0)
+        Mockito.verify(profileFunction, Mockito.times(1)).createProfileSwitch(30, 110, 0)
     }
 
     @Test fun hasDialogTest() {
@@ -57,8 +56,8 @@ class ActionProfileSwitchPercentTest : ActionsTestBase() {
     }
 
     @Test fun toJSONTest() {
-        sut.pct = InputPercent(injector, 100.0)
-        sut.duration = InputDuration(injector, 30, InputDuration.TimeUnit.MINUTES)
+        sut.pct = InputPercent(100.0)
+        sut.duration = InputDuration(30, InputDuration.TimeUnit.MINUTES)
         Assert.assertEquals("{\"data\":{\"percentage\":100,\"durationInMinutes\":30},\"type\":\"info.nightscout.androidaps.plugins.general.automation.actions.ActionProfileSwitchPercent\"}", sut.toJSON())
     }
 

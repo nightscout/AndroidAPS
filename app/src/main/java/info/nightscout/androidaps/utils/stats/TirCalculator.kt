@@ -4,7 +4,7 @@ import android.text.Spanned
 import android.util.LongSparseArray
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.DateUtil
@@ -26,8 +26,8 @@ class TirCalculator @Inject constructor(
     fun calculate(days: Long, lowMgdl: Double, highMgdl: Double): LongSparseArray<TIR> {
         if (lowMgdl < 39) throw RuntimeException("Low below 39")
         if (lowMgdl > highMgdl) throw RuntimeException("Low > High")
-        val startTime = MidnightTime.calc(DateUtil.now() - T.days(days).msecs())
-        val endTime = MidnightTime.calc(DateUtil.now())
+        val startTime = MidnightTime.calc(dateUtil.now() - T.days(days).msecs())
+        val endTime = MidnightTime.calc(dateUtil.now())
 
         val bgReadings = repository.compatGetBgReadingsDataFromTime(startTime, endTime, true).blockingGet()
         val result = LongSparseArray<TIR>()

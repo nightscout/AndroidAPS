@@ -9,7 +9,7 @@ import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.dana.R
 import info.nightscout.androidaps.dana.databinding.DanarUserOptionsActivityBinding
 import info.nightscout.androidaps.events.EventInitializationChanged
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -32,16 +32,16 @@ class DanaUserOptionsActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var context: Context
     @Inject lateinit var danaPump: DanaPump
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var aapsSchedulers: AapsSchedulers
 
     private val disposable = CompositeDisposable()
 
     // This is for Dana pumps only
-    private fun isRS() = activePlugin.activePump.pumpDescription.pumpType == PumpType.DanaRS
-    private fun isDanaR() = activePlugin.activePump.pumpDescription.pumpType == PumpType.DanaR
-    private fun isDanaRv2() = activePlugin.activePump.pumpDescription.pumpType == PumpType.DanaRv2
+    private fun isRS() = activePlugin.activePump.pumpDescription.pumpType == PumpType.DANA_RS
+    private fun isDanaR() = activePlugin.activePump.pumpDescription.pumpType == PumpType.DANA_R
+    private fun isDanaRv2() = activePlugin.activePump.pumpDescription.pumpType == PumpType.DANA_RV2
 
     var minBacklight = 1
 

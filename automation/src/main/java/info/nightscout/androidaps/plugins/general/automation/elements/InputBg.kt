@@ -1,25 +1,22 @@
 package info.nightscout.androidaps.plugins.general.automation.elements
 
 import android.widget.LinearLayout
-import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.automation.R
+import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.ui.NumberPicker
 import java.text.DecimalFormat
-import javax.inject.Inject
 
-class InputBg(injector: HasAndroidInjector) : Element(injector) {
-    @Inject lateinit var profileFunction: ProfileFunction
+class InputBg(profileFunction: ProfileFunction) : Element() {
 
-    var units = Constants.MGDL
+    var units = GlucoseUnit.MGDL
     var value = 0.0
     var minValue = 0.0
     private var maxValue = 0.0
     private var step = 0.0
     private var decimalFormat: DecimalFormat? = null
 
-    constructor(injector: HasAndroidInjector, value: Double, units: String) : this(injector) {
+    constructor(profileFunction: ProfileFunction, value: Double, units: GlucoseUnit) : this(profileFunction) {
         setUnits(units)
         this.value = value
     }
@@ -40,8 +37,8 @@ class InputBg(injector: HasAndroidInjector) : Element(injector) {
         return this
     }
 
-    fun setUnits(units: String): InputBg {
-        if (units == Constants.MMOL) {
+    fun setUnits(units: GlucoseUnit): InputBg {
+        if (units == GlucoseUnit.MMOL) {
             minValue = MMOL_MIN
             maxValue = MMOL_MAX
             step = 0.1

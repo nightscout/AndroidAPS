@@ -6,24 +6,16 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.Spinner
-import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.automation.R
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import javax.inject.Inject
 
-class InputProfileName(injector: HasAndroidInjector) : Element(injector) {
-    @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var activePlugin: ActivePluginProvider
+class InputProfileName(private val resourceHelper: ResourceHelper, private val activePlugin: ActivePlugin, val name: String = "") : Element() {
 
-    var value: String = ""
-
-    constructor(injector: HasAndroidInjector, name: String) : this(injector) {
-        value = name
-    }
+    var value: String = name
 
     override fun addToLayout(root: LinearLayout) {
-        val profileStore = activePlugin.activeProfileInterface.profile ?: return
+        val profileStore = activePlugin.activeProfileSource.profile ?: return
         val profileList = profileStore.getProfileList()
         val adapter = ArrayAdapter(root.context, R.layout.spinner_centered, profileList)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)

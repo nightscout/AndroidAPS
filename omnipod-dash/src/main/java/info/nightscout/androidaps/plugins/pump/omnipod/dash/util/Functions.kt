@@ -1,14 +1,13 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.util
 
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BasalProgram
 import java.util.*
 import kotlin.math.roundToInt
 
 fun mapProfileToBasalProgram(profile: Profile): BasalProgram {
-    val basalValues = profile.basalValues
-        ?: throw IllegalArgumentException("Basal values can not be null")
+    val basalValues = profile.getBasalValues()
     if (basalValues.isEmpty()) {
         throw IllegalArgumentException("Basal values should contain values")
     }
@@ -35,7 +34,7 @@ fun mapProfileToBasalProgram(profile: Profile): BasalProgram {
                 BasalProgram.Segment(
                     (previousBasalValue.timeAsSeconds / 1800).toShort(),
                     startSlotIndex,
-                    (PumpType.Omnipod_Dash.determineCorrectBasalSize(previousBasalValue.value) * 100).roundToInt()
+                    (PumpType.OMNIPOD_DASH.determineCorrectBasalSize(previousBasalValue.value) * 100).roundToInt()
                 )
             )
         }
@@ -55,7 +54,7 @@ fun mapProfileToBasalProgram(profile: Profile): BasalProgram {
         BasalProgram.Segment(
             (previousBasalValue!!.timeAsSeconds / 1800).toShort(),
             48,
-            (PumpType.Omnipod_Dash.determineCorrectBasalSize(previousBasalValue.value) * 100).roundToInt()
+            (PumpType.OMNIPOD_DASH.determineCorrectBasalSize(previousBasalValue.value) * 100).roundToInt()
         )
     )
 

@@ -5,32 +5,33 @@ import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.automation.R
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.GlucoseUnit
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator
 import info.nightscout.androidaps.plugins.general.automation.elements.InputBg
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder
 import info.nightscout.androidaps.plugins.general.automation.elements.StaticLabel
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.utils.JsonHelper
 import org.json.JSONObject
 
 class TriggerBg(injector: HasAndroidInjector) : Trigger(injector) {
-    var bg = InputBg(injector)
-    var comparator = Comparator(injector)
 
-    constructor(injector: HasAndroidInjector, value: Double, units: String, compare: Comparator.Compare) : this(injector) {
-        bg = InputBg(injector, value, units)
-        comparator = Comparator(injector, compare)
+    var bg = InputBg(profileFunction)
+    var comparator = Comparator(resourceHelper)
+
+    constructor(injector: HasAndroidInjector, value: Double, units: GlucoseUnit, compare: Comparator.Compare) : this(injector) {
+        bg = InputBg(profileFunction, value, units)
+        comparator = Comparator(resourceHelper, compare)
     }
 
     constructor(injector: HasAndroidInjector, triggerBg: TriggerBg) : this(injector) {
-        bg = InputBg(injector, triggerBg.bg.value, triggerBg.bg.units)
-        comparator = Comparator(injector, triggerBg.comparator.value)
+        bg = InputBg(profileFunction, triggerBg.bg.value, triggerBg.bg.units)
+        comparator = Comparator(resourceHelper, triggerBg.comparator.value)
     }
 
-    fun setUnits(units: String): TriggerBg {
+    fun setUnits(units: GlucoseUnit): TriggerBg {
         bg.units = units
         return this
     }
@@ -46,7 +47,7 @@ class TriggerBg(injector: HasAndroidInjector) : Trigger(injector) {
     }
 
     override fun shouldRun(): Boolean {
-        val glucoseStatus = GlucoseStatus(injector).glucoseStatusData
+        val glucoseStatus = glucoseStatusProvider.glucoseStatusData
         if (glucoseStatus == null && comparator.value == Comparator.Compare.IS_NOT_AVAILABLE) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
             return true
@@ -63,20 +64,15 @@ class TriggerBg(injector: HasAndroidInjector) : Trigger(injector) {
         return false
     }
 
-    override fun toJSON(): String {
-        val data = JSONObject()
+    override fun dataJSON(): JSONObject =
+        JSONObject()
             .put("bg", bg.value)
             .put("comparator", comparator.value.toString())
-            .put("units", bg.units)
-        return JSONObject()
-            .put("type", this::class.java.name)
-            .put("data", data)
-            .toString()
-    }
+            .put("units", bg.units.asText)
 
     override fun fromJSON(data: String): Trigger {
         val d = JSONObject(data)
-        bg.setUnits(JsonHelper.safeGetString(d, "units")!!)
+        bg.setUnits(GlucoseUnit.fromText(JsonHelper.safeGetString(d, "units", Constants.MGDL)))
         bg.value = JsonHelper.safeGetDouble(d, "bg")
         comparator.setValue(Comparator.Compare.valueOf(JsonHelper.safeGetString(d, "comparator")!!))
         return this
@@ -88,7 +84,7 @@ class TriggerBg(injector: HasAndroidInjector) : Trigger(injector) {
         return if (comparator.value == Comparator.Compare.IS_NOT_AVAILABLE)
             resourceHelper.gs(R.string.glucoseisnotavailable)
         else
-            resourceHelper.gs(if (bg.units == Constants.MGDL) R.string.glucosecomparedmgdl else R.string.glucosecomparedmmol, resourceHelper.gs(comparator.value.stringRes), bg.value, bg.units)
+            resourceHelper.gs(if (bg.units == GlucoseUnit.MGDL) R.string.glucosecomparedmgdl else R.string.glucosecomparedmmol, resourceHelper.gs(comparator.value.stringRes), bg.value, bg.units)
     }
 
     override fun icon(): Optional<Int?> = Optional.of(R.drawable.ic_cp_bgcheck)
@@ -97,9 +93,9 @@ class TriggerBg(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(injector, R.string.glucose, this))
+            .add(StaticLabel(resourceHelper, R.string.glucose, this))
             .add(comparator)
-            .add(LabelWithElement(injector, resourceHelper.gs(R.string.glucose_u, bg.units), "", bg))
+            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.glucose_u, bg.units), "", bg))
             .build(root)
     }
 }

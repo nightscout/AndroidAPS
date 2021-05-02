@@ -7,7 +7,7 @@ import dagger.android.AndroidInjector
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.automation.di.AutomationModule
 import info.nightscout.androidaps.combo.di.ComboModule
-import info.nightscout.androidaps.core.di.CoreModule
+import info.nightscout.androidaps.di.CoreModule
 import info.nightscout.androidaps.dana.di.DanaModule
 import info.nightscout.androidaps.danar.di.DanaRModule
 import info.nightscout.androidaps.danars.di.DanaRSModule

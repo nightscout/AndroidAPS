@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod Dash - Description -->
+    <string name="omnipod_dash_pump_description">Intégration de la pompe Omnipod Dash (le nouveau modèle Bluetooth, avec un bouchon d\'aiguille bleue).</string>
+    <!-- Omnipod Dash - Keys -->
+    <!-- Omnipod Dash - Overview -->
+    <string name="omnipod_dash_bluetooth_status">État Bluetooth</string>
+    <string name="omnipod_dash_bluetooth_address">Adresse Bluetooth</string>
+</resources>

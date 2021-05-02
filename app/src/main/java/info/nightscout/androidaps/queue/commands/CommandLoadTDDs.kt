@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.queue.commands
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.queue.Callback
 import javax.inject.Inject
@@ -11,7 +11,7 @@ class CommandLoadTDDs(
     callback: Callback?
 ) : Command(injector, CommandType.LOAD_TDD, callback) {
 
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
 
     override fun execute() {
         val pump = activePlugin.activePump

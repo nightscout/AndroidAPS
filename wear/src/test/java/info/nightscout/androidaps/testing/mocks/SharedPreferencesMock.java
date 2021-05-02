@@ -12,7 +12,7 @@ public class SharedPreferencesMock implements SharedPreferences {
 
     private final EditorInternals editor = new EditorInternals();
 
-    class EditorInternals implements Editor {
+    static class EditorInternals implements Editor {
 
         Map<String, Object> innerMap = new HashMap<>();
 

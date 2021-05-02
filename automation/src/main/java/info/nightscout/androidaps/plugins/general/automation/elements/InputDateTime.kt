@@ -2,35 +2,23 @@ package info.nightscout.androidaps.plugins.general.automation.elements
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.content.Context
 import android.graphics.Typeface
 import android.text.format.DateFormat
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import java.util.*
-import javax.inject.Inject
 
-class InputDateTime(injector: HasAndroidInjector) : Element(injector) {
-    @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var context: Context
-    @Inject lateinit var dateUtil: DateUtil
-
-    var value: Long = DateUtil.now()
-
-    @Suppress("unused") constructor(injector: HasAndroidInjector, value: Long) : this(injector) {
-        this.value = value
-    }
+class InputDateTime(private val resourceHelper: ResourceHelper, private val dateUtil: DateUtil, var value: Long = dateUtil.now()) : Element() {
 
     override fun addToLayout(root: LinearLayout) {
         val label = TextView(root.context)
         val dateButton = TextView(root.context)
         val timeButton = TextView(root.context)
-        dateButton.text = DateUtil.dateString(value)
+        dateButton.text = dateUtil.dateString(value)
         timeButton.text = dateUtil.timeString(value)
 
         // create an OnDateSetListener
@@ -41,7 +29,7 @@ class InputDateTime(injector: HasAndroidInjector) : Element(injector) {
             cal.set(Calendar.MONTH, monthOfYear)
             cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
             value = cal.timeInMillis
-            dateButton.text = DateUtil.dateString(value)
+            dateButton.text = dateUtil.dateString(value)
         }
 
         dateButton.setOnClickListener {
@@ -74,7 +62,7 @@ class InputDateTime(injector: HasAndroidInjector) : Element(injector) {
                 TimePickerDialog(it, timeSetListener,
                     cal.get(Calendar.HOUR_OF_DAY),
                     cal.get(Calendar.MINUTE),
-                    DateFormat.is24HourFormat(context)
+                    DateFormat.is24HourFormat(it)
                 ).show()
             }
         }

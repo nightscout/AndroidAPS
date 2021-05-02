@@ -7,7 +7,7 @@ import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.utils.ui.WeekdayPicker
 import java.util.*
 
-class InputWeekDay(injector: HasAndroidInjector) : Element(injector) {
+class InputWeekDay : Element() {
 
     enum class DayOfWeek {
         MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY;

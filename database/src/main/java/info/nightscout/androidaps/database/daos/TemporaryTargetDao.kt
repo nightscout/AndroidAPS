@@ -5,7 +5,6 @@ import androidx.room.Query
 import info.nightscout.androidaps.database.TABLE_TEMPORARY_TARGETS
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import io.reactivex.Maybe
-import io.reactivex.Observable
 import io.reactivex.Single
 
 @Suppress("FunctionName")
@@ -19,20 +18,28 @@ internal interface TemporaryTargetDao : TraceableDao<TemporaryTarget> {
     override fun deleteAllEntries()
 
     @Query("SELECT * FROM $TABLE_TEMPORARY_TARGETS WHERE nightscoutId = :nsId AND referenceId IS NULL")
-    fun findByNSIdMaybe(nsId: String): Maybe<TemporaryTarget>
+    fun findByNSId(nsId: String): TemporaryTarget?
 
     @Query("SELECT * FROM $TABLE_TEMPORARY_TARGETS WHERE timestamp <= :timestamp AND (timestamp + duration) > :timestamp AND referenceId IS NULL AND isValid = 1 ORDER BY timestamp DESC LIMIT 1")
-    fun getTemporaryTargetActiveAt(timestamp: Long): TemporaryTarget?
+    fun getTemporaryTargetActiveAt(timestamp: Long): Maybe<TemporaryTarget>
 
     @Query("SELECT * FROM $TABLE_TEMPORARY_TARGETS WHERE timestamp >= :timestamp AND isValid = 1 AND referenceId IS NULL ORDER BY timestamp ASC")
-    fun compatGetTemporaryTargetDataFromTime(timestamp: Long): Single<List<TemporaryTarget>>
+    fun getTemporaryTargetDataFromTime(timestamp: Long): Single<List<TemporaryTarget>>
+
+    @Query("SELECT * FROM $TABLE_TEMPORARY_TARGETS WHERE timestamp >= :timestamp AND referenceId IS NULL ORDER BY timestamp ASC")
+    fun getTemporaryTargetDataIncludingInvalidFromTime(timestamp: Long): Single<List<TemporaryTarget>>
 
     @Query("SELECT * FROM $TABLE_TEMPORARY_TARGETS WHERE isValid = 1 AND referenceId IS NULL ORDER BY timestamp ASC")
-    fun compatGetTemporaryTargetData(): List<TemporaryTarget>
+    fun getTemporaryTargetData(): Single<List<TemporaryTarget>>
 
-    @Query("SELECT * FROM $TABLE_TEMPORARY_TARGETS WHERE referenceId = :id ORDER BY id DESC LIMIT 1")
-    fun getLastHistoryRecord(id: Long): TemporaryTarget?
-
+    // This query will be used with v3 to get all changed records
     @Query("SELECT * FROM $TABLE_TEMPORARY_TARGETS WHERE id > :id AND referenceId IS NULL OR id IN (SELECT DISTINCT referenceId FROM $TABLE_TEMPORARY_TARGETS WHERE id > :id) ORDER BY id ASC")
     fun getModifiedFrom(id: Long): Single<List<TemporaryTarget>>
+
+    // for WS we need 1 record only
+    @Query("SELECT * FROM $TABLE_TEMPORARY_TARGETS WHERE id > :id ORDER BY id ASC limit 1")
+    fun getNextModifiedOrNewAfter(id: Long): Maybe<TemporaryTarget>
+
+    @Query("SELECT * FROM $TABLE_TEMPORARY_TARGETS WHERE id = :referenceId")
+    fun getCurrentFromHistoric(referenceId: Long): Maybe<TemporaryTarget>
 }

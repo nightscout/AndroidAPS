@@ -24,12 +24,13 @@ class ActionAlarm(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var context: Context
+    @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var timerUtil: TimerUtil
 
-    var text = InputString(injector)
+    var text = InputString()
 
     constructor(injector: HasAndroidInjector, text: String) : this(injector) {
-        this.text = InputString(injector, text)
+        this.text = InputString(text)
     }
 
     override fun friendlyName(): Int = R.string.alarm
@@ -39,7 +40,7 @@ class ActionAlarm(injector: HasAndroidInjector) : Action(injector) {
     override fun isValid(): Boolean = true // empty alarm will show app name
 
     override fun doAction(callback: Callback) {
-        timerUtil.scheduleReminder(DateUtil.now() + T.secs(10L).msecs(), text.value.takeIf { it.isNotBlank() }
+        timerUtil.scheduleReminder(dateUtil.now() + T.secs(10L).msecs(), text.value.takeIf { it.isNotBlank() }
             ?: resourceHelper.gs(R.string.app_name))
         callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok))?.run()
     }
@@ -62,7 +63,7 @@ class ActionAlarm(injector: HasAndroidInjector) : Action(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(LabelWithElement(injector, resourceHelper.gs(R.string.alarm_short), "", text))
+            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.alarm_short), "", text))
             .build(root)
     }
 }

@@ -12,11 +12,10 @@ class MsgStatusTempBasalTest : DanaRTestBase() {
     @Test fun runTest() {
         val packet = MsgStatusTempBasal(injector)
         // test message decoding
-        // test message decoding
         packet.handleMessage(createArray(34, 1.toByte()))
-        Assert.assertEquals(true, danaPump.isTempBasalInProgress)
+        Assert.assertEquals(true, packet.isTempBasalInProgress)
         // passing an bigger number
         packet.handleMessage(createArray(34, 2.toByte()))
-        Assert.assertEquals(false, danaPump.isTempBasalInProgress)
+        Assert.assertEquals(false, packet.isTempBasalInProgress)
     }
 }

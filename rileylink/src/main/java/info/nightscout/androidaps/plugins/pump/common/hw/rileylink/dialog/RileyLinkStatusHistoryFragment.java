@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.jetbrains.annotations.NotNull;
+import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -120,7 +120,7 @@ public class RileyLinkStatusHistoryFragment extends DaggerFragment implements Re
         }
 
 
-        @NotNull
+        @NonNull
         @Override
         public RecyclerViewAdapter.HistoryViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.rileylink_status_history_item, //

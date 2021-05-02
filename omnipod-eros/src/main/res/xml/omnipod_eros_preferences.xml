@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:validate="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory android:title="@string/omnipod_eros_preferences_category_riley_link">
+    <PreferenceCategory
+        android:key="@string/key_omnipod_preference_category_rileylink_settings"
+        android:title="@string/omnipod_eros_preferences_category_riley_link"
+        app:initialExpandedChildrenCount="0">
 
         <Preference
             android:enabled="true"
@@ -25,7 +29,10 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/omnipod_common_preferences_category_confirmation_beeps">
+    <PreferenceCategory
+        android:key="@string/key_common_preferences_category_confirmation_beeps_settings"
+        android:title="@string/omnipod_common_preferences_category_confirmation_beeps"
+        app:initialExpandedChildrenCount="0">
 
         <SwitchPreference
             android:defaultValue="true"
@@ -49,7 +56,10 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/omnipod_common_preferences_category_alerts">
+    <PreferenceCategory
+        android:key="@string/key_common_preferences_category_alerts_settings"
+        android:title="@string/omnipod_common_preferences_category_alerts"
+        app:initialExpandedChildrenCount="0">
 
         <SwitchPreference
             android:defaultValue="true"
@@ -90,7 +100,10 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/omnipod_eros_preferences_category_notifications">
+    <PreferenceCategory
+        android:key="@string/key_omnipod_eros_preferences_category_notifications_settings"
+        android:title="@string/omnipod_eros_preferences_category_notifications"
+        app:initialExpandedChildrenCount="0">
 
         <SwitchPreference
             android:defaultValue="false"
@@ -109,7 +122,10 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/omnipod_common_preferences_category_other">
+    <PreferenceCategory
+        android:key="@string/key_omnipod_common_preferences_category_other_settings"
+        android:title="@string/omnipod_common_preferences_category_other"
+        app:initialExpandedChildrenCount="0">
 
         <SwitchPreference
             android:defaultValue="false"

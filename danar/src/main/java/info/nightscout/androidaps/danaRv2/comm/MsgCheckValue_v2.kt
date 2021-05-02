@@ -27,7 +27,6 @@ class MsgCheckValue_v2(
         danaPump.protocol = intFromBuff(bytes, 1, 1)
         danaPump.productCode = intFromBuff(bytes, 2, 1)
         if (danaPump.hwModel != DanaPump.EXPORT_MODEL) {
-            danaPump.reset()
             val notification = Notification(Notification.WRONG_DRIVER, resourceHelper.gs(R.string.pumpdrivercorrected), Notification.NORMAL)
             rxBus.send(EventNewNotification(notification))
             danaRPlugin.disconnect("Wrong Model")
@@ -37,6 +36,7 @@ class MsgCheckValue_v2(
             danaRPlugin.setPluginEnabled(PluginType.PUMP, false)
             danaRPlugin.setFragmentVisible(PluginType.PUMP, false)
             danaPump.reset() // mark not initialized
+            pumpSync.connectNewPump()
             //If profile coming from pump, switch it as well
             configBuilder.storeSettings("ChangingDanaRv2Driver")
             rxBus.send(EventRebuildTabs())
@@ -44,7 +44,6 @@ class MsgCheckValue_v2(
             return
         }
         if (danaPump.protocol != 2) {
-            danaPump.reset()
             val notification = Notification(Notification.WRONG_DRIVER, resourceHelper.gs(R.string.pumpdrivercorrected), Notification.NORMAL)
             rxBus.send(EventNewNotification(notification))
             danaRKoreanPlugin.disconnect("Wrong Model")
@@ -53,6 +52,8 @@ class MsgCheckValue_v2(
             danaRv2Plugin.setFragmentVisible(PluginType.PUMP, false)
             danaRPlugin.setPluginEnabled(PluginType.PUMP, true)
             danaRPlugin.setFragmentVisible(PluginType.PUMP, true)
+            danaPump.reset() // mark not initialized
+            pumpSync.connectNewPump()
             //If profile coming from pump, switch it as well
             configBuilder.storeSettings("ChangingDanaRv2Driver")
             rxBus.send(EventRebuildTabs())

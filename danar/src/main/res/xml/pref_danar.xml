@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
+        android:key="@string/key_danar_pump_settings"
         android:title="@string/danar_pump_settings"
         app:initialExpandedChildrenCount="0">
 
@@ -31,12 +32,6 @@
             android:defaultValue="false"
             android:key="@string/key_danar_useextended"
             android:title="@string/danar_useextended_title" />
-
-        <SwitchPreference
-            android:defaultValue="false"
-            android:dependency="@string/key_danar_useextended"
-            android:key="@string/key_danar_visualizeextendedaspercentage"
-            android:title="@string/danar_visualizeextendedaspercentage_title" />
 
     </PreferenceCategory>
 

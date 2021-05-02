@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -49,7 +48,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     resourceHelper: ResourceHelper,
     commandQueue: CommandQueueProvider
-) : PumpPluginBase(pluginDescription, injector, aapsLogger, resourceHelper, commandQueue), PumpInterface {
+) : PumpPluginBase(pluginDescription, injector, aapsLogger, resourceHelper, commandQueue), Pump {
 
     companion object {
 
@@ -62,7 +61,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             .preferencesId(R.xml.omnipod_dash_preferences)
             .description(R.string.omnipod_dash_pump_description)
 
-        private val pumpDescription = PumpDescription(PumpType.Omnipod_Dash)
+        private val pumpDescription = PumpDescription(PumpType.OMNIPOD_DASH)
     }
 
     override fun isInitialized(): Boolean {
@@ -200,7 +199,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     commandType = OmnipodCommandType.SET_BOLUS,
                     bolusRecord = BolusRecord(
                         detailedBolusInfo.insulin,
-                        if (detailedBolusInfo.isSMB) BolusType.SMB else BolusType.DEFAULT
+                        BolusType.fromBolusInfoBolusType(detailedBolusInfo.bolusType),
                     ),
                 ).flatMapObservable { recordId ->
                     podStateManager.createActiveCommand(recordId).toObservable()
@@ -222,7 +221,9 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 onError = { throwable ->
                     aapsLogger.error(LTag.PUMP, "Error in deliverTreatment", throwable)
                     source.onSuccess(
-                        PumpEnactResult(injector).success(false).enacted(false).comment(throwable.message)
+                        PumpEnactResult(injector).success(false).enacted(false).comment(
+                            throwable.toString()
+                        )
                     )
                 },
                 onComplete = {
@@ -249,7 +250,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
         absoluteRate: Double,
         durationInMinutes: Int,
         profile: Profile,
-        enforceNew: Boolean
+        enforceNew: Boolean,
+        tbrType: PumpSync.TemporaryBasalType
     ): PumpEnactResult {
         // TODO update Treatments
         // TODO check for existing basal
@@ -275,7 +277,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
         percent: Int,
         durationInMinutes: Int,
         profile: Profile,
-        enforceNew: Boolean
+        enforceNew: Boolean,
+        tbrType: PumpSync.TemporaryBasalType
     ): PumpEnactResult {
         // TODO i18n
         return PumpEnactResult(injector).success(false).enacted(false)
@@ -310,7 +313,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     override val pumpDescription: PumpDescription = Companion.pumpDescription
 
     override fun manufacturer(): ManufacturerType {
-        return pumpDescription.pumpType.manufacturer
+        return ManufacturerType.Insulet
     }
 
     override fun model(): PumpType {
@@ -395,7 +398,11 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     },
                     onError = { throwable ->
                         aapsLogger.error(LTag.PUMP, "Error in silenceAlerts", throwable)
-                        source.onSuccess(PumpEnactResult(injector).success(false).comment(throwable.message))
+                        source.onSuccess(
+                            PumpEnactResult(injector).success(false).comment(
+                                throwable.toString()
+                            )
+                        )
                     },
                     onComplete = {
                         aapsLogger.debug("silenceAlerts completed")
@@ -501,7 +508,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
                     podStateManager.maybeMarkActiveCommandFailed()
                     source.onSuccess(
-                        PumpEnactResult(injector).success(false).enacted(false).comment(throwable.message)
+                        PumpEnactResult(injector).success(false).enacted(false).comment(throwable.toString())
                     )
                 },
                 onComplete = {

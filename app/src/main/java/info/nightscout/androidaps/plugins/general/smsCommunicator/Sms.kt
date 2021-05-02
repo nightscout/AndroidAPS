@@ -1,10 +1,9 @@
 package info.nightscout.androidaps.plugins.general.smsCommunicator
 
 import android.telephony.SmsMessage
-import info.nightscout.androidaps.MainApp
-import info.nightscout.androidaps.utils.DateUtil
 
 class Sms {
+
     var phoneNumber: String
     var text: String
     var date: Long
@@ -23,7 +22,7 @@ class Sms {
     internal constructor(phoneNumber: String, text: String) {
         this.phoneNumber = phoneNumber
         this.text = text
-        date = DateUtil.now()
+        date = System.currentTimeMillis()
         sent = true
     }
 

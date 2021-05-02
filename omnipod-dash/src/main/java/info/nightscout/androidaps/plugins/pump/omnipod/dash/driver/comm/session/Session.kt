@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session
 
+import info.nightscout.androidaps.extensions.toHex
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Ids
@@ -15,7 +16,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.b
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.AlarmStatusResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.NakResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.Response
-import info.nightscout.androidaps.utils.extensions.toHex
 import kotlin.reflect.KClass
 
 sealed class CommandSendResult

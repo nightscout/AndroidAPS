@@ -3,10 +3,11 @@ package info.nightscout.androidaps.plugins.general.overview
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventRefreshOverview
-import info.nightscout.androidaps.interfaces.OverviewInterface
+import info.nightscout.androidaps.extensions.*
+import info.nightscout.androidaps.interfaces.Overview
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
@@ -16,7 +17,6 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNo
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationStore
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.extensions.*
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -48,7 +48,7 @@ class OverviewPlugin @Inject constructor(
     .preferencesId(R.xml.pref_overview)
     .description(R.string.description_overview),
     aapsLogger, resourceHelper, injector
-), OverviewInterface {
+), Overview {
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 

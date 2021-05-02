@@ -4,6 +4,7 @@ import org.joda.time.IllegalFieldValueException;
 import org.joda.time.LocalDateTime;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -46,8 +47,8 @@ public class MedtronicConverter {
     Object convertResponse(PumpType pumpType, MedtronicCommandType commandType, byte[] rawContent) {
 
         if ((rawContent == null || rawContent.length < 1) && commandType != MedtronicCommandType.PumpModel) {
-            aapsLogger.warn(LTag.PUMPCOMM, "Content is empty or too short, no data to convert (type={},isNull={},length={})",
-                    commandType.name(), rawContent == null, rawContent == null ? "-" : rawContent.length);
+            aapsLogger.warn(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "Content is empty or too short, no data to convert (type=%s,isNull=%b,length=%s)",
+                    commandType.name(), rawContent == null, rawContent == null ? "-" : rawContent.length));
             return null;
         }
 
@@ -120,7 +121,7 @@ public class MedtronicConverter {
 
         String rawModel = StringUtil.fromBytes(ByteUtil.substring(rawContent, 1, 3));
         MedtronicDeviceType pumpModel = MedtronicDeviceType.getByDescription(rawModel);
-        aapsLogger.debug(LTag.PUMPCOMM, "PumpModel: [raw={}, resolved={}]", rawModel, pumpModel.name());
+        aapsLogger.debug(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "PumpModel: [raw=%s, resolved=%s]", rawModel, pumpModel.name()));
 
         if (pumpModel != MedtronicDeviceType.Unknown_Device) {
             if (!medtronicUtil.isModelSet()) {
@@ -177,7 +178,7 @@ public class MedtronicConverter {
             startIdx = 2;
         }
 
-        int reqLength = startIdx+1;
+        int reqLength = startIdx + 1;
         float value = 0;
 
         if (reqLength >= rawData.length) {
@@ -204,8 +205,8 @@ public class MedtronicConverter {
             return pumpTime;
         } catch (IllegalFieldValueException e) {
             aapsLogger.error(LTag.PUMPCOMM,
-                    "decodeTime: Failed to parse pump time value: year=%d, month=%d, hours=%d, minutes=%d, seconds=%d",
-                    year, month, day, hours, minutes, seconds);
+                    String.format(Locale.ENGLISH, "decodeTime: Failed to parse pump time value: year=%d, month=%d, hours=%d, minutes=%d, seconds=%d",
+                            year, month, day, hours, minutes, seconds));
             return null;
         }
 

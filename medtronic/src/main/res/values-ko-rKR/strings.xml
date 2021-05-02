@@ -23,6 +23,7 @@
     <string name="medtronic_pump_battery_lithium">리튬(확장뷰)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (확장 뷰)</string>
     <string name="medtronic_bolus_debugging">Bolus/관리 디버깅</string>
+    <!-- MDT Fragment -->
     <!-- MDT Errors -->
     <string name="medtronic_error_serial_not_set">일련번호 # 설정되지 않음</string>
     <string name="medtronic_error_serial_invalid">일련번호 # 유효하지않음.</string>

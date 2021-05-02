@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm
 
-import info.nightscout.androidaps.utils.extensions.toHex
+import info.nightscout.androidaps.extensions.toHex
 import java.nio.ByteBuffer
 
 data class Id(val address: ByteArray) {

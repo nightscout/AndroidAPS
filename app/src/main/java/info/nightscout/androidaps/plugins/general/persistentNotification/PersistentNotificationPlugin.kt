@@ -10,19 +10,18 @@ import androidx.core.app.RemoteInput
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.events.*
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.resources.IconsProvider
+import info.nightscout.androidaps.extensions.toStringShort
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.androidaps.utils.valueToUnitsString
+import info.nightscout.androidaps.extensions.valueToUnitsString
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -36,13 +35,14 @@ class PersistentNotificationPlugin @Inject constructor(
     private val aapsSchedulers: AapsSchedulers,
     private val profileFunction: ProfileFunction,
     private val fabricPrivacy: FabricPrivacy,
-    private val activePlugins: ActivePluginProvider,
-    private val iobCobCalculatorPlugin: IobCobCalculatorPlugin,
+    private val activePlugins: ActivePlugin,
+    private val iobCobCalculator: IobCobCalculator,
     private val rxBus: RxBusWrapper,
     private val context: Context,
-    private val notificationHolder: NotificationHolderInterface,
+    private val notificationHolder: NotificationHolder,
     private val dummyServiceHelper: DummyServiceHelper,
-    private val iconsProvider: IconsProvider
+    private val iconsProvider: IconsProvider,
+    private val glucoseStatusProvider: GlucoseStatusProvider
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .neverVisible(true)
@@ -129,14 +129,14 @@ class PersistentNotificationPlugin @Inject constructor(
         if (profileFunction.isProfileValid("Notification")) {
             var line1aa: String
             val units = profileFunction.getUnits()
-            val lastBG = iobCobCalculatorPlugin.lastBg()
-            val glucoseStatus = GlucoseStatus(injector).glucoseStatusData
+            val lastBG = iobCobCalculator.ads.lastBg()
+            val glucoseStatus = glucoseStatusProvider.glucoseStatusData
             if (lastBG != null) {
                 line1aa = lastBG.valueToUnitsString(units)
                 line1 = line1aa
                 if (glucoseStatus != null) {
                     line1 += ("  Δ" + Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
-                        + " avgΔ" + Profile.toSignedUnitsString(glucoseStatus.avgDelta, glucoseStatus.avgDelta * Constants.MGDL_TO_MMOLL, units))
+                        + " avgΔ" + Profile.toSignedUnitsString(glucoseStatus.shortAvgDelta, glucoseStatus.shortAvgDelta * Constants.MGDL_TO_MMOLL, units))
                     line1aa += "  " + lastBG.trendArrow.symbol
                 } else {
                     line1 += " " +
@@ -148,18 +148,16 @@ class PersistentNotificationPlugin @Inject constructor(
                 line1aa = resourceHelper.gs(R.string.missed_bg_readings)
                 line1 = line1aa
             }
-            val activeTemp = activePlugins.activeTreatments.getTempBasalFromHistory(System.currentTimeMillis())
+            val activeTemp = iobCobCalculator.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())
             if (activeTemp != null) {
                 line1 += "  " + activeTemp.toStringShort()
                 line1aa += "  " + activeTemp.toStringShort() + "."
             }
             //IOB
-            activePlugins.activeTreatments.updateTotalIOBTreatments()
-            activePlugins.activeTreatments.updateTotalIOBTempBasals()
-            val bolusIob = activePlugins.activeTreatments.lastCalculationTreatments.round()
-            val basalIob = activePlugins.activeTreatments.lastCalculationTempBasals.round()
-            line2 = resourceHelper.gs(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U " + resourceHelper.gs(R.string.cob) + ": " + iobCobCalculatorPlugin.getCobInfo(false, "PersistentNotificationPlugin").generateCOBString()
-            val line2aa = resourceHelper.gs(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U. " + resourceHelper.gs(R.string.cob) + ": " + iobCobCalculatorPlugin.getCobInfo(false, "PersistentNotificationPlugin").generateCOBString() + "."
+            val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
+            val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
+            line2 = resourceHelper.gs(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U " + resourceHelper.gs(R.string.cob) + ": " + iobCobCalculator.getCobInfo(false, "PersistentNotificationPlugin").generateCOBString()
+            val line2aa = resourceHelper.gs(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U. " + resourceHelper.gs(R.string.cob) + ": " + iobCobCalculator.getCobInfo(false, "PersistentNotificationPlugin").generateCOBString() + "."
             line3 = DecimalFormatter.to2Decimal(pump.baseBasalRate) + " U/h"
             var line3aa = DecimalFormatter.to2Decimal(pump.baseBasalRate) + " U/h."
             line3 += " - " + profileFunction.getProfileName()

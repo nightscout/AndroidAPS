@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.dialogs
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -7,44 +8,52 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.common.base.Joiner
-import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.activities.ErrorHelperActivity
+import info.nightscout.androidaps.data.DetailedBolusInfo
+import info.nightscout.androidaps.interfaces.Profile
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.TemporaryTarget
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.ValueWithUnit
+import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
 import info.nightscout.androidaps.databinding.DialogCarbsBinding
-import info.nightscout.androidaps.db.CareportalEvent
-import info.nightscout.androidaps.db.Source
-import info.nightscout.androidaps.db.TempTarget
+import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.interfaces.Constraint
+import info.nightscout.androidaps.interfaces.GlucoseUnit
+import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
-import info.nightscout.androidaps.plugins.treatments.CarbsGenerator
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
+import info.nightscout.androidaps.queue.Callback
+import info.nightscout.androidaps.queue.CommandQueue
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.extensions.formatColor
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import java.text.DecimalFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.math.max
 
 class CarbsDialog : DialogFragmentWithDate() {
 
-    @Inject lateinit var mainApp: MainApp
+    @Inject lateinit var ctx: Context
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
-    @Inject lateinit var nsUpload: NSUpload
-    @Inject lateinit var carbsGenerator: CarbsGenerator
+    @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var carbTimer: CarbTimer
+    @Inject lateinit var commandQueue: CommandQueue
+    @Inject lateinit var repository: AppRepository
 
     companion object {
 
@@ -52,6 +61,8 @@ class CarbsDialog : DialogFragmentWithDate() {
         private const val FAV2_DEFAULT = 10
         private const val FAV3_DEFAULT = 20
     }
+
+    private val disposable = CompositeDisposable()
 
     private val textWatcher: TextWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable) {
@@ -67,15 +78,15 @@ class CarbsDialog : DialogFragmentWithDate() {
         val time = binding.time.value.toInt()
         if (time > 12 * 60 || time < -12 * 60) {
             binding.time.value = 0.0
-            ToastUtils.showToastInUiThread(mainApp, resourceHelper.gs(R.string.constraintapllied))
+            ToastUtils.showToastInUiThread(ctx, resourceHelper.gs(R.string.constraintapllied))
         }
         if (binding.duration.value > 10) {
             binding.duration.value = 0.0
-            ToastUtils.showToastInUiThread(mainApp, resourceHelper.gs(R.string.constraintapllied))
+            ToastUtils.showToastInUiThread(ctx, resourceHelper.gs(R.string.constraintapllied))
         }
         if (binding.carbs.value.toInt() > maxCarbs) {
             binding.carbs.value = 0.0
-            ToastUtils.showToastInUiThread(mainApp, resourceHelper.gs(R.string.carbsconstraintapplied))
+            ToastUtils.showToastInUiThread(ctx, resourceHelper.gs(R.string.carbsconstraintapplied))
         }
     }
 
@@ -133,7 +144,7 @@ class CarbsDialog : DialogFragmentWithDate() {
             validateInputs()
         }
 
-        iobCobCalculatorPlugin.actualBg()?.let { bgReading ->
+        iobCobCalculator.ads.actualBg()?.let { bgReading ->
             if (bgReading.value < 72)
                 binding.hypoTt.isChecked = true
         }
@@ -153,6 +164,7 @@ class CarbsDialog : DialogFragmentWithDate() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        disposable.clear()
         _binding = null
     }
 
@@ -172,7 +184,7 @@ class CarbsDialog : DialogFragmentWithDate() {
         val hypoTTDuration = defaultValueHelper.determineHypoTTDuration()
         val hypoTT = defaultValueHelper.determineHypoTT()
         val actions: LinkedList<String?> = LinkedList()
-        val unitLabel = if (units == Constants.MMOL) resourceHelper.gs(R.string.mmol) else resourceHelper.gs(R.string.mgdl)
+        val unitLabel = if (units == GlucoseUnit.MMOL) resourceHelper.gs(R.string.mmol) else resourceHelper.gs(R.string.mgdl)
         val useAlarm = binding.alarmCheckBox.isChecked
 
         val activitySelected = binding.activityTt.isChecked
@@ -212,53 +224,86 @@ class CarbsDialog : DialogFragmentWithDate() {
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.carbs), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     when {
                         activitySelected   -> {
-                            uel.log("TT ACTIVITY", d1 = activityTT, i1 = activityTTDuration)
-                            val tempTarget = TempTarget()
-                                .date(System.currentTimeMillis())
-                                .duration(activityTTDuration)
-                                .reason(resourceHelper.gs(R.string.activity))
-                                .source(Source.USER)
-                                .low(Profile.toMgdl(activityTT, profileFunction.getUnits()))
-                                .high(Profile.toMgdl(activityTT, profileFunction.getUnits()))
-                            treatmentsPlugin.addToHistoryTempTarget(tempTarget)
+                            uel.log(Action.TT, Sources.CarbDialog,
+                                ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.ACTIVITY),
+                                ValueWithUnit.fromGlucoseUnit(activityTT, units.asText),
+                                ValueWithUnit.Minute(activityTTDuration))
+                            disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
+                                timestamp = System.currentTimeMillis(),
+                                duration = TimeUnit.MINUTES.toMillis(activityTTDuration.toLong()),
+                                reason = TemporaryTarget.Reason.ACTIVITY,
+                                lowTarget = Profile.toMgdl(activityTT, profileFunction.getUnits()),
+                                highTarget = Profile.toMgdl(activityTT, profileFunction.getUnits())
+                            )).subscribe({ result ->
+                                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }
+                                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
+                            }, {
+                                aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
+                            })
                         }
 
                         eatingSoonSelected -> {
-                            uel.log("TT EATING SOON", d1 = eatingSoonTT, i1 = eatingSoonTTDuration)
-                            val tempTarget = TempTarget()
-                                .date(System.currentTimeMillis())
-                                .duration(eatingSoonTTDuration)
-                                .reason(resourceHelper.gs(R.string.eatingsoon))
-                                .source(Source.USER)
-                                .low(Profile.toMgdl(eatingSoonTT, profileFunction.getUnits()))
-                                .high(Profile.toMgdl(eatingSoonTT, profileFunction.getUnits()))
-                            treatmentsPlugin.addToHistoryTempTarget(tempTarget)
+                            uel.log(Action.TT, Sources.CarbDialog,
+                                ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.EATING_SOON),
+                                ValueWithUnit.fromGlucoseUnit(eatingSoonTT, units.asText),
+                                ValueWithUnit.Minute(eatingSoonTTDuration))
+                            disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
+                                timestamp = System.currentTimeMillis(),
+                                duration = TimeUnit.MINUTES.toMillis(eatingSoonTTDuration.toLong()),
+                                reason = TemporaryTarget.Reason.EATING_SOON,
+                                lowTarget = Profile.toMgdl(eatingSoonTT, profileFunction.getUnits()),
+                                highTarget = Profile.toMgdl(eatingSoonTT, profileFunction.getUnits())
+                            )).subscribe({ result ->
+                                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }
+                                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
+                            }, {
+                                aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
+                            })
                         }
 
                         hypoSelected       -> {
-                            uel.log("TT HYPO", d1 = hypoTT, i1 = hypoTTDuration)
-                            val tempTarget = TempTarget()
-                                .date(System.currentTimeMillis())
-                                .duration(hypoTTDuration)
-                                .reason(resourceHelper.gs(R.string.hypo))
-                                .source(Source.USER)
-                                .low(Profile.toMgdl(hypoTT, profileFunction.getUnits()))
-                                .high(Profile.toMgdl(hypoTT, profileFunction.getUnits()))
-                            treatmentsPlugin.addToHistoryTempTarget(tempTarget)
+                            uel.log(Action.TT, Sources.CarbDialog,
+                                ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.HYPOGLYCEMIA),
+                                ValueWithUnit.fromGlucoseUnit(hypoTT, units.asText),
+                                ValueWithUnit.Minute(hypoTTDuration))
+                            disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
+                                timestamp = System.currentTimeMillis(),
+                                duration = TimeUnit.MINUTES.toMillis(hypoTTDuration.toLong()),
+                                reason = TemporaryTarget.Reason.HYPOGLYCEMIA,
+                                lowTarget = Profile.toMgdl(hypoTT, profileFunction.getUnits()),
+                                highTarget = Profile.toMgdl(hypoTT, profileFunction.getUnits())
+                            )).subscribe({ result ->
+                                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }
+                                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
+                            }, {
+                                aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
+                            })
                         }
                     }
                     if (carbsAfterConstraints > 0) {
-                        if (duration == 0) {
-                            uel.log("CARBS", d1 = carbsAfterConstraints.toDouble(), i1 = timeOffset)
-                            carbsGenerator.createCarb(carbsAfterConstraints, time, CareportalEvent.CARBCORRECTION, notes)
-                        } else {
-                            uel.log("CARBS", d1 = carbsAfterConstraints.toDouble(), i1 = timeOffset, i2 = duration)
-                            carbsGenerator.generateCarbs(carbsAfterConstraints, time, duration, notes)
-                            nsUpload.uploadEvent(CareportalEvent.NOTE, DateUtil.now() - 2000, resourceHelper.gs(R.string.generated_ecarbs_note, carbsAfterConstraints, duration, timeOffset))
-                        }
+                        val detailedBolusInfo = DetailedBolusInfo()
+                        detailedBolusInfo.eventType = DetailedBolusInfo.EventType.CORRECTION_BOLUS
+                        detailedBolusInfo.carbs = carbsAfterConstraints.toDouble()
+                        detailedBolusInfo.context = context
+                        detailedBolusInfo.notes = notes
+                        detailedBolusInfo.carbsDuration = T.hours(duration.toLong()).msecs()
+                        detailedBolusInfo.carbsTimestamp = time
+                        uel.log(if (duration == 0) Action.CARBS else Action.EXTENDED_CARBS, Sources.CarbDialog,
+                            notes,
+                            ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
+                            ValueWithUnit.Gram(carbsAfterConstraints),
+                            ValueWithUnit.Minute(timeOffset).takeIf { timeOffset != 0 },
+                            ValueWithUnit.Hour(duration).takeIf { duration != 0 })
+                        commandQueue.bolus(detailedBolusInfo, object : Callback() {
+                            override fun run() {
+                                if (!result.success) {
+                                    ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
+                                }
+                            }
+                        })
                     }
                     if (useAlarm && carbs > 0 && timeOffset > 0) {
-                        carbTimer.scheduleReminder(dateUtil._now() + T.mins(timeOffset.toLong()).msecs())
+                        carbTimer.scheduleReminder(dateUtil.now() + T.mins(timeOffset.toLong()).msecs())
                     }
                 }, null)
             }

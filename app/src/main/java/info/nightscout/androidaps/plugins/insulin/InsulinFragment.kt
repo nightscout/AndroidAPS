@@ -7,13 +7,13 @@ import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.InsulinFragmentBinding
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
 
 class InsulinFragment : DaggerFragment() {
 
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var resourceHelper: ResourceHelper
 
     private var _binding: InsulinFragmentBinding? = null
