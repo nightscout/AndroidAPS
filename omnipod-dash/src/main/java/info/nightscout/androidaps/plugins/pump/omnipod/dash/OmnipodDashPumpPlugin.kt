@@ -11,18 +11,25 @@ import info.nightscout.androidaps.plugins.common.ManufacturerType
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
+import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.OmnipodDashManager
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.event.PodEvent
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.ActivationProgress
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BeepType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.ResponseType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.DashHistory
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.BolusRecord
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.BolusType
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.TempBasalRecord
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.OmnipodDashOverviewFragment
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.mapProfileToBasalProgram
 import info.nightscout.androidaps.queue.commands.CustomCommand
 import info.nightscout.androidaps.utils.TimeChangeType
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.blockingSubscribeBy
 import io.reactivex.rxkotlin.subscribeBy
@@ -37,6 +44,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     private val podStateManager: OmnipodDashPodStateManager,
     private val sp: SP,
     private val profileFunction: ProfileFunction,
+    private val history: DashHistory,
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     resourceHelper: ResourceHelper,
@@ -72,8 +80,23 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     override fun isConnected(): Boolean {
-        // TODO
-        return true
+        // NOTE: Using connected state for unconfirmed commands
+
+        // We are faking connection lost on unconfirmed commands.
+        // During normal execution, the activeCommand is set to null after a command was executed with success or we
+        // were not able to send that command.
+        // If we are not sure if the POD received the command or not, then we answer with "success" but keep this
+        // activeCommand set until we can confirm/deny it.
+
+        // In order to prevent AAPS from sending us other programming commands while the current command was not
+        // confirmed, we are simulating "connection lost".
+        // We need to prevent AAPS from sending other commands because they would overwrite the ID of the last
+        // programming command reported by the POD. And we using that ID to confirm/deny the activeCommand.
+
+        // The effect of answering with 'false' here is that AAPS will call connect() and will not sent any new
+        // commands. On connect(), we are calling getPodStatus where we are always trying to confirm/deny the
+        // activeCommand.
+        return podStateManager.activeCommand == null
     }
 
     override fun isConnecting(): Boolean {
@@ -91,7 +114,12 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     override fun connect(reason: String) {
-        // TODO
+        // See:
+        // NOTE: Using connected state for unconfirmed commands
+        if (podStateManager.activeCommand == null) {
+            return
+        }
+        getPumpStatus("unconfirmed command")
     }
 
     override fun disconnect(reason: String) {
@@ -103,8 +131,11 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     override fun getPumpStatus(reason: String) {
-        // TODO history
-        omnipodManager.getStatus(ResponseType.StatusResponseType.DEFAULT_STATUS_RESPONSE).blockingSubscribeBy(
+        Observable.concat(
+            omnipodManager.getStatus(ResponseType.StatusResponseType.DEFAULT_STATUS_RESPONSE),
+            history.updateFromState(podStateManager).toObservable(),
+            podStateManager.updateActiveCommand().toObservable(),
+        ).blockingSubscribeBy(
             onNext = { podEvent ->
                 aapsLogger.debug(
                     LTag.PUMP,
@@ -121,35 +152,20 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
-        // TODO history
-
-        return Single.create<PumpEnactResult> { source ->
-            omnipodManager.setBasalProgram(mapProfileToBasalProgram(profile)).subscribeBy(
-                onNext = { podEvent ->
-                    aapsLogger.debug(
-                        LTag.PUMP,
-                        "Received PodEvent in setNewBasalProfile: $podEvent"
-                    )
-                },
-                onError = { throwable ->
-                    aapsLogger.error(LTag.PUMP, "Error in setNewBasalProfile", throwable)
-                    source.onSuccess(PumpEnactResult(injector).success(false).enacted(false).comment(throwable.message))
-                },
-                onComplete = {
-                    aapsLogger.debug("setNewBasalProfile completed")
-                    source.onSuccess(PumpEnactResult(injector).success(true).enacted(true))
-                }
-            )
-        }.blockingGet()
+        return executeProgrammingCommand(
+            history.createRecord(
+                commandType = OmnipodCommandType.SET_BASAL_PROFILE
+            ),
+            omnipodManager.setBasalProgram(mapProfileToBasalProgram(profile))
+        )
     }
 
     override fun isThisProfileSet(profile: Profile): Boolean = podStateManager.basalProgram?.let {
         it == mapProfileToBasalProgram(profile)
     } ?: true
 
-
     override fun lastDataTime(): Long {
-        return podStateManager.lastConnection
+        return podStateManager.lastUpdatedSystem
     }
 
     override val baseBasalRate: Double
@@ -172,7 +188,6 @@ class OmnipodDashPumpPlugin @Inject constructor(
         get() = 0
 
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
-        // TODO history
         // TODO update Treatments (?)
         // TODO bolus progress
         // TODO report actual delivered amount after Pod Alarm and bolus cancellation
@@ -180,10 +195,23 @@ class OmnipodDashPumpPlugin @Inject constructor(
         return Single.create<PumpEnactResult> { source ->
             val bolusBeeps = sp.getBoolean(R.string.key_omnipod_common_bolus_beeps_enabled, false)
 
-            omnipodManager.bolus(
-                detailedBolusInfo.insulin,
-                bolusBeeps,
-                bolusBeeps
+            Observable.concat(
+                history.createRecord(
+                    commandType = OmnipodCommandType.SET_BOLUS,
+                    bolusRecord = BolusRecord(
+                        detailedBolusInfo.insulin,
+                        if (detailedBolusInfo.isSMB) BolusType.SMB else BolusType.DEFAULT
+                    ),
+                ).flatMapObservable { recordId ->
+                    podStateManager.createActiveCommand(recordId).toObservable()
+                },
+                omnipodManager.bolus(
+                    detailedBolusInfo.insulin,
+                    bolusBeeps,
+                    bolusBeeps
+                ),
+                history.updateFromState(podStateManager).toObservable(),
+                podStateManager.updateActiveCommand().toObservable(),
             ).subscribeBy(
                 onNext = { podEvent ->
                     aapsLogger.debug(
@@ -193,12 +221,15 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 },
                 onError = { throwable ->
                     aapsLogger.error(LTag.PUMP, "Error in deliverTreatment", throwable)
-                    source.onSuccess(PumpEnactResult(injector).success(false).enacted(false).comment(throwable.message))
+                    source.onSuccess(
+                        PumpEnactResult(injector).success(false).enacted(false).comment(throwable.message)
+                    )
                 },
                 onComplete = {
                     aapsLogger.debug("deliverTreatment completed")
                     source.onSuccess(
-                        PumpEnactResult(injector).success(true).enacted(true).bolusDelivered(detailedBolusInfo.insulin)
+                        PumpEnactResult(injector).success(true).enacted(true)
+                            .bolusDelivered(detailedBolusInfo.insulin)
                             .carbsDelivered(detailedBolusInfo.carbs)
                     )
                 }
@@ -207,22 +238,10 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     override fun stopBolusDelivering() {
-        // TODO history
         // TODO update Treatments (?)
-
-        omnipodManager.stopBolus().blockingSubscribeBy(
-            onNext = { podEvent ->
-                aapsLogger.debug(
-                    LTag.PUMP,
-                    "Received PodEvent in stopBolusDelivering: $podEvent"
-                )
-            },
-            onError = { throwable ->
-                aapsLogger.error(LTag.PUMP, "Error in stopBolusDelivering", throwable)
-            },
-            onComplete = {
-                aapsLogger.debug("stopBolusDelivering completed")
-            }
+        executeProgrammingCommand(
+            history.createRecord(OmnipodCommandType.CANCEL_BOLUS),
+            omnipodManager.stopBolus(),
         )
     }
 
@@ -232,33 +251,24 @@ class OmnipodDashPumpPlugin @Inject constructor(
         profile: Profile,
         enforceNew: Boolean
     ): PumpEnactResult {
-        // TODO history
         // TODO update Treatments
-
-        return Single.create<PumpEnactResult> { source ->
+        // TODO check for existing basal
+        // check existing basal(locally and maybe? get status)
+        //   if enforceNew -> cancel it()
+        //   else -> return error that existing basal is running
+        //  set new temp basal
+        // update treatments
+        // profit
+        return executeProgrammingCommand(
+            history.createRecord(
+                commandType = OmnipodCommandType.SET_TEMPORARY_BASAL,
+                tempBasalRecord = TempBasalRecord(duration = durationInMinutes, rate = absoluteRate)
+            ),
             omnipodManager.setTempBasal(
                 absoluteRate,
                 durationInMinutes.toShort()
-            ).subscribeBy(
-                onNext = { podEvent ->
-                    aapsLogger.debug(
-                        LTag.PUMP,
-                        "Received PodEvent in setTempBasalAbsolute: $podEvent"
-                    )
-                },
-                onError = { throwable ->
-                    aapsLogger.error(LTag.PUMP, "Error in setTempBasalAbsolute", throwable)
-                    source.onSuccess(PumpEnactResult(injector).success(false).enacted(false).comment(throwable.message))
-                },
-                onComplete = {
-                    aapsLogger.debug("setTempBasalAbsolute completed")
-                    source.onSuccess(
-                        PumpEnactResult(injector).success(true).enacted(true).absolute(absoluteRate)
-                            .duration(durationInMinutes)
-                    )
-                }
             )
-        }.blockingGet()
+        )
     }
 
     override fun setTempBasalPercent(
@@ -279,29 +289,11 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
-        // TODO history
         // TODO update Treatments
-
-        return Single.create<PumpEnactResult> { source ->
-            omnipodManager.stopTempBasal().subscribeBy(
-                onNext = { podEvent ->
-                    aapsLogger.debug(
-                        LTag.PUMP,
-                        "Received PodEvent in cancelTempBasal: $podEvent"
-                    )
-                },
-                onError = { throwable ->
-                    aapsLogger.error(LTag.PUMP, "Error in cancelTempBasal", throwable)
-                    source.onSuccess(PumpEnactResult(injector).success(false).enacted(false).comment(throwable.message))
-                },
-                onComplete = {
-                    aapsLogger.debug("cancelTempBasal completed")
-                    source.onSuccess(
-                        PumpEnactResult(injector).success(true).enacted(true)
-                    )
-                }
-            )
-        }.blockingGet()
+        return executeProgrammingCommand(
+            history.createRecord(OmnipodCommandType.CANCEL_TEMPORARY_BASAL),
+            omnipodManager.stopTempBasal()
+        )
     }
 
     override fun cancelExtendedBolus(): PumpEnactResult {
@@ -326,11 +318,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     override fun serialNumber(): String {
-        return if (podStateManager.uniqueId == null) {
-            "n/a" // TODO i18n
-        } else {
-            podStateManager.uniqueId.toString()
-        }
+        return podStateManager.uniqueId?.toString()
+            ?: "n/a" // TODO i18n
     }
 
     override fun shortStatus(veryShort: Boolean): String {
@@ -389,12 +378,15 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     private fun silenceAlerts(): PumpEnactResult {
-        // TODO history
         // TODO filter alert types
-
         return podStateManager.activeAlerts?.let {
             Single.create<PumpEnactResult> { source ->
-                omnipodManager.silenceAlerts(it).subscribeBy(
+                Observable.concat(
+                    // TODO: is this a programming command? if yes, save to history
+                    omnipodManager.silenceAlerts(it),
+                    history.updateFromState(podStateManager).toObservable(),
+                    podStateManager.updateActiveCommand().toObservable(),
+                ).subscribeBy(
                     onNext = { podEvent ->
                         aapsLogger.debug(
                             LTag.PUMP,
@@ -415,75 +407,26 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     private fun suspendDelivery(): PumpEnactResult {
-        // TODO history
-
-        return Single.create<PumpEnactResult> { source ->
-            omnipodManager.suspendDelivery().subscribeBy(
-                onNext = { podEvent ->
-                    aapsLogger.debug(
-                        LTag.PUMP,
-                        "Received PodEvent in suspendDelivery: $podEvent"
-                    )
-                },
-                onError = { throwable ->
-                    aapsLogger.error(LTag.PUMP, "Error in suspendDelivery", throwable)
-                    source.onSuccess(PumpEnactResult(injector).success(false).comment(throwable.message))
-                },
-                onComplete = {
-                    aapsLogger.debug("suspendDelivery completed")
-                    source.onSuccess(PumpEnactResult(injector).success(true))
-                }
-            )
-        }.blockingGet()
+        return executeProgrammingCommand(
+            history.createRecord(OmnipodCommandType.RESUME_DELIVERY),
+            omnipodManager.suspendDelivery()
+        )
     }
 
     private fun resumeDelivery(): PumpEnactResult {
-        // TODO history
-
         return profileFunction.getProfile()?.let {
-
-            Single.create<PumpEnactResult> { source ->
-                omnipodManager.setBasalProgram(mapProfileToBasalProgram(it)).subscribeBy(
-                    onNext = { podEvent ->
-                        aapsLogger.debug(
-                            LTag.PUMP,
-                            "Received PodEvent in resumeDelivery: $podEvent"
-                        )
-                    },
-                    onError = { throwable ->
-                        aapsLogger.error(LTag.PUMP, "Error in resumeDelivery", throwable)
-                        source.onSuccess(PumpEnactResult(injector).success(false).comment(throwable.message))
-                    },
-                    onComplete = {
-                        aapsLogger.debug("resumeDelivery completed")
-                        source.onSuccess(PumpEnactResult(injector).success(true))
-                    }
-                )
-            }.blockingGet()
+            executeProgrammingCommand(
+                history.createRecord(OmnipodCommandType.RESUME_DELIVERY),
+                omnipodManager.setBasalProgram(mapProfileToBasalProgram(it))
+            )
         } ?: PumpEnactResult(injector).success(false).enacted(false).comment("No profile active") // TODO i18n
     }
 
     private fun deactivatePod(): PumpEnactResult {
-        // TODO history
-
-        return Single.create<PumpEnactResult> { source ->
-            omnipodManager.deactivatePod().subscribeBy(
-                onNext = { podEvent ->
-                    aapsLogger.debug(
-                        LTag.PUMP,
-                        "Received PodEvent in deactivatePod: $podEvent"
-                    )
-                },
-                onError = { throwable ->
-                    aapsLogger.error(LTag.PUMP, "Error in deactivatePod", throwable)
-                    source.onSuccess(PumpEnactResult(injector).success(false).comment(throwable.message))
-                },
-                onComplete = {
-                    aapsLogger.debug("deactivatePod completed")
-                    source.onSuccess(PumpEnactResult(injector).success(true))
-                }
-            )
-        }.blockingGet()
+        return executeProgrammingCommand(
+            history.createRecord(OmnipodCommandType.DEACTIVATE_POD),
+            omnipodManager.deactivatePod()
+        )
     }
 
     private fun handleTimeChange(): PumpEnactResult {
@@ -497,28 +440,10 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     private fun playTestBeep(): PumpEnactResult {
-        // TODO history
-
-        return Single.create<PumpEnactResult> { source ->
-            omnipodManager.playBeep(BeepType.LONG_SINGLE_BEEP).subscribeBy(
-                onNext = { podEvent ->
-                    aapsLogger.debug(
-                        LTag.PUMP,
-                        "Received PodEvent in playTestBeep: $podEvent"
-                    )
-                },
-                onError = { throwable ->
-                    aapsLogger.error(LTag.PUMP, "Error in playTestBeep", throwable)
-                    source.onSuccess(PumpEnactResult(injector).success(false).enacted(false).comment(throwable.message))
-                },
-                onComplete = {
-                    aapsLogger.debug("playTestBeep completed")
-                    source.onSuccess(
-                        PumpEnactResult(injector).success(true).enacted(true)
-                    )
-                }
-            )
-        }.blockingGet()
+        return executeProgrammingCommand(
+            history.createRecord(OmnipodCommandType.PLAY_TEST_BEEP),
+            omnipodManager.playBeep(BeepType.LONG_SINGLE_BEEP)
+        )
     }
 
     override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
@@ -540,5 +465,52 @@ class OmnipodDashPumpPlugin @Inject constructor(
         aapsLogger.info(LTag.PUMP, "Handling time change")
 
         commandQueue.customCommand(CommandHandleTimeChange(false), null)
+    }
+
+    private fun observeAddNewActiveCommandToHistory(observeCreateHistoryEntry: Single<String>): Observable<PodEvent> {
+        return observeCreateHistoryEntry.flatMapObservable {
+            podStateManager.createActiveCommand(it).toObservable<PodEvent>()
+        }
+    }
+
+    private fun executeProgrammingCommand(
+        observeCreateHistoryEntry: Single<String>,
+        command: Observable<PodEvent>
+    ): PumpEnactResult {
+        return Single.create<PumpEnactResult> { source ->
+            Observable.concat(
+                listOf(
+                    podStateManager.observeNoActiveCommand(),
+                    observeAddNewActiveCommandToHistory(observeCreateHistoryEntry),
+                    command,
+                    history.updateFromState(podStateManager).toObservable(),
+                    podStateManager.updateActiveCommand().toObservable(),
+                )
+            ).subscribeBy(
+                onNext = { podEvent ->
+                    aapsLogger.debug(
+                        LTag.PUMP,
+                        "Received PodEvent: $podEvent"
+                    )
+                },
+                onError = { throwable ->
+                    aapsLogger.error(LTag.PUMP, "Error executing command", throwable)
+                    // Here we assume that onError will be called only BEFORE we manage to send a command
+                    // If it gets called later, we will have the command as "not sent" in history and will not try to
+                    // get it's final status, even if it was send
+
+                    podStateManager.maybeMarkActiveCommandFailed()
+                    source.onSuccess(
+                        PumpEnactResult(injector).success(false).enacted(false).comment(throwable.message)
+                    )
+                },
+                onComplete = {
+                    aapsLogger.debug("Command completed")
+                    source.onSuccess(
+                        PumpEnactResult(injector).success(true).enacted(true)
+                    )
+                }
+            )
+        }.blockingGet()
     }
 }

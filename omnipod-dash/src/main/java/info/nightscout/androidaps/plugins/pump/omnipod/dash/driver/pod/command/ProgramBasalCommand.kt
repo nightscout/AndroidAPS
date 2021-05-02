@@ -31,7 +31,7 @@ class ProgramBasalCommand private constructor(
     private val delayUntilNextTenthPulseInUsec: Int
     val length: Short
         get() = (insulinProgramElements.size * 6 + 10).toShort()
-    val bodyLength: Byte
+    private val bodyLength: Byte
         get() = (insulinProgramElements.size * 6 + 8).toByte()
 
     override val encoded: ByteArray

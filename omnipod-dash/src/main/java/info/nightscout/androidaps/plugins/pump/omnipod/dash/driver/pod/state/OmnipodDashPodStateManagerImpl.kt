@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state
 
+import android.os.SystemClock
 import com.google.gson.Gson
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -9,12 +10,16 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair.PairResult
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.EapSqn
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.event.PodEvent
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.AlarmStatusResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.DefaultStatusResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.SetUniqueIdResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.VersionResponse
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import io.reactivex.Completable
+import io.reactivex.Maybe
+import io.reactivex.Observable
 import java.io.Serializable
 import java.util.*
 import javax.inject.Inject
@@ -60,8 +65,8 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             store()
         }
 
-    override val lastUpdated: Long
-        get() = podState.lastUpdated
+    override val lastUpdatedSystem: Long
+        get() = podState.lastUpdatedSystem
 
     override val messageSequenceNumber: Short
         get() = podState.messageSequenceNumber
@@ -152,6 +157,9 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             store()
         }
 
+    override val lastStatusResponseReceived: Long
+        get() = podState.lastStatusResponseReceived
+
     override fun increaseMessageSequenceNumber() {
         podState.messageSequenceNumber = ((podState.messageSequenceNumber.toInt() + 1) and 0x0f).toShort()
         store()
@@ -170,6 +178,76 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             podState.ltk = ltk
             store()
         }
+
+    override val activeCommand: OmnipodDashPodStateManager.ActiveCommand?
+        get() = podState.activeCommand
+
+    @Synchronized
+    override fun createActiveCommand(historyId: String) = Completable.create { source ->
+        if (activeCommand == null) {
+            podState.activeCommand = OmnipodDashPodStateManager.ActiveCommand(
+                podState.messageSequenceNumber,
+                createdRealtime = SystemClock.elapsedRealtime(),
+                historyId = historyId
+            )
+            source.onComplete()
+        } else {
+            source.onError(
+                java.lang.IllegalStateException(
+                    "Trying to send a command " +
+                        "and the last command was not confirmed"
+                )
+            )
+        }
+    }
+
+    @Synchronized
+    override fun observeNoActiveCommand(): Observable<PodEvent> {
+        return Observable.defer {
+            if (activeCommand == null) {
+                Observable.empty()
+            } else {
+                Observable.error(
+                    java.lang.IllegalStateException(
+                        "Trying to send a command " +
+                            "and the last command was not confirmed"
+                    )
+                )
+            }
+        }
+    }
+
+    @Synchronized
+    override fun maybeMarkActiveCommandFailed() {
+        podState.activeCommand?.run {
+            if (sentRealtime < createdRealtime) {
+                // command was not sent
+                podState.activeCommand = null
+            }
+        }
+    }
+
+    @Synchronized
+    override fun updateActiveCommand() = Maybe.create<PodEvent> { source ->
+        podState.activeCommand?.run {
+            logger.debug(
+                "Trying to confirm active command with parameters: $activeCommand " +
+                    "lastResponse=$lastStatusResponseReceived " +
+                    "$sequenceNumberOfLastProgrammingCommand $historyId"
+            )
+            if (createdRealtime >= lastStatusResponseReceived)
+            // we did not receive a valid response yet
+                source.onComplete()
+            else {
+                podState.activeCommand = null
+                if (sequenceNumberOfLastProgrammingCommand == sequence)
+                    source.onSuccess(PodEvent.CommandConfirmed(historyId, true))
+                else
+                    source.onSuccess(PodEvent.CommandConfirmed(historyId, false))
+            }
+        }
+            ?: source.onComplete() // no active programming command
+    }
 
     override fun increaseEapAkaSequenceNumber(): ByteArray {
         podState.eapAkaSequenceNumber++
@@ -191,7 +269,9 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         podState.minutesSinceActivation = response.minutesSinceActivation
         podState.activeAlerts = response.activeAlerts
 
-        podState.lastUpdated = System.currentTimeMillis()
+        podState.lastUpdatedSystem = System.currentTimeMillis()
+        podState.lastStatusResponseReceived = SystemClock.elapsedRealtime()
+
         store()
         rxBus.send(EventOmnipodDashPumpValuesChanged())
     }
@@ -211,7 +291,8 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         podState.lotNumber = response.lotNumber
         podState.podSequenceNumber = response.podSequenceNumber
 
-        podState.lastUpdated = System.currentTimeMillis()
+        podState.lastUpdatedSystem = System.currentTimeMillis()
+
         store()
         rxBus.send(EventOmnipodDashPumpValuesChanged())
     }
@@ -237,7 +318,8 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         podState.podSequenceNumber = response.podSequenceNumber
         podState.uniqueId = response.uniqueIdReceivedInCommand
 
-        podState.lastUpdated = System.currentTimeMillis()
+        podState.lastUpdatedSystem = System.currentTimeMillis()
+
         store()
         rxBus.send(EventOmnipodDashPumpValuesChanged())
     }
@@ -293,7 +375,8 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
 
         var activationProgress: ActivationProgress = ActivationProgress.NOT_STARTED
         var lastConnection: Long = 0
-        var lastUpdated: Long = 0
+        var lastUpdatedSystem: Long = 0
+        var lastStatusResponseReceived: Long = 0
 
         var messageSequenceNumber: Short = 0
         var sequenceNumberOfLastProgrammingCommand: Short? = null
@@ -322,5 +405,6 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
 
         var basalProgram: BasalProgram? = null
         var tempBasal: OmnipodDashPodStateManager.TempBasal? = null
+        var activeCommand: OmnipodDashPodStateManager.ActiveCommand? = null
     }
 }

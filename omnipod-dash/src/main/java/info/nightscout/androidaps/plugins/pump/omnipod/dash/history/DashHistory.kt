@@ -4,6 +4,7 @@ import com.github.guepardoapps.kulid.ULID
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType.SET_BOLUS
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType.SET_TEMPORARY_BASAL
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.BolusRecord
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.HistoryRecord
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.InitialResult
@@ -22,13 +23,13 @@ class DashHistory @Inject constructor(
     private val historyMapper: HistoryMapper
 ) {
 
-    fun markSuccess(id: String, date: Long): Completable = dao.markResolved(
+    private fun markSuccess(id: String): Completable = dao.markResolved(
         id,
         ResolvedResult.SUCCESS,
         currentTimeMillis()
     )
 
-    fun markFailure(id: String, date: Long): Completable = dao.markResolved(
+    private fun markFailure(id: String): Completable = dao.markResolved(
         id,
         ResolvedResult.FAILURE,
         currentTimeMillis()
@@ -37,8 +38,8 @@ class DashHistory @Inject constructor(
     @Suppress("ReturnCount")
     fun createRecord(
         commandType: OmnipodCommandType,
-        date: Long,
-        initialResult: InitialResult = InitialResult.UNCONFIRMED,
+        date: Long = System.currentTimeMillis(),
+        initialResult: InitialResult = InitialResult.NOT_SENT,
         tempBasalRecord: TempBasalRecord? = null,
         bolusRecord: BolusRecord? = null,
         resolveResult: ResolvedResult? = null,
@@ -72,4 +73,29 @@ class DashHistory @Inject constructor(
         dao.all().map { list -> list.map(historyMapper::entityToDomain) }
 
     fun getRecordsAfter(time: Long): Single<List<HistoryRecordEntity>> = dao.allSince(time)
+
+    fun updateFromState(podState: OmnipodDashPodStateManager) = Completable.defer {
+        podState.activeCommand?.run {
+            when {
+
+                createdRealtime <= podState.lastStatusResponseReceived &&
+                    sequence == podState.sequenceNumberOfLastProgrammingCommand ->
+                    dao.setInitialResult(historyId, InitialResult.SENT)
+                        .andThen(markSuccess(historyId))
+
+                createdRealtime <= podState.lastStatusResponseReceived &&
+                    sequence != podState.sequenceNumberOfLastProgrammingCommand ->
+                    markFailure(historyId)
+
+                // no response received after this point
+                createdRealtime <= sentRealtime ->
+                    dao.setInitialResult(historyId, InitialResult.SENT)
+
+                createdRealtime > sentRealtime ->
+                    dao.setInitialResult(historyId, InitialResult.FAILURE_SENDING)
+
+                else -> Completable.error(IllegalStateException("This can't happen. Could not update history"))
+            }
+        } ?: Completable.complete() // no active programming command
+    }
 }

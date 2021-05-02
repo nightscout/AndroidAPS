@@ -6,4 +6,5 @@ import java.io.Serializable
 interface Command : Encodable, Serializable {
 
     val commandType: CommandType
+    val sequenceNumber: Short
 }

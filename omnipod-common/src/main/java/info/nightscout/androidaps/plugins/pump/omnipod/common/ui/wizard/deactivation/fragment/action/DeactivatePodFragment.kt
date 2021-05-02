@@ -31,7 +31,8 @@ class DeactivatePodFragment : ActionFragmentBase() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.findViewById<Button>(R.id.omnipod_wizard_button_discard_pod)?.setOnClickListener {
+        buttonDiscardPod = view.findViewById(R.id.omnipod_wizard_button_discard_pod)
+        buttonDiscardPod.setOnClickListener {
             context?.let {
                 AlertDialog.Builder(it)
                     .setIcon(android.R.drawable.ic_dialog_alert)
