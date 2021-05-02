@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.util
 
-import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.data.Profile.ProfileValue
+import info.nightscout.androidaps.interfaces.Profile
+import info.nightscout.androidaps.interfaces.Profile.ProfileValue
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BasalProgram
 import org.junit.Assert.assertEquals
 import org.junit.Rule
@@ -26,7 +26,7 @@ class FunctionsTest {
         val value3 = Mockito.mock(ProfileValue::class.java)
         value3.timeAsSeconds = 50400
         value3.value = 3.05
-        PowerMockito.`when`(profile.basalValues).thenReturn(
+        PowerMockito.`when`(profile.getBasalValues()).thenReturn(
             arrayOf(
                 value1,
                 value2,
@@ -50,17 +50,11 @@ class FunctionsTest {
         assertEquals(48.toShort(), entry3.endSlotIndex)
     }
 
-    @Test fun invalidProfileNullEntries() {
-        thrown.expect(IllegalArgumentException::class.java)
-        thrown.expectMessage("Basal values can not be null")
-        mapProfileToBasalProgram(Mockito.mock(Profile::class.java))
-    }
-
     @Test fun invalidProfileZeroEntries() {
         thrown.expect(IllegalArgumentException::class.java)
         thrown.expectMessage("Basal values should contain values")
         val profile = Mockito.mock(Profile::class.java)
-        PowerMockito.`when`(profile.basalValues).thenReturn(arrayOfNulls(0))
+        PowerMockito.`when`(profile.getBasalValues()).thenReturn(emptyArray())
         mapProfileToBasalProgram(profile)
     }
 
@@ -71,7 +65,7 @@ class FunctionsTest {
         val value = Mockito.mock(ProfileValue::class.java)
         value.timeAsSeconds = 1800
         value.value = 0.5
-        PowerMockito.`when`(profile.basalValues).thenReturn(
+        PowerMockito.`when`(profile.getBasalValues()).thenReturn(
             arrayOf(
                 value
             )
@@ -90,7 +84,7 @@ class FunctionsTest {
         val value2 = Mockito.mock(ProfileValue::class.java)
         value2.timeAsSeconds = 86400
         value2.value = 0.5
-        PowerMockito.`when`(profile.basalValues).thenReturn(
+        PowerMockito.`when`(profile.getBasalValues()).thenReturn(
             arrayOf(
                 value1,
                 value2
@@ -106,7 +100,7 @@ class FunctionsTest {
         val value = Mockito.mock(ProfileValue::class.java)
         value.timeAsSeconds = -1
         value.value = 0.5
-        PowerMockito.`when`(profile.basalValues).thenReturn(
+        PowerMockito.`when`(profile.getBasalValues()).thenReturn(
             arrayOf(
                 value
             )
@@ -119,7 +113,7 @@ class FunctionsTest {
         val value = Mockito.mock(ProfileValue::class.java)
         value.timeAsSeconds = 0
         value.value = 0.04
-        PowerMockito.`when`(profile.basalValues).thenReturn(
+        PowerMockito.`when`(profile.getBasalValues()).thenReturn(
             arrayOf(
                 value
             )
