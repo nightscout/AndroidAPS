@@ -30,6 +30,9 @@ internal interface TemporaryBasalDao : TraceableDao<TemporaryBasal> {
     @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE nightscoutId = :nsId AND referenceId IS NULL")
     fun findByNSId(nsId: String): TemporaryBasal?
 
+    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE temporaryId = :temporaryId AND pumpType = :pumpType AND pumpSerial = :pumpSerial AND referenceId IS NULL")
+    fun findByPumpTempIds(temporaryId: Long, pumpType: InterfaceIDs.PumpType, pumpSerial: String): TemporaryBasal?
+
     @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE timestamp <= :timestamp AND (timestamp + duration) > :timestamp AND pumpType = :pumpType AND pumpSerial = :pumpSerial AND referenceId IS NULL AND isValid = 1 ORDER BY timestamp DESC LIMIT 1")
     fun getTemporaryBasalActiveAt(timestamp: Long, pumpType: InterfaceIDs.PumpType, pumpSerial: String): Maybe<TemporaryBasal>
 

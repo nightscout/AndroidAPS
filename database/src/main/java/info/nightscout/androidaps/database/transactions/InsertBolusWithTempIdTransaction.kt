@@ -5,29 +5,24 @@ import info.nightscout.androidaps.database.entities.Bolus
 /**
  * Creates or updates the Bolus from pump synchronization
  */
-class SyncPumpBolusWithTempIdTransaction(
-    private val bolus: Bolus,
-    private val newType: Bolus.Type?
-) : Transaction<SyncPumpBolusWithTempIdTransaction.TransactionResult>() {
+class InsertBolusWithTempIdTransaction(
+    private val bolus: Bolus
+) : Transaction<InsertBolusWithTempIdTransaction.TransactionResult>() {
 
     override fun run(): TransactionResult {
         bolus.interfaceIDs.temporaryId ?: bolus.interfaceIDs.pumpType ?: bolus.interfaceIDs.pumpSerial ?:
             throw IllegalStateException("Some pump ID is null")
         val result = TransactionResult()
         val current = database.bolusDao.findByPumpTempIds(bolus.interfaceIDs.temporaryId!!, bolus.interfaceIDs.pumpType!!, bolus.interfaceIDs.pumpSerial!!)
-        if (current != null) {
-            current.timestamp = bolus.timestamp
-            current.amount = bolus.amount
-            current.type = newType ?: current.type
-            current.interfaceIDs.pumpId = bolus.interfaceIDs.pumpId
-            database.bolusDao.updateExistingEntry(current)
-            result.updated.add(current)
+        if (current == null) {
+            database.bolusDao.insert(bolus)
+            result.inserted.add(bolus)
         }
         return result
     }
 
     class TransactionResult {
 
-        val updated = mutableListOf<Bolus>()
+        val inserted = mutableListOf<Bolus>()
     }
 }
