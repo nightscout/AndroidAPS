@@ -189,8 +189,8 @@ class SWDefinition @Inject constructor(
             .label(R.string.status)
             .initialStatus(nsClientPlugin.status)
         )
-        .validator { nsClientPlugin.nsClientService != null && NSClientService.isConnected && NSClientService.hasWriteAuth }
-        .visibility { !(nsClientPlugin.nsClientService != null && NSClientService.isConnected && NSClientService.hasWriteAuth) }
+        .validator { nsClientPlugin.nsClientService?.isConnected == true && nsClientPlugin.nsClientService?.hasWriteAuth == true }
+        .visibility { !(nsClientPlugin.nsClientService?.isConnected == true && nsClientPlugin.nsClientService?.hasWriteAuth == true) }
     private val screenPatientName = SWScreen(injector, R.string.patient_name)
         .skippable(true)
         .add(SWInfoText(injector)
@@ -268,13 +268,19 @@ class SWDefinition @Inject constructor(
             .label(R.string.adjustprofileinns))
         .add(SWFragment(injector, this)
             .add(NSProfileFragment()))
-        .validator { nsProfilePlugin.profile?.getDefaultProfile()?.let { ProfileSealed.Pure(it).isValid("StartupWizard", activePlugin.activePump, config, resourceHelper, rxBus)  } ?: false }
+        .validator {
+            nsProfilePlugin.profile?.getDefaultProfile()?.let { ProfileSealed.Pure(it).isValid("StartupWizard", activePlugin.activePump, config, resourceHelper, rxBus) }
+                ?: false
+        }
         .visibility { nsProfilePlugin.isEnabled() }
     private val screenLocalProfile = SWScreen(injector, R.string.localprofile)
         .skippable(false)
         .add(SWFragment(injector, this)
             .add(LocalProfileFragment()))
-        .validator { localProfilePlugin.profile?.getDefaultProfile()?.let { ProfileSealed.Pure(it).isValid("StartupWizard", activePlugin.activePump, config, resourceHelper, rxBus)  } ?: false }
+        .validator {
+            localProfilePlugin.profile?.getDefaultProfile()?.let { ProfileSealed.Pure(it).isValid("StartupWizard", activePlugin.activePump, config, resourceHelper, rxBus) }
+                ?: false
+        }
         .visibility { localProfilePlugin.isEnabled() }
     private val screenProfileSwitch = SWScreen(injector, R.string.careportal_profileswitch)
         .skippable(false)

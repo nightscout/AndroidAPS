@@ -85,6 +85,7 @@ fun extendedBolusFromNsIdForInvalidating(nsId: String): ExtendedBolus =
         JSONObject()
             .put("mills", 1)
             .put("amount", -1.0)
+            .put("enteredinsulin", -1.0)
             .put("duration", -1.0)
             .put("splitNow", 0)
             .put("splitExt", 100)

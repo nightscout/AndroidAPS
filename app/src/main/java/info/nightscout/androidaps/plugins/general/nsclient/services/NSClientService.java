@@ -99,20 +99,20 @@ public class NSClientService extends DaggerService {
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
-    static public PowerManager.WakeLock mWakeLock;
+//    public PowerManager.WakeLock mWakeLock;
     private final IBinder mBinder = new NSClientService.LocalBinder();
 
-    static public Handler handler;
+    private Handler handler;
 
-    public static Socket mSocket;
-    public static boolean isConnected = false;
-    public static boolean hasWriteAuth = false;
-    private static Integer dataCounter = 0;
-    private static Integer connectCounter = 0;
+    public Socket mSocket;
+    public boolean isConnected = false;
+    public boolean hasWriteAuth = false;
+    private Integer dataCounter = 0;
+    private Integer connectCounter = 0;
 
 
     private boolean nsEnabled = false;
-    static public String nsURL = "";
+    public String nsURL = "";
     private String nsAPISecret = "";
     private String nsDevice = "";
     private final Integer nsHours = 48;
@@ -140,9 +140,9 @@ public class NSClientService extends DaggerService {
     @Override
     public void onCreate() {
         super.onCreate();
-        PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:NSClientService");
-        mWakeLock.acquire();
+//        PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+//        mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:NSClientService");
+//        mWakeLock.acquire();
 
         initialize();
 
@@ -209,7 +209,7 @@ public class NSClientService extends DaggerService {
     public void onDestroy() {
         super.onDestroy();
         disposable.clear();
-        if (mWakeLock.isHeld()) mWakeLock.release();
+//        if (mWakeLock.isHeld()) mWakeLock.release();
     }
 
     public void processAddAck(NSAddAck ack) {
@@ -277,13 +277,14 @@ public class NSClientService extends DaggerService {
         readPreferences();
 
         if (!nsAPISecret.equals(""))
+            //noinspection UnstableApiUsage
             nsAPIhashCode = Hashing.sha1().hashString(nsAPISecret, Charsets.UTF_8).toString();
 
         rxBus.send(new EventNSClientStatus("Initializing"));
         if (!nsClientPlugin.isAllowed()) {
             rxBus.send(new EventNSClientNewLog("NSCLIENT", "not allowed"));
             rxBus.send(new EventNSClientStatus("Not allowed"));
-        } else if (nsClientPlugin.paused) {
+        } else if (nsClientPlugin.getPaused()) {
             rxBus.send(new EventNSClientNewLog("NSCLIENT", "paused"));
             rxBus.send(new EventNSClientStatus("Paused"));
         } else if (!nsEnabled) {
@@ -519,11 +520,11 @@ public class NSClientService extends DaggerService {
     private final Emitter.Listener onDataUpdate = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
-            NSClientService.handler.post(() -> {
+            handler.post(() -> {
                 PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
                 PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
                         "AndroidAPS:NSClientService_onDataUpdate");
-                wakeLock.acquire();
+                wakeLock.acquire(3000);
                 try {
 
                     JSONObject data = (JSONObject) args[0];
@@ -733,27 +734,35 @@ public class NSClientService extends DaggerService {
         handler.post(() -> {
             if (mSocket == null || !mSocket.connected()) return;
 
-            rxBus.send(new EventNSClientNewLog("QUEUE", "Resend started: " + reason));
-
             if (lastAckTime > System.currentTimeMillis() - 10 * 1000L) {
                 aapsLogger.debug(LTag.NSCLIENT, "Skipping resend by lastAckTime: " + ((System.currentTimeMillis() - lastAckTime) / 1000L) + " sec");
                 return;
             }
+            PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+            PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+                    "AndroidAPS:NSClientService_onDataUpdate");
+            wakeLock.acquire(T.mins(10).msecs());
+            try {
 
-            dataSyncSelector.processChangedBolusesCompat();
-            dataSyncSelector.processChangedCarbsCompat();
-            dataSyncSelector.processChangedBolusCalculatorResultsCompat();
-            dataSyncSelector.processChangedTemporaryBasalsCompat();
-            dataSyncSelector.processChangedExtendedBolusesCompat();
-            dataSyncSelector.processChangedProfileSwitchesCompat();
-            dataSyncSelector.processChangedGlucoseValuesCompat();
-            dataSyncSelector.processChangedTempTargetsCompat();
-            dataSyncSelector.processChangedFoodsCompat();
-            dataSyncSelector.processChangedTherapyEventsCompat();
-            dataSyncSelector.processChangedDeviceStatusesCompat();
-            dataSyncSelector.processChangedProfileStore();
+                rxBus.send(new EventNSClientNewLog("QUEUE", "Resend started: " + reason));
 
-            rxBus.send(new EventNSClientNewLog("QUEUE", "Resend ended: " + reason));
+                dataSyncSelector.processChangedBolusesCompat();
+                dataSyncSelector.processChangedCarbsCompat();
+                dataSyncSelector.processChangedBolusCalculatorResultsCompat();
+                dataSyncSelector.processChangedTemporaryBasalsCompat();
+                dataSyncSelector.processChangedExtendedBolusesCompat();
+                dataSyncSelector.processChangedProfileSwitchesCompat();
+                dataSyncSelector.processChangedGlucoseValuesCompat();
+                dataSyncSelector.processChangedTempTargetsCompat();
+                dataSyncSelector.processChangedFoodsCompat();
+                dataSyncSelector.processChangedTherapyEventsCompat();
+                dataSyncSelector.processChangedDeviceStatusesCompat();
+                dataSyncSelector.processChangedProfileStore();
+
+                rxBus.send(new EventNSClientNewLog("QUEUE", "Resend ended: " + reason));
+            } finally {
+                if (wakeLock.isHeld()) wakeLock.release();
+            }
         });
     }
 
