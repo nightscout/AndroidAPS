@@ -5,11 +5,16 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.TestPumpPlugin
 import info.nightscout.androidaps.dana.DanaPump
+import info.nightscout.androidaps.dana.database.DanaHistoryRecordDao
 import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
 import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.danar.comm.MessageBase
-import info.nightscout.androidaps.interfaces.*
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.interfaces.ConfigBuilder
+import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
@@ -31,7 +36,6 @@ open class DanaRTestBase : TestBase() {
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var dateUtil: DateUtil
-    @Mock lateinit var databaseHelper: DatabaseHelperInterface
     @Mock lateinit var danaRPlugin: DanaRPlugin
     @Mock lateinit var danaRKoreanPlugin: DanaRKoreanPlugin
     @Mock lateinit var danaRv2Plugin: DanaRv2Plugin
@@ -41,6 +45,7 @@ open class DanaRTestBase : TestBase() {
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Mock lateinit var constraintChecker: ConstraintChecker
     @Mock lateinit var pumpSync: PumpSync
+    @Mock lateinit var danaHistoryRecordDao: DanaHistoryRecordDao
 
     private lateinit var testPumpPlugin: TestPumpPlugin
 
@@ -69,9 +74,9 @@ open class DanaRTestBase : TestBase() {
                 it.configBuilder = configBuilder
                 it.detailedBolusInfoStorage = detailedBolusInfoStorage
                 it.constraintChecker = constraintChecker
-                it.databaseHelper = databaseHelper
                 it.commandQueue = commandQueue
                 it.pumpSync = pumpSync
+                it.danaHistoryRecordDao = danaHistoryRecordDao
             }
         }
     }
