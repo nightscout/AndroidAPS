@@ -23,7 +23,6 @@ import info.nightscout.androidaps.databinding.TreatmentsTemptargetFragmentBindin
 import info.nightscout.androidaps.databinding.TreatmentsTemptargetItemBinding
 import info.nightscout.androidaps.events.EventTempTargetChange
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.UploadQueueInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -58,7 +57,6 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var uploadQueue: UploadQueueInterface
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var translator: Translator
     @Inject lateinit var dateUtil: DateUtil
@@ -151,7 +149,7 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
         _binding = null
     }
 
-    private inner class RecyclerViewAdapter internal constructor(private var tempTargetList: List<TemporaryTarget>) : RecyclerView.Adapter<TempTargetsViewHolder>() {
+    private inner class RecyclerViewAdapter(private var tempTargetList: List<TemporaryTarget>) : RecyclerView.Adapter<TempTargetsViewHolder>() {
 
         private val dbRecord = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
         private val currentlyActiveTarget = if (dbRecord is ValueWrapper.Existing) dbRecord.value else null

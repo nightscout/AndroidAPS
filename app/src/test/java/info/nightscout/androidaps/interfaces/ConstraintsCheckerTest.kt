@@ -18,7 +18,6 @@ import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugi
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective
 import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin
 import info.nightscout.androidaps.plugins.general.maintenance.LoggerUtils
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
@@ -64,8 +63,6 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     @Mock lateinit var glimpPlugin: GlimpPlugin
     @Mock lateinit var sensitivityOref1Plugin: SensitivityOref1Plugin
     @Mock lateinit var profiler: Profiler
-    @Mock lateinit var nsUpload: NSUpload
-    @Mock lateinit var uploadQueue: UploadQueueInterface
     @Mock lateinit var uel: UserEntryLogger
     @Mock lateinit var loggerUtils: LoggerUtils
     @Mock lateinit var databaseHelper: DatabaseHelperInterface
@@ -144,7 +141,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         comboPlugin = ComboPlugin(injector, aapsLogger, rxBus, resourceHelper, profileFunction, sp, commandQueue, context, databaseHelper, pumpSync, dateUtil)
         danaRPlugin = DanaRPlugin(injector, aapsLogger, aapsSchedulers, rxBus, context, resourceHelper, constraintChecker, activePlugin, sp, commandQueue, danaPump, dateUtil, fabricPrivacy, pumpSync)
         danaRSPlugin = DanaRSPlugin(injector, aapsLogger, aapsSchedulers, rxBus, context, resourceHelper, constraintChecker, profileFunction, sp, commandQueue, danaPump, pumpSync, detailedBolusInfoStorage, temporaryBasalStorage, fabricPrivacy, dateUtil)
-        insightPlugin = LocalInsightPlugin(injector, aapsLogger, rxBus, resourceHelper, treatmentsInterface, sp, commandQueue, profileFunction, nsUpload, context, uploadQueue, ConfigImpl(), dateUtil, databaseHelper, pumpSync)
+        insightPlugin = LocalInsightPlugin(injector, aapsLogger, rxBus, resourceHelper, treatmentsInterface, sp, commandQueue, profileFunction, context, ConfigImpl(), dateUtil, databaseHelper, pumpSync)
         openAPSSMBPlugin = OpenAPSSMBPlugin(injector, aapsLogger, rxBus, constraintChecker, resourceHelper, profileFunction, context, activePlugin, iobCobCalculator, hardLimits, profiler, sp, dateUtil, repository, glucoseStatusProvider)
         openAPSAMAPlugin = OpenAPSAMAPlugin(injector, aapsLogger, rxBus, constraintChecker, resourceHelper, profileFunction, context, activePlugin, iobCobCalculator, hardLimits, profiler, fabricPrivacy, dateUtil, repository, glucoseStatusProvider)
         safetyPlugin = SafetyPlugin(injector, aapsLogger, resourceHelper, sp, rxBus, constraintChecker, openAPSAMAPlugin, openAPSSMBPlugin, sensitivityOref1Plugin, activePlugin, hardLimits, BuildHelper(ConfigImpl(), loggerUtils), iobCobCalculator, ConfigImpl(), dateUtil)

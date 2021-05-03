@@ -12,13 +12,11 @@ import info.nightscout.androidaps.db.DatabaseHelperProvider
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctionImplementation
 import info.nightscout.androidaps.plugins.general.maintenance.ImportExportPrefsImpl
 import info.nightscout.androidaps.plugins.general.nsclient.DataSyncSelectorImplementation
-import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.pump.PumpSyncImplementation
@@ -65,16 +63,6 @@ open class AppModule {
     @Provides
     @Singleton
     internal fun provideSchedulers(): AapsSchedulers = DefaultAapsSchedulers()
-
-    @Provides
-    @Singleton
-    fun providesUploadQueue(
-        aapsLogger: AAPSLogger,
-        databaseHelper: DatabaseHelperInterface,
-        context: Context,
-        sp: SP,
-        rxBus: RxBusWrapper
-    ): UploadQueueInterface = UploadQueue(aapsLogger, databaseHelper, context, sp, rxBus)
 
     @Provides
     @Singleton

@@ -12,7 +12,6 @@ import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.HardLimits
@@ -35,7 +34,6 @@ class LocalProfilePlugin @Inject constructor(
     resourceHelper: ResourceHelper,
     private val sp: SP,
     private val profileFunction: ProfileFunction,
-    private val nsUpload: NSUpload,
     private val activePlugin: ActivePlugin,
     private val hardLimits: HardLimits,
     private val dateUtil: DateUtil
@@ -144,7 +142,7 @@ class LocalProfilePlugin @Inject constructor(
             if (name.contains(".")) namesOK = false
         }
         if (namesOK)
-            rawProfile?.let { nsUpload.uploadProfileStore(it.data) }
+            sp.putLong(R.string.key_local_profile_last_change, dateUtil.now())
         else
             activity?.let {
                 OKDialog.show(it, "", resourceHelper.gs(R.string.profilenamecontainsdot))

@@ -1,8 +1,6 @@
 package info.nightscout.androidaps.interfaces
 
-import com.j256.ormlite.dao.CloseableIterator
 import info.nightscout.androidaps.db.*
-import org.json.JSONObject
 
 interface DatabaseHelperInterface {
 
@@ -13,14 +11,7 @@ interface DatabaseHelperInterface {
     fun createOrUpdate(record: InsightPumpID)
     fun createOrUpdate(record: InsightHistoryOffset)
     fun createOrUpdate(record: OHQueueItem)
-    fun create(record: DbRequest)
-    fun size(table: String): Long
-    fun deleteAllDbRequests()
-    fun deleteDbRequest(id: String): Int
     fun delete(extendedBolus: ExtendedBolus)
-    fun deleteDbRequestbyMongoId(action: String, _id: String)
-    fun getDbRequestIterator(): CloseableIterator<DbRequest>
-    fun roundDateToSec(date: Long): Long
     fun createOrUpdate(tempBasal: TemporaryBasal): Boolean
     @Deprecated("Use new DB")
     fun findTempBasalByPumpId(id: Long): TemporaryBasal?

@@ -14,14 +14,12 @@ import androidx.work.OneTimeWorkRequest;
 
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
-import com.j256.ormlite.dao.CloseableIterator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,17 +27,15 @@ import javax.inject.Inject;
 
 import dagger.android.DaggerService;
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.interfaces.Config;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.database.AppRepository;
-import info.nightscout.androidaps.db.DbRequest;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventConfigBuilderChange;
 import info.nightscout.androidaps.events.EventPreferenceChange;
+import info.nightscout.androidaps.interfaces.Config;
 import info.nightscout.androidaps.interfaces.DataSyncSelector;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.interfaces.UploadQueueInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
@@ -97,7 +93,6 @@ public class NSClientService extends DaggerService {
     @Inject BuildHelper buildHelper;
     @Inject Config config;
     @Inject DateUtil dateUtil;
-    @Inject UploadQueueInterface uploadQueue;
     @Inject DataWorker dataWorker;
     @Inject DataSyncSelector dataSyncSelector;
     @Inject AppRepository repository;
@@ -122,7 +117,6 @@ public class NSClientService extends DaggerService {
     private String nsDevice = "";
     private final Integer nsHours = 48;
 
-    public long lastResendTime = 0;
     public long lastAckTime = 0;
 
     public long latestDateInReceivedData = 0;
@@ -533,11 +527,9 @@ public class NSClientService extends DaggerService {
                 try {
 
                     JSONObject data = (JSONObject) args[0];
-                    boolean broadcastProfile = false;
                     try {
                         // delta means only increment/changes are comming
                         boolean isDelta = data.has("delta");
-                        boolean isFull = !isDelta;
                         rxBus.send(new EventNSClientNewLog("DATA", "Data packet #" + dataCounter++ + (isDelta ? " delta" : " full")));
 
                         if (data.has("status")) {
@@ -576,7 +568,7 @@ public class NSClientService extends DaggerService {
                             JSONArray addedOrUpdatedTreatments = new JSONArray();
                             if (treatments.length() > 0)
                                 rxBus.send(new EventNSClientNewLog("DATA", "received " + treatments.length() + " treatments"));
-                            for (Integer index = 0; index < treatments.length(); index++) {
+                            for (int index = 0; index < treatments.length(); index++) {
                                 JSONObject jsonTreatment = treatments.getJSONObject(index);
                                 String action = JsonHelper.safeGetStringAllowNull(jsonTreatment, "action", null);
                                 long mills = JsonHelper.safeGetLong(jsonTreatment, "mills");
@@ -689,20 +681,6 @@ public class NSClientService extends DaggerService {
         }
     };
 
-    public void dbUpdate(DbRequest dbr, NSUpdateAck ack) {
-        try {
-            if (!isConnected || !hasWriteAuth) return;
-            JSONObject message = new JSONObject();
-            message.put("collection", dbr.collection);
-            message.put("_id", dbr._id);
-            message.put("data", new JSONObject(dbr.data));
-            mSocket.emit("dbUpdate", message, ack);
-            rxBus.send(new EventNSClientNewLog("DBUPDATE " + dbr.collection, "Sent " + dbr._id));
-        } catch (JSONException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-    }
-
     public void dbUpdate(String collection, String _id, JSONObject data, Object originalObject) {
         try {
             if (!isConnected || !hasWriteAuth) return;
@@ -717,19 +695,6 @@ public class NSClientService extends DaggerService {
         }
     }
 
-    public void dbRemove(DbRequest dbr, NSUpdateAck ack) {
-        try {
-            if (!isConnected || !hasWriteAuth) return;
-            JSONObject message = new JSONObject();
-            message.put("collection", dbr.collection);
-            message.put("_id", dbr._id);
-            mSocket.emit("dbRemove", message, ack);
-            rxBus.send(new EventNSClientNewLog("DBREMOVE " + dbr.collection, "Sent " + dbr._id));
-        } catch (JSONException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-    }
-
     public void dbRemove(String collection, String _id, Object originalObject) {
         try {
             if (!isConnected || !hasWriteAuth) return;
@@ -738,19 +703,6 @@ public class NSClientService extends DaggerService {
             message.put("_id", _id);
             mSocket.emit("dbRemove", message, new NSUpdateAck("dbRemove", _id, aapsLogger, rxBus, originalObject));
             rxBus.send(new EventNSClientNewLog("DBREMOVE " + collection, "Sent " + originalObject.getClass().getSimpleName() + " " + _id));
-        } catch (JSONException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-    }
-
-    public void dbAdd(DbRequest dbr, NSAddAck ack) {
-        try {
-            if (!isConnected || !hasWriteAuth) return;
-            JSONObject message = new JSONObject();
-            message.put("collection", dbr.collection);
-            message.put("data", new JSONObject(dbr.data));
-            mSocket.emit("dbAdd", message, ack);
-            rxBus.send(new EventNSClientNewLog("DBADD " + dbr.collection, "Sent " + dbr.nsClientID));
         } catch (JSONException e) {
             aapsLogger.error("Unhandled exception", e);
         }
@@ -799,41 +751,7 @@ public class NSClientService extends DaggerService {
             dataSyncSelector.processChangedFoodsCompat();
             dataSyncSelector.processChangedTherapyEventsCompat();
             dataSyncSelector.processChangedDeviceStatusesCompat();
-
-            if (uploadQueue.size() == 0)
-                return;
-
-            if (lastResendTime > System.currentTimeMillis() - 10 * 1000L) {
-                aapsLogger.debug(LTag.NSCLIENT, "Skipping resend by lastResendTime: " + ((System.currentTimeMillis() - lastResendTime) / 1000L) + " sec");
-                return;
-            }
-            lastResendTime = System.currentTimeMillis();
-
-            CloseableIterator<DbRequest> iterator;
-            int maxcount = 30;
-            try {
-                iterator = databaseHelper.getDbRequestIterator();
-                try {
-                    while (iterator.hasNext() && maxcount > 0) {
-                        DbRequest dbr = iterator.next();
-                        if (dbr.action.equals("dbAdd")) {
-                            NSAddAck addAck = new NSAddAck(aapsLogger, rxBus, null);
-                            dbAdd(dbr, addAck);
-                        } else if (dbr.action.equals("dbRemove")) {
-                            NSUpdateAck removeAck = new NSUpdateAck("dbRemove", dbr._id, aapsLogger, rxBus, null);
-                            dbRemove(dbr, removeAck);
-                        } else if (dbr.action.equals("dbUpdate")) {
-                            NSUpdateAck updateAck = new NSUpdateAck("dbUpdate", dbr._id, aapsLogger, rxBus, null);
-                            dbUpdate(dbr, updateAck);
-                        }
-                        maxcount--;
-                    }
-                } finally {
-                    iterator.close();
-                }
-            } catch (SQLException e) {
-                aapsLogger.error("Unhandled exception", e);
-            }
+            dataSyncSelector.processChangedProfileStore();
 
             rxBus.send(new EventNSClientNewLog("QUEUE", "Resend ended: " + reason));
         });

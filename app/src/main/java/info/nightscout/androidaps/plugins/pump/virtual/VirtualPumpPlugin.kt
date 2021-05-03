@@ -139,7 +139,6 @@ open class VirtualPumpPlugin @Inject constructor(
     override fun isHandshakeInProgress(): Boolean = false
 
     override fun connect(reason: String) {
-        //if (!Config.NSCLIENT) NSUpload.uploadDeviceStatus()
         lastDataTime = System.currentTimeMillis()
     }
 

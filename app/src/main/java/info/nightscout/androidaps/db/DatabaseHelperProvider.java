@@ -25,38 +25,6 @@ public class DatabaseHelperProvider implements DatabaseHelperInterface {
         MainApp.Companion.getDbHelper().createOrUpdate(record);
     }
 
-    @Override public long size(@NonNull String table) {
-        return MainApp.Companion.getDbHelper().size(table);
-    }
-
-    @Override public void create(@NonNull DbRequest record) {
-        try {
-            MainApp.Companion.getDbHelper().create(record);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override public void deleteAllDbRequests() {
-        MainApp.Companion.getDbHelper().deleteAllDbRequests();
-    }
-
-    @Override public int deleteDbRequest(@NonNull String id) {
-        return MainApp.Companion.getDbHelper().deleteDbRequest(id);
-    }
-
-    @Override public void deleteDbRequestbyMongoId(@NonNull String action, @NonNull String _id) {
-        MainApp.Companion.getDbHelper().deleteDbRequestbyMongoId(action, _id);
-    }
-
-    @NonNull @Override public CloseableIterator<DbRequest> getDbRequestIterator() {
-        return MainApp.Companion.getDbHelper().getDbRequestIterator();
-    }
-
-    @Override public long roundDateToSec(long date) {
-        return MainApp.Companion.getDbHelper().roundDateToSec(date);
-    }
-
     @Override public boolean createOrUpdate(@NonNull TemporaryBasal tempBasal) {
 //        return MainApp.Companion.getDbHelper().createOrUpdate(tempBasal);
         return false;

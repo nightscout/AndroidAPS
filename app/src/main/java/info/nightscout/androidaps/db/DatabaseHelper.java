@@ -27,7 +27,6 @@ import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.openhumans.OpenHumansUploader;
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -46,12 +45,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     @Inject VirtualPumpPlugin virtualPumpPlugin;
     @Inject OpenHumansUploader openHumansUploader;
     @Inject ActivePlugin activePlugin;
-    @Inject NSUpload nsUpload;
     @Inject DateUtil dateUtil;
 
     public static final String DATABASE_NAME = "AndroidAPSDb";
-    public static final String DATABASE_DANARHISTORY = "DanaRHistory";
-    public static final String DATABASE_DBREQUESTS = "DBRequests";
 
     private static final int DATABASE_VERSION = 13;
 
@@ -71,7 +67,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void onCreate(SQLiteDatabase database, ConnectionSource connectionSource) {
         try {
             aapsLogger.info(LTag.DATABASE, "onCreate");
-            TableUtils.createTableIfNotExists(connectionSource, DbRequest.class);
             TableUtils.createTableIfNotExists(connectionSource, InsightHistoryOffset.class);
             TableUtils.createTableIfNotExists(connectionSource, InsightBolusID.class);
             TableUtils.createTableIfNotExists(connectionSource, InsightPumpID.class);
@@ -95,7 +90,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
             if (oldVersion < 7) {
                 aapsLogger.info(LTag.DATABASE, "onUpgrade");
-                TableUtils.dropTable(connectionSource, DbRequest.class, true);
                 onCreate(database, connectionSource);
             } else if (oldVersion < 10) {
                 TableUtils.createTableIfNotExists(connectionSource, InsightHistoryOffset.class);
@@ -138,9 +132,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public void resetDatabases() {
         try {
-            TableUtils.dropTable(connectionSource, DbRequest.class, true);
             TableUtils.dropTable(connectionSource, OmnipodHistoryRecord.class, true);
-            TableUtils.createTableIfNotExists(connectionSource, DbRequest.class);
             TableUtils.createTableIfNotExists(connectionSource, OmnipodHistoryRecord.class);
             updateEarliestDataChange(0);
         } catch (SQLException e) {
@@ -160,10 +152,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     // ------------------ getDao -------------------------------------------
 
-    private Dao<DbRequest, String> getDaoDbRequest() throws SQLException {
-        return getDao(DbRequest.class);
-    }
-
     private Dao<InsightPumpID, Long> getDaoInsightPumpID() throws SQLException {
         return getDao(InsightPumpID.class);
     }
@@ -182,76 +170,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private Dao<OHQueueItem, Long> getDaoOpenHumansQueue() throws SQLException {
         return getDao(OHQueueItem.class);
-    }
-
-    public long roundDateToSec(long date) {
-        long rounded = date - date % 1000;
-        if (rounded != date)
-            aapsLogger.debug(LTag.DATABASE, "Rounding " + date + " to " + rounded);
-        return rounded;
-    }
-
-    // ------------- DbRequests handling -------------------
-
-    public void create(DbRequest dbr) throws SQLException {
-        getDaoDbRequest().create(dbr);
-    }
-
-    public int delete(DbRequest dbr) {
-        try {
-            return getDaoDbRequest().delete(dbr);
-        } catch (SQLException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-        return 0;
-    }
-
-    public int deleteDbRequest(String nsClientId) {
-        try {
-            return getDaoDbRequest().deleteById(nsClientId);
-        } catch (SQLException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-        return 0;
-    }
-
-    public void deleteDbRequestbyMongoId(String action, String id) {
-        try {
-            QueryBuilder<DbRequest, String> queryBuilder = getDaoDbRequest().queryBuilder();
-            // By nsID
-            Where where = queryBuilder.where();
-            where.eq("_id", id).and().eq("action", action);
-            queryBuilder.limit(10L);
-            PreparedQuery<DbRequest> preparedQuery = queryBuilder.prepare();
-            List<DbRequest> dbList = getDaoDbRequest().query(preparedQuery);
-            for (DbRequest r : dbList) delete(r);
-            // By nsClientID
-            where = queryBuilder.where();
-            where.eq("nsClientID", id).and().eq("action", action);
-            queryBuilder.limit(10L);
-            preparedQuery = queryBuilder.prepare();
-            dbList = getDaoDbRequest().query(preparedQuery);
-            for (DbRequest r : dbList) delete(r);
-        } catch (SQLException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-    }
-
-    public void deleteAllDbRequests() {
-        try {
-            TableUtils.clearTable(connectionSource, DbRequest.class);
-        } catch (SQLException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-    }
-
-    public CloseableIterator getDbRequestIterator() {
-        try {
-            return getDaoDbRequest().closeableIterator();
-        } catch (SQLException e) {
-            aapsLogger.error("Unhandled exception", e);
-            return null;
-        }
     }
 
     public static void updateEarliestDataChange(long newDate) {

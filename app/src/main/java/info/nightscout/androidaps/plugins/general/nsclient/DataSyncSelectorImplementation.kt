@@ -10,6 +10,7 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.extensions.toJson
+import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
@@ -21,7 +22,8 @@ class DataSyncSelectorImplementation @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val nsClientPlugin: NSClientPlugin,
     private val activePlugin: ActivePlugin,
-    private val appRepository: AppRepository
+    private val appRepository: AppRepository,
+    private val localProfilePlugin: LocalProfilePlugin
 ) : DataSyncSelector {
 
     override fun resetToNextFullSync() {
@@ -36,6 +38,7 @@ class DataSyncSelectorImplementation @Inject constructor(
         sp.remove(R.string.key_ns_extended_bolus_last_synced_id)
         sp.remove(R.string.key_ns_therapy_event_last_synced_id)
         sp.remove(R.string.key_ns_profile_switch_last_synced_id)
+        sp.remove(R.string.key_ns_profile_store_last_synced_timestamp)
     }
 
     override fun confirmLastBolusIdIfGreater(lastSynced: Long) {
@@ -444,5 +447,20 @@ class DataSyncSelectorImplementation @Inject constructor(
             return true
         }
         return false
+    }
+
+    override fun confirmLastProfileStore(lastSynced: Long) {
+        sp.putLong(R.string.key_ns_profile_store_last_synced_timestamp, lastSynced)
+    }
+
+    override fun processChangedProfileStore() {
+        val lastSync = sp.getLong(R.string.key_ns_profile_store_last_synced_timestamp, 0)
+        val lastChange = sp.getLong(R.string.key_local_profile_last_change, 0)
+        if (lastChange == 0L) return
+        localProfilePlugin.createProfileStore()
+        val profileJson = localProfilePlugin.profile?.data ?: return
+        if (sp.getBoolean(R.string.key_ns_uploadlocalprofile, false))
+            if (lastChange > lastSync)
+                nsClientPlugin.nsClientService?.dbAdd("profile", profileJson, DataSyncSelector.PairProfileStore(profileJson, dateUtil.now()))
     }
 }
