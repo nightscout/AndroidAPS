@@ -400,7 +400,7 @@ open class VirtualPumpPlugin @Inject constructor(
         aapsLogger.debug(LTag.PUMP, "Pump in configuration: $pumpType, PumpType object: $pumpTypeNew")
         if (this.pumpType == pumpTypeNew) return
         aapsLogger.debug(LTag.PUMP, "New pump configuration found ($pumpTypeNew), changing from previous (${this.pumpType})")
-        pumpDescription.setPumpDescription(pumpTypeNew)
+        pumpDescription.fillFor(pumpTypeNew)
         this.pumpType = pumpTypeNew
     }
 
