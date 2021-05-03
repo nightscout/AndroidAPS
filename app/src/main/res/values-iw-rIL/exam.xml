@@ -93,7 +93,7 @@
     <string name="prerequisites2_supportedcgm">חיישן סוכר נתמך ואפליקציה מתאימה לקבלת ערכי הסוכר בטלפון\\התקן.</string>
     <string name="prerequisites2_hint1">https://androidaps.readthedocs.io/en/latest/EN/Module/module.html</string>
     <string name="update_label">עדכון AndroidAPS</string>
-    <string name="whatistrue">בחרו את כל ההיגדים הנכונים.</string>
+    <string name="whatistrue">סמנו את כל התשובות הנכונות.</string>
     <string name="update_git">אתם צריכים להתקין ולהגדיר את Git במחשב שלכם.</string>
     <string name="update_asap">כאשר גרסאות מעודכנות של AndroidAPS ישוחררו, ייתכן שהגרסאות הקודמות יוגבלו מרחוק לאחר זמן מסויים.</string>
     <string name="update_keys">עליכם לשמור ולציין את מיקום ה-Keystore שלכם ולהשתמש באותו מפתח חתימה בעדכונים בו השתמשתם להתקנה הקודמת שלכם.</string>
@@ -117,7 +117,7 @@
     <string name="insulin_actrapid">Actrapid®/Humalin R®/ אינסולין אנושי \"רגיל\".</string>
     <string name="insulin_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html#insulin</string>
     <string name="sensitivity_label">תוספי רגישות</string>
-    <string name="sensitivity_which">בחרו את כל ההיגדים הנכונים.</string>
+    <string name="sensitivity_which">סמנו את כל התשובות הנכונות.</string>
     <string name="sensitivity_adjust">תוספי רגישות מאפשרים ל-AndroidAPS לפצות על שינויים זמניים או קצרים ברגישות לאינסולין (לדוגמה משינויים הורמונליים או בעיות עם קליטה באתר העירוי).</string>
     <string name="sensitivity_edit">תוספי רגישות מספקים למשתמש הצעות לשינויים למינוני הבזאלי, יחסי התיקון והפחמימות, שאיתם ניתן לערוך את הפרופיל.</string>
     <string name="sensitivity_cannula">רישום החלפת צינורית יאפס את היחס של Autosens בחזרה ל-100%.</string>
@@ -136,7 +136,7 @@
     <string name="wronginsulin_prime">מזריקים בולוס על חלק מהאינסולין המחושב \"שחסר\" עם מזרק\\עט או באמצעות תיחול (Prime).</string>
     <string name="wronginsulin_donothing">לא לעשות דבר ולאפשר ל-AndroidAPS לתקן כל רמת סוכר גבוהה.</string>
     <string name="iob_label">אינסולין פעיל בגוף (IOB)</string>
-    <string name="iob_which">בחרו את כל ההיגדים הנכונים.</string>
+    <string name="iob_which">סמנו את כל התשובות הנכונות.</string>
     <string name="iob_value">ערך האינסולין הפעיל (IOB) מושפע ממינונים בזאליים זמניים שסופקו.</string>
     <string name="iob_hightemp">מינון בזאלי גבוה לא יינתן כאשר רמת הסוכר נמוכה מערך המטרה.</string>
     <string name="iob_negiob">אינסולין פעיל שלילי לאורך זמן בו לא נעשית פעילות מצביע על כך שהפרופיל הוא חזק מדי, נדרש פחות אינסולין ויש להגדיר זאת בהגדרות.</string>
