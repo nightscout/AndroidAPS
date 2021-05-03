@@ -10,6 +10,7 @@ import android.graphics.Paint
 import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import android.os.Handler
+import android.os.HandlerThread
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
@@ -24,10 +25,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.jjoe64.graphview.GraphView
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.TemporaryTarget
@@ -124,7 +123,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     private lateinit var dm: DisplayMetrics
     private var axisWidth: Int = 0
     private var rangeToDisplay = 6 // for graph
-    private var loopHandler = Handler()
+    private lateinit var loopHandler: Handler
     private var refreshLoop: Runnable? = null
 
     private val secondaryGraphs = ArrayList<GraphView>()
@@ -150,6 +149,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        loopHandler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
         // pre-process landscape mode
         val screenWidth = dm.widthPixels
@@ -297,14 +297,14 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         if (childFragmentManager.isStateSaved) return
         activity?.let { activity ->
             when (v.id) {
-                R.id.treatment_button -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { if (isAdded) TreatmentDialog().show(childFragmentManager, "Overview") })
-                R.id.wizard_button -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { if (isAdded) WizardDialog().show(childFragmentManager, "Overview") })
-                R.id.insulin_button -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { if (isAdded) InsulinDialog().show(childFragmentManager, "Overview") })
+                R.id.treatment_button    -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { if (isAdded) TreatmentDialog().show(childFragmentManager, "Overview") })
+                R.id.wizard_button       -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { if (isAdded) WizardDialog().show(childFragmentManager, "Overview") })
+                R.id.insulin_button      -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { if (isAdded) InsulinDialog().show(childFragmentManager, "Overview") })
                 R.id.quick_wizard_button -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { if (isAdded) onClickQuickWizard() })
-                R.id.carbs_button -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { if (isAdded) CarbsDialog().show(childFragmentManager, "Overview") })
-                R.id.temp_target -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { if (isAdded) TempTargetDialog().show(childFragmentManager, "Overview") })
+                R.id.carbs_button        -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { if (isAdded) CarbsDialog().show(childFragmentManager, "Overview") })
+                R.id.temp_target         -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { if (isAdded) TempTargetDialog().show(childFragmentManager, "Overview") })
 
-                R.id.active_profile -> {
+                R.id.active_profile      -> {
                     ProfileViewerDialog().also { pvd ->
                         pvd.arguments = Bundle().also {
                             it.putLong("time", dateUtil.now())
@@ -313,7 +313,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     }.show(childFragmentManager, "ProfileViewDialog")
                 }
 
-                R.id.cgm_button -> {
+                R.id.cgm_button          -> {
                     if (xdripPlugin.isEnabled(PluginType.BGSOURCE))
                         openCgmApp("com.eveningoutpost.dexdrip")
                     else if (dexcomPlugin.isEnabled(PluginType.BGSOURCE)) {
@@ -324,7 +324,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     }
                 }
 
-                R.id.calibration_button -> {
+                R.id.calibration_button  -> {
                     if (xdripPlugin.isEnabled(PluginType.BGSOURCE)) {
                         CalibrationDialog().show(childFragmentManager, "CalibrationDialog")
                     } else if (dexcomPlugin.isEnabled(PluginType.BGSOURCE)) {
@@ -339,27 +339,29 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     }
                 }
 
-                R.id.accept_temp_button -> {
+                R.id.accept_temp_button  -> {
                     profileFunction.getProfile() ?: return
                     if (loopPlugin.isEnabled(PluginType.LOOP)) {
-                        val lastRun = loopPlugin.lastRun
-                        loopPlugin.invoke("Accept temp button", false)
-                        if (lastRun?.lastAPSRun != null && lastRun.constraintsProcessed?.isChangeRequested == true) {
-                            protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable {
-                                OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.tempbasal_label), lastRun.constraintsProcessed?.toSpanned()
-                                    ?: "".toSpanned(), {
-                                    uel.log(Action.ACCEPTS_TEMP_BASAL, Sources.Overview)
-                                    binding.buttonsLayout.acceptTempButton.visibility = View.GONE
-                                    (context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(Constants.notificationID)
-                                    rxBus.send(EventWearInitiateAction("cancelChangeRequest"))
-                                    loopPlugin.acceptChangeRequest()
+                        loopHandler.post {
+                            val lastRun = loopPlugin.lastRun
+                            loopPlugin.invoke("Accept temp button", false)
+                            if (lastRun?.lastAPSRun != null && lastRun.constraintsProcessed?.isChangeRequested == true) {
+                                protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable {
+                                    OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.tempbasal_label), lastRun.constraintsProcessed?.toSpanned()
+                                        ?: "".toSpanned(), {
+                                        uel.log(Action.ACCEPTS_TEMP_BASAL, Sources.Overview)
+                                        binding.buttonsLayout.acceptTempButton.visibility = View.GONE
+                                        (context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(Constants.notificationID)
+                                        rxBus.send(EventWearInitiateAction("cancelChangeRequest"))
+                                        Thread { loopPlugin.acceptChangeRequest() }.run()
+                                    })
                                 })
-                            })
+                            }
                         }
                     }
                 }
 
-                R.id.aps_mode -> {
+                R.id.aps_mode            -> {
                     protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable {
                         if (isAdded) LoopDialog().also { dialog ->
                             dialog.arguments = Bundle().also { it.putInt("showOkCancel", 1) }
@@ -391,7 +393,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 return true
             }
 
-            R.id.aps_mode -> {
+            R.id.aps_mode            -> {
                 activity?.let { activity ->
                     protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable {
                         LoopDialog().also { dialog ->
@@ -401,8 +403,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 }
             }
 
-            R.id.temp_target -> v.performClick()
-            R.id.active_profile -> activity?.let { activity -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { ProfileSwitchDialog().show(childFragmentManager, "Overview") }) }
+            R.id.temp_target         -> v.performClick()
+            R.id.active_profile      -> activity?.let { activity -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { ProfileSwitchDialog().show(childFragmentManager, "Overview") }) }
 
         }
         return false
@@ -775,7 +777,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         if (config.APS && lastRun?.constraintsProcessed != null) {
             if (lastRun.constraintsProcessed!!.carbsReq > 0) {
                 //only display carbsreq when carbs have not been entered recently
-                    val lastCarb = repository.getLastCarbsRecordWrapped().blockingGet()
+                val lastCarb = repository.getLastCarbsRecordWrapped().blockingGet()
                 val lastCarbsTime = if (lastCarb is ValueWrapper.Existing) lastCarb.value.timestamp else 0L
                 if (lastCarbsTime < lastRun.lastAPSRun) {
                     cobText = cobText + " | " + lastRun.constraintsProcessed!!.carbsReq + " " + resourceHelper.gs(R.string.required)
@@ -860,7 +862,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
                 // **** BG ****
                 if (predictionsAvailable && menuChartSettings[0][OverviewMenus.CharType.PRE.ordinal])
-                    graphData.addBgReadings(fromTime, toTime, highLine, apsResult?.predictions?.map { bg-> GlucoseValueDataPoint(bg, defaultValueHelper, profileFunction, resourceHelper) }?.toMutableList())
+                    graphData.addBgReadings(fromTime, toTime, highLine, apsResult?.predictions?.map { bg -> GlucoseValueDataPoint(bg, defaultValueHelper, profileFunction, resourceHelper) }?.toMutableList())
                 else graphData.addBgReadings(fromTime, toTime, highLine, null)
                 if (buildHelper.isDev()) graphData.addBucketedData(fromTime, toTime)
 
