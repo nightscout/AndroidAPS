@@ -22,6 +22,7 @@ class NsClientReceiverDelegate @Inject constructor(
     private var allowedChargingState = true
     private var allowedNetworkState = true
     var allowed = true
+
     fun grabReceiversState() {
         receiverStatusStore.updateNetworkStatus()
     }
