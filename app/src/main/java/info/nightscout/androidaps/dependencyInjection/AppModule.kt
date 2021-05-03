@@ -7,6 +7,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.MainApp
+import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.db.DatabaseHelperProvider
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -14,6 +15,7 @@ import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctionImplementation
 import info.nightscout.androidaps.plugins.general.maintenance.ImportExportPrefsImpl
 import info.nightscout.androidaps.plugins.general.nsclient.DataSyncSelectorImplementation
 import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue
@@ -22,9 +24,11 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorP
 import info.nightscout.androidaps.plugins.pump.PumpSyncImplementation
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.CommandQueue
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.androidNotification.NotificationHolderImpl
 import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.utils.resources.IconsProviderImplementation
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.rx.DefaultAapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -71,6 +75,12 @@ open class AppModule {
         sp: SP,
         rxBus: RxBusWrapper
     ): UploadQueueInterface = UploadQueue(aapsLogger, databaseHelper, context, sp, rxBus)
+
+    @Provides
+    @Singleton
+    fun provideProfileFunction(aapsLogger: AAPSLogger, sp: SP, resourceHelper: ResourceHelper, activePlugin: ActivePlugin, repository: AppRepository, dateUtil: DateUtil): ProfileFunction {
+        return ProfileFunctionImplementation(aapsLogger, sp, resourceHelper, activePlugin, repository, dateUtil)
+    }
 
     @Module
     interface AppBindings {

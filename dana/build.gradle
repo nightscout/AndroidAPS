@@ -12,6 +12,12 @@ android {
     defaultConfig {
         versionCode 1
         versionName "1.0"
+        kapt {
+            arguments {
+                arg("room.incremental", "true")
+                arg("room.schemaLocation", "$projectDir/schemas")
+            }
+        }
     }
 }
 

@@ -330,6 +330,18 @@ class PumpSyncImplementation @Inject constructor(
             }
     }
 
+    override fun invalidateTemporaryBasalWithTempId(temporaryId: Long): Boolean {
+        repository.runTransactionForResult(InvalidateTemporaryBasalWithTempIdTransaction(temporaryId))
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating TemporaryBasal", it) }
+            .blockingGet()
+            .also { result ->
+                result.invalidated.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryBasal $it")
+                }
+                return result.invalidated.size > 0
+            }
+    }
+
     override fun syncExtendedBolusWithPumpId(timestamp: Long, amount: Double, duration: Long, isEmulatingTB: Boolean, pumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean {
         if (!confirmActivePump(timestamp, pumpType, pumpSerial)) return false
         val extendedBolus = ExtendedBolus(
