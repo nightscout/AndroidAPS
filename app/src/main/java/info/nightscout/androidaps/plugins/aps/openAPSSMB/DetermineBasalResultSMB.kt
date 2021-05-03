@@ -35,7 +35,6 @@ class DetermineBasalResultSMB private constructor(injector: HasAndroidInjector) 
                 duration = -1
             }
             if (result.has("units")) {
-                bolusRequested = true
                 smb = result.getDouble("units")
             } else {
                 smb = 0.0

@@ -48,7 +48,6 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
     var usePercent = false
     var duration = 0
     var tempBasalRequested = false
-    var bolusRequested = false
     var iob: IobTotal? = null
     var json: JSONObject? = JSONObject()
     var hasPredictions = false
@@ -161,7 +160,6 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
         newResult.rate = rate
         newResult.duration = duration
         newResult.tempBasalRequested = tempBasalRequested
-        newResult.bolusRequested = bolusRequested
         newResult.iob = iob
         newResult.json = JSONObject(json.toString())
         newResult.hasPredictions = hasPredictions
@@ -309,11 +307,11 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
             // closed loop mode: handle change at driver level
             if (closedLoopEnabled.value()) {
                 aapsLogger.debug(LTag.APS, "DEFAULT: Closed mode")
-                return tempBasalRequested || bolusRequested
+                return tempBasalRequested || bolusRequested()
             }
 
             // open loop mode: try to limit request
-            if (!tempBasalRequested && !bolusRequested) {
+            if (!tempBasalRequested && !bolusRequested()) {
                 aapsLogger.debug(LTag.APS, "FALSE: No request")
                 return false
             }
@@ -399,4 +397,6 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
                 }
             }
         }
+
+    fun bolusRequested(): Boolean = smb > 0.0
 }
