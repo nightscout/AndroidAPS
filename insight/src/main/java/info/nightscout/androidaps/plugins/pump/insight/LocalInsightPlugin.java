@@ -922,9 +922,9 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                             extendedBolus.durationInMinutes = (int) ((System.currentTimeMillis() - extendedBolus.date) / 60000);
                             if (extendedBolus.durationInMinutes <= 0) {
                                 final String _id = extendedBolus._id;
-                                if (NSUpload.isIdValid(_id))
-                                    nsUpload.removeCareportalEntryFromNS(_id);
-                                else uploadQueue.removeByMongoId("dbAdd", _id);
+//                                if (NSUpload.isIdValid(_id))
+//                                    nsUpload.removeCareportalEntryFromNS(_id);
+//                                else uploadQueue.removeByMongoId("dbAdd", _id);
                                 databaseHelper.delete(extendedBolus);
                             } else
                                 treatmentsPlugin.addToHistoryExtendedBolus(extendedBolus);
@@ -1436,8 +1436,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 ExtendedBolus extendedBolus = databaseHelper.getExtendedBolusByPumpId(bolusID.id);
                 if (extendedBolus != null) {
                     final String _id = extendedBolus._id;
-                    if (NSUpload.isIdValid(_id)) nsUpload.removeCareportalEntryFromNS(_id);
-                    else uploadQueue.removeByMongoId("dbAdd", _id);
+//                    if (NSUpload.isIdValid(_id)) nsUpload.removeCareportalEntryFromNS(_id);
+//                    else uploadQueue.removeByMongoId("dbAdd", _id);
                     databaseHelper.delete(extendedBolus);
                 }
             } else {

@@ -6,7 +6,6 @@ import dagger.Lazy
 import dagger.Module
 import dagger.Provides
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.db.DatabaseHelperProvider
 import info.nightscout.androidaps.interfaces.*
@@ -32,6 +31,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.storage.FileStorage
 import info.nightscout.androidaps.utils.storage.Storage
 import javax.inject.Singleton
+
 @Suppress("unused")
 @Module(includes = [
     AppModule.AppBindings::class
@@ -70,7 +70,7 @@ open class AppModule {
         context: Context,
         sp: SP,
         rxBus: RxBusWrapper
-    ): UploadQueueAdminInterface = UploadQueue(aapsLogger, databaseHelper, context, sp, rxBus)
+    ): UploadQueueInterface = UploadQueue(aapsLogger, databaseHelper, context, sp, rxBus)
 
     @Module
     interface AppBindings {
@@ -88,7 +88,6 @@ open class AppModule {
         @Binds fun bindLoopInterface(loopPlugin: LoopPlugin): LoopInterface
         @Binds fun bindIobCobCalculatorInterface(iobCobCalculatorPlugin: IobCobCalculatorPlugin): IobCobCalculator
         @Binds fun bindSmsCommunicatorInterface(smsCommunicatorPlugin: SmsCommunicatorPlugin): SmsCommunicator
-        @Binds fun bindUploadQueueAdminInterfaceToUploadQueue(uploadQueueAdminInterface: UploadQueueAdminInterface) : UploadQueueInterface
         @Binds fun bindDataSyncSelector(dataSyncSelectorImplementation: DataSyncSelectorImplementation): DataSyncSelector
         @Binds fun bindPumpSync(pumpSyncImplementation: PumpSyncImplementation): PumpSync
 

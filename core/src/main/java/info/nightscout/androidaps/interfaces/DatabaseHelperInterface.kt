@@ -8,14 +8,12 @@ interface DatabaseHelperInterface {
 
     fun resetDatabases()
 
-    fun createOrUpdate(record: DanaRHistoryRecord)
     fun createOrUpdate(record: OmnipodHistoryRecord)
     fun createOrUpdate(record: InsightBolusID)
     fun createOrUpdate(record: InsightPumpID)
     fun createOrUpdate(record: InsightHistoryOffset)
     fun createOrUpdate(record: OHQueueItem)
     fun create(record: DbRequest)
-    fun getDanaRHistoryRecordsByType(type: Byte): List<DanaRHistoryRecord>
     fun size(table: String): Long
     fun deleteAllDbRequests()
     fun deleteDbRequest(id: String): Int
@@ -41,7 +39,6 @@ interface DatabaseHelperInterface {
 
     fun getOHQueueSize(): Long
     fun clearOpenHumansQueue()
-    fun getCountOfAllRows(): Long
     fun removeAllOHQueueItemsWithIdSmallerThan(id: Long)
 
     companion object {

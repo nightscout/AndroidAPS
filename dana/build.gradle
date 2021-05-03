@@ -17,4 +17,10 @@ android {
 
 dependencies {
     implementation project(':core')
+
+    api "androidx.room:room-ktx:$room_version"
+    api "androidx.room:room-runtime:$room_version"
+    api "androidx.room:room-rxjava2:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    kapt "android.arch.persistence.room:compiler:$room_version"
 }

@@ -9,8 +9,4 @@ public interface UploadQueueInterface {
     long size();
 
     void add(DbRequest dbRequest);
-
-    void removeByMongoId(final String action, final String _id);
-
-    String textList();
 }

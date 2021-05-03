@@ -2,7 +2,6 @@ package info.nightscout.androidaps.interfaces
 
 import androidx.collection.ArrayMap
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.ProfileImplOld
 import info.nightscout.androidaps.data.PureProfile
 import info.nightscout.androidaps.extensions.pureProfileFromJson
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -67,8 +66,7 @@ class ProfileStore(val injector: HasAndroidInjector, val data: JSONObject, val d
         return profile
     }
 
-    fun getSpecificProfileJson(profileName: String): JSONObject? {
-        var profile: PureProfile? = null
+    private fun getSpecificProfileJson(profileName: String): JSONObject? {
         getStore()?.let { store ->
             if (store.has(profileName))
                 return JsonHelper.safeGetJSONObject(store, profileName, null)

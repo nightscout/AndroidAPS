@@ -75,15 +75,6 @@
                 android:layout_height="wrap_content"
                 android:textStyle="normal|bold" />
 
-            <TextView
-                android:id="@+id/queue"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
-                android:text="@string/queue"
-                android:textAlignment="viewEnd"
-                tools:ignore="RtlHardcoded" />
-
         </LinearLayout>
 
         <LinearLayout
@@ -121,26 +112,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/deliver_now"
-                android:textAlignment="center"
-                android:textColor="@android:color/holo_orange_light"
-                android:textStyle="normal|bold" />
-
-            <TextView
-                android:id="@+id/clear_queue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/clear_queue"
-                android:textAlignment="center"
-                android:textColor="@android:color/holo_orange_light"
-                android:textStyle="normal|bold" />
-
-            <TextView
-                android:id="@+id/show_queue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/show_queue"
                 android:textAlignment="center"
                 android:textColor="@android:color/holo_orange_light"
                 android:textStyle="normal|bold" />

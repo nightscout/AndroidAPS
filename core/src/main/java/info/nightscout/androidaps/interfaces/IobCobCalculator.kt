@@ -20,7 +20,7 @@ interface IobCobCalculator {
     fun getLastAutosensDataWithWaitForCalculationFinish(reason: String): AutosensData?
 
     fun calculateAbsInsulinFromTreatmentsAndTemps(fromTime: Long): IobTotal
-    fun calculateFromTreatmentsAndTemps(time: Long, profile: Profile): IobTotal
+    fun calculateFromTreatmentsAndTemps(fromTime: Long, profile: Profile): IobTotal
 
     fun getBasalData(profile: Profile, fromTime: Long): BasalData
 

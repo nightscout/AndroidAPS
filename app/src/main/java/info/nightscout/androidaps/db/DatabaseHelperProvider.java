@@ -5,8 +5,6 @@ import androidx.annotation.Nullable;
 
 import com.j256.ormlite.dao.CloseableIterator;
 
-import org.json.JSONObject;
-
 import java.sql.SQLException;
 import java.util.List;
 
@@ -23,16 +21,8 @@ public class DatabaseHelperProvider implements DatabaseHelperInterface {
     @Inject DatabaseHelperProvider() {
     }
 
-    @Override public void createOrUpdate(@NonNull DanaRHistoryRecord record) {
-        MainApp.Companion.getDbHelper().createOrUpdate(record);
-    }
-
     @Override public void createOrUpdate(@NonNull OmnipodHistoryRecord record) {
         MainApp.Companion.getDbHelper().createOrUpdate(record);
-    }
-
-    @NonNull @Override public List<DanaRHistoryRecord> getDanaRHistoryRecordsByType(byte type) {
-        return MainApp.Companion.getDbHelper().getDanaRHistoryRecordsByType(type);
     }
 
     @Override public long size(@NonNull String table) {
@@ -68,16 +58,19 @@ public class DatabaseHelperProvider implements DatabaseHelperInterface {
     }
 
     @Override public boolean createOrUpdate(@NonNull TemporaryBasal tempBasal) {
-        return MainApp.Companion.getDbHelper().createOrUpdate(tempBasal);
+//        return MainApp.Companion.getDbHelper().createOrUpdate(tempBasal);
+        return false;
     }
 
     @Nullable @Override public TemporaryBasal findTempBasalByPumpId(long id) {
-        return MainApp.Companion.getDbHelper().findTempBasalByPumpId(id);
+//        return MainApp.Companion.getDbHelper().findTempBasalByPumpId(id);
+        return null;
     }
 
     @Deprecated
     @NonNull @Override public List<TemporaryBasal> getTemporaryBasalsDataFromTime(long mills, boolean ascending) {
-        return MainApp.Companion.getDbHelper().getTemporaryBasalsDataFromTime(mills, ascending);
+//        return MainApp.Companion.getDbHelper().getTemporaryBasalsDataFromTime(mills, ascending);
+        return null;
     }
 
     @NonNull @Override public List<OmnipodHistoryRecord> getAllOmnipodHistoryRecordsFromTimestamp(long timestamp, boolean ascending) {
@@ -101,11 +94,12 @@ public class DatabaseHelperProvider implements DatabaseHelperInterface {
     }
 
     @Override public void delete(@NonNull ExtendedBolus extendedBolus) {
-        MainApp.Companion.getDbHelper().delete(extendedBolus);
+//        MainApp.Companion.getDbHelper().delete(extendedBolus);
     }
 
     @Nullable @Override public ExtendedBolus getExtendedBolusByPumpId(long pumpId) {
-        return MainApp.Companion.getDbHelper().getExtendedBolusByPumpId(pumpId);
+//        return MainApp.Companion.getDbHelper().getExtendedBolusByPumpId(pumpId);
+        return null;
     }
 
     @Nullable @Override public InsightBolusID getInsightBolusID(@NonNull String pumpSerial, int bolusID, long timestamp) {
@@ -138,10 +132,6 @@ public class DatabaseHelperProvider implements DatabaseHelperInterface {
 
     @Override public void clearOpenHumansQueue() {
         MainApp.Companion.getDbHelper().clearOpenHumansQueue();
-    }
-
-    @Override public long getCountOfAllRows() {
-        return MainApp.Companion.getDbHelper().getCountOfAllRows();
     }
 
     @Override public void removeAllOHQueueItemsWithIdSmallerThan(long id) {
