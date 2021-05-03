@@ -296,8 +296,7 @@ class NSClientService : DaggerService() {
         synchronized(reconnections) {
             val now = dateUtil.now()
             reconnections.add(now)
-            for (i in reconnections.indices) {
-                val r = reconnections[i]
+            for (r in reconnections.reversed()) {
                 if (r < now - mins(WATCHDOG_INTERVAL_MINUTES.toLong()).msecs()) {
                     reconnections.remove(r)
                 }

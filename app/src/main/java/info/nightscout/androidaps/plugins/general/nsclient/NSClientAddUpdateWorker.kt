@@ -14,6 +14,7 @@ import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.*
 import info.nightscout.androidaps.extensions.*
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -43,6 +44,7 @@ class NSClientAddUpdateWorker(
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var config: Config
     @Inject lateinit var repository: AppRepository
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var uel: UserEntryLogger
 
@@ -304,7 +306,7 @@ class NSClientAddUpdateWorker(
                             }
                     } ?: aapsLogger.error("Error parsing TemporaryBasal json $json")
                 eventType == TherapyEvent.Type.PROFILE_SWITCH.text          ->
-                    profileSwitchFromJson(json, dateUtil)?.let { profileSwitch ->
+                    profileSwitchFromJson(json, dateUtil, activePlugin)?.let { profileSwitch ->
                         repository.runTransactionForResult(SyncNsProfileSwitchTransaction(profileSwitch, invalidateByNsOnly = false))
                             .doOnError {
                                 aapsLogger.error(LTag.DATABASE, "Error while saving ProfileSwitch", it)
@@ -326,7 +328,7 @@ class NSClientAddUpdateWorker(
                                     aapsLogger.debug(LTag.DATABASE, "Updated nsId ProfileSwitch $it")
                                 }
                             }
-                    } ?: aapsLogger.error("Error parsing TemporaryBasal json $json")
+                    } ?: aapsLogger.error("Error parsing ProfileSwitch json $json")
             }
             if (eventType == TherapyEvent.Type.ANNOUNCEMENT.text) {
                 val date = safeGetLong(json, "mills")
