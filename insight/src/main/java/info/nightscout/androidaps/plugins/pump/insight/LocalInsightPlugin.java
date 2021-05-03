@@ -241,7 +241,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         this.pumpSync = pumpSync;
 
         pumpDescription = new PumpDescription();
-        pumpDescription.setPumpDescription(PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH);
+        pumpDescription.fillFor(PumpType.ACCU_CHEK_INSIGHT);
     }
 
     public TBROverNotificationBlock getTBROverNotificationBlock() {
@@ -1026,7 +1026,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
 
     @NonNull @Override
     public PumpType model() {
-        return PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH;
+        return PumpType.ACCU_CHEK_INSIGHT;
     }
 
     @NonNull @Override

@@ -74,7 +74,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
         this.fabricPrivacy = fabricPrivacy;
 
         useExtendedBoluses = sp.getBoolean(R.string.key_danar_useextended, false);
-        pumpDescription.setPumpDescription(PumpType.DANA_R);
+        pumpDescription.fillFor(PumpType.DANA_R);
     }
 
     @Override
