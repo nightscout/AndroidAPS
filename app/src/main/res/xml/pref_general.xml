@@ -79,7 +79,7 @@
             android:title="@string/skin" />
 
         <ListPreference
-            android:defaultValue="system"
+            android:defaultValue="dark"
             android:entries="@array/darkMode"
             android:entryValues="@array/darkModeValues"
             android:key="@string/key_use_dark_mode"
