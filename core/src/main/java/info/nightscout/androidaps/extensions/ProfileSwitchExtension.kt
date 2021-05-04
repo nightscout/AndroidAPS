@@ -94,9 +94,9 @@ fun profileSwitchFromJson(jsonObject: JSONObject, dateUtil: DateUtil, activePlug
 /**
  * Pure profile doesn't contain timestamp, percentage, timeshift, profileName
  */
-fun pureProfileFromJson(jsonObject: JSONObject, dateUtil: DateUtil): PureProfile? {
+fun pureProfileFromJson(jsonObject: JSONObject, dateUtil: DateUtil, defaultUnits: String? = null): PureProfile? {
     try {
-        JsonHelper.safeGetStringAllowNull(jsonObject, "units", null) ?: return null
+        JsonHelper.safeGetStringAllowNull(jsonObject, "units", defaultUnits) ?: return null
         val units = GlucoseUnit.fromText(JsonHelper.safeGetString(jsonObject, "units", Constants.MGDL))
         val dia = JsonHelper.safeGetDoubleAllowNull(jsonObject, "dia") ?: return null
         val timezone = TimeZone.getTimeZone(JsonHelper.safeGetString(jsonObject, "timezone", "UTC"))

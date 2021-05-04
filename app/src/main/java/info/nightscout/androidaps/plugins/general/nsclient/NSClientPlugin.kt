@@ -8,6 +8,7 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.IBinder
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceScreen
 import androidx.preference.SwitchPreference
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
@@ -147,25 +148,17 @@ class NSClientPlugin @Inject constructor(
     override fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {
         super.preprocessPreferences(preferenceFragment)
         if (config.NSCLIENT) {
-            val key_ns_uploadlocalprofile = preferenceFragment.findPreference<SwitchPreference>(resourceHelper.gs(R.string.key_ns_uploadlocalprofile))
-            if (key_ns_uploadlocalprofile != null) key_ns_uploadlocalprofile.isVisible = false
-            val key_ns_autobackfill = preferenceFragment.findPreference<SwitchPreference>(resourceHelper.gs(R.string.key_ns_autobackfill))
-            if (key_ns_autobackfill != null) key_ns_autobackfill.isVisible = false
-            val key_ns_create_announcements_from_errors = preferenceFragment.findPreference<SwitchPreference>(resourceHelper.gs(R.string.key_ns_create_announcements_from_errors))
-            if (key_ns_create_announcements_from_errors != null) key_ns_create_announcements_from_errors.isVisible = false
-            val key_ns_create_announcements_from_carbs_req = preferenceFragment.findPreference<SwitchPreference>(resourceHelper.gs(R.string.key_ns_create_announcements_from_carbs_req))
-            if (key_ns_create_announcements_from_carbs_req != null) key_ns_create_announcements_from_carbs_req.isVisible = false
-            val key_ns_upload_only = preferenceFragment.findPreference<SwitchPreference>(resourceHelper.gs(R.string.key_ns_upload_only))
-            if (key_ns_upload_only != null) {
-                key_ns_upload_only.isVisible = false
-                key_ns_upload_only.isEnabled = false
-            }
-            val key_ns_sync_use_absolute = preferenceFragment.findPreference<SwitchPreference>(resourceHelper.gs(R.string.key_ns_sync_use_absolute))
-            if (key_ns_sync_use_absolute != null) key_ns_sync_use_absolute.isVisible = false
+            preferenceFragment.findPreference<PreferenceScreen>(resourceHelper.gs(R.string.ns_sync_options))?.isVisible = false
+
+            preferenceFragment.findPreference<SwitchPreference>(resourceHelper.gs(R.string.key_ns_create_announcements_from_errors))?.isVisible = false
+            preferenceFragment.findPreference<SwitchPreference>(resourceHelper.gs(R.string.key_ns_create_announcements_from_carbs_req))?.isVisible = false
+            preferenceFragment.findPreference<SwitchPreference>(resourceHelper.gs(R.string.key_ns_sync_use_absolute))?.isVisible = false
         } else {
             // APS or pumpControl mode
-            val key_ns_upload_only = preferenceFragment.findPreference<SwitchPreference>(resourceHelper.gs(R.string.key_ns_upload_only))
-            if (key_ns_upload_only != null) key_ns_upload_only.isVisible = buildHelper.isEngineeringMode()
+            preferenceFragment.findPreference<SwitchPreference>(resourceHelper.gs(R.string.key_ns_receive_profile_switch))?.isVisible = buildHelper.isEngineeringMode()
+            preferenceFragment.findPreference<SwitchPreference>(resourceHelper.gs(R.string.key_ns_receive_insulin))?.isVisible = buildHelper.isEngineeringMode()
+            preferenceFragment.findPreference<SwitchPreference>(resourceHelper.gs(R.string.key_ns_receive_carbs))?.isVisible = buildHelper.isEngineeringMode()
+            preferenceFragment.findPreference<SwitchPreference>(resourceHelper.gs(R.string.key_ns_receive_temp_target))?.isVisible = buildHelper.isEngineeringMode()
         }
     }
 
@@ -232,7 +225,7 @@ class NSClientPlugin @Inject constructor(
 
     fun handleClearAlarm(originalAlarm: NSAlarm, silenceTimeInMilliseconds: Long) {
         if (!isEnabled(PluginType.GENERAL)) return
-        if (sp.getBoolean(R.string.key_ns_noupload, false)) {
+        if (!sp.getBoolean(R.string.key_ns_upload, false)) {
             aapsLogger.debug(LTag.NSCLIENT, "Upload disabled. Message dropped")
             return
         }

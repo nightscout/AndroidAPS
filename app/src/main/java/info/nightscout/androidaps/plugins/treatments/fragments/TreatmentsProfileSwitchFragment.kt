@@ -99,7 +99,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
                 }
             }
         }
-        if (sp.getBoolean(R.string.key_ns_upload_only, true) || !buildHelper.isEngineeringMode()) binding.refreshFromNightscout.visibility = View.GONE
+        if (!sp.getBoolean(R.string.key_ns_receive_profile_switch, false) || !buildHelper.isEngineeringMode()) binding.refreshFromNightscout.visibility = View.GONE
         binding.showInvalidated.setOnCheckedChangeListener { _, _ ->
             rxBus.send(EventTreatmentUpdateGui())
         }

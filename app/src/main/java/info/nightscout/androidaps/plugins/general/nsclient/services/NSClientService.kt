@@ -36,7 +36,7 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNo
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction
-import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin.NSProfileWorker
+import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.source.NSClientSourcePlugin.NSClientSourceWorker
 import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.services.Intents
@@ -472,7 +472,7 @@ class NSClientService : DaggerService() {
                             val profileStoreJson = profiles[profiles.length() - 1] as JSONObject
                             rxBus.send(EventNSClientNewLog("PROFILE", "profile received"))
                             dataWorker.enqueue(
-                                OneTimeWorkRequest.Builder(NSProfileWorker::class.java)
+                                OneTimeWorkRequest.Builder(LocalProfilePlugin.NSProfileWorker::class.java)
                                     .setInputData(dataWorker.storeInputData(profileStoreJson, null))
                                     .build())
                             if (sp.getBoolean(R.string.key_nsclient_localbroadcasts, false)) {
@@ -652,18 +652,7 @@ class NSClientService : DaggerService() {
             wakeLock.acquire(mins(10).msecs())
             try {
                 rxBus.send(EventNSClientNewLog("QUEUE", "Resend started: $reason"))
-                dataSyncSelector.processChangedBolusesCompat()
-                dataSyncSelector.processChangedCarbsCompat()
-                dataSyncSelector.processChangedBolusCalculatorResultsCompat()
-                dataSyncSelector.processChangedTemporaryBasalsCompat()
-                dataSyncSelector.processChangedExtendedBolusesCompat()
-                dataSyncSelector.processChangedProfileSwitchesCompat()
-                dataSyncSelector.processChangedGlucoseValuesCompat()
-                dataSyncSelector.processChangedTempTargetsCompat()
-                dataSyncSelector.processChangedFoodsCompat()
-                dataSyncSelector.processChangedTherapyEventsCompat()
-                dataSyncSelector.processChangedDeviceStatusesCompat()
-                dataSyncSelector.processChangedProfileStore()
+                dataSyncSelector.doUpload()
                 rxBus.send(EventNSClientNewLog("QUEUE", "Resend ended: $reason"))
             } finally {
                 if (wakeLock.isHeld) wakeLock.release()

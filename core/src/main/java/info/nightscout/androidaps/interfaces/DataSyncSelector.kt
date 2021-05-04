@@ -18,6 +18,8 @@ interface DataSyncSelector {
     data class PairProfileSwitch(val value: ProfileSwitch, val updateRecordId: Long)
     data class PairProfileStore(val value: JSONObject, val timestampSync: Long)
 
+    fun doUpload()
+
     fun resetToNextFullSync()
 
     fun confirmLastBolusIdIfGreater(lastSynced: Long)

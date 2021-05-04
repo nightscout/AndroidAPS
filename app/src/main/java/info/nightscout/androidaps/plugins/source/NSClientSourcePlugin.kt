@@ -5,12 +5,12 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
 import info.nightscout.androidaps.interfaces.BgSource
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
@@ -115,7 +115,7 @@ class NSClientSourcePlugin @Inject constructor(
         override fun doWork(): Result {
             var ret = Result.success()
 
-            if (!nsClientSourcePlugin.isEnabled() && !sp.getBoolean(R.string.key_ns_autobackfill, true) && !dexcomPlugin.isEnabled()) return Result.success()
+            if (!nsClientSourcePlugin.isEnabled() && !sp.getBoolean(R.string.key_ns_receive_cgm, true) && !dexcomPlugin.isEnabled()) return Result.success()
 
             val sgvs = dataWorker.pickupJSONArray(inputData.getLong(DataWorker.STORE_KEY, -1))
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))

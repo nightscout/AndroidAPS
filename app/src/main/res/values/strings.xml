@@ -78,7 +78,6 @@
     <string name="description_overview">Displays the current state of your loop and buttons for most common actions</string>
     <string name="description_persistent_notification">Shows an ongoing notification with a short overview of what your loop is doing</string>
     <string name="description_profile_local">Define a profile which is available offline.</string>
-    <string name="description_profile_nightscout">Provides the profile you have defined in Nightscout</string>
     <string name="description_pump_mdi">Pump integration for people who do multiple daily injections for their diabetes therapy</string>
     <string name="description_pump_virtual">Pump integration for pumps which don\'t have any driver yet (Open Loop)</string>
     <string name="description_sensitivity_aaps">Sensitivity is calculated the same way like Oref0, but you can specify timeframe to the past. Minimal carb absorption is calculated from max carb absorption time from preferences.</string>
@@ -128,7 +127,6 @@
 
     <string name="configbuilder">Config Builder</string>
     <string name="overview">Overview</string>
-    <string name="nsprofile">NS Profile</string>
     <string name="treatments">Treatments</string>
     <string name="virtualpump">Virtual Pump</string>
     <string name="careportal">Careportal</string>
@@ -340,7 +338,6 @@
     <string name="localprofile_shortname">LP</string>
     <string name="overview_shortname">HOME</string>
     <string name="virtualpump_shortname">VPUMP</string>
-    <string name="profileviewer_shortname">NSPROFILE</string>
     <string name="treatments_shortname">TREAT</string>
     <string name="objectives_shortname">OBJ</string>
     <string name="wear_shortname">WEAR</string>
@@ -499,10 +496,6 @@
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">Show BGI</string>
     <string name="wear_showbgi_summary">Add BGI to status line</string>
-    <string name="ns_noupload">No upload to NS</string>
-    <string name="ns_noupload_summary">All data sent to NS are dropped. AAPS is connected to NS but no change in NS is done</string>
-    <string name="key_ns_upload_only" translatable="false">ns_upload_only2</string>
-    <string name="key_ns_noupload" translatable="false">ns_noupload</string>
     <string name="overview_extendedbolus_cancel_button">Cancel Extended Bolus</string>
     <string name="doprofileswitch">Do Profile Switch</string>
     <string name="careportal_sensor_label">Sensor</string>
@@ -699,8 +692,6 @@
     <string name="category">Category</string>
     <string name="subcategory">Subcategory</string>
     <string name="bolusrecordedonly">Bolus will be recorded only (not delivered by pump)</string>
-    <string name="ns_autobackfill_summary">Autobackfill missig BGs from NS</string>
-    <string name="key_ns_autobackfill" translatable="false">ns_autobackfill</string>
     <string name="loop_smbsetbypump_label">SMB set by pump</string>
     <string name="overview_show_activity">Activity</string>
     <string name="overview_show_bgi">Blood Glucose Impact</string>
@@ -783,7 +774,6 @@
     <string name="virtualpump_type">Virtual Pump Type</string>
     <string name="virtualpump_definition">Pump Definition</string>
     <string name="virtualpump_pump_def">Bolus: Step=%1$s\nExtended Bolus: [Step=%2$s, Duration=%3$smin-%4$sh]\nBasal: Step=%5$s\nTBR: %6$s (by %7$s), Duration=%8$smin-%9$sh\n%10$s</string>
-    <string name="ns_autobackfill_title">Autobackfill BG</string>
     <string name="wear_wizard_settings">Wizard Settings</string>
     <string name="key_wearwizard_bg" translatable="false">wearwizard_bg</string>
     <string name="key_wearwizard_tt" translatable="false">wearwizard_tt</string>
@@ -797,7 +787,6 @@
     <string name="enable_nsclient">Enable NSClient</string>
     <string name="welcometosetupwizard">Welcome to setup wizard. It will guide you through the setup process\n</string>
     <string name="readstatus">Read status</string>
-    <string name="adjustprofileinns">Changes must be done in NS</string>
     <string name="exitwizard">Skip setup wizard</string>
     <string name="setupwizard_loop_description">Press the button below to enable AndroidAPS to suggest/make basal changes</string>
     <string name="key_setupwizard_processed" translatable="false">startupwizard_processed</string>
@@ -805,7 +794,6 @@
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
     <string name="nsclientinfotext">NSClient handles connection to Nightscout. You can skip this part now but you will not be able to pass objectives until you set it up.</string>
     <string name="diawarning">Please remember: new insulin profiles require DIA at least 5h. DIA 5–6h on new profile is equal to DIA 3h on old insulin profiles.</string>
-    <string name="setupwizard_profile_description">Please select source of profile. If patient is a child you should use NS profile. If there is nobody following you on Nightscout you will probably prefer Local profile. Please remember that you are only selecting the profile source. To use it you must activate it by executing \"Profile switch\"</string>
     <string name="setupwizard_aps_description">Select one from availables algorithms. They are sorted from oldest to newest. Newer algorithm is usually more powerful and more aggressive. Thus if you are new looper you may probably start with AMA and not with latest one. Do not forget to read the OpenAPS documentation and configure it before use.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Please configure your RileyLink below. After selecting a RileyLink, it will be possible to continue setup once the RileyLink status is \"Connected\". This might take a minute.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Note:</b> You can continue setup once the pump has been set up.\n</string>
@@ -954,7 +942,6 @@
     <string name="objectives_button_unstart">Clear started</string>
     <string name="doyouwantresetstart">Do you want reset objective start? You may lose your progress.</string>
     <string name="setupwizard_units_prompt">Select units you want to display values in</string>
-    <string name="ns_ploadlocalprofile">Upload local profile changes to NS</string>
     <string name="key_wear_detailediob" translatable="false">wear_detailediob</string>
     <string name="key_wear_showbgi" translatable="false">wear_showbgi</string>
     <string name="dia_short">DIA</string>
@@ -1139,5 +1126,30 @@
     <string name="profile_carbs_ratio_value">Profile carbs ratio value</string>
     <string name="full_sync">Full sync</string>
     <string name="prime">Prime</string>
+    <string name="ns_sync_options">Synchronization</string>
+    <string name="key_ns_upload" translatable="false">ns_upload</string>
+    <string name="ns_upload_summary">Profiles, boluses, carbs, temporary basals are uploaded to NS</string>
+    <string name="ns_upload">Upload data to NS</string>
+    <string name="key_ns_receive_profile_store" translatable="false">ns_receive_profile_store</string>
+    <string name="ns_receive_profile_store">Receive profile store</string>
+    <string name="ns_receive_profile_store_summary">Synchronized profiles from NS profile editor to Local profile</string>
+    <string name="key_ns_receive_temp_target" translatable="false">ns_receive_temp_target</string>
+    <string name="ns_receive_temp_target">Receive temporary targets</string>
+    <string name="ns_receive_temp_target_summary">Accept temporary targets entered through NS or NSClient</string>
+    <string name="key_ns_receive_profile_switch" translatable="false">ns_receive_profile_switch</string>
+    <string name="ns_receive_profile_switch">Receive profile switches</string>
+    <string name="ns_receive_profile_switch_summary">Accept profile switches entered through NS or NSClient</string>
+    <string name="key_ns_receive_insulin" translatable="false">ns_receive_insulin</string>
+    <string name="ns_receive_insulin">Receive insulin</string>
+    <string name="ns_receive_insulin_summary">Accept insulin entered through NS or NSClient (it\'s not delivered, only calculated towards IOB)</string>
+    <string name="key_ns_receive_carbs" translatable="false">ns_receive_carbs</string>
+    <string name="ns_receive_carbs">Receive carbs</string>
+    <string name="ns_receive_carbs_summary">Accept carbs entered through NS or NSClient</string>
+    <string name="key_ns_receive_therapy_events" translatable="false">ns_receive_therapy_events</string>
+    <string name="ns_receive_therapy_events">Receive therapy events</string>
+    <string name="ns_receive_therapy_events_summary">Accept therapy events (cannula, insulin, battery change etc) entered through NS or NSClient</string>
+    <string name="key_ns_receive_cgm" translatable="false">ns_receive_cgm</string>
+    <string name="ns_receive_cgm">Receive/backfill CGM data</string>
+    <string name="ns_receive_cgm_summary">Accept CGM data from NS</string>
 
 </resources>
