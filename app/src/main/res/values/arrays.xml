@@ -148,9 +148,9 @@
     </string-array>
 
     <string-array name="darkModeValues">
-        <item>dark</item>
-        <item>light</item>
-        <item>system</item>
+        <item>@string/value_dark_theme</item>
+        <item>@string/value_light_theme</item>
+        <item>@string/value_system_theme</item>
     </string-array>
 
 </resources>
