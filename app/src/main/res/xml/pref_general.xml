@@ -82,7 +82,7 @@
             android:defaultValue="system"
             android:entries="@array/darkMode"
             android:entryValues="@array/darkModeValues"
-            android:key="@string/key_useDarkmode"
+            android:key="@string/key_use_dark_mode"
             android:summary="@string/theme_switcher_summary"
             android:title="@string/app_color_scheme" />
 
