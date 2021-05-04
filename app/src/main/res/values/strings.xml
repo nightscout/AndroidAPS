@@ -1115,6 +1115,9 @@
     <string name="dark_theme">Dark theme</string>
     <string name="light_theme">Light theme</string>
     <string name="follow_system_theme">Use device theme</string>
+    <string name="value_dark_theme" translatable="false">dark</string>
+    <string name="value_light_theme" translatable="false">light</string>
+    <string name="value_system_theme" translatable="false">system</string>
     <string name="common_values">Use values of your largest food you usually eat\n</string>
     <string name="summary_email_for_crash_report">This email address will attached to crash reports so we can contact you in urgent cases. It\'s optional.</string>
     <string name="email_address">Email address</string>
