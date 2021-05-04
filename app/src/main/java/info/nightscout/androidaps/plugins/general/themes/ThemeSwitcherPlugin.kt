@@ -40,7 +40,7 @@ class ThemeSwitcherPlugin @Inject constructor(
 
     override fun onStart() {
         compositeDisposable.add(rxBusWrapper.toObservable(EventPreferenceChange::class.java).subscribe {
-            if (it.isChanged(resourceHelper, id = R.string.key_useDarkmode)) switchTheme()
+            if (it.isChanged(resourceHelper, id = R.string.key_use_dark_mode)) switchTheme()
         })
     }
 
