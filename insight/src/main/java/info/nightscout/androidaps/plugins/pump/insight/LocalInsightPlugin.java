@@ -592,18 +592,17 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 // Move to Insight room database
                 InsightBolusID insightBolusID = new InsightBolusID();
                 insightBolusID.bolusID = bolusID;
-                insightBolusID.timestamp = System.currentTimeMillis();
+                insightBolusID.timestamp = dateUtil.now();
                 insightBolusID.pumpSerial = connectionService.getPumpSystemIdentification().getSerialNumber();
                 databaseHelper.createOrUpdate(insightBolusID);
                 aapsLogger.debug(LTag.PUMP, "XXXX set Bolus: " + dateUtil.dateAndTimeAndSecondsString(dateUtil.now()) + " amount: " + insulin);
-                /*
-                detailedBolusInfo.setBolusTimestamp(insightBolusID.timestamp);
-                detailedBolusInfo.setPumpType(PumpType.ACCU_CHEK_INSIGHT);
-                detailedBolusInfo.setPumpSerial(serialNumber());
-                detailedBolusInfo.setBolusPumpId(insightBolusID.id);
-                treatmentsPlugin.addToHistoryTreatment(detailedBolusInfo, true);
-
-                 */
+                pumpSync.syncBolusWithPumpId(
+                        insightBolusID.timestamp,
+                        detailedBolusInfo.insulin,
+                        detailedBolusInfo.getBolusType(),
+                        insightBolusID.id,
+                        PumpType.ACCU_CHEK_INSIGHT,
+                        serialNumber());
                 while (true) {
                     synchronized ($bolusLock) {
                         if (bolusCancelled) break;
@@ -755,7 +754,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     .enacted(true)
                     .comment(R.string.virtualpump_resultok);
             aapsLogger.debug(LTag.PUMP, "XXXX Set Temp Basal timestamp: " + dateUtil.now() + " rate: " + percent + " duration: " + durationInMinutes);
-            fetchStatus();          // here I switched fetchStatus and readHistory (I noticed that we could miss the latest command sent to the pump if readHistory is before
+            fetchStatus();
             readHistory();
         } catch (AppLayerErrorException e) {
             aapsLogger.info(LTag.PUMP, "Exception while setting TBR: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
@@ -1492,7 +1491,6 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
 //                    else uploadQueue.removeByMongoId("dbAdd", _id);
                     databaseHelper.delete(extendedBolus);
                 }
-
                  */
             } else {
                 if (profileFunction.getProfile(bolusID.timestamp) != null)
