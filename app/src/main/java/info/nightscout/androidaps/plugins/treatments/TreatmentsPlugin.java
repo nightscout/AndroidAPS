@@ -26,7 +26,6 @@ import info.nightscout.androidaps.interfaces.TreatmentServiceInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
@@ -37,12 +36,10 @@ import io.reactivex.disposables.CompositeDisposable;
 @Singleton
 public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface {
 
-    private final AapsSchedulers aapsSchedulers;
     private final SP sp;
     private final RxBusWrapper rxBus;
     private final ProfileFunction profileFunction;
     private final ActivePlugin activePlugin;
-    private final NSUpload nsUpload;
     private final FabricPrivacy fabricPrivacy;
     private final DateUtil dateUtil;
     private final DatabaseHelperInterface databaseHelper;
@@ -63,7 +60,6 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             SP sp,
             ProfileFunction profileFunction,
             ActivePlugin activePlugin,
-            NSUpload nsUpload,
             FabricPrivacy fabricPrivacy,
             DateUtil dateUtil,
             DatabaseHelperInterface databaseHelper,
@@ -81,13 +77,11 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                 aapsLogger, resourceHelper, injector
         );
         this.rxBus = rxBus;
-        this.aapsSchedulers = aapsSchedulers;
         this.sp = sp;
         this.profileFunction = profileFunction;
         this.activePlugin = activePlugin;
         this.fabricPrivacy = fabricPrivacy;
         this.dateUtil = dateUtil;
-        this.nsUpload = nsUpload;
         this.databaseHelper = databaseHelper;
         this.repository = repository;
     }

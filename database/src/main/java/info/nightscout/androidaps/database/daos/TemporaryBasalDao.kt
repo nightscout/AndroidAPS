@@ -18,6 +18,9 @@ internal interface TemporaryBasalDao : TraceableDao<TemporaryBasal> {
     @Query("DELETE FROM $TABLE_TEMPORARY_BASALS")
     override fun deleteAllEntries()
 
+    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE temporaryId = :temporaryId")
+    fun findByTempId(temporaryId: Long): TemporaryBasal?
+
     @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE timestamp = :timestamp AND referenceId IS NULL")
     fun findByTimestamp(timestamp: Long): TemporaryBasal?
 

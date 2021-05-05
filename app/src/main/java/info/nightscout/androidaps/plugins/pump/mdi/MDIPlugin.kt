@@ -61,7 +61,7 @@ class MDIPlugin @Inject constructor(
     override fun waitForDisconnectionInSeconds(): Int = 0
     override fun stopConnecting() {}
     override fun getPumpStatus(reason: String) {}
-    override fun setNewBasalProfile(profile: Profile): PumpEnactResult = PumpEnactResult(injector).success(true)
+    override fun setNewBasalProfile(profile: Profile): PumpEnactResult = PumpEnactResult(injector).success(true).enacted(true)
     override fun isThisProfileSet(profile: Profile): Boolean = false
     override fun lastDataTime(): Long = System.currentTimeMillis()
     override val baseBasalRate: Double = 0.0

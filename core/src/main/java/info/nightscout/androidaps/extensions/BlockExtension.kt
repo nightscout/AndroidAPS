@@ -5,7 +5,6 @@ import info.nightscout.androidaps.database.data.TargetBlock
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import org.json.JSONArray
-import org.json.JSONException
 import org.json.JSONObject
 
 private fun getShiftedTimeSecs(originalSeconds: Int, timeShiftHours: Int): Int {
@@ -86,33 +85,18 @@ fun blockFromJsonArray(jsonArray: JSONArray?, dateUtil: DateUtil): List<Block>? 
     val ret = ArrayList<Block>(size)
     try {
         for (index in 0 until jsonArray.length() - 1) {
-            val o: JSONObject = jsonArray.getJSONObject(index)
-            val tas: Int = try {
-                o.getInt("timeAsSeconds")
-            } catch (e: JSONException) {
-                val time = o.getString("time")
-                dateUtil.toSeconds(time)
-            }
-            val next: JSONObject = jsonArray.getJSONObject(index + 1)
-            val nextTas: Int = try {
-                next.getInt("timeAsSeconds")
-            } catch (e: JSONException) {
-                val time = next.getString("time")
-                dateUtil.toSeconds(time)
-            }
-            val value: Double = o.getDouble("value")
+            val o = jsonArray.getJSONObject(index)
+            val tas = dateUtil.toSeconds(o.getString("time"))
+            val next = jsonArray.getJSONObject(index + 1)
+            val nextTas = dateUtil.toSeconds(next.getString("time"))
+            val value = o.getDouble("value")
             if (tas % 3600 != 0) return null
             if (nextTas % 3600 != 0) return null
             ret.add(index, Block((nextTas - tas) * 1000L, value))
         }
         val last: JSONObject = jsonArray.getJSONObject(jsonArray.length() - 1)
-        val lastTas: Int = try {
-            last.getInt("timeAsSeconds")
-        } catch (e: JSONException) {
-            val time = last.getString("time")
-            dateUtil.toSeconds(time)
-        }
-        val value: Double = last.getDouble("value")
+        val lastTas = dateUtil.toSeconds(last.getString("time"))
+        val value = last.getDouble("value")
         ret.add(jsonArray.length() - 1, Block((T.hours(24).secs() - lastTas) * 1000L, value))
     } catch (e: Exception) {
         return null
@@ -128,41 +112,23 @@ fun targetBlockFromJsonArray(jsonArray1: JSONArray?, jsonArray2: JSONArray?, dat
     try {
         for (index in 0 until jsonArray1.length() - 1) {
             val o1: JSONObject = jsonArray1.getJSONObject(index)
-            val tas1: Int = try {
-                o1.getInt("timeAsSeconds")
-            } catch (e: JSONException) {
-                val time = o1.getString("time")
-                dateUtil.toSeconds(time)
-            }
-            val value1: Double = o1.getDouble("value")
-            val next1: JSONObject = jsonArray1.getJSONObject(index + 1)
-            val nextTas1: Int = try {
-                next1.getInt("timeAsSeconds")
-            } catch (e: JSONException) {
-                val time = next1.getString("time")
-                dateUtil.toSeconds(time)
-            }
-            val o2: JSONObject = jsonArray2.getJSONObject(index)
-            val tas2: Int = try {
-                o2.getInt("timeAsSeconds")
-            } catch (e: JSONException) {
-                val time = o2.getString("time")
-                dateUtil.toSeconds(time)
-            }
-            val value2: Double = o2.getDouble("value")
+            val tas1 = dateUtil.toSeconds(o1.getString("time"))
+            val value1 = o1.getDouble("value")
+            val next1 = jsonArray1.getJSONObject(index + 1)
+            val nextTas1 = dateUtil.toSeconds(next1.getString("time"))
+            val o2 = jsonArray2.getJSONObject(index)
+            val tas2 = dateUtil.toSeconds(o2.getString("time"))
+            val value2 = o2.getDouble("value")
             if (tas1 != tas2) return null
+            if (tas1 % 3600 != 0) return null
+            if (nextTas1 % 3600 != 0) return null
             ret.add(index, TargetBlock((nextTas1 - tas1) * 1000L, value1, value2))
         }
-        val last1: JSONObject = jsonArray1.getJSONObject(jsonArray1.length() - 1)
-        val lastTas1: Int = try {
-            last1.getInt("timeAsSeconds")
-        } catch (e: JSONException) {
-            val time = last1.getString("time")
-            dateUtil.toSeconds(time)
-        }
-        val value1: Double = last1.getDouble("value")
-        val last2: JSONObject = jsonArray2.getJSONObject(jsonArray2.length() - 1)
-        val value2: Double = last2.getDouble("value")
+        val last1 = jsonArray1.getJSONObject(jsonArray1.length() - 1)
+        val lastTas1 = dateUtil.toSeconds(last1.getString("time"))
+        val value1 = last1.getDouble("value")
+        val last2 = jsonArray2.getJSONObject(jsonArray2.length() - 1)
+        val value2 = last2.getDouble("value")
         ret.add(jsonArray1.length() - 1, TargetBlock((T.hours(24).secs() - lastTas1) * 1000L, value1, value2))
     } catch (e: Exception) {
         return null

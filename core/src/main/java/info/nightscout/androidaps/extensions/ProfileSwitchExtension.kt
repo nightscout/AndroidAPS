@@ -7,6 +7,7 @@ import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.ProfileSwitch
 import info.nightscout.androidaps.database.entities.TemporaryBasal
 import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.utils.DateUtil
@@ -23,7 +24,7 @@ fun ProfileSwitch.toJson(dateUtil: DateUtil): JSONObject =
         .put("eventType", TherapyEvent.Type.PROFILE_SWITCH.text)
         .put("duration", T.msecs(duration).mins())
         .put("profile", getCustomizedName())
-        .put("profileJson", ProfileSealed.PS(this).toPureNsJson(dateUtil))
+        .put("profileJson", ProfileSealed.PS(this).toPureNsJson(dateUtil).toString())
         .put("timeshift", T.msecs(timeshift).hours())
         .put("percentage", percentage)
         .also {
@@ -33,7 +34,20 @@ fun ProfileSwitch.toJson(dateUtil: DateUtil): JSONObject =
             if (interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId)
         }
 
-fun profileSwitchFromJson(jsonObject: JSONObject, dateUtil: DateUtil): ProfileSwitch? {
+/* NS PS
+{
+   "_id":"608ffa268db0676196a772d7",
+   "enteredBy":"undefined",
+   "eventType":"Profile Switch",
+   "duration":10,
+   "profile":"LocalProfile0",
+   "created_at":"2021-05-03T13:26:58.537Z",
+   "utcOffset":0,
+   "mills":1620048418537,
+   "mgdl":98
+}
+ */
+fun profileSwitchFromJson(jsonObject: JSONObject, dateUtil: DateUtil, activePlugin: ActivePlugin): ProfileSwitch? {
     val timestamp = JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null) ?: return null
     val duration = JsonHelper.safeGetLong(jsonObject, "duration")
     val timeshift = JsonHelper.safeGetLong(jsonObject, "timeshift")
@@ -41,14 +55,20 @@ fun profileSwitchFromJson(jsonObject: JSONObject, dateUtil: DateUtil): ProfileSw
     val isValid = JsonHelper.safeGetBoolean(jsonObject, "isValid", true)
     val id = JsonHelper.safeGetStringAllowNull(jsonObject, "_id", null)
     val profileName = JsonHelper.safeGetStringAllowNull(jsonObject, "profile", null) ?: return null
-    val profileJson = JsonHelper.safeGetStringAllowNull(jsonObject, "profileJson", null) ?: return null
+    val profileJson = JsonHelper.safeGetStringAllowNull(jsonObject, "profileJson", null)
     val pumpId = JsonHelper.safeGetLongAllowNull(jsonObject, "pumpId", null)
     val pumpType = InterfaceIDs.PumpType.fromString(JsonHelper.safeGetStringAllowNull(jsonObject, "pumpType", null))
     val pumpSerial = JsonHelper.safeGetStringAllowNull(jsonObject, "pumpSerial", null)
 
     if (timestamp == 0L) return null
-    val pureProfile = pureProfileFromJson(JSONObject(profileJson), dateUtil) ?: return null
+    val pureProfile =
+        if (profileJson == null) { // entered through NS, no JSON attached
+            val profilePlugin = activePlugin.activeProfileSource
+            val store = profilePlugin.profile ?: return null
+            store.getSpecificProfile(profileName) ?: return null
+        } else pureProfileFromJson(JSONObject(profileJson), dateUtil) ?: return null
     val profileSealed = ProfileSealed.Pure(pureProfile)
+
 
     return ProfileSwitch(
         timestamp = timestamp,
@@ -74,9 +94,9 @@ fun profileSwitchFromJson(jsonObject: JSONObject, dateUtil: DateUtil): ProfileSw
 /**
  * Pure profile doesn't contain timestamp, percentage, timeshift, profileName
  */
-fun pureProfileFromJson(jsonObject: JSONObject, dateUtil: DateUtil): PureProfile? {
+fun pureProfileFromJson(jsonObject: JSONObject, dateUtil: DateUtil, defaultUnits: String? = null): PureProfile? {
     try {
-        JsonHelper.safeGetStringAllowNull(jsonObject, "units", null) ?: return null
+        JsonHelper.safeGetStringAllowNull(jsonObject, "units", defaultUnits) ?: return null
         val units = GlucoseUnit.fromText(JsonHelper.safeGetString(jsonObject, "units", Constants.MGDL))
         val dia = JsonHelper.safeGetDoubleAllowNull(jsonObject, "dia") ?: return null
         val timezone = TimeZone.getTimeZone(JsonHelper.safeGetString(jsonObject, "timezone", "UTC"))

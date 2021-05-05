@@ -345,6 +345,19 @@ interface PumpSync {
     fun invalidateTemporaryBasal(id: Long): Boolean
 
     /**
+     * Invalidate of temporary basals that failed to start
+     * MDT specific
+     *
+     * If exists, isValid is set false
+     * If db record doesn't exist data is ignored and false returned
+     *
+     *
+     * @param temporaryId    temporary id of temporary basal
+     * @return true if running record is found and invalidated
+     **/
+    fun invalidateTemporaryBasalWithTempId(temporaryId: Long): Boolean
+
+    /**
      * Synchronization of extended bolus
      *
      * Search for combination of pumpId, PumpType, pumpSerial
