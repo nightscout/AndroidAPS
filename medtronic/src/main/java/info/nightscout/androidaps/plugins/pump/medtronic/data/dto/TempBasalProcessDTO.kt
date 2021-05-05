@@ -4,9 +4,17 @@ import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry
 
 class TempBasalProcessDTO {
-    @JvmField var itemOne: PumpHistoryEntry? = null
-    @JvmField var itemTwo: PumpHistoryEntry? = null
-    @JvmField var processOperation = Operation.None
+    var itemOne: PumpHistoryEntry? = null
+    var itemTwo: PumpHistoryEntry? = null
+    var processOperation = Operation.None
+    var cancelPresent: Boolean = false
+
+    val atechDateTime: Long
+        get() = if (itemOne==null) 0L else itemOne!!.atechDateTime!!
+
+    val pumpId: Long
+        get() = if (itemOne==null) 0L else itemOne!!.pumpId!!
+
     val duration: Int
         get() = if (itemTwo == null) {
             val tbr = itemOne!!.getDecodedDataEntry("Object") as TempBasalPair?

@@ -8,6 +8,7 @@ import info.nightscout.androidaps.db.TemporaryBasal
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.lang.reflect.Type
 import java.util.*
@@ -132,12 +133,17 @@ class PumpSyncStorage @Inject constructor(
     // TODO
     fun addTemporaryBasalRateWithTempId(temporaryBasal: PumpDbEntryTBR, writeToInternalHistory: Boolean, creator: PumpSyncEntriesCreator) : Boolean {
         val timenow : Long = System.currentTimeMillis()
-
         val temporaryId = creator.generateTempId(timenow)
-        val response = false
-        //     pumpSync.addBolusWithTempId(temporaryBasal.timestamp, detailedBolusInfo.insulin,
-        // generateTempId(detailedBolusInfo.timestamp), detailedBolusInfo.getBolusType(),
-        // getPumpType(), serialNumber());
+
+        val response = pumpSync.addTemporaryBasalWithTempId(
+            timenow,
+            temporaryBasal.rate,
+            (temporaryBasal.durationInMinutes * 60L * 1000L),
+            temporaryBasal.isAbsolute,
+            temporaryId,
+            temporaryBasal.tbrType,
+            creator.model(),
+            creator.serialNumber())
 
         if (response && writeToInternalHistory) {
             var innerList: MutableList<PumpDbEntry> = pumpSyncStorage[TBR]!!

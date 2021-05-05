@@ -759,17 +759,17 @@ class MedtronicPumpPlugin @Inject constructor(
             medtronicPumpStatus.tempBasalStart = Date()
             medtronicPumpStatus.tempBasalAmount = absoluteRate
             medtronicPumpStatus.tempBasalLength = durationInMinutes
-            val tempStart = TemporaryBasal(injector) //
-                .date(System.currentTimeMillis()) //
-                .duration(durationInMinutes) //
-                .absolute(absoluteRate) //
-                .source(Source.USER)
-
-            activePlugin.activeTreatments.addToHistoryTempBasal(tempStart)
-
-            // val tempData = PumpDbEntryTBR(absoluteRate, true, durationInMinutes, tbrType)
+            // val tempStart = TemporaryBasal(injector) //
+            //     .date(System.currentTimeMillis()) //
+            //     .duration(durationInMinutes) //
+            //     .absolute(absoluteRate) //
+            //     .source(Source.USER)
             //
-            // pumpSyncStorage.addTemporaryBasalRateWithTempId(tempData, true, this)
+            // activePlugin.activeTreatments.addToHistoryTempBasal(tempStart)
+
+            val tempData = PumpDbEntryTBR(absoluteRate, true, durationInMinutes, tbrType)
+
+            pumpSyncStorage.addTemporaryBasalRateWithTempId(tempData, true, this)
 
             incrementStatistics(MedtronicConst.Statistics.TBRsSet)
             finishAction("TBR")
@@ -1003,17 +1003,17 @@ class MedtronicPumpPlugin @Inject constructor(
         finishAction("TBR")
         return if (response!!) {
             aapsLogger.info(LTag.PUMP, logPrefix + "cancelTempBasal - Cancel TBR successful.")
-            val tempBasal = TemporaryBasal(injector) //
-                .date(System.currentTimeMillis()) //
-                .duration(0) //
-                .source(Source.USER)
-
-            activePlugin.activeTreatments.addToHistoryTempBasal(tempBasal)
+            // val tempBasal = TemporaryBasal(injector) //
+            //     .date(System.currentTimeMillis()) //
+            //     .duration(0) //
+            //     .source(Source.USER)
+            //
+            // activePlugin.activeTreatments.addToHistoryTempBasal(tempBasal)
 
             // TODO need to find solution for this !?
-            // val tempData = PumpDbEntryTBR(absoluteRate, true, durationInMinutes, tbrType)
-            //
-            // pumpSyncStorage.addTemporaryBasalRateWithTempId(tempData, true, this)
+            val tempData = PumpDbEntryTBR(0.0, true, 0, TemporaryBasalType.NORMAL)
+
+            pumpSyncStorage.addTemporaryBasalRateWithTempId(tempData, true, this)
 
             PumpEnactResult(injector).success(true).enacted(true) //
                 .isTempCancel(true)
