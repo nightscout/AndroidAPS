@@ -52,12 +52,13 @@ class ProfileStore(val injector: HasAndroidInjector, val data: JSONObject, val d
 
     fun getSpecificProfile(profileName: String): PureProfile? {
         var profile: PureProfile? = null
+        val defaultUnits = JsonHelper.safeGetStringAllowNull(data, "units", null)
         getStore()?.let { store ->
             if (store.has(profileName)) {
                 profile = cachedObjects[profileName]
                 if (profile == null) {
                     JsonHelper.safeGetJSONObject(store, profileName, null)?.let { profileObject ->
-                        profile = pureProfileFromJson(profileObject, dateUtil)
+                        profile = pureProfileFromJson(profileObject, dateUtil, defaultUnits)
                         cachedObjects[profileName] = profile
                     }
                 }

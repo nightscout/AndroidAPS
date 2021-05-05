@@ -2,7 +2,6 @@ package info.nightscout.androidaps.di
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import info.nightscout.androidaps.data.ProfileImplOld
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.interfaces.ProfileStore
 import info.nightscout.androidaps.plugins.aps.loop.APSResult
@@ -16,6 +15,5 @@ abstract class CoreDataClassesModule {
     @ContributesAndroidInjector abstract fun apsResultInjector(): APSResult
     @ContributesAndroidInjector abstract fun autosensDataInjector(): AutosensData
 
-    @ContributesAndroidInjector abstract fun profileInjector(): ProfileImplOld
     @ContributesAndroidInjector abstract fun profileStoreInjector(): ProfileStore
 }

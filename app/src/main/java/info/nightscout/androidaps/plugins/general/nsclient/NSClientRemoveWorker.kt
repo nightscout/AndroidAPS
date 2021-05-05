@@ -42,8 +42,9 @@ class NSClientRemoveWorker(
     @Inject lateinit var uel: UserEntryLogger
 
     override fun doWork(): Result {
-        val acceptNSData = !sp.getBoolean(R.string.key_ns_upload_only, true) && buildHelper.isEngineeringMode() || config.NSCLIENT
-        if (!acceptNSData) return Result.success()
+        // Do not accept removed data over WS. Only invalidated trough NSClient
+        @Suppress("ConstantConditionIf")
+        if (true) return Result.success()
 
         var ret = Result.success()
 

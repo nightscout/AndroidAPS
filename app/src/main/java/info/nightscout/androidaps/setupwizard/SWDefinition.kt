@@ -19,11 +19,8 @@ import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesFragm
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientStatus
-import info.nightscout.androidaps.plugins.general.nsclient.services.NSClientService
 import info.nightscout.androidaps.plugins.profile.local.LocalProfileFragment
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
-import info.nightscout.androidaps.plugins.profile.ns.NSProfileFragment
-import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.OmnipodDashPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin
@@ -53,7 +50,6 @@ class SWDefinition @Inject constructor(
     private val configBuilder: ConfigBuilder,
     private val loopPlugin: LoopPlugin,
     private val nsClientPlugin: NSClientPlugin,
-    private val nsProfilePlugin: NSProfilePlugin,
     private val importExportPrefs: ImportExportPrefs,
     private val androidPermission: AndroidPermission,
     private val cryptoUtil: CryptoUtil,
@@ -254,25 +250,6 @@ class SWDefinition @Inject constructor(
             .option(PluginType.BGSOURCE, R.string.configbuilder_bgsource_description)
             .label(R.string.configbuilder_bgsource))
         .add(SWBreak(injector))
-    private val screenProfile = SWScreen(injector, R.string.configbuilder_profile)
-        .skippable(false)
-        .add(SWInfoText(injector)
-            .label(R.string.setupwizard_profile_description))
-        .add(SWBreak(injector))
-        .add(SWPlugin(injector, this)
-            .option(PluginType.PROFILE, R.string.configbuilder_profile_description)
-            .label(R.string.configbuilder_profile))
-    private val screenNsProfile = SWScreen(injector, R.string.nsprofile)
-        .skippable(false)
-        .add(SWInfoText(injector)
-            .label(R.string.adjustprofileinns))
-        .add(SWFragment(injector, this)
-            .add(NSProfileFragment()))
-        .validator {
-            nsProfilePlugin.profile?.getDefaultProfile()?.let { ProfileSealed.Pure(it).isValid("StartupWizard", activePlugin.activePump, config, resourceHelper, rxBus) }
-                ?: false
-        }
-        .visibility { nsProfilePlugin.isEnabled() }
     private val screenLocalProfile = SWScreen(injector, R.string.localprofile)
         .skippable(false)
         .add(SWFragment(injector, this)
@@ -405,8 +382,6 @@ class SWDefinition @Inject constructor(
             .add(screenAge)
             .add(screenInsulin)
             .add(screenBgSource)
-            .add(screenProfile)
-            .add(screenNsProfile)
             .add(screenLocalProfile)
             .add(screenProfileSwitch)
             .add(screenPump)
@@ -434,8 +409,6 @@ class SWDefinition @Inject constructor(
             .add(screenAge)
             .add(screenInsulin)
             .add(screenBgSource)
-            .add(screenProfile)
-            .add(screenNsProfile)
             .add(screenLocalProfile)
             .add(screenProfileSwitch)
             .add(screenPump)
