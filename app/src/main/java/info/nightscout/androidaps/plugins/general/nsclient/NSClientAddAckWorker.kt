@@ -147,7 +147,7 @@ class NSClientAddAckWorker(
                         dataSyncSelector.confirmLastCarbsIdIfGreater(pair.updateRecordId)
                     }
                     .blockingGet()
-                rxBus.send(EventNSClientNewLog("DBADD", "Acked Carbs" + pair.value.interfaceIDs.nightscoutId))
+                rxBus.send(EventNSClientNewLog("DBADD", "Acked Carbs " + pair.value.interfaceIDs.nightscoutId))
                 // Send new if waiting
                 dataSyncSelector.processChangedCarbsCompat()
             }
@@ -166,7 +166,7 @@ class NSClientAddAckWorker(
                         dataSyncSelector.confirmLastBolusCalculatorResultsIdIfGreater(pair.updateRecordId)
                     }
                     .blockingGet()
-                rxBus.send(EventNSClientNewLog("DBADD", "Acked BolusCalculatorResult" + pair.value.interfaceIDs.nightscoutId))
+                rxBus.send(EventNSClientNewLog("DBADD", "Acked BolusCalculatorResult " + pair.value.interfaceIDs.nightscoutId))
                 // Send new if waiting
                 dataSyncSelector.processChangedBolusCalculatorResultsCompat()
             }
@@ -185,7 +185,7 @@ class NSClientAddAckWorker(
                         dataSyncSelector.confirmLastTemporaryBasalIdIfGreater(pair.updateRecordId)
                     }
                     .blockingGet()
-                rxBus.send(EventNSClientNewLog("DBADD", "Acked TemporaryBasal" + pair.value.interfaceIDs.nightscoutId))
+                rxBus.send(EventNSClientNewLog("DBADD", "Acked TemporaryBasal " + pair.value.interfaceIDs.nightscoutId))
                 // Send new if waiting
                 dataSyncSelector.processChangedTemporaryBasalsCompat()
             }
@@ -204,7 +204,7 @@ class NSClientAddAckWorker(
                         dataSyncSelector.confirmLastExtendedBolusIdIfGreater(pair.updateRecordId)
                     }
                     .blockingGet()
-                rxBus.send(EventNSClientNewLog("DBADD", "Acked ExtendedBolus" + pair.value.interfaceIDs.nightscoutId))
+                rxBus.send(EventNSClientNewLog("DBADD", "Acked ExtendedBolus " + pair.value.interfaceIDs.nightscoutId))
                 // Send new if waiting
                 dataSyncSelector.processChangedTemporaryBasalsCompat()
             }
@@ -223,7 +223,7 @@ class NSClientAddAckWorker(
                         dataSyncSelector.confirmLastProfileSwitchIdIfGreater(pair.updateRecordId)
                     }
                     .blockingGet()
-                rxBus.send(EventNSClientNewLog("DBADD", "Acked ProfileSwitch" + pair.value.interfaceIDs.nightscoutId))
+                rxBus.send(EventNSClientNewLog("DBADD", "Acked ProfileSwitch " + pair.value.interfaceIDs.nightscoutId))
                 // Send new if waiting
                 dataSyncSelector.processChangedTemporaryBasalsCompat()
             }
@@ -242,9 +242,14 @@ class NSClientAddAckWorker(
                         dataSyncSelector.confirmLastDeviceStatusIdIfGreater(deviceStatus.id)
                     }
                     .blockingGet()
-                rxBus.send(EventNSClientNewLog("DBADD", "Acked DeviceStatus" + deviceStatus.interfaceIDs.nightscoutId))
+                rxBus.send(EventNSClientNewLog("DBADD", "Acked DeviceStatus " + deviceStatus.interfaceIDs.nightscoutId))
                 // Send new if waiting
                 dataSyncSelector.processChangedDeviceStatusesCompat()
+            }
+
+            is PairProfileStore              -> {
+                dataSyncSelector.confirmLastProfileStore(ack.originalObject.timestampSync)
+                rxBus.send(EventNSClientNewLog("DBADD", "Acked ProfileStore " + ack.id))
             }
         }
         return ret

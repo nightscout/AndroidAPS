@@ -156,7 +156,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                 })
             }
         }
-        val nsUploadOnly = sp.getBoolean(R.string.key_ns_upload_only, true) || !buildHelper.isEngineeringMode()
+        val nsUploadOnly = !sp.getBoolean(R.string.key_ns_receive_insulin, false) || !sp.getBoolean(R.string.key_ns_receive_carbs, false) || !buildHelper.isEngineeringMode()
         if (nsUploadOnly) binding.refreshFromNightscout.visibility = View.GONE
         binding.showInvalidated.setOnCheckedChangeListener { _, _ ->
             rxBus.send(EventTreatmentUpdateGui())

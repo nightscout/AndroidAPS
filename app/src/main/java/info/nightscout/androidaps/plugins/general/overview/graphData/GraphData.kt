@@ -400,9 +400,8 @@ class GraphData(
                 time += 5 * 60 * 1000L
                 continue
             }
-            var iob = 0.0
             var absIob = 0.0
-            iob = iobCobCalculator.calculateFromTreatmentsAndTemps(time, profile).iob
+            val iob: Double = iobCobCalculator.calculateFromTreatmentsAndTemps(time, profile).iob
             if (absScale) absIob = iobCobCalculator.calculateAbsInsulinFromTreatmentsAndTemps(time).iob
             if (abs(lastIob - iob) > 0.02) {
                 if (abs(lastIob - iob) > 0.2) iobArray.add(ScaledDataPoint(time, lastIob, iobScale))
@@ -461,8 +460,7 @@ class GraphData(
                 time += 5 * 60 * 1000L
                 continue
             }
-            var iob = 0.0
-            iob = iobCobCalculator.calculateAbsInsulinFromTreatmentsAndTemps(time).iob
+            val iob: Double = iobCobCalculator.calculateAbsInsulinFromTreatmentsAndTemps(time).iob
             if (abs(lastIob - iob) > 0.02) {
                 if (abs(lastIob - iob) > 0.2) iobArray.add(ScaledDataPoint(time, lastIob, iobScale))
                 iobArray.add(ScaledDataPoint(time, iob, iobScale))

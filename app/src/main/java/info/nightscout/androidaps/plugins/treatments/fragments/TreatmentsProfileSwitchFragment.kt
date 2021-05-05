@@ -21,12 +21,10 @@ import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.events.EventProfileSwitchChanged
 import info.nightscout.androidaps.extensions.getCustomizedName
 import info.nightscout.androidaps.extensions.toVisibility
-import info.nightscout.androidaps.interfaces.UploadQueueInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
@@ -55,8 +53,6 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
     @Inject lateinit var localProfilePlugin: LocalProfilePlugin
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var nsUpload: NSUpload
-    @Inject lateinit var uploadQueue: UploadQueueInterface
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var buildHelper: BuildHelper
     @Inject lateinit var aapsSchedulers: AapsSchedulers
@@ -103,7 +99,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
                 }
             }
         }
-        if (sp.getBoolean(R.string.key_ns_upload_only, true) || !buildHelper.isEngineeringMode()) binding.refreshFromNightscout.visibility = View.GONE
+        if (!sp.getBoolean(R.string.key_ns_receive_profile_switch, false) || !buildHelper.isEngineeringMode()) binding.refreshFromNightscout.visibility = View.GONE
         binding.showInvalidated.setOnCheckedChangeListener { _, _ ->
             rxBus.send(EventTreatmentUpdateGui())
         }

@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.data.defaultProfile
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.ProfileImplOld
 import info.nightscout.androidaps.data.PureProfile
 import info.nightscout.androidaps.extensions.pureProfileFromJson
 import info.nightscout.androidaps.interfaces.GlucoseUnit

@@ -8,7 +8,6 @@ import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.automation.elements.InputString
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.TimerUtil
@@ -24,7 +23,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(NSUpload::class, RxBusWrapper::class, TimerUtil::class)
+@PrepareForTest(RxBusWrapper::class, TimerUtil::class)
 class ActionAlarmTest : TestBase() {
 
     @Mock lateinit var resourceHelper: ResourceHelper

@@ -7,7 +7,7 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 class PumpDescription() {
 
     constructor(pumpType: PumpType) : this() {
-        setPumpDescription(pumpType)
+        fillFor(pumpType)
     }
 
     var pumpType = PumpType.GENERIC_AAPS
@@ -69,7 +69,7 @@ class PumpDescription() {
         hasCustomUnreachableAlertCheck = false
     }
 
-    fun setPumpDescription(pumpType: PumpType) {
+    fun fillFor(pumpType: PumpType) {
         resetSettings()
         this.pumpType = pumpType
         val pumpCapability = pumpType.pumpCapability ?: return

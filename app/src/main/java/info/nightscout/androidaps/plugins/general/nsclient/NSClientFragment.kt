@@ -12,14 +12,11 @@ import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.databinding.NsClientFragmentBinding
 import info.nightscout.androidaps.interfaces.DataSyncSelector
-import info.nightscout.androidaps.interfaces.UploadQueueAdminInterface
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientNewLog
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientUpdateGUI
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.HtmlHelper.fromHtml
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
@@ -33,7 +30,6 @@ class NSClientFragment : DaggerFragment() {
     @Inject lateinit var sp: SP
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var rxBus: RxBusWrapper
-    @Inject lateinit var uploadQueue: UploadQueueAdminInterface
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var dataSyncSelector: DataSyncSelector
@@ -72,18 +68,6 @@ class NSClientFragment : DaggerFragment() {
         binding.restart.paintFlags = binding.restart.paintFlags or Paint.UNDERLINE_TEXT_FLAG
         binding.deliverNow.setOnClickListener { nsClientPlugin.resend("GUI") }
         binding.deliverNow.paintFlags = binding.deliverNow.paintFlags or Paint.UNDERLINE_TEXT_FLAG
-        binding.clearQueue.setOnClickListener {
-            context?.let { context ->
-                OKDialog.showConfirmation(context, resourceHelper.gs(R.string.nsclientinternal), resourceHelper.gs(R.string.clearqueueconfirm), Runnable {
-                    uel.log(Action.NS_QUEUE_CLEARED, Sources.NSClient)
-                    uploadQueue.clearQueue()
-                    updateGui()
-                })
-            }
-        }
-        binding.clearQueue.paintFlags = binding.clearQueue.paintFlags or Paint.UNDERLINE_TEXT_FLAG
-        binding.showQueue.setOnClickListener { rxBus.send(EventNSClientNewLog("QUEUE", uploadQueue.textList())) }
-        binding.showQueue.paintFlags = binding.showQueue.paintFlags or Paint.UNDERLINE_TEXT_FLAG
         binding.fullSync.setOnClickListener {
             context?.let { context ->
                 OKDialog.showConfirmation(context, resourceHelper.gs(R.string.nsclientinternal), resourceHelper.gs(R.string.full_sync), Runnable {
@@ -116,7 +100,6 @@ class NSClientFragment : DaggerFragment() {
         binding.log.text = nsClientPlugin.textLog
         if (nsClientPlugin.autoscroll) binding.logScrollview.fullScroll(ScrollView.FOCUS_DOWN)
         binding.url.text = nsClientPlugin.url()
-        binding.queue.text = fromHtml(resourceHelper.gs(R.string.queue) + " <b>" + uploadQueue.size() + "</b>")
         binding.status.text = nsClientPlugin.status
     }
 }

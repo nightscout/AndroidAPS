@@ -32,7 +32,6 @@ class DanaRsPacketNotifyAlarmTest : DanaRSTestBase() {
         // test params
         Assert.assertEquals(null, packet.requestParams)
         // test message decoding
-        // handle message testing fails on non-error byte because of NSUpload not properly mocked
         packet.handleMessage(createArray(17, 0x01.toByte()))
         Assert.assertEquals(false, packet.failed)
         // no error

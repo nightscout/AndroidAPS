@@ -40,7 +40,6 @@ class DetermineBasalResultAMA private constructor(injector: HasAndroidInjector) 
                 tempBasalRequested = false
             }
         }
-        bolusRequested = false
     }
 
     override fun newAndClone(injector: HasAndroidInjector): DetermineBasalResultAMA {

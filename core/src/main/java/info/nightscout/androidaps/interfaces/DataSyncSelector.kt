@@ -2,6 +2,7 @@ package info.nightscout.androidaps.interfaces
 
 import info.nightscout.androidaps.database.entities.DeviceStatus
 import info.nightscout.androidaps.database.entities.*
+import org.json.JSONObject
 
 interface DataSyncSelector {
 
@@ -15,6 +16,9 @@ interface DataSyncSelector {
     data class PairTemporaryBasal(val value: TemporaryBasal, val updateRecordId: Long)
     data class PairExtendedBolus(val value: ExtendedBolus, val updateRecordId: Long)
     data class PairProfileSwitch(val value: ProfileSwitch, val updateRecordId: Long)
+    data class PairProfileStore(val value: JSONObject, val timestampSync: Long)
+
+    fun doUpload()
 
     fun resetToNextFullSync()
 
@@ -72,4 +76,7 @@ interface DataSyncSelector {
     fun changedProfileSwitch() : List<ProfileSwitch>
     // Until NS v3
     fun processChangedProfileSwitchesCompat(): Boolean
+
+    fun confirmLastProfileStore(lastSynced: Long)
+    fun processChangedProfileStore()
 }
