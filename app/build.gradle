@@ -197,7 +197,7 @@ dependencies {
     /* Dagger2 - We are going to use dagger.android which includes
      * support for Activity and fragment injection so we need to include
      * the following dependencies */
-
+    implementation 'com.dropbox.core:dropbox-core-sdk:2.1.1'
 
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
     annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
