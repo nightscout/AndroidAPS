@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.pump.common.data
 
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpStatusType
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
+import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntry
 import java.util.*
 
 /**

@@ -62,6 +62,7 @@ class MedtronicHistoryData @Inject constructor(
 ) {
 
     val allHistory: MutableList<PumpHistoryEntry> = mutableListOf()
+    private var allPumpIds: MutableSet<Long> = mutableSetOf()
     private var newHistory: MutableList<PumpHistoryEntry> = mutableListOf()
     private var isInit = false
 
@@ -80,7 +81,7 @@ class MedtronicHistoryData @Inject constructor(
         val validEntries: List<PumpHistoryEntry> = result.validEntries
         val newEntries: MutableList<PumpHistoryEntry> = mutableListOf()
         for (validEntry in validEntries) {
-            if (!allHistory.contains(validEntry)) {
+            if (!allPumpIds.contains(validEntry.pumpId)) {
                 newEntries.add(validEntry)
             } else {
                 val entryByPumpId = getEntryByPumpId(validEntry.pumpId!!)
@@ -137,7 +138,7 @@ class MedtronicHistoryData @Inject constructor(
         //aapsLogger.debug(LTag.PUMP, "Filter new entries: Before {}", newHistory);
         if (!isCollectionEmpty(newHistory)) {
             for (pumpHistoryEntry in newHistory) {
-                if (!allHistory.contains(pumpHistoryEntry)) {
+                if (!allPumpIds.contains(pumpHistoryEntry.pumpId)) {
                     val type = pumpHistoryEntry.entryType
                     if (type === PumpHistoryEntryType.TempBasalRate || type === PumpHistoryEntryType.TempBasalDuration) {
                         tbrs.add(pumpHistoryEntry)
@@ -160,7 +161,16 @@ class MedtronicHistoryData @Inject constructor(
                 extendBolusRecords(bolusEstimates, newHistory2)
             }
             newHistory2.addAll(tbrs)
-            newHistory = newHistory2
+
+            val newHistory3: MutableList<PumpHistoryEntry> = mutableListOf()
+
+            for (pumpHistoryEntry in newHistory2) {
+                if (!allPumpIds.contains(pumpHistoryEntry.pumpId)) {
+                    newHistory3.add(pumpHistoryEntry)
+                }
+            }
+
+            newHistory = newHistory3
             sort(newHistory)
         }
         aapsLogger.debug(LTag.PUMP, "New History entries found: " + newHistory.size)
@@ -192,10 +202,11 @@ class MedtronicHistoryData @Inject constructor(
         // add new entries
         newHistory.reverse()
         for (pumpHistoryEntry in newHistory) {
-            if (!allHistory.contains(pumpHistoryEntry)) {
+            if (!allPumpIds.contains(pumpHistoryEntry.pumpId)) {
                 lastIdUsed++
                 pumpHistoryEntry.id = lastIdUsed
                 allHistory.add(pumpHistoryEntry)
+                allPumpIds.add(pumpHistoryEntry.pumpId!!)
             }
         }
         // if (pheLast == null) // if we don't have any valid record we don't do the filtering and setting
@@ -215,6 +226,7 @@ class MedtronicHistoryData @Inject constructor(
             for (pumpHistoryEntry in allHistory) {
                 if (!pumpHistoryEntry.isAfter(dtRemove)) {
                     removeList.add(pumpHistoryEntry)
+                    allPumpIds.remove(pumpHistoryEntry.pumpId!!)
                 }
             }
             allHistory.removeAll(removeList)
@@ -262,33 +274,34 @@ class MedtronicHistoryData @Inject constructor(
         } else false
     }
 
+
     private fun getDataForPumpSuspends(): MutableList<PumpHistoryEntry> {
-            val newAndAll: MutableList<PumpHistoryEntry> = mutableListOf()
-            if (isCollectionNotEmpty(allHistory)) {
-                newAndAll.addAll(allHistory)
-            }
-            if (isCollectionNotEmpty(newHistory)) {
-                for (pumpHistoryEntry in newHistory) {
-                    if (!newAndAll.contains(pumpHistoryEntry)) {
-                        newAndAll.add(pumpHistoryEntry)
-                    }
+        val newAndAll: MutableList<PumpHistoryEntry> = mutableListOf()
+        if (isCollectionNotEmpty(allHistory)) {
+            newAndAll.addAll(allHistory)
+        }
+        if (isCollectionNotEmpty(newHistory)) {
+            for (pumpHistoryEntry in newHistory) {
+                if (!newAndAll.contains(pumpHistoryEntry)) {
+                    newAndAll.add(pumpHistoryEntry)
                 }
             }
-            if (newAndAll.isEmpty()) return newAndAll
-            this.sort(newAndAll)
-            var newAndAll2: MutableList<PumpHistoryEntry> = getFilteredItems(newAndAll,  //
-                setOf(PumpHistoryEntryType.Bolus,  //
-                    PumpHistoryEntryType.TempBasalCombined,  //
-                    PumpHistoryEntryType.Prime,  //
-                    PumpHistoryEntryType.SuspendPump,  //
-                    PumpHistoryEntryType.ResumePump,  //
-                    PumpHistoryEntryType.Rewind,  //
-                    PumpHistoryEntryType.NoDeliveryAlarm,  //
-                    PumpHistoryEntryType.BatteryChange,  //
-                    PumpHistoryEntryType.BasalProfileStart))
-            newAndAll2 = filterPumpSuspend(newAndAll2, 10)
-            return newAndAll2
         }
+        if (newAndAll.isEmpty()) return newAndAll
+        this.sort(newAndAll)
+        var newAndAll2: MutableList<PumpHistoryEntry> = getFilteredItems(newAndAll,  //
+            setOf(PumpHistoryEntryType.Bolus,  //
+                PumpHistoryEntryType.TempBasalCombined,  //
+                PumpHistoryEntryType.Prime,  //
+                PumpHistoryEntryType.SuspendPump,  //
+                PumpHistoryEntryType.ResumePump,  //
+                PumpHistoryEntryType.Rewind,  //
+                PumpHistoryEntryType.NoDeliveryAlarm,  //
+                PumpHistoryEntryType.BatteryChange,  //
+                PumpHistoryEntryType.BasalProfileStart))
+        newAndAll2 = filterPumpSuspend(newAndAll2, 10)
+        return newAndAll2
+    }
 
     private fun filterPumpSuspend(newAndAll: MutableList<PumpHistoryEntry>, filterCount: Int): MutableList<PumpHistoryEntry> {
         if (newAndAll.size <= filterCount) {
@@ -389,7 +402,8 @@ class MedtronicHistoryData @Inject constructor(
 
     private fun processPrime(primeRecords: List<PumpHistoryEntry?>) {
         val maxAllowedTimeInPast = DateTimeUtil.getATDWithAddedMinutes(GregorianCalendar(), -30)
-        var lastPrimeRecord = 0L
+        var lastPrimeRecordTime = 0L
+        var lastPrimeRecord: PumpHistoryEntry? = null
         for (primeRecord in primeRecords) {
             val fixedAmount = primeRecord!!.getDecodedDataEntry("FixedAmount")
             if (fixedAmount != null && fixedAmount as Float == 0.0f) {
@@ -399,43 +413,57 @@ class MedtronicHistoryData @Inject constructor(
                 continue
             }
             if (primeRecord.atechDateTime!! > maxAllowedTimeInPast) {
-                if (lastPrimeRecord < primeRecord.atechDateTime!!) {
-                    lastPrimeRecord = primeRecord.atechDateTime!!
+                if (lastPrimeRecordTime < primeRecord.atechDateTime!!) {
+                    lastPrimeRecordTime = primeRecord.atechDateTime!!
+                    lastPrimeRecord = primeRecord
                 }
             }
         }
-        if (lastPrimeRecord != 0L) {
-            val lastPrimeFromAAPS = sp.getLong(MedtronicConst.Statistics.LastPrime, 0L)
-            if (lastPrimeRecord != lastPrimeFromAAPS) {
-                uploadCareportalEvent(DateTimeUtil.toMillisFromATD(lastPrimeRecord), DetailedBolusInfo.EventType.CANNULA_CHANGE)
-                sp.putLong(MedtronicConst.Statistics.LastPrime, lastPrimeRecord)
-            }
+        if (lastPrimeRecord != null) {
+            uploadCareportalEventIfFoundInHistory(lastPrimeRecord,
+                MedtronicConst.Statistics.LastPrime,
+                DetailedBolusInfo.EventType.CANNULA_CHANGE)
         }
     }
 
     private fun processRewind(rewindRecords: List<PumpHistoryEntry?>) {
         val maxAllowedTimeInPast = DateTimeUtil.getATDWithAddedMinutes(GregorianCalendar(), -30)
-        var lastRewindRecord = 0L
+        var lastRewindRecordTime = 0L
+        var lastRewindRecord: PumpHistoryEntry? = null
         for (rewindRecord in rewindRecords) {
             if (rewindRecord!!.atechDateTime!! > maxAllowedTimeInPast) {
-                if (lastRewindRecord < rewindRecord.atechDateTime!!) {
-                    lastRewindRecord = rewindRecord.atechDateTime!!
+                if (lastRewindRecordTime < rewindRecord.atechDateTime!!) {
+                    lastRewindRecordTime = rewindRecord.atechDateTime!!
+                    lastRewindRecord = rewindRecord
                 }
             }
         }
-        if (lastRewindRecord != 0L) {
-            val lastRewindFromAAPS = sp.getLong(MedtronicConst.Statistics.LastRewind, 0L)
-            if (lastRewindRecord != lastRewindFromAAPS) {
-                uploadCareportalEvent(DateTimeUtil.toMillisFromATD(lastRewindRecord), DetailedBolusInfo.EventType.INSULIN_CHANGE)
-                sp.putLong(MedtronicConst.Statistics.LastRewind, lastRewindRecord)
-            }
+        if (lastRewindRecord != null) {
+            uploadCareportalEventIfFoundInHistory(lastRewindRecord,
+                MedtronicConst.Statistics.LastRewind,
+                DetailedBolusInfo.EventType.INSULIN_CHANGE)
         }
     }
 
-    private fun uploadCareportalEvent(date: Long, event: DetailedBolusInfo.EventType) {
-        pumpSync.insertTherapyEventIfNewWithTimestamp(date, event, null, null,
-            medtronicPumpStatus.pumpType, medtronicPumpStatus.serialNumber!!)
+
+    private fun uploadCareportalEventIfFoundInHistory(historyRecord: PumpHistoryEntry, eventSP: String, eventType: DetailedBolusInfo.EventType) {
+        val lastPrimeFromAAPS = sp.getLong(eventSP, 0L)
+        if (historyRecord.atechDateTime != lastPrimeFromAAPS) {
+            var result = pumpSync.insertTherapyEventIfNewWithTimestamp(
+                DateTimeUtil.toMillisFromATD(historyRecord.atechDateTime!!),
+                eventType, null,
+                historyRecord.pumpId,
+                medtronicPumpStatus.pumpType,
+                medtronicPumpStatus.serialNumber!!)
+
+            aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "insertTherapyEventIfNewWithTimestamp [date=%d, eventType=%d, pumpId=%d, pumpSerial=%s] - Result: %b",
+                historyRecord.atechDateTime!!, eventType, historyRecord.pumpId,
+                medtronicPumpStatus.serialNumber!!, result))
+
+            sp.putLong(eventSP, historyRecord.atechDateTime!!)
+        }
     }
+
 
     private fun processTDDs(tddsIn: MutableList<PumpHistoryEntry>) {
         val tdds = filterTDDs(tddsIn)
@@ -616,7 +644,7 @@ class MedtronicHistoryData @Inject constructor(
 
                 val tbrEntry = tempBasalProcessDTO.itemOne!!.getDecodedDataEntry("Object") as TempBasalPair
 
-                removeCancelTBRTemporaryRecord(tempBasalProcessDTO, tbrRecords)  // TODO
+                //removeCancelTBRTemporaryRecord(tempBasalProcessDTO, tbrRecords)
 
                 if (entryWithTempId!=null) {
                     val result = pumpSync.syncTemporaryBasalWithTempId(
@@ -636,6 +664,14 @@ class MedtronicHistoryData @Inject constructor(
                         medtronicPumpStatus.serialNumber!!, result))
 
                     pumpSyncStorage.removeTemporaryBasalWithTemporaryId(entryWithTempId.temporaryId)
+                    tbrRecords.remove(entryWithTempId)
+
+                    entryWithTempId.pumpId = tempBasalProcessDTO.pumpId
+                    entryWithTempId.date = tryToGetByLocalTime(tempBasalProcessDTO.atechDateTime)
+
+                    if (isTBRActive(entryWithTempId)) {
+                        medtronicPumpStatus.runningTBR = entryWithTempId
+                    }
 
                 } else {
                     val result = pumpSync.syncTemporaryBasalWithPumpId(
@@ -659,21 +695,26 @@ class MedtronicHistoryData @Inject constructor(
 
 
     private fun removeCancelTBRTemporaryRecord(tempBasalProcessDTO: TempBasalProcessDTO, tbrRecords: MutableList<PumpDbEntry>) {
-        //fun syncTemporaryBasalWithPumpId(timestamp: Long, rate: Double, duration: Long, isAbsolute: Boolean, type: PumpSync.TemporaryBasalType?, pumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean
         if (tempBasalProcessDTO.cancelPresent) {
 
             //val dateTime : Long = DateTimeUtil.getMillisFromATDWithAddedMinutes(tempBasalProcessDTO.atechDateTime, tempBasalProcessDTO.duration)
-
             val dbEntry = findDbEntry(tempBasalProcessDTO.itemTwo!!, tbrRecords)
 
             if (dbEntry!=null) {
                 if (dbEntry.tbrData!!.durationInMinutes == 0) {
-                    pumpSync.invalidateTemporaryBasal(dbEntry.temporaryId) // TODO fix
+                    pumpSync.invalidateTemporaryBasalWithTempId(dbEntry.temporaryId)
+                    pumpSyncStorage.removeTemporaryBasalWithTemporaryId(dbEntry.temporaryId)
+                    tbrRecords.remove(dbEntry)
                 }
             }
-
-            //
         }
+    }
+
+
+    fun isTBRActive(dbEntry: PumpDbEntry) : Boolean {
+        val endDate = dbEntry.date + (dbEntry.tbrData!!.durationInMinutes * 60 * 1000)
+
+        return (endDate > System.currentTimeMillis())
     }
 
 
@@ -777,8 +818,8 @@ class MedtronicHistoryData @Inject constructor(
      */
     private fun findDbEntry_Old(treatment: PumpHistoryEntry?, entriesFromHistory: List<DbObjectBase>): DbObjectBase? {
         val proposedTime = DateTimeUtil.toMillisFromATD(treatment!!.atechDateTime!!)
-
         //proposedTime += (this.pumpTime.timeDifference * 1000);
+
         if (doubleBolusDebug) aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "DoubleBolusDebug: findDbEntry Treatment=%s, FromDb=%s", treatment, gson.toJson(entriesFromHistory)))
         if (entriesFromHistory.size == 0) {
             if (doubleBolusDebug) aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "DoubleBolusDebug: findDbEntry Treatment=%s, FromDb=null", treatment))
@@ -1268,16 +1309,4 @@ class MedtronicHistoryData @Inject constructor(
         const val doubleBolusDebug = false
     }
 
-    init {
-        //allHistory = ArrayList()
-        //this.injector = injector
-        //this.aapsLogger = aapsLogger
-        // this.sp = sp
-        // this.activePlugin = activePlugin
-        // this.medtronicUtil = medtronicUtil
-        // this.medtronicPumpHistoryDecoder = medtronicPumpHistoryDecoder
-        // this.medtronicPumpStatus = medtronicPumpStatus
-        // databaseHelper = databaseHelperInterface
-        //this.pumpSync = pumpSync
-    }
 }

@@ -48,6 +48,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BasalProfile
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BasalProfile.Companion.getProfilesByHourToString
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BasalProfileEntry
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.TempBasalPair
+import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.TempBasalProcessDTO
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.*
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandType.Companion.getSettings
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus
@@ -1011,9 +1012,36 @@ class MedtronicPumpPlugin @Inject constructor(
             // activePlugin.activeTreatments.addToHistoryTempBasal(tempBasal)
 
             // TODO need to find solution for this !?
-            val tempData = PumpDbEntryTBR(0.0, true, 0, TemporaryBasalType.NORMAL)
+            //val tempData = PumpDbEntryTBR(0.0, true, 0, TemporaryBasalType.NORMAL)
 
-            pumpSyncStorage.addTemporaryBasalRateWithTempId(tempData, true, this)
+            val runningTBR = medtronicPumpStatus.runningTBR
+
+            if (runningTBR!=null) {
+                if (medtronicHistoryData.isTBRActive(runningTBR)) {
+
+                    val differenceTime = System.currentTimeMillis() - runningTBR.date
+                    val tbrData = runningTBR.tbrData!!
+
+                    val result = pumpSync.syncTemporaryBasalWithPumpId(
+                        runningTBR.date,
+                        tbrData.rate,
+                        differenceTime,
+                        tbrData.isAbsolute,
+                        tbrData.tbrType,
+                        runningTBR.pumpId!!,
+                        runningTBR.pumpType,
+                        runningTBR.serialNumber)
+
+                    val differenceTimeMin = Math.floor(differenceTime/(60.0*1000.0))
+
+                    aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "canceling running TBR - syncTemporaryBasalWithPumpId [date=%d, pumpId=%d, rate=%.2f U, duration=%d, pumpSerial=%s] - Result: %b",
+                        runningTBR.date, runningTBR.pumpId!!,
+                        tbrData.rate, differenceTimeMin.toInt(),
+                        medtronicPumpStatus.serialNumber!!, result))
+                }
+            }
+
+            //pumpSyncStorage.addTemporaryBasalRateWithTempId(tempData, true, this)
 
             PumpEnactResult(injector).success(true).enacted(true) //
                 .isTempCancel(true)

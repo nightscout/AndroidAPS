@@ -78,7 +78,7 @@ abstract class PumpPluginAbstract protected constructor(
         get() = field
         set(value) {
             field = value
-            pumpDescription.setPumpDescription(value)
+            pumpDescription.fillFor(value)
         }
 
 
@@ -90,19 +90,19 @@ abstract class PumpPluginAbstract protected constructor(
         super.onStart()
         initPumpStatusData()
         val intent = Intent(context, serviceClass)
-        context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+        context.bindService(intent, serviceConnection!!, Context.BIND_AUTO_CREATE)
         serviceRunning = true
         disposable.add(rxBus
             .toObservable(EventAppExit::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ event: EventAppExit? -> context.unbindService(serviceConnection) }) { throwable: Throwable? -> fabricPrivacy.logException(throwable!!) }
+            .subscribe({ event: EventAppExit? -> context.unbindService(serviceConnection!!) }) { throwable: Throwable? -> fabricPrivacy.logException(throwable!!) }
         )
         onStartCustomActions()
     }
 
     override fun onStop() {
         aapsLogger.debug(LTag.PUMP, deviceID() + " onStop()")
-        context.unbindService(serviceConnection)
+        context.unbindService(serviceConnection!!)
         serviceRunning = false
         disposable.clear()
         super.onStop()
@@ -250,7 +250,7 @@ abstract class PumpPluginAbstract protected constructor(
         val extended = JSONObject()
         try {
             battery.put("percent", pumpStatusData.batteryRemaining)
-            status.put("status", if (pumpStatusData.pumpStatusType != null) pumpStatusData.pumpStatusType.status else "normal")
+            status.put("status", pumpStatusData.pumpStatusType.status)
             extended.put("Version", version)
             try {
                 extended.put("ActiveProfile", profileName)
@@ -386,12 +386,8 @@ abstract class PumpPluginAbstract protected constructor(
     }
 
 
-
     init {
-        pumpDescription.setPumpDescription(pumpType)
+        pumpDescription.fillFor(pumpType)
         this.pumpType = pumpType
-        this.dateUtil = dateUtil
-        this.aapsSchedulers = aapsSchedulers
-        //this.pumpSync = pumpSync
     }
 }

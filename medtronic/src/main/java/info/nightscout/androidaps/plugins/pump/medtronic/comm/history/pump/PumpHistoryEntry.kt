@@ -72,7 +72,7 @@ class PumpHistoryEntry : MedtronicHistoryEntry() {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is PumpHistoryEntry) return false
-        val that = other as PumpHistoryEntry
+        val that = other //as PumpHistoryEntry
         return this.pumpId === that.pumpId
         // return entryType == that.entryType &&  //
         //     atechDateTime === that.atechDateTime // && //

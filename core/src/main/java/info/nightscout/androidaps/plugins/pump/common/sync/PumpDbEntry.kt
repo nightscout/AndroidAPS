@@ -10,7 +10,8 @@ data class PumpDbEntry constructor(var temporaryId: Long,
                        var pumpType: PumpType,
                        var serialNumber: String,
                        var bolusData: PumpDbEntryBolus? = null,
-                       var tbrData: PumpDbEntryTBR? = null ) {
+                       var tbrData: PumpDbEntryTBR? = null,
+                       var pumpId: Long? = null) {
 
     constructor(temporaryId: Long,
                 date: Long,
