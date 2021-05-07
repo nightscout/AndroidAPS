@@ -12,8 +12,9 @@ import info.nightscout.androidaps.di.CoreModule
 import info.nightscout.androidaps.dana.di.DanaModule
 import info.nightscout.androidaps.danar.di.DanaRModule
 import info.nightscout.androidaps.danars.di.DanaRSModule
-import info.nightscout.androidaps.danars.di.InsightModule
 import info.nightscout.androidaps.database.DatabaseModule
+import info.nightscout.androidaps.insight.di.InsightDatabaseModule
+import info.nightscout.androidaps.insight.di.InsightModule
 import info.nightscout.androidaps.plugins.pump.common.di.RileyLinkModule
 import info.nightscout.androidaps.plugins.pump.medtronic.di.MedtronicModule
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.dagger.OmnipodErosModule
@@ -51,6 +52,7 @@ import javax.inject.Singleton
         DanaRSModule::class,
         ComboModule::class,
         InsightModule::class,
+        InsightDatabaseModule::class,
         WorkersModule::class,
         OHUploaderModule::class
     ]

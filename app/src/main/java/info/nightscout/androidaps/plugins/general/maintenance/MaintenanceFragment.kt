@@ -21,6 +21,7 @@ import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.maintenance.activities.LogSettingActivity
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData
+import info.nightscout.androidaps.plugins.pump.insight.database.InsightDatabase
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
@@ -39,6 +40,7 @@ class MaintenanceFragment : DaggerFragment() {
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var danaHistoryDatabase: DanaHistoryDatabase
+    @Inject lateinit var insightDatabase: InsightDatabase
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var dataSyncSelector: DataSyncSelector
     @Inject lateinit var pumpSync: PumpSync
@@ -70,6 +72,7 @@ class MaintenanceFragment : DaggerFragment() {
                         fromAction {
                             repository.clearDatabases()
                             danaHistoryDatabase.clearAllTables()
+                            insightDatabase.clearAllTables()
                             dataSyncSelector.resetToNextFullSync()
                             pumpSync.connectNewPump()
                         }
