@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.pump.insight.database
+package info.nightscout.androidaps.insight.database
 
 import androidx.room.Entity
 import androidx.room.Index
