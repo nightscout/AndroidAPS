@@ -8,10 +8,17 @@ import androidx.room.PrimaryKey
     indices = [Index("timestamp")])
 data class InsightPumpID(
     var timestamp: Long,
-    var eventType: String? = null,
-    var pumpSerial: String? = "None",
+    var eventType: EventType = EventType.None,
+    val pumpSerial: String? = null,
     @PrimaryKey
     var eventID: Long
 ) {
-    fun getId(): Long = eventID
+    enum class EventType {
+        PumpStarted,
+        PumpStopped,
+        PumpPaused,
+        StartOfTBR,
+        EndOfTBR,
+        None;
+    }
 }

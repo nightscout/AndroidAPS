@@ -39,6 +39,7 @@ import info.nightscout.androidaps.insight.database.InsightBolusID;
 import info.nightscout.androidaps.insight.database.InsightDatabaseDao;
 import info.nightscout.androidaps.insight.database.InsightHistoryOffset;
 import info.nightscout.androidaps.insight.database.InsightPumpID;
+import info.nightscout.androidaps.insight.database.InsightPumpID.EventType;
 import info.nightscout.androidaps.insight.R;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.Config;
@@ -1198,11 +1199,11 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
 
         for (InsightPumpID pumpID : pumpStartedEvents) {
             InsightPumpID stoppedEvent = insightDatabaseDao.getPumpStoppedEvent(pumpID.getPumpSerial(), pumpID.getTimestamp());
-            if (stoppedEvent != null && stoppedEvent.getEventType().equals("PumpStopped")) {             // Search if Stop event is after 15min of Pause
+            if (stoppedEvent != null && stoppedEvent.getEventType().equals(EventType.PumpStopped)) {             // Search if Stop event is after 15min of Pause
                 InsightPumpID pauseEvent = insightDatabaseDao.getPumpStoppedEvent(pumpID.getPumpSerial(), stoppedEvent.getTimestamp() - T.mins(1).msecs());
-                if (pauseEvent != null && pauseEvent.getEventType().equals("PumpPaused") && (stoppedEvent.getTimestamp() - pauseEvent.getTimestamp() < T.mins(16).msecs())) {
+                if (pauseEvent != null && pauseEvent.getEventType().equals(EventType.PumpPaused) && (stoppedEvent.getTimestamp() - pauseEvent.getTimestamp() < T.mins(16).msecs())) {
                     stoppedEvent = pauseEvent;
-                    stoppedEvent.setEventType("PumpStopped");
+                    stoppedEvent.setEventType(EventType.PumpStopped);
                 }
             }
             if (stoppedEvent == null || stoppedEvent.getEventType().equals("PumpPaused")) continue;
@@ -1213,7 +1214,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     0,
                     false,
                     PumpSync.TemporaryBasalType.NORMAL,
-                    pumpID.getId(),
+                    pumpID.getEventID(),
                     pumpID.getEventID());
             temporaryBasals.add(temporaryBasal);
         }
@@ -1355,25 +1356,25 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
         InsightPumpID pumpID = new InsightPumpID(
                 timestamp,
-                "",
+                EventType.None,
                 serial,
                 event.getEventPosition());
         switch (event.getNewValue()) {
             case STARTED:
-                pumpID.setEventType("PumpStarted");
+                pumpID.setEventType(EventType.PumpStarted);
                 pumpStartedEvents.add(pumpID);
                 if (sp.getBoolean("insight_log_operating_mode_changes", false))
                     logNote(timestamp, resourceHelper.gs(R.string.pump_started));
                 aapsLogger.debug(LTag.PUMP, "XXXX event START Event TimeStamp: " + timestamp + " HMS: " + dateUtil.dateAndTimeAndSecondsString(timestamp));
                 break;
             case STOPPED:
-                pumpID.setEventType("PumpStopped");
+                pumpID.setEventType(EventType.PumpStopped);
                 if (sp.getBoolean("insight_log_operating_mode_changes", false))
                     logNote(timestamp, resourceHelper.gs(R.string.pump_stopped));
                 aapsLogger.debug(LTag.PUMP, "XXXX event STOP: " + timestamp + " HMS: " + dateUtil.dateAndTimeAndSecondsString(timestamp));
                 break;
             case PAUSED:
-                pumpID.setEventType("PumpPaused");
+                pumpID.setEventType(EventType.PumpPaused);
                 if (sp.getBoolean("insight_log_operating_mode_changes", false))
                     logNote(timestamp, resourceHelper.gs(R.string.pump_paused));
                 aapsLogger.debug(LTag.PUMP, "XXXX event Pause: " + timestamp + " HMS: " + dateUtil.dateAndTimeAndSecondsString(timestamp));
@@ -1387,19 +1388,19 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
         insightDatabaseDao.createOrUpdate(new InsightPumpID(
                 timestamp,
-                "StartOfTBR",
+                EventType.StartOfTBR,
                 serial,
                 event.getEventPosition())
         );
-        TemporaryBasal temporaryBasal = new TemporaryBasal(
+        temporaryBasals.add(new TemporaryBasal(
                 timestamp,
                 T.mins(event.getDuration()).msecs(),
                 event.getAmount(),
                 false,
                 PumpSync.TemporaryBasalType.NORMAL,
                 event.getEventPosition(),
-                event.getEventPosition());
-        temporaryBasals.add(temporaryBasal);
+                event.getEventPosition())
+        );
     }
 
     private void processEndOfTBREvent(String serial, List<TemporaryBasal> temporaryBasals, EndOfTBREvent event) {
@@ -1407,27 +1408,27 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
         insightDatabaseDao.createOrUpdate(new InsightPumpID(
                 timestamp - 1500L,
-                "EndOfTBR",
+                EventType.EndOfTBR,
                 serial,
                 event.getEventPosition())
         );
 
-        TemporaryBasal temporaryBasal = new PumpSync.PumpState.TemporaryBasal(
+        temporaryBasals.add(new PumpSync.PumpState.TemporaryBasal(
                 timestamp - 1500L,
                 0L,
                 100.0,
                 false,
                 PumpSync.TemporaryBasalType.NORMAL,
                 event.getEventPosition(),
-                event.getEventPosition());
-        temporaryBasals.add(temporaryBasal);
+                event.getEventPosition())
+        );
     }
 
     private void processBolusProgrammedEvent(String serial, BolusProgrammedEvent event) {
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
         InsightBolusID bolusID = insightDatabaseDao.getInsightBolusID(serial, event.getBolusID(), timestamp);
-        if (bolusID != null && bolusID.getEndID() != null) {                        // TODO() Check if test EndID is necessary
+        if (bolusID != null && bolusID.getEndID() != null) {
             bolusID.setStartID(event.getEventPosition());
             insightDatabaseDao.createOrUpdate(bolusID);
             return;
@@ -1485,7 +1486,6 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         bolusID.setEndID(event.getEventPosition());
         insightDatabaseDao.createOrUpdate(bolusID);
         bolusID = insightDatabaseDao.getInsightBolusID(serial, event.getBolusID(), startTimestamp); // Line added to get id
-        //databaseHelper.createOrUpdate(bolusID);
         if (event.getBolusType() == BolusType.STANDARD || event.getBolusType() == BolusType.MULTIWAVE) {
             pumpSync.syncBolusWithPumpId(
                     bolusID.getTimestamp(),

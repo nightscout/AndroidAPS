@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import info.nightscout.androidaps.insight.database.InsightPumpID.EventType
 
 @Dao
 abstract class InsightDatabaseDao {
@@ -20,8 +21,10 @@ abstract class InsightDatabaseDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun createOrUpdate(insightHistoryOffset: InsightHistoryOffset)
 
-    @Query("SELECT * from $DATABASE_INSIGHT_PUMP_IDS WHERE pumpSerial = :pumpSerial AND (eventType = 'PumpStopped' OR eventType = 'PumpPaused') AND timestamp < :timestamp  ORDER BY timestamp DESC")
-    abstract fun getPumpStoppedEvent(pumpSerial: String, timestamp: Long): InsightPumpID?
+    @Query("SELECT * from $DATABASE_INSIGHT_PUMP_IDS WHERE pumpSerial = :pumpSerial AND (eventType = :PumpStopped OR eventType = :PumpPaused) AND timestamp < :timestamp  ORDER BY timestamp DESC")
+    abstract fun getPumpStoppedEvent(pumpSerial: String, timestamp: Long, PumpStopped: EventType, PumpPaused: EventType): InsightPumpID?
+
+    fun getPumpStoppedEvent(pumpSerial: String, timestamp: Long): InsightPumpID? = getPumpStoppedEvent(pumpSerial, timestamp, EventType.PumpStopped, EventType.PumpPaused)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun createOrUpdate(insightPumpID: InsightPumpID)

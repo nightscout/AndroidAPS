@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 
 const val DATABASE_INSIGHT_BOLUS_IDS = "insightBolusIDs"
 const val DATABASE_INSIGHT_PUMP_IDS = "insightPumpIDs"
@@ -14,6 +15,7 @@ const val DATABASE_INSIGHT_HISTORY_OFFSETS = "insightHistoryOffsets"
     exportSchema = true,
     version = InsightDatabase.VERSION
 )
+@TypeConverters(Converters::class)
 abstract class InsightDatabase : RoomDatabase() {
 
     abstract fun insightDatabaseDao(): InsightDatabaseDao

@@ -8,8 +8,8 @@ import androidx.room.PrimaryKey
     indices = [Index("bolusID")])
 data class InsightBolusID(
     var timestamp: Long,
-    var pumpSerial: String? = "None",
-    var bolusID: Int? = null,
+    val pumpSerial: String? = null,
+    val bolusID: Int? = null,
     var startID: Long? = null,
     var endID: Long? = null
 ) {
