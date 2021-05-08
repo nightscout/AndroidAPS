@@ -600,7 +600,6 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                         null
                 ));
                 InsightBolusID insightBolusID = insightDbHelper.getInsightBolusID(serial, bolusID, now);
-                aapsLogger.debug(LTag.PUMP, "XXXX set Bolus: " + dateUtil.dateAndTimeAndSecondsString(dateUtil.now()) + " amount: " + insulin);
                 pumpSync.syncBolusWithPumpId(
                         insightBolusID.getTimestamp(),
                         detailedBolusInfo.insulin,
@@ -672,7 +671,6 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     bolusCancelled = true;
                     confirmAlert(AlertType.WARNING_38);
                     alertService.ignore(null);
-                    aapsLogger.debug(LTag.PUMP, "XXXX Stop Bolus : " + dateUtil.dateAndTimeAndSecondsString(dateUtil.now()));
                 }
             } catch (AppLayerErrorException e) {
                 aapsLogger.info(LTag.PUMP, "Exception while canceling bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
@@ -758,7 +756,6 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     .success(true)
                     .enacted(true)
                     .comment(R.string.virtualpump_resultok);
-            aapsLogger.debug(LTag.PUMP, "XXXX Set Temp Basal timestamp: " + dateUtil.now() + " rate: " + percent + " duration: " + durationInMinutes);
             readHistory();
             fetchStatus();
         } catch (AppLayerErrorException e) {
@@ -809,7 +806,6 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     null,
                     null
             ));
-            aapsLogger.debug(LTag.PUMP, "XXXX Set Extended timestamp: " + dateUtil.now() + " amount: " + insulin + "U duration: " + durationInMinutes + "BolusId: " + bolusID);
             result.success(true).enacted(true).comment(R.string.virtualpump_resultok);
         } catch (AppLayerErrorException e) {
             aapsLogger.info(LTag.PUMP, "Exception while delivering extended bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
@@ -830,7 +826,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         PumpEnactResult cancelEBResult = null;
         if (isFakingTempsByExtendedBoluses()) cancelEBResult = cancelExtendedBolusOnly();
         PumpEnactResult cancelTBRResult = cancelTempBasalOnly();
-        result.success((cancelEBResult == null || (cancelEBResult != null && cancelEBResult.getSuccess())) && cancelTBRResult.getSuccess()); //Fix a bug when Fake TBR is disabled and click on Cancel TBR button
+        result.success((cancelEBResult == null || (cancelEBResult != null && cancelEBResult.getSuccess())) && cancelTBRResult.getSuccess());
         result.enacted((cancelEBResult != null && cancelEBResult.getEnacted()) || cancelTBRResult.getEnacted());
         result.comment(cancelEBResult != null ? cancelEBResult.getComment() : cancelTBRResult.getComment());
         try {
@@ -857,7 +853,6 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             confirmAlert(AlertType.WARNING_36);
             alertService.ignore(null);
             result.comment(R.string.virtualpump_resultok);
-            aapsLogger.debug(LTag.PUMP, "XXXX cancel Temp Basal time: " + dateUtil.dateAndTimeAndSecondsString(dateUtil.now()));
         } catch (NoActiveTBRToCanceLException e) {
             result.success(true);
             result.comment(R.string.virtualpump_resultok);
@@ -903,18 +898,6 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     alertService.ignore(null);
                     InsightBolusID insightBolusID = insightDbHelper.getInsightBolusID(serialNumber(), activeBolus.getBolusID(), dateUtil.now());
                     if (insightBolusID != null) {
-                        /*  TODO() I don't know if we can remove bolck below (there is a readHistory after that will update AAPS database)
-                        PumpSync.PumpState.ExtendedBolus extendedBolus = databaseHelper.getExtendedBolusByPumpId(insightBolusID.id);
-                        if (extendedBolus != null) {
-                            extendedBolus.durationInMinutes = (int) ((System.currentTimeMillis() - extendedBolus.date) / 60000);
-                            if (extendedBolus.durationInMinutes <= 0) {
-                                final String _id = extendedBolus._id;
-                                databaseHelper.delete(extendedBolus);
-                            } else
-                                treatmentsPlugin.addToHistoryExtendedBolus(extendedBolus);
-                        }
-                         */
-                        aapsLogger.debug(LTag.PUMP, "XXXX cancel Extended Bolus time: " + dateUtil.dateAndTimeAndSecondsString(dateUtil.now()) + " BolusId: " + activeBolus.getBolusID());
                         result.enacted(true).success(true);
                     }
                 }
@@ -1295,7 +1278,6 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         calendar.set(Calendar.YEAR, event.getTotalYear());
         calendar.set(Calendar.MONTH, event.getTotalMonth() - 1);
         calendar.set(Calendar.DAY_OF_MONTH, event.getTotalDay());
-        aapsLogger.debug(LTag.PUMP, "XXXX event Daily Dose event day: " + event.getTotalYear() + "/" + (event.getTotalMonth() - 1) + "/" + event.getTotalDay() + " Basal: " + event.getBasalTotal() + " Bolus: " + event.getBolusTotal());
         pumpSync.createOrUpdateTotalDailyDose(
                 calendar.getTimeInMillis(),
                 event.getBolusTotal(),
@@ -1341,7 +1323,6 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
         uploadCareportalEvent(timestamp, DetailedBolusInfo.EventType.PUMP_BATTERY_CHANGE);
-        aapsLogger.debug(LTag.PUMP, "XXXX event Battery Change time: " + dateUtil.dateAndTimeAndSecondsString(timestamp));
         pumpSync.insertTherapyEventIfNewWithTimestamp(
                 timestamp,
                 DetailedBolusInfo.EventType.PUMP_BATTERY_CHANGE,
@@ -1365,19 +1346,16 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 pumpStartedEvents.add(pumpID);
                 if (sp.getBoolean("insight_log_operating_mode_changes", false))
                     logNote(timestamp, resourceHelper.gs(R.string.pump_started));
-                aapsLogger.debug(LTag.PUMP, "XXXX event START Event TimeStamp: " + timestamp + " HMS: " + dateUtil.dateAndTimeAndSecondsString(timestamp));
                 break;
             case STOPPED:
                 pumpID.setEventType(EventType.PumpStopped);
                 if (sp.getBoolean("insight_log_operating_mode_changes", false))
                     logNote(timestamp, resourceHelper.gs(R.string.pump_stopped));
-                aapsLogger.debug(LTag.PUMP, "XXXX event STOP: " + timestamp + " HMS: " + dateUtil.dateAndTimeAndSecondsString(timestamp));
                 break;
             case PAUSED:
                 pumpID.setEventType(EventType.PumpPaused);
                 if (sp.getBoolean("insight_log_operating_mode_changes", false))
                     logNote(timestamp, resourceHelper.gs(R.string.pump_paused));
-                aapsLogger.debug(LTag.PUMP, "XXXX event Pause: " + timestamp + " HMS: " + dateUtil.dateAndTimeAndSecondsString(timestamp));
                 break;
         }
         insightDbHelper.createOrUpdate(pumpID);
@@ -1390,8 +1368,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 timestamp,
                 EventType.StartOfTBR,
                 serial,
-                event.getEventPosition())
-        );
+                event.getEventPosition()));
         temporaryBasals.add(new TemporaryBasal(
                 timestamp,
                 T.mins(event.getDuration()).msecs(),
@@ -1399,8 +1376,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 false,
                 PumpSync.TemporaryBasalType.NORMAL,
                 event.getEventPosition(),
-                event.getEventPosition())
-        );
+                event.getEventPosition()));
     }
 
     private void processEndOfTBREvent(String serial, List<TemporaryBasal> temporaryBasals, EndOfTBREvent event) {
@@ -1410,8 +1386,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 timestamp - 1500L,
                 EventType.EndOfTBR,
                 serial,
-                event.getEventPosition())
-        );
+                event.getEventPosition()));
 
         temporaryBasals.add(new PumpSync.PumpState.TemporaryBasal(
                 timestamp - 1500L,
@@ -1420,8 +1395,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 false,
                 PumpSync.TemporaryBasalType.NORMAL,
                 event.getEventPosition(),
-                event.getEventPosition())
-        );
+                event.getEventPosition()));
     }
 
     private void processBolusProgrammedEvent(String serial, BolusProgrammedEvent event) {
@@ -1433,7 +1407,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             insightDbHelper.createOrUpdate(bolusID);
             return;
         }
-        if (bolusID == null || bolusID.getStartID() != null) {                        // TODO() Check StartID test is necessary
+        if (bolusID == null || bolusID.getStartID() != null) {                        //In rare edge cases two boluses can share the same ID
             insightDbHelper.createOrUpdate(new InsightBolusID(
                     timestamp,
                     serial,
@@ -1480,8 +1454,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     serial,
                     event.getBolusID(),
                     bolusID == null ? event.getEventPosition() : bolusID.getStartID(),
-                    event.getEventPosition()
-            );
+                    event.getEventPosition());
         }
         bolusID.setEndID(event.getEventPosition());
         insightDbHelper.createOrUpdate(bolusID);
@@ -1496,16 +1469,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     serial);
         }
         if (event.getBolusType() == BolusType.EXTENDED || event.getBolusType() == BolusType.MULTIWAVE) {
-            if (event.getDuration() == 0) {
-                /*                                              TODO() Check if we can remove this block
-                ExtendedBolus extendedBolus = databaseHelper.getExtendedBolusByPumpId(bolusID.id);
-                if (extendedBolus != null) {
-                    final String _id = extendedBolus._id;
-                    databaseHelper.delete(extendedBolus);
-                }
-                 */
-            } else {
-                if (profileFunction.getProfile(bolusID.getTimestamp()) != null)
+            if (event.getDuration() > 0 && profileFunction.getProfile(bolusID.getTimestamp()) != null)
                     pumpSync.syncExtendedBolusWithPumpId(
                             bolusID.getTimestamp(),
                             event.getExtendedAmount(),
@@ -1514,7 +1478,6 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                             bolusID.getId(),
                             PumpType.ACCU_CHEK_INSIGHT,
                             serial);
-            }
         }
     }
 
