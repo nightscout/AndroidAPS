@@ -12,7 +12,9 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntry
+import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryBolus
 import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryCarbs
+import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryTBR
 import info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncStorage
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil
@@ -644,8 +646,6 @@ class MedtronicHistoryData @Inject constructor(
 
                 val tbrEntry = tempBasalProcessDTO.itemOne!!.getDecodedDataEntry("Object") as TempBasalPair
 
-                //removeCancelTBRTemporaryRecord(tempBasalProcessDTO, tbrRecords)
-
                 if (entryWithTempId!=null) {
                     val result = pumpSync.syncTemporaryBasalWithTempId(
                         tryToGetByLocalTime(tempBasalProcessDTO.atechDateTime),
@@ -688,124 +688,43 @@ class MedtronicHistoryData @Inject constructor(
                         tempBasalProcessDTO.atechDateTime, tempBasalProcessDTO.pumpId,
                         tbrEntry.insulinRate, (if (tbrEntry.isPercent) "%" else "U"), tempBasalProcessDTO.duration,
                         medtronicPumpStatus.serialNumber!!, result))
+
+                    if (medtronicPumpStatus.runningTBR!=null) {
+                        if (!isTBRActive(medtronicPumpStatus.runningTBR!!)) {
+                            medtronicPumpStatus.runningTBR = null
+                        }
+                    }
+
+                    if (isTBRActive(tryToGetByLocalTime(tempBasalProcessDTO.atechDateTime), tempBasalProcessDTO.duration)) {
+                        if (medtronicPumpStatus.runningTBR == null) {
+                            medtronicPumpStatus.runningTBR = PumpDbEntry(0L,
+                                tryToGetByLocalTime(tempBasalProcessDTO.atechDateTime),
+                                medtronicPumpStatus.pumpType,
+                                medtronicPumpStatus.serialNumber!!,
+                                null,
+                                PumpDbEntryTBR(tbrEntry.insulinRate, !tbrEntry.isPercent, tempBasalProcessDTO.duration, PumpSync.TemporaryBasalType.NORMAL),
+                                tempBasalProcessDTO.pumpId)
+                        }
+                    }
                 }
             } // for
         } // collection
     }
 
 
-    private fun removeCancelTBRTemporaryRecord(tempBasalProcessDTO: TempBasalProcessDTO, tbrRecords: MutableList<PumpDbEntry>) {
-        if (tempBasalProcessDTO.cancelPresent) {
-
-            //val dateTime : Long = DateTimeUtil.getMillisFromATDWithAddedMinutes(tempBasalProcessDTO.atechDateTime, tempBasalProcessDTO.duration)
-            val dbEntry = findDbEntry(tempBasalProcessDTO.itemTwo!!, tbrRecords)
-
-            if (dbEntry!=null) {
-                if (dbEntry.tbrData!!.durationInMinutes == 0) {
-                    pumpSync.invalidateTemporaryBasalWithTempId(dbEntry.temporaryId)
-                    pumpSyncStorage.removeTemporaryBasalWithTemporaryId(dbEntry.temporaryId)
-                    tbrRecords.remove(dbEntry)
-                }
-            }
-        }
+    fun isTBRActive(dbEntry: PumpDbEntry) : Boolean {
+        return isTBRActive(dbEntry.date, dbEntry.tbrData!!.durationInMinutes)
     }
 
 
-    fun isTBRActive(dbEntry: PumpDbEntry) : Boolean {
-        val endDate = dbEntry.date + (dbEntry.tbrData!!.durationInMinutes * 60 * 1000)
+    fun isTBRActive(startTimestamp: Long, durationMin: Int) : Boolean {
+        val endDate = startTimestamp + (durationMin * 60 * 1000)
 
         return (endDate > System.currentTimeMillis())
     }
 
 
-    // private fun processTBREntries_Old(entryList: MutableList<PumpHistoryEntry>) {
-    //     Collections.reverse(entryList)
-    //     val tbr = entryList[0].getDecodedDataEntry("Object") as TempBasalPair?
-    //     var readOldItem = false
-    //     if (tbr!!.isCancelTBR) {
-    //         val oneMoreEntryFromHistory = getOneMoreEntryFromHistory(PumpHistoryEntryType.TempBasalCombined)
-    //         if (oneMoreEntryFromHistory != null) {
-    //             entryList.add(0, oneMoreEntryFromHistory)
-    //             readOldItem = true
-    //         } else {
-    //             entryList.removeAt(0)
-    //         }
-    //     }
-    //     val oldestTimestamp = getOldestTimestamp(entryList)
-    //     val entriesFromHistory = getDatabaseEntriesByLastTimestamp(oldestTimestamp, ProcessHistoryRecord.TBR)
-    //     aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, ProcessHistoryRecord.TBR.description + " List (before filter): %s, FromDb=%s", gson.toJson(entryList),
-    //         gson.toJson(entriesFromHistory)))
-    //     var processDTO: TempBasalProcessDTO? = null
-    //     val processList: MutableList<TempBasalProcessDTO> = ArrayList()
-    //     for (treatment in entryList) {
-    //         val tbr2 = treatment.getDecodedDataEntry("Object") as TempBasalPair?
-    //         if (tbr2!!.isCancelTBR) {
-    //             if (processDTO != null) {
-    //                 processDTO.itemTwo = treatment
-    //                 if (readOldItem) {
-    //                     processDTO.processOperation = TempBasalProcessDTO.Operation.Edit
-    //                     readOldItem = false
-    //                 }
-    //             } else {
-    //                 aapsLogger.error("processDTO was null - shouldn't happen. ItemTwo=$treatment")
-    //             }
-    //         } else {
-    //             if (processDTO != null) {
-    //                 processList.add(processDTO)
-    //             }
-    //             processDTO = TempBasalProcessDTO()
-    //             processDTO.itemOne = treatment
-    //             processDTO.processOperation = TempBasalProcessDTO.Operation.Add
-    //         }
-    //     }
-    //     if (processDTO != null) {
-    //         processList.add(processDTO)
-    //     }
-    //     if (isCollectionNotEmpty(processList)) {
-    //         for (tempBasalProcessDTO in processList) {
-    //             if (tempBasalProcessDTO.processOperation === TempBasalProcessDTO.Operation.Edit) {
-    //                 // edit
-    //                 val tempBasal = findTempBasalWithPumpId(tempBasalProcessDTO.itemOne!!.pumpId!!, entriesFromHistory)
-    //                 if (tempBasal != null) {
-    //                     tempBasal.durationInMinutes = tempBasalProcessDTO.duration
-    //                     // pumpSync - createOrUpdate(tempBasal)
-    //                     databaseHelper.createOrUpdate(tempBasal)
-    //                     aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "Edit " + ProcessHistoryRecord.TBR.description + " - (entryFromDb=%s) ", tempBasal))
-    //                 } else {
-    //                     aapsLogger.error(LTag.PUMP, "TempBasal not found. Item: " + tempBasalProcessDTO.itemOne)
-    //                 }
-    //             } else {
-    //                 // add
-    //                 val treatment = tempBasalProcessDTO.itemOne
-    //                 val tbr2 = treatment!!.decodedData!!["Object"] as TempBasalPair?
-    //                 tbr2!!.durationMinutes = tempBasalProcessDTO.duration
-    //                 val tempBasal = findTempBasalWithPumpId(tempBasalProcessDTO.itemOne!!.pumpId!!, entriesFromHistory)
-    //                 if (tempBasal == null) {
-    //                     val treatmentDb = findDbEntry_Old(treatment, entriesFromHistory)
-    //                     aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "Add " + ProcessHistoryRecord.TBR.description + " %s - (entryFromDb=%s) ", treatment, treatmentDb))
-    //                     addTBR(treatment, treatmentDb as TemporaryBasal?)
-    //                 } else {
-    //                     // this shouldn't happen
-    //                     if (tempBasal.durationInMinutes != tempBasalProcessDTO.duration) {
-    //                         aapsLogger.debug(LTag.PUMP, "Found entry with wrong duration (shouldn't happen)... updating")
-    //                         tempBasal.durationInMinutes = tempBasalProcessDTO.duration
-    //                     }
-    //                 }
-    //             } // if
-    //         } // for
-    //     } // collection
-    // }
 
-    private fun findTempBasalWithPumpId(pumpId: Long, entriesFromHistory: List<DbObjectBase>): TemporaryBasal? {
-        for (dbObjectBase in entriesFromHistory) {
-            val tbr = dbObjectBase as TemporaryBasal
-            if (tbr.pumpId == pumpId) {
-                return tbr
-            }
-        }
-        // TODO pumpSync - findTempBasalByPumpId
-        return databaseHelper.findTempBasalByPumpId(pumpId)
-    }
 
     /**
      * findDbEntry - finds Db entries in database, while theoretically this should have same dateTime they
@@ -816,56 +735,6 @@ class MedtronicHistoryData @Inject constructor(
      * @param entriesFromHistory entries from history
      * @return DbObject from AAPS (if found)
      */
-    private fun findDbEntry_Old(treatment: PumpHistoryEntry?, entriesFromHistory: List<DbObjectBase>): DbObjectBase? {
-        val proposedTime = DateTimeUtil.toMillisFromATD(treatment!!.atechDateTime!!)
-        //proposedTime += (this.pumpTime.timeDifference * 1000);
-
-        if (doubleBolusDebug) aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "DoubleBolusDebug: findDbEntry Treatment=%s, FromDb=%s", treatment, gson.toJson(entriesFromHistory)))
-        if (entriesFromHistory.size == 0) {
-            if (doubleBolusDebug) aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "DoubleBolusDebug: findDbEntry Treatment=%s, FromDb=null", treatment))
-            return null
-        } else if (entriesFromHistory.size == 1) {
-            if (doubleBolusDebug) aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "DoubleBolusDebug: findDbEntry Treatment=%s, FromDb=%s. Type=SingleEntry", treatment, entriesFromHistory[0]))
-
-            // if difference is bigger than 2 minutes we discard entry
-            val maxMillisAllowed = DateTimeUtil.getMillisFromATDWithAddedMinutes(treatment.atechDateTime!!, 2)
-            if (doubleBolusDebug) aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "DoubleBolusDebug: findDbEntry maxMillisAllowed=%d, AtechDateTime=%d (add 2 minutes). ", maxMillisAllowed, treatment.atechDateTime))
-            if (entriesFromHistory[0].getDate() > maxMillisAllowed) {
-                if (doubleBolusDebug) aapsLogger.debug(LTag.PUMP, "DoubleBolusDebug: findDbEntry entry filtered out, returning null. ")
-                return null
-            }
-            return entriesFromHistory[0]
-        }
-        var min = 0
-        while (min < 2) {
-            var sec = 0
-            while (sec <= 50) {
-                if (min == 1 && sec == 50) {
-                    sec = 59
-                }
-                val diff = sec * 1000
-                val outList: MutableList<DbObjectBase> = ArrayList()
-                for (treatment1 in entriesFromHistory) {
-                    if (treatment1.getDate() > proposedTime - diff && treatment1.getDate() < proposedTime + diff) {
-                        outList.add(treatment1)
-                    }
-                }
-                if (outList.size == 1) {
-                    if (doubleBolusDebug) aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "DoubleBolusDebug: findDbEntry Treatment={}, FromDb={}. Type=EntrySelected, AtTimeMin={}, AtTimeSec={}", treatment, entriesFromHistory[0], min, sec))
-                    return outList[0]
-                }
-                if (min == 0 && sec == 10 && outList.size > 1) {
-                    aapsLogger.error(String.format(Locale.ENGLISH, "Too many entries (with too small diff): (timeDiff=[min=%d,sec=%d],count=%d,list=%s)",
-                        min, sec, outList.size, gson.toJson(outList)))
-                    if (doubleBolusDebug) aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "DoubleBolusDebug: findDbEntry Error - Too many entries (with too small diff): (timeDiff=[min=%d,sec=%d],count=%d,list=%s)",
-                        min, sec, outList.size, gson.toJson(outList)))
-                }
-                sec += 10
-            }
-            min += 1
-        }
-        return null
-    }
 
     /**
      * Looks at all boluses that have temporaryId and find one that is correct for us (if such entry exists)
@@ -923,54 +792,6 @@ class MedtronicHistoryData @Inject constructor(
             min += 1
         }
         return null
-    }
-
-
-    private fun getDatabaseEntriesByLastTimestamp(startTimestamp: Long, processHistoryRecord: ProcessHistoryRecord): MutableList<DbObjectBase> {
-        var outList: MutableList<DbObjectBase> = mutableListOf()
-
-        if (processHistoryRecord == ProcessHistoryRecord.Bolus) {
-            outList.addAll(activePlugin.activeTreatments.getTreatmentsFromHistoryAfterTimestamp(startTimestamp))
-        } else {
-            // TODO pumpSync - databaseHelper.getTemporaryBasalsDataFromTime(startTimestamp, true)
-            outList.addAll(databaseHelper.getTemporaryBasalsDataFromTime(startTimestamp, true))
-        }
-
-        return outList
-    }
-
-
-    private fun addCarbsFromEstimate(detailedBolusInfo: DetailedBolusInfo, bolus: PumpHistoryEntry?) {
-        if (bolus!!.containsDecodedData("Estimate")) {
-            val bolusWizard = bolus.decodedData!!["Estimate"] as BolusWizardDTO?
-            if (doubleBolusDebug) aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "DoubleBolusDebug: addCarbsFromEstimate: Bolus=%s, BolusWizardDTO=%s", bolus, bolusWizard))
-            detailedBolusInfo.carbs = bolusWizard!!.carbs.toDouble()
-        }
-    }
-
-    private fun addTBR(treatment: PumpHistoryEntry?, temporaryBasalDbInput: TemporaryBasal?) {
-        val tbr = treatment!!.decodedData!!["Object"] as TempBasalPair?
-        var temporaryBasalDb = temporaryBasalDbInput
-        var operation = "editTBR"
-        if (temporaryBasalDb == null) {
-            temporaryBasalDb = TemporaryBasal(injector)
-            temporaryBasalDb.date = tryToGetByLocalTime(treatment.atechDateTime!!)
-            operation = "addTBR"
-        }
-        temporaryBasalDb.source = Source.PUMP
-        temporaryBasalDb.pumpId = treatment.pumpId!!
-        temporaryBasalDb.durationInMinutes = tbr!!.durationMinutes
-        temporaryBasalDb.absoluteRate = tbr.insulinRate
-        temporaryBasalDb.isAbsolute = !tbr.isPercent
-        treatment.linkedObject = temporaryBasalDb
-        // TODO pumpSync - databaseHelper.createOrUpdate(tbr)
-        databaseHelper.createOrUpdate(temporaryBasalDb)
-        aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "$operation - [date=%d,pumpId=%d, rate=%s %s, duration=%d]",  //
-            temporaryBasalDb.getDate(),  //
-            temporaryBasalDb.getPumpId(),  //
-            if (temporaryBasalDb.isAbsolute) String.format(Locale.ENGLISH, "%.2f", temporaryBasalDb.absoluteRate) else String.format(Locale.ENGLISH, "%d", temporaryBasalDb.percentRate),  //
-            if (temporaryBasalDb.isAbsolute) "U/h" else "%",  //
-            temporaryBasalDb.durationInMinutes))
     }
 
 
@@ -1148,27 +969,6 @@ class MedtronicHistoryData @Inject constructor(
         return DateTimeUtil.toMillisFromATD(atechDateTime)
     }
 
-    private fun getOldestTimestamp(treatments: List<PumpHistoryEntry?>): Long {
-        var dt = Long.MAX_VALUE
-        var currentTreatment: PumpHistoryEntry? = null
-        for (treatment in treatments) {
-            if (treatment!!.atechDateTime!! < dt) {
-                dt = treatment.atechDateTime!!
-                currentTreatment = treatment
-            }
-        }
-        if (doubleBolusDebug) aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "DoubleBolusDebug: getOldestTimestamp. Oldest entry found: time=%d, object=%s", dt, currentTreatment))
-        return try {
-            val oldestEntryTime = DateTimeUtil.toGregorianCalendar(dt)
-            if (doubleBolusDebug) aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "DoubleBolusDebug: getOldestTimestamp. oldestEntryTime: %s", DateTimeUtil.toString(oldestEntryTime)))
-            oldestEntryTime.add(Calendar.MINUTE, -2)
-            if (doubleBolusDebug) aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "DoubleBolusDebug: getOldestTimestamp. oldestEntryTime (-2m): %s, timeInMillis=%d", DateTimeUtil.toString(oldestEntryTime), oldestEntryTime.timeInMillis))
-            oldestEntryTime.timeInMillis
-        } catch (ex: Exception) {
-            aapsLogger.error("Problem decoding date from last record: $currentTreatment")
-            8 // default return of 6 minutes
-        }
-    }
 
     private fun getTDDType(): PumpHistoryEntryType {
         return if (medtronicUtil.medtronicPumpModel == null) {
@@ -1187,11 +987,13 @@ class MedtronicHistoryData @Inject constructor(
         }
     }
 
+
     fun hasBasalProfileChanged(): Boolean {
         val filteredItems: List<PumpHistoryEntry?> = getFilteredItems(PumpHistoryEntryType.ChangeBasalProfile_NewProfile)
         aapsLogger.debug(LTag.PUMP, "hasBasalProfileChanged. Items: " + gson.toJson(filteredItems))
         return filteredItems.size > 0
     }
+
 
     fun processLastBasalProfileChange(pumpType: PumpType?, mdtPumpStatus: MedtronicPumpStatus) {
         val filteredItems: List<PumpHistoryEntry?> = getFilteredItems(PumpHistoryEntryType.ChangeBasalProfile_NewProfile)
@@ -1271,32 +1073,25 @@ class MedtronicHistoryData @Inject constructor(
     }
 
     private fun getFilteredItems(inList: MutableList<PumpHistoryEntry>?, entryTypes: Set<PumpHistoryEntryType>?): MutableList<PumpHistoryEntry> {
-
-        // aapsLogger.debug(LTag.PUMP, "InList: " + inList.size());
         val outList: MutableList<PumpHistoryEntry> = mutableListOf()
-        if (inList != null && inList.size > 0) {
+        if (!inList.isNullOrEmpty()) {
             for (pumpHistoryEntry in inList) {
-                if (!isEmpty(entryTypes)) {
-                    if (entryTypes!!.contains(pumpHistoryEntry.entryType)) {
+                if (entryTypes.isNullOrEmpty()) {
+                    outList.add(pumpHistoryEntry)
+                } else {
+                    if (entryTypes.contains(pumpHistoryEntry.entryType)) {
                         outList.add(pumpHistoryEntry)
                     }
-                } else {
-                    outList.add(pumpHistoryEntry)
                 }
             }
         }
-
-        // aapsLogger.debug(LTag.PUMP, "OutList: " + outList.size());
         return outList
     }
 
-    private fun isEmpty(entryTypes: Set<PumpHistoryEntryType>?): Boolean {
-        return entryTypes.isNullOrEmpty()
-        //return entryTypes == null || entryTypes.size == 1 && entryTypes[0] == null
-    }
 
     private val logPrefix: String
         get() = "MedtronicHistoryData::"
+
 
     companion object {
         /**

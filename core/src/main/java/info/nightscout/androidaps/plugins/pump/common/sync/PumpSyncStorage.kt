@@ -4,11 +4,9 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.db.TemporaryBasal
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.lang.reflect.Type
 import java.util.*
@@ -84,6 +82,7 @@ class PumpSyncStorage @Inject constructor(
         return pumpSyncStorage[BOLUS]!!;
     }
 
+
     fun getTBRs() : MutableList<PumpDbEntry> {
         return pumpSyncStorage[TBR]!!;
     }
@@ -130,7 +129,7 @@ class PumpSyncStorage @Inject constructor(
             carbsDto.date, carbsDto.carbs, carbsDto.serialNumber, result))
     }
 
-    // TODO
+
     fun addTemporaryBasalRateWithTempId(temporaryBasal: PumpDbEntryTBR, writeToInternalHistory: Boolean, creator: PumpSyncEntriesCreator) : Boolean {
         val timenow : Long = System.currentTimeMillis()
         val temporaryId = creator.generateTempId(timenow)
@@ -157,18 +156,19 @@ class PumpSyncStorage @Inject constructor(
     }
 
 
-
     fun removeBolusWithTemporaryId(temporaryId: Long) {
         val bolusList = removeTemporaryId(temporaryId, pumpSyncStorage[BOLUS]!!)
         pumpSyncStorage[BOLUS] = bolusList
         saveStorage()
     }
 
+
     fun removeTemporaryBasalWithTemporaryId(temporaryId: Long) {
         val tbrList = removeTemporaryId(temporaryId, pumpSyncStorage[TBR]!!)
         pumpSyncStorage[TBR] = tbrList
         saveStorage()
     }
+
 
     private fun removeTemporaryId(temporaryId: Long, list: MutableList<PumpDbEntry>): MutableList<PumpDbEntry> {
         var dbEntry: PumpDbEntry? = null

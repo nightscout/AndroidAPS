@@ -11,7 +11,6 @@ import info.nightscout.androidaps.activities.ErrorHelperActivity.Companion.runAl
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.db.Source
-import info.nightscout.androidaps.db.TemporaryBasal
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.interfaces.PumpSync.TemporaryBasalType
@@ -828,7 +827,6 @@ class MedtronicPumpPlugin @Inject constructor(
         }
         medtronicHistoryData.processNewHistoryData()
         medtronicHistoryData.finalizeNewHistoryRecords()
-        // this.medtronicHistoryData.setLastHistoryRecordTime(this.lastPumpHistoryEntry.atechDateTime);
     }
 
     private fun readPumpHistoryLogic() {
@@ -1004,15 +1002,6 @@ class MedtronicPumpPlugin @Inject constructor(
         finishAction("TBR")
         return if (response!!) {
             aapsLogger.info(LTag.PUMP, logPrefix + "cancelTempBasal - Cancel TBR successful.")
-            // val tempBasal = TemporaryBasal(injector) //
-            //     .date(System.currentTimeMillis()) //
-            //     .duration(0) //
-            //     .source(Source.USER)
-            //
-            // activePlugin.activeTreatments.addToHistoryTempBasal(tempBasal)
-
-            // TODO need to find solution for this !?
-            //val tempData = PumpDbEntryTBR(0.0, true, 0, TemporaryBasalType.NORMAL)
 
             val runningTBR = medtronicPumpStatus.runningTBR
 
