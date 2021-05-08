@@ -600,7 +600,6 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                         null
                 ));
                 InsightBolusID insightBolusID = insightDatabaseDao.getInsightBolusID(serial, bolusID, now);
-                aapsLogger.debug(LTag.PUMP, "XXXX set Bolus: " + dateUtil.dateAndTimeAndSecondsString(dateUtil.now()) + " amount: " + insulin);
                 pumpSync.syncBolusWithPumpId(
                         insightBolusID.getTimestamp(),
                         detailedBolusInfo.insulin,
@@ -672,7 +671,6 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     bolusCancelled = true;
                     confirmAlert(AlertType.WARNING_38);
                     alertService.ignore(null);
-                    aapsLogger.debug(LTag.PUMP, "XXXX Stop Bolus : " + dateUtil.dateAndTimeAndSecondsString(dateUtil.now()));
                 }
             } catch (AppLayerErrorException e) {
                 aapsLogger.info(LTag.PUMP, "Exception while canceling bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
@@ -758,7 +756,6 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     .success(true)
                     .enacted(true)
                     .comment(R.string.virtualpump_resultok);
-            aapsLogger.debug(LTag.PUMP, "XXXX Set Temp Basal timestamp: " + dateUtil.now() + " rate: " + percent + " duration: " + durationInMinutes);
             readHistory();
             fetchStatus();
         } catch (AppLayerErrorException e) {
@@ -809,7 +806,6 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     null,
                     null
             ));
-            aapsLogger.debug(LTag.PUMP, "XXXX Set Extended timestamp: " + dateUtil.now() + " amount: " + insulin + "U duration: " + durationInMinutes + "BolusId: " + bolusID);
             result.success(true).enacted(true).comment(R.string.virtualpump_resultok);
         } catch (AppLayerErrorException e) {
             aapsLogger.info(LTag.PUMP, "Exception while delivering extended bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
@@ -857,7 +853,6 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             confirmAlert(AlertType.WARNING_36);
             alertService.ignore(null);
             result.comment(R.string.virtualpump_resultok);
-            aapsLogger.debug(LTag.PUMP, "XXXX cancel Temp Basal time: " + dateUtil.dateAndTimeAndSecondsString(dateUtil.now()));
         } catch (NoActiveTBRToCanceLException e) {
             result.success(true);
             result.comment(R.string.virtualpump_resultok);
@@ -903,7 +898,6 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     alertService.ignore(null);
                     InsightBolusID insightBolusID = insightDatabaseDao.getInsightBolusID(serialNumber(), activeBolus.getBolusID(), dateUtil.now());
                     if (insightBolusID != null) {
-                        aapsLogger.debug(LTag.PUMP, "XXXX cancel Extended Bolus time: " + dateUtil.dateAndTimeAndSecondsString(dateUtil.now()) + " BolusId: " + activeBolus.getBolusID());
                         result.enacted(true).success(true);
                     }
                 }
@@ -1284,7 +1278,6 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         calendar.set(Calendar.YEAR, event.getTotalYear());
         calendar.set(Calendar.MONTH, event.getTotalMonth() - 1);
         calendar.set(Calendar.DAY_OF_MONTH, event.getTotalDay());
-        aapsLogger.debug(LTag.PUMP, "XXXX event Daily Dose event day: " + event.getTotalYear() + "/" + (event.getTotalMonth() - 1) + "/" + event.getTotalDay() + " Basal: " + event.getBasalTotal() + " Bolus: " + event.getBolusTotal());
         pumpSync.createOrUpdateTotalDailyDose(
                 calendar.getTimeInMillis(),
                 event.getBolusTotal(),
@@ -1330,7 +1323,6 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
         uploadCareportalEvent(timestamp, DetailedBolusInfo.EventType.PUMP_BATTERY_CHANGE);
-        aapsLogger.debug(LTag.PUMP, "XXXX event Battery Change time: " + dateUtil.dateAndTimeAndSecondsString(timestamp));
         pumpSync.insertTherapyEventIfNewWithTimestamp(
                 timestamp,
                 DetailedBolusInfo.EventType.PUMP_BATTERY_CHANGE,
@@ -1354,19 +1346,16 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 pumpStartedEvents.add(pumpID);
                 if (sp.getBoolean("insight_log_operating_mode_changes", false))
                     logNote(timestamp, resourceHelper.gs(R.string.pump_started));
-                aapsLogger.debug(LTag.PUMP, "XXXX event START Event TimeStamp: " + timestamp + " HMS: " + dateUtil.dateAndTimeAndSecondsString(timestamp));
                 break;
             case STOPPED:
                 pumpID.setEventType(EventType.PumpStopped);
                 if (sp.getBoolean("insight_log_operating_mode_changes", false))
                     logNote(timestamp, resourceHelper.gs(R.string.pump_stopped));
-                aapsLogger.debug(LTag.PUMP, "XXXX event STOP: " + timestamp + " HMS: " + dateUtil.dateAndTimeAndSecondsString(timestamp));
                 break;
             case PAUSED:
                 pumpID.setEventType(EventType.PumpPaused);
                 if (sp.getBoolean("insight_log_operating_mode_changes", false))
                     logNote(timestamp, resourceHelper.gs(R.string.pump_paused));
-                aapsLogger.debug(LTag.PUMP, "XXXX event Pause: " + timestamp + " HMS: " + dateUtil.dateAndTimeAndSecondsString(timestamp));
                 break;
         }
         insightDatabaseDao.createOrUpdate(pumpID);
