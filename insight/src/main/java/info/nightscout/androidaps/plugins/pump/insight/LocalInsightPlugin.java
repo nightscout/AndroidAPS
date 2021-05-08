@@ -1189,7 +1189,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     stoppedEvent.setEventType(EventType.PumpStopped);
                 }
             }
-            if (stoppedEvent == null || stoppedEvent.getEventType().equals("PumpPaused")) continue;
+            if (stoppedEvent == null || stoppedEvent.getEventType().equals(EventType.PumpPaused) || pumpID.getTimestamp() - stoppedEvent.getTimestamp() < 10000)
+                continue;
             long tbrStart = stoppedEvent.getTimestamp() + 10000;
             TemporaryBasal temporaryBasal = new TemporaryBasal(
                     tbrStart,
@@ -1261,15 +1262,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         if (!sp.getBoolean(R.string.key_insight_log_site_changes, false)) return;
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
-        uploadCareportalEvent(timestamp, DetailedBolusInfo.EventType.CANNULA_CHANGE);
-        aapsLogger.debug(LTag.PUMP, "XXXX event Site Change time: " + dateUtil.dateAndTimeAndSecondsString(timestamp));
-        pumpSync.insertTherapyEventIfNewWithTimestamp(
-                timestamp,
-                DetailedBolusInfo.EventType.CANNULA_CHANGE,
-                "",
-                event.getEventPosition(),
-                PumpType.ACCU_CHEK_INSIGHT,
-                serial);
+        if (event.getAmount() > 0.0)                 // Don't record event if amount is null => Fix Site Change with Insight v3 (event is always sent when Reservoir is changed)
+            uploadCareportalEvent(timestamp, DetailedBolusInfo.EventType.CANNULA_CHANGE);
     }
 
     private void processTotalDailyDoseEvent(String serial, TotalDailyDoseEvent event) {
@@ -1292,15 +1286,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         if (!sp.getBoolean(R.string.key_insight_log_tube_changes, false)) return;
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
-        logNote(timestamp, resourceHelper.gs(R.string.tube_changed));
-        aapsLogger.debug(LTag.PUMP, "XXXX event Tube Change time: " + dateUtil.dateAndTimeAndSecondsString(timestamp));
-        pumpSync.insertTherapyEventIfNewWithTimestamp(
-                timestamp,
-                DetailedBolusInfo.EventType.INSULIN_CHANGE,
-                "",
-                event.getEventPosition(),
-                PumpType.ACCU_CHEK_INSIGHT,
-                serial);
+        if (event.getAmount() > 0.0)               // Don't record event if amount is null
+            logNote(timestamp, resourceHelper.gs(R.string.tube_changed));
     }
 
     private void processSniffingDoneEvent(String serial, SniffingDoneEvent event) {
@@ -1308,14 +1295,6 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
         uploadCareportalEvent(timestamp, DetailedBolusInfo.EventType.INSULIN_CHANGE);
-        aapsLogger.debug(LTag.PUMP, "XXXX event Reservoir Change time: " + dateUtil.dateAndTimeAndSecondsString(timestamp));
-        pumpSync.insertTherapyEventIfNewWithTimestamp(
-                timestamp,
-                DetailedBolusInfo.EventType.INSULIN_CHANGE,
-                "",
-                event.getEventPosition(),
-                PumpType.ACCU_CHEK_INSIGHT,
-                serial);
     }
 
     private void processPowerUpEvent(String serial, PowerUpEvent event) {
@@ -1323,13 +1302,6 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
         uploadCareportalEvent(timestamp, DetailedBolusInfo.EventType.PUMP_BATTERY_CHANGE);
-        pumpSync.insertTherapyEventIfNewWithTimestamp(
-                timestamp,
-                DetailedBolusInfo.EventType.PUMP_BATTERY_CHANGE,
-                "",
-                event.getEventPosition(),
-                PumpType.ACCU_CHEK_INSIGHT,
-                serial);
     }
 
     private void processOperatingModeChangedEvent(String serial, List<InsightPumpID> pumpStartedEvents, OperatingModeChangedEvent event) {
