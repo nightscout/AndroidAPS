@@ -36,7 +36,7 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.insight.database.InsightBolusID;
-import info.nightscout.androidaps.insight.database.InsightDatabaseDao;
+import info.nightscout.androidaps.insight.database.InsightDbHelper;
 import info.nightscout.androidaps.insight.database.InsightHistoryOffset;
 import info.nightscout.androidaps.insight.database.InsightPumpID;
 import info.nightscout.androidaps.insight.database.InsightPumpID.EventType;
@@ -144,7 +144,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     private final ProfileFunction profileFunction;
     private final Context context;
     private final DateUtil dateUtil;
-    private final InsightDatabaseDao insightDatabaseDao;
+    private final InsightDbHelper insightDbHelper;
     private final PumpSync pumpSync;
 
     public static final String ALERT_CHANNEL_ID = "AndroidAPS-InsightAlert";
@@ -203,7 +203,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             Context context,
             Config config,
             DateUtil dateUtil,
-            InsightDatabaseDao insightDatabaseDao,
+            InsightDbHelper insightDbHelper,
             PumpSync pumpSync
     ) {
         super(new PluginDescription()
@@ -225,7 +225,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         this.profileFunction = profileFunction;
         this.context = context;
         this.dateUtil = dateUtil;
-        this.insightDatabaseDao = insightDatabaseDao;
+        this.insightDbHelper = insightDbHelper;
         this.pumpSync = pumpSync;
 
         pumpDescription = new PumpDescription();
@@ -592,14 +592,14 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 int trials = 0;
                 Long now = dateUtil.now();
                 String serial = serialNumber();
-                insightDatabaseDao.createOrUpdate( new InsightBolusID(
+                insightDbHelper.createOrUpdate( new InsightBolusID(
                         now,
                         serial,
                         bolusID,
                         null,
                         null
                 ));
-                InsightBolusID insightBolusID = insightDatabaseDao.getInsightBolusID(serial, bolusID, now);
+                InsightBolusID insightBolusID = insightDbHelper.getInsightBolusID(serial, bolusID, now);
                 aapsLogger.debug(LTag.PUMP, "XXXX set Bolus: " + dateUtil.dateAndTimeAndSecondsString(dateUtil.now()) + " amount: " + insulin);
                 pumpSync.syncBolusWithPumpId(
                         insightBolusID.getTimestamp(),
@@ -802,7 +802,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             bolusMessage.setImmediateAmount(0);
             bolusMessage.setVibration(disableVibration);
             int bolusID = connectionService.requestMessage(bolusMessage).await().getBolusId();
-            insightDatabaseDao.createOrUpdate(new InsightBolusID(
+            insightDbHelper.createOrUpdate(new InsightBolusID(
                     dateUtil.now(),
                     serialNumber(),
                     bolusID,
@@ -901,7 +901,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     connectionService.requestMessage(cancelBolusMessage).await();
                     confirmAlert(AlertType.WARNING_38);
                     alertService.ignore(null);
-                    InsightBolusID insightBolusID = insightDatabaseDao.getInsightBolusID(serialNumber(), activeBolus.getBolusID(), dateUtil.now());
+                    InsightBolusID insightBolusID = insightDbHelper.getInsightBolusID(serialNumber(), activeBolus.getBolusID(), dateUtil.now());
                     if (insightBolusID != null) {
                         /*  TODO() I don't know if we can remove bolck below (there is a readHistory after that will update AAPS database)
                         PumpSync.PumpState.ExtendedBolus extendedBolus = databaseHelper.getExtendedBolusByPumpId(insightBolusID.id);
@@ -1138,7 +1138,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             String serial = serialNumber();
             timeOffset = Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis() - parseDate(pumpTime.getYear(),
                     pumpTime.getMonth(), pumpTime.getDay(), pumpTime.getHour(), pumpTime.getMinute(), pumpTime.getSecond());
-            InsightHistoryOffset historyOffset = insightDatabaseDao.getInsightHistoryOffset(serial);
+            InsightHistoryOffset historyOffset = insightDbHelper.getInsightHistoryOffset(serial);
             try {
                 List<HistoryEvent> historyEvents = new ArrayList<>();
                 if (historyOffset == null) {
@@ -1162,7 +1162,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 Collections.reverse(historyEvents);
                 if (historyOffset != null) processHistoryEvents(serial, historyEvents);
                 if (historyEvents.size() > 0) {
-                    insightDatabaseDao.createOrUpdate(new InsightHistoryOffset(
+                    insightDbHelper.createOrUpdate(new InsightHistoryOffset(
                             serial,
                             historyEvents.get(0).getEventPosition())
                     );
@@ -1198,9 +1198,9 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         Collections.reverse(temporaryBasals);
 
         for (InsightPumpID pumpID : pumpStartedEvents) {
-            InsightPumpID stoppedEvent = insightDatabaseDao.getPumpStoppedEvent(pumpID.getPumpSerial(), pumpID.getTimestamp());
+            InsightPumpID stoppedEvent = insightDbHelper.getPumpStoppedEvent(pumpID.getPumpSerial(), pumpID.getTimestamp());
             if (stoppedEvent != null && stoppedEvent.getEventType().equals(EventType.PumpStopped)) {             // Search if Stop event is after 15min of Pause
-                InsightPumpID pauseEvent = insightDatabaseDao.getPumpStoppedEvent(pumpID.getPumpSerial(), stoppedEvent.getTimestamp() - T.mins(1).msecs());
+                InsightPumpID pauseEvent = insightDbHelper.getPumpStoppedEvent(pumpID.getPumpSerial(), stoppedEvent.getTimestamp() - T.mins(1).msecs());
                 if (pauseEvent != null && pauseEvent.getEventType().equals(EventType.PumpPaused) && (stoppedEvent.getTimestamp() - pauseEvent.getTimestamp() < T.mins(16).msecs())) {
                     stoppedEvent = pauseEvent;
                     stoppedEvent.setEventType(EventType.PumpStopped);
@@ -1380,13 +1380,13 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 aapsLogger.debug(LTag.PUMP, "XXXX event Pause: " + timestamp + " HMS: " + dateUtil.dateAndTimeAndSecondsString(timestamp));
                 break;
         }
-        insightDatabaseDao.createOrUpdate(pumpID);
+        insightDbHelper.createOrUpdate(pumpID);
     }
 
     private void processStartOfTBREvent(String serial, List<TemporaryBasal> temporaryBasals, StartOfTBREvent event) {
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
-        insightDatabaseDao.createOrUpdate(new InsightPumpID(
+        insightDbHelper.createOrUpdate(new InsightPumpID(
                 timestamp,
                 EventType.StartOfTBR,
                 serial,
@@ -1406,7 +1406,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     private void processEndOfTBREvent(String serial, List<TemporaryBasal> temporaryBasals, EndOfTBREvent event) {
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
-        insightDatabaseDao.createOrUpdate(new InsightPumpID(
+        insightDbHelper.createOrUpdate(new InsightPumpID(
                 timestamp - 1500L,
                 EventType.EndOfTBR,
                 serial,
@@ -1427,24 +1427,24 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     private void processBolusProgrammedEvent(String serial, BolusProgrammedEvent event) {
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
-        InsightBolusID bolusID = insightDatabaseDao.getInsightBolusID(serial, event.getBolusID(), timestamp);
+        InsightBolusID bolusID = insightDbHelper.getInsightBolusID(serial, event.getBolusID(), timestamp);
         if (bolusID != null && bolusID.getEndID() != null) {
             bolusID.setStartID(event.getEventPosition());
-            insightDatabaseDao.createOrUpdate(bolusID);
+            insightDbHelper.createOrUpdate(bolusID);
             return;
         }
         if (bolusID == null || bolusID.getStartID() != null) {                        // TODO() Check StartID test is necessary
-            insightDatabaseDao.createOrUpdate(new InsightBolusID(
+            insightDbHelper.createOrUpdate(new InsightBolusID(
                     timestamp,
                     serial,
                     event.getBolusID(),
                     event.getEventPosition(),
                     null
             ));
-            bolusID = insightDatabaseDao.getInsightBolusID(serial, event.getBolusID(), timestamp);
+            bolusID = insightDbHelper.getInsightBolusID(serial, event.getBolusID(), timestamp);
         }
         bolusID.setStartID(event.getEventPosition());
-        insightDatabaseDao.createOrUpdate(bolusID);
+        insightDbHelper.createOrUpdate(bolusID);
 
         if (event.getBolusType() == BolusType.STANDARD || event.getBolusType() == BolusType.MULTIWAVE) {
             pumpSync.syncBolusWithPumpId(
@@ -1473,7 +1473,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
         long startTimestamp = parseRelativeDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(), event.getEventHour(),
                 event.getEventMinute(), event.getEventSecond(), event.getStartHour(), event.getStartMinute(), event.getStartSecond()) + timeOffset;
-        InsightBolusID bolusID = insightDatabaseDao.getInsightBolusID(serial, event.getBolusID(), timestamp);
+        InsightBolusID bolusID = insightDbHelper.getInsightBolusID(serial, event.getBolusID(), timestamp);
         if (bolusID == null || bolusID.getEndID() != null) {                        // TODO() Check if test EndID is necessary
             bolusID = new InsightBolusID(
                     startTimestamp,
@@ -1484,8 +1484,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             );
         }
         bolusID.setEndID(event.getEventPosition());
-        insightDatabaseDao.createOrUpdate(bolusID);
-        bolusID = insightDatabaseDao.getInsightBolusID(serial, event.getBolusID(), startTimestamp); // Line added to get id
+        insightDbHelper.createOrUpdate(bolusID);
+        bolusID = insightDbHelper.getInsightBolusID(serial, event.getBolusID(), startTimestamp); // Line added to get id
         if (event.getBolusType() == BolusType.STANDARD || event.getBolusType() == BolusType.MULTIWAVE) {
             pumpSync.syncBolusWithPumpId(
                     bolusID.getTimestamp(),

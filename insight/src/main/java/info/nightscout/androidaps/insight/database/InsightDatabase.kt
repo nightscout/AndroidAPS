@@ -20,6 +20,8 @@ abstract class InsightDatabase : RoomDatabase() {
 
     abstract fun insightDatabaseDao(): InsightDatabaseDao
 
+    abstract fun insightDbHelper(): InsightDbHelper
+
     companion object {
 
         const val VERSION = 1
