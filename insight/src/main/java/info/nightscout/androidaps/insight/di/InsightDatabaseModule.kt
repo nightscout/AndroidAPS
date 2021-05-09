@@ -5,6 +5,7 @@ import dagger.Module
 import dagger.Provides
 import info.nightscout.androidaps.insight.database.InsightDatabase
 import info.nightscout.androidaps.insight.database.InsightDatabaseDao
+import info.nightscout.androidaps.insight.database.InsightDbHelper
 import javax.inject.Singleton
 
 @Module
@@ -19,5 +20,8 @@ class InsightDatabaseModule {
     internal fun provideInsightDatabaseDao(insightDatabase: InsightDatabase): InsightDatabaseDao =
         insightDatabase.insightDatabaseDao()
 
+    @Provides
+    @Singleton
+    internal fun provideInsightDbHelper(insightDatabaseDao: InsightDatabaseDao): InsightDbHelper = InsightDbHelper(insightDatabaseDao)
 
 }

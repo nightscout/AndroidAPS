@@ -24,8 +24,6 @@ abstract class InsightDatabaseDao {
     @Query("SELECT * from $DATABASE_INSIGHT_PUMP_IDS WHERE pumpSerial = :pumpSerial AND (eventType = :pumpStopped OR eventType = :pumpPaused) AND timestamp < :timestamp  ORDER BY timestamp DESC")
     abstract fun getPumpStoppedEvent(pumpSerial: String, timestamp: Long, pumpStopped: EventType, pumpPaused: EventType): InsightPumpID?
 
-    fun getPumpStoppedEvent(pumpSerial: String, timestamp: Long): InsightPumpID? = getPumpStoppedEvent(pumpSerial, timestamp, EventType.PumpStopped, EventType.PumpPaused)
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun createOrUpdate(insightPumpID: InsightPumpID)
 }
