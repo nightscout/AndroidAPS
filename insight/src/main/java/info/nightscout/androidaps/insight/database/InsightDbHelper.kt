@@ -1,12 +1,6 @@
 package info.nightscout.androidaps.insight.database
 
-import androidx.room.Dao
-import javax.inject.Inject
-
-@Dao
-abstract class InsightDbHelper {
-
-    @Inject lateinit var insightDatabaseDao: InsightDatabaseDao
+class InsightDbHelper (val insightDatabaseDao: InsightDatabaseDao) {
 
     fun getInsightBolusID(pumpSerial: String, bolusID: Int, timestamp: Long): InsightBolusID? = insightDatabaseDao.getInsightBolusID(pumpSerial, bolusID, timestamp)
 

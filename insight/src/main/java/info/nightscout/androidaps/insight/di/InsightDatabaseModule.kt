@@ -22,7 +22,6 @@ class InsightDatabaseModule {
 
     @Provides
     @Singleton
-    internal fun provideInsightDbHelper(insightDatabase: InsightDatabase): InsightDbHelper =
-        insightDatabase.insightDbHelper()
+    internal fun provideInsightDbHelper(insightDatabaseDao: InsightDatabaseDao): InsightDbHelper = InsightDbHelper(insightDatabaseDao)
 
 }
