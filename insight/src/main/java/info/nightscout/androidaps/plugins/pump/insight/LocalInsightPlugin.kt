@@ -1,1641 +1,1436 @@
-package info.nightscout.androidaps.plugins.pump.insight;
+package info.nightscout.androidaps.plugins.pump.insight
 
-import static info.nightscout.androidaps.extensions.PumpStateExtensionKt.convertedToAbsolute;
-import static info.nightscout.androidaps.extensions.PumpStateExtensionKt.getPlannedRemainingMinutes;
-
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Looper;
-import android.os.SystemClock;
-
-import androidx.annotation.NonNull;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
-import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.data.DetailedBolusInfo;
-import info.nightscout.androidaps.interfaces.Profile;
-import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.events.EventInitializationChanged;
-import info.nightscout.androidaps.events.EventRefreshOverview;
-import info.nightscout.androidaps.insight.database.InsightBolusID;
-import info.nightscout.androidaps.insight.database.InsightDbHelper;
-import info.nightscout.androidaps.insight.database.InsightHistoryOffset;
-import info.nightscout.androidaps.insight.database.InsightPumpID;
-import info.nightscout.androidaps.insight.database.InsightPumpID.EventType;
-import info.nightscout.androidaps.insight.R;
-import info.nightscout.androidaps.interfaces.CommandQueueProvider;
-import info.nightscout.androidaps.interfaces.Config;
-import info.nightscout.androidaps.interfaces.Constraint;
-import info.nightscout.androidaps.interfaces.Constraints;
-import info.nightscout.androidaps.interfaces.PluginDescription;
-import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.interfaces.ProfileFunction;
-import info.nightscout.androidaps.interfaces.Pump;
-import info.nightscout.androidaps.interfaces.PumpDescription;
-import info.nightscout.androidaps.interfaces.PumpPluginBase;
-import info.nightscout.androidaps.interfaces.PumpSync;
-import info.nightscout.androidaps.interfaces.PumpSync.PumpState.TemporaryBasal;
-import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
-import info.nightscout.androidaps.plugins.common.ManufacturerType;
-import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
-import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
-import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.Service;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.history.HistoryReadingDirection;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.history.ReadHistoryEventsMessage;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.history.StartReadingHistoryMessage;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.history.StopReadingHistoryMessage;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.history.history_events.BolusDeliveredEvent;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.history.history_events.BolusProgrammedEvent;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.history.history_events.CannulaFilledEvent;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.history.history_events.DateTimeChangedEvent;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.history.history_events.DefaultDateTimeSetEvent;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.history.history_events.EndOfTBREvent;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.history.history_events.HistoryEvent;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.history.history_events.OccurrenceOfAlertEvent;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.history.history_events.OperatingModeChangedEvent;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.history.history_events.PowerUpEvent;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.history.history_events.SniffingDoneEvent;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.history.history_events.StartOfTBREvent;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.history.history_events.TotalDailyDoseEvent;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.history.history_events.TubeFilledEvent;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.ActiveBRProfileBlock;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.BRProfile1Block;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.BRProfileBlock;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.FactoryMinBasalAmountBlock;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.FactoryMinBolusAmountBlock;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.MaxBasalAmountBlock;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.MaxBolusAmountBlock;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.TBROverNotificationBlock;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.remote_control.CancelBolusMessage;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.remote_control.CancelTBRMessage;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.remote_control.ChangeTBRMessage;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.remote_control.ConfirmAlertMessage;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.remote_control.DeliverBolusMessage;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.remote_control.SetDateTimeMessage;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.remote_control.SetOperatingModeMessage;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.remote_control.SetTBRMessage;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.status.GetActiveAlertMessage;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.status.GetActiveBasalRateMessage;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.status.GetActiveBolusesMessage;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.status.GetActiveTBRMessage;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.status.GetBatteryStatusMessage;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.status.GetCartridgeStatusMessage;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.status.GetDateTimeMessage;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.status.GetOperatingModeMessage;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.status.GetPumpStatusRegisterMessage;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.status.GetTotalDailyDoseMessage;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.status.ResetPumpStatusRegisterMessage;
-import info.nightscout.androidaps.plugins.pump.insight.connection_service.InsightConnectionService;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.ActiveBasalRate;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.ActiveBolus;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.ActiveTBR;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.AlertType;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.BasalProfile;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.BasalProfileBlock;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.BatteryStatus;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.BolusType;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.CartridgeStatus;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.InsightState;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.OperatingMode;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.PumpTime;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.TotalDailyDose;
-import info.nightscout.androidaps.plugins.pump.insight.events.EventLocalInsightUpdateGUI;
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.InsightException;
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_errors.AppLayerErrorException;
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_errors.NoActiveTBRToCanceLException;
-import info.nightscout.androidaps.plugins.pump.insight.utils.ExceptionTranslator;
-import info.nightscout.androidaps.plugins.pump.insight.utils.ParameterBlockUtil;
-import info.nightscout.androidaps.utils.DateUtil;
-import info.nightscout.androidaps.utils.T;
-import info.nightscout.androidaps.utils.resources.ResourceHelper;
-import info.nightscout.androidaps.utils.sharedPreferences.SP;
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
+import android.os.Handler
+import android.os.IBinder
+import android.os.Looper
+import android.os.SystemClock
+import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.data.DetailedBolusInfo
+import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.events.EventInitializationChanged
+import info.nightscout.androidaps.events.EventRefreshOverview
+import info.nightscout.androidaps.extensions.convertedToAbsolute
+import info.nightscout.androidaps.extensions.plannedRemainingMinutes
+import info.nightscout.androidaps.insight.R
+import info.nightscout.androidaps.insight.database.InsightBolusID
+import info.nightscout.androidaps.insight.database.InsightDbHelper
+import info.nightscout.androidaps.insight.database.InsightHistoryOffset
+import info.nightscout.androidaps.insight.database.InsightPumpID
+import info.nightscout.androidaps.interfaces.*
+import info.nightscout.androidaps.interfaces.Profile.ProfileValue
+import info.nightscout.androidaps.interfaces.PumpSync.PumpState.TemporaryBasal
+import info.nightscout.androidaps.interfaces.PumpSync.TemporaryBasalType
+import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.common.ManufacturerType
+import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
+import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
+import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
+import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.Service
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.history.HistoryReadingDirection
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.history.ReadHistoryEventsMessage
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.history.StartReadingHistoryMessage
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.history.StopReadingHistoryMessage
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.history.history_events.*
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.*
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.remote_control.*
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.status.*
+import info.nightscout.androidaps.plugins.pump.insight.connection_service.InsightConnectionService
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.*
+import info.nightscout.androidaps.plugins.pump.insight.events.EventLocalInsightUpdateGUI
+import info.nightscout.androidaps.plugins.pump.insight.exceptions.InsightException
+import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_errors.AppLayerErrorException
+import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_errors.NoActiveTBRToCanceLException
+import info.nightscout.androidaps.plugins.pump.insight.utils.ExceptionTranslator
+import info.nightscout.androidaps.plugins.pump.insight.utils.ParameterBlockUtil
+import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.T.Companion.mins
+import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.sharedPreferences.SP
+import org.json.JSONException
+import org.json.JSONObject
+import java.util.*
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @Singleton
-public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constraints, InsightConnectionService.StateCallback {
+class LocalInsightPlugin @Inject constructor(
+    injector: HasAndroidInjector,
+    aapsLogger: AAPSLogger,
+    private val rxBus: RxBusWrapper,
+    resourceHelper: ResourceHelper,
+    private val sp: SP,
+    commandQueue: CommandQueueProvider,
+    private val profileFunction: ProfileFunction,
+    private val context: Context,
+    config: Config,
+    private val dateUtil: DateUtil,
+    private val insightDbHelper: InsightDbHelper,
+    private val pumpSync: PumpSync
+) : PumpPluginBase(PluginDescription()
+    .pluginIcon(R.drawable.ic_insight_128)
+    .pluginName(R.string.insight_local)
+    .shortName(R.string.insightpump_shortname)
+    .mainType(PluginType.PUMP)
+    .description(R.string.description_pump_insight_local)
+    .fragmentClass(LocalInsightFragment::class.java.name)
+    .preferencesId(if (config.APS) R.xml.pref_insight_local_full else R.xml.pref_insight_local_pumpcontrol),
+    injector, aapsLogger, resourceHelper, commandQueue
+), Pump, Constraints, InsightConnectionService.StateCallback {
 
-    private final AAPSLogger aapsLogger;
-    private final RxBusWrapper rxBus;
-    private final ResourceHelper resourceHelper;
-    private final SP sp;
-    private final CommandQueueProvider commandQueue;
-    private final ProfileFunction profileFunction;
-    private final Context context;
-    private final DateUtil dateUtil;
-    private final InsightDbHelper insightDbHelper;
-    private final PumpSync pumpSync;
-
-    public static final String ALERT_CHANNEL_ID = "AndroidAPS-InsightAlert";
-
-    private final PumpDescription pumpDescription;
-    private InsightAlertService alertService;
-    private InsightConnectionService connectionService;
-    private long timeOffset;
-    private final ServiceConnection serviceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder binder) {
-            if (binder instanceof InsightConnectionService.LocalBinder) {
-                connectionService = ((InsightConnectionService.LocalBinder) binder).getService();
-                connectionService.registerStateCallback(LocalInsightPlugin.this);
-            } else if (binder instanceof InsightAlertService.LocalBinder) {
-                alertService = ((InsightAlertService.LocalBinder) binder).getService();
+    override val pumpDescription: PumpDescription
+    private var alertService: InsightAlertService? = null
+    var connectionService: InsightConnectionService? = null
+        private set
+    private var timeOffset: Long = 0
+    private val serviceConnection: ServiceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName, binder: IBinder) {
+            if (binder is InsightConnectionService.LocalBinder) {
+                connectionService = binder.service
+                connectionService?.registerStateCallback(this@LocalInsightPlugin)
+            } else if (binder is InsightAlertService.LocalBinder) {
+                alertService = binder.service
             }
             if (connectionService != null && alertService != null) {
-                rxBus.send(new EventInitializationChanged());
+                rxBus.send(EventInitializationChanged())
             }
         }
 
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            connectionService = null;
+        override fun onServiceDisconnected(name: ComponentName) {
+            connectionService = null
         }
-    };
+    }
+    private val `$bolusLock`: Any = arrayOfNulls<Any>(0)
+    private var bolusID = 0
+    private var bolusCancelled = false
+    private var activeBasalProfile: BasalProfile? = null
+    private var profileBlocks: List<BasalProfileBlock>? = null
+    private var limitsFetched = false
+    private var maximumBolusAmount = 0.0
+    private var minimumBolusAmount = 0.0
+    var operatingMode: OperatingMode? = null
+        private set
+    var batteryStatus: BatteryStatus? = null
+        private set
+    var cartridgeStatus: CartridgeStatus? = null
+        private set
+    var totalDailyDose: TotalDailyDose? = null
+        private set
+    var activeBasalRate: ActiveBasalRate? = null
+        private set
+    var activeTBR: ActiveTBR? = null
+        private set
+    var activeBoluses: List<ActiveBolus>? = null
+        private set
+    private var statusLoaded = false
+    var tBROverNotificationBlock: TBROverNotificationBlock? = null
+        private set
 
-    private final Object $bolusLock = new Object[0];
-    private int bolusID;
-    private boolean bolusCancelled;
-    private BasalProfile activeBasalProfile;
-    private List<BasalProfileBlock> profileBlocks;
-    private boolean limitsFetched;
-    private double maximumBolusAmount;
-    private double minimumBolusAmount;
-    private OperatingMode operatingMode;
-    private BatteryStatus batteryStatus;
-    private CartridgeStatus cartridgeStatus;
-    private TotalDailyDose totalDailyDose;
-    private ActiveBasalRate activeBasalRate;
-    private ActiveTBR activeTBR;
-    private List<ActiveBolus> activeBoluses;
-    private boolean statusLoaded;
-    private TBROverNotificationBlock tbrOverNotificationBlock;
-
-    @Inject
-    public LocalInsightPlugin(
-            HasAndroidInjector injector,
-            AAPSLogger aapsLogger,
-            RxBusWrapper rxBus,
-            ResourceHelper resourceHelper,
-            SP sp,
-            CommandQueueProvider commandQueue,
-            ProfileFunction profileFunction,
-            Context context,
-            Config config,
-            DateUtil dateUtil,
-            InsightDbHelper insightDbHelper,
-            PumpSync pumpSync
-    ) {
-        super(new PluginDescription()
-                        .pluginIcon(R.drawable.ic_insight_128)
-                        .pluginName(R.string.insight_local)
-                        .shortName(R.string.insightpump_shortname)
-                        .mainType(PluginType.PUMP)
-                        .description(R.string.description_pump_insight_local)
-                        .fragmentClass(LocalInsightFragment.class.getName())
-                        .preferencesId(config.getAPS() ? R.xml.pref_insight_local_full : R.xml.pref_insight_local_pumpcontrol),
-                injector, aapsLogger, resourceHelper, commandQueue
-
-        );
-        this.aapsLogger = aapsLogger;
-        this.rxBus = rxBus;
-        this.resourceHelper = resourceHelper;
-        this.sp = sp;
-        this.commandQueue = commandQueue;
-        this.profileFunction = profileFunction;
-        this.context = context;
-        this.dateUtil = dateUtil;
-        this.insightDbHelper = insightDbHelper;
-        this.pumpSync = pumpSync;
-
-        pumpDescription = new PumpDescription();
-        pumpDescription.fillFor(PumpType.ACCU_CHEK_INSIGHT);
+    override fun onStart() {
+        super.onStart()
+        context.bindService(Intent(context, InsightConnectionService::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
+        context.bindService(Intent(context, InsightAlertService::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
+        createNotificationChannel()
     }
 
-    public TBROverNotificationBlock getTBROverNotificationBlock() {
-        return tbrOverNotificationBlock;
+    private fun createNotificationChannel() {
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val channel = NotificationChannel(ALERT_CHANNEL_ID, resourceHelper.gs(R.string.insight_alert_notification_channel), NotificationManager.IMPORTANCE_HIGH)
+        channel.setSound(null, null)
+        notificationManager.createNotificationChannel(channel)
     }
 
-    public InsightConnectionService getConnectionService() {
-        return connectionService;
+    override fun onStop() {
+        super.onStop()
+        context.unbindService(serviceConnection)
     }
 
-    public OperatingMode getOperatingMode() {
-        return operatingMode;
+    override fun isInitialized(): Boolean {
+        return connectionService != null && alertService != null && connectionService!!.isPaired
     }
 
-    public BatteryStatus getBatteryStatus() {
-        return batteryStatus;
+    override fun isSuspended(): Boolean {
+        return operatingMode != null && operatingMode != OperatingMode.STARTED
     }
 
-    public CartridgeStatus getCartridgeStatus() {
-        return cartridgeStatus;
+    override fun isBusy(): Boolean {
+        return false
     }
 
-    public TotalDailyDose getTotalDailyDose() {
-        return totalDailyDose;
+    override fun isConnected(): Boolean {
+        return (connectionService != null && alertService != null && connectionService!!.hasRequestedConnection(this)
+            && connectionService!!.state == InsightState.CONNECTED)
     }
 
-    public ActiveBasalRate getActiveBasalRate() {
-        return activeBasalRate;
+    override fun isConnecting(): Boolean {
+        if (connectionService == null || alertService == null || !connectionService!!.hasRequestedConnection(this)) return false
+        val state = connectionService!!.state
+        return state == InsightState.CONNECTING || state == InsightState.APP_CONNECT_MESSAGE || state == InsightState.RECOVERING
     }
 
-    public ActiveTBR getActiveTBR() {
-        return activeTBR;
+    override fun isHandshakeInProgress(): Boolean {
+        return false
     }
 
-    public List<ActiveBolus> getActiveBoluses() {
-        return activeBoluses;
+    override fun connect(reason: String) {
+        if (connectionService != null && alertService != null) connectionService!!.requestConnection(this)
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        context.bindService(new Intent(context, InsightConnectionService.class), serviceConnection, Context.BIND_AUTO_CREATE);
-        context.bindService(new Intent(context, InsightAlertService.class), serviceConnection, Context.BIND_AUTO_CREATE);
-        createNotificationChannel();
+    override fun disconnect(reason: String) {
+        if (connectionService != null && alertService != null) connectionService!!.withdrawConnectionRequest(this)
     }
 
-    private void createNotificationChannel() {
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        NotificationChannel channel = new NotificationChannel(ALERT_CHANNEL_ID, resourceHelper.gs(R.string.insight_alert_notification_channel), NotificationManager.IMPORTANCE_HIGH);
-        channel.setSound(null, null);
-        notificationManager.createNotificationChannel(channel);
+    override fun stopConnecting() {
+        if (connectionService != null && alertService != null) connectionService!!.withdrawConnectionRequest(this)
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        context.unbindService(serviceConnection);
-    }
-
-    @Override
-    public boolean isInitialized() {
-        return connectionService != null && alertService != null && connectionService.isPaired();
-    }
-
-    @Override
-    public boolean isSuspended() {
-        return operatingMode != null && operatingMode != OperatingMode.STARTED;
-    }
-
-    @Override
-    public boolean isBusy() {
-        return false;
-    }
-
-    @Override
-    public boolean isConnected() {
-        return connectionService != null
-                && alertService != null
-                && connectionService.hasRequestedConnection(this)
-                && connectionService.getState() == InsightState.CONNECTED;
-    }
-
-    @Override
-    public boolean isConnecting() {
-        if (connectionService == null || alertService == null || !connectionService.hasRequestedConnection(this))
-            return false;
-        InsightState state = connectionService.getState();
-        return state == InsightState.CONNECTING
-                || state == InsightState.APP_CONNECT_MESSAGE
-                || state == InsightState.RECOVERING;
-    }
-
-    @Override
-    public boolean isHandshakeInProgress() {
-        return false;
-    }
-
-    @Override
-    public void connect(@NonNull String reason) {
-        if (connectionService != null && alertService != null)
-            connectionService.requestConnection(this);
-    }
-
-    @Override
-    public void disconnect(@NonNull String reason) {
-        if (connectionService != null && alertService != null)
-            connectionService.withdrawConnectionRequest(this);
-    }
-
-    @Override
-    public void stopConnecting() {
-        if (connectionService != null && alertService != null)
-            connectionService.withdrawConnectionRequest(this);
-    }
-
-    @Override
-    public void getPumpStatus(@NonNull String reason) {
+    override fun getPumpStatus(reason: String) {
         try {
-            tbrOverNotificationBlock = ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, TBROverNotificationBlock.class);
-            readHistory();
-            fetchBasalProfile();
-            fetchLimitations();
-            updatePumpTimeIfNeeded();
-            fetchStatus();
-        } catch (AppLayerErrorException e) {
-            aapsLogger.info(LTag.PUMP, "Exception while fetching status: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
-        } catch (InsightException e) {
-            aapsLogger.info(LTag.PUMP, "Exception while fetching status: " + e.getClass().getCanonicalName());
-        } catch (Exception e) {
-            aapsLogger.error("Exception while fetching status", e);
+            tBROverNotificationBlock = ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, TBROverNotificationBlock::class.java)
+            readHistory()
+            fetchBasalProfile()
+            fetchLimitations()
+            updatePumpTimeIfNeeded()
+            fetchStatus()
+        } catch (e: AppLayerErrorException) {
+            aapsLogger.info(LTag.PUMP, "Exception while fetching status: " + e.javaClass.canonicalName + " (" + e.errorCode + ")")
+        } catch (e: InsightException) {
+            aapsLogger.info(LTag.PUMP, "Exception while fetching status: " + e.javaClass.canonicalName)
+        } catch (e: Exception) {
+            aapsLogger.error("Exception while fetching status", e)
         }
     }
 
-    private void updatePumpTimeIfNeeded() throws Exception {
-        PumpTime pumpTime = connectionService.requestMessage(new GetDateTimeMessage()).await().getPumpTime();
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, pumpTime.getYear());
-        calendar.set(Calendar.MONTH, pumpTime.getMonth() - 1);
-        calendar.set(Calendar.DAY_OF_MONTH, pumpTime.getDay());
-        calendar.set(Calendar.HOUR_OF_DAY, pumpTime.getHour());
-        calendar.set(Calendar.MINUTE, pumpTime.getMinute());
-        calendar.set(Calendar.SECOND, pumpTime.getSecond());
-        if (calendar.get(Calendar.HOUR_OF_DAY) != pumpTime.getHour() || Math.abs(calendar.getTimeInMillis() - dateUtil.now()) > 10000) {
-            calendar.setTime(new Date());
-            pumpTime.setYear(calendar.get(Calendar.YEAR));
-            pumpTime.setMonth(calendar.get(Calendar.MONTH) + 1);
-            pumpTime.setDay(calendar.get(Calendar.DAY_OF_MONTH));
-            pumpTime.setHour(calendar.get(Calendar.HOUR_OF_DAY));
-            pumpTime.setMinute(calendar.get(Calendar.MINUTE));
-            pumpTime.setSecond(calendar.get(Calendar.SECOND));
-            SetDateTimeMessage setDateTimeMessage = new SetDateTimeMessage();
-            setDateTimeMessage.setPumpTime(pumpTime);
-            connectionService.requestMessage(setDateTimeMessage).await();
-            Notification notification = new Notification(Notification.INSIGHT_DATE_TIME_UPDATED, resourceHelper.gs(R.string.pump_time_updated), Notification.INFO, 60);
-            rxBus.send(new EventNewNotification(notification));
+    @Throws(Exception::class) private fun updatePumpTimeIfNeeded() {
+        val pumpTime = connectionService!!.requestMessage(GetDateTimeMessage()).await().pumpTime
+        val calendar = Calendar.getInstance()
+        calendar[Calendar.YEAR] = pumpTime.year
+        calendar[Calendar.MONTH] = pumpTime.month - 1
+        calendar[Calendar.DAY_OF_MONTH] = pumpTime.day
+        calendar[Calendar.HOUR_OF_DAY] = pumpTime.hour
+        calendar[Calendar.MINUTE] = pumpTime.minute
+        calendar[Calendar.SECOND] = pumpTime.second
+        if (calendar[Calendar.HOUR_OF_DAY] != pumpTime.hour || Math.abs(calendar.timeInMillis - dateUtil.now()) > 10000) {
+            calendar.time = Date()
+            pumpTime.year = calendar[Calendar.YEAR]
+            pumpTime.month = calendar[Calendar.MONTH] + 1
+            pumpTime.day = calendar[Calendar.DAY_OF_MONTH]
+            pumpTime.hour = calendar[Calendar.HOUR_OF_DAY]
+            pumpTime.minute = calendar[Calendar.MINUTE]
+            pumpTime.second = calendar[Calendar.SECOND]
+            val setDateTimeMessage = SetDateTimeMessage()
+            setDateTimeMessage.setPumpTime(pumpTime)
+            connectionService!!.requestMessage(setDateTimeMessage).await()
+            val notification = Notification(Notification.INSIGHT_DATE_TIME_UPDATED, resourceHelper.gs(R.string.pump_time_updated), Notification.INFO, 60)
+            rxBus.send(EventNewNotification(notification))
         }
     }
 
-    private void fetchBasalProfile() throws Exception {
-        activeBasalProfile = ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, ActiveBRProfileBlock.class).getActiveBasalProfile();
-        profileBlocks = ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, BRProfile1Block.class).getProfileBlocks();
+    @Throws(Exception::class) private fun fetchBasalProfile() {
+        activeBasalProfile = ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, ActiveBRProfileBlock::class.java).activeBasalProfile
+        profileBlocks = ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, BRProfile1Block::class.java).profileBlocks
     }
 
-    private void fetchStatus() throws Exception {
+    @Throws(Exception::class) private fun fetchStatus() {
         if (statusLoaded) {
-            GetPumpStatusRegisterMessage registerMessage = connectionService.requestMessage(new GetPumpStatusRegisterMessage()).await();
-            ResetPumpStatusRegisterMessage resetMessage = new ResetPumpStatusRegisterMessage();
-            resetMessage.setOperatingModeChanged(registerMessage.isOperatingModeChanged());
-            resetMessage.setBatteryStatusChanged(registerMessage.isBatteryStatusChanged());
-            resetMessage.setCartridgeStatusChanged(registerMessage.isCartridgeStatusChanged());
-            resetMessage.setTotalDailyDoseChanged(registerMessage.isTotalDailyDoseChanged());
-            resetMessage.setActiveTBRChanged(registerMessage.isActiveTBRChanged());
-            resetMessage.setActiveBolusesChanged(registerMessage.isActiveBolusesChanged());
-            connectionService.requestMessage(resetMessage).await();
-            if (registerMessage.isOperatingModeChanged())
-                operatingMode = connectionService.requestMessage(new GetOperatingModeMessage()).await().getOperatingMode();
-            if (registerMessage.isBatteryStatusChanged())
-                batteryStatus = connectionService.requestMessage(new GetBatteryStatusMessage()).await().getBatteryStatus();
-            if (registerMessage.isCartridgeStatusChanged())
-                cartridgeStatus = connectionService.requestMessage(new GetCartridgeStatusMessage()).await().getCartridgeStatus();
-            if (registerMessage.isTotalDailyDoseChanged())
-                totalDailyDose = connectionService.requestMessage(new GetTotalDailyDoseMessage()).await().getTDD();
+            val registerMessage = connectionService!!.requestMessage(GetPumpStatusRegisterMessage()).await()
+            val resetMessage = ResetPumpStatusRegisterMessage()
+            resetMessage.setOperatingModeChanged(registerMessage.isOperatingModeChanged)
+            resetMessage.setBatteryStatusChanged(registerMessage.isBatteryStatusChanged)
+            resetMessage.setCartridgeStatusChanged(registerMessage.isCartridgeStatusChanged)
+            resetMessage.setTotalDailyDoseChanged(registerMessage.isTotalDailyDoseChanged)
+            resetMessage.setActiveTBRChanged(registerMessage.isActiveTBRChanged)
+            resetMessage.setActiveBolusesChanged(registerMessage.isActiveBolusesChanged)
+            connectionService!!.requestMessage(resetMessage).await()
+            if (registerMessage.isOperatingModeChanged) operatingMode = connectionService!!.requestMessage(GetOperatingModeMessage()).await().operatingMode
+            if (registerMessage.isBatteryStatusChanged) batteryStatus = connectionService!!.requestMessage(GetBatteryStatusMessage()).await().batteryStatus
+            if (registerMessage.isCartridgeStatusChanged) cartridgeStatus = connectionService!!.requestMessage(GetCartridgeStatusMessage()).await().cartridgeStatus
+            if (registerMessage.isTotalDailyDoseChanged) totalDailyDose = connectionService!!.requestMessage(GetTotalDailyDoseMessage()).await().tdd
             if (operatingMode == OperatingMode.STARTED) {
-                if (registerMessage.isActiveBasalRateChanged())
-                    activeBasalRate = connectionService.requestMessage(new GetActiveBasalRateMessage()).await().getActiveBasalRate();
-                if (registerMessage.isActiveTBRChanged())
-                    activeTBR = connectionService.requestMessage(new GetActiveTBRMessage()).await().getActiveTBR();
-                if (registerMessage.isActiveBolusesChanged())
-                    activeBoluses = connectionService.requestMessage(new GetActiveBolusesMessage()).await().getActiveBoluses();
+                if (registerMessage.isActiveBasalRateChanged) activeBasalRate = connectionService!!.requestMessage(GetActiveBasalRateMessage()).await().activeBasalRate
+                if (registerMessage.isActiveTBRChanged) activeTBR = connectionService!!.requestMessage(GetActiveTBRMessage()).await().activeTBR
+                if (registerMessage.isActiveBolusesChanged) activeBoluses = connectionService!!.requestMessage(GetActiveBolusesMessage()).await().activeBoluses
             } else {
-                activeBasalRate = null;
-                activeTBR = null;
-                activeBoluses = null;
+                activeBasalRate = null
+                activeTBR = null
+                activeBoluses = null
             }
-
         } else {
-            ResetPumpStatusRegisterMessage resetMessage = new ResetPumpStatusRegisterMessage();
-            resetMessage.setOperatingModeChanged(true);
-            resetMessage.setBatteryStatusChanged(true);
-            resetMessage.setCartridgeStatusChanged(true);
-            resetMessage.setTotalDailyDoseChanged(true);
-            resetMessage.setActiveBasalRateChanged(true);
-            resetMessage.setActiveTBRChanged(true);
-            resetMessage.setActiveBolusesChanged(true);
-            connectionService.requestMessage(resetMessage).await();
-            operatingMode = connectionService.requestMessage(new GetOperatingModeMessage()).await().getOperatingMode();
-            batteryStatus = connectionService.requestMessage(new GetBatteryStatusMessage()).await().getBatteryStatus();
-            cartridgeStatus = connectionService.requestMessage(new GetCartridgeStatusMessage()).await().getCartridgeStatus();
-            totalDailyDose = connectionService.requestMessage(new GetTotalDailyDoseMessage()).await().getTDD();
+            val resetMessage = ResetPumpStatusRegisterMessage()
+            resetMessage.setOperatingModeChanged(true)
+            resetMessage.setBatteryStatusChanged(true)
+            resetMessage.setCartridgeStatusChanged(true)
+            resetMessage.setTotalDailyDoseChanged(true)
+            resetMessage.setActiveBasalRateChanged(true)
+            resetMessage.setActiveTBRChanged(true)
+            resetMessage.setActiveBolusesChanged(true)
+            connectionService!!.requestMessage(resetMessage).await()
+            operatingMode = connectionService!!.requestMessage(GetOperatingModeMessage()).await().operatingMode
+            batteryStatus = connectionService!!.requestMessage(GetBatteryStatusMessage()).await().batteryStatus
+            cartridgeStatus = connectionService!!.requestMessage(GetCartridgeStatusMessage()).await().cartridgeStatus
+            totalDailyDose = connectionService!!.requestMessage(GetTotalDailyDoseMessage()).await().tdd
             if (operatingMode == OperatingMode.STARTED) {
-                activeBasalRate = connectionService.requestMessage(new GetActiveBasalRateMessage()).await().getActiveBasalRate();
-                activeTBR = connectionService.requestMessage(new GetActiveTBRMessage()).await().getActiveTBR();
-                activeBoluses = connectionService.requestMessage(new GetActiveBolusesMessage()).await().getActiveBoluses();
+                activeBasalRate = connectionService!!.requestMessage(GetActiveBasalRateMessage()).await().activeBasalRate
+                activeTBR = connectionService!!.requestMessage(GetActiveTBRMessage()).await().activeTBR
+                activeBoluses = connectionService!!.requestMessage(GetActiveBolusesMessage()).await().activeBoluses
             } else {
-                activeBasalRate = null;
-                activeTBR = null;
-                activeBoluses = null;
+                activeBasalRate = null
+                activeTBR = null
+                activeBoluses = null
             }
-            statusLoaded = true;
+            statusLoaded = true
         }
-        new Handler(Looper.getMainLooper()).post(() -> {
-            rxBus.send(new EventLocalInsightUpdateGUI());
-            rxBus.send(new EventRefreshOverview("LocalInsightPlugin::fetchStatus", false));
-        });
+        Handler(Looper.getMainLooper()).post {
+            rxBus.send(EventLocalInsightUpdateGUI())
+            rxBus.send(EventRefreshOverview("LocalInsightPlugin::fetchStatus", false))
+        }
     }
 
-    private void fetchLimitations() throws Exception {
-        maximumBolusAmount = ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, MaxBolusAmountBlock.class).getAmountLimitation();
-        double maximumBasalAmount = ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, MaxBasalAmountBlock.class).getAmountLimitation();
-        minimumBolusAmount = ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, FactoryMinBolusAmountBlock.class).getAmountLimitation();
-        double minimumBasalAmount = ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, FactoryMinBasalAmountBlock.class).getAmountLimitation();
-        this.pumpDescription.setBasalMaximumRate(maximumBasalAmount);
-        this.pumpDescription.setBasalMinimumRate(minimumBasalAmount);
-        limitsFetched = true;
+    @Throws(Exception::class) private fun fetchLimitations() {
+        maximumBolusAmount = ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, MaxBolusAmountBlock::class.java).amountLimitation
+        val maximumBasalAmount = ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, MaxBasalAmountBlock::class.java).amountLimitation
+        minimumBolusAmount = ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, FactoryMinBolusAmountBlock::class.java).amountLimitation
+        val minimumBasalAmount = ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, FactoryMinBasalAmountBlock::class.java).amountLimitation
+        pumpDescription.basalMaximumRate = maximumBasalAmount
+        pumpDescription.basalMinimumRate = minimumBasalAmount
+        limitsFetched = true
     }
 
-    @NonNull @Override
-    public PumpEnactResult setNewBasalProfile(Profile profile) {
-        PumpEnactResult result = new PumpEnactResult(getInjector());
-        rxBus.send(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
-        List<BasalProfileBlock> profileBlocks = new ArrayList<>();
-        for (int i = 0; i < profile.getBasalValues().length; i++) {
-            Profile.ProfileValue basalValue = profile.getBasalValues()[i];
-            Profile.ProfileValue nextValue = null;
-            if (profile.getBasalValues().length > i + 1)
-                nextValue = profile.getBasalValues()[i + 1];
-            BasalProfileBlock profileBlock = new BasalProfileBlock();
-            profileBlock.setBasalAmount(basalValue.getValue() > 5 ? Math.round(basalValue.getValue() / 0.1) * 0.1 : Math.round(basalValue.getValue() / 0.01) * 0.01);
-            profileBlock.setDuration((((nextValue != null ? nextValue.getTimeAsSeconds() : 24 * 60 * 60) - basalValue.getTimeAsSeconds()) / 60));
-            profileBlocks.add(profileBlock);
+    override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
+        val result = PumpEnactResult(injector)
+        rxBus.send(EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED))
+        val profileBlocks: MutableList<BasalProfileBlock> = ArrayList()
+        for (i in 0 until profile.getBasalValues().size) {
+            val basalValue = profile.getBasalValues()[i]
+            var nextValue: ProfileValue? = null
+            if (profile.getBasalValues().size > i + 1) nextValue = profile.getBasalValues()[i + 1]
+            val profileBlock = BasalProfileBlock()
+            profileBlock.basalAmount = if (basalValue.value > 5) Math.round(basalValue.value / 0.1) * 0.1 else Math.round(basalValue.value / 0.01) * 0.01
+            profileBlock.duration = ((nextValue?.timeAsSeconds
+                ?: 24 * 60 * 60) - basalValue.timeAsSeconds) / 60
+            profileBlocks.add(profileBlock)
         }
         try {
-            ActiveBRProfileBlock activeBRProfileBlock = new ActiveBRProfileBlock();
-            activeBRProfileBlock.setActiveBasalProfile(BasalProfile.PROFILE_1);
-            ParameterBlockUtil.writeConfigurationBlock(connectionService, activeBRProfileBlock);
-            activeBasalProfile = BasalProfile.PROFILE_1;
-            BRProfileBlock profileBlock = new BRProfile1Block();
-            profileBlock.setProfileBlocks(profileBlocks);
-            ParameterBlockUtil.writeConfigurationBlock(connectionService, profileBlock);
-            rxBus.send(new EventDismissNotification(Notification.FAILED_UPDATE_PROFILE));
-            Notification notification = new Notification(Notification.PROFILE_SET_OK, resourceHelper.gs(R.string.profile_set_ok), Notification.INFO, 60);
-            rxBus.send(new EventNewNotification(notification));
+            val activeBRProfileBlock = ActiveBRProfileBlock()
+            activeBRProfileBlock.activeBasalProfile = BasalProfile.PROFILE_1
+            ParameterBlockUtil.writeConfigurationBlock(connectionService, activeBRProfileBlock)
+            activeBasalProfile = BasalProfile.PROFILE_1
+            val profileBlock: BRProfileBlock = BRProfile1Block()
+            profileBlock.profileBlocks = profileBlocks
+            ParameterBlockUtil.writeConfigurationBlock(connectionService, profileBlock)
+            rxBus.send(EventDismissNotification(Notification.FAILED_UPDATE_PROFILE))
+            val notification = Notification(Notification.PROFILE_SET_OK, resourceHelper.gs(R.string.profile_set_ok), Notification.INFO, 60)
+            rxBus.send(EventNewNotification(notification))
             result.success(true)
-                    .enacted(true)
-                    .comment(R.string.virtualpump_resultok);
-            this.profileBlocks = profileBlocks;
+                .enacted(true)
+                .comment(R.string.virtualpump_resultok)
+            this.profileBlocks = profileBlocks
             try {
-                fetchStatus();
-            } catch (Exception ignored) {
+                fetchStatus()
+            } catch (ignored: Exception) {
             }
-        } catch (AppLayerErrorException e) {
-            aapsLogger.info(LTag.PUMP, "Exception while setting profile: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
-            Notification notification = new Notification(Notification.FAILED_UPDATE_PROFILE, resourceHelper.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
-            rxBus.send(new EventNewNotification(notification));
-            result.comment(ExceptionTranslator.getString(context, e));
-        } catch (InsightException e) {
-            aapsLogger.info(LTag.PUMP, "Exception while setting profile: " + e.getClass().getCanonicalName());
-            Notification notification = new Notification(Notification.FAILED_UPDATE_PROFILE, resourceHelper.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
-            rxBus.send(new EventNewNotification(notification));
-            result.comment(ExceptionTranslator.getString(context, e));
-        } catch (Exception e) {
-            aapsLogger.error("Exception while setting profile", e);
-            Notification notification = new Notification(Notification.FAILED_UPDATE_PROFILE, resourceHelper.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
-            rxBus.send(new EventNewNotification(notification));
-            result.comment(ExceptionTranslator.getString(context, e));
+        } catch (e: AppLayerErrorException) {
+            aapsLogger.info(LTag.PUMP, "Exception while setting profile: " + e.javaClass.canonicalName + " (" + e.errorCode + ")")
+            val notification = Notification(Notification.FAILED_UPDATE_PROFILE, resourceHelper.gs(R.string.failedupdatebasalprofile), Notification.URGENT)
+            rxBus.send(EventNewNotification(notification))
+            result.comment(ExceptionTranslator.getString(context, e))
+        } catch (e: InsightException) {
+            aapsLogger.info(LTag.PUMP, "Exception while setting profile: " + e.javaClass.canonicalName)
+            val notification = Notification(Notification.FAILED_UPDATE_PROFILE, resourceHelper.gs(R.string.failedupdatebasalprofile), Notification.URGENT)
+            rxBus.send(EventNewNotification(notification))
+            result.comment(ExceptionTranslator.getString(context, e))
+        } catch (e: Exception) {
+            aapsLogger.error("Exception while setting profile", e)
+            val notification = Notification(Notification.FAILED_UPDATE_PROFILE, resourceHelper.gs(R.string.failedupdatebasalprofile), Notification.URGENT)
+            rxBus.send(EventNewNotification(notification))
+            result.comment(ExceptionTranslator.getString(context, e))
         }
-        return result;
+        return result
     }
 
-    @Override
-    public boolean isThisProfileSet(@NonNull Profile profile) {
-        if (!isInitialized() || profileBlocks == null) return true;
-        if (profile.getBasalValues().length != profileBlocks.size()) return false;
-        if (activeBasalProfile != BasalProfile.PROFILE_1) return false;
-        for (int i = 0; i < profileBlocks.size(); i++) {
-            BasalProfileBlock profileBlock = profileBlocks.get(i);
-            Profile.ProfileValue basalValue = profile.getBasalValues()[i];
-            Profile.ProfileValue nextValue = null;
-            if (profile.getBasalValues().length > i + 1)
-                nextValue = profile.getBasalValues()[i + 1];
-            if (profileBlock.getDuration() * 60 != (nextValue != null ? nextValue.getTimeAsSeconds() : 24 * 60 * 60) - basalValue.getTimeAsSeconds())
-                return false;
-            if (Math.abs(profileBlock.getBasalAmount() - basalValue.getValue()) > (basalValue.getValue() > 5 ? 0.051 : 0.0051))
-                return false;
+    override fun isThisProfileSet(profile: Profile): Boolean {
+        if (!isInitialized() || profileBlocks == null) return true
+        if (profile.getBasalValues().size != profileBlocks!!.size) return false
+        if (activeBasalProfile != BasalProfile.PROFILE_1) return false
+        for (i in profileBlocks!!.indices) {
+            val profileBlock = profileBlocks!![i]
+            val basalValue = profile.getBasalValues()[i]
+            var nextValue: ProfileValue? = null
+            if (profile.getBasalValues().size > i + 1) nextValue = profile.getBasalValues()[i + 1]
+            if (profileBlock.duration * 60 != (nextValue?.timeAsSeconds ?: 24 * 60 * 60) - basalValue.timeAsSeconds) return false
+            if (Math.abs(profileBlock.basalAmount - basalValue.value) > (if (basalValue.value > 5) 0.051 else 0.0051)) return false
         }
-        return true;
+        return true
     }
 
-    @Override
-    public long lastDataTime() {
-        if (connectionService == null || alertService == null) return dateUtil.now();
-        return connectionService.getLastDataTime();
+    override fun lastDataTime(): Long {
+        return if (connectionService == null || alertService == null) dateUtil.now() else connectionService!!.lastDataTime
     }
 
-    @Override
-    public double getBaseBasalRate() {
-        if (connectionService == null || alertService == null) return 0;
-        if (activeBasalRate != null) return activeBasalRate.getActiveBasalRate();
-        else return 0;
-    }
-
-    @Override
-    public double getReservoirLevel() {
-        if (cartridgeStatus == null) return 0;
-        return cartridgeStatus.getRemainingAmount();
-    }
-
-    @Override
-    public int getBatteryLevel() {
-        if (batteryStatus == null) return 0;
-        return batteryStatus.getBatteryAmount();
-    }
-
-    @NonNull @Override
-    public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
-        if (detailedBolusInfo.insulin == 0 || detailedBolusInfo.carbs > 0) {
-            throw new IllegalArgumentException(detailedBolusInfo.toString(), new Exception());
+    override val baseBasalRate: Double
+        get() {
+            if (connectionService == null || alertService == null) return 0.0
+            return if (activeBasalRate != null) activeBasalRate!!.activeBasalRate else 0.0
         }
-        PumpEnactResult result = new PumpEnactResult(getInjector());
-        double insulin = Math.round(detailedBolusInfo.insulin / 0.01) * 0.01;
+    override val reservoirLevel: Double
+        get() = if (cartridgeStatus == null) 0.0 else cartridgeStatus!!.remainingAmount
+    override val batteryLevel: Int
+        get() = if (batteryStatus == null) 0 else batteryStatus!!.batteryAmount
+
+    override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
+        if (detailedBolusInfo.insulin.equals(0.0) || detailedBolusInfo.carbs > 0) {
+            throw IllegalArgumentException(detailedBolusInfo.toString(), Exception())
+        }
+        val result = PumpEnactResult(injector)
+        val insulin = Math.round(detailedBolusInfo.insulin / 0.01) * 0.01
         if (insulin > 0) {
             try {
-                synchronized ($bolusLock) {
-                    DeliverBolusMessage bolusMessage = new DeliverBolusMessage();
-                    bolusMessage.setBolusType(BolusType.STANDARD);
-                    bolusMessage.setDuration(0);
-                    bolusMessage.setExtendedAmount(0);
-                    bolusMessage.setImmediateAmount(insulin);
-                    bolusMessage.setVibration(sp.getBoolean(detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB ? R.string.key_insight_disable_vibration_auto : R.string.key_insight_disable_vibration, false));
-                    bolusID = connectionService.requestMessage(bolusMessage).await().getBolusId();
-                    bolusCancelled = false;
+                synchronized(`$bolusLock`) {
+                    val bolusMessage = DeliverBolusMessage()
+                    bolusMessage.setBolusType(BolusType.STANDARD)
+                    bolusMessage.setDuration(0)
+                    bolusMessage.setExtendedAmount(0.0)
+                    bolusMessage.setImmediateAmount(insulin)
+                    bolusMessage.setVibration(sp.getBoolean(if (detailedBolusInfo.bolusType === DetailedBolusInfo.BolusType.SMB) R.string.key_insight_disable_vibration_auto else R.string.key_insight_disable_vibration, false))
+                    bolusID = connectionService!!.requestMessage(bolusMessage).await().bolusId
+                    bolusCancelled = false
                 }
-                result.success(true).enacted(true);
-                EventOverviewBolusProgress.Treatment t = new EventOverviewBolusProgress.Treatment(0, 0, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB);
-                final EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.INSTANCE;
-                bolusingEvent.setT(t);
-                bolusingEvent.setStatus(resourceHelper.gs(R.string.insight_delivered, 0d, insulin));
-                bolusingEvent.setPercent(0);
-                rxBus.send(bolusingEvent);
-                int trials = 0;
-                Long now = dateUtil.now();
-                String serial = serialNumber();
-                insightDbHelper.createOrUpdate( new InsightBolusID(
-                        now,
-                        serial,
-                        bolusID,
-                        null,
-                        null
-                ));
-                InsightBolusID insightBolusID = insightDbHelper.getInsightBolusID(serial, bolusID, now);
-                pumpSync.syncBolusWithPumpId(
-                        insightBolusID.getTimestamp(),
-                        detailedBolusInfo.insulin,
-                        detailedBolusInfo.getBolusType(),
-                        insightBolusID.getId(),
-                        PumpType.ACCU_CHEK_INSIGHT,
-                        serialNumber());
-                while (true) {
-                    synchronized ($bolusLock) {
-                        if (bolusCancelled) break;
-                    }
-                    OperatingMode operatingMode = connectionService.requestMessage(new GetOperatingModeMessage()).await().getOperatingMode();
-                    if (operatingMode != OperatingMode.STARTED) break;
-                    List<ActiveBolus> activeBoluses = connectionService.requestMessage(new GetActiveBolusesMessage()).await().getActiveBoluses();
-                    ActiveBolus activeBolus = null;
-                    for (ActiveBolus bolus : activeBoluses) {
-                        if (bolus.getBolusID() == bolusID) {
-                            activeBolus = bolus;
-                            break;
-                        }
-                    }
-                    if (activeBolus != null) {
-                        trials = -1;
-                        int percentBefore = bolusingEvent.getPercent();
-                        bolusingEvent.setPercent((int) (100D / activeBolus.getInitialAmount() * (activeBolus.getInitialAmount() - activeBolus.getRemainingAmount())));
-                        bolusingEvent.setStatus(resourceHelper.gs(R.string.insight_delivered, activeBolus.getInitialAmount() - activeBolus.getRemainingAmount(), activeBolus.getInitialAmount()));
-                        if (percentBefore != bolusingEvent.getPercent())
-                            rxBus.send(bolusingEvent);
-                    } else {
-                        synchronized ($bolusLock) {
-                            if (bolusCancelled || trials == -1 || trials++ >= 5) {
-                                if (!bolusCancelled) {
-                                    bolusingEvent.setStatus(resourceHelper.gs(R.string.insight_delivered, insulin, insulin));
-                                    bolusingEvent.setPercent(100);
-                                    rxBus.send(bolusingEvent);
-                                }
-                                break;
-                            }
-                        }
-                    }
-                    SystemClock.sleep(200);
-                }
-                readHistory();
-                fetchStatus();
-            } catch (AppLayerErrorException e) {
-                aapsLogger.info(LTag.PUMP, "Exception while delivering bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
-                result.comment(ExceptionTranslator.getString(context, e));
-            } catch (InsightException e) {
-                aapsLogger.info(LTag.PUMP, "Exception while delivering bolus: " + e.getClass().getCanonicalName());
-                result.comment(ExceptionTranslator.getString(context, e));
-            } catch (Exception e) {
-                aapsLogger.error("Exception while delivering bolus", e);
-                result.comment(ExceptionTranslator.getString(context, e));
-            }
-            result.bolusDelivered(insulin);
-        }
-        return result;
-    }
-
-    @Override
-    public void stopBolusDelivering() {
-        new Thread(() -> {
-            try {
-                synchronized ($bolusLock) {
-                    alertService.ignore(AlertType.WARNING_38);
-                    CancelBolusMessage cancelBolusMessage = new CancelBolusMessage();
-                    cancelBolusMessage.setBolusID(bolusID);
-                    connectionService.requestMessage(cancelBolusMessage).await();
-                    bolusCancelled = true;
-                    confirmAlert(AlertType.WARNING_38);
-                    alertService.ignore(null);
-                }
-            } catch (AppLayerErrorException e) {
-                aapsLogger.info(LTag.PUMP, "Exception while canceling bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
-            } catch (InsightException e) {
-                aapsLogger.info(LTag.PUMP, "Exception while canceling bolus: " + e.getClass().getCanonicalName());
-            } catch (Exception e) {
-                aapsLogger.error("Exception while canceling bolus", e);
-            }
-        }).start();
-    }
-
-    @NonNull @Override
-    public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, @NonNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
-        PumpEnactResult result = new PumpEnactResult(getInjector());
-        if (activeBasalRate == null) return result;
-        if (activeBasalRate.getActiveBasalRate() == 0) return result;
-        double percent = 100D / activeBasalRate.getActiveBasalRate() * absoluteRate;
-        if (isFakingTempsByExtendedBoluses()) {
-            PumpEnactResult cancelEBResult = cancelExtendedBolusOnly();
-            if (cancelEBResult.getSuccess()) {
-                if (percent > 250) {
-                    PumpEnactResult cancelTBRResult = cancelTempBasalOnly();
-                    if (cancelTBRResult.getSuccess()) {
-                        PumpEnactResult ebResult = setExtendedBolusOnly((absoluteRate - getBaseBasalRate()) / 60D
-                                        * ((double) durationInMinutes), durationInMinutes,
-                                sp.getBoolean(R.string.key_insight_disable_vibration_auto, false));
-                        if (ebResult.getSuccess()) {
-                            result.success(true)
-                                    .enacted(true)
-                                    .isPercent(false)
-                                    .absolute(absoluteRate)
-                                    .duration(durationInMinutes)
-                                    .comment(R.string.virtualpump_resultok);
-                        } else {
-                            result.comment(ebResult.getComment());
-                        }
-                    } else {
-                        result.comment(cancelTBRResult.getComment());
-                    }
-                } else {
-                    return setTempBasalPercent((int) Math.round(percent), durationInMinutes, profile, enforceNew, tbrType);
-                }
-            } else {
-                result.comment(cancelEBResult.getComment());
-            }
-        } else {
-            return setTempBasalPercent((int) Math.round(percent), durationInMinutes, profile, enforceNew, tbrType);
-        }
-        try {
-            fetchStatus();
-            readHistory();
-        } catch (AppLayerErrorException e) {
-            aapsLogger.info(LTag.PUMP, "Exception after setting TBR: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
-        } catch (InsightException e) {
-            aapsLogger.info(LTag.PUMP, "Exception after setting TBR: " + e.getClass().getCanonicalName());
-        } catch (Exception e) {
-            aapsLogger.error("Exception after setting TBR", e);
-        }
-        return result;
-    }
-
-    @NonNull @Override
-    public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
-        PumpEnactResult result = new PumpEnactResult(getInjector());
-        percent = (int) Math.round(((double) percent) / 10d) * 10;
-        if (percent == 100) return cancelTempBasal(true);
-        else if (percent > 250) percent = 250;
-        try {
-            if (activeTBR != null) {
-                ChangeTBRMessage message = new ChangeTBRMessage();
-                message.setDuration(durationInMinutes);
-                message.setPercentage(percent);
-                connectionService.requestMessage(message);
-            } else {
-                SetTBRMessage message = new SetTBRMessage();
-                message.setDuration(durationInMinutes);
-                message.setPercentage(percent);
-                connectionService.requestMessage(message);
-            }
-            result.isPercent(true)
-                    .percent(percent)
-                    .duration(durationInMinutes)
-                    .success(true)
-                    .enacted(true)
-                    .comment(R.string.virtualpump_resultok);
-            readHistory();
-            fetchStatus();
-        } catch (AppLayerErrorException e) {
-            aapsLogger.info(LTag.PUMP, "Exception while setting TBR: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
-            result.comment(ExceptionTranslator.getString(context, e));
-        } catch (InsightException e) {
-            aapsLogger.info(LTag.PUMP, "Exception while setting TBR: " + e.getClass().getCanonicalName());
-            result.comment(ExceptionTranslator.getString(context, e));
-        } catch (Exception e) {
-            aapsLogger.error("Exception while setting TBR", e);
-            result.comment(ExceptionTranslator.getString(context, e));
-        }
-        return result;
-    }
-
-    @NonNull @Override
-    public PumpEnactResult setExtendedBolus(double insulin, int durationInMinutes) {
-        PumpEnactResult result = cancelExtendedBolusOnly();
-        if (result.getSuccess())
-            result = setExtendedBolusOnly(insulin, durationInMinutes, sp.getBoolean(R.string.key_insight_disable_vibration, false));
-        try {
-            fetchStatus();
-            readHistory();
-        } catch (AppLayerErrorException e) {
-            aapsLogger.info(LTag.PUMP, "Exception after delivering extended bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
-        } catch (InsightException e) {
-            aapsLogger.info(LTag.PUMP, "Exception after delivering extended bolus: " + e.getClass().getCanonicalName());
-        } catch (Exception e) {
-            aapsLogger.error("Exception after delivering extended bolus", e);
-        }
-        return result;
-    }
-
-    public PumpEnactResult setExtendedBolusOnly(Double insulin, Integer durationInMinutes, boolean disableVibration) {
-        PumpEnactResult result = new PumpEnactResult(getInjector());
-        try {
-            DeliverBolusMessage bolusMessage = new DeliverBolusMessage();
-            bolusMessage.setBolusType(BolusType.EXTENDED);
-            bolusMessage.setDuration(durationInMinutes);
-            bolusMessage.setExtendedAmount(insulin);
-            bolusMessage.setImmediateAmount(0);
-            bolusMessage.setVibration(disableVibration);
-            int bolusID = connectionService.requestMessage(bolusMessage).await().getBolusId();
-            insightDbHelper.createOrUpdate(new InsightBolusID(
-                    dateUtil.now(),
-                    serialNumber(),
+                result.success(true).enacted(true)
+                val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType === DetailedBolusInfo.BolusType.SMB)
+                val bolusingEvent = EventOverviewBolusProgress
+                bolusingEvent.t = t
+                bolusingEvent.status = resourceHelper.gs(R.string.insight_delivered, 0.0, insulin)
+                bolusingEvent.percent = 0
+                rxBus.send(bolusingEvent)
+                var trials = 0
+                val now = dateUtil.now()
+                val serial = serialNumber()
+                insightDbHelper.createOrUpdate(InsightBolusID(
+                    now,
+                    serial,
                     bolusID,
                     null,
                     null
-            ));
-            result.success(true).enacted(true).comment(R.string.virtualpump_resultok);
-        } catch (AppLayerErrorException e) {
-            aapsLogger.info(LTag.PUMP, "Exception while delivering extended bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
-            result.comment(ExceptionTranslator.getString(context, e));
-        } catch (InsightException e) {
-            aapsLogger.info(LTag.PUMP, "Exception while delivering extended bolus: " + e.getClass().getCanonicalName());
-            result.comment(ExceptionTranslator.getString(context, e));
-        } catch (Exception e) {
-            aapsLogger.error("Exception while delivering extended bolus", e);
-            result.comment(ExceptionTranslator.getString(context, e));
+                ))
+                val insightBolusID = insightDbHelper.getInsightBolusID(serial, bolusID, now)
+                pumpSync.syncBolusWithPumpId(
+                    insightBolusID!!.timestamp,
+                    detailedBolusInfo.insulin,
+                    detailedBolusInfo.bolusType,
+                    insightBolusID.id,
+                    PumpType.ACCU_CHEK_INSIGHT,
+                    serialNumber())
+                while (true) {
+                    synchronized(`$bolusLock`) {}               // TODO check if OK... kotlin doesn't accept break inside synchronized block, I don't know if we keep empty block to synchronize bolusCancelled ?
+                    if (bolusCancelled)
+                        break
+                    val operatingMode = connectionService!!.requestMessage(GetOperatingModeMessage()).await().operatingMode
+                    if (operatingMode != OperatingMode.STARTED) break
+                    val activeBoluses = connectionService!!.requestMessage(GetActiveBolusesMessage()).await().activeBoluses
+                    var activeBolus: ActiveBolus? = null
+                    for (bolus in activeBoluses) {
+                        if (bolus.bolusID == bolusID) {
+                            activeBolus = bolus
+                            break
+                        }
+                    }
+                    if (activeBolus != null) {
+                        trials = -1
+                        val percentBefore = bolusingEvent.percent
+                        bolusingEvent.percent = (100.0 / activeBolus.initialAmount * (activeBolus.initialAmount - activeBolus.remainingAmount)).toInt()
+                        bolusingEvent.status = resourceHelper.gs(R.string.insight_delivered, activeBolus.initialAmount - activeBolus.remainingAmount, activeBolus.initialAmount)
+                        if (percentBefore != bolusingEvent.percent) rxBus.send(bolusingEvent)
+                    } else {
+                        synchronized(`$bolusLock`) {
+                            if (bolusCancelled || trials == -1 || trials++ >= 5) {
+                                if (!bolusCancelled) {
+                                    bolusingEvent.status = resourceHelper.gs(R.string.insight_delivered, insulin, insulin)
+                                    bolusingEvent.percent = 100
+                                    rxBus.send(bolusingEvent)
+                                }
+                            }
+                        }
+                        if (bolusCancelled)               // TODO check if OK... kotlin doesn't accept break inside synchronized block, I moved it outside block
+                            break
+                    }
+                    SystemClock.sleep(200)
+                }
+                readHistory()
+                fetchStatus()
+            } catch (e: AppLayerErrorException) {
+                aapsLogger.info(LTag.PUMP, "Exception while delivering bolus: " + e.javaClass.canonicalName + " (" + e.errorCode + ")")
+                result.comment(ExceptionTranslator.getString(context, e))
+            } catch (e: InsightException) {
+                aapsLogger.info(LTag.PUMP, "Exception while delivering bolus: " + e.javaClass.canonicalName)
+                result.comment(ExceptionTranslator.getString(context, e))
+            } catch (e: Exception) {
+                aapsLogger.error("Exception while delivering bolus", e)
+                result.comment(ExceptionTranslator.getString(context, e))
+            }
+            result.bolusDelivered(insulin)
         }
-        return result;
+        return result
     }
 
-    @NonNull @Override
-    public PumpEnactResult cancelTempBasal(boolean enforceNew) {
-        PumpEnactResult result = new PumpEnactResult(getInjector());
-        PumpEnactResult cancelEBResult = null;
-        if (isFakingTempsByExtendedBoluses()) cancelEBResult = cancelExtendedBolusOnly();
-        PumpEnactResult cancelTBRResult = cancelTempBasalOnly();
-        result.success((cancelEBResult == null || (cancelEBResult != null && cancelEBResult.getSuccess())) && cancelTBRResult.getSuccess());
-        result.enacted((cancelEBResult != null && cancelEBResult.getEnacted()) || cancelTBRResult.getEnacted());
-        result.comment(cancelEBResult != null ? cancelEBResult.getComment() : cancelTBRResult.getComment());
-        try {
-            fetchStatus();
-            readHistory();
-        } catch (AppLayerErrorException e) {
-            aapsLogger.info(LTag.PUMP, "Exception after canceling TBR: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
-        } catch (InsightException e) {
-            aapsLogger.info(LTag.PUMP, "Exception after canceling TBR: " + e.getClass().getCanonicalName());
-        } catch (Exception e) {
-            aapsLogger.error("Exception after canceling TBR", e);
-        }
-        return result;
+    override fun stopBolusDelivering() {
+        Thread {
+            try {
+                synchronized(`$bolusLock`) {
+                    alertService!!.ignore(AlertType.WARNING_38)
+                    val cancelBolusMessage = CancelBolusMessage()
+                    cancelBolusMessage.setBolusID(bolusID)
+                    connectionService!!.requestMessage(cancelBolusMessage).await()
+                    bolusCancelled = true
+                    confirmAlert(AlertType.WARNING_38)
+                    alertService!!.ignore(null)
+                }
+            } catch (e: AppLayerErrorException) {
+                aapsLogger.info(LTag.PUMP, "Exception while canceling bolus: " + e.javaClass.canonicalName + " (" + e.errorCode + ")")
+            } catch (e: InsightException) {
+                aapsLogger.info(LTag.PUMP, "Exception while canceling bolus: " + e.javaClass.canonicalName)
+            } catch (e: Exception) {
+                aapsLogger.error("Exception while canceling bolus", e)
+            }
+        }.start()
     }
 
-    private PumpEnactResult cancelTempBasalOnly() {
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+    override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
+        val result = PumpEnactResult(injector)
+        if (activeBasalRate == null) return result
+        if (activeBasalRate!!.activeBasalRate == 0.0) return result
+        val percent = 100.0 / activeBasalRate!!.activeBasalRate * absoluteRate
+        if (isFakingTempsByExtendedBoluses) {
+            val cancelEBResult = cancelExtendedBolusOnly()
+            if (cancelEBResult.success) {
+                if (percent > 250) {
+                    val cancelTBRResult = cancelTempBasalOnly()
+                    if (cancelTBRResult.success) {
+                        val ebResult = setExtendedBolusOnly((absoluteRate - baseBasalRate) / 60.0
+                            * durationInMinutes.toDouble(), durationInMinutes,
+                            sp.getBoolean(R.string.key_insight_disable_vibration_auto, false))
+                        if (ebResult.success) {
+                            result.success(true)
+                                .enacted(true)
+                                .isPercent(false)
+                                .absolute(absoluteRate)
+                                .duration(durationInMinutes)
+                                .comment(R.string.virtualpump_resultok)
+                        } else {
+                            result.comment(ebResult.comment)
+                        }
+                    } else {
+                        result.comment(cancelTBRResult.comment)
+                    }
+                } else {
+                    return setTempBasalPercent(Math.round(percent).toInt(), durationInMinutes, profile, enforceNew, tbrType)
+                }
+            } else {
+                result.comment(cancelEBResult.comment)
+            }
+        } else {
+            return setTempBasalPercent(Math.round(percent).toInt(), durationInMinutes, profile, enforceNew, tbrType)
+        }
         try {
-            alertService.ignore(AlertType.WARNING_36);
-            connectionService.requestMessage(new CancelTBRMessage()).await();
+            fetchStatus()
+            readHistory()
+        } catch (e: AppLayerErrorException) {
+            aapsLogger.info(LTag.PUMP, "Exception after setting TBR: " + e.javaClass.canonicalName + " (" + e.errorCode + ")")
+        } catch (e: InsightException) {
+            aapsLogger.info(LTag.PUMP, "Exception after setting TBR: " + e.javaClass.canonicalName)
+        } catch (e: Exception) {
+            aapsLogger.error("Exception after setting TBR", e)
+        }
+        return result
+    }
+
+    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
+        var percent = percent
+        val result = PumpEnactResult(injector)
+        percent = Math.round(percent.toDouble() / 10.0).toInt() * 10
+        if (percent == 100) return cancelTempBasal(true) else if (percent > 250) percent = 250
+        try {
+            if (activeTBR != null) {
+                val message = ChangeTBRMessage()
+                message.setDuration(durationInMinutes)
+                message.setPercentage(percent)
+                connectionService!!.requestMessage(message)
+            } else {
+                val message = SetTBRMessage()
+                message.setDuration(durationInMinutes)
+                message.setPercentage(percent)
+                connectionService!!.requestMessage(message)
+            }
+            result.isPercent(true)
+                .percent(percent)
+                .duration(durationInMinutes)
+                .success(true)
+                .enacted(true)
+                .comment(R.string.virtualpump_resultok)
+            readHistory()
+            fetchStatus()
+        } catch (e: AppLayerErrorException) {
+            aapsLogger.info(LTag.PUMP, "Exception while setting TBR: " + e.javaClass.canonicalName + " (" + e.errorCode + ")")
+            result.comment(ExceptionTranslator.getString(context, e))
+        } catch (e: InsightException) {
+            aapsLogger.info(LTag.PUMP, "Exception while setting TBR: " + e.javaClass.canonicalName)
+            result.comment(ExceptionTranslator.getString(context, e))
+        } catch (e: Exception) {
+            aapsLogger.error("Exception while setting TBR", e)
+            result.comment(ExceptionTranslator.getString(context, e))
+        }
+        return result
+    }
+
+    override fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
+        var result = cancelExtendedBolusOnly()
+        if (result.success) result = setExtendedBolusOnly(insulin, durationInMinutes, sp.getBoolean(R.string.key_insight_disable_vibration, false))
+        try {
+            fetchStatus()
+            readHistory()
+        } catch (e: AppLayerErrorException) {
+            aapsLogger.info(LTag.PUMP, "Exception after delivering extended bolus: " + e.javaClass.canonicalName + " (" + e.errorCode + ")")
+        } catch (e: InsightException) {
+            aapsLogger.info(LTag.PUMP, "Exception after delivering extended bolus: " + e.javaClass.canonicalName)
+        } catch (e: Exception) {
+            aapsLogger.error("Exception after delivering extended bolus", e)
+        }
+        return result
+    }
+
+    fun setExtendedBolusOnly(insulin: Double?, durationInMinutes: Int?, disableVibration: Boolean): PumpEnactResult {
+        val result = PumpEnactResult(injector)
+        try {
+            val bolusMessage = DeliverBolusMessage()
+            bolusMessage.setBolusType(BolusType.EXTENDED)
+            bolusMessage.setDuration(durationInMinutes!!)
+            bolusMessage.setExtendedAmount(insulin!!)
+            bolusMessage.setImmediateAmount(0.0)
+            bolusMessage.setVibration(disableVibration)
+            val bolusID = connectionService!!.requestMessage(bolusMessage).await().bolusId
+            insightDbHelper.createOrUpdate(InsightBolusID(
+                timestamp= dateUtil.now(),
+                pumpSerial = serialNumber(),
+                bolusID= bolusID
+            ))
+            result.success(true).enacted(true).comment(R.string.virtualpump_resultok)
+        } catch (e: AppLayerErrorException) {
+            aapsLogger.info(LTag.PUMP, "Exception while delivering extended bolus: " + e.javaClass.canonicalName + " (" + e.errorCode + ")")
+            result.comment(ExceptionTranslator.getString(context, e))
+        } catch (e: InsightException) {
+            aapsLogger.info(LTag.PUMP, "Exception while delivering extended bolus: " + e.javaClass.canonicalName)
+            result.comment(ExceptionTranslator.getString(context, e))
+        } catch (e: Exception) {
+            aapsLogger.error("Exception while delivering extended bolus", e)
+            result.comment(ExceptionTranslator.getString(context, e))
+        }
+        return result
+    }
+
+    override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
+        val result = PumpEnactResult(injector)
+        var cancelEBResult: PumpEnactResult? = null
+        if (isFakingTempsByExtendedBoluses) cancelEBResult = cancelExtendedBolusOnly()
+        val cancelTBRResult = cancelTempBasalOnly()
+        result.success((cancelEBResult == null || cancelEBResult != null && cancelEBResult.success) && cancelTBRResult.success)
+        result.enacted(cancelEBResult != null && cancelEBResult.enacted || cancelTBRResult.enacted)
+        result.comment(cancelEBResult?.comment ?: cancelTBRResult.comment)
+        try {
+            fetchStatus()
+            readHistory()
+        } catch (e: AppLayerErrorException) {
+            aapsLogger.info(LTag.PUMP, "Exception after canceling TBR: " + e.javaClass.canonicalName + " (" + e.errorCode + ")")
+        } catch (e: InsightException) {
+            aapsLogger.info(LTag.PUMP, "Exception after canceling TBR: " + e.javaClass.canonicalName)
+        } catch (e: Exception) {
+            aapsLogger.error("Exception after canceling TBR", e)
+        }
+        return result
+    }
+
+    private fun cancelTempBasalOnly(): PumpEnactResult {
+        val result = PumpEnactResult(injector)
+        try {
+            alertService!!.ignore(AlertType.WARNING_36)
+            connectionService!!.requestMessage(CancelTBRMessage()).await()
             result.success(true)
-                    .enacted(true)
-                    .isTempCancel(true);
-            confirmAlert(AlertType.WARNING_36);
-            alertService.ignore(null);
-            result.comment(R.string.virtualpump_resultok);
-        } catch (NoActiveTBRToCanceLException e) {
-            result.success(true);
-            result.comment(R.string.virtualpump_resultok);
-        } catch (AppLayerErrorException e) {
-            aapsLogger.info(LTag.PUMP, "Exception while canceling TBR: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
-            result.comment(ExceptionTranslator.getString(context, e));
-        } catch (InsightException e) {
-            aapsLogger.info(LTag.PUMP, "Exception while canceling TBR: " + e.getClass().getCanonicalName());
-            result.comment(ExceptionTranslator.getString(context, e));
-        } catch (Exception e) {
-            aapsLogger.error("Exception while canceling TBR", e);
-            result.comment(ExceptionTranslator.getString(context, e));
+                .enacted(true)
+                .isTempCancel(true)
+            confirmAlert(AlertType.WARNING_36)
+            alertService!!.ignore(null)
+            result.comment(R.string.virtualpump_resultok)
+        } catch (e: NoActiveTBRToCanceLException) {
+            result.success(true)
+            result.comment(R.string.virtualpump_resultok)
+        } catch (e: AppLayerErrorException) {
+            aapsLogger.info(LTag.PUMP, "Exception while canceling TBR: " + e.javaClass.canonicalName + " (" + e.errorCode + ")")
+            result.comment(ExceptionTranslator.getString(context, e))
+        } catch (e: InsightException) {
+            aapsLogger.info(LTag.PUMP, "Exception while canceling TBR: " + e.javaClass.canonicalName)
+            result.comment(ExceptionTranslator.getString(context, e))
+        } catch (e: Exception) {
+            aapsLogger.error("Exception while canceling TBR", e)
+            result.comment(ExceptionTranslator.getString(context, e))
         }
-        return result;
+        return result
     }
 
-    @NonNull @Override
-    public PumpEnactResult cancelExtendedBolus() {
-        PumpEnactResult result = cancelExtendedBolusOnly();
+    override fun cancelExtendedBolus(): PumpEnactResult {
+        val result = cancelExtendedBolusOnly()
         try {
-            fetchStatus();
-            readHistory();
-        } catch (AppLayerErrorException e) {
-            aapsLogger.info(LTag.PUMP, "Exception after canceling extended bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
-        } catch (InsightException e) {
-            aapsLogger.info(LTag.PUMP, "Exception after canceling extended bolus: " + e.getClass().getCanonicalName());
-        } catch (Exception e) {
-            aapsLogger.error("Exception after canceling extended bolus", e);
+            fetchStatus()
+            readHistory()
+        } catch (e: AppLayerErrorException) {
+            aapsLogger.info(LTag.PUMP, "Exception after canceling extended bolus: " + e.javaClass.canonicalName + " (" + e.errorCode + ")")
+        } catch (e: InsightException) {
+            aapsLogger.info(LTag.PUMP, "Exception after canceling extended bolus: " + e.javaClass.canonicalName)
+        } catch (e: Exception) {
+            aapsLogger.error("Exception after canceling extended bolus", e)
         }
-        return result;
+        return result
     }
 
-    private PumpEnactResult cancelExtendedBolusOnly() {
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+    private fun cancelExtendedBolusOnly(): PumpEnactResult {
+        val result = PumpEnactResult(injector)
         try {
-            for (ActiveBolus activeBolus : activeBoluses) {
-                if (activeBolus.getBolusType() == BolusType.EXTENDED || activeBolus.getBolusType() == BolusType.MULTIWAVE) {
-                    alertService.ignore(AlertType.WARNING_38);
-                    CancelBolusMessage cancelBolusMessage = new CancelBolusMessage();
-                    cancelBolusMessage.setBolusID(activeBolus.getBolusID());
-                    connectionService.requestMessage(cancelBolusMessage).await();
-                    confirmAlert(AlertType.WARNING_38);
-                    alertService.ignore(null);
-                    InsightBolusID insightBolusID = insightDbHelper.getInsightBolusID(serialNumber(), activeBolus.getBolusID(), dateUtil.now());
+            for (activeBolus in activeBoluses!!) {
+                if (activeBolus.bolusType == BolusType.EXTENDED || activeBolus.bolusType == BolusType.MULTIWAVE) {
+                    alertService!!.ignore(AlertType.WARNING_38)
+                    val cancelBolusMessage = CancelBolusMessage()
+                    cancelBolusMessage.setBolusID(activeBolus.bolusID)
+                    connectionService!!.requestMessage(cancelBolusMessage).await()
+                    confirmAlert(AlertType.WARNING_38)
+                    alertService!!.ignore(null)
+                    val insightBolusID = insightDbHelper.getInsightBolusID(serialNumber(), activeBolus.bolusID, dateUtil.now())
                     if (insightBolusID != null) {
-                        result.enacted(true).success(true);
+                        result.enacted(true).success(true)
                     }
                 }
             }
-            result.success(true).comment(R.string.virtualpump_resultok);
-        } catch (AppLayerErrorException e) {
-            aapsLogger.info(LTag.PUMP, "Exception while canceling extended bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
-            result.comment(ExceptionTranslator.getString(context, e));
-        } catch (InsightException e) {
-            aapsLogger.info(LTag.PUMP, "Exception while canceling extended bolus: " + e.getClass().getCanonicalName());
-            result.comment(ExceptionTranslator.getString(context, e));
-        } catch (Exception e) {
-            aapsLogger.error("Exception while canceling extended bolus", e);
-            result.comment(ExceptionTranslator.getString(context, e));
+            result.success(true).comment(R.string.virtualpump_resultok)
+        } catch (e: AppLayerErrorException) {
+            aapsLogger.info(LTag.PUMP, "Exception while canceling extended bolus: " + e.javaClass.canonicalName + " (" + e.errorCode + ")")
+            result.comment(ExceptionTranslator.getString(context, e))
+        } catch (e: InsightException) {
+            aapsLogger.info(LTag.PUMP, "Exception while canceling extended bolus: " + e.javaClass.canonicalName)
+            result.comment(ExceptionTranslator.getString(context, e))
+        } catch (e: Exception) {
+            aapsLogger.error("Exception while canceling extended bolus", e)
+            result.comment(ExceptionTranslator.getString(context, e))
         }
-        return result;
+        return result
     }
 
-    private void confirmAlert(AlertType alertType) {
+    private fun confirmAlert(alertType: AlertType) {
         try {
-            long started = dateUtil.now();
+            val started = dateUtil.now()
             while (dateUtil.now() - started < 10000) {
-                GetActiveAlertMessage activeAlertMessage = connectionService.requestMessage(new GetActiveAlertMessage()).await();
-                if (activeAlertMessage.getAlert() != null) {
-                    if (activeAlertMessage.getAlert().getAlertType() == alertType) {
-                        ConfirmAlertMessage confirmMessage = new ConfirmAlertMessage();
-                        confirmMessage.setAlertID(activeAlertMessage.getAlert().getAlertId());
-                        connectionService.requestMessage(confirmMessage).await();
-                    } else break;
+                val activeAlertMessage = connectionService!!.requestMessage(GetActiveAlertMessage()).await()
+                if (activeAlertMessage.alert != null) {
+                    if (activeAlertMessage.alert.alertType == alertType) {
+                        val confirmMessage = ConfirmAlertMessage()
+                        confirmMessage.setAlertID(activeAlertMessage.alert.alertId)
+                        connectionService!!.requestMessage(confirmMessage).await()
+                    } else break
                 }
             }
-        } catch (AppLayerErrorException e) {
-            aapsLogger.info(LTag.PUMP, "Exception while confirming alert: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
-        } catch (InsightException e) {
-            aapsLogger.info(LTag.PUMP, "Exception while confirming alert: " + e.getClass().getCanonicalName());
-        } catch (Exception e) {
-            aapsLogger.error("Exception while confirming alert", e);
+        } catch (e: AppLayerErrorException) {
+            aapsLogger.info(LTag.PUMP, "Exception while confirming alert: " + e.javaClass.canonicalName + " (" + e.errorCode + ")")
+        } catch (e: InsightException) {
+            aapsLogger.info(LTag.PUMP, "Exception while confirming alert: " + e.javaClass.canonicalName)
+        } catch (e: Exception) {
+            aapsLogger.error("Exception while confirming alert", e)
         }
     }
 
-    @NonNull @Override
-    public JSONObject getJSONStatus(@NonNull Profile profile, @NonNull String profileName, @NonNull String version) {
-        long now = dateUtil.now();
-        if (connectionService == null) return new JSONObject();
-        if (dateUtil.now() - connectionService.getLastConnected() > (60 * 60 * 1000)) {
-            return new JSONObject();
+    override fun getJSONStatus(profile: Profile, profileName: String, version: String): JSONObject {
+        val now = dateUtil.now()
+        if (connectionService == null) return JSONObject()
+        if (dateUtil.now() - connectionService!!.lastConnected > 60 * 60 * 1000) {
+            return JSONObject()
         }
-
-        final JSONObject pump = new JSONObject();
-        final JSONObject battery = new JSONObject();
-        final JSONObject status = new JSONObject();
-        final JSONObject extended = new JSONObject();
+        val pump = JSONObject()
+        val battery = JSONObject()
+        val status = JSONObject()
+        val extended = JSONObject()
         try {
-            status.put("timestamp", dateUtil.toISOString(connectionService.getLastConnected()));
-            extended.put("Version", version);
+            status.put("timestamp", dateUtil.toISOString(connectionService!!.lastConnected))
+            extended.put("Version", version)
             try {
-                extended.put("ActiveProfile", profileFunction.getProfileName());
-            } catch (Exception e) {
-                e.printStackTrace();
+                extended.put("ActiveProfile", profileFunction.getProfileName())
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
-            PumpSync.PumpState.TemporaryBasal tb = pumpSync.expectedPumpState().getTemporaryBasal();
+            val tb = pumpSync.expectedPumpState().temporaryBasal
             if (tb != null) {
-                extended.put("TempBasalAbsoluteRate", convertedToAbsolute(tb, now, profile));
-                extended.put("TempBasalStart", dateUtil.dateAndTimeString(tb.getTimestamp()));
-                extended.put("TempBasalRemaining", getPlannedRemainingMinutes(tb));
+                extended.put("TempBasalAbsoluteRate", tb.convertedToAbsolute(now, profile))
+                extended.put("TempBasalStart", dateUtil.dateAndTimeString(tb.timestamp))
+                extended.put("TempBasalRemaining", tb.plannedRemainingMinutes)
             }
-            PumpSync.PumpState.ExtendedBolus eb = pumpSync.expectedPumpState().getExtendedBolus();
+            val eb = pumpSync.expectedPumpState().extendedBolus
             if (eb != null) {
-                extended.put("ExtendedBolusAbsoluteRate", eb.getRate());
-                extended.put("ExtendedBolusStart", dateUtil.dateAndTimeString(eb.getTimestamp()));
-                extended.put("ExtendedBolusRemaining", getPlannedRemainingMinutes(eb));
+                extended.put("ExtendedBolusAbsoluteRate", eb.rate)
+                extended.put("ExtendedBolusStart", dateUtil.dateAndTimeString(eb.timestamp))
+                extended.put("ExtendedBolusRemaining", eb.plannedRemainingMinutes)
             }
-            extended.put("BaseBasalRate", getBaseBasalRate());
-            status.put("timestamp", dateUtil.toISOString(now));
-
-            pump.put("extended", extended);
+            extended.put("BaseBasalRate", baseBasalRate)
+            status.put("timestamp", dateUtil.toISOString(now))
+            pump.put("extended", extended)
             if (statusLoaded) {
-                status.put("status", operatingMode != OperatingMode.STARTED ? "suspended" : "normal");
-                pump.put("status", status);
-                battery.put("percent", batteryStatus.getBatteryAmount());
-                pump.put("battery", battery);
-                pump.put("reservoir", cartridgeStatus.getRemainingAmount());
+                status.put("status", if (operatingMode != OperatingMode.STARTED) "suspended" else "normal")
+                pump.put("status", status)
+                battery.put("percent", batteryStatus!!.batteryAmount)
+                pump.put("battery", battery)
+                pump.put("reservoir", cartridgeStatus!!.remainingAmount)
             }
-            pump.put("clock", dateUtil.toISOString(now));
-        } catch (JSONException e) {
-            aapsLogger.error("Unhandled exception", e);
+            pump.put("clock", dateUtil.toISOString(now))
+        } catch (e: JSONException) {
+            aapsLogger.error("Unhandled exception", e)
         }
-        return pump;
+        return pump
     }
 
-    @NonNull @Override
-    public ManufacturerType manufacturer() {
-        return ManufacturerType.Roche;
+    override fun manufacturer(): ManufacturerType {
+        return ManufacturerType.Roche
     }
 
-    @NonNull @Override
-    public PumpType model() {
-        return PumpType.ACCU_CHEK_INSIGHT;
+    override fun model(): PumpType {
+        return PumpType.ACCU_CHEK_INSIGHT
     }
 
-    @NonNull @Override
-    public String serialNumber() {
-        if (connectionService == null || alertService == null) return "Unknown";
-        return connectionService.getPumpSystemIdentification().getSerialNumber();
+    override fun serialNumber(): String {
+        return if (connectionService == null || alertService == null) "Unknown" else connectionService!!.pumpSystemIdentification.serialNumber
     }
 
-    public PumpEnactResult stopPump() {
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+    fun stopPump(): PumpEnactResult {
+        val result = PumpEnactResult(injector)
         try {
-            SetOperatingModeMessage operatingModeMessage = new SetOperatingModeMessage();
-            operatingModeMessage.setOperatingMode(OperatingMode.STOPPED);
-            connectionService.requestMessage(operatingModeMessage).await();
-            result.success(true).enacted(true);
-            fetchStatus();
-            readHistory();
-        } catch (AppLayerErrorException e) {
-            aapsLogger.info(LTag.PUMP, "Exception while stopping pump: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
-            result.comment(ExceptionTranslator.getString(context, e));
-        } catch (InsightException e) {
-            aapsLogger.info(LTag.PUMP, "Exception while stopping pump: " + e.getClass().getCanonicalName());
-            result.comment(ExceptionTranslator.getString(context, e));
-        } catch (Exception e) {
-            aapsLogger.error("Exception while stopping pump", e);
-            result.comment(ExceptionTranslator.getString(context, e));
+            val operatingModeMessage = SetOperatingModeMessage()
+            operatingModeMessage.setOperatingMode(OperatingMode.STOPPED)
+            connectionService!!.requestMessage(operatingModeMessage).await()
+            result.success(true).enacted(true)
+            fetchStatus()
+            readHistory()
+        } catch (e: AppLayerErrorException) {
+            aapsLogger.info(LTag.PUMP, "Exception while stopping pump: " + e.javaClass.canonicalName + " (" + e.errorCode + ")")
+            result.comment(ExceptionTranslator.getString(context, e))
+        } catch (e: InsightException) {
+            aapsLogger.info(LTag.PUMP, "Exception while stopping pump: " + e.javaClass.canonicalName)
+            result.comment(ExceptionTranslator.getString(context, e))
+        } catch (e: Exception) {
+            aapsLogger.error("Exception while stopping pump", e)
+            result.comment(ExceptionTranslator.getString(context, e))
         }
-        return result;
+        return result
     }
 
-    public PumpEnactResult startPump() {
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+    fun startPump(): PumpEnactResult {
+        val result = PumpEnactResult(injector)
         try {
-            SetOperatingModeMessage operatingModeMessage = new SetOperatingModeMessage();
-            operatingModeMessage.setOperatingMode(OperatingMode.STARTED);
-            connectionService.requestMessage(operatingModeMessage).await();
-            result.success(true).enacted(true);
-            fetchStatus();
-            readHistory();
-        } catch (AppLayerErrorException e) {
-            aapsLogger.info(LTag.PUMP, "Exception while starting pump: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
-            result.comment(ExceptionTranslator.getString(context, e));
-        } catch (InsightException e) {
-            aapsLogger.info(LTag.PUMP, "Exception while starting pump: " + e.getClass().getCanonicalName());
-            result.comment(ExceptionTranslator.getString(context, e));
-        } catch (Exception e) {
-            aapsLogger.error("Exception while starting pump", e);
-            result.comment(ExceptionTranslator.getString(context, e));
+            val operatingModeMessage = SetOperatingModeMessage()
+            operatingModeMessage.setOperatingMode(OperatingMode.STARTED)
+            connectionService!!.requestMessage(operatingModeMessage).await()
+            result.success(true).enacted(true)
+            fetchStatus()
+            readHistory()
+        } catch (e: AppLayerErrorException) {
+            aapsLogger.info(LTag.PUMP, "Exception while starting pump: " + e.javaClass.canonicalName + " (" + e.errorCode + ")")
+            result.comment(ExceptionTranslator.getString(context, e))
+        } catch (e: InsightException) {
+            aapsLogger.info(LTag.PUMP, "Exception while starting pump: " + e.javaClass.canonicalName)
+            result.comment(ExceptionTranslator.getString(context, e))
+        } catch (e: Exception) {
+            aapsLogger.error("Exception while starting pump", e)
+            result.comment(ExceptionTranslator.getString(context, e))
         }
-        return result;
+        return result
     }
 
-    public PumpEnactResult setTBROverNotification(boolean enabled) {
-        PumpEnactResult result = new PumpEnactResult(getInjector());
-        boolean valueBefore = tbrOverNotificationBlock.isEnabled();
-        tbrOverNotificationBlock.setEnabled(enabled);
+    fun setTBROverNotification(enabled: Boolean): PumpEnactResult {
+        val result = PumpEnactResult(injector)
+        val valueBefore = tBROverNotificationBlock!!.isEnabled
+        tBROverNotificationBlock!!.isEnabled = enabled
         try {
-            ParameterBlockUtil.writeConfigurationBlock(connectionService, tbrOverNotificationBlock);
-            result.success(true).enacted(true);
-        } catch (AppLayerErrorException e) {
-            tbrOverNotificationBlock.setEnabled(valueBefore);
-            aapsLogger.info(LTag.PUMP, "Exception while updating TBR notification block: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
-            result.comment(ExceptionTranslator.getString(context, e));
-        } catch (InsightException e) {
-            tbrOverNotificationBlock.setEnabled(valueBefore);
-            aapsLogger.info(LTag.PUMP, "Exception while updating TBR notification block: " + e.getClass().getSimpleName());
-            result.comment(ExceptionTranslator.getString(context, e));
-        } catch (Exception e) {
-            tbrOverNotificationBlock.setEnabled(valueBefore);
-            aapsLogger.error("Exception while updating TBR notification block", e);
-            result.comment(ExceptionTranslator.getString(context, e));
+            ParameterBlockUtil.writeConfigurationBlock(connectionService, tBROverNotificationBlock)
+            result.success(true).enacted(true)
+        } catch (e: AppLayerErrorException) {
+            tBROverNotificationBlock!!.isEnabled = valueBefore
+            aapsLogger.info(LTag.PUMP, "Exception while updating TBR notification block: " + e.javaClass.canonicalName + " (" + e.errorCode + ")")
+            result.comment(ExceptionTranslator.getString(context, e))
+        } catch (e: InsightException) {
+            tBROverNotificationBlock!!.isEnabled = valueBefore
+            aapsLogger.info(LTag.PUMP, "Exception while updating TBR notification block: " + e.javaClass.simpleName)
+            result.comment(ExceptionTranslator.getString(context, e))
+        } catch (e: Exception) {
+            tBROverNotificationBlock!!.isEnabled = valueBefore
+            aapsLogger.error("Exception while updating TBR notification block", e)
+            result.comment(ExceptionTranslator.getString(context, e))
         }
-        return result;
+        return result
     }
 
-    @NonNull @Override
-    public PumpDescription getPumpDescription() {
-        return pumpDescription;
-    }
-
-    @NonNull @Override
-    public String shortStatus(boolean veryShort) {
-        StringBuilder ret = new StringBuilder();
-        if (connectionService.getLastConnected() != 0) {
-            long agoMsec = dateUtil.now() - connectionService.getLastConnected();
-            int agoMin = (int) (agoMsec / 60d / 1000d);
-            ret.append(resourceHelper.gs(R.string.short_status_last_connected, agoMin)).append("\n");
+    override fun shortStatus(veryShort: Boolean): String {
+        val ret = StringBuilder()
+        if (connectionService!!.lastConnected != 0L) {
+            val agoMsec = dateUtil.now() - connectionService!!.lastConnected
+            val agoMin = (agoMsec / 60.0 / 1000.0).toInt()
+            ret.append(resourceHelper.gs(R.string.short_status_last_connected, agoMin)).append("\n")
         }
         if (activeTBR != null) {
-            ret.append(resourceHelper.gs(R.string.short_status_tbr, activeTBR.getPercentage(),
-                    activeTBR.getInitialDuration() - activeTBR.getRemainingDuration(), activeTBR.getInitialDuration())).append("\n");
+            ret.append(resourceHelper.gs(R.string.short_status_tbr, activeTBR!!.percentage,
+                activeTBR!!.initialDuration - activeTBR!!.remainingDuration, activeTBR!!.initialDuration)).append("\n")
         }
-        if (activeBoluses != null) for (ActiveBolus activeBolus : activeBoluses) {
-            if (activeBolus.getBolusType() == BolusType.STANDARD) continue;
-            ret.append(resourceHelper.gs(activeBolus.getBolusType() == BolusType.MULTIWAVE ? R.string.short_status_multiwave : R.string.short_status_extended,
-                    activeBolus.getRemainingAmount(), activeBolus.getInitialAmount(), activeBolus.getRemainingDuration())).append("\n");
+        if (activeBoluses != null) for (activeBolus in activeBoluses!!) {
+            if (activeBolus.bolusType == BolusType.STANDARD) continue
+            ret.append(resourceHelper.gs(if (activeBolus.bolusType == BolusType.MULTIWAVE) R.string.short_status_multiwave else R.string.short_status_extended,
+                activeBolus.remainingAmount, activeBolus.initialAmount, activeBolus.remainingDuration)).append("\n")
         }
         if (!veryShort && totalDailyDose != null) {
-            ret.append(resourceHelper.gs(R.string.short_status_tdd, totalDailyDose.getBolusAndBasal())).append("\n");
+            ret.append(resourceHelper.gs(R.string.short_status_tdd, totalDailyDose!!.bolusAndBasal)).append("\n")
         }
         if (cartridgeStatus != null) {
-            ret.append(resourceHelper.gs(R.string.short_status_reservoir, cartridgeStatus.getRemainingAmount())).append("\n");
+            ret.append(resourceHelper.gs(R.string.short_status_reservoir, cartridgeStatus!!.remainingAmount)).append("\n")
         }
         if (batteryStatus != null) {
-            ret.append(resourceHelper.gs(R.string.short_status_battery, batteryStatus.getBatteryAmount())).append("\n");
+            ret.append(resourceHelper.gs(R.string.short_status_battery, batteryStatus!!.batteryAmount)).append("\n")
         }
-        return ret.toString();
+        return ret.toString()
     }
 
-    @Override
-    public boolean isFakingTempsByExtendedBoluses() {
-        return sp.getBoolean(R.string.key_insight_enable_tbr_emulation, false);
+    override val isFakingTempsByExtendedBoluses: Boolean
+        get() = sp.getBoolean(R.string.key_insight_enable_tbr_emulation, false)
+
+    override fun loadTDDs(): PumpEnactResult {
+        return PumpEnactResult(injector).success(true)
     }
 
-    @NonNull @Override
-    public PumpEnactResult loadTDDs() {
-        return new PumpEnactResult(getInjector()).success(true);
-    }
-
-    private void readHistory() {
+    private fun readHistory() {
         try {
-            PumpTime pumpTime = connectionService.requestMessage(new GetDateTimeMessage()).await().getPumpTime();
-            String serial = serialNumber();
-            timeOffset = Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis() - parseDate(pumpTime.getYear(),
-                    pumpTime.getMonth(), pumpTime.getDay(), pumpTime.getHour(), pumpTime.getMinute(), pumpTime.getSecond());
-            InsightHistoryOffset historyOffset = insightDbHelper.getInsightHistoryOffset(serial);
+            val pumpTime = connectionService!!.requestMessage(GetDateTimeMessage()).await().pumpTime
+            val serial = serialNumber()
+            timeOffset = Calendar.getInstance(TimeZone.getTimeZone("UTC")).timeInMillis - parseDate(pumpTime.year,
+                pumpTime.month, pumpTime.day, pumpTime.hour, pumpTime.minute, pumpTime.second)
+            val historyOffset = insightDbHelper.getInsightHistoryOffset(serial)
             try {
-                List<HistoryEvent> historyEvents = new ArrayList<>();
+                var historyEvents: MutableList<HistoryEvent> = ArrayList()
                 if (historyOffset == null) {
-                    StartReadingHistoryMessage startMessage = new StartReadingHistoryMessage();
-                    startMessage.setDirection(HistoryReadingDirection.BACKWARD);
-                    startMessage.setOffset(0xFFFFFFFF);
-                    connectionService.requestMessage(startMessage).await();
-                    historyEvents = connectionService.requestMessage(new ReadHistoryEventsMessage()).await().getHistoryEvents();
+                    val startMessage = StartReadingHistoryMessage()
+                    startMessage.setDirection(HistoryReadingDirection.BACKWARD)
+                    startMessage.setOffset(-0x1)
+                    connectionService!!.requestMessage(startMessage).await()
+                    historyEvents = connectionService!!.requestMessage(ReadHistoryEventsMessage()).await().historyEvents
                 } else {
-                    StartReadingHistoryMessage startMessage = new StartReadingHistoryMessage();
-                    startMessage.setDirection(HistoryReadingDirection.FORWARD);
-                    startMessage.setOffset(historyOffset.getOffset() + 1);
-                    connectionService.requestMessage(startMessage).await();
+                    val startMessage = StartReadingHistoryMessage()
+                    startMessage.setDirection(HistoryReadingDirection.FORWARD)
+                    startMessage.setOffset(historyOffset.offset + 1)
+                    connectionService!!.requestMessage(startMessage).await()
                     while (true) {
-                        List<HistoryEvent> newEvents = connectionService.requestMessage(new ReadHistoryEventsMessage()).await().getHistoryEvents();
-                        if (newEvents.size() == 0) break;
-                        historyEvents.addAll(newEvents);
+                        val newEvents = connectionService!!.requestMessage(ReadHistoryEventsMessage()).await().historyEvents
+                        if (newEvents.size == 0) break
+                        historyEvents.addAll(newEvents)
                     }
                 }
-                Collections.sort(historyEvents);
-                Collections.reverse(historyEvents);
-                if (historyOffset != null) processHistoryEvents(serial, historyEvents);
-                if (historyEvents.size() > 0) {
-                    insightDbHelper.createOrUpdate(new InsightHistoryOffset(
-                            serial,
-                            historyEvents.get(0).getEventPosition())
-                    );
+                Collections.sort(historyEvents)
+                Collections.reverse(historyEvents)
+                if (historyOffset != null) processHistoryEvents(serial, historyEvents)
+                if (historyEvents.size > 0) {
+                    insightDbHelper.createOrUpdate(InsightHistoryOffset(
+                        serial,
+                        historyEvents[0].eventPosition)
+                    )
                 }
-            } catch (AppLayerErrorException e) {
-                aapsLogger.info(LTag.PUMP, "Exception while reading history: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
-            } catch (InsightException e) {
-                aapsLogger.info(LTag.PUMP, "Exception while reading history: " + e.getClass().getSimpleName());
-            } catch (Exception e) {
-                aapsLogger.error("Exception while reading history", e);
+            } catch (e: AppLayerErrorException) {
+                aapsLogger.info(LTag.PUMP, "Exception while reading history: " + e.javaClass.canonicalName + " (" + e.errorCode + ")")
+            } catch (e: InsightException) {
+                aapsLogger.info(LTag.PUMP, "Exception while reading history: " + e.javaClass.simpleName)
+            } catch (e: Exception) {
+                aapsLogger.error("Exception while reading history", e)
             } finally {
                 try {
-                    connectionService.requestMessage(new StopReadingHistoryMessage()).await();
-                } catch (Exception ignored) {
-                }
+                    connectionService!!.requestMessage(StopReadingHistoryMessage()).await()
+                } catch (ignored: Exception) {}
             }
-        } catch (AppLayerErrorException e) {
-            aapsLogger.info(LTag.PUMP, "Exception while reading history: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
-        } catch (InsightException e) {
-            aapsLogger.info(LTag.PUMP, "Exception while reading history: " + e.getClass().getSimpleName());
-        } catch (Exception e) {
-            aapsLogger.error("Exception while reading history", e);
+        } catch (e: AppLayerErrorException) {
+            aapsLogger.info(LTag.PUMP, "Exception while reading history: " + e.javaClass.canonicalName + " (" + e.errorCode + ")")
+        } catch (e: InsightException) {
+            aapsLogger.info(LTag.PUMP, "Exception while reading history: " + e.javaClass.simpleName)
+        } catch (e: Exception) {
+            aapsLogger.error("Exception while reading history", e)
         }
-        new Handler(Looper.getMainLooper()).post(() -> rxBus.send(new EventRefreshOverview("LocalInsightPlugin::readHistory", false)));
+        Handler(Looper.getMainLooper()).post { rxBus.send(EventRefreshOverview("LocalInsightPlugin::readHistory", false)) }
     }
 
-    private void processHistoryEvents(String serial, List<HistoryEvent> historyEvents) {
-        List<TemporaryBasal> temporaryBasals = new ArrayList<>();
-        List<InsightPumpID> pumpStartedEvents = new ArrayList<>();
-        for (HistoryEvent historyEvent : historyEvents)
-            if (!processHistoryEvent(serial, temporaryBasals, pumpStartedEvents, historyEvent))
-                break;
-        Collections.reverse(temporaryBasals);
-
-        for (InsightPumpID pumpID : pumpStartedEvents) {
-            InsightPumpID stoppedEvent = insightDbHelper.getPumpStoppedEvent(pumpID.getPumpSerial(), pumpID.getTimestamp());
-            if (stoppedEvent != null && stoppedEvent.getEventType().equals(EventType.PumpStopped)) {             // Search if Stop event is after 15min of Pause
-                InsightPumpID pauseEvent = insightDbHelper.getPumpStoppedEvent(pumpID.getPumpSerial(), stoppedEvent.getTimestamp() - T.mins(1).msecs());
-                if (pauseEvent != null && pauseEvent.getEventType().equals(EventType.PumpPaused) && (stoppedEvent.getTimestamp() - pauseEvent.getTimestamp() < T.mins(16).msecs())) {
-                    stoppedEvent = pauseEvent;
-                    stoppedEvent.setEventType(EventType.PumpStopped);
+    private fun processHistoryEvents(serial: String, historyEvents: List<HistoryEvent?>) {
+        val temporaryBasals: MutableList<TemporaryBasal> = ArrayList()
+        val pumpStartedEvents: MutableList<InsightPumpID> = ArrayList()
+        for (historyEvent in historyEvents) if (!processHistoryEvent(serial, temporaryBasals, pumpStartedEvents, historyEvent)) break
+        Collections.reverse(temporaryBasals)
+        for ((timestamp, _, pumpSerial, eventID) in pumpStartedEvents) {
+            var stoppedEvent = insightDbHelper.getPumpStoppedEvent(pumpSerial!!, timestamp)
+            if (stoppedEvent != null && stoppedEvent.eventType == InsightPumpID.EventType.PumpStopped) {             // Search if Stop event is after 15min of Pause
+                val pauseEvent = insightDbHelper.getPumpStoppedEvent(pumpSerial, stoppedEvent.timestamp - mins(1).msecs())
+                if (pauseEvent != null && pauseEvent.eventType == InsightPumpID.EventType.PumpPaused && stoppedEvent.timestamp - pauseEvent.timestamp < mins(16).msecs()) {
+                    stoppedEvent = pauseEvent
+                    stoppedEvent.eventType = InsightPumpID.EventType.PumpStopped
                 }
             }
-            if (stoppedEvent == null || stoppedEvent.getEventType().equals(EventType.PumpPaused) || pumpID.getTimestamp() - stoppedEvent.getTimestamp() < 10000)
-                continue;
-            long tbrStart = stoppedEvent.getTimestamp() + 10000;
-            TemporaryBasal temporaryBasal = new TemporaryBasal(
-                    tbrStart,
-                    pumpID.getTimestamp() - tbrStart,
-                    0,
-                    false,
-                    PumpSync.TemporaryBasalType.NORMAL,
-                    pumpID.getEventID(),
-                    pumpID.getEventID());
-            temporaryBasals.add(temporaryBasal);
+            if (stoppedEvent == null || stoppedEvent.eventType == InsightPumpID.EventType.PumpPaused || timestamp - stoppedEvent.timestamp < 10000) continue
+            val tbrStart = stoppedEvent.timestamp + 10000
+            val temporaryBasal = TemporaryBasal(
+                timestamp= tbrStart,
+                duration= timestamp - tbrStart,
+                rate= 0.0,
+                isAbsolute = false,
+                type= TemporaryBasalType.NORMAL,
+                id= eventID,
+                pumpId= eventID)
+            temporaryBasals.add(temporaryBasal)
         }
-        temporaryBasals.sort((o1, o2) -> (int) (o1.getTimestamp() - o2.getTimestamp()));
-        for (TemporaryBasal temporaryBasal : temporaryBasals) {
-            if (temporaryBasal.getDuration() == 0L) {                    // for Stop TBR event duration = 0L
+        temporaryBasals.sortWith(object: Comparator<TemporaryBasal> {override fun compare(o1: TemporaryBasal, o2: TemporaryBasal): Int = (o1.timestamp - o2.timestamp).toInt() })
+        for (temporaryBasal in temporaryBasals) {
+            if (temporaryBasal.duration == 0L) {                    // for Stop TBR event duration = 0L
                 pumpSync.syncStopTemporaryBasalWithPumpId(
-                            temporaryBasal.getTimestamp(),
-                            temporaryBasal.getPumpId(),
-                            PumpType.ACCU_CHEK_INSIGHT,
-                            serial);
+                    timestamp= temporaryBasal.timestamp,
+                    endPumpId= temporaryBasal.pumpId!!,
+                    pumpType= PumpType.ACCU_CHEK_INSIGHT,
+                    pumpSerial= serial)
             }
-            if (temporaryBasal.getRate() != 100.0){
+            if (temporaryBasal.rate != 100.0) {
                 pumpSync.syncTemporaryBasalWithPumpId(
-                        temporaryBasal.getTimestamp(),
-                        temporaryBasal.getRate(),
-                        temporaryBasal.getDuration(),
-                        temporaryBasal.isAbsolute(),
-                        temporaryBasal.getType(),
-                        temporaryBasal.getPumpId(),
-                        PumpType.ACCU_CHEK_INSIGHT,
-                        serial);
+                    timestamp= temporaryBasal.timestamp,
+                    rate= temporaryBasal.rate,
+                    duration= temporaryBasal.duration,
+                    isAbsolute= temporaryBasal.isAbsolute,
+                    type= temporaryBasal.type,
+                    pumpId= temporaryBasal.pumpId!!,
+                    pumpType= PumpType.ACCU_CHEK_INSIGHT,
+                    pumpSerial= serial)
             }
         }
     }
 
-    private boolean processHistoryEvent(String serial, List<TemporaryBasal> temporaryBasals, List<InsightPumpID> pumpStartedEvents, HistoryEvent event) {
-        if (event instanceof DefaultDateTimeSetEvent) return false;
-        else if (event instanceof DateTimeChangedEvent)
-            processDateTimeChangedEvent((DateTimeChangedEvent) event);
-        else if (event instanceof CannulaFilledEvent)
-            processCannulaFilledEvent(serial, (CannulaFilledEvent) event);
-        else if (event instanceof TotalDailyDoseEvent)
-            processTotalDailyDoseEvent(serial, (TotalDailyDoseEvent) event);
-        else if (event instanceof TubeFilledEvent) processTubeFilledEvent(serial, (TubeFilledEvent) event);
-        else if (event instanceof SniffingDoneEvent)
-            processSniffingDoneEvent(serial, (SniffingDoneEvent) event);
-        else if (event instanceof PowerUpEvent) processPowerUpEvent(serial, (PowerUpEvent) event);
-        else if (event instanceof OperatingModeChangedEvent)
-            processOperatingModeChangedEvent(serial, pumpStartedEvents, (OperatingModeChangedEvent) event);
-        else if (event instanceof StartOfTBREvent)
-            processStartOfTBREvent(serial, temporaryBasals, (StartOfTBREvent) event);
-        else if (event instanceof EndOfTBREvent)
-            processEndOfTBREvent(serial, temporaryBasals, (EndOfTBREvent) event);
-        else if (event instanceof BolusProgrammedEvent)
-            processBolusProgrammedEvent(serial, (BolusProgrammedEvent) event);
-        else if (event instanceof BolusDeliveredEvent)
-            processBolusDeliveredEvent(serial, (BolusDeliveredEvent) event);
-        else if (event instanceof OccurrenceOfAlertEvent)
-            processOccurrenceOfAlertEvent((OccurrenceOfAlertEvent) event);
-        return true;
+    private fun processHistoryEvent(serial: String, temporaryBasals: MutableList<TemporaryBasal>, pumpStartedEvents: MutableList<InsightPumpID>, event: HistoryEvent?): Boolean {
+        when (event) {
+            is DefaultDateTimeSetEvent      -> return false
+            is DateTimeChangedEvent         -> processDateTimeChangedEvent(event)
+            is CannulaFilledEvent           -> processCannulaFilledEvent(serial, event)
+            is TotalDailyDoseEvent          -> processTotalDailyDoseEvent(serial, event)
+            is TubeFilledEvent              -> processTubeFilledEvent(serial, event)
+            is SniffingDoneEvent            -> processSniffingDoneEvent(serial, event)
+            is PowerUpEvent                 -> processPowerUpEvent(serial, event)
+            is OperatingModeChangedEvent    -> processOperatingModeChangedEvent(serial, pumpStartedEvents, event)
+            is StartOfTBREvent              -> processStartOfTBREvent(serial, temporaryBasals, event)
+            is EndOfTBREvent                -> processEndOfTBREvent(serial, temporaryBasals, event)
+            is BolusProgrammedEvent         -> processBolusProgrammedEvent(serial, event)
+            is BolusDeliveredEvent          -> processBolusDeliveredEvent(serial, event)
+            is OccurrenceOfAlertEvent       -> processOccurrenceOfAlertEvent(event)
+        }
+        return true
     }
 
-    private void processDateTimeChangedEvent(DateTimeChangedEvent event) {
-        long timeAfter = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(), event.getEventHour(), event.getEventMinute(), event.getEventSecond());
-        long timeBefore = parseDate(event.getBeforeYear(), event.getBeforeMonth(), event.getBeforeDay(), event.getBeforeHour(), event.getBeforeMinute(), event.getBeforeSecond());
-        timeOffset -= timeAfter - timeBefore;
+    private fun processDateTimeChangedEvent(event: DateTimeChangedEvent) {
+        val timeAfter = parseDate(event.eventYear, event.eventMonth, event.eventDay, event.eventHour, event.eventMinute, event.eventSecond)
+        val timeBefore = parseDate(event.beforeYear, event.beforeMonth, event.beforeDay, event.beforeHour, event.beforeMinute, event.beforeSecond)
+        timeOffset -= timeAfter - timeBefore
     }
 
-    private void processCannulaFilledEvent(String serial, CannulaFilledEvent event) {
-        if (!sp.getBoolean(R.string.key_insight_log_site_changes, false)) return;
-        long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
-                event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
-        if (event.getAmount() > 0.0)                 // Don't record event if amount is null => Fix Site Change with Insight v3 (event is always sent when Reservoir is changed)
-            uploadCareportalEvent(timestamp, DetailedBolusInfo.EventType.CANNULA_CHANGE);
+    private fun processCannulaFilledEvent(serial: String, event: CannulaFilledEvent) {
+        if (!sp.getBoolean(R.string.key_insight_log_site_changes, false)) return
+        val timestamp = parseDate(event.eventYear, event.eventMonth, event.eventDay,
+            event.eventHour, event.eventMinute, event.eventSecond) + timeOffset
+        if (event.amount > 0.0)                 // Don't record event if amount is null => Fix Site Change with Insight v3 (event is always sent when Reservoir is changed)
+            uploadCareportalEvent(timestamp, DetailedBolusInfo.EventType.CANNULA_CHANGE)
     }
 
-    private void processTotalDailyDoseEvent(String serial, TotalDailyDoseEvent event) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date(0));
-        calendar.set(Calendar.YEAR, event.getTotalYear());
-        calendar.set(Calendar.MONTH, event.getTotalMonth() - 1);
-        calendar.set(Calendar.DAY_OF_MONTH, event.getTotalDay());
+    private fun processTotalDailyDoseEvent(serial: String, event: TotalDailyDoseEvent) {
+        val calendar = Calendar.getInstance()
+        calendar.time = Date(0)
+        calendar[Calendar.YEAR] = event.totalYear
+        calendar[Calendar.MONTH] = event.totalMonth - 1
+        calendar[Calendar.DAY_OF_MONTH] = event.totalDay
         pumpSync.createOrUpdateTotalDailyDose(
-                calendar.getTimeInMillis(),
-                event.getBolusTotal(),
-                event.getBasalTotal(),
-                0.0, // will be calculated automatically
-                event.getEventPosition(),
-                PumpType.ACCU_CHEK_INSIGHT,
-                serial);
+            timestamp= dateUtil.now(),
+            bolusAmount = event.bolusTotal,
+            basalAmount =  event.basalTotal,
+            totalAmount = 0.0,  // will be calculated automatically
+            pumpId =  event.eventPosition,
+            pumpType= PumpType.ACCU_CHEK_INSIGHT,
+            pumpSerial= serial)
     }
 
-    private void processTubeFilledEvent(String serial, TubeFilledEvent event) {
-        if (!sp.getBoolean(R.string.key_insight_log_tube_changes, false)) return;
-        long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
-                event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
-        if (event.getAmount() > 0.0)               // Don't record event if amount is null
-            logNote(timestamp, resourceHelper.gs(R.string.tube_changed));
+    private fun processTubeFilledEvent(serial: String, event: TubeFilledEvent) {
+        if (!sp.getBoolean(R.string.key_insight_log_tube_changes, false)) return
+        val timestamp = parseDate(event.eventYear, event.eventMonth, event.eventDay,
+            event.eventHour, event.eventMinute, event.eventSecond) + timeOffset
+        if (event.amount > 0.0) // Don't record event if amount is null
+            logNote(timestamp, resourceHelper.gs(R.string.tube_changed))
     }
 
-    private void processSniffingDoneEvent(String serial, SniffingDoneEvent event) {
-        if (!sp.getBoolean(R.string.key_insight_log_reservoir_changes, false)) return;
-        long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
-                event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
-        uploadCareportalEvent(timestamp, DetailedBolusInfo.EventType.INSULIN_CHANGE);
+    private fun processSniffingDoneEvent(serial: String, event: SniffingDoneEvent) {
+        if (!sp.getBoolean(R.string.key_insight_log_reservoir_changes, false)) return
+        val timestamp = parseDate(event.eventYear, event.eventMonth, event.eventDay,
+            event.eventHour, event.eventMinute, event.eventSecond) + timeOffset
+        uploadCareportalEvent(timestamp, DetailedBolusInfo.EventType.INSULIN_CHANGE)
     }
 
-    private void processPowerUpEvent(String serial, PowerUpEvent event) {
-        if (!sp.getBoolean(R.string.key_insight_log_battery_changes, false)) return;
-        long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
-                event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
-        uploadCareportalEvent(timestamp, DetailedBolusInfo.EventType.PUMP_BATTERY_CHANGE);
+    private fun processPowerUpEvent(serial: String, event: PowerUpEvent) {
+        if (!sp.getBoolean(R.string.key_insight_log_battery_changes, false)) return
+        val timestamp = parseDate(event.eventYear, event.eventMonth, event.eventDay,
+            event.eventHour, event.eventMinute, event.eventSecond) + timeOffset
+        uploadCareportalEvent(timestamp, DetailedBolusInfo.EventType.PUMP_BATTERY_CHANGE)
     }
 
-    private void processOperatingModeChangedEvent(String serial, List<InsightPumpID> pumpStartedEvents, OperatingModeChangedEvent event) {
-        long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
-                event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
-        InsightPumpID pumpID = new InsightPumpID(
-                timestamp,
-                EventType.None,
-                serial,
-                event.getEventPosition());
-        switch (event.getNewValue()) {
-            case STARTED:
-                pumpID.setEventType(EventType.PumpStarted);
-                pumpStartedEvents.add(pumpID);
-                if (sp.getBoolean("insight_log_operating_mode_changes", false))
-                    logNote(timestamp, resourceHelper.gs(R.string.pump_started));
-                break;
-            case STOPPED:
-                pumpID.setEventType(EventType.PumpStopped);
-                if (sp.getBoolean("insight_log_operating_mode_changes", false))
-                    logNote(timestamp, resourceHelper.gs(R.string.pump_stopped));
-                break;
-            case PAUSED:
-                pumpID.setEventType(EventType.PumpPaused);
-                if (sp.getBoolean("insight_log_operating_mode_changes", false))
-                    logNote(timestamp, resourceHelper.gs(R.string.pump_paused));
-                break;
+    private fun processOperatingModeChangedEvent(serial: String, pumpStartedEvents: MutableList<InsightPumpID>, event: OperatingModeChangedEvent) {
+        val timestamp = parseDate(event.eventYear, event.eventMonth, event.eventDay,
+            event.eventHour, event.eventMinute, event.eventSecond) + timeOffset
+        val pumpID = InsightPumpID(
+            timestamp,
+            InsightPumpID.EventType.None,
+            serial,
+            event.eventPosition)
+        when (event.newValue) {
+            OperatingMode.STARTED -> {
+                pumpID.eventType = InsightPumpID.EventType.PumpStarted
+                pumpStartedEvents.add(pumpID)
+                if (sp.getBoolean("insight_log_operating_mode_changes", false)) logNote(timestamp, resourceHelper.gs(R.string.pump_started))
+            }
+
+            OperatingMode.STOPPED -> {
+                pumpID.eventType = InsightPumpID.EventType.PumpStopped
+                if (sp.getBoolean("insight_log_operating_mode_changes", false)) logNote(timestamp, resourceHelper.gs(R.string.pump_stopped))
+            }
+
+            OperatingMode.PAUSED -> {
+                pumpID.eventType = InsightPumpID.EventType.PumpPaused
+                if (sp.getBoolean("insight_log_operating_mode_changes", false)) logNote(timestamp, resourceHelper.gs(R.string.pump_paused))
+            }
         }
-        insightDbHelper.createOrUpdate(pumpID);
+        insightDbHelper.createOrUpdate(pumpID)
     }
 
-    private void processStartOfTBREvent(String serial, List<TemporaryBasal> temporaryBasals, StartOfTBREvent event) {
-        long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
-                event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
-        insightDbHelper.createOrUpdate(new InsightPumpID(
-                timestamp,
-                EventType.StartOfTBR,
-                serial,
-                event.getEventPosition()));
-        temporaryBasals.add(new TemporaryBasal(
-                timestamp,
-                T.mins(event.getDuration()).msecs(),
-                event.getAmount(),
-                false,
-                PumpSync.TemporaryBasalType.NORMAL,
-                event.getEventPosition(),
-                event.getEventPosition()));
+    private fun processStartOfTBREvent(serial: String, temporaryBasals: MutableList<TemporaryBasal>, event: StartOfTBREvent) {
+        val timestamp = parseDate(event.eventYear, event.eventMonth, event.eventDay,
+            event.eventHour, event.eventMinute, event.eventSecond) + timeOffset
+        insightDbHelper.createOrUpdate(InsightPumpID(
+            timestamp= timestamp,
+            eventType= InsightPumpID.EventType.StartOfTBR,
+            pumpSerial= serial,
+            eventID= event.eventPosition))
+        temporaryBasals.add(TemporaryBasal(
+            timestamp= timestamp,
+            duration= mins(event.duration.toLong()).msecs(),
+            rate= event.amount.toDouble(),
+            isAbsolute= false,
+            type= TemporaryBasalType.NORMAL,
+            id= event.eventPosition,
+            pumpId= event.eventPosition))
     }
 
-    private void processEndOfTBREvent(String serial, List<TemporaryBasal> temporaryBasals, EndOfTBREvent event) {
-        long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
-                event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
-        insightDbHelper.createOrUpdate(new InsightPumpID(
-                timestamp - 1500L,
-                EventType.EndOfTBR,
-                serial,
-                event.getEventPosition()));
-
-        temporaryBasals.add(new PumpSync.PumpState.TemporaryBasal(
-                timestamp - 1500L,
-                0L,
-                100.0,
-                false,
-                PumpSync.TemporaryBasalType.NORMAL,
-                event.getEventPosition(),
-                event.getEventPosition()));
+    private fun processEndOfTBREvent(serial: String, temporaryBasals: MutableList<TemporaryBasal>, event: EndOfTBREvent) {
+        val timestamp = parseDate(event.eventYear, event.eventMonth, event.eventDay,
+            event.eventHour, event.eventMinute, event.eventSecond) + timeOffset
+        insightDbHelper.createOrUpdate(InsightPumpID(
+            timestamp= timestamp - 1500L,
+            eventType= InsightPumpID.EventType.EndOfTBR,
+            pumpSerial= serial,
+            eventID= event.eventPosition))
+        temporaryBasals.add(TemporaryBasal(
+            timestamp= timestamp - 1500L,
+            duration= 0L,
+            rate= 100.0,
+            isAbsolute = false,
+            type= TemporaryBasalType.NORMAL,
+            id= event.eventPosition,
+            pumpId= event.eventPosition))
     }
 
-    private void processBolusProgrammedEvent(String serial, BolusProgrammedEvent event) {
-        long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
-                event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
-        InsightBolusID bolusID = insightDbHelper.getInsightBolusID(serial, event.getBolusID(), timestamp);
-        if (bolusID != null && bolusID.getEndID() != null) {
-            bolusID.setStartID(event.getEventPosition());
-            insightDbHelper.createOrUpdate(bolusID);
-            return;
+    private fun processBolusProgrammedEvent(serial: String, event: BolusProgrammedEvent) {
+        val timestamp = parseDate(event.eventYear, event.eventMonth, event.eventDay,
+            event.eventHour, event.eventMinute, event.eventSecond) + timeOffset
+        var bolusID = insightDbHelper.getInsightBolusID(serial, event.bolusID, timestamp)
+        if (bolusID != null && bolusID.endID != null) {
+            bolusID.startID = event.eventPosition
+            insightDbHelper.createOrUpdate(bolusID)
+            return
         }
-        if (bolusID == null || bolusID.getStartID() != null) {                        //In rare edge cases two boluses can share the same ID
-            insightDbHelper.createOrUpdate(new InsightBolusID(
-                    timestamp,
-                    serial,
-                    event.getBolusID(),
-                    event.getEventPosition(),
-                    null
-            ));
-            bolusID = insightDbHelper.getInsightBolusID(serial, event.getBolusID(), timestamp);
+        if (bolusID == null || bolusID.startID != null) {                        //In rare edge cases two boluses can share the same ID
+            insightDbHelper.createOrUpdate(InsightBolusID(
+                timestamp= timestamp,
+                pumpSerial= serial,
+                bolusID= event.bolusID,
+                startID= event.eventPosition))
+            bolusID = insightDbHelper.getInsightBolusID(serial, event.bolusID, timestamp)
         }
-        bolusID.setStartID(event.getEventPosition());
-        insightDbHelper.createOrUpdate(bolusID);
-
-        if (event.getBolusType() == BolusType.STANDARD || event.getBolusType() == BolusType.MULTIWAVE) {
+        bolusID!!.startID = event.eventPosition
+        insightDbHelper.createOrUpdate(bolusID)
+        if (event.bolusType == BolusType.STANDARD || event.bolusType == BolusType.MULTIWAVE) {
             pumpSync.syncBolusWithPumpId(
-                    bolusID.getTimestamp(),
-                    event.getImmediateAmount(),
-                    null,
-                    bolusID.getId(),
-                    PumpType.ACCU_CHEK_INSIGHT,
-                    serial);
+                timestamp= timestamp,
+                amount= event.immediateAmount,
+                type= null,
+                pumpId= bolusID.id,
+                pumpType= PumpType.ACCU_CHEK_INSIGHT,
+                pumpSerial= serial)
         }
-        if ((event.getBolusType() == BolusType.EXTENDED || event.getBolusType() == BolusType.MULTIWAVE)) {
-            if (profileFunction.getProfile(bolusID.getTimestamp()) != null)
-                pumpSync.syncExtendedBolusWithPumpId(
-                        bolusID.getTimestamp(),
-                        event.getExtendedAmount(),
-                        T.mins(event.getDuration()).msecs(),
-                        isFakingTempsByExtendedBoluses(),
-                        bolusID.getId(),
-                        PumpType.ACCU_CHEK_INSIGHT,
-                        serial);
+        if (event.bolusType == BolusType.EXTENDED || event.bolusType == BolusType.MULTIWAVE) {
+            if (profileFunction.getProfile(bolusID.timestamp) != null) pumpSync.syncExtendedBolusWithPumpId(
+                timestamp= timestamp,
+                amount= event.extendedAmount,
+                duration= mins(event.duration.toLong()).msecs(),
+                isEmulatingTB = isFakingTempsByExtendedBoluses,
+                pumpId= bolusID.id,
+                pumpType= PumpType.ACCU_CHEK_INSIGHT,
+                pumpSerial= serial)
         }
     }
 
-    private void processBolusDeliveredEvent(String serial, BolusDeliveredEvent event) {
-        long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
-                event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
-        long startTimestamp = parseRelativeDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(), event.getEventHour(),
-                event.getEventMinute(), event.getEventSecond(), event.getStartHour(), event.getStartMinute(), event.getStartSecond()) + timeOffset;
-        InsightBolusID bolusID = insightDbHelper.getInsightBolusID(serial, event.getBolusID(), timestamp);
-        if (bolusID == null || bolusID.getEndID() != null) {                        // TODO() Check if test EndID is necessary
-            bolusID = new InsightBolusID(
-                    startTimestamp,
-                    serial,
-                    event.getBolusID(),
-                    bolusID == null ? event.getEventPosition() : bolusID.getStartID(),
-                    event.getEventPosition());
+    private fun processBolusDeliveredEvent(serial: String, event: BolusDeliveredEvent) {
+        val timestamp = parseDate(event.eventYear, event.eventMonth, event.eventDay,
+            event.eventHour, event.eventMinute, event.eventSecond) + timeOffset
+        val startTimestamp = parseRelativeDate(event.eventYear, event.eventMonth, event.eventDay, event.eventHour,
+            event.eventMinute, event.eventSecond, event.startHour, event.startMinute, event.startSecond) + timeOffset
+        var bolusID = insightDbHelper.getInsightBolusID(serial, event.bolusID, timestamp)
+        if (bolusID == null || bolusID.endID != null) {
+            bolusID = InsightBolusID(
+                timestamp= startTimestamp,
+                pumpSerial= serial,
+                bolusID= event.bolusID,
+                startID= bolusID?.startID ?: event.eventPosition,
+                endID= event.eventPosition)
         }
-        bolusID.setEndID(event.getEventPosition());
-        insightDbHelper.createOrUpdate(bolusID);
-        bolusID = insightDbHelper.getInsightBolusID(serial, event.getBolusID(), startTimestamp); // Line added to get id
-        if (event.getBolusType() == BolusType.STANDARD || event.getBolusType() == BolusType.MULTIWAVE) {
+        bolusID.endID = event.eventPosition
+        insightDbHelper.createOrUpdate(bolusID)
+        bolusID = insightDbHelper.getInsightBolusID(serial, event.bolusID, startTimestamp) // Line added to get id
+        if (event.bolusType == BolusType.STANDARD || event.bolusType == BolusType.MULTIWAVE) {
             pumpSync.syncBolusWithPumpId(
-                    bolusID.getTimestamp(),
-                    event.getImmediateAmount(),
-                    null,
-                    bolusID.getId(),
-                    PumpType.ACCU_CHEK_INSIGHT,
-                    serial);
+                timestamp= startTimestamp,
+                amount= event.immediateAmount,
+                type= null,
+                pumpId= bolusID!!.id,
+                pumpType= PumpType.ACCU_CHEK_INSIGHT,
+                pumpSerial= serial)
         }
-        if (event.getBolusType() == BolusType.EXTENDED || event.getBolusType() == BolusType.MULTIWAVE) {
-            if (event.getDuration() > 0 && profileFunction.getProfile(bolusID.getTimestamp()) != null)
-                    pumpSync.syncExtendedBolusWithPumpId(
-                            bolusID.getTimestamp(),
-                            event.getExtendedAmount(),
-                            T.mins(event.getDuration()).msecs(),
-                            isFakingTempsByExtendedBoluses(),
-                            bolusID.getId(),
-                            PumpType.ACCU_CHEK_INSIGHT,
-                            serial);
+        if (event.bolusType == BolusType.EXTENDED || event.bolusType == BolusType.MULTIWAVE) {
+            if (event.duration > 0 && profileFunction.getProfile(bolusID!!.timestamp) != null) pumpSync.syncExtendedBolusWithPumpId(
+                timestamp= startTimestamp,
+                amount= event.extendedAmount,
+                duration= mins(event.duration.toLong()).msecs(),
+                isEmulatingTB= isFakingTempsByExtendedBoluses,
+                pumpId= bolusID.id,
+                pumpType= PumpType.ACCU_CHEK_INSIGHT,
+                pumpSerial= serial)
         }
     }
 
-    private void processOccurrenceOfAlertEvent(OccurrenceOfAlertEvent event) {
-        if (!sp.getBoolean(R.string.key_insight_log_alerts, false)) return;
-        long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
-                event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
-        Integer code = null;
-        Integer title = null;
-        switch (event.getAlertType()) {
-            case ERROR_6:
-                code = R.string.alert_e6_code;
-                title = R.string.alert_e6_title;
-                break;
-            case ERROR_10:
-                code = R.string.alert_e10_code;
-                title = R.string.alert_e10_title;
-                break;
-            case ERROR_13:
-                code = R.string.alert_e13_code;
-                title = R.string.alert_e13_title;
-                break;
-            case MAINTENANCE_20:
-                code = R.string.alert_m20_code;
-                title = R.string.alert_m20_title;
-                break;
-            case MAINTENANCE_21:
-                code = R.string.alert_m21_code;
-                title = R.string.alert_m21_title;
-                break;
-            case MAINTENANCE_22:
-                code = R.string.alert_m22_code;
-                title = R.string.alert_m22_title;
-                break;
-            case MAINTENANCE_23:
-                code = R.string.alert_m23_code;
-                title = R.string.alert_m23_title;
-                break;
-            case MAINTENANCE_24:
-                code = R.string.alert_m24_code;
-                title = R.string.alert_m24_title;
-                break;
-            case MAINTENANCE_25:
-                code = R.string.alert_m25_code;
-                title = R.string.alert_m25_title;
-                break;
-            case MAINTENANCE_26:
-                code = R.string.alert_m26_code;
-                title = R.string.alert_m26_title;
-                break;
-            case MAINTENANCE_27:
-                code = R.string.alert_m27_code;
-                title = R.string.alert_m27_title;
-                break;
-            case MAINTENANCE_28:
-                code = R.string.alert_m28_code;
-                title = R.string.alert_m28_title;
-                break;
-            case MAINTENANCE_29:
-                code = R.string.alert_m29_code;
-                title = R.string.alert_m29_title;
-                break;
-            case MAINTENANCE_30:
-                code = R.string.alert_m30_code;
-                title = R.string.alert_m30_title;
-                break;
-            case WARNING_31:
-                code = R.string.alert_w31_code;
-                title = R.string.alert_w31_title;
-                break;
-            case WARNING_32:
-                code = R.string.alert_w32_code;
-                title = R.string.alert_w32_title;
-                break;
-            case WARNING_33:
-                code = R.string.alert_w33_code;
-                title = R.string.alert_w33_title;
-                break;
-            case WARNING_34:
-                code = R.string.alert_w34_code;
-                title = R.string.alert_w34_title;
-                break;
-            case WARNING_39:
-                code = R.string.alert_w39_code;
-                title = R.string.alert_w39_title;
-                break;
+    private fun processOccurrenceOfAlertEvent(event: OccurrenceOfAlertEvent) {
+        if (!sp.getBoolean(R.string.key_insight_log_alerts, false)) return
+        val timestamp = parseDate(event.eventYear, event.eventMonth, event.eventDay,
+            event.eventHour, event.eventMinute, event.eventSecond) + timeOffset
+        var code: Int? = null
+        var title: Int? = null
+        when (event.alertType) {
+            AlertType.ERROR_6 -> {
+                code = R.string.alert_e6_code
+                title = R.string.alert_e6_title
+            }
+
+            AlertType.ERROR_10 -> {
+                code = R.string.alert_e10_code
+                title = R.string.alert_e10_title
+            }
+
+            AlertType.ERROR_13 -> {
+                code = R.string.alert_e13_code
+                title = R.string.alert_e13_title
+            }
+
+            AlertType.MAINTENANCE_20 -> {
+                code = R.string.alert_m20_code
+                title = R.string.alert_m20_title
+            }
+
+            AlertType.MAINTENANCE_21 -> {
+                code = R.string.alert_m21_code
+                title = R.string.alert_m21_title
+            }
+
+            AlertType.MAINTENANCE_22 -> {
+                code = R.string.alert_m22_code
+                title = R.string.alert_m22_title
+            }
+
+            AlertType.MAINTENANCE_23 -> {
+                code = R.string.alert_m23_code
+                title = R.string.alert_m23_title
+            }
+
+            AlertType.MAINTENANCE_24 -> {
+                code = R.string.alert_m24_code
+                title = R.string.alert_m24_title
+            }
+
+            AlertType.MAINTENANCE_25 -> {
+                code = R.string.alert_m25_code
+                title = R.string.alert_m25_title
+            }
+
+            AlertType.MAINTENANCE_26 -> {
+                code = R.string.alert_m26_code
+                title = R.string.alert_m26_title
+            }
+
+            AlertType.MAINTENANCE_27 -> {
+                code = R.string.alert_m27_code
+                title = R.string.alert_m27_title
+            }
+
+            AlertType.MAINTENANCE_28 -> {
+                code = R.string.alert_m28_code
+                title = R.string.alert_m28_title
+            }
+
+            AlertType.MAINTENANCE_29 -> {
+                code = R.string.alert_m29_code
+                title = R.string.alert_m29_title
+            }
+
+            AlertType.MAINTENANCE_30 -> {
+                code = R.string.alert_m30_code
+                title = R.string.alert_m30_title
+            }
+
+            AlertType.WARNING_31 -> {
+                code = R.string.alert_w31_code
+                title = R.string.alert_w31_title
+            }
+
+            AlertType.WARNING_32 -> {
+                code = R.string.alert_w32_code
+                title = R.string.alert_w32_title
+            }
+
+            AlertType.WARNING_33 -> {
+                code = R.string.alert_w33_code
+                title = R.string.alert_w33_title
+            }
+
+            AlertType.WARNING_34 -> {
+                code = R.string.alert_w34_code
+                title = R.string.alert_w34_title
+            }
+
+            AlertType.WARNING_39 -> {
+                code = R.string.alert_w39_code
+                title = R.string.alert_w39_title
+            }
         }
-        if (code != null)
-            logNote(timestamp, resourceHelper.gs(R.string.insight_alert_formatter, resourceHelper.gs(code), resourceHelper.gs(title)));
+        if (code != null) logNote(timestamp, resourceHelper.gs(R.string.insight_alert_formatter, resourceHelper.gs(code), resourceHelper.gs(title!!)))
     }
 
-    private long parseDate(int year, int month, int day, int hour, int minute, int second) {
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, month - 1);
-        calendar.set(Calendar.DAY_OF_MONTH, day);
-        calendar.set(Calendar.HOUR_OF_DAY, hour);
-        calendar.set(Calendar.MINUTE, minute);
-        calendar.set(Calendar.SECOND, second);
-        return calendar.getTimeInMillis();
+    private fun parseDate(year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Int): Long {
+        val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+        calendar[Calendar.YEAR] = year
+        calendar[Calendar.MONTH] = month - 1
+        calendar[Calendar.DAY_OF_MONTH] = day
+        calendar[Calendar.HOUR_OF_DAY] = hour
+        calendar[Calendar.MINUTE] = minute
+        calendar[Calendar.SECOND] = second
+        return calendar.timeInMillis
     }
 
-    private void logNote(long date, String note) {
-        pumpSync.insertTherapyEventIfNewWithTimestamp(date, DetailedBolusInfo.EventType.NOTE, note, null, PumpType.ACCU_CHEK_INSIGHT, serialNumber());
+    private fun logNote(date: Long, note: String) {
+        pumpSync.insertTherapyEventIfNewWithTimestamp(date, DetailedBolusInfo.EventType.NOTE, note, null, PumpType.ACCU_CHEK_INSIGHT, serialNumber())
     }
 
-    private long parseRelativeDate(int year, int month, int day, int hour, int minute, int second, int relativeHour, int relativeMinute, int relativeSecond) {
-        if (relativeHour * 60 * 60 + relativeMinute * 60 + relativeSecond >= hour * 60 * 60 * minute * 60 + second)
-            day--;
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, month - 1);
-        calendar.set(Calendar.DAY_OF_MONTH, day);
-        calendar.set(Calendar.HOUR_OF_DAY, relativeHour);
-        calendar.set(Calendar.MINUTE, relativeMinute);
-        calendar.set(Calendar.SECOND, relativeSecond);
-        return calendar.getTimeInMillis();
+    private fun parseRelativeDate(year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Int, relativeHour: Int, relativeMinute: Int, relativeSecond: Int): Long {
+        var day = day
+        if (relativeHour * 60 * 60 + relativeMinute * 60 + relativeSecond >= hour * 60 * 60 * minute * 60 + second) day--
+        val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+        calendar[Calendar.YEAR] = year
+        calendar[Calendar.MONTH] = month - 1
+        calendar[Calendar.DAY_OF_MONTH] = day
+        calendar[Calendar.HOUR_OF_DAY] = relativeHour
+        calendar[Calendar.MINUTE] = relativeMinute
+        calendar[Calendar.SECOND] = relativeSecond
+        return calendar.timeInMillis
     }
 
-    private void uploadCareportalEvent(long date, DetailedBolusInfo.EventType event) {
-        pumpSync.insertTherapyEventIfNewWithTimestamp(date, event, null, null, PumpType.ACCU_CHEK_INSIGHT, serialNumber());
+    private fun uploadCareportalEvent(date: Long, event: DetailedBolusInfo.EventType) {
+        pumpSync.insertTherapyEventIfNewWithTimestamp(date, event, null, null, PumpType.ACCU_CHEK_INSIGHT, serialNumber())
     }
 
-    @NonNull @Override
-    public Constraint<Integer> applyBasalPercentConstraints(Constraint<Integer> percentRate, @NonNull Profile profile) {
-        percentRate.setIfGreater(getAapsLogger(), 0, String.format(resourceHelper.gs(R.string.limitingpercentrate), 0, resourceHelper.gs(R.string.itmustbepositivevalue)), this);
-        percentRate.setIfSmaller(getAapsLogger(), getPumpDescription().getMaxTempPercent(), String.format(resourceHelper.gs(R.string.limitingpercentrate), getPumpDescription().getMaxTempPercent(), resourceHelper.gs(R.string.pumplimit)), this);
-        return percentRate;
+    override fun applyBasalPercentConstraints(percentRate: Constraint<Int>, profile: Profile): Constraint<Int> {
+        percentRate.setIfGreater(aapsLogger, 0, String.format(resourceHelper.gs(R.string.limitingpercentrate), 0, resourceHelper.gs(R.string.itmustbepositivevalue)), this)
+        percentRate.setIfSmaller(aapsLogger, pumpDescription.maxTempPercent, String.format(resourceHelper.gs(R.string.limitingpercentrate), pumpDescription.maxTempPercent, resourceHelper.gs(R.string.pumplimit)), this)
+        return percentRate
     }
 
-    @NonNull @Override
-    public Constraint<Double> applyBolusConstraints(@NonNull Constraint<Double> insulin) {
-        if (!limitsFetched) return insulin;
-        insulin.setIfSmaller(getAapsLogger(), maximumBolusAmount, String.format(resourceHelper.gs(R.string.limitingbolus), maximumBolusAmount, resourceHelper.gs(R.string.pumplimit)), this);
+    override fun applyBolusConstraints(insulin: Constraint<Double>): Constraint<Double> {
+        if (!limitsFetched) return insulin
+        insulin.setIfSmaller(aapsLogger, maximumBolusAmount, String.format(resourceHelper.gs(R.string.limitingbolus), maximumBolusAmount, resourceHelper.gs(R.string.pumplimit)), this)
         if (insulin.value() < minimumBolusAmount) {
 
             //TODO: Add function to Constraints or use different approach
             // This only works if the interface of the InsightPlugin is called last.
             // If not, another constraint could theoretically set the value between 0 and minimumBolusAmount
-
-            insulin.set(getAapsLogger(), 0d, String.format(resourceHelper.gs(R.string.limitingbolus), minimumBolusAmount, resourceHelper.gs(R.string.pumplimit)), this);
+            insulin[aapsLogger, 0.0, String.format(resourceHelper.gs(R.string.limitingbolus), minimumBolusAmount, resourceHelper.gs(R.string.pumplimit))] = this
         }
-        return insulin;
+        return insulin
     }
 
-    @NonNull @Override
-    public Constraint<Double> applyExtendedBolusConstraints(@NonNull Constraint<Double> insulin) {
-        return applyBolusConstraints(insulin);
+    override fun applyExtendedBolusConstraints(insulin: Constraint<Double>): Constraint<Double> {
+        return applyBolusConstraints(insulin)
     }
 
-    @Override
-    public void onStateChanged(InsightState state) {
+    override fun onStateChanged(state: InsightState) {
         if (state == InsightState.CONNECTED) {
-            statusLoaded = false;
-            new Handler(Looper.getMainLooper()).post(() -> rxBus.send(new EventDismissNotification(Notification.INSIGHT_TIMEOUT_DURING_HANDSHAKE)));
+            statusLoaded = false
+            Handler(Looper.getMainLooper()).post { rxBus.send(EventDismissNotification(Notification.INSIGHT_TIMEOUT_DURING_HANDSHAKE)) }
         } else if (state == InsightState.NOT_PAIRED) {
-            connectionService.withdrawConnectionRequest(this);
-            statusLoaded = false;
-            profileBlocks = null;
-            operatingMode = null;
-            batteryStatus = null;
-            cartridgeStatus = null;
-            totalDailyDose = null;
-            activeBasalRate = null;
-            activeTBR = null;
-            activeBoluses = null;
-            tbrOverNotificationBlock = null;
-            new Handler(Looper.getMainLooper()).post(() -> rxBus.send(new EventRefreshOverview("LocalInsightPlugin::onStateChanged", false)));
+            connectionService!!.withdrawConnectionRequest(this)
+            statusLoaded = false
+            profileBlocks = null
+            operatingMode = null
+            batteryStatus = null
+            cartridgeStatus = null
+            totalDailyDose = null
+            activeBasalRate = null
+            activeTBR = null
+            activeBoluses = null
+            tBROverNotificationBlock = null
+            Handler(Looper.getMainLooper()).post { rxBus.send(EventRefreshOverview("LocalInsightPlugin::onStateChanged", false)) }
         }
-        new Handler(Looper.getMainLooper()).post(() -> rxBus.send(new EventLocalInsightUpdateGUI()));
+        Handler(Looper.getMainLooper()).post { rxBus.send(EventLocalInsightUpdateGUI()) }
     }
 
-    @Override
-    public void onPumpPaired() {
-        commandQueue.readStatus("Pump paired", null);
+    override fun onPumpPaired() {
+        commandQueue.readStatus("Pump paired", null)
     }
 
-    @Override
-    public void onTimeoutDuringHandshake() {
-        Notification notification = new Notification(Notification.INSIGHT_TIMEOUT_DURING_HANDSHAKE, resourceHelper.gs(R.string.timeout_during_handshake), Notification.URGENT);
-        new Handler(Looper.getMainLooper()).post(() -> rxBus.send(new EventNewNotification(notification)));
+    override fun onTimeoutDuringHandshake() {
+        val notification = Notification(Notification.INSIGHT_TIMEOUT_DURING_HANDSHAKE, resourceHelper.gs(R.string.timeout_during_handshake), Notification.URGENT)
+        Handler(Looper.getMainLooper()).post { rxBus.send(EventNewNotification(notification)) }
     }
 
-    @Override
-    public boolean canHandleDST() {
-        return true;
+    override fun canHandleDST(): Boolean {
+        return true
     }
 
+    companion object {
+
+        const val ALERT_CHANNEL_ID = "AndroidAPS-InsightAlert"
+    }
+
+    init {
+        pumpDescription = PumpDescription()
+        pumpDescription.fillFor(PumpType.ACCU_CHEK_INSIGHT)
+    }
 }
