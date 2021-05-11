@@ -279,7 +279,7 @@ class DataSyncSelectorImplementation @Inject constructor(
                         nsClientPlugin.nsClientService?.dbUpdate("entries", gv.first.interfaceIDs.nightscoutId, gv.first.toJson(dateUtil), DataSyncSelector.PairGlucoseValue(gv.first, gv.second))
                 }
                 return true
-            }
+            } else confirmLastGlucoseValueIdIfGreater(gv.second)
         }
         return false
     }
@@ -385,7 +385,7 @@ class DataSyncSelectorImplementation @Inject constructor(
                         nsClientPlugin.nsClientService?.dbUpdate("treatments", tb.first.interfaceIDs.nightscoutId, tb.first.toJson(profile, dateUtil), DataSyncSelector.PairTemporaryBasal(tb.first, tb.second))
                 }
                 return true
-            }
+            } ?: confirmLastTemporaryBasalIdIfGreater(tb.second)
         }
         return false
     }
@@ -424,7 +424,7 @@ class DataSyncSelectorImplementation @Inject constructor(
                         nsClientPlugin.nsClientService?.dbUpdate("treatments", eb.first.interfaceIDs.nightscoutId, eb.first.toJson(profile, dateUtil), DataSyncSelector.PairExtendedBolus(eb.first, eb.second))
                 }
                 return true
-            }
+            } ?: confirmLastExtendedBolusIdIfGreater(eb.second)
         }
         return false
     }
