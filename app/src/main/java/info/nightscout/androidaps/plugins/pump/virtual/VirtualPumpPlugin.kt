@@ -155,7 +155,8 @@ open class VirtualPumpPlugin @Inject constructor(
     }
 
     override fun isThisProfileSet(profile: Profile): Boolean {
-        return true
+        val running = pumpSync.expectedPumpState().profile
+        return running?.isEqual(profile) ?: false
     }
 
     override fun lastDataTime(): Long {
