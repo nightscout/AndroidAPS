@@ -158,14 +158,14 @@ class DexcomPlugin @Inject constructor(
                         }
                         result.sensorInsertionsInserted.forEach {
                             uel.log(Action.CAREPORTAL,
-                                Sources.BG,
+                                Sources.Dexcom,
                                 ValueWithUnit.Timestamp(it.timestamp),
                                 ValueWithUnit.TherapyEventType(it.type))
                             aapsLogger.debug(LTag.DATABASE, "Inserted sensor insertion $it")
                         }
                         result.calibrationsInserted.forEach {
                             uel.log(Action.CAREPORTAL,
-                                Sources.BG,
+                                Sources.Dexcom,
                                 ValueWithUnit.Timestamp(it.timestamp),
                                 ValueWithUnit.TherapyEventType(it.type))
                             aapsLogger.debug(LTag.DATABASE, "Inserted calibration $it")
