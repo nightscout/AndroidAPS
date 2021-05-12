@@ -368,6 +368,7 @@ class DataSyncSelectorImplementation @Inject constructor(
 
     override fun processChangedTemporaryBasalsCompat(): Boolean {
         val startId = sp.getLong(R.string.key_ns_temporary_basal_last_synced_id, 0)
+        val useAbsolute = sp.getBoolean(R.string.key_ns_sync_use_absolute, false)
         appRepository.getNextSyncElementTemporaryBasal(startId).blockingGet()?.let { tb ->
             aapsLogger.info(LTag.DATABASE, "Loading TemporaryBasal data Start: $startId ID: ${tb.first.id} HistoryID: ${tb.second} ")
             profileFunction.getProfile(tb.first.timestamp)?.let { profile ->
@@ -379,10 +380,10 @@ class DataSyncSelectorImplementation @Inject constructor(
                         nsClientPlugin.nsClientService?.dbRemove("treatments", tb.first.interfaceIDs.nightscoutId, DataSyncSelector.PairTemporaryBasal(tb.first, tb.second))
                     // existing without nsId = create new
                     tb.first.isValid && tb.first.interfaceIDs.nightscoutId == null  ->
-                        nsClientPlugin.nsClientService?.dbAdd("treatments", tb.first.toJson(profile, dateUtil), DataSyncSelector.PairTemporaryBasal(tb.first, tb.second))
+                        nsClientPlugin.nsClientService?.dbAdd("treatments", tb.first.toJson(profile, dateUtil, useAbsolute), DataSyncSelector.PairTemporaryBasal(tb.first, tb.second))
                     // existing with nsId = update
                     tb.first.isValid && tb.first.interfaceIDs.nightscoutId != null  ->
-                        nsClientPlugin.nsClientService?.dbUpdate("treatments", tb.first.interfaceIDs.nightscoutId, tb.first.toJson(profile, dateUtil), DataSyncSelector.PairTemporaryBasal(tb.first, tb.second))
+                        nsClientPlugin.nsClientService?.dbUpdate("treatments", tb.first.interfaceIDs.nightscoutId, tb.first.toJson(profile, dateUtil, useAbsolute), DataSyncSelector.PairTemporaryBasal(tb.first, tb.second))
                 }
                 return true
             } ?: confirmLastTemporaryBasalIdIfGreater(tb.second)
@@ -407,6 +408,7 @@ class DataSyncSelectorImplementation @Inject constructor(
 
     override fun processChangedExtendedBolusesCompat(): Boolean {
         val startId = sp.getLong(R.string.key_ns_extended_bolus_last_synced_id, 0)
+        val useAbsolute = sp.getBoolean(R.string.key_ns_sync_use_absolute, false)
         appRepository.getNextSyncElementExtendedBolus(startId).blockingGet()?.let { eb ->
             aapsLogger.info(LTag.DATABASE, "Loading ExtendedBolus data Start: $startId ID: ${eb.first.id} HistoryID: ${eb.second} ")
             profileFunction.getProfile(eb.first.timestamp)?.let { profile ->
@@ -418,10 +420,10 @@ class DataSyncSelectorImplementation @Inject constructor(
                         nsClientPlugin.nsClientService?.dbRemove("treatments", eb.first.interfaceIDs.nightscoutId, DataSyncSelector.PairExtendedBolus(eb.first, eb.second))
                     // existing without nsId = create new
                     eb.first.isValid && eb.first.interfaceIDs.nightscoutId == null  ->
-                        nsClientPlugin.nsClientService?.dbAdd("treatments", eb.first.toJson(profile, dateUtil), DataSyncSelector.PairExtendedBolus(eb.first, eb.second))
+                        nsClientPlugin.nsClientService?.dbAdd("treatments", eb.first.toJson(profile, dateUtil, useAbsolute), DataSyncSelector.PairExtendedBolus(eb.first, eb.second))
                     // existing with nsId = update
                     eb.first.isValid && eb.first.interfaceIDs.nightscoutId != null  ->
-                        nsClientPlugin.nsClientService?.dbUpdate("treatments", eb.first.interfaceIDs.nightscoutId, eb.first.toJson(profile, dateUtil), DataSyncSelector.PairExtendedBolus(eb.first, eb.second))
+                        nsClientPlugin.nsClientService?.dbUpdate("treatments", eb.first.interfaceIDs.nightscoutId, eb.first.toJson(profile, dateUtil, useAbsolute), DataSyncSelector.PairExtendedBolus(eb.first, eb.second))
                 }
                 return true
             } ?: confirmLastExtendedBolusIdIfGreater(eb.second)
