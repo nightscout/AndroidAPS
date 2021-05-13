@@ -152,7 +152,7 @@ class UserEntryPresentationHelper @Inject constructor(
         csvString(R.string.eventtype),
         csvString(R.string.ue_source),
         csvString(R.string.careportal_note),
-        csvString(R.string.ue_formated_string),
+        csvString(R.string.ue_string),
         csvString(R.string.event_time_label),
         csvString(if (profileFunction.getUnits() == GlucoseUnit.MGDL) R.string.mgdl else R.string.mmol),
         csvString(R.string.shortgram),
@@ -165,15 +165,15 @@ class UserEntryPresentationHelper @Inject constructor(
     ) + "\n"
 
     private fun getCsvEntry(entry: UserEntry): String {
-        val fullvalueWithUnitList = ArrayList<ValueWithUnit?>(entry.values)
-        var timestampRec = "" + entry.timestamp
-        var dateTimestampRev = dateUtil.dateAndTimeAndSecondsString(entry.timestamp)
-        var utcOffset = dateUtil.timeStringFromSeconds((entry.utcOffset/1000).toInt())
-        var action = csvString(entry.action)
+        val fullvalueWithUnitList = ArrayList(entry.values)
+        val timestampRec = entry.timestamp.toString()
+        val dateTimestampRev = dateUtil.dateAndTimeAndSecondsString(entry.timestamp)
+        val utcOffset = dateUtil.timeStringFromSeconds((entry.utcOffset/1000).toInt())
+        val action = csvString(entry.action)
         var therapyEvent = ""
-        var source = translator.translate(entry.source)
-        var note = csvString(entry.note)
-        var stringResource = ""
+        val source = translator.translate(entry.source)
+        val note = csvString(entry.note)
+        var simpleString = ""
         var timestamp = ""
         var bg = ""
         var gram = ""
@@ -182,7 +182,7 @@ class UserEntryPresentationHelper @Inject constructor(
         var percent = ""
         var hour = ""
         var minute = ""
-        var other = ""
+        var noUnit = ""
 
         for (valueWithUnit in fullvalueWithUnitList.filterNotNull()) {
             when (valueWithUnit) {
@@ -192,8 +192,8 @@ class UserEntryPresentationHelper @Inject constructor(
                 is ValueWithUnit.Percent               -> percent = valueWithUnit.value.toString()
                 is ValueWithUnit.Insulin               -> insulin = DecimalFormatter.to2Decimal(valueWithUnit.value)
                 is ValueWithUnit.UnitPerHour           -> unitPerHour = DecimalFormatter.to2Decimal(valueWithUnit.value)
-                is ValueWithUnit.SimpleInt             -> other = other.addWithSeparator(valueWithUnit.value)
-                is ValueWithUnit.SimpleString          -> other = other.addWithSeparator(valueWithUnit.value)
+                is ValueWithUnit.SimpleInt             -> noUnit = noUnit.addWithSeparator(valueWithUnit.value)
+                is ValueWithUnit.SimpleString          -> simpleString = simpleString.addWithSeparator(valueWithUnit.value)
                 is ValueWithUnit.TherapyEventMeterType -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
                 is ValueWithUnit.TherapyEventTTReason  -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
                 is ValueWithUnit.TherapyEventType      -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
@@ -210,9 +210,9 @@ class UserEntryPresentationHelper @Inject constructor(
         }
 
         therapyEvent = csvString(therapyEvent)
-        stringResource = csvString(stringResource)
-        other = csvString(other)
-        return "$timestampRec;$dateTimestampRev;$utcOffset;$action;$therapyEvent;$source;$note;$stringResource;$timestamp;$bg;$gram;$insulin;$unitPerHour;$percent;$hour;$minute;$other"
+        simpleString = csvString(simpleString)
+        noUnit = csvString(noUnit)
+        return "$timestampRec;$dateTimestampRev;$utcOffset;$action;$therapyEvent;$source;$note;$simpleString;$timestamp;$bg;$gram;$insulin;$unitPerHour;$percent;$hour;$minute;$noUnit"
     }
 
     private fun csvString(action: Action): String = "\"" + translator.translate(action).replace("\"", "\"\"").replace("\n"," / ") + "\""
