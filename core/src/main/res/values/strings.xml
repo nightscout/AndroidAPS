@@ -486,7 +486,7 @@
     <string name="uel_plugin_enabled">PLUGIN ENABLED</string>
     <string name="uel_plugin_disabled">PLUGIN DISABLED</string>
     <string name="uel_unknown">UNKNOWN</string>
-    <string name="ue_formated_string">Formated string</string>
+    <string name="ue_string">String</string>
     <string name="ue_source">Source</string>
     <string name="ue_utc_offset">UTC Offset</string>
     <string name="ue_action">Action</string>
