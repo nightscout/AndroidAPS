@@ -50,10 +50,10 @@ fun ExtendedBolus.toTemporaryBasal(profile: Profile): TemporaryBasal =
         type = TemporaryBasal.Type.FAKE_EXTENDED
     )
 
-fun ExtendedBolus.toJson(profile: Profile, dateUtil: DateUtil): JSONObject =
+fun ExtendedBolus.toJson(profile: Profile, dateUtil: DateUtil, useAbsolute: Boolean): JSONObject =
     if (isEmulatingTempBasal)
         toTemporaryBasal(profile)
-            .toJson(profile, dateUtil)
+            .toJson(profile, dateUtil, useAbsolute)
             .put("extendedEmulated", toRealJson(dateUtil))
     else toRealJson(dateUtil)
 

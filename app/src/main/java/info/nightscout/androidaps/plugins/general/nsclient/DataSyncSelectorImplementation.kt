@@ -374,6 +374,7 @@ class DataSyncSelectorImplementation @Inject constructor(
     private var lastTbrId = -1L
     private var lastTbrTime = -1L
     override fun processChangedTemporaryBasalsCompat(): Boolean {
+        val useAbsolute = sp.getBoolean(R.string.key_ns_sync_use_absolute, false)
         val startId = sp.getLong(R.string.key_ns_temporary_basal_last_synced_id, 0)
         if (startId == lastTbrId && dateUtil.now() - lastTbrTime < 5000) return false
         lastTbrId = startId
@@ -384,10 +385,10 @@ class DataSyncSelectorImplementation @Inject constructor(
                 when {
                     // without nsId = create new
                     tb.first.interfaceIDs.nightscoutId == null ->
-                        nsClientPlugin.nsClientService?.dbAdd("treatments", tb.first.toJson(profile, dateUtil), DataSyncSelector.PairTemporaryBasal(tb.first, tb.second))
+                        nsClientPlugin.nsClientService?.dbAdd("treatments", tb.first.toJson(profile, dateUtil, useAbsolute), DataSyncSelector.PairTemporaryBasal(tb.first, tb.second))
                     // with nsId = update
                     tb.first.interfaceIDs.nightscoutId != null ->
-                        nsClientPlugin.nsClientService?.dbUpdate("treatments", tb.first.interfaceIDs.nightscoutId, tb.first.toJson(profile, dateUtil), DataSyncSelector.PairTemporaryBasal(tb.first, tb.second))
+                        nsClientPlugin.nsClientService?.dbUpdate("treatments", tb.first.interfaceIDs.nightscoutId, tb.first.toJson(profile, dateUtil, useAbsolute), DataSyncSelector.PairTemporaryBasal(tb.first, tb.second))
                 }
                 return true
             } ?: confirmLastTemporaryBasalIdIfGreater(tb.second)
@@ -413,6 +414,7 @@ class DataSyncSelectorImplementation @Inject constructor(
     private var lastEbId = -1L
     private var lastEbTime = -1L
     override fun processChangedExtendedBolusesCompat(): Boolean {
+        val useAbsolute = sp.getBoolean(R.string.key_ns_sync_use_absolute, false)
         val startId = sp.getLong(R.string.key_ns_extended_bolus_last_synced_id, 0)
         if (startId == lastEbId && dateUtil.now() - lastEbTime < 5000) return false
         lastEbId = startId
@@ -423,10 +425,10 @@ class DataSyncSelectorImplementation @Inject constructor(
                 when {
                     // without nsId = create new
                     eb.first.interfaceIDs.nightscoutId == null ->
-                        nsClientPlugin.nsClientService?.dbAdd("treatments", eb.first.toJson(profile, dateUtil), DataSyncSelector.PairExtendedBolus(eb.first, eb.second))
+                        nsClientPlugin.nsClientService?.dbAdd("treatments", eb.first.toJson(profile, dateUtil, useAbsolute), DataSyncSelector.PairExtendedBolus(eb.first, eb.second))
                     // with nsId = update
                     eb.first.interfaceIDs.nightscoutId != null ->
-                        nsClientPlugin.nsClientService?.dbUpdate("treatments", eb.first.interfaceIDs.nightscoutId, eb.first.toJson(profile, dateUtil), DataSyncSelector.PairExtendedBolus(eb.first, eb.second))
+                        nsClientPlugin.nsClientService?.dbUpdate("treatments", eb.first.interfaceIDs.nightscoutId, eb.first.toJson(profile, dateUtil, useAbsolute), DataSyncSelector.PairExtendedBolus(eb.first, eb.second))
                 }
                 return true
             } ?: confirmLastExtendedBolusIdIfGreater(eb.second)
