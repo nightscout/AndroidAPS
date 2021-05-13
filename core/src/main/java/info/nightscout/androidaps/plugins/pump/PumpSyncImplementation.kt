@@ -203,7 +203,7 @@ class PumpSyncImplementation @Inject constructor(
             timestamp = timestamp,
             type = type.toDBbEventType(),
             duration = 0,
-            note = null,
+            note = note,
             enteredBy = "AndroidAPS",
             glucose = null,
             glucoseType = null,
