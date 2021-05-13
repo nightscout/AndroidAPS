@@ -413,7 +413,7 @@
     <string name="uel_carbs">CARBS</string>
     <string name="uel_extended_carbs">EXTENDED CARBS</string>
     <string name="uel_temp_basal">TEMP BASAL</string>
-    <string name="uel_tt">TT</string>
+    <string name="uel_tt">TEMP TARGET</string>
     <string name="uel_new_profile">NEW PROFILE</string>
     <string name="uel_clone_profile">CLONE PROFILE</string>
     <string name="uel_store_profile">STORE PROFILE</string>
@@ -434,7 +434,7 @@
     <string name="uel_cancel_temp_basal">CANCEL TEMP BASAL</string>
     <string name="uel_cancel_bolus">CANCEL BOLUS</string>
     <string name="uel_cancel_extended_bolus">CANCEL EXTENDED BOLUS</string>
-    <string name="uel_cancel_tt">CANCEL TT</string>
+    <string name="uel_cancel_tt">CANCEL TEMP TARGET</string>
     <string name="uel_careportal">CAREPORTAL</string>
     <string name="uel_site_change">SITE CHANGE</string>
     <string name="uel_reservoir_change">RESERVOIR CHANGE</string>
@@ -444,7 +444,7 @@
     <string name="uel_careportal_ns_refresh">CAREPORTAL NS REFRESH</string>
     <string name="uel_profile_switch_ns_refresh">PROFILE SWITCH NS REFRESH</string>
     <string name="uel_treatments_ns_refresh">TREATMENTS NS REFRESH</string>
-    <string name="uel_tt_ns_refresh">TT NS REFRESH</string>
+    <string name="uel_tt_ns_refresh">TEMP TARGET NS REFRESH</string>
     <string name="uel_automation_removed">AUTOMATION REMOVED</string>
     <string name="uel_bg_removed">BG REMOVED</string>
     <string name="uel_careportal_removed">CAREPORTAL REMOVED</string>
@@ -458,7 +458,7 @@
     <string name="uel_profile_switch_removed">PROFILE SWITCH REMOVED</string>
     <string name="uel_restart_events_removed">RESTART EVENTS REMOVED</string>
     <string name="uel_treatment_removed">TREATMENT REMOVED</string>
-    <string name="uel_tt_removed">TT REMOVED</string>
+    <string name="uel_tt_removed">TEMP TARGET REMOVED</string>
     <string name="uel_ns_paused">NS PAUSED</string>
     <string name="uel_ns_resume">NS RESUME</string>
     <string name="uel_ns_queue_cleared">NS QUEUE CLEARED</string>
