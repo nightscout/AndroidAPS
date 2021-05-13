@@ -19,7 +19,13 @@ import java.util.*
         entity = ProfileSwitch::class,
         parentColumns = ["id"],
         childColumns = ["referenceId"])],
-    indices = [Index("referenceId"), Index("timestamp")])
+    indices = [
+        Index("referenceId"),
+        Index("timestamp"),
+        Index("isValid"),
+        Index("id"),
+        Index("nightscoutId")
+    ])
 data class ProfileSwitch(
     @PrimaryKey(autoGenerate = true)
     override var id: Long = 0,
@@ -47,6 +53,7 @@ data class ProfileSwitch(
     enum class GlucoseUnit {
         MGDL,
         MMOL;
-        companion object {}
+
+        companion object
     }
 }

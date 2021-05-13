@@ -18,7 +18,16 @@ import java.util.*
             entity = Bolus::class,
             parentColumns = ["id"],
             childColumns = ["referenceId"])],
-    indices = [Index("referenceId"), Index("timestamp")])
+    indices = [
+        Index("id"),
+        Index("isValid"),
+        Index("temporaryId"),
+        Index("pumpId"),
+        Index("pumpSerial"),
+        Index("pumpType"),
+        Index("referenceId"),
+        Index("timestamp")
+    ])
 data class Bolus(
     @PrimaryKey(autoGenerate = true)
     override var id: Long = 0,
