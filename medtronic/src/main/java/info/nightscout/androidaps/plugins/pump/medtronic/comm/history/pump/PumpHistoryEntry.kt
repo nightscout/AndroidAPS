@@ -5,6 +5,7 @@ import com.google.gson.annotations.Expose
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.MedtronicHistoryEntry
+import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BolusDTO
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType
 import java.util.*
 
@@ -113,8 +114,18 @@ class PumpHistoryEntry : MedtronicHistoryEntry() {
             super.pumpId = pumpId
         }
 
-    fun hasBolusOrTBRDataChanged(entry: PumpHistoryEntry) : Boolean {
-        if (entryType!=null && (entryType!! == PumpHistoryEntryType.Bolus || entryType!! == PumpHistoryEntryType.TempBasalCombined)) {
+    fun hasBolusChanged(entry: PumpHistoryEntry) : Boolean {
+        if (entryType!=null && entryType == PumpHistoryEntryType.Bolus) {
+            val thisOne: BolusDTO? =  this.decodedData!!["Object"]!! as BolusDTO?
+            val otherOne: BolusDTO? = entry.decodedData!!["Object"]!! as BolusDTO?
+
+            if (thisOne==null || otherOne==null) {
+                return false;
+            }
+
+
+
+
             return false // TODO needs to be implemented
         }
 

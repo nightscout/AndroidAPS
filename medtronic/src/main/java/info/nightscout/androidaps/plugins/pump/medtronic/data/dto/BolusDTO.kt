@@ -57,7 +57,7 @@ class BolusDTO : PumpTimeStampedRecord() {
             return StringUtil.getLeadingZero(h, 2) + ":" + StringUtil.getLeadingZero(minutes, 2)
         }
 
-    val value: String?
+    val value: String
         get() = if (bolusType === PumpBolusType.Normal || bolusType === PumpBolusType.Audio) {
             getFormattedDecimal(deliveredAmount!!)
         } else if (bolusType === PumpBolusType.Extended) {
@@ -77,7 +77,7 @@ class BolusDTO : PumpTimeStampedRecord() {
             return value
         }
 
-    override fun getFormattedDecimal(value: Double): String? {
+    override fun getFormattedDecimal(value: Double): String {
         return StringUtil.getFormatedValueUS(value, 2)
     }
 

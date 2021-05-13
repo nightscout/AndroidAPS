@@ -88,10 +88,10 @@ class MedtronicHistoryData @Inject constructor(
             } else {
                 val entryByPumpId = getEntryByPumpId(validEntry.pumpId!!)
 
-                // TODO not implemented
-                if (entryByPumpId!=null && entryByPumpId.hasBolusOrTBRDataChanged(validEntry)) {
+                if (entryByPumpId!=null && entryByPumpId.hasBolusChanged(validEntry)) {
                     newEntries.add(validEntry)
                     allHistory.remove(entryByPumpId)
+                    allPumpIds.remove(validEntry.pumpId!!);
                 }
             }
         }
