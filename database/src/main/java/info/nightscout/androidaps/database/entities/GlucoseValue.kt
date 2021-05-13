@@ -13,7 +13,13 @@ import java.util.TimeZone
         entity = GlucoseValue::class,
         parentColumns = ["id"],
         childColumns = ["referenceId"])],
-    indices = [Index("referenceId"), Index("timestamp")])
+    indices = [
+        Index("id"),
+        Index("nightscoutId"),
+        Index("sourceSensor"),
+        Index("referenceId"),
+        Index("timestamp")
+    ])
 data class GlucoseValue(
     @PrimaryKey(autoGenerate = true)
     override var id: Long = 0,

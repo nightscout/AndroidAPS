@@ -11,7 +11,11 @@ import java.util.*
 
 @Entity(tableName = TABLE_DEVICE_STATUS,
     foreignKeys = [],
-    indices = [Index("timestamp")])
+    indices = [
+        Index("id"),
+        Index("nightscoutId"),
+        Index("timestamp")
+    ])
 data class DeviceStatus(
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0,

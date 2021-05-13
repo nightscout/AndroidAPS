@@ -5,7 +5,11 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(tableName = DATABASE_INSIGHT_PUMP_IDS,
-    indices = [Index("timestamp")])
+    indices = [
+        Index("timestamp"),
+        Index("pumpSerial"),
+        Index("eventType")
+    ])
 data class InsightPumpID(
     var timestamp: Long,
     var eventType: EventType = EventType.None,

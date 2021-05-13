@@ -19,7 +19,12 @@ import java.util.*
         entity = EffectiveProfileSwitch::class,
         parentColumns = ["id"],
         childColumns = ["referenceId"])],
-    indices = [Index("referenceId"), Index("timestamp")])
+    indices = [
+        Index("id"),
+        Index("referenceId"),
+        Index("timestamp"),
+        Index("isValid")
+    ])
 data class EffectiveProfileSwitch(
     @PrimaryKey(autoGenerate = true)
     override var id: Long = 0,
@@ -45,7 +50,7 @@ data class EffectiveProfileSwitch(
     var originalEnd: Long,
     @Embedded
     var insulinConfiguration: InsulinConfiguration
-) : TraceableDBEntry, DBEntryWithTime{
+) : TraceableDBEntry, DBEntryWithTime {
 
     enum class GlucoseUnit {
         MGDL,
