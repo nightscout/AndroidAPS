@@ -24,7 +24,7 @@
     <string name="description_insulin_free_peak">מאפשר להגדיר את שיא פעילות האינסולין, לשימוש על ידי משתמשים מתקדמים בלבד</string>
     <string name="description_loop">הפעלת או השבתת הלולאה.</string>
     <string name="description_ns_client">מסנכרן את נתוניכם עם Nightscout</string>
-    <string name="description_ama">מצב האלגוריתם ב-2017</string>
+    <string name="description_ama">הישאר עם האלגוריתם של 2017</string>
     <string name="description_smb">האלגוריתם העדכני ביותר, עבור משתמשים מתקדמים בלבד</string>
     <string name="description_overview">מציג את המצב הנוכחי של הלולאה ולחצני פעולות שימושיות</string>
     <string name="description_persistent_notification">מציג הודעה קבועה עם סקירה קצרה של מה שהלולאה שלכם עושה</string>
