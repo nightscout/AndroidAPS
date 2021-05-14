@@ -46,6 +46,7 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus
 import info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity
+import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverview
 import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.GlucoseValueDataPoint
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationStore
@@ -115,6 +116,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
+    @Inject lateinit var overviewData: OverviewData
 
     private val disposable = CompositeDisposable()
 
@@ -224,13 +226,13 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 else scheduleUpdateGUI(it.from)
             }, fabricPrivacy::logException))
         disposable.add(rxBus
+            .toObservable(EventUpdateOverview::class.java)
+            .observeOn(aapsSchedulers.main)
+            .subscribe({ updateGUI(it.what) }, fabricPrivacy::logException))
+        disposable.add(rxBus
             .toObservable(EventExtendedBolusChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ scheduleUpdateGUI("EventExtendedBolusChange") }, fabricPrivacy::logException))
-        disposable.add(rxBus
-            .toObservable(EventTempBasalChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ scheduleUpdateGUI("EventTempBasalChange") }, fabricPrivacy::logException))
         disposable.add(rxBus
             .toObservable(EventTreatmentChange::class.java)
             .observeOn(aapsSchedulers.io)
@@ -255,10 +257,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             .toObservable(EventAutosensCalculationFinished::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ scheduleUpdateGUI("EventAutosensCalculationFinished") }, fabricPrivacy::logException))
-        disposable.add(rxBus
-            .toObservable(EventProfileSwitchChanged::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ scheduleUpdateGUI("EventProfileNeedsUpdate") }, fabricPrivacy::logException))
         disposable.add(rxBus
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
@@ -544,6 +542,22 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         view?.postDelayed(task, 500)
     }
 
+    fun updateGUI(what: OverviewData.Property) {
+        when (what) {
+            OverviewData.Property.PROFILE         -> TODO()
+
+            OverviewData.Property.TEMPORARY_BASAL -> {
+                // Basal, TBR
+                binding.infoLayout.baseBasal.text = overviewData.temporaryBasalText
+                binding.infoLayout.baseBasal.setTextColor(overviewData.temporaryBasalColor)
+                binding.infoLayout.baseBasalIcon.setImageResource(overviewData.temporaryBasalIcon)
+                binding.infoLayout.basalLayout.setOnClickListener {
+                    activity?.let { OKDialog.show(it, resourceHelper.gs(R.string.basal), overviewData.temporaryBasalDialogText) }
+                }
+            }
+        }
+    }
+
     @SuppressLint("SetTextI18n")
     fun updateGUI(from: String) {
         if (_binding == null) return
@@ -551,7 +565,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
         binding.infoLayout.time.text = dateUtil.timeString(dateUtil.now())
 
-        if (!profileFunction.isProfileValid("Overview")) {
+        if (overviewData.profile == null) {
             binding.loopPumpStatusLayout.pumpStatus.setText(R.string.noprofileset)
             binding.loopPumpStatusLayout.pumpStatusLayout.visibility = View.VISIBLE
             binding.loopPumpStatusLayout.loopLayout.visibility = View.GONE
@@ -561,7 +575,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         binding.loopPumpStatusLayout.pumpStatusLayout.visibility = View.GONE
         binding.loopPumpStatusLayout.loopLayout.visibility = View.VISIBLE
 
-        val profile = profileFunction.getProfile() ?: return
+        val profile = overviewData.profile ?: return
         val actualBG = iobCobCalculator.ads.actualBg()
         val lastBG = iobCobCalculator.ads.lastBg()
         val pump = activePlugin.activePump
@@ -700,27 +714,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 binding.loopPumpStatusLayout.tempTarget.text = Profile.toTargetRangeString(profile.getTargetLowMgdl(), profile.getTargetHighMgdl(), GlucoseUnit.MGDL, units)
             }
         }
-
-        // Basal, TBR
-        val activeTemp = iobCobCalculator.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())
-        binding.infoLayout.baseBasal.text = activeTemp?.let { "T:" + activeTemp.toStringShort() }
-            ?: resourceHelper.gs(R.string.pump_basebasalrate, profile.getBasal())
-        binding.infoLayout.basalLayout.setOnClickListener {
-            var fullText = "${resourceHelper.gs(R.string.basebasalrate_label)}: ${resourceHelper.gs(R.string.pump_basebasalrate, profile.getBasal())}"
-            if (activeTemp != null)
-                fullText += "\n" + resourceHelper.gs(R.string.tempbasal_label) + ": " + activeTemp.toStringFull(profile, dateUtil)
-            activity?.let {
-                OKDialog.show(it, resourceHelper.gs(R.string.basal), fullText)
-            }
-        }
-        binding.infoLayout.baseBasal.setTextColor(activeTemp?.let { resourceHelper.gc(R.color.basal) }
-            ?: resourceHelper.gc(R.color.defaulttextcolor))
-
-        binding.infoLayout.baseBasalIcon.setImageResource(R.drawable.ic_cp_basal_no_tbr)
-        val percentRate = activeTemp?.convertedToPercent(System.currentTimeMillis(), profile)
-            ?: 100
-        if (percentRate > 100) binding.infoLayout.baseBasalIcon.setImageResource(R.drawable.ic_cp_basal_tbr_high)
-        if (percentRate < 100) binding.infoLayout.baseBasalIcon.setImageResource(R.drawable.ic_cp_basal_tbr_low)
 
         // Extended bolus
         val extendedBolus = repository.getExtendedBolusActiveAt(dateUtil.now()).blockingGet()

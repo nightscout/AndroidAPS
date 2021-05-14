@@ -3,19 +3,20 @@ package info.nightscout.androidaps.plugins.general.overview
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.events.EventAppInitialized
+import info.nightscout.androidaps.events.EventProfileSwitchChanged
 import info.nightscout.androidaps.events.EventRefreshOverview
+import info.nightscout.androidaps.events.EventTempBasalChange
 import info.nightscout.androidaps.extensions.*
-import info.nightscout.androidaps.interfaces.Overview
-import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginDescription
-import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
+import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverview
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationStore
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
@@ -36,7 +37,11 @@ class OverviewPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     private val aapsSchedulers: AapsSchedulers,
     resourceHelper: ResourceHelper,
-    private val config: Config
+    private val config: Config,
+    private val dateUtil: DateUtil,
+    private val profileFunction: ProfileFunction,
+    private val iobCobCalculator: IobCobCalculator,
+    private val overviewData: OverviewData
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(OverviewFragment::class.qualifiedName)
@@ -69,6 +74,18 @@ class OverviewPlugin @Inject constructor(
                 if (notificationStore.remove(n.id))
                     rxBus.send(EventRefreshOverview("EventDismissNotification"))
             }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventAppInitialized::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe( { loadAll() }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventTempBasalChange::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe( { loadTemporaryBasal() }, fabricPrivacy::logException)
+        disposable.add(rxBus
+            .toObservable(EventProfileSwitchChanged::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ loadProfile() }, fabricPrivacy::logException))
     }
 
     override fun onStop() {
@@ -141,5 +158,23 @@ class OverviewPlugin @Inject constructor(
             .storeDouble(R.string.key_statuslights_res_critical, sp, resourceHelper)
             .storeDouble(R.string.key_statuslights_bat_warning, sp, resourceHelper)
             .storeDouble(R.string.key_statuslights_bat_critical, sp, resourceHelper)
+    }
+
+    private fun loadAll() {
+        loadProfile()
+        loadTemporaryBasal()
+    }
+
+    @Synchronized
+    private fun loadProfile() {
+        overviewData.profile = profileFunction.getProfile()
+        overviewData.profileName = profileFunction.getProfileName()
+        rxBus.send(EventUpdateOverview(OverviewData.Property.PROFILE))
+    }
+
+    @Synchronized
+    private fun loadTemporaryBasal() {
+        overviewData.temporaryBasal = iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil.now())
+        rxBus.send(EventUpdateOverview(OverviewData.Property.TEMPORARY_BASAL))
     }
 }
