@@ -20,7 +20,7 @@
     <string name="offlineprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html#profile</string>
     <string name="pumpdisconnect_label">סיבות להפעלת מצב \"ניתוק משאבה\" ב- AndroidAPS</string>
     <string name="pumpdisconnect_whattodo">מה צריך לעשות כשמנתקים את המשאבה?</string>
-    <string name="pumpdisconnect_unnecessary">זה לא הכרחי הואיל ולא יוזרם אינסולין אם המשאבה מנותקת פיזית.</string>
+    <string name="pumpdisconnect_unnecessary">\"ניתוק משאבה\" אינו הכרחי הואיל ולא יוזרם אינסולין אם המשאבה מנותקת פיזית.</string>
     <string name="pumpdisconnect_missinginsulin">כדי למנוע מ- AndoirdAPS לקחת בחשבון אינסולין שלא הוזרם בעת שהמשאבה היתה מנותקת</string>
     <string name="pumpdisconnect_notstop">זה לא יגרום להפסקת הזרמת האינסולין כל עוד המשאבה מחוברת.</string>
     <string name="pumpdisconnect_openloop">זה יעביר את AndoirdAPS למצב לולאה פתוחה.</string>
