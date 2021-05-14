@@ -594,7 +594,7 @@ class NSClientService : DaggerService() {
         }
     }
 
-    fun dbUpdate(collection: String, _id: String?, data: JSONObject?, originalObject: Any) {
+    fun dbUpdate(collection: String, _id: String?, data: JSONObject?, originalObject: Any, progress: String) {
         try {
             if (_id == null) return
             if (!isConnected || !hasWriteAuth) return
@@ -603,20 +603,20 @@ class NSClientService : DaggerService() {
             message.put("_id", _id)
             message.put("data", data)
             socket?.emit("dbUpdate", message, NSUpdateAck("dbUpdate", _id, aapsLogger, rxBus, originalObject))
-            rxBus.send(EventNSClientNewLog("DBUPDATE $collection", "Sent " + originalObject.javaClass.simpleName + " " + _id))
+            rxBus.send(EventNSClientNewLog("DBUPDATE $collection", "Sent " + originalObject.javaClass.simpleName + " " + _id + " " + progress))
         } catch (e: JSONException) {
             aapsLogger.error("Unhandled exception", e)
         }
     }
 
-    fun dbAdd(collection: String, data: JSONObject, originalObject: Any) {
+    fun dbAdd(collection: String, data: JSONObject, originalObject: Any, progress: String) {
         try {
             if (!isConnected || !hasWriteAuth) return
             val message = JSONObject()
             message.put("collection", collection)
             message.put("data", data)
             socket?.emit("dbAdd", message, NSAddAck(aapsLogger, rxBus, originalObject))
-            rxBus.send(EventNSClientNewLog("DBADD $collection", "Sent " + originalObject.javaClass.simpleName + " " + data))
+            rxBus.send(EventNSClientNewLog("DBADD $collection", "Sent " + originalObject.javaClass.simpleName + " " + data + " " + progress))
         } catch (e: JSONException) {
             aapsLogger.error("Unhandled exception", e)
         }

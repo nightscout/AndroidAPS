@@ -16,6 +16,9 @@ internal interface GlucoseValueDao : TraceableDao<GlucoseValue> {
     @Query("DELETE FROM $TABLE_GLUCOSE_VALUES")
     override fun deleteAllEntries()
 
+    @Query("SELECT id FROM $TABLE_GLUCOSE_VALUES ORDER BY id DESC limit 1")
+    fun getLastId(): Maybe<Long>
+
     @Query("SELECT * FROM $TABLE_GLUCOSE_VALUES WHERE nightscoutId = :nsId AND referenceId IS NULL")
     fun findByNSIdMaybe(nsId: String): Maybe<GlucoseValue>
 
