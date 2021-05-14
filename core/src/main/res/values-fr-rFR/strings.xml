@@ -178,12 +178,12 @@
     <string name="careportal_note">Remarque</string>
     <string name="careportal_question">Question</string>
     <string name="careportal_exercise">Activité Physique</string>
-    <string name="careportal_pumpsitechange">Changement Zone D\'insertion</string>
+    <string name="careportal_pumpsitechange">Changement de site</string>
     <string name="careportal_cgmsensorinsert">Insertion Capteur MGC</string>
     <string name="careportal_cgmsensorstart">Démarrage Capteur MGC</string>
     <string name="careportal_cgm_sensor_stop">Arrêt capteur MGC</string>
     <string name="careportal_dad_alert">Chien d\'alerte</string>
-    <string name="careportal_insulincartridgechange">Changement du Réservoir</string>
+    <string name="careportal_insulincartridgechange">Changement du réservoir</string>
     <string name="careportal_profileswitch">Changement de profil</string>
     <string name="careportal_snackbolus">Bolus Goûter</string>
     <string name="careportal_mealbolus">Bolus Repas</string>
@@ -193,7 +193,7 @@
     <string name="careportal_tempbasalend">Fin Basal Temp</string>
     <string name="careportal_carbscorrection">Ressucrage</string>
     <string name="careportal_openapsoffline">OpenAPS hors ligne</string>
-    <string name="careportal_pumpbatterychange">Changement Pile Pompe</string>
+    <string name="careportal_pumpbatterychange">Changement pile pompe</string>
     <string name="careportal_temporarytarget">Cible temp.</string>
     <string name="careportal_temporarytargetcancel">Annuler Cible Temporaire</string>
     <string name="boluswizard">Assistant Bolus</string>
@@ -314,7 +314,7 @@
     <string name="sunday_short">D</string>
     <!-- User Entry -->
     <string name="uel_bolus">BOLUS</string>
-    <string name="uel_bolus_advisor">ASSISTANT DE BOLUS</string>
+    <string name="uel_bolus_advisor">ASSISTANT BOLUS</string>
     <string name="uel_bolus_record">BOLUS ENREGISTRÉ</string>
     <string name="uel_extended_bolus">BOLUS ÉTENDU</string>
     <string name="uel_superbolus_tbr">DBT SUPERBOLUS</string>
