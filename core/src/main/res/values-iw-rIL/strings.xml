@@ -246,7 +246,7 @@
     <string name="pump_status_never_contacted">מעולם לא נוצר קשר</string>
     <string name="pump_status_waking_up">מתעורר</string>
     <string name="pump_status_error_comm">שגיאת תקשורת</string>
-    <string name="pump_status_timeout_comm">חריגה ממגבלת הזמן בתקשורת</string>
+    <string name="pump_status_timeout_comm">חריגה ממגבלת הזמן לתקשורת</string>
     <string name="pump_status_pump_unreachable">המשאבה לא זמינה</string>
     <string name="pump_status_invalid_config">קונפיגורציה לא חוקית</string>
     <string name="pump_status_active">פעיל</string>
