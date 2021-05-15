@@ -75,7 +75,7 @@
     <string name="openapsma_request_label">Requête</string>
     <string name="delta">Delta</string>
     <string name="sms_delta">Delta:</string>
-    <string name="configbuilder">Générateur de configuration</string>
+    <string name="configbuilder">Configuration</string>
     <string name="overview">Aperçu</string>
     <string name="nsprofile">Profil NS</string>
     <string name="treatments">Traitements</string>
