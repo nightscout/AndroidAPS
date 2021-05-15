@@ -44,7 +44,6 @@ class LocalInsightFragment : DaggerFragment(), View.OnClickListener {
         @JvmField @Inject
     var aapsSchedulers: AapsSchedulers? = null
     private val disposable = CompositeDisposable()
-    private var viewsCreated = false
     private var operatingModeCallback: Callback? = null
     private var tbrOverNotificationCallback: Callback? = null
     private var refreshCallback: Callback? = null
@@ -54,7 +53,6 @@ class LocalInsightFragment : DaggerFragment(), View.OnClickListener {
         binding.tbrOverNotification.setOnClickListener(this)
         binding.operatingMode.setOnClickListener(this)
         binding.refresh.setOnClickListener(this)
-        viewsCreated = true
         return binding.root
     }
 
@@ -75,7 +73,6 @@ class LocalInsightFragment : DaggerFragment(), View.OnClickListener {
 
     @Synchronized override fun onDestroyView() {
         super.onDestroyView()
-        viewsCreated = false
     }
 
     override fun onClick(v: View) {
@@ -128,7 +125,6 @@ class LocalInsightFragment : DaggerFragment(), View.OnClickListener {
     }
 
     protected fun updateGUI() {
-        if (!viewsCreated) return
         binding.statusItemContainer.removeAllViews()
         if (!localInsightPlugin.isInitialized()) {
             binding.operatingMode.visibility = View.GONE
