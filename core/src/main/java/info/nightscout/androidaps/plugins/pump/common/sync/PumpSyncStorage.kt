@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.pump.common.sync
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import com.thoughtworks.xstream.XStream
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -23,12 +24,13 @@ class PumpSyncStorage @Inject constructor(
     val aapsLogger: AAPSLogger
 ) {
 
-    val pumpSyncStorageKey: String = "pump_sync_storage"
+    val pumpSyncStorageKey: String = "pump_sync_storage_xstream"
     var pumpSyncStorage: MutableMap<String,MutableList<PumpDbEntry>> = mutableMapOf()
     var TBR: String = "TBR"
     var BOLUS: String = "BOLUS"
     var storageInitialized: Boolean = false
     var gson: Gson = GsonBuilder().create()
+    var xstream: XStream = XStream()
 
 
     init {
@@ -43,15 +45,10 @@ class PumpSyncStorage @Inject constructor(
         var loaded = false
 
         if (sp.contains(pumpSyncStorageKey)) {
-            val jsonData: String = sp.getString("pump_sync_storage", "");
+            val jsonData: String = sp.getString(pumpSyncStorageKey, "");
 
             if (!jsonData.isBlank()) {
-
-                val pumpSyncStorageType: Type = object : TypeToken<MutableMap<String, MutableList<PumpDbEntry>>>() {}.getType()
-
-                val baseMap: MutableMap<String, MutableList<PumpDbEntry>> = gson.fromJson(jsonData, pumpSyncStorageType) //as MutableMap<String, MutableList<PumpDbEntry>>
-
-                pumpSyncStorage = baseMap
+                pumpSyncStorage = xstream.fromXML(jsonData, MutableMap::class.java) as MutableMap<String, MutableList<PumpDbEntry>>
 
                 aapsLogger.debug(String.format("Loading Pump Sync Storage: boluses=%d, tbrs=%d.", pumpSyncStorage[BOLUS]!!.size, pumpSyncStorage[TBR]!!.size))
                 loaded = true
@@ -67,7 +64,7 @@ class PumpSyncStorage @Inject constructor(
 
     fun saveStorage() {
         if (!isStorageEmpty()) {
-            sp.putString(pumpSyncStorageKey, gson.toJson(pumpSyncStorage))
+            sp.putString(pumpSyncStorageKey, xstream.toXML(pumpSyncStorage))
             aapsLogger.debug(String.format("Saving Pump Sync Storage: boluses=%d, tbrs=%d.", pumpSyncStorage[BOLUS]!!.size, pumpSyncStorage[TBR]!!.size))
         }
     }

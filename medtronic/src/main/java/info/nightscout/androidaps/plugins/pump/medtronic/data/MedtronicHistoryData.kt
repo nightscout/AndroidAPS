@@ -458,7 +458,7 @@ class MedtronicHistoryData @Inject constructor(
                 medtronicPumpStatus.pumpType,
                 medtronicPumpStatus.serialNumber!!)
 
-            aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "insertTherapyEventIfNewWithTimestamp [date=%d, eventType=%d, pumpId=%d, pumpSerial=%s] - Result: %b",
+            aapsLogger.debug(LTag.PUMP, String.format(Locale.ROOT, "insertTherapyEventIfNewWithTimestamp [date=%d, eventType=%s, pumpId=%d, pumpSerial=%s] - Result: %b",
                 historyRecord.atechDateTime!!, eventType, historyRecord.pumpId,
                 medtronicPumpStatus.serialNumber!!, result))
 
@@ -646,7 +646,11 @@ class MedtronicHistoryData @Inject constructor(
 
                 val entryWithTempId = findDbEntry(tempBasalProcessDTO.itemOne, tbrRecords)
 
+                aapsLogger.debug(LTag.PUMP, "DD: entryWithTempId: " + (if (entryWithTempId==null) "null" else entryWithTempId.toString()))
+
                 val tbrEntry = tempBasalProcessDTO.itemOne!!.getDecodedDataEntry("Object") as TempBasalPair
+
+                aapsLogger.debug(LTag.PUMP, String.format("DD: tbrEntry=%s, tempBasalProcessDTO=%s", gson.toJson(tbrEntry), gson.toJson(tempBasalProcessDTO)))
 
                 if (entryWithTempId!=null) {
 
