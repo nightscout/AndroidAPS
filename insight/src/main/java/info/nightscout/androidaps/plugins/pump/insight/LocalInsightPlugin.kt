@@ -431,8 +431,10 @@ class LocalInsightPlugin @Inject constructor(
                     serialNumber())
                 while (true) {
                     synchronized(`$bolusLock`) {}               // TODO check if OK... kotlin doesn't accept break inside synchronized block, I don't know if we keep empty block to synchronize bolusCancelled ?
-                    if (bolusCancelled)
+                    if (bolusCancelled) {
+                        aapsLogger.info(LTag.PUMP, "XXXX Break after empty synchronized block)")
                         break
+                    }
                     val operatingMode = connectionService!!.requestMessage(GetOperatingModeMessage()).await().operatingMode
                     if (operatingMode != OperatingMode.STARTED) break
                     val activeBoluses = connectionService!!.requestMessage(GetActiveBolusesMessage()).await().activeBoluses
@@ -459,8 +461,10 @@ class LocalInsightPlugin @Inject constructor(
                                 }
                             }
                         }
-                        if (bolusCancelled)               // TODO check if OK... kotlin doesn't accept break inside synchronized block, I moved it outside block
+                        if (bolusCancelled) {
+                            aapsLogger.info(LTag.PUMP, "XXXX Break after second synchronized block)")
                             break
+                        }
                     }
                     SystemClock.sleep(200)
                 }
@@ -485,6 +489,7 @@ class LocalInsightPlugin @Inject constructor(
         Thread {
             try {
                 synchronized(`$bolusLock`) {
+                    aapsLogger.info(LTag.PUMP, "XXXX Stop Thread beginning)")
                     alertService!!.ignore(AlertType.WARNING_38)
                     val cancelBolusMessage = CancelBolusMessage()
                     cancelBolusMessage.setBolusID(bolusID)
@@ -492,6 +497,7 @@ class LocalInsightPlugin @Inject constructor(
                     bolusCancelled = true
                     confirmAlert(AlertType.WARNING_38)
                     alertService!!.ignore(null)
+                    aapsLogger.info(LTag.PUMP, "XXXX Stop Thread end)")
                 }
             } catch (e: AppLayerErrorException) {
                 aapsLogger.info(LTag.PUMP, "Exception while canceling bolus: " + e.javaClass.canonicalName + " (" + e.errorCode + ")")

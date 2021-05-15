@@ -1,326 +1,272 @@
-package info.nightscout.androidaps.plugins.pump.insight;
+package info.nightscout.androidaps.plugins.pump.insight
 
-import android.annotation.SuppressLint;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.annotation.SuppressLint
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.TextView
+import dagger.android.support.DaggerFragment
+import info.nightscout.androidaps.insight.R
+import info.nightscout.androidaps.insight.databinding.LocalInsightFragmentBinding
+import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.*
+import info.nightscout.androidaps.plugins.pump.insight.events.EventLocalInsightUpdateGUI
+import info.nightscout.androidaps.queue.Callback
+import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.DecimalFormatter.to2Decimal
+import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import java.util.*
+import javax.inject.Inject
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+class LocalInsightFragment : DaggerFragment(), View.OnClickListener {
 
-import java.util.ArrayList;
-import java.util.List;
+    @Inject lateinit var localInsightPlugin: LocalInsightPlugin
+    @Inject lateinit var  commandQueue: CommandQueueProvider
+    @Inject lateinit var  rxBus: RxBusWrapper
+    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
+    @Inject lateinit var dateUtil: DateUtil
+    private var _binding: LocalInsightFragmentBinding? = null
 
-import javax.inject.Inject;
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
 
-import dagger.android.support.DaggerFragment;
-import info.nightscout.androidaps.insight.R;
-import info.nightscout.androidaps.interfaces.CommandQueueProvider;
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.TBROverNotificationBlock;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.ActiveBasalRate;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.ActiveBolus;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.ActiveTBR;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.CartridgeStatus;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.InsightState;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.TotalDailyDose;
-import info.nightscout.androidaps.plugins.pump.insight.events.EventLocalInsightUpdateGUI;
-import info.nightscout.androidaps.queue.Callback;
-import info.nightscout.androidaps.utils.DateUtil;
-import info.nightscout.androidaps.utils.DecimalFormatter;
-import info.nightscout.androidaps.utils.FabricPrivacy;
-import info.nightscout.androidaps.utils.resources.ResourceHelper;
-import info.nightscout.androidaps.utils.rx.AapsSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
+        @JvmField @Inject
+    var aapsSchedulers: AapsSchedulers? = null
+    private val disposable = CompositeDisposable()
+    private var viewsCreated = false
+    private var operatingModeCallback: Callback? = null
+    private var tbrOverNotificationCallback: Callback? = null
+    private var refreshCallback: Callback? = null
 
-public class LocalInsightFragment extends DaggerFragment implements View.OnClickListener {
-    @Inject LocalInsightPlugin localInsightPlugin;
-    @Inject CommandQueueProvider commandQueue;
-    @Inject RxBusWrapper rxBus;
-    @Inject ResourceHelper resourceHelper;
-    @Inject FabricPrivacy fabricPrivacy;
-    @Inject DateUtil dateUtil;
-    @Inject AapsSchedulers aapsSchedulers;
-
-    private final CompositeDisposable disposable = new CompositeDisposable();
-
-    private static final boolean ENABLE_OPERATING_MODE_BUTTON = false;
-
-    private boolean viewsCreated;
-    private Button operatingMode;
-    private Button tbrOverNotification;
-    private Button refresh;
-    private LinearLayout statusItemContainer = null;
-
-    private Callback operatingModeCallback;
-    private Callback tbrOverNotificationCallback;
-    private Callback refreshCallback;
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.local_insight_fragment, container, false);
-        statusItemContainer = view.findViewById(R.id.status_item_container);
-        tbrOverNotification = view.findViewById(R.id.tbr_over_notification);
-        tbrOverNotification.setOnClickListener(this);
-        operatingMode = view.findViewById(R.id.operating_mode);
-        operatingMode.setOnClickListener(this);
-        refresh = view.findViewById(R.id.refresh);
-        refresh.setOnClickListener(this);
-        viewsCreated = true;
-        return view;
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = LocalInsightFragmentBinding.inflate(inflater, container, false)
+        binding.tbrOverNotification.setOnClickListener(this)
+        binding.operatingMode.setOnClickListener(this)
+        binding.refresh.setOnClickListener(this)
+        viewsCreated = true
+        return binding.root
     }
 
-    @Override
-    public synchronized void onResume() {
-        super.onResume();
+    @Synchronized override fun onResume() {
+        super.onResume()
         disposable.add(rxBus
-                .toObservable(EventLocalInsightUpdateGUI.class)
-                .observeOn(aapsSchedulers.getMain())
-                .subscribe(event -> updateGUI(), fabricPrivacy::logException)
-        );
-        updateGUI();
+            .toObservable(EventLocalInsightUpdateGUI::class.java)
+            .observeOn(aapsSchedulers!!.main)
+            .subscribe({ event: EventLocalInsightUpdateGUI? -> updateGUI() }) { throwable: Throwable? -> fabricPrivacy.logException(throwable!!) }
+        )
+        updateGUI()
     }
 
-    @Override
-    public synchronized void onPause() {
-        super.onPause();
-        disposable.clear();
+    @Synchronized override fun onPause() {
+        super.onPause()
+        disposable.clear()
     }
 
-    @Override
-    public synchronized void onDestroyView() {
-        super.onDestroyView();
-        viewsCreated = false;
+    @Synchronized override fun onDestroyView() {
+        super.onDestroyView()
+        viewsCreated = false
     }
 
-    @Override
-    public void onClick(View v) {
-        if (v == operatingMode) {
-            if (localInsightPlugin.getOperatingMode() != null) {
-                operatingMode.setEnabled(false);
-                operatingModeCallback = new Callback() {
-                    @Override
-                    public void run() {
-                        new Handler(Looper.getMainLooper()).post(() -> {
-                            operatingModeCallback = null;
-                            updateGUI();
-                        });
+    override fun onClick(v: View) {
+        when (v.id) {
+            R.id.operating_mode -> {
+                    if (localInsightPlugin.operatingMode != null) {
+                        binding.operatingMode.isEnabled = false
+                        operatingModeCallback = object : Callback() {
+                            override fun run() {
+                                Handler(Looper.getMainLooper()).post {
+                                    operatingModeCallback = null
+                                    updateGUI()
+                                }
+                            }
+                        }
+                        when (localInsightPlugin.operatingMode) {
+                            OperatingMode.PAUSED, OperatingMode.STOPPED -> commandQueue.startPump(operatingModeCallback)
+                            OperatingMode.STARTED                       -> commandQueue.stopPump(operatingModeCallback)
+                        }
                     }
-                };
-                switch (localInsightPlugin.getOperatingMode()) {
-                    case PAUSED:
-                    case STOPPED:
-                        commandQueue.startPump(operatingModeCallback);
-                        break;
-                    case STARTED:
-                        commandQueue.stopPump(operatingModeCallback);
                 }
-            }
-        } else if (v == tbrOverNotification) {
-            TBROverNotificationBlock notificationBlock = localInsightPlugin.getTBROverNotificationBlock();
-            if (notificationBlock != null) {
-                tbrOverNotification.setEnabled(false);
-                tbrOverNotificationCallback = new Callback() {
-                    @Override
-                    public void run() {
-                        new Handler(Looper.getMainLooper()).post(() -> {
-                            tbrOverNotificationCallback = null;
-                            updateGUI();
-                        });
+            R.id.tbr_over_notification -> {
+                    val notificationBlock = localInsightPlugin.tBROverNotificationBlock
+                    if (notificationBlock != null) {
+                        binding.tbrOverNotification.isEnabled = false
+                        tbrOverNotificationCallback = object : Callback() {
+                            override fun run() {
+                                Handler(Looper.getMainLooper()).post {
+                                    tbrOverNotificationCallback = null
+                                    updateGUI()
+                                }
+                            }
+                        }
+                        commandQueue.setTBROverNotification(tbrOverNotificationCallback, !notificationBlock.isEnabled)
                     }
-                };
-                commandQueue.setTBROverNotification(tbrOverNotificationCallback, !notificationBlock.isEnabled());
-            }
-        } else if (v == refresh) {
-            refresh.setEnabled(false);
-            refreshCallback = new Callback() {
-                @Override
-                public void run() {
-                    new Handler(Looper.getMainLooper()).post(() -> {
-                        refreshCallback = null;
-                        updateGUI();
-                    });
                 }
-            };
-            commandQueue.readStatus("InsightRefreshButton", refreshCallback);
+            R.id.refresh    -> {
+                binding.refresh.isEnabled = false
+                refreshCallback = object : Callback() {
+                    override fun run() {
+                        Handler(Looper.getMainLooper()).post {
+                            refreshCallback = null
+                            updateGUI()
+                        }
+                    }
+                }
+                commandQueue.readStatus("InsightRefreshButton", refreshCallback)
+            }
         }
     }
 
-    protected void updateGUI() {
-        if (!viewsCreated) return;
-        statusItemContainer.removeAllViews();
+    protected fun updateGUI() {
+        if (!viewsCreated) return
+        binding.statusItemContainer.removeAllViews()
         if (!localInsightPlugin.isInitialized()) {
-            operatingMode.setVisibility(View.GONE);
-            tbrOverNotification.setVisibility(View.GONE);
-            refresh.setVisibility(View.GONE);
-            return;
+            binding.operatingMode.visibility = View.GONE
+            binding.tbrOverNotification.visibility = View.GONE
+            binding.refresh.visibility = View.GONE
+            return
         }
-        refresh.setVisibility(View.VISIBLE);
-        refresh.setEnabled(refreshCallback == null);
-        TBROverNotificationBlock notificationBlock = localInsightPlugin.getTBROverNotificationBlock();
-        tbrOverNotification.setVisibility(notificationBlock == null ? View.GONE : View.VISIBLE);
-        if (notificationBlock != null)
-            tbrOverNotification.setText(notificationBlock.isEnabled() ? R.string.disable_tbr_over_notification : R.string.enable_tbr_over_notification);
-        tbrOverNotification.setEnabled(tbrOverNotificationCallback == null);
-        List<View> statusItems = new ArrayList<>();
-        getConnectionStatusItem(statusItems);
-        getLastConnectedItem(statusItems);
-        getOperatingModeItem(statusItems);
-        getBatteryStatusItem(statusItems);
-        getCartridgeStatusItem(statusItems);
-        getTDDItems(statusItems);
-        getBaseBasalRateItem(statusItems);
-        getTBRItem(statusItems);
-        getBolusItems(statusItems);
-        for (int i = 0; i < statusItems.size(); i++) {
-            statusItemContainer.addView(statusItems.get(i));
-            if (i != statusItems.size() - 1)
-                getLayoutInflater().inflate(R.layout.local_insight_status_delimitter, statusItemContainer);
+        binding.refresh.visibility = View.VISIBLE
+        binding.refresh.isEnabled = refreshCallback == null
+        val notificationBlock = localInsightPlugin.tBROverNotificationBlock
+        binding.tbrOverNotification.visibility = if (notificationBlock == null) View.GONE else View.VISIBLE
+        if (notificationBlock != null) binding.tbrOverNotification.setText(if (notificationBlock.isEnabled) R.string.disable_tbr_over_notification else R.string.enable_tbr_over_notification)
+        binding.tbrOverNotification.isEnabled = tbrOverNotificationCallback == null
+        val statusItems: MutableList<View> = ArrayList()
+        getConnectionStatusItem(statusItems)
+        getLastConnectedItem(statusItems)
+        getOperatingModeItem(statusItems)
+        getBatteryStatusItem(statusItems)
+        getCartridgeStatusItem(statusItems)
+        getTDDItems(statusItems)
+        getBaseBasalRateItem(statusItems)
+        getTBRItem(statusItems)
+        getBolusItems(statusItems)
+        for (i in statusItems.indices) {
+            binding.statusItemContainer.addView(statusItems[i])
+            if (i != statusItems.size - 1) layoutInflater.inflate(R.layout.local_insight_status_delimitter, binding.statusItemContainer)
         }
     }
 
-    private View getStatusItem(String label, String value) {
-        @SuppressLint("InflateParams") View statusItem = getLayoutInflater().inflate(R.layout.local_insight_status_item, null);
-        ((TextView) statusItem.findViewById(R.id.label)).setText(label);
-        ((TextView) statusItem.findViewById(R.id.value)).setText(value);
-        return statusItem;
+    private fun getStatusItem(label: String, value: String): View {
+        @SuppressLint("InflateParams") val statusItem = layoutInflater.inflate(R.layout.local_insight_status_item, null)
+        (statusItem.findViewById<View>(R.id.label) as TextView).text = label
+        (statusItem.findViewById<View>(R.id.value) as TextView).text = value
+        return statusItem
     }
 
-    private void getConnectionStatusItem(List<View> statusItems) {
-        int string = 0;
-        InsightState state = localInsightPlugin.getConnectionService().getState();
-        switch (state) {
-            case NOT_PAIRED:
-                string = R.string.not_paired;
-                break;
-            case DISCONNECTED:
-                string = R.string.disconnected;
-                break;
-            case CONNECTING:
-            case SATL_CONNECTION_REQUEST:
-            case SATL_KEY_REQUEST:
-            case SATL_SYN_REQUEST:
-            case SATL_VERIFY_CONFIRM_REQUEST:
-            case SATL_VERIFY_DISPLAY_REQUEST:
-            case APP_ACTIVATE_PARAMETER_SERVICE:
-            case APP_ACTIVATE_STATUS_SERVICE:
-            case APP_BIND_MESSAGE:
-            case APP_CONNECT_MESSAGE:
-            case APP_FIRMWARE_VERSIONS:
-            case APP_SYSTEM_IDENTIFICATION:
-            case AWAITING_CODE_CONFIRMATION:
-                string = R.string.connecting;
-                break;
-            case CONNECTED:
-                string = R.string.connected;
-                break;
-            case RECOVERING:
-                string = R.string.recovering;
-                break;
+    private fun getConnectionStatusItem(statusItems: MutableList<View>) {
+        var string = 0
+        val state = localInsightPlugin.connectionService!!.state
+        string = when (state) {
+            InsightState.NOT_PAIRED                                                                                                                                                                                                                                                                                                                                                                                                                                                                      -> R.string.not_paired
+            InsightState.DISCONNECTED                                                                                                                                                                                                                                                                                                                                                                                                                                                                    -> R.string.disconnected
+            InsightState.CONNECTING, InsightState.SATL_CONNECTION_REQUEST, InsightState.SATL_KEY_REQUEST, InsightState.SATL_SYN_REQUEST, InsightState.SATL_VERIFY_CONFIRM_REQUEST, InsightState.SATL_VERIFY_DISPLAY_REQUEST, InsightState.APP_ACTIVATE_PARAMETER_SERVICE, InsightState.APP_ACTIVATE_STATUS_SERVICE, InsightState.APP_BIND_MESSAGE, InsightState.APP_CONNECT_MESSAGE, InsightState.APP_FIRMWARE_VERSIONS, InsightState.APP_SYSTEM_IDENTIFICATION, InsightState.AWAITING_CODE_CONFIRMATION -> R.string.connecting
+            InsightState.CONNECTED                                                                                                                                                                                                                                                                                                                                                                                                                                                                       -> R.string.connected
+            InsightState.RECOVERING                                                                                                                                                                                                                                                                                                                                                                                                                                                                      -> R.string.recovering
         }
-        statusItems.add(getStatusItem(resourceHelper.gs(R.string.insight_status), resourceHelper.gs(string)));
+        statusItems.add(getStatusItem(resourceHelper.gs(R.string.insight_status), resourceHelper.gs(string)))
         if (state == InsightState.RECOVERING) {
-            statusItems.add(getStatusItem(resourceHelper.gs(R.string.recovery_duration), localInsightPlugin.getConnectionService().getRecoveryDuration() / 1000 + "s"));
+            statusItems.add(getStatusItem(resourceHelper.gs(R.string.recovery_duration), (localInsightPlugin.connectionService!!.recoveryDuration / 1000).toString() + "s"))
         }
     }
 
-    private void getLastConnectedItem(List<View> statusItems) {
-        switch (localInsightPlugin.getConnectionService().getState()) {
-            case CONNECTED:
-            case NOT_PAIRED:
-                return;
-            default:
-                long lastConnection = localInsightPlugin.getConnectionService().getLastConnected();
-                if (lastConnection == 0) return;
-                statusItems.add(getStatusItem(resourceHelper.gs(R.string.last_connected), dateUtil.timeString(lastConnection)));
-        }
-    }
+    private fun getLastConnectedItem(statusItems: MutableList<View>) {
+        when (localInsightPlugin.connectionService!!.state) {
+            InsightState.CONNECTED, InsightState.NOT_PAIRED -> return
 
-    private void getOperatingModeItem(List<View> statusItems) {
-        if (localInsightPlugin.getOperatingMode() == null) {
-            operatingMode.setVisibility(View.GONE);
-            return;
-        }
-        int string = 0;
-        if (ENABLE_OPERATING_MODE_BUTTON) operatingMode.setVisibility(View.VISIBLE);
-        operatingMode.setEnabled(operatingModeCallback == null);
-        switch (localInsightPlugin.getOperatingMode()) {
-            case STARTED:
-                operatingMode.setText(R.string.stop_pump);
-                string = R.string.started;
-                break;
-            case STOPPED:
-                operatingMode.setText(R.string.start_pump);
-                string = R.string.stopped;
-                break;
-            case PAUSED:
-                operatingMode.setText(R.string.start_pump);
-                string = R.string.paused;
-                break;
-        }
-        statusItems.add(getStatusItem(resourceHelper.gs(R.string.operating_mode), resourceHelper.gs(string)));
-    }
-
-    private void getBatteryStatusItem(List<View> statusItems) {
-        if (localInsightPlugin.getBatteryStatus() == null) return;
-        statusItems.add(getStatusItem(resourceHelper.gs(R.string.battery_label),
-                localInsightPlugin.getBatteryStatus().getBatteryAmount() + "%"));
-    }
-
-    private void getCartridgeStatusItem(List<View> statusItems) {
-        CartridgeStatus cartridgeStatus = localInsightPlugin.getCartridgeStatus();
-        if (cartridgeStatus == null) return;
-        String status;
-        if (cartridgeStatus.isInserted())
-            status = DecimalFormatter.INSTANCE.to2Decimal(localInsightPlugin.getCartridgeStatus().getRemainingAmount()) + "U";
-        else status = resourceHelper.gs(R.string.not_inserted);
-        statusItems.add(getStatusItem(resourceHelper.gs(R.string.reservoir_label), status));
-    }
-
-    private void getTDDItems(List<View> statusItems) {
-        if (localInsightPlugin.getTotalDailyDose() == null) return;
-        TotalDailyDose tdd = localInsightPlugin.getTotalDailyDose();
-        statusItems.add(getStatusItem(resourceHelper.gs(R.string.tdd_bolus), DecimalFormatter.INSTANCE.to2Decimal(tdd.getBolus())));
-        statusItems.add(getStatusItem(resourceHelper.gs(R.string.tdd_basal), DecimalFormatter.INSTANCE.to2Decimal(tdd.getBasal())));
-        statusItems.add(getStatusItem(resourceHelper.gs(R.string.tdd_total), DecimalFormatter.INSTANCE.to2Decimal(tdd.getBolusAndBasal())));
-    }
-
-    private void getBaseBasalRateItem(List<View> statusItems) {
-        if (localInsightPlugin.getActiveBasalRate() == null) return;
-        ActiveBasalRate activeBasalRate = localInsightPlugin.getActiveBasalRate();
-        statusItems.add(getStatusItem(resourceHelper.gs(R.string.basebasalrate_label),
-                DecimalFormatter.INSTANCE.to2Decimal(activeBasalRate.getActiveBasalRate()) + " U/h (" + activeBasalRate.getActiveBasalProfileName() + ")"));
-    }
-
-    private void getTBRItem(List<View> statusItems) {
-        if (localInsightPlugin.getActiveTBR() == null) return;
-        ActiveTBR activeTBR = localInsightPlugin.getActiveTBR();
-        statusItems.add(getStatusItem(resourceHelper.gs(R.string.tempbasal_label),
-                resourceHelper.gs(R.string.tbr_formatter, activeTBR.getPercentage(), activeTBR.getInitialDuration() - activeTBR.getRemainingDuration(), activeTBR.getInitialDuration())));
-    }
-
-    private void getBolusItems(List<View> statusItems) {
-        if (localInsightPlugin.getActiveBoluses() == null) return;
-        for (ActiveBolus activeBolus : localInsightPlugin.getActiveBoluses()) {
-            String label;
-            switch (activeBolus.getBolusType()) {
-                case MULTIWAVE:
-                    label = resourceHelper.gs(R.string.multiwave_bolus);
-                    break;
-                case EXTENDED:
-                    label = resourceHelper.gs(R.string.extended_bolus);
-                    break;
-                default:
-                    continue;
+            else                                            -> {
+                val lastConnection = localInsightPlugin.connectionService!!.lastConnected
+                if (lastConnection == 0L) return
+                statusItems.add(getStatusItem(resourceHelper.gs(R.string.last_connected), dateUtil.timeString(lastConnection)))
             }
-            statusItems.add(getStatusItem(label, resourceHelper.gs(R.string.eb_formatter, activeBolus.getRemainingAmount(), activeBolus.getInitialAmount(), activeBolus.getRemainingDuration())));
         }
+    }
+
+    private fun getOperatingModeItem(statusItems: MutableList<View>) {
+        if (localInsightPlugin.operatingMode == null) {
+            binding.operatingMode.visibility = View.GONE
+            return
+        }
+        var string = 0
+        if (ENABLE_OPERATING_MODE_BUTTON) binding.operatingMode.visibility = View.VISIBLE
+        binding.operatingMode.isEnabled = operatingModeCallback == null
+        when (localInsightPlugin.operatingMode) {
+            OperatingMode.STARTED -> {
+                    binding.operatingMode.setText(R.string.stop_pump)
+                    string = R.string.started
+                }
+            OperatingMode.STOPPED -> {
+                    binding.operatingMode.setText(R.string.start_pump)
+                    string = R.string.stopped
+                }
+            OperatingMode.PAUSED  -> {
+                    binding.operatingMode.setText(R.string.start_pump)
+                    string = R.string.paused
+                }
+        }
+        statusItems.add(getStatusItem(resourceHelper.gs(R.string.operating_mode), resourceHelper.gs(string)))
+    }
+
+    private fun getBatteryStatusItem(statusItems: MutableList<View>) {
+        if (localInsightPlugin.batteryStatus == null) return
+        statusItems.add(getStatusItem(resourceHelper.gs(R.string.battery_label), localInsightPlugin.batteryStatus!!.batteryAmount.toString() + "%"))
+    }
+
+    private fun getCartridgeStatusItem(statusItems: MutableList<View>) {
+        val cartridgeStatus = localInsightPlugin.cartridgeStatus ?: return
+        val status: String
+        status = if (cartridgeStatus.isInserted) to2Decimal(localInsightPlugin.cartridgeStatus!!.remainingAmount) + "U" else resourceHelper.gs(R.string.not_inserted)
+        statusItems.add(getStatusItem(resourceHelper.gs(R.string.reservoir_label), status))
+    }
+
+    private fun getTDDItems(statusItems: MutableList<View>) {
+        if (localInsightPlugin.totalDailyDose == null) return
+        val tdd = localInsightPlugin.totalDailyDose
+        statusItems.add(getStatusItem(resourceHelper.gs(R.string.tdd_bolus), to2Decimal(tdd!!.bolus)))
+        statusItems.add(getStatusItem(resourceHelper.gs(R.string.tdd_basal), to2Decimal(tdd.basal)))
+        statusItems.add(getStatusItem(resourceHelper.gs(R.string.tdd_total), to2Decimal(tdd.bolusAndBasal)))
+    }
+
+    private fun getBaseBasalRateItem(statusItems: MutableList<View>) {
+        if (localInsightPlugin.activeBasalRate == null) return
+        val activeBasalRate = localInsightPlugin.activeBasalRate
+        statusItems.add(getStatusItem(resourceHelper.gs(R.string.basebasalrate_label),
+            to2Decimal(activeBasalRate!!.activeBasalRate) + " U/h (" + activeBasalRate.activeBasalProfileName + ")"))
+    }
+
+    private fun getTBRItem(statusItems: MutableList<View>) {
+        if (localInsightPlugin.activeTBR == null) return
+        val activeTBR = localInsightPlugin.activeTBR
+        statusItems.add(getStatusItem(resourceHelper.gs(R.string.tempbasal_label),
+            resourceHelper.gs(R.string.tbr_formatter, activeTBR!!.percentage, activeTBR.initialDuration - activeTBR.remainingDuration, activeTBR.initialDuration)))
+    }
+
+    private fun getBolusItems(statusItems: MutableList<View>) {
+        if (localInsightPlugin.activeBoluses == null) return
+        for (activeBolus in localInsightPlugin.activeBoluses!!) {
+            var label: String
+            label = when (activeBolus.bolusType) {
+                BolusType.MULTIWAVE -> resourceHelper.gs(R.string.multiwave_bolus)
+                BolusType.EXTENDED  -> resourceHelper.gs(R.string.extended_bolus)
+                else                -> continue
+            }
+            statusItems.add(getStatusItem(label, resourceHelper.gs(R.string.eb_formatter, activeBolus.remainingAmount, activeBolus.initialAmount, activeBolus.remainingDuration)))
+        }
+    }
+
+    companion object {
+
+        private const val ENABLE_OPERATING_MODE_BUTTON = false
     }
 }
