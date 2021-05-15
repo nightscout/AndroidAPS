@@ -522,6 +522,8 @@ class MedtronicHistoryData @Inject constructor(
             if (!multiwave) {
                 val entryWithTempId = findDbEntry(bolus, boluses)
 
+                aapsLogger.debug(LTag.PUMP, String.format("DD: entryWithTempId=%s", gson.toJson(entryWithTempId)))
+
                 if (entryWithTempId != null) {
                     temporaryId = entryWithTempId.temporaryId
                     pumpSyncStorage.removeBolusWithTemporaryId(temporaryId)
@@ -647,6 +649,10 @@ class MedtronicHistoryData @Inject constructor(
                 val tbrEntry = tempBasalProcessDTO.itemOne!!.getDecodedDataEntry("Object") as TempBasalPair
 
                 if (entryWithTempId!=null) {
+
+                    aapsLogger.debug(LTag.PUMP, String.format("DD: tempIdEntry=%s, tbrEntry=%s, tempBasalProcessDTO=%s, pumpType=%s, serial=%s",
+                        gson.toJson(entryWithTempId), gson.toJson(tbrEntry), gson.toJson(tempBasalProcessDTO), medtronicPumpStatus.pumpType, medtronicPumpStatus.serialNumber!!))
+
                     val result = pumpSync.syncTemporaryBasalWithTempId(
                         tryToGetByLocalTime(tempBasalProcessDTO.atechDateTime),
                         tbrEntry.insulinRate,
