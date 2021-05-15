@@ -22,7 +22,7 @@ abstract class InsightDatabase : RoomDatabase() {
 
     companion object {
 
-        const val VERSION = 1
+        const val VERSION = 2
 
         fun build(context: Context) =
             Room.databaseBuilder(

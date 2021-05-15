@@ -5,7 +5,11 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(tableName = DATABASE_INSIGHT_BOLUS_IDS,
-    indices = [Index("bolusID")])
+    indices = [
+        Index("bolusID"),
+        Index("pumpSerial"),
+        Index("timestamp")
+    ])
 data class InsightBolusID(
     var timestamp: Long,
     val pumpSerial: String? = null,

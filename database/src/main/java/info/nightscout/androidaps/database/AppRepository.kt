@@ -78,6 +78,11 @@ open class AppRepository @Inject internal constructor(
         database.glucoseValueDao.getModifiedFrom(lastId)
             .subscribeOn(Schedulers.io())
 
+    fun getLastGlucoseValueIdWrapped(): Single<ValueWrapper<Long>> =
+        database.glucoseValueDao.getLastId()
+            .subscribeOn(Schedulers.io())
+            .toWrappedSingle()
+
     /*
        * returns a Pair of the next entity to sync and the ID of the "update".
        * The update id might either be the entry id itself if it is a new entry - or the id
@@ -151,6 +156,11 @@ open class AppRepository @Inject internal constructor(
     fun deleteAllTempTargetEntries() =
         database.temporaryTargetDao.deleteAllEntries()
 
+    fun getLastTempTargetIdWrapped(): Single<ValueWrapper<Long>> =
+        database.temporaryTargetDao.getLastId()
+            .subscribeOn(Schedulers.io())
+            .toWrappedSingle()
+
     // USER ENTRY
     fun getAllUserEntries(): Single<List<UserEntry>> =
         database.userEntryDao.getAll()
@@ -217,6 +227,11 @@ open class AppRepository @Inject internal constructor(
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
 
+    fun getLastProfileSwitchIdWrapped(): Single<ValueWrapper<Long>> =
+        database.profileSwitchDao.getLastId()
+            .subscribeOn(Schedulers.io())
+            .toWrappedSingle()
+
     // EFFECTIVE PROFILE SWITCH
     /*
        * returns a Pair of the next entity to sync and the ID of the "update".
@@ -266,6 +281,11 @@ open class AppRepository @Inject internal constructor(
 
     fun deleteAllEffectiveProfileSwitches() =
         database.effectiveProfileSwitchDao.deleteAllEntries()
+
+    fun getLastEffectiveProfileSwitchIdWrapped(): Single<ValueWrapper<Long>> =
+        database.effectiveProfileSwitchDao.getLastId()
+            .subscribeOn(Schedulers.io())
+            .toWrappedSingle()
 
     // THERAPY EVENT
     /*
@@ -329,6 +349,11 @@ open class AppRepository @Inject internal constructor(
         database.therapyEventDao.compatGetTherapyEventDataFromToTime(from, to)
             .subscribeOn(Schedulers.io())
 
+    fun getLastTherapyEventIdWrapped(): Single<ValueWrapper<Long>> =
+        database.therapyEventDao.getLastId()
+            .subscribeOn(Schedulers.io())
+            .toWrappedSingle()
+
     // FOOD
     /*
        * returns a Pair of the next entity to sync and the ID of the "update".
@@ -359,6 +384,11 @@ open class AppRepository @Inject internal constructor(
 
     fun deleteAllFoods() =
         database.foodDao.deleteAllEntries()
+
+    fun getLastFoodIdWrapped(): Single<ValueWrapper<Long>> =
+        database.foodDao.getLastId()
+            .subscribeOn(Schedulers.io())
+            .toWrappedSingle()
 
     // BOLUS
     /*
@@ -421,6 +451,10 @@ open class AppRepository @Inject internal constructor(
     fun deleteAllBoluses() =
         database.bolusDao.deleteAllEntries()
 
+    fun getLastBolusIdWrapped(): Single<ValueWrapper<Long>> =
+        database.bolusDao.getLastId()
+            .subscribeOn(Schedulers.io())
+            .toWrappedSingle()
     // CARBS
 
     private fun expandCarbs(carbs: Carbs): List<Carbs> =
@@ -529,6 +563,11 @@ open class AppRepository @Inject internal constructor(
     fun deleteAllCarbs() =
         database.carbsDao.deleteAllEntries()
 
+    fun getLastCarbsIdWrapped(): Single<ValueWrapper<Long>> =
+        database.carbsDao.getLastId()
+            .subscribeOn(Schedulers.io())
+            .toWrappedSingle()
+
     // BOLUS CALCULATOR RESULT
     /*
       * returns a Pair of the next entity to sync and the ID of the "update".
@@ -566,6 +605,11 @@ open class AppRepository @Inject internal constructor(
     fun deleteAllBolusCalculatorResults() =
         database.bolusCalculatorResultDao.deleteAllEntries()
 
+    fun getLastBolusCalculatorResultIdWrapped(): Single<ValueWrapper<Long>> =
+        database.bolusCalculatorResultDao.getLastId()
+            .subscribeOn(Schedulers.io())
+            .toWrappedSingle()
+
     // DEVICE STATUS
     fun insert(deviceStatus: DeviceStatus): Long =
         database.deviceStatusDao.insert(deviceStatus)
@@ -585,6 +629,11 @@ open class AppRepository @Inject internal constructor(
     fun getModifiedDeviceStatusDataFromId(lastId: Long): Single<List<DeviceStatus>> =
         database.deviceStatusDao.getModifiedFrom(lastId)
             .subscribeOn(Schedulers.io())
+
+    fun getLastDeviceStatusIdWrapped(): Single<ValueWrapper<Long>> =
+        database.deviceStatusDao.getLastId()
+            .subscribeOn(Schedulers.io())
+            .toWrappedSingle()
 
     // TEMPORARY BASAL
     /*
@@ -642,6 +691,11 @@ open class AppRepository @Inject internal constructor(
 
     fun getOldestTemporaryBasalRecord(): TemporaryBasal? =
         database.temporaryBasalDao.getOldestRecord()
+
+    fun getLastTemporaryBasalIdWrapped(): Single<ValueWrapper<Long>> =
+        database.temporaryBasalDao.getLastId()
+            .subscribeOn(Schedulers.io())
+            .toWrappedSingle()
 
     // EXTENDED BOLUS
     /*
@@ -707,6 +761,10 @@ open class AppRepository @Inject internal constructor(
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
 
+    fun getLastExtendedBolusIdWrapped(): Single<ValueWrapper<Long>> =
+        database.extendedBolusDao.getLastId()
+            .subscribeOn(Schedulers.io())
+            .toWrappedSingle()
 }
 
 @Suppress("USELESS_CAST")
