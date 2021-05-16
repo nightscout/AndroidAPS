@@ -25,8 +25,8 @@ fun ProfileSwitch.toJson(dateUtil: DateUtil): JSONObject =
         .put("duration", T.msecs(duration).mins())
         .put("profile", getCustomizedName())
         .put("profileJson", ProfileSealed.PS(this).toPureNsJson(dateUtil).toString())
-        .put("timeshift", T.msecs(timeshift).hours())
-        .put("percentage", percentage)
+        .put("timeshift", 0)
+        .put("percentage", 100) // customization already applied to json
         .also {
             if (interfaceIDs.pumpId != null) it.put("pumpId", interfaceIDs.pumpId)
             if (interfaceIDs.pumpType != null) it.put("pumpType", interfaceIDs.pumpType!!.name)

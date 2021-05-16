@@ -49,18 +49,6 @@ public class DatabaseHelperProvider implements DatabaseHelperInterface {
         return MainApp.Companion.getDbHelper().findOmnipodHistoryRecordByPumpId(pumpId);
     }
 
-    @Override public void createOrUpdate(@NonNull InsightBolusID record) {
-        MainApp.Companion.getDbHelper().createOrUpdate(record);
-    }
-
-    @Override public void createOrUpdate(@NonNull InsightPumpID record) {
-        MainApp.Companion.getDbHelper().createOrUpdate(record);
-    }
-
-    @Override public void createOrUpdate(@NonNull InsightHistoryOffset record) {
-        MainApp.Companion.getDbHelper().createOrUpdate(record);
-    }
-
     @Override public void delete(@NonNull ExtendedBolus extendedBolus) {
 //        MainApp.Companion.getDbHelper().delete(extendedBolus);
     }
@@ -68,18 +56,6 @@ public class DatabaseHelperProvider implements DatabaseHelperInterface {
     @Nullable @Override public ExtendedBolus getExtendedBolusByPumpId(long pumpId) {
 //        return MainApp.Companion.getDbHelper().getExtendedBolusByPumpId(pumpId);
         return null;
-    }
-
-    @Nullable @Override public InsightBolusID getInsightBolusID(@NonNull String pumpSerial, int bolusID, long timestamp) {
-        return MainApp.Companion.getDbHelper().getInsightBolusID(pumpSerial, bolusID, timestamp);
-    }
-
-    @Nullable @Override public InsightHistoryOffset getInsightHistoryOffset(@NonNull String pumpSerial) {
-        return MainApp.Companion.getDbHelper().getInsightHistoryOffset(pumpSerial);
-    }
-
-    @Nullable @Override public InsightPumpID getPumpStoppedEvent(@NonNull String pumpSerial, long before) {
-        return MainApp.Companion.getDbHelper().getPumpStoppedEvent(pumpSerial, before);
     }
 
     @Override public void resetDatabases() {

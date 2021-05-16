@@ -19,6 +19,9 @@ internal interface ProfileSwitchDao : ProfileSwitchDaoWorkaround {
     @Query("DELETE FROM $TABLE_PROFILE_SWITCHES")
     override fun deleteAllEntries()
 
+    @Query("SELECT id FROM $TABLE_PROFILE_SWITCHES ORDER BY id DESC limit 1")
+    fun getLastId(): Maybe<Long>
+
     @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE timestamp = :timestamp AND referenceId IS NULL")
     fun findByTimestamp(timestamp: Long): ProfileSwitch?
 

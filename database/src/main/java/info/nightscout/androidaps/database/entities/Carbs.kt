@@ -16,7 +16,13 @@ import java.util.*
         entity = Carbs::class,
         parentColumns = ["id"],
         childColumns = ["referenceId"])],
-    indices = [Index("referenceId"), Index("timestamp")])
+    indices = [
+        Index("id"),
+        Index("isValid"),
+        Index("nightscoutId"),
+        Index("referenceId"),
+        Index("timestamp")
+    ])
 data class Carbs(
     @PrimaryKey(autoGenerate = true)
     override var id: Long = 0,

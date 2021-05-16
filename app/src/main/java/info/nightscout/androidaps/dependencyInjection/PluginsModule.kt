@@ -192,7 +192,7 @@ abstract class PluginsModule {
     abstract fun bindOpenAPSSMBPlugin(plugin: OpenAPSSMBPlugin): PluginBase
 
     @Binds
-    @NotNSClient
+    @AllConfigs
     @IntoMap
     @IntKey(240)
     abstract fun bindLocalProfilePlugin(plugin: LocalProfilePlugin): PluginBase

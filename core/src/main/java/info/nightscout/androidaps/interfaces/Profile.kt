@@ -31,6 +31,11 @@ interface Profile {
     val timeshift: Int
 
     /**
+     * is equal to another profile?
+     */
+    fun isEqual(profile: Profile): Boolean
+
+    /**
      * Basal value according to "now"
      */
     fun getBasal(): Double

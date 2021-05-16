@@ -62,7 +62,7 @@ fun TemporaryBasal.toStringFull(profile: Profile, dateUtil: DateUtil): String {
     }
 }
 
-fun TemporaryBasal.toJson(profile: Profile, dateUtil: DateUtil): JSONObject =
+fun TemporaryBasal.toJson(profile: Profile, dateUtil: DateUtil, useAbsolute: Boolean): JSONObject =
     JSONObject()
         .put("created_at", dateUtil.toISOString(timestamp))
         .put("enteredBy", "openaps://" + "AndroidAPS")
@@ -71,7 +71,7 @@ fun TemporaryBasal.toJson(profile: Profile, dateUtil: DateUtil): JSONObject =
         .put("rate", rate)
         .put("type", type.name)
         .also {
-            if (isAbsolute) it.put("absolute", rate)
+            if (useAbsolute) it.put("absolute", convertedToAbsolute(timestamp, profile))
             else it.put("percent", convertedToPercent(timestamp, profile) - 100)
             if (interfaceIDs.pumpId != null) it.put("pumpId", interfaceIDs.pumpId)
             if (interfaceIDs.endId != null) it.put("endId", interfaceIDs.endId)

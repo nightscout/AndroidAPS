@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.general.nsclient.services
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.*
 import androidx.work.OneTimeWorkRequest
@@ -83,6 +85,7 @@ class NSClientService : DaggerService() {
     @Inject lateinit var repository: AppRepository
 
     companion object {
+
         private const val WATCHDOG_INTERVAL_MINUTES = 2
         private const val WATCHDOG_RECONNECT_IN = 15
         private const val WATCHDOG_MAX_CONNECTIONS = 5
@@ -90,7 +93,7 @@ class NSClientService : DaggerService() {
 
     private val disposable = CompositeDisposable()
 
-    //    public PowerManager.WakeLock mWakeLock;
+    private var wakeLock: PowerManager.WakeLock? = null
     private val binder: IBinder = LocalBinder()
     private var handler: Handler? = null
     private var socket: Socket? = null
@@ -108,11 +111,12 @@ class NSClientService : DaggerService() {
     var hasWriteAuth = false
     var nsURL = ""
     var latestDateInReceivedData: Long = 0
+
+    @SuppressLint("WakelockTimeout")
     override fun onCreate() {
         super.onCreate()
-        //        PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
-//        mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:NSClientService");
-//        mWakeLock.acquire();
+        wakeLock = (getSystemService(Context.POWER_SERVICE) as PowerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:NSClientService")
+        wakeLock?.acquire()
         initialize()
         disposable.add(rxBus
             .toObservable(EventConfigBuilderChange::class.java)
@@ -163,7 +167,7 @@ class NSClientService : DaggerService() {
         disposable.add(rxBus
             .toObservable(NSUpdateAck::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ ack  -> processUpdateAck(ack) }, fabricPrivacy::logException)
+            .subscribe({ ack -> processUpdateAck(ack) }, fabricPrivacy::logException)
         )
         disposable.add(rxBus
             .toObservable(NSAddAck::class.java)
@@ -175,7 +179,7 @@ class NSClientService : DaggerService() {
     override fun onDestroy() {
         super.onDestroy()
         disposable.clear()
-        //        if (mWakeLock.isHeld()) mWakeLock.release();
+        if (wakeLock?.isHeld == true) wakeLock?.release()
     }
 
     private fun processAddAck(ack: NSAddAck) {
@@ -449,10 +453,10 @@ class NSClientService : DaggerService() {
     }
     private val onDataUpdate = Emitter.Listener { args ->
         handler?.post {
-            val powerManager = getSystemService(POWER_SERVICE) as PowerManager
-            val wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-                "AndroidAPS:NSClientService_onDataUpdate")
-            wakeLock.acquire(3000)
+            // val powerManager = getSystemService(POWER_SERVICE) as PowerManager
+            // val wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+            //     "AndroidAPS:NSClientService_onDataUpdate")
+            // wakeLock.acquire(3000)
             try {
                 val data = args[0] as JSONObject
                 try {
@@ -585,12 +589,12 @@ class NSClientService : DaggerService() {
                 }
                 //rxBus.send(new EventNSClientNewLog("NSCLIENT", "onDataUpdate end");
             } finally {
-                if (wakeLock.isHeld) wakeLock.release()
+                // if (wakeLock.isHeld) wakeLock.release()
             }
         }
     }
 
-    fun dbUpdate(collection: String, _id: String?, data: JSONObject?, originalObject: Any) {
+    fun dbUpdate(collection: String, _id: String?, data: JSONObject?, originalObject: Any, progress: String) {
         try {
             if (_id == null) return
             if (!isConnected || !hasWriteAuth) return
@@ -599,34 +603,20 @@ class NSClientService : DaggerService() {
             message.put("_id", _id)
             message.put("data", data)
             socket?.emit("dbUpdate", message, NSUpdateAck("dbUpdate", _id, aapsLogger, rxBus, originalObject))
-            rxBus.send(EventNSClientNewLog("DBUPDATE $collection", "Sent " + originalObject.javaClass.simpleName + " " + _id))
+            rxBus.send(EventNSClientNewLog("DBUPDATE $collection", "Sent " + originalObject.javaClass.simpleName + " " + _id + " " + progress))
         } catch (e: JSONException) {
             aapsLogger.error("Unhandled exception", e)
         }
     }
 
-    fun dbRemove(collection: String, _id: String?, originalObject: Any) {
-        try {
-            if (_id == null) return
-            if (!isConnected || !hasWriteAuth) return
-            val message = JSONObject()
-            message.put("collection", collection)
-            message.put("_id", _id)
-            socket?.emit("dbRemove", message, NSUpdateAck("dbRemove", _id, aapsLogger, rxBus, originalObject))
-            rxBus.send(EventNSClientNewLog("DBREMOVE $collection", "Sent " + originalObject.javaClass.simpleName + " " + _id))
-        } catch (e: JSONException) {
-            aapsLogger.error("Unhandled exception", e)
-        }
-    }
-
-    fun dbAdd(collection: String, data: JSONObject, originalObject: Any) {
+    fun dbAdd(collection: String, data: JSONObject, originalObject: Any, progress: String) {
         try {
             if (!isConnected || !hasWriteAuth) return
             val message = JSONObject()
             message.put("collection", collection)
             message.put("data", data)
             socket?.emit("dbAdd", message, NSAddAck(aapsLogger, rxBus, originalObject))
-            rxBus.send(EventNSClientNewLog("DBADD $collection", "Sent " + originalObject.javaClass.simpleName + " " + data))
+            rxBus.send(EventNSClientNewLog("DBADD $collection", "Sent " + originalObject.javaClass.simpleName + " " + data + " " + progress))
         } catch (e: JSONException) {
             aapsLogger.error("Unhandled exception", e)
         }
@@ -646,16 +636,16 @@ class NSClientService : DaggerService() {
                 aapsLogger.debug(LTag.NSCLIENT, "Skipping resend by lastAckTime: " + (System.currentTimeMillis() - lastAckTime) / 1000L + " sec")
                 return@post
             }
-            val powerManager = getSystemService(POWER_SERVICE) as PowerManager
-            val wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-                "AndroidAPS:NSClientService_onDataUpdate")
-            wakeLock.acquire(mins(10).msecs())
+            // val powerManager = getSystemService(POWER_SERVICE) as PowerManager
+            // val wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+            //     "AndroidAPS:NSClientService_onDataUpdate")
+            // wakeLock.acquire(mins(10).msecs())
             try {
                 rxBus.send(EventNSClientNewLog("QUEUE", "Resend started: $reason"))
                 dataSyncSelector.doUpload()
                 rxBus.send(EventNSClientNewLog("QUEUE", "Resend ended: $reason"))
             } finally {
-                if (wakeLock.isHeld) wakeLock.release()
+                // if (wakeLock.isHeld) wakeLock.release()
             }
         }
     }

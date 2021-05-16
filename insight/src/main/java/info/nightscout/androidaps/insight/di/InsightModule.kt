@@ -1,10 +1,14 @@
-package info.nightscout.androidaps.danars.di
+package info.nightscout.androidaps.insight.di
 
 import dagger.Module
+import dagger.android.ContributesAndroidInjector
 
 @Module(includes = [
     InsightCommModule::class,
     InsightActivitiesModule::class,
-    InsightServicesModule::class
+    InsightServicesModule::class,
+    InsightDatabaseModule::class
 ])
-open class InsightModule
+
+@Suppress("unused")
+abstract class InsightModule
