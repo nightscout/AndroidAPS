@@ -1,4 +1,3 @@
-package info.nightscout.androidaps.plugins.pump.insight.satl;
+package info.nightscout.androidaps.plugins.pump.insight.satl
 
-public class VerifyDisplayRequest extends SatlMessage {
-}
+class VerifyDisplayRequest : SatlMessage()

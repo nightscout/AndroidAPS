@@ -1,7 +1,6 @@
-package info.nightscout.androidaps.plugins.pump.insight.satl;
+package info.nightscout.androidaps.plugins.pump.insight.satl
 
-public enum PairingStatus {
-
+enum class PairingStatus {
     CONFIRMED,
     REJECTED,
     PENDING

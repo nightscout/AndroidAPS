@@ -1,7 +1,6 @@
-package info.nightscout.androidaps.plugins.pump.insight.satl;
+package info.nightscout.androidaps.plugins.pump.insight.satl
 
-public enum SatlError {
-
+enum class SatlError {
     UNDEFINED,
     INCOMPATIBLE_VERSION,
     INVALID_COMM_ID,
