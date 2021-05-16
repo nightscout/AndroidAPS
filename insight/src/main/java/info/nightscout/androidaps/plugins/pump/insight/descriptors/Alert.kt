@@ -3,8 +3,8 @@ package info.nightscout.androidaps.plugins.pump.insight.descriptors
 class Alert {
 
     var alertId = 0
-    var alertCategory: AlertCategory = AlertCategory.NONE
-    var alertType: AlertType = AlertType.NONE
+    var alertCategory: AlertCategory? = null
+    var alertType: AlertType? = null
     var alertStatus: AlertStatus? = null
     var tBRAmount = 0
     var tBRDuration = 0

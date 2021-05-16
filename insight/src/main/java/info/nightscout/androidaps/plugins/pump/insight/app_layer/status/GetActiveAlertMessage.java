@@ -3,10 +3,10 @@ package info.nightscout.androidaps.plugins.pump.insight.app_layer.status;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.Service;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.Alert;
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.AlertCategory;
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.AlertStatus;
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.AlertType;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.MessagePriority;
-import info.nightscout.androidaps.plugins.pump.insight.ids.AlertCategoryIDs;
-import info.nightscout.androidaps.plugins.pump.insight.ids.AlertStatusIDs;
-import info.nightscout.androidaps.plugins.pump.insight.ids.AlertTypeIDs;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf;
 
 public class GetActiveAlertMessage extends AppLayerMessage {
@@ -21,9 +21,9 @@ public class GetActiveAlertMessage extends AppLayerMessage {
     protected void parse(ByteBuf byteBuf) {
         Alert alert = new Alert();
         alert.setAlertId(byteBuf.readUInt16LE());
-        alert.setAlertCategory(AlertCategoryIDs.IDS.getType(byteBuf.readUInt16LE()));
-        alert.setAlertType(AlertTypeIDs.IDS.getType(byteBuf.readUInt16LE()));
-        alert.setAlertStatus(AlertStatusIDs.IDS.getType(byteBuf.readUInt16LE()));
+        alert.setAlertCategory(AlertCategory.Companion.fromId(byteBuf.readUInt16LE()));
+        alert.setAlertType(AlertType.Companion.fromId(byteBuf.readUInt16LE()));
+        alert.setAlertStatus(AlertStatus.Companion.fromId(byteBuf.readUInt16LE()));
         if (alert.getAlertType() != null) {
             switch (alert.getAlertType()) {
                 case WARNING_38:

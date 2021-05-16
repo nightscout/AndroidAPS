@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.insight.app_layer.history.history_events;
 
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.AlertType;
-import info.nightscout.androidaps.plugins.pump.insight.ids.AlertTypeIncrementalIDs;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf;
 
 public abstract class OccurrenceOfAlertEvent extends HistoryEvent {
@@ -11,7 +10,7 @@ public abstract class OccurrenceOfAlertEvent extends HistoryEvent {
 
     @Override
     public void parse(ByteBuf byteBuf) {
-        alertType = AlertTypeIncrementalIDs.IDS.getType(byteBuf.readUInt16LE());
+        alertType = AlertType.Companion.fromIncId(byteBuf.readUInt16LE());
         alertID = byteBuf.readUInt16LE();
     }
 
