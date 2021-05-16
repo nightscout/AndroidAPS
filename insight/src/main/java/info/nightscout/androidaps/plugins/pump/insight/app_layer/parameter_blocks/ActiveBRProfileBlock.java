@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks;
 
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.BasalProfile;
-import info.nightscout.androidaps.plugins.pump.insight.ids.ActiveBasalProfileIDs;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf;
 
 public class ActiveBRProfileBlock extends ParameterBlock {
@@ -10,13 +9,13 @@ public class ActiveBRProfileBlock extends ParameterBlock {
 
     @Override
     public void parse(ByteBuf byteBuf) {
-        activeBasalProfile = ActiveBasalProfileIDs.IDS.getType(byteBuf.readUInt16LE());
+        activeBasalProfile = BasalProfile.Companion.fromId(byteBuf.readUInt16LE());
     }
 
     @Override
     public ByteBuf getData() {
         ByteBuf byteBuf = new ByteBuf(2);
-        byteBuf.putUInt16LE(ActiveBasalProfileIDs.IDS.getID(activeBasalProfile));
+        byteBuf.putUInt16LE(activeBasalProfile.getId());
         return byteBuf;
     }
 
