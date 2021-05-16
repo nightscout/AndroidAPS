@@ -484,7 +484,6 @@ class LocalInsightPlugin @Inject constructor(
         Thread {
             try {
                 synchronized(`$bolusLock`) {
-                    aapsLogger.info(LTag.PUMP, "XXXX Stop Thread beginning)")
                     alertService!!.ignore(AlertType.WARNING_38)
                     val cancelBolusMessage = CancelBolusMessage()
                     cancelBolusMessage.setBolusID(bolusID)
@@ -554,24 +553,23 @@ class LocalInsightPlugin @Inject constructor(
     }
 
     override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
-        var percent = percent
         val result = PumpEnactResult(injector)
-        percent = Math.round(percent.toDouble() / 10.0).toInt() * 10
-        if (percent == 100) return cancelTempBasal(true) else if (percent > 250) percent = 250
+        var percentage = Math.round(percent.toDouble() / 10.0).toInt() * 10
+        if (percentage == 100) return cancelTempBasal(true) else if (percentage > 250) percentage = 250
         try {
             if (activeTBR != null) {
                 val message = ChangeTBRMessage()
                 message.setDuration(durationInMinutes)
-                message.setPercentage(percent)
+                message.setPercentage(percentage)
                 connectionService!!.requestMessage(message)
             } else {
                 val message = SetTBRMessage()
                 message.setDuration(durationInMinutes)
-                message.setPercentage(percent)
+                message.setPercentage(percentage)
                 connectionService!!.requestMessage(message)
             }
             result.isPercent(true)
-                .percent(percent)
+                .percent(percentage)
                 .duration(durationInMinutes)
                 .success(true)
                 .enacted(true)
@@ -641,7 +639,7 @@ class LocalInsightPlugin @Inject constructor(
         var cancelEBResult: PumpEnactResult? = null
         if (isFakingTempsByExtendedBoluses) cancelEBResult = cancelExtendedBolusOnly()
         val cancelTBRResult = cancelTempBasalOnly()
-        result.success((cancelEBResult == null || cancelEBResult != null && cancelEBResult.success) && cancelTBRResult.success)
+        result.success((cancelEBResult == null || cancelEBResult.success) && cancelTBRResult.success)
         result.enacted(cancelEBResult != null && cancelEBResult.enacted || cancelTBRResult.enacted)
         result.comment(cancelEBResult?.comment ?: cancelTBRResult.comment)
         try {
@@ -1022,11 +1020,11 @@ class LocalInsightPlugin @Inject constructor(
         when (event) {
             is DefaultDateTimeSetEvent      -> return false
             is DateTimeChangedEvent         -> processDateTimeChangedEvent(event)
-            is CannulaFilledEvent           -> processCannulaFilledEvent(serial, event)
+            is CannulaFilledEvent           -> processCannulaFilledEvent(event)
             is TotalDailyDoseEvent          -> processTotalDailyDoseEvent(serial, event)
-            is TubeFilledEvent              -> processTubeFilledEvent(serial, event)
-            is SniffingDoneEvent            -> processSniffingDoneEvent(serial, event)
-            is PowerUpEvent                 -> processPowerUpEvent(serial, event)
+            is TubeFilledEvent              -> processTubeFilledEvent(event)
+            is SniffingDoneEvent            -> processSniffingDoneEvent(event)
+            is PowerUpEvent                 -> processPowerUpEvent(event)
             is OperatingModeChangedEvent    -> processOperatingModeChangedEvent(serial, pumpStartedEvents, event)
             is StartOfTBREvent              -> processStartOfTBREvent(serial, temporaryBasals, event)
             is EndOfTBREvent                -> processEndOfTBREvent(serial, temporaryBasals, event)
@@ -1043,7 +1041,7 @@ class LocalInsightPlugin @Inject constructor(
         timeOffset -= timeAfter - timeBefore
     }
 
-    private fun processCannulaFilledEvent(serial: String, event: CannulaFilledEvent) {
+    private fun processCannulaFilledEvent(event: CannulaFilledEvent) {
         if (!sp.getBoolean(R.string.key_insight_log_site_changes, false)) return
         val timestamp = parseDate(event.eventYear, event.eventMonth, event.eventDay,
             event.eventHour, event.eventMinute, event.eventSecond) + timeOffset
@@ -1067,7 +1065,7 @@ class LocalInsightPlugin @Inject constructor(
             pumpSerial= serial)
     }
 
-    private fun processTubeFilledEvent(serial: String, event: TubeFilledEvent) {
+    private fun processTubeFilledEvent(event: TubeFilledEvent) {
         if (!sp.getBoolean(R.string.key_insight_log_tube_changes, false)) return
         val timestamp = parseDate(event.eventYear, event.eventMonth, event.eventDay,
             event.eventHour, event.eventMinute, event.eventSecond) + timeOffset
@@ -1075,14 +1073,14 @@ class LocalInsightPlugin @Inject constructor(
             logNote(timestamp, resourceHelper.gs(R.string.tube_changed))
     }
 
-    private fun processSniffingDoneEvent(serial: String, event: SniffingDoneEvent) {
+    private fun processSniffingDoneEvent(event: SniffingDoneEvent) {
         if (!sp.getBoolean(R.string.key_insight_log_reservoir_changes, false)) return
         val timestamp = parseDate(event.eventYear, event.eventMonth, event.eventDay,
             event.eventHour, event.eventMinute, event.eventSecond) + timeOffset
         uploadCareportalEvent(timestamp, DetailedBolusInfo.EventType.INSULIN_CHANGE)
     }
 
-    private fun processPowerUpEvent(serial: String, event: PowerUpEvent) {
+    private fun processPowerUpEvent(event: PowerUpEvent) {
         if (!sp.getBoolean(R.string.key_insight_log_battery_changes, false)) return
         val timestamp = parseDate(event.eventYear, event.eventMonth, event.eventDay,
             event.eventHour, event.eventMinute, event.eventSecond) + timeOffset
@@ -1099,20 +1097,18 @@ class LocalInsightPlugin @Inject constructor(
             event.eventPosition)
         when (event.newValue) {
             OperatingMode.STARTED -> {
-                pumpID.eventType = InsightPumpID.EventType.PumpStarted
-                pumpStartedEvents.add(pumpID)
-                if (sp.getBoolean("insight_log_operating_mode_changes", false)) logNote(timestamp, resourceHelper.gs(R.string.pump_started))
-            }
-
+                    pumpID.eventType = InsightPumpID.EventType.PumpStarted
+                    pumpStartedEvents.add(pumpID)
+                    if (sp.getBoolean("insight_log_operating_mode_changes", false)) logNote(timestamp, resourceHelper.gs(R.string.pump_started))
+                }
             OperatingMode.STOPPED -> {
-                pumpID.eventType = InsightPumpID.EventType.PumpStopped
-                if (sp.getBoolean("insight_log_operating_mode_changes", false)) logNote(timestamp, resourceHelper.gs(R.string.pump_stopped))
-            }
-
+                    pumpID.eventType = InsightPumpID.EventType.PumpStopped
+                    if (sp.getBoolean("insight_log_operating_mode_changes", false)) logNote(timestamp, resourceHelper.gs(R.string.pump_stopped))
+                }
             OperatingMode.PAUSED -> {
-                pumpID.eventType = InsightPumpID.EventType.PumpPaused
-                if (sp.getBoolean("insight_log_operating_mode_changes", false)) logNote(timestamp, resourceHelper.gs(R.string.pump_paused))
-            }
+                    pumpID.eventType = InsightPumpID.EventType.PumpPaused
+                    if (sp.getBoolean("insight_log_operating_mode_changes", false)) logNote(timestamp, resourceHelper.gs(R.string.pump_paused))
+                }
         }
         insightDbHelper.createOrUpdate(pumpID)
     }
@@ -1332,6 +1328,7 @@ class LocalInsightPlugin @Inject constructor(
                 code = R.string.alert_w39_code
                 title = R.string.alert_w39_title
             }
+            else                -> Unit
         }
         if (code != null) logNote(timestamp, resourceHelper.gs(R.string.insight_alert_formatter, resourceHelper.gs(code), resourceHelper.gs(title!!)))
     }
@@ -1352,12 +1349,12 @@ class LocalInsightPlugin @Inject constructor(
     }
 
     private fun parseRelativeDate(year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Int, relativeHour: Int, relativeMinute: Int, relativeSecond: Int): Long {
-        var day = day
-        if (relativeHour * 60 * 60 + relativeMinute * 60 + relativeSecond >= hour * 60 * 60 * minute * 60 + second) day--
+        var day1 = day
+        if (relativeHour * 60 * 60 + relativeMinute * 60 + relativeSecond >= hour * 60 * 60 * minute * 60 + second) day1--
         val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
         calendar[Calendar.YEAR] = year
         calendar[Calendar.MONTH] = month - 1
-        calendar[Calendar.DAY_OF_MONTH] = day
+        calendar[Calendar.DAY_OF_MONTH] = day1
         calendar[Calendar.HOUR_OF_DAY] = relativeHour
         calendar[Calendar.MINUTE] = relativeMinute
         calendar[Calendar.SECOND] = relativeSecond

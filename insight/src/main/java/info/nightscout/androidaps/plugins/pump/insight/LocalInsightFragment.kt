@@ -7,8 +7,6 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.LinearLayout
 import android.widget.TextView
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.insight.R
@@ -35,14 +33,14 @@ class LocalInsightFragment : DaggerFragment(), View.OnClickListener {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
+
     private var _binding: LocalInsightFragmentBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
 
-        @JvmField @Inject
-    var aapsSchedulers: AapsSchedulers? = null
     private val disposable = CompositeDisposable()
     private var operatingModeCallback: Callback? = null
     private var tbrOverNotificationCallback: Callback? = null
@@ -60,8 +58,8 @@ class LocalInsightFragment : DaggerFragment(), View.OnClickListener {
         super.onResume()
         disposable.add(rxBus
             .toObservable(EventLocalInsightUpdateGUI::class.java)
-            .observeOn(aapsSchedulers!!.main)
-            .subscribe({ event: EventLocalInsightUpdateGUI? -> updateGUI() }) { throwable: Throwable? -> fabricPrivacy.logException(throwable!!) }
+            .observeOn(aapsSchedulers.main)
+            .subscribe({ _: EventLocalInsightUpdateGUI? -> updateGUI() }) { throwable: Throwable? -> fabricPrivacy.logException(throwable!!) }
         )
         updateGUI()
     }
@@ -162,9 +160,8 @@ class LocalInsightFragment : DaggerFragment(), View.OnClickListener {
     }
 
     private fun getConnectionStatusItem(statusItems: MutableList<View>) {
-        var string = 0
         val state = localInsightPlugin.connectionService!!.state
-        string = when (state) {
+        var string = when (state) {
             InsightState.NOT_PAIRED                                                                                                                                                                                                                                                                                                                                                                                                                                                                      -> R.string.not_paired
             InsightState.DISCONNECTED                                                                                                                                                                                                                                                                                                                                                                                                                                                                    -> R.string.disconnected
             InsightState.CONNECTING, InsightState.SATL_CONNECTION_REQUEST, InsightState.SATL_KEY_REQUEST, InsightState.SATL_SYN_REQUEST, InsightState.SATL_VERIFY_CONFIRM_REQUEST, InsightState.SATL_VERIFY_DISPLAY_REQUEST, InsightState.APP_ACTIVATE_PARAMETER_SERVICE, InsightState.APP_ACTIVATE_STATUS_SERVICE, InsightState.APP_BIND_MESSAGE, InsightState.APP_CONNECT_MESSAGE, InsightState.APP_FIRMWARE_VERSIONS, InsightState.APP_SYSTEM_IDENTIFICATION, InsightState.AWAITING_CODE_CONFIRMATION -> R.string.connecting
