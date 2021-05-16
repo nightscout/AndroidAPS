@@ -1109,6 +1109,7 @@ class LocalInsightPlugin @Inject constructor(
                     pumpID.eventType = InsightPumpID.EventType.PumpPaused
                     if (sp.getBoolean("insight_log_operating_mode_changes", false)) logNote(timestamp, resourceHelper.gs(R.string.pump_paused))
                 }
+            else                 -> Unit
         }
         insightDbHelper.createOrUpdate(pumpID)
     }

@@ -162,11 +162,23 @@ class LocalInsightFragment : DaggerFragment(), View.OnClickListener {
     private fun getConnectionStatusItem(statusItems: MutableList<View>) {
         val state = localInsightPlugin.connectionService!!.state
         var string = when (state) {
-            InsightState.NOT_PAIRED                                                                                                                                                                                                                                                                                                                                                                                                                                                                      -> R.string.not_paired
-            InsightState.DISCONNECTED                                                                                                                                                                                                                                                                                                                                                                                                                                                                    -> R.string.disconnected
-            InsightState.CONNECTING, InsightState.SATL_CONNECTION_REQUEST, InsightState.SATL_KEY_REQUEST, InsightState.SATL_SYN_REQUEST, InsightState.SATL_VERIFY_CONFIRM_REQUEST, InsightState.SATL_VERIFY_DISPLAY_REQUEST, InsightState.APP_ACTIVATE_PARAMETER_SERVICE, InsightState.APP_ACTIVATE_STATUS_SERVICE, InsightState.APP_BIND_MESSAGE, InsightState.APP_CONNECT_MESSAGE, InsightState.APP_FIRMWARE_VERSIONS, InsightState.APP_SYSTEM_IDENTIFICATION, InsightState.AWAITING_CODE_CONFIRMATION -> R.string.connecting
-            InsightState.CONNECTED                                                                                                                                                                                                                                                                                                                                                                                                                                                                       -> R.string.connected
-            InsightState.RECOVERING                                                                                                                                                                                                                                                                                                                                                                                                                                                                      -> R.string.recovering
+            InsightState.NOT_PAIRED                     -> R.string.not_paired
+            InsightState.DISCONNECTED                   -> R.string.disconnected
+            InsightState.CONNECTING,
+            InsightState.SATL_CONNECTION_REQUEST,
+            InsightState.SATL_KEY_REQUEST,
+            InsightState.SATL_SYN_REQUEST,
+            InsightState.SATL_VERIFY_CONFIRM_REQUEST,
+            InsightState.SATL_VERIFY_DISPLAY_REQUEST,
+            InsightState.APP_ACTIVATE_PARAMETER_SERVICE,
+            InsightState.APP_ACTIVATE_STATUS_SERVICE,
+            InsightState.APP_BIND_MESSAGE,
+            InsightState.APP_CONNECT_MESSAGE,
+            InsightState.APP_FIRMWARE_VERSIONS,
+            InsightState.APP_SYSTEM_IDENTIFICATION,
+            InsightState.AWAITING_CODE_CONFIRMATION     -> R.string.connecting
+            InsightState.CONNECTED                      -> R.string.connected
+            InsightState.RECOVERING                     -> R.string.recovering
         }
         statusItems.add(getStatusItem(resourceHelper.gs(R.string.insight_status), resourceHelper.gs(string)))
         if (state == InsightState.RECOVERING) {
