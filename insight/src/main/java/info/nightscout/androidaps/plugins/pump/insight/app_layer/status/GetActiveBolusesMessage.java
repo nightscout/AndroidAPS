@@ -6,8 +6,8 @@ import java.util.List;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.Service;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.ActiveBolus;
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.BolusType;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.MessagePriority;
-import info.nightscout.androidaps.plugins.pump.insight.ids.ActiveBolusTypeIDs;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf;
 
 public class GetActiveBolusesMessage extends AppLayerMessage {
@@ -24,7 +24,7 @@ public class GetActiveBolusesMessage extends AppLayerMessage {
         for (int i = 0; i < 3; i++) {
             ActiveBolus activeBolus = new ActiveBolus();
             activeBolus.setBolusID(byteBuf.readUInt16LE());
-            activeBolus.setBolusType(ActiveBolusTypeIDs.IDS.getType(byteBuf.readUInt16LE()));
+            activeBolus.setBolusType(BolusType.Companion.fromActiveId(byteBuf.readUInt16LE()));
             byteBuf.shift(2);
             byteBuf.shift(2);
             activeBolus.setInitialAmount(byteBuf.readUInt16Decimal());

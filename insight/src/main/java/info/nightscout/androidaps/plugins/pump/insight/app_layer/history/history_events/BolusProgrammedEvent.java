@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.insight.app_layer.history.history_events;
 
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.BolusType;
-import info.nightscout.androidaps.plugins.pump.insight.ids.BolusTypeIDs;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf;
 
 public class BolusProgrammedEvent extends HistoryEvent {
@@ -14,7 +13,7 @@ public class BolusProgrammedEvent extends HistoryEvent {
 
     @Override
     public void parse(ByteBuf byteBuf) {
-        bolusType = BolusTypeIDs.IDS.getType(byteBuf.readUInt16LE());
+        bolusType = BolusType.Companion.fromId(byteBuf.readUInt16LE());
         immediateAmount = byteBuf.readUInt16Decimal();
         extendedAmount = byteBuf.readUInt16Decimal();
         duration = byteBuf.readUInt16LE();

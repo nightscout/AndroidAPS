@@ -4,7 +4,6 @@ import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.Service;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.BolusType;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.MessagePriority;
-import info.nightscout.androidaps.plugins.pump.insight.ids.BolusTypeIDs;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf;
 
 public class DeliverBolusMessage extends AppLayerMessage {
@@ -28,7 +27,7 @@ public class DeliverBolusMessage extends AppLayerMessage {
             byteBuf.putUInt16LE(252);
         else
             byteBuf.putUInt16LE(805);
-        byteBuf.putUInt16LE(BolusTypeIDs.IDS.getID(bolusType));
+        byteBuf.putUInt16LE(bolusType.getId());
         byteBuf.putUInt16LE(31);
         byteBuf.putUInt16LE(0);
         byteBuf.putUInt16Decimal(immediateAmount);
