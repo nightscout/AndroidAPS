@@ -206,7 +206,7 @@ class NSClientAddAckWorker(
                     .blockingGet()
                 rxBus.send(EventNSClientNewLog("DBADD", "Acked ExtendedBolus " + pair.value.interfaceIDs.nightscoutId))
                 // Send new if waiting
-                dataSyncSelector.processChangedTemporaryBasalsCompat()
+                dataSyncSelector.processChangedExtendedBolusesCompat()
             }
 
             is PairProfileSwitch         -> {
@@ -225,7 +225,7 @@ class NSClientAddAckWorker(
                     .blockingGet()
                 rxBus.send(EventNSClientNewLog("DBADD", "Acked ProfileSwitch " + pair.value.interfaceIDs.nightscoutId))
                 // Send new if waiting
-                dataSyncSelector.processChangedTemporaryBasalsCompat()
+                dataSyncSelector.processChangedProfileSwitchesCompat()
             }
 
             is DeviceStatus              -> {

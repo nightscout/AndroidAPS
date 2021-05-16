@@ -17,6 +17,9 @@ internal interface FoodDao : TraceableDao<Food> {
     @Query("DELETE FROM $TABLE_FOODS")
     override fun deleteAllEntries()
 
+    @Query("SELECT id FROM $TABLE_FOODS ORDER BY id DESC limit 1")
+    fun getLastId(): Maybe<Long>
+
     @Query("SELECT * FROM $TABLE_FOODS WHERE nightscoutId = :nsId AND referenceId IS NULL")
     fun findByNSId(nsId: String): Food?
 

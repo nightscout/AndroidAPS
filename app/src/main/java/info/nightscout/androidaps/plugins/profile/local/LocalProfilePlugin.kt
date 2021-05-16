@@ -413,7 +413,7 @@ class LocalProfilePlugin @Inject constructor(
             if (sp.getBoolean(R.string.key_ns_receive_profile_store, false) || config.NSCLIENT) {
                 localProfilePlugin.loadFromStore(ProfileStore(injector, profileJson, dateUtil))
                 aapsLogger.debug(LTag.PROFILE, "Received profileStore: $profileJson")
-                return Result.success(workDataOf("Data" to profileJson.toString()))
+                return Result.success(workDataOf("Data" to profileJson.toString().substring(1..5000)))
             }
             return Result.success()
         }

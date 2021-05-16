@@ -17,6 +17,9 @@ internal interface TemporaryTargetDao : TraceableDao<TemporaryTarget> {
     @Query("DELETE FROM $TABLE_TEMPORARY_TARGETS")
     override fun deleteAllEntries()
 
+    @Query("SELECT id FROM $TABLE_TEMPORARY_TARGETS ORDER BY id DESC limit 1")
+    fun getLastId(): Maybe<Long>
+
     @Query("SELECT * FROM $TABLE_TEMPORARY_TARGETS WHERE nightscoutId = :nsId AND referenceId IS NULL")
     fun findByNSId(nsId: String): TemporaryTarget?
 
