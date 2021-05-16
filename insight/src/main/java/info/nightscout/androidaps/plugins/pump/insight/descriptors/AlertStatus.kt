@@ -5,6 +5,6 @@ enum class AlertStatus (val id: Int)  {
     SNOOZED (227);
 
     companion object {
-        fun fromId(id: Int) = values().first { it.id == id }
+        fun fromId(id: Int) = values().firstOrNull { it.id == id } ?: null
     }
 }
