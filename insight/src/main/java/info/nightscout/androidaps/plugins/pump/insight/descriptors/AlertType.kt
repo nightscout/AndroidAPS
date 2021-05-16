@@ -1,7 +1,6 @@
-package info.nightscout.androidaps.plugins.pump.insight.descriptors;
+package info.nightscout.androidaps.plugins.pump.insight.descriptors
 
-public enum AlertType {
-
+enum class AlertType {
     REMINDER_01,
     REMINDER_02,
     REMINDER_03,

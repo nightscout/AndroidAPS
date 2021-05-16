@@ -1,7 +1,6 @@
-package info.nightscout.androidaps.plugins.pump.insight.descriptors;
+package info.nightscout.androidaps.plugins.pump.insight.descriptors
 
-public enum OperatingMode {
-
+enum class OperatingMode {
     STARTED,
     STOPPED,
     PAUSED

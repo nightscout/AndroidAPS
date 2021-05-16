@@ -1,7 +1,6 @@
-package info.nightscout.androidaps.plugins.pump.insight.descriptors;
+package info.nightscout.androidaps.plugins.pump.insight.descriptors
 
-public enum BasalProfile {
-
+enum class BasalProfile {
     PROFILE_1,
     PROFILE_2,
     PROFILE_3,

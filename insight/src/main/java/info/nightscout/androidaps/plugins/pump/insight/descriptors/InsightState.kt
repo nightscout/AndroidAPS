@@ -1,7 +1,6 @@
-package info.nightscout.androidaps.plugins.pump.insight.descriptors;
+package info.nightscout.androidaps.plugins.pump.insight.descriptors
 
-public enum InsightState {
-
+enum class InsightState {
     NOT_PAIRED,
     DISCONNECTED,
     RECOVERING,
@@ -18,5 +17,5 @@ public enum InsightState {
     APP_FIRMWARE_VERSIONS,
     APP_ACTIVATE_PARAMETER_SERVICE,
     APP_SYSTEM_IDENTIFICATION,
-    CONNECTED,
+    CONNECTED
 }
