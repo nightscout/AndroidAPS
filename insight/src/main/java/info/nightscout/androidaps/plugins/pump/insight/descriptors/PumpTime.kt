@@ -1,59 +1,11 @@
-package info.nightscout.androidaps.plugins.pump.insight.descriptors;
+package info.nightscout.androidaps.plugins.pump.insight.descriptors
 
-public class PumpTime {
+class PumpTime {
 
-    private int year;
-    private int month;
-    private int day;
-    private int hour;
-    private int minute;
-    private int second;
-
-    public int getYear() {
-        return this.year;
-    }
-
-    public int getMonth() {
-        return this.month;
-    }
-
-    public int getDay() {
-        return this.day;
-    }
-
-    public int getHour() {
-        return this.hour;
-    }
-
-    public int getMinute() {
-        return this.minute;
-    }
-
-    public int getSecond() {
-        return this.second;
-    }
-
-    public void setYear(int year) {
-        this.year = year;
-    }
-
-    public void setMonth(int month) {
-        this.month = month;
-    }
-
-    public void setDay(int day) {
-        this.day = day;
-    }
-
-    public void setHour(int hour) {
-        this.hour = hour;
-    }
-
-    public void setMinute(int minute) {
-        this.minute = minute;
-    }
-
-    public void setSecond(int second) {
-        this.second = second;
-    }
+    var year = 0
+    var month = 0
+    var day = 0
+    var hour = 0
+    var minute = 0
+    var second = 0
 }

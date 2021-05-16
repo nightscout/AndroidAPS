@@ -26,5 +26,6 @@ enum class AlertType {
     MAINTENANCE_30,
     ERROR_6,
     ERROR_10,
-    ERROR_13
+    ERROR_13,
+    NONE
 }

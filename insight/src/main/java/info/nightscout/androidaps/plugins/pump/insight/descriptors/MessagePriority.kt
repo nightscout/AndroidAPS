@@ -1,7 +1,6 @@
-package info.nightscout.androidaps.plugins.pump.insight.descriptors;
+package info.nightscout.androidaps.plugins.pump.insight.descriptors
 
-public enum MessagePriority {
-
+enum class MessagePriority {
     NORMAL,
     HIGHER,
     HIGHEST

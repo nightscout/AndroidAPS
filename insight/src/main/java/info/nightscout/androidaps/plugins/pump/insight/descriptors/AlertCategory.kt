@@ -4,5 +4,6 @@ enum class AlertCategory {
     REMINDER,
     MAINTENANCE,
     WARNING,
-    ERROR
+    ERROR,
+    NONE
 }
