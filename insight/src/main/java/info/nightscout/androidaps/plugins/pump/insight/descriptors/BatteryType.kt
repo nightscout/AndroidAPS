@@ -1,7 +1,11 @@
 package info.nightscout.androidaps.plugins.pump.insight.descriptors
 
-enum class BatteryType {
-    ALKALI,
-    LITHIUM,
-    NI_MH
+enum class BatteryType (val id: Int) {
+    ALKALI (31),
+    LITHIUM (227),
+    NI_MH (252);
+
+    companion object {
+        fun fromId(id: Int) = values().first { it.id == id }
+    }
 }
