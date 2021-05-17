@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.insight.satl;
 
-import info.nightscout.androidaps.plugins.pump.insight.ids.SatlErrorIDs;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf;
 
 public class ErrorMessage extends SatlMessage {
@@ -9,7 +8,7 @@ public class ErrorMessage extends SatlMessage {
 
     @Override
     protected void parse(ByteBuf byteBuf) {
-        error = SatlErrorIDs.IDS.getType(byteBuf.readByte());
+        error = SatlError.Companion.fromId(byteBuf.readByte());
     }
 
     public SatlError getError() {
