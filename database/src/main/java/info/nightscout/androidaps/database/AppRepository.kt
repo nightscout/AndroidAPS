@@ -7,8 +7,6 @@ import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.internal.operators.maybe.MaybeJust
-import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.Callable
@@ -80,6 +78,11 @@ open class AppRepository @Inject internal constructor(
 
     fun getLastGlucoseValueIdWrapped(): Single<ValueWrapper<Long>> =
         database.glucoseValueDao.getLastId()
+            .subscribeOn(Schedulers.io())
+            .toWrappedSingle()
+
+    fun getLastGlucoseValueWrapped(): Single<ValueWrapper<GlucoseValue>> =
+        database.glucoseValueDao.getLast()
             .subscribeOn(Schedulers.io())
             .toWrappedSingle()
 

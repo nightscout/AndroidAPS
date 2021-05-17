@@ -165,7 +165,6 @@ fun TemporaryBasal.iobCalc(time: Long, profile: Profile, insulinInterface: Insul
                     result.hightempinsulin += tempBolusPart.amount
                 }
             }
-            result.netRatio = netBasalRate // ratio at the end of interval
         }
     }
     result.netInsulin = netBasalAmount
@@ -217,7 +216,6 @@ fun TemporaryBasal.iobCalc(time: Long, profile: Profile, lastAutosensResult: Aut
                     result.hightempinsulin += tempBolusPart.amount
                 }
             }
-            result.netRatio = netBasalRate // ratio at the end of interval
         }
     }
     result.netInsulin = netBasalAmount

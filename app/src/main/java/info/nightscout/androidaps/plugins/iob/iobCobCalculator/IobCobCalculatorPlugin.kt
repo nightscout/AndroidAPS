@@ -7,7 +7,6 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.data.MealData
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.Bolus
@@ -71,7 +70,6 @@ open class IobCobCalculatorPlugin @Inject constructor(
     private val disposable = CompositeDisposable()
 
     private var iobTable = LongSparseArray<IobTotal>() // oldest at index 0
-    private var absIobTable = LongSparseArray<IobTotal>() // oldest at index 0, absolute insulin in the body
     private var basalDataTable = LongSparseArray<BasalData>() // oldest at index 0
 
     override var ads: AutosensDataStore = AutosensDataStore()
@@ -169,56 +167,37 @@ open class IobCobCalculatorPlugin @Inject constructor(
         return getBGDataFrom
     }
 
-    override fun calculateFromTreatmentsAndTemps(fromTime: Long, profile: Profile): IobTotal {
-        synchronized(dataLock) {
-            val now = System.currentTimeMillis()
-            val time = ads.roundUpTime(fromTime)
-            val cacheHit = iobTable[time]
-            if (time < now && cacheHit != null) {
-                //og.debug(">>> calculateFromTreatmentsAndTemps Cache hit " + new Date(time).toLocaleString());
-                return cacheHit
-            } // else log.debug(">>> calculateFromTreatmentsAndTemps Cache miss " + new Date(time).toLocaleString());
-            val bolusIob = calculateIobFromBolusToTime(time).round()
-            val basalIob = calculateIobToTimeFromTempBasalsIncludingConvertedExtended(time).round()
-            // OpenAPSSMB only
-            // Add expected zero temp basal for next 240 minutes
-            val basalIobWithZeroTemp = basalIob.copy()
-            val t = TemporaryBasal(
-                timestamp = now + 60 * 1000L,
-                duration = 240,
-                rate = 0.0,
-                isAbsolute = true,
-                type = TemporaryBasal.Type.NORMAL)
-            if (t.timestamp < time) {
-                val calc = t.iobCalc(time, profile, activePlugin.activeInsulin)
-                basalIobWithZeroTemp.plus(calc)
-            }
-            basalIob.iobWithZeroTemp = IobTotal.combine(bolusIob, basalIobWithZeroTemp).round()
-            val iobTotal = IobTotal.combine(bolusIob, basalIob).round()
-            if (time < System.currentTimeMillis()) {
+    override fun calculateFromTreatmentsAndTemps(toTime: Long, profile: Profile): IobTotal {
+        val now = System.currentTimeMillis()
+        val time = ads.roundUpTime(toTime)
+        val cacheHit = iobTable[time]
+        if (time < now && cacheHit != null) {
+            //og.debug(">>> calculateFromTreatmentsAndTemps Cache hit " + new Date(time).toLocaleString());
+            return cacheHit
+        } // else log.debug(">>> calculateFromTreatmentsAndTemps Cache miss " + new Date(time).toLocaleString());
+        val bolusIob = calculateIobFromBolusToTime(time).round()
+        val basalIob = calculateIobToTimeFromTempBasalsIncludingConvertedExtended(time).round()
+        // OpenAPSSMB only
+        // Add expected zero temp basal for next 240 minutes
+        val basalIobWithZeroTemp = basalIob.copy()
+        val t = TemporaryBasal(
+            timestamp = now + 60 * 1000L,
+            duration = 240,
+            rate = 0.0,
+            isAbsolute = true,
+            type = TemporaryBasal.Type.NORMAL)
+        if (t.timestamp < time) {
+            val calc = t.iobCalc(time, profile, activePlugin.activeInsulin)
+            basalIobWithZeroTemp.plus(calc)
+        }
+        basalIob.iobWithZeroTemp = IobTotal.combine(bolusIob, basalIobWithZeroTemp).round()
+        val iobTotal = IobTotal.combine(bolusIob, basalIob).round()
+        if (time < System.currentTimeMillis()) {
+            synchronized(dataLock) {
                 iobTable.put(time, iobTotal)
             }
-            return iobTotal
         }
-    }
-
-    override fun calculateAbsInsulinFromTreatmentsAndTemps(fromTime: Long): IobTotal {
-        synchronized(dataLock) {
-            val now = System.currentTimeMillis()
-            val time = ads.roundUpTime(fromTime)
-            val cacheHit = absIobTable[time]
-            if (time < now && cacheHit != null) {
-                //log.debug(">>> calculateFromTreatmentsAndTemps Cache hit " + new Date(time).toLocaleString());
-                return cacheHit
-            } // else log.debug(">>> calculateFromTreatmentsAndTemps Cache miss " + new Date(time).toLocaleString());
-            val bolusIob = calculateIobFromBolusToTime(time).round()
-            val basalIob = calculateAbsoluteIobTempBasals(time).round()
-            val iobTotal = IobTotal.combine(bolusIob, basalIob).round()
-            if (time < System.currentTimeMillis()) {
-                absIobTable.put(time, iobTotal)
-            }
-            return iobTotal
-        }
+        return iobTotal
     }
 
     private fun calculateFromTreatmentsAndTemps(time: Long, lastAutosensResult: AutosensResult, exercise_mode: Boolean, half_basal_exercise_target: Int, isTempTarget: Boolean): IobTotal {
@@ -246,28 +225,28 @@ open class IobCobCalculatorPlugin @Inject constructor(
     }
 
     override fun getBasalData(profile: Profile, fromTime: Long): BasalData {
-        synchronized(dataLock) {
-            val now = System.currentTimeMillis()
-            val time = ads.roundUpTime(fromTime)
-            var retVal = basalDataTable[time]
-            if (retVal == null) {
-                //log.debug(">>> getBasalData Cache miss " + new Date(time).toLocaleString());
-                retVal = BasalData()
-                val tb = getTempBasalIncludingConvertedExtended(time)
-                retVal.basal = profile.getBasal(time)
-                if (tb != null) {
-                    retVal.isTempBasalRunning = true
-                    retVal.tempBasalAbsolute = tb.convertedToAbsolute(time, profile)
-                } else {
-                    retVal.isTempBasalRunning = false
-                    retVal.tempBasalAbsolute = retVal.basal
-                }
-                if (time < now) {
+        val now = System.currentTimeMillis()
+        val time = ads.roundUpTime(fromTime)
+        var retVal = basalDataTable[time]
+        if (retVal == null) {
+            //log.debug(">>> getBasalData Cache miss " + new Date(time).toLocaleString());
+            retVal = BasalData()
+            val tb = getTempBasalIncludingConvertedExtended(time)
+            retVal.basal = profile.getBasal(time)
+            if (tb != null) {
+                retVal.isTempBasalRunning = true
+                retVal.tempBasalAbsolute = tb.convertedToAbsolute(time, profile)
+            } else {
+                retVal.isTempBasalRunning = false
+                retVal.tempBasalAbsolute = retVal.basal
+            }
+            if (time < now) {
+                synchronized(dataLock) {
                     basalDataTable.append(time, retVal)
                 }
-            } //else log.debug(">>> getBasalData Cache hit " +  new Date(time).toLocaleString());
-            return retVal
-        }
+            }
+        } //else log.debug(">>> getBasalData Cache hit " +  new Date(time).toLocaleString());
+        return retVal
     }
 
     override fun getLastAutosensDataWithWaitForCalculationFinish(reason: String): AutosensData? {
@@ -408,14 +387,6 @@ open class IobCobCalculatorPlugin @Inject constructor(
                     break
                 }
             }
-            for (index in absIobTable.size() - 1 downTo 0) {
-                if (absIobTable.keyAt(index) > time) {
-                    aapsLogger.debug(LTag.AUTOSENS, "Removing from absIobTable: " + dateUtil.dateAndTimeAndSecondsString(absIobTable.keyAt(index)))
-                    absIobTable.removeAt(index)
-                } else {
-                    break
-                }
-            }
             for (index in basalDataTable.size() - 1 downTo 0) {
                 if (basalDataTable.keyAt(index) > time) {
                     aapsLogger.debug(LTag.AUTOSENS, "Removing from basalDataTable: " + dateUtil.dateAndTimeAndSecondsString(basalDataTable.keyAt(index)))
@@ -459,8 +430,8 @@ open class IobCobCalculatorPlugin @Inject constructor(
      *  Time range to the past for IOB calculation
      *  @return milliseconds
      */
-    fun range(): Long = ((profileFunction.getProfile()?.dia
-        ?: Constants.defaultDIA) * 60 * 60 * 1000).toLong()
+    fun range(): Long = ((/*overviewData.rangeToDisplay + */(profileFunction.getProfile()?.dia
+        ?: Constants.defaultDIA)) * 60 * 60 * 1000).toLong()
 
     override fun calculateIobFromBolus(): IobTotal = calculateIobFromBolusToTime(dateUtil.now())
 
@@ -533,6 +504,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
     }
 
     override fun getTempBasalIncludingConvertedExtended(timestamp: Long): TemporaryBasal? {
+
         val tb = repository.getTemporaryBasalActiveAt(timestamp).blockingGet()
         if (tb is ValueWrapper.Existing) return tb.value
         val eb = repository.getExtendedBolusActiveAt(timestamp).blockingGet()
@@ -542,7 +514,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
         return null
     }
 
-    override fun calculateAbsoluteIobTempBasals(toTime: Long): IobTotal {
+    override fun calculateAbsoluteIobFromBaseBasals(toTime: Long): IobTotal {
         val total = IobTotal(toTime)
         var i = toTime - range()
         while (i < toTime) {
@@ -551,8 +523,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
                 i += T.mins(5).msecs()
                 continue
             }
-            val runningTBR = getTempBasalIncludingConvertedExtended(i)
-            val running = runningTBR?.convertedToAbsolute(i, profile) ?: profile.getBasal(i)
+            val running = profile.getBasal(i)
             val bolus = Bolus(
                 timestamp = i,
                 amount = running * 5.0 / 60.0,

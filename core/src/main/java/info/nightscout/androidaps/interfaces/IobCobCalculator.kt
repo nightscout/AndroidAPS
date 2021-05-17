@@ -2,7 +2,6 @@ package info.nightscout.androidaps.interfaces
 
 import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.data.MealData
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.database.entities.ExtendedBolus
 import info.nightscout.androidaps.database.entities.TemporaryBasal
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
@@ -19,8 +18,7 @@ interface IobCobCalculator {
     fun getMealDataWithWaitingForCalculationFinish(): MealData
     fun getLastAutosensDataWithWaitForCalculationFinish(reason: String): AutosensData?
 
-    fun calculateAbsInsulinFromTreatmentsAndTemps(fromTime: Long): IobTotal
-    fun calculateFromTreatmentsAndTemps(fromTime: Long, profile: Profile): IobTotal
+    fun calculateFromTreatmentsAndTemps(toTime: Long, profile: Profile): IobTotal
 
     fun getBasalData(profile: Profile, fromTime: Long): BasalData
 
@@ -72,14 +70,12 @@ interface IobCobCalculator {
     fun getExtendedBolus(timestamp: Long): ExtendedBolus?
 
     /**
-     *  Calculate IOB of all insulin in the body to the time
-     *
-     *  Running basal is added to the IOB !!!
+     *  Calculate IOB of base basal insulin (usualy not accounted towards IOB)
      *
      *  @param  toTime
      *  @return IobTotal
      */
-    fun calculateAbsoluteIobTempBasals(toTime: Long): IobTotal
+    fun calculateAbsoluteIobFromBaseBasals(toTime: Long): IobTotal
 
     /**
      *  Calculate IOB from Temporary basals and Extended boluses (if emulation is enabled) to the the time specified
