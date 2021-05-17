@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.pump.insight.app_layer.status;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.Service;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.CartridgeStatus;
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.CartridgeType;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.MessagePriority;
 import info.nightscout.androidaps.plugins.pump.insight.ids.CartridgeTypeIDs;
 import info.nightscout.androidaps.plugins.pump.insight.ids.SymbolStatusIDs;
