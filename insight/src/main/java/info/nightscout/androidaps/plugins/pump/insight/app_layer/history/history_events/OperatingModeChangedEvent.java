@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.insight.app_layer.history.history_events;
 
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.OperatingMode;
-import info.nightscout.androidaps.plugins.pump.insight.ids.OperatingModeIDs;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf;
 
 public class OperatingModeChangedEvent extends HistoryEvent {
@@ -11,8 +10,8 @@ public class OperatingModeChangedEvent extends HistoryEvent {
 
     @Override
     public void parse(ByteBuf byteBuf) {
-        oldValue = OperatingModeIDs.IDS.getType(byteBuf.readUInt16LE());
-        newValue = OperatingModeIDs.IDS.getType(byteBuf.readUInt16LE());
+        oldValue = OperatingMode.Companion.fromId(byteBuf.readUInt16LE());
+        newValue = OperatingMode.Companion.fromId(byteBuf.readUInt16LE());
     }
 
 

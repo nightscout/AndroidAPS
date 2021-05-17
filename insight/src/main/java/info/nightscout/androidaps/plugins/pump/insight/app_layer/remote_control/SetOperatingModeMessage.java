@@ -4,7 +4,6 @@ import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.Service;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.MessagePriority;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.OperatingMode;
-import info.nightscout.androidaps.plugins.pump.insight.ids.OperatingModeIDs;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf;
 
 public class SetOperatingModeMessage extends AppLayerMessage {
@@ -18,7 +17,7 @@ public class SetOperatingModeMessage extends AppLayerMessage {
     @Override
     protected ByteBuf getData() {
         ByteBuf byteBuf = new ByteBuf(2);
-        byteBuf.putUInt16LE(OperatingModeIDs.IDS.getID(operatingMode));
+        byteBuf.putUInt16LE(operatingMode.getId());
         return byteBuf;
     }
 
