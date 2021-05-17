@@ -5,7 +5,7 @@ import info.nightscout.androidaps.plugins.pump.insight.app_layer.Service;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.BatteryStatus;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.BatteryType;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.MessagePriority;
-import info.nightscout.androidaps.plugins.pump.insight.ids.SymbolStatusIDs;
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.SymbolStatus;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf;
 
 public class GetBatteryStatusMessage extends AppLayerMessage {
@@ -21,7 +21,7 @@ public class GetBatteryStatusMessage extends AppLayerMessage {
         batteryStatus = new BatteryStatus();
         batteryStatus.setBatteryType(BatteryType.Companion.fromId(byteBuf.readUInt16LE()));
         batteryStatus.setBatteryAmount(byteBuf.readUInt16LE());
-        batteryStatus.setSymbolStatus(SymbolStatusIDs.IDS.getType(byteBuf.readUInt16LE()));
+        batteryStatus.setSymbolStatus(SymbolStatus.Companion.fromId(byteBuf.readUInt16LE()));
     }
 
     public BatteryStatus getBatteryStatus() {
