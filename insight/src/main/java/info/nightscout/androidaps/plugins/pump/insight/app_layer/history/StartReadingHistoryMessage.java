@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.pump.insight.app_layer.history;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.Service;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.MessagePriority;
-import info.nightscout.androidaps.plugins.pump.insight.ids.HistoryReadingDirectionIDs;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf;
 
 public class StartReadingHistoryMessage extends AppLayerMessage {
@@ -19,7 +18,7 @@ public class StartReadingHistoryMessage extends AppLayerMessage {
     protected ByteBuf getData() {
         ByteBuf byteBuf = new ByteBuf(8);
         byteBuf.putUInt16LE(31);
-        byteBuf.putUInt16LE(HistoryReadingDirectionIDs.IDS.getID(direction));
+        byteBuf.putUInt16LE(direction.getId());
         byteBuf.putUInt32LE(offset);
         return byteBuf;
     }

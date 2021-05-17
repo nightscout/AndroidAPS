@@ -1,8 +1,8 @@
-package info.nightscout.androidaps.plugins.pump.insight.app_layer.history;
+package info.nightscout.androidaps.plugins.pump.insight.app_layer.history
 
-public enum HistoryReadingDirection {
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.BatteryType
 
-    FORWARD,
-    BACKWARD
-
+enum class HistoryReadingDirection (val id: Int) {
+    FORWARD (31),
+    BACKWARD (227);
 }
