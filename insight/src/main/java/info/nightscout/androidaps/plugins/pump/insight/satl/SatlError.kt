@@ -18,6 +18,6 @@ enum class SatlError (val id: Byte) {
     NONE (255.toByte());
 
     companion object {
-        fun fromId(id: Byte) = values().firstOrNull { it.id == id } ?: null
+        fun fromId(id: Byte) = values().firstOrNull { it.id == id }
     }
 }

@@ -9,7 +9,6 @@ import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_erro
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_errors.UnknownAppLayerErrorCodeException;
 import info.nightscout.androidaps.plugins.pump.insight.ids.AppCommandIDs;
 import info.nightscout.androidaps.plugins.pump.insight.ids.AppErrorIDs;
-import info.nightscout.androidaps.plugins.pump.insight.ids.ServiceIDs;
 import info.nightscout.androidaps.plugins.pump.insight.satl.DataMessage;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf;
 import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.Cryptograph;
@@ -42,7 +41,7 @@ public class AppLayerMessage implements Comparable<AppLayerMessage> {
         byte[] data = getData().getBytes();
         ByteBuf byteBuf = new ByteBuf(4 + data.length + (outCRC ? 2 : 0));
         byteBuf.putByte(VERSION);
-        byteBuf.putByte(ServiceIDs.IDS.getID(getService()));
+        byteBuf.putByte(getService().getId());
         byteBuf.putUInt16LE(AppCommandIDs.IDS.getID(clazz));
         byteBuf.putBytes(data);
         if (outCRC) byteBuf.putUInt16LE(Cryptograph.calculateCRC(data));
@@ -58,7 +57,7 @@ public class AppLayerMessage implements Comparable<AppLayerMessage> {
         if (clazz == null) throw new UnknownAppCommandException();
         if (version != VERSION) throw new IncompatibleAppVersionException();
         AppLayerMessage message = clazz.newInstance();
-        if (ServiceIDs.IDS.getType(service) == null) throw new UnknownServiceException();
+        if (Service.Companion.fromId(service) == null) throw new UnknownServiceException();
         if (error != 0) {
             Class<? extends AppLayerErrorException> exceptionClass = AppErrorIDs.IDS.getType(error);
             if (exceptionClass == null) throw new UnknownAppLayerErrorCodeException(error);

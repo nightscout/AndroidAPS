@@ -25,6 +25,7 @@ import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.ReadParameterBlockMessage;
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.Service;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.configuration.CloseConfigurationWriteSessionMessage;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.configuration.OpenConfigurationWriteSessionMessage;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.configuration.WriteConfigurationBlockMessage;
@@ -61,7 +62,6 @@ import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.Sa
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlPairingRejectedException;
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlUndefinedErrorException;
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlWrongStateException;
-import info.nightscout.androidaps.plugins.pump.insight.ids.ServiceIDs;
 import info.nightscout.androidaps.plugins.pump.insight.satl.ConnectionRequest;
 import info.nightscout.androidaps.plugins.pump.insight.satl.ConnectionResponse;
 import info.nightscout.androidaps.plugins.pump.insight.satl.DataMessage;
@@ -235,13 +235,13 @@ public class InsightConnectionService extends DaggerService implements Connectio
             if (service != info.nightscout.androidaps.plugins.pump.insight.app_layer.Service.CONNECTION && !activatedServices.contains(service)) {
                 if (service.getServicePassword() == null) {
                     ActivateServiceMessage activateServiceMessage = new ActivateServiceMessage();
-                    activateServiceMessage.setServiceID(ServiceIDs.IDS.getID(service));
+                    activateServiceMessage.setServiceID(service.getId());
                     activateServiceMessage.setVersion(service.getVersion());
                     activateServiceMessage.setServicePassword(new byte[16]);
                     sendAppLayerMessage(activateServiceMessage);
                 } else {
                     ServiceChallengeMessage serviceChallengeMessage = new ServiceChallengeMessage();
-                    serviceChallengeMessage.setServiceID(ServiceIDs.IDS.getID(service));
+                    serviceChallengeMessage.setServiceID(service.getId());
                     serviceChallengeMessage.setVersion(service.getVersion());
                     sendAppLayerMessage(serviceChallengeMessage);
                 }
@@ -689,7 +689,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
         }
         setState(InsightState.APP_ACTIVATE_STATUS_SERVICE);
         ActivateServiceMessage activateServiceMessage = new ActivateServiceMessage();
-        activateServiceMessage.setServiceID(ServiceIDs.IDS.getID(info.nightscout.androidaps.plugins.pump.insight.app_layer.Service.STATUS));
+        activateServiceMessage.setServiceID(Service.STATUS.getId());
         activateServiceMessage.setServicePassword(new byte[16]);
         activateServiceMessage.setVersion(info.nightscout.androidaps.plugins.pump.insight.app_layer.Service.STATUS.getVersion());
         sendAppLayerMessage(activateServiceMessage);
@@ -703,7 +703,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
         pairingDataStorage.setFirmwareVersions(message.getFirmwareVersions());
         setState(InsightState.APP_ACTIVATE_PARAMETER_SERVICE);
         ActivateServiceMessage activateServiceMessage = new ActivateServiceMessage();
-        activateServiceMessage.setServiceID(ServiceIDs.IDS.getID(info.nightscout.androidaps.plugins.pump.insight.app_layer.Service.PARAMETER));
+        activateServiceMessage.setServiceID(Service.PARAMETER.getId());
         activateServiceMessage.setServicePassword(new byte[16]);
         activateServiceMessage.setVersion(info.nightscout.androidaps.plugins.pump.insight.app_layer.Service.PARAMETER.getVersion());
         sendAppLayerMessage(activateServiceMessage);
@@ -760,7 +760,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
         } else {
             info.nightscout.androidaps.plugins.pump.insight.app_layer.Service service = messageQueue.getActiveRequest().request.getService();
             ActivateServiceMessage activateServiceMessage = new ActivateServiceMessage();
-            activateServiceMessage.setServiceID(ServiceIDs.IDS.getID(service));
+            activateServiceMessage.setServiceID(service.getId());
             activateServiceMessage.setVersion(service.getVersion());
             activateServiceMessage.setServicePassword(Cryptograph.getServicePasswordHash(service.getServicePassword(), serviceChallengeMessage.getRandomData()));
             sendAppLayerMessage(activateServiceMessage);
