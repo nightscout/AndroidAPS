@@ -77,7 +77,7 @@
     <string name="riley_link_common_no">No</string>
 
     <!-- RileyLink - Preferences -->
-    <string name="riley_link_show_battery_level">Show battery level reported by OrangeLink/EmaLink</string>
+    <string name="riley_link_show_battery_level">Show battery level reported by OrangeLink/EmaLink/DiaLink</string>
     <string name="riley_link_show_battery_level_summary">DOES NOT work with the original RileyLink. May not work with other RileyLink alternatives.</string>
 
     <plurals name="duration_days">

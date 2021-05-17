@@ -12,7 +12,7 @@ import javax.inject.Inject;
 
 import dagger.android.DaggerService;
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
@@ -43,7 +43,7 @@ public abstract class RileyLinkService extends DaggerService {
     @Inject protected HasAndroidInjector injector;
     @Inject protected ResourceHelper resourceHelper;
     @Inject protected RileyLinkServiceData rileyLinkServiceData;
-    @Inject protected ActivePluginProvider activePlugin;
+    @Inject protected ActivePlugin activePlugin;
     @Inject protected RileyLinkBLE rileyLinkBLE; // android-bluetooth management
     @Inject protected RFSpy rfspy; // interface for RL xxx Mhz radio.
 

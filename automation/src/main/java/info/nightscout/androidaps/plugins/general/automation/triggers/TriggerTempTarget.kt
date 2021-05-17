@@ -4,21 +4,15 @@ import android.widget.LinearLayout
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.automation.R
-import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.general.automation.elements.ComparatorExists
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder
 import info.nightscout.androidaps.plugins.general.automation.elements.StaticLabel
-import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
 import org.json.JSONObject
-import javax.inject.Inject
 
 class TriggerTempTarget(injector: HasAndroidInjector) : Trigger(injector) {
-
-    @Inject lateinit var repository: AppRepository
-    @Inject lateinit var dateUtil: DateUtil
 
     var comparator = ComparatorExists(resourceHelper)
 
@@ -36,7 +30,7 @@ class TriggerTempTarget(injector: HasAndroidInjector) : Trigger(injector) {
     }
 
     override fun shouldRun(): Boolean {
-        val tt = repository.getTemporaryTargetActiveAt(dateUtil._now()).blockingGet()
+        val tt = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
         if (tt is ValueWrapper.Absent && comparator.value == ComparatorExists.Compare.NOT_EXISTS) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
             return true
@@ -49,14 +43,9 @@ class TriggerTempTarget(injector: HasAndroidInjector) : Trigger(injector) {
         return false
     }
 
-    override fun toJSON(): String {
-        val data = JSONObject()
+    override fun dataJSON(): JSONObject =
+        JSONObject()
             .put("comparator", comparator.value.toString())
-        return JSONObject()
-            .put("type", TriggerTempTarget::class.java.name)
-            .put("data", data)
-            .toString()
-    }
 
     override fun fromJSON(data: String): Trigger {
         val d = JSONObject(data)

@@ -4,7 +4,9 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.interfaces.end
+import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Interval
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -65,7 +67,7 @@ class TempTargetTest(
     override val isValid: Boolean get() = true
 
     // -------- Interval interface end ---------
-
+/*
     fun lowValueToUnitsToString(units: String): String =
         if (units == Constants.MGDL) DecimalFormatter.to0Decimal(data.lowTarget)
         else DecimalFormatter.to1Decimal(data.lowTarget * Constants.MGDL_TO_MMOLL)
@@ -77,7 +79,8 @@ class TempTargetTest(
     override fun toString(): String = data.toString()
 
     fun friendlyDescription(units: String, resourceHelper: ResourceHelper): String =
-        Profile.toTargetRangeString(data.lowTarget, data.highTarget, Constants.MGDL, units) +
+        Profile.toTargetRangeString(data.lowTarget, data.highTarget, GlucoseUnit.MGDL, units) +
             units +
             "@" + resourceHelper.gs(R.string.format_mins, TimeUnit.MILLISECONDS.toMinutes(data.duration)) + "(" + data.reason.text + ")"
+ */
 }

@@ -21,20 +21,16 @@ import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
-import info.nightscout.androidaps.database.AppRepository;
-import info.nightscout.androidaps.database.entities.TherapyEvent;
-import info.nightscout.androidaps.database.transactions.InsertTherapyEventIfNewTransaction;
 import info.nightscout.androidaps.db.DbObjectBase;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.Source;
-import info.nightscout.androidaps.db.TDD;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
+import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
@@ -55,7 +51,6 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 import info.nightscout.androidaps.plugins.treatments.TreatmentUpdateReturn;
 import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
-import io.reactivex.disposables.CompositeDisposable;
 
 
 /**
@@ -76,12 +71,12 @@ public class MedtronicHistoryData {
     private final HasAndroidInjector injector;
     private final AAPSLogger aapsLogger;
     private final SP sp;
-    private final ActivePluginProvider activePlugin;
-    private final NSUpload nsUpload;
+    private final ActivePlugin activePlugin;
     private final MedtronicUtil medtronicUtil;
     private final MedtronicPumpHistoryDecoder medtronicPumpHistoryDecoder;
+    private final MedtronicPumpStatus medtronicPumpStatus;
     private final DatabaseHelperInterface databaseHelper;
-    private final AppRepository repository;
+    private final PumpSync pumpSync;
 
     private final List<PumpHistoryEntry> allHistory;
     private List<PumpHistoryEntry> newHistory = null;
@@ -95,10 +90,9 @@ public class MedtronicHistoryData {
 
     private long lastIdUsed = 0;
 
-    private final CompositeDisposable disposable = new CompositeDisposable();
     /**
      * Double bolus debug. We seem to have small problem with double Boluses (or sometimes also missing boluses
-     * from history. This flag turns on debugging for that (default is off=false)... Debuging is pretty detailed,
+     * from history. This flag turns on debugging for that (default is off=false)... Debugging is pretty detailed,
      * so log files will get bigger.
      * Note: June 2020. Since this seems to be fixed, I am disabling this per default. I will leave code inside
      * in case we need it again. Code that turns this on is commented out RileyLinkMedtronicService#verifyConfiguration()
@@ -110,12 +104,12 @@ public class MedtronicHistoryData {
             HasAndroidInjector injector,
             AAPSLogger aapsLogger,
             SP sp,
-            ActivePluginProvider activePlugin,
-            NSUpload nsUpload,
+            ActivePlugin activePlugin,
             MedtronicUtil medtronicUtil,
             MedtronicPumpHistoryDecoder medtronicPumpHistoryDecoder,
+            MedtronicPumpStatus medtronicPumpStatus,
             DatabaseHelperInterface databaseHelperInterface,
-            AppRepository repository
+            PumpSync pumpSync
     ) {
         this.allHistory = new ArrayList<>();
 
@@ -123,11 +117,11 @@ public class MedtronicHistoryData {
         this.aapsLogger = aapsLogger;
         this.sp = sp;
         this.activePlugin = activePlugin;
-        this.nsUpload = nsUpload;
         this.medtronicUtil = medtronicUtil;
         this.medtronicPumpHistoryDecoder = medtronicPumpHistoryDecoder;
+        this.medtronicPumpStatus = medtronicPumpStatus;
         this.databaseHelper = databaseHelperInterface;
-        this.repository = repository;
+        this.pumpSync = pumpSync;
     }
 
     private Gson gson() {
@@ -553,7 +547,7 @@ public class MedtronicHistoryData {
             long lastPrimeFromAAPS = sp.getLong(MedtronicConst.Statistics.LastPrime, 0L);
 
             if (lastPrimeRecord != lastPrimeFromAAPS) {
-                uploadCareportalEvent(DateTimeUtil.toMillisFromATD(lastPrimeRecord), TherapyEvent.Type.CANNULA_CHANGE);
+                uploadCareportalEvent(DateTimeUtil.toMillisFromATD(lastPrimeRecord), DetailedBolusInfo.EventType.CANNULA_CHANGE);
 
                 sp.putLong(MedtronicConst.Statistics.LastPrime, lastPrimeRecord);
             }
@@ -576,7 +570,7 @@ public class MedtronicHistoryData {
             long lastRewindFromAAPS = sp.getLong(MedtronicConst.Statistics.LastRewind, 0L);
 
             if (lastRewindRecord != lastRewindFromAAPS) {
-                uploadCareportalEvent(DateTimeUtil.toMillisFromATD(lastRewindRecord), TherapyEvent.Type.INSULIN_CHANGE);
+                uploadCareportalEvent(DateTimeUtil.toMillisFromATD(lastRewindRecord), DetailedBolusInfo.EventType.INSULIN_CHANGE);
 
                 sp.putLong(MedtronicConst.Statistics.LastRewind, lastRewindRecord);
             }
@@ -584,15 +578,8 @@ public class MedtronicHistoryData {
     }
 
 
-    private void uploadCareportalEvent(long date, TherapyEvent.Type event) {
-        if (repository.getTherapyEventByTimestamp(event, date) != null) return;
-        disposable.add(repository.runTransactionForResult(new InsertTherapyEventIfNewTransaction(date,
-                event, 0, null, sp.getString("careportal_enteredby", "AndroidAPS"),
-                null, null, TherapyEvent.GlucoseUnit.MGDL))
-                .subscribe(
-                        result -> result.getInserted().forEach(nsUpload::uploadEvent),
-                        error -> aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", error)
-                ));
+    private void uploadCareportalEvent(long date, DetailedBolusInfo.EventType event) {
+        pumpSync.insertTherapyEventIfNewWithTimestamp(date, event, null, null, medtronicPumpStatus.pumpType, medtronicPumpStatus.serialNumber);
     }
 
     private void processTDDs(List<PumpHistoryEntry> tddsIn) {
@@ -601,6 +588,21 @@ public class MedtronicHistoryData {
 
         aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, getLogPrefix() + "TDDs found: %d.\n%s", tdds.size(), gson().toJson(tdds)));
 
+
+        for (PumpHistoryEntry tdd : tdds) {
+            DailyTotalsDTO totalsDTO = (DailyTotalsDTO) tdd.getDecodedData().get("Object");
+            Boolean result = pumpSync.createOrUpdateTotalDailyDose(
+                    totalsDTO.timestamp(),
+                    totalsDTO.insulinBasal(),
+                    totalsDTO.insulinBolus(),
+                    totalsDTO.insulinTotal(),
+                    null,
+                    medtronicPumpStatus.pumpType,
+                    medtronicPumpStatus.serialNumber
+            );
+            if (result) aapsLogger.debug(LTag.PUMP, "TDD Added/Updated: " + totalsDTO);
+        }
+/*
         List<TDD> tddsDb = databaseHelper.getTDDsForLastXDays(3);
 
         for (PumpHistoryEntry tdd : tdds) {
@@ -630,6 +632,8 @@ public class MedtronicHistoryData {
                 }
             }
         }
+
+ */
     }
 
 
@@ -982,9 +986,10 @@ public class MedtronicHistoryData {
                 case Normal: {
                     DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
 
-                    detailedBolusInfo.date = tryToGetByLocalTime(bolus.atechDateTime);
-                    detailedBolusInfo.source = Source.PUMP;
-                    detailedBolusInfo.pumpId = bolus.getPumpId();
+                    detailedBolusInfo.setBolusTimestamp(tryToGetByLocalTime(bolus.atechDateTime));
+                    detailedBolusInfo.setPumpType(PumpType.MEDTRONIC_512_712); // TODO grab real model
+                    detailedBolusInfo.setPumpSerial(medtronicPumpStatus.serialNumber);
+                    detailedBolusInfo.setBolusPumpId(bolus.getPumpId());
                     detailedBolusInfo.insulin = bolusDTO.getDeliveredAmount();
 
                     addCarbsFromEstimate(detailedBolusInfo, bolus);
@@ -996,8 +1001,8 @@ public class MedtronicHistoryData {
 
                     bolus.setLinkedObject(detailedBolusInfo);
 
-                    aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "addBolus - [date=%d,pumpId=%d, insulin=%.2f, newRecord=%b]", detailedBolusInfo.date,
-                            detailedBolusInfo.pumpId, detailedBolusInfo.insulin, newRecord));
+                    aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "addBolus - [date=%d,pumpId=%d, insulin=%.2f, newRecord=%b]", detailedBolusInfo.timestamp,
+                            detailedBolusInfo.getBolusPumpId(), detailedBolusInfo.insulin, newRecord));
                 }
                 break;
 
@@ -1328,7 +1333,7 @@ public class MedtronicHistoryData {
         return tddsOut.size() == 0 ? tdds : tddsOut;
     }
 
-
+/*
     private TDD findTDD(long atechDateTime, List<TDD> tddsDb) {
 
         for (TDD tdd : tddsDb) {
@@ -1340,7 +1345,7 @@ public class MedtronicHistoryData {
 
         return null;
     }
-
+*/
     private long tryToGetByLocalTime(long atechDateTime) {
         return DateTimeUtil.toMillisFromATD(atechDateTime);
     }

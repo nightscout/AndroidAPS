@@ -77,7 +77,7 @@ class TriggerConnectorTest : TriggerTestBase() {
     }
 
     companion object {
-        const val empty = "{\"data\":{\"connectorType\":\"AND\",\"triggerList\":[]},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector\"}"
-        const val oneItem = "{\"data\":{\"connectorType\":\"AND\",\"triggerList\":[\"{\\\"data\\\":{\\\"connectorType\\\":\\\"AND\\\",\\\"triggerList\\\":[]},\\\"type\\\":\\\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector\\\"}\"]},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector\"}"
+        const val empty = "{\"data\":{\"connectorType\":\"AND\",\"triggerList\":[]},\"type\":\"TriggerConnector\"}"
+        const val oneItem = "{\"data\":{\"connectorType\":\"AND\",\"triggerList\":[\"{\\\"data\\\":{\\\"connectorType\\\":\\\"AND\\\",\\\"triggerList\\\":[]},\\\"type\\\":\\\"TriggerConnector\\\"}\"]},\"type\":\"TriggerConnector\"}"
     }
 }

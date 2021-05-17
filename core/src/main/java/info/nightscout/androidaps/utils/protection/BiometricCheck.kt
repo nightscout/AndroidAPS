@@ -5,7 +5,7 @@ import androidx.biometric.BiometricPrompt.*
 import androidx.fragment.app.FragmentActivity
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.utils.ToastUtils
-import info.nightscout.androidaps.utils.extensions.runOnUiThread
+import info.nightscout.androidaps.extensions.runOnUiThread
 import java.util.concurrent.Executors
 
 object BiometricCheck {

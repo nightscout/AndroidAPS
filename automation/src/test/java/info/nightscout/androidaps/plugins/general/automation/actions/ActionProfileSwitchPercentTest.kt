@@ -20,7 +20,6 @@ class ActionProfileSwitchPercentTest : ActionsTestBase() {
     @Before
     fun setup() {
 
-        `when`(activePlugin.activeTreatments).thenReturn(treatmentsInterface)
         `when`(resourceHelper.gs(R.string.startprofileforever)).thenReturn("Start profile %d%%")
         `when`(resourceHelper.gs(R.string.startprofile)).thenReturn("Start profile %d%% for %d min")
 
@@ -49,7 +48,7 @@ class ActionProfileSwitchPercentTest : ActionsTestBase() {
                 Assert.assertTrue(result.success)
             }
         })
-        Mockito.verify(treatmentsInterface, Mockito.times(1)).doProfileSwitch(30, 110, 0)
+        Mockito.verify(profileFunction, Mockito.times(1)).createProfileSwitch(30, 110, 0)
     }
 
     @Test fun hasDialogTest() {

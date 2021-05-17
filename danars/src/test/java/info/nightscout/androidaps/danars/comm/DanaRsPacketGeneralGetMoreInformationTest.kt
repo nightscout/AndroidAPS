@@ -44,8 +44,6 @@ class DanaRsPacketGeneralGetMoreInformationTest : DanaRSTestBase() {
         Assert.assertFalse(packet.failed)
         Assert.assertEquals(6.0, danaPump.iob, 0.01)
         Assert.assertEquals(12.5, danaPump.dailyTotalUnits, 0.01)
-        Assert.assertTrue(danaPump.isExtendedInProgress)
-        Assert.assertEquals(150, danaPump.extendedBolusRemainingMinutes)
         val lastBolus = Calendar.getInstance()
         lastBolus.timeInMillis = danaPump.lastBolusTime
         Assert.assertEquals(15, lastBolus.get(Calendar.HOUR_OF_DAY))

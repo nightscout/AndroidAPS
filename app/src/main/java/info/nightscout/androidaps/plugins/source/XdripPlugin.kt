@@ -3,12 +3,13 @@ package info.nightscout.androidaps.plugins.source
 import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
-import info.nightscout.androidaps.interfaces.BgSourceInterface
+import info.nightscout.androidaps.interfaces.BgSource
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
@@ -32,10 +33,12 @@ class XdripPlugin @Inject constructor(
     .pluginName(R.string.xdrip)
     .description(R.string.description_source_xdrip),
     aapsLogger, resourceHelper, injector
-), BgSourceInterface {
+), BgSource {
 
     private var advancedFiltering = false
     override var sensorBatteryLevel = -1
+
+    override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean  = false
 
     override fun advancedFilteringSupported(): Boolean {
         return advancedFiltering
@@ -70,9 +73,9 @@ class XdripPlugin @Inject constructor(
         override fun doWork(): Result {
             var ret = Result.success()
 
-            if (!xdripPlugin.isEnabled(PluginType.BGSOURCE)) return Result.failure()
+            if (!xdripPlugin.isEnabled(PluginType.BGSOURCE)) return Result.success()
             val bundle = dataWorker.pickupBundle(inputData.getLong(DataWorker.STORE_KEY, -1))
-                ?: return Result.failure()
+                ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
             aapsLogger.debug(LTag.BGSOURCE, "Received xDrip data: $bundle")
             val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
@@ -87,14 +90,14 @@ class XdripPlugin @Inject constructor(
             )
             repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
                 .doOnError {
-                    aapsLogger.error(LTag.BGSOURCE, "Error while saving values from Eversense App", it)
-                    ret = Result.failure()
+                    aapsLogger.error(LTag.DATABASE, "Error while saving values from Xdrip", it)
+                    ret = Result.failure(workDataOf("Error" to it.toString()))
                 }
                 .blockingGet()
                 .also { savedValues ->
                     savedValues.all().forEach {
                         xdripPlugin.detectSource(it)
-                        aapsLogger.debug(LTag.BGSOURCE, "Inserted bg $it")
+                        aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
                     }
                 }
             xdripPlugin.sensorBatteryLevel = bundle.getInt(Intents.EXTRA_SENSOR_BATTERY, -1)

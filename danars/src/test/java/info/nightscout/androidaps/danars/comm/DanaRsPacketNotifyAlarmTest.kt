@@ -3,7 +3,7 @@ package info.nightscout.androidaps.danars.comm
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.DanaRSTestBase
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
+import info.nightscout.androidaps.interfaces.PumpSync
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -13,7 +13,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 @RunWith(PowerMockRunner::class)
 class DanaRsPacketNotifyAlarmTest : DanaRSTestBase() {
 
-    @Mock lateinit var nsUpload: NSUpload
+    @Mock lateinit var pumpSync: PumpSync
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
@@ -21,7 +21,8 @@ class DanaRsPacketNotifyAlarmTest : DanaRSTestBase() {
                 it.aapsLogger = aapsLogger
                 it.rxBus = rxBus
                 it.resourceHelper = resourceHelper
-                it.nsUpload = nsUpload
+                it.pumpSync = pumpSync
+                it.danaPump = danaPump
             }
         }
     }
@@ -31,7 +32,6 @@ class DanaRsPacketNotifyAlarmTest : DanaRSTestBase() {
         // test params
         Assert.assertEquals(null, packet.requestParams)
         // test message decoding
-        // handle message testing fails on non-error byte because of NSUpload not properly mocked
         packet.handleMessage(createArray(17, 0x01.toByte()))
         Assert.assertEquals(false, packet.failed)
         // no error

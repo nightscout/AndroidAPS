@@ -6,7 +6,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.interfaces.ImportExportPrefsInterface
+import info.nightscout.androidaps.interfaces.ImportExportPrefs
 import info.nightscout.androidaps.plugins.general.maintenance.PrefsFileContract
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.permissions.OptimizationPermissionContract
@@ -16,7 +16,7 @@ import javax.inject.Inject
 open class DaggerAppCompatActivityWithResult : DaggerAppCompatActivity() {
 
     @Inject lateinit var resourceHelper: ResourceHelperImplementation
-    @Inject lateinit var importExportPrefs: ImportExportPrefsInterface
+    @Inject lateinit var importExportPrefs: ImportExportPrefs
 
     val callForPrefFile = registerForActivityResult(PrefsFileContract()) {
         it?.let {

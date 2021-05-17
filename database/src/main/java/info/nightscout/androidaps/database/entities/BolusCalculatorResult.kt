@@ -8,20 +8,25 @@ import info.nightscout.androidaps.database.interfaces.TraceableDBEntry
 import java.util.TimeZone
 
 @Entity(tableName = TABLE_BOLUS_CALCULATOR_RESULTS,
-        foreignKeys = [ForeignKey(
-                entity = BolusCalculatorResult::class,
-                parentColumns = ["id"],
-                childColumns = ["referenceId"])],
-        indices = [Index("referenceId"), Index("timestamp")])
+    foreignKeys = [ForeignKey(
+        entity = BolusCalculatorResult::class,
+        parentColumns = ["id"],
+        childColumns = ["referenceId"])],
+    indices = [
+        Index("referenceId"),
+        Index("timestamp"),
+        Index("id"),
+        Index("isValid")
+    ])
 data class BolusCalculatorResult(
     @PrimaryKey(autoGenerate = true)
-        override var id: Long = 0,
+    override var id: Long = 0,
     override var version: Int = 0,
     override var dateCreated: Long = -1,
     override var isValid: Boolean = true,
     override var referenceId: Long? = null,
     @Embedded
-        override var interfaceIDs_backing: InterfaceIDs? = null,
+    override var interfaceIDs_backing: InterfaceIDs? = null,
     override var timestamp: Long,
     override var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
     var targetBGLow: Double,
@@ -49,5 +54,8 @@ data class BolusCalculatorResult(
     var wasSuperbolusUsed: Boolean,
     var superbolusInsulin: Double,
     var wasTempTargetUsed: Boolean,
-    var totalInsulin: Double
+    var totalInsulin: Double,
+    var percentageCorrection: Int,
+    var profileName: String,
+    var note: String
 ) : TraceableDBEntry, DBEntryWithTime

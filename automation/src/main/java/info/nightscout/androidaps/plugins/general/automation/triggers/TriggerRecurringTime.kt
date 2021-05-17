@@ -4,21 +4,18 @@ import android.widget.LinearLayout
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.automation.R
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.general.automation.elements.InputTime
 import info.nightscout.androidaps.plugins.general.automation.elements.InputWeekDay
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder
 import info.nightscout.androidaps.plugins.general.automation.elements.StaticLabel
-import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.MidnightTime
 import org.json.JSONObject
 import java.util.*
-import javax.inject.Inject
 
 class TriggerRecurringTime(injector: HasAndroidInjector) : Trigger(injector) {
-    @Inject lateinit var dateUtil: DateUtil
 
     val days = InputWeekDay()
     val time = InputTime(resourceHelper, dateUtil)
@@ -34,8 +31,8 @@ class TriggerRecurringTime(injector: HasAndroidInjector) : Trigger(injector) {
         return this
     }
 
-    override fun shouldRun() : Boolean {
-        val currentMinSinceMidnight = getMinSinceMidnight(dateUtil._now())
+    override fun shouldRun(): Boolean {
+        val currentMinSinceMidnight = getMinSinceMidnight(dateUtil.now())
         val scheduledDayOfWeek = Calendar.getInstance()[Calendar.DAY_OF_WEEK]
         if (days.isSet(Objects.requireNonNull(InputWeekDay.DayOfWeek.fromCalendarInt(scheduledDayOfWeek)))) {
             if (currentMinSinceMidnight >= time.value && currentMinSinceMidnight - time.value < 5) {
@@ -47,16 +44,13 @@ class TriggerRecurringTime(injector: HasAndroidInjector) : Trigger(injector) {
         return false
     }
 
-    override fun toJSON(): String {
+    override fun dataJSON(): JSONObject {
         val data = JSONObject()
             .put("time", time.value)
         for (i in days.weekdays.indices) {
             data.put(InputWeekDay.DayOfWeek.values()[i].name, days.weekdays[i])
         }
-        return JSONObject()
-            .put("type", TriggerRecurringTime::class.java.name)
-            .put("data", data)
-            .toString()
+        return data
     }
 
     override fun fromJSON(data: String): Trigger {

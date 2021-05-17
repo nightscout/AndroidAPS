@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.dialogs
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -16,25 +17,24 @@ import androidx.fragment.app.FragmentManager
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.databinding.DialogWizardBinding
 import info.nightscout.androidaps.events.EventAutosensCalculationFinished
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.TreatmentsInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
-import info.nightscout.androidaps.utils.*
-import info.nightscout.androidaps.utils.extensions.toVisibility
-import info.nightscout.androidaps.utils.extensions.valueToUnits
+import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.DecimalFormatter
+import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.SafeParse
+import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.androidaps.extensions.toVisibility
+import info.nightscout.androidaps.extensions.valueToUnits
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -51,16 +51,15 @@ class WizardDialog : DaggerDialogFragment() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var constraintChecker: ConstraintChecker
-    @Inject lateinit var mainApp: MainApp
+    @Inject lateinit var ctx: Context
     @Inject lateinit var sp: SP
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var activePlugin: ActivePluginProvider
-    @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
+    @Inject lateinit var activePlugin: ActivePlugin
+    @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var repository: AppRepository
-    @Inject lateinit var treatmentsPlugin: TreatmentsInterface
     @Inject lateinit var dateUtil: DateUtil
 
     private var wizard: BolusWizard? = null
@@ -126,7 +125,7 @@ class WizardDialog : DaggerDialogFragment() {
         val maxCarbs = constraintChecker.getMaxCarbsAllowed().value()
         val maxCorrection = constraintChecker.getMaxBolusAllowed().value()
 
-        if (profileFunction.getUnits() == Constants.MGDL)
+        if (profileFunction.getUnits() == GlucoseUnit.MGDL)
             binding.bgInput.setParams(savedInstanceState?.getDouble("bg_input")
                 ?: 0.0, 0.0, 500.0, 1.0, DecimalFormat("0"), false, binding.ok, timeTextWatcher)
         else
@@ -180,7 +179,7 @@ class WizardDialog : DaggerDialogFragment() {
         // profile spinner
         binding.profile.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                ToastUtils.showToastInUiThread(mainApp, resourceHelper.gs(R.string.noprofileselected))
+                ToastUtils.showToastInUiThread(ctx, resourceHelper.gs(R.string.noprofileselected))
                 binding.ok.visibility = View.GONE
             }
 
@@ -208,7 +207,7 @@ class WizardDialog : DaggerDialogFragment() {
 
     private fun onCheckedChanged(buttonView: CompoundButton, @Suppress("UNUSED_PARAMETER") state: Boolean) {
         saveCheckedStates()
-        binding.ttcheckbox.isEnabled = binding.bgcheckbox.isChecked && repository.getTemporaryTargetActiveAt(dateUtil._now()).blockingGet() is ValueWrapper.Existing
+        binding.ttcheckbox.isEnabled = binding.bgcheckbox.isChecked && repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing
         if (buttonView.id == binding.cobcheckbox.id)
             processCobCheckBox()
         calculateInsulin()
@@ -242,10 +241,10 @@ class WizardDialog : DaggerDialogFragment() {
 
     private fun initDialog() {
         val profile = profileFunction.getProfile()
-        val profileStore = activePlugin.activeProfileInterface.profile
+        val profileStore = activePlugin.activeProfileSource.profile
 
         if (profile == null || profileStore == null) {
-            ToastUtils.showToastInUiThread(mainApp, resourceHelper.gs(R.string.noprofile))
+            ToastUtils.showToastInUiThread(ctx, resourceHelper.gs(R.string.noprofile))
             dismiss()
             return
         }
@@ -258,27 +257,19 @@ class WizardDialog : DaggerDialogFragment() {
         } ?: return
 
         val units = profileFunction.getUnits()
-        binding.bgunits.text = units
-        if (units == Constants.MGDL)
+        binding.bgunits.text = units.asText
+        if (units == GlucoseUnit.MGDL)
             binding.bgInput.setStep(1.0)
         else
             binding.bgInput.setStep(0.1)
 
         // Set BG if not old
-        val lastBg = iobCobCalculatorPlugin.actualBg()
-
-        if (lastBg != null) {
-            binding.bgInput.value = lastBg.valueToUnits(units)
-        } else {
-            binding.bgInput.value = 0.0
-        }
-        binding.ttcheckbox.isEnabled = repository.getTemporaryTargetActiveAt(dateUtil._now()).blockingGet() is ValueWrapper.Existing
+        binding.bgInput.value = iobCobCalculator.ads.actualBg()?.valueToUnits(units) ?: 0.0
+        binding.ttcheckbox.isEnabled = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing
 
         // IOB calculation
-        treatmentsPlugin.updateTotalIOBTreatments()
-        val bolusIob = treatmentsPlugin.lastCalculationTreatments.round()
-        treatmentsPlugin.updateTotalIOBTempBasals()
-        val basalIob = treatmentsPlugin.lastCalculationTempBasals.round()
+        val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
+        val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
 
         binding.bolusiobinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, -bolusIob.iob)
         binding.basaliobinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, -basalIob.basaliob)
@@ -289,7 +280,7 @@ class WizardDialog : DaggerDialogFragment() {
     }
 
     private fun calculateInsulin() {
-        val profileStore = activePlugin.activeProfileInterface.profile
+        val profileStore = activePlugin.activeProfileSource.profile
         if (binding.profile.selectedItem == null || profileStore == null)
             return  // not initialized yet
         var profileName = binding.profile.selectedItem.toString()
@@ -298,7 +289,7 @@ class WizardDialog : DaggerDialogFragment() {
             specificProfile = profileFunction.getProfile()
             profileName = profileFunction.getProfileName()
         } else
-            specificProfile = profileStore.getSpecificProfile(profileName)
+            specificProfile = profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(it) }
 
         if (specificProfile == null) return
 
@@ -309,25 +300,25 @@ class WizardDialog : DaggerDialogFragment() {
         val carbsAfterConstraint = constraintChecker.applyCarbsConstraints(Constraint(carbs)).value()
         if (abs(carbs - carbsAfterConstraint) > 0.01) {
             binding.carbsInput.value = 0.0
-            ToastUtils.showToastInUiThread(mainApp, resourceHelper.gs(R.string.carbsconstraintapplied))
+            ToastUtils.showToastInUiThread(ctx, resourceHelper.gs(R.string.carbsconstraintapplied))
             return
         }
 
         bg = if (binding.bgcheckbox.isChecked) bg else 0.0
-        val dbRecord = repository.getTemporaryTargetActiveAt(dateUtil._now()).blockingGet()
+        val dbRecord = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
         val tempTarget = if (binding.ttcheckbox.isChecked && dbRecord is ValueWrapper.Existing) dbRecord.value else null
 
         // COB
         var cob = 0.0
         if (binding.cobcheckbox.isChecked) {
-            val cobInfo = iobCobCalculatorPlugin.getCobInfo(false, "Wizard COB")
+            val cobInfo = iobCobCalculator.getCobInfo(false, "Wizard COB")
             cobInfo.displayCob?.let { cob = it }
         }
 
         val carbTime = SafeParse.stringToInt(binding.carbTimeInput.text)
 
-        wizard = BolusWizard(mainApp).doCalc(specificProfile, profileName, tempTarget, carbsAfterConstraint, cob, bg, correction,
-            sp.getInt(R.string.key_boluswizard_percentage, 100).toDouble(),
+        wizard = BolusWizard(injector).doCalc(specificProfile, profileName, tempTarget, carbsAfterConstraint, cob, bg, correction,
+            sp.getInt(R.string.key_boluswizard_percentage, 100),
             binding.bgcheckbox.isChecked,
             binding.cobcheckbox.isChecked,
             binding.bolusiobcheckbox.isChecked,
@@ -339,7 +330,7 @@ class WizardDialog : DaggerDialogFragment() {
             binding.notes.text.toString(), carbTime)
 
         wizard?.let { wizard ->
-            binding.bg.text = String.format(resourceHelper.gs(R.string.format_bg_isf), valueToUnitsToString(Profile.toMgdl(bg, profileFunction.getUnits()), profileFunction.getUnits()), wizard.sens)
+            binding.bg.text = String.format(resourceHelper.gs(R.string.format_bg_isf), valueToUnitsToString(Profile.toMgdl(bg, profileFunction.getUnits()), profileFunction.getUnits().asText), wizard.sens)
             binding.bginsulin.text = resourceHelper.gs(R.string.formatinsulinunits, wizard.insulinFromBG)
 
             binding.carbs.text = String.format(resourceHelper.gs(R.string.format_carbs_ic), carbs.toDouble(), wizard.ic)

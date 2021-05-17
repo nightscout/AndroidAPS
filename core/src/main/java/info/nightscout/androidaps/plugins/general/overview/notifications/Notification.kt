@@ -121,6 +121,8 @@ open class Notification {
         const val OMNIPOD_UNKNOWN_TBR = 68
         const val OMNIPOD_STARTUP_STATUS_REFRESH_FAILED = 69
         const val OMNIPOD_TIME_OUT_OF_SYNC = 70
+        const val UNSUPPORTED_ACTION_IN_PUMP = 71
+        const val WRONG_PUMP_DATA = 71
 
         const val USER_MESSAGE = 1000
 

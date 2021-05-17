@@ -18,13 +18,12 @@ import org.powermock.modules.junit4.PowerMockRunner
 class TriggerTimeRangeTest : TriggerTestBase() {
 
     var now = 754 // in minutes from midnight
-    private var timeJson = "{\"data\":{\"start\":753,\"end\":784},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerTimeRange\"}"
+    private var timeJson = "{\"data\":{\"start\":753,\"end\":784},\"type\":\"TriggerTimeRange\"}"
 
     @Before
     fun mock() {
-        PowerMockito.mockStatic(DateUtil::class.java)
         val nowMills = MidnightTime.calcPlusMinutes(now)
-        PowerMockito.`when`(DateUtil.now()).thenReturn(nowMills)
+        PowerMockito.`when`(dateUtil.now()).thenReturn(nowMills)
     }
 
     @Test

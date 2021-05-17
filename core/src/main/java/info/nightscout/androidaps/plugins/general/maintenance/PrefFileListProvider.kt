@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.general.maintenance
 
 import android.os.Environment
 import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.interfaces.ConfigInterface
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
 import info.nightscout.androidaps.plugins.general.maintenance.formats.*
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -20,7 +20,7 @@ import kotlin.math.abs
 @Singleton
 class PrefFileListProvider @Inject constructor(
     private val resourceHelper: ResourceHelper,
-    private val config: ConfigInterface,
+    private val config: Config,
     private val classicPrefsFormat: ClassicPrefsFormat,
     private val encryptedPrefsFormat: EncryptedPrefsFormat,
     private val storage: Storage,

@@ -32,7 +32,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.R;
@@ -52,7 +52,7 @@ public class RileyLinkBLEConfigActivity extends NoSplashAppCompatActivity {
     @Inject ResourceHelper resourceHelper;
     @Inject BlePreCheck blePrecheck;
     @Inject RileyLinkUtil rileyLinkUtil;
-    @Inject ActivePluginProvider activePlugin;
+    @Inject ActivePlugin activePlugin;
 
     private static final String TAG = "RileyLinkBLEConfigActivity";
     private static final long SCAN_PERIOD_MILLIS = 15_000;

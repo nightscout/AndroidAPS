@@ -30,16 +30,17 @@ import javax.inject.Singleton;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.activities.ErrorHelperActivity;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
-import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventRefreshOverview;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.interfaces.Pump;
+import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
@@ -54,7 +55,6 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.events.EventRefreshButtonState;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpDevice;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpInfo;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState;
@@ -97,10 +97,9 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
  * @author Andy Rozman (andy.rozman@gmail.com)
  */
 @Singleton
-public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInterface, RileyLinkPumpDevice {
+public class MedtronicPumpPlugin extends PumpPluginAbstract implements Pump, RileyLinkPumpDevice {
 
     private final SP sp;
-    private final RileyLinkUtil rileyLinkUtil;
     private final MedtronicUtil medtronicUtil;
     private final MedtronicPumpStatus medtronicPumpStatus;
     private final MedtronicHistoryData medtronicHistoryData;
@@ -128,18 +127,18 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             RxBusWrapper rxBus,
             Context context,
             ResourceHelper resourceHelper,
-            ActivePluginProvider activePlugin,
+            ActivePlugin activePlugin,
             SP sp,
             CommandQueueProvider commandQueue,
             FabricPrivacy fabricPrivacy,
-            RileyLinkUtil rileyLinkUtil,
             MedtronicUtil medtronicUtil,
             MedtronicPumpStatus medtronicPumpStatus,
             MedtronicHistoryData medtronicHistoryData,
             RileyLinkServiceData rileyLinkServiceData,
             ServiceTaskExecutor serviceTaskExecutor,
             DateUtil dateUtil,
-            AapsSchedulers aapsSchedulers
+            AapsSchedulers aapsSchedulers,
+            PumpSync pumpSync
     ) {
 
         super(new PluginDescription() //
@@ -150,11 +149,10 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                         .shortName(R.string.medtronic_name_short) //
                         .preferencesId(R.xml.pref_medtronic)
                         .description(R.string.description_pump_medtronic), //
-                PumpType.Medtronic_522_722, // we default to most basic model, correct model from config is loaded later
-                injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy, dateUtil, aapsSchedulers
+                PumpType.MEDTRONIC_522_722, // we default to most basic model, correct model from config is loaded later
+                injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy, dateUtil, aapsSchedulers, pumpSync
         );
 
-        this.rileyLinkUtil = rileyLinkUtil;
         this.medtronicUtil = medtronicUtil;
         this.sp = sp;
         this.medtronicPumpStatus = medtronicPumpStatus;
@@ -681,9 +679,9 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         for (Profile.ProfileValue basalValue : profile.getBasalValues()) {
 
-            double basalValueValue = pumpDescription.getPumpType().determineCorrectBasalSize(basalValue.value);
+            double basalValueValue = pumpDescription.getPumpType().determineCorrectBasalSize(basalValue.getValue());
 
-            int hour = basalValue.timeAsSeconds / (60 * 60);
+            int hour = basalValue.getTimeAsSeconds() / (60 * 60);
 
             if (!MedtronicUtil.isSame(basalsByHour[hour], basalValueValue)) {
                 invalid = true;
@@ -879,15 +877,15 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
                 long now = System.currentTimeMillis();
 
-                detailedBolusInfo.date = now;
-                detailedBolusInfo.deliverAt = now; // not sure about that one
+                detailedBolusInfo.timestamp = now;
+                detailedBolusInfo.deliverAtTheLatest = now; // not sure about that one
 
                 activePlugin.getActiveTreatments().addToHistoryTreatment(detailedBolusInfo, true);
 
                 // we subtract insulin, exact amount will be visible with next remainingInsulin update.
                 medtronicPumpStatus.reservoirRemainingUnits -= detailedBolusInfo.insulin;
 
-                incrementStatistics(detailedBolusInfo.isSMB ? MedtronicConst.Statistics.SMBBoluses
+                incrementStatistics(detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB ? MedtronicConst.Statistics.SMBBoluses
                         : MedtronicConst.Statistics.StandardBoluses);
 
 
@@ -956,8 +954,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     // if enforceNew===true current temp basal is canceled and new TBR set (duration is prolonged),
     // if false and the same rate is requested enacted=false and success=true is returned and TBR is not changed
     @NonNull @Override
-    public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, Profile profile,
-                                                boolean enforceNew) {
+    public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
 
         setRefreshButtonEnabled(false);
 
@@ -1068,14 +1065,14 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
 
     @NonNull @Override
-    public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean enforceNew) {
+    public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
         if (percent == 0) {
-            return setTempBasalAbsolute(0.0d, durationInMinutes, profile, enforceNew);
+            return setTempBasalAbsolute(0.0d, durationInMinutes, profile, enforceNew, tbrType);
         } else {
             double absoluteValue = profile.getBasal() * (percent / 100.0d);
             absoluteValue = pumpDescription.getPumpType().determineCorrectBasalSize(absoluteValue);
             aapsLogger.warn(LTag.PUMP, "setTempBasalPercent [MedtronicPumpPlugin] - You are trying to use setTempBasalPercent with percent other then 0% (" + percent + "). This will start setTempBasalAbsolute, with calculated value (" + absoluteValue + "). Result might not be 100% correct.");
-            return setTempBasalAbsolute(absoluteValue, durationInMinutes, profile, enforceNew);
+            return setTempBasalAbsolute(absoluteValue, durationInMinutes, profile, enforceNew, tbrType);
         }
     }
 

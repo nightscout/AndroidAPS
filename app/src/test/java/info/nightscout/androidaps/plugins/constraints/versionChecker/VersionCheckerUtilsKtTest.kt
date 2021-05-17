@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.constraints.versionChecker
 
 import android.content.Context
-import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -19,7 +19,7 @@ class VersionCheckerUtilsKtTest : TestBase() {
     @Mock lateinit var sp: SP
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var context: Context
-    val config = Config()
+    val config = ConfigImpl()
 
     private val rxBus = RxBusWrapper(aapsSchedulers)
 

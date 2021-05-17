@@ -14,7 +14,12 @@ import info.nightscout.androidaps.database.interfaces.TraceableDBEntry
         entity = Food::class,
         parentColumns = ["id"],
         childColumns = ["referenceId"])],
-    indices = [Index("referenceId")])
+    indices = [
+        Index("id"),
+        Index("nightscoutId"),
+        Index("referenceId"),
+        Index("isValid")
+    ])
 data class Food(
     @PrimaryKey(autoGenerate = true)
     override var id: Long = 0,

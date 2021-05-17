@@ -19,7 +19,7 @@ import dagger.android.DaggerService
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.events.EventAppExit
 import info.nightscout.androidaps.events.EventLocationChange
-import info.nightscout.androidaps.interfaces.NotificationHolderInterface
+import info.nightscout.androidaps.interfaces.NotificationHolder
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -37,7 +37,7 @@ class LocationService : DaggerService() {
     @Inject lateinit var sp: SP
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var notificationHolder: NotificationHolderInterface
+    @Inject lateinit var notificationHolder: NotificationHolder
     @Inject lateinit var lastLocationDataContainer: LastLocationDataContainer
 
     private val disposable = CompositeDisposable()

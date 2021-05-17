@@ -10,6 +10,6 @@ class MealDataTest {
 
     @Test fun canCreateObject() {
         val md = MealData()
-        Assert.assertEquals(0.0, md.boluses, 0.01)
+        Assert.assertEquals(0.0, md.carbs, 0.01)
     }
 }

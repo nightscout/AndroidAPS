@@ -16,6 +16,9 @@ internal interface TherapyEventDao : TraceableDao<TherapyEvent> {
     @Query("DELETE FROM $TABLE_THERAPY_EVENTS")
     override fun deleteAllEntries()
 
+    @Query("SELECT id FROM $TABLE_THERAPY_EVENTS ORDER BY id DESC limit 1")
+    fun getLastId(): Maybe<Long>
+
     @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE type = :type AND timestamp = :timestamp AND referenceId IS NULL")
     fun findByTimestamp(type: TherapyEvent.Type, timestamp: Long): TherapyEvent?
 
@@ -42,4 +45,15 @@ internal interface TherapyEventDao : TraceableDao<TherapyEvent> {
 
     @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE timestamp >= :from AND timestamp <= :to AND isValid = 1 AND referenceId IS NULL ORDER BY timestamp ASC")
     fun compatGetTherapyEventDataFromToTime(from: Long, to: Long): Single<List<TherapyEvent>>
+
+    // This query will be used with v3 to get all changed records
+    @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE id > :id AND referenceId IS NULL OR id IN (SELECT DISTINCT referenceId FROM $TABLE_THERAPY_EVENTS WHERE id > :id) ORDER BY id ASC")
+    fun getModifiedFrom(id: Long): Single<List<TherapyEvent>>
+
+    // for WS we need 1 record only
+    @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE id > :id ORDER BY id ASC limit 1")
+    fun getNextModifiedOrNewAfter(id: Long): Maybe<TherapyEvent>
+
+    @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE id = :referenceId")
+    fun getCurrentFromHistoric(referenceId: Long): Maybe<TherapyEvent>
 }

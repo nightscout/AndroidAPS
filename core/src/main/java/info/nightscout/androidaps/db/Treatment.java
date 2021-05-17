@@ -18,10 +18,10 @@ import javax.inject.Inject;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.core.R;
-import info.nightscout.androidaps.data.Iob;
-import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
-import info.nightscout.androidaps.interfaces.InsulinInterface;
+import info.nightscout.androidaps.interfaces.Profile;
+import info.nightscout.androidaps.database.entities.Bolus;
+import info.nightscout.androidaps.interfaces.ActivePlugin;
+import info.nightscout.androidaps.interfaces.Insulin;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries;
@@ -31,12 +31,13 @@ import info.nightscout.androidaps.utils.DefaultValueHelper;
 import info.nightscout.androidaps.utils.JsonHelper;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
+@Deprecated
 @DatabaseTable(tableName = Treatment.TABLE_TREATMENTS)
 public class Treatment implements DataPointWithLabelInterface, DbObjectBase {
     @Inject public DefaultValueHelper defaultValueHelper;
     @Inject public ResourceHelper resourceHelper;
     @Inject public ProfileFunction profileFunction;
-    @Inject public ActivePluginProvider activePlugin;
+    @Inject public ActivePlugin activePlugin;
     @Inject public DateUtil dateUtil;
 
     public static final String TABLE_TREATMENTS = "Treatments";
@@ -65,7 +66,7 @@ public class Treatment implements DataPointWithLabelInterface, DbObjectBase {
     public boolean isSMB = false;
 
     @DatabaseField
-    public int insulinInterfaceID = InsulinInterface.InsulinType.OREF_RAPID_ACTING.getValue(); // currently unused, will be used in the future
+    public int insulinInterfaceID = Insulin.InsulinType.OREF_RAPID_ACTING.getValue(); // currently unused, will be used in the future
     @DatabaseField
     public double dia = Constants.defaultDIA; // currently unused, will be used in the future
     @DatabaseField
@@ -79,31 +80,15 @@ public class Treatment implements DataPointWithLabelInterface, DbObjectBase {
         injector.androidInjector().inject(this);
     }
 
-    public static Treatment createFromJson(JSONObject json) throws JSONException {
-        Treatment treatment = new Treatment();
-        treatment.source = Source.NIGHTSCOUT;
-        treatment.date = DateUtil.roundDateToSec(JsonHelper.safeGetLong(json, "mills"));
-        if (treatment.date == 0L)
-            return null;
-        treatment.carbs = JsonHelper.safeGetDouble(json, "carbs");
-        treatment.insulin = JsonHelper.safeGetDouble(json, "insulin");
-        treatment.pumpId = JsonHelper.safeGetLong(json, "pumpId");
-        treatment._id = json.getString("_id");
-        treatment.isSMB = JsonHelper.safeGetBoolean(json, "isSMB");
-        if (json.has("eventType")) {
-            treatment.mealBolus = !json.get("eventType").equals("Correction Bolus");
-            double carbs = treatment.carbs;
-            if (json.has("boluscalc")) {
-                JSONObject boluscalc = json.getJSONObject("boluscalc");
-                treatment.boluscalc = boluscalc.toString();
-                if (boluscalc.has("carbs")) {
-                    carbs = Math.max(boluscalc.getDouble("carbs"), carbs);
-                }
-            }
-            if (carbs <= 0)
-                treatment.mealBolus = false;
-        }
-        return treatment;
+    public Treatment(HasAndroidInjector injector, Bolus bolus) {
+        this(injector);
+        date = bolus.getTimestamp();
+        isValid = bolus.isValid();
+        pumpId = (bolus.getInterfaceIDs().getPumpId() != null) ? bolus.getInterfaceIDs().getPumpId() : 0;
+        source = (bolus.getInterfaceIDs().getPumpId() != null) ? Source.PUMP : Source.USER;
+        _id = bolus.getInterfaceIDs().getNightscoutId();
+        insulin = bolus.getAmount();
+        isSMB = bolus.getType() == Bolus.Type.SMB;
     }
 
     @NonNull public String toString() {
@@ -243,7 +228,8 @@ public class Treatment implements DataPointWithLabelInterface, DbObjectBase {
     @Override
     public String getLabel() {
         String label = "";
-        if (insulin > 0) label += DecimalFormatter.INSTANCE.toPumpSupportedBolus(insulin, activePlugin.getActivePump(), resourceHelper);
+        if (insulin > 0)
+            label += DecimalFormatter.INSTANCE.toPumpSupportedBolus(insulin, activePlugin.getActivePump(), resourceHelper);
         if (carbs > 0)
             label += "~" + resourceHelper.gs(R.string.format_carbs, (int) carbs);
         return label;
@@ -283,14 +269,6 @@ public class Treatment implements DataPointWithLabelInterface, DbObjectBase {
     }
 
     //  ----------------- DataPointInterface end --------------------
-
-    public Iob iobCalc(long time, double dia) {
-        if (!isValid)
-            return new Iob();
-
-        InsulinInterface insulinInterface = activePlugin.getActiveInsulin();
-        return insulinInterface.iobCalcForTreatment(this, time, dia);
-    }
 
     @Override
     public long getDate() {
