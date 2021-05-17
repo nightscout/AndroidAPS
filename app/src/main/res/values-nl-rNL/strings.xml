@@ -29,7 +29,6 @@
     <string name="description_overview">Toont de huidige Loop-status en knoppen voor meest gebruikte acties</string>
     <string name="description_persistent_notification">Toont een permanente melding met een beknopt overzicht van hetgeen de Loop momenteel doet</string>
     <string name="description_profile_local">Gebruik profiel(en) die je in AAPS aanmaakt en offline kunt gebruiken.</string>
-    <string name="description_profile_nightscout">Gebruik profiel(en) die je hebt aangemaakt in Nightscout</string>
     <string name="description_pump_mdi">Pomp integratie voor mensen met pen-therapie (meerdere dagelijkse injecties)</string>
     <string name="description_pump_virtual">Pomp integratie voor pompen, waar nog geen driver voor is (Open Loop)</string>
     <string name="description_sensitivity_aaps">Gevoeligheid wordt berekend op dezelfde manier als Oref0, maar je kunt zelf instellen hoeveel uren AAPS terugkijkt. Minimale koolhydraat absorptie is berekend op basis van max koolhydraat absorptie tijd zoals in jouw instellingen.</string>
@@ -77,7 +76,6 @@
     <string name="sms_delta">Verschil:</string>
     <string name="configbuilder">Configurator</string>
     <string name="overview">Overzicht</string>
-    <string name="nsprofile">NS Profiel</string>
     <string name="treatments">Behandelingen</string>
     <string name="virtualpump">Virtuele Pomp</string>
     <string name="careportal">Careportal</string>
@@ -93,7 +91,6 @@
     <string name="configbuilder_general_description">Dit zijn enkele algemene plugins die handig kunnen zijn.</string>
     <string name="configbuilder_constraints_description">Welke beperkingen worden toegepast?</string>
     <string name="constraints">Beperkingen</string>
-    <string name="loop">Loop</string>
     <string name="configbuilder_loop">Loop</string>
     <string name="configbuilder_loop_description">Gebruik dit om AndroidAPS loop integratie te activeren.</string>
     <string name="loop_aps_label">APS</string>
@@ -276,7 +273,6 @@
     <string name="localprofile_shortname">LP</string>
     <string name="overview_shortname">OVZ</string>
     <string name="virtualpump_shortname">VPUMP</string>
-    <string name="profileviewer_shortname">NSPROFIEL</string>
     <string name="treatments_shortname">BEHAND</string>
     <string name="objectives_shortname">DOEL</string>
     <string name="wear_shortname">WEAR</string>
@@ -402,8 +398,6 @@
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">Toon BGI</string>
     <string name="wear_showbgi_summary">Voeg BGI toe aan status lijn</string>
-    <string name="ns_noupload">Geen upload naar NS</string>
-    <string name="ns_noupload_summary">AAPS is verbonden met NS maar er worden geen wijzigingen uitgevoerd op NS</string>
     <string name="overview_extendedbolus_cancel_button">Annuleer vertraagde bolus</string>
     <string name="doprofileswitch">Profiel wissel uitvoeren</string>
     <string name="careportal_sensor_label">Sensor</string>
@@ -418,7 +412,6 @@
     <string name="nsalarm_urgent_staledatavalue_label">Alarm oude gegevens sinds [min]</string>
     <string name="openapsama_autosens_period">Interval voor autosens [uur]</string>
     <string name="openapsama_autosens_period_summary">Aantal uren in het verleden voor gevoeligheids detectie (koolhy. absorbtie tijd niet meegerekend)</string>
-    <string name="pump">Pomp</string>
     <string name="openaps">OpenAPS</string>
     <string name="uploader">Uploader</string>
     <string name="configbuilder_sensitivity">Gevoeligheid detectie</string>
@@ -560,7 +553,6 @@
     <string name="category">Categorie</string>
     <string name="subcategory">Subcategorie</string>
     <string name="bolusrecordedonly">Bolus wordt alleen geregistreerd (niet toegediend door pomp)</string>
-    <string name="ns_autobackfill_summary">Automatische onbekende BGs aanvullen van NS</string>
     <string name="loop_smbsetbypump_label">SMB op de pomp ingesteld</string>
     <string name="overview_show_activity">Activiteit</string>
     <string name="overview_show_sensitivity">Gevoeligheid</string>
@@ -626,7 +618,6 @@
     <string name="virtualpump_type">Virtuele pomp Type</string>
     <string name="virtualpump_definition">Pomp definitie</string>
     <string name="virtualpump_pump_def">Bolus: Stap=%1$s\nExtended Bolus: [Stap=%2$s, Duur=%3$smin-%4$sh]\nBasaal: Stap=%5$s\nTBR: %6$s (by %7$s), Duur=%8$smin-%9$sh\n%10$s</string>
-    <string name="ns_autobackfill_title">Automatische BG aanvullen</string>
     <string name="wear_wizard_settings">Wizard instellingen</string>
     <string name="wear_wizard_settings_summary">Berekeningen inclusief in het resultaat van de wizard</string>
     <string name="wear_display_settings">Scherm instellingen</string>
@@ -634,14 +625,12 @@
     <string name="enable_nsclient">NSClient inschakelen</string>
     <string name="welcometosetupwizard">Welkom bij de wizard setup. Het zal je begeleiden door het setup-process\n</string>
     <string name="readstatus">Lees status</string>
-    <string name="adjustprofileinns">Wijzigingen moeten worden gedaan in Nightscout</string>
     <string name="exitwizard">De installatiewizard overslaan</string>
     <string name="setupwizard_loop_description">Druk op de knop hieronder om AndroidAPS basaalwijzigingen te laten voorstellen/uitvoeren</string>
     <string name="setupwizard_sensitivity_description">Gevoeligheid plugin wordt gebruikt voor de detectie van de gevoeligheid en COB berekening. Voor meer info bezoek:</string>
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
     <string name="nsclientinfotext">NSClient zorgt voor verbinding met Nightscout. Je kunt dit deel nu overslaan, maar pas de Doelen afronden als je het hebt ingesteld.</string>
     <string name="diawarning">Onthoud: nieuwe insuline profielen vereisen een minimale DIA van 5 uur. DIA 5 – 6h op nieuw profiel is gelijk aan DIA 3h op oude insuline profielen.</string>
-    <string name="setupwizard_profile_description">Kies een bron van het profiel. Als de patiënt een kind is, moet u het NS-profiel gebruiken. Als er niemand is die je volgt op Nightscout, zul je waarschijnlijk een lokaal profiel prefereren. Onthoud dat u alleen de profielbron selecteert. Om het te gebruiken, moet u het activeren door \"Profiel wisselen\" uit te voeren</string>
     <string name="setupwizard_aps_description">Selecteer een van beschikbare algoritmen. Ze zijn gesorteerd van oudste naar nieuwste. Nieuwer algoritme is meestal krachtiger en agressiever. Dus als je een nieuwe looper bent, kun je waarschijnlijk beginnen met AMA en niet met de nieuwste. Vergeet niet de OpenAPS-documentatie te lezen en deze vóór gebruik te configureren.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Configureer uw RileyLink hieronder. Na het selecteren van een RileyLink, kun je doorgaan zodra de RileyLink status \"Verbonden\" is. Dit kan even duren.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Opmerking:</b> Je kunt doorgaan zodra de pomp is ingesteld.\n</string>
@@ -753,7 +742,6 @@
     <string name="objectives_button_unstart">Start wissen</string>
     <string name="doyouwantresetstart">Wil je dit leerdoel opnieuw starten? Je kunt je voortgang verliezen.</string>
     <string name="setupwizard_units_prompt">Selecteer eenheden waarin je waarden wilt weergeven</string>
-    <string name="ns_ploadlocalprofile">Upload lokale profielwijzigingen naar NS</string>
     <string name="dia_short">DIA</string>
     <string name="ic_short">KH-ratio</string>
     <string name="isf_short">ISF</string>
@@ -785,6 +773,7 @@
     <string name="randombg_short">BG</string>
     <string name="tools">Hulpmiddelen</string>
     <string name="show_calculation">Toon berekening</string>
+    <string name="show_removed">Laat verwijderde items zien</string>
     <string name="clearqueueconfirm">Wachtrij leegmaken? Alle gegevens in de wachtrij zullen verloren gaan!</string>
     <string name="ebstopsloop">Gebruik van Vertraagde bolus functie zal de closed loop modus stoppen voor de duur van de vertraagde bolus. Wil je dit toch?</string>
     <string name="closed_loop_disabled_with_eb">Closed loop modus uitgeschakeld vanwege afgeven Vertraagde bolus</string>
@@ -887,4 +876,13 @@
     <string name="fabric_upload_disabled">Upload van crashrapporten is uitgeschakeld!</string>
     <string name="graph_menu_divider_header">Grafiek</string>
     <string name="chart_menu">Grafiek menu</string>
+    <string name="full_sync">Volledige synchronisatie</string>
+    <string name="prime">Vullen</string>
+    <string name="ns_sync_options">Synchronisatie</string>
+    <string name="ns_upload_summary">Profielen, bolussen, koolhydraten, tijdelijke basaal standen worden geupload naar NS</string>
+    <string name="ns_upload">Upload data naar NS</string>
+    <string name="ns_receive_temp_target">Ontvang tijdelijke doelen</string>
+    <string name="ns_receive_temp_target_summary">Accepteer tijdelijke doelen ingevoerd in NS of NSClient</string>
+    <string name="ns_receive_profile_switch">Ontvang profielwissels</string>
+    <string name="ns_receive_profile_switch_summary">Accepteer profielwissels zoals ingevoerd in NS of NSClient</string>
 </resources>
