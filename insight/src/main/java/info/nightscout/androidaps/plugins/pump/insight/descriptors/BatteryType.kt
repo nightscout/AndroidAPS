@@ -6,6 +6,6 @@ enum class BatteryType (val id: Int) {
     NI_MH (252);
 
     companion object {
-        fun fromId(id: Int) = values().firstOrNull { it.id == id } ?: null
+        fun fromId(id: Int) = values().firstOrNull { it.id == id }
     }
 }

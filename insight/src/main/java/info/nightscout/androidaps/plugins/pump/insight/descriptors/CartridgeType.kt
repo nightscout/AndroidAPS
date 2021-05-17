@@ -5,6 +5,6 @@ enum class CartridgeType (val id: Int)  {
     SELF_FILLED (227);
 
     companion object {
-        fun fromId(id: Int) = values().firstOrNull { it.id == id } ?: null
+        fun fromId(id: Int) = values().firstOrNull { it.id == id }
     }
 }

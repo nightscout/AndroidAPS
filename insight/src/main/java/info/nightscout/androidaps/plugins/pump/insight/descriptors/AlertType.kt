@@ -29,7 +29,7 @@ enum class AlertType (val id: Int, val incId: Int) {
     ERROR_13 (7567, 13);
 
     companion object {
-        fun fromId(id: Int) = values().firstOrNull { it.id == id } ?: null
-        fun fromIncId(incId: Int) = values().firstOrNull { it.incId == incId } ?: null
+        fun fromId(id: Int) = values().firstOrNull { it.id == id }
+        fun fromIncId(incId: Int) = values().firstOrNull { it.incId == incId }
     }
 }

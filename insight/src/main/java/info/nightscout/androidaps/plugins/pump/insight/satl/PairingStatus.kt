@@ -6,6 +6,6 @@ enum class PairingStatus (val id: Int) {
     PENDING (1683);
 
     companion object {
-        fun fromId(id: Int) = values().firstOrNull { it.id == id } ?: null
+        fun fromId(id: Int) = values().firstOrNull { it.id == id }
     }
 }
