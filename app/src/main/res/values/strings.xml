@@ -1132,7 +1132,7 @@
     <string name="ns_upload">Upload data to NS</string>
     <string name="key_ns_receive_profile_store" translatable="false">ns_receive_profile_store</string>
     <string name="ns_receive_profile_store">Receive profile store</string>
-    <string name="ns_receive_profile_store_summary">Synchronized profiles from NS profile editor to Local profile</string>
+    <string name="ns_receive_profile_store_summary">Synchronize profiles from NS profile editor to Local profile</string>
     <string name="key_ns_receive_temp_target" translatable="false">ns_receive_temp_target</string>
     <string name="ns_receive_temp_target">Receive temporary targets</string>
     <string name="ns_receive_temp_target_summary">Accept temporary targets entered through NS or NSClient</string>
