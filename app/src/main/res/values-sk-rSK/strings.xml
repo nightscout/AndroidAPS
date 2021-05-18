@@ -778,6 +778,7 @@
     <string name="randombg_short">Glykémia</string>
     <string name="tools">Nástroje</string>
     <string name="show_calculation">Zobraziť kalkuláciu</string>
+    <string name="show_removed">Zobraziť odstránené</string>
     <string name="clearqueueconfirm">Vymazať frontu? Všetky dáta vo fronte budú stratené!</string>
     <string name="ebstopsloop">Použitie funkcie rozloženého bolusu zastaví uzavretý okruh na dobu trvania rozloženého bolusu. Naozaj to chcete?</string>
     <string name="closed_loop_disabled_with_eb">Uzavretý okruh je zastavený kvôli prebiehajúcemu rozloženému bolusu</string>
@@ -899,4 +900,23 @@
     <string name="profile_max_daily_basal_value">Profilová maximálna hodnota bazálu</string>
     <string name="current_basal_value">Aktuálna hodnota bazálu</string>
     <string name="profile_carbs_ratio_value">Profilový inzulino-sacharidový pomer</string>
+    <string name="full_sync">Úplná synchronizácia</string>
+    <string name="prime">Plnenie</string>
+    <string name="ns_sync_options">Synchronizácia</string>
+    <string name="ns_upload_summary">Profily, bolusy, sacharidy, dočasné bazály sú nahrávané do NS</string>
+    <string name="ns_upload">Nahrávať dáta do NS</string>
+    <string name="ns_receive_profile_store">Prijímať úložisko profilov</string>
+    <string name="ns_receive_profile_store_summary">Synchronizovať profily z NS do miestneho profilu</string>
+    <string name="ns_receive_temp_target">Prijímať dočasné ciele</string>
+    <string name="ns_receive_temp_target_summary">Prijať dočasné ciele zadané prostredníctvom NS, alebo NSClienta</string>
+    <string name="ns_receive_profile_switch">Prijímať prepnutia profilov</string>
+    <string name="ns_receive_profile_switch_summary">Prijať prepnutia profilov zadané prostredníctvom NS, alebo NSClienta</string>
+    <string name="ns_receive_insulin">Prijímať inzulín</string>
+    <string name="ns_receive_insulin_summary">Prijať inzulín vložený cez NS, alebo NSClient (nie je dodaný, iba započítaný do IOB)</string>
+    <string name="ns_receive_carbs">Prijímať sacharidy</string>
+    <string name="ns_receive_carbs_summary">Prijať sacharidy vložené prostredníctvom NS, alebo NSClienta</string>
+    <string name="ns_receive_therapy_events">Prijímať liečebné udalosti</string>
+    <string name="ns_receive_therapy_events_summary">Prijať liečebné udalosti (výmena setu, inzulínu, batérie atď.) zadané prostredníctvom NS, alebo NSClienta</string>
+    <string name="ns_receive_cgm">Prijímať/doplňovať glykémie</string>
+    <string name="ns_receive_cgm_summary">Prijať CGM dáta z NS</string>
 </resources>
