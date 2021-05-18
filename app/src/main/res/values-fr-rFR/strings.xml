@@ -900,4 +900,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="profile_max_daily_basal_value">Basale maximale du profil</string>
     <string name="current_basal_value">Basale actuelle</string>
     <string name="profile_carbs_ratio_value">Rapport glucides/insuline de profil</string>
+    <string name="full_sync">Synchro. complète</string>
+    <string name="prime">Amorcer</string>
+    <string name="ns_sync_options">Synchronisation</string>
 </resources>
