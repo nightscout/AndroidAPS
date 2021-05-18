@@ -157,7 +157,7 @@ class SignatureVerifierPlugin @Inject constructor(
         val sb = StringBuilder()
         for (i in array.indices) {
             if (i != 0) sb.append(":")
-            sb.append(String.format("%02X", 0xFF and map[map.indexOf(shortHash[i])].toInt()))
+            sb.append(String.format("%02X", 0xFF and map[map.indexOf(shortHash[i])].code))
         }
         return sb.toString()
     }

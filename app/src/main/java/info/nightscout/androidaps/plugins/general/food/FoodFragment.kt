@@ -210,7 +210,7 @@ class FoodFragment : DaggerFragment() {
             if (f.category == null || f.subCategory == null) continue
             if (subcategoryFilter != resourceHelper.gs(R.string.none) && f.subCategory != subcategoryFilter) continue
             if (categoryFilter != resourceHelper.gs(R.string.none) && f.category != categoryFilter) continue
-            if (textFilter != "" && !f.name.toLowerCase(Locale.getDefault()).contains(textFilter.toLowerCase(Locale.getDefault()))) continue
+            if (textFilter != "" && !f.name.lowercase(Locale.getDefault()).contains(textFilter.lowercase(Locale.getDefault()))) continue
             newFiltered.add(f)
         }
         filtered = newFiltered
