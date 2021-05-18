@@ -27,11 +27,11 @@ class Converters {
     fun toSource(source: String?) = source?.let { Sources.fromString(it) }
 
     @TypeConverter
-    fun fromListOfXXXValueWithUnit(values: List<ValueWithUnit>): String = values.map(::ValueWithUnitWrapper)
+    fun fromListOfValueWithUnit(values: List<ValueWithUnit>): String = values.map(::ValueWithUnitWrapper)
         .let(SealedClassHelper.gson::toJson)
 
     @TypeConverter
-    fun toMutableListOfXXXValueWithUnit(string: String): List<ValueWithUnit> = SealedClassHelper.gson
+    fun toMutableListOfValueWithUnit(string: String): List<ValueWithUnit> = SealedClassHelper.gson
         .fromJson<List<ValueWithUnitWrapper>>(string).map { it.wrapped }
 
     private class ValueWithUnitWrapper(val wrapped: ValueWithUnit)
