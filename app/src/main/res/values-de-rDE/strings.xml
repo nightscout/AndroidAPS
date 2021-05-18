@@ -778,6 +778,7 @@ Unerwartetes Verhalten.</string>
     <string name="randombg_short">BZ</string>
     <string name="tools">Tools</string>
     <string name="show_calculation">Berechnung anzeigen</string>
+    <string name="show_removed">Gelöschte anzeigen</string>
     <string name="clearqueueconfirm">Warteschlange löschen? Alle Daten in der Warteschlange gehen verloren!</string>
     <string name="ebstopsloop">Die Verwendung eines Verzögerungsbolus unterbricht dem Closed Loop Modus für die Dauer des Verzögerungsbolus. Willst Du das wirklich?</string>
     <string name="closed_loop_disabled_with_eb">Closed Loop wegen Verzögerungsbolus unterbrochen</string>
@@ -899,4 +900,22 @@ Unerwartetes Verhalten.</string>
     <string name="profile_max_daily_basal_value">Profil max. Basalwert</string>
     <string name="current_basal_value">Aktueller Basalwert</string>
     <string name="profile_carbs_ratio_value">Profil KH-Faktor</string>
+    <string name="full_sync">Vollständige Sync</string>
+    <string name="prime">Füllen</string>
+    <string name="ns_sync_options">Synchronisierung</string>
+    <string name="ns_upload_summary">Profile, Boli, Kohlenhydrate und temporäre Basalraten werden zu NS hochgeladen</string>
+    <string name="ns_upload">Daten zu NS hochladen</string>
+    <string name="ns_receive_profile_store">Gespeicherte Profile abrufen</string>
+    <string name="ns_receive_temp_target">Temporäre Ziele abrufen</string>
+    <string name="ns_receive_temp_target_summary">Temp. Ziele akzeptieren, die in NS oder NSClient eingegeben wurden</string>
+    <string name="ns_receive_profile_switch">Profilwechsel abrufen</string>
+    <string name="ns_receive_profile_switch_summary">Profilwechsel akzeptieren, die in NS oder NSClient eingegeben wurden</string>
+    <string name="ns_receive_insulin">Insulin abrufen</string>
+    <string name="ns_receive_insulin_summary">Insulin akzeptieren, das in NS oder NSClient eingegeben wurden</string>
+    <string name="ns_receive_carbs">Kohlenhydrate abrufen</string>
+    <string name="ns_receive_carbs_summary">Kohlenhydrate akzeptieren, die in NS oder NSClient eingegeben wurden</string>
+    <string name="ns_receive_therapy_events">Ereignisse abrufen</string>
+    <string name="ns_receive_therapy_events_summary">Ereignisse (Kanülen-, Ampullen-, Batteriewechsel etc.) akzeptieren, die in NS oder NSClient eingegeben wurden</string>
+    <string name="ns_receive_cgm">Historische CGM Daten ergänzen</string>
+    <string name="ns_receive_cgm_summary">CGM Daten von NS akzeptieren</string>
 </resources>
