@@ -27,12 +27,12 @@
     <string name="combo_reservoir_low">נמוך</string>
     <string name="combo_reservoir_empty">ריק</string>
     <string name="combo_reservoir_normal">רגיל</string>
-    <string name="combo_notification_check_time_date">דרוש עדכון שעון המשאבה</string>
+    <string name="combo_notification_check_time_date">דרוש עדכון לשעון המשאבה</string>
     <string name="combo_pump_tbr_cancelled_warrning">אזהרת ביטול בזאלי זמני אושרה</string>
     <string name="combo_error_no_connection_no_bolus_delivered">לא ניתן להתחבר למשאבה. הבולוס לא ניתן.</string>
-    <string name="combo_error_no_bolus_delivered">מתן הבולוס נכשל. נראה כי לא נמסר בולוס. כדי להיות בטוחים, יש לבדוק את המשאבה כדי למנוע בולוס כפול ואז להזריק שוב בולוס. כדי להגן מפני באגים, בולוסים אינם ניתנים מחדש אוטומטית.</string>
+    <string name="combo_error_no_bolus_delivered">מתן הבולוס נכשל. נראה כי לא ניתן בולוס. כדי להיות בטוחים, יש לבדוק את המשאבה כדי למנוע בולוס כפול ואז להזריק שוב בולוס. כדי להגן מפני באגים, בולוסים אינם ניתנים מחדש אוטומטית.</string>
     <string name="combo_error_partial_bolus_delivered">רק %1$.2f מתוך %2$.2f יח\' מהבולוס המבוקש הוזרקו בשל שגיאה. בדקו את המשאבה כדי לוודא זאת ולבצע את הפעולות המתאימות.</string>
-    <string name="combo_error_bolus_verification_failed">אספקת הבולוס ואימות ההיסטוריה של המשאבה נכשלו, אנא בדקו את המשאבה. אם נמסר בולוס, הוא יתווסף לטיפולים במהלך החיבור הבא למשאבה.</string>
+    <string name="combo_error_bolus_verification_failed">אספקת הבולוס ואימות ההיסטוריה של המשאבה נכשלו, אנא בדקו את המשאבה. אם ניתן בולוס, הוא יתווסף לטיפולים במהלך החיבור הבא למשאבה.</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">לא נותר מספיק אינסולין במיכל בשביל להשלים את הבולוס</string>
     <string name="combo_invalid_setup">הגדרת משאבה לא חוקית, בדקו את הוראות ההפעלה וודאו שתפריט \'מידע מהיר\' נקרא בשם QUICK INFO באמצעות תוכנת התצורה 360.</string>
     <string name="combo_actvity_reading_basal_profile">קריאת פרופיל בזאלי</string>
@@ -45,7 +45,7 @@
     <string name="combo_activity_checking_for_history_changes">בודק שינויים בהיסטוריה</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">בולוסים מרובים באותו הגודל הוזרקו בתוך אותה דקה. ניתן להוסיף רק רשומה אחת לטיפולים. בדקו את המשאבה והוסיפו באופן ידני רשומת בולוס בלשונית פורטל הטיפולים. יש ליצור רשומות בולוס עם זמנים שונים מבולוסים אחרים.</string>
     <string name="about_link_urls">\n\nתיעוד:\nhttps://androidaps.readthedocs.io\n\nפייסבוק:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
-    <string name="combo_check_date">הבולוס האחרון נרשם לפני 24 שעות או בשעה עתידית, נא לבדוק את כיוון השעון ותאריך במשאבה.</string>
+    <string name="combo_check_date">הבולוס האחרון נרשם לפני 24 שעות או בזמן עתידי, נא לבדוק את כיוון השעון והתאריך במשאבה.</string>
     <string name="combo_suspious_bolus_time">זמן\\תאריך הבולוס שהוזרק מהמשאבה נראה לא נכון, IOB כנראה שגוי, בדקו את השעון ואת התאריך במשאבה.</string>
     <string name="combo_bolus_count">ספירת בולוסים</string>
     <string name="combo_tbr_count">ספירת TBR</string>

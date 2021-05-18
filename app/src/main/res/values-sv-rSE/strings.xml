@@ -29,7 +29,6 @@
     <string name="description_overview">Visar loopens nuvarande tillstånd och knappar för de vanligaste funktionerna</string>
     <string name="description_persistent_notification">Visar en konstant avisering med en kort sammanfattning av vad din loop gör</string>
     <string name="description_profile_local">Definiera en profil som är tillgänglig offline.</string>
-    <string name="description_profile_nightscout">Använder profiler från Nightscout</string>
     <string name="description_pump_mdi">Integration för de som endast använder insulinpennor</string>
     <string name="description_pump_virtual">Integration för pumpar som ännu inte stöds av AndroidAPS (Open loop)</string>
     <string name="description_sensitivity_aaps">Känsligheten beräknas på samma sätt som i Oref0, men du kan specificera hur mycket av historiken som ska tas med i beräkningen. Minimalt upptag av kolhydrater beräknas utifrån maximal upptagstid för kolhydrater som angetts i Inställningar.</string>
@@ -78,7 +77,6 @@ Eversense-appen.</string>
     <string name="sms_delta">Delta:</string>
     <string name="configbuilder">Konfigurationsverktyg</string>
     <string name="overview">Översikt</string>
-    <string name="nsprofile">NS-profil</string>
     <string name="treatments">Behandlingar</string>
     <string name="virtualpump">Virtuell pump</string>
     <string name="careportal">Careportal</string>
@@ -94,7 +92,6 @@ Eversense-appen.</string>
     <string name="configbuilder_general_description">Dessa är några allmänna insticksprogram som kan vara användbara.</string>
     <string name="configbuilder_constraints_description">Vilka begränsningar ska tillämpas?</string>
     <string name="constraints">Begränsningar</string>
-    <string name="loop">Loop</string>
     <string name="configbuilder_loop">Loop</string>
     <string name="configbuilder_loop_description">Använd detta för att aktivera AndroidAPS loop-möjligheter.</string>
     <string name="loop_aps_label">APS</string>
@@ -139,6 +136,7 @@ Eversense-appen.</string>
     <string name="configbuilder_nightscoutversion_label">Nightscoutversion:</string>
     <string name="missing_carbs">Saknar %1$dg</string>
     <string name="exported">Inställningar exporterade</string>
+    <string name="ue_exported">Användarposter exporterade</string>
     <string name="export_to">Exportera inställningar till</string>
     <string name="import_from">Importera inställningar från</string>
     <string name="setting_imported">Inställningar importerade</string>
@@ -270,6 +268,7 @@ Eversense-appen.</string>
     <string name="openapsma_autosensdata_label">Autosensdata</string>
     <string name="openapsma_scriptdebugdata_label">Debug</string>
     <string name="openapsama_useautosens">Använd autosens</string>
+    <string name="refresheventsfromnightscout">Uppdatera från NS</string>
     <string name="deletefuturetreatments">Ta bort behandlingar från framtiden</string>
     <string name="actions_shortname">Act</string>
     <string name="configbuilder_shortname">Konf</string>
@@ -278,7 +277,6 @@ Eversense-appen.</string>
     <string name="localprofile_shortname">LP</string>
     <string name="overview_shortname">Hem</string>
     <string name="virtualpump_shortname">vPump</string>
-    <string name="profileviewer_shortname">Profil</string>
     <string name="treatments_shortname">Beh</string>
     <string name="objectives_shortname">Mål</string>
     <string name="wear_shortname">Wear</string>
@@ -405,8 +403,6 @@ Eversense-appen.</string>
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">Visa BGI</string>
     <string name="wear_showbgi_summary">Visa BGI i statusraden</string>
-    <string name="ns_noupload">Ingen uppladdning till Nightscout</string>
-    <string name="ns_noupload_summary">Ingen data sänds till Nightscout. AndroidAPS ansluter till Nightscout men inga ändringar görs i Nightscout</string>
     <string name="overview_extendedbolus_cancel_button">Stoppa förlängd bolus</string>
     <string name="doprofileswitch">Genomför profilbyte</string>
     <string name="careportal_sensor_label">Sensor</string>
@@ -421,7 +417,6 @@ Eversense-appen.</string>
     <string name="nsalarm_urgent_staledatavalue_label">Akut varning efter [min]</string>
     <string name="openapsama_autosens_period">Intervall för autosens [tim]</string>
     <string name="openapsama_autosens_period_summary">Antal timmar för beräkning av känslighet (absorptionstid för KH är exkluderad)</string>
-    <string name="pump">Pump</string>
     <string name="openaps">OpenAPS</string>
     <string name="uploader">Uppladdare</string>
     <string name="configbuilder_sensitivity">Känslighetsavkänning</string>
@@ -563,7 +558,6 @@ Eversense-appen.</string>
     <string name="category">Kategori</string>
     <string name="subcategory">Underkategori</string>
     <string name="bolusrecordedonly">Bolus kommer bara att loggas. Inte levereras av pumpen</string>
-    <string name="ns_autobackfill_summary">Hämta saknad BG-data från Nightscout</string>
     <string name="loop_smbsetbypump_label">SMB satt i pump</string>
     <string name="overview_show_activity">Insulinaktivitet (5m)</string>
     <string name="overview_show_bgi">Blodglukospåverkan</string>
@@ -630,7 +624,6 @@ Eversense-appen.</string>
     <string name="virtualpump_type">Typ av virtuell pump</string>
     <string name="virtualpump_definition">Pumpdefinition</string>
     <string name="virtualpump_pump_def">Bolus: Steg =%1$s\nFörlängd bolus: [Steg=%2$s, duration =%3$smin -%4$sh] \nBasal: Steg=%5$s\nTempbasal: %6$s (av %7$s), duration =%8$smin -%9$sh\n%10$s</string>
-    <string name="ns_autobackfill_title">Auto Backfill BG</string>
     <string name="wear_wizard_settings">Kalkylatorinställningar</string>
     <string name="wear_wizard_settings_summary">Kalkyler inkluderade i resultatet</string>
     <string name="wear_display_settings">Visningsinställningar</string>
@@ -638,14 +631,12 @@ Eversense-appen.</string>
     <string name="enable_nsclient">Aktivera NSClient</string>
     <string name="welcometosetupwizard">Välkommen till installationsguiden! Den kommer att hjälpa dig genom installationsprocessen\n</string>
     <string name="readstatus">Läs status</string>
-    <string name="adjustprofileinns">Ändringar måste göras i NS</string>
     <string name="exitwizard">Hoppa över installationsguiden</string>
     <string name="setupwizard_loop_description">Tryck på knappen nedan för att låta AndroidAPS föreslå/göra basalförändringar</string>
     <string name="setupwizard_sensitivity_description">Insticksprogrammet för känslighet används för att detektera insulinkänslighet och för att beräkning av aktiva kolhydrater, COB. För mer information, besök:</string>
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
     <string name="nsclientinfotext">NSClient hanterar anslutningen till Nightscout. Du kan hoppa över denna del nu, men du kommer inte att kunna passera vissa mål tills du har satt upp det.</string>
     <string name="diawarning">Kom ihåg: De nya insulinprofilerna kräver en duration (DIA) på minst 5 timmar. En DIA på 5-6 timmar enligt de nya profilerna är ungefär lika med DIA 3 timmar enligt de gamla insulinprofilerna.</string>
-    <string name="setupwizard_profile_description">Vänligen välj källa för profil. Om patienten är ett barn bör du använda NS profil. Om ingen följer dig på Nightscout kommer du förmodligen föredra lokal profil. Kom ihåg att du endast väljer profilkälla här. För att använda den måste du aktivera den genom att köra ”Byt Profil”</string>
     <string name="setupwizard_aps_description">Välj en av dessa algoritmer. De sorteras från den äldsta till nyaste. Nyare algoritm är oftast mer kraftfull och mer aggressiv. Om du är ny som loopanvändare vill du förmodligen börja med AMA och inte med senaste. Glöm inte att läsa dokumentationen om OpenAPS och konfigurera algoritmen innan användning.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Konfigurera din Riley Link nedan. När du har valt en Riley Link kan du fortsätta installationen när status är \"Ansluten\". Det här kan ta en minut.\n</string>
     <string name="setupwizard_pump_pump_not_initialized">Du kan fortsätta installationen först när pumpen har konfigurerats.\n</string>
@@ -757,7 +748,6 @@ Eversense-appen.</string>
     <string name="objectives_button_unstart">Rensa påbörjade</string>
     <string name="doyouwantresetstart">Vill du starta om målet? Du kan förlora de steg du gjort hittills.</string>
     <string name="setupwizard_units_prompt">Välj enheter du vill visa värden i</string>
-    <string name="ns_ploadlocalprofile">Överför lokala profiländringar till NS</string>
     <string name="dia_short">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>

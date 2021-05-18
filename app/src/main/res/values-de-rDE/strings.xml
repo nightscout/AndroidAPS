@@ -29,7 +29,6 @@
     <string name="description_overview">Zeigt den aktuellen Status deines Loops und Schaltflächen für die geläufigsten Aktionen an</string>
     <string name="description_persistent_notification">Zeigt eine fortlaufende Benachrichtigung mit einer kurzen Übersicht darüber, was dein Loop derzeit tut</string>
     <string name="description_profile_local">Definiere ein Profil, was auch offline verfügbar ist.</string>
-    <string name="description_profile_nightscout">Stellt das Profil zur Verfügung, das in Nightscout definiert ist</string>
     <string name="description_pump_mdi">Pumpenintegration für Personen, die täglich mehrere Injektionen für ihre Diabetestherapie vornehmen</string>
     <string name="description_pump_virtual">Pumpenintegration für Pumpen, die noch nicht über einen Treiber verfügen (Open Loop)</string>
     <string name="description_sensitivity_aaps">Die Sensitivität wird genauso wie bei Oref0 berechnet, aber Du kannst dafür ein Zeitfenster bestimmen. Die minimale Kohlenhydrat-Absorptionsrate wird aus der maximalen Absorptionsdauer aus den Einstellungen abgeleitet.</string>
@@ -77,7 +76,6 @@
     <string name="sms_delta">Delta:</string>
     <string name="configbuilder">Konfiguration</string>
     <string name="overview">Übersicht</string>
-    <string name="nsprofile">Nightscout-Profil</string>
     <string name="treatments">Behandlungen</string>
     <string name="virtualpump">Virtuelle Pumpe</string>
     <string name="careportal">Careportal</string>
@@ -93,7 +91,6 @@
     <string name="configbuilder_general_description">Dies sind einige generelle Plugins, die Du vielleicht hilfreich findest.</string>
     <string name="configbuilder_constraints_description">Welche Beschränkungen werden angewendet?</string>
     <string name="constraints">Beschränkungen</string>
-    <string name="loop">Loop</string>
     <string name="configbuilder_loop">Loop</string>
     <string name="configbuilder_loop_description">Nutze dies, um die Loop-Integration von AndroidAPS zu aktivieren.</string>
     <string name="loop_aps_label">APS</string>
@@ -278,7 +275,6 @@
     <string name="localprofile_shortname">LP</string>
     <string name="overview_shortname">HOME</string>
     <string name="virtualpump_shortname">VP</string>
-    <string name="profileviewer_shortname">PROF</string>
     <string name="treatments_shortname">BEH</string>
     <string name="objectives_shortname">ZIEL</string>
     <string name="wear_shortname">UHR</string>
@@ -405,8 +401,6 @@
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">Zeige BGI</string>
     <string name="wear_showbgi_summary">Füge BGI zur Statuszeile hinzu.</string>
-    <string name="ns_noupload">Kein Upload zu Nightscout</string>
-    <string name="ns_noupload_summary">Alle an Nightscout gesendeten Daten werden verworfen. AAPS ist verbunden, aber Nightscout-Daten werden nicht geändert.</string>
     <string name="overview_extendedbolus_cancel_button">Verzögerten Bolus abbrechen</string>
     <string name="doprofileswitch">Profilwechsel durchführen</string>
     <string name="careportal_sensor_label">Sensor</string>
@@ -421,7 +415,6 @@
     <string name="nsalarm_urgent_staledatavalue_label">Stark veraltete Daten seit [min]</string>
     <string name="openapsama_autosens_period">Intervall für Autosens [h]</string>
     <string name="openapsama_autosens_period_summary">Anzahl der vergangenen Stunden, die verwendet werden, um die Sensitivität zu erkennen (Zeit, in der KH resorbiert werden, wird nicht berücksichtigt)</string>
-    <string name="pump">Pumpe</string>
     <string name="openaps">OpenAPS</string>
     <string name="uploader">Uploader</string>
     <string name="configbuilder_sensitivity">Sensitivitätserkennung</string>
@@ -563,7 +556,6 @@
     <string name="category">Kategorie</string>
     <string name="subcategory">Unterkategorie</string>
     <string name="bolusrecordedonly">Bolus wird nur aufgezeichnet (Pumpe gibt kein Insulin ab!)</string>
-    <string name="ns_autobackfill_summary">Lade fehlende Blutzuckerwerte automatisch aus Nightscout nach.</string>
     <string name="loop_smbsetbypump_label">SMB von der Pumpe abgegeben</string>
     <string name="overview_show_activity">Aktivität</string>
     <string name="overview_show_bgi">Blutzuckerwirkung</string>
@@ -630,7 +622,6 @@
     <string name="virtualpump_type">Typ der virtuellen Pumpe</string>
     <string name="virtualpump_definition">Pumpen-Definition</string>
     <string name="virtualpump_pump_def">Bolus: Schritt=%1$s\nVerzögerter Bolus: [Schritt=%2$s, Dauer=%3$smin-%4$sh]\nBasal: Schritt=%5$s\nTBR: %6$s (bei %7$s), Dauer=%8$smin-%9$sh\n%10$s</string>
-    <string name="ns_autobackfill_title">BZ automatisch auffüllen</string>
     <string name="wear_wizard_settings">Wizard-Einstellungen</string>
     <string name="wear_wizard_settings_summary">Berechnungen, die im Assistenten berücksichtigt werden:</string>
     <string name="wear_display_settings">Anzeigeeinstellungen</string>
@@ -638,14 +629,12 @@
     <string name="enable_nsclient">Aktiviere Nightscout-Client</string>
     <string name="welcometosetupwizard">Willkommen im Setup-Assistenten. Er führt Dich durch den Setup-Prozess\n</string>
     <string name="readstatus">Status lesen</string>
-    <string name="adjustprofileinns">Änderungen müssen in Nightscout vorgenommen werden.</string>
     <string name="exitwizard">Einrichtungsassistenten überspringen</string>
     <string name="setupwizard_loop_description">Drücke die Schaltfläche unten, um AndroidAPS zu erlauben, Basal-Änderungen vorzuschlagen/vorzunehmen</string>
     <string name="setupwizard_sensitivity_description">Das Sensitivitäts-Plugin wird für die Sensitivitäts- und COB-Berechnung verwendet. Für weitere Informationen siehe:</string>
     <string name="setupwizard_sensitivity_url">http://androidaps.readthedocs.io/en/latest/DE/konfigurations-generator.html#empfindlichkeitserkennung</string>
     <string name="nsclientinfotext">Nightscout-Client ist für die Verbindung zu Nightscout zuständig. Du kannst diesen Teil jetzt überspringen, aber Du wirst nicht in der Lage sein, Zielsetzungen zu erfüllen, bis Du diesen eingerichtet hast.</string>
     <string name="diawarning">Bitte beachte: Neue Insulin-Profile benötigen einen DIA von mind. 5 Stunden. Eine DIA von 5-6 Stunden im neuen Insulin-Profil entspricht einem DIA von 3 Stunden bei alten Insulin-Profilen.</string>
-    <string name="setupwizard_profile_description">Wähle eine Profilquelle aus. Verwende für ein Kind das NS-Profil. Wenn Dir niemand auf Nightscout folgt, wirst Du wahrscheinlich das lokale Profil bevorzugen. Beachte, dass hier nur die Profilquelle festgelegt wird. Damit das Profil verwendet werden kann, muss es mit einem \"Profil-Wechsel\" aktiviert werden.</string>
     <string name="setupwizard_aps_description">Wähle einen der verfügbaren Algorithmen aus. Sie sind vom Ältesten zum Neuesten sortiert. Neuere Algorithmen sind meist stärker und aggressiver. Wenn du ein Anfänger bist, solltest du nicht mit dem Neuesten sondern mit AMA starten. Vergiss nicht, die OpenAPS-Dokumentation zu lesen und die entsprechenden Einstellungen vor der Benutzung vorzunehmen.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Bitte konfiguriere Deinen RileyLink unten. Nachdem Du einen RileyLink ausgewählt hast, kannst Du die Installation fortsetzen, sobald der RileyLink-Status \"Verbunden\" ist. Das kann eine Minute dauern.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Hinweis:</b> Du kannst das Setup fortsetzen, sobald die Pumpe initialisiert wurde.\n</string>
@@ -758,7 +747,6 @@ Unerwartetes Verhalten.</string>
     <string name="objectives_button_unstart">Ziel neu starten</string>
     <string name="doyouwantresetstart">Möchtest Du den Start der Ziele zurücksetzen? Du verlierst Deine Fortschritte.</string>
     <string name="setupwizard_units_prompt">Wähle die Einheit, in der die Werte angezeigt werden sollen.</string>
-    <string name="ns_ploadlocalprofile">Lade die Änderungen des lokalen Profils zu NS hoch.</string>
     <string name="dia_short">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
@@ -790,6 +778,7 @@ Unerwartetes Verhalten.</string>
     <string name="randombg_short">BZ</string>
     <string name="tools">Tools</string>
     <string name="show_calculation">Berechnung anzeigen</string>
+    <string name="show_removed">Gelöschte anzeigen</string>
     <string name="clearqueueconfirm">Warteschlange löschen? Alle Daten in der Warteschlange gehen verloren!</string>
     <string name="ebstopsloop">Die Verwendung eines Verzögerungsbolus unterbricht dem Closed Loop Modus für die Dauer des Verzögerungsbolus. Willst Du das wirklich?</string>
     <string name="closed_loop_disabled_with_eb">Closed Loop wegen Verzögerungsbolus unterbrochen</string>
@@ -911,4 +900,22 @@ Unerwartetes Verhalten.</string>
     <string name="profile_max_daily_basal_value">Profil max. Basalwert</string>
     <string name="current_basal_value">Aktueller Basalwert</string>
     <string name="profile_carbs_ratio_value">Profil KH-Faktor</string>
+    <string name="full_sync">Vollständige Sync</string>
+    <string name="prime">Füllen</string>
+    <string name="ns_sync_options">Synchronisierung</string>
+    <string name="ns_upload_summary">Profile, Boli, Kohlenhydrate und temporäre Basalraten werden zu NS hochgeladen</string>
+    <string name="ns_upload">Daten zu NS hochladen</string>
+    <string name="ns_receive_profile_store">Gespeicherte Profile abrufen</string>
+    <string name="ns_receive_temp_target">Temporäre Ziele abrufen</string>
+    <string name="ns_receive_temp_target_summary">Temp. Ziele akzeptieren, die in NS oder NSClient eingegeben wurden</string>
+    <string name="ns_receive_profile_switch">Profilwechsel abrufen</string>
+    <string name="ns_receive_profile_switch_summary">Profilwechsel akzeptieren, die in NS oder NSClient eingegeben wurden</string>
+    <string name="ns_receive_insulin">Insulin abrufen</string>
+    <string name="ns_receive_insulin_summary">Insulin akzeptieren, das in NS oder NSClient eingegeben wurden</string>
+    <string name="ns_receive_carbs">Kohlenhydrate abrufen</string>
+    <string name="ns_receive_carbs_summary">Kohlenhydrate akzeptieren, die in NS oder NSClient eingegeben wurden</string>
+    <string name="ns_receive_therapy_events">Ereignisse abrufen</string>
+    <string name="ns_receive_therapy_events_summary">Ereignisse (Kanülen-, Ampullen-, Batteriewechsel etc.) akzeptieren, die in NS oder NSClient eingegeben wurden</string>
+    <string name="ns_receive_cgm">Historische CGM Daten ergänzen</string>
+    <string name="ns_receive_cgm_summary">CGM Daten von NS akzeptieren</string>
 </resources>

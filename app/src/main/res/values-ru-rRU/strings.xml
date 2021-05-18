@@ -29,7 +29,6 @@
     <string name="description_overview">Отображает текущее состояние цикла и часто используемые кнопки</string>
     <string name="description_persistent_notification">Показывает текущие уведомления и краткий обзор событий цикла</string>
     <string name="description_profile_local">Определите профиль, доступный в автономном режиме.</string>
-    <string name="description_profile_nightscout">Содержит профиль, заданный в Nightscout</string>
     <string name="description_pump_mdi">Интеграция с помпой для тех, кто для компенсации диабета пользуется инъекциями шприц-ручек</string>
     <string name="description_pump_virtual">Интеграция с помпами, еще не имеющими драйвера (незамкнутый цикл)</string>
     <string name="description_sensitivity_aaps">Чувствительность вычисляется аналогично алгоритму oref0, но можно включить период прошлого. Минимальное усвоение углеводов вычисляется на основе макс усвоения из настроек.</string>
@@ -77,7 +76,6 @@
     <string name="sms_delta">дельта:</string>
     <string name="configbuilder">Конфигуратор</string>
     <string name="overview">Начало</string>
-    <string name="nsprofile">профиль NS</string>
     <string name="treatments">Терапия</string>
     <string name="virtualpump">Виртуальная помпа</string>
     <string name="careportal">Портал лечения / назначений</string>
@@ -93,7 +91,6 @@
     <string name="configbuilder_general_description">Это некоторые общепринятые плагины которые могут пригодиться.</string>
     <string name="configbuilder_constraints_description">Какие ограничения применяются?</string>
     <string name="constraints">ограничения</string>
-    <string name="loop">замкнутый цикл</string>
     <string name="configbuilder_loop">замкнутый цикл</string>
     <string name="configbuilder_loop_description">Используйте, чтобы активировать интеграцию AndroidAPS в цикл ИПЖ.</string>
     <string name="loop_aps_label">Система ИПЖ</string>
@@ -279,7 +276,6 @@
     <string name="localprofile_shortname">ЛП</string>
     <string name="overview_shortname">НАЧАЛО</string>
     <string name="virtualpump_shortname">ВиртПомпа</string>
-    <string name="profileviewer_shortname">профильNS</string>
     <string name="treatments_shortname">НАЗНАЧ</string>
     <string name="objectives_shortname">ЦЕЛИ</string>
     <string name="wear_shortname">WEAR</string>
@@ -406,8 +402,6 @@
     <string name="xdripstatus_shortname">Статус xDrip</string>
     <string name="wear_showbgi_title">показать BGI</string>
     <string name="wear_showbgi_summary">добавить BGI в строку состояния</string>
-    <string name="ns_noupload">данные не передаются в NS</string>
-    <string name="ns_noupload_summary">данные передаваемые в NS не доходят. AAPS соединяется с NS но изменения туда не вносятся</string>
     <string name="overview_extendedbolus_cancel_button">Отмена удлиненного болюса</string>
     <string name="doprofileswitch">Переключить профиль</string>
     <string name="careportal_sensor_label">Сенсор</string>
@@ -422,7 +416,6 @@
     <string name="nsalarm_urgent_staledatavalue_label">Порог тревоги об устаревших данных [min] (мин)</string>
     <string name="openapsama_autosens_period">Интервал для autosens [h] (ч)</string>
     <string name="openapsama_autosens_period_summary">Время в часах в прошлом для определения чувствительности (время усвоения углеводов исключается)</string>
-    <string name="pump">помпа</string>
     <string name="openaps">OpenAPS</string>
     <string name="uploader">Загрузчик</string>
     <string name="configbuilder_sensitivity">определение чувствительности</string>
@@ -564,7 +557,6 @@
     <string name="category">Категория</string>
     <string name="subcategory">Подкатегория</string>
     <string name="bolusrecordedonly">Болюс будет только протоколироваться (не подаваться помпой)</string>
-    <string name="ns_autobackfill_summary">Заполнять пропущенные данные из NS</string>
     <string name="loop_smbsetbypump_label">Супер микро болюс SMB задан помпой</string>
     <string name="overview_show_activity">Нагрузка</string>
     <string name="overview_show_bgi">Влияние глюкозы</string>
@@ -631,7 +623,6 @@
     <string name="virtualpump_type">Тип виртуальной помпы</string>
     <string name="virtualpump_definition">Определение помпы</string>
     <string name="virtualpump_pump_def">Болюс: Шаг =%1$s\n Пролонгированный Болюс: [Шаг =%2$s, Продолжительность =%3$sмин -%4$sh] \nБазал: Шаг =%5$s\n ВБС: %6$s (на %7$s), Продолжительность =%8$sмин -%9$sh\n%10$s</string>
-    <string name="ns_autobackfill_title">Автозаполнение пропущенных данных СК</string>
     <string name="wear_wizard_settings">Параметры мастера настройки смарт-часов wear</string>
     <string name="wear_wizard_settings_summary">Расчеты, включены в результат мастера настройки смарт-часов wear:</string>
     <string name="wear_display_settings">Параметры экрана</string>
@@ -639,7 +630,6 @@
     <string name="enable_nsclient">Включить клиент NSClient</string>
     <string name="welcometosetupwizard">Добро пожаловать в мастер установки</string>
     <string name="readstatus">Статус \'чтение\'</string>
-    <string name="adjustprofileinns">Изменения должны быть сделано в Nightscout</string>
     <string name="exitwizard">Пропустить Мастер установки</string>
     <string name="setupwizard_loop_description">Нажмите на кнопку ниже, чтобы AndroidAPS мог предложить/внести изменения в базал</string>
     <string name="setupwizard_sensitivity_description">Плагин чувствительности Sensitivity применяется для определения чувствительности к инсулину и вычисления активных углеводов COB. Дополнительная информация:</string>
@@ -648,7 +638,6 @@
 Context | Edit Context</string>
     <string name="nsclientinfotext">NSClient обрабатывает подключения к Nightscout. Вы можете пропустить этот этап сейчас, но не преодолеете все Цели пока не настроите его.</string>
     <string name="diawarning">Напоминание: новые профили инсулина требуют как минимум 5 часов длительности действия DIA. 5-6 часовая DIA эквивалентна трехчасовой на старых профилях.</string>
-    <string name="setupwizard_profile_description">Пожалуйста выберите источник профиля. Если пациент ребенок пользуйтесь профилем Nightscout. Если никто не отслеживает ваш СК на NS, вы вероятно предпочтете Локальный профиль. Напоминание - вы всего лишь выбираете профиль. Активируйте его \"Переключателем профиля\"</string>
     <string name="setupwizard_aps_description">Выберите один из доступных алгоритмов. Они расположены от самых старых к самым новым. Более новый алгоритм обычно мощнее и агрессивнее. Если вы новый пользователь возможно вам лучше начать с помощника болюса AMA а не с новейшего алгоритма. Читайте документацию OpenAPS и определите свою конфигурацию.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Сконфигурируйте RileyLink. После выбора RileyLink можно будет продолжить установку если состояние RileyLink \"Соединено\". Это может занять минуту.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Примечание:</b> После инициализации помпы можно продолжить настройку\n</string>
@@ -760,7 +749,6 @@ Context | Edit Context</string>
     <string name="objectives_button_unstart">Очистить начатые</string>
     <string name="doyouwantresetstart">Хотите сбросить начатую цель? Можете потерять уже достигнутое.</string>
     <string name="setupwizard_units_prompt">Выберите единицы, в которых вы хотите отображать значения</string>
-    <string name="ns_ploadlocalprofile">Перенести изменения локального профиля в NS</string>
     <string name="dia_short">Время действия инсулина DIA</string>
     <string name="ic_short">IC (инсулин/углеводы)</string>
     <string name="isf_short">ISF (чувствительность к инсулину)</string>
@@ -792,6 +780,7 @@ Context | Edit Context</string>
     <string name="randombg_short">BG/ГК</string>
     <string name="tools">Инструментарий</string>
     <string name="show_calculation">Показать расчет</string>
+    <string name="show_removed">Показать удаленные</string>
     <string name="clearqueueconfirm">Очистить очередь? Все данные в очереди будут потеряны!</string>
     <string name="ebstopsloop">Функция Пролонгированный Болюс остановит режим замкнутого цикла на время действия пролонгированного болюса. Подтверждаете выбор?</string>
     <string name="closed_loop_disabled_with_eb">Замкнутый цикл отключен из-за работы Пролонгированного Болюса</string>
@@ -913,4 +902,23 @@ Context | Edit Context</string>
     <string name="profile_max_daily_basal_value">Максимальное значение базала в профиле</string>
     <string name="current_basal_value">Текущее значение базала</string>
     <string name="profile_carbs_ratio_value">Коэффициент углеводов в профиле</string>
+    <string name="full_sync">Полная синхронизация</string>
+    <string name="prime">Заполнение инфузионной системы</string>
+    <string name="ns_sync_options">Синхронизация</string>
+    <string name="ns_upload_summary">Профили, болюсы, углеводы, временные базалы закачиваются в NS</string>
+    <string name="ns_upload">Передать данные в NS</string>
+    <string name="ns_receive_profile_store">Принимать хранилище профилей</string>
+    <string name="ns_receive_profile_store_summary">Синхронизировать профили из редактора NS профиля в локальный профиль</string>
+    <string name="ns_receive_temp_target">Получить временные цели</string>
+    <string name="ns_receive_temp_target_summary">Принимать временные цели, установленные через NS или NSClient</string>
+    <string name="ns_receive_profile_switch">Получать переключения профиля</string>
+    <string name="ns_receive_profile_switch_summary">Принимать переключения профиля, введенные через NS или NSClient</string>
+    <string name="ns_receive_insulin">Принимать инсулин</string>
+    <string name="ns_receive_insulin_summary">Принимать инсулин, введенный через NS или NSClient (не подается, только рассчитывается как активный IOB)</string>
+    <string name="ns_receive_carbs">Принимать углеводы</string>
+    <string name="ns_receive_carbs_summary">Принимать углеводы, введенные через NS или NSClient</string>
+    <string name="ns_receive_therapy_events">Принимать события терапии</string>
+    <string name="ns_receive_therapy_events_summary">Принимать события терапии (катетер, инсулин, изменение батареи и т. д.) через NS или NSClient</string>
+    <string name="ns_receive_cgm">Получать/заполнять данные мониторинга CGM</string>
+    <string name="ns_receive_cgm_summary">Принимать данные мониторинга CGM из NS</string>
 </resources>
