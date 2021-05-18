@@ -26,6 +26,7 @@ import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.JsonHelper.safeGetLong
+import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.util.concurrent.TimeUnit
@@ -287,7 +288,7 @@ class NSClientAddUpdateWorker(
                                     result.inserted.forEach {
                                         uel.log(Action.TEMP_BASAL, Sources.NSClient,
                                             ValueWithUnit.Timestamp(it.timestamp),
-                                            ValueWithUnit.UnitPerHour(it.rate),
+                                            if (it.isAbsolute) ValueWithUnit.UnitPerHour(it.rate) else ValueWithUnit.Percent(it.rate.toInt()),
                                             ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
                                         )
                                         aapsLogger.debug(LTag.DATABASE, "Inserted TemporaryBasal $it")
@@ -295,7 +296,7 @@ class NSClientAddUpdateWorker(
                                     result.invalidated.forEach {
                                         uel.log(Action.TEMP_BASAL_REMOVED, Sources.NSClient,
                                             ValueWithUnit.Timestamp(it.timestamp),
-                                            ValueWithUnit.UnitPerHour(it.rate),
+                                            if (it.isAbsolute) ValueWithUnit.UnitPerHour(it.rate) else ValueWithUnit.Percent(it.rate.toInt()),
                                             ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
                                         )
                                         aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryBasal $it")
@@ -303,7 +304,7 @@ class NSClientAddUpdateWorker(
                                     result.ended.forEach {
                                         uel.log(Action.CANCEL_TEMP_BASAL, Sources.NSClient,
                                             ValueWithUnit.Timestamp(it.timestamp),
-                                            ValueWithUnit.UnitPerHour(it.rate),
+                                            if (it.isAbsolute) ValueWithUnit.UnitPerHour(it.rate) else ValueWithUnit.Percent(it.rate.toInt()),
                                             ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
                                         )
                                         aapsLogger.debug(LTag.DATABASE, "Ended TemporaryBasal $it")
