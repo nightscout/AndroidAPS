@@ -315,7 +315,6 @@
     <!-- User Entry -->
     <string name="uel_bolus">BOLO</string>
     <string name="uel_bolus_advisor">CONSIGLIO BOLO</string>
-    <string name="uel_bolus_record">RECORD BOLO</string>
     <string name="uel_extended_bolus">BOLO ESTESO</string>
     <string name="uel_superbolus_tbr">TBR SUPERBOLO</string>
     <string name="uel_carbs">CHO</string>
@@ -380,28 +379,8 @@
     <string name="uel_import_databases">IMPORTA DATABASE</string>
     <string name="uel_otp_export">ESPORTAZIONE OTP</string>
     <string name="uel_otp_reset">RESET OTP</string>
-    <string name="uel_sms_basal">SMS BASALE</string>
-    <string name="uel_sms_bolus">SMS BOLO</string>
-    <string name="uel_sms_cal">SMS CAL</string>
-    <string name="uel_sms_carbs">SMS CHO</string>
-    <string name="uel_sms_extended_bolus">SMS BOLO ESTESO</string>
-    <string name="uel_sms_loop_disabled">SMS LOOP DISABILITATO</string>
-    <string name="uel_sms_loop_enabled">SMS LOOP ABILITATO</string>
-    <string name="uel_sms_loop_resume">SMS RIPRESA LOOP</string>
-    <string name="uel_sms_loop_suspend">SMS SOSPENSIONE LOOP</string>
-    <string name="uel_sms_profile">SMS PROFILO</string>
-    <string name="uel_sms_pump_connect">SMS CONNESSIONE MICRO</string>
-    <string name="uel_sms_pump_disconnect">SMS DISCONNESSIONE MICRO</string>
-    <string name="uel_sms_sms">SMS SMS</string>
-    <string name="uel_sms_tt">SMS TT</string>
-    <string name="uel_tt_deleted_from_ns">TT ELIMINATO DA NS</string>
-    <string name="uel_careportal_deleted_from_ns">PORTALE ELIMINATO DA NS</string>
-    <string name="uel_careportal_from_ns">PORTALE DA NS</string>
-    <string name="uel_tt_from_ns">TT DA NS</string>
-    <string name="uel_tt_canceleted_from_ns">TT CANCELLATO DA NS</string>
     <string name="uel_export_csv">ESPORTA VOCI UTENTE</string>
     <string name="uel_unknown">SCONOSCIUTO</string>
-    <string name="formated_string">Stringa formattata</string>
     <string name="ue_export_to_csv">Esporta voci utente in Excel (csv)</string>
     <string name="ue_csv_header">"Timestamp;Date;UTC Offset;Action;Note;Value;Unit"</string>
     <plurals name="days">
