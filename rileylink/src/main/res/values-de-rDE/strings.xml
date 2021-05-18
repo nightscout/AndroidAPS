@@ -64,7 +64,6 @@
     <string name="riley_link_common_yes">Ja</string>
     <string name="riley_link_common_no">Nein</string>
     <!-- RileyLink - Preferences -->
-    <string name="riley_link_show_battery_level">Akkustand von OrangeLink/EmaLink anzeigen</string>
     <string name="riley_link_show_battery_level_summary">FUNKTIONIERT NICHT mit dem original RileyLink. Funktioniert vielleicht nicht mit anderen RileyLink Alternativen.</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d Tag</item>
