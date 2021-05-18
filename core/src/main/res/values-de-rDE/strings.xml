@@ -103,6 +103,7 @@
     <string name="notes_label">Notizen</string>
     <string name="remove_button">Löschen</string>
     <string name="addnew">Weiteren hinzufügen</string>
+    <string name="wrong_pump_data">Daten kommen von einer anderen Pumpe. Wechsle den Pumpentreiber.</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Begrenzung der max. Basalrate auf %1$.2f IE/h wegen %2$s</string>
     <string name="pumplimit">Limit der Pumpe</string>
@@ -152,6 +153,7 @@
     <string name="profile_carbs_per_unit">g/IE</string>
     <!--    ProfileFunction-->
     <string name="noprofileselected">Kein Profil ausgewählt</string>
+    <string name="startprofile">Profil %1$d%% für %2$d Min. starten</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Bei der virtuellen Pumpe können nur einzelne Werte und keine Bereiche zur Festlegung der Basal/Bolus-Granularität gewählt werden.</string>
     <!--    APSResult-->
@@ -204,6 +206,10 @@
     <string name="wear">Wear</string>
     <string name="automation">Automatisierung</string>
     <string name="custom">Benutzerdefiniert</string>
+    <string name="pump">Pumpe</string>
+    <string name="loop">Loop</string>
+    <string name="ns">NS</string>
+    <string name="record">Eintrag</string>
     <!--    Command-->
     <string name="connectiontimedout">Zeitüberschreitung bei Verbindung</string>
     <!--    PumpEnactResult-->
@@ -310,6 +316,28 @@
     <string name="saturday_short">Sa</string>
     <string name="sunday_short">So</string>
     <!-- User Entry -->
+    <string name="uel_tt">TEMP. ZIEL</string>
+    <string name="uel_cancel_bolus">BOLUS ABBRECHEN</string>
+    <string name="uel_cancel_tt">TEMP. ZIEL ABBRECHEN</string>
+    <string name="uel_site_change">KANÜLENWECHSEL</string>
+    <string name="uel_reservoir_change">RESERVOIRWECHSEL</string>
+    <string name="uel_tt_ns_refresh">TEMP. ZIEL NS AKTUALISIEREN</string>
+    <string name="uel_bolus_removed">BOLUS ENTFERNT</string>
+    <string name="uel_carbs_removed">KOHLENHYDRATE ENTFERNT</string>
+    <string name="uel_temp_basal_removed">TEMP BASAL ENTFERNT</string>
+    <string name="uel_food">NAHRUNG</string>
+    <string name="uel_tt_removed">TEMP ZIEL ENTFERNT</string>
+    <string name="uel_stop_sms">STOP SMS</string>
+    <string name="uel_start_aaps">STARTE AAPS</string>
+    <string name="uel_exit_aaps">AAPS BEENDEN</string>
+    <string name="uel_plugin_enabled">PLUGIN AKTIVIERT</string>
+    <string name="uel_plugin_disabled">PLUGIN DEAKTIVIERT</string>
+    <string name="ue_string">Zeichenfolge</string>
+    <string name="ue_source">Quelle</string>
+    <string name="ue_utc_offset">UTC-Abstand</string>
+    <string name="ue_action">Aktion</string>
+    <string name="ue_timestamp">Zeitstempel</string>
+    <string name="ue_none">Keine Einheit</string>
     <plurals name="days">
         <item quantity="one">%1$d Tag</item>
         <item quantity="other">%1$d Tage</item>
