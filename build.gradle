@@ -76,7 +76,7 @@ allprojects {
     //Support @JvmDefault
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
         kotlinOptions {
-            freeCompilerArgs = ['-Xjvm-default=enable'] //enable or compatibility
+            freeCompilerArgs = ['-Xjvm-default=all']
             jvmTarget = "1.8"
         }
     }

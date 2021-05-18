@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.interfaces
 
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.plugins.common.ManufacturerType
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
@@ -52,7 +51,7 @@ interface Pump {
     /**
      * set initial handshake completed (moved to connected state)
      */
-    @JvmDefault fun finishHandshaking() {}
+    fun finishHandshaking() {}
 
     /**
      * Perform BT connect, there is new command waiting in queue
@@ -69,7 +68,7 @@ interface Pump {
     /**
      * @return # of second to wait before [disconnect] is send after last command
      */
-    @JvmDefault fun waitForDisconnectionInSeconds(): Int = 5
+    fun waitForDisconnectionInSeconds(): Int = 5
 
     /**
      * Stop connection process
@@ -244,14 +243,14 @@ interface Pump {
      *
      * @return list of custom actions
      */
-    @JvmDefault fun getCustomActions(): List<CustomAction>? = null
+    fun getCustomActions(): List<CustomAction>? = null
 
     /**
      * Executes a custom action. Please note that these actions will not be queued
      *
      * @param customActionType action to be executed
      */
-    @JvmDefault fun executeCustomAction(customActionType: CustomActionType) {}
+    fun executeCustomAction(customActionType: CustomActionType) {}
 
     /**
      * Executes a custom queued command
@@ -260,22 +259,21 @@ interface Pump {
      * @param customCommand the custom command to be executed
      * @return PumpEnactResult that represents the command execution result
      */
-    @JvmDefault fun executeCustomCommand(customCommand: CustomCommand): PumpEnactResult? = null
+    fun executeCustomCommand(customCommand: CustomCommand): PumpEnactResult? = null
 
     /**
      * This method will be called when time or Timezone changes, and pump driver can then do a specific action (for
      * example update clock on pump).
      */
-    @JvmDefault fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {}
+    fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {}
 
     /**
      * Only used for pump types where hasCustomUnreachableAlertCheck=true
      */
-    @JvmDefault
     fun isUnreachableAlertTimeoutExceeded(alertTimeoutMilliseconds: Long): Boolean = false
 
     /**
      * if true APS set 100% basal before full hour to avoid pump beeping
      */
-    @JvmDefault fun setNeutralTempAtFullHour(): Boolean = false
+    fun setNeutralTempAtFullHour(): Boolean = false
 }
