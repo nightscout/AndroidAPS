@@ -906,4 +906,19 @@ Context | Edit Context</string>
     <string name="prime">Заполнение инфузионной системы</string>
     <string name="ns_sync_options">Синхронизация</string>
     <string name="ns_upload_summary">Профили, болюсы, углеводы, временные базалы закачиваются в NS</string>
+    <string name="ns_upload">Передать данные в NS</string>
+    <string name="ns_receive_profile_store">Принимать хранилище профилей</string>
+    <string name="ns_receive_profile_store_summary">Синхронизировать профили из редактора NS профиля в локальный профиль</string>
+    <string name="ns_receive_temp_target">Получить временные цели</string>
+    <string name="ns_receive_temp_target_summary">Принимать временные цели, установленные через NS или NSClient</string>
+    <string name="ns_receive_profile_switch">Получать переключения профиля</string>
+    <string name="ns_receive_profile_switch_summary">Принимать переключения профиля, введенные через NS или NSClient</string>
+    <string name="ns_receive_insulin">Принимать инсулин</string>
+    <string name="ns_receive_insulin_summary">Принимать инсулин, введенный через NS или NSClient (не подается, только рассчитывается как активный IOB)</string>
+    <string name="ns_receive_carbs">Принимать углеводы</string>
+    <string name="ns_receive_carbs_summary">Принимать углеводы, введенные через NS или NSClient</string>
+    <string name="ns_receive_therapy_events">Принимать события терапии</string>
+    <string name="ns_receive_therapy_events_summary">Принимать события терапии (катетер, инсулин, изменение батареи и т. д.) через NS или NSClient</string>
+    <string name="ns_receive_cgm">Получать/заполнять данные мониторинга CGM</string>
+    <string name="ns_receive_cgm_summary">Принимать данные мониторинга CGM из NS</string>
 </resources>
