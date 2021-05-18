@@ -780,6 +780,7 @@ Context | Edit Context</string>
     <string name="randombg_short">BG/ГК</string>
     <string name="tools">Инструментарий</string>
     <string name="show_calculation">Показать расчет</string>
+    <string name="show_removed">Показать удаленные</string>
     <string name="clearqueueconfirm">Очистить очередь? Все данные в очереди будут потеряны!</string>
     <string name="ebstopsloop">Функция Пролонгированный Болюс остановит режим замкнутого цикла на время действия пролонгированного болюса. Подтверждаете выбор?</string>
     <string name="closed_loop_disabled_with_eb">Замкнутый цикл отключен из-за работы Пролонгированного Болюса</string>
@@ -901,4 +902,8 @@ Context | Edit Context</string>
     <string name="profile_max_daily_basal_value">Максимальное значение базала в профиле</string>
     <string name="current_basal_value">Текущее значение базала</string>
     <string name="profile_carbs_ratio_value">Коэффициент углеводов в профиле</string>
+    <string name="full_sync">Полная синхронизация</string>
+    <string name="prime">Заполнение инфузионной системы</string>
+    <string name="ns_sync_options">Синхронизация</string>
+    <string name="ns_upload_summary">Профили, болюсы, углеводы, временные базалы закачиваются в NS</string>
 </resources>
