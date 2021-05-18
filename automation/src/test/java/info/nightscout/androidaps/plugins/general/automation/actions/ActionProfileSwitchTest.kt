@@ -27,7 +27,8 @@ class ActionProfileSwitchTest : ActionsTestBase() {
         `when`(resourceHelper.gs(ArgumentMatchers.eq(R.string.changengetoprofilename), ArgumentMatchers.anyString())).thenReturn("Change profile to %s")
         `when`(resourceHelper.gs(R.string.alreadyset)).thenReturn("Already set")
         `when`(resourceHelper.gs(R.string.notexists)).thenReturn("not exists")
-        `when`(resourceHelper.gs(R.string.ok)).thenReturn("OK")
+        `when`(resourceHelper.gs(R.string.error_field_must_not_be_empty)).thenReturn("The field must not be empty")
+        `when`(resourceHelper.gs(R.string.noprofile)).thenReturn("No profile loaded from NS yet")
 
         sut = ActionProfileSwitch(injector)
     }

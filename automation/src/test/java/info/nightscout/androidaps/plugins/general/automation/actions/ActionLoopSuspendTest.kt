@@ -22,6 +22,7 @@ class ActionLoopSuspendTest : ActionsTestBase() {
 
         `when`(resourceHelper.gs(R.string.suspendloop)).thenReturn("Suspend loop")
         `when`(resourceHelper.gs(ArgumentMatchers.eq(R.string.suspendloopforXmin), ArgumentMatchers.anyInt())).thenReturn("Suspend loop for %d min")
+        `when`(resourceHelper.gs(R.string.alreadysuspended)).thenReturn("Already suspended")
 
         sut = ActionLoopSuspend(injector)
     }
