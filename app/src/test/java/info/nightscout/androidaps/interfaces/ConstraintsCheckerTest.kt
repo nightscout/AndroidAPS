@@ -67,7 +67,6 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     @Mock lateinit var profiler: Profiler
     @Mock lateinit var uel: UserEntryLogger
     @Mock lateinit var loggerUtils: LoggerUtils
-    @Mock lateinit var databaseHelper: DatabaseHelperInterface
     @Mock lateinit var repository: AppRepository
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var insightDatabaseDao: InsightDatabaseDao
@@ -142,7 +141,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         danaPump = DanaPump(aapsLogger, sp, dateUtil, injector)
         hardLimits = HardLimits(aapsLogger, rxBus, sp, resourceHelper, context, repository)
         objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, resourceHelper, activePlugin, sp, ConfigImpl(), dateUtil, uel)
-        comboPlugin = ComboPlugin(injector, aapsLogger, rxBus, resourceHelper, profileFunction, sp, commandQueue, context, databaseHelper, pumpSync, dateUtil)
+        comboPlugin = ComboPlugin(injector, aapsLogger, rxBus, resourceHelper, profileFunction, sp, commandQueue, context, pumpSync, dateUtil)
         danaRPlugin = DanaRPlugin(injector, aapsLogger, aapsSchedulers, rxBus, context, resourceHelper, constraintChecker, activePlugin, sp, commandQueue, danaPump, dateUtil, fabricPrivacy, pumpSync)
         danaRSPlugin = DanaRSPlugin(injector, aapsLogger, aapsSchedulers, rxBus, context, resourceHelper, constraintChecker, profileFunction, sp, commandQueue, danaPump, pumpSync, detailedBolusInfoStorage, temporaryBasalStorage, fabricPrivacy, dateUtil)
         insightPlugin = LocalInsightPlugin(injector, aapsLogger, rxBus, resourceHelper, sp, commandQueue, profileFunction, context, ConfigImpl(), dateUtil, insightDbHelper, pumpSync)
