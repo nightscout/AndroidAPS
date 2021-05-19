@@ -8,14 +8,14 @@ android:
   components:
   - platform-tools
   - tools
-  - build-tools-29.0.2
+  - build-tools-30.0.2
   - android-28
   - extra-google-m2repository
   - extra-android-m2repository
   - extra-google-google_play_services
   
 before_install:
-#- yes | sdkmanager "platforms;android-28"
+- yes | sdkmanager --licenses
 
 script:
   # Unit Test
