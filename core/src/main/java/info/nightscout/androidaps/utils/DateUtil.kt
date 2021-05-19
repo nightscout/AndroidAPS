@@ -137,12 +137,14 @@ open class DateUtil @Inject constructor(private val context: Context) {
         return if (mills == 0L) "" else dateString(mills) + " " + timeStringWithSeconds(mills)
     }
 
-    fun minAgo(resourceHelper: ResourceHelper, time: Long): String {
+    fun minAgo(resourceHelper: ResourceHelper, time: Long?): String {
+        if (time == null) return ""
         val mins = ((now() - time) / 1000 / 60).toInt()
         return resourceHelper.gs(R.string.minago, mins)
     }
 
-    fun minAgoShort(time: Long): String {
+    fun minAgoShort(time: Long?): String {
+        if (time == null) return ""
         val mins = ((time - now()) / 1000 / 60).toInt()
         return (if (mins > 0) "+" else "") + mins
     }

@@ -5,6 +5,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.plugins.general.automation.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
+import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -135,5 +136,8 @@ open class ActionsTestBase : TestBaseWithProfile() {
         `when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
         `when`(activePlugin.activeProfileSource).thenReturn(profilePlugin)
         `when`(profilePlugin.profile).thenReturn(getValidProfileStore())
+
+        `when`(resourceHelper.gs(R.string.ok)).thenReturn("OK")
+        `when`(resourceHelper.gs(R.string.error)).thenReturn("Error")
     }
 }

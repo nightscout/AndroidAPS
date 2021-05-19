@@ -29,7 +29,6 @@
     <string name="description_overview">Viser loopens nåværende tilstand og knapper for de vanligste funksjonene</string>
     <string name="description_persistent_notification">Viser en konstant melding med en kort oppsummering av hva loop gjør</string>
     <string name="description_profile_local">Definer en profil som er tilgjengelig offline.</string>
-    <string name="description_profile_nightscout">Bruker profiler som du har definert i Nightscout</string>
     <string name="description_pump_mdi">Integrasjon mot de som kun bruker insulinpenner i sin diabetesbehandling</string>
     <string name="description_pump_virtual">Integrasjon mot pumper som ikke støttes av AndroidAPS (åpen loop)</string>
     <string name="description_sensitivity_aaps">Sensitiviteten beregnes på samme måte som i Oref0, men du kan angi hvor mye av historikken som skal tas med i beregningen. Minimum opptak av karbohydrater beregnes ut fra maks karbohydratopptak angitt i dine innstillinger.</string>
@@ -77,7 +76,6 @@
     <string name="sms_delta">Delta:</string>
     <string name="configbuilder">Konfigurasjonsverktøy</string>
     <string name="overview">Oversikt</string>
-    <string name="nsprofile">NS profil</string>
     <string name="treatments">Behandlinger</string>
     <string name="virtualpump">Virtuell pumpe</string>
     <string name="careportal">Careportal</string>
@@ -93,7 +91,6 @@
     <string name="configbuilder_general_description">Det er noen generelle plugins som kan være nyttige.</string>
     <string name="configbuilder_constraints_description">Hvilke begrensninger brukes?</string>
     <string name="constraints">Begrensninger</string>
-    <string name="loop">Loop</string>
     <string name="configbuilder_loop">Loop</string>
     <string name="configbuilder_loop_description">Bruk dette for å aktivere AndroidAPS loop integrasjon.</string>
     <string name="loop_aps_label">APS</string>
@@ -279,7 +276,6 @@
     <string name="localprofile_shortname">LP</string>
     <string name="overview_shortname">HJEM</string>
     <string name="virtualpump_shortname">VPUMP</string>
-    <string name="profileviewer_shortname">NSPROFIL</string>
     <string name="treatments_shortname">BEH</string>
     <string name="objectives_shortname">MÅL</string>
     <string name="wear_shortname">WEAR</string>
@@ -406,8 +402,6 @@
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">Vis BGI</string>
     <string name="wear_showbgi_summary">Legg til BGI i statuslinje</string>
-    <string name="ns_noupload">Ingen opplast til NS</string>
-    <string name="ns_noupload_summary">Alle data som sendes til NS blir slettet. Selv om AAPS er tilknyttet NS, gjøres det ingen endring i NS</string>
     <string name="overview_extendedbolus_cancel_button">Avbryt forlenget bolus</string>
     <string name="doprofileswitch">Gjør profilbytte</string>
     <string name="careportal_sensor_label">Sensor</string>
@@ -422,7 +416,6 @@
     <string name="nsalarm_urgent_staledatavalue_label">Kritisk mangel på data advarsel [min]</string>
     <string name="openapsama_autosens_period">Intervall for autosens [h]</string>
     <string name="openapsama_autosens_period_summary">Antall timer med historiske data for beregning av sensitivitet (absorpsjonstid for KH er ekskludert)</string>
-    <string name="pump">Pumpe</string>
     <string name="openaps">OpenAPS</string>
     <string name="uploader">Opplaster</string>
     <string name="configbuilder_sensitivity">Sensitivitets deteksjon</string>
@@ -564,7 +557,6 @@
     <string name="category">Kategori</string>
     <string name="subcategory">Underkategori</string>
     <string name="bolusrecordedonly">Bolus vil bare bli loggført (ikke levert av pumpe)</string>
-    <string name="ns_autobackfill_summary">Hente manglende BS data fra NS</string>
     <string name="loop_smbsetbypump_label">SMB satt med pumpe</string>
     <string name="overview_show_activity">Aktivitet</string>
     <string name="overview_show_bgi">Blodsukkerpåvirkning</string>
@@ -631,7 +623,6 @@
     <string name="virtualpump_type">Virtuell pumpetype</string>
     <string name="virtualpump_definition">Pumpedefinisjon</string>
     <string name="virtualpump_pump_def">Bolus: Step=%1$s\nForlenget bolus: [Step=%2$s, Varighet=%3$smin-%4$sh]\nBasal: Step=%5$s\nTBR: %6$s (av %7$s), Varighet=%8$smin-%9$sh\n%10$s</string>
-    <string name="ns_autobackfill_title">Auto tilbakefyll BS</string>
     <string name="wear_wizard_settings">Veiviser innstillinger</string>
     <string name="wear_wizard_settings_summary">Beregninger inkludert i resultatet fra veiviseren:</string>
     <string name="wear_display_settings">Visningsinnstillinger</string>
@@ -639,14 +630,12 @@
     <string name="enable_nsclient">Aktiver NSClient</string>
     <string name="welcometosetupwizard">Velkommen til oppsettveiviseren. Den vil lede deg gjennom installasjonsprosessen\n</string>
     <string name="readstatus">Les status</string>
-    <string name="adjustprofileinns">Endringer må gjøres i NS</string>
     <string name="exitwizard">Hopp over oppsettsveiviser</string>
     <string name="setupwizard_loop_description">Trykk på knappen under for å tillate at AndroidAPS foreslår/gjør basal endringer</string>
     <string name="setupwizard_sensitivity_description">Sensitivitets plugin brukes til å oppdage insulinsensitivitet og COB beregninger. For mer info, se:</string>
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
     <string name="nsclientinfotext">NSClient håndterer tilkobling til Nightscout. Du kan hoppe over denne delen nå, men du vil ikke kunne bestå læringsmålene før den er satt opp.</string>
     <string name="diawarning">Husk: nye insulinprofiler krever en DIA på minst 5t. DIA 5-6t på ny profil er lik DIA 3t på gamle insulinprofiler.</string>
-    <string name="setupwizard_profile_description">Vennligst velg kilde for din profil. Hvis pasienten er et barn anbefales det å bruke NS profil. Hvis ingen følger deg på Nightscout anbefales det å bruke en Lokal Profil. Husk at du her kun velger hvor profilen din ligger lagret. For å bruke den må du velge Profilbytte</string>
     <string name="setupwizard_aps_description">Velg en av de tilgjengelige algoritmene. De er sortert fra eldst til nyest. De nyeste algoritmene er vanligvis mer kraftfull og aggressiv. Hvis du er en ny looper kan det være fornuftig å starte med AMA og ikke den siste. Ikke glem å lese OpenAPS dokumentasjonen og konfigurer algoritmen før den brukes.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Vennligst konfigurer din RileyLink under. Etter å ha valgt en RileyLink, vil det være mulig å fortsette konfigureringen når RileyLink statusen er \"Tilkoblet\". Dette kan ta et minutt.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Merk:</b> Du kan fortsette oppsettet når pumpen er satt opp.\n</string>
@@ -758,7 +747,6 @@
     <string name="objectives_button_unstart">Sletting startet</string>
     <string name="doyouwantresetstart">Ønsker du å omstarte læringsmålet? Du vil miste fullførte trinn.</string>
     <string name="setupwizard_units_prompt">Velg enheter som du vil vise verdier i</string>
-    <string name="ns_ploadlocalprofile">Last opp lokale profilendringer til NS</string>
     <string name="dia_short">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>

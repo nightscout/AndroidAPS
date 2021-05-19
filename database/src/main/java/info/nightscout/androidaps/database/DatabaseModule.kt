@@ -2,6 +2,7 @@ package info.nightscout.androidaps.database
 
 import android.content.Context
 import androidx.room.Room
+import androidx.room.RoomDatabase.Callback
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import dagger.Module
@@ -25,6 +26,15 @@ open class DatabaseModule {
  //           .addMigrations(migration6to7)
  //           .addMigrations(migration7to8)
  //           .addMigrations(migration11to12)
+            .addCallback(object : Callback() {
+                override fun onOpen(db: SupportSQLiteDatabase) {
+                    super.onOpen(db)
+                    db.execSQL("CREATE INDEX IF NOT EXISTS `index_temporaryBasals_end` ON `temporaryBasals` (`timestamp` + `duration`)")
+                    db.execSQL("CREATE INDEX IF NOT EXISTS `index_extendedBoluses_end` ON `extendedBoluses` (`timestamp` + `duration`)")
+                    db.execSQL("CREATE INDEX IF NOT EXISTS `index_temporaryTargets_end` ON `temporaryTargets` (`timestamp` + `duration`)")
+                    db.execSQL("CREATE INDEX IF NOT EXISTS `index_carbs_end` ON `carbs` (`timestamp` + `duration`)")
+                }
+            })
             .fallbackToDestructiveMigration()
             .build()
 

@@ -199,14 +199,14 @@ abstract class DanaRS_Packet_History_(
                     danaRHistoryRecord.timestamp = datetimewihtsec.millis
                     var strAlarm = "None"
                     when (paramByte8) {
-                        'P'.toByte() -> strAlarm = "Basal Compare"
-                        'R'.toByte() -> strAlarm = "Empty Reservoir"
-                        'C'.toByte() -> strAlarm = "Check"
-                        'O'.toByte() -> strAlarm = "Occlusion"
-                        'M'.toByte() -> strAlarm = "Basal max"
-                        'D'.toByte() -> strAlarm = "Daily max"
-                        'B'.toByte() -> strAlarm = "Low Battery"
-                        'S'.toByte() -> strAlarm = "Shutdown"
+                        'P'.code.toByte() -> strAlarm = "Basal Compare"
+                        'R'.code.toByte() -> strAlarm = "Empty Reservoir"
+                        'C'.code.toByte() -> strAlarm = "Check"
+                        'O'.code.toByte() -> strAlarm = "Occlusion"
+                        'M'.code.toByte() -> strAlarm = "Basal max"
+                        'D'.code.toByte() -> strAlarm = "Daily max"
+                        'B'.code.toByte() -> strAlarm = "Low Battery"
+                        'S'.code.toByte() -> strAlarm = "Shutdown"
                     }
                     danaRHistoryRecord.alarm = strAlarm
                     danaRHistoryRecord.value = value * 0.01

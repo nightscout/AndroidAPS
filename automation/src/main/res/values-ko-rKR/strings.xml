@@ -21,7 +21,6 @@
     <string name="alreadyset">이미 설정됨</string>
     <string name="profilepercentage">프로파일 퍼센트</string>
     <string name="startprofileforever">프로파일 %1$d%% 시작</string>
-    <string name="startprofile">프로파일 %1$d%%을 %2$d 분 동안 시작</string>
     <string name="percent_u">퍼센트 [%]:</string>
     <string name="sendsmsactionlabel">SMS 전송: %1$s</string>
     <string name="sendsmsactiondescription">모든 번호에 SMS 전송</string>

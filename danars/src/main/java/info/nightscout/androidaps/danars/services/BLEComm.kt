@@ -452,7 +452,7 @@ class BLEComm @Inject internal constructor(
     // 1st packet response
     private fun processConnectResponse(decryptedBuffer: ByteArray) {
         // response OK v1
-        if (decryptedBuffer.size == 4 && decryptedBuffer[2] == 'O'.toByte() && decryptedBuffer[3] == 'K'.toByte()) {
+        if (decryptedBuffer.size == 4 && decryptedBuffer[2] == 'O'.code.toByte() && decryptedBuffer[3] == 'K'.code.toByte()) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK (OK)" + " " + DanaRS_Packet.toHexString(decryptedBuffer))
             v3Encryption = false
             danaPump.v3RSPump = false
@@ -466,7 +466,7 @@ class BLEComm @Inject internal constructor(
                 sendPairingRequest()
             }
             // response OK v3
-        } else if (decryptedBuffer.size == 9 && decryptedBuffer[2] == 'O'.toByte() && decryptedBuffer[3] == 'K'.toByte()) {
+        } else if (decryptedBuffer.size == 9 && decryptedBuffer[2] == 'O'.code.toByte() && decryptedBuffer[3] == 'K'.code.toByte()) {
             // v3 2nd layer encryption
             v3Encryption = true
             danaPump.v3RSPump = true
@@ -485,7 +485,7 @@ class BLEComm @Inject internal constructor(
                 sendEasyMenuCheck()
             }
             // response PUMP : error status
-        } else if (decryptedBuffer.size == 6 && decryptedBuffer[2] == 'P'.toByte() && decryptedBuffer[3] == 'U'.toByte() && decryptedBuffer[4] == 'M'.toByte() && decryptedBuffer[5] == 'P'.toByte()) {
+        } else if (decryptedBuffer.size == 6 && decryptedBuffer[2] == 'P'.code.toByte() && decryptedBuffer[3] == 'U'.code.toByte() && decryptedBuffer[4] == 'M'.code.toByte() && decryptedBuffer[5] == 'P'.code.toByte()) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK (PUMP)" + " " + DanaRS_Packet.toHexString(decryptedBuffer))
             mSendQueue.clear()
             rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, resourceHelper.gs(R.string.pumperror)))
@@ -493,7 +493,7 @@ class BLEComm @Inject internal constructor(
             val n = Notification(Notification.PUMP_ERROR, resourceHelper.gs(R.string.pumperror), Notification.URGENT)
             rxBus.send(EventNewNotification(n))
             // response BUSY: error status
-        } else if (decryptedBuffer.size == 6 && decryptedBuffer[2] == 'B'.toByte() && decryptedBuffer[3] == 'U'.toByte() && decryptedBuffer[4] == 'S'.toByte() && decryptedBuffer[5] == 'Y'.toByte()) {
+        } else if (decryptedBuffer.size == 6 && decryptedBuffer[2] == 'B'.code.toByte() && decryptedBuffer[3] == 'U'.code.toByte() && decryptedBuffer[4] == 'S'.code.toByte() && decryptedBuffer[5] == 'Y'.code.toByte()) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK (BUSY)" + " " + DanaRS_Packet.toHexString(decryptedBuffer))
             mSendQueue.clear()
             rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, resourceHelper.gs(R.string.pumpbusy)))

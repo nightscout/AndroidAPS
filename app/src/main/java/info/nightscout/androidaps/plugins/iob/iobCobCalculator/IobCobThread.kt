@@ -81,7 +81,7 @@ class IobCobThread @Inject internal constructor(
             //log.debug("Locking calculateSensitivityData");
             val oldestTimeWithData = iobCobCalculatorPlugin.calculateDetectionStart(end, limitDataToOldestAvailable)
             if (bgDataReload) {
-                iobCobCalculatorPlugin.ads.loadBgData(end, repository, aapsLogger, dateUtil)
+                iobCobCalculatorPlugin.ads.loadBgData(end, repository, aapsLogger, dateUtil, rxBus)
                 iobCobCalculatorPlugin.clearCache()
             }
             // work on local copy and set back when finished

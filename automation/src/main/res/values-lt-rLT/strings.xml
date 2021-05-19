@@ -22,7 +22,6 @@
     <string name="alreadyset">Jau nustatyta</string>
     <string name="profilepercentage">Profilio procentas</string>
     <string name="startprofileforever">Pradėti profilį %1$d%%</string>
-    <string name="startprofile">Pradėti profilį %1$d%% %2$d min</string>
     <string name="percent_u">Procentais [%]:</string>
     <string name="sendsmsactionlabel">Siųsti SMS: %1$s</string>
     <string name="sendsmsactiondescription">Siųsti SMS į visus numerius</string>

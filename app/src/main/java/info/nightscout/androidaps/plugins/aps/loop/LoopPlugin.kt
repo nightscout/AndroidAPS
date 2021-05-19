@@ -54,6 +54,7 @@ import info.nightscout.androidaps.extensions.buildDeviceStatus
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.convertedToPercent
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes
+import info.nightscout.androidaps.plugins.aps.events.EventLoopInvoked
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -286,7 +287,7 @@ open class LoopPlugin @Inject constructor(
             if (apsResult == null) {
                 rxBus.send(EventLoopSetLastRunGui(resourceHelper.gs(R.string.noapsselected)))
                 return
-            }
+            } else rxBus.send(EventLoopInvoked())
 
             // Prepare for pumps using % basals
             if (pump.pumpDescription.tempBasalStyle == PumpDescription.PERCENT && allowPercentage()) {

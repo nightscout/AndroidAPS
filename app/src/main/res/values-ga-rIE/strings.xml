@@ -40,7 +40,6 @@
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_general">Ginearálta</string>
     <string name="constraints">Srianta</string>
-    <string name="loop">Lúb</string>
     <string name="configbuilder_loop">Lúb</string>
     <string name="loop_aps_label">APS</string>
     <string name="overview_calculator_label">Áireamhán</string>
@@ -143,7 +142,6 @@
     <string name="careportal_pb_label">Caidéil ceallraí</string>
     <string name="careportal_age_label">aois:</string>
     <string name="ns_alarmoptions">Aláraim roghanna</string>
-    <string name="pump">Caidéil</string>
     <string name="openaps">OpenAPS</string>
     <string name="openaps_short">OAPS</string>
     <string name="basal_short">BUN</string>

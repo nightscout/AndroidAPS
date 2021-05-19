@@ -15,6 +15,7 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.ExtendedBolus
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.database.transactions.InvalidateExtendedBolusTransaction
 import info.nightscout.androidaps.databinding.TreatmentsExtendedbolusFragmentBinding
@@ -157,7 +158,11 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
                 ${resourceHelper.gs(R.string.extended_bolus)}
                 ${resourceHelper.gs(R.string.date)}: ${dateUtil.dateAndTimeString(extendedBolus.timestamp)}
                 """.trimIndent(), { _: DialogInterface, _: Int ->
-                            uel.log(Action.EXTENDED_BOLUS_REMOVED, Sources.Treatments)
+                            uel.log(Action.EXTENDED_BOLUS_REMOVED, Sources.Treatments,
+                                ValueWithUnit.Timestamp(extendedBolus.timestamp),
+                                ValueWithUnit.Insulin(extendedBolus.amount),
+                                ValueWithUnit.UnitPerHour(extendedBolus.rate),
+                                ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(extendedBolus.duration).toInt()))
                             disposable += repository.runTransactionForResult(InvalidateExtendedBolusTransaction(extendedBolus.id))
                                 .subscribe(
                                     { aapsLogger.debug(LTag.DATABASE, "Removed extended bolus $extendedBolus") },

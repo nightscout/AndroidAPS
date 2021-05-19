@@ -32,7 +32,7 @@
     <string name="objectives_usedisconnectpump">Simulation d\'une douche. Déconnectez la pompe pendant 1h (Appui long sur Boucle Ouverte)</string>
     <string name="objectives_usereconnectpump">... et reconnectez la pompe de la même façon</string>
     <string name="objectives_usetemptarget">Créer une cible temporaire personnalisée avec une durée de 10 min (Appui long sur votre cible actuelle)</string>
-    <string name="objectives_useactions">Dans le Générateur de configuration, activez le plugin Actions, rendez le visible et affichez son contenu dans le menu supérieur</string>
+    <string name="objectives_useactions">Dans la Configuration, activez le plugin Actions, rendez le visible et affichez son contenu dans le menu supérieur</string>
     <string name="objectives_useloop">Affichage du contenu du plugin Boucle</string>
     <string name="objectives_usescale">Modification de l\'échelle du graphique par un appui long sur la courbe de glycémie</string>
     <string name="objectives_button_enter">Entrer</string>

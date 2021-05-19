@@ -29,7 +29,6 @@
     <string name="description_overview">Wyświetla bieżący stan twojej pętli i przyciski dla większości typowych działań</string>
     <string name="description_persistent_notification">Wyświetla bieżące powiadomienia z krótkim omówieniem działania pętli</string>
     <string name="description_profile_local">Zdefiniuj profil, który jest dostępny offline.</string>
-    <string name="description_profile_nightscout">Użycie profilu, który zdefiniowałeś w Nightscout</string>
     <string name="description_pump_mdi">Integracja pompy dla pacjentów podających insulinę w formie wielu zastrzyków dziennie</string>
     <string name="description_pump_virtual">Integracja z pompami, które nie posiadają jeszcze żadnego sterownika (Open Loop)</string>
     <string name="description_sensitivity_aaps">Wrażliwość jest obliczana w taki sam sposób, jak algorytm Oref0, ale możliwe jest podanie okresu z przeszłości. Minimalne wchłanianie węglowodanów jest obliczana na podstawie czasu wchłaniania max carb, określonego w ustawieniu.</string>
@@ -77,7 +76,6 @@
     <string name="sms_delta">Delta:</string>
     <string name="configbuilder">Konfiguracja</string>
     <string name="overview">Przegląd</string>
-    <string name="nsprofile">Profil Nightscout</string>
     <string name="treatments">Terapia</string>
     <string name="virtualpump">Pompa wirtualna</string>
     <string name="careportal">PortalOpieki</string>
@@ -93,7 +91,6 @@
     <string name="configbuilder_general_description">To są główne wtyczki, które mogą okazać się użyteczne.</string>
     <string name="configbuilder_constraints_description">Które ograniczenia są zastosowane?</string>
     <string name="constraints">Ograniczenia</string>
-    <string name="loop">Pętla</string>
     <string name="configbuilder_loop">Pętla</string>
     <string name="configbuilder_loop_description">Użyj tego, aby aktywować integrację pętli AndroidAPS.</string>
     <string name="loop_aps_label">APS</string>
@@ -276,7 +273,6 @@
     <string name="localprofile_shortname">LP</string>
     <string name="overview_shortname">HOME</string>
     <string name="virtualpump_shortname">VPUMP</string>
-    <string name="profileviewer_shortname">NSPROFIL</string>
     <string name="treatments_shortname">TREAT</string>
     <string name="objectives_shortname">OBJ</string>
     <string name="wear_shortname">WEAR</string>
@@ -402,9 +398,6 @@
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">Pokaż BGI</string>
     <string name="wear_showbgi_summary">Dodaj BGI do Linii Statusu</string>
-    <string name="ns_noupload">Brak przesyłania do NS</string>
-    <string name="ns_noupload_summary">Wszystkie dane wysyłane do NS są odrzucane. AAPS jest podłączony do NS, ale nie dokonuje 
- żadnych zmian w NS</string>
     <string name="overview_extendedbolus_cancel_button">Anuluj bolus przedłużony </string>
     <string name="doprofileswitch">Zmień profil</string>
     <string name="careportal_sensor_label">Sensor</string>
@@ -419,7 +412,6 @@
     <string name="nsalarm_urgent_staledatavalue_label">Próg uwaga nieaktualne dane [min]</string>
     <string name="openapsama_autosens_period">Przedział czasowy dla autosens [h]</string>
     <string name="openapsama_autosens_period_summary">Ilość minionych godzin brana pod uwagę do określenia wrażliwości \"sensitivity\" (wyklucza się czas wchłaniania węglowodanów)</string>
-    <string name="pump">Pompa</string>
     <string name="openaps">OpenAPS</string>
     <string name="uploader">Uploader</string>
     <string name="configbuilder_sensitivity">Detekcja wrażliwości (sensitivity)</string>
@@ -560,7 +552,6 @@
     <string name="category">Kategoria</string>
     <string name="subcategory">Podkategoria</string>
     <string name="bolusrecordedonly">Bolus zostanie jedynie odnotowany (nie będzie podany przez pompę)</string>
-    <string name="ns_autobackfill_summary">Automatycznie wypełnij brakujące BG z NS</string>
     <string name="loop_smbsetbypump_label">SMB ustawiony przez pompę</string>
     <string name="overview_show_activity">Aktywność</string>
     <string name="overview_show_sensitivity">Wrażliwość</string>
@@ -626,7 +617,6 @@
     <string name="virtualpump_type">Pompa wirtualna</string>
     <string name="virtualpump_definition">Definicja Pompy</string>
     <string name="virtualpump_pump_def">Bolus: Krok =%1$s\nBolus Przedłużony: [krok =%2$s, czas trwania =%3$smin -%4$sh] \nBasal: krok =%5$s\nTBR: %6$s (przez %7$s), czas trwania =%8$smin -%9$sh\n%10$s</string>
-    <string name="ns_autobackfill_title">Automatycznie uzupełnij BG</string>
     <string name="wear_wizard_settings">Ustawienia kreatora</string>
     <string name="wear_wizard_settings_summary">Obliczenia uwzględnione w wynikach kreatora:</string>
     <string name="wear_display_settings">Ustawienia wyświetlania</string>
@@ -634,14 +624,12 @@
     <string name="enable_nsclient">Włącz NSClient</string>
     <string name="welcometosetupwizard">Witaj w kreatorze konfiguracji. Poprowadzi Cię on przez proces instalacji\n</string>
     <string name="readstatus">Odczyt stanu</string>
-    <string name="adjustprofileinns">Zmiany muszą być dokonane w NS</string>
     <string name="exitwizard">Pomiń Kreatora konfiguracji</string>
     <string name="setupwizard_loop_description">Naciśnij przycisk poniżej, by umożliwić AndroidAPS wprowadzenie zmian insuliny bazowej</string>
     <string name="setupwizard_sensitivity_description">Wtyczka wrażliwości używana jest w celu określenia wrażliwości i kalkulacji COB. Więcej informacji na:</string>
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
     <string name="nsclientinfotext">NSClient obsługuje połączenia z Nightscout. Można teraz pominąć tę część, ale nie będziesz mógł wykonać Zadań (programu do nauki), dopóki nie dokończysz tej konfiguracji.</string>
     <string name="diawarning">Pamiętaj: nowe profile insuliny wymagają ustawienia DIA (czas działania insuliny) powyżej 5h. DIA między 5-6h na nowym profilu odpowiada 3h DIA na starych profilach insuliny.</string>
-    <string name="setupwizard_profile_description">Proszę wybrać źródło profilu. Jeśli pacjent jest dzieckiem, należy skorzystać z profilu Nightscout. Jeśli nikt nie obserwuje twojej terapii przez Nightscout, prawdopodobnie wolisz profil Lokalny. Przypomnienie - wybierasz tylko źródło profilu. Musisz go później aktywować za pomocą \"Przełącznika profilu\"</string>
     <string name="setupwizard_aps_description">Wybierz jeden z dostępnych algorytmów. Ułożone są one od najstarszych do najnowszych. Nowszy algorytm jest zazwyczaj bardziej wydajny i agresywny. Jeśli jesteś nowym użytkownikiem, lepiej zacznij od zaawansowanego asystenta posiłku AMA, a nie od najnowszego algorytmu. Zapoznaj się koniecznie z dokumentacją OpenAPS przed wybraniem odpowiedniego algorytmu i jego konfiguracją.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Proszę skonfigurować RileyLink poniżej. Po wybraniu RileyLink, możliwe będzie kontynuowanie konfiguracji, gdy status RileyLink będzie \"Połączony\". To może zająć minutę.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Uwaga:</b> Możesz kontynuować konfigurację po skonfigurowaniu pompy.\n</string>
@@ -753,7 +741,6 @@
     <string name="objectives_button_unstart">Wyczyść rozpoczęte</string>
     <string name="doyouwantresetstart">Czy chcesz zresetować czas rozpoczęcia zadania? Możesz utracić postępy.</string>
     <string name="setupwizard_units_prompt">Wybierz jednostki, w których chcesz wyświetlać wartości</string>
-    <string name="ns_ploadlocalprofile">Prześlij zmiany w profilu lokalnym do NS</string>
     <string name="dia_short">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>

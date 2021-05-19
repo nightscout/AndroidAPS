@@ -21,7 +21,6 @@
     <string name="alreadyset">已使用</string>
     <string name="profilepercentage">配置文件的百分比</string>
     <string name="startprofileforever">启动配置文件 %1$d%%</string>
-    <string name="startprofile">启动配置文件 %1$d%%在 %2$d 分钟</string>
     <string name="percent_u">百分百(%)</string>
     <string name="sendsmsactionlabel">发送 SMS: %1$s</string>
     <string name="sendsmsactiondescription">将 SMS 发送到所有号码</string>

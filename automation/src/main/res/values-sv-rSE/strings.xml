@@ -23,7 +23,6 @@
     <string name="alreadyset">Redan satt</string>
     <string name="profilepercentage">Procent av profil</string>
     <string name="startprofileforever">Byt till profil %1$d%%</string>
-    <string name="startprofile">Byt till profil %1$d%% i %2$d min</string>
     <string name="percent_u">Procent [%]:</string>
     <string name="sendsmsactionlabel">Skicka SMS: %1$s</string>
     <string name="sendsmsactiondescription">Skicka SMS till alla nummer</string>

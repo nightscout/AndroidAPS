@@ -22,9 +22,9 @@ class JSONFormatter @Inject constructor(
         val visitor = JsonVisitor(1, '\t')
         return try {
             when {
-                jsonString == "undefined"                   -> fromHtml("undefined")
-                jsonString.toByteArray()[0] == '['.toByte() -> fromHtml(visitor.visit(JSONArray(jsonString), 0))
-                else                                        -> fromHtml(visitor.visit(JSONObject(jsonString), 0))
+                jsonString == "undefined"                        -> fromHtml("undefined")
+                jsonString.toByteArray()[0] == '['.code.toByte() -> fromHtml(visitor.visit(JSONArray(jsonString), 0))
+                else                                             -> fromHtml(visitor.visit(JSONObject(jsonString), 0))
             }
         } catch (e: JSONException) {
             aapsLogger.error("Unhandled exception", e)
