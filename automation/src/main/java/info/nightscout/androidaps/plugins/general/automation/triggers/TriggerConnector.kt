@@ -19,6 +19,7 @@ import org.json.JSONObject
 import java.util.*
 
 class TriggerConnector(injector: HasAndroidInjector) : Trigger(injector) {
+
     var list: MutableList<Trigger> = ArrayList()
     private var connectorType: Type = Type.AND
 
@@ -40,6 +41,7 @@ class TriggerConnector(injector: HasAndroidInjector) : Trigger(injector) {
             }
 
         companion object {
+
             fun labels(resourceHelper: ResourceHelper): List<String> {
                 val list: MutableList<String> = ArrayList()
                 for (t in values()) {
@@ -79,16 +81,12 @@ class TriggerConnector(injector: HasAndroidInjector) : Trigger(injector) {
         return result
     }
 
-    @Synchronized override fun toJSON(): String {
+    override fun dataJSON(): JSONObject {
         val array = JSONArray()
         for (t in list) array.put(t.toJSON())
-        val data = JSONObject()
+        return JSONObject()
             .put("connectorType", connectorType.toString())
             .put("triggerList", array)
-        return JSONObject()
-            .put("type", TriggerConnector::class.java.name)
-            .put("data", data)
-            .toString()
     }
 
     override fun fromJSON(data: String): Trigger {

@@ -1,0 +1,96 @@
+package info.nightscout.androidaps.plugins.general.overview.graphExtensions
+
+import android.content.Context
+import android.graphics.Color
+import info.nightscout.androidaps.Constants
+import info.nightscout.androidaps.core.R
+import info.nightscout.androidaps.interfaces.Profile
+import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.androidaps.interfaces.GlucoseUnit
+import info.nightscout.androidaps.interfaces.Interval
+import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.utils.Translator
+import info.nightscout.androidaps.utils.resources.ResourceHelper
+import javax.inject.Inject
+
+class TherapyEventDataPoint @Inject constructor(
+    val data: TherapyEvent,
+    private val resourceHelper: ResourceHelper,
+    private val profileFunction: ProfileFunction,
+    private val translator: Translator
+) : DataPointWithLabelInterface, Interval {
+
+    private var yValue = 0.0
+
+    override fun getX(): Double {
+        return data.timestamp.toDouble()
+    }
+
+    override fun getY(): Double {
+        val units = profileFunction.getUnits()
+        if (data.type == TherapyEvent.Type.NS_MBG) return Profile.fromMgdlToUnits(data.glucose!!, units)
+        if (data.glucose != null && data.glucose != 0.0) {
+            var mmol = 0.0
+            var mgdl = 0.0
+            if (units == GlucoseUnit.MGDL) {
+                mgdl = data.glucose!!
+                mmol = data.glucose!! * Constants.MGDL_TO_MMOLL
+            }
+            if (units == GlucoseUnit.MMOL) {
+                mmol = data.glucose!!
+                mgdl = data.glucose!! * Constants.MMOLL_TO_MGDL
+            }
+            return Profile.toUnits(mgdl, mmol, units)
+        }
+        return yValue
+    }
+
+    override fun setY(y: Double) {
+        yValue = y
+    }
+
+    override fun getLabel(): String? =
+        if (data.note != null) data.note
+        else translator.translate(data.type)
+
+    override fun getDuration(): Long = end() - start()
+    override fun getShape(): PointsWithLabelGraphSeries.Shape =
+        when {
+            data.type == TherapyEvent.Type.NS_MBG                -> PointsWithLabelGraphSeries.Shape.MBG
+            data.type == TherapyEvent.Type.FINGER_STICK_BG_VALUE -> PointsWithLabelGraphSeries.Shape.BGCHECK
+            data.type == TherapyEvent.Type.ANNOUNCEMENT          -> PointsWithLabelGraphSeries.Shape.ANNOUNCEMENT
+            data.type == TherapyEvent.Type.APS_OFFLINE           -> PointsWithLabelGraphSeries.Shape.OPENAPSOFFLINE
+            data.type == TherapyEvent.Type.EXERCISE              -> PointsWithLabelGraphSeries.Shape.EXERCISE
+            duration > 0                                         -> PointsWithLabelGraphSeries.Shape.GENERALWITHDURATION
+            else                                                 -> PointsWithLabelGraphSeries.Shape.GENERAL
+        }
+
+    override fun getSize(): Float = if (resourceHelper.gb(R.bool.isTablet)) 12.0f else 10.0f
+    override fun getColor(context: Context): Int =
+        when (data.type) {
+            TherapyEvent.Type.ANNOUNCEMENT          -> resourceHelper.getAttributeColor(context, R.attr.therapyeventAnnouncement)
+            TherapyEvent.Type.NS_MBG                -> resourceHelper.getAttributeColor(context, R.attr.therapyeventNsmbg)
+            TherapyEvent.Type.FINGER_STICK_BG_VALUE -> resourceHelper.getAttributeColor(context, R.attr.therapyeventFingerstick)
+            TherapyEvent.Type.EXERCISE              -> resourceHelper.getAttributeColor(context, R.attr.therapyeventExercise)
+            TherapyEvent.Type.APS_OFFLINE           -> resourceHelper.getAttributeColor(context, R.attr.therapyeventAapsoffline)
+            else                                    -> resourceHelper.getAttributeColor(context, R.attr.therapyeventDefault)
+        }
+
+    // Interval interface
+    private var cutEnd: Long? = null
+
+    override fun durationInMsec(): Long = data.duration
+    override fun start(): Long = data.timestamp
+    override fun originalEnd(): Long = data.timestamp + durationInMsec()
+    override fun end(): Long = cutEnd ?: originalEnd()
+    override fun cutEndTo(end: Long) {
+        cutEnd = end
+    }
+
+    override fun match(time: Long): Boolean = start() <= time && end() >= time
+    override fun before(time: Long): Boolean = end() < time
+    override fun after(time: Long): Boolean = start() > time
+    override val isInProgress: Boolean get() = match(System.currentTimeMillis())
+    override val isEndingEvent: Boolean get() = durationInMsec() == 0L
+    override val isValid: Boolean get() = data.type == TherapyEvent.Type.APS_OFFLINE
+}

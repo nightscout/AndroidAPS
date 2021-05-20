@@ -3,13 +3,14 @@ package info.nightscout.androidaps.plugins.source
 import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
-import info.nightscout.androidaps.interfaces.BgSourceInterface
+import info.nightscout.androidaps.interfaces.BgSource
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
@@ -17,7 +18,6 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSgv
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
@@ -44,7 +44,7 @@ class NSClientSourcePlugin @Inject constructor(
     .pluginName(R.string.nsclientbg)
     .description(R.string.description_source_ns_client),
     aapsLogger, resourceHelper, injector
-), BgSourceInterface {
+), BgSource {
 
     private var lastBGTimeStamp: Long = 0
     private var isAdvancedFilteringEnabled = false
@@ -60,6 +60,8 @@ class NSClientSourcePlugin @Inject constructor(
     override fun advancedFilteringSupported(): Boolean {
         return isAdvancedFilteringEnabled
     }
+
+    override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean = false
 
     private fun detectSource(glucoseValue: GlucoseValue) {
         if (glucoseValue.timestamp > lastBGTimeStamp) {
@@ -85,7 +87,6 @@ class NSClientSourcePlugin @Inject constructor(
         @Inject lateinit var aapsLogger: AAPSLogger
         @Inject lateinit var sp: SP
         @Inject lateinit var rxBus: RxBusWrapper
-        @Inject lateinit var nsUpload: NSUpload
         @Inject lateinit var dateUtil: DateUtil
         @Inject lateinit var dataWorker: DataWorker
         @Inject lateinit var repository: AppRepository
@@ -103,7 +104,7 @@ class NSClientSourcePlugin @Inject constructor(
                 timestamp = sgv.mills ?: return null,
                 value = sgv.mgdl?.toDouble() ?: return null,
                 noise = null,
-                raw = sgv.filtered?.toDouble() ?:  sgv.mgdl?.toDouble(),
+                raw = sgv.filtered?.toDouble() ?: sgv.mgdl?.toDouble(),
                 trendArrow = GlucoseValue.TrendArrow.fromString(sgv.direction),
                 nightscoutId = sgv.id,
                 sourceSensor = GlucoseValue.SourceSensor.fromString(sgv.device)
@@ -114,10 +115,10 @@ class NSClientSourcePlugin @Inject constructor(
         override fun doWork(): Result {
             var ret = Result.success()
 
-            if (!nsClientSourcePlugin.isEnabled() && !sp.getBoolean(R.string.key_ns_autobackfill, true) && !dexcomPlugin.isEnabled()) return Result.failure()
+            if (!nsClientSourcePlugin.isEnabled() && !sp.getBoolean(R.string.key_ns_receive_cgm, true) && !dexcomPlugin.isEnabled()) return Result.success()
 
             val sgvs = dataWorker.pickupJSONArray(inputData.getLong(DataWorker.STORE_KEY, -1))
-                ?: return Result.failure()
+                ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
             try {
                 var latestDateInReceivedData: Long = 0
@@ -126,12 +127,12 @@ class NSClientSourcePlugin @Inject constructor(
                 val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
                 for (i in 0 until sgvs.length()) {
                     val sgv = toGv(sgvs.getJSONObject(i)) ?: continue
-                    if (sgv.timestamp < dateUtil._now() && sgv.timestamp > latestDateInReceivedData) latestDateInReceivedData = sgv.timestamp
+                    if (sgv.timestamp < dateUtil.now() && sgv.timestamp > latestDateInReceivedData) latestDateInReceivedData = sgv.timestamp
                     glucoseValues += sgv
 
                 }
                 // Was that sgv more less 5 mins ago ?
-                if (T.msecs(dateUtil._now() - latestDateInReceivedData).mins() < 5L) {
+                if (T.msecs(dateUtil.now() - latestDateInReceivedData).mins() < 5L) {
                     rxBus.send(EventDismissNotification(Notification.NS_ALARM))
                     rxBus.send(EventDismissNotification(Notification.NS_URGENT_ALARM))
                 }
@@ -140,25 +141,25 @@ class NSClientSourcePlugin @Inject constructor(
 
                 repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null, !nsClientSourcePlugin.isEnabled()))
                     .doOnError {
-                        aapsLogger.error("Error while saving values from NSClient App", it)
-                        ret = Result.failure()
+                        aapsLogger.error(LTag.DATABASE, "Error while saving values from NSClient App", it)
+                        ret = Result.failure(workDataOf("Error" to it.toString()))
                     }
                     .blockingGet()
                     .also { result ->
                         result.updated.forEach {
                             broadcastToXDrip(it)
                             nsClientSourcePlugin.detectSource(it)
-                            aapsLogger.debug(LTag.BGSOURCE, "Updated bg $it")
+                            aapsLogger.debug(LTag.DATABASE, "Updated bg $it")
                         }
                         result.inserted.forEach {
                             broadcastToXDrip(it)
                             nsClientSourcePlugin.detectSource(it)
-                            aapsLogger.debug(LTag.BGSOURCE, "Inserted bg $it")
+                            aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
                         }
                     }
             } catch (e: Exception) {
                 aapsLogger.error("Unhandled exception", e)
-                ret = Result.failure()
+                ret = Result.failure(workDataOf("Error" to e.toString()))
             }
             // Objectives 0
             sp.putBoolean(R.string.key_ObjectivesbgIsAvailableInNS, true)

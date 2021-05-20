@@ -27,7 +27,6 @@
     <string name="description_overview">현재 Loop 상태와 기본 기능 버튼을 표시합니다.</string>
     <string name="description_persistent_notification">Loop가 어떤 작동하는지에 대한 간략한 개요를 연속 알림으로 보여줍니다.</string>
     <string name="description_profile_local">오프라인에서 사용 가능한 프로파일을 정의하십시오.</string>
-    <string name="description_profile_nightscout">Nightscout에서 정의한 프로필을 사용합니다.</string>
     <string name="description_pump_mdi">다회요법으로 관리하는 사용자를 위한 설정</string>
     <string name="description_pump_virtual">가상용 펌프를 위한 설정(Open Loop)</string>
     <string name="description_sensitivity_aaps">Oref0와 동일한 방법으로 민감도가 계산되지만, 과거 시간을 지정할 수 있습니다. 최소 탄수화물 흡수는 설정에서 최대 탄수화물 흡수 시간으로 부터 계산됩니다.</string>
@@ -73,7 +72,6 @@
     <string name="sms_delta">Delta:</string>
     <string name="configbuilder">구성 관리자</string>
     <string name="overview">홈</string>
-    <string name="nsprofile">NS 프로파일</string>
     <string name="treatments">관리</string>
     <string name="virtualpump">가상펌프</string>
     <string name="careportal">케어포털</string>
@@ -89,7 +87,6 @@
     <string name="configbuilder_general_description">유용한 여러가지 플러그인</string>
     <string name="configbuilder_constraints_description">어떤 제약을 적용합니까?</string>
     <string name="constraints">제한</string>
-    <string name="loop">Loop</string>
     <string name="configbuilder_loop">Loop</string>
     <string name="configbuilder_loop_description">AndroidAPS의 Loop를 활성하기 위해서 이것을 사용하세요.</string>
     <string name="loop_aps_label">APS</string>
@@ -234,7 +231,6 @@
     <string name="localprofile_shortname">LP</string>
     <string name="overview_shortname">홈</string>
     <string name="virtualpump_shortname">VPUMP</string>
-    <string name="profileviewer_shortname">NSPROFILE</string>
     <string name="treatments_shortname">TREAT</string>
     <string name="objectives_shortname">OBJ</string>
     <string name="wear_shortname">WEAR</string>
@@ -321,8 +317,6 @@
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">BGI 보기</string>
     <string name="wear_showbgi_summary">BGI를 상태라인에 추가하기</string>
-    <string name="ns_noupload">NS에 업로드하지 않기</string>
-    <string name="ns_noupload_summary">NS로 보낼 모든 데이터가 버려집니다. AAPS는 NS에 연결되어 있지만 NS에는 변화가 없을것입니다.</string>
     <string name="overview_extendedbolus_cancel_button">확장Bolus 취소</string>
     <string name="doprofileswitch">프로파일 변경 실행</string>
     <string name="ns_alarmoptions">알람 옵션</string>
@@ -330,7 +324,6 @@
     <string name="nsalarm_urgent_staledatavalue_label">위험 누락 데이터 기준값 [min]</string>
     <string name="openapsama_autosens_period">autosens 시간 [h]</string>
     <string name="openapsama_autosens_period_summary">민감도를 감지하기 위해 계산될 총 시간 (탄수화물 흡수 시간은 제외됩니다.)</string>
-    <string name="pump">펌프</string>
     <string name="openaps">OpenAPS</string>
     <string name="uploader">업로더</string>
     <string name="configbuilder_sensitivity">민감도 감지</string>
@@ -454,7 +447,6 @@
     <string name="do_not_bolus_record_only">실제 Bolus 주입않고, 기록만 하기</string>
     <string name="category">분류</string>
     <string name="subcategory">하위 분류</string>
-    <string name="ns_autobackfill_summary">NS에서 누락된 혈당이 자동으로 채워집니다.</string>
     <string name="loop_smbsetbypump_label">펌프에 의한 SMB 설정</string>
     <string name="overview_show_activity">활동</string>
     <string name="overview_show_sensitivity">민감도</string>
@@ -520,7 +512,6 @@
     <string name="virtualpump_type">가성펌프 종류</string>
     <string name="virtualpump_definition">펌프 정의</string>
     <string name="virtualpump_pump_def">Bolus: 스텝=%1$s\n확장Bolus: [Step=%2$s, 기간=%3$s분-%4$s시]\nBasal: 스텝=%5$s\n임시Basal: %6$s (by %7$s), 기간=%8$s분-%9$s시\n%10$s</string>
-    <string name="ns_autobackfill_title">혈당 자동채움</string>
     <string name="wear_wizard_settings">마법사 설정</string>
     <string name="wear_wizard_settings_summary">마법사 결과에 사용 된 계산:</string>
     <string name="wear_display_settings">화면 설정</string>
@@ -528,14 +519,12 @@
     <string name="enable_nsclient">NSClient 활성화하기</string>
     <string name="welcometosetupwizard">설정 마법사에 오신것을 환영합니다. 설정 마법사가 설정 과정을 안내하여 줄것입니다.</string>
     <string name="readstatus">상태 불러오기</string>
-    <string name="adjustprofileinns">오직 NS에서 변경해야합니다.</string>
     <string name="exitwizard">설정 마법사 건너뛰기</string>
     <string name="setupwizard_loop_description">AndroidAPS가 Basal 변화를 제안 혹은 실행하게 하려면 아래 버튼을 누르세요.</string>
     <string name="setupwizard_sensitivity_description">민감도 플러그인은 민감도감지와 COB 계산을 위해 사용됩니다. 더 많은 정보는 다름 링크를 방문하세요.</string>
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
     <string name="nsclientinfotext">NSClient는 Nightscout와의 연결을 처리합니다. 이 부분을 건너뛸 수 있지만 설정하기 전엔 목적을 수행할 수 없습니다.</string>
     <string name="diawarning">새로운 인슐린 프로파일은 최소 5시간의 DIA가 요구됩니다. 새로운 프로파일의 DIA 5-6시간은 구식 인슐린 프로파일의 DIA 3시간과 동일합니다.</string>
-    <string name="setupwizard_profile_description">프로파일 소스를 선택해주세요. 당뇨인이 어린이라면 NS 프로파일을 선택하여야 합니다. Nightscout으로 관리해줄 사람이 없다면 당신은 로컬 프로파일을 선호할 수도 있습니다. 여기선 프로파일의 소스를 선택할 뿐이라는 것을 명심하세요. 그 프로파일을 실제 사용하려면 \"프로파일 변경\"을 실행하여 프로파일을 활성화 시켜야합니다.</string>
     <string name="setupwizard_aps_description">사용 가능한 알고리즘 중 하나를 선택하세요. 과거부터 최신의 순으로 정렬이 되어 있습니다. 일반적으로 새로운 알고리즘은 보다 강력하고 공격적입니다. 따라서 당신이 신규 사용자라면 최신의 알고리즘보단 AMA로 시작하는것이 나을 수 있습니다. 사용 전에 OpenAPS 문서를 읽어보고 설정하는 것을 잊지마세요.</string>
     <string name="startobjective">첫번째 목표를 시작하세요.</string>
     <string name="permission">권한</string>
@@ -634,7 +623,6 @@
     <string name="objectives_button_unstart">시작 초기화</string>
     <string name="doyouwantresetstart">목표를 초기화하시겠습니까? 진행상황이 삭제됩니다.</string>
     <string name="setupwizard_units_prompt">사용하시는 혈당 단위를 선택하세요</string>
-    <string name="ns_ploadlocalprofile">로컬 프로파일 변경을 NS에 업로드하기</string>
     <string name="dia_short">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>

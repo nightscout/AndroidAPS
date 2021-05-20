@@ -11,7 +11,7 @@ import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.PopupMenu
 import com.google.gson.Gson
-import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -49,6 +49,7 @@ class OverviewMenus @Inject constructor(
 
 
     companion object {
+
         const val MAX_GRAPHS = 5 // including main
     }
 
@@ -61,12 +62,10 @@ class OverviewMenus @Inject constructor(
         return r.toString()
     }
 
-
-
     private var _setting: MutableList<Array<Boolean>> = ArrayList()
 
     val setting: List<Array<Boolean>>
-     get() = _setting.toMutableList() // implicitly does a list copy
+        get() = _setting.toMutableList() // implicitly does a list copy
 
     private fun storeGraphConfig() {
         val sts = Gson().toJson(_setting)
@@ -74,7 +73,7 @@ class OverviewMenus @Inject constructor(
         aapsLogger.debug(sts)
     }
 
-    private fun loadGraphConfig() {
+    fun loadGraphConfig() {
         val sts = sp.getString(R.string.key_graphconfig, "")
         if (sts.isNotEmpty()) {
             _setting = Gson().fromJson(sts, Array<Array<Boolean>>::class.java).toMutableList()
@@ -91,7 +90,6 @@ class OverviewMenus @Inject constructor(
     }
 
     fun setupChartMenu(chartButton: ImageButton) {
-        loadGraphConfig()
         val settingsCopy = setting
         val numOfGraphs = settingsCopy.size // 1 main + x secondary
 
@@ -102,6 +100,8 @@ class OverviewMenus @Inject constructor(
                 else            -> false
             }
             val popup = PopupMenu(v.context, v)
+
+            val used = arrayListOf<Int>()
 
             for (g in 0 until numOfGraphs) {
                 if (g != 0 && g < numOfGraphs) {
@@ -115,6 +115,7 @@ class OverviewMenus @Inject constructor(
                     var insert = true
                     if (m == CharType.PRE) insert = predictionsAvailable
                     if (m == CharType.DEVSLOPE) insert = buildHelper.isDev()
+                    if (used.contains(m.ordinal)) insert = false
                     if (insert) {
                         val item = popup.menu.add(Menu.NONE, m.ordinal + 100 * (g + 1), Menu.NONE, resourceHelper.gs(m.nameId))
                         val title = item.title
@@ -125,6 +126,7 @@ class OverviewMenus @Inject constructor(
                         item.title = s
                         item.isCheckable = true
                         item.isChecked = settingsCopy[g][m.ordinal]
+                        if (settingsCopy[g][m.ordinal]) used.add(m.ordinal)
                     }
                 }
             }
@@ -136,16 +138,20 @@ class OverviewMenus @Inject constructor(
 
             popup.setOnMenuItemClickListener {
                 // id < 100 graph header - divider 1, 2, 3 .....
-                if (it.itemId == numOfGraphs) {
-                    // add new empty
-                    _setting.add(Array(CharType.values().size) { false })
-                } else if (it.itemId < 100) {
-                    // remove graph
-                    _setting.removeAt(it.itemId)
-                } else {
-                    val graphNumber = it.itemId / 100 - 1
-                    val item = it.itemId % 100
-                    _setting[graphNumber][item] = !it.isChecked
+                when {
+                    it.itemId == numOfGraphs -> {
+                        // add new empty
+                        _setting.add(Array(CharType.values().size) { false })
+                    }
+                    it.itemId < 100          -> {
+                        // remove graph
+                        _setting.removeAt(it.itemId)
+                    }
+                    else                     -> {
+                        val graphNumber = it.itemId / 100 - 1
+                        val item = it.itemId % 100
+                        _setting[graphNumber][item] = !it.isChecked
+                    }
                 }
                 storeGraphConfig()
                 setupChartMenu(chartButton)
@@ -156,6 +162,13 @@ class OverviewMenus @Inject constructor(
             popup.setOnDismissListener { chartButton.setImageResource(R.drawable.ic_arrow_drop_down_white_24dp) }
             popup.show()
         }
+    }
+
+    fun isEnabledIn(type: CharType): Int {
+        val settingsCopy = setting
+        val numOfGraphs = settingsCopy.size // 1 main + x secondary
+        for (g in 0 until numOfGraphs) if (settingsCopy[g][type.ordinal]) return g
+        return -1
     }
 
 }

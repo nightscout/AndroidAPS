@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.general.automation.triggers
 
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
+import org.json.JSONObject
 
 // Used for instantiation of other triggers only
 class TriggerDummy(injector: HasAndroidInjector, val shouldRun: Boolean = false) : Trigger(injector) {
@@ -10,7 +11,7 @@ class TriggerDummy(injector: HasAndroidInjector, val shouldRun: Boolean = false)
         return shouldRun
     }
 
-    override fun toJSON(): String {
+    override fun dataJSON(): JSONObject {
         throw NotImplementedError("An operation is not implemented")
     }
 

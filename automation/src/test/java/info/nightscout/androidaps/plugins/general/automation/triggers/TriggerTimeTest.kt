@@ -21,8 +21,7 @@ class TriggerTimeTest : TriggerTestBase() {
     var now = 1514766900000L
 
     @Before fun mock() {
-        PowerMockito.mockStatic(DateUtil::class.java)
-        PowerMockito.`when`(DateUtil.now()).thenReturn(now)
+        PowerMockito.`when`(dateUtil.now()).thenReturn(now)
     }
 
     @Test fun shouldRunTest() {
@@ -36,7 +35,7 @@ class TriggerTimeTest : TriggerTestBase() {
         Assert.assertFalse(t.shouldRun())
     }
 
-    private var timeJson = "{\"data\":{\"runAt\":1514766840000},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerTime\"}"
+    private var timeJson = "{\"data\":{\"runAt\":1514766840000},\"type\":\"TriggerTime\"}"
     @Test fun toJSONTest() {
         val t: TriggerTime = TriggerTime(injector).runAt(now - T.mins(1).msecs())
         Assert.assertEquals(timeJson, t.toJSON())

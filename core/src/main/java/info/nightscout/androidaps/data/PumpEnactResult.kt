@@ -2,6 +2,7 @@ package info.nightscout.androidaps.data
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.core.R
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -31,11 +32,8 @@ class PumpEnactResult(injector: HasAndroidInjector) {
     var bolusDelivered = 0.0 // real value of delivered insulin
     var carbsDelivered = 0.0 // real value of delivered carbs
     var queued = false
-    fun success(success: Boolean): PumpEnactResult {
-        this.success = success
-        return this
-    }
 
+    fun success(success: Boolean): PumpEnactResult = this.also { this.success = success }
     fun enacted(enacted: Boolean): PumpEnactResult = this.also { it.enacted = enacted }
     fun comment(comment: String): PumpEnactResult = this.also { it.comment = comment }
     fun comment(comment: Int): PumpEnactResult = this.also { it.comment = resourceHelper.gs(comment) }
@@ -150,7 +148,7 @@ class PumpEnactResult(injector: HasAndroidInjector) {
 
             isPercent          -> {
                 // Nightscout is expecting absolute value
-                val abs = Round.roundTo(profile.basal * percent / 100, 0.01)
+                val abs = Round.roundTo(profile.getBasal() * percent / 100, 0.01)
                 result.put("rate", abs)
                 result.put("duration", duration)
             }

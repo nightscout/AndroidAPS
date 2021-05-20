@@ -5,17 +5,20 @@ import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.transactions.InsertTherapyEventAnnouncementTransaction
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.automation.elements.InputString
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationUserMessage
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import org.json.JSONObject
 import javax.inject.Inject
 
@@ -23,7 +26,9 @@ class ActionNotification(injector: HasAndroidInjector) : Action(injector) {
 
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var rxBus: RxBusWrapper
-    @Inject lateinit var nsUpload: NSUpload
+    @Inject lateinit var repository: AppRepository
+
+    private val disposable = CompositeDisposable()
 
     var text = InputString()
 
@@ -34,7 +39,7 @@ class ActionNotification(injector: HasAndroidInjector) : Action(injector) {
     override fun doAction(callback: Callback) {
         val notification = NotificationUserMessage(text.value)
         rxBus.send(EventNewNotification(notification))
-        nsUpload.uploadError(text.value)
+        disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(text.value)).subscribe()
         rxBus.send(EventRefreshOverview("ActionNotification"))
         callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok))?.run()
     }

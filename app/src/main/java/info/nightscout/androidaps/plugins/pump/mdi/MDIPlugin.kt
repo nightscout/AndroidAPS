@@ -3,16 +3,16 @@ package info.nightscout.androidaps.plugins.pump.mdi
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.common.ManufacturerType
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.InstanceId.instanceId
+import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.json.JSONException
 import org.json.JSONObject
@@ -25,14 +25,15 @@ class MDIPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     resourceHelper: ResourceHelper,
     commandQueue: CommandQueueProvider,
-    private val treatmentsPlugin: TreatmentsPlugin
+    private val dateUtil: DateUtil,
+    private val pumpSync: PumpSync
 ) : PumpPluginBase(PluginDescription()
     .mainType(PluginType.PUMP)
     .pluginIcon(R.drawable.ic_ict)
     .pluginName(R.string.mdi)
     .description(R.string.description_pump_mdi),
     injector, aapsLogger, resourceHelper, commandQueue
-), PumpInterface {
+), Pump {
 
     override val pumpDescription = PumpDescription()
 
@@ -60,7 +61,7 @@ class MDIPlugin @Inject constructor(
     override fun waitForDisconnectionInSeconds(): Int = 0
     override fun stopConnecting() {}
     override fun getPumpStatus(reason: String) {}
-    override fun setNewBasalProfile(profile: Profile): PumpEnactResult = PumpEnactResult(injector).success(true)
+    override fun setNewBasalProfile(profile: Profile): PumpEnactResult = PumpEnactResult(injector).success(true).enacted(true)
     override fun isThisProfileSet(profile: Profile): Boolean = false
     override fun lastDataTime(): Long = System.currentTimeMillis()
     override val baseBasalRate: Double = 0.0
@@ -73,12 +74,26 @@ class MDIPlugin @Inject constructor(
         result.bolusDelivered = detailedBolusInfo.insulin
         result.carbsDelivered = detailedBolusInfo.carbs
         result.comment = resourceHelper.gs(R.string.virtualpump_resultok)
-        treatmentsPlugin.addToHistoryTreatment(detailedBolusInfo, false)
+        if (detailedBolusInfo.insulin > 0)
+            pumpSync.syncBolusWithPumpId(
+                timestamp = detailedBolusInfo.timestamp,
+                amount = detailedBolusInfo.insulin,
+                type = detailedBolusInfo.bolusType,
+                pumpId = dateUtil.now(),
+                pumpType = PumpType.MDI,
+                pumpSerial = serialNumber())
+        if (detailedBolusInfo.carbs > 0)
+            pumpSync.syncCarbsWithTimestamp(
+                timestamp = detailedBolusInfo.timestamp + T.mins(detailedBolusInfo.carbTime.toLong()).msecs(),
+                amount = detailedBolusInfo.carbs,
+                pumpId = null,
+                pumpType = PumpType.MDI,
+                pumpSerial = serialNumber())
         return result
     }
 
     override fun stopBolusDelivering() {}
-    override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean): PumpEnactResult {
+    override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         val result = PumpEnactResult(injector)
         result.success = false
         result.comment = resourceHelper.gs(R.string.pumperror)
@@ -86,7 +101,7 @@ class MDIPlugin @Inject constructor(
         return result
     }
 
-    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean): PumpEnactResult {
+    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         val result = PumpEnactResult(injector)
         result.success = false
         result.comment = resourceHelper.gs(R.string.pumperror)
@@ -127,10 +142,10 @@ class MDIPlugin @Inject constructor(
             status.put("status", "normal")
             extended.put("Version", version)
             extended.put("ActiveProfile", profileName)
-            status.put("timestamp", DateUtil.toISOString(now))
+            status.put("timestamp", dateUtil.toISOString(now))
             pump.put("status", status)
             pump.put("extended", extended)
-            pump.put("clock", DateUtil.toISOString(now))
+            pump.put("clock", dateUtil.toISOString(now))
         } catch (e: JSONException) {
             aapsLogger.error("Exception: ", e)
         }

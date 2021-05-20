@@ -5,9 +5,9 @@ import com.google.common.base.Charsets
 import com.google.common.hash.Hashing
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
-import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.database.entities.UserEntry.*
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -25,9 +25,10 @@ class ObjectivesPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     resourceHelper: ResourceHelper,
-    private val activePlugin: ActivePluginProvider,
+    private val activePlugin: ActivePlugin,
     private val sp: SP,
     config: Config,
+    private val dateUtil: DateUtil,
     private val uel: UserEntryLogger
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.CONSTRAINTS)
@@ -39,7 +40,7 @@ class ObjectivesPlugin @Inject constructor(
     .shortName(R.string.objectives_shortname)
     .description(R.string.description_objectives),
     aapsLogger, resourceHelper, injector
-), ConstraintsInterface {
+), Constraints {
 
     var objectives: MutableList<Objective> = ArrayList()
 
@@ -121,29 +122,29 @@ class ObjectivesPlugin @Inject constructor(
 
     fun completeObjectives(activity: FragmentActivity, request: String) {
         val requestCode = sp.getString(R.string.key_objectives_request_code, "")
-        var url = sp.getString(R.string.key_nsclientinternal_url, "").toLowerCase(Locale.getDefault())
+        var url = sp.getString(R.string.key_nsclientinternal_url, "").lowercase(Locale.getDefault())
         if (!url.endsWith("/")) url = "$url/"
         @Suppress("DEPRECATION") val hashNS = Hashing.sha1().hashString(url + BuildConfig.APPLICATION_ID + "/" + requestCode, Charsets.UTF_8).toString()
         if (request.equals(hashNS.substring(0, 10), ignoreCase = true)) {
-            sp.putLong("Objectives_" + "openloop" + "_started", DateUtil.now())
-            sp.putLong("Objectives_" + "openloop" + "_accomplished", DateUtil.now())
-            sp.putLong("Objectives_" + "maxbasal" + "_started", DateUtil.now())
-            sp.putLong("Objectives_" + "maxbasal" + "_accomplished", DateUtil.now())
-            sp.putLong("Objectives_" + "maxiobzero" + "_started", DateUtil.now())
-            sp.putLong("Objectives_" + "maxiobzero" + "_accomplished", DateUtil.now())
-            sp.putLong("Objectives_" + "maxiob" + "_started", DateUtil.now())
-            sp.putLong("Objectives_" + "maxiob" + "_accomplished", DateUtil.now())
-            sp.putLong("Objectives_" + "autosens" + "_started", DateUtil.now())
-            sp.putLong("Objectives_" + "autosens" + "_accomplished", DateUtil.now())
-            sp.putLong("Objectives_" + "ama" + "_started", DateUtil.now())
-            sp.putLong("Objectives_" + "ama" + "_accomplished", DateUtil.now())
-            sp.putLong("Objectives_" + "smb" + "_started", DateUtil.now())
-            sp.putLong("Objectives_" + "smb" + "_accomplished", DateUtil.now())
-            sp.putLong("Objectives_" + "auto" + "_started", DateUtil.now())
-            sp.putLong("Objectives_" + "auto" + "_accomplished", DateUtil.now())
+            sp.putLong("Objectives_" + "openloop" + "_started", dateUtil.now())
+            sp.putLong("Objectives_" + "openloop" + "_accomplished", dateUtil.now())
+            sp.putLong("Objectives_" + "maxbasal" + "_started", dateUtil.now())
+            sp.putLong("Objectives_" + "maxbasal" + "_accomplished", dateUtil.now())
+            sp.putLong("Objectives_" + "maxiobzero" + "_started", dateUtil.now())
+            sp.putLong("Objectives_" + "maxiobzero" + "_accomplished", dateUtil.now())
+            sp.putLong("Objectives_" + "maxiob" + "_started", dateUtil.now())
+            sp.putLong("Objectives_" + "maxiob" + "_accomplished", dateUtil.now())
+            sp.putLong("Objectives_" + "autosens" + "_started", dateUtil.now())
+            sp.putLong("Objectives_" + "autosens" + "_accomplished", dateUtil.now())
+            sp.putLong("Objectives_" + "ama" + "_started", dateUtil.now())
+            sp.putLong("Objectives_" + "ama" + "_accomplished", dateUtil.now())
+            sp.putLong("Objectives_" + "smb" + "_started", dateUtil.now())
+            sp.putLong("Objectives_" + "smb" + "_accomplished", dateUtil.now())
+            sp.putLong("Objectives_" + "auto" + "_started", dateUtil.now())
+            sp.putLong("Objectives_" + "auto" + "_accomplished", dateUtil.now())
             setupObjectives()
             OKDialog.show(activity, resourceHelper.gs(R.string.objectives), resourceHelper.gs(R.string.codeaccepted))
-            uel.log(Action.OBJECTIVES_SKIPPED)
+            uel.log(Action.OBJECTIVES_SKIPPED, Sources.Objectives)
         } else {
             OKDialog.show(activity, resourceHelper.gs(R.string.objectives), resourceHelper.gs(R.string.codeinvalid))
         }

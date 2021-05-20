@@ -23,7 +23,6 @@
     <string name="alreadyset">Už nastavené</string>
     <string name="profilepercentage">Percentuálny profil</string>
     <string name="startprofileforever">Začiatok profilu %1$d%%</string>
-    <string name="startprofile">Začiatok profilu %1$d%% na %2$d min</string>
     <string name="percent_u">Percentá [%]:</string>
     <string name="sendsmsactionlabel">Poslať SMS: %1$s</string>
     <string name="sendsmsactiondescription">Poslať SMS na všetky čísla</string>

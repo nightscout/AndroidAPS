@@ -35,6 +35,7 @@ class OpenAPSAMAFragment : DaggerFragment() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var openAPSAMAPlugin: OpenAPSAMAPlugin
     @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var jsonFormatter: JSONFormatter
 
     private var _binding: OpenapsamaFragmentBinding? = null
 
@@ -92,30 +93,30 @@ class OpenAPSAMAFragment : DaggerFragment() {
     private fun updateGUI() {
         if (_binding == null) return
         openAPSAMAPlugin.lastAPSResult?.let { lastAPSResult ->
-            binding.result.text = JSONFormatter.format(lastAPSResult.json)
+            binding.result.text = jsonFormatter.format(lastAPSResult.json)
             binding.request.text = lastAPSResult.toSpanned()
         }
         openAPSAMAPlugin.lastDetermineBasalAdapterAMAJS?.let { determineBasalAdapterAMAJS ->
-            binding.glucosestatus.text = JSONFormatter.format(determineBasalAdapterAMAJS.glucoseStatusParam)
-            binding.currenttemp.text = JSONFormatter.format(determineBasalAdapterAMAJS.currentTempParam)
+            binding.glucosestatus.text = jsonFormatter.format(determineBasalAdapterAMAJS.glucoseStatusParam)
+            binding.currenttemp.text = jsonFormatter.format(determineBasalAdapterAMAJS.currentTempParam)
             try {
                 val iobArray = JSONArray(determineBasalAdapterAMAJS.iobDataParam)
-                binding.iobdata.text = TextUtils.concat(resourceHelper.gs(R.string.array_of_elements, iobArray.length()) + "\n", JSONFormatter.format(iobArray.getString(0)))
+                binding.iobdata.text = TextUtils.concat(resourceHelper.gs(R.string.array_of_elements, iobArray.length()) + "\n", jsonFormatter.format(iobArray.getString(0)))
             } catch (e: JSONException) {
                 aapsLogger.error(LTag.APS, "Unhandled exception", e)
                 @Suppress("SetTextI18n")
                 binding.iobdata.text = "JSONException see log for details"
             }
 
-            binding.profile.text = JSONFormatter.format(determineBasalAdapterAMAJS.profileParam)
-            binding.mealdata.text = JSONFormatter.format(determineBasalAdapterAMAJS.mealDataParam)
+            binding.profile.text = jsonFormatter.format(determineBasalAdapterAMAJS.profileParam)
+            binding.mealdata.text = jsonFormatter.format(determineBasalAdapterAMAJS.mealDataParam)
             binding.scriptdebugdata.text = determineBasalAdapterAMAJS.scriptDebug
         }
         if (openAPSAMAPlugin.lastAPSRun != 0L) {
             binding.lastrun.text = dateUtil.dateAndTimeString(openAPSAMAPlugin.lastAPSRun)
         }
         openAPSAMAPlugin.lastAutosensResult.let {
-            binding.autosensdata.text = JSONFormatter.format(it.json())
+            binding.autosensdata.text = jsonFormatter.format(it.json())
         }
     }
 

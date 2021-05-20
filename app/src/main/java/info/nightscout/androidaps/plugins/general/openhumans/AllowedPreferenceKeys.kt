@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.general.openhumans
 
 import java.util.*
 
-fun String.isAllowedKey() = if (startsWith("ConfigBuilder_")) true else allowedKeys.contains(this.toUpperCase(Locale.ROOT))
+fun String.isAllowedKey() = if (startsWith("ConfigBuilder_")) true else allowedKeys.contains(this.uppercase(Locale.ROOT))
 
 private val allowedKeys = """
     absorption
@@ -206,4 +206,4 @@ private val allowedKeys = """
     xdripstatus
     xdripstatus_detailediob
     xdripstatus_showbgi
-""".trimIndent().split("\n").filterNot { it.isBlank() }.map { it.toUpperCase() }
+""".trimIndent().split("\n").filterNot { it.isBlank() }.map { it.uppercase(Locale.getDefault()) }

@@ -5,30 +5,27 @@ import androidx.annotation.NonNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Date;
-
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.dana.DanaFragment;
 import info.nightscout.androidaps.dana.DanaPump;
-import info.nightscout.androidaps.dana.DanaPumpInterface;
 import info.nightscout.androidaps.dana.comm.RecordTypes;
 import info.nightscout.androidaps.danar.services.AbstractDanaRExecutionService;
-import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.db.ExtendedBolus;
-import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventConfigBuilderChange;
 import info.nightscout.androidaps.events.EventPreferenceChange;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.extensions.PumpStateExtensionKt;
+import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.Constraint;
-import info.nightscout.androidaps.interfaces.ConstraintsInterface;
-import info.nightscout.androidaps.interfaces.DanaRInterface;
+import info.nightscout.androidaps.interfaces.Constraints;
+import info.nightscout.androidaps.interfaces.Dana;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
-import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.interfaces.Pump;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
+import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
@@ -49,7 +46,7 @@ import io.reactivex.disposables.CompositeDisposable;
  * Created by mike on 28.01.2018.
  */
 
-public abstract class AbstractDanaRPlugin extends PumpPluginBase implements PumpInterface, DanaRInterface, ConstraintsInterface, DanaPumpInterface {
+public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump, Dana, Constraints {
     protected AbstractDanaRExecutionService sExecutionService;
 
     protected CompositeDisposable disposable = new CompositeDisposable();
@@ -60,10 +57,11 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     protected DanaPump danaPump;
     protected ConstraintChecker constraintChecker;
     protected RxBusWrapper rxBus;
-    protected ActivePluginProvider activePlugin;
+    protected ActivePlugin activePlugin;
     protected SP sp;
     protected DateUtil dateUtil;
     protected AapsSchedulers aapsSchedulers;
+    protected PumpSync pumpSync;
 
     protected AbstractDanaRPlugin(
             HasAndroidInjector injector,
@@ -74,9 +72,10 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
             AapsSchedulers aapsSchedulers,
             CommandQueueProvider commandQueue,
             RxBusWrapper rxBus,
-            ActivePluginProvider activePlugin,
+            ActivePlugin activePlugin,
             SP sp,
-            DateUtil dateUtil
+            DateUtil dateUtil,
+            PumpSync pumpSync
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.PUMP)
@@ -95,6 +94,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
         this.sp = sp;
         this.dateUtil = dateUtil;
         this.aapsSchedulers = aapsSchedulers;
+        this.pumpSync = pumpSync;
     }
 
     @Override protected void onStart() {
@@ -110,6 +110,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
                 .subscribe(event -> {
                     if (event.isChanged(getResourceHelper(), R.string.key_danar_bt_name)) {
                         danaPump.reset();
+                        pumpSync.connectNewPump();
                         getCommandQueue().readStatus("DeviceChanged", null);
                     }
                 })
@@ -214,8 +215,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     }
 
     @NonNull @Override
-    public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean enforceNew) {
-        DanaPump pump = danaPump;
+    public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
         PumpEnactResult result = new PumpEnactResult(getInjector());
         percent = constraintChecker.applyBasalPercentConstraints(new Constraint<>(percent), profile).value();
         if (percent < 0) {
@@ -225,28 +225,36 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
         }
         if (percent > getPumpDescription().getMaxTempPercent())
             percent = getPumpDescription().getMaxTempPercent();
-        long now = System.currentTimeMillis();
-        TemporaryBasal activeTemp = activePlugin.getActiveTreatments().getRealTempBasalFromHistory(now);
-        if (activeTemp != null && activeTemp.percentRate == percent && activeTemp.getPlannedRemainingMinutes() > 4 && !enforceNew) {
+        if (danaPump.isTempBasalInProgress() && danaPump.getTempBasalPercent() == percent && danaPump.getTempBasalRemainingMin() > 4 && !enforceNew) {
             result.enacted(false).success(true).isTempCancel(false)
                     .comment(R.string.ok)
-                    .duration(pump.getTempBasalRemainingMin())
-                    .percent(pump.getTempBasalPercent())
+                    .duration(danaPump.getTempBasalRemainingMin())
+                    .percent(danaPump.getTempBasalPercent())
                     .isPercent(true);
             getAapsLogger().debug(LTag.PUMP, "setTempBasalPercent: Correct value already set");
             return result;
         }
         int durationInHours = Math.max(durationInMinutes / 60, 1);
         boolean connectionOK = sExecutionService.tempBasal(percent, durationInHours);
-        if (connectionOK && pump.isTempBasalInProgress() && pump.getTempBasalPercent() == percent) {
+        if (connectionOK && danaPump.isTempBasalInProgress() && danaPump.getTempBasalPercent() == percent) {
             result.enacted(true)
                     .success(true)
                     .comment(R.string.ok)
                     .isTempCancel(false)
-                    .duration(pump.getTempBasalRemainingMin())
-                    .percent(pump.getTempBasalPercent())
+                    .duration((int) danaPump.getTempBasalDuration())
+                    .percent(danaPump.getTempBasalPercent())
                     .isPercent(true);
             getAapsLogger().debug(LTag.PUMP, "setTempBasalPercent: OK");
+            pumpSync.syncTemporaryBasalWithPumpId(
+                    danaPump.getTempBasalStart(),
+                    danaPump.getTempBasalPercent(),
+                    danaPump.getTempBasalDuration(),
+                    false,
+                    tbrType,
+                    danaPump.getTempBasalStart(),
+                    getPumpDescription().getPumpType(),
+                    serialNumber()
+            );
             return result;
         }
         result.enacted(false).success(false).comment(R.string.tempbasaldeliveryerror);
@@ -256,58 +264,78 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
 
     @NonNull @Override
     public PumpEnactResult setExtendedBolus(double insulin, int durationInMinutes) {
-        DanaPump pump = danaPump;
         insulin = constraintChecker.applyExtendedBolusConstraints(new Constraint<>(insulin)).value();
         // needs to be rounded
         int durationInHalfHours = Math.max(durationInMinutes / 30, 1);
         insulin = Round.roundTo(insulin, getPumpDescription().getExtendedBolusStep());
 
         PumpEnactResult result = new PumpEnactResult(getInjector());
-        ExtendedBolus runningEB = activePlugin.getActiveTreatments().getExtendedBolusFromHistory(System.currentTimeMillis());
-        if (runningEB != null && Math.abs(runningEB.insulin - insulin) < getPumpDescription().getExtendedBolusStep()) {
+        if (danaPump.isExtendedInProgress() && Math.abs(danaPump.getExtendedBolusAmount() - insulin) < getPumpDescription().getExtendedBolusStep()) {
             result.enacted(false)
                     .success(true)
                     .comment(R.string.ok)
-                    .duration(pump.getExtendedBolusRemainingMinutes())
-                    .absolute(pump.getExtendedBolusAbsoluteRate())
+                    .duration(danaPump.getExtendedBolusRemainingMinutes())
+                    .absolute(danaPump.getExtendedBolusAbsoluteRate())
                     .isPercent(false)
                     .isTempCancel(false);
-            getAapsLogger().debug(LTag.PUMP, "setExtendedBolus: Correct extended bolus already set. Current: " + pump.getExtendedBolusAmount() + " Asked: " + insulin);
+            getAapsLogger().debug(LTag.PUMP, "setExtendedBolus: Correct extended bolus already set. Current: " + danaPump.getExtendedBolusAmount() + " Asked: " + insulin);
             return result;
         }
+        if (danaPump.isExtendedInProgress()) {
+            cancelExtendedBolus();
+            if (danaPump.isExtendedInProgress()) {
+                result.enacted(false).success(false);
+                getAapsLogger().debug(LTag.PUMP, "cancelExtendedBolus failed. aborting setExtendedBolus");
+                return result;
+            }
+        }
         boolean connectionOK = sExecutionService.extendedBolus(insulin, durationInHalfHours);
-        if (connectionOK && pump.isExtendedInProgress() && Math.abs(pump.getExtendedBolusAmount() - insulin) < getPumpDescription().getExtendedBolusStep()) {
+        if (connectionOK && danaPump.isExtendedInProgress() && Math.abs(danaPump.getExtendedBolusAmount() - insulin) < getPumpDescription().getExtendedBolusStep()) {
             result.enacted(true)
                     .success(true)
                     .comment(R.string.ok)
                     .isTempCancel(false)
-                    .duration(pump.getExtendedBolusRemainingMinutes())
-                    .absolute(pump.getExtendedBolusAbsoluteRate())
+                    .duration(danaPump.getExtendedBolusRemainingMinutes())
+                    .absolute(danaPump.getExtendedBolusAbsoluteRate())
                     .isPercent(false);
             if (!sp.getBoolean("danar_useextended", false))
-                result.bolusDelivered(pump.getExtendedBolusAmount());
+                result.bolusDelivered(danaPump.getExtendedBolusAmount());
+            pumpSync.syncExtendedBolusWithPumpId(
+                    danaPump.getExtendedBolusStart(),
+                    danaPump.getExtendedBolusAmount(),
+                    danaPump.getExtendedBolusDuration(),
+                    sp.getBoolean("danar_useextended", false),
+                    danaPump.getExtendedBolusStart(),
+                    getPumpDescription().getPumpType(),
+                    serialNumber()
+            );
             getAapsLogger().debug(LTag.PUMP, "setExtendedBolus: OK");
             return result;
         }
         result.enacted(false).success(false).comment(R.string.danar_valuenotsetproperly);
         getAapsLogger().error("setExtendedBolus: Failed to extended bolus");
+        getAapsLogger().error("inProgress: " + danaPump.isExtendedInProgress() + " start: " + danaPump.getExtendedBolusStart() + " amount: " + danaPump.getExtendedBolusAmount() + " duration: " + danaPump.getExtendedBolusDuration());
         return result;
     }
 
     @NonNull @Override
     public PumpEnactResult cancelExtendedBolus() {
         PumpEnactResult result = new PumpEnactResult(getInjector());
-        ExtendedBolus runningEB = activePlugin.getActiveTreatments().getExtendedBolusFromHistory(System.currentTimeMillis());
-        if (runningEB != null) {
+        if (danaPump.isExtendedInProgress()) {
             sExecutionService.extendedBolusStop();
-            result.enacted(true).isTempCancel(true);
-        }
-        if (!danaPump.isExtendedInProgress()) {
-            result.success(true).comment(R.string.ok);
-            getAapsLogger().debug(LTag.PUMP, "cancelExtendedBolus: OK");
+            if (!danaPump.isExtendedInProgress()) {
+                result.success(true).enacted(true).isTempCancel(true);
+                pumpSync.syncStopExtendedBolusWithPumpId(
+                        dateUtil.now(),
+                        dateUtil.now(),
+                        getPumpDescription().getPumpType(),
+                        serialNumber()
+                );
+            } else
+                result.success(false).enacted(false).isTempCancel(true);
         } else {
-            result.success(false).comment(R.string.danar_valuenotsetproperly);
-            getAapsLogger().error("cancelExtendedBolus: Failed to cancel extended bolus");
+            result.success(true).comment(R.string.ok).isTempCancel(true);
+            getAapsLogger().debug(LTag.PUMP, "cancelExtendedBolus: OK");
         }
         return result;
     }
@@ -364,23 +392,22 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
         try {
             battery.put("percent", pump.getBatteryRemaining());
             status.put("status", pump.getPumpSuspended() ? "suspended" : "normal");
-            status.put("timestamp", DateUtil.toISOString(pump.getLastConnection()));
+            status.put("timestamp", dateUtil.toISOString(pump.getLastConnection()));
             extended.put("Version", version);
             if (pump.getLastBolusTime() != 0) {
                 extended.put("LastBolus", dateUtil.dateAndTimeString(pump.getLastBolusTime()));
                 extended.put("LastBolusAmount", pump.getLastBolusAmount());
             }
-            TemporaryBasal tb = activePlugin.getActiveTreatments().getRealTempBasalFromHistory(now);
-            if (tb != null) {
-                extended.put("TempBasalAbsoluteRate", tb.tempBasalConvertedToAbsolute(now, profile));
-                extended.put("TempBasalStart", dateUtil.dateAndTimeString(tb.date));
-                extended.put("TempBasalRemaining", tb.getPlannedRemainingMinutes());
+            PumpSync.PumpState pumpState = pumpSync.expectedPumpState();
+            if (pumpState.getTemporaryBasal() != null) {
+                extended.put("TempBasalAbsoluteRate", PumpStateExtensionKt.convertedToAbsolute(pumpState.getTemporaryBasal(), now, profile));
+                extended.put("TempBasalStart", dateUtil.dateAndTimeString(pumpState.getTemporaryBasal().getTimestamp()));
+                extended.put("TempBasalRemaining", PumpStateExtensionKt.getPlannedRemainingMinutes(pumpState.getTemporaryBasal()));
             }
-            ExtendedBolus eb = activePlugin.getActiveTreatments().getExtendedBolusFromHistory(now);
-            if (eb != null) {
-                extended.put("ExtendedBolusAbsoluteRate", eb.absoluteRate());
-                extended.put("ExtendedBolusStart", dateUtil.dateAndTimeString(eb.date));
-                extended.put("ExtendedBolusRemaining", eb.getPlannedRemainingMinutes());
+            if (pumpState.getExtendedBolus() != null) {
+                extended.put("ExtendedBolusAbsoluteRate", pumpState.getExtendedBolus().getRate());
+                extended.put("ExtendedBolusStart", dateUtil.dateAndTimeString(pumpState.getExtendedBolus().getTimestamp()));
+                extended.put("ExtendedBolusRemaining", PumpStateExtensionKt.getPlannedRemainingMinutes(pumpState.getExtendedBolus()));
             }
             extended.put("BaseBasalRate", getBaseBasalRate());
             try {
@@ -392,7 +419,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
             pumpJson.put("status", status);
             pumpJson.put("extended", extended);
             pumpJson.put("reservoir", (int) pump.getReservoirRemainingUnits());
-            pumpJson.put("clock", DateUtil.toISOString(new Date()));
+            pumpJson.put("clock", dateUtil.toISOString(dateUtil.now()));
         } catch (JSONException e) {
             getAapsLogger().error("Unhandled exception", e);
         }
@@ -459,29 +486,27 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
 
     // Reply for sms communicator
     @NonNull public String shortStatus(boolean veryShort) {
-        DanaPump pump = danaPump;
         String ret = "";
-        if (pump.getLastConnection() != 0) {
-            long agoMilliseconds = System.currentTimeMillis() - pump.getLastConnection();
+        if (danaPump.getLastConnection() != 0) {
+            long agoMilliseconds = System.currentTimeMillis() - danaPump.getLastConnection();
             int agoMin = (int) (agoMilliseconds / 60d / 1000d);
             ret += "LastConn: " + agoMin + " min ago\n";
         }
-        if (pump.getLastBolusTime() != 0) {
-            ret += "LastBolus: " + DecimalFormatter.INSTANCE.to2Decimal(pump.getLastBolusAmount()) + "U @" + android.text.format.DateFormat.format("HH:mm", pump.getLastBolusTime()) + "\n";
+        if (danaPump.getLastBolusTime() != 0) {
+            ret += "LastBolus: " + DecimalFormatter.INSTANCE.to2Decimal(danaPump.getLastBolusAmount()) + "U @" + android.text.format.DateFormat.format("HH:mm", danaPump.getLastBolusTime()) + "\n";
         }
-        TemporaryBasal activeTemp = activePlugin.getActiveTreatments().getRealTempBasalFromHistory(System.currentTimeMillis());
-        if (activeTemp != null) {
-            ret += "Temp: " + activeTemp.toStringFull() + "\n";
+        PumpSync.PumpState pumpState = pumpSync.expectedPumpState();
+        if (pumpState.getTemporaryBasal() != null) {
+            ret += "Temp: " + PumpStateExtensionKt.toStringFull(pumpState.getTemporaryBasal(), dateUtil) + "\n";
         }
-        ExtendedBolus activeExtendedBolus = activePlugin.getActiveTreatments().getExtendedBolusFromHistory(System.currentTimeMillis());
-        if (activeExtendedBolus != null) {
-            ret += "Extended: " + activeExtendedBolus.toString() + "\n";
+        if (pumpState.getExtendedBolus() != null) {
+            ret += "Extended: " + PumpStateExtensionKt.toStringFull(pumpState.getExtendedBolus(), dateUtil) + "\n";
         }
         if (!veryShort) {
-            ret += "TDD: " + DecimalFormatter.INSTANCE.to0Decimal(pump.getDailyTotalUnits()) + " / " + pump.getMaxDailyTotalUnits() + " U\n";
+            ret += "TDD: " + DecimalFormatter.INSTANCE.to0Decimal(danaPump.getDailyTotalUnits()) + " / " + danaPump.getMaxDailyTotalUnits() + " U\n";
         }
-        ret += "Reserv: " + DecimalFormatter.INSTANCE.to0Decimal(pump.getReservoirRemainingUnits()) + "U\n";
-        ret += "Batt: " + pump.getBatteryRemaining() + "\n";
+        ret += "Reserv: " + DecimalFormatter.INSTANCE.to0Decimal(danaPump.getReservoirRemainingUnits()) + "U\n";
+        ret += "Batt: " + danaPump.getBatteryRemaining() + "\n";
         return ret;
     }
     // TODO: daily total constraint

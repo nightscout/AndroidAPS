@@ -21,7 +21,6 @@
     <string name="alreadyset">Já definido</string>
     <string name="profilepercentage">Percentagem do Perfil</string>
     <string name="startprofileforever">Iniciar perfil %1$d%%</string>
-    <string name="startprofile">Iniciar perfil %1$d%% para %2$d min</string>
     <string name="percent_u">Percentagem [%]:</string>
     <string name="sendsmsactionlabel">Enviar SMS: %1$s</string>
     <string name="sendsmsactiondescription">Enviar SMS para todos os números</string>

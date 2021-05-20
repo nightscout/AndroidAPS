@@ -23,7 +23,6 @@
     <string name="alreadyset">Deja setat</string>
     <string name="profilepercentage">Procentajul profilului</string>
     <string name="startprofileforever">Pornește profilul %1$d%%</string>
-    <string name="startprofile">Utilizează profilul %1$d%% pentru %2$d min</string>
     <string name="percent_u">Procent [%]:</string>
     <string name="sendsmsactionlabel">Trimite SMS: %1$s</string>
     <string name="sendsmsactiondescription">Trimite SMS către toate numerele</string>

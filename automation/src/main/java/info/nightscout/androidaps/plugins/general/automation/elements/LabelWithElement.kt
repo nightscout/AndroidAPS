@@ -27,7 +27,6 @@ class LabelWithElement(
         textViewPre.text = textPre
         textViewPre.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT)
-        //textViewPre.setWidth(MainApp.dpToPx(120));
         textViewPre.setPadding(px, px, px, px)
         textViewPre.setTypeface(textViewPre.typeface, Typeface.BOLD)
         textViewPre.setTextColor(resourceHelper.getAttributeColor(null, R.attr.TitleAndLabelTextColor))
@@ -44,7 +43,6 @@ class LabelWithElement(
         textViewPost.text = textPost
         textViewPost.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT)
-        //textViewPost.setWidth(MainApp.dpToPx(45));
         textViewPost.setPadding(px, px, px, px)
         textViewPost.setTypeface(textViewPost.typeface, Typeface.BOLD)
         layout.addView(textViewPost)

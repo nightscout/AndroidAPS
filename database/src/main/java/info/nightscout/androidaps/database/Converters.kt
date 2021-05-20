@@ -5,7 +5,10 @@ import info.nightscout.androidaps.database.data.Block
 import info.nightscout.androidaps.database.data.TargetBlock
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.*
-import info.nightscout.androidaps.database.entities.UserEntry.*
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.serialisation.SealedClassHelper
+import info.nightscout.androidaps.database.serialisation.fromJson
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -18,30 +21,20 @@ class Converters {
     fun toAction(action: String?) = action?.let { Action.fromString(it) }
 
     @TypeConverter
-    fun fromMutableListOfValueWithUnit(values: MutableList<ValueWithUnit>?): String? {
-        if (values == null) return null
-        val jsonArray = JSONArray()
-        values.forEach {
-            if (it.condition) {
-                val jsonObject = JSONObject()
-                jsonObject.put("dValue", it.dValue).put("iValue", it.iValue).put("lValue", it.lValue).put("sValue", it.sValue).put("unit", it.unit.name)
-                jsonArray.put(jsonObject)
-            }
-        }
-        return jsonArray.toString()
-    }
+    fun fromSource(source: Sources?) = source?.name
 
     @TypeConverter
-    fun toMutableListOfValueWithUnit(jsonString: String?): MutableList<ValueWithUnit>? {
-        if (jsonString == null) return null
-        val jsonArray = JSONArray(jsonString)
-        val list = mutableListOf<ValueWithUnit>()
-        for (i in 0 until jsonArray.length()) {
-            val jsonObject = jsonArray.getJSONObject(i)
-            list.add(ValueWithUnit(jsonObject.getDouble("dValue"), jsonObject.getInt("iValue"), jsonObject.getLong("lValue"), jsonObject.getString("sValue"), Units.fromString(jsonObject.getString("unit"))))
-        }
-        return list
-    }
+    fun toSource(source: String?) = source?.let { Sources.fromString(it) }
+
+    @TypeConverter
+    fun fromListOfValueWithUnit(values: List<ValueWithUnit>): String = values.map(::ValueWithUnitWrapper)
+        .let(SealedClassHelper.gson::toJson)
+
+    @TypeConverter
+    fun toMutableListOfValueWithUnit(string: String): List<ValueWithUnit> = SealedClassHelper.gson
+        .fromJson<List<ValueWithUnitWrapper>>(string).map { it.wrapped }
+
+    private class ValueWithUnitWrapper(val wrapped: ValueWithUnit)
 
     @TypeConverter
     fun fromBolusType(bolusType: Bolus.Type?) = bolusType?.name
@@ -86,10 +79,16 @@ class Converters {
     fun toGlucoseType(meterType: String?) = meterType?.let { TherapyEvent.MeterType.valueOf(it) }
 
     @TypeConverter
-    fun fromGlucoseUnit(glucoseUnit: ProfileSwitch.GlucoseUnit?) = glucoseUnit?.name
+    fun fromProfileSwitchGlucoseUnit(glucoseUnit: ProfileSwitch.GlucoseUnit?) = glucoseUnit?.name
 
     @TypeConverter
-    fun toGlucoseUnit(glucoseUnit: String?) = glucoseUnit?.let { ProfileSwitch.GlucoseUnit.valueOf(it) }
+    fun toProfileSwitchGlucoseUnit(glucoseUnit: String?) = glucoseUnit?.let { ProfileSwitch.GlucoseUnit.valueOf(it) }
+
+    @TypeConverter
+    fun fromEffectiveProfileSwitchGlucoseUnit(glucoseUnit: EffectiveProfileSwitch.GlucoseUnit?) = glucoseUnit?.name
+
+    @TypeConverter
+    fun toEffectiveProfileSwitchGlucoseUnit(glucoseUnit: String?) = glucoseUnit?.let { EffectiveProfileSwitch.GlucoseUnit.valueOf(it) }
 
     @TypeConverter
     fun fromTherapyGlucoseUnit(glucoseUnit: TherapyEvent.GlucoseUnit?) = glucoseUnit?.name

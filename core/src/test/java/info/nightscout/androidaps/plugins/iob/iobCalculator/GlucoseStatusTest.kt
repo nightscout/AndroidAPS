@@ -2,7 +2,8 @@ package info.nightscout.androidaps.plugins.iob.iobCalculator
 
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.database.entities.GlucoseValue
-import info.nightscout.androidaps.interfaces.IobCobCalculatorInterface
+import info.nightscout.androidaps.interfaces.IobCobCalculator
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.asRounded
@@ -24,11 +25,17 @@ import java.util.*
  */
 @Suppress("SpellCheckingInspection")
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(DateUtil::class)
+@PrepareForTest(DateUtil::class, AutosensDataStore::class)
 class GlucoseStatusTest : TestBase() {
 
     @Mock lateinit var dateUtil: DateUtil
-    @Mock lateinit var iobCobCalculatorPlugin: IobCobCalculatorInterface
+    @Mock lateinit var iobCobCalculatorPlugin: IobCobCalculator
+    @Mock lateinit var autosensDataStore: AutosensDataStore
+
+    @Before
+    fun prepare() {
+        `when`(iobCobCalculatorPlugin.ads).thenReturn(autosensDataStore)
+    }
 
     @Test fun toStringShouldBeOverloaded() {
         val glucoseStatus = GlucoseStatus(glucose = 0.0, noise = 0.0, delta = 0.0, shortAvgDelta = 0.0, longAvgDelta = 0.0, date = 0)
@@ -41,8 +48,8 @@ class GlucoseStatusTest : TestBase() {
     }
 
     @Test fun calculateValidGlucoseStatus() {
-        PowerMockito.`when`(iobCobCalculatorPlugin.bgReadings).thenReturn(generateValidBgData())
-        val glucoseStatus = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin).glucoseStatusData!!
+        PowerMockito.`when`(autosensDataStore.getBgReadingsDataTableCopy()).thenReturn(generateValidBgData())
+        val glucoseStatus = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin, dateUtil).glucoseStatusData!!
         Assert.assertEquals(214.0, glucoseStatus.glucose, 0.001)
         Assert.assertEquals(-2.0, glucoseStatus.delta, 0.001)
         Assert.assertEquals(-2.5, glucoseStatus.shortAvgDelta, 0.001) // -2 -2.5 -3 deltas are relative to current value
@@ -51,8 +58,8 @@ class GlucoseStatusTest : TestBase() {
     }
 
     @Test fun calculateMostRecentGlucoseStatus() {
-        PowerMockito.`when`(iobCobCalculatorPlugin.bgReadings).thenReturn(generateMostRecentBgData())
-        val glucoseStatus: GlucoseStatus = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin).glucoseStatusData!!
+        PowerMockito.`when`(autosensDataStore.getBgReadingsDataTableCopy()).thenReturn(generateMostRecentBgData())
+        val glucoseStatus: GlucoseStatus = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin, dateUtil).glucoseStatusData!!
         Assert.assertEquals(215.0, glucoseStatus.glucose, 0.001) // (214+216) / 2
         Assert.assertEquals(-1.0, glucoseStatus.delta, 0.001)
         Assert.assertEquals(-1.0, glucoseStatus.shortAvgDelta, 0.001)
@@ -61,8 +68,8 @@ class GlucoseStatusTest : TestBase() {
     }
 
     @Test fun oneRecordShouldProduceZeroDeltas() {
-        PowerMockito.`when`(iobCobCalculatorPlugin.bgReadings).thenReturn(generateOneCurrentRecordBgData())
-        val glucoseStatus: GlucoseStatus = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin).glucoseStatusData!!
+        PowerMockito.`when`(autosensDataStore.getBgReadingsDataTableCopy()).thenReturn(generateOneCurrentRecordBgData())
+        val glucoseStatus: GlucoseStatus = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin, dateUtil).glucoseStatusData!!
         Assert.assertEquals(214.0, glucoseStatus.glucose, 0.001)
         Assert.assertEquals(0.0, glucoseStatus.delta, 0.001)
         Assert.assertEquals(0.0, glucoseStatus.shortAvgDelta, 0.001) // -2 -2.5 -3 deltas are relative to current value
@@ -71,20 +78,20 @@ class GlucoseStatusTest : TestBase() {
     }
 
     @Test fun insufficientDataShouldReturnNull() {
-        PowerMockito.`when`(iobCobCalculatorPlugin.bgReadings).thenReturn(generateInsufficientBgData())
-        val glucoseStatus: GlucoseStatus? = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin).glucoseStatusData
+        PowerMockito.`when`(autosensDataStore.getBgReadingsDataTableCopy()).thenReturn(generateInsufficientBgData())
+        val glucoseStatus: GlucoseStatus? = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin, dateUtil).glucoseStatusData
         Assert.assertEquals(null, glucoseStatus)
     }
 
     @Test fun oldDataShouldReturnNull() {
-        PowerMockito.`when`(iobCobCalculatorPlugin.bgReadings).thenReturn(generateOldBgData())
-        val glucoseStatus: GlucoseStatus? = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin).glucoseStatusData
+        PowerMockito.`when`(autosensDataStore.getBgReadingsDataTableCopy()).thenReturn(generateOldBgData())
+        val glucoseStatus: GlucoseStatus? = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin, dateUtil).glucoseStatusData
         Assert.assertEquals(null, glucoseStatus)
     }
 
     @Test fun returnOldDataIfAllowed() {
-        PowerMockito.`when`(iobCobCalculatorPlugin.bgReadings).thenReturn(generateOldBgData())
-        val glucoseStatus: GlucoseStatus? = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin).getGlucoseStatusData(true)
+        PowerMockito.`when`(autosensDataStore.getBgReadingsDataTableCopy()).thenReturn(generateOldBgData())
+        val glucoseStatus: GlucoseStatus? = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin, dateUtil).getGlucoseStatusData(true)
         Assert.assertNotEquals(null, glucoseStatus)
     }
 
@@ -93,8 +100,8 @@ class GlucoseStatusTest : TestBase() {
     }
 
     @Test fun calculateGlucoseStatusForLibreTestBgData() {
-        PowerMockito.`when`(iobCobCalculatorPlugin.bgReadings).thenReturn(generateLibreTestData())
-        val glucoseStatus: GlucoseStatus = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin).glucoseStatusData!!
+        PowerMockito.`when`(autosensDataStore.getBgReadingsDataTableCopy()).thenReturn(generateLibreTestData())
+        val glucoseStatus: GlucoseStatus = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin, dateUtil).glucoseStatusData!!
         Assert.assertEquals(100.0, glucoseStatus.glucose, 0.001) //
         Assert.assertEquals(-10.0, glucoseStatus.delta, 0.001)
         Assert.assertEquals(-10.0, glucoseStatus.shortAvgDelta, 0.001)
@@ -104,9 +111,8 @@ class GlucoseStatusTest : TestBase() {
 
     @Before
     fun initMocking() {
-        PowerMockito.mockStatic(DateUtil::class.java)
-        PowerMockito.`when`(DateUtil.now()).thenReturn(1514766900000L + T.mins(1).msecs())
-        `when`(iobCobCalculatorPlugin.dataLock).thenReturn(Unit)
+        `when`(dateUtil.now()).thenReturn(1514766900000L + T.mins(1).msecs())
+        `when`(iobCobCalculatorPlugin.ads).thenReturn(autosensDataStore)
     }
 
     // [{"mgdl":214,"mills":1521895773113,"device":"xDrip-DexcomG5","direction":"Flat","filtered":191040,"unfiltered":205024,"noise":1,"rssi":100},{"mgdl":219,"mills":1521896073352,"device":"xDrip-DexcomG5","direction":"Flat","filtered":200160,"unfiltered":209760,"noise":1,"rssi":100},{"mgdl":222,"mills":1521896372890,"device":"xDrip-DexcomG5","direction":"Flat","filtered":207360,"unfiltered":212512,"noise":1,"rssi":100},{"mgdl":220,"mills":1521896673062,"device":"xDrip-DexcomG5","direction":"Flat","filtered":211488,"unfiltered":210688,"noise":1,"rssi":100},{"mgdl":193,"mills":1521896972933,"device":"xDrip-DexcomG5","direction":"Flat","filtered":212384,"unfiltered":208960,"noise":1,"rssi":100},{"mgdl":181,"mills":1521897273336,"device":"xDrip-DexcomG5","direction":"SingleDown","filtered":210592,"unfiltered":204320,"noise":1,"rssi":100},{"mgdl":176,"mills":1521897572875,"device":"xDrip-DexcomG5","direction":"FortyFiveDown","filtered":206720,"unfiltered":197440,"noise":1,"rssi":100},{"mgdl":168,"mills":1521897872929,"device":"xDrip-DexcomG5","direction":"FortyFiveDown","filtered":201024,"unfiltered":187904,"noise":1,"rssi":100},{"mgdl":161,"mills":1521898172814,"device":"xDrip-DexcomG5","direction":"FortyFiveDown","filtered":193376,"unfiltered":178144,"noise":1,"rssi":100},{"mgdl":148,"mills":1521898472879,"device":"xDrip-DexcomG5","direction":"SingleDown","filtered":183264,"unfiltered":161216,"noise":1,"rssi":100},{"mgdl":139,"mills":1521898772862,"device":"xDrip-DexcomG5","direction":"FortyFiveDown","filtered":170784,"unfiltered":148928,"noise":1,"rssi":100},{"mgdl":132,"mills":1521899072896,"device":"xDrip-DexcomG5","direction":"FortyFiveDown","filtered":157248,"unfiltered":139552,"noise":1,"rssi":100},{"mgdl":125,"mills":1521899372834,"device":"xDrip-DexcomG5","direction":"FortyFiveDown","filtered":144416,"unfiltered":129616.00000000001,"noise":1,"rssi":100},{"mgdl":128,"mills":1521899973456,"device":"xDrip-DexcomG5","direction":"Flat","filtered":130240.00000000001,"unfiltered":133536,"noise":1,"rssi":100},{"mgdl":132,"mills":1521900573287,"device":"xDrip-DexcomG5","direction":"Flat","filtered":133504,"unfiltered":138720,"noise":1,"rssi":100},{"mgdl":127,"mills":1521900873711,"device":"xDrip-DexcomG5","direction":"Flat","filtered":136480,"unfiltered":132992,"noise":1,"rssi":100},{"mgdl":127,"mills":1521901180151,"device":"xDrip-DexcomG5","direction":"Flat","filtered":136896,"unfiltered":132128,"noise":1,"rssi":100},{"mgdl":125,"mills":1521901473582,"device":"xDrip-DexcomG5","direction":"Flat","filtered":134624,"unfiltered":129696,"noise":1,"rssi":100},{"mgdl":120,"mills":1521901773597,"device":"xDrip-DexcomG5","direction":"Flat","filtered":130704.00000000001,"unfiltered":123376,"noise":1,"rssi":100},{"mgdl":116,"mills":1521902075855,"device":"xDrip-DexcomG5","direction":"Flat","filtered":126272,"unfiltered":118448,"noise":1,"rssi":100}]

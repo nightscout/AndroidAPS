@@ -13,7 +13,13 @@ import java.util.TimeZone
         entity = GlucoseValue::class,
         parentColumns = ["id"],
         childColumns = ["referenceId"])],
-    indices = [Index("referenceId"), Index("timestamp")])
+    indices = [
+        Index("id"),
+        Index("nightscoutId"),
+        Index("sourceSensor"),
+        Index("referenceId"),
+        Index("timestamp")
+    ])
 data class GlucoseValue(
     @PrimaryKey(autoGenerate = true)
     override var id: Long = 0,
@@ -93,11 +99,11 @@ data class GlucoseValue(
         @SerializedName("Random") RANDOM("Random"),
         @SerializedName("Unknown") UNKNOWN("Unknown"),
 
-        @SerializedName("IOBPrediction") IOB_PREDICTION("IOBPrediction"),
-        @SerializedName("aCOBPrediction") aCOB_PREDICTION("aCOBPrediction"),
-        @SerializedName("COBPrediction") COB_PREDICTION("COBPrediction"),
-        @SerializedName("UAMPrediction") UAM_PREDICTION("UAMPrediction"),
-        @SerializedName("ZTPrediction") ZT_PREDICTION("ZTPrediction")
+        IOB_PREDICTION("IOBPrediction"),
+        A_COB_PREDICTION("aCOBPrediction"),
+        COB_PREDICTION("COBPrediction"),
+        UAM_PREDICTION("UAMPrediction"),
+        ZT_PREDICTION("ZTPrediction"),
         ;
 
         companion object {

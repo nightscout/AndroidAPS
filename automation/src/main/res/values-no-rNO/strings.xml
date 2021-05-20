@@ -23,7 +23,6 @@
     <string name="alreadyset">Allerede angitt</string>
     <string name="profilepercentage">Profil prosent</string>
     <string name="startprofileforever">Start profil %1$d%%</string>
-    <string name="startprofile">Start profil %1$d%% i %2$d min</string>
     <string name="percent_u">Prosent [%]:</string>
     <string name="sendsmsactionlabel">Send SMS: %1$s</string>
     <string name="sendsmsactiondescription">Send SMS til alle numre</string>

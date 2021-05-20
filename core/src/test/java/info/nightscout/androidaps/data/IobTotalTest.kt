@@ -1,16 +1,29 @@
 package info.nightscout.androidaps.data
 
+import android.content.Context
 import info.nightscout.androidaps.utils.DateUtil
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.Mock
 import org.powermock.modules.junit4.PowerMockRunner
 
 @Suppress("SpellCheckingInspection")
 @RunWith(PowerMockRunner::class)
 class IobTotalTest {
 
-    var now = DateUtil.now()
+    @Mock lateinit var context: Context
+
+    lateinit var dateUtil: DateUtil
+    var now = 0L
+
+    @Before
+    fun prepare() {
+        dateUtil = DateUtil(context)
+        now = dateUtil.now()
+    }
+
     @Test fun copyTest() {
         val a = IobTotal(now)
         a.iob = 10.0
@@ -94,11 +107,11 @@ class IobTotalTest {
         a.netInsulin = 16.0
         a.extendedBolusInsulin = 17.0
         try {
-            val j = a.json()
+            val j = a.json(dateUtil)
             Assert.assertEquals(a.iob, j.getDouble("iob"), 0.0000001)
             Assert.assertEquals(a.basaliob, j.getDouble("basaliob"), 0.0000001)
             Assert.assertEquals(a.activity, j.getDouble("activity"), 0.0000001)
-            Assert.assertEquals(now.toFloat(), DateUtil.fromISODateString(j.getString("time")).time.toFloat(), 1000f)
+            Assert.assertEquals(now, dateUtil.fromISODateString(j.getString("time")))
         } catch (e: Exception) {
             Assert.fail("Exception: " + e.message)
         }
@@ -116,13 +129,13 @@ class IobTotalTest {
         a.extendedBolusInsulin = 17.0
         a.iobWithZeroTemp = IobTotal(now)
         try {
-            val j = a.determineBasalJson()
+            val j = a.determineBasalJson(dateUtil)
             Assert.assertEquals(a.iob, j.getDouble("iob"), 0.0000001)
             Assert.assertEquals(a.basaliob, j.getDouble("basaliob"), 0.0000001)
             Assert.assertEquals(a.bolussnooze, j.getDouble("bolussnooze"), 0.0000001)
             Assert.assertEquals(a.activity, j.getDouble("activity"), 0.0000001)
             Assert.assertEquals(0, j.getLong("lastBolusTime"))
-            Assert.assertEquals(now.toFloat(), DateUtil.fromISODateString(j.getString("time")).time.toFloat(), 1000f)
+            Assert.assertEquals(now, dateUtil.fromISODateString(j.getString("time")))
             Assert.assertNotNull(j.getJSONObject("iobWithZeroTemp"))
         } catch (e: Exception) {
             Assert.fail("Exception: " + e.message)

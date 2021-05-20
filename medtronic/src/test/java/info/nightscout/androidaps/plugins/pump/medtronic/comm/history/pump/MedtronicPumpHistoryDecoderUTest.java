@@ -11,7 +11,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.util.List;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.AAPSLoggerTest;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
@@ -35,7 +35,7 @@ public class MedtronicPumpHistoryDecoderUTest {
     AAPSLogger aapsLogger = new AAPSLoggerTest();
     RxBusWrapper rxBusWrapper = new RxBusWrapper(new TestAapsSchedulers());
     @Mock ResourceHelper resourceHelper;
-    @Mock(answer = Answers.RETURNS_DEEP_STUBS) ActivePluginProvider activePluginProvider;
+    @Mock(answer = Answers.RETURNS_DEEP_STUBS) ActivePlugin activePlugin;
     @Mock RileyLinkUtil rileyLinkUtil;
     @Mock SP sp;
     MedtronicPumpStatus medtronicPumpStatus;

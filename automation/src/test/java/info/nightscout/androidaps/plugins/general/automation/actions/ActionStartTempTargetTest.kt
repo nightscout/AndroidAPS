@@ -5,6 +5,7 @@ import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
 import info.nightscout.androidaps.database.transactions.Transaction
+import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDuration
 import info.nightscout.androidaps.plugins.general.automation.elements.InputTempTarget
 import info.nightscout.androidaps.queue.Callback
@@ -102,7 +103,7 @@ class ActionStartTempTargetTest : ActionsTestBase() {
 
     @Test fun fromJSONTest() {
         sut.fromJSON("{\"value\":100,\"durationInMinutes\":30,\"units\":\"mg/dl\"}")
-        Assert.assertEquals(Constants.MGDL, sut.value.units)
+        Assert.assertEquals(GlucoseUnit.MGDL, sut.value.units)
         Assert.assertEquals(100.0, sut.value.value, 0.001)
         Assert.assertEquals(30.0, sut.duration.getMinutes().toDouble(), 0.001)
     }

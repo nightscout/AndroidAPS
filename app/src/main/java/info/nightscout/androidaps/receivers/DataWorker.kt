@@ -32,6 +32,12 @@ class DataWorker @Inject constructor(
         return value as Bundle?
     }
 
+    @Synchronized fun pickupObject(key: Long): Any? {
+        val value = store[key]
+        store.remove(key)
+        return value
+    }
+
     @Synchronized fun pickupString(key: Long): String? {
         val value = store[key]
         store.remove(key)

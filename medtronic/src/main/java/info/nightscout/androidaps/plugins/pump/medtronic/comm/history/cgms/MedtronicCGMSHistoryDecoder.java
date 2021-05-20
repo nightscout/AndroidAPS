@@ -22,7 +22,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RecordDeco
 
 public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder<CGMSHistoryEntry> {
 
-    private static final Logger LOG = StacktraceLoggerWrapper.getLogger(LTag.PUMPCOMM);
+    //private static final Logger LOG = StacktraceLoggerWrapper.getLogger(LTag.PUMPCOMM);
 
 
     // CGMSValuesWriter cgmsValuesWriter = null;
@@ -35,7 +35,7 @@ public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder<CGMSHis
         try {
             return decodeRecord(record, false);
         } catch (Exception ex) {
-            LOG.error("     Error decoding: type={}, ex={}", record.getEntryType().name(), ex.getMessage(), ex);
+            //LOG.error("     Error decoding: type={}, ex={}", record.getEntryType().name(), ex.getMessage(), ex);
             return RecordDecodeStatus.Error;
         }
     }
@@ -144,7 +144,7 @@ public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder<CGMSHis
 
                 if (entryType == CGMSHistoryEntryType.None) {
                     this.unknownOpCodes.put(opCode, opCode);
-                    LOG.warn("GlucoseHistoryEntry with unknown code: " + opCode);
+                    //LOG.warn("GlucoseHistoryEntry with unknown code: " + opCode);
 
                     CGMSHistoryEntry pe = new CGMSHistoryEntry();
                     pe.setEntryType(CGMSHistoryEntryType.None);
@@ -208,7 +208,7 @@ public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder<CGMSHis
                     entry.setDateTime(dateTime, getIndex);
             }
 
-            LOG.debug("Record: {}", entry);
+            //LOG.debug("Record: {}", entry);
         }
 
         return reversedOutList;
@@ -274,7 +274,7 @@ public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder<CGMSHis
             return atechDateTime;
 
         } else if (entry.getEntryType().getDateType() == CGMSHistoryEntryType.DateType.SecondSpecific) {
-            LOG.warn("parseDate for SecondSpecific type is not implemented.");
+            //LOG.warn("parseDate for SecondSpecific type is not implemented.");
             throw new RuntimeException();
             // return null;
         } else

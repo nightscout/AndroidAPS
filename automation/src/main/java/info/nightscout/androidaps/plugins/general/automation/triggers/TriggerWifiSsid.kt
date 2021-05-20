@@ -16,12 +16,14 @@ import org.json.JSONObject
 import javax.inject.Inject
 
 class TriggerWifiSsid(injector: HasAndroidInjector) : Trigger(injector) {
+
     @Inject lateinit var receiverStatusStore: ReceiverStatusStore
 
     var ssid = InputString()
     var comparator = Comparator(resourceHelper)
 
-    @Suppress("unused") constructor(injector: HasAndroidInjector, ssid: String, compare: Comparator.Compare) : this(injector) {
+    @Suppress("unused")
+    constructor(injector: HasAndroidInjector, ssid: String, compare: Comparator.Compare) : this(injector) {
         this.ssid = InputString(ssid)
         comparator = Comparator(resourceHelper, compare)
     }
@@ -55,15 +57,10 @@ class TriggerWifiSsid(injector: HasAndroidInjector) : Trigger(injector) {
         return false
     }
 
-    override fun toJSON(): String {
-        val data = JSONObject()
+    override fun dataJSON(): JSONObject =
+        JSONObject()
             .put("ssid", ssid.value)
             .put("comparator", comparator.value.toString())
-        return JSONObject()
-            .put("type", this::class.java.name)
-            .put("data", data)
-            .toString()
-    }
 
     override fun fromJSON(data: String): Trigger {
         val d = JSONObject(data)

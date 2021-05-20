@@ -29,7 +29,6 @@
     <string name="description_overview">Exibe o estado actual do loop e botões para acções mais comuns</string>
     <string name="description_persistent_notification">Mostra uma notificação em curso com um breve resumo do que o seu loop está a fazer</string>
     <string name="description_profile_local">Defina um perfil que está disponível offline.</string>
-    <string name="description_profile_nightscout">Fornece o perfil definido no Nightscout</string>
     <string name="description_pump_mdi">Integração para as pessoas que fazem múltiplas injeções diárias para a sua terapia de diabetes</string>
     <string name="description_pump_virtual">Integração para as bombas que não têm qualquer driver ainda (Open Loop)</string>
     <string name="description_sensitivity_aaps">A sensibilidade é calculada da mesma forma que Oref0, mas pode especificar o período de tempo para o passado. A absorção mínima de hidratos de carbono é calculada a partir do tempo máximo de absorção de hidratos de carbono das preferências.</string>
@@ -77,7 +76,6 @@
     <string name="sms_delta">Delta:</string>
     <string name="configbuilder">Configurador</string>
     <string name="overview">Visão Geral</string>
-    <string name="nsprofile">Perfil NS</string>
     <string name="treatments">Tratamentos</string>
     <string name="virtualpump">Bomba virtual</string>
     <string name="careportal">Careportal</string>
@@ -93,7 +91,6 @@
     <string name="configbuilder_general_description">Estes são alguns plugins gerais que pode achar úteis.</string>
     <string name="configbuilder_constraints_description">Que restrições são aplicadas?</string>
     <string name="constraints">Restrições</string>
-    <string name="loop">Loop</string>
     <string name="configbuilder_loop">Loop</string>
     <string name="configbuilder_loop_description">Utilize isto para activar a integração loop do AndroidAPS.</string>
     <string name="loop_aps_label">APS</string>
@@ -279,7 +276,6 @@
     <string name="localprofile_shortname">PL</string>
     <string name="overview_shortname">Início</string>
     <string name="virtualpump_shortname">BOMBAV</string>
-    <string name="profileviewer_shortname">NSPerfil</string>
     <string name="treatments_shortname">TRATA</string>
     <string name="objectives_shortname">OBJ</string>
     <string name="wear_shortname">WEAR</string>
@@ -406,8 +402,6 @@
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">Mostrar BGI</string>
     <string name="wear_showbgi_summary">Adicionar BGI à linha de status</string>
-    <string name="ns_noupload">Sem envio para NS</string>
-    <string name="ns_noupload_summary">Todos os dados enviados para o NS são descartados. A AAPS está conectada ao NS, mas não é feita nenhuma alteração no NS</string>
     <string name="overview_extendedbolus_cancel_button">Cancelar Bólus Prolongado</string>
     <string name="doprofileswitch">Fazer Mudança De Perfil</string>
     <string name="careportal_sensor_label">Sensor</string>
@@ -422,7 +416,6 @@
     <string name="nsalarm_urgent_staledatavalue_label">Tempo limite para Urgência por dados obsoletos [min]</string>
     <string name="openapsama_autosens_period">Intervalo para autosens [h]</string>
     <string name="openapsama_autosens_period_summary">Quantidade de horas observadas para a deteção de sensibilidade (o tempo de absorção dos hidratos de carbono é excluído)</string>
-    <string name="pump">Bomba</string>
     <string name="openaps">OpenAPS</string>
     <string name="uploader">Uploader</string>
     <string name="configbuilder_sensitivity">Detecção sensibilidade</string>
@@ -564,7 +557,6 @@
     <string name="category">Categoria</string>
     <string name="subcategory">Subcategoria</string>
     <string name="bolusrecordedonly">Bólus será registado apenas (não administrado pela bomba)</string>
-    <string name="ns_autobackfill_summary">Preencher Glicose em falta com NS</string>
     <string name="loop_smbsetbypump_label">SMB definido pela bomba</string>
     <string name="overview_show_activity">Actividade</string>
     <string name="overview_show_bgi">Impacto Glicose</string>
@@ -631,7 +623,6 @@
     <string name="virtualpump_type">Tipo da Bomba Virtual</string>
     <string name="virtualpump_definition">Definição da Bomba</string>
     <string name="virtualpump_pump_def">Bólus: Passo=%1$s\nBólus Prolongado: [Passo=%2$s, Duração=%3$smin -%4$sh] \nBasal: Passo=%5$s\ nDBT: %6$s (por %7$s), Duração=%8$smin-%9$sh\n%10$s</string>
-    <string name="ns_autobackfill_title">Auto-preenchimento Glicose</string>
     <string name="wear_wizard_settings">Definições do Assistente Rápido</string>
     <string name="wear_wizard_settings_summary">Resultado cálculos incluídos no Assistente:</string>
     <string name="wear_display_settings">Definições Ecrã</string>
@@ -639,14 +630,12 @@
     <string name="enable_nsclient">Activar ClienteNS</string>
     <string name="welcometosetupwizard">Bem-vindo ao assistente de configuração. Vai guiá-lo(a) através do processo de instalação\n</string>
     <string name="readstatus">Ler estado</string>
-    <string name="adjustprofileinns">Alterações devem ser feitas no NS</string>
     <string name="exitwizard">Saltar assistente de configuração</string>
     <string name="setupwizard_loop_description">Pressione o botão abaixo para permitir que a AndroidAPS sugira/faça alterações nas basais</string>
     <string name="setupwizard_sensitivity_description">Plugin de Sensibilidade é usado para deteção de sensibilidade e cálculos HCA. Para mais info visite:</string>
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
     <string name="nsclientinfotext">ClienteNS gere a ligação ao Nightscout. Pode saltar esta parte mas não será possível passar os objectivos até que o configure.</string>
     <string name="diawarning">Lembre-se: novos perfis de insulina requerem diâmetro de pelo menos 5h. DIA 5–6h no novo perfil é igual ao diâmetro 3h nos antigos perfis de insulina.</string>
-    <string name="setupwizard_profile_description">Por favor selecione a fonte do perfil. Se o paciente é uma criança deverá utilizar perfil NS. Se ninguém o está a seguir no Nightscout provavelmente preferirá um perfil Local. Lembre-se que apenas está a escolher a fonte de perfil. Para o utilizar terá que o ativar executando \"Troca Perfil\"</string>
     <string name="setupwizard_aps_description">Seleccione um dos algoritmos disponíveis. Eles são classificados do mais antigo para o mais recente. Algoritmo mais recente é geralmente mais forte e mais agressivo. Assim, se é novo looper, poderá provavelmente começar com AMA e não com a versão mais recente. Não se esqueça de ler a documentação de OpenAPS e configurá-lo antes de utilizar.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Por favor, configure o seu RileyLink abaixo. Depois de seleccionar um RileyLink, será possível continuar a configuração quando o estado do RileyLink estiver \"Conectado\". Isso pode levar um minuto.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Nota:</b> Pode continuar a configuração assim que a bomba for configurada.\n</string>
@@ -758,7 +747,6 @@
     <string name="objectives_button_unstart">Limpar iniciado</string>
     <string name="doyouwantresetstart">Deseja reiniciar o objectivo? Pode perder seu progresso.</string>
     <string name="setupwizard_units_prompt">Seleccione as unidades em que deseja exibir os valores</string>
-    <string name="ns_ploadlocalprofile">Carregar as alterações do perfil local para NS</string>
     <string name="dia_short">DIA</string>
     <string name="ic_short">IHC</string>
     <string name="isf_short">FSI</string>

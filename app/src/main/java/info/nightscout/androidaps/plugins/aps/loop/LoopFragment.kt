@@ -98,7 +98,6 @@ class LoopFragment : DaggerFragment() {
             binding.constraintsprocessed.text = it.constraintsProcessed?.toSpanned() ?: ""
             binding.source.text = it.source ?: ""
             binding.lastrun.text = dateUtil.dateAndTimeString(it.lastAPSRun)
-                ?: ""
             binding.smbrequestTime.text = dateUtil.dateAndTimeAndSecondsString(it.lastSMBRequest)
             binding.smbexecutionTime.text = dateUtil.dateAndTimeAndSecondsString(it.lastSMBEnact)
             binding.tbrrequestTime.text = dateUtil.dateAndTimeAndSecondsString(it.lastTBRRequest)

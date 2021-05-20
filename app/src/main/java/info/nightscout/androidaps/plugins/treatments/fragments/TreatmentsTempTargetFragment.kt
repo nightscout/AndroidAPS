@@ -13,20 +13,20 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.entities.TemporaryTarget
-import info.nightscout.androidaps.database.entities.UserEntry.*
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.database.transactions.InvalidateTemporaryTargetTransaction
 import info.nightscout.androidaps.databinding.TreatmentsTemptargetFragmentBinding
 import info.nightscout.androidaps.databinding.TreatmentsTemptargetItemBinding
 import info.nightscout.androidaps.events.EventTempTargetChange
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.UploadQueueInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.plugins.treatments.events.EventTreatmentUpdateGui
 import info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsTempTargetFragment.RecyclerViewAdapter.TempTargetsViewHolder
@@ -36,10 +36,10 @@ import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.Translator
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
-import info.nightscout.androidaps.utils.extensions.friendlyDescription
-import info.nightscout.androidaps.utils.extensions.highValueToUnitsToString
-import info.nightscout.androidaps.utils.extensions.lowValueToUnitsToString
-import info.nightscout.androidaps.utils.extensions.toVisibility
+import info.nightscout.androidaps.extensions.friendlyDescription
+import info.nightscout.androidaps.extensions.highValueToUnitsToString
+import info.nightscout.androidaps.extensions.lowValueToUnitsToString
+import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -57,8 +57,6 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var nsUpload: NSUpload
-    @Inject lateinit var uploadQueue: UploadQueueInterface
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var translator: Translator
     @Inject lateinit var dateUtil: DateUtil
@@ -86,7 +84,7 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
         binding.refreshFromNightscout.setOnClickListener {
             context?.let { context ->
                 OKDialog.showConfirmation(context, resourceHelper.gs(R.string.refresheventsfromnightscout) + " ?", {
-                    uel.log(Action.TT_NS_REFRESH)
+                    uel.log(Action.TT_NS_REFRESH, Sources.Treatments)
                     disposable += Completable.fromAction { repository.deleteAllTempTargetEntries() }
                         .subscribeOn(aapsSchedulers.io)
                         .observeOn(aapsSchedulers.main)
@@ -99,7 +97,7 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
                 })
             }
         }
-        val nsUploadOnly = sp.getBoolean(R.string.key_ns_upload_only, true) || !buildHelper.isEngineeringMode()
+        val nsUploadOnly = !sp.getBoolean(R.string.key_ns_receive_temp_target, false) || !buildHelper.isEngineeringMode()
         if (nsUploadOnly) binding.refreshFromNightscout.visibility = View.INVISIBLE
         binding.showInvalidated.setOnCheckedChangeListener { _, _ ->
             rxBus.send(EventTreatmentUpdateGui())
@@ -151,9 +149,9 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
         _binding = null
     }
 
-    inner class RecyclerViewAdapter internal constructor(private var tempTargetList: List<TemporaryTarget>) : RecyclerView.Adapter<TempTargetsViewHolder>() {
+    private inner class RecyclerViewAdapter(private var tempTargetList: List<TemporaryTarget>) : RecyclerView.Adapter<TempTargetsViewHolder>() {
 
-        private val dbRecord = repository.getTemporaryTargetActiveAt(dateUtil._now()).blockingGet()
+        private val dbRecord = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
         private val currentlyActiveTarget = if (dbRecord is ValueWrapper.Existing) dbRecord.value else null
 
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): TempTargetsViewHolder =
@@ -170,7 +168,7 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
             holder.binding.duration.text = resourceHelper.gs(R.string.format_mins, T.msecs(tempTarget.duration).mins())
             holder.binding.low.text = tempTarget.lowValueToUnitsToString(units)
             holder.binding.high.text = tempTarget.highValueToUnitsToString(units)
-            holder.binding.reason.text = translator.translate(tempTarget.reason.text)
+            holder.binding.reason.text = translator.translate(tempTarget.reason)
             holder.binding.date.setTextColor(
                 when {
                     tempTarget.id == currentlyActiveTarget?.id  -> resourceHelper.getAttributeColor(context, R.attr.treatmentActive)
@@ -196,15 +194,16 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
                         ${dateUtil.dateAndTimeString(tempTarget.timestamp)}
                         """.trimIndent(),
                             { _: DialogInterface?, _: Int ->
-                                uel.log(Action.TT_REMOVED, ValueWithUnit(tempTarget.timestamp, Units.Timestamp), ValueWithUnit(tempTarget.reason.text, Units.TherapyEvent), ValueWithUnit(tempTarget.lowTarget, Units.Mg_Dl), ValueWithUnit(tempTarget.highTarget, Units.Mg_Dl, tempTarget.lowTarget != tempTarget.highTarget), ValueWithUnit(tempTarget.duration.toInt(), Units.M))
+                                uel.log(Action.TT_REMOVED, Sources.Treatments,
+                                    ValueWithUnit.Timestamp(tempTarget.timestamp),
+                                    ValueWithUnit.TherapyEventTTReason(tempTarget.reason),
+                                    ValueWithUnit.Mgdl(tempTarget.lowTarget),
+                                    ValueWithUnit.Mgdl(tempTarget.highTarget).takeIf { tempTarget.lowTarget != tempTarget.highTarget },
+                                    ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tempTarget.duration).toInt()))
                                 disposable += repository.runTransactionForResult(InvalidateTemporaryTargetTransaction(tempTarget.id))
-                                    .subscribe({
-                                        val id = tempTarget.interfaceIDs.nightscoutId
-                                        if (NSUpload.isIdValid(id)) nsUpload.removeCareportalEntryFromNS(id)
-                                        else uploadQueue.removeByMongoId("dbAdd", tempTarget.timestamp.toString())
-                                    }, {
-                                        aapsLogger.error(LTag.BGSOURCE, "Error while invalidating temporary target", it)
-                                    })
+                                    .subscribe(
+                                        { aapsLogger.debug(LTag.DATABASE, "Removed temp target $tempTarget") },
+                                        { aapsLogger.error(LTag.DATABASE, "Error while invalidating temporary target", it) })
                             }, null)
                     }
                 }

@@ -35,9 +35,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:contentDescription="@string/show_calculation"
+            android:contentDescription="@string/show_removed"
             app:srcCompat="@drawable/ic_visibility" />
-
 
     </LinearLayout>
 

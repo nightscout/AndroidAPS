@@ -3,17 +3,18 @@ package info.nightscout.androidaps.plugins.general.nsclient
 import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.transactions.SyncTherapyEventTransaction
-import info.nightscout.androidaps.interfaces.ConfigInterface
+import info.nightscout.androidaps.database.transactions.SyncNsTherapyEventTransaction
+import info.nightscout.androidaps.extensions.therapyEventFromNsMbg
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSMbg
 import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
-import info.nightscout.androidaps.utils.extensions.therapyEventFromNsMbg
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
 
@@ -27,23 +28,23 @@ class NSClientMbgWorker(
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var sp: SP
     @Inject lateinit var buildHelper: BuildHelper
-    @Inject lateinit var config: ConfigInterface
+    @Inject lateinit var config: Config
 
     override fun doWork(): Result {
         var ret = Result.success()
 
-        val acceptNSData = !sp.getBoolean(R.string.key_ns_upload_only, true) && buildHelper.isEngineeringMode() || config.NSCLIENT
+        val acceptNSData = sp.getBoolean(R.string.key_ns_receive_therapy_events, false) || config.NSCLIENT
         if (!acceptNSData) return ret
 
         val mbgArray = dataWorker.pickupJSONArray(inputData.getLong(DataWorker.STORE_KEY, -1))
-            ?: return Result.failure()
+            ?: return Result.failure(workDataOf("Error" to "missing input data"))
         for (i in 0 until mbgArray.length()) {
             val nsMbg = NSMbg(mbgArray.getJSONObject(i))
             if (!nsMbg.isValid()) continue
-            repository.runTransactionForResult(SyncTherapyEventTransaction(therapyEventFromNsMbg(nsMbg)))
+            repository.runTransactionForResult(SyncNsTherapyEventTransaction(therapyEventFromNsMbg(nsMbg), false))
                 .doOnError {
                     aapsLogger.error("Error while saving therapy event", it)
-                    ret = Result.failure()
+                    ret = Result.failure(workDataOf("Error" to it.toString()))
                 }
                 .blockingGet()
                 .also {

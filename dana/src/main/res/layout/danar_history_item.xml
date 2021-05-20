@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@style/Widget.MaterialComponents.CardView"
     android:id="@+id/danar_history_cardview"
     android:layout_width="match_parent"
@@ -24,71 +25,78 @@
 
 
         <TextView
-            android:id="@+id/danar_history_time"
+            android:id="@+id/time"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:paddingStart="5dp"
-            android:text="27.06.2016 18:00" />
+            android:text="27.06.2016 18:00"
+            tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry" />
 
         <TextView
-            android:id="@+id/danar_history_value"
+            android:id="@+id/value"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:paddingStart="5dp"
             android:text="0.25"
-            android:gravity="right" />
+            android:gravity="right"
+            tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry" />
 
         <TextView
-            android:id="@+id/danar_history_bolustype"
+            android:id="@+id/bolus_type"
             android:layout_width="20dp"
             android:layout_height="wrap_content"
             android:paddingStart="5dp"
             android:text="E"
-/>
+            tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry" />
 
         <TextView
-            android:id="@+id/danar_history_stringvalue"
+            android:id="@+id/string_value"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:paddingStart="5dp"
             android:text="XXXXXXX"
-/>
+            tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry" />
 
         <TextView
-            android:id="@+id/danar_history_duration"
+            android:id="@+id/duration"
             android:layout_width="30dp"
             android:layout_height="wrap_content"
             android:paddingStart="5dp"
             android:text="30"
-            android:gravity="right" />
+            android:gravity="right"
+            tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry" />
 
         <TextView
-            android:id="@+id/danar_history_dailybasal"
+            android:id="@+id/daily_basal"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:paddingStart="5dp"
-            android:gravity="right" />
+            android:gravity="right"
+            tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry" />
 
         <TextView
-            android:id="@+id/danar_history_dailybolus"
+            android:id="@+id/daily_bolus"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:paddingStart="5dp"
-            android:gravity="right" />
+            android:gravity="right"
+            tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry" />
 
         <TextView
-            android:id="@+id/danar_history_dailytotal"
+            android:id="@+id/daily_total"
             android:layout_width="56dp"
             android:layout_height="wrap_content"
             android:paddingStart="10dp"
             android:gravity="right"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry" />
 
         <TextView
-            android:id="@+id/danar_history_alarm"
+            android:id="@+id/alarm"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:paddingStart="5dp" />
+            android:paddingStart="5dp"
+            tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry" />
 
     </LinearLayout>
 

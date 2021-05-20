@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.general.automation.triggers
 
-import android.content.Context
 import android.widget.LinearLayout
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
@@ -9,14 +8,11 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDateTime
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder
 import info.nightscout.androidaps.plugins.general.automation.elements.StaticLabel
-import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.T
 import org.json.JSONObject
-import javax.inject.Inject
 
 class TriggerTime(injector: HasAndroidInjector) : Trigger(injector) {
-    @Inject lateinit var dateUtil: DateUtil
 
     var time = InputDateTime(resourceHelper, dateUtil)
 
@@ -24,7 +20,8 @@ class TriggerTime(injector: HasAndroidInjector) : Trigger(injector) {
         this.time.value = runAt
     }
 
-    @Suppress("unused") constructor(injector: HasAndroidInjector, triggerTime: TriggerTime) : this(injector) {
+    @Suppress("unused")
+    constructor(injector: HasAndroidInjector, triggerTime: TriggerTime) : this(injector) {
         this.time.value = triggerTime.time.value
     }
 
@@ -34,7 +31,7 @@ class TriggerTime(injector: HasAndroidInjector) : Trigger(injector) {
     }
 
     override fun shouldRun(): Boolean {
-        val now = DateUtil.now()
+        val now = dateUtil.now()
         if (now >= time.value && now - time.value < T.mins(5).msecs()) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
             return true
@@ -43,14 +40,9 @@ class TriggerTime(injector: HasAndroidInjector) : Trigger(injector) {
         return false
     }
 
-    override fun toJSON(): String {
-        val data = JSONObject()
+    override fun dataJSON(): JSONObject =
+        JSONObject()
             .put("runAt", time.value)
-        return JSONObject()
-            .put("type", this::class.java.name)
-            .put("data", data)
-            .toString()
-    }
 
     override fun fromJSON(data: String): Trigger {
         val o = JSONObject(data)

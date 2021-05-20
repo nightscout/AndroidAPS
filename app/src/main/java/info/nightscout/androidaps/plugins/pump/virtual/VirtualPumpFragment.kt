@@ -10,24 +10,29 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.VirtualpumpFragmentBinding
 import info.nightscout.androidaps.events.EventExtendedBolusChange
 import info.nightscout.androidaps.events.EventTempBasalChange
+import info.nightscout.androidaps.interfaces.IobCobCalculator
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.virtual.events.EventVirtualPumpUpdateGui
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
-import io.reactivex.rxkotlin.plusAssign
+import info.nightscout.androidaps.extensions.toStringFull
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import javax.inject.Inject
 
 class VirtualPumpFragment : DaggerFragment() {
 
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var virtualPumpPlugin: VirtualPumpPlugin
-    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
+    @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var aapsSchedulers: AapsSchedulers
 
     private val disposable = CompositeDisposable()
@@ -88,10 +93,11 @@ class VirtualPumpFragment : DaggerFragment() {
     @Synchronized
     private fun updateGui() {
         if (_binding == null) return
+        val profile = profileFunction.getProfile() ?: return
         binding.basabasalrate.text = resourceHelper.gs(R.string.pump_basebasalrate, virtualPumpPlugin.baseBasalRate)
-        binding.tempbasal.text = treatmentsPlugin.getTempBasalFromHistory(System.currentTimeMillis())?.toStringFull()
+        binding.tempbasal.text = iobCobCalculator.getTempBasal(dateUtil.now())?.toStringFull(profile, dateUtil)
             ?: ""
-        binding.extendedbolus.text = treatmentsPlugin.getExtendedBolusFromHistory(System.currentTimeMillis())?.toString()
+        binding.extendedbolus.text = iobCobCalculator.getExtendedBolus(dateUtil.now())?.toStringFull(dateUtil)
             ?: ""
         binding.battery.text = resourceHelper.gs(R.string.format_percent, virtualPumpPlugin.batteryPercent)
         binding.reservoir.text = resourceHelper.gs(R.string.formatinsulinunits, virtualPumpPlugin.reservoirInUnits.toDouble())

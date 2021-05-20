@@ -23,9 +23,9 @@ class MsgInitConnStatusBasic(
         danaPump.reservoirRemainingUnits = intFromBuff(bytes, 7, 3) / 750.0
         danaPump.bolusBlocked = intFromBuff(bytes, 10, 1) == 1
         danaPump.currentBasal = intFromBuff(bytes, 11, 2) / 100.0
-        danaPump.tempBasalPercent = intFromBuff(bytes, 13, 1)
-        danaPump.isExtendedInProgress = intFromBuff(bytes, 14, 1) == 1
-        danaPump.isTempBasalInProgress = intFromBuff(bytes, 15, 1) == 1
+        val tempBasalPercent = intFromBuff(bytes, 13, 1)
+        val isExtendedInProgress = intFromBuff(bytes, 14, 1) == 1
+        //val isTempBasalInProgress = intFromBuff(bytes, 15, 1) == 1
         val statusBasalUDOption = intFromBuff(bytes, 16, 1)
         danaPump.isDualBolusInProgress = intFromBuff(bytes, 17, 1) == 1
         val extendedBolusRate = intFromBuff(bytes, 18, 2) / 100.0
@@ -46,8 +46,8 @@ class MsgInitConnStatusBasic(
         aapsLogger.debug(LTag.PUMPCOMM, "Reservoir remaining units: " + danaPump.reservoirRemainingUnits)
         aapsLogger.debug(LTag.PUMPCOMM, "Bolus blocked: " + danaPump.bolusBlocked)
         aapsLogger.debug(LTag.PUMPCOMM, "Current basal: " + danaPump.currentBasal)
-        aapsLogger.debug(LTag.PUMPCOMM, "Current temp basal percent: " + danaPump.tempBasalPercent)
-        aapsLogger.debug(LTag.PUMPCOMM, "Is extended bolus running: " + danaPump.isExtendedInProgress)
+        aapsLogger.debug(LTag.PUMPCOMM, "Current temp basal percent: $tempBasalPercent")
+        aapsLogger.debug(LTag.PUMPCOMM, "Is extended bolus running: $isExtendedInProgress")
         aapsLogger.debug(LTag.PUMPCOMM, "statusBasalUDOption: $statusBasalUDOption")
         aapsLogger.debug(LTag.PUMPCOMM, "Is dual bolus running: " + danaPump.isDualBolusInProgress)
         aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus rate: $extendedBolusRate")

@@ -38,7 +38,6 @@ import info.nightscout.androidaps.plugins.insulin.InsulinOrefRapidActingPlugin
 import info.nightscout.androidaps.plugins.insulin.InsulinOrefUltraRapidActingPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
-import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin
 import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.pump.mdi.MDIPlugin
@@ -151,17 +150,17 @@ abstract class PluginsModule {
     @IntKey(140)
     abstract fun bindComboPlugin(plugin: ComboPlugin): PluginBase
 
-    @Binds
-    @PumpDriver
-    @IntoMap
-    @IntKey(150)
-    abstract fun bindMedtronicPumpPlugin(plugin: MedtronicPumpPlugin): PluginBase
+    // @Binds
+    // @PumpDriver
+    // @IntoMap
+    // @IntKey(150)
+    // abstract fun bindMedtronicPumpPlugin(plugin: MedtronicPumpPlugin): PluginBase
 
-    @Binds
-    @PumpDriver
-    @IntoMap
-    @IntKey(155)
-    abstract fun bindOmnipodPumpPlugin(plugin: OmnipodErosPumpPlugin): PluginBase
+    // @Binds
+    // @PumpDriver
+    // @IntoMap
+    // @IntKey(155)
+    // abstract fun bindOmnipodPumpPlugin(plugin: OmnipodErosPumpPlugin): PluginBase
 
     @Binds
     @NotNSClient
@@ -195,12 +194,6 @@ abstract class PluginsModule {
 
     @Binds
     @AllConfigs
-    @IntoMap
-    @IntKey(230)
-    abstract fun bindNSProfilePlugin(plugin: NSProfilePlugin): PluginBase
-
-    @Binds
-    @NotNSClient
     @IntoMap
     @IntKey(240)
     abstract fun bindLocalProfilePlugin(plugin: LocalProfilePlugin): PluginBase
@@ -349,11 +342,11 @@ abstract class PluginsModule {
     @IntKey(470)
     abstract fun bindRandomBgPlugin(plugin: RandomBgPlugin): PluginBase
 
-    @Binds
-    @NotNSClient
-    @IntoMap
-    @IntKey(480)
-    abstract fun bindOpenHumansPlugin(plugin: OpenHumansUploader): PluginBase
+    // @Binds
+    // @NotNSClient
+    // @IntoMap
+    // @IntKey(480)
+    // abstract fun bindOpenHumansPlugin(plugin: OpenHumansUploader): PluginBase
 
     @Binds
     @AllConfigs

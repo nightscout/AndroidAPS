@@ -10,19 +10,19 @@ import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.transactions.InvalidateAAPSStartedTherapyEventTransaction
 import info.nightscout.androidaps.database.transactions.InvalidateTherapyEventTransaction
-import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.databinding.TreatmentsCareportalFragmentBinding
 import info.nightscout.androidaps.databinding.TreatmentsCareportalItemBinding
 import info.nightscout.androidaps.events.EventTherapyEventChange
-import info.nightscout.androidaps.interfaces.UploadQueueInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.plugins.treatments.events.EventTreatmentUpdateGui
 import info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsCareportalFragment.RecyclerViewAdapter.TherapyEventsViewHolder
@@ -32,7 +32,7 @@ import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.Translator
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
-import info.nightscout.androidaps.utils.extensions.toVisibility
+import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -51,8 +51,6 @@ class TreatmentsCareportalFragment : DaggerFragment() {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var translator: Translator
-    @Inject lateinit var nsUpload: NSUpload
-    @Inject lateinit var uploadQueue: UploadQueueInterface
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var buildHelper: BuildHelper
     @Inject lateinit var aapsSchedulers: AapsSchedulers
@@ -79,7 +77,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
         binding.refreshFromNightscout.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal), resourceHelper.gs(R.string.refresheventsfromnightscout) + " ?", Runnable {
-                    uel.log(Action.CAREPORTAL_NS_REFRESH)
+                    uel.log(Action.CAREPORTAL_NS_REFRESH, Sources.Treatments)
                     disposable += Completable.fromAction { repository.deleteAllTherapyEventsEntries() }
                         .subscribeOn(aapsSchedulers.io)
                         .observeOn(aapsSchedulers.main)
@@ -94,24 +92,17 @@ class TreatmentsCareportalFragment : DaggerFragment() {
         binding.removeAndroidapsStartedEvents.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal), resourceHelper.gs(R.string.careportal_removestartedevents), Runnable {
-                    uel.log(Action.RESTART_EVENTS_REMOVED)
-                    //               val events = databaseHelper.getCareportalEvents(false)
-                    repository.runTransactionForResult(InvalidateAAPSStartedTherapyEventTransaction())
-                        .subscribe({ result ->
-                            result.invalidated.forEach { event ->
-                                if (NSUpload.isIdValid(event.interfaceIDs.nightscoutId))
-                                    nsUpload.removeCareportalEntryFromNS(event.interfaceIDs.nightscoutId)
-                                else
-                                    uploadQueue.removeByMongoId("dbAdd", event.timestamp.toString())
-                            }
-                        }, {
-                            aapsLogger.error(LTag.BGSOURCE, "Error while invalidating therapy event", it)
-                        })
+                    uel.log(Action.RESTART_EVENTS_REMOVED, Sources.Treatments)
+                    repository.runTransactionForResult(InvalidateAAPSStartedTherapyEventTransaction(resourceHelper.gs(R.string.androidaps_start)))
+                        .subscribe(
+                            { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated therapy event $it") } },
+                            { aapsLogger.error(LTag.DATABASE, "Error while invalidating therapy event", it) }
+                        )
                 }, null)
             }
         }
 
-        val nsUploadOnly = sp.getBoolean(R.string.key_ns_upload_only, true) || !buildHelper.isEngineeringMode()
+        val nsUploadOnly = !sp.getBoolean(R.string.key_ns_receive_therapy_events, false) || !buildHelper.isEngineeringMode()
         if (nsUploadOnly) binding.refreshFromNightscout.visibility = View.GONE
         binding.showInvalidated.setOnCheckedChangeListener { _, _ ->
             rxBus.send(EventTreatmentUpdateGui())
@@ -120,28 +111,28 @@ class TreatmentsCareportalFragment : DaggerFragment() {
 
     fun swapAdapter() {
         val now = System.currentTimeMillis()
-        if (binding.showInvalidated.isChecked)
-            repository
-                .getTherapyEventDataIncludingInvalidFromTime(now - millsToThePast, false)
-                .observeOn(aapsSchedulers.main)
-                .subscribe { list -> binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true) }
-        else
-            repository
-                .getTherapyEventDataFromTime(now - millsToThePast, false)
-                .observeOn(aapsSchedulers.main)
-                .subscribe { list -> binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true) }
+        disposable +=
+            if (binding.showInvalidated.isChecked)
+                repository
+                    .getTherapyEventDataIncludingInvalidFromTime(now - millsToThePast, false)
+                    .observeOn(aapsSchedulers.main)
+                    .subscribe { list -> binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true) }
+            else
+                repository
+                    .getTherapyEventDataFromTime(now - millsToThePast, false)
+                    .observeOn(aapsSchedulers.main)
+                    .subscribe { list -> binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true) }
     }
 
     @Synchronized
     override fun onResume() {
         super.onResume()
         swapAdapter()
-        disposable.add(rxBus
+        disposable += rxBus
             .toObservable(EventTherapyEventChange::class.java)
             .observeOn(aapsSchedulers.main)
             .debounce(1L, TimeUnit.SECONDS)
             .subscribe({ swapAdapter() }, fabricPrivacy::logException)
-        )
         disposable += rxBus
             .toObservable(EventTreatmentUpdateGui::class.java) // TODO join with above
             .observeOn(aapsSchedulers.io)
@@ -174,9 +165,9 @@ class TreatmentsCareportalFragment : DaggerFragment() {
             holder.binding.ns.visibility = (therapyEvent.interfaceIDs.nightscoutId != null).toVisibility()
             holder.binding.invalid.visibility = therapyEvent.isValid.not().toVisibility()
             holder.binding.date.text = dateUtil.dateAndTimeString(therapyEvent.timestamp)
-            holder.binding.duration.text = if (therapyEvent.duration == 0L) "" else DateUtil.niceTimeScalar(therapyEvent.duration, resourceHelper)
+            holder.binding.duration.text = if (therapyEvent.duration == 0L) "" else dateUtil.niceTimeScalar(therapyEvent.duration, resourceHelper)
             holder.binding.note.text = therapyEvent.note
-            holder.binding.type.text = translator.translate(therapyEvent.type.text)
+            holder.binding.type.text = translator.translate(therapyEvent.type)
             holder.binding.remove.tag = therapyEvent
         }
 
@@ -192,19 +183,19 @@ class TreatmentsCareportalFragment : DaggerFragment() {
                 binding.remove.setOnClickListener { v: View ->
                     val therapyEvent = v.tag as TherapyEvent
                     activity?.let { activity ->
-                        val text = resourceHelper.gs(R.string.eventtype) + ": " + translator.translate(therapyEvent.type.text) + "\n" +
-                            resourceHelper.gs(R.string.notes_label) + ": " + (therapyEvent.note ?: "") + "\n" +
+                        val text = resourceHelper.gs(R.string.eventtype) + ": " + translator.translate(therapyEvent.type) + "\n" +
+                            resourceHelper.gs(R.string.notes_label) + ": " + (therapyEvent.note
+                            ?: "") + "\n" +
                             resourceHelper.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(therapyEvent.timestamp)
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord), text, Runnable {
-                            uel.log(Action.CAREPORTAL_REMOVED, therapyEvent.note , ValueWithUnit(therapyEvent.timestamp, Units.Timestamp), ValueWithUnit(therapyEvent.type.text, Units.TherapyEvent))
+                            uel.log(Action.CAREPORTAL_REMOVED, Sources.Treatments, therapyEvent.note ,
+                                ValueWithUnit.Timestamp(therapyEvent.timestamp),
+                                ValueWithUnit.TherapyEventType(therapyEvent.type))
                             disposable += repository.runTransactionForResult(InvalidateTherapyEventTransaction(therapyEvent.id))
-                                .subscribe({
-                                    val id = therapyEvent.interfaceIDs.nightscoutId
-                                    if (NSUpload.isIdValid(id)) nsUpload.removeCareportalEntryFromNS(id)
-                                    else uploadQueue.removeByMongoId("dbAdd", therapyEvent.timestamp.toString())
-                                }, {
-                                    aapsLogger.error(LTag.BGSOURCE, "Error while invalidating therapy event", it)
-                                })
+                                .subscribe(
+                                    { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated therapy event $it") } },
+                                    { aapsLogger.error(LTag.DATABASE, "Error while invalidating therapy event", it) }
+                                )
                         }, null)
                     }
                 }

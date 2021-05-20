@@ -6,62 +6,40 @@ import android.graphics.DashPathEffect
 import android.graphics.Paint
 import android.view.ContextThemeWrapper
 import com.jjoe64.graphview.GraphView
-import com.jjoe64.graphview.series.BarGraphSeries
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 import com.jjoe64.graphview.series.Series
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.GlucoseValueDataPoint
-import info.nightscout.androidaps.data.IobTotal
-import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.data.TherapyEventDataPoint
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.ValueWrapper
-import info.nightscout.androidaps.database.entities.GlucoseValue
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
-import info.nightscout.androidaps.interfaces.LoopInterface
+import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.TreatmentsInterface
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults
-import info.nightscout.androidaps.plugins.general.overview.graphExtensions.*
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.DecimalFormatter
+import info.nightscout.androidaps.plugins.general.overview.OverviewData
+import info.nightscout.androidaps.plugins.general.overview.graphExtensions.AreaGraphSeries
+import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DoubleDataPoint
+import info.nightscout.androidaps.plugins.general.overview.graphExtensions.TimeAsXAxisLabelFormatter
+import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.Round
-import info.nightscout.androidaps.utils.extensions.target
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import java.util.*
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.max
-import kotlin.math.min
 
 class GraphData(
-    private val injector: HasAndroidInjector,
-    private val graph: GraphView,
-    private val iobCobCalculatorPlugin: IobCobCalculatorPlugin,
-    private val treatmentsPlugin: TreatmentsInterface
+    injector: HasAndroidInjector,
+    private val graph: GraphView
 ) {
 
-    // IobCobCalculatorPlugin  Cannot be injected: HistoryBrowser
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var activePlugin: ActivePluginProvider
-    @Inject lateinit var databaseHelper: DatabaseHelperInterface
-    @Inject lateinit var repository: AppRepository
-    @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var defaultValueHelper: DefaultValueHelper
+    @Inject lateinit var overviewData: OverviewData
 
     var maxY = Double.MIN_VALUE
     private var minY = Double.MAX_VALUE
-    private var bgReadingsArray: List<GlucoseValue>? = null
-    private val units: String
+    private val units: GlucoseUnit
     private val series: MutableList<Series<*>> = ArrayList()
 
     init {
@@ -69,36 +47,17 @@ class GraphData(
         units = profileFunction.getUnits()
     }
 
-    @Suppress("UNUSED_PARAMETER")
-    fun addBgReadings(fromTime: Long, toTime: Long, lowLine: Double, highLine: Double, predictions: MutableList<GlucoseValueDataPoint>?) {
-        var maxBgValue = Double.MIN_VALUE
-        bgReadingsArray = iobCobCalculatorPlugin.bgReadings
-        if (bgReadingsArray?.isEmpty() != false) {
-            aapsLogger.debug("No BG data.")
-            maxY = if (units == Constants.MGDL) 180.0 else 10.0
-            minY = 0.0
-            return
-        }
-        val bgListArray: MutableList<DataPointWithLabelInterface> = ArrayList()
-        for (bg in bgReadingsArray!!) {
-            if (bg.timestamp < fromTime || bg.timestamp > toTime) continue
-            if (bg.value > maxBgValue) maxBgValue = bg.value
-            bgListArray.add(GlucoseValueDataPoint(injector, bg))
-        }
-        if (predictions != null) {
-            predictions.sortWith(Comparator { o1: GlucoseValueDataPoint, o2: GlucoseValueDataPoint -> o1.x.compareTo(o2.x) })
-            for (prediction in predictions) if (prediction.data.value >= 40) bgListArray.add(prediction)
-        }
-        maxBgValue = Profile.fromMgdlToUnits(maxBgValue, units)
-        maxBgValue = addUpperChartMargin(maxBgValue)
-        if (highLine > maxBgValue) maxBgValue = highLine
-        maxY = maxBgValue
-        minY = 0.0
-        addSeries(PointsWithLabelGraphSeries(Array(bgListArray.size) { i -> bgListArray[i] }))
+    fun addBucketedData() {
+        addSeries(overviewData.bucketedGraphSeries)
     }
 
-    internal fun setNumVerticalLabels() {
-        graph.gridLabelRenderer.numVerticalLabels = if (units == Constants.MGDL) (maxY / 40 + 1).toInt() else (maxY / 2 + 1).toInt()
+    fun addBgReadings(addPredictions: Boolean) {
+        maxY = if (overviewData.bgReadingsArray.isEmpty()) {
+            if (units == GlucoseUnit.MGDL) 180.0 else 10.0
+        } else overviewData.maxBgValue
+        minY = 0.0
+        addSeries(overviewData.bgReadingGraphSeries)
+        if (addPredictions) addSeries(overviewData.predictionsGraphSeries)
     }
 
     private fun addUpperChartMargin(maxBgValue: Double) =
@@ -110,523 +69,112 @@ class GraphData(
             DoubleDataPoint(fromTime.toDouble(), lowLine, highLine),
             DoubleDataPoint(toTime.toDouble(), lowLine, highLine)
         )
-        inRangeAreaSeries = AreaGraphSeries(inRangeAreaDataPoints)
-        inRangeAreaSeries.color = 0
-        inRangeAreaSeries.isDrawBackground = true
-        inRangeAreaSeries.backgroundColor = resourceHelper.getAttributeColor(context, R.attr.inrangeBackground)
-        addSeries(inRangeAreaSeries)
-    }
-
-    // scale in % of vertical size (like 0.3)
-    fun addBasals(fromTime: Long, toTime: Long, scale: Double,context: Context) {
-        var maxBasalValueFound = 0.0
-        val basalScale = Scale()
-        val baseBasalArray: MutableList<ScaledDataPoint> = ArrayList()
-        val tempBasalArray: MutableList<ScaledDataPoint> = ArrayList()
-        val basalLineArray: MutableList<ScaledDataPoint> = ArrayList()
-        val absoluteBasalLineArray: MutableList<ScaledDataPoint> = ArrayList()
-        var lastLineBasal = 0.0
-        var lastAbsoluteLineBasal = -1.0
-        var lastBaseBasal = 0.0
-        var lastTempBasal = 0.0
-        var time = fromTime
-        while (time < toTime) {
-            val profile = profileFunction.getProfile(time)
-            if (profile == null) {
-                time += 60 * 1000L
-                continue
-            }
-            val basalData = iobCobCalculatorPlugin.getBasalData(profile, time)
-            val baseBasalValue = basalData.basal
-            var absoluteLineValue = baseBasalValue
-            var tempBasalValue = 0.0
-            var basal = 0.0
-            if (basalData.isTempBasalRunning) {
-                tempBasalValue = basalData.tempBasalAbsolute
-                absoluteLineValue = tempBasalValue
-                if (tempBasalValue != lastTempBasal) {
-                    tempBasalArray.add(ScaledDataPoint(time, lastTempBasal, basalScale))
-                    tempBasalArray.add(ScaledDataPoint(time, tempBasalValue.also { basal = it }, basalScale))
-                }
-                if (lastBaseBasal != 0.0) {
-                    baseBasalArray.add(ScaledDataPoint(time, lastBaseBasal, basalScale))
-                    baseBasalArray.add(ScaledDataPoint(time, 0.0, basalScale))
-                    lastBaseBasal = 0.0
-                }
-            } else {
-                if (baseBasalValue != lastBaseBasal) {
-                    baseBasalArray.add(ScaledDataPoint(time, lastBaseBasal, basalScale))
-                    baseBasalArray.add(ScaledDataPoint(time, baseBasalValue.also { basal = it }, basalScale))
-                    lastBaseBasal = baseBasalValue
-                }
-                if (lastTempBasal != 0.0) {
-                    tempBasalArray.add(ScaledDataPoint(time, lastTempBasal, basalScale))
-                    tempBasalArray.add(ScaledDataPoint(time, 0.0, basalScale))
-                }
-            }
-            if (baseBasalValue != lastLineBasal) {
-                basalLineArray.add(ScaledDataPoint(time, lastLineBasal, basalScale))
-                basalLineArray.add(ScaledDataPoint(time, baseBasalValue, basalScale))
-            }
-            if (absoluteLineValue != lastAbsoluteLineBasal) {
-                absoluteBasalLineArray.add(ScaledDataPoint(time, lastAbsoluteLineBasal, basalScale))
-                absoluteBasalLineArray.add(ScaledDataPoint(time, basal, basalScale))
-            }
-            lastAbsoluteLineBasal = absoluteLineValue
-            lastLineBasal = baseBasalValue
-            lastTempBasal = tempBasalValue
-            maxBasalValueFound = max(maxBasalValueFound, max(tempBasalValue, baseBasalValue))
-            time += 60 * 1000L
-        }
-
-        // final points
-        basalLineArray.add(ScaledDataPoint(toTime, lastLineBasal, basalScale))
-        baseBasalArray.add(ScaledDataPoint(toTime, lastBaseBasal, basalScale))
-        tempBasalArray.add(ScaledDataPoint(toTime, lastTempBasal, basalScale))
-        absoluteBasalLineArray.add(ScaledDataPoint(toTime, lastAbsoluteLineBasal, basalScale))
-
-        // create series
-        addSeries(LineGraphSeries(Array(baseBasalArray.size) { i -> baseBasalArray[i] }).also {
+        addSeries(AreaGraphSeries(inRangeAreaDataPoints).also {
+            it.color = 0
             it.isDrawBackground = true
-            it.backgroundColor = resourceHelper.getAttributeColor(context, R.attr.basebasal)
-            it.thickness = 0
-        })
-        addSeries(LineGraphSeries(Array(tempBasalArray.size) { i -> tempBasalArray[i] }).also {
-            it.isDrawBackground = true
-            it.backgroundColor =resourceHelper.getAttributeColor(context, R.attr.lightblue)
-            it.thickness = 0
-        })
-        addSeries(LineGraphSeries(Array(basalLineArray.size) { i -> basalLineArray[i] }).also {
-            it.setCustomPaint(Paint().also { paint ->
-                paint.style = Paint.Style.STROKE
-                paint.strokeWidth = resourceHelper.getDisplayMetrics().scaledDensity * 2
-                paint.pathEffect = DashPathEffect(floatArrayOf(2f, 4f), 0f)
-                paint.color = resourceHelper.getAttributeColor(context, R.attr.basal)
-            })
-        })
-        addSeries(LineGraphSeries(Array(absoluteBasalLineArray.size) { i -> absoluteBasalLineArray[i] }).also {
-            it.setCustomPaint(Paint().also { absolutePaint ->
-                absolutePaint.style = Paint.Style.STROKE
-                absolutePaint.strokeWidth = resourceHelper.getDisplayMetrics().scaledDensity * 2
-                absolutePaint.color = resourceHelper.getAttributeColor(context, R.attr.basal)
-            })
-        })
-        basalScale.setMultiplier(maxY * scale / maxBasalValueFound)
-    }
-
-    fun addTargetLine(fromTime: Long, toTimeParam: Long, profile: Profile, lastRun: LoopInterface.LastRun?, context: Context) {
-        var toTime = toTimeParam
-        val targetsSeriesArray: MutableList<DataPoint> = ArrayList()
-        var lastTarget = -1.0
-        lastRun?.constraintsProcessed?.let { toTime = max(it.latestPredictionsTime, toTime) }
-        var time = fromTime
-        while (time < toTime) {
-            val tt = repository.getTemporaryTargetActiveAt(time).blockingGet()
-            val value: Double = if (tt is ValueWrapper.Existing) {
-                Profile.fromMgdlToUnits(tt.value.target(), units)
-            } else {
-                Profile.fromMgdlToUnits((profile.getTargetLowMgdl(time) + profile.getTargetHighMgdl(time)) / 2, units)
-            }
-            if (lastTarget != value) {
-                if (lastTarget != -1.0) targetsSeriesArray.add(DataPoint(time.toDouble(), lastTarget))
-                targetsSeriesArray.add(DataPoint(time.toDouble(), value))
-            }
-            lastTarget = value
-            time += 5 * 60 * 1000L
-        }
-        // final point
-        targetsSeriesArray.add(DataPoint(toTime.toDouble(), lastTarget))
-        // create series
-        addSeries(LineGraphSeries(Array(targetsSeriesArray.size) { i -> targetsSeriesArray[i] }).also {
-            it.isDrawBackground = false
-            it.color = resourceHelper.getAttributeColor(context, R.attr.tempTargetBackground)
-            it.thickness = 2
+            it.backgroundColor = resourceHelper.getAttributeColor(context, R.attr.tempTargetBackground)
         })
     }
 
-    fun addTreatments(fromTime: Long, endTime: Long) {
-        val filteredTreatments: MutableList<DataPointWithLabelInterface> = ArrayList()
-        treatmentsPlugin.treatmentsFromHistory
-            .filterTimeframe(fromTime, endTime)
-            .filter { !it.isSMB || it.isValid }
-            .forEach {
-                it.y = getNearestBg(it.x.toLong())
-                filteredTreatments.add(it)
-            }
-
-        // ProfileSwitch
-        treatmentsPlugin.profileSwitchesFromHistory.list
-            .filterTimeframe(fromTime, endTime)
-            .forEach(filteredTreatments::add)
-
-        // Extended bolus
-        if (!activePlugin.activePump.isFakingTempsByExtendedBoluses) {
-            treatmentsPlugin.extendedBolusesFromHistory.list
-                .filterTimeframe(fromTime, endTime)
-                .filter { it.duration != 0L }
-                .forEach {
-                    it.y = getNearestBg(it.x.toLong())
-                    filteredTreatments.add(it)
-                }
-        }
-
-        // Careportal
-//        databaseHelper.getCareportalEventsFromTime(fromTime - 6 * 60 * 60 * 1000, true)
-        repository.compatGetTherapyEventDataFromToTime(fromTime - 6 * 60 * 60 * 1000, endTime).blockingGet()
-            .map { TherapyEventDataPoint(injector, it) }
-            .filterTimeframe(fromTime, endTime)
-            .forEach {
-                if (it.y == 0.0) it.y = getNearestBg(it.x.toLong())
-                filteredTreatments.add(it)
-            }
-
-        // increase maxY if a treatment forces it's own height that's higher than a BG value
-        filteredTreatments.map { it.y }
-            .maxOrNull()
-            ?.let(::addUpperChartMargin)
-            ?.let { maxY = maxOf(maxY, it) }
-
-        addSeries(PointsWithLabelGraphSeries(filteredTreatments.toTypedArray()))
+    fun addBasals() {
+        val scale = defaultValueHelper.determineLowLine() / maxY / 1.2
+        addSeries(overviewData.baseBasalGraphSeries)
+        addSeries(overviewData.tempBasalGraphSeries)
+        addSeries(overviewData.basalLineGraphSeries)
+        addSeries(overviewData.absoluteBasalGraphSeries)
+        overviewData.basalScale.setMultiplier(maxY * scale / overviewData.maxBasalValueFound)
     }
 
-    private fun getNearestBg(date: Long): Double {
-        bgReadingsArray?.let { bgReadingsArray ->
-            for (r in bgReadingsArray.indices) {
-                val reading = bgReadingsArray[r]
-                if (reading.timestamp > date) continue
-                return Profile.fromMgdlToUnits(reading.value, units)
-            }
-            return if (bgReadingsArray.isNotEmpty()) Profile.fromMgdlToUnits(bgReadingsArray[0].value, units) else Profile.fromMgdlToUnits(100.0, units)
-        } ?: return Profile.fromMgdlToUnits(100.0, units)
+    fun addTargetLine() {
+        addSeries(overviewData.temporaryTargetSeries)
     }
 
-    fun addActivity(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double, context: Context) {
-        val actArrayHist: MutableList<ScaledDataPoint> = ArrayList()
-        val actArrayPrediction: MutableList<ScaledDataPoint> = ArrayList()
-        val now = System.currentTimeMillis().toDouble()
-        val actScale = Scale()
-        var total: IobTotal
-        var maxIAValue = 0.0
-        var time = fromTime
-        while (time <= toTime) {
-            val profile = profileFunction.getProfile(time)
-            if (profile == null) {
-                time += 5 * 60 * 1000L
-                continue
-            }
-            total = iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(time, profile)
-            val act: Double = total.activity
-            if (time <= now) actArrayHist.add(ScaledDataPoint(time, act, actScale)) else actArrayPrediction.add(ScaledDataPoint(time, act, actScale))
-            maxIAValue = max(maxIAValue, abs(act))
-            time += 5 * 60 * 1000L
-        }
-        addSeries(FixedLineGraphSeries(Array(actArrayHist.size) { i -> actArrayHist[i] }).also {
-            it.isDrawBackground = false
-            it.color = resourceHelper.getAttributeColor(context, R.attr.activity)
-            it.thickness = 3
-        })
-        addSeries(FixedLineGraphSeries(Array(actArrayPrediction.size) { i -> actArrayPrediction[i] }).also {
-            it.setCustomPaint(Paint().also { paint ->
-                paint.style = Paint.Style.STROKE
-                paint.strokeWidth = 3f
-                paint.pathEffect = DashPathEffect(floatArrayOf(4f, 4f), 0f)
-                paint.color = resourceHelper.getAttributeColor(context, R.attr.activity)
-            })
-        })
-        if (useForScale) {
-            maxY = maxIAValue
-            minY = -maxIAValue
-        }
-        actScale.setMultiplier(maxY * scale / maxIAValue)
+    fun addTreatments() {
+        maxY = maxOf(maxY, overviewData.maxTreatmentsValue)
+        addSeries(overviewData.treatmentsSeries)
+    }
+
+    fun addActivity(scale: Double) {
+        addSeries(overviewData.activitySeries)
+        addSeries(overviewData.activityPredictionSeries)
+        overviewData.actScale.setMultiplier(maxY * scale / overviewData.maxIAValue)
     }
 
     //Function below show -BGI to be able to compare curves with deviations
-    fun addMinusBGI(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double, devBgiScale: Boolean,context: Context) {
-        val bgiArrayHist: MutableList<ScaledDataPoint> = ArrayList()
-        val bgiArrayPrediction: MutableList<ScaledDataPoint> = ArrayList()
-        val now = System.currentTimeMillis().toDouble()
-        val bgiScale = Scale()
-        var total: IobTotal
-        var maxBGIValue = 0.0
-        var time = fromTime
-        while (time <= toTime) {
-            val profile = profileFunction.getProfile(time)
-            if (profile == null) {
-                time += 5 * 60 * 1000L
-                continue
-            }
-            val deviation = if (devBgiScale) iobCobCalculatorPlugin.getAutosensData(time)?.deviation
-                ?: 0.0 else 0.0
-
-            total = iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(time, profile)
-            val bgi: Double = total.activity * profile.getIsfMgdl(time) * 5.0
-            if (time <= now) bgiArrayHist.add(ScaledDataPoint(time, bgi, bgiScale)) else bgiArrayPrediction.add(ScaledDataPoint(time, bgi, bgiScale))
-            maxBGIValue = max(maxBGIValue, max(abs(bgi), deviation))
-            time += 5 * 60 * 1000L
-        }
-        addSeries(FixedLineGraphSeries(Array(bgiArrayHist.size) { i -> bgiArrayHist[i] }).also {
-            it.isDrawBackground = false
-            it.color = resourceHelper.getAttributeColor(context, R.attr.bgi)
-            it.thickness = 3
-        })
-        addSeries(FixedLineGraphSeries(Array(bgiArrayPrediction.size) { i -> bgiArrayPrediction[i] }).also {
-            it.setCustomPaint(Paint().also { paint ->
-                paint.style = Paint.Style.STROKE
-                paint.strokeWidth = 3f
-                paint.pathEffect = DashPathEffect(floatArrayOf(4f, 4f), 0f)
-                paint.color = resourceHelper.getAttributeColor(context, R.attr.bgi)
-            })
-        })
+    fun addMinusBGI(useForScale: Boolean, scale: Double) {
         if (useForScale) {
-            maxY = maxBGIValue
-            minY = -maxBGIValue
+            maxY = overviewData.maxBGIValue
+            minY = -overviewData.maxBGIValue
         }
-        bgiScale.setMultiplier(maxY * scale / maxBGIValue)
+        overviewData.bgiScale.setMultiplier(maxY * scale / overviewData.maxBGIValue)
+        addSeries(overviewData.minusBgiSeries)
+        addSeries(overviewData.minusBgiHistSeries)
     }
 
     // scale in % of vertical size (like 0.3)
-    fun addIob(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double, showPrediction: Boolean, absScale: Boolean,context: Context) {
-        val iobSeries: FixedLineGraphSeries<ScaledDataPoint?>
-        val iobArray: MutableList<ScaledDataPoint> = ArrayList()
-        var maxIobValueFound = Double.MIN_VALUE
-        var lastIob = 0.0
-        val iobScale = Scale()
-        var time = fromTime
-        while (time <= toTime) {
-            val profile = profileFunction.getProfile(time)
-            var iob = 0.0
-            var absIob = 0.0
-            if (profile != null) {
-                iob = iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(time, profile).iob
-                if (absScale) absIob = iobCobCalculatorPlugin.calculateAbsInsulinFromTreatmentsAndTempsSynchronized(time).iob
-            }
-            if (abs(lastIob - iob) > 0.02) {
-                if (abs(lastIob - iob) > 0.2) iobArray.add(ScaledDataPoint(time, lastIob, iobScale))
-                iobArray.add(ScaledDataPoint(time, iob, iobScale))
-                maxIobValueFound = if (absScale) max(maxIobValueFound, abs(absIob)) else max(maxIobValueFound, abs(iob))
-                lastIob = iob
-            }
-            time += 5 * 60 * 1000L
-        }
-        iobSeries = FixedLineGraphSeries(Array(iobArray.size) { i -> iobArray[i] }).also {
-            it.isDrawBackground = true
-            it.backgroundColor = -0x7f000001 and resourceHelper.getAttributeColor(context, R.attr.iobColor) //50%
-            it.color = resourceHelper.getAttributeColor(context, R.attr.iobColor)
-            it.thickness = 3
-        }
-        if (showPrediction) {
-            val autosensData = iobCobCalculatorPlugin.getLastAutosensDataSynchronized("GraphData")
-            val lastAutosensResult = autosensData?.autosensResult ?: AutosensResult()
-            val isTempTarget = repository.getTemporaryTargetActiveAt(dateUtil._now()).blockingGet() is ValueWrapper.Existing
-            val iobPrediction: MutableList<DataPointWithLabelInterface> = ArrayList()
-            val iobPredictionArray = iobCobCalculatorPlugin.calculateIobArrayForSMB(lastAutosensResult, SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
-            for (i in iobPredictionArray) {
-                iobPrediction.add(i.setColor(resourceHelper.getAttributeColor(context, R.attr.iobPredAS)))
-                maxIobValueFound = max(maxIobValueFound, abs(i.iob))
-            }
-            addSeries(PointsWithLabelGraphSeries(Array(iobPrediction.size) { i -> iobPrediction[i] }))
-            val iobPrediction2: MutableList<DataPointWithLabelInterface> = ArrayList()
-            val iobPredictionArray2 = iobCobCalculatorPlugin.calculateIobArrayForSMB(AutosensResult(), SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
-            for (i in iobPredictionArray2) {
-                iobPrediction2.add(i.setColor(resourceHelper.getAttributeColor(context,R.attr.iobPred)))
-                maxIobValueFound = max(maxIobValueFound, abs(i.iob))
-            }
-            addSeries(PointsWithLabelGraphSeries(Array(iobPrediction2.size) { i -> iobPrediction2[i] }))
-            aapsLogger.debug(LTag.AUTOSENS, "IOB prediction for AS=" + DecimalFormatter.to2Decimal(lastAutosensResult.ratio) + ": " + iobCobCalculatorPlugin.iobArrayToString(iobPredictionArray))
-            aapsLogger.debug(LTag.AUTOSENS, "IOB prediction for AS=" + DecimalFormatter.to2Decimal(1.0) + ": " + iobCobCalculatorPlugin.iobArrayToString(iobPredictionArray2))
-        }
+    fun addIob(useForScale: Boolean, scale: Double) {
         if (useForScale) {
-            maxY = maxIobValueFound
-            minY = -maxIobValueFound
+            maxY = overviewData.maxIobValueFound
+            minY = -overviewData.maxIobValueFound
         }
-        iobScale.setMultiplier(maxY * scale / maxIobValueFound)
-        addSeries(iobSeries)
+        overviewData.iobScale.setMultiplier(maxY * scale / overviewData.maxIobValueFound)
+        addSeries(overviewData.iobSeries)
+        addSeries(overviewData.iobPredictions1Series)
+        addSeries(overviewData.iobPredictions2Series)
     }
 
     // scale in % of vertical size (like 0.3)
-    fun addAbsIob(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double,context: Context) {
-        val iobSeries: FixedLineGraphSeries<ScaledDataPoint?>
-        val iobArray: MutableList<ScaledDataPoint> = ArrayList()
-        var maxIobValueFound = Double.MIN_VALUE
-        var lastIob = 0.0
-        val iobScale = Scale()
-        var time = fromTime
-        while (time <= toTime) {
-            val profile = profileFunction.getProfile(time)
-            var iob = 0.0
-            if (profile != null) iob = iobCobCalculatorPlugin.calculateAbsInsulinFromTreatmentsAndTempsSynchronized(time).iob
-            if (abs(lastIob - iob) > 0.02) {
-                if (abs(lastIob - iob) > 0.2) iobArray.add(ScaledDataPoint(time, lastIob, iobScale))
-                iobArray.add(ScaledDataPoint(time, iob, iobScale))
-                maxIobValueFound = max(maxIobValueFound, abs(iob))
-                lastIob = iob
-            }
-            time += 5 * 60 * 1000L
-        }
-        iobSeries = FixedLineGraphSeries(Array(iobArray.size) { i -> iobArray[i] }).also {
-            it.isDrawBackground = true
-            it.backgroundColor = -0x7f000001 and resourceHelper.getAttributeColor(context, R.attr.iobColor) //50%
-            it.color = resourceHelper.getAttributeColor(context, R.attr.iobColor)
-            it.thickness = 3
-        }
+    fun addAbsIob(useForScale: Boolean, scale: Double) {
         if (useForScale) {
-            maxY = maxIobValueFound
-            minY = -maxIobValueFound
+            maxY = overviewData.maxIobValueFound
+            minY = -overviewData.maxIobValueFound
         }
-        iobScale.setMultiplier(maxY * scale / maxIobValueFound)
-        addSeries(iobSeries)
+        overviewData.iobScale.setMultiplier(maxY * scale / overviewData.maxIobValueFound)
+        addSeries(overviewData.absIobSeries)
     }
 
     // scale in % of vertical size (like 0.3)
-    fun addCob(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double, context: Context) {
-        val minFailOverActiveList: MutableList<DataPointWithLabelInterface> = ArrayList()
-        val cobArray: MutableList<ScaledDataPoint> = ArrayList()
-        var maxCobValueFound = 0.0
-        var lastCob = 0
-        val cobScale = Scale()
-        var time = fromTime
-        while (time <= toTime) {
-            iobCobCalculatorPlugin.getAutosensData(time)?.let { autosensData ->
-                val cob = autosensData.cob.toInt()
-                if (cob != lastCob) {
-                    if (autosensData.carbsFromBolus > 0) cobArray.add(ScaledDataPoint(time, lastCob.toDouble(), cobScale))
-                    cobArray.add(ScaledDataPoint(time, cob.toDouble(), cobScale))
-                    maxCobValueFound = max(maxCobValueFound, cob.toDouble())
-                    lastCob = cob
-                }
-                if (autosensData.failoverToMinAbsorbtionRate) {
-                    autosensData.setScale(cobScale)
-                    autosensData.setChartTime(time)
-                    minFailOverActiveList.add(autosensData)
-                }
-            }
-            time += 5 * 60 * 1000L
-        }
-
-        // COB
-        addSeries(FixedLineGraphSeries(Array(cobArray.size) { i -> cobArray[i] }).also {
-            it.isDrawBackground = true
-            it.backgroundColor = -0x7f000001 and resourceHelper.getAttributeColor(context, R.attr.cobColor) //50%
-            it.color = resourceHelper.getAttributeColor(context, R.attr.cobColor)
-            it.thickness = 3
-        })
+    fun addCob(useForScale: Boolean, scale: Double) {
         if (useForScale) {
-            maxY = maxCobValueFound
+            maxY = overviewData.maxCobValueFound
             minY = 0.0
         }
-        cobScale.setMultiplier(maxY * scale / maxCobValueFound)
-        addSeries(PointsWithLabelGraphSeries(Array(minFailOverActiveList.size) { i -> minFailOverActiveList[i] }))
+        overviewData.cobScale.setMultiplier(maxY * scale / overviewData.maxCobValueFound)
+        addSeries(overviewData.cobSeries)
+        addSeries(overviewData.cobMinFailOverSeries)
     }
 
     // scale in % of vertical size (like 0.3)
-    fun addDeviations(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double, devBgiScale: Boolean, context: Context) {
-        class DeviationDataPoint(x: Double, y: Double, var color: Int, scale: Scale) : ScaledDataPoint(x, y, scale)
-
-        val devArray: MutableList<DeviationDataPoint> = ArrayList()
-        var maxDevValueFound = 0.0
-        val devScale = Scale()
-        var time = fromTime
-        var total: IobTotal
-
-        while (time <= toTime) {
-            // if align Dev Scale with BGI scale, then calculate BGI value, else bgi = 0.0
-            val bgi: Double = if (devBgiScale) {
-                val profile = profileFunction.getProfile(time)
-                total = iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(time, profile)
-                total.activity * (profile?.getIsfMgdl(time) ?: 0.0) * 5.0
-            } else 0.0
-
-            iobCobCalculatorPlugin.getAutosensData(time)?.let { autosensData ->
-                var color = resourceHelper.getAttributeColor(context, R.attr.deviationEqual) // "="
-                if (autosensData.type == "" || autosensData.type == "non-meal") {
-                    if (autosensData.pastSensitivity == "C") color = resourceHelper.getAttributeColor(context, R.attr.deviationCsf)
-                    if (autosensData.pastSensitivity == "+") color = resourceHelper.getAttributeColor(context, R.attr.deviationPlus)
-                    if (autosensData.pastSensitivity == "-") color = resourceHelper.getAttributeColor(context, R.attr.deviationMinus)
-                } else if (autosensData.type == "uam") {
-                    color = resourceHelper.getAttributeColor(context, R.attr.uamColor)
-                } else if (autosensData.type == "csf") {
-                    color = resourceHelper.getAttributeColor(context, R.attr.deviationCsf)
-                }
-                devArray.add(DeviationDataPoint(time.toDouble(), autosensData.deviation, color, devScale))
-                maxDevValueFound = max(maxDevValueFound, max(abs(autosensData.deviation), abs(bgi)))
-            }
-            time += 5 * 60 * 1000L
-        }
-
-        // DEVIATIONS
-        addSeries(BarGraphSeries(Array(devArray.size) { i -> devArray[i] }).also {
-            it.setValueDependentColor { data: DeviationDataPoint -> data.color }
-        })
+    fun addDeviations(useForScale: Boolean, scale: Double) {
         if (useForScale) {
-            maxY = maxDevValueFound
+            maxY = overviewData.maxDevValueFound
             minY = -maxY
         }
-        devScale.setMultiplier(maxY * scale / maxDevValueFound)
+        overviewData.devScale.setMultiplier(maxY * scale / overviewData.maxDevValueFound)
+        addSeries(overviewData.deviationsSeries)
     }
 
     // scale in % of vertical size (like 0.3)
-    fun addRatio(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double, context: Context) {
-        val ratioArray: MutableList<ScaledDataPoint> = ArrayList()
-        var maxRatioValueFound = 5.0                    //even if sens data equals 0 for all the period, minimum scale is between 95% and 105%
-        var minRatioValueFound = - maxRatioValueFound
-        val ratioScale = if (useForScale) Scale(100.0) else Scale()
-        var time = fromTime
-        while (time <= toTime) {
-            iobCobCalculatorPlugin.getAutosensData(time)?.let { autosensData ->
-                ratioArray.add(ScaledDataPoint(time, 100.0 * (autosensData.autosensResult.ratio - 1 ), ratioScale))
-                maxRatioValueFound = max(maxRatioValueFound, 100.0 * (autosensData.autosensResult.ratio - 1))
-                minRatioValueFound = min(minRatioValueFound, 100.0 * (autosensData.autosensResult.ratio - 1))
-            }
-            time += 5 * 60 * 1000L
-        }
-
-        // RATIOS
-        addSeries(LineGraphSeries(Array(ratioArray.size) { i -> ratioArray[i] }).also {
-            it.color = resourceHelper.getAttributeColor(context, R.attr.overviewShowSensitivity)
-            it.thickness = 3
-        })
+    fun addRatio(useForScale: Boolean, scale: Double) {
         if (useForScale) {
-            maxY = 100.0 + max(maxRatioValueFound, abs(minRatioValueFound))
-            minY = 100.0 - max(maxRatioValueFound, abs(minRatioValueFound))
-            ratioScale.setMultiplier(1.0)
+            maxY = 100.0 + max(overviewData.maxRatioValueFound, abs(overviewData.minRatioValueFound))
+            minY = 100.0 - max(overviewData.maxRatioValueFound, abs(overviewData.minRatioValueFound))
+            overviewData.ratioScale.setMultiplier(1.0)
         } else
-            ratioScale.setMultiplier(maxY * scale / max(maxRatioValueFound, abs(minRatioValueFound)))
+            overviewData.ratioScale.setMultiplier(maxY * scale / max(overviewData.maxRatioValueFound, abs(overviewData.minRatioValueFound)))
+        addSeries(overviewData.ratioSeries)
     }
 
     // scale in % of vertical size (like 0.3)
-    fun addDeviationSlope(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double,context: Context) {
-        val dsMaxArray: MutableList<ScaledDataPoint> = ArrayList()
-        val dsMinArray: MutableList<ScaledDataPoint> = ArrayList()
-        var maxFromMaxValueFound = 0.0
-        var maxFromMinValueFound = 0.0
-        val dsMaxScale = Scale()
-        val dsMinScale = Scale()
-        var time = fromTime
-        while (time <= toTime) {
-            iobCobCalculatorPlugin.getAutosensData(time)?.let { autosensData ->
-                dsMaxArray.add(ScaledDataPoint(time, autosensData.slopeFromMaxDeviation, dsMaxScale))
-                dsMinArray.add(ScaledDataPoint(time, autosensData.slopeFromMinDeviation, dsMinScale))
-                maxFromMaxValueFound = max(maxFromMaxValueFound, abs(autosensData.slopeFromMaxDeviation))
-                maxFromMinValueFound = max(maxFromMinValueFound, abs(autosensData.slopeFromMinDeviation))
-            }
-            time += 5 * 60 * 1000L
-        }
-
-        // Slopes
-        addSeries(LineGraphSeries(Array(dsMaxArray.size) { i -> dsMaxArray[i] }).also {
-            it.color = resourceHelper.getAttributeColor(context, R.attr.devslopepos)
-            it.thickness = 3
-        })
-        addSeries(LineGraphSeries(Array(dsMinArray.size) { i -> dsMinArray[i] }).also {
-            it.color = resourceHelper.getAttributeColor(context, R.attr.devslopeneg)
-            it.thickness = 3
-        })
+    fun addDeviationSlope(useForScale: Boolean, scale: Double) {
         if (useForScale) {
-            maxY = max(maxFromMaxValueFound, maxFromMinValueFound)
+            maxY = max(overviewData.maxFromMaxValueFound, overviewData.maxFromMinValueFound)
             minY = -maxY
         }
-        dsMaxScale.setMultiplier(maxY * scale / maxFromMaxValueFound)
-        dsMinScale.setMultiplier(maxY * scale / maxFromMinValueFound)
+        overviewData.dsMaxScale.setMultiplier(maxY * scale / overviewData.maxFromMaxValueFound)
+        overviewData.dsMinScale.setMultiplier(maxY * scale / overviewData.maxFromMinValueFound)
+        addSeries(overviewData.dsMaxSeries)
+        addSeries(overviewData.dsMinSeries)
     }
 
     // scale in % of vertical size (like 0.3)
@@ -647,6 +195,10 @@ class GraphData(
         })
     }
 
+    fun setNumVerticalLabels() {
+        graph.gridLabelRenderer.numVerticalLabels = if (units == GlucoseUnit.MGDL) (maxY / 40 + 1).toInt() else (maxY / 2 + 1).toInt()
+    }
+
     fun formatAxis(fromTime: Long, endTime: Long) {
         graph.viewport.setMaxX(endTime.toDouble())
         graph.viewport.setMinX(fromTime.toDouble())
@@ -655,7 +207,7 @@ class GraphData(
         graph.gridLabelRenderer.numHorizontalLabels = 7 // only 7 because of the space
     }
 
-    private fun addSeries(s: Series<*>) = series.add(s)
+    internal fun addSeries(s: Series<*>) = series.add(s)
 
     fun performUpdate() {
         // clear old data
@@ -679,5 +231,3 @@ class GraphData(
     }
 }
 
-private fun <E : DataPointWithLabelInterface> List<E>.filterTimeframe(fromTime: Long, endTime: Long): List<E> =
-    filter { it.x + it.duration >= fromTime && it.x <= endTime }

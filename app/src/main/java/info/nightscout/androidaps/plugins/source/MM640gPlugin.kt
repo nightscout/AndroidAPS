@@ -3,18 +3,18 @@ package info.nightscout.androidaps.plugins.source
 import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
-import info.nightscout.androidaps.interfaces.BgSourceInterface
+import info.nightscout.androidaps.interfaces.BgSource
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.XDripBroadcast
@@ -29,7 +29,8 @@ import javax.inject.Singleton
 class MM640gPlugin @Inject constructor(
     injector: HasAndroidInjector,
     resourceHelper: ResourceHelper,
-    aapsLogger: AAPSLogger
+    aapsLogger: AAPSLogger,
+    private val sp: SP
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
@@ -37,7 +38,7 @@ class MM640gPlugin @Inject constructor(
     .pluginName(R.string.MM640g)
     .description(R.string.description_source_mm640g),
     aapsLogger, resourceHelper, injector
-), BgSourceInterface {
+), BgSource {
 
     // cannot be inner class because of needed injection
     class MM640gWorker(
@@ -48,8 +49,6 @@ class MM640gPlugin @Inject constructor(
         @Inject lateinit var mM640gPlugin: MM640gPlugin
         @Inject lateinit var injector: HasAndroidInjector
         @Inject lateinit var aapsLogger: AAPSLogger
-        @Inject lateinit var sp: SP
-        @Inject lateinit var nsUpload: NSUpload
         @Inject lateinit var dateUtil: DateUtil
         @Inject lateinit var dataWorker: DataWorker
         @Inject lateinit var repository: AppRepository
@@ -62,8 +61,8 @@ class MM640gPlugin @Inject constructor(
         override fun doWork(): Result {
             var ret = Result.success()
 
-            if (!mM640gPlugin.isEnabled(PluginType.BGSOURCE)) return Result.failure()
-            val collection = inputData.getString("collection") ?: return Result.failure()
+            if (!mM640gPlugin.isEnabled(PluginType.BGSOURCE)) return Result.success()
+            val collection = inputData.getString("collection") ?: return Result.failure(workDataOf("Error" to "missing collection"))
             if (collection == "entries") {
                 val data = inputData.getString("data")
                 aapsLogger.debug(LTag.BGSOURCE, "Received MM640g Data: $data")
@@ -88,25 +87,27 @@ class MM640gPlugin @Inject constructor(
                         }
                         repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
                             .doOnError {
-                                aapsLogger.error("Error while saving values from Eversense App", it)
-                                ret = Result.failure()
+                                aapsLogger.error(LTag.DATABASE, "Error while saving values from Eversense App", it)
+                                ret = Result.failure(workDataOf("Error" to it.toString()))
                             }
                             .blockingGet()
                             .also { savedValues ->
-                            savedValues.all().forEach {
-                                broadcastToXDrip(it)
-                                if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false))
-                                    nsUpload.uploadBg(it, GlucoseValue.SourceSensor.MM_600_SERIES.text)
-                                aapsLogger.debug(LTag.BGSOURCE, "Inserted bg $it")
+                                savedValues.all().forEach {
+                                    broadcastToXDrip(it)
+                                    aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
+                                }
                             }
-                        }
                     } catch (e: JSONException) {
                         aapsLogger.error("Exception: ", e)
-                        ret = Result.failure()
+                        ret = Result.failure(workDataOf("Error" to e.toString()))
                     }
                 }
             }
             return ret
         }
     }
+
+    override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean =
+        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.MM_600_SERIES && sp.getBoolean(R.string.key_dexcomg5_nsupload, false)
+
 }

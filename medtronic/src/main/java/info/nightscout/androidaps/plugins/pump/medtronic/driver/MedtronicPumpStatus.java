@@ -65,7 +65,7 @@ public class MedtronicPumpStatus extends info.nightscout.androidaps.plugins.pump
                                RxBusWrapper rxBus,
                                RileyLinkUtil rileyLinkUtil
     ) {
-        super(PumpType.Medtronic_522_722);
+        super(PumpType.MEDTRONIC_522_722);
         this.resourceHelper = resourceHelper;
         this.sp = sp;
         this.rxBus = rxBus;
@@ -110,17 +110,17 @@ public class MedtronicPumpStatus extends info.nightscout.androidaps.plugins.pump
     private void createMedtronicPumpMap() {
 
         medtronicPumpMap = new HashMap<>();
-        medtronicPumpMap.put("512", PumpType.Medtronic_512_712);
-        medtronicPumpMap.put("712", PumpType.Medtronic_512_712);
-        medtronicPumpMap.put("515", PumpType.Medtronic_515_715);
-        medtronicPumpMap.put("715", PumpType.Medtronic_515_715);
+        medtronicPumpMap.put("512", PumpType.MEDTRONIC_512_712);
+        medtronicPumpMap.put("712", PumpType.MEDTRONIC_512_712);
+        medtronicPumpMap.put("515", PumpType.MEDTRONIC_515_715);
+        medtronicPumpMap.put("715", PumpType.MEDTRONIC_515_715);
 
-        medtronicPumpMap.put("522", PumpType.Medtronic_522_722);
-        medtronicPumpMap.put("722", PumpType.Medtronic_522_722);
-        medtronicPumpMap.put("523", PumpType.Medtronic_523_723_Revel);
-        medtronicPumpMap.put("723", PumpType.Medtronic_523_723_Revel);
-        medtronicPumpMap.put("554", PumpType.Medtronic_554_754_Veo);
-        medtronicPumpMap.put("754", PumpType.Medtronic_554_754_Veo);
+        medtronicPumpMap.put("522", PumpType.MEDTRONIC_522_722);
+        medtronicPumpMap.put("722", PumpType.MEDTRONIC_522_722);
+        medtronicPumpMap.put("523", PumpType.MEDTRONIC_523_723_REVEL);
+        medtronicPumpMap.put("723", PumpType.MEDTRONIC_523_723_REVEL);
+        medtronicPumpMap.put("554", PumpType.MEDTRONIC_554_754_VEO);
+        medtronicPumpMap.put("754", PumpType.MEDTRONIC_554_754_VEO);
 
     }
 

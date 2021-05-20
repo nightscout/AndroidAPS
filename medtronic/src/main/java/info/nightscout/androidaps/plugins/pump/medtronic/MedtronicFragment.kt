@@ -12,8 +12,10 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.events.EventExtendedBolusChange
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.events.EventTempBasalChange
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.extensions.toStringFull
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -51,9 +53,10 @@ class MedtronicFragment : DaggerFragment() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var commandQueue: CommandQueueProvider
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var medtronicPumpPlugin: MedtronicPumpPlugin
     @Inject lateinit var warnColors: WarnColors
     @Inject lateinit var rileyLinkUtil: RileyLinkUtil
@@ -61,6 +64,7 @@ class MedtronicFragment : DaggerFragment() {
     @Inject lateinit var medtronicPumpStatus: MedtronicPumpStatus
     @Inject lateinit var rileyLinkServiceData: RileyLinkServiceData
     @Inject lateinit var aapsSchedulers: AapsSchedulers
+    @Inject lateinit var pumpSync: PumpSync
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -264,7 +268,7 @@ class MedtronicFragment : DaggerFragment() {
 
         // last connection
         if (medtronicPumpStatus.lastConnection != 0L) {
-            val minAgo = DateUtil.minAgo(resourceHelper, medtronicPumpStatus.lastConnection)
+            val minAgo = dateUtil.minAgo(resourceHelper, medtronicPumpStatus.lastConnection)
             val min = (System.currentTimeMillis() - medtronicPumpStatus.lastConnection) / 1000 / 60
             if (medtronicPumpStatus.lastConnection + 60 * 1000 > System.currentTimeMillis()) {
                 binding.lastConnection.setText(R.string.medtronic_pump_connected_now)
@@ -300,8 +304,8 @@ class MedtronicFragment : DaggerFragment() {
             val unit = resourceHelper.gs(R.string.insulin_unit_shortname)
             val ago = when {
                 agoMsc < 60 * 1000 -> resourceHelper.gs(R.string.medtronic_pump_connected_now)
-                bolusMinAgo < 60   -> DateUtil.minAgo(resourceHelper, medtronicPumpStatus.lastBolusTime.time)
-                else               -> DateUtil.hourAgo(medtronicPumpStatus.lastBolusTime.time, resourceHelper)
+                bolusMinAgo < 60   -> dateUtil.minAgo(resourceHelper, medtronicPumpStatus.lastBolusTime.time)
+                else               -> dateUtil.hourAgo(medtronicPumpStatus.lastBolusTime.time, resourceHelper)
             }
             binding.lastBolus.text = resourceHelper.gs(R.string.mdt_last_bolus, bolus, unit, ago)
         } else {
@@ -309,11 +313,12 @@ class MedtronicFragment : DaggerFragment() {
             binding.lastBolus.setTextColor(resourceHelper.getAttributeColor(context, R.attr.defaultTextColor))
         }
 
+        val pumpState = pumpSync.expectedPumpState()
         // base basal rate
         binding.baseBasalRate.text = ("(" + medtronicPumpStatus.activeProfileName + ")  "
             + resourceHelper.gs(R.string.pump_basebasalrate, medtronicPumpPlugin.baseBasalRate))
 
-        binding.tempBasal.text = activePlugin.activeTreatments.getTempBasalFromHistory(System.currentTimeMillis())?.toStringFull()
+        binding.tempBasal.text = pumpState.temporaryBasal?.toStringFull(dateUtil)
             ?: ""
 
         // battery
@@ -336,7 +341,7 @@ class MedtronicFragment : DaggerFragment() {
         medtronicPumpPlugin.rileyLinkService?.verifyConfiguration()
         binding.errors.text = medtronicPumpStatus.errorInfo
 
-        var showRileyLinkBatteryLevel: Boolean = rileyLinkServiceData.showBatteryLevel
+        val showRileyLinkBatteryLevel: Boolean = rileyLinkServiceData.showBatteryLevel
 
         if (showRileyLinkBatteryLevel) {
             binding.rlBatteryView.visibility = View.VISIBLE

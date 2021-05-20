@@ -25,7 +25,6 @@
     <string name="description_smb">İleri düzey kullanıcılar için en yeni algoritma</string>
     <string name="description_overview">En yaygın eylemler için Döngü ve düğmelerinizin geçerli durumunu görüntüler</string>
     <string name="description_persistent_notification">Döngünün şu anda ne yaptığını hızlıca gözden geçirerek sürekli bir bildirim gösterir</string>
-    <string name="description_profile_nightscout">Nightscout\'ta tanımladığınız profili sağlar</string>
     <string name="description_pump_mdi">Diyabet tedavisi için günde birden fazla enjeksiyon yapan kişiler için pompa entegrasyonu</string>
     <string name="description_pump_virtual">Henüz herhangi bir sürücüye sahip olmayan pompalar için pompa entegrasyonu (Açık Döngü)</string>
     <string name="description_sensitivity_aaps">Duyarlılık, Oref0 gibi aynı şekilde hesaplanır ancak geçmiş zaman çerçevesi belirtebilirsiniz. Minimal karbonhidrat emilimi, tercihlerden maksimum karbonhidrat emilim süresinden hesaplanır.</string>
@@ -69,7 +68,6 @@
     <string name="sms_delta">Delta:</string>
     <string name="configbuilder">Konfigurasyon oluştur</string>
     <string name="overview">Genel Bakış</string>
-    <string name="nsprofile">Nightscout Profil</string>
     <string name="treatments">Tedaviler</string>
     <string name="virtualpump">Sanal pompa</string>
     <string name="careportal">Careportal</string>
@@ -85,7 +83,6 @@
     <string name="configbuilder_general_description">Kullanışlı bulabileceğiniz bazı genel eklentiler.</string>
     <string name="configbuilder_constraints_description">Hangi kısıtlamaları uygula?</string>
     <string name="constraints">Kısıtlamalar</string>
-    <string name="loop">Döngü</string>
     <string name="configbuilder_loop">Döngü</string>
     <string name="configbuilder_loop_description">AndroidAPS döngü entegrasyonunu etkinleştirmek için bunu kullanın.</string>
     <string name="loop_aps_label">APS</string>
@@ -202,7 +199,6 @@
     <string name="localprofile_shortname">LP</string>
     <string name="overview_shortname">HOME</string>
     <string name="virtualpump_shortname">VPOMP</string>
-    <string name="profileviewer_shortname">NSPROFIL</string>
     <string name="treatments_shortname">TEDAVİ</string>
     <string name="objectives_shortname">OBJ</string>
     <string name="wear_shortname">WEAR</string>
@@ -285,15 +281,12 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">BGI göster</string>
     <string name="wear_showbgi_summary">BGI\'yı durum satırına ekle</string>
-    <string name="ns_noupload">NightScout\'a yükleme yok</string>
-    <string name="ns_noupload_summary">NS\'ye gönderilen tüm veriler düştü. AAPS NS\'ye bağlandı, ancak NS\'de hiçbir değişiklik yapılmadı</string>
     <string name="overview_extendedbolus_cancel_button">Yayma Bolusu iptal et</string>
     <string name="ns_alarmoptions">Alarm türleri</string>
     <string name="nsalarm_staledatavalue_label">Eski veri eşiği [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Acil durum verileri eşiği [min]</string>
     <string name="openapsama_autosens_period">Autosens [h] için aralık</string>
     <string name="openapsama_autosens_period_summary">Duyarlılık tespiti için geçmişte geçen saat miktarı (karbonhidrat emilim süresi hariç)</string>
-    <string name="pump">Pompa</string>
     <string name="openaps">OpenAPS</string>
     <string name="uploader">Aktar</string>
     <string name="configbuilder_sensitivity">Duyarlılık algılaması</string>
@@ -413,7 +406,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="do_not_bolus_record_only">Bolusu sadece kayıt altına al</string>
     <string name="category">Kategori</string>
     <string name="subcategory">Alt kategori</string>
-    <string name="ns_autobackfill_summary">Nightscout\'tan eksik kan şekeri değerlerini otomatik olarak yükleyin</string>
     <string name="loop_smbsetbypump_label">SMB (Supermicroboluses) pompa tarafından verildi</string>
     <string name="overview_show_sensitivity">Duyarlılık</string>
     <string name="overview_show_deviations">Sapma</string>
@@ -478,7 +470,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="virtualpump_type">Sanal pompa tipi</string>
     <string name="virtualpump_definition">Pompa tanımı</string>
     <string name="virtualpump_pump_def">Bolus: Adım=%1$s\nYayım Bolus: [Step=%2$s, Süre=%3$smin-%4$sh]\nBasal: Adım=%5$s\nTBR: %6$s (ile %7$s), Süre=%8$smin-%9$sh\n%10$s</string>
-    <string name="ns_autobackfill_title">KŞ Otomatik doldur</string>
     <string name="wear_wizard_settings">Kurulum Sihirbazı Ayarları</string>
     <string name="wear_wizard_settings_summary">Sihirbaz sonucuna dahil edilen hesaplamalar:</string>
     <string name="wear_display_settings">Ayarları Görüntüle</string>
@@ -486,13 +477,11 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="enable_nsclient">NSClient etkinleştir</string>
     <string name="welcometosetupwizard">Kurulum sihirbazına hoş geldiniz. Kurulum işleminde size rehberlik edecektir\n</string>
     <string name="readstatus">Durum oku</string>
-    <string name="adjustprofileinns">Değişiklikler Nightscout\'da yapılmalıdır</string>
     <string name="exitwizard">Kurulum sihirbazını atla</string>
     <string name="setupwizard_loop_description">AndroidAPS\'ın bazal değişiklikleri önerme/yapmasını sağlamak için aşağıdaki düğmeye basın</string>
     <string name="setupwizard_sensitivity_description">Duyarlılık eklentisi, duyarlılık tespiti ve COB hesaplaması için kullanılır. Daha fazla bilgi için ziyaret edin:</string>
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
     <string name="diawarning">Lütfen unutmayın: yeni insülin profilleri en az 5 saat DIA gerektirir. Yeni profildeki DIA 5–6 saat, eski insülin profillerinde DIA 3saat\'e eşittir.</string>
-    <string name="setupwizard_profile_description">Lütfen profil kaynağını seçiniz. Hasta bir çocuksa Nightscout profilini kullanmalısınız. Eğer Nightscout\'ta seni takip eden kimse yoksa muhtemelen yerel profili tercih edersiniz. Lütfen sadece profil kaynağını seçtiğinizi unutmayın. Bunu kullanmak için \"Profil değiştir\" i çalıştırarak etkinleştirmelisiniz</string>
     <string name="setupwizard_aps_description">Mevcut algoritmalardan birini seçin. En eskiden en yeniye ayrılırlar. Yeni algoritma genellikle daha güçlü ve daha agresiftir. Böylece eğer yeni bir Döngü\'cü iseniz, muhtemelen AMA ile başlayabilirsin, en sonuncusuyla değil. OpenAPS belgelerini okumayı ve kullanmadan önce yapılandırmayı unutmayın.</string>
     <string name="startobjective">İlk hedefinize başlayın</string>
     <string name="permission">Yetki</string>
