@@ -28,6 +28,7 @@ class OHUploadWorker(context: Context, workerParameters: WorkerParameters)
     @Inject
     lateinit var resourceHelper: ResourceHelper
 
+    @kotlin.ExperimentalStdlibApi
     override fun createWork(): Single<Result> = Single.defer {
 
         // Here we inject every time we create work

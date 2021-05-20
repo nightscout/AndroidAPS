@@ -105,6 +105,7 @@ class EncryptedPrefsFormat @Inject constructor(
         }
     }
 
+    @kotlin.ExperimentalStdlibApi
     override fun loadPreferences(file: File, masterPassword: String?): Prefs {
 
         val entries: MutableMap<String, String> = mutableMapOf()

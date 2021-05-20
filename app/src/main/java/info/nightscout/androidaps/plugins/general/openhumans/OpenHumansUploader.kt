@@ -439,6 +439,7 @@ class OpenHumansUploader @Inject constructor(
         notificationManager.notify(FAILURE_NOTIFICATION_ID, notification)
     }
 
+    @kotlin.ExperimentalStdlibApi
     fun uploadDataSegmentally(): Completable =
         uploadData(UPLOAD_SEGMENT_SIZE)
             .repeatUntil { databaseHelper.getOHQueueSize() == 0L }
@@ -452,6 +453,7 @@ class OpenHumansUploader @Inject constructor(
                 aapsLogger.error(LTag.OHUPLOADER, "Segmental upload exceptional", it)
             }
 
+    @kotlin.ExperimentalStdlibApi
     @Suppress("SameParameterValue")
     private fun uploadData(maxEntries: Long): Completable = gatherData(maxEntries)
         .flatMap { data -> refreshAccessTokensIfNeeded().map { accessToken -> accessToken to data } }
@@ -494,6 +496,7 @@ class OpenHumansUploader @Inject constructor(
         }
     }
 
+    @kotlin.ExperimentalStdlibApi
     private fun gatherData(maxEntries: Long) = Single.defer {
         val items = databaseHelper.getAllOHQueueItems(maxEntries)
         val baos = ByteArrayOutputStream()

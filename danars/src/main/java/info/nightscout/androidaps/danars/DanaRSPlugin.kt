@@ -141,6 +141,7 @@ class DanaRSPlugin @Inject constructor(
         commandQueue.readStatus("DeviceChanged", null)
     }
 
+    @kotlin.ExperimentalStdlibApi
     override fun connect(reason: String) {
         aapsLogger.debug(LTag.PUMP, "RS connect from: $reason")
         if (danaRSService != null && mDeviceAddress != "" && mDeviceName != "") {
