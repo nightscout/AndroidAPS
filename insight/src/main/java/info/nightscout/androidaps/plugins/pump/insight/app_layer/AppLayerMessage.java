@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.insight.app_layer;
 
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.AppCommands;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.AppErrors;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.MessagePriority;
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.IncompatibleAppVersionException;
@@ -8,7 +9,6 @@ import info.nightscout.androidaps.plugins.pump.insight.exceptions.UnknownAppComm
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.UnknownServiceException;
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_errors.AppLayerErrorException;
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_errors.UnknownAppLayerErrorCodeException;
-import info.nightscout.androidaps.plugins.pump.insight.ids.AppCommandIDs;
 import info.nightscout.androidaps.plugins.pump.insight.satl.DataMessage;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf;
 import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.Cryptograph;
@@ -42,7 +42,7 @@ public class AppLayerMessage implements Comparable<AppLayerMessage> {
         ByteBuf byteBuf = new ByteBuf(4 + data.length + (outCRC ? 2 : 0));
         byteBuf.putByte(VERSION);
         byteBuf.putByte(getService().getId());
-        byteBuf.putUInt16LE(AppCommandIDs.IDS.getID(clazz));
+        byteBuf.putUInt16LE(AppCommands.Companion.fromType(clazz).getId());
         byteBuf.putBytes(data);
         if (outCRC) byteBuf.putUInt16LE(Cryptograph.calculateCRC(data));
         return byteBuf;
@@ -53,7 +53,7 @@ public class AppLayerMessage implements Comparable<AppLayerMessage> {
         byte service = byteBuf.readByte();
         int command = byteBuf.readUInt16LE();
         int error = byteBuf.readUInt16LE();
-        Class<? extends AppLayerMessage> clazz = AppCommandIDs.IDS.getType(command);
+        Class<? extends AppLayerMessage> clazz = AppCommands.Companion.fromId(command).getType();
         if (clazz == null) throw new UnknownAppCommandException();
         if (version != VERSION) throw new IncompatibleAppVersionException();
         AppLayerMessage message = clazz.newInstance();

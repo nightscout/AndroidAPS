@@ -1,4 +1,3 @@
-package info.nightscout.androidaps.plugins.pump.insight.app_layer.history.history_events;
+package info.nightscout.androidaps.plugins.pump.insight.app_layer.history.history_events
 
-public class PowerDownEvent extends HistoryEvent {
-}
+class PowerDownEvent : HistoryEvent()

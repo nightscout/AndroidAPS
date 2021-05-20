@@ -1,11 +1,11 @@
 package info.nightscout.androidaps.plugins.pump.insight.app_layer.history.history_events;
 
+import org.slf4j.Logger;
+
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
-import info.nightscout.androidaps.plugins.pump.insight.ids.HistoryEventIDs;
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.HistoryEvents;
 import info.nightscout.androidaps.plugins.pump.insight.utils.BOCUtil;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class HistoryEvent implements Comparable<HistoryEvent> {
     private static final Logger log = StacktraceLoggerWrapper.getLogger(HistoryEvent.class);
@@ -20,7 +20,7 @@ public class HistoryEvent implements Comparable<HistoryEvent> {
 
     public static HistoryEvent deserialize(ByteBuf byteBuf) {
         int eventID = byteBuf.readUInt16LE();
-        Class<? extends HistoryEvent> eventClass = HistoryEventIDs.IDS.getType(eventID);
+        Class<? extends HistoryEvent> eventClass = HistoryEvents.Companion.fromId(eventID).getType();
         HistoryEvent event = null;
         if (eventClass == null) event = new HistoryEvent();
         else {
