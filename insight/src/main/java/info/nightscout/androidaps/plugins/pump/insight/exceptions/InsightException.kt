@@ -1,4 +1,3 @@
-package info.nightscout.androidaps.plugins.pump.insight.exceptions;
+package info.nightscout.androidaps.plugins.pump.insight.exceptions
 
-public abstract class InsightException extends Exception {
-}
+abstract class InsightException : Exception()

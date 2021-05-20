@@ -1,5 +1,3 @@
-package info.nightscout.androidaps.plugins.pump.insight.exceptions;
+package info.nightscout.androidaps.plugins.pump.insight.exceptions
 
-public class InvalidMacTrailerException extends SatlException {
-
-}
+class InvalidMacTrailerException : SatlException()

@@ -1,5 +1,3 @@
-package info.nightscout.androidaps.plugins.pump.insight.exceptions;
+package info.nightscout.androidaps.plugins.pump.insight.exceptions
 
-public class InvalidNonceException extends SatlException {
-
-}
+class InvalidNonceException : SatlException()

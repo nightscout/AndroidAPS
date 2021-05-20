@@ -1,4 +1,3 @@
-package info.nightscout.androidaps.plugins.pump.insight.exceptions;
+package info.nightscout.androidaps.plugins.pump.insight.exceptions
 
-public class TooChattyPumpException extends InsightException {
-}
+class TooChattyPumpException : InsightException()
