@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.overview
 
+import android.content.Context
 import com.jjoe64.graphview.series.BarGraphSeries
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
@@ -40,7 +41,7 @@ class OverviewData @Inject constructor(
     private val sp: SP,
     private val activePlugin: ActivePlugin,
     private val defaultValueHelper: DefaultValueHelper,
-    private val profileFunction: ProfileFunction
+    private val profileFunction: ProfileFunction,
 ) {
 
     enum class Property {
@@ -84,19 +85,19 @@ class OverviewData @Inject constructor(
     var profileName: String? = null
     var profileNameWithRemainingTime: String? = null
 
-    val profileBackgroudColor: Int
+    val profileBackgroundColor: Int
         get() =
             profile?.let { profile ->
-                if (profile.percentage != 100 || profile.timeshift != 0) resourceHelper.gc(R.color.ribbonWarning)
-                else resourceHelper.gc(R.color.ribbonDefault)
-            } ?: resourceHelper.gc(R.color.ribbonTextDefault)
+                if (profile.percentage != 100 || profile.timeshift != 0) resourceHelper.getAttributeColor( null ,R.attr.ribbonWarning )
+                else resourceHelper.getAttributeColor( null ,R.attr.ribbonDefault )
+            } ?: resourceHelper.getAttributeColor( null ,R.attr.ribbonDefault )
 
     val profileTextColor: Int
         get() =
             profile?.let { profile ->
-                if (profile.percentage != 100 || profile.timeshift != 0) resourceHelper.gc(R.color.ribbonTextWarning)
-                else resourceHelper.gc(R.color.ribbonTextDefault)
-            } ?: resourceHelper.gc(R.color.ribbonTextDefault)
+                if (profile.percentage != 100 || profile.timeshift != 0) resourceHelper.getAttributeColor( null ,R.attr.ribbonTextWarning )
+                else resourceHelper.getAttributeColor( null ,R.attr.defaultPillTextColor )
+            } ?: resourceHelper.getAttributeColor( null ,R.attr.defaultPillTextColor )
 
     /*
      * CALC PROGRESS
@@ -113,11 +114,11 @@ class OverviewData @Inject constructor(
     val lastBgColor: Int
         get() = lastBg?.let { lastBg ->
             when {
-                lastBg.valueToUnits(profileFunction.getUnits()) < defaultValueHelper.determineLowLine()  -> resourceHelper.gc(R.color.low)
-                lastBg.valueToUnits(profileFunction.getUnits()) > defaultValueHelper.determineHighLine() -> resourceHelper.gc(R.color.high)
-                else                                                                                     -> resourceHelper.gc(R.color.inrange)
+                lastBg.valueToUnits(profileFunction.getUnits()) < defaultValueHelper.determineLowLine()  -> resourceHelper.getAttributeColor( null ,R.attr.bgLow )
+                lastBg.valueToUnits(profileFunction.getUnits()) > defaultValueHelper.determineHighLine() -> resourceHelper.getAttributeColor( null ,R.attr.bgHigh )
+                else                                                                                     -> resourceHelper.getAttributeColor( null ,R.attr.bgInRange )
             }
-        } ?: resourceHelper.gc(R.color.inrange)
+        } ?: resourceHelper.getAttributeColor( null ,R.attr.bgInRange )
 
     val isActualBg: Boolean
         get() =

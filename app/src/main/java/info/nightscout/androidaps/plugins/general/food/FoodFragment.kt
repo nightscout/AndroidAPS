@@ -199,7 +199,6 @@ class FoodFragment : DaggerFragment() {
         }
     }
 
-    fun isUnfilteredInitialized() = ::unfiltered.isInitialized
 
     private fun filterData() {
         val textFilter = binding.filter.text.toString()

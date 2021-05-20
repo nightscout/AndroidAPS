@@ -90,7 +90,7 @@
         android:id="@+id/recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/reloadHistory"
+        android:layout_above="@id/reload"
         android:layout_below="@+id/status" />
 
     <info.nightscout.androidaps.utils.ui.SingleClickButton
@@ -105,6 +105,10 @@
         app:iconTint="?attr/iconColorToolbar"
         app:iconGravity="start"
         android:textAlignment="center"
-        android:text="@string/reload" />
+        android:text="@string/reload"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerview" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

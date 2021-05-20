@@ -179,6 +179,8 @@
 <attr name="smsCommunicatorWrongLength" format="reference|color" />
 <attr name="smsCommunicatorWrongPin" format="reference|color" />
 <attr name="smsCommunicatorOtp" format="reference|color" />
+    <!---Graph Viewport-->
+    <attr name="graphViwewportBackground" format="reference|color" />
 <!---Misc -->
 <attr name="carbsColor" format="reference|color" />
 <attr name="smbColor" format="reference|color" />
@@ -221,6 +223,10 @@
 <attr name="TitleAndLabelTextColor" format="reference" />
 <attr name="tddStatsActivityBackgroundColor" format="reference" />
 <attr name="activity_title_background" format="reference" />
+<attr name="ratio" format="reference" />
+<attr name="InMemoryGlucoseValue" format="reference" />
+<attr name="colorScheduled" format="reference" />
+
 <!-- Window background-->
 <attr name="windowBackground" format="reference|color" />
 </resources>

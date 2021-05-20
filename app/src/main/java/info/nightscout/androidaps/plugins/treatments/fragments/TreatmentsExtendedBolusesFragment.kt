@@ -139,7 +139,7 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
             val iob = extendedBolus.iobCalc(System.currentTimeMillis(), profile, activePlugin.activeInsulin)
             holder.binding.iob.text = resourceHelper.gs(R.string.formatinsulinunits, iob.iob)
             holder.binding.ratio.text = resourceHelper.gs(R.string.pump_basebasalrate, extendedBolus.rate)
-            if (iob.iob != 0.0) holder.binding.iob.setTextColor(resourceHelper.gc(R.color.colorActive)) else holder.binding.iob.setTextColor(holder.binding.insulin.currentTextColor)
+            if (iob.iob != 0.0) holder.binding.iob.setTextColor(resourceHelper.getAttributeColor(context, R.attr.treatmentActive)) else holder.binding.iob.setTextColor(holder.binding.insulin.currentTextColor)
             holder.binding.remove.tag = extendedBolus
         }
 

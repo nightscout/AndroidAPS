@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.utils.userEntry
 
+import android.content.Context
 import android.text.Spanned
 import dagger.Reusable
 import info.nightscout.androidaps.Constants
@@ -28,16 +29,16 @@ class UserEntryPresentationHelper @Inject constructor(
 ) {
 
     fun colorId(colorGroup: ColorGroup): Int = when (colorGroup) {
-        ColorGroup.InsulinTreatment -> R.color.iob
-        ColorGroup.BasalTreatment   -> R.color.basal
-        ColorGroup.CarbTreatment    -> R.color.carbs
-        ColorGroup.TT               -> R.color.tempTargetConfirmation
-        ColorGroup.Profile          -> R.color.white
-        ColorGroup.Loop             -> R.color.loopClosed
-        ColorGroup.Careportal       -> R.color.high
-        ColorGroup.Pump             -> R.color.loopDisconnected
-        ColorGroup.Aaps             -> R.color.defaulttext
-        else                        -> R.color.defaulttext
+        ColorGroup.InsulinTreatment -> R.attr.iobColor
+        ColorGroup.BasalTreatment   -> R.attr.basal
+        ColorGroup.CarbTreatment    -> R.attr.carbsColor
+        ColorGroup.TT               -> R.attr.tempTargetConfirmation
+        ColorGroup.Profile          -> R.attr.defaultTextColor
+        ColorGroup.Loop             -> R.attr.loopClosed
+        ColorGroup.Careportal       -> R.attr.bgHigh
+        ColorGroup.Pump             -> R.attr.loopDisconnected
+        ColorGroup.Aaps             -> R.attr.defaultTextColor
+        else                        -> R.attr.defaultTextColor
     }
 
     fun iconId(source: Sources): Int = when (source) {
@@ -102,12 +103,12 @@ class UserEntryPresentationHelper @Inject constructor(
         Sources.Unknown             -> R.drawable.ic_generic_icon
     }
 
-    fun actionToColoredString(action: Action): Spanned = when (action) {
-        Action.TREATMENT -> HtmlHelper.fromHtml(coloredAction(Action.BOLUS) + " + " + coloredAction(Action.CARBS))
-        else             -> HtmlHelper.fromHtml(coloredAction(action))
+    fun actionToColoredString(context: Context ,action: Action): Spanned = when (action) {
+        Action.TREATMENT -> HtmlHelper.fromHtml(coloredAction(context,Action.BOLUS) + " + " + coloredAction(context, Action.CARBS))
+        else             -> HtmlHelper.fromHtml(coloredAction(context, action))
     }
 
-    private fun coloredAction(action: Action): String = "<font color='${resourceHelper.gc(colorId(action.colorGroup))}'>${translator.translate(action)}</font>"
+    private fun coloredAction(context: Context , action: Action): String = "<font color='${resourceHelper.getAttributeColor(context, colorId(action.colorGroup))}'>${translator.translate(action)}</font>"
 
     fun listToPresentationString(list: List<ValueWithUnit?>) =
         list.joinToString(separator = "  ", transform = this::toPresentationString)

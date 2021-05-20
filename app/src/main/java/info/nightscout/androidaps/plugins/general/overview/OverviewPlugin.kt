@@ -475,12 +475,12 @@ class OverviewPlugin @Inject constructor(
         // create series
         overviewData.baseBasalGraphSeries = LineGraphSeries(Array(baseBasalArray.size) { i -> baseBasalArray[i] }).also {
             it.isDrawBackground = true
-            it.backgroundColor = resourceHelper.gc(R.color.basebasal)
+            it.backgroundColor = resourceHelper.getAttributeColor(null, R.attr.basebasal)
             it.thickness = 0
         }
         overviewData.tempBasalGraphSeries = LineGraphSeries(Array(tempBasalArray.size) { i -> tempBasalArray[i] }).also {
             it.isDrawBackground = true
-            it.backgroundColor = resourceHelper.gc(R.color.tempbasal)
+            it.backgroundColor = resourceHelper.getAttributeColor( null, R.attr.basal)
             it.thickness = 0
         }
         overviewData.basalLineGraphSeries = LineGraphSeries(Array(basalLineArray.size) { i -> basalLineArray[i] }).also {
@@ -488,14 +488,14 @@ class OverviewPlugin @Inject constructor(
                 paint.style = Paint.Style.STROKE
                 paint.strokeWidth = resourceHelper.getDisplayMetrics().scaledDensity * 2
                 paint.pathEffect = DashPathEffect(floatArrayOf(2f, 4f), 0f)
-                paint.color = resourceHelper.gc(R.color.basal)
+                paint.color = resourceHelper.getAttributeColor(null, R.attr.basal)
             })
         }
         overviewData.absoluteBasalGraphSeries = LineGraphSeries(Array(absoluteBasalLineArray.size) { i -> absoluteBasalLineArray[i] }).also {
             it.setCustomPaint(Paint().also { absolutePaint ->
                 absolutePaint.style = Paint.Style.STROKE
                 absolutePaint.strokeWidth = resourceHelper.getDisplayMetrics().scaledDensity * 2
-                absolutePaint.color = resourceHelper.gc(R.color.basal)
+                absolutePaint.color = resourceHelper.getAttributeColor(null, R.attr.basal)
             })
         }
 //        profiler.log(LTag.UI, "prepareBasalData() $from", start)
@@ -531,7 +531,7 @@ class OverviewPlugin @Inject constructor(
         // create series
         overviewData.temporaryTargetSeries = LineGraphSeries(Array(targetsSeriesArray.size) { i -> targetsSeriesArray[i] }).also {
             it.isDrawBackground = false
-            it.color = resourceHelper.gc(R.color.tempTargetBackground)
+            it.color = resourceHelper.getAttributeColor(null, R.attr.tempTargetBackground)
             it.thickness = 2
         }
 //        profiler.log(LTag.UI, "prepareTemporaryTargetData() $from", start)
@@ -540,7 +540,6 @@ class OverviewPlugin @Inject constructor(
     @Suppress("UNUSED_PARAMETER")
     @Synchronized
     private fun prepareTreatmentsData(from: String) {
-//        val start = dateUtil.now()
         overviewData.maxTreatmentsValue = 0.0
         val filteredTreatments: MutableList<DataPointWithLabelInterface> = ArrayList()
         repository.getBolusesIncludingInvalidFromTimeToTime(overviewData.fromTime, overviewData.endTime, true).blockingGet()
@@ -559,13 +558,13 @@ class OverviewPlugin @Inject constructor(
 
         // ProfileSwitch
         repository.getEffectiveProfileSwitchDataFromTimeToTime(overviewData.fromTime, overviewData.endTime, true).blockingGet()
-            .map { EffectiveProfileSwitchDataPoint(it) }
+            .map { EffectiveProfileSwitchDataPoint(it, resourceHelper) }
             .forEach(filteredTreatments::add)
 
         // Extended bolus
         if (!activePlugin.activePump.isFakingTempsByExtendedBoluses) {
             repository.getExtendedBolusDataFromTimeToTime(overviewData.fromTime, overviewData.endTime, true).blockingGet()
-                .map { ExtendedBolusDataPoint(it) }
+                .map { ExtendedBolusDataPoint(it, resourceHelper) }
                 .filter { it.duration != 0L }
                 .forEach {
                     it.y = getNearestBg(it.x.toLong())
@@ -686,15 +685,15 @@ class OverviewPlugin @Inject constructor(
 
             // DEVIATIONS
             if (autosensData != null) {
-                var color = resourceHelper.gc(R.color.deviationblack) // "="
+                var color = resourceHelper.getAttributeColor(null, R.attr.deviationCsf) // "="
                 if (autosensData.type == "" || autosensData.type == "non-meal") {
-                    if (autosensData.pastSensitivity == "C") color = resourceHelper.gc(R.color.deviationgrey)
-                    if (autosensData.pastSensitivity == "+") color = resourceHelper.gc(R.color.deviationgreen)
-                    if (autosensData.pastSensitivity == "-") color = resourceHelper.gc(R.color.deviationred)
+                    if (autosensData.pastSensitivity == "C") color = resourceHelper.getAttributeColor(null, R.attr.deviationCsf)
+                    if (autosensData.pastSensitivity == "+") color = resourceHelper.getAttributeColor(null, R.attr.deviationPlus)
+                    if (autosensData.pastSensitivity == "-") color =resourceHelper.getAttributeColor(null, R.attr.deviationMinus)
                 } else if (autosensData.type == "uam") {
-                    color = resourceHelper.gc(R.color.uam)
+                    color = resourceHelper.getAttributeColor(null, R.attr.uamColor)
                 } else if (autosensData.type == "csf") {
-                    color = resourceHelper.gc(R.color.deviationgrey)
+                    color = resourceHelper.getAttributeColor(null, R.attr.deviationCsf)
                 }
                 devArray.add(DeviationDataPoint(time.toDouble(), autosensData.deviation, color, overviewData.devScale))
                 overviewData.maxDevValueFound = maxOf(overviewData.maxDevValueFound, abs(autosensData.deviation), abs(bgi))
@@ -720,14 +719,14 @@ class OverviewPlugin @Inject constructor(
         // IOB
         overviewData.iobSeries = FixedLineGraphSeries(Array(iobArray.size) { i -> iobArray[i] }).also {
             it.isDrawBackground = true
-            it.backgroundColor = -0x7f000001 and resourceHelper.gc(R.color.iob) //50%
-            it.color = resourceHelper.gc(R.color.iob)
+            it.backgroundColor = -0x7f000001 and resourceHelper.getAttributeColor(null, R.attr.iobColor) //50%
+            it.color = resourceHelper.getAttributeColor(null, R.attr.iobColor)
             it.thickness = 3
         }
         overviewData.absIobSeries = FixedLineGraphSeries(Array(absIobArray.size) { i -> absIobArray[i] }).also {
             it.isDrawBackground = true
-            it.backgroundColor = -0x7f000001 and resourceHelper.gc(R.color.iob) //50%
-            it.color = resourceHelper.gc(R.color.iob)
+            it.backgroundColor = -0x7f000001 and resourceHelper.getAttributeColor(null, R.attr.iobColor) //50%
+            it.color = resourceHelper.getAttributeColor(null, R.attr.iobColor)
             it.thickness = 3
         }
 
@@ -738,14 +737,14 @@ class OverviewPlugin @Inject constructor(
             val iobPrediction: MutableList<DataPointWithLabelInterface> = ArrayList()
             val iobPredictionArray = iobCobCalculator.calculateIobArrayForSMB(lastAutosensResult, SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
             for (i in iobPredictionArray) {
-                iobPrediction.add(i.setColor(resourceHelper.gc(R.color.iobPredAS)))
+                iobPrediction.add(i.setColor(resourceHelper.getAttributeColor(null, R.attr.iobPredAS)))
                 overviewData.maxIobValueFound = max(overviewData.maxIobValueFound, abs(i.iob))
             }
             overviewData.iobPredictions1Series = PointsWithLabelGraphSeries(Array(iobPrediction.size) { i -> iobPrediction[i] })
             val iobPrediction2: MutableList<DataPointWithLabelInterface> = ArrayList()
             val iobPredictionArray2 = iobCobCalculator.calculateIobArrayForSMB(AutosensResult(), SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
             for (i in iobPredictionArray2) {
-                iobPrediction2.add(i.setColor(resourceHelper.gc(R.color.iobPred)))
+                iobPrediction2.add(i.setColor(resourceHelper.getAttributeColor(null, R.attr.iobPred)))
                 overviewData.maxIobValueFound = max(overviewData.maxIobValueFound, abs(i.iob))
             }
             overviewData.iobPredictions2Series = PointsWithLabelGraphSeries(Array(iobPrediction2.size) { i -> iobPrediction2[i] })
@@ -759,8 +758,8 @@ class OverviewPlugin @Inject constructor(
         // COB
         overviewData.cobSeries = FixedLineGraphSeries(Array(cobArray.size) { i -> cobArray[i] }).also {
             it.isDrawBackground = true
-            it.backgroundColor = -0x7f000001 and resourceHelper.gc(R.color.cob) //50%
-            it.color = resourceHelper.gc(R.color.cob)
+            it.backgroundColor = -0x7f000001 and resourceHelper.getAttributeColor(null, R.attr.cobColor) //50%
+            it.color = resourceHelper.getAttributeColor(null, R.attr.cobColor)
             it.thickness = 3
         }
         overviewData.cobMinFailOverSeries = PointsWithLabelGraphSeries(Array(minFailOverActiveList.size) { i -> minFailOverActiveList[i] })
@@ -768,7 +767,7 @@ class OverviewPlugin @Inject constructor(
         // ACTIVITY
         overviewData.activitySeries = FixedLineGraphSeries(Array(actArrayHist.size) { i -> actArrayHist[i] }).also {
             it.isDrawBackground = false
-            it.color = resourceHelper.gc(R.color.activity)
+            it.color = resourceHelper.getAttributeColor(null, R.attr.activity)
             it.thickness = 3
         }
         overviewData.activityPredictionSeries = FixedLineGraphSeries(Array(actArrayPrediction.size) { i -> actArrayPrediction[i] }).also {
@@ -776,14 +775,14 @@ class OverviewPlugin @Inject constructor(
                 paint.style = Paint.Style.STROKE
                 paint.strokeWidth = 3f
                 paint.pathEffect = DashPathEffect(floatArrayOf(4f, 4f), 0f)
-                paint.color = resourceHelper.gc(R.color.activity)
+                paint.color = resourceHelper.getAttributeColor(null, R.attr.activity)
             })
         }
 
         // BGI
         overviewData.minusBgiSeries = FixedLineGraphSeries(Array(bgiArrayHist.size) { i -> bgiArrayHist[i] }).also {
             it.isDrawBackground = false
-            it.color = resourceHelper.gc(R.color.bgi)
+            it.color = resourceHelper.getAttributeColor(null, R.attr.bgi)
             it.thickness = 3
         }
         overviewData.minusBgiHistSeries = FixedLineGraphSeries(Array(bgiArrayPrediction.size) { i -> bgiArrayPrediction[i] }).also {
@@ -791,7 +790,7 @@ class OverviewPlugin @Inject constructor(
                 paint.style = Paint.Style.STROKE
                 paint.strokeWidth = 3f
                 paint.pathEffect = DashPathEffect(floatArrayOf(4f, 4f), 0f)
-                paint.color = resourceHelper.gc(R.color.bgi)
+                paint.color = resourceHelper.getAttributeColor(null, R.attr.bgi)
             })
         }
 
@@ -802,17 +801,17 @@ class OverviewPlugin @Inject constructor(
 
         // RATIO
         overviewData.ratioSeries = LineGraphSeries(Array(ratioArray.size) { i -> ratioArray[i] }).also {
-            it.color = resourceHelper.gc(R.color.ratio)
+            it.color = resourceHelper.getAttributeColor(null, R.attr.ratio)
             it.thickness = 3
         }
 
         // DEV SLOPE
         overviewData.dsMaxSeries = LineGraphSeries(Array(dsMaxArray.size) { i -> dsMaxArray[i] }).also {
-            it.color = resourceHelper.gc(R.color.devslopepos)
+            it.color = resourceHelper.getAttributeColor(null, R.attr.devslopepos)
             it.thickness = 3
         }
         overviewData.dsMinSeries = LineGraphSeries(Array(dsMinArray.size) { i -> dsMinArray[i] }).also {
-            it.color = resourceHelper.gc(R.color.devslopeneg)
+            it.color = resourceHelper.getAttributeColor(null, R.attr.devslopeneg)
             it.thickness = 3
         }
 

@@ -112,7 +112,7 @@ class DanaHistoryActivity : NoSplashAppCompatActivity() {
         }
         binding.spinner.adapter = ArrayAdapter(this, R.layout.spinner_centered, typeList)
 
-        binding.reloadHistory.setOnClickListener {
+        binding.reload.setOnClickListener {
             val selected = binding.spinner.selectedItem as TypeList?
                 ?: return@setOnClickListener
             binding.reload.visibility = View.GONE
@@ -122,7 +122,7 @@ class DanaHistoryActivity : NoSplashAppCompatActivity() {
                 override fun run() {
                     swapAdapter(selected.type)
                     runOnUiThread {
-                        binding.reloadHistory.visibility = View.VISIBLE
+                        binding.reload.visibility = View.VISIBLE
                         binding.status.visibility = View.GONE
                     }
                 }

@@ -298,7 +298,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
 //                if (buildHelper.isDev()) graphData.addBucketedData(fromTime, toTime)
 
                 // add target line
-                graphData.addTargetLine(fromTime, toTime, profile, null, baseContext.applicationContext)
+//                graphData.addTargetLine(fromTime, toTime, profile, null, baseContext.applicationContext)
 
                 // **** NOW line ****
                 graphData.addNowLine(pointer)
@@ -307,11 +307,11 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
                     // Treatments
 //                    graphData.addTreatments(fromTime, toTime)
                     if (menuChartSettings[0][OverviewMenus.CharType.ACT.ordinal])
-                        graphData.addActivity(fromTime, toTime, false, 0.8,baseContext.applicationContext)
+//                        graphData.addActivity(fromTime, toTime, false, 0.8,baseContext.applicationContext)
 
                     // add basal data
                     if (pump.pumpDescription.isTempBasalCapable && menuChartSettings[0][OverviewMenus.CharType.BAS.ordinal]) {
-                        graphData.addBasals(fromTime, toTime, lowLine / graphData.maxY / 1.2, baseContext.applicationContext)
+//                        graphData.addBasals(fromTime, toTime, lowLine / graphData.maxY / 1.2, baseContext.applicationContext)
                     }
                     // ------------------ 2nd graph
                     synchronized(graphLock) {
@@ -337,13 +337,13 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
                             val alignIobScale = menuChartSettings[g + 1][OverviewMenus.CharType.ABS.ordinal] && menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal]
                             val alignDevBgiScale = menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal] && menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal]
 
-                            if (menuChartSettings[g + 1][OverviewMenus.CharType.ABS.ordinal]) secondGraphData.addAbsIob(fromTime, toTime, useABSForScale, 1.0, baseContext.applicationContext)
-                            if (menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal]) secondGraphData.addIob(fromTime, toTime, useIobForScale, 1.0, menuChartSettings[g + 1][OverviewMenus.CharType.PRE.ordinal], alignIobScale, baseContext.applicationContext)
-                            if (menuChartSettings[g + 1][OverviewMenus.CharType.COB.ordinal]) secondGraphData.addCob(fromTime, toTime, useCobForScale, if (useCobForScale) 1.0 else 0.5,  baseContext.applicationContext)
-                            if (menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal]) secondGraphData.addDeviations(fromTime, toTime, useDevForScale, 1.0, alignDevBgiScale, baseContext.applicationContext)
-                            if (menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal]) secondGraphData.addRatio(fromTime, toTime, useRatioForScale, 1.0, baseContext.applicationContext)
-                            if (menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal]) secondGraphData.addMinusBGI(fromTime, toTime, useBGIForScale, if (alignDevBgiScale) 1.0 else 0.8, alignDevBgiScale, baseContext.applicationContext)
-                            if (menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] && buildHelper.isDev()) secondGraphData.addDeviationSlope(fromTime, toTime, useDSForScale, 1.0, baseContext.applicationContext)
+  //                          if (menuChartSettings[g + 1][OverviewMenus.CharType.ABS.ordinal]) secondGraphData.addAbsIob(fromTime, toTime, useABSForScale, 1.0, baseContext.applicationContext)
+  //                          if (menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal]) secondGraphData.addIob(fromTime, toTime, useIobForScale, 1.0, menuChartSettings[g + 1][OverviewMenus.CharType.PRE.ordinal], alignIobScale, baseContext.applicationContext)
+  //                          if (menuChartSettings[g + 1][OverviewMenus.CharType.COB.ordinal]) secondGraphData.addCob(fromTime, toTime, useCobForScale, if (useCobForScale) 1.0 else 0.5,  baseContext.applicationContext)
+  //                          if (menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal]) secondGraphData.addDeviations(fromTime, toTime, useDevForScale, 1.0, alignDevBgiScale, baseContext.applicationContext)
+  //                          if (menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal]) secondGraphData.addRatio(fromTime, toTime, useRatioForScale, 1.0, baseContext.applicationContext)
+  //                          if (menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal]) secondGraphData.addMinusBGI(fromTime, toTime, useBGIForScale, if (alignDevBgiScale) 1.0 else 0.8, alignDevBgiScale, baseContext.applicationContext)
+  //                          if (menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] && buildHelper.isDev()) secondGraphData.addDeviationSlope(fromTime, toTime, useDSForScale, 1.0, baseContext.applicationContext)
 
                             // set manual x bounds to have nice steps
                             secondGraphData.formatAxis(fromTime, toTime)

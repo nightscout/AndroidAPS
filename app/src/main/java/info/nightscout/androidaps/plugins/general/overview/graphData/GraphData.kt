@@ -60,9 +60,6 @@ class GraphData(
         if (addPredictions) addSeries(overviewData.predictionsGraphSeries)
     }
 
-    private fun addUpperChartMargin(maxBgValue: Double) =
-        if (units == Constants.MGDL) Round.roundTo(maxBgValue, 40.0) + 80 else Round.roundTo(maxBgValue, 2.0) + 4
-
     fun addInRangeArea(fromTime: Long, toTime: Long, lowLine: Double, highLine: Double,context: Context) {
         val inRangeAreaSeries: AreaGraphSeries<DoubleDataPoint>
         val inRangeAreaDataPoints = arrayOf(
@@ -72,7 +69,7 @@ class GraphData(
         addSeries(AreaGraphSeries(inRangeAreaDataPoints).also {
             it.color = 0
             it.isDrawBackground = true
-            it.backgroundColor = resourceHelper.getAttributeColor(context, R.attr.tempTargetBackground)
+            it.backgroundColor = resourceHelper.getAttributeColor(context, R.attr.colorGraphBackground)
         })
     }
 

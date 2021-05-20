@@ -189,7 +189,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
             holder.binding.remove.visibility = (profileSwitch is ProfileSealed.PS).toVisibility()
             holder.binding.clone.visibility = (profileSwitch is ProfileSealed.PS).toVisibility()
             holder.binding.spacer.visibility = (profileSwitch is ProfileSealed.PS).toVisibility()
-            holder.binding.root.setBackgroundColor(resourceHelper.gc(if (profileSwitch is ProfileSealed.PS) R.color.defaultbackground else R.color.list_delimiter))
+            holder.binding.root.setBackgroundColor(resourceHelper.getAttributeColor(view?.context, if (profileSwitch is ProfileSealed.PS) R.attr.colorSurface else R.attr.okBackground))
         }
 
         override fun getItemCount(): Int {

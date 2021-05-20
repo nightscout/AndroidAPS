@@ -5,7 +5,6 @@ package info.nightscout.androidaps.db;
  */
 
 import android.content.Context;
-import android.graphics.Color;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -18,6 +17,7 @@ import javax.inject.Inject;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.core.R;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.Insulin;
 import info.nightscout.androidaps.interfaces.Interval;

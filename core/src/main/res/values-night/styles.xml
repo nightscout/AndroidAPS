@@ -32,6 +32,8 @@
         <item name="uamColor">@color/swampGreen</item>
         <item name="smbColor">@color/cyan</item>
         <item name="ztColor">@color/cyan</item>
+        <item name="ratio">@color/lightgray</item>
+        <item name="InMemoryGlucoseValue">@color/white</item>
         <item name="textAppearanceHeadline1">@style/TextAppearance.MaterialComponents.Headline1</item>
         <item name="textAppearanceHeadline2">@style/TextAppearance.MaterialComponents.Headline2</item>
         <item name="textAppearanceHeadline3">@style/TextAppearance.MaterialComponents.Headline3</item>
@@ -63,7 +65,7 @@
         <!-- Fragment background for some themes default transparent  -->
         <item name="fragmentbackground">@color/transparent</item>
         <!-- Color of graph background -->
-        <item name="colorGraphBackground">@color/white_alpha_08</item>
+        <item name="colorGraphBackground">@color/black_alpha_20</item>
         <item name="inrangeBackground">@color/white_alpha_08</item>
         <!-- Graph specific colors  -->
         <item name="graphHorizontalLabelText">@color/white</item>
@@ -252,6 +254,7 @@
         <item name="automationSelectedItemBackground" >@color/gray</item>
         <!---Round dialog corner only if sdk >= 28 -->
         <item name="android:dialogCornerRadius" ns2:targetApi="p">8dp</item>
+        <item name="colorScheduled" >@color/squash</item>
         <!---windowBackground -->
         <item name="android:windowBackground">?attr/windowBackground</item>
         <item name="background">?attr/windowBackground</item>
@@ -261,6 +264,7 @@
         <item name="TitleAndLabelTextColor" >@color/white</item>
         <item name="tddStatsActivityBackgroundColor" >@color/transparent</item>
         <item name="activity_title_background" >@color/background_dark</item>
+        <item name="graphViwewportBackground" >@color/black_alpha_20</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>

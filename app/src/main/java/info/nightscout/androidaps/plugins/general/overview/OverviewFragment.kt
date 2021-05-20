@@ -557,12 +557,14 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
                 val graph = GraphView(context)
                 graph.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, resourceHelper.dpToPx(skinProvider.activeSkin().secondaryGraphHeight)).also { it.setMargins(0, resourceHelper.dpToPx(15), 0, resourceHelper.dpToPx(10)) }
-                graph.gridLabelRenderer?.gridColor = resourceHelper.gc(R.color.graphgrid)
+                graph.gridLabelRenderer?.gridColor = resourceHelper.getAttributeColor(context,R.attr.graphGrid )
+                graph.gridLabelRenderer?.horizontalLabelsColor = resourceHelper.getAttributeColor(context,R.attr.graphHorizontalLabelText )
+                graph.gridLabelRenderer?.verticalLabelsColor = resourceHelper.getAttributeColor(context,R.attr.graphVerticalLabelText )
                 graph.gridLabelRenderer?.reloadStyles()
                 graph.gridLabelRenderer?.isHorizontalLabelsVisible = false
                 graph.gridLabelRenderer?.labelVerticalWidth = axisWidth
                 graph.gridLabelRenderer?.numVerticalLabels = 3
-                graph.viewport.backgroundColor = Color.argb(20, 255, 255, 255) // 8% of gray
+                graph.setBackgroundColor(resourceHelper.getAttributeColor(context,R.attr.colorGraphBackground ))
                 relativeLayout.addView(graph)
 
                 val label = TextView(context)
@@ -597,8 +599,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Suppress("UNUSED_PARAMETER")
     @SuppressLint("SetTextI18n")
     fun updateGUI(from: String, what: OverviewData.Property) {
-//        if (what != OverviewData.Property.CALC_PROGRESS)
-//            aapsLogger.debug(LTag.UI, "UpdateGui $from $what")
         if (overviewData.profile == null) {
             binding.loopPumpStatusLayout.pumpStatus.setText(R.string.noprofileset)
             binding.loopPumpStatusLayout.pumpStatusLayout.visibility = View.VISIBLE
@@ -641,11 +641,13 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 binding.infoLayout.timeAgoShort.text = "(" + dateUtil.minAgoShort(overviewData.lastBg?.timestamp) + ")"
             }
 
-            OverviewData.Property.PROFILE          -> {
+            OverviewData.Property.PROFILE  -> {
                 binding.loopPumpStatusLayout.activeProfile.text = overviewData.profileNameWithRemainingTime
                     ?: ""
-                binding.loopPumpStatusLayout.activeProfile.setBackgroundColor(overviewData.profileBackgroudColor)
+                binding.loopPumpStatusLayout.activeProfile.setBackgroundColor(overviewData.profileBackgroundColor)
                 binding.loopPumpStatusLayout.activeProfile.setTextColor(overviewData.profileTextColor)
+                val drawableLeft: Array<Drawable?> = binding.loopPumpStatusLayout.activeProfile.compoundDrawables
+                if (drawableLeft[0] != null) overviewData.profileTextColor.let { drawableLeft[0]!!.setTint(it) }
             }
 
             OverviewData.Property.TEMPORARY_BASAL  -> {
@@ -670,7 +672,11 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 binding.infoLayout.time.text = dateUtil.timeString(dateUtil.now())
                 // Status lights
                 binding.statusLightsLayout.statusLights.visibility = (sp.getBoolean(R.string.key_show_statuslights, true) || config.NSCLIENT).toVisibility()
-                statusLightHandler.updateStatusLights(binding.statusLightsLayout.cannulaAge, binding.statusLightsLayout.insulinAge, binding.statusLightsLayout.reservoirLevel, binding.statusLightsLayout.sensorAge, null, binding.statusLightsLayout.pbAge, binding.statusLightsLayout.batteryLevel)
+                statusLightHandler.updateStatusLights(binding.statusLightsLayout.cannulaAge, binding.statusLightsLayout.insulinAge, binding.statusLightsLayout.reservoirLevel, binding.statusLightsLayout.sensorAge, null, binding.statusLightsLayout.pbAge, binding.statusLightsLayout.batteryLevel , resourceHelper.getAttributeColor(context, R.attr.statuslightNormal),
+                    resourceHelper.getAttributeColor(context, R.attr.statuslightWarning),
+                    resourceHelper.getAttributeColor(context, R.attr.statuslightAlarm))
+
+
                 processButtonsVisibility()
                 processAps()
             }
@@ -711,9 +717,11 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 // temp target
                 val tempTarget = overviewData.temporarytarget
                 if (tempTarget != null) {
-                    binding.loopPumpStatusLayout.tempTarget.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
-                    binding.loopPumpStatusLayout.tempTarget.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning))
+                    binding.loopPumpStatusLayout.tempTarget.setTextColor(resourceHelper.getAttributeColor(context, R.attr.ribbonTextWarning))
+                    binding.loopPumpStatusLayout.tempTarget.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.ribbonWarning))
                     binding.loopPumpStatusLayout.tempTarget.text = Profile.toTargetRangeString(tempTarget.lowTarget, tempTarget.highTarget, GlucoseUnit.MGDL, units) + " " + dateUtil.untilString(tempTarget.end, resourceHelper)
+                    val drawableLeft: Array<Drawable?> = binding.loopPumpStatusLayout.tempTarget.compoundDrawables
+                    if (drawableLeft[0] != null) resourceHelper.getAttributeColor(context, R.attr.ribbonTextWarning).let { drawableLeft[0]!!.setTint(it) }
                 } else {
                     // If the target is not the same as set in the profile then oref has overridden it
                     overviewData.profile?.let { profile ->
@@ -722,12 +730,16 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                         if (targetUsed != 0.0 && abs(profile.getTargetMgdl() - targetUsed) > 0.01) {
                             aapsLogger.debug("Adjusted target. Profile: ${profile.getTargetMgdl()} APS: $targetUsed")
                             binding.loopPumpStatusLayout.tempTarget.text = Profile.toTargetRangeString(targetUsed, targetUsed, GlucoseUnit.MGDL, units)
-                            binding.loopPumpStatusLayout.tempTarget.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
-                            binding.loopPumpStatusLayout.tempTarget.setBackgroundColor(resourceHelper.gc(R.color.tempTargetBackground))
+                            binding.loopPumpStatusLayout.tempTarget.setTextColor(resourceHelper.getAttributeColor(context, R.attr.ribbonTextWarning))
+                            binding.loopPumpStatusLayout.tempTarget.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.tempTargetBackground))
+                            val drawableLeft: Array<Drawable?> = binding.loopPumpStatusLayout.tempTarget.compoundDrawables
+                            if (drawableLeft[0] != null) resourceHelper.getAttributeColor(context, R.attr.ribbonTextWarning).let { drawableLeft[0]!!.setTint(it) }
                         } else {
-                            binding.loopPumpStatusLayout.tempTarget.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault))
-                            binding.loopPumpStatusLayout.tempTarget.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
+                            binding.loopPumpStatusLayout.tempTarget.setTextColor(resourceHelper.getAttributeColor(context, R.attr.defaultPillTextColor))
+                            binding.loopPumpStatusLayout.tempTarget.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.ribbonDefault))
                             binding.loopPumpStatusLayout.tempTarget.text = Profile.toTargetRangeString(profile.getTargetLowMgdl(), profile.getTargetHighMgdl(), GlucoseUnit.MGDL, units)
+                            val drawableLeft: Array<Drawable?> = binding.loopPumpStatusLayout.tempTarget.compoundDrawables
+                            if (drawableLeft[0] != null) resourceHelper.getAttributeColor(context, R.attr.defaultPillTextColor).let { drawableLeft[0]!!.setTint(it) }
                         }
                     }
                 }
@@ -736,7 +748,11 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             OverviewData.Property.GRAPH            -> {
                 val graphData = GraphData(injector, binding.graphsLayout.bgGraph)
                 val menuChartSettings = overviewMenus.setting
-                graphData.addInRangeArea(overviewData.fromTime, overviewData.endTime, defaultValueHelper.determineLowLine(), defaultValueHelper.determineHighLine())
+                this.context?.let {
+                    graphData.addInRangeArea(overviewData.fromTime, overviewData.endTime, defaultValueHelper.determineLowLine(), defaultValueHelper.determineHighLine(),
+                        it
+                    )
+                }
                 graphData.addBgReadings(menuChartSettings[0][OverviewMenus.CharType.PRE.ordinal])
                 if (buildHelper.isDev()) graphData.addBucketedData()
                 graphData.addTreatments()

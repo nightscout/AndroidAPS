@@ -31,6 +31,8 @@
         <item name="uamColor">@color/swampGreen</item>
         <item name="smbColor">@color/cyan</item>
         <item name="ztColor">@color/cyan</item>
+        <item name="ratio">@color/lightgray</item>
+        <item name="InMemoryGlucoseValue">@color/black</item>
         <item name="textAppearanceHeadline1">@style/TextAppearance.MaterialComponents.Headline1</item>
         <item name="textAppearanceHeadline2">@style/TextAppearance.MaterialComponents.Headline2</item>
         <item name="textAppearanceHeadline3">@style/TextAppearance.MaterialComponents.Headline3</item>
@@ -55,7 +57,7 @@
         <item name="colorPrimaryDarkDialog">?attr/colorPrimaryDark</item>
         <item name="colorAccentDialog">?attr/colorAccent</item>
         <!-- Color of graph background -->
-        <item name="colorGraphBackground">@color/white_alpha_80</item>
+        <item name="colorGraphBackground">@color/black_alpha_10</item>
         <item name="inrangeBackground">@color/black_alpha_10</item>
         <!-- Top bar icons -->
         <item name="iconSensor">@drawable/ic_dexcom_g6</item>
@@ -252,11 +254,13 @@
         <item name="extendedBolus" >@color/cyan</item>
         <item name="TitleAndLabelTextColor" >@color/white</item>
         <item name="tddStatsActivityBackgroundColor" >@color/transparent</item>
+        <item name="colorScheduled" >@color/squash</item>
         <!---Round dialog corner only if sdk >= 28 -->
         <item name="android:dialogCornerRadius" ns2:targetApi="p">8dp</item>
         <!---windowBackground -->
         <item name="windowBackground" >?attr/colorSurface</item>
         <item name="activity_title_background" >@color/background_light</item>
+        <item name="graphViwewportBackground" >@color/black_alpha_20</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>

@@ -27,6 +27,7 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.CarbTimer
 import info.nightscout.androidaps.utils.DateUtil
@@ -56,7 +57,7 @@ class BolusWizard @Inject constructor(
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var loopPlugin: LoopPlugin
-    @Inject lateinit var iobCobCalculator: IobCobCalculator
+    @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var config: Config
     @Inject lateinit var uel: UserEntryLogger
@@ -207,8 +208,8 @@ class BolusWizard @Inject constructor(
 
         // Insulin from IOB
         // IOB calculation
-        val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
-        val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
+        val bolusIob = iobCobCalculatorPlugin.calculateIobFromBolus().round()
+        val basalIob = iobCobCalculatorPlugin.calculateIobFromTempBasalsIncludingConvertedExtended().round()
 
         insulinFromBolusIOB = if (includeBolusIOB) -bolusIob.iob else 0.0
         insulinFromBasalIOB = if (includeBasalIOB) -basalIob.basaliob else 0.0
@@ -299,7 +300,7 @@ class BolusWizard @Inject constructor(
         }
         if (insulinFromCOB > 0) {
             actions.add(resourceHelper.gs(R.string.cobvsiob) + ": " + resourceHelper.gs(R.string.formatsignedinsulinunits, insulinFromBolusIOB + insulinFromBasalIOB + insulinFromCOB + insulinFromBG).formatColorFromAttribute( resourceHelper.getAttributeColor(null, R.attr.cobAlert )))
-            val absorptionRate = iobCobCalculatorPlugin.slowAbsorptionPercentage(60)
+            val absorptionRate = iobCobCalculatorPlugin.ads.slowAbsorptionPercentage(60)
             if (absorptionRate > .25)
                 actions.add(resourceHelper.gs(R.string.slowabsorptiondetected, resourceHelper.getAttributeColor(null, R.attr.cobAlert), (absorptionRate * 100).toInt()))
         }
