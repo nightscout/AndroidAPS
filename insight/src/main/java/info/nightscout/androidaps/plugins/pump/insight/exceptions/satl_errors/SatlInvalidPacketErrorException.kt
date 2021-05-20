@@ -1,5 +1,3 @@
-package info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors;
+package info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors
 
-public class SatlInvalidPacketErrorException extends SatlErrorException {
-
-}
+class SatlInvalidPacketErrorException : SatlErrorException()
