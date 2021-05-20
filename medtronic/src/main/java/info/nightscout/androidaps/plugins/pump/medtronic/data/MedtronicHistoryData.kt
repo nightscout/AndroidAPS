@@ -756,7 +756,11 @@ class MedtronicHistoryData @Inject constructor(
         }
 
         var proposedTime = DateTimeUtil.toMillisFromATD(treatment!!.atechDateTime!!)
-        proposedTime += (this.pumpTime!!.timeDifference * 1000)
+
+        // pumpTime should never be null, but it can theoretically happen if reading of time from pump fails
+        if (this.pumpTime!=null) {
+            proposedTime += (this.pumpTime!!.timeDifference * 1000)
+        }
 
         val proposedTimeDiff : LongArray = longArrayOf(proposedTime-(2*60*1000), proposedTime+(2L*60L*1000L))
         val tempEntriesList: MutableList<PumpDbEntry> = mutableListOf()
