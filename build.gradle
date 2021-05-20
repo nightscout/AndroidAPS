@@ -3,7 +3,8 @@
 buildscript {
     ext.kotlin_version = '1.5.0-release-764'
     ext {
-        kotlin_version = '1.5.0'
+        // kotlin 1.5.0 prevents travis from pass
+        kotlin_version = '1.4.32'
         coreVersion = '1.5.0'
         rxjava_version = '2.2.21'
         rxandroid_version = '2.1.1'
