@@ -20,7 +20,6 @@
     <string name="automation_trigger_pump_last_connection_compared">Τελευταία σύνδεση με αντλία %1$s %2$s λεπτά πριν</string>
     <string name="profilepercentage">Προφίλ ποσοστό</string>
     <string name="startprofileforever">Έναρξη προφίλ %1$d%%</string>
-    <string name="startprofile">Έναρξη προφίλ %1$d%% για %2$d λεπτά</string>
     <string name="percent_u">Ποσοστό [%]:</string>
     <string name="sendsmsactionlabel">Στείλτε SMS: %1$s</string>
     <string name="sendsmsactiontext">Στείλτε SMS με κείμενο</string>

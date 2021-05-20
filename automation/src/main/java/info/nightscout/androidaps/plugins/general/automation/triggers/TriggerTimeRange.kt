@@ -4,22 +4,18 @@ import android.widget.LinearLayout
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.automation.R
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.general.automation.elements.InputTimeRange
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder
 import info.nightscout.androidaps.plugins.general.automation.elements.StaticLabel
-import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper.safeGetInt
 import info.nightscout.androidaps.utils.MidnightTime
 import org.json.JSONObject
-import javax.inject.Inject
 
 // Trigger for time range ( from 10:00AM till 13:00PM )
 class TriggerTimeRange(injector: HasAndroidInjector) : Trigger(injector) {
 
-    @Inject lateinit var dateUtil: DateUtil
-    
     // in minutes since midnight 60 means 1AM
     var range = InputTimeRange(resourceHelper, dateUtil)
 
@@ -28,7 +24,8 @@ class TriggerTimeRange(injector: HasAndroidInjector) : Trigger(injector) {
         range.end = end
     }
 
-    @Suppress("unused") constructor(injector: HasAndroidInjector, triggerTimeRange: TriggerTimeRange) : this(injector) {
+    @Suppress("unused")
+    constructor(injector: HasAndroidInjector, triggerTimeRange: TriggerTimeRange) : this(injector) {
         range.start = triggerTimeRange.range.start
         range.end = triggerTimeRange.range.end
     }
@@ -40,7 +37,7 @@ class TriggerTimeRange(injector: HasAndroidInjector) : Trigger(injector) {
     }
 
     override fun shouldRun(): Boolean {
-        val currentMinSinceMidnight = getMinSinceMidnight(DateUtil.now())
+        val currentMinSinceMidnight = getMinSinceMidnight(dateUtil.now())
         var doRun = false
         if (range.start < range.end && range.start < currentMinSinceMidnight && currentMinSinceMidnight < range.end) doRun = true
         else if (range.start > range.end && (range.start < currentMinSinceMidnight || currentMinSinceMidnight < range.end)) doRun = true
@@ -52,15 +49,10 @@ class TriggerTimeRange(injector: HasAndroidInjector) : Trigger(injector) {
         return false
     }
 
-    override fun toJSON(): String {
-        val data = JSONObject()
+    override fun dataJSON(): JSONObject =
+        JSONObject()
             .put("start", range.start)
             .put("end", range.end)
-        return JSONObject()
-            .put("type", this::class.java.name)
-            .put("data", data)
-            .toString()
-    }
 
     override fun fromJSON(data: String): TriggerTimeRange {
         val o = JSONObject(data)

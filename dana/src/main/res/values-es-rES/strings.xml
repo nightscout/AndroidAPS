@@ -106,7 +106,6 @@
     <string name="danars_password_title">Bomba de contraseña (v1 solamente)</string>
     <string name="danar_password_title">Contraseña de la bomba</string>
     <string name="danar_useextended_title">Usar bolos extendidos para &gt;200%%</string>
-    <string name="danar_visualizeextendedaspercentage_title">Visualizar bolo extendido como %%</string>
     <string name="bolusspeed">Velocidad bolo</string>
     <string name="selectedpump">Bomba seleccionada</string>
     <string name="rs_loginsulinchange_title">Registrar cambios de reservorio</string>

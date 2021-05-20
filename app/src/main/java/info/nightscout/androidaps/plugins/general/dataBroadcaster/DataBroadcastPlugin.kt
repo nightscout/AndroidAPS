@@ -5,15 +5,10 @@ import android.content.Intent
 import android.content.pm.ResolveInfo
 import android.os.Bundle
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.events.*
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginDescription
-import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.events.EventOpenAPSUpdateGui
@@ -22,11 +17,13 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.services.Intents
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.extensions.durationInMinutes
+import info.nightscout.androidaps.extensions.toStringFull
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -40,14 +37,15 @@ class DataBroadcastPlugin @Inject constructor(
     resourceHelper: ResourceHelper,
     private val aapsSchedulers: AapsSchedulers,
     private val context: Context,
+    private val dateUtil: DateUtil,
     private val fabricPrivacy: FabricPrivacy,
     private val rxBus: RxBusWrapper,
-    private val iobCobCalculatorPlugin: IobCobCalculatorPlugin,
+    private val iobCobCalculator: IobCobCalculator,
     private val profileFunction: ProfileFunction,
     private val defaultValueHelper: DefaultValueHelper,
     private val nsDeviceStatus: NSDeviceStatus,
     private val loopPlugin: LoopPlugin,
-    private val activePlugin: ActivePluginProvider,
+    private val activePlugin: ActivePlugin,
     private var receiverStatusStore: ReceiverStatusStore,
     private val config: Config,
     private val glucoseStatusProvider: GlucoseStatusProvider
@@ -121,12 +119,12 @@ class DataBroadcastPlugin @Inject constructor(
     }
 
     private fun bgStatus(bundle: Bundle) {
-        val lastBG = iobCobCalculatorPlugin.lastBg() ?: return
+        val lastBG = iobCobCalculator.ads.lastBg() ?: return
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData ?: return
 
         bundle.putDouble("glucoseMgdl", lastBG.value)   // last BG in mgdl
         bundle.putLong("glucoseTimeStamp", lastBG.timestamp) // timestamp
-        bundle.putString("units", profileFunction.getUnits()) // units used in AAPS "mg/dl" or "mmol"
+        bundle.putString("units", profileFunction.getUnits().asText) // units used in AAPS "mg/dl" or "mmol"
         bundle.putString("slopeArrow", lastBG.trendArrow.text) // direction arrow as string
         bundle.putDouble("deltaMgdl", glucoseStatus.delta) // bg delta in mgdl
         bundle.putDouble("avgDeltaMgdl", glucoseStatus.shortAvgDelta) // average bg delta
@@ -136,15 +134,13 @@ class DataBroadcastPlugin @Inject constructor(
 
     private fun iobCob(bundle: Bundle) {
         profileFunction.getProfile() ?: return
-        activePlugin.activeTreatments.updateTotalIOBTreatments()
-        val bolusIob: IobTotal = activePlugin.activeTreatments.lastCalculationTreatments.round()
-        activePlugin.activeTreatments.updateTotalIOBTempBasals()
-        val basalIob: IobTotal = activePlugin.activeTreatments.lastCalculationTempBasals.round()
+        val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
+        val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
         bundle.putDouble("bolusIob", bolusIob.iob)
         bundle.putDouble("basalIob", basalIob.basaliob)
         bundle.putDouble("iob", bolusIob.iob + basalIob.basaliob) // total IOB
 
-        val cob = iobCobCalculatorPlugin.getCobInfo(false, "broadcast")
+        val cob = iobCobCalculator.getCobInfo(false, "broadcast")
         bundle.putDouble("cob", cob.displayCob ?: -1.0) // COB [g] or -1 if N/A
         bundle.putDouble("futureCarbs", cob.futureCarbs) // future scheduled carbs
     }
@@ -179,14 +175,14 @@ class DataBroadcastPlugin @Inject constructor(
         val now = System.currentTimeMillis()
         val profile = profileFunction.getProfile() ?: return
         bundle.putLong("basalTimeStamp", now)
-        bundle.putDouble("baseBasal", profile.basal)
+        bundle.putDouble("baseBasal", profile.getBasal())
         bundle.putString("profile", profileFunction.getProfileName())
-        activePlugin.activeTreatments.getTempBasalFromHistory(now)?.let {
-            bundle.putLong("tempBasalStart", it.date)
-            bundle.putInt("tempBasalDurationInMinutes", it.durationInMinutes)
-            if (it.isAbsolute) bundle.putDouble("tempBasalAbsolute", it.absoluteRate) // U/h for absolute TBR
-            else bundle.putInt("tempBasalPercent", it.percentRate) // % for percent type TBR
-            bundle.putString("tempBasalString", it.toStringFull()) // user friendly string
+        iobCobCalculator.getTempBasalIncludingConvertedExtended(now)?.let {
+            bundle.putLong("tempBasalStart", it.timestamp)
+            bundle.putLong("tempBasalDurationInMinutes", it.durationInMinutes)
+            if (it.isAbsolute) bundle.putDouble("tempBasalAbsolute", it.rate) // U/h for absolute TBR
+            else bundle.putInt("tempBasalPercent", it.rate.toInt()) // % for percent type TBR
+            bundle.putString("tempBasalString", it.toStringFull(profile, dateUtil)) // user friendly string
         }
     }
 

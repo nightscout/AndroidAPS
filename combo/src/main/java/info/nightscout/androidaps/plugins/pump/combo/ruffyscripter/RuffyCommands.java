@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.combo.ruffyscripter;
 
+import androidx.annotation.Nullable;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.PumpHistoryRequest;
 
 public interface RuffyCommands {
@@ -45,5 +46,8 @@ public interface RuffyCommands {
     CommandResult getDateAndTime();
 
     CommandResult setDateAndTime();
+
+    @Nullable
+    String getMacAddress();
 }
 

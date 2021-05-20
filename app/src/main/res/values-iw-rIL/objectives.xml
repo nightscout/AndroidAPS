@@ -16,7 +16,7 @@
     <string name="objectives_maxiob_objective">כוונון הלולאה הסגורה, תוך העלאה של ערך ה- IOB מעל 0 ובסופו של דבר הורדת ערכי המטרה של רמת הסוכר</string>
     <string name="objectives_maxiob_gate">לפני הורדת ערך רמת הסוכר, הפעילו במשך מס\' ימים, עם לפחות לילה אחד ללא התרעת רמת סוכר נמוכה</string>
     <string name="objectives_autosens_objective">במידת הצורך, בצעו התאמת בזאלי ויחסים, ולאחר מכן הפעילו את Autosens</string>
-    <string name="objectives_autosens_gate">שבוע של הפעלה מוצלחת של הלולאה במשך שעות היום, עם הוספת ערכי פחמימות בקביעות</string>
+    <string name="objectives_autosens_gate">שבוע של הפעלה מוצלחת של הלולאה במשך שעות היום, עם רישום ערכי פחמימות בקביעות</string>
     <string name="objectives_ama_objective">הפעלת פונקציות נוספות לשימוש במשך היום, לדוגמה AMA (סיוע ארוחות מתקדם)</string>
     <string name="objectives_smb_objective">הפעלת פונקציות נוספות לשימוש במשך היום, כגון סופר מיקרו בולוסים (SMB)</string>
     <string name="objectives_auto_objective">הפעלת אוטומציה</string>
@@ -39,13 +39,13 @@
     <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">אם השתמשתם בלולאה סגורה במשך שלושה חודשים לפחות עם מערכות אחרות, תוכלו לבקש קוד לדילוג על המטרות. ראו: https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives לפרטים נוספים.</string>
     <string name="codeaccepted">קוד אושר</string>
     <string name="codeinvalid">קוד בלתי חוקי</string>
-    <string name="objectives_exam_objective">הוכח את הידע שלך</string>
-    <string name="objectives_exam_gate">למדו את השאלות.  ניתנות לכם ארבע תשובות אפשריות לכל שאלה. ייתכן שיש יותר מתשובה נכונה אחת. בחרו את כל התשובות הנכונות ובחרו אישור.</string>
-    <string name="answerdisabledto">השבת תשובה מושבתת עד: %1$s</string>
+    <string name="objectives_exam_objective">הוכיחו את הידע שלכם\\ן</string>
+    <string name="objectives_exam_gate">למדו לקראת מענה על השאלות.  קיימות ארבע תשובות אפשריות לכל שאלה. ייתכן שיש יותר מתשובה נכונה אחת. בחרו את כל התשובות הנכונות ובחרו אישור.</string>
+    <string name="answerdisabledto">לא ניתן לענות עד: %1$s</string>
     <string name="wronganswer">תשובה שגויה!</string>
-    <string name="unfinshed_button">הבא שלא נעשה</string>
+    <string name="unfinshed_button">הבא שלא נענה</string>
     <string name="requestcode">בקשת קוד: %1$s</string>
-    <string name="objectives_hint">(בחרו את כל ההיגדים הנכונים)</string>
+    <string name="objectives_hint">(סמנו את כל התשובות הנכונות)</string>
     <string name="disconnectpump_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
     <string name="usetemptarget_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="useaction_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#config-builder</string>

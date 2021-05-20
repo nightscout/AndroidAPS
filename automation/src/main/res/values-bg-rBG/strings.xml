@@ -23,7 +23,6 @@
     <string name="alreadyset">Вече направено</string>
     <string name="profilepercentage">Профил процент</string>
     <string name="startprofileforever">Стартирай профил %1$d%%</string>
-    <string name="startprofile">Стартирай профил %1$d%% за %2$d мин</string>
     <string name="percent_u">Процент [%]:</string>
     <string name="sendsmsactionlabel">Изпращане на SMS с текст %1$s</string>
     <string name="sendsmsactiondescription">Изпратете SMS на всички</string>

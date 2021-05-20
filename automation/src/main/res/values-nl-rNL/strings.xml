@@ -22,7 +22,6 @@
     <string name="alreadyset">Al ingesteld</string>
     <string name="profilepercentage">Profiel percentage</string>
     <string name="startprofileforever">Profiel %1$d%% starten</string>
-    <string name="startprofile">Start profiel %1$d%% voor %2$d min</string>
     <string name="percent_u">Procent [%]:</string>
     <string name="sendsmsactionlabel">Stuur SMS: %1$s</string>
     <string name="sendsmsactiondescription">SMS verzenden naar alle nummers</string>

@@ -2,7 +2,6 @@ package info.nightscout.androidaps.data
 
 class MealData {
 
-    var boluses = 0.0
     var carbs = 0.0
     var mealCOB = 0.0
     var slopeFromMaxDeviation = 0.0

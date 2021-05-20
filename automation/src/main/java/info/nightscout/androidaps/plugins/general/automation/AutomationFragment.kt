@@ -20,7 +20,8 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.automation.databinding.AutomationEventItemBinding
 import info.nightscout.androidaps.automation.databinding.AutomationFragmentBinding
-import info.nightscout.androidaps.database.entities.UserEntry.*
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.automation.dialogs.EditEventDialog
@@ -35,7 +36,7 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import io.reactivex.rxkotlin.plusAssign
-import info.nightscout.androidaps.utils.extensions.toVisibility
+import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -217,7 +218,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
             holder.binding.iconTrash.setOnClickListener {
                 OKDialog.showConfirmation(requireContext(), resourceHelper.gs(R.string.removerecord) + " " + automationPlugin.at(position).title,
                     {
-                        uel.log(Action.AUTOMATION_REMOVED, automationPlugin.at(position).title)
+                        uel.log(Action.AUTOMATION_REMOVED, Sources.Automation, automationPlugin.at(position).title)
                         automationPlugin.removeAt(position)
                         notifyItemRemoved(position)
                     }, {
@@ -240,7 +241,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord) + " " + automationPlugin.at(position).title,
                     Runnable {
-                        uel.log(Action.AUTOMATION_REMOVED, automationPlugin.at(position).title)
+                        uel.log(Action.AUTOMATION_REMOVED, Sources.Automation, automationPlugin.at(position).title)
                         automationPlugin.removeAt(position)
                         notifyItemRemoved(position)
                         rxBus.send(EventAutomationDataChanged())

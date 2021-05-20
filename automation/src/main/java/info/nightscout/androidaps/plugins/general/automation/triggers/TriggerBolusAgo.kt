@@ -4,19 +4,20 @@ import android.widget.LinearLayout
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.automation.R
+import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDuration
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder
 import info.nightscout.androidaps.plugins.general.automation.elements.StaticLabel
-import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.JsonHelper.safeGetString
 import org.json.JSONObject
 
 class TriggerBolusAgo(injector: HasAndroidInjector) : Trigger(injector) {
-    var minutesAgo: InputDuration = InputDuration( 30, InputDuration.TimeUnit.MINUTES)
+
+    var minutesAgo: InputDuration = InputDuration(30, InputDuration.TimeUnit.MINUTES)
     var comparator: Comparator = Comparator(resourceHelper)
 
     private constructor(injector: HasAndroidInjector, triggerBolusAgo: TriggerBolusAgo) : this(injector) {
@@ -35,7 +36,7 @@ class TriggerBolusAgo(injector: HasAndroidInjector) : Trigger(injector) {
     }
 
     override fun shouldRun(): Boolean {
-        val lastBolusTime = treatmentsInterface.getLastBolusTime(true)
+        val lastBolusTime = repository.getLastBolusRecordOfType(Bolus.Type.NORMAL)?.timestamp ?: 0L
         if (lastBolusTime == 0L)
             return if (comparator.value == Comparator.Compare.IS_NOT_AVAILABLE) {
                 aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
@@ -44,7 +45,7 @@ class TriggerBolusAgo(injector: HasAndroidInjector) : Trigger(injector) {
                 aapsLogger.debug(LTag.AUTOMATION, "NOT ready for execution: " + friendlyDescription())
                 false
             }
-        val last = (DateUtil.now() - lastBolusTime).toDouble() / (60 * 1000)
+        val last = (dateUtil.now() - lastBolusTime).toDouble() / (60 * 1000)
         aapsLogger.debug(LTag.AUTOMATION, "LastBolus min ago: $minutesAgo")
         val doRun = comparator.value.check(last.toInt(), minutesAgo.getMinutes())
         if (doRun) {
@@ -55,15 +56,10 @@ class TriggerBolusAgo(injector: HasAndroidInjector) : Trigger(injector) {
         return false
     }
 
-    override fun toJSON(): String {
-        val data = JSONObject()
+    override fun dataJSON(): JSONObject =
+        JSONObject()
             .put("minutesAgo", minutesAgo.value)
             .put("comparator", comparator.value.toString())
-        return JSONObject()
-            .put("type", this::class.java.name)
-            .put("data", data)
-            .toString()
-    }
 
     override fun fromJSON(data: String): Trigger {
         val d = JSONObject(data)

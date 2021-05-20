@@ -17,18 +17,18 @@ import info.nightscout.androidaps.danars.comm.DanaRS_Packet_Etc_Keep_Connection
 import info.nightscout.androidaps.danars.encryption.BleEncryption
 import info.nightscout.androidaps.danars.events.EventDanaRSPairingSuccess
 import info.nightscout.androidaps.events.EventPumpStatusChanged
+import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.ToastUtils
-import info.nightscout.androidaps.utils.extensions.notify
-import info.nightscout.androidaps.utils.extensions.waitMillis
+import info.nightscout.androidaps.extensions.notify
+import info.nightscout.androidaps.extensions.waitMillis
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.util.*
@@ -48,7 +48,8 @@ class BLEComm @Inject internal constructor(
     private val danaPump: DanaPump,
     private val danaRSPlugin: DanaRSPlugin,
     private val bleEncryption: BleEncryption,
-    private val nsUpload: NSUpload
+    private val pumpSync: PumpSync,
+    private val dateUtil: DateUtil
 ) {
 
     companion object {
@@ -140,7 +141,7 @@ class BLEComm @Inject internal constructor(
             // there was no response from pump after started encryption
             // assume pairing keys are invalid
             val lastClearRequest = sp.getLong(R.string.key_rs_last_clear_key_request, 0)
-            if (lastClearRequest != 0L && DateUtil.isOlderThan(lastClearRequest, 5)) {
+            if (lastClearRequest != 0L && dateUtil.isOlderThan(lastClearRequest, 5)) {
                 aapsLogger.error("Clearing pairing keys !!!")
                 sp.remove(resourceHelper.gs(R.string.key_danars_v3_randompairingkey) + danaRSPlugin.mDeviceName)
                 sp.remove(resourceHelper.gs(R.string.key_danars_v3_pairingkey) + danaRSPlugin.mDeviceName)
@@ -149,7 +150,7 @@ class BLEComm @Inject internal constructor(
                 danaRSPlugin.changePump()
             } else if (lastClearRequest == 0L) {
                 aapsLogger.error("Clearing pairing keys postponed")
-                sp.putLong(R.string.key_rs_last_clear_key_request, DateUtil.now())
+                sp.putLong(R.string.key_rs_last_clear_key_request, dateUtil.now())
             }
         }
         // cancel previous scheduled disconnection to prevent closing upcoming connection
@@ -391,22 +392,22 @@ class BLEComm @Inject internal constructor(
                     if (decryptedBuffer[0] == BleEncryption.DANAR_PACKET__TYPE_ENCRYPTION_RESPONSE.toByte()) {
                         when (decryptedBuffer[1]) {
                             // 1st packet exchange
-                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PUMP_CHECK.toByte() ->
+                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PUMP_CHECK.toByte()         ->
                                 processConnectResponse(decryptedBuffer)
 
-                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__TIME_INFORMATION.toByte() ->
+                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__TIME_INFORMATION.toByte()   ->
                                 processEncryptionResponse(decryptedBuffer)
 
-                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__CHECK_PASSKEY.toByte() ->
+                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__CHECK_PASSKEY.toByte()      ->
                                 processPasskeyCheck(decryptedBuffer)
 
-                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PASSKEY_REQUEST.toByte() ->
+                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PASSKEY_REQUEST.toByte()    ->
                                 processPairingRequest(decryptedBuffer)
 
-                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PASSKEY_RETURN.toByte() ->
+                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PASSKEY_RETURN.toByte()     ->
                                 processPairingRequest2(decryptedBuffer)
 
-                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__GET_PUMP_CHECK.toByte() -> {
+                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__GET_PUMP_CHECK.toByte()     -> {
                                 // not easy mode, request time info
                                 if (decryptedBuffer[2] == 0x05.toByte()) sendTimeInfo()
                                 // easy mode
@@ -451,7 +452,7 @@ class BLEComm @Inject internal constructor(
     // 1st packet response
     private fun processConnectResponse(decryptedBuffer: ByteArray) {
         // response OK v1
-        if (decryptedBuffer.size == 4 && decryptedBuffer[2] == 'O'.toByte() && decryptedBuffer[3] == 'K'.toByte()) {
+        if (decryptedBuffer.size == 4 && decryptedBuffer[2] == 'O'.code.toByte() && decryptedBuffer[3] == 'K'.code.toByte()) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK (OK)" + " " + DanaRS_Packet.toHexString(decryptedBuffer))
             v3Encryption = false
             danaPump.v3RSPump = false
@@ -465,7 +466,7 @@ class BLEComm @Inject internal constructor(
                 sendPairingRequest()
             }
             // response OK v3
-        } else if (decryptedBuffer.size == 9 && decryptedBuffer[2] == 'O'.toByte() && decryptedBuffer[3] == 'K'.toByte()) {
+        } else if (decryptedBuffer.size == 9 && decryptedBuffer[2] == 'O'.code.toByte() && decryptedBuffer[3] == 'K'.code.toByte()) {
             // v3 2nd layer encryption
             v3Encryption = true
             danaPump.v3RSPump = true
@@ -484,15 +485,15 @@ class BLEComm @Inject internal constructor(
                 sendEasyMenuCheck()
             }
             // response PUMP : error status
-        } else if (decryptedBuffer.size == 6 && decryptedBuffer[2] == 'P'.toByte() && decryptedBuffer[3] == 'U'.toByte() && decryptedBuffer[4] == 'M'.toByte() && decryptedBuffer[5] == 'P'.toByte()) {
+        } else if (decryptedBuffer.size == 6 && decryptedBuffer[2] == 'P'.code.toByte() && decryptedBuffer[3] == 'U'.code.toByte() && decryptedBuffer[4] == 'M'.code.toByte() && decryptedBuffer[5] == 'P'.code.toByte()) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK (PUMP)" + " " + DanaRS_Packet.toHexString(decryptedBuffer))
             mSendQueue.clear()
             rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, resourceHelper.gs(R.string.pumperror)))
-            nsUpload.uploadError(resourceHelper.gs(R.string.pumperror))
+            pumpSync.insertAnnouncement(resourceHelper.gs(R.string.pumperror), null, danaPump.pumpType(), danaPump.serialNumber)
             val n = Notification(Notification.PUMP_ERROR, resourceHelper.gs(R.string.pumperror), Notification.URGENT)
             rxBus.send(EventNewNotification(n))
             // response BUSY: error status
-        } else if (decryptedBuffer.size == 6 && decryptedBuffer[2] == 'B'.toByte() && decryptedBuffer[3] == 'U'.toByte() && decryptedBuffer[4] == 'S'.toByte() && decryptedBuffer[5] == 'Y'.toByte()) {
+        } else if (decryptedBuffer.size == 6 && decryptedBuffer[2] == 'B'.code.toByte() && decryptedBuffer[3] == 'U'.code.toByte() && decryptedBuffer[4] == 'S'.code.toByte() && decryptedBuffer[5] == 'Y'.code.toByte()) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK (BUSY)" + " " + DanaRS_Packet.toHexString(decryptedBuffer))
             mSendQueue.clear()
             rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, resourceHelper.gs(R.string.pumpbusy)))

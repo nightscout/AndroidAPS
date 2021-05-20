@@ -17,12 +17,13 @@ import android.widget.TableRow
 import android.widget.TextView
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.core.databinding.ActivityTddStatsBinding
-import info.nightscout.androidaps.db.TDD
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.TotalDailyDose
 import info.nightscout.androidaps.events.EventDanaRSyncStatus
 import info.nightscout.androidaps.events.EventPumpStatusChanged
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.extensions.total
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
-import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -30,6 +31,7 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.SafeParse
+import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
@@ -47,9 +49,9 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var sp: SP
     @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var commandQueue: CommandQueueProvider
-    @Inject lateinit var databaseHelper: DatabaseHelperInterface
+    @Inject lateinit var repository: AppRepository
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var aapsSchedulers: AapsSchedulers
 
@@ -59,8 +61,8 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
     lateinit var tbb: String
     private var magicNumber = 0.0
     private var decimalFormat: DecimalFormat = DecimalFormat("0.000")
-    private var historyList: MutableList<TDD> = mutableListOf()
-    private var dummies: MutableList<TDD> = mutableListOf()
+    private var historyList: MutableList<TotalDailyDose> = mutableListOf()
+    private var dummies: MutableList<TotalDailyDose> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -230,7 +232,7 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun loadDataFromDB() {
         historyList.clear()
-        historyList.addAll(databaseHelper.getTDDs())
+        historyList.addAll(repository.getLastTotalDailyDoses(10, false).blockingGet())
 
         //only use newest 10
         historyList = historyList.subList(0, min(10, historyList.size))
@@ -240,18 +242,19 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
         for (i in 0 until historyList.size - 1) {
             val elem1 = historyList[i]
             val elem2 = historyList[i + 1]
-            if (df.format(Date(elem1.date)) != df.format(Date(elem2.date + 25 * 60 * 60 * 1000))) {
-                val dummy = TDD()
-                dummy.date = elem1.date - 24 * 60 * 60 * 1000
-                dummy.basal = elem1.basal / 2
-                dummy.bolus = elem1.bolus / 2
+            if (df.format(Date(elem1.timestamp)) != df.format(Date(elem2.timestamp + 25 * 60 * 60 * 1000))) {
+                val dummy = TotalDailyDose(
+                    timestamp = elem1.timestamp - T.hours(24).msecs(),
+                    basalAmount = elem1.basalAmount / 2.0,
+                    bolusAmount = elem1.bolusAmount / 2.0
+                )
                 dummies.add(dummy)
-                elem1.basal /= 2.0
-                elem1.bolus /= 2.0
+                elem1.basalAmount /= 2.0
+                elem1.bolusAmount /= 2.0
             }
         }
         historyList.addAll(dummies)
-        historyList.sortWith { lhs: TDD, rhs: TDD -> (rhs.date - lhs.date).toInt() }
+        historyList.sortWith { lhs: TotalDailyDose, rhs: TotalDailyDose -> (rhs.timestamp - lhs.timestamp).toInt() }
         runOnUiThread {
             cleanTable(binding.mainTable)
             cleanTable(binding.cumulativeTable)
@@ -273,7 +276,7 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
 
             //TDD table
             for (record in historyList) {
-                val tdd = record.getTotal()
+                val tdd = record.total
 
                 // Create the table row
                 binding.mainTable.addView(
@@ -290,17 +293,17 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
                         // Here create the TextView dynamically
                         tr.addView(TextView(this@TDDStatsActivity).also { labelDATE ->
                             labelDATE.id = 200 + i
-                            labelDATE.text = df1.format(Date(record.date))
+                            labelDATE.text = df1.format(Date(record.timestamp))
                             labelDATE.setTextColor(Color.WHITE)
                         })
                         tr.addView(TextView(this@TDDStatsActivity).also { labelBASAL ->
                             labelBASAL.id = 300 + i
-                            labelBASAL.text = resourceHelper.gs(R.string.formatinsulinunits, record.basal)
+                            labelBASAL.text = resourceHelper.gs(R.string.formatinsulinunits, record.basalAmount)
                             labelBASAL.setTextColor(Color.WHITE)
                         })
                         tr.addView(TextView(this@TDDStatsActivity).also { labelBOLUS ->
                             labelBOLUS.id = 400 + i
-                            labelBOLUS.text = resourceHelper.gs(R.string.formatinsulinunits, record.bolus)
+                            labelBOLUS.text = resourceHelper.gs(R.string.formatinsulinunits, record.bolusAmount)
                             labelBOLUS.setTextColor(Color.WHITE)
                         })
                         tr.addView(TextView(this@TDDStatsActivity).also { labelTDD ->
@@ -320,11 +323,11 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
 
             //cumulative TDDs
             for (record in historyList) {
-                if (historyList.isNotEmpty() && df1.format(Date(record.date)) == df1.format(Date()))
+                if (historyList.isNotEmpty() && df1.format(Date(record.timestamp)) == df1.format(Date()))
                 //Today should not be included
                     continue
                 i++
-                sum += record.getTotal()
+                sum += record.total
 
                 // Create the cumulative table row
                 binding.cumulativeTable.addView(
@@ -358,14 +361,14 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
                 binding.message.visibility = View.VISIBLE
                 binding.message.text = resourceHelper.gs(R.string.olddata_Message)
             } else binding.mainTable.setBackgroundColor(Color.TRANSPARENT)
-            if (historyList.isNotEmpty() && df1.format(Date(historyList[0].date)) == df1.format(Date())) {
+            if (historyList.isNotEmpty() && df1.format(Date(historyList[0].timestamp)) == df1.format(Date())) {
                 //Today should not be included
                 historyList.removeAt(0)
             }
             historyList.reverse()
             i = 0
             for (record in historyList) {
-                val tdd = record.getTotal()
+                val tdd = record.total
                 if (i == 0) {
                     weighted03 = tdd
                     weighted05 = tdd
@@ -420,10 +423,10 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
         if (childCount > 1) table.removeViews(1, childCount - 1)
     }
 
-    private fun isOldData(historyList: List<TDD>): Boolean {
+    private fun isOldData(historyList: List<TotalDailyDose>): Boolean {
         val type = activePlugin.activePump.pumpDescription.pumpType
-        val startsYesterday = type == PumpType.DanaR || type == PumpType.DanaRS || type == PumpType.DanaRv2 || type == PumpType.DanaRKorean || type == PumpType.AccuChekInsight
+        val startsYesterday = type == PumpType.DANA_R || type == PumpType.DANA_RS || type == PumpType.DANA_RV2 || type == PumpType.DANA_R_KOREAN || type == PumpType.ACCU_CHEK_INSIGHT_VIRTUAL
         val df: DateFormat = SimpleDateFormat("dd.MM.", Locale.getDefault())
-        return historyList.size < 3 || df.format(Date(historyList[0].date)) != df.format(Date(System.currentTimeMillis() - if (startsYesterday) 1000 * 60 * 60 * 24 else 0))
+        return historyList.size < 3 || df.format(Date(historyList[0].timestamp)) != df.format(Date(System.currentTimeMillis() - if (startsYesterday) 1000 * 60 * 60 * 24 else 0))
     }
 }

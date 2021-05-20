@@ -13,7 +13,7 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.events.EventPreferenceChange
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
@@ -72,7 +72,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var commandQueue: CommandQueueProvider
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var omnipodErosPumpPlugin: OmnipodErosPumpPlugin
     @Inject lateinit var podStateManager: PodStateManager
     @Inject lateinit var sp: SP
@@ -567,13 +567,13 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
         val timeAsJavaData = time.toLocalDateTime().toDate()
         val timeZone = podStateManager.timeZone.toTimeZone()
         if (timeZone == TimeZone.getDefault()) {
-            return dateUtil.dateAndTimeString(timeAsJavaData)
+            return dateUtil.dateAndTimeString(timeAsJavaData.time)
         }
 
         val isDaylightTime = timeZone.inDaylightTime(timeAsJavaData)
         val locale = resources.configuration.locales.get(0)
         val timeZoneDisplayName = timeZone.getDisplayName(isDaylightTime, TimeZone.SHORT, locale) + " " + timeZone.getDisplayName(isDaylightTime, TimeZone.LONG, locale)
-        return resourceHelper.gs(R.string.omnipod_common_time_with_timezone, dateUtil.dateAndTimeString(timeAsJavaData), timeZoneDisplayName)
+        return resourceHelper.gs(R.string.omnipod_common_time_with_timezone, dateUtil.dateAndTimeString(timeAsJavaData.time), timeZoneDisplayName)
     }
 
     private fun readableDuration(dateTime: DateTime): String {

@@ -23,12 +23,12 @@ class ActionProfileSwitchTest : ActionsTestBase() {
     private val stringJson = "{\"data\":{\"profileToSwitchTo\":\"Test\"},\"type\":\"info.nightscout.androidaps.plugins.general.automation.actions.ActionProfileSwitch\"}"
 
     @Before fun setUp() {
-        `when`(activePlugin.activeTreatments).thenReturn(treatmentsInterface)
         `when`(resourceHelper.gs(R.string.profilename)).thenReturn("Change profile to")
         `when`(resourceHelper.gs(ArgumentMatchers.eq(R.string.changengetoprofilename), ArgumentMatchers.anyString())).thenReturn("Change profile to %s")
         `when`(resourceHelper.gs(R.string.alreadyset)).thenReturn("Already set")
         `when`(resourceHelper.gs(R.string.notexists)).thenReturn("not exists")
-        `when`(resourceHelper.gs(R.string.ok)).thenReturn("OK")
+        `when`(resourceHelper.gs(R.string.error_field_must_not_be_empty)).thenReturn("The field must not be empty")
+        `when`(resourceHelper.gs(R.string.noprofile)).thenReturn("No profile loaded from NS yet")
 
         sut = ActionProfileSwitch(injector)
     }
@@ -90,7 +90,7 @@ class ActionProfileSwitchTest : ActionsTestBase() {
                 Assert.assertEquals("OK", result.comment)
             }
         })
-        Mockito.verify(treatmentsInterface, Mockito.times(1)).doProfileSwitch(anyObject(), anyString(), anyInt(), anyInt(), anyInt(), anyLong())
+        Mockito.verify(profileFunction, Mockito.times(1)).createProfileSwitch(anyObject(), anyString(), anyInt(), anyInt(), anyInt(), anyLong())
     }
 
     @Test fun hasDialogTest() {

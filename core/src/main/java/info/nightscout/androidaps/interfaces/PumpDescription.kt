@@ -7,10 +7,10 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 class PumpDescription() {
 
     constructor(pumpType: PumpType) : this() {
-        setPumpDescription(pumpType)
+        fillFor(pumpType)
     }
 
-    var pumpType = PumpType.GenericAAPS
+    var pumpType = PumpType.GENERIC_AAPS
     var isBolusCapable = false
     var bolusStep = 0.0
     var isExtendedBolusCapable = false
@@ -69,32 +69,30 @@ class PumpDescription() {
         hasCustomUnreachableAlertCheck = false
     }
 
-    fun setPumpDescription(pumpType: PumpType) {
+    fun fillFor(pumpType: PumpType) {
         resetSettings()
         this.pumpType = pumpType
-        val pumpCapability = pumpType.pumpCapability
+        val pumpCapability = pumpType.pumpCapability ?: return
         isBolusCapable = pumpCapability.hasCapability(PumpCapability.Bolus)
         bolusStep = pumpType.bolusSize
         isExtendedBolusCapable = pumpCapability.hasCapability(PumpCapability.ExtendedBolus)
-        extendedBolusStep = pumpType.extendedBolusSettings.step
-        extendedBolusDurationStep = pumpType.extendedBolusSettings.durationStep.toDouble()
-        extendedBolusMaxDuration = pumpType.extendedBolusSettings.maxDuration.toDouble()
+        pumpType.extendedBolusSettings?.step?.let { extendedBolusStep = it }
+        pumpType.extendedBolusSettings?.durationStep?.let { extendedBolusDurationStep = it.toDouble() }
+        pumpType.extendedBolusSettings?.maxDuration?.let { extendedBolusMaxDuration = it.toDouble() }
         isTempBasalCapable = pumpCapability.hasCapability(PumpCapability.TempBasal)
         if (pumpType.pumpTempBasalType == PumpTempBasalType.Percent) {
             tempBasalStyle = PERCENT
-            maxTempPercent = pumpType.tbrSettings.maxDose.toInt()
-            tempPercentStep = pumpType.tbrSettings.step.toInt()
+            pumpType.tbrSettings?.maxDose?.let { maxTempPercent = it.toInt() }
+            pumpType.tbrSettings?.step?.let { tempPercentStep = it.toInt() }
         } else {
             tempBasalStyle = ABSOLUTE
-            maxTempAbsolute = pumpType.tbrSettings.maxDose
-            tempAbsoluteStep = pumpType.tbrSettings.step
+            pumpType.tbrSettings?.maxDose?.let { maxTempAbsolute = it }
+            pumpType.tbrSettings?.step?.let { tempAbsoluteStep = it }
         }
-        tempDurationStep = pumpType.tbrSettings.durationStep
-        tempMaxDuration = pumpType.tbrSettings.maxDuration
-        tempDurationStep15mAllowed = pumpType.specialBasalDurations
-            .hasCapability(PumpCapability.BasalRate_Duration15minAllowed)
-        tempDurationStep30mAllowed = pumpType.specialBasalDurations
-            .hasCapability(PumpCapability.BasalRate_Duration30minAllowed)
+        pumpType.tbrSettings?.durationStep?.let { tempDurationStep = it }
+        pumpType.tbrSettings?.maxDuration?.let { tempMaxDuration = it }
+        pumpType.specialBasalDurations?.hasCapability(PumpCapability.BasalRate_Duration15minAllowed)?.let { tempDurationStep15mAllowed = it }
+        pumpType.specialBasalDurations?.hasCapability(PumpCapability.BasalRate_Duration30minAllowed)?.let { tempDurationStep30mAllowed = it }
         isSetBasalProfileCapable = pumpCapability.hasCapability(PumpCapability.BasalProfileSet)
         basalStep = pumpType.baseBasalStep
         basalMinimumRate = pumpType.baseBasalMinValue

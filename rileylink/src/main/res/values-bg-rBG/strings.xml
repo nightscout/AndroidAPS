@@ -64,7 +64,6 @@
     <string name="riley_link_common_yes">Да</string>
     <string name="riley_link_common_no">Не</string>
     <!-- RileyLink - Preferences -->
-    <string name="riley_link_show_battery_level">Вземи нивото на батерия от EmaLink/OrangeLink</string>
     <string name="riley_link_show_battery_level_summary">НЕ работи с оригиналната RileyLink. Може да не работи с други RileyLink алтернативи.</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d ден</item>

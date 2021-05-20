@@ -10,15 +10,14 @@ import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.activities.TDDStatsActivity
 import info.nightscout.androidaps.dana.databinding.DanarFragmentBinding
-import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.events.EventExtendedBolusChange
 import info.nightscout.androidaps.events.EventInitializationChanged
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.events.EventTempBasalChange
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
-import info.nightscout.androidaps.interfaces.PumpInterface
+import info.nightscout.androidaps.interfaces.Pump
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -28,9 +27,12 @@ import info.nightscout.androidaps.queue.events.EventQueueChanged
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.userEntry.UserEntryMapper.Action
+import info.nightscout.androidaps.utils.userEntry.UserEntryMapper.Sources
 import info.nightscout.androidaps.utils.WarnColors
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.extensions.toVisibility
+import info.nightscout.androidaps.extensions.toVisibility
+import info.nightscout.androidaps.interfaces.Dana
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -44,7 +46,7 @@ class DanaFragment : DaggerFragment() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var commandQueue: CommandQueueProvider
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var danaPump: DanaPump
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var sp: SP
@@ -84,33 +86,33 @@ class DanaFragment : DaggerFragment() {
 
         binding.history.setOnClickListener { startActivity(Intent(context, info.nightscout.androidaps.dana.activities.DanaHistoryActivity::class.java)) }
         binding.viewprofile.setOnClickListener {
-            val profile = danaPump.createConvertedProfile()?.getDefaultProfile()
+            val profile = danaPump.createConvertedProfile()?.getDefaultProfileJson()
                 ?: return@setOnClickListener
             val profileName = danaPump.createConvertedProfile()?.getDefaultProfileName()
                 ?: return@setOnClickListener
-            val args = Bundle()
-            args.putLong("time", DateUtil.now())
-            args.putInt("mode", ProfileViewerDialog.Mode.CUSTOM_PROFILE.ordinal)
-            args.putString("customProfile", profile.data.toString())
-            args.putString("customProfileUnits", profile.units)
-            args.putString("customProfileName", profileName)
-            val pvd = ProfileViewerDialog()
-            pvd.arguments = args
-            pvd.show(childFragmentManager, "ProfileViewDialog")
+            ProfileViewerDialog().also { pvd ->
+                pvd.arguments = Bundle().also { args ->
+                    args.putLong("time", dateUtil.now())
+                    args.putInt("mode", ProfileViewerDialog.Mode.CUSTOM_PROFILE.ordinal)
+                    args.putString("customProfile", profile.toString())
+                    args.putString("customProfileName", profileName)
+                }
+
+            }.show(childFragmentManager, "ProfileViewDialog")
         }
         binding.stats.setOnClickListener { startActivity(Intent(context, TDDStatsActivity::class.java)) }
         binding.userOptions.setOnClickListener { startActivity(Intent(context, info.nightscout.androidaps.dana.activities.DanaUserOptionsActivity::class.java)) }
         binding.btconnection.setOnClickListener {
             aapsLogger.debug(LTag.PUMP, "Clicked connect to pump")
-            danaPump.lastConnection = 0
+            danaPump.reset()
             commandQueue.readStatus("Clicked connect to pump", null)
         }
-        if (activePlugin.activePump.pumpDescription.pumpType == PumpType.DanaRS)
+        if (activePlugin.activePump.pumpDescription.pumpType == PumpType.DANA_RS)
             binding.btconnection.setOnLongClickListener {
                 activity?.let {
                     OKDialog.showConfirmation(it, resourceHelper.gs(R.string.resetpairing)) {
-                        uel.log(Action.CLEAR_PAIRING_KEYS)
-                        (activePlugin.activePump as DanaPumpInterface).clearPairing()
+                        uel.log(Action.CLEAR_PAIRING_KEYS, Sources.Dana)
+                        (activePlugin.activePump as Dana).clearPairing()
                     }
                 }
                 true
@@ -187,7 +189,7 @@ class DanaFragment : DaggerFragment() {
     fun updateGUI() {
         if (_binding == null) return
         val pump = danaPump
-        val plugin: PumpInterface = activePlugin.activePump
+        val plugin: Pump = activePlugin.activePump
         if (pump.lastConnection != 0L) {
             val agoMsec = System.currentTimeMillis() - pump.lastConnection
             val agoMin = (agoMsec.toDouble() / 60.0 / 1000.0).toInt()
@@ -199,7 +201,7 @@ class DanaFragment : DaggerFragment() {
             val agoHours = agoMsec.toDouble() / 60.0 / 60.0 / 1000.0
             if (agoHours < 6)
             // max 6h back
-                binding.lastbolus.text = dateUtil.timeString(pump.lastBolusTime) + " " + DateUtil.sinceString(pump.lastBolusTime, resourceHelper) + " " + resourceHelper.gs(R.string.formatinsulinunits, pump.lastBolusAmount)
+                binding.lastbolus.text = dateUtil.timeString(pump.lastBolusTime) + " " + dateUtil.sinceString(pump.lastBolusTime, resourceHelper) + " " + resourceHelper.gs(R.string.formatinsulinunits, pump.lastBolusAmount)
             else
                 binding.lastbolus.text = ""
         }
@@ -208,16 +210,8 @@ class DanaFragment : DaggerFragment() {
         warnColors.setColor(binding.dailyunits, pump.dailyTotalUnits, pump.maxDailyTotalUnits * 0.75, pump.maxDailyTotalUnits * 0.9)
         binding.basabasalrate.text = "( " + (pump.activeProfile + 1) + " )  " + resourceHelper.gs(R.string.pump_basebasalrate, plugin.baseBasalRate)
         // DanaRPlugin, DanaRKoreanPlugin
-        if (activePlugin.activePump.isFakingTempsByExtendedBoluses) {
-            binding.tempbasal.text = activePlugin.activeTreatments.getRealTempBasalFromHistory(System.currentTimeMillis())?.toStringFull()
-                ?: ""
-        } else {
-            // v2 plugin
-            binding.tempbasal.text = activePlugin.activeTreatments.getTempBasalFromHistory(System.currentTimeMillis())?.toStringFull()
-                ?: ""
-        }
-        binding.extendedbolus.text = activePlugin.activeTreatments.getExtendedBolusFromHistory(System.currentTimeMillis())?.toString()
-            ?: ""
+        binding.tempbasal.text = danaPump.temporaryBasalToString()
+        binding.extendedbolus.text = danaPump.extendedBolusToString()
         binding.reservoir.text = resourceHelper.gs(R.string.reservoirvalue, pump.reservoirRemainingUnits, 300)
         warnColors.setColorInverse(binding.reservoir, pump.reservoirRemainingUnits, 50.0, 20.0)
         binding.battery.text = "{fa-battery-" + pump.batteryRemaining / 25 + "}"

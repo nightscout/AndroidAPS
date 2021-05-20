@@ -16,7 +16,7 @@ import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.extensions.toVisibility
+import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.util.*
 import javax.inject.Inject
@@ -63,7 +63,7 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
         eventTime = savedInstanceState?.getLong("eventTime") ?: dateUtil.nowWithoutMilliseconds()
         eventTimeChanged = savedInstanceState?.getBoolean("eventTimeChanged") ?: false
 
-        eventDateView?.text = DateUtil.dateString(eventTime)
+        eventDateView?.text = dateUtil.dateString(eventTime)
         eventTimeView?.text = dateUtil.timeString(eventTime)
 
         // create an OnDateSetListener
@@ -75,7 +75,7 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
             cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
             eventTime = cal.timeInMillis
             eventTimeChanged = true
-            eventDateView?.text = DateUtil.dateString(eventTime)
+            eventDateView?.text = dateUtil.dateString(eventTime)
         }
 
         eventDateView?.setOnClickListener {

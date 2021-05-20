@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.dialogs
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -10,24 +11,25 @@ import androidx.annotation.StringRes
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.androidaps.database.transactions.InsertTherapyEventIfNewTransaction
-import info.nightscout.androidaps.database.entities.UserEntry.*
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import info.nightscout.androidaps.databinding.DialogCareBinding
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.Translator
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.extensions.fromConstant
+import info.nightscout.androidaps.extensions.fromConstant
+import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
@@ -38,10 +40,9 @@ import javax.inject.Inject
 class CareDialog : DialogFragmentWithDate() {
 
     @Inject lateinit var injector: HasAndroidInjector
-    @Inject lateinit var mainApp: MainApp
+    @Inject lateinit var ctx: Context
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var nsUpload: NSUpload
     @Inject lateinit var translator: Translator
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var repository: AppRepository
@@ -60,7 +61,8 @@ class CareDialog : DialogFragmentWithDate() {
     }
 
     private var options: EventType = EventType.BGCHECK
-    private var valuesWithUnit = mutableListOf<ValueWithUnit>()
+    //private var valuesWithUnit = mutableListOf<XXXValueWithUnit?>()
+    private var valuesWithUnit = mutableListOf<ValueWithUnit?>()
 
     @StringRes
     private var event: Int = R.string.none
@@ -150,7 +152,7 @@ class CareDialog : DialogFragmentWithDate() {
             }
         }
 
-        if (profileFunction.getUnits() == Constants.MMOL) {
+        if (profileFunction.getUnits() == GlucoseUnit.MMOL) {
             binding.bgunits.text = resourceHelper.gs(R.string.mmol)
             binding.bg.setParams(savedInstanceState?.getDouble("bg")
                 ?: bg, 2.0, 30.0, 0.1, DecimalFormat("0.0"), false, binding.okcancel.ok, bgTextWatcher)
@@ -172,7 +174,7 @@ class CareDialog : DialogFragmentWithDate() {
 
     override fun submit(): Boolean {
         val enteredBy = sp.getString("careportal_enteredby", "AndroidAPS")
-        val unitResId = if (profileFunction.getUnits() == Constants.MGDL) R.string.mgdl else R.string.mmol
+        val unitResId = if (profileFunction.getUnits() == GlucoseUnit.MGDL) R.string.mgdl else R.string.mmol
 
         eventTime -= eventTime % 1000
 
@@ -198,17 +200,17 @@ class CareDialog : DialogFragmentWithDate() {
                     binding.sensor.isChecked -> TherapyEvent.MeterType.SENSOR
                     else                     -> TherapyEvent.MeterType.MANUAL
                 }
-            actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_glucosetype) + ": " + translator.translate(meterType.text))
+            actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_glucosetype) + ": " + translator.translate(meterType))
             actions.add(resourceHelper.gs(R.string.treatments_wizard_bg_label) + ": " + Profile.toCurrentUnitsString(profileFunction, binding.bg.value) + " " + resourceHelper.gs(unitResId))
             therapyEvent.glucoseType = meterType
             therapyEvent.glucose = binding.bg.value
-            valuesWithUnit.add(ValueWithUnit(binding.bg.value.toDouble(), profileFunction.getUnits()))
-            valuesWithUnit.add(ValueWithUnit(meterType.text, Units.TherapyEvent))
+            valuesWithUnit.add(ValueWithUnit.fromGlucoseUnit(binding.bg.value.toDouble(), profileFunction.getUnits().asText))
+            valuesWithUnit.add(ValueWithUnit.TherapyEventMeterType(meterType))
         }
         if (options == EventType.NOTE || options == EventType.EXERCISE) {
             actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_duration_label) + ": " + resourceHelper.gs(R.string.format_mins, binding.duration.value.toInt()))
             therapyEvent.duration = T.mins(binding.duration.value.toLong()).msecs()
-            valuesWithUnit.add(ValueWithUnit(binding.duration.value.toInt(), Units.M, !binding.duration.value.equals(0.0)))
+            valuesWithUnit.add(ValueWithUnit.Minute(binding.duration.value.toInt()).takeIf { !binding.duration.value.equals(0.0) } )
         }
         val notes = binding.notesLayout.notes.text.toString()
         if (notes.isNotEmpty()) {
@@ -220,16 +222,26 @@ class CareDialog : DialogFragmentWithDate() {
 
         therapyEvent.enteredBy = enteredBy
 
+        var source = when  (options) {
+            EventType.BGCHECK        -> Sources.BgCheck
+            EventType.SENSOR_INSERT  -> Sources.SensorInsert
+            EventType.BATTERY_CHANGE -> Sources.BatteryChange
+            EventType.NOTE           -> Sources.Note
+            EventType.EXERCISE       -> Sources.Exercise
+            EventType.QUESTION       -> Sources.Question
+            EventType.ANNOUNCEMENT   -> Sources.Announcement
+        }
+
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, resourceHelper.gs(event), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
-                disposable += repository.runTransactionForResult(InsertTherapyEventIfNewTransaction(therapyEvent)).subscribe({ result ->
-                    result.inserted.forEach { nsUpload.uploadEvent(it) }
-                }, {
-                    aapsLogger.error(LTag.BGSOURCE, "Error while saving therapy event", it)
-                })
-                valuesWithUnit.add(0, ValueWithUnit(eventTime, Units.Timestamp, eventTimeChanged))
-                valuesWithUnit.add(1, ValueWithUnit(therapyEvent.type.text, Units.TherapyEvent))
-                uel.log(Action.CAREPORTAL, notes, valuesWithUnit)
+                disposable += repository.runTransactionForResult(InsertIfNewByTimestampTherapyEventTransaction(therapyEvent))
+                    .subscribe(
+                        { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted therapy event $it") } },
+                        { aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it) }
+                    )
+                valuesWithUnit.add(0, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged })
+                valuesWithUnit.add(1, ValueWithUnit.TherapyEventType(therapyEvent.type))
+                uel.log(Action.CAREPORTAL, source, notes, valuesWithUnit)
             }, null)
         }
         return true

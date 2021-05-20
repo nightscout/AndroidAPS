@@ -5,7 +5,7 @@ import java.util.Locale;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
@@ -29,7 +29,7 @@ public class RileyLinkServiceData {
     @Inject AAPSLogger aapsLogger;
     @Inject RileyLinkUtil rileyLinkUtil;
     @Inject RxBusWrapper rxBus;
-    @Inject ActivePluginProvider activePlugin;
+    @Inject ActivePlugin activePlugin;
 
     boolean tuneUpDone = false;
     public RileyLinkError rileyLinkError;

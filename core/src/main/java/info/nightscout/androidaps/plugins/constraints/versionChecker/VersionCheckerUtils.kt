@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.constraints.versionChecker
 import android.content.Context
 import android.net.ConnectivityManager
 import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.interfaces.ConfigInterface
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -23,7 +23,7 @@ class VersionCheckerUtils @Inject constructor(
     val sp: SP,
     val resourceHelper: ResourceHelper,
     val rxBus: RxBusWrapper,
-    private val config: ConfigInterface,
+    private val config: Config,
     val context: Context
 ) {
 

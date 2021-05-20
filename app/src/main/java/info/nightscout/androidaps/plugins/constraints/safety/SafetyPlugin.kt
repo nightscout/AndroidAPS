@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.plugins.constraints.safety
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
@@ -13,6 +13,7 @@ import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.Round
@@ -34,11 +35,12 @@ class SafetyPlugin @Inject constructor(
     private val openAPSAMAPlugin: OpenAPSAMAPlugin,
     private val openAPSSMBPlugin: OpenAPSSMBPlugin,
     private val sensitivityOref1Plugin: SensitivityOref1Plugin,
-    private val activePlugin: ActivePluginProvider,
+    private val activePlugin: ActivePlugin,
     private val hardLimits: HardLimits,
     private val buildHelper: BuildHelper,
-    private val treatmentsPlugin: TreatmentsInterface,
-    private val config: Config
+    private val iobCobCalculator: IobCobCalculator,
+    private val config: Config,
+    private val dateUtil: DateUtil
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.CONSTRAINTS)
     .neverVisible(true)
@@ -47,7 +49,7 @@ class SafetyPlugin @Inject constructor(
     .pluginName(R.string.safety)
     .preferencesId(R.xml.pref_safety),
     aapsLogger, resourceHelper, injector
-), ConstraintsInterface {
+), Constraints {
 
     /**
      * Constraints interface
@@ -68,7 +70,7 @@ class SafetyPlugin @Inject constructor(
             value[aapsLogger, false, resourceHelper.gs(R.string.closed_loop_disabled_on_dev_branch)] = this
         }
         val pump = activePlugin.activePump
-        if (!pump.isFakingTempsByExtendedBoluses && treatmentsPlugin.isInHistoryExtendedBolusInProgress) {
+        if (!pump.isFakingTempsByExtendedBoluses && iobCobCalculator.getExtendedBolus(dateUtil.now()) != null) {
             value[aapsLogger, false, resourceHelper.gs(R.string.closed_loop_disabled_with_eb)] = this
         }
         return value
@@ -106,25 +108,25 @@ class SafetyPlugin @Inject constructor(
         absoluteRate.setIfGreater(aapsLogger, 0.0, String.format(resourceHelper.gs(R.string.limitingbasalratio), 0.0, resourceHelper.gs(R.string.itmustbepositivevalue)), this)
         if (config.APS) {
             var maxBasal = sp.getDouble(R.string.key_openapsma_max_basal, 1.0)
-            if (maxBasal < profile.maxDailyBasal) {
-                maxBasal = profile.maxDailyBasal
+            if (maxBasal < profile.getMaxDailyBasal()) {
+                maxBasal = profile.getMaxDailyBasal()
                 absoluteRate.addReason(resourceHelper.gs(R.string.increasingmaxbasal), this)
             }
             absoluteRate.setIfSmaller(aapsLogger, maxBasal, String.format(resourceHelper.gs(R.string.limitingbasalratio), maxBasal, resourceHelper.gs(R.string.maxvalueinpreferences)), this)
 
             // Check percentRate but absolute rate too, because we know real current basal in pump
             val maxBasalMultiplier = sp.getDouble(R.string.key_openapsama_current_basal_safety_multiplier, 4.0)
-            val maxFromBasalMultiplier = floor(maxBasalMultiplier * profile.basal * 100) / 100
+            val maxFromBasalMultiplier = floor(maxBasalMultiplier * profile.getBasal() * 100) / 100
             absoluteRate.setIfSmaller(aapsLogger, maxFromBasalMultiplier, String.format(resourceHelper.gs(R.string.limitingbasalratio), maxFromBasalMultiplier, resourceHelper.gs(R.string.maxbasalmultiplier)), this)
             val maxBasalFromDaily = sp.getDouble(R.string.key_openapsama_max_daily_safety_multiplier, 3.0)
-            val maxFromDaily = floor(profile.maxDailyBasal * maxBasalFromDaily * 100) / 100
+            val maxFromDaily = floor(profile.getMaxDailyBasal() * maxBasalFromDaily * 100) / 100
             absoluteRate.setIfSmaller(aapsLogger, maxFromDaily, String.format(resourceHelper.gs(R.string.limitingbasalratio), maxFromDaily, resourceHelper.gs(R.string.maxdailybasalmultiplier)), this)
         }
         absoluteRate.setIfSmaller(aapsLogger, hardLimits.maxBasal(), String.format(resourceHelper.gs(R.string.limitingbasalratio), hardLimits.maxBasal(), resourceHelper.gs(R.string.hardlimit)), this)
         val pump = activePlugin.activePump
         // check for pump max
         if (pump.pumpDescription.tempBasalStyle == PumpDescription.ABSOLUTE) {
-            val pumpLimit = pump.pumpDescription.pumpType.tbrSettings.maxDose
+            val pumpLimit = pump.pumpDescription.pumpType.tbrSettings?.maxDose ?: 0.0
             absoluteRate.setIfSmaller(aapsLogger, pumpLimit, String.format(resourceHelper.gs(R.string.limitingbasalratio), pumpLimit, resourceHelper.gs(R.string.pumplimit)), this)
         }
 
@@ -136,7 +138,7 @@ class SafetyPlugin @Inject constructor(
     }
 
     override fun applyBasalPercentConstraints(percentRate: Constraint<Int>, profile: Profile): Constraint<Int> {
-        val currentBasal = profile.basal
+        val currentBasal = profile.getBasal()
         val absoluteRate = currentBasal * (percentRate.originalValue().toDouble() / 100)
         percentRate.addReason("Percent rate " + percentRate.originalValue() + "% recalculated to " + DecimalFormatter.to2Decimal(absoluteRate) + " U/h with current basal " + DecimalFormatter.to2Decimal(currentBasal) + " U/h", this)
         val absoluteConstraint = Constraint(absoluteRate)
@@ -147,7 +149,7 @@ class SafetyPlugin @Inject constructor(
         percentRateAfterConst = if (percentRateAfterConst < 100) Round.ceilTo(percentRateAfterConst.toDouble(), pump.pumpDescription.tempPercentStep.toDouble()).toInt() else Round.floorTo(percentRateAfterConst.toDouble(), pump.pumpDescription.tempPercentStep.toDouble()).toInt()
         percentRate[aapsLogger, percentRateAfterConst, String.format(resourceHelper.gs(R.string.limitingpercentrate), percentRateAfterConst, resourceHelper.gs(R.string.pumplimit))] = this
         if (pump.pumpDescription.tempBasalStyle == PumpDescription.PERCENT) {
-            val pumpLimit = pump.pumpDescription.pumpType.tbrSettings.maxDose
+            val pumpLimit = pump.pumpDescription.pumpType.tbrSettings?.maxDose ?: 0.0
             percentRate.setIfSmaller(aapsLogger, pumpLimit.toInt(), String.format(resourceHelper.gs(R.string.limitingbasalratio), pumpLimit, resourceHelper.gs(R.string.pumplimit)), this)
         }
         return percentRate

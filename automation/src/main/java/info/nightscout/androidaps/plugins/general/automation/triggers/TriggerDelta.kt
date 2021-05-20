@@ -5,7 +5,8 @@ import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.automation.R
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.GlucoseUnit
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDelta
@@ -13,29 +14,29 @@ import info.nightscout.androidaps.plugins.general.automation.elements.InputDelta
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder
 import info.nightscout.androidaps.plugins.general.automation.elements.StaticLabel
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.utils.JsonHelper
 import org.json.JSONObject
 import java.text.DecimalFormat
 
 class TriggerDelta(injector: HasAndroidInjector) : Trigger(injector) {
 
-    var units: String = Constants.MGDL
+    var units: GlucoseUnit = GlucoseUnit.MGDL
     var delta: InputDelta = InputDelta(resourceHelper)
     var comparator: Comparator = Comparator(resourceHelper)
 
     companion object {
+
         private const val MMOL_MAX = 4.0
         private const val MGDL_MAX = 72.0
     }
 
     init {
         units = profileFunction.getUnits()
-        delta = if (units == Constants.MMOL) InputDelta(resourceHelper, 0.0, (-MMOL_MAX), MMOL_MAX, 0.1, DecimalFormat("0.1"), DeltaType.DELTA)
+        delta = if (units == GlucoseUnit.MMOL) InputDelta(resourceHelper, 0.0, (-MMOL_MAX), MMOL_MAX, 0.1, DecimalFormat("0.1"), DeltaType.DELTA)
         else InputDelta(resourceHelper, 0.0, (-MGDL_MAX), MGDL_MAX, 1.0, DecimalFormat("1"), DeltaType.DELTA)
     }
 
-    constructor(injector: HasAndroidInjector, inputDelta: InputDelta, units: String, comparator: Comparator.Compare) : this(injector) {
+    constructor(injector: HasAndroidInjector, inputDelta: InputDelta, units: GlucoseUnit, comparator: Comparator.Compare) : this(injector) {
         this.units = units
         this.delta = inputDelta
         this.comparator.value = comparator
@@ -47,7 +48,7 @@ class TriggerDelta(injector: HasAndroidInjector) : Trigger(injector) {
         comparator = Comparator(resourceHelper, triggerDelta.comparator.value)
     }
 
-    fun units(units: String): TriggerDelta {
+    fun units(units: GlucoseUnit): TriggerDelta {
         this.units = units
         return this
     }
@@ -85,25 +86,20 @@ class TriggerDelta(injector: HasAndroidInjector) : Trigger(injector) {
         return false
     }
 
-    override fun toJSON(): String {
-        val data = JSONObject()
+    override fun dataJSON(): JSONObject =
+        JSONObject()
             .put("value", delta.value)
-            .put("units", units)
+            .put("units", units.asText)
             .put("deltaType", delta.deltaType)
             .put("comparator", comparator.value.toString())
-        return JSONObject()
-            .put("type", this::class.java.name)
-            .put("data", data)
-            .toString()
-    }
 
     override fun fromJSON(data: String): Trigger {
         val d = JSONObject(data)
-        units = JsonHelper.safeGetString(d, "units")!!
+        units = GlucoseUnit.fromText(JsonHelper.safeGetString(d, "units", Constants.MGDL))
         val type = DeltaType.valueOf(JsonHelper.safeGetString(d, "deltaType", ""))
         val value = JsonHelper.safeGetDouble(d, "value")
         delta =
-            if (units == Constants.MMOL) InputDelta(resourceHelper, value, (-MMOL_MAX), MMOL_MAX, 0.1, DecimalFormat("0.1"), type)
+            if (units == GlucoseUnit.MMOL) InputDelta(resourceHelper, value, (-MMOL_MAX), MMOL_MAX, 0.1, DecimalFormat("0.1"), type)
             else InputDelta(resourceHelper, value, (-MGDL_MAX), MGDL_MAX, 1.0, DecimalFormat("1"), type)
         comparator.setValue(Comparator.Compare.valueOf(JsonHelper.safeGetString(d, "comparator")!!))
         return this

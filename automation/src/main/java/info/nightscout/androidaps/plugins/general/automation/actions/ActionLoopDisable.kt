@@ -4,12 +4,15 @@ import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.database.entities.UserEntry
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
-import info.nightscout.androidaps.interfaces.ConfigBuilderInterface
+import info.nightscout.androidaps.interfaces.ConfigBuilder
 import info.nightscout.androidaps.interfaces.LoopInterface
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -18,9 +21,10 @@ import javax.inject.Inject
 class ActionLoopDisable(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var loopPlugin: LoopInterface
     @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var configBuilderPlugin: ConfigBuilderInterface
+    @Inject lateinit var configBuilder: ConfigBuilder
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var uel: UserEntryLogger
 
     override fun friendlyName(): Int = R.string.disableloop
     override fun shortDescription(): String = resourceHelper.gs(R.string.disableloop)
@@ -29,7 +33,8 @@ class ActionLoopDisable(injector: HasAndroidInjector) : Action(injector) {
     override fun doAction(callback: Callback) {
         if ((loopPlugin as PluginBase).isEnabled()) {
             (loopPlugin as PluginBase).setPluginEnabled(PluginType.LOOP, false)
-            configBuilderPlugin.storeSettings("ActionLoopDisable")
+            configBuilder.storeSettings("ActionLoopDisable")
+            uel.log(UserEntry.Action.LOOP_DISABLED, Sources.Automation, title)
             commandQueue.cancelTempBasal(true, object : Callback() {
                 override fun run() {
                     rxBus.send(EventRefreshOverview("ActionLoopDisable"))

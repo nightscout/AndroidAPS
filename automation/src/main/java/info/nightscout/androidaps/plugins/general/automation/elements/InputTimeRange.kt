@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import info.nightscout.androidaps.automation.R
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.MidnightTime
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -15,8 +15,8 @@ import java.util.*
 
 class InputTimeRange(private val resourceHelper: ResourceHelper, private val dateUtil: DateUtil) : Element() {
 
-    var start: Int = getMinSinceMidnight(DateUtil.now())
-    var end: Int = getMinSinceMidnight(DateUtil.now())
+    var start: Int = getMinSinceMidnight(dateUtil.now())
+    var end: Int = getMinSinceMidnight(dateUtil.now())
 
     override fun addToLayout(root: LinearLayout) {
         val label = TextView(root.context)

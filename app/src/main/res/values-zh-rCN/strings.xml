@@ -25,7 +25,6 @@
     <string name="description_smb">最新的适合高级用户的算法</string>
     <string name="description_overview">显示闭环的当前状态和大多数常用操作的按钮</string>
     <string name="description_persistent_notification">显示持续的通知, 其中简要概述了您的闭环正在做什么</string>
-    <string name="description_profile_nightscout">提供您在 Nightscout 中已经定义的配置文件</string>
     <string name="description_pump_mdi">与用于糖尿病治疗的多次每日注射的泵集成</string>
     <string name="description_pump_virtual">与我们还没有其驱动的泵集成（开环）</string>
     <string name="description_sensitivity_aaps">灵敏度的计算方式与 Oref0 相同, 但可以指定过去的时间范围。碳水化合物吸收最小值是根据参数选项里的碳水化合物吸收时间最大值计算得来的</string>
@@ -70,7 +69,6 @@
     <string name="sms_delta">增量:</string>
     <string name="configbuilder">配置生成器</string>
     <string name="overview">首页概览</string>
-    <string name="nsprofile">NS 配置文件</string>
     <string name="treatments">治疗</string>
     <string name="virtualpump">虚拟泵</string>
     <string name="careportal">护理记录</string>
@@ -86,7 +84,6 @@
     <string name="configbuilder_general_description">这些是一些一般的插件, 你可能会觉得有用。</string>
     <string name="configbuilder_constraints_description">应用了哪些约束条件？</string>
     <string name="constraints">约束条件</string>
-    <string name="loop">闭环</string>
     <string name="configbuilder_loop">闭环</string>
     <string name="configbuilder_loop_description">使用此激活 AndroidAPS 的闭环集成。</string>
     <string name="loop_aps_label">APS</string>
@@ -215,7 +212,6 @@
     <string name="localprofile_shortname">本地配置文件</string>
     <string name="overview_shortname">主页</string>
     <string name="virtualpump_shortname">虚拟泵</string>
-    <string name="profileviewer_shortname">NS配置文件</string>
     <string name="treatments_shortname">治疗</string>
     <string name="objectives_shortname">目标</string>
     <string name="wear_shortname">手表</string>
@@ -302,15 +298,12 @@
     <string name="xdripstatus_shortname">xdrip</string>
     <string name="wear_showbgi_title">显示血糖线</string>
     <string name="wear_showbgi_summary">添加血糖线到状态线</string>
-    <string name="ns_noupload">没有上传到NS服务器</string>
-    <string name="ns_noupload_summary">所有发送到 NS 的数据都将被丢弃。AAPS 已连接到 NS, 但 NS中没有进行任何更改</string>
     <string name="overview_extendedbolus_cancel_button">取消扩展大剂量</string>
     <string name="ns_alarmoptions">报警选项</string>
     <string name="nsalarm_staledatavalue_label">陈旧数据阈值 [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">紧急陈旧数据阈值 [min]</string>
     <string name="openapsama_autosens_period">Autosens间隔的 [h]</string>
     <string name="openapsama_autosens_period_summary">灵敏度检测过去的小时数 (排除碳水化合物吸收时间)</string>
-    <string name="pump">胰岛素泵</string>
     <string name="openaps">OpenAPS</string>
     <string name="uploader">上传者</string>
     <string name="configbuilder_sensitivity">灵敏度检测</string>
@@ -434,7 +427,6 @@
     <string name="do_not_bolus_record_only">不打大剂量，只记录</string>
     <string name="category">类别</string>
     <string name="subcategory">子类别</string>
-    <string name="ns_autobackfill_summary">Autobackfill 现在无法从NS获取血糖</string>
     <string name="loop_smbsetbypump_label">通过泵设置SMB微型大剂量</string>
     <string name="overview_show_activity">活动</string>
     <string name="overview_show_sensitivity">灵敏度</string>
@@ -500,7 +492,6 @@
     <string name="virtualpump_type">虚拟泵类型</string>
     <string name="virtualpump_definition">泵定义</string>
     <string name="virtualpump_pump_def">大剂量: Step=%1$s\n扩展大剂量: [Step=%2$s, 持续时间=%3$smin-%4$sh]\n基础率: Step=%5$s\nTBR临时基础率: %6$s (by %7$s), 持续时间=%8$smin-%9$sh\n%10$s</string>
-    <string name="ns_autobackfill_title">Autobackfill 血糖</string>
     <string name="wear_wizard_settings">向导设置</string>
     <string name="wear_wizard_settings_summary">包含在向导中的计算结果：</string>
     <string name="wear_display_settings">显示设置</string>
@@ -508,13 +499,11 @@
     <string name="enable_nsclient">启用 NSClient</string>
     <string name="welcometosetupwizard">欢迎使用设置向导。它将指导您完成设置过程 \n</string>
     <string name="readstatus">读取状态</string>
-    <string name="adjustprofileinns">更改必须在 NS 中完成</string>
     <string name="exitwizard">跳过设置向导</string>
     <string name="setupwizard_loop_description">按下下面的按钮, 以使 AndroidAPS 建议或者更改基础率</string>
     <string name="setupwizard_sensitivity_description">灵敏度插件用于灵敏度检测和碳水化合物计算。有关详细信息, 请访问:</string>
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
     <string name="diawarning">请记住：新的胰岛素分布需要DIA至少5小时。 对于新的配置文件，DIA 5-6小时相当于旧胰岛素配置文件中的DIA 3小时</string>
-    <string name="setupwizard_profile_description">请选择配置文件的来源。如果病人是孩子, 你应该使用 NS 配置文件。如果没有人通过 Nightscout关注你， 你可能会更喜欢本地配置文件。请记住, 您只选择配置文件源。要使用它, 您必须通过执行 \"配置文件切换\" 来激活它。</string>
     <string name="setupwizard_aps_description">从可用算法中选择一个。 他们从最旧到最新排序。 较新的算法通常更强大，更冒险。 因此，如果你是新的闭环使用者，你可能会从AMA算法开始，而不是最新的。 不要忘记在使用之前阅读OpenAPS文档并对其进行配置。</string>
     <string name="startobjective">开始你的第一个目标</string>
     <string name="permission">权限</string>

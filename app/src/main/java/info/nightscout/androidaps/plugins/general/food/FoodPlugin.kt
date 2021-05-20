@@ -3,11 +3,13 @@ package info.nightscout.androidaps.plugins.general.food
 import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.Food
-import info.nightscout.androidaps.database.transactions.SyncFoodTransaction
+import info.nightscout.androidaps.database.transactions.SyncNsFoodTransaction
+import info.nightscout.androidaps.extensions.foodFromJson
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
@@ -15,10 +17,8 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.JsonHelper
-import info.nightscout.androidaps.utils.extensions.foodFromJson
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import org.json.JSONArray
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -56,8 +56,8 @@ class FoodPlugin @Inject constructor(
 
         override fun doWork(): Result {
             val foods = dataWorker.pickupJSONArray(inputData.getLong(DataWorker.STORE_KEY, -1))
-                ?: return Result.failure()
-            aapsLogger.debug(LTag.DATAFOOD, "Received Food Data: $foods")
+                ?: return Result.failure(workDataOf("Error" to "missing input data"))
+            aapsLogger.debug(LTag.DATABASE, "Received Food Data: $foods")
 
             var ret = Result.success()
 
@@ -75,34 +75,34 @@ class FoodPlugin @Inject constructor(
                             isValid = false
                         ).also { it.interfaceIDs.nightscoutId = JsonHelper.safeGetString(jsonFood, "_id") }
 
-                        repository.runTransactionForResult(SyncFoodTransaction(delFood))
+                        repository.runTransactionForResult(SyncNsFoodTransaction(delFood, true))
                             .doOnError {
-                                aapsLogger.error(LTag.DATAFOOD, "Error while removing food", it)
-                                ret = Result.failure()
+                                aapsLogger.error(LTag.DATABASE, "Error while removing food", it)
+                                ret = Result.failure(workDataOf("Error" to it.toString()))
                             }
                             .blockingGet()
                             .also {
-                                it.invalidated.forEach { f -> aapsLogger.debug(LTag.DATAFOOD, "Invalidated food ${f.interfaceIDs.nightscoutId}") }
+                                it.invalidated.forEach { f -> aapsLogger.debug(LTag.DATABASE, "Invalidated food ${f.interfaceIDs.nightscoutId}") }
                             }
                     }
 
                     else     -> {
                         val food = foodFromJson(jsonFood)
                         if (food != null) {
-                            repository.runTransactionForResult(SyncFoodTransaction(food))
+                            repository.runTransactionForResult(SyncNsFoodTransaction(food, false))
                                 .doOnError {
-                                    aapsLogger.error(LTag.DATAFOOD, "Error while adding/updating food", it)
-                                    ret = Result.failure()
+                                    aapsLogger.error(LTag.DATABASE, "Error while adding/updating food", it)
+                                    ret = Result.failure(workDataOf("Error" to it.toString()))
                                 }
                                 .blockingGet()
                                 .also { result ->
-                                    result.inserted.forEach { aapsLogger.debug(LTag.DATAFOOD, "Inserted food $it") }
-                                    result.updated.forEach { aapsLogger.debug(LTag.DATAFOOD, "Updated food $it") }
-                                    result.invalidated.forEach { aapsLogger.debug(LTag.DATAFOOD, "Invalidated food $it") }
+                                    result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted food $it") }
+                                    result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated food $it") }
+                                    result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated food $it") }
                                 }
                         } else {
-                            aapsLogger.error(LTag.DATAFOOD, "Error parsing food", jsonFood.toString())
-                            ret = Result.failure()
+                            aapsLogger.error(LTag.DATABASE, "Error parsing food", jsonFood.toString())
+                            ret = Result.failure(workDataOf("Error" to "Error parsing food"))
                         }
                     }
                 }

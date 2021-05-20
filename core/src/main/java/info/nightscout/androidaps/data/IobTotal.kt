@@ -6,7 +6,6 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.Round
 import org.json.JSONException
 import org.json.JSONObject
-import java.util.*
 
 @Suppress("SpellCheckingInspection")
 class IobTotal(var time: Long) : DataPointWithLabelInterface {
@@ -22,7 +21,6 @@ class IobTotal(var time: Long) : DataPointWithLabelInterface {
     @JvmField var lastBolusTime: Long = 0
     var iobWithZeroTemp: IobTotal? = null
     @JvmField var netInsulin = 0.0 // for calculations from temp basals only
-    @JvmField var netRatio = 0.0 // net ratio at start of temp basal
     @JvmField var extendedBolusInsulin = 0.0 // total insulin for extended bolus
     fun copy(): IobTotal {
         val i = IobTotal(time)
@@ -33,9 +31,8 @@ class IobTotal(var time: Long) : DataPointWithLabelInterface {
         i.netbasalinsulin = netbasalinsulin
         i.hightempinsulin = hightempinsulin
         i.lastBolusTime = lastBolusTime
-        if (iobWithZeroTemp != null) i.iobWithZeroTemp = iobWithZeroTemp!!.copy()
+        i.iobWithZeroTemp = iobWithZeroTemp?.copy()
         i.netInsulin = netInsulin
-        i.netRatio = netRatio
         i.extendedBolusInsulin = extendedBolusInsulin
         return i
     }
@@ -64,19 +61,19 @@ class IobTotal(var time: Long) : DataPointWithLabelInterface {
         return this
     }
 
-    fun json(): JSONObject {
+    fun json(dateUtil: DateUtil): JSONObject {
         val json = JSONObject()
         try {
             json.put("iob", iob)
             json.put("basaliob", basaliob)
             json.put("activity", activity)
-            json.put("time", DateUtil.toISOString(Date()))
+            json.put("time", dateUtil.toISOString(time))
         } catch (ignored: JSONException) {
         }
         return json
     }
 
-    fun determineBasalJson(): JSONObject {
+    fun determineBasalJson(dateUtil: DateUtil): JSONObject {
         val json = JSONObject()
         try {
             json.put("iob", iob)
@@ -84,7 +81,7 @@ class IobTotal(var time: Long) : DataPointWithLabelInterface {
             json.put("bolussnooze", bolussnooze)
             json.put("activity", activity)
             json.put("lastBolusTime", lastBolusTime)
-            json.put("time", DateUtil.toISOString(Date(time)))
+            json.put("time", dateUtil.toISOString(time))
             /*
 
             This is requested by SMB determine_basal but by based on Scott's info
@@ -98,7 +95,7 @@ class IobTotal(var time: Long) : DataPointWithLabelInterface {
             json.put("lastTemp", lastTemp);
             */
             if (iobWithZeroTemp != null) {
-                val iwzt = iobWithZeroTemp!!.determineBasalJson()
+                val iwzt = iobWithZeroTemp!!.determineBasalJson(dateUtil)
                 json.put("iobWithZeroTemp", iwzt)
             }
         } catch (ignored: JSONException) {

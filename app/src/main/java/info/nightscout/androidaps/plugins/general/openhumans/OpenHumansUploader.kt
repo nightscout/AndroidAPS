@@ -28,8 +28,7 @@ import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
-import info.nightscout.androidaps.utils.extensions.toConstant
+import info.nightscout.androidaps.extensions.toConstant
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -61,7 +60,6 @@ class OpenHumansUploader @Inject constructor(
     private val sp: SP,
     private val rxBus: RxBusWrapper,
     private val context: Context,
-    private val treatmentsPlugin: TreatmentsPlugin,
     private val databaseHelper: DatabaseHelperInterface,
     val repository: AppRepository
 ) : PluginBase(
@@ -180,24 +178,24 @@ class OpenHumansUploader @Inject constructor(
         }
     }
 
-    @JvmOverloads
-    fun enqueueTreatment(treatment: Treatment?, deleted: Boolean = false) = treatment?.let {
-        insertQueueItem("Treatments") {
-            put("date", treatment.date)
-            put("isValid", treatment.isValid)
-            put("source", treatment.source)
-            put("nsId", treatment._id)
-            put("boluscalc", treatment.boluscalc)
-            put("carbs", treatment.carbs)
-            put("dia", treatment.dia)
-            put("insulin", treatment.insulin)
-            put("insulinInterfaceID", treatment.insulinInterfaceID)
-            put("isSMB", treatment.isSMB)
-            put("mealBolus", treatment.mealBolus)
-            put("bolusCalcJson", treatment.getBoluscalc())
-            put("isDeletion", deleted)
-        }
-    }
+    // @JvmOverloads
+    // fun enqueueTreatment(treatment: Treatment?, deleted: Boolean = false) = treatment?.let {
+    //     insertQueueItem("Treatments") {
+    //         put("date", treatment.date)
+    //         put("isValid", treatment.isValid)
+    //         put("source", treatment.source)
+    //         put("nsId", treatment._id)
+    //         put("boluscalc", treatment.boluscalc)
+    //         put("carbs", treatment.carbs)
+    //         put("dia", treatment.dia)
+    //         put("insulin", treatment.insulin)
+    //         put("insulinInterfaceID", treatment.insulinInterfaceID)
+    //         put("isSMB", treatment.isSMB)
+    //         put("mealBolus", treatment.mealBolus)
+    //         put("bolusCalcJson", treatment.getBoluscalc())
+    //         put("isDeletion", deleted)
+    //     }
+    // }
 
     @JvmOverloads
     fun enqueueTherapyEvent(therapyEvent: TherapyEvent, deleted: Boolean = false) = insertQueueItem("TherapyEvents") {
@@ -212,56 +210,56 @@ class OpenHumansUploader @Inject constructor(
         put("isDeletion", deleted)
     }
 
-    @JvmOverloads
-    fun enqueueExtendedBolus(extendedBolus: ExtendedBolus, deleted: Boolean = false) = insertQueueItem("ExtendedBoluses") {
-        put("date", extendedBolus.date)
-        put("isValid", extendedBolus.isValid)
-        put("source", extendedBolus.source)
-        put("nsId", extendedBolus._id)
-        put("pumpId", extendedBolus.pumpId)
-        put("insulin", extendedBolus.insulin)
-        put("durationInMinutes", extendedBolus.durationInMinutes)
-        put("isDeletion", deleted)
-    }
+    // @JvmOverloads
+    // fun enqueueExtendedBolus(extendedBolus: ExtendedBolus, deleted: Boolean = false) = insertQueueItem("ExtendedBoluses") {
+    //     put("date", extendedBolus.date)
+    //     put("isValid", extendedBolus.isValid)
+    //     put("source", extendedBolus.source)
+    //     put("nsId", extendedBolus._id)
+    //     put("pumpId", extendedBolus.pumpId)
+    //     put("insulin", extendedBolus.insulin)
+    //     put("durationInMinutes", extendedBolus.durationInMinutes)
+    //     put("isDeletion", deleted)
+    // }
 
-    @JvmOverloads
-    fun enqueueProfileSwitch(profileSwitch: ProfileSwitch, deleted: Boolean = false) = insertQueueItem("ProfileSwitches") {
-        put("date", profileSwitch.date)
-        put("isValid", profileSwitch.isValid)
-        put("source", profileSwitch.source)
-        put("nsId", profileSwitch._id)
-        put("isCPP", profileSwitch.isCPP)
-        put("timeshift", profileSwitch.timeshift)
-        put("percentage", profileSwitch.percentage)
-        put("profile", JSONObject(profileSwitch.profileJson))
-        put("profilePlugin", profileSwitch.profilePlugin)
-        put("durationInMinutes", profileSwitch.durationInMinutes)
-        put("isDeletion", deleted)
-    }
+    // @JvmOverloads
+    // fun enqueueProfileSwitch(profileSwitch: ProfileSwitch, deleted: Boolean = false) = insertQueueItem("ProfileSwitches") {
+    //     put("date", profileSwitch.date)
+    //     put("isValid", profileSwitch.isValid)
+    //     put("source", profileSwitch.source)
+    //     put("nsId", profileSwitch._id)
+    //     put("isCPP", profileSwitch.isCPP)
+    //     put("timeshift", profileSwitch.timeshift)
+    //     put("percentage", profileSwitch.percentage)
+    //     put("profile", JSONObject(profileSwitch.profileJson))
+    //     put("profilePlugin", profileSwitch.profilePlugin)
+    //     put("durationInMinutes", profileSwitch.durationInMinutes)
+    //     put("isDeletion", deleted)
+    // }
 
-    fun enqueueTotalDailyDose(tdd: TDD) = insertQueueItem("TotalDailyDoses") {
-        put("double", tdd.date)
-        put("double", tdd.bolus)
-        put("double", tdd.basal)
-        put("double", tdd.total)
-    }
+    // fun enqueueTotalDailyDose(tdd: TDD) = insertQueueItem("TotalDailyDoses") {
+    //     put("double", tdd.date)
+    //     put("double", tdd.bolus)
+    //     put("double", tdd.basal)
+    //     put("double", tdd.total)
+    // }
 
-    @JvmOverloads
-    fun enqueueTemporaryBasal(temporaryBasal: TemporaryBasal?, deleted: Boolean = false) = temporaryBasal?.let {
-        insertQueueItem("TemporaryBasals") {
-            put("date", temporaryBasal.date)
-            put("isValid", temporaryBasal.isValid)
-            put("source", temporaryBasal.source)
-            put("nsId", temporaryBasal._id)
-            put("pumpId", temporaryBasal.pumpId)
-            put("durationInMinutes", temporaryBasal.durationInMinutes)
-            put("durationInMinutes", temporaryBasal.durationInMinutes)
-            put("isAbsolute", temporaryBasal.isAbsolute)
-            put("percentRate", temporaryBasal.percentRate)
-            put("absoluteRate", temporaryBasal.absoluteRate)
-            put("isDeletion", deleted)
-        }
-    }
+    // @JvmOverloads
+    // fun enqueueTemporaryBasal(temporaryBasal: TemporaryBasal?, deleted: Boolean = false) = temporaryBasal?.let {
+    //     insertQueueItem("TemporaryBasals") {
+    //         put("date", temporaryBasal.date)
+    //         put("isValid", temporaryBasal.isValid)
+    //         put("source", temporaryBasal.source)
+    //         put("nsId", temporaryBasal._id)
+    //         put("pumpId", temporaryBasal.pumpId)
+    //         put("durationInMinutes", temporaryBasal.durationInMinutes)
+    //         put("durationInMinutes", temporaryBasal.durationInMinutes)
+    //         put("isAbsolute", temporaryBasal.isAbsolute)
+    //         put("percentRate", temporaryBasal.percentRate)
+    //         put("absoluteRate", temporaryBasal.absoluteRate)
+    //         put("isDeletion", deleted)
+    //     }
+    // }
 
     @JvmOverloads
     fun enqueueTempTarget(tempTarget: TemporaryTarget?, deleted: Boolean = false) = tempTarget?.let {
@@ -356,29 +354,29 @@ class OpenHumansUploader @Inject constructor(
             if (currentProgress % 1000L == 0L) showOngoingNotification(maxProgress, currentProgress)
         }
         copyDisposable = Completable.fromCallable { databaseHelper.clearOpenHumansQueue() }
-            .andThen(Single.defer { Single.just(databaseHelper.getCountOfAllRows() + treatmentsPlugin.service.count()) })
-            .doOnSuccess { maxProgress = it }
-            .flatMapObservable { Observable.defer { Observable.fromIterable(treatmentsPlugin.service.getTreatmentData()) } }
-            .map { enqueueTreatment(it); increaseCounter() }
-            .ignoreElements()
+//            .andThen(Single.defer { Single.just(databaseHelper.getCountOfAllRows() + treatmentsPlugin.service.count()) })
+//            .doOnSuccess { maxProgress = it }
+//            .flatMapObservable { Observable.defer { Observable.fromIterable(treatmentsPlugin.service.getTreatmentData()) } }
+//            .map { enqueueTreatment(it); increaseCounter() }
+//            .ignoreElements()
             .andThen(Observable.defer { Observable.fromIterable(repository.compatGetBgReadingsDataFromTime(0, true).blockingGet()) })
             .map { enqueueBGReading(it); increaseCounter() }
             .ignoreElements()
             .andThen(Observable.defer { Observable.fromIterable(repository.compatGetTherapyEventDataFromTime(0, true).blockingGet()) })
             .map { enqueueTherapyEvent(it); increaseCounter() }
             .ignoreElements()
-            .andThen(Observable.defer { Observable.fromIterable(databaseHelper.getAllExtendedBoluses()) })
-            .map { enqueueExtendedBolus(it); increaseCounter() }
-            .ignoreElements()
-            .andThen(Observable.defer { Observable.fromIterable(databaseHelper.getAllProfileSwitches()) })
-            .map { enqueueProfileSwitch(it); increaseCounter() }
-            .ignoreElements()
-            .andThen(Observable.defer { Observable.fromIterable(databaseHelper.getAllTDDs()) })
-            .map { enqueueTotalDailyDose(it); increaseCounter() }
-            .ignoreElements()
-            .andThen(Observable.defer { Observable.fromIterable(databaseHelper.getAllTemporaryBasals()) })
-            .map { enqueueTemporaryBasal(it); increaseCounter() }
-            .ignoreElements()
+//            .andThen(Observable.defer { Observable.fromIterable(databaseHelper.getAllExtendedBoluses()) })
+//            .map { enqueueExtendedBolus(it); increaseCounter() }
+//            .ignoreElements()
+//             .andThen(Observable.defer { Observable.fromIterable(databaseHelper.getAllProfileSwitches()) })
+//             .map { enqueueProfileSwitch(it); increaseCounter() }
+//             .ignoreElements()
+            // .andThen(Observable.defer { Observable.fromIterable(databaseHelper.getAllTDDs()) })
+            // .map { enqueueTotalDailyDose(it); increaseCounter() }
+            // .ignoreElements()
+            // .andThen(Observable.defer { Observable.fromIterable(databaseHelper.getAllTemporaryBasals()) })
+            // .map { enqueueTemporaryBasal(it); increaseCounter() }
+            // .ignoreElements()
             .andThen(Observable.defer { Observable.fromIterable(repository.compatGetTemporaryTargetData().blockingGet()) })
             .map { enqueueTempTarget(it); increaseCounter() }
             .ignoreElements()

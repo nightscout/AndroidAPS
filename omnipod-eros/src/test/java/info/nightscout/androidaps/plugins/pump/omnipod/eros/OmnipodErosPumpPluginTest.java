@@ -1,5 +1,12 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import android.os.Looper;
 
 import org.joda.time.DateTimeZone;
@@ -16,27 +23,20 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.util.ArrayList;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
+import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.AAPSLoggerTest;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
-import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
+import info.nightscout.androidaps.plugins.pump.common.defs.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodErosManager;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.rx.TestAapsSchedulers;
-
-import static info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.OmnipodConstants.BASAL_STEP_DURATION;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 
 @RunWith(PowerMockRunner.class)
@@ -46,10 +46,11 @@ public class OmnipodErosPumpPluginTest {
     AAPSLogger aapsLogger = new AAPSLoggerTest();
     RxBusWrapper rxBusWrapper = new RxBusWrapper(new TestAapsSchedulers());
     @Mock ResourceHelper resourceHelper;
-    @Mock(answer = Answers.RETURNS_DEEP_STUBS) ActivePluginProvider activePluginProvider;
+    @Mock(answer = Answers.RETURNS_DEEP_STUBS) ActivePlugin activePlugin;
     @Mock AapsOmnipodErosManager aapsOmnipodErosManager;
     @Mock CommandQueueProvider commandQueueProvider;
     @Mock RileyLinkUtil rileyLinkUtil;
+    @Mock PumpSync pumpSync;
 
     @Before
     public void prepare() {
@@ -65,11 +66,12 @@ public class OmnipodErosPumpPluginTest {
         // mock all the things
         PowerMockito.mockStatic(Looper.class);
         OmnipodErosPumpPlugin plugin = new OmnipodErosPumpPlugin(injector, aapsLogger, new TestAapsSchedulers(), rxBusWrapper, null,
-                resourceHelper, activePluginProvider, null, null, aapsOmnipodErosManager, commandQueueProvider,
+                resourceHelper, activePlugin, null, null, aapsOmnipodErosManager, commandQueueProvider,
                 null, null, null, null,
-                rileyLinkUtil, null, null, null
+                rileyLinkUtil, null, null, pumpSync
         );
-        when(activePluginProvider.getActiveTreatments().getTempBasalFromHistory(anyLong())).thenReturn(null);
+        PumpSync.PumpState pumpState = new PumpSync.PumpState(null, null, null, null);
+        when(pumpSync.expectedPumpState()).thenReturn(pumpState);
         when(rileyLinkUtil.getRileyLinkHistory()).thenReturn(new ArrayList<>());
         when(injector.androidInjector()).thenReturn(instance -> {
         });
@@ -90,11 +92,11 @@ public class OmnipodErosPumpPluginTest {
         // Given standard basal
         when(profile.getBasal()).thenReturn(0.5d);
         // When
-        PumpEnactResult result1 = plugin.setTempBasalPercent(80, 30, profile, false);
-        PumpEnactResult result2 = plugin.setTempBasalPercent(5000, 30000, profile, false);
-        PumpEnactResult result3 = plugin.setTempBasalPercent(0, 30, profile, false);
-        PumpEnactResult result4 = plugin.setTempBasalPercent(0, 0, profile, false);
-        PumpEnactResult result5 = plugin.setTempBasalPercent(-50, 60, profile, false);
+        PumpEnactResult result1 = plugin.setTempBasalPercent(80, 30, profile, false, PumpSync.TemporaryBasalType.NORMAL);
+        PumpEnactResult result2 = plugin.setTempBasalPercent(5000, 30000, profile, false, PumpSync.TemporaryBasalType.NORMAL);
+        PumpEnactResult result3 = plugin.setTempBasalPercent(0, 30, profile, false, PumpSync.TemporaryBasalType.NORMAL);
+        PumpEnactResult result4 = plugin.setTempBasalPercent(0, 0, profile, false, PumpSync.TemporaryBasalType.NORMAL);
+        PumpEnactResult result5 = plugin.setTempBasalPercent(-50, 60, profile, false, PumpSync.TemporaryBasalType.NORMAL);
         // Then return correct values
         assertEquals(result1.getAbsolute(), 0.4d, 0.01d);
         assertEquals(result1.getDuration(), 30);
@@ -111,8 +113,8 @@ public class OmnipodErosPumpPluginTest {
         // Given zero basal
         when(profile.getBasal()).thenReturn(0d);
         // When
-        result1 = plugin.setTempBasalPercent(8000, 90, profile, false);
-        result2 = plugin.setTempBasalPercent(0, 0, profile, false);
+        result1 = plugin.setTempBasalPercent(8000, 90, profile, false, PumpSync.TemporaryBasalType.NORMAL);
+        result2 = plugin.setTempBasalPercent(0, 0, profile, false, PumpSync.TemporaryBasalType.NORMAL);
         // Then return zero values
         assertEquals(result1.getAbsolute(), 0d, 0.01d);
         assertEquals(result1.getDuration(), 90);
@@ -122,15 +124,15 @@ public class OmnipodErosPumpPluginTest {
         // Given unhealthy basal
         when(profile.getBasal()).thenReturn(500d);
         // When treatment
-        result1 = plugin.setTempBasalPercent(80, 30, profile, false);
+        result1 = plugin.setTempBasalPercent(80, 30, profile, false, PumpSync.TemporaryBasalType.NORMAL);
         // Then return sane values
-        assertEquals(result1.getAbsolute(), PumpType.Omnipod_Eros.determineCorrectBasalSize(500d * 0.8), 0.01d);
+        assertEquals(result1.getAbsolute(), PumpType.OMNIPOD_EROS.determineCorrectBasalSize(500d * 0.8), 0.01d);
         assertEquals(result1.getDuration(), 30);
 
         // Given weird basal
         when(profile.getBasal()).thenReturn(1.234567d);
         // When treatment
-        result1 = plugin.setTempBasalPercent(280, 600, profile, false);
+        result1 = plugin.setTempBasalPercent(280, 600, profile, false, PumpSync.TemporaryBasalType.NORMAL);
         // Then return sane values
         assertEquals(result1.getAbsolute(), 3.4567876, 0.01d);
         assertEquals(result1.getDuration(), 600);
@@ -138,7 +140,7 @@ public class OmnipodErosPumpPluginTest {
         // Given negative basal
         when(profile.getBasal()).thenReturn(-1.234567d);
         // When treatment
-        result1 = plugin.setTempBasalPercent(280, 510, profile, false);
+        result1 = plugin.setTempBasalPercent(280, 510, profile, false, PumpSync.TemporaryBasalType.NORMAL);
         // Then return negative value (this is validated further downstream, see TempBasalExtraCommand)
         assertEquals(result1.getAbsolute(), -3.4567876, 0.01d);
         assertEquals(result1.getDuration(), 510);

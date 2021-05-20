@@ -15,7 +15,7 @@ class TriggerBTDeviceTest : TriggerTestBase() {
 
     var now = 1514766900000L
     private var someName = "Headset"
-    private var btJson = "{\"data\":{\"comparator\":\"ON_CONNECT\",\"name\":\"Headset\"},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerBTDevice\"}"
+    private var btJson = "{\"data\":{\"comparator\":\"ON_CONNECT\",\"name\":\"Headset\"},\"type\":\"TriggerBTDevice\"}"
 
     @Test fun shouldRun() {
         @Suppress("UNUSED_VARIABLE")

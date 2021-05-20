@@ -17,6 +17,8 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.Food
 import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.InvalidateFoodTransaction
 import info.nightscout.androidaps.databinding.FoodFragmentBinding
 import info.nightscout.androidaps.databinding.FoodItemBinding
@@ -25,11 +27,10 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.extensions.toVisibility
+import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.Completable
@@ -48,13 +49,12 @@ class FoodFragment : DaggerFragment() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var nsUpload: NSUpload
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var uel: UserEntryLogger
 
     private val disposable = CompositeDisposable()
-    private lateinit var unfiltered: List<Food>
-    private lateinit var filtered: MutableList<Food>
+    private var unfiltered: List<Food> = arrayListOf()
+    private var filtered: MutableList<Food> = arrayListOf()
 
     private var _binding: FoodFragmentBinding? = null
 
@@ -76,7 +76,8 @@ class FoodFragment : DaggerFragment() {
         binding.refreshFromNightscout.setOnClickListener {
             context?.let { context ->
                 OKDialog.showConfirmation(context, resourceHelper.gs(R.string.refresheventsfromnightscout) + " ?", {
-                    uel.log(Action.FOOD_FROM_NS)
+                    uel.log(Action.FOOD, Sources.Food, resourceHelper.gs(R.string.refresheventsfromnightscout),
+                        ValueWithUnit.SimpleString(resourceHelper.gsNotLocalised(R.string.refresheventsfromnightscout)))
                     disposable += Completable.fromAction { repository.deleteAllFoods() }
                         .subscribeOn(aapsSchedulers.io)
                         .observeOn(aapsSchedulers.main)
@@ -200,14 +201,16 @@ class FoodFragment : DaggerFragment() {
 
     private fun filterData() {
         val textFilter = binding.filter.text.toString()
-        val categoryFilter = binding.category.selectedItem?.toString() ?: resourceHelper.gs(R.string.none)
-        val subcategoryFilter = binding.subcategory.selectedItem?.toString() ?: resourceHelper.gs(R.string.none)
+        val categoryFilter = binding.category.selectedItem?.toString()
+            ?: resourceHelper.gs(R.string.none)
+        val subcategoryFilter = binding.subcategory.selectedItem?.toString()
+            ?: resourceHelper.gs(R.string.none)
         val newFiltered = ArrayList<Food>()
         for (f in unfiltered) {
             if (f.category == null || f.subCategory == null) continue
             if (subcategoryFilter != resourceHelper.gs(R.string.none) && f.subCategory != subcategoryFilter) continue
             if (categoryFilter != resourceHelper.gs(R.string.none) && f.category != categoryFilter) continue
-            if (textFilter != "" && !f.name.toLowerCase(Locale.getDefault()).contains(textFilter.toLowerCase(Locale.getDefault()))) continue
+            if (textFilter != "" && !f.name.lowercase(Locale.getDefault()).contains(textFilter.lowercase(Locale.getDefault()))) continue
             newFiltered.add(f)
         }
         filtered = newFiltered
@@ -250,16 +253,12 @@ class FoodFragment : DaggerFragment() {
                     val food = v.tag as Food
                     activity?.let { activity ->
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord) + "\n" + food.name, {
-                            uel.log(Action.FOOD_REMOVED, food.name)
+                            uel.log(Action.FOOD_REMOVED, Sources.Food, food.name)
                             disposable += repository.runTransactionForResult(InvalidateFoodTransaction(food.id))
-                                .subscribe({
-                                    val id = food.interfaceIDs.nightscoutId
-                                    if (NSUpload.isIdValid(id)) nsUpload.removeFoodFromNS(id)
-                                    // no create at the moment
-                                    // else uploadQueue.removeID("dbAdd", food.timestamp.toString())
-                                }, {
-                                    aapsLogger.error(LTag.BGSOURCE, "Error while invalidating food", it)
-                                })
+                                .subscribe(
+                                    { aapsLogger.error(LTag.DATABASE, "Invalidated food $it") },
+                                    { aapsLogger.error(LTag.DATABASE, "Error while invalidating food", it) }
+                                )
                         }, null)
                     }
                 }
