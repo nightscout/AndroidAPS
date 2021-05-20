@@ -105,6 +105,7 @@
     <string name="notes_label">הערות</string>
     <string name="remove_button">הסרה</string>
     <string name="addnew">הוסף חדש</string>
+    <string name="wrong_pump_data">הנתונים מגיעים ממשאבה אחרת. בחרו מחדש את סוג המשאבה כדי לאפס את מצב המשאבה.</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">מגביל את הקצב הבזאלי המרבי ל-%1$.2f יח\' לשעה בגלל %2$s</string>
     <string name="pumplimit">מגבלת משאבה</string>
@@ -154,6 +155,7 @@
     <string name="profile_carbs_per_unit">גר\'\\יח\'</string>
     <!--    ProfileFunction-->
     <string name="noprofileselected">לא נבחר פרופיל</string>
+    <string name="startprofile">הפעלת פרופיל %1$d%% במשך %2$d דק\'</string>
     <!--    PumpType-->
     <string name="def_extended_note">* רק ערכים בדידים, טווחים אינם נתמכים עבור ערכי בזאלי ובולוס במשאבה וירטואלית.</string>
     <!--    APSResult-->
@@ -207,6 +209,10 @@
     <string name="wear">Wear</string>
     <string name="automation">אוטומציה</string>
     <string name="custom">מותאם אישית</string>
+    <string name="pump">משאבה</string>
+    <string name="loop">לולאה</string>
+    <string name="ns">נייטסקאוט</string>
+    <string name="record">הקלטה</string>
     <!--    Command-->
     <string name="connectiontimedout">החיבור חרג ממגבלת הזמן</string>
     <!--    PumpEnactResult-->
