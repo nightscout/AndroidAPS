@@ -165,16 +165,20 @@ interface Profile {
             if (units == GlucoseUnit.MGDL) (if (valueInMgdl > 0) "+" else "") + to0Decimal(valueInMgdl)
             else (if (valueInMmol > 0) "+" else "") + to1Decimal(valueInMmol)
 
+        fun isMgdl(anyBg: Double) = anyBg >= 39
+        fun isMmol(anyBg: Double) = anyBg < 39
+        fun unit(anyBg: Double) = if (isMgdl(anyBg)) GlucoseUnit.MGDL else GlucoseUnit.MMOL
+
         fun toCurrentUnits(profileFunction: ProfileFunction, anyBg: Double): Double =
-            if (anyBg < 32) fromMmolToUnits(anyBg, profileFunction.getUnits())
+            if (isMmol(anyBg)) fromMmolToUnits(anyBg, profileFunction.getUnits())
             else fromMgdlToUnits(anyBg, profileFunction.getUnits())
 
         fun toCurrentUnits(units: GlucoseUnit, anyBg: Double): Double =
-            if (anyBg < 32) fromMmolToUnits(anyBg, units)
+            if (isMmol(anyBg)) fromMmolToUnits(anyBg, units)
             else fromMgdlToUnits(anyBg, units)
 
         fun toCurrentUnitsString(profileFunction: ProfileFunction, anyBg: Double): String =
-            if (anyBg < 32) toUnitsString(anyBg * Constants.MMOLL_TO_MGDL, anyBg, profileFunction.getUnits())
+            if (isMmol(anyBg)) toUnitsString(anyBg * Constants.MMOLL_TO_MGDL, anyBg, profileFunction.getUnits())
             else toUnitsString(anyBg, anyBg * Constants.MGDL_TO_MMOLL, profileFunction.getUnits())
 
         fun toMgdl(value: Double, units: GlucoseUnit): Double =

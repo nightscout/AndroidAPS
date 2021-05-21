@@ -8,7 +8,6 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.RequestDexcomPermissionActivity
 import info.nightscout.androidaps.database.AppRepository
@@ -18,10 +17,8 @@ import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
-import info.nightscout.androidaps.interfaces.BgSource
-import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginDescription
-import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.extensions.fromConstant
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -126,11 +123,12 @@ class DexcomPlugin @Inject constructor(
                         meters.getBundle(i.toString())?.let {
                             val timestamp = it.getLong("timestamp") * 1000
                             val now = dateUtil.now()
+                            val value = it.getInt("meterValue").toDouble()
                             if (timestamp > now - T.months(1).msecs() && timestamp < now) {
                                 calibrations.add(CgmSourceTransaction.Calibration(
                                     timestamp = it.getLong("timestamp") * 1000,
-                                    value = it.getInt("meterValue").toDouble(),
-                                    glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
+                                    value = value,
+                                    glucoseUnit = TherapyEvent.GlucoseUnit.fromConstant(Profile.unit(value))
                                 ))
                             }
                         }
