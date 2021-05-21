@@ -1,109 +1,81 @@
-package info.nightscout.androidaps.plugins.pump.insight.activities;
+package info.nightscout.androidaps.plugins.pump.insight.activities
 
-import android.content.ComponentName;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.text.Html;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.content.ComponentName
+import android.content.Intent
+import android.content.ServiceConnection
+import android.os.Bundle
+import android.os.IBinder
+import android.view.View
+import android.view.WindowManager
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
+import dagger.android.support.DaggerAppCompatActivity
+import info.nightscout.androidaps.insight.databinding.ActivityInsightAlertBinding
+import info.nightscout.androidaps.plugins.pump.insight.InsightAlertService
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.Alert
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.AlertStatus
+import info.nightscout.androidaps.plugins.pump.insight.utils.AlertUtils
+import info.nightscout.androidaps.utils.HtmlHelper.fromHtml
+import javax.inject.Inject
 
-import androidx.core.content.ContextCompat;
+class InsightAlertActivity : DaggerAppCompatActivity() {
 
-import javax.inject.Inject;
+    @Inject lateinit var alertUtils: AlertUtils
+    private var alertService: InsightAlertService? = null
 
-import dagger.android.support.DaggerAppCompatActivity;
-import info.nightscout.androidaps.insight.R;
-import info.nightscout.androidaps.plugins.pump.insight.InsightAlertService;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.Alert;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.AlertStatus;
-import info.nightscout.androidaps.plugins.pump.insight.utils.AlertUtils;
-import info.nightscout.androidaps.utils.HtmlHelper;
+    private lateinit var binding: ActivityInsightAlertBinding
 
-public class InsightAlertActivity extends DaggerAppCompatActivity {
-
-    @Inject AlertUtils alertUtils;
-
-    private InsightAlertService alertService;
-
-    private ImageView icon;
-    private TextView errorCode;
-    private TextView errorTitle;
-    private TextView errorDescription;
-    private Button mute;
-    private Button confirm;
-
-    private final ServiceConnection serviceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder binder) {
-            alertService = ((InsightAlertService.LocalBinder) binder).getService();
-            alertService.getAlertLiveData().observe(InsightAlertActivity.this, alert -> {
-                if (alert == null) finish();
-                else update(alert);
-            });
+    private val serviceConnection: ServiceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName, binder: IBinder) {
+            alertService = (binder as InsightAlertService.LocalBinder).service
+            alertService!!.alertLiveData.observe(this@InsightAlertActivity, Observer { alert: Alert? -> if (alert == null) finish() else update(alert) })
         }
 
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            alertService = null;
-        }
-    };
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_insight_alert);
-
-        bindService(new Intent(this, InsightAlertService.class), serviceConnection, BIND_AUTO_CREATE);
-
-        icon = findViewById(R.id.icon);
-        errorCode = findViewById(R.id.error_code);
-        errorTitle = findViewById(R.id.error_title);
-        errorDescription = findViewById(R.id.error_description);
-        mute = findViewById(R.id.mute);
-        confirm = findViewById(R.id.confirm);
-
-        setFinishOnTouchOutside(false);
-
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-                | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
-                | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-                | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-    }
-
-    @Override
-    protected void onDestroy() {
-        unbindService(serviceConnection);
-        super.onDestroy();
-    }
-
-    public void update(Alert alert) {
-        mute.setEnabled(true);
-        mute.setVisibility(alert.getAlertStatus() == AlertStatus.SNOOZED ? View.GONE : View.VISIBLE);
-        confirm.setEnabled(true);
-        this.icon.setImageDrawable(ContextCompat.getDrawable(this, alertUtils.getAlertIcon(alert.getAlertCategory())));
-        this.errorCode.setText(alertUtils.getAlertCode(alert.getAlertType()));
-        this.errorTitle.setText(alertUtils.getAlertTitle(alert.getAlertType()));
-        String description = alertUtils.getAlertDescription(alert);
-        if (description == null) this.errorDescription.setVisibility(View.GONE);
-        else {
-            this.errorDescription.setVisibility(View.VISIBLE);
-            this.errorDescription.setText(HtmlHelper.INSTANCE.fromHtml(description));
+        override fun onServiceDisconnected(name: ComponentName) {
+            alertService = null
         }
     }
 
-    public void muteClicked(View view) {
-        mute.setEnabled(false);
-        alertService.mute();
+    public override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityInsightAlertBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        bindService(Intent(this, InsightAlertService::class.java), serviceConnection, BIND_AUTO_CREATE)
+
+        setFinishOnTouchOutside(false)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+            or WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
+            or WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+            or WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON)
     }
 
-    public void confirmClicked(View view) {
-        mute.setEnabled(false);
-        confirm.setEnabled(false);
-        alertService.confirm();
+    override fun onDestroy() {
+        unbindService(serviceConnection)
+        super.onDestroy()
+    }
+
+    fun update(alert: Alert) {
+        binding.mute.isEnabled = true
+        binding.mute.visibility = if (alert.alertStatus === AlertStatus.SNOOZED) View.GONE else View.VISIBLE
+        binding.confirm.isEnabled = true
+        binding.icon.setImageDrawable(ContextCompat.getDrawable(this, alertUtils.getAlertIcon(alert.alertCategory)))
+        binding.errorCode.text = alertUtils.getAlertCode(alert.alertType)
+        binding.errorTitle.text = alertUtils.getAlertTitle(alert.alertType)
+        val description = alertUtils.getAlertDescription(alert)
+        if (description == null) binding.errorDescription.visibility = View.GONE else {
+            binding.errorDescription.visibility = View.VISIBLE
+            binding.errorDescription.text = fromHtml(description)
+        }
+    }
+
+    fun muteClicked() {
+        binding.mute.isEnabled = false
+        alertService!!.mute()
+    }
+
+    fun confirmClicked() {
+        binding.mute.isEnabled = false
+        binding.confirm.isEnabled = false
+        alertService!!.confirm()
     }
 }

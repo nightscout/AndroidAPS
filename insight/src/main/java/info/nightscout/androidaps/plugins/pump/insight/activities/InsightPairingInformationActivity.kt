@@ -5,12 +5,8 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.View
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.insight.databinding.ActivityInsightPairingInformationBinding
-import info.nightscout.androidaps.insight.R
 import info.nightscout.androidaps.plugins.pump.insight.connection_service.InsightConnectionService
 
 class InsightPairingInformationActivity : NoSplashAppCompatActivity() {
@@ -59,7 +55,7 @@ class InsightPairingInformationActivity : NoSplashAppCompatActivity() {
         super.onDestroy()
     }
 
-    fun deletePairing(view: View?) {
+    fun deletePairing() {
         if (connectionService != null) {
             connectionService!!.reset()
             finish()
