@@ -16,7 +16,7 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.Cryptograph
 open class AppLayerMessage(private val messagePriority: MessagePriority, private val inCRC: Boolean, private val outCRC: Boolean, open var service: Service?) : Comparable<AppLayerMessage> {
 
     protected open val data: ByteBuf
-        protected get() = ByteBuf(0)
+        get() = ByteBuf(0)
 
     @Throws(Exception::class) protected open fun parse(byteBuf: ByteBuf?) {}
     fun serialize(clazz: Class<out AppLayerMessage?>?): ByteBuf {

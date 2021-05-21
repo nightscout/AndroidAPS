@@ -12,7 +12,7 @@ class ReadParameterBlockMessage : AppLayerMessage(MessagePriority.NORMAL, true, 
         private set
 
     override val data: ByteBuf
-        protected get() {
+        get() {
             val byteBuf = ByteBuf(2)
             byteBuf.putUInt16LE(ParameterBlockIDs.IDS.getID(parameterBlockId))
             return byteBuf

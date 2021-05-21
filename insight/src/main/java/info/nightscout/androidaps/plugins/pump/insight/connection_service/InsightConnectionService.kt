@@ -284,7 +284,10 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
 
     @Synchronized private fun handleException(e: Exception) {
         when (state) {
-            InsightState.NOT_PAIRED, InsightState.DISCONNECTED, InsightState.RECOVERING -> return
+            InsightState.NOT_PAIRED,
+            InsightState.DISCONNECTED,
+            InsightState.RECOVERING -> return
+            else                    -> Unit
         }
         aapsLogger!!.info(LTag.PUMP, "Exception occurred: " + e.javaClass.simpleName)
         if (pairingDataStorage!!.isPaired) {
@@ -476,18 +479,17 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
         }
         when (verifyConfirmResponse.pairingStatus) {
             PairingStatus.CONFIRMED -> {
-                verificationString = null
-                setState(InsightState.APP_BIND_MESSAGE)
-                sendAppLayerMessage(BindMessage())
-            }
-
+                    verificationString = null
+                    setState(InsightState.APP_BIND_MESSAGE)
+                    sendAppLayerMessage(BindMessage())
+                }
             PairingStatus.PENDING   -> try {
-                Thread.sleep(200)
-                sendSatlMessage(VerifyConfirmRequest())
-            } catch (e: InterruptedException) {
-                //Redirect interrupt flag
-                Thread.currentThread().interrupt()
-            }
+                    Thread.sleep(200)
+                    sendSatlMessage(VerifyConfirmRequest())
+                } catch (e: InterruptedException) {
+                    //Redirect interrupt flag
+                    Thread.currentThread().interrupt()
+                }
             PairingStatus.REJECTED  -> handleException(SatlPairingRejectedException())
         }
     }
@@ -521,10 +523,15 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
 
     private fun processDataMessage(dataMessage: DataMessage) {
         when (state) {
-            InsightState.CONNECTED, InsightState.APP_BIND_MESSAGE, InsightState.APP_CONNECT_MESSAGE, InsightState.APP_ACTIVATE_PARAMETER_SERVICE, InsightState.APP_ACTIVATE_STATUS_SERVICE, InsightState.APP_FIRMWARE_VERSIONS, InsightState.APP_SYSTEM_IDENTIFICATION -> {
-            }
+            InsightState.CONNECTED,
+            InsightState.APP_BIND_MESSAGE,
+            InsightState.APP_CONNECT_MESSAGE,
+            InsightState.APP_ACTIVATE_PARAMETER_SERVICE,
+            InsightState.APP_ACTIVATE_STATUS_SERVICE,
+            InsightState.APP_FIRMWARE_VERSIONS,
+            InsightState.APP_SYSTEM_IDENTIFICATION      -> { }
 
-            else                                                                                                                                                                                                                                                       -> handleException(ReceivedPacketInInvalidStateException())
+            else                                        -> handleException(ReceivedPacketInInvalidStateException())
         }
         try {
             val appLayerMessage = unwrap(dataMessage)

@@ -1,33 +1,28 @@
-package info.nightscout.androidaps.plugins.pump.insight.app_layer.history;
+package info.nightscout.androidaps.plugins.pump.insight.app_layer.history
 
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.Service;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.MessagePriority;
-import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf;
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.Service
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.MessagePriority
+import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
-public class StartReadingHistoryMessage extends AppLayerMessage {
+class StartReadingHistoryMessage : AppLayerMessage(MessagePriority.NORMAL, false, true, Service.HISTORY) {
 
-    private long offset;
-    private HistoryReadingDirection direction;
+    private var offset: Long = 0
+    private var direction: HistoryReadingDirection? = null
+    override val data: ByteBuf
+        get() {
+            val byteBuf = ByteBuf(8)
+            byteBuf.putUInt16LE(31)
+            byteBuf.putUInt16LE(direction!!.id)
+            byteBuf.putUInt32LE(offset)
+            return byteBuf
+        }
 
-    public StartReadingHistoryMessage() {
-        super(MessagePriority.NORMAL, false, true, Service.HISTORY);
+    fun setOffset(offset: Long) {
+        this.offset = offset
     }
 
-    @Override
-    protected ByteBuf getData() {
-        ByteBuf byteBuf = new ByteBuf(8);
-        byteBuf.putUInt16LE(31);
-        byteBuf.putUInt16LE(direction.getId());
-        byteBuf.putUInt32LE(offset);
-        return byteBuf;
-    }
-
-    public void setOffset(long offset) {
-        this.offset = offset;
-    }
-
-    public void setDirection(HistoryReadingDirection direction) {
-        this.direction = direction;
+    fun setDirection(direction: HistoryReadingDirection?) {
+        this.direction = direction
     }
 }
