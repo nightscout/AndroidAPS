@@ -1,25 +1,18 @@
-package info.nightscout.androidaps.plugins.pump.insight.app_layer.history.history_events;
+package info.nightscout.androidaps.plugins.pump.insight.app_layer.history.history_events
 
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.OperatingMode;
-import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf;
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.OperatingMode
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.OperatingMode.Companion.fromId
+import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
-public class OperatingModeChangedEvent extends HistoryEvent {
+class OperatingModeChangedEvent : HistoryEvent() {
 
-    private OperatingMode oldValue;
-    private OperatingMode newValue;
+    var oldValue: OperatingMode? = null
+        private set
+    var newValue: OperatingMode? = null
+        private set
 
-    @Override
-    public void parse(ByteBuf byteBuf) {
-        oldValue = OperatingMode.Companion.fromId(byteBuf.readUInt16LE());
-        newValue = OperatingMode.Companion.fromId(byteBuf.readUInt16LE());
-    }
-
-
-    public OperatingMode getOldValue() {
-        return oldValue;
-    }
-
-    public OperatingMode getNewValue() {
-        return newValue;
+    override fun parse(byteBuf: ByteBuf) {
+        oldValue = fromId(byteBuf.readUInt16LE())
+        newValue = fromId(byteBuf.readUInt16LE())
     }
 }

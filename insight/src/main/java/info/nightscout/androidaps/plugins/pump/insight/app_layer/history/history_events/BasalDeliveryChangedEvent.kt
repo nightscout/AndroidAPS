@@ -1,23 +1,16 @@
-package info.nightscout.androidaps.plugins.pump.insight.app_layer.history.history_events;
+package info.nightscout.androidaps.plugins.pump.insight.app_layer.history.history_events
 
-import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf;
+import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
-public class BasalDeliveryChangedEvent extends HistoryEvent {
+class BasalDeliveryChangedEvent : HistoryEvent() {
 
-    private double oldBasalRate;
-    private double newBasalRate;
+    var oldBasalRate = 0.0
+        private set
+    var newBasalRate = 0.0
+        private set
 
-    @Override
-    public void parse(ByteBuf byteBuf) {
-        oldBasalRate = byteBuf.readUInt32Decimal1000();
-        newBasalRate = byteBuf.readUInt32Decimal1000();
-    }
-
-    public double getOldBasalRate() {
-        return oldBasalRate;
-    }
-
-    public double getNewBasalRate() {
-        return newBasalRate;
+    override fun parse(byteBuf: ByteBuf) {
+        oldBasalRate = byteBuf.readUInt32Decimal1000()
+        newBasalRate = byteBuf.readUInt32Decimal1000()
     }
 }

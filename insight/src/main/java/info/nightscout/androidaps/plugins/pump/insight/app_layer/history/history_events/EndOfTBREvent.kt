@@ -1,43 +1,27 @@
-package info.nightscout.androidaps.plugins.pump.insight.app_layer.history.history_events;
+package info.nightscout.androidaps.plugins.pump.insight.app_layer.history.history_events
 
-import info.nightscout.androidaps.plugins.pump.insight.utils.BOCUtil;
-import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf;
+import info.nightscout.androidaps.plugins.pump.insight.utils.BOCUtil
+import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
-public class EndOfTBREvent extends HistoryEvent {
+class EndOfTBREvent : HistoryEvent() {
 
-    private int startHour;
-    private int startMinute;
-    private int startSecond;
-    private int amount;
-    private int duration;
+    var startHour = 0
+        private set
+    var startMinute = 0
+        private set
+    var startSecond = 0
+        private set
+    var amount = 0
+        private set
+    var duration = 0
+        private set
 
-    @Override
-    public void parse(ByteBuf byteBuf) {
-        byteBuf.shift(1);
-        startHour = BOCUtil.parseBOC(byteBuf.readByte());
-        startMinute = BOCUtil.parseBOC(byteBuf.readByte());
-        startSecond = BOCUtil.parseBOC(byteBuf.readByte());
-        amount = byteBuf.readUInt16LE();
-        duration = byteBuf.readUInt16LE();
-    }
-
-    public int getStartHour() {
-        return startHour;
-    }
-
-    public int getStartMinute() {
-        return startMinute;
-    }
-
-    public int getStartSecond() {
-        return startSecond;
-    }
-
-    public int getAmount() {
-        return amount;
-    }
-
-    public int getDuration() {
-        return duration;
+    override fun parse(byteBuf: ByteBuf) {
+        byteBuf.shift(1)
+        startHour = BOCUtil.parseBOC(byteBuf.readByte())
+        startMinute = BOCUtil.parseBOC(byteBuf.readByte())
+        startSecond = BOCUtil.parseBOC(byteBuf.readByte())
+        amount = byteBuf.readUInt16LE()
+        duration = byteBuf.readUInt16LE()
     }
 }
