@@ -47,8 +47,7 @@ import javax.inject.Inject
 
 class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback, InputStreamReader.Callback, OutputStreamWriter.Callback {
 
-    @JvmField @Inject
-    var aapsLogger: AAPSLogger? = null
+    @Inject lateinit var aapsLogger: AAPSLogger
 
     @JvmField @Inject
     var sp: SP? = null
@@ -200,7 +199,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
         if ((state === InsightState.DISCONNECTED || state === InsightState.NOT_PAIRED) && wakeLock!!.isHeld) wakeLock!!.release() else if (!wakeLock!!.isHeld) wakeLock!!.acquire()
         this.state = state
         for (stateCallback in stateCallbacks) stateCallback.onStateChanged(state)
-        aapsLogger!!.info(LTag.PUMP, "Insight state changed: " + state.name)
+        aapsLogger.info(LTag.PUMP, "Insight state changed: " + state.name)
     }
 
     @Synchronized fun requestConnection(lock: Any) {
@@ -230,7 +229,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
                 var disconnectTimeout = sp!!.getInt(R.string.key_insight_disconnect_delay, 5).toLong()
                 disconnectTimeout = Math.min(disconnectTimeout, 15)
                 disconnectTimeout = Math.max(disconnectTimeout, 0)
-                aapsLogger!!.info(LTag.PUMP, "Last connection lock released, will disconnect in $disconnectTimeout seconds")
+                aapsLogger.info(LTag.PUMP, "Last connection lock released, will disconnect in $disconnectTimeout seconds")
                 disconnectTimer = DelayedActionThread.runDelayed("Disconnect Timer", disconnectTimeout * 1000) { disconnect() }
             }
         }
@@ -289,7 +288,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
             InsightState.RECOVERING -> return
             else                    -> Unit
         }
-        aapsLogger!!.info(LTag.PUMP, "Exception occurred: " + e.javaClass.simpleName)
+        aapsLogger.info(LTag.PUMP, "Exception occurred: " + e.javaClass.simpleName)
         if (pairingDataStorage!!.isPaired) {
             if (e is TimeoutException && (state === InsightState.SATL_SYN_REQUEST || state === InsightState.APP_CONNECT_MESSAGE)) {
                 if (++timeoutDuringHandshakeCounter == TIMEOUT_DURING_HANDSHAKE_NOTIFICATION_THRESHOLD) {
@@ -341,7 +340,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
     @Synchronized fun pair(macAddress: String?) {
         check(!pairingDataStorage!!.isPaired) { "Pump must be unbonded first." }
         check(connectionRequests.size != 0) { "A connection lock must be hold for pairing" }
-        aapsLogger!!.info(LTag.PUMP, "Pairing initiated")
+        aapsLogger.info(LTag.PUMP, "Pairing initiated")
         cleanup(true)
         pairingDataStorage!!.macAddress = macAddress
         connect()
@@ -610,10 +609,10 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
     private fun processReadParameterBlockMessage(message: ReadParameterBlockMessage) {
         if (state === InsightState.APP_SYSTEM_IDENTIFICATION) {
             if (message.parameterBlock !is SystemIdentificationBlock) handleException(TooChattyPumpException()) else {
-                val systemIdentification = (message.parameterBlock as SystemIdentificationBlock?)!!.systemIdentification
+                val systemIdentification = (message.parameterBlock as SystemIdentificationBlock).systemIdentification
                 pairingDataStorage!!.systemIdentification = systemIdentification
                 pairingDataStorage!!.isPaired = true
-                aapsLogger!!.info(LTag.PUMP, "Pairing completed YEE-HAW ♪ ┏(・o･)┛ ♪ ┗( ･o･)┓ ♪")
+                aapsLogger.info(LTag.PUMP, "Pairing completed YEE-HAW ♪ ┏(・o･)┛ ♪ ┗( ･o･)┓ ♪")
                 setState(InsightState.CONNECTED)
                 for (stateCallback in stateCallbacks) stateCallback.onPumpPaired()
             }
@@ -665,7 +664,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
         disconnect()
     }
 
-    override fun onBind(intent: Intent): IBinder? {
+    override fun onBind(intent: Intent): IBinder {
         return localBinder
     }
 

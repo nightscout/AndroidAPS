@@ -11,10 +11,11 @@ class TBROverNotificationBlock : ParameterBlock() {
         melody = byteBuf.readUInt16LE()
     }
 
-    override fun getData(): ByteBuf {
-        val byteBuf = ByteBuf(4)
-        byteBuf.putBoolean(isEnabled)
-        byteBuf.putUInt16LE(melody)
-        return byteBuf
-    }
+    override val data: ByteBuf
+        get() {
+            val byteBuf = ByteBuf(4)
+            byteBuf.putBoolean(isEnabled)
+            byteBuf.putUInt16LE(melody)
+            return byteBuf
+        }
 }

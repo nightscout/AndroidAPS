@@ -15,7 +15,6 @@ class SystemIdentificationBlock : ParameterBlock() {
         systemIdentification!!.manufacturingDate = byteBuf.readUTF16(22)
     }
 
-    override fun getData(): ByteBuf? {
-        return null
-    }
+    override val data: ByteBuf?
+        get() { return null }
 }

@@ -1,50 +1,42 @@
-package info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks;
+package info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.BasalProfileBlock
+import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
+import java.util.*
 
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.BasalProfileBlock;
-import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf;
+abstract class BRProfileBlock : ParameterBlock() {
 
-public abstract class BRProfileBlock extends ParameterBlock {
-
-    private List<BasalProfileBlock> profileBlocks;
-
-    @Override
-    public void parse(ByteBuf byteBuf) {
-        profileBlocks = new ArrayList<>();
-        for (int i = 0; i < 24; i++) {
-            BasalProfileBlock basalProfileBlock = new BasalProfileBlock();
-            basalProfileBlock.setDuration(byteBuf.readUInt16LE());
-            profileBlocks.add(basalProfileBlock);
+    internal lateinit var profileBlocks: MutableList<BasalProfileBlock>
+    override fun parse(byteBuf: ByteBuf) {
+        val newProfileBlocks = mutableListOf<BasalProfileBlock>()
+        for (i in 0..23) {
+            val basalProfileBlock = BasalProfileBlock()
+            basalProfileBlock.duration = byteBuf.readUInt16LE()
+            newProfileBlocks.add(basalProfileBlock)
         }
-        for (int i = 0; i < 24; i++) profileBlocks.get(i).setBasalAmount(byteBuf.readUInt16Decimal());
-        Iterator<BasalProfileBlock> iterator = profileBlocks.iterator();
-        while (iterator.hasNext())
-            if (iterator.next().getDuration() == 0)
-                iterator.remove();
+        for (i in 0..23) newProfileBlocks.get(i).basalAmount = byteBuf.readUInt16Decimal()
+        val iterator = newProfileBlocks.iterator()
+        while (iterator.hasNext()) if (iterator.next().duration == 0) iterator.remove()
+        profileBlocks = newProfileBlocks
     }
 
-    @Override
-    public ByteBuf getData() {
-        ByteBuf byteBuf = new ByteBuf(96);
-        for (int i = 0; i < 24; i++) {
-            if (profileBlocks.size() > i) byteBuf.putUInt16LE(profileBlocks.get(i).getDuration());
-            else byteBuf.putUInt16LE(0);
+    override val data: ByteBuf
+        get() {
+            val byteBuf = ByteBuf(96)
+            for (i in 0..23) {
+                if (profileBlocks.size > i) byteBuf.putUInt16LE(profileBlocks[i].duration) else byteBuf.putUInt16LE(0)
+            }
+            for (i in 0..23) {
+                if (profileBlocks.size > i) byteBuf.putUInt16Decimal(profileBlocks[i].basalAmount) else byteBuf.putUInt16Decimal(0.0)
+            }
+            return byteBuf
         }
-        for (int i = 0; i < 24; i++) {
-            if (profileBlocks.size() > i) byteBuf.putUInt16Decimal(profileBlocks.get(i).getBasalAmount());
-            else byteBuf.putUInt16Decimal(0);
-        }
-        return byteBuf;
+
+    fun getProfileBlocks(): List<BasalProfileBlock> {
+        return profileBlocks
     }
 
-    public List<BasalProfileBlock> getProfileBlocks() {
-        return profileBlocks;
-    }
-
-    public void setProfileBlocks(List<BasalProfileBlock> profileBlocks) {
-        this.profileBlocks = profileBlocks;
+    fun setProfileBlocks(profileBlocks: MutableList<BasalProfileBlock>) {
+        this.profileBlocks = profileBlocks
     }
 }

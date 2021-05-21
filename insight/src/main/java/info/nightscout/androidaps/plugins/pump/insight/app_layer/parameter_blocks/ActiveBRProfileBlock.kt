@@ -1,29 +1,20 @@
-package info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks;
+package info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks
 
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.BasalProfile;
-import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf;
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.BasalProfile
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.BasalProfile.Companion.fromId
+import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
-public class ActiveBRProfileBlock extends ParameterBlock {
+class ActiveBRProfileBlock : ParameterBlock() {
 
-    private BasalProfile activeBasalProfile;
-
-    @Override
-    public void parse(ByteBuf byteBuf) {
-        activeBasalProfile = BasalProfile.Companion.fromId(byteBuf.readUInt16LE());
+    var activeBasalProfile: BasalProfile? = null
+    override fun parse(byteBuf: ByteBuf) {
+        activeBasalProfile = fromId(byteBuf.readUInt16LE())
     }
 
-    @Override
-    public ByteBuf getData() {
-        ByteBuf byteBuf = new ByteBuf(2);
-        byteBuf.putUInt16LE(activeBasalProfile.getId());
-        return byteBuf;
-    }
-
-    public BasalProfile getActiveBasalProfile() {
-        return activeBasalProfile;
-    }
-
-    public void setActiveBasalProfile(BasalProfile activeBasalProfile) {
-        this.activeBasalProfile = activeBasalProfile;
-    }
+    override val data: ByteBuf
+        get() {
+            val byteBuf = ByteBuf(2)
+            activeBasalProfile?.let { byteBuf.putUInt16LE(it.id) }
+            return byteBuf
+        }
 }
