@@ -1,26 +1,21 @@
-package info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks;
+package info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks
 
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.SystemIdentification;
-import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf;
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.SystemIdentification
+import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
-public class SystemIdentificationBlock extends ParameterBlock {
+class SystemIdentificationBlock : ParameterBlock() {
 
-    private SystemIdentification systemIdentification;
+    var systemIdentification: SystemIdentification? = null
+        private set
 
-    @Override
-    public void parse(ByteBuf byteBuf) {
-        systemIdentification = new SystemIdentification();
-        systemIdentification.setSerialNumber(byteBuf.readUTF16(18));
-        systemIdentification.setSystemIdAppendix(byteBuf.readUInt32LE());
-        systemIdentification.setManufacturingDate(byteBuf.readUTF16(22));
+    override fun parse(byteBuf: ByteBuf) {
+        systemIdentification = SystemIdentification()
+        systemIdentification!!.serialNumber = byteBuf.readUTF16(18)
+        systemIdentification!!.systemIdAppendix = byteBuf.readUInt32LE()
+        systemIdentification!!.manufacturingDate = byteBuf.readUTF16(22)
     }
 
-    @Override
-    public ByteBuf getData() {
-        return null;
-    }
-
-    public SystemIdentification getSystemIdentification() {
-        return systemIdentification;
+    override fun getData(): ByteBuf? {
+        return null
     }
 }
