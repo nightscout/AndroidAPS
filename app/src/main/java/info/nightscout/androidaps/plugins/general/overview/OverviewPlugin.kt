@@ -243,6 +243,7 @@ class OverviewPlugin @Inject constructor(
     override fun refreshLoop(from: String) {
         if (runningRefresh) return
         runningRefresh = true
+        loadIobCobResults(from)
         overviewBus.send(EventUpdateOverview(from, OverviewData.Property.BG))
         overviewBus.send(EventUpdateOverview(from, OverviewData.Property.TIME))
         overviewBus.send(EventUpdateOverview(from, OverviewData.Property.TEMPORARY_BASAL))
