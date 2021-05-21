@@ -59,7 +59,7 @@ class LocalInsightFragment : DaggerFragment(), View.OnClickListener {
         disposable.add(rxBus
             .toObservable(EventLocalInsightUpdateGUI::class.java)
             .observeOn(aapsSchedulers.main)
-            .subscribe({ _: EventLocalInsightUpdateGUI? -> updateGUI() }) { throwable: Throwable? -> fabricPrivacy.logException(throwable!!) }
+            .subscribe({ updateGUI() }) { throwable: Throwable? -> fabricPrivacy.logException(throwable!!) }
         )
         updateGUI()
     }
