@@ -50,14 +50,14 @@ fun ExtendedBolus.toTemporaryBasal(profile: Profile): TemporaryBasal =
         type = TemporaryBasal.Type.FAKE_EXTENDED
     )
 
-fun ExtendedBolus.toJson(profile: Profile, dateUtil: DateUtil, useAbsolute: Boolean): JSONObject =
+fun ExtendedBolus.toJson(isAdd: Boolean, profile: Profile, dateUtil: DateUtil, useAbsolute: Boolean): JSONObject =
     if (isEmulatingTempBasal)
         toTemporaryBasal(profile)
-            .toJson(profile, dateUtil, useAbsolute)
-            .put("extendedEmulated", toRealJson(dateUtil))
-    else toRealJson(dateUtil)
+            .toJson(isAdd, profile, dateUtil, useAbsolute)
+            .put("extendedEmulated", toRealJson(isAdd, dateUtil))
+    else toRealJson(isAdd, dateUtil)
 
-fun ExtendedBolus.toRealJson(dateUtil: DateUtil): JSONObject =
+fun ExtendedBolus.toRealJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
     JSONObject()
         .put("created_at", dateUtil.toISOString(timestamp))
         .put("enteredBy", "openaps://" + "AndroidAPS")
@@ -74,7 +74,7 @@ fun ExtendedBolus.toRealJson(dateUtil: DateUtil): JSONObject =
             if (interfaceIDs.endId != null) it.put("endId", interfaceIDs.endId)
             if (interfaceIDs.pumpType != null) it.put("pumpType", interfaceIDs.pumpType!!.name)
             if (interfaceIDs.pumpSerial != null) it.put("pumpSerial", interfaceIDs.pumpSerial)
-            if (interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId)
+            if (isAdd && interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId)
         }
 
 /*

@@ -16,7 +16,7 @@ fun Bolus.iobCalc(activePlugin: ActivePlugin, time: Long, dia: Double): Iob {
     return insulinInterface.iobCalcForTreatment(this, time, dia)
 }
 
-fun Bolus.toJson(dateUtil: DateUtil): JSONObject =
+fun Bolus.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
     JSONObject()
         .put("eventType", if (type == Bolus.Type.SMB) TherapyEvent.Type.CORRECTION_BOLUS.text else TherapyEvent.Type.MEAL_BOLUS.text)
         .put("insulin", amount)
@@ -28,7 +28,7 @@ fun Bolus.toJson(dateUtil: DateUtil): JSONObject =
             if (interfaceIDs.pumpId != null) it.put("pumpId", interfaceIDs.pumpId)
             if (interfaceIDs.pumpType != null) it.put("pumpType", interfaceIDs.pumpType!!.name)
             if (interfaceIDs.pumpSerial != null) it.put("pumpSerial", interfaceIDs.pumpSerial)
-            if (interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId)
+            if (isAdd && interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId)
         }
 
 /*

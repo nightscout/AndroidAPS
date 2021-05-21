@@ -17,7 +17,7 @@ import info.nightscout.androidaps.utils.T
 import org.json.JSONObject
 import java.util.*
 
-fun ProfileSwitch.toJson(dateUtil: DateUtil): JSONObject =
+fun ProfileSwitch.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
     JSONObject()
         .put("created_at", dateUtil.toISOString(timestamp))
         .put("enteredBy", "openaps://" + "AndroidAPS")
@@ -31,7 +31,7 @@ fun ProfileSwitch.toJson(dateUtil: DateUtil): JSONObject =
             if (interfaceIDs.pumpId != null) it.put("pumpId", interfaceIDs.pumpId)
             if (interfaceIDs.pumpType != null) it.put("pumpType", interfaceIDs.pumpType!!.name)
             if (interfaceIDs.pumpSerial != null) it.put("pumpSerial", interfaceIDs.pumpSerial)
-            if (interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId)
+            if (isAdd && interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId)
         }
 
 /* NS PS
