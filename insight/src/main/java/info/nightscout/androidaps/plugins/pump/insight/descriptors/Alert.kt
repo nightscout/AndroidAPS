@@ -12,10 +12,10 @@ class Alert {
     var deliveredBolusAmount = 0.0
     var cartridgeAmount = 0.0
 
-    override fun equals(o: Any?): Boolean {
-        if (this === o) return true
-        if (o == null || javaClass != o.javaClass) return false
-        val alert = o as Alert
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || javaClass != other.javaClass) return false
+        val alert = other as Alert
         if (alertId != alert.alertId) return false
         if (tBRAmount != alert.tBRAmount) return false
         if (tBRDuration != alert.tBRDuration) return false

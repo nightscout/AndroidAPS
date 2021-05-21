@@ -1,260 +1,207 @@
-package info.nightscout.androidaps.plugins.pump.insight.activities;
+package info.nightscout.androidaps.plugins.pump.insight.activities
 
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.ServiceConnection;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
+import android.content.*
+import android.os.Bundle
+import android.os.IBinder
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
+import info.nightscout.androidaps.insight.R
+import info.nightscout.androidaps.insight.databinding.ActivityInsightPairingBinding
+import info.nightscout.androidaps.plugins.pump.insight.connection_service.InsightConnectionService
+import info.nightscout.androidaps.plugins.pump.insight.connection_service.InsightConnectionService.ExceptionCallback
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.InsightState
+import info.nightscout.androidaps.plugins.pump.insight.utils.ExceptionTranslator
+import java.util.*
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+class InsightPairingActivity : NoSplashAppCompatActivity(), InsightConnectionService.StateCallback, View.OnClickListener, ExceptionCallback {
 
-import java.util.ArrayList;
-import java.util.List;
-
-import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
-import info.nightscout.androidaps.insight.R;
-import info.nightscout.androidaps.plugins.pump.insight.connection_service.InsightConnectionService;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.InsightState;
-import info.nightscout.androidaps.plugins.pump.insight.utils.ExceptionTranslator;
-
-public class InsightPairingActivity extends NoSplashAppCompatActivity implements InsightConnectionService.StateCallback, View.OnClickListener, InsightConnectionService.ExceptionCallback {
-
-    private boolean scanning;
-    private LinearLayout deviceSearchSection;
-    private TextView pleaseWaitSection;
-    private LinearLayout codeCompareSection;
-    private LinearLayout pairingCompletedSection;
-    private Button yes;
-    private Button no;
-    private TextView code;
-    private Button exit;
-    private RecyclerView deviceList;
-    private final DeviceAdapter deviceAdapter = new DeviceAdapter();
-
-    private InsightConnectionService service;
-
-    private final ServiceConnection serviceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder binder) {
-            service = ((InsightConnectionService.LocalBinder) binder).getService();
-            if (service.isPaired()) return;
-            else {
-                service.requestConnection(InsightPairingActivity.this);
-                service.registerStateCallback(InsightPairingActivity.this);
-                service.registerExceptionCallback(InsightPairingActivity.this);
-                onStateChanged(service.getState());
+    private lateinit var binding: ActivityInsightPairingBinding
+    private var scanning = false
+    private val deviceAdapter = DeviceAdapter()
+    private var service: InsightConnectionService? = null
+    private val serviceConnection: ServiceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName, binder: IBinder) {
+            val newService: InsightConnectionService = (binder as InsightConnectionService.LocalBinder).service
+            if (newService.isPaired()) return else {
+                newService.requestConnection(this@InsightPairingActivity)
+                newService.registerStateCallback(this@InsightPairingActivity)
+                newService.registerExceptionCallback(this@InsightPairingActivity)
+                onStateChanged(newService.getState())
             }
+            service = newService
         }
 
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
+        override fun onServiceDisconnected(name: ComponentName) {}
+    }
 
-        }
-    };
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityInsightPairingBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_insight_pairing);
+        binding.yes.setOnClickListener(this)
+        binding.no.setOnClickListener(this)
+        binding.exit.setOnClickListener(this)
+        binding.deviceList.setLayoutManager(LinearLayoutManager(this))
+        binding.deviceList.setAdapter(deviceAdapter)
+        bindService(Intent(this, InsightConnectionService::class.java), serviceConnection, BIND_AUTO_CREATE)
+    }
 
-        deviceSearchSection = findViewById(R.id.device_search_section);
-        pleaseWaitSection = findViewById(R.id.please_wait_section);
-        codeCompareSection = findViewById(R.id.code_compare_section);
-        pairingCompletedSection = findViewById(R.id.pairing_completed_section);
-        yes = findViewById(R.id.yes);
-        no = findViewById(R.id.no);
-        code = findViewById(R.id.code);
-        exit = findViewById(R.id.exit);
-        deviceList = findViewById(R.id.device_list);
-
-        yes.setOnClickListener(this);
-        no.setOnClickListener(this);
-        exit.setOnClickListener(this);
-
-        deviceList.setLayoutManager(new LinearLayoutManager(this));
-        deviceList.setAdapter(deviceAdapter);
-
-
-        bindService(new Intent(this, InsightConnectionService.class), serviceConnection, BIND_AUTO_CREATE);
-}
-
-    @Override
-    protected void onDestroy() {
+    override fun onDestroy() {
         if (service != null) {
-            service.withdrawConnectionRequest(InsightPairingActivity.this);
-            service.unregisterStateCallback(InsightPairingActivity.this);
-            service.unregisterExceptionCallback(InsightPairingActivity.this);
+            service!!.withdrawConnectionRequest(this@InsightPairingActivity)
+            service!!.unregisterStateCallback(this@InsightPairingActivity)
+            service!!.unregisterExceptionCallback(this@InsightPairingActivity)
         }
-        unbindService(serviceConnection);
-        super.onDestroy();
+        unbindService(serviceConnection)
+        super.onDestroy()
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (service != null && service.getState() == InsightState.NOT_PAIRED) startBLScan();
+    override fun onStart() {
+        super.onStart()
+        if (service != null && service!!.state === InsightState.NOT_PAIRED) startBLScan()
     }
 
-    @Override
-    protected void onStop() {
-        stopBLScan();
-        super.onStop();
+    override fun onStop() {
+        stopBLScan()
+        super.onStop()
     }
 
-    @Override
-    public void onStateChanged(InsightState state) {
-        runOnUiThread(() -> {
-            switch (state) {
-                case NOT_PAIRED:
-                    startBLScan();
-                    deviceSearchSection.setVisibility(View.VISIBLE);
-                    pleaseWaitSection.setVisibility(View.GONE);
-                    codeCompareSection.setVisibility(View.GONE);
-                    pairingCompletedSection.setVisibility(View.GONE);
-                    break;
-                case CONNECTING:
-                case SATL_CONNECTION_REQUEST:
-                case SATL_KEY_REQUEST:
-                case SATL_VERIFY_DISPLAY_REQUEST:
-                case SATL_VERIFY_CONFIRM_REQUEST:
-                case APP_BIND_MESSAGE:
-                    stopBLScan();
-                    deviceSearchSection.setVisibility(View.GONE);
-                    pleaseWaitSection.setVisibility(View.VISIBLE);
-                    codeCompareSection.setVisibility(View.GONE);
-                    pairingCompletedSection.setVisibility(View.GONE);
-                    break;
-                case AWAITING_CODE_CONFIRMATION:
-                    stopBLScan();
-                    deviceSearchSection.setVisibility(View.GONE);
-                    pleaseWaitSection.setVisibility(View.GONE);
-                    codeCompareSection.setVisibility(View.VISIBLE);
-                    pairingCompletedSection.setVisibility(View.GONE);
-                    code.setText(service.getVerificationString());
-                    break;
-                case DISCONNECTED:
-                case CONNECTED:
-                    stopBLScan();
-                    deviceSearchSection.setVisibility(View.GONE);
-                    pleaseWaitSection.setVisibility(View.GONE);
-                    codeCompareSection.setVisibility(View.GONE);
-                    pairingCompletedSection.setVisibility(View.VISIBLE);
-                    break;
+    override fun onStateChanged(state: InsightState) {
+        runOnUiThread {
+            when (state) {
+                InsightState.NOT_PAIRED                             -> {
+                    startBLScan()
+                    binding.deviceSearchSection.visibility = View.VISIBLE
+                    binding.pleaseWaitSection.visibility = View.GONE
+                    binding.codeCompareSection.visibility = View.GONE
+                    binding.pairingCompletedSection.visibility = View.GONE
+                }
+
+                InsightState.CONNECTING,
+                InsightState.SATL_CONNECTION_REQUEST,
+                InsightState.SATL_KEY_REQUEST,
+                InsightState.SATL_VERIFY_DISPLAY_REQUEST,
+                InsightState.SATL_VERIFY_CONFIRM_REQUEST,
+                InsightState.APP_BIND_MESSAGE                       -> {
+                    stopBLScan()
+                    binding.deviceSearchSection.visibility = View.GONE
+                    binding.pleaseWaitSection.visibility = View.VISIBLE
+                    binding.codeCompareSection.visibility = View.GONE
+                    binding.pairingCompletedSection.visibility = View.GONE
+                }
+
+                InsightState.AWAITING_CODE_CONFIRMATION             -> {
+                    stopBLScan()
+                    binding.deviceSearchSection.visibility = View.GONE
+                    binding.pleaseWaitSection.visibility = View.GONE
+                    binding.codeCompareSection.visibility = View.VISIBLE
+                    binding.pairingCompletedSection.visibility = View.GONE
+                    binding.code.text = service!!.verificationString
+                }
+
+                InsightState.DISCONNECTED, InsightState.CONNECTED   -> {
+                    stopBLScan()
+                    binding.deviceSearchSection.visibility = View.GONE
+                    binding.pleaseWaitSection.visibility = View.GONE
+                    binding.codeCompareSection.visibility = View.GONE
+                    binding.pairingCompletedSection.visibility = View.VISIBLE
+                }
+
+                else                                                -> Unit
             }
-        });
+        }
     }
 
-    private void startBLScan() {
+    private fun startBLScan() {
         if (!scanning) {
-            BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
             if (bluetoothAdapter != null) {
-                if (!bluetoothAdapter.isEnabled()) bluetoothAdapter.enable();
-                IntentFilter intentFilter = new IntentFilter();
-                intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-                intentFilter.addAction(BluetoothDevice.ACTION_FOUND);
-                registerReceiver(broadcastReceiver, intentFilter);
-                bluetoothAdapter.startDiscovery();
-                scanning = true;
+                if (!bluetoothAdapter.isEnabled) bluetoothAdapter.enable()
+                val intentFilter = IntentFilter()
+                intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)
+                intentFilter.addAction(BluetoothDevice.ACTION_FOUND)
+                registerReceiver(broadcastReceiver, intentFilter)
+                bluetoothAdapter.startDiscovery()
+                scanning = true
             }
         }
     }
 
-    private void stopBLScan() {
+    private fun stopBLScan() {
         if (scanning) {
-            unregisterReceiver(broadcastReceiver);
-            BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-            if (bluetoothAdapter != null) {
-                bluetoothAdapter.cancelDiscovery();
-            }
-            scanning = false;
+            unregisterReceiver(broadcastReceiver)
+            val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+            bluetoothAdapter?.cancelDiscovery()
+            scanning = false
         }
     }
-    @Override
-    public void onClick(View v) {
-        if (v == exit) finish();
-        else if (v == yes) service.confirmVerificationString();
-        else if (v == no) service.rejectVerificationString();
+
+    override fun onClick(v: View) {
+        if (v === binding.exit) finish() else if (v === binding.yes) service!!.confirmVerificationString() else if (v === binding.no) service!!.rejectVerificationString()
     }
 
-    @Override
-    public void onExceptionOccur(Exception e) {
-        ExceptionTranslator.makeToast(this, e);
+    override fun onExceptionOccur(e: Exception) {
+        ExceptionTranslator.makeToast(this, e)
     }
 
-    private void deviceSelected(BluetoothDevice device) {
-        service.pair(device.getAddress());
+    private fun deviceSelected(device: BluetoothDevice) {
+        service!!.pair(device.address)
     }
 
-    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (action.equals(BluetoothAdapter.ACTION_DISCOVERY_FINISHED))
-                BluetoothAdapter.getDefaultAdapter().startDiscovery();
-            else if (action.equals(BluetoothDevice.ACTION_FOUND)) {
-                BluetoothDevice bluetoothDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                deviceAdapter.addDevice(bluetoothDevice);
+    private val broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val action = intent.action
+            if (action == BluetoothAdapter.ACTION_DISCOVERY_FINISHED) BluetoothAdapter.getDefaultAdapter().startDiscovery() else if (action == BluetoothDevice.ACTION_FOUND) {
+                val bluetoothDevice = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
+                deviceAdapter.addDevice(bluetoothDevice)
             }
         }
-    };
+    }
 
-    private class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.ViewHolder> {
+    private inner class DeviceAdapter : RecyclerView.Adapter<DeviceAdapter.ViewHolder>() {
 
-        private final List<BluetoothDevice> bluetoothDevices = new ArrayList<>();
-
-        public void addDevice(BluetoothDevice bluetoothDevice) {
+        private val bluetoothDevices: MutableList<BluetoothDevice> = ArrayList()
+        fun addDevice(bluetoothDevice: BluetoothDevice) {
             if (!bluetoothDevices.contains(bluetoothDevice)) {
-                bluetoothDevices.add(bluetoothDevice);
-                notifyDataSetChanged();
+                bluetoothDevices.add(bluetoothDevice)
+                notifyDataSetChanged()
             }
         }
 
-        public void clear() {
-            bluetoothDevices.clear();
-            notifyDataSetChanged();
+        fun clear() {
+            bluetoothDevices.clear()
+            notifyDataSetChanged()
         }
 
-        @NonNull
-        @Override
-        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.bluetooth_device, parent, false));
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+            return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.bluetooth_device, parent, false))
         }
 
-        @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            BluetoothDevice bluetoothDevice = bluetoothDevices.get(position);
-            holder.deviceName.setText(bluetoothDevice.getName() == null ? bluetoothDevice.getAddress() : bluetoothDevice.getName());
-            holder.deviceName.setOnClickListener((v) -> deviceSelected(bluetoothDevice));
+        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+            val bluetoothDevice = bluetoothDevices[position]
+            holder.deviceName.text = if (bluetoothDevice.name == null) bluetoothDevice.address else bluetoothDevice.name
+            holder.deviceName.setOnClickListener { deviceSelected(bluetoothDevice) }
         }
 
-        @Override
-        public int getItemCount() {
-            return bluetoothDevices.size();
+        override fun getItemCount(): Int {
+            return bluetoothDevices.size
         }
 
-        public class ViewHolder extends RecyclerView.ViewHolder {
+        inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-            private final TextView deviceName;
+            val deviceName: TextView
 
-            public ViewHolder(View itemView) {
-                super(itemView);
-                deviceName = (TextView) itemView;
+            init {
+                deviceName = itemView as TextView
             }
         }
-
     }
 }

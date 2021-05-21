@@ -22,7 +22,7 @@ abstract class SatlMessage {
     var commID: Long = 0
     lateinit var satlContent: ByteArray
     protected open val data: ByteBuf
-        protected get() = ByteBuf(0)
+        get() = ByteBuf(0)
 
     protected open fun parse(byteBuf: ByteBuf?) {}
     fun serialize(clazz: Class<out SatlMessage>, key: ByteArray?): ByteBuf {
