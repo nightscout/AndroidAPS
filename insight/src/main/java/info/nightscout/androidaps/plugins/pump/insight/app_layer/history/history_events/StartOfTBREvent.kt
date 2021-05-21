@@ -9,8 +9,8 @@ class StartOfTBREvent : HistoryEvent() {
     var duration = 0
         private set
 
-    override fun parse(byteBuf: ByteBuf) {
-        amount = byteBuf.readUInt16LE()
-        duration = byteBuf.readUInt16LE()
+    override fun parse(byteBuf: ByteBuf?) {
+        amount = byteBuf?.readUInt16LE()    ?: 0
+        duration = byteBuf?.readUInt16LE()  ?: 0
     }
 }

@@ -17,12 +17,14 @@ class BolusProgrammedEvent : HistoryEvent() {
     var bolusID = 0
         private set
 
-    override fun parse(byteBuf: ByteBuf) {
-        bolusType = fromId(byteBuf.readUInt16LE())
-        immediateAmount = byteBuf.readUInt16Decimal()
-        extendedAmount = byteBuf.readUInt16Decimal()
-        duration = byteBuf.readUInt16LE()
-        byteBuf.shift(4)
-        bolusID = byteBuf.readUInt16LE()
+    override fun parse(byteBuf: ByteBuf?) {
+        if (byteBuf != null) {
+            bolusType = fromId(byteBuf.readUInt16LE())
+            immediateAmount = byteBuf.readUInt16Decimal()
+            extendedAmount = byteBuf.readUInt16Decimal()
+            duration = byteBuf.readUInt16LE()
+            byteBuf.shift(4)
+            bolusID = byteBuf.readUInt16LE()
+        }
     }
 }

@@ -16,12 +16,14 @@ class EndOfTBREvent : HistoryEvent() {
     var duration = 0
         private set
 
-    override fun parse(byteBuf: ByteBuf) {
-        byteBuf.shift(1)
-        startHour = BOCUtil.parseBOC(byteBuf.readByte())
-        startMinute = BOCUtil.parseBOC(byteBuf.readByte())
-        startSecond = BOCUtil.parseBOC(byteBuf.readByte())
-        amount = byteBuf.readUInt16LE()
-        duration = byteBuf.readUInt16LE()
+    override fun parse(byteBuf: ByteBuf?) {
+        if (byteBuf != null) {
+            byteBuf.shift(1)
+            startHour = BOCUtil.parseBOC(byteBuf.readByte())
+            startMinute = BOCUtil.parseBOC(byteBuf.readByte())
+            startSecond = BOCUtil.parseBOC(byteBuf.readByte())
+            amount = byteBuf.readUInt16LE()
+            duration = byteBuf.readUInt16LE()
+        }
     }
 }

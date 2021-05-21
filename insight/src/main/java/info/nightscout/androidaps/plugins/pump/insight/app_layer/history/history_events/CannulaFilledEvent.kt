@@ -7,7 +7,7 @@ class CannulaFilledEvent : HistoryEvent() {
     var amount = 0.0
         private set
 
-    override fun parse(byteBuf: ByteBuf) {
-        amount = byteBuf.readUInt16Decimal()
+    override fun parse(byteBuf: ByteBuf?) {
+        amount = byteBuf?.readUInt16Decimal() ?: 0.0
     }
 }

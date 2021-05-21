@@ -16,11 +16,13 @@ class TotalDailyDoseEvent : HistoryEvent() {
     var totalDay = 0
         private set
 
-    override fun parse(byteBuf: ByteBuf) {
-        basalTotal = byteBuf.readUInt32Decimal100()
-        bolusTotal = byteBuf.readUInt32Decimal100()
-        totalYear = BOCUtil.parseBOC(byteBuf.readByte()) * 100 + BOCUtil.parseBOC(byteBuf.readByte())
-        totalMonth = BOCUtil.parseBOC(byteBuf.readByte())
-        totalDay = BOCUtil.parseBOC(byteBuf.readByte())
+    override fun parse(byteBuf: ByteBuf?) {
+        if (byteBuf != null) {
+            basalTotal = byteBuf.readUInt32Decimal100()
+            bolusTotal = byteBuf.readUInt32Decimal100()
+            totalYear = BOCUtil.parseBOC(byteBuf.readByte()) * 100 + BOCUtil.parseBOC(byteBuf.readByte())
+            totalMonth = BOCUtil.parseBOC(byteBuf.readByte())
+            totalDay = BOCUtil.parseBOC(byteBuf.readByte())
+        }
     }
 }

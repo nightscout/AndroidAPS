@@ -11,8 +11,10 @@ class OperatingModeChangedEvent : HistoryEvent() {
     var newValue: OperatingMode? = null
         private set
 
-    override fun parse(byteBuf: ByteBuf) {
-        oldValue = fromId(byteBuf.readUInt16LE())
-        newValue = fromId(byteBuf.readUInt16LE())
+    override fun parse(byteBuf: ByteBuf?) {
+        if (byteBuf != null) {
+            oldValue = fromId(byteBuf.readUInt16LE())
+            newValue = fromId(byteBuf.readUInt16LE())
+        }
     }
 }
