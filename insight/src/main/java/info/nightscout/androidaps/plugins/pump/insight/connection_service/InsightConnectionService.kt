@@ -1,832 +1,689 @@
-package info.nightscout.androidaps.plugins.pump.insight.connection_service;
+package info.nightscout.androidaps.plugins.pump.insight.connection_service
 
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
-import android.content.Intent;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.PowerManager;
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothSocket
+import android.content.Intent
+import android.os.Binder
+import android.os.IBinder
+import android.os.PowerManager
+import dagger.android.DaggerService
+import info.nightscout.androidaps.insight.R
+import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage.Companion.unwrap
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage.Companion.wrap
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.ReadParameterBlockMessage
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.Service
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.configuration.CloseConfigurationWriteSessionMessage
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.configuration.OpenConfigurationWriteSessionMessage
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.configuration.WriteConfigurationBlockMessage
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.connection.ActivateServiceMessage
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.connection.BindMessage
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.connection.ConnectMessage
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.connection.DisconnectMessage
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.connection.ServiceChallengeMessage
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.SystemIdentificationBlock
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.status.GetFirmwareVersionsMessage
+import info.nightscout.androidaps.plugins.pump.insight.connection_service.InsightConnectionService
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.FirmwareVersions
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.InsightState
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.SystemIdentification
+import info.nightscout.androidaps.plugins.pump.insight.exceptions.*
+import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.*
+import info.nightscout.androidaps.plugins.pump.insight.satl.*
+import info.nightscout.androidaps.plugins.pump.insight.satl.SatlMessage.Companion.deserialize
+import info.nightscout.androidaps.plugins.pump.insight.satl.SatlMessage.Companion.hasCompletePacket
+import info.nightscout.androidaps.plugins.pump.insight.utils.*
+import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.Cryptograph
+import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.KeyPair
+import info.nightscout.androidaps.utils.sharedPreferences.SP
+import org.spongycastle.crypto.InvalidCipherTextException
+import java.io.IOException
+import java.security.SecureRandom
+import java.util.*
+import javax.inject.Inject
 
-import androidx.annotation.Nullable;
+class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback, InputStreamReader.Callback, OutputStreamWriter.Callback {
 
-import org.spongycastle.crypto.InvalidCipherTextException;
+    @JvmField @Inject
+    var aapsLogger: AAPSLogger? = null
 
-import java.io.IOException;
-import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Inject;
-
-import dagger.android.DaggerService;
-import info.nightscout.androidaps.insight.R;
-import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.ReadParameterBlockMessage;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.Service;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.configuration.CloseConfigurationWriteSessionMessage;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.configuration.OpenConfigurationWriteSessionMessage;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.configuration.WriteConfigurationBlockMessage;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.connection.ActivateServiceMessage;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.connection.BindMessage;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.connection.ConnectMessage;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.connection.DisconnectMessage;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.connection.ServiceChallengeMessage;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.SystemIdentificationBlock;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.status.GetFirmwareVersionsMessage;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.FirmwareVersions;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.InsightState;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.SystemIdentification;
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.ConnectionFailedException;
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.ConnectionLostException;
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.DisconnectedException;
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.InsightException;
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.InvalidNonceException;
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.InvalidSatlCommandException;
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.ReceivedPacketInInvalidStateException;
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.TimeoutException;
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.TooChattyPumpException;
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlCompatibleStateErrorException;
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlDecryptVerifyFailedErrorException;
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlIncompatibleVersionErrorException;
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlInvalidCRCErrorException;
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlInvalidCommIdErrorException;
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlInvalidMacErrorException;
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlInvalidMessageTypeErrorException;
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlInvalidNonceErrorException;
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlInvalidPacketErrorException;
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlInvalidPayloadLengthErrorException;
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlNoneErrorException;
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlPairingRejectedException;
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlUndefinedErrorException;
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlWrongStateException;
-import info.nightscout.androidaps.plugins.pump.insight.satl.ConnectionRequest;
-import info.nightscout.androidaps.plugins.pump.insight.satl.ConnectionResponse;
-import info.nightscout.androidaps.plugins.pump.insight.satl.DataMessage;
-import info.nightscout.androidaps.plugins.pump.insight.satl.ErrorMessage;
-import info.nightscout.androidaps.plugins.pump.insight.satl.KeyRequest;
-import info.nightscout.androidaps.plugins.pump.insight.satl.KeyResponse;
-import info.nightscout.androidaps.plugins.pump.insight.satl.SatlMessage;
-import info.nightscout.androidaps.plugins.pump.insight.satl.SynAckResponse;
-import info.nightscout.androidaps.plugins.pump.insight.satl.SynRequest;
-import info.nightscout.androidaps.plugins.pump.insight.satl.VerifyConfirmRequest;
-import info.nightscout.androidaps.plugins.pump.insight.satl.VerifyConfirmResponse;
-import info.nightscout.androidaps.plugins.pump.insight.satl.VerifyDisplayRequest;
-import info.nightscout.androidaps.plugins.pump.insight.satl.VerifyDisplayResponse;
-import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf;
-import info.nightscout.androidaps.plugins.pump.insight.utils.ConnectionEstablisher;
-import info.nightscout.androidaps.plugins.pump.insight.utils.DelayedActionThread;
-import info.nightscout.androidaps.plugins.pump.insight.utils.InputStreamReader;
-import info.nightscout.androidaps.plugins.pump.insight.utils.Nonce;
-import info.nightscout.androidaps.plugins.pump.insight.utils.OutputStreamWriter;
-import info.nightscout.androidaps.plugins.pump.insight.utils.PairingDataStorage;
-import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.Cryptograph;
-import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.DerivedKeys;
-import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.KeyPair;
-import info.nightscout.androidaps.utils.sharedPreferences.SP;
-
-public class InsightConnectionService extends DaggerService implements ConnectionEstablisher.Callback, InputStreamReader.Callback, OutputStreamWriter.Callback {
-
-    @Inject AAPSLogger aapsLogger;
-    @Inject SP sp;
-
-    private static final int BUFFER_SIZE = 1024;
-    private static final int TIMEOUT_DURING_HANDSHAKE_NOTIFICATION_THRESHOLD = 3;
-    private static final long RESPONSE_TIMEOUT = 6000;
-
-    private final List<StateCallback> stateCallbacks = new ArrayList<>();
-    private final List<Object> connectionRequests = new ArrayList<>();
-    private final List<ExceptionCallback> exceptionCallbacks = new ArrayList<>();
-    private final LocalBinder localBinder = new LocalBinder();
-    private PairingDataStorage pairingDataStorage;
-    private InsightState state;
-    private PowerManager.WakeLock wakeLock;
-    private DelayedActionThread disconnectTimer;
-    private DelayedActionThread recoveryTimer;
-    private DelayedActionThread timeoutTimer;
-    private final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-    private BluetoothDevice bluetoothDevice;
-    private BluetoothSocket bluetoothSocket;
-    private ConnectionEstablisher connectionEstablisher;
-    private InputStreamReader inputStreamReader;
-    private OutputStreamWriter outputStreamWriter;
-    private KeyRequest keyRequest;
-    private final ByteBuf buffer = new ByteBuf(BUFFER_SIZE);
-    private String verificationString;
-    private KeyPair keyPair;
-    private byte[] randomBytes;
-    private final MessageQueue messageQueue = new MessageQueue();
-    private final List<info.nightscout.androidaps.plugins.pump.insight.app_layer.Service> activatedServices = new ArrayList<>();
-    private long lastDataTime;
-    private long lastConnected;
-    private long recoveryDuration = 0;
-    private int timeoutDuringHandshakeCounter;
-
-    KeyPair getKeyPair() {
-        if (keyPair == null) keyPair = Cryptograph.generateRSAKey();
-        return keyPair;
+    @JvmField @Inject
+    var sp: SP? = null
+    private val stateCallbacks: MutableList<StateCallback> = ArrayList()
+    private val connectionRequests: MutableList<Any> = ArrayList()
+    private val exceptionCallbacks: MutableList<ExceptionCallback> = ArrayList()
+    private val localBinder: LocalBinder = LocalBinder()
+    private var pairingDataStorage: PairingDataStorage? = null
+    @get:Synchronized lateinit var state: InsightState
+        private set
+    private var wakeLock: PowerManager.WakeLock? = null
+    private var disconnectTimer: DelayedActionThread? = null
+    private var recoveryTimer: DelayedActionThread? = null
+    private var timeoutTimer: DelayedActionThread? = null
+    private val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+    private var bluetoothDevice: BluetoothDevice? = null
+    private var bluetoothSocket: BluetoothSocket? = null
+    private var connectionEstablisher: ConnectionEstablisher? = null
+    private var inputStreamReader: InputStreamReader? = null
+    private var outputStreamWriter: OutputStreamWriter? = null
+    private var keyRequest: KeyRequest? = null
+    private val buffer = ByteBuf(BUFFER_SIZE)
+    @get:Synchronized var verificationString: String? = null
+        private set
+    private var keyPair: KeyPair? = null
+    private var randomBytes: ByteArray? = null
+    private val messageQueue = MessageQueue()
+    private val activatedServices: MutableList<Service?> = ArrayList()
+    var lastDataTime: Long = 0
+        private set
+    var lastConnected: Long = 0
+        private set
+    @get:Synchronized var recoveryDuration: Long = 0
+        private set
+    private var timeoutDuringHandshakeCounter = 0
+    fun getKeyPair(): KeyPair? {
+        if (keyPair == null) keyPair = Cryptograph.generateRSAKey()
+        return keyPair
     }
 
-    byte[] getRandomBytes() {
+    fun getRandomBytes(): ByteArray {
         if (randomBytes == null) {
-            randomBytes = new byte[28];
-            new SecureRandom().nextBytes(randomBytes);
+            randomBytes = ByteArray(28)
+            SecureRandom().nextBytes(randomBytes)
         }
-        return randomBytes;
+        return randomBytes!!
     }
 
-    public synchronized long getRecoveryDuration() {
-        return recoveryDuration;
+    private fun increaseRecoveryDuration() {
+        var maxRecoveryDuration = sp!!.getInt(R.string.key_insight_max_recovery_duration, 20).toLong()
+        maxRecoveryDuration = Math.min(maxRecoveryDuration, 20)
+        maxRecoveryDuration = Math.max(maxRecoveryDuration, 0)
+        var minRecoveryDuration = sp!!.getInt(R.string.key_insight_min_recovery_duration, 5).toLong()
+        minRecoveryDuration = Math.min(minRecoveryDuration, 20)
+        minRecoveryDuration = Math.max(minRecoveryDuration, 0)
+        recoveryDuration += 1000
+        recoveryDuration = Math.max(recoveryDuration, minRecoveryDuration * 1000)
+        recoveryDuration = Math.min(recoveryDuration, maxRecoveryDuration * 1000)
     }
 
-    private void increaseRecoveryDuration() {
-        long maxRecoveryDuration = sp.getInt(R.string.key_insight_max_recovery_duration, 20);
-        maxRecoveryDuration = Math.min(maxRecoveryDuration, 20);
-        maxRecoveryDuration = Math.max(maxRecoveryDuration, 0);
-        long minRecoveryDuration = sp.getInt(R.string.key_insight_min_recovery_duration, 5);
-        minRecoveryDuration = Math.min(minRecoveryDuration, 20);
-        minRecoveryDuration = Math.max(minRecoveryDuration, 0);
-        recoveryDuration += 1000;
-        recoveryDuration = Math.max(recoveryDuration, minRecoveryDuration * 1000);
-        recoveryDuration = Math.min(recoveryDuration, maxRecoveryDuration * 1000);
+    val pumpFirmwareVersions: FirmwareVersions
+        get() = pairingDataStorage!!.firmwareVersions
+    val pumpSystemIdentification: SystemIdentification
+        get() = pairingDataStorage!!.systemIdentification
+    val bluetoothAddress: String
+        get() = pairingDataStorage!!.macAddress
+
+    @Synchronized fun registerStateCallback(stateCallback: StateCallback) {
+        stateCallbacks.add(stateCallback)
     }
 
-    public long getLastConnected() {
-        return lastConnected;
+    @Synchronized fun unregisterStateCallback(stateCallback: StateCallback) {
+        stateCallbacks.remove(stateCallback)
     }
 
-    public long getLastDataTime() {
-        return lastDataTime;
+    @Synchronized fun registerExceptionCallback(exceptionCallback: ExceptionCallback) {
+        exceptionCallbacks.add(exceptionCallback)
     }
 
-    public FirmwareVersions getPumpFirmwareVersions() {
-        return pairingDataStorage.getFirmwareVersions();
+    @Synchronized fun unregisterExceptionCallback(exceptionCallback: ExceptionCallback) {
+        exceptionCallbacks.remove(exceptionCallback)
     }
 
-    public SystemIdentification getPumpSystemIdentification() {
-        return pairingDataStorage.getSystemIdentification();
+    @Synchronized fun confirmVerificationString() {
+        setState(InsightState.SATL_VERIFY_CONFIRM_REQUEST)
+        sendSatlMessage(VerifyConfirmRequest())
     }
 
-    public String getBluetoothAddress() {
-        return pairingDataStorage.getMacAddress();
+    @Synchronized fun rejectVerificationString() {
+        handleException(SatlPairingRejectedException())
     }
 
-    public synchronized String getVerificationString() {
-        return verificationString;
-    }
+    @get:Synchronized val isPaired: Boolean
+        get() = pairingDataStorage!!.isPaired
 
-    public synchronized void registerStateCallback(StateCallback stateCallback) {
-        stateCallbacks.add(stateCallback);
-    }
-
-    public synchronized void unregisterStateCallback(StateCallback stateCallback) {
-        stateCallbacks.remove(stateCallback);
-    }
-
-    public synchronized void registerExceptionCallback(ExceptionCallback exceptionCallback) {
-        exceptionCallbacks.add(exceptionCallback);
-    }
-
-    public synchronized void unregisterExceptionCallback(ExceptionCallback exceptionCallback) {
-        exceptionCallbacks.remove(exceptionCallback);
-    }
-
-    public synchronized void confirmVerificationString() {
-        setState(InsightState.SATL_VERIFY_CONFIRM_REQUEST);
-        sendSatlMessage(new VerifyConfirmRequest());
-    }
-
-    public synchronized void rejectVerificationString() {
-        handleException(new SatlPairingRejectedException());
-    }
-
-    public synchronized boolean isPaired() {
-        return pairingDataStorage.isPaired();
-    }
-
-    public synchronized <T extends AppLayerMessage> MessageRequest<T> requestMessage(T message) {
-        MessageRequest<T> messageRequest;
-        if (getState() != InsightState.CONNECTED) {
-            messageRequest = new MessageRequest<>(message);
-            messageRequest.exception = new DisconnectedException();
-            return messageRequest;
+    @Synchronized fun <T : AppLayerMessage?> requestMessage(message: T): MessageRequest<T> {
+        val messageRequest: MessageRequest<T>
+        if (state !== InsightState.CONNECTED) {
+            messageRequest = MessageRequest(message)
+            messageRequest.exception = DisconnectedException()
+            return messageRequest
         }
-        if (message instanceof WriteConfigurationBlockMessage) {
-            MessageRequest<OpenConfigurationWriteSessionMessage> openRequest = new MessageRequest<>(new OpenConfigurationWriteSessionMessage());
-            MessageRequest<CloseConfigurationWriteSessionMessage> closeRequest = new MessageRequest<>(new CloseConfigurationWriteSessionMessage());
-            messageRequest = new ConfigurationMessageRequest<>(message, openRequest, closeRequest);
-            messageQueue.enqueueRequest(openRequest);
-            messageQueue.enqueueRequest(messageRequest);
-            messageQueue.enqueueRequest(closeRequest);
+        if (message is WriteConfigurationBlockMessage) {
+            val openRequest = MessageRequest(OpenConfigurationWriteSessionMessage())
+            val closeRequest = MessageRequest(CloseConfigurationWriteSessionMessage())
+            messageRequest = ConfigurationMessageRequest(message, openRequest, closeRequest)
+            messageQueue.enqueueRequest(openRequest)
+            messageQueue.enqueueRequest(messageRequest)
+            messageQueue.enqueueRequest(closeRequest)
         } else {
-            messageRequest = new MessageRequest<>(message);
-            messageQueue.enqueueRequest(messageRequest);
+            messageRequest = MessageRequest(message)
+            messageQueue.enqueueRequest(messageRequest)
         }
-        requestNextMessage();
-        return messageRequest;
+        requestNextMessage()
+        return messageRequest
     }
 
-    private void requestNextMessage() {
+    private fun requestNextMessage() {
         while (messageQueue.getActiveRequest() == null && messageQueue.hasPendingMessages()) {
-            messageQueue.nextRequest();
-            info.nightscout.androidaps.plugins.pump.insight.app_layer.Service service = messageQueue.getActiveRequest().request.getService();
-            if (service != info.nightscout.androidaps.plugins.pump.insight.app_layer.Service.CONNECTION && !activatedServices.contains(service)) {
-                if (service.getServicePassword() == null) {
-                    ActivateServiceMessage activateServiceMessage = new ActivateServiceMessage();
-                    activateServiceMessage.setServiceID(service.getId());
-                    activateServiceMessage.setVersion(service.getVersion());
-                    activateServiceMessage.setServicePassword(new byte[16]);
-                    sendAppLayerMessage(activateServiceMessage);
+            messageQueue.nextRequest()
+            val service = messageQueue.getActiveRequest().request.service
+            if (service !== Service.CONNECTION && !activatedServices.contains(service)) {
+                if (service!!.servicePassword == null) {
+                    val activateServiceMessage = ActivateServiceMessage()
+                    activateServiceMessage.serviceID = service.id
+                    activateServiceMessage.version = service.version
+                    activateServiceMessage.setServicePassword(ByteArray(16))
+                    sendAppLayerMessage(activateServiceMessage)
                 } else {
-                    ServiceChallengeMessage serviceChallengeMessage = new ServiceChallengeMessage();
-                    serviceChallengeMessage.setServiceID(service.getId());
-                    serviceChallengeMessage.setVersion(service.getVersion());
-                    sendAppLayerMessage(serviceChallengeMessage);
+                    val serviceChallengeMessage = ServiceChallengeMessage()
+                    serviceChallengeMessage.setServiceID(service.id)
+                    serviceChallengeMessage.setVersion(service.version)
+                    sendAppLayerMessage(serviceChallengeMessage)
                 }
-            } else sendAppLayerMessage(messageQueue.getActiveRequest().request);
+            } else sendAppLayerMessage(messageQueue.getActiveRequest().request)
         }
     }
 
-    public synchronized InsightState getState() {
-        return state;
+    @Synchronized override fun onCreate() {
+        super.onCreate()
+        pairingDataStorage = PairingDataStorage(this)
+        state = if (pairingDataStorage!!.isPaired) InsightState.DISCONNECTED else InsightState.NOT_PAIRED
+        wakeLock = (getSystemService(POWER_SERVICE) as PowerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:InsightConnectionService")
     }
 
-    @Override
-    public synchronized void onCreate() {
-        super.onCreate();
-        pairingDataStorage = new PairingDataStorage(this);
-        state = pairingDataStorage.isPaired() ? InsightState.DISCONNECTED : InsightState.NOT_PAIRED;
-        wakeLock = ((PowerManager) getSystemService(POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:InsightConnectionService");
+    private fun setState(state: InsightState) {
+        if (this.state === state) return
+        if (this.state === InsightState.CONNECTED) lastConnected = System.currentTimeMillis()
+        if ((state === InsightState.DISCONNECTED || state === InsightState.NOT_PAIRED) && wakeLock!!.isHeld) wakeLock!!.release() else if (!wakeLock!!.isHeld) wakeLock!!.acquire()
+        this.state = state
+        for (stateCallback in stateCallbacks) stateCallback.onStateChanged(state)
+        aapsLogger!!.info(LTag.PUMP, "Insight state changed: " + state.name)
     }
 
-    private void setState(InsightState state) {
-        if (this.state == state) return;
-        if (this.state == InsightState.CONNECTED) lastConnected = System.currentTimeMillis();
-        if ((state == InsightState.DISCONNECTED || state == InsightState.NOT_PAIRED) && wakeLock.isHeld())
-            wakeLock.release();
-        else if (!wakeLock.isHeld()) wakeLock.acquire();
-        this.state = state;
-        for (StateCallback stateCallback : stateCallbacks) stateCallback.onStateChanged(state);
-        aapsLogger.info(LTag.PUMP, "Insight state changed: " + state.name());
-    }
-
-    public synchronized void requestConnection(Object lock) {
-        if (connectionRequests.contains(lock)) return;
-        connectionRequests.add(lock);
+    @Synchronized fun requestConnection(lock: Any) {
+        if (connectionRequests.contains(lock)) return
+        connectionRequests.add(lock)
         if (disconnectTimer != null) {
-            disconnectTimer.interrupt();
-            disconnectTimer = null;
+            disconnectTimer!!.interrupt()
+            disconnectTimer = null
         }
-        if (state == InsightState.DISCONNECTED && pairingDataStorage.isPaired()) {
-            recoveryDuration = 0;
-            timeoutDuringHandshakeCounter = 0;
-            connect();
+        if (state === InsightState.DISCONNECTED && pairingDataStorage!!.isPaired) {
+            recoveryDuration = 0
+            timeoutDuringHandshakeCounter = 0
+            connect()
         }
     }
 
-    public synchronized void withdrawConnectionRequest(Object lock) {
-        if (!connectionRequests.contains(lock)) return;
-        connectionRequests.remove(lock);
-        if (connectionRequests.size() == 0) {
-            if (state == InsightState.RECOVERING) {
-                recoveryTimer.interrupt();
-                recoveryTimer = null;
-                setState(InsightState.DISCONNECTED);
-                cleanup(true);
-            } else if (state != InsightState.DISCONNECTED) {
-                long disconnectTimeout = sp.getInt(R.string.key_insight_disconnect_delay, 5);
-                disconnectTimeout = Math.min(disconnectTimeout, 15);
-                disconnectTimeout = Math.max(disconnectTimeout, 0);
-                aapsLogger.info(LTag.PUMP, "Last connection lock released, will disconnect in " + disconnectTimeout + " seconds");
-                disconnectTimer = DelayedActionThread.runDelayed("Disconnect Timer", disconnectTimeout * 1000, this::disconnect);
+    @Synchronized fun withdrawConnectionRequest(lock: Any) {
+        if (!connectionRequests.contains(lock)) return
+        connectionRequests.remove(lock)
+        if (connectionRequests.size == 0) {
+            if (state === InsightState.RECOVERING) {
+                recoveryTimer!!.interrupt()
+                recoveryTimer = null
+                setState(InsightState.DISCONNECTED)
+                cleanup(true)
+            } else if (state !== InsightState.DISCONNECTED) {
+                var disconnectTimeout = sp!!.getInt(R.string.key_insight_disconnect_delay, 5).toLong()
+                disconnectTimeout = Math.min(disconnectTimeout, 15)
+                disconnectTimeout = Math.max(disconnectTimeout, 0)
+                aapsLogger!!.info(LTag.PUMP, "Last connection lock released, will disconnect in $disconnectTimeout seconds")
+                disconnectTimer = DelayedActionThread.runDelayed("Disconnect Timer", disconnectTimeout * 1000) { disconnect() }
             }
         }
     }
 
-    public synchronized boolean hasRequestedConnection(Object lock) {
-        return connectionRequests.contains(lock);
+    @Synchronized fun hasRequestedConnection(lock: Any): Boolean {
+        return connectionRequests.contains(lock)
     }
 
-    private void cleanup(boolean closeSocket) {
-        messageQueue.completeActiveRequest(new ConnectionLostException());
-        messageQueue.completePendingRequests(new ConnectionLostException());
+    private fun cleanup(closeSocket: Boolean) {
+        messageQueue.completeActiveRequest(ConnectionLostException())
+        messageQueue.completePendingRequests(ConnectionLostException())
         if (recoveryTimer != null) {
-            recoveryTimer.interrupt();
-            recoveryTimer = null;
+            recoveryTimer!!.interrupt()
+            recoveryTimer = null
         }
         if (disconnectTimer != null) {
-            disconnectTimer.interrupt();
-            disconnectTimer = null;
+            disconnectTimer!!.interrupt()
+            disconnectTimer = null
         }
         if (inputStreamReader != null) {
-            inputStreamReader.close();
-            inputStreamReader = null;
+            inputStreamReader!!.close()
+            inputStreamReader = null
         }
         if (outputStreamWriter != null) {
-            outputStreamWriter.close();
-            outputStreamWriter = null;
+            outputStreamWriter!!.close()
+            outputStreamWriter = null
         }
         if (connectionEstablisher != null) {
             if (closeSocket) {
-                connectionEstablisher.close(closeSocket);
-                bluetoothSocket = null;
+                connectionEstablisher!!.close(closeSocket)
+                bluetoothSocket = null
             }
-            connectionEstablisher = null;
+            connectionEstablisher = null
         }
         if (timeoutTimer != null) {
-            timeoutTimer.interrupt();
-            timeoutTimer = null;
+            timeoutTimer!!.interrupt()
+            timeoutTimer = null
         }
-        buffer.clear();
-        verificationString = null;
-        keyPair = null;
-        randomBytes = null;
-        activatedServices.clear();
-        if (!pairingDataStorage.isPaired()) {
-            bluetoothSocket = null;
-            bluetoothDevice = null;
-            pairingDataStorage.reset();
+        buffer.clear()
+        verificationString = null
+        keyPair = null
+        randomBytes = null
+        activatedServices.clear()
+        if (!pairingDataStorage!!.isPaired) {
+            bluetoothSocket = null
+            bluetoothDevice = null
+            pairingDataStorage!!.reset()
         }
     }
 
-    private synchronized void handleException(Exception e) {
-        switch (state) {
-            case NOT_PAIRED:
-            case DISCONNECTED:
-            case RECOVERING:
-                return;
+    @Synchronized private fun handleException(e: Exception) {
+        when (state) {
+            InsightState.NOT_PAIRED, InsightState.DISCONNECTED, InsightState.RECOVERING -> return
         }
-        aapsLogger.info(LTag.PUMP, "Exception occurred: " + e.getClass().getSimpleName());
-        if (pairingDataStorage.isPaired()) {
-            if (e instanceof TimeoutException && (state == InsightState.SATL_SYN_REQUEST || state == InsightState.APP_CONNECT_MESSAGE)) {
+        aapsLogger!!.info(LTag.PUMP, "Exception occurred: " + e.javaClass.simpleName)
+        if (pairingDataStorage!!.isPaired) {
+            if (e is TimeoutException && (state === InsightState.SATL_SYN_REQUEST || state === InsightState.APP_CONNECT_MESSAGE)) {
                 if (++timeoutDuringHandshakeCounter == TIMEOUT_DURING_HANDSHAKE_NOTIFICATION_THRESHOLD) {
-                    for (StateCallback stateCallback : stateCallbacks) {
-                        stateCallback.onTimeoutDuringHandshake();
+                    for (stateCallback in stateCallbacks) {
+                        stateCallback.onTimeoutDuringHandshake()
                     }
                 }
             }
-            setState(connectionRequests.size() != 0 ? InsightState.RECOVERING : InsightState.DISCONNECTED);
-            if (e instanceof ConnectionFailedException) {
-                cleanup(((ConnectionFailedException) e).getDurationOfConnectionAttempt() <= 1000);
-            } else cleanup(true);
-            messageQueue.completeActiveRequest(e);
-            messageQueue.completePendingRequests(e);
-            if (connectionRequests.size() != 0) {
-                if (!(e instanceof ConnectionFailedException)) {
-                    connect();
+            setState(if (connectionRequests.size != 0) InsightState.RECOVERING else InsightState.DISCONNECTED)
+            if (e is ConnectionFailedException) {
+                cleanup(e.durationOfConnectionAttempt <= 1000)
+            } else cleanup(true)
+            messageQueue.completeActiveRequest(e)
+            messageQueue.completePendingRequests(e)
+            if (connectionRequests.size != 0) {
+                if (e !is ConnectionFailedException) {
+                    connect()
                 } else {
-                    increaseRecoveryDuration();
-                    if (recoveryDuration == 0) connect();
-                    else {
-                        recoveryTimer = DelayedActionThread.runDelayed("RecoveryTimer", recoveryDuration, () -> {
-                            recoveryTimer = null;
-                            synchronized (InsightConnectionService.this) {
-                                if (!Thread.currentThread().isInterrupted()) connect();
-                            }
-                        });
+                    increaseRecoveryDuration()
+                    if (recoveryDuration == 0L) connect() else {
+                        recoveryTimer = DelayedActionThread.runDelayed("RecoveryTimer", recoveryDuration) {
+                            recoveryTimer = null
+                            synchronized(this@InsightConnectionService) { if (!Thread.currentThread().isInterrupted) connect() }
+                        }
                     }
                 }
             }
         } else {
-            setState(InsightState.NOT_PAIRED);
-            cleanup(true);
+            setState(InsightState.NOT_PAIRED)
+            cleanup(true)
         }
-        for (ExceptionCallback exceptionCallback : exceptionCallbacks)
-            exceptionCallback.onExceptionOccur(e);
+        for (exceptionCallback in exceptionCallbacks) exceptionCallback.onExceptionOccur(e)
     }
 
-    private synchronized void disconnect() {
-        if (state == InsightState.CONNECTED) {
-            sendAppLayerMessage(new DisconnectMessage());
-            sendSatlMessageAndWait(new info.nightscout.androidaps.plugins.pump.insight.satl.DisconnectMessage());
+    @Synchronized private fun disconnect() {
+        if (state === InsightState.CONNECTED) {
+            sendAppLayerMessage(DisconnectMessage())
+            sendSatlMessageAndWait(info.nightscout.androidaps.plugins.pump.insight.satl.DisconnectMessage())
         }
-        cleanup(true);
-        setState(pairingDataStorage.isPaired() ? InsightState.DISCONNECTED : InsightState.NOT_PAIRED);
+        cleanup(true)
+        setState(if (pairingDataStorage!!.isPaired) InsightState.DISCONNECTED else InsightState.NOT_PAIRED)
     }
 
-    public synchronized void reset() {
-        pairingDataStorage.reset();
-        disconnect();
+    @Synchronized fun reset() {
+        pairingDataStorage!!.reset()
+        disconnect()
     }
 
-    public synchronized void pair(String macAddress) {
-        if (pairingDataStorage.isPaired())
-            throw new IllegalStateException("Pump must be unbonded first.");
-        if (connectionRequests.size() == 0)
-            throw new IllegalStateException("A connection lock must be hold for pairing");
-        aapsLogger.info(LTag.PUMP, "Pairing initiated");
-        cleanup(true);
-        pairingDataStorage.setMacAddress(macAddress);
-        connect();
+    @Synchronized fun pair(macAddress: String?) {
+        check(!pairingDataStorage!!.isPaired) { "Pump must be unbonded first." }
+        check(connectionRequests.size != 0) { "A connection lock must be hold for pairing" }
+        aapsLogger!!.info(LTag.PUMP, "Pairing initiated")
+        cleanup(true)
+        pairingDataStorage!!.macAddress = macAddress
+        connect()
     }
 
-    private synchronized void connect() {
-        if (bluetoothDevice == null)
-            bluetoothDevice = bluetoothAdapter.getRemoteDevice(pairingDataStorage.getMacAddress());
-        setState(InsightState.CONNECTING);
-        connectionEstablisher = new ConnectionEstablisher(this, !pairingDataStorage.isPaired(), bluetoothAdapter, bluetoothDevice, bluetoothSocket);
-        connectionEstablisher.start();
+    @Synchronized private fun connect() {
+        if (bluetoothDevice == null) bluetoothDevice = bluetoothAdapter.getRemoteDevice(pairingDataStorage!!.macAddress)
+        setState(InsightState.CONNECTING)
+        connectionEstablisher = ConnectionEstablisher(this, !pairingDataStorage!!.isPaired, bluetoothAdapter, bluetoothDevice, bluetoothSocket)
+        connectionEstablisher!!.start()
     }
 
-    @Override
-    public synchronized void onSocketCreated(BluetoothSocket bluetoothSocket) {
-        this.bluetoothSocket = bluetoothSocket;
+    @Synchronized override fun onSocketCreated(bluetoothSocket: BluetoothSocket) {
+        this.bluetoothSocket = bluetoothSocket
     }
 
-    @Override
-    public synchronized void onConnectionSucceed() {
+    @Synchronized override fun onConnectionSucceed() {
         try {
-            recoveryDuration = 0;
-            inputStreamReader = new InputStreamReader(bluetoothSocket.getInputStream(), this);
-            outputStreamWriter = new OutputStreamWriter(bluetoothSocket.getOutputStream(), this);
-            inputStreamReader.start();
-            outputStreamWriter.start();
-            if (pairingDataStorage.isPaired()) {
-                setState(InsightState.SATL_SYN_REQUEST);
-                sendSatlMessage(new SynRequest());
+            recoveryDuration = 0
+            inputStreamReader = InputStreamReader(bluetoothSocket!!.inputStream, this)
+            outputStreamWriter = OutputStreamWriter(bluetoothSocket!!.outputStream, this)
+            inputStreamReader!!.start()
+            outputStreamWriter!!.start()
+            if (pairingDataStorage!!.isPaired) {
+                setState(InsightState.SATL_SYN_REQUEST)
+                sendSatlMessage(SynRequest())
             } else {
-                setState(InsightState.SATL_CONNECTION_REQUEST);
-                sendSatlMessage(new ConnectionRequest());
+                setState(InsightState.SATL_CONNECTION_REQUEST)
+                sendSatlMessage(ConnectionRequest())
             }
-        } catch (IOException e) {
-            handleException(e);
+        } catch (e: IOException) {
+            handleException(e)
         }
     }
 
-    @Override
-    public synchronized void onReceiveBytes(byte[] buffer, int bytesRead) {
-        this.buffer.putBytes(buffer, bytesRead);
+    @Synchronized override fun onReceiveBytes(buffer: ByteArray, bytesRead: Int) {
+        this.buffer.putBytes(buffer, bytesRead)
         try {
-            while (SatlMessage.hasCompletePacket(this.buffer)) {
-                SatlMessage satlMessage = SatlMessage.deserialize(this.buffer, pairingDataStorage.getLastNonceReceived(), pairingDataStorage.getIncomingKey());
-                if (pairingDataStorage.getIncomingKey() != null
-                        && pairingDataStorage.getLastNonceReceived() != null
-                        && !pairingDataStorage.getLastNonceReceived().isSmallerThan(satlMessage.getNonce())) {
-                    throw new InvalidNonceException();
-                } else processSatlMessage(satlMessage);
+            while (hasCompletePacket(this.buffer)) {
+                val satlMessage = deserialize(this.buffer, pairingDataStorage!!.lastNonceReceived, pairingDataStorage!!.incomingKey)
+                if (pairingDataStorage!!.incomingKey != null && pairingDataStorage!!.lastNonceReceived != null && !pairingDataStorage!!.lastNonceReceived.isSmallerThan(satlMessage!!.nonce)) {
+                    throw InvalidNonceException()
+                } else processSatlMessage(satlMessage)
             }
-        } catch (InsightException e) {
-            handleException(e);
+        } catch (e: InsightException) {
+            handleException(e)
         }
     }
 
-    private byte[] prepareSatlMessage(SatlMessage satlMessage) {
-        satlMessage.setCommID(pairingDataStorage.getCommId());
-        Nonce nonce = pairingDataStorage.getLastNonceSent();
+    private fun prepareSatlMessage(satlMessage: SatlMessage): ByteArray {
+        satlMessage.commID = pairingDataStorage!!.commId
+        val nonce = pairingDataStorage!!.lastNonceSent
         if (nonce != null) {
-            nonce.increment();
-            pairingDataStorage.setLastNonceSent(nonce);
-            satlMessage.setNonce(nonce);
+            nonce.increment()
+            pairingDataStorage!!.lastNonceSent = nonce
+            satlMessage.nonce = nonce
         }
-        ByteBuf serialized = satlMessage.serialize(satlMessage.getClass(), pairingDataStorage.getOutgoingKey());
-        if (timeoutTimer != null) timeoutTimer.interrupt();
-        timeoutTimer = DelayedActionThread.runDelayed("TimeoutTimer", RESPONSE_TIMEOUT, () -> {
-            timeoutTimer = null;
-            handleException(new TimeoutException());
-        });
-        return serialized.getBytes();
+        val serialized = satlMessage.serialize(satlMessage.javaClass, pairingDataStorage!!.outgoingKey)
+        if (timeoutTimer != null) timeoutTimer!!.interrupt()
+        timeoutTimer = DelayedActionThread.runDelayed("TimeoutTimer", RESPONSE_TIMEOUT) {
+            timeoutTimer = null
+            handleException(TimeoutException())
+        }
+        return serialized.bytes
     }
 
-    private void sendSatlMessage(SatlMessage satlMessage) {
-        if (outputStreamWriter == null) return;
-        outputStreamWriter.write(prepareSatlMessage(satlMessage));
+    private fun sendSatlMessage(satlMessage: SatlMessage) {
+        if (outputStreamWriter == null) return
+        outputStreamWriter!!.write(prepareSatlMessage(satlMessage))
     }
 
-    private void sendSatlMessageAndWait(SatlMessage satlMessage) {
-        if (outputStreamWriter == null) return;
-        outputStreamWriter.writeAndWait(prepareSatlMessage(satlMessage));
+    private fun sendSatlMessageAndWait(satlMessage: SatlMessage) {
+        if (outputStreamWriter == null) return
+        outputStreamWriter!!.writeAndWait(prepareSatlMessage(satlMessage))
     }
 
-    private void processSatlMessage(SatlMessage satlMessage) {
+    private fun processSatlMessage(satlMessage: SatlMessage?) {
         if (timeoutTimer != null) {
-            timeoutTimer.interrupt();
-            timeoutTimer = null;
+            timeoutTimer!!.interrupt()
+            timeoutTimer = null
         }
-        pairingDataStorage.setLastNonceReceived(satlMessage.getNonce());
-        if (satlMessage instanceof ConnectionResponse) processConnectionResponse();
-        else if (satlMessage instanceof KeyResponse) processKeyResponse((KeyResponse) satlMessage);
-        else if (satlMessage instanceof VerifyDisplayResponse) processVerifyDisplayResponse();
-        else if (satlMessage instanceof VerifyConfirmResponse)
-            processVerifyConfirmResponse((VerifyConfirmResponse) satlMessage);
-        else if (satlMessage instanceof DataMessage) processDataMessage((DataMessage) satlMessage);
-        else if (satlMessage instanceof SynAckResponse) processSynAckResponse();
-        else if (satlMessage instanceof ErrorMessage)
-            processErrorMessage((ErrorMessage) satlMessage);
-        else handleException(new InvalidSatlCommandException());
+        pairingDataStorage!!.lastNonceReceived = satlMessage!!.nonce
+        if (satlMessage is ConnectionResponse) processConnectionResponse() else if (satlMessage is KeyResponse) processKeyResponse(satlMessage) else if (satlMessage is VerifyDisplayResponse) processVerifyDisplayResponse() else if (satlMessage is VerifyConfirmResponse) processVerifyConfirmResponse(satlMessage) else if (satlMessage is DataMessage) processDataMessage(satlMessage) else if (satlMessage is SynAckResponse) processSynAckResponse() else if (satlMessage is ErrorMessage) processErrorMessage(satlMessage) else handleException(InvalidSatlCommandException())
     }
 
-    private void processConnectionResponse() {
-        if (state != InsightState.SATL_CONNECTION_REQUEST) {
-            handleException(new ReceivedPacketInInvalidStateException());
-            return;
+    private fun processConnectionResponse() {
+        if (state !== InsightState.SATL_CONNECTION_REQUEST) {
+            handleException(ReceivedPacketInInvalidStateException())
+            return
         }
-        keyRequest = new KeyRequest();
-        keyRequest.setPreMasterKey(getKeyPair().getPublicKeyBytes());
-        keyRequest.setRandomBytes(getRandomBytes());
-        setState(InsightState.SATL_KEY_REQUEST);
-        sendSatlMessage(keyRequest);
+        keyRequest = KeyRequest()
+        keyRequest!!.setPreMasterKey(getKeyPair()!!.publicKeyBytes)
+        keyRequest!!.setRandomBytes(getRandomBytes())
+        setState(InsightState.SATL_KEY_REQUEST)
+        sendSatlMessage(keyRequest!!)
     }
 
-    private void processKeyResponse(KeyResponse keyResponse) {
-        if (state != InsightState.SATL_KEY_REQUEST) {
-            handleException(new ReceivedPacketInInvalidStateException());
-            return;
+    private fun processKeyResponse(keyResponse: KeyResponse) {
+        if (state !== InsightState.SATL_KEY_REQUEST) {
+            handleException(ReceivedPacketInInvalidStateException())
+            return
         }
         try {
-            DerivedKeys derivedKeys = Cryptograph.deriveKeys(Cryptograph.combine(keyRequest.getSatlContent(), keyResponse.getSatlContent()),
-                    Cryptograph.decryptRSA(getKeyPair().getPrivateKey(), keyResponse.getPreMasterSecret()),
-                    getRandomBytes(),
-                    keyResponse.getRandomData());
-            pairingDataStorage.setCommId(keyResponse.getCommID());
-            keyRequest = null;
-            randomBytes = null;
-            keyPair = null;
-            verificationString = derivedKeys.getVerificationString();
-            pairingDataStorage.setOutgoingKey(derivedKeys.getOutgoingKey());
-            pairingDataStorage.setIncomingKey(derivedKeys.getIncomingKey());
-            pairingDataStorage.setLastNonceSent(new Nonce());
-            setState(InsightState.SATL_VERIFY_DISPLAY_REQUEST);
-            sendSatlMessage(new VerifyDisplayRequest());
-        } catch (InvalidCipherTextException e) {
-            handleException(e);
+            val derivedKeys = Cryptograph.deriveKeys(Cryptograph.combine(keyRequest!!.satlContent, keyResponse.satlContent),
+                Cryptograph.decryptRSA(getKeyPair()!!.privateKey, keyResponse.preMasterSecret),
+                getRandomBytes(),
+                keyResponse.randomData)
+            pairingDataStorage!!.commId = keyResponse.commID
+            keyRequest = null
+            randomBytes = null
+            keyPair = null
+            verificationString = derivedKeys.verificationString
+            pairingDataStorage!!.outgoingKey = derivedKeys.outgoingKey
+            pairingDataStorage!!.incomingKey = derivedKeys.incomingKey
+            pairingDataStorage!!.lastNonceSent = Nonce()
+            setState(InsightState.SATL_VERIFY_DISPLAY_REQUEST)
+            sendSatlMessage(VerifyDisplayRequest())
+        } catch (e: InvalidCipherTextException) {
+            handleException(e)
         }
     }
 
-    private void processVerifyDisplayResponse() {
-        if (state != InsightState.SATL_VERIFY_DISPLAY_REQUEST) {
-            handleException(new ReceivedPacketInInvalidStateException());
-            return;
+    private fun processVerifyDisplayResponse() {
+        if (state !== InsightState.SATL_VERIFY_DISPLAY_REQUEST) {
+            handleException(ReceivedPacketInInvalidStateException())
+            return
         }
-        setState(InsightState.AWAITING_CODE_CONFIRMATION);
+        setState(InsightState.AWAITING_CODE_CONFIRMATION)
     }
 
-    private void processVerifyConfirmResponse(VerifyConfirmResponse verifyConfirmResponse) {
-        if (state != InsightState.SATL_VERIFY_CONFIRM_REQUEST) {
-            handleException(new ReceivedPacketInInvalidStateException());
-            return;
+    private fun processVerifyConfirmResponse(verifyConfirmResponse: VerifyConfirmResponse) {
+        if (state !== InsightState.SATL_VERIFY_CONFIRM_REQUEST) {
+            handleException(ReceivedPacketInInvalidStateException())
+            return
         }
-        switch (verifyConfirmResponse.getPairingStatus()) {
-            case CONFIRMED:
-                verificationString = null;
-                setState(InsightState.APP_BIND_MESSAGE);
-                sendAppLayerMessage(new BindMessage());
-                break;
-            case PENDING:
-                try {
-                    Thread.sleep(200);
-                    sendSatlMessage(new VerifyConfirmRequest());
-                } catch (InterruptedException e) {
-                    //Redirect interrupt flag
-                    Thread.currentThread().interrupt();
-                }
-                break;
-            case REJECTED:
-                handleException(new SatlPairingRejectedException());
-                break;
+        when (verifyConfirmResponse.pairingStatus) {
+            PairingStatus.CONFIRMED -> {
+                verificationString = null
+                setState(InsightState.APP_BIND_MESSAGE)
+                sendAppLayerMessage(BindMessage())
+            }
+
+            PairingStatus.PENDING   -> try {
+                Thread.sleep(200)
+                sendSatlMessage(VerifyConfirmRequest())
+            } catch (e: InterruptedException) {
+                //Redirect interrupt flag
+                Thread.currentThread().interrupt()
+            }
+            PairingStatus.REJECTED  -> handleException(SatlPairingRejectedException())
         }
     }
 
-    private void processSynAckResponse() {
-        if (state != InsightState.SATL_SYN_REQUEST) {
-            handleException(new ReceivedPacketInInvalidStateException());
-            return;
+    private fun processSynAckResponse() {
+        if (state !== InsightState.SATL_SYN_REQUEST) {
+            handleException(ReceivedPacketInInvalidStateException())
+            return
         }
-        setState(InsightState.APP_CONNECT_MESSAGE);
-        sendAppLayerMessage(new ConnectMessage());
+        setState(InsightState.APP_CONNECT_MESSAGE)
+        sendAppLayerMessage(ConnectMessage())
     }
 
-    private void processErrorMessage(ErrorMessage errorMessage) {
-        switch (errorMessage.getError()) {
-            case INVALID_NONCE:
-                handleException(new SatlInvalidNonceErrorException());
-                break;
-            case INVALID_CRC:
-                handleException(new SatlInvalidCRCErrorException());
-                break;
-            case INVALID_MAC_TRAILER:
-                handleException(new SatlInvalidMacErrorException());
-                break;
-            case DECRYPT_VERIFY_FAILED:
-                handleException(new SatlDecryptVerifyFailedErrorException());
-                break;
-            case INVALID_PAYLOAD_LENGTH:
-                handleException(new SatlInvalidPayloadLengthErrorException());
-                break;
-            case INVALID_MESSAGE_TYPE:
-                handleException(new SatlInvalidMessageTypeErrorException());
-                break;
-            case INCOMPATIBLE_VERSION:
-                handleException(new SatlIncompatibleVersionErrorException());
-                break;
-            case COMPATIBLE_STATE:
-                handleException(new SatlCompatibleStateErrorException());
-                break;
-            case INVALID_COMM_ID:
-                handleException(new SatlInvalidCommIdErrorException());
-                break;
-            case INVALID_PACKET:
-                handleException(new SatlInvalidPacketErrorException());
-                break;
-            case WRONG_STATE:
-                handleException(new SatlWrongStateException());
-                break;
-            case UNDEFINED:
-                handleException(new SatlUndefinedErrorException());
-                break;
-            case NONE:
-                handleException(new SatlNoneErrorException());
-                break;
+    private fun processErrorMessage(errorMessage: ErrorMessage) {
+        when (errorMessage.error) {
+            SatlError.INVALID_NONCE          -> handleException(SatlInvalidNonceErrorException())
+            SatlError.INVALID_CRC            -> handleException(SatlInvalidCRCErrorException())
+            SatlError.INVALID_MAC_TRAILER    -> handleException(SatlInvalidMacErrorException())
+            SatlError.DECRYPT_VERIFY_FAILED  -> handleException(SatlDecryptVerifyFailedErrorException())
+            SatlError.INVALID_PAYLOAD_LENGTH -> handleException(SatlInvalidPayloadLengthErrorException())
+            SatlError.INVALID_MESSAGE_TYPE   -> handleException(SatlInvalidMessageTypeErrorException())
+            SatlError.INCOMPATIBLE_VERSION   -> handleException(SatlIncompatibleVersionErrorException())
+            SatlError.COMPATIBLE_STATE       -> handleException(SatlCompatibleStateErrorException())
+            SatlError.INVALID_COMM_ID        -> handleException(SatlInvalidCommIdErrorException())
+            SatlError.INVALID_PACKET         -> handleException(SatlInvalidPacketErrorException())
+            SatlError.WRONG_STATE            -> handleException(SatlWrongStateException())
+            SatlError.UNDEFINED              -> handleException(SatlUndefinedErrorException())
+            SatlError.NONE                   -> handleException(SatlNoneErrorException())
         }
     }
 
-    private void processDataMessage(DataMessage dataMessage) {
-        switch (state) {
-            case CONNECTED:
-            case APP_BIND_MESSAGE:
-            case APP_CONNECT_MESSAGE:
-            case APP_ACTIVATE_PARAMETER_SERVICE:
-            case APP_ACTIVATE_STATUS_SERVICE:
-            case APP_FIRMWARE_VERSIONS:
-            case APP_SYSTEM_IDENTIFICATION:
-                break;
-            default:
-                handleException(new ReceivedPacketInInvalidStateException());
+    private fun processDataMessage(dataMessage: DataMessage) {
+        when (state) {
+            InsightState.CONNECTED, InsightState.APP_BIND_MESSAGE, InsightState.APP_CONNECT_MESSAGE, InsightState.APP_ACTIVATE_PARAMETER_SERVICE, InsightState.APP_ACTIVATE_STATUS_SERVICE, InsightState.APP_FIRMWARE_VERSIONS, InsightState.APP_SYSTEM_IDENTIFICATION -> {
+            }
+
+            else                                                                                                                                                                                                                                                       -> handleException(ReceivedPacketInInvalidStateException())
         }
         try {
-            AppLayerMessage appLayerMessage = AppLayerMessage.unwrap(dataMessage);
-            if (appLayerMessage instanceof BindMessage) processBindMessage();
-            else if (appLayerMessage instanceof ConnectMessage) processConnectMessage();
-            else if (appLayerMessage instanceof ActivateServiceMessage)
-                processActivateServiceMessage();
-            else if (appLayerMessage instanceof DisconnectMessage) ;
-            else if (appLayerMessage instanceof ServiceChallengeMessage)
-                processServiceChallengeMessage((ServiceChallengeMessage) appLayerMessage);
-            else if (appLayerMessage instanceof GetFirmwareVersionsMessage)
-                processFirmwareVersionsMessage((GetFirmwareVersionsMessage) appLayerMessage);
-            else if (appLayerMessage instanceof ReadParameterBlockMessage)
-                processReadParameterBlockMessage((ReadParameterBlockMessage) appLayerMessage);
-            else processGenericAppLayerMessage(appLayerMessage);
-        } catch (Exception e) {
-            if (state != InsightState.CONNECTED) {
-                handleException(e);
+            val appLayerMessage = unwrap(dataMessage)
+            if (appLayerMessage is BindMessage) processBindMessage() else if (appLayerMessage is ConnectMessage) processConnectMessage() else if (appLayerMessage is ActivateServiceMessage) processActivateServiceMessage() else if (appLayerMessage is DisconnectMessage) ; else if (appLayerMessage is ServiceChallengeMessage) processServiceChallengeMessage(appLayerMessage) else if (appLayerMessage is GetFirmwareVersionsMessage) processFirmwareVersionsMessage(appLayerMessage) else if (appLayerMessage is ReadParameterBlockMessage) processReadParameterBlockMessage(appLayerMessage) else processGenericAppLayerMessage(appLayerMessage)
+        } catch (e: Exception) {
+            if (state !== InsightState.CONNECTED) {
+                handleException(e)
             } else {
                 if (messageQueue.getActiveRequest() == null) {
-                    handleException(new TooChattyPumpException());
+                    handleException(TooChattyPumpException())
                 } else {
-                    messageQueue.completeActiveRequest(e);
-                    requestNextMessage();
+                    messageQueue.completeActiveRequest(e)
+                    requestNextMessage()
                 }
             }
         }
     }
 
-    private void processBindMessage() {
-        if (state != InsightState.APP_BIND_MESSAGE) {
-            handleException(new ReceivedPacketInInvalidStateException());
-            return;
+    private fun processBindMessage() {
+        if (state !== InsightState.APP_BIND_MESSAGE) {
+            handleException(ReceivedPacketInInvalidStateException())
+            return
         }
-        setState(InsightState.APP_ACTIVATE_STATUS_SERVICE);
-        ActivateServiceMessage activateServiceMessage = new ActivateServiceMessage();
-        activateServiceMessage.setServiceID(Service.STATUS.getId());
-        activateServiceMessage.setServicePassword(new byte[16]);
-        activateServiceMessage.setVersion(info.nightscout.androidaps.plugins.pump.insight.app_layer.Service.STATUS.getVersion());
-        sendAppLayerMessage(activateServiceMessage);
+        setState(InsightState.APP_ACTIVATE_STATUS_SERVICE)
+        val activateServiceMessage = ActivateServiceMessage()
+        activateServiceMessage.serviceID = Service.STATUS.id
+        activateServiceMessage.setServicePassword(ByteArray(16))
+        activateServiceMessage.version = Service.STATUS.version
+        sendAppLayerMessage(activateServiceMessage)
     }
 
-    private void processFirmwareVersionsMessage(GetFirmwareVersionsMessage message) {
-        if (state != InsightState.APP_FIRMWARE_VERSIONS) {
-            handleException(new ReceivedPacketInInvalidStateException());
-            return;
+    private fun processFirmwareVersionsMessage(message: GetFirmwareVersionsMessage) {
+        if (state !== InsightState.APP_FIRMWARE_VERSIONS) {
+            handleException(ReceivedPacketInInvalidStateException())
+            return
         }
-        pairingDataStorage.setFirmwareVersions(message.getFirmwareVersions());
-        setState(InsightState.APP_ACTIVATE_PARAMETER_SERVICE);
-        ActivateServiceMessage activateServiceMessage = new ActivateServiceMessage();
-        activateServiceMessage.setServiceID(Service.PARAMETER.getId());
-        activateServiceMessage.setServicePassword(new byte[16]);
-        activateServiceMessage.setVersion(info.nightscout.androidaps.plugins.pump.insight.app_layer.Service.PARAMETER.getVersion());
-        sendAppLayerMessage(activateServiceMessage);
+        pairingDataStorage!!.firmwareVersions = message.firmwareVersions
+        setState(InsightState.APP_ACTIVATE_PARAMETER_SERVICE)
+        val activateServiceMessage = ActivateServiceMessage()
+        activateServiceMessage.serviceID = Service.PARAMETER.id
+        activateServiceMessage.setServicePassword(ByteArray(16))
+        activateServiceMessage.version = Service.PARAMETER.version
+        sendAppLayerMessage(activateServiceMessage)
     }
 
-    private void processConnectMessage() {
-        if (state != InsightState.APP_CONNECT_MESSAGE) {
-            handleException(new ReceivedPacketInInvalidStateException());
-            return;
+    private fun processConnectMessage() {
+        if (state !== InsightState.APP_CONNECT_MESSAGE) {
+            handleException(ReceivedPacketInInvalidStateException())
+            return
         }
-        setState(InsightState.CONNECTED);
+        setState(InsightState.CONNECTED)
     }
 
-    private void processActivateServiceMessage() {
-        if (state == InsightState.APP_ACTIVATE_PARAMETER_SERVICE) {
-            activatedServices.add(info.nightscout.androidaps.plugins.pump.insight.app_layer.Service.PARAMETER);
-            setState(InsightState.APP_SYSTEM_IDENTIFICATION);
-            ReadParameterBlockMessage message = new ReadParameterBlockMessage();
-            message.setParameterBlockId(SystemIdentificationBlock.class);
-            message.setService(info.nightscout.androidaps.plugins.pump.insight.app_layer.Service.PARAMETER);
-            sendAppLayerMessage(message);
-        } else if (state == InsightState.APP_ACTIVATE_STATUS_SERVICE) {
-            activatedServices.add(info.nightscout.androidaps.plugins.pump.insight.app_layer.Service.STATUS);
-            setState(InsightState.APP_FIRMWARE_VERSIONS);
-            sendAppLayerMessage(new GetFirmwareVersionsMessage());
+    private fun processActivateServiceMessage() {
+        if (state === InsightState.APP_ACTIVATE_PARAMETER_SERVICE) {
+            activatedServices.add(Service.PARAMETER)
+            setState(InsightState.APP_SYSTEM_IDENTIFICATION)
+            val message = ReadParameterBlockMessage()
+            message.setParameterBlockId(SystemIdentificationBlock::class.java)
+            message.service = Service.PARAMETER
+            sendAppLayerMessage(message)
+        } else if (state === InsightState.APP_ACTIVATE_STATUS_SERVICE) {
+            activatedServices.add(Service.STATUS)
+            setState(InsightState.APP_FIRMWARE_VERSIONS)
+            sendAppLayerMessage(GetFirmwareVersionsMessage())
         } else {
             if (messageQueue.getActiveRequest() == null) {
-                handleException(new TooChattyPumpException());
+                handleException(TooChattyPumpException())
             } else {
-                activatedServices.add(messageQueue.getActiveRequest().request.getService());
-                sendAppLayerMessage(messageQueue.getActiveRequest().request);
+                activatedServices.add(messageQueue.getActiveRequest().request.service)
+                sendAppLayerMessage(messageQueue.getActiveRequest().request)
             }
         }
     }
 
-    private void processReadParameterBlockMessage(ReadParameterBlockMessage message) {
-        if (state == InsightState.APP_SYSTEM_IDENTIFICATION) {
-            if (!(message.getParameterBlock() instanceof SystemIdentificationBlock))
-                handleException(new TooChattyPumpException());
-            else {
-                SystemIdentification systemIdentification = ((SystemIdentificationBlock) message.getParameterBlock()).getSystemIdentification();
-                pairingDataStorage.setSystemIdentification(systemIdentification);
-                pairingDataStorage.setPaired(true);
-                aapsLogger.info(LTag.PUMP, "Pairing completed YEE-HAW ♪ ┏(・o･)┛ ♪ ┗( ･o･)┓ ♪");
-                setState(InsightState.CONNECTED);
-                for (StateCallback stateCallback : stateCallbacks) stateCallback.onPumpPaired();
+    private fun processReadParameterBlockMessage(message: ReadParameterBlockMessage) {
+        if (state === InsightState.APP_SYSTEM_IDENTIFICATION) {
+            if (message.parameterBlock !is SystemIdentificationBlock) handleException(TooChattyPumpException()) else {
+                val systemIdentification = (message.parameterBlock as SystemIdentificationBlock?)!!.systemIdentification
+                pairingDataStorage!!.systemIdentification = systemIdentification
+                pairingDataStorage!!.isPaired = true
+                aapsLogger!!.info(LTag.PUMP, "Pairing completed YEE-HAW ♪ ┏(・o･)┛ ♪ ┗( ･o･)┓ ♪")
+                setState(InsightState.CONNECTED)
+                for (stateCallback in stateCallbacks) stateCallback.onPumpPaired()
             }
-        } else processGenericAppLayerMessage(message);
+        } else processGenericAppLayerMessage(message)
     }
 
-    private void processServiceChallengeMessage(ServiceChallengeMessage serviceChallengeMessage) {
+    private fun processServiceChallengeMessage(serviceChallengeMessage: ServiceChallengeMessage) {
         if (messageQueue.getActiveRequest() == null) {
-            handleException(new TooChattyPumpException());
+            handleException(TooChattyPumpException())
         } else {
-            info.nightscout.androidaps.plugins.pump.insight.app_layer.Service service = messageQueue.getActiveRequest().request.getService();
-            ActivateServiceMessage activateServiceMessage = new ActivateServiceMessage();
-            activateServiceMessage.setServiceID(service.getId());
-            activateServiceMessage.setVersion(service.getVersion());
-            activateServiceMessage.setServicePassword(Cryptograph.getServicePasswordHash(service.getServicePassword(), serviceChallengeMessage.getRandomData()));
-            sendAppLayerMessage(activateServiceMessage);
+            val service = messageQueue.getActiveRequest().request.service
+            val activateServiceMessage = ActivateServiceMessage()
+            activateServiceMessage.serviceID = service!!.id
+            activateServiceMessage.version = service.version
+            activateServiceMessage.setServicePassword(Cryptograph.getServicePasswordHash(service.servicePassword, serviceChallengeMessage.randomData))
+            sendAppLayerMessage(activateServiceMessage)
         }
     }
 
-    private void processGenericAppLayerMessage(AppLayerMessage appLayerMessage) {
-        if (messageQueue.getActiveRequest() == null) handleException(new TooChattyPumpException());
-        else {
+    private fun processGenericAppLayerMessage(appLayerMessage: AppLayerMessage) {
+        if (messageQueue.getActiveRequest() == null) handleException(TooChattyPumpException()) else {
             try {
-                messageQueue.completeActiveRequest(appLayerMessage);
-                lastDataTime = System.currentTimeMillis();
-            } catch (Exception e) {
-                messageQueue.completeActiveRequest(e);
+                messageQueue.completeActiveRequest(appLayerMessage)
+                lastDataTime = System.currentTimeMillis()
+            } catch (e: Exception) {
+                messageQueue.completeActiveRequest(e)
             }
-            requestNextMessage();
+            requestNextMessage()
         }
     }
 
-    void sendAppLayerMessage(AppLayerMessage appLayerMessage) {
-        sendSatlMessage(AppLayerMessage.wrap(appLayerMessage));
+    fun sendAppLayerMessage(appLayerMessage: AppLayerMessage?) {
+        sendSatlMessage(wrap(appLayerMessage!!))
     }
 
-    @Override
-    public synchronized void onConnectionFail(Exception e, long duration) {
-        handleException(new ConnectionFailedException(duration));
+    @Synchronized override fun onConnectionFail(e: Exception, duration: Long) {
+        handleException(ConnectionFailedException(duration))
     }
 
-    @Override
-    public synchronized void onErrorWhileReading(Exception e) {
-        handleException(new ConnectionLostException());
+    @Synchronized override fun onErrorWhileReading(e: Exception) {
+        handleException(ConnectionLostException())
     }
 
-    @Override
-    public synchronized void onErrorWhileWriting(Exception e) {
-        handleException(new ConnectionLostException());
+    @Synchronized override fun onErrorWhileWriting(e: Exception) {
+        handleException(ConnectionLostException())
     }
 
-    @Override
-    public void onDestroy() {
-        disconnect();
+    override fun onDestroy() {
+        disconnect()
     }
 
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return localBinder;
+    override fun onBind(intent: Intent): IBinder? {
+        return localBinder
     }
 
-    public class LocalBinder extends Binder {
-        public InsightConnectionService getService() {
-            return InsightConnectionService.this;
-        }
+    inner class LocalBinder : Binder() {
+
+        val service: InsightConnectionService
+            get() = this@InsightConnectionService
     }
 
-    public interface StateCallback {
-        void onStateChanged(InsightState state);
+    interface StateCallback {
 
-        default void onPumpPaired() {
-        }
-
-        default void onTimeoutDuringHandshake() {
-        }
+        fun onStateChanged(state: InsightState?)
+        fun onPumpPaired() {}
+        fun onTimeoutDuringHandshake() {}
     }
 
-    public interface ExceptionCallback {
-        void onExceptionOccur(Exception e);
+    interface ExceptionCallback {
+
+        fun onExceptionOccur(e: Exception?)
+    }
+
+    companion object {
+
+        private const val BUFFER_SIZE = 1024
+        private const val TIMEOUT_DURING_HANDSHAKE_NOTIFICATION_THRESHOLD = 3
+        private const val RESPONSE_TIMEOUT: Long = 6000
     }
 }

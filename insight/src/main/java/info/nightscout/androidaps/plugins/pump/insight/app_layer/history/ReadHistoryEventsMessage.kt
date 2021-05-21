@@ -1,34 +1,30 @@
-package info.nightscout.androidaps.plugins.pump.insight.app_layer.history;
+package info.nightscout.androidaps.plugins.pump.insight.app_layer.history
 
-import java.util.ArrayList;
-import java.util.List;
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.Service
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.history.history_events.HistoryEvent
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.MessagePriority
+import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
+import java.util.*
 
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.Service;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.history.history_events.HistoryEvent;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.MessagePriority;
-import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf;
+class ReadHistoryEventsMessage : AppLayerMessage(MessagePriority.NORMAL, true, false, Service.HISTORY) {
 
-public class ReadHistoryEventsMessage extends AppLayerMessage {
+    internal var historyEvents: MutableList<HistoryEvent> = mutableListOf()
+    @Throws(Exception::class) override fun parse(byteBuf: ByteBuf?) {
+        val newHistoryEvents = mutableListOf<HistoryEvent>()
 
-    private List<HistoryEvent> historyEvents;
-
-    public ReadHistoryEventsMessage() {
-        super(MessagePriority.NORMAL, true, false, Service.HISTORY);
-    }
-
-    @Override
-    protected void parse(ByteBuf byteBuf) throws Exception {
-        historyEvents = new ArrayList<>();
-        byteBuf.shift(2);
-        int frameCount = byteBuf.readUInt16LE();
-        for (int i = 0; i < frameCount; i++) {
-            int length = byteBuf.readUInt16LE();
-            historyEvents.add(HistoryEvent.deserialize(ByteBuf.from(byteBuf.readBytes(length))));
+        if (byteBuf != null) {
+            byteBuf.shift(2)
+            val frameCount = byteBuf.readUInt16LE()
+            for (i in 0 until frameCount) {
+                val length = byteBuf.readUInt16LE()
+                HistoryEvent.deserialize(ByteBuf.from(byteBuf.readBytes(length)))?.let { newHistoryEvents.add(it) }
+            }
         }
+        historyEvents = newHistoryEvents
     }
 
-    public List<HistoryEvent> getHistoryEvents() {
-        return historyEvents;
+    fun getHistoryEvents(): List<HistoryEvent> {
+        return historyEvents
     }
 }

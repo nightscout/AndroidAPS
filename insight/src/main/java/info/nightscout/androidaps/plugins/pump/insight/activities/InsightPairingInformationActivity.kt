@@ -19,21 +19,21 @@ class InsightPairingInformationActivity : NoSplashAppCompatActivity() {
 
         override fun onServiceConnected(name: ComponentName, binder: IBinder) {
             val newConnectionService: InsightConnectionService = (binder as InsightConnectionService.LocalBinder).service
-            if (!newConnectionService.isPaired()) {
+            if (!newConnectionService.isPaired) {
                 overridePendingTransition(0, 0)
                 finish()
                 startActivity(Intent(this@InsightPairingInformationActivity, InsightPairingActivity::class.java))
             } else {
-                binding.serialNumber.text = newConnectionService.getPumpSystemIdentification().serialNumber
-                binding.manufacturingDate.text = newConnectionService.getPumpSystemIdentification().manufacturingDate
-                binding.systemIdAppendix.text = newConnectionService.getPumpSystemIdentification().systemIdAppendix.toString() + ""
-                binding.releaseSwVersion.text = newConnectionService.getPumpFirmwareVersions().releaseSWVersion
-                binding.uiProcSwVersion.text = newConnectionService.getPumpFirmwareVersions().uiProcSWVersion
-                binding.pcProcSwVersion.text = newConnectionService.getPumpFirmwareVersions().pcProcSWVersion
-                binding.mdTelSwVersion.text = newConnectionService.getPumpFirmwareVersions().mdTelProcSWVersion
-                binding.safetyProcSwVersion.text = newConnectionService.getPumpFirmwareVersions().safetyProcSWVersion
-                binding.btInfoPageVersion.text = newConnectionService.getPumpFirmwareVersions().btInfoPageVersion
-                binding.bluetoothAddress.text = newConnectionService.getBluetoothAddress()
+                binding.serialNumber.text = newConnectionService.pumpSystemIdentification.serialNumber
+                binding.manufacturingDate.text = newConnectionService.pumpSystemIdentification.manufacturingDate
+                binding.systemIdAppendix.text = newConnectionService.pumpSystemIdentification.systemIdAppendix.toString() + ""
+                binding.releaseSwVersion.text = newConnectionService.pumpFirmwareVersions.releaseSWVersion
+                binding.uiProcSwVersion.text = newConnectionService.pumpFirmwareVersions.uiProcSWVersion
+                binding.pcProcSwVersion.text = newConnectionService.pumpFirmwareVersions.pcProcSWVersion
+                binding.mdTelSwVersion.text = newConnectionService.pumpFirmwareVersions.mdTelProcSWVersion
+                binding.safetyProcSwVersion.text = newConnectionService.pumpFirmwareVersions.safetyProcSWVersion
+                binding.btInfoPageVersion.text = newConnectionService.pumpFirmwareVersions.btInfoPageVersion
+                binding.bluetoothAddress.text = newConnectionService.bluetoothAddress
             }
             connectionService = newConnectionService
         }

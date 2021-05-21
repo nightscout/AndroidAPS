@@ -1389,7 +1389,7 @@ class LocalInsightPlugin @Inject constructor(
         return applyBolusConstraints(insulin)
     }
 
-    override fun onStateChanged(state: InsightState) {
+    override fun onStateChanged(state: InsightState?) {
         if (state == InsightState.CONNECTED) {
             statusLoaded = false
             Handler(Looper.getMainLooper()).post { rxBus.send(EventDismissNotification(Notification.INSIGHT_TIMEOUT_DURING_HANDSHAKE)) }

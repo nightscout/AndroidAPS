@@ -53,7 +53,7 @@ class InsightAlertService : DaggerService(), InsightConnectionService.StateCallb
         override fun onServiceConnected(name: ComponentName, binder: IBinder) {
             val newConnectionService: InsightConnectionService = (binder as InsightConnectionService.LocalBinder).service
             newConnectionService.registerStateCallback(this@InsightAlertService)
-            onStateChanged(newConnectionService.getState())
+            onStateChanged(newConnectionService.state)
             connectionService = newConnectionService
         }
 
@@ -102,7 +102,7 @@ class InsightAlertService : DaggerService(), InsightConnectionService.StateCallb
         return START_STICKY
     }
 
-    override fun onStateChanged(state: InsightState) {
+    override fun onStateChanged(state: InsightState?) {
         if (state == InsightState.CONNECTED) {
             thread = Thread { queryActiveAlert() }
             thread!!.start()
@@ -138,7 +138,7 @@ class InsightAlertService : DaggerService(), InsightConnectionService.StateCallb
                     }
                 }
             } catch (ignored: InterruptedException) {
-                connectionService!!.withdrawConnectionRequest(thread)
+                connectionService!!.withdrawConnectionRequest(thread as Any)
                 break
             } catch (e: AppLayerErrorException) {
                 aapsLogger.info(LTag.PUMP, "Exception while fetching alert: " + e.javaClass.canonicalName + " (" + e.errorCode + ")")
@@ -154,7 +154,7 @@ class InsightAlertService : DaggerService(), InsightConnectionService.StateCallb
             }
         }
         if (connectionRequested) {
-            connectionService!!.withdrawConnectionRequest(thread)
+            connectionService!!.withdrawConnectionRequest(thread as Any)
             connectionRequested = false
         }
         stopAlerting()

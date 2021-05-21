@@ -29,11 +29,11 @@ class InsightPairingActivity : NoSplashAppCompatActivity(), InsightConnectionSer
     private val serviceConnection: ServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, binder: IBinder) {
             val newService: InsightConnectionService = (binder as InsightConnectionService.LocalBinder).service
-            if (newService.isPaired()) return else {
+            if (newService.isPaired) return else {
                 newService.requestConnection(this@InsightPairingActivity)
                 newService.registerStateCallback(this@InsightPairingActivity)
                 newService.registerExceptionCallback(this@InsightPairingActivity)
-                onStateChanged(newService.getState())
+                onStateChanged(newService.state)
             }
             service = newService
         }
@@ -74,7 +74,7 @@ class InsightPairingActivity : NoSplashAppCompatActivity(), InsightConnectionSer
         super.onStop()
     }
 
-    override fun onStateChanged(state: InsightState) {
+    override fun onStateChanged(state: InsightState?) {
         runOnUiThread {
             when (state) {
                 InsightState.NOT_PAIRED                             -> {
@@ -148,7 +148,7 @@ class InsightPairingActivity : NoSplashAppCompatActivity(), InsightConnectionSer
         if (v === binding.exit) finish() else if (v === binding.yes) service!!.confirmVerificationString() else if (v === binding.no) service!!.rejectVerificationString()
     }
 
-    override fun onExceptionOccur(e: Exception) {
+    override fun onExceptionOccur(e: Exception?) {
         ExceptionTranslator.makeToast(this, e)
     }
 
