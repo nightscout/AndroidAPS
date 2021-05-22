@@ -303,7 +303,7 @@ class MedtronicPumpPlugin @Inject constructor(
     override fun getPumpStatus(reason: String) {
         var needRefresh = true
         if (firstRun) {
-            needRefresh = initializePump(!isRefresh)
+            needRefresh = initializePump()  /*!isRefresh*/
         } else {
             refreshAnyStatusThatNeedsToBeRefreshed()
         }
@@ -401,7 +401,7 @@ class MedtronicPumpPlugin @Inject constructor(
         rxBus.send(EventRefreshButtonState(enabled))
     }
 
-    private fun initializePump(realInit: Boolean): Boolean {
+    private fun initializePump(): Boolean {
         if (rileyLinkMedtronicService == null) return false
         aapsLogger.info(LTag.PUMP, logPrefix + "initializePump - start")
         rileyLinkMedtronicService!!.deviceCommunicationManager.setDoWakeUpBeforeCommand(false)
@@ -562,7 +562,7 @@ class MedtronicPumpPlugin @Inject constructor(
         if (clock == null) return
         val timeDiff = Math.abs(clock.timeDifference)
         if (timeDiff > 20) {
-            if (clock.localDeviceTime!!.year <= 2015 || timeDiff <= 24 * 60 * 60) {
+            if (clock.localDeviceTime.year <= 2015 || timeDiff <= 24 * 60 * 60) {
                 aapsLogger.info(LTag.PUMP, String.format(Locale.ENGLISH, "MedtronicPumpPlugin::checkTimeAndOptionallySetTime - Time difference is %d s. Set time on pump.", timeDiff))
                 rileyLinkMedtronicService!!.medtronicUIComm.executeCommand(MedtronicCommandType.SetRealTimeClock)
                 if (clock.timeDifference == 0) {
@@ -570,7 +570,7 @@ class MedtronicPumpPlugin @Inject constructor(
                     rxBus.send(EventNewNotification(notification))
                 }
             } else {
-                if (clock.localDeviceTime!!.year > 2015) {
+                if (clock.localDeviceTime.year > 2015) {
                     aapsLogger.error(String.format(Locale.ENGLISH, "MedtronicPumpPlugin::checkTimeAndOptionallySetTime - Time difference over 24h requested [diff=%d s]. Doing nothing.", timeDiff))
                     medtronicUtil.sendNotification(MedtronicNotificationType.TimeChangeOver24h, resourceHelper, rxBus)
                 }
@@ -855,7 +855,7 @@ class MedtronicPumpPlugin @Inject constructor(
             if (debugHistory) aapsLogger.debug(LTag.PUMP, logPrefix + "readPumpHistoryLogic(): lastPumpHistoryEntry: not null - " + medtronicUtil.gsonInstance.toJson(lastPumpHistoryEntry))
             medtronicHistoryData.setIsInInit(false)
             // we need to read 35 minutes in the past so that we can repair any TBR or Bolus values if neeeded
-            targetDate = LocalDateTime(DateTimeUtil.getMillisFromATDWithAddedMinutes(lastPumpHistoryEntry!!.atechDateTime!!, -35))
+            targetDate = LocalDateTime(DateTimeUtil.getMillisFromATDWithAddedMinutes(lastPumpHistoryEntry!!.atechDateTime, -35))
         }
 
         //aapsLogger.debug(LTag.PUMP, "HST: Target Date: " + targetDate);

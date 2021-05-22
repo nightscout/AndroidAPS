@@ -5,10 +5,10 @@ import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil
 /**
  * Created by andy on 6/2/18.
  */
-open class PumpTimeStampedRecord {
+open class PumpTimeStampedRecord constructor(var atechDateTime: Long = 0) {
 
     var decimalPrecission = 2
-    var atechDateTime: Long = 0
+    // var atechDateTime: Long = 0
 
     open fun getFormattedDecimal(value: Double): String? {
         return StringUtil.getFormatedValueUS(value, decimalPrecission)

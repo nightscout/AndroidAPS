@@ -5,6 +5,7 @@ import com.google.gson.annotations.Expose
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil
+import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntryType
 import java.util.*
 
 /**
@@ -42,6 +43,7 @@ abstract class MedtronicHistoryEntry : MedtronicHistoryEntryInterface {
         set(value) {
             field = value
             DT = DateTimeUtil.toString(value)
+            if (isEntryTypeSet() && value != 0L) pumpId = generatePumpId()
         }
 
     @Expose
@@ -51,7 +53,7 @@ abstract class MedtronicHistoryEntry : MedtronicHistoryEntryInterface {
     /**
      * Pump id that will be used with AAPS object (time * 1000 + historyType (max is FF = 255)
      */
-    open var pumpId: Long? = null
+    open var pumpId: Long = 0L
 
     /**
      * if history object is already linked to AAPS object (either Treatment, TempBasal or TDD (tdd's
@@ -74,6 +76,10 @@ abstract class MedtronicHistoryEntry : MedtronicHistoryEntryInterface {
     //     linked = true
     //     this.linkedObject = linkedObject
     // }
+
+    abstract fun generatePumpId(): Long
+
+    abstract fun isEntryTypeSet(): Boolean
 
     override fun setData(listRawData: List<Byte>, doNotProcess: Boolean) {
         rawData = listRawData

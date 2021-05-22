@@ -66,7 +66,7 @@ class MedtronicUITask {
 
             MedtronicCommandType.GetRealTimeClock                                          -> {
                 result = communicationManager.getPumpTime()
-                medtronicUtil.pumpTime = null
+                //medtronicUtil.pumpTime = null
             }
 
             MedtronicCommandType.SetRealTimeClock                                          -> {

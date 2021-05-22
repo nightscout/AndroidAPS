@@ -30,6 +30,17 @@ class CGMSHistoryEntry : MedtronicHistoryEntry() {
     override val entryTypeName: String
         get() = entryType!!.name
 
+    override fun generatePumpId(): Long {
+        return if (entryType==null)
+            atechDateTime * 1000L
+        else
+            entryType!!.code + atechDateTime * 1000L
+    }
+
+    override fun isEntryTypeSet(): Boolean {
+        return entryType!=null
+    }
+
     override fun setData(listRawData: List<Byte>, doNotProcess: Boolean) {
         if (entryType!!.schemaSet) {
             super.setData(listRawData, doNotProcess)

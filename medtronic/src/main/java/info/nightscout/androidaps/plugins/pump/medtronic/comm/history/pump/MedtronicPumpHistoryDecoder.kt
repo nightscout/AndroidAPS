@@ -30,8 +30,9 @@ import kotlin.experimental.and
 @Singleton
 class MedtronicPumpHistoryDecoder @Inject constructor(
     aapsLogger: AAPSLogger,
-    medtronicUtil: MedtronicUtil
-) : MedtronicHistoryDecoder<PumpHistoryEntry>() {
+    medtronicUtil: MedtronicUtil,
+    bitUtils: ByteUtil
+) : MedtronicHistoryDecoder<PumpHistoryEntry>(aapsLogger, medtronicUtil, bitUtils) {
 
     //private var tbrPreviousRecord: PumpHistoryEntry? = null
     private var changeTimeRecord: PumpHistoryEntry? = null
@@ -133,7 +134,7 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
         return try {
             decodeRecordInternal(record)
         } catch (ex: Exception) {
-            aapsLogger.error(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "     Error decoding: type=%s, ex=%s", record.entryType!!.name, ex.message, ex))
+            aapsLogger.error(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "     Error decoding: type=%s, ex=%s", record.entryType.name, ex.message, ex))
             //ex.printStackTrace()
             RecordDecodeStatus.Error
         }
@@ -144,62 +145,125 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
             decodeDateTime(entry)
         }
         return when (entry.entryType) {
-            PumpHistoryEntryType.ChangeBasalPattern, PumpHistoryEntryType.CalBGForPH, PumpHistoryEntryType.ChangeRemoteId, PumpHistoryEntryType.ClearAlarm, PumpHistoryEntryType.ChangeAlarmNotifyMode, PumpHistoryEntryType.EnableDisableRemote, PumpHistoryEntryType.BGReceived, PumpHistoryEntryType.SensorAlert, PumpHistoryEntryType.ChangeTimeFormat, PumpHistoryEntryType.ChangeReservoirWarningTime, PumpHistoryEntryType.ChangeBolusReminderEnable, PumpHistoryEntryType.SetBolusReminderTime, PumpHistoryEntryType.ChangeChildBlockEnable, PumpHistoryEntryType.BolusWizardEnabled, PumpHistoryEntryType.ChangeBGReminderOffset, PumpHistoryEntryType.ChangeAlarmClockTime, PumpHistoryEntryType.ChangeMeterId, PumpHistoryEntryType.ChangeParadigmID, PumpHistoryEntryType.JournalEntryMealMarker, PumpHistoryEntryType.JournalEntryExerciseMarker, PumpHistoryEntryType.DeleteBolusReminderTime, PumpHistoryEntryType.SetAutoOff, PumpHistoryEntryType.SelfTest, PumpHistoryEntryType.JournalEntryInsulinMarker, PumpHistoryEntryType.JournalEntryOtherMarker, PumpHistoryEntryType.BolusWizardSetup512, PumpHistoryEntryType.ChangeSensorSetup2, PumpHistoryEntryType.ChangeSensorAlarmSilenceConfig, PumpHistoryEntryType.ChangeSensorRateOfChangeAlertSetup, PumpHistoryEntryType.ChangeBolusScrollStepSize, PumpHistoryEntryType.BolusWizardSetup, PumpHistoryEntryType.ChangeVariableBolus, PumpHistoryEntryType.ChangeAudioBolus, PumpHistoryEntryType.ChangeBGReminderEnable, PumpHistoryEntryType.ChangeAlarmClockEnable, PumpHistoryEntryType.BolusReminder, PumpHistoryEntryType.DeleteAlarmClockTime, PumpHistoryEntryType.ChangeCarbUnits, PumpHistoryEntryType.ChangeWatchdogEnable, PumpHistoryEntryType.ChangeOtherDeviceID, PumpHistoryEntryType.ReadOtherDevicesIDs, PumpHistoryEntryType.BGReceived512, PumpHistoryEntryType.SensorStatus, PumpHistoryEntryType.ReadCaptureEventEnabled, PumpHistoryEntryType.ChangeCaptureEventEnable, PumpHistoryEntryType.ReadOtherDevicesStatus -> RecordDecodeStatus.OK
+            PumpHistoryEntryType.ChangeBasalPattern,
+            PumpHistoryEntryType.CalBGForPH,
+            PumpHistoryEntryType.ChangeRemoteId,
+            PumpHistoryEntryType.ClearAlarm,
+            PumpHistoryEntryType.ChangeAlarmNotifyMode,
+            PumpHistoryEntryType.EnableDisableRemote,
+            PumpHistoryEntryType.BGReceived,
+            PumpHistoryEntryType.SensorAlert,
+            PumpHistoryEntryType.ChangeTimeFormat,
+            PumpHistoryEntryType.ChangeReservoirWarningTime,
+            PumpHistoryEntryType.ChangeBolusReminderEnable,
+            PumpHistoryEntryType.SetBolusReminderTime,
+            PumpHistoryEntryType.ChangeChildBlockEnable,
+            PumpHistoryEntryType.BolusWizardEnabled,
+            PumpHistoryEntryType.ChangeBGReminderOffset,
+            PumpHistoryEntryType.ChangeAlarmClockTime,
+            PumpHistoryEntryType.ChangeMeterId,
+            PumpHistoryEntryType.ChangeParadigmID,
+            PumpHistoryEntryType.JournalEntryMealMarker,
+            PumpHistoryEntryType.JournalEntryExerciseMarker,
+            PumpHistoryEntryType.DeleteBolusReminderTime,
+            PumpHistoryEntryType.SetAutoOff,
+            PumpHistoryEntryType.SelfTest,
+            PumpHistoryEntryType.JournalEntryInsulinMarker,
+            PumpHistoryEntryType.JournalEntryOtherMarker,
+            PumpHistoryEntryType.BolusWizardSetup512,
+            PumpHistoryEntryType.ChangeSensorSetup2,
+            PumpHistoryEntryType.ChangeSensorAlarmSilenceConfig,
+            PumpHistoryEntryType.ChangeSensorRateOfChangeAlertSetup,
+            PumpHistoryEntryType.ChangeBolusScrollStepSize,
+            PumpHistoryEntryType.BolusWizardSetup,
+            PumpHistoryEntryType.ChangeVariableBolus,
+            PumpHistoryEntryType.ChangeAudioBolus,
+            PumpHistoryEntryType.ChangeBGReminderEnable,
+            PumpHistoryEntryType.ChangeAlarmClockEnable,
+            PumpHistoryEntryType.BolusReminder,
+            PumpHistoryEntryType.DeleteAlarmClockTime,
+            PumpHistoryEntryType.ChangeCarbUnits,
+            PumpHistoryEntryType.ChangeWatchdogEnable,
+            PumpHistoryEntryType.ChangeOtherDeviceID,
+            PumpHistoryEntryType.ReadOtherDevicesIDs,
+            PumpHistoryEntryType.BGReceived512,
+            PumpHistoryEntryType.SensorStatus,
+            PumpHistoryEntryType.ReadCaptureEventEnabled,
+            PumpHistoryEntryType.ChangeCaptureEventEnable,
+            PumpHistoryEntryType.ReadOtherDevicesStatus                       -> RecordDecodeStatus.OK
 
-            PumpHistoryEntryType.Sensor_0x54, PumpHistoryEntryType.Sensor_0x55, PumpHistoryEntryType.Sensor_0x51, PumpHistoryEntryType.Sensor_0x52, PumpHistoryEntryType.EventUnknown_MM512_0x2e                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               -> {
+            PumpHistoryEntryType.Sensor_0x54,
+            PumpHistoryEntryType.Sensor_0x55,
+            PumpHistoryEntryType.Sensor_0x51,
+            PumpHistoryEntryType.Sensor_0x52,
+            PumpHistoryEntryType.EventUnknown_MM512_0x2e                      -> {
                 aapsLogger.debug(LTag.PUMPBTCOMM, " -- ignored Unknown Pump Entry: $entry")
                 RecordDecodeStatus.Ignored
             }
 
-            PumpHistoryEntryType.UnabsorbedInsulin, PumpHistoryEntryType.UnabsorbedInsulin512                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  -> RecordDecodeStatus.Ignored
-            PumpHistoryEntryType.DailyTotals522, PumpHistoryEntryType.DailyTotals523, PumpHistoryEntryType.DailyTotals515, PumpHistoryEntryType.EndResultTotals                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                -> decodeDailyTotals(entry)
-            PumpHistoryEntryType.ChangeBasalProfile_OldProfile, PumpHistoryEntryType.ChangeBasalProfile_NewProfile                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             -> decodeBasalProfile(entry)
-            PumpHistoryEntryType.BasalProfileStart                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             -> decodeBasalProfileStart(entry)
+            PumpHistoryEntryType.UnabsorbedInsulin,
+            PumpHistoryEntryType.UnabsorbedInsulin512                         -> RecordDecodeStatus.Ignored
+            PumpHistoryEntryType.DailyTotals522,
+            PumpHistoryEntryType.DailyTotals523,
+            PumpHistoryEntryType.DailyTotals515,
+            PumpHistoryEntryType.EndResultTotals                              -> decodeDailyTotals(entry)
+            PumpHistoryEntryType.ChangeBasalProfile_OldProfile,
+            PumpHistoryEntryType.ChangeBasalProfile_NewProfile                -> decodeBasalProfile(entry)
+            PumpHistoryEntryType.BasalProfileStart                            -> decodeBasalProfileStart(entry)
 
-            PumpHistoryEntryType.ChangeTime                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    -> {
+            PumpHistoryEntryType.ChangeTime                                   -> {
                 changeTimeRecord = entry
                 RecordDecodeStatus.OK
             }
 
-            PumpHistoryEntryType.NewTimeSet                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    -> {
+            PumpHistoryEntryType.NewTimeSet                                   -> {
                 decodeChangeTime(entry)
                 RecordDecodeStatus.OK
             }
 
-            PumpHistoryEntryType.TempBasalDuration                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             ->                 // decodeTempBasal(entry);
+            PumpHistoryEntryType.TempBasalDuration                            ->   // decodeTempBasal(entry);
                 RecordDecodeStatus.OK
 
-            PumpHistoryEntryType.TempBasalRate                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 ->                 // decodeTempBasal(entry);
+            PumpHistoryEntryType.TempBasalRate                                ->  // decodeTempBasal(entry);
                 RecordDecodeStatus.OK
 
-            PumpHistoryEntryType.Bolus                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         -> {
+            PumpHistoryEntryType.Bolus                                        -> {
                 decodeBolus(entry)
                 RecordDecodeStatus.OK
             }
 
-            PumpHistoryEntryType.BatteryChange                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 -> {
+            PumpHistoryEntryType.BatteryChange                                -> {
                 decodeBatteryActivity(entry)
                 RecordDecodeStatus.OK
             }
 
-            PumpHistoryEntryType.LowReservoir                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  -> {
+            PumpHistoryEntryType.LowReservoir                                 -> {
                 decodeLowReservoir(entry)
                 RecordDecodeStatus.OK
             }
 
-            PumpHistoryEntryType.LowBattery, PumpHistoryEntryType.SuspendPump, PumpHistoryEntryType.ResumePump, PumpHistoryEntryType.Rewind, PumpHistoryEntryType.NoDeliveryAlarm, PumpHistoryEntryType.ChangeTempBasalType, PumpHistoryEntryType.ChangeMaxBolus, PumpHistoryEntryType.ChangeMaxBasal, PumpHistoryEntryType.ClearSettings, PumpHistoryEntryType.SaveSettings                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   -> RecordDecodeStatus.OK
-            PumpHistoryEntryType.BolusWizard                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   -> decodeBolusWizard(entry)
-            PumpHistoryEntryType.BolusWizard512                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                -> decodeBolusWizard512(entry)
+            PumpHistoryEntryType.LowBattery,
+            PumpHistoryEntryType.SuspendPump,
+            PumpHistoryEntryType.ResumePump,
+            PumpHistoryEntryType.Rewind,
+            PumpHistoryEntryType.NoDeliveryAlarm,
+            PumpHistoryEntryType.ChangeTempBasalType,
+            PumpHistoryEntryType.ChangeMaxBolus,
+            PumpHistoryEntryType.ChangeMaxBasal,
+            PumpHistoryEntryType.ClearSettings,
+            PumpHistoryEntryType.SaveSettings                                 -> RecordDecodeStatus.OK
+            PumpHistoryEntryType.BolusWizard                                  -> decodeBolusWizard(entry)
+            PumpHistoryEntryType.BolusWizard512                               -> decodeBolusWizard512(entry)
 
-            PumpHistoryEntryType.Prime                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         -> {
+            PumpHistoryEntryType.Prime                                        -> {
                 decodePrime(entry)
                 RecordDecodeStatus.OK
             }
 
-            PumpHistoryEntryType.TempBasalCombined                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             -> RecordDecodeStatus.Ignored
-            PumpHistoryEntryType.None, PumpHistoryEntryType.UnknownBasePacket                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  -> RecordDecodeStatus.Error
+            PumpHistoryEntryType.TempBasalCombined                            -> RecordDecodeStatus.Ignored
+            PumpHistoryEntryType.None, PumpHistoryEntryType.UnknownBasePacket -> RecordDecodeStatus.Error
 
-            else                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               -> {
+            else                                                              -> {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "Not supported: " + entry.entryType)
                 RecordDecodeStatus.NotSupported
             }
@@ -345,10 +409,10 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
         entry.addDecodedData("amount", (ByteUtil.asUINT8(entry.getRawDataByIndex(5)) and 0x80 shl 1) + ByteUtil.asUINT8(entry.getRawDataByIndex(0))) // index moved from 1 -> 0
     }
 
-    private fun decodeNoDeliveryAlarm(entry: PumpHistoryEntry) {
-        //rawtype = asUINT8(data[1]);
-        // not sure if this is actually NoDelivery Alarm?
-    }
+    // private fun decodeNoDeliveryAlarm(entry: PumpHistoryEntry) {
+    //     //rawtype = asUINT8(data[1]);
+    //     // not sure if this is actually NoDelivery Alarm?
+    // }
 
     override fun postProcess() {}
 
@@ -357,33 +421,24 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
     }
 
     private fun decodeBolus(entry: PumpHistoryEntry) {
-        val bolus = BolusDTO()
+        var bolus: BolusDTO?
         val data = entry.head!!
         if (MedtronicDeviceType.isSameDevice(medtronicUtil.medtronicPumpModel!!, MedtronicDeviceType.Medtronic_523andHigher)) {
-            bolus.requestedAmount = ByteUtil.toInt(data.get(0), data.get(1)) / 40.0
-            bolus.deliveredAmount = ByteUtil.toInt(data.get(2), data.get(3)) / 40.0
+            bolus = BolusDTO(atechDateTime = entry.atechDateTime,
+                requestedAmount = ByteUtil.toInt(data.get(0), data.get(1)) / 40.0,
+                deliveredAmount = ByteUtil.toInt(data.get(2), data.get(3)) / 40.0,
+                duration = data.get(6) * 30)
             bolus.insulinOnBoard = ByteUtil.toInt(data.get(4), data.get(5)) / 40.0
-            bolus.duration = data.get(6) * 30
         } else {
-            bolus.requestedAmount = ByteUtil.asUINT8(data.get(0)) / 10.0
-            bolus.deliveredAmount = ByteUtil.asUINT8(data.get(1)) / 10.0
-            bolus.duration = ByteUtil.asUINT8(data.get(2)) * 30
+            bolus = BolusDTO(atechDateTime = entry.atechDateTime,
+                requestedAmount = ByteUtil.asUINT8(data.get(0)) / 10.0,
+                deliveredAmount = ByteUtil.asUINT8(data.get(1)) / 10.0,
+                duration = ByteUtil.asUINT8(data.get(2)) * 30)
         }
-        bolus.bolusType = if (bolus.duration != null && bolus.duration!! > 0) PumpBolusType.Extended else PumpBolusType.Normal
-        bolus.atechDateTime = entry.atechDateTime
+        bolus.bolusType = if (bolus.duration > 0) PumpBolusType.Extended else PumpBolusType.Normal
         entry.addDecodedData("Object", bolus)
         entry.displayableValue = bolus.displayableValue
     }
-
-    // private fun decodeTempBasal(entry: PumpHistoryEntry) {
-    //     if (tbrPreviousRecord == null) {
-    //         // LOG.debug(this.tbrPreviousRecord.toString());
-    //         tbrPreviousRecord = entry
-    //         return
-    //     }
-    //     decodeTempBasal(tbrPreviousRecord, entry)
-    //     tbrPreviousRecord = null
-    // }
 
     fun decodeTempBasal(tbrPreviousRecord: PumpHistoryEntry, entry: PumpHistoryEntry) {
         var tbrRate: PumpHistoryEntry? = null
@@ -399,25 +454,18 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
             tbrRate = tbrPreviousRecord
         }
 
-//        TempBasalPair tbr = new TempBasalPair(
-//                tbrRate.getHead()[0],
-//                tbrDuration.getHead()[0],
-//                (ByteUtil.asUINT8(tbrRate.getDatetime()[4]) >> 3) == 0);
         val tbr = TempBasalPair(
             tbrRate.head!!.get(0),
             tbrRate.body!!.get(0),
             tbrDuration!!.head!!.get(0).toInt(),
             ByteUtil.asUINT8(tbrRate.datetime!!.get(4)) shr 3 == 0)
 
-        // System.out.println("TBR: amount=" + tbr.getInsulinRate() + ", duration=" + tbr.getDurationMinutes()
-        // // + " min. Packed: " + tbr.getValue()
-        // );
         entry.addDecodedData("Object", tbr)
         entry.displayableValue = tbr.description
     }
 
     private fun decodeDateTime(entry: PumpHistoryEntry) {
-        if (entry.datetime==null) {
+        if (entry.datetime == null) {
             aapsLogger.warn(LTag.PUMPBTCOMM, "DateTime not set.")
         }
         val dt = entry.datetime!!
@@ -445,7 +493,7 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
 
             //LOG.debug("DT: {} {} {}", year, month, dayOfMonth);
             if (dayOfMonth == 32) {
-                aapsLogger.warn(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "Entry: Day 32 %s = [%s] %s", entry.entryType!!.name,
+                aapsLogger.warn(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "Entry: Day 32 %s = [%s] %s", entry.entryType.name,
                     ByteUtil.getHex(entry.rawData), entry))
             }
             if (isEndResults(entry.entryType)) {
@@ -460,7 +508,10 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
     }
 
     private fun isEndResults(entryType: PumpHistoryEntryType?): Boolean {
-        return entryType === PumpHistoryEntryType.EndResultTotals || entryType === PumpHistoryEntryType.DailyTotals515 || entryType === PumpHistoryEntryType.DailyTotals522 || entryType === PumpHistoryEntryType.DailyTotals523
+        return entryType === PumpHistoryEntryType.EndResultTotals ||
+            entryType === PumpHistoryEntryType.DailyTotals515 ||
+            entryType === PumpHistoryEntryType.DailyTotals522 ||
+            entryType === PumpHistoryEntryType.DailyTotals523
     }
 
     private fun fix2DigitYear(year: Int): Int {
@@ -474,13 +525,10 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
     }
 
     companion object {
+
         private fun getFormattedValue(value: Float, decimals: Int): String {
             return String.format(Locale.ENGLISH, "%." + decimals + "f", value)
         }
     }
 
-    init {
-        super.aapsLogger = aapsLogger
-        this.medtronicUtil = medtronicUtil
-    }
 }

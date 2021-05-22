@@ -41,5 +41,11 @@ class GetHistoryPageCarelinkMessageBody : CarelinkLongMessageBody {
     }
 
     val frameData: ByteArray
-        get() = ByteUtil.substring(data!!, 1, data!!.size - 1)
+        get() {
+            return if (data == null) {
+                byteArrayOf()
+            } else {
+                ByteUtil.substring(data!!, 1, data!!.size - 1)
+            }
+        }
 }

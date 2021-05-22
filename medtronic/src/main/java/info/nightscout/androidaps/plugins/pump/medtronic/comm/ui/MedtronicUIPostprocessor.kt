@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.ui
 
-import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -38,7 +37,7 @@ class MedtronicUIPostprocessor @Inject constructor(
     // where responses won't be directly used
     fun postProcessData(uiTask: MedtronicUITask) {
         when (uiTask.commandType) {
-            MedtronicCommandType.SetBasalProfileSTD                          -> {
+            MedtronicCommandType.SetBasalProfileSTD  -> {
                 val response = uiTask.result as Boolean?
                 if (response!!) {
                     val basalProfile = uiTask.getParameter(0) as BasalProfile
@@ -50,21 +49,22 @@ class MedtronicUIPostprocessor @Inject constructor(
                 }
             }
 
-            MedtronicCommandType.GetBasalProfileSTD                          -> {
+            MedtronicCommandType.GetBasalProfileSTD  -> {
                 val basalProfile = uiTask.result as BasalProfile?
 
                 //aapsLogger.debug("D: basal profile on read: " + basalProfile);
                 try {
-                    // TODO need to refactor
-                    val profilesByHour = basalProfile!!.getProfilesByHour(medtronicPumpPlugin.pumpDescription.pumpType)
-                    if (profilesByHour != null) {
-                        medtronicPumpStatus.basalsByHour = profilesByHour
-                        medtronicPumpStatus.basalProfileStatus = BasalProfileStatus.ProfileOK
-                        //aapsLogger.debug("D: basal profile on read: basalsByHour: " +  BasalProfile.getProfilesByHourToString(medtronicPumpStatus.basalsByHour));
-                    } else {
-                        uiTask.responseType = MedtronicUIResponseType.Error
-                        uiTask.errorDescription = "No profile found."
-                        aapsLogger.error(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "Basal Profile was NOT valid. [%s]", basalProfile.basalProfileToStringError()))
+                    if (basalProfile != null) {
+                        val profilesByHour = basalProfile.getProfilesByHour(medtronicPumpPlugin.pumpDescription.pumpType)
+                        if (!BasalProfile.isBasalProfileByHourUndefined(profilesByHour)) {
+                            medtronicPumpStatus.basalsByHour = profilesByHour
+                            medtronicPumpStatus.basalProfileStatus = BasalProfileStatus.ProfileOK
+                            //aapsLogger.debug("D: basal profile on read: basalsByHour: " +  BasalProfile.getProfilesByHourToString(medtronicPumpStatus.basalsByHour));
+                        } else {
+                            uiTask.responseType = MedtronicUIResponseType.Error
+                            uiTask.errorDescription = "No profile found."
+                            aapsLogger.error(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "Basal Profile was NOT valid. [%s]", basalProfile.basalProfileToStringError()))
+                        }
                     }
                 } catch (ex: Exception) {
                     aapsLogger.error(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "Basal Profile was returned, but was invalid. [%s]", basalProfile!!.basalProfileToStringError()))
@@ -73,26 +73,26 @@ class MedtronicUIPostprocessor @Inject constructor(
                 }
             }
 
-            MedtronicCommandType.SetBolus                                    -> {
+            MedtronicCommandType.SetBolus            -> {
                 medtronicPumpStatus.lastBolusAmount = uiTask.getDoubleFromParameters(0)
                 medtronicPumpStatus.lastBolusTime = Date()
             }
 
-            MedtronicCommandType.GetRemainingInsulin                         -> {
+            MedtronicCommandType.GetRemainingInsulin -> {
                 medtronicPumpStatus.reservoirRemainingUnits = uiTask.result as Double
             }
 
-            MedtronicCommandType.CancelTBR                                   -> {
+            MedtronicCommandType.CancelTBR           -> {
                 medtronicPumpStatus.tempBasalStart = null
                 medtronicPumpStatus.tempBasalAmount = null
                 medtronicPumpStatus.tempBasalLength = null
             }
 
-            MedtronicCommandType.GetRealTimeClock                            -> {
+            MedtronicCommandType.GetRealTimeClock    -> {
                 processTime(uiTask)
             }
 
-            MedtronicCommandType.SetRealTimeClock                            -> {
+            MedtronicCommandType.SetRealTimeClock    -> {
                 val response = uiTask.result as Boolean
                 aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "New time was %s set.", if (response) "" else "NOT"))
                 if (response) {
@@ -100,7 +100,7 @@ class MedtronicUIPostprocessor @Inject constructor(
                 }
             }
 
-            MedtronicCommandType.GetBatteryStatus                            -> {
+            MedtronicCommandType.GetBatteryStatus    -> {
                 val batteryStatusDTO = uiTask.result as BatteryStatusDTO?
                 medtronicPumpStatus.batteryRemaining = batteryStatusDTO!!.getCalculatedPercent(medtronicPumpStatus.batteryType)
                 if (batteryStatusDTO.voltage != null) {
@@ -109,7 +109,7 @@ class MedtronicUIPostprocessor @Inject constructor(
                 aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "BatteryStatus: %s", batteryStatusDTO.toString()))
             }
 
-            MedtronicCommandType.PumpModel                                   -> {
+            MedtronicCommandType.PumpModel           -> {
                 if (medtronicPumpStatus.medtronicDeviceType !== medtronicUtil.medtronicPumpModel) {
                     aapsLogger.warn(LTag.PUMP, "Configured pump is different then pump detected !")
                     medtronicUtil.sendNotification(MedtronicNotificationType.PumpTypeNotSame, resourceHelper, rxBus)
@@ -117,23 +117,27 @@ class MedtronicUIPostprocessor @Inject constructor(
             }
 
             MedtronicCommandType.Settings_512,
-            MedtronicCommandType.Settings -> {
+            MedtronicCommandType.Settings            -> {
                 postProcessSettings(uiTask)
             }
 
-            else                                                             -> {
+            else                                     -> {
             }
         }
     }
 
     private fun processTime(uiTask: MedtronicUITask) {
         val clockDTO = uiTask.result as ClockDTO?
-        val dur = Duration(clockDTO!!.pumpTime!!.toDateTime(DateTimeZone.UTC),
-            clockDTO.localDeviceTime!!.toDateTime(DateTimeZone.UTC))
-        clockDTO.timeDifference = dur.standardSeconds.toInt()
-        medtronicUtil.pumpTime = clockDTO
-        aapsLogger.debug(LTag.PUMP, "Pump Time: " + clockDTO.localDeviceTime + ", DeviceTime=" + clockDTO.pumpTime +  //
-            ", diff: " + dur.standardSeconds + " s")
+        if (clockDTO != null) {
+            val dur = Duration(clockDTO.pumpTime.toDateTime(DateTimeZone.UTC),
+                clockDTO.localDeviceTime.toDateTime(DateTimeZone.UTC))
+            clockDTO.timeDifference = dur.standardSeconds.toInt()
+            medtronicUtil.pumpTime = clockDTO
+            aapsLogger.debug(LTag.PUMP, "Pump Time: " + clockDTO.localDeviceTime + ", DeviceTime=" + clockDTO.pumpTime +  //
+                ", diff: " + dur.standardSeconds + " s")
+        } else {
+            aapsLogger.debug(LTag.PUMP, "Problem with returned data: " + medtronicUtil.gsonInstance.toJson(uiTask.result))
+        }
     }
 
     private fun postProcessSettings(uiTask: MedtronicUITask) {

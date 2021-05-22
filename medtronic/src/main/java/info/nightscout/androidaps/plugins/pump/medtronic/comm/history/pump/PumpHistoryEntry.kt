@@ -19,12 +19,12 @@ import java.util.*
 class PumpHistoryEntry : MedtronicHistoryEntry() {
 
     @Expose
-    var entryType: PumpHistoryEntryType? = null
+    var entryType: PumpHistoryEntryType = PumpHistoryEntryType.None
         private set
 
     override var opCode: Byte? = null
         // this is set only when we have unknown entry...
-        get() = if (field == null) entryType!!.code else field
+        get() = if (field == null) entryType.code else field
         set(value) {
             field = value
         }
@@ -41,15 +41,19 @@ class PumpHistoryEntry : MedtronicHistoryEntry() {
         sizes[0] = entryType.getHeadLength(medtronicDeviceType)
         sizes[1] = entryType.dateLength
         sizes[2] = entryType.getBodyLength(medtronicDeviceType)
-        if (this.entryType != null && atechDateTime != 0L) generatePumpId()
+        if (isEntryTypeSet() && atechDateTime != 0L) pumpId = generatePumpId()
     }
 
-    private fun generatePumpId() : Long {
-        return entryType!!.code + atechDateTime * 1000L
+    override fun generatePumpId() : Long {
+        return entryType.code + atechDateTime * 1000L
+    }
+
+    override fun isEntryTypeSet(): Boolean {
+        return this.entryType != PumpHistoryEntryType.None
     }
 
     override val toStringStart: String
-        get() = ("PumpHistoryEntry [type=" + StringUtil.getStringInLength(entryType!!.name, 20) + " ["
+        get() = ("PumpHistoryEntry [type=" + StringUtil.getStringInLength(entryType.name, 20) + " ["
             + StringUtil.getStringInLength("" + opCode, 3) + ", 0x"
             + ByteUtil.shortHexString(opCode!!) + "]")
 
@@ -65,16 +69,16 @@ class PumpHistoryEntry : MedtronicHistoryEntry() {
     }
 
     override val entryTypeName: String
-        get() = entryType!!.name
+        get() = entryType.name
 
     override val dateLength: Int
-        get() = entryType!!.dateLength
+        get() = entryType.dateLength
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is PumpHistoryEntry) return false
         val that = other //as PumpHistoryEntry
-        return this.pumpId === that.pumpId
+        return this.pumpId == that.pumpId
         // return entryType == that.entryType &&  //
         //     atechDateTime === that.atechDateTime // && //
         // Objects.equals(this.decodedData, that.decodedData);
@@ -101,24 +105,26 @@ class PumpHistoryEntry : MedtronicHistoryEntry() {
     class Comparator : java.util.Comparator<PumpHistoryEntry> {
         override fun compare(o1: PumpHistoryEntry, o2: PumpHistoryEntry): Int {
             val data = (o2.atechDateTime - o1.atechDateTime).toInt()
-            return if (data != 0) data else o2.entryType!!.code - o1.entryType!!.code
+            return if (data != 0) data else o2.entryType.code - o1.entryType.code
         }
     }
 
-    override var pumpId: Long? = null
+    override var pumpId: Long = 0L
         get() {
-            field = generatePumpId()
+            if (field==0L) {
+                field = generatePumpId()
+            }
             return field
         }
         set(pumpId) {
-            super.pumpId = pumpId
+            field = pumpId
         }
 
     fun hasBolusChanged(entry: PumpHistoryEntry) : Boolean {
-        if (entryType!=null && entryType == PumpHistoryEntryType.Bolus) {
+        if (entryType == PumpHistoryEntryType.Bolus) {
             val thisOne: BolusDTO =  this.decodedData["Object"] as BolusDTO
-            
-            if (entry.entryType!=null && entry.entryType == PumpHistoryEntryType.Bolus) {
+
+            if (entry.entryType == PumpHistoryEntryType.Bolus) {
                 val otherOne: BolusDTO = entry.decodedData["Object"] as BolusDTO
                 return (thisOne.value.equals(otherOne.value))
             } else

@@ -54,7 +54,7 @@ class MedtronicHistoryActivity : DaggerActivity() {
             filteredHistoryList.addAll(list)
         } else {
             for (pumpHistoryEntry in list) {
-                if (pumpHistoryEntry.entryType!!.group === group) {
+                if (pumpHistoryEntry.entryType.group === group) {
                     filteredHistoryList.add(pumpHistoryEntry)
                 }
             }
@@ -159,7 +159,7 @@ class MedtronicHistoryActivity : DaggerActivity() {
             val record = historyList[position]
             //if (record != null) {
                 holder.timeView.text = record.dateTimeString
-                holder.typeView.text = record.entryType!!.description
+                holder.typeView.text = record.entryType.description
                 holder.valueView.text = record.displayableValue
             //}
         }

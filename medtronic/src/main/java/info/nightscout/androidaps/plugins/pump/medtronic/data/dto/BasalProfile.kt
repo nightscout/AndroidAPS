@@ -33,7 +33,7 @@ class BasalProfile {
     private val aapsLogger: AAPSLogger
 
     @Expose
-    lateinit var rawData  : ByteArray // store as byte array to make transport (via parcel) easier
+    lateinit var rawData: ByteArray // store as byte array to make transport (via parcel) easier
         private set
 
     private var listEntries: MutableList<BasalProfileEntry>? = null
@@ -49,7 +49,7 @@ class BasalProfile {
     }
 
     fun init() {
-        rawData = byteArrayOf(0,0,0x3f)
+        rawData = byteArrayOf(0, 0, 0x3f)
     }
 
     private fun setRawData(data: ByteArray): Boolean {
@@ -268,7 +268,7 @@ class BasalProfile {
                 // if (pumpType == null)
                 //     basalByHour[j] = current.rate
                 // else
-                    basalByHour[j] = pumpType.determineCorrectBasalSize(current.rate)
+                basalByHour[j] = pumpType.determineCorrectBasalSize(current.rate)
             }
         }
         return basalByHour
@@ -291,9 +291,8 @@ class BasalProfile {
         return true
     }
 
-
-
     companion object {
+
         const val MAX_RAW_DATA_SIZE = 48 * 3 + 1
         private const val DEBUG_BASALPROFILE = false
 
@@ -309,6 +308,16 @@ class BasalProfile {
                 stringBuilder.append(" ")
             }
             return stringBuilder.toString()
+        }
+
+        @JvmStatic
+        fun isBasalProfileByHourUndefined(basalByHour: DoubleArray): Boolean {
+            for (i in 0..23) {
+                if (basalByHour[i] > 0.0) {
+                    return false;
+                }
+            }
+            return true
         }
     }
 }

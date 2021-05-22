@@ -296,13 +296,13 @@ class MedtronicFragment : DaggerFragment() {
         val bolus = medtronicPumpStatus.lastBolusAmount
         val bolusTime = medtronicPumpStatus.lastBolusTime
         if (bolus != null && bolusTime != null) {
-            val agoMsc = System.currentTimeMillis() - medtronicPumpStatus.lastBolusTime!!.time
+            val agoMsc = System.currentTimeMillis() - bolusTime.time
             val bolusMinAgo = agoMsc.toDouble() / 60.0 / 1000.0
             val unit = resourceHelper.gs(R.string.insulin_unit_shortname)
             val ago = when {
                 agoMsc < 60 * 1000 -> resourceHelper.gs(R.string.medtronic_pump_connected_now)
-                bolusMinAgo < 60   -> dateUtil.minAgo(resourceHelper, medtronicPumpStatus.lastBolusTime!!.time)
-                else               -> dateUtil.hourAgo(medtronicPumpStatus.lastBolusTime!!.time, resourceHelper)
+                bolusMinAgo < 60   -> dateUtil.minAgo(resourceHelper, bolusTime.time)
+                else               -> dateUtil.hourAgo(bolusTime.time, resourceHelper)
             }
             binding.lastBolus.text = resourceHelper.gs(R.string.mdt_last_bolus, bolus, unit, ago)
         } else {
@@ -315,9 +315,9 @@ class MedtronicFragment : DaggerFragment() {
 
         // TBR
         var tbrStr = ""
-        var tbrRemainingTime: Int? = medtronicPumpStatus.tbrRemainingTime
+        val tbrRemainingTime: Int? = medtronicPumpStatus.tbrRemainingTime
 
-        if (tbrRemainingTime!=null) {
+        if (tbrRemainingTime != null) {
             tbrStr = resourceHelper.gs(R.string.mdt_tbr_remaining, medtronicPumpStatus.tempBasalAmount, tbrRemainingTime);
         }
         binding.tempBasal.text = tbrStr

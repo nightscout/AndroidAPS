@@ -22,8 +22,7 @@ class PumpHistoryResult(private val aapsLogger: AAPSLogger, searchEntry: PumpHis
     var unprocessedEntries: List<PumpHistoryEntry> = ArrayList()
     var validEntries: MutableList<PumpHistoryEntry> = ArrayList()
 
-
-    fun addHistoryEntries(entries: List<PumpHistoryEntry>, page: Int) {
+    fun addHistoryEntries(entries: List<PumpHistoryEntry> /*, page: Int*/) {
         unprocessedEntries = entries
         //aapsLogger.debug(LTag.PUMPCOMM,"PumpHistoryResult. Unprocessed entries: {}", MedtronicUtil.getGsonInstance().toJson(entries));
         processEntries()
@@ -42,7 +41,7 @@ class PumpHistoryResult(private val aapsLogger: AAPSLogger, searchEntry: PumpHis
 
                 //Collections.sort(this.unprocessedEntries, new PumpHistoryEntry.Comparator());
                 aapsLogger.debug(LTag.PUMPCOMM, "PE. PumpHistoryResult. Search entry date: " + searchEntry!!.atechDateTime)
-                val date = searchEntry.atechDateTime
+                //val date = searchEntry.atechDateTime
                 for (unprocessedEntry in unprocessedEntries) {
                     if (unprocessedEntry.equals(searchEntry)) {
                         //aapsLogger.debug(LTag.PUMPCOMM,"PE. Item found {}.", unprocessedEntry);
@@ -60,7 +59,7 @@ class PumpHistoryResult(private val aapsLogger: AAPSLogger, searchEntry: PumpHis
             SearchType.Date      -> {
                 aapsLogger.debug(LTag.PUMPCOMM, "PE. Date search: Search date: " + searchDate)
                 for (unprocessedEntry in unprocessedEntries) {
-                    if (unprocessedEntry.atechDateTime == null || unprocessedEntry.atechDateTime == 0L) {
+                    if (unprocessedEntry.atechDateTime == 0L) {
                         aapsLogger.debug(LTag.PUMPCOMM, "PE. PumpHistoryResult. Search entry date: Entry with no date: $unprocessedEntry")
                         continue
                     }
@@ -83,7 +82,7 @@ class PumpHistoryResult(private val aapsLogger: AAPSLogger, searchEntry: PumpHis
     }
 
     override fun toString(): String {
-        return "PumpHistoryResult [unprocessed=" + unprocessedEntries.size  +  //
+        return "PumpHistoryResult [unprocessed=" + unprocessedEntries.size +  //
             ", valid=" + validEntries.size +  //
             ", searchEntry=" + searchEntry +  //
             ", searchDate=" + searchDate +  //
@@ -99,10 +98,8 @@ class PumpHistoryResult(private val aapsLogger: AAPSLogger, searchEntry: PumpHis
     val latestEntry: PumpHistoryEntry?
         get() = if (validEntries.size == 0) null else validEntries[0]
 
-
     // val isSearchRequired: Boolean
     //     get() = searchType != SearchType.None
-
 
     internal enum class SearchType {
         None,  //

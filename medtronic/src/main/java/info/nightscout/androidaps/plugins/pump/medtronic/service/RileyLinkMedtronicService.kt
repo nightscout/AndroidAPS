@@ -39,7 +39,7 @@ class RileyLinkMedtronicService  // This empty constructor must be kept, otherwi
 
     private val mBinder: IBinder = LocalBinder()
     private var serialChanged = false
-    private var frequencies: Array<String?>? = null
+    lateinit var frequencies: Array<String>
     private var rileyLinkAddress: String? = null
     private var rileyLinkAddressChanged = false
     private var encodingType: RileyLinkEncodingType? = null
@@ -68,9 +68,9 @@ class RileyLinkMedtronicService  // This empty constructor must be kept, otherwi
      * If you have customized RileyLinkServiceData you need to override this
      */
     override fun initRileyLinkServiceData() {
-        frequencies = arrayOfNulls(2)
-        frequencies!![0] = resourceHelper.gs(R.string.key_medtronic_pump_frequency_us_ca)
-        frequencies!![1] = resourceHelper.gs(R.string.key_medtronic_pump_frequency_worldwide)
+        frequencies = arrayOf()
+        frequencies[0] = resourceHelper.gs(R.string.key_medtronic_pump_frequency_us_ca)
+        frequencies[1] = resourceHelper.gs(R.string.key_medtronic_pump_frequency_worldwide)
         rileyLinkServiceData.targetDevice = RileyLinkTargetDevice.MedtronicPump
         setPumpIDString(sp.getString(MedtronicConst.Prefs.PumpSerial, "000000"))
 
@@ -169,12 +169,12 @@ class RileyLinkMedtronicService  // This empty constructor must be kept, otherwi
                 medtronicPumpStatus.errorDescription = resourceHelper.gs(R.string.medtronic_error_pump_frequency_not_set)
                 return false
             } else {
-                if (pumpFrequency != frequencies!![0] && pumpFrequency != frequencies!![1]) {
+                if (pumpFrequency != frequencies[0] && pumpFrequency != frequencies[1]) {
                     medtronicPumpStatus.errorDescription = resourceHelper.gs(R.string.medtronic_error_pump_frequency_invalid)
                     return false
                 } else {
                     medtronicPumpStatus.pumpFrequency = pumpFrequency
-                    val isFrequencyUS = pumpFrequency == frequencies!![0]
+                    val isFrequencyUS = pumpFrequency == frequencies[0]
                     val newTargetFrequency = if (isFrequencyUS) //
                         RileyLinkTargetFrequency.Medtronic_US else RileyLinkTargetFrequency.Medtronic_WorldWide
                     if (rileyLinkServiceData.rileyLinkTargetFrequency != newTargetFrequency) {

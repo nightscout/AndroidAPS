@@ -1,18 +1,17 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.history.cgms
 
+import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper.Companion.getLogger
+import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.MedtronicHistoryDecoder
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RecordDecodeStatus
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.cgms.CGMSHistoryEntryType
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.cgms.CGMSHistoryEntryType.Companion.getByCode
+import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
 import okhttp3.internal.and
 import org.joda.time.LocalDateTime
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import java.util.*
-import org.slf4j.LoggerFactory.getLogger as getLogger1
 
 /**
  * This file was taken from GGC - GNU Gluco Control (ggc.sourceforge.net), application for diabetes
@@ -21,13 +20,17 @@ import org.slf4j.LoggerFactory.getLogger as getLogger1
  *
  * Author: Andy {andy.rozman@gmail.com}
  */
-class MedtronicCGMSHistoryDecoder : MedtronicHistoryDecoder<CGMSHistoryEntry>() {
+class MedtronicCGMSHistoryDecoder constructor(
+    aapsLogger: AAPSLogger,
+    medtronicUtil: MedtronicUtil,
+    bitUtils: ByteUtil
+) : MedtronicHistoryDecoder<CGMSHistoryEntry>(aapsLogger, medtronicUtil, bitUtils) {
 
     override fun decodeRecord(record: CGMSHistoryEntry): RecordDecodeStatus? {
         return try {
             decodeRecordInternal(record)
         } catch (ex: Exception) {
-            aapsLogger.error(LTag.PUMPCOMM,"     Error decoding: type={}, ex={}", record.entryType!!.name, ex.message, ex)
+            aapsLogger.error(LTag.PUMPCOMM, "     Error decoding: type={}, ex={}", record.entryType!!.name, ex.message, ex)
             RecordDecodeStatus.Error
         }
     }
@@ -111,7 +114,7 @@ class MedtronicCGMSHistoryDecoder : MedtronicHistoryDecoder<CGMSHistoryEntry>() 
             }
         } while (counter < dataClear.size)
         outList.reverse()
-        val reversedOutList =  outList  // reverseList(outList, CGMSHistoryEntry::class.java)
+        val reversedOutList = outList  // reverseList(outList, CGMSHistoryEntry::class.java)
         //var timeStamp: Long? = null
         var dateTime: LocalDateTime? = null
         var getIndex = 0
@@ -127,7 +130,7 @@ class MedtronicCGMSHistoryDecoder : MedtronicHistoryDecoder<CGMSHistoryEntry>() 
             } else {
                 if (dateTime != null) entry.setDateTime(dateTime, getIndex)
             }
-            aapsLogger.debug(LTag.PUMPCOMM,"Record: {}", entry)
+            aapsLogger.debug(LTag.PUMPCOMM, "Record: {}", entry)
         }
         return reversedOutList
     }
@@ -171,7 +174,7 @@ class MedtronicCGMSHistoryDecoder : MedtronicHistoryDecoder<CGMSHistoryEntry>() 
             entry.atechDateTime = atechDateTime
             atechDateTime
         } else if (entry.entryType!!.dateType === CGMSHistoryEntryType.DateType.SecondSpecific) {
-            aapsLogger.warn(LTag.PUMPCOMM,"parseDate for SecondSpecific type is not implemented.")
+            aapsLogger.warn(LTag.PUMPCOMM, "parseDate for SecondSpecific type is not implemented.")
             throw RuntimeException()
             // return null;
         } else null
@@ -246,7 +249,7 @@ class MedtronicCGMSHistoryDecoder : MedtronicHistoryDecoder<CGMSHistoryEntry>() 
         val packetType: String
         packetType = when (entry.getRawDataByIndex(1)) {
             0x02.toByte() -> "init"
-            else -> "unknown"
+            else          -> "unknown"
         }
         entry.addDecodedData("packetType", packetType)
     }

@@ -35,7 +35,6 @@ import org.joda.time.LocalDateTime
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.jvm.Throws
 
 /**
  * Original file created by geoff on 5/30/16.
@@ -54,11 +53,11 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
     @Inject lateinit var medtronicConverter: MedtronicConverter
     @Inject lateinit var medtronicUtil: MedtronicUtil
     @Inject lateinit var medtronicPumpHistoryDecoder: MedtronicPumpHistoryDecoder
-    
+
     private val MAX_COMMAND_TRIES = 3
     private val DEFAULT_TIMEOUT = 2000
     private val RILEYLINK_TIMEOUT: Long = 15 * 60 * 1000 // 15 min
-        
+
     var errorResponse: String? = null
         private set
     private val debugSetCommands = false
@@ -266,8 +265,7 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
             while (!done) {
                 // examine current response for problems.
                 val frameData = currentResponse.frameData
-                if (frameData != null && frameData.size > 0
-                    && currentResponse.frameNumber == expectedFrameNum) {
+                if (frameData.size > 0 && currentResponse.frameNumber == expectedFrameNum) {
                     // success! got a frame.
                     if (frameData.size != 64) {
                         aapsLogger.warn(LTag.PUMPCOMM, "Expected frame of length 64, got frame of length " + frameData.size)
@@ -287,7 +285,7 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
                         done = true // successful completion
                     }
                 } else {
-                    if (frameData == null) {
+                    if (frameData.size == 0) {
                         aapsLogger.error(LTag.PUMPCOMM, "null frame data, retrying")
                     } else if (currentResponse.frameNumber != expectedFrameNum) {
                         aapsLogger.warn(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "Expected frame number %d, received %d (retrying)", expectedFrameNum,
@@ -335,7 +333,7 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
             rawHistoryPage.dumpToDebug()
             val medtronicHistoryEntries = medtronicPumpHistoryDecoder.processPageAndCreateRecords(rawHistoryPage)
             aapsLogger.debug(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "getPumpHistory: Found %d history entries.", medtronicHistoryEntries.size))
-            pumpTotalResult.addHistoryEntries(medtronicHistoryEntries, pageNumber)
+            pumpTotalResult.addHistoryEntries(medtronicHistoryEntries) //, pageNumber)
             aapsLogger.debug(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "getPumpHistory: Search status: Search finished: %b", pumpTotalResult.isSearchFinished))
             if (pumpTotalResult.isSearchFinished) {
                 medtronicPumpStatus.pumpDeviceState = PumpDeviceState.Sleeping
@@ -350,7 +348,7 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
         return when (type) {
             RLMessageType.PowerOn        -> medtronicUtil.buildCommandPayload(rileyLinkServiceData, MedtronicCommandType.RFPowerOn, byteArrayOf(2, 1, receiverDeviceAwakeForMinutes.toByte()))
             RLMessageType.ReadSimpleData -> medtronicUtil.buildCommandPayload(rileyLinkServiceData, MedtronicCommandType.PumpModel, null)
-            else -> ByteArray(0)
+            else                         -> ByteArray(0)
         }
     }
 
@@ -507,8 +505,6 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
         }
     }
 
-
-
     fun getBasalProfile(): BasalProfile? {
 
         // wakeUp
@@ -552,7 +548,7 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
                 }
 
 
-                aapsLogger.debug(LTag.PUMPCOMM,"End Response: {}", ByteUtil.getHex(data))
+                aapsLogger.debug(LTag.PUMPCOMM, "End Response: {}", ByteUtil.getHex(data))
 
                 var basalProfile: BasalProfile? = medtronicConverter.decodeBasalProfile(medtronicPumpPlugin.pumpDescription.pumpType, data)
                 // checkResponseRawContent(data, commandType) {
@@ -593,26 +589,26 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
     }
 
     fun getPumpTime(): ClockDTO? {
-        val clockDTO = ClockDTO()
-        clockDTO.localDeviceTime = LocalDateTime()
+        val localTime = LocalDateTime()
         val responseObject = sendAndGetResponseWithCheck(MedtronicCommandType.GetRealTimeClock) { _, _, rawContent ->
             medtronicConverter.decodeTime(rawContent)
         }
         if (responseObject != null) {
-            clockDTO.pumpTime = responseObject
-            return clockDTO
+            return ClockDTO(localDeviceTime = localTime, pumpTime = responseObject)
         }
         return null
     }
 
     fun getTemporaryBasal(): TempBasalPair? {
         return sendAndGetResponseWithCheck(MedtronicCommandType.ReadTemporaryBasal) { _, _, rawContent ->
-            TempBasalPair(aapsLogger, rawContent!!) }
+            TempBasalPair(aapsLogger, rawContent!!)
+        }
     }
 
     fun getPumpSettings(): Map<String, PumpSettingDTO>? {
         return sendAndGetResponseWithCheck(getSettings(medtronicUtil.medtronicPumpModel)) { _, _, rawContent ->
-            medtronicConverter.decodeSettingsLoop(rawContent) }
+            medtronicConverter.decodeSettingsLoop(rawContent)
+        }
     }
 
     fun setBolus(units: Double): Boolean {

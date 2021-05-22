@@ -12,7 +12,7 @@ class TempBasalProcessDTO constructor(var itemOne: PumpHistoryEntry,
         get() = itemOne.atechDateTime
 
     val pumpId: Long
-        get() = itemOne.pumpId!!
+        get() = itemOne.pumpId
 
     val duration: Int
         get() = if (itemTwo == null) {

@@ -7,8 +7,6 @@ import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
 import org.apache.commons.lang3.StringUtils
 import java.util.*
-import javax.inject.Inject
-import kotlin.jvm.Throws
 
 /**
  * This file was taken from GGC - GNU Gluco Control (ggc.sourceforge.net), application for diabetes
@@ -19,9 +17,17 @@ import kotlin.jvm.Throws
  */
 abstract class MedtronicHistoryDecoder<T : MedtronicHistoryEntry?> : MedtronicHistoryDecoderInterface<T> {
 
-    @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var medtronicUtil: MedtronicUtil
-    @Inject lateinit var bitUtils: ByteUtil
+    constructor(aapsLogger: AAPSLogger,
+                medtronicUtil: MedtronicUtil,
+                bitUtils: ByteUtil) {
+        this.aapsLogger = aapsLogger
+        this.medtronicUtil = medtronicUtil
+        this.bitUtils = bitUtils
+    }
+
+    var aapsLogger: AAPSLogger
+    var medtronicUtil: MedtronicUtil
+    var bitUtils: ByteUtil
 
     // STATISTICS (remove at later time or not)
     protected var statisticsEnabled = true
