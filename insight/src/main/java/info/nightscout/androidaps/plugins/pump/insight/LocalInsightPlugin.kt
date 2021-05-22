@@ -731,14 +731,17 @@ class LocalInsightPlugin @Inject constructor(
     private fun confirmAlert(alertType: AlertType) {
         try {
             val started = dateUtil.now()
-            while (dateUtil.now() - started < 10000) {
-                val activeAlertMessage = connectionService!!.requestMessage(GetActiveAlertMessage()).await()
-                if (activeAlertMessage.alert != null) {
-                    if (activeAlertMessage.alert.alertType == alertType) {
-                        val confirmMessage = ConfirmAlertMessage()
-                        confirmMessage.setAlertID(activeAlertMessage.alert.alertId)
-                        connectionService!!.requestMessage(confirmMessage).await()
-                    } else break
+            var continueLoop = true                                             //Todo improve this
+            while (dateUtil.now() - started < 10000 && continueLoop) {
+                connectionService?.run {
+                    val activeAlertMessage = requestMessage(GetActiveAlertMessage()).await()
+                    activeAlertMessage.alert?.let {
+                        if (it.alertType == alertType) {
+                            val confirmMessage = ConfirmAlertMessage()
+                            confirmMessage.setAlertID(it.alertId)
+                            requestMessage(confirmMessage).await()
+                        } else continueLoop = false                            // break not accepted here because jump accross class bundary
+                    }
                 }
             }
         } catch (e: AppLayerErrorException) {
