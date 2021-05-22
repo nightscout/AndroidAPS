@@ -1,66 +1,59 @@
-package info.nightscout.androidaps.plugins.pump.insight.connection_service;
+package info.nightscout.androidaps.plugins.pump.insight.connection_service
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import info.nightscout.androidaps.extensions.notifyAll
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage
+import java.util.*
 
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage;
+class MessageQueue {
 
-public class MessageQueue {
-
-    MessageRequest activeRequest;
-    final List<MessageRequest> messageRequests = new ArrayList<>();
-
-    public MessageRequest getActiveRequest() {
-        return activeRequest;
-    }
-
-    public void completeActiveRequest(AppLayerMessage response) {
-        if (activeRequest == null) return;
-        synchronized (activeRequest) {
-            activeRequest.response = response;
-            activeRequest.notifyAll();
+    var activeRequest: MessageRequest<*>? = null
+    val messageRequests: MutableList<MessageRequest<*>> = ArrayList()
+    fun completeActiveRequest(response: AppLayerMessage?) {
+        if (activeRequest == null) return
+        synchronized(activeRequest!!) {
+            activeRequest!!.response = response
+            activeRequest!!.notifyAll()
         }
-        activeRequest = null;
+        activeRequest = null
     }
 
-    public void completeActiveRequest(Exception exception) {
-        if (activeRequest == null) return;
-        synchronized (activeRequest) {
-            activeRequest.exception = exception;
-            activeRequest.notifyAll();
+    fun completeActiveRequest(exception: Exception?) {
+        if (activeRequest == null) return
+        synchronized(activeRequest!!) {
+            activeRequest!!.exception = exception
+            activeRequest!!.notifyAll()
         }
-        activeRequest = null;
+        activeRequest = null
     }
 
-    public void completePendingRequests(Exception exception) {
-        for (MessageRequest messageRequest : messageRequests) {
-            synchronized (messageRequest) {
-                messageRequest.exception = exception;
-                messageRequest.notifyAll();
+    fun completePendingRequests(exception: Exception?) {
+        for (messageRequest in messageRequests) {
+            synchronized(messageRequest) {
+                messageRequest.exception = exception
+                messageRequest.notifyAll()
             }
         }
-        messageRequests.clear();
+        messageRequests.clear()
     }
 
-    public void enqueueRequest(MessageRequest messageRequest) {
-        messageRequests.add(messageRequest);
-        Collections.sort(messageRequests);
+    fun enqueueRequest(messageRequest: MessageRequest<*>) {
+        messageRequests.add(messageRequest)
+        Collections.sort(messageRequests)
     }
 
-    public void nextRequest() {
-        if (messageRequests.size() != 0) {
-            activeRequest = messageRequests.get(0);
-            messageRequests.remove(0);
+    fun nextRequest() {
+        if (messageRequests.size != 0) {
+            activeRequest = messageRequests[0]
+            messageRequests.removeAt(0)
         }
     }
 
-    public boolean hasPendingMessages() {
-        return messageRequests.size() != 0;
+    fun hasPendingMessages(): Boolean {
+        return messageRequests.size != 0
     }
 
-    public void reset() {
-        activeRequest = null;
-        messageRequests.clear();
+    fun reset() {
+        activeRequest = null
+        messageRequests.clear()
     }
 }

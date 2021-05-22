@@ -166,9 +166,9 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
     }
 
     private fun requestNextMessage() {
-        while (messageQueue.getActiveRequest() == null && messageQueue.hasPendingMessages()) {
+        while (messageQueue.activeRequest == null && messageQueue.hasPendingMessages()) {
             messageQueue.nextRequest()
-            val service = messageQueue.getActiveRequest().request.service
+            val service = messageQueue.activeRequest?.request?.service
             if (service !== Service.CONNECTION && !activatedServices.contains(service)) {
                 if (service!!.servicePassword == null) {
                     val activateServiceMessage = ActivateServiceMessage()
@@ -182,7 +182,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
                     serviceChallengeMessage.setVersion(service.version)
                     sendAppLayerMessage(serviceChallengeMessage)
                 }
-            } else sendAppLayerMessage(messageQueue.getActiveRequest().request)
+            } else sendAppLayerMessage(messageQueue.activeRequest?.request)
         }
     }
 
@@ -448,14 +448,16 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
                 Cryptograph.decryptRSA(getKeyPair()!!.privateKey, keyResponse.preMasterSecret),
                 getRandomBytes(),
                 keyResponse.randomData)
-            pairingDataStorage!!.commId = keyResponse.commID
             keyRequest = null
             randomBytes = null
             keyPair = null
             verificationString = derivedKeys.verificationString
-            pairingDataStorage!!.outgoingKey = derivedKeys.outgoingKey
-            pairingDataStorage!!.incomingKey = derivedKeys.incomingKey
-            pairingDataStorage!!.lastNonceSent = Nonce()
+            pairingDataStorage?.run {
+                commId = keyResponse.commID
+                outgoingKey = derivedKeys.outgoingKey
+                incomingKey = derivedKeys.incomingKey
+                lastNonceSent = Nonce()
+            }
             setState(InsightState.SATL_VERIFY_DISPLAY_REQUEST)
             sendSatlMessage(VerifyDisplayRequest())
         } catch (e: InvalidCipherTextException) {
@@ -548,7 +550,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
             if (state !== InsightState.CONNECTED) {
                 handleException(e)
             } else {
-                if (messageQueue.getActiveRequest() == null) {
+                if (messageQueue.activeRequest == null) {
                     handleException(TooChattyPumpException())
                 } else {
                     messageQueue.completeActiveRequest(e)
@@ -576,7 +578,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
             handleException(ReceivedPacketInInvalidStateException())
             return
         }
-        pairingDataStorage!!.firmwareVersions = message.firmwareVersions
+        pairingDataStorage?.run { firmwareVersions = message.firmwareVersions }
         setState(InsightState.APP_ACTIVATE_PARAMETER_SERVICE)
         val activateServiceMessage = ActivateServiceMessage()
         activateServiceMessage.serviceID = Service.PARAMETER.id
@@ -606,11 +608,12 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
             setState(InsightState.APP_FIRMWARE_VERSIONS)
             sendAppLayerMessage(GetFirmwareVersionsMessage())
         } else {
-            if (messageQueue.getActiveRequest() == null) {
+            val activeRequest = messageQueue.activeRequest
+            if (activeRequest == null) {
                 handleException(TooChattyPumpException())
             } else {
-                activatedServices.add(messageQueue.getActiveRequest().request.service)
-                sendAppLayerMessage(messageQueue.getActiveRequest().request)
+                activatedServices.add(activeRequest.request.service)
+                sendAppLayerMessage(activeRequest.request)
             }
         }
     }
@@ -618,9 +621,11 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
     private fun processReadParameterBlockMessage(message: ReadParameterBlockMessage) {
         if (state === InsightState.APP_SYSTEM_IDENTIFICATION) {
             if (message.parameterBlock !is SystemIdentificationBlock) handleException(TooChattyPumpException()) else {
-                val systemIdentification = (message.parameterBlock as SystemIdentificationBlock).systemIdentification
-                pairingDataStorage!!.systemIdentification = systemIdentification
-                pairingDataStorage!!.isPaired = true
+                var systemIdentification = (message.parameterBlock as SystemIdentificationBlock).systemIdentification
+                pairingDataStorage?.run {
+                    systemIdentification = systemIdentification
+                    isPaired = true
+                }
                 aapsLogger.info(LTag.PUMP, "Pairing completed YEE-HAW ♪ ┏(・o･)┛ ♪ ┗( ･o･)┓ ♪")
                 setState(InsightState.CONNECTED)
                 for (stateCallback in stateCallbacks) stateCallback.onPumpPaired()
@@ -629,20 +634,25 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
     }
 
     private fun processServiceChallengeMessage(serviceChallengeMessage: ServiceChallengeMessage) {
-        if (messageQueue.getActiveRequest() == null) {
+        val activeRequest = messageQueue.activeRequest
+        if (activeRequest == null) {
             handleException(TooChattyPumpException())
         } else {
-            val service = messageQueue.getActiveRequest().request.service
+            val service = activeRequest.request.service
             val activateServiceMessage = ActivateServiceMessage()
-            activateServiceMessage.serviceID = service!!.id
-            activateServiceMessage.version = service.version
-            activateServiceMessage.setServicePassword(Cryptograph.getServicePasswordHash(service.servicePassword, serviceChallengeMessage.randomData))
+            if (service != null) {
+                activateServiceMessage.serviceID = service.id
+                activateServiceMessage.version = service.version
+            }
+            if (service != null) {
+                activateServiceMessage.setServicePassword(Cryptograph.getServicePasswordHash(service.servicePassword, serviceChallengeMessage.randomData))
+            }
             sendAppLayerMessage(activateServiceMessage)
         }
     }
 
     private fun processGenericAppLayerMessage(appLayerMessage: AppLayerMessage) {
-        if (messageQueue.getActiveRequest() == null) handleException(TooChattyPumpException()) else {
+        if (messageQueue.activeRequest == null) handleException(TooChattyPumpException()) else {
             try {
                 messageQueue.completeActiveRequest(appLayerMessage)
                 lastDataTime = System.currentTimeMillis()
@@ -654,7 +664,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
     }
 
     fun sendAppLayerMessage(appLayerMessage: AppLayerMessage?) {
-        sendSatlMessage(wrap(appLayerMessage!!))
+        appLayerMessage?.let { sendSatlMessage(wrap(it)) }
     }
 
     @Synchronized override fun onConnectionFail(e: Exception, duration: Long) {
