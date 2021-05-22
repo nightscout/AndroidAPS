@@ -102,11 +102,15 @@ class MedtronicUIPostprocessor @Inject constructor(
 
             MedtronicCommandType.GetBatteryStatus    -> {
                 val batteryStatusDTO = uiTask.result as BatteryStatusDTO?
-                medtronicPumpStatus.batteryRemaining = batteryStatusDTO!!.getCalculatedPercent(medtronicPumpStatus.batteryType)
-                if (batteryStatusDTO.voltage != null) {
-                    medtronicPumpStatus.batteryVoltage = batteryStatusDTO.voltage
+                if (batteryStatusDTO != null) {
+                    medtronicPumpStatus.batteryRemaining = batteryStatusDTO.getCalculatedPercent(medtronicPumpStatus.batteryType)
+                    if (batteryStatusDTO.voltage != null) {
+                        medtronicPumpStatus.batteryVoltage = batteryStatusDTO.voltage
+                    }
+                    aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "BatteryStatus: %s", batteryStatusDTO.toString()))
+                } else {
+                    medtronicPumpStatus.batteryVoltage = null
                 }
-                aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "BatteryStatus: %s", batteryStatusDTO.toString()))
             }
 
             MedtronicCommandType.PumpModel           -> {

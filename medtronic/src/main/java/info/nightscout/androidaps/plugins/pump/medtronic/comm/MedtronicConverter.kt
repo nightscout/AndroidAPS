@@ -8,8 +8,6 @@ import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BasalProfile
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BatteryStatusDTO
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.PumpSettingDTO
-import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.TempBasalPair
-import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandType
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpConfigurationGroup
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
@@ -95,6 +93,7 @@ class MedtronicConverter @Inject constructor(
         if (pumpModel != MedtronicDeviceType.Unknown_Device) {
             if (!medtronicUtil.isModelSet) {
                 medtronicUtil.medtronicPumpModel = pumpModel
+                medtronicUtil.isModelSet = true
             }
         }
         return pumpModel
@@ -129,12 +128,12 @@ class MedtronicConverter @Inject constructor(
     public fun decodeRemainingInsulin(rawData: ByteArray?): Double {
         var startIdx = 0
         val pumpModel = medtronicUtil.medtronicPumpModel
-        val strokes = pumpModel?.bolusStrokes ?: 10
+        val strokes = pumpModel.bolusStrokes //?: 10
         if (strokes == 40) {
             startIdx = 2
         }
         val reqLength = startIdx + 1
-        val value : Double
+        val value: Double
         value = if (reqLength >= rawData!!.size) {
             rawData[startIdx] / (1.0 * strokes)
         } else {
@@ -208,7 +207,7 @@ class MedtronicConverter @Inject constructor(
             rd[settingIndexMaxBasal + 1].toInt())), PumpConfigurationGroup.Basal, map)
         addSettingToMap("CFG_BASE_CLOCK_MODE", if (rd[settingIndexTimeDisplayFormat].toInt() == 0) "12h" else "24h",
             PumpConfigurationGroup.General, map)
-        if (MedtronicDeviceType.isSameDevice(medtronicUtil.medtronicPumpModel!!, MedtronicDeviceType.Medtronic_523andHigher)) {
+        if (MedtronicDeviceType.isSameDevice(medtronicUtil.medtronicPumpModel, MedtronicDeviceType.Medtronic_523andHigher)) {
             addSettingToMap("PCFG_INSULIN_CONCENTRATION", "" + if (rd[9].toInt() == 0) 50 else 100, PumpConfigurationGroup.Insulin,
                 map)
             //            LOG.debug("Insulin concentration: " + rd[9]);
@@ -249,7 +248,7 @@ class MedtronicConverter @Inject constructor(
         addSettingToMap("PCFG_MM_SRESERVOIR_WARNING_POINT", "" + ByteUtil.asUINT8(rd[19]),
             PumpConfigurationGroup.Other, map)
         addSettingToMap("CFG_MM_KEYPAD_LOCKED", parseResultEnable(rd[20].toInt()), PumpConfigurationGroup.Other, map)
-        if (MedtronicDeviceType.isSameDevice(medtronicUtil.medtronicPumpModel!!, MedtronicDeviceType.Medtronic_523andHigher)) {
+        if (MedtronicDeviceType.isSameDevice(medtronicUtil.medtronicPumpModel, MedtronicDeviceType.Medtronic_523andHigher)) {
             addSettingToMap("PCFG_BOLUS_SCROLL_STEP_SIZE", "" + rd[21], PumpConfigurationGroup.Bolus, map)
             addSettingToMap("PCFG_CAPTURE_EVENT_ENABLE", parseResultEnable(rd[22].toInt()), PumpConfigurationGroup.Other, map)
             addSettingToMap("PCFG_OTHER_DEVICE_ENABLE", parseResultEnable(rd[23].toInt()), PumpConfigurationGroup.Other, map)
@@ -273,7 +272,7 @@ class MedtronicConverter @Inject constructor(
 
     // 512
     private fun decodeInsulinActionSetting(ai: ByteArray, map: MutableMap<String, PumpSettingDTO>) {
-        if (MedtronicDeviceType.isSameDevice(medtronicUtil.medtronicPumpModel!!, MedtronicDeviceType.Medtronic_512_712)) {
+        if (MedtronicDeviceType.isSameDevice(medtronicUtil.medtronicPumpModel, MedtronicDeviceType.Medtronic_512_712)) {
             addSettingToMap("PCFG_INSULIN_ACTION_TYPE", if (ai[17].toInt() != 0) "Regular" else "Fast",
                 PumpConfigurationGroup.Insulin, map)
         } else {
@@ -308,7 +307,7 @@ class MedtronicConverter @Inject constructor(
     }
 
     private fun is523orHigher(): Boolean {
-        return MedtronicDeviceType.isSameDevice(medtronicUtil.medtronicPumpModel!!, MedtronicDeviceType.Medtronic_523andHigher)
+        return MedtronicDeviceType.isSameDevice(medtronicUtil.medtronicPumpModel, MedtronicDeviceType.Medtronic_523andHigher)
     }
 
 }

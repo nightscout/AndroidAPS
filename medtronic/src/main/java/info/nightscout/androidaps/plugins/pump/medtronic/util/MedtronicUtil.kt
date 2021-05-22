@@ -48,7 +48,6 @@ class MedtronicUtil @Inject constructor(
     var pumpTime: ClockDTO? = null
     var gsonInstance = GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()
 
-
     fun getTimeFrom30MinInterval(interval: Int): LocalTime {
         return if (interval % 2 == 0) {
             LocalTime(interval / 2, 0)
@@ -74,7 +73,7 @@ class MedtronicUtil @Inject constructor(
     }
 
     fun getBolusStrokes(amount: Double): ByteArray {
-        val strokesPerUnit = medtronicPumpStatus.medtronicDeviceType!!.bolusStrokes
+        val strokesPerUnit = medtronicPumpStatus.medtronicDeviceType.bolusStrokes
         val length: Int
         val scrollRate: Int
         if (strokesPerUnit >= 40) {
@@ -217,10 +216,10 @@ class MedtronicUtil @Inject constructor(
         return true
     }
 
-    val isModelSet: Boolean
-        get() = medtronicPumpStatus.medtronicDeviceType != null
+    var isModelSet: Boolean = false
+    // get() = medtronicPumpStatus.medtronicDeviceType != null
 
-    var medtronicPumpModel: MedtronicDeviceType?
+    var medtronicPumpModel: MedtronicDeviceType
         get() = medtronicPumpStatus.medtronicDeviceType
         set(medtronicPumpModel) {
             medtronicPumpStatus.medtronicDeviceType = medtronicPumpModel
@@ -248,6 +247,7 @@ class MedtronicUtil @Inject constructor(
     }
 
     companion object {
+
         const val isLowLevelDebug = true
         fun getIntervalFromMinutes(minutes: Int): Int {
             return minutes / 30
@@ -294,7 +294,7 @@ class MedtronicUtil @Inject constructor(
             //var length = 1
             var scrollRate = 1
             if (strokesPerUnit >= 40) {
-            //    length = 2
+                //    length = 2
 
                 // 40-stroke pumps scroll faster for higher unit values
                 if (amount > 10) scrollRate = 4 else if (amount > 1) scrollRate = 2

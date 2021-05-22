@@ -69,7 +69,7 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
             }
             val entryType = getByCode(opCode.toByte())
             val pe = PumpHistoryEntry()
-            pe.setEntryType(medtronicUtil.medtronicPumpModel!!, entryType!!)
+            pe.setEntryType(medtronicUtil.medtronicPumpModel, entryType, if (entryType == PumpHistoryEntryType.UnknownBasePacket) opCode.toByte() else null)
             pe.offset = counter
             counter++
             if (counter >= 1022) {
@@ -91,7 +91,7 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
                 }
                 special = true
             } else {
-                for (j in 0 until entryType.getTotalLength(medtronicUtil.medtronicPumpModel!!) - 1) {
+                for (j in 0 until entryType.getTotalLength(medtronicUtil.medtronicPumpModel) - 1) {
                     try {
                         listRawData.add(dataClearInput[counter])
                         counter++
@@ -111,7 +111,7 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
                 if (pe.entryType === PumpHistoryEntryType.UnknownBasePacket) {
                     pe.opCode = opCode.toByte()
                 }
-                if (entryType.getHeadLength(medtronicUtil.medtronicPumpModel!!) == 0) special = true
+                if (entryType.getHeadLength(medtronicUtil.medtronicPumpModel) == 0) special = true
                 pe.setData(listRawData as List<Byte>, special)
                 val decoded = decodeRecord(pe)
                 if (decoded === RecordDecodeStatus.OK || decoded === RecordDecodeStatus.Ignored) {
@@ -299,7 +299,7 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
         val offset = body!![0] * 1000 * 30 * 60
         var rate: Float? = null
         val index = entry.head!![0].toInt()
-        if (MedtronicDeviceType.isSameDevice(medtronicUtil.medtronicPumpModel!!, MedtronicDeviceType.Medtronic_523andHigher)) {
+        if (MedtronicDeviceType.isSameDevice(medtronicUtil.medtronicPumpModel, MedtronicDeviceType.Medtronic_523andHigher)) {
             rate = body[1] * 0.025f
         }
 
@@ -318,7 +318,7 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
         val body = entry.body!!
         val dto = BolusWizardDTO()
         var bolusStrokes = 10.0f
-        if (MedtronicDeviceType.isSameDevice(medtronicUtil.medtronicPumpModel!!, MedtronicDeviceType.Medtronic_523andHigher)) {
+        if (MedtronicDeviceType.isSameDevice(medtronicUtil.medtronicPumpModel, MedtronicDeviceType.Medtronic_523andHigher)) {
             // https://github.com/ps2/minimed_rf/blob/master/lib/minimed_rf/log_entries/bolus_wizard.rb#L102
             bolusStrokes = 40.0f
             dto.carbs = ((body[1] and 0x0c.toByte()).toInt() shl 6) + body[0]
@@ -421,9 +421,9 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
     }
 
     private fun decodeBolus(entry: PumpHistoryEntry) {
-        var bolus: BolusDTO?
+        val bolus: BolusDTO?
         val data = entry.head!!
-        if (MedtronicDeviceType.isSameDevice(medtronicUtil.medtronicPumpModel!!, MedtronicDeviceType.Medtronic_523andHigher)) {
+        if (MedtronicDeviceType.isSameDevice(medtronicUtil.medtronicPumpModel, MedtronicDeviceType.Medtronic_523andHigher)) {
             bolus = BolusDTO(atechDateTime = entry.atechDateTime,
                 requestedAmount = ByteUtil.toInt(data.get(0), data.get(1)) / 40.0,
                 deliveredAmount = ByteUtil.toInt(data.get(2), data.get(3)) / 40.0,

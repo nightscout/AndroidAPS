@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump
 
-import android.util.Log
 import com.google.gson.annotations.Expose
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil
@@ -36,15 +35,16 @@ class PumpHistoryEntry : MedtronicHistoryEntry() {
             field = value
         }
 
-    fun setEntryType(medtronicDeviceType: MedtronicDeviceType, entryType: PumpHistoryEntryType) {
+    fun setEntryType(medtronicDeviceType: MedtronicDeviceType, entryType: PumpHistoryEntryType, opCode: Byte? = null) {
         this.entryType = entryType
         sizes[0] = entryType.getHeadLength(medtronicDeviceType)
         sizes[1] = entryType.dateLength
         sizes[2] = entryType.getBodyLength(medtronicDeviceType)
         if (isEntryTypeSet() && atechDateTime != 0L) pumpId = generatePumpId()
+        this.opCode = opCode
     }
 
-    override fun generatePumpId() : Long {
+    override fun generatePumpId(): Long {
         return entryType.code + atechDateTime * 1000L
     }
 
@@ -103,6 +103,7 @@ class PumpHistoryEntry : MedtronicHistoryEntry() {
     }
 
     class Comparator : java.util.Comparator<PumpHistoryEntry> {
+
         override fun compare(o1: PumpHistoryEntry, o2: PumpHistoryEntry): Int {
             val data = (o2.atechDateTime - o1.atechDateTime).toInt()
             return if (data != 0) data else o2.entryType.code - o1.entryType.code
@@ -111,7 +112,7 @@ class PumpHistoryEntry : MedtronicHistoryEntry() {
 
     override var pumpId: Long = 0L
         get() {
-            if (field==0L) {
+            if (field == 0L) {
                 field = generatePumpId()
             }
             return field
@@ -120,9 +121,9 @@ class PumpHistoryEntry : MedtronicHistoryEntry() {
             field = pumpId
         }
 
-    fun hasBolusChanged(entry: PumpHistoryEntry) : Boolean {
+    fun hasBolusChanged(entry: PumpHistoryEntry): Boolean {
         if (entryType == PumpHistoryEntryType.Bolus) {
-            val thisOne: BolusDTO =  this.decodedData["Object"] as BolusDTO
+            val thisOne: BolusDTO = this.decodedData["Object"] as BolusDTO
 
             if (entry.entryType == PumpHistoryEntryType.Bolus) {
                 val otherOne: BolusDTO = entry.decodedData["Object"] as BolusDTO

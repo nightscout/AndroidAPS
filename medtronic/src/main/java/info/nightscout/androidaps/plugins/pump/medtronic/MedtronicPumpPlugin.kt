@@ -36,8 +36,8 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.WakeAndTuneTask
 import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryTBR
 import info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncEntriesCreator
-import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
 import info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncStorage
+import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryResult
 import info.nightscout.androidaps.plugins.pump.medtronic.data.MedtronicHistoryData
@@ -236,7 +236,7 @@ class MedtronicPumpPlugin @Inject constructor(
 
     override fun getPumpInfo(): RileyLinkPumpInfo {
         val frequency = resourceHelper.gs(if (medtronicPumpStatus.pumpFrequency == "medtronic_pump_frequency_us_ca") R.string.medtronic_pump_frequency_us_ca else R.string.medtronic_pump_frequency_worldwide)
-        val model = if (medtronicPumpStatus.medtronicDeviceType == null) "???" else "Medtronic " + medtronicPumpStatus.medtronicDeviceType!!.pumpModel
+        val model = if (!medtronicUtil.isModelSet) "???" else "Medtronic " + medtronicPumpStatus.medtronicDeviceType.pumpModel
         val serialNumber = medtronicPumpStatus.serialNumber
         return RileyLinkPumpInfo(frequency, model, serialNumber)
     }
@@ -417,7 +417,7 @@ class MedtronicPumpPlugin @Inject constructor(
         }
 
         // model (once)
-        if (medtronicUtil.medtronicPumpModel == null) {
+        if (!medtronicUtil.isModelSet) {
             rileyLinkMedtronicService!!.medtronicUIComm.executeCommand(MedtronicCommandType.PumpModel)
         } else {
             if (medtronicPumpStatus.medtronicDeviceType !== medtronicUtil.medtronicPumpModel) {
@@ -533,7 +533,6 @@ class MedtronicPumpPlugin @Inject constructor(
         val timestamp: Long = objectA as Long
         return DateTimeUtil.toATechDate(timestamp)
     }
-
 
     private var bolusDeliveryType = BolusDeliveryType.Idle
 
@@ -1002,7 +1001,7 @@ class MedtronicPumpPlugin @Inject constructor(
 
             val runningTBR = medtronicPumpStatus.runningTBR
 
-            if (runningTBR!=null) {
+            if (runningTBR != null) {
                 if (medtronicHistoryData.isTBRActive(runningTBR)) {
 
                     val differenceTime = System.currentTimeMillis() - runningTBR.date
@@ -1018,7 +1017,7 @@ class MedtronicPumpPlugin @Inject constructor(
                         runningTBR.pumpType,
                         runningTBR.serialNumber)
 
-                    val differenceTimeMin = Math.floor(differenceTime/(60.0*1000.0))
+                    val differenceTimeMin = Math.floor(differenceTime / (60.0 * 1000.0))
 
                     aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "canceling running TBR - syncTemporaryBasalWithPumpId [date=%d, pumpId=%d, rate=%.2f U, duration=%d, pumpSerial=%s] - Result: %b",
                         runningTBR.date, runningTBR.pumpId!!,
@@ -1175,6 +1174,7 @@ class MedtronicPumpPlugin @Inject constructor(
     }
 
     companion object {
+
         var isBusy = false
     }
 

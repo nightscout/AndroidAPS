@@ -44,7 +44,7 @@ class MedtronicPumpStatus @Inject constructor(private val resourceHelper: Resour
             rxBus.send(EventRileyLinkDeviceStatusChange(pumpDeviceState))
         }
 
-    var medtronicDeviceType: MedtronicDeviceType? = null
+    var medtronicDeviceType: MedtronicDeviceType = MedtronicDeviceType.Medtronic_522
     var medtronicPumpMap: MutableMap<String, PumpType> = mutableMapOf()
     var medtronicDeviceTypeMap: MutableMap<String, MedtronicDeviceType> = mutableMapOf()
     var basalProfileStatus = BasalProfileStatus.NotInitialized
@@ -87,7 +87,6 @@ class MedtronicPumpStatus @Inject constructor(private val resourceHelper: Resour
         medtronicPumpMap["754"] = PumpType.MEDTRONIC_554_754_VEO
     }
 
-
     val basalProfileForHour: Double
         get() {
             if (basalsByHour != null) {
@@ -114,7 +113,6 @@ class MedtronicPumpStatus @Inject constructor(private val resourceHelper: Resour
 
     override val errorInfo: String
         get() = if (errorDescription == null) "-" else errorDescription!!
-
 
     val tbrRemainingTime: Int?
         get() {

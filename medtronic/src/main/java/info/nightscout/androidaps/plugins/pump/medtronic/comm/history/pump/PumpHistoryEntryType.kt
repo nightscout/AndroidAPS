@@ -12,10 +12,11 @@ import java.util.*
  * Author: Andy {andy.rozman@gmail.com}
  */
 enum class PumpHistoryEntryType // implements CodeEnum
-    constructor(opCode: Byte, name: String?, group: PumpHistoryEntryGroup, head: Int = 2, date: Int = 5, body: Int = 0) {
+constructor(opCode: Byte, name: String?, group: PumpHistoryEntryGroup, head: Int = 2, date: Int = 5, body: Int = 0) {
 
     // all commented out are probably not the real items
-    None(0, "None", PumpHistoryEntryGroup.Unknown, 1, 0, 0), Bolus(0x01, "Bolus", PumpHistoryEntryGroup.Bolus, 4, 5, 0),  // 523+[H=8] 9/13
+    None(0, "None", PumpHistoryEntryGroup.Unknown, 1, 0, 0),
+    Bolus(0x01, "Bolus", PumpHistoryEntryGroup.Bolus, 4, 5, 0),  // 523+[H=8] 9/13
     Prime(0x03, "Prime", PumpHistoryEntryGroup.Prime, 5, 5, 0),  //
 
     //    /**/EventUnknown_MM522_0x05((byte) 0x05, "Unknown Event 0x05", PumpHistoryEntryGroup.Unknown, 2, 5, 28), //
@@ -40,6 +41,7 @@ enum class PumpHistoryEntryType // implements CodeEnum
     ClearSettings(0x22, "Clear Settings", PumpHistoryEntryGroup.Configuration),  //
     ChangeChildBlockEnable(0x23, "Change Child Block Enable", PumpHistoryEntryGroup.Configuration),  //
     ChangeMaxBolus(0x24, "Change Max Bolus", PumpHistoryEntryGroup.Configuration),  //
+
     //    /**/EventUnknown_MM522_0x25(0x25, "Unknown Event 0x25", PumpHistoryEntryGroup.Unknown), // 8?
     EnableDisableRemote(0x26, "Enable/Disable Remote", PumpHistoryEntryGroup.Configuration, 2, 5, 14),  // 2, 5, 14 V6:2,5,14
     ChangeRemoteId(0x27, "Change Remote ID", PumpHistoryEntryGroup.Configuration),  // ??
@@ -54,6 +56,7 @@ enum class PumpHistoryEntryType // implements CodeEnum
     LowReservoir(0x34, "Low Reservoir", PumpHistoryEntryGroup.Notification),  //
     ChangeAlarmClock(0x35, "Change Alarm Clock", PumpHistoryEntryGroup.Configuration),  //
     ChangeMeterId(0x36, "Change Meter ID", PumpHistoryEntryGroup.Configuration),  //
+
     //    /**/EventUnknown_MM512_0x37(0x37, "Unknown Event 0x37", PumpHistoryEntryGroup.Unknown), // V:MM512
     //    /**/EventUnknown_MM512_0x38(0x38, "Unknown Event 0x38", PumpHistoryEntryGroup.Unknown), //
     BGReceived512(0x39, "BG Received (512)", PumpHistoryEntryGroup.Glucose, 2, 5, 3),  //
@@ -69,6 +72,7 @@ enum class PumpHistoryEntryType // implements CodeEnum
     JournalEntryInsulinMarker(0x42, "Insulin Marker", PumpHistoryEntryGroup.Bolus, 2, 5, 0),  // V6 = body(0)/was=1
     JournalEntryOtherMarker(0x43, "Other Marker", PumpHistoryEntryGroup.Bolus, 2, 5, 1),  // V6 = body(1) was=0
     EnableSensorAutoCal(0x44, "Enable Sensor AutoCal", PumpHistoryEntryGroup.Glucose),  //
+
     //    /**/EventUnknown_MM522_0x45(0x45, "Unknown Event 0x45", PumpHistoryEntryGroup.Unknown, 2, 5, 1), //
     //    /**/EventUnknown_MM522_0x46(0x46, "Unknown Event 0x46", PumpHistoryEntryGroup.Unknown, 2, 5, 1), //
     //    /**/EventUnknown_MM522_0x47(0x47, "Unknown Event 0x47", PumpHistoryEntryGroup.Unknown, 2, 5, 1), //
@@ -110,6 +114,7 @@ enum class PumpHistoryEntryType // implements CodeEnum
     DailyTotals522(0x6d, "Daily Totals (522)", PumpHistoryEntryGroup.Statistic, 1, 2, 41),  //
     DailyTotals523(0x6e, "Daily Totals (523)", PumpHistoryEntryGroup.Statistic, 1, 2, 49),  // 1102014-03-17T00:00:00
     ChangeCarbUnits(0x6f.toByte(), "Change Carb Units", PumpHistoryEntryGroup.Configuration),  //
+
     //    /**/EventUnknown_MM522_0x70((byte) 0x70, "Unknown Event 0x70", PumpHistoryEntryGroup.Unknown, 2, 5, 1), //
     BasalProfileStart(0x7b, "Basal Profile Start", PumpHistoryEntryGroup.Basal, 2, 5, 3),  // // 722
     ChangeWatchdogEnable(0x7c, "Change Watchdog Enable", PumpHistoryEntryGroup.Configuration),  //
@@ -133,6 +138,7 @@ enum class PumpHistoryEntryType // implements CodeEnum
     UnknownBasePacket(0xff.toByte(), "Unknown Base Packet", PumpHistoryEntryGroup.Unknown);
 
     companion object {
+
         private val opCodeMap: MutableMap<Byte, PumpHistoryEntryType?> = HashMap()
         fun setSpecialRulesForEntryTypes() {
             EndResultTotals.addSpecialRuleBody(SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 3))
@@ -143,9 +149,9 @@ enum class PumpHistoryEntryType // implements CodeEnum
             ChangeSensorSetup2.addSpecialRuleBody(SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 34))
         }
 
-        fun getByCode(opCode: Byte): PumpHistoryEntryType? {
+        fun getByCode(opCode: Byte): PumpHistoryEntryType {
             return if (opCodeMap.containsKey(opCode)) {
-                opCodeMap[opCode]
+                opCodeMap[opCode]!!
             } else {
                 UnknownBasePacket
             }

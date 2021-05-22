@@ -209,13 +209,16 @@ class MedtronicFragment : DaggerFragment() {
             } ?: "-"
 
         when (medtronicPumpStatus.pumpDeviceState) {
-            PumpDeviceState.Sleeping             -> binding.pumpStatusIcon.text = "{fa-bed}   " // + pumpStatus.pumpDeviceState.name());
+            PumpDeviceState.Sleeping             ->
+                binding.pumpStatusIcon.text = "{fa-bed}   " // + pumpStatus.pumpDeviceState.name());
+
             PumpDeviceState.NeverContacted,
             PumpDeviceState.WakingUp,
             PumpDeviceState.PumpUnreachable,
             PumpDeviceState.ErrorWhenCommunicating,
             PumpDeviceState.TimeoutWhenCommunicating,
-            PumpDeviceState.InvalidConfiguration -> binding.pumpStatusIcon.text = " " + resourceHelper.gs(medtronicPumpStatus.pumpDeviceState.resourceId)
+            PumpDeviceState.InvalidConfiguration ->
+                binding.pumpStatusIcon.text = " " + resourceHelper.gs(medtronicPumpStatus.pumpDeviceState.resourceId)
 
             PumpDeviceState.Active               -> {
                 val cmd = medtronicUtil.getCurrentCommand()
@@ -223,10 +226,10 @@ class MedtronicFragment : DaggerFragment() {
                     binding.pumpStatusIcon.text = " " + resourceHelper.gs(medtronicPumpStatus.pumpDeviceState.resourceId)
                 else {
                     aapsLogger.debug(LTag.PUMP, "Command: $cmd")
-                    val cmdResourceId = cmd.resourceId!!
+                    val cmdResourceId = cmd.resourceId //!!
                     if (cmd == MedtronicCommandType.GetHistoryData) {
                         binding.pumpStatusIcon.text = medtronicUtil.frameNumber?.let {
-                            resourceHelper.gs(cmdResourceId, medtronicUtil.pageNumber, medtronicUtil.frameNumber)
+                            resourceHelper.gs(cmdResourceId!!, medtronicUtil.pageNumber, medtronicUtil.frameNumber)
                         }
                             ?: resourceHelper.gs(R.string.medtronic_cmd_desc_get_history_request, medtronicUtil.pageNumber)
                     } else {
@@ -236,7 +239,8 @@ class MedtronicFragment : DaggerFragment() {
                 }
             }
 
-            else                                 -> aapsLogger.warn(LTag.PUMP, "Unknown pump state: " + medtronicPumpStatus.pumpDeviceState)
+            else                                 ->
+                aapsLogger.warn(LTag.PUMP, "Unknown pump state: " + medtronicPumpStatus.pumpDeviceState)
         }
 
         val status = commandQueue.spannedStatus()

@@ -44,7 +44,7 @@ abstract class MedtronicHistoryDecoder<T : MedtronicHistoryEntry?> : MedtronicHi
     private fun checkPage(page: RawHistoryPage): MutableList<Byte> {
         //val byteList: MutableList<Byte> = mutableListOf()
 
-        if (medtronicUtil.medtronicPumpModel == null) {
+        if (!medtronicUtil.isModelSet) {
             aapsLogger.error(LTag.PUMPCOMM, "Device Type is not defined.")
             return mutableListOf()
         }

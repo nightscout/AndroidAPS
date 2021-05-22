@@ -17,6 +17,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
 import info.nightscout.androidaps.plugins.pump.medtronic.R
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.MedtronicCommunicationManager
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.ui.MedtronicUIComm
+import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
@@ -109,7 +110,8 @@ class RileyLinkMedtronicService  // This empty constructor must be kept, otherwi
             val oldId = rileyLinkServiceData.pumpID
             rileyLinkServiceData.setPumpID(pumpID, pumpIDBytes)
             if (oldId != null && oldId != pumpID) {
-                medtronicUtil.medtronicPumpModel = null // if we change pumpId, model probably changed too
+                medtronicUtil.medtronicPumpModel = MedtronicDeviceType.Medtronic_522 // if we change pumpId, model probably changed too
+                medtronicUtil.isModelSet = false
             }
             return
         }
@@ -119,6 +121,7 @@ class RileyLinkMedtronicService  // This empty constructor must be kept, otherwi
     }
 
     inner class LocalBinder : Binder() {
+
         val serviceInstance: RileyLinkMedtronicService
             get() = this@RileyLinkMedtronicService
     }
@@ -158,7 +161,7 @@ class RileyLinkMedtronicService  // This empty constructor must be kept, otherwi
                     return false
                 } else {
                     val pumpType = medtronicPumpStatus.medtronicPumpMap[pumpTypePart]
-                    medtronicPumpStatus.medtronicDeviceType = medtronicPumpStatus.medtronicDeviceTypeMap[pumpTypePart]
+                    medtronicPumpStatus.medtronicDeviceType = medtronicPumpStatus.medtronicDeviceTypeMap[pumpTypePart]!!
                     medtronicPumpStatus.pumpType = pumpType!!
                     medtronicPumpPlugin.pumpType = pumpType
                     if (pumpTypePart.startsWith("7")) medtronicPumpStatus.reservoirFullUnits = 300 else medtronicPumpStatus.reservoirFullUnits = 176

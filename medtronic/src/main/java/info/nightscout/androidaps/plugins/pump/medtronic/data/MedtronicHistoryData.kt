@@ -946,7 +946,7 @@ class MedtronicHistoryData @Inject constructor(
     }
 
     private fun getTDDType(): PumpHistoryEntryType {
-        return if (medtronicUtil.medtronicPumpModel == null) {
+        return if (!medtronicUtil.isModelSet) {
             PumpHistoryEntryType.EndResultTotals
         } else when (medtronicUtil.medtronicPumpModel) {
             MedtronicDeviceType.Medtronic_515,
@@ -1015,7 +1015,7 @@ class MedtronicHistoryData @Inject constructor(
         for (pumpHistoryEntry in TBRs_Input) {
             if (map.containsKey(pumpHistoryEntry.DT)) {
                 medtronicPumpHistoryDecoder.decodeTempBasal(map[pumpHistoryEntry.DT]!!, pumpHistoryEntry)
-                pumpHistoryEntry.setEntryType(medtronicUtil.medtronicPumpModel!!, PumpHistoryEntryType.TempBasalCombined)
+                pumpHistoryEntry.setEntryType(medtronicUtil.medtronicPumpModel, PumpHistoryEntryType.TempBasalCombined)
                 TBRs.add(pumpHistoryEntry)
                 map.remove(pumpHistoryEntry.DT)
             } else {

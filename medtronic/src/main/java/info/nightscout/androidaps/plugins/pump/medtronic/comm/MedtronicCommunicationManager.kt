@@ -136,8 +136,9 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
                         val dataResponse = medtronicConverter.decodeModel(pumpResponse.rawContent)
                         val pumpModel = dataResponse as MedtronicDeviceType?
                         val valid = pumpModel !== MedtronicDeviceType.Unknown_Device
-                        if (medtronicUtil.medtronicPumpModel == null && valid) {
-                            medtronicUtil.medtronicPumpModel = pumpModel
+                        if (!medtronicUtil.isModelSet && valid) {
+                            medtronicUtil.medtronicPumpModel = pumpModel!!
+                            medtronicUtil.isModelSet = true
                         }
                         aapsLogger.debug(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "isDeviceReachable. PumpModel is %s - Valid: %b (rssi=%d)", pumpModel!!.name, valid,
                             radioResponse.rssi))
