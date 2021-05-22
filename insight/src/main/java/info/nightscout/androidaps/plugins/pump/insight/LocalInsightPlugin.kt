@@ -213,25 +213,28 @@ class LocalInsightPlugin @Inject constructor(
     @Throws(Exception::class) private fun updatePumpTimeIfNeeded() {
         val pumpTime = connectionService!!.requestMessage(GetDateTimeMessage()).await().pumpTime
         val calendar = Calendar.getInstance()
-        calendar[Calendar.YEAR] = pumpTime.year
-        calendar[Calendar.MONTH] = pumpTime.month - 1
-        calendar[Calendar.DAY_OF_MONTH] = pumpTime.day
-        calendar[Calendar.HOUR_OF_DAY] = pumpTime.hour
-        calendar[Calendar.MINUTE] = pumpTime.minute
-        calendar[Calendar.SECOND] = pumpTime.second
-        if (calendar[Calendar.HOUR_OF_DAY] != pumpTime.hour || Math.abs(calendar.timeInMillis - dateUtil.now()) > 10000) {
-            calendar.time = Date()
-            pumpTime.year = calendar[Calendar.YEAR]
-            pumpTime.month = calendar[Calendar.MONTH] + 1
-            pumpTime.day = calendar[Calendar.DAY_OF_MONTH]
-            pumpTime.hour = calendar[Calendar.HOUR_OF_DAY]
-            pumpTime.minute = calendar[Calendar.MINUTE]
-            pumpTime.second = calendar[Calendar.SECOND]
-            val setDateTimeMessage = SetDateTimeMessage()
-            setDateTimeMessage.setPumpTime(pumpTime)
-            connectionService!!.requestMessage(setDateTimeMessage).await()
-            val notification = Notification(Notification.INSIGHT_DATE_TIME_UPDATED, resourceHelper.gs(R.string.pump_time_updated), Notification.INFO, 60)
-            rxBus.send(EventNewNotification(notification))
+
+        if (pumpTime != null) {
+            calendar[Calendar.YEAR] = pumpTime.year
+            calendar[Calendar.MONTH] = pumpTime.month - 1
+            calendar[Calendar.DAY_OF_MONTH] = pumpTime.day
+            calendar[Calendar.HOUR_OF_DAY] = pumpTime.hour
+            calendar[Calendar.MINUTE] = pumpTime.minute
+            calendar[Calendar.SECOND] = pumpTime.second
+            if (calendar[Calendar.HOUR_OF_DAY] != pumpTime.hour || Math.abs(calendar.timeInMillis - dateUtil.now()) > 10000) {
+                calendar.time = Date()
+                pumpTime.year = calendar[Calendar.YEAR]
+                pumpTime.month = calendar[Calendar.MONTH] + 1
+                pumpTime.day = calendar[Calendar.DAY_OF_MONTH]
+                pumpTime.hour = calendar[Calendar.HOUR_OF_DAY]
+                pumpTime.minute = calendar[Calendar.MINUTE]
+                pumpTime.second = calendar[Calendar.SECOND]
+                val setDateTimeMessage = SetDateTimeMessage()
+                setDateTimeMessage.setPumpTime(pumpTime)
+                connectionService!!.requestMessage(setDateTimeMessage).await()
+                val notification = Notification(Notification.INSIGHT_DATE_TIME_UPDATED, resourceHelper.gs(R.string.pump_time_updated), Notification.INFO, 60)
+                rxBus.send(EventNewNotification(notification))
+            }
         }
     }
 
@@ -242,50 +245,56 @@ class LocalInsightPlugin @Inject constructor(
 
     @Throws(Exception::class) private fun fetchStatus() {
         if (statusLoaded) {
-            val registerMessage = connectionService!!.requestMessage(GetPumpStatusRegisterMessage()).await()
+            val registerMessage = connectionService?.run { requestMessage(GetPumpStatusRegisterMessage()).await() }
             val resetMessage = ResetPumpStatusRegisterMessage()
-            resetMessage.setOperatingModeChanged(registerMessage.isOperatingModeChanged)
-            resetMessage.setBatteryStatusChanged(registerMessage.isBatteryStatusChanged)
-            resetMessage.setCartridgeStatusChanged(registerMessage.isCartridgeStatusChanged)
-            resetMessage.setTotalDailyDoseChanged(registerMessage.isTotalDailyDoseChanged)
-            resetMessage.setActiveTBRChanged(registerMessage.isActiveTBRChanged)
-            resetMessage.setActiveBolusesChanged(registerMessage.isActiveBolusesChanged)
-            connectionService!!.requestMessage(resetMessage).await()
-            if (registerMessage.isOperatingModeChanged) operatingMode = connectionService!!.requestMessage(GetOperatingModeMessage()).await().operatingMode
-            if (registerMessage.isBatteryStatusChanged) batteryStatus = connectionService!!.requestMessage(GetBatteryStatusMessage()).await().batteryStatus
-            if (registerMessage.isCartridgeStatusChanged) cartridgeStatus = connectionService!!.requestMessage(GetCartridgeStatusMessage()).await().cartridgeStatus
-            if (registerMessage.isTotalDailyDoseChanged) totalDailyDose = connectionService!!.requestMessage(GetTotalDailyDoseMessage()).await().tdd
-            if (operatingMode == OperatingMode.STARTED) {
-                if (registerMessage.isActiveBasalRateChanged) activeBasalRate = connectionService!!.requestMessage(GetActiveBasalRateMessage()).await().activeBasalRate
-                if (registerMessage.isActiveTBRChanged) activeTBR = connectionService!!.requestMessage(GetActiveTBRMessage()).await().activeTBR
-                if (registerMessage.isActiveBolusesChanged) activeBoluses = connectionService!!.requestMessage(GetActiveBolusesMessage()).await().activeBoluses
-            } else {
-                activeBasalRate = null
-                activeTBR = null
-                activeBoluses = null
+            registerMessage?.run {
+                resetMessage.operatingModeChanged = isOperatingModeChanged
+                resetMessage.batteryStatusChanged = isBatteryStatusChanged
+                resetMessage.cartridgeStatusChanged = isCartridgeStatusChanged
+                resetMessage.totalDailyDoseChanged = isTotalDailyDoseChanged
+                resetMessage.activeTBRChanged = isActiveTBRChanged
+                resetMessage.activeBolusesChanged = isActiveBolusesChanged
+            }
+            connectionService?.run { requestMessage(GetPumpStatusRegisterMessage()).await() }
+            registerMessage?.run {
+                if (isOperatingModeChanged) operatingMode = connectionService?.run { requestMessage(GetOperatingModeMessage()).await().operatingMode }
+                if (isBatteryStatusChanged) batteryStatus = connectionService?.run { requestMessage(GetBatteryStatusMessage()).await().batteryStatus }
+                if (isCartridgeStatusChanged) cartridgeStatus = connectionService?.run { requestMessage(GetCartridgeStatusMessage()).await().cartridgeStatus }
+                if (isTotalDailyDoseChanged) totalDailyDose = connectionService?.run { requestMessage(GetTotalDailyDoseMessage()).await().tDD }
+                if (operatingMode == OperatingMode.STARTED) {
+                    if (isActiveBasalRateChanged) activeBasalRate = connectionService?.run { requestMessage(GetActiveBasalRateMessage()).await().activeBasalRate }
+                    if (isActiveTBRChanged) activeTBR = connectionService?.run { requestMessage(GetActiveTBRMessage()).await().activeTBR }
+                    if (isActiveBolusesChanged) activeBoluses = connectionService?.run { requestMessage(GetActiveBolusesMessage()).await().activeBoluses }
+                } else {
+                    activeBasalRate = null
+                    activeTBR = null
+                    activeBoluses = null
+                }
             }
         } else {
             val resetMessage = ResetPumpStatusRegisterMessage()
-            resetMessage.setOperatingModeChanged(true)
-            resetMessage.setBatteryStatusChanged(true)
-            resetMessage.setCartridgeStatusChanged(true)
-            resetMessage.setTotalDailyDoseChanged(true)
-            resetMessage.setActiveBasalRateChanged(true)
-            resetMessage.setActiveTBRChanged(true)
-            resetMessage.setActiveBolusesChanged(true)
-            connectionService!!.requestMessage(resetMessage).await()
-            operatingMode = connectionService!!.requestMessage(GetOperatingModeMessage()).await().operatingMode
-            batteryStatus = connectionService!!.requestMessage(GetBatteryStatusMessage()).await().batteryStatus
-            cartridgeStatus = connectionService!!.requestMessage(GetCartridgeStatusMessage()).await().cartridgeStatus
-            totalDailyDose = connectionService!!.requestMessage(GetTotalDailyDoseMessage()).await().tdd
-            if (operatingMode == OperatingMode.STARTED) {
-                activeBasalRate = connectionService!!.requestMessage(GetActiveBasalRateMessage()).await().activeBasalRate
-                activeTBR = connectionService!!.requestMessage(GetActiveTBRMessage()).await().activeTBR
-                activeBoluses = connectionService!!.requestMessage(GetActiveBolusesMessage()).await().activeBoluses
-            } else {
-                activeBasalRate = null
-                activeTBR = null
-                activeBoluses = null
+            resetMessage.operatingModeChanged = true
+            resetMessage.batteryStatusChanged = true
+            resetMessage.cartridgeStatusChanged = true
+            resetMessage.totalDailyDoseChanged = true
+            resetMessage.activeBasalRateChanged = true
+            resetMessage.activeTBRChanged = true
+            resetMessage.activeBolusesChanged = true
+            connectionService?.run { requestMessage(resetMessage).await() }
+            connectionService?.run {
+                operatingMode = requestMessage(GetOperatingModeMessage()).await().operatingMode
+                batteryStatus = requestMessage(GetBatteryStatusMessage()).await().batteryStatus
+                cartridgeStatus = requestMessage(GetCartridgeStatusMessage()).await().cartridgeStatus
+                totalDailyDose = requestMessage(GetTotalDailyDoseMessage()).await().tDD
+                if (operatingMode == OperatingMode.STARTED) {
+                    activeBasalRate = requestMessage(GetActiveBasalRateMessage()).await().activeBasalRate
+                    activeTBR = requestMessage(GetActiveTBRMessage()).await().activeTBR
+                    activeBoluses = requestMessage(GetActiveBolusesMessage()).await().activeBoluses
+                } else {
+                    activeBasalRate = null
+                    activeTBR = null
+                    activeBoluses = null
+                }
             }
             statusLoaded = true
         }
@@ -436,10 +445,12 @@ class LocalInsightPlugin @Inject constructor(
                     if (operatingMode != OperatingMode.STARTED) break
                     val activeBoluses = connectionService!!.requestMessage(GetActiveBolusesMessage()).await().activeBoluses
                     var activeBolus: ActiveBolus? = null
-                    for (bolus in activeBoluses) {
-                        if (bolus.bolusID == bolusID) {
-                            activeBolus = bolus
-                            break
+                    if (activeBoluses != null) {
+                        for (bolus in activeBoluses) {
+                            if (bolus.bolusID == bolusID) {
+                                activeBolus = bolus
+                                break
+                            }
                         }
                     }
                     if (activeBolus != null) {
@@ -916,10 +927,10 @@ class LocalInsightPlugin @Inject constructor(
 
     private fun readHistory() {
         try {
-            val pumpTime = connectionService!!.requestMessage(GetDateTimeMessage()).await().pumpTime
+            val pumpTime = connectionService?.run { requestMessage(GetDateTimeMessage()).await().pumpTime }
             val serial = serialNumber()
-            timeOffset = Calendar.getInstance(TimeZone.getTimeZone("UTC")).timeInMillis - parseDate(pumpTime.year,
-                pumpTime.month, pumpTime.day, pumpTime.hour, pumpTime.minute, pumpTime.second)
+            pumpTime?.let { timeOffset = Calendar.getInstance(TimeZone.getTimeZone("UTC")).timeInMillis - parseDate(it.year,
+                    it.month, it.day, it.hour, it.minute, it.second) }
             val historyOffset = insightDbHelper.getInsightHistoryOffset(serial)
             try {
                 var historyEvents: MutableList<HistoryEvent> = ArrayList()
@@ -927,15 +938,15 @@ class LocalInsightPlugin @Inject constructor(
                     val startMessage = StartReadingHistoryMessage()
                     startMessage.setDirection(HistoryReadingDirection.BACKWARD)
                     startMessage.setOffset(-0x1)
-                    connectionService!!.requestMessage(startMessage).await()
-                    historyEvents = connectionService!!.requestMessage(ReadHistoryEventsMessage()).await().historyEvents
+                    connectionService?.run { requestMessage(startMessage).await() }
+                    historyEvents = connectionService?.run { requestMessage(ReadHistoryEventsMessage()).await().historyEvents } ?: mutableListOf()
                 } else {
                     val startMessage = StartReadingHistoryMessage()
                     startMessage.setDirection(HistoryReadingDirection.FORWARD)
                     startMessage.setOffset(historyOffset.offset + 1)
-                    connectionService!!.requestMessage(startMessage).await()
+                    connectionService?.run { requestMessage(startMessage).await() }
                     while (true) {
-                        val newEvents = connectionService!!.requestMessage(ReadHistoryEventsMessage()).await().historyEvents
+                        val newEvents = connectionService?.run { requestMessage(ReadHistoryEventsMessage()).await().historyEvents } ?: mutableListOf()
                         if (newEvents.size == 0) break
                         historyEvents.addAll(newEvents)
                     }

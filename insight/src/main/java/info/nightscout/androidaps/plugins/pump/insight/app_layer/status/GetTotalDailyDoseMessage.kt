@@ -1,28 +1,24 @@
-package info.nightscout.androidaps.plugins.pump.insight.app_layer.status;
+package info.nightscout.androidaps.plugins.pump.insight.app_layer.status
 
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.Service;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.MessagePriority;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.TotalDailyDose;
-import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf;
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.Service
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.MessagePriority
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.TotalDailyDose
+import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
-public class GetTotalDailyDoseMessage extends AppLayerMessage {
+class GetTotalDailyDoseMessage : AppLayerMessage(MessagePriority.NORMAL, true, false, Service.STATUS) {
 
-    private TotalDailyDose tdd;
+    var tDD: TotalDailyDose? = null
+        private set
 
-    public GetTotalDailyDoseMessage() {
-        super(MessagePriority.NORMAL, true, false, Service.STATUS);
-    }
-
-    @Override
-    protected void parse(ByteBuf byteBuf) {
-        tdd = new TotalDailyDose();
-        tdd.setBolus(byteBuf.readUInt32Decimal100());
-        tdd.setBasal(byteBuf.readUInt32Decimal100());
-        tdd.setBolusAndBasal(byteBuf.readUInt32Decimal100());
-    }
-
-    public TotalDailyDose getTDD() {
-        return this.tdd;
+    override fun parse(byteBuf: ByteBuf?) {
+        tDD = TotalDailyDose()
+        tDD?.let {
+            byteBuf?.run {
+                it.bolus = readUInt32Decimal100()
+                it.basal = readUInt32Decimal100()
+                it.bolusAndBasal = readUInt32Decimal100()
+            }
+        }
     }
 }

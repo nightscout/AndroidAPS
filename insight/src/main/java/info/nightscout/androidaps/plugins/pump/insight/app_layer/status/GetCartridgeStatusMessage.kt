@@ -1,31 +1,27 @@
-package info.nightscout.androidaps.plugins.pump.insight.app_layer.status;
+package info.nightscout.androidaps.plugins.pump.insight.app_layer.status
 
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.Service;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.CartridgeStatus;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.CartridgeType;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.MessagePriority;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.SymbolStatus;
-import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf;
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.Service
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.CartridgeStatus
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.CartridgeType
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.MessagePriority
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.SymbolStatus
+import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
-public class GetCartridgeStatusMessage extends AppLayerMessage {
+class GetCartridgeStatusMessage : AppLayerMessage(MessagePriority.NORMAL, false, false, Service.STATUS) {
 
-    private CartridgeStatus cartridgeStatus;
+    var cartridgeStatus: CartridgeStatus? = null
+        private set
 
-    public GetCartridgeStatusMessage() {
-        super(MessagePriority.NORMAL, false, false, Service.STATUS);
-    }
-
-    @Override
-    protected void parse(ByteBuf byteBuf) {
-        cartridgeStatus = new CartridgeStatus();
-        cartridgeStatus.setInserted(byteBuf.readBoolean());
-        cartridgeStatus.setCartridgeType(CartridgeType.Companion.fromId(byteBuf.readUInt16LE()));
-        cartridgeStatus.setSymbolStatus(SymbolStatus.Companion.fromId(byteBuf.readUInt16LE()));
-        cartridgeStatus.setRemainingAmount(byteBuf.readUInt16Decimal());
-    }
-
-    public CartridgeStatus getCartridgeStatus() {
-        return this.cartridgeStatus;
+    override fun parse(byteBuf: ByteBuf?) {
+        cartridgeStatus = CartridgeStatus()
+        cartridgeStatus?.let {
+            byteBuf?.run {
+                it.isInserted = readBoolean()
+                it.cartridgeType = CartridgeType.fromId(readUInt16LE())
+                it.symbolStatus = SymbolStatus.fromId(readUInt16LE())
+                it.remainingAmount = readUInt16Decimal()
+            }
+        }
     }
 }

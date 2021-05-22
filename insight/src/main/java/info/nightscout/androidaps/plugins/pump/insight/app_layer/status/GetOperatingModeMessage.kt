@@ -1,25 +1,17 @@
-package info.nightscout.androidaps.plugins.pump.insight.app_layer.status;
+package info.nightscout.androidaps.plugins.pump.insight.app_layer.status
 
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.Service;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.MessagePriority;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.OperatingMode;
-import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf;
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.Service
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.MessagePriority
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.OperatingMode
+import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
-public class GetOperatingModeMessage extends AppLayerMessage {
+class GetOperatingModeMessage : AppLayerMessage(MessagePriority.NORMAL, true, false, Service.STATUS) {
 
-    private OperatingMode operatingMode;
+    var operatingMode: OperatingMode? = null
+        private set
 
-    public GetOperatingModeMessage() {
-        super(MessagePriority.NORMAL, true, false, Service.STATUS);
-    }
-
-    @Override
-    protected void parse(ByteBuf byteBuf) {
-        this.operatingMode = OperatingMode.Companion.fromId(byteBuf.readUInt16LE());
-    }
-
-    public OperatingMode getOperatingMode() {
-        return this.operatingMode;
+    override fun parse(byteBuf: ByteBuf?) {
+        operatingMode = byteBuf?.run { OperatingMode.fromId(readUInt16LE()) }
     }
 }

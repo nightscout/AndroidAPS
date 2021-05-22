@@ -1,35 +1,31 @@
-package info.nightscout.androidaps.plugins.pump.insight.app_layer.status;
+package info.nightscout.androidaps.plugins.pump.insight.app_layer.status
 
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.Service;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.FirmwareVersions;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.MessagePriority;
-import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf;
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.Service
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.FirmwareVersions
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.MessagePriority
+import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
-public class GetFirmwareVersionsMessage extends AppLayerMessage {
+class GetFirmwareVersionsMessage : AppLayerMessage(MessagePriority.NORMAL, false, false, Service.STATUS) {
 
-    private FirmwareVersions firmwareVersions;
+    var firmwareVersions: FirmwareVersions? = null
+        private set
 
-    public GetFirmwareVersionsMessage() {
-        super(MessagePriority.NORMAL, false, false, Service.STATUS);
-    }
-
-    @Override
-    protected void parse(ByteBuf byteBuf) {
-        firmwareVersions = new FirmwareVersions();
-        firmwareVersions.setReleaseSWVersion(byteBuf.readASCII(13));
-        firmwareVersions.setUiProcSWVersion(byteBuf.readASCII(11));
-        firmwareVersions.setPcProcSWVersion(byteBuf.readASCII(11));
-        firmwareVersions.setMdTelProcSWVersion(byteBuf.readASCII(11));
-        firmwareVersions.setBtInfoPageVersion(byteBuf.readASCII(11));
-        firmwareVersions.setSafetyProcSWVersion(byteBuf.readASCII(11));
-        firmwareVersions.setConfigIndex(byteBuf.readUInt16LE());
-        firmwareVersions.setHistoryIndex(byteBuf.readUInt16LE());
-        firmwareVersions.setStateIndex(byteBuf.readUInt16LE());
-        firmwareVersions.setVocabularyIndex(byteBuf.readUInt16LE());
-    }
-
-    public FirmwareVersions getFirmwareVersions() {
-        return this.firmwareVersions;
+    override fun parse(byteBuf: ByteBuf?) {
+        firmwareVersions = FirmwareVersions()
+        firmwareVersions?.let {
+            byteBuf?.run {
+                it.releaseSWVersion = readASCII(13)
+                it.uiProcSWVersion = readASCII(11)
+                it.pcProcSWVersion = readASCII(11)
+                it.mdTelProcSWVersion = readASCII(11)
+                it.btInfoPageVersion = readASCII(11)
+                it.safetyProcSWVersion = readASCII(11)
+                it.configIndex = readUInt16LE()
+                it.historyIndex = readUInt16LE()
+                it.stateIndex = readUInt16LE()
+                it.vocabularyIndex = readUInt16LE()
+            }
+        }
     }
 }
