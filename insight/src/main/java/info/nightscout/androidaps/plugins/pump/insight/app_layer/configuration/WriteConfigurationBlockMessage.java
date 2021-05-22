@@ -4,7 +4,7 @@ import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.Service;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.ParameterBlock;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.MessagePriority;
-import info.nightscout.androidaps.plugins.pump.insight.ids.ParameterBlockIDs;
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.ParameterBlocks;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf;
 
 public class WriteConfigurationBlockMessage extends AppLayerMessage {
@@ -20,15 +20,15 @@ public class WriteConfigurationBlockMessage extends AppLayerMessage {
     protected ByteBuf getData() {
         ByteBuf configBlockData = parameterBlock.getData();
         ByteBuf data = new ByteBuf(4 + configBlockData.getSize());
-        data.putUInt16LE(ParameterBlockIDs.IDS.getID(parameterBlock.getClass()));
+        data.putUInt16LE(ParameterBlocks.Companion.fromType(parameterBlock.getClass()).getId());
         data.putUInt16LE(31);
         data.putByteBuf(configBlockData);
         return data;
     }
 
     @Override
-    protected void parse(ByteBuf byteBuf) throws Exception {
-        configurationBlockId = ParameterBlockIDs.IDS.getType(byteBuf.readUInt16LE());
+    protected void parse(ByteBuf byteBuf) {
+        configurationBlockId = ParameterBlocks.Companion.fromId(byteBuf.readUInt16LE()).getType();
     }
 
     public Class<? extends ParameterBlock> getConfigurationBlockId() {
