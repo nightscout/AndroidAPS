@@ -12,7 +12,6 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntry
-import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryBolus
 import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryCarbs
 import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryTBR
 import info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncStorage
@@ -44,10 +43,6 @@ import javax.inject.Singleton
 //  all times that time changed (TZ, DST, etc.). Data needs to be returned in batches (time_changed batches, so that we can
 //  handle it. It would help to assign sort_ids to items (from oldest (1) to newest (x)
 //
-// TODO New Database changes:
-//   + we need to read 35 minutes from history on each read
-//   - compare all read items if they have the same amounts, if not send them back to database changes.
-//   - we need to remove and invalidate TBRs that are cancels from PumpSyncStorage
 @Suppress("DEPRECATION")
 @Singleton
 class MedtronicHistoryData @Inject constructor(
@@ -105,13 +100,6 @@ class MedtronicHistoryData @Inject constructor(
             .findFirst()
 
         return if (findFirst.isPresent()) findFirst.get() else null
-        //
-        // for (pumpHistoryEntry in allHistory) {
-        //     if (pumpHistoryEntry.pumpId == pumpId) {
-        //         return pumpHistoryEntry
-        //     }
-        // }
-        // return null
     }
 
     private fun showLogs(header: String?, data: String) {
@@ -126,10 +114,6 @@ class MedtronicHistoryData @Inject constructor(
             aapsLogger.debug(LTag.PUMP, "No data.")
         }
     }
-
-    // fun getAllHistory(): List<PumpHistoryEntry?> {
-    //     return allHistory
-    // }
 
     fun filterNewEntries() {
         val newHistory2: MutableList<PumpHistoryEntry> = mutableListOf()
@@ -211,9 +195,7 @@ class MedtronicHistoryData @Inject constructor(
                 allPumpIds.add(pumpHistoryEntry.pumpId!!)
             }
         }
-        // if (pheLast == null) // if we don't have any valid record we don't do the filtering and setting
-        //     return
-        //setLastHistoryRecordTime(pheLast.atechDateTime)
+
         sp.putLong(MedtronicConst.Statistics.LastPumpHistoryEntry, pheLast.atechDateTime!!)
         var dt: LocalDateTime? = null
         try {
@@ -986,8 +968,10 @@ class MedtronicHistoryData @Inject constructor(
         return if (medtronicUtil.medtronicPumpModel == null) {
             PumpHistoryEntryType.EndResultTotals
         } else when (medtronicUtil.medtronicPumpModel) {
-            MedtronicDeviceType.Medtronic_515, MedtronicDeviceType.Medtronic_715 -> PumpHistoryEntryType.DailyTotals515
-            MedtronicDeviceType.Medtronic_522, MedtronicDeviceType.Medtronic_722 -> PumpHistoryEntryType.DailyTotals522
+            MedtronicDeviceType.Medtronic_515,
+            MedtronicDeviceType.Medtronic_715 -> PumpHistoryEntryType.DailyTotals515
+            MedtronicDeviceType.Medtronic_522,
+            MedtronicDeviceType.Medtronic_722 -> PumpHistoryEntryType.DailyTotals522
             MedtronicDeviceType.Medtronic_523_Revel,
             MedtronicDeviceType.Medtronic_723_Revel,
             MedtronicDeviceType.Medtronic_554_Veo,
