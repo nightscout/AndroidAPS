@@ -25,8 +25,7 @@ import java.util.*
  *
  * Author: Andy {andy@atech-software.com}
  */
-enum class MedtronicCommandType
-{
+enum class MedtronicCommandType {
 
     InvalidCommand(0, "Invalid Command", null, null),  //
 
@@ -57,7 +56,7 @@ enum class MedtronicCommandType
     GetRealTimeClock(112, "Get Pump Time", MedtronicDeviceType.All, MinimedCommandParameterType.NoParameters,  //
         7, R.string.medtronic_cmd_desc_get_time),  // 0x70
     GetBatteryStatus(0x72, "Get Battery Status", MedtronicDeviceType.All, MinimedCommandParameterType.NoParameters,
-         0, R.string.medtronic_cmd_desc_get_battery_status), //
+        0, R.string.medtronic_cmd_desc_get_battery_status), //
     GetRemainingInsulin(0x73, "Read Remaining Insulin", MedtronicDeviceType.All, MinimedCommandParameterType.NoParameters,
         2, R.string.medtronic_cmd_desc_get_remaining_insulin),  // 115
     SetBolus(0x42, "Set Bolus", MedtronicDeviceType.All, MinimedCommandParameterType.NoParameters,  //
@@ -130,9 +129,8 @@ enum class MedtronicCommandType
     // Fake Commands
     CancelTBR;
 
-
-
     companion object {
+
         var mapByCode: MutableMap<Byte, MedtronicCommandType> = HashMap()
 
         // private fun getDeviceTypesArray(vararg types: MedtronicDeviceType): HashMap<MedtronicDeviceType, String?> {
@@ -151,16 +149,19 @@ enum class MedtronicCommandType
             }
         }
 
-        fun constructMessageBody(messageType: MedtronicCommandType?, bodyData: ByteArray?): MessageBody {
+        fun constructMessageBody(messageType: MedtronicCommandType?, bodyData: ByteArray): MessageBody {
             return when (messageType) {
                 CommandACK -> PumpAckMessageBody(bodyData)
-                else       -> UnknownMessageBody(bodyData!!)
+                else       -> UnknownMessageBody(bodyData)
             }
         }
 
         @JvmStatic
         fun getSettings(medtronicPumpModel: MedtronicDeviceType?): MedtronicCommandType {
-            return if (isSameDevice(medtronicPumpModel!!, MedtronicDeviceType.Medtronic_512_712)) Settings_512 else Settings
+            return if (isSameDevice(medtronicPumpModel!!, MedtronicDeviceType.Medtronic_512_712))
+                Settings_512
+            else
+                Settings
         }
 
         init {
@@ -194,19 +195,19 @@ enum class MedtronicCommandType
     }
 
     constructor(code: Int, description: String, devices: MedtronicDeviceType?,
-                         parameterType: MinimedCommandParameterType?, cmd_params: ByteArray) : this(code, description, devices, parameterType) {
+                parameterType: MinimedCommandParameterType?, cmd_params: ByteArray) : this(code, description, devices, parameterType) {
         commandParameters = cmd_params
         commandParametersCount = cmd_params.size
     }
 
     // NEW
     constructor(code: Int, description: String, devices: MedtronicDeviceType?,  //
-                         parameterType: MinimedCommandParameterType?, expectedLength: Int) : this(code, description, devices, parameterType, 64, 1, expectedLength, null) {
+                parameterType: MinimedCommandParameterType?, expectedLength: Int) : this(code, description, devices, parameterType, 64, 1, expectedLength, null) {
     }
 
     // NEW
     constructor(code: Int, description: String, devices: MedtronicDeviceType?,  //
-                         parameterType: MinimedCommandParameterType?, expectedLength: Int, resourceId: Int) : this(code, description, devices, parameterType, 64, 1, expectedLength, resourceId) {
+                parameterType: MinimedCommandParameterType?, expectedLength: Int, resourceId: Int) : this(code, description, devices, parameterType, 64, 1, expectedLength, resourceId) {
     }
 
     // NEW
@@ -252,7 +253,6 @@ enum class MedtronicCommandType
     //         minimalBufferSizeToStartReading = 200
     //     }
     // }
-
 
     override fun toString(): String {
         return name

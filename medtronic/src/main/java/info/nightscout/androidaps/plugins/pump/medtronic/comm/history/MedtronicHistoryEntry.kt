@@ -1,12 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.history
 
-import android.util.Log
 import com.google.gson.annotations.Expose
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil
-import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntryType
-import java.util.*
 
 /**
  * This file was taken from GGC - GNU Gluco Control (ggc.sourceforge.net), application for diabetes
@@ -17,17 +14,15 @@ import java.util.*
  */
 abstract class MedtronicHistoryEntry : MedtronicHistoryEntryInterface {
 
-    var rawData: List<Byte>? = null
-        get() = field
+    lateinit var rawData: List<Byte>
 
     protected var sizes = IntArray(3)
         get() = field
 
-    var head: ByteArray? = null
-        get() = field
+    lateinit var head: ByteArray
+    lateinit var datetime: ByteArray
+    lateinit var body: ByteArray
 
-    var datetime: ByteArray? = null
-    var body: ByteArray? = null
     var id: Long = 0
         set(value) {
             field = value
@@ -81,7 +76,7 @@ abstract class MedtronicHistoryEntry : MedtronicHistoryEntryInterface {
 
     abstract fun isEntryTypeSet(): Boolean
 
-    override fun setData(listRawData: List<Byte>, doNotProcess: Boolean) {
+    override fun setData(listRawData: MutableList<Byte>, doNotProcess: Boolean) {
         rawData = listRawData
 
         // System.out.println("Head: " + sizes[0] + ", dates: " + sizes[1] +
@@ -89,28 +84,31 @@ abstract class MedtronicHistoryEntry : MedtronicHistoryEntryInterface {
         if (!doNotProcess) {
             head = ByteArray(headLength - 1)
             for (i in 1 until headLength) {
-                head!![i - 1] = listRawData[i]
+                head[i - 1] = listRawData[i]
             }
             if (dateTimeLength > 0) {
                 datetime = ByteArray(dateTimeLength)
                 var i = headLength
                 var j = 0
                 while (j < dateTimeLength) {
-                    datetime!![j] = listRawData[i]
+                    datetime[j] = listRawData[i]
                     i++
                     j++
                 }
-            }
+            } else
+                datetime = byteArrayOf()
+
             if (bodyLength > 0) {
                 body = ByteArray(bodyLength)
                 var i = headLength + dateTimeLength
                 var j = 0
                 while (j < bodyLength) {
-                    body!![j] = listRawData[i]
+                    body[j] = listRawData[i]
                     i++
                     j++
                 }
-            }
+            } else
+                body = byteArrayOf()
         }
         return
     }
@@ -177,15 +175,15 @@ abstract class MedtronicHistoryEntry : MedtronicHistoryEntryInterface {
             sb.append("]")
             return sb.toString()
         }
-        if (head != null) {
+        if (head.size != 0) {
             sb.append(", head=")
             sb.append(ByteUtil.shortHexString(head))
         }
-        if (datetime != null) {
+        if (datetime.size != 0) {
             sb.append(", datetime=")
             sb.append(ByteUtil.shortHexString(datetime))
         }
-        if (body != null) {
+        if (body.size != 0) {
             sb.append(", body=")
             sb.append(ByteUtil.shortHexString(body))
         }
@@ -204,15 +202,15 @@ abstract class MedtronicHistoryEntry : MedtronicHistoryEntryInterface {
     abstract val toStringStart: String?
 
     fun getRawDataByIndex(index: Int): Byte {
-        return rawData!![index]
+        return rawData[index]
     }
 
     fun getRawDataByIndexInt(index: Int): Int {
-        return rawData!![index].toInt()
+        return rawData[index].toInt()
     }
 
     fun getUnsignedRawDataByIndex(index: Int): Int {
-        return ByteUtil.convertUnsignedByteToInt(rawData!![index])
+        return ByteUtil.convertUnsignedByteToInt(rawData[index])
     }
 
     fun addDecodedData(key: String, value: Any) {
@@ -220,7 +218,7 @@ abstract class MedtronicHistoryEntry : MedtronicHistoryEntryInterface {
     }
 
     fun toShortString(): String {
-        return if (head == null) {
+        return if (head.size != 0) {
             "Unidentified record. "
         } else {
             "HistoryRecord: head=[" + ByteUtil.shortHexString(head) + "]"

@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.history.cgms
 
-import java.util.*
-
 /**
  * This file was taken from GGC - GNU Gluco Control (ggc.sourceforge.net), application for diabetes
  * management and modified/extended for AAPS.
@@ -22,14 +20,19 @@ enum class CGMSHistoryEntryType(val code: Int, val description: String, val head
     CalBGForGH(0x0e, "CalBGForGH',packet_size=5", 1, 4, 1, DateType.MinuteSpecific),  //
     SensorCalFactor(0x0f, "SensorCalFactor", 1, 4, 2, DateType.MinuteSpecific),  //
     Something10(0x10, "10-Something", 1, 4, 0, DateType.MinuteSpecific),  //
-    Something19(0x13, "19-Something", 1, 0, 0, DateType.PreviousTimeStamp), GlucoseSensorData(0xFF, "GlucoseSensorData", 1, 0, 0, DateType.PreviousTimeStamp);
+    Something19(0x13, "19-Something", 1, 0, 0, DateType.PreviousTimeStamp), GlucoseSensorData(0xFF, "GlucoseSensorData", 1, 0, 0, DateType.PreviousTimeStamp),
+    UnknownOpCode(0xFF, "Unknown", 0, 0, 0, DateType.None);
 
     companion object {
-        private val opCodeMap: MutableMap<Int, CGMSHistoryEntryType?> = HashMap()
-        @JvmStatic fun getByCode(opCode: Int): CGMSHistoryEntryType? {
-            return if (opCodeMap.containsKey(opCode)) {
-                opCodeMap[opCode]
-            } else None
+
+        private val opCodeMap: MutableMap<Int, CGMSHistoryEntryType> = mutableMapOf()
+
+        @JvmStatic
+        fun getByCode(opCode: Int): CGMSHistoryEntryType {
+            return if (opCodeMap.containsKey(opCode))
+                opCodeMap[opCode]!!
+            else
+                UnknownOpCode
         }
 
         init {

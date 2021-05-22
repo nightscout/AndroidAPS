@@ -30,7 +30,7 @@ class MedtronicPumpStatus @Inject constructor(private val resourceHelper: Resour
 ) : PumpStatus(PumpType.MEDTRONIC_522_722) {
 
     var errorDescription: String? = null
-    var serialNumber: String? = null
+    lateinit var serialNumber: String //? = null
     var pumpFrequency: String? = null
     var maxBolus: Double? = null
     var maxBasal: Double? = null
@@ -58,6 +58,10 @@ class MedtronicPumpStatus @Inject constructor(private val resourceHelper: Resour
         if (medtronicDeviceTypeMap.isEmpty()) createMedtronicDeviceTypeMap()
         lastConnection = sp.getLong(MedtronicConst.Statistics.LastGoodPumpCommunicationTime, 0L)
         lastDataTime = lastConnection
+        var serial = sp.getStringOrNull(MedtronicConst.Prefs.PumpSerial, null)
+        if (serial != null) {
+            serialNumber = serial
+        }
     }
 
     private fun createMedtronicDeviceTypeMap() {

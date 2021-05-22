@@ -30,7 +30,7 @@ class MedtronicCGMSHistoryDecoder constructor(
         return try {
             decodeRecordInternal(record)
         } catch (ex: Exception) {
-            aapsLogger.error(LTag.PUMPCOMM, "     Error decoding: type={}, ex={}", record.entryType!!.name, ex.message, ex)
+            aapsLogger.error(LTag.PUMPCOMM, "     Error decoding: type={}, ex={}", record.entryType.name, ex.message, ex)
             RecordDecodeStatus.Error
         }
     }
@@ -40,25 +40,30 @@ class MedtronicCGMSHistoryDecoder constructor(
             parseDate(entry)
         }
         when (entry.entryType) {
-            CGMSHistoryEntryType.SensorPacket                                                                         -> decodeSensorPacket(entry)
-            CGMSHistoryEntryType.SensorError                                                                          -> decodeSensorError(entry)
-            CGMSHistoryEntryType.SensorDataLow                                                                        -> decodeDataHighLow(entry, 40)
-            CGMSHistoryEntryType.SensorDataHigh                                                                       -> decodeDataHighLow(entry, 400)
-            CGMSHistoryEntryType.SensorTimestamp                                                                      -> decodeSensorTimestamp(entry)
-            CGMSHistoryEntryType.SensorCal                                                                            -> decodeSensorCal(entry)
-            CGMSHistoryEntryType.SensorCalFactor                                                                      -> decodeSensorCalFactor(entry)
-            CGMSHistoryEntryType.SensorSync                                                                           -> decodeSensorSync(entry)
-            CGMSHistoryEntryType.SensorStatus                                                                         -> decodeSensorStatus(entry)
-            CGMSHistoryEntryType.CalBGForGH                                                                           -> decodeCalBGForGH(entry)
-            CGMSHistoryEntryType.GlucoseSensorData                                                                    -> decodeGlucoseSensorData(entry)
+            CGMSHistoryEntryType.SensorPacket      -> decodeSensorPacket(entry)
+            CGMSHistoryEntryType.SensorError       -> decodeSensorError(entry)
+            CGMSHistoryEntryType.SensorDataLow     -> decodeDataHighLow(entry, 40)
+            CGMSHistoryEntryType.SensorDataHigh    -> decodeDataHighLow(entry, 400)
+            CGMSHistoryEntryType.SensorTimestamp   -> decodeSensorTimestamp(entry)
+            CGMSHistoryEntryType.SensorCal         -> decodeSensorCal(entry)
+            CGMSHistoryEntryType.SensorCalFactor   -> decodeSensorCalFactor(entry)
+            CGMSHistoryEntryType.SensorSync        -> decodeSensorSync(entry)
+            CGMSHistoryEntryType.SensorStatus      -> decodeSensorStatus(entry)
+            CGMSHistoryEntryType.CalBGForGH        -> decodeCalBGForGH(entry)
+            CGMSHistoryEntryType.GlucoseSensorData -> decodeGlucoseSensorData(entry)
 
-            CGMSHistoryEntryType.BatteryChange, CGMSHistoryEntryType.Something10, CGMSHistoryEntryType.DateTimeChange -> {
+            CGMSHistoryEntryType.BatteryChange,
+            CGMSHistoryEntryType.Something10,
+            CGMSHistoryEntryType.DateTimeChange    -> {
             }
 
-            CGMSHistoryEntryType.Something19, CGMSHistoryEntryType.DataEnd, CGMSHistoryEntryType.SensorWeakSignal     -> {
+            CGMSHistoryEntryType.Something19,
+            CGMSHistoryEntryType.DataEnd,
+            CGMSHistoryEntryType.SensorWeakSignal  -> {
             }
 
-            CGMSHistoryEntryType.None                                                                                 -> {
+            CGMSHistoryEntryType.UnknownOpCode,
+            CGMSHistoryEntryType.None              -> {
             }
         }
         return RecordDecodeStatus.NotSupported
@@ -83,7 +88,7 @@ class MedtronicCGMSHistoryDecoder constructor(
             } else if (opCode > 0 && opCode < 20) {
                 entryType = getByCode(opCode)
                 if (entryType === CGMSHistoryEntryType.None) {
-                    unknownOpCodes!![opCode] = opCode
+                    unknownOpCodes[opCode] = opCode
                     aapsLogger.warn(LTag.PUMPCOMM, "GlucoseHistoryEntry with unknown code: $opCode")
                     val pe = CGMSHistoryEntry()
                     pe.setEntryType(CGMSHistoryEntryType.None)
@@ -94,7 +99,7 @@ class MedtronicCGMSHistoryDecoder constructor(
                     // System.out.println("OpCode: " + opCode);
                     val listRawData: MutableList<Byte> = ArrayList()
                     listRawData.add(opCode.toByte())
-                    for (j in 0 until entryType!!.totalLength - 1) {
+                    for (j in 0 until entryType.totalLength - 1) {
                         listRawData.add(dataClear[counter])
                         counter++
                     }
@@ -166,14 +171,14 @@ class MedtronicCGMSHistoryDecoder constructor(
     }
 
     private fun parseDate(entry: CGMSHistoryEntry): Long? {
-        if (!entry.entryType!!.hasDate()) return null
+        if (!entry.entryType.hasDate()) return null
         val data = entry.datetime
-        return if (entry.entryType!!.dateType === CGMSHistoryEntryType.DateType.MinuteSpecific) {
-            val atechDateTime = DateTimeUtil.toATechDate(parseYear(data!![3].toInt()), parseMonths(data[0].toInt(), data[1].toInt()),
+        return if (entry.entryType.dateType === CGMSHistoryEntryType.DateType.MinuteSpecific) {
+            val atechDateTime = DateTimeUtil.toATechDate(parseYear(data[3].toInt()), parseMonths(data[0].toInt(), data[1].toInt()),
                 parseDay(data[2].toInt()), parseHours(data[0].toInt()), parseMinutes(data[1].toInt()), 0)
             entry.atechDateTime = atechDateTime
             atechDateTime
-        } else if (entry.entryType!!.dateType === CGMSHistoryEntryType.DateType.SecondSpecific) {
+        } else if (entry.entryType.dateType === CGMSHistoryEntryType.DateType.SecondSpecific) {
             aapsLogger.warn(LTag.PUMPCOMM, "parseDate for SecondSpecific type is not implemented.")
             throw RuntimeException()
             // return null;

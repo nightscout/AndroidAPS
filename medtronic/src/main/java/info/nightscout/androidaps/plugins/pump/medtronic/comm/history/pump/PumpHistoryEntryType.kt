@@ -12,7 +12,12 @@ import java.util.*
  * Author: Andy {andy.rozman@gmail.com}
  */
 enum class PumpHistoryEntryType // implements CodeEnum
-constructor(opCode: Byte, name: String?, group: PumpHistoryEntryGroup, head: Int = 2, date: Int = 5, body: Int = 0) {
+constructor(var code: Byte,
+            var description: String,
+            var group: PumpHistoryEntryGroup,
+            var headLength: Int = 2,
+            var dateLength: Int = 5,
+            var bodyLength: Int = 0) {
 
     // all commented out are probably not the real items
     None(0, "None", PumpHistoryEntryGroup.Unknown, 1, 0, 0),
@@ -193,16 +198,6 @@ constructor(opCode: Byte, name: String?, group: PumpHistoryEntryGroup, head: Int
         }
     }
 
-    val code: Byte
-
-    val description: String?
-        get() = field
-
-    val headLength: Int
-    val dateLength: Int
-
-    // private MinimedDeviceType deviceType;
-    private val bodyLength: Int
     private val totalLength: Int
 
     // special rules need to be put in list from highest to lowest (e.g.:
@@ -211,12 +206,6 @@ constructor(opCode: Byte, name: String?, group: PumpHistoryEntryGroup, head: Int
     private var specialRulesBody: MutableList<SpecialRule>? = null
     private var hasSpecialRules = false
         get() = field
-
-    val group: PumpHistoryEntryGroup
-        get() = field
-
-    private constructor(opCode: Byte, group: PumpHistoryEntryGroup) : this(opCode, null, group, 2, 5, 0) {}
-    private constructor(opCode: Byte, group: PumpHistoryEntryGroup, head: Int, date: Int, body: Int) : this(opCode, null, group, head, date, body) {}
 
     fun getTotalLength(medtronicDeviceType: MedtronicDeviceType): Int {
         return if (hasSpecialRules) {
@@ -227,7 +216,7 @@ constructor(opCode: Byte, name: String?, group: PumpHistoryEntryGroup, head: Int
     }
 
     fun addSpecialRuleHead(rule: SpecialRule) {
-        if (isEmpty(specialRulesHead)) {
+        if (specialRulesHead.isNullOrEmpty()) {
             specialRulesHead = ArrayList()
         }
         specialRulesHead!!.add(rule)
@@ -235,53 +224,33 @@ constructor(opCode: Byte, name: String?, group: PumpHistoryEntryGroup, head: Int
     }
 
     fun addSpecialRuleBody(rule: SpecialRule) {
-        if (isEmpty(specialRulesBody)) {
+        if (specialRulesBody.isNullOrEmpty()) {
             specialRulesBody = ArrayList()
         }
         specialRulesBody!!.add(rule)
         hasSpecialRules = true
     }
 
-    // fun getDescription(): String {
-    //     return description ?: name
-    // }
-
     fun getHeadLength(medtronicDeviceType: MedtronicDeviceType): Int {
-        return if (hasSpecialRules) {
-            if (isNotEmpty(specialRulesHead)) {
-                determineSizeByRule(medtronicDeviceType, headLength, specialRulesHead)
-            } else {
-                headLength
-            }
+        return if (hasSpecialRules && !specialRulesHead.isNullOrEmpty()) {
+            determineSizeByRule(medtronicDeviceType, headLength, specialRulesHead!!)
         } else {
             headLength
         }
     }
 
     fun getBodyLength(medtronicDeviceType: MedtronicDeviceType): Int {
-        return if (hasSpecialRules) {
-            if (isNotEmpty(specialRulesBody)) {
-                determineSizeByRule(medtronicDeviceType, bodyLength, specialRulesBody)
-            } else {
-                bodyLength
-            }
+        return if (hasSpecialRules && !specialRulesBody.isNullOrEmpty()) {
+            determineSizeByRule(medtronicDeviceType, bodyLength, specialRulesBody!!)
         } else {
             bodyLength
         }
     }
 
-    private fun isNotEmpty(list: List<*>?): Boolean {
-        return list != null && !list.isEmpty()
-    }
-
-    private fun isEmpty(list: List<*>?): Boolean {
-        return list == null || list.isEmpty()
-    }
-
     // byte[] dh = { 2, 3 };
-    private fun determineSizeByRule(medtronicDeviceType: MedtronicDeviceType, defaultValue: Int, rules: List<SpecialRule>?): Int {
+    private fun determineSizeByRule(medtronicDeviceType: MedtronicDeviceType, defaultValue: Int, rules: List<SpecialRule>): Int {
         var size = defaultValue
-        for (rule in rules!!) {
+        for (rule in rules) {
             if (MedtronicDeviceType.isSameDevice(medtronicDeviceType, rule.deviceType)) {
                 size = rule.size
                 break
@@ -293,12 +262,6 @@ constructor(opCode: Byte, name: String?, group: PumpHistoryEntryGroup, head: Int
     class SpecialRule internal constructor(var deviceType: MedtronicDeviceType, var size: Int)
 
     init {
-        this.code = opCode //as Byte.toInt()
-        description = name
-        headLength = head
-        dateLength = date
-        bodyLength = body
-        totalLength = head + date + body
-        this.group = group
+        totalLength = headLength + dateLength + bodyLength
     }
 }

@@ -85,9 +85,9 @@ class PumpMessage : RLMessage {
 //            + commandType);
 
     // rawContent = just response without code (contents-2, messageBody.txData-1);
-    val rawContent: ByteArray?
+    val rawContent: ByteArray
         get() {
-            if (messageBody == null || messageBody!!.txData == null || messageBody!!.txData!!.size == 0) return null
+            if (messageBody == null || messageBody!!.txData == null || messageBody!!.txData!!.size == 0) return byteArrayOf()
             val data = messageBody!!.txData
             var length = ByteUtil.asUINT8(data!![0]) // length is not always correct so, we check whole array if we have
             // data, after length
@@ -121,7 +121,7 @@ class PumpMessage : RLMessage {
         get() {
             val raw = messageBody!!.txData
             return if (raw == null || raw.size == 0) {
-                ByteArray(0)
+                byteArrayOf()
             } else {
                 ByteUtil.substring(raw, 1, Math.min(FRAME_DATA_LENGTH, raw.size - 1))
             }
@@ -178,6 +178,7 @@ class PumpMessage : RLMessage {
     }
 
     companion object {
+
         const val FRAME_DATA_LENGTH = 64
     }
 }

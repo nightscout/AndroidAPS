@@ -27,63 +27,13 @@ class MedtronicConverter @Inject constructor(
     private val medtronicUtil: MedtronicUtil
 ) {
 
-    // fun convertResponse(pumpType: PumpType, commandType: MedtronicCommandType, rawContent: ByteArray?): Any? {
-    //     if ((rawContent == null || rawContent.size < 1) && commandType != MedtronicCommandType.PumpModel) {
-    //         aapsLogger.warn(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "Content is empty or too short, no data to convert (type=%s,isNull=%b,length=%s)",
-    //             commandType.name, rawContent == null, rawContent?.size ?: "-"))
-    //         return null
-    //     }
-    //     aapsLogger.debug(LTag.PUMPCOMM, "Raw response before convert: " + ByteUtil.shortHexString(rawContent))
-    //     return when (commandType) {
-    //         MedtronicCommandType.PumpModel                                                                                        -> {
-    //             decodeModel(rawContent)
-    //         }
-    //
-    //         MedtronicCommandType.GetRealTimeClock                                                                                 -> {
-    //             decodeTime(rawContent)
-    //         }
-    //
-    //         MedtronicCommandType.GetRemainingInsulin                                                                              -> {
-    //             decodeRemainingInsulin(rawContent)
-    //         }
-    //
-    //         MedtronicCommandType.GetBatteryStatus                                                                                 -> {
-    //             decodeBatteryStatus(rawContent) // 1
-    //         }
-    //
-    //         MedtronicCommandType.GetBasalProfileSTD, MedtronicCommandType.GetBasalProfileA, MedtronicCommandType.GetBasalProfileB -> {
-    //             decodeBasalProfile(pumpType, rawContent)
-    //         }
-    //
-    //         MedtronicCommandType.ReadTemporaryBasal                                                                               -> {
-    //             TempBasalPair(aapsLogger, rawContent!!) // 5
-    //         }
-    //
-    //         MedtronicCommandType.Settings_512                                                                                     -> {
-    //             decodeSettingsLoop(rawContent)
-    //         }
-    //
-    //         MedtronicCommandType.Settings                                                                                         -> {
-    //             decodeSettingsLoop(rawContent)
-    //         }
-    //
-    //         MedtronicCommandType.SetBolus                                                                                         -> {
-    //             rawContent // 1
-    //         }
-    //
-    //         else                                                                                                                  -> {
-    //             throw RuntimeException("Unsupported command Type: $commandType")
-    //         }
-    //     }
-    // }
-
-    fun decodeBasalProfile(pumpType: PumpType, rawContent: ByteArray?): BasalProfile? {
-        val basalProfile = BasalProfile(aapsLogger, rawContent!!)
+    fun decodeBasalProfile(pumpType: PumpType, rawContent: ByteArray): BasalProfile? {
+        val basalProfile = BasalProfile(aapsLogger, rawContent)
         return if (basalProfile.verify(pumpType)) basalProfile else null
     }
 
-    fun decodeModel(rawContent: ByteArray?): MedtronicDeviceType {
-        if (rawContent == null || rawContent.size < 4) {
+    fun decodeModel(rawContent: ByteArray): MedtronicDeviceType {
+        if (rawContent.size < 4) {
             aapsLogger.warn(LTag.PUMPCOMM, "Error reading PumpModel, returning Unknown_Device")
             return MedtronicDeviceType.Unknown_Device
         }
@@ -99,10 +49,10 @@ class MedtronicConverter @Inject constructor(
         return pumpModel
     }
 
-    fun decodeBatteryStatus(rawData: ByteArray?): BatteryStatusDTO {
+    fun decodeBatteryStatus(rawData: ByteArray): BatteryStatusDTO {
         // 00 7C 00 00
         val batteryStatus = BatteryStatusDTO()
-        val status = rawData!![0].toInt()
+        val status = rawData[0].toInt()
         if (status == 0) {
             batteryStatus.batteryStatusType = BatteryStatusDTO.BatteryStatusType.Normal
         } else if (status == 1) {
@@ -125,7 +75,7 @@ class MedtronicConverter @Inject constructor(
         return batteryStatus
     }
 
-    public fun decodeRemainingInsulin(rawData: ByteArray?): Double {
+    fun decodeRemainingInsulin(rawData: ByteArray): Double {
         var startIdx = 0
         val pumpModel = medtronicUtil.medtronicPumpModel
         val strokes = pumpModel.bolusStrokes //?: 10
@@ -134,7 +84,7 @@ class MedtronicConverter @Inject constructor(
         }
         val reqLength = startIdx + 1
         val value: Double
-        value = if (reqLength >= rawData!!.size) {
+        value = if (reqLength >= rawData.size) {
             rawData[startIdx] / (1.0 * strokes)
         } else {
             ByteUtil.toInt(rawData[startIdx], rawData[startIdx + 1]) / (1.0 * strokes)
@@ -143,8 +93,8 @@ class MedtronicConverter @Inject constructor(
         return value
     }
 
-    public fun decodeTime(rawContent: ByteArray?): LocalDateTime? {
-        val hours = ByteUtil.asUINT8(rawContent!![0])
+    fun decodeTime(rawContent: ByteArray): LocalDateTime? {
+        val hours = ByteUtil.asUINT8(rawContent[0])
         val minutes = ByteUtil.asUINT8(rawContent[1])
         val seconds = ByteUtil.asUINT8(rawContent[2])
         val year = (ByteUtil.asUINT8(rawContent[4]) and 0x3f) + 1984
@@ -159,12 +109,12 @@ class MedtronicConverter @Inject constructor(
         }
     }
 
-    public fun decodeSettingsLoop(rd: ByteArray?): Map<String, PumpSettingDTO> {
+    public fun decodeSettingsLoop(rd: ByteArray): Map<String, PumpSettingDTO> {
         val map: MutableMap<String, PumpSettingDTO> = HashMap()
         addSettingToMap("PCFG_MAX_BOLUS", "" + decodeMaxBolus(rd), PumpConfigurationGroup.Bolus, map)
         addSettingToMap(
             "PCFG_MAX_BASAL", ""
-            + decodeBasalInsulin(ByteUtil.makeUnsignedShort(rd!![settingIndexMaxBasal].toInt(),
+            + decodeBasalInsulin(ByteUtil.makeUnsignedShort(rd[settingIndexMaxBasal].toInt(),
             rd[settingIndexMaxBasal + 1].toInt())), PumpConfigurationGroup.Basal, map)
         addSettingToMap("CFG_BASE_CLOCK_MODE", if (rd[settingIndexTimeDisplayFormat].toInt() == 0) "12h" else "24h",
             PumpConfigurationGroup.General, map)
@@ -301,9 +251,11 @@ class MedtronicConverter @Inject constructor(
     private val settingIndexTimeDisplayFormat: Int
         get() = if (is523orHigher()) 9 else 8
 
-    private fun decodeMaxBolus(ai: ByteArray?): Double {
-        return if (is523orHigher()) decodeBolusInsulin(ByteUtil.toInt(ai!![5], ai[6])) else decodeBolusInsulin(ByteUtil
-            .asUINT8(ai!![5]))
+    private fun decodeMaxBolus(ai: ByteArray): Double {
+        return if (is523orHigher())
+            decodeBolusInsulin(ByteUtil.toInt(ai[5], ai[6]))
+        else
+            decodeBolusInsulin(ByteUtil.asUINT8(ai[5]))
     }
 
     private fun is523orHigher(): Boolean {

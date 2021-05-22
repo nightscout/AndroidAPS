@@ -1,9 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data.dto
 
-import com.google.gson.annotations.Expose
 //import info.nightscout.androidaps.db.TDD
+import com.google.gson.annotations.Expose
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil
-import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntryType
@@ -65,8 +64,8 @@ class DailyTotalsDTO(var entry: PumpHistoryEntry) {
     }
 
     private fun decodeEndResultsTotals(entry: PumpHistoryEntry) {
-        val totals = ByteUtil.toInt(entry.head!![0].toInt(), entry.head!![1].toInt(), entry.head!![2].toInt(),
-            entry.head!![3].toInt(), ByteUtil.BitConversion.BIG_ENDIAN) * 0.025
+        val totals = ByteUtil.toInt(entry.head[0].toInt(), entry.head[1].toInt(), entry.head[2].toInt(),
+            entry.head[3].toInt(), ByteUtil.BitConversion.BIG_ENDIAN) * 0.025
         insulinTotal = totals
         entry.addDecodedData("Totals", totals)
     }
@@ -88,9 +87,9 @@ class DailyTotalsDTO(var entry: PumpHistoryEntry) {
         }
     }
 
-    private fun decodeDailyTotals515(data: ByteArray?) {
+    private fun decodeDailyTotals515(data: ByteArray) {
         // LOG.debug("Can't decode DailyTotals515: Body={}", ByteUtil.getHex(data));
-        insulinTotal = ByteUtil.toInt(data!![8], data[9]) / 40.0
+        insulinTotal = ByteUtil.toInt(data[8], data[9]) / 40.0
         insulinBasal = ByteUtil.toInt(data[10], data[11]) / 40.0
         insulinBolus = ByteUtil.toInt(data[13], data[14]) / 40.0
 
@@ -102,8 +101,8 @@ class DailyTotalsDTO(var entry: PumpHistoryEntry) {
         //LOG.debug("515: {}", toString());
     }
 
-    private fun decodeDailyTotals522(data: ByteArray?) {
-        insulinTotal = ByteUtil.toInt(data!![8], data[9]) / 40.0
+    private fun decodeDailyTotals522(data: ByteArray) {
+        insulinTotal = ByteUtil.toInt(data[8], data[9]) / 40.0
         insulinBasal = ByteUtil.toInt(data[10], data[11]) / 40.0
         insulinBolus = ByteUtil.toInt(data[13], data[14]) / 40.0
         bolusTotal = ByteUtil.toInt(data[17], data[18], data[19]) / 40.0
@@ -124,8 +123,8 @@ class DailyTotalsDTO(var entry: PumpHistoryEntry) {
         //LOG.debug("522: {}", toString());
     }
 
-    private fun decodeDailyTotals523(data: ByteArray?) {
-        insulinTotal = ByteUtil.toInt(data!![8], data[9]) / 40.0
+    private fun decodeDailyTotals523(data: ByteArray) {
+        insulinTotal = ByteUtil.toInt(data[8], data[9]) / 40.0
         insulinBasal = ByteUtil.toInt(data[10], data[11]) / 40.0
         insulinBolus = ByteUtil.toInt(data[13], data[14]) / 40.0
         insulinCarbs = ByteUtil.toInt(data[16], data[17]) * 1.0
@@ -177,23 +176,13 @@ class DailyTotalsDTO(var entry: PumpHistoryEntry) {
             .toString()
     }
 
-    // fun setTDD(tdd: TDD) {
-    //     tdd.date = DateTimeUtil.toMillisFromATD(entry.atechDateTime!!)
-    //     tdd.basal = insulinBasal!!
-    //     tdd.bolus = insulinBolus
-    //     tdd.total = insulinTotal
-    // }
-    //
-    // fun doesEqual(tdd: TDD): Boolean {
-    //     return tdd.total == insulinTotal && tdd.bolus == insulinBolus && tdd.basal == insulinBasal
-    // }
-
     init {
         when (entry.entryType) {
             PumpHistoryEntryType.EndResultTotals -> decodeEndResultsTotals(entry)
             PumpHistoryEntryType.DailyTotals515  -> decodeDailyTotals515(entry.body)
             PumpHistoryEntryType.DailyTotals522  -> decodeDailyTotals522(entry.body)
             PumpHistoryEntryType.DailyTotals523  -> decodeDailyTotals523(entry.body)
+
             else                                 -> {
             }
         }

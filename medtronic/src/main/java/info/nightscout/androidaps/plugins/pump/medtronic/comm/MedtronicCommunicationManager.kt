@@ -402,7 +402,7 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
     private inline fun <reified T> sendAndGetResponseWithCheck(
         commandType: MedtronicCommandType,
         bodyData: ByteArray? = null,
-        decode: (pumpType: PumpType, commandType: MedtronicCommandType, rawContent: ByteArray?) -> T
+        decode: (pumpType: PumpType, commandType: MedtronicCommandType, rawContent: ByteArray) -> T
     ): T? {
         aapsLogger.debug(LTag.PUMPCOMM, "getDataFromPump: $commandType")
         for (retries in 0 until MAX_COMMAND_TRIES) {
@@ -526,7 +526,7 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
 //                aapsLogger.debug(LTag.PUMPCOMM,"1st Response: " + HexDump.toHexStringDisplayable(response.getRawContent()));
 //                aapsLogger.debug(LTag.PUMPCOMM,"1st Response: " + HexDump.toHexStringDisplayable(response.getMessageBody().getTxData()));
                 val check = checkResponseContent(response, commandType.commandDescription, 1)
-                var data: ByteArray? = null
+                var data: ByteArray = byteArrayOf()
                 if (check == null) {
                     data = response.rawContentOfFrame
                     val ackMsg = makePumpMessage(MedtronicCommandType.CommandACK, PumpAckMessageBody())
@@ -572,13 +572,13 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
         return null
     }
 
-    private fun checkIfWeHaveMoreData(commandType: MedtronicCommandType, response: PumpMessage, data: ByteArray?): Boolean {
+    private fun checkIfWeHaveMoreData(commandType: MedtronicCommandType, response: PumpMessage, data: ByteArray): Boolean {
         if (commandType === MedtronicCommandType.GetBasalProfileSTD || //
             commandType === MedtronicCommandType.GetBasalProfileA || //
             commandType === MedtronicCommandType.GetBasalProfileB) {
             val responseRaw = response.rawContentOfFrame
             val last = responseRaw.size - 1
-            aapsLogger.debug(LTag.PUMPCOMM, "Length: " + data!!.size)
+            aapsLogger.debug(LTag.PUMPCOMM, "Length: " + data.size)
             if (data.size >= BasalProfile.MAX_RAW_DATA_SIZE) {
                 return false
             }

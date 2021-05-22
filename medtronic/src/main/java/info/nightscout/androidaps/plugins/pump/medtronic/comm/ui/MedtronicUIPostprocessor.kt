@@ -43,8 +43,6 @@ class MedtronicUIPostprocessor @Inject constructor(
                     val basalProfile = uiTask.getParameter(0) as BasalProfile
                     aapsLogger.debug("D: basal profile returned after set: $basalProfile")
 
-                    //var desc: PumpDescription = medtronicPumpPlugin.getP.getPumpDescription()
-
                     medtronicPumpStatus.basalsByHour = basalProfile.getProfilesByHour(medtronicPumpPlugin.pumpDescription.pumpType)
                 }
             }
@@ -145,40 +143,53 @@ class MedtronicUIPostprocessor @Inject constructor(
     }
 
     private fun postProcessSettings(uiTask: MedtronicUITask) {
-        val settings = uiTask.result as Map<String, PumpSettingDTO>?
+        val settings = uiTask.result as? Map<String, PumpSettingDTO>
+
+        if (settings == null)
+            return
+
         medtronicUtil.settings = settings
-        var checkValue: PumpSettingDTO?
-        medtronicPumpPlugin.rileyLinkService!!.verifyConfiguration()
+        var checkValue: PumpSettingDTO
+        medtronicPumpPlugin.rileyLinkService.verifyConfiguration()
 
         // check profile
-        if ("Yes" != settings!!["PCFG_BASAL_PROFILES_ENABLED"]!!.value) {
-            aapsLogger.error(LTag.PUMP, "Basal profiles are not enabled on pump.")
-            medtronicUtil.sendNotification(MedtronicNotificationType.PumpBasalProfilesNotEnabled, resourceHelper, rxBus)
-        } else {
-            checkValue = settings["PCFG_ACTIVE_BASAL_PROFILE"]
-            if ("STD" != checkValue!!.value) {
-                aapsLogger.error("Basal profile set on pump is incorrect (must be STD).")
-                medtronicUtil.sendNotification(MedtronicNotificationType.PumpIncorrectBasalProfileSelected, resourceHelper, rxBus)
+        if (settings.containsKey("PCFG_BASAL_PROFILES_ENABLED") && settings.containsKey("PCFG_ACTIVE_BASAL_PROFILE")) {
+            checkValue = settings["PCFG_BASAL_PROFILES_ENABLED"]!!
+            if ("Yes" != checkValue.value) {
+                aapsLogger.error(LTag.PUMP, "Basal profiles are not enabled on pump.")
+                medtronicUtil.sendNotification(MedtronicNotificationType.PumpBasalProfilesNotEnabled, resourceHelper, rxBus)
+            } else {
+                checkValue = settings["PCFG_ACTIVE_BASAL_PROFILE"]!!
+                if ("STD" != checkValue.value) {
+                    aapsLogger.error("Basal profile set on pump is incorrect (must be STD).")
+                    medtronicUtil.sendNotification(MedtronicNotificationType.PumpIncorrectBasalProfileSelected, resourceHelper, rxBus)
+                }
             }
         }
 
         // TBR
-        checkValue = settings["PCFG_TEMP_BASAL_TYPE"]
-        if ("Units" != checkValue!!.value) {
-            aapsLogger.error("Wrong TBR type set on pump (must be Absolute).")
-            medtronicUtil.sendNotification(MedtronicNotificationType.PumpWrongTBRTypeSet, resourceHelper, rxBus)
+        if (settings.containsKey("PCFG_TEMP_BASAL_TYPE")) {
+            if ("Units" != settings["PCFG_TEMP_BASAL_TYPE"]!!.value) {
+                aapsLogger.error("Wrong TBR type set on pump (must be Absolute).")
+                medtronicUtil.sendNotification(MedtronicNotificationType.PumpWrongTBRTypeSet, resourceHelper, rxBus)
+            }
         }
 
         // MAXes
-        checkValue = settings["PCFG_MAX_BOLUS"]
-        if (!MedtronicUtil.isSame(checkValue!!.value.toDouble(), medtronicPumpStatus.maxBolus!!)) {
-            aapsLogger.error(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "Wrong Max Bolus set on Pump (current=%s, required=%.2f).", checkValue.value, medtronicPumpStatus.maxBolus))
-            medtronicUtil.sendNotification(MedtronicNotificationType.PumpWrongMaxBolusSet, resourceHelper, rxBus, medtronicPumpStatus.maxBolus)
+        if (settings.containsKey("PCFG_MAX_BOLUS")) {
+            checkValue = settings["PCFG_MAX_BOLUS"]!!
+            if (!MedtronicUtil.isSame(checkValue.value.toDouble(), medtronicPumpStatus.maxBolus!!)) {
+                aapsLogger.error(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "Wrong Max Bolus set on Pump (current=%s, required=%.2f).", checkValue.value, medtronicPumpStatus.maxBolus))
+                medtronicUtil.sendNotification(MedtronicNotificationType.PumpWrongMaxBolusSet, resourceHelper, rxBus, medtronicPumpStatus.maxBolus)
+            }
         }
-        checkValue = settings["PCFG_MAX_BASAL"]
-        if (!MedtronicUtil.isSame(checkValue!!.value.toDouble(), medtronicPumpStatus.maxBasal!!)) {
-            aapsLogger.error(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "Wrong Max Basal set on Pump (current=%s, required=%.2f).", checkValue.value, medtronicPumpStatus.maxBasal))
-            medtronicUtil.sendNotification(MedtronicNotificationType.PumpWrongMaxBasalSet, resourceHelper, rxBus, medtronicPumpStatus.maxBasal)
+
+        if (settings.containsKey("PCFG_MAX_BASAL")) {
+            checkValue = settings["PCFG_MAX_BASAL"]!!
+            if (!MedtronicUtil.isSame(checkValue.value.toDouble(), medtronicPumpStatus.maxBasal!!)) {
+                aapsLogger.error(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "Wrong Max Basal set on Pump (current=%s, required=%.2f).", checkValue.value, medtronicPumpStatus.maxBasal))
+                medtronicUtil.sendNotification(MedtronicNotificationType.PumpWrongMaxBasalSet, resourceHelper, rxBus, medtronicPumpStatus.maxBasal)
+            }
         }
     }
 

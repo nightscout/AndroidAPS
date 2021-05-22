@@ -34,8 +34,7 @@ class BolusDTO constructor(atechDateTime: Long,
                            @Expose var requestedAmount: Double,
                            @Expose var deliveredAmount: Double,
                            @Expose var duration: Int = 0
- )
-    : PumpTimeStampedRecord(atechDateTime) {
+) : PumpTimeStampedRecord(atechDateTime) {
 
     // @Expose
     // var requestedAmount: Double? = null
@@ -50,7 +49,7 @@ class BolusDTO constructor(atechDateTime: Long,
     // var duration: Int? = null
 
     @Expose
-    var bolusType: PumpBolusType? = null
+    lateinit var bolusType: PumpBolusType
 
     var insulinOnBoard: Double? = null
 
@@ -87,9 +86,9 @@ class BolusDTO constructor(atechDateTime: Long,
     }
 
     val bolusKey: String
-        get() = "Bolus_" + bolusType!!.name
+        get() = "Bolus_" + bolusType.name
 
     override fun toString(): String {
-        return "BolusDTO [type=" + bolusType!!.name + ", " + value + "]"
+        return "BolusDTO [type=" + bolusType.name + ", " + value + "]"
     }
 }

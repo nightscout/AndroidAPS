@@ -6,7 +6,6 @@ import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
 import org.apache.commons.lang3.StringUtils
-import java.util.*
 
 /**
  * This file was taken from GGC - GNU Gluco Control (ggc.sourceforge.net), application for diabetes
@@ -15,35 +14,21 @@ import java.util.*
  *
  * Author: Andy {andy.rozman@gmail.com}
  */
-abstract class MedtronicHistoryDecoder<T : MedtronicHistoryEntry?> : MedtronicHistoryDecoderInterface<T> {
-
-    constructor(aapsLogger: AAPSLogger,
-                medtronicUtil: MedtronicUtil,
-                bitUtils: ByteUtil) {
-        this.aapsLogger = aapsLogger
-        this.medtronicUtil = medtronicUtil
-        this.bitUtils = bitUtils
-    }
-
-    var aapsLogger: AAPSLogger
-    var medtronicUtil: MedtronicUtil
-    var bitUtils: ByteUtil
+abstract class MedtronicHistoryDecoder<T : MedtronicHistoryEntry?>(var aapsLogger: AAPSLogger,
+                                                                   var medtronicUtil: MedtronicUtil,
+                                                                   var bitUtils: ByteUtil) : MedtronicHistoryDecoderInterface<T> {
 
     // STATISTICS (remove at later time or not)
     protected var statisticsEnabled = true
-    protected var unknownOpCodes: MutableMap<Int, Int?>? = null
-    protected var mapStatistics: MutableMap<RecordDecodeStatus, MutableMap<String, String>>? = null
+    protected var unknownOpCodes: MutableMap<Int, Int?> = mutableMapOf()
+    protected var mapStatistics: MutableMap<RecordDecodeStatus, MutableMap<String, String>> = mutableMapOf()
 
-    // public abstract <E extends MedtronicHistoryEntry> Class<E> getHistoryEntryClass();
-    // public abstract RecordDecodeStatus decodeRecord(T record);
     abstract fun postProcess()
     protected abstract fun runPostDecodeTasks()
 
     // TODO_ extend this to also use bigger pages (for now we support only 1024 pages)
     @Throws(RuntimeException::class)
     private fun checkPage(page: RawHistoryPage): MutableList<Byte> {
-        //val byteList: MutableList<Byte> = mutableListOf()
-
         if (!medtronicUtil.isModelSet) {
             aapsLogger.error(LTag.PUMPCOMM, "Device Type is not defined.")
             return mutableListOf()
@@ -69,36 +54,37 @@ abstract class MedtronicHistoryDecoder<T : MedtronicHistoryEntry?> : MedtronicHi
 
     protected fun prepareStatistics() {
         if (!statisticsEnabled) return
-        unknownOpCodes = HashMap()
-        mapStatistics = HashMap()
+        // unknownOpCodes = HashMap()
+        // mapStatistics = HashMap()
         for (stat in RecordDecodeStatus.values()) {
-            (mapStatistics as HashMap<RecordDecodeStatus, MutableMap<String, String>>)[stat] = HashMap()
+            mapStatistics[stat] = hashMapOf()
+            //(mapStatistics as HashMap<RecordDecodeStatus, MutableMap<String, String>>)[stat] = hashMapOf()
         }
     }
 
     protected fun addToStatistics(pumpHistoryEntry: MedtronicHistoryEntryInterface, status: RecordDecodeStatus?, opCode: Int?) {
         if (!statisticsEnabled) return
         if (opCode != null) {
-            if (!unknownOpCodes!!.containsKey(opCode)) {
-                unknownOpCodes!![opCode] = opCode
+            if (!unknownOpCodes.containsKey(opCode)) {
+                unknownOpCodes[opCode] = opCode
             }
             return
         }
-        if (!mapStatistics!![status]!!.containsKey(pumpHistoryEntry.entryTypeName)) {
-            mapStatistics!![status]!!.put(pumpHistoryEntry.entryTypeName!!, "")
+        if (!mapStatistics[status]!!.containsKey(pumpHistoryEntry.entryTypeName)) {
+            mapStatistics[status]!!.put(pumpHistoryEntry.entryTypeName, "")
         }
     }
 
     protected fun showStatistics() {
         var sb = StringBuilder()
-        for ((key) in unknownOpCodes!!) {
+        for ((key) in unknownOpCodes) {
             StringUtil.appendToStringBuilder(sb, "" + key, ", ")
         }
         aapsLogger.info(LTag.PUMPCOMM, "STATISTICS OF PUMP DECODE")
-        if (unknownOpCodes!!.size > 0) {
+        if (unknownOpCodes.size > 0) {
             aapsLogger.warn(LTag.PUMPCOMM, "Unknown Op Codes: $sb")
         }
-        for ((key, value) in mapStatistics!!) {
+        for ((key, value) in mapStatistics) {
             sb = StringBuilder()
             if (key !== RecordDecodeStatus.OK) {
                 if (value.size == 0) continue
@@ -106,9 +92,9 @@ abstract class MedtronicHistoryDecoder<T : MedtronicHistoryEntry?> : MedtronicHi
                     StringUtil.appendToStringBuilder(sb, key1, ", ")
                 }
                 val spaces = StringUtils.repeat(" ", 14 - key.name.length)
-                aapsLogger.info(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "    %s%s - %d. Elements: %s", key.name, spaces, value.size, sb.toString()))
+                aapsLogger.info(LTag.PUMPCOMM, "    ${key.name}$spaces - ${value.size}. Elements: ${sb.toString()}")
             } else {
-                aapsLogger.info(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "    %s             - %d", key.name, value.size))
+                aapsLogger.info(LTag.PUMPCOMM, "    ${key.name}             - ${value.size}")
             }
         }
     }

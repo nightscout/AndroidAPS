@@ -5,7 +5,7 @@ package info.nightscout.androidaps.plugins.pump.medtronic.comm.history
  */
 interface MedtronicHistoryEntryInterface {
 
-    val entryTypeName: String?
-    fun setData(listRawData: List<Byte>, doNotProcess: Boolean)
+    val entryTypeName: String
+    fun setData(listRawData: MutableList<Byte>, doNotProcess: Boolean)
     val dateLength: Int
 }

@@ -75,7 +75,7 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
             if (counter >= 1022) {
                 break
             }
-            val listRawData: MutableList<Byte?> = ArrayList()
+            val listRawData: MutableList<Byte> = ArrayList()
             listRawData.add(opCode.toByte())
             if (entryType === PumpHistoryEntryType.UnabsorbedInsulin
                 || entryType === PumpHistoryEntryType.UnabsorbedInsulin512) {
@@ -112,7 +112,7 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
                     pe.opCode = opCode.toByte()
                 }
                 if (entryType.getHeadLength(medtronicUtil.medtronicPumpModel) == 0) special = true
-                pe.setData(listRawData as List<Byte>, special)
+                pe.setData(listRawData, special)
                 val decoded = decodeRecord(pe)
                 if (decoded === RecordDecodeStatus.OK || decoded === RecordDecodeStatus.Ignored) {
                     //Log.i(TAG, "#" + record + " " + decoded.getDescription() + " " + pe);
@@ -291,14 +291,14 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
     }
 
     private fun decodeBatteryActivity(entry: PumpHistoryEntry) {
-        entry.displayableValue = if (entry.head!![0] == 0.toByte()) "Battery Removed" else "Battery Replaced"
+        entry.displayableValue = if (entry.head[0] == 0.toByte()) "Battery Removed" else "Battery Replaced"
     }
 
     private fun decodeBasalProfileStart(entry: PumpHistoryEntry): RecordDecodeStatus {
         val body = entry.body
-        val offset = body!![0] * 1000 * 30 * 60
+        val offset = body[0] * 1000 * 30 * 60
         var rate: Float? = null
-        val index = entry.head!![0].toInt()
+        val index = entry.head[0].toInt()
         if (MedtronicDeviceType.isSameDevice(medtronicUtil.medtronicPumpModel, MedtronicDeviceType.Medtronic_523andHigher)) {
             rate = body[1] * 0.025f
         }
@@ -315,14 +315,14 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
     }
 
     private fun decodeBolusWizard(entry: PumpHistoryEntry): RecordDecodeStatus {
-        val body = entry.body!!
+        val body = entry.body
         val dto = BolusWizardDTO()
         var bolusStrokes = 10.0f
         if (MedtronicDeviceType.isSameDevice(medtronicUtil.medtronicPumpModel, MedtronicDeviceType.Medtronic_523andHigher)) {
             // https://github.com/ps2/minimed_rf/blob/master/lib/minimed_rf/log_entries/bolus_wizard.rb#L102
             bolusStrokes = 40.0f
             dto.carbs = ((body[1] and 0x0c.toByte()).toInt() shl 6) + body[0]
-            dto.bloodGlucose = ((body[1] and 0x03).toInt() shl 8) + entry.head!![0]
+            dto.bloodGlucose = ((body[1] and 0x03).toInt() shl 8) + entry.head[0]
             dto.carbRatio = body[1] / 10.0f
             // carb_ratio (?) = (((self.body[2] & 0x07) << 8) + self.body[3]) /
             // 10.0s
@@ -334,7 +334,7 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
             dto.unabsorbedInsulin = ((body[10].toInt() shl 8) + body[11]) / bolusStrokes
             dto.bolusTotal = ((body[12].toInt() shl 8) + body[13]) / bolusStrokes
         } else {
-            dto.bloodGlucose = (body.get(1) and 0x0F).toInt() shl 8 or entry.head!!.get(0).toInt()
+            dto.bloodGlucose = (body.get(1) and 0x0F).toInt() shl 8 or entry.head.get(0).toInt()
             dto.carbs = body[0].toInt()
             dto.carbRatio = body[2].toFloat()
             dto.insulinSensitivity = body[3].toFloat()
@@ -356,10 +356,10 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
     }
 
     private fun decodeBolusWizard512(entry: PumpHistoryEntry): RecordDecodeStatus {
-        val body = entry.body!!
+        val body = entry.body
         val dto = BolusWizardDTO()
         val bolusStrokes = 10.0f
-        dto.bloodGlucose = (body.get(1) and 0x03).toInt() shl 8 or entry.head!!.get(0).toInt()
+        dto.bloodGlucose = (body.get(1) and 0x03).toInt() shl 8 or entry.head.get(0).toInt()
         dto.carbs = body.get(1).toInt() and 0xC shl 6 or body.get(0).toInt() // (int)body[0];
         dto.carbRatio = body.get(2).toFloat()
         dto.insulinSensitivity = body.get(3).toFloat()
@@ -379,13 +379,13 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
     }
 
     private fun decodeLowReservoir(entry: PumpHistoryEntry) {
-        val amount = getUnsignedInt(entry.head!!.get(0)) * 1.0f / 10.0f * 2
+        val amount = getUnsignedInt(entry.head.get(0)) * 1.0f / 10.0f * 2
         entry.displayableValue = getFormattedValue(amount, 1)
     }
 
     private fun decodePrime(entry: PumpHistoryEntry) {
-        val amount = ByteUtil.toInt(entry.head!!.get(2), entry.head!!.get(3)) / 10.0f
-        val fixed = ByteUtil.toInt(entry.head!!.get(0), entry.head!!.get(1)) / 10.0f
+        val amount = ByteUtil.toInt(entry.head.get(2), entry.head.get(3)) / 10.0f
+        val fixed = ByteUtil.toInt(entry.head.get(0), entry.head.get(1)) / 10.0f
 
 //        amount = (double)(asUINT8(data[4]) << 2) / 40.0;
 //        programmedAmount = (double)(asUINT8(data[2]) << 2) / 40.0;
@@ -422,7 +422,7 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
 
     private fun decodeBolus(entry: PumpHistoryEntry) {
         val bolus: BolusDTO?
-        val data = entry.head!!
+        val data = entry.head
         if (MedtronicDeviceType.isSameDevice(medtronicUtil.medtronicPumpModel, MedtronicDeviceType.Medtronic_523andHigher)) {
             bolus = BolusDTO(atechDateTime = entry.atechDateTime,
                 requestedAmount = ByteUtil.toInt(data.get(0), data.get(1)) / 40.0,
@@ -455,20 +455,20 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
         }
 
         val tbr = TempBasalPair(
-            tbrRate.head!!.get(0),
-            tbrRate.body!!.get(0),
-            tbrDuration!!.head!!.get(0).toInt(),
-            ByteUtil.asUINT8(tbrRate.datetime!!.get(4)) shr 3 == 0)
+            tbrRate.head.get(0),
+            tbrRate.body.get(0),
+            tbrDuration!!.head.get(0).toInt(),
+            ByteUtil.asUINT8(tbrRate.datetime.get(4)) shr 3 == 0)
 
         entry.addDecodedData("Object", tbr)
         entry.displayableValue = tbr.description
     }
 
     private fun decodeDateTime(entry: PumpHistoryEntry) {
-        if (entry.datetime == null) {
+        if (entry.datetime.size == 0) {
             aapsLogger.warn(LTag.PUMPBTCOMM, "DateTime not set.")
         }
-        val dt = entry.datetime!!
+        val dt = entry.datetime
         if (entry.dateTimeLength == 5) {
             val seconds: Int = (dt.get(0) and 0x3F.toByte()).toInt()
             val minutes: Int = (dt.get(1) and 0x3F.toByte()).toInt()

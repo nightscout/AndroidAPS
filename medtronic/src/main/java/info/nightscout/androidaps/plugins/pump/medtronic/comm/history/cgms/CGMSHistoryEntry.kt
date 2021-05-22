@@ -14,11 +14,11 @@ import org.joda.time.LocalDateTime
  */
 class CGMSHistoryEntry : MedtronicHistoryEntry() {
 
-    var entryType: CGMSHistoryEntryType? = null
+    var entryType: CGMSHistoryEntryType = CGMSHistoryEntryType.UnknownOpCode
         private set
 
     override var opCode: Byte? = null // this is set only when we have unknown entry...
-        get() = if (field == null) entryType!!.code.toByte() else field
+        get() = if (field == null) entryType.code.toByte() else field
 
     fun setEntryType(entryType: CGMSHistoryEntryType) {
         this.entryType = entryType
@@ -28,21 +28,21 @@ class CGMSHistoryEntry : MedtronicHistoryEntry() {
     }
 
     override val entryTypeName: String
-        get() = entryType!!.name
+        get() = entryType.name
 
     override fun generatePumpId(): Long {
-        return if (entryType==null)
+        return if (entryType == null)
             atechDateTime * 1000L
         else
-            entryType!!.code + atechDateTime * 1000L
+            entryType.code + atechDateTime * 1000L
     }
 
     override fun isEntryTypeSet(): Boolean {
-        return entryType!=null
+        return entryType != CGMSHistoryEntryType.UnknownOpCode
     }
 
-    override fun setData(listRawData: List<Byte>, doNotProcess: Boolean) {
-        if (entryType!!.schemaSet) {
+    override fun setData(listRawData: MutableList<Byte>, doNotProcess: Boolean) {
+        if (entryType.schemaSet) {
             super.setData(listRawData, doNotProcess)
         } else {
             rawData = listRawData
@@ -50,14 +50,14 @@ class CGMSHistoryEntry : MedtronicHistoryEntry() {
     }
 
     override val dateLength: Int
-        get() = entryType!!.dateLength
+        get() = entryType.dateLength
 
     fun hasTimeStamp(): Boolean {
-        return entryType!!.hasDate()
+        return entryType.hasDate()
     }
 
     override val toStringStart: String
-        get() = ("CGMSHistoryEntry [type=" + StringUtils.rightPad(entryType!!.name, 18) + " ["
+        get() = ("CGMSHistoryEntry [type=" + StringUtils.rightPad(entryType.name, 18) + " ["
             + StringUtils.leftPad("" + opCode, 3) + ", 0x" + ByteUtil.getCorrectHexValue(opCode!!) + "]")
 
     fun setDateTime(timeStamp: LocalDateTime, getIndex: Int) {

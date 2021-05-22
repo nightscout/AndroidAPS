@@ -69,9 +69,10 @@ class RileyLinkMedtronicService  // This empty constructor must be kept, otherwi
      * If you have customized RileyLinkServiceData you need to override this
      */
     override fun initRileyLinkServiceData() {
-        frequencies = arrayOf()
-        frequencies[0] = resourceHelper.gs(R.string.key_medtronic_pump_frequency_us_ca)
-        frequencies[1] = resourceHelper.gs(R.string.key_medtronic_pump_frequency_worldwide)
+        frequencies = arrayOf(resourceHelper.gs(R.string.key_medtronic_pump_frequency_us_ca),
+            resourceHelper.gs(R.string.key_medtronic_pump_frequency_worldwide))
+        // frequencies[0] = resourceHelper.gs(R.string.key_medtronic_pump_frequency_us_ca)
+        // frequencies[1] = resourceHelper.gs(R.string.key_medtronic_pump_frequency_worldwide)
         rileyLinkServiceData.targetDevice = RileyLinkTargetDevice.MedtronicPump
         setPumpIDString(sp.getString(MedtronicConst.Prefs.PumpSerial, "000000"))
 
@@ -160,9 +161,9 @@ class RileyLinkMedtronicService  // This empty constructor must be kept, otherwi
                     medtronicPumpStatus.errorDescription = resourceHelper.gs(R.string.medtronic_error_pump_type_invalid)
                     return false
                 } else {
-                    val pumpType = medtronicPumpStatus.medtronicPumpMap[pumpTypePart]
+                    val pumpType = medtronicPumpStatus.medtronicPumpMap[pumpTypePart]!!
                     medtronicPumpStatus.medtronicDeviceType = medtronicPumpStatus.medtronicDeviceTypeMap[pumpTypePart]!!
-                    medtronicPumpStatus.pumpType = pumpType!!
+                    medtronicPumpStatus.pumpType = pumpType
                     medtronicPumpPlugin.pumpType = pumpType
                     if (pumpTypePart.startsWith("7")) medtronicPumpStatus.reservoirFullUnits = 300 else medtronicPumpStatus.reservoirFullUnits = 176
                 }
@@ -245,7 +246,7 @@ class RileyLinkMedtronicService  // This empty constructor must be kept, otherwi
     private fun reconfigureService(forceRileyLinkAddressRenewal: Boolean): Boolean {
         if (!inPreInit) {
             if (serialChanged) {
-                setPumpIDString(medtronicPumpStatus.serialNumber!!) // short operation
+                setPumpIDString(medtronicPumpStatus.serialNumber) // short operation
                 serialChanged = false
             }
             if (rileyLinkAddressChanged || forceRileyLinkAddressRenewal) {

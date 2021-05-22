@@ -173,7 +173,7 @@ class MedtronicUtil @Inject constructor(
                 b = b or 128.toByte()
                 // b |= doneBit;
                 frameData.add(0, b)
-                checkAndAppenLastFrame(frameData)
+                checkAndAppendLastFrame(frameData)
                 lastFrame = true
                 done = true
             } else {
@@ -194,12 +194,12 @@ class MedtronicUtil @Inject constructor(
             b = b or 128.toByte()
             // b |= doneBit;
             frameData.add(b)
-            checkAndAppenLastFrame(frameData)
+            checkAndAppendLastFrame(frameData)
         }
         return frames
     }
 
-    private fun checkAndAppenLastFrame(frameData: MutableList<Byte>) {
+    private fun checkAndAppendLastFrame(frameData: MutableList<Byte>) {
         if (frameData.size == BIG_FRAME_LENGTH) return
         val missing = BIG_FRAME_LENGTH - frameData.size
         for (i in 0 until missing) {
