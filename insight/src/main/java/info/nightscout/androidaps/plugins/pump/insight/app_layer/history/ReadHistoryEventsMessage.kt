@@ -10,18 +10,19 @@ import java.util.*
 class ReadHistoryEventsMessage : AppLayerMessage(MessagePriority.NORMAL, true, false, Service.HISTORY) {
 
     internal var historyEvents: MutableList<HistoryEvent> = mutableListOf()
-    @Throws(Exception::class) override fun parse(byteBuf: ByteBuf?) {
-        val newHistoryEvents = mutableListOf<HistoryEvent>()
 
-        if (byteBuf != null) {
-            byteBuf.shift(2)
-            val frameCount = byteBuf.readUInt16LE()
-            for (i in 0 until frameCount) {
-                val length = byteBuf.readUInt16LE()
-                HistoryEvent.deserialize(ByteBuf.from(byteBuf.readBytes(length)))?.let { newHistoryEvents.add(it) }
+    @Throws(Exception::class) override fun parse(byteBuf: ByteBuf?) {
+        historyEvents = mutableListOf()
+        historyEvents.let {
+            if (byteBuf != null) {
+                byteBuf.shift(2)
+                val frameCount = byteBuf.readUInt16LE()
+                for (i in 0 until frameCount) {
+                    val length = byteBuf.readUInt16LE()
+                    HistoryEvent.deserialize(ByteBuf.from(byteBuf.readBytes(length)))?.let { it1 -> it.add(it1) }
+                }
             }
         }
-        historyEvents = newHistoryEvents
     }
 
     fun getHistoryEvents(): List<HistoryEvent> {

@@ -19,10 +19,13 @@ class ReadParameterBlockMessage : AppLayerMessage(MessagePriority.NORMAL, true, 
         }
 
     @Throws(Exception::class) override fun parse(byteBuf: ByteBuf?) {
-        val newParameterBlock = ParameterBlocks.fromId(byteBuf!!.readUInt16LE())?.type?.newInstance()
-        byteBuf.shift(2) //Restriction level
-        newParameterBlock?.parse(byteBuf)
-        parameterBlock =newParameterBlock
+        if (byteBuf != null) {
+            parameterBlock = ParameterBlocks.fromId(byteBuf.readUInt16LE())?.type?.newInstance()
+            parameterBlock?.let {
+                byteBuf.shift(2) //Restriction level
+                it.parse(byteBuf)
+            }
+        }
     }
 
     fun setParameterBlockId(configurationBlockId: Class<out ParameterBlock>?) {

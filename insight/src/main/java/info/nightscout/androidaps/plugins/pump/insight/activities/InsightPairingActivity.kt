@@ -28,14 +28,15 @@ class InsightPairingActivity : NoSplashAppCompatActivity(), InsightConnectionSer
     private var service: InsightConnectionService? = null
     private val serviceConnection: ServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, binder: IBinder) {
-            val newService: InsightConnectionService = (binder as InsightConnectionService.LocalBinder).service
-            if (newService.isPaired) return else {
-                newService.requestConnection(this@InsightPairingActivity)
-                newService.registerStateCallback(this@InsightPairingActivity)
-                newService.registerExceptionCallback(this@InsightPairingActivity)
-                onStateChanged(newService.state)
+            service = (binder as InsightConnectionService.LocalBinder).service
+            service?.let {
+                if (it.isPaired) return else {
+                    it.requestConnection(this@InsightPairingActivity)
+                    it.registerStateCallback(this@InsightPairingActivity)
+                    it.registerExceptionCallback(this@InsightPairingActivity)
+                    onStateChanged(it.state)
+                }
             }
-            service = newService
         }
 
         override fun onServiceDisconnected(name: ComponentName) {}

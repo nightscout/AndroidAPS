@@ -18,24 +18,25 @@ class InsightPairingInformationActivity : NoSplashAppCompatActivity() {
     private val serviceConnection: ServiceConnection = object : ServiceConnection {
 
         override fun onServiceConnected(name: ComponentName, binder: IBinder) {
-            val newConnectionService: InsightConnectionService = (binder as InsightConnectionService.LocalBinder).service
-            if (!newConnectionService.isPaired) {
-                overridePendingTransition(0, 0)
-                finish()
-                startActivity(Intent(this@InsightPairingInformationActivity, InsightPairingActivity::class.java))
-            } else {
-                binding.serialNumber.text = newConnectionService.pumpSystemIdentification.serialNumber
-                binding.manufacturingDate.text = newConnectionService.pumpSystemIdentification.manufacturingDate
-                binding.systemIdAppendix.text = newConnectionService.pumpSystemIdentification.systemIdAppendix.toString() + ""
-                binding.releaseSwVersion.text = newConnectionService.pumpFirmwareVersions.releaseSWVersion
-                binding.uiProcSwVersion.text = newConnectionService.pumpFirmwareVersions.uiProcSWVersion
-                binding.pcProcSwVersion.text = newConnectionService.pumpFirmwareVersions.pcProcSWVersion
-                binding.mdTelSwVersion.text = newConnectionService.pumpFirmwareVersions.mdTelProcSWVersion
-                binding.safetyProcSwVersion.text = newConnectionService.pumpFirmwareVersions.safetyProcSWVersion
-                binding.btInfoPageVersion.text = newConnectionService.pumpFirmwareVersions.btInfoPageVersion
-                binding.bluetoothAddress.text = newConnectionService.bluetoothAddress
+            connectionService = (binder as InsightConnectionService.LocalBinder).service
+            connectionService?.let {
+                if (!it.isPaired) {
+                    overridePendingTransition(0, 0)
+                    finish()
+                    startActivity(Intent(this@InsightPairingInformationActivity, InsightPairingActivity::class.java))
+                } else {
+                    binding.serialNumber.text = it.pumpSystemIdentification.serialNumber
+                    binding.manufacturingDate.text = it.pumpSystemIdentification.manufacturingDate
+                    binding.systemIdAppendix.text = it.pumpSystemIdentification.systemIdAppendix.toString() + ""
+                    binding.releaseSwVersion.text = it.pumpFirmwareVersions.releaseSWVersion
+                    binding.uiProcSwVersion.text = it.pumpFirmwareVersions.uiProcSWVersion
+                    binding.pcProcSwVersion.text = it.pumpFirmwareVersions.pcProcSWVersion
+                    binding.mdTelSwVersion.text = it.pumpFirmwareVersions.mdTelProcSWVersion
+                    binding.safetyProcSwVersion.text = it.pumpFirmwareVersions.safetyProcSWVersion
+                    binding.btInfoPageVersion.text = it.pumpFirmwareVersions.btInfoPageVersion
+                    binding.bluetoothAddress.text = it.bluetoothAddress
+                }
             }
-            connectionService = newConnectionService
         }
 
         override fun onServiceDisconnected(name: ComponentName) {
