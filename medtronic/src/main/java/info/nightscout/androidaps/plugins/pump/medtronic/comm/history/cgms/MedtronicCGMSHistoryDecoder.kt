@@ -27,7 +27,7 @@ class MedtronicCGMSHistoryDecoder : MedtronicHistoryDecoder<CGMSHistoryEntry>() 
         return try {
             decodeRecordInternal(record)
         } catch (ex: Exception) {
-            LOG.error("     Error decoding: type={}, ex={}", record.entryType!!.name, ex.message, ex)
+            aapsLogger.error(LTag.PUMPCOMM,"     Error decoding: type={}, ex={}", record.entryType!!.name, ex.message, ex)
             RecordDecodeStatus.Error
         }
     }
@@ -81,7 +81,7 @@ class MedtronicCGMSHistoryDecoder : MedtronicHistoryDecoder<CGMSHistoryEntry>() 
                 entryType = getByCode(opCode)
                 if (entryType === CGMSHistoryEntryType.None) {
                     unknownOpCodes!![opCode] = opCode
-                    LOG.warn("GlucoseHistoryEntry with unknown code: $opCode")
+                    aapsLogger.warn(LTag.PUMPCOMM, "GlucoseHistoryEntry with unknown code: $opCode")
                     val pe = CGMSHistoryEntry()
                     pe.setEntryType(CGMSHistoryEntryType.None)
                     pe.opCode = opCode.toByte()
@@ -112,14 +112,14 @@ class MedtronicCGMSHistoryDecoder : MedtronicHistoryDecoder<CGMSHistoryEntry>() 
         } while (counter < dataClear.size)
         outList.reverse()
         val reversedOutList =  outList  // reverseList(outList, CGMSHistoryEntry::class.java)
-        var timeStamp: Long? = null
+        //var timeStamp: Long? = null
         var dateTime: LocalDateTime? = null
         var getIndex = 0
         for (entry in reversedOutList) {
             decodeRecord(entry)
             if (entry.hasTimeStamp()) {
-                timeStamp = entry.atechDateTime
-                dateTime = DateTimeUtil.toLocalDateTime(timeStamp!!)
+                //timeStamp = entry.atechDateTime
+                dateTime = DateTimeUtil.toLocalDateTime(entry.atechDateTime)
                 getIndex = 0
             } else if (entry.entryType == CGMSHistoryEntryType.GlucoseSensorData) {
                 getIndex++
@@ -127,7 +127,7 @@ class MedtronicCGMSHistoryDecoder : MedtronicHistoryDecoder<CGMSHistoryEntry>() 
             } else {
                 if (dateTime != null) entry.setDateTime(dateTime, getIndex)
             }
-            LOG.debug("Record: {}", entry)
+            aapsLogger.debug(LTag.PUMPCOMM,"Record: {}", entry)
         }
         return reversedOutList
     }
@@ -168,10 +168,10 @@ class MedtronicCGMSHistoryDecoder : MedtronicHistoryDecoder<CGMSHistoryEntry>() 
         return if (entry.entryType!!.dateType === CGMSHistoryEntryType.DateType.MinuteSpecific) {
             val atechDateTime = DateTimeUtil.toATechDate(parseYear(data!![3].toInt()), parseMonths(data[0].toInt(), data[1].toInt()),
                 parseDay(data[2].toInt()), parseHours(data[0].toInt()), parseMinutes(data[1].toInt()), 0)
-            entry.setAtechDateTime(atechDateTime)
+            entry.atechDateTime = atechDateTime
             atechDateTime
         } else if (entry.entryType!!.dateType === CGMSHistoryEntryType.DateType.SecondSpecific) {
-            LOG.warn("parseDate for SecondSpecific type is not implemented.")
+            aapsLogger.warn(LTag.PUMPCOMM,"parseDate for SecondSpecific type is not implemented.")
             throw RuntimeException()
             // return null;
         } else null
@@ -268,7 +268,4 @@ class MedtronicCGMSHistoryDecoder : MedtronicHistoryDecoder<CGMSHistoryEntry>() 
         showStatistics()
     }
 
-    companion object {
-        private val LOG: Logger = getLogger1("MedtronicCGMSHistoryDecoder")
-    }
 }

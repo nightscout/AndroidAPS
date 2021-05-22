@@ -50,6 +50,6 @@ class CGMSHistoryEntry : MedtronicHistoryEntry() {
             + StringUtils.leftPad("" + opCode, 3) + ", 0x" + ByteUtil.getCorrectHexValue(opCode!!) + "]")
 
     fun setDateTime(timeStamp: LocalDateTime, getIndex: Int) {
-        setAtechDateTime(DateTimeUtil.toATechDate(timeStamp.plusMinutes(getIndex * 5)))
+        atechDateTime = (DateTimeUtil.toATechDate(timeStamp.plusMinutes(getIndex * 5)))
     }
 }

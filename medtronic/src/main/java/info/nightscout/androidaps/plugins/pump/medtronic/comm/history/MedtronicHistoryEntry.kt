@@ -37,14 +37,15 @@ abstract class MedtronicHistoryEntry : MedtronicHistoryEntryInterface {
         get() = field
 
     @Expose
-    var atechDateTime: Long? = null
+    var atechDateTime: Long = 0L
         get() = field
         set(value) {
             field = value
+            DT = DateTimeUtil.toString(value)
         }
 
     @Expose
-    var decodedData: MutableMap<String, Any?>? = null
+    var decodedData: MutableMap<String, Any> = mutableMapOf()
         get() = field
 
     /**
@@ -112,10 +113,10 @@ abstract class MedtronicHistoryEntry : MedtronicHistoryEntryInterface {
         get() = if (DT == null) "Unknown" else DT!!
 
     val decodedDataAsString: String
-        get() = if (decodedData == null) if (isNoDataEntry) "No data" else "" else decodedData.toString()
+        get() = if (decodedData.size == 0) if (isNoDataEntry) "No data" else "" else decodedData.toString()
 
     fun hasData(): Boolean {
-        return decodedData != null || isNoDataEntry || entryTypeName == "UnabsorbedInsulin"
+        return decodedData.size == 0 || isNoDataEntry || entryTypeName == "UnabsorbedInsulin"
     }
 
     val isNoDataEntry: Boolean
@@ -126,11 +127,11 @@ abstract class MedtronicHistoryEntry : MedtronicHistoryEntryInterface {
     // }
 
     fun getDecodedDataEntry(key: String?): Any? {
-        return if (decodedData != null) decodedData!![key] else null
+        return if (decodedData.containsKey(key)) decodedData[key] else null
     }
 
     fun hasDecodedDataEntry(key: String?): Boolean {
-        return decodedData!!.containsKey(key)
+        return decodedData.containsKey(key)
     }
 
     fun showRaw(): Boolean {
@@ -148,9 +149,9 @@ abstract class MedtronicHistoryEntry : MedtronicHistoryEntryInterface {
 
     override fun toString(): String {
         val sb = StringBuilder()
-        if (DT == null) {
-            Log.e("", "DT is null. RawData=" + ByteUtil.getHex(rawData))
-        }
+        // if (DT == null) {
+        //     Log.e("", "DT is null. RawData=" + ByteUtil.getHex(rawData))
+        // }
         sb.append(toStringStart)
         sb.append(", DT: " + if (DT == null) "null" else StringUtil.getStringInLength(DT, 19))
         sb.append(", length=")
@@ -208,14 +209,8 @@ abstract class MedtronicHistoryEntry : MedtronicHistoryEntryInterface {
         return ByteUtil.convertUnsignedByteToInt(rawData!![index])
     }
 
-    fun setAtechDateTime(dt: Long) {
-        atechDateTime = dt
-        DT = DateTimeUtil.toString(atechDateTime!!)
-    }
-
-    fun addDecodedData(key: String, value: Any?) {
-        if (decodedData == null) decodedData = HashMap()
-        decodedData!![key] = value
+    fun addDecodedData(key: String, value: Any) {
+        decodedData.put(key, value)
     }
 
     fun toShortString(): String {
@@ -227,7 +222,7 @@ abstract class MedtronicHistoryEntry : MedtronicHistoryEntryInterface {
     }
 
     fun containsDecodedData(key: String?): Boolean {
-        return if (decodedData == null) false else decodedData!!.containsKey(key)
+        return decodedData.containsKey(key)
     } // if we extend to CGMS this need to be changed back
     // public abstract PumpHistoryEntryType getEntryType();
 }

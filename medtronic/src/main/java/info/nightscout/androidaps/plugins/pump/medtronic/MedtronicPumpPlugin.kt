@@ -869,7 +869,7 @@ class MedtronicPumpPlugin @Inject constructor(
         if (latestEntry == null) // no new history to read
             return
         lastPumpHistoryEntry = latestEntry
-        sp.putLong(MedtronicConst.Statistics.LastPumpHistoryEntry, latestEntry.atechDateTime!!)
+        sp.putLong(MedtronicConst.Statistics.LastPumpHistoryEntry, latestEntry.atechDateTime)
         if (debugHistory) aapsLogger.debug(LTag.PUMP, "HST: History: valid=" + historyResult.validEntries.size + ", unprocessed=" + historyResult.unprocessedEntries.size)
         medtronicHistoryData.addNewHistory(historyResult)
         medtronicHistoryData.filterNewEntries()
@@ -1153,13 +1153,10 @@ class MedtronicPumpPlugin @Inject constructor(
             MedtronicCustomActionType.ResetRileyLinkConfiguration -> {
                 serviceTaskExecutor.startTask(ResetRileyLinkConfigurationTask(injector))
             }
-
-            else                                                  -> {
-            }
         }
     }
 
-    override fun timezoneOrDSTChanged(changeType: TimeChangeType) {
+    override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
         aapsLogger.warn(LTag.PUMP, logPrefix + "Time or TimeZone changed. ")
         hasTimeDateOrTimeZoneChanged = true
     }

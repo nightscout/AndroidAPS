@@ -41,11 +41,11 @@ class PumpHistoryEntry : MedtronicHistoryEntry() {
         sizes[0] = entryType.getHeadLength(medtronicDeviceType)
         sizes[1] = entryType.dateLength
         sizes[2] = entryType.getBodyLength(medtronicDeviceType)
-        if (this.entryType != null && atechDateTime != null) generatePumpId()
+        if (this.entryType != null && atechDateTime != 0L) generatePumpId()
     }
 
     private fun generatePumpId() : Long {
-        return entryType!!.code + atechDateTime!! * 1000L
+        return entryType!!.code + atechDateTime * 1000L
     }
 
     override val toStringStart: String
@@ -91,16 +91,16 @@ class PumpHistoryEntry : MedtronicHistoryEntry() {
     // return this.dateTime.isAfter(dateTimeIn);
     // }
     fun isAfter(atechDateTime: Long): Boolean {
-        if (this.atechDateTime == null) {
-            Log.e("PumpHistoryEntry", "Date is null. Show object: " + toString())
+        if (this.atechDateTime == 0L) {
+            // Log.e("PumpHistoryEntry", "Date is null. Show object: " + toString())
             return false // FIXME shouldn't happen
         }
-        return atechDateTime < this.atechDateTime!!
+        return atechDateTime < this.atechDateTime
     }
 
     class Comparator : java.util.Comparator<PumpHistoryEntry> {
         override fun compare(o1: PumpHistoryEntry, o2: PumpHistoryEntry): Int {
-            val data = (o2.atechDateTime!! - o1.atechDateTime!!).toInt()
+            val data = (o2.atechDateTime - o1.atechDateTime).toInt()
             return if (data != 0) data else o2.entryType!!.code - o1.entryType!!.code
         }
     }
@@ -116,17 +116,13 @@ class PumpHistoryEntry : MedtronicHistoryEntry() {
 
     fun hasBolusChanged(entry: PumpHistoryEntry) : Boolean {
         if (entryType!=null && entryType == PumpHistoryEntryType.Bolus) {
-            val thisOne: BolusDTO? =  this.decodedData!!["Object"]!! as BolusDTO?
-            val otherOne: BolusDTO? = entry.decodedData!!["Object"]!! as BolusDTO?
-
-            if (thisOne==null || otherOne==null) {
-                return false;
-            }
-
-
-
-
-            return false // TODO needs to be implemented
+            val thisOne: BolusDTO =  this.decodedData["Object"] as BolusDTO
+            
+            if (entry.entryType!=null && entry.entryType == PumpHistoryEntryType.Bolus) {
+                val otherOne: BolusDTO = entry.decodedData["Object"] as BolusDTO
+                return (thisOne.value.equals(otherOne.value))
+            } else
+                return false
         }
 
         return false

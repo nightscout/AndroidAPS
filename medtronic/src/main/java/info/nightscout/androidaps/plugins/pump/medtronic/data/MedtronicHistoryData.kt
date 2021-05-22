@@ -133,7 +133,7 @@ class MedtronicHistoryData @Inject constructor(
                         newHistory2.add(pumpHistoryEntry)
                     } else {
                         if (type === PumpHistoryEntryType.EndResultTotals) {
-                            if (!DateTimeUtil.isSameDay(atechDate, pumpHistoryEntry.atechDateTime!!)) {
+                            if (!DateTimeUtil.isSameDay(atechDate, pumpHistoryEntry.atechDateTime)) {
                                 newHistory2.add(pumpHistoryEntry)
                             }
                         } else {
@@ -168,7 +168,7 @@ class MedtronicHistoryData @Inject constructor(
         for (bolusEstimate in bolusEstimates) {
             for (bolus in boluses) {
                 if (bolusEstimate.atechDateTime == bolus.atechDateTime) {
-                    bolus.addDecodedData("Estimate", bolusEstimate.decodedData!!["Object"])
+                    bolus.addDecodedData("Estimate", bolusEstimate.decodedData["Object"]!!)
                 }
             }
         }
@@ -180,7 +180,7 @@ class MedtronicHistoryData @Inject constructor(
 
         // find last entry
         for (pumpHistoryEntry in newHistory) {
-            if (pumpHistoryEntry.atechDateTime != null && pumpHistoryEntry.isAfter(pheLast.atechDateTime!!)) {
+            if (pumpHistoryEntry.atechDateTime != 0L && pumpHistoryEntry.isAfter(pheLast.atechDateTime)) {
                 pheLast = pumpHistoryEntry
             }
         }
@@ -196,10 +196,10 @@ class MedtronicHistoryData @Inject constructor(
             }
         }
 
-        sp.putLong(MedtronicConst.Statistics.LastPumpHistoryEntry, pheLast.atechDateTime!!)
+        sp.putLong(MedtronicConst.Statistics.LastPumpHistoryEntry, pheLast.atechDateTime)
         var dt: LocalDateTime? = null
         try {
-            dt = DateTimeUtil.toLocalDateTime(pheLast.atechDateTime!!)
+            dt = DateTimeUtil.toLocalDateTime(pheLast.atechDateTime)
         } catch (ex: Exception) {
             aapsLogger.error("Problem decoding date from last record: $pheLast")
         }
@@ -396,9 +396,9 @@ class MedtronicHistoryData @Inject constructor(
                 // so skip the prime entry if it was not a fixed prime
                 continue
             }
-            if (primeRecord.atechDateTime!! > maxAllowedTimeInPast) {
-                if (lastPrimeRecordTime < primeRecord.atechDateTime!!) {
-                    lastPrimeRecordTime = primeRecord.atechDateTime!!
+            if (primeRecord.atechDateTime > maxAllowedTimeInPast) {
+                if (lastPrimeRecordTime!=0L && lastPrimeRecordTime < primeRecord.atechDateTime) {
+                    lastPrimeRecordTime = primeRecord.atechDateTime
                     lastPrimeRecord = primeRecord
                 }
             }
@@ -410,14 +410,14 @@ class MedtronicHistoryData @Inject constructor(
         }
     }
 
-    private fun processRewind(rewindRecords: List<PumpHistoryEntry?>) {
+    private fun processRewind(rewindRecords: List<PumpHistoryEntry>) {
         val maxAllowedTimeInPast = DateTimeUtil.getATDWithAddedMinutes(GregorianCalendar(), -30)
         var lastRewindRecordTime = 0L
         var lastRewindRecord: PumpHistoryEntry? = null
         for (rewindRecord in rewindRecords) {
-            if (rewindRecord!!.atechDateTime!! > maxAllowedTimeInPast) {
-                if (lastRewindRecordTime < rewindRecord.atechDateTime!!) {
-                    lastRewindRecordTime = rewindRecord.atechDateTime!!
+            if (rewindRecord.atechDateTime > maxAllowedTimeInPast) {
+                if (lastRewindRecordTime < rewindRecord.atechDateTime) {
+                    lastRewindRecordTime = rewindRecord.atechDateTime
                     lastRewindRecord = rewindRecord
                 }
             }
@@ -434,17 +434,17 @@ class MedtronicHistoryData @Inject constructor(
         val lastPrimeFromAAPS = sp.getLong(eventSP, 0L)
         if (historyRecord.atechDateTime != lastPrimeFromAAPS) {
             var result = pumpSync.insertTherapyEventIfNewWithTimestamp(
-                DateTimeUtil.toMillisFromATD(historyRecord.atechDateTime!!),
+                DateTimeUtil.toMillisFromATD(historyRecord.atechDateTime),
                 eventType, null,
                 historyRecord.pumpId,
                 medtronicPumpStatus.pumpType,
                 medtronicPumpStatus.serialNumber!!)
 
             aapsLogger.debug(LTag.PUMP, String.format(Locale.ROOT, "insertTherapyEventIfNewWithTimestamp [date=%d, eventType=%s, pumpId=%d, pumpSerial=%s] - Result: %b",
-                historyRecord.atechDateTime!!, eventType, historyRecord.pumpId,
+                historyRecord.atechDateTime, eventType, historyRecord.pumpId,
                 medtronicPumpStatus.serialNumber!!, result))
 
-            sp.putLong(eventSP, historyRecord.atechDateTime!!)
+            sp.putLong(eventSP, historyRecord.atechDateTime)
         }
     }
 
@@ -456,10 +456,10 @@ class MedtronicHistoryData @Inject constructor(
             tdds.size, gson.toJson(tdds)))
 
         for (tdd in tdds) {
-            val totalsDTO = tdd.decodedData!!["Object"] as DailyTotalsDTO
+            val totalsDTO = tdd.decodedData["Object"] as DailyTotalsDTO
 
             pumpSync.createOrUpdateTotalDailyDose(
-                DateTimeUtil.toMillisFromATD(tdd.atechDateTime!!),
+                DateTimeUtil.toMillisFromATD(tdd.atechDateTime),
                 totalsDTO.insulinBolus,
                 totalsDTO.insulinBasal!!,
                 totalsDTO.insulinTotal,
@@ -484,7 +484,7 @@ class MedtronicHistoryData @Inject constructor(
 
         for (bolus in entryList) {
 
-            val bolusDTO = bolus.decodedData!!["Object"]!! as BolusDTO
+            val bolusDTO = bolus.decodedData["Object"] as BolusDTO
             var type: DetailedBolusInfo.BolusType = DetailedBolusInfo.BolusType.NORMAL
             var multiwave = false
 
@@ -516,7 +516,7 @@ class MedtronicHistoryData @Inject constructor(
 
             if (temporaryId!=null) {
                 val result = pumpSync.syncBolusWithTempId(
-                    tryToGetByLocalTime(bolus.atechDateTime!!),
+                    tryToGetByLocalTime(bolus.atechDateTime),
                     deliveredAmount,
                     temporaryId,
                     type,
@@ -525,11 +525,11 @@ class MedtronicHistoryData @Inject constructor(
                     medtronicPumpStatus.serialNumber!!)
 
                 aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "syncBolusWithTempId [date=%d, temporaryId=%d, pumpId=%d, insulin=%.2f, pumpSerial=%s] - Result: %b",
-                    bolus.atechDateTime!!, temporaryId, bolus.pumpId, deliveredAmount,
+                    bolus.atechDateTime, temporaryId, bolus.pumpId, deliveredAmount,
                     medtronicPumpStatus.serialNumber!!, result))
             } else {
                 val result = pumpSync.syncBolusWithPumpId(
-                    tryToGetByLocalTime(bolus.atechDateTime!!),
+                    tryToGetByLocalTime(bolus.atechDateTime),
                     deliveredAmount,
                     type,
                     bolus.pumpId!!,
@@ -537,7 +537,7 @@ class MedtronicHistoryData @Inject constructor(
                     medtronicPumpStatus.serialNumber!!)
 
                 aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "syncBolusWithPumpId [date=%d, pumpId=%d, insulin=%.2f, pumpSerial=%s] - Result: %b",
-                    bolus.atechDateTime!!, bolus.pumpId, deliveredAmount,
+                    bolus.atechDateTime, bolus.pumpId, deliveredAmount,
                     medtronicPumpStatus.serialNumber!!, result))
             }
 
@@ -550,7 +550,7 @@ class MedtronicHistoryData @Inject constructor(
         val durationMs : Long = bolusDTO.duration!! * 60L * 1000L
 
         val result = pumpSync.syncExtendedBolusWithPumpId(
-            tryToGetByLocalTime(bolus.atechDateTime!!),
+            tryToGetByLocalTime(bolus.atechDateTime),
             bolusDTO.deliveredAmount!!,
             durationMs,
             false,
@@ -559,17 +559,17 @@ class MedtronicHistoryData @Inject constructor(
             medtronicPumpStatus.serialNumber!!)
 
         aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "syncExtendedBolusWithPumpId [date=%d, amount=%.2f, duration=%d, pumpId=%d, pumpSerial=%s, multiwave=%b] - Result: %b",
-            bolus.atechDateTime!!, bolusDTO.deliveredAmount!!, bolusDTO.duration, bolus.pumpId,
+            bolus.atechDateTime, bolusDTO.deliveredAmount!!, bolusDTO.duration, bolus.pumpId,
             medtronicPumpStatus.serialNumber!!, isMultiwave, result))
     }
 
 
     private fun addCarbs(bolus: PumpHistoryEntry) {
         if (bolus.containsDecodedData("Estimate")) {
-            val bolusWizard = bolus.decodedData!!["Estimate"] as BolusWizardDTO
+            val bolusWizard = bolus.decodedData["Estimate"] as BolusWizardDTO
 
             pumpSyncStorage.addCarbs(PumpDbEntryCarbs(
-                tryToGetByLocalTime(bolus.atechDateTime!!),
+                tryToGetByLocalTime(bolus.atechDateTime),
                 bolusWizard.carbs.toDouble(),
                 medtronicPumpStatus.pumpType,
                 medtronicPumpStatus.serialNumber!!,
@@ -615,9 +615,9 @@ class MedtronicHistoryData @Inject constructor(
                 if (processDTO != null) {
                     processList.add(processDTO)
                 }
-                processDTO = TempBasalProcessDTO()
-                processDTO.itemOne = treatment
-                processDTO.processOperation = TempBasalProcessDTO.Operation.Add
+                processDTO = TempBasalProcessDTO(
+                    itemOne= treatment,
+                    processOperation = TempBasalProcessDTO.Operation.Add)
             }
         }
         if (processDTO != null) {
@@ -630,7 +630,7 @@ class MedtronicHistoryData @Inject constructor(
 
                 aapsLogger.debug(LTag.PUMP, "DD: entryWithTempId: " + (if (entryWithTempId==null) "null" else entryWithTempId.toString()))
 
-                val tbrEntry = tempBasalProcessDTO.itemOne!!.getDecodedDataEntry("Object") as TempBasalPair
+                val tbrEntry = tempBasalProcessDTO.itemOne.getDecodedDataEntry("Object") as TempBasalPair
 
                 aapsLogger.debug(LTag.PUMP, String.format("DD: tbrEntry=%s, tempBasalProcessDTO=%s", gson.toJson(tbrEntry), gson.toJson(tempBasalProcessDTO)))
 
@@ -737,7 +737,7 @@ class MedtronicHistoryData @Inject constructor(
             return null
         }
 
-        var proposedTime = DateTimeUtil.toMillisFromATD(treatment!!.atechDateTime!!)
+        var proposedTime = DateTimeUtil.toMillisFromATD(treatment!!.atechDateTime)
 
         // pumpTime should never be null, but it can theoretically happen if reading of time from pump fails
         this.pumpTime?.let { proposedTime += (it.timeDifference * 1000) }
@@ -793,18 +793,19 @@ class MedtronicHistoryData @Inject constructor(
         for (tempBasalProcess in tempBasalProcessList) {
 
             val result = pumpSync.syncTemporaryBasalWithPumpId(
-                tryToGetByLocalTime(tempBasalProcess.itemOne!!.atechDateTime!!),
+                tryToGetByLocalTime(tempBasalProcess.itemOne.atechDateTime),
                 0.0,
                 tempBasalProcess.duration * 60 * 1000L,
                 true,
                 PumpSync.TemporaryBasalType.PUMP_SUSPEND,
-                tempBasalProcess.itemOne!!.pumpId!!,
+                tempBasalProcess.itemOne.pumpId!!,
                 medtronicPumpStatus.pumpType,
                 medtronicPumpStatus.serialNumber!!)
 
             aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "processSuspends::syncTemporaryBasalWithPumpId [date=%d, rate=%.2f, duration=%d, pumpId=%d, pumpSerial=%s] - Result: %b",
-                tempBasalProcess.itemOne!!.atechDateTime!!, 0.0, tempBasalProcess.duration, tempBasalProcess.itemOne!!.pumpId!!,
+                tempBasalProcess.itemOne.atechDateTime, 0.0, tempBasalProcess.duration, tempBasalProcess.itemOne.pumpId!!,
                 medtronicPumpStatus.serialNumber!!, result))
+
         }
     }
 
@@ -862,11 +863,11 @@ class MedtronicHistoryData @Inject constructor(
                 Collections.reverse(filtered2Items)
                 var i = 0
                 while (i < filtered2Items.size) {
-                    val dto = TempBasalProcessDTO()
-                    dto.itemOne = filtered2Items[i]
-                    dto.itemTwo = filtered2Items[i + 1]
-                    dto.processOperation = TempBasalProcessDTO.Operation.Add
-                    outList.add(dto)
+                    outList.add(TempBasalProcessDTO(
+                        itemOne= filtered2Items[i],
+                        itemTwo= filtered2Items[i + 1],
+                        processOperation = TempBasalProcessDTO.Operation.Add))
+
                     i += 2
                 }
             }
@@ -925,20 +926,20 @@ class MedtronicHistoryData @Inject constructor(
         }
         showLogs("NoDeliveryRewindPrimeRecords: Records to evaluate: ", gson.toJson(tempData))
         var items: MutableList<PumpHistoryEntry> = getFilteredItems(tempData, PumpHistoryEntryType.Prime)
-        val processDTO = TempBasalProcessDTO()
-        processDTO.itemTwo = items[0]
+        var itemTwo = items[0]
         items = getFilteredItems(tempData, PumpHistoryEntryType.NoDeliveryAlarm)
         if (items.size > 0) {
-            processDTO.itemOne = items[items.size - 1]
-            processDTO.processOperation = TempBasalProcessDTO.Operation.Add
-            outList.add(processDTO)
+            outList.add(TempBasalProcessDTO(
+                itemOne=items[items.size - 1],
+                itemTwo= itemTwo,
+                processOperation=TempBasalProcessDTO.Operation.Add))
             return outList
         }
         items = getFilteredItems(tempData, PumpHistoryEntryType.Rewind)
         if (items.size > 0) {
-            processDTO.itemOne = items[0]
-            processDTO.processOperation = TempBasalProcessDTO.Operation.Add
-            outList.add(processDTO)
+            outList.add(TempBasalProcessDTO(
+                itemOne=items[0],
+                processOperation=TempBasalProcessDTO.Operation.Add))
             return outList
         }
         return outList
@@ -991,8 +992,8 @@ class MedtronicHistoryData @Inject constructor(
     }
 
 
-    fun processLastBasalProfileChange(pumpType: PumpType?, mdtPumpStatus: MedtronicPumpStatus) {
-        val filteredItems: List<PumpHistoryEntry?> = getFilteredItems(PumpHistoryEntryType.ChangeBasalProfile_NewProfile)
+    fun processLastBasalProfileChange(pumpType: PumpType, mdtPumpStatus: MedtronicPumpStatus) {
+        val filteredItems: List<PumpHistoryEntry> = getFilteredItems(PumpHistoryEntryType.ChangeBasalProfile_NewProfile)
         aapsLogger.debug(LTag.PUMP, "processLastBasalProfileChange. Items: $filteredItems")
         var newProfile: PumpHistoryEntry? = null
         var lastDate: Long? = null
@@ -1000,16 +1001,16 @@ class MedtronicHistoryData @Inject constructor(
             newProfile = filteredItems[0]
         } else if (filteredItems.size > 1) {
             for (filteredItem in filteredItems) {
-                if (lastDate == null || lastDate < filteredItem!!.atechDateTime!!) {
+                if (lastDate == null || lastDate < filteredItem.atechDateTime) {
                     newProfile = filteredItem
-                    lastDate = newProfile!!.atechDateTime
+                    lastDate = newProfile.atechDateTime
                 }
             }
         }
         if (newProfile != null) {
             aapsLogger.debug(LTag.PUMP, "processLastBasalProfileChange. item found, setting new basalProfileLocally: $newProfile")
-            val basalProfile = newProfile.decodedData!!["Object"] as BasalProfile?
-            mdtPumpStatus.basalsByHour = basalProfile!!.getProfilesByHour(pumpType!!)
+            val basalProfile = newProfile.decodedData["Object"] as BasalProfile
+            mdtPumpStatus.basalsByHour = basalProfile.getProfilesByHour(pumpType)
         }
     }
 
