@@ -1,39 +1,40 @@
-package info.nightscout.androidaps.plugins.pump.insight.satl;
+package info.nightscout.androidaps.plugins.pump.insight.satl
 
-import java.util.Calendar;
+import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
+import java.util.*
 
-import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf;
+class KeyRequest : SatlMessage() {
 
-public class KeyRequest extends SatlMessage {
+    private lateinit var randomBytes: ByteArray
+    private lateinit var preMasterKey: ByteArray
+    override val data: ByteBuf
+        get() {
+            val byteBuf = ByteBuf(288)
+            byteBuf.putBytes(randomBytes)
+            byteBuf.putUInt32LE(translateDate().toLong())
+            byteBuf.putBytes(preMasterKey)
+            return byteBuf
+        }
 
-    private byte[] randomBytes;
-    private byte[] preMasterKey;
-
-    @Override
-    protected ByteBuf getData() {
-        ByteBuf byteBuf = new ByteBuf(288);
-        byteBuf.putBytes(randomBytes);
-        byteBuf.putUInt32LE(translateDate());
-        byteBuf.putBytes(preMasterKey);
-        return byteBuf;
+    fun setRandomBytes(randomBytes: ByteArray) {
+        this.randomBytes = randomBytes
     }
 
-    private static int translateDate() {
-        Calendar calendar = Calendar.getInstance();
-        int second = calendar.get(Calendar.SECOND);
-        int minute = calendar.get(Calendar.MINUTE);
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        int month = calendar.get(Calendar.MONTH);
-        int year = calendar.get(Calendar.YEAR);
-        return (year % 100 & 0x3f) << 26 | (month & 0x0f) << 22 | (day & 0x1f) << 17 | (hour & 0x1f) << 12 | (minute & 0x3f) << 6 | (second & 0x3f);
+    fun setPreMasterKey(preMasterKey: ByteArray) {
+        this.preMasterKey = preMasterKey
     }
 
-    public void setRandomBytes(byte[] randomBytes) {
-        this.randomBytes = randomBytes;
-    }
+    companion object {
 
-    public void setPreMasterKey(byte[] preMasterKey) {
-        this.preMasterKey = preMasterKey;
+        private fun translateDate(): Int {
+            val calendar = Calendar.getInstance()
+            val second = calendar[Calendar.SECOND]
+            val minute = calendar[Calendar.MINUTE]
+            val hour = calendar[Calendar.HOUR_OF_DAY]
+            val day = calendar[Calendar.DAY_OF_MONTH]
+            val month = calendar[Calendar.MONTH]
+            val year = calendar[Calendar.YEAR]
+            return year % 100 and 0x3f shl 26 or (month and 0x0f shl 22) or (day and 0x1f shl 17) or (hour and 0x1f shl 12) or (minute and 0x3f shl 6) or (second and 0x3f)
+        }
     }
 }

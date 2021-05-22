@@ -528,13 +528,22 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
             InsightState.APP_ACTIVATE_PARAMETER_SERVICE,
             InsightState.APP_ACTIVATE_STATUS_SERVICE,
             InsightState.APP_FIRMWARE_VERSIONS,
-            InsightState.APP_SYSTEM_IDENTIFICATION      -> { }
-
+            InsightState.APP_SYSTEM_IDENTIFICATION      -> Unit
             else                                        -> handleException(ReceivedPacketInInvalidStateException())
         }
         try {
             val appLayerMessage = unwrap(dataMessage)
-            if (appLayerMessage is BindMessage) processBindMessage() else if (appLayerMessage is ConnectMessage) processConnectMessage() else if (appLayerMessage is ActivateServiceMessage) processActivateServiceMessage() else if (appLayerMessage is DisconnectMessage) ; else if (appLayerMessage is ServiceChallengeMessage) processServiceChallengeMessage(appLayerMessage) else if (appLayerMessage is GetFirmwareVersionsMessage) processFirmwareVersionsMessage(appLayerMessage) else if (appLayerMessage is ReadParameterBlockMessage) processReadParameterBlockMessage(appLayerMessage) else processGenericAppLayerMessage(appLayerMessage)
+            when(appLayerMessage) {
+                is BindMessage                  -> processBindMessage()
+                is ConnectMessage               -> processConnectMessage()
+                is ActivateServiceMessage       -> processActivateServiceMessage()
+                is ServiceChallengeMessage      -> processServiceChallengeMessage(appLayerMessage)
+                is GetFirmwareVersionsMessage   -> processFirmwareVersionsMessage(appLayerMessage)
+                is ReadParameterBlockMessage    -> processReadParameterBlockMessage(appLayerMessage)
+                is DisconnectMessage, null      -> Unit
+                else                            -> processGenericAppLayerMessage(appLayerMessage)
+            }
+
         } catch (e: Exception) {
             if (state !== InsightState.CONNECTED) {
                 handleException(e)

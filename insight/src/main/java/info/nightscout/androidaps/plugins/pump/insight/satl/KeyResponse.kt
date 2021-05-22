@@ -1,24 +1,18 @@
-package info.nightscout.androidaps.plugins.pump.insight.satl;
+package info.nightscout.androidaps.plugins.pump.insight.satl
 
-import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf;
+import info.nightscout.androidaps.plugins.pump.insight.satl.SatlMessage
+import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
-public class KeyResponse extends SatlMessage {
+class KeyResponse : SatlMessage() {
 
-    private byte[] randomData;
-    private byte[] preMasterSecret;
+    lateinit var randomData: ByteArray
+        private set
+    lateinit var preMasterSecret: ByteArray
+        private set
 
-    @Override
-    protected void parse(ByteBuf byteBuf) {
-        randomData = byteBuf.readBytes(28);
-        byteBuf.shift(4);
-        preMasterSecret = byteBuf.getBytes(256);
-    }
-
-    public byte[] getRandomData() {
-        return this.randomData;
-    }
-
-    public byte[] getPreMasterSecret() {
-        return this.preMasterSecret;
+    override fun parse(byteBuf: ByteBuf?) {
+        randomData = byteBuf!!.readBytes(28)
+        byteBuf.shift(4)
+        preMasterSecret = byteBuf.getBytes(256)
     }
 }

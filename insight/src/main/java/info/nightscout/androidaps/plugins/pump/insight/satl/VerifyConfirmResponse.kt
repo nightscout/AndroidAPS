@@ -1,17 +1,13 @@
-package info.nightscout.androidaps.plugins.pump.insight.satl;
+package info.nightscout.androidaps.plugins.pump.insight.satl
 
-import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf;
+import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
-public class VerifyConfirmResponse extends SatlMessage {
+class VerifyConfirmResponse : SatlMessage() {
 
-    private PairingStatus pairingStatus;
+    var pairingStatus: PairingStatus? = null
+        private set
 
-    @Override
-    protected void parse(ByteBuf byteBuf) {
-        pairingStatus = PairingStatus.Companion.fromId(byteBuf.readUInt16LE());
-    }
-
-    public PairingStatus getPairingStatus() {
-        return this.pairingStatus;
+    override fun parse(byteBuf: ByteBuf?) {
+        pairingStatus = byteBuf?.let { PairingStatus.fromId(it.readUInt16LE()) }
     }
 }

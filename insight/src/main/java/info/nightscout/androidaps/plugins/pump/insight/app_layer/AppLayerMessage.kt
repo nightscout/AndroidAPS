@@ -58,12 +58,12 @@ open class AppLayerMessage(private val messagePriority: MessagePriority, private
 
         @JvmStatic fun wrap(message: AppLayerMessage): DataMessage {
             val dataMessage = DataMessage()
-            dataMessage.setData(message.serialize(message.javaClass))
+            dataMessage.data = message.serialize(message.javaClass)
             return dataMessage
         }
 
-        @JvmStatic @Throws(Exception::class) fun unwrap(dataMessage: DataMessage): AppLayerMessage {
-            return deserialize(dataMessage.data)
+        @JvmStatic @Throws(Exception::class) fun unwrap(dataMessage: DataMessage): AppLayerMessage? {
+            return dataMessage.data?.let { deserialize(it) }
         }
     }
 }
