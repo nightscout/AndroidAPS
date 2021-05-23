@@ -62,9 +62,6 @@ class BLEComm @Inject internal constructor(
 
         private const val PACKET_START_BYTE = 0xA5.toByte()
         private const val PACKET_END_BYTE = 0x5A.toByte()
-
-        private const val BLE5_PACKET_START_BYTE = 0x73.toByte()
-        private const val BLE5_PACKET_END_BYTE = 0xBF.toByte()
     }
 
     private var scheduledDisconnection: ScheduledFuture<*>? = null
@@ -342,7 +339,7 @@ class BLEComm @Inject internal constructor(
 
     @kotlin.ExperimentalStdlibApi
     private fun readDataParsing(receivedData: ByteArray) {
-        //aapsLogger.debug(LTag.PUMPBTCOMM, "readDataParsing")
+        //aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< readDataParsing " + DanaRS_Packet.toHexString(receivedData))
         var startSignatureFound = false
         var packetIsValid = false
         var isProcessing: Boolean
@@ -350,13 +347,15 @@ class BLEComm @Inject internal constructor(
         var inputBuffer: ByteArray? = null
 
         // decrypt 2nd level after successful connection
-        val incomingBuffer = if (encryption == EncryptionType.ENCRYPTION_RSv3 && isConnected)
-            bleEncryption.decryptSecondLevelPacket(receivedData).also {
-                encryptedDataRead = true
-                sp.putLong(R.string.key_rs_last_clear_key_request, 0L)
-            }
-        else receivedData
+        val incomingBuffer =
+            if (isConnected && (encryption == EncryptionType.ENCRYPTION_RSv3 || encryption == EncryptionType.ENCRYPTION_BLE5))
+                bleEncryption.decryptSecondLevelPacket(receivedData).also {
+                    encryptedDataRead = true
+                    sp.putLong(R.string.key_rs_last_clear_key_request, 0L)
+                }
+            else receivedData
         addToReadBuffer(incomingBuffer)
+        //aapsLogger.debug(LTag.PUMPBTCOMM, "incomingBuffer " + DanaRS_Packet.toHexString(incomingBuffer))
 
         while (isProcessing) {
             var length = 0
@@ -386,58 +385,29 @@ class BLEComm @Inject internal constructor(
                     // Verify packed end [5A 5A]
                     if (readBuffer[length + 5] == PACKET_END_BYTE && readBuffer[length + 6] == PACKET_END_BYTE) {
                         packetIsValid = true
+                    } else if (readBuffer[length + 5] == readBuffer[length + 6]) {
+                        // BLE5
+                        packetIsValid = true
+                        readBuffer[length + 5] = PACKET_END_BYTE
+                        readBuffer[length + 6] = PACKET_END_BYTE
                     }
                 }
-                // packet can be BLE5 encrypted too
-                if (!packetIsValid && encryption == EncryptionType.ENCRYPTION_BLE5) {
-                    var startIndex: Int = -1
-                    // Find encrypted packet start [73 73]
-                    if (bufferLength >= 6) {
-                        for (idxStartByte in 0 until bufferLength - 2) {
-                            if (readBuffer[idxStartByte] == BLE5_PACKET_START_BYTE && readBuffer[idxStartByte + 1] == BLE5_PACKET_START_BYTE) {
-                                if (idxStartByte > 0) {
-                                    // if buffer doesn't start with signature remove the leading trash
-                                    aapsLogger.debug(LTag.PUMPBTCOMM, "Shifting the input buffer by $idxStartByte bytes")
-                                    System.arraycopy(readBuffer, idxStartByte, readBuffer, 0, bufferLength - idxStartByte)
-                                    bufferLength -= idxStartByte
-                                }
-                                startIndex = idxStartByte
-                                break
-                            }
-                        }
-                    }
-                    // 73 73 ENCRYPTED CONTENT BF BF
-                    if (startIndex != -1) {
-                        for (idxEndByte in 5..bufferLength - 2) {
-                            if (readBuffer[idxEndByte] == BLE5_PACKET_END_BYTE && readBuffer[idxEndByte + 1] == BLE5_PACKET_END_BYTE) {
-                                length = idxEndByte - startIndex + 2 - 7
-                                packetIsValid = true
-                                encryptedDataRead = true
-                                break
-                            }
-                        }
-                    }
-                }
-                if (packetIsValid) {
-                    inputBuffer = ByteArray(length + 7)
-                    // copy packet to input buffer
-                    System.arraycopy(readBuffer, 0, inputBuffer, 0, length + 7)
-                    // Cut off the message from readBuffer
-                    try {
-                        System.arraycopy(readBuffer, length + 7, readBuffer, 0, bufferLength - (length + 7))
-                    } catch (e: Exception) {
-                        aapsLogger.error("length: " + length + "bufferLength: " + bufferLength)
-                        throw e
-                    }
-                    bufferLength -= length + 7
-                    // now we have encrypted packet in inputBuffer
-                }
-            }
-            if (packetIsValid && encryptedDataRead && encryption == EncryptionType.ENCRYPTION_BLE5) {
-                inputBuffer = bleEncryption.decryptSecondLevelPacket(inputBuffer)
             }
             if (packetIsValid) {
-                // aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< PROCESSING: " + DanaRS_Packet.toHexString(inputBuffer))
+                inputBuffer = ByteArray(length + 7)
+                // copy packet to input buffer
+                System.arraycopy(readBuffer, 0, inputBuffer, 0, length + 7)
+                // Cut off the message from readBuffer
+                try {
+                    System.arraycopy(readBuffer, length + 7, readBuffer, 0, bufferLength - (length + 7))
+                } catch (e: Exception) {
+                    aapsLogger.error("length: " + length + "bufferLength: " + bufferLength)
+                    throw e
+                }
+                bufferLength -= length + 7
+                // now we have encrypted packet in inputBuffer
+
+                //aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< PROCESSING: " + DanaRS_Packet.toHexString(inputBuffer))
                 // decrypt the packet
                 bleEncryption.getDecryptedPacket(inputBuffer)?.let { decryptedBuffer ->
                     if (decryptedBuffer[0] == BleEncryption.DANAR_PACKET__TYPE_ENCRYPTION_RESPONSE.toByte()) {
