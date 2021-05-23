@@ -230,7 +230,7 @@ class LocalInsightPlugin @Inject constructor(
                 pumpTime.minute = calendar[Calendar.MINUTE]
                 pumpTime.second = calendar[Calendar.SECOND]
                 val setDateTimeMessage = SetDateTimeMessage()
-                setDateTimeMessage.setPumpTime(pumpTime)
+                setDateTimeMessage.pumpTime = pumpTime
                 connectionService!!.requestMessage(setDateTimeMessage).await()
                 val notification = Notification(Notification.INSIGHT_DATE_TIME_UPDATED, resourceHelper.gs(R.string.pump_time_updated), Notification.INFO, 60)
                 rxBus.send(EventNewNotification(notification))
@@ -405,11 +405,11 @@ class LocalInsightPlugin @Inject constructor(
             try {
                 synchronized(`$bolusLock`) {
                     val bolusMessage = DeliverBolusMessage()
-                    bolusMessage.setBolusType(BolusType.STANDARD)
-                    bolusMessage.setDuration(0)
-                    bolusMessage.setExtendedAmount(0.0)
-                    bolusMessage.setImmediateAmount(insulin)
-                    bolusMessage.setVibration(sp.getBoolean(if (detailedBolusInfo.bolusType === DetailedBolusInfo.BolusType.SMB) R.string.key_insight_disable_vibration_auto else R.string.key_insight_disable_vibration, false))
+                    bolusMessage.bolusType = BolusType.STANDARD
+                    bolusMessage.duration = 0
+                    bolusMessage.extendedAmount = 0.0
+                    bolusMessage.immediateAmount = insulin
+                    bolusMessage.disableVibration = sp.getBoolean(if (detailedBolusInfo.bolusType === DetailedBolusInfo.BolusType.SMB) R.string.key_insight_disable_vibration_auto else R.string.key_insight_disable_vibration, false)
                     bolusID = connectionService!!.requestMessage(bolusMessage).await().bolusId
                     bolusCancelled = false
                 }
@@ -497,7 +497,7 @@ class LocalInsightPlugin @Inject constructor(
                 synchronized(`$bolusLock`) {
                     alertService!!.ignore(AlertType.WARNING_38)
                     val cancelBolusMessage = CancelBolusMessage()
-                    cancelBolusMessage.setBolusID(bolusID)
+                    cancelBolusMessage.bolusID = bolusID
                     connectionService!!.requestMessage(cancelBolusMessage).await()
                     bolusCancelled = true
                     confirmAlert(AlertType.WARNING_38)
@@ -570,13 +570,13 @@ class LocalInsightPlugin @Inject constructor(
         try {
             if (activeTBR != null) {
                 val message = ChangeTBRMessage()
-                message.setDuration(durationInMinutes)
-                message.setPercentage(percentage)
+                message.duration = durationInMinutes
+                message.percentage = percentage
                 connectionService!!.requestMessage(message)
             } else {
                 val message = SetTBRMessage()
-                message.setDuration(durationInMinutes)
-                message.setPercentage(percentage)
+                message.duration = durationInMinutes
+                message.percentage = percentage
                 connectionService!!.requestMessage(message)
             }
             result.isPercent(true)
@@ -620,11 +620,11 @@ class LocalInsightPlugin @Inject constructor(
         val result = PumpEnactResult(injector)
         try {
             val bolusMessage = DeliverBolusMessage()
-            bolusMessage.setBolusType(BolusType.EXTENDED)
-            bolusMessage.setDuration(durationInMinutes!!)
-            bolusMessage.setExtendedAmount(insulin!!)
-            bolusMessage.setImmediateAmount(0.0)
-            bolusMessage.setVibration(disableVibration)
+            bolusMessage.bolusType = BolusType.EXTENDED
+            bolusMessage.duration = durationInMinutes ?: 0
+            bolusMessage.extendedAmount = insulin ?: 0.0
+            bolusMessage.immediateAmount = 0.0
+            bolusMessage.disableVibration = disableVibration
             val bolusID = connectionService!!.requestMessage(bolusMessage).await().bolusId
             insightDbHelper.createOrUpdate(InsightBolusID(
                 timestamp= dateUtil.now(),
@@ -715,7 +715,7 @@ class LocalInsightPlugin @Inject constructor(
                 if (activeBolus.bolusType == BolusType.EXTENDED || activeBolus.bolusType == BolusType.MULTIWAVE) {
                     alertService!!.ignore(AlertType.WARNING_38)
                     val cancelBolusMessage = CancelBolusMessage()
-                    cancelBolusMessage.setBolusID(activeBolus.bolusID)
+                    cancelBolusMessage.bolusID = activeBolus.bolusID
                     connectionService!!.requestMessage(cancelBolusMessage).await()
                     confirmAlert(AlertType.WARNING_38)
                     alertService!!.ignore(null)
@@ -749,7 +749,7 @@ class LocalInsightPlugin @Inject constructor(
                     activeAlertMessage.alert?.let {
                         if (it.alertType == alertType) {
                             val confirmMessage = ConfirmAlertMessage()
-                            confirmMessage.setAlertID(it.alertId)
+                            confirmMessage.alertID = it.alertId
                             requestMessage(confirmMessage).await()
                         } else continueLoop = false                            // break not accepted here because jump accross class bundary
                     }
@@ -827,7 +827,7 @@ class LocalInsightPlugin @Inject constructor(
         val result = PumpEnactResult(injector)
         try {
             val operatingModeMessage = SetOperatingModeMessage()
-            operatingModeMessage.setOperatingMode(OperatingMode.STOPPED)
+            operatingModeMessage.operatingMode = OperatingMode.STOPPED
             connectionService!!.requestMessage(operatingModeMessage).await()
             result.success(true).enacted(true)
             fetchStatus()
@@ -849,7 +849,7 @@ class LocalInsightPlugin @Inject constructor(
         val result = PumpEnactResult(injector)
         try {
             val operatingModeMessage = SetOperatingModeMessage()
-            operatingModeMessage.setOperatingMode(OperatingMode.STARTED)
+            operatingModeMessage.operatingMode = OperatingMode.STARTED
             connectionService!!.requestMessage(operatingModeMessage).await()
             result.success(true).enacted(true)
             fetchStatus()

@@ -86,7 +86,7 @@ class InsightAlertService : DaggerService(), InsightConnectionService.StateCallb
     }
 
     override fun onDestroy() {
-        if (thread != null) thread!!.interrupt()
+        if (thread != null) thread?.interrupt()
         unbindService(serviceConnection)
     }
 
@@ -105,10 +105,10 @@ class InsightAlertService : DaggerService(), InsightConnectionService.StateCallb
     override fun onStateChanged(state: InsightState?) {
         if (state == InsightState.CONNECTED) {
             thread = Thread { queryActiveAlert() }
-            thread!!.start()
+            thread?.start()
         } else {
             dismissNotification()
-            if (thread != null) thread!!.interrupt()
+            if (thread != null) thread?.interrupt()
         }
     }
 
@@ -183,13 +183,15 @@ class InsightAlertService : DaggerService(), InsightConnectionService.StateCallb
             try {
                 synchronized(`$alertLock`) {
                     if (alert == null) return@Runnable
-                    alert!!.alertStatus = AlertStatus.SNOOZED
-                    alertLiveData.postValue(alert)
-                    stopAlerting()
-                    showNotification(alert!!)
-                    val snoozeAlertMessage = SnoozeAlertMessage()
-                    snoozeAlertMessage.setAlertID(alert!!.alertId)
-                    connectionService!!.requestMessage(snoozeAlertMessage).await()
+                    alert?.let {
+                        it.alertStatus = AlertStatus.SNOOZED
+                        alertLiveData.postValue(alert)
+                        stopAlerting()
+                        showNotification(alert!!)
+                        val snoozeAlertMessage = SnoozeAlertMessage()
+                        snoozeAlertMessage.alertID = it.alertId
+                        connectionService?.run { requestMessage(snoozeAlertMessage).await() }
+                    }
                 }
             } catch (e: AppLayerErrorException) {
                 aapsLogger.info(LTag.PUMP, "Exception while muting alert: " + e.javaClass.canonicalName + " (" + e.errorCode + ")")
@@ -213,8 +215,8 @@ class InsightAlertService : DaggerService(), InsightConnectionService.StateCallb
                     alertLiveData.postValue(null)
                     dismissNotification()
                     val confirmAlertMessage = ConfirmAlertMessage()
-                    confirmAlertMessage.setAlertID(alert!!.alertId)
-                    connectionService!!.requestMessage(confirmAlertMessage).await()
+                    alert?.let { confirmAlertMessage.alertID = it.alertId }
+                    connectionService?.run { requestMessage(confirmAlertMessage).await() }
                     alert = null
                 }
             } catch (e: AppLayerErrorException) {

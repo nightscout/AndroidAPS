@@ -1,69 +1,41 @@
-package info.nightscout.androidaps.plugins.pump.insight.app_layer.remote_control;
+package info.nightscout.androidaps.plugins.pump.insight.app_layer.remote_control
 
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.Service;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.BolusType;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.MessagePriority;
-import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf;
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.Service
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.BolusType
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.MessagePriority
+import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
-public class DeliverBolusMessage extends AppLayerMessage {
+class DeliverBolusMessage : AppLayerMessage(MessagePriority.NORMAL, true, true, Service.REMOTE_CONTROL) {
 
-    private BolusType bolusType;
-    private double immediateAmount;
-    private double extendedAmount;
-    private int duration;
-    private int bolusId;
-    private boolean disableVibration = false;
+    internal var bolusType: BolusType? = null
+    internal var immediateAmount = 0.0
+    internal var extendedAmount = 0.0
+    internal var duration = 0
+    internal var bolusId = 0
+        private set
+    internal var disableVibration = false
 
-    public DeliverBolusMessage() {
-        super(MessagePriority.NORMAL, true, true, Service.REMOTE_CONTROL);
+    override val data: ByteBuf
+        get() {
+            val byteBuf = ByteBuf(22)
+            // 805 => Old value with vibration (2.6.1 and earlier), 252 => new value without vibrations for firmware 3.x
+            if (disableVibration) byteBuf.putUInt16LE(252) else byteBuf.putUInt16LE(805)
+            byteBuf.putUInt16LE(bolusType!!.id)
+            byteBuf.putUInt16LE(31)
+            byteBuf.putUInt16LE(0)
+            byteBuf.putUInt16Decimal(immediateAmount)
+            byteBuf.putUInt16Decimal(extendedAmount)
+            byteBuf.putUInt16LE(duration)
+            byteBuf.putUInt16LE(0)
+            byteBuf.putUInt16Decimal(immediateAmount)
+            byteBuf.putUInt16Decimal(extendedAmount)
+            byteBuf.putUInt16LE(duration)
+            return byteBuf
+        }
+
+    @Throws(Exception::class) override fun parse(byteBuf: ByteBuf?) {
+        byteBuf?.run { bolusId = readUInt16LE() }
     }
 
-    @Override
-    protected ByteBuf getData() {
-        ByteBuf byteBuf = new ByteBuf(22);
-        // 805 => Old value with vibration (2.6.1 and earlier), 252 => new value without vibrations for firmware 3.x
-        if (disableVibration)
-            byteBuf.putUInt16LE(252);
-        else
-            byteBuf.putUInt16LE(805);
-        byteBuf.putUInt16LE(bolusType.getId());
-        byteBuf.putUInt16LE(31);
-        byteBuf.putUInt16LE(0);
-        byteBuf.putUInt16Decimal(immediateAmount);
-        byteBuf.putUInt16Decimal(extendedAmount);
-        byteBuf.putUInt16LE(duration);
-        byteBuf.putUInt16LE(0);
-        byteBuf.putUInt16Decimal(immediateAmount);
-        byteBuf.putUInt16Decimal(extendedAmount);
-        byteBuf.putUInt16LE(duration);
-        return byteBuf;
-    }
-
-    @Override
-    protected void parse(ByteBuf byteBuf) throws Exception {
-        bolusId = byteBuf.readUInt16LE();
-    }
-
-    public void setBolusType(BolusType bolusType) {
-        this.bolusType = bolusType;
-    }
-
-    public void setImmediateAmount(double immediateAmount) {
-        this.immediateAmount = immediateAmount;
-    }
-
-    public void setExtendedAmount(double extendedAmount) {
-        this.extendedAmount = extendedAmount;
-    }
-
-    public void setDuration(int duration) {
-        this.duration = duration;
-    }
-
-    public void setVibration(boolean disableVibration) { this.disableVibration = disableVibration;}
-
-    public int getBolusId() {
-        return bolusId;
-    }
 }
