@@ -273,8 +273,8 @@ class OverviewData @Inject constructor(
 
     var maxFromMaxValueFound = Double.MIN_VALUE
     var maxFromMinValueFound = Double.MIN_VALUE
-    val dsMaxScale = Scale()
-    val dsMinScale = Scale()
+    var dsMaxScale = Scale()
+    var dsMinScale = Scale()
     var dsMaxSeries: LineGraphSeries<ScaledDataPoint> = LineGraphSeries()
     var dsMinSeries: LineGraphSeries<ScaledDataPoint> = LineGraphSeries()
 

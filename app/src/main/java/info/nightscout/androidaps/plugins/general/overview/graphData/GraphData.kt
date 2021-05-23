@@ -164,13 +164,22 @@ class GraphData(
     }
 
     // scale in % of vertical size (like 0.3)
-    fun addDeviationSlope(useForScale: Boolean, scale: Double) {
+    fun addDeviationSlope(useForScale: Boolean, scale: Double, isRatioScale: Boolean = false) {
         if (useForScale) {
             maxY = max(overviewData.maxFromMaxValueFound, overviewData.maxFromMinValueFound)
             minY = -maxY
         }
-        overviewData.dsMaxScale.setMultiplier(maxY * scale / overviewData.maxFromMaxValueFound)
-        overviewData.dsMinScale.setMultiplier(maxY * scale / overviewData.maxFromMinValueFound)
+        var graphMaxY = maxY
+        if (isRatioScale) {
+            graphMaxY = maxY - 100.0
+            overviewData.dsMinScale = Scale(100.0)
+            overviewData.dsMaxScale = Scale(100.0)
+        } else {
+            overviewData.dsMinScale = Scale()
+            overviewData.dsMaxScale = Scale()
+        }
+        overviewData.dsMaxScale.setMultiplier(graphMaxY * scale / overviewData.maxFromMaxValueFound)
+        overviewData.dsMinScale.setMultiplier(graphMaxY * scale / overviewData.maxFromMinValueFound)
         addSeries(overviewData.dsMaxSeries)
         addSeries(overviewData.dsMinSeries)
     }
