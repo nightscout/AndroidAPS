@@ -18,6 +18,7 @@ fun ByteArray.toHex() : String{
     return result.toString()
 }
 
+@kotlin.ExperimentalStdlibApi
 fun String.hexStringToByteArray(): ByteArray {
 
     val result = ByteArray(length / 2)

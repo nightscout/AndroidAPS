@@ -256,7 +256,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
         return null;
     }
 
-    public boolean bolus(double amount, int carbs, long carbtime, final EventOverviewBolusProgress.Treatment t) {
+    public boolean bolus(double amount, int carbs, long carbTimeStamp, final EventOverviewBolusProgress.Treatment t) {
         if (!isConnected()) return false;
         if (BolusProgressDialog.stopPressed) return false;
 
@@ -267,7 +267,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
         danaPump.setBolusStopForced(false);
 
         if (carbs > 0) {
-            mSerialIOThread.sendMessage(new MsgSetCarbsEntry(injector, carbtime, carbs));
+            mSerialIOThread.sendMessage(new MsgSetCarbsEntry(injector, carbTimeStamp, carbs));
         }
 
         if (amount > 0) {

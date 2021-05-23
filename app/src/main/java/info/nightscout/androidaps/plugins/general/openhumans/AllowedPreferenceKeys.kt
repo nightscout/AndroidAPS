@@ -2,8 +2,10 @@ package info.nightscout.androidaps.plugins.general.openhumans
 
 import java.util.*
 
+@kotlin.ExperimentalStdlibApi
 fun String.isAllowedKey() = if (startsWith("ConfigBuilder_")) true else allowedKeys.contains(this.uppercase(Locale.ROOT))
 
+@kotlin.ExperimentalStdlibApi
 private val allowedKeys = """
     absorption
     absorption_maxtime

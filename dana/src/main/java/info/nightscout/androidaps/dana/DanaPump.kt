@@ -249,7 +249,7 @@ class DanaPump @Inject constructor(
 
     // DanaRS specific
     var rsPassword = ""
-    var v3RSPump = false
+    var ignoreUserPassword = false // true if replaced by enhanced encryption
 
     // User settings
     var timeDisplayType24 = false
@@ -262,6 +262,7 @@ class DanaPump @Inject constructor(
     var lowReservoirRate = 0
     var cannulaVolume = 0
     var refillAmount = 0
+    var target = 0 // mgdl 40~400 mmol 2.2~22 => 220~2200
     var userOptionsFrompump: ByteArray? = null
     var initialBolusAmount = 0.0
 
@@ -366,7 +367,7 @@ class DanaPump @Inject constructor(
         get() = password == sp.getInt(R.string.key_danar_password, -2)
 
     val isRSPasswordOK: Boolean
-        get() = rsPassword.equals(sp.getString(R.string.key_danars_password, ""), ignoreCase = true) || v3RSPump
+        get() = rsPassword.equals(sp.getString(R.string.key_danars_password, ""), ignoreCase = true) || ignoreUserPassword
 
     fun reset() {
         aapsLogger.debug(LTag.PUMP, "DanaRPump reset")
@@ -388,7 +389,8 @@ class DanaPump @Inject constructor(
                 if (protocol < 10) "DanaRS"
                 else "DanaRS v3"
             0x06 -> "DanaRS Korean"
-            0x07 -> "Dana-i"
+            0x07 -> "Dana-i (BLE4.2)"
+            0x09 -> "Dana-i (BLE5)"
             else -> "Unknown Dana pump"
         }
 

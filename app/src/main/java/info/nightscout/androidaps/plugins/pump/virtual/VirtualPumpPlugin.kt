@@ -206,7 +206,7 @@ open class VirtualPumpPlugin @Inject constructor(
                 pumpSerial = serialNumber())
         if (detailedBolusInfo.carbs > 0)
             pumpSync.syncCarbsWithTimestamp(
-                timestamp = detailedBolusInfo.timestamp + T.mins(detailedBolusInfo.carbTime.toLong()).msecs(),
+                timestamp = detailedBolusInfo.carbsTimestamp ?: detailedBolusInfo.timestamp,
                 amount = detailedBolusInfo.carbs,
                 pumpId = null,
                 pumpType = pumpType ?: PumpType.GENERIC_AAPS,

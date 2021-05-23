@@ -97,6 +97,7 @@ class DanaRSService : DaggerService() {
     val isConnecting: Boolean
         get() = bleComm.isConnecting
 
+    @kotlin.ExperimentalStdlibApi
     fun connect(from: String, address: String): Boolean {
         return bleComm.connect(from, address)
     }

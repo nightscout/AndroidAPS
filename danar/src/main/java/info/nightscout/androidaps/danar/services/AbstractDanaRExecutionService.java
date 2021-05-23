@@ -99,7 +99,7 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
 
     public abstract PumpEnactResult loadEvents();
 
-    public abstract boolean bolus(double amount, int carbs, long carbtime, final EventOverviewBolusProgress.Treatment t);
+    public abstract boolean bolus(double amount, int carbs, long carbTimeStamp, final EventOverviewBolusProgress.Treatment t);
 
     public abstract boolean highTempBasal(int percent, int durationInMinutes); // Rv2 only
 

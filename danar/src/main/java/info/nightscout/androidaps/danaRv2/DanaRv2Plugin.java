@@ -180,16 +180,15 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             // I don't think it's necessary to copy DetailedBolusInfo right now for carbs records
             double carbs = detailedBolusInfo.carbs;
             detailedBolusInfo.carbs = 0;
-            int carbTime = detailedBolusInfo.carbTime;
-            if (carbTime == 0) carbTime--; // better set 1 man back to prevent clash with insulin
-            detailedBolusInfo.carbTime = 0;
+            long carbTimeStamp = detailedBolusInfo.getCarbsTimestamp() != null ? detailedBolusInfo.getCarbsTimestamp() : detailedBolusInfo.timestamp;
+            if (carbTimeStamp == detailedBolusInfo.timestamp) carbTimeStamp -= T.mins(1).msecs(); // better set 1 min back to prevents clash with insulin
 
             detailedBolusInfoStorage.add(detailedBolusInfo); // will be picked up on reading history
 
             EventOverviewBolusProgress.Treatment t = new EventOverviewBolusProgress.Treatment(0, 0, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB);
             boolean connectionOK = false;
             if (detailedBolusInfo.insulin > 0 || carbs > 0)
-                connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) carbs, dateUtil.now() + T.mins(carbTime).msecs(), t);
+                connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) carbs, carbTimeStamp, t);
             PumpEnactResult result = new PumpEnactResult(getInjector());
             result.success(connectionOK && Math.abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.getBolusStep())
                     .bolusDelivered(t.insulin)

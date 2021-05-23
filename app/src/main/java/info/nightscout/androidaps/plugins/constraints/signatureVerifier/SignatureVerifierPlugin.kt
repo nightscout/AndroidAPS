@@ -152,6 +152,7 @@ class SignatureVerifierPlugin @Inject constructor(
         return sb.toString()
     }
 
+    @kotlin.ExperimentalStdlibApi
     fun singleCharUnMap(shortHash: String): String {
         val array = ByteArray(shortHash.length)
         val sb = StringBuilder()
