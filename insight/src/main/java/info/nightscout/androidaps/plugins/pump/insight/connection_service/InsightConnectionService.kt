@@ -362,8 +362,8 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
             recoveryDuration = 0
             inputStreamReader = InputStreamReader(bluetoothSocket!!.inputStream, this)
             outputStreamWriter = OutputStreamWriter(bluetoothSocket!!.outputStream, this)
-            inputStreamReader!!.start()
-            outputStreamWriter!!.start()
+            inputStreamReader?.start()
+            outputStreamWriter?.start()
             if (pairingDataStorage!!.isPaired) {
                 setState(InsightState.SATL_SYN_REQUEST)
                 sendSatlMessage(SynRequest())
@@ -380,10 +380,14 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
         this.buffer.putBytes(buffer, bytesRead)
         try {
             while (hasCompletePacket(this.buffer)) {
-                val satlMessage = deserialize(this.buffer, pairingDataStorage!!.lastNonceReceived, pairingDataStorage!!.incomingKey)
-                if (pairingDataStorage!!.incomingKey != null && pairingDataStorage!!.lastNonceReceived != null && !pairingDataStorage!!.lastNonceReceived.isSmallerThan(satlMessage!!.nonce)) {
-                    throw InvalidNonceException()
-                } else processSatlMessage(satlMessage)
+                pairingDataStorage?.let {
+                    val satlMessage = deserialize(this.buffer, it.lastNonceReceived, it.incomingKey)
+                    satlMessage?.let { it2 ->
+                        if (it.incomingKey != null && it.lastNonceReceived != null && !it.lastNonceReceived.isSmallerThan(it2.nonce!!)) {
+                            throw InvalidNonceException()
+                        } else processSatlMessage(satlMessage)
+                    }
+                }
             }
         } catch (e: InsightException) {
             handleException(e)

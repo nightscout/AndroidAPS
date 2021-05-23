@@ -1,47 +1,48 @@
-package info.nightscout.androidaps.plugins.pump.insight.utils;
+package info.nightscout.androidaps.plugins.pump.insight.utils
 
-import java.math.BigInteger;
+import java.math.BigInteger
 
-public class Nonce {
+class Nonce {
 
-    private BigInteger bigInteger;
+    private var bigInteger: BigInteger
 
-    public Nonce() {
-        bigInteger = BigInteger.ZERO;
+    constructor() {
+        bigInteger = BigInteger.ZERO
     }
 
-    public Nonce(byte[] storageValue) {
-        bigInteger = new BigInteger(storageValue);
+    constructor(storageValue: ByteArray?) {
+        bigInteger = BigInteger(storageValue)
     }
 
-    public byte[] getStorageValue() {
-        return bigInteger.toByteArray();
+    val storageValue: ByteArray
+        get() = bigInteger.toByteArray()
+    val productionalBytes: ByteBuf
+        get() {
+            val byteBuf = ByteBuf(13)
+            byteBuf.putBytesLE(bigInteger.toByteArray())
+            byteBuf.putBytes(0x00.toByte(), 13 - byteBuf.size)
+            return byteBuf
+        }
+
+    fun increment() {
+        bigInteger = bigInteger.add(BigInteger.ONE)
     }
 
-    public ByteBuf getProductionalBytes() {
-        ByteBuf byteBuf = new ByteBuf(13);
-        byteBuf.putBytesLE(bigInteger.toByteArray());
-        byteBuf.putBytes((byte) 0x00, 13 - byteBuf.getSize());
-        return byteBuf;
+    fun increment(count: Int) {
+        bigInteger = bigInteger.add(BigInteger.valueOf(count.toLong()))
     }
 
-    public static Nonce fromProductionalBytes(byte[] bytes) {
-        ByteBuf byteBuf = new ByteBuf(14);
-        byteBuf.putByte((byte) 0x00);
-        byteBuf.putBytesLE(bytes);
-        return new Nonce(byteBuf.getBytes());
+    fun isSmallerThan(greater: Nonce): Boolean {
+        return bigInteger.compareTo(greater.bigInteger) < 0
     }
 
-    public void increment() {
-        bigInteger = bigInteger.add(BigInteger.ONE);
-    }
+    companion object {
 
-    public void increment(int count) {
-        bigInteger = bigInteger.add(BigInteger.valueOf(count));
+        fun fromProductionalBytes(bytes: ByteArray?): Nonce {
+            val byteBuf = ByteBuf(14)
+            byteBuf.putByte(0x00.toByte())
+            byteBuf.putBytesLE(bytes)
+            return Nonce(byteBuf.bytes)
+        }
     }
-
-    public boolean isSmallerThan(Nonce greater) {
-        return bigInteger.compareTo(greater.bigInteger) < 0;
-    }
-
 }
