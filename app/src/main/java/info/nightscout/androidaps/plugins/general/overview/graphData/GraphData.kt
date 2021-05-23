@@ -15,6 +15,7 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.general.overview.OverviewData
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.AreaGraphSeries
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DoubleDataPoint
+import info.nightscout.androidaps.plugins.general.overview.graphExtensions.Scale
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.TimeAsXAxisLabelFormatter
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.Round
@@ -153,9 +154,12 @@ class GraphData(
         if (useForScale) {
             maxY = 100.0 + max(overviewData.maxRatioValueFound, abs(overviewData.minRatioValueFound))
             minY = 100.0 - max(overviewData.maxRatioValueFound, abs(overviewData.minRatioValueFound))
+            overviewData.ratioScale = Scale(100.0)
             overviewData.ratioScale.setMultiplier(1.0)
-        } else
+        } else {
+            overviewData.ratioScale = Scale()
             overviewData.ratioScale.setMultiplier(maxY * scale / max(overviewData.maxRatioValueFound, abs(overviewData.minRatioValueFound)))
+        }
         addSeries(overviewData.ratioSeries)
     }
 

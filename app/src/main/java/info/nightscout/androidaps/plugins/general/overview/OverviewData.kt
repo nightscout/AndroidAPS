@@ -268,7 +268,7 @@ class OverviewData @Inject constructor(
 
     var maxRatioValueFound = 5.0                    //even if sens data equals 0 for all the period, minimum scale is between 95% and 105%
     var minRatioValueFound = -maxRatioValueFound
-    val ratioScale = Scale()
+    var ratioScale = Scale()
     var ratioSeries: LineGraphSeries<ScaledDataPoint> = LineGraphSeries()
 
     var maxFromMaxValueFound = Double.MIN_VALUE
