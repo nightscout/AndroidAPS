@@ -1,28 +1,24 @@
-package info.nightscout.androidaps.plugins.pump.insight.utils;
+package info.nightscout.androidaps.plugins.pump.insight.utils
 
-public class DelayedActionThread extends Thread {
+class DelayedActionThread private constructor(name: String, private val duration: Long, private val runnable: Runnable) : Thread() {
 
-    private final long duration;
-    private final Runnable runnable;
-
-    private DelayedActionThread(String name, long duration, Runnable runnable) {
-        setName(name);
-        this.duration = duration;
-        this.runnable = runnable;
+    override fun run() {
+        try {
+            sleep(duration)
+            runnable.run()
+        } catch (e: InterruptedException) { }
     }
 
-    @Override
-    public void run() {
-        try {
-            Thread.sleep(duration);
-            runnable.run();
-        } catch (InterruptedException e) {
+    companion object {
+
+        fun runDelayed(name: String, duration: Long, runnable: Runnable): DelayedActionThread {
+            val delayedActionThread = DelayedActionThread(name, duration, runnable)
+            delayedActionThread.start()
+            return delayedActionThread
         }
     }
 
-    public static DelayedActionThread runDelayed(String name, long duration, Runnable runnable) {
-        DelayedActionThread delayedActionThread = new DelayedActionThread(name, duration, runnable);
-        delayedActionThread.start();
-        return delayedActionThread;
+    init {
+        setName(name)
     }
 }
