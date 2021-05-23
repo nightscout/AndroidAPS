@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".plugins.treatments.TreatmentsFragment">
+    tools:context="info.nightscout.androidaps.activities.TreatmentsActivity">
 
 
     <com.google.android.flexbox.FlexboxLayout

@@ -344,7 +344,7 @@ class BLEComm @Inject internal constructor(
         var packetIsValid = false
         var isProcessing: Boolean
         isProcessing = true
-        var inputBuffer: ByteArray? = null
+        var inputBuffer: ByteArray?
 
         // decrypt 2nd level after successful connection
         val incomingBuffer =

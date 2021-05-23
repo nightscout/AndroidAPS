@@ -27,11 +27,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.joanzapata.iconify.Iconify
 import com.joanzapata.iconify.fonts.FontAwesomeModule
 import dev.doubledot.doki.ui.DokiActivity
-import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
-import info.nightscout.androidaps.activities.PreferencesActivity
-import info.nightscout.androidaps.activities.ProfileHelperActivity
-import info.nightscout.androidaps.activities.SingleFragmentActivity
-import info.nightscout.androidaps.activities.StatsActivity
+import info.nightscout.androidaps.activities.*
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.databinding.ActivityMainBinding
@@ -288,6 +284,11 @@ class MainActivity : NoSplashAppCompatActivity() {
 
             R.id.nav_historybrowser -> {
                 startActivity(Intent(this, HistoryBrowseActivity::class.java))
+                return true
+            }
+
+            R.id.nav_treatments -> {
+                startActivity(Intent(this, TreatmentsActivity::class.java))
                 return true
             }
 

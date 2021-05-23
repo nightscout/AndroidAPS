@@ -1,7 +1,6 @@
-package info.nightscout.androidaps.plugins.treatments.fragments
+package info.nightscout.androidaps.utils.ui
 
 import android.content.Context
-import android.graphics.Color
 import android.util.AttributeSet
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
@@ -9,7 +8,7 @@ import com.jjoe64.graphview.series.LineGraphSeries
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.utils.Round
-import java.util.*
+import java.util.ArrayList
 import kotlin.math.max
 
 class ProfileGraph : GraphView {
