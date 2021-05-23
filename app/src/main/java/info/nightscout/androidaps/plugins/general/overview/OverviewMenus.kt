@@ -113,6 +113,9 @@ class OverviewMenus @Inject constructor(
                     if (m == CharType.PRE) insert = predictionsAvailable
                     if (m == CharType.DEVSLOPE) insert = buildHelper.isDev()
                     if (used.contains(m.ordinal)) insert = false
+                    for (g2 in g + 1 until numOfGraphs) {
+                        if (settingsCopy[g2][m.ordinal]) insert = false
+                    }
                     if (insert) {
                         val item = popup.menu.add(Menu.NONE, m.ordinal + 100 * (g + 1), Menu.NONE, resourceHelper.gs(m.nameId))
                         val title = item.title
