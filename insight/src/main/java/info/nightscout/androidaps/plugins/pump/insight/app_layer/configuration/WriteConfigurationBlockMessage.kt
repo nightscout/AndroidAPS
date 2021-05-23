@@ -1,41 +1,33 @@
-package info.nightscout.androidaps.plugins.pump.insight.app_layer.configuration;
+package info.nightscout.androidaps.plugins.pump.insight.app_layer.configuration
 
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.Service;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.ParameterBlock;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.MessagePriority;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.ParameterBlocks;
-import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf;
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.Service
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.ParameterBlock
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.MessagePriority
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.ParameterBlocks
+import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
-public class WriteConfigurationBlockMessage extends AppLayerMessage {
+class WriteConfigurationBlockMessage : AppLayerMessage(MessagePriority.NORMAL, false, true, Service.CONFIGURATION) {
 
-    private ParameterBlock parameterBlock;
-    private Class<? extends ParameterBlock> configurationBlockId;
+    internal var parameterBlock: ParameterBlock? = null
+    internal var configurationBlockId: Class<out ParameterBlock?>? = null
+        private set
 
-    public WriteConfigurationBlockMessage() {
-        super(MessagePriority.NORMAL, false, true, Service.CONFIGURATION);
+    override val data: ByteBuf
+        get() {
+            val configBlockData = parameterBlock!!.data
+            val data = ByteBuf(4 + configBlockData!!.size)
+            data.putUInt16LE(ParameterBlocks.fromType(parameterBlock!!.javaClass)!!.id)
+            data.putUInt16LE(31)
+            data.putByteBuf(configBlockData)
+            return data
+        }
+
+    override fun parse(byteBuf: ByteBuf?) {
+        configurationBlockId = ParameterBlocks.fromId(byteBuf!!.readUInt16LE())!!.type
     }
 
-    @Override
-    protected ByteBuf getData() {
-        ByteBuf configBlockData = parameterBlock.getData();
-        ByteBuf data = new ByteBuf(4 + configBlockData.getSize());
-        data.putUInt16LE(ParameterBlocks.Companion.fromType(parameterBlock.getClass()).getId());
-        data.putUInt16LE(31);
-        data.putByteBuf(configBlockData);
-        return data;
-    }
-
-    @Override
-    protected void parse(ByteBuf byteBuf) {
-        configurationBlockId = ParameterBlocks.Companion.fromId(byteBuf.readUInt16LE()).getType();
-    }
-
-    public Class<? extends ParameterBlock> getConfigurationBlockId() {
-        return this.configurationBlockId;
-    }
-
-    public void setParameterBlock(ParameterBlock parameterBlock) {
-        this.parameterBlock = parameterBlock;
+    fun setParameterBlock(parameterBlock: ParameterBlock?) {
+        this.parameterBlock = parameterBlock
     }
 }
