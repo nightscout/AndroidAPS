@@ -8,7 +8,7 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
 class GetAvailableBolusTypesMessage : AppLayerMessage(MessagePriority.NORMAL, false, false, Service.REMOTE_CONTROL) {
 
-    var availableBolusTypes: AvailableBolusTypes? = null
+    internal var availableBolusTypes: AvailableBolusTypes? = null
         private set
 
     override fun parse(byteBuf: ByteBuf?) {

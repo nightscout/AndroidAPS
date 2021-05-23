@@ -9,7 +9,7 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
 class GetActiveBasalRateMessage : AppLayerMessage(MessagePriority.NORMAL, true, false, Service.STATUS) {
 
-    var activeBasalRate: ActiveBasalRate? = null
+    internal var activeBasalRate: ActiveBasalRate? = null
         private set
 
     override fun parse(byteBuf: ByteBuf?) {

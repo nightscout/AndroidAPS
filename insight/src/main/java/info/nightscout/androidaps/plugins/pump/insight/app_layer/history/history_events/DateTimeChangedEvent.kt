@@ -5,17 +5,17 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
 class DateTimeChangedEvent : HistoryEvent() {
 
-    var beforeYear = 0
+    internal var beforeYear = 0
         private set
-    var beforeMonth = 0
+    internal var beforeMonth = 0
         private set
-    var beforeDay = 0
+    internal var beforeDay = 0
         private set
-    var beforeHour = 0
+    internal var beforeHour = 0
         private set
-    var beforeMinute = 0
+    internal var beforeMinute = 0
         private set
-    var beforeSecond = 0
+    internal var beforeSecond = 0
         private set
 
     override fun parse(byteBuf: ByteBuf?) {

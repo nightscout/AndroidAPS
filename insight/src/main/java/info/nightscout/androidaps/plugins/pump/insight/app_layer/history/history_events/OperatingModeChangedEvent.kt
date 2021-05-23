@@ -6,9 +6,9 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
 class OperatingModeChangedEvent : HistoryEvent() {
 
-    var oldValue: OperatingMode? = null
+    internal var oldValue: OperatingMode? = null
         private set
-    var newValue: OperatingMode? = null
+    internal var newValue: OperatingMode? = null
         private set
 
     override fun parse(byteBuf: ByteBuf?) {

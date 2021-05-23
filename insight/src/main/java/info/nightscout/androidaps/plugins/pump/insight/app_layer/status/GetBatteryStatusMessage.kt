@@ -10,7 +10,7 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
 class GetBatteryStatusMessage : AppLayerMessage(MessagePriority.NORMAL, false, false, Service.STATUS) {
 
-    var batteryStatus: BatteryStatus? = null
+    internal var batteryStatus: BatteryStatus? = null
         private set
 
     override fun parse(byteBuf: ByteBuf?) {

@@ -936,14 +936,14 @@ class LocalInsightPlugin @Inject constructor(
                 var historyEvents: MutableList<HistoryEvent> = ArrayList()
                 if (historyOffset == null) {
                     val startMessage = StartReadingHistoryMessage()
-                    startMessage.setDirection(HistoryReadingDirection.BACKWARD)
-                    startMessage.setOffset(-0x1)
+                    startMessage.direction = HistoryReadingDirection.BACKWARD
+                    startMessage.offset = -0x1
                     connectionService?.run { requestMessage(startMessage).await() }
                     historyEvents = connectionService?.run { requestMessage(ReadHistoryEventsMessage()).await().historyEvents } ?: mutableListOf()
                 } else {
                     val startMessage = StartReadingHistoryMessage()
-                    startMessage.setDirection(HistoryReadingDirection.FORWARD)
-                    startMessage.setOffset(historyOffset.offset + 1)
+                    startMessage.direction = HistoryReadingDirection.FORWARD
+                    startMessage.offset = historyOffset.offset + 1
                     connectionService?.run { requestMessage(startMessage).await() }
                     while (true) {
                         val newEvents = connectionService?.run { requestMessage(ReadHistoryEventsMessage()).await().historyEvents } ?: mutableListOf()

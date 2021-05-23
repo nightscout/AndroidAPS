@@ -8,7 +8,7 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
 class GetFirmwareVersionsMessage : AppLayerMessage(MessagePriority.NORMAL, false, false, Service.STATUS) {
 
-    var firmwareVersions: FirmwareVersions? = null
+    internal var firmwareVersions: FirmwareVersions? = null
         private set
 
     override fun parse(byteBuf: ByteBuf?) {

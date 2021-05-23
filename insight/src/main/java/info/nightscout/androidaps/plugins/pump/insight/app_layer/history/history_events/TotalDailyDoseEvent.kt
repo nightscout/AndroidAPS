@@ -5,15 +5,15 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
 class TotalDailyDoseEvent : HistoryEvent() {
 
-    var basalTotal = 0.0
+    internal var basalTotal = 0.0
         private set
-    var bolusTotal = 0.0
+    internal var bolusTotal = 0.0
         private set
-    var totalYear = 0
+    internal var totalYear = 0
         private set
-    var totalMonth = 0
+    internal var totalMonth = 0
         private set
-    var totalDay = 0
+    internal var totalDay = 0
         private set
 
     override fun parse(byteBuf: ByteBuf?) {

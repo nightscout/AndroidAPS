@@ -8,7 +8,7 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
 class GetOperatingModeMessage : AppLayerMessage(MessagePriority.NORMAL, true, false, Service.STATUS) {
 
-    var operatingMode: OperatingMode? = null
+    internal var operatingMode: OperatingMode? = null
         private set
 
     override fun parse(byteBuf: ByteBuf?) {

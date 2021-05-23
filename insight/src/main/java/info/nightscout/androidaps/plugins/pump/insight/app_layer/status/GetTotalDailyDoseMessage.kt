@@ -8,7 +8,7 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
 class GetTotalDailyDoseMessage : AppLayerMessage(MessagePriority.NORMAL, true, false, Service.STATUS) {
 
-    var tDD: TotalDailyDose? = null
+    internal var tDD: TotalDailyDose? = null
         private set
 
     override fun parse(byteBuf: ByteBuf?) {

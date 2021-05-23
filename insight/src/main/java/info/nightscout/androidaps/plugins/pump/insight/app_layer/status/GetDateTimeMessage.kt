@@ -8,7 +8,7 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
 class GetDateTimeMessage : AppLayerMessage(MessagePriority.NORMAL, true, false, Service.STATUS) {
 
-    var pumpTime: PumpTime? = null
+    internal var pumpTime: PumpTime? = null
         private set
 
     override fun parse(byteBuf: ByteBuf?) {

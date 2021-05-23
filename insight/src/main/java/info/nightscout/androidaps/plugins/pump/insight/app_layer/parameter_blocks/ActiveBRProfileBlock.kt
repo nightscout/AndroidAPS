@@ -6,7 +6,7 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
 class ActiveBRProfileBlock : ParameterBlock() {
 
-    var activeBasalProfile: BasalProfile? = null
+    internal var activeBasalProfile: BasalProfile? = null
     override fun parse(byteBuf: ByteBuf) {
         activeBasalProfile = fromId(byteBuf.readUInt16LE())
     }

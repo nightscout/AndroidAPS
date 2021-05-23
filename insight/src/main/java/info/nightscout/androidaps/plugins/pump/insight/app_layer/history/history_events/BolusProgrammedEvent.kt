@@ -6,15 +6,15 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
 class BolusProgrammedEvent : HistoryEvent() {
 
-    var bolusType: BolusType? = null
+    internal var bolusType: BolusType? = null
         private set
-    var immediateAmount = 0.0
+    internal var immediateAmount = 0.0
         private set
-    var extendedAmount = 0.0
+    internal var extendedAmount = 0.0
         private set
-    var duration = 0
+    internal var duration = 0
         private set
-    var bolusID = 0
+    internal var bolusID = 0
         private set
 
     override fun parse(byteBuf: ByteBuf?) {

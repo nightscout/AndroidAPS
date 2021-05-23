@@ -174,12 +174,12 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
                     val activateServiceMessage = ActivateServiceMessage()
                     activateServiceMessage.serviceID = service.id
                     activateServiceMessage.version = service.version
-                    activateServiceMessage.setServicePassword(ByteArray(16))
+                    activateServiceMessage.servicePassword = ByteArray(16)
                     sendAppLayerMessage(activateServiceMessage)
                 } else {
                     val serviceChallengeMessage = ServiceChallengeMessage()
-                    serviceChallengeMessage.setServiceID(service.id)
-                    serviceChallengeMessage.setVersion(service.version)
+                    serviceChallengeMessage.serviceID = service.id
+                    serviceChallengeMessage.version = service.version
                     sendAppLayerMessage(serviceChallengeMessage)
                 }
             } else sendAppLayerMessage(messageQueue.activeRequest?.request)
@@ -568,7 +568,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
         setState(InsightState.APP_ACTIVATE_STATUS_SERVICE)
         val activateServiceMessage = ActivateServiceMessage()
         activateServiceMessage.serviceID = Service.STATUS.id
-        activateServiceMessage.setServicePassword(ByteArray(16))
+        activateServiceMessage.servicePassword = ByteArray(16)
         activateServiceMessage.version = Service.STATUS.version
         sendAppLayerMessage(activateServiceMessage)
     }
@@ -582,7 +582,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
         setState(InsightState.APP_ACTIVATE_PARAMETER_SERVICE)
         val activateServiceMessage = ActivateServiceMessage()
         activateServiceMessage.serviceID = Service.PARAMETER.id
-        activateServiceMessage.setServicePassword(ByteArray(16))
+        activateServiceMessage.servicePassword = ByteArray(16)
         activateServiceMessage.version = Service.PARAMETER.version
         sendAppLayerMessage(activateServiceMessage)
     }
@@ -600,7 +600,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
             activatedServices.add(Service.PARAMETER)
             setState(InsightState.APP_SYSTEM_IDENTIFICATION)
             val message = ReadParameterBlockMessage()
-            message.setParameterBlockId(SystemIdentificationBlock::class.java)
+            message.parameterBlockId = SystemIdentificationBlock::class.java
             message.service = Service.PARAMETER
             sendAppLayerMessage(message)
         } else if (state === InsightState.APP_ACTIVATE_STATUS_SERVICE) {
@@ -645,7 +645,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
                 activateServiceMessage.version = service.version
             }
             if (service != null) {
-                activateServiceMessage.setServicePassword(Cryptograph.getServicePasswordHash(service.servicePassword, serviceChallengeMessage.randomData))
+                activateServiceMessage.servicePassword = Cryptograph.getServicePasswordHash(service.servicePassword, serviceChallengeMessage.randomData)
             }
             sendAppLayerMessage(activateServiceMessage)
         }

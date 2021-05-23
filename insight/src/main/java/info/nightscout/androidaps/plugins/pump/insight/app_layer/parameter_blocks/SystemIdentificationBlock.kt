@@ -5,7 +5,7 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
 class SystemIdentificationBlock : ParameterBlock() {
 
-    var systemIdentification: SystemIdentification? = null
+    internal var systemIdentification: SystemIdentification? = null
         private set
 
     override fun parse(byteBuf: ByteBuf) {

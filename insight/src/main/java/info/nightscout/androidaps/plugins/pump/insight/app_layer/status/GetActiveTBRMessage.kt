@@ -8,7 +8,7 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
 class GetActiveTBRMessage : AppLayerMessage(MessagePriority.NORMAL, true, false, Service.STATUS) {
 
-    var activeTBR: ActiveTBR? = null
+    internal var activeTBR: ActiveTBR? = null
         private set
 
     override fun parse(byteBuf: ByteBuf?) {

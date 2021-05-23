@@ -7,19 +7,19 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
 class GetPumpStatusRegisterMessage : AppLayerMessage(MessagePriority.NORMAL, false, false, Service.STATUS) {
 
-    var isOperatingModeChanged = false
+    internal var isOperatingModeChanged = false
         private set
-    var isBatteryStatusChanged = false
+    internal var isBatteryStatusChanged = false
         private set
-    var isCartridgeStatusChanged = false
+    internal var isCartridgeStatusChanged = false
         private set
-    var isTotalDailyDoseChanged = false
+    internal var isTotalDailyDoseChanged = false
         private set
-    var isActiveBasalRateChanged = false
+    internal var isActiveBasalRateChanged = false
         private set
-    var isActiveTBRChanged = false
+    internal var isActiveTBRChanged = false
         private set
-    var isActiveBolusesChanged = false
+    internal var isActiveBolusesChanged = false
         private set
 
     override fun parse(byteBuf: ByteBuf?) {

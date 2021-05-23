@@ -14,8 +14,4 @@ class SnoozeAlertMessage : AppLayerMessage(MessagePriority.NORMAL, false, true, 
             byteBuf.putUInt16LE(alertID)
             return byteBuf
         }
-
-    fun setAlertID(alertID: Int) {
-        this.alertID = alertID
-    }
 }

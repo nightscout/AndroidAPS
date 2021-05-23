@@ -10,7 +10,7 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
 class GetCartridgeStatusMessage : AppLayerMessage(MessagePriority.NORMAL, false, false, Service.STATUS) {
 
-    var cartridgeStatus: CartridgeStatus? = null
+    internal var cartridgeStatus: CartridgeStatus? = null
         private set
 
     override fun parse(byteBuf: ByteBuf?) {

@@ -7,8 +7,8 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
 class StartReadingHistoryMessage : AppLayerMessage(MessagePriority.NORMAL, false, true, Service.HISTORY) {
 
-    private var offset: Long = 0
-    private var direction: HistoryReadingDirection? = null
+    internal var offset: Long = 0
+    internal var direction: HistoryReadingDirection? = null
     override val data: ByteBuf
         get() {
             val byteBuf = ByteBuf(8)
@@ -17,12 +17,4 @@ class StartReadingHistoryMessage : AppLayerMessage(MessagePriority.NORMAL, false
             byteBuf.putUInt32LE(offset)
             return byteBuf
         }
-
-    fun setOffset(offset: Long) {
-        this.offset = offset
-    }
-
-    fun setDirection(direction: HistoryReadingDirection?) {
-        this.direction = direction
-    }
 }

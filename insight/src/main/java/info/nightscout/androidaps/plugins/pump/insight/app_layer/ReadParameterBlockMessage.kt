@@ -7,7 +7,7 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
 class ReadParameterBlockMessage : AppLayerMessage(MessagePriority.NORMAL, true, false, null) {
 
-    private var parameterBlockId: Class<out ParameterBlock>? = null
+    internal var parameterBlockId: Class<out ParameterBlock>? = null
     var parameterBlock: ParameterBlock? = null
         private set
 

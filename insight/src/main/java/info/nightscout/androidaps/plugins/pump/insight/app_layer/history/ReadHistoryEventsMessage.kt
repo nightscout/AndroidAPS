@@ -24,8 +24,4 @@ class ReadHistoryEventsMessage : AppLayerMessage(MessagePriority.NORMAL, true, f
             }
         }
     }
-
-    fun getHistoryEvents(): List<HistoryEvent> {
-        return historyEvents
-    }
 }

@@ -4,7 +4,7 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
 class CannulaFilledEvent : HistoryEvent() {
 
-    var amount = 0.0
+    internal var amount = 0.0
         private set
 
     override fun parse(byteBuf: ByteBuf?) {

@@ -29,8 +29,4 @@ class GetActiveBolusesMessage : AppLayerMessage(MessagePriority.NORMAL, true, fa
             }
         }
     }
-
-    fun getActiveBoluses(): List<ActiveBolus>? {
-        return activeBoluses
-    }
 }

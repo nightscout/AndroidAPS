@@ -9,6 +9,7 @@ class SetTBRMessage : AppLayerMessage(MessagePriority.NORMAL, false, true, Servi
 
     internal var percentage = 0
     internal var duration = 0
+
     override val data: ByteBuf
         get() {
             val byteBuf = ByteBuf(6)

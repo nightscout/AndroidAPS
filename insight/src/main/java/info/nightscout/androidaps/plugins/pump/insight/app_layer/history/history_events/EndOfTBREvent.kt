@@ -5,15 +5,15 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
 class EndOfTBREvent : HistoryEvent() {
 
-    var startHour = 0
+    internal var startHour = 0
         private set
-    var startMinute = 0
+    internal var startMinute = 0
         private set
-    var startSecond = 0
+    internal var startSecond = 0
         private set
-    var amount = 0
+    internal var amount = 0
         private set
-    var duration = 0
+    internal var duration = 0
         private set
 
     override fun parse(byteBuf: ByteBuf?) {

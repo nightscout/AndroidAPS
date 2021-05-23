@@ -4,7 +4,7 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
 abstract class InsulinAmountLimitationBlock : ParameterBlock() {
 
-    var amountLimitation = 0.0
+    internal var amountLimitation = 0.0
     override fun parse(byteBuf: ByteBuf) {
         amountLimitation = byteBuf.readUInt16Decimal()
     }

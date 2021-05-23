@@ -11,7 +11,7 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
 class GetActiveAlertMessage : AppLayerMessage(MessagePriority.NORMAL, true, false, Service.STATUS) {
 
-    var alert: Alert? = null
+    internal var alert: Alert? = null
         private set
 
     override fun parse(byteBuf: ByteBuf?) {
