@@ -1,24 +1,19 @@
-package info.nightscout.androidaps.plugins.pump.insight.app_layer.history.history_events;
+package info.nightscout.androidaps.plugins.pump.insight.app_layer.history.history_events
 
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.AlertType;
-import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf;
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.AlertType
+import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
-public abstract class OccurrenceOfAlertEvent extends HistoryEvent {
+abstract class OccurrenceOfAlertEvent : HistoryEvent() {
 
-    private AlertType alertType;
-    private int alertID;
+    internal var alertType: AlertType? = null
+        private set
+    internal var alertID = 0
+        private set
 
-    @Override
-    public void parse(ByteBuf byteBuf) {
-        alertType = AlertType.Companion.fromIncId(byteBuf.readUInt16LE());
-        alertID = byteBuf.readUInt16LE();
-    }
-
-    public AlertType getAlertType() {
-        return alertType;
-    }
-
-    public int getAlertID() {
-        return alertID;
+    override fun parse(byteBuf: ByteBuf?) {
+        byteBuf?.run {
+            alertType = AlertType.fromIncId(readUInt16LE())
+            alertID = readUInt16LE()
+        }
     }
 }
