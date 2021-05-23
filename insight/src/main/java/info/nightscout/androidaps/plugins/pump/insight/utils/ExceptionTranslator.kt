@@ -1,54 +1,44 @@
-package info.nightscout.androidaps.plugins.pump.insight.utils;
+package info.nightscout.androidaps.plugins.pump.insight.utils
 
-import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
-import android.widget.Toast;
+import android.content.Context
+import android.os.Handler
+import android.os.Looper
+import android.widget.Toast
+import info.nightscout.androidaps.insight.R
+import info.nightscout.androidaps.plugins.pump.insight.exceptions.ConnectionFailedException
+import info.nightscout.androidaps.plugins.pump.insight.exceptions.ConnectionLostException
+import info.nightscout.androidaps.plugins.pump.insight.exceptions.DisconnectedException
+import info.nightscout.androidaps.plugins.pump.insight.exceptions.SocketCreationFailedException
+import info.nightscout.androidaps.plugins.pump.insight.exceptions.TimeoutException
+import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_errors.*
+import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlPairingRejectedException
+import java.util.*
 
-import java.util.HashMap;
-import java.util.Map;
+object ExceptionTranslator {
 
-import info.nightscout.androidaps.insight.R;
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.ConnectionFailedException;
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.ConnectionLostException;
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.DisconnectedException;
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.SocketCreationFailedException;
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.TimeoutException;
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_errors.MaximumNumberOfBolusTypeAlreadyRunningException;
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_errors.NoActiveTBRToCanceLException;
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_errors.NoActiveTBRToChangeException;
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_errors.NoSuchBolusToCancelException;
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_errors.PumpAlreadyInThatStateException;
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_errors.PumpStoppedException;
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_errors.RunModeNotAllowedException;
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlPairingRejectedException;
-
-public class ExceptionTranslator {
-
-    private static final Map<Class<? extends Exception>, Integer> TABLE = new HashMap<>();
-
-    static {
-        TABLE.put(ConnectionFailedException.class, R.string.connection_failed);
-        TABLE.put(ConnectionLostException.class, R.string.connection_lost);
-        TABLE.put(DisconnectedException.class, R.string.disconnected);
-        TABLE.put(SatlPairingRejectedException.class, R.string.pairing_rejected);
-        TABLE.put(SocketCreationFailedException.class, R.string.socket_creation_failed);
-        TABLE.put(TimeoutException.class, R.string.timeout);
-        TABLE.put(MaximumNumberOfBolusTypeAlreadyRunningException.class, R.string.maximum_number_of_bolus_type_already_running);
-        TABLE.put(NoActiveTBRToCanceLException.class, R.string.no_active_tbr_to_cancel);
-        TABLE.put(NoActiveTBRToChangeException.class, R.string.no_active_tbr_to_change);
-        TABLE.put(NoSuchBolusToCancelException.class, R.string.no_such_bolus_to_cancel);
-        TABLE.put(PumpAlreadyInThatStateException.class, R.string.pump_already_in_that_state_exception);
-        TABLE.put(PumpStoppedException.class, R.string.pump_stopped);
-        TABLE.put(RunModeNotAllowedException.class, R.string.run_mode_not_allowed);
+    private val TABLE: MutableMap<Class<out Exception>, Int> = HashMap()
+    fun getString(context: Context, exception: Exception): String {
+        val res = TABLE[exception.javaClass]
+        return if (res == null) exception.javaClass.simpleName else context.getString(res)
     }
 
-    public static String getString(Context context, Exception exception) {
-        Integer res = TABLE.get(exception.getClass());
-        return res == null ? exception.getClass().getSimpleName() : context.getString(res);
+    fun makeToast(context: Context, exception: Exception) {
+        Handler(Looper.getMainLooper()).post { Toast.makeText(context, getString(context, exception), Toast.LENGTH_LONG).show() }
     }
 
-    public static void makeToast(Context context, Exception exception) {
-        new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(context, getString(context, exception), Toast.LENGTH_LONG).show());
+    init {
+        TABLE[ConnectionFailedException::class.java] = R.string.connection_failed
+        TABLE[ConnectionLostException::class.java] = R.string.connection_lost
+        TABLE[DisconnectedException::class.java] = R.string.disconnected
+        TABLE[SatlPairingRejectedException::class.java] = R.string.pairing_rejected
+        TABLE[SocketCreationFailedException::class.java] = R.string.socket_creation_failed
+        TABLE[TimeoutException::class.java] = R.string.timeout
+        TABLE[MaximumNumberOfBolusTypeAlreadyRunningException::class.java] = R.string.maximum_number_of_bolus_type_already_running
+        TABLE[NoActiveTBRToCanceLException::class.java] = R.string.no_active_tbr_to_cancel
+        TABLE[NoActiveTBRToChangeException::class.java] = R.string.no_active_tbr_to_change
+        TABLE[NoSuchBolusToCancelException::class.java] = R.string.no_such_bolus_to_cancel
+        TABLE[PumpAlreadyInThatStateException::class.java] = R.string.pump_already_in_that_state_exception
+        TABLE[PumpStoppedException::class.java] = R.string.pump_stopped
+        TABLE[RunModeNotAllowedException::class.java] = R.string.run_mode_not_allowed
     }
 }

@@ -150,7 +150,7 @@ class InsightPairingActivity : NoSplashAppCompatActivity(), InsightConnectionSer
     }
 
     override fun onExceptionOccur(e: Exception?) {
-        ExceptionTranslator.makeToast(this, e)
+        e?.let { ExceptionTranslator.makeToast(this, it) }
     }
 
     private fun deviceSelected(device: BluetoothDevice) {
