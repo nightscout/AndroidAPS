@@ -1,51 +1,52 @@
-package info.nightscout.androidaps.plugins.pump.insight.utils;
+package info.nightscout.androidaps.plugins.pump.insight.utils
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.IOException
+import java.io.InputStream
 
-public class InputStreamReader extends Thread {
+class InputStreamReader(inputStream: InputStream, callback: Callback) : Thread() {
 
-    private static final int BUFFER_SIZE = 1024;
-
-    private final InputStream inputStream;
-    private final Callback callback;
-
-    public InputStreamReader(InputStream inputStream, Callback callback) {
-        setName(getClass().getSimpleName());
-        this.inputStream = inputStream;
-        this.callback = callback;
-    }
-
-    @Override
-    public void run() {
-        byte[] buffer = new byte[BUFFER_SIZE];
-        int bytesRead;
+    private val inputStream: InputStream
+    private val callback: Callback
+    override fun run() {
+        val buffer = ByteArray(BUFFER_SIZE)
+        var bytesRead: Int
         try {
-            while (!isInterrupted()) {
-                bytesRead = inputStream.read(buffer);
-                if (bytesRead == -1) callback.onErrorWhileReading(new IOException("Stream closed"));
-                else callback.onReceiveBytes(buffer, bytesRead);
+            while (!isInterrupted) {
+                bytesRead = inputStream.read(buffer)
+                if (bytesRead == -1) callback.onErrorWhileReading(IOException("Stream closed")) else callback.onReceiveBytes(buffer, bytesRead)
             }
-        } catch (IOException e) {
-            if (!isInterrupted()) callback.onErrorWhileReading(e);
+        } catch (e: IOException) {
+            if (!isInterrupted) callback.onErrorWhileReading(e)
         } finally {
             try {
-                inputStream.close();
-            } catch (IOException e) {
+                inputStream.close()
+            } catch (e: IOException) {
             }
         }
     }
 
-    public void close() {
-        interrupt();
+    fun close() {
+        interrupt()
         try {
-            inputStream.close();
-        } catch (IOException e) {
+            inputStream.close()
+        } catch (e: IOException) {
         }
     }
 
-    public interface Callback {
-        void onReceiveBytes(byte[] buffer, int bytesRead);
-        void onErrorWhileReading(Exception e);
+    interface Callback {
+
+        fun onReceiveBytes(buffer: ByteArray?, bytesRead: Int)
+        fun onErrorWhileReading(e: Exception?)
+    }
+
+    companion object {
+
+        private const val BUFFER_SIZE = 1024
+    }
+
+    init {
+        name = javaClass.simpleName
+        this.inputStream = inputStream
+        this.callback = callback
     }
 }
