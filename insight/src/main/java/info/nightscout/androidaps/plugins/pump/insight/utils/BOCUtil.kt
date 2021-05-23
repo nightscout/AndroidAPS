@@ -1,8 +1,10 @@
-package info.nightscout.androidaps.plugins.pump.insight.utils;
+package info.nightscout.androidaps.plugins.pump.insight.utils
 
-public final class BOCUtil {
+import kotlin.experimental.and
 
-    public static int parseBOC(byte b) {
-        return ((b & 0xF0) >> 4) * 10 + (b & 0x0F);
+object BOCUtil {
+
+    fun parseBOC(b: Byte): Int {
+        return ((b and 0xF0.toByte()).toInt() shr 4) * 10 + (b and 0x0F)
     }
 }
