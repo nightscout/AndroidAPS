@@ -155,7 +155,7 @@ class LocalInsightPlugin @Inject constructor(
     }
 
     override fun isInitialized(): Boolean {
-        return connectionService != null && alertService != null && connectionService!!.isPaired
+        return connectionService?.let { alertService != null && it.isPaired } ?: false
     }
 
     override fun isSuspended(): Boolean {
@@ -167,8 +167,7 @@ class LocalInsightPlugin @Inject constructor(
     }
 
     override fun isConnected(): Boolean {
-        return (connectionService != null && alertService != null && connectionService!!.hasRequestedConnection(this)
-            && connectionService!!.state == InsightState.CONNECTED)
+        return connectionService?.let { (alertService != null && it.hasRequestedConnection(this) && it.state == InsightState.CONNECTED) } == true
     }
 
     override fun isConnecting(): Boolean {
@@ -211,7 +210,7 @@ class LocalInsightPlugin @Inject constructor(
     }
 
     @Throws(Exception::class) private fun updatePumpTimeIfNeeded() {
-        val pumpTime = connectionService!!.requestMessage(GetDateTimeMessage()).await().pumpTime
+        val pumpTime = connectionService?.run { requestMessage(GetDateTimeMessage()).await().pumpTime }
         val calendar = Calendar.getInstance()
 
         if (pumpTime != null) {
@@ -231,7 +230,7 @@ class LocalInsightPlugin @Inject constructor(
                 pumpTime.second = calendar[Calendar.SECOND]
                 val setDateTimeMessage = SetDateTimeMessage()
                 setDateTimeMessage.pumpTime = pumpTime
-                connectionService!!.requestMessage(setDateTimeMessage).await()
+                connectionService?.run { requestMessage(setDateTimeMessage).await() }
                 val notification = Notification(Notification.INSIGHT_DATE_TIME_UPDATED, resourceHelper.gs(R.string.pump_time_updated), Notification.INFO, 60)
                 rxBus.send(EventNewNotification(notification))
             }
@@ -438,9 +437,7 @@ class LocalInsightPlugin @Inject constructor(
                     insightBolusID.id,
                     PumpType.ACCU_CHEK_INSIGHT,
                     serialNumber())
-                while (true) {
-                    synchronized(`$bolusLock`) {}   // TODO() Can I remove the empty Bolus Block (break is moved outside synchronized block
-                    if (bolusCancelled) { break }
+                while (!bolusCancelled) {
                     val operatingMode = connectionService!!.requestMessage(GetOperatingModeMessage()).await().operatingMode
                     if (operatingMode != OperatingMode.STARTED) break
                     val activeBoluses = connectionService!!.requestMessage(GetActiveBolusesMessage()).await().activeBoluses
@@ -470,7 +467,7 @@ class LocalInsightPlugin @Inject constructor(
                                 // break        // TODO() remove this line if ok (in java break was here but kotlin doesn't acccept break inside a synchronized block
                             }
                         }
-                        if (bolusCancelled || trials == -1 || trials++ >= 5) { break }   // TODO() break is moved outside synchronized block (Side effect or not ?)
+                        if (trials == -1 || trials++ >= 5) { break }   // TODO() break is moved outside synchronized block (Side effect or not ?)
                     }
                     SystemClock.sleep(200)
                 }
@@ -892,28 +889,22 @@ class LocalInsightPlugin @Inject constructor(
 
     override fun shortStatus(veryShort: Boolean): String {
         val ret = StringBuilder()
-        if (connectionService!!.lastConnected != 0L) {
-            val agoMsec = dateUtil.now() - connectionService!!.lastConnected
-            val agoMin = (agoMsec / 60.0 / 1000.0).toInt()
-            ret.append(resourceHelper.gs(R.string.short_status_last_connected, agoMin)).append("\n")
-        }
-        if (activeTBR != null) {
-            ret.append(resourceHelper.gs(R.string.short_status_tbr, activeTBR!!.percentage,
-                activeTBR!!.initialDuration - activeTBR!!.remainingDuration, activeTBR!!.initialDuration)).append("\n")
-        }
-        if (activeBoluses != null) for (activeBolus in activeBoluses!!) {
-            if (activeBolus.bolusType == BolusType.STANDARD) continue
-            ret.append(resourceHelper.gs(if (activeBolus.bolusType == BolusType.MULTIWAVE) R.string.short_status_multiwave else R.string.short_status_extended,
-                activeBolus.remainingAmount, activeBolus.initialAmount, activeBolus.remainingDuration)).append("\n")
-        }
-        if (!veryShort && totalDailyDose != null) {
-            ret.append(resourceHelper.gs(R.string.short_status_tdd, totalDailyDose!!.bolusAndBasal)).append("\n")
-        }
-        if (cartridgeStatus != null) {
-            ret.append(resourceHelper.gs(R.string.short_status_reservoir, cartridgeStatus!!.remainingAmount)).append("\n")
-        }
-        if (batteryStatus != null) {
-            ret.append(resourceHelper.gs(R.string.short_status_battery, batteryStatus!!.batteryAmount)).append("\n")
+        connectionService?.run {
+            if (lastConnected != 0L) {
+                val agoMsec = dateUtil.now() - lastConnected
+                val agoMin = (agoMsec / 60.0 / 1000.0).toInt()
+                ret.append(resourceHelper.gs(R.string.short_status_last_connected, agoMin)).append("\n")
+            }
+            activeTBR?.let { ret.append(resourceHelper.gs(R.string.short_status_tbr, it.percentage, it.initialDuration - it.remainingDuration, it.initialDuration)).append("\n") }
+            activeBoluses?.forEach {
+                if (it.bolusType != BolusType.STANDARD)
+                    ret.append(resourceHelper.gs(if (it.bolusType == BolusType.MULTIWAVE) R.string.short_status_multiwave else R.string.short_status_extended,
+                        it.remainingAmount, it.initialAmount, it.remainingDuration)).append("\n")
+            }
+            if (!veryShort)
+                totalDailyDose?.let { ret.append(resourceHelper.gs(R.string.short_status_tdd, it.bolusAndBasal)).append("\n") }
+            cartridgeStatus?.let { ret.append(resourceHelper.gs(R.string.short_status_reservoir, it.remainingAmount)).append("\n") }
+            batteryStatus?.let { ret.append(resourceHelper.gs(R.string.short_status_battery, it.batteryAmount)).append("\n") }
         }
         return ret.toString()
     }
@@ -938,15 +929,15 @@ class LocalInsightPlugin @Inject constructor(
                     val startMessage = StartReadingHistoryMessage()
                     startMessage.direction = HistoryReadingDirection.BACKWARD
                     startMessage.offset = -0x1
-                    connectionService?.run { requestMessage(startMessage).await() }
-                    historyEvents = connectionService?.run { requestMessage(ReadHistoryEventsMessage()).await().historyEvents } ?: mutableListOf()
+                    connectionService!!.requestMessage(startMessage).await()
+                    historyEvents = connectionService!!.requestMessage(ReadHistoryEventsMessage()).await().historyEvents
                 } else {
                     val startMessage = StartReadingHistoryMessage()
                     startMessage.direction = HistoryReadingDirection.FORWARD
                     startMessage.offset = historyOffset.offset + 1
-                    connectionService?.run { requestMessage(startMessage).await() }
+                    connectionService!!.requestMessage(startMessage).await()
                     while (true) {
-                        val newEvents = connectionService?.run { requestMessage(ReadHistoryEventsMessage()).await().historyEvents } ?: mutableListOf()
+                        val newEvents = connectionService!!.requestMessage(ReadHistoryEventsMessage()).await().historyEvents
                         if (newEvents.size == 0) break
                         historyEvents.addAll(newEvents)
                     }
@@ -967,9 +958,7 @@ class LocalInsightPlugin @Inject constructor(
             } catch (e: Exception) {
                 aapsLogger.error("Exception while reading history", e)
             } finally {
-                try {
-                    connectionService!!.requestMessage(StopReadingHistoryMessage()).await()
-                } catch (ignored: Exception) {}
+                connectionService?.run { requestMessage(StopReadingHistoryMessage()).await() }
             }
         } catch (e: AppLayerErrorException) {
             aapsLogger.info(LTag.PUMP, "Exception while reading history: " + e.javaClass.canonicalName + " (" + e.errorCode + ")")
@@ -1408,7 +1397,7 @@ class LocalInsightPlugin @Inject constructor(
             statusLoaded = false
             Handler(Looper.getMainLooper()).post { rxBus.send(EventDismissNotification(Notification.INSIGHT_TIMEOUT_DURING_HANDSHAKE)) }
         } else if (state == InsightState.NOT_PAIRED) {
-            connectionService!!.withdrawConnectionRequest(this)
+            connectionService?.let { it.withdrawConnectionRequest(this) }
             statusLoaded = false
             profileBlocks = null
             operatingMode = null
