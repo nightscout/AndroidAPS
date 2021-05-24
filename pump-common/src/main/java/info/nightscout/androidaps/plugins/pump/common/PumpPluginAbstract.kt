@@ -24,9 +24,6 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewB
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
-import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryCarbs
-import info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncEntriesCreator
-import info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncStorage
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter.to0Decimal
 import info.nightscout.androidaps.utils.DecimalFormatter.to2Decimal
@@ -37,7 +34,6 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
 import org.json.JSONException
 import org.json.JSONObject
-
 
 /**
  * Created by andy on 23.04.18.
@@ -58,14 +54,14 @@ abstract class PumpPluginAbstract protected constructor(
     var dateUtil: DateUtil,
     var aapsSchedulers: AapsSchedulers,
     var pumpSync: PumpSync,
-    var pumpSyncStorage: PumpSyncStorage
-) : PumpPluginBase(pluginDescription!!, injector!!, aapsLogger, resourceHelper, commandQueue), Pump, Constraints, PumpSyncEntriesCreator {
+    var pumpSyncStorage: info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncStorage
+) : PumpPluginBase(pluginDescription!!, injector!!, aapsLogger, resourceHelper, commandQueue), Pump, Constraints, info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncEntriesCreator {
 
     private val disposable = CompositeDisposable()
 
     // Pump capabilities
     final override var pumpDescription = PumpDescription()
-        //protected set
+    //protected set
 
     @JvmField protected var serviceConnection: ServiceConnection? = null
     @JvmField protected var serviceRunning = false
@@ -78,7 +74,6 @@ abstract class PumpPluginAbstract protected constructor(
             field = value
             pumpDescription.fillFor(value)
         }
-
 
     protected var gson = GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()
 
@@ -282,7 +277,7 @@ abstract class PumpPluginAbstract protected constructor(
     override fun shortStatus(veryShort: Boolean): String {
         var ret = ""
 
-        if (pumpStatusData.lastConnection==0L) {
+        if (pumpStatusData.lastConnection == 0L) {
             ret += "LastConn: never\n"
         } else {
             val agoMsec = System.currentTimeMillis() - pumpStatusData.lastConnection
@@ -343,7 +338,7 @@ abstract class PumpPluginAbstract protected constructor(
                 detailedBolusInfo.timestamp = System.currentTimeMillis()
 
                 // no bolus required, carb only treatment
-                pumpSyncStorage.addCarbs(PumpDbEntryCarbs(detailedBolusInfo, this))
+                pumpSyncStorage.addCarbs(info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryCarbs(detailedBolusInfo, this))
 
                 val bolusingEvent = EventOverviewBolusProgress
                 bolusingEvent.t = EventOverviewBolusProgress.Treatment(0.0, detailedBolusInfo.carbs.toInt(), detailedBolusInfo.bolusType === DetailedBolusInfo.BolusType.SMB)
@@ -370,19 +365,17 @@ abstract class PumpPluginAbstract protected constructor(
         return pumpType
     }
 
-
     override fun canHandleDST(): Boolean {
         return false
     }
 
-    protected abstract fun deliverBolus(detailedBolusInfo: DetailedBolusInfo?): PumpEnactResult
+    protected abstract fun deliverBolus(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult
 
     protected abstract fun triggerUIChange()
 
     private fun getOperationNotSupportedWithCustomText(resourceId: Int): PumpEnactResult {
         return PumpEnactResult(injector).success(false).enacted(false).comment(resourceId)
     }
-
 
     init {
         pumpDescription.fillFor(pumpType)

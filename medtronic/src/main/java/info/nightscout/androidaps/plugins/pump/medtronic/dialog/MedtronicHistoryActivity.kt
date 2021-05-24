@@ -22,8 +22,8 @@ import javax.inject.Inject
 
 class MedtronicHistoryActivity : DaggerActivity() {
 
-    @Inject lateinit var  medtronicHistoryData: MedtronicHistoryData
-    @Inject lateinit var  resourceHelper: ResourceHelper
+    @Inject lateinit var medtronicHistoryData: MedtronicHistoryData
+    @Inject lateinit var resourceHelper: ResourceHelper
 
     lateinit var historyTypeSpinner: Spinner
     lateinit var statusView: TextView
@@ -33,7 +33,7 @@ class MedtronicHistoryActivity : DaggerActivity() {
 
     var filteredHistoryList: MutableList<PumpHistoryEntry> = ArrayList()
     var manualChange = false
-    var typeListFull: List<TypeList>? = null
+    lateinit var typeListFull: List<TypeList>
 
     //private var _binding: MedtronicHistoryActivityBinding? = null
 
@@ -60,8 +60,8 @@ class MedtronicHistoryActivity : DaggerActivity() {
             }
         }
 
-            recyclerViewAdapter.setHistoryListInternal(filteredHistoryList)
-            recyclerViewAdapter.notifyDataSetChanged()
+        recyclerViewAdapter.setHistoryListInternal(filteredHistoryList)
+        recyclerViewAdapter.notifyDataSetChanged()
 
         //LOG.debug("Items on filtered list: {}", filteredHistoryList.size());
     }
@@ -74,8 +74,8 @@ class MedtronicHistoryActivity : DaggerActivity() {
 
     private fun setHistoryTypeSpinner() {
         manualChange = true
-        for (i in typeListFull!!.indices) {
-            if (typeListFull!![i].entryGroup === selectedGroup) {
+        for (i in typeListFull.indices) {
+            if (typeListFull[i].entryGroup === selectedGroup) {
                 historyTypeSpinner.setSelection(i)
                 break
             }
@@ -119,15 +119,16 @@ class MedtronicHistoryActivity : DaggerActivity() {
         })
     }
 
-    private fun getTypeList(list: List<PumpHistoryEntryGroup>?): List<TypeList> {
+    private fun getTypeList(list: List<PumpHistoryEntryGroup>): List<TypeList> {
         val typeList = ArrayList<TypeList>()
-        for (pumpHistoryEntryGroup in list!!) {
+        for (pumpHistoryEntryGroup in list) {
             typeList.add(TypeList(pumpHistoryEntryGroup))
         }
         return typeList
     }
 
     class TypeList internal constructor(var entryGroup: PumpHistoryEntryGroup) {
+
         var name: String
         override fun toString(): String {
             return name
@@ -139,7 +140,6 @@ class MedtronicHistoryActivity : DaggerActivity() {
     }
 
     class RecyclerViewAdapter internal constructor(var historyList: List<PumpHistoryEntry>) : RecyclerView.Adapter<RecyclerViewAdapter.HistoryViewHolder>() {
-
 
         fun setHistoryListInternal(historyList: List<PumpHistoryEntry>) {
             // this.historyList.clear();
@@ -157,22 +157,17 @@ class MedtronicHistoryActivity : DaggerActivity() {
 
         override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
             val record = historyList[position]
-            //if (record != null) {
-                holder.timeView.text = record.dateTimeString
-                holder.typeView.text = record.entryType.description
-                holder.valueView.text = record.displayableValue
-            //}
+            holder.timeView.text = record.dateTimeString
+            holder.typeView.text = record.entryType.description
+            holder.valueView.text = record.displayableValue
         }
 
         override fun getItemCount(): Int {
             return historyList.size
         }
 
-        override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
-            super.onAttachedToRecyclerView(recyclerView)
-        }
-
         class HistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
             var timeView: TextView
             var typeView: TextView
             var valueView: TextView
@@ -188,6 +183,7 @@ class MedtronicHistoryActivity : DaggerActivity() {
     }
 
     companion object {
+
         var showingType: TypeList? = null
         var selectedGroup = PumpHistoryEntryGroup.All
     }

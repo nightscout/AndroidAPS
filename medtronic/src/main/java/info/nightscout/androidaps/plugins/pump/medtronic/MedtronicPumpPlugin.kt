@@ -90,8 +90,8 @@ class MedtronicPumpPlugin @Inject constructor(
     dateUtil: DateUtil,
     aapsSchedulers: AapsSchedulers,
     pumpSync: PumpSync,
-    pumpSyncStorage: PumpSyncStorage
-) : PumpPluginAbstract(PluginDescription() //
+    pumpSyncStorage: info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncStorage
+) : info.nightscout.androidaps.plugins.pump.common.PumpPluginAbstract(PluginDescription() //
     .mainType(PluginType.PUMP) //
     .fragmentClass(MedtronicFragment::class.java.name) //
     .pluginIcon(R.drawable.ic_veo_128)
@@ -101,7 +101,7 @@ class MedtronicPumpPlugin @Inject constructor(
     .description(R.string.description_pump_medtronic),  //
     PumpType.MEDTRONIC_522_722,  // we default to most basic model, correct model from config is loaded later
     injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy, dateUtil, aapsSchedulers, pumpSync, pumpSyncStorage
-), Pump, RileyLinkPumpDevice, PumpSyncEntriesCreator {
+), Pump, RileyLinkPumpDevice, info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncEntriesCreator {
 
     private lateinit var rileyLinkMedtronicService: RileyLinkMedtronicService
 
@@ -199,7 +199,7 @@ class MedtronicPumpPlugin @Inject constructor(
                 SystemClock.sleep(60000)
                 if (this.isInitialized) {
                     val statusRefresh = workWithStatusRefresh(
-                        StatusRefreshAction.GetData, null, null)
+                        StatusRefreshAction.GetData, null, null)!!
                     if (doWeHaveAnyStatusNeededRefereshing(statusRefresh)) {
                         if (!commandQueue.statusInQueue()) {
                             commandQueue.readStatus("Scheduled Status Refresh", null)
@@ -214,7 +214,7 @@ class MedtronicPumpPlugin @Inject constructor(
     override val serviceClass: Class<*>
         get() = RileyLinkMedtronicService::class.java
 
-    override val pumpStatusData: PumpStatus
+    override val pumpStatusData: info.nightscout.androidaps.plugins.pump.common.data.PumpStatus
         get() = medtronicPumpStatus
 
     override fun deviceID(): String {
@@ -334,7 +334,7 @@ class MedtronicPumpPlugin @Inject constructor(
 
     private fun refreshAnyStatusThatNeedsToBeRefreshed() {
         val statusRefresh = workWithStatusRefresh(StatusRefreshAction.GetData, null,
-            null)
+            null)!!
         if (!doWeHaveAnyStatusNeededRefereshing(statusRefresh)) {
             return
         }
@@ -354,7 +354,7 @@ class MedtronicPumpPlugin @Inject constructor(
 
         // execute
         val refreshTypesNeededToReschedule: MutableSet<MedtronicStatusRefreshType> = mutableSetOf()
-        for ((key, value) in statusRefresh!!) {
+        for ((key, value) in statusRefresh) {
             if (value > 0 && System.currentTimeMillis() > value) {
                 when (key) {
                     MedtronicStatusRefreshType.PumpHistory                                                -> {
@@ -389,8 +389,8 @@ class MedtronicPumpPlugin @Inject constructor(
         if (resetTime) medtronicPumpStatus.setLastCommunicationToNow()
     }
 
-    private fun doWeHaveAnyStatusNeededRefereshing(statusRefresh: Map<MedtronicStatusRefreshType, Long>?): Boolean {
-        for ((_, value) in statusRefresh!!) {
+    private fun doWeHaveAnyStatusNeededRefereshing(statusRefresh: Map<MedtronicStatusRefreshType, Long>): Boolean {
+        for ((_, value) in statusRefresh) {
             if (value > 0 && System.currentTimeMillis() > value) {
                 return true
             }
@@ -583,10 +583,10 @@ class MedtronicPumpPlugin @Inject constructor(
         scheduleNextRefresh(MedtronicStatusRefreshType.PumpTime, 0)
     }
 
-    override fun deliverBolus(detailedBolusInfo: DetailedBolusInfo?): PumpEnactResult {
+    override fun deliverBolus(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         aapsLogger.info(LTag.PUMP, "MedtronicPumpPlugin::deliverBolus - " + BolusDeliveryType.DeliveryPrepared)
         setRefreshButtonEnabled(false)
-        if (detailedBolusInfo!!.insulin > medtronicPumpStatus.reservoirRemainingUnits) {
+        if (detailedBolusInfo.insulin > medtronicPumpStatus.reservoirRemainingUnits) {
             return PumpEnactResult(injector) //
                 .success(false) //
                 .enacted(false) //
@@ -621,7 +621,12 @@ class MedtronicPumpPlugin @Inject constructor(
             setRefreshButtonEnabled(true)
 
             // LOG.debug("MedtronicPumpPlugin::deliverBolus - Response: {}", response);
-            if (response!!) {
+            return if (response == null || !response) {
+                PumpEnactResult(injector) //
+                    .success(bolusDeliveryType == BolusDeliveryType.CancelDelivery) //
+                    .enacted(false) //
+                    .comment(R.string.medtronic_cmd_bolus_could_not_be_delivered)
+            } else {
                 if (bolusDeliveryType == BolusDeliveryType.CancelDelivery) {
                     // LOG.debug("MedtronicPumpPlugin::deliverBolus - Delivery Canceled after Bolus started.");
                     Thread(Runnable {
@@ -648,11 +653,6 @@ class MedtronicPumpPlugin @Inject constructor(
                     .enacted(true) //
                     .bolusDelivered(detailedBolusInfo.insulin) //
                     .carbsDelivered(detailedBolusInfo.carbs)
-            } else {
-                PumpEnactResult(injector) //
-                    .success(bolusDeliveryType == BolusDeliveryType.CancelDelivery) //
-                    .enacted(false) //
-                    .comment(R.string.medtronic_cmd_bolus_could_not_be_delivered)
             }
         } finally {
             finishAction("Bolus")
@@ -739,13 +739,13 @@ class MedtronicPumpPlugin @Inject constructor(
             // CANCEL
             val responseTask2 = rileyLinkMedtronicService.medtronicUIComm.executeCommand(MedtronicCommandType.CancelTBR)
             val response = responseTask2.result as Boolean?
-            if (response!!) {
-                aapsLogger.info(LTag.PUMP, logPrefix + "setTempBasalAbsolute - Current TBR cancelled.")
-            } else {
+            if (response == null || !response) {
                 aapsLogger.error(logPrefix + "setTempBasalAbsolute - Cancel TBR failed.")
                 finishAction("TBR")
                 return PumpEnactResult(injector).success(false).enacted(false)
                     .comment(R.string.medtronic_cmd_cant_cancel_tbr_stop_op)
+            } else {
+                aapsLogger.info(LTag.PUMP, logPrefix + "setTempBasalAbsolute - Current TBR cancelled.")
             }
         }
 
@@ -763,7 +763,7 @@ class MedtronicPumpPlugin @Inject constructor(
             medtronicPumpStatus.tempBasalAmount = absoluteRate
             medtronicPumpStatus.tempBasalLength = durationInMinutes
 
-            val tempData = PumpDbEntryTBR(absoluteRate, true, durationInMinutes, tbrType)
+            val tempData = info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryTBR(absoluteRate, true, durationInMinutes, tbrType)
 
             pumpSyncStorage.addTemporaryBasalRateWithTempId(tempData, true, this)
 
@@ -956,10 +956,13 @@ class MedtronicPumpPlugin @Inject constructor(
             val tbr = responseTask.result as TempBasalPair?
 
             // we sometimes get rate returned even if TBR is no longer running
-            if (tbr!!.durationMinutes == 0) {
-                tbr.insulinRate = 0.0
-            }
-            tbr
+            if (tbr != null) {
+                if (tbr.durationMinutes == 0) {
+                    tbr.insulinRate = 0.0
+                }
+                tbr
+            } else
+                null
         } else {
             null
         }
@@ -992,7 +995,11 @@ class MedtronicPumpPlugin @Inject constructor(
         val responseTask2 = rileyLinkMedtronicService.medtronicUIComm.executeCommand(MedtronicCommandType.CancelTBR)
         val response = responseTask2.result as Boolean?
         finishAction("TBR")
-        return if (response!!) {
+        return if (response == null || !response) {
+            aapsLogger.info(LTag.PUMP, logPrefix + "cancelTempBasal - Cancel TBR failed.")
+            PumpEnactResult(injector).success(false).enacted(false) //
+                .comment(R.string.medtronic_cmd_cant_cancel_tbr)
+        } else {
             aapsLogger.info(LTag.PUMP, logPrefix + "cancelTempBasal - Cancel TBR successful.")
 
             val runningTBR = medtronicPumpStatus.runningTBR
@@ -1022,19 +1029,13 @@ class MedtronicPumpPlugin @Inject constructor(
                 }
             }
 
-            //pumpSyncStorage.addTemporaryBasalRateWithTempId(tempData, true, this)
-
             PumpEnactResult(injector).success(true).enacted(true) //
                 .isTempCancel(true)
-        } else {
-            aapsLogger.info(LTag.PUMP, logPrefix + "cancelTempBasal - Cancel TBR failed.")
-            PumpEnactResult(injector).success(response).enacted(response) //
-                .comment(R.string.medtronic_cmd_cant_cancel_tbr)
         }
     }
 
     override fun manufacturer(): ManufacturerType {
-        return pumpDescription.pumpType.manufacturer!!
+        return ManufacturerType.Medtronic
     }
 
     override fun model(): PumpType {

@@ -55,7 +55,7 @@ class MedtronicHistoryData @Inject constructor(
     val medtronicPumpStatus: MedtronicPumpStatus,
     val databaseHelper: DatabaseHelperInterface,
     val pumpSync: PumpSync,
-    val pumpSyncStorage: PumpSyncStorage
+    val pumpSyncStorage: info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncStorage
 ) {
 
     val allHistory: MutableList<PumpHistoryEntry> = mutableListOf()
@@ -381,12 +381,12 @@ class MedtronicHistoryData @Inject constructor(
         }
     }
 
-    private fun processPrime(primeRecords: List<PumpHistoryEntry?>) {
+    private fun processPrime(primeRecords: List<PumpHistoryEntry>) {
         val maxAllowedTimeInPast = DateTimeUtil.getATDWithAddedMinutes(GregorianCalendar(), -30)
         var lastPrimeRecordTime = 0L
         var lastPrimeRecord: PumpHistoryEntry? = null
         for (primeRecord in primeRecords) {
-            val fixedAmount = primeRecord!!.getDecodedDataEntry("FixedAmount")
+            val fixedAmount = primeRecord.getDecodedDataEntry("FixedAmount")
             if (fixedAmount != null && fixedAmount as Float == 0.0f) {
                 // non-fixed primes are used to prime the tubing
                 // fixed primes are used to prime the cannula
@@ -456,7 +456,7 @@ class MedtronicHistoryData @Inject constructor(
             pumpSync.createOrUpdateTotalDailyDose(
                 DateTimeUtil.toMillisFromATD(tdd.atechDateTime),
                 totalsDTO.insulinBolus,
-                totalsDTO.insulinBasal!!,
+                totalsDTO.insulinBasal,
                 totalsDTO.insulinTotal,
                 tdd.pumpId,
                 medtronicPumpStatus.pumpType,
@@ -559,7 +559,7 @@ class MedtronicHistoryData @Inject constructor(
         if (bolus.containsDecodedData("Estimate")) {
             val bolusWizard = bolus.decodedData["Estimate"] as BolusWizardDTO
 
-            pumpSyncStorage.addCarbs(PumpDbEntryCarbs(
+            pumpSyncStorage.addCarbs(info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryCarbs(
                 tryToGetByLocalTime(bolus.atechDateTime),
                 bolusWizard.carbs.toDouble(),
                 medtronicPumpStatus.pumpType,
@@ -571,9 +571,9 @@ class MedtronicHistoryData @Inject constructor(
 
     private fun processTBREntries(entryList: MutableList<PumpHistoryEntry>) {
         Collections.reverse(entryList)
-        val tbr = entryList[0].getDecodedDataEntry("Object") as TempBasalPair?
+        val tbr = entryList[0].getDecodedDataEntry("Object") as TempBasalPair
         var readOldItem = false
-        if (tbr!!.isCancelTBR) {
+        if (tbr.isCancelTBR) {
             val oneMoreEntryFromHistory = getOneMoreEntryFromHistory(PumpHistoryEntryType.TempBasalCombined)
             if (oneMoreEntryFromHistory != null) {
                 entryList.add(0, oneMoreEntryFromHistory)
@@ -679,12 +679,12 @@ class MedtronicHistoryData @Inject constructor(
 
                     if (isTBRActive(tryToGetByLocalTime(tempBasalProcessDTO.atechDateTime), tempBasalProcessDTO.duration)) {
                         if (medtronicPumpStatus.runningTBR == null) {
-                            medtronicPumpStatus.runningTBR = PumpDbEntry(0L,
+                            medtronicPumpStatus.runningTBR = info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntry(0L,
                                 tryToGetByLocalTime(tempBasalProcessDTO.atechDateTime),
                                 medtronicPumpStatus.pumpType,
                                 medtronicPumpStatus.serialNumber,
                                 null,
-                                PumpDbEntryTBR(tbrEntry.insulinRate, !tbrEntry.isPercent, tempBasalProcessDTO.duration, PumpSync.TemporaryBasalType.NORMAL),
+                                info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryTBR(tbrEntry.insulinRate, !tbrEntry.isPercent, tempBasalProcessDTO.duration, PumpSync.TemporaryBasalType.NORMAL),
                                 tempBasalProcessDTO.pumpId)
                         }
                     }
@@ -693,7 +693,7 @@ class MedtronicHistoryData @Inject constructor(
         } // collection
     }
 
-    fun isTBRActive(dbEntry: PumpDbEntry): Boolean {
+    fun isTBRActive(dbEntry: info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntry): Boolean {
         return isTBRActive(dbEntry.date, dbEntry.tbrData!!.durationInMinutes)
     }
 
@@ -716,7 +716,7 @@ class MedtronicHistoryData @Inject constructor(
     /**
      * Looks at all boluses that have temporaryId and find one that is correct for us (if such entry exists)
      */
-    private fun findDbEntry(treatment: PumpHistoryEntry, temporaryEntries: MutableList<PumpDbEntry>): PumpDbEntry? {
+    private fun findDbEntry(treatment: PumpHistoryEntry, temporaryEntries: MutableList<info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntry>): info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntry? {
 
         if (temporaryEntries.isEmpty()) {
             return null
@@ -728,7 +728,7 @@ class MedtronicHistoryData @Inject constructor(
         this.pumpTime?.let { proposedTime += (it.timeDifference * 1000) }
 
         val proposedTimeDiff: LongArray = longArrayOf(proposedTime - (2 * 60 * 1000), proposedTime + (2L * 60L * 1000L))
-        val tempEntriesList: MutableList<PumpDbEntry> = mutableListOf()
+        val tempEntriesList: MutableList<info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntry> = mutableListOf()
 
         for (temporaryEntry in temporaryEntries) {
             if (temporaryEntry.date > proposedTimeDiff[0] && temporaryEntry.date < proposedTimeDiff[1]) {
@@ -750,7 +750,7 @@ class MedtronicHistoryData @Inject constructor(
                     sec = 59
                 }
                 val diff = sec * 1000
-                val outList: MutableList<PumpDbEntry> = mutableListOf()
+                val outList: MutableList<info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntry> = mutableListOf()
                 for (treatment1 in tempEntriesList) {
                     if (treatment1.date > proposedTime - diff && treatment1.date < proposedTime + diff) {
                         outList.add(treatment1)

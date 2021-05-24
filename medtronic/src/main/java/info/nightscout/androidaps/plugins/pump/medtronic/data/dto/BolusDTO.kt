@@ -36,17 +36,8 @@ class BolusDTO constructor(atechDateTime: Long,
                            @Expose var duration: Int = 0
 ) : PumpTimeStampedRecord(atechDateTime) {
 
-    // @Expose
-    // var requestedAmount: Double? = null
-    //
-    // @Expose
-    // var deliveredAmount: Double? = null
-
     @Expose
     var immediateAmount: Double? = null // when Multiwave this is used
-
-    // @Expose
-    // var duration: Int? = null
 
     @Expose
     lateinit var bolusType: PumpBolusType

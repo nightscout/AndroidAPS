@@ -27,14 +27,14 @@ class MedtronicPumpStatus @Inject constructor(private val resourceHelper: Resour
                                               private val sp: SP,
                                               private val rxBus: RxBusWrapper,
                                               private val rileyLinkUtil: RileyLinkUtil
-) : PumpStatus(PumpType.MEDTRONIC_522_722) {
+) : info.nightscout.androidaps.plugins.pump.common.data.PumpStatus(PumpType.MEDTRONIC_522_722) {
 
     var errorDescription: String? = null
     lateinit var serialNumber: String //? = null
     var pumpFrequency: String? = null
     var maxBolus: Double? = null
     var maxBasal: Double? = null
-    var runningTBR: PumpDbEntry? = null
+    var runningTBR: info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntry? = null
 
     // statuses
     var pumpDeviceState = PumpDeviceState.NeverContacted

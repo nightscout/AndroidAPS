@@ -32,6 +32,7 @@ enum class PumpHistoryEntryGroup(val resourceId: Int) {
     }
 
     companion object {
+
         private var translatedList: MutableList<PumpHistoryEntryGroup>? = null
 
         private fun doTranslation(resourceHelper: ResourceHelper) {
@@ -43,9 +44,9 @@ enum class PumpHistoryEntryGroup(val resourceId: Int) {
         }
 
         @JvmStatic
-        fun getTranslatedList(resourceHelper: ResourceHelper): List<PumpHistoryEntryGroup>? {
+        fun getTranslatedList(resourceHelper: ResourceHelper): List<PumpHistoryEntryGroup> {
             if (translatedList == null) doTranslation(resourceHelper)
-            return translatedList
+            return translatedList!!
         }
     }
 

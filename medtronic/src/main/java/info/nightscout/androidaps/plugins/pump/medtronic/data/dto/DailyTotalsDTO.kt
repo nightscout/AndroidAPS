@@ -36,7 +36,7 @@ class DailyTotalsDTO(var entry: PumpHistoryEntry) {
     var insulinTotal = 0.0
 
     @Expose
-    var insulinBasal: Double? = 0.0
+    var insulinBasal: Double = 0.0
 
     @Expose
     var insulinBolus = 0.0
@@ -55,7 +55,7 @@ class DailyTotalsDTO(var entry: PumpHistoryEntry) {
     private var bolusCountFood: Int? = null
     private var bolusCountCorr: Int? = null
     private fun setDisplayable() {
-        if (insulinBasal == null) {
+        if (insulinBasal == 0.0) {
             entry.displayableValue = "Total Insulin: " + StringUtil.getFormatedValueUS(insulinTotal, 2)
         } else {
             entry.displayableValue = ("Basal Insulin: " + StringUtil.getFormatedValueUS(insulinBasal, 2)

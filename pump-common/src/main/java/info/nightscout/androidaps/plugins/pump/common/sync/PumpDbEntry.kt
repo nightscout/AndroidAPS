@@ -4,14 +4,13 @@ import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 
-
 data class PumpDbEntry constructor(var temporaryId: Long,
-                       var date: Long,
-                       var pumpType: PumpType,
-                       var serialNumber: String,
-                       var bolusData: PumpDbEntryBolus? = null,
-                       var tbrData: PumpDbEntryTBR? = null,
-                       var pumpId: Long? = null) {
+                                   var date: Long,
+                                   var pumpType: PumpType,
+                                   var serialNumber: String,
+                                   var bolusData: PumpDbEntryBolus? = null,
+                                   var tbrData: PumpDbEntryTBR? = null,
+                                   var pumpId: Long? = null) {
 
     constructor(temporaryId: Long,
                 date: Long,
@@ -41,7 +40,6 @@ data class PumpDbEntry constructor(var temporaryId: Long,
 
 }
 
-
 data class PumpDbEntryBolus(var insulin: Double,
                             var carbs: Double,
                             var bolusType: DetailedBolusInfo.BolusType)
@@ -51,11 +49,12 @@ data class PumpDbEntryCarbs(var date: Long,
                             var pumpType: PumpType,
                             var serialNumber: String,
                             var pumpId: Long? = null) {
+
     constructor(detailedBolusInfo: DetailedBolusInfo,
                 creator: PumpSyncEntriesCreator) : this(detailedBolusInfo.timestamp,
-                                                        detailedBolusInfo.carbs,
-                                                        creator.model(),
-                                                        creator.serialNumber())
+        detailedBolusInfo.carbs,
+        creator.model(),
+        creator.serialNumber())
 }
 
 data class PumpDbEntryTBR(var rate: Double,

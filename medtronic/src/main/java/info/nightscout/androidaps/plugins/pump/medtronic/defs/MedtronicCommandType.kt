@@ -157,8 +157,8 @@ enum class MedtronicCommandType {
         }
 
         @JvmStatic
-        fun getSettings(medtronicPumpModel: MedtronicDeviceType?): MedtronicCommandType {
-            return if (isSameDevice(medtronicPumpModel!!, MedtronicDeviceType.Medtronic_512_712))
+        fun getSettings(medtronicPumpModel: MedtronicDeviceType): MedtronicCommandType {
+            return if (isSameDevice(medtronicPumpModel, MedtronicDeviceType.Medtronic_512_712))
                 Settings_512
             else
                 Settings

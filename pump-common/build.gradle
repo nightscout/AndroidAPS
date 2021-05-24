@@ -16,6 +16,9 @@ android {
 
 dependencies {
     implementation project(':core')
-    implementation project(':pump-common')
-    implementation project(':rileylink')
+    //implementation project(':database')
+
+    implementation('com.thoughtworks.xstream:xstream:1.4.7') {
+        exclude group: 'xmlpull', module: 'xmlpull'
+    }
 }

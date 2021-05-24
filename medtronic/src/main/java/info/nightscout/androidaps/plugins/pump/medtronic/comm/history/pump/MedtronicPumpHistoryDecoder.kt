@@ -117,7 +117,7 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
                 if (decoded === RecordDecodeStatus.OK || decoded === RecordDecodeStatus.Ignored) {
                     //Log.i(TAG, "#" + record + " " + decoded.getDescription() + " " + pe);
                 } else {
-                    aapsLogger.warn(LTag.PUMPBTCOMM, "#" + record + " " + decoded!!.description + "  " + pe)
+                    aapsLogger.warn(LTag.PUMPBTCOMM, "#" + record + " " + decoded.description + "  " + pe)
                 }
                 addToStatistics(pe, decoded, null)
                 record++
@@ -130,7 +130,7 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
         return outList
     }
 
-    override fun decodeRecord(record: PumpHistoryEntry): RecordDecodeStatus? {
+    override fun decodeRecord(record: PumpHistoryEntry): RecordDecodeStatus {
         return try {
             decodeRecordInternal(record)
         } catch (ex: Exception) {

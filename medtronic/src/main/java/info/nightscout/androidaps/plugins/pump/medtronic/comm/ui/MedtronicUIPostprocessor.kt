@@ -39,7 +39,7 @@ class MedtronicUIPostprocessor @Inject constructor(
         when (uiTask.commandType) {
             MedtronicCommandType.SetBasalProfileSTD  -> {
                 val response = uiTask.result as Boolean?
-                if (response!!) {
+                if (response != null && response) {
                     val basalProfile = uiTask.getParameter(0) as BasalProfile
                     aapsLogger.debug("D: basal profile returned after set: $basalProfile")
 

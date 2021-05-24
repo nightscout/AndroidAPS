@@ -13,7 +13,7 @@ enum class MedtronicStatusRefreshType(val refreshTime: Int,
     PumpTime(60, MedtronicCommandType.GetRealTimeClock //
     );
 
-    fun getCommandType(medtronicDeviceType: MedtronicDeviceType?): MedtronicCommandType? {
+    fun getCommandType(medtronicDeviceType: MedtronicDeviceType): MedtronicCommandType? {
         return if (this == Configuration) {
             MedtronicCommandType.getSettings(medtronicDeviceType)
         } else

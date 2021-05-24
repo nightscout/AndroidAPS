@@ -140,7 +140,7 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
                             medtronicUtil.medtronicPumpModel = pumpModel!!
                             medtronicUtil.isModelSet = true
                         }
-                        aapsLogger.debug(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "isDeviceReachable. PumpModel is %s - Valid: %b (rssi=%d)", pumpModel!!.name, valid,
+                        aapsLogger.debug(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "isDeviceReachable. PumpModel is %s - Valid: %b (rssi=%d)", medtronicUtil.medtronicPumpModel, valid,
                             radioResponse.rssi))
                         if (valid) {
                             if (state === PumpDeviceState.PumpUnreachable)
@@ -313,7 +313,9 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
                             aapsLogger.error(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "Problem acknowledging frame response. (retry=%d)", retries))
                         }
                     }
-                    if (nextMsg != null) currentResponse = GetHistoryPageCarelinkMessageBody(nextMsg.messageBody!!.txData) else {
+                    if (nextMsg != null)
+                        currentResponse = GetHistoryPageCarelinkMessageBody(nextMsg.messageBody!!.txData)
+                    else {
                         aapsLogger.error(LTag.PUMPCOMM, "We couldn't acknowledge frame from pump, aborting operation.")
                     }
                 }
@@ -602,7 +604,7 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
 
     fun getTemporaryBasal(): TempBasalPair? {
         return sendAndGetResponseWithCheck(MedtronicCommandType.ReadTemporaryBasal) { _, _, rawContent ->
-            TempBasalPair(aapsLogger, rawContent!!)
+            TempBasalPair(aapsLogger, rawContent)
         }
     }
 
