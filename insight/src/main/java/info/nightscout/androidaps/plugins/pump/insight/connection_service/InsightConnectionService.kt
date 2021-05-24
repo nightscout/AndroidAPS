@@ -376,7 +376,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
         }
     }
 
-    @Synchronized override fun onReceiveBytes(buffer: ByteArray?, bytesRead: Int) {
+    @Synchronized override fun onReceiveBytes(buffer: ByteArray, bytesRead: Int) {
         this.buffer.putBytes(buffer, bytesRead)
         try {
             while (hasCompletePacket(this.buffer)) {
@@ -675,7 +675,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
         handleException(ConnectionFailedException(duration))
     }
 
-    @Synchronized override fun onErrorWhileReading(e: Exception?) {
+    @Synchronized override fun onErrorWhileReading(e: Exception) {
         handleException(ConnectionLostException())
     }
 
