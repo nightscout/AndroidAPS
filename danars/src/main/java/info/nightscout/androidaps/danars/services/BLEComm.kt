@@ -323,12 +323,15 @@ class BLEComm @Inject internal constructor(
     }
 
     private val readBuffer = ByteArray(1024)
-    private var bufferLength = 0
+    @Volatile private var bufferLength = 0
 
     private fun addToReadBuffer(buffer: ByteArray) {
         //log.debug("addToReadBuffer " + DanaRS_Packet.toHexString(buffer));
         if (buffer.isEmpty()) {
             return
+        }
+        if (bufferLength == 1024) {
+            aapsLogger.debug(LTag.PUMPBTCOMM, "1024 XXXXXXXXXXXXXX")
         }
         synchronized(readBuffer) {
             // Append incoming data to input buffer
