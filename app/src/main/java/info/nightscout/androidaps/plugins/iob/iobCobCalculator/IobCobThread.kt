@@ -98,7 +98,7 @@ class IobCobThread @Inject internal constructor(
             // start from oldest to be able sub cob
             for (i in bucketedData.size - 4 downTo 0) {
                 val progress = i.toString() + if (buildHelper.isDev()) " ($from)" else ""
-                rxBus.send(EventIobCalculationProgress(progress))
+                rxBus.send(EventIobCalculationProgress(progress, cause))
                 if (iobCobCalculatorPlugin.stopCalculationTrigger) {
                     iobCobCalculatorPlugin.stopCalculationTrigger = false
                     aapsLogger.debug(LTag.AUTOSENS, "Aborting calculation thread (trigger): $from")
@@ -272,7 +272,7 @@ class IobCobThread @Inject internal constructor(
             }.start()
         } finally {
             mWakeLock?.release()
-            rxBus.send(EventIobCalculationProgress(""))
+            rxBus.send(EventIobCalculationProgress("", cause))
             aapsLogger.debug(LTag.AUTOSENS, "AUTOSENSDATA thread ended: $from")
             profiler.log(LTag.AUTOSENS, "IobCobThread", start)
         }

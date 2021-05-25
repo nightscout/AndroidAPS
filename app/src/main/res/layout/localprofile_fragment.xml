@@ -239,7 +239,7 @@
                 android:layout_marginBottom="10dp"
                 android:orientation="vertical" />
 
-            <info.nightscout.androidaps.plugins.treatments.fragments.ProfileGraph
+            <info.nightscout.androidaps.utils.ui.ProfileGraph
                 android:id="@+id/basal_graph"
                 android:layout_width="match_parent"
                 android:layout_height="100dip"

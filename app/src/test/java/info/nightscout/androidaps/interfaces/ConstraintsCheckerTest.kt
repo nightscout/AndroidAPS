@@ -28,8 +28,6 @@ import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
 import info.nightscout.androidaps.plugins.source.GlimpPlugin
-import info.nightscout.androidaps.plugins.treatments.TreatmentService
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.Profiler
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
@@ -51,7 +49,7 @@ import java.util.*
 @RunWith(PowerMockRunner::class)
 @PrepareForTest(
     ConstraintChecker::class, SP::class, Context::class,
-    OpenAPSAMAPlugin::class, OpenAPSSMBPlugin::class, TreatmentsPlugin::class, TreatmentService::class,
+    OpenAPSAMAPlugin::class, OpenAPSSMBPlugin::class,
     VirtualPumpPlugin::class, DetailedBolusInfoStorage::class, TemporaryBasalStorage::class, GlimpPlugin::class, Profiler::class,
     UserEntryLogger::class, LoggerUtils::class, AppRepository::class, InsightDatabaseDao::class)
 class ConstraintsCheckerTest : TestBaseWithProfile() {

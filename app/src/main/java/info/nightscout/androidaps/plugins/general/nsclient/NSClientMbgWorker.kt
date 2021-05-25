@@ -34,7 +34,7 @@ class NSClientMbgWorker(
         var ret = Result.success()
 
         val acceptNSData = sp.getBoolean(R.string.key_ns_receive_therapy_events, false) || config.NSCLIENT
-        if (!acceptNSData) return ret
+        if (!acceptNSData) return Result.success(workDataOf("Result" to "Sync not enabled"))
 
         val mbgArray = dataWorker.pickupJSONArray(inputData.getLong(DataWorker.STORE_KEY, -1))
             ?: return Result.failure(workDataOf("Error" to "missing input data"))

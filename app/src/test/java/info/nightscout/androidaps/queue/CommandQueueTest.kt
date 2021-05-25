@@ -20,7 +20,6 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.maintenance.LoggerUtils
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.commands.*
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -45,7 +44,7 @@ import java.util.*
 @RunWith(PowerMockRunner::class)
 @PrepareForTest(
     ConstraintChecker::class, VirtualPumpPlugin::class, ToastUtils::class, Context::class,
-    TreatmentsPlugin::class, FabricPrivacy::class, LoggerUtils::class, PowerManager::class,
+    FabricPrivacy::class, LoggerUtils::class, PowerManager::class,
     AppRepository::class)
 class CommandQueueTest : TestBaseWithProfile() {
 

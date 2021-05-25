@@ -13,7 +13,6 @@ import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.junit.Assert
@@ -40,7 +39,6 @@ class BolusWizardTest : TestBase() {
     @Mock lateinit var commandQueue: CommandQueueProvider
     @Mock lateinit var loopPlugin: LoopPlugin
     @Mock lateinit var iobCobCalculator: IobCobCalculator
-    @Mock lateinit var treatmentsPlugin: TreatmentsPlugin
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var autosensDataStore: AutosensDataStore
@@ -71,7 +69,6 @@ class BolusWizardTest : TestBase() {
         `when`(profile.getIc()).thenReturn(insulinToCarbRatio)
 
         `when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
-        `when`(activePlugin.activeTreatments).thenReturn(treatmentsPlugin)
         `when`(iobCobCalculator.calculateIobFromBolus()).thenReturn(IobTotal(System.currentTimeMillis()))
         `when`(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(IobTotal(System.currentTimeMillis()))
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
