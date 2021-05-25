@@ -34,6 +34,7 @@ public class RileyLinkConst {
         //public static final String RileyLinkAddress = PrefPrefix + "mac_address"; // pref_rileylink_mac_address
         public static final int RileyLinkAddress = R.string.key_rileylink_mac_address;
         public static final int RileyLinkName = R.string.key_rileylink_name;
+        public static final int OrangeUseScanning = R.string.key_orange_use_scanning;
         public static final String LastGoodDeviceCommunicationTime = Prefix + "lastGoodDeviceCommunicationTime";
         public static final String LastGoodDeviceFrequency = Prefix + "LastGoodDeviceFrequency";
         public static final int Encoding = R.string.key_medtronic_encoding;
