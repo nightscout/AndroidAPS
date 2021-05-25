@@ -620,7 +620,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     binding.infoLayout.avgDelta.text = Profile.toSignedUnitsString(glucoseStatus.shortAvgDelta, glucoseStatus.shortAvgDelta * Constants.MGDL_TO_MMOLL, units)
                     binding.infoLayout.longAvgDelta.text = Profile.toSignedUnitsString(glucoseStatus.longAvgDelta, glucoseStatus.longAvgDelta * Constants.MGDL_TO_MMOLL, units)
                 } else {
-                    binding.infoLayout.deltaLarge.text = "Δ " + resourceHelper.gs(R.string.notavailable)
+                    binding.infoLayout.deltaLarge.text = ""
                     binding.infoLayout.delta.text = "Δ " + resourceHelper.gs(R.string.notavailable)
                     binding.infoLayout.avgDelta.text = ""
                     binding.infoLayout.longAvgDelta.text = ""
