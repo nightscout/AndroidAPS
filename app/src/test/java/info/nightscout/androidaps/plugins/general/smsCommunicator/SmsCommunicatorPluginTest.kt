@@ -57,6 +57,7 @@ import java.util.*
     SmsManager::class, CommandQueue::class, LocalProfilePlugin::class, DateUtil::class,
     OneTimePassword::class, UserEntryLogger::class, LoopPlugin::class,
     AppRepository::class, DateUtil::class, AutosensDataStore::class)
+@kotlin.ExperimentalStdlibApi
 class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
     @Mock lateinit var sp: SP
@@ -66,7 +67,6 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     @Mock lateinit var loopPlugin: LoopPlugin
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Mock lateinit var localProfilePlugin: LocalProfilePlugin
-    @Mock lateinit var treatmentService: TreatmentService
     @Mock lateinit var otp: OneTimePassword
     @Mock lateinit var xdripCalibrations: XdripCalibrations
     @Mock lateinit var uel: UserEntryLogger

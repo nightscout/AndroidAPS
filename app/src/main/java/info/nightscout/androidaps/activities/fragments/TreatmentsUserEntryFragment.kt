@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.treatments.fragments
+package info.nightscout.androidaps.activities.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater

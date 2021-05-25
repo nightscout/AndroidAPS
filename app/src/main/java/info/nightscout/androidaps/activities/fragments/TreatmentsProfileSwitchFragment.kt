@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.treatments.fragments
+package info.nightscout.androidaps.activities.fragments
 
 import android.graphics.Paint
 import android.os.Bundle
@@ -30,7 +30,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHi
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
 import info.nightscout.androidaps.plugins.treatments.events.EventTreatmentUpdateGui
-import info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsProfileSwitchFragment.RecyclerProfileViewAdapter.ProfileSwitchViewHolder
+import info.nightscout.androidaps.activities.fragments.TreatmentsProfileSwitchFragment.RecyclerProfileViewAdapter.ProfileSwitchViewHolder
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T

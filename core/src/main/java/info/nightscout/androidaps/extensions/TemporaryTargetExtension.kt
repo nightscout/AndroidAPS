@@ -88,7 +88,7 @@ fun temporaryTargetFromJson(jsonObject: JSONObject): TemporaryTarget? {
     return tt
 }
 
-fun TemporaryTarget.toJson(units: GlucoseUnit, dateUtil: DateUtil): JSONObject =
+fun TemporaryTarget.toJson(isAdd: Boolean, units: GlucoseUnit, dateUtil: DateUtil): JSONObject =
     JSONObject()
         .put("eventType", TherapyEvent.Type.TEMPORARY_TARGET.text)
         .put("duration", T.msecs(duration).mins())
@@ -100,5 +100,5 @@ fun TemporaryTarget.toJson(units: GlucoseUnit, dateUtil: DateUtil): JSONObject =
                 .put("targetBottom", Profile.fromMgdlToUnits(lowTarget, units))
                 .put("targetTop", Profile.fromMgdlToUnits(highTarget, units))
                 .put("units", units.asText)
-            if (interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId)
+            if (isAdd && interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId)
         }

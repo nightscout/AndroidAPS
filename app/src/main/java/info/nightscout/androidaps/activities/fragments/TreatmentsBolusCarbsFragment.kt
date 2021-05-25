@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.treatments.fragments
+package info.nightscout.androidaps.activities.fragments
 
 import android.graphics.Paint
 import android.os.Bundle

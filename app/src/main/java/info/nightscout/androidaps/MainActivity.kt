@@ -27,11 +27,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.joanzapata.iconify.Iconify
 import com.joanzapata.iconify.fonts.FontAwesomeModule
 import dev.doubledot.doki.ui.DokiActivity
-import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
-import info.nightscout.androidaps.activities.PreferencesActivity
-import info.nightscout.androidaps.activities.ProfileHelperActivity
-import info.nightscout.androidaps.activities.SingleFragmentActivity
-import info.nightscout.androidaps.activities.StatsActivity
+import info.nightscout.androidaps.activities.*
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.databinding.ActivityMainBinding
@@ -99,6 +95,7 @@ class MainActivity : NoSplashAppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
+    @kotlin.ExperimentalStdlibApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Iconify.with(FontAwesomeModule())
@@ -291,6 +288,11 @@ class MainActivity : NoSplashAppCompatActivity() {
                 return true
             }
 
+            R.id.nav_treatments -> {
+                startActivity(Intent(this, TreatmentsActivity::class.java))
+                return true
+            }
+
             R.id.nav_setupwizard -> {
                 protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, {
                     startActivity(Intent(this, SetupWizardActivity::class.java))
@@ -360,6 +362,7 @@ class MainActivity : NoSplashAppCompatActivity() {
     // Correct place for calling setUserStats() would be probably MainApp
     // but we need to have it called at least once a day. Thus this location
 
+    @kotlin.ExperimentalStdlibApi
     private fun setUserStats() {
         if (!fabricPrivacy.fabricEnabled()) return
         val closedLoopEnabled = if (constraintChecker.isClosedLoopAllowed().value()) "CLOSED_LOOP_ENABLED" else "CLOSED_LOOP_DISABLED"

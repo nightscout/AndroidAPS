@@ -60,6 +60,7 @@ abstract class DanaRS_Packet_History_(
         return request
     }
 
+    @kotlin.ExperimentalStdlibApi
     override fun handleMessage(data: ByteArray) {
         val error: Int
         totalCount = 0
