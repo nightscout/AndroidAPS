@@ -15,7 +15,6 @@ import info.nightscout.androidaps.interfaces.Profile.Companion.secondsFromMidnig
 import info.nightscout.androidaps.interfaces.Profile.Companion.toMgdl
 import info.nightscout.androidaps.interfaces.Profile.ProfileValue
 import info.nightscout.androidaps.interfaces.Pump
-import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
@@ -153,6 +152,7 @@ sealed class ProfileSealed(
             if (getIcTimeFromMidnight(seconds) !=  profile.getIcTimeFromMidnight(seconds)) return false
             if (getTargetLowMgdlTimeFromMidnight(seconds) !=  profile.getTargetLowMgdlTimeFromMidnight(seconds)) return false
             if (getTargetHighMgdlTimeFromMidnight(seconds) !=  profile.getTargetHighMgdlTimeFromMidnight(seconds)) return false
+            if (dia != profile.dia) return false
         }
         return true
     }
