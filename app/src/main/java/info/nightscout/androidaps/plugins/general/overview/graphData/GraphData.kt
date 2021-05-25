@@ -26,16 +26,16 @@ import kotlin.math.max
 
 class GraphData(
     injector: HasAndroidInjector,
-    private val graph: GraphView
+    private val graph: GraphView,
+    private val overviewData: OverviewData
 ) {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
-    @Inject lateinit var overviewData: OverviewData
 
-    var maxY = Double.MIN_VALUE
+    private var maxY = Double.MIN_VALUE
     private var minY = Double.MAX_VALUE
     private val units: GlucoseUnit
     private val series: MutableList<Series<*>> = ArrayList()
@@ -201,7 +201,7 @@ class GraphData(
         graph.gridLabelRenderer.numHorizontalLabels = 7 // only 7 because of the space
     }
 
-    internal fun addSeries(s: Series<*>) = series.add(s)
+    private fun addSeries(s: Series<*>) = series.add(s)
 
     fun performUpdate() {
         // clear old data
