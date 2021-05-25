@@ -15,6 +15,7 @@ import info.nightscout.androidaps.setupwizard.SetupWizardActivity
 @Suppress("unused")
 abstract class ActivitiesModule {
 
+    @ContributesAndroidInjector abstract fun contributesTreatmentsActivity(): TreatmentsActivity
     @ContributesAndroidInjector abstract fun contributesHistoryBrowseActivity(): HistoryBrowseActivity
     @ContributesAndroidInjector abstract fun contributesLogSettingActivity(): LogSettingActivity
     @ContributesAndroidInjector abstract fun contributeMainActivity(): MainActivity

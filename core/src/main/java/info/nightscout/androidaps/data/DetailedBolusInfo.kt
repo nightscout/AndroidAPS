@@ -20,7 +20,6 @@ class DetailedBolusInfo {
 
     // Additional requesting parameters
     @JvmField var timestamp = System.currentTimeMillis()
-    @JvmField var carbTime = 0 // time shift of carbs in minutes
     @JvmField var lastKnownBolusTime: Long = 0 // for SMB check
     @JvmField var deliverAtTheLatest: Long = 0 // SMB should be delivered within 1 min from this time
     @Transient var context: Context? = null // context for progress dialog
@@ -113,7 +112,7 @@ class DetailedBolusInfo {
     fun createCarbs(): Carbs? =
         if (carbs != 0.0)
             Carbs(
-                timestamp = carbsTimestamp ?: timestamp + T.mins(carbTime.toLong()).msecs(),
+                timestamp = carbsTimestamp ?: timestamp,
                 amount = carbs,
                 duration = carbsDuration
             )
@@ -138,7 +137,6 @@ class DetailedBolusInfo {
         n.carbs = carbs
 
         n.timestamp = timestamp
-        n.carbTime = carbTime
         n.lastKnownBolusTime = lastKnownBolusTime
         n.deliverAtTheLatest = deliverAtTheLatest
         n.context = context

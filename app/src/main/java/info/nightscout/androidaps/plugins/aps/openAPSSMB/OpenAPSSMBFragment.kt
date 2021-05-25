@@ -59,6 +59,7 @@ class OpenAPSSMBFragment : DaggerFragment() {
     }
 
     @Synchronized
+    @kotlin.ExperimentalStdlibApi
     override fun onResume() {
         super.onResume()
         disposable += rxBus
@@ -90,6 +91,7 @@ class OpenAPSSMBFragment : DaggerFragment() {
     }
 
     @Synchronized
+    @kotlin.ExperimentalStdlibApi
     fun updateGUI() {
         if (_binding == null) return
         openAPSSMBPlugin.lastAPSResult?.let { lastAPSResult ->

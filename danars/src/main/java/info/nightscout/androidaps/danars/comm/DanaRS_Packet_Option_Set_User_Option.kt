@@ -26,8 +26,12 @@ class DanaRS_Packet_Option_Set_User_Option(
                 + "\nlcdOnTimeSec:" + danaPump.lcdOnTimeSec
                 + "\nbacklight:" + danaPump.backlightOnTimeSec
                 + "\ndanaRPumpUnits:" + danaPump.units
-                + "\nlowReservoir:" + danaPump.lowReservoirRate)
-        val request = ByteArray(13)
+                + "\nlowReservoir:" + danaPump.lowReservoirRate
+                + "\ncannulaVolume:" + danaPump.cannulaVolume
+                + "\nrefillAmount:" + danaPump.refillAmount
+                + "\ntarget:" + danaPump.target)
+        val size = if (danaPump.hwModel >= 7) 15 else 13
+        val request = ByteArray(size)
         request[0] = if (danaPump.timeDisplayType24) 0.toByte() else 1.toByte()
         request[1] = if (danaPump.buttonScrollOnOff) 1.toByte() else 0.toByte()
         request[2] = (danaPump.beepAndAlarm and 0xff).toByte()
@@ -41,6 +45,10 @@ class DanaRS_Packet_Option_Set_User_Option(
         request[10] = (danaPump.cannulaVolume ushr 8 and 0xff).toByte()
         request[11] = (danaPump.refillAmount and 0xff).toByte()
         request[12] = (danaPump.refillAmount ushr 8 and 0xff).toByte()
+        if (danaPump.hwModel >= 7) {
+            request[13] = (danaPump.target and 0xff).toByte()
+            request[14] = (danaPump.target ushr 8 and 0xff).toByte()
+        }
         return request
     }
 

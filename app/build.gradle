@@ -167,6 +167,14 @@ android {
     useLibrary "org.apache.http.legacy"
 }
 
+allprojects {
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
+}
+
 dependencies {
     wearApp project(':wear')
 

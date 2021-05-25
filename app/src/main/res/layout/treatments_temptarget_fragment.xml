@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsTempTargetFragment">
+    tools:context="info.nightscout.androidaps.activities.fragments.TreatmentsTempTargetFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

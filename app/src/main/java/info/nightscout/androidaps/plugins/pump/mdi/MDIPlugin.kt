@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.pump.mdi
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -12,7 +11,6 @@ import info.nightscout.androidaps.plugins.common.ManufacturerType
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.InstanceId.instanceId
-import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.json.JSONException
 import org.json.JSONObject
@@ -84,7 +82,7 @@ class MDIPlugin @Inject constructor(
                 pumpSerial = serialNumber())
         if (detailedBolusInfo.carbs > 0)
             pumpSync.syncCarbsWithTimestamp(
-                timestamp = detailedBolusInfo.timestamp + T.mins(detailedBolusInfo.carbTime.toLong()).msecs(),
+                timestamp = detailedBolusInfo.carbsTimestamp ?:  detailedBolusInfo.timestamp,
                 amount = detailedBolusInfo.carbs,
                 pumpId = null,
                 pumpType = PumpType.MDI,

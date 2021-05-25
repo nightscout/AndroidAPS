@@ -15,13 +15,12 @@ fun GlucoseValue.valueToUnitsString(units: GlucoseUnit): String =
     if (units == GlucoseUnit.MGDL) DecimalFormatter.to0Decimal(value)
     else DecimalFormatter.to1Decimal(value * Constants.MGDL_TO_MMOLL)
 
-fun GlucoseValue.toJson(dateUtil: DateUtil): JSONObject =
+fun GlucoseValue.toJson(isAdd : Boolean, dateUtil: DateUtil): JSONObject =
     JSONObject()
         .put("device", sourceSensor.text)
         .put("date", timestamp)
         .put("dateString", dateUtil.toISOString(timestamp))
         .put("sgv", value)
         .put("direction", trendArrow.text)
-        .put("type", "sgv").also {
-            if (interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId)
-        }
+        .put("type", "sgv")
+        .also { if (isAdd && interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId) }

@@ -18,54 +18,24 @@ class DanaRS_Packet_Option_Get_User_Option(
     }
 
     override fun handleMessage(data: ByteArray) {
-        var dataIndex = DATA_START
-        var dataSize = 1
-        danaPump.timeDisplayType24 = byteArrayToInt(getBytes(data, dataIndex, dataSize)) == 0
-        dataIndex += dataSize
-        dataSize = 1
-        danaPump.buttonScrollOnOff = byteArrayToInt(getBytes(data, dataIndex, dataSize)) == 1
-        dataIndex += dataSize
-        dataSize = 1
-        danaPump.beepAndAlarm = byteArrayToInt(getBytes(data, dataIndex, dataSize))
-        dataIndex += dataSize
-        dataSize = 1
-        danaPump.lcdOnTimeSec = byteArrayToInt(getBytes(data, dataIndex, dataSize))
-        dataIndex += dataSize
-        dataSize = 1
-        danaPump.backlightOnTimeSec = byteArrayToInt(getBytes(data, dataIndex, dataSize))
-        dataIndex += dataSize
-        dataSize = 1
-        danaPump.selectedLanguage = byteArrayToInt(getBytes(data, dataIndex, dataSize))
-        dataIndex += dataSize
-        dataSize = 1
-        danaPump.units = byteArrayToInt(getBytes(data, dataIndex, dataSize))
-        dataIndex += dataSize
-        dataSize = 1
-        danaPump.shutdownHour = byteArrayToInt(getBytes(data, dataIndex, dataSize))
-        dataIndex += dataSize
-        dataSize = 1
-        danaPump.lowReservoirRate = byteArrayToInt(getBytes(data, dataIndex, dataSize))
-        dataIndex += dataSize
-        dataSize = 2
-        danaPump.cannulaVolume = byteArrayToInt(getBytes(data, dataIndex, dataSize))
-        dataIndex += dataSize
-        dataSize = 2
-        danaPump.refillAmount = byteArrayToInt(getBytes(data, dataIndex, dataSize))
-        dataIndex += dataSize
-        dataSize = 1
-        val selectableLanguage1 = byteArrayToInt(getBytes(data, dataIndex, dataSize))
-        dataIndex += dataSize
-        dataSize = 1
-        val selectableLanguage2 = byteArrayToInt(getBytes(data, dataIndex, dataSize))
-        dataIndex += dataSize
-        dataSize = 1
-        val selectableLanguage3 = byteArrayToInt(getBytes(data, dataIndex, dataSize))
-        dataIndex += dataSize
-        dataSize = 1
-        val selectableLanguage4 = byteArrayToInt(getBytes(data, dataIndex, dataSize))
-        dataIndex += dataSize
-        dataSize = 1
-        val selectableLanguage5 = byteArrayToInt(getBytes(data, dataIndex, dataSize))
+        danaPump.timeDisplayType24 = intFromBuff(data, 0, 1) == 0
+        danaPump.buttonScrollOnOff = intFromBuff(data, 1, 1) == 1
+        danaPump.beepAndAlarm = intFromBuff(data, 2, 1)
+        danaPump.lcdOnTimeSec = intFromBuff(data, 3, 1)
+        danaPump.backlightOnTimeSec = intFromBuff(data, 4, 1)
+        danaPump.selectedLanguage = intFromBuff(data, 5, 1)
+        danaPump.units = intFromBuff(data, 6, 1)
+        danaPump.shutdownHour = intFromBuff(data, 7, 1)
+        danaPump.lowReservoirRate = intFromBuff(data, 8, 1)
+        danaPump.cannulaVolume = intFromBuff(data, 9, 2)
+        danaPump.refillAmount = intFromBuff(data, 11, 2)
+        val selectableLanguage1 = intFromBuff(data, 13, 1)
+        val selectableLanguage2 = intFromBuff(data, 14, 1)
+        val selectableLanguage3 = intFromBuff(data, 15, 1)
+        val selectableLanguage4 = intFromBuff(data, 16, 1)
+        val selectableLanguage5 = intFromBuff(data, 17, 1)
+        if (data.size >= 22) // hw 7+
+            danaPump.target = intFromBuff(data, 18, 2)
         // Pump's screen on time can't be less than 5
         failed = danaPump.lcdOnTimeSec < 5
         aapsLogger.debug(LTag.PUMPCOMM, "timeDisplayType24: " + danaPump.timeDisplayType24)
@@ -77,12 +47,14 @@ class DanaRS_Packet_Option_Get_User_Option(
         aapsLogger.debug(LTag.PUMPCOMM, "Pump units: " + if (danaPump.units == DanaPump.UNITS_MGDL) "MGDL" else "MMOL")
         aapsLogger.debug(LTag.PUMPCOMM, "shutdownHour: " + danaPump.shutdownHour)
         aapsLogger.debug(LTag.PUMPCOMM, "lowReservoirRate: " + danaPump.lowReservoirRate)
+        aapsLogger.debug(LTag.PUMPCOMM, "cannulaVolume: " + danaPump.cannulaVolume)
         aapsLogger.debug(LTag.PUMPCOMM, "refillAmount: " + danaPump.refillAmount)
         aapsLogger.debug(LTag.PUMPCOMM, "selectableLanguage1: $selectableLanguage1")
         aapsLogger.debug(LTag.PUMPCOMM, "selectableLanguage2: $selectableLanguage2")
         aapsLogger.debug(LTag.PUMPCOMM, "selectableLanguage3: $selectableLanguage3")
         aapsLogger.debug(LTag.PUMPCOMM, "selectableLanguage4: $selectableLanguage4")
         aapsLogger.debug(LTag.PUMPCOMM, "selectableLanguage5: $selectableLanguage5")
+        aapsLogger.debug(LTag.PUMPCOMM, "target: ${if (danaPump.units == DanaPump.UNITS_MGDL) danaPump.target else danaPump.target / 100}")
     }
 
     override fun getFriendlyName(): String {
