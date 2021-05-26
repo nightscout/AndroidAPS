@@ -51,7 +51,7 @@ abstract class SatlMessage {
 
     private fun serializeCTR(nonce: ByteBuf, key: ByteArray, commandId: Byte): ByteBuf {
         val data = data
-        val encryptedData = ByteBuf.from(Cryptograph.encryptDataCTR(data?.bytes, key, nonce.bytes))
+        val encryptedData = ByteBuf.from(Cryptograph.encryptDataCTR(data!!.bytes, key, nonce.bytes))
         val length = 29 + encryptedData.size
         val byteBuf = ByteBuf(length + 8)
         byteBuf.putUInt32LE(PREAMBLE)
@@ -63,7 +63,7 @@ abstract class SatlMessage {
         byteBuf.putUInt32LE(commID)
         byteBuf.putByteBuf(nonce)
         byteBuf.putByteBuf(encryptedData)
-        byteBuf.putBytes(Cryptograph.produceCCMTag(byteBuf.getBytes(16, 13), data?.bytes, byteBuf.getBytes(8, 21), key))
+        byteBuf.putBytes(Cryptograph.produceCCMTag(byteBuf.getBytes(16, 13), data.bytes, byteBuf.getBytes(8, 21), key))
         return byteBuf
     }
 

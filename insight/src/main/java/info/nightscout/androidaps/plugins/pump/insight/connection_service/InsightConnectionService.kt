@@ -632,7 +632,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
                 activateServiceMessage.version = service.version
             }
             if (service != null) {
-                activateServiceMessage.servicePassword = Cryptograph.getServicePasswordHash(service.servicePassword, serviceChallengeMessage.randomData)
+                service?.run { servicePassword?.let { activateServiceMessage.servicePassword = Cryptograph.getServicePasswordHash(it, serviceChallengeMessage.randomData) } }
             }
             sendAppLayerMessage(activateServiceMessage)
         }
