@@ -202,10 +202,8 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
     @Synchronized fun requestConnection(lock: Any) {
         if (connectionRequests.contains(lock)) return
         connectionRequests.add(lock)
-        if (disconnectTimer != null) {
-            disconnectTimer!!.interrupt()
-            disconnectTimer = null
-        }
+        disconnectTimer?.interrupt()
+        disconnectTimer = null
         if (state === InsightState.DISCONNECTED && pairingDataStorage!!.isPaired) {
             recoveryDuration = 0
             timeoutDuringHandshakeCounter = 0
@@ -218,7 +216,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
         connectionRequests.remove(lock)
         if (connectionRequests.size == 0) {
             if (state === InsightState.RECOVERING) {
-                recoveryTimer!!.interrupt()
+                recoveryTimer?.interrupt()
                 recoveryTimer = null
                 setState(InsightState.DISCONNECTED)
                 cleanup(true)
@@ -239,33 +237,23 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
     private fun cleanup(closeSocket: Boolean) {
         messageQueue.completeActiveRequest(ConnectionLostException())
         messageQueue.completePendingRequests(ConnectionLostException())
-        if (recoveryTimer != null) {
-            recoveryTimer!!.interrupt()
-            recoveryTimer = null
-        }
-        if (disconnectTimer != null) {
-            disconnectTimer!!.interrupt()
-            disconnectTimer = null
-        }
-        if (inputStreamReader != null) {
-            inputStreamReader!!.close()
-            inputStreamReader = null
-        }
-        if (outputStreamWriter != null) {
-            outputStreamWriter!!.close()
-            outputStreamWriter = null
-        }
-        if (connectionEstablisher != null) {
+        recoveryTimer?.interrupt()
+        recoveryTimer = null
+        disconnectTimer?.interrupt()
+        disconnectTimer = null
+        inputStreamReader?.close()
+        inputStreamReader = null
+        outputStreamWriter?.close()
+        outputStreamWriter = null
+        connectionEstablisher?.run {
             if (closeSocket) {
-                connectionEstablisher!!.close(closeSocket)
+                close(closeSocket)
                 bluetoothSocket = null
             }
-            connectionEstablisher = null
         }
-        if (timeoutTimer != null) {
-            timeoutTimer!!.interrupt()
-            timeoutTimer = null
-        }
+        connectionEstablisher = null
+        timeoutTimer?.interrupt()
+        timeoutTimer = null
         buffer.clear()
         verificationString = null
         keyPair = null
@@ -326,20 +314,20 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
             sendSatlMessageAndWait(info.nightscout.androidaps.plugins.pump.insight.satl.DisconnectMessage())
         }
         cleanup(true)
-        setState(if (pairingDataStorage!!.isPaired) InsightState.DISCONNECTED else InsightState.NOT_PAIRED)
+        pairingDataStorage?.run { setState(if (isPaired) InsightState.DISCONNECTED else InsightState.NOT_PAIRED) }
     }
 
     @Synchronized fun reset() {
-        pairingDataStorage!!.reset()
+        pairingDataStorage?.reset()
         disconnect()
     }
 
     @Synchronized fun pair(macAddress: String?) {
-        check(!pairingDataStorage!!.isPaired) { "Pump must be unbonded first." }
+        pairingDataStorage?.run { check(isPaired) { "Pump must be unbonded first." } }
         check(connectionRequests.size != 0) { "A connection lock must be hold for pairing" }
         aapsLogger.info(LTag.PUMP, "Pairing initiated")
         cleanup(true)
-        pairingDataStorage!!.macAddress = macAddress
+        pairingDataStorage?.macAddress = macAddress
         connect()
     }
 
@@ -408,22 +396,20 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
         return serialized.bytes
     }
 
-    private fun sendSatlMessage(satlMessage: SatlMessage) {
-        if (outputStreamWriter == null) return
-        outputStreamWriter!!.write(prepareSatlMessage(satlMessage))
+    private fun sendSatlMessage(satlMessage: SatlMessage?) {
+        outputStreamWriter?.write(satlMessage?.let { prepareSatlMessage(it) })
     }
 
-    private fun sendSatlMessageAndWait(satlMessage: SatlMessage) {
-        if (outputStreamWriter == null) return
-        outputStreamWriter!!.writeAndWait(prepareSatlMessage(satlMessage))
+    private fun sendSatlMessageAndWait(satlMessage: SatlMessage?) {
+        outputStreamWriter?.writeAndWait(satlMessage?.let { prepareSatlMessage(it) })
     }
 
     private fun processSatlMessage(satlMessage: SatlMessage?) {
-        if (timeoutTimer != null) {
-            timeoutTimer!!.interrupt()
-            timeoutTimer = null
+        timeoutTimer?.interrupt()
+        timeoutTimer = null
+        if (satlMessage != null) {
+            pairingDataStorage?.lastNonceReceived = satlMessage.nonce
         }
-        pairingDataStorage!!.lastNonceReceived = satlMessage!!.nonce
         if (satlMessage is ConnectionResponse) processConnectionResponse() else if (satlMessage is KeyResponse) processKeyResponse(satlMessage) else if (satlMessage is VerifyDisplayResponse) processVerifyDisplayResponse() else if (satlMessage is VerifyConfirmResponse) processVerifyConfirmResponse(satlMessage) else if (satlMessage is DataMessage) processDataMessage(satlMessage) else if (satlMessage is SynAckResponse) processSynAckResponse() else if (satlMessage is ErrorMessage) processErrorMessage(satlMessage) else handleException(InvalidSatlCommandException())
     }
 
@@ -433,10 +419,10 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
             return
         }
         keyRequest = KeyRequest()
-        keyRequest!!.setPreMasterKey(getKeyPair()!!.publicKeyBytes)
-        keyRequest!!.setRandomBytes(getRandomBytes())
+        getKeyPair()?.run { keyRequest?.setPreMasterKey(publicKeyBytes) }
+        keyRequest?.setRandomBytes(getRandomBytes())
         setState(InsightState.SATL_KEY_REQUEST)
-        sendSatlMessage(keyRequest!!)
+        sendSatlMessage(keyRequest)
     }
 
     private fun processKeyResponse(keyResponse: KeyResponse) {
