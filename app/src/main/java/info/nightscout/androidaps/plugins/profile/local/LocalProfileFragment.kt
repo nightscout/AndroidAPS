@@ -70,7 +70,7 @@ class LocalProfileFragment : DaggerFragment() {
     }
 
     private fun sumLabel(): String {
-        val profile = localProfilePlugin.createProfileStore().getDefaultProfile()
+        val profile = localProfilePlugin.profile?.getDefaultProfile()
         val sum = profile?.let { ProfileSealed.Pure(profile).baseBasalSum() } ?: 0.0
         return " ∑" + DecimalFormatter.to2Decimal(sum) + resourceHelper.gs(R.string.insulin_unit_shortname)
     }
