@@ -169,12 +169,11 @@ enum class MedtronicCommandType(
     var allowedRetries = 2
 
     //var maxAllowedTime = 2000
-    //var parameterType: MinimedCommandParameterType? = parameterType
     var minimalBufferSizeToStartReading = 14
 
     init {
         commandCode = code.toByte()
-        this.commandParametersCount = if (commandParameters != null) commandParameters!!.size else 0
+        this.commandParametersCount = commandParameters?.size ?: 0
         allowedRetries = 2
         if (this.parameterType == MinimedCommandParameterType.SubCommands) {
             minimalBufferSizeToStartReading = 200
