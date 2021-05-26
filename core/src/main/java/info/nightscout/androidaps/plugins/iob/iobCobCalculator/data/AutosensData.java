@@ -108,7 +108,7 @@ public class AutosensData implements DataPointWithLabelInterface {
     @NonNull @Override
     public String toString() {
         return String.format(Locale.ENGLISH, "AutosensData: %s pastSensitivity=%s  delta=%.02f  avgDelta=%.02f bgi=%.02f deviation=%.02f avgDeviation=%.02f absorbed=%.02f carbsFromBolus=%.02f cob=%.02f autosensRatio=%.02f slopeFromMaxDeviation=%.02f slopeFromMinDeviation=%.02f activeCarbsList=%s",
-                dateUtil.dateAndTimeString(time), pastSensitivity, delta, avgDelta, bgi, deviation, avgDeviation, absorbed, carbsFromBolus, cob, autosensResult.ratio, slopeFromMaxDeviation, slopeFromMinDeviation, activeCarbsList.toString());
+                dateUtil.dateAndTimeString(time), pastSensitivity, delta, avgDelta, bgi, deviation, avgDeviation, absorbed, carbsFromBolus, cob, autosensResult.getRatio(), slopeFromMaxDeviation, slopeFromMinDeviation, activeCarbsList.toString());
     }
 
     public List<CarbsInPast> cloneCarbsList() {
