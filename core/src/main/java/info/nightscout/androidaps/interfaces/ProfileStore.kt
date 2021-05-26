@@ -31,6 +31,15 @@ class ProfileStore(val injector: HasAndroidInjector, val data: JSONObject, val d
         return null
     }
 
+    fun getStartDate(): Long {
+        val iso = JsonHelper.safeGetString(data, "startDate") ?: return 0
+        return try {
+            dateUtil.fromISODateString(iso)
+        } catch (e: Exception) {
+            0
+        }
+    }
+
     fun getDefaultProfile(): PureProfile? = getDefaultProfileName()?.let { getSpecificProfile(it) }
     fun getDefaultProfileJson(): JSONObject? = getDefaultProfileName()?.let { getSpecificProfileJson(it) }
 

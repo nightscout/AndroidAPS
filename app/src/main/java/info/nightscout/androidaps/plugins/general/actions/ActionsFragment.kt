@@ -29,7 +29,7 @@ import info.nightscout.androidaps.events.EventTherapyEventChange
 import info.nightscout.androidaps.extensions.toStringMedium
 import info.nightscout.androidaps.extensions.toStringShort
 import info.nightscout.androidaps.extensions.toVisibility
-import info.nightscout.androidaps.historyBrowser.HistoryBrowseActivity
+import info.nightscout.androidaps.activities.HistoryBrowseActivity
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Config

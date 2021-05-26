@@ -104,7 +104,8 @@ class ProfileFunctionImplementation @Inject constructor(
             timeshift = T.hours(timeShiftInHours.toLong()).msecs(),
             percentage = percentage,
             duration = T.mins(durationInMinutes.toLong()).msecs(),
-            insulinConfiguration = activePlugin.activeInsulin.insulinConfiguration)
+            insulinConfiguration = activePlugin.activeInsulin.insulinConfiguration.also { it.insulinEndTime = (pureProfile.dia * 3600 * 1000).toLong() }
+        )
         disposable += repository.runTransactionForResult(InsertOrUpdateProfileSwitch(ps))
             .subscribe({ result ->
                 result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted ProfileSwitch $it") }

@@ -73,7 +73,7 @@
                 android:layout_weight="1">
 
                 <com.jjoe64.graphview.GraphView
-                    android:id="@+id/bggraph"
+                    android:id="@+id/bg_graph"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent" />
 

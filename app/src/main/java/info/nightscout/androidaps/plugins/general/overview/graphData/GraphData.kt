@@ -28,16 +28,16 @@ import kotlin.math.max
 
 class GraphData(
     injector: HasAndroidInjector,
-    private val graph: GraphView
+    private val graph: GraphView,
+    private val overviewData: OverviewData
 ) {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
-    @Inject lateinit var overviewData: OverviewData
 
-    var maxY = Double.MIN_VALUE
+    private var maxY = Double.MIN_VALUE
     private var minY = Double.MAX_VALUE
     private val units: GlucoseUnit
     private val series: MutableList<Series<*>> = ArrayList()
@@ -79,7 +79,7 @@ class GraphData(
         addSeries(overviewData.tempBasalGraphSeries)
         addSeries(overviewData.basalLineGraphSeries)
         addSeries(overviewData.absoluteBasalGraphSeries)
-        overviewData.basalScale.setMultiplier(maxY * scale / overviewData.maxBasalValueFound)
+        overviewData.basalScale.multiplier = maxY * scale / overviewData.maxBasalValueFound
     }
 
     fun addTargetLine() {
@@ -94,7 +94,7 @@ class GraphData(
     fun addActivity(scale: Double) {
         addSeries(overviewData.activitySeries)
         addSeries(overviewData.activityPredictionSeries)
-        overviewData.actScale.setMultiplier(maxY * scale / overviewData.maxIAValue)
+        overviewData.actScale.multiplier = maxY * scale / overviewData.maxIAValue
     }
 
     //Function below show -BGI to be able to compare curves with deviations
@@ -103,7 +103,7 @@ class GraphData(
             maxY = overviewData.maxBGIValue
             minY = -overviewData.maxBGIValue
         }
-        overviewData.bgiScale.setMultiplier(maxY * scale / overviewData.maxBGIValue)
+        overviewData.bgiScale.multiplier = maxY * scale / overviewData.maxBGIValue
         addSeries(overviewData.minusBgiSeries)
         addSeries(overviewData.minusBgiHistSeries)
     }
@@ -114,7 +114,7 @@ class GraphData(
             maxY = overviewData.maxIobValueFound
             minY = -overviewData.maxIobValueFound
         }
-        overviewData.iobScale.setMultiplier(maxY * scale / overviewData.maxIobValueFound)
+        overviewData.iobScale.multiplier = maxY * scale / overviewData.maxIobValueFound
         addSeries(overviewData.iobSeries)
         addSeries(overviewData.iobPredictions1Series)
         addSeries(overviewData.iobPredictions2Series)
@@ -126,7 +126,7 @@ class GraphData(
             maxY = overviewData.maxIobValueFound
             minY = -overviewData.maxIobValueFound
         }
-        overviewData.iobScale.setMultiplier(maxY * scale / overviewData.maxIobValueFound)
+        overviewData.iobScale.multiplier = maxY * scale / overviewData.maxIobValueFound
         addSeries(overviewData.absIobSeries)
     }
 
@@ -136,7 +136,7 @@ class GraphData(
             maxY = overviewData.maxCobValueFound
             minY = 0.0
         }
-        overviewData.cobScale.setMultiplier(maxY * scale / overviewData.maxCobValueFound)
+        overviewData.cobScale.multiplier = maxY * scale / overviewData.maxCobValueFound
         addSeries(overviewData.cobSeries)
         addSeries(overviewData.cobMinFailOverSeries)
     }
@@ -147,7 +147,7 @@ class GraphData(
             maxY = overviewData.maxDevValueFound
             minY = -maxY
         }
-        overviewData.devScale.setMultiplier(maxY * scale / overviewData.maxDevValueFound)
+        overviewData.devScale.multiplier = maxY * scale / overviewData.maxDevValueFound
         addSeries(overviewData.deviationsSeries)
     }
 
@@ -156,9 +156,9 @@ class GraphData(
         if (useForScale) {
             maxY = 100.0 + max(overviewData.maxRatioValueFound, abs(overviewData.minRatioValueFound))
             minY = 100.0 - max(overviewData.maxRatioValueFound, abs(overviewData.minRatioValueFound))
-            overviewData.ratioScale.setMultiplier(1.0)
+            overviewData.ratioScale.multiplier = 1.0
         } else
-            overviewData.ratioScale.setMultiplier(maxY * scale / max(overviewData.maxRatioValueFound, abs(overviewData.minRatioValueFound)))
+            overviewData.ratioScale.multiplier = maxY * scale / max(overviewData.maxRatioValueFound, abs(overviewData.minRatioValueFound))
         addSeries(overviewData.ratioSeries)
     }
 
@@ -168,8 +168,8 @@ class GraphData(
             maxY = max(overviewData.maxFromMaxValueFound, overviewData.maxFromMinValueFound)
             minY = -maxY
         }
-        overviewData.dsMaxScale.setMultiplier(maxY * scale / overviewData.maxFromMaxValueFound)
-        overviewData.dsMinScale.setMultiplier(maxY * scale / overviewData.maxFromMinValueFound)
+        overviewData.dsMaxScale.multiplier = maxY * scale / overviewData.maxFromMaxValueFound
+        overviewData.dsMinScale.multiplier = maxY * scale / overviewData.maxFromMinValueFound
         addSeries(overviewData.dsMaxSeries)
         addSeries(overviewData.dsMinSeries)
     }
@@ -204,7 +204,7 @@ class GraphData(
         graph.gridLabelRenderer.numHorizontalLabels = 7 // only 7 because of the space
     }
 
-    internal fun addSeries(s: Series<*>) = series.add(s)
+    private fun addSeries(s: Series<*>) = series.add(s)
 
     fun performUpdate() {
         // clear old data
