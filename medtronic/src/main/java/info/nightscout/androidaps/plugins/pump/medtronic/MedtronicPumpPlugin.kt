@@ -108,7 +108,8 @@ class MedtronicPumpPlugin @Inject constructor(
     private var lastPumpHistoryEntry: PumpHistoryEntry? = null
     private val busyTimestamps: MutableList<Long> = ArrayList()
     private var hasTimeDateOrTimeZoneChanged = false
-    private val usePumpSync = false
+    private var isBusy = false
+    private val displayConnectionMessages = false
 
     override fun onStart() {
         aapsLogger.debug(LTag.PUMP, deviceID() + " started.")
@@ -1125,7 +1126,7 @@ class MedtronicPumpPlugin @Inject constructor(
     }
 
     override fun executeCustomAction(customActionType: CustomActionType) {
-        val mcat = customActionType as MedtronicCustomActionType
+        val mcat = customActionType as? MedtronicCustomActionType
         when (mcat) {
             MedtronicCustomActionType.WakeUpAndTune               -> {
                 if (rileyLinkMedtronicService.verifyConfiguration()) {
@@ -1143,6 +1144,10 @@ class MedtronicPumpPlugin @Inject constructor(
 
             MedtronicCustomActionType.ResetRileyLinkConfiguration -> {
                 serviceTaskExecutor.startTask(ResetRileyLinkConfigurationTask(injector))
+            }
+
+            null                                                  -> {
+
             }
         }
     }
@@ -1165,12 +1170,4 @@ class MedtronicPumpPlugin @Inject constructor(
         refreshCustomActionsList()
     }
 
-    companion object {
-
-        var isBusy = false
-    }
-
-    init {
-        displayConnectionMessages = false
-    }
 }

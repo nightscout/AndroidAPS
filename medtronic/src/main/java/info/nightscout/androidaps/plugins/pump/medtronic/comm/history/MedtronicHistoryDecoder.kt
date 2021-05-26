@@ -62,7 +62,7 @@ abstract class MedtronicHistoryDecoder<T : MedtronicHistoryEntry?>(var aapsLogge
         }
     }
 
-    protected fun addToStatistics(pumpHistoryEntry: MedtronicHistoryEntryInterface, status: RecordDecodeStatus?, opCode: Int?) {
+    protected fun addToStatistics(pumpHistoryEntry: MedtronicHistoryEntryInterface, status: RecordDecodeStatus, opCode: Int?) {
         if (!statisticsEnabled) return
         if (opCode != null) {
             if (!unknownOpCodes.containsKey(opCode)) {

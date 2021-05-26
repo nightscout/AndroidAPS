@@ -67,11 +67,6 @@ abstract class MedtronicHistoryEntry : MedtronicHistoryEntryInterface {
             field = value
         }
 
-    // fun setLinkedObject(linkedObject: Any?) {
-    //     linked = true
-    //     this.linkedObject = linkedObject
-    // }
-
     abstract fun generatePumpId(): Long
 
     abstract fun isEntryTypeSet(): Boolean
@@ -125,10 +120,6 @@ abstract class MedtronicHistoryEntry : MedtronicHistoryEntryInterface {
 
     val isNoDataEntry: Boolean
         get() = sizes[0] == 2 && sizes[1] == 5 && sizes[2] == 0
-
-    // fun getDecodedData(): Map<String, Any?>? {
-    //     return decodedData
-    // }
 
     fun getDecodedDataEntry(key: String?): Any? {
         return if (decodedData.containsKey(key)) decodedData[key] else null

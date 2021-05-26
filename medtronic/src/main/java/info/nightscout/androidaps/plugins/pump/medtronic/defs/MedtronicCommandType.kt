@@ -165,8 +165,6 @@ enum class MedtronicCommandType {
         }
 
         init {
-            RFPowerOn.maxAllowedTime = 17000
-            RFPowerOn.allowedRetries = 0
             RFPowerOn.recordLength = 0
             RFPowerOn.minimalBufferSizeToStartReading = 1
             for (medtronicCommandType in values()) {
@@ -183,7 +181,8 @@ enum class MedtronicCommandType {
     var resourceId: Int? = null
         private set
     var allowedRetries = 2
-    var maxAllowedTime = 2000
+
+    //var maxAllowedTime = 2000
     var parameterType: MinimedCommandParameterType? = null
     var minimalBufferSizeToStartReading = 14
     var expectedLength = 0
@@ -201,14 +200,21 @@ enum class MedtronicCommandType {
     }
 
     // NEW
-    constructor(code: Int, description: String, devices: MedtronicDeviceType?,  //
-                parameterType: MinimedCommandParameterType?, expectedLength: Int) : this(code, description, devices, parameterType, 64, 1, expectedLength, null) {
-    }
+    // constructor(code: Int,
+    //             description: String,
+    //             devices: MedtronicDeviceType?,  //
+    //             parameterType: MinimedCommandParameterType?,
+    //             expectedLength: Int) : this(code, description, devices, parameterType, 64, 1, expectedLength, null) {
+    // }
 
     // NEW
-    constructor(code: Int, description: String, devices: MedtronicDeviceType?,  //
-                parameterType: MinimedCommandParameterType?, expectedLength: Int, resourceId: Int) : this(code, description, devices, parameterType, 64, 1, expectedLength, resourceId) {
-    }
+    // constructor(code: Int,
+    //             description: String,
+    //             devices: MedtronicDeviceType?,  //
+    //             parameterType: MinimedCommandParameterType?,
+    //             expectedLength: Int,
+    //             resourceId: Int) : this(code, description, devices, parameterType, 64, 1, expectedLength, resourceId) {
+    // }
 
     // NEW
     constructor(code: Int,
@@ -222,7 +228,6 @@ enum class MedtronicCommandType {
         commandCode = code.toByte()
         commandDescription = description
         this.devices = devices
-        this.recordLength = recordLength
         maxRecords = max_recs
         this.resourceId = resourceId
         commandParametersCount = 0
@@ -233,26 +238,6 @@ enum class MedtronicCommandType {
             minimalBufferSizeToStartReading = 200
         }
     }
-
-    // @Deprecated("")
-    // constructor(code: Int, description: String, devices: MedtronicDeviceType?,  //
-    //                      parameterType: MinimedCommandParameterType?, recordLength: Int, max_recs: Int, addy: Int,  //
-    //                      addy_len: Int, cmd_type: Int, expectedLength: Int) {
-    //     commandCode = code.toByte()
-    //     commandDescription = description
-    //     //this.targetType = targetType;
-    //     this.devices = devices
-    //     this.recordLength = recordLength
-    //     maxRecords = max_recs
-    //     command_type = cmd_type
-    //     commandParametersCount = 0
-    //     allowedRetries = 2
-    //     this.parameterType = parameterType
-    //     this.expectedLength = expectedLength
-    //     if (this.parameterType == MinimedCommandParameterType.SubCommands) {
-    //         minimalBufferSizeToStartReading = 200
-    //     }
-    // }
 
     override fun toString(): String {
         return name

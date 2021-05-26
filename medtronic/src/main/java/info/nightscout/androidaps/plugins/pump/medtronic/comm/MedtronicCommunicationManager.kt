@@ -444,32 +444,6 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
         }
     }
 
-    // private fun <T> sendAndGetResponseWithCheck(commandType: MedtronicCommandType, bodyData: ByteArray, clazz: Class<T>): T? {
-    //     aapsLogger.debug(LTag.PUMPCOMM, "getDataFromPump: $commandType")
-    //     for (retries in 0 until MAX_COMMAND_TRIES) {
-    //         try {
-    //             val response = sendAndGetResponse(commandType, bodyData, DEFAULT_TIMEOUT + DEFAULT_TIMEOUT * retries)
-    //             val check = checkResponseContent(response, commandType.commandDescription, commandType.expectedLength)
-    //             if (check == null) {
-    //                 val dataResponse = medtronicConverter!!.convertResponse(medtronicPumpPlugin!!.pumpDescription.pumpType, commandType, response.rawContent) as T?
-    //                 if (dataResponse != null) {
-    //                     errorResponse = null
-    //                     aapsLogger.debug(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "Converted response for %s is %s.", commandType.name, dataResponse))
-    //                     return dataResponse
-    //                 } else {
-    //                     errorResponse = "Error decoding response."
-    //                 }
-    //             } else {
-    //                 errorResponse = check
-    //                 // return null;
-    //             }
-    //         } catch (e: RileyLinkCommunicationException) {
-    //             aapsLogger.warn(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "Error getting response from RileyLink (error=%s, retry=%d)", e.message, retries + 1))
-    //         }
-    //     }
-    //     return null
-    // }
-
     private fun checkResponseContent(response: PumpMessage, method: String, expectedLength: Int): String? {
         if (!response.isValid) {
             val responseData = String.format("%s: Invalid response.", method)
