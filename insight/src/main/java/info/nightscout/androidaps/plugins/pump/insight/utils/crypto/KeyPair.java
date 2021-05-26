@@ -22,7 +22,7 @@ public class KeyPair {
         return this.privateKey;
     }
 
-    public RSAKeyParameters getPublicKey() {
-        return this.publicKey;
-    }
+    //public RSAKeyParameters getPublicKey() {
+    //    return this.publicKey;
+    //}
 }
