@@ -109,7 +109,6 @@ class MedtronicPumpPlugin @Inject constructor(
     private val busyTimestamps: MutableList<Long> = ArrayList()
     private var hasTimeDateOrTimeZoneChanged = false
     private var isBusy = false
-    private val displayConnectionMessages = false
 
     override fun onStart() {
         aapsLogger.debug(LTag.PUMP, deviceID() + " started.")
@@ -167,7 +166,9 @@ class MedtronicPumpPlugin @Inject constructor(
         }
         migrateSettings()
 
-        pumpSyncStorage.initStorage();
+        pumpSyncStorage.initStorage()
+
+        this.displayConnectionMessages = false
     }
 
     override fun triggerPumpConfigurationChangedEvent() {

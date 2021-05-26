@@ -104,6 +104,7 @@
     <string name="medtronic_cmd_desc_set_basal_profile">Set Basal Profile</string>
     <string name="medtronic_cmd_desc_get_tbr">Get Temporary Basal</string>
     <string name="medtronic_cmd_desc_set_tbr">Set Temporary Basal</string>
+    <string name="medtronic_cmd_desc_cancel_tbr">Cancel Temporary Basal</string>
     <string name="medtronic_cmd_desc_set_bolus">Set Bolus</string>
     <string name="medtronic_cmd_desc_get_remaining_insulin">Get Remaining Insulin</string>
 

@@ -25,25 +25,34 @@ import java.util.*
  *
  * Author: Andy {andy@atech-software.com}
  */
-enum class MedtronicCommandType {
+enum class MedtronicCommandType(
+    code: Int,
+    description: String,
+    var devices: MedtronicDeviceType = MedtronicDeviceType.All,
+    var parameterType: MinimedCommandParameterType = MinimedCommandParameterType.NoParameters,
+    var recordLength: Int = 64,
+    var maxRecords: Int = 1,
+    var expectedLength: Int = 0,
+    var resourceId: Int? = null,
+    var commandParameters: ByteArray? = null) {
 
-    InvalidCommand(0, "Invalid Command", null, null),  //
+    InvalidCommand(code = 0, description = "Invalid Command"),  //
 
     // Pump Responses (9)
-    CommandACK(0x06, "ACK - Acknowledge", MedtronicDeviceType.All, MinimedCommandParameterType.NoParameters),  //
-    CommandNAK(0x15, "NAK - Not Acknowledged", MedtronicDeviceType.All, MinimedCommandParameterType.NoParameters),  //
+    CommandACK(code = 0x06, description = "ACK - Acknowledge"),  //
+    CommandNAK(code = 0x15, description = "NAK - Not Acknowledged"),  //
 
     // All (8)
-    PushAck(91, "Push ACK", MedtronicDeviceType.All, MinimedCommandParameterType.FixedParameters, byteArrayOf(2)),  //
-    PushEsc(91, "Push Esc", MedtronicDeviceType.All, MinimedCommandParameterType.FixedParameters, byteArrayOf(1)),  //
-    PushButton(0x5b, "Push Button", MedtronicDeviceType.All, MinimedCommandParameterType.NoParameters),  // 91
-    RFPowerOn(93, "RF Power On", MedtronicDeviceType.All, MinimedCommandParameterType.FixedParameters, byteArrayOf(1, 10)),  //
-    RFPowerOff(93, "RF Power Off", MedtronicDeviceType.All, MinimedCommandParameterType.FixedParameters, byteArrayOf(0, 0)),  //
+    PushAck(code = 91, description = "Push ACK", parameterType = MinimedCommandParameterType.FixedParameters, commandParameters = byteArrayOf(2)),  //
+    PushEsc(code = 91, description = "Push Esc", parameterType = MinimedCommandParameterType.FixedParameters, commandParameters = byteArrayOf(1)),  //
+    PushButton(code = 0x5b, description = "Push Button"),  // 91
+    RFPowerOn(code = 93, description = "RF Power On", parameterType = MinimedCommandParameterType.FixedParameters, commandParameters = byteArrayOf(1, 10)),  //
+    RFPowerOff(code = 93, description = "RF Power Off", parameterType = MinimedCommandParameterType.FixedParameters, commandParameters = byteArrayOf(0, 0)),  //
 
     // SetSuspend(77, "Set Suspend", MinimedTargetType.InitCommand, MedtronicDeviceType.All, MinimedCommandParameterType.FixedParameters, getByteArray(1)), //
     // CancelSuspend(77, "Cancel Suspend", MinimedTargetType.InitCommand, MedtronicDeviceType.All,MinimedCommandParameterType.FixedParameters, getByteArray(0)), //
-    PumpState(131, "Pump State", MedtronicDeviceType.All, MinimedCommandParameterType.NoParameters),  //
-    ReadPumpErrorStatus(117, "Pump Error Status", MedtronicDeviceType.All, MinimedCommandParameterType.NoParameters),  //
+    PumpState(code = 131, description = "Pump State"),  //
+    ReadPumpErrorStatus(code = 117, description = "Pump Error Status"),  //
 
     // 511 (InitCommand = 2, Config 7, Data = 1(+3)
     //    DetectBolus(75, "Detect Bolus", MedtronicDeviceType.Medtronic_511, MinimedCommandParameterType.FixedParameters, getByteArray(
@@ -51,24 +60,20 @@ enum class MedtronicCommandType {
     // RemoteControlIds(118, "Remote Control Ids", MinimedTargetType.PumpConfiguration_NA, MedtronicDeviceType.All,MinimedCommandParameterType.NoParameters), //
     // FirmwareVersion(116, "Firmware Version", MinimedTargetType.InitCommand, MedtronicDeviceType.All,MinimedCommandParameterType.NoParameters), //
     // PumpId(113, "Pump Id", MinimedTargetType.PumpConfiguration, MedtronicDeviceType.All,MinimedCommandParameterType.NoParameters), // init
-    SetRealTimeClock(0x40, "Set Pump Time", MedtronicDeviceType.All, MinimedCommandParameterType.NoParameters,  //
-        0, R.string.medtronic_cmd_desc_set_time),  //
-    GetRealTimeClock(112, "Get Pump Time", MedtronicDeviceType.All, MinimedCommandParameterType.NoParameters,  //
-        7, R.string.medtronic_cmd_desc_get_time),  // 0x70
-    GetBatteryStatus(0x72, "Get Battery Status", MedtronicDeviceType.All, MinimedCommandParameterType.NoParameters,
-        0, R.string.medtronic_cmd_desc_get_battery_status), //
-    GetRemainingInsulin(0x73, "Read Remaining Insulin", MedtronicDeviceType.All, MinimedCommandParameterType.NoParameters,
-        2, R.string.medtronic_cmd_desc_get_remaining_insulin),  // 115
-    SetBolus(0x42, "Set Bolus", MedtronicDeviceType.All, MinimedCommandParameterType.NoParameters,  //
-        0, R.string.medtronic_cmd_desc_set_bolus),  // 66
+    SetRealTimeClock(code = 0x40, description = "Set Pump Time", recordLength = 0, resourceId = R.string.medtronic_cmd_desc_set_time),  //
+    GetRealTimeClock(112, description = "Get Pump Time", recordLength = 7, resourceId = R.string.medtronic_cmd_desc_get_time),  // 0x70
+    GetBatteryStatus(code = 0x72, description = "Get Battery Status", recordLength = 0, resourceId = R.string.medtronic_cmd_desc_get_battery_status), //
+    GetRemainingInsulin(code = 0x73, description = "Read Remaining Insulin",
+        recordLength = 2, resourceId = R.string.medtronic_cmd_desc_get_remaining_insulin),  // 115
+    SetBolus(code = 0x42, description = "Set Bolus", recordLength = 0, resourceId = R.string.medtronic_cmd_desc_set_bolus),  // 66
 
     // 512
-    ReadTemporaryBasal(0x98, "Read Temporary Basal", MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters,  //
-        5, R.string.medtronic_cmd_desc_get_tbr),  // 152
-    SetTemporaryBasal(76, "Set Temporay Basal", MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters,  //
-        0, R.string.medtronic_cmd_desc_set_tbr),  // 512 Config
-    PumpModel(141, "Pump Model", MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters,  //
-        5, R.string.medtronic_cmd_desc_get_model),  // 0x8D
+    ReadTemporaryBasal(code = 0x98, description = "Read Temporary Basal", devices = MedtronicDeviceType.Medtronic_512andHigher,  //
+        recordLength = 5, resourceId = R.string.medtronic_cmd_desc_get_tbr),  // 152
+    SetTemporaryBasal(code = 76, description = "Set Temporay Basal", devices = MedtronicDeviceType.Medtronic_512andHigher, //
+        recordLength = 0, resourceId = R.string.medtronic_cmd_desc_set_tbr),  // 512 Config
+    PumpModel(code = 141, description = "Pump Model", devices = MedtronicDeviceType.Medtronic_512andHigher,   //
+        recordLength = 5, resourceId = R.string.medtronic_cmd_desc_get_model),  // 0x8D
 
     // BGTargets_512(140, "BG Targets", MinimedTargetType.PumpConfiguration, MedtronicDeviceType.Medtronic_512_712,
     // MinimedCommandParameterType.NoParameters), //
@@ -76,49 +81,44 @@ enum class MedtronicCommandType {
     // MinimedCommandParameterType.NoParameters), //
     // Language(134, "Language", MinimedTargetType.PumpConfiguration, MedtronicDeviceType.Medtronic_512andHigher,
     // MinimedCommandParameterType.NoParameters), //
-    Settings_512(145, "Configuration", MedtronicDeviceType.Medtronic_512_712, MinimedCommandParameterType.NoParameters,  //
-        64, 1, 18, R.string.medtronic_cmd_desc_get_settings),  //
+    Settings_512(code = 145, description = "Configuration", devices = MedtronicDeviceType.Medtronic_512_712,
+        expectedLength = 18, resourceId = R.string.medtronic_cmd_desc_get_settings),  //
 
     // 512 Data
-    GetHistoryData(128, "Get History", MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.SubCommands,  //
-        1024, 16, 1024, R.string.medtronic_cmd_desc_get_history),  // 0x80
-    GetBasalProfileSTD(146, "Get Profile Standard", MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters,  //
-        64, 3, 192, R.string.medtronic_cmd_desc_get_basal_profile),  // 146
-    GetBasalProfileA(147, "Get Profile A", MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters,  //
-        64, 3, 192, R.string.medtronic_cmd_desc_get_basal_profile),
-    GetBasalProfileB(148, "Get Profile B", MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters,  //
-        64, 3, 192, R.string.medtronic_cmd_desc_get_basal_profile),  // 148
-    SetBasalProfileSTD(0x6f, "Set Profile Standard", MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters,  //
-        64, 3, 192, R.string.medtronic_cmd_desc_set_basal_profile),  // 111
-    SetBasalProfileA(0x30, "Set Profile A", MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters,  //
-        64, 3, 192, R.string.medtronic_cmd_desc_set_basal_profile),  // 48
-    SetBasalProfileB(0x31, "Set Profile B", MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters,  //
-        64, 3, 192, R.string.medtronic_cmd_desc_set_basal_profile),  // 49
+    GetHistoryData(code = 128, description = "Get History", devices = MedtronicDeviceType.Medtronic_512andHigher,
+        parameterType = MinimedCommandParameterType.SubCommands, recordLength = 1024, maxRecords = 16,
+        expectedLength = 1024, resourceId = R.string.medtronic_cmd_desc_get_history),  // 0x80
+    GetBasalProfileSTD(code = 146, description = "Get Profile Standard", devices = MedtronicDeviceType.Medtronic_512andHigher,  //
+        maxRecords = 3, expectedLength = 192, resourceId = R.string.medtronic_cmd_desc_get_basal_profile),  // 146
+    GetBasalProfileA(code = 147, description = "Get Profile A", devices = MedtronicDeviceType.Medtronic_512andHigher,   //
+        maxRecords = 3, expectedLength = 192, resourceId = R.string.medtronic_cmd_desc_get_basal_profile),
+    GetBasalProfileB(code = 148, description = "Get Profile B", devices = MedtronicDeviceType.Medtronic_512andHigher,   //
+        maxRecords = 3, expectedLength = 192, resourceId = R.string.medtronic_cmd_desc_get_basal_profile),  // 148
+    SetBasalProfileSTD(code = 0x6f, description = "Set Profile Standard", devices = MedtronicDeviceType.Medtronic_512andHigher,   //
+        maxRecords = 3, expectedLength = 192, resourceId = R.string.medtronic_cmd_desc_set_basal_profile),  // 111
+    SetBasalProfileA(code = 0x30, description = "Set Profile A", devices = MedtronicDeviceType.Medtronic_512andHigher,  //
+        maxRecords = 3, expectedLength = 192, resourceId = R.string.medtronic_cmd_desc_set_basal_profile),  // 48
+    SetBasalProfileB(code = 0x31, description = "Set Profile B", devices = MedtronicDeviceType.Medtronic_512andHigher,  //
+        maxRecords = 3, expectedLength = 192, resourceId = R.string.medtronic_cmd_desc_set_basal_profile),  // 49
 
     // 515
-    PumpStatus(206, "Pump Status", MedtronicDeviceType.Medtronic_515andHigher, MinimedCommandParameterType.NoParameters),  // PumpConfiguration
-    Settings(192, "Configuration", MedtronicDeviceType.Medtronic_515andHigher, MinimedCommandParameterType.NoParameters,  //
-        64, 1, 21, R.string.medtronic_cmd_desc_get_settings),  //
+    PumpStatus(code = 206, description = "Pump Status", devices = MedtronicDeviceType.Medtronic_515andHigher),  // PumpConfiguration
+    Settings(code = 192, description = "Configuration", devices = MedtronicDeviceType.Medtronic_515andHigher,
+        maxRecords = 1, expectedLength = 21, resourceId = R.string.medtronic_cmd_desc_get_settings),  //
 
     // 522
-    SensorSettings_522(153, "Sensor Configuration", MedtronicDeviceType.Medtronic_522andHigher, MinimedCommandParameterType.NoParameters),  //
-    GlucoseHistory(154, "Glucose History", MedtronicDeviceType.Medtronic_522andHigher, MinimedCommandParameterType.SubCommands, 1024, 32, 0, null),  //
+    SensorSettings_522(code = 153, description = "Sensor Configuration", devices = MedtronicDeviceType.Medtronic_522andHigher),  //
+    GlucoseHistory(code = 154, description = "Glucose History", devices = MedtronicDeviceType.Medtronic_522andHigher,
+        MinimedCommandParameterType.SubCommands, recordLength = 1024, maxRecords = 32, expectedLength = 0),  //
 
     // 523
-    SensorSettings(207, "Sensor Configuration", MedtronicDeviceType.Medtronic_523andHigher, MinimedCommandParameterType.NoParameters),  //
+    SensorSettings(code = 207, description = "Sensor Configuration", devices = MedtronicDeviceType.Medtronic_523andHigher),  //
 
     // 553
     // 554
     // var MESSAGES = {
-    // READ_TIME : 0x70,
-    // READ_BATTERY_STATUS: 0x72,
-    // READ_HISTORY : 0x80,
     // READ_CARB_RATIOS : 0x8A,
     // READ_INSULIN_SENSITIVITIES: 0x8B,
-    // READ_MODEL : 0x8D,
-    // READ_PROFILE_STD : 0x92,
-    // READ_PROFILE_A : 0x93,
-    // READ_PROFILE_B : 0x94,
     // READ_CBG_HISTORY: 0x9A,
     // READ_ISIG_HISTORY: 0x9B,
     // READ_CURRENT_PAGE : 0x9D,
@@ -127,19 +127,11 @@ enum class MedtronicCommandType {
     // READ_CURRENT_CBG_PAGE : 0xCD
     // };
     // Fake Commands
-    CancelTBR;
+    CancelTBR(code = 250, description = "Cancel TBR", resourceId = R.string.medtronic_cmd_desc_cancel_tbr);
 
     companion object {
 
         var mapByCode: MutableMap<Byte, MedtronicCommandType> = HashMap()
-
-        // private fun getDeviceTypesArray(vararg types: MedtronicDeviceType): HashMap<MedtronicDeviceType, String?> {
-        //     val hashMap = HashMap<MedtronicDeviceType, String?>()
-        //     for (type in types) {
-        //         hashMap[type] = null
-        //     }
-        //     return hashMap
-        // }
 
         fun getByCode(code: Byte): MedtronicCommandType? {
             return if (mapByCode.containsKey(code)) {
@@ -165,8 +157,6 @@ enum class MedtronicCommandType {
         }
 
         init {
-            RFPowerOn.recordLength = 0
-            RFPowerOn.minimalBufferSizeToStartReading = 1
             for (medtronicCommandType in values()) {
                 mapByCode[medtronicCommandType.commandCode] = medtronicCommandType
             }
@@ -174,66 +164,18 @@ enum class MedtronicCommandType {
     }
 
     var commandCode: Byte = 0
-    var commandDescription = ""
-    var commandParameters: ByteArray? = null
+    var commandDescription = description
     var commandParametersCount = 0
-    var maxRecords = 1
-    var resourceId: Int? = null
-        private set
     var allowedRetries = 2
 
     //var maxAllowedTime = 2000
-    var parameterType: MinimedCommandParameterType? = null
+    //var parameterType: MinimedCommandParameterType? = parameterType
     var minimalBufferSizeToStartReading = 14
-    var expectedLength = 0
-    var devices: MedtronicDeviceType? = null
-    private var recordLength = 64
 
-    constructor() {
-        // this is for "fake" commands needed by AAPS MedtronicUITask
-    }
-
-    constructor(code: Int, description: String, devices: MedtronicDeviceType?,
-                parameterType: MinimedCommandParameterType?, cmd_params: ByteArray) : this(code, description, devices, parameterType) {
-        commandParameters = cmd_params
-        commandParametersCount = cmd_params.size
-    }
-
-    // NEW
-    // constructor(code: Int,
-    //             description: String,
-    //             devices: MedtronicDeviceType?,  //
-    //             parameterType: MinimedCommandParameterType?,
-    //             expectedLength: Int) : this(code, description, devices, parameterType, 64, 1, expectedLength, null) {
-    // }
-
-    // NEW
-    // constructor(code: Int,
-    //             description: String,
-    //             devices: MedtronicDeviceType?,  //
-    //             parameterType: MinimedCommandParameterType?,
-    //             expectedLength: Int,
-    //             resourceId: Int) : this(code, description, devices, parameterType, 64, 1, expectedLength, resourceId) {
-    // }
-
-    // NEW
-    constructor(code: Int,
-                description: String,
-                devices: MedtronicDeviceType?,  //
-                parameterType: MinimedCommandParameterType?,
-                recordLength: Int = 64,
-                max_recs: Int = 1,
-                expectedLength: Int = 0,
-                resourceId: Int? = null) {
+    init {
         commandCode = code.toByte()
-        commandDescription = description
-        this.devices = devices
-        maxRecords = max_recs
-        this.resourceId = resourceId
-        commandParametersCount = 0
+        this.commandParametersCount = if (commandParameters != null) commandParameters!!.size else 0
         allowedRetries = 2
-        this.parameterType = parameterType
-        this.expectedLength = expectedLength
         if (this.parameterType == MinimedCommandParameterType.SubCommands) {
             minimalBufferSizeToStartReading = 200
         }
