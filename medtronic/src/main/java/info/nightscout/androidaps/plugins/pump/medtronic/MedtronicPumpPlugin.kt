@@ -21,8 +21,6 @@ import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
-import info.nightscout.androidaps.plugins.pump.common.PumpPluginAbstract
-import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.common.events.EventRefreshButtonState
@@ -34,9 +32,6 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.Riley
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ResetRileyLinkConfigurationTask
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.WakeAndTuneTask
-import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryTBR
-import info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncEntriesCreator
-import info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncStorage
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
 import info.nightscout.androidaps.plugins.pump.common.utils.ProfileUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry

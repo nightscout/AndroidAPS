@@ -6,7 +6,7 @@ import android.content.ServiceConnection
 import android.text.format.DateFormat
 import com.google.gson.GsonBuilder
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.core.R
+
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.events.EventAppExit

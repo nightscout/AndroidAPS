@@ -23,7 +23,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 @Deprecated
 @DatabaseTable(tableName = "TemporaryBasals")
-public class TemporaryBasal implements Interval, DbObjectBase {
+public class TemporaryBasal implements Interval {
 
     @Inject public AAPSLogger aapsLogger;
     @Inject public ProfileFunction profileFunction;
@@ -360,12 +360,10 @@ public class TemporaryBasal implements Interval, DbObjectBase {
         }
     }
 
-    @Override
     public long getDate() {
         return this.date;
     }
 
-    @Override
     public long getPumpId() {
         return this.pumpId;
     }

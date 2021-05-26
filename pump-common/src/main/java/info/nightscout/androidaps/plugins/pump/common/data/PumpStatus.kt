@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.pump.common.data
 
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpStatusType
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
-import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntry
 import java.util.*
 
 /**
@@ -33,7 +32,7 @@ abstract class PumpStatus(var pumpType: PumpType) {
     // TDD
     var dailyTotalUnits: Double? = null
     var maxDailyTotalUnits: String? = null
-    var units : String? = null // Constants.MGDL or Constants.MMOL
+    var units: String? = null // Constants.MGDL or Constants.MMOL
     var pumpStatusType = PumpStatusType.Running
     var basalsByHour: DoubleArray? = null
     var tempBasalStart: Date? = null

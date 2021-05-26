@@ -6,7 +6,6 @@ import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.MedtronicHistoryDecoder
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RecordDecodeStatus
-import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.cgms.CGMSHistoryEntryType
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.cgms.CGMSHistoryEntryType.Companion.getByCode
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
 import okhttp3.internal.and

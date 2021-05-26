@@ -52,67 +52,67 @@ class MedtronicUITask {
     fun execute(communicationManager: MedtronicCommunicationManager) {
         aapsLogger.debug(LTag.PUMP, "MedtronicUITask: @@@ In execute. $commandType")
         when (commandType) {
-            MedtronicCommandType.PumpModel                                                 -> {
+            MedtronicCommandType.PumpModel                                   -> {
                 result = communicationManager.getPumpModel()
             }
 
-            MedtronicCommandType.GetBasalProfileSTD                                        -> {
+            MedtronicCommandType.GetBasalProfileSTD                          -> {
                 result = communicationManager.getBasalProfile()
             }
 
-            MedtronicCommandType.GetRemainingInsulin                                       -> {
+            MedtronicCommandType.GetRemainingInsulin                         -> {
                 result = communicationManager.getRemainingInsulin()
             }
 
-            MedtronicCommandType.GetRealTimeClock                                          -> {
+            MedtronicCommandType.GetRealTimeClock                            -> {
                 result = communicationManager.getPumpTime()
                 //medtronicUtil.pumpTime = null
             }
 
-            MedtronicCommandType.SetRealTimeClock                                          -> {
+            MedtronicCommandType.SetRealTimeClock                            -> {
                 result = communicationManager.setPumpTime()
             }
 
-            MedtronicCommandType.GetBatteryStatus                                          -> {
+            MedtronicCommandType.GetBatteryStatus                            -> {
                 result = communicationManager.getRemainingBattery()
             }
 
-            MedtronicCommandType.SetTemporaryBasal                                         -> {
+            MedtronicCommandType.SetTemporaryBasal                           -> {
                 val tbr = getTbrSettings()
                 if (tbr != null) {
                     result = communicationManager.setTemporaryBasal(tbr)
                 }
             }
 
-            MedtronicCommandType.ReadTemporaryBasal                                        -> {
+            MedtronicCommandType.ReadTemporaryBasal                          -> {
                 result = communicationManager.getTemporaryBasal()
             }
 
-            MedtronicCommandType.Settings, MedtronicCommandType.Settings_512               -> {
+            MedtronicCommandType.Settings, MedtronicCommandType.Settings_512 -> {
                 result = communicationManager.getPumpSettings()
             }
 
-            MedtronicCommandType.SetBolus                                                  -> {
+            MedtronicCommandType.SetBolus                                    -> {
                 val amount = getDoubleFromParameters(0)
                 if (amount != null) result = communicationManager.setBolus(amount)
             }
 
-            MedtronicCommandType.CancelTBR                                                 -> {
+            MedtronicCommandType.CancelTBR                                   -> {
                 result = communicationManager.cancelTBR()
             }
 
             MedtronicCommandType.SetBasalProfileSTD,
-            MedtronicCommandType.SetBasalProfileA -> {
+            MedtronicCommandType.SetBasalProfileA                            -> {
                 val profile = parameters!![0] as BasalProfile
                 result = communicationManager.setBasalProfile(profile)
             }
 
-            MedtronicCommandType.GetHistoryData                                            -> {
+            MedtronicCommandType.GetHistoryData                              -> {
                 result = communicationManager.getPumpHistory(parameters!![0] as PumpHistoryEntry?,
                     parameters!![1] as LocalDateTime?)
             }
 
-            else                                                                           -> {
+            else                                                             -> {
                 aapsLogger.warn(LTag.PUMP, String.format(Locale.ENGLISH, "This commandType is not supported (yet) - %s.", commandType))
                 // invalid = true;
                 responseType = MedtronicUIResponseType.Invalid

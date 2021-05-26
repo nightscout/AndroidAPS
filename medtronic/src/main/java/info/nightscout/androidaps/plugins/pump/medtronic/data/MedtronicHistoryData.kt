@@ -11,10 +11,6 @@ import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
-import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntry
-import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryCarbs
-import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryTBR
-import info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncStorage
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.MedtronicPumpHistoryDecoder

@@ -44,7 +44,6 @@ class RileyLinkStatusDeviceMedtronic : DaggerFragment(), RefreshableInterface {
         // _binding = LoopFragmentBinding.inflate(inflater, container, false)
         // return binding.root
 
-
         val rootView = inflater.inflate(R.layout.rileylink_status_device, container, false)
         adapter = RileyLinkCommandListAdapter()
         return rootView
@@ -62,12 +61,14 @@ class RileyLinkStatusDeviceMedtronic : DaggerFragment(), RefreshableInterface {
     }
 
     internal class ViewHolder {
+
         var itemTime: TextView? = null
         var itemSource: TextView? = null
         var itemDescription: TextView? = null
     }
 
     inner class RileyLinkCommandListAdapter : BaseAdapter() {
+
         private val historyItemList: MutableList<RLHistoryItem>
         private val mInflator: LayoutInflater
         fun addItem(item: RLHistoryItem) {
@@ -113,12 +114,12 @@ class RileyLinkStatusDeviceMedtronic : DaggerFragment(), RefreshableInterface {
             val viewHolder: ViewHolder
             // General ListView optimization code.
 //            if (view == null) {
-                view = mInflator.inflate(R.layout.rileylink_status_device_item, null)
-                viewHolder = ViewHolder()
-                viewHolder.itemTime = view.findViewById(R.id.rileylink_history_time)
-                viewHolder.itemSource = view.findViewById(R.id.rileylink_history_source)
-                viewHolder.itemDescription = view.findViewById(R.id.rileylink_history_description)
-                view.tag = viewHolder
+            view = mInflator.inflate(R.layout.rileylink_status_device_item, null)
+            viewHolder = ViewHolder()
+            viewHolder.itemTime = view.findViewById(R.id.rileylink_history_time)
+            viewHolder.itemSource = view.findViewById(R.id.rileylink_history_source)
+            viewHolder.itemDescription = view.findViewById(R.id.rileylink_history_description)
+            view.tag = viewHolder
             // }
             // else {
             //     viewHolder = view.tag as ViewHolder

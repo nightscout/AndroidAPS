@@ -15,7 +15,7 @@ open class MessageBody {
     open fun init(rxData: ByteArray?) {}
 
     open val txData: ByteArray?
-        get() = if (data==null) byteArrayOf() else data
+        get() = if (data == null) byteArrayOf() else data
 
     override fun toString(): String {
         val sb = StringBuilder(javaClass.simpleName)

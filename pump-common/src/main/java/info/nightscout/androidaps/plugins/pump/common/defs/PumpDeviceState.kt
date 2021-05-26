@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.common.defs
 
-import info.nightscout.androidaps.core.R
+import info.nightscout.androidaps.plugins.pump.common.R
 
 enum class PumpDeviceState(var resourceId: Int) {
 

@@ -1,14 +1,12 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.driver
 
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
-import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntry
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.BasalProfileStatus
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.BatteryType
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType
