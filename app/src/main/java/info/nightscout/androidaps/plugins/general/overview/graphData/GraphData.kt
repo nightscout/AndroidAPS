@@ -15,7 +15,6 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.general.overview.OverviewData
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.AreaGraphSeries
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DoubleDataPoint
-import info.nightscout.androidaps.plugins.general.overview.graphExtensions.Scale
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.TimeAsXAxisLabelFormatter
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.Round
@@ -77,7 +76,7 @@ class GraphData(
         addSeries(overviewData.tempBasalGraphSeries)
         addSeries(overviewData.basalLineGraphSeries)
         addSeries(overviewData.absoluteBasalGraphSeries)
-        overviewData.basalScale.setMultiplier(maxY * scale / overviewData.maxBasalValueFound)
+        overviewData.basalScale.multiplier = maxY * scale / overviewData.maxBasalValueFound
     }
 
     fun addTargetLine() {
@@ -92,7 +91,7 @@ class GraphData(
     fun addActivity(scale: Double) {
         addSeries(overviewData.activitySeries)
         addSeries(overviewData.activityPredictionSeries)
-        overviewData.actScale.setMultiplier(maxY * scale / overviewData.maxIAValue)
+        overviewData.actScale.multiplier = maxY * scale / overviewData.maxIAValue
     }
 
     //Function below show -BGI to be able to compare curves with deviations
@@ -101,7 +100,7 @@ class GraphData(
             maxY = overviewData.maxBGIValue
             minY = -overviewData.maxBGIValue
         }
-        overviewData.bgiScale.setMultiplier(maxY * scale / overviewData.maxBGIValue)
+        overviewData.bgiScale.multiplier = maxY * scale / overviewData.maxBGIValue
         addSeries(overviewData.minusBgiSeries)
         addSeries(overviewData.minusBgiHistSeries)
     }
@@ -112,7 +111,7 @@ class GraphData(
             maxY = overviewData.maxIobValueFound
             minY = -overviewData.maxIobValueFound
         }
-        overviewData.iobScale.setMultiplier(maxY * scale / overviewData.maxIobValueFound)
+        overviewData.iobScale.multiplier = maxY * scale / overviewData.maxIobValueFound
         addSeries(overviewData.iobSeries)
         addSeries(overviewData.iobPredictions1Series)
         addSeries(overviewData.iobPredictions2Series)
@@ -124,7 +123,7 @@ class GraphData(
             maxY = overviewData.maxIobValueFound
             minY = -overviewData.maxIobValueFound
         }
-        overviewData.iobScale.setMultiplier(maxY * scale / overviewData.maxIobValueFound)
+        overviewData.iobScale.multiplier = maxY * scale / overviewData.maxIobValueFound
         addSeries(overviewData.absIobSeries)
     }
 
@@ -134,7 +133,7 @@ class GraphData(
             maxY = overviewData.maxCobValueFound
             minY = 0.0
         }
-        overviewData.cobScale.setMultiplier(maxY * scale / overviewData.maxCobValueFound)
+        overviewData.cobScale.multiplier = maxY * scale / overviewData.maxCobValueFound
         addSeries(overviewData.cobSeries)
         addSeries(overviewData.cobMinFailOverSeries)
     }
@@ -145,7 +144,7 @@ class GraphData(
             maxY = overviewData.maxDevValueFound
             minY = -maxY
         }
-        overviewData.devScale.setMultiplier(maxY * scale / overviewData.maxDevValueFound)
+        overviewData.devScale.multiplier = maxY * scale / overviewData.maxDevValueFound
         addSeries(overviewData.deviationsSeries)
     }
 
@@ -154,11 +153,11 @@ class GraphData(
         if (useForScale) {
             maxY = 100.0 + max(overviewData.maxRatioValueFound, abs(overviewData.minRatioValueFound))
             minY = 100.0 - max(overviewData.maxRatioValueFound, abs(overviewData.minRatioValueFound))
-            overviewData.ratioScale = Scale(100.0)
-            overviewData.ratioScale.setMultiplier(1.0)
+            overviewData.ratioScale.multiplier = 1.0
+            overviewData.ratioScale.shift = 100.0
         } else {
-            overviewData.ratioScale = Scale()
-            overviewData.ratioScale.setMultiplier(maxY * scale / max(overviewData.maxRatioValueFound, abs(overviewData.minRatioValueFound)))
+            overviewData.ratioScale.multiplier = maxY * scale / max(overviewData.maxRatioValueFound, abs(overviewData.minRatioValueFound))
+            overviewData.ratioScale.shift = 0.0
         }
         addSeries(overviewData.ratioSeries)
     }
@@ -172,14 +171,14 @@ class GraphData(
         var graphMaxY = maxY
         if (isRatioScale) {
             graphMaxY = maxY - 100.0
-            overviewData.dsMinScale = Scale(100.0)
-            overviewData.dsMaxScale = Scale(100.0)
+            overviewData.dsMinScale.shift = 100.0
+            overviewData.dsMaxScale.shift = 100.0
         } else {
-            overviewData.dsMinScale = Scale()
-            overviewData.dsMaxScale = Scale()
+            overviewData.dsMinScale.shift = 0
+            overviewData.dsMaxScale.shift = 0
         }
-        overviewData.dsMaxScale.setMultiplier(graphMaxY * scale / overviewData.maxFromMaxValueFound)
-        overviewData.dsMinScale.setMultiplier(graphMaxY * scale / overviewData.maxFromMinValueFound)
+        overviewData.dsMaxScale.setMultiplier = graphMaxY * scale / overviewData.maxFromMaxValueFound
+        overviewData.dsMinScale.setMultiplier = graphMaxY * scale / overviewData.maxFromMinValueFound
         addSeries(overviewData.dsMaxSeries)
         addSeries(overviewData.dsMinSeries)
     }

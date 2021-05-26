@@ -15,11 +15,7 @@ import info.nightscout.androidaps.database.entities.ExtendedBolus
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.entities.TemporaryBasal
 import info.nightscout.androidaps.database.entities.TemporaryTarget
-import info.nightscout.androidaps.extensions.convertedToPercent
-import info.nightscout.androidaps.extensions.target
-import info.nightscout.androidaps.extensions.toStringFull
-import info.nightscout.androidaps.extensions.toStringShort
-import info.nightscout.androidaps.extensions.valueToUnits
+import info.nightscout.androidaps.extensions.*
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -152,6 +148,7 @@ class OverviewData @Inject constructor(
     val temporaryBasalText: String
         get() =
             profile?.let { profile ->
+                if (temporaryBasal?.isInProgress == false) temporaryBasal = null
                 temporaryBasal?.let { "T:" + it.toStringShort() }
                     ?: resourceHelper.gs(R.string.pump_basebasalrate, profile.getBasal())
             } ?: resourceHelper.gs(R.string.notavailable)
@@ -191,7 +188,10 @@ class OverviewData @Inject constructor(
     val extendedBolusText: String
         get() =
             extendedBolus?.let { extendedBolus ->
-                if (activePlugin.activePump.isFakingTempsByExtendedBoluses) resourceHelper.gs(R.string.pump_basebasalrate, extendedBolus.rate)
+                if (!extendedBolus.isInProgress(dateUtil)) {
+                    this@OverviewData.extendedBolus = null
+                    ""
+                } else if (activePlugin.activePump.isFakingTempsByExtendedBoluses) resourceHelper.gs(R.string.pump_basebasalrate, extendedBolus.rate)
                 else ""
             } ?: ""
 
