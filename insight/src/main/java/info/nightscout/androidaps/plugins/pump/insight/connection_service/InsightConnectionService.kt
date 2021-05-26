@@ -26,15 +26,12 @@ import info.nightscout.androidaps.plugins.pump.insight.app_layer.connection.Disc
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.connection.ServiceChallengeMessage
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.SystemIdentificationBlock
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.status.GetFirmwareVersionsMessage
-import info.nightscout.androidaps.plugins.pump.insight.connection_service.InsightConnectionService
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.FirmwareVersions
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.InsightState
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.SystemIdentification
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.*
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.*
 import info.nightscout.androidaps.plugins.pump.insight.satl.*
-import info.nightscout.androidaps.plugins.pump.insight.satl.SatlMessage.Companion.deserialize
-import info.nightscout.androidaps.plugins.pump.insight.satl.SatlMessage.Companion.hasCompletePacket
 import info.nightscout.androidaps.plugins.pump.insight.utils.*
 import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.Cryptograph
 import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.KeyPair
@@ -379,9 +376,9 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
     @Synchronized override fun onReceiveBytes(buffer: ByteArray, bytesRead: Int) {
         this.buffer.putBytes(buffer, bytesRead)
         try {
-            while (hasCompletePacket(this.buffer)) {
+            while (SatlMessage.hasCompletePacket(this.buffer)) {
                 pairingDataStorage?.let {
-                    val satlMessage = deserialize(this.buffer, it.lastNonceReceived, it.incomingKey)
+                    val satlMessage = SatlMessage.deserialize(this.buffer, it.lastNonceReceived, it.incomingKey)
                     satlMessage?.let { it2 ->
                         if (it.incomingKey != null && it.lastNonceReceived != null && !it.lastNonceReceived.isSmallerThan(it2.nonce!!)) {
                             throw InvalidNonceException()
