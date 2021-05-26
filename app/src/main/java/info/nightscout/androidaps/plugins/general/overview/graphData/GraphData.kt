@@ -174,11 +174,11 @@ class GraphData(
             overviewData.dsMinScale.shift = 100.0
             overviewData.dsMaxScale.shift = 100.0
         } else {
-            overviewData.dsMinScale.shift = 0
-            overviewData.dsMaxScale.shift = 0
+            overviewData.dsMinScale.shift = 0.0
+            overviewData.dsMaxScale.shift = 0.0
         }
-        overviewData.dsMaxScale.setMultiplier = graphMaxY * scale / overviewData.maxFromMaxValueFound
-        overviewData.dsMinScale.setMultiplier = graphMaxY * scale / overviewData.maxFromMinValueFound
+        overviewData.dsMaxScale.multiplier = graphMaxY * scale / overviewData.maxFromMaxValueFound
+        overviewData.dsMinScale.multiplier = graphMaxY * scale / overviewData.maxFromMinValueFound
         addSeries(overviewData.dsMaxSeries)
         addSeries(overviewData.dsMinSeries)
     }
