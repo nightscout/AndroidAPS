@@ -226,6 +226,7 @@
 <attr name="ratio" format="reference" />
 <attr name="InMemoryGlucoseValue" format="reference" />
 <attr name="colorScheduled" format="reference" />
+<attr name="tempbasal" format="reference" />
 
 <!-- Window background-->
 <attr name="windowBackground" format="reference|color" />

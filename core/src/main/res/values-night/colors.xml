@@ -84,6 +84,7 @@
     <color name="bolus">#1ea3e5</color>
     <color name="iobPredAS">#1ea3e5</color>
     <color name="iob">#1ba1e2</color>
+    <color name="tempbasal">#C803A9F4</color>
     <color name="toastInfo">#03A9F4</color>
     <color name="basal">#6B85FF</color>
     <color name="cobAlert">#7484E2</color>

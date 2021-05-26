@@ -233,6 +233,7 @@
         <item name="cobAlert" >@color/cobAlert</item>
         <item name="info" >@color/info</item>
         <item name="basebasal" >@color/basebasal</item>
+        <item name="tempbasal" >@color/tempbasal</item>
         <item name="lightblue" >@color/lightblue</item>
         <item name="ribbonWarning" >@color/ribbonWarning</item>
         <item name="ribbonDefault" >@color/ribbonDefault</item>
