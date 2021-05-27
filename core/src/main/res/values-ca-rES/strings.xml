@@ -20,9 +20,6 @@
     <!--    CarbsReq-->
     <!--    TDDStatsActivity-->
     <!--    Ntp-->
-    <!-- PumoCommon - Pump Abstract -->
-    <!-- PumoCommon - Pump Status -->
-    <!-- PumpCommon - History Group -->
     <!-- Maintenance -->
     <string name="metadata_label_created_at">Creat:</string>
     <string name="metadata_label_aaps_version">Versió d\'AAPS</string>
