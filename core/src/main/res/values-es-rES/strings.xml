@@ -68,6 +68,24 @@
     <string name="pairing">Emparejando</string>
     <string name="yes">Si</string>
     <string name="no">No</string>
+    <string name="bolusdelivered">Bolo %1$.2fU enviado correctamente</string>
+    <string name="novalidbasalrate">Tasa Basal no valida en la bomba</string>
+    <string name="limitingmaxiob">Limitando max IOB a %1$.1f U debido a %2$s</string>
+    <string name="unsafeusage">uso no seguro</string>
+    <string name="pump_unreachable">Bomba no alcanzable</string>
+    <string name="disableloop">Desactivar lazo</string>
+    <string name="enableloop">Activar lazo</string>
+    <string name="resumeloop">Reactivar el lazo</string>
+    <string name="suspendloop">Suspender lazo</string>
+    <string name="notification">Notificación</string>
+    <string name="noprofile">Pendiente carga perfil NS</string>
+    <string name="notexists">no existe</string>
+    <string name="iob">IOB</string>
+    <string name="name_short">Nombre:</string>
+    <string name="time">Tiempo</string>
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="event_time_label">Hora del evento</string>
+    <string name="addnew">Añadir nuevo</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limitando max basal rate a %1$.2f U/h debido a %2$s</string>
     <string name="pumplimit">límite de la bomba</string>
@@ -116,6 +134,7 @@
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
     <string name="noprofileselected">Ningun perfil seleccionado</string>
+    <string name="startprofile">Iniciar perfil %1$d%% durante %2$d min</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Sólo se soportan valores discretos, no rangos, como entrada de datos para basal/bolo en la bomba virtual.</string>
     <!--    APSResult-->
