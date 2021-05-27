@@ -115,16 +115,6 @@
     <string name="tbb2">TBB * 2</string>
     <!--    Ntp-->
     <string name="format_hour_minute">%1$du %2$dn</string>
-    <!-- PumoCommon - Pump Abstract -->
-    <string name="common_resultok">Ceart go leor</string>
-    <!-- PumoCommon - Pump Status -->
-    <string name="pump_status_active">Gníomhach</string>
-    <!-- PumpCommon - History Group -->
-    <string name="history_group_basal">Bunaidhi</string>
-    <string name="history_group_all">Ar fad</string>
-    <string name="history_group_bolus">Bólasi</string>
-    <string name="history_group_alarm">Aláraim</string>
-    <string name="history_group_glucose">Glúcóis</string>
     <!-- Maintenance -->
     <!-- VersionChecker -->
     <!-- Permissions -->
