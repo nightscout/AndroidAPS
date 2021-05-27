@@ -1450,6 +1450,12 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                             bolusID.getId(),
                             PumpType.ACCU_CHEK_INSIGHT,
                             serial);
+            if (!isFakingTempsByExtendedBoluses())
+                pumpSync.syncStopExtendedBolusWithPumpId(
+                    timestamp,
+                    event.getEventPosition(),
+                    PumpType.ACCU_CHEK_INSIGHT,
+                    serialNumber());
         }
     }
 
