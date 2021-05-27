@@ -88,7 +88,7 @@ abstract class PumpPluginAbstract protected constructor(
         disposable.add(rxBus
             .toObservable(EventAppExit::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ event: EventAppExit? -> context.unbindService(serviceConnection!!) }) { throwable: Throwable? -> fabricPrivacy.logException(throwable!!) }
+            .subscribe({ _ -> context.unbindService(serviceConnection!!) }) { throwable: Throwable? -> fabricPrivacy.logException(throwable!!) }
         )
         onStartCustomActions()
     }

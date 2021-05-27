@@ -451,7 +451,7 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
             return responseData
         }
         val contents = response.rawContent
-        return if (contents != null) {
+        return if (contents.size > 0) {
             if (contents.size >= expectedLength) {
                 aapsLogger.debug(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "%s: Content: %s", method, ByteUtil.shortHexString(contents)))
                 null
@@ -463,7 +463,7 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
                 responseData
             }
         } else {
-            val responseData = String.format("%s: Cannot return data. Null response.", method)
+            val responseData = String.format("%s: Cannot return data. Zero length response.", method)
             aapsLogger.warn(LTag.PUMPCOMM, responseData)
             responseData
         }

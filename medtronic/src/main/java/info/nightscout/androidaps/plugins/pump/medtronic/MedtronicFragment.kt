@@ -98,7 +98,7 @@ class MedtronicFragment : DaggerFragment() {
         binding.pumpStatusIcon.text = "{fa-bed}"
 
         binding.history.setOnClickListener {
-            if (medtronicPumpPlugin.rileyLinkService?.verifyConfiguration() == true) {
+            if (medtronicPumpPlugin.rileyLinkService.verifyConfiguration() == true) {
                 startActivity(Intent(context, MedtronicHistoryActivity::class.java))
             } else {
                 displayNotConfiguredDialog()
@@ -106,7 +106,7 @@ class MedtronicFragment : DaggerFragment() {
         }
 
         binding.refresh.setOnClickListener {
-            if (medtronicPumpPlugin.rileyLinkService?.verifyConfiguration() != true) {
+            if (medtronicPumpPlugin.rileyLinkService.verifyConfiguration() != true) {
                 displayNotConfiguredDialog()
             } else {
                 binding.refresh.isEnabled = false
@@ -120,7 +120,7 @@ class MedtronicFragment : DaggerFragment() {
         }
 
         binding.stats.setOnClickListener {
-            if (medtronicPumpPlugin.rileyLinkService?.verifyConfiguration() == true) {
+            if (medtronicPumpPlugin.rileyLinkService.verifyConfiguration() == true) {
                 startActivity(Intent(context, RileyLinkStatusActivity::class.java))
             } else {
                 displayNotConfiguredDialog()
@@ -160,7 +160,7 @@ class MedtronicFragment : DaggerFragment() {
             .observeOn(aapsSchedulers.main)
             .subscribe({
                 aapsLogger.debug(LTag.PUMP, "EventMedtronicPumpConfigurationChanged triggered")
-                medtronicPumpPlugin.rileyLinkService?.verifyConfiguration()
+                medtronicPumpPlugin.rileyLinkService.verifyConfiguration()
                 updateGUI()
             }, fabricPrivacy::logException)
         disposable += rxBus
@@ -192,7 +192,7 @@ class MedtronicFragment : DaggerFragment() {
     @Synchronized
     private fun setDeviceStatus() {
         val resourceId = rileyLinkServiceData.rileyLinkServiceState.resourceId
-        val rileyLinkError = medtronicPumpPlugin.rileyLinkService?.error
+        val rileyLinkError = medtronicPumpPlugin.rileyLinkService.error
         binding.rlStatus.text =
             when {
                 rileyLinkServiceData.rileyLinkServiceState == RileyLinkServiceState.NotStarted -> resourceHelper.gs(resourceId)
@@ -338,7 +338,7 @@ class MedtronicFragment : DaggerFragment() {
         binding.reservoir.text = resourceHelper.gs(R.string.reservoirvalue, medtronicPumpStatus.reservoirRemainingUnits, medtronicPumpStatus.reservoirFullUnits)
         warnColors.setColorInverse(binding.reservoir, medtronicPumpStatus.reservoirRemainingUnits, 50.0, 20.0)
 
-        medtronicPumpPlugin.rileyLinkService?.verifyConfiguration()
+        medtronicPumpPlugin.rileyLinkService.verifyConfiguration()
         binding.errors.text = medtronicPumpStatus.errorInfo
 
         val showRileyLinkBatteryLevel: Boolean = rileyLinkServiceData.showBatteryLevel

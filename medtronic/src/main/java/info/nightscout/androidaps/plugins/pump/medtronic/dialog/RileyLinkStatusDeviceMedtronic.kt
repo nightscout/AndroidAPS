@@ -60,7 +60,16 @@ class RileyLinkStatusDeviceMedtronic : DaggerFragment(), RefreshableInterface {
         // adapter.addItemsAndClean(RileyLinkUtil.getRileyLinkHistory());
     }
 
-    internal class ViewHolder {
+    internal class ViewHolder constructor(view: View,
+                                          var itemTime: TextView? = null,
+                                          var itemSource: TextView? = null,
+                                          var itemDescription: TextView? = null) {
+
+        init {
+            itemTime = view.findViewById(R.id.rileylink_history_time)
+            itemSource = view.findViewById(R.id.rileylink_history_source)
+            itemDescription = view.findViewById(R.id.rileylink_history_description)
+        }
 
         var itemTime: TextView? = null
         var itemSource: TextView? = null
@@ -109,26 +118,43 @@ class RileyLinkStatusDeviceMedtronic : DaggerFragment(), RefreshableInterface {
             return i.toLong()
         }
 
-        override fun getView(i: Int, viewIn: View, viewGroup: ViewGroup): View {
-            var view = viewIn
+        override fun getView(i: Int, viewIn: View?, viewGroup: ViewGroup): View {
+            var rowView: View?
             val viewHolder: ViewHolder
-            // General ListView optimization code.
-//            if (view == null) {
-            view = mInflator.inflate(R.layout.rileylink_status_device_item, null)
-            viewHolder = ViewHolder()
-            viewHolder.itemTime = view.findViewById(R.id.rileylink_history_time)
-            viewHolder.itemSource = view.findViewById(R.id.rileylink_history_source)
-            viewHolder.itemDescription = view.findViewById(R.id.rileylink_history_description)
-            view.tag = viewHolder
-            // }
-            // else {
-            //     viewHolder = view.tag as ViewHolder
-            // }
+
+            if (view == null) {
+                rowView = layoutInflater.inflate(R.layout.rileylink_status_device_item, viewGroup, false)
+
+                viewHolder = ViewHolder(rowView)
+                rowView.tag = viewHolder
+
+            } else {
+                rowView = view
+                viewHolder = rowView.tag as ViewHolder
+            }
+
             val item = historyItemList[i]
             viewHolder.itemTime!!.text = StringUtil.toDateTimeString(dateUtil, item.dateTime)
             viewHolder.itemSource!!.text = "Riley Link" // for now
             viewHolder.itemDescription!!.text = item.getDescription(resourceHelper)
-            return view
+
+            return rowView!!
+
+            // // old
+            // if (view == null) {
+            //     view = mInflator.inflate(R.layout.rileylink_status_device_item, viewGroup, false)
+            // }
+            // viewHolder = ViewHolder()
+            // viewHolder.itemTime = view.findViewById(R.id.rileylink_history_time)
+            // viewHolder.itemSource = view.findViewById(R.id.rileylink_history_source)
+            // viewHolder.itemDescription = view.findViewById(R.id.rileylink_history_description)
+            // view.tag = viewHolder
+            //
+            // val item = historyItemList[i]
+            // viewHolder.itemTime!!.text = StringUtil.toDateTimeString(dateUtil, item.dateTime)
+            // viewHolder.itemSource!!.text = "Riley Link" // for now
+            // viewHolder.itemDescription!!.text = item.getDescription(resourceHelper)
+            // return view
         }
 
         init {

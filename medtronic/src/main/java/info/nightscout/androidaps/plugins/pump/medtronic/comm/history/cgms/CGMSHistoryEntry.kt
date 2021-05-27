@@ -31,10 +31,7 @@ class CGMSHistoryEntry : MedtronicHistoryEntry() {
         get() = entryType.name
 
     override fun generatePumpId(): Long {
-        return if (entryType == null)
-            atechDateTime * 1000L
-        else
-            entryType.code + atechDateTime * 1000L
+        return entryType.code + atechDateTime * 1000L
     }
 
     override fun isEntryTypeSet(): Boolean {
