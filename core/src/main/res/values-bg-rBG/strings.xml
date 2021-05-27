@@ -151,6 +151,7 @@
     <string name="profile_carbs_per_unit">гр/Е</string>
     <!--    ProfileFunction-->
     <string name="noprofileselected">Няма избран профил</string>
+    <string name="startprofile">Стартирай профил %1$d%% за %2$d мин</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Само конкретни стойности! Диапазони не се поддържат за базал/болус при виртуална помпа.</string>
     <!--    APSResult-->
@@ -190,10 +191,18 @@
     <string name="careportal_pumpbatterychange">Смяна на батерия</string>
     <string name="careportal_temporarytarget">Временна цел</string>
     <string name="careportal_temporarytargetcancel">Откажи временна цел</string>
+    <string name="boluswizard">Болус калкулатор</string>
     <string name="glucosetype_finger">Пръст</string>
     <string name="glucosetype_sensor">Сензор</string>
     <string name="manual">Друго</string>
     <string name="unknown">неизвестно</string>
+    <string name="eatingsoon">Преди хранене</string>
+    <string name="hypo">Хипоглекимия</string>
+    <string name="activity">Физ.активност</string>
+    <string name="wear">Часовник</string>
+    <string name="automation">Автоматизация</string>
+    <string name="custom">По избор</string>
+    <string name="loop">Кръг - Loop</string>
     <!--    Command-->
     <string name="connectiontimedout">Времето за връзка изтече</string>
     <!--    PumpEnactResult-->
