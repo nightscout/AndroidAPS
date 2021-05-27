@@ -106,11 +106,11 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
     }
 
     val pumpFirmwareVersions: FirmwareVersions
-        get() = pairingDataStorage!!.firmwareVersions
+        get() = pairingDataStorage!!.firmwareVersions!!
     val pumpSystemIdentification: SystemIdentification
-        get() = pairingDataStorage!!.systemIdentification
+        get() = pairingDataStorage!!.systemIdentification!!
     val bluetoothAddress: String
-        get() = pairingDataStorage!!.macAddress
+        get() = pairingDataStorage!!.macAddress!!
 
     @Synchronized fun registerStateCallback(stateCallback: StateCallback) {
         stateCallbacks.add(stateCallback)
@@ -138,7 +138,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
     }
 
     @get:Synchronized val isPaired: Boolean
-        get() = pairingDataStorage!!.isPaired
+        get() = pairingDataStorage!!.paired
 
     @Synchronized fun <T : AppLayerMessage?> requestMessage(message: T): MessageRequest<T> {
         val messageRequest: MessageRequest<T>
@@ -186,7 +186,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
     @Synchronized override fun onCreate() {
         super.onCreate()
         pairingDataStorage = PairingDataStorage(this)
-        state = if (pairingDataStorage!!.isPaired) InsightState.DISCONNECTED else InsightState.NOT_PAIRED
+        state = if (pairingDataStorage!!.paired) InsightState.DISCONNECTED else InsightState.NOT_PAIRED
         wakeLock = (getSystemService(POWER_SERVICE) as PowerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:InsightConnectionService")
     }
 
@@ -204,7 +204,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
         connectionRequests.add(lock)
         disconnectTimer?.interrupt()
         disconnectTimer = null
-        if (state === InsightState.DISCONNECTED && pairingDataStorage!!.isPaired) {
+        if (state === InsightState.DISCONNECTED && pairingDataStorage!!.paired) {
             recoveryDuration = 0
             timeoutDuringHandshakeCounter = 0
             connect()
@@ -259,7 +259,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
         keyPair = null
         randomBytes = null
         activatedServices.clear()
-        if (!pairingDataStorage!!.isPaired) {
+        if (!pairingDataStorage!!.paired) {
             bluetoothSocket = null
             bluetoothDevice = null
             pairingDataStorage!!.reset()
@@ -274,7 +274,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
             else                    -> Unit
         }
         aapsLogger.info(LTag.PUMP, "Exception occurred: " + e.javaClass.simpleName)
-        if (pairingDataStorage!!.isPaired) {
+        if (pairingDataStorage!!.paired) {
             if (e is TimeoutException && (state === InsightState.SATL_SYN_REQUEST || state === InsightState.APP_CONNECT_MESSAGE)) {
                 if (++timeoutDuringHandshakeCounter == TIMEOUT_DURING_HANDSHAKE_NOTIFICATION_THRESHOLD) {
                     for (stateCallback in stateCallbacks) {
@@ -334,7 +334,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
     @Synchronized private fun connect() {
         if (bluetoothDevice == null) bluetoothDevice = bluetoothAdapter.getRemoteDevice(pairingDataStorage!!.macAddress)
         setState(InsightState.CONNECTING)
-        connectionEstablisher = ConnectionEstablisher(this, !pairingDataStorage!!.isPaired, bluetoothAdapter, bluetoothDevice, bluetoothSocket)
+        connectionEstablisher = ConnectionEstablisher(this, !pairingDataStorage!!.paired, bluetoothAdapter, bluetoothDevice, bluetoothSocket)
         connectionEstablisher!!.start()
     }
 
@@ -349,7 +349,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
             outputStreamWriter = OutputStreamWriter(bluetoothSocket!!.outputStream, this)
             inputStreamReader?.start()
             outputStreamWriter?.start()
-            if (pairingDataStorage!!.isPaired) {
+            if (pairingDataStorage!!.paired) {
                 setState(InsightState.SATL_SYN_REQUEST)
                 sendSatlMessage(SynRequest())
             } else {
@@ -366,9 +366,9 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
         try {
             while (SatlMessage.hasCompletePacket(this.buffer)) {
                 pairingDataStorage?.let {
-                    val satlMessage = SatlMessage.deserialize(this.buffer, it.lastNonceReceived, it.incomingKey)
+                    val satlMessage = SatlMessage.deserialize(this.buffer, it.lastNonceReceived!!, it.incomingKey)
                     satlMessage?.let { it2 ->
-                        if (it.incomingKey != null && it.lastNonceReceived != null && !it.lastNonceReceived.isSmallerThan(it2.nonce!!)) {
+                        if (it.incomingKey != null && it.lastNonceReceived != null && !it.lastNonceReceived!!.isSmallerThan(it2.nonce!!)) {
                             throw InvalidNonceException()
                         } else processSatlMessage(satlMessage)
                     }
@@ -611,7 +611,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
                 var systemIdentification = (message.parameterBlock as SystemIdentificationBlock).systemIdentification
                 pairingDataStorage?.run {
                     systemIdentification = systemIdentification
-                    isPaired = true
+                    paired = true
                 }
                 aapsLogger.info(LTag.PUMP, "Pairing completed YEE-HAW ♪ ┏(・o･)┛ ♪ ┗( ･o･)┓ ♪")
                 setState(InsightState.CONNECTED)
@@ -631,9 +631,8 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
                 activateServiceMessage.serviceID = service.id
                 activateServiceMessage.version = service.version
             }
-            if (service != null) {
-                service?.run { servicePassword?.let { activateServiceMessage.servicePassword = Cryptograph.getServicePasswordHash(it, serviceChallengeMessage.randomData) } }
-            }
+            service?.run { servicePassword?.let { activateServiceMessage.servicePassword = Cryptograph.getServicePasswordHash(it, serviceChallengeMessage.randomData) } }
+
             sendAppLayerMessage(activateServiceMessage)
         }
     }
