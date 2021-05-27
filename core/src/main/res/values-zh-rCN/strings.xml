@@ -23,10 +23,6 @@
     <!--    CarbsReq-->
     <!--    TDDStatsActivity-->
     <!--    Ntp-->
-    <!-- PumoCommon - Pump Abstract -->
-    <string name="pump_operation_not_yet_supported_by_pump">泵不支持操作 YYT 。</string>
-    <!-- PumoCommon - Pump Status -->
-    <!-- PumpCommon - History Group -->
     <!-- Maintenance -->
     <string name="metadata_label_created_at">创建于</string>
     <string name="metadata_label_aaps_version">AAPS 版本</string>
