@@ -46,6 +46,16 @@
     <string name="bluetooth">Bluetooth</string>
     <string name="yes">Tá</string>
     <string name="no">Níl</string>
+    <string name="loopdisabled">LÚB DÍCHUMASAITHE LE SRIANTA</string>
+    <string name="disableloop">Díchumasaigh lúb</string>
+    <string name="enableloop">Cumasaigh lúb</string>
+    <string name="resumeloop">Lúb Atosú</string>
+    <string name="suspendloop">Fionraí lúb</string>
+    <string name="glucose">Glúcóis</string>
+    <string name="name_short">Ainm:</string>
+    <string name="time">Am</string>
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="addnew">Cuir nua</string>
     <!--    Constraints-->
     <!--    Dialogs-->
     <string name="confirmation">Deimhniú</string>
@@ -96,6 +106,7 @@
     <string name="careportal_insulincartridgechange">Athrú Cartús Inslin</string>
     <string name="glucosetype_finger">Méar</string>
     <string name="glucosetype_sensor">Braiteoir</string>
+    <string name="activity">Gníomhaíocht</string>
     <!--    Command-->
     <!--    PumpEnactResult-->
     <string name="comment">Tuairim</string>
