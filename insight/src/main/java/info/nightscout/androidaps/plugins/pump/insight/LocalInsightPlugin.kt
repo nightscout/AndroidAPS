@@ -1228,6 +1228,11 @@ class LocalInsightPlugin @Inject constructor(
                 pumpId= bolusID.id,
                 pumpType= PumpType.ACCU_CHEK_INSIGHT,
                 pumpSerial= serial)
+            if (!isFakingTempsByExtendedBoluses) pumpSync.syncStopExtendedBolusWithPumpId(
+                    timestamp,
+                    event.eventPosition,
+                    PumpType.ACCU_CHEK_INSIGHT,
+                    serialNumber())
         }
     }
 
@@ -1238,17 +1243,17 @@ class LocalInsightPlugin @Inject constructor(
         var code: Int? = null
         var title: Int? = null
         when (event.alertType) {
-            AlertType.ERROR_6 -> {
+            AlertType.ERROR_6        -> {
                 code = R.string.alert_e6_code
                 title = R.string.alert_e6_title
             }
 
-            AlertType.ERROR_10 -> {
+            AlertType.ERROR_10       -> {
                 code = R.string.alert_e10_code
                 title = R.string.alert_e10_title
             }
 
-            AlertType.ERROR_13 -> {
+            AlertType.ERROR_13       -> {
                 code = R.string.alert_e13_code
                 title = R.string.alert_e13_title
             }
@@ -1308,22 +1313,22 @@ class LocalInsightPlugin @Inject constructor(
                 title = R.string.alert_m30_title
             }
 
-            AlertType.WARNING_31 -> {
+            AlertType.WARNING_31     -> {
                 code = R.string.alert_w31_code
                 title = R.string.alert_w31_title
             }
 
-            AlertType.WARNING_32 -> {
+            AlertType.WARNING_32     -> {
                 code = R.string.alert_w32_code
                 title = R.string.alert_w32_title
             }
 
-            AlertType.WARNING_33 -> {
+            AlertType.WARNING_33     -> {
                 code = R.string.alert_w33_code
                 title = R.string.alert_w33_title
             }
 
-            AlertType.WARNING_34 -> {
+            AlertType.WARNING_34     -> {
                 code = R.string.alert_w34_code
                 title = R.string.alert_w34_title
             }
