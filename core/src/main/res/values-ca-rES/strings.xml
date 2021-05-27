@@ -9,12 +9,14 @@
     <!--    Protection-->
     <!--    Profile-->
     <!--    ProfileFunction-->
+    <string name="startprofile">Iniciar perfil %1$d%% durant %2$d min</string>
     <!--    PumpType-->
     <!--    APSResult-->
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    TDD-->
     <!--    Translator-->
+    <string name="loop">Llaç</string>
     <!--    Command-->
     <!--    PumpEnactResult-->
     <!--    CarbsReq-->
