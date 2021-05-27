@@ -151,6 +151,7 @@
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
     <string name="noprofileselected">Niciun profil selectat</string>
+    <string name="startprofile">Utilizează profilul %1$d%% pentru %2$d min</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Pompa virtuală acceptă doar valori specifice ca și incremente, nu și intervale de valori.
 * Doar valorile specifice, nu şi intervalele de valori sunt suportate ca şi incremente în pompa virtuală.</string>
@@ -191,10 +192,16 @@
     <string name="careportal_pumpbatterychange">Schimbare baterie pompă</string>
     <string name="careportal_temporarytarget">Ţintă temporară</string>
     <string name="careportal_temporarytargetcancel">Oprire ţintă temporară</string>
+    <string name="boluswizard">Asistent bolusare</string>
     <string name="glucosetype_finger">Deget</string>
     <string name="glucosetype_sensor">Senzor</string>
     <string name="manual">Manual</string>
     <string name="unknown">necunoscută</string>
+    <string name="eatingsoon">Mănânc în curând</string>
+    <string name="hypo">Hipo</string>
+    <string name="wear">Ceas</string>
+    <string name="automation">Automatizare</string>
+    <string name="custom">Personalizat</string>
     <!--    Command-->
     <string name="connectiontimedout">Conectare eșuată</string>
     <!--    PumpEnactResult-->
