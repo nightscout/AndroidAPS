@@ -23,10 +23,6 @@
     <!--    CarbsReq-->
     <!--    TDDStatsActivity-->
     <!--    Ntp-->
-    <!-- PumoCommon - Pump Abstract -->
-    <string name="pump_operation_not_yet_supported_by_pump">Η λειτουργία δεν υποστηρίζεται ΑΚΟΜΑ από την αντλία.</string>
-    <!-- PumoCommon - Pump Status -->
-    <!-- PumpCommon - History Group -->
     <!-- Maintenance -->
     <!-- VersionChecker -->
     <string name="signature_verifier">Έλεγχος υπογραφής</string>
