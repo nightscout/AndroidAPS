@@ -23,10 +23,6 @@
     <!--    CarbsReq-->
     <!--    TDDStatsActivity-->
     <!--    Ntp-->
-    <!-- PumoCommon - Pump Abstract -->
-    <string name="pump_operation_not_yet_supported_by_pump">펌프에서 지원되지 않는 작동.</string>
-    <!-- PumoCommon - Pump Status -->
-    <!-- PumpCommon - History Group -->
     <!-- Maintenance -->
     <string name="preferences_import_list_title">가져올 파일을 선택하세요.</string>
     <string name="metadata_warning_different_flavour">환경설정은 AAPS (%1$s) 와는 다르게 생성되기 때문에 불러오는 도중 일부 설정이 누락되거나 설정이 되지 않을 수 있습니다. - 가져오기를 수행한 후 설정을 확인하고 업데이트 해주시기 바랍니다.</string>
