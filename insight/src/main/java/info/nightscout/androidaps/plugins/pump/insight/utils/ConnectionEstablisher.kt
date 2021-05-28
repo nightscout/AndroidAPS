@@ -1,79 +1,61 @@
-package info.nightscout.androidaps.plugins.pump.insight.utils;
+package info.nightscout.androidaps.plugins.pump.insight.utils
 
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothSocket
+import java.io.IOException
+import java.util.*
 
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.UUID;
+class ConnectionEstablisher(private val callback: Callback, private val forPairing: Boolean, private val bluetoothAdapter: BluetoothAdapter, private val bluetoothDevice: BluetoothDevice, private var socket: BluetoothSocket?) : Thread() {
 
-public class ConnectionEstablisher extends Thread {
-
-    private final Callback callback;
-    private final boolean forPairing;
-    private final BluetoothAdapter bluetoothAdapter;
-    private final BluetoothDevice bluetoothDevice;
-    private BluetoothSocket socket;
-
-    public ConnectionEstablisher(Callback callback, boolean forPairing, BluetoothAdapter bluetoothAdapter, BluetoothDevice bluetoothDevice, BluetoothSocket socket) {
-        this.callback = callback;
-        this.forPairing = forPairing;
-        this.bluetoothAdapter = bluetoothAdapter;
-        this.bluetoothDevice = bluetoothDevice;
-        this.socket = socket;
-    }
-
-    @Override
-    public void run() {
+    override fun run() {
         try {
-            if (!bluetoothAdapter.isEnabled()) {
-                bluetoothAdapter.enable();
-                Thread.sleep(2000);
+            if (!bluetoothAdapter.isEnabled) {
+                bluetoothAdapter.enable()
+                sleep(2000)
             }
-        } catch (InterruptedException ignored) {
-            return;
+        } catch (ignored: InterruptedException) {
+            return
         }
-        if (forPairing && bluetoothDevice.getBondState() != BluetoothDevice.BOND_NONE) {
+        if (forPairing && bluetoothDevice.bondState != BluetoothDevice.BOND_NONE) {
             try {
-                Method removeBond = bluetoothDevice.getClass().getMethod("removeBond", (Class[]) null);
-                removeBond.invoke(bluetoothDevice, (Object[]) null);
-            } catch (ReflectiveOperationException e) {
-                if (!isInterrupted()) callback.onConnectionFail(e, 0);
-                return;
+                val removeBond = bluetoothDevice.javaClass.getMethod("removeBond", null)
+                removeBond.invoke(bluetoothDevice, null)
+            } catch (e: ReflectiveOperationException) {
+                if (!isInterrupted) callback.onConnectionFail(e, 0)
+                return
             }
         }
         try {
             if (socket == null) {
-                socket = bluetoothDevice.createInsecureRfcommSocketToServiceRecord(UUID.fromString("00001101-0000-1000-8000-00805f9b34fb"));
-                callback.onSocketCreated(socket);
+                socket = bluetoothDevice.createInsecureRfcommSocketToServiceRecord(UUID.fromString("00001101-0000-1000-8000-00805f9b34fb"))
+                callback.onSocketCreated(socket!!)
             }
-        } catch (IOException e) {
-            if (!isInterrupted()) callback.onConnectionFail(e, 0);
-            return;
+        } catch (e: IOException) {
+            if (!isInterrupted) callback.onConnectionFail(e, 0)
+            return
         }
-        long connectionStart = System.currentTimeMillis();
+        val connectionStart = System.currentTimeMillis()
         try {
-            socket.connect();
-            if (!isInterrupted()) callback.onConnectionSucceed();
-        } catch (IOException e) {
-            if (!isInterrupted()) callback.onConnectionFail(e, System.currentTimeMillis() - connectionStart);
+            socket!!.connect()
+            if (!isInterrupted) callback.onConnectionSucceed()
+        } catch (e: IOException) {
+            if (!isInterrupted) callback.onConnectionFail(e, System.currentTimeMillis() - connectionStart)
         }
     }
 
-    public void close(boolean closeSocket) {
+    fun close(closeSocket: Boolean) {
         try {
-            interrupt();
-            if (closeSocket && socket != null && socket.isConnected()) socket.close();
-        } catch (IOException ignored) {
+            interrupt()
+            socket?.let { if (closeSocket && it.isConnected) it.close() }
+        } catch (ignored: IOException) {
         }
     }
 
-    public interface Callback {
-        void onSocketCreated(BluetoothSocket bluetoothSocket);
+    interface Callback {
 
-        void onConnectionSucceed();
-
-        void onConnectionFail(Exception e, long duration);
+        fun onSocketCreated(bluetoothSocket: BluetoothSocket)
+        fun onConnectionSucceed()
+        fun onConnectionFail(e: Exception, duration: Long)
     }
 }

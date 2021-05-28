@@ -334,8 +334,8 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
     @Synchronized private fun connect() {
         if (bluetoothDevice == null) bluetoothDevice = bluetoothAdapter.getRemoteDevice(pairingDataStorage!!.macAddress)
         setState(InsightState.CONNECTING)
-        connectionEstablisher = ConnectionEstablisher(this, !pairingDataStorage!!.paired, bluetoothAdapter, bluetoothDevice, bluetoothSocket)
-        connectionEstablisher!!.start()
+        connectionEstablisher = ConnectionEstablisher(this, !pairingDataStorage!!.paired, bluetoothAdapter, bluetoothDevice!!, bluetoothSocket)
+        connectionEstablisher?.start()
     }
 
     @Synchronized override fun onSocketCreated(bluetoothSocket: BluetoothSocket) {

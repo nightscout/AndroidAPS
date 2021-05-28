@@ -30,7 +30,9 @@ class InsightPairingActivity : NoSplashAppCompatActivity(), InsightConnectionSer
         override fun onServiceConnected(name: ComponentName, binder: IBinder) {
             service = (binder as InsightConnectionService.LocalBinder).service
             service?.let {
-                if (it.isPaired) return else {
+                if (it.isPaired)
+                    return
+                else {
                     it.requestConnection(this@InsightPairingActivity)
                     it.registerStateCallback(this@InsightPairingActivity)
                     it.registerExceptionCallback(this@InsightPairingActivity)
@@ -56,10 +58,10 @@ class InsightPairingActivity : NoSplashAppCompatActivity(), InsightConnectionSer
     }
 
     override fun onDestroy() {
-        if (service != null) {
-            service!!.withdrawConnectionRequest(this@InsightPairingActivity)
-            service!!.unregisterStateCallback(this@InsightPairingActivity)
-            service!!.unregisterExceptionCallback(this@InsightPairingActivity)
+        service?.run {
+            withdrawConnectionRequest(this@InsightPairingActivity)
+            unregisterStateCallback(this@InsightPairingActivity)
+            unregisterExceptionCallback(this@InsightPairingActivity)
         }
         unbindService(serviceConnection)
         super.onDestroy()
@@ -154,7 +156,7 @@ class InsightPairingActivity : NoSplashAppCompatActivity(), InsightConnectionSer
     }
 
     private fun deviceSelected(device: BluetoothDevice) {
-        service!!.pair(device.address)
+        service?.pair(device.address)
     }
 
     private val broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
