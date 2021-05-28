@@ -23,6 +23,7 @@ internal class LTKExchanger(
     private val keyExchange = KeyExchange(aapsLogger, X25519KeyGenerator(), RandomByteGenerator())
     private var seq: Byte = 1
 
+    @kotlin.ExperimentalStdlibApi
     @Throws(PairingException::class)
     fun negotiateLTK(): PairResult {
         val sp1sp2 = PairMessage(
@@ -113,6 +114,7 @@ internal class LTKExchanger(
         keyExchange.validatePodConf(payload)
     }
 
+    @kotlin.ExperimentalStdlibApi
     private fun sp2(): ByteArray {
         // This is GetPodStatus command, with page 0 parameter.
         // We could replace that in the future with the serialized GetPodStatus()
