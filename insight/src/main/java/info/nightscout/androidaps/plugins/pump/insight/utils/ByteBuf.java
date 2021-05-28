@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 
-public class ByteBuf {
+public class ByteBuf extends Object {
 
     private final byte[] bytes;
     private int size = 0;
