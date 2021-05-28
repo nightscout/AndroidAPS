@@ -17,7 +17,7 @@ import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
-import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
+import info.nightscout.androidaps.database.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import info.nightscout.androidaps.databinding.DialogCarbsBinding
 import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.interfaces.Constraint
@@ -226,7 +226,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                                 ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.ACTIVITY),
                                 ValueWithUnit.fromGlucoseUnit(activityTT, units.asText),
                                 ValueWithUnit.Minute(activityTTDuration))
-                            disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
+                            disposable += repository.runTransactionForResult(InsertAndCancelCurrentTemporaryTargetTransaction(
                                 timestamp = System.currentTimeMillis(),
                                 duration = TimeUnit.MINUTES.toMillis(activityTTDuration.toLong()),
                                 reason = TemporaryTarget.Reason.ACTIVITY,
@@ -245,7 +245,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                                 ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.EATING_SOON),
                                 ValueWithUnit.fromGlucoseUnit(eatingSoonTT, units.asText),
                                 ValueWithUnit.Minute(eatingSoonTTDuration))
-                            disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
+                            disposable += repository.runTransactionForResult(InsertAndCancelCurrentTemporaryTargetTransaction(
                                 timestamp = System.currentTimeMillis(),
                                 duration = TimeUnit.MINUTES.toMillis(eatingSoonTTDuration.toLong()),
                                 reason = TemporaryTarget.Reason.EATING_SOON,
@@ -264,7 +264,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                                 ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.HYPOGLYCEMIA),
                                 ValueWithUnit.fromGlucoseUnit(hypoTT, units.asText),
                                 ValueWithUnit.Minute(hypoTTDuration))
-                            disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
+                            disposable += repository.runTransactionForResult(InsertAndCancelCurrentTemporaryTargetTransaction(
                                 timestamp = System.currentTimeMillis(),
                                 duration = TimeUnit.MINUTES.toMillis(hypoTTDuration.toLong()),
                                 reason = TemporaryTarget.Reason.HYPOGLYCEMIA,

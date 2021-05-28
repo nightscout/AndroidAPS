@@ -1,9 +1,10 @@
 package info.nightscout.androidaps.interfaces
 
 import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.database.entities.OfflineEvent
 import info.nightscout.androidaps.plugins.aps.loop.APSResult
 
-interface LoopInterface {
+interface Loop {
 
     class LastRun {
 
@@ -22,8 +23,9 @@ interface LoopInterface {
 
     var lastRun: LastRun?
     val isSuspended: Boolean
+    var enabled: Boolean
 
-    fun suspendTo(endTime: Long)
-    fun createOfflineEvent(durationInMinutes: Int)
+    fun minutesToEndOfSuspend(): Int
+    fun goToZeroTemp(durationInMinutes: Int, profile: Profile, reason: OfflineEvent.Reason)
     fun suspendLoop(durationInMinutes: Int)
 }

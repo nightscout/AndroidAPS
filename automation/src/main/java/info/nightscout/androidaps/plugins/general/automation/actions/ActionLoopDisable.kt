@@ -9,7 +9,7 @@ import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.ConfigBuilder
-import info.nightscout.androidaps.interfaces.LoopInterface
+import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -19,7 +19,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
 
 class ActionLoopDisable(injector: HasAndroidInjector) : Action(injector) {
-    @Inject lateinit var loopPlugin: LoopInterface
+    @Inject lateinit var loopPlugin: Loop
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var configBuilder: ConfigBuilder
     @Inject lateinit var commandQueue: CommandQueueProvider

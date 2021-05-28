@@ -43,6 +43,8 @@ data class UserEntry(
         OPEN_LOOP_MODE (ColorGroup.Loop),
         LOOP_DISABLED (ColorGroup.Loop),
         LOOP_ENABLED (ColorGroup.Loop),
+        LOOP_CHANGE (ColorGroup.Loop),
+        LOOP_REMOVED (ColorGroup.Loop),
         RECONNECT (ColorGroup.Pump),
         DISCONNECT (ColorGroup.Pump),
         RESUME (ColorGroup.Loop),

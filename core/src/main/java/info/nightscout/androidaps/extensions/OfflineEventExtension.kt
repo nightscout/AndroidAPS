@@ -1,56 +1,58 @@
 package info.nightscout.androidaps.extensions
 
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
-import info.nightscout.androidaps.database.entities.Carbs
+import info.nightscout.androidaps.database.entities.OfflineEvent
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
+import info.nightscout.androidaps.utils.T
 import org.json.JSONObject
 
-fun Carbs.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
+fun OfflineEvent.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
     JSONObject()
-        .put("eventType", if (amount < 12) TherapyEvent.Type.CARBS_CORRECTION.text else TherapyEvent.Type.MEAL_BOLUS.text)
-        .put("carbs", amount)
         .put("created_at", dateUtil.toISOString(timestamp))
+        .put("enteredBy", "openaps://" + "AndroidAPS")
+        .put("eventType", TherapyEvent.Type.APS_OFFLINE.text)
         .put("isValid", isValid)
-        .put("date", timestamp).also {
-            if (duration != 0L) it.put("duration", duration)
+        .put("duration", T.msecs(duration).mins())
+        .put("reason", reason.name)
+        .also {
             if (interfaceIDs.pumpId != null) it.put("pumpId", interfaceIDs.pumpId)
             if (interfaceIDs.pumpType != null) it.put("pumpType", interfaceIDs.pumpType!!.name)
             if (interfaceIDs.pumpSerial != null) it.put("pumpSerial", interfaceIDs.pumpSerial)
             if (isAdd && interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId)
         }
 
-/*
-        create fake object with nsID and isValid == false
+/* NS PS
+{
+    "enteredBy": "undefined",
+    "eventType": "OpenAPS Offline",
+    "duration": 60,
+    "created_at": "2021-05-27T15:11:52.230Z",
+    "utcOffset": 0,
+    "_id": "60afb6ba3c0d77e3e720f2fe",
+    "mills": 1622128312230,
+    "carbs": null,
+    "insulin": null
+}
  */
-fun carbsFromNsIdForInvalidating(nsId: String): Carbs =
-    carbsFromJson(
-        JSONObject()
-            .put("mills", 1)
-            .put("carbs", -1.0)
-            .put("_id", nsId)
-            .put("isValid", false)
-    )!!
-
-fun carbsFromJson(jsonObject: JSONObject): Carbs? {
+fun offlineEventFromJson(jsonObject: JSONObject): OfflineEvent? {
     val timestamp = JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null) ?: return null
     val duration = JsonHelper.safeGetLong(jsonObject, "duration")
-    val amount = JsonHelper.safeGetDoubleAllowNull(jsonObject, "carbs") ?: return null
     val isValid = JsonHelper.safeGetBoolean(jsonObject, "isValid", true)
-    val id = JsonHelper.safeGetStringAllowNull(jsonObject, "_id", null) ?: return null
+    val id = JsonHelper.safeGetStringAllowNull(jsonObject, "_id", null)
     val pumpId = JsonHelper.safeGetLongAllowNull(jsonObject, "pumpId", null)
     val pumpType = InterfaceIDs.PumpType.fromString(JsonHelper.safeGetStringAllowNull(jsonObject, "pumpType", null))
     val pumpSerial = JsonHelper.safeGetStringAllowNull(jsonObject, "pumpSerial", null)
+    val reason = OfflineEvent.Reason.fromString(JsonHelper.safeGetString(jsonObject, "reason", OfflineEvent.Reason.OTHER.name))
 
-    if (timestamp == 0L) return null
-    if (amount == 0.0) return null
 
-    return Carbs(
+
+    return OfflineEvent(
         timestamp = timestamp,
-        duration = duration,
-        amount = amount,
-        isValid = isValid
+        duration = T.mins(duration).msecs(),
+        isValid = isValid,
+        reason = reason
     ).also {
         it.interfaceIDs.nightscoutId = id
         it.interfaceIDs.pumpId = pumpId
@@ -58,4 +60,5 @@ fun carbsFromJson(jsonObject: JSONObject): Carbs? {
         it.interfaceIDs.pumpSerial = pumpSerial
     }
 }
+
 

@@ -3,9 +3,9 @@ package info.nightscout.androidaps.database.transactions
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.interfaces.end
 
-class InsertTemporaryTargetAndCancelCurrentTransaction(
+class InsertAndCancelCurrentTemporaryTargetTransaction(
     val temporaryTarget: TemporaryTarget
-) : Transaction<InsertTemporaryTargetAndCancelCurrentTransaction.TransactionResult>() {
+) : Transaction<InsertAndCancelCurrentTemporaryTargetTransaction.TransactionResult>() {
 
     constructor(timestamp: Long, duration: Long, reason: TemporaryTarget.Reason, lowTarget: Double, highTarget: Double) :
         this(TemporaryTarget(timestamp = timestamp, reason = reason, lowTarget = lowTarget, highTarget = highTarget, duration = duration))

@@ -20,7 +20,7 @@ import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.database.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
-import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
+import info.nightscout.androidaps.database.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import info.nightscout.androidaps.extensions.total
 import info.nightscout.androidaps.extensions.valueToUnits
 import info.nightscout.androidaps.interfaces.*
@@ -572,7 +572,7 @@ class ActionStringHandler @Inject constructor(
 
     private fun generateTempTarget(duration: Int, low: Double, high: Double) {
         if (duration != 0) {
-            disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
+            disposable += repository.runTransactionForResult(InsertAndCancelCurrentTemporaryTargetTransaction(
                 timestamp = System.currentTimeMillis(),
                 duration = TimeUnit.MINUTES.toMillis(duration.toLong()),
                 reason = TemporaryTarget.Reason.WEAR,
