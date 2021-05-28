@@ -6,7 +6,7 @@ import info.nightscout.androidaps.plugins.pump.insight.app_layer.configuration.W
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.ParameterBlock;
 import info.nightscout.androidaps.plugins.pump.insight.connection_service.InsightConnectionService;
 
-public class ParameterBlockUtil {
+public class ParameterBlockUtil extends Object {
 
     public static <T extends ParameterBlock> T readParameterBlock(InsightConnectionService connectionService, Service service, Class<T> parameterBlock) throws Exception {
         ReadParameterBlockMessage readMessage = new ReadParameterBlockMessage();
