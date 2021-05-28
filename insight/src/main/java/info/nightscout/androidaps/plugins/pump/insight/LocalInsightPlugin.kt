@@ -1228,11 +1228,6 @@ class LocalInsightPlugin @Inject constructor(
                 pumpId= bolusID.id,
                 pumpType= PumpType.ACCU_CHEK_INSIGHT,
                 pumpSerial= serial)
-            if (!isFakingTempsByExtendedBoluses) pumpSync.syncStopExtendedBolusWithPumpId(
-                    timestamp,
-                    event.eventPosition,
-                    PumpType.ACCU_CHEK_INSIGHT,
-                    serialNumber())
         }
     }
 
