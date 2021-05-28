@@ -653,7 +653,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
             OverviewData.Property.EXTENDED_BOLUS   -> {
                 binding.infoLayout.extendedBolus.text = overviewData.extendedBolusText
-                binding.infoLayout.extendedBolus.setOnClickListener {
+                binding.infoLayout.extendedLayout.setOnClickListener {
                     activity?.let { OKDialog.show(it, resourceHelper.gs(R.string.extended_bolus), overviewData.extendedBolusDialogText) }
                 }
                 binding.infoLayout.extendedLayout.visibility = (overviewData.extendedBolus != null && !pump.isFakingTempsByExtendedBoluses).toVisibility()
