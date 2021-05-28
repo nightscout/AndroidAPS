@@ -12,6 +12,7 @@ import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.BolusCalculatorResult
+import info.nightscout.androidaps.database.entities.OfflineEvent
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.UserEntry.Action
@@ -374,7 +375,7 @@ class BolusWizard @Inject constructor(
                 if (useSuperBolus) {
                     uel.log(Action.SUPERBOLUS_TBR, Sources.WizardDialog)
                     if (loopPlugin.isEnabled(PluginType.LOOP)) {
-                        loopPlugin.superBolusTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000)
+                        loopPlugin.goToZeroTemp(2 * 60, profile, OfflineEvent.Reason.SUPER_BOLUS)
                         rxBus.send(EventRefreshOverview("WizardDialog"))
                     }
 
@@ -408,7 +409,7 @@ class BolusWizard @Inject constructor(
                     context = ctx
                     mgdlGlucose = Profile.toMgdl(bg, profile.units)
                     glucoseType = DetailedBolusInfo.MeterType.MANUAL
-                    carbTime = this@BolusWizard.carbTime
+                    carbsTimestamp = dateUtil.now() + T.mins(this@BolusWizard.carbTime.toLong()).msecs()
                     bolusCalculatorResult = createBolusCalculatorResult()
                     notes = this@BolusWizard.notes
                     if (insulin > 0 || carbs > 0) {

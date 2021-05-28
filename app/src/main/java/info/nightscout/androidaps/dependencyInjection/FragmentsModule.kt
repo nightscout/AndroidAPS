@@ -29,11 +29,9 @@ import info.nightscout.androidaps.plugins.general.tidepool.TidepoolFragment
 import info.nightscout.androidaps.plugins.general.wear.WearFragment
 import info.nightscout.androidaps.plugins.insulin.InsulinFragment
 import info.nightscout.androidaps.plugins.profile.local.LocalProfileFragment
-import info.nightscout.androidaps.plugins.profile.ns.NSProfileFragment
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpFragment
 import info.nightscout.androidaps.plugins.source.BGSourceFragment
-import info.nightscout.androidaps.plugins.treatments.TreatmentsFragment
-import info.nightscout.androidaps.plugins.treatments.fragments.*
+import info.nightscout.androidaps.activities.fragments.*
 import info.nightscout.androidaps.utils.protection.PasswordCheck
 
 @Module
@@ -46,8 +44,7 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesAutomationFragment(): AutomationFragment
     @ContributesAndroidInjector abstract fun contributesBGSourceFragment(): BGSourceFragment
 
-    @ContributesAndroidInjector
-    abstract fun contributesConfigBuilderFragment(): ConfigBuilderFragment
+    @ContributesAndroidInjector abstract fun contributesConfigBuilderFragment(): ConfigBuilderFragment
 
     @ContributesAndroidInjector abstract fun contributesFoodFragment(): FoodFragment
     @ContributesAndroidInjector abstract fun contributesInsulinFragment(): InsulinFragment
@@ -58,14 +55,11 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesOverviewFragment(): OverviewFragment
     @ContributesAndroidInjector abstract fun contributesLoopFragment(): LoopFragment
     @ContributesAndroidInjector abstract fun contributesMaintenanceFragment(): MaintenanceFragment
-    @ContributesAndroidInjector abstract fun contributesNSProfileFragment(): NSProfileFragment
     @ContributesAndroidInjector abstract fun contributesNSClientFragment(): NSClientFragment
-    @ContributesAndroidInjector
-    abstract fun contributesSmsCommunicatorFragment(): SmsCommunicatorFragment
+    @ContributesAndroidInjector abstract fun contributesSmsCommunicatorFragment(): SmsCommunicatorFragment
     @ContributesAndroidInjector abstract fun contributesWearFragment(): WearFragment
 
     @ContributesAndroidInjector abstract fun contributesTidepoolFragment(): TidepoolFragment
-    @ContributesAndroidInjector abstract fun contributesTreatmentsFragment(): TreatmentsFragment
     @ContributesAndroidInjector abstract fun contributesTreatmentsBolusFragment(): TreatmentsBolusCarbsFragment
     @ContributesAndroidInjector abstract fun contributesTreatmentsTemporaryBasalsFragment(): TreatmentsTemporaryBasalsFragment
     @ContributesAndroidInjector abstract fun contributesTreatmentsTempTargetFragment(): TreatmentsTempTargetFragment
@@ -85,8 +79,7 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesEditEventDialog(): EditEventDialog
     @ContributesAndroidInjector abstract fun contributesEditTriggerDialog(): EditTriggerDialog
 
-    @ContributesAndroidInjector
-    abstract fun contributesEditQuickWizardDialog(): EditQuickWizardDialog
+    @ContributesAndroidInjector abstract fun contributesEditQuickWizardDialog(): EditQuickWizardDialog
 
     @ContributesAndroidInjector abstract fun contributesExtendedBolusDialog(): ExtendedBolusDialog
     @ContributesAndroidInjector abstract fun contributesFillDialog(): FillDialog
@@ -102,8 +95,7 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesWizardDialog(): WizardDialog
     @ContributesAndroidInjector abstract fun contributesWizardInfoDialog(): WizardInfoDialog
 
-    @ContributesAndroidInjector
-    abstract fun contributesExchangeAuthTokenDialot(): OpenHumansLoginActivity.ExchangeAuthTokenDialog
+    @ContributesAndroidInjector abstract fun contributesExchangeAuthTokenDialog(): OpenHumansLoginActivity.ExchangeAuthTokenDialog
 
     @ContributesAndroidInjector abstract fun contributesPasswordCheck(): PasswordCheck
 }

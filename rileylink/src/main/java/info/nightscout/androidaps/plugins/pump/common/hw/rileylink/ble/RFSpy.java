@@ -16,7 +16,7 @@ import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
-import info.nightscout.androidaps.plugins.pump.common.R;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.R;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.command.RileyLinkCommand;

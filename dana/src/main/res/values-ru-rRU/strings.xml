@@ -106,7 +106,6 @@
     <string name="danars_password_title">Пароль для помпы (только v1)</string>
     <string name="danar_password_title">пароль помпы</string>
     <string name="danar_useextended_title">Для величин &gt;200%% пользуйтесь пролонгированным болюсом</string>
-    <string name="danar_visualizeextendedaspercentage_title">Показать пролонгированный болюс в %%</string>
     <string name="bolusspeed">Скорость подачи болюса</string>
     <string name="selectedpump">Выбранная помпа</string>
     <string name="rs_loginsulinchange_title">Отслеживать замену резервуара</string>

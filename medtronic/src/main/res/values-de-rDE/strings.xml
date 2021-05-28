@@ -71,6 +71,7 @@
     <string name="medtronic_cmd_desc_set_basal_profile">Setzte Basal-Profil</string>
     <string name="medtronic_cmd_desc_get_tbr">Hole Temporäre Basalraten</string>
     <string name="medtronic_cmd_desc_set_tbr">Setze Temporäre Basalrate</string>
+    <string name="medtronic_cmd_desc_cancel_tbr">Temp. Basalrate abbrechen</string>
     <string name="medtronic_cmd_desc_set_bolus">Setze Bolus</string>
     <string name="medtronic_pump_status_pump_unreachable">Pumpe nicht erreichbar</string>
     <string name="medtronic_warning">Warnung</string>

@@ -4,7 +4,7 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.interfaces.ConfigBuilder
-import info.nightscout.androidaps.interfaces.LoopInterface
+import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.automation.actions.ActionLoopEnable
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnectorTest
@@ -20,7 +20,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 @RunWith(PowerMockRunner::class)
 class AutomationEventTest : TestBase() {
 
-    @Mock lateinit var loopPlugin: LoopInterface
+    @Mock lateinit var loopPlugin: Loop
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var configBuilder: ConfigBuilder
 

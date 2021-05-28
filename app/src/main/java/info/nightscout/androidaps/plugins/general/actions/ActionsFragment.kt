@@ -11,7 +11,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
@@ -21,13 +20,18 @@ import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.dialogs.*
-import info.nightscout.androidaps.events.*
+import info.nightscout.androidaps.events.EventCustomActionsChanged
+import info.nightscout.androidaps.events.EventExtendedBolusChange
+import info.nightscout.androidaps.events.EventInitializationChanged
+import info.nightscout.androidaps.events.EventTempBasalChange
+import info.nightscout.androidaps.events.EventTherapyEventChange
 import info.nightscout.androidaps.extensions.toStringMedium
 import info.nightscout.androidaps.extensions.toStringShort
 import info.nightscout.androidaps.extensions.toVisibility
-import info.nightscout.androidaps.historyBrowser.HistoryBrowseActivity
+import info.nightscout.androidaps.activities.HistoryBrowseActivity
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -227,10 +231,6 @@ class ActionsFragment : DaggerFragment() {
         super.onResume()
         disposable += rxBus
             .toObservable(EventInitializationChanged::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({ updateGui() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventRefreshOverview::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ updateGui() }, fabricPrivacy::logException)
         disposable += rxBus

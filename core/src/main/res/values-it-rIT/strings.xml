@@ -154,6 +154,7 @@
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
     <string name="noprofileselected">Nessun profilo selezionato</string>
+    <string name="startprofile">Avvia profilo %1$d%% per %2$d min</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Sono supportati solo valori discreti, non intervalli di valori, come incrementi per basale/bolo nel micro virtuale.</string>
     <!--    APSResult-->
@@ -207,6 +208,9 @@
     <string name="wear">Smartwatch</string>
     <string name="automation">Automazione</string>
     <string name="custom">Personalizzato</string>
+    <string name="pump">Micro</string>
+    <string name="loop">Loop</string>
+    <string name="ns">NS</string>
     <!--    Command-->
     <string name="connectiontimedout">Time out connessione</string>
     <!--    PumpEnactResult-->
@@ -238,30 +242,6 @@
     <!--    Ntp-->
     <string name="timedetection">Rilevamento tempo</string>
     <string name="format_hour_minute">%1$dh %2$dm</string>
-    <!-- PumoCommon - Pump Abstract -->
-    <string name="pump_operation_not_supported_by_pump_driver">Operazione non supportata dal micro e/o dal driver.</string>
-    <string name="pump_operation_not_yet_supported_by_pump">Operazione NON ANCORA supportata dal micro.</string>
-    <string name="common_resultok">OK</string>
-    <!-- PumoCommon - Pump Status -->
-    <string name="pump_status_never_contacted">Mai connesso</string>
-    <string name="pump_status_waking_up">Risveglio</string>
-    <string name="pump_status_error_comm">Errore nella comunicazione</string>
-    <string name="pump_status_timeout_comm">Timeout della comunicazione</string>
-    <string name="pump_status_pump_unreachable">Micro irraggiungibile</string>
-    <string name="pump_status_invalid_config">Configurazione non valida</string>
-    <string name="pump_status_active">Attivo</string>
-    <string name="pump_status_sleeping">In sospensione</string>
-    <!-- PumpCommon - History Group -->
-    <string name="history_group_basal">Basali</string>
-    <string name="history_group_configuration">Configurazioni</string>
-    <string name="history_group_notification">Notifiche</string>
-    <string name="history_group_statistic">Statistiche</string>
-    <string name="history_group_unknown">Sconosciuti</string>
-    <string name="history_group_all">Tutto</string>
-    <string name="history_group_bolus">Boli</string>
-    <string name="history_group_prime">Caricamento</string>
-    <string name="history_group_alarm">Allarmi</string>
-    <string name="history_group_glucose">Glicemia</string>
     <string name="mute5min">Muto per 5 minuti</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">Formato file</string>
@@ -315,13 +295,11 @@
     <!-- User Entry -->
     <string name="uel_bolus">BOLO</string>
     <string name="uel_bolus_advisor">CONSIGLIO BOLO</string>
-    <string name="uel_bolus_record">RECORD BOLO</string>
     <string name="uel_extended_bolus">BOLO ESTESO</string>
     <string name="uel_superbolus_tbr">TBR SUPERBOLO</string>
     <string name="uel_carbs">CHO</string>
     <string name="uel_extended_carbs">CHO ESTESI</string>
     <string name="uel_temp_basal">BASALE TEMPORANEA</string>
-    <string name="uel_tt">TT</string>
     <string name="uel_new_profile">NUOVO PROFILO</string>
     <string name="uel_clone_profile">CLONA PROFILO</string>
     <string name="uel_store_profile">MEMORIZZA PROFILO</string>
@@ -341,25 +319,27 @@
     <string name="uel_accepts_temp_basal">ACCETTA BASALE TEMPORANEA</string>
     <string name="uel_cancel_temp_basal">CANCELLA BASALE TEMPORANEA</string>
     <string name="uel_cancel_extended_bolus">CANCELLA BOLO ESTESO</string>
-    <string name="uel_cancel_tt">CANCELLA TT</string>
     <string name="uel_careportal">PORTALE</string>
+    <string name="uel_site_change">CAMBIO POSIZIONE CANNULA</string>
+    <string name="uel_reservoir_change">CAMBIO SERBATOIO</string>
     <string name="uel_calibration">CALIBRAZIONE</string>
     <string name="uel_prime_bolus">BOLO DI CARICAMENTO</string>
     <string name="uel_treatment">TRATTAMENTO</string>
     <string name="uel_careportal_ns_refresh">PORTALE NS AGGIORNAMENTO</string>
     <string name="uel_profile_switch_ns_refresh">CAMBIO PROFILO NS AGGIORNAMENTO</string>
     <string name="uel_treatments_ns_refresh">TRATTAMENTI NS AGGIORNAMENTO</string>
-    <string name="uel_tt_ns_refresh">TT NS AGGIORNAMENTO</string>
     <string name="uel_automation_removed">AUTOMAZIONE RIMOSSA</string>
     <string name="uel_bg_removed">BG RIMOSSO</string>
     <string name="uel_careportal_removed">PORTALE RIMOSSO</string>
+    <string name="uel_bolus_removed">BOLO RIMOSSO</string>
+    <string name="uel_carbs_removed">CHO RIMOSSI</string>
     <string name="uel_extended_bolus_removed">BOLO ESTESO RIMOSSO</string>
+    <string name="uel_food">CIBO</string>
     <string name="uel_food_removed">CIBO RIMOSSO</string>
     <string name="uel_profile_removed">PROFILO RIMOSSO</string>
     <string name="uel_profile_switch_removed">CAMBIO PROFILO RIMOSSO</string>
     <string name="uel_restart_events_removed">EVENTI DI RIAVVIO RIMOSSI</string>
     <string name="uel_treatment_removed">TRATTAMENTO RIMOSSO</string>
-    <string name="uel_tt_removed">TT RIMOSSO</string>
     <string name="uel_ns_paused">NS IN PAUSA</string>
     <string name="uel_ns_resume">NS RIPRESA</string>
     <string name="uel_ns_queue_cleared">CODA NS CANCELLATA</string>
@@ -380,30 +360,12 @@
     <string name="uel_import_databases">IMPORTA DATABASE</string>
     <string name="uel_otp_export">ESPORTAZIONE OTP</string>
     <string name="uel_otp_reset">RESET OTP</string>
-    <string name="uel_sms_basal">SMS BASALE</string>
-    <string name="uel_sms_bolus">SMS BOLO</string>
-    <string name="uel_sms_cal">SMS CAL</string>
-    <string name="uel_sms_carbs">SMS CHO</string>
-    <string name="uel_sms_extended_bolus">SMS BOLO ESTESO</string>
-    <string name="uel_sms_loop_disabled">SMS LOOP DISABILITATO</string>
-    <string name="uel_sms_loop_enabled">SMS LOOP ABILITATO</string>
-    <string name="uel_sms_loop_resume">SMS RIPRESA LOOP</string>
-    <string name="uel_sms_loop_suspend">SMS SOSPENSIONE LOOP</string>
-    <string name="uel_sms_profile">SMS PROFILO</string>
-    <string name="uel_sms_pump_connect">SMS CONNESSIONE MICRO</string>
-    <string name="uel_sms_pump_disconnect">SMS DISCONNESSIONE MICRO</string>
-    <string name="uel_sms_sms">SMS SMS</string>
-    <string name="uel_sms_tt">SMS TT</string>
-    <string name="uel_tt_deleted_from_ns">TT ELIMINATO DA NS</string>
-    <string name="uel_careportal_deleted_from_ns">PORTALE ELIMINATO DA NS</string>
-    <string name="uel_careportal_from_ns">PORTALE DA NS</string>
-    <string name="uel_tt_from_ns">TT DA NS</string>
-    <string name="uel_tt_canceleted_from_ns">TT CANCELLATO DA NS</string>
     <string name="uel_export_csv">ESPORTA VOCI UTENTE</string>
     <string name="uel_unknown">SCONOSCIUTO</string>
-    <string name="formated_string">Stringa formattata</string>
+    <string name="ue_string">Stringa</string>
+    <string name="ue_source">Fonte</string>
+    <string name="ue_action">Azione</string>
     <string name="ue_export_to_csv">Esporta voci utente in Excel (csv)</string>
-    <string name="ue_csv_header">"Timestamp;Date;UTC Offset;Action;Note;Value;Unit"</string>
     <plurals name="days">
         <item quantity="one">%1$d giorno</item>
         <item quantity="other">%1$d giorni</item>

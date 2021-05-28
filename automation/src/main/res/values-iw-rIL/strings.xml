@@ -23,7 +23,6 @@
     <string name="alreadyset">כבר מוגדר</string>
     <string name="profilepercentage">אחוז הפרופיל</string>
     <string name="startprofileforever">הפעלת פרופיל %1$d%%</string>
-    <string name="startprofile">הפעלת פרופיל %1$d%% במשך %2$d דק\'</string>
     <string name="percent_u">אחוז [%]:</string>
     <string name="sendsmsactionlabel">שליחת מסרון: %1$s</string>
     <string name="sendsmsactiondescription">שליחת מסרונים לכל המספרים</string>
@@ -43,7 +42,7 @@
     <string name="iobcompared">אינסולין פעיל %1$s %2$.1f</string>
     <string name="and">וגם</string>
     <string name="or">או</string>
-    <string name="xor">או בררני</string>
+    <string name="xor">או בררני (XOR)</string>
     <string name="atspecifiedtime">ב-%1$s</string>
     <string name="use_network_location">שימוש במיקום רשת</string>
     <string name="use_gps_location">שימוש במיקום GPS</string>

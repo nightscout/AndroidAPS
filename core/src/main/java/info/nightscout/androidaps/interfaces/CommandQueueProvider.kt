@@ -38,5 +38,5 @@ interface CommandQueueProvider {
     fun isCustomCommandRunning(customCommandType: Class<out CustomCommand>): Boolean
     fun isCustomCommandInQueue(customCommandType: Class<out CustomCommand>): Boolean
     fun spannedStatus(): Spanned
-    fun isThisProfileSet(profile: Profile): Boolean
+    fun isThisProfileSet(requestedProfile: Profile): Boolean
 }

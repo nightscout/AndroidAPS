@@ -27,18 +27,14 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.joanzapata.iconify.Iconify
 import com.joanzapata.iconify.fonts.FontAwesomeModule
 import dev.doubledot.doki.ui.DokiActivity
-import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
-import info.nightscout.androidaps.activities.PreferencesActivity
-import info.nightscout.androidaps.activities.ProfileHelperActivity
-import info.nightscout.androidaps.activities.SingleFragmentActivity
-import info.nightscout.androidaps.activities.StatsActivity
+import info.nightscout.androidaps.activities.*
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.databinding.ActivityMainBinding
 import info.nightscout.androidaps.events.EventAppExit
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.events.EventRebuildTabs
-import info.nightscout.androidaps.historyBrowser.HistoryBrowseActivity
+import info.nightscout.androidaps.activities.HistoryBrowseActivity
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.IconsProvider
@@ -99,6 +95,7 @@ class MainActivity : NoSplashAppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
+    @kotlin.ExperimentalStdlibApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Iconify.with(FontAwesomeModule())
@@ -290,6 +287,11 @@ class MainActivity : NoSplashAppCompatActivity() {
                 return true
             }
 
+            R.id.nav_treatments -> {
+                startActivity(Intent(this, TreatmentsActivity::class.java))
+                return true
+            }
+
             R.id.nav_setupwizard -> {
                 protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, {
                     startActivity(Intent(this, SetupWizardActivity::class.java))
@@ -359,11 +361,12 @@ class MainActivity : NoSplashAppCompatActivity() {
     // Correct place for calling setUserStats() would be probably MainApp
     // but we need to have it called at least once a day. Thus this location
 
+    @kotlin.ExperimentalStdlibApi
     private fun setUserStats() {
         if (!fabricPrivacy.fabricEnabled()) return
         val closedLoopEnabled = if (constraintChecker.isClosedLoopAllowed().value()) "CLOSED_LOOP_ENABLED" else "CLOSED_LOOP_DISABLED"
         // Size is limited to 36 chars
-        val remote = BuildConfig.REMOTE.toLowerCase(Locale.getDefault())
+        val remote = BuildConfig.REMOTE.lowercase(Locale.getDefault())
             .replace("https://", "")
             .replace("http://", "")
             .replace(".git", "")

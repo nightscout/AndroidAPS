@@ -698,17 +698,16 @@ public class AapsOmnipodErosManager {
         detailedBolusInfo.setPumpSerial(serialNumber());
         detailedBolusInfo.setBolusPumpId(addSuccessToHistory(detailedBolusInfo.timestamp, PodHistoryEntryType.SET_BOLUS, detailedBolusInfo.insulin + ";" + detailedBolusInfo.carbs));
 
-        if (detailedBolusInfo.carbs > 0 && detailedBolusInfo.carbTime > 0) {
+        if (detailedBolusInfo.carbs > 0 && detailedBolusInfo.getCarbsTimestamp() != null) {
             // split out a separate carbs record without a pumpId
             DetailedBolusInfo carbInfo = new DetailedBolusInfo();
-            carbInfo.setCarbsTimestamp(detailedBolusInfo.timestamp + detailedBolusInfo.carbTime * 60L * 1000L);
+            carbInfo.setCarbsTimestamp(detailedBolusInfo.getCarbsTimestamp());
             carbInfo.carbs = detailedBolusInfo.carbs;
             carbInfo.setPumpType(PumpType.USER);
             activePlugin.getActiveTreatments().addToHistoryTreatment(carbInfo, false);
 
             // remove carbs from bolusInfo to not trigger any unwanted code paths in
             // TreatmentsPlugin.addToHistoryTreatment() method
-            detailedBolusInfo.carbTime = 0;
             detailedBolusInfo.carbs = 0;
         }
         activePlugin.getActiveTreatments().addToHistoryTreatment(detailedBolusInfo, false);

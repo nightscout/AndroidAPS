@@ -151,6 +151,7 @@
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
     <string name="noprofileselected">Niciun profil selectat</string>
+    <string name="startprofile">Utilizează profilul %1$d%% pentru %2$d min</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Pompa virtuală acceptă doar valori specifice ca și incremente, nu și intervale de valori.
 * Doar valorile specifice, nu şi intervalele de valori sunt suportate ca şi incremente în pompa virtuală.</string>
@@ -191,10 +192,16 @@
     <string name="careportal_pumpbatterychange">Schimbare baterie pompă</string>
     <string name="careportal_temporarytarget">Ţintă temporară</string>
     <string name="careportal_temporarytargetcancel">Oprire ţintă temporară</string>
+    <string name="boluswizard">Asistent bolusare</string>
     <string name="glucosetype_finger">Deget</string>
     <string name="glucosetype_sensor">Senzor</string>
     <string name="manual">Manual</string>
     <string name="unknown">necunoscută</string>
+    <string name="eatingsoon">Mănânc în curând</string>
+    <string name="hypo">Hipo</string>
+    <string name="wear">Ceas</string>
+    <string name="automation">Automatizare</string>
+    <string name="custom">Personalizat</string>
     <!--    Command-->
     <string name="connectiontimedout">Conectare eșuată</string>
     <!--    PumpEnactResult-->
@@ -226,30 +233,6 @@
     <!--    Ntp-->
     <string name="timedetection">Detectare timp</string>
     <string name="format_hour_minute">%1$dh %2$dm</string>
-    <!-- PumoCommon - Pump Abstract -->
-    <string name="pump_operation_not_supported_by_pump_driver">Operațiunea nu este suportată de către pompă și/sau driver.</string>
-    <string name="pump_operation_not_yet_supported_by_pump">Operațiunea nu este ÎNCĂ suportată de către pompă.</string>
-    <string name="common_resultok">OK</string>
-    <!-- PumoCommon - Pump Status -->
-    <string name="pump_status_never_contacted">Niciodată contactată</string>
-    <string name="pump_status_waking_up">Se pornește</string>
-    <string name="pump_status_error_comm">Eroare de comunicație</string>
-    <string name="pump_status_timeout_comm">Comunicația nu a reușit la timp</string>
-    <string name="pump_status_pump_unreachable">Pompă indisponibilă</string>
-    <string name="pump_status_invalid_config">Configurație invalidă</string>
-    <string name="pump_status_active">Activă</string>
-    <string name="pump_status_sleeping">În repaus</string>
-    <!-- PumpCommon - History Group -->
-    <string name="history_group_basal">Bazale</string>
-    <string name="history_group_configuration">Configurații</string>
-    <string name="history_group_notification">Notificări</string>
-    <string name="history_group_statistic">Statistici</string>
-    <string name="history_group_unknown">Necunoscute</string>
-    <string name="history_group_all">Toate</string>
-    <string name="history_group_bolus">Bolusuri</string>
-    <string name="history_group_prime">Amorsare</string>
-    <string name="history_group_alarm">Alarme</string>
-    <string name="history_group_glucose">Glicemie</string>
     <string name="mute5min">Dezactivează pentru 5 minute</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">Format fișier</string>

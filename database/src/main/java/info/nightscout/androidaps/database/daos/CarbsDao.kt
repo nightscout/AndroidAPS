@@ -17,6 +17,9 @@ internal interface CarbsDao : TraceableDao<Carbs> {
     @Query("DELETE FROM $TABLE_CARBS")
     override fun deleteAllEntries()
 
+    @Query("SELECT id FROM $TABLE_CARBS ORDER BY id DESC limit 1")
+    fun getLastId(): Maybe<Long>
+
     @Query("SELECT * FROM $TABLE_CARBS WHERE nightscoutId = :nsId AND referenceId IS NULL")
     fun findByNSId(nsId: String): Carbs?
 

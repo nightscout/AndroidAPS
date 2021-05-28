@@ -1,10 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros;
 
-import static info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.OmnipodConstants.BASAL_STEP_DURATION;
-import static info.nightscout.androidaps.extensions.PumpStateExtensionKt.convertedToAbsolute;
-import static info.nightscout.androidaps.extensions.PumpStateExtensionKt.getPlannedRemainingMinutes;
-import static info.nightscout.androidaps.extensions.PumpStateExtensionKt.toStringFull;
-
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -34,7 +29,6 @@ import javax.inject.Singleton;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.activities.ErrorHelperActivity;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
-import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventAppInitialized;
@@ -44,9 +38,10 @@ import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
-import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.Pump;
+import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
 import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
@@ -109,6 +104,11 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
+
+import static info.nightscout.androidaps.extensions.PumpStateExtensionKt.convertedToAbsolute;
+import static info.nightscout.androidaps.extensions.PumpStateExtensionKt.getPlannedRemainingMinutes;
+import static info.nightscout.androidaps.extensions.PumpStateExtensionKt.toStringFull;
+import static info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.OmnipodConstants.BASAL_STEP_DURATION;
 
 /**
  * Created by andy on 23.04.18.
@@ -651,7 +651,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
             activePlugin.getActiveTreatments().addToHistoryTreatment(detailedBolusInfo, true);
 
             return new PumpEnactResult(getInjector()).success(true).enacted(true).bolusDelivered(0d)
-                    .carbsDelivered(detailedBolusInfo.carbs).comment(info.nightscout.androidaps.core.R.string.common_resultok);
+                    .carbsDelivered(detailedBolusInfo.carbs);
         }
     }
 
@@ -1040,17 +1040,17 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
 
     @NonNull @Override public PumpEnactResult setExtendedBolus(double insulin, int durationInMinutes) {
         aapsLogger.debug(LTag.PUMP, "setExtendedBolus [OmnipodPumpPlugin] - Not implemented.");
-        return getOperationNotSupportedWithCustomText(info.nightscout.androidaps.core.R.string.pump_operation_not_supported_by_pump_driver);
+        return getOperationNotSupportedWithCustomText(info.nightscout.androidaps.plugins.pump.common.R.string.pump_operation_not_supported_by_pump_driver);
     }
 
     @NonNull @Override public PumpEnactResult cancelExtendedBolus() {
         aapsLogger.debug(LTag.PUMP, "cancelExtendedBolus [OmnipodPumpPlugin] - Not implemented.");
-        return getOperationNotSupportedWithCustomText(info.nightscout.androidaps.core.R.string.pump_operation_not_supported_by_pump_driver);
+        return getOperationNotSupportedWithCustomText(info.nightscout.androidaps.plugins.pump.common.R.string.pump_operation_not_supported_by_pump_driver);
     }
 
     @NonNull @Override public PumpEnactResult loadTDDs() {
         aapsLogger.debug(LTag.PUMP, "loadTDDs [OmnipodPumpPlugin] - Not implemented.");
-        return getOperationNotSupportedWithCustomText(info.nightscout.androidaps.core.R.string.pump_operation_not_supported_by_pump_driver);
+        return getOperationNotSupportedWithCustomText(info.nightscout.androidaps.plugins.pump.common.R.string.pump_operation_not_supported_by_pump_driver);
     }
 
     public boolean isUseRileyLinkBatteryLevel() {

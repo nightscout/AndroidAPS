@@ -31,11 +31,11 @@ class TherapyEventDataPoint @Inject constructor(
         if (data.glucose != null && data.glucose != 0.0) {
             var mmol = 0.0
             var mgdl = 0.0
-            if (units == GlucoseUnit.MGDL) {
+            if (data.glucoseUnit == TherapyEvent.GlucoseUnit.MGDL) {
                 mgdl = data.glucose!!
                 mmol = data.glucose!! * Constants.MGDL_TO_MMOLL
             }
-            if (units == GlucoseUnit.MMOL) {
+            if (data.glucoseUnit == TherapyEvent.GlucoseUnit.MMOL) {
                 mmol = data.glucose!!
                 mgdl = data.glucose!! * Constants.MMOLL_TO_MGDL
             }

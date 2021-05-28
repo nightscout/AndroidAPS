@@ -120,9 +120,10 @@ class ObjectivesPlugin @Inject constructor(
         sp.putBoolean(R.string.key_objectiveusescale, false)
     }
 
+    @kotlin.ExperimentalStdlibApi
     fun completeObjectives(activity: FragmentActivity, request: String) {
         val requestCode = sp.getString(R.string.key_objectives_request_code, "")
-        var url = sp.getString(R.string.key_nsclientinternal_url, "").toLowerCase(Locale.getDefault())
+        var url = sp.getString(R.string.key_nsclientinternal_url, "").lowercase(Locale.getDefault())
         if (!url.endsWith("/")) url = "$url/"
         @Suppress("DEPRECATION") val hashNS = Hashing.sha1().hashString(url + BuildConfig.APPLICATION_ID + "/" + requestCode, Charsets.UTF_8).toString()
         if (request.equals(hashNS.substring(0, 10), ignoreCase = true)) {

@@ -26,12 +26,12 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
     implementation("io.reactivex.rxjava2:rxkotlin:$rxkotlin_version")
 
-    implementation "com.google.code.gson:gson:2.8.6"
+    implementation "com.google.code.gson:gson:2.8.7"
 
     api "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
     /* Database schema export */
-    kapt "android.arch.persistence.room:compiler:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
     implementation "androidx.room:room-rxjava2:$room_version"
 

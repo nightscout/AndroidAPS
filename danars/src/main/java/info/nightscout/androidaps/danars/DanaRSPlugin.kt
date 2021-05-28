@@ -141,6 +141,7 @@ class DanaRSPlugin @Inject constructor(
         commandQueue.readStatus("DeviceChanged", null)
     }
 
+    @kotlin.ExperimentalStdlibApi
     override fun connect(reason: String) {
         aapsLogger.debug(LTag.PUMP, "RS connect from: $reason")
         if (danaRSService != null && mDeviceAddress != "" && mDeviceName != "") {
@@ -282,13 +283,12 @@ class DanaRSPlugin @Inject constructor(
             // I don't think it's necessary to copy DetailedBolusInfo right now for carbs records
             val carbs = detailedBolusInfo.carbs
             detailedBolusInfo.carbs = 0.0
-            var carbTime = detailedBolusInfo.carbTime
-            if (carbTime == 0) carbTime-- // better set 1 min back to prevents clash with insulin
-            detailedBolusInfo.carbTime = 0
+            var carbTimeStamp = detailedBolusInfo.carbsTimestamp ?: detailedBolusInfo.timestamp
+            if (carbTimeStamp == detailedBolusInfo.timestamp) carbTimeStamp -= T.mins(1).msecs() // better set 1 min back to prevents clash with insulin
             detailedBolusInfoStorage.add(detailedBolusInfo) // will be picked up on reading history
             val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB)
             var connectionOK = false
-            if (detailedBolusInfo.insulin > 0 || carbs > 0) connectionOK = danaRSService?.bolus(detailedBolusInfo.insulin, carbs.toInt(), dateUtil.now() + T.mins(carbTime.toLong()).msecs(), t)
+            if (detailedBolusInfo.insulin > 0 || carbs > 0) connectionOK = danaRSService?.bolus(detailedBolusInfo.insulin, carbs.toInt(), carbTimeStamp, t)
                 ?: false
             val result = PumpEnactResult(injector)
             result.success = connectionOK && abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.bolusStep

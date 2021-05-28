@@ -75,12 +75,16 @@ class CompatDBHelper @Inject constructor(
                 rxBus.send(EventFoodDatabaseChanged())
             }
             it.filterIsInstance<ProfileSwitch>().firstOrNull()?.let {
-                aapsLogger.debug(LTag.DATABASE, "Firing EventProfileNeedsUpdate")
+                aapsLogger.debug(LTag.DATABASE, "Firing EventProfileSwitchChanged")
                 rxBus.send(EventProfileSwitchChanged())
             }
             it.filterIsInstance<EffectiveProfileSwitch>().firstOrNull()?.let {
-                aapsLogger.debug(LTag.DATABASE, "Firing EventProfileNeedsUpdate")
+                aapsLogger.debug(LTag.DATABASE, "Firing EventProfileSwitchChanged")
                 rxBus.send(EventProfileSwitchChanged())
+            }
+            it.filterIsInstance<OfflineEvent>().firstOrNull()?.let {
+                aapsLogger.debug(LTag.DATABASE, "Firing EventOfflineChange")
+                rxBus.send(EventOfflineChange())
             }
         }
 }

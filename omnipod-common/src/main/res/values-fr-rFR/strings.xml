@@ -127,7 +127,7 @@
     <string name="omnipod_common_cmd_set_bolus">Définir Bolus</string>
     <string name="omnipod_common_cmd_cancel_bolus">Annuler Bolus</string>
     <string name="omnipod_common_cmd_set_tbr">Définir Basal Temporaire</string>
-    <string name="omnipod_common_cmd_cancel_tbr_by_driver">Annulation basal temp. (en interne par le pilote)</string>
+    <string name="omnipod_common_cmd_cancel_tbr_by_driver">Annulation basal temp (en interne par le pilote)</string>
     <string name="omnipod_common_cmd_cancel_tbr">Annuler basal temporaire</string>
     <string name="omnipod_common_cmd_set_basal_schedule">Définir le profil de basal</string>
     <string name="omnipod_common_cmd_get_pod_status">Obtenir l\'état du Pod</string>

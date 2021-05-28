@@ -39,7 +39,7 @@ class NSClientUpdateRemoveAckWorker(
             is PairTemporaryTarget       -> {
                 val pair = ack.originalObject
                 dataSyncSelector.confirmLastTempTargetsIdIfGreater(pair.updateRecordId)
-                rxBus.send(EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked TemporaryTarget" + ack._id))
+                rxBus.send(EventNSClientNewLog("DBUPDATE", "Acked TemporaryTarget" + ack._id))
                 // Send new if waiting
                 dataSyncSelector.processChangedTempTargetsCompat()
                 ret = Result.success(workDataOf("ProcessedData" to pair.toString()))
@@ -48,7 +48,7 @@ class NSClientUpdateRemoveAckWorker(
             is PairGlucoseValue          -> {
                 val pair = ack.originalObject
                 dataSyncSelector.confirmLastGlucoseValueIdIfGreater(pair.updateRecordId)
-                rxBus.send(EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked GlucoseValue " + ack._id))
+                rxBus.send(EventNSClientNewLog("DBUPDATE", "Acked GlucoseValue " + ack._id))
                 // Send new if waiting
                 dataSyncSelector.processChangedGlucoseValuesCompat()
                 ret = Result.success(workDataOf("ProcessedData" to pair.toString()))
@@ -57,7 +57,7 @@ class NSClientUpdateRemoveAckWorker(
             is PairFood                  -> {
                 val pair = ack.originalObject
                 dataSyncSelector.confirmLastFoodIdIfGreater(pair.updateRecordId)
-                rxBus.send(EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked Food " + ack._id))
+                rxBus.send(EventNSClientNewLog("DBUPDATE", "Acked Food " + ack._id))
                 // Send new if waiting
                 dataSyncSelector.processChangedFoodsCompat()
                 ret = Result.success(workDataOf("ProcessedData" to pair.toString()))
@@ -66,7 +66,7 @@ class NSClientUpdateRemoveAckWorker(
             is PairTherapyEvent          -> {
                 val pair = ack.originalObject
                 dataSyncSelector.confirmLastTherapyEventIdIfGreater(pair.updateRecordId)
-                rxBus.send(EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked TherapyEvent " + ack._id))
+                rxBus.send(EventNSClientNewLog("DBUPDATE", "Acked TherapyEvent " + ack._id))
                 // Send new if waiting
                 dataSyncSelector.processChangedTherapyEventsCompat()
                 ret = Result.success(workDataOf("ProcessedData" to pair.toString()))
@@ -75,7 +75,7 @@ class NSClientUpdateRemoveAckWorker(
             is PairBolus                 -> {
                 val pair = ack.originalObject
                 dataSyncSelector.confirmLastBolusIdIfGreater(pair.updateRecordId)
-                rxBus.send(EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked Bolus " + ack._id))
+                rxBus.send(EventNSClientNewLog("DBUPDATE", "Acked Bolus " + ack._id))
                 // Send new if waiting
                 dataSyncSelector.processChangedBolusesCompat()
                 ret = Result.success(workDataOf("ProcessedData" to pair.toString()))
@@ -84,7 +84,7 @@ class NSClientUpdateRemoveAckWorker(
             is PairCarbs                 -> {
                 val pair = ack.originalObject
                 dataSyncSelector.confirmLastCarbsIdIfGreater(pair.updateRecordId)
-                rxBus.send(EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked Carbs " + ack._id))
+                rxBus.send(EventNSClientNewLog("DBUPDATE", "Acked Carbs " + ack._id))
                 // Send new if waiting
                 dataSyncSelector.processChangedCarbsCompat()
                 ret = Result.success(workDataOf("ProcessedData" to pair.toString()))
@@ -93,7 +93,7 @@ class NSClientUpdateRemoveAckWorker(
             is PairBolusCalculatorResult -> {
                 val pair = ack.originalObject
                 dataSyncSelector.confirmLastBolusCalculatorResultsIdIfGreater(pair.updateRecordId)
-                rxBus.send(EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked BolusCalculatorResult " + ack._id))
+                rxBus.send(EventNSClientNewLog("DBUPDATE", "Acked BolusCalculatorResult " + ack._id))
                 // Send new if waiting
                 dataSyncSelector.processChangedBolusCalculatorResultsCompat()
                 ret = Result.success(workDataOf("ProcessedData" to pair.toString()))
@@ -102,7 +102,7 @@ class NSClientUpdateRemoveAckWorker(
             is PairTemporaryBasal        -> {
                 val pair = ack.originalObject
                 dataSyncSelector.confirmLastTemporaryBasalIdIfGreater(pair.updateRecordId)
-                rxBus.send(EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked TemporaryBasal " + ack._id))
+                rxBus.send(EventNSClientNewLog("DBUPDATE", "Acked TemporaryBasal " + ack._id))
                 // Send new if waiting
                 dataSyncSelector.processChangedTemporaryBasalsCompat()
                 ret = Result.success(workDataOf("ProcessedData" to pair.toString()))
@@ -111,7 +111,7 @@ class NSClientUpdateRemoveAckWorker(
             is PairExtendedBolus         -> {
                 val pair = ack.originalObject
                 dataSyncSelector.confirmLastExtendedBolusIdIfGreater(pair.updateRecordId)
-                rxBus.send(EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked ExtendedBolus " + ack._id))
+                rxBus.send(EventNSClientNewLog("DBUPDATE", "Acked ExtendedBolus " + ack._id))
                 // Send new if waiting
                 dataSyncSelector.processChangedExtendedBolusesCompat()
                 ret = Result.success(workDataOf("ProcessedData" to pair.toString()))
@@ -120,9 +120,18 @@ class NSClientUpdateRemoveAckWorker(
             is PairProfileSwitch         -> {
                 val pair = ack.originalObject
                 dataSyncSelector.confirmLastProfileSwitchIdIfGreater(pair.updateRecordId)
-                rxBus.send(EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked ProfileSwitch " + ack._id))
+                rxBus.send(EventNSClientNewLog("DBUPDATE", "Acked ProfileSwitch " + ack._id))
                 // Send new if waiting
                 dataSyncSelector.processChangedProfileSwitchesCompat()
+                ret = Result.success(workDataOf("ProcessedData" to pair.toString()))
+            }
+
+            is PairOfflineEvent       -> {
+                val pair = ack.originalObject
+                dataSyncSelector.confirmLastOfflineEventIdIfGreater(pair.updateRecordId)
+                rxBus.send(EventNSClientNewLog("DBUPDATE", "Acked OfflineEvent" + ack._id))
+                // Send new if waiting
+                dataSyncSelector.processChangedOfflineEventsCompat()
                 ret = Result.success(workDataOf("ProcessedData" to pair.toString()))
             }
         }

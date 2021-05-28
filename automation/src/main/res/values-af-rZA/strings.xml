@@ -20,7 +20,6 @@
     <string name="automation_trigger_pump_last_connection_compared">Vorige konneksie na pomp %1$s %2$s min terug</string>
     <string name="profilepercentage">Profiel persentasie</string>
     <string name="startprofileforever">Begin profiel %1$d%%</string>
-    <string name="startprofile">Begin profiele%1$d%% vir %2$d min</string>
     <string name="percent_u">Persentasie [%]:</string>
     <string name="sendsmsactionlabel">Stuur\'n SMS: %1$s</string>
     <string name="sendsmsactiontext">Stuur\'n SMS met die teks</string>

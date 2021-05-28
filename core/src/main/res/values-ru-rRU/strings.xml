@@ -105,6 +105,7 @@
     <string name="notes_label">Заметки</string>
     <string name="remove_button">Удалить</string>
     <string name="addnew">Добавить новый</string>
+    <string name="wrong_pump_data">Данные поступают с другой помпы. Измените драйвер помпы, чтобы сбросить ее состояние.</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Макс базальный уровень ограничен до %1$.2f ед/ч вследствие %2$s</string>
     <string name="pumplimit">лимит помпы</string>
@@ -154,6 +155,7 @@
     <string name="profile_carbs_per_unit">г/ед</string>
     <!--    ProfileFunction-->
     <string name="noprofileselected">профиль не выбран</string>
+    <string name="startprofile">Начать профиль %1$d%% на %2$d мин</string>
     <!--    PumpType-->
     <string name="def_extended_note">* В виртуальной помпе поддерживаются только дискретные величины для обработки базала/болюса.</string>
     <!--    APSResult-->
@@ -207,6 +209,10 @@
     <string name="wear">Смарт-часы Wear</string>
     <string name="automation">Автоматизация</string>
     <string name="custom">Пользовательский</string>
+    <string name="pump">Помпа</string>
+    <string name="loop">Замкнутый цикл</string>
+    <string name="ns">NS</string>
+    <string name="record">Запись</string>
     <!--    Command-->
     <string name="connectiontimedout">Истекло время ожидания соединения</string>
     <!--    PumpEnactResult-->
@@ -238,30 +244,6 @@
     <!--    Ntp-->
     <string name="timedetection">Определение времени</string>
     <string name="format_hour_minute">%1$dч %2$dмин</string>
-    <!-- PumoCommon - Pump Abstract -->
-    <string name="pump_operation_not_supported_by_pump_driver">Операция не поддерживается помпой и/или драйвером.</string>
-    <string name="pump_operation_not_yet_supported_by_pump">Операция ЕЩЕ не поддерживается помпой.</string>
-    <string name="common_resultok">OK</string>
-    <!-- PumoCommon - Pump Status -->
-    <string name="pump_status_never_contacted">Никогда не подключалась</string>
-    <string name="pump_status_waking_up">Пробуждение</string>
-    <string name="pump_status_error_comm">Ошибка связи</string>
-    <string name="pump_status_timeout_comm">Таймаут связи</string>
-    <string name="pump_status_pump_unreachable">Помпа недоступна</string>
-    <string name="pump_status_invalid_config">Недопустимая конфигурация</string>
-    <string name="pump_status_active">Активно</string>
-    <string name="pump_status_sleeping">Сон</string>
-    <!-- PumpCommon - History Group -->
-    <string name="history_group_basal">Базал</string>
-    <string name="history_group_configuration">Конфигурация</string>
-    <string name="history_group_notification">Уведомления</string>
-    <string name="history_group_statistic">Статистика</string>
-    <string name="history_group_unknown">Неизвестные</string>
-    <string name="history_group_all">Все</string>
-    <string name="history_group_bolus">Болюсы</string>
-    <string name="history_group_prime">Заполнение инфузионной системы</string>
-    <string name="history_group_alarm">Оповещения об опасности</string>
-    <string name="history_group_glucose">Гликемия</string>
     <string name="mute5min">Отключить уведомления на 5 минут</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">Формат файла</string>
@@ -315,13 +297,12 @@
     <!-- User Entry -->
     <string name="uel_bolus">БОЛЮС</string>
     <string name="uel_bolus_advisor">ПОМОЩНИК БОЛЮСА</string>
-    <string name="uel_bolus_record">ЗАПИСЬ О БОЛЮСЕ</string>
     <string name="uel_extended_bolus">ПРОЛОНГИРОВАННЫЙ БОЛЮС</string>
     <string name="uel_superbolus_tbr">СУПЕРБОЛЮС ВБС/TBR</string>
     <string name="uel_carbs">УГЛЕВОДЫ</string>
     <string name="uel_extended_carbs">ПРОЛОНГИРОВАННЫЕ УГЛЕВОДЫ</string>
     <string name="uel_temp_basal">ВРЕМЕННЫЙ БАЗАЛ</string>
-    <string name="uel_tt">ВРЕМ ЦЕЛЬ TT</string>
+    <string name="uel_tt">ВРЕМ ЦЕЛЬ</string>
     <string name="uel_new_profile">НОВЫЙ ПРОФИЛЬ</string>
     <string name="uel_clone_profile">КЛОНИРОВАТЬ ПРОФИЛЬ</string>
     <string name="uel_store_profile">СОХРАНИТЬ ПРОФИЛЬ</string>
@@ -340,26 +321,33 @@
     <string name="uel_clear_pairing_keys">ОЧИСТИТЬ КЛЮЧИ СОПРЯЖЕНИЯ</string>
     <string name="uel_accepts_temp_basal">ПРИНЯТЬ ВРЕМЕННЫЙ БАЗАЛ</string>
     <string name="uel_cancel_temp_basal">ОТМЕНИТЬ ВРЕМЕННЫЙ БАЗАЛ</string>
+    <string name="uel_cancel_bolus">ОТМЕНИТЬ БОЛЮС</string>
     <string name="uel_cancel_extended_bolus">ОТМЕНИТЬ ПРОЛОНГИРОВАННЫЙ БОЛЮС</string>
-    <string name="uel_cancel_tt">ОТМЕНИТЬ ВЦ/TT</string>
+    <string name="uel_cancel_tt">ОТМЕНИТЬ ВРЕМЕННУЮ ЦЕЛЬ</string>
     <string name="uel_careportal">ПОРТАЛ ТЕРАПИИ</string>
+    <string name="uel_site_change">СМЕНА МЕСТА КАТЕТЕРА</string>
+    <string name="uel_reservoir_change">ЗАМЕНА РЕЗЕРВУАРА</string>
     <string name="uel_calibration">КАЛИБРОВКА</string>
     <string name="uel_prime_bolus">НАЧАТЬ БОЛЮС</string>
     <string name="uel_treatment">ТЕРАПИЯ</string>
     <string name="uel_careportal_ns_refresh">ОБНОВИТЬ ПОРТАЛ ТЕРАПИИ NS</string>
     <string name="uel_profile_switch_ns_refresh">ОБНОВЛЕНИЕ КОММУТАТОРА ПРОФИЛЯ NS</string>
     <string name="uel_treatments_ns_refresh">ОБНОВИТЬ НАЗНАЧЕНИЯ ИЗ NS</string>
-    <string name="uel_tt_ns_refresh">ОБНОВИТЬ TT ИЗ NS</string>
+    <string name="uel_tt_ns_refresh">ОБНОВЛЕНИЕ ВРЕМ ЦЕЛИ NS</string>
     <string name="uel_automation_removed">АВТОМАТИЗАЦИЯ УДАЛЕНА</string>
     <string name="uel_bg_removed">ГК УДАЛЕНА</string>
     <string name="uel_careportal_removed">ПОРТАЛ ТЕРАПИИ УДАЛЕН</string>
+    <string name="uel_bolus_removed">BOLUS УДАЛЕН</string>
+    <string name="uel_carbs_removed">УГЛЕВОДЫ УДАЛЕНЫ</string>
+    <string name="uel_temp_basal_removed">ВРЕМ БАЗАЛ УДАЛЕН</string>
     <string name="uel_extended_bolus_removed">ПРОЛОНГИРОВАННЫЙ БОЛЮС УДАЛЕН</string>
+    <string name="uel_food">ЕДА</string>
     <string name="uel_food_removed">ПИТАНИЕ УДАЛЕНО</string>
     <string name="uel_profile_removed">ПРОФИЛЬ УДАЛЕН</string>
     <string name="uel_profile_switch_removed">ПЕРЕКЛЮЧЕНИЕ ПРОФИЛЯ УДАЛЕНО</string>
     <string name="uel_restart_events_removed">СОБЫТИЯ ПЕРЕЗАПУСКА УДАЛЕНЫ</string>
     <string name="uel_treatment_removed">НАЗНАЧЕНИЕ УДАЛЕНО</string>
-    <string name="uel_tt_removed">ВР ЦЕЛЬ TT УДАЛЕНА</string>
+    <string name="uel_tt_removed">ВРЕМ ЦЕЛЬ УДАЛЕНА</string>
     <string name="uel_ns_paused">NS ПРИОСТАНОВЛЕН</string>
     <string name="uel_ns_resume">NS ВОЗОБНОВЛЕН</string>
     <string name="uel_ns_queue_cleared">ОЧЕРЕДЬ NS ОЧИЩЕНА</string>
@@ -380,30 +368,20 @@
     <string name="uel_import_databases">ИМПОРТИРОВАТЬ БАЗЫ ДАННЫХ</string>
     <string name="uel_otp_export">ЭКСПОРТИРОВАТЬ OTP</string>
     <string name="uel_otp_reset">СБРОСИТЬ OTP</string>
-    <string name="uel_sms_basal">БАЗАЛ ПО SMS</string>
-    <string name="uel_sms_bolus">БОЛЮС ПО SMS</string>
-    <string name="uel_sms_cal">КАЛИБРОВКА ПО SMS</string>
-    <string name="uel_sms_carbs">УГЛЕВОДЫ ПО SMS</string>
-    <string name="uel_sms_extended_bolus">ПРОЛОНГИРОВАННЫЙ БОЛЮС ПО SMS</string>
-    <string name="uel_sms_loop_disabled">ОТКЛЮЧИТЬ ЦИКЛ ПО SMS</string>
-    <string name="uel_sms_loop_enabled">ВКЛЮЧИТЬ ЦИКЛ ПО SMS</string>
-    <string name="uel_sms_loop_resume">ВОЗОБНОВИТЬ ЗЦ ПО SMS</string>
-    <string name="uel_sms_loop_suspend">ПРИОСТАНОВИТЬ ЗЦ ПО SMS</string>
-    <string name="uel_sms_profile">ПРОФИЛЬ ПО SMS</string>
-    <string name="uel_sms_pump_connect">ВЫПОЛНИТЬ СВЯЗЬ С ПОМПОЙ ПО SMS</string>
-    <string name="uel_sms_pump_disconnect">РАЗЪЕДИНИТЬ СВЯЗЬ С ПОМПОЙ ПО SMS</string>
-    <string name="uel_sms_sms">ОТПРАВИТЬ SMS ЧЕРЕЗ SMS</string>
-    <string name="uel_sms_tt">TT ПО SMS</string>
-    <string name="uel_tt_deleted_from_ns">TT УДАЛЕНА ИЗ NS</string>
-    <string name="uel_careportal_deleted_from_ns">ПОРТАЛ ТЕРАПИИ УДАЛЕН ИЗ NS</string>
-    <string name="uel_careportal_from_ns">ПОРТАЛ ТЕРАПИИ ИЗ NS</string>
-    <string name="uel_tt_from_ns">TT ИЗ NS</string>
-    <string name="uel_tt_canceleted_from_ns">TT ОТМЕНЕНА ИЗ NS</string>
+    <string name="uel_stop_sms">ОСТАНОВКА СМС</string>
     <string name="uel_export_csv">ЭКСПОРТИРОВАТЬ ПОЛЬЗОВАТЕЛЬСКИЕ ЗАПИСИ</string>
+    <string name="uel_start_aaps">ЗАПУСТИТЬ AAPS</string>
+    <string name="uel_exit_aaps">ЗАКРЫТЬ AAPS</string>
+    <string name="uel_plugin_enabled">МОДУЛЬ ВКЛЮЧЕН</string>
+    <string name="uel_plugin_disabled">МОДУЛЬ ВЫКЛЮЧЕН</string>
     <string name="uel_unknown">НЕИЗВЕСТНО</string>
-    <string name="formated_string">Форматированная строка</string>
+    <string name="ue_string">Строка</string>
+    <string name="ue_source">Источник</string>
+    <string name="ue_utc_offset">Смещение UTC</string>
+    <string name="ue_action">Действие</string>
+    <string name="ue_timestamp">Отметка времени</string>
+    <string name="ue_none">Нет единиц</string>
     <string name="ue_export_to_csv">Экспорт пользовательских записей в Excel (csv)</string>
-    <string name="ue_csv_header">"Отметка времени; Дата; Смещение по Гринвичу; Действия; Блокнот; Значение, Ед"</string>
     <plurals name="days">
         <item quantity="one">%1$d день</item>
         <item quantity="few">%1$d дня</item>

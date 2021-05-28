@@ -97,6 +97,7 @@ class DanaRSService : DaggerService() {
     val isConnecting: Boolean
         get() = bleComm.isConnecting
 
+    @kotlin.ExperimentalStdlibApi
     fun connect(from: String, address: String): Boolean {
         return bleComm.connect(from, address)
     }
@@ -198,7 +199,6 @@ class DanaRSService : DaggerService() {
             danaPump.fromTemporaryBasal(tbr)
             rxBus.send(EventDanaRNewStatus())
             rxBus.send(EventInitializationChanged())
-            //NSUpload.uploadDeviceStatus();
             if (danaPump.dailyTotalUnits > danaPump.maxDailyTotalUnits * Constants.dailyLimitWarning) {
                 aapsLogger.debug(LTag.PUMPCOMM, "Approaching daily limit: " + danaPump.dailyTotalUnits + "/" + danaPump.maxDailyTotalUnits)
                 if (System.currentTimeMillis() > lastApproachingDailyLimit + 30 * 60 * 1000) {

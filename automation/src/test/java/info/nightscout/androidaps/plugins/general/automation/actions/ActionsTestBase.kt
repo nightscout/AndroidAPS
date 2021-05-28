@@ -2,14 +2,15 @@ package info.nightscout.androidaps.plugins.general.automation.actions
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.plugins.general.automation.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
+import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.database.entities.OfflineEvent
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.general.automation.TestBaseWithProfile
 import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -28,13 +29,20 @@ open class ActionsTestBase : TestBaseWithProfile() {
         pluginDescription: PluginDescription
     ) : PluginBase(
         pluginDescription, aapsLogger, resourceHelper, injector
-    ), LoopInterface {
+    ), Loop {
 
         private var suspended = false
-        override var lastRun: LoopInterface.LastRun? = LoopInterface.LastRun()
+        override var lastRun: Loop.LastRun? = Loop.LastRun()
         override val isSuspended: Boolean = suspended
-        override fun suspendTo(endTime: Long) {}
-        override fun createOfflineEvent(durationInMinutes: Int) {}
+        override var enabled: Boolean
+            get() = true
+            set(value) {}
+
+        override fun minutesToEndOfSuspend(): Int = 0
+
+        override fun goToZeroTemp(durationInMinutes: Int, profile: Profile, reason: OfflineEvent.Reason) {
+        }
+
         override fun suspendLoop(durationInMinutes: Int) {}
     }
 
@@ -101,6 +109,8 @@ open class ActionsTestBase : TestBaseWithProfile() {
                 it.resourceHelper = resourceHelper
                 it.configBuilder = configBuilder
                 it.rxBus = rxBus
+                it.repository = repository
+                it.dateUtil = dateUtil
                 it.uel = uel
             }
             if (it is ActionLoopEnable) {
@@ -135,5 +145,8 @@ open class ActionsTestBase : TestBaseWithProfile() {
         `when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
         `when`(activePlugin.activeProfileSource).thenReturn(profilePlugin)
         `when`(profilePlugin.profile).thenReturn(getValidProfileStore())
+
+        `when`(resourceHelper.gs(R.string.ok)).thenReturn("OK")
+        `when`(resourceHelper.gs(R.string.error)).thenReturn("Error")
     }
 }

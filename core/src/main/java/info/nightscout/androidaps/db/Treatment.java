@@ -18,10 +18,10 @@ import javax.inject.Inject;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.core.R;
-import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.database.entities.Bolus;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.Insulin;
+import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries;
@@ -33,7 +33,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 @Deprecated
 @DatabaseTable(tableName = Treatment.TABLE_TREATMENTS)
-public class Treatment implements DataPointWithLabelInterface, DbObjectBase {
+public class Treatment implements DataPointWithLabelInterface {
     @Inject public DefaultValueHelper defaultValueHelper;
     @Inject public ResourceHelper resourceHelper;
     @Inject public ProfileFunction profileFunction;
@@ -270,12 +270,10 @@ public class Treatment implements DataPointWithLabelInterface, DbObjectBase {
 
     //  ----------------- DataPointInterface end --------------------
 
-    @Override
     public long getDate() {
         return this.date;
     }
 
-    @Override
     public long getPumpId() {
         return this.pumpId;
     }

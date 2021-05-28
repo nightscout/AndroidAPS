@@ -64,7 +64,7 @@
     <string name="riley_link_common_yes">Oui</string>
     <string name="riley_link_common_no">Non</string>
     <!-- RileyLink - Preferences -->
-    <string name="riley_link_show_battery_level">Afficher le niveau de pile transmis par OrangeLink/EmaLink</string>
+    <string name="riley_link_show_battery_level">Afficher le niveau de batterie transmis par OrangeLink/EmaLink/DiaLink</string>
     <string name="riley_link_show_battery_level_summary">NE FONCTIONNE PAS avec le RileyLink original. Peut ne pas fonctionner avec d\'autres versions de RileyLink.</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d jour</item>

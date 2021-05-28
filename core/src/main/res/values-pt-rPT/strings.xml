@@ -154,6 +154,7 @@
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
     <string name="noprofileselected">Nenhum perfil seleccionado</string>
+    <string name="startprofile">Iniciar perfil %1$d%% para %2$d min</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Somente valores discretos nos intervalos são suportados como granularidade para basal/bolus na bomba virtual.</string>
     <!--    APSResult-->
@@ -238,30 +239,6 @@
     <!--    Ntp-->
     <string name="timedetection">Detecção de tempo</string>
     <string name="format_hour_minute">%1$dh %2$dm</string>
-    <!-- PumoCommon - Pump Abstract -->
-    <string name="pump_operation_not_supported_by_pump_driver">Operação não suportada pela Bomba e/ou Controlador.</string>
-    <string name="pump_operation_not_yet_supported_by_pump">Operação não suportada ainda pela Bomba.</string>
-    <string name="common_resultok">OK</string>
-    <!-- PumoCommon - Pump Status -->
-    <string name="pump_status_never_contacted">Nunca contactado</string>
-    <string name="pump_status_waking_up">A acordar</string>
-    <string name="pump_status_error_comm">Erro com comunicação</string>
-    <string name="pump_status_timeout_comm">Tempo limite para comunicação</string>
-    <string name="pump_status_pump_unreachable">Bomba inacessível</string>
-    <string name="pump_status_invalid_config">Configuração inválida</string>
-    <string name="pump_status_active">Activo</string>
-    <string name="pump_status_sleeping">A dormir</string>
-    <!-- PumpCommon - History Group -->
-    <string name="history_group_basal">Basais</string>
-    <string name="history_group_configuration">Configurações</string>
-    <string name="history_group_notification">Notificações</string>
-    <string name="history_group_statistic">Estatísticas</string>
-    <string name="history_group_unknown">Desconhecido</string>
-    <string name="history_group_all">Tudo</string>
-    <string name="history_group_bolus">Bólus</string>
-    <string name="history_group_prime">Purgar</string>
-    <string name="history_group_alarm">Alarmes</string>
-    <string name="history_group_glucose">Glucose</string>
     <string name="mute5min">Silenciar por 5 minutos</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">Formato do ficheiro</string>
@@ -315,13 +292,11 @@
     <!-- User Entry -->
     <string name="uel_bolus">BÓLUS</string>
     <string name="uel_bolus_advisor">ASSISTENTE DE BÓLUS</string>
-    <string name="uel_bolus_record">REGISTO DE BÓLUS</string>
     <string name="uel_extended_bolus">BÓLUS PROLONGADO</string>
     <string name="uel_superbolus_tbr">DBT SUPERBÓLUS</string>
     <string name="uel_carbs">HC</string>
     <string name="uel_extended_carbs">HC LENTOS</string>
     <string name="uel_temp_basal">BASAL TEMPORÁRIA</string>
-    <string name="uel_tt">AT</string>
     <string name="uel_new_profile">NOVO PERFIL</string>
     <string name="uel_clone_profile">CLONAR PERFIL</string>
     <string name="uel_store_profile">GUARDAR PERFIL</string>
@@ -341,13 +316,11 @@
     <string name="uel_accepts_temp_basal">ACEITAR BASAL TEMPORÁRIA</string>
     <string name="uel_cancel_temp_basal">CANCELAR BASAL TEMPORÁRIA</string>
     <string name="uel_cancel_extended_bolus">CANCELAR BÓLUS PROLONGADO</string>
-    <string name="uel_cancel_tt">CANCELAR AT</string>
     <string name="uel_prime_bolus">BÓLUS DE PREENCHIMENTO</string>
     <string name="uel_treatment">TRATAMENTO</string>
     <string name="uel_careportal_ns_refresh">ATUALIZAÇÃO DO CAREPORTAL DO NS</string>
     <string name="uel_profile_switch_ns_refresh">ATUALIZAR MUDANÇA DE PERFIL DO NS</string>
     <string name="uel_treatments_ns_refresh">ATUALIZAR TRATAMENTOS DO NS </string>
-    <string name="uel_tt_ns_refresh">ATUALIZAR AT DO NS</string>
     <string name="uel_automation_removed">AUTOMATIZAÇÃO REMOVIDA</string>
     <string name="uel_bg_removed">GLIC REMOVIDA</string>
     <string name="uel_careportal_removed">CAREPORTAL REMOVIDO</string>
@@ -357,7 +330,6 @@
     <string name="uel_profile_switch_removed">TROCA DE PERFIL REMOVIDA</string>
     <string name="uel_restart_events_removed">REINICIAR EVENTOS REMOVIDOS</string>
     <string name="uel_treatment_removed">TRATAMENTO REMOVIDO</string>
-    <string name="uel_tt_removed">AT REMOVIDO</string>
     <string name="uel_ns_paused">NS PAUSADO</string>
     <string name="uel_ns_resume">RETOMAR NS</string>
     <string name="uel_ns_queue_cleared">FILA DO NS LIMPA</string>
@@ -378,30 +350,9 @@
     <string name="uel_import_databases">IMPORTAR BASES DE DADOS</string>
     <string name="uel_otp_export">EXPORTAR OTP</string>
     <string name="uel_otp_reset">REINICIAR OTP</string>
-    <string name="uel_sms_basal">SMS - BASAL</string>
-    <string name="uel_sms_bolus">SMS - BÓLUS</string>
-    <string name="uel_sms_cal">SMS - CALIBRAÇÃO</string>
-    <string name="uel_sms_carbs">SMS - HC</string>
-    <string name="uel_sms_extended_bolus">SMS - BÓLUS PROLONGADO</string>
-    <string name="uel_sms_loop_disabled">SMS - LOOP DESATIVADO</string>
-    <string name="uel_sms_loop_enabled">SMS - LOOP DESATIVADO</string>
-    <string name="uel_sms_loop_resume">SMS - RETOMAR O LOOP</string>
-    <string name="uel_sms_loop_suspend">SMS - SUSPENDER O LOOP</string>
-    <string name="uel_sms_profile">SMS - PERFIL</string>
-    <string name="uel_sms_pump_connect">SMS - LIGAR BOMBA</string>
-    <string name="uel_sms_pump_disconnect">SMS - DESLIGAR BOMBA</string>
-    <string name="uel_sms_sms">SMS - SMS</string>
-    <string name="uel_sms_tt">SMS - AT</string>
-    <string name="uel_tt_deleted_from_ns">AT APAGADO DO NS</string>
-    <string name="uel_careportal_deleted_from_ns">CAREPORTAL APAGADO DO NS</string>
-    <string name="uel_careportal_from_ns">CAREPORTAL DO NS</string>
-    <string name="uel_tt_from_ns">AT DO NS</string>
-    <string name="uel_tt_canceleted_from_ns">AT CANCELADO DO NS</string>
     <string name="uel_export_csv">EXPORTAR ENTRADAS DO UTILIZADOR</string>
     <string name="uel_unknown">DESCONHECIDO</string>
-    <string name="formated_string">Cadeia formatada</string>
     <string name="ue_export_to_csv">Exportar Entradas do Utilizador para o Excel (csv)</string>
-    <string name="ue_csv_header">"Horário;Data;Diferença Horária;Ação;Notas;Valor;Unidade"</string>
     <plurals name="days">
         <item quantity="one">%1$d dia</item>
         <item quantity="other">%1$d dias</item>

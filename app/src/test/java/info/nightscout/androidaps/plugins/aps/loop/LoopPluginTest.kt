@@ -14,7 +14,6 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.configBuilder.RunningConfiguration
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -41,7 +40,6 @@ class LoopPluginTest : TestBase() {
     @Mock lateinit var context: Context
     @Mock lateinit var commandQueue: CommandQueueProvider
     @Mock lateinit var activePlugin: ActivePlugin
-    @Mock lateinit var treatmentsPlugin: TreatmentsPlugin
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Mock lateinit var iobCobCalculator: IobCobCalculator
     @Mock lateinit var fabricPrivacy: FabricPrivacy

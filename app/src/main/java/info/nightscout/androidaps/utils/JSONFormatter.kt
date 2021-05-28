@@ -17,14 +17,15 @@ class JSONFormatter @Inject constructor(
     private val aapsLogger: AAPSLogger
 ) {
 
+    @kotlin.ExperimentalStdlibApi
     fun format(jsonString: String?): Spanned {
         jsonString ?: return fromHtml("")
         val visitor = JsonVisitor(1, '\t')
         return try {
             when {
-                jsonString == "undefined"                   -> fromHtml("undefined")
-                jsonString.toByteArray()[0] == '['.toByte() -> fromHtml(visitor.visit(JSONArray(jsonString), 0))
-                else                                        -> fromHtml(visitor.visit(JSONObject(jsonString), 0))
+                jsonString == "undefined"                        -> fromHtml("undefined")
+                jsonString.toByteArray()[0] == '['.code.toByte() -> fromHtml(visitor.visit(JSONArray(jsonString), 0))
+                else                                             -> fromHtml(visitor.visit(JSONObject(jsonString), 0))
             }
         } catch (e: JSONException) {
             aapsLogger.error("Unhandled exception", e)

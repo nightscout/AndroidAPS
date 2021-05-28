@@ -29,7 +29,6 @@
     <string name="description_overview">Afişează starea curentă a buclei şi butoanele pentru cele mai folosite acţiuni</string>
     <string name="description_persistent_notification">Afişează o notificare activă cu o scurtă descriere referitoare la starea buclei</string>
     <string name="description_profile_local">Definire profil care să fie valabil offline.</string>
-    <string name="description_profile_nightscout">Foloseşte profilul predefinit deja în Nightscout</string>
     <string name="description_pump_mdi">Integrare cu pompă virtuală, pentru persoanele ce folosesc terapia cu pen</string>
     <string name="description_pump_virtual">Integrare cu pompele ce nu au încă un driver software disponibil (Buclă Deschisă)</string>
     <string name="description_sensitivity_aaps">Sensibilitatea este calculată la fel ca în algoritmul Oref0, dar se poate specifica un interval de timp în trecut. Absorbția minimă de carbohidrați este calculată din parametrul echivalent, stabilit în preferințe.</string>
@@ -77,7 +76,6 @@
     <string name="sms_delta">Diferență:</string>
     <string name="configbuilder">Configurator</string>
     <string name="overview">Privire de ansamblu</string>
-    <string name="nsprofile">Profil NS</string>
     <string name="treatments">Tratamente</string>
     <string name="virtualpump">Pompă virtuală</string>
     <string name="careportal">Careportal</string>
@@ -93,7 +91,6 @@
     <string name="configbuilder_general_description">Există pluginuri generale pe care le-ați putea găsi utile.</string>
     <string name="configbuilder_constraints_description">Ce constrângeri sunt aplicate?</string>
     <string name="constraints">Constrângeri</string>
-    <string name="loop">Buclă</string>
     <string name="configbuilder_loop">Buclă</string>
     <string name="configbuilder_loop_description">Folosiți aceasta pentru a activa facilitățile de buclă a AndroidAPS.</string>
     <string name="loop_aps_label">APS</string>
@@ -276,7 +273,6 @@
     <string name="localprofile_shortname">LP</string>
     <string name="overview_shortname">ACASĂ</string>
     <string name="virtualpump_shortname">POMPĂV</string>
-    <string name="profileviewer_shortname">PROFILNS</string>
     <string name="treatments_shortname">TRAT</string>
     <string name="objectives_shortname">OBI</string>
     <string name="wear_shortname">CEAS</string>
@@ -403,8 +399,6 @@
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">Arată BGI</string>
     <string name="wear_showbgi_summary">Adaugă BGI în linia de status</string>
-    <string name="ns_noupload">Fără trimitere către NS</string>
-    <string name="ns_noupload_summary">Toate trimiterile de date către NS sunt oprite. AAPS este conectat la NS dar nu se fac schimbări în NS</string>
     <string name="overview_extendedbolus_cancel_button">Renunță la bolusul extins</string>
     <string name="doprofileswitch">Schimbă profilul</string>
     <string name="careportal_sensor_label">Senzor</string>
@@ -419,7 +413,6 @@
     <string name="nsalarm_urgent_staledatavalue_label">Prag date mult prea vechi [min]</string>
     <string name="openapsama_autosens_period">Interval pentru autosens [o]</string>
     <string name="openapsama_autosens_period_summary">Numărul de ore din trecut pentru detectarea sensibilității (se exclude timpul de absorbție al carbo)</string>
-    <string name="pump">Pompă</string>
     <string name="openaps">OpenAPS</string>
     <string name="uploader">Uploader</string>
     <string name="configbuilder_sensitivity">Detectare sensibilitate</string>
@@ -561,7 +554,6 @@
     <string name="category">Categorie</string>
     <string name="subcategory">Subcategorie</string>
     <string name="bolusrecordedonly">Bolusul va fi doar consemnat (nu va fi livrat de pompă)</string>
-    <string name="ns_autobackfill_summary">Autocompletează valorile glicemiei lipsă din NS</string>
     <string name="loop_smbsetbypump_label">SMB setat de pompă</string>
     <string name="overview_show_activity">Activitate</string>
     <string name="overview_show_bgi">Impactul glicemiei</string>
@@ -628,7 +620,6 @@
     <string name="virtualpump_type">Tipul pompei virtuale</string>
     <string name="virtualpump_definition">Definirea pompei</string>
     <string name="virtualpump_pump_def">Bolus: Pas=%1$s\nBolus Extins: [Pas=%2$s, Durată=%3$smin-%4$sh]\nBazală: Pas=%5$s\nRBT: %6$s (cu %7$s), Durată=%8$smin-%9$sh\n%10$s</string>
-    <string name="ns_autobackfill_title">Autocompletează glicemiile lipsă</string>
     <string name="wear_wizard_settings">Asistent setări</string>
     <string name="wear_wizard_settings_summary">Calcule incluse în rezultatul asistentului:</string>
     <string name="wear_display_settings">Setări afișare</string>
@@ -636,14 +627,12 @@
     <string name="enable_nsclient">Activează NSClient</string>
     <string name="welcometosetupwizard">Ați pornit asistentul pentru setări. Acesta vă va ajuta pentru configurarea setărilor\n</string>
     <string name="readstatus">Citire stare</string>
-    <string name="adjustprofileinns">Schimbările trebuie făcute în NS</string>
     <string name="exitwizard">Ignoră asistentul pentru setări</string>
     <string name="setupwizard_loop_description">Apăsați butonul pentru a permite AndroidAPS să sugereze/facă schimbări ale bazalei</string>
     <string name="setupwizard_sensitivity_description">Pluginul Sensibilitate este folosit pentru estimarea sensibilității și calcularea COB. Pentru mai multe info vizitați:</string>
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
     <string name="nsclientinfotext">NSClient se ocupă de conectarea la Nightscout. Puteți sări peste această parte, dar nu se vor îndeplini anumite obiective dacă faceți acest lucru.</string>
     <string name="diawarning">Reamintire: noile profiluri necesită o durată de acțiune a insulinei (DIA) de cel puțin 5 ore. DIA de 5-6 ore în profilurile noi sunt echivalente cu DIA 3 ore din profilele vechi.</string>
-    <string name="setupwizard_profile_description">Selectați sursa sau profilul. Dacă pacientul este copil, ar fi bine să alegeți un profil NS. Dacă nu aveți profil NS, puteți alege profil local. De aici alegeți doar sursa profilului; pentru a utiliza acest profil, trebuie să îl activați prin executarea unei \"Schimbări de profil\"</string>
     <string name="setupwizard_aps_description">Alegeți unul dintre algoritmii disponibili. Algoritmii sunt aranjați de la cel mai vechi spre cel mai nou. Algoritmii mai noi sunt, de obicei, mai puternici și mai agresivi. De aceeea, dacă sunteți la început, ar fi indicat să porniți cu AMA și nu cu cel mai nou. Este important să parcurgeți documentația OpenAPS și să îl configurați corect înainte de a folosi aplicația.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Vă rugăm configuraţi RileyLink mai jos. După selectarea unui RileyLink, va fi posibil să continuaţi setarea odată ce starea RieyLink este \"Connected\". Acest lucru ar putea dura un minut.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Notă:</b> Puteți continua configurarea imediat ce pompa a fost inițializată.\n</string>
@@ -755,7 +744,6 @@
     <string name="objectives_button_unstart">Șterge starea \"Început\"</string>
     <string name="doyouwantresetstart">Doriți să reîncepeți obiectivul? Vă puteți pierde progresul.</string>
     <string name="setupwizard_units_prompt">Selectați unitățile în care doriți să afișați valorile</string>
-    <string name="ns_ploadlocalprofile">Transmiteți modificările profilului local către NS</string>
     <string name="dia_short">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>

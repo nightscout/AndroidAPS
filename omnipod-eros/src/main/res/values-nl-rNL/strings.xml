@@ -37,7 +37,7 @@
     <string name="omnipod_eros_error_nonce_out_of_sync">Communicatie mislukt: nonce out of sync</string>
     <string name="omnipod_eros_error_not_enough_data">Communicatie mislukt: onvoldoende gegevens ontvangen van de Pod</string>
     <string name="omnipod_eros_error_pod_fault">Een Podfout (%1$03d %2$s) is gedetecteerd. Deactiveer de Pod en activeer een nieuwe</string>
-    <string name="omnipod_eros_error_pod_returned_error_response">Communicatie mislukt: de Pod heeft een foutrespons gegeven</string>
+    <string name="omnipod_eros_error_pod_returned_error_response">Communicatie mislukt: de Pod heeft een foutmelding gegeven</string>
     <string name="omnipod_eros_error_communication_failed_no_response_from_riley_link">Geen reactie van RileyLink</string>
     <string name="omnipod_eros_error_communication_failed_riley_link_interrupted">RileyLink onderbroken</string>
     <string name="omnipod_eros_error_communication_failed_no_response_from_pod">Geen reactie van de Pod</string>

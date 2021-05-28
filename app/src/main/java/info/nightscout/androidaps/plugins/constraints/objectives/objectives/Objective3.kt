@@ -5,7 +5,6 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin
-import info.nightscout.androidaps.plugins.general.nsclient.services.NSClientService
 import info.nightscout.androidaps.utils.T
 import javax.inject.Inject
 
@@ -28,8 +27,9 @@ class Objective3 @Inject constructor(injector: HasAndroidInjector) : Objective(i
     }
 
     override fun specialActionEnabled(): Boolean =
-        NSClientService.isConnected && NSClientService.hasWriteAuth
+        nsClientPlugin.nsClientService?.isConnected == true && nsClientPlugin.nsClientService?.hasWriteAuth == true
 
+    @kotlin.ExperimentalStdlibApi
     override fun specialAction(activity: FragmentActivity, input: String) {
         objectivesPlugin.completeObjectives(activity, input)
     }

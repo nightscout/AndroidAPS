@@ -38,7 +38,7 @@ fun foodFromJson(jsonObject: JSONObject): Food? {
     return null
 }
 
-fun Food.toJson(): JSONObject =
+fun Food.toJson(isAdd: Boolean): JSONObject =
     JSONObject()
         .put("type", "food")
         .put("name", name)
@@ -51,8 +51,6 @@ fun Food.toJson(): JSONObject =
         .put("energy", energy)
         .put("protein", protein)
         .put("fat", fat)
-        .put("isValid", isValid).also {
-            if (interfaceIDs.nightscoutId != null) it
-                .put("_id", interfaceIDs.nightscoutId)
-        }
+        .put("isValid", isValid)
+        .also { if (isAdd && interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId) }
 

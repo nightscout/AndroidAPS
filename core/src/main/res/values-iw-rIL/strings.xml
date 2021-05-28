@@ -105,6 +105,7 @@
     <string name="notes_label">הערות</string>
     <string name="remove_button">הסרה</string>
     <string name="addnew">הוסף חדש</string>
+    <string name="wrong_pump_data">הנתונים מגיעים ממשאבה אחרת. בחרו מחדש את סוג המשאבה כדי לאפס את מצב המשאבה.</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">מגביל את הקצב הבזאלי המרבי ל-%1$.2f יח\' לשעה בגלל %2$s</string>
     <string name="pumplimit">מגבלת משאבה</string>
@@ -154,6 +155,7 @@
     <string name="profile_carbs_per_unit">גר\'\\יח\'</string>
     <!--    ProfileFunction-->
     <string name="noprofileselected">לא נבחר פרופיל</string>
+    <string name="startprofile">הפעלת פרופיל %1$d%% במשך %2$d דק\'</string>
     <!--    PumpType-->
     <string name="def_extended_note">* רק ערכים בדידים, טווחים אינם נתמכים עבור ערכי בזאלי ובולוס במשאבה וירטואלית.</string>
     <!--    APSResult-->
@@ -207,6 +209,10 @@
     <string name="wear">Wear</string>
     <string name="automation">אוטומציה</string>
     <string name="custom">מותאם אישית</string>
+    <string name="pump">משאבה</string>
+    <string name="loop">לולאה</string>
+    <string name="ns">נייטסקאוט</string>
+    <string name="record">הקלטה</string>
     <!--    Command-->
     <string name="connectiontimedout">החיבור חרג ממגבלת הזמן</string>
     <!--    PumpEnactResult-->
@@ -238,30 +244,6 @@
     <!--    Ntp-->
     <string name="timedetection">זיהוי שעה</string>
     <string name="format_hour_minute">%1$d ש\' %2$d דק\'</string>
-    <!-- PumoCommon - Pump Abstract -->
-    <string name="pump_operation_not_supported_by_pump_driver">הפעולה לא נתמכת ע\"י המשאבה ו\\או מנהל התקן.</string>
-    <string name="pump_operation_not_yet_supported_by_pump">הפעולה עוד לא נתמכת על ידי המשאבה.</string>
-    <string name="common_resultok">אישור</string>
-    <!-- PumoCommon - Pump Status -->
-    <string name="pump_status_never_contacted">מעולם לא נוצר קשר</string>
-    <string name="pump_status_waking_up">מתעורר</string>
-    <string name="pump_status_error_comm">שגיאת תקשורת</string>
-    <string name="pump_status_timeout_comm">חריגה ממגבלת הזמן בתקשורת</string>
-    <string name="pump_status_pump_unreachable">המשאבה לא זמינה</string>
-    <string name="pump_status_invalid_config">קונפיגורציה לא חוקית</string>
-    <string name="pump_status_active">פעיל</string>
-    <string name="pump_status_sleeping">ישן</string>
-    <!-- PumpCommon - History Group -->
-    <string name="history_group_basal">בזאלים</string>
-    <string name="history_group_configuration">קונפיגורציות</string>
-    <string name="history_group_notification">התראות</string>
-    <string name="history_group_statistic">סטטיסטיקה</string>
-    <string name="history_group_unknown">לא ידועים</string>
-    <string name="history_group_all">כל</string>
-    <string name="history_group_bolus">בולוסים</string>
-    <string name="history_group_prime">תיחול</string>
-    <string name="history_group_alarm">התראות</string>
-    <string name="history_group_glucose">גלוקוז</string>
     <string name="mute5min">השתקה ל-5 דקות</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">פורמט הקובץ</string>
@@ -315,13 +297,12 @@
     <!-- User Entry -->
     <string name="uel_bolus">בולוס</string>
     <string name="uel_bolus_advisor">יועץ בולוס</string>
-    <string name="uel_bolus_record">רשומת בולוס</string>
     <string name="uel_extended_bolus">בולוס ממושך</string>
     <string name="uel_superbolus_tbr">בזאלי זמני של סופר בולוס</string>
     <string name="uel_carbs">פחמימות</string>
     <string name="uel_extended_carbs">פחמימות מורכבות</string>
     <string name="uel_temp_basal">בזאלי זמני</string>
-    <string name="uel_tt">מטרה זמנית</string>
+    <string name="uel_tt">ערך מטרה זמני</string>
     <string name="uel_new_profile">פרופיל חדש</string>
     <string name="uel_clone_profile">שכפול פרופיל</string>
     <string name="uel_store_profile">אחסון פרופיל</string>
@@ -340,26 +321,33 @@
     <string name="uel_clear_pairing_keys">מחיקת מפתחות זיווג</string>
     <string name="uel_accepts_temp_basal">מקבל מינוני בזאלי זמניים</string>
     <string name="uel_cancel_temp_basal">ביטול בזאלי זמני</string>
+    <string name="uel_cancel_bolus">ביטול בולוס</string>
     <string name="uel_cancel_extended_bolus">ביטול בולוס ממושך</string>
-    <string name="uel_cancel_tt">ביטול מטרה זמנית</string>
+    <string name="uel_cancel_tt">ביטול ערך מטרה זמני</string>
     <string name="uel_careportal">פורטל הטיפולים</string>
+    <string name="uel_site_change">שינוי אתר עירוי</string>
+    <string name="uel_reservoir_change">החלפת מכל</string>
     <string name="uel_calibration">כיול</string>
     <string name="uel_prime_bolus">בולוס תיחול</string>
     <string name="uel_treatment">טיפול</string>
     <string name="uel_careportal_ns_refresh">רענון פורטל הטיפולים בנייטסקאוט</string>
     <string name="uel_profile_switch_ns_refresh">רענון החלפת פרופיל בנייטסקאוט</string>
     <string name="uel_treatments_ns_refresh">רענון הטיפולים בנייטסקאוט</string>
-    <string name="uel_tt_ns_refresh">רענון ערך מטרה זמני בנייטסקאוט</string>
+    <string name="uel_tt_ns_refresh">רענון מטרה זמנית מנייטסקאוט</string>
     <string name="uel_automation_removed">האוטומציה הוסרה</string>
     <string name="uel_bg_removed">ערך סוכר נמחק</string>
     <string name="uel_careportal_removed">פורטל הטיפולים הוסר</string>
+    <string name="uel_bolus_removed">בולוס נמחק</string>
+    <string name="uel_carbs_removed">פחמימות סולקו</string>
+    <string name="uel_temp_basal_removed">מינון בזאלי זמני סולק</string>
     <string name="uel_extended_bolus_removed">בולוס ממושך הוסר</string>
+    <string name="uel_food">מזון</string>
     <string name="uel_food_removed">מזון הוסר</string>
     <string name="uel_profile_removed">הפרופיל הוסר</string>
     <string name="uel_profile_switch_removed">החלפת הפרופיל הוסרה</string>
     <string name="uel_restart_events_removed">אירועי אתחול הוסרו</string>
     <string name="uel_treatment_removed">הטיפול הוסר</string>
-    <string name="uel_tt_removed">ערך מטרה זמני הוסר</string>
+    <string name="uel_tt_removed">ערך מטרה זמני סולק</string>
     <string name="uel_ns_paused">נייטסקאוט הושהה</string>
     <string name="uel_ns_resume">נייטסקאוט חודש</string>
     <string name="uel_ns_queue_cleared">תור נייטסקאוט נוקה</string>
@@ -380,30 +368,20 @@
     <string name="uel_import_databases">ייבוא מסדי נתונים</string>
     <string name="uel_otp_export">ייצוא סיסמה חד פעמית (OTP)</string>
     <string name="uel_otp_reset">איפוס סיסמה חד פעמית (OTP)</string>
-    <string name="uel_sms_basal">בזאלי (SMS)</string>
-    <string name="uel_sms_bolus">בולוס (SMS)</string>
-    <string name="uel_sms_cal">כיול (SMS)</string>
-    <string name="uel_sms_carbs">פחמימות (SMS)</string>
-    <string name="uel_sms_extended_bolus">בולוס ממושך (SMS)</string>
-    <string name="uel_sms_loop_disabled">השבתת לולאה (SMS)</string>
-    <string name="uel_sms_loop_enabled">הפעלת לולאה (SMS)</string>
-    <string name="uel_sms_loop_resume">חידוש לולאה (SMS)</string>
-    <string name="uel_sms_loop_suspend">השהיית לולאה (SMS)</string>
-    <string name="uel_sms_profile">פרופיל (SMS)</string>
-    <string name="uel_sms_pump_connect">חיבור משאבה (SMS)</string>
-    <string name="uel_sms_pump_disconnect">ניתוק משאבה (SMS)</string>
-    <string name="uel_sms_sms">SMS (SMS)</string>
-    <string name="uel_sms_tt">ערך מטרה זמני (SMS)</string>
-    <string name="uel_tt_deleted_from_ns">ערך מטרה זמני נמחק מנייטסקאוט</string>
-    <string name="uel_careportal_deleted_from_ns">פורטל הטיפולים נמחק מנייטסקאוט</string>
-    <string name="uel_careportal_from_ns">פורטל הטיפולים מנייטסקאוט</string>
-    <string name="uel_tt_from_ns">ערך מטרה זמני מנייטסקאוט</string>
-    <string name="uel_tt_canceleted_from_ns">ערך מטרה זמני בוטל בנייטסקאוט</string>
+    <string name="uel_stop_sms">עצור SMS</string>
     <string name="uel_export_csv">ייצוא רישומי המשתמש</string>
+    <string name="uel_start_aaps">הפעלת AAPS</string>
+    <string name="uel_exit_aaps">יציאה</string>
+    <string name="uel_plugin_enabled">תוסף מופעל</string>
+    <string name="uel_plugin_disabled">תוסף מושבת</string>
     <string name="uel_unknown">לא ידוע</string>
-    <string name="formated_string">מחרוזת מעוצבת</string>
+    <string name="ue_string">מחרוזת</string>
+    <string name="ue_source">מקור</string>
+    <string name="ue_utc_offset">היסט זמן אוניברסלי מתואם (UTC)</string>
+    <string name="ue_action">פעולה</string>
+    <string name="ue_timestamp">חתימת זמן</string>
+    <string name="ue_none">ללא יחידה</string>
     <string name="ue_export_to_csv">יצוא ערכי משתמש לאקסל (csv)</string>
-    <string name="ue_csv_header">"Timestamp;Date;UTC Offset;Action;Note;Value;Unit"</string>
     <plurals name="days">
         <item quantity="one">%1$d יום</item>
         <item quantity="two">%1$d ימים</item>
