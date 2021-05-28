@@ -95,13 +95,18 @@
     <string name="medtronic_cmd_desc_get_history">Get History - Page %1$d (%2$d/16)</string>
     <string name="medtronic_cmd_desc_get_history_request">Get History - Page %1$d</string>
     <string name="medtronic_cmd_desc_get_time">Get Pump Time</string>
+    <string name="medtronic_cmd_desc_set_time">Set Pump Time</string>
+    <string name="medtronic_cmd_desc_get_battery_status">Get Battery Status</string>
+
     <string name="medtronic_cmd_desc_get_settings">Get Settings</string>
     <string name="medtronic_cmd_desc_get_model">Get Pump Model</string>
     <string name="medtronic_cmd_desc_get_basal_profile">Get Basal Profile</string>
     <string name="medtronic_cmd_desc_set_basal_profile">Set Basal Profile</string>
     <string name="medtronic_cmd_desc_get_tbr">Get Temporary Basal</string>
     <string name="medtronic_cmd_desc_set_tbr">Set Temporary Basal</string>
+    <string name="medtronic_cmd_desc_cancel_tbr">Cancel Temporary Basal</string>
     <string name="medtronic_cmd_desc_set_bolus">Set Bolus</string>
+    <string name="medtronic_cmd_desc_get_remaining_insulin">Get Remaining Insulin</string>
 
     <string name="medtronic_pump_status_pump_unreachable">Pump unreachable</string>
     <string name="medtronic_warning">Warning</string>  <!-- medtronic_warning -->
@@ -115,8 +120,7 @@
     <string name="key_set_neutral_temps" translatable="false">set_neutral_temps</string>
     <string name="set_neutral_temps_title">Set neutral temp basals</string>
     <string name="set_neutral_temps_summary">If enabled, it will cancel a temporary basal before the end of each hour. This method can help stop some pumps beeping/vibrating on the hour.</string>
-
-
+    <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d min remaining)</string>
     <string name="sixdigitnumber" translatable="false">^\\d{6}</string>
 
 </resources>
