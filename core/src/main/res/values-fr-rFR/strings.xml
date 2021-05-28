@@ -196,7 +196,7 @@
     <string name="careportal_carbscorrection">Ressucrage</string>
     <string name="careportal_openapsoffline">OpenAPS hors ligne</string>
     <string name="careportal_pumpbatterychange">Changement pile pompe</string>
-    <string name="careportal_temporarytarget">Cible temp.</string>
+    <string name="careportal_temporarytarget">Cible Temp</string>
     <string name="careportal_temporarytargetcancel">Annuler Cible Temporaire</string>
     <string name="boluswizard">Assistant Bolus</string>
     <string name="glucosetype_finger">Doigt</string>
@@ -323,7 +323,7 @@
     <string name="uel_cancel_temp_basal">TEMP BASAL ANNULÉE</string>
     <string name="uel_cancel_bolus">ANNULER BOLUS</string>
     <string name="uel_cancel_extended_bolus">BOLUS ÉTENDU ANNULÉ</string>
-    <string name="uel_cancel_tt">ANNULER CIBLE TEMPORAIRE</string>
+    <string name="uel_cancel_tt">ANNULER CIBLE TEMP</string>
     <string name="uel_careportal">CAREPORTAL</string>
     <string name="uel_site_change">CHANGEMENT DE SITE</string>
     <string name="uel_reservoir_change">CHANGEMENT DU RÉSERVOIR</string>
