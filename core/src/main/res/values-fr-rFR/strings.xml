@@ -302,7 +302,7 @@
     <string name="uel_carbs">GLUCIDES</string>
     <string name="uel_extended_carbs">GLUCIDES ÉTENDUS</string>
     <string name="uel_temp_basal">BASAL TEMP</string>
-    <string name="uel_tt">CIBLE TEMPORAIRE</string>
+    <string name="uel_tt">CIBLE TEMP</string>
     <string name="uel_new_profile">NOUVEAU PROFIL</string>
     <string name="uel_clone_profile">PROFIL DUPLIQUÉ</string>
     <string name="uel_store_profile">PROFIL SAUVEGARDÉ</string>
