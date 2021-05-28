@@ -12,16 +12,8 @@ private val allowedKeys = """
     openapsama_autosens_period
     autosens_max
     autosens_min
-    absorption
     openapsama_min_5m_carbimpact
     absorption_cutoff
-    autosens_max
-    autosens_min
-    absorption
-    openapsama_min_5m_carbimpact
-    absorption_cutoff
-    autosens_max
-    autosens_min
     age
     location
     dexcomg5_nsupload
@@ -29,29 +21,13 @@ private val allowedKeys = """
     dexcom_lognssensorchange
     danars_bolusspeed
     danar_useextended
-    danar_visualizeextendedaspercentage"
-    bt_watchdog
-    danar_useextended
-    danar_visualizeextendedaspercentage"
+    danar_visualizeextendedaspercentage
     bt_watchdog
     DanaRProfile
     danarprofile_dia
     blescannner
     danars_bolusspeed
-    bt_watchdog
-    danars_bolusspeed
-    bt_watchdog
     enable_fabric
-    insight_log_reservoir_changes
-    insight_log_tube_changes
-    insight_log_site_changes
-    insight_log_battery_changes
-    insight_log_operating_mode_changes
-    insight_log_alerts
-    insight_enable_tbr_emulation
-    insight_min_recovery_duration
-    insight_max_recovery_duration
-    insight_disconnect_delay
     insight_log_reservoir_changes
     insight_log_tube_changes
     insight_log_site_changes
