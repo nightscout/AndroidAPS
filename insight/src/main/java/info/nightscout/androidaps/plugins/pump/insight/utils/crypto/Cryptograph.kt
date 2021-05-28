@@ -58,7 +58,7 @@ object Cryptograph {
         val length = Math.min(array1.size, array2.size)
         val xor = ByteArray(length)
         for (i in 0 until length) {
-            xor[i] = (array1[i] xor array2[i]) as Byte
+            xor[i] = (array1[i] xor array2[i])
         }
         return xor
     }

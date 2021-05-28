@@ -5,7 +5,7 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 class VerifyConfirmRequest : SatlMessage() {
 
     override val data: ByteBuf
-        protected get() {
+        get() {
             val byteBuf = ByteBuf(2)
             byteBuf.putUInt16LE(PairingStatus.CONFIRMED.id)
             return byteBuf
