@@ -9,7 +9,6 @@ import info.nightscout.androidaps.plugins.pump.medtronic.comm.MedtronicCommunica
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.ui.MedtronicUIComm
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.ui.MedtronicUITask
 import info.nightscout.androidaps.plugins.pump.medtronic.dialog.MedtronicHistoryActivity
-import info.nightscout.androidaps.plugins.pump.medtronic.dialog.RileyLinkStatusDeviceMedtronic
 import info.nightscout.androidaps.plugins.pump.medtronic.service.RileyLinkMedtronicService
 
 @Module
@@ -26,8 +25,6 @@ abstract class MedtronicModule {
     @ContributesAndroidInjector
     abstract fun medtronicCommunicationManagerProvider(): MedtronicCommunicationManager
     @ContributesAndroidInjector abstract fun medtronicUITaskProvider(): MedtronicUITask
-    @ContributesAndroidInjector
-    abstract fun contributesRileyLinkStatusDeviceMedtronic(): RileyLinkStatusDeviceMedtronic
     @ContributesAndroidInjector abstract fun medtronicUICommProvider(): MedtronicUIComm
 
     companion object {
