@@ -51,10 +51,11 @@ class InsightAlertService : DaggerService(), InsightConnectionService.StateCallb
     private var ignoreType: AlertType? = null
     private val serviceConnection: ServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, binder: IBinder) {
-            val newConnectionService: InsightConnectionService = (binder as InsightConnectionService.LocalBinder).service
-            newConnectionService.registerStateCallback(this@InsightAlertService)
-            onStateChanged(newConnectionService.state)
-            connectionService = newConnectionService
+            connectionService = (binder as InsightConnectionService.LocalBinder).service
+            connectionService?.let {
+                it.registerStateCallback(this@InsightAlertService)
+                onStateChanged(it.state)
+            }
         }
 
         override fun onServiceDisconnected(name: ComponentName) {
@@ -138,7 +139,7 @@ class InsightAlertService : DaggerService(), InsightConnectionService.StateCallb
                     }
                 }
             } catch (ignored: InterruptedException) {
-                connectionService!!.withdrawConnectionRequest(thread as Any)
+                connectionService?.withdrawConnectionRequest(thread as Any)
                 break
             } catch (e: AppLayerErrorException) {
                 aapsLogger.info(LTag.PUMP, "Exception while fetching alert: " + e.javaClass.canonicalName + " (" + e.errorCode + ")")
@@ -154,7 +155,7 @@ class InsightAlertService : DaggerService(), InsightConnectionService.StateCallb
             }
         }
         if (connectionRequested) {
-            connectionService!!.withdrawConnectionRequest(thread as Any)
+            connectionService?.withdrawConnectionRequest(thread as Any)
             connectionRequested = false
         }
         stopAlerting()
@@ -166,14 +167,14 @@ class InsightAlertService : DaggerService(), InsightConnectionService.StateCallb
 
     private fun alert() {
         if (!vibrating) {
-            vibrator!!.vibrate(VibrationEffect.createWaveform(longArrayOf(0, 1000, 1000, 0), 0))
+            vibrator?.vibrate(VibrationEffect.createWaveform(longArrayOf(0, 1000, 1000, 0), 0))
             vibrating = true
         }
     }
 
     private fun stopAlerting() {
         if (vibrating) {
-            vibrator!!.cancel()
+            vibrator?.cancel()
             vibrating = false
         }
     }
@@ -185,9 +186,9 @@ class InsightAlertService : DaggerService(), InsightConnectionService.StateCallb
                     if (alert == null) return@Runnable
                     alert?.let {
                         it.alertStatus = AlertStatus.SNOOZED
-                        alertLiveData.postValue(alert)
+                        alertLiveData.postValue(it)
                         stopAlerting()
-                        showNotification(alert!!)
+                        showNotification(it)
                         val snoozeAlertMessage = SnoozeAlertMessage()
                         snoozeAlertMessage.alertID = it.alertId
                         connectionService?.run { requestMessage(snoozeAlertMessage).await() }
