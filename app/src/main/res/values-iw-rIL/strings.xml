@@ -778,6 +778,7 @@
     <string name="randombg_short">ערכי גלוקוז בדם</string>
     <string name="tools">כלים</string>
     <string name="show_calculation">הצג חישוב</string>
+    <string name="show_removed">הצג מחוקים</string>
     <string name="clearqueueconfirm">לנקות את התור? כל הנתונים בתור יאבדו!</string>
     <string name="ebstopsloop">שימוש בבולוס ממושך יפסיק את מצב הלולאה הסגורה לזמן פעילות הבולוס. אתם בטוחים שאתם רוצים להמשיך?</string>
     <string name="closed_loop_disabled_with_eb">הלולאה הסגורה מופסקת עקב מתן בולוס ממושך</string>
@@ -899,4 +900,23 @@
     <string name="profile_max_daily_basal_value">ערך מינון בזאלי מרבי של הפרופיל</string>
     <string name="current_basal_value">מינון בזאלי נוכחי</string>
     <string name="profile_carbs_ratio_value">יחס הפחמימות של הפרופיל</string>
+    <string name="full_sync">סינכרון מלא</string>
+    <string name="prime">תיחול</string>
+    <string name="ns_sync_options">סינכרון</string>
+    <string name="ns_upload_summary">פרופילים, בולוסים, פחמימות ומינונים בזאליים זמניים נטענים לנייטסקאוט</string>
+    <string name="ns_upload">טעינת נתוני סוכר לנייטסקאוט</string>
+    <string name="ns_receive_profile_store">אחזר פרופילים שמורים</string>
+    <string name="ns_receive_profile_store_summary">סינכרון פרופילים מעורך הפרופיל של נייטסקאוט לפרופיל מקומי</string>
+    <string name="ns_receive_temp_target">קבלת ערכי מטרה זמניים</string>
+    <string name="ns_receive_temp_target_summary">קבלת ערכי מטרה זמניים שהוגדרו בנייטסקאוט או ב-NSClient</string>
+    <string name="ns_receive_profile_switch">קבלת החלפות פרופיל</string>
+    <string name="ns_receive_profile_switch_summary">קבלת החלפות פרופיל שהוגדרו בנייטסקאוט או ב-NSClient</string>
+    <string name="ns_receive_insulin">קבלת אינסולין</string>
+    <string name="ns_receive_insulin_summary">קבלת אינסולין שהוזן באמצעות נייטסקאוט או NSClient (הוא לא מוזרק, רק מחושב רק כאינסולין פעיל)</string>
+    <string name="ns_receive_carbs">קבלת פחמימות</string>
+    <string name="ns_receive_carbs_summary">קבלת פחמימות שנרשמו בנייטסקאוט או ב-NSClient</string>
+    <string name="ns_receive_therapy_events">קבלת אירועי טיפול</string>
+    <string name="ns_receive_therapy_events_summary">קבלת אירועי טיפול (צינורית, אינסולין, החלפת סוללה) שצוינו באמצעות נייטסקאוט או NSClient</string>
+    <string name="ns_receive_cgm">קבלת\\טעינת נתוני סנסור</string>
+    <string name="ns_receive_cgm_summary">קבלת נתוני סנסור מנייטסקאוט</string>
 </resources>

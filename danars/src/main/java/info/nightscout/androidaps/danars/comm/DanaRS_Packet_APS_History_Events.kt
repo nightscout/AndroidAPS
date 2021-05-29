@@ -86,7 +86,7 @@ open class DanaRS_Packet_APS_History_Events(
                 // but on pump is running
                 // at least on Model: 05 Protocol: 10 Code: 10
                 if (index > 0 && recordCode(message) == DanaPump.TEMPSTOP) {
-                    val previous = sorted[index-1]
+                    val previous = sorted[index - 1]
                     if (recordCode(previous) == DanaPump.TEMPSTART && dateTime(message) == dateTime(previous)) {
                         aapsLogger.debug(LTag.PUMPCOMM, "SKIPPING EVENT TEMPSTOP (" + recordCode(message) + ") " + dateUtil.dateAndTimeString(dateTime(message)) + " (" + dateTime(message) + ")")
                         continue
@@ -102,13 +102,16 @@ open class DanaRS_Packet_APS_History_Events(
         if (!danaPump.usingUTC) dateTimeSecFromBuff(data, 1) // 6 bytes
         else intFromBuffMsbLsb(data, 3, 4) * 1000L
 
-    fun recordCode(data: ByteArray): Int =
-        intFromBuff(data, 0, 1).toInt()
+    private fun recordCode(data: ByteArray): Int =
+        if (!danaPump.usingUTC)
+            intFromBuff(data, 0, 1)
+        else
+            intFromBuff(data, 2, 1)
 
     fun processMessage(data: ByteArray) {
-        var recordCode = intFromBuff(data, 0, 1).toByte()
+        val recordCode = recordCode(data)
         // Last record
-        if (recordCode == 0xFF.toByte()) {
+        if (recordCode == 0xFF) {
             return
         }
         val datetime: Long
@@ -121,12 +124,11 @@ open class DanaRS_Packet_APS_History_Events(
             pumpId = datetime
         } else {
             datetime = intFromBuffMsbLsb(data, 3, 4) * 1000L
-            recordCode = intFromBuff(data, 2, 1).toByte()
             id = intFromBuffMsbLsb(data, 0, 2) // range only 1-2000
             pumpId = datetime shl 16 + id
         }
         val status: String
-        when (recordCode.toInt()) {
+        when (recordCode) {
             DanaPump.TEMPSTART         -> {
                 val temporaryBasalInfo = temporaryBasalStorage.findTemporaryBasal(datetime, param1.toDouble())
                 val newRecord = pumpSync.syncTemporaryBasalWithPumpId(

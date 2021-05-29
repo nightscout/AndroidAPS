@@ -67,7 +67,6 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.TREATMENT)
-                        .fragmentClass(TreatmentsFragment.class.getName())
                         .pluginIcon(R.drawable.ic_treatments)
                         .pluginName(R.string.treatments)
                         .shortName(R.string.treatments_shortname)

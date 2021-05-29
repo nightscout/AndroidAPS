@@ -906,6 +906,7 @@
     <string name="ns_upload_summary">Profily, bolusy, sacharidy, dočasné bazály jsou nahrány do NS</string>
     <string name="ns_upload">Nahrávat data do NS</string>
     <string name="ns_receive_profile_store">Přijímat úložiště profilu</string>
+    <string name="ns_receive_profile_store_summary">Synchronizovat profily z NS do místního profilu</string>
     <string name="ns_receive_temp_target">Přijímat dočasné cíle</string>
     <string name="ns_receive_temp_target_summary">Přijmout dočasné cíle zadané prostřednictvím NS nebo NSClienta</string>
     <string name="ns_receive_profile_switch">Přijímat přepnutí profilu</string>

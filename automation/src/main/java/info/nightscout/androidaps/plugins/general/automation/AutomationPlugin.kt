@@ -8,7 +8,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.events.*
 import info.nightscout.androidaps.interfaces.Config
-import info.nightscout.androidaps.interfaces.LoopInterface
+import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
@@ -45,7 +45,7 @@ class AutomationPlugin @Inject constructor(
     private val context: Context,
     private val sp: SP,
     private val fabricPrivacy: FabricPrivacy,
-    private val loopPlugin: LoopInterface,
+    private val loopPlugin: Loop,
     private val rxBus: RxBusWrapper,
     private val constraintChecker: ConstraintChecker,
     aapsLogger: AAPSLogger,

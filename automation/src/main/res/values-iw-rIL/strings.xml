@@ -42,7 +42,7 @@
     <string name="iobcompared">אינסולין פעיל %1$s %2$.1f</string>
     <string name="and">וגם</string>
     <string name="or">או</string>
-    <string name="xor">או בררני</string>
+    <string name="xor">או בררני (XOR)</string>
     <string name="atspecifiedtime">ב-%1$s</string>
     <string name="use_network_location">שימוש במיקום רשת</string>
     <string name="use_gps_location">שימוש במיקום GPS</string>

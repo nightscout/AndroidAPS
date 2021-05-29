@@ -139,6 +139,7 @@ class LocalProfilePlugin @Inject constructor(
         }
         sp.putInt(Constants.LOCAL_PROFILE + "_profiles", numOfProfiles)
 
+        sp.putLong(R.string.key_local_profile_last_change, dateUtil.now())
         createAndStoreConvertedProfile()
         isEdited = false
         aapsLogger.debug(LTag.PROFILE, "Storing settings: " + rawProfile?.data.toString())
@@ -148,12 +149,9 @@ class LocalProfilePlugin @Inject constructor(
             val name = it.name ?: "."
             if (name.contains(".")) namesOK = false
         }
-        if (namesOK)
-            sp.putLong(R.string.key_local_profile_last_change, dateUtil.now())
-        else
-            activity?.let {
-                OKDialog.show(it, "", resourceHelper.gs(R.string.profilenamecontainsdot))
-            }
+        if (!namesOK) activity?.let {
+            OKDialog.show(it, "", resourceHelper.gs(R.string.profilenamecontainsdot))
+        }
     }
 
     @Synchronized
@@ -372,7 +370,8 @@ class LocalProfilePlugin @Inject constructor(
                 }
             }
             if (numOfProfiles > 0) json.put("defaultProfile", currentProfile()?.name)
-            json.put("startDate", dateUtil.toISOAsUTC(dateUtil.now()))
+            val startDate = sp.getLong(R.string.key_local_profile_last_change, dateUtil.now())
+            json.put("startDate", dateUtil.toISOAsUTC(startDate))
             json.put("store", store)
         } catch (e: JSONException) {
             aapsLogger.error("Unhandled exception", e)
@@ -412,11 +411,19 @@ class LocalProfilePlugin @Inject constructor(
             val profileJson = dataWorker.pickupJSONObject(inputData.getLong(DataWorker.STORE_KEY, -1))
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))
             if (sp.getBoolean(R.string.key_ns_receive_profile_store, false) || config.NSCLIENT) {
-                localProfilePlugin.loadFromStore(ProfileStore(injector, profileJson, dateUtil))
-                aapsLogger.debug(LTag.PROFILE, "Received profileStore: $profileJson")
-                return Result.success(workDataOf("Data" to profileJson.toString().substring(0..min(5000, profileJson.length()))))
+                val store = ProfileStore(injector, profileJson, dateUtil)
+                val startDate = store.getStartDate()
+                val lastLocalChange = sp.getLong(R.string.key_local_profile_last_change, 0)
+                aapsLogger.debug(LTag.PROFILE, "Received profileStore: StartDate: $startDate Local last modification: $lastLocalChange")
+                @Suppress("LiftReturnOrAssignment")
+                if (startDate > lastLocalChange || startDate % 1000 == 0L) {// whole second means edited in NS
+                    localProfilePlugin.loadFromStore(store)
+                    aapsLogger.debug(LTag.PROFILE, "Received profileStore: $profileJson")
+                    return Result.success(workDataOf("Data" to profileJson.toString().substring(0..min(5000, profileJson.length()))))
+                } else
+                    return Result.success(workDataOf("Result" to "Unchanged. Ignoring"))
             }
-            return Result.success()
+            return Result.success(workDataOf("Result" to "Sync not enabled"))
         }
     }
 
