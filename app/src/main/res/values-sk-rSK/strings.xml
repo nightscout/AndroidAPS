@@ -81,8 +81,6 @@
     <string name="careportal">Starostlivosť</string>
     <string name="configbuilder_pump">Pumpa</string>
     <string name="configbuilder_pump_description">Akú pumpu chcete používať s AndroidAPS?</string>
-    <string name="configbuilder_treatments">Ošetrenia</string>
-    <string name="configbuilder_treatments_description">Aký modul chcete používať pre spracovanie ošetrení?</string>
     <string name="configbuilder_profile">Profil</string>
     <string name="configbuilder_profile_description">Aký profil má používať AndroidAPS?</string>
     <string name="configbuilder_aps">APS</string>
