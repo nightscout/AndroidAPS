@@ -81,8 +81,6 @@
     <string name="careportal">Портал лечения / назначений</string>
     <string name="configbuilder_pump">помпа</string>
     <string name="configbuilder_pump_description">Какой помпой вы хотели бы пользоваться с AndroidAPS?</string>
-    <string name="configbuilder_treatments">назначения</string>
-    <string name="configbuilder_treatments_description">Каким плагином пользоваться для выполнения назначений?</string>
     <string name="configbuilder_profile">профиль</string>
     <string name="configbuilder_profile_description">Какой профиль следует использовать в AndroidAPS?</string>
     <string name="configbuilder_aps">система ИПЖ</string>
