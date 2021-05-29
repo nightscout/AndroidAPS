@@ -81,8 +81,6 @@
     <string name="careportal">Careportal</string>
     <string name="configbuilder_pump">Pumpe</string>
     <string name="configbuilder_pump_description">Hvilken pumpe ønsker du å bruke sammen med AndroidAPS?</string>
-    <string name="configbuilder_treatments">Behandlinger</string>
-    <string name="configbuilder_treatments_description">Hvilken plugin burde brukes til håndtering av behandlinger?</string>
     <string name="configbuilder_profile">Profil</string>
     <string name="configbuilder_profile_description">Hvilken profil bør AndroidAPS bruke?</string>
     <string name="configbuilder_aps">APS</string>
