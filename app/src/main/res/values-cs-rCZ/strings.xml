@@ -909,6 +909,8 @@
     <string name="ns_receive_temp_target_summary">Přijmout dočasné cíle zadané prostřednictvím NS nebo NSClienta</string>
     <string name="ns_receive_profile_switch">Přijímat přepnutí profilu</string>
     <string name="ns_receive_profile_switch_summary">Přijmout přepnutí profilu zadané prostřednictvím NS nebo NSClienta</string>
+    <string name="ns_receive_offline_event">Přijímat události APS offline</string>
+    <string name="ns_receive_offline_event_summary">Přijmout APS offline události zadané prostřednictvím NS nebo NSClienta</string>
     <string name="ns_receive_insulin">Přijímat inzulín</string>
     <string name="ns_receive_insulin_summary">Přijmout inzulín vložený přes NS nebo NSClient (není dodán, pouze započítán do IOB)</string>
     <string name="ns_receive_carbs">Přijímat sacharidy</string>
