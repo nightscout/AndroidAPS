@@ -732,7 +732,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Absorption lente des glucides détectée : %2$d%% du temps. Vérifiez de nouveau votre calcul. Les GA (Glucides Actifs) peuvent être surestimés et alors plus d\'insuline pourrait être délivré !!!!!</font>]]></string>
     <string name="partialboluswizard">Injecter cette partie de Bolus calculée par l’assistant [%]</string>
     <string name="deliverpartofboluswizard">L\'assistant Bolus effectue le calcul mais seulement cette partie de l\'insuline calculée est délivrée. Utile avec l\'algorithme SMB.</string>
-    <string name="snooze">Report alarme</string>
+    <string name="snooze">Masquer</string>
     <string name="increasingmaxbasal">Augmentation de la valeur du débit Basal max parce que ce paramètre est inférieur au débit Basal max de votre profil</string>
     <string name="smscommunicator_messagebody">Message invalide</string>
     <string name="format_bg_isf">%1$s SI: %2$.1f</string>
