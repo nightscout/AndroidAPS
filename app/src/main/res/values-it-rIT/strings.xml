@@ -81,8 +81,6 @@
     <string name="careportal">Portale</string>
     <string name="configbuilder_pump">Micro</string>
     <string name="configbuilder_pump_description">Quale microinfusore desideri usare con AndroidAPS?</string>
-    <string name="configbuilder_treatments">Trattamenti</string>
-    <string name="configbuilder_treatments_description">Quale plugin dovrebbe essere usato per la gestione del trattamento?</string>
     <string name="configbuilder_profile">Profilo</string>
     <string name="configbuilder_profile_description">Quale profilo AndroidAPS dovrebbe usare?</string>
     <string name="configbuilder_aps">APS</string>
