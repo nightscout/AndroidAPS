@@ -81,8 +81,6 @@
     <string name="careportal">Péče</string>
     <string name="configbuilder_pump">Pumpa</string>
     <string name="configbuilder_pump_description">Jakou pumpu chcete používat s AndroidAPS?</string>
-    <string name="configbuilder_treatments">Ošetření</string>
-    <string name="configbuilder_treatments_description">Jaký plugin chcete používat pro ukládání informací?</string>
     <string name="configbuilder_profile">Profil</string>
     <string name="configbuilder_profile_description">Jaký profil má AndroidAPS používat?</string>
     <string name="configbuilder_aps">APS</string>
