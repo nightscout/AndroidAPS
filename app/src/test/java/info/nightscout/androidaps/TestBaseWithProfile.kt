@@ -23,7 +23,6 @@ open class TestBaseWithProfile : TestBase() {
 
     @Mock lateinit var activePluginProvider: ActivePlugin
     @Mock lateinit var resourceHelper: ResourceHelper
-    @Mock lateinit var treatmentsInterface: TreatmentsInterface
     @Mock lateinit var iobCobCalculator: IobCobCalculator
     @Mock lateinit var fabricPrivacy: FabricPrivacy
     @Mock lateinit var profileFunction: ProfileFunction

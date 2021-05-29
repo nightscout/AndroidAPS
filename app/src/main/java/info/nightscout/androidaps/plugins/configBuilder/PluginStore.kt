@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.configBuilder
 
-import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -21,7 +20,6 @@ class PluginStore @Inject constructor(
     private var activeAPSStore: APS? = null
     private var activeInsulinStore: Insulin? = null
     private var activeSensitivityStore: Sensitivity? = null
-    private var activeTreatmentsStore: TreatmentsInterface? = null
 
     fun loadDefaults() {
         verifySelectionInCategories()
@@ -121,16 +119,6 @@ class PluginStore @Inject constructor(
             aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting PumpInterface")
         }
         setFragmentVisibilities((activePumpStore as PluginBase).name, pluginsInCategory, PluginType.PUMP)
-
-        // PluginType.TREATMENT
-        pluginsInCategory = getSpecificPluginsList(PluginType.TREATMENT)
-        activeTreatmentsStore = getTheOneEnabledInArray(pluginsInCategory, PluginType.TREATMENT) as TreatmentsInterface?
-        if (activeTreatmentsStore == null) {
-            activeTreatmentsStore = getDefaultPlugin(PluginType.TREATMENT) as TreatmentsInterface
-            (activeTreatmentsStore as PluginBase).setPluginEnabled(PluginType.TREATMENT, true)
-            aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting PumpInterface")
-        }
-        setFragmentVisibilities((activeTreatmentsStore as PluginBase).name, pluginsInCategory, PluginType.TREATMENT)
     }
 
     private fun setFragmentVisibilities(activePluginName: String, pluginsInCategory: ArrayList<PluginBase>,
@@ -174,10 +162,6 @@ class PluginStore @Inject constructor(
     override val activeSensitivity: Sensitivity
         get() = activeSensitivityStore
             ?: checkNotNull(activeSensitivityStore) { "No sensitivity selected" }
-
-    override val activeTreatments: TreatmentsInterface
-        get() = activeTreatmentsStore
-            ?: checkNotNull(activeTreatmentsStore) { "No treatments selected" }
 
     override val activeOverview: Overview
         get() = getSpecificPluginsListByInterface(Overview::class.java).first() as Overview

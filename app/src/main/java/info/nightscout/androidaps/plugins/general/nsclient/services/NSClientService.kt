@@ -16,7 +16,6 @@ import info.nightscout.androidaps.events.EventConfigBuilderChange
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.DataSyncSelector
-import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -71,7 +70,6 @@ class NSClientService : DaggerService() {
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var nsSettingsStatus: NSSettingsStatus
     @Inject lateinit var nsDeviceStatus: NSDeviceStatus
-    @Inject lateinit var databaseHelper: DatabaseHelperInterface
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var sp: SP
@@ -199,7 +197,7 @@ class NSClientService : DaggerService() {
                 .build())
     }
 
-    fun processAuthAck(ack: NSAuthAck) {
+    private fun processAuthAck(ack: NSAuthAck) {
         var connectionStatus = "Authenticated ("
         if (ack.read) connectionStatus += "R"
         if (ack.write) connectionStatus += "W"

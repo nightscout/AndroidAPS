@@ -182,7 +182,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPreferencesFromResourceIfEnabled(automationPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(wearPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(statusLinePlugin, rootKey)
-            addPreferencesFromResource(R.xml.pref_alerts, rootKey) // TODO not organized well
+            addPreferencesFromResource(R.xml.pref_alerts, rootKey)
             addPreferencesFromResource(R.xml.pref_datachoices, rootKey)
             addPreferencesFromResourceIfEnabled(maintenancePlugin, rootKey)
             addPreferencesFromResourceIfEnabled(openHumansUploader, rootKey)
