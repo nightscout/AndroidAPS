@@ -8,16 +8,17 @@ abstract class BRProfileBlock : ParameterBlock() {
 
     internal lateinit var profileBlocks: MutableList<BasalProfileBlock>
     override fun parse(byteBuf: ByteBuf) {
-        val newProfileBlocks = mutableListOf<BasalProfileBlock>()
-        for (i in 0..23) {
-            val basalProfileBlock = BasalProfileBlock()
-            basalProfileBlock.duration = byteBuf.readUInt16LE()
-            newProfileBlocks.add(basalProfileBlock)
+        profileBlocks = mutableListOf<BasalProfileBlock>()
+        profileBlocks.let {
+            for (i in 0..23) {
+                val basalProfileBlock = BasalProfileBlock()
+                basalProfileBlock.duration = byteBuf.readUInt16LE()
+                it.add(basalProfileBlock)
+            }
+            for (i in 0..23) it.get(i).basalAmount = byteBuf.readUInt16Decimal()
+            val iterator = it.iterator()
+            while (iterator.hasNext()) if (iterator.next().duration == 0) iterator.remove()
         }
-        for (i in 0..23) newProfileBlocks.get(i).basalAmount = byteBuf.readUInt16Decimal()
-        val iterator = newProfileBlocks.iterator()
-        while (iterator.hasNext()) if (iterator.next().duration == 0) iterator.remove()
-        profileBlocks = newProfileBlocks
     }
 
     override val data: ByteBuf
