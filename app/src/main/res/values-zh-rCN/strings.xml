@@ -74,8 +74,6 @@
     <string name="careportal">护理记录</string>
     <string name="configbuilder_pump">胰岛素泵</string>
     <string name="configbuilder_pump_description">你想用 AndroidAPS连接哪个胰岛素泵？</string>
-    <string name="configbuilder_treatments">治疗</string>
-    <string name="configbuilder_treatments_description">什么插件应该用于治疗处理？</string>
     <string name="configbuilder_profile">配置文件</string>
     <string name="configbuilder_profile_description">AndroidAPS 应该使用哪个配置文件？</string>
     <string name="configbuilder_aps">APS</string>
