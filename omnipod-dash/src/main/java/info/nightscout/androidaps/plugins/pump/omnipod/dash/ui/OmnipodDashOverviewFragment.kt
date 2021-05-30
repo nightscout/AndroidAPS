@@ -42,7 +42,6 @@ import info.nightscout.androidaps.utils.ui.UIRunnable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import org.apache.commons.lang3.StringUtils
-import org.joda.time.DateTime
 import org.joda.time.Duration
 import java.util.*
 import javax.inject.Inject
@@ -61,7 +60,6 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var pumpSync: PumpSync
-
 
     companion object {
 
@@ -221,7 +219,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
         updateQueueStatus()
     }
 
-    private fun updateBluetoothStatus(){
+    private fun updateBluetoothStatus() {
         bluetoothStatusBinding.omnipodDashBluetoothAddress.text = podStateManager.bluetoothAddress
             ?: PLACEHOLDER
         bluetoothStatusBinding.omnipodDashBluetoothStatus.text =
@@ -392,7 +390,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                     resourceHelper.gs(R.string.omnipod_common_pod_status_suspended)
                 } else {
                     resourceHelper.gs(R.string.omnipod_common_pod_status_running) +
-                        podStateManager.deliveryStatus?.let{ " " + podStateManager.deliveryStatus.toString() }
+                        podStateManager.deliveryStatus?.let { " " + podStateManager.deliveryStatus.toString() }
                 }
                 // TODO
                 /*
@@ -586,36 +584,39 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
         val minutes = duration.standardMinutes.toInt()
         val seconds = duration.standardSeconds.toInt()
         when {
-            seconds < 10           -> {
+            seconds < 10 -> {
                 return resourceHelper.gs(R.string.omnipod_common_moments_ago)
             }
 
-            seconds < 60           -> {
+            seconds < 60 -> {
                 return resourceHelper.gs(R.string.omnipod_common_less_than_a_minute_ago)
             }
 
-            seconds < 60 * 60      -> { // < 1 hour
+            seconds < 60 * 60 -> { // < 1 hour
                 return resourceHelper.gs(R.string.omnipod_common_time_ago, resourceHelper.gq(R.plurals.omnipod_common_minutes, minutes, minutes))
             }
 
             seconds < 24 * 60 * 60 -> { // < 1 day
                 val minutesLeft = minutes % 60
                 if (minutesLeft > 0)
-                    return resourceHelper.gs(R.string.omnipod_common_time_ago,
-                        resourceHelper.gs(R.string.omnipod_common_composite_time, resourceHelper.gq(R.plurals.omnipod_common_hours, hours, hours), resourceHelper.gq(R.plurals.omnipod_common_minutes, minutesLeft, minutesLeft)))
+                    return resourceHelper.gs(
+                        R.string.omnipod_common_time_ago,
+                        resourceHelper.gs(R.string.omnipod_common_composite_time, resourceHelper.gq(R.plurals.omnipod_common_hours, hours, hours), resourceHelper.gq(R.plurals.omnipod_common_minutes, minutesLeft, minutesLeft))
+                    )
                 return resourceHelper.gs(R.string.omnipod_common_time_ago, resourceHelper.gq(R.plurals.omnipod_common_hours, hours, hours))
             }
 
-            else                   -> {
+            else -> {
                 val days = hours / 24
                 val hoursLeft = hours % 24
                 if (hoursLeft > 0)
-                    return resourceHelper.gs(R.string.omnipod_common_time_ago,
-                        resourceHelper.gs(R.string.omnipod_common_composite_time, resourceHelper.gq(R.plurals.omnipod_common_days, days, days), resourceHelper.gq(R.plurals.omnipod_common_hours, hoursLeft, hoursLeft)))
+                    return resourceHelper.gs(
+                        R.string.omnipod_common_time_ago,
+                        resourceHelper.gs(R.string.omnipod_common_composite_time, resourceHelper.gq(R.plurals.omnipod_common_days, days, days), resourceHelper.gq(R.plurals.omnipod_common_hours, hoursLeft, hoursLeft))
+                    )
                 return resourceHelper.gs(R.string.omnipod_common_time_ago, resourceHelper.gq(R.plurals.omnipod_common_days, days, days))
             }
         }
-
     }
 
     private fun isQueueEmpty(): Boolean {

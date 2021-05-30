@@ -700,7 +700,7 @@ class OmnipodDashManagerImpl @Inject constructor(
     inner class ErrorInterceptor : Consumer<Throwable> {
 
         override fun accept(throwable: Throwable) {
-            logger.debug(LTag.PUMP, "Intercepted error in OmnipodDashManagerImpl: ${throwable}")
+            logger.debug(LTag.PUMP, "Intercepted error in OmnipodDashManagerImpl: $throwable")
         }
     }
 

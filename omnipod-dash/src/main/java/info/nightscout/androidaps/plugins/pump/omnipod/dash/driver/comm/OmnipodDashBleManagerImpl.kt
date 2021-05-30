@@ -84,7 +84,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
     }
 
     override fun getStatus(): ConnectionState {
-        return connection?.let{ getStatus() }
+        return connection?.let { getStatus() }
             ?: NotConnected
     }
 

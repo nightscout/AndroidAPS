@@ -106,7 +106,6 @@ class Connection(
         }
         podState.bluetoothConnectionState = OmnipodDashPodStateManager.BluetoothConnectionState.CONNECTED
 
-
         val discoverer = ServiceDiscoverer(aapsLogger, gattConnection, bleCommCallbacks)
         val discovered = discoverer.discoverServices()
         dataBleIO.characteristic = discovered[CharacteristicType.DATA]!!

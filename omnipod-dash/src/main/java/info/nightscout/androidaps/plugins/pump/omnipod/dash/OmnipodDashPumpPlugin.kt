@@ -296,7 +296,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         val ret = pumpSync.syncTemporaryBasalWithPumpId(
             timestamp = historyEntry.createdAt,
             rate = record.rate,
-            duration =  T.mins(record.duration.toLong()).msecs(),
+            duration = T.mins(record.duration.toLong()).msecs(),
             isAbsolute = true,
             type = tbrType,
             pumpId = historyEntry.pumpId(),
@@ -408,7 +408,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 }
 
             else ->
-                aapsLogger.warn(LTag.PUMP,
+                aapsLogger.warn(
+                    LTag.PUMP,
                     "Will not sync confirmed command of type: $historyEntry and " +
                         "succes: ${confirmation.success}"
                 )
