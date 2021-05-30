@@ -282,6 +282,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     .ignoreElement()
             )
         ).toPumpEnactResult()
+        // TODO: on error, invalidateTemporaryBasal or sync it only after sending the command
     }
 
     private fun pumpSyncTempBasal(
@@ -394,6 +395,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
         val historyEntry = history.getById(confirmation.historyId)
         when (historyEntry.commandType) {
             OmnipodCommandType.CANCEL_TEMPORARY_BASAL ->
+                // We can't invalidate this command,
+                // and this is why it pumpSync-ed at this point
                 if (confirmation.success) {
                     pumpSync.syncStopTemporaryBasalWithPumpId(
                         historyEntry.createdAt,
@@ -403,6 +406,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     )
                 }
             OmnipodCommandType.SET_TEMPORARY_BASAL ->
+                // This treatment was synced before sending the command
                 if (!confirmation.success) {
                     pumpSync.invalidateTemporaryBasal(historyEntry.pumpId())
                 }
