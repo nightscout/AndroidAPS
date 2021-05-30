@@ -391,6 +391,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 } else {
                     resourceHelper.gs(R.string.omnipod_common_pod_status_running) +
                         podStateManager.deliveryStatus?.let { " " + podStateManager.deliveryStatus.toString() }
+                    // TODO Display deliveryStatus in a nice way
                 }
                 // TODO
                 /*
