@@ -14,7 +14,7 @@ enum class BolusType {
     companion object {
         fun fromBolusInfoBolusType(type: DetailedBolusInfo.BolusType): BolusType {
             return when (type) {
-                DetailedBolusInfo.BolusType.SMB -> SMB;
+                DetailedBolusInfo.BolusType.SMB -> SMB
                 else -> DEFAULT
             }
         }

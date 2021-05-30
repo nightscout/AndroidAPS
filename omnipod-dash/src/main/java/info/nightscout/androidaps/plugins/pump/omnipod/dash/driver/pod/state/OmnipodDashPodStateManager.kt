@@ -8,9 +8,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.DefaultStatusResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.SetUniqueIdResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.VersionResponse
-import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Observable
+import io.reactivex.Single
 import java.io.Serializable
 import java.util.*
 
@@ -66,8 +66,8 @@ interface OmnipodDashPodStateManager {
     fun updateFromPairing(uniqueId: Id, pairResult: PairResult)
     fun reset()
 
-    fun createActiveCommand(historyId: String): Completable
-    fun updateActiveCommand(): Maybe<PodEvent>
+    fun createActiveCommand(historyId: String): Single<ActiveCommand>
+    fun updateActiveCommand(): Maybe<CommandConfirmed>
     fun observeNoActiveCommand(): Observable<PodEvent>
     fun maybeMarkActiveCommandFailed()
 

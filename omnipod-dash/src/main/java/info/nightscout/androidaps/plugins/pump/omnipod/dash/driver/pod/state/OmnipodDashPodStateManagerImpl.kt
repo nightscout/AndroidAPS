@@ -17,9 +17,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.SetUniqueIdResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.VersionResponse
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Observable
+import io.reactivex.Single
 import java.io.Serializable
 import java.util.*
 import javax.inject.Inject
@@ -183,21 +183,24 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         get() = podState.activeCommand
 
     @Synchronized
-    override fun createActiveCommand(historyId: String) = Completable.create { source ->
-        if (activeCommand == null) {
-            podState.activeCommand = OmnipodDashPodStateManager.ActiveCommand(
-                podState.messageSequenceNumber,
-                createdRealtime = SystemClock.elapsedRealtime(),
-                historyId = historyId
-            )
-            source.onComplete()
-        } else {
-            source.onError(
-                java.lang.IllegalStateException(
-                    "Trying to send a command " +
-                        "and the last command was not confirmed"
+    override fun createActiveCommand(historyId: String): Single<OmnipodDashPodStateManager.ActiveCommand> {
+        return Single.create { source ->
+            if (activeCommand == null) {
+                val command = OmnipodDashPodStateManager.ActiveCommand(
+                    podState.messageSequenceNumber,
+                    createdRealtime = SystemClock.elapsedRealtime(),
+                    historyId = historyId
                 )
-            )
+                podState.activeCommand = command
+                source.onSuccess(command)
+            } else {
+                source.onError(
+                    java.lang.IllegalStateException(
+                        "Trying to send a command " +
+                            "and the last command was not confirmed"
+                    )
+                )
+            }
         }
     }
 
@@ -228,7 +231,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     }
 
     @Synchronized
-    override fun updateActiveCommand() = Maybe.create<PodEvent> { source ->
+    override fun updateActiveCommand() = Maybe.create<CommandConfirmed> { source ->
         podState.activeCommand?.run {
             logger.debug(
                 "Trying to confirm active command with parameters: $activeCommand " +
@@ -241,12 +244,12 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             else {
                 podState.activeCommand = null
                 if (sequenceNumberOfLastProgrammingCommand == sequence)
-                    source.onSuccess(PodEvent.CommandConfirmed(historyId, true))
+                    source.onSuccess(CommandConfirmed(historyId, true))
                 else
-                    source.onSuccess(PodEvent.CommandConfirmed(historyId, false))
+                    source.onSuccess(CommandConfirmed(historyId, false))
             }
-        }
-            ?: source.onComplete() // no active programming command
+        } ?: source.onComplete()
+        // no active programming command
     }
 
     override fun increaseEapAkaSequenceNumber(): ByteArray {

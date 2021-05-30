@@ -35,6 +35,14 @@ class DashHistory @Inject constructor(
         currentTimeMillis()
     )
 
+    fun getById(id: String): HistoryRecord {
+        val entry = dao.byIdBlocking(id)
+        if (entry == null) {
+            throw java.lang.IllegalArgumentException("history entry [$id] not found")
+        }
+        return historyMapper.entityToDomain(entry)
+    }
+
     @Suppress("ReturnCount")
     fun createRecord(
         commandType: OmnipodCommandType,
@@ -77,7 +85,6 @@ class DashHistory @Inject constructor(
     fun updateFromState(podState: OmnipodDashPodStateManager) = Completable.defer {
         podState.activeCommand?.run {
             when {
-
                 createdRealtime <= podState.lastStatusResponseReceived &&
                     sequence == podState.sequenceNumberOfLastProgrammingCommand ->
                     dao.setInitialResult(historyId, InitialResult.SENT)
