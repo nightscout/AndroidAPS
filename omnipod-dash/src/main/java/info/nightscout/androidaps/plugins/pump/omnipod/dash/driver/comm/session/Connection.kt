@@ -20,6 +20,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.CmdBl
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.DataBleIO
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.IncomingPackets
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageIO
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 
 sealed class ConnectionState
 
@@ -29,7 +30,8 @@ object NotConnected : ConnectionState()
 class Connection(
     private val podDevice: BluetoothDevice,
     private val aapsLogger: AAPSLogger,
-    context: Context
+    context: Context,
+    private val podState: OmnipodDashPodStateManager
 ) : DisconnectHandler {
 
     private val incomingPackets = IncomingPackets()
@@ -50,13 +52,15 @@ class Connection(
         aapsLogger.debug(LTag.PUMPBTCOMM, "Connecting to ${podDevice.address}")
 
         val autoConnect = false
-
+        podState.bluetoothConnectionState = OmnipodDashPodStateManager.BluetoothConnectionState.CONNECTING
         gattConnection = podDevice.connectGatt(context, autoConnect, bleCommCallbacks, BluetoothDevice.TRANSPORT_LE)
         // OnDisconnect can be called after this point!!!
         val state = waitForConnection()
         if (state !is Connected) {
+            podState.bluetoothConnectionState = OmnipodDashPodStateManager.BluetoothConnectionState.DISCONNECTED
             throw FailedToConnectException(podDevice.address)
         }
+        podState.bluetoothConnectionState = OmnipodDashPodStateManager.BluetoothConnectionState.CONNECTED
         val discoverer = ServiceDiscoverer(aapsLogger, gattConnection, bleCommCallbacks)
         val discoveredCharacteristics = discoverer.discoverServices()
         cmdBleIO = CmdBleIO(
@@ -90,13 +94,18 @@ class Connection(
             disconnect()
         }
         aapsLogger.debug("Connecting")
+        podState.bluetoothConnectionState = OmnipodDashPodStateManager.BluetoothConnectionState.CONNECTING
+
         if (!gattConnection.connect()) {
             throw FailedToConnectException("connect() returned false")
         }
 
-        if (waitForConnection() is NotConnected) {
+        if (waitForConnection() !is Connected) {
+            podState.bluetoothConnectionState = OmnipodDashPodStateManager.BluetoothConnectionState.DISCONNECTED
             throw FailedToConnectException(podDevice.address)
         }
+        podState.bluetoothConnectionState = OmnipodDashPodStateManager.BluetoothConnectionState.CONNECTED
+
 
         val discoverer = ServiceDiscoverer(aapsLogger, gattConnection, bleCommCallbacks)
         val discovered = discoverer.discoverServices()
@@ -110,6 +119,8 @@ class Connection(
 
     fun disconnect() {
         aapsLogger.debug(LTag.PUMPBTCOMM, "Disconnecting")
+        podState.bluetoothConnectionState = OmnipodDashPodStateManager.BluetoothConnectionState.DISCONNECTED
+
         gattConnection.disconnect()
         bleCommCallbacks.resetConnection()
         session = null

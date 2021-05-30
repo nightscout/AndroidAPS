@@ -407,8 +407,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 }
 
             else ->
-                throw IllegalArgumentException(
-                    "Don't know how to sync confirmed command of type: $historyEntry and " +
+                aapsLogger.warn(LTag.PUMP,
+                    "Will not sync confirmed command of type: $historyEntry and " +
                         "succes: ${confirmation.success}"
                 )
         }

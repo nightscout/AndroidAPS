@@ -22,6 +22,7 @@ interface OmnipodDashPodStateManager {
     val isSuspended: Boolean
     val isPodRunning: Boolean
     var lastConnection: Long
+    var bluetoothConnectionState: BluetoothConnectionState
 
     val lastUpdatedSystem: Long // System.currentTimeMillis()
     val lastStatusResponseReceived: Long
@@ -79,4 +80,8 @@ interface OmnipodDashPodStateManager {
     )
     // TODO: set created to "now" on boot
     data class TempBasal(val startTime: Long, val rate: Double, val durationInMinutes: Short) : Serializable
+
+    enum class BluetoothConnectionState {
+        CONNECTING, CONNECTED, DISCONNECTED
+    }
 }

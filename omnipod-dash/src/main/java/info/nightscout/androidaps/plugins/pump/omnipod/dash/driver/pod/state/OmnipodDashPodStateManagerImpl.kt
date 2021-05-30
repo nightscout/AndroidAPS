@@ -160,6 +160,14 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     override val lastStatusResponseReceived: Long
         get() = podState.lastStatusResponseReceived
 
+    override var bluetoothConnectionState: OmnipodDashPodStateManager.BluetoothConnectionState
+        get() = podState.bluetoothConnectionState
+        set(bluetoothConnectionState) {
+            podState.bluetoothConnectionState = bluetoothConnectionState
+            rxBus.send(EventOmnipodDashPumpValuesChanged())
+            // do not store
+        }
+
     override fun increaseMessageSequenceNumber() {
         podState.messageSequenceNumber = ((podState.messageSequenceNumber.toInt() + 1) and 0x0f).toShort()
         store()
@@ -380,7 +388,8 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         var lastConnection: Long = 0
         var lastUpdatedSystem: Long = 0
         var lastStatusResponseReceived: Long = 0
-
+        var bluetoothConnectionState: OmnipodDashPodStateManager.BluetoothConnectionState =
+            OmnipodDashPodStateManager.BluetoothConnectionState.DISCONNECTED
         var messageSequenceNumber: Short = 0
         var sequenceNumberOfLastProgrammingCommand: Short? = null
         var activationTime: Long? = null
