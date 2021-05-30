@@ -258,6 +258,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
         enforceNew: Boolean,
         tbrType: PumpSync.TemporaryBasalType
     ): PumpEnactResult {
+        val tempBasalBeeps = sp.getBoolean(R.string.key_omnipod_common_tbr_beeps_enabled, false)
+
         return Completable.concat(
             listOf(
                 observeNoActiveTempBasal(enforceNew),
@@ -270,7 +272,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     .ignoreElement(),
                 omnipodManager.setTempBasal(
                     absoluteRate,
-                    durationInMinutes.toShort()
+                    durationInMinutes.toShort(),
+                    tempBasalBeeps,
                 ).ignoreElements(),
                 history.updateFromState(podStateManager),
                 podStateManager.updateActiveCommand()
