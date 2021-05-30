@@ -293,7 +293,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             throw IllegalArgumentException("Illegal recording in history: $record. Expected a temp basal")
         }
         val ret = pumpSync.syncTemporaryBasalWithPumpId(
-            timestamp = historyEntry.pumpId(),
+            timestamp = historyEntry.createdAt,
             rate = record.rate,
             duration = record.duration.toLong(),
             isAbsolute = true,
