@@ -1223,7 +1223,7 @@ class LocalInsightPlugin @Inject constructor(
             if (event.duration > 0 && profileFunction.getProfile(bolusID!!.timestamp) != null) pumpSync.syncExtendedBolusWithPumpId(
                 timestamp= startTimestamp,
                 amount= event.extendedAmount,
-                duration= mins(event.duration.toLong()).msecs(),
+                duration= timestamp - startTimestamp,
                 isEmulatingTB= isFakingTempsByExtendedBoluses,
                 pumpId= bolusID.id,
                 pumpType= PumpType.ACCU_CHEK_INSIGHT,
