@@ -26,6 +26,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.TempBas
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.OmnipodDashOverviewFragment
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.mapProfileToBasalProgram
 import info.nightscout.androidaps.queue.commands.CustomCommand
+import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.TimeChangeType
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -295,7 +296,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         val ret = pumpSync.syncTemporaryBasalWithPumpId(
             timestamp = historyEntry.createdAt,
             rate = record.rate,
-            duration = record.duration.toLong(),
+            duration =  T.mins(record.duration.toLong()).msecs(),
             isAbsolute = true,
             type = tbrType,
             pumpId = historyEntry.pumpId(),
