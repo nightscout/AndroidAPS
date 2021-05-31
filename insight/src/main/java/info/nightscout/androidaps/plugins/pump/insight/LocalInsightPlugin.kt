@@ -198,7 +198,7 @@ class LocalInsightPlugin @Inject constructor(
 
     override fun getPumpStatus(reason: String) {
         try {
-            tBROverNotificationBlock = ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, TBROverNotificationBlock::class.java)
+            tBROverNotificationBlock = ParameterBlockUtil.readParameterBlock(connectionService!!, Service.CONFIGURATION, TBROverNotificationBlock::class.java) // TODO resolve !!
             readHistory()
             fetchBasalProfile()
             fetchLimitations()
@@ -242,8 +242,8 @@ class LocalInsightPlugin @Inject constructor(
     }
 
     @Throws(Exception::class) private fun fetchBasalProfile() {
-        activeBasalProfile = ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, ActiveBRProfileBlock::class.java).activeBasalProfile
-        profileBlocks = ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, BRProfile1Block::class.java).profileBlocks
+        activeBasalProfile = ParameterBlockUtil.readParameterBlock(connectionService!!, Service.CONFIGURATION, ActiveBRProfileBlock::class.java)!!.activeBasalProfile // TODO resolve !!
+        profileBlocks = ParameterBlockUtil.readParameterBlock(connectionService!!, Service.CONFIGURATION, BRProfile1Block::class.java)!!.profileBlocks // TODO resolve !!
     }
 
     @Throws(Exception::class) private fun fetchStatus() {
@@ -310,13 +310,15 @@ class LocalInsightPlugin @Inject constructor(
     }
 
     @Throws(Exception::class) private fun fetchLimitations() {
-        maximumBolusAmount = ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, MaxBolusAmountBlock::class.java).amountLimitation
-        val maximumBasalAmount = ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, MaxBasalAmountBlock::class.java).amountLimitation
-        minimumBolusAmount = ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, FactoryMinBolusAmountBlock::class.java).amountLimitation
-        val minimumBasalAmount = ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, FactoryMinBasalAmountBlock::class.java).amountLimitation
-        pumpDescription.basalMaximumRate = maximumBasalAmount
-        pumpDescription.basalMinimumRate = minimumBasalAmount
-        limitsFetched = true
+        connectionService!!.let { service -> // TODO resolve !!:
+            maximumBolusAmount = ParameterBlockUtil.readParameterBlock(service, Service.CONFIGURATION, MaxBolusAmountBlock::class.java)!!.amountLimitation
+            val maximumBasalAmount = ParameterBlockUtil.readParameterBlock(service, Service.CONFIGURATION, MaxBasalAmountBlock::class.java)!!.amountLimitation
+            minimumBolusAmount = ParameterBlockUtil.readParameterBlock(service, Service.CONFIGURATION, FactoryMinBolusAmountBlock::class.java)!!.amountLimitation
+            val minimumBasalAmount = ParameterBlockUtil.readParameterBlock(service, Service.CONFIGURATION, FactoryMinBasalAmountBlock::class.java)!!.amountLimitation
+            pumpDescription.basalMaximumRate = maximumBasalAmount
+            pumpDescription.basalMinimumRate = minimumBasalAmount
+            limitsFetched = true
+        }
     }
 
     override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
@@ -336,11 +338,11 @@ class LocalInsightPlugin @Inject constructor(
         try {
             val activeBRProfileBlock = ActiveBRProfileBlock()
             activeBRProfileBlock.activeBasalProfile = BasalProfile.PROFILE_1
-            ParameterBlockUtil.writeConfigurationBlock(connectionService, activeBRProfileBlock)
+            ParameterBlockUtil.writeConfigurationBlock(connectionService!!, activeBRProfileBlock) // TODO resolve !!
             activeBasalProfile = BasalProfile.PROFILE_1
             val profileBlock: BRProfileBlock = BRProfile1Block()
             profileBlock.profileBlocks = profileBlocks
-            ParameterBlockUtil.writeConfigurationBlock(connectionService, profileBlock)
+            ParameterBlockUtil.writeConfigurationBlock(connectionService!!, profileBlock) // TODO resolve !!
             rxBus.send(EventDismissNotification(Notification.FAILED_UPDATE_PROFILE))
             val notification = Notification(Notification.PROFILE_SET_OK, resourceHelper.gs(R.string.profile_set_ok), Notification.INFO, 60)
             rxBus.send(EventNewNotification(notification))
@@ -878,7 +880,7 @@ class LocalInsightPlugin @Inject constructor(
         val valueBefore = tBROverNotificationBlock!!.isEnabled
         tBROverNotificationBlock!!.isEnabled = enabled
         try {
-            ParameterBlockUtil.writeConfigurationBlock(connectionService, tBROverNotificationBlock)
+            ParameterBlockUtil.writeConfigurationBlock(connectionService!!, tBROverNotificationBlock) // TODO resolve !!
             result.success(true).enacted(true)
         } catch (e: AppLayerErrorException) {
             tBROverNotificationBlock!!.isEnabled = valueBefore
