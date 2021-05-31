@@ -28,6 +28,7 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.RunningConfiguration
+import info.nightscout.androidaps.plugins.general.maintenance.MaintenancePlugin
 import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -72,6 +73,7 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
         @Inject lateinit var rxBus: RxBusWrapper
         @Inject lateinit var commandQueue: CommandQueueProvider
         @Inject lateinit var fabricPrivacy: FabricPrivacy
+        @Inject lateinit var maintenancePlugin: MaintenancePlugin
 
         init {
             (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
@@ -93,6 +95,8 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
             localAlertUtils.checkStaleBGAlert()
             checkPump()
             checkAPS()
+            maintenancePlugin.deleteLogs(30)
+
             return Result.success()
         }
 

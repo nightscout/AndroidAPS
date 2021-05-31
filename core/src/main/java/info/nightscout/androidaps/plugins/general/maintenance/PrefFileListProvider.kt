@@ -32,6 +32,7 @@ class PrefFileListProvider @Inject constructor(
         private val path = File(Environment.getExternalStorageDirectory().toString())
         private val aapsPath = File(path, "AAPS" + File.separator + "preferences")
         private val exportsPath = File(path, "AAPS" + File.separator + "exports")
+        private val extraPath = File(path, "AAPS" + File.separator + "extra")
         private const val IMPORT_AGE_NOT_YET_OLD_DAYS = 60
     }
 
@@ -90,13 +91,21 @@ class PrefFileListProvider @Inject constructor(
         return File(path, resourceHelper.gs(R.string.app_name) + "Preferences")
     }
 
-    fun ensureExportDirExists() {
+    fun ensureExportDirExists(): File {
         if (!aapsPath.exists()) {
             aapsPath.mkdirs()
         }
         if (!exportsPath.exists()) {
             exportsPath.mkdirs()
         }
+        return exportsPath
+    }
+
+    fun ensureExtraDirExists(): File {
+        if (!extraPath.exists()) {
+            extraPath.mkdirs()
+        }
+        return extraPath
     }
 
     fun newExportFile(): File {
