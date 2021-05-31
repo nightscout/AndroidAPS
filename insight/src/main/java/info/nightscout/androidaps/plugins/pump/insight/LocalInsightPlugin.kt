@@ -473,12 +473,11 @@ class LocalInsightPlugin @Inject constructor(
                                     bolusingEvent.percent = 100
                                     rxBus.send(bolusingEvent)
                                 }
-                                // break        // TODO() remove this line if ok (in java break was here but kotlin doesn't acccept break inside a synchronized block
                             }
                         }
-                        if (trials == -1 || trials++ >= 5) { // TODO: ++ here would increment it a second time.
+                        if (trials == -1 || trials >= 5) {
                             break
-                        }   // TODO() break is moved outside synchronized block (Side effect or not ?)
+                        }
                     }
                     SystemClock.sleep(200)
                 }
