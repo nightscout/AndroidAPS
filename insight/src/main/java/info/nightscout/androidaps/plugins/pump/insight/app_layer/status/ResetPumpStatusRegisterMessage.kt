@@ -5,15 +5,15 @@ import info.nightscout.androidaps.plugins.pump.insight.app_layer.Service
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.MessagePriority
 import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
-class ResetPumpStatusRegisterMessage : AppLayerMessage(MessagePriority.NORMAL, false, false, Service.STATUS) {
-
-    internal var operatingModeChanged: Boolean = false
-    internal var batteryStatusChanged = false
-    internal var cartridgeStatusChanged = false
-    internal var totalDailyDoseChanged = false
-    internal var activeBasalRateChanged = false
-    internal var activeTBRChanged = false
-    internal var activeBolusesChanged = false
+class ResetPumpStatusRegisterMessage(
+    internal val operatingModeChanged: Boolean = false,
+    internal val batteryStatusChanged: Boolean = false,
+    internal val cartridgeStatusChanged: Boolean = false,
+    internal val totalDailyDoseChanged: Boolean = false,
+    internal val activeBasalRateChanged: Boolean = false,
+    internal val activeTBRChanged: Boolean = false,
+    internal val activeBolusesChanged: Boolean = false
+) : AppLayerMessage(MessagePriority.NORMAL, false, false, Service.STATUS) {
 
     override val data: ByteBuf
         get() {
