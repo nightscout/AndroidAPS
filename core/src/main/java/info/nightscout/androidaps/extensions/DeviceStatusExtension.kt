@@ -3,7 +3,7 @@ package info.nightscout.androidaps.extensions
 import android.os.Build
 import info.nightscout.androidaps.database.entities.DeviceStatus
 import info.nightscout.androidaps.interfaces.IobCobCalculator
-import info.nightscout.androidaps.interfaces.LoopInterface
+import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.Pump
 import info.nightscout.androidaps.plugins.configBuilder.RunningConfiguration
@@ -28,7 +28,7 @@ fun DeviceStatus.toJson(dateUtil: DateUtil): JSONObject =
 
 fun buildDeviceStatus(
     dateUtil: DateUtil,
-    loopPlugin: LoopInterface,
+    loopPlugin: Loop,
     iobCobCalculatorPlugin: IobCobCalculator,
     profileFunction: ProfileFunction,
     pump: Pump,

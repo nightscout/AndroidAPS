@@ -8,7 +8,7 @@ import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.interfaces.ConfigBuilder
-import info.nightscout.androidaps.interfaces.LoopInterface
+import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -20,7 +20,7 @@ import javax.inject.Inject
 class ActionLoopEnable(injector: HasAndroidInjector) : Action(injector) {
 
     @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var loopPlugin: LoopInterface
+    @Inject lateinit var loopPlugin: Loop
     @Inject lateinit var configBuilder: ConfigBuilder
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var uel: UserEntryLogger

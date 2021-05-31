@@ -372,6 +372,7 @@ class BLEComm @Inject internal constructor(
                                 aapsLogger.debug(LTag.PUMPBTCOMM, "Shifting the input buffer by $idxStartByte bytes")
                                 System.arraycopy(readBuffer, idxStartByte, readBuffer, 0, bufferLength - idxStartByte)
                                 bufferLength -= idxStartByte
+                                if (bufferLength < 0) bufferLength = 0
                             }
                             startSignatureFound = true
                             break
@@ -393,6 +394,9 @@ class BLEComm @Inject internal constructor(
                         packetIsValid = true
                         readBuffer[length + 5] = PACKET_END_BYTE
                         readBuffer[length + 6] = PACKET_END_BYTE
+                    } else {
+                        aapsLogger.error(LTag.PUMPBTCOMM, "Error in input data. Resetting buffer.")
+                        bufferLength = 0
                     }
                 }
             }

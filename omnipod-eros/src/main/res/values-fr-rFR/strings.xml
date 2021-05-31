@@ -56,7 +56,7 @@
     <string name="omnipod_eros_error_operation_not_possible_no_configuration">Operation impossible.\n\nVous devez d\'abord configurer l\'Omnipod pour pouvoir faire cette operation.</string>
     <string name="omnipod_eros_error_bolus_failed_uncertain">Impossible de vérifier si le bolus a réussi. Veuillez vérifier manuellement que votre Pod est en train de délivrer un bolus en écoutant des clics. <b>Si vous êtes sûr que le bolus n\'a pas réussi, vous devez supprimer manuellement l\'entrée bolus des traitements, même si vous cliquez sur \'Annuler bolus\' maintenant !</b></string>
     <string name="omnipod_eros_error_bolus_failed_uncertain_smb">Impossible de vérifier si le bolus SMB (%1$.2f U) a réussi. <b>Si vous êtes certain que le bolus n\'a pas réussi, vous devez supprimer manuellement l\'entrée SMB des traitements.</b></string>
-    <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Un basal temporaire est en cours d\'exécution sur le Pod, mais AAPS n\'est pas au courant de ce basal temporaire. Veuillez annuler votre basal temporaire manuellement.</string>
+    <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Une basale temporaire est en cours d\'exécution sur le Pod, mais AAPS n\'est pas au courant de ce basal temporaire. Veuillez annuler votre basal temporaire manuellement.</string>
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">Stats RileyLink</string>
     <string name="omnipod_eros_pod_management_waiting_for_riley_link_connection">En attente de connexion RileyLink...</string>

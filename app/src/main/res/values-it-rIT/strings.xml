@@ -899,4 +899,9 @@
     <string name="profile_max_daily_basal_value">Valore max basale (profilo)</string>
     <string name="current_basal_value">Valore basale corrente</string>
     <string name="profile_carbs_ratio_value">Valore rapporto CHO (profilo)</string>
+    <string name="ns_receive_temp_target">Ricevi target temporanei</string>
+    <string name="ns_receive_profile_switch">Ricevi cambi profilo</string>
+    <string name="ns_receive_insulin">Ricevi insulina</string>
+    <string name="ns_receive_carbs">Ricevi CHO</string>
+    <string name="ns_receive_cgm_summary">Accetta dati CGM da NS</string>
 </resources>

@@ -21,6 +21,7 @@ fun ProfileSwitch.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
     JSONObject()
         .put("created_at", dateUtil.toISOString(timestamp))
         .put("enteredBy", "openaps://" + "AndroidAPS")
+        .put("isValid", isValid)
         .put("eventType", TherapyEvent.Type.PROFILE_SWITCH.text)
         .put("duration", T.msecs(duration).mins())
         .put("profile", getCustomizedName())

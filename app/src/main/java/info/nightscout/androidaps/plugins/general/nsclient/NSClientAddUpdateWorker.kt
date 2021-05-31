@@ -26,7 +26,6 @@ import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.JsonHelper.safeGetLong
-import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.util.concurrent.TimeUnit
@@ -194,7 +193,6 @@ class NSClientAddUpdateWorker(
                     eventType == TherapyEvent.Type.ANNOUNCEMENT.text ||
                     eventType == TherapyEvent.Type.QUESTION.text ||
                     eventType == TherapyEvent.Type.EXERCISE.text ||
-                    eventType == TherapyEvent.Type.APS_OFFLINE.text ||
                     eventType == TherapyEvent.Type.PUMP_BATTERY_CHANGE.text ->
                     if (sp.getBoolean(R.string.key_ns_receive_therapy_events, false) || config.NSCLIENT) {
                         therapyEventFromJson(json)?.let { therapyEvent ->
@@ -340,6 +338,43 @@ class NSClientAddUpdateWorker(
                                     }
                                 }
                         } ?: aapsLogger.error("Error parsing ProfileSwitch json $json")
+                    }
+                eventType == TherapyEvent.Type.APS_OFFLINE.text          ->
+                    if (sp.getBoolean(R.string.key_ns_receive_offline_event, false) && buildHelper.isEngineeringMode() || config.NSCLIENT) {
+                        offlineEventFromJson(json)?.let { offlineEvent ->
+                            repository.runTransactionForResult(SyncNsOfflineEventTransaction(offlineEvent, invalidateByNsOnly = false))
+                                .doOnError {
+                                    aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it)
+                                    ret = Result.failure(workDataOf("Error" to it.toString()))
+                                }
+                                .blockingGet()
+                                .also { result ->
+                                    result.inserted.forEach { oe ->
+                                        uel.log(Action.LOOP_CHANGE, Sources.NSClient,
+                                            ValueWithUnit.OfflineEventReason(oe.reason),
+                                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(oe.duration).toInt())
+                                        )
+                                        aapsLogger.debug(LTag.DATABASE, "Inserted OfflineEvent $oe")
+                                    }
+                                    result.invalidated.forEach { oe ->
+                                        uel.log(Action.LOOP_REMOVED, Sources.NSClient,
+                                            ValueWithUnit.OfflineEventReason(oe.reason),
+                                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(oe.duration).toInt())
+                                        )
+                                        aapsLogger.debug(LTag.DATABASE, "Invalidated OfflineEvent $oe")
+                                    }
+                                    result.ended.forEach { oe ->
+                                        uel.log(Action.LOOP_CHANGE, Sources.NSClient,
+                                            ValueWithUnit.OfflineEventReason(oe.reason),
+                                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(oe.duration).toInt())
+                                        )
+                                        aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent $oe")
+                                    }
+                                    result.updatedNsId.forEach {
+                                        aapsLogger.debug(LTag.DATABASE, "Updated nsId OfflineEvent $it")
+                                    }
+                                }
+                        } ?: aapsLogger.error("Error parsing OfflineEvent json $json")
                     }
             }
             if (sp.getBoolean(R.string.key_ns_receive_therapy_events, false) || config.NSCLIENT)

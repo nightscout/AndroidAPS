@@ -29,7 +29,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientR
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
-import info.nightscout.androidaps.plugins.treatments.events.EventTreatmentUpdateGui
+import info.nightscout.androidaps.events.EventTreatmentUpdateGui
 import info.nightscout.androidaps.activities.fragments.TreatmentsProfileSwitchFragment.RecyclerProfileViewAdapter.ProfileSwitchViewHolder
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy

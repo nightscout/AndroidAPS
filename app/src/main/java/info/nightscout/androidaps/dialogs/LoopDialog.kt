@@ -13,9 +13,13 @@ import androidx.fragment.app.FragmentManager
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.OfflineEvent
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.transactions.CancelCurrentOfflineEventIfAnyTransaction
+import info.nightscout.androidaps.database.transactions.InsertAndCancelCurrentOfflineEventTransaction
 import info.nightscout.androidaps.databinding.DialogLoopBinding
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.events.EventRefreshOverview
@@ -30,8 +34,13 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.extensions.toVisibility
+import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import javax.inject.Inject
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
@@ -50,6 +59,8 @@ class LoopDialog : DaggerDialogFragment() {
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var configBuilder: ConfigBuilder
     @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var repository: AppRepository
 
     private var showOkCancel: Boolean = true
     private var _binding: DialogLoopBinding? = null
@@ -59,6 +70,8 @@ class LoopDialog : DaggerDialogFragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+
+    val disposable = CompositeDisposable()
 
     override fun onStart() {
         super.onStart()
@@ -135,6 +148,7 @@ class LoopDialog : DaggerDialogFragment() {
         super.onDestroyView()
         _binding = null
         loopHandler.removeCallbacksAndMessages(null)
+        disposable.clear()
     }
 
     var task: Runnable? = null
@@ -229,22 +243,22 @@ class LoopDialog : DaggerDialogFragment() {
     private fun onClickOkCancelEnabled(v: View): Boolean {
         var description = ""
         when (v.id) {
-            R.id.overview_closeloop -> description = resourceHelper.gs(R.string.closedloop)
-            R.id.overview_lgsloop -> description = resourceHelper.gs(R.string.lowglucosesuspend)
-            R.id.overview_openloop -> description = resourceHelper.gs(R.string.openloop)
-            R.id.overview_disable -> description = resourceHelper.gs(R.string.disableloop)
-            R.id.overview_enable -> description = resourceHelper.gs(R.string.enableloop)
-            R.id.overview_resume -> description = resourceHelper.gs(R.string.resume)
-            R.id.overview_reconnect -> description = resourceHelper.gs(R.string.reconnect)
-            R.id.overview_suspend_1h -> description = resourceHelper.gs(R.string.suspendloopfor1h)
-            R.id.overview_suspend_2h -> description = resourceHelper.gs(R.string.suspendloopfor2h)
-            R.id.overview_suspend_3h -> description = resourceHelper.gs(R.string.suspendloopfor3h)
-            R.id.overview_suspend_10h -> description = resourceHelper.gs(R.string.suspendloopfor10h)
+            R.id.overview_closeloop      -> description = resourceHelper.gs(R.string.closedloop)
+            R.id.overview_lgsloop        -> description = resourceHelper.gs(R.string.lowglucosesuspend)
+            R.id.overview_openloop       -> description = resourceHelper.gs(R.string.openloop)
+            R.id.overview_disable        -> description = resourceHelper.gs(R.string.disableloop)
+            R.id.overview_enable         -> description = resourceHelper.gs(R.string.enableloop)
+            R.id.overview_resume         -> description = resourceHelper.gs(R.string.resume)
+            R.id.overview_reconnect      -> description = resourceHelper.gs(R.string.reconnect)
+            R.id.overview_suspend_1h     -> description = resourceHelper.gs(R.string.suspendloopfor1h)
+            R.id.overview_suspend_2h     -> description = resourceHelper.gs(R.string.suspendloopfor2h)
+            R.id.overview_suspend_3h     -> description = resourceHelper.gs(R.string.suspendloopfor3h)
+            R.id.overview_suspend_10h    -> description = resourceHelper.gs(R.string.suspendloopfor10h)
             R.id.overview_disconnect_15m -> description = resourceHelper.gs(R.string.disconnectpumpfor15m)
             R.id.overview_disconnect_30m -> description = resourceHelper.gs(R.string.disconnectpumpfor30m)
-            R.id.overview_disconnect_1h -> description = resourceHelper.gs(R.string.disconnectpumpfor1h)
-            R.id.overview_disconnect_2h -> description = resourceHelper.gs(R.string.disconnectpumpfor2h)
-            R.id.overview_disconnect_3h -> description = resourceHelper.gs(R.string.disconnectpumpfor3h)
+            R.id.overview_disconnect_1h  -> description = resourceHelper.gs(R.string.disconnectpumpfor1h)
+            R.id.overview_disconnect_2h  -> description = resourceHelper.gs(R.string.disconnectpumpfor2h)
+            R.id.overview_disconnect_3h  -> description = resourceHelper.gs(R.string.disconnectpumpfor3h)
         }
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.confirm), description, Runnable {
@@ -255,30 +269,29 @@ class LoopDialog : DaggerDialogFragment() {
     }
 
     fun onClick(v: View): Boolean {
-        val profile = profileFunction.getProfile() ?: return true
         when (v.id) {
-            R.id.overview_closeloop -> {
+            R.id.overview_closeloop                       -> {
                 uel.log(Action.CLOSED_LOOP_MODE, Sources.LoopDialog)
                 sp.putString(R.string.key_aps_mode, "closed")
                 rxBus.send(EventPreferenceChange(resourceHelper.gs(R.string.closedloop)))
                 return true
             }
 
-            R.id.overview_lgsloop -> {
+            R.id.overview_lgsloop                         -> {
                 uel.log(Action.LGS_LOOP_MODE, Sources.LoopDialog)
                 sp.putString(R.string.key_aps_mode, "lgs")
                 rxBus.send(EventPreferenceChange(resourceHelper.gs(R.string.lowglucosesuspend)))
                 return true
             }
 
-            R.id.overview_openloop -> {
+            R.id.overview_openloop                        -> {
                 uel.log(Action.OPEN_LOOP_MODE, Sources.LoopDialog)
                 sp.putString(R.string.key_aps_mode, "open")
                 rxBus.send(EventPreferenceChange(resourceHelper.gs(R.string.lowglucosesuspend)))
                 return true
             }
 
-            R.id.overview_disable -> {
+            R.id.overview_disable                         -> {
                 uel.log(Action.LOOP_DISABLED, Sources.LoopDialog)
                 loopPlugin.setPluginEnabled(PluginType.LOOP, false)
                 loopPlugin.setFragmentVisible(PluginType.LOOP, false)
@@ -291,23 +304,39 @@ class LoopDialog : DaggerDialogFragment() {
                         }
                     }
                 })
-                loopPlugin.createOfflineEvent(24 * 60) // upload 24h, we don't know real duration
+                disposable += repository.runTransactionForResult(InsertAndCancelCurrentOfflineEventTransaction(dateUtil.now(), T.days(365).msecs(), OfflineEvent.Reason.DISABLE_LOOP))
+                    .subscribe({ result ->
+                        result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent $it") }
+                        result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted OfflineEvent $it") }
+                    }, {
+                        aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it)
+                    })
                 return true
             }
 
-            R.id.overview_enable -> {
+            R.id.overview_enable                          -> {
                 uel.log(Action.LOOP_ENABLED, Sources.LoopDialog)
                 loopPlugin.setPluginEnabled(PluginType.LOOP, true)
                 loopPlugin.setFragmentVisible(PluginType.LOOP, true)
                 configBuilder.storeSettings("EnablingLoop")
                 rxBus.send(EventRefreshOverview("suspendmenu"))
-                loopPlugin.createOfflineEvent(0)
+                disposable += repository.runTransactionForResult(CancelCurrentOfflineEventIfAnyTransaction(dateUtil.now()))
+                    .subscribe({ result ->
+                        result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent $it") }
+                    }, {
+                        aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it)
+                    })
                 return true
             }
 
             R.id.overview_resume, R.id.overview_reconnect -> {
-                uel.log(if (v.id==R.id.overview_resume) Action.RESUME else Action.RECONNECT, Sources.LoopDialog)
-                loopPlugin.suspendTo(0L)
+                uel.log(if (v.id == R.id.overview_resume) Action.RESUME else Action.RECONNECT, Sources.LoopDialog)
+                disposable += repository.runTransactionForResult(CancelCurrentOfflineEventIfAnyTransaction(dateUtil.now()))
+                    .subscribe({ result ->
+                        result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent $it") }
+                    }, {
+                        aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it)
+                    })
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {
@@ -317,70 +346,123 @@ class LoopDialog : DaggerDialogFragment() {
                     }
                 })
                 sp.putBoolean(R.string.key_objectiveusereconnect, true)
-                loopPlugin.createOfflineEvent(0)
                 return true
             }
 
-            R.id.overview_suspend_1h -> {
+            R.id.overview_suspend_1h                      -> {
                 uel.log(Action.SUSPEND, Sources.LoopDialog, ValueWithUnit.Hour(1))
-                loopPlugin.suspendLoop(60)
+                disposable += repository.runTransactionForResult(InsertAndCancelCurrentOfflineEventTransaction(dateUtil.now(), T.hours(1).msecs(), OfflineEvent.Reason.SUSPEND))
+                    .subscribe({ result ->
+                        result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent $it") }
+                        result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted OfflineEvent $it") }
+                    }, {
+                        aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it)
+                    })
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true
             }
 
-            R.id.overview_suspend_2h -> {
+            R.id.overview_suspend_2h                      -> {
                 uel.log(Action.SUSPEND, Sources.LoopDialog, ValueWithUnit.Hour(2))
-                loopPlugin.suspendLoop(120)
+                disposable += repository.runTransactionForResult(InsertAndCancelCurrentOfflineEventTransaction(dateUtil.now(), T.hours(2).msecs(), OfflineEvent.Reason.SUSPEND))
+                    .subscribe({ result ->
+                        result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent $it") }
+                        result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted OfflineEvent $it") }
+                    }, {
+                        aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it)
+                    })
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true
             }
 
-            R.id.overview_suspend_3h -> {
+            R.id.overview_suspend_3h                      -> {
                 uel.log(Action.SUSPEND, Sources.LoopDialog, ValueWithUnit.Hour(3))
-                loopPlugin.suspendLoop(180)
+                disposable += repository.runTransactionForResult(InsertAndCancelCurrentOfflineEventTransaction(dateUtil.now(), T.hours(3).msecs(), OfflineEvent.Reason.SUSPEND))
+                    .subscribe({ result ->
+                        result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent $it") }
+                        result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted OfflineEvent $it") }
+                    }, {
+                        aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it)
+                    })
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true
             }
 
-            R.id.overview_suspend_10h -> {
+            R.id.overview_suspend_10h                     -> {
                 uel.log(Action.SUSPEND, Sources.LoopDialog, ValueWithUnit.Hour(10))
-                loopPlugin.suspendLoop(600)
+                disposable += repository.runTransactionForResult(InsertAndCancelCurrentOfflineEventTransaction(dateUtil.now(), T.hours(10).msecs(), OfflineEvent.Reason.SUSPEND))
+                    .subscribe({ result ->
+                        result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent $it") }
+                        result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted OfflineEvent $it") }
+                    }, {
+                        aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it)
+                    })
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true
             }
 
-            R.id.overview_disconnect_15m -> {
+            R.id.overview_disconnect_15m                  -> {
                 uel.log(Action.DISCONNECT, Sources.LoopDialog, ValueWithUnit.Minute(15))
-                loopPlugin.disconnectPump(15, profile)
+                disposable += repository.runTransactionForResult(InsertAndCancelCurrentOfflineEventTransaction(dateUtil.now(), T.mins(15).msecs(), OfflineEvent.Reason.DISCONNECT_PUMP))
+                    .subscribe({ result ->
+                        result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent $it") }
+                        result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted OfflineEvent $it") }
+                    }, {
+                        aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it)
+                    })
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true
             }
 
-            R.id.overview_disconnect_30m -> {
+            R.id.overview_disconnect_30m                  -> {
                 uel.log(Action.DISCONNECT, Sources.LoopDialog, ValueWithUnit.Minute(30))
-                loopPlugin.disconnectPump(30, profile)
+                disposable += repository.runTransactionForResult(InsertAndCancelCurrentOfflineEventTransaction(dateUtil.now(), T.mins(30).msecs(), OfflineEvent.Reason.DISCONNECT_PUMP))
+                    .subscribe({ result ->
+                        result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent $it") }
+                        result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted OfflineEvent $it") }
+                    }, {
+                        aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it)
+                    })
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true
             }
 
-            R.id.overview_disconnect_1h -> {
+            R.id.overview_disconnect_1h                   -> {
                 uel.log(Action.DISCONNECT, Sources.LoopDialog, ValueWithUnit.Hour(1))
-                loopPlugin.disconnectPump(60, profile)
+                disposable += repository.runTransactionForResult(InsertAndCancelCurrentOfflineEventTransaction(dateUtil.now(), T.mins(60).msecs(), OfflineEvent.Reason.DISCONNECT_PUMP))
+                    .subscribe({ result ->
+                        result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent $it") }
+                        result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted OfflineEvent $it") }
+                    }, {
+                        aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it)
+                    })
                 sp.putBoolean(R.string.key_objectiveusedisconnect, true)
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true
             }
 
-            R.id.overview_disconnect_2h -> {
+            R.id.overview_disconnect_2h                   -> {
                 uel.log(Action.DISCONNECT, Sources.LoopDialog, ValueWithUnit.Hour(2))
-                loopPlugin.disconnectPump(120, profile)
+                disposable += repository.runTransactionForResult(InsertAndCancelCurrentOfflineEventTransaction(dateUtil.now(), T.mins(120).msecs(), OfflineEvent.Reason.DISCONNECT_PUMP))
+                    .subscribe({ result ->
+                        result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent $it") }
+                        result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted OfflineEvent $it") }
+                    }, {
+                        aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it)
+                    })
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true
             }
 
-            R.id.overview_disconnect_3h -> {
+            R.id.overview_disconnect_3h                   -> {
                 uel.log(Action.DISCONNECT, Sources.LoopDialog, ValueWithUnit.Hour(3))
-                loopPlugin.disconnectPump(180, profile)
+                disposable += repository.runTransactionForResult(InsertAndCancelCurrentOfflineEventTransaction(dateUtil.now(), T.mins(180).msecs(), OfflineEvent.Reason.DISCONNECT_PUMP))
+                    .subscribe({ result ->
+                        result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent $it") }
+                        result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted OfflineEvent $it") }
+                    }, {
+                        aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it)
+                    })
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true
             }

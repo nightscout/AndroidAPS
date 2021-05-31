@@ -47,6 +47,7 @@
     <string name="key_ns_temporary_basal_last_synced_id" translatable="false">ns_temporary_basal_last_synced_id</string>
     <string name="key_ns_extended_bolus_last_synced_id" translatable="false">ns_extended_bolus_last_synced_id</string>
     <string name="key_ns_profile_switch_last_synced_id" translatable="false">profile_switch_last_synced_id</string>
+    <string name="key_ns_offline_event_last_synced_id" translatable="false">ns_offline_event_last_synced_id</string>
     <string name="key_ns_profile_store_last_synced_timestamp" translatable="false">ns_profile_store_last_synced_timestamp</string>
     <string name="key_local_profile_last_change" translatable="false">local_profile_last_change</string>
 
@@ -134,8 +135,6 @@
 
     <string name="configbuilder_pump">Pump</string>
     <string name="configbuilder_pump_description">Which pump would you like to use with AndroidAPS?</string>
-    <string name="configbuilder_treatments">Treatments</string>
-    <string name="configbuilder_treatments_description">Which plugin should be used for treatment handling?</string>
     <string name="configbuilder_profile">Profile</string>
     <string name="configbuilder_profile_description">Which profile should AndroidAPS use?</string>
     <string name="configbuilder_aps">APS</string>
@@ -1145,8 +1144,11 @@
     <string name="ns_receive_temp_target">Receive temporary targets</string>
     <string name="ns_receive_temp_target_summary">Accept temporary targets entered through NS or NSClient</string>
     <string name="key_ns_receive_profile_switch" translatable="false">ns_receive_profile_switch</string>
+    <string name="key_ns_receive_offline_event" translatable="false">ns_receive_offline_event</string>
     <string name="ns_receive_profile_switch">Receive profile switches</string>
     <string name="ns_receive_profile_switch_summary">Accept profile switches entered through NS or NSClient</string>
+    <string name="ns_receive_offline_event">Receive APS offline events</string>
+    <string name="ns_receive_offline_event_summary">Accept APS Offline events entered through NS or NSClient</string>
     <string name="key_ns_receive_insulin" translatable="false">ns_receive_insulin</string>
     <string name="ns_receive_insulin">Receive insulin</string>
     <string name="ns_receive_insulin_summary">Accept insulin entered through NS or NSClient (it\'s not delivered, only calculated towards IOB)</string>

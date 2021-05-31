@@ -11,6 +11,7 @@ fun BolusCalculatorResult.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject
     JSONObject()
         .put("eventType", TherapyEvent.Type.BOLUS_WIZARD.text)
         .put("created_at", dateUtil.toISOString(timestamp))
+        .put("isValid", isValid)
         .put("bolusCalculatorResult", Gson().toJson(this))
         .put("date", timestamp)
         .put("glucose", glucoseValue)

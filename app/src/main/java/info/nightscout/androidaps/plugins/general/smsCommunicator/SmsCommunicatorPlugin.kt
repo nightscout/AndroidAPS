@@ -11,25 +11,26 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.ValueWithUnit
+import info.nightscout.androidaps.database.entities.OfflineEvent
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.ValueWithUnit
+import info.nightscout.androidaps.database.transactions.CancelCurrentOfflineEventIfAnyTransaction
 import info.nightscout.androidaps.database.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
-import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
+import info.nightscout.androidaps.database.transactions.InsertAndCancelCurrentOfflineEventTransaction
+import info.nightscout.androidaps.database.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.events.EventRefreshOverview
+import info.nightscout.androidaps.extensions.valueToUnitsString
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
@@ -41,7 +42,6 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProv
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.*
-import info.nightscout.androidaps.extensions.valueToUnitsString
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -72,7 +72,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     private val fabricPrivacy: FabricPrivacy,
     private val activePlugin: ActivePlugin,
     private val commandQueue: CommandQueueProvider,
-    private val loopPlugin: LoopPlugin,
+    private val loop: Loop,
     private val iobCobCalculator: IobCobCalculator,
     private val xdripCalibrations: XdripCalibrations,
     private var otp: OneTimePassword,
@@ -340,14 +340,14 @@ class SmsCommunicatorPlugin @Inject constructor(
     private fun processLOOP(divided: Array<String>, receivedSms: Sms) {
         when (divided[1].uppercase(Locale.getDefault())) {
             "DISABLE", "STOP" -> {
-                if (loopPlugin.isEnabled(PluginType.LOOP)) {
+                if (loop.enabled) {
                     val passCode = generatePassCode()
                     val reply = String.format(resourceHelper.gs(R.string.smscommunicator_loopdisablereplywithcode), passCode)
                     receivedSms.processed = true
                     messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction() {
                         override fun run() {
                             uel.log(Action.LOOP_DISABLED, Sources.SMS)
-                            loopPlugin.setPluginEnabled(PluginType.LOOP, false)
+                            loop.enabled = false
                             commandQueue.cancelTempBasal(true, object : Callback() {
                                 override fun run() {
                                     rxBus.send(EventRefreshOverview("SMS_LOOP_STOP"))
@@ -364,14 +364,14 @@ class SmsCommunicatorPlugin @Inject constructor(
             }
 
             "ENABLE", "START" -> {
-                if (!loopPlugin.isEnabled(PluginType.LOOP)) {
+                if (!loop.enabled) {
                     val passCode = generatePassCode()
                     val reply = String.format(resourceHelper.gs(R.string.smscommunicator_loopenablereplywithcode), passCode)
                     receivedSms.processed = true
                     messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction() {
                         override fun run() {
                             uel.log(Action.LOOP_ENABLED, Sources.SMS)
-                            loopPlugin.setPluginEnabled(PluginType.LOOP, true)
+                            loop.enabled= true
                             sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_loophasbeenenabled)))
                             rxBus.send(EventRefreshOverview("SMS_LOOP_START"))
                         }
@@ -382,8 +382,8 @@ class SmsCommunicatorPlugin @Inject constructor(
             }
 
             "STATUS"          -> {
-                val reply = if (loopPlugin.isEnabled(PluginType.LOOP)) {
-                    if (loopPlugin.isSuspended) String.format(resourceHelper.gs(R.string.loopsuspendedfor), loopPlugin.minutesToEndOfSuspend())
+                val reply = if (loop.enabled) {
+                    if (loop.isSuspended) String.format(resourceHelper.gs(R.string.loopsuspendedfor), loop.minutesToEndOfSuspend())
                     else resourceHelper.gs(R.string.smscommunicator_loopisenabled)
                 } else
                     resourceHelper.gs(R.string.loopisdisabled)
@@ -398,7 +398,12 @@ class SmsCommunicatorPlugin @Inject constructor(
                 messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction() {
                     override fun run() {
                         uel.log(Action.RESUME, Sources.SMS)
-                        loopPlugin.suspendTo(0L)
+                        disposable += repository.runTransactionForResult(CancelCurrentOfflineEventIfAnyTransaction(dateUtil.now()))
+                            .subscribe({ result ->
+                                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent $it") }
+                            }, {
+                                aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it)
+                            })
                         rxBus.send(EventRefreshOverview("SMS_LOOP_RESUME"))
                         commandQueue.cancelTempBasal(true, object : Callback() {
                             override fun run() {
@@ -409,7 +414,6 @@ class SmsCommunicatorPlugin @Inject constructor(
                                 }
                             }
                         })
-                        loopPlugin.createOfflineEvent(0)
                         sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_loopresumed)))
                     }
                 })
@@ -434,8 +438,13 @@ class SmsCommunicatorPlugin @Inject constructor(
                             commandQueue.cancelTempBasal(true, object : Callback() {
                                 override fun run() {
                                     if (result.success) {
-                                        loopPlugin.suspendTo(dateUtil.now() + anInteger() * 60L * 1000)
-                                        loopPlugin.createOfflineEvent(anInteger() * 60)
+                                        disposable += repository.runTransactionForResult(InsertAndCancelCurrentOfflineEventTransaction(dateUtil.now(), T.mins(anInteger().toLong()).msecs(), OfflineEvent.Reason.SUSPEND))
+                                            .subscribe({ result ->
+                                                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent $it") }
+                                                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted OfflineEvent $it") }
+                                            }, {
+                                                aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it)
+                                            })
                                         rxBus.send(EventRefreshOverview("SMS_LOOP_SUSPENDED"))
                                         val replyText = resourceHelper.gs(R.string.smscommunicator_loopsuspended) + " " +
                                             resourceHelper.gs(if (result.success) R.string.smscommunicator_tempbasalcanceled else R.string.smscommunicator_tempbasalcancelfailed)
@@ -512,10 +521,14 @@ class SmsCommunicatorPlugin @Inject constructor(
                             if (!result.success) {
                                 sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_pumpconnectfail)))
                             } else {
-                                loopPlugin.suspendTo(0L)
+                                disposable += repository.runTransactionForResult(CancelCurrentOfflineEventIfAnyTransaction(dateUtil.now()))
+                                    .subscribe({ result ->
+                                        result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent $it") }
+                                    }, {
+                                        aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it)
+                                    })
                                 sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_reconnect)))
                                 rxBus.send(EventRefreshOverview("SMS_PUMP_START"))
-                                loopPlugin.createOfflineEvent(0)
                             }
                         }
                     })
@@ -536,8 +549,8 @@ class SmsCommunicatorPlugin @Inject constructor(
                 messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction() {
                     override fun run() {
                         uel.log(Action.DISCONNECT, Sources.SMS)
-                        val profile = profileFunction.getProfile()
-                        loopPlugin.disconnectPump(duration, profile)
+                        val profile = profileFunction.getProfile() ?: return
+                        loop.goToZeroTemp(duration, profile, OfflineEvent.Reason.DISCONNECT_PUMP)
                         rxBus.send(EventRefreshOverview("SMS_PUMP_DISCONNECT"))
                         sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_pumpdisconnected)))
                     }
@@ -832,7 +845,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                                                         currentProfile.units == GlucoseUnit.MMOL -> Constants.defaultEatingSoonTTmmol
                                                         else                                     -> Constants.defaultEatingSoonTTmgdl
                                                     }
-                                                disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
+                                                disposable += repository.runTransactionForResult(InsertAndCancelCurrentTemporaryTargetTransaction(
                                                     timestamp = dateUtil.now(),
                                                     duration = TimeUnit.MINUTES.toMillis(eatingSoonTTDuration.toLong()),
                                                     reason = TemporaryTarget.Reason.EATING_SOON,
@@ -979,7 +992,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                     var tt = sp.getDouble(keyTarget, if (units == GlucoseUnit.MMOL) defaultTargetMMOL else defaultTargetMGDL)
                     tt = Profile.toCurrentUnits(profileFunction, tt)
                     tt = if (tt > 0) tt else if (units == GlucoseUnit.MMOL) defaultTargetMMOL else defaultTargetMGDL
-                    disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
+                    disposable += repository.runTransactionForResult(InsertAndCancelCurrentTemporaryTargetTransaction(
                         timestamp = dateUtil.now(),
                         duration = TimeUnit.MINUTES.toMillis(ttDuration.toLong()),
                         reason = TemporaryTarget.Reason.EATING_SOON,

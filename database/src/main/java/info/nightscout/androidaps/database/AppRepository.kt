@@ -768,6 +768,64 @@ open class AppRepository @Inject internal constructor(
         database.extendedBolusDao.getLastId()
             .subscribeOn(Schedulers.io())
             .toWrappedSingle()
+
+    // OFFLINE EVENT
+    /*
+       * returns a Pair of the next entity to sync and the ID of the "update".
+       * The update id might either be the entry id itself if it is a new entry - or the id
+       * of the update ("historic") entry. The sync counter should be incremented to that id if it was synced successfully.
+       *
+       * It is a Maybe as there might be no next element.
+       * */
+    fun getNextSyncElementOfflineEvent(id: Long): Maybe<Pair<OfflineEvent, Long>> =
+        database.offlineEventDao.getNextModifiedOrNewAfter(id)
+            .flatMap { nextIdElement ->
+                val nextIdElemReferenceId = nextIdElement.referenceId
+                if (nextIdElemReferenceId == null) {
+                    Maybe.just(nextIdElement to nextIdElement.id)
+                } else {
+                    database.offlineEventDao.getCurrentFromHistoric(nextIdElemReferenceId)
+                        .map { it to nextIdElement.id }
+                }
+            }
+
+    fun compatGetOfflineEventData(): Single<List<OfflineEvent>> =
+        database.offlineEventDao.getOfflineEventData()
+            .subscribeOn(Schedulers.io())
+
+    fun getOfflineEventDataFromTime(timestamp: Long, ascending: Boolean): Single<List<OfflineEvent>> =
+        database.offlineEventDao.getOfflineEventDataFromTime(timestamp)
+            .map { if (!ascending) it.reversed() else it }
+            .subscribeOn(Schedulers.io())
+
+    fun getOfflineEventDataIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<OfflineEvent>> =
+        database.offlineEventDao.getOfflineEventDataIncludingInvalidFromTime(timestamp)
+            .map { if (!ascending) it.reversed() else it }
+            .subscribeOn(Schedulers.io())
+
+    fun getOfflineEventDataFromTimeToTime(start: Long, end: Long, ascending: Boolean): Single<List<OfflineEvent>> =
+        database.offlineEventDao.getOfflineEventDataFromTimeToTime(start, end)
+            .map { if (!ascending) it.reversed() else it }
+            .subscribeOn(Schedulers.io())
+
+    fun getModifiedOfflineEventsDataFromId(lastId: Long): Single<List<OfflineEvent>> =
+        database.offlineEventDao.getModifiedFrom(lastId)
+            .subscribeOn(Schedulers.io())
+
+    fun getOfflineEventActiveAt(timestamp: Long): Single<ValueWrapper<OfflineEvent>> =
+        database.offlineEventDao.getOfflineEventActiveAt(timestamp)
+            .subscribeOn(Schedulers.io())
+            .toWrappedSingle()
+
+    fun deleteAllOfflineEventEntries() =
+        database.offlineEventDao.deleteAllEntries()
+
+    fun getLastOfflineEventIdWrapped(): Single<ValueWrapper<Long>> =
+        database.offlineEventDao.getLastId()
+            .subscribeOn(Schedulers.io())
+            .toWrappedSingle()
+
+
 }
 
 @Suppress("USELESS_CAST")

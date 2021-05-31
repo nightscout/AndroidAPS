@@ -139,9 +139,9 @@ class OverviewPlugin @Inject constructor(
                 .observeOn(aapsSchedulers.io)
                 .subscribe({ overviewData.preparePredictions("EventLoopInvoked") }, fabricPrivacy::logException)
         disposable.add(rxBus
-                .toObservable(EventProfileSwitchChanged::class.java)
+                .toObservable(EventNewBasalProfile::class.java)
                 .observeOn(aapsSchedulers.io)
-                .subscribe({ loadProfile("EventProfileSwitchChanged") }, fabricPrivacy::logException))
+                .subscribe({ loadProfile("EventNewBasalProfile") }, fabricPrivacy::logException))
         disposable.add(rxBus
                 .toObservable(EventAutosensCalculationFinished::class.java)
                 .observeOn(aapsSchedulers.io)

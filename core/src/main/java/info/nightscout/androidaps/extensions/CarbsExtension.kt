@@ -12,6 +12,7 @@ fun Carbs.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
         .put("eventType", if (amount < 12) TherapyEvent.Type.CARBS_CORRECTION.text else TherapyEvent.Type.MEAL_BOLUS.text)
         .put("carbs", amount)
         .put("created_at", dateUtil.toISOString(timestamp))
+        .put("isValid", isValid)
         .put("date", timestamp).also {
             if (duration != 0L) it.put("duration", duration)
             if (interfaceIDs.pumpId != null) it.put("pumpId", interfaceIDs.pumpId)
