@@ -600,7 +600,9 @@ class MedtronicHistoryData @Inject constructor(
                 }
                 processDTO = TempBasalProcessDTO(
                     itemOne = treatment,
-                    processOperation = TempBasalProcessDTO.Operation.Add)
+                    processOperation = TempBasalProcessDTO.Operation.Add,
+                    aapsLogger = aapsLogger
+                )
             }
         }
         if (processDTO != null) {
@@ -841,7 +843,8 @@ class MedtronicHistoryData @Inject constructor(
                     outList.add(TempBasalProcessDTO(
                         itemOne = filtered2Items[i],
                         itemTwo = filtered2Items[i + 1],
-                        processOperation = TempBasalProcessDTO.Operation.Add))
+                        processOperation = TempBasalProcessDTO.Operation.Add,
+                        aapsLogger = aapsLogger))
 
                     i += 2
                 }
@@ -906,14 +909,16 @@ class MedtronicHistoryData @Inject constructor(
             outList.add(TempBasalProcessDTO(
                 itemOne = items[items.size - 1],
                 itemTwo = itemTwo,
-                processOperation = TempBasalProcessDTO.Operation.Add))
+                processOperation = TempBasalProcessDTO.Operation.Add,
+                aapsLogger = aapsLogger))
             return outList
         }
         items = getFilteredItems(tempData, PumpHistoryEntryType.Rewind)
         if (items.size > 0) {
             outList.add(TempBasalProcessDTO(
                 itemOne = items[0],
-                processOperation = TempBasalProcessDTO.Operation.Add))
+                processOperation = TempBasalProcessDTO.Operation.Add,
+                aapsLogger = aapsLogger))
             return outList
         }
         return outList
