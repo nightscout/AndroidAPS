@@ -13,16 +13,16 @@ class DanaRsPacketBasalSetProfileNumberTest : DanaRSTestBase() {
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is DanaRS_Packet_Basal_Set_Profile_Number) {
+            if (it is DanaRSPacketBasalSetProfileNumber) {
                 it.aapsLogger = aapsLogger
             }
         }
     }
 
     @Test fun runTest() {
-        val packet = DanaRS_Packet_Basal_Set_Profile_Number(packetInjector, 1)
+        val packet = DanaRSPacketBasalSetProfileNumber(packetInjector, 1)
         // test params
-        val testParams = packet.requestParams
+        val testParams = packet.getRequestParams()
         // is profile 1
         Assert.assertEquals(1.toByte(), testParams[0])
         // test message decoding

@@ -17,6 +17,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
 
+@Suppress("SpellCheckingInspection")
 @Singleton
 class PrefFileListProvider @Inject constructor(
     private val resourceHelper: ResourceHelper,
@@ -27,12 +28,13 @@ class PrefFileListProvider @Inject constructor(
     private val versionCheckerUtils: VersionCheckerUtils
 ) {
 
+    private val path = File(Environment.getExternalStorageDirectory().toString())
+    private val aapsPath = File(path, "AAPS" + File.separator + "preferences")
+    private val exportsPath = File(path, "AAPS" + File.separator + "exports")
+    private val extraPath = File(path, "AAPS" + File.separator + "extra")
+
     companion object {
 
-        private val path = File(Environment.getExternalStorageDirectory().toString())
-        private val aapsPath = File(path, "AAPS" + File.separator + "preferences")
-        private val exportsPath = File(path, "AAPS" + File.separator + "exports")
-        private val extraPath = File(path, "AAPS" + File.separator + "extra")
         private const val IMPORT_AGE_NOT_YET_OLD_DAYS = 60
     }
 

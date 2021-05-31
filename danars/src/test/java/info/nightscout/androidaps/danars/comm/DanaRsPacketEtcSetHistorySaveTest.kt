@@ -13,16 +13,16 @@ class DanaRsPacketEtcSetHistorySaveTest : DanaRSTestBase() {
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is DanaRS_Packet_Etc_Set_History_Save) {
+            if (it is DanaRSPacketEtcSetHistorySave) {
                 it.aapsLogger = aapsLogger
             }
         }
     }
 
     @Test fun runTest() {
-        val packet = DanaRS_Packet_Etc_Set_History_Save(packetInjector, 0, 0, 0, 0, 0, 0, 0, 0, 2)
+        val packet = DanaRSPacketEtcSetHistorySave(packetInjector, 0, 0, 0, 0, 0, 0, 0, 0, 2)
         // test params
-        val testParams = packet.requestParams
+        val testParams = packet.getRequestParams()
         Assert.assertEquals(2.toByte(), testParams[8])
         Assert.assertEquals((2 ushr 8).toByte(), testParams[9])
         // test message decoding

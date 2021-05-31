@@ -13,7 +13,7 @@ class DanaRsPacketBolusGetCalculationInformationTest : DanaRSTestBase() {
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is DanaRS_Packet_Bolus_Get_Calculation_Information) {
+            if (it is DanaRSPacketBolusGetCalculationInformation) {
                 it.aapsLogger = aapsLogger
                 it.danaPump = danaPump
             }
@@ -21,8 +21,8 @@ class DanaRsPacketBolusGetCalculationInformationTest : DanaRSTestBase() {
     }
 
     @Test fun runTest() {
-        val packet = DanaRS_Packet_Bolus_Get_Calculation_Information(packetInjector)
-        Assert.assertEquals(null, packet.requestParams)
+        val packet = DanaRSPacketBolusGetCalculationInformation(packetInjector)
+        Assert.assertEquals(0, packet.getRequestParams().size)
         // test message decoding
         packet.handleMessage(createArray(24, 0.toByte()))
         Assert.assertEquals(false, packet.failed)

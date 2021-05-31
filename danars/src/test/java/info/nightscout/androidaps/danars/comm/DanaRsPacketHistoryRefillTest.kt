@@ -13,18 +13,18 @@ class DanaRsPacketHistoryRefillTest : DanaRSTestBase() {
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is DanaRS_Packet) {
+            if (it is DanaRSPacket) {
                 it.aapsLogger = aapsLogger
                 it.dateUtil = dateUtil
             }
-            if (it is DanaRS_Packet_History_Refill) {
+            if (it is DanaRSPacketHistoryRefill) {
                 it.rxBus = rxBus
             }
         }
     }
 
     @Test fun runTest() {
-        val packet = DanaRS_Packet_History_Refill(packetInjector, System.currentTimeMillis())
+        val packet = DanaRSPacketHistoryRefill(packetInjector, System.currentTimeMillis())
         Assert.assertEquals("REVIEW__REFILL", packet.friendlyName)
     }
 }

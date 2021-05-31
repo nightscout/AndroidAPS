@@ -14,7 +14,7 @@ class DanaRsPacketOptionSetPumpTimeTest : DanaRSTestBase() {
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is DanaRS_Packet) {
+            if (it is DanaRSPacket) {
                 it.aapsLogger = aapsLogger
                 it.dateUtil = dateUtil
             }
@@ -23,9 +23,9 @@ class DanaRsPacketOptionSetPumpTimeTest : DanaRSTestBase() {
 
     @Test fun runTest() {
         val date = DateTime()
-        val packet = DanaRS_Packet_Option_Set_Pump_Time(packetInjector, date.millis)
+        val packet = DanaRSPacketOptionSetPumpTime(packetInjector, date.millis)
         // test params
-        val params = packet.requestParams
+        val params = packet.getRequestParams()
         Assert.assertEquals((date.year - 2000 and 0xff).toByte(), params[0]) // 2019 -> 19
         Assert.assertEquals((date.monthOfYear and 0xff).toByte(), params[1])
         Assert.assertEquals((date.dayOfMonth and 0xff).toByte(), params[2])
