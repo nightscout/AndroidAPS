@@ -75,7 +75,8 @@ interface OmnipodDashPodStateManager {
         val sequence: Short,
         val createdRealtime: Long,
         var sentRealtime: Long = 0,
-        val historyId: String
+        val historyId: String,
+        var sendError: Throwable?,
     )
     // TODO: set created to "now" on boot
     data class TempBasal(val startTime: Long, val rate: Double, val durationInMinutes: Short) : Serializable

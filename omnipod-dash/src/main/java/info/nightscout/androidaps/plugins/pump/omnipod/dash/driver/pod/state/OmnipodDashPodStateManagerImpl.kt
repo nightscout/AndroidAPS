@@ -197,7 +197,8 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
                 val command = OmnipodDashPodStateManager.ActiveCommand(
                     podState.messageSequenceNumber,
                     createdRealtime = SystemClock.elapsedRealtime(),
-                    historyId = historyId
+                    historyId = historyId,
+                    sendError = null,
                 )
                 podState.activeCommand = command
                 source.onSuccess(command)
@@ -236,10 +237,12 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
                     "lastResponse=$lastStatusResponseReceived " +
                     "$sequenceNumberOfLastProgrammingCommand $historyId"
             )
-            if (sentRealtime < createdRealtime) {
-                // command was not sent, clear it up
+
+            if (sentRealtime < createdRealtime) { // command was not sent, clear it up
                 podState.activeCommand = null
-                source.onComplete()
+                source.onError(this.sendError
+                                   ?: java.lang.IllegalStateException("Could not send command and sendError is " +
+                                                                          "missing") )
             } else if  (createdRealtime >= lastStatusResponseReceived)
                 // we did not receive a valid response yet
                 source.onComplete()

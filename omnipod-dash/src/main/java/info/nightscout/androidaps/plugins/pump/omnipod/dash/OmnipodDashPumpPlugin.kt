@@ -311,20 +311,24 @@ class OmnipodDashPumpPlugin @Inject constructor(
         return Completable.defer {
             val expectedState = pumpSync.expectedPumpState()
             when {
-                expectedState.temporaryBasal == null ->
+                expectedState.temporaryBasal == null -> {
+                    aapsLogger.info(LTag.PUMP, "No temporary basal to cancel")
                     Completable.complete()
+                }
                 !enforeNew ->
                     Completable.error(
                         IllegalStateException(
                             "Temporary basal already active and enforeNew is not set."
                         )
                     )
-                else -> // enforceNew == true
-                    // TODO: chain with the completable?
+                else -> {
+                    // enforceNew == true
+                    aapsLogger.info(LTag.PUMP, "Canceling existing temp basal")
                     executeSimpleProgrammingCommand(
                         history.createRecord(OmnipodCommandType.CANCEL_TEMPORARY_BASAL),
                         omnipodManager.stopTempBasal().ignoreElements()
                     )
+                }
             }
         }
     }
@@ -591,6 +595,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     .flatMap { podStateManager.createActiveCommand(it) }
                     .ignoreElement(),
                 command.doOnError {
+                    podStateManager.activeCommand?.sendError = it
                     aapsLogger.error(LTag.PUMP, "Error executing command", it)
                 }.onErrorComplete(),
                 history.updateFromState(podStateManager),
