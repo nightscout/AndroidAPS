@@ -49,6 +49,6 @@ class DanaRsMessageHashTableTest : DanaRSTestBase() {
         val danaRSMessageHashTable = DanaRSMessageHashTable(packetInjector)
         val forTesting: DanaRS_Packet = DanaRS_Packet_APS_Set_Event_History(packetInjector, info.nightscout.androidaps.dana.DanaPump.CARBS, 0, 0, 0)
         val testPacket: DanaRS_Packet = danaRSMessageHashTable.findMessage(forTesting.command)
-        Assert.assertEquals(BleEncryption.DANAR_PACKET__OPCODE__APS_SET_EVENT_HISTORY.toLong(), testPacket.getOpCode().toLong())
+        Assert.assertEquals(BleEncryption.DANAR_PACKET__OPCODE__APS_SET_EVENT_HISTORY.toLong(), testPacket.opCode.toLong())
     }
 }

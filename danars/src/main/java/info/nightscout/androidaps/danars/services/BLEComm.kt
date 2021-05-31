@@ -18,6 +18,8 @@ import info.nightscout.androidaps.danars.encryption.BleEncryption
 import info.nightscout.androidaps.danars.encryption.EncryptionType
 import info.nightscout.androidaps.danars.events.EventDanaRSPairingSuccess
 import info.nightscout.androidaps.events.EventPumpStatusChanged
+import info.nightscout.androidaps.extensions.notify
+import info.nightscout.androidaps.extensions.waitMillis
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -28,8 +30,6 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.ToastUtils
-import info.nightscout.androidaps.extensions.notify
-import info.nightscout.androidaps.extensions.waitMillis
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.util.*
@@ -62,6 +62,8 @@ class BLEComm @Inject internal constructor(
 
         private const val PACKET_START_BYTE = 0xA5.toByte()
         private const val PACKET_END_BYTE = 0x5A.toByte()
+        private const val BLE5_PACKET_START_BYTE = 0xAA.toByte()
+        private const val BLE5_PACKET_END_BYTE = 0xEE.toByte()
     }
 
     private var scheduledDisconnection: ScheduledFuture<*>? = null
@@ -327,12 +329,8 @@ class BLEComm @Inject internal constructor(
 
     private fun addToReadBuffer(buffer: ByteArray) {
         //log.debug("addToReadBuffer " + DanaRS_Packet.toHexString(buffer));
-        if (buffer.isEmpty()) {
-            return
-        }
-        if (bufferLength == 1024) {
-            aapsLogger.debug(LTag.PUMPBTCOMM, "1024 XXXXXXXXXXXXXX")
-        }
+        if (buffer.isEmpty()) return
+
         synchronized(readBuffer) {
             // Append incoming data to input buffer
             System.arraycopy(buffer, 0, readBuffer, bufferLength, buffer.size)
@@ -343,7 +341,6 @@ class BLEComm @Inject internal constructor(
     @kotlin.ExperimentalStdlibApi
     private fun readDataParsing(receivedData: ByteArray) {
         //aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< readDataParsing " + DanaRS_Packet.toHexString(receivedData))
-        var startSignatureFound = false
         var packetIsValid = false
         var isProcessing: Boolean
         isProcessing = true
@@ -363,10 +360,11 @@ class BLEComm @Inject internal constructor(
         while (isProcessing) {
             var length = 0
             synchronized(readBuffer) {
-                // Find packet start [A5 A5]
+                // Find packet start [A5 A5] or [AA AA]
                 if (bufferLength >= 6) {
                     for (idxStartByte in 0 until bufferLength - 2) {
-                        if (readBuffer[idxStartByte] == PACKET_START_BYTE && readBuffer[idxStartByte + 1] == PACKET_START_BYTE) {
+                        if (readBuffer[idxStartByte] == PACKET_START_BYTE && readBuffer[idxStartByte + 1] == PACKET_START_BYTE ||
+                            readBuffer[idxStartByte] == BLE5_PACKET_START_BYTE && readBuffer[idxStartByte + 1] == BLE5_PACKET_START_BYTE) {
                             if (idxStartByte > 0) {
                                 // if buffer doesn't start with signature remove the leading trash
                                 aapsLogger.debug(LTag.PUMPBTCOMM, "Shifting the input buffer by $idxStartByte bytes")
@@ -374,29 +372,25 @@ class BLEComm @Inject internal constructor(
                                 bufferLength -= idxStartByte
                                 if (bufferLength < 0) bufferLength = 0
                             }
-                            startSignatureFound = true
+                            // A5 A5 LEN TYPE CODE PARAMS CHECKSUM1 CHECKSUM2 5A 5A    or
+                            // AA AA LEN TYPE CODE PARAMS CHECKSUM1 CHECKSUM2 EE EE
+                            //           ^---- LEN -----^
+                            // total packet length 2 + 1 + readBuffer[2] + 2 + 2
+                            length = readBuffer[2].toInt()
+                            // test if there is enough data loaded
+                            if (length + 7 > bufferLength)
+                                return
+                            // Verify packed end [5A 5A]
+                            if (readBuffer[length + 5] == PACKET_END_BYTE && readBuffer[length + 6] == PACKET_END_BYTE ||
+                                readBuffer[length + 5] == BLE5_PACKET_END_BYTE && readBuffer[length + 6] == BLE5_PACKET_END_BYTE) {
+                                packetIsValid = true
+                            } else {
+                                aapsLogger.error(LTag.PUMPBTCOMM, "Error in input data. Resetting buffer.")
+                                bufferLength = 0
+                            }
                             break
                         }
-                    }
-                }
-                // A5 A5 LEN TYPE CODE PARAMS CHECKSUM1 CHECKSUM2 5A 5A
-                //           ^---- LEN -----^
-                // total packet length 2 + 1 + readBuffer[2] + 2 + 2
-                if (startSignatureFound) {
-                    length = readBuffer[2].toInt()
-                    // test if there is enough data loaded
-                    if (length + 7 > bufferLength) return
-                    // Verify packed end [5A 5A]
-                    if (readBuffer[length + 5] == PACKET_END_BYTE && readBuffer[length + 6] == PACKET_END_BYTE) {
-                        packetIsValid = true
-                    } else if (readBuffer[length + 5] == readBuffer[length + 6]) {
-                        // BLE5
-                        packetIsValid = true
-                        readBuffer[length + 5] = PACKET_END_BYTE
-                        readBuffer[length + 6] = PACKET_END_BYTE
-                    } else {
-                        aapsLogger.error(LTag.PUMPBTCOMM, "Error in input data. Resetting buffer.")
-                        bufferLength = 0
+                        break
                     }
                 }
             }
@@ -414,9 +408,11 @@ class BLEComm @Inject internal constructor(
                 bufferLength -= length + 7
                 // now we have encrypted packet in inputBuffer
 
-                //aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< PROCESSING: " + DanaRS_Packet.toHexString(inputBuffer))
+                val decrypted = bleEncryption.getDecryptedPacket(inputBuffer)
+                //aapsLogger.debug(LTag.PUMPBTCOMM, "XXXXXX <<<<< PROCESSING: " + DanaRS_Packet.toHexString(inputBuffer))
+                //aapsLogger.debug(LTag.PUMPBTCOMM, "XXXXXY <<<<< PROCESSING: " + DanaRS_Packet.toHexString(decrypted))
                 // decrypt the packet
-                bleEncryption.getDecryptedPacket(inputBuffer)?.let { decryptedBuffer ->
+                decrypted?.let { decryptedBuffer ->
                     if (decryptedBuffer[0] == BleEncryption.DANAR_PACKET__TYPE_ENCRYPTION_RESPONSE.toByte()) {
                         when (decryptedBuffer[1]) {
                             // 1st packet exchange
@@ -450,8 +446,9 @@ class BLEComm @Inject internal constructor(
                         // Retrieve message code from received buffer and last message sent
                         processMessage(decryptedBuffer)
                     }
-                } ?: throw IllegalStateException("Null decryptedInputBuffer")
-                startSignatureFound = false
+                }
+                if (decrypted == null)
+                    throw IllegalStateException("Null decryptedInputBuffer")
                 packetIsValid = false
                 if (bufferLength < 6) {
                     // stop the loop
@@ -722,8 +719,8 @@ class BLEComm @Inject internal constructor(
         encryptedCommandSent = true
         processedMessage = message
         val command = byteArrayOf(message.type.toByte(), message.opCode.toByte())
-        val params = message.requestParams
-        aapsLogger.debug(LTag.PUMPBTCOMM, ">>>>> " + message.friendlyName + " " + DanaRS_Packet.toHexString(command) + " " + DanaRS_Packet.toHexString(params))
+        val params = message.getRequestParams()
+        aapsLogger.debug(LTag.PUMPBTCOMM, ">>>>> " + message.getFriendlyName() + " " + DanaRS_Packet.toHexString(command) + " " + DanaRS_Packet.toHexString(params))
         var bytes = bleEncryption.getEncryptedPacket(message.opCode, params, null)
         // aapsLogger.debug(LTag.PUMPBTCOMM, ">>>>> " + DanaRS_Packet.toHexString(bytes))
         if (encryption != EncryptionType.ENCRYPTION_DEFAULT)
@@ -783,7 +780,7 @@ class BLEComm @Inject internal constructor(
 
         //SystemClock.sleep(200);
         if (!message.isReceived) {
-            aapsLogger.warn(LTag.PUMPBTCOMM, "Reply not received " + message.friendlyName)
+            aapsLogger.warn(LTag.PUMPBTCOMM, "Reply not received " + message.getFriendlyName())
             message.handleMessageNotReceived()
         }
         // verify encryption for v3
@@ -803,7 +800,7 @@ class BLEComm @Inject internal constructor(
             danaRSMessageHashTable.findMessage(receivedCommand)
         }
         if (message != null) {
-            aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + message.friendlyName + " " + DanaRS_Packet.toHexString(decryptedBuffer))
+            aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + message.getFriendlyName() + " " + DanaRS_Packet.toHexString(decryptedBuffer))
             // process received data
             message.handleMessage(decryptedBuffer)
             message.setReceived()
