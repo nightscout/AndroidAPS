@@ -50,7 +50,7 @@ open class AppLayerMessage(private val messagePriority: MessagePriority, private
                 val exceptionClass = AppErrors.fromId(error)?.type
                 if (exceptionClass == null) throw UnknownAppLayerErrorCodeException(error) else throw exceptionClass.getConstructor(Int::class.javaPrimitiveType).newInstance(error)!!
             }
-            val data = byteBuf.readBytes(byteBuf.size - if (message!!.inCRC) 2 else 0)
+            val data = byteBuf.readBytes(byteBuf.filledSize - if (message!!.inCRC) 2 else 0)
             if (message.inCRC && Cryptograph.calculateCRC(data) != byteBuf.readUInt16LE()) throw InvalidAppCRCException()
             message.parse(ByteBuf.from(data))
             return message

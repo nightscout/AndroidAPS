@@ -20,7 +20,7 @@ class Nonce {
         get() {
             val byteBuf = ByteBuf(13)
             byteBuf.putBytesLE(bigInteger.toByteArray())
-            byteBuf.putBytes(0x00.toByte(), 13 - byteBuf.size)
+            byteBuf.putBytes(0x00.toByte(), 13 - byteBuf.filledSize)
             return byteBuf
         }
 

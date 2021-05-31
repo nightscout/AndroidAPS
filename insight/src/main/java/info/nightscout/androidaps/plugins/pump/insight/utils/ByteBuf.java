@@ -7,7 +7,7 @@ import java.nio.charset.StandardCharsets;
 public class ByteBuf extends Object {
 
     private final byte[] bytes;
-    private int size = 0;
+    private int filledSize = 0;
 
     public ByteBuf(int length) {
         bytes = new byte[length];
@@ -15,14 +15,14 @@ public class ByteBuf extends Object {
 
 
     public byte[] getBytes() {
-        byte[] bytes = new byte[size];
-        System.arraycopy(this.bytes, 0, bytes, 0, size);
+        byte[] bytes = new byte[filledSize];
+        System.arraycopy(this.bytes, 0, bytes, 0, filledSize);
         return bytes;
     }
 
     public void shift(int offset) {
         System.arraycopy(bytes, offset, bytes, 0, bytes.length - offset);
-        size -= offset;
+        filledSize -= offset;
     }
 
     public byte getByte(int position) {
@@ -40,13 +40,13 @@ public class ByteBuf extends Object {
     }
 
     public void putByte(byte b) {
-        bytes[size] = b;
-        size += 1;
+        bytes[filledSize] = b;
+        filledSize += 1;
     }
 
 
     public void putBytes(byte b, int count) {
-        for (int i = 0; i < count; i++) bytes[size++] = b;
+        for (int i = 0; i < count; i++) bytes[filledSize++] = b;
     }
 
 
@@ -67,12 +67,12 @@ public class ByteBuf extends Object {
     }
 
     byte[] readBytes() {
-        return readBytes(size);
+        return readBytes(filledSize);
     }
 
     public void putBytes(byte[] bytes, int length) {
-        System.arraycopy(bytes, 0, this.bytes, size, length);
-        size += length;
+        System.arraycopy(bytes, 0, this.bytes, filledSize, length);
+        filledSize += length;
     }
 
     public void putBytes(byte[] bytes) {
@@ -99,8 +99,8 @@ public class ByteBuf extends Object {
 
     private void putBytesLE(byte[] bytes, int length) {
         for (int i = 0; i < length; i++)
-            this.bytes[size + length - 1 - i] = bytes[i];
-        size += length;
+            this.bytes[filledSize + length - 1 - i] = bytes[i];
+        filledSize += length;
     }
 
     void putBytesLE(byte[] bytes) {
@@ -109,7 +109,7 @@ public class ByteBuf extends Object {
 
 
     public void putByteBuf(ByteBuf byteBuf) {
-        putBytes(byteBuf.getBytes(), byteBuf.getSize());
+        putBytes(byteBuf.getBytes(), byteBuf.getFilledSize());
     }
 
 
@@ -342,11 +342,11 @@ public class ByteBuf extends Object {
         return from(bytes, bytes.length);
     }
 
-    public int getSize() {
-        return this.size;
+    public int getFilledSize() {
+        return this.filledSize;
     }
 
     public void clear() {
-        shift(size);
+        shift(filledSize);
     }
 }

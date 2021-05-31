@@ -27,20 +27,20 @@ abstract class SatlMessage {
     fun serialize(clazz: Class<out SatlMessage>, key: ByteArray?): ByteBuf {
         val byteBuf: ByteBuf
         byteBuf = if (nonce == null || key == null) serializeCRC(clazz) else serializeCTR(nonce!!.productionalBytes, key, SatlCommands.fromType(clazz).id)
-        satlContent = byteBuf.getBytes(8, byteBuf.size - 16)
+        satlContent = byteBuf.getBytes(8, byteBuf.filledSize - 16)
         return byteBuf
     }
 
     private fun serializeCRC(clazz: Class<out SatlMessage>): ByteBuf {
         val data = data
-        val length = (data?.size ?: 0) + 31
+        val length = (data?.filledSize ?: 0) + 31
         val byteBuf = ByteBuf(length + 8)
         byteBuf.putUInt32LE(PREAMBLE)
         byteBuf.putUInt16LE(length)
         byteBuf.putUInt16LE(length.inv())
         byteBuf.putByte(VERSION)
         byteBuf.putByte(SatlCommands.fromType(clazz).id)
-        byteBuf.putUInt16LE((data?.size ?: 0) + 2)
+        byteBuf.putUInt16LE((data?.filledSize ?: 0) + 2)
         byteBuf.putUInt32LE(if (clazz == KeyRequest::class.java) 1 else commID)
         byteBuf.putBytes(0x00.toByte(), 13)
         byteBuf.putByteBuf(data)
@@ -52,14 +52,14 @@ abstract class SatlMessage {
     private fun serializeCTR(nonce: ByteBuf, key: ByteArray, commandId: Byte): ByteBuf {
         val data = data
         val encryptedData = ByteBuf.from(Cryptograph.encryptDataCTR(data!!.bytes, key, nonce.bytes))
-        val length = 29 + encryptedData.size
+        val length = 29 + encryptedData.filledSize
         val byteBuf = ByteBuf(length + 8)
         byteBuf.putUInt32LE(PREAMBLE)
         byteBuf.putUInt16LE(length)
         byteBuf.putUInt16LE(length.inv())
         byteBuf.putByte(VERSION)
         byteBuf.putByte(commandId)
-        byteBuf.putUInt16LE(encryptedData.size)
+        byteBuf.putUInt16LE(encryptedData.filledSize)
         byteBuf.putUInt32LE(commID)
         byteBuf.putByteBuf(nonce)
         byteBuf.putByteBuf(encryptedData)
@@ -74,7 +74,7 @@ abstract class SatlMessage {
         @JvmStatic @Throws(InvalidMacTrailerException::class, InvalidSatlCRCException::class, InvalidNonceException::class, InvalidPreambleException::class, InvalidPacketLengthsException::class, IncompatibleSatlVersionException::class, InvalidSatlCommandException::class)
         fun deserialize(data: ByteBuf, lastNonce: Nonce, key: ByteArray?): SatlMessage? {
             val satlMessage: SatlMessage?
-            val satlContent = data.getBytes(8, data.size - 16)
+            val satlContent = data.getBytes(8, data.filledSize - 16)
             satlMessage = if (key == null) deserializeCRC(data) else deserializeCTR(data, lastNonce, key)
             satlMessage!!.satlContent = satlContent
             return satlMessage
@@ -144,7 +144,7 @@ abstract class SatlMessage {
         }
 
         @JvmStatic fun hasCompletePacket(byteBuf: ByteBuf): Boolean {
-            return if (byteBuf.size < 37) false else byteBuf.size >= byteBuf.getUInt16LE(4) + 8
+            return if (byteBuf.filledSize < 37) false else byteBuf.filledSize >= byteBuf.getUInt16LE(4) + 8
         }
     }
 }
