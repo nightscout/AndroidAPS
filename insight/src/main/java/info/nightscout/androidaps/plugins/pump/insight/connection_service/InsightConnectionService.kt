@@ -314,7 +314,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
             sendSatlMessageAndWait(info.nightscout.androidaps.plugins.pump.insight.satl.DisconnectMessage())
         }
         cleanup(true)
-        pairingDataStorage?.run { setState(if (isPaired) InsightState.DISCONNECTED else InsightState.NOT_PAIRED) }
+        pairingDataStorage?.run { setState(if (paired) InsightState.DISCONNECTED else InsightState.NOT_PAIRED) }
     }
 
     @Synchronized fun reset() {
@@ -323,7 +323,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
     }
 
     @Synchronized fun pair(macAddress: String?) {
-        pairingDataStorage?.run { check(isPaired) { "Pump must be unbonded first." } }
+        pairingDataStorage?.run { check(paired) { "Pump must be unbonded first." } }
         check(connectionRequests.size != 0) { "A connection lock must be hold for pairing" }
         aapsLogger.info(LTag.PUMP, "Pairing initiated")
         cleanup(true)
