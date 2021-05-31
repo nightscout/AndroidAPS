@@ -309,18 +309,19 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     private fun observeNoActiveTempBasal(enforeNew: Boolean): Completable {
-        return Completable.create { source ->
+        return Completable.defer {
             val expectedState = pumpSync.expectedPumpState()
             when {
                 expectedState.temporaryBasal == null ->
-                    source.onComplete()
+                    Completable.complete()
                 !enforeNew ->
-                    source.onError(
+                    Completable.error(
                         IllegalStateException(
                             "Temporary basal already active and enforeNew is not set."
                         )
                     )
                 else -> // enforceNew == true
+                    // TODO: chain with the completable?
                     executeSimpleProgrammingCommand(
                         history.createRecord(OmnipodCommandType.CANCEL_TEMPORARY_BASAL),
                         omnipodManager.stopTempBasal()
@@ -374,29 +375,12 @@ class OmnipodDashPumpPlugin @Inject constructor(
             .blockingGet()
     }
 
-    private fun observeCancelTempBasal(): Completable {
-        return Completable.concat(
-            listOf(
-                observeActiveTempBasal(),
-                podStateManager.observeNoActiveCommand().ignoreElements(),
-                history.createRecord(OmnipodCommandType.CANCEL_TEMPORARY_BASAL)
-                    .flatMap { podStateManager.createActiveCommand(it) }
-                    .ignoreElement(),
-                omnipodManager.stopTempBasal().ignoreElements(),
-                history.updateFromState(podStateManager),
-                podStateManager.updateActiveCommand()
-                    .map { handleCommandConfirmation(it) }
-                    .ignoreElement()
-            )
-        )
-    }
-
     private fun handleCommandConfirmation(confirmation: CommandConfirmed) {
         val historyEntry = history.getById(confirmation.historyId)
         when (historyEntry.commandType) {
             OmnipodCommandType.CANCEL_TEMPORARY_BASAL ->
                 // We can't invalidate this command,
-                // and this is why it pumpSync-ed at this point
+                // and this is why it is pumpSync-ed at this point
                 if (confirmation.success) {
                     pumpSync.syncStopTemporaryBasalWithPumpId(
                         historyEntry.createdAt,
