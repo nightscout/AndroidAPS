@@ -210,7 +210,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="smscommunicator_loopresumereplywithcode">Pour reprendre la boucle, renvoyez le code %1$s</string>
     <string name="smscommunicator_loopenablereplywithcode">Pour activer la boucle, renvoyez le code %1$s</string>
     <string name="smscommunicator_loopdisablereplywithcode">Pour désactiver la boucle, renvoyez le code %1$s</string>
-    <string name="smscommunicator_tempbasalset">Démarrage réussi pour %1$.2fU/h de basal temporaire pour %2$d min</string>
+    <string name="smscommunicator_tempbasalset">Démarrage réussi pour %1$.2fU/h de basal temp pour %2$d min</string>
     <string name="smscommunicator_extendedset">Le Bolus étendu %1$.2fU pendant %2$d min a commencé avec succès</string>
     <string name="smscommunicator_carbsset">%1$d  g de glucides entrés avec succès</string>
     <string name="smscommunicator_carbsfailed">L\'entrée de %1$dg de glucides a échoué</string>
@@ -523,7 +523,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="enablesmbwithcob_summary">Activer SMB tant que des Glucides sont actifs.</string>
     <string name="enablesmbwithtemptarget">Activer SMB avec les cibles temporaires</string>
     <string name="enablesmbwithtemptarget_summary">Activer SMB lorsqu\'il y a une cible temporaire active (repas imminent, exercise)</string>
-    <string name="enablesmbwithhightemptarget">Activer SMB avec cibles temp. hautes</string>
+    <string name="enablesmbwithhightemptarget">Activer SMB avec cibles temp hautes</string>
     <string name="enablesmbwithhightemptarget_summary">Activer les SMB quand il y a une cible temp haute active (exercise, au dessus de 100 mg/dl ou 5.5 mmol/l)</string>
     <string name="overview_insulin_label">Insuline</string>
     <string name="overview_buttons_selection">Boutons</string>
@@ -779,6 +779,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="randombg_short">Gly</string>
     <string name="tools">Outils</string>
     <string name="show_calculation">Afficher le calcul</string>
+    <string name="show_removed">Afficher les éléments supprimés</string>
     <string name="clearqueueconfirm">Effacer la queue ? Toutes les données en attente seront perdues !</string>
     <string name="ebstopsloop">L\'utilisation du bolus étendu arrètera la boucle fermée pour la durée d\'exécution du bolus étendu. Voulez-vous vraiment le faire ?</string>
     <string name="closed_loop_disabled_with_eb">Boucle fermée désactivée à cause du bolus étendu</string>
@@ -900,4 +901,23 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="profile_max_daily_basal_value">Basale maximale du profil</string>
     <string name="current_basal_value">Basale actuelle</string>
     <string name="profile_carbs_ratio_value">Rapport glucides/insuline de profil</string>
+    <string name="full_sync">Synchro. complète</string>
+    <string name="prime">Amorcer</string>
+    <string name="ns_sync_options">Synchronisation</string>
+    <string name="ns_upload_summary">Profils, boluses, glucides, basals temporaires sont téléchargés vers NS</string>
+    <string name="ns_upload">Télécharger des données vers NS</string>
+    <string name="ns_receive_profile_store">Recevoir les profils sauvegardés</string>
+    <string name="ns_receive_profile_store_summary">Synchroniser les profils à partir de l\'éditeur de profil NS vers le profil local</string>
+    <string name="ns_receive_temp_target">Recevoir les cibles temporaires</string>
+    <string name="ns_receive_temp_target_summary">Accepter les cibles temporaires entrées via NS ou NSClient</string>
+    <string name="ns_receive_profile_switch">Recevoir les changements de profil</string>
+    <string name="ns_receive_profile_switch_summary">Accepter les changements de profil entrés via NS ou NSClient</string>
+    <string name="ns_receive_insulin">Recevoir l\'insuline</string>
+    <string name="ns_receive_insulin_summary">Acceptez l\'insuline entrée via NS ou NSClient (elle n\'est pas injectée, uniquement pour le calcul pour IA)</string>
+    <string name="ns_receive_carbs">Recevoir les glucides</string>
+    <string name="ns_receive_carbs_summary">Accepter les glucides entrés par NS ou NSClient</string>
+    <string name="ns_receive_therapy_events">Recevoir des événements thérapeutiques</string>
+    <string name="ns_receive_therapy_events_summary">Accepter les événements de thérapie (canule, insuline, changement de batterie, etc.) entrés via NS ou NSClient</string>
+    <string name="ns_receive_cgm">Recevoir/remplir les anciennes données MGC</string>
+    <string name="ns_receive_cgm_summary">Accepter les données MGC de NS</string>
 </resources>

@@ -18,6 +18,7 @@ dependencies {
     androidTestImplementation "androidx.test:rules:$androidx_rules"
 
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
+    testImplementation 'org.mockito:mockito-inline:2.8.47'
 }
 
 android {

@@ -67,6 +67,7 @@ fun TemporaryBasal.toJson(isAdd: Boolean, profile: Profile, dateUtil: DateUtil, 
         .put("created_at", dateUtil.toISOString(timestamp))
         .put("enteredBy", "openaps://" + "AndroidAPS")
         .put("eventType", TherapyEvent.Type.TEMPORARY_BASAL.text)
+        .put("isValid", isValid)
         .put("duration", T.msecs(duration).mins())
         .put("rate", rate)
         .put("type", type.name)

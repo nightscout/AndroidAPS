@@ -100,6 +100,7 @@ fun therapyEventFromJson(jsonObject: JSONObject): TherapyEvent? {
 fun TherapyEvent.toJson(isAdd: Boolean): JSONObject =
     JSONObject()
         .put("eventType", type.text)
+        .put("isValid", isValid)
         .put("created_at", timestamp)
         .put("enteredBy", enteredBy)
         .put("units", if (glucoseUnit == TherapyEvent.GlucoseUnit.MGDL) Constants.MGDL else Constants.MMOL)

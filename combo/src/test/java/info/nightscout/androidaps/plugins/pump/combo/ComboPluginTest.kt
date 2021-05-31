@@ -32,7 +32,6 @@ class ComboPluginTest : TestBase() {
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var sp: SP
     @Mock lateinit var context: Context
-    @Mock lateinit var databaseHelper: DatabaseHelperInterface
     @Mock lateinit var dateUtil: DateUtil
 
     val injector = HasAndroidInjector {

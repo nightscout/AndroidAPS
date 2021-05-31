@@ -39,6 +39,7 @@ class DataSyncSelectorImplementation @Inject constructor(
             processChangedFoodsCompat()
             processChangedTherapyEventsCompat()
             processChangedDeviceStatusesCompat()
+            processChangedOfflineEventsCompat()
             processChangedProfileStore()
         }
     }
@@ -55,6 +56,7 @@ class DataSyncSelectorImplementation @Inject constructor(
         sp.remove(R.string.key_ns_extended_bolus_last_synced_id)
         sp.remove(R.string.key_ns_therapy_event_last_synced_id)
         sp.remove(R.string.key_ns_profile_switch_last_synced_id)
+        sp.remove(R.string.key_ns_offline_event_last_synced_id)
         sp.remove(R.string.key_ns_profile_store_last_synced_timestamp)
     }
 
@@ -547,6 +549,49 @@ class DataSyncSelectorImplementation @Inject constructor(
                 // with nsId = update
                 ps.first.interfaceIDs.nightscoutId != null ->
                     nsClientPlugin.nsClientService?.dbUpdate("treatments", ps.first.interfaceIDs.nightscoutId, ps.first.toJson(false, dateUtil), DataSyncSelector.PairProfileSwitch(ps.first, ps.second), "$startId/$lastDbId")
+            }
+            return true
+        }
+        return false
+    }
+
+    override fun confirmLastOfflineEventIdIfGreater(lastSynced: Long) {
+        if (lastSynced > sp.getLong(R.string.key_ns_offline_event_last_synced_id, 0)) {
+            aapsLogger.debug(LTag.NSCLIENT, "Setting OfflineEvent data sync from $lastSynced")
+            sp.putLong(R.string.key_ns_offline_event_last_synced_id, lastSynced)
+        }
+    }
+
+    // Prepared for v3 (returns all modified after)
+    override fun changedOfflineEvents(): List<OfflineEvent> {
+        val startId = sp.getLong(R.string.key_ns_offline_event_last_synced_id, 0)
+        return appRepository.getModifiedOfflineEventsDataFromId(startId).blockingGet().also {
+            aapsLogger.debug(LTag.NSCLIENT, "Loading OfflineEvent data for sync from $startId. Records ${it.size}")
+        }
+    }
+
+    private var lastOeId = -1L
+    private var lastOeTime = -1L
+    override fun processChangedOfflineEventsCompat(): Boolean {
+        val lastDbIdWrapped = appRepository.getLastOfflineEventIdWrapped().blockingGet()
+        val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
+        var startId = sp.getLong(R.string.key_ns_offline_event_last_synced_id, 0)
+        if (startId > lastDbId) {
+            sp.putLong(R.string.key_ns_offline_event_last_synced_id, 0)
+            startId = 0
+        }
+        if (startId == lastOeId && dateUtil.now() - lastOeTime < 5000) return false
+        lastOeId = startId
+        lastOeTime = dateUtil.now()
+        appRepository.getNextSyncElementOfflineEvent(startId).blockingGet()?.let { oe ->
+            aapsLogger.info(LTag.DATABASE, "Loading OfflineEvent data Start: $startId ID: ${oe.first.id} HistoryID: ${oe.second} ")
+            when {
+                // without nsId = create new
+                oe.first.interfaceIDs.nightscoutId == null ->
+                    nsClientPlugin.nsClientService?.dbAdd("treatments", oe.first.toJson(true, dateUtil), DataSyncSelector.PairOfflineEvent(oe.first, oe.second), "$startId/$lastDbId")
+                // existing with nsId = update
+                oe.first.interfaceIDs.nightscoutId != null ->
+                    nsClientPlugin.nsClientService?.dbUpdate("treatments", oe.first.interfaceIDs.nightscoutId, oe.first.toJson(false, dateUtil), DataSyncSelector.PairOfflineEvent(oe.first, oe.second), "$startId/$lastDbId")
             }
             return true
         }

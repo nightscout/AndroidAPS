@@ -878,4 +878,5 @@
     <string name="clear_filter">Премахни филтъра</string>
     <string name="trend_arrow">Стрелка тенденция</string>
     <string name="cannula">Канюла</string>
+    <string name="ns_receive_profile_store_summary">Синхронизирай NS профила с локалния</string>
 </resources>

@@ -1,9 +1,8 @@
 package info.nightscout.androidaps.plugins.general.automation.actions
 
-import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.database.entities.TemporaryTarget
-import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
+import info.nightscout.androidaps.database.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import info.nightscout.androidaps.database.transactions.Transaction
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDuration
@@ -14,7 +13,6 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatcher
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.powermock.modules.junit4.PowerMockRunner
@@ -68,16 +66,15 @@ class ActionStartTempTargetTest : ActionsTestBase() {
         }
 
         val updated = mutableListOf<TemporaryTarget>().apply {
-            // TODO insert all updated TTs
         }
 
         `when`(
-            repository.runTransactionForResult(argThatKotlin<InsertTemporaryTargetAndCancelCurrentTransaction> {
+            repository.runTransactionForResult(argThatKotlin<InsertAndCancelCurrentTemporaryTargetTransaction> {
                 it.temporaryTarget
                     .copy(timestamp = expectedTarget.timestamp, utcOffset = expectedTarget.utcOffset) // those can be different
                     .contentEqualsTo(expectedTarget)
             })
-        ).thenReturn(Single.just(InsertTemporaryTargetAndCancelCurrentTransaction.TransactionResult().apply {
+        ).thenReturn(Single.just(InsertAndCancelCurrentTemporaryTargetTransaction.TransactionResult().apply {
             inserted.addAll(inserted)
             updated.addAll(updated)
         }))
@@ -87,7 +84,7 @@ class ActionStartTempTargetTest : ActionsTestBase() {
                 Assert.assertTrue(result.success)
             }
         })
-        Mockito.verify(repository, Mockito.times(1)).runTransactionForResult(anyObject<Transaction<InsertTemporaryTargetAndCancelCurrentTransaction.TransactionResult>>())
+        Mockito.verify(repository, Mockito.times(1)).runTransactionForResult(anyObject<Transaction<InsertAndCancelCurrentTemporaryTargetTransaction.TransactionResult>>())
     }
 
     @Test fun hasDialogTest() {

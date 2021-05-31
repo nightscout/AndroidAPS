@@ -154,19 +154,31 @@ class GraphData(
             maxY = 100.0 + max(overviewData.maxRatioValueFound, abs(overviewData.minRatioValueFound))
             minY = 100.0 - max(overviewData.maxRatioValueFound, abs(overviewData.minRatioValueFound))
             overviewData.ratioScale.multiplier = 1.0
-        } else
+            overviewData.ratioScale.shift = 100.0
+        } else {
             overviewData.ratioScale.multiplier = maxY * scale / max(overviewData.maxRatioValueFound, abs(overviewData.minRatioValueFound))
+            overviewData.ratioScale.shift = 0.0
+        }
         addSeries(overviewData.ratioSeries)
     }
 
     // scale in % of vertical size (like 0.3)
-    fun addDeviationSlope(useForScale: Boolean, scale: Double) {
+    fun addDeviationSlope(useForScale: Boolean, scale: Double, isRatioScale: Boolean = false) {
         if (useForScale) {
             maxY = max(overviewData.maxFromMaxValueFound, overviewData.maxFromMinValueFound)
             minY = -maxY
         }
-        overviewData.dsMaxScale.multiplier = maxY * scale / overviewData.maxFromMaxValueFound
-        overviewData.dsMinScale.multiplier = maxY * scale / overviewData.maxFromMinValueFound
+        var graphMaxY = maxY
+        if (isRatioScale) {
+            graphMaxY = maxY - 100.0
+            overviewData.dsMinScale.shift = 100.0
+            overviewData.dsMaxScale.shift = 100.0
+        } else {
+            overviewData.dsMinScale.shift = 0.0
+            overviewData.dsMaxScale.shift = 0.0
+        }
+        overviewData.dsMaxScale.multiplier = graphMaxY * scale / overviewData.maxFromMaxValueFound
+        overviewData.dsMinScale.multiplier = graphMaxY * scale / overviewData.maxFromMinValueFound
         addSeries(overviewData.dsMaxSeries)
         addSeries(overviewData.dsMinSeries)
     }

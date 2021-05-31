@@ -20,6 +20,7 @@ fun GlucoseValue.toJson(isAdd : Boolean, dateUtil: DateUtil): JSONObject =
         .put("device", sourceSensor.text)
         .put("date", timestamp)
         .put("dateString", dateUtil.toISOString(timestamp))
+        .put("isValid", isValid)
         .put("sgv", value)
         .put("direction", trendArrow.text)
         .put("type", "sgv")

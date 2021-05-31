@@ -123,6 +123,7 @@ class UserEntryPresentationHelper @Inject constructor(
         is ValueWithUnit.SimpleString          -> valueWithUnit.value
         is ValueWithUnit.TherapyEventMeterType -> translator.translate(valueWithUnit.value)
         is ValueWithUnit.TherapyEventTTReason  -> translator.translate(valueWithUnit.value)
+        is ValueWithUnit.OfflineEventReason    -> translator.translate(valueWithUnit.value)
         is ValueWithUnit.TherapyEventType      -> translator.translate(valueWithUnit.value)
         is ValueWithUnit.Timestamp             -> dateUtil.dateAndTimeAndSecondsString(valueWithUnit.value)
 
@@ -165,10 +166,10 @@ class UserEntryPresentationHelper @Inject constructor(
     ) + "\n"
 
     private fun getCsvEntry(entry: UserEntry): String {
-        val fullvalueWithUnitList = ArrayList(entry.values)
+        val fullValueWithUnitList = ArrayList(entry.values)
         val timestampRec = entry.timestamp.toString()
         val dateTimestampRev = dateUtil.dateAndTimeAndSecondsString(entry.timestamp)
-        val utcOffset = dateUtil.timeStringFromSeconds((entry.utcOffset/1000).toInt())
+        val utcOffset = dateUtil.timeStringFromSeconds((entry.utcOffset / 1000).toInt())
         val action = csvString(entry.action)
         var therapyEvent = ""
         val source = translator.translate(entry.source)
@@ -184,7 +185,7 @@ class UserEntryPresentationHelper @Inject constructor(
         var minute = ""
         var noUnit = ""
 
-        for (valueWithUnit in fullvalueWithUnitList.filterNotNull()) {
+        for (valueWithUnit in fullValueWithUnitList.filterNotNull()) {
             when (valueWithUnit) {
                 is ValueWithUnit.Gram                  -> gram = valueWithUnit.value.toString()
                 is ValueWithUnit.Hour                  -> hour = valueWithUnit.value.toString()
@@ -196,6 +197,7 @@ class UserEntryPresentationHelper @Inject constructor(
                 is ValueWithUnit.SimpleString          -> simpleString = simpleString.addWithSeparator(valueWithUnit.value)
                 is ValueWithUnit.TherapyEventMeterType -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
                 is ValueWithUnit.TherapyEventTTReason  -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
+                is ValueWithUnit.OfflineEventReason    -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
                 is ValueWithUnit.TherapyEventType      -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
                 is ValueWithUnit.Timestamp             -> timestamp = dateUtil.dateAndTimeAndSecondsString(valueWithUnit.value)
 
@@ -215,9 +217,9 @@ class UserEntryPresentationHelper @Inject constructor(
         return "$timestampRec;$dateTimestampRev;$utcOffset;$action;$therapyEvent;$source;$note;$simpleString;$timestamp;$bg;$gram;$insulin;$unitPerHour;$percent;$hour;$minute;$noUnit"
     }
 
-    private fun csvString(action: Action): String = "\"" + translator.translate(action).replace("\"", "\"\"").replace("\n"," / ") + "\""
-    private fun csvString(id: Int): String = if (id != 0) "\"" + resourceHelper.gs(id).replace("\"", "\"\"").replace("\n"," / ") + "\"" else ""
-    private fun csvString(s: String): String = if (s != "") "\"" + s.replace("\"", "\"\"").replace("\n"," / ") + "\"" else ""
+    private fun csvString(action: Action): String = "\"" + translator.translate(action).replace("\"", "\"\"").replace("\n", " / ") + "\""
+    private fun csvString(id: Int): String = if (id != 0) "\"" + resourceHelper.gs(id).replace("\"", "\"\"").replace("\n", " / ") + "\"" else ""
+    private fun csvString(s: String): String = if (s != "") "\"" + s.replace("\"", "\"\"").replace("\n", " / ") + "\"" else ""
 
     private fun String.addWithSeparator(add: Any) =
         this + (if (this.isBlank()) "" else " / ") + add.toString()

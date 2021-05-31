@@ -86,7 +86,6 @@ open class CommandQueue @Inject constructor(
                                 ErrorHelperActivity.runAlarm(context, result.comment, resourceHelper.gs(R.string.failedupdatebasalprofile), R.raw.boluserror)
                             }
                             if (result.enacted) {
-                                rxBus.send(EventNewBasalProfile())
                                 repository.createEffectiveProfileSwitch(
                                     EffectiveProfileSwitch(
                                         timestamp = dateUtil.now(),
@@ -104,6 +103,7 @@ open class CommandQueue @Inject constructor(
                                         insulinConfiguration = it.insulinConfiguration
                                     )
                                 )
+                                rxBus.send(EventNewBasalProfile())
                             }
                         }
                     })

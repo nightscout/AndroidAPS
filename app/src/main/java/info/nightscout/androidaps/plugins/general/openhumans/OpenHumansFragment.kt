@@ -11,7 +11,6 @@ import androidx.work.WorkManager
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.Event
-import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -38,24 +37,23 @@ class OpenHumansFragment : DaggerFragment() {
     @Inject lateinit var openHumansUploader: OpenHumansUploader
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var databaseHelper: DatabaseHelperInterface
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        compositeDisposable += Single.fromCallable { databaseHelper.getOHQueueSize() }
-            .subscribeOn(aapsSchedulers.io)
-            .repeatWhen {
-                rxBus.toObservable(UpdateViewEvent::class.java)
-                    .cast(Any::class.java)
-                    .mergeWith(rxBus.toObservable(UpdateQueueEvent::class.java)
-                        .throttleLatest(5, TimeUnit.SECONDS))
-                    .toFlowable(BackpressureStrategy.LATEST)
-            }
-            .observeOn(aapsSchedulers.main)
-            .subscribe({
-                queueSizeValue = it
-                updateGUI()
-            }, {})
+        // compositeDisposable += Single.fromCallable { databaseHelper.getOHQueueSize() }
+        //     .subscribeOn(aapsSchedulers.io)
+        //     .repeatWhen {
+        //         rxBus.toObservable(UpdateViewEvent::class.java)
+        //             .cast(Any::class.java)
+        //             .mergeWith(rxBus.toObservable(UpdateQueueEvent::class.java)
+        //                 .throttleLatest(5, TimeUnit.SECONDS))
+        //             .toFlowable(BackpressureStrategy.LATEST)
+        //     }
+        //     .observeOn(aapsSchedulers.main)
+        //     .subscribe({
+        //         queueSizeValue = it
+        //         updateGUI()
+        //     }, {})
         context?.applicationContext?.let { appContext ->
             WorkManager.getInstance(appContext).getWorkInfosForUniqueWorkLiveData(OpenHumansUploader.WORK_NAME).observe(this, {
                 val workInfo = it.lastOrNull()
