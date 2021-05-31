@@ -21,14 +21,13 @@ import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.db.*
 import info.nightscout.androidaps.events.EventPreferenceChange
-import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
+import info.nightscout.androidaps.extensions.toConstant
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.extensions.toConstant
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -60,7 +59,6 @@ class OpenHumansUploader @Inject constructor(
     private val sp: SP,
     private val rxBus: RxBusWrapper,
     private val context: Context,
-    private val databaseHelper: DatabaseHelperInterface,
     val repository: AppRepository
 ) : PluginBase(
     PluginDescription()
@@ -306,11 +304,11 @@ class OpenHumansUploader @Inject constructor(
                 jsonObject.put("structureVersion", structureVersion)
                 jsonObject.put("queuedOn", System.currentTimeMillis())
                 generator(jsonObject)
-                val queueItem = OHQueueItem(
-                    file = file,
-                    content = jsonObject.toString()
-                )
-                databaseHelper.createOrUpdate(queueItem)
+//                val queueItem = OHQueueItem(
+//                    file = file,
+//                    content = jsonObject.toString()
+//                )
+//                databaseHelper.createOrUpdate(queueItem)
                 rxBus.send(OpenHumansFragment.UpdateQueueEvent)
             } catch (e: JSONException) {
                 e.printStackTrace()
@@ -340,7 +338,7 @@ class OpenHumansUploader @Inject constructor(
         isSetup = false
         oAuthTokens = null
         projectMemberId = null
-        databaseHelper.clearOpenHumansQueue()
+//        databaseHelper.clearOpenHumansQueue()
         rxBus.send(OpenHumansFragment.UpdateViewEvent)
     }
 
@@ -353,18 +351,18 @@ class OpenHumansUploader @Inject constructor(
             //Updating the notification for every item drastically slows down the operation
             if (currentProgress % 1000L == 0L) showOngoingNotification(maxProgress, currentProgress)
         }
-        copyDisposable = Completable.fromCallable { databaseHelper.clearOpenHumansQueue() }
+//        copyDisposable = Completable.fromCallable { databaseHelper.clearOpenHumansQueue() }
 //            .andThen(Single.defer { Single.just(databaseHelper.getCountOfAllRows() + treatmentsPlugin.service.count()) })
 //            .doOnSuccess { maxProgress = it }
 //            .flatMapObservable { Observable.defer { Observable.fromIterable(treatmentsPlugin.service.getTreatmentData()) } }
 //            .map { enqueueTreatment(it); increaseCounter() }
 //            .ignoreElements()
-            .andThen(Observable.defer { Observable.fromIterable(repository.compatGetBgReadingsDataFromTime(0, true).blockingGet()) })
-            .map { enqueueBGReading(it); increaseCounter() }
-            .ignoreElements()
-            .andThen(Observable.defer { Observable.fromIterable(repository.compatGetTherapyEventDataFromTime(0, true).blockingGet()) })
-            .map { enqueueTherapyEvent(it); increaseCounter() }
-            .ignoreElements()
+//            .andThen(Observable.defer { Observable.fromIterable(repository.compatGetBgReadingsDataFromTime(0, true).blockingGet()) })
+//            .map { enqueueBGReading(it); increaseCounter() }
+//            .ignoreElements()
+//            .andThen(Observable.defer { Observable.fromIterable(repository.compatGetTherapyEventDataFromTime(0, true).blockingGet()) })
+//            .map { enqueueTherapyEvent(it); increaseCounter() }
+//            .ignoreElements()
 //            .andThen(Observable.defer { Observable.fromIterable(databaseHelper.getAllExtendedBoluses()) })
 //            .map { enqueueExtendedBolus(it); increaseCounter() }
 //            .ignoreElements()
@@ -377,30 +375,30 @@ class OpenHumansUploader @Inject constructor(
             // .andThen(Observable.defer { Observable.fromIterable(databaseHelper.getAllTemporaryBasals()) })
             // .map { enqueueTemporaryBasal(it); increaseCounter() }
             // .ignoreElements()
-            .andThen(Observable.defer { Observable.fromIterable(repository.compatGetTemporaryTargetData().blockingGet()) })
-            .map { enqueueTempTarget(it); increaseCounter() }
-            .ignoreElements()
-            .doOnSubscribe {
-                wakeLock.acquire(TimeUnit.MINUTES.toMillis(30))
-                showOngoingNotification()
-            }
-            .doOnComplete {
-                isSetup = true
-                scheduleWorker(false)
-                showSetupFinishedNotification()
-            }
-            .doOnError {
-                logout()
-                showSetupFailedNotification()
-            }
-            .doFinally {
-                copyDisposable = null
-                NotificationManagerCompat.from(context).cancel(COPY_NOTIFICATION_ID)
-                wakeLock.release()
-            }
-            .onErrorComplete()
-            .subscribeOn(aapsSchedulers.io)
-            .subscribe()
+//            .andThen(Observable.defer { Observable.fromIterable(repository.compatGetTemporaryTargetData().blockingGet()) })
+//            .map { enqueueTempTarget(it); increaseCounter() }
+//            .ignoreElements()
+//            .doOnSubscribe {
+//                wakeLock.acquire(TimeUnit.MINUTES.toMillis(30))
+//                showOngoingNotification()
+//            }
+//            .doOnComplete {
+//                isSetup = true
+//                scheduleWorker(false)
+//                showSetupFinishedNotification()
+//            }
+//            .doOnError {
+//                logout()
+//                showSetupFailedNotification()
+//            }
+//            .doFinally {
+//                copyDisposable = null
+//                NotificationManagerCompat.from(context).cancel(COPY_NOTIFICATION_ID)
+//                wakeLock.release()
+//            }
+//            .onErrorComplete()
+//            .subscribeOn(aapsSchedulers.io)
+//            .subscribe()
     }
 
     private fun showOngoingNotification(maxProgress: Long? = null, currentProgress: Long? = null) {
@@ -438,7 +436,7 @@ class OpenHumansUploader @Inject constructor(
         val notificationManager = NotificationManagerCompat.from(context)
         notificationManager.notify(FAILURE_NOTIFICATION_ID, notification)
     }
-
+/*
     @kotlin.ExperimentalStdlibApi
     fun uploadDataSegmentally(): Completable =
         uploadData(UPLOAD_SEGMENT_SIZE)
@@ -478,7 +476,7 @@ class OpenHumansUploader @Inject constructor(
         .doOnSubscribe {
             aapsLogger.info(LTag.OHUPLOADER, "Starting upload")
         }
-
+*/
     private fun uploadFile(accessToken: String, uploadData: UploadData) = Completable.defer {
         openHumansAPI.prepareFileUpload(accessToken, uploadData.fileName, uploadData.metadata)
             .flatMap { openHumansAPI.uploadFile(it.uploadURL, uploadData.content).andThen(Single.just(it.fileId)) }
@@ -495,7 +493,7 @@ class OpenHumansUploader @Inject constructor(
             Single.just(oAuthTokens.accessToken)
         }
     }
-
+/*
     @kotlin.ExperimentalStdlibApi
     private fun gatherData(maxEntries: Long) = Single.defer {
         val items = databaseHelper.getAllOHQueueItems(maxEntries)
@@ -571,7 +569,7 @@ class OpenHumansUploader @Inject constructor(
             highestQueueId = items.map { it.id }.maxOrNull()
         ))
     }
-
+*/
     private fun ZipOutputStream.writeFile(name: String, bytes: ByteArray) {
         putNextEntry(ZipEntry(name))
         write(bytes)
@@ -579,7 +577,7 @@ class OpenHumansUploader @Inject constructor(
     }
 
     private fun removeUploadedEntriesFromQueue(highestId: Long) = Completable.fromCallable {
-        databaseHelper.removeAllOHQueueItemsWithIdSmallerThan(highestId)
+//        databaseHelper.removeAllOHQueueItemsWithIdSmallerThan(highestId)
     }
 
     private fun handleSignOut() {
@@ -649,4 +647,5 @@ class OpenHumansUploader @Inject constructor(
     private fun onSharedPreferenceChanged(event: EventPreferenceChange) {
         if (event.changedKey == "key_oh_charging_only" && isSetup) scheduleWorker(true)
     }
+
 }

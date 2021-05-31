@@ -187,7 +187,7 @@ class OverviewData @Inject constructor(
                 if (!extendedBolus.isInProgress(dateUtil)) {
                     this@OverviewData.extendedBolus = null
                     ""
-                } else if (activePlugin.activePump.isFakingTempsByExtendedBoluses) resourceHelper.gs(R.string.pump_basebasalrate, extendedBolus.rate)
+                } else if (!activePlugin.activePump.isFakingTempsByExtendedBoluses) resourceHelper.gs(R.string.pump_basebasalrate, extendedBolus.rate)
                 else ""
             } ?: ""
 

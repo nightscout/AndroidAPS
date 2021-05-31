@@ -21,7 +21,6 @@ import info.nightscout.androidaps.danar.DanaRPlugin;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.ConfigBuilder;
-import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;

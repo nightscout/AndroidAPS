@@ -1,10 +1,9 @@
-package info.nightscout.androidaps.utils
+package info.nightscout.androidaps.utils.ui
 
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.utils.ui.NumberPicker
 
 class NumberPickerVertical : NumberPicker {
 

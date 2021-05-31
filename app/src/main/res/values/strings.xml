@@ -135,8 +135,6 @@
 
     <string name="configbuilder_pump">Pump</string>
     <string name="configbuilder_pump_description">Which pump would you like to use with AndroidAPS?</string>
-    <string name="configbuilder_treatments">Treatments</string>
-    <string name="configbuilder_treatments_description">Which plugin should be used for treatment handling?</string>
     <string name="configbuilder_profile">Profile</string>
     <string name="configbuilder_profile_description">Which profile should AndroidAPS use?</string>
     <string name="configbuilder_aps">APS</string>

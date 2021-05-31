@@ -120,7 +120,6 @@ class ConfigBuilderPlugin @Inject constructor(
         for (p in activePlugin.getPluginsList()) {
             aapsLogger.debug(LTag.CONFIGBUILDER, p.name + ":" +
                 (if (p.isEnabled(PluginType.GENERAL)) " GENERAL" else "") +
-                (if (p.isEnabled(PluginType.TREATMENT)) " TREATMENT" else "") +
                 (if (p.isEnabled(PluginType.SENSITIVITY)) " SENSITIVITY" else "") +
                 (if (p.isEnabled(PluginType.PROFILE)) " PROFILE" else "") +
                 (if (p.isEnabled(PluginType.APS)) " APS" else "") +
@@ -185,7 +184,6 @@ class ConfigBuilderPlugin @Inject constructor(
             PluginType.APS         -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(APS::class.java)
             PluginType.PROFILE     -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(ProfileSource::class.java)
             PluginType.BGSOURCE    -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(BgSource::class.java)
-            PluginType.TREATMENT   -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(TreatmentsInterface::class.java)
             PluginType.PUMP        -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Pump::class.java)
 
             else                   -> {

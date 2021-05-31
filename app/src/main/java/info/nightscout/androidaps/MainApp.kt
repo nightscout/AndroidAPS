@@ -6,7 +6,6 @@ import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.os.Build
-import com.j256.ormlite.android.apptools.OpenHelperManager
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import info.nightscout.androidaps.database.AppRepository
@@ -15,11 +14,10 @@ import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import info.nightscout.androidaps.database.transactions.VersionChangeTransaction
 import info.nightscout.androidaps.db.CompatDBHelper
-import info.nightscout.androidaps.db.DatabaseHelper
-import info.nightscout.androidaps.db.StaticInjector
+import info.nightscout.androidaps.di.StaticInjector
 import info.nightscout.androidaps.dependencyInjection.DaggerAppComponent
-import info.nightscout.androidaps.interfaces.ConfigBuilder
 import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.androidaps.interfaces.ConfigBuilder
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -63,7 +61,6 @@ class MainApp : DaggerApplication() {
         super.onCreate()
         aapsLogger.debug("onCreate")
         update(this)
-        dbHelper = OpenHelperManager.getHelper(this, DatabaseHelper::class.java)
 
         var gitRemote: String? = BuildConfig.REMOTE
         var commitHash: String? = BuildConfig.HEAD
@@ -133,10 +130,5 @@ class MainApp : DaggerApplication() {
         unregisterActivityLifecycleCallbacks(activityMonitor)
         keepAliveManager.cancelAlarm(this)
         super.onTerminate()
-    }
-
-    companion object {
-
-        lateinit var dbHelper: DatabaseHelper
     }
 }

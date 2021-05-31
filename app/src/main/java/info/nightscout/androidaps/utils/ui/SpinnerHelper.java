@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils;
+package info.nightscout.androidaps.utils.ui;
 
 import android.view.MotionEvent;
 import android.view.View;
