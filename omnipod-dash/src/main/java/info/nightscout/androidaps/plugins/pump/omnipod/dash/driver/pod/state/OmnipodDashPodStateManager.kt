@@ -70,7 +70,6 @@ interface OmnipodDashPodStateManager {
     fun createActiveCommand(historyId: String): Single<ActiveCommand>
     fun updateActiveCommand(): Maybe<CommandConfirmed>
     fun observeNoActiveCommand(): Observable<PodEvent>
-    fun maybeMarkActiveCommandFailed()
 
     data class ActiveCommand(
         val sequence: Short,

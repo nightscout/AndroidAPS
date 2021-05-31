@@ -229,16 +229,6 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     }
 
     @Synchronized
-    override fun maybeMarkActiveCommandFailed() {
-        podState.activeCommand?.run {
-            if (sentRealtime < createdRealtime) {
-                // command was not sent
-                podState.activeCommand = null
-            }
-        }
-    }
-
-    @Synchronized
     override fun updateActiveCommand() = Maybe.create<CommandConfirmed> { source ->
         podState.activeCommand?.run {
             logger.debug(
@@ -246,8 +236,12 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
                     "lastResponse=$lastStatusResponseReceived " +
                     "$sequenceNumberOfLastProgrammingCommand $historyId"
             )
-            if (createdRealtime >= lastStatusResponseReceived)
-            // we did not receive a valid response yet
+            if (sentRealtime < createdRealtime) {
+                // command was not sent, clear it up
+                podState.activeCommand = null
+                source.onComplete()
+            } else if  (createdRealtime >= lastStatusResponseReceived)
+                // we did not receive a valid response yet
                 source.onComplete()
             else {
                 podState.activeCommand = null
