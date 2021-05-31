@@ -817,7 +817,7 @@ class LocalInsightPlugin @Inject constructor(
     }
 
     override fun serialNumber(): String {
-        return if (connectionService == null || alertService == null) "Unknown" else connectionService!!.pumpSystemIdentification.serialNumber
+        return if (connectionService == null || alertService == null) "Unknown" else connectionService!!.pumpSystemIdentification?.serialNumber!!
     }
 
     fun stopPump(): PumpEnactResult {

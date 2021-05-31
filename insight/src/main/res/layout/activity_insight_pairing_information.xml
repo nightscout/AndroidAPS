@@ -159,6 +159,7 @@
             android:textSize="14sp" />
 
         <Button
+            android:id="@+id/delete_pairing"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="deletePairing"

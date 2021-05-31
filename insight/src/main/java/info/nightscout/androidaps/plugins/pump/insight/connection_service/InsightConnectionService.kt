@@ -105,12 +105,12 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
         recoveryDuration = Math.min(recoveryDuration, maxRecoveryDuration * 1000)
     }
 
-    val pumpFirmwareVersions: FirmwareVersions
-        get() = pairingDataStorage!!.firmwareVersions!!
-    val pumpSystemIdentification: SystemIdentification
-        get() = pairingDataStorage!!.systemIdentification!!
-    val bluetoothAddress: String
-        get() = pairingDataStorage!!.macAddress!!
+    val pumpFirmwareVersions: FirmwareVersions?
+        get() = pairingDataStorage?.firmwareVersions
+    val pumpSystemIdentification: SystemIdentification?
+        get() = pairingDataStorage?.systemIdentification
+    val bluetoothAddress: String?
+        get() = pairingDataStorage?.macAddress
 
     @Synchronized fun registerStateCallback(stateCallback: StateCallback) {
         stateCallbacks.add(stateCallback)
