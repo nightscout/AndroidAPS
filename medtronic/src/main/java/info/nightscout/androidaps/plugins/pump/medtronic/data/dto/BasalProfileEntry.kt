@@ -15,16 +15,9 @@ class BasalProfileEntry {
 
     var rate_raw: ByteArray
     var rate = 0.0
-        set(value) {
-            field = value
-        }
 
     var startTime_raw: Byte
     var startTime : LocalTime? = null // Just a "time of day"
-        set(value) {
-            field = value
-        }
-
 
     constructor() {
         rate = -9.999E6

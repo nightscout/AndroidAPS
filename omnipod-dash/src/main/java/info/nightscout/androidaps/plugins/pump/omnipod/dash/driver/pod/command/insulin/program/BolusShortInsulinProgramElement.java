@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.
 import java.nio.ByteBuffer;
 
 public class BolusShortInsulinProgramElement implements ShortInsulinProgramElement {
-    private short numberOfPulses;
+    private final short numberOfPulses;
 
     public BolusShortInsulinProgramElement(short numberOfPulses) {
         this.numberOfPulses = numberOfPulses;

@@ -11,7 +11,7 @@ public enum AlertSlot {
     EXPIRATION((byte) 0x07),
     UNKNOWN((byte) 0xff);
 
-    private byte value;
+    private final byte value;
 
     AlertSlot(byte value) {
         this.value = value;

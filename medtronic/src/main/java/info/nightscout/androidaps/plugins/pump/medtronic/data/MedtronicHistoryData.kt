@@ -91,7 +91,7 @@ class MedtronicHistoryData @Inject constructor(
             .filter { f -> f.pumpId == pumpId }
             .findFirst()
 
-        return if (findFirst.isPresent()) findFirst.get() else null
+        return if (findFirst.isPresent) findFirst.get() else null
     }
 
     private fun showLogs(header: String?, data: String) {
