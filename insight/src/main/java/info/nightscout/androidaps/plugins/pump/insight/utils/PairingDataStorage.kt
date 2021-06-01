@@ -8,61 +8,69 @@ import org.spongycastle.util.encoders.Hex
 
 class PairingDataStorage(context: Context) {
 
-    internal val preferences: SharedPreferences
+    private val preferences: SharedPreferences
 
-    internal var paired : Boolean = false
-        get() { return field }
+    private var _paired : Boolean = false
+    internal var paired : Boolean
+        get() { return _paired }
         set(paired) {
-            field = paired
-            preferences.edit().putBoolean("paired", paired).apply()
+            _paired = paired
+            preferences.edit().putBoolean("paired", _paired).apply()
         }
 
-    internal var macAddress : String? = null
-        get() { return field }
+    private var _macAddress : String? = null
+    internal var macAddress : String?
+        get() { return _macAddress }
         set(macAddress) {
-            field = macAddress
-            preferences.edit().putString("macAddress", macAddress).apply()
+            _macAddress = macAddress
+            preferences.edit().putString("macAddress", _macAddress).apply()
         }
 
-    internal var lastNonceSent : Nonce? = null
-        get() { return field }
+    private var _lastNonceSent : Nonce? = null
+    internal var lastNonceSent : Nonce?
+        get() { return _lastNonceSent }
         set(lastNonceSent) {
-            field = lastNonceSent
+            _lastNonceSent = lastNonceSent
             preferences.edit().putString("lastNonceSent", if (lastNonceSent == null) null else Hex.toHexString(lastNonceSent.storageValue)).apply()
         }
 
-    internal var lastNonceReceived : Nonce? = null
-        get() { return field }
+    private var _lastNonceReceived : Nonce? = null
+    internal var lastNonceReceived : Nonce?
+        get() { return _lastNonceReceived }
         set(lastNonceReceived) {
-            field = lastNonceReceived
+            _lastNonceReceived = lastNonceReceived
             preferences.edit().putString("lastNonceReceived", if (lastNonceReceived == null) null else Hex.toHexString(lastNonceReceived.storageValue)).apply()
         }
 
-    internal var commId : Long = 0
-        get() { return field }
+    private var _commId : Long = 0
+    internal var commId : Long
+        get() { return _commId }
         set(commId) {
-            field = commId
+            _commId = commId
             preferences.edit().putLong("commId", commId).apply()
         }
 
-    internal var incomingKey : ByteArray? = null
-        get() { return field }
+    private var _incomingKey : ByteArray? = null
+    internal var incomingKey : ByteArray?
+        get() { return _incomingKey }
         set(incomingKey) {
-            field = incomingKey
+            _incomingKey = incomingKey
             preferences.edit().putString("incomingKey", if (incomingKey == null) null else Hex.toHexString(incomingKey)).apply()
         }
 
-    internal var outgoingKey : ByteArray? = null
-        get() { return field }
+    private var _outgoingKey : ByteArray? = null
+    internal var outgoingKey : ByteArray?
+        get() { return _outgoingKey }
         set(outgoingKey) {
-            field = outgoingKey
+            _outgoingKey = outgoingKey
             preferences.edit().putString("outgoingKey", if (outgoingKey == null) null else Hex.toHexString(outgoingKey)).apply()
         }
 
-    internal var firmwareVersions : FirmwareVersions? = null
-        get() { return field }
+    private var _firmwareVersions : FirmwareVersions? = null
+    internal var firmwareVersions : FirmwareVersions?
+        get() { return _firmwareVersions }
         set(firmwareVersions) {
-            field = firmwareVersions
+            _firmwareVersions = firmwareVersions
             if (firmwareVersions == null) {
                 preferences.edit()
                     .putString("releaseSWVersion", null)
@@ -92,10 +100,11 @@ class PairingDataStorage(context: Context) {
             }
         }
 
-    internal var systemIdentification : SystemIdentification? = null
-        get() { return field }
+    private var _systemIdentification : SystemIdentification? = null
+    internal var systemIdentification : SystemIdentification?
+        get() { return _systemIdentification }
         set(systemIdentification) {
-            field = systemIdentification
+            _systemIdentification = systemIdentification
             if (systemIdentification == null) {
                 preferences.edit()
                     .putString("pumpSerial", null)
@@ -113,7 +122,6 @@ class PairingDataStorage(context: Context) {
 
     fun reset() {
         paired = false
-        macAddress = null
         commId = 0
         incomingKey = null
         outgoingKey = null
@@ -126,22 +134,22 @@ class PairingDataStorage(context: Context) {
 
     init {
         preferences = context.getSharedPreferences(context.packageName + ".PAIRING_DATA_STORAGE", Context.MODE_PRIVATE)
-        paired = preferences.getBoolean("paired", false)
-        macAddress = preferences.getString("macAddress", null)
+        _paired = preferences.getBoolean("paired", false)
+        _macAddress = preferences.getString("macAddress", null)
         val lastNonceSentHex = preferences.getString("lastNonceSent", null)
-        if (lastNonceSentHex != null) lastNonceSent = Nonce(Hex.decode(lastNonceSentHex))
+        if (lastNonceSentHex != null) _lastNonceSent = Nonce(Hex.decode(lastNonceSentHex))
         val lastNonceReceivedHex = preferences.getString("lastNonceReceived", null)
-        if (lastNonceReceivedHex != null) lastNonceReceived = Nonce(Hex.decode(lastNonceReceivedHex))
-        commId = preferences.getLong("commId", 0)
+        if (lastNonceReceivedHex != null) _lastNonceReceived = Nonce(Hex.decode(lastNonceReceivedHex))
+        _commId = preferences.getLong("commId", 0)
         val incomingKeyHex = preferences.getString("incomingKey", null)
-        incomingKey = if (incomingKeyHex == null) null else Hex.decode(incomingKeyHex)
+        _incomingKey = if (incomingKeyHex == null) null else Hex.decode(incomingKeyHex)
         val outgoingKeyHex = preferences.getString("outgoingKey", null)
-        outgoingKey = if (outgoingKeyHex == null) null else Hex.decode(outgoingKeyHex)
+        _outgoingKey = if (outgoingKeyHex == null) null else Hex.decode(outgoingKeyHex)
         val pumpSerial = preferences.getString("pumpSerial", null)
         val manufacturingDate = preferences.getString("manufacturingDate", null)
         val systemIdAppendix = preferences.getLong("systemIdAppendix", 0)
         if (pumpSerial != null) {
-            systemIdentification = SystemIdentification().also {
+            _systemIdentification = SystemIdentification().also {
                 it.serialNumber = pumpSerial
                 it.manufacturingDate = manufacturingDate
                 it.systemIdAppendix = systemIdAppendix
@@ -158,7 +166,7 @@ class PairingDataStorage(context: Context) {
         val stateIndex = preferences.getInt("stateIndex", 0)
         val vocabularyIndex = preferences.getInt("vocabularyIndex", 0)
         if (releaseSWVersion != null) {
-            firmwareVersions = FirmwareVersions().also {
+            _firmwareVersions = FirmwareVersions().also {
                 it.releaseSWVersion = releaseSWVersion
                 it.uiProcSWVersion = uiProcSWVersion
                 it.pcProcSWVersion = pcProcSWVersion
