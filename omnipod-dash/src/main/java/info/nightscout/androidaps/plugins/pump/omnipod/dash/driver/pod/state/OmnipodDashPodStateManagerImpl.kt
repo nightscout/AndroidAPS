@@ -231,30 +231,70 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
 
     @Synchronized
     override fun updateActiveCommand() = Maybe.create<CommandConfirmed> { source ->
-        podState.activeCommand?.run {
+        val activeCommand = podState.activeCommand
+        if (activeCommand == null) {
+            logger.error("No active command to update")
+            source.onComplete()
+            return@create
+        }
+
+        when (getCommandConfirmationFromState()) {
+            CommandSendingFailure -> {
+                podState.activeCommand = null
+                source.onError(
+                    activeCommand?.sendError
+                        ?: java.lang.IllegalStateException(
+                            "Could not send command and sendError is " +
+                                "missing"
+                        )
+                )
+            }
+
+            CommandSendingNotConfirmed -> {
+                // we did not receive a valid response yet
+                source.onComplete()
+            }
+
+            CommandConfirmationDenied -> {
+                podState.activeCommand = null
+                source.onSuccess(CommandConfirmed(activeCommand.historyId, false))
+            }
+
+            CommandConfirmationSuccess -> {
+                podState.activeCommand = null
+                source.onSuccess(CommandConfirmed(activeCommand.historyId, false))
+            }
+
+            NoActiveCommand -> {
+                source.onComplete()
+            }
+        }
+    }
+
+    @Synchronized
+    override fun getCommandConfirmationFromState(): CommandConfirmationFromState {
+        return podState.activeCommand?.run {
             logger.debug(
-                "Trying to confirm active command with parameters: $activeCommand " +
+                "Getting command state with parameters: $activeCommand " +
                     "lastResponse=$lastStatusResponseReceived " +
                     "$sequenceNumberOfLastProgrammingCommand $historyId"
             )
-
-            if (sentRealtime < createdRealtime) { // command was not sent, clear it up
-                podState.activeCommand = null
-                source.onError(this.sendError
-                                   ?: java.lang.IllegalStateException("Could not send command and sendError is " +
-                                                                          "missing") )
-            } else if  (createdRealtime >= lastStatusResponseReceived)
-                // we did not receive a valid response yet
-                source.onComplete()
-            else {
-                podState.activeCommand = null
-                if (sequenceNumberOfLastProgrammingCommand == sequence)
-                    source.onSuccess(CommandConfirmed(historyId, true))
-                else
-                    source.onSuccess(CommandConfirmed(historyId, false))
+            when {
+                createdRealtime <= podState.lastStatusResponseReceived &&
+                    sequence == podState.sequenceNumberOfLastProgrammingCommand ->
+                    CommandConfirmationSuccess
+                createdRealtime <= podState.lastStatusResponseReceived &&
+                    sequence != podState.sequenceNumberOfLastProgrammingCommand ->
+                    CommandConfirmationDenied
+                // no response received after this point
+                createdRealtime <= sentRealtime ->
+                    CommandSendingNotConfirmed
+                createdRealtime > sentRealtime ->
+                    CommandSendingFailure
+                else -> // this can't happen, see the previous two conditions
+                    NoActiveCommand
             }
-        } ?: source.onComplete()
-        // no active programming command
+        } ?: NoActiveCommand
     }
 
     override fun increaseEapAkaSequenceNumber(): ByteArray {

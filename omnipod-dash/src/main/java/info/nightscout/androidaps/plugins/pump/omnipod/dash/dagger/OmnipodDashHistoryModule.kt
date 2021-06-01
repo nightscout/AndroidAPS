@@ -4,6 +4,7 @@ import android.content.Context
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
+import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.DashHistory
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.database.DashHistoryDatabase
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.database.HistoryRecordDao
@@ -28,6 +29,6 @@ class OmnipodDashHistoryModule {
 
     @Provides
     @Singleton
-    internal fun provideDashHistory(dao: HistoryRecordDao, historyMapper: HistoryMapper) =
-        DashHistory(dao, historyMapper)
+    internal fun provideDashHistory(dao: HistoryRecordDao, historyMapper: HistoryMapper, logger: AAPSLogger) =
+        DashHistory(dao, historyMapper, logger)
 }

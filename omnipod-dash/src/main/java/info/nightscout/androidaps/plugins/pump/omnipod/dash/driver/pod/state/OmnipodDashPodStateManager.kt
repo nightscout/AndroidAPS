@@ -14,6 +14,13 @@ import io.reactivex.Single
 import java.io.Serializable
 import java.util.*
 
+sealed class CommandConfirmationFromState
+object CommandSendingFailure : CommandConfirmationFromState()
+object CommandSendingNotConfirmed : CommandConfirmationFromState()
+object CommandConfirmationDenied : CommandConfirmationFromState()
+object CommandConfirmationSuccess : CommandConfirmationFromState()
+object NoActiveCommand : CommandConfirmationFromState()
+
 interface OmnipodDashPodStateManager {
 
     var activationProgress: ActivationProgress
@@ -70,6 +77,7 @@ interface OmnipodDashPodStateManager {
     fun createActiveCommand(historyId: String): Single<ActiveCommand>
     fun updateActiveCommand(): Maybe<CommandConfirmed>
     fun observeNoActiveCommand(): Observable<PodEvent>
+    fun getCommandConfirmationFromState(): CommandConfirmationFromState
 
     data class ActiveCommand(
         val sequence: Short,

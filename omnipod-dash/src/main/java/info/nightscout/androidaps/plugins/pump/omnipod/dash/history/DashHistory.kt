@@ -1,10 +1,12 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.history
 
 import com.github.guepardoapps.kulid.ULID
+import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType.SET_BOLUS
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType.SET_TEMPORARY_BASAL
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.BolusRecord
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.HistoryRecord
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.InitialResult
@@ -20,7 +22,8 @@ import javax.inject.Inject
 
 class DashHistory @Inject constructor(
     private val dao: HistoryRecordDao,
-    private val historyMapper: HistoryMapper
+    private val historyMapper: HistoryMapper,
+    private val logger: AAPSLogger
 ) {
 
     private fun markSuccess(id: String): Completable = dao.markResolved(
@@ -83,26 +86,23 @@ class DashHistory @Inject constructor(
     fun getRecordsAfter(time: Long): Single<List<HistoryRecordEntity>> = dao.allSince(time)
 
     fun updateFromState(podState: OmnipodDashPodStateManager) = Completable.defer {
-        podState.activeCommand?.run {
-            when {
-                createdRealtime <= podState.lastStatusResponseReceived &&
-                    sequence == podState.sequenceNumberOfLastProgrammingCommand ->
-                    dao.setInitialResult(historyId, InitialResult.SENT)
-                        .andThen(markSuccess(historyId))
-
-                createdRealtime <= podState.lastStatusResponseReceived &&
-                    sequence != podState.sequenceNumberOfLastProgrammingCommand ->
-                    markFailure(historyId)
-
-                // no response received after this point
-                createdRealtime <= sentRealtime ->
-                    dao.setInitialResult(historyId, InitialResult.SENT)
-
-                createdRealtime > sentRealtime ->
-                    dao.setInitialResult(historyId, InitialResult.FAILURE_SENDING)
-
-                else -> Completable.error(IllegalStateException("This can't happen. Could not update history"))
-            }
-        } ?: Completable.complete() // no active programming command
+        val historyId = podState.activeCommand?.historyId
+        if (historyId == null) {
+            logger.error(LTag.PUMP, "HistoryId not found to for updating from state")
+            return@defer Completable.complete()
+        }
+        when (podState.getCommandConfirmationFromState()) {
+            CommandSendingFailure ->
+                dao.setInitialResult(historyId, InitialResult.FAILURE_SENDING)
+            CommandSendingNotConfirmed ->
+                dao.setInitialResult(historyId, InitialResult.SENT)
+            CommandConfirmationDenied ->
+                markFailure(historyId)
+            CommandConfirmationSuccess ->
+                dao.setInitialResult(historyId, InitialResult.SENT)
+                    .andThen(markSuccess(historyId))
+            NoActiveCommand ->
+                Completable.complete()
+        }
     }
 }
