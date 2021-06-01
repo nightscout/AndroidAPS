@@ -103,7 +103,6 @@ class OmnipodDashBleManagerImpl @Inject constructor(
                 ?: Connection(podDevice, aapsLogger, context, podState)
             connection = conn
             if (conn.connectionState() is Connected) {
-                podState.lastConnection = System.currentTimeMillis()
                 if (conn.session == null) {
                     emitter.onNext(PodEvent.EstablishingSession)
                     establishSession(1.toByte())
@@ -116,7 +115,6 @@ class OmnipodDashBleManagerImpl @Inject constructor(
             }
             conn.connect()
             emitter.onNext(PodEvent.BluetoothConnected(podAddress))
-            podState.lastConnection = System.currentTimeMillis()
             emitter.onNext(PodEvent.EstablishingSession)
             establishSession(1.toByte())
             emitter.onNext(PodEvent.Connected)

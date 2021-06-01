@@ -58,13 +58,6 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     override val isPodRunning: Boolean
         get() = podState.podStatus?.isRunning() ?: false
 
-    override var lastConnection: Long
-        get() = podState.lastConnection
-        set(lastConnection) {
-            podState.lastConnection = lastConnection
-            store()
-        }
-
     override val lastUpdatedSystem: Long
         get() = podState.lastUpdatedSystem
 
@@ -422,7 +415,6 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     class PodState : Serializable {
 
         var activationProgress: ActivationProgress = ActivationProgress.NOT_STARTED
-        var lastConnection: Long = 0
         var lastUpdatedSystem: Long = 0
         var lastStatusResponseReceived: Long = 0
         var bluetoothConnectionState: OmnipodDashPodStateManager.BluetoothConnectionState =

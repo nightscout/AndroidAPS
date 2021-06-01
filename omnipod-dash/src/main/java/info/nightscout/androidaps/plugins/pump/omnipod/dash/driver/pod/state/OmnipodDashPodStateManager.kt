@@ -28,7 +28,6 @@ interface OmnipodDashPodStateManager {
     val isActivationCompleted: Boolean
     val isSuspended: Boolean
     val isPodRunning: Boolean
-    var lastConnection: Long
     var bluetoothConnectionState: BluetoothConnectionState
 
     val lastUpdatedSystem: Long // System.currentTimeMillis()
