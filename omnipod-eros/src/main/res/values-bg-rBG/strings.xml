@@ -10,9 +10,39 @@
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Показване на RileyLink Stats бутон в меню Управление на Pod</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">Позволи на записване на смяна на батерията в Действия</string>
     <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_tbr_sound_enabled">Сигнал при неясни TBR известия, разрешен</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_smb_sound_enabled">Сигнал при неясни SMB известия, разрешен</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_bolus_sound_enabled">Сигнал при неясни болус известия, разрешен</string>
     <!-- Omnipod Eros - History -->
+    <string name="omnipod_eros_history_title">История в Pod</string>
+    <string name="omnipod_eros_history_item_description">Описание</string>
+    <string name="omnipod_eros_history_item_source">Източник</string>
+    <string name="omnipod_eros_history_item_date">Дата</string>
+    <string name="omnipod_eros_history_type">Тип:</string>
+    <string name="omnipod_eros_history_bolus_value">%1$.2fЕ</string>
+    <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f Е, Вх=%2$.1f гр</string>
+    <string name="omnipod_eros_history_tbr_value">Количество: %1$.2f U, Продължителност: %2$d мин</string>
     <!-- Omnipod Eros - Short Status -->
+    <string name="omnipod_eros_short_status_riley_link_battery">RL бат: %1$d</string>
     <!-- Omnipod Eros - Error -->
+    <string name="omnipod_eros_error_riley_link_address_invalid">Грешен RileyLink адрес.</string>
+    <string name="omnipod_eros_error_crc_mismatch">Неуспешна комуникация: проверката на цялостта на съобщението е неуспешна</string>
+    <string name="omnipod_eros_error_invalid_packet_type">Неуспешна комуникация: получиен невалиден пакет от под</string>
+    <string name="omnipod_eros_error_invalid_progress_state">Неуспешна комуникация: под е в грешно състояние</string>
+    <string name="omnipod_eros_error_invalid_response">Неуспешна комуникация: получени грешен отговор от под</string>
+    <string name="omnipod_eros_error_invalid_message_sequence_number">Неуспешна комуникация: получи съобщение с невалиден номер на последователност от Pod</string>
+    <string name="omnipod_eros_error_invalid_message_address">Неуспешна комуникация: получено съобщение с невалиден адрес от Pod</string>
+    <string name="omnipod_eros_error_message_decoding_failed">Неуспешна комуникация: неуспешно декодиране на съобщение от Pod</string>
+    <string name="omnipod_eros_error_nonce_resync_failed">Комуникацията е неуспешна: ресинхронизирането е неуспешно</string>
+    <string name="omnipod_eros_error_nonce_out_of_sync">Комуникацията е неуспешна: ресинхронизирането е неуспешно</string>
+    <string name="omnipod_eros_error_not_enough_data">Комуникацията е неуспешна: не достатъчно данни получени от Pod</string>
+    <string name="omnipod_eros_error_pod_fault">Грешка на Pod (%1$03d %2$s). Моля, деактивирайте вашия Pod и стартирайте нов</string>
+    <string name="omnipod_eros_error_pod_returned_error_response">Комуникацията е неуспешна: Pod върна отговор с грешка</string>
+    <string name="omnipod_eros_error_communication_failed_no_response_from_riley_link">Няма отговор от RileyLink</string>
+    <string name="omnipod_eros_error_communication_failed_riley_link_interrupted">RileyLink прекъснат</string>
+    <string name="omnipod_eros_error_communication_failed_no_response_from_pod">Няма отговор от Pod</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">Неуспешно задаване на базален профил. Доставката на инсулин може да бъде спряна! Моля, ръчно опреснете състоянието на Pod от раздел Omnipod и възобновете доставката, ако е необходимо.</string>
+    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">Неуспешно задаване на базален профил. Доставката на инсулин може да бъде спряна! Моля, ръчно опреснете състоянието на Pod от раздел Omnipod и възобновете доставката, ако е необходимо.</string>
     <!-- Omnipod Eros - Pod Management -->
     <!-- Omnipod Eros - Pod Activation Wizard -->
     <!-- Omnipod Eros - Other -->
