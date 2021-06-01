@@ -141,10 +141,11 @@ class PairingDataStorage(context: Context) {
         val manufacturingDate = preferences.getString("manufacturingDate", null)
         val systemIdAppendix = preferences.getLong("systemIdAppendix", 0)
         if (pumpSerial != null) {
-            systemIdentification = SystemIdentification()
-            systemIdentification!!.serialNumber = pumpSerial
-            systemIdentification!!.manufacturingDate = manufacturingDate
-            systemIdentification!!.systemIdAppendix = systemIdAppendix
+            systemIdentification = SystemIdentification().also {
+                it.serialNumber = pumpSerial
+                it.manufacturingDate = manufacturingDate
+                it.systemIdAppendix = systemIdAppendix
+            }
         }
         val releaseSWVersion = preferences.getString("releaseSWVersion", null)
         val uiProcSWVersion = preferences.getString("uiProcSWVersion", null)
@@ -157,8 +158,7 @@ class PairingDataStorage(context: Context) {
         val stateIndex = preferences.getInt("stateIndex", 0)
         val vocabularyIndex = preferences.getInt("vocabularyIndex", 0)
         if (releaseSWVersion != null) {
-            firmwareVersions = FirmwareVersions()
-            firmwareVersions?.let {
+            firmwareVersions = FirmwareVersions().also {
                 it.releaseSWVersion = releaseSWVersion
                 it.uiProcSWVersion = uiProcSWVersion
                 it.pcProcSWVersion = pcProcSWVersion

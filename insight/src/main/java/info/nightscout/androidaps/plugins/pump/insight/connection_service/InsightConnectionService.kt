@@ -609,7 +609,9 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
 
     private fun processReadParameterBlockMessage(message: ReadParameterBlockMessage) {
         if (state === InsightState.APP_SYSTEM_IDENTIFICATION) {
-            if (message.parameterBlock !is SystemIdentificationBlock) handleException(TooChattyPumpException()) else {
+            if (message.parameterBlock !is SystemIdentificationBlock)
+                handleException(TooChattyPumpException())
+            else {
                 var systemIdentification = (message.parameterBlock as SystemIdentificationBlock).systemIdentification
                 pairingDataStorage.systemIdentification = systemIdentification
                 pairingDataStorage.paired = true
