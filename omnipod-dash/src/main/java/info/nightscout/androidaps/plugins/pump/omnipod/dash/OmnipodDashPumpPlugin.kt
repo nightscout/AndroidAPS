@@ -315,12 +315,14 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     aapsLogger.info(LTag.PUMP, "No temporary basal to cancel")
                     Completable.complete()
                 }
+
                 !enforeNew ->
                     Completable.error(
                         IllegalStateException(
                             "Temporary basal already active and enforeNew is not set."
                         )
                     )
+
                 else -> {
                     // enforceNew == true
                     aapsLogger.info(LTag.PUMP, "Canceling existing temp basal")
@@ -376,35 +378,6 @@ class OmnipodDashPumpPlugin @Inject constructor(
         return this.toSingleDefault(PumpEnactResult(injector).success(true).enacted(true))
             .onErrorReturnItem(PumpEnactResult(injector).success(false).enacted(false))
             .blockingGet()
-    }
-
-    private fun handleCommandConfirmation(confirmation: CommandConfirmed) {
-        val historyEntry = history.getById(confirmation.historyId)
-        when (historyEntry.commandType) {
-            OmnipodCommandType.CANCEL_TEMPORARY_BASAL ->
-                // We can't invalidate this command,
-                // and this is why it is pumpSync-ed at this point
-                if (confirmation.success) {
-                    pumpSync.syncStopTemporaryBasalWithPumpId(
-                        historyEntry.createdAt,
-                        historyEntry.pumpId(),
-                        PumpType.OMNIPOD_DASH,
-                        serialNumber()
-                    )
-                }
-            OmnipodCommandType.SET_TEMPORARY_BASAL ->
-                // This treatment was synced before sending the command
-                if (!confirmation.success) {
-                    pumpSync.invalidateTemporaryBasal(historyEntry.pumpId())
-                }
-
-            else ->
-                aapsLogger.warn(
-                    LTag.PUMP,
-                    "Will not sync confirmed command of type: $historyEntry and " +
-                        "succes: ${confirmation.success}"
-                )
-        }
     }
 
     override fun cancelExtendedBolus(): PumpEnactResult {
@@ -604,5 +577,34 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     .ignoreElement()
             )
         )
+    }
+
+    private fun handleCommandConfirmation(confirmation: CommandConfirmed) {
+        val historyEntry = history.getById(confirmation.historyId)
+        when (historyEntry.commandType) {
+            OmnipodCommandType.CANCEL_TEMPORARY_BASAL ->
+                // We can't invalidate this command,
+                // and this is why it is pumpSync-ed at this point
+                if (confirmation.success) {
+                    pumpSync.syncStopTemporaryBasalWithPumpId(
+                        historyEntry.createdAt,
+                        historyEntry.pumpId(),
+                        PumpType.OMNIPOD_DASH,
+                        serialNumber()
+                    )
+                }
+            OmnipodCommandType.SET_TEMPORARY_BASAL ->
+                // This treatment was synced before sending the command
+                if (!confirmation.success) {
+                    pumpSync.invalidateTemporaryBasal(historyEntry.pumpId())
+                }
+
+            else ->
+                aapsLogger.warn(
+                    LTag.PUMP,
+                    "Will not sync confirmed command of type: $historyEntry and " +
+                        "succes: ${confirmation.success}"
+                )
+        }
     }
 }
