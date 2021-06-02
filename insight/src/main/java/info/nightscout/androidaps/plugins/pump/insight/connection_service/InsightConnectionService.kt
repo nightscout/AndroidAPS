@@ -316,7 +316,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
     }
 
     @Synchronized fun pair(macAddress: String?) {
-        check(pairingDataStorage.paired) { "Pump must be unbonded first." }
+        check(!pairingDataStorage.paired) { "Pump must be unbonded first." }
         check(connectionRequests.size != 0) { "A connection lock must be hold for pairing" }
         aapsLogger.info(LTag.PUMP, "Pairing initiated")
         cleanup(true)
