@@ -776,6 +776,7 @@
     <string name="randombg_short">BS</string>
     <string name="tools">Verktøy</string>
     <string name="show_calculation">Vis beregning</string>
+    <string name="show_removed">Vis slettede</string>
     <string name="clearqueueconfirm">Slett køen? All data i køen vil gå tapt!</string>
     <string name="ebstopsloop">Bruk av forlenget bolus funksjon vil deaktivere lukket loop i perioden med forlenget bolus. Vil du virkelig dette?</string>
     <string name="closed_loop_disabled_with_eb">Lukket loop deaktivert på grunn av forlenget bolus</string>
@@ -897,4 +898,9 @@
     <string name="profile_max_daily_basal_value">Profil maksimal basal dose</string>
     <string name="current_basal_value">Aktiv basal dose</string>
     <string name="profile_carbs_ratio_value">Profil karbohydratfaktor (IK)</string>
+    <string name="full_sync">Full synkronisering</string>
+    <string name="ns_sync_options">Synkronisering</string>
+    <string name="ns_upload_summary">Profiler, boluser, karbohydrater, midlertidige basaler lastes opp til NS</string>
+    <string name="ns_upload">Last opp data til NS</string>
+    <string name="ns_receive_profile_store">Hent lagrede profiler</string>
 </resources>
