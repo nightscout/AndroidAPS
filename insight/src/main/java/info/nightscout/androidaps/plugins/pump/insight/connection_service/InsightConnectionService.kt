@@ -41,6 +41,8 @@ import java.io.IOException
 import java.security.SecureRandom
 import java.util.*
 import javax.inject.Inject
+import kotlin.math.max
+import kotlin.math.min
 
 class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback, InputStreamReader.Callback, OutputStreamWriter.Callback {
 
@@ -86,21 +88,21 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
 
     private fun increaseRecoveryDuration() {
         var maxRecoveryDuration = sp.getInt(R.string.key_insight_max_recovery_duration, 20).toLong()
-        maxRecoveryDuration = Math.min(maxRecoveryDuration, 20)
-        maxRecoveryDuration = Math.max(maxRecoveryDuration, 0)
+        maxRecoveryDuration = min(maxRecoveryDuration, 20)
+        maxRecoveryDuration = max(maxRecoveryDuration, 0)
         var minRecoveryDuration = sp.getInt(R.string.key_insight_min_recovery_duration, 5).toLong()
-        minRecoveryDuration = Math.min(minRecoveryDuration, 20)
-        minRecoveryDuration = Math.max(minRecoveryDuration, 0)
+        minRecoveryDuration = min(minRecoveryDuration, 20)
+        minRecoveryDuration = max(minRecoveryDuration, 0)
         recoveryDuration += 1000
-        recoveryDuration = Math.max(recoveryDuration, minRecoveryDuration * 1000)
-        recoveryDuration = Math.min(recoveryDuration, maxRecoveryDuration * 1000)
+        recoveryDuration = max(recoveryDuration, minRecoveryDuration * 1000)
+        recoveryDuration = min(recoveryDuration, maxRecoveryDuration * 1000)
     }
 
-    val pumpFirmwareVersions: FirmwareVersions?
+    val pumpFirmwareVersions: FirmwareVersions?             // pairingDataStorage is a lateinit var
         get() = pairingDataStorage.firmwareVersions
-    val pumpSystemIdentification: SystemIdentification?
+    val pumpSystemIdentification: SystemIdentification?     // pairingDataStorage is a lateinit var
         get() = pairingDataStorage.systemIdentification
-    val bluetoothAddress: String?
+    val bluetoothAddress: String?                           // pairingDataStorage is a lateinit var
         get() = pairingDataStorage.macAddress
 
     @Synchronized fun registerStateCallback(stateCallback: StateCallback) {
@@ -128,7 +130,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
         handleException(SatlPairingRejectedException())
     }
 
-    @get:Synchronized val isPaired: Boolean
+    @get:Synchronized val isPaired: Boolean             // pairingDataStorage is a lateinit var
         get() = pairingDataStorage.paired
 
     @Synchronized fun <T : AppLayerMessage?> requestMessage(message: T): MessageRequest<T> {
@@ -213,8 +215,8 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
                 cleanup(true)
             } else if (state !== InsightState.DISCONNECTED) {
                 var disconnectTimeout = sp.getInt(R.string.key_insight_disconnect_delay, 5).toLong()
-                disconnectTimeout = Math.min(disconnectTimeout, 15)
-                disconnectTimeout = Math.max(disconnectTimeout, 0)
+                disconnectTimeout = min(disconnectTimeout, 15)
+                disconnectTimeout = max(disconnectTimeout, 0)
                 aapsLogger.info(LTag.PUMP, "Last connection lock released, will disconnect in $disconnectTimeout seconds")
                 disconnectTimer = DelayedActionThread.runDelayed("Disconnect Timer", disconnectTimeout * 1000) { disconnect() }
             }
@@ -236,9 +238,9 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
         inputStreamReader = null
         outputStreamWriter?.close()
         outputStreamWriter = null
-        connectionEstablisher?.run {
+        connectionEstablisher?.let {
             if (closeSocket) {
-                close(closeSocket)
+                it.close(closeSocket)
                 bluetoothSocket = null
             }
         }
@@ -369,13 +371,13 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
     private fun prepareSatlMessage(satlMessage: SatlMessage): ByteArray {
         satlMessage.commID = pairingDataStorage.commId
         val nonce = pairingDataStorage.lastNonceSent
-        if (nonce != null) {
-            nonce.increment()
-            pairingDataStorage.lastNonceSent = nonce
-            satlMessage.nonce = nonce
+        nonce?.let {
+            it.increment()
+            pairingDataStorage.lastNonceSent = it
+            satlMessage.nonce = it
         }
         val serialized = satlMessage.serialize(satlMessage.javaClass, pairingDataStorage.outgoingKey)
-        if (timeoutTimer != null) timeoutTimer!!.interrupt()
+        timeoutTimer?.interrupt()
         timeoutTimer = DelayedActionThread.runDelayed("TimeoutTimer", RESPONSE_TIMEOUT) {
             timeoutTimer = null
             handleException(TimeoutException())
