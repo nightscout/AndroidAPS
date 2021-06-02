@@ -26,17 +26,17 @@ class DanaRsMessageHashTableTest : DanaRSTestBase() {
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is DanaRS_Packet) {
+            if (it is DanaRSPacket) {
                 it.aapsLogger = aapsLogger
                 it.dateUtil = dateUtil
             }
-            if (it is DanaRS_Packet_Bolus_Set_Step_Bolus_Start) {
+            if (it is DanaRSPacketBolusSetStepBolusStart) {
                 it.constraintChecker = constraintChecker
             }
-            if (it is DanaRS_Packet_Bolus_Set_Step_Bolus_Start) {
+            if (it is DanaRSPacketBolusSetStepBolusStart) {
                 it.danaPump = danaPump
             }
-            if (it is DanaRS_Packet_APS_History_Events) {
+            if (it is DanaRSPacketAPSHistoryEvents) {
                 it.danaPump = danaPump
             }
         }
@@ -47,8 +47,8 @@ class DanaRsMessageHashTableTest : DanaRSTestBase() {
         `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(Constraint(0.0))
 
         val danaRSMessageHashTable = DanaRSMessageHashTable(packetInjector)
-        val forTesting: DanaRS_Packet = DanaRS_Packet_APS_Set_Event_History(packetInjector, info.nightscout.androidaps.dana.DanaPump.CARBS, 0, 0, 0)
-        val testPacket: DanaRS_Packet = danaRSMessageHashTable.findMessage(forTesting.command)
-        Assert.assertEquals(BleEncryption.DANAR_PACKET__OPCODE__APS_SET_EVENT_HISTORY.toLong(), testPacket.getOpCode().toLong())
+        val forTesting: DanaRSPacket = DanaRSPacketAPSSetEventHistory(packetInjector, info.nightscout.androidaps.dana.DanaPump.CARBS, 0, 0, 0)
+        val testPacket: DanaRSPacket = danaRSMessageHashTable.findMessage(forTesting.command)
+        Assert.assertEquals(BleEncryption.DANAR_PACKET__OPCODE__APS_SET_EVENT_HISTORY.toLong(), testPacket.opCode.toLong())
     }
 }

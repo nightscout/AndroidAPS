@@ -19,7 +19,7 @@ public enum PodStatus {
     DEACTIVATED((byte) 0x0f),
     UNKNOWN((byte) 0xff);
 
-    private byte value;
+    private final byte value;
 
     PodStatus(byte value) {
         this.value = value;

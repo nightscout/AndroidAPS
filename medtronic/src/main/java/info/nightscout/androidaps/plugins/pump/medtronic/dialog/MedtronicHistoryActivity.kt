@@ -84,10 +84,6 @@ class MedtronicHistoryActivity : DaggerActivity() {
         manualChange = false
     }
 
-    override fun onPause() {
-        super.onPause()
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.medtronic_history_activity)
@@ -96,17 +92,17 @@ class MedtronicHistoryActivity : DaggerActivity() {
         recyclerView = findViewById(R.id.medtronic_history_recyclerview)
         recyclerView.setHasFixedSize(true)
         llm = LinearLayoutManager(this)
-        recyclerView.setLayoutManager(llm)
+        recyclerView.layoutManager = llm
         recyclerViewAdapter = RecyclerViewAdapter(filteredHistoryList)
-        recyclerView.setAdapter(recyclerViewAdapter)
-        statusView.setVisibility(View.GONE)
+        recyclerView.adapter = recyclerViewAdapter
+        statusView.visibility = View.GONE
         typeListFull = getTypeList(PumpHistoryEntryGroup.getTranslatedList(resourceHelper))
         val spinnerAdapter = ArrayAdapter(this, R.layout.spinner_centered, typeListFull)
-        historyTypeSpinner.setAdapter(spinnerAdapter)
-        historyTypeSpinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+        historyTypeSpinner.adapter = spinnerAdapter
+        historyTypeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
                 if (manualChange) return
-                val selected = historyTypeSpinner.getSelectedItem() as TypeList
+                val selected = historyTypeSpinner.selectedItem as TypeList
                 showingType = selected
                 selectedGroup = selected.entryGroup
                 filterHistory(selectedGroup)
@@ -116,7 +112,7 @@ class MedtronicHistoryActivity : DaggerActivity() {
                 if (manualChange) return
                 filterHistory(PumpHistoryEntryGroup.All)
             }
-        })
+        }
     }
 
     private fun getTypeList(list: List<PumpHistoryEntryGroup>): List<TypeList> {

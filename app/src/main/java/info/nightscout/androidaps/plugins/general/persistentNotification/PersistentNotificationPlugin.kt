@@ -171,7 +171,7 @@ class PersistentNotificationPlugin @Inject constructor(
             val msgReadPendingIntent = PendingIntent.getBroadcast(context,
                 notificationHolder.notificationID,
                 msgReadIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT)
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
             val msgReplyIntent = Intent()
                 .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
                 .setAction(REPLY_ACTION)
@@ -181,7 +181,7 @@ class PersistentNotificationPlugin @Inject constructor(
                 context,
                 notificationHolder.notificationID,
                 msgReplyIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT)
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
             // Build a RemoteInput for receiving voice input from devices
             val remoteInput = RemoteInput.Builder(EXTRA_VOICE_REPLY).build()
             // Create the UnreadConversation

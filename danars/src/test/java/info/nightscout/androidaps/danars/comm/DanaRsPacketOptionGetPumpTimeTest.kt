@@ -14,18 +14,18 @@ class DanaRsPacketOptionGetPumpTimeTest : DanaRSTestBase() {
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is DanaRS_Packet) {
+            if (it is DanaRSPacket) {
                 it.aapsLogger = aapsLogger
                 it.dateUtil = dateUtil
             }
-            if (it is DanaRS_Packet_Option_Get_Pump_Time) {
+            if (it is DanaRSPacketOptionGetPumpTime) {
                 it.danaPump = danaPump
             }
         }
     }
 
     @Test fun runTest() {
-        val packet = DanaRS_Packet_Option_Get_Pump_Time(packetInjector)
+        val packet = DanaRSPacketOptionGetPumpTime(packetInjector)
         val array = createArray(8, 0.toByte()) // 6 + 2
         putByteToArray(array, 0, 19) // year 2019
         putByteToArray(array, 1, 2) // month february

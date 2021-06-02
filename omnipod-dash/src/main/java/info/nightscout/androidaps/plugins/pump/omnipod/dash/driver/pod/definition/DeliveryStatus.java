@@ -9,7 +9,7 @@ public enum DeliveryStatus {
     BOLUS_AND_TEMP_BASAL_ACTIVE((byte) 0x06),
     UNKNOWN((byte) 0xff);
 
-    private byte value;
+    private final byte value;
 
     DeliveryStatus(byte value) {
         this.value = value;

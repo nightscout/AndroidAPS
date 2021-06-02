@@ -16,7 +16,7 @@ class DanaRsPacketBasalGetBasalRateTest : DanaRSTestBase() {
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is DanaRS_Packet_Basal_Get_Basal_Rate) {
+            if (it is DanaRSPacketBasalGetBasalRate) {
                 it.aapsLogger = aapsLogger
                 it.rxBus = rxBus
                 it.resourceHelper = resourceHelper
@@ -26,7 +26,7 @@ class DanaRsPacketBasalGetBasalRateTest : DanaRSTestBase() {
     }
 
     @Test fun runTest() {
-        val packet = DanaRS_Packet_Basal_Get_Basal_Rate(packetInjector)
+        val packet = DanaRSPacketBasalGetBasalRate(packetInjector)
         // test message decoding
         // rate is 0.01
         val array = ByteArray(100)

@@ -13,14 +13,14 @@ class DanaRsPacketBasalSetSuspendOnTest : DanaRSTestBase() {
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is DanaRS_Packet_Basal_Set_Suspend_On) {
+            if (it is DanaRSPacketBasalSetSuspendOn) {
                 it.aapsLogger = aapsLogger
             }
         }
     }
 
     @Test fun runTest() {
-        val packet = DanaRS_Packet_Basal_Set_Suspend_On(packetInjector)
+        val packet = DanaRSPacketBasalSetSuspendOn(packetInjector)
         // test message decoding
         packet.handleMessage(byteArrayOf(0.toByte(), 0.toByte(), 0.toByte()))
         Assert.assertEquals(false, packet.failed)

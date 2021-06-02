@@ -5,14 +5,14 @@ import androidx.annotation.NonNull;
 import java.nio.ByteBuffer;
 
 public class AlertConfiguration implements Encodable {
-    private AlertSlot slot;
-    private boolean enabled;
-    private short durationInMinutes;
-    private boolean autoOff;
-    private AlertTriggerType triggerType;
-    private short offsetInMinutesOrThresholdInMicroLiters;
-    private BeepType beepType;
-    private BeepRepetitionType beepRepetition;
+    private final AlertSlot slot;
+    private final boolean enabled;
+    private final short durationInMinutes;
+    private final boolean autoOff;
+    private final AlertTriggerType triggerType;
+    private final short offsetInMinutesOrThresholdInMicroLiters;
+    private final BeepType beepType;
+    private final BeepRepetitionType beepRepetition;
 
     public AlertConfiguration(AlertSlot slot, boolean enabled, short durationInMinutes, boolean autoOff, AlertTriggerType triggerType, short offsetInMinutesOrThresholdInMicroLiters, BeepType beepType, BeepRepetitionType beepRepetition) {
         this.slot = slot;

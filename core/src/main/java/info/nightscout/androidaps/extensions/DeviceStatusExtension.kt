@@ -20,7 +20,7 @@ fun DeviceStatus.toJson(dateUtil: DateUtil): JSONObject =
             it.put("openaps", JSONObject().also { openaps ->
                 if (enacted != null) openaps.put("enacted", JSONObject(enacted))
                 if (suggested != null) openaps.put("suggested", JSONObject(suggested))
-                if (iob != null) openaps.put("iob", iob)
+                if (iob != null) openaps.put("iob", JSONObject(iob))
             })
             if (uploaderBattery != 0) it.put("uploaderBattery", uploaderBattery)
             if (configuration != null) it.put("configuration", JSONObject(configuration))

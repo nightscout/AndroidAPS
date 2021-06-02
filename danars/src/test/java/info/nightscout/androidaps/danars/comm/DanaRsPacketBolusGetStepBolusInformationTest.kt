@@ -14,18 +14,18 @@ class DanaRsPacketBolusGetStepBolusInformationTest : DanaRSTestBase() {
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is DanaRS_Packet) {
+            if (it is DanaRSPacket) {
                 it.aapsLogger = aapsLogger
                 it.dateUtil = dateUtil
             }
-            if (it is DanaRS_Packet_Bolus_Get_Step_Bolus_Information) {
+            if (it is DanaRSPacketBolusGetStepBolusInformation) {
                 it.danaPump = danaPump
             }
         }
     }
 
     @Test fun runTest() {
-        val packet = DanaRS_Packet_Bolus_Get_Step_Bolus_Information(packetInjector)
+        val packet = DanaRSPacketBolusGetStepBolusInformation(packetInjector)
 
         val array = createArray(13, 0.toByte()) // 11 + 2
         putByteToArray(array, 0, 2) // error 2

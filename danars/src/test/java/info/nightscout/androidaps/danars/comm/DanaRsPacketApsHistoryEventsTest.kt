@@ -30,11 +30,11 @@ class DanaRsPacketApsHistoryEventsTest : DanaRSTestBase() {
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is DanaRS_Packet) {
+            if (it is DanaRSPacket) {
                 it.aapsLogger = aapsLogger
                 it.dateUtil = dateUtil
             }
-            if (it is DanaRS_Packet_APS_History_Events) {
+            if (it is DanaRSPacketAPSHistoryEvents) {
                 it.rxBus = rxBus
                 it.resourceHelper = resourceHelper
                 it.pumpSync = pumpSync
@@ -49,9 +49,9 @@ class DanaRsPacketApsHistoryEventsTest : DanaRSTestBase() {
     @Test fun runTest() {
         val now = dateUtil.now()
 
-        val testPacket = DanaRS_Packet_APS_History_Events(packetInjector, now)
+        val testPacket = DanaRSPacketAPSHistoryEvents(packetInjector, now)
         // test getRequestedParams
-        val returnedValues = testPacket.requestParams
+        val returnedValues = testPacket.getRequestParams()
         val expectedValues = getCalender(now)
         //year
         Assert.assertEquals(expectedValues[0], returnedValues[0])

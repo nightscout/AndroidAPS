@@ -109,7 +109,7 @@ class MedtronicConverter @Inject constructor(
         }
     }
 
-    public fun decodeSettingsLoop(rd: ByteArray): Map<String, PumpSettingDTO> {
+    fun decodeSettingsLoop(rd: ByteArray): Map<String, PumpSettingDTO> {
         val map: MutableMap<String, PumpSettingDTO> = HashMap()
         addSettingToMap("PCFG_MAX_BOLUS", "" + decodeMaxBolus(rd), PumpConfigurationGroup.Bolus, map)
         addSettingToMap(

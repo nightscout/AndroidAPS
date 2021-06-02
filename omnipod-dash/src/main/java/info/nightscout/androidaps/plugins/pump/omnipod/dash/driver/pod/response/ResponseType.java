@@ -7,7 +7,7 @@ public enum ResponseType {
     NAK_RESPONSE((byte) 0x06),
     UNKNOWN((byte) 0xff);
 
-    private byte value;
+    private final byte value;
 
     ResponseType(byte value) {
         this.value = value;
@@ -37,7 +37,7 @@ public enum ResponseType {
         STATUS_RESPONSE_PAGE_81((byte) 0x51),
         UNKNOWN((byte) 0xff);
 
-        private byte value;
+        private final byte value;
 
         AdditionalStatusResponseType(byte value) {
             this.value = value;
@@ -62,7 +62,7 @@ public enum ResponseType {
         SET_UNIQUE_ID_RESPONSE((byte) 0x1b),
         UNKNOWN((byte) 0xff);
 
-        private byte length;
+        private final byte length;
 
         ActivationResponseType(byte length) {
             this.length = length;
