@@ -68,8 +68,6 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
     private val buffer = ByteBuf(BUFFER_SIZE)
     @get:Synchronized var verificationString: String? = null
         private set
-    private var keyPair: KeyPair? = null
-    private var randomBytes: ByteArray? = null
     private val messageQueue = MessageQueue()
     private val activatedServices: MutableList<Service?> = ArrayList()
     var lastDataTime: Long = 0
@@ -79,18 +77,12 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
     @get:Synchronized var recoveryDuration: Long = 0
         private set
     private var timeoutDuringHandshakeCounter = 0
-    fun getKeyPair(): KeyPair? {
-        if (keyPair == null) keyPair = Cryptograph.generateRSAKey()
-        return keyPair
-    }
 
-    fun getRandomBytes(): ByteArray {
-        if (randomBytes == null) {
-            randomBytes = ByteArray(28)
-            SecureRandom().nextBytes(randomBytes)
-        }
-        return randomBytes!!
-    }
+    private var _keyPair: KeyPair? = null
+    private val keyPair: KeyPair = _keyPair ?: Cryptograph.generateRSAKey().also { _keyPair = it }
+
+    private var _randomBytes: ByteArray? = null
+    val randomBytes: ByteArray = _randomBytes ?: ByteArray(28).also {  _randomBytes = it; SecureRandom().nextBytes(_randomBytes) }
 
     private fun increaseRecoveryDuration() {
         var maxRecoveryDuration = sp.getInt(R.string.key_insight_max_recovery_duration, 20).toLong()
@@ -255,8 +247,8 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
         timeoutTimer = null
         buffer.clear()
         verificationString = null
-        keyPair = null
-        randomBytes = null
+        _keyPair = null
+        _randomBytes = null
         activatedServices.clear()
         if (!pairingDataStorage.paired) {
             bluetoothSocket = null
@@ -344,10 +336,8 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
     @Synchronized override fun onConnectionSucceed() {
         try {
             recoveryDuration = 0
-            inputStreamReader = InputStreamReader(bluetoothSocket!!.inputStream, this)
-            outputStreamWriter = OutputStreamWriter(bluetoothSocket!!.outputStream, this)
-            inputStreamReader?.start()
-            outputStreamWriter?.start()
+            inputStreamReader = InputStreamReader(bluetoothSocket!!.inputStream, this).also { it.start() }
+            outputStreamWriter = OutputStreamWriter(bluetoothSocket!!.outputStream, this).also { it.start() }
             if (pairingDataStorage.paired) {
                 setState(InsightState.SATL_SYN_REQUEST)
                 sendSatlMessage(SynRequest())
@@ -421,9 +411,10 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
             handleException(ReceivedPacketInInvalidStateException())
             return
         }
-        keyRequest = KeyRequest()
-        getKeyPair()?.run { keyRequest?.setPreMasterKey(publicKeyBytes) }
-        keyRequest?.setRandomBytes(getRandomBytes())
+        keyRequest = KeyRequest().also {
+            it.setPreMasterKey(keyPair.publicKeyBytes)
+            it.setRandomBytes(randomBytes)
+        }
         setState(InsightState.SATL_KEY_REQUEST)
         sendSatlMessage(keyRequest)
     }
@@ -435,12 +426,12 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
         }
         try {
             val derivedKeys = Cryptograph.deriveKeys(Cryptograph.combine(keyRequest!!.satlContent, keyResponse.satlContent),
-                Cryptograph.decryptRSA(getKeyPair()!!.privateKey, keyResponse.preMasterSecret),
-                getRandomBytes(),
+                Cryptograph.decryptRSA(keyPair.privateKey, keyResponse.preMasterSecret),
+                randomBytes,
                 keyResponse.randomData)
             keyRequest = null
-            randomBytes = null
-            keyPair = null
+            _randomBytes = null
+            _keyPair = null
             verificationString = derivedKeys.verificationString
             pairingDataStorage.commId = keyResponse.commID
             pairingDataStorage.outgoingKey = derivedKeys.outgoingKey
