@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="info.nightscout.androidaps.insight">
 
+    <uses-permission android:name="android.permission.VIBRATE" />
     <application>
         <activity
             android:name="info.nightscout.androidaps.plugins.pump.insight.activities.InsightPairingActivity"
