@@ -166,11 +166,13 @@ open class LoopPlugin @Inject constructor(
     }
 
     override val isSuspended: Boolean
-        get()  = repository.getOfflineEventActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing
+        get() = repository.getOfflineEventActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing
 
     override var enabled: Boolean
         get() = isEnabled()
-        set(value) { setPluginEnabled(PluginType.LOOP, value)}
+        set(value) {
+            setPluginEnabled(PluginType.LOOP, value)
+        }
 
     val isLGS: Boolean
         get() {
@@ -210,6 +212,17 @@ open class LoopPlugin @Inject constructor(
     }
 
     @Synchronized
+    fun isEmptyQueue(): Boolean {
+        val maxMinutes = 2L
+        val start = dateUtil.now()
+        while (start + T.mins(maxMinutes).msecs() > dateUtil.now()) {
+            if (commandQueue.size() == 0 && commandQueue.performing() == null) return true
+            SystemClock.sleep(100)
+        }
+        return false
+    }
+
+    @Synchronized
     operator fun invoke(initiator: String, allowNotification: Boolean, tempBasalFallback: Boolean) {
         try {
             aapsLogger.debug(LTag.APS, "invoke from $initiator")
@@ -246,6 +259,12 @@ open class LoopPlugin @Inject constructor(
                 rxBus.send(EventLoopSetLastRunGui(resourceHelper.gs(R.string.noapsselected)))
                 return
             } else rxBus.send(EventLoopInvoked())
+
+            if (!isEmptyQueue()) {
+                aapsLogger.debug(LTag.APS, resourceHelper.gs(R.string.pumpbusy))
+                rxBus.send(EventLoopSetLastRunGui(resourceHelper.gs(R.string.pumpbusy)))
+                return
+            }
 
             // Prepare for pumps using % basals
             if (pump.pumpDescription.tempBasalStyle == PumpDescription.PERCENT && allowPercentage()) {
@@ -357,8 +376,7 @@ open class LoopPlugin @Inject constructor(
                         }
                     }
                     if (resultAfterConstraints.isChangeRequested
-                        && !commandQueue.bolusInQueue()
-                        && !commandQueue.isRunning(Command.CommandType.BOLUS)) {
+                        && !commandQueue.bolusInQueue()) {
                         val waiting = PumpEnactResult(injector)
                         waiting.queued = true
                         if (resultAfterConstraints.tempBasalRequested) lastRun.tbrSetByPump = waiting
