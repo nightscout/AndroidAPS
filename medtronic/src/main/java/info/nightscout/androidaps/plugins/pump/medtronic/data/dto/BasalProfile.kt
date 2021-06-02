@@ -314,7 +314,7 @@ class BasalProfile {
         fun isBasalProfileByHourUndefined(basalByHour: DoubleArray): Boolean {
             for (i in 0..23) {
                 if (basalByHour[i] > 0.0) {
-                    return false;
+                    return false
                 }
             }
             return true

@@ -92,7 +92,7 @@ abstract class MedtronicHistoryDecoder<T : MedtronicHistoryEntry?>(var aapsLogge
                     StringUtil.appendToStringBuilder(sb, key1, ", ")
                 }
                 val spaces = StringUtils.repeat(" ", 14 - key.name.length)
-                aapsLogger.info(LTag.PUMPCOMM, "    ${key.name}$spaces - ${value.size}. Elements: ${sb.toString()}")
+                aapsLogger.info(LTag.PUMPCOMM, "    ${key.name}$spaces - ${value.size}. Elements: $sb")
             } else {
                 aapsLogger.info(LTag.PUMPCOMM, "    ${key.name}             - ${value.size}")
             }

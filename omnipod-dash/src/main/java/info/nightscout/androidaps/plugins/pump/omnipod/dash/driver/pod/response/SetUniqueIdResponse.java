@@ -6,25 +6,25 @@ import java.util.Arrays;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodStatus;
 
 public final class SetUniqueIdResponse extends ActivationResponseBase {
-    private byte messageType;
-    private short messageLength;
-    private short pulseVolumeInTenThousandthMicroLiter;
-    private short pumpRate;
-    private short primePumpRate;
-    private short numberOfEngagingClutchDrivePulses;
-    private short numberOfPrimePulses;
-    private short podExpirationTimeInHours;
-    private short firmwareVersionMajor;
-    private short firmwareVersionMinor;
-    private short firmwareVersionInterim;
-    private short bleVersionMajor;
-    private short bleVersionMinor;
-    private short bleVersionInterim;
-    private short productId;
-    private PodStatus podStatus;
-    private long lotNumber;
-    private long podSequenceNumber;
-    private long uniqueIdReceivedInCommand;
+    private final byte messageType;
+    private final short messageLength;
+    private final short pulseVolumeInTenThousandthMicroLiter;
+    private final short pumpRate;
+    private final short primePumpRate;
+    private final short numberOfEngagingClutchDrivePulses;
+    private final short numberOfPrimePulses;
+    private final short podExpirationTimeInHours;
+    private final short firmwareVersionMajor;
+    private final short firmwareVersionMinor;
+    private final short firmwareVersionInterim;
+    private final short bleVersionMajor;
+    private final short bleVersionMinor;
+    private final short bleVersionInterim;
+    private final short productId;
+    private final PodStatus podStatus;
+    private final long lotNumber;
+    private final long podSequenceNumber;
+    private final long uniqueIdReceivedInCommand;
 
     public SetUniqueIdResponse(byte[] encoded) {
         super(ResponseType.ActivationResponseType.SET_UNIQUE_ID_RESPONSE, encoded);

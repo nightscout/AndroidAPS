@@ -13,16 +13,16 @@ class DanaRsPacketGeneralSetHistoryUploadModeTest : DanaRSTestBase() {
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is DanaRS_Packet_General_Set_History_Upload_Mode) {
+            if (it is DanaRSPacketGeneralSetHistoryUploadMode) {
                 it.aapsLogger = aapsLogger
             }
         }
     }
 
     @Test fun runTest() {
-        val packet = DanaRS_Packet_General_Set_History_Upload_Mode(packetInjector, 1)
+        val packet = DanaRSPacketGeneralSetHistoryUploadMode(packetInjector, 1)
         // test params
-        Assert.assertEquals(1.toByte(), packet.requestParams[0])
+        Assert.assertEquals(1.toByte(), packet.getRequestParams()[0])
         // test message decoding
         packet.handleMessage(createArray(3, 0.toByte()))
         Assert.assertEquals(false, packet.failed)

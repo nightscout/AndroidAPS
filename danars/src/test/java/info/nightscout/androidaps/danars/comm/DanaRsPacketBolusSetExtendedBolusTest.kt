@@ -13,16 +13,16 @@ class DanaRsPacketBolusSetExtendedBolusTest : DanaRSTestBase() {
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is DanaRS_Packet_Bolus_Set_Extended_Bolus) {
+            if (it is DanaRSPacketBolusSetExtendedBolus) {
                 it.aapsLogger = aapsLogger
             }
         }
     }
 
     @Test fun runTest() {
-        val packet = DanaRS_Packet_Bolus_Set_Extended_Bolus(packetInjector, 1.0, 1)
+        val packet = DanaRSPacketBolusSetExtendedBolus(packetInjector, 1.0, 1)
         // test params
-        val testparams = packet.requestParams
+        val testparams = packet.getRequestParams()
         Assert.assertEquals(100.toByte(), testparams[0])
         Assert.assertEquals(1.toByte(), testparams[2])
         // test message decoding

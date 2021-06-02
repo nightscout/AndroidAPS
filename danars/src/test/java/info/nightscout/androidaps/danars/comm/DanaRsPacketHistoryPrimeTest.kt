@@ -13,18 +13,18 @@ class DanaRsPacketHistoryPrimeTest : DanaRSTestBase() {
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is DanaRS_Packet) {
+            if (it is DanaRSPacket) {
                 it.aapsLogger = aapsLogger
                 it.dateUtil = dateUtil
             }
-            if (it is DanaRS_Packet_History_Prime) {
+            if (it is DanaRSPacketHistoryPrime) {
                 it.rxBus = rxBus
             }
         }
     }
 
     @Test fun runTest() {
-        val packet = DanaRS_Packet_History_Prime(packetInjector, System.currentTimeMillis())
+        val packet = DanaRSPacketHistoryPrime(packetInjector, System.currentTimeMillis())
         Assert.assertEquals("REVIEW__PRIME", packet.friendlyName)
     }
 }

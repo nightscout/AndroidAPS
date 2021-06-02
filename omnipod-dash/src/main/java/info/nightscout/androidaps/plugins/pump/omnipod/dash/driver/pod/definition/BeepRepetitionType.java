@@ -8,7 +8,7 @@ public enum BeepRepetitionType {
     XXX4((byte) 0x06), // Used in imminent pod expiration alert
     XXX5((byte) 0x08); // Used in lump of coal alert
 
-    private byte value;
+    private final byte value;
 
     BeepRepetitionType(byte value) {
         this.value = value;

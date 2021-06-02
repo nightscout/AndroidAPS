@@ -63,7 +63,9 @@ class MaintenanceFragment : DaggerFragment() {
         binding.logSend.setOnClickListener { maintenancePlugin.sendLogs() }
         binding.logDelete.setOnClickListener {
             uel.log(Action.DELETE_LOGS, Sources.Maintenance)
-            maintenancePlugin.deleteLogs()
+            Thread {
+                maintenancePlugin.deleteLogs(5)
+            }.start()
         }
         binding.navResetdb.setOnClickListener {
             activity?.let { activity ->

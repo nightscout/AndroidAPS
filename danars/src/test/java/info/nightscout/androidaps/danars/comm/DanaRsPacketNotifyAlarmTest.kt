@@ -17,7 +17,7 @@ class DanaRsPacketNotifyAlarmTest : DanaRSTestBase() {
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is DanaRS_Packet_Notify_Alarm) {
+            if (it is DanaRSPacketNotifyAlarm) {
                 it.aapsLogger = aapsLogger
                 it.rxBus = rxBus
                 it.resourceHelper = resourceHelper
@@ -28,9 +28,9 @@ class DanaRsPacketNotifyAlarmTest : DanaRSTestBase() {
     }
 
     @Test fun runTest() {
-        val packet = DanaRS_Packet_Notify_Alarm(packetInjector)
+        val packet = DanaRSPacketNotifyAlarm(packetInjector)
         // test params
-        Assert.assertEquals(null, packet.requestParams)
+        Assert.assertEquals(0, packet.getRequestParams().size)
         // test message decoding
         packet.handleMessage(createArray(17, 0x01.toByte()))
         Assert.assertEquals(false, packet.failed)

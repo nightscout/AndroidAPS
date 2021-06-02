@@ -32,7 +32,7 @@ public enum NakErrorType {
     INVALID_CRC((byte) 0x1d),
     UNKNOWN((byte) 0xff);
 
-    private byte value;
+    private final byte value;
 
     NakErrorType(byte value) {
         this.value = value;

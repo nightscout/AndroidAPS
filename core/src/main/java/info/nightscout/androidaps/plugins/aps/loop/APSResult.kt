@@ -30,6 +30,7 @@ import kotlin.math.max
 /**
  * Created by mike on 09.06.2016.
  */
+@Suppress("LeakingThis")
 open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
 
     @Inject lateinit var aapsLogger: AAPSLogger
@@ -42,7 +43,7 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
     @Inject lateinit var dateUtil: DateUtil
 
     var date: Long = 0
-    var reason: String? = null
+    var reason: String = ""
     var rate = 0.0
     var percent = 0
     var usePercent = false
@@ -102,16 +103,16 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
         val pump = activePlugin.activePump
         if (isChangeRequested) {
             // rate
-            var ret: String = if (rate == 0.0 && duration == 0) "${resourceHelper.gs(R.string.canceltemp)}\n"
+            var ret: String = if (rate == 0.0 && duration == 0) "${resourceHelper.gs(R.string.canceltemp)} "
             else if (rate == -1.0) "${resourceHelper.gs(R.string.let_temp_basal_run)}\n"
-            else if (usePercent) "${resourceHelper.gs(R.string.rate)}: ${DecimalFormatter.to2Decimal(percent.toDouble())}% (${DecimalFormatter.to2Decimal(percent * pump.baseBasalRate / 100.0)} U/h)\n" +
-                "${resourceHelper.gs(R.string.duration)}: ${DecimalFormatter.to2Decimal(duration.toDouble())} min\n"
-            else "${resourceHelper.gs(R.string.rate)}: ${DecimalFormatter.to2Decimal(rate)} U/h (${DecimalFormatter.to2Decimal(rate / pump.baseBasalRate * 100)}%)" +
-                "${resourceHelper.gs(R.string.duration)}: ${DecimalFormatter.to2Decimal(duration.toDouble())} min\n"
+            else if (usePercent) "${resourceHelper.gs(R.string.rate)}: ${DecimalFormatter.to2Decimal(percent.toDouble())}% (${DecimalFormatter.to2Decimal(percent * pump.baseBasalRate / 100.0)} U/h) " +
+                "${resourceHelper.gs(R.string.duration)}: ${DecimalFormatter.to2Decimal(duration.toDouble())} min "
+            else "${resourceHelper.gs(R.string.rate)}: ${DecimalFormatter.to2Decimal(rate)} U/h (${DecimalFormatter.to2Decimal(rate / pump.baseBasalRate * 100)}%) " +
+                "${resourceHelper.gs(R.string.duration)}: ${DecimalFormatter.to2Decimal(duration.toDouble())} min "
             // smb
-            if (smb != 0.0) ret += "SMB: ${DecimalFormatter.toPumpSupportedBolus(smb, activePlugin.activePump, resourceHelper)}\n"
+            if (smb != 0.0) ret += "SMB: ${DecimalFormatter.toPumpSupportedBolus(smb, activePlugin.activePump, resourceHelper)} "
             if (isCarbsRequired) {
-                ret += "$carbsRequiredText\n"
+                ret += "$carbsRequiredText "
             }
 
             // reason
@@ -140,7 +141,7 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
             }
 
             // reason
-            ret += "<b>" + resourceHelper.gs(R.string.reason) + "</b>: " + reason!!.replace("<", "&lt;").replace(">", "&gt;")
+            ret += "<b>" + resourceHelper.gs(R.string.reason) + "</b>: " + reason.replace("<", "&lt;").replace(">", "&gt;")
             return fromHtml(ret)
         }
         return if (isCarbsRequired) {
@@ -156,7 +157,7 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
 
     protected fun doClone(newResult: APSResult) {
         newResult.date = date
-        newResult.reason = if (reason != null) reason else null
+        newResult.reason = reason
         newResult.rate = rate
         newResult.duration = duration
         newResult.tempBasalRequested = tempBasalRequested
@@ -332,12 +333,12 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
                     aapsLogger.debug(LTag.APS, "FALSE: Temp equal")
                     return false
                 }
-                // always report zerotemp
+                // always report zero temp
                 if (percent == 0) {
                     aapsLogger.debug(LTag.APS, "TRUE: Zero temp")
                     return true
                 }
-                // always report hightemp
+                // always report high temp
                 if (pump.pumpDescription.tempBasalStyle == PumpDescription.PERCENT) {
                     val pumpLimit = pump.pumpDescription.pumpType.tbrSettings?.maxDose ?: 0.0
                     if (percent.toDouble() == pumpLimit) {
@@ -368,12 +369,12 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
                     aapsLogger.debug(LTag.APS, "FALSE: Temp equal")
                     return false
                 }
-                // always report zerotemp
+                // always report zero temp
                 if (rate == 0.0) {
                     aapsLogger.debug(LTag.APS, "TRUE: Zero temp")
                     return true
                 }
-                // always report hightemp
+                // always report high temp
                 if (pump.pumpDescription.tempBasalStyle == PumpDescription.ABSOLUTE) {
                     val pumpLimit = pump.pumpDescription.pumpType.tbrSettings?.maxDose ?: 0.0
                     if (rate == pumpLimit) {

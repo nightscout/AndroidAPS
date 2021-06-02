@@ -13,7 +13,7 @@ class DanaRsPacketReviewGetPumpDecRatioTest : DanaRSTestBase() {
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is DanaRS_Packet_Review_Get_Pump_Dec_Ratio) {
+            if (it is DanaRSPacketReviewGetPumpDecRatio) {
                 it.aapsLogger = aapsLogger
                 it.danaPump = danaPump
             }
@@ -21,7 +21,7 @@ class DanaRsPacketReviewGetPumpDecRatioTest : DanaRSTestBase() {
     }
 
     @Test fun runTest() {
-        val packet = DanaRS_Packet_Review_Get_Pump_Dec_Ratio(packetInjector)
+        val packet = DanaRSPacketReviewGetPumpDecRatio(packetInjector)
 
         val array = ByteArray(100)
         putByteToArray(array, 0, 4.toByte())

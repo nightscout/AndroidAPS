@@ -13,18 +13,18 @@ class DanaRsPacketHistoryDailyTest : DanaRSTestBase() {
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is DanaRS_Packet) {
+            if (it is DanaRSPacket) {
                 it.aapsLogger = aapsLogger
                 it.dateUtil = dateUtil
             }
-            if (it is DanaRS_Packet_History_Daily) {
+            if (it is DanaRSPacketHistoryDaily) {
                 it.rxBus = rxBus
             }
         }
     }
 
     @Test fun runTest() {
-        val packet = DanaRS_Packet_History_Daily(packetInjector, System.currentTimeMillis())
+        val packet = DanaRSPacketHistoryDaily(packetInjector, System.currentTimeMillis())
         Assert.assertEquals("REVIEW__DAILY", packet.friendlyName)
     }
 }

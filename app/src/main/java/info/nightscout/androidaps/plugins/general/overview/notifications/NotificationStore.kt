@@ -128,7 +128,7 @@ class NotificationStore @Inject constructor(
     private fun deleteIntent(id: Int): PendingIntent {
         val intent = Intent(context, DismissNotificationService::class.java)
         intent.putExtra("alertID", id)
-        return PendingIntent.getService(context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        return PendingIntent.getService(context, id, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
     fun createNotificationChannel() {

@@ -193,6 +193,7 @@ class NSClientAddUpdateWorker(
                     eventType == TherapyEvent.Type.ANNOUNCEMENT.text ||
                     eventType == TherapyEvent.Type.QUESTION.text ||
                     eventType == TherapyEvent.Type.EXERCISE.text ||
+                    eventType == TherapyEvent.Type.NOTE.text ||
                     eventType == TherapyEvent.Type.PUMP_BATTERY_CHANGE.text ->
                     if (sp.getBoolean(R.string.key_ns_receive_therapy_events, false) || config.NSCLIENT) {
                         therapyEventFromJson(json)?.let { therapyEvent ->
