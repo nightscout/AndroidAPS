@@ -172,6 +172,7 @@ class OmnipodDashManagerImpl @Inject constructor(
                 DefaultStatusResponse::class
             )
         }.doOnComplete {
+            // TODO: remove podStateManager.basalProgram?
             podStateManager.basalProgram = basalProgram
         }
     }

@@ -53,7 +53,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
 
     override val isSuspended: Boolean
         get() = podState.deliveryStatus?.equals(DeliveryStatus.SUSPENDED)
-            ?: true
+            ?: false
 
     override val isPodRunning: Boolean
         get() = podState.podStatus?.isRunning() ?: false
@@ -141,7 +141,11 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         get() = podState.tempBasal
 
     override val tempBasalActive: Boolean
-        get() = tempBasal != null && tempBasal!!.startTime + tempBasal!!.durationInMinutes * 60 * 1000 > System.currentTimeMillis()
+        get() = podState.deliveryStatus in
+            arrayOf(
+                DeliveryStatus.TEMP_BASAL_ACTIVE,
+                DeliveryStatus.BOLUS_AND_TEMP_BASAL_ACTIVE
+            )
 
     override var basalProgram: BasalProgram?
         get() = podState.basalProgram
@@ -230,8 +234,9 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             source.onComplete()
             return@create
         }
-
-        when (getCommandConfirmationFromState()) {
+        val cmdConfirmation = getCommandConfirmationFromState()
+        logger.info(LTag.PUMPCOMM, "Update active command with confirmation: $cmdConfirmation")
+        when (cmdConfirmation) {
             CommandSendingFailure -> {
                 podState.activeCommand = null
                 source.onError(
@@ -255,7 +260,8 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
 
             CommandConfirmationSuccess -> {
                 podState.activeCommand = null
-                source.onSuccess(CommandConfirmed(activeCommand.historyId, false))
+
+                source.onSuccess(CommandConfirmed(activeCommand.historyId, false)) // TODO: remove test
             }
 
             NoActiveCommand -> {
