@@ -17,6 +17,9 @@ internal interface EffectiveProfileSwitchDao : TraceableDao<EffectiveProfileSwit
     @Query("DELETE FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES")
     override fun deleteAllEntries()
 
+    @Query("SELECT id FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES ORDER BY id DESC limit 1")
+    fun getLastId(): Maybe<Long>
+
     @Query("SELECT * FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES WHERE isValid = 1 AND referenceId IS NULL ORDER BY id ASC LIMIT 1")
     fun getOldestEffectiveProfileSwitchRecord(): EffectiveProfileSwitch?
 

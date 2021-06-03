@@ -77,7 +77,7 @@ interface PumpSync {
      * USAGE:
      * Generate unique temporaryId
      * Call before bolus when no pumpId is known (provide timestamp, amount, temporaryId, type, pumpType, pumpSerial)
-     * After reading record from history or completed bolus call syncBolusWithTempId with the same temporaryId provided
+     * After reading record from history or completed bolus call [syncBolusWithTempId] with the same temporaryId provided
      * If syncBolusWithTempId is not called afterwards record remains valid and is calculated towards iob
      *
      * @param timestamp     timestamp of event from pump history
@@ -277,6 +277,61 @@ interface PumpSync {
     fun syncStopTemporaryBasalWithPumpId(timestamp: Long, endPumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean
 
     /**
+     * Create temporary basal with temporary id
+     *
+     * Search for combination of  temporaryId, PumpType, pumpSerial
+     *
+     * If db record doesn't exist, new record is created.
+     * If exists false is returned and data is ignored
+     *
+     * USAGE:
+     * Generate unique temporaryId
+     * Call on setting temporary basal when no pumpId is known (provide timestamp, temporaryId, type, pumpType, pumpSerial)
+     * After reading record from history or completed bolus call [syncTemporaryBasalWithTempId] with the same temporaryId provided
+     * If syncTemporaryBasalWithTempId is not called afterwards record remains valid and is calculated towards iob
+     *
+     * @param timestamp     timestamp of event from pump history
+     * @param rate          TBR rate in U/h or % (value of 100% is equal to no TBR)
+     * @param duration      duration in milliseconds
+     * @param isAbsolute    is TBR in U/h or % ?
+     * @param tempId        pump id from history
+     * @param type          type of TBR, from request sent to the driver
+     * @param pumpType      pump type like PumpType.ACCU_CHEK_COMBO
+     * @param pumpSerial    pump serial number
+     * @return true if new record is created
+     *
+     * see [info.nightscout.androidaps.database.transactions.InsertTemporaryBasalWithTempIdTransaction]
+     **/
+
+    fun addTemporaryBasalWithTempId(timestamp: Long, rate: Double, duration: Long, isAbsolute: Boolean, tempId: Long, type: TemporaryBasalType, pumpType: PumpType, pumpSerial: String): Boolean
+
+    /**
+     * Synchronization of temporary basal with temporary id
+     *
+     * Search for combination of  temporaryId, PumpType, pumpSerial
+     *
+     * If db record doesn't exist data is ignored and false returned.
+     * If exists, data is updated, type and pumpId only if provided
+     * isValid field is preserved
+     *
+     * USAGE:
+     * After reading record from history or completed bolus call syncTemporaryBasalWithTempId and
+     * provide updated timestamp, rate, duration, pumpId (if known), type (if change needed) with the same temporaryId, pumpType, pumpSerial
+     *
+     * @param timestamp     timestamp of event from pump history
+     * @param rate          TBR rate in U/h or % (value of 100% is equal to no TBR)
+     * @param duration      duration in milliseconds
+     * @param isAbsolute    is TBR in U/h or % ?
+     * @param temporaryId   temporary id generated when pump id in not know yet
+     * @param type          type of TBR, from request sent to the driver
+     * @param pumpId        pump id from history
+     * @param pumpType      pump type like PumpType.ACCU_CHEK_COMBO
+     * @param pumpSerial    pump serial number
+     * @return true if record is successfully updated
+     **/
+    fun syncTemporaryBasalWithTempId(timestamp: Long, rate: Double, duration: Long, isAbsolute: Boolean, temporaryId: Long, type: TemporaryBasalType?, pumpId: Long?, pumpType: PumpType, pumpSerial: String): Boolean
+
+    /**
      * Invalidate of temporary basals that failed to start
      * EROS specific, replace by setting duration to zero ????
      *
@@ -284,12 +339,23 @@ interface PumpSync {
      * If db record doesn't exist data is ignored and false returned
      *
      *
-     * @param pumpId     pump id of ending event from history
-     * @param pumpType      pump type like PumpType.ACCU_CHEK_COMBO
-     * @param pumpSerial    pump serial number
+     * @param id            id of temporary basal
      * @return true if running record is found and invalidated
      **/
     fun invalidateTemporaryBasal(id: Long): Boolean
+
+    /**
+     * Invalidate of temporary basals that failed to start
+     * MDT specific
+     *
+     * If exists, isValid is set false
+     * If db record doesn't exist data is ignored and false returned
+     *
+     *
+     * @param temporaryId    temporary id of temporary basal
+     * @return true if running record is found and invalidated
+     **/
+    fun invalidateTemporaryBasalWithTempId(temporaryId: Long): Boolean
 
     /**
      * Synchronization of extended bolus

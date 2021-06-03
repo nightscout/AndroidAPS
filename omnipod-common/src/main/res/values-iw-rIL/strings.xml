@@ -5,7 +5,7 @@
     <string name="omnipod_common_pod_management_title">ניהול פוד</string>
     <string name="omnipod_common_pod_management_heading_actions">פעולות</string>
     <string name="omnipod_common_pod_management_heading_tools">כלים</string>
-    <string name="omnipod_common_pod_management_button_activate_pod">הפעלת פוד</string>
+    <string name="omnipod_common_pod_management_button_activate_pod">הפעל פוד</string>
     <string name="omnipod_common_pod_management_button_deactivate_pod">כבה פוד</string>
     <string name="omnipod_common_pod_management_button_discard_pod">היפטר מהפוד</string>
     <string name="omnipod_common_pod_management_discard_pod_confirmation">אם תזרקו את פוד, לא תוכלו לתקשר איתו יותר. כדאי לעשות את זה רק כאשר כל התקשורת עם הניצן תמיד נכשלת. אם אתם עדיין יכולים לתקשר עם הפוד, אנא השתמשו באפשרות <b>השבתה</b>.\n\n אם ברצונכם להמשיך, אנא הקפידו להסיר את הפוד מהגוף!</string>

@@ -2,7 +2,6 @@ package info.nightscout.androidaps.interfaces
 
 import androidx.collection.ArrayMap
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.ProfileImplOld
 import info.nightscout.androidaps.data.PureProfile
 import info.nightscout.androidaps.extensions.pureProfileFromJson
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -32,6 +31,15 @@ class ProfileStore(val injector: HasAndroidInjector, val data: JSONObject, val d
         return null
     }
 
+    fun getStartDate(): Long {
+        val iso = JsonHelper.safeGetString(data, "startDate") ?: return 0
+        return try {
+            dateUtil.fromISODateString(iso)
+        } catch (e: Exception) {
+            0
+        }
+    }
+
     fun getDefaultProfile(): PureProfile? = getDefaultProfileName()?.let { getSpecificProfile(it) }
     fun getDefaultProfileJson(): JSONObject? = getDefaultProfileName()?.let { getSpecificProfileJson(it) }
 
@@ -53,12 +61,13 @@ class ProfileStore(val injector: HasAndroidInjector, val data: JSONObject, val d
 
     fun getSpecificProfile(profileName: String): PureProfile? {
         var profile: PureProfile? = null
+        val defaultUnits = JsonHelper.safeGetStringAllowNull(data, "units", null)
         getStore()?.let { store ->
             if (store.has(profileName)) {
                 profile = cachedObjects[profileName]
                 if (profile == null) {
                     JsonHelper.safeGetJSONObject(store, profileName, null)?.let { profileObject ->
-                        profile = pureProfileFromJson(profileObject, dateUtil)
+                        profile = pureProfileFromJson(profileObject, dateUtil, defaultUnits)
                         cachedObjects[profileName] = profile
                     }
                 }
@@ -67,8 +76,7 @@ class ProfileStore(val injector: HasAndroidInjector, val data: JSONObject, val d
         return profile
     }
 
-    fun getSpecificProfileJson(profileName: String): JSONObject? {
-        var profile: PureProfile? = null
+    private fun getSpecificProfileJson(profileName: String): JSONObject? {
         getStore()?.let { store ->
             if (store.has(profileName))
                 return JsonHelper.safeGetJSONObject(store, profileName, null)

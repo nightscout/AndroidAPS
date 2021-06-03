@@ -12,7 +12,12 @@ import java.util.TimeZone
         entity = BolusCalculatorResult::class,
         parentColumns = ["id"],
         childColumns = ["referenceId"])],
-    indices = [Index("referenceId"), Index("timestamp")])
+    indices = [
+        Index("referenceId"),
+        Index("timestamp"),
+        Index("id"),
+        Index("isValid")
+    ])
 data class BolusCalculatorResult(
     @PrimaryKey(autoGenerate = true)
     override var id: Long = 0,

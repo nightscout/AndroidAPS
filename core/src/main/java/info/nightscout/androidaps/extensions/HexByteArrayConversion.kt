@@ -18,11 +18,12 @@ fun ByteArray.toHex() : String{
     return result.toString()
 }
 
-fun String.hexStringToByteArray() : ByteArray {
+@kotlin.ExperimentalStdlibApi
+fun String.hexStringToByteArray(): ByteArray {
 
     val result = ByteArray(length / 2)
 
-    val lowerCased = this.toLowerCase(Locale.getDefault())
+    val lowerCased = this.lowercase(Locale.getDefault())
     for (i in 0 until length step 2) {
         val firstIndex = HEX_CHARS.indexOf(lowerCased[i])
         val secondIndex = HEX_CHARS.indexOf(lowerCased[i + 1])

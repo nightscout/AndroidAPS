@@ -27,7 +27,6 @@
     <string name="description_overview">Εμφανίζει την τρέχουσα κατάσταση του κυκλώματός σας και τα πλήκτρα για τις πιο κοινές ενέργειες</string>
     <string name="description_persistent_notification">Εμφανίζει μία τρέχουσα ειδοποίηση με σύντομη επισκόπηση του τι κάνει το κύκλωμα τώρα</string>
     <string name="description_profile_local">Ορίστε ένα προφίλ που είναι διαθέσιμο εκτός σύνδεσης.</string>
-    <string name="description_profile_nightscout">Παρέχει το προφίλ που έχετε ορίσει στο Nightscout</string>
     <string name="description_pump_mdi">Ολοκλήρωση αντλίας για ανθρώπους που κάνουν εντατικοποιημένο σχήμα ενέσεων για την θεραπεία τους</string>
     <string name="description_pump_virtual">Ολοκλήρωση αντλίας για αντλίες που δεν έχουν κανέναν οδηγό ακόμα (Ανοιχτό Κύκλωμα)</string>
     <string name="description_sensitivity_aaps">Η ευαισθησία υπολογίζεται με τον ίδιο τρόπο όπως το Oref0, αλλά μπορείτε να καθορίσετε το χρονικό διάστημα στο παρελθόν. Η ελάχιστη απορρόφηση υδατανθράκων υπολογίζεται από την μέγιστη απορρόφηση υδατανθράκων από τις επιλογές.</string>
@@ -73,7 +72,6 @@
     <string name="sms_delta">Διαφορά:</string>
     <string name="configbuilder">Διαμόρφωση</string>
     <string name="overview">Επισκόπηση</string>
-    <string name="nsprofile">Προφίλ NS</string>
     <string name="treatments">Θεραπείες</string>
     <string name="virtualpump">Εικονική Αντλία</string>
     <string name="careportal">Φροντίδα</string>
@@ -89,7 +87,6 @@
     <string name="configbuilder_general_description">Αυτά είναι μερικά πρόσθετα που μπορεί να βρείτε χρήσιμα.</string>
     <string name="configbuilder_constraints_description">Ποιοι περιορισμοί έχουν εφαρμοστεί;</string>
     <string name="constraints">Περιορισμοί</string>
-    <string name="loop">Κύκλωμα</string>
     <string name="configbuilder_loop">Κύκλωμα</string>
     <string name="configbuilder_loop_description">Χρησιμοποιήστε αυτό για να ενεργοποιήσετε την ενσωμάτωση του κυκλώματος AndroidAPS.</string>
     <string name="loop_aps_label">APS</string>
@@ -218,7 +215,6 @@
     <string name="localprofile_shortname">LP</string>
     <string name="overview_shortname">ΑΡΧΙΚΗ</string>
     <string name="virtualpump_shortname">Εικ. αντλία</string>
-    <string name="profileviewer_shortname">NSPROFILE</string>
     <string name="treatments_shortname">ΘΕΡΑΠ</string>
     <string name="objectives_shortname">ΣΤΟΧΟΙ</string>
     <string name="wear_shortname">WEAR</string>
@@ -305,15 +301,12 @@
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">Δείξε BGI</string>
     <string name="wear_showbgi_summary">Πρόσθεσε BGI στην γραμμή κατάστασης</string>
-    <string name="ns_noupload">Μη φόρτωση στο NS</string>
-    <string name="ns_noupload_summary">Όλα τα δεδομένα που αποστέλλονται στην NS έχουν καταργηθεί. Το AAPS συνδέεται με NS, αλλά δεν γίνεται καμία αλλαγή στα NS</string>
     <string name="overview_extendedbolus_cancel_button">Ακύρωση Εκτεταμμένου bolus</string>
     <string name="ns_alarmoptions">Επιλογές συναγερμού</string>
     <string name="nsalarm_staledatavalue_label">Οριακή τιμή για παλιά δεδομένα [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Επείγουσα οριακή τιμή για παλιά δεδομένα [min]</string>
     <string name="openapsama_autosens_period">Εσωτερικά διαστήματα για autosense [h] </string>
     <string name="openapsama_autosens_period_summary">Ποσότητα ωρών κατά το παρελθόν για ανίχνευση ευαισθησίας (εξαιρείται ο χρόνος απορρόφησης υδατανθράκων)</string>
-    <string name="pump">Αντλία</string>
     <string name="openaps">OpenAPS</string>
     <string name="uploader">Uploader</string>
     <string name="configbuilder_sensitivity">Ανίχνευση ευαισθησίας</string>
@@ -437,7 +430,6 @@
     <string name="do_not_bolus_record_only">Μην κάνετε bolus, μόνο να καταγράφετε</string>
     <string name="category">Κατηγορία</string>
     <string name="subcategory">Υποκατηγορία</string>
-    <string name="ns_autobackfill_summary">Συμπληρώνεται αυτόματα η BG που λείπει από το NS</string>
     <string name="loop_smbsetbypump_label">Το SMB ρυθμίστηκε από την αντλία</string>
     <string name="overview_show_activity">Δραστηριότητα</string>
     <string name="overview_show_sensitivity">Ευαισθησία</string>
@@ -503,7 +495,6 @@
     <string name="virtualpump_type">Τύπος εικονικής αντλίας</string>
     <string name="virtualpump_definition">Ορισμός Αντλίας</string>
     <string name="virtualpump_pump_def">Bolus: Άμεσο=%1$s\nΕκτεταμένο Bolus: [Άμεσο=%2$s, Διάρκεια=%3$smin-%4$sh]\nΒασικός: Άμεσο=%5$s\nTBR: %6$s (με %7$s), Διάρκεια=%8$smin-%9$sh\n%10$s</string>
-    <string name="ns_autobackfill_title">Αυτόματη φόρτωση BG</string>
     <string name="wear_wizard_settings">Ρυθμίσεις Γρήγορου Οδηγού</string>
     <string name="wear_wizard_settings_summary">Υπολογισμοί που περιλαμβάνονται στο αποτέλεσμα του γρήγορου οδηγού:</string>
     <string name="wear_display_settings">Ρυθμίσεις Εμφάνισης</string>
@@ -511,14 +502,12 @@
     <string name="enable_nsclient">Ενεργοποίηση NSClient</string>
     <string name="welcometosetupwizard">Καλώς ήρθατε στον οδηγό εγκατάστασης. Θα σας καθοδηγήσει μέσα από το πρόγραμμα εγκατάστασης\n</string>
     <string name="readstatus">Κατάσταση ανάγνωσης</string>
-    <string name="adjustprofileinns">Αλλαγές πρέπει να γίνουν στο NS</string>
     <string name="exitwizard">Παράλειψη του \"Οδηγού εγκατάστασης\"</string>
     <string name="setupwizard_loop_description">Πατήστε το παρακάτω πλήκτρο για να ενεργοποιήσετε το AndroidAPS για να προτείνει/κάνει αλλαγές στον βασικό ρυθμό</string>
     <string name="setupwizard_sensitivity_description">Η προσθήκη Ευαισθησία χρησιμοποιείται για την ανίχνευση αλλαγών στην ευαισθησία και τον υπολογισμό του COB. Για περισσότερες πληροφορίες εδώ:</string>
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
     <string name="nsclientinfotext">Το NSClient χειρίζεται τη σύνδεση με το Nightscout. Μπορείτε να παραλείψετε αυτό τώρα αλλά δεν θα μπορείτε να ολοκληρώσετε τους Στόχους μέχρι να κάνετε τις ρυθμίσεις του.</string>
     <string name="diawarning">Προσοχή: Τα νέα προφίλ ινσουλίνης απαιτούν DIA τουλάχιστον 5 ωρών. Η DIA 5-6 ώρες στα νέα προφίλ είναι ισοδύναμα με DIA των 3 ωρών στα παλιά προφίλ ινσουλινών.</string>
-    <string name="setupwizard_profile_description">Επιλέξτε μια πηγή του προφίλ. Για ένα παιδί, χρησιμοποιήστε το προφίλ NS. Εάν κανείς δεν σας ακολουθεί μέσω NS, πιθανότατα προτιμάτε Τοπικό προφίλ. Σημειώστε ότι ορίζετε μόνο την πηγή προφίλ. Για να χρησιμοποιείται το προφίλ πρέπει να το ενεργοποιήσετε εκτελώντας το \"Προφίλ αλλαγής\"</string>
     <string name="setupwizard_aps_description">Επιλέξτε έναν από τους διαθέσιμους αλγόριθμους. Ταξινομούνται από το παλαιότερο στον νεότερο. Ένας νεότερος είναι συνήθως καλύτερος και πιο επιθετικός. Επομένως, αν είστε καινούριος στο κλειστό κύκλωμα, θα πρέπει πρώτα να επιλέξετε μόνο το AMA και όχι το τελευταίο. Μην ξεχάσετε να διαβάσετε το εγχειρίδιο του OpenAPS και να κάνετε τις ρυθμίσεις προτού αρχίσετε να το χρησιμοποιείτε.</string>
     <string name="startobjective">Ξεκινήστε τον πρώτο στόχο</string>
     <string name="permission">Άδεια</string>

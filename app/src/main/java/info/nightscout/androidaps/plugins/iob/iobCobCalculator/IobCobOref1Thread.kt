@@ -82,7 +82,7 @@ class IobCobOref1Thread internal constructor(
             //log.debug("Locking calculateSensitivityData");
             val oldestTimeWithData = iobCobCalculatorPlugin.calculateDetectionStart(end, limitDataToOldestAvailable)
             if (bgDataReload) {
-                iobCobCalculatorPlugin.ads.loadBgData(end, repository, aapsLogger, dateUtil)
+                iobCobCalculatorPlugin.ads.loadBgData(end, repository, aapsLogger, dateUtil, rxBus)
                 iobCobCalculatorPlugin.clearCache()
             }
             // work on local copy and set back when finished
@@ -99,7 +99,7 @@ class IobCobOref1Thread internal constructor(
             // start from oldest to be able sub cob
             for (i in bucketedData.size - 4 downTo 0) {
                 val progress = i.toString() + if (buildHelper.isDev()) " ($from)" else ""
-                rxBus.send(EventIobCalculationProgress(progress))
+                rxBus.send(EventIobCalculationProgress(progress, cause))
                 if (iobCobCalculatorPlugin.stopCalculationTrigger) {
                     iobCobCalculatorPlugin.stopCalculationTrigger = false
                     aapsLogger.debug(LTag.AUTOSENS, "Aborting calculation thread (trigger): $from")
@@ -325,7 +325,7 @@ class IobCobOref1Thread internal constructor(
             }.start()
         } finally {
             mWakeLock?.release()
-            rxBus.send(EventIobCalculationProgress(""))
+            rxBus.send(EventIobCalculationProgress("", cause))
             aapsLogger.debug(LTag.AUTOSENS, "AUTOSENSDATA thread ended: $from")
             profiler.log(LTag.AUTOSENS, "IobCobOref1Thread", start)
         }

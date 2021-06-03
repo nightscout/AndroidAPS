@@ -154,6 +154,7 @@
     <string name="profile_carbs_per_unit">g/E</string>
     <!--    ProfileFunction-->
     <string name="noprofileselected">Ingen profil valgt</string>
+    <string name="startprofile">Start profil %1$d%% i %2$d min</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Bare konkrete verdier støttes som granularitet for basal/bolus i virtuell pumpe, ingen verdiområder.</string>
     <!--    APSResult-->
@@ -238,30 +239,6 @@
     <!--    Ntp-->
     <string name="timedetection">Tidsdetektering</string>
     <string name="format_hour_minute">%1$dt %2$dm</string>
-    <!-- PumoCommon - Pump Abstract -->
-    <string name="pump_operation_not_supported_by_pump_driver">Operasjonen støttes ikke av pumpen og/eller driveren.</string>
-    <string name="pump_operation_not_yet_supported_by_pump">Operasjonen støttes ikke av pumpen ennå.</string>
-    <string name="common_resultok">OK</string>
-    <!-- PumoCommon - Pump Status -->
-    <string name="pump_status_never_contacted">Aldri kontaktet</string>
-    <string name="pump_status_waking_up">Våkner opp</string>
-    <string name="pump_status_error_comm">Kommunikasjonsfeil</string>
-    <string name="pump_status_timeout_comm">Tidsavbrudd kommunikasjon</string>
-    <string name="pump_status_pump_unreachable">Pumpe utilgjengelig</string>
-    <string name="pump_status_invalid_config">Ugyldig oppsett</string>
-    <string name="pump_status_active">Aktiv</string>
-    <string name="pump_status_sleeping">Sover</string>
-    <!-- PumpCommon - History Group -->
-    <string name="history_group_basal">Basaldoser</string>
-    <string name="history_group_configuration">Innstillinger</string>
-    <string name="history_group_notification">Varsler</string>
-    <string name="history_group_statistic">Statistikk</string>
-    <string name="history_group_unknown">Ukjente</string>
-    <string name="history_group_all">Alle</string>
-    <string name="history_group_bolus">Boluser</string>
-    <string name="history_group_prime">Prime</string>
-    <string name="history_group_alarm">Alarmer</string>
-    <string name="history_group_glucose">Glukose</string>
     <string name="mute5min">Demp i 5 minutter</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">Filformat</string>
@@ -315,13 +292,11 @@
     <!-- User Entry -->
     <string name="uel_bolus">BOLUS</string>
     <string name="uel_bolus_advisor">BOLUS ASSISTENT</string>
-    <string name="uel_bolus_record">BOLUS REGISTRERING</string>
     <string name="uel_extended_bolus">FORLENGET BOLUS</string>
     <string name="uel_superbolus_tbr">SUPERBOLUS TBR</string>
     <string name="uel_carbs">KARBO</string>
     <string name="uel_extended_carbs">FORLENGET KARBO</string>
     <string name="uel_temp_basal">TEMP BASAL</string>
-    <string name="uel_tt">TT</string>
     <string name="uel_new_profile">NY PROFIL</string>
     <string name="uel_clone_profile">KOPIER PROFIL</string>
     <string name="uel_store_profile">LAGRE PROFIL</string>
@@ -341,7 +316,6 @@
     <string name="uel_accepts_temp_basal">AKSEPTER TEMP BASAL</string>
     <string name="uel_cancel_temp_basal">AVBRYT TEMP BASAL</string>
     <string name="uel_cancel_extended_bolus">AVBRYT FORLENGET BOLUS</string>
-    <string name="uel_cancel_tt">AVBRYT TT</string>
     <string name="uel_careportal">CAREPORTAL</string>
     <string name="uel_calibration">KALIBRERING</string>
     <string name="uel_prime_bolus">PRIME BOLUS</string>
@@ -349,7 +323,6 @@
     <string name="uel_careportal_ns_refresh">CAREPORTAL NS OPPDATER</string>
     <string name="uel_profile_switch_ns_refresh">PROFILBYTTE NS OPPDATER</string>
     <string name="uel_treatments_ns_refresh">BEHANDLINGER NS OPPDATER</string>
-    <string name="uel_tt_ns_refresh">TT NS OPPDATER</string>
     <string name="uel_automation_removed">AUTOMASJON FJERNET</string>
     <string name="uel_bg_removed">BS FJERNET</string>
     <string name="uel_careportal_removed">CAREPORTAL FJERNET</string>
@@ -359,7 +332,6 @@
     <string name="uel_profile_switch_removed">PROFILBYTTE FJERNET</string>
     <string name="uel_restart_events_removed">RESTART HENDELSER FJERNET</string>
     <string name="uel_treatment_removed">BEHANDLING FJERNET</string>
-    <string name="uel_tt_removed">TT FJERNET</string>
     <string name="uel_ns_paused">NS PAUSET</string>
     <string name="uel_ns_resume">GJENOPPTA NS</string>
     <string name="uel_ns_queue_cleared">NS KØ SLETTET</string>
@@ -380,30 +352,9 @@
     <string name="uel_import_databases">IMPORTER DATABASER</string>
     <string name="uel_otp_export">OTP EKSPORT</string>
     <string name="uel_otp_reset">OTP RESET</string>
-    <string name="uel_sms_basal">SMS BASAL</string>
-    <string name="uel_sms_bolus">SMS BOLUS</string>
-    <string name="uel_sms_cal">SMS CAL</string>
-    <string name="uel_sms_carbs">SMS KARBO</string>
-    <string name="uel_sms_extended_bolus">SMS FORLENGET BOLUS</string>
-    <string name="uel_sms_loop_disabled">SMS DEAKTIVER LOOP</string>
-    <string name="uel_sms_loop_enabled">SMS AKTIVER LOOP</string>
-    <string name="uel_sms_loop_resume">SMS GJENOPPTA LOOP</string>
-    <string name="uel_sms_loop_suspend">SMS PAUSE LOOP</string>
-    <string name="uel_sms_profile">SMS PROFIL</string>
-    <string name="uel_sms_pump_connect">SMS PUMPE TILKOBLE</string>
-    <string name="uel_sms_pump_disconnect">SMS PUMPE FRAKOBLE</string>
-    <string name="uel_sms_sms">SMS SMS</string>
-    <string name="uel_sms_tt">SMS TT</string>
-    <string name="uel_tt_deleted_from_ns">TT SLETTET FRA NS</string>
-    <string name="uel_careportal_deleted_from_ns">CAREPORTAL SLETTET FRA NS</string>
-    <string name="uel_careportal_from_ns">CAREPORTAL FRA NS</string>
-    <string name="uel_tt_from_ns">TT FRA NS</string>
-    <string name="uel_tt_canceleted_from_ns">TT KANSELLERT FRA NS</string>
     <string name="uel_export_csv">EKSPORTER BRUKEROPPFØRINGER</string>
     <string name="uel_unknown">UKJENT</string>
-    <string name="formated_string">Formatert tekst</string>
     <string name="ue_export_to_csv">Eksporter brukeroppføringer til Excel (csv)</string>
-    <string name="ue_csv_header">"Klokkeslett;Dato;UTC forskyvning;Aksjon;Merk;Verdi;Enhet"</string>
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dager</item>

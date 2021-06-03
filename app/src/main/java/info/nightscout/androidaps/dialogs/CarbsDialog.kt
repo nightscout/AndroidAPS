@@ -17,7 +17,7 @@ import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
-import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
+import info.nightscout.androidaps.database.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import info.nightscout.androidaps.databinding.DialogCarbsBinding
 import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.interfaces.Constraint
@@ -27,7 +27,6 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.queue.CommandQueue
 import info.nightscout.androidaps.utils.*
@@ -47,7 +46,6 @@ class CarbsDialog : DialogFragmentWithDate() {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
-    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var uel: UserEntryLogger
@@ -228,7 +226,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                                 ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.ACTIVITY),
                                 ValueWithUnit.fromGlucoseUnit(activityTT, units.asText),
                                 ValueWithUnit.Minute(activityTTDuration))
-                            disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
+                            disposable += repository.runTransactionForResult(InsertAndCancelCurrentTemporaryTargetTransaction(
                                 timestamp = System.currentTimeMillis(),
                                 duration = TimeUnit.MINUTES.toMillis(activityTTDuration.toLong()),
                                 reason = TemporaryTarget.Reason.ACTIVITY,
@@ -247,7 +245,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                                 ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.EATING_SOON),
                                 ValueWithUnit.fromGlucoseUnit(eatingSoonTT, units.asText),
                                 ValueWithUnit.Minute(eatingSoonTTDuration))
-                            disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
+                            disposable += repository.runTransactionForResult(InsertAndCancelCurrentTemporaryTargetTransaction(
                                 timestamp = System.currentTimeMillis(),
                                 duration = TimeUnit.MINUTES.toMillis(eatingSoonTTDuration.toLong()),
                                 reason = TemporaryTarget.Reason.EATING_SOON,
@@ -266,7 +264,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                                 ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.HYPOGLYCEMIA),
                                 ValueWithUnit.fromGlucoseUnit(hypoTT, units.asText),
                                 ValueWithUnit.Minute(hypoTTDuration))
-                            disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
+                            disposable += repository.runTransactionForResult(InsertAndCancelCurrentTemporaryTargetTransaction(
                                 timestamp = System.currentTimeMillis(),
                                 duration = TimeUnit.MINUTES.toMillis(hypoTTDuration.toLong()),
                                 reason = TemporaryTarget.Reason.HYPOGLYCEMIA,

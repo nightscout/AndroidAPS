@@ -7,8 +7,10 @@ import javax.inject.Inject
 class RequestDexcomPermissionActivity : DialogAppCompatActivity() {
     @Inject lateinit var dexcomPlugin: DexcomPlugin
 
-    private val requestCode = "AndroidAPS <3".map { it.toInt() }.sum()
+    @kotlin.ExperimentalStdlibApi
+    private val requestCode = "AndroidAPS <3".map { it.code }.sum()
 
+    @kotlin.ExperimentalStdlibApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestPermissions(arrayOf(DexcomPlugin.PERMISSION), requestCode)

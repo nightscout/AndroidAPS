@@ -97,9 +97,10 @@ fun therapyEventFromJson(jsonObject: JSONObject): TherapyEvent? {
     return te
 }
 
-fun TherapyEvent.toJson(): JSONObject =
+fun TherapyEvent.toJson(isAdd: Boolean): JSONObject =
     JSONObject()
         .put("eventType", type.text)
+        .put("isValid", isValid)
         .put("created_at", timestamp)
         .put("enteredBy", enteredBy)
         .put("units", if (glucoseUnit == TherapyEvent.GlucoseUnit.MGDL) Constants.MGDL else Constants.MMOL)
@@ -108,7 +109,7 @@ fun TherapyEvent.toJson(): JSONObject =
             if (note != null) it.put("notes", note)
             if (glucose != null) it.put("glucose", glucose)
             if (glucoseType != null) it.put("glucoseType", glucoseType!!.text)
-            if (interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId)
+            if (isAdd && interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId)
             if (type == TherapyEvent.Type.ANNOUNCEMENT) it.put("isAnnouncement", true)
         }
 

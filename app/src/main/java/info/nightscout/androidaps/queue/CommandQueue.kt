@@ -86,7 +86,6 @@ open class CommandQueue @Inject constructor(
                                 ErrorHelperActivity.runAlarm(context, result.comment, resourceHelper.gs(R.string.failedupdatebasalprofile), R.raw.boluserror)
                             }
                             if (result.enacted) {
-                                rxBus.send(EventNewBasalProfile())
                                 repository.createEffectiveProfileSwitch(
                                     EffectiveProfileSwitch(
                                         timestamp = dateUtil.now(),
@@ -104,6 +103,7 @@ open class CommandQueue @Inject constructor(
                                         insulinConfiguration = it.insulinConfiguration
                                     )
                                 )
+                                rxBus.send(EventNewBasalProfile())
                             }
                         }
                     })
@@ -566,11 +566,12 @@ open class CommandQueue @Inject constructor(
         return HtmlHelper.fromHtml(s)
     }
 
-    override fun isThisProfileSet(profile: Profile): Boolean {
-        val result = activePlugin.activePump.isThisProfileSet(profile)
+    override fun isThisProfileSet(requestedProfile: Profile): Boolean {
+        val runningProfile = profileFunction.getProfile() ?: return false
+        val result = activePlugin.activePump.isThisProfileSet(requestedProfile) && requestedProfile.isEqual(runningProfile)
         if (!result) {
             aapsLogger.debug(LTag.PUMPQUEUE, "Current profile: ${profileFunction.getProfile()}")
-            aapsLogger.debug(LTag.PUMPQUEUE, "New profile: $profile")
+            aapsLogger.debug(LTag.PUMPQUEUE, "New profile: $requestedProfile")
         }
         return result
     }

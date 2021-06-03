@@ -29,7 +29,6 @@
     <string name="description_overview">Zobrazení stavu a informací. Přístup k nejběžnějším ovládacím prvkům</string>
     <string name="description_persistent_notification">Zobrazení průběžného oznámení v Androidu s krátkým přehledem, co smyčka právě dělá</string>
     <string name="description_profile_local">Definujte profil, který je dostupný offline.</string>
-    <string name="description_profile_nightscout">Použití profilu definovaného v Nightscoutu</string>
     <string name="description_pump_mdi">Ovladač pumpy pro uživatele inzulínových per</string>
     <string name="description_pump_virtual">Ovladač pumpy pro uživatele bez podporované pumpy (Otevřená smyčka)</string>
     <string name="description_sensitivity_aaps">Citlivost je počítána stejným způsobem jako v Oref0, ale je možné specifikovat dobu do minulosti. Minimální absorpce sacharidů je počítána dynamicky z maximální doby absorpce definované v nastavení.</string>
@@ -77,7 +76,6 @@
     <string name="sms_delta">Rozdíl:</string>
     <string name="configbuilder">Konfigurace</string>
     <string name="overview">Přehled</string>
-    <string name="nsprofile">NS profil</string>
     <string name="treatments">Ošetření</string>
     <string name="virtualpump">Virtuální pumpa</string>
     <string name="careportal">Péče</string>
@@ -93,7 +91,6 @@
     <string name="configbuilder_general_description">Obecné pluginy, které by se Vám mohly hodit.</string>
     <string name="configbuilder_constraints_description">Jaká omezení byla použita?</string>
     <string name="constraints">Omezení</string>
-    <string name="loop">Smyčka</string>
     <string name="configbuilder_loop">Smyčka</string>
     <string name="configbuilder_loop_description">Integrace smyčky do AndroidAPS.</string>
     <string name="loop_aps_label">APS</string>
@@ -279,7 +276,6 @@
     <string name="localprofile_shortname">MPRF</string>
     <string name="overview_shortname">PŘEH</string>
     <string name="virtualpump_shortname">VPUM</string>
-    <string name="profileviewer_shortname">PROF</string>
     <string name="treatments_shortname">OŠET</string>
     <string name="objectives_shortname">CÍLE</string>
     <string name="wear_shortname">WEAR</string>
@@ -406,8 +402,6 @@
     <string name="xdripstatus_shortname">XDS</string>
     <string name="wear_showbgi_title">Zobrazovat BGI</string>
     <string name="wear_showbgi_summary">Přidat BGI do stavové řádky</string>
-    <string name="ns_noupload">Zakázat nahrávání do NS</string>
-    <string name="ns_noupload_summary">Všechna data odeslaná do NS jsou zahozena. AAPS je připojen k NS, ale nedělá do něj žádné změny</string>
     <string name="overview_extendedbolus_cancel_button">Zrušit prodloužený bolus</string>
     <string name="doprofileswitch">Proveďte přepnutí profilu</string>
     <string name="careportal_sensor_label">Senzor</string>
@@ -422,7 +416,6 @@
     <string name="nsalarm_urgent_staledatavalue_label">Urgentní mezní hodnota pro zastaralá data [min]</string>
     <string name="openapsama_autosens_period">Interval pro detekci senzitivity [h]</string>
     <string name="openapsama_autosens_period_summary">Počet hodin do minulosti pro detekci senzitivity</string>
-    <string name="pump">Pumpa</string>
     <string name="openaps">OpenAPS</string>
     <string name="uploader">Uploader</string>
     <string name="configbuilder_sensitivity">Detekce citlivosti</string>
@@ -564,7 +557,6 @@
     <string name="category">Kategorie</string>
     <string name="subcategory">Podkategorie</string>
     <string name="bolusrecordedonly">Bolus nebude pumpou vydán, pouze zaznamenán</string>
-    <string name="ns_autobackfill_summary">Automaticky doplňovat chybějící glykémie z NS</string>
     <string name="loop_smbsetbypump_label">SMB provedené pumpou</string>
     <string name="overview_show_activity">Aktivita</string>
     <string name="overview_show_bgi">Vliv na hladinu glukózy</string>
@@ -631,7 +623,6 @@
     <string name="virtualpump_type">Typ virtuální pumpy</string>
     <string name="virtualpump_definition">Definice pumpy</string>
     <string name="virtualpump_pump_def">Bolus: Krok =%1$s\nProdl. bolus: [Krok=%2$s, Délka=%3$smin-%4$sh]\nBazál: Krok=%5$s\nDoč. bazál: %6$s (%7$s), Délka=%8$smin-%9$sh\n%10$s</string>
-    <string name="ns_autobackfill_title">Doplňování glykémií z NS</string>
     <string name="wear_wizard_settings">Nastavení wizardu</string>
     <string name="wear_wizard_settings_summary">Kalkulace použité ve výsledku wizardu:</string>
     <string name="wear_display_settings">Nastavení zobrazení</string>
@@ -639,14 +630,12 @@
     <string name="enable_nsclient">Povolit NSClient</string>
     <string name="welcometosetupwizard">Vítejte v průvodci nastavením. Provede Vás procesem nastavení programu\n</string>
     <string name="readstatus">Načíst status</string>
-    <string name="adjustprofileinns">Změny musí být prováděny v NS</string>
     <string name="exitwizard">Přeskočit průvodce</string>
     <string name="setupwizard_loop_description">Stiskněte tlačítko níže, chcete-li AndroidAPS povolit navrhovat nebo provádět změny bazálu</string>
     <string name="setupwizard_sensitivity_description">Plugin senzitivita slouží k detekci změn v senzitivitě a k počítání COB. Více informací zde:</string>
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
     <string name="nsclientinfotext">NSClient slouží ke spojení s Nightscoutem. Nastavení můžete nyní přeskočit, ale nebudete schopni dokončit cíle, dokud nastavení neprovedete.</string>
     <string name="diawarning">Pozor: Nové inzulínové profily vyžadují DIA minimálně 5h. DIA 5–6 hodin odpovídá zhruba nastavení 3h na starších typech profilů nebo v pumpě.</string>
-    <string name="setupwizard_profile_description">Vyberte zdroj profilů. Pokud jde o dítě, využijte nejspíše NS profil. Pokud Vás nikdo přes NS nesleduje, budete patrně preferovat Místní profil. Uvědomte si, že nastavujete pouze zdroj profilů. Na to aby se opravdu profil začal používat, je třeba provést aktivaci profilu použitím \"Přepnutí profilu\"</string>
     <string name="setupwizard_aps_description">Vyberte jeden z algoritmů. Jsou setříděné od nejstaršího po nejnovější. Novější je obvykle lepší a agresivnější, ale vyžaduje přesnější nastavení. Proto pokud se smyčkou začínáte, měli byste nejdříve vybrat jen AMA a ne ten poslední. Nezapomeňte si přečíst dokumentaci k OpenAPS a provést nastavení, než ho začnete používat.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Prosím nakonfigurujte svůj RileyLink níže. Po výběru RileyLinku bude možné pokračovat v nastavení, jakmile stav RileyLinku je \"Připojeno\". Tato akce může chvilku trvat.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Poznámka:</b> Po nastavení pumpy můžete pokračovat v nastavení.\n</string>
@@ -758,7 +747,6 @@
     <string name="objectives_button_unstart">Vymazat start</string>
     <string name="doyouwantresetstart">Chcete resetovat začátek cíle? Můžete přijít o svůj pokrok.</string>
     <string name="setupwizard_units_prompt">Vyberte jednotky, ve kterých chcete zobrazit hodnoty</string>
-    <string name="ns_ploadlocalprofile">Odeslat změny lokálního profilu do NS</string>
     <string name="dia_short">DIA</string>
     <string name="ic_short">I:C</string>
     <string name="isf_short">ISF</string>
@@ -790,6 +778,7 @@
     <string name="randombg_short">GLYK</string>
     <string name="tools">Nástroje</string>
     <string name="show_calculation">Zobrazit kalkulaci</string>
+    <string name="show_removed">Zobrazit odstraněné</string>
     <string name="clearqueueconfirm">Vymazat frontu? Všechna data ve frontě budou ztracena!</string>
     <string name="ebstopsloop">Použití funkce prodlouženého bolusu zastaví uzavřenou smyčku po dobu trvání prodlouženého bolusu. Opravdu to chcete?</string>
     <string name="closed_loop_disabled_with_eb">Uzavřená smyčka je zastavena kvůli běžícímu prodlouženému bolusu</string>
@@ -911,4 +900,23 @@
     <string name="profile_max_daily_basal_value">Maximální hodnota bazálu profilu</string>
     <string name="current_basal_value">Aktuální hodnota bazálu</string>
     <string name="profile_carbs_ratio_value">Inzulino-sacharidový poměr profilu</string>
+    <string name="full_sync">Úplná synchronizace</string>
+    <string name="prime">Doplňování</string>
+    <string name="ns_sync_options">Synchronizace</string>
+    <string name="ns_upload_summary">Profily, bolusy, sacharidy, dočasné bazály jsou nahrány do NS</string>
+    <string name="ns_upload">Nahrávat data do NS</string>
+    <string name="ns_receive_profile_store">Přijímat úložiště profilu</string>
+    <string name="ns_receive_profile_store_summary">Synchronizovat profily z NS do místního profilu</string>
+    <string name="ns_receive_temp_target">Přijímat dočasné cíle</string>
+    <string name="ns_receive_temp_target_summary">Přijmout dočasné cíle zadané prostřednictvím NS nebo NSClienta</string>
+    <string name="ns_receive_profile_switch">Přijímat přepnutí profilu</string>
+    <string name="ns_receive_profile_switch_summary">Přijmout přepnutí profilu zadané prostřednictvím NS nebo NSClienta</string>
+    <string name="ns_receive_insulin">Přijímat inzulín</string>
+    <string name="ns_receive_insulin_summary">Přijmout inzulín vložený přes NS nebo NSClient (není dodán, pouze započítán do IOB)</string>
+    <string name="ns_receive_carbs">Přijímat sacharidy</string>
+    <string name="ns_receive_carbs_summary">Přijmout sacharidy vložené prostřednictvím NS nebo NSClienta</string>
+    <string name="ns_receive_therapy_events">Přijímat události</string>
+    <string name="ns_receive_therapy_events_summary">Přijmout léčebné události (výměna setu, inzulínu, baterie atd.) zadané prostřednictvím NS nebo NSClienta</string>
+    <string name="ns_receive_cgm">Přijímat/doplňovat glykémie</string>
+    <string name="ns_receive_cgm_summary">Přijmout CGM data z NS</string>
 </resources>

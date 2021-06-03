@@ -67,6 +67,7 @@ class FoodFragment : DaggerFragment() {
         return binding.root
     }
 
+    @kotlin.ExperimentalStdlibApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -128,6 +129,7 @@ class FoodFragment : DaggerFragment() {
     }
 
     @Synchronized
+    @kotlin.ExperimentalStdlibApi
     override fun onResume() {
         super.onResume()
         disposable.add(rxBus
@@ -139,6 +141,7 @@ class FoodFragment : DaggerFragment() {
         swapAdapter()
     }
 
+    @kotlin.ExperimentalStdlibApi
     private fun swapAdapter() {
         disposable += repository
             .getFoodData()
@@ -199,6 +202,7 @@ class FoodFragment : DaggerFragment() {
         }
     }
 
+    @kotlin.ExperimentalStdlibApi
     private fun filterData() {
         val textFilter = binding.filter.text.toString()
         val categoryFilter = binding.category.selectedItem?.toString()
@@ -210,7 +214,7 @@ class FoodFragment : DaggerFragment() {
             if (f.category == null || f.subCategory == null) continue
             if (subcategoryFilter != resourceHelper.gs(R.string.none) && f.subCategory != subcategoryFilter) continue
             if (categoryFilter != resourceHelper.gs(R.string.none) && f.category != categoryFilter) continue
-            if (textFilter != "" && !f.name.toLowerCase(Locale.getDefault()).contains(textFilter.toLowerCase(Locale.getDefault()))) continue
+            if (textFilter != "" && !f.name.lowercase(Locale.getDefault()).contains(textFilter.lowercase(Locale.getDefault()))) continue
             newFiltered.add(f)
         }
         filtered = newFiltered

@@ -166,6 +166,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
             ?: throw FailedToConnectException("connection lost")
     }
 
+    @kotlin.ExperimentalStdlibApi
     override fun pairNewPod(): Observable<PodEvent> = Observable.create { emitter ->
         if (!busy.compareAndSet(false, true)) {
             throw BusyException()

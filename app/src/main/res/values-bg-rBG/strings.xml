@@ -29,7 +29,6 @@
     <string name="description_overview">Показва текущото състояние на вашия APS и бутони за най-често използваните действия</string>
     <string name="description_persistent_notification">Показва известие с резюме на това, което прави вашия APS</string>
     <string name="description_profile_local">Този тип профил е достъпен в офлайн режим.</string>
-    <string name="description_profile_nightscout">Работа с профила, които сте дефинирали в Nightscout</string>
     <string name="description_pump_mdi">Писалки - За хората, които правят множество ежедневни инжекции ( интензифицирано лечение с писалки)</string>
     <string name="description_pump_virtual">За помпи, който все още не работят с AndroidAPS(Open Loop)</string>
     <string name="description_sensitivity_aaps">Чувствителността се изчислява по същия начин като в Oref0, но можете да зададете времева рамка. Минимална въглехидрати абсорбция се изчислява от Макс време за усвояване на въглехидратите в опциите.</string>
@@ -77,7 +76,6 @@
     <string name="sms_delta">Изменение (делта):</string>
     <string name="configbuilder">Конфигурация</string>
     <string name="overview">Общ</string>
-    <string name="nsprofile">NS Профил</string>
     <string name="treatments">Лечения</string>
     <string name="virtualpump">Виртуална помпа</string>
     <string name="careportal">Careportal</string>
@@ -93,7 +91,6 @@
     <string name="configbuilder_general_description">Това са някой общи функции, които може да са Ви от полза.</string>
     <string name="configbuilder_constraints_description">Кои ограничения да се прилагат?</string>
     <string name="constraints">Ограничения</string>
-    <string name="loop">Кръг - Loop</string>
     <string name="configbuilder_loop">Режим на APS - Loop</string>
     <string name="configbuilder_loop_description">Използвайте това, за да активирате loop интеграцията в \'AndroidAPS.</string>
     <string name="loop_aps_label">Алгоритъм за APS</string>
@@ -276,7 +273,6 @@
     <string name="localprofile_shortname">ЛПр</string>
     <string name="overview_shortname">ОСН</string>
     <string name="virtualpump_shortname">ВП</string>
-    <string name="profileviewer_shortname">NSПр</string>
     <string name="treatments_shortname">Леч</string>
     <string name="objectives_shortname">Цел</string>
     <string name="wear_shortname">WEAR</string>
@@ -402,8 +398,6 @@
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">Показвай BGI</string>
     <string name="wear_showbgi_summary">Добави BGI към статуса</string>
-    <string name="ns_noupload">Без качване на данни в NS</string>
-    <string name="ns_noupload_summary">Всички данни за NS се пропускат. AAPS е свързан с NS, но не прави промени в NS</string>
     <string name="overview_extendedbolus_cancel_button">Спри удължен болус</string>
     <string name="doprofileswitch">Смени профил</string>
     <string name="careportal_sensor_label">Сензор</string>
@@ -418,7 +412,6 @@
     <string name="nsalarm_urgent_staledatavalue_label">Много стари данни при повече от [мин]</string>
     <string name="openapsama_autosens_period">Интервал за autosens [ч]</string>
     <string name="openapsama_autosens_period_summary">Брой часове назад за определяне на чувствителността (приемът на въглехидрати е изключен)</string>
-    <string name="pump">Помпа</string>
     <string name="openaps">OpenAPS</string>
     <string name="uploader">Uploader</string>
     <string name="configbuilder_sensitivity">Определяне на чувствителност</string>
@@ -560,7 +553,6 @@
     <string name="category">Категория</string>
     <string name="subcategory">Подкатегория</string>
     <string name="bolusrecordedonly">Болус само ще се запише (няма да се стартира в помпа)</string>
-    <string name="ns_autobackfill_summary">Допълни липсващи данни за КЗ от Nightscout</string>
     <string name="loop_smbsetbypump_label">SMB в помпата</string>
     <string name="overview_show_activity">Активност</string>
     <string name="overview_show_sensitivity">Чувствителност</string>
@@ -626,7 +618,6 @@
     <string name="virtualpump_type">Виртуална помпа тип</string>
     <string name="virtualpump_definition">Описание на помпата</string>
     <string name="virtualpump_pump_def">Болус: Стъпка =%1$s\Удължен болус: [стъпка =%2$s, продължителност =%3$smin -%4$sh] \nБазал: стъпка =%5$s\ nTBR: %6$s (от %7$s), продължителност =%8$sмин -%9$sh\n%10$s</string>
-    <string name="ns_autobackfill_title">Изтегляне КЗ от Найтскаут</string>
     <string name="wear_wizard_settings">Настройки на съветник</string>
     <string name="wear_wizard_settings_summary">Изчисления, включени в резултата на съветника:</string>
     <string name="wear_display_settings">Настройки за визуализация</string>
@@ -634,14 +625,12 @@
     <string name="enable_nsclient">Разреши NSClient</string>
     <string name="welcometosetupwizard">Добре дошли в съветника за настройки. Той ще ви преведе през етапите на настройка.</string>
     <string name="readstatus">Получавам състоянието на помпата</string>
-    <string name="adjustprofileinns">Промени трябва да се направят и в NS</string>
     <string name="exitwizard">Пропусни съветника за настройка</string>
     <string name="setupwizard_loop_description">Натиснете бутона по-долу за да позволите AndroidAPS да предлага/прави промени в базалните стойности</string>
     <string name="setupwizard_sensitivity_description">Модула за чувствителност се използва за определяне на чувствителността и COB изчисления. За повече информация посетете:</string>
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
     <string name="nsclientinfotext">NSClient поддържа връзка с Nightscout. Можете да пропуснете тази настройка сега, но вие няма можете да преминете целите, докато не го настроите.</string>
     <string name="diawarning">Моля, не забравяйте: нови инсулин профили изискват време на действие на инсулиина - DIA от поне 5ч. DIA 5-6ч на нов профил е равно на DIA 3ч при стари инсулин профили.</string>
-    <string name="setupwizard_profile_description">Моля изберете вид профил. Ако пациентът е дете, трябва да използвате NS профил. Ако никой освен Вас не ви проследява в Nightscout вероятно ще предпочетете Локален профил. Моля, не забравяйте, че тук само избирате източника на профил. За да го използвате трябва да го активирате с натискане на \"Смяна на профила\"</string>
     <string name="setupwizard_aps_description">Изберете един от наличните алгоритми. Те са подредени от най-стария до най-новия. По-новите алгоритми са обикновено по-мощни и по-агресивни. Така ако сте новак в APS системите може да започнете с AMA. Не забравяйте да прочетете документацията на OpenAPS и да го конфигурирате преди употреба.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Конфигурация на RileyLink. След избиране на RileyLink, ще е възможно неговото конфигуриране, след като статуса му е \"Свързан\". Може да отнеме време \n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Заб:</b> Можете да продължите след като помпата се инициализира.\n</string>
@@ -753,7 +742,6 @@
     <string name="objectives_button_unstart">Изчисти стартираните</string>
     <string name="doyouwantresetstart">Искате ли да нулирате прогреса си?</string>
     <string name="setupwizard_units_prompt">Изберете единиците, в които искате да работите</string>
-    <string name="ns_ploadlocalprofile">Качване на локални промени в НС профила</string>
     <string name="dia_short">DIA</string>
     <string name="ic_short">И / Въгл</string>
     <string name="isf_short">Чувств</string>
@@ -890,4 +878,5 @@
     <string name="clear_filter">Премахни филтъра</string>
     <string name="trend_arrow">Стрелка тенденция</string>
     <string name="cannula">Канюла</string>
+    <string name="ns_receive_profile_store_summary">Синхронизирай NS профила с локалния</string>
 </resources>

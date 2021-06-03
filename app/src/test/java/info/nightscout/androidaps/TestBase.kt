@@ -1,13 +1,10 @@
 package info.nightscout.androidaps
 
-import android.content.Context
 import info.nightscout.androidaps.logging.AAPSLoggerTest
-import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.rx.TestAapsSchedulers
 import org.junit.Before
 import org.junit.Rule
-import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnit
 import org.mockito.junit.MockitoRule

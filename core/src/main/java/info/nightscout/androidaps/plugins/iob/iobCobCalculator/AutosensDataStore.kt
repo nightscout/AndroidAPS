@@ -6,7 +6,9 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventBucketedDataCreated
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import kotlin.math.abs
@@ -151,7 +153,7 @@ class AutosensDataStore {
         return someTime + diff
     }
 
-    fun loadBgData(to: Long, repository: AppRepository, aapsLogger: AAPSLogger, dateUtil: DateUtil) {
+    fun loadBgData(to: Long, repository: AppRepository, aapsLogger: AAPSLogger, dateUtil: DateUtil, rxBus: RxBusWrapper) {
         synchronized(dataLock) {
             val start = to - T.hours((24 + 10 /* max dia */).toLong()).msecs()
             // there can be some readings with time in close future (caused by wrong time setting on sensor)
@@ -162,6 +164,7 @@ class AutosensDataStore {
                 .filter { it.value >= 39 }
             aapsLogger.debug(LTag.AUTOSENS, "BG data loaded. Size: " + bgReadings.size + " Start date: " + dateUtil.dateAndTimeString(start) + " End date: " + dateUtil.dateAndTimeString(to))
             createBucketedData(aapsLogger, dateUtil)
+            rxBus.send(EventBucketedDataCreated())
         }
     }
 

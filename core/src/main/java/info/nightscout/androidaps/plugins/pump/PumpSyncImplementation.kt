@@ -124,11 +124,11 @@ class PumpSyncImplementation @Inject constructor(
                 pumpSerial = pumpSerial
             )
         )
-        repository.runTransactionForResult(InsertPumpBolusWithTempIdTransaction(bolus))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving bolus", it) }
+        repository.runTransactionForResult(InsertBolusWithTempIdTransaction(bolus))
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving Bolus", it) }
             .blockingGet()
             .also { result ->
-                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted bolus $it") }
+                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted Bolus $it") }
                 return result.inserted.size > 0
             }
     }
@@ -146,11 +146,11 @@ class PumpSyncImplementation @Inject constructor(
                 pumpSerial = pumpSerial
             )
         )
-        repository.runTransactionForResult(SyncPumpBolusWithTempIdTransaction(bolus, type?.toDBbBolusType()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving bolus", it) }
+        repository.runTransactionForResult(SyncBolusWithTempIdTransaction(bolus, type?.toDBbBolusType()))
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving Bolus", it) }
             .blockingGet()
             .also { result ->
-                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated bolus $it") }
+                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated Bolus $it") }
                 return result.updated.size > 0
             }
     }
@@ -168,11 +168,11 @@ class PumpSyncImplementation @Inject constructor(
             )
         )
         repository.runTransactionForResult(SyncPumpBolusTransaction(bolus, type?.toDBbBolusType()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving bolus", it) }
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving Bolus", it) }
             .blockingGet()
             .also { result ->
-                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted bolus $it") }
-                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated bolus $it") }
+                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted Bolus $it") }
+                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated Bolus $it") }
                 return result.inserted.size > 0
             }
     }
@@ -189,10 +189,10 @@ class PumpSyncImplementation @Inject constructor(
                 pumpSerial = pumpSerial)
         )
         repository.runTransactionForResult(InsertIfNewByTimestampCarbsTransaction(carbs))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it) }
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving Carbs", it) }
             .blockingGet()
             .also { result ->
-                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted carbs $it") }
+                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted Carbs $it") }
                 return result.inserted.size > 0
             }
     }
@@ -203,7 +203,7 @@ class PumpSyncImplementation @Inject constructor(
             timestamp = timestamp,
             type = type.toDBbEventType(),
             duration = 0,
-            note = null,
+            note = note,
             enteredBy = "AndroidAPS",
             glucose = null,
             glucoseType = null,
@@ -215,11 +215,11 @@ class PumpSyncImplementation @Inject constructor(
         )
         repository.runTransactionForResult(InsertIfNewByTimestampTherapyEventTransaction(therapyEvent))
             .doOnError {
-                aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it)
+                aapsLogger.error(LTag.DATABASE, "Error while saving TherapyEvent", it)
             }
             .blockingGet()
             .also { result ->
-                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted therapy event $it") }
+                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted TherapyEvent $it") }
                 return result.inserted.size > 0
             }
     }
@@ -249,11 +249,11 @@ class PumpSyncImplementation @Inject constructor(
             )
         )
         repository.runTransactionForResult(SyncPumpTemporaryBasalTransaction(temporaryBasal, type?.toDbType()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while temporary basal", it) }
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while TemporaryBasal", it) }
             .blockingGet()
             .also { result ->
-                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temporary basal $it") }
-                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temporary basal $it") }
+                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted TemporaryBasal $it") }
+                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated TemporaryBasal $it") }
                 return result.inserted.size > 0
             }
     }
@@ -261,23 +261,82 @@ class PumpSyncImplementation @Inject constructor(
     override fun syncStopTemporaryBasalWithPumpId(timestamp: Long, endPumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean {
         if (!confirmActivePump(timestamp, pumpType, pumpSerial)) return false
         repository.runTransactionForResult(SyncPumpCancelTemporaryBasalIfAnyTransaction(timestamp, endPumpId, pumpType.toDbPumpType(), pumpSerial))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving temporary basal", it) }
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving TemporaryBasal", it) }
             .blockingGet()
             .also { result ->
                 result.updated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated temporary basal $it")
+                    aapsLogger.debug(LTag.DATABASE, "Updated TemporaryBasal $it")
                 }
+                return result.updated.size > 0
+            }
+    }
+
+    override fun addTemporaryBasalWithTempId(timestamp: Long, rate: Double, duration: Long, isAbsolute: Boolean, tempId: Long, type: PumpSync.TemporaryBasalType, pumpType: PumpType, pumpSerial: String): Boolean {
+        if (!confirmActivePump(timestamp, pumpType, pumpSerial)) return false
+        val temporaryBasal = TemporaryBasal(
+            timestamp = timestamp,
+            rate = rate,
+            duration = duration,
+            type = type.toDbType(),
+            isAbsolute = isAbsolute,
+            interfaceIDs_backing = InterfaceIDs(
+                temporaryId = tempId,
+                pumpType = pumpType.toDbPumpType(),
+                pumpSerial = pumpSerial
+            )
+        )
+        repository.runTransactionForResult(InsertTemporaryBasalWithTempIdTransaction(temporaryBasal))
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving TemporaryBasal", it) }
+            .blockingGet()
+            .also { result ->
+                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted TemporaryBasal $it") }
+                return result.inserted.size > 0
+            }
+    }
+
+    override fun syncTemporaryBasalWithTempId(timestamp: Long, rate: Double, duration: Long, isAbsolute: Boolean, temporaryId: Long, type: PumpSync.TemporaryBasalType?, pumpId: Long?, pumpType: PumpType, pumpSerial: String): Boolean {
+        if (!confirmActivePump(timestamp, pumpType, pumpSerial)) return false
+        val bolus = TemporaryBasal(
+            timestamp = timestamp,
+            rate = rate,
+            duration = duration,
+            type = TemporaryBasal.Type.NORMAL, // not used for update
+            isAbsolute = isAbsolute,
+            interfaceIDs_backing = InterfaceIDs(
+                temporaryId = temporaryId,
+                pumpId = pumpId,
+                pumpType = pumpType.toDbPumpType(),
+                pumpSerial = pumpSerial
+            )
+        )
+        repository.runTransactionForResult(SyncTemporaryBasalWithTempIdTransaction(bolus, type?.toDbType()))
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving TemporaryBasal", it) }
+            .blockingGet()
+            .also { result ->
+                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated TemporaryBasal $it") }
                 return result.updated.size > 0
             }
     }
 
     override fun invalidateTemporaryBasal(id: Long): Boolean {
         repository.runTransactionForResult(InvalidateTemporaryBasalTransaction(id))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating temporary basal", it) }
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating TemporaryBasal", it) }
             .blockingGet()
             .also { result ->
                 result.invalidated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Invalidated temporary basal $it")
+                    aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryBasal $it")
+                }
+                return result.invalidated.size > 0
+            }
+    }
+
+    override fun invalidateTemporaryBasalWithTempId(temporaryId: Long): Boolean {
+        repository.runTransactionForResult(InvalidateTemporaryBasalWithTempIdTransaction(temporaryId))
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating TemporaryBasal", it) }
+            .blockingGet()
+            .also { result ->
+                result.invalidated.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryBasal $it")
                 }
                 return result.invalidated.size > 0
             }
@@ -297,11 +356,11 @@ class PumpSyncImplementation @Inject constructor(
             )
         )
         repository.runTransactionForResult(SyncPumpExtendedBolusTransaction(extendedBolus))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while extended bolus", it) }
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while ExtendedBolus", it) }
             .blockingGet()
             .also { result ->
-                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted extended bolus $it") }
-                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated extended bolus $it") }
+                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted ExtendedBolus $it") }
+                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated ExtendedBolus $it") }
                 return result.inserted.size > 0
             }
     }
@@ -309,11 +368,11 @@ class PumpSyncImplementation @Inject constructor(
     override fun syncStopExtendedBolusWithPumpId(timestamp: Long, endPumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean {
         if (!confirmActivePump(timestamp, pumpType, pumpSerial)) return false
         repository.runTransactionForResult(SyncPumpCancelExtendedBolusIfAnyTransaction(timestamp, endPumpId, pumpType.toDbPumpType(), pumpSerial))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving extended bolus", it) }
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving ExtendedBolus", it) }
             .blockingGet()
             .also { result ->
                 result.updated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated extended bolus $it")
+                    aapsLogger.debug(LTag.DATABASE, "Updated ExtendedBolus $it")
                 }
                 return result.updated.size > 0
             }

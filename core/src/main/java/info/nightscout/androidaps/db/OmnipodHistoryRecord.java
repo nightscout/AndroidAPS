@@ -9,7 +9,7 @@ import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
  * Created by andy on 30.11.2019.
  */
 @DatabaseTable(tableName = "PodHistory")
-public class OmnipodHistoryRecord implements DbObjectBase, Comparable<OmnipodHistoryRecord> {
+public class OmnipodHistoryRecord implements Comparable<OmnipodHistoryRecord> {
 
     @DatabaseField(id = true)
     public long date;
@@ -42,7 +42,6 @@ public class OmnipodHistoryRecord implements DbObjectBase, Comparable<OmnipodHis
         generatePumpId();
     }
 
-    @Override
     public long getDate() {
         return this.date;
     }
@@ -91,7 +90,6 @@ public class OmnipodHistoryRecord implements DbObjectBase, Comparable<OmnipodHis
         this.successConfirmed = successConfirmed;
     }
 
-    @Override
     public long getPumpId() {
         return pumpId;
     }

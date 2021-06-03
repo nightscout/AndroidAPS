@@ -1,8 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink;
 
 
-import info.nightscout.androidaps.plugins.pump.common.R;
-
 /**
  * Created by andy on 16/05/2018.
  */

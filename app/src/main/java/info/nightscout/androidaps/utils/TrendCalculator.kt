@@ -10,9 +10,12 @@ class TrendCalculator @Inject constructor(
     private val repository: AppRepository
 ) {
 
-    fun getTrendArrow(glucoseValue: GlucoseValue): GlucoseValue.TrendArrow =
-        if (glucoseValue.trendArrow != GlucoseValue.TrendArrow.NONE) glucoseValue.trendArrow
-        else calculateDirection(glucoseValue)
+    fun getTrendArrow(glucoseValue: GlucoseValue?): GlucoseValue.TrendArrow =
+        when {
+            glucoseValue?.trendArrow == null                        -> GlucoseValue.TrendArrow.NONE
+            glucoseValue.trendArrow != GlucoseValue.TrendArrow.NONE -> glucoseValue.trendArrow
+            else                                                    -> calculateDirection(glucoseValue)
+        }
 
     private fun calculateDirection(glucoseValue: GlucoseValue): GlucoseValue.TrendArrow {
 

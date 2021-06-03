@@ -178,24 +178,24 @@ class OpenHumansUploader @Inject constructor(
         }
     }
 
-    @JvmOverloads
-    fun enqueueTreatment(treatment: Treatment?, deleted: Boolean = false) = treatment?.let {
-        insertQueueItem("Treatments") {
-            put("date", treatment.date)
-            put("isValid", treatment.isValid)
-            put("source", treatment.source)
-            put("nsId", treatment._id)
-            put("boluscalc", treatment.boluscalc)
-            put("carbs", treatment.carbs)
-            put("dia", treatment.dia)
-            put("insulin", treatment.insulin)
-            put("insulinInterfaceID", treatment.insulinInterfaceID)
-            put("isSMB", treatment.isSMB)
-            put("mealBolus", treatment.mealBolus)
-            put("bolusCalcJson", treatment.getBoluscalc())
-            put("isDeletion", deleted)
-        }
-    }
+    // @JvmOverloads
+    // fun enqueueTreatment(treatment: Treatment?, deleted: Boolean = false) = treatment?.let {
+    //     insertQueueItem("Treatments") {
+    //         put("date", treatment.date)
+    //         put("isValid", treatment.isValid)
+    //         put("source", treatment.source)
+    //         put("nsId", treatment._id)
+    //         put("boluscalc", treatment.boluscalc)
+    //         put("carbs", treatment.carbs)
+    //         put("dia", treatment.dia)
+    //         put("insulin", treatment.insulin)
+    //         put("insulinInterfaceID", treatment.insulinInterfaceID)
+    //         put("isSMB", treatment.isSMB)
+    //         put("mealBolus", treatment.mealBolus)
+    //         put("bolusCalcJson", treatment.getBoluscalc())
+    //         put("isDeletion", deleted)
+    //     }
+    // }
 
     @JvmOverloads
     fun enqueueTherapyEvent(therapyEvent: TherapyEvent, deleted: Boolean = false) = insertQueueItem("TherapyEvents") {
@@ -210,17 +210,17 @@ class OpenHumansUploader @Inject constructor(
         put("isDeletion", deleted)
     }
 
-    @JvmOverloads
-    fun enqueueExtendedBolus(extendedBolus: ExtendedBolus, deleted: Boolean = false) = insertQueueItem("ExtendedBoluses") {
-        put("date", extendedBolus.date)
-        put("isValid", extendedBolus.isValid)
-        put("source", extendedBolus.source)
-        put("nsId", extendedBolus._id)
-        put("pumpId", extendedBolus.pumpId)
-        put("insulin", extendedBolus.insulin)
-        put("durationInMinutes", extendedBolus.durationInMinutes)
-        put("isDeletion", deleted)
-    }
+    // @JvmOverloads
+    // fun enqueueExtendedBolus(extendedBolus: ExtendedBolus, deleted: Boolean = false) = insertQueueItem("ExtendedBoluses") {
+    //     put("date", extendedBolus.date)
+    //     put("isValid", extendedBolus.isValid)
+    //     put("source", extendedBolus.source)
+    //     put("nsId", extendedBolus._id)
+    //     put("pumpId", extendedBolus.pumpId)
+    //     put("insulin", extendedBolus.insulin)
+    //     put("durationInMinutes", extendedBolus.durationInMinutes)
+    //     put("isDeletion", deleted)
+    // }
 
     // @JvmOverloads
     // fun enqueueProfileSwitch(profileSwitch: ProfileSwitch, deleted: Boolean = false) = insertQueueItem("ProfileSwitches") {
@@ -244,22 +244,22 @@ class OpenHumansUploader @Inject constructor(
     //     put("double", tdd.total)
     // }
 
-    @JvmOverloads
-    fun enqueueTemporaryBasal(temporaryBasal: TemporaryBasal?, deleted: Boolean = false) = temporaryBasal?.let {
-        insertQueueItem("TemporaryBasals") {
-            put("date", temporaryBasal.date)
-            put("isValid", temporaryBasal.isValid)
-            put("source", temporaryBasal.source)
-            put("nsId", temporaryBasal._id)
-            put("pumpId", temporaryBasal.pumpId)
-            put("durationInMinutes", temporaryBasal.durationInMinutes)
-            put("durationInMinutes", temporaryBasal.durationInMinutes)
-            put("isAbsolute", temporaryBasal.isAbsolute)
-            put("percentRate", temporaryBasal.percentRate)
-            put("absoluteRate", temporaryBasal.absoluteRate)
-            put("isDeletion", deleted)
-        }
-    }
+    // @JvmOverloads
+    // fun enqueueTemporaryBasal(temporaryBasal: TemporaryBasal?, deleted: Boolean = false) = temporaryBasal?.let {
+    //     insertQueueItem("TemporaryBasals") {
+    //         put("date", temporaryBasal.date)
+    //         put("isValid", temporaryBasal.isValid)
+    //         put("source", temporaryBasal.source)
+    //         put("nsId", temporaryBasal._id)
+    //         put("pumpId", temporaryBasal.pumpId)
+    //         put("durationInMinutes", temporaryBasal.durationInMinutes)
+    //         put("durationInMinutes", temporaryBasal.durationInMinutes)
+    //         put("isAbsolute", temporaryBasal.isAbsolute)
+    //         put("percentRate", temporaryBasal.percentRate)
+    //         put("absoluteRate", temporaryBasal.absoluteRate)
+    //         put("isDeletion", deleted)
+    //     }
+    // }
 
     @JvmOverloads
     fun enqueueTempTarget(tempTarget: TemporaryTarget?, deleted: Boolean = false) = tempTarget?.let {
@@ -439,6 +439,7 @@ class OpenHumansUploader @Inject constructor(
         notificationManager.notify(FAILURE_NOTIFICATION_ID, notification)
     }
 
+    @kotlin.ExperimentalStdlibApi
     fun uploadDataSegmentally(): Completable =
         uploadData(UPLOAD_SEGMENT_SIZE)
             .repeatUntil { databaseHelper.getOHQueueSize() == 0L }
@@ -452,6 +453,7 @@ class OpenHumansUploader @Inject constructor(
                 aapsLogger.error(LTag.OHUPLOADER, "Segmental upload exceptional", it)
             }
 
+    @kotlin.ExperimentalStdlibApi
     @Suppress("SameParameterValue")
     private fun uploadData(maxEntries: Long): Completable = gatherData(maxEntries)
         .flatMap { data -> refreshAccessTokensIfNeeded().map { accessToken -> accessToken to data } }
@@ -494,6 +496,7 @@ class OpenHumansUploader @Inject constructor(
         }
     }
 
+    @kotlin.ExperimentalStdlibApi
     private fun gatherData(maxEntries: Long) = Single.defer {
         val items = databaseHelper.getAllOHQueueItems(maxEntries)
         val baos = ByteArrayOutputStream()

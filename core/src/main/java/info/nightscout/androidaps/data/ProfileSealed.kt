@@ -15,7 +15,6 @@ import info.nightscout.androidaps.interfaces.Profile.Companion.secondsFromMidnig
 import info.nightscout.androidaps.interfaces.Profile.Companion.toMgdl
 import info.nightscout.androidaps.interfaces.Profile.ProfileValue
 import info.nightscout.androidaps.interfaces.Pump
-import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
@@ -144,6 +143,19 @@ sealed class ProfileSealed(
 
     override val timeshift: Int
         get() = ts
+
+    override fun isEqual(profile: Profile): Boolean {
+        for (hour in 0..23) {
+            val seconds = T.hours(hour.toLong()).secs().toInt()
+            if (getBasalTimeFromMidnight(seconds) !=  profile.getBasalTimeFromMidnight(seconds)) return false
+            if (getIsfMgdlTimeFromMidnight(seconds) !=  profile.getIsfMgdlTimeFromMidnight(seconds)) return false
+            if (getIcTimeFromMidnight(seconds) !=  profile.getIcTimeFromMidnight(seconds)) return false
+            if (getTargetLowMgdlTimeFromMidnight(seconds) !=  profile.getTargetLowMgdlTimeFromMidnight(seconds)) return false
+            if (getTargetHighMgdlTimeFromMidnight(seconds) !=  profile.getTargetHighMgdlTimeFromMidnight(seconds)) return false
+            if (dia != profile.dia) return false
+        }
+        return true
+    }
 
     override val percentage: Int
         get() = pct

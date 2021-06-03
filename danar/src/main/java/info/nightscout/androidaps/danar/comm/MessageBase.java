@@ -14,6 +14,7 @@ import javax.inject.Inject;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.dana.DanaPump;
+import info.nightscout.androidaps.dana.database.DanaHistoryRecordDao;
 import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.danaRv2.DanaRv2Plugin;
 import info.nightscout.androidaps.danar.DanaRPlugin;
@@ -54,7 +55,7 @@ public class MessageBase {
     @Inject public TemporaryBasalStorage temporaryBasalStorage;
     @Inject public ConstraintChecker constraintChecker;
     @Inject public PumpSync pumpSync;
-    @Inject public DatabaseHelperInterface databaseHelper;
+    @Inject public DanaHistoryRecordDao danaHistoryRecordDao;
     HasAndroidInjector injector;
 
     public byte[] buffer = new byte[512];

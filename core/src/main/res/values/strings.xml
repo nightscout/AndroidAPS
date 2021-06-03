@@ -19,7 +19,6 @@
     <string name="key_high_mark" translatable="false">high_mark</string>
     <string name="key_ns_create_announcements_from_errors" translatable="false">ns_create_announcements_from_errors</string>
     <string name="key_ns_logappstartedevent" translatable="false">ns_logappstartedevent</string>
-    <string name="key_ns_uploadlocalprofile" translatable="false">ns_uploadlocalprofile</string>
     <string name="key_btwatchdog" translatable="false">bt_watchdog</string>
     <string name="key_btwatchdog_lastbark" translatable="false">bt_watchdog_last</string>
     <string name="key_pump_unreachable_threshold_minutes" translatable="false">pump_unreachable_threshold</string>
@@ -321,32 +320,6 @@
     <string name="timedetection">Time detection</string>
     <string name="format_hour_minute">%1$dh %2$dm</string>
 
-    <!-- PumoCommon - Pump Abstract -->
-    <string name="pump_operation_not_supported_by_pump_driver">Operation not supported by pump and/or driver.</string>
-    <string name="pump_operation_not_yet_supported_by_pump">Operation not YET supported by pump.</string>
-    <string name="common_resultok">OK</string>
-
-    <!-- PumoCommon - Pump Status -->
-    <string name="pump_status_never_contacted">Never contacted</string>
-    <string name="pump_status_waking_up">Waking up</string>
-    <string name="pump_status_error_comm">Error with communication</string>
-    <string name="pump_status_timeout_comm">Timeout on communication</string>
-    <string name="pump_status_pump_unreachable">Pump unreachable</string>
-    <string name="pump_status_invalid_config">Invalid configuration</string>
-    <string name="pump_status_active">Active</string>
-    <string name="pump_status_sleeping">Sleeping</string>
-
-    <!-- PumpCommon - History Group -->
-    <string name="history_group_basal">Basals</string>
-    <string name="history_group_configuration">Configurations</string>
-    <string name="history_group_notification">Notifications</string>
-    <string name="history_group_statistic">Statistics</string>
-    <string name="history_group_unknown">Unknowns</string>
-    <string name="history_group_all">All</string>
-    <string name="history_group_bolus">Boluses</string>
-    <string name="history_group_prime">Prime</string>
-    <string name="history_group_alarm">Alarms</string>
-    <string name="history_group_glucose">Glucose</string>
     <string name="mute5min">Mute for 5 minutes</string>
 
     <!-- Maintenance -->
@@ -414,7 +387,7 @@
     <string name="uel_carbs">CARBS</string>
     <string name="uel_extended_carbs">EXTENDED CARBS</string>
     <string name="uel_temp_basal">TEMP BASAL</string>
-    <string name="uel_tt">TT</string>
+    <string name="uel_tt">TEMP TARGET</string>
     <string name="uel_new_profile">NEW PROFILE</string>
     <string name="uel_clone_profile">CLONE PROFILE</string>
     <string name="uel_store_profile">STORE PROFILE</string>
@@ -435,7 +408,7 @@
     <string name="uel_cancel_temp_basal">CANCEL TEMP BASAL</string>
     <string name="uel_cancel_bolus">CANCEL BOLUS</string>
     <string name="uel_cancel_extended_bolus">CANCEL EXTENDED BOLUS</string>
-    <string name="uel_cancel_tt">CANCEL TT</string>
+    <string name="uel_cancel_tt">CANCEL TEMP TARGET</string>
     <string name="uel_careportal">CAREPORTAL</string>
     <string name="uel_site_change">SITE CHANGE</string>
     <string name="uel_reservoir_change">RESERVOIR CHANGE</string>
@@ -445,7 +418,7 @@
     <string name="uel_careportal_ns_refresh">CAREPORTAL NS REFRESH</string>
     <string name="uel_profile_switch_ns_refresh">PROFILE SWITCH NS REFRESH</string>
     <string name="uel_treatments_ns_refresh">TREATMENTS NS REFRESH</string>
-    <string name="uel_tt_ns_refresh">TT NS REFRESH</string>
+    <string name="uel_tt_ns_refresh">TEMP TARGET NS REFRESH</string>
     <string name="uel_automation_removed">AUTOMATION REMOVED</string>
     <string name="uel_bg_removed">BG REMOVED</string>
     <string name="uel_careportal_removed">CAREPORTAL REMOVED</string>
@@ -459,7 +432,7 @@
     <string name="uel_profile_switch_removed">PROFILE SWITCH REMOVED</string>
     <string name="uel_restart_events_removed">RESTART EVENTS REMOVED</string>
     <string name="uel_treatment_removed">TREATMENT REMOVED</string>
-    <string name="uel_tt_removed">TT REMOVED</string>
+    <string name="uel_tt_removed">TEMP TARGET REMOVED</string>
     <string name="uel_ns_paused">NS PAUSED</string>
     <string name="uel_ns_resume">NS RESUME</string>
     <string name="uel_ns_queue_cleared">NS QUEUE CLEARED</string>
@@ -487,7 +460,7 @@
     <string name="uel_plugin_enabled">PLUGIN ENABLED</string>
     <string name="uel_plugin_disabled">PLUGIN DISABLED</string>
     <string name="uel_unknown">UNKNOWN</string>
-    <string name="ue_formated_string">Formated string</string>
+    <string name="ue_string">String</string>
     <string name="ue_source">Source</string>
     <string name="ue_utc_offset">UTC Offset</string>
     <string name="ue_action">Action</string>
@@ -495,6 +468,9 @@
     <string name="ue_none">No Unit</string>
     <string name="ue_export_to_csv">Export User Entries to Excel (csv)</string>
     <string name="ue_csv_header" translatable="false">"%1$s;%2$s;%3$s;%4$s;%5$s;%6$s;%7$s;%8$s;%9$s;%10$s;%11$s;%12$s;%13$s;%14$s;%15$s;%16$s;%17$s"</string>
+    <string name="uel_loop_change">LOOP CHANGED</string>
+    <string name="uel_loop_removed">LOOP REMOVED</string>
+    <string name="uel_other">OTHER</string>
 
     <plurals name="days">
         <item quantity="one">%1$d day</item>

@@ -18,6 +18,12 @@ internal interface TemporaryBasalDao : TraceableDao<TemporaryBasal> {
     @Query("DELETE FROM $TABLE_TEMPORARY_BASALS")
     override fun deleteAllEntries()
 
+    @Query("SELECT id FROM $TABLE_TEMPORARY_BASALS ORDER BY id DESC limit 1")
+    fun getLastId(): Maybe<Long>
+
+    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE temporaryId = :temporaryId")
+    fun findByTempId(temporaryId: Long): TemporaryBasal?
+
     @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE timestamp = :timestamp AND referenceId IS NULL")
     fun findByTimestamp(timestamp: Long): TemporaryBasal?
 
@@ -29,6 +35,9 @@ internal interface TemporaryBasalDao : TraceableDao<TemporaryBasal> {
 
     @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE nightscoutId = :nsId AND referenceId IS NULL")
     fun findByNSId(nsId: String): TemporaryBasal?
+
+    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE temporaryId = :temporaryId AND pumpType = :pumpType AND pumpSerial = :pumpSerial AND referenceId IS NULL")
+    fun findByPumpTempIds(temporaryId: Long, pumpType: InterfaceIDs.PumpType, pumpSerial: String): TemporaryBasal?
 
     @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE timestamp <= :timestamp AND (timestamp + duration) > :timestamp AND pumpType = :pumpType AND pumpSerial = :pumpSerial AND referenceId IS NULL AND isValid = 1 ORDER BY timestamp DESC LIMIT 1")
     fun getTemporaryBasalActiveAt(timestamp: Long, pumpType: InterfaceIDs.PumpType, pumpSerial: String): Maybe<TemporaryBasal>

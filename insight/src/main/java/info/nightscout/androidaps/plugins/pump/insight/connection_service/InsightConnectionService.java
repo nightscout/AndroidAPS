@@ -20,6 +20,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.android.DaggerService;
+import info.nightscout.androidaps.insight.R;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage;
@@ -141,10 +142,10 @@ public class InsightConnectionService extends DaggerService implements Connectio
     }
 
     private void increaseRecoveryDuration() {
-        long maxRecoveryDuration = sp.getInt("insight_max_recovery_duration", 20);
+        long maxRecoveryDuration = sp.getInt(R.string.key_insight_max_recovery_duration, 20);
         maxRecoveryDuration = Math.min(maxRecoveryDuration, 20);
         maxRecoveryDuration = Math.max(maxRecoveryDuration, 0);
-        long minRecoveryDuration = sp.getInt("insight_min_recovery_duration", 5);
+        long minRecoveryDuration = sp.getInt(R.string.key_insight_min_recovery_duration, 5);
         minRecoveryDuration = Math.min(minRecoveryDuration, 20);
         minRecoveryDuration = Math.max(minRecoveryDuration, 0);
         recoveryDuration += 1000;
@@ -295,7 +296,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
                 setState(InsightState.DISCONNECTED);
                 cleanup(true);
             } else if (state != InsightState.DISCONNECTED) {
-                long disconnectTimeout = sp.getInt("insight_disconnect_delay", 5);
+                long disconnectTimeout = sp.getInt(R.string.key_insight_disconnect_delay, 5);
                 disconnectTimeout = Math.min(disconnectTimeout, 15);
                 disconnectTimeout = Math.max(disconnectTimeout, 0);
                 aapsLogger.info(LTag.PUMP, "Last connection lock released, will disconnect in " + disconnectTimeout + " seconds");

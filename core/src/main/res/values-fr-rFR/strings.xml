@@ -105,6 +105,7 @@
     <string name="notes_label">Notes</string>
     <string name="remove_button">Supprimer</string>
     <string name="addnew">Ajouter</string>
+    <string name="wrong_pump_data">Les données proviennent de différentes pompes. Changer le pilote de la pompe pour réinitialiser l\'état de la pompe.</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiter le débit de basal max à %1$.2f U/h à cause de %2$s</string>
     <string name="pumplimit">Limite de la pompe</string>
@@ -154,6 +155,7 @@
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
     <string name="noprofileselected">Aucun profil séléctionné</string>
+    <string name="startprofile">Démarrer le profil %1$d%% pour %2$d min</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Uniquement les valeurs unitaires sont acceptées. Les plages pour les basal/bolus ne sont pas supportées par les pompes virtuelles.</string>
     <!--    APSResult-->
@@ -178,12 +180,12 @@
     <string name="careportal_note">Remarque</string>
     <string name="careportal_question">Question</string>
     <string name="careportal_exercise">Activité Physique</string>
-    <string name="careportal_pumpsitechange">Changement Zone D\'insertion</string>
+    <string name="careportal_pumpsitechange">Changement de site</string>
     <string name="careportal_cgmsensorinsert">Insertion Capteur MGC</string>
     <string name="careportal_cgmsensorstart">Démarrage Capteur MGC</string>
     <string name="careportal_cgm_sensor_stop">Arrêt capteur MGC</string>
     <string name="careportal_dad_alert">Chien d\'alerte</string>
-    <string name="careportal_insulincartridgechange">Changement du Réservoir</string>
+    <string name="careportal_insulincartridgechange">Changement du réservoir</string>
     <string name="careportal_profileswitch">Changement de profil</string>
     <string name="careportal_snackbolus">Bolus Goûter</string>
     <string name="careportal_mealbolus">Bolus Repas</string>
@@ -193,8 +195,8 @@
     <string name="careportal_tempbasalend">Fin Basal Temp</string>
     <string name="careportal_carbscorrection">Ressucrage</string>
     <string name="careportal_openapsoffline">OpenAPS hors ligne</string>
-    <string name="careportal_pumpbatterychange">Changement Pile Pompe</string>
-    <string name="careportal_temporarytarget">Cible temp.</string>
+    <string name="careportal_pumpbatterychange">Changement pile pompe</string>
+    <string name="careportal_temporarytarget">Cible Temp</string>
     <string name="careportal_temporarytargetcancel">Annuler Cible Temporaire</string>
     <string name="boluswizard">Assistant Bolus</string>
     <string name="glucosetype_finger">Doigt</string>
@@ -207,6 +209,10 @@
     <string name="wear">Montre</string>
     <string name="automation">Automatisation</string>
     <string name="custom">Manuel</string>
+    <string name="pump">Pompe</string>
+    <string name="loop">Boucle</string>
+    <string name="ns">NS</string>
+    <string name="record">Enregistrement</string>
     <!--    Command-->
     <string name="connectiontimedout">Connexion expirée</string>
     <!--    PumpEnactResult-->
@@ -238,30 +244,6 @@
     <!--    Ntp-->
     <string name="timedetection">Détection de temps</string>
     <string name="format_hour_minute">%1$dh%2$dm</string>
-    <!-- PumoCommon - Pump Abstract -->
-    <string name="pump_operation_not_supported_by_pump_driver">Opération non prise en charge par la pompe et/ou le pilote.</string>
-    <string name="pump_operation_not_yet_supported_by_pump">Opération non ENCORE supportée par la pompe.</string>
-    <string name="common_resultok">OK</string>
-    <!-- PumoCommon - Pump Status -->
-    <string name="pump_status_never_contacted">Jamais contacté</string>
-    <string name="pump_status_waking_up">Réveil en cours</string>
-    <string name="pump_status_error_comm">Erreur de communication</string>
-    <string name="pump_status_timeout_comm">Expiration du délai d\'attente en communication</string>
-    <string name="pump_status_pump_unreachable">Pompe hors de portée</string>
-    <string name="pump_status_invalid_config">Configuration non valable</string>
-    <string name="pump_status_active">Activé</string>
-    <string name="pump_status_sleeping">En veille</string>
-    <!-- PumpCommon - History Group -->
-    <string name="history_group_basal">Basals</string>
-    <string name="history_group_configuration">Configurations</string>
-    <string name="history_group_notification">Notifications</string>
-    <string name="history_group_statistic">Statistiques</string>
-    <string name="history_group_unknown">Inconnus</string>
-    <string name="history_group_all">Tous</string>
-    <string name="history_group_bolus">Bolus</string>
-    <string name="history_group_prime">Amorcer</string>
-    <string name="history_group_alarm">Alarmes</string>
-    <string name="history_group_glucose">Glucose</string>
     <string name="mute5min">Muet pendant 5 minutes</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">Format de fichier</string>
@@ -314,14 +296,13 @@
     <string name="sunday_short">D</string>
     <!-- User Entry -->
     <string name="uel_bolus">BOLUS</string>
-    <string name="uel_bolus_advisor">ASSISTANT DE BOLUS</string>
-    <string name="uel_bolus_record">BOLUS ENREGISTRÉ</string>
+    <string name="uel_bolus_advisor">ASSISTANT BOLUS</string>
     <string name="uel_extended_bolus">BOLUS ÉTENDU</string>
     <string name="uel_superbolus_tbr">DBT SUPERBOLUS</string>
     <string name="uel_carbs">GLUCIDES</string>
     <string name="uel_extended_carbs">GLUCIDES ÉTENDUS</string>
     <string name="uel_temp_basal">BASAL TEMP</string>
-    <string name="uel_tt">CT</string>
+    <string name="uel_tt">CIBLE TEMP</string>
     <string name="uel_new_profile">NOUVEAU PROFIL</string>
     <string name="uel_clone_profile">PROFIL DUPLIQUÉ</string>
     <string name="uel_store_profile">PROFIL SAUVEGARDÉ</string>
@@ -340,26 +321,33 @@
     <string name="uel_clear_pairing_keys">CLÉS D\'APPAIRAGE EFFACÉES</string>
     <string name="uel_accepts_temp_basal">TEMP BASAL ACCEPTÉE</string>
     <string name="uel_cancel_temp_basal">TEMP BASAL ANNULÉE</string>
+    <string name="uel_cancel_bolus">ANNULER BOLUS</string>
     <string name="uel_cancel_extended_bolus">BOLUS ÉTENDU ANNULÉ</string>
-    <string name="uel_cancel_tt">CT ANNULÉE</string>
+    <string name="uel_cancel_tt">ANNULER CIBLE TEMP</string>
     <string name="uel_careportal">CAREPORTAL</string>
+    <string name="uel_site_change">CHANGEMENT DE SITE</string>
+    <string name="uel_reservoir_change">CHANGEMENT DU RÉSERVOIR</string>
     <string name="uel_calibration">ÉTALONNAGE</string>
     <string name="uel_prime_bolus">BOLUS D\'AMORÇAGE</string>
     <string name="uel_treatment">TRAITEMENT</string>
     <string name="uel_careportal_ns_refresh">CAREPORTAL ACTU NS</string>
     <string name="uel_profile_switch_ns_refresh">CHANGEMENT DE PROFIL ACTU NS</string>
     <string name="uel_treatments_ns_refresh">TREATMENTS ACTU NS</string>
-    <string name="uel_tt_ns_refresh">CT ACTU NS</string>
+    <string name="uel_tt_ns_refresh">RÉGÉNÉRATION NS CIBLES TEMP</string>
     <string name="uel_automation_removed">AUTOMATISATION SUPPRIMÉE</string>
     <string name="uel_bg_removed">GLY SUPPRIMÉE</string>
     <string name="uel_careportal_removed">CAREPORTAL SUPPRIMÉ</string>
+    <string name="uel_bolus_removed">BOLUS SUPPRIMÉ</string>
+    <string name="uel_carbs_removed">GLUCIDES SUPPRIMÉS</string>
+    <string name="uel_temp_basal_removed">BASAL TEMP SUPPRIMÉ</string>
     <string name="uel_extended_bolus_removed">BOLUS ÉTENDU SUPPRIMÉ</string>
+    <string name="uel_food">ALIMENTS</string>
     <string name="uel_food_removed">ALIMENT SUPPRIMÉ</string>
     <string name="uel_profile_removed">PROFIL SUPPRIMÉ</string>
     <string name="uel_profile_switch_removed">CHANGEMENT DE PROFIL SUPPRIMÉ</string>
     <string name="uel_restart_events_removed">REDÉMARRAGES SUPPRIMÉS</string>
     <string name="uel_treatment_removed">TRAITEMENT SUPPRIMÉ</string>
-    <string name="uel_tt_removed">CT SUPPRIMÉE</string>
+    <string name="uel_tt_removed">CIBLE TEMP SUPPRIMÉE</string>
     <string name="uel_ns_paused">PAUSE NS</string>
     <string name="uel_ns_resume">REPRISE NS</string>
     <string name="uel_ns_queue_cleared">QUEUE NS SUPPRIMÉE</string>
@@ -380,30 +368,20 @@
     <string name="uel_import_databases">BASE DE DONNÉES IMPORTÉE</string>
     <string name="uel_otp_export">OTP EXPORTÉ</string>
     <string name="uel_otp_reset">OTP RÉINITIALISÉ</string>
-    <string name="uel_sms_basal">BASAL (SMS)</string>
-    <string name="uel_sms_bolus">BOLUS (SMS)</string>
-    <string name="uel_sms_cal">CAL (SMS)</string>
-    <string name="uel_sms_carbs">GLUCIDES (SMS)</string>
-    <string name="uel_sms_extended_bolus">BOLUS ÉTENDU (SMS)</string>
-    <string name="uel_sms_loop_disabled">BOUCLE DÉSACTIVÉE (SMS)</string>
-    <string name="uel_sms_loop_enabled">BOUCLE ACTIVÉE (SMS)</string>
-    <string name="uel_sms_loop_resume">REPRISE BOUCLE (SMS)</string>
-    <string name="uel_sms_loop_suspend">BOUCLE SUSPENDUE (SMS)</string>
-    <string name="uel_sms_profile">PROFILE (SMS)</string>
-    <string name="uel_sms_pump_connect">POMPE CONNECTÉE (SMS)</string>
-    <string name="uel_sms_pump_disconnect">POMPE DÉCONNECTÉE (SMS)</string>
-    <string name="uel_sms_sms">SMS (SMS)</string>
-    <string name="uel_sms_tt">CT (SMS)</string>
-    <string name="uel_tt_deleted_from_ns">CT SUPPRIMÉ (NS)</string>
-    <string name="uel_careportal_deleted_from_ns">CAREPORTAL SUPPRIMÉ (NS)</string>
-    <string name="uel_careportal_from_ns">CAREPORTAL (NS)</string>
-    <string name="uel_tt_from_ns">CT (NS)</string>
-    <string name="uel_tt_canceleted_from_ns">CT SUPPRIMÉ (NS)</string>
+    <string name="uel_stop_sms">ARRÊTER SMS</string>
     <string name="uel_export_csv">ENTRÉES UTILISATEUR EXPORTÉES</string>
+    <string name="uel_start_aaps">DÉMARRER AAPS</string>
+    <string name="uel_exit_aaps">QUITTER AAPS</string>
+    <string name="uel_plugin_enabled">PLUGIN ACTIVÉ</string>
+    <string name="uel_plugin_disabled">PLUGIN DÉSACTIVÉ</string>
     <string name="uel_unknown">INCONNU</string>
-    <string name="formated_string">Chaîne de caractères formatée</string>
+    <string name="ue_string">Chaîne</string>
+    <string name="ue_source">Source</string>
+    <string name="ue_utc_offset">Décalage UTC</string>
+    <string name="ue_action">Action</string>
+    <string name="ue_timestamp">Horodatage</string>
+    <string name="ue_none">Aucune unité</string>
     <string name="ue_export_to_csv">Exporter les entrées utilisateur vers Excel (csv)</string>
-    <string name="ue_csv_header">"Horodatage;Date;Décalage TU;Action;Note;Valeur;Unité"</string>
     <plurals name="days">
         <item quantity="one">%1$d jour</item>
         <item quantity="other">%1$d jours</item>

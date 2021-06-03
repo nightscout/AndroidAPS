@@ -92,8 +92,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:weightSum="5"
-            android:paddingBottom="10dp">
+            android:paddingBottom="10dp"
+            android:weightSum="5">
 
             <TextView
                 android:id="@+id/dia_tab"
@@ -228,10 +228,24 @@
 
         <LinearLayout
             android:id="@+id/basal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
-            android:orientation="vertical" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/basal_holder"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical" />
+
+            <info.nightscout.androidaps.utils.ui.ProfileGraph
+                android:id="@+id/basal_graph"
+                android:layout_width="match_parent"
+                android:layout_height="100dip"
+                android:layout_margin="20dp" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/target"
@@ -248,15 +262,15 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="3dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_marginTop="3dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="3dp"
             android:layout_weight="1"
+            android:drawableStart="@drawable/ic_local_activate"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:text="@string/activate_profile"
-            android:drawableStart="@drawable/ic_local_activate" />
+            android:text="@string/activate_profile" />
 
         <LinearLayout
             android:layout_width="match_parent"

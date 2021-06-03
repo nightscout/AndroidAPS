@@ -103,6 +103,7 @@
     <string name="notes_label">Notizen</string>
     <string name="remove_button">Löschen</string>
     <string name="addnew">Weiteren hinzufügen</string>
+    <string name="wrong_pump_data">Daten kommen von einer anderen Pumpe. Wechsle den Pumpentreiber.</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Begrenzung der max. Basalrate auf %1$.2f IE/h wegen %2$s</string>
     <string name="pumplimit">Limit der Pumpe</string>
@@ -152,6 +153,7 @@
     <string name="profile_carbs_per_unit">g/IE</string>
     <!--    ProfileFunction-->
     <string name="noprofileselected">Kein Profil ausgewählt</string>
+    <string name="startprofile">Profil %1$d%% für %2$d Min. starten</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Bei der virtuellen Pumpe können nur einzelne Werte und keine Bereiche zur Festlegung der Basal/Bolus-Granularität gewählt werden.</string>
     <!--    APSResult-->
@@ -204,6 +206,10 @@
     <string name="wear">Wear</string>
     <string name="automation">Automatisierung</string>
     <string name="custom">Benutzerdefiniert</string>
+    <string name="pump">Pumpe</string>
+    <string name="loop">Loop</string>
+    <string name="ns">NS</string>
+    <string name="record">Eintrag</string>
     <!--    Command-->
     <string name="connectiontimedout">Zeitüberschreitung bei Verbindung</string>
     <!--    PumpEnactResult-->
@@ -235,30 +241,6 @@
     <!--    Ntp-->
     <string name="timedetection">Zeiterkennung</string>
     <string name="format_hour_minute">%1$dh %2$dm</string>
-    <!-- PumoCommon - Pump Abstract -->
-    <string name="pump_operation_not_supported_by_pump_driver">Aktion von Pumpe und/oder Treiber nicht unterstützt.</string>
-    <string name="pump_operation_not_yet_supported_by_pump">Operation NOCH NICHT von Pumpe unterstützt.</string>
-    <string name="common_resultok">OK</string>
-    <!-- PumoCommon - Pump Status -->
-    <string name="pump_status_never_contacted">Nie verbunden</string>
-    <string name="pump_status_waking_up">Aufwecken</string>
-    <string name="pump_status_error_comm">Fehler bei der Kommunikation</string>
-    <string name="pump_status_timeout_comm">Zeitüberschreitung bei Kommunikation</string>
-    <string name="pump_status_pump_unreachable">Pumpe nicht erreichbar</string>
-    <string name="pump_status_invalid_config">Ungültige Einstellung</string>
-    <string name="pump_status_active">Aktiv</string>
-    <string name="pump_status_sleeping">Schlafen</string>
-    <!-- PumpCommon - History Group -->
-    <string name="history_group_basal">Basal</string>
-    <string name="history_group_configuration">Konfigurationen</string>
-    <string name="history_group_notification">Benachrichtigungen</string>
-    <string name="history_group_statistic">Statistiken</string>
-    <string name="history_group_unknown">Unbekannte</string>
-    <string name="history_group_all">Alle</string>
-    <string name="history_group_bolus">Boli</string>
-    <string name="history_group_prime">Füllen</string>
-    <string name="history_group_alarm">Alarme</string>
-    <string name="history_group_glucose">Glukose</string>
     <string name="mute5min">Stumm schalten für 5 Minuten</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">Dateiformat</string>
@@ -310,6 +292,28 @@
     <string name="saturday_short">Sa</string>
     <string name="sunday_short">So</string>
     <!-- User Entry -->
+    <string name="uel_tt">TEMP. ZIEL</string>
+    <string name="uel_cancel_bolus">BOLUS ABBRECHEN</string>
+    <string name="uel_cancel_tt">TEMP. ZIEL ABBRECHEN</string>
+    <string name="uel_site_change">KANÜLENWECHSEL</string>
+    <string name="uel_reservoir_change">RESERVOIRWECHSEL</string>
+    <string name="uel_tt_ns_refresh">TEMP. ZIEL NS AKTUALISIEREN</string>
+    <string name="uel_bolus_removed">BOLUS ENTFERNT</string>
+    <string name="uel_carbs_removed">KOHLENHYDRATE ENTFERNT</string>
+    <string name="uel_temp_basal_removed">TEMP BASAL ENTFERNT</string>
+    <string name="uel_food">NAHRUNG</string>
+    <string name="uel_tt_removed">TEMP ZIEL ENTFERNT</string>
+    <string name="uel_stop_sms">STOP SMS</string>
+    <string name="uel_start_aaps">STARTE AAPS</string>
+    <string name="uel_exit_aaps">AAPS BEENDEN</string>
+    <string name="uel_plugin_enabled">PLUGIN AKTIVIERT</string>
+    <string name="uel_plugin_disabled">PLUGIN DEAKTIVIERT</string>
+    <string name="ue_string">Zeichenfolge</string>
+    <string name="ue_source">Quelle</string>
+    <string name="ue_utc_offset">UTC-Abstand</string>
+    <string name="ue_action">Aktion</string>
+    <string name="ue_timestamp">Zeitstempel</string>
+    <string name="ue_none">Keine Einheit</string>
     <plurals name="days">
         <item quantity="one">%1$d Tag</item>
         <item quantity="other">%1$d Tage</item>

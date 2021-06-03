@@ -8,7 +8,7 @@ class InvalidateAAPSStartedTherapyEventTransaction(private val note: String) : T
         val result = TransactionResult()
         val therapyEvents = database.therapyEventDao.getValidByType(TherapyEvent.Type.NOTE)
         for (event in therapyEvents) {
-            if (event.note?.contains(note) == true) {
+            if (event.note?.contains(note) == true && event.isValid) {
                 event.isValid = false
                 database.therapyEventDao.updateExistingEntry(event)
                 result.invalidated.add(event)

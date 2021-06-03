@@ -16,7 +16,17 @@ import java.util.*
         entity = TemporaryBasal::class,
         parentColumns = ["id"],
         childColumns = ["referenceId"])],
-    indices = [Index("referenceId"), Index("timestamp")])
+    indices = [
+        Index("id"),
+        Index("isValid"),
+        Index("nightscoutId"),
+        Index("pumpType"),
+        Index("endId"),
+        Index("pumpSerial"),
+        Index("temporaryId"),
+        Index("referenceId"),
+        Index("timestamp")
+    ])
 data class TemporaryBasal(
     @PrimaryKey(autoGenerate = true)
     override var id: Long = 0,
@@ -35,8 +45,7 @@ data class TemporaryBasal(
 ) : TraceableDBEntry, DBEntryWithTimeAndDuration {
 
     init {
-        if (duration <= 0)
-            require(duration > 0)
+        require(duration > 0)
     }
 
     enum class Type {

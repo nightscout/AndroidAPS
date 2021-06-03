@@ -11,6 +11,7 @@ buildscript {
     }
 }
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 apply plugin: 'com.hiya.jacoco-android'
 
 jacoco {
@@ -19,6 +20,7 @@ jacoco {
 
 ext {
     wearableVersion = "2.8.1"
+    // playServicesWearable 17.1.0 breaks test
     playServicesWearable = "17.0.0"
 }
 
@@ -143,9 +145,14 @@ dependencies {
     testImplementation "org.powermock:powermock-module-junit4-rule:${powermockVersion}"
     testImplementation "org.powermock:powermock-module-junit4:${powermockVersion}"
     testImplementation "joda-time:joda-time:$jodatime_version"
-    testImplementation('com.google.truth:truth:1.1.2') {
+    testImplementation('com.google.truth:truth:1.1.3') {
         exclude group: "com.google.guava", module: "guava"
     }
     testImplementation "org.skyscreamer:jsonassert:1.5.0"
     testImplementation "org.hamcrest:hamcrest-all:1.3"
+    implementation "androidx.core:core-ktx:+"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }

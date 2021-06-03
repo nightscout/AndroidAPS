@@ -17,7 +17,14 @@ import java.util.*
         entity = TherapyEvent::class,
         parentColumns = ["id"],
         childColumns = ["referenceId"])],
-    indices = [Index("referenceId"), Index("timestamp")])
+    indices = [
+        Index("id"),
+        Index("type"),
+        Index("nightscoutId"),
+        Index("isValid"),
+        Index("referenceId"),
+        Index("timestamp")
+    ])
 data class TherapyEvent(
     @PrimaryKey(autoGenerate = true)
     override var id: Long = 0,

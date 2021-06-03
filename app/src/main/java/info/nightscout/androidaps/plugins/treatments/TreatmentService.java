@@ -105,23 +105,8 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> impleme
             return wrapped.queryForAll();
         }
 
-        public void delete(Treatment data) throws SQLException {
-            wrapped.delete(data);
-            openHumansUploader.enqueueTreatment(data, true);
-        }
-
-        public void create(Treatment data) throws SQLException {
-            wrapped.create(data);
-            openHumansUploader.enqueueTreatment(data);
-        }
-
         public Treatment queryForId(long id) throws SQLException {
             return wrapped.queryForId(id);
-        }
-
-        public void update(Treatment data) throws SQLException {
-            wrapped.update(data);
-            openHumansUploader.enqueueTreatment(data);
         }
 
         public QueryBuilder<Treatment, Long> queryBuilder() {

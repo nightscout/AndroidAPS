@@ -11,15 +11,10 @@ import info.nightscout.androidaps.danaRKorean.services.DanaRKoreanExecutionServi
 import info.nightscout.androidaps.danar.AbstractDanaRPlugin
 import info.nightscout.androidaps.danar.R
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.events.EventAppExit
 import info.nightscout.androidaps.events.EventPreferenceChange
-import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.CommandQueueProvider
-import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.interfaces.PumpSync
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.interfaces.PumpSync.TemporaryBasalType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -60,7 +55,7 @@ class DanaRKoreanPlugin @Inject constructor(
     init {
         pluginDescription.description(R.string.description_pump_dana_r_korean)
         useExtendedBoluses = sp.getBoolean(R.string.key_danar_useextended, false)
-        pumpDescription.setPumpDescription(PumpType.DANA_R_KOREAN)
+        pumpDescription.fillFor(PumpType.DANA_R_KOREAN)
     }
 
     override fun onStart() {
@@ -130,7 +125,8 @@ class DanaRKoreanPlugin @Inject constructor(
             val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB)
             var connectionOK = false
             if (detailedBolusInfo.insulin > 0)
-                connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, detailedBolusInfo.carbs.toInt(), detailedBolusInfo.carbTime.toLong(), t)
+                connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, detailedBolusInfo.carbs.toInt(), detailedBolusInfo.carbsTimestamp
+                    ?: detailedBolusInfo.timestamp, t)
             val result = PumpEnactResult(injector)
             result.success(connectionOK && abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.bolusStep)
                 .bolusDelivered(t.insulin)
