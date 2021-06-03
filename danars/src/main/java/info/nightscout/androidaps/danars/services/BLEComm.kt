@@ -126,6 +126,7 @@ class BLEComm @Inject internal constructor(
         encryptedDataRead = false
         encryptedCommandSent = false
         isConnecting = true
+        bufferLength = 0
         aapsLogger.debug(LTag.PUMPBTCOMM, "Trying to create a new connection from: $from")
         connectDeviceName = device.name
         bluetoothGatt = device.connectGatt(context, false, mGattCallback)
