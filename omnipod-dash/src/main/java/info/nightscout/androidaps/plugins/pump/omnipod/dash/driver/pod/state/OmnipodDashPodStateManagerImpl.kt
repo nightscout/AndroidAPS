@@ -148,7 +148,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         get() = podState.tempBasal
 
     override val tempBasalActive: Boolean
-        get() = tempBasal != null && tempBasal!!.startTime + tempBasal!!.durationInMinutes * 60 * 1000 > System.currentTimeMillis()
+        get() = podState.deliveryStatus in arrayOf(DeliveryStatus.TEMP_BASAL_ACTIVE, DeliveryStatus.BOLUS_AND_TEMP_BASAL_ACTIVE)
 
     override var basalProgram: BasalProgram?
         get() = podState.basalProgram

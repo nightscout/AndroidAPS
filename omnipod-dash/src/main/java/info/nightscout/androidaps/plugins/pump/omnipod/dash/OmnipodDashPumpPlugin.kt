@@ -307,7 +307,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         return ret
     }
 
-    private fun observeNoActiveTempBasal(enforeNew: Boolean): Completable {
+    private fun observeNoActiveTempBasal(enforceNew: Boolean): Completable {
         return Completable.defer {
             val expectedState = pumpSync.expectedPumpState()
             when {
@@ -315,7 +315,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     aapsLogger.info(LTag.PUMP, "No temporary basal to cancel")
                     Completable.complete()
                 }
-                !enforeNew ->
+                !enforceNew ->
                     Completable.error(
                         IllegalStateException(
                             "Temporary basal already active and enforeNew is not set."
@@ -335,7 +335,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     private fun observeActiveTempBasal(): Completable {
         return Completable.defer {
-            if (pumpSync.expectedPumpState().temporaryBasal != null)
+            if (podStateManager.tempBasalActive)
                 Completable.complete()
             else
                 Completable.error(
