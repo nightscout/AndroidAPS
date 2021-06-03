@@ -37,6 +37,7 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.blockingSubscribeBy
 import io.reactivex.rxkotlin.subscribeBy
 import org.json.JSONObject
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -198,7 +199,6 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     override val baseBasalRate: Double
         get() = podStateManager.basalProgram?.rateAt(Date()) ?: 0.0
-            //pumpSync.expectedPumpState().profile?.getBasal() ?: 0.0
 
     override val reservoirLevel: Double
         get() {
