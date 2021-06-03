@@ -62,7 +62,7 @@ class TempBasalPair : TempBasalPair {
         aapsLogger.warn(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "TempBasalPair (with %d byte response): %s", response.size, toString()))
     }
 
-    constructor(insulinRate: Double, isPercent: Boolean, durationMinutes: Int) : super(insulinRate, isPercent, durationMinutes) {}
+    constructor(insulinRate: Double, isPercent: Boolean, durationMinutes: Int) : super(insulinRate, isPercent, durationMinutes)
 
     // list.add((byte) 0); // ?
 

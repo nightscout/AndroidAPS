@@ -13,6 +13,7 @@ import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.maintenance.LoggerUtils
+import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.androidaps.queue.commands.CommandTempBasalAbsolute
@@ -33,13 +34,13 @@ import org.powermock.modules.junit4.PowerMockRunner
 @RunWith(PowerMockRunner::class)
 @PrepareForTest(
     ConstraintChecker::class, VirtualPumpPlugin::class, ToastUtils::class, Context::class,
-    FabricPrivacy::class, LoggerUtils::class, PowerManager::class)
+    FabricPrivacy::class, PrefFileListProvider::class, PowerManager::class)
 class QueueThreadTest : TestBaseWithProfile() {
 
     @Mock lateinit var constraintChecker: ConstraintChecker
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var sp: SP
-    @Mock lateinit var loggerUtils: LoggerUtils
+    @Mock lateinit var fileListProvider: PrefFileListProvider
     @Mock lateinit var powerManager: PowerManager
     @Mock lateinit var repository: AppRepository
 
@@ -62,7 +63,7 @@ class QueueThreadTest : TestBaseWithProfile() {
     @Before
     fun prepare() {
         pumpPlugin = TestPumpPlugin(injector)
-        commandQueue = CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, activePlugin, context, sp, BuildHelper(ConfigImpl(), loggerUtils), dateUtil, repository, fabricPrivacy)
+        commandQueue = CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, activePlugin, context, sp, BuildHelper(ConfigImpl(), fileListProvider), dateUtil, repository, fabricPrivacy)
 
         val pumpDescription = PumpDescription()
         pumpDescription.basalMinimumRate = 0.1

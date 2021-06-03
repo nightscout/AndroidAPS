@@ -5,7 +5,7 @@ public enum BeepType {
     FOUR_TIMES_BIP_BEEP((byte) 0x02), // Used in low reservoir alert, user expiration alert, expiration alert, imminent expiration alert, lump of coal alert
     LONG_SINGLE_BEEP((byte) 0x06); // Used in stop delivery command
 
-    private byte value;
+    private final byte value;
 
     BeepType(byte value) {
         this.value = value;

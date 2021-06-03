@@ -4,5 +4,4 @@ import dagger.Module
 
 @Module
 @Suppress("unused")
-abstract class OmnipodDashModule {
-}
+abstract class OmnipodDashModule

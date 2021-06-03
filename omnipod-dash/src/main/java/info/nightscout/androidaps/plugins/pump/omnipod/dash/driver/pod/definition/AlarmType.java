@@ -157,7 +157,7 @@ public enum AlarmType {
     ALARM_BLE_QN_CRIT_VAR_FAIL((byte) 0xc2),
     UNKNOWN((byte) 0xff);
 
-    private byte value;
+    private final byte value;
 
     AlarmType(byte value) {
         this.value = value;

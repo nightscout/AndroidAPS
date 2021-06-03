@@ -48,7 +48,7 @@ data class TherapyEvent(
     enum class GlucoseUnit {
         MGDL,
         MMOL;
-        companion object { }
+        companion object
     }
 
     enum class MeterType(val text: String) {

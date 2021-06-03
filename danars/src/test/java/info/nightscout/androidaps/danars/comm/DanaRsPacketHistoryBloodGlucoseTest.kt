@@ -13,18 +13,18 @@ class DanaRsPacketHistoryBloodGlucoseTest : DanaRSTestBase() {
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is DanaRS_Packet) {
+            if (it is DanaRSPacket) {
                 it.aapsLogger = aapsLogger
                 it.dateUtil = dateUtil
             }
-            if (it is DanaRS_Packet_History_Blood_Glucose) {
+            if (it is DanaRSPacketHistoryBloodGlucose) {
                 it.rxBus = rxBus
             }
         }
     }
 
     @Test fun runTest() {
-        val packet = DanaRS_Packet_History_Blood_Glucose(packetInjector, System.currentTimeMillis())
+        val packet = DanaRSPacketHistoryBloodGlucose(packetInjector, System.currentTimeMillis())
         Assert.assertEquals("REVIEW__BLOOD_GLUCOSE", packet.friendlyName)
     }
 }

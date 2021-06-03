@@ -30,6 +30,6 @@ abstract class MedtronicModule {
     companion object {
 
         @Provides
-        fun byteUtilProvider(): ByteUtil = ByteUtil();
+        fun byteUtilProvider(): ByteUtil = ByteUtil()
     }
 }
