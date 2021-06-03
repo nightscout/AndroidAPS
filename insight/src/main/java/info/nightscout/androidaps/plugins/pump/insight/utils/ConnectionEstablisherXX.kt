@@ -6,7 +6,7 @@ import android.bluetooth.BluetoothSocket
 import java.io.IOException
 import java.util.*
 
-class ConnectionEstablisher(private val callback: Callback, private val forPairing: Boolean, private val bluetoothAdapter: BluetoothAdapter, private val bluetoothDevice: BluetoothDevice, private var socket: BluetoothSocket?) : Thread() {
+class ConnectionEstablisherXX(private val callback: Callback, private val forPairing: Boolean, private val bluetoothAdapter: BluetoothAdapter, private val bluetoothDevice: BluetoothDevice, private var socket: BluetoothSocket?) : Thread() {
 
     override fun run() {
         try {

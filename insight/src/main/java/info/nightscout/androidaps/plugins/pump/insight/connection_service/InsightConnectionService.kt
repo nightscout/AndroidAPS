@@ -356,7 +356,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
         this.buffer.putBytes(buffer, bytesRead)
         try {
             while (SatlMessage.hasCompletePacket(this.buffer)) {
-                val satlMessage = SatlMessage.deserialize(this.buffer, pairingDataStorage.lastNonceReceived!!, pairingDataStorage.incomingKey)
+                val satlMessage = SatlMessage.deserialize(this.buffer, pairingDataStorage.lastNonceReceived, pairingDataStorage.incomingKey)
                 satlMessage?.let {
                     if (pairingDataStorage.incomingKey != null && pairingDataStorage.lastNonceReceived != null && !pairingDataStorage.lastNonceReceived!!.isSmallerThan(it.nonce!!)) {
                         throw InvalidNonceException()

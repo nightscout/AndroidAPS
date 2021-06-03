@@ -72,11 +72,11 @@ abstract class SatlMessage {
         private const val PREAMBLE = 4293840008L
         private const val VERSION: Byte = 0x20
         @JvmStatic @Throws(InvalidMacTrailerException::class, InvalidSatlCRCException::class, InvalidNonceException::class, InvalidPreambleException::class, InvalidPacketLengthsException::class, IncompatibleSatlVersionException::class, InvalidSatlCommandException::class)
-        fun deserialize(data: ByteBuf, lastNonce: Nonce, key: ByteArray?): SatlMessage? {
+        fun deserialize(data: ByteBuf, lastNonce: Nonce?, key: ByteArray?): SatlMessage? {
             val satlMessage: SatlMessage?
             val satlContent = data.getBytes(8, data.filledSize - 16)
-            satlMessage = if (key == null) deserializeCRC(data) else deserializeCTR(data, lastNonce, key)
-            satlMessage!!.satlContent = satlContent
+            satlMessage = if (key == null) deserializeCRC(data) else lastNonce?.let { deserializeCTR(data, lastNonce, key) }
+            satlMessage?.satlContent = satlContent
             return satlMessage
         }
 
