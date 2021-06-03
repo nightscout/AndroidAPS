@@ -589,7 +589,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
         intent.putExtras(params);
 
         PendingIntent resultPendingIntent =
-                PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
 
         builder = builder.setContentIntent(resultPendingIntent);
 
