@@ -395,6 +395,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             OmnipodCommandType.SET_TEMPORARY_BASAL ->
                 // This treatment was synced before sending the command
                 if (!confirmation.success) {
+                    // TODO: the ID here is the temp basal id, not the pumpId!!
                     pumpSync.invalidateTemporaryBasal(historyEntry.pumpId())
                 }
 
