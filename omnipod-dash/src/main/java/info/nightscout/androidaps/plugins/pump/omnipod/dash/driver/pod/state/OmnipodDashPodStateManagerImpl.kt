@@ -190,27 +190,27 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     @Synchronized
     override fun createActiveCommand(historyId: String, basalProgram: BasalProgram?):
         Single<OmnipodDashPodStateManager.ActiveCommand> {
-        return Single.create { source ->
-            if (activeCommand == null) {
-                val command = OmnipodDashPodStateManager.ActiveCommand(
-                    podState.messageSequenceNumber,
-                    createdRealtime = SystemClock.elapsedRealtime(),
-                    historyId = historyId,
-                    sendError = null,
-                    basalProgram = basalProgram,
-                )
-                podState.activeCommand = command
-                source.onSuccess(command)
-            } else {
-                source.onError(
-                    java.lang.IllegalStateException(
-                        "Trying to send a command " +
-                            "and the last command was not confirmed"
+            return Single.create { source ->
+                if (activeCommand == null) {
+                    val command = OmnipodDashPodStateManager.ActiveCommand(
+                        podState.messageSequenceNumber,
+                        createdRealtime = SystemClock.elapsedRealtime(),
+                        historyId = historyId,
+                        sendError = null,
+                        basalProgram = basalProgram,
                     )
-                )
+                    podState.activeCommand = command
+                    source.onSuccess(command)
+                } else {
+                    source.onError(
+                        java.lang.IllegalStateException(
+                            "Trying to send a command " +
+                                "and the last command was not confirmed"
+                        )
+                    )
+                }
             }
         }
-    }
 
     @Synchronized
     override fun observeNoActiveCommand(): Observable<PodEvent> {

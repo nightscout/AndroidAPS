@@ -55,29 +55,29 @@ class DashHistory @Inject constructor(
         bolusRecord: BolusRecord? = null,
         resolveResult: ResolvedResult? = null,
         resolvedAt: Long? = null
-    ): Single<String> {
+    ): Single<String> = Single.defer {
         val id = ULID.random()
 
         when {
             commandType == SET_BOLUS && bolusRecord == null ->
-                return Single.error(IllegalArgumentException("bolusRecord missing on SET_BOLUS"))
+                Single.error(IllegalArgumentException("bolusRecord missing on SET_BOLUS"))
             commandType == SET_TEMPORARY_BASAL && tempBasalRecord == null ->
-                return Single.error(IllegalArgumentException("tempBasalRecord missing on SET_TEMPORARY_BASAL"))
+                Single.error(IllegalArgumentException("tempBasalRecord missing on SET_TEMPORARY_BASAL"))
+            else ->
+                dao.save(
+                    HistoryRecordEntity(
+                        id = id,
+                        date = date,
+                        createdAt = currentTimeMillis(),
+                        commandType = commandType,
+                        tempBasalRecord = tempBasalRecord,
+                        bolusRecord = bolusRecord,
+                        initialResult = initialResult,
+                        resolvedResult = resolveResult,
+                        resolvedAt = resolvedAt
+                    )
+                ).toSingle { id }
         }
-
-        return dao.save(
-            HistoryRecordEntity(
-                id = id,
-                date = date,
-                createdAt = currentTimeMillis(),
-                commandType = commandType,
-                tempBasalRecord = tempBasalRecord,
-                bolusRecord = bolusRecord,
-                initialResult = initialResult,
-                resolvedResult = resolveResult,
-                resolvedAt = resolvedAt
-            )
-        ).toSingle { id }
     }
 
     fun getRecords(): Single<List<HistoryRecord>> =

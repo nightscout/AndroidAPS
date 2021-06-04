@@ -158,11 +158,10 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
         return executeSimpleProgrammingCommand(
-            historyEntry = history.createRecord(
-                commandType = OmnipodCommandType.SET_BASAL_PROFILE
-            ),
-            command = omnipodManager.setBasalProgram(mapProfileToBasalProgram(profile)).ignoreElements(),
             pre = suspendDeliveryIfActive(),
+            historyEntry = history.createRecord(commandType = OmnipodCommandType.SET_BASAL_PROFILE),
+            command = omnipodManager.setBasalProgram(mapProfileToBasalProgram(profile))
+                .ignoreElements(),
         ).toPumpEnactResult()
     }
 
@@ -172,7 +171,17 @@ class OmnipodDashPumpPlugin @Inject constructor(
         else
             executeSimpleProgrammingCommand(
                 history.createRecord(OmnipodCommandType.SUSPEND_DELIVERY),
-                omnipodManager.suspendDelivery().ignoreElements()
+                omnipodManager.suspendDelivery()
+                    .filter { podEvent -> podEvent is PodEvent.CommandSent }
+                    .map {
+                        pumpSyncTempBasal(
+                            it,
+                            0.0,
+                            PodConstants.MAX_POD_LIFETIME.standardMinutes,
+                            PumpSync.TemporaryBasalType.PUMP_SUSPEND
+                        )
+                    }
+                    .ignoreElements(),
             )
     }
 
@@ -528,10 +537,12 @@ class OmnipodDashPumpPlugin @Inject constructor(
             command = omnipodManager.suspendDelivery()
                 .filter { podEvent -> podEvent is PodEvent.CommandSent }
                 .map {
-                    pumpSyncTempBasal(it,
-                                      0.0,
-                                      PodConstants.MAX_POD_LIFETIME.standardMinutes,
-                                      PumpSync.TemporaryBasalType.PUMP_SUSPEND)
+                    pumpSyncTempBasal(
+                        it,
+                        0.0,
+                        PodConstants.MAX_POD_LIFETIME.standardMinutes,
+                        PumpSync.TemporaryBasalType.PUMP_SUSPEND
+                    )
                 }
                 .ignoreElements(),
             pre = observeDeliveryActive(),
@@ -626,7 +637,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     private fun handleCommandConfirmation(confirmation: CommandConfirmed) {
         val historyEntry = history.getById(confirmation.historyId)
-        aapsLogger.debug(LTag.PUMPCOMM, "handling confirmation command: $confirmation")
+        aapsLogger.debug(LTag.PUMPCOMM, "handling command confirmation: $confirmation")
         when (historyEntry.commandType) {
             OmnipodCommandType.CANCEL_TEMPORARY_BASAL,
             OmnipodCommandType.SET_BASAL_PROFILE,
