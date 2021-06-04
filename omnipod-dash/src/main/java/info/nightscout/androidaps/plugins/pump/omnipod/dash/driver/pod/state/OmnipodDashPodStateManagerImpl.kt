@@ -188,7 +188,8 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         get() = podState.activeCommand
 
     @Synchronized
-    override fun createActiveCommand(historyId: String): Single<OmnipodDashPodStateManager.ActiveCommand> {
+    override fun createActiveCommand(historyId: String, basalProgram: BasalProgram?):
+        Single<OmnipodDashPodStateManager.ActiveCommand> {
         return Single.create { source ->
             if (activeCommand == null) {
                 val command = OmnipodDashPodStateManager.ActiveCommand(
@@ -196,6 +197,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
                     createdRealtime = SystemClock.elapsedRealtime(),
                     historyId = historyId,
                     sendError = null,
+                    basalProgram = basalProgram,
                 )
                 podState.activeCommand = command
                 source.onSuccess(command)
@@ -261,7 +263,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             CommandConfirmationSuccess -> {
                 podState.activeCommand = null
 
-                source.onSuccess(CommandConfirmed(activeCommand.historyId, true)) 
+                source.onSuccess(CommandConfirmed(activeCommand.historyId, true))
             }
 
             NoActiveCommand -> {

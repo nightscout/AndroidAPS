@@ -73,7 +73,7 @@ interface OmnipodDashPodStateManager {
     fun updateFromPairing(uniqueId: Id, pairResult: PairResult)
     fun reset()
 
-    fun createActiveCommand(historyId: String): Single<ActiveCommand>
+    fun createActiveCommand(historyId: String, basalProgram: BasalProgram?=null): Single<ActiveCommand>
     fun updateActiveCommand(): Maybe<CommandConfirmed>
     fun observeNoActiveCommand(): Observable<PodEvent>
     fun getCommandConfirmationFromState(): CommandConfirmationFromState
@@ -84,6 +84,7 @@ interface OmnipodDashPodStateManager {
         var sentRealtime: Long = 0,
         val historyId: String,
         var sendError: Throwable?,
+        var basalProgram: BasalProgram?
     )
     // TODO: set created to "now" on boot
     data class TempBasal(val startTime: Long, val rate: Double, val durationInMinutes: Short) : Serializable

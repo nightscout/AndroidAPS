@@ -17,6 +17,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.event.PodEven
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.ActivationProgress
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BeepType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.DeliveryStatus
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.ResponseType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.CommandConfirmed
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
@@ -296,7 +297,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 tempBasalBeeps
             )
                 .filter { podEvent -> podEvent is PodEvent.CommandSent }
-                .map { pumpSyncTempBasal(it, tbrType) }
+                .map { pumpSyncTempBasal(it, absoluteRate, durationInMinutes.toLong(), tbrType) }
                 .ignoreElements(),
             pre = observeNoActiveTempBasal(enforceNew)
         ).toPumpEnactResult()
@@ -304,6 +305,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     private fun pumpSyncTempBasal(
         podEvent: PodEvent,
+        absoluteRate: Double,
+        durationInMinutes: Long,
         tbrType: PumpSync.TemporaryBasalType
     ): Boolean {
         val activeCommand = podStateManager.activeCommand
@@ -315,14 +318,11 @@ class OmnipodDashPumpPlugin @Inject constructor(
             )
         }
         val historyEntry = history.getById(activeCommand.historyId)
-        val record = historyEntry.record
-        if (record == null || !(record is TempBasalRecord)) {
-            throw IllegalArgumentException("Illegal recording in history: $record. Expected a temp basal")
-        }
+
         val ret = pumpSync.syncTemporaryBasalWithPumpId(
             timestamp = historyEntry.createdAt,
-            rate = record.rate,
-            duration = T.mins(record.duration.toLong()).msecs(),
+            rate = absoluteRate,
+            duration = T.mins(durationInMinutes.toLong()).msecs(),
             isAbsolute = true,
             type = tbrType,
             pumpId = historyEntry.pumpId(),
@@ -363,8 +363,9 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     private fun observeActiveTempBasal(): Completable {
+
         return Completable.defer {
-            if (podStateManager.tempBasalActive)
+            if (podStateManager.tempBasalActive || pumpSync.expectedPumpState().temporaryBasal != null)
                 Completable.complete()
             else
                 Completable.error(
@@ -523,8 +524,16 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     private fun suspendDelivery(): PumpEnactResult {
         return executeSimpleProgrammingCommand(
-            history.createRecord(OmnipodCommandType.SUSPEND_DELIVERY),
-            omnipodManager.suspendDelivery().ignoreElements(),
+            historyEntry = history.createRecord(OmnipodCommandType.SUSPEND_DELIVERY),
+            command = omnipodManager.suspendDelivery()
+                .filter { podEvent -> podEvent is PodEvent.CommandSent }
+                .map {
+                    pumpSyncTempBasal(it,
+                                      0.0,
+                                      PodConstants.MAX_POD_LIFETIME.standardMinutes,
+                                      PumpSync.TemporaryBasalType.PUMP_SUSPEND)
+                }
+                .ignoreElements(),
             pre = observeDeliveryActive(),
         ).toPumpEnactResult()
     }
@@ -619,7 +628,9 @@ class OmnipodDashPumpPlugin @Inject constructor(
         val historyEntry = history.getById(confirmation.historyId)
         aapsLogger.debug(LTag.PUMPCOMM, "handling confirmation command: $confirmation")
         when (historyEntry.commandType) {
-            OmnipodCommandType.CANCEL_TEMPORARY_BASAL ->
+            OmnipodCommandType.CANCEL_TEMPORARY_BASAL,
+            OmnipodCommandType.SET_BASAL_PROFILE,
+            OmnipodCommandType.RESUME_DELIVERY ->
                 // We can't invalidate this command,
                 // and this is why it is pumpSync-ed at this point
                 if (confirmation.success) {
@@ -634,6 +645,12 @@ class OmnipodDashPumpPlugin @Inject constructor(
             OmnipodCommandType.SET_TEMPORARY_BASAL -> {
                 // This treatment was synced before sending the command
                 aapsLogger.info(LTag.PUMPCOMM, "temporary basal denied. PumpId: ${historyEntry.pumpId()}")
+                if (!confirmation.success) {
+                    pumpSync.invalidateTemporaryBasal(historyEntry.pumpId())
+                }
+            }
+
+            OmnipodCommandType.SUSPEND_DELIVERY -> {
                 if (!confirmation.success) {
                     pumpSync.invalidateTemporaryBasal(historyEntry.pumpId())
                 }
