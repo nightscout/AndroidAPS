@@ -3,9 +3,11 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.events.EventProfileSwitchChanged
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.common.ManufacturerType
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType
@@ -28,6 +30,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.BolusTy
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.TempBasalRecord
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.OmnipodDashOverviewFragment
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.mapProfileToBasalProgram
+import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.androidaps.queue.commands.CustomCommand
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.TimeChangeType
@@ -51,6 +54,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val history: DashHistory,
     private val pumpSync: PumpSync,
+    private val rxBus: RxBusWrapper,
+
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     resourceHelper: ResourceHelper,
@@ -671,6 +676,10 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     podStateManager.basalProgram = command.basalProgram
                     if (podStateManager.basalProgram == null) {
                         aapsLogger.warn(LTag.PUMP, "Saving null basal profile")
+                    }
+                    if (!commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)) {
+                        // we are late-confirming this command. before that, we answered with success:false
+                        rxBus.send(EventProfileSwitchChanged())
                     }
                     pumpSync.syncStopTemporaryBasalWithPumpId(
                         historyEntry.createdAt,
