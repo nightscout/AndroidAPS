@@ -326,7 +326,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 .filter { podEvent -> podEvent is PodEvent.CommandSent }
                 .map { pumpSyncTempBasal(it, absoluteRate, durationInMinutes.toLong(), tbrType) }
                 .ignoreElements(),
-            pre = observeNoActiveTempBasal(enforceNew),
+            pre = observeNoActiveTempBasal(true),
             tempBasal = OmnipodDashPodStateManager.TempBasal(
                 startTime = System.currentTimeMillis(),
                 rate = absoluteRate,
