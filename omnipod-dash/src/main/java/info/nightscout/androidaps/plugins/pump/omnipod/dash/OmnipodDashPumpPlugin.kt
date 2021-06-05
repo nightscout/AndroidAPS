@@ -91,23 +91,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     override fun isConnected(): Boolean {
-        // NOTE: Using connected state for unconfirmed commands
-
-        // We are faking connection lost on unconfirmed commands.
-        // During normal execution, the activeCommand is set to null after a command was executed with success or we
-        // were not able to send that command.
-        // If we are not sure if the POD received the command or not, then we answer with "success" but keep this
-        // activeCommand set until we can confirm/deny it.
-
-        // In order to prevent AAPS from sending us other programming commands while the current command was not
-        // confirmed, we are simulating "connection lost".
-        // We need to prevent AAPS from sending other commands because they would overwrite the ID of the last
-        // programming command reported by the POD. And we using that ID to confirm/deny the activeCommand.
-
-        // The effect of answering with 'false' here is that AAPS will call connect() and will not sent any new
-        // commands. On connect(), we are calling getPodStatus where we are always trying to confirm/deny the
-        // activeCommand.
-        return podStateManager.activeCommand == null
+        return true
     }
 
     override fun isConnecting(): Boolean {
@@ -125,12 +109,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     override fun connect(reason: String) {
-        // See:
-        // NOTE: Using connected state for unconfirmed commands
-        if (podStateManager.activeCommand == null) {
-            return
-        }
-        getPumpStatus("unconfirmed command")
+        // empty on purpose
     }
 
     override fun disconnect(reason: String) {
