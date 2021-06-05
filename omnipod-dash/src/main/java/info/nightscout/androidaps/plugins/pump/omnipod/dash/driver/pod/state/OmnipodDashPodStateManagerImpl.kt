@@ -240,11 +240,15 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
 
             if (sentRealtime < createdRealtime) { // command was not sent, clear it up
                 podState.activeCommand = null
-                source.onError(this.sendError
-                                   ?: java.lang.IllegalStateException("Could not send command and sendError is " +
-                                                                          "missing") )
-            } else if  (createdRealtime >= lastStatusResponseReceived)
-                // we did not receive a valid response yet
+                source.onError(
+                    this.sendError
+                        ?: java.lang.IllegalStateException(
+                            "Could not send command and sendError is " +
+                                "missing"
+                        )
+                )
+            } else if (createdRealtime >= lastStatusResponseReceived)
+            // we did not receive a valid response yet
                 source.onComplete()
             else {
                 podState.activeCommand = null
