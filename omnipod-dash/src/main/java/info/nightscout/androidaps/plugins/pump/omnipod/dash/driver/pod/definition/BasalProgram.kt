@@ -17,7 +17,16 @@ class BasalProgram(
 
     fun isZeroBasal() = segments.sumBy(Segment::basalRateInHundredthUnitsPerHour) == 0
 
-    fun rateAt(date: Date): Double = 0.0 // TODO
+    fun rateAt(date: Date): Double {
+        val instance = Calendar.getInstance()
+        instance.time = date
+        val hourOfDay = instance[Calendar.HOUR_OF_DAY]
+        val minuteOfHour = instance[Calendar.MINUTE]
+        val slotIndex = hourOfDay * 2 + minuteOfHour.div(30)
+        val slot = segments.find { it.startSlotIndex <= slotIndex && slotIndex< it.endSlotIndex }
+        val ret = (slot?.basalRateInHundredthUnitsPerHour ?: 0).toDouble() / 100
+        return ret
+    }
 
     class Segment(
         val startSlotIndex: Short,

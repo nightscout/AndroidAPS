@@ -298,8 +298,15 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
              */
 
             // base basal rate
-            // TODO: check if delivery is suspended
-            podInfoBinding.baseBasalRate.text = PLACEHOLDER
+            podInfoBinding.baseBasalRate.text = if (podStateManager.basalProgram != null && !podStateManager.isSuspended) {
+                resourceHelper.gs(
+                    R.string.pump_basebasalrate,
+                    omnipodDashPumpPlugin.model()
+                        .determineCorrectBasalSize(podStateManager.basalProgram!!.rateAt(Date()))
+                )
+            } else {
+                PLACEHOLDER
+            }
 
             // total delivered
             podInfoBinding.totalDelivered.text =

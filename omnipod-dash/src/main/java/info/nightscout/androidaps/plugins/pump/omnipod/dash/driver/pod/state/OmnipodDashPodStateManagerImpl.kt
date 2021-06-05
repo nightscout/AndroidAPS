@@ -257,13 +257,13 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
 
             CommandConfirmationDenied -> {
                 podState.activeCommand = null
-                source.onSuccess(CommandConfirmed(activeCommand.historyId, false))
+                source.onSuccess(CommandConfirmed(activeCommand, false))
             }
 
             CommandConfirmationSuccess -> {
                 podState.activeCommand = null
 
-                source.onSuccess(CommandConfirmed(activeCommand.historyId, true))
+                source.onSuccess(CommandConfirmed(activeCommand, true))
             }
 
             NoActiveCommand -> {
