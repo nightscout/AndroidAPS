@@ -141,11 +141,12 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         get() = podState.tempBasal
         set(tempBasal) {
             podState.tempBasal = tempBasal
+            rxBus.send(EventOmnipodDashPumpValuesChanged())
             store()
         }
 
     override val tempBasalActive: Boolean
-        get() = tempBasal?.let {
+        get() = !isSuspended && tempBasal?.let {
             it.startTime + it.durationInMinutes *60 * 1000 > System.currentTimeMillis()
         } ?: false
 
@@ -153,6 +154,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         get() = podState.basalProgram
         set(basalProgram) {
             podState.basalProgram = basalProgram
+            rxBus.send(EventOmnipodDashPumpValuesChanged())
             store()
         }
 
