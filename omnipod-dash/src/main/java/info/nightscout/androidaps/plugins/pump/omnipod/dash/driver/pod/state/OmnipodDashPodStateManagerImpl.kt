@@ -137,15 +137,17 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     override val activeAlerts: EnumSet<AlertType>?
         get() = podState.activeAlerts
 
-    override val tempBasal: OmnipodDashPodStateManager.TempBasal?
+    override var tempBasal: OmnipodDashPodStateManager.TempBasal?
         get() = podState.tempBasal
+        set(tempBasal) {
+            podState.tempBasal = tempBasal
+            store()
+        }
 
     override val tempBasalActive: Boolean
-        get() = podState.deliveryStatus in
-            arrayOf(
-                DeliveryStatus.TEMP_BASAL_ACTIVE,
-                DeliveryStatus.BOLUS_AND_TEMP_BASAL_ACTIVE
-            )
+        get() = tempBasal?.let {
+            it.startTime + it.durationInMinutes *60 * 1000 > System.currentTimeMillis()
+        } ?: false
 
     override var basalProgram: BasalProgram?
         get() = podState.basalProgram
@@ -188,7 +190,11 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         get() = podState.activeCommand
 
     @Synchronized
-    override fun createActiveCommand(historyId: String, basalProgram: BasalProgram?):
+    override fun createActiveCommand(
+        historyId: String,
+        basalProgram: BasalProgram?,
+        tempBasal: OmnipodDashPodStateManager.TempBasal?
+    ):
         Single<OmnipodDashPodStateManager.ActiveCommand> {
             return Single.create { source ->
                 if (activeCommand == null) {
@@ -198,6 +204,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
                         historyId = historyId,
                         sendError = null,
                         basalProgram = basalProgram,
+                        tempBasal = tempBasal,
                     )
                     podState.activeCommand = command
                     source.onSuccess(command)

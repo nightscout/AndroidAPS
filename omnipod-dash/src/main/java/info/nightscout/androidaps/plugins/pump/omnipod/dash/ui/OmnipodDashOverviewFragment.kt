@@ -42,6 +42,7 @@ import info.nightscout.androidaps.utils.ui.UIRunnable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import org.apache.commons.lang3.StringUtils
+import org.joda.time.DateTime
 import org.joda.time.Duration
 import java.util.*
 import javax.inject.Inject
@@ -343,7 +344,9 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 )
             }
 
-            podInfoBinding.podActiveAlerts.text = PLACEHOLDER
+            podInfoBinding.podActiveAlerts.text = podStateManager.activeAlerts?.let {
+                it.map { it.toString() }.joinToString(",")
+            } ?:  PLACEHOLDER
         }
 
         if (errors.size == 0) {
@@ -503,7 +506,8 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     }
 
     private fun updateSilenceAlertsButton() {
-        if (isAutomaticallySilenceAlertsEnabled() && podStateManager.isPodRunning &&
+        if (!isAutomaticallySilenceAlertsEnabled() &&
+            podStateManager.isPodRunning &&
             (
                 podStateManager.activeAlerts!!.size > 0 ||
                     commandQueue.isCustomCommandInQueue(CommandSilenceAlerts::class.java)
