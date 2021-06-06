@@ -55,6 +55,9 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         get() = podState.deliveryStatus?.equals(DeliveryStatus.SUSPENDED)
             ?: false
 
+    override val isPodKaput: Boolean
+        get() = podState.podStatus in arrayOf(PodStatus.ALARM, PodStatus.DEACTIVATED)
+
     override val isPodRunning: Boolean
         get() = podState.podStatus?.isRunning() ?: false
 
@@ -136,6 +139,9 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
 
     override val activeAlerts: EnumSet<AlertType>?
         get() = podState.activeAlerts
+
+    override val alarmType: AlarmType?
+        get() = podState.alarmType
 
     override var tempBasal: OmnipodDashPodStateManager.TempBasal?
         get() = podState.tempBasal
@@ -317,6 +323,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     }
 
     override fun updateFromDefaultStatusResponse(response: DefaultStatusResponse) {
+        logger.debug(LTag.PUMPBTCOMM, "Default status reponse :$response")
         podState.deliveryStatus = response.deliveryStatus
         podState.podStatus = response.podStatus
         podState.pulsesDelivered = response.totalPulsesDelivered
@@ -383,15 +390,24 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     }
 
     override fun updateFromAlarmStatusResponse(response: AlarmStatusResponse) {
-        // TODO
-        logger.error(
-            LTag.PUMP,
-            "Not implemented: OmnipodDashPodStateManagerImpl.updateFromAlarmStatusResponse(AlarmStatusResponse)"
-        )
         logger.info(
             LTag.PUMP,
             "Received AlarmStatusReponse: $response"
         )
+        podState.deliveryStatus = response.deliveryStatus
+        podState.podStatus = response.podStatus
+        podState.pulsesDelivered = response.totalPulsesDelivered
+        if (response.reservoirPulsesRemaining < 1023) {
+            podState.pulsesRemaining = response.reservoirPulsesRemaining
+        }
+        podState.sequenceNumberOfLastProgrammingCommand = response.sequenceNumberOfLastProgrammingCommand
+        podState.minutesSinceActivation = response.minutesSinceActivation
+        podState.activeAlerts = response.activeAlerts
+        podState.alarmType = response.alarmType
+
+        podState.lastUpdatedSystem = System.currentTimeMillis()
+        podState.lastStatusResponseReceived = SystemClock.elapsedRealtime()
+
         store()
         rxBus.send(EventOmnipodDashPumpValuesChanged())
     }
@@ -463,6 +479,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         var deliveryStatus: DeliveryStatus? = null
         var minutesSinceActivation: Short? = null
         var activeAlerts: EnumSet<AlertType>? = null
+        var alarmType: AlarmType? = null
 
         var basalProgram: BasalProgram? = null
         var tempBasal: OmnipodDashPodStateManager.TempBasal? = null

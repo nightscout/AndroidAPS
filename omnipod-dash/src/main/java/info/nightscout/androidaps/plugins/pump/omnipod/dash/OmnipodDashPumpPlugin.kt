@@ -47,6 +47,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.ceil
+import kotlin.random.Random
 
 @Singleton
 class OmnipodDashPumpPlugin @Inject constructor(
@@ -136,6 +137,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 podStateManager.updateActiveCommand()
                     .map { handleCommandConfirmation(it) }
                     .ignoreElement(),
+                checkPodKaput()
             )
         ).blockingGet()
         if (throwable != null) {
@@ -143,6 +145,25 @@ class OmnipodDashPumpPlugin @Inject constructor(
         } else {
             aapsLogger.info(LTag.PUMP, "getPumpStatus executed with success")
         }
+    }
+
+    private fun checkPodKaput(): Completable = Completable.defer {
+        val tbr = pumpSync.expectedPumpState().temporaryBasal
+        if (podStateManager.isPodKaput &&
+            (tbr == null || tbr.rate != 0.0)
+        ) {
+            pumpSync.syncTemporaryBasalWithPumpId(
+                timestamp = System.currentTimeMillis(),
+                rate = 0.0,
+                duration = T.mins(PodConstants.MAX_POD_LIFETIME.standardMinutes).msecs(),
+                isAbsolute = true,
+                type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
+                pumpId = Random.Default.nextLong(), // we don't use this, just make sure it's unique
+                pumpType = PumpType.OMNIPOD_DASH,
+                pumpSerial = serialNumber()
+            )
+        }
+        Completable.complete()
     }
 
     override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
@@ -224,7 +245,10 @@ class OmnipodDashPumpPlugin @Inject constructor(
             val date = Date()
             val ret = podStateManager.basalProgram?.rateAt(date) ?: 0.0
             aapsLogger.info(LTag.PUMP, "baseBasalRate: %ret at $date}")
-            return ret
+            return if (podStateManager.alarmType != null) {
+                0.0
+            } else
+                ret
         }
 
     override val reservoirLevel: Double

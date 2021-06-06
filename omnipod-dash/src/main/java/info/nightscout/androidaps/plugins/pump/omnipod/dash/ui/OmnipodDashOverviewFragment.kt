@@ -212,7 +212,6 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     }
 
     private fun updateUi() {
-        // TODO update bluetooth status
         updateBluetoothStatus()
         updateOmnipodStatus()
         updatePodActionButtons()
@@ -296,6 +295,15 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 errors.add(resourceHelper.gs(R.string.omnipod_common_pod_status_pod_fault_description, faultEventCode.value, faultEventCode.name))
             }
              */
+            podStateManager.alarmType?.let {
+                errors.add(
+                    resourceHelper.gs(
+                        R.string.omnipod_common_pod_status_pod_fault_description,
+                        it.value,
+                        it.toString()
+                    )
+                )
+            }
 
             // base basal rate
             podInfoBinding.baseBasalRate.text = if (podStateManager.basalProgram != null && !podStateManager.isSuspended) {
