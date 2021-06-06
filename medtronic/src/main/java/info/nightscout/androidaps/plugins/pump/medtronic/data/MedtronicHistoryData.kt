@@ -578,7 +578,7 @@ class MedtronicHistoryData @Inject constructor(
 
         val tbrRecords = pumpSyncStorage.getTBRs()
         aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, ProcessHistoryRecord.TBR.description + " List (before filter): %s, FromDb=%s", gson.toJson(entryList),
-            gson.toJson(tbrRecords)))
+            tbrRecords))
         var processDTO: TempBasalProcessDTO? = null
         val processList: MutableList<TempBasalProcessDTO> = mutableListOf()
         for (treatment in entryList) {
