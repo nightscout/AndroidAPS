@@ -46,7 +46,9 @@ class PumpSyncStorage @Inject constructor(
             if (!jsonData.isBlank()) {
                 pumpSyncStorage = xstream.fromXML(jsonData, MutableMap::class.java) as MutableMap<String, MutableList<PumpDbEntry>>
 
-                aapsLogger.debug(String.format("Loading Pump Sync Storage: boluses=%d, tbrs=%d.", pumpSyncStorage[BOLUS]!!.size, pumpSyncStorage[TBR]!!.size))
+                aapsLogger.debug(LTag.PUMP, String.format("Loading Pump Sync Storage: boluses=%d, tbrs=%d.", pumpSyncStorage[BOLUS]!!.size, pumpSyncStorage[TBR]!!.size))
+                aapsLogger.debug(LTag.PUMP, "DD: PumpSyncStorage=$pumpSyncStorage")
+
                 loaded = true
             }
         }
