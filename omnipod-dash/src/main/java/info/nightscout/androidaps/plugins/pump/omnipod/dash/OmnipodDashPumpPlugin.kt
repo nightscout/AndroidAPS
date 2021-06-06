@@ -12,6 +12,7 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.common.ManufacturerType
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType
+import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.*
@@ -39,12 +40,13 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.json.JSONObject
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.ceil
 
 @Singleton
 class OmnipodDashPumpPlugin @Inject constructor(
@@ -240,59 +242,103 @@ class OmnipodDashPumpPlugin @Inject constructor(
         get() = 0
 
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
-        // TODO update Treatments (?)
-        // TODO bolus progress
         // TODO report actual delivered amount after Pod Alarm and bolus cancellation
+        val bolusBeeps = sp.getBoolean(R.string.key_omnipod_common_bolus_beeps_enabled, false)
 
-        return Single.create<PumpEnactResult> { source ->
-            val bolusBeeps = sp.getBoolean(R.string.key_omnipod_common_bolus_beeps_enabled, false)
+        if (detailedBolusInfo.carbs > 0 || detailedBolusInfo.insulin == 0.0) {
+            return PumpEnactResult(injector)
+                .success(false)
+                .enacted(false)
+                .bolusDelivered(0.0)
+                .carbsDelivered(0.0)
+                .comment("Invalid input");
+        }
+        val requestedBolusAmount = detailedBolusInfo.insulin
+        var delieveredBolusAmount = 0.0
 
-            Observable.concat(
-                history.createRecord(
-                    commandType = OmnipodCommandType.SET_BOLUS,
-                    bolusRecord = BolusRecord(
-                        detailedBolusInfo.insulin,
-                        BolusType.fromBolusInfoBolusType(detailedBolusInfo.bolusType),
-                    ),
-                ).flatMapObservable { recordId ->
-                    podStateManager.createActiveCommand(recordId).toObservable()
-                },
-                omnipodManager.bolus(
-                    detailedBolusInfo.insulin,
-                    bolusBeeps,
-                    bolusBeeps
-                ),
-                history.updateFromState(podStateManager).toObservable(),
-                podStateManager.updateActiveCommand().toObservable(),
-            ).subscribeBy(
-                onNext = { podEvent ->
-                    aapsLogger.debug(
-                        LTag.PUMP,
-                        "Received PodEvent in deliverTreatment: $podEvent"
-                    )
-                },
-                onError = { throwable ->
-                    aapsLogger.error(LTag.PUMP, "Error in deliverTreatment", throwable)
-                    source.onSuccess(
-                        PumpEnactResult(injector).success(false).enacted(false).comment(
-                            throwable.toString()
-                        )
-                    )
-                },
-                onComplete = {
-                    aapsLogger.debug("deliverTreatment completed")
-                    source.onSuccess(
-                        PumpEnactResult(injector).success(true).enacted(true)
-                            .bolusDelivered(detailedBolusInfo.insulin)
-                            .carbsDelivered(detailedBolusInfo.carbs)
-                    )
-                }
+        aapsLogger.info(
+            LTag.PUMP,
+            "deliverTreatment: units: ${requestedBolusAmount}"
+        )
+        return executeProgrammingCommand(
+            pre = observeNoActiveTempBasal(true),
+            historyEntry = history.createRecord(
+                commandType = OmnipodCommandType.SET_BOLUS,
+                bolusRecord = BolusRecord(
+                    requestedBolusAmount,
+                    BolusType.fromBolusInfoBolusType(detailedBolusInfo.bolusType)
+                )
+            ),
+            command = omnipodManager.bolus(
+                detailedBolusInfo.insulin,
+                bolusBeeps,
+                bolusBeeps
+            ).filter { podEvent -> podEvent is PodEvent.CommandSent }
+                .map { pumpSyncBolusStart(it, requestedBolusAmount, detailedBolusInfo.bolusType) }
+                .ignoreElements(),
+            post = waitForBolusDeliveryToComplete(5, requestedBolusAmount, detailedBolusInfo.bolusType)
+        ).toSingleDefault(PumpEnactResult(injector).success(true).enacted(true).bolusDelivered(delieveredBolusAmount))
+            .onErrorReturnItem(PumpEnactResult(injector).success(false).enacted(false))
+            .blockingGet()
+    }
+
+    private fun waitForBolusDeliveryToComplete(
+        maxRetriesAtTheEnd: Int,
+        requestedBolusAmount: Double,
+        bolusType: DetailedBolusInfo.BolusType
+    ): Completable {
+        // TODO: wait for bolus delivery to start!
+        // For now, we assume it started with success
+
+        val estimatedDeliveryTimeSeconds = ceil(requestedBolusAmount / 0.05).toLong() * 2
+        aapsLogger.info(LTag.PUMP, "estimatedDeliveryTimeSeconds: $estimatedDeliveryTimeSeconds")
+        return Completable.concat(listOf(
+            Observable.interval(1, TimeUnit.SECONDS)
+                .take(estimatedDeliveryTimeSeconds)
+                .doOnNext {
+                    if (bolusType == DetailedBolusInfo.BolusType.SMB) {
+                        return@doOnNext
+                    }
+                    val progressUpdateEvent = EventOverviewBolusProgress
+                    val percent = (100 * it) / estimatedDeliveryTimeSeconds
+                    progressUpdateEvent.status = resourceHelper.gs(R.string.bolusdelivering, requestedBolusAmount)
+                    progressUpdateEvent.percent = percent.toInt()
+                    rxBus.send(progressUpdateEvent)
+                }.ignoreElements(),
+            Observable.interval(5, TimeUnit.SECONDS).ignoreElements()
+            // TODO check delivery status. for now, we are just sleeping for 5 sec
+        ))
+    }
+
+    private fun pumpSyncBolusStart(
+        podEvent: PodEvent,
+        requestedBolusAmount: Double,
+        bolusType: DetailedBolusInfo.BolusType
+    ): Boolean {
+        val activeCommand = podStateManager.activeCommand
+        if (activeCommand == null || podEvent !is PodEvent.CommandSent) {
+            throw IllegalArgumentException(
+                "No active command or illegal podEvent: " +
+                    "activeCommand=$activeCommand" +
+                    "podEvent=$podEvent"
             )
-        }.blockingGet()
+        }
+        val historyEntry = history.getById(activeCommand.historyId)
+        val ret = pumpSync.syncBolusWithPumpId(
+            timestamp = historyEntry.createdAt,
+            amount = requestedBolusAmount,
+            type = bolusType,
+            pumpId = historyEntry.pumpId(),
+            pumpType = PumpType.OMNIPOD_DASH,
+            pumpSerial = serialNumber()
+        )
+        aapsLogger.debug(LTag.PUMP, "pumpSyncBolusStart: $ret")
+        return ret
     }
 
     override fun stopBolusDelivering() {
         // TODO update Treatments (?)
+        aapsLogger.info(LTag.PUMP, "stopBolusDelivering called")
         executeProgrammingCommand(
             historyEntry = history.createRecord(OmnipodCommandType.CANCEL_BOLUS),
             command = omnipodManager.stopBolus().ignoreElements()
@@ -312,7 +358,9 @@ class OmnipodDashPumpPlugin @Inject constructor(
             "setTempBasalAbsolute: $durationInMinutes min :: $absoluteRate U/h :: " +
                 "enforce: $enforceNew :: tbrType: $tbrType"
         )
+
         return executeProgrammingCommand(
+            pre = observeNoActiveTempBasal(true),
             historyEntry = history.createRecord(
                 commandType = OmnipodCommandType.SET_TEMPORARY_BASAL,
                 tempBasalRecord = TempBasalRecord(duration = durationInMinutes, rate = absoluteRate)
@@ -335,7 +383,6 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 .filter { podEvent -> podEvent is PodEvent.CommandSent }
                 .map { pumpSyncTempBasal(it, absoluteRate, durationInMinutes.toLong(), tbrType) }
                 .ignoreElements(),
-            pre = observeNoActiveTempBasal(true),
         ).toPumpEnactResult()
     }
 
@@ -365,7 +412,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             pumpType = PumpType.OMNIPOD_DASH,
             pumpSerial = serialNumber()
         )
-        aapsLogger.debug(LTag.PUMP, "Pump sync temp basal: $ret")
+        aapsLogger.debug(LTag.PUMP, "pumpSyncTempBasal: $ret")
         return ret
     }
 
@@ -719,6 +766,19 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     pumpSync.invalidateTemporaryBasal(historyEntry.pumpId())
                 } else {
                     podStateManager.tempBasal = null
+                }
+            }
+
+            OmnipodCommandType.SET_BOLUS -> {
+                if (!confirmation.success) {
+                    pumpSync.syncBolusWithPumpId(
+                        timestamp = historyEntry.createdAt,
+                        amount = 0.0,
+                        pumpId = historyEntry.pumpId(),
+                        pumpType = PumpType.OMNIPOD_DASH,
+                        pumpSerial = serialNumber(),
+                        type = null // TODO: set the correct bolus type here!!!
+                    )
                 }
             }
 
