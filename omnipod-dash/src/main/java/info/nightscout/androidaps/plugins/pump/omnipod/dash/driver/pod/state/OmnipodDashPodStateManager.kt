@@ -73,7 +73,7 @@ interface OmnipodDashPodStateManager {
     fun updateFromPairing(uniqueId: Id, pairResult: PairResult)
     fun reset()
 
-    fun createActiveCommand(historyId: String, basalProgram: BasalProgram? = null, tempBasal: TempBasal?=null):
+    fun createActiveCommand(historyId: String, basalProgram: BasalProgram? = null, tempBasal: TempBasal? = null):
         Single<ActiveCommand>
     fun updateActiveCommand(): Maybe<CommandConfirmed>
     fun observeNoActiveCommand(): Observable<PodEvent>

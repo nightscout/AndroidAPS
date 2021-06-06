@@ -147,7 +147,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
 
     override val tempBasalActive: Boolean
         get() = !isSuspended && tempBasal?.let {
-            it.startTime + it.durationInMinutes *60 * 1000 > System.currentTimeMillis()
+            it.startTime + it.durationInMinutes * 60 * 1000 > System.currentTimeMillis()
         } ?: false
 
     override var basalProgram: BasalProgram?
@@ -388,7 +388,10 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             LTag.PUMP,
             "Not implemented: OmnipodDashPodStateManagerImpl.updateFromAlarmStatusResponse(AlarmStatusResponse)"
         )
-
+        logger.info(
+            LTag.PUMP,
+            "Received AlarmStatusReponse: $response"
+        )
         store()
         rxBus.send(EventOmnipodDashPumpValuesChanged())
     }

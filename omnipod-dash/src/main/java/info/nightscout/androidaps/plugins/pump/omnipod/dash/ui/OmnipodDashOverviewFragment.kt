@@ -42,7 +42,6 @@ import info.nightscout.androidaps.utils.ui.UIRunnable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import org.apache.commons.lang3.StringUtils
-import org.joda.time.DateTime
 import org.joda.time.Duration
 import java.util.*
 import javax.inject.Inject
@@ -346,7 +345,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
             podInfoBinding.podActiveAlerts.text = podStateManager.activeAlerts?.let {
                 it.map { it.toString() }.joinToString(",")
-            } ?:  PLACEHOLDER
+            } ?: PLACEHOLDER
         }
 
         if (errors.size == 0) {

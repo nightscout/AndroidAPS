@@ -23,7 +23,7 @@ class BasalProgram(
         val hourOfDay = instance[Calendar.HOUR_OF_DAY]
         val minuteOfHour = instance[Calendar.MINUTE]
         val slotIndex = hourOfDay * 2 + minuteOfHour.div(30)
-        val slot = segments.find { it.startSlotIndex <= slotIndex && slotIndex< it.endSlotIndex }
+        val slot = segments.find { it.startSlotIndex <= slotIndex && slotIndex < it.endSlotIndex }
         return (slot?.basalRateInHundredthUnitsPerHour ?: 0).toDouble() / 100
     }
 
