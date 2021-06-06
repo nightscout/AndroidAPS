@@ -323,10 +323,11 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     }
 
     override fun updateFromDefaultStatusResponse(response: DefaultStatusResponse) {
-        logger.debug(LTag.PUMPBTCOMM, "Default status reponse :$response")
+        logger.debug(LTag.PUMPBTCOMM, "Default status response :$response")
         podState.deliveryStatus = response.deliveryStatus
         podState.podStatus = response.podStatus
         podState.pulsesDelivered = response.totalPulsesDelivered
+        podState.bolusPulsesRemaining = response.bolusPulsesRemaining
         if (response.reservoirPulsesRemaining < 1023) {
             podState.pulsesRemaining = response.reservoirPulsesRemaining
         }
@@ -397,6 +398,8 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         podState.deliveryStatus = response.deliveryStatus
         podState.podStatus = response.podStatus
         podState.pulsesDelivered = response.totalPulsesDelivered
+        podState.bolusPulsesRemaining = response.bolusPulsesRemaining
+
         if (response.reservoirPulsesRemaining < 1023) {
             podState.pulsesRemaining = response.reservoirPulsesRemaining
         }
@@ -462,6 +465,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         var bluetoothAddress: String? = null
         var ltk: ByteArray? = null
         var eapAkaSequenceNumber: Long = 1
+        var bolusPulsesRemaining: Short = 0
 
         var bleVersion: SoftwareVersion? = null
         var firmwareVersion: SoftwareVersion? = null
