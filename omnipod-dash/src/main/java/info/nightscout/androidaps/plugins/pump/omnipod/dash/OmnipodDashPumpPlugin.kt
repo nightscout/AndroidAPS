@@ -302,7 +302,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 .filter { podEvent -> podEvent is PodEvent.CommandSent }
                 .map { pumpSyncTempBasal(it, absoluteRate, durationInMinutes.toLong(), tbrType) }
                 .ignoreElements(),
-            pre = observeNoActiveTempBasal(enforceNew)
+            pre = observeNoActiveTempBasal()
         ).toPumpEnactResult()
     }
 
@@ -336,31 +336,19 @@ class OmnipodDashPumpPlugin @Inject constructor(
         return ret
     }
 
-    private fun observeNoActiveTempBasal(enforceNew: Boolean): Completable {
+    private fun observeNoActiveTempBasal(): Completable {
         return Completable.defer {
-            when {
-                podStateManager.deliveryStatus !in
-                    arrayOf(DeliveryStatus.TEMP_BASAL_ACTIVE, DeliveryStatus.BOLUS_AND_TEMP_BASAL_ACTIVE) -> {
-                    // TODO: what happens if we try to cancel inexistent temp basal?
-                    aapsLogger.info(LTag.PUMP, "No temporary basal to cancel")
-                    Completable.complete()
-                }
-
-                !enforceNew ->
-                    Completable.error(
-                        IllegalStateException(
-                            "Temporary basal already active and enforeNew is not set."
-                        )
-                    )
-
-                else -> {
-                    // enforceNew == true
-                    aapsLogger.info(LTag.PUMP, "Canceling existing temp basal")
-                    executeSimpleProgrammingCommand(
-                        history.createRecord(OmnipodCommandType.CANCEL_TEMPORARY_BASAL),
-                        omnipodManager.stopTempBasal().ignoreElements()
-                    )
-                }
+            val expectedState = pumpSync.expectedPumpState()
+            if (expectedState.temporaryBasal == null) {
+                aapsLogger.info(LTag.PUMP, "No temporary basal to cancel")
+                Completable.complete()
+            } else {
+                // enforceNew == true
+                aapsLogger.info(LTag.PUMP, "Canceling existing temp basal")
+                executeSimpleProgrammingCommand(
+                    history.createRecord(OmnipodCommandType.CANCEL_TEMPORARY_BASAL),
+                    omnipodManager.stopTempBasal().ignoreElements()
+                )
             }
         }
     }
