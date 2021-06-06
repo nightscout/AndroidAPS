@@ -689,6 +689,8 @@
 Unerwartetes Verhalten.</string>
     <string name="loop_openmode_min_change">Minimaler Wert zur Anfrage einer Änderung [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">Open Loop schlägt neue Änderungen nur dann vor, wenn die Änderung größer als dieser Wert ist. Der Standard-Wert ist 20%.</string>
+    <string name="food_intake_warning_threshold" formatted="false">Fehlende Kohlenhydrate Warnungsschwelle</string>
+    <string name="food_intake_warning_threshold_summary" formatted="false">Der Loop schlägt die Einnahme von Kohlenhydrate nur dann vor, wenn die Menge größer als dieser Wert ist. Der Standard-Wert ist 0g.</string>
     <string name="profile_total">== ∑  %1$s IE</string>
     <string name="dexcom_lognssensorchange_title">Speichere Sensor Wechsel in Nightscout</string>
     <string name="dexcom_lognssensorchange_summary">Ereignis \"Sensorwechsel\" bei Sensorstart automatisch in NS erstellen</string>

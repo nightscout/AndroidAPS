@@ -857,6 +857,8 @@
     <string name="sendlogfiles">Send today\'s log files to developers along with this time. Unexpected situation.</string>
     <string name="loop_openmode_min_change">Minimal request change [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">Open Loop will popup new change request only if change is bigger than this value in %. Default value is 20%</string>
+    <string name="food_intake_warning_threshold" formatted="false">Food Intake Warning Threshold</string>
+    <string name="food_intake_warning_threshold_summary" formatted="false">Loop will popup new request for food intake only if required carbs are more than this value in g. Default value is 0g</string>
     <string name="key_short_tabtitles" translatable="false">short_tabtitles</string>
 
     <string name="profile_total">== ∑  %1$s U</string>

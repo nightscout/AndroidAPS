@@ -300,7 +300,7 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
             return latest
         }
     val isCarbsRequired: Boolean
-        get() = carbsReq > 0
+        get() = carbsReq > sp.getInt(R.string.key_food_intake_warning_threshold, 0);
 
     val isChangeRequested: Boolean
         get() {
