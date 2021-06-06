@@ -317,6 +317,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     }
 
     override fun updateFromDefaultStatusResponse(response: DefaultStatusResponse) {
+        logger.debug(LTag.PUMPBTCOMM, "Default status reponse :$response")
         podState.deliveryStatus = response.deliveryStatus
         podState.podStatus = response.podStatus
         podState.pulsesDelivered = response.totalPulsesDelivered
