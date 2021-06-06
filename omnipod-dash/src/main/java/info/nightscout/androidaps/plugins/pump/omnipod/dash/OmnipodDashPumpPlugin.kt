@@ -339,10 +339,11 @@ class OmnipodDashPumpPlugin @Inject constructor(
     override fun stopBolusDelivering() {
         // TODO update Treatments (?)
         aapsLogger.info(LTag.PUMP, "stopBolusDelivering called")
-        executeProgrammingCommand(
+        val ret = executeProgrammingCommand(
             historyEntry = history.createRecord(OmnipodCommandType.CANCEL_BOLUS),
             command = omnipodManager.stopBolus().ignoreElements()
         ).toPumpEnactResult()
+        aapsLogger.info(LTag.PUMP, "stopBolusDelivering finished with result: $ret")
     }
 
     override fun setTempBasalAbsolute(
@@ -487,6 +488,9 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     fun Completable.toPumpEnactResult(): PumpEnactResult {
         return this.toSingleDefault(PumpEnactResult(injector).success(true).enacted(true))
+            .doOnError { throwable ->
+                aapsLogger.error(LTag.PUMP, "toPumpEnactResult, error executing command: $throwable")
+            }
             .onErrorReturnItem(PumpEnactResult(injector).success(false).enacted(false))
             .blockingGet()
     }
@@ -575,33 +579,10 @@ class OmnipodDashPumpPlugin @Inject constructor(
     private fun silenceAlerts(): PumpEnactResult {
         // TODO filter alert types
         return podStateManager.activeAlerts?.let {
-            Single.create<PumpEnactResult> { source ->
-                Observable.concat(
-                    // TODO: is this a programming command? if yes, save to history
-                    omnipodManager.silenceAlerts(it),
-                    history.updateFromState(podStateManager).toObservable(),
-                    podStateManager.updateActiveCommand().toObservable(),
-                ).subscribeBy(
-                    onNext = { podEvent ->
-                        aapsLogger.debug(
-                            LTag.PUMP,
-                            "Received PodEvent in silenceAlerts: $podEvent"
-                        )
-                    },
-                    onError = { throwable ->
-                        aapsLogger.error(LTag.PUMP, "Error in silenceAlerts", throwable)
-                        source.onSuccess(
-                            PumpEnactResult(injector).success(false).comment(
-                                throwable.toString()
-                            )
-                        )
-                    },
-                    onComplete = {
-                        aapsLogger.debug("silenceAlerts completed")
-                        source.onSuccess(PumpEnactResult(injector).success(true))
-                    }
-                )
-            }.blockingGet()
+            executeProgrammingCommand(
+                historyEntry = history.createRecord(commandType = OmnipodCommandType.ACKNOWLEDGE_ALERTS),
+                command = omnipodManager.silenceAlerts(it).ignoreElements(),
+            ).toPumpEnactResult()
         } ?: PumpEnactResult(injector).success(false).enacted(false).comment("No active alerts") // TODO i18n
     }
 
