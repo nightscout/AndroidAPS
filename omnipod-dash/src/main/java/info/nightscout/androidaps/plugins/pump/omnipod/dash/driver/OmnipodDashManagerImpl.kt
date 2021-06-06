@@ -615,7 +615,6 @@ class OmnipodDashManagerImpl @Inject constructor(
 
     override fun deactivatePod(): Observable<PodEvent> {
         return Observable.concat(
-            observePodRunning,
             observeConnectToPod,
             observeSendDeactivateCommand
         )
