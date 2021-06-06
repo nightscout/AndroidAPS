@@ -28,6 +28,7 @@ interface OmnipodDashPodStateManager {
     val isActivationCompleted: Boolean
     val isSuspended: Boolean
     val isPodRunning: Boolean
+    val isPodKaput: Boolean
     var bluetoothConnectionState: BluetoothConnectionState
 
     val lastUpdatedSystem: Long // System.currentTimeMillis()
@@ -57,8 +58,9 @@ interface OmnipodDashPodStateManager {
     val deliveryStatus: DeliveryStatus?
     val minutesSinceActivation: Short?
     val activeAlerts: EnumSet<AlertType>?
+    val alarmType: AlarmType?
 
-    val tempBasal: TempBasal?
+    var tempBasal: TempBasal?
     val tempBasalActive: Boolean
     var basalProgram: BasalProgram?
     val activeCommand: ActiveCommand?
@@ -73,7 +75,8 @@ interface OmnipodDashPodStateManager {
     fun updateFromPairing(uniqueId: Id, pairResult: PairResult)
     fun reset()
 
-    fun createActiveCommand(historyId: String, basalProgram: BasalProgram? = null): Single<ActiveCommand>
+    fun createActiveCommand(historyId: String, basalProgram: BasalProgram? = null, tempBasal: TempBasal? = null):
+        Single<ActiveCommand>
     fun updateActiveCommand(): Maybe<CommandConfirmed>
     fun observeNoActiveCommand(): Observable<PodEvent>
     fun getCommandConfirmationFromState(): CommandConfirmationFromState
@@ -84,7 +87,8 @@ interface OmnipodDashPodStateManager {
         var sentRealtime: Long = 0,
         val historyId: String,
         var sendError: Throwable?,
-        var basalProgram: BasalProgram?
+        var basalProgram: BasalProgram?,
+        val tempBasal: TempBasal?
     )
     // TODO: set created to "now" on boot
     data class TempBasal(val startTime: Long, val rate: Double, val durationInMinutes: Short) : Serializable
