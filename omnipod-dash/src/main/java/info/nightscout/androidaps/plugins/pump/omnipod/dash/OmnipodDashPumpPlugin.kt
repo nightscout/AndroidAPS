@@ -36,11 +36,11 @@ import info.nightscout.androidaps.queue.commands.CustomCommand
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.TimeChangeType
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.rxkotlin.subscribeBy
 import org.json.JSONObject
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -57,6 +57,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
     private val history: DashHistory,
     private val pumpSync: PumpSync,
     private val rxBus: RxBusWrapper,
+    private val aapsSchedulers: AapsSchedulers,
+
 //    private val disposable: CompositeDisposable = CompositeDisposable(),
     //   private val aapsSchedulers: AapsSchedulers,
 
@@ -186,12 +188,12 @@ class OmnipodDashPumpPlugin @Inject constructor(
             )
     }
 
-   /* override fun onStop() {
-        super.onStop()
-        disposable.clear()
-    }
+    /* override fun onStop() {
+         super.onStop()
+         disposable.clear()
+     }
 
-    */
+     */
 
     private fun observeDeliverySuspended(): Completable = Completable.defer {
         if (podStateManager.deliveryStatus == DeliveryStatus.SUSPENDED)
@@ -251,14 +253,14 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 .enacted(false)
                 .bolusDelivered(0.0)
                 .carbsDelivered(0.0)
-                .comment("Invalid input");
+                .comment("Invalid input")
         }
         val requestedBolusAmount = detailedBolusInfo.insulin
         var delieveredBolusAmount = 0.0
 
         aapsLogger.info(
             LTag.PUMP,
-            "deliverTreatment: units: ${requestedBolusAmount}"
+            "deliverTreatment: units: $requestedBolusAmount"
         )
         return executeProgrammingCommand(
             pre = observeNoActiveTempBasal(true),
@@ -292,22 +294,24 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
         val estimatedDeliveryTimeSeconds = ceil(requestedBolusAmount / 0.05).toLong() * 2
         aapsLogger.info(LTag.PUMP, "estimatedDeliveryTimeSeconds: $estimatedDeliveryTimeSeconds")
-        return Completable.concat(listOf(
-            Observable.interval(1, TimeUnit.SECONDS)
-                .take(estimatedDeliveryTimeSeconds)
-                .doOnNext {
-                    if (bolusType == DetailedBolusInfo.BolusType.SMB) {
-                        return@doOnNext
-                    }
-                    val progressUpdateEvent = EventOverviewBolusProgress
-                    val percent = (100 * it) / estimatedDeliveryTimeSeconds
-                    progressUpdateEvent.status = resourceHelper.gs(R.string.bolusdelivering, requestedBolusAmount)
-                    progressUpdateEvent.percent = percent.toInt()
-                    rxBus.send(progressUpdateEvent)
-                }.ignoreElements(),
-            Observable.interval(5, TimeUnit.SECONDS).ignoreElements()
-            // TODO check delivery status. for now, we are just sleeping for 5 sec
-        ))
+        return Completable.concat(
+            listOf(
+                Observable.interval(1, TimeUnit.SECONDS)
+                    .take(estimatedDeliveryTimeSeconds)
+                    .doOnNext {
+                        if (bolusType == DetailedBolusInfo.BolusType.SMB) {
+                            return@doOnNext
+                        }
+                        val progressUpdateEvent = EventOverviewBolusProgress
+                        val percent = (100 * it) / estimatedDeliveryTimeSeconds
+                        progressUpdateEvent.status = resourceHelper.gs(R.string.bolusdelivering, requestedBolusAmount)
+                        progressUpdateEvent.percent = percent.toInt()
+                        rxBus.send(progressUpdateEvent)
+                    }.ignoreElements(),
+                Observable.interval(5, TimeUnit.SECONDS).take(1).ignoreElements()
+                // TODO check delivery status. for now, we are just sleeping for 5 sec
+            )
+        )
     }
 
     private fun pumpSyncBolusStart(
@@ -342,7 +346,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
         val ret = executeProgrammingCommand(
             historyEntry = history.createRecord(OmnipodCommandType.CANCEL_BOLUS),
             command = omnipodManager.stopBolus().ignoreElements()
-        ).toPumpEnactResult()
+        ).subscribeOn(aapsSchedulers.io) // stopBolusDelivering is executed on the main thread
+            .toPumpEnactResult()
         aapsLogger.info(LTag.PUMP, "stopBolusDelivering finished with result: $ret")
     }
 
