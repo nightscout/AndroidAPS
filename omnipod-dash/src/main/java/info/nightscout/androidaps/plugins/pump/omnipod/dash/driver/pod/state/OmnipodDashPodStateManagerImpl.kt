@@ -140,7 +140,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     override val activeAlerts: EnumSet<AlertType>?
         get() = podState.activeAlerts
 
-    override  val alarmType: AlarmType?
+    override val alarmType: AlarmType?
         get() = podState.alarmType
 
     override var tempBasal: OmnipodDashPodStateManager.TempBasal?

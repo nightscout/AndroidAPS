@@ -132,8 +132,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 history.updateFromState(podStateManager),
                 podStateManager.updateActiveCommand()
                     .map { handleCommandConfirmation(it) }
-                    .map { checkPodKaput() }
                     .ignoreElement(),
+                checkPodKaput()
             )
         ).blockingGet()
         if (throwable != null) {
@@ -143,12 +143,11 @@ class OmnipodDashPumpPlugin @Inject constructor(
         }
     }
 
-    private fun checkPodKaput() {
-        if (podStateManager.isPodKaput) {
-            val tbr = pumpSync.expectedPumpState().temporaryBasal
-            if (tbr?.rate == 0.0) {
-                return
-            }
+    private fun checkPodKaput(): Completable = Completable.defer {
+        val tbr = pumpSync.expectedPumpState().temporaryBasal
+        if (podStateManager.isPodKaput &&
+            (tbr == null || tbr.rate != 0.0)
+        ) {
             pumpSync.syncTemporaryBasalWithPumpId(
                 timestamp = System.currentTimeMillis(),
                 rate = 0.0,
@@ -160,6 +159,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 pumpSerial = serialNumber()
             )
         }
+        Completable.complete()
     }
 
     override fun setNewBasalProfile(profile: Profile): PumpEnactResult {

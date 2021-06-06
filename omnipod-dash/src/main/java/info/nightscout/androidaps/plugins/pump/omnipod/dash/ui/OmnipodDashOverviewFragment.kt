@@ -296,10 +296,12 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             }
              */
             podStateManager.alarmType?.let {
-                errors.add(resourceHelper.gs(
-                    R.string.omnipod_common_pod_status_pod_fault_description,
-                    it.value,
-                    it.toString())
+                errors.add(
+                    resourceHelper.gs(
+                        R.string.omnipod_common_pod_status_pod_fault_description,
+                        it.value,
+                        it.toString()
+                    )
                 )
             }
 
