@@ -298,7 +298,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
              */
 
             // base basal rate
-            podInfoBinding.baseBasalRate.text = if (podStateManager.basalProgram != null) {
+            podInfoBinding.baseBasalRate.text = if (podStateManager.basalProgram != null && !podStateManager.isSuspended) {
                 resourceHelper.gs(
                     R.string.pump_basebasalrate,
                     omnipodDashPumpPlugin.model()
@@ -357,7 +357,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
     private fun updateLastConnection() {
         if (podStateManager.isUniqueIdSet) {
-            podInfoBinding.lastConnection.text = readableDuration(podStateManager.lastConnection)
+            podInfoBinding.lastConnection.text = readableDuration(podStateManager.lastUpdatedSystem)
             val lastConnectionColor =
                 if (omnipodDashPumpPlugin.isUnreachableAlertTimeoutExceeded(getPumpUnreachableTimeout().millis)) {
                     Color.RED
@@ -367,7 +367,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             podInfoBinding.lastConnection.setTextColor(lastConnectionColor)
         } else {
             podInfoBinding.lastConnection.setTextColor(Color.WHITE)
-            podInfoBinding.lastConnection.text = readableDuration(podStateManager.lastConnection)
+            podInfoBinding.lastConnection.text = readableDuration(podStateManager.lastUpdatedSystem)
         }
     }
 
@@ -518,7 +518,9 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
     private fun updateSuspendDeliveryButton() {
         // If the Pod is currently suspended, we show the Resume delivery button instead.
-        if (isSuspendDeliveryButtonEnabled() &&
+        // TODO: isSuspendDeliveryButtonEnabled doesn't work
+        val isSuspendDeliveryButtonEnabled = true
+        if (isSuspendDeliveryButtonEnabled &&
             podStateManager.isPodRunning &&
             (!podStateManager.isSuspended || commandQueue.isCustomCommandInQueue(CommandSuspendDelivery::class.java))
         ) {

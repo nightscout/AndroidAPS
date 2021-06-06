@@ -14,6 +14,13 @@ import io.reactivex.Single
 import java.io.Serializable
 import java.util.*
 
+sealed class CommandConfirmationFromState
+object CommandSendingFailure : CommandConfirmationFromState()
+object CommandSendingNotConfirmed : CommandConfirmationFromState()
+object CommandConfirmationDenied : CommandConfirmationFromState()
+object CommandConfirmationSuccess : CommandConfirmationFromState()
+object NoActiveCommand : CommandConfirmationFromState()
+
 interface OmnipodDashPodStateManager {
 
     var activationProgress: ActivationProgress
@@ -21,7 +28,6 @@ interface OmnipodDashPodStateManager {
     val isActivationCompleted: Boolean
     val isSuspended: Boolean
     val isPodRunning: Boolean
-    var lastConnection: Long
     var bluetoothConnectionState: BluetoothConnectionState
 
     val lastUpdatedSystem: Long // System.currentTimeMillis()
@@ -67,9 +73,10 @@ interface OmnipodDashPodStateManager {
     fun updateFromPairing(uniqueId: Id, pairResult: PairResult)
     fun reset()
 
-    fun createActiveCommand(historyId: String): Single<ActiveCommand>
+    fun createActiveCommand(historyId: String, basalProgram: BasalProgram? = null): Single<ActiveCommand>
     fun updateActiveCommand(): Maybe<CommandConfirmed>
     fun observeNoActiveCommand(): Observable<PodEvent>
+    fun getCommandConfirmationFromState(): CommandConfirmationFromState
 
     data class ActiveCommand(
         val sequence: Short,
@@ -77,6 +84,7 @@ interface OmnipodDashPodStateManager {
         var sentRealtime: Long = 0,
         val historyId: String,
         var sendError: Throwable?,
+        var basalProgram: BasalProgram?
     )
     // TODO: set created to "now" on boot
     data class TempBasal(val startTime: Long, val rate: Double, val durationInMinutes: Short) : Serializable

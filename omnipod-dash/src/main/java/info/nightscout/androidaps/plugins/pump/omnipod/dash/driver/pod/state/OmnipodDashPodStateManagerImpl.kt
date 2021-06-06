@@ -53,17 +53,10 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
 
     override val isSuspended: Boolean
         get() = podState.deliveryStatus?.equals(DeliveryStatus.SUSPENDED)
-            ?: true
+            ?: false
 
     override val isPodRunning: Boolean
         get() = podState.podStatus?.isRunning() ?: false
-
-    override var lastConnection: Long
-        get() = podState.lastConnection
-        set(lastConnection) {
-            podState.lastConnection = lastConnection
-            store()
-        }
 
     override val lastUpdatedSystem: Long
         get() = podState.lastUpdatedSystem
@@ -148,7 +141,11 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         get() = podState.tempBasal
 
     override val tempBasalActive: Boolean
-        get() = podState.deliveryStatus in arrayOf(DeliveryStatus.TEMP_BASAL_ACTIVE, DeliveryStatus.BOLUS_AND_TEMP_BASAL_ACTIVE)
+        get() = podState.deliveryStatus in
+            arrayOf(
+                DeliveryStatus.TEMP_BASAL_ACTIVE,
+                DeliveryStatus.BOLUS_AND_TEMP_BASAL_ACTIVE
+            )
 
     override var basalProgram: BasalProgram?
         get() = podState.basalProgram
@@ -191,27 +188,29 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         get() = podState.activeCommand
 
     @Synchronized
-    override fun createActiveCommand(historyId: String): Single<OmnipodDashPodStateManager.ActiveCommand> {
-        return Single.create { source ->
-            if (activeCommand == null) {
-                val command = OmnipodDashPodStateManager.ActiveCommand(
-                    podState.messageSequenceNumber,
-                    createdRealtime = SystemClock.elapsedRealtime(),
-                    historyId = historyId,
-                    sendError = null,
-                )
-                podState.activeCommand = command
-                source.onSuccess(command)
-            } else {
-                source.onError(
-                    java.lang.IllegalStateException(
-                        "Trying to send a command " +
-                            "and the last command was not confirmed"
+    override fun createActiveCommand(historyId: String, basalProgram: BasalProgram?):
+        Single<OmnipodDashPodStateManager.ActiveCommand> {
+            return Single.create { source ->
+                if (activeCommand == null) {
+                    val command = OmnipodDashPodStateManager.ActiveCommand(
+                        podState.messageSequenceNumber,
+                        createdRealtime = SystemClock.elapsedRealtime(),
+                        historyId = historyId,
+                        sendError = null,
+                        basalProgram = basalProgram,
                     )
-                )
+                    podState.activeCommand = command
+                    source.onSuccess(command)
+                } else {
+                    source.onError(
+                        java.lang.IllegalStateException(
+                            "Trying to send a command " +
+                                "and the last command was not confirmed"
+                        )
+                    )
+                }
             }
         }
-    }
 
     @Synchronized
     override fun observeNoActiveCommand(): Observable<PodEvent> {
@@ -231,34 +230,72 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
 
     @Synchronized
     override fun updateActiveCommand() = Maybe.create<CommandConfirmed> { source ->
-        podState.activeCommand?.run {
-            logger.debug(
-                "Trying to confirm active command with parameters: $activeCommand " +
-                    "lastResponse=$lastStatusResponseReceived " +
-                    "$sequenceNumberOfLastProgrammingCommand $historyId"
-            )
-
-            if (sentRealtime < createdRealtime) { // command was not sent, clear it up
+        val activeCommand = podState.activeCommand
+        if (activeCommand == null) {
+            logger.error("No active command to update")
+            source.onComplete()
+            return@create
+        }
+        val cmdConfirmation = getCommandConfirmationFromState()
+        logger.info(LTag.PUMPCOMM, "Update active command with confirmation: $cmdConfirmation")
+        when (cmdConfirmation) {
+            CommandSendingFailure -> {
                 podState.activeCommand = null
                 source.onError(
-                    this.sendError
+                    activeCommand?.sendError
                         ?: java.lang.IllegalStateException(
                             "Could not send command and sendError is " +
                                 "missing"
                         )
                 )
-            } else if (createdRealtime >= lastStatusResponseReceived)
-            // we did not receive a valid response yet
-                source.onComplete()
-            else {
-                podState.activeCommand = null
-                if (sequenceNumberOfLastProgrammingCommand == sequence)
-                    source.onSuccess(CommandConfirmed(historyId, true))
-                else
-                    source.onSuccess(CommandConfirmed(historyId, false))
             }
-        } ?: source.onComplete()
-        // no active programming command
+
+            CommandSendingNotConfirmed -> {
+                // we did not receive a valid response yet
+                source.onComplete()
+            }
+
+            CommandConfirmationDenied -> {
+                podState.activeCommand = null
+                source.onSuccess(CommandConfirmed(activeCommand, false))
+            }
+
+            CommandConfirmationSuccess -> {
+                podState.activeCommand = null
+
+                source.onSuccess(CommandConfirmed(activeCommand, true))
+            }
+
+            NoActiveCommand -> {
+                source.onComplete()
+            }
+        }
+    }
+
+    @Synchronized
+    override fun getCommandConfirmationFromState(): CommandConfirmationFromState {
+        return podState.activeCommand?.run {
+            logger.debug(
+                "Getting command state with parameters: $activeCommand " +
+                    "lastResponse=$lastStatusResponseReceived " +
+                    "$sequenceNumberOfLastProgrammingCommand $historyId"
+            )
+            when {
+                createdRealtime <= podState.lastStatusResponseReceived &&
+                    sequence == podState.sequenceNumberOfLastProgrammingCommand ->
+                    CommandConfirmationSuccess
+                createdRealtime <= podState.lastStatusResponseReceived &&
+                    sequence != podState.sequenceNumberOfLastProgrammingCommand ->
+                    CommandConfirmationDenied
+                // no response received after this point
+                createdRealtime <= sentRealtime ->
+                    CommandSendingNotConfirmed
+                createdRealtime > sentRealtime ->
+                    CommandSendingFailure
+                else -> // this can't happen, see the previous two conditions
+                    NoActiveCommand
+            }
+        } ?: NoActiveCommand
     }
 
     override fun increaseEapAkaSequenceNumber(): ByteArray {
@@ -386,7 +423,6 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     class PodState : Serializable {
 
         var activationProgress: ActivationProgress = ActivationProgress.NOT_STARTED
-        var lastConnection: Long = 0
         var lastUpdatedSystem: Long = 0
         var lastStatusResponseReceived: Long = 0
         var bluetoothConnectionState: OmnipodDashPodStateManager.BluetoothConnectionState =

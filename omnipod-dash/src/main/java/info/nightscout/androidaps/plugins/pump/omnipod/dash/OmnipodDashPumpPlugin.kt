@@ -3,9 +3,11 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.events.EventProfileSwitchChanged
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.common.ManufacturerType
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType
@@ -15,7 +17,10 @@ import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.OmnipodDashManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.event.PodEvent
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.ActivationProgress
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BasalProgram
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BeepType
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.DeliveryStatus
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.ResponseType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.CommandConfirmed
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
@@ -25,6 +30,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.BolusTy
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.TempBasalRecord
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.OmnipodDashOverviewFragment
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.mapProfileToBasalProgram
+import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.androidaps.queue.commands.CustomCommand
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.TimeChangeType
@@ -48,6 +54,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val history: DashHistory,
     private val pumpSync: PumpSync,
+    private val rxBus: RxBusWrapper,
+
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     resourceHelper: ResourceHelper,
@@ -83,23 +91,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     override fun isConnected(): Boolean {
-        // NOTE: Using connected state for unconfirmed commands
-
-        // We are faking connection lost on unconfirmed commands.
-        // During normal execution, the activeCommand is set to null after a command was executed with success or we
-        // were not able to send that command.
-        // If we are not sure if the POD received the command or not, then we answer with "success" but keep this
-        // activeCommand set until we can confirm/deny it.
-
-        // In order to prevent AAPS from sending us other programming commands while the current command was not
-        // confirmed, we are simulating "connection lost".
-        // We need to prevent AAPS from sending other commands because they would overwrite the ID of the last
-        // programming command reported by the POD. And we using that ID to confirm/deny the activeCommand.
-
-        // The effect of answering with 'false' here is that AAPS will call connect() and will not sent any new
-        // commands. On connect(), we are calling getPodStatus where we are always trying to confirm/deny the
-        // activeCommand.
-        return podStateManager.activeCommand == null
+        return true
     }
 
     override fun isConnecting(): Boolean {
@@ -117,12 +109,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     override fun connect(reason: String) {
-        // See:
-        // NOTE: Using connected state for unconfirmed commands
-        if (podStateManager.activeCommand == null) {
-            return
-        }
-        getPumpStatus("unconfirmed command")
+        // empty on purpose
     }
 
     override fun disconnect(reason: String) {
@@ -134,38 +121,81 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     override fun getPumpStatus(reason: String) {
-        Observable.concat(
-            omnipodManager.getStatus(ResponseType.StatusResponseType.DEFAULT_STATUS_RESPONSE),
-            history.updateFromState(podStateManager).toObservable(),
-            podStateManager.updateActiveCommand().toObservable(),
-        ).blockingSubscribeBy(
-            onNext = { podEvent ->
-                aapsLogger.debug(
-                    LTag.PUMP,
-                    "Received PodEvent in getPumpStatus: $podEvent"
-                )
-            },
-            onError = { throwable ->
-                aapsLogger.error(LTag.PUMP, "Error in getPumpStatus", throwable)
-            },
-            onComplete = {
-                aapsLogger.debug("getPumpStatus completed")
-            }
-        )
+        val throwable = Completable.concat(listOf(
+            omnipodManager
+                .getStatus(ResponseType.StatusResponseType.DEFAULT_STATUS_RESPONSE)
+                .ignoreElements(),
+            history.updateFromState(podStateManager),
+            podStateManager.updateActiveCommand()
+                .map { handleCommandConfirmation(it) }
+                .ignoreElement(),
+        )).blockingGet()
+        if (throwable != null){
+            aapsLogger.error(LTag.PUMP, "Error in getPumpStatus", throwable)
+        } else {
+            aapsLogger.info(LTag.PUMP, "getPumpStatus executed with success")
+
+        }
     }
 
     override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
+        val basalProgram = mapProfileToBasalProgram(profile)
         return executeSimpleProgrammingCommand(
-            history.createRecord(
-                commandType = OmnipodCommandType.SET_BASAL_PROFILE
-            ),
-            omnipodManager.setBasalProgram(mapProfileToBasalProgram(profile)).ignoreElements()
+            pre = suspendDeliveryIfActive(),
+            historyEntry = history.createRecord(commandType = OmnipodCommandType.SET_BASAL_PROFILE),
+            command = omnipodManager.setBasalProgram(basalProgram).ignoreElements(),
+            basalProgram = basalProgram,
+            post = failWhenUnconfirmed(),
         ).toPumpEnactResult()
     }
 
-    override fun isThisProfileSet(profile: Profile): Boolean = podStateManager.basalProgram?.let {
-        it == mapProfileToBasalProgram(profile)
-    } ?: true
+    private fun failWhenUnconfirmed(): Completable = Completable.defer{
+        if (podStateManager.activeCommand != null) {
+            Completable.error(java.lang.IllegalStateException("Command not confirmed"))
+        }else {
+            Completable.complete()
+        }
+    }
+
+    private fun suspendDeliveryIfActive(): Completable = Completable.defer {
+        if (podStateManager.deliveryStatus == DeliveryStatus.SUSPENDED)
+            Completable.complete()
+        else
+            executeSimpleProgrammingCommand(
+                history.createRecord(OmnipodCommandType.SUSPEND_DELIVERY),
+                omnipodManager.suspendDelivery()
+                    .filter { podEvent -> podEvent is PodEvent.CommandSent }
+                    .map {
+                        pumpSyncTempBasal(
+                            it,
+                            0.0,
+                            PodConstants.MAX_POD_LIFETIME.standardMinutes,
+                            PumpSync.TemporaryBasalType.PUMP_SUSPEND
+                        )
+                    }
+                    .ignoreElements(),
+            )
+    }
+
+    private fun observeDeliverySuspended(): Completable = Completable.defer {
+        if (podStateManager.deliveryStatus == DeliveryStatus.SUSPENDED)
+            Completable.complete()
+        else {
+            Completable.error(java.lang.IllegalStateException("Expected suspended delivery"))
+        }
+    }
+
+    override fun isThisProfileSet(profile: Profile): Boolean {
+        if (!podStateManager.isActivationCompleted) {
+            // prevent setBasal requests
+            return true
+        }
+        // TODO: what do we have to answer here if delivery is suspended?
+        val running = podStateManager.basalProgram
+        val equal = (mapProfileToBasalProgram(profile) == running)
+        aapsLogger.info(LTag.PUMP, "isThisProfileSet: $equal")
+        return equal
+    }
 
     override fun lastDataTime(): Long {
         return podStateManager.lastUpdatedSystem
@@ -270,7 +300,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 tempBasalBeeps
             )
                 .filter { podEvent -> podEvent is PodEvent.CommandSent }
-                .map { pumpSyncTempBasal(it, tbrType) }
+                .map { pumpSyncTempBasal(it, absoluteRate, durationInMinutes.toLong(), tbrType) }
                 .ignoreElements(),
             pre = observeNoActiveTempBasal()
         ).toPumpEnactResult()
@@ -278,6 +308,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     private fun pumpSyncTempBasal(
         podEvent: PodEvent,
+        absoluteRate: Double,
+        durationInMinutes: Long,
         tbrType: PumpSync.TemporaryBasalType
     ): Boolean {
         val activeCommand = podStateManager.activeCommand
@@ -289,14 +321,11 @@ class OmnipodDashPumpPlugin @Inject constructor(
             )
         }
         val historyEntry = history.getById(activeCommand.historyId)
-        val record = historyEntry.record
-        if (record == null || !(record is TempBasalRecord)) {
-            throw IllegalArgumentException("Illegal recording in history: $record. Expected a temp basal")
-        }
+
         val ret = pumpSync.syncTemporaryBasalWithPumpId(
             timestamp = historyEntry.createdAt,
-            rate = record.rate,
-            duration = T.mins(record.duration.toLong()).msecs(),
+            rate = absoluteRate,
+            duration = T.mins(durationInMinutes.toLong()).msecs(),
             isAbsolute = true,
             type = tbrType,
             pumpId = historyEntry.pumpId(),
@@ -325,8 +354,9 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     private fun observeActiveTempBasal(): Completable {
+
         return Completable.defer {
-            if (podStateManager.tempBasalActive)
+            if (podStateManager.tempBasalActive || pumpSync.expectedPumpState().temporaryBasal != null)
                 Completable.complete()
             else
                 Completable.error(
@@ -367,36 +397,6 @@ class OmnipodDashPumpPlugin @Inject constructor(
         return this.toSingleDefault(PumpEnactResult(injector).success(true).enacted(true))
             .onErrorReturnItem(PumpEnactResult(injector).success(false).enacted(false))
             .blockingGet()
-    }
-
-    private fun handleCommandConfirmation(confirmation: CommandConfirmed) {
-        val historyEntry = history.getById(confirmation.historyId)
-        when (historyEntry.commandType) {
-            OmnipodCommandType.CANCEL_TEMPORARY_BASAL ->
-                // We can't invalidate this command,
-                // and this is why it is pumpSync-ed at this point
-                if (confirmation.success) {
-                    pumpSync.syncStopTemporaryBasalWithPumpId(
-                        historyEntry.createdAt,
-                        historyEntry.pumpId(),
-                        PumpType.OMNIPOD_DASH,
-                        serialNumber()
-                    )
-                }
-            OmnipodCommandType.SET_TEMPORARY_BASAL ->
-                // This treatment was synced before sending the command
-                if (!confirmation.success) {
-                    // TODO: the ID here is the temp basal id, not the pumpId!!
-                    pumpSync.invalidateTemporaryBasal(historyEntry.pumpId())
-                }
-
-            else ->
-                aapsLogger.warn(
-                    LTag.PUMP,
-                    "Will not sync confirmed command of type: $historyEntry and " +
-                        "succes: ${confirmation.success}"
-                )
-        }
     }
 
     override fun cancelExtendedBolus(): PumpEnactResult {
@@ -515,16 +515,35 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     private fun suspendDelivery(): PumpEnactResult {
         return executeSimpleProgrammingCommand(
-            history.createRecord(OmnipodCommandType.RESUME_DELIVERY),
-            omnipodManager.suspendDelivery().ignoreElements()
+            historyEntry = history.createRecord(OmnipodCommandType.SUSPEND_DELIVERY),
+            command = omnipodManager.suspendDelivery()
+                .filter { podEvent -> podEvent is PodEvent.CommandSent }
+                .map {
+                    pumpSyncTempBasal(
+                        it,
+                        0.0,
+                        PodConstants.MAX_POD_LIFETIME.standardMinutes,
+                        PumpSync.TemporaryBasalType.PUMP_SUSPEND
+                    )
+                }
+                .ignoreElements(),
+            pre = observeDeliveryActive(),
         ).toPumpEnactResult()
+    }
+
+    private fun observeDeliveryActive(): Completable = Completable.defer {
+        if (podStateManager.deliveryStatus != DeliveryStatus.SUSPENDED)
+            Completable.complete()
+        else
+            Completable.error(java.lang.IllegalStateException("Expected active delivery"))
     }
 
     private fun resumeDelivery(): PumpEnactResult {
         return profileFunction.getProfile()?.let {
             executeSimpleProgrammingCommand(
                 history.createRecord(OmnipodCommandType.RESUME_DELIVERY),
-                omnipodManager.setBasalProgram(mapProfileToBasalProgram(it)).ignoreElements()
+                omnipodManager.setBasalProgram(mapProfileToBasalProgram(it)).ignoreElements(),
+                pre = observeDeliverySuspended(),
             ).toPumpEnactResult()
         } ?: PumpEnactResult(injector).success(false).enacted(false).comment("No profile active") // TODO i18n
     }
@@ -578,13 +597,15 @@ class OmnipodDashPumpPlugin @Inject constructor(
         historyEntry: Single<String>,
         command: Completable,
         pre: Completable = Completable.complete(),
+        basalProgram: BasalProgram? = null,
+        post: Completable = Completable.complete(),
     ): Completable {
         return Completable.concat(
             listOf(
                 pre,
                 podStateManager.observeNoActiveCommand().ignoreElements(),
                 historyEntry
-                    .flatMap { podStateManager.createActiveCommand(it) }
+                    .flatMap { podStateManager.createActiveCommand(it, basalProgram) }
                     .ignoreElement(),
                 command.doOnError {
                     podStateManager.activeCommand?.sendError = it
@@ -593,8 +614,69 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 history.updateFromState(podStateManager),
                 podStateManager.updateActiveCommand()
                     .map { handleCommandConfirmation(it) }
-                    .ignoreElement()
+                    .ignoreElement(),
+                post,
             )
         )
+    }
+
+    private fun handleCommandConfirmation(confirmation: CommandConfirmed) {
+        val command = confirmation.command
+        val historyEntry = history.getById(command.historyId)
+        aapsLogger.debug(LTag.PUMPCOMM, "handling command confirmation: $confirmation")
+        when (historyEntry.commandType) {
+            OmnipodCommandType.CANCEL_TEMPORARY_BASAL,
+            OmnipodCommandType.RESUME_DELIVERY ->
+                // We can't invalidate this command,
+                // and this is why it is pumpSync-ed at this point
+                if (confirmation.success) {
+                    pumpSync.syncStopTemporaryBasalWithPumpId(
+                        historyEntry.createdAt,
+                        historyEntry.pumpId(),
+                        PumpType.OMNIPOD_DASH,
+                        serialNumber()
+                    )
+                }
+
+            OmnipodCommandType.SET_BASAL_PROFILE -> {
+                if (confirmation.success) {
+                    podStateManager.basalProgram = command.basalProgram
+                    if (podStateManager.basalProgram == null) {
+                        aapsLogger.warn(LTag.PUMP, "Saving null basal profile")
+                    }
+                    if (!commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)) {
+                        // we are late-confirming this command. before that, we answered with success:false
+                        rxBus.send(EventProfileSwitchChanged())
+                    }
+                    pumpSync.syncStopTemporaryBasalWithPumpId(
+                        historyEntry.createdAt,
+                        historyEntry.pumpId(),
+                        PumpType.OMNIPOD_DASH,
+                        serialNumber()
+                    )
+                }
+            }
+
+            OmnipodCommandType.SET_TEMPORARY_BASAL -> {
+                // This treatment was synced before sending the command
+                aapsLogger.info(LTag.PUMPCOMM, "temporary basal denied. PumpId: ${historyEntry.pumpId()}")
+                if (!confirmation.success) {
+                    pumpSync.invalidateTemporaryBasal(historyEntry.pumpId())
+                }
+            }
+
+            OmnipodCommandType.SUSPEND_DELIVERY -> {
+                if (!confirmation.success) {
+                    pumpSync.invalidateTemporaryBasal(historyEntry.pumpId())
+                }
+            }
+
+            else ->
+                aapsLogger.warn(
+                    LTag.PUMP,
+                    "Will not sync confirmed command of type: $historyEntry and " +
+                        "succes: ${confirmation.success}"
+                )
+        }
     }
 }
