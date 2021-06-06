@@ -97,7 +97,11 @@ class PumpSyncStorage @Inject constructor(
         if (result && writeToInternalHistory) {
             val innerList: MutableList<PumpDbEntry> = pumpSyncStorage[BOLUS]!!
 
-            innerList.add(PumpDbEntry(temporaryId, detailedBolusInfo.timestamp, creator.model(), creator.serialNumber(), detailedBolusInfo))
+            val dbEntry = PumpDbEntry(temporaryId, detailedBolusInfo.timestamp, creator.model(), creator.serialNumber(), detailedBolusInfo)
+
+            aapsLogger.debug("PumpDbEntry: $dbEntry")
+
+            innerList.add(dbEntry)
             pumpSyncStorage[BOLUS] = innerList
             saveStorage()
         }
