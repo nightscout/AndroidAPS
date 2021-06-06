@@ -11,7 +11,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptio
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair.LTKExchanger
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.scan.PodScanner
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.*
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.status.ConnectionStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.event.PodEvent
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.Command
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.Response
@@ -34,7 +33,6 @@ class OmnipodDashBleManagerImpl @Inject constructor(
         context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
     private val bluetoothAdapter: BluetoothAdapter = bluetoothManager.adapter
     private var connection: Connection? = null
-    private var status: ConnectionStatus = ConnectionStatus.IDLE
     private val ids = Ids(podState)
 
     override fun sendCommand(cmd: Command, responseType: KClass<out Response>): Observable<PodEvent> =
@@ -85,13 +83,9 @@ class OmnipodDashBleManagerImpl @Inject constructor(
             ?: throw NotConnectedException("Missing session")
     }
 
-    override fun getStatus(): ConnectionStatus {
-        // TODO is this used?
-        var s: ConnectionStatus
-        synchronized(status) {
-            s = status
-        }
-        return s
+    override fun getStatus(): ConnectionState {
+        return connection?.let { getStatus() }
+            ?: NotConnected
     }
 
     override fun connect(): Observable<PodEvent> = Observable.create { emitter ->
@@ -106,9 +100,10 @@ class OmnipodDashBleManagerImpl @Inject constructor(
                     ?: throw FailedToConnectException("Missing bluetoothAddress, activate the pod first")
             val podDevice = bluetoothAdapter.getRemoteDevice(podAddress)
             val conn = connection
-                ?: Connection(podDevice, aapsLogger, context)
+                ?: Connection(podDevice, aapsLogger, context, podState)
             connection = conn
             if (conn.connectionState() is Connected) {
+                podState.lastConnection = System.currentTimeMillis()
                 if (conn.session == null) {
                     emitter.onNext(PodEvent.EstablishingSession)
                     establishSession(1.toByte())
@@ -121,7 +116,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
             }
             conn.connect()
             emitter.onNext(PodEvent.BluetoothConnected(podAddress))
-
+            podState.lastConnection = System.currentTimeMillis()
             emitter.onNext(PodEvent.EstablishingSession)
             establishSession(1.toByte())
             emitter.onNext(PodEvent.Connected)
@@ -190,7 +185,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
 
             emitter.onNext(PodEvent.BluetoothConnecting)
             val podDevice = bluetoothAdapter.getRemoteDevice(podAddress)
-            val conn = Connection(podDevice, aapsLogger, context)
+            val conn = Connection(podDevice, aapsLogger, context, podState)
             connection = conn
             emitter.onNext(PodEvent.BluetoothConnected(podAddress))
 

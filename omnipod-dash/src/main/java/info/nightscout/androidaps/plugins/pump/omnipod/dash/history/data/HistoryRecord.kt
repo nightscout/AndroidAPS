@@ -1,6 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data
 
+import com.github.guepardoapps.kulid.ULID
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType
+import java.nio.ByteBuffer
 
 data class HistoryRecord(
     val id: String, // ULID
@@ -11,4 +13,9 @@ data class HistoryRecord(
     val record: Record?,
     val resolvedResult: ResolvedResult?,
     val resolvedAt: Long?
-)
+) {
+    fun pumpId(): Long {
+        val entropy = ULID.getEntropy(id)
+        return ByteBuffer.wrap(entropy).getLong()
+    }
+}

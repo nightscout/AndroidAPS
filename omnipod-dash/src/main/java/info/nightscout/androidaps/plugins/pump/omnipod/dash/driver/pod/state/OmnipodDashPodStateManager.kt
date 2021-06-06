@@ -8,9 +8,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.DefaultStatusResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.SetUniqueIdResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.VersionResponse
-import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Observable
+import io.reactivex.Single
 import java.io.Serializable
 import java.util.*
 
@@ -22,6 +22,7 @@ interface OmnipodDashPodStateManager {
     val isSuspended: Boolean
     val isPodRunning: Boolean
     var lastConnection: Long
+    var bluetoothConnectionState: BluetoothConnectionState
 
     val lastUpdatedSystem: Long // System.currentTimeMillis()
     val lastStatusResponseReceived: Long
@@ -66,17 +67,21 @@ interface OmnipodDashPodStateManager {
     fun updateFromPairing(uniqueId: Id, pairResult: PairResult)
     fun reset()
 
-    fun createActiveCommand(historyId: String): Completable
-    fun updateActiveCommand(): Maybe<PodEvent>
+    fun createActiveCommand(historyId: String): Single<ActiveCommand>
+    fun updateActiveCommand(): Maybe<CommandConfirmed>
     fun observeNoActiveCommand(): Observable<PodEvent>
-    fun maybeMarkActiveCommandFailed()
 
     data class ActiveCommand(
         val sequence: Short,
         val createdRealtime: Long,
         var sentRealtime: Long = 0,
-        val historyId: String
+        val historyId: String,
+        var sendError: Throwable?,
     )
     // TODO: set created to "now" on boot
     data class TempBasal(val startTime: Long, val rate: Double, val durationInMinutes: Short) : Serializable
+
+    enum class BluetoothConnectionState {
+        CONNECTING, CONNECTED, DISCONNECTED
+    }
 }

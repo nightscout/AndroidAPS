@@ -24,7 +24,7 @@ interface OmnipodDashManager {
 
     fun setTime(): Observable<PodEvent>
 
-    fun setTempBasal(rate: Double, durationInMinutes: Short): Observable<PodEvent>
+    fun setTempBasal(rate: Double, durationInMinutes: Short, tempBasalBeeps: Boolean): Observable<PodEvent>
 
     fun stopTempBasal(): Observable<PodEvent>
 

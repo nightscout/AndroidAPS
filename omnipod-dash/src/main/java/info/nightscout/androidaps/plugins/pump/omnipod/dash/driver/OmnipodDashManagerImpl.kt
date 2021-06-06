@@ -460,14 +460,14 @@ class OmnipodDashManagerImpl @Inject constructor(
         return Observable.empty()
     }
 
-    private fun observeSendProgramTempBasalCommand(rate: Double, durationInMinutes: Short): Observable<PodEvent> {
+    private fun observeSendProgramTempBasalCommand(rate: Double, durationInMinutes: Short, tempBasalBeeps: Boolean): Observable<PodEvent> {
         return Observable.defer {
-            // TODO cancel current temp basal (if active)
             bleManager.sendCommand(
                 ProgramTempBasalCommand.Builder()
                     .setSequenceNumber(podStateManager.messageSequenceNumber)
                     .setUniqueId(podStateManager.uniqueId!!.toInt())
                     .setNonce(NONCE)
+                    .setProgramReminder(ProgramReminder(tempBasalBeeps, tempBasalBeeps, 0))
                     .setRateInUnitsPerHour(rate)
                     .setDurationInMinutes(durationInMinutes)
                     .build(),
@@ -476,11 +476,11 @@ class OmnipodDashManagerImpl @Inject constructor(
         }
     }
 
-    override fun setTempBasal(rate: Double, durationInMinutes: Short): Observable<PodEvent> {
+    override fun setTempBasal(rate: Double, durationInMinutes: Short, tempBasalBeeps: Boolean): Observable<PodEvent> {
         return Observable.concat(
             observePodRunning,
             observeConnectToPod,
-            observeSendProgramTempBasalCommand(rate, durationInMinutes)
+            observeSendProgramTempBasalCommand(rate, durationInMinutes, tempBasalBeeps)
         )
             // TODO these would be common for any observable returned in a public function in this class
             .doOnNext(PodEventInterceptor())
@@ -700,7 +700,7 @@ class OmnipodDashManagerImpl @Inject constructor(
     inner class ErrorInterceptor : Consumer<Throwable> {
 
         override fun accept(throwable: Throwable) {
-            logger.debug(LTag.PUMP, "Intercepted error in OmnipodDashManagerImpl: ${throwable.javaClass.simpleName}")
+            logger.debug(LTag.PUMP, "Intercepted error in OmnipodDashManagerImpl: $throwable")
         }
     }
 

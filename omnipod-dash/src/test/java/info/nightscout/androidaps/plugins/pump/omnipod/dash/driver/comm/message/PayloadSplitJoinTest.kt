@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message
 
+import info.nightscout.androidaps.extensions.toHex
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet.PayloadJoiner
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet.PayloadSplitter
-import info.nightscout.androidaps.extensions.toHex
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.util.*

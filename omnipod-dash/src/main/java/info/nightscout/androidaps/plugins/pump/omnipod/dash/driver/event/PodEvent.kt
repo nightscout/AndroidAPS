@@ -65,6 +65,4 @@ sealed class PodEvent {
             return "ResponseReceived(command=$command, response=$response)"
         }
     }
-
-    data class CommandConfirmed(val historyId: String, val success: Boolean) : PodEvent()
 }

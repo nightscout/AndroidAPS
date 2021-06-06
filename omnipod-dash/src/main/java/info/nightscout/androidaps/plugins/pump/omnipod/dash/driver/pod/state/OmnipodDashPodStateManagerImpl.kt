@@ -17,9 +17,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.SetUniqueIdResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.VersionResponse
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Observable
+import io.reactivex.Single
 import java.io.Serializable
 import java.util.*
 import javax.inject.Inject
@@ -148,7 +148,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         get() = podState.tempBasal
 
     override val tempBasalActive: Boolean
-        get() = tempBasal != null && tempBasal!!.startTime + tempBasal!!.durationInMinutes * 60 * 1000 > System.currentTimeMillis()
+        get() = podState.deliveryStatus in arrayOf(DeliveryStatus.TEMP_BASAL_ACTIVE, DeliveryStatus.BOLUS_AND_TEMP_BASAL_ACTIVE)
 
     override var basalProgram: BasalProgram?
         get() = podState.basalProgram
@@ -159,6 +159,14 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
 
     override val lastStatusResponseReceived: Long
         get() = podState.lastStatusResponseReceived
+
+    override var bluetoothConnectionState: OmnipodDashPodStateManager.BluetoothConnectionState
+        get() = podState.bluetoothConnectionState
+        set(bluetoothConnectionState) {
+            podState.bluetoothConnectionState = bluetoothConnectionState
+            rxBus.send(EventOmnipodDashPumpValuesChanged())
+            // do not store
+        }
 
     override fun increaseMessageSequenceNumber() {
         podState.messageSequenceNumber = ((podState.messageSequenceNumber.toInt() + 1) and 0x0f).toShort()
@@ -183,21 +191,25 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         get() = podState.activeCommand
 
     @Synchronized
-    override fun createActiveCommand(historyId: String) = Completable.create { source ->
-        if (activeCommand == null) {
-            podState.activeCommand = OmnipodDashPodStateManager.ActiveCommand(
-                podState.messageSequenceNumber,
-                createdRealtime = SystemClock.elapsedRealtime(),
-                historyId = historyId
-            )
-            source.onComplete()
-        } else {
-            source.onError(
-                java.lang.IllegalStateException(
-                    "Trying to send a command " +
-                        "and the last command was not confirmed"
+    override fun createActiveCommand(historyId: String): Single<OmnipodDashPodStateManager.ActiveCommand> {
+        return Single.create { source ->
+            if (activeCommand == null) {
+                val command = OmnipodDashPodStateManager.ActiveCommand(
+                    podState.messageSequenceNumber,
+                    createdRealtime = SystemClock.elapsedRealtime(),
+                    historyId = historyId,
+                    sendError = null,
                 )
-            )
+                podState.activeCommand = command
+                source.onSuccess(command)
+            } else {
+                source.onError(
+                    java.lang.IllegalStateException(
+                        "Trying to send a command " +
+                            "and the last command was not confirmed"
+                    )
+                )
+            }
         }
     }
 
@@ -218,35 +230,35 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     }
 
     @Synchronized
-    override fun maybeMarkActiveCommandFailed() {
-        podState.activeCommand?.run {
-            if (sentRealtime < createdRealtime) {
-                // command was not sent
-                podState.activeCommand = null
-            }
-        }
-    }
-
-    @Synchronized
-    override fun updateActiveCommand() = Maybe.create<PodEvent> { source ->
+    override fun updateActiveCommand() = Maybe.create<CommandConfirmed> { source ->
         podState.activeCommand?.run {
             logger.debug(
                 "Trying to confirm active command with parameters: $activeCommand " +
                     "lastResponse=$lastStatusResponseReceived " +
                     "$sequenceNumberOfLastProgrammingCommand $historyId"
             )
-            if (createdRealtime >= lastStatusResponseReceived)
+
+            if (sentRealtime < createdRealtime) { // command was not sent, clear it up
+                podState.activeCommand = null
+                source.onError(
+                    this.sendError
+                        ?: java.lang.IllegalStateException(
+                            "Could not send command and sendError is " +
+                                "missing"
+                        )
+                )
+            } else if (createdRealtime >= lastStatusResponseReceived)
             // we did not receive a valid response yet
                 source.onComplete()
             else {
                 podState.activeCommand = null
                 if (sequenceNumberOfLastProgrammingCommand == sequence)
-                    source.onSuccess(PodEvent.CommandConfirmed(historyId, true))
+                    source.onSuccess(CommandConfirmed(historyId, true))
                 else
-                    source.onSuccess(PodEvent.CommandConfirmed(historyId, false))
+                    source.onSuccess(CommandConfirmed(historyId, false))
             }
-        }
-            ?: source.onComplete() // no active programming command
+        } ?: source.onComplete()
+        // no active programming command
     }
 
     override fun increaseEapAkaSequenceNumber(): ByteArray {
@@ -377,7 +389,8 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         var lastConnection: Long = 0
         var lastUpdatedSystem: Long = 0
         var lastStatusResponseReceived: Long = 0
-
+        var bluetoothConnectionState: OmnipodDashPodStateManager.BluetoothConnectionState =
+            OmnipodDashPodStateManager.BluetoothConnectionState.DISCONNECTED
         var messageSequenceNumber: Short = 0
         var sequenceNumberOfLastProgrammingCommand: Short? = null
         var activationTime: Long? = null
