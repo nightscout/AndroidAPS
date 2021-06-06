@@ -8,9 +8,10 @@ object AlertUtil {
     fun decodeAlertSet(encoded: Byte): EnumSet<AlertType> {
         val encodedInt = encoded.toInt() and 0xff
 
-        val alertList = AlertType.values().filter {
-            (it.value.toInt() and 0xff) and encodedInt != 0
-        }.toList()
+        val alertList = AlertType.values()
+            .filter { it != AlertType.UNKNOWN } // 0xff && <something> will always be true
+            .filter { (it.value.toInt() and 0xff) and encodedInt != 0 }
+            .toList()
 
         return if (alertList.isEmpty()) {
             EnumSet.noneOf(AlertType::class.java)
