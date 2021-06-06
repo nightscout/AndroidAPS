@@ -491,7 +491,7 @@ class MedtronicHistoryData @Inject constructor(
             if (!multiwave) {
                 val entryWithTempId = findDbEntry(bolus, boluses)
 
-                aapsLogger.debug(LTag.PUMP, String.format("DD: entryWithTempId=%s", entryWithTempId))
+                aapsLogger.debug(LTag.PUMP, "DD: entryWithTempId=$entryWithTempId")
 
                 if (entryWithTempId != null) {
                     aapsLogger.debug(LTag.PUMP, String.format("DD: entryWithTempId.bolusData=%s", if (entryWithTempId.bolusData == null) "null" else entryWithTempId.bolusData))
