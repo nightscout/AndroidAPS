@@ -446,7 +446,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         return ret
     }
 
-    private fun observeNoActiveTempBasal(): Completable {
+    private fun observeNoActiveTempBasal(enforceNew: Boolean): Completable {
         return Completable.defer {
             when {
                 podStateManager.deliveryStatus !in
