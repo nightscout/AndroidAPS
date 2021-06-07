@@ -629,17 +629,12 @@ class MedtronicHistoryData @Inject constructor(
                     aapsLogger.debug(LTag.PUMP, String.format("DD: tempIdEntry=%s, tbrEntry=%s, tempBasalProcessDTO=%s, pumpType=%s, serial=%s",
                         gson.toJson(entryWithTempId), gson.toJson(tbrEntry), gson.toJson(tempBasalProcessDTO), medtronicPumpStatus.pumpType, medtronicPumpStatus.serialNumber))
 
-                    aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "BEFORE syncTemporaryBasalWithTempId " +
-                        "[date=%d, dateProcess=%d,  tbrEntry.insulinRate=%d, duration=%d, isAbsolute=%b, temporaryId=%d, pumpId=%d, pumpType=%s, pumpSerial=%s]",
-                        tempBasalProcessDTO.atechDateTime,
-                        tryToGetByLocalTime(tempBasalProcessDTO.atechDateTime),
-                        tbrEntry.insulinRate,
-                        tempBasalProcessDTO.duration * 60L * 1000L,
-                        !tbrEntry.isPercent,
-                        entryWithTempId.temporaryId,
-                        tempBasalProcessDTO.pumpId,
-                        medtronicPumpStatus.pumpType,
-                        medtronicPumpStatus.serialNumber))
+                    aapsLogger.debug(LTag.PUMP, "BEFORE syncTemporaryBasalWithTempId " +
+                        "[date=${tempBasalProcessDTO.atechDateTime}, dateProcess=${tryToGetByLocalTime(tempBasalProcessDTO.atechDateTime)},  " +
+                        "tbrEntry.insulinRate=${tbrEntry.insulinRate}, duration=${tempBasalProcessDTO.duration * 60L * 1000L}, " +
+                        "isAbsolute=${!tbrEntry.isPercent}, temporaryId=${entryWithTempId.temporaryId}, " +
+                        "pumpId=${tempBasalProcessDTO.pumpId}, pumpType=${medtronicPumpStatus.pumpType}, " +
+                        "pumpSerial=${medtronicPumpStatus.serialNumber}]")
 
                     val result = pumpSync.syncTemporaryBasalWithTempId(
                         tryToGetByLocalTime(tempBasalProcessDTO.atechDateTime),
