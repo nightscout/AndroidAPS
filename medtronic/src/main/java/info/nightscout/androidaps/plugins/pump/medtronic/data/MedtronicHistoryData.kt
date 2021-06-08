@@ -9,6 +9,7 @@ import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
+import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntry
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.MedtronicPumpHistoryDecoder
@@ -490,9 +491,11 @@ class MedtronicHistoryData @Inject constructor(
             if (!multiwave) {
                 val entryWithTempId = findDbEntry(bolus, boluses)
 
-                aapsLogger.debug(LTag.PUMP, String.format("DD: entryWithTempId=%s", gson.toJson(entryWithTempId)))
+                aapsLogger.debug(LTag.PUMP, "DD: entryWithTempId=$entryWithTempId")
 
                 if (entryWithTempId != null) {
+                    aapsLogger.debug(LTag.PUMP, String.format("DD: entryWithTempId.bolusData=%s", if (entryWithTempId.bolusData == null) "null" else entryWithTempId.bolusData))
+
                     temporaryId = entryWithTempId.temporaryId
                     pumpSyncStorage.removeBolusWithTemporaryId(temporaryId)
                     boluses.remove(entryWithTempId)
@@ -578,7 +581,7 @@ class MedtronicHistoryData @Inject constructor(
 
         val tbrRecords = pumpSyncStorage.getTBRs()
         aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, ProcessHistoryRecord.TBR.description + " List (before filter): %s, FromDb=%s", gson.toJson(entryList),
-            gson.toJson(tbrRecords)))
+            tbrRecords))
         var processDTO: TempBasalProcessDTO? = null
         val processList: MutableList<TempBasalProcessDTO> = mutableListOf()
         for (treatment in entryList) {
@@ -611,6 +614,8 @@ class MedtronicHistoryData @Inject constructor(
         if (processList.isNotEmpty()) {
             for (tempBasalProcessDTO in processList) {
 
+                aapsLogger.debug(LTag.PUMP, "DD: tempBasalProcessDTO.itemOne: " + gson.toJson(tempBasalProcessDTO.itemOne))
+
                 val entryWithTempId = findDbEntry(tempBasalProcessDTO.itemOne, tbrRecords)
 
                 aapsLogger.debug(LTag.PUMP, "DD: entryWithTempId: " + (if (entryWithTempId == null) "null" else entryWithTempId.toString()))
@@ -623,6 +628,13 @@ class MedtronicHistoryData @Inject constructor(
 
                     aapsLogger.debug(LTag.PUMP, String.format("DD: tempIdEntry=%s, tbrEntry=%s, tempBasalProcessDTO=%s, pumpType=%s, serial=%s",
                         gson.toJson(entryWithTempId), gson.toJson(tbrEntry), gson.toJson(tempBasalProcessDTO), medtronicPumpStatus.pumpType, medtronicPumpStatus.serialNumber))
+
+                    aapsLogger.debug(LTag.PUMP, "BEFORE syncTemporaryBasalWithTempId " +
+                        "[date=${tempBasalProcessDTO.atechDateTime}, dateProcess=${tryToGetByLocalTime(tempBasalProcessDTO.atechDateTime)},  " +
+                        "tbrEntry.insulinRate=${tbrEntry.insulinRate}, duration=${tempBasalProcessDTO.duration * 60L * 1000L}, " +
+                        "isAbsolute=${!tbrEntry.isPercent}, temporaryId=${entryWithTempId.temporaryId}, " +
+                        "pumpId=${tempBasalProcessDTO.pumpId}, pumpType=${medtronicPumpStatus.pumpType}, " +
+                        "pumpSerial=${medtronicPumpStatus.serialNumber}]")
 
                     val result = pumpSync.syncTemporaryBasalWithTempId(
                         tryToGetByLocalTime(tempBasalProcessDTO.atechDateTime),
@@ -711,7 +723,7 @@ class MedtronicHistoryData @Inject constructor(
     /**
      * Looks at all boluses that have temporaryId and find one that is correct for us (if such entry exists)
      */
-    private fun findDbEntry(treatment: PumpHistoryEntry, temporaryEntries: MutableList<info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntry>): info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntry? {
+    private fun findDbEntry(treatment: PumpHistoryEntry, temporaryEntries: MutableList<PumpDbEntry>): PumpDbEntry? {
 
         if (temporaryEntries.isEmpty()) {
             return null
