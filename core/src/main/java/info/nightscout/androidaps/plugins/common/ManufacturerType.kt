@@ -9,5 +9,6 @@ enum class ManufacturerType(val description: String) {
     Animas("Animas"),
     Cellnovo("Cellnovo"),
     Roche("Roche"),
-    Ypsomed("Ypsomed");
+    Ypsomed("Ypsomed"),
+    G2e("G2e");
 }
