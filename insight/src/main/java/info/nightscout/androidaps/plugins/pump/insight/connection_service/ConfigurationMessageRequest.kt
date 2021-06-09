@@ -4,7 +4,11 @@ import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.configuration.CloseConfigurationWriteSessionMessage
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.configuration.OpenConfigurationWriteSessionMessage
 
-class ConfigurationMessageRequest<T : AppLayerMessage?>(request: T, private val openRequest: MessageRequest<OpenConfigurationWriteSessionMessage>, private val closeRequest: MessageRequest<CloseConfigurationWriteSessionMessage>) : MessageRequest<T>(request) {
+class ConfigurationMessageRequest<T : AppLayerMessage?>(
+    request: T,
+    private val openRequest: MessageRequest<OpenConfigurationWriteSessionMessage>,
+    private val closeRequest: MessageRequest<CloseConfigurationWriteSessionMessage>
+    ) : MessageRequest<T>(request) {
 
     @Throws(Exception::class) override fun await(): T {
         openRequest.await()

@@ -5,7 +5,7 @@ package info.nightscout.androidaps.plugins.pump.insight.utils.crypto
  * Table generated using: http://pycrc.org/
  * Command used: python pycrc.py --width 16 --poly 0x1021 --reflect-in True --reflect-out True --xor-in 0xffff --xor-out=0x0000 --generate TABLE
  */
-object CRC {
+internal object CRC {
 
     @JvmField val TABLE = intArrayOf(
         0x0000, 0x1189, 0x2312, 0x329b, 0x4624, 0x57ad, 0x6536, 0x74bf,

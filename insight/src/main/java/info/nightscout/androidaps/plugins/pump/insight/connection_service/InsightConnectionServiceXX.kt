@@ -44,7 +44,7 @@ import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.min
 
-class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback, InputStreamReader.Callback, OutputStreamWriter.Callback {
+class InsightConnectionServiceXX : DaggerService(), ConnectionEstablisher.Callback, InputStreamReader.Callback, OutputStreamWriter.Callback {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var sp: SP
@@ -289,7 +289,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
                     if (recoveryDuration == 0L) connect() else {
                         recoveryTimer = DelayedActionThread.runDelayed("RecoveryTimer", recoveryDuration) {
                             recoveryTimer = null
-                            synchronized(this@InsightConnectionService) { if (!Thread.currentThread().isInterrupted) connect() }
+                            synchronized(this@InsightConnectionServiceXX) { if (!Thread.currentThread().isInterrupted) connect() }
                         }
                     }
                 }
@@ -670,8 +670,8 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
 
     inner class LocalBinder : Binder() {
 
-        val service: InsightConnectionService
-            get() = this@InsightConnectionService
+        val service: InsightConnectionServiceXX
+            get() = this@InsightConnectionServiceXX
     }
 
     interface StateCallback {

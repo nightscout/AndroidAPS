@@ -7,9 +7,9 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
 class ActivateServiceMessage : AppLayerMessage(MessagePriority.NORMAL, false, false, Service.CONNECTION) {
 
-    internal var serviceID: Byte = 0
-    internal var version: Short = 0
-    internal lateinit var servicePassword: ByteArray
+    var serviceID: Byte = 0
+    var version: Short = 0
+    lateinit var servicePassword: ByteArray
     override fun parse(byteBuf: ByteBuf?) {
         serviceID = byteBuf?.readByte() ?: 0
         version = byteBuf?.readShort() ?: 0

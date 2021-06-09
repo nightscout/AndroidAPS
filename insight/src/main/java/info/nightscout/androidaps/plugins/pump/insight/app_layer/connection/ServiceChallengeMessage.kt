@@ -7,10 +7,10 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
 class ServiceChallengeMessage : AppLayerMessage(MessagePriority.NORMAL, false, false, Service.CONNECTION) {
 
-    internal var serviceID: Byte = 0
-    lateinit internal var randomData: ByteArray
+    var serviceID: Byte = 0
+    lateinit var randomData: ByteArray
         private set
-    internal var version: Short = 0
+    var version: Short = 0
     override fun parse(byteBuf: ByteBuf?) {
         randomData = byteBuf!!.getBytes(16)
     }

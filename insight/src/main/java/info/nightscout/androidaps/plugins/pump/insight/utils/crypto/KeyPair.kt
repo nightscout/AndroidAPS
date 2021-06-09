@@ -5,7 +5,6 @@ import org.spongycastle.crypto.params.RSAPrivateCrtKeyParameters
 
 class KeyPair {
 
-    //public RSAKeyParameters getPublicKey() {
     lateinit var privateKey: RSAPrivateCrtKeyParameters
     lateinit var publicKey: RSAKeyParameters
     val publicKeyBytes: ByteArray
@@ -15,6 +14,4 @@ class KeyPair {
             System.arraycopy(modulus, 1, bytes, 0, 256)
             return bytes
         }
-    //    return this.publicKey;
-    //}
 }

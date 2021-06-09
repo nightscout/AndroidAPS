@@ -19,8 +19,8 @@ class ConnectionEstablisherXX(private val callback: Callback, private val forPai
         }
         if (forPairing && bluetoothDevice.bondState != BluetoothDevice.BOND_NONE) {
             try {
-                val removeBond = bluetoothDevice.javaClass.getMethod("removeBond", null)
-                removeBond.invoke(bluetoothDevice, null)
+                val removeBond = bluetoothDevice.javaClass.getMethod("removeBond", null as Class<*>)
+                removeBond.invoke(bluetoothDevice, null as Array<Any?>)
             } catch (e: ReflectiveOperationException) {
                 if (!isInterrupted) callback.onConnectionFail(e, 0)
                 return
@@ -29,7 +29,7 @@ class ConnectionEstablisherXX(private val callback: Callback, private val forPai
         try {
             if (socket == null) {
                 socket = bluetoothDevice.createInsecureRfcommSocketToServiceRecord(UUID.fromString("00001101-0000-1000-8000-00805f9b34fb"))
-                callback.onSocketCreated(socket!!)
+                callback.onSocketCreated(socket)
             }
         } catch (e: IOException) {
             if (!isInterrupted) callback.onConnectionFail(e, 0)
@@ -54,8 +54,8 @@ class ConnectionEstablisherXX(private val callback: Callback, private val forPai
 
     interface Callback {
 
-        fun onSocketCreated(bluetoothSocket: BluetoothSocket)
+        fun onSocketCreated(bluetoothSocket: BluetoothSocket?)
         fun onConnectionSucceed()
-        fun onConnectionFail(e: Exception, duration: Long)
+        fun onConnectionFail(e: Exception?, duration: Long)
     }
 }

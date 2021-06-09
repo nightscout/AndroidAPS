@@ -9,67 +9,61 @@ import org.spongycastle.util.encoders.Hex
 class PairingDataStorage(context: Context) {
 
     private val preferences: SharedPreferences
+    private var _paired: Boolean = false
+    private var _macAddress: String? = null
+    private var _lastNonceSent: Nonce? = null
+    private var _lastNonceReceived: Nonce? = null
+    private var _commId: Long = 0
+    private var _incomingKey: ByteArray? = ByteArray(0)
+    private var _outgoingKey: ByteArray?
+    private var _firmwareVersions: FirmwareVersions? = null
+    private var _systemIdentification: SystemIdentification? = null
 
-    private var _paired : Boolean = false
-    internal var paired : Boolean
+    var paired: Boolean
         get() { return _paired }
         set(paired) {
             _paired = paired
-            preferences.edit().putBoolean("paired", _paired).apply()
+            preferences.edit().putBoolean("paired", paired).apply()
         }
-
-    private var _macAddress : String? = null
-    internal var macAddress : String?
+    var macAddress: String?
         get() { return _macAddress }
         set(macAddress) {
             _macAddress = macAddress
-            preferences.edit().putString("macAddress", _macAddress).apply()
+            preferences.edit().putString("macAddress", macAddress).apply()
         }
-
-    private var _lastNonceSent : Nonce? = null
-    internal var lastNonceSent : Nonce?
+    var lastNonceSent: Nonce?
         get() { return _lastNonceSent }
         set(lastNonceSent) {
             _lastNonceSent = lastNonceSent
             preferences.edit().putString("lastNonceSent", if (lastNonceSent == null) null else Hex.toHexString(lastNonceSent.storageValue)).apply()
         }
-
-    private var _lastNonceReceived : Nonce? = null
-    internal var lastNonceReceived : Nonce?
+    var lastNonceReceived: Nonce?
         get() { return _lastNonceReceived }
         set(lastNonceReceived) {
             _lastNonceReceived = lastNonceReceived
             preferences.edit().putString("lastNonceReceived", if (lastNonceReceived == null) null else Hex.toHexString(lastNonceReceived.storageValue)).apply()
         }
-
-    private var _commId : Long = 0
-    internal var commId : Long
+    var commId: Long
         get() { return _commId }
         set(commId) {
             _commId = commId
             preferences.edit().putLong("commId", commId).apply()
         }
-
-    private var _incomingKey : ByteArray? = null
-    internal var incomingKey : ByteArray?
+    var incomingKey: ByteArray?
         get() { return _incomingKey }
-        set(incomingKey) {
+        set (incomingKey) {
             _incomingKey = incomingKey
             preferences.edit().putString("incomingKey", if (incomingKey == null) null else Hex.toHexString(incomingKey)).apply()
         }
-
-    private var _outgoingKey : ByteArray? = null
-    internal var outgoingKey : ByteArray?
+    var outgoingKey: ByteArray?
         get() { return _outgoingKey }
         set(outgoingKey) {
             _outgoingKey = outgoingKey
             preferences.edit().putString("outgoingKey", if (outgoingKey == null) null else Hex.toHexString(outgoingKey)).apply()
         }
-
-    private var _firmwareVersions : FirmwareVersions? = null
-    internal var firmwareVersions : FirmwareVersions?
+    var firmwareVersions: FirmwareVersions?
         get() { return _firmwareVersions }
-        set(firmwareVersions) {
+        set (firmwareVersions) {
             _firmwareVersions = firmwareVersions
             if (firmwareVersions == null) {
                 preferences.edit()
@@ -99,9 +93,7 @@ class PairingDataStorage(context: Context) {
                     .apply()
             }
         }
-
-    private var _systemIdentification : SystemIdentification? = null
-    internal var systemIdentification : SystemIdentification?
+    var systemIdentification: SystemIdentification?
         get() { return _systemIdentification }
         set(systemIdentification) {
             _systemIdentification = systemIdentification
@@ -122,6 +114,7 @@ class PairingDataStorage(context: Context) {
 
     fun reset() {
         paired = false
+        macAddress = null
         commId = 0
         incomingKey = null
         outgoingKey = null
@@ -129,7 +122,6 @@ class PairingDataStorage(context: Context) {
         lastNonceSent = null
         firmwareVersions = null
         systemIdentification = null
-        macAddress = null
     }
 
     init {

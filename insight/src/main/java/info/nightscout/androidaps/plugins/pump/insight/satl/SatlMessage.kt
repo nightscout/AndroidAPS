@@ -75,8 +75,8 @@ abstract class SatlMessage {
         fun deserialize(data: ByteBuf, lastNonce: Nonce?, key: ByteArray?): SatlMessage? {
             val satlMessage: SatlMessage?
             val satlContent = data.getBytes(8, data.filledSize - 16)
-            satlMessage = if (key == null) deserializeCRC(data) else lastNonce?.let { deserializeCTR(data, lastNonce, key) }
-            satlMessage?.satlContent = satlContent
+            satlMessage = if (key == null) deserializeCRC(data) else lastNonce?.let { deserializeCTR(data, it, key) }
+            satlMessage?.let { it.satlContent = satlContent }
             return satlMessage
         }
 
@@ -106,14 +106,15 @@ abstract class SatlMessage {
             try {
                 message = clazz.newInstance()
             } catch (ignored: Exception) {}
-            message!!.parse(ByteBuf.from(payload))
-            message.nonce = parsedNonce
-            message.commID = commId
-            return message
+            return message?.also {
+                it.parse(ByteBuf.from(payload))
+                it.nonce = parsedNonce
+                it.commID = commId
+            }
         }
 
         @Throws(InvalidSatlCRCException::class, InvalidPreambleException::class, InvalidPacketLengthsException::class, IncompatibleSatlVersionException::class, InvalidSatlCommandException::class)
-        private fun deserializeCRC(data: ByteBuf): SatlMessage {
+        private fun deserializeCRC(data: ByteBuf): SatlMessage? {
             val preamble = data.readUInt32LE()
             val packetLength = data.readUInt16LE()
             val packetLengthXOR = data.readUInt16LE() xor 65535
@@ -137,10 +138,11 @@ abstract class SatlMessage {
                 message = clazz.newInstance()
             } catch (ignored: Exception) {
             }
-            message!!.parse(ByteBuf.from(payload))
-            message.nonce = Nonce.fromProductionalBytes(nonce)
-            message.commID = commId
-            return message
+            return message?.also {
+                it.parse(ByteBuf.from(payload))
+                it.nonce = Nonce.fromProductionalBytes(nonce)
+                it.commID = commId
+            }
         }
 
         @JvmStatic fun hasCompletePacket(byteBuf: ByteBuf): Boolean {
