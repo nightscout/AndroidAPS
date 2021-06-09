@@ -32,7 +32,6 @@ abstract class SatlMessage {
     }
 
     private fun serializeCRC(clazz: Class<out SatlMessage>): ByteBuf {
-        val data = data
         val length = (data?.filledSize ?: 0) + 31
         val byteBuf = ByteBuf(length + 8)
         byteBuf.putUInt32LE(PREAMBLE)
