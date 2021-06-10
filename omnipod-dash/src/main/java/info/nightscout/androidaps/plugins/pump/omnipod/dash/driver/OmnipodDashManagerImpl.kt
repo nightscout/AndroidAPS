@@ -218,7 +218,7 @@ class OmnipodDashManagerImpl @Inject constructor(
         return Observable.concat(
             observePodReadyForActivationPart1,
             observePairNewPod,
-            observeConnectToPod, // FIXME needed after disconnect; observePairNewPod does not connect in that case.
+            observeConnectToPod,
             observeActivationPart1Commands(lowReservoirAlertTrigger)
         ).doOnComplete(ActivationProgressUpdater(ActivationProgress.PHASE_1_COMPLETED))
             // TODO these would be common for any observable returned in a public function in this class
@@ -246,6 +246,7 @@ class OmnipodDashManagerImpl @Inject constructor(
             )
         }
         if (podStateManager.activationProgress.isBefore(ActivationProgress.PRIMING)) {
+            observables.add(observeConnectToPod) // connection can time out while waiting
             observables.add(
                 Observable.defer {
                     Observable.timer(podStateManager.firstPrimeBolusVolume!!.toLong(), TimeUnit.SECONDS)
@@ -644,6 +645,7 @@ class OmnipodDashManagerImpl @Inject constructor(
                 }
 
                 is PodEvent.CommandSent -> {
+                    logger.debug(LTag.PUMP, "Command sent: ${event.command.commandType}")
                     podStateManager.activeCommand?.let {
                         if (it.sequence == event.command.sequenceNumber) {
                             it.sentRealtime = SystemClock.elapsedRealtime()

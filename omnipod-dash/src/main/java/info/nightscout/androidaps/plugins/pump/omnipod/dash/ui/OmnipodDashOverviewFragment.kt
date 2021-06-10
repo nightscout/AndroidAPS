@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -367,7 +368,8 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
     private fun updateLastConnection() {
         if (podStateManager.isUniqueIdSet) {
-            podInfoBinding.lastConnection.text = readableDuration(podStateManager.lastUpdatedSystem)
+            podInfoBinding.lastConnection.text = readableDuration(Duration(podStateManager.lastUpdatedSystem, System
+                .currentTimeMillis()))
             val lastConnectionColor =
                 if (omnipodDashPumpPlugin.isUnreachableAlertTimeoutExceeded(getPumpUnreachableTimeout().millis)) {
                     Color.RED
@@ -377,7 +379,8 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             podInfoBinding.lastConnection.setTextColor(lastConnectionColor)
         } else {
             podInfoBinding.lastConnection.setTextColor(Color.WHITE)
-            podInfoBinding.lastConnection.text = readableDuration(podStateManager.lastUpdatedSystem)
+            podInfoBinding.lastConnection.text = readableDuration(
+                Duration(podStateManager.lastUpdatedSystem, System.currentTimeMillis()))
         }
     }
 
@@ -416,7 +419,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
         }
 
         val podStatusColor =
-            if (!podStateManager.isActivationCompleted || /* TODO podStateManager.isPodDead || */ podStateManager.isSuspended) {
+            if (!podStateManager.isActivationCompleted || podStateManager.isPodKaput || podStateManager.isSuspended) {
                 Color.RED
             } else {
                 Color.WHITE
@@ -425,27 +428,43 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     }
 
     private fun updateLastBolus() {
-        // TODO
-        /*
-        if (podStateManager.isActivationCompleted && podStateManager.hasLastBolus()) {
-            var text = resourceHelper.gs(R.string.omnipod_common_overview_last_bolus_value, omnipodDashPumpPlugin.model().determineCorrectBolusSize(podStateManager.lastBolusAmount), resourceHelper.gs(R.string.insulin_unit_shortname), readableDuration(podStateManager.lastBolusStartTime))
-            val textColor: Int
 
-            if (podStateManager.isLastBolusCertain) {
-                textColor = Color.WHITE
-            } else {
+        var textColor = Color.WHITE
+        podStateManager.activeCommand?.let {
+            val requestedBolus = it.requestedBolus
+            if (requestedBolus != null) {
+                var text = resourceHelper.gs(
+                    R.string.omnipod_common_overview_last_bolus_value,
+                    omnipodDashPumpPlugin.model().determineCorrectBolusSize(requestedBolus),
+                    resourceHelper.gs(R.string.insulin_unit_shortname),
+                    readableDuration(Duration(it.createdRealtime, SystemClock.elapsedRealtime()))
+                )
+                text += " (uncertain) "
                 textColor = Color.RED
-                text += " (" + resourceHelper.gs(R.string.omnipod_eros_uncertain) + ")"
+                podInfoBinding.lastBolus.text = text
+                podInfoBinding.lastBolus.setTextColor(textColor)
+                return
             }
+        }
 
+        podInfoBinding.lastBolus.setTextColor(textColor)
+        podStateManager.lastBolus?.let {
+            // display requested units if delivery is in progress
+            var bolusSize = it.deliveredUnits()
+                ?: it.requestedUnits
+
+            var text = resourceHelper.gs(
+                R.string.omnipod_common_overview_last_bolus_value,
+                omnipodDashPumpPlugin.model().determineCorrectBolusSize(bolusSize),
+                resourceHelper.gs(R.string.insulin_unit_shortname),
+                readableDuration(Duration(it.startTime, System.currentTimeMillis()))
+            )
+            if (!it.complete) {
+                textColor = Color.YELLOW
+            }
             podInfoBinding.lastBolus.text = text
             podInfoBinding.lastBolus.setTextColor(textColor)
-
-        } else {
-            podInfoBinding.lastBolus.text = PLACEHOLDER
-            podInfoBinding.lastBolus.setTextColor(Color.WHITE)
         }
-         */
     }
 
     private fun updateTempBasal() {
@@ -592,8 +611,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     }
      */
 
-    private fun readableDuration(dateTime: Long): String {
-        val duration = Duration(dateTime, System.currentTimeMillis())
+    private fun readableDuration(duration: Duration): String {
         val hours = duration.standardHours.toInt()
         val minutes = duration.standardMinutes.toInt()
         val seconds = duration.standardSeconds.toInt()

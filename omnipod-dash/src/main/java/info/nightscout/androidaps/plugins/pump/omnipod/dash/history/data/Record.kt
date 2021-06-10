@@ -11,6 +11,13 @@ data class TempBasalRecord(val duration: Int, val rate: Double) : Record()
 enum class BolusType {
     DEFAULT, SMB;
 
+    fun toBolusInfoBolusType(): DetailedBolusInfo.BolusType {
+        return when (this) {
+            DEFAULT -> DetailedBolusInfo.BolusType.NORMAL
+            SMB -> DetailedBolusInfo.BolusType.SMB
+        }
+    }
+
     companion object {
         fun fromBolusInfoBolusType(type: DetailedBolusInfo.BolusType): BolusType {
             return when (type) {
