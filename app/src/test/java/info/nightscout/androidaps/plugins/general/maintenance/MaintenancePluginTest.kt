@@ -38,7 +38,7 @@ class MaintenancePluginTest : TestBase() {
         sut = MaintenancePlugin(injector, context, resourceHelper, sp, nsSettingsStatus, aapsLogger, buildHelper, ConfigImpl(), fileListProvider, loggerUtils)
         `when`(loggerUtils.suffix).thenReturn(".log.zip")
         `when`(loggerUtils.logDirectory).thenReturn("src/test/res/logger")
-        `when`(fileListProvider.ensureExportDirExists()).thenReturn(File("src/test/res/logger"))
+        `when`(fileListProvider.ensureTempDirExists()).thenReturn(File("src/test/res/logger"))
     }
 
     @Test fun logFilesTest() {
