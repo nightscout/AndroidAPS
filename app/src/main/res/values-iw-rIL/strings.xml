@@ -919,4 +919,6 @@
     <string name="ns_receive_therapy_events_summary">קבלת אירועי טיפול (צינורית, אינסולין, החלפת סוללה) שצוינו באמצעות נייטסקאוט או NSClient</string>
     <string name="ns_receive_cgm">קבלת\\טעינת נתוני סנסור</string>
     <string name="ns_receive_cgm_summary">קבלת נתוני סנסור מנייטסקאוט</string>
+    <string name="sms_timeout_while_wating">בהמתנה עד לסיום תקשורת קודמת עם המשאבה</string>
+    <string name="smscommunicator_another_bolus_in_queue">ישנו בולוס נוסף בתור. נסו שוב מאוחר יותר.</string>
 </resources>
