@@ -26,20 +26,20 @@ class TempBasalProcessDTO constructor(var itemOne: PumpHistoryEntry,
     val pumpId: Long
         get() = itemOne.pumpId
 
-    val duration: Int
+    val durationAsSeconds: Int
         get() = if (itemTwo == null) {
             if (itemOneTbr != null) {
-                aapsLogger.debug("TemporaryBasalPair: $itemOneTbr")
-                itemOneTbr!!.durationMinutes
+                aapsLogger.debug("TemporaryBasalPair - itemOneSingle: $itemOneTbr")
+                itemOneTbr!!.durationMinutes * 60
             } else {
                 aapsLogger.error("Couldn't find TempBasalPair in entry: $itemOne")
                 0
             }
         } else {
             aapsLogger.debug(LTag.PUMP, "Found 2 items for duration: itemOne=$itemOne, itemTwo=$itemTwo")
-            val minuteDiff = DateTimeUtil.getATechDateDiferenceAsMinutes(itemOne.atechDateTime, itemTwo!!.atechDateTime)
-            aapsLogger.debug(LTag.PUMP, "Difference in minutes: $minuteDiff")
-            minuteDiff
+            val secondsDiff = DateTimeUtil.getATechDateDiferenceAsSeconds(itemOne.atechDateTime, itemTwo!!.atechDateTime)
+            aapsLogger.debug(LTag.PUMP, "Difference in seconds: $secondsDiff")
+            secondsDiff
         }
 
     init {
@@ -47,10 +47,12 @@ class TempBasalProcessDTO constructor(var itemOne: PumpHistoryEntry,
     }
 
     override fun toString(): String {
-        return "ItemOne: $itemOne, ItemTwo: $itemTwo, Duration: $duration, Operation: $processOperation"
+        return "ItemOne: $itemOne, ItemTwo: $itemTwo, Duration: $durationAsSeconds, Operation: $processOperation"
     }
 
     enum class Operation {
-        None, Add, Edit
+        None,
+        Add,
+        Edit
     }
 }

@@ -129,7 +129,7 @@ class PumpSyncStorage @Inject constructor(
         val response = pumpSync.addTemporaryBasalWithTempId(
             timenow,
             temporaryBasal.rate,
-            (temporaryBasal.durationInMinutes * 60L * 1000L),
+            (temporaryBasal.durationInSeconds * 1000L),
             temporaryBasal.isAbsolute,
             temporaryId,
             temporaryBasal.tbrType,

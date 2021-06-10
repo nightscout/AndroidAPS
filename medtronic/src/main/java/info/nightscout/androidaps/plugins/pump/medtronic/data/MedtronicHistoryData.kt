@@ -10,6 +10,7 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntry
+import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryTBR
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.MedtronicPumpHistoryDecoder
@@ -628,12 +629,14 @@ class MedtronicHistoryData @Inject constructor(
                 if (entryWithTempId != null) {
 
                     if (tbrEntry != null) {
-                        aapsLogger.debug(LTag.PUMP, String.format("DD: tempIdEntry=%s, tbrEntry=%s, tempBasalProcessDTO=%s, pumpType=%s, serial=%s",
-                            gson.toJson(entryWithTempId), gson.toJson(tbrEntry), gson.toJson(tempBasalProcessDTO), medtronicPumpStatus.pumpType, medtronicPumpStatus.serialNumber))
+                        aapsLogger.debug(LTag.PUMP, "DD: tempIdEntry=${entryWithTempId}, tbrEntry=${tbrEntry}, " +
+                            "tempBasalProcessDTO=${tempBasalProcessDTO}, " +
+                            "pumpType=${medtronicPumpStatus.pumpType}, serial=${medtronicPumpStatus.serialNumber}")
 
-                        aapsLogger.debug(LTag.PUMP, "BEFORE syncTemporaryBasalWithTempId " +
+                        aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithTempId " +
                             "[date=${tempBasalProcessDTO.atechDateTime}, dateProcess=${tryToGetByLocalTime(tempBasalProcessDTO.atechDateTime)},  " +
-                            "tbrEntry.insulinRate=${tbrEntry.insulinRate}, duration=${tempBasalProcessDTO.duration * 60L * 1000L}, " +
+                            "tbrEntry.insulinRate=${tbrEntry.insulinRate}, " +
+                            "duration=${tempBasalProcessDTO.durationAsSeconds} s, " +
                             "isAbsolute=${!tbrEntry.isPercent}, temporaryId=${entryWithTempId.temporaryId}, " +
                             "pumpId=${tempBasalProcessDTO.pumpId}, pumpType=${medtronicPumpStatus.pumpType}, " +
                             "pumpSerial=${medtronicPumpStatus.serialNumber}]")
@@ -641,7 +644,7 @@ class MedtronicHistoryData @Inject constructor(
                         val result = pumpSync.syncTemporaryBasalWithTempId(
                             tryToGetByLocalTime(tempBasalProcessDTO.atechDateTime),
                             tbrEntry.insulinRate,
-                            tempBasalProcessDTO.duration * 60L * 1000L,
+                            tempBasalProcessDTO.durationAsSeconds * 1000L,
                             !tbrEntry.isPercent,
                             entryWithTempId.temporaryId,
                             PumpSync.TemporaryBasalType.NORMAL,
@@ -649,10 +652,7 @@ class MedtronicHistoryData @Inject constructor(
                             medtronicPumpStatus.pumpType,
                             medtronicPumpStatus.serialNumber)
 
-                        aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "syncTemporaryBasalWithTempId [date=%d, temporaryId=%d, pumpId=%d, rate=%.2f %s, duration=%d, pumpSerial=%s] - Result: %b",
-                            tempBasalProcessDTO.atechDateTime, entryWithTempId.temporaryId, tempBasalProcessDTO.pumpId,
-                            tbrEntry.insulinRate, (if (tbrEntry.isPercent) "%" else "U"), tempBasalProcessDTO.duration,
-                            medtronicPumpStatus.serialNumber, result))
+                        aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithTempId - Result: ${result}")
 
                         pumpSyncStorage.removeTemporaryBasalWithTemporaryId(entryWithTempId.temporaryId)
                         tbrRecords.remove(entryWithTempId)
@@ -671,20 +671,21 @@ class MedtronicHistoryData @Inject constructor(
 
                     if (tbrEntry != null) {
 
+                        aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithPumpId [date=${tempBasalProcessDTO.atechDateTime}, " +
+                            "pumpId=${tempBasalProcessDTO.pumpId}, rate=${tbrEntry.insulinRate} U, " +
+                            "duration=${tempBasalProcessDTO.durationAsSeconds} s, pumpSerial=${medtronicPumpStatus.serialNumber}]")
+
                         val result = pumpSync.syncTemporaryBasalWithPumpId(
                             tryToGetByLocalTime(tempBasalProcessDTO.atechDateTime),
                             tbrEntry.insulinRate,
-                            tempBasalProcessDTO.duration * 60L * 1000L,
+                            tempBasalProcessDTO.durationAsSeconds * 1000L,
                             !tbrEntry.isPercent,
                             PumpSync.TemporaryBasalType.NORMAL,
                             tempBasalProcessDTO.pumpId,
                             medtronicPumpStatus.pumpType,
                             medtronicPumpStatus.serialNumber)
 
-                        aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "syncTemporaryBasalWithPumpId [date=%d, pumpId=%d, rate=%.2f %s, duration=%d, pumpSerial=%s] - Result: %b",
-                            tempBasalProcessDTO.atechDateTime, tempBasalProcessDTO.pumpId,
-                            tbrEntry.insulinRate, (if (tbrEntry.isPercent) "%" else "U"), tempBasalProcessDTO.duration,
-                            medtronicPumpStatus.serialNumber, result))
+                        aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithPumpId - Result: $result")
 
                         if (medtronicPumpStatus.runningTBR != null) {
                             if (!isTBRActive(medtronicPumpStatus.runningTBR!!)) {
@@ -692,14 +693,18 @@ class MedtronicHistoryData @Inject constructor(
                             }
                         }
 
-                        if (isTBRActive(tryToGetByLocalTime(tempBasalProcessDTO.atechDateTime), tempBasalProcessDTO.duration)) {
+                        if (isTBRActive(startTimestamp = tryToGetByLocalTime(tempBasalProcessDTO.atechDateTime),
+                                durationSeconds = tempBasalProcessDTO.durationAsSeconds)) {
                             if (medtronicPumpStatus.runningTBR == null) {
                                 medtronicPumpStatus.runningTBR = info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntry(0L,
                                     tryToGetByLocalTime(tempBasalProcessDTO.atechDateTime),
                                     medtronicPumpStatus.pumpType,
                                     medtronicPumpStatus.serialNumber,
                                     null,
-                                    info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryTBR(tbrEntry.insulinRate, !tbrEntry.isPercent, tempBasalProcessDTO.duration, PumpSync.TemporaryBasalType.NORMAL),
+                                    PumpDbEntryTBR(rate = tbrEntry.insulinRate,
+                                        isAbsolute = !tbrEntry.isPercent,
+                                        durationInSeconds = tempBasalProcessDTO.durationAsSeconds,
+                                        tbrType = PumpSync.TemporaryBasalType.NORMAL),
                                     tempBasalProcessDTO.pumpId)
                             }
                         }
@@ -711,12 +716,14 @@ class MedtronicHistoryData @Inject constructor(
         } // collection
     }
 
-    fun isTBRActive(dbEntry: info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntry): Boolean {
-        return isTBRActive(dbEntry.date, dbEntry.tbrData!!.durationInMinutes)
+    fun isTBRActive(dbEntry: PumpDbEntry): Boolean {
+        return isTBRActive(
+            startTimestamp = dbEntry.date,
+            durationSeconds = dbEntry.tbrData!!.durationInSeconds)
     }
 
-    fun isTBRActive(startTimestamp: Long, durationMin: Int): Boolean {
-        val endDate = startTimestamp + (durationMin * 60 * 1000)
+    fun isTBRActive(startTimestamp: Long, durationSeconds: Int): Boolean {
+        val endDate = startTimestamp + (durationSeconds * 1000)
 
         return (endDate > System.currentTimeMillis())
     }
@@ -794,20 +801,22 @@ class MedtronicHistoryData @Inject constructor(
     private fun processSuspends(tempBasalProcessList: List<TempBasalProcessDTO>) {
         for (tempBasalProcess in tempBasalProcessList) {
 
+            aapsLogger.debug(LTag.PUMP, "processSuspends::syncTemporaryBasalWithPumpId [date=${tempBasalProcess.itemOne.atechDateTime}, " +
+                "rate=0.0, duration=${tempBasalProcess.durationAsSeconds} s, type=${PumpSync.TemporaryBasalType.PUMP_SUSPEND}, " +
+                "pumpId=${tempBasalProcess.itemOne.pumpId}, " +
+                "pumpSerial=${medtronicPumpStatus.serialNumber}]")
+
             val result = pumpSync.syncTemporaryBasalWithPumpId(
                 tryToGetByLocalTime(tempBasalProcess.itemOne.atechDateTime),
                 0.0,
-                tempBasalProcess.duration * 60 * 1000L,
+                tempBasalProcess.durationAsSeconds * 1000L,
                 true,
                 PumpSync.TemporaryBasalType.PUMP_SUSPEND,
                 tempBasalProcess.itemOne.pumpId,
                 medtronicPumpStatus.pumpType,
                 medtronicPumpStatus.serialNumber)
 
-            aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "processSuspends::syncTemporaryBasalWithPumpId [date=%d, rate=%.2f, duration=%d, pumpId=%d, pumpSerial=%s] - Result: %b",
-                tempBasalProcess.itemOne.atechDateTime, 0.0, tempBasalProcess.duration, tempBasalProcess.itemOne.pumpId,
-                medtronicPumpStatus.serialNumber, result))
-
+            aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithPumpId: Result: $result")
         }
     }
 
