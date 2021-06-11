@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.insight.utils
 
 import info.nightscout.androidaps.TestBase
+import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
