@@ -916,5 +916,6 @@ Unerwartetes Verhalten.</string>
     <string name="ns_receive_therapy_events_summary">Ereignisse (Kanülen-, Ampullen-, Batteriewechsel etc.) akzeptieren, die in NS oder NSClient eingegeben wurden</string>
     <string name="ns_receive_cgm">Historische CGM Daten ergänzen</string>
     <string name="ns_receive_cgm_summary">CGM Daten von NS akzeptieren</string>
+    <string name="sms_timeout_while_wating">Zeitüberschreitung beim Warten auf das Ende der vorherigen Kommunikation mit der Pumpe</string>
     <string name="smscommunicator_another_bolus_in_queue">In der Warteschlange befindet sich ein weiterer Bolus. Bitte später erneut versuchen.</string>
 </resources>
