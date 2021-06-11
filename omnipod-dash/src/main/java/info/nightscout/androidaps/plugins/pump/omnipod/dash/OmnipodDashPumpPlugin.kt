@@ -185,7 +185,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
         if (!podStateManager.isActivationCompleted) {
-            return PumpEnactResult().success(true).enacted(false)
+            return PumpEnactResult(injector).success(true).enacted(false)
         }
         val basalProgram = mapProfileToBasalProgram(profile)
         return executeProgrammingCommand(
