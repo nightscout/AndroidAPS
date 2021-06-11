@@ -1,215 +1,209 @@
-package info.nightscout.androidaps.plugins.pump.insight.utils.crypto;
+package info.nightscout.androidaps.plugins.pump.insight.utils.crypto
 
-import org.spongycastle.crypto.AsymmetricCipherKeyPair;
-import org.spongycastle.crypto.Digest;
-import org.spongycastle.crypto.InvalidCipherTextException;
-import org.spongycastle.crypto.digests.MD5Digest;
-import org.spongycastle.crypto.digests.SHA1Digest;
-import org.spongycastle.crypto.encodings.OAEPEncoding;
-import org.spongycastle.crypto.engines.RSAEngine;
-import org.spongycastle.crypto.engines.TwofishEngine;
-import org.spongycastle.crypto.generators.RSAKeyPairGenerator;
-import org.spongycastle.crypto.macs.HMac;
-import org.spongycastle.crypto.modes.CBCBlockCipher;
-import org.spongycastle.crypto.params.AsymmetricKeyParameter;
-import org.spongycastle.crypto.params.KeyParameter;
-import org.spongycastle.crypto.params.ParametersWithIV;
-import org.spongycastle.crypto.params.RSAKeyGenerationParameters;
-import org.spongycastle.crypto.params.RSAKeyParameters;
-import org.spongycastle.crypto.params.RSAPrivateCrtKeyParameters;
+import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
+import org.spongycastle.crypto.Digest
+import org.spongycastle.crypto.InvalidCipherTextException
+import org.spongycastle.crypto.digests.MD5Digest
+import org.spongycastle.crypto.digests.SHA1Digest
+import org.spongycastle.crypto.encodings.OAEPEncoding
+import org.spongycastle.crypto.engines.RSAEngine
+import org.spongycastle.crypto.engines.TwofishEngine
+import org.spongycastle.crypto.generators.RSAKeyPairGenerator
+import org.spongycastle.crypto.macs.HMac
+import org.spongycastle.crypto.modes.CBCBlockCipher
+import org.spongycastle.crypto.params.*
+import java.math.BigInteger
+import java.security.SecureRandom
+import kotlin.experimental.xor
 
-import java.math.BigInteger;
-import java.security.SecureRandom;
+object Cryptograph {
 
-import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf;
-
-public class Cryptograph {
-
-    private static final String keySeed = "master secret";
-    private static final String verificationSeed = "finished";
-
-    private static byte[] getHmac(byte[] secret, byte[] data, Digest algorithm) {
-        HMac hmac = new HMac(algorithm);
-        hmac.init(new KeyParameter(secret));
-        byte[] result = new byte[hmac.getMacSize()];
-        hmac.update(data, 0, data.length);
-        hmac.doFinal(result, 0);
-        return result;
+    private const val keySeed = "master secret"
+    private const val verificationSeed = "finished"
+    private fun getHmac(secret: ByteArray, data: ByteArray, algorithm: Digest): ByteArray {
+        val hmac = HMac(algorithm)
+        hmac.init(KeyParameter(secret))
+        val result = ByteArray(hmac.macSize)
+        hmac.update(data, 0, data.size)
+        hmac.doFinal(result, 0)
+        return result
     }
 
-    private static byte[] getMultiHmac(byte[] secret, byte[] data, int bytes, Digest algorithm) {
-        byte[] nuData = data;
-        byte[] output = new byte[bytes];
-        int size = 0;
+    private fun getMultiHmac(secret: ByteArray, data: ByteArray, bytes: Int, algorithm: Digest): ByteArray {
+        var nuData = data
+        val output = ByteArray(bytes)
+        var size = 0
         while (size < bytes) {
-            nuData = getHmac(secret, nuData, algorithm);
-            byte[] preOutput = getHmac(secret, combine(nuData, data), algorithm);
-            System.arraycopy(preOutput, 0, output, size, Math.min(bytes - size, preOutput.length));
-            size += preOutput.length;
+            nuData = getHmac(secret, nuData, algorithm)
+            val preOutput = getHmac(secret, combine(nuData, data), algorithm)
+            System.arraycopy(preOutput, 0, output, size, Math.min(bytes - size, preOutput.size))
+            size += preOutput.size
         }
-        return output;
+        return output
     }
 
-    private static byte[] sha1MultiHmac(byte[] secret, byte[] data, int bytes) {
-        return getMultiHmac(secret, data, bytes, new SHA1Digest());
+    private fun sha1MultiHmac(secret: ByteArray, data: ByteArray, bytes: Int): ByteArray {
+        return getMultiHmac(secret, data, bytes, SHA1Digest())
     }
 
-    private static byte[] md5MultiHmac(byte[] secret, byte[] data, int bytes) {
-        return getMultiHmac(secret, data, bytes, new MD5Digest());
+    private fun md5MultiHmac(secret: ByteArray, data: ByteArray, bytes: Int): ByteArray {
+        return getMultiHmac(secret, data, bytes, MD5Digest())
     }
 
-    public static byte[] getServicePasswordHash(String servicePassword, byte[] salt) {
-        return multiHashXOR(servicePassword.getBytes(), combine("service pwd".getBytes(), salt), 16);
+    @JvmStatic fun getServicePasswordHash(servicePassword: String, salt: ByteArray): ByteArray {
+        return multiHashXOR(servicePassword.toByteArray(), combine("service pwd".toByteArray(), salt), 16)
     }
 
-    private static byte[] byteArrayXOR(byte[] array1, byte[] array2) {
-        int length = Math.min(array1.length, array2.length);
-        byte[] xor = new byte[length];
-        for (int i = 0; i < length; i++) {
-            xor[i] = (byte) (array1[i] ^ array2[i]);
+    private fun byteArrayXOR(array1: ByteArray, array2: ByteArray): ByteArray {
+        val length = Math.min(array1.size, array2.size)
+        val xor = ByteArray(length)
+        for (i in 0 until length) {
+            xor[i] = (array1[i] xor array2[i]) as Byte
         }
-        return xor;
+        return xor
     }
 
-    private static byte[] multiHashXOR(byte[] secret, byte[] seed, int bytes) {
-        byte[] array1 = new byte[secret.length / 2];
-        byte[] array2 = new byte[array1.length];
-        System.arraycopy(secret, 0, array1, 0, array1.length);
-        System.arraycopy(secret, array1.length, array2, 0, array2.length);
-        byte[] md5 = md5MultiHmac(array1, seed, bytes);
-        byte[] sha1 = sha1MultiHmac(array2, seed, bytes);
-        return byteArrayXOR(md5, sha1);
+    private fun multiHashXOR(secret: ByteArray, seed: ByteArray, bytes: Int): ByteArray {
+        val array1 = ByteArray(secret.size / 2)
+        val array2 = ByteArray(array1.size)
+        System.arraycopy(secret, 0, array1, 0, array1.size)
+        System.arraycopy(secret, array1.size, array2, 0, array2.size)
+        val md5 = md5MultiHmac(array1, seed, bytes)
+        val sha1 = sha1MultiHmac(array2, seed, bytes)
+        return byteArrayXOR(md5, sha1)
     }
 
-    public static DerivedKeys deriveKeys(byte[] verificationSeed, byte[] secret, byte[] random, byte[] peerRandom) {
-        byte[] result = multiHashXOR(secret, combine(combine(keySeed.getBytes(), random), peerRandom), 32);
-        DerivedKeys derivedKeys = new DerivedKeys();
-        derivedKeys.incomingKey = new byte[result.length / 2];
-        derivedKeys.outgoingKey = new byte[derivedKeys.incomingKey.length];
-        System.arraycopy(result, 0, derivedKeys.incomingKey, 0, derivedKeys.incomingKey.length);
-        System.arraycopy(result, derivedKeys.incomingKey.length, derivedKeys.outgoingKey, 0, derivedKeys.outgoingKey.length);
-        derivedKeys.verificationString = calculateVerificationString(verificationSeed, result);
-        return derivedKeys;
+    @JvmStatic
+    fun deriveKeys(verificationSeed: ByteArray, secret: ByteArray, random: ByteArray, peerRandom: ByteArray): DerivedKeys {
+        val result = multiHashXOR(secret, combine(combine(keySeed.toByteArray(), random), peerRandom), 32)
+        val derivedKeys = DerivedKeys()
+        derivedKeys.incomingKey = ByteArray(result.size / 2)
+        derivedKeys.outgoingKey = ByteArray(derivedKeys.incomingKey.size)
+        System.arraycopy(result, 0, derivedKeys.incomingKey, 0, derivedKeys.incomingKey.size)
+        System.arraycopy(result, derivedKeys.incomingKey.size, derivedKeys.outgoingKey, 0, derivedKeys.outgoingKey.size)
+        derivedKeys.verificationString = calculateVerificationString(verificationSeed, result)
+        return derivedKeys
     }
 
-    private static String calculateVerificationString(byte[] verificationSeed, byte[] key) {
-        byte[] verificationData = multiHashXOR(key, combine(Cryptograph.verificationSeed.getBytes(), verificationSeed), 8);
-        long value = 0;
-        for (int i = 7; i >= 0; i--) {
-            long byteValue = verificationData[i];
-            if (byteValue < 0) byteValue += 256;
-            value |= byteValue << (i * 8);
+    private fun calculateVerificationString(verificationSeed: ByteArray, key: ByteArray): String {
+        val verificationData = multiHashXOR(key, combine(Cryptograph.verificationSeed.toByteArray(), verificationSeed), 8)
+        var value: Long = 0
+        for (i in 7 downTo 0) {
+            var byteValue = verificationData[i].toLong()
+            if (byteValue < 0) byteValue += 256
+            value = value or (byteValue shl i * 8)
         }
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int index = 0; index < 10; index++) {
-            if (index == 3 || index == 6) stringBuilder.append(" ");
-            stringBuilder.append(VerificationString.TABLE[((int) value) & 63]);
-            value >>= 6;
+        val stringBuilder = StringBuilder()
+        for (index in 0..9) {
+            if (index == 3 || index == 6) stringBuilder.append(" ")
+            stringBuilder.append(VerificationString.TABLE[value.toInt() and 63])
+            value = value shr 6
         }
-        return stringBuilder.toString();
+        return stringBuilder.toString()
     }
 
-    private static byte[] processRSA(AsymmetricKeyParameter key, byte[] data, boolean encrypt) throws InvalidCipherTextException {
-        OAEPEncoding cipher = new OAEPEncoding(new RSAEngine());
-        cipher.init(encrypt, key);
-        return cipher.processBlock(data, 0, data.length);
+    @Throws(InvalidCipherTextException::class)
+    private fun processRSA(key: AsymmetricKeyParameter, data: ByteArray, encrypt: Boolean): ByteArray {
+        val cipher = OAEPEncoding(RSAEngine())
+        cipher.init(encrypt, key)
+        return cipher.processBlock(data, 0, data.size)
     }
 
-    public static byte[] decryptRSA(RSAPrivateCrtKeyParameters key, byte[] data) throws InvalidCipherTextException {
-        return processRSA(key, data, false);
+    @JvmStatic @Throws(InvalidCipherTextException::class)
+    fun decryptRSA(key: RSAPrivateCrtKeyParameters, data: ByteArray): ByteArray {
+        return processRSA(key, data, false)
     }
 
-    public static KeyPair generateRSAKey() {
-        RSAKeyPairGenerator generator = new RSAKeyPairGenerator();
-        generator.init(new RSAKeyGenerationParameters(BigInteger.valueOf(65537), new SecureRandom(), 2048, 8));
-        AsymmetricCipherKeyPair ackp = generator.generateKeyPair();
-        KeyPair keyPair = new KeyPair();
-        keyPair.privateKey = (RSAPrivateCrtKeyParameters) ackp.getPrivate();
-        keyPair.publicKey = (RSAKeyParameters) ackp.getPublic();
-        return keyPair;
+    @JvmStatic fun generateRSAKey(): KeyPair {
+        val generator = RSAKeyPairGenerator()
+        generator.init(RSAKeyGenerationParameters(BigInteger.valueOf(65537), SecureRandom(), 2048, 8))
+        val ackp = generator.generateKeyPair()
+        val keyPair = KeyPair()
+        keyPair.privateKey = (ackp.private as RSAPrivateCrtKeyParameters)
+        keyPair.publicKey = (ackp.public as RSAKeyParameters)
+        return keyPair
     }
 
-    public static byte[] combine(byte[] array1, byte[] array2) {
-        byte[] combined = new byte[array1.length + array2.length];
-        System.arraycopy(array1, 0, combined, 0, array1.length);
-        System.arraycopy(array2, 0, combined, array1.length, array2.length);
-        return combined;
+    @JvmStatic fun combine(array1: ByteArray, array2: ByteArray): ByteArray {
+        val combined = ByteArray(array1.size + array2.size)
+        System.arraycopy(array1, 0, combined, 0, array1.size)
+        System.arraycopy(array2, 0, combined, array1.size, array2.size)
+        return combined
     }
 
-    private static byte[] produceCCMPrimitive(byte headerByte, byte[] nonce, short number) {
-        ByteBuf byteBuf = new ByteBuf(16);
-        byteBuf.putByte(headerByte);
-        byteBuf.putBytes(nonce);
-        byteBuf.putShort(number);
-        return byteBuf.getBytes();
+    private fun produceCCMPrimitive(headerByte: Byte, nonce: ByteArray, number: Short): ByteArray {
+        val byteBuf = ByteBuf(16)
+        byteBuf.putByte(headerByte)
+        byteBuf.putBytes(nonce)
+        byteBuf.putShort(number)
+        return byteBuf.bytes
     }
 
-    private static byte[] produceIV(byte[] nonce, short payloadSize) {
-        return produceCCMPrimitive((byte) 0x59, nonce, payloadSize);
+    private fun produceIV(nonce: ByteArray, payloadSize: Short): ByteArray {
+        return produceCCMPrimitive(0x59.toByte(), nonce, payloadSize)
     }
 
-    private static byte[] produceCTRBlock(byte[] nonce, short counter) {
-        return produceCCMPrimitive((byte) 0x01, nonce, counter);
+    private fun produceCTRBlock(nonce: ByteArray, counter: Short): ByteArray {
+        return produceCCMPrimitive(0x01.toByte(), nonce, counter)
     }
 
-    private static byte[] blockCipherZeroPad(byte[] input) {
-        int modulus = input.length % 16;
-        if (modulus == 0) return input;
-        byte[] append = new byte[16 - modulus];
-        for (int i = 0; i < 16 - modulus; i++) {
-            append[i] = 0x00;
+    private fun blockCipherZeroPad(input: ByteArray): ByteArray {
+        val modulus = input.size % 16
+        if (modulus == 0) return input
+        val append = ByteArray(16 - modulus)
+        for (i in 0 until 16 - modulus) {
+            append[i] = 0x00
         }
-        return combine(input, append);
+        return combine(input, append)
     }
 
-    public static byte[] encryptDataCTR(byte[] data, byte[] key, byte[] nonce) {
-        byte[] padded = blockCipherZeroPad(data);
-        int length = padded.length >> 4;
-        byte[] result = new byte[length * 16];
-        TwofishEngine engine = new TwofishEngine();
-        engine.init(true, new KeyParameter(key));
-        for (int i = 0; i < length; i++) {
-            engine.processBlock(produceCTRBlock(nonce, (short) (i + 1)), 0, result, i * 16);
+    fun encryptDataCTR(data: ByteArray, key: ByteArray?, nonce: ByteArray): ByteArray {
+        val padded = blockCipherZeroPad(data)
+        val length = padded.size shr 4
+        val result = ByteArray(length * 16)
+        val engine = TwofishEngine()
+        engine.init(true, KeyParameter(key))
+        for (i in 0 until length) {
+            engine.processBlock(produceCTRBlock(nonce, (i + 1).toShort()), 0, result, i * 16)
         }
-        byte[] xor = byteArrayXOR(padded, result);
-        byte[] copy = new byte[Math.min(data.length, xor.length)];
-        System.arraycopy(xor, 0, copy, 0, copy.length);
-        return copy;
+        val xor = byteArrayXOR(padded, result)
+        val copy = ByteArray(Math.min(data.size, xor.size))
+        System.arraycopy(xor, 0, copy, 0, copy.size)
+        return copy
     }
 
-    private static byte[] processHeader(byte[] header) {
-        ByteBuf byteBuf;
-        byteBuf = new ByteBuf(2 + header.length);
-        byteBuf.putShort((short) header.length);
-        byteBuf.putBytes(header);
-        return byteBuf.getBytes();
+    private fun processHeader(header: ByteArray): ByteArray {
+        val byteBuf: ByteBuf
+        byteBuf = ByteBuf(2 + header.size)
+        byteBuf.putShort(header.size.toShort())
+        byteBuf.putBytes(header)
+        return byteBuf.bytes
     }
 
-    public static byte[] produceCCMTag(byte[] nonce, byte[] payload, byte[] header, byte[] key) {
-        TwofishEngine engine = new TwofishEngine();
-        engine.init(true, new KeyParameter(key));
-        byte[] initializationVector = new byte[engine.getBlockSize()];
-        engine.processBlock(produceIV(nonce, (short) payload.length), 0, initializationVector, 0);
-        CBCBlockCipher cbc = new CBCBlockCipher(new TwofishEngine());
-        cbc.init(true, new ParametersWithIV(new KeyParameter(key), initializationVector));
-        byte[] processedHeader = blockCipherZeroPad(processHeader(header));
-        byte[] processedPayload = blockCipherZeroPad(payload);
-        byte[] combine = combine(processedHeader, blockCipherZeroPad(processedPayload));
-        byte[] result = new byte[combine.length];
-        for (int i = 0; i < combine.length / 16; i++)
-            cbc.processBlock(combine, i * 16, result, i * 16);
-        byte[] result2 = new byte[8];
-        System.arraycopy(result, result.length - 16, result2, 0, 8);
-        byte[] ctr = new byte[engine.getBlockSize()];
-        engine.processBlock(produceCTRBlock(nonce, (short) 0), 0, ctr, 0);
-        return byteArrayXOR(result2, ctr);
+    fun produceCCMTag(nonce: ByteArray, payload: ByteArray, header: ByteArray, key: ByteArray?): ByteArray {
+        val engine = TwofishEngine()
+        engine.init(true, KeyParameter(key))
+        val initializationVector = ByteArray(engine.blockSize)
+        engine.processBlock(produceIV(nonce, payload.size.toShort()), 0, initializationVector, 0)
+        val cbc = CBCBlockCipher(TwofishEngine())
+        cbc.init(true, ParametersWithIV(KeyParameter(key), initializationVector))
+        val processedHeader = blockCipherZeroPad(processHeader(header))
+        val processedPayload = blockCipherZeroPad(payload)
+        val combine = combine(processedHeader, blockCipherZeroPad(processedPayload))
+        val result = ByteArray(combine.size)
+        for (i in 0 until combine.size / 16) cbc.processBlock(combine, i * 16, result, i * 16)
+        val result2 = ByteArray(8)
+        System.arraycopy(result, result.size - 16, result2, 0, 8)
+        val ctr = ByteArray(engine.blockSize)
+        engine.processBlock(produceCTRBlock(nonce, 0.toShort()), 0, ctr, 0)
+        return byteArrayXOR(result2, ctr)
     }
 
-    public static int calculateCRC(byte[] bytes) {
-        int crc = 0xffff;
-        for (byte b : bytes) {
-            crc = (crc >>> 8) ^ CRC.TABLE[(crc ^ b) & 0xff];
+    fun calculateCRC(bytes: ByteArray): Int {
+        var crc = 0xffff
+        for (b in bytes) {
+            crc = crc ushr 8 xor CRC.TABLE[crc xor b.toInt() and 0xff]
         }
-        return crc;
+        return crc
     }
 }
