@@ -11,7 +11,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definitio
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.androidaps.utils.rx.retryWithBackoff
 import io.reactivex.Observable
 import io.reactivex.functions.Action
 import io.reactivex.functions.Consumer
@@ -78,8 +77,7 @@ class OmnipodDashManagerImpl @Inject constructor(
     private val observeConnectToPod: Observable<PodEvent>
         get() = Observable.defer {
             bleManager.connect()
-                .doOnError { throwable -> logger.warn(LTag.PUMPBTCOMM,"observeConnectToPod error=$throwable")}
-                .retryWithBackoff(retries = 2, delay = 6, timeUnit = TimeUnit.SECONDS, delayFactor = 1.2)
+                .doOnError { throwable -> logger.warn(LTag.PUMPBTCOMM, "observeConnectToPod error=$throwable") }
         }
 
     private val observePairNewPod: Observable<PodEvent>

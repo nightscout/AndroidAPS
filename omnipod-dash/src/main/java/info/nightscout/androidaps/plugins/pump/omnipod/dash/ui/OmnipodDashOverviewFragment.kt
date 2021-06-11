@@ -368,8 +368,13 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
     private fun updateLastConnection() {
         if (podStateManager.isUniqueIdSet) {
-            podInfoBinding.lastConnection.text = readableDuration(Duration(podStateManager.lastUpdatedSystem, System
-                .currentTimeMillis()))
+            podInfoBinding.lastConnection.text = readableDuration(
+                Duration(
+                    podStateManager.lastUpdatedSystem,
+                    System
+                        .currentTimeMillis()
+                )
+            )
             val lastConnectionColor =
                 if (omnipodDashPumpPlugin.isUnreachableAlertTimeoutExceeded(getPumpUnreachableTimeout().millis)) {
                     Color.RED
@@ -380,7 +385,8 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
         } else {
             podInfoBinding.lastConnection.setTextColor(Color.WHITE)
             podInfoBinding.lastConnection.text = readableDuration(
-                Duration(podStateManager.lastUpdatedSystem, System.currentTimeMillis()))
+                Duration(podStateManager.lastUpdatedSystem, System.currentTimeMillis())
+            )
         }
     }
 

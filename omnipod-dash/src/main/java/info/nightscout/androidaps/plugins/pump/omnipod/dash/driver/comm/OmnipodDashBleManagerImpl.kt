@@ -113,7 +113,22 @@ class OmnipodDashBleManagerImpl @Inject constructor(
                 emitter.onComplete()
                 return@create
             }
-            conn.connect()
+
+            // two retries
+            for (i in 1..MAX_NUMBER_OF_CONNECTION_ATTEMPTS) {
+                try {
+                    // wait i * CONNECTION_TIMEOUT
+                    conn.connect(i)
+                    break
+                } catch (e: Exception) {
+                    aapsLogger.warn(LTag.PUMPBTCOMM, "connect error=$e")
+                    if (i == MAX_NUMBER_OF_CONNECTION_ATTEMPTS) {
+                        emitter.onError(e)
+                        return@create
+                    }
+                }
+            }
+
             emitter.onNext(PodEvent.BluetoothConnected(podAddress))
             emitter.onNext(PodEvent.EstablishingSession)
             establishSession(1.toByte())
@@ -218,7 +233,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
     }
 
     companion object {
-
+        const val MAX_NUMBER_OF_CONNECTION_ATTEMPTS = 3
         const val CONTROLLER_ID = 4242 // TODO read from preferences or somewhere else.
     }
 }
