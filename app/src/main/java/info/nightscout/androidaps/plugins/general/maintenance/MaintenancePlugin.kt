@@ -8,8 +8,8 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
-import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
@@ -67,6 +67,10 @@ class MaintenancePlugin @Inject constructor(
     //todo replace this with a call on startup of the application, specifically to remove
     // unnecessary garbage from the log exports
     fun deleteLogs(keep: Int) {
+
+        if (true)
+            return
+        
         val logDir = File(loggerUtils.logDirectory)
         val files = logDir.listFiles { _: File?, name: String ->
             (name.startsWith("AndroidAPS") && name.endsWith(".zip"))
