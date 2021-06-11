@@ -26,6 +26,15 @@
             validate:minNumber="1"
             validate:testType="numericRange"/>
 
+        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+            android:defaultValue="30"
+            android:inputType="number"
+            android:key="@string/key_logshipper_amount"
+            android:title="@string/logshipper_amount"
+            validate:maxNumber="300"
+            validate:minNumber="15"
+            validate:testType="numericRange"/>
+
         <SwitchPreference
             android:defaultValue="true"
             android:key="@string/key_maintenance_encrypt_exported_prefs"
