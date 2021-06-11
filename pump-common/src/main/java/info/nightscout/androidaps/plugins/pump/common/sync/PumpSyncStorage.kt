@@ -22,7 +22,7 @@ class PumpSyncStorage @Inject constructor(
     val aapsLogger: AAPSLogger
 ) {
 
-    val pumpSyncStorageKey: String = "pump_sync_storage_xstream"
+    val pumpSyncStorageKey: String = "pump_sync_storage_xstream_v2"
     var pumpSyncStorage: MutableMap<String, MutableList<PumpDbEntry>> = mutableMapOf()
     var TBR: String = "TBR"
     var BOLUS: String = "BOLUS"
