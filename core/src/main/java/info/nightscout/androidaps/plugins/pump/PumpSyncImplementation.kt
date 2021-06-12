@@ -330,6 +330,19 @@ class PumpSyncImplementation @Inject constructor(
             }
     }
 
+    override fun invalidateTemporaryBasalWithPumpId(pumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean {
+        repository.runTransactionForResult(InvalidateTemporaryBasalTransactionWithPumpId(pumpId, pumpType.toDbPumpType(),
+                                                                                         pumpSerial))
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating TemporaryBasal", it) }
+            .blockingGet()
+            .also { result ->
+                result.invalidated.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryBasal $it")
+                }
+                return result.invalidated.size > 0
+            }
+    }
+
     override fun invalidateTemporaryBasalWithTempId(temporaryId: Long): Boolean {
         repository.runTransactionForResult(InvalidateTemporaryBasalWithTempIdTransaction(temporaryId))
             .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating TemporaryBasal", it) }
