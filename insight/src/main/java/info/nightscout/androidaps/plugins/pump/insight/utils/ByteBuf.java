@@ -4,33 +4,31 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 
-public class ByteBuf extends Object {
+public class ByteBuf {
 
-    private final byte[] bytes;
-    private int filledSize = 0;
+    private final byte[] _bytes;
+    private int _filledSize = 0;
 
     public ByteBuf(int length) {
-        bytes = new byte[length];
+        _bytes = new byte[length];
     }
 
 
     public byte[] getBytes() {
-        byte[] bytes = new byte[filledSize];
-        System.arraycopy(this.bytes, 0, bytes, 0, filledSize);
+        byte[] bytes = new byte[_filledSize];
+        System.arraycopy(this._bytes, 0, bytes, 0, _filledSize);
         return bytes;
     }
 
     public void shift(int offset) {
-        System.arraycopy(bytes, offset, bytes, 0, bytes.length - offset);
-        filledSize -= offset;
+        System.arraycopy(_bytes, offset, _bytes, 0, _bytes.length - offset);
+        _filledSize -= offset;
     }
 
-    public byte getByte(int position) {
-        return bytes[position];
-    }
+    // public byte getByte(int position) { return _bytes[position]; }
 
-    public byte getByte() {
-        return bytes[0];
+    private byte getByte() {
+        return _bytes[0];
     }
 
     public byte readByte() {
@@ -40,19 +38,19 @@ public class ByteBuf extends Object {
     }
 
     public void putByte(byte b) {
-        bytes[filledSize] = b;
-        filledSize += 1;
+        _bytes[_filledSize] = b;
+        _filledSize += 1;
     }
 
 
     public void putBytes(byte b, int count) {
-        for (int i = 0; i < count; i++) bytes[filledSize++] = b;
+        for (int i = 0; i < count; i++) _bytes[_filledSize++] = b;
     }
 
 
     public byte[] getBytes(int position, int length) {
         byte[] copy = new byte[length];
-        System.arraycopy(bytes, position, copy, 0, length);
+        System.arraycopy(_bytes, position, copy, 0, length);
         return copy;
     }
 
@@ -67,12 +65,12 @@ public class ByteBuf extends Object {
     }
 
     byte[] readBytes() {
-        return readBytes(filledSize);
+        return readBytes(_filledSize);
     }
 
     public void putBytes(byte[] bytes, int length) {
-        System.arraycopy(bytes, 0, this.bytes, filledSize, length);
-        filledSize += length;
+        System.arraycopy(bytes, 0, this._bytes, _filledSize, length);
+        _filledSize += length;
     }
 
     public void putBytes(byte[] bytes) {
@@ -83,24 +81,22 @@ public class ByteBuf extends Object {
     private byte[] getBytesLE(int position, int length) {
         byte[] copy = new byte[length];
         for (int i = 0; i < length; i++)
-            copy[i] = bytes[length - 1 - i + position];
+            copy[i] = _bytes[length - 1 - i + position];
         return copy;
     }
 
-    private byte[] getBytesLE(int length) {
-        return getBytesLE(0, length);
-    }
+    // private byte[] getBytesLE(int length) { return getBytesLE(0, length); }
 
     public byte[] readBytesLE(int length) {
-        byte[] copy = getBytesLE(length);
+        byte[] copy = getBytesLE(0, length);
         shift(length);
         return copy;
     }
 
     private void putBytesLE(byte[] bytes, int length) {
         for (int i = 0; i < length; i++)
-            this.bytes[filledSize + length - 1 - i] = bytes[i];
-        filledSize += length;
+            this._bytes[_filledSize + length - 1 - i] = bytes[i];
+        _filledSize += length;
     }
 
     void putBytesLE(byte[] bytes) {
@@ -114,15 +110,13 @@ public class ByteBuf extends Object {
 
 
     private short getUInt8(int position) {
-        return (short) (bytes[position] & 0xFF);
+        return (short) (_bytes[position] & 0xFF);
     }
 
-    private short getUInt8() {
-        return getUInt8(0);
-    }
+    // private short getUInt8() { return getUInt8(0); }
 
     public short readUInt8() {
-        short value = getUInt8();
+        short value = getUInt8(0);
         shift(1);
         return value;
     }
@@ -133,16 +127,14 @@ public class ByteBuf extends Object {
 
 
     public int getUInt16LE(int position) {
-        return (bytes[position++] & 0xFF |
-                (bytes[position] & 0xFF) << 8);
+        return (_bytes[position++] & 0xFF |
+                (_bytes[position] & 0xFF) << 8);
     }
 
-    private int getUInt16LE() {
-        return getUInt16LE(0);
-    }
+    //private int getUInt16LE() { return getUInt16LE(0); }
 
     public int readUInt16LE() {
-        int i = getUInt16LE();
+        int i = getUInt16LE(0);
         shift(2);
         return i;
     }
@@ -159,12 +151,10 @@ public class ByteBuf extends Object {
                 .doubleValue();
     }
 
-    private double getUInt16Decimal() {
-        return getUInt16Decimal(0);
-    }
+    //private double getUInt16Decimal() { return getUInt16Decimal(0); }
 
     public double readUInt16Decimal() {
-        double d = getUInt16Decimal();
+        double d = getUInt16Decimal(0);
         shift(2);
         return d;
     }
@@ -183,23 +173,21 @@ public class ByteBuf extends Object {
                 .doubleValue();
     }
 
-    private double getUInt32Decimal100() {
-        return getUInt32Decimal100(0);
-    }
+    //private double getUInt32Decimal100() { return getUInt32Decimal100(0); }
 
     public double readUInt32Decimal100() {
-        double d = getUInt32Decimal100();
+        double d = getUInt32Decimal100(0);
         shift(4);
         return d;
     }
-
+/*
     public void putUInt32Decimal100(double d) {
         putUInt32LE(new BigDecimal(d)
                 .multiply(new BigDecimal(100))
                 .setScale(0, RoundingMode.HALF_UP)
                 .longValue());
     }
-
+*/
 
     private double getUInt32Decimal1000(int position) {
         return new BigDecimal(getUInt32LE(position))
@@ -207,35 +195,31 @@ public class ByteBuf extends Object {
                 .doubleValue();
     }
 
-    private double getUInt32Decimal1000() {
-        return getUInt32Decimal1000(0);
-    }
+    //private double getUInt32Decimal1000() { return getUInt32Decimal1000(0); }
 
     public double readUInt32Decimal1000() {
-        double d = getUInt32Decimal1000();
+        double d = getUInt32Decimal1000(0);
         shift(4);
         return d;
     }
-
+/*
     public void putUInt32Decimal1000(double d) {
         putUInt32LE(new BigDecimal(d)
                 .multiply(new BigDecimal(1000))
                 .setScale(0, RoundingMode.HALF_UP)
                 .longValue());
     }
-
+ */
 
     private short getShort(int position) {
-        return (short) (bytes[position++] << 8 |
-                bytes[position] & 0xFF);
+        return (short) (_bytes[position++] << 8 |
+                _bytes[position] & 0xFF);
     }
 
-    public short getShort() {
-        return getShort(0);
-    }
+//    public short getShort() { return getShort(0); }
 
     public short readShort() {
-        short s = getShort();
+        short s = getShort(0);
         shift(2);
         return s;
     }
@@ -247,18 +231,16 @@ public class ByteBuf extends Object {
 
 
     private long getUInt32LE(int position) {
-        return ((long) bytes[position++] & 0xFF) |
-                ((long) bytes[position++] & 0xFF) << 8 |
-                ((long) bytes[position++] & 0xFF) << 16 |
-                ((long) bytes[position] & 0xFF) << 24;
+        return ((long) _bytes[position++] & 0xFF) |
+                ((long) _bytes[position++] & 0xFF) << 8 |
+                ((long) _bytes[position++] & 0xFF) << 16 |
+                ((long) _bytes[position] & 0xFF) << 24;
     }
 
-    private long getUInt32LE() {
-        return getUInt32LE(0);
-    }
+    // private long getUInt32LE() { return getUInt32LE(0); }
 
     public long readUInt32LE() {
-        long l = getUInt32LE();
+        long l = getUInt32LE(0);
         shift(4);
         return l;
     }
@@ -276,12 +258,10 @@ public class ByteBuf extends Object {
         return string.substring(0, string.indexOf(new String(new char[]{0, 0})));
     }
 
-    private String getUTF16(int stringLength) {
-        return getUTF16(0, stringLength);
-    }
+    //private String getUTF16(int stringLength) { return getUTF16(0, stringLength); }
 
     public String readUTF16(int stringLength) {
-        String string = getUTF16(stringLength);
+        String string = getUTF16(0, stringLength);
         shift(stringLength * 2 + 2);
         return string;
     }
@@ -297,12 +277,10 @@ public class ByteBuf extends Object {
         return string.substring(0, string.indexOf(0));
     }
 
-    private String getASCII(int stringLength) {
-        return getASCII(0, stringLength);
-    }
+    //private String getASCII(int stringLength) { return getASCII(0, stringLength); }
 
     public String readASCII(int stringLength) {
-        String string = getASCII(stringLength);
+        String string = getASCII(0, stringLength);
         shift(stringLength + 1);
         return string;
     }
@@ -313,16 +291,14 @@ public class ByteBuf extends Object {
     }
 
 
-    public boolean getBoolean(int position) {
+    private boolean getBoolean(int position) {
         return getUInt16LE(position) == 75;
     }
 
-    public boolean getBoolean() {
-        return getBoolean(0);
-    }
+    //public boolean getBoolean() { return getBoolean(0); }
 
     public boolean readBoolean() {
-        boolean bool = getBoolean();
+        boolean bool = getBoolean(0);
         shift(2);
         return bool;
     }
@@ -332,7 +308,7 @@ public class ByteBuf extends Object {
     }
 
 
-    public static ByteBuf from(byte[] bytes, int length) {
+    private static ByteBuf from(byte[] bytes, int length) {
         ByteBuf byteBuf = new ByteBuf(length);
         byteBuf.putBytes(bytes, length);
         return byteBuf;
@@ -343,10 +319,10 @@ public class ByteBuf extends Object {
     }
 
     public int getFilledSize() {
-        return this.filledSize;
+        return this._filledSize;
     }
 
     public void clear() {
-        shift(filledSize);
+        shift(_filledSize);
     }
 }
