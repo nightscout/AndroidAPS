@@ -5,6 +5,7 @@ import info.nightscout.androidaps.extensions.wait
 import java.io.IOException
 import java.io.OutputStream
 
+// Todo If I replace java file by this one, I can pair but it seems to be less reliable (more difficulties to connect during pairing...)
 class OutputStreamWriterXX(outputStream: OutputStream, callback: Callback) : Thread() {
 
     private val outputStream: OutputStream

@@ -44,6 +44,7 @@ import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.min
 
+// Todo I cannot pair with this file (cannot establish connection with pump during pairing process)
 class InsightConnectionServiceXX : DaggerService(), ConnectionEstablisher.Callback, InputStreamReader.Callback, OutputStreamWriter.Callback {
 
     @Inject lateinit var aapsLogger: AAPSLogger
@@ -594,7 +595,7 @@ class InsightConnectionServiceXX : DaggerService(), ConnectionEstablisher.Callba
             if (activeRequest == null) {
                 handleException(TooChattyPumpException())
             } else {
-                activatedServices.add(activeRequest.request.service)
+                activatedServices.add(activeRequest.request!!.service)
                 sendAppLayerMessage(activeRequest.request)
             }
         }
@@ -620,7 +621,7 @@ class InsightConnectionServiceXX : DaggerService(), ConnectionEstablisher.Callba
         if (activeRequest == null) {
             handleException(TooChattyPumpException())
         } else {
-            val service = activeRequest.request.service
+            val service = activeRequest.request!!.service
             val activateServiceMessage = ActivateServiceMessage()
             if (service != null) {
                 activateServiceMessage.serviceID = service.id
