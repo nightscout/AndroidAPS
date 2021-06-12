@@ -921,5 +921,5 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="ns_receive_cgm">Recevoir/remplir les anciennes données MGC</string>
     <string name="ns_receive_cgm_summary">Accepter les données MGC de NS</string>
     <string name="sms_timeout_while_wating">Délai d\'attente pour finir la communication précédente avec la pompe</string>
-    <string name="smscommunicator_another_bolus_in_queue">Il y a un autre bolus dans la file d\'attente. Réessayez plus tard.</string>
+    <string name="smscommunicator_another_bolus_in_queue">Un autre bolus est en file d\'attente. Réessayez plus tard.</string>
 </resources>
