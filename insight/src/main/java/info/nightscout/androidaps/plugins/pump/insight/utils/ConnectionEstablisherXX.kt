@@ -19,8 +19,8 @@ class ConnectionEstablisherXX(private val callback: Callback, private val forPai
         }
         if (forPairing && bluetoothDevice.bondState != BluetoothDevice.BOND_NONE) {
             try {
-                val removeBond = bluetoothDevice.javaClass.getMethod("removeBond", null as Class<*>)
-                removeBond.invoke(bluetoothDevice, null as Array<Any?>)
+                val removeBond = bluetoothDevice.javaClass.getMethod("removeBond", null)
+                removeBond.invoke(bluetoothDevice, null)
             } catch (e: ReflectiveOperationException) {
                 if (!isInterrupted) callback.onConnectionFail(e, 0)
                 return
@@ -37,7 +37,7 @@ class ConnectionEstablisherXX(private val callback: Callback, private val forPai
         }
         val connectionStart = System.currentTimeMillis()
         try {
-            socket!!.connect()
+            socket?.connect()                                               // TODO Wrong management of null ?
             if (!isInterrupted) callback.onConnectionSucceed()
         } catch (e: IOException) {
             if (!isInterrupted) callback.onConnectionFail(e, System.currentTimeMillis() - connectionStart)
@@ -47,7 +47,7 @@ class ConnectionEstablisherXX(private val callback: Callback, private val forPai
     fun close(closeSocket: Boolean) {
         try {
             interrupt()
-            socket?.let { if (closeSocket && it.isConnected) it.close() }
+            socket?.let { if (closeSocket && it.isConnected) it.close() }   // TODO Wrong management of null ?
         } catch (ignored: IOException) {
         }
     }
