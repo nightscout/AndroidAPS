@@ -181,6 +181,6 @@ class Connection(
     }
 
     companion object {
-        private const val BASE_CONNECT_TIMEOUT_MS = 6000
+        private const val BASE_CONNECT_TIMEOUT_MS = 10000
     }
 }

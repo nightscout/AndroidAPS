@@ -565,20 +565,6 @@ class OmnipodDashPumpPlugin @Inject constructor(
         }
     }
 
-    private fun observeActiveTempBasal(): Completable {
-
-        return Completable.defer {
-            if (podStateManager.tempBasalActive || pumpSync.expectedPumpState().temporaryBasal != null)
-                Completable.complete()
-            else
-                Completable.error(
-                    java.lang.IllegalStateException(
-                        "There is no active basal to cancel"
-                    )
-                )
-        }
-    }
-
     override fun setTempBasalPercent(
         percent: Int,
         durationInMinutes: Int,
@@ -598,10 +584,15 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
+        if (!podStateManager.tempBasalActive &&
+            pumpSync.expectedPumpState().temporaryBasal == null) {
+            // nothing to cancel
+            return PumpEnactResult(injector).success(true).enacted(false)
+        }
+
         return executeProgrammingCommand(
             historyEntry = history.createRecord(OmnipodCommandType.CANCEL_TEMPORARY_BASAL),
             command = omnipodManager.stopTempBasal().ignoreElements(),
-            pre = observeActiveTempBasal(),
         ).toPumpEnactResult()
     }
 
