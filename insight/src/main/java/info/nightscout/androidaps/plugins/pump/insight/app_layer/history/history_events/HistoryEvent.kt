@@ -1,10 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.insight.app_layer.history.history_events
 
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper.Companion.getLogger
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.HistoryEvents.Companion.fromId
 import info.nightscout.androidaps.plugins.pump.insight.utils.BOCUtil
 import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
-import org.slf4j.Logger
 
 open class HistoryEvent : Comparable<HistoryEvent> {
 
@@ -40,24 +38,9 @@ open class HistoryEvent : Comparable<HistoryEvent> {
     }
 
     companion object {
-
-        private val log: Logger = getLogger(HistoryEvent::class.java)
-        @JvmStatic fun deserialize(byteBuf: ByteBuf): HistoryEvent? {
-            val eventID = byteBuf.readUInt16LE()
-            val eventClass = fromId(eventID)?.type
-            var event: HistoryEvent? = null
-            if (eventClass == null) event = HistoryEvent() else {
-                try {
-                    event = eventClass.newInstance()
-                } catch (e: IllegalAccessException) {
-                    log.error("Unhandled exception", e)
-                } catch (e: InstantiationException) {
-                    log.error("Unhandled exception", e)
-                }
+        fun deserialize(byteBuf: ByteBuf): HistoryEvent = fromId(byteBuf.readUInt16LE()).apply {
+                parseHeader(byteBuf)
+                parse(byteBuf)
             }
-            event?.parseHeader(byteBuf)
-            event?.parse(byteBuf)
-            return event
-        }
     }
 }
