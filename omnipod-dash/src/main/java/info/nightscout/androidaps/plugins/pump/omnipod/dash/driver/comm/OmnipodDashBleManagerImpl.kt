@@ -44,6 +44,14 @@ class OmnipodDashBleManagerImpl @Inject constructor(
                 val session = assertSessionEstablished()
 
                 emitter.onNext(PodEvent.CommandSending(cmd))
+            /*
+                if (Random.nextBoolean()) {
+                    // XXX use this to test "failed to confirm" commands
+                    emitter.onNext(PodEvent.CommandSendNotConfirmed(cmd))
+                    emitter.tryOnError(MessageIOException("XXX random failure to test unconfirmed commands"))
+                    return@create
+                }
+*/
                 when (session.sendCommand(cmd)) {
                     is CommandSendErrorSending -> {
                         emitter.tryOnError(CouldNotSendCommandException())
@@ -55,7 +63,12 @@ class OmnipodDashBleManagerImpl @Inject constructor(
                     is CommandSendErrorConfirming ->
                         emitter.onNext(PodEvent.CommandSendNotConfirmed(cmd))
                 }
-
+                /*
+                if (Random.nextBoolean()) {
+                    // XXX use this commands confirmed with success
+                    emitter.tryOnError(MessageIOException("XXX random failure to test unconfirmed commands"))
+                    return@create
+                }*/
                 when (val readResult = session.readAndAckResponse(responseType)) {
                     is CommandReceiveSuccess ->
                         emitter.onNext(PodEvent.ResponseReceived(cmd, readResult.result))

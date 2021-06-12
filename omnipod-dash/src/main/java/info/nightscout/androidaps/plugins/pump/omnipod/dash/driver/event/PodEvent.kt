@@ -65,4 +65,8 @@ sealed class PodEvent {
             return "ResponseReceived(command=$command, response=$response)"
         }
     }
+
+    fun isCommandSent(): Boolean {
+        return this is CommandSent || this is CommandSendNotConfirmed
+    }
 }

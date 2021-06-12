@@ -274,6 +274,13 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
              */
 
             // TODO
+            if (podStateManager.activeCommand != null) {
+                podInfoBinding.podExpiryDate.setTextColor(Color.RED)
+                podInfoBinding.podExpiryDate.text = "Active command"
+            } else {
+                podInfoBinding.podExpiryDate.text = PLACEHOLDER
+                podInfoBinding.podExpiryDate.setTextColor(Color.WHITE)
+            }
             /*
             val expiresAt = podStateManager.expiresAt
 
