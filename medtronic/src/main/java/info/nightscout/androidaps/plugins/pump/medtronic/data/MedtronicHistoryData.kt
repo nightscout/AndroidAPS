@@ -605,7 +605,8 @@ class MedtronicHistoryData @Inject constructor(
                 processDTO = TempBasalProcessDTO(
                     itemOne = treatment,
                     processOperation = TempBasalProcessDTO.Operation.Add,
-                    aapsLogger = aapsLogger
+                    aapsLogger = aapsLogger,
+                    objectType = TempBasalProcessDTO.ObjectType.TemporaryBasal
                 )
             }
         }
@@ -875,7 +876,8 @@ class MedtronicHistoryData @Inject constructor(
                     val tbrProcess = TempBasalProcessDTO(
                         itemOne = filtered2Items[i],
                         processOperation = TempBasalProcessDTO.Operation.Add,
-                        aapsLogger = aapsLogger)
+                        aapsLogger = aapsLogger,
+                        objectType = TempBasalProcessDTO.ObjectType.Suspend)
 
                     tbrProcess.itemTwo = filtered2Items[i + 1]
 
@@ -944,7 +946,8 @@ class MedtronicHistoryData @Inject constructor(
             val tbrProcess = TempBasalProcessDTO(
                 itemOne = items[items.size - 1],
                 processOperation = TempBasalProcessDTO.Operation.Add,
-                aapsLogger = aapsLogger)
+                aapsLogger = aapsLogger,
+                objectType = TempBasalProcessDTO.ObjectType.Suspend)
 
             tbrProcess.itemTwo = itemTwo
 
@@ -957,7 +960,8 @@ class MedtronicHistoryData @Inject constructor(
             outList.add(TempBasalProcessDTO(
                 itemOne = items[0],
                 processOperation = TempBasalProcessDTO.Operation.Add,
-                aapsLogger = aapsLogger))
+                aapsLogger = aapsLogger,
+                objectType = TempBasalProcessDTO.ObjectType.Suspend))
             return outList
         }
         return outList
