@@ -919,4 +919,6 @@
     <string name="ns_receive_therapy_events_summary">Přijmout léčebné události (výměna setu, inzulínu, baterie atd.) zadané prostřednictvím NS nebo NSClienta</string>
     <string name="ns_receive_cgm">Přijímat/doplňovat glykémie</string>
     <string name="ns_receive_cgm_summary">Přijmout CGM data z NS</string>
+    <string name="sms_timeout_while_wating">Vypršel časový limit při čekání na dokončení předchozí komunikace s pumpou</string>
+    <string name="smscommunicator_another_bolus_in_queue">Ve frontě je další bolus. Zkuste to znovu později.</string>
 </resources>
