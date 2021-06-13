@@ -285,11 +285,12 @@ public class ByteBuf {
         return string;
     }
 
+    /*
     public void putASCII(String string, int stringLength) {
         putBytes(string.getBytes(StandardCharsets.UTF_16LE), stringLength * 2);
         putBytes((byte) 0, 1);
     }
-
+*/
 
     private boolean getBoolean(int position) {
         return getUInt16LE(position) == 75;
