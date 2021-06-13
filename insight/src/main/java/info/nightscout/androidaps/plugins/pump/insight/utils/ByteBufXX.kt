@@ -106,7 +106,7 @@ class ByteBufXX(length: Int) {
     }
 
     fun putUInt8(value: Short) {
-        putByte((value and 0xFF) as Byte)
+        putByte((value and 0xFF).toByte())
     }
 
     fun getUInt16LE(position: Int): Int {
