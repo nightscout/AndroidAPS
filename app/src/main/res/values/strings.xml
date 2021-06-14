@@ -837,7 +837,6 @@
     <string name="key_maintenance_logs_amount" translatable="false">maintenance_logs_amount</string>
     <string name="key_logshipper_amount" translatable="false">logshipper_amount</string>
     <string name="maintenance_amount">No of Logs to send</string>
-    <string name="logshipper_amount">No of Logs to keep in history</string>
     <string name="maintenance">Maintenance</string>
     <string name="maintenance_shortname">MAINT</string>
     <string name="description_maintenance">Provides several functions for maintenance (eg. log sending, log deletion).</string>
