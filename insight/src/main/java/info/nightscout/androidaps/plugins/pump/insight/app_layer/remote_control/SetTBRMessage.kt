@@ -12,10 +12,11 @@ class SetTBRMessage : AppLayerMessage(MessagePriority.NORMAL, false, true, Servi
 
     override val data: ByteBuf
         get() {
-            val byteBuf = ByteBuf(6)
-            byteBuf.putUInt16LE(percentage)
-            byteBuf.putUInt16LE(duration)
-            byteBuf.putUInt16LE(31)
+            val byteBuf = ByteBuf(6).apply {
+                putUInt16LE(percentage)
+                putUInt16LE(duration)
+                putUInt16LE(31)
+            }
             return byteBuf
         }
 }

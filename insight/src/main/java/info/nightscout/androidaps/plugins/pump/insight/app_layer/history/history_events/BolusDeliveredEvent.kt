@@ -25,17 +25,17 @@ class BolusDeliveredEvent : HistoryEvent() {
         private set
 
     override fun parse(byteBuf: ByteBuf?) {
-        if (byteBuf != null) {
-            bolusType = fromId(byteBuf.readUInt16LE())
-            byteBuf.shift(1)
-            startHour = BOCUtil.parseBOC(byteBuf.readByte())
-            startMinute = BOCUtil.parseBOC(byteBuf.readByte())
-            startSecond = BOCUtil.parseBOC(byteBuf.readByte())
-            immediateAmount = byteBuf.readUInt16Decimal()
-            extendedAmount = byteBuf.readUInt16Decimal()
-            duration = byteBuf.readUInt16LE()
-            byteBuf.shift(2)
-            bolusID = byteBuf.readUInt16LE()
+        byteBuf?.let {
+            bolusType = fromId(it.readUInt16LE())
+            it.shift(1)
+            startHour = BOCUtil.parseBOC(it.readByte())
+            startMinute = BOCUtil.parseBOC(it.readByte())
+            startSecond = BOCUtil.parseBOC(it.readByte())
+            immediateAmount = it.readUInt16Decimal()
+            extendedAmount = it.readUInt16Decimal()
+            duration = it.readUInt16LE()
+            it.shift(2)
+            bolusID = it.readUInt16LE()
         }
     }
 }

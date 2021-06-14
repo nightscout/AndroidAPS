@@ -17,10 +17,11 @@ class ActivateServiceMessage : AppLayerMessage(MessagePriority.NORMAL, false, fa
 
     override val data: ByteBuf
         get() {
-            val byteBuf = ByteBuf(19)
-            byteBuf.putByte(serviceID)
-            byteBuf.putShort(version)
-            byteBuf.putBytes(servicePassword)
+            val byteBuf = ByteBuf(19).apply {
+                putByte(serviceID)
+                putShort(version)
+                putBytes(servicePassword)
+            }
             return byteBuf
         }
 }

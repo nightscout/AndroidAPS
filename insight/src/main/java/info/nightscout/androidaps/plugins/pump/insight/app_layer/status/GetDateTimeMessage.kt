@@ -12,15 +12,14 @@ class GetDateTimeMessage : AppLayerMessage(MessagePriority.NORMAL, true, false, 
         private set
 
     override fun parse(byteBuf: ByteBuf?) {
-        pumpTime = PumpTime()
-        pumpTime?.let {
-            byteBuf?.run {
-                it.year = readUInt16LE()
-                it.month = readUInt8().toInt()
-                it.day = readUInt8().toInt()
-                it.hour = readUInt8().toInt()
-                it.minute = readUInt8().toInt()
-                it.second = readUInt8().toInt()
+        pumpTime = PumpTime().apply {
+            byteBuf?.let {
+                year = it.readUInt16LE()
+                month = it.readUInt8().toInt()
+                day = it.readUInt8().toInt()
+                hour = it.readUInt8().toInt()
+                minute = it.readUInt8().toInt()
+                second = it.readUInt8().toInt()
             }
         }
     }

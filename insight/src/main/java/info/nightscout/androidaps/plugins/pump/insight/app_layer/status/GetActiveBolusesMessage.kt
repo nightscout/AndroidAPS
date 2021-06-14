@@ -15,15 +15,16 @@ class GetActiveBolusesMessage : AppLayerMessage(MessagePriority.NORMAL, true, fa
         activeBoluses = mutableListOf()
         activeBoluses?.let {
             for (i in 0..2) {
-                val activeBolus = ActiveBolus()
-                byteBuf?.run {
-                    activeBolus.bolusID = readUInt16LE()
-                    activeBolus.bolusType = BolusType.fromActiveId(readUInt16LE())
-                    shift(2)
-                    shift(2)
-                    activeBolus.initialAmount = readUInt16Decimal()
-                    activeBolus.remainingAmount = readUInt16Decimal()
-                    activeBolus.remainingDuration = readUInt16LE()
+                val activeBolus = ActiveBolus().apply {
+                    byteBuf?.let { it2 ->
+                        bolusID = it2.readUInt16LE()
+                        bolusType = BolusType.fromActiveId(it2.readUInt16LE())
+                        it2.shift(2)
+                        it2.shift(2)
+                        initialAmount = it2.readUInt16Decimal()
+                        remainingAmount = it2.readUInt16Decimal()
+                        remainingDuration = it2.readUInt16LE()
+                    }
                 }
                 if (activeBolus.bolusType != null) it.add(activeBolus)
             }

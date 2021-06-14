@@ -12,19 +12,18 @@ class GetFirmwareVersionsMessage : AppLayerMessage(MessagePriority.NORMAL, false
         private set
 
     override fun parse(byteBuf: ByteBuf?) {
-        firmwareVersions = FirmwareVersions()
-        firmwareVersions?.let {
-            byteBuf?.run {
-                it.releaseSWVersion = readASCII(13)
-                it.uiProcSWVersion = readASCII(11)
-                it.pcProcSWVersion = readASCII(11)
-                it.mdTelProcSWVersion = readASCII(11)
-                it.btInfoPageVersion = readASCII(11)
-                it.safetyProcSWVersion = readASCII(11)
-                it.configIndex = readUInt16LE()
-                it.historyIndex = readUInt16LE()
-                it.stateIndex = readUInt16LE()
-                it.vocabularyIndex = readUInt16LE()
+        firmwareVersions = FirmwareVersions().apply {
+            byteBuf?.let {
+                releaseSWVersion = it.readASCII(13)
+                uiProcSWVersion = it.readASCII(11)
+                pcProcSWVersion = it.readASCII(11)
+                mdTelProcSWVersion = it.readASCII(11)
+                btInfoPageVersion = it.readASCII(11)
+                safetyProcSWVersion = it.readASCII(11)
+                configIndex = it.readUInt16LE()
+                historyIndex = it.readUInt16LE()
+                stateIndex = it.readUInt16LE()
+                vocabularyIndex = it.readUInt16LE()
             }
         }
     }

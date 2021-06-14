@@ -13,12 +13,12 @@ class ReadHistoryEventsMessage : AppLayerMessage(MessagePriority.NORMAL, true, f
      override fun parse(byteBuf: ByteBuf?) {
         historyEvents = mutableListOf()
         historyEvents.let {
-            if (byteBuf != null) {
-                byteBuf.shift(2)
-                val frameCount = byteBuf.readUInt16LE()
+            byteBuf?.let { it1 ->
+                it1.shift(2)
+                val frameCount = it1.readUInt16LE()
                 for (i in 0 until frameCount) {
-                    val length = byteBuf.readUInt16LE()
-                    HistoryEvent.deserialize(ByteBuf.from(byteBuf.readBytes(length))).let { it1 -> it.add(it1) }
+                    val length = it1.readUInt16LE()
+                    it.add(HistoryEvent.deserialize(ByteBuf.from(it1.readBytes(length))))
                 }
             }
         }

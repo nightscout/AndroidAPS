@@ -12,12 +12,11 @@ class GetTotalDailyDoseMessage : AppLayerMessage(MessagePriority.NORMAL, true, f
         private set
 
     override fun parse(byteBuf: ByteBuf?) {
-        tDD = TotalDailyDose()
-        tDD?.let {
-            byteBuf?.run {
-                it.bolus = readUInt32Decimal100()
-                it.basal = readUInt32Decimal100()
-                it.bolusAndBasal = readUInt32Decimal100()
+        tDD = TotalDailyDose().apply {
+            byteBuf?.let {
+                bolus = it.readUInt32Decimal100()
+                basal = it.readUInt32Decimal100()
+                bolusAndBasal = it.readUInt32Decimal100()
             }
         }
     }

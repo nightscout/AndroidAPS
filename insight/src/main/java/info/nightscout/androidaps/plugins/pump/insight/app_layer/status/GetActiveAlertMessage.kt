@@ -15,26 +15,30 @@ class GetActiveAlertMessage : AppLayerMessage(MessagePriority.NORMAL, true, fals
         private set
 
     override fun parse(byteBuf: ByteBuf?) {
-        val alert = Alert()
-        alert.alertId = byteBuf!!.readUInt16LE()
-        alert.alertCategory = AlertCategory.fromId(byteBuf.readUInt16LE())
-        alert.alertType = AlertType.fromId(byteBuf.readUInt16LE())
-        alert.alertStatus = AlertStatus.fromId(byteBuf.readUInt16LE())
-        if (alert.alertType != null) {
-            when (alert.alertType) {
-                AlertType.WARNING_38                        -> {
-                    byteBuf.shift(4)
-                    alert.programmedBolusAmount = byteBuf.readUInt16Decimal()
-                    alert.deliveredBolusAmount = byteBuf.readUInt16Decimal()
-                }
+        val alert = Alert().apply {
+            byteBuf?.let {
+                alertId = it.readUInt16LE()
+                alertCategory = AlertCategory.fromId(it.readUInt16LE())
+                alertType = AlertType.fromId(it.readUInt16LE())
+                alertStatus = AlertStatus.fromId(it.readUInt16LE())
+                if (alertType != null) {
+                    when (alertType) {
+                        AlertType.WARNING_38    -> {
+                            it.shift(4)
+                            programmedBolusAmount = it.readUInt16Decimal()
+                            deliveredBolusAmount = it.readUInt16Decimal()
+                        }
 
-                AlertType.REMINDER_07, AlertType.WARNING_36 -> {
-                    byteBuf.shift(2)
-                    alert.tBRAmount = byteBuf.readUInt16LE()
-                    alert.tBRDuration = byteBuf.readUInt16LE()
-                }
+                        AlertType.REMINDER_07,
+                        AlertType.WARNING_36    -> {
+                            it.shift(2)
+                            tBRAmount = it.readUInt16LE()
+                            tBRDuration = it.readUInt16LE()
+                        }
 
-                AlertType.WARNING_31                        -> alert.cartridgeAmount = byteBuf.readUInt16Decimal()
+                        AlertType.WARNING_31    -> cartridgeAmount = it.readUInt16Decimal()
+                    }
+                }
             }
         }
         if (alert.alertCategory != null && alert.alertType != null && alert.alertStatus != null) this.alert = alert

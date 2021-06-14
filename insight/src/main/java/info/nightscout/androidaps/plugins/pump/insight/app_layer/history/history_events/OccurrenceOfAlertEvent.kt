@@ -11,9 +11,9 @@ abstract class OccurrenceOfAlertEvent : HistoryEvent() {
         private set
 
     override fun parse(byteBuf: ByteBuf?) {
-        byteBuf?.run {
-            alertType = AlertType.fromIncId(readUInt16LE())
-            alertID = readUInt16LE()
+        byteBuf?.let {
+            alertType = AlertType.fromIncId(it.readUInt16LE())
+            alertID = it.readUInt16LE()
         }
     }
 }

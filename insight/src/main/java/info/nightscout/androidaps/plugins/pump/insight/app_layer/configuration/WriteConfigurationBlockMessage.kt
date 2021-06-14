@@ -16,10 +16,11 @@ class WriteConfigurationBlockMessage : AppLayerMessage(MessagePriority.NORMAL, f
     override val data: ByteBuf
         get() {
             val configBlockData = parameterBlock!!.data
-            val data = ByteBuf(4 + configBlockData!!.filledSize)
-            data.putUInt16LE(ParameterBlocks.fromType(parameterBlock!!.javaClass)!!.id)
-            data.putUInt16LE(31)
-            data.putByteBuf(configBlockData)
+            val data = ByteBuf(4 + configBlockData!!.filledSize).apply {
+                putUInt16LE(ParameterBlocks.fromType(parameterBlock!!.javaClass)!!.id)
+                putUInt16LE(31)
+                putByteBuf(configBlockData)
+            }
             return data
         }
 

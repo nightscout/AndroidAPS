@@ -10,8 +10,7 @@ class SnoozeAlertMessage : AppLayerMessage(MessagePriority.NORMAL, false, true, 
     internal var alertID = 0
     override val data: ByteBuf
         get() {
-            val byteBuf = ByteBuf(2)
-            byteBuf.putUInt16LE(alertID)
+            val byteBuf = ByteBuf(2).apply { putUInt16LE(alertID) }
             return byteBuf
         }
 }

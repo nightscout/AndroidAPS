@@ -18,13 +18,13 @@ class BolusProgrammedEvent : HistoryEvent() {
         private set
 
     override fun parse(byteBuf: ByteBuf?) {
-        if (byteBuf != null) {
-            bolusType = fromId(byteBuf.readUInt16LE())
-            immediateAmount = byteBuf.readUInt16Decimal()
-            extendedAmount = byteBuf.readUInt16Decimal()
-            duration = byteBuf.readUInt16LE()
-            byteBuf.shift(4)
-            bolusID = byteBuf.readUInt16LE()
+        byteBuf?.let {
+            bolusType = fromId(it.readUInt16LE())
+            immediateAmount = it.readUInt16Decimal()
+            extendedAmount = it.readUInt16Decimal()
+            duration = it.readUInt16LE()
+            it.shift(4)
+            bolusID = it.readUInt16LE()
         }
     }
 }

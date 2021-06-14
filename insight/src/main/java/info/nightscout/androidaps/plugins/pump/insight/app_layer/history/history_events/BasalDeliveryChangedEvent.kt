@@ -10,9 +10,9 @@ class BasalDeliveryChangedEvent : HistoryEvent() {
         private set
 
     override fun parse(byteBuf: ByteBuf?) {
-        if (byteBuf != null) {
-            oldBasalRate = byteBuf.readUInt32Decimal1000()
-            newBasalRate = byteBuf.readUInt32Decimal1000()
+        byteBuf?.let {
+            oldBasalRate = it.readUInt32Decimal1000()
+            newBasalRate = it.readUInt32Decimal1000()
         }
     }
 }

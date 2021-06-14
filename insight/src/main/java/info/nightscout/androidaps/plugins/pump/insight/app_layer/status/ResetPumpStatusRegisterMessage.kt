@@ -17,15 +17,16 @@ class ResetPumpStatusRegisterMessage(
 
     override val data: ByteBuf
         get() {
-            val byteBuf = ByteBuf(28)
-            byteBuf.putBoolean(operatingModeChanged)
-            byteBuf.putBoolean(batteryStatusChanged)
-            byteBuf.putBoolean(cartridgeStatusChanged)
-            byteBuf.putBoolean(totalDailyDoseChanged)
-            byteBuf.putBoolean(activeBasalRateChanged)
-            byteBuf.putBoolean(activeTBRChanged)
-            byteBuf.putBoolean(activeBolusesChanged)
-            for (i in 0..6) byteBuf.putBoolean(false)
+            val byteBuf = ByteBuf(28).apply {
+                putBoolean(operatingModeChanged)
+                putBoolean(batteryStatusChanged)
+                putBoolean(cartridgeStatusChanged)
+                putBoolean(totalDailyDoseChanged)
+                putBoolean(activeBasalRateChanged)
+                putBoolean(activeTBRChanged)
+                putBoolean(activeBolusesChanged)
+                for (i in 0..6) putBoolean(false)
+            }
             return byteBuf
         }
 }

@@ -10,8 +10,7 @@ class CancelBolusMessage : AppLayerMessage(MessagePriority.HIGHEST, false, true,
     internal var bolusID = 0
     override val data: ByteBuf
         get() {
-            val byteBuf = ByteBuf(2)
-            byteBuf.putUInt16LE(bolusID)
+            val byteBuf = ByteBuf(2).apply { putUInt16LE(bolusID) }
             return byteBuf
         }
 }

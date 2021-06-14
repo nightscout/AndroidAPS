@@ -18,19 +18,20 @@ class DeliverBolusMessage : AppLayerMessage(MessagePriority.NORMAL, true, true, 
 
     override val data: ByteBuf
         get() {
-            val byteBuf = ByteBuf(22)
-            // 805 => Old value with vibration (2.6.1 and earlier), 252 => new value without vibrations for firmware 3.x
-            if (disableVibration) byteBuf.putUInt16LE(252) else byteBuf.putUInt16LE(805)
-            byteBuf.putUInt16LE(bolusType!!.id)
-            byteBuf.putUInt16LE(31)
-            byteBuf.putUInt16LE(0)
-            byteBuf.putUInt16Decimal(immediateAmount)
-            byteBuf.putUInt16Decimal(extendedAmount)
-            byteBuf.putUInt16LE(duration)
-            byteBuf.putUInt16LE(0)
-            byteBuf.putUInt16Decimal(immediateAmount)
-            byteBuf.putUInt16Decimal(extendedAmount)
-            byteBuf.putUInt16LE(duration)
+            val byteBuf = ByteBuf(22).apply {
+                // 805 => Old value with vibration (2.6.1 and earlier), 252 => new value without vibrations for firmware 3.x
+                if (disableVibration) putUInt16LE(252) else putUInt16LE(805)
+                putUInt16LE(bolusType!!.id)
+                putUInt16LE(31)
+                putUInt16LE(0)
+                putUInt16Decimal(immediateAmount)
+                putUInt16Decimal(extendedAmount)
+                putUInt16LE(duration)
+                putUInt16LE(0)
+                putUInt16Decimal(immediateAmount)
+                putUInt16Decimal(extendedAmount)
+                putUInt16LE(duration)
+            }
             return byteBuf
         }
 

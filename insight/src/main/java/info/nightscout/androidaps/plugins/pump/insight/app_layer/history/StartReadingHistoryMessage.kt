@@ -11,10 +11,11 @@ class StartReadingHistoryMessage : AppLayerMessage(MessagePriority.NORMAL, false
     internal var direction: HistoryReadingDirection? = null
     override val data: ByteBuf
         get() {
-            val byteBuf = ByteBuf(8)
-            byteBuf.putUInt16LE(31)
-            byteBuf.putUInt16LE(direction!!.id)
-            byteBuf.putUInt32LE(offset)
+            val byteBuf = ByteBuf(8).apply {
+                putUInt16LE(31)
+                putUInt16LE(direction!!.id)
+                putUInt32LE(offset)
+            }
             return byteBuf
         }
 }

@@ -14,13 +14,12 @@ class GetCartridgeStatusMessage : AppLayerMessage(MessagePriority.NORMAL, false,
         private set
 
     override fun parse(byteBuf: ByteBuf?) {
-        cartridgeStatus = CartridgeStatus()
-        cartridgeStatus?.let {
-            byteBuf?.run {
-                it.isInserted = readBoolean()
-                it.cartridgeType = CartridgeType.fromId(readUInt16LE())
-                it.symbolStatus = SymbolStatus.fromId(readUInt16LE())
-                it.remainingAmount = readUInt16Decimal()
+        cartridgeStatus = CartridgeStatus().apply {
+            byteBuf?.let {
+                isInserted = it.readBoolean()
+                cartridgeType = CartridgeType.fromId(it.readUInt16LE())
+                symbolStatus = SymbolStatus.fromId(it.readUInt16LE())
+                remainingAmount = it.readUInt16Decimal()
             }
         }
     }

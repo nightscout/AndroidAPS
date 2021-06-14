@@ -22,20 +22,21 @@ open class HistoryEvent : Comparable<HistoryEvent> {
         private set
 
     fun parseHeader(byteBuf: ByteBuf) {
-        eventYear = BOCUtil.parseBOC(byteBuf.readByte()) * 100 + BOCUtil.parseBOC(byteBuf.readByte())
-        eventMonth = BOCUtil.parseBOC(byteBuf.readByte())
-        eventDay = BOCUtil.parseBOC(byteBuf.readByte())
-        byteBuf.shift(1)
-        eventHour = BOCUtil.parseBOC(byteBuf.readByte())
-        eventMinute = BOCUtil.parseBOC(byteBuf.readByte())
-        eventSecond = BOCUtil.parseBOC(byteBuf.readByte())
-        eventPosition = byteBuf.readUInt32LE()
+        byteBuf.let {
+            eventYear = BOCUtil.parseBOC(it.readByte()) * 100 + BOCUtil.parseBOC(it.readByte())
+            eventMonth = BOCUtil.parseBOC(it.readByte())
+            eventDay = BOCUtil.parseBOC(it.readByte())
+            it.shift(1)
+            eventHour = BOCUtil.parseBOC(it.readByte())
+            eventMinute = BOCUtil.parseBOC(it.readByte())
+            eventSecond = BOCUtil.parseBOC(it.readByte())
+            eventPosition = it.readUInt32LE()
+        }
     }
 
-    open fun parse(byteBuf: ByteBuf?) {}
-    override fun compareTo(other: HistoryEvent): Int {
-        return (eventPosition - other.eventPosition).toInt()
-    }
+    open fun parse(byteBuf: ByteBuf?) = Unit
+
+    override fun compareTo(other: HistoryEvent): Int = (eventPosition - other.eventPosition).toInt()
 
     companion object {
         fun deserialize(byteBuf: ByteBuf): HistoryEvent = fromId(byteBuf.readUInt16LE()).apply {

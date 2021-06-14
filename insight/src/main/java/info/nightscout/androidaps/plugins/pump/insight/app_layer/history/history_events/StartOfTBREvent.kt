@@ -10,7 +10,9 @@ class StartOfTBREvent : HistoryEvent() {
         private set
 
     override fun parse(byteBuf: ByteBuf?) {
-        amount = byteBuf?.readUInt16LE()    ?: 0
-        duration = byteBuf?.readUInt16LE()  ?: 0
+        byteBuf?.let {
+            amount = it.readUInt16LE()
+            duration = it.readUInt16LE()
+        }
     }
 }

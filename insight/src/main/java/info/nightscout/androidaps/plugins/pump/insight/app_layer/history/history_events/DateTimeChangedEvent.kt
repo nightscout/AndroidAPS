@@ -19,14 +19,14 @@ class DateTimeChangedEvent : HistoryEvent() {
         private set
 
     override fun parse(byteBuf: ByteBuf?) {
-        if (byteBuf != null) {
-            beforeYear = BOCUtil.parseBOC(byteBuf.readByte()) * 100 + BOCUtil.parseBOC(byteBuf.readByte())
-            beforeMonth = BOCUtil.parseBOC(byteBuf.readByte())
-            beforeDay = BOCUtil.parseBOC(byteBuf.readByte())
-            byteBuf.shift(1)
-            beforeHour = BOCUtil.parseBOC(byteBuf.readByte())
-            beforeMinute = BOCUtil.parseBOC(byteBuf.readByte())
-            beforeSecond = BOCUtil.parseBOC(byteBuf.readByte())
+        byteBuf?.let {
+            beforeYear = BOCUtil.parseBOC(it.readByte()) * 100 + BOCUtil.parseBOC(it.readByte())
+            beforeMonth = BOCUtil.parseBOC(it.readByte())
+            beforeDay = BOCUtil.parseBOC(it.readByte())
+            it.shift(1)
+            beforeHour = BOCUtil.parseBOC(it.readByte())
+            beforeMinute = BOCUtil.parseBOC(it.readByte())
+            beforeSecond = BOCUtil.parseBOC(it.readByte())
         }
     }
 }

@@ -8,11 +8,11 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
 class SetOperatingModeMessage : AppLayerMessage(MessagePriority.HIGHEST, false, true, Service.REMOTE_CONTROL) {
 
-    internal var operatingMode: OperatingMode? = null
+    internal lateinit var operatingMode: OperatingMode
+
     override val data: ByteBuf
         get() {
-            val byteBuf = ByteBuf(2)
-            byteBuf.putUInt16LE(operatingMode!!.id)
+            val byteBuf = ByteBuf(2).apply { putUInt16LE(operatingMode.id) }
             return byteBuf
         }
 }

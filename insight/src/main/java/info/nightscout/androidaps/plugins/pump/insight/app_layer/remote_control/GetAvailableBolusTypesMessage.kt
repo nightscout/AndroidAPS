@@ -12,12 +12,11 @@ class GetAvailableBolusTypesMessage : AppLayerMessage(MessagePriority.NORMAL, fa
         private set
 
     override fun parse(byteBuf: ByteBuf?) {
-        availableBolusTypes = AvailableBolusTypes()
-        availableBolusTypes?.let {
-            byteBuf?.run {
-                it.isStandardAvailable = readBoolean()
-                it.isExtendedAvailable = readBoolean()
-                it.isMultiwaveAvailable = readBoolean()
+        availableBolusTypes = AvailableBolusTypes().apply {
+            byteBuf?.let {
+                isStandardAvailable = it.readBoolean()
+                isExtendedAvailable = it.readBoolean()
+                isMultiwaveAvailable = it.readBoolean()
             }
         }
     }

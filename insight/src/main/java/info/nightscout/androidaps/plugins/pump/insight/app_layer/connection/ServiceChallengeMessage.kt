@@ -17,9 +17,10 @@ class ServiceChallengeMessage : AppLayerMessage(MessagePriority.NORMAL, false, f
 
     override val data: ByteBuf
         get() {
-            val byteBuf = ByteBuf(3)
-            byteBuf.putByte(serviceID)
-            byteBuf.putShort(version)
+            val byteBuf = ByteBuf(3).apply {
+                putByte(serviceID)
+                putShort(version)
+            }
             return byteBuf
         }
 }

@@ -12,6 +12,6 @@ class GetOperatingModeMessage : AppLayerMessage(MessagePriority.NORMAL, true, fa
         private set
 
     override fun parse(byteBuf: ByteBuf?) {
-        operatingMode = byteBuf?.run { OperatingMode.fromId(readUInt16LE()) }
+        operatingMode = byteBuf?.let { OperatingMode.fromId(it.readUInt16LE()) }
     }
 }
