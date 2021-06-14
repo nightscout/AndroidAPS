@@ -42,7 +42,7 @@ abstract class SatlMessage {
         byteBuf.putUInt16LE((data?.filledSize ?: 0) + 2)
         byteBuf.putUInt32LE(if (clazz == KeyRequest::class.java) 1 else commID)
         byteBuf.putBytes(0x00.toByte(), 13)
-        byteBuf.putByteBuf(data)
+        byteBuf.putByteBuf(data!!)
         byteBuf.putUInt16LE(Cryptograph.calculateCRC(byteBuf.getBytes(8, length - 10)))
         byteBuf.putBytes(0x00.toByte(), 8)
         return byteBuf

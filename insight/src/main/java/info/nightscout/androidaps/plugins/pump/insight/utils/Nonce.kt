@@ -41,7 +41,7 @@ class Nonce {
         fun fromProductionalBytes(bytes: ByteArray?): Nonce {
             val byteBuf = ByteBuf(14)
             byteBuf.putByte(0x00.toByte())
-            byteBuf.putBytesLE(bytes)
+            byteBuf.putBytesLE(bytes!!)
             return Nonce(byteBuf.bytes)
         }
     }

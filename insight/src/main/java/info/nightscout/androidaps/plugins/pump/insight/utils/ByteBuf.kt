@@ -7,7 +7,7 @@ import kotlin.experimental.and
 import kotlin.experimental.or
 
 // Todo : Cannot communicate with pump with this file even if pump paired
-class ByteBufXX(length: Int) {
+class ByteBuf(length: Int) {
 
     private val _bytes: ByteArray
     var filledSize = 0
@@ -95,7 +95,7 @@ class ByteBufXX(length: Int) {
     }
 
     private fun getUInt8(position: Int): Short {
-        return (_bytes[position] and 0xFF.toByte()) as Short
+        return _bytes[position].toShort() and 0xFF
     }
 
     // private short getUInt8() { return getUInt8(0); }
@@ -111,10 +111,8 @@ class ByteBufXX(length: Int) {
 
     fun getUInt16LE(position: Int): Int {
         var position = position
-        return (
-            (_bytes[position++] and 0xFF.toByte()) or
-                ((_bytes[position] and 0xFF.toByte()).toInt() shl 8).toByte()
-            ).toInt()
+        return  (_bytes[position++].toShort() and 0xFF) +
+                (_bytes[position].toShort() and 0xFF) * 256 // Convert to short and replace "or" by "+" and "shl 8" by "* 256" to fix convertion compared to java
     }
 
     //private int getUInt16LE() { return getUInt16LE(0); }
@@ -183,20 +181,12 @@ class ByteBufXX(length: Int) {
         return d
     }
 
-    /*
-    public void putUInt32Decimal1000(double d) {
-        putUInt32LE(new BigDecimal(d)
-                .multiply(new BigDecimal(1000))
-                .setScale(0, RoundingMode.HALF_UP)
-                .longValue());
-    }
- */
     private fun getShort(position: Int): Short {
         var position = position
         return (
-            (_bytes[position++].toInt() shl 8).toByte() or
-                _bytes[position] and 0xFF.toByte()
-            ).toShort()
+                (_bytes[position++].toLong() and 0xFF) shl 8 or
+                (_bytes[position].toLong() and 0xFF)
+            ).toShort()  // Convert to Long and keep "or", "and" & "shl" to fix convertion compared to java
     }
 
     //    public short getShort() { return getShort(0); }
