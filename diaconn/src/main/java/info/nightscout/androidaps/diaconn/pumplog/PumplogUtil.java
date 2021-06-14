@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.diaconn.pumplog;
 
+import android.annotation.SuppressLint;
+
 import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -17,6 +19,7 @@ public class PumplogUtil {
 	 * @param buffer 바이트버퍼
 	 * @return GMT 날짜 문자열
 	 */
+    @SuppressLint("SimpleDateFormat")
 	public static String getDttm(ByteBuffer buffer) {
 		byte b0 = buffer.get();
 		byte b1 = buffer.get();
@@ -34,6 +37,7 @@ public class PumplogUtil {
 	 * @param data 로그데이터
 	 * @return GMT 날짜 문자열
 	 */
+    @SuppressLint("SimpleDateFormat")
 	public static String getDttm(String data) {
 		byte[] bytes = PumplogUtil.hexStringToByteArray(data);
 		byte b0 = bytes[0];
@@ -42,7 +46,7 @@ public class PumplogUtil {
 		byte b3 = bytes[3];
 		long pumpTime = Long.parseLong(String.format("%02x%02x%02x%02x", b3, b2, b1, b0), 16);
 		long epochTime = new Date(0).getTime(); // 1970-01-01
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 		return sdf.format(new Date(epochTime + pumpTime * 1000));
 	}

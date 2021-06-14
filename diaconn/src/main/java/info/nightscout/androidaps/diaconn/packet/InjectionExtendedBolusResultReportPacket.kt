@@ -37,7 +37,7 @@ class InjectionExtendedBolusResultReportPacket(injector: HasAndroidInjector) : D
         val bolusAmountToBeDelivered  = getShortToInt(bufferData) / 100.0
         val deliveredBolusAmount = getShortToInt(bufferData) / 100.0
 
-        diaconnG8Pump.isExtendedInProgress = result == 0
+        //diaconnG8Pump.isExtendedInProgress = result == 0
         diaconnG8Pump.extendedBolusMinutes = settingMinutes
         diaconnG8Pump.extendedBolusAbsoluteRate = bolusAmountToBeDelivered
         diaconnG8Pump.extendedBolusPassedMinutes = elapsedTime
@@ -45,7 +45,6 @@ class InjectionExtendedBolusResultReportPacket(injector: HasAndroidInjector) : D
         diaconnG8Pump.extendedBolusDeliveredSoFar = deliveredBolusAmount
 
         aapsLogger.debug(LTag.PUMPCOMM, "Result: $result")
-        aapsLogger.debug(LTag.PUMPCOMM, "Is extended bolus running: " + diaconnG8Pump.isExtendedInProgress)
         aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus running: " + diaconnG8Pump.extendedBolusAbsoluteRate + " U/h")
         aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus duration: " + diaconnG8Pump.extendedBolusMinutes + " min")
         aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus so far: " + diaconnG8Pump.extendedBolusSoFarInMinutes + " min")

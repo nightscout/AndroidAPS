@@ -21,7 +21,6 @@ import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.apache.commons.lang3.time.DateUtils
-import org.joda.time.DateTime
 import javax.inject.Inject
 
 /**
