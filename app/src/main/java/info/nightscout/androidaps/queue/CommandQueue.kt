@@ -68,12 +68,12 @@ open class CommandQueue @Inject constructor(
     private val disposable = CompositeDisposable()
 
     private val queue = LinkedList<Command>()
-    private var thread: QueueThread? = null
+    @Volatile private var thread: QueueThread? = null
 
-    var performing: Command? = null
+    @Volatile var performing: Command? = null
 
     init {
-        disposable.add(rxBus
+        disposable += rxBus
             .toObservable(EventProfileSwitchChanged::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({
@@ -109,8 +109,6 @@ open class CommandQueue @Inject constructor(
                     })
                 }
             }, fabricPrivacy::logException)
-        )
-
     }
 
     private fun executingNowError(): PumpEnactResult =
@@ -197,6 +195,7 @@ open class CommandQueue @Inject constructor(
         aapsLogger.debug(LTag.PUMPQUEUE, "Starting new queue")
         val tempCommandQueue = CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, activePlugin, context, sp, buildHelper, dateUtil, repository, fabricPrivacy)
         tempCommandQueue.readStatus(reason, callback)
+        tempCommandQueue.disposable.clear()
     }
 
     @Synchronized
