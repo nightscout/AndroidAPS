@@ -183,11 +183,6 @@ class BigAPSMainInfoInquireResponsePacket(
         // 20. language
         diaconnG8Pump.selectedLanguage =  getByteToInt(bufferData) // language (1=Chiness, 2=Korean, 3=English)
 
-        // 21. pump LGS ( firmware above
-        diaconnG8Pump.lgsStatus = 0      // LGS 상태(1=LGS_ON, 2=LGS_OFF)
-        diaconnG8Pump.lgsTime = 0        // LGS 적용 시간 (0~255분)
-        diaconnG8Pump.lgsElapsedTime= 0  // LGS 경과 시간(0~255분)
-
         // tempbasal setting status
         diaconnG8Pump.isTempBasalInProgress = diaconnG8Pump.tbStatus == 1
         aapsLogger.debug(LTag.PUMPCOMM, "isTempBasalInProgress > " + diaconnG8Pump.isTempBasalInProgress)
