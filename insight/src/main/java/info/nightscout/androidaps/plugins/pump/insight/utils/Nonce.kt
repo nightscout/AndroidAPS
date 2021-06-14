@@ -10,7 +10,7 @@ class Nonce {
         bigInteger = BigInteger.ZERO
     }
 
-    constructor(storageValue: ByteArray?) {
+    constructor(storageValue: ByteArray) {
         bigInteger = BigInteger(storageValue)
     }
 

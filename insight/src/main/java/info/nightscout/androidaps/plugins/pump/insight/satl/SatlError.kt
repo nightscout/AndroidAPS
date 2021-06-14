@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.insight.satl
 
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.BasalProfile
-
 enum class SatlError (val id: Byte) {
     UNDEFINED (0.toByte()),
     INCOMPATIBLE_VERSION (1.toByte()),
@@ -18,6 +16,6 @@ enum class SatlError (val id: Byte) {
     NONE (255.toByte());
 
     companion object {
-        fun fromId(id: Byte) = values().firstOrNull { it.id == id }
+        fun fromId(id: Byte) = values().firstOrNull() { it.id == id } ?:NONE
     }
 }

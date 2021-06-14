@@ -4,7 +4,7 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
 class VerifyConfirmResponse : SatlMessage() {
 
-    var pairingStatus: PairingStatus? = null
+    lateinit var pairingStatus: PairingStatus
         private set
 
     override fun parse(byteBuf: ByteBuf) {

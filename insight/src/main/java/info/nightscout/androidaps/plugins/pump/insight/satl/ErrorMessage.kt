@@ -4,7 +4,7 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
 class ErrorMessage : SatlMessage() {
 
-    var error: SatlError? = null
+    lateinit var error: SatlError
         private set
 
     override fun parse(byteBuf: ByteBuf) {
