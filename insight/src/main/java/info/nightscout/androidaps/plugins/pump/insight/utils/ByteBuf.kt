@@ -6,7 +6,6 @@ import java.nio.charset.StandardCharsets
 import kotlin.experimental.and
 import kotlin.experimental.or
 
-// Todo : Cannot communicate with pump with this file even if pump paired
 class ByteBuf(length: Int) {
 
     private val _bytes: ByteArray
