@@ -1153,5 +1153,7 @@
     <string name="key_ns_receive_cgm" translatable="false">ns_receive_cgm</string>
     <string name="ns_receive_cgm">Receive/backfill CGM data</string>
     <string name="ns_receive_cgm_summary">Accept CGM data from NS</string>
+    <string name="sms_timeout_while_wating">Timeout while waiting for finish of previous pump communication</string>
+    <string name="smscommunicator_another_bolus_in_queue">There is another bolus in queue. Try again later.</string>
 
 </resources>

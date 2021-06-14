@@ -56,7 +56,7 @@ class AuthRequestTest : TestBase() {
 
     @Test fun doTests() {
         val requester = Sms("aNumber", "aText")
-        val action: SmsAction = object : SmsAction() {
+        val action: SmsAction = object : SmsAction(false) {
             override fun run() {
                 actionCalled = true
             }
