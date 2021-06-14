@@ -7,7 +7,7 @@ class VerifyConfirmResponse : SatlMessage() {
     var pairingStatus: PairingStatus? = null
         private set
 
-    override fun parse(byteBuf: ByteBuf?) {
-        pairingStatus = byteBuf?.let { PairingStatus.fromId(it.readUInt16LE()) }
+    override fun parse(byteBuf: ByteBuf) {
+        pairingStatus = PairingStatus.fromId(byteBuf.readUInt16LE())
     }
 }

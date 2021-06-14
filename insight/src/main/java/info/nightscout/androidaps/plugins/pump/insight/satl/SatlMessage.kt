@@ -20,29 +20,29 @@ abstract class SatlMessage {
     var nonce: Nonce? = null
     var commID: Long = 0
     lateinit var satlContent: ByteArray
-    protected open val data: ByteBuf?
+    protected open val data: ByteBuf
         get() = ByteBuf(0)
 
-    protected open fun parse(byteBuf: ByteBuf?) {}
+    protected open fun parse(byteBuf: ByteBuf) = Unit
+
     fun serialize(clazz: Class<out SatlMessage>, key: ByteArray?): ByteBuf {
-        val byteBuf: ByteBuf
-        byteBuf = if (nonce == null || key == null) serializeCRC(clazz) else serializeCTR(nonce!!.productionalBytes, key, SatlCommands.fromType(clazz).id)
+        val byteBuf: ByteBuf = if (nonce == null || key == null) serializeCRC(clazz) else serializeCTR(nonce!!.productionalBytes, key, SatlCommands.fromType(clazz).id)
         satlContent = byteBuf.getBytes(8, byteBuf.filledSize - 16)
         return byteBuf
     }
 
     private fun serializeCRC(clazz: Class<out SatlMessage>): ByteBuf {
-        val length = (data?.filledSize ?: 0) + 31
+        val length = data.filledSize + 31
         val byteBuf = ByteBuf(length + 8)
         byteBuf.putUInt32LE(PREAMBLE)
         byteBuf.putUInt16LE(length)
         byteBuf.putUInt16LE(length.inv())
         byteBuf.putByte(VERSION)
         byteBuf.putByte(SatlCommands.fromType(clazz).id)
-        byteBuf.putUInt16LE((data?.filledSize ?: 0) + 2)
+        byteBuf.putUInt16LE(data.filledSize + 2)
         byteBuf.putUInt32LE(if (clazz == KeyRequest::class.java) 1 else commID)
         byteBuf.putBytes(0x00.toByte(), 13)
-        byteBuf.putByteBuf(data!!)
+        byteBuf.putByteBuf(data)
         byteBuf.putUInt16LE(Cryptograph.calculateCRC(byteBuf.getBytes(8, length - 10)))
         byteBuf.putBytes(0x00.toByte(), 8)
         return byteBuf
@@ -50,7 +50,7 @@ abstract class SatlMessage {
 
     private fun serializeCTR(nonce: ByteBuf, key: ByteArray, commandId: Byte): ByteBuf {
         val data = data
-        val encryptedData = ByteBuf.from(Cryptograph.encryptDataCTR(data!!.bytes, key, nonce.bytes))
+        val encryptedData = ByteBuf.from(Cryptograph.encryptDataCTR(data.bytes, key, nonce.bytes))
         val length = 29 + encryptedData.filledSize
         val byteBuf = ByteBuf(length + 8)
         byteBuf.putUInt32LE(PREAMBLE)

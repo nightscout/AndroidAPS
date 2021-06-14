@@ -525,7 +525,7 @@ class InsightConnectionServiceXX : DaggerService(), ConnectionEstablisher.Callba
                 is ServiceChallengeMessage      -> processServiceChallengeMessage(appLayerMessage)
                 is GetFirmwareVersionsMessage   -> processFirmwareVersionsMessage(appLayerMessage)
                 is ReadParameterBlockMessage    -> processReadParameterBlockMessage(appLayerMessage)
-                is DisconnectMessage, null      -> Unit
+                is DisconnectMessage            -> Unit
                 else                            -> processGenericAppLayerMessage(appLayerMessage)
             }
 

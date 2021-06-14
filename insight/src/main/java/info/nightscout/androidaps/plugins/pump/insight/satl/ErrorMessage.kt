@@ -7,7 +7,7 @@ class ErrorMessage : SatlMessage() {
     var error: SatlError? = null
         private set
 
-    override fun parse(byteBuf: ByteBuf?) {
-        error = byteBuf?.let { SatlError.fromId(it.readByte()) }
+    override fun parse(byteBuf: ByteBuf) {
+        error = SatlError.fromId(byteBuf.readByte())
     }
 }

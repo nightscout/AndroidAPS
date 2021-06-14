@@ -4,8 +4,8 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
 
 class DataMessage : SatlMessage() {
 
-    public override var data: ByteBuf? = null
-    override fun parse(byteBuf: ByteBuf?) {
+    public override lateinit var data: ByteBuf
+    override fun parse(byteBuf: ByteBuf) {
         data = byteBuf
     }
 }
