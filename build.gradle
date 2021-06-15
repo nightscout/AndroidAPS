@@ -28,7 +28,7 @@ buildscript {
         work_version = '2.5.0'
 
         junit_version = '4.13.2'
-        mockitoVersion = '3.10.0'
+        mockitoVersion = '3.11.1'
         powermockVersion = '2.0.9'
         dexmakerVersion = "1.2"
         retrofit2Version = '2.9.0'
