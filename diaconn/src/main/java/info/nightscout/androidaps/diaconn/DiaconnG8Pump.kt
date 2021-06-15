@@ -21,6 +21,7 @@ class DiaconnG8Pump @Inject constructor(
     private val dateUtil: DateUtil
 ) {
 
+
     var maxBolusePerDay: Double = 0.0
     var pumpIncarnationNum: Int = 65536
     var isPumpVersionGe2_63: Boolean = false // is pumpVersion higher then 2.63
@@ -98,7 +99,16 @@ class DiaconnG8Pump @Inject constructor(
     var extendedBolusStart: Long = 0
     var extendedBolusDuration: Long = 0
     var extendedBolusAmount = 0.0
-    var isExtendedInProgress:Boolean = false
+    var isExtendedInProgress: Boolean
+        get() = extendedBolusStart != 0L && dateUtil.now() in extendedBolusStart..extendedBolusStart + extendedBolusDuration
+        set(isRunning) {
+            if (isRunning) throw IllegalArgumentException("Use to cancel EB only")
+            else {
+                extendedBolusStart = 0L
+                extendedBolusDuration = 0L
+                extendedBolusAmount = 0.0
+            }
+        }
     var extendedBolusPassedMinutes = 0
     var extendedBolusRemainingMinutes = 0
     var extendedBolusAbsoluteRate = 0.0
@@ -148,6 +158,11 @@ class DiaconnG8Pump @Inject constructor(
     var bolusStopped = false // bolus finished
     var bolusStopForced = false // bolus forced to stop by user
     var bolusDone = false // success end
+
+    // LGS Status
+    var lgsStatus: Int = 0     // LGS Status(1=LGS_ON, 2=LGS_OFF)
+    var lgsTime:Int = 0        // LGS Setting time (0~255 min)
+    var lgsElapsedTime:Int = 0 // LGS Passed Time (0~255 min)
 
     fun buildDiaconnG8ProfileRecord(nsProfile: Profile): Array<Double> {
         val record = Array(24) { 0.0 }

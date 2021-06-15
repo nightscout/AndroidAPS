@@ -16,6 +16,7 @@ import info.nightscout.androidaps.diaconn.DiaconnG8Pump
 import info.nightscout.androidaps.diaconn.R
 import info.nightscout.androidaps.diaconn.events.EventDiaconnG8NewStatus
 import info.nightscout.androidaps.diaconn.packet.*
+import info.nightscout.androidaps.diaconn.pumplog.PumplogUtil
 import info.nightscout.androidaps.dialogs.BolusProgressDialog
 import info.nightscout.androidaps.events.EventAppExit
 import info.nightscout.androidaps.events.EventInitializationChanged
@@ -39,6 +40,7 @@ import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.StringUtils
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
@@ -132,12 +134,19 @@ class DiaconnG8Service : DaggerService() {
         try {
             val pump = activePlugin.activePump
             rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.gettingpumpsettings)))
-            sendMessage(BasalLimitInquirePacket(injector), 2000) // basal Limit
-            sendMessage(SneckLimitInquirePacket(injector), 2000) // bolus Limit
-            sendMessage(BigMainInfoInquirePacket(injector), 2000) // Pump Main Info
-            sendMessage(SoundInquirePacket(injector), 2000) // sounds
-            sendMessage(DisplayTimeInquirePacket(injector), 2000) // display
-            sendMessage(LanguageInquirePacket(injector), 2000) // language
+
+            val pumpFirmwareVersion = sp.getString(resourceHelper.gs(R.string.pumpversion),"")
+
+            if(!StringUtils.emptyString(pumpFirmwareVersion) && PumplogUtil.isPumpVersionGe(pumpFirmwareVersion, 2, 83)) {
+                sendMessage(BigAPSMainInfoInquirePacket(injector), 2000) // APS Pump Main Info
+            } else {
+                sendMessage(BasalLimitInquirePacket(injector), 2000) // basal Limit
+                sendMessage(SneckLimitInquirePacket(injector), 2000) // bolus Limit
+                sendMessage(BigMainInfoInquirePacket(injector), 2000) // Pump Main Info
+                sendMessage(SoundInquirePacket(injector), 2000) // sounds
+                sendMessage(DisplayTimeInquirePacket(injector), 2000) // display
+                sendMessage(LanguageInquirePacket(injector), 2000) // language
+            }
 
             diaconnG8Pump.lastConnection = System.currentTimeMillis()
 
@@ -180,8 +189,7 @@ class DiaconnG8Service : DaggerService() {
                     rxBus.send(EventInitializationChanged())
                     return
                 } else {
-                    // 폰과 휴대폰의 시간 동기화
-                    // 임시기저가 진행 여부에 따른 시간설정 분기.
+
                     if(!diaconnG8Pump.isTempBasalInProgress) {
                         val msgPacket = TimeSettingPacket(injector, dateUtil.now(), offset)
                         sendMessage(msgPacket)
@@ -434,7 +442,7 @@ class DiaconnG8Service : DaggerService() {
         }
     }
 
-    fun tempBasal(absoluteRate: Double, durationInHours: Int): Boolean {
+    fun tempBasal(absoluteRate: Double, durationInHours: Double): Boolean {
         if (!isConnected) return false
         if (diaconnG8Pump.isTempBasalInProgress) {
             rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.stoppingtempbasal)))
@@ -447,7 +455,7 @@ class DiaconnG8Service : DaggerService() {
         }
         rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.settingtempbasal)))
         val tbInjectRate = ((absoluteRate*100) + 1000).toInt()
-        val msgTBR = TempBasalSettingPacket(injector, 1, (durationInHours * 60) / 15, tbInjectRate)
+        val msgTBR = TempBasalSettingPacket(injector, 1, ((durationInHours * 60) / 15).toInt(), tbInjectRate)
         sendMessage(msgTBR, 2000)
         // otp process
         if(!processConfirm(msgTBR.msgType)) return false
@@ -550,7 +558,7 @@ class DiaconnG8Service : DaggerService() {
         sendMessage(msgExtended, 2000)
         // otp process
         if(!processConfirm(msgExtended.msgType)) return false
-
+        //diaconnG8Pump.isExtendedInProgress = true
         loadHistory()
         val eb = pumpSync.expectedPumpState().extendedBolus
         diaconnG8Pump.fromExtendedBolus(eb)

@@ -332,11 +332,11 @@ class DiaconnG8Plugin @Inject constructor(
             }
             temporaryBasalStorage.add(PumpSync.PumpState.TemporaryBasal(dateUtil.now(), T.mins(durationInMinutes.toLong()).msecs(), absoluteRate, true, tbrType, 0L, 0L))
             // Convert duration from minutes to hours
-            aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Setting temp basal $absoluteAfterConstrain% for $durationInMinutes mins (doLowTemp || doHighTemp)")
+            aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Setting temp basal $absoluteAfterConstrain U for $durationInMinutes mins (doLowTemp || doHighTemp)")
             val connectionOK: Boolean = if (durationInMinutes == 15 || durationInMinutes == 30) {
                 diaconnG8Service?.tempBasalShortDuration(absoluteAfterConstrain, durationInMinutes) ?: false
             } else {
-                val durationInHours = max(durationInMinutes / 60, 1)
+                val durationInHours = max(durationInMinutes / 60.0, 1.0)
                 diaconnG8Service?.tempBasal(absoluteAfterConstrain, durationInHours) ?: false
             }
 
@@ -377,7 +377,6 @@ class DiaconnG8Plugin @Inject constructor(
     override fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
         var insulinAfterConstraint = constraintChecker.applyExtendedBolusConstraints(Constraint(insulin)).value()
         // needs to be rounded
-        //val durationInHalfHours = max(durationInMinutes / 30, 1)
         insulinAfterConstraint = Round.roundTo(insulinAfterConstraint, pumpDescription.extendedBolusStep)
         val result = PumpEnactResult(injector)
 

@@ -19,6 +19,7 @@ class DiaconnG8ResponseMessageHashTable @Inject constructor(val injector: HasAnd
 
     init {
         put(BigMainInfoInquireResponsePacket(injector))
+        put(BigAPSMainInfoInquireResponsePacket(injector))
         put(BigLogInquireResponsePacket(injector))
         put(InjectionSnackInquireResponsePacket(injector))
         put(SneckLimitInquireResponsePacket(injector))
