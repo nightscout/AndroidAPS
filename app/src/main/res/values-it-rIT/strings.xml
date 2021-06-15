@@ -919,4 +919,6 @@
     <string name="ns_receive_therapy_events_summary">Accetta eventi terapia (cambio cannula, insulina, batteria, ecc.) inseriti tramite NS o NSClient</string>
     <string name="ns_receive_cgm">Ricevi/riempi dati CGM</string>
     <string name="ns_receive_cgm_summary">Accetta dati CGM da NS</string>
+    <string name="sms_timeout_while_wating">Timeout nell\'attesa della fine della precedente comunicazione col micro.</string>
+    <string name="smscommunicator_another_bolus_in_queue">C\'è un altro bolo in coda. Riprova più tardi.</string>
 </resources>
