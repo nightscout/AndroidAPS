@@ -118,7 +118,7 @@ class DanaRSService : DaggerService() {
         try {
             val pump = activePlugin.activePump
             rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.gettingpumpsettings)))
-            sendMessage(DanaRSPacketEtcKeepConnection(injector)) // test encryption for v3
+            sendMessage(DanaRSPacketEtcKeepConnection(injector)) // test encryption for v3 & BLE
             sendMessage(DanaRSPacketGeneralGetShippingInformation(injector)) // serial no
             sendMessage(DanaRSPacketGeneralGetPumpCheck(injector)) // firmware
             sendMessage(DanaRSPacketBasalGetProfileNumber(injector))
