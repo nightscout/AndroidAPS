@@ -18,8 +18,8 @@ class DateTimeChangedEvent : HistoryEvent() {
     internal var beforeSecond = 0
         private set
 
-    override fun parse(byteBuf: ByteBuf?) {
-        byteBuf?.let {
+    override fun parse(byteBuf: ByteBuf) {
+        byteBuf.let {
             beforeYear = BOCUtil.parseBOC(it.readByte()) * 100 + BOCUtil.parseBOC(it.readByte())
             beforeMonth = BOCUtil.parseBOC(it.readByte())
             beforeDay = BOCUtil.parseBOC(it.readByte())

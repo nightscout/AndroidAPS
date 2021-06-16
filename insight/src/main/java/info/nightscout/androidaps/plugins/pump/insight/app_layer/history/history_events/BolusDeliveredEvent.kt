@@ -24,8 +24,8 @@ class BolusDeliveredEvent : HistoryEvent() {
     internal var bolusID = 0
         private set
 
-    override fun parse(byteBuf: ByteBuf?) {
-        byteBuf?.let {
+    override fun parse(byteBuf: ByteBuf) {
+        byteBuf.let {
             bolusType = fromId(it.readUInt16LE())
             it.shift(1)
             startHour = BOCUtil.parseBOC(it.readByte())

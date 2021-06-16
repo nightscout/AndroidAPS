@@ -16,8 +16,8 @@ class TotalDailyDoseEvent : HistoryEvent() {
     internal var totalDay = 0
         private set
 
-    override fun parse(byteBuf: ByteBuf?) {
-        byteBuf?.let {
+    override fun parse(byteBuf: ByteBuf) {
+        byteBuf.let {
             basalTotal = it.readUInt32Decimal100()
             bolusTotal = it.readUInt32Decimal100()
             totalYear = BOCUtil.parseBOC(it.readByte()) * 100 + BOCUtil.parseBOC(it.readByte())

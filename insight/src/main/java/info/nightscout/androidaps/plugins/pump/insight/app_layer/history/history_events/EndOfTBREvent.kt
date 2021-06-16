@@ -16,8 +16,8 @@ class EndOfTBREvent : HistoryEvent() {
     internal var duration = 0
         private set
 
-    override fun parse(byteBuf: ByteBuf?) {
-        byteBuf?.let {
+    override fun parse(byteBuf: ByteBuf) {
+        byteBuf.let {
             it.shift(1)
             startHour = BOCUtil.parseBOC(it.readByte())
             startMinute = BOCUtil.parseBOC(it.readByte())

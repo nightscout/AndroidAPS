@@ -34,7 +34,7 @@ open class HistoryEvent : Comparable<HistoryEvent> {
         }
     }
 
-    open fun parse(byteBuf: ByteBuf?) = Unit
+    open fun parse(byteBuf: ByteBuf) = Unit
 
     override fun compareTo(other: HistoryEvent): Int = (eventPosition - other.eventPosition).toInt()
 
