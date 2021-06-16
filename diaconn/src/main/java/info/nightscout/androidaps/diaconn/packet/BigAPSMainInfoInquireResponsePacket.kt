@@ -203,7 +203,6 @@ class BigAPSMainInfoInquireResponsePacket(
         }
 
         // extended bolus status
-        diaconnG8Pump.isExtendedInProgress = diaconnG8Pump.squareStatus == 1 || diaconnG8Pump.dualStatus == 1
         if(diaconnG8Pump.squareStatus == 1) { //square
             diaconnG8Pump.extendedBolusMinutes = diaconnG8Pump.squareTime
             diaconnG8Pump.extendedBolusAbsoluteRate = diaconnG8Pump.squareAmount
