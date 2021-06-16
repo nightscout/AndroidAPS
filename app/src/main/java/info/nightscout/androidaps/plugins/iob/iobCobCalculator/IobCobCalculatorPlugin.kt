@@ -130,7 +130,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
         runCalculation(reason, System.currentTimeMillis(), bgDataReload = false, limitDataToOldestAvailable = true, cause = event)
     }
 
-    fun clearCache() {
+    override fun clearCache() {
         synchronized(dataLock) {
             aapsLogger.debug(LTag.AUTOSENS, "Clearing cached data.")
             iobTable = LongSparseArray()
