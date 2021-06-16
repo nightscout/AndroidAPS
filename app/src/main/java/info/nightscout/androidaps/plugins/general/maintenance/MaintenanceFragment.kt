@@ -16,11 +16,13 @@ import info.nightscout.androidaps.events.EventNewBG
 import info.nightscout.androidaps.insight.database.InsightDatabase
 import info.nightscout.androidaps.interfaces.DataSyncSelector
 import info.nightscout.androidaps.interfaces.ImportExportPrefs
+import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.maintenance.activities.LogSettingActivity
+import info.nightscout.androidaps.plugins.general.overview.OverviewData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -44,6 +46,8 @@ class MaintenanceFragment : DaggerFragment() {
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var dataSyncSelector: DataSyncSelector
     @Inject lateinit var pumpSync: PumpSync
+    @Inject lateinit var iobCobCalculator: IobCobCalculator
+    @Inject lateinit var overviewData: OverviewData
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -77,6 +81,9 @@ class MaintenanceFragment : DaggerFragment() {
                             insightDatabase.clearAllTables()
                             dataSyncSelector.resetToNextFullSync()
                             pumpSync.connectNewPump()
+                            overviewData.reset()
+                            iobCobCalculator.ads.reset()
+                            iobCobCalculator.clearCache()
                         }
                             .subscribeOn(aapsSchedulers.io)
                             .observeOn(aapsSchedulers.main)

@@ -71,7 +71,7 @@ class MaintenancePlugin @Inject constructor(
         val files = logDir.listFiles { _: File?, name: String ->
             (name.startsWith("AndroidAPS") && name.endsWith(".zip"))
         }
-        Arrays.sort(files) { f1: File, f2: File -> f1.name.compareTo(f2.name) }
+        Arrays.sort(files) { f1: File, f2: File -> f2.name.compareTo(f1.name) }
         var delFiles = listOf(*files)
         val amount = sp.getInt(R.string.key_logshipper_amount, keep)
         val keepIndex = amount - 1
