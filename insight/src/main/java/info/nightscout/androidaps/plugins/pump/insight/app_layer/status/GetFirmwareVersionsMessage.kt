@@ -11,9 +11,9 @@ class GetFirmwareVersionsMessage : AppLayerMessage(MessagePriority.NORMAL, false
     var firmwareVersions: FirmwareVersions? = null
         private set
 
-    override fun parse(byteBuf: ByteBuf?) {
+    override fun parse(byteBuf: ByteBuf) {
         firmwareVersions = FirmwareVersions().apply {
-            byteBuf?.let {
+            byteBuf.let {
                 releaseSWVersion = it.readASCII(13)
                 uiProcSWVersion = it.readASCII(11)
                 pcProcSWVersion = it.readASCII(11)

@@ -19,7 +19,7 @@ open class AppLayerMessage(private val messagePriority: MessagePriority, private
         get() = ByteBuf(0)
 
     @Throws(Exception::class)
-    protected open fun parse(byteBuf: ByteBuf?) = Unit
+    protected open fun parse(byteBuf: ByteBuf) = Unit
 
     fun serialize(clazz: Class<out AppLayerMessage?>?): ByteBuf {
         val data = data.bytes

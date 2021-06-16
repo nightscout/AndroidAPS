@@ -10,9 +10,9 @@ class ActivateServiceMessage : AppLayerMessage(MessagePriority.NORMAL, false, fa
     var serviceID: Byte = 0
     var version: Short = 0
     lateinit var servicePassword: ByteArray
-    override fun parse(byteBuf: ByteBuf?) {
-        serviceID = byteBuf?.readByte() ?: 0
-        version = byteBuf?.readShort() ?: 0
+    override fun parse(byteBuf: ByteBuf) {
+        serviceID = byteBuf.readByte() ?: 0
+        version = byteBuf.readShort() ?: 0
     }
 
     override val data: ByteBuf

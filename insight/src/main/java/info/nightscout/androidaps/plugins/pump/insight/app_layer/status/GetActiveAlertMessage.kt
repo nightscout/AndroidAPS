@@ -14,9 +14,9 @@ class GetActiveAlertMessage : AppLayerMessage(MessagePriority.NORMAL, true, fals
     internal var alert: Alert? = null
         private set
 
-    override fun parse(byteBuf: ByteBuf?) {
+    override fun parse(byteBuf: ByteBuf) {
         val alert = Alert().apply {
-            byteBuf?.let {
+            byteBuf.let {
                 alertId = it.readUInt16LE()
                 alertCategory = AlertCategory.fromId(it.readUInt16LE())
                 alertType = AlertType.fromId(it.readUInt16LE())

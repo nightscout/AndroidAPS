@@ -12,9 +12,9 @@ class GetActiveBasalRateMessage : AppLayerMessage(MessagePriority.NORMAL, true, 
     internal var activeBasalRate: ActiveBasalRate? = null
         private set
 
-    override fun parse(byteBuf: ByteBuf?) {
+    override fun parse(byteBuf: ByteBuf) {
         val activeBasalRate = ActiveBasalRate().apply {
-            byteBuf?.let {
+            byteBuf.let {
                 activeBasalProfile = BasalProfile.fromId(it.readUInt16LE())
                 activeBasalProfileName = it.readUTF16(30)
                 activeBasalRate = it.readUInt16Decimal()

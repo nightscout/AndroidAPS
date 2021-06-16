@@ -24,8 +24,8 @@ class WriteConfigurationBlockMessage : AppLayerMessage(MessagePriority.NORMAL, f
             return data
         }
 
-    override fun parse(byteBuf: ByteBuf?) {
-        configurationBlockId = ParameterBlocks.fromId(byteBuf!!.readUInt16LE())!!.type
+    override fun parse(byteBuf: ByteBuf) {
+        configurationBlockId = ParameterBlocks.fromId(byteBuf.readUInt16LE())!!.type
     }
 
     fun setParameterBlock(parameterBlock: ParameterBlock?) {

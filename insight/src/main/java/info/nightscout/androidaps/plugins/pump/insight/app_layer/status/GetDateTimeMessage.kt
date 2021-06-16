@@ -11,9 +11,9 @@ class GetDateTimeMessage : AppLayerMessage(MessagePriority.NORMAL, true, false, 
     internal var pumpTime: PumpTime? = null
         private set
 
-    override fun parse(byteBuf: ByteBuf?) {
+    override fun parse(byteBuf: ByteBuf) {
         pumpTime = PumpTime().apply {
-            byteBuf?.let {
+            byteBuf.let {
                 year = it.readUInt16LE()
                 month = it.readUInt8().toInt()
                 day = it.readUInt8().toInt()

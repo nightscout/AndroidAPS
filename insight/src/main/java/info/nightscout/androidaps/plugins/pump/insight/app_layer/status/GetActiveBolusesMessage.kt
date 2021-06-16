@@ -11,12 +11,12 @@ import java.util.*
 class GetActiveBolusesMessage : AppLayerMessage(MessagePriority.NORMAL, true, false, Service.STATUS) {
 
     internal var activeBoluses: MutableList<ActiveBolus>? = null
-    override fun parse(byteBuf: ByteBuf?) {
+    override fun parse(byteBuf: ByteBuf) {
         activeBoluses = mutableListOf()
         activeBoluses?.let {
             for (i in 0..2) {
                 val activeBolus = ActiveBolus().apply {
-                    byteBuf?.let { it2 ->
+                    byteBuf.let { it2 ->
                         bolusID = it2.readUInt16LE()
                         bolusType = BolusType.fromActiveId(it2.readUInt16LE())
                         it2.shift(2)

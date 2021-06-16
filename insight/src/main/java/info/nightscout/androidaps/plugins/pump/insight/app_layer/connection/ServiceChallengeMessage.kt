@@ -11,8 +11,8 @@ class ServiceChallengeMessage : AppLayerMessage(MessagePriority.NORMAL, false, f
     lateinit var randomData: ByteArray
         private set
     var version: Short = 0
-    override fun parse(byteBuf: ByteBuf?) {
-        randomData = byteBuf!!.getBytes(16)
+    override fun parse(byteBuf: ByteBuf) {
+        randomData = byteBuf.getBytes(16)
     }
 
     override val data: ByteBuf

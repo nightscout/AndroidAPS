@@ -22,8 +22,8 @@ class GetPumpStatusRegisterMessage : AppLayerMessage(MessagePriority.NORMAL, fal
     internal var isActiveBolusesChanged = false
         private set
 
-    override fun parse(byteBuf: ByteBuf?) {
-        byteBuf?.let {
+    override fun parse(byteBuf: ByteBuf) {
+        byteBuf.let {
             isOperatingModeChanged = it.readBoolean()
             isBatteryStatusChanged = it.readBoolean()
             isCartridgeStatusChanged = it.readBoolean()

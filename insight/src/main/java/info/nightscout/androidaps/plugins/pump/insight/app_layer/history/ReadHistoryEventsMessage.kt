@@ -10,10 +10,10 @@ class ReadHistoryEventsMessage : AppLayerMessage(MessagePriority.NORMAL, true, f
 
     internal var historyEvents: MutableList<HistoryEvent> = mutableListOf()
 
-     override fun parse(byteBuf: ByteBuf?) {
+     override fun parse(byteBuf: ByteBuf) {
         historyEvents = mutableListOf()
         historyEvents.let {
-            byteBuf?.let { it1 ->
+            byteBuf.let { it1 ->
                 it1.shift(2)
                 val frameCount = it1.readUInt16LE()
                 for (i in 0 until frameCount) {

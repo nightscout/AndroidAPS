@@ -13,9 +13,9 @@ class GetBatteryStatusMessage : AppLayerMessage(MessagePriority.NORMAL, false, f
     internal var batteryStatus: BatteryStatus? = null
         private set
 
-    override fun parse(byteBuf: ByteBuf?) {
+    override fun parse(byteBuf: ByteBuf) {
         batteryStatus = BatteryStatus().apply {
-            byteBuf?.let {
+            byteBuf.let {
                 batteryType = BatteryType.fromId(it.readUInt16LE())
                 batteryAmount = it.readUInt16LE()
                 symbolStatus = SymbolStatus.fromId(it.readUInt16LE())

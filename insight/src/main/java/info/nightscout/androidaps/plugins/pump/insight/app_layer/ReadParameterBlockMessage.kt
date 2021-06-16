@@ -18,13 +18,11 @@ class ReadParameterBlockMessage : AppLayerMessage(MessagePriority.NORMAL, true, 
             return byteBuf
         }
 
-    @Throws(Exception::class) override fun parse(byteBuf: ByteBuf?) {
-        if (byteBuf != null) {
-            parameterBlock = ParameterBlocks.fromId(byteBuf.readUInt16LE())?.type?.newInstance()
-            parameterBlock?.let {
-                byteBuf.shift(2) //Restriction level
-                it.parse(byteBuf)
-            }
+    @Throws(Exception::class) override fun parse(byteBuf: ByteBuf) {
+        parameterBlock = ParameterBlocks.fromId(byteBuf.readUInt16LE())?.type?.newInstance()
+        parameterBlock?.let {
+            byteBuf.shift(2) //Restriction level
+            it.parse(byteBuf)
         }
     }
 

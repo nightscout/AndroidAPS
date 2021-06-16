@@ -11,9 +11,9 @@ class GetActiveTBRMessage : AppLayerMessage(MessagePriority.NORMAL, true, false,
     internal var activeTBR: ActiveTBR? = null
         private set
 
-    override fun parse(byteBuf: ByteBuf?) {
+    override fun parse(byteBuf: ByteBuf) {
         val activeTBR = ActiveTBR().apply {
-            byteBuf?.let {
+            byteBuf.let {
                 percentage = it.readUInt16LE()
                 remainingDuration = it.readUInt16LE()
                 initialDuration = it.readUInt16LE()

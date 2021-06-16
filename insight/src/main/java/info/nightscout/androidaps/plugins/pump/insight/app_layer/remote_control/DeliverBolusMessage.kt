@@ -35,8 +35,8 @@ class DeliverBolusMessage : AppLayerMessage(MessagePriority.NORMAL, true, true, 
             return byteBuf
         }
 
-    @Throws(Exception::class) override fun parse(byteBuf: ByteBuf?) {
-        byteBuf?.run { bolusId = readUInt16LE() }
+    @Throws(Exception::class) override fun parse(byteBuf: ByteBuf) {
+        byteBuf.run { bolusId = readUInt16LE() }
     }
 
 }

@@ -13,9 +13,9 @@ class GetCartridgeStatusMessage : AppLayerMessage(MessagePriority.NORMAL, false,
     internal var cartridgeStatus: CartridgeStatus? = null
         private set
 
-    override fun parse(byteBuf: ByteBuf?) {
+    override fun parse(byteBuf: ByteBuf) {
         cartridgeStatus = CartridgeStatus().apply {
-            byteBuf?.let {
+            byteBuf.let {
                 isInserted = it.readBoolean()
                 cartridgeType = CartridgeType.fromId(it.readUInt16LE())
                 symbolStatus = SymbolStatus.fromId(it.readUInt16LE())
