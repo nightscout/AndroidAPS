@@ -1,8 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.insight.app_layer
 
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.Service.Companion.fromId
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.AppCommands
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.AppCommands.Companion.fromType
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.AppErrors
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.MessagePriority
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.IncompatibleAppVersionException
@@ -21,12 +19,12 @@ open class AppLayerMessage(private val messagePriority: MessagePriority, private
     @Throws(Exception::class)
     protected open fun parse(byteBuf: ByteBuf) = Unit
 
-    fun serialize(clazz: Class<out AppLayerMessage?>?): ByteBuf {
+    fun serialize(clazz: Class<out AppLayerMessage?>): ByteBuf {
         val data = data.bytes
         val byteBuf = ByteBuf(4 + data.size + if (outCRC) 2 else 0)
         byteBuf.putByte(VERSION)
         byteBuf.putByte(service!!.id)
-        byteBuf.putUInt16LE(fromType(clazz!!)!!.id)
+        byteBuf.putUInt16LE(AppCommands.fromType(clazz))
         byteBuf.putBytes(data)
         if (outCRC) byteBuf.putUInt16LE(Cryptograph.calculateCRC(data))
         return byteBuf
@@ -39,20 +37,20 @@ open class AppLayerMessage(private val messagePriority: MessagePriority, private
     companion object {
 
         private const val VERSION: Byte = 0x20
-        @Throws(Exception::class) fun deserialize(byteBuf: ByteBuf): AppLayerMessage {
+        fun deserialize(byteBuf: ByteBuf): AppLayerMessage {
             val version = byteBuf.readByte()
             val service = byteBuf.readByte()
             val command = byteBuf.readUInt16LE()
             val error = byteBuf.readUInt16LE()
-            val clazz = AppCommands.fromId(command)!!.type
+            val clazz = AppCommands.fromId(command)
             if (version != VERSION) throw IncompatibleAppVersionException()
-            val message = clazz.newInstance()
-            if (fromId(service) == null) throw UnknownServiceException()
-            if (error != 0) {
+            val message = clazz?.newInstance()
+            if (Service.fromId(service) == null) throw UnknownServiceException()
+            if (error != 0 || message == null) {
                 val exceptionClass = AppErrors.fromId(error)?.type
                 if (exceptionClass == null) throw UnknownAppLayerErrorCodeException(error) else throw exceptionClass.getConstructor(Int::class.javaPrimitiveType).newInstance(error)!!
             }
-            val data = byteBuf.readBytes(byteBuf.filledSize - if (message!!.inCRC) 2 else 0)
+            val data = byteBuf.readBytes(byteBuf.filledSize - if (message.inCRC) 2 else 0)
             if (message.inCRC && Cryptograph.calculateCRC(data) != byteBuf.readUInt16LE()) throw InvalidAppCRCException()
             message.parse(ByteBuf.from(data))
             return message
