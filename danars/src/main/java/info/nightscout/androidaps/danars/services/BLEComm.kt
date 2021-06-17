@@ -143,6 +143,27 @@ class BLEComm @Inject internal constructor(
     fun disconnect(from: String) {
         aapsLogger.debug(LTag.PUMPBTCOMM, "disconnect from: $from")
 
+        if (!encryptedDataRead && encryptedCommandSent && encryption == EncryptionType.ENCRYPTION_BLE5) {
+            // there was no response from pump after started encryption
+            // assume pairing keys are invalid
+            val lastClearRequest = sp.getLong(R.string.key_rs_last_clear_key_request, 0)
+            if (lastClearRequest != 0L && dateUtil.isOlderThan(lastClearRequest, 5)) {
+                ToastUtils.showToastInUiThread(context, R.string.invalidpairing)
+                danaRSPlugin.changePump()
+                sp.getStringOrNull(R.string.key_danars_address, null)?.let { address ->
+                    bluetoothAdapter?.getRemoteDevice(address)?.let { device ->
+                        try {
+                            device::class.java.getMethod("removeBond").invoke(device)
+                        } catch (e: Exception) {
+                            aapsLogger.error("Removing bond has been failed. ${e.message}")
+                        }
+                    }
+                }
+            } else if (lastClearRequest == 0L) {
+                aapsLogger.error("Clearing pairing keys postponed")
+                sp.putLong(R.string.key_rs_last_clear_key_request, dateUtil.now())
+            }
+        }
         if (!encryptedDataRead && encryptedCommandSent && encryption == EncryptionType.ENCRYPTION_RSv3) {
             // there was no response from pump after started encryption
             // assume pairing keys are invalid
@@ -177,6 +198,28 @@ class BLEComm @Inject internal constructor(
     }
 
     @Synchronized fun close() {
+        if (!encryptedDataRead && !encryptedCommandSent) {
+            // there was no response from pump before started encryption
+            // assume pairing is invalid
+            val lastClearRequest = sp.getLong(R.string.key_rs_last_clear_key_request, 0)
+            if (lastClearRequest != 0L && dateUtil.isOlderThan(lastClearRequest, 5)) {
+                ToastUtils.showToastInUiThread(context, R.string.invalidpairing)
+                danaRSPlugin.changePump()
+                sp.getStringOrNull(R.string.key_danars_address, null)?.let { address ->
+                    bluetoothAdapter?.getRemoteDevice(address)?.let { device ->
+                        try {
+                            aapsLogger.debug(LTag.PUMPBTCOMM, "Removing bond")
+                            device::class.java.getMethod("removeBond").invoke(device)
+                        } catch (e: Exception) {
+                            aapsLogger.error("Removing bond has been failed. ${e.message}")
+                        }
+                    }
+                }
+            } else if (lastClearRequest == 0L) {
+                aapsLogger.error("Clearing pairing keys postponed")
+                sp.putLong(R.string.key_rs_last_clear_key_request, dateUtil.now())
+            }
+        }
         aapsLogger.debug(LTag.PUMPBTCOMM, "BluetoothAdapter close")
         bluetoothGatt?.close()
         bluetoothGatt = null
@@ -719,6 +762,10 @@ class BLEComm @Inject internal constructor(
         processedMessage = message
         val command = byteArrayOf(message.type.toByte(), message.opCode.toByte())
         val params = message.getRequestParams()
+        if (bluetoothGatt == null) {
+            aapsLogger.debug(LTag.PUMPBTCOMM, ">>>>> IGNORING (NOT CONNECTED) " + message.friendlyName + " " + DanaRSPacket.toHexString(command) + " " + DanaRSPacket.toHexString(params))
+            return
+        }
         aapsLogger.debug(LTag.PUMPBTCOMM, ">>>>> " + message.friendlyName + " " + DanaRSPacket.toHexString(command) + " " + DanaRSPacket.toHexString(params))
         var bytes = bleEncryption.getEncryptedPacket(message.opCode, params, null)
         // aapsLogger.debug(LTag.PUMPBTCOMM, ">>>>> " + DanaRS_Packet.toHexString(bytes))
@@ -782,7 +829,7 @@ class BLEComm @Inject internal constructor(
             aapsLogger.warn(LTag.PUMPBTCOMM, "Reply not received " + message.friendlyName)
             message.handleMessageNotReceived()
         }
-        // verify encryption for v3
+        // verify encryption for v3 & BLE
         if (message is DanaRSPacketEtcKeepConnection)
             if (!message.isReceived) disconnect("KeepAlive not received")
     }
