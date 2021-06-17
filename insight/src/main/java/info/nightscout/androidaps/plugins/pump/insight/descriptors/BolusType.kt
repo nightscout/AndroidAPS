@@ -6,8 +6,8 @@ enum class BolusType (val id: Int,val activeId: Int)  {
     MULTIWAVE (252, 805);
 
     companion object {
-        fun fromActiveId(activeId: Int) = values().firstOrNull { it.activeId == activeId } ?:MULTIWAVE
-        fun fromId(id: Int) = values().firstOrNull { it.id == id } ?:MULTIWAVE
+        fun fromActiveId(activeId: Int) = values().firstOrNull { it.activeId == activeId }
+        fun fromId(id: Int) = values().firstOrNull { it.id == id }
 
     }
 }

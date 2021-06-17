@@ -6,6 +6,6 @@ enum class SymbolStatus (val id: Int) {
     EMPTY (252);
 
     companion object {
-        fun fromId(id: Int) = values().firstOrNull { it.id == id } ?:FULL
+        fun fromId(id: Int) = values().firstOrNull { it.id == id }
     }
 }
