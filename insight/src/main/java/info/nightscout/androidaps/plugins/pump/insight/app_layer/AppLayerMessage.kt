@@ -46,7 +46,7 @@ open class AppLayerMessage(private val messagePriority: MessagePriority, private
             if (version != VERSION) throw IncompatibleAppVersionException()
             if (Service.fromId(service) == null) throw UnknownServiceException()
             if (error != 0 || message == null) {
-                val exceptionClass = AppErrors.fromId(error)?.type
+                val exceptionClass = AppErrors.fromId(error)
                 if (exceptionClass == null) throw UnknownAppLayerErrorCodeException(error) else throw exceptionClass.getConstructor(Int::class.javaPrimitiveType).newInstance(error)!!
             }
             val data = byteBuf.readBytes(byteBuf.filledSize - if (message.inCRC) 2 else 0)
