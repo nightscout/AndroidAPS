@@ -31,6 +31,7 @@ class TempBasalProcessDTO constructor(var itemOne: PumpHistoryEntry,
 
     val durationAsSeconds: Int
         get() {
+            aapsLogger.debug(LTag.PUMP, "durationAsSeconds: [objectType=$objectType]")
             if (objectType == ObjectType.TemporaryBasal) {
                 if (itemTwo == null) {
                     if (itemOneTbr != null) {
