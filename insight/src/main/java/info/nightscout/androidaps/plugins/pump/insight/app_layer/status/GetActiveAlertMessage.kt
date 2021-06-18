@@ -37,6 +37,7 @@ class GetActiveAlertMessage : AppLayerMessage(MessagePriority.NORMAL, true, fals
                         }
 
                         AlertType.WARNING_31    -> cartridgeAmount = it.readUInt16Decimal()
+                        else                    -> Unit     // added to remove build warning
                     }
                 }
             }

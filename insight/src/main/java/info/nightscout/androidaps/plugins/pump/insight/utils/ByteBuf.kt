@@ -4,7 +4,6 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 import java.nio.charset.StandardCharsets
 import kotlin.experimental.and
-import kotlin.experimental.or
 
 class ByteBuf(length: Int) {
 
@@ -25,7 +24,7 @@ class ByteBuf(length: Int) {
 
     // public byte getByte(int position) { return _bytes[position]; }
     private val byte: Byte
-        private get() = _bytes[0]
+        get() = _bytes[0]
 
     fun readByte(): Byte {
         val b = byte
@@ -109,9 +108,9 @@ class ByteBuf(length: Int) {
     }
 
     fun getUInt16LE(position: Int): Int {
-        var position = position
-        return  (_bytes[position++].toShort() and 0xFF) +
-                (_bytes[position].toShort() and 0xFF) * 256 // Convert to short and replace "or" by "+" and "shl 8" by "* 256" to fix convertion compared to java
+        var p = position
+        return  (_bytes[p++].toShort() and 0xFF) +
+                (_bytes[p].toShort() and 0xFF) * 256 // Convert to short and replace "or" by "+" and "shl 8" by "* 256" to fix convertion compared to java
     }
 
     //private int getUInt16LE() { return getUInt16LE(0); }
@@ -181,10 +180,10 @@ class ByteBuf(length: Int) {
     }
 
     private fun getShort(position: Int): Short {
-        var position = position
+        var p = position
         return (
-                (_bytes[position++].toLong() and 0xFF) shl 8 or
-                (_bytes[position].toLong() and 0xFF)
+                (_bytes[p++].toLong() and 0xFF) shl 8 or
+                (_bytes[p].toLong() and 0xFF)
             ).toShort()  // Convert to Long and keep "or", "and" & "shl" to fix convertion compared to java
     }
 
@@ -201,11 +200,11 @@ class ByteBuf(length: Int) {
     }
 
     private fun getUInt32LE(position: Int): Long {
-        var position = position
-        return _bytes[position++].toLong() and 0xFF or (
-            _bytes[position++].toLong() and 0xFF shl 8) or (
-            _bytes[position++].toLong() and 0xFF shl 16) or (
-            _bytes[position].toLong() and 0xFF shl 24)
+        var p = position
+        return _bytes[p++].toLong() and 0xFF or (
+            _bytes[p++].toLong() and 0xFF shl 8) or (
+            _bytes[p++].toLong() and 0xFF shl 16) or (
+            _bytes[p].toLong() and 0xFF shl 24)
     }
 
     // private long getUInt32LE() { return getUInt32LE(0); }

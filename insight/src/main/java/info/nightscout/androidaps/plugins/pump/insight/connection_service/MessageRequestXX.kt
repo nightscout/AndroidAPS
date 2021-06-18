@@ -25,7 +25,7 @@ open class MessageRequestXX<T : AppLayerMessage?> internal constructor(var reque
         }
     }
 
-    override fun compareTo(messageRequest: MessageRequest<*>): Int {
-        return request!!.compareTo(messageRequest.request!!)
+    override fun compareTo(other: MessageRequest<*>): Int {
+        return request!!.compareTo(other.request!!)
     }
 }

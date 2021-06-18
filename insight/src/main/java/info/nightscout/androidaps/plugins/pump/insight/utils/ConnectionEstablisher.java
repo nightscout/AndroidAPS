@@ -36,8 +36,8 @@ public class ConnectionEstablisher extends Thread {
         }
         if (forPairing && bluetoothDevice.getBondState() != BluetoothDevice.BOND_NONE) {
             try {
-                Method removeBond = bluetoothDevice.getClass().getMethod("removeBond", null);   // getMethod("removeBond", (Class[]) null);
-                removeBond.invoke(bluetoothDevice, null);                                                    // invoke(bluetoothDevice, (Object[]) null);
+                Method removeBond = bluetoothDevice.getClass().getMethod("removeBond", (Class[]) null);   // getMethod("removeBond", (Class[]) null);
+                removeBond.invoke(bluetoothDevice, (Object[]) null);                                                    // invoke(bluetoothDevice, (Object[]) null);
             } catch (ReflectiveOperationException e) {
                 if (!isInterrupted()) callback.onConnectionFail(e, 0);
                 return;
