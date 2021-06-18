@@ -377,7 +377,7 @@ class InsightConnectionServiceXX : DaggerService(), ConnectionEstablisher.Callba
             pairingDataStorage.lastNonceSent = it
             satlMessage.nonce = it
         }
-        val serialized = satlMessage.serialize(satlMessage.javaClass, pairingDataStorage.outgoingKey)
+        val serialized = satlMessage.serialize(pairingDataStorage.outgoingKey)
         timeoutTimer?.interrupt()
         timeoutTimer = DelayedActionThread.runDelayed("TimeoutTimer", RESPONSE_TIMEOUT) {
             timeoutTimer = null

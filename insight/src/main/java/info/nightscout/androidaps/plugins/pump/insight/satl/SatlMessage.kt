@@ -12,7 +12,6 @@ import info.nightscout.androidaps.plugins.pump.insight.exceptions.InvalidPacketL
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.IncompatibleSatlVersionException
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.InvalidSatlCommandException
 import info.nightscout.androidaps.plugins.pump.insight.utils.Nonce
-import java.lang.Exception
 import java.util.*
 
 abstract class SatlMessage {
@@ -25,22 +24,22 @@ abstract class SatlMessage {
 
     protected open fun parse(byteBuf: ByteBuf) = Unit
 
-    fun serialize(clazz: Class<out SatlMessage>, key: ByteArray?): ByteBuf {
-        val byteBuf: ByteBuf = if (nonce == null || key == null) serializeCRC(clazz) else serializeCTR(nonce!!.productionalBytes, key, SatlCommands.fromType(clazz).id)
+    fun serialize(key: ByteArray?): ByteBuf {
+        val byteBuf: ByteBuf = if (nonce == null || key == null) serializeCRC() else serializeCTR(nonce!!.productionalBytes, key, SatlCommands.fromType(this))
         satlContent = byteBuf.getBytes(8, byteBuf.filledSize - 16)
         return byteBuf
     }
 
-    private fun serializeCRC(clazz: Class<out SatlMessage>): ByteBuf {
+    private fun serializeCRC(): ByteBuf {
         val length = data.filledSize + 31
         val byteBuf = ByteBuf(length + 8)
         byteBuf.putUInt32LE(PREAMBLE)
         byteBuf.putUInt16LE(length)
         byteBuf.putUInt16LE(length.inv())
         byteBuf.putByte(VERSION)
-        byteBuf.putByte(SatlCommands.fromType(clazz).id)
+        byteBuf.putByte(SatlCommands.fromType(this))
         byteBuf.putUInt16LE(data.filledSize + 2)
-        byteBuf.putUInt32LE(if (clazz == KeyRequest::class.java) 1 else commID)
+        byteBuf.putUInt32LE(if (this is KeyRequest) 1 else commID)
         byteBuf.putBytes(0x00.toByte(), 13)
         byteBuf.putByteBuf(data)
         byteBuf.putUInt16LE(Cryptograph.calculateCRC(byteBuf.getBytes(8, length - 10)))
@@ -80,14 +79,14 @@ abstract class SatlMessage {
         }
 
         @Throws(InvalidMacTrailerException::class, InvalidNonceException::class, InvalidPreambleException::class, InvalidPacketLengthsException::class, IncompatibleSatlVersionException::class, InvalidSatlCommandException::class)
-        private fun deserializeCTR(data: ByteBuf, lastNonce: Nonce, key: ByteArray): SatlMessage? {
+        private fun deserializeCTR(data: ByteBuf, lastNonce: Nonce, key: ByteArray): SatlMessage {
             val preamble = data.readUInt32LE()
             val packetLength = data.readUInt16LE()
             val packetLengthXOR = data.readUInt16LE() xor 65535
             val header = data.getBytes(21)
             val version = data.readByte()
             val commandId = data.readByte()
-            val clazz = SatlCommands.fromId(commandId)?.type
+            val message = SatlCommands.fromId(commandId)
             val dataLength = data.readUInt16LE()
             val commId = data.readUInt32LE()
             val nonce = data.readBytes(13)
@@ -100,12 +99,8 @@ abstract class SatlMessage {
             if (preamble != PREAMBLE) throw InvalidPreambleException()
             if (packetLength != packetLengthXOR) throw InvalidPacketLengthsException()
             if (version != VERSION) throw IncompatibleSatlVersionException()
-            if (clazz == null) throw InvalidSatlCommandException()
-            var message: SatlMessage? = null
-            try {
-                message = clazz.newInstance()
-            } catch (ignored: Exception) {}
-            return message?.also {
+            if (message == null) throw InvalidSatlCommandException()
+            return message.also {
                 it.parse(ByteBuf.from(payload))
                 it.nonce = parsedNonce
                 it.commID = commId
@@ -113,14 +108,14 @@ abstract class SatlMessage {
         }
 
         @Throws(InvalidSatlCRCException::class, InvalidPreambleException::class, InvalidPacketLengthsException::class, IncompatibleSatlVersionException::class, InvalidSatlCommandException::class)
-        private fun deserializeCRC(data: ByteBuf): SatlMessage? {
+        private fun deserializeCRC(data: ByteBuf): SatlMessage {
             val preamble = data.readUInt32LE()
             val packetLength = data.readUInt16LE()
             val packetLengthXOR = data.readUInt16LE() xor 65535
             val crcContent = data.getBytes(packetLength - 10)
             val version = data.readByte()
             val commandId = data.readByte()
-            val clazz = SatlCommands.fromId(commandId)?.type
+            val message = SatlCommands.fromId(commandId)
             val dataLength = data.readUInt16LE()
             val commId = data.readUInt32LE()
             val nonce = data.readBytes(13)
@@ -131,13 +126,8 @@ abstract class SatlMessage {
             if (preamble != PREAMBLE) throw InvalidPreambleException()
             if (packetLength != packetLengthXOR) throw InvalidPacketLengthsException()
             if (version != VERSION) throw IncompatibleSatlVersionException()
-            if (clazz == null) throw InvalidSatlCommandException()
-            var message: SatlMessage? = null
-            try {
-                message = clazz.newInstance()
-            } catch (ignored: Exception) {
-            }
-            return message?.also {
+            if (message == null) throw InvalidSatlCommandException()
+            return message.also {
                 it.parse(ByteBuf.from(payload))
                 it.nonce = Nonce.fromProductionalBytes(nonce)
                 it.commID = commId

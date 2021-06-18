@@ -480,7 +480,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
             pairingDataStorage.setLastNonceSent(nonce);
             satlMessage.setNonce(nonce);
         }
-        ByteBuf serialized = satlMessage.serialize(satlMessage.getClass(), pairingDataStorage.getOutgoingKey());
+        ByteBuf serialized = satlMessage.serialize(pairingDataStorage.getOutgoingKey());
         if (timeoutTimer != null) timeoutTimer.interrupt();
         timeoutTimer = DelayedActionThread.Companion.runDelayed("TimeoutTimer", RESPONSE_TIMEOUT, () -> {
             timeoutTimer = null;
