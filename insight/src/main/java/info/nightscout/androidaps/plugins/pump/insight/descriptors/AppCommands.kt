@@ -11,80 +11,80 @@ import info.nightscout.androidaps.plugins.pump.insight.app_layer.status.*
 class AppCommands (val id: Int, val type: Class<out AppLayerMessage?>)  {
 
     companion object {
-        fun fromId(id: Int) : Class<out AppLayerMessage?>? = when (id) {
-            CONNECTMESSAGE                        -> ConnectMessage::class.java
-            BINDMESSAGE                           -> BindMessage::class.java
-            DISCONNECTMESSAGE                     -> DisconnectMessage::class.java
-            ACTIVATESERVICEMESSAGE                -> ActivateServiceMessage::class.java
-            SERVICECHALLENGEMESSAGE               -> ServiceChallengeMessage::class.java
-            GETACTIVEALERTMESSAGE                 -> GetActiveAlertMessage::class.java
-            GETACTIVEBOLUSESMESSAGE               -> GetActiveBolusesMessage::class.java
-            GETACTIVETBRMESSAGE                   -> GetActiveTBRMessage::class.java
-            GETAVAILABLEBOLUSTYPESMESSAGE         -> GetAvailableBolusTypesMessage::class.java
-            GETBATTERYSTATUSMESSAGE               -> GetBatteryStatusMessage::class.java
-            GETCARTRIDGESTATUSMESSAGE             -> GetCartridgeStatusMessage::class.java
-            GETDATETIMEMESSAGE                    -> GetDateTimeMessage::class.java
-            GETFIRMWAREVERSIONSMESSAGE            -> GetFirmwareVersionsMessage::class.java
-            GETOPERATINGMODEMESSAGE               -> GetOperatingModeMessage::class.java
-            GETPUMPSTATUSREGISTERMESSAGE          -> GetPumpStatusRegisterMessage::class.java
-            RESETPUMPSTATUSREGISTERMESSAGE        -> ResetPumpStatusRegisterMessage::class.java
-            GETACTIVEBASALRATEMESSAGE             -> GetActiveBasalRateMessage::class.java
-            GETTOTALDAILYDOSEMESSAGE              -> GetTotalDailyDoseMessage::class.java
-            CANCELTBRMESSAGE                      -> CancelTBRMessage::class.java
-            CANCELBOLUSMESSAGE                    -> CancelBolusMessage::class.java
-            SETOPERATINGMODEMESSAGE               -> SetOperatingModeMessage::class.java
-            READPARAMETERBLOCKMESSAGE             -> ReadParameterBlockMessage::class.java
-            WRITECONFIGURATIONBLOCKMESSAGE        -> WriteConfigurationBlockMessage::class.java
-            CLOSECONFIGURATIONWRITESESSIONMESSAGE -> CloseConfigurationWriteSessionMessage::class.java
-            OPENCONFIGURATIONWRITESESSIONMESSAGE  -> OpenConfigurationWriteSessionMessage::class.java
-            DELIVERBOLUSMESSAGE                   -> DeliverBolusMessage::class.java
-            SETTBRMESSAGE                         -> SetTBRMessage::class.java
-            CHANGETBRMESSAGE                      -> ChangeTBRMessage::class.java
-            READHISTORYEVENTSMESSAGE              -> ReadHistoryEventsMessage::class.java
-            STARTREADINGHISTORYMESSAGE            -> StartReadingHistoryMessage::class.java
-            STOPREADINGHISTORYMESSAGE             -> StopReadingHistoryMessage::class.java
-            CONFIRMALERTMESSAGE                   -> ConfirmAlertMessage::class.java
-            SNOOZEALERTMESSAGE                    -> SnoozeAlertMessage::class.java
-            SETDATETIMEMESSAGE                    -> SetDateTimeMessage::class.java
+        fun fromId(id: Int) : AppLayerMessage? = when (id) {
+            CONNECTMESSAGE                        -> ConnectMessage()
+            BINDMESSAGE                           -> BindMessage()
+            DISCONNECTMESSAGE                     -> DisconnectMessage()
+            ACTIVATESERVICEMESSAGE                -> ActivateServiceMessage()
+            SERVICECHALLENGEMESSAGE               -> ServiceChallengeMessage()
+            GETACTIVEALERTMESSAGE                 -> GetActiveAlertMessage()
+            GETACTIVEBOLUSESMESSAGE               -> GetActiveBolusesMessage()
+            GETACTIVETBRMESSAGE                   -> GetActiveTBRMessage()
+            GETAVAILABLEBOLUSTYPESMESSAGE         -> GetAvailableBolusTypesMessage()
+            GETBATTERYSTATUSMESSAGE               -> GetBatteryStatusMessage()
+            GETCARTRIDGESTATUSMESSAGE             -> GetCartridgeStatusMessage()
+            GETDATETIMEMESSAGE                    -> GetDateTimeMessage()
+            GETFIRMWAREVERSIONSMESSAGE            -> GetFirmwareVersionsMessage()
+            GETOPERATINGMODEMESSAGE               -> GetOperatingModeMessage()
+            GETPUMPSTATUSREGISTERMESSAGE          -> GetPumpStatusRegisterMessage()
+            RESETPUMPSTATUSREGISTERMESSAGE        -> ResetPumpStatusRegisterMessage()
+            GETACTIVEBASALRATEMESSAGE             -> GetActiveBasalRateMessage()
+            GETTOTALDAILYDOSEMESSAGE              -> GetTotalDailyDoseMessage()
+            CANCELTBRMESSAGE                      -> CancelTBRMessage()
+            CANCELBOLUSMESSAGE                    -> CancelBolusMessage()
+            SETOPERATINGMODEMESSAGE               -> SetOperatingModeMessage()
+            READPARAMETERBLOCKMESSAGE             -> ReadParameterBlockMessage()
+            WRITECONFIGURATIONBLOCKMESSAGE        -> WriteConfigurationBlockMessage()
+            CLOSECONFIGURATIONWRITESESSIONMESSAGE -> CloseConfigurationWriteSessionMessage()
+            OPENCONFIGURATIONWRITESESSIONMESSAGE  -> OpenConfigurationWriteSessionMessage()
+            DELIVERBOLUSMESSAGE                   -> DeliverBolusMessage()
+            SETTBRMESSAGE                         -> SetTBRMessage()
+            CHANGETBRMESSAGE                      -> ChangeTBRMessage()
+            READHISTORYEVENTSMESSAGE              -> ReadHistoryEventsMessage()
+            STARTREADINGHISTORYMESSAGE            -> StartReadingHistoryMessage()
+            STOPREADINGHISTORYMESSAGE             -> StopReadingHistoryMessage()
+            CONFIRMALERTMESSAGE                   -> ConfirmAlertMessage()
+            SNOOZEALERTMESSAGE                    -> SnoozeAlertMessage()
+            SETDATETIMEMESSAGE                    -> SetDateTimeMessage()
             else                                  -> null                               // if wrong id received return null
         }
 
-        fun fromType(type: Class<out AppLayerMessage?>) : Int = when(type) {
-            ConnectMessage::class.java                        -> CONNECTMESSAGE
-            BindMessage::class.java                           -> BINDMESSAGE
-            DisconnectMessage::class.java                     -> DISCONNECTMESSAGE
-            ActivateServiceMessage::class.java                -> ACTIVATESERVICEMESSAGE
-            ServiceChallengeMessage::class.java               -> SERVICECHALLENGEMESSAGE
-            GetActiveAlertMessage::class.java                 -> GETACTIVEALERTMESSAGE
-            GetActiveBolusesMessage::class.java               -> GETACTIVEBOLUSESMESSAGE
-            GetActiveTBRMessage::class.java                   -> GETACTIVETBRMESSAGE
-            GetAvailableBolusTypesMessage::class.java         -> GETAVAILABLEBOLUSTYPESMESSAGE
-            GetBatteryStatusMessage::class.java               -> GETBATTERYSTATUSMESSAGE
-            GetCartridgeStatusMessage::class.java             -> GETCARTRIDGESTATUSMESSAGE
-            GetDateTimeMessage::class.java                    -> GETDATETIMEMESSAGE
-            GetFirmwareVersionsMessage::class.java            -> GETFIRMWAREVERSIONSMESSAGE
-            GetOperatingModeMessage::class.java               -> GETOPERATINGMODEMESSAGE
-            GetPumpStatusRegisterMessage::class.java          -> GETPUMPSTATUSREGISTERMESSAGE
-            ResetPumpStatusRegisterMessage::class.java        -> RESETPUMPSTATUSREGISTERMESSAGE
-            GetActiveBasalRateMessage::class.java             -> GETACTIVEBASALRATEMESSAGE
-            GetTotalDailyDoseMessage::class.java              -> GETTOTALDAILYDOSEMESSAGE
-            CancelTBRMessage::class.java                      -> CANCELTBRMESSAGE
-            CancelBolusMessage::class.java                    -> CANCELBOLUSMESSAGE
-            SetOperatingModeMessage::class.java               -> SETOPERATINGMODEMESSAGE
-            ReadParameterBlockMessage::class.java             -> READPARAMETERBLOCKMESSAGE
-            WriteConfigurationBlockMessage::class.java        -> WRITECONFIGURATIONBLOCKMESSAGE
-            CloseConfigurationWriteSessionMessage::class.java -> CLOSECONFIGURATIONWRITESESSIONMESSAGE
-            OpenConfigurationWriteSessionMessage::class.java  -> OPENCONFIGURATIONWRITESESSIONMESSAGE
-            DeliverBolusMessage::class.java                   -> DELIVERBOLUSMESSAGE
-            SetTBRMessage::class.java                         -> SETTBRMESSAGE
-            ChangeTBRMessage::class.java                      -> CHANGETBRMESSAGE
-            ReadHistoryEventsMessage::class.java              -> READHISTORYEVENTSMESSAGE
-            StartReadingHistoryMessage::class.java            -> STARTREADINGHISTORYMESSAGE
-            StopReadingHistoryMessage::class.java             -> STOPREADINGHISTORYMESSAGE
-            ConfirmAlertMessage::class.java                   -> CONFIRMALERTMESSAGE
-            SnoozeAlertMessage::class.java                    -> SNOOZEALERTMESSAGE
-            SetDateTimeMessage::class.java                    -> SETDATETIMEMESSAGE
-            else                                              -> 0                      //I think when is exhaustive but kotlin request an else branch here
+        fun fromType(type: AppLayerMessage?) : Int = when(type) {
+            is ConnectMessage                        -> CONNECTMESSAGE
+            is BindMessage                           -> BINDMESSAGE
+            is DisconnectMessage                     -> DISCONNECTMESSAGE
+            is ActivateServiceMessage                -> ACTIVATESERVICEMESSAGE
+            is ServiceChallengeMessage               -> SERVICECHALLENGEMESSAGE
+            is GetActiveAlertMessage                 -> GETACTIVEALERTMESSAGE
+            is GetActiveBolusesMessage               -> GETACTIVEBOLUSESMESSAGE
+            is GetActiveTBRMessage                   -> GETACTIVETBRMESSAGE
+            is GetAvailableBolusTypesMessage         -> GETAVAILABLEBOLUSTYPESMESSAGE
+            is GetBatteryStatusMessage               -> GETBATTERYSTATUSMESSAGE
+            is GetCartridgeStatusMessage             -> GETCARTRIDGESTATUSMESSAGE
+            is GetDateTimeMessage                    -> GETDATETIMEMESSAGE
+            is GetFirmwareVersionsMessage            -> GETFIRMWAREVERSIONSMESSAGE
+            is GetOperatingModeMessage               -> GETOPERATINGMODEMESSAGE
+            is GetPumpStatusRegisterMessage          -> GETPUMPSTATUSREGISTERMESSAGE
+            is ResetPumpStatusRegisterMessage        -> RESETPUMPSTATUSREGISTERMESSAGE
+            is GetActiveBasalRateMessage             -> GETACTIVEBASALRATEMESSAGE
+            is GetTotalDailyDoseMessage              -> GETTOTALDAILYDOSEMESSAGE
+            is CancelTBRMessage                      -> CANCELTBRMESSAGE
+            is CancelBolusMessage                    -> CANCELBOLUSMESSAGE
+            is SetOperatingModeMessage               -> SETOPERATINGMODEMESSAGE
+            is ReadParameterBlockMessage             -> READPARAMETERBLOCKMESSAGE
+            is WriteConfigurationBlockMessage        -> WRITECONFIGURATIONBLOCKMESSAGE
+            is CloseConfigurationWriteSessionMessage -> CLOSECONFIGURATIONWRITESESSIONMESSAGE
+            is OpenConfigurationWriteSessionMessage  -> OPENCONFIGURATIONWRITESESSIONMESSAGE
+            is DeliverBolusMessage                   -> DELIVERBOLUSMESSAGE
+            is SetTBRMessage                         -> SETTBRMESSAGE
+            is ChangeTBRMessage                      -> CHANGETBRMESSAGE
+            is ReadHistoryEventsMessage              -> READHISTORYEVENTSMESSAGE
+            is StartReadingHistoryMessage            -> STARTREADINGHISTORYMESSAGE
+            is StopReadingHistoryMessage             -> STOPREADINGHISTORYMESSAGE
+            is ConfirmAlertMessage                   -> CONFIRMALERTMESSAGE
+            is SnoozeAlertMessage                    -> SNOOZEALERTMESSAGE
+            is SetDateTimeMessage                    -> SETDATETIMEMESSAGE
+            else                                     -> 0                      //Only if type is null
         }
 
         const val CONNECTMESSAGE = 61451

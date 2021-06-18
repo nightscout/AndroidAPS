@@ -19,12 +19,12 @@ open class AppLayerMessage(private val messagePriority: MessagePriority, private
     @Throws(Exception::class)
     protected open fun parse(byteBuf: ByteBuf) = Unit
 
-    fun serialize(clazz: Class<out AppLayerMessage?>): ByteBuf {
+    fun serialize(): ByteBuf {
         val data = data.bytes
         val byteBuf = ByteBuf(4 + data.size + if (outCRC) 2 else 0)
         byteBuf.putByte(VERSION)
         byteBuf.putByte(service!!.id)
-        byteBuf.putUInt16LE(AppCommands.fromType(clazz))
+        byteBuf.putUInt16LE(AppCommands.fromType(this))
         byteBuf.putBytes(data)
         if (outCRC) byteBuf.putUInt16LE(Cryptograph.calculateCRC(data))
         return byteBuf
@@ -42,9 +42,8 @@ open class AppLayerMessage(private val messagePriority: MessagePriority, private
             val service = byteBuf.readByte()
             val command = byteBuf.readUInt16LE()
             val error = byteBuf.readUInt16LE()
-            val clazz = AppCommands.fromId(command)
+            val message = AppCommands.fromId(command)
             if (version != VERSION) throw IncompatibleAppVersionException()
-            val message = clazz?.newInstance()
             if (Service.fromId(service) == null) throw UnknownServiceException()
             if (error != 0 || message == null) {
                 val exceptionClass = AppErrors.fromId(error)?.type
@@ -58,11 +57,11 @@ open class AppLayerMessage(private val messagePriority: MessagePriority, private
 
         @JvmStatic fun wrap(message: AppLayerMessage): DataMessage {
             val dataMessage = DataMessage()
-            dataMessage.data = message.serialize(message.javaClass)
+            dataMessage.data = message.serialize()
             return dataMessage
         }
 
-        @JvmStatic @Throws(Exception::class) fun unwrap(dataMessage: DataMessage): AppLayerMessage {
+        @JvmStatic fun unwrap(dataMessage: DataMessage): AppLayerMessage {
             return deserialize(dataMessage.data)
         }
     }
