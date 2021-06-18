@@ -31,6 +31,7 @@ class PrefFileListProvider @Inject constructor(
     private val path = File(Environment.getExternalStorageDirectory().toString())
     private val aapsPath = File(path, "AAPS" + File.separator + "preferences")
     private val exportsPath = File(path, "AAPS" + File.separator + "exports")
+    private val tempPath = File(path, "AAPS" + File.separator + "temp")
     private val extraPath = File(path, "AAPS" + File.separator + "extra")
 
     companion object {
@@ -103,6 +104,13 @@ class PrefFileListProvider @Inject constructor(
         return exportsPath
     }
 
+    fun ensureTempDirExists(): File {
+        if (!tempPath.exists()) {
+            tempPath.mkdirs()
+        }
+        return tempPath
+    }
+
     fun ensureExtraDirExists(): File {
         if (!extraPath.exists()) {
             extraPath.mkdirs()
@@ -115,7 +123,7 @@ class PrefFileListProvider @Inject constructor(
         return File(aapsPath, timeLocal + "_" + config.FLAVOR + ".json")
     }
 
-    fun newExportXmlFile(): File {
+    fun newExportCsvFile(): File {
         val timeLocal = LocalDateTime.now().toString(DateTimeFormat.forPattern("yyyy-MM-dd'_'HHmmss"))
         return File(exportsPath, timeLocal + "_UserEntry.csv")
     }

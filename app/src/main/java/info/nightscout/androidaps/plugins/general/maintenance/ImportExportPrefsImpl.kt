@@ -363,7 +363,7 @@ class ImportExportPrefsImpl @Inject constructor(
     override fun exportUserEntriesCsv(activity: FragmentActivity, singleEntries: Single<List<UserEntry>>) {
         val entries = singleEntries.blockingGet()
         prefFileList.ensureExportDirExists()
-        val newFile = prefFileList.newExportXmlFile()
+        val newFile = prefFileList.newExportCsvFile()
 
         try {
             classicPrefsFormat.saveCsv(newFile, entries)
