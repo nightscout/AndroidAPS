@@ -419,7 +419,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         }
 
         for (tryNumber in 1..maxTries) {
-            updateBolusProgressDialog("Checking delivery status. Try: $tryNumber/$maxTries", 100.toInt())
+            updateBolusProgressDialog("Checking delivery status", 100)
 
             val cmd = if (bolusCanceled)
                 cancelBolus()
