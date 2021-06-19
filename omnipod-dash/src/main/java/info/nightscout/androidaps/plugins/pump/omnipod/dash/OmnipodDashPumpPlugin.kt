@@ -198,7 +198,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             activeCommandEntry = { historyId ->
                 podStateManager.createActiveCommand(historyId, basalProgram = basalProgram)
             },
-            command = omnipodManager.setBasalProgram(basalProgram).ignoreElements(),
+            command = omnipodManager.setBasalProgram(basalProgram, hasBasalBeepEnabled()).ignoreElements(),
             post = failWhenUnconfirmed(),
         ).toPumpEnactResult()
     }
@@ -218,7 +218,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         else
             executeProgrammingCommand(
                 historyEntry = history.createRecord(OmnipodCommandType.SUSPEND_DELIVERY),
-                command = omnipodManager.suspendDelivery()
+                command = omnipodManager.suspendDelivery(hasBasalBeepEnabled())
                     .filter { podEvent -> podEvent.isCommandSent() }
                     .map {
                         pumpSyncTempBasal(
@@ -293,8 +293,12 @@ class OmnipodDashPumpPlugin @Inject constructor(
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         try {
             aapsLogger.info(LTag.PUMP, "Delivering treatment: $detailedBolusInfo")
-            val bolusBeeps = sp.getBoolean(R.string.key_omnipod_common_bolus_beeps_enabled, false)
-
+            val beepsConfigurationKey = if (detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB)
+                R.string.key_omnipod_common_smb_beeps_enabled
+            else
+                R.string.key_omnipod_common_bolus_beeps_enabled
+            val bolusBeeps = sp.getBoolean(beepsConfigurationKey, false)
+            R.string.key_omnipod_common_smb_beeps_enabled
             if (detailedBolusInfo.carbs > 0 ||
                 detailedBolusInfo.insulin == 0.0
             ) {
@@ -451,9 +455,10 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     private fun cancelBolus(): Completable {
+        val bolusBeeps = sp.getBoolean(R.string.key_omnipod_common_bolus_beeps_enabled, false)
         return executeProgrammingCommand(
             historyEntry = history.createRecord(commandType = OmnipodCommandType.CANCEL_BOLUS),
-            command = omnipodManager.stopBolus().ignoreElements()
+            command = omnipodManager.stopBolus(bolusBeeps).ignoreElements()
         )
     }
 
@@ -497,7 +502,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         enforceNew: Boolean,
         tbrType: PumpSync.TemporaryBasalType
     ): PumpEnactResult {
-        val tempBasalBeeps = sp.getBoolean(R.string.key_omnipod_common_tbr_beeps_enabled, false)
+        val tempBasalBeeps = hasTempBasalBeepEnabled()
         aapsLogger.info(
             LTag.PUMP,
             "setTempBasalAbsolute: duration=$durationInMinutes min, rate=$absoluteRate U/h :: " +
@@ -586,7 +591,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     aapsLogger.info(LTag.PUMP, "Canceling existing temp basal")
                     executeProgrammingCommand(
                         historyEntry = history.createRecord(OmnipodCommandType.CANCEL_TEMPORARY_BASAL),
-                        command = omnipodManager.stopTempBasal().ignoreElements()
+                        command = omnipodManager.stopTempBasal(hasTempBasalBeepEnabled()).ignoreElements()
                     )
                 }
             }
@@ -611,6 +616,14 @@ class OmnipodDashPumpPlugin @Inject constructor(
             .comment("Omnipod Dash driver does not support extended boluses")
     }
 
+    private fun hasTempBasalBeepEnabled(): Boolean {
+        return sp.getBoolean(R.string.key_omnipod_common_tbr_beeps_enabled, false)
+    }
+
+    private fun hasBasalBeepEnabled(): Boolean {
+        return sp.getBoolean(R.string.key_omnipod_common_basal_beeps_enabled, false)
+    }
+
     override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
         if (!podStateManager.tempBasalActive &&
             pumpSync.expectedPumpState().temporaryBasal == null
@@ -621,7 +634,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
         return executeProgrammingCommand(
             historyEntry = history.createRecord(OmnipodCommandType.CANCEL_TEMPORARY_BASAL),
-            command = omnipodManager.stopTempBasal().ignoreElements(),
+            command = omnipodManager.stopTempBasal(hasTempBasalBeepEnabled()).ignoreElements(),
         ).toPumpEnactResult()
     }
 
@@ -728,7 +741,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     private fun suspendDelivery(): PumpEnactResult {
         return executeProgrammingCommand(
             historyEntry = history.createRecord(OmnipodCommandType.SUSPEND_DELIVERY),
-            command = omnipodManager.suspendDelivery()
+            command = omnipodManager.suspendDelivery(hasBasalBeepEnabled())
                 .filter { podEvent -> podEvent.isCommandSent() }
                 .map {
                     pumpSyncTempBasal(
@@ -754,7 +767,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             executeProgrammingCommand(
                 pre = observeDeliverySuspended(),
                 historyEntry = history.createRecord(OmnipodCommandType.RESUME_DELIVERY),
-                command = omnipodManager.setBasalProgram(mapProfileToBasalProgram(it)).ignoreElements()
+                command = omnipodManager.setBasalProgram(mapProfileToBasalProgram(it), hasBasalBeepEnabled()).ignoreElements()
             ).toPumpEnactResult()
         } ?: PumpEnactResult(injector).success(false).enacted(false).comment("No profile active") // TODO i18n
     }

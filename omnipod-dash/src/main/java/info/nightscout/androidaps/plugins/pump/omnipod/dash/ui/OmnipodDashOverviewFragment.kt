@@ -561,9 +561,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
     private fun updateSuspendDeliveryButton() {
         // If the Pod is currently suspended, we show the Resume delivery button instead.
-        // TODO: isSuspendDeliveryButtonEnabled doesn't work
-        val isSuspendDeliveryButtonEnabled = true
-        if (isSuspendDeliveryButtonEnabled &&
+        if (isSuspendDeliveryButtonEnabled() &&
             podStateManager.isPodRunning &&
             (!podStateManager.isSuspended || commandQueue.isCustomCommandInQueue(CommandSuspendDelivery::class.java))
         ) {
@@ -592,7 +590,8 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     }
 
     private fun isSuspendDeliveryButtonEnabled(): Boolean {
-        return sp.getBoolean(R.string.omnipod_common_preferences_suspend_delivery_button_enabled, false)
+        R.string.key_omnipod_common_basal_beeps_enabled
+        return sp.getBoolean(R.string.key_omnipod_common_suspend_delivery_button_enabled, false)
     }
 
     private fun displayErrorDialog(title: String, message: String, withSound: Boolean) {

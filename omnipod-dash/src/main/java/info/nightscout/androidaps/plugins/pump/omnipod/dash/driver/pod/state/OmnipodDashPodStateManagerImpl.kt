@@ -427,6 +427,11 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         podState.uniqueId = response.uniqueIdReceivedInCommand
 
         podState.lastUpdatedSystem = System.currentTimeMillis()
+        // TODO: what is considered to be the pod activation time?
+        //  LTK negotiation ?
+        //  setUniqueId?
+        //  compute it from the number of "minutesOnPod"?
+        podState.activationTime = System.currentTimeMillis()
 
         store()
         rxBus.send(EventOmnipodDashPumpValuesChanged())
