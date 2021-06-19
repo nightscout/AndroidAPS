@@ -529,7 +529,9 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 .map { pumpSyncTempBasal(absoluteRate, durationInMinutes.toLong(), tbrType) }
                 .ignoreElements(),
         ).toPumpEnactResult()
-        // TODO: add details about TBR
+        if (ret.success && ret.enacted) {
+            ret.isPercent(false).absolute(absoluteRate).duration(durationInMinutes)
+        }
         aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute: result=$ret")
         return ret
     }
@@ -623,7 +625,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         ).toPumpEnactResult()
     }
 
-    fun Completable.toPumpEnactResult(): PumpEnactResult {
+    private fun Completable.toPumpEnactResult(): PumpEnactResult {
         return this.toSingleDefault(PumpEnactResult(injector).success(true).enacted(true))
             .doOnError { throwable ->
                 aapsLogger.error(LTag.PUMP, "toPumpEnactResult, error executing command: $throwable")
