@@ -47,7 +47,7 @@ open class AppLayerMessage(private val messagePriority: MessagePriority, private
             if (Service.fromId(service) == null) throw UnknownServiceException()
             if (error != 0 || message == null) {
                 val exceptionClass = AppErrors.fromId(error)
-                if (exceptionClass == null) throw UnknownAppLayerErrorCodeException(error) else throw exceptionClass.getConstructor(Int::class.javaPrimitiveType).newInstance(error)!!
+                exceptionClass?.let { throw it.getConstructor(Int::class.javaPrimitiveType).newInstance(error)!! } ?: throw UnknownAppLayerErrorCodeException(error)
             }
             val data = byteBuf.readBytes(byteBuf.filledSize - if (message.inCRC) 2 else 0)
             if (message.inCRC && Cryptograph.calculateCRC(data) != byteBuf.readUInt16LE()) throw InvalidAppCRCException()

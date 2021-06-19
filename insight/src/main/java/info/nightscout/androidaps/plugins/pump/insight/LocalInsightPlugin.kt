@@ -176,7 +176,7 @@ class LocalInsightPlugin @Inject constructor(
 
     override fun isConnecting(): Boolean {
         if (connectionService == null || alertService == null || !connectionService!!.hasRequestedConnection(this)) return false
-        val state = connectionService!!.state
+        val state = connectionService?.state
         return state == InsightState.CONNECTING || state == InsightState.APP_CONNECT_MESSAGE || state == InsightState.RECOVERING
     }
 
@@ -185,20 +185,20 @@ class LocalInsightPlugin @Inject constructor(
     }
 
     override fun connect(reason: String) {
-        if (connectionService != null && alertService != null) connectionService!!.requestConnection(this)
+        if (alertService != null) connectionService?.requestConnection(this)
     }
 
     override fun disconnect(reason: String) {
-        if (connectionService != null && alertService != null) connectionService!!.withdrawConnectionRequest(this)
+        if (alertService != null) connectionService?.withdrawConnectionRequest(this)
     }
 
     override fun stopConnecting() {
-        if (connectionService != null && alertService != null) connectionService!!.withdrawConnectionRequest(this)
+        if (alertService != null) connectionService?.withdrawConnectionRequest(this)
     }
 
     override fun getPumpStatus(reason: String) {
         try {
-            tBROverNotificationBlock = ParameterBlockUtil.readParameterBlock(connectionService!!, Service.CONFIGURATION, TBROverNotificationBlock::class.java) // TODO resolve !!
+            tBROverNotificationBlock = connectionService?.let { ParameterBlockUtil.readParameterBlock(it, Service.CONFIGURATION, TBROverNotificationBlock::class.java) } // TODO resolve !!
             readHistory()
             fetchBasalProfile()
             fetchLimitations()
@@ -375,16 +375,18 @@ class LocalInsightPlugin @Inject constructor(
 
     override fun isThisProfileSet(profile: Profile): Boolean {
         if (!isInitialized() || profileBlocks == null) return true
-        if (profile.getBasalValues().size != profileBlocks!!.size) return false
-        if (activeBasalProfile != BasalProfile.PROFILE_1) return false
-        for (i in profileBlocks!!.indices) {
-            val profileBlock = profileBlocks!![i]
-            val basalValue = profile.getBasalValues()[i]
-            var nextValue: ProfileValue? = null
-            if (profile.getBasalValues().size > i + 1) nextValue = profile.getBasalValues()[i + 1]
-            if (profileBlock.duration * 60 != (nextValue?.timeAsSeconds
-                    ?: 24 * 60 * 60) - basalValue.timeAsSeconds) return false
-            if (abs(profileBlock.basalAmount - basalValue.value) > (if (basalValue.value > 5) 0.051 else 0.0051)) return false
+        profileBlocks?.let {
+            if (profile.getBasalValues().size != it.size) return false
+            if (activeBasalProfile != BasalProfile.PROFILE_1) return false
+            for (i in it.indices) {
+                val profileBlock = it[i]
+                val basalValue = profile.getBasalValues()[i]
+                var nextValue: ProfileValue? = null
+                if (profile.getBasalValues().size > i + 1) nextValue = profile.getBasalValues()[i + 1]
+                if (profileBlock.duration * 60 != (nextValue?.timeAsSeconds
+                        ?: 24 * 60 * 60) - basalValue.timeAsSeconds) return false
+                if (abs(profileBlock.basalAmount - basalValue.value) > (if (basalValue.value > 5) 0.051 else 0.0051)) return false
+            }
         }
         return true
     }
@@ -396,12 +398,12 @@ class LocalInsightPlugin @Inject constructor(
     override val baseBasalRate: Double
         get() {
             if (connectionService == null || alertService == null) return 0.0
-            return if (activeBasalRate != null) activeBasalRate!!.activeBasalRate else 0.0
+            return activeBasalRate?.activeBasalRate  ?: 0.0
         }
     override val reservoirLevel: Double
-        get() = if (cartridgeStatus == null) 0.0 else cartridgeStatus!!.remainingAmount
+        get() = cartridgeStatus?.remainingAmount ?: 0.0
     override val batteryLevel: Int
-        get() = if (batteryStatus == null) 0 else batteryStatus!!.batteryAmount
+        get() = batteryStatus?.batteryAmount ?: 0
 
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         if (detailedBolusInfo.insulin.equals(0.0) || detailedBolusInfo.carbs > 0) {
@@ -502,13 +504,13 @@ class LocalInsightPlugin @Inject constructor(
         Thread {
             try {
                 synchronized(_bolusLock) {
-                    alertService!!.ignore(AlertType.WARNING_38)
+                    alertService?.ignore(AlertType.WARNING_38)
                     val cancelBolusMessage = CancelBolusMessage()
                     cancelBolusMessage.bolusID = bolusID
                     connectionService!!.requestMessage(cancelBolusMessage).await()
                     bolusCancelled = true
                     confirmAlert(AlertType.WARNING_38)
-                    alertService!!.ignore(null)
+                    alertService?.ignore(null)
                     aapsLogger.info(LTag.PUMP, "XXXX Stop Thread end)")
                 }
             } catch (e: AppLayerErrorException) {
@@ -523,8 +525,7 @@ class LocalInsightPlugin @Inject constructor(
 
     override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
         val result = PumpEnactResult(injector)
-        if (activeBasalRate == null) return result
-        if (activeBasalRate!!.activeBasalRate == 0.0) return result
+        if (activeBasalRate == null || activeBasalRate?.activeBasalRate == 0.0) return result
         val percent = 100.0 / activeBasalRate!!.activeBasalRate * absoluteRate
         if (isFakingTempsByExtendedBoluses) {
             val cancelEBResult = cancelExtendedBolusOnly()
@@ -579,12 +580,12 @@ class LocalInsightPlugin @Inject constructor(
                 val message = ChangeTBRMessage()
                 message.duration = durationInMinutes
                 message.percentage = percentage
-                connectionService!!.requestMessage(message)
+                connectionService?.requestMessage(message)
             } else {
                 val message = SetTBRMessage()
                 message.duration = durationInMinutes
                 message.percentage = percentage
-                connectionService!!.requestMessage(message)
+                connectionService?.requestMessage(message)
             }
             result.isPercent(true)
                 .percent(percentage)
@@ -676,13 +677,13 @@ class LocalInsightPlugin @Inject constructor(
     private fun cancelTempBasalOnly(): PumpEnactResult {
         val result = PumpEnactResult(injector)
         try {
-            alertService!!.ignore(AlertType.WARNING_36)
+            alertService?.ignore(AlertType.WARNING_36)
             connectionService!!.requestMessage(CancelTBRMessage()).await()
             result.success(true)
                 .enacted(true)
                 .isTempCancel(true)
             confirmAlert(AlertType.WARNING_36)
-            alertService!!.ignore(null)
+            alertService?.ignore(null)
             result.comment(R.string.virtualpump_resultok)
         } catch (e: NoActiveTBRToCanceLException) {
             result.success(true)

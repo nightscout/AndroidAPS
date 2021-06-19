@@ -12,7 +12,7 @@ object ParameterBlockUtil {
     fun <T : ParameterBlock?> readParameterBlock(connectionService: InsightConnectionService, service: Service?, parameterBlock: Class<out T>?): T? {
         val readMessage = ReadParameterBlockMessage()
         readMessage.service = service
-        readMessage.setParameterBlockId(parameterBlock)
+        readMessage.parameterBlockId = parameterBlock
         return connectionService.requestMessage(readMessage).await().parameterBlock as T?
     }
 
