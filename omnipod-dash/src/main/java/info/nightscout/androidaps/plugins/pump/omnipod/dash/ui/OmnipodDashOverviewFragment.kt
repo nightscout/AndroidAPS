@@ -24,6 +24,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.Comm
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandResumeDelivery
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandSilenceAlerts
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandSuspendDelivery
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.BuildConfig
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.EventOmnipodDashPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.OmnipodDashPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
@@ -416,8 +417,9 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                     resourceHelper.gs(R.string.omnipod_common_pod_status_suspended)
                 } else {
                     resourceHelper.gs(R.string.omnipod_common_pod_status_running) +
-                        podStateManager.deliveryStatus?.let { " " + podStateManager.deliveryStatus.toString() }
-                    // TODO Display deliveryStatus in a nice way
+                        if (BuildConfig.DEBUG)
+                            podStateManager.deliveryStatus?.let { " " + podStateManager.deliveryStatus.toString() }
+                        else ""
                 }
                 // TODO
                 /*
