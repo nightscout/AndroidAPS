@@ -472,7 +472,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 resourceHelper.gs(R.string.insulin_unit_shortname),
                 readableDuration(Duration(it.startTime, System.currentTimeMillis()))
             )
-            if (!it.complete) {
+            if (!it.deliveryComplete) {
                 textColor = Color.YELLOW
             }
             podInfoBinding.lastBolus.text = text
