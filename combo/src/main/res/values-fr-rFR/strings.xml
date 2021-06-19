@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="description_pump_combo">Intégration des pompes Accu-Chek Combo il faut avoir Ruffy installé</string>
+    <string name="description_pump_combo">Pour l\'intégration des pompes Accu-Chek Combo, il faut d\'abord installer Ruffy</string>
     <string name="combo_programming_bolus">Programmer la pompe pour injecter un bolus</string>
     <string name="combo_pump_state_label">État</string>
     <string name="combo_pump_activity_label">Activité</string>
