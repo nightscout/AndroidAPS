@@ -157,7 +157,7 @@ class OmnipodDashManagerImpl @Inject constructor(
         }
     }
 
-    private fun observeSendProgramBasalCommand(basalProgram: BasalProgram): Observable<PodEvent> {
+    private fun observeSendProgramBasalCommand(basalProgram: BasalProgram, hasBasalBeepEnabled: Boolean): Observable<PodEvent> {
         return Observable.defer {
             val currentTime = Date()
             logger.debug(LTag.PUMPCOMM, "Programming basal. currentTime={}, basalProgram={}", currentTime, basalProgram)
@@ -166,7 +166,7 @@ class OmnipodDashManagerImpl @Inject constructor(
                     .setUniqueId(podStateManager.uniqueId!!.toInt())
                     .setSequenceNumber(podStateManager.messageSequenceNumber)
                     .setNonce(NONCE)
-                    .setProgramReminder(ProgramReminder(atStart = false, atEnd = false, atInterval = 0))
+                    .setProgramReminder(ProgramReminder(atStart = hasBasalBeepEnabled, atEnd = false, atInterval = 0))
                     .setBasalProgram(basalProgram)
                     .setCurrentTime(currentTime)
                     .build(),
@@ -399,7 +399,7 @@ class OmnipodDashManagerImpl @Inject constructor(
         }
         if (podStateManager.activationProgress.isBefore(ActivationProgress.PROGRAMMED_BASAL)) {
             observables.add(
-                observeSendProgramBasalCommand(basalProgram)
+                observeSendProgramBasalCommand(basalProgram, false)
                     .doOnComplete(ActivationProgressUpdater(ActivationProgress.PROGRAMMED_BASAL))
             )
         }
@@ -419,11 +419,11 @@ class OmnipodDashManagerImpl @Inject constructor(
             .subscribeOn(aapsSchedulers.io)
     }
 
-    override fun setBasalProgram(basalProgram: BasalProgram): Observable<PodEvent> {
+    override fun setBasalProgram(basalProgram: BasalProgram, hasBasalBeepEnabled: Boolean): Observable<PodEvent> {
         return Observable.concat(
             observePodRunning,
             observeConnectToPod,
-            observeSendProgramBasalCommand(basalProgram)
+            observeSendProgramBasalCommand(basalProgram, hasBasalBeepEnabled)
         )
             // TODO these would be common for any observable returned in a public function in this class
             .doOnNext(PodEventInterceptor())
@@ -431,25 +431,34 @@ class OmnipodDashManagerImpl @Inject constructor(
             .subscribeOn(aapsSchedulers.io)
     }
 
-    private fun observeSendStopDeliveryCommand(deliveryType: StopDeliveryCommand.DeliveryType): Observable<PodEvent> {
+    private fun observeSendStopDeliveryCommand(
+        deliveryType: StopDeliveryCommand.DeliveryType,
+        beepEnabled: Boolean
+    ): Observable<PodEvent> {
         return Observable.defer {
+            val beepType = if (!beepEnabled)
+                BeepType.SILENT
+            else
+                BeepType.LONG_SINGLE_BEEP
+
             bleManager.sendCommand(
                 StopDeliveryCommand.Builder()
                     .setSequenceNumber(podStateManager.messageSequenceNumber)
                     .setUniqueId(podStateManager.uniqueId!!.toInt())
                     .setNonce(NONCE)
                     .setDeliveryType(deliveryType)
+                    .setBeepType(beepType)
                     .build(),
                 DefaultStatusResponse::class
             )
         }
     }
 
-    override fun suspendDelivery(): Observable<PodEvent> {
+    override fun suspendDelivery(hasBasalBeepEnabled: Boolean): Observable<PodEvent> {
         return Observable.concat(
             observePodRunning,
             observeConnectToPod,
-            observeSendStopDeliveryCommand(StopDeliveryCommand.DeliveryType.ALL)
+            observeSendStopDeliveryCommand(StopDeliveryCommand.DeliveryType.ALL, hasBasalBeepEnabled)
         )
             // TODO these would be common for any observable returned in a public function in this class
             .doOnNext(PodEventInterceptor())
@@ -491,11 +500,11 @@ class OmnipodDashManagerImpl @Inject constructor(
             .subscribeOn(aapsSchedulers.io)
     }
 
-    override fun stopTempBasal(): Observable<PodEvent> {
+    override fun stopTempBasal(hasTempBasalBeepEnabled: Boolean): Observable<PodEvent> {
         return Observable.concat(
             observePodRunning,
             observeConnectToPod,
-            observeSendStopDeliveryCommand(StopDeliveryCommand.DeliveryType.TEMP_BASAL)
+            observeSendStopDeliveryCommand(StopDeliveryCommand.DeliveryType.TEMP_BASAL, hasTempBasalBeepEnabled)
         )
             // TODO these would be common for any observable returned in a public function in this class
             .doOnNext(PodEventInterceptor())
@@ -520,11 +529,11 @@ class OmnipodDashManagerImpl @Inject constructor(
             .subscribeOn(aapsSchedulers.io)
     }
 
-    override fun stopBolus(): Observable<PodEvent> {
+    override fun stopBolus(beep: Boolean): Observable<PodEvent> {
         return Observable.concat(
             observePodRunning,
             observeConnectToPod,
-            observeSendStopDeliveryCommand(StopDeliveryCommand.DeliveryType.BOLUS)
+            observeSendStopDeliveryCommand(StopDeliveryCommand.DeliveryType.BOLUS, beep)
         )
             // TODO these would be common for any observable returned in a public function in this class
             .doOnNext(PodEventInterceptor())

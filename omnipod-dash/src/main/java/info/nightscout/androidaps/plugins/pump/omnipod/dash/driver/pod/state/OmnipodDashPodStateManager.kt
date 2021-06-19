@@ -84,7 +84,7 @@ interface OmnipodDashPodStateManager {
         requestedBolus: Double? = null
     ): Single<ActiveCommand>
     fun updateActiveCommand(): Maybe<CommandConfirmed>
-    fun observeNoActiveCommand(): Observable<PodEvent>
+    fun observeNoActiveCommand(b: Boolean): Observable<PodEvent>
     fun getCommandConfirmationFromState(): CommandConfirmationFromState
 
     fun createLastBolus(requestedUnits: Double, historyId: String, bolusType: DetailedBolusInfo.BolusType)
@@ -108,13 +108,13 @@ interface OmnipodDashPodStateManager {
         val startTime: Long,
         val requestedUnits: Double,
         var bolusUnitsRemaining: Double,
-        var complete: Boolean,
+        var deliveryComplete: Boolean,
         val historyId: String,
         val bolusType: DetailedBolusInfo.BolusType
     ) {
 
         fun deliveredUnits(): Double? {
-            return if (complete) {
+            return if (deliveryComplete) {
                 requestedUnits - bolusUnitsRemaining
             } else {
                 null
@@ -122,7 +122,7 @@ interface OmnipodDashPodStateManager {
         }
 
         fun markComplete(): Double {
-            this.complete = true
+            this.deliveryComplete = true
             return requestedUnits - bolusUnitsRemaining
         }
     }

@@ -208,7 +208,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             startTime = System.currentTimeMillis(),
             requestedUnits = requestedUnits,
             bolusUnitsRemaining = requestedUnits,
-            complete = false, // cancelled, delivered 100% or pod failure
+            deliveryComplete = false, // cancelled, delivered 100% or pod failure
             historyId = historyId,
             bolusType = bolusType
         )
@@ -219,7 +219,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         val lastBolus = podState.lastBolus
 
         lastBolus?.run {
-            this.complete = true
+            this.deliveryComplete = true
         }
             ?: logger.error(LTag.PUMP, "Trying to mark null bolus as complete")
 
@@ -231,7 +231,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             val remainingUnits = bolusPulsesRemaining.toDouble() * 0.05
             this.bolusUnitsRemaining = remainingUnits
             if (remainingUnits == 0.0) {
-                this.complete = true
+                this.deliveryComplete = true
             }
         }
     }
@@ -269,9 +269,9 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         }
 
     @Synchronized
-    override fun observeNoActiveCommand(): Observable<PodEvent> {
+    override fun observeNoActiveCommand(check: Boolean): Observable<PodEvent> {
         return Observable.defer {
-            if (activeCommand == null) {
+            if (activeCommand == null || !check) {
                 Observable.empty()
             } else {
                 logger.warn(LTag.PUMP, "Active command already existing: $activeCommand")
@@ -427,6 +427,11 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         podState.uniqueId = response.uniqueIdReceivedInCommand
 
         podState.lastUpdatedSystem = System.currentTimeMillis()
+        // TODO: what is considered to be the pod activation time?
+        //  LTK negotiation ?
+        //  setUniqueId?
+        //  compute it from the number of "minutesOnPod"?
+        podState.activationTime = System.currentTimeMillis()
 
         store()
         rxBus.send(EventOmnipodDashPumpValuesChanged())

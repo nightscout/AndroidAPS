@@ -14,6 +14,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activati
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.databinding.OmnipodDashPodManagementBinding
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.ActivationProgress
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.wizard.activation.DashPodActivationWizardActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.wizard.deactivation.DashPodDeactivationWizardActivity
@@ -124,7 +125,8 @@ class DashPodManagementActivity : NoSplashAppCompatActivity() {
 
         binding.buttonActivatePod.isEnabled = podStateManager.activationProgress.isBefore(ActivationProgress.COMPLETED)
         binding.buttonDeactivatePod.isEnabled =
-            podStateManager.activationProgress.isAtLeast(ActivationProgress.PHASE_1_COMPLETED)
+            podStateManager.activationProgress.isAtLeast(ActivationProgress.PHASE_1_COMPLETED) ||
+                podStateManager.podStatus == PodStatus.ALARM
 
         if (podStateManager.activationProgress.isAtLeast(ActivationProgress.PHASE_1_COMPLETED)) {
             if (commandQueue.isCustomCommandInQueue(CommandPlayTestBeep::class.java)) {

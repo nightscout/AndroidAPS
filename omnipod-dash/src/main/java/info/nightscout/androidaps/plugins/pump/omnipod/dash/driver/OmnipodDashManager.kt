@@ -18,19 +18,19 @@ interface OmnipodDashManager {
 
     fun getStatus(type: ResponseType.StatusResponseType): Observable<PodEvent>
 
-    fun setBasalProgram(basalProgram: BasalProgram): Observable<PodEvent>
+    fun setBasalProgram(basalProgram: BasalProgram, hasBasalBeepEnabled: Boolean): Observable<PodEvent>
 
-    fun suspendDelivery(): Observable<PodEvent>
+    fun suspendDelivery(hasBasalBeepEnabled: Boolean): Observable<PodEvent>
 
     fun setTime(): Observable<PodEvent>
 
     fun setTempBasal(rate: Double, durationInMinutes: Short, tempBasalBeeps: Boolean): Observable<PodEvent>
 
-    fun stopTempBasal(): Observable<PodEvent>
+    fun stopTempBasal(hasTempBasalBeepEnabled: Boolean): Observable<PodEvent>
 
     fun bolus(units: Double, confirmationBeeps: Boolean, completionBeeps: Boolean): Observable<PodEvent>
 
-    fun stopBolus(): Observable<PodEvent>
+    fun stopBolus(beep: Boolean): Observable<PodEvent>
 
     fun playBeep(beepType: BeepType): Observable<PodEvent>
 

@@ -24,6 +24,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.Comm
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandResumeDelivery
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandSilenceAlerts
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandSuspendDelivery
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.BuildConfig
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.EventOmnipodDashPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.OmnipodDashPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
@@ -274,6 +275,13 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
              */
 
             // TODO
+            if (podStateManager.activeCommand != null) {
+                podInfoBinding.podExpiryDate.setTextColor(Color.RED)
+                podInfoBinding.podExpiryDate.text = "Active command"
+            } else {
+                podInfoBinding.podExpiryDate.text = PLACEHOLDER
+                podInfoBinding.podExpiryDate.setTextColor(Color.WHITE)
+            }
             /*
             val expiresAt = podStateManager.expiresAt
 
@@ -409,8 +417,9 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                     resourceHelper.gs(R.string.omnipod_common_pod_status_suspended)
                 } else {
                     resourceHelper.gs(R.string.omnipod_common_pod_status_running) +
-                        podStateManager.deliveryStatus?.let { " " + podStateManager.deliveryStatus.toString() }
-                    // TODO Display deliveryStatus in a nice way
+                        if (BuildConfig.DEBUG)
+                            podStateManager.deliveryStatus?.let { " " + podStateManager.deliveryStatus.toString() }
+                        else ""
                 }
                 // TODO
                 /*
@@ -465,7 +474,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 resourceHelper.gs(R.string.insulin_unit_shortname),
                 readableDuration(Duration(it.startTime, System.currentTimeMillis()))
             )
-            if (!it.complete) {
+            if (!it.deliveryComplete) {
                 textColor = Color.YELLOW
             }
             podInfoBinding.lastBolus.text = text
@@ -554,9 +563,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
     private fun updateSuspendDeliveryButton() {
         // If the Pod is currently suspended, we show the Resume delivery button instead.
-        // TODO: isSuspendDeliveryButtonEnabled doesn't work
-        val isSuspendDeliveryButtonEnabled = true
-        if (isSuspendDeliveryButtonEnabled &&
+        if (isSuspendDeliveryButtonEnabled() &&
             podStateManager.isPodRunning &&
             (!podStateManager.isSuspended || commandQueue.isCustomCommandInQueue(CommandSuspendDelivery::class.java))
         ) {
@@ -585,7 +592,8 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     }
 
     private fun isSuspendDeliveryButtonEnabled(): Boolean {
-        return sp.getBoolean(R.string.omnipod_common_preferences_suspend_delivery_button_enabled, false)
+        R.string.key_omnipod_common_basal_beeps_enabled
+        return sp.getBoolean(R.string.key_omnipod_common_suspend_delivery_button_enabled, false)
     }
 
     private fun displayErrorDialog(title: String, message: String, withSound: Boolean) {
