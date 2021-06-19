@@ -189,7 +189,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
         if (!podStateManager.isActivationCompleted) {
-            return PumpEnactResult(injector).success(true).enacted(false)
+            return PumpEnactResult(injector).success(true).enacted(true)
         }
         val basalProgram = mapProfileToBasalProgram(profile)
         return executeProgrammingCommand(
@@ -773,10 +773,14 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     private fun deactivatePod(): PumpEnactResult {
-        return executeProgrammingCommand(
+        val ret = executeProgrammingCommand(
             historyEntry = history.createRecord(OmnipodCommandType.DEACTIVATE_POD),
             command = omnipodManager.deactivatePod().ignoreElements()
         ).toPumpEnactResult()
+        if (podStateManager.activeCommand != null) {
+            ret.success(false)
+        }
+        return ret
     }
 
     private fun handleTimeChange(): PumpEnactResult {

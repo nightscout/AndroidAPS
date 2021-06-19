@@ -166,7 +166,7 @@ class OmnipodDashManagerImpl @Inject constructor(
                     .setUniqueId(podStateManager.uniqueId!!.toInt())
                     .setSequenceNumber(podStateManager.messageSequenceNumber)
                     .setNonce(NONCE)
-                    .setProgramReminder(ProgramReminder(atStart = hasBasalBeepEnabled, atEnd = hasBasalBeepEnabled, atInterval = 0))
+                    .setProgramReminder(ProgramReminder(atStart = hasBasalBeepEnabled, atEnd = false, atInterval = 0))
                     .setBasalProgram(basalProgram)
                     .setCurrentTime(currentTime)
                     .build(),
@@ -436,18 +436,11 @@ class OmnipodDashManagerImpl @Inject constructor(
         beepEnabled: Boolean
     ): Observable<PodEvent> {
         return Observable.defer {
-            val beepType = if (!beepEnabled) {
+            val beepType = if (!beepEnabled)
                 BeepType.SILENT
-            } else {
-                when (deliveryType) {
-                    StopDeliveryCommand.DeliveryType.ALL, StopDeliveryCommand.DeliveryType.BASAL ->
-                        BeepType.FOUR_TIMES_BIP_BEEP
-                    StopDeliveryCommand.DeliveryType.TEMP_BASAL ->
-                        BeepType.LONG_SINGLE_BEEP
-                    StopDeliveryCommand.DeliveryType.BOLUS ->
-                        BeepType.LONG_SINGLE_BEEP
-                }
-            }
+            else
+                BeepType.LONG_SINGLE_BEEP
+
             bleManager.sendCommand(
                 StopDeliveryCommand.Builder()
                     .setSequenceNumber(podStateManager.messageSequenceNumber)
