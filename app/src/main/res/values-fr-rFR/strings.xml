@@ -94,7 +94,7 @@
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">Après traitement des restrictions</string>
     <string name="loop_tbrsetbypump_label">Basal temporaire défini par la pompe</string>
-    <string name="noapsselected">Pas d\'APS séléctionné ou pas de résultat fourni</string>
+    <string name="noapsselected">Pas d\'APS sélectionné ou pas de résultat fourni</string>
     <string name="safety">Sécurité</string>
     <string name="openapsma_disabled">Plugin désactivé</string>
     <string name="constraints_violation">Violation des restrictions</string>
