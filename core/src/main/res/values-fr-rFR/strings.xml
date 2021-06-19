@@ -11,7 +11,7 @@
     <string name="tempbasaldeliveryerror">Erreur injection basal temporaire</string>
     <string name="goingtodeliver">%1$.2f U vont être injectées</string>
     <string name="waitingforpump">Attente connection pompe</string>
-    <string name="connectingfor">Connexion à %1$d en cours</string>
+    <string name="connectingfor">Connexion en cours : %1$d sec.</string>
     <string name="bolusdelivering">%1$.2f U ont été injectées</string>
     <string name="handshaking">Connexion</string>
     <string name="connecting">Connection en cours</string>
