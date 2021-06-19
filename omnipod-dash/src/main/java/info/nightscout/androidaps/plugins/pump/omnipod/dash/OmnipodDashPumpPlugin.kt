@@ -383,14 +383,14 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     private fun waitForBolusDeliveryToComplete(
-        maxRetries: Int,
+        maxTries: Int,
         requestedBolusAmount: Double,
         bolusType: DetailedBolusInfo.BolusType
     ): Single<Double> = Single.defer {
 
         if (bolusCanceled && podStateManager.activeCommand != null) {
             var errorGettingStatus: Throwable? = null
-            for (tries in 1..maxRetries) {
+            for (tries in 1..maxTries) {
                 errorGettingStatus = getPodStatus().blockingGet()
                 if (errorGettingStatus != null) {
                     aapsLogger.debug(LTag.PUMP, "waitForBolusDeliveryToComplete errorGettingStatus=$errorGettingStatus")
@@ -414,11 +414,13 @@ class OmnipodDashPumpPlugin @Inject constructor(
             if (bolusType == DetailedBolusInfo.BolusType.SMB) {
                 continue
             }
-            val percent = waited.toFloat() / estimatedDeliveryTimeSeconds
+            val percent = (waited.toFloat() / estimatedDeliveryTimeSeconds) * 100
             updateBolusProgressDialog(resourceHelper.gs(R.string.bolusdelivering, requestedBolusAmount), percent.toInt())
         }
 
-        for (tries in 1..maxRetries) {
+        for (tryNumber in 1..maxTries) {
+            updateBolusProgressDialog("Checking delivery status. Try: $tryNumber/$maxTries", 100.toInt())
+
             val cmd = if (bolusCanceled)
                 cancelBolus()
             else
