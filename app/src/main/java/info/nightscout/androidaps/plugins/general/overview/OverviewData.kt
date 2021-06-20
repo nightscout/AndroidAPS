@@ -71,6 +71,44 @@ class OverviewData @Inject constructor(
     var fromTime: Long = 0
     var endTime: Long = 0
 
+    fun reset() {
+        profile = null
+        profileName = null
+        profileNameWithRemainingTime = null
+        calcProgress = ""
+        lastBg = null
+        temporaryBasal = null
+        extendedBolus = null
+        bolusIob = null
+        basalIob = null
+        cobInfo = null
+        lastCarbsTime = 0L
+        temporaryTarget = null
+        lastAutosensData = null
+        bgReadingsArray = ArrayList()
+        bucketedGraphSeries = PointsWithLabelGraphSeries()
+        bgReadingGraphSeries = PointsWithLabelGraphSeries()
+        predictionsGraphSeries = PointsWithLabelGraphSeries()
+        baseBasalGraphSeries = LineGraphSeries()
+        tempBasalGraphSeries = LineGraphSeries()
+        basalLineGraphSeries = LineGraphSeries()
+        absoluteBasalGraphSeries = LineGraphSeries()
+        activitySeries = FixedLineGraphSeries()
+        activityPredictionSeries = FixedLineGraphSeries()
+        iobSeries = FixedLineGraphSeries()
+        absIobSeries = FixedLineGraphSeries()
+        iobPredictions1Series = PointsWithLabelGraphSeries()
+        iobPredictions2Series = PointsWithLabelGraphSeries()
+        minusBgiSeries = FixedLineGraphSeries()
+        minusBgiHistSeries = FixedLineGraphSeries()
+        cobSeries = FixedLineGraphSeries()
+        cobMinFailOverSeries = PointsWithLabelGraphSeries()
+        deviationsSeries = BarGraphSeries()
+        ratioSeries = LineGraphSeries()
+        dsMaxSeries = LineGraphSeries()
+        dsMinSeries = LineGraphSeries()
+    }
+
     fun initRange() {
         rangeToDisplay = sp.getInt(R.string.key_rangetodisplay, 6)
 

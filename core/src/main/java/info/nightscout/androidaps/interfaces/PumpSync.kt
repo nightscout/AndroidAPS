@@ -346,6 +346,21 @@ interface PumpSync {
 
     /**
      * Invalidate of temporary basals that failed to start
+     *
+     * If exists, isValid is set false
+     * If db record doesn't exist data is ignored and false returned
+     *
+     *
+     * @param pumpId        pumpId of temporary basal
+     * @param pumpType      pump type like PumpType.ACCU_CHEK_COMBO
+     * @param pumpSerial    pump serial number
+     * @return true if running record is found and invalidated
+     **/
+
+    fun invalidateTemporaryBasalWithPumpId(pumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean
+
+    /**
+     * Invalidate of temporary basals that failed to start
      * MDT specific
      *
      * If exists, isValid is set false

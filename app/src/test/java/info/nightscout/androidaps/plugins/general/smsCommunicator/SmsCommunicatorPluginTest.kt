@@ -86,6 +86,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
                 it.resourceHelper = resourceHelper
                 it.otp = otp
                 it.dateUtil = dateUtil
+                it.commandQueue = commandQueue
             }
         }
     }
@@ -262,7 +263,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         Assert.assertTrue(smsCommunicatorPlugin.isCommand("BOLUS", ""))
         smsCommunicatorPlugin.messageToConfirm = null
         Assert.assertFalse(smsCommunicatorPlugin.isCommand("BLB", ""))
-        smsCommunicatorPlugin.messageToConfirm = AuthRequest(injector, Sms("1234", "ddd"), "RequestText", "ccode", object : SmsAction() {
+        smsCommunicatorPlugin.messageToConfirm = AuthRequest(injector, Sms("1234", "ddd"), "RequestText", "ccode", object : SmsAction(false) {
             override fun run() {}
         })
         Assert.assertTrue(smsCommunicatorPlugin.isCommand("BLB", "1234"))
