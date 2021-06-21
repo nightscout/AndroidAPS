@@ -592,7 +592,6 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     }
 
     private fun isSuspendDeliveryButtonEnabled(): Boolean {
-        R.string.key_omnipod_common_basal_beeps_enabled
         return sp.getBoolean(R.string.key_omnipod_common_suspend_delivery_button_enabled, false)
     }
 
