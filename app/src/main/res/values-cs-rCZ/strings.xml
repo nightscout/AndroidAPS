@@ -81,8 +81,6 @@
     <string name="careportal">Péče</string>
     <string name="configbuilder_pump">Pumpa</string>
     <string name="configbuilder_pump_description">Jakou pumpu chcete používat s AndroidAPS?</string>
-    <string name="configbuilder_treatments">Ošetření</string>
-    <string name="configbuilder_treatments_description">Jaký plugin chcete používat pro ukládání informací?</string>
     <string name="configbuilder_profile">Profil</string>
     <string name="configbuilder_profile_description">Jaký profil má AndroidAPS používat?</string>
     <string name="configbuilder_aps">APS</string>
@@ -911,6 +909,8 @@
     <string name="ns_receive_temp_target_summary">Přijmout dočasné cíle zadané prostřednictvím NS nebo NSClienta</string>
     <string name="ns_receive_profile_switch">Přijímat přepnutí profilu</string>
     <string name="ns_receive_profile_switch_summary">Přijmout přepnutí profilu zadané prostřednictvím NS nebo NSClienta</string>
+    <string name="ns_receive_offline_event">Přijímat události APS offline</string>
+    <string name="ns_receive_offline_event_summary">Přijmout APS offline události zadané prostřednictvím NS nebo NSClienta</string>
     <string name="ns_receive_insulin">Přijímat inzulín</string>
     <string name="ns_receive_insulin_summary">Přijmout inzulín vložený přes NS nebo NSClient (není dodán, pouze započítán do IOB)</string>
     <string name="ns_receive_carbs">Přijímat sacharidy</string>
@@ -919,4 +919,6 @@
     <string name="ns_receive_therapy_events_summary">Přijmout léčebné události (výměna setu, inzulínu, baterie atd.) zadané prostřednictvím NS nebo NSClienta</string>
     <string name="ns_receive_cgm">Přijímat/doplňovat glykémie</string>
     <string name="ns_receive_cgm_summary">Přijmout CGM data z NS</string>
+    <string name="sms_timeout_while_wating">Vypršel časový limit při čekání na dokončení předchozí komunikace s pumpou</string>
+    <string name="smscommunicator_another_bolus_in_queue">Ve frontě je další bolus. Zkuste to znovu později.</string>
 </resources>
