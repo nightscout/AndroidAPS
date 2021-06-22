@@ -514,7 +514,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
         val bolusBeeps = sp.getBoolean(R.string.key_omnipod_common_bolus_beeps_enabled, false)
         return executeProgrammingCommand(
             historyEntry = history.createRecord(commandType = OmnipodCommandType.CANCEL_BOLUS),
-            command = omnipodManager.stopBolus(bolusBeeps).ignoreElements()
+            command = omnipodManager.stopBolus(bolusBeeps).ignoreElements(),
+            checkNoActiveCommand = false,
         )
     }
 
