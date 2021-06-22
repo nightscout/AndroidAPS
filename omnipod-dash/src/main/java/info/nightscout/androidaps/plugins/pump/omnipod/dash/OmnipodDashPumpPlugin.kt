@@ -1095,9 +1095,11 @@ class OmnipodDashPumpPlugin @Inject constructor(
             message,
             urgency
         )
+        // TODO add back sound when we have options to disable it
+        /*
         if (sound != null) {
             notification.soundId = sound
-        }
+        }*/
         rxBus.send(EventNewNotification(notification))
     }
 
