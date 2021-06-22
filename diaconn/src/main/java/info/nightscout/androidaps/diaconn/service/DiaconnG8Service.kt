@@ -443,7 +443,7 @@ class DiaconnG8Service : DaggerService() {
         // temp state check
         sendMessage(TempBasalInquirePacket(injector))
 
-        if (diaconnG8Pump.tbStatus ==1 || diaconnG8Pump.isTempBasalInProgress) {
+        if (diaconnG8Pump.tbStatus ==1 ) {
             rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.stoppingtempbasal)))
             val msgPacket = TempBasalSettingPacket(injector, 2, diaconnG8Pump.tbTime, diaconnG8Pump.tbInjectRateRatio)
             // tempbasal stop
@@ -471,7 +471,7 @@ class DiaconnG8Service : DaggerService() {
         // temp state check
         sendMessage(TempBasalInquirePacket(injector))
 
-        if (diaconnG8Pump.tbStatus ==1 || diaconnG8Pump.isTempBasalInProgress) {
+        if (diaconnG8Pump.tbStatus ==1 ) {
             rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.stoppingtempbasal)))
             val msgPacket = TempBasalSettingPacket(injector, 2, diaconnG8Pump.tbTime, diaconnG8Pump.tbInjectRateRatio)
             // tempbasal stop
@@ -512,7 +512,7 @@ class DiaconnG8Service : DaggerService() {
 
         // temp state check
         sendMessage(TempBasalInquirePacket(injector))
-        if (diaconnG8Pump.tbStatus ==1 || diaconnG8Pump.isTempBasalInProgress) {
+        if (diaconnG8Pump.tbStatus ==1 ) {
             rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.stoppingtempbasal)))
             val msgPacket = TempBasalSettingPacket(injector, 2, diaconnG8Pump.tbTime, diaconnG8Pump.tbInjectRateRatio)
             // tempbasal stop
