@@ -42,11 +42,6 @@ open class TempBasalInquireResponsePacket(
         diaconnG8Pump.tbInjectRateRatio = getShortToInt(bufferData) //임시기저 주입량/률
         diaconnG8Pump.tbElapsedTime = getShortToInt(bufferData) // 임시기저 경과시간
 
-        diaconnG8Pump.isTempBasalInProgress = diaconnG8Pump.tbStatus == 1
-        if (diaconnG8Pump.tbInjectRateRatio >= 50000) {
-            diaconnG8Pump.tempBasalPercent = diaconnG8Pump.tbInjectRateRatio - 50000
-        }
-
         aapsLogger.debug(LTag.PUMPCOMM, "Result --> $result")
         aapsLogger.debug(LTag.PUMPCOMM, "tbStatus > " + diaconnG8Pump.tbStatus)
         aapsLogger.debug(LTag.PUMPCOMM, "tbTime> " + diaconnG8Pump.tbTime)

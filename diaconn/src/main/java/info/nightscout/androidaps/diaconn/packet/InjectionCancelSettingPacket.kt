@@ -21,7 +21,7 @@ class InjectionCancelSettingPacket(
     }
 
     override fun encode(msgSeq:Int): ByteArray {
-        var buffer = prefixEncode(msgType, msgSeq, MSG_CON_END)
+        val buffer = prefixEncode(msgType, msgSeq, MSG_CON_END)
         buffer.put(reqMsgType)
         return suffixEncode(buffer)
     }

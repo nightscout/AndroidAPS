@@ -169,8 +169,10 @@ class DiaconnG8Fragment : DaggerFragment() {
                 binding.lastbolus.text = ""
         }
 
-        binding.dailyunits.text = resourceHelper.gs(R.string.reservoirvalue, (pump.todayBaseAmount + pump.todaySnackAmount + pump.todayMealAmount), ((pump.maxBasal.toInt() * 24) + pump.maxBolusePerDay.toInt()))
-        warnColors.setColor(binding.dailyunits, pump.baseInjAmount, pump.baseAmount * 0.75, pump.baseAmount * 0.9)
+        val todayInsulinAmount = (pump.todayBaseAmount + pump.todaySnackAmount + pump.todayMealAmount)
+        val todayInsulinLimitAmount = (pump.maxBasal.toInt() * 24) + pump.maxBolusePerDay.toInt()
+        binding.dailyunits.text = resourceHelper.gs(R.string.reservoirvalue, todayInsulinAmount, todayInsulinLimitAmount)
+        warnColors.setColor(binding.dailyunits, todayInsulinAmount, todayInsulinLimitAmount * 0.75, todayInsulinLimitAmount * 0.9)
         binding.basabasalrate.text = pump.baseInjAmount.toString() +" / "+ resourceHelper.gs(R.string.pump_basebasalrate, plugin.baseBasalRate)
 
         binding.tempbasal.text = diaconnG8Pump.temporaryBasalToString()
@@ -179,7 +181,6 @@ class DiaconnG8Fragment : DaggerFragment() {
         warnColors.setColorInverse(binding.reservoir, pump.systemRemainInsulin , 50.0, 20.0)
         binding.battery.text = "{fa-battery-" + pump.systemRemainBattery / 25  + "}" + " ("+ pump.systemRemainBattery + " %)"
         warnColors.setColorInverse(binding.battery, pump.systemRemainBattery.toDouble(), 51.0, 26.0)
-        //binding.tdd.text = "basal: " +pump.todayBaseAmount + "/ bolus: "+ (pump.todaySnackAmount + pump.todayMealAmount)
         binding.firmware.text = resourceHelper.gs(R.string.diaconn_g8_pump) + "\nVersion: " + pump.majorVersion.toString() + "." +  pump.minorVersion.toString() + "\nCountry: "+pump.country.toString() + "\nProductType: "+ pump.productType.toString() + "\nManufacture: " + pump.makeYear + "." + pump.makeMonth + "." + pump.makeDay
         binding.basalstep.text = pump.basalStep.toString()
         binding.bolusstep.text = pump.bolusStep.toString()

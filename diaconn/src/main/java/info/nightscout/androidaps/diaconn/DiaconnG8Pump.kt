@@ -58,27 +58,41 @@ class DiaconnG8Pump @Inject constructor(
     var bolusBlocked = false
     var lastBolusTime: Long = 0
     var lastBolusAmount = 0.0
-    var extendedBolusMinutes = 0
-    var extendedBolusSoFarInMinutes = 0
-    var extendedBolusDeliveredSoFar = 0.0
+
 
     /*
      * TEMP BASALS
      */
-    var isTempBasalInProgress = false
-    var tempBasalPercent = 0
     var tempBasalStart: Long = 0
+    var tempBasalDuration: Long = 0 // in milliseconds
     var tempBasalAbsoluteRate: Double = 0.0
-    var tempBasalDuration: Long = 0
+    var tempBasalPercent: Int = 0
 
+    var tempBasalTotalSec: Long
+        set(durationInSec) {
+            tempBasalDuration = T.secs(durationInSec).msecs()
+        }
+        get() = T.msecs(tempBasalDuration).mins()
+    var isTempBasalInProgress: Boolean
+        get() = tempBasalStart != 0L && dateUtil.now() in tempBasalStart..tempBasalStart + tempBasalDuration
+        set(isRunning) {
+            if (isRunning) throw IllegalArgumentException("Use to cancel TBR only")
+            else {
+                tempBasalStart = 0L
+                tempBasalDuration = 0L
+                tempBasalAbsoluteRate = 0.0
+            }
+        }
     val tempBasalRemainingMin: Int
-        get() = max(tbElapsedTime, 0)
+        get() = max(T.msecs(tempBasalStart + tempBasalDuration - dateUtil.now()).mins().toInt(), 0)
 
     fun temporaryBasalToString(): String {
         if (!isTempBasalInProgress) return ""
-        return tempBasalAbsoluteRate.toString() + "U @" +
+
+        val passedMin = ((min(dateUtil.now(), tempBasalStart + tempBasalDuration) - tempBasalStart) / 60.0 / 1000).roundToInt()
+        return tempBasalAbsoluteRate.toString() + "U/h @" +
             dateUtil.timeString(tempBasalStart) +
-            " " + tbElapsedTime + "/" + T.msecs(tempBasalDuration).mins() + "'"
+            " " + passedMin + "/" + T.msecs(tempBasalDuration).mins() + "'"
     }
 
     fun fromTemporaryBasal(tbr: PumpSync.PumpState.TemporaryBasal?) {
@@ -99,6 +113,7 @@ class DiaconnG8Pump @Inject constructor(
     var extendedBolusStart: Long = 0
     var extendedBolusDuration: Long = 0
     var extendedBolusAmount = 0.0
+
     var isExtendedInProgress: Boolean
         get() = extendedBolusStart != 0L && dateUtil.now() in extendedBolusStart..extendedBolusStart + extendedBolusDuration
         set(isRunning) {
@@ -109,15 +124,26 @@ class DiaconnG8Pump @Inject constructor(
                 extendedBolusAmount = 0.0
             }
         }
-    var extendedBolusPassedMinutes = 0
-    var extendedBolusRemainingMinutes = 0
-    var extendedBolusAbsoluteRate = 0.0
+    val extendedBolusPassedMinutes:Int
+        get() = T.msecs(max(0, dateUtil.now() - extendedBolusStart)).mins().toInt()
+    val extendedBolusRemainingMinutes: Int
+        get() = max(T.msecs(extendedBolusStart + extendedBolusDuration - dateUtil.now()).mins().toInt(), 0)
+    private val extendedBolusDurationInMinutes: Int
+        get() = T.msecs(extendedBolusDuration).mins().toInt()
+
+    var extendedBolusAbsoluteRate: Double
+        get() = extendedBolusAmount * T.hours(1).msecs() / extendedBolusDuration
+        set(rate) {
+            extendedBolusAmount = rate * extendedBolusDuration / T.hours(1).msecs()
+        }
 
     fun extendedBolusToString(): String {
         if (!isExtendedInProgress) return ""
-        return "E "+ DecimalFormatter.to2Decimal(extendedBolusDeliveredSoFar) +"/" + DecimalFormatter.to2Decimal(extendedBolusAbsoluteRate) + "U/h @" +
+        //return "E "+ DecimalFormatter.to2Decimal(extendedBolusDeliveredSoFar) +"/" + DecimalFormatter.to2Decimal(extendedBolusAbsoluteRate) + "U/h @" +
+        //     " " + extendedBolusPassedMinutes + "/" + extendedBolusMinutes + "'"
+        return "E "+ DecimalFormatter.to2Decimal(extendedBolusAbsoluteRate) + "U/h @" +
             dateUtil.timeString(extendedBolusStart) +
-            " " + extendedBolusPassedMinutes + "/" + extendedBolusMinutes + "'"
+            " " + extendedBolusPassedMinutes + "/" + extendedBolusDurationInMinutes + "'"
     }
 
     fun fromExtendedBolus(eb: PumpSync.PumpState.ExtendedBolus?) {
@@ -231,7 +257,7 @@ class DiaconnG8Pump @Inject constructor(
     var maxBasalPerHours = 0.0
 
     // 7. Tempbasal status
-    var tbStatus = 0 // 임시기저 상태
+    var tbStatus = 0 // 임시기저 상태 (1 : running, 2:not  running )
     var tbTime = 0 // 임시기저 시간
     var tbInjectRateRatio = 0 // 임시기저 주입량/률  1000(0.00U)~1600(6.00U), 50000(0%)~50200(200%), 50000이상이면 주입률로 판정
     var tbElapsedTime = 0 // 임시기저 경과 시간(0~1425분)
