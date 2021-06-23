@@ -198,6 +198,7 @@ class BLEComm @Inject internal constructor(
     }
 
     @Synchronized fun close() {
+        /*
         if (!encryptedDataRead && !encryptedCommandSent) {
             // there was no response from pump before started encryption
             // assume pairing is invalid
@@ -220,6 +221,7 @@ class BLEComm @Inject internal constructor(
                 sp.putLong(R.string.key_rs_last_clear_key_request, dateUtil.now())
             }
         }
+        */
         aapsLogger.debug(LTag.PUMPBTCOMM, "BluetoothAdapter close")
         bluetoothGatt?.close()
         bluetoothGatt = null

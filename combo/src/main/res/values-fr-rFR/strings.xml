@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="description_pump_combo">Intégration des pompes Accu-Chek Combo il faut avoir Ruffy installé</string>
-    <string name="combo_programming_bolus">Programmer la pompe pour injecter un bolus</string>
+    <string name="description_pump_combo">Pour l\'intégration des pompes Accu-Chek Combo, il faut d\'abord installer Ruffy</string>
+    <string name="combo_programming_bolus">Programmation de la pompe pour injecter un bolus</string>
     <string name="combo_pump_state_label">État</string>
     <string name="combo_pump_activity_label">Activité</string>
     <string name="combo_no_pump_connection">Pas de connexion depuis %1$d min</string>
@@ -10,13 +10,13 @@
     <string name="combo_pump_state_suspended_due_to_error">Arrêté pour cause d\'erreur</string>
     <string name="combo_pump_state_suspended_by_user">Arrêté par l\'utilisateur</string>
     <string name="combo_pump_state_running">En cours d\'exécution</string>
-    <string name="combo_pump_action_cancelling_tbr">Annulation en cours du TBR</string>
-    <string name="combo_pump_action_setting_tbr">Paramétrer TBR (%1$d%% / %2$d min) </string>
+    <string name="combo_pump_action_cancelling_tbr">Annulation du DBT</string>
+    <string name="combo_pump_action_setting_tbr">Réglage DBT (%1$d%% / %2$d min)</string>
     <string name="combo_pump_action_bolusing">Injection du Bolus en cours (%1$.1f U)</string>
     <string name="combo_pump_action_refreshing">Actualisation en cours</string>
     <string name="combo_pump_unsupported_operation">L\'opération demandée n\'est pas prise en charge par la pompe</string>
     <string name="combo_low_suspend_forced_notification">Utilisation dangereuse : les bolus étendus ou carrés sont actifs. Le mode Boucle a été programmé pour des suspensions seulement pour 6 heures. Uniquement les bolus normaux sont pris en charge par le mode Boucle</string>
-    <string name="combo_force_disabled_notification">Utilisation dangereuse : la pompe utilise un profil avec taux basal différent de celui du premier. Le mode Boucle a été désactivé. Sélectionner le premier profil sur la pompe et rafraîchir.</string>
+    <string name="combo_force_disabled_notification">Utilisation dangereuse : la pompe utilise un profil avec un taux basal différent du premier. Le mode Boucle a été désactivé. Sélectionner le premier profil sur la pompe et rafraîchir.</string>
     <string name="bolus_frequency_exceeded">Un bolus avec la même quantité d’insuline a été demandé au cours de la dernière minute. Pour prévenir l’administration accidentelle de deux bolus à la fois et pour protéger contre les bugs, ceci (bolus) n\'est pas autorisé.</string>
     <string name="combo_pump_connected_now">Maintenant</string>
     <string name="combo_activity_reading_pump_history">Lecture historique pompe</string>
@@ -37,13 +37,13 @@
     <string name="combo_invalid_setup">Paramétrage de la pompe invalide. Vérifiez la documentation et le menu QUICK INFO en utilisant le logiciel de configuration 360.</string>
     <string name="combo_actvity_reading_basal_profile">Lecture du profil basal</string>
     <string name="combo_bolus_rejected_due_to_pump_history_change">L\'historique de la pompe a été modifié depuis le calcul du bolus. Le bolus n\'a pas été administré. Merci de recalculer le bolus s\'il est toujours nécessaire.</string>
-    <string name="combo_error_updating_treatment_record">Le bolus a été délivré mais il n\'a pas pu être ajouté à l\'historique des traitements. Ceci peut se produire lorsque deux petits bolus de la même taille sont gérés dans les deux dernières minutes. Merci de vérifier l\'historique de la pompe et les entrées de traitements puis utilisez le Careportal pour y ajouter les entrées manquantes. Assurez-vous de ne pas ajouter des entrées au cours de la même minute et pour la même quantité d\'insuline.</string>
+    <string name="combo_error_updating_treatment_record">Le bolus a été délivré mais il n\'a pas pu être ajouté à l\'historique des traitements. Ceci peut se produire lorsque deux petits bolus de même taille sont injectés dans les deux dernières minutes. Veuillez vérifier l\'historique de la pompe et les entrées de traitements puis utilisez Careportal pour y ajouter les entrées manquantes. Assurez-vous de ne pas ajouter d\'entrées au cours de la même minute et pour la même quantité d\'insuline.</string>
     <string name="combo_high_temp_rejected_due_to_pump_history_changes">Rejet cible temporaire haute parce que le calcul ne prend pas en compte les changements récents de l\'historique pompe</string>
     <string name="combo_activity_checking_pump_state">Actualisation de l\'état de la pompe</string>
     <string name="combo_warning_pump_basal_rate_changed">Le taux basal de la pompe a été modifié et sera bientôt actualisé</string>
     <string name="combo_error_failure_reading_changed_basal_rate">Le pourcentage de basal a changé dans la pompe mais sa lecture a échoué</string>
     <string name="combo_activity_checking_for_history_changes">Vérification des modifications de l\'historique</string>
-    <string name="combo_error_multiple_boluses_with_identical_timestamp">De multiples bolus similaires viennent d\'être importés dans la même minute. Un seul enregistrement a pu être ajouté aux traitements. Merci de vérifier la pompe et d\'ajouter manuellement un enregistrement de bolus en utilisant l\'onglet Careportal. Assurez vous de créer ce bolus avec un temps différent de tous les autres Bolus.</string>
+    <string name="combo_error_multiple_boluses_with_identical_timestamp">De multiples bolus similaires viennent d\'être importés dans la même minute. Un seul enregistrement a pu être ajouté aux traitements. Veuillez vérifier la pompe et d\'ajouter manuellement un enregistrement de bolus en utilisant l\'onglet Careportal. Assurez vous de créer ce bolus avec un temps différent de tous les autres Bolus.</string>
     <string name="about_link_urls">\n\ndocumentation :\nhttps://androidaps.readthedocs.io/fr/latest/\n\nfacebook :\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <string name="combo_check_date">Le dernier bolus enregistré date d\'il y a plus de 24h ou est dans le futur. Vérifiez que la date dans la pompe est correctement définie.</string>
     <string name="combo_suspious_bolus_time">L\'heure/date sur la pompe du dernier bolus administré semble erroné. L\'IA est probablement incorrecte. Vérifiez l\'heure/date de la pompe.</string>

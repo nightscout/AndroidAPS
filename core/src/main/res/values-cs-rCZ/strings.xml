@@ -382,6 +382,9 @@
     <string name="ue_timestamp">Datum</string>
     <string name="ue_none">Žádné jednotky</string>
     <string name="ue_export_to_csv">Exportovat uživatelské záznamy do Excelu (csv)</string>
+    <string name="uel_loop_change">SMYČKA ZMĚNĚNA</string>
+    <string name="uel_loop_removed">SMYČKA ODEBRÁNA</string>
+    <string name="uel_other">JINÉ</string>
     <plurals name="days">
         <item quantity="one">%1$d den</item>
         <item quantity="few">%1$d dnů</item>

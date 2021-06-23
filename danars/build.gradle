@@ -11,8 +11,6 @@ android {
     ndkVersion "21.1.6352462"
 
     defaultConfig {
-        versionCode 1
-        versionName "1.0"
 
         ndk {
             moduleName "BleCommandUtil"

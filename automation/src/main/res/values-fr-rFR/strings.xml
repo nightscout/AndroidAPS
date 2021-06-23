@@ -3,9 +3,9 @@
     <string name="automation_short">Auto</string>
     <string name="automation">Automatisation</string>
     <string name="automation_description">Tâches d\'automatisation définies par l\'utilisateur</string>
-    <string name="automation_missing_task_name">Merci d\'entrer le nom de la tâche.</string>
-    <string name="automation_missing_trigger">Merci de spécifier au moins un déclencheur.</string>
-    <string name="automation_missing_action">Merci de spécifier au moins une action.</string>
+    <string name="automation_missing_task_name">Veuillez entrer un nom pour la tâche.</string>
+    <string name="automation_missing_trigger">Veuillez spécifier au moins un déclencheur.</string>
+    <string name="automation_missing_action">Veuillez spécifier au moins une action.</string>
     <string name="alarm_message">Alarme: %1$s</string>
     <string name="alarm_short">Alarme:</string>
     <string name="message_short">Mess :</string>
