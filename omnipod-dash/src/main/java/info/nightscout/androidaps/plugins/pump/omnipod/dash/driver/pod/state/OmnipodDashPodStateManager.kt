@@ -12,6 +12,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.
 import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
+import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
+import org.joda.time.Duration
 import java.io.Serializable
 import java.util.*
 
@@ -32,8 +35,11 @@ interface OmnipodDashPodStateManager {
     val isPodKaput: Boolean
     var bluetoothConnectionState: BluetoothConnectionState
 
+    var timeZone: DateTimeZone
     val lastUpdatedSystem: Long // System.currentTimeMillis()
     val lastStatusResponseReceived: Long
+    val time: DateTime?
+    val timeBehind: Duration?
 
     val messageSequenceNumber: Short
     val sequenceNumberOfLastProgrammingCommand: Short?

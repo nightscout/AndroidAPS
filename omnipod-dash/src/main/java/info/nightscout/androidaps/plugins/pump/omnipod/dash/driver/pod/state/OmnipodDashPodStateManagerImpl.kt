@@ -21,6 +21,9 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
+import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
+import org.joda.time.Duration
 import java.io.Serializable
 import java.util.*
 import javax.inject.Inject
@@ -94,6 +97,13 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             } else if (bluetoothAddress != podState.bluetoothAddress) {
                 throw IllegalStateException("Trying to set Bluetooth Address to $bluetoothAddress, but it is already set to ${podState.bluetoothAddress}")
             }
+        }
+
+    override var timeZone: DateTimeZone
+        get() = podState.timeZone
+        set(tz) {
+            podState.timeZone = tz
+            store()
         }
 
     override val bluetoothVersion: SoftwareVersion?
@@ -171,6 +181,23 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
 
     override val lastStatusResponseReceived: Long
         get() = podState.lastStatusResponseReceived
+
+    override val time: DateTime?
+        get() {
+            val minutesSinceActivation = podState.minutesSinceActivation
+            val activationTime = podState.activationTime
+            if ((activationTime != null) && (minutesSinceActivation != null)) {
+                return DateTime(activationTime)
+                    .plusMinutes(minutesSinceActivation.toInt())
+                    .plus(Duration(podState.lastStatusResponseReceived, System.currentTimeMillis()))
+            }
+            return null
+        }
+
+    override val timeBehind: Duration?
+        get() {
+            return Duration(DateTime.now(), time)
+        }
 
     override var bluetoothConnectionState: OmnipodDashPodStateManager.BluetoothConnectionState
         get() = podState.bluetoothConnectionState
@@ -513,6 +540,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         var ltk: ByteArray? = null
         var eapAkaSequenceNumber: Long = 1
         var bolusPulsesRemaining: Short = 0
+        var timeZone = DateTimeZone.getDefault()
 
         var bleVersion: SoftwareVersion? = null
         var firmwareVersion: SoftwareVersion? = null

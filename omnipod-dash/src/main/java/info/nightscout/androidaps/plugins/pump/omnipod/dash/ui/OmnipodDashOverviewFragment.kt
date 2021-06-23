@@ -69,6 +69,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
         private const val REFRESH_INTERVAL_MILLIS = 15 * 1000L // 15 seconds
         private const val PLACEHOLDER = "-"
+        private const val MAX_TIME_DEVIATION_MINUTES = 15
     }
 
     private var disposables: CompositeDisposable = CompositeDisposable()
@@ -236,13 +237,15 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             }
     }
 
-    // Get time on pos from activation time and minutes since activation
+    // Get time on pod from activation time and minutes since activation
     private fun getTimeOnPod(): DateTime? {
         var timeOnPod: DateTime? = null
         val minutesSinceActivation = podStateManager.minutesSinceActivation
         val activationTime = podStateManager.activationTime
-        if ((activationTime != null) and (minutesSinceActivation != null)) {
-            timeOnPod = DateTime(activationTime!!).plusMinutes(minutesSinceActivation!!.toInt())
+        if ((activationTime != null) && (minutesSinceActivation != null)) {
+            timeOnPod = DateTime(activationTime)
+                .plusMinutes(minutesSinceActivation.toInt())
+                .plus(Duration(podStateManager.lastStatusResponseReceived, System.currentTimeMillis()))
         }
         return timeOnPod
     }
@@ -252,8 +255,8 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
         var expiresAt: DateTime? = null
         val podLifeInHours = podStateManager.podLifeInHours
         val minutesSinceActivation = podStateManager.minutesSinceActivation
-        if ((podLifeInHours != null) and (minutesSinceActivation != null)) {
-            val expiresInMinutes = (podLifeInHours!! * 60) - minutesSinceActivation!!
+        if (podLifeInHours != null && minutesSinceActivation != null) {
+            val expiresInMinutes = podLifeInHours * 60 - minutesSinceActivation
             expiresAt = DateTime().plusMinutes(expiresInMinutes)
         }
         return expiresAt
@@ -293,28 +296,28 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             // Update time on Pod
             // TODO: For now: derive from podStateManager.minutesSinceActivation
             val timeOnPod = getTimeOnPod()
-            if (timeOnPod == null) {
-                podInfoBinding.timeOnPod.text = "???"
-            } else {
-                podInfoBinding.timeOnPod.text = readableZonedTime(timeOnPod)
-            }
+            podInfoBinding.timeOnPod.text = podStateManager.time?.let{
+                readableZonedTime(it)
+            } ?: PLACEHOLDER
 
-            // TODO
-            /*
-            podInfoBinding.timeOnPod.setTextColor(if (podStateManager.timeDeviatesMoreThan(OmnipodConstants.TIME_DEVIATION_THRESHOLD)) {
-                Color.RED
-            } else {
-                Color.WHITE
-            })
-             */
+            podInfoBinding.timeOnPod.setTextColor(
+                podStateManager.timeBehind?.let {
+                    if (it.abs().toStandardMinutes() > MAX_TIME_DEVIATION_MINUTES) {
+                        Color.RED
+                    }else {
+                        Color.WHITE
+                    }
+                } ?: Color.WHITE
+            )
+
 
             // Update Pod expiry time
             val expiresAt = getExpiryAt()
-            if (expiresAt is Nothing) {
+            if (expiresAt == null) {
                 podInfoBinding.podExpiryDate.text = PLACEHOLDER
                 podInfoBinding.podExpiryDate.setTextColor(Color.WHITE)
             } else {
-                podInfoBinding.podExpiryDate.text = readableZonedTime(expiresAt!!)
+                podInfoBinding.podExpiryDate.text = readableZonedTime(expiresAt)
                 podInfoBinding.podExpiryDate.setTextColor(if (DateTime.now().isAfter(expiresAt)) {
                     Color.RED
                 } else {
@@ -322,12 +325,6 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 })
             }
 
-            /* TODO
-            if (podStateManager.isPodFaulted) {
-                val faultEventCode = podStateManager.faultEventCode
-                errors.add(resourceHelper.gs(R.string.omnipod_common_pod_status_pod_fault_description, faultEventCode.value, faultEventCode.name))
-            }
-             */
             podStateManager.alarmType?.let {
                 errors.add(
                     resourceHelper.gs(
