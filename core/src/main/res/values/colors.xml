@@ -76,7 +76,7 @@
     <color name="lightyellow">#FFFF00</color>
     <color name="midyellow">#EBEB00</color>
     <color name="devslopepos">#E5E500</color>
-    <color name="ribbonWarning">#f4d700</color>
+    <color name="ribbonWarning">#E4C700</color>
 
     <!-- Orange Colors -->
     <color name="squash">#de7550</color>
@@ -87,7 +87,7 @@
     <color name="notificationAnnouncement">#FF8C00</color>
     <color name="metadataTextWarning">#FF8C00</color>
     <color name="cob">#f0a30a</color>
-    <color name="carbsOrange">#FEAD01</color>
+    <color name="carbsOrange">#EE9F01</color>
     <color name="midorange">#f0a30a</color>
 
     <!-- Green Colors -->
@@ -96,7 +96,7 @@
     <color name="sensGreen">#008585</color>
     <color name="tempTargetConfirmation">#77dd77</color>
     <color name="lightPastelGreen">#7200FF00</color>
-    <color name="lightGreen">#00FF00</color>
+    <color name="lightGreen">#00D900</color>
     <color name="calcGreen">#67e86a</color>
     <color name="swampGreen">#c9bd60</color>
     <color name="toastOk">#77dd77</color>
@@ -124,9 +124,9 @@
     <color name="cardObjectiveText">#779ECB</color>
     <color name="colorInsulinButton">#8EC1FF</color>
     <color name="colorSetTempButton">#FF478EFF</color>
-    <color name="bgi">#00EEEE</color>
-    <color name="cyan">#00d2d2</color>
-    <color name="cyan_blue">#67DFE8</color>
+    <color name="bgi">#00DADA</color>
+    <color name="cyan">#00C6C6</color>
+    <color name="cyan_blue">#65C9D2</color>
 
     <!-- Gray colors -->
     <color name="darkgray">#323232</color>
