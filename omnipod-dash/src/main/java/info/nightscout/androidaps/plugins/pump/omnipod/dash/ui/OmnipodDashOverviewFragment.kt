@@ -69,7 +69,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
         private const val REFRESH_INTERVAL_MILLIS = 15 * 1000L // 15 seconds
         private const val PLACEHOLDER = "-"
-        private const val MAX_TIME_DEVIATION_MINUTES = 15.toInt()
+        private const val MAX_TIME_DEVIATION_MINUTES = 15L
     }
 
     private var disposables: CompositeDisposable = CompositeDisposable()
@@ -302,8 +302,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
             podInfoBinding.timeOnPod.setTextColor(
                 podStateManager.timeBehind?.let {
-                    if (it.abs().toStandardMinutes().isGreaterThan(Duration.standardMinutes
-                        (MAX_TIME_DEVIATION_MINUTES))) {
+                    if (it.abs().isLongerThan(Duration.standardMinutes(MAX_TIME_DEVIATION_MINUTES))) {
                         Color.RED
                     }else {
                         Color.WHITE
