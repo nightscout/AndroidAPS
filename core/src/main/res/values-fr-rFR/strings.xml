@@ -11,7 +11,7 @@
     <string name="tempbasaldeliveryerror">Erreur injection basal temporaire</string>
     <string name="goingtodeliver">%1$.2f U vont être injectées</string>
     <string name="waitingforpump">Attente connection pompe</string>
-    <string name="connectingfor">Connexion à %1$d en cours</string>
+    <string name="connectingfor">Connexion en cours : %1$d sec.</string>
     <string name="bolusdelivering">%1$.2f U ont été injectées</string>
     <string name="handshaking">Connexion</string>
     <string name="connecting">Connection en cours</string>
@@ -382,6 +382,9 @@
     <string name="ue_timestamp">Horodatage</string>
     <string name="ue_none">Aucune unité</string>
     <string name="ue_export_to_csv">Exporter les entrées utilisateur vers Excel (csv)</string>
+    <string name="uel_loop_change">BOUCLE CHANGÉE</string>
+    <string name="uel_loop_removed">BOUCLE SUPPRIMÉE</string>
+    <string name="uel_other">AUTRE</string>
     <plurals name="days">
         <item quantity="one">%1$d jour</item>
         <item quantity="other">%1$d jours</item>

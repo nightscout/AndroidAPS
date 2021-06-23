@@ -73,8 +73,6 @@
     <string name="careportal">Careportal</string>
     <string name="configbuilder_pump">Pompa</string>
     <string name="configbuilder_pump_description">Hangi pompa ile AndroidAPS kullanmak istersiniz?</string>
-    <string name="configbuilder_treatments">Tedaviler</string>
-    <string name="configbuilder_treatments_description">Hangi eklenti tedavi işleme için kullanılsın?</string>
     <string name="configbuilder_profile">Profil</string>
     <string name="configbuilder_profile_description">Hangi profili AndroidAPS kullanmalı?</string>
     <string name="configbuilder_aps">APS (YPS)</string>

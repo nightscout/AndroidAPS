@@ -81,8 +81,6 @@
     <string name="careportal">Careportal</string>
     <string name="configbuilder_pump">Pompe</string>
     <string name="configbuilder_pump_description">Quelle pompe souhaitez-vous utiliser avec AndroidAPS ?</string>
-    <string name="configbuilder_treatments">Traitements</string>
-    <string name="configbuilder_treatments_description">Quel plugin doit être utilisé pour la gestion des traitements ?</string>
     <string name="configbuilder_profile">Profil</string>
     <string name="configbuilder_profile_description">Quel profil doit utiliser AndroidAPS ?</string>
     <string name="configbuilder_aps">APS</string>
@@ -96,7 +94,7 @@
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">Après traitement des restrictions</string>
     <string name="loop_tbrsetbypump_label">Basal temporaire défini par la pompe</string>
-    <string name="noapsselected">Pas d\'APS séléctionné ou pas de résultat fourni</string>
+    <string name="noapsselected">Pas d\'APS sélectionné ou pas de résultat fourni</string>
     <string name="safety">Sécurité</string>
     <string name="openapsma_disabled">Plugin désactivé</string>
     <string name="constraints_violation">Violation des restrictions</string>
@@ -732,7 +730,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Absorption lente des glucides détectée : %2$d%% du temps. Vérifiez de nouveau votre calcul. Les GA (Glucides Actifs) peuvent être surestimés et alors plus d\'insuline pourrait être délivré !!!!!</font>]]></string>
     <string name="partialboluswizard">Injecter cette partie de Bolus calculée par l’assistant [%]</string>
     <string name="deliverpartofboluswizard">L\'assistant Bolus effectue le calcul mais seulement cette partie de l\'insuline calculée est délivrée. Utile avec l\'algorithme SMB.</string>
-    <string name="snooze">Report alarme</string>
+    <string name="snooze">Masquer</string>
     <string name="increasingmaxbasal">Augmentation de la valeur du débit Basal max parce que ce paramètre est inférieur au débit Basal max de votre profil</string>
     <string name="smscommunicator_messagebody">Message invalide</string>
     <string name="format_bg_isf">%1$s SI: %2$.1f</string>
@@ -912,6 +910,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="ns_receive_temp_target_summary">Accepter les cibles temporaires entrées via NS ou NSClient</string>
     <string name="ns_receive_profile_switch">Recevoir les changements de profil</string>
     <string name="ns_receive_profile_switch_summary">Accepter les changements de profil entrés via NS ou NSClient</string>
+    <string name="ns_receive_offline_event">Recevoir les événements APS hors ligne</string>
+    <string name="ns_receive_offline_event_summary">Accepter les événements APS hors ligne entrés via NS ou NSClient</string>
     <string name="ns_receive_insulin">Recevoir l\'insuline</string>
     <string name="ns_receive_insulin_summary">Acceptez l\'insuline entrée via NS ou NSClient (elle n\'est pas injectée, uniquement pour le calcul pour IA)</string>
     <string name="ns_receive_carbs">Recevoir les glucides</string>
@@ -920,4 +920,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="ns_receive_therapy_events_summary">Accepter les événements de thérapie (canule, insuline, changement de batterie, etc.) entrés via NS ou NSClient</string>
     <string name="ns_receive_cgm">Recevoir/remplir les anciennes données MGC</string>
     <string name="ns_receive_cgm_summary">Accepter les données MGC de NS</string>
+    <string name="sms_timeout_while_wating">Délai d\'attente pour finir la communication précédente avec la pompe</string>
+    <string name="smscommunicator_another_bolus_in_queue">Un autre bolus est en file d\'attente. Réessayez plus tard.</string>
 </resources>

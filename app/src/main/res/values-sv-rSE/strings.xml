@@ -82,8 +82,6 @@ Eversense-appen.</string>
     <string name="careportal">Careportal</string>
     <string name="configbuilder_pump">Pump</string>
     <string name="configbuilder_pump_description">Vilken pump vill du använda med AndroidAPS?</string>
-    <string name="configbuilder_treatments">Behandlingar</string>
-    <string name="configbuilder_treatments_description">Vilket insticksprogram ska användas för att hantera behandlingar?</string>
     <string name="configbuilder_profile">Profil</string>
     <string name="configbuilder_profile_description">Vilken profil ska AndroidAPS använda?</string>
     <string name="configbuilder_aps">APS</string>
