@@ -174,9 +174,9 @@ class DiaconnG8Pump @Inject constructor(
     var selectedLanguage = 0
     var bolusSpeed = 0
 
+    var resultErrorCode: Int = 0 // last start bolus erroCode
 
     // Bolus settings
-    var bolusStartErrorCode: Int = 0 // last start bolus erroCode
     var historyDoneReceived: Boolean = false // true when last history message is received
     var bolusingTreatment: EventOverviewBolusProgress.Treatment? = null // actually delivered treatment
     var bolusAmountToBeDelivered = 0.0 // amount to be delivered

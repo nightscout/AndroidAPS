@@ -268,7 +268,7 @@ class DiaconnG8Plugin @Inject constructor(
 
             if(result.success) result.enacted = true
             if (!result.success) {
-                setErrorMsg(diaconnG8Pump.bolusStartErrorCode, result)
+                setErrorMsg(diaconnG8Pump.resultErrorCode, result)
             } else result.comment = resourceHelper.gs(R.string.ok)
             aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
             result
@@ -409,7 +409,7 @@ class DiaconnG8Plugin @Inject constructor(
 
         result.enacted = false
         result.success = false
-        setErrorMsg(diaconnG8Pump.bolusStartErrorCode, result)
+        setErrorMsg(diaconnG8Pump.resultErrorCode, result)
         aapsLogger.error("setExtendedBolus: Failed to extended bolus")
         return result
     }
@@ -422,6 +422,7 @@ class DiaconnG8Plugin @Inject constructor(
             result.success = !diaconnG8Pump.isTempBasalInProgress
             result.enacted = true
             result.isTempCancel = true
+            if(!result.success) setErrorMsg(diaconnG8Pump.resultErrorCode, result)
         } else {
             result.success = true
             result.enacted = false
@@ -438,6 +439,11 @@ class DiaconnG8Plugin @Inject constructor(
             diaconnG8Service?.extendedBolusStop()
             result.success = !diaconnG8Pump.isExtendedInProgress
             result.enacted = true
+            if(!result.success) {
+                setErrorMsg(diaconnG8Pump.resultErrorCode, result)
+                diaconnG8Service?.readPumpStatus()
+            }
+
        } else {
             result.success = true
             result.enacted = false
@@ -560,6 +566,11 @@ class DiaconnG8Plugin @Inject constructor(
             13 -> result.comment = resourceHelper.gs(R.string.diaconn_g8_errorcode_13)
             14 -> result.comment = resourceHelper.gs(R.string.diaconn_g8_errorcode_14)
             15 -> result.comment = resourceHelper.gs(R.string.diaconn_g8_errorcode_15)
+            32 -> result.comment = resourceHelper.gs(R.string.diaconn_g8_errorcode_32)
+            33 -> result.comment = resourceHelper.gs(R.string.diaconn_g8_errorcode_33)
+            34 -> result.comment = resourceHelper.gs(R.string.diaconn_g8_errorcode_34)
+            35 -> result.comment = resourceHelper.gs(R.string.diaconn_g8_errorcode_35)
+            36 -> result.comment = resourceHelper.gs(R.string.diaconn_g8_errorcode_36)
             else -> result.comment = "not defined Error code: $errorCode"
         }
     }

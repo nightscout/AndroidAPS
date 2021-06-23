@@ -231,11 +231,11 @@ class DiaconnG8Service : DaggerService() {
             result.comment = "pump not initialized"
             return result
         }
-        sendMessage(LogStatusInquirePacket(injector), 1000)
+        sendMessage(LogStatusInquirePacket(injector))
 
         // pump version check
         if(diaconnG8Pump.isPumpVersionGe2_63) {
-            sendMessage(IncarnationInquirePacket(injector), 1000)
+            sendMessage(IncarnationInquirePacket(injector))
         }
 
         val result = PumpEnactResult(injector)
@@ -423,7 +423,6 @@ class DiaconnG8Service : DaggerService() {
 
     fun bolusStop() {
         val stop = InjectionCancelSettingPacket(injector, 0x07.toByte())
-
         diaconnG8Pump.bolusStopForced = true
         if (isConnected) {
             sendMessage(stop)
@@ -482,7 +481,6 @@ class DiaconnG8Service : DaggerService() {
             // SystemClock.sleep(500)
         }
         rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.settingtempbasal)))
-
 
         val tbTime = 2 // 2: 30min, 3:45min, 4:60min
         var newAbsoluteRate = absoluteRate
@@ -586,7 +584,7 @@ class DiaconnG8Service : DaggerService() {
         sendMessage(msgStop)
         // otp process
         if(!processConfirm(msgStop.msgType)) return false
-        loadHistory()
+        loadHistory() // pump log sync( db update)
         val eb = pumpSync.expectedPumpState().extendedBolus
         diaconnG8Pump.fromExtendedBolus(eb)
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
@@ -617,7 +615,7 @@ class DiaconnG8Service : DaggerService() {
         sendMessage(requestReqPacket4)
 
         // otp process
-        if(!processConfirm(0x0B)) return false
+        if(!processConfirm(requestReqPacket4.msgType)) return false
         // pump saving time about 30 second
         aapsLogger.debug(LTag.PUMPCOMM, "30 seconds Waiting!!")
         SystemClock.sleep(30000)

@@ -21,6 +21,7 @@ import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.apache.commons.lang3.time.DateUtils
+import org.joda.time.DateTime
 import javax.inject.Inject
 
 /**
@@ -299,6 +300,9 @@ class BigLogInquireResponsePacket(
                         pumpSerial = diaconnG8Pump.serialNo.toString())
                     aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT DUALBOLUS (" + pumplogKind + ") " + dateUtil.dateAndTimeString(logDateTime) + " (" + logDateTime + ")" + " Bolus: " + logItem.injectAmount / 100.0 + "U Duration: " + logItem.getInjectTime() + "min")
 
+                    diaconnG8Pump.lastBolusAmount = logItem.injectAmount / 100.0
+                    diaconnG8Pump.lastBolusTime = logDateTime
+
                     //Diaconn History
                     diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_BOLUS
                     diaconnG8HistoryRecord.timestamp = logDateTime
@@ -441,7 +445,7 @@ class BigLogInquireResponsePacket(
                     val logDateTime = logStartDate.time
 
                     diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_DAILY
-                    diaconnG8HistoryRecord.timestamp = logDateTime
+                    diaconnG8HistoryRecord.timestamp = DateTime(logDateTime).withTimeAtStartOfDay().millis
                     diaconnG8HistoryRecord.dailyBolus = logItem.extAmount / 100.0 + logItem.mealAmount / 100.0
 
                     val recordDateStr = "" + diaconnG8HistoryRecord.timestamp
@@ -488,7 +492,7 @@ class BigLogInquireResponsePacket(
                     val logDateTime = logStartDate.time
 
                     diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_DAILY
-                    diaconnG8HistoryRecord.timestamp = logDateTime
+                    diaconnG8HistoryRecord.timestamp = DateTime(logDateTime).withTimeAtStartOfDay().millis
                     diaconnG8HistoryRecord.dailyBasal = logItem.amount / 100.0
 
                     val recordDateStr = "" + diaconnG8HistoryRecord.timestamp

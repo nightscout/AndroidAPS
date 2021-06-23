@@ -30,7 +30,7 @@ class AppCancelSettingResponsePacket(
         val bufferData = prefixDecode(data)
         result =  getByteToInt(bufferData)
         if(!isSuccSettingResponseResult(result)) {
-            diaconnG8Pump.bolusStartErrorCode = result
+            diaconnG8Pump.resultErrorCode = result
             failed = true
             return
         }
