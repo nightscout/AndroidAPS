@@ -274,6 +274,11 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
      */
 
+    override fun onStart() {
+        super.onStart()
+        podStateManager.onStart()
+    }
+
     private fun observeDeliverySuspended(): Completable = Completable.defer {
         if (podStateManager.deliveryStatus == DeliveryStatus.SUSPENDED)
             Completable.complete()

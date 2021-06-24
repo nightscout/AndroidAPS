@@ -95,6 +95,7 @@ interface OmnipodDashPodStateManager {
 
     fun createLastBolus(requestedUnits: Double, historyId: String, bolusType: DetailedBolusInfo.BolusType)
     fun markLastBolusComplete(): LastBolus?
+    fun onStart()
 
     data class ActiveCommand(
         val sequence: Short,

@@ -391,6 +391,31 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         store()
     }
 
+    override fun onStart() {
+        when (getCommandConfirmationFromState()) {
+            CommandConfirmationSuccess, CommandConfirmationDenied -> {
+                val now = System.currentTimeMillis()
+                val newCommand = podState.activeCommand?.copy(
+                    createdRealtime = now,
+                    sentRealtime = now + 1
+                )
+                podState.lastStatusResponseReceived = now + 2
+                podState.activeCommand = newCommand
+            }
+            CommandSendingNotConfirmed -> {
+                val now = System.currentTimeMillis()
+                val newCommand = podState.activeCommand?.copy(
+                    createdRealtime = now,
+                    sentRealtime = now + 1
+                )
+                podState.lastStatusResponseReceived = 0
+            }
+            CommandSendingFailure, NoActiveCommand ->
+                podState.activeCommand = null
+        }
+
+    }
+
     override fun updateFromDefaultStatusResponse(response: DefaultStatusResponse) {
         logger.debug(LTag.PUMPCOMM, "Default status response :$response")
         podState.deliveryStatus = response.deliveryStatus
