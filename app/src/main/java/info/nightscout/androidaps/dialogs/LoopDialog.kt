@@ -324,7 +324,7 @@ class LoopDialog : DaggerDialogFragment() {
                 commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.tempbasaldeliveryerror), info.nightscout.androidaps.dana.R.raw.boluserror)
+                            ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
                         }
                     }
                 })
