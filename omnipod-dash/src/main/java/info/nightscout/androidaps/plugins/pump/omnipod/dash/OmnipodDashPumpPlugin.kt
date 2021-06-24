@@ -130,6 +130,11 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     override fun getPumpStatus(reason: String) {
+        if (reason != "REQUESTED BY USER" &&  !podStateManager.isActivationCompleted) {
+            // prevent races on BLE whent the pod is not activated
+            return
+        }
+
         val throwable = getPodStatus().blockingGet()
         if (throwable != null) {
             aapsLogger.error(LTag.PUMP, "Error in getPumpStatus", throwable)
