@@ -192,6 +192,7 @@ dependencies {
     implementation project(':omnipod-common')
     implementation project(':omnipod-eros')
     implementation project(':omnipod-dash')
+    implementation project(':diaconn')
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
