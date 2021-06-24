@@ -312,6 +312,29 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         }
     }
 
+    override fun recoverActivationFromPodStatus(): String? {
+        val newActivationProgress = when (podState.podStatus) {
+            PodStatus.FILLED ->
+                ActivationProgress.NOT_STARTED
+            PodStatus.UID_SET ->
+                ActivationProgress.SET_UNIQUE_ID
+            PodStatus.ENGAGING_CLUTCH_DRIVE, PodStatus.PRIMING ->
+                return "Busy"
+            PodStatus.CLUTCH_DRIVE_ENGAGED ->
+                ActivationProgress.PRIME_COMPLETED
+            PodStatus.BASAL_PROGRAM_SET ->
+                ActivationProgress.PROGRAMMED_BASAL
+            PodStatus.RUNNING_ABOVE_MIN_VOLUME, PodStatus.RUNNING_BELOW_MIN_VOLUME ->
+                ActivationProgress.CANNULA_INSERTED
+            else ->
+                null
+        }
+        newActivationProgress?.let {
+            podState.activationProgress = it
+        }
+        return null
+    }
+
     @Synchronized
     override fun updateActiveCommand() = Maybe.create<CommandConfirmed> { source ->
         val activeCommand = podState.activeCommand
@@ -402,6 +425,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
                 podState.lastStatusResponseReceived = now + 2
                 podState.activeCommand = newCommand
             }
+
             CommandSendingNotConfirmed -> {
                 val now = System.currentTimeMillis()
                 val newCommand = podState.activeCommand?.copy(
@@ -410,10 +434,10 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
                 )
                 podState.lastStatusResponseReceived = 0
             }
+
             CommandSendingFailure, NoActiveCommand ->
                 podState.activeCommand = null
         }
-
     }
 
     override fun updateFromDefaultStatusResponse(response: DefaultStatusResponse) {

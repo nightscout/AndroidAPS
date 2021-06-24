@@ -96,6 +96,12 @@ interface OmnipodDashPodStateManager {
     fun createLastBolus(requestedUnits: Double, historyId: String, bolusType: DetailedBolusInfo.BolusType)
     fun markLastBolusComplete(): LastBolus?
     fun onStart()
+    /*
+    This is called only:. It overwrites activationStatus
+       - when activation was interrupted(application crash, killed, etc)
+       - after getPodStatus was successful(we have an up-to-date podStatus)
+     */
+    fun recoverActivationFromPodStatus(): String?
 
     data class ActiveCommand(
         val sequence: Short,

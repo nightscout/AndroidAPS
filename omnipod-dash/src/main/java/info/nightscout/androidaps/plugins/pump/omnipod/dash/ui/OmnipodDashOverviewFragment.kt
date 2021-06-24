@@ -296,7 +296,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             // Update time on Pod
             // TODO: For now: derive from podStateManager.minutesSinceActivation
             val timeOnPod = getTimeOnPod()
-            podInfoBinding.timeOnPod.text = podStateManager.time?.let{
+            podInfoBinding.timeOnPod.text = podStateManager.time?.let {
                 readableZonedTime(it)
             } ?: PLACEHOLDER
 
@@ -304,12 +304,11 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 podStateManager.timeBehind?.let {
                     if (it.abs().isLongerThan(Duration.standardMinutes(MAX_TIME_DEVIATION_MINUTES))) {
                         Color.RED
-                    }else {
+                    } else {
                         Color.WHITE
                     }
                 } ?: Color.WHITE
             )
-
 
             // Update Pod expiry time
             val expiresAt = getExpiryAt()
@@ -318,11 +317,13 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 podInfoBinding.podExpiryDate.setTextColor(Color.WHITE)
             } else {
                 podInfoBinding.podExpiryDate.text = readableZonedTime(expiresAt)
-                podInfoBinding.podExpiryDate.setTextColor(if (DateTime.now().isAfter(expiresAt)) {
-                    Color.RED
-                } else {
-                    Color.WHITE
-                })
+                podInfoBinding.podExpiryDate.setTextColor(
+                    if (DateTime.now().isAfter(expiresAt)) {
+                        Color.RED
+                    } else {
+                        Color.WHITE
+                    }
+                )
             }
 
             podStateManager.alarmType?.let {

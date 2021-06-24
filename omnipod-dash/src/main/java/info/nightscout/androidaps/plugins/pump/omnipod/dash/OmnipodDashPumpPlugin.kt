@@ -130,7 +130,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     override fun getPumpStatus(reason: String) {
-        if (reason != "REQUESTED BY USER" &&  !podStateManager.isActivationCompleted) {
+        if (reason != "REQUESTED BY USER" && !podStateManager.isActivationCompleted) {
             // prevent races on BLE when the pod is not activated
             return
         }
@@ -140,6 +140,13 @@ class OmnipodDashPumpPlugin @Inject constructor(
             aapsLogger.error(LTag.PUMP, "Error in getPumpStatus", throwable)
         } else {
             aapsLogger.info(LTag.PUMP, "getPumpStatus executed with success")
+            if (!podStateManager.isActivationCompleted) {
+                val msg = podStateManager.recoverActivationFromPodStatus()
+                msg?.let {
+                    // TODO: show dialog with "try again, the pod is busy now"
+                    aapsLogger.info(LTag.PUMP, "recoverActivationFromPodStatus msg=$msg")
+                }
+            }
         }
     }
 
