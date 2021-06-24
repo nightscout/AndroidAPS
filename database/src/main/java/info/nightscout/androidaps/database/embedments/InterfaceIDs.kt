@@ -43,6 +43,7 @@ data class InterfaceIDs(
         TANDEM_T_SLIM_X2,
         YPSOPUMP,
         MDI,
+        DIACONN_G8,
         USER;
 
         companion object {

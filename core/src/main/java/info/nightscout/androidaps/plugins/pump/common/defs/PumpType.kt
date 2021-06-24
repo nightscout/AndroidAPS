@@ -284,7 +284,23 @@ enum class PumpType {
         model = "USER",
         tbrSettings = DoseSettings(1.0, 15, 24 * 60, 0.0, 500.0),
         extendedBolusSettings = DoseSettings(0.1, 15, 12 * 60, 0.1),
-        pumpCapability = PumpCapability.MDI);
+        pumpCapability = PumpCapability.MDI),
+
+    //Diaconn Pump
+    DIACONN_G8(description = "DiaconnG8",
+        manufacturer = ManufacturerType.G2e,
+        model = "Diaconn G8",
+        bolusSize = 0.01,
+        specialBolusSize = null,
+        extendedBolusSettings = DoseSettings(0.05, 10, 5 * 60, 0.05),
+        pumpTempBasalType = PumpTempBasalType.Absolute,
+        tbrSettings = DoseSettings(0.01, 30, 24 * 60, 0.0, 6.0),
+        specialBasalDurations = PumpCapability.BasalRate_Duration30minAllowed,
+        baseBasalMinValue = 0.05,
+        baseBasalMaxValue = 3.0,
+        baseBasalStep = 0.01,
+        baseBasalSpecialSteps = null,
+        pumpCapability = PumpCapability.DanaWithHistoryCapabilities);
 
     val description: String
     var manufacturer: ManufacturerType? = null
@@ -444,5 +460,6 @@ enum class PumpType {
             YPSOPUMP                    -> InterfaceIDs.PumpType.YPSOPUMP
             MDI                         -> InterfaceIDs.PumpType.MDI
             USER                        -> InterfaceIDs.PumpType.USER
+            DIACONN_G8                  -> InterfaceIDs.PumpType.DIACONN_G8
         }
 }
