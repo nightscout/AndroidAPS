@@ -189,7 +189,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             if ((activationTime != null) && (minutesSinceActivation != null)) {
                 return DateTime(activationTime)
                     .plusMinutes(minutesSinceActivation.toInt())
-                    .plus(Duration(podState.lastStatusResponseReceived, System.currentTimeMillis()))
+                    .plus(Duration(podState.lastUpdatedSystem, System.currentTimeMillis()))
             }
             return null
         }
