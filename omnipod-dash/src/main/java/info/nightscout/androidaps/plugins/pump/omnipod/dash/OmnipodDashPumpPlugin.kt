@@ -131,7 +131,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     override fun getPumpStatus(reason: String) {
         if (reason != "REQUESTED BY USER" &&  !podStateManager.isActivationCompleted) {
-            // prevent races on BLE whent the pod is not activated
+            // prevent races on BLE when the pod is not activated
             return
         }
 
