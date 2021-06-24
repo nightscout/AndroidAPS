@@ -360,10 +360,10 @@ class DataSyncSelectorImplementation @Inject constructor(
             when {
                 // without nsId = create new
                 te.first.interfaceIDs.nightscoutId == null ->
-                    nsClientPlugin.nsClientService?.dbAdd("treatments", te.first.toJson(true), DataSyncSelector.PairTherapyEvent(te.first, te.second), "$startId/$lastDbId")
+                    nsClientPlugin.nsClientService?.dbAdd("treatments", te.first.toJson(true, dateUtil), DataSyncSelector.PairTherapyEvent(te.first, te.second), "$startId/$lastDbId")
                 // nsId = update
                 te.first.interfaceIDs.nightscoutId != null ->
-                    nsClientPlugin.nsClientService?.dbUpdate("treatments", te.first.interfaceIDs.nightscoutId, te.first.toJson(false), DataSyncSelector.PairTherapyEvent(te.first, te.second), "$startId/$lastDbId")
+                    nsClientPlugin.nsClientService?.dbUpdate("treatments", te.first.interfaceIDs.nightscoutId, te.first.toJson(false, dateUtil), DataSyncSelector.PairTherapyEvent(te.first, te.second), "$startId/$lastDbId")
             }
             return true
         }
