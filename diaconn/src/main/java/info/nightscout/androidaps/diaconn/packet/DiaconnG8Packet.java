@@ -267,7 +267,7 @@ public class DiaconnG8Packet {
                 break;
 
             case 10:
-                aapsLogger.error(LTag.PUMPCOMM, "Pump canceled due to non-response.");
+                aapsLogger.error(LTag.PUMPCOMM, "Canceled due to the opt number did not match.");
                 break;
 
             case 11:
@@ -288,6 +288,26 @@ public class DiaconnG8Packet {
 
             case 15:
                 aapsLogger.error(LTag.PUMPCOMM, "After base setting is completed, base injection can be made.");
+                break;
+
+            case 32:
+                aapsLogger.error(LTag.PUMPCOMM, "During LGS running, injection is restricted");
+                break;
+
+            case 33:
+                aapsLogger.error(LTag.PUMPCOMM, "LGS status is ON, ON Command is declined.");
+                break;
+
+            case 34:
+                aapsLogger.error(LTag.PUMPCOMM, "LGS status is OFF, OFF Command is declined.");
+                break;
+
+            case 35:
+                aapsLogger.error(LTag.PUMPCOMM, "Tempbasal start is rejected  when tempbasal is running");
+                break;
+
+            case 36:
+                aapsLogger.error(LTag.PUMPCOMM, "Tempbasal stop is rejected  when tempbasal is not running");
                 break;
 
             default:

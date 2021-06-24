@@ -26,6 +26,7 @@ import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.queue.Callback
@@ -232,10 +233,14 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun loadDataFromDB() {
         historyList.clear()
-        historyList.addAll(repository.getLastTotalDailyDoses(10, false).blockingGet())
+        // timestamp DESC sorting!
+        historyList.addAll(repository.getLastTotalDailyDoses(10, true).blockingGet())
 
         //only use newest 10
         historyList = historyList.subList(0, min(10, historyList.size))
+
+        // dummies reset
+        dummies.clear()
 
         //fill single gaps
         val df: DateFormat = SimpleDateFormat("dd.MM.", Locale.getDefault())

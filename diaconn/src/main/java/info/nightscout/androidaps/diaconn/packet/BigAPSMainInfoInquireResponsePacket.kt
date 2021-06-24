@@ -183,40 +183,6 @@ class BigAPSMainInfoInquireResponsePacket(
         // 20. language
         diaconnG8Pump.selectedLanguage =  getByteToInt(bufferData) // language (1=Chiness, 2=Korean, 3=English)
 
-        // tempbasal setting status
-        diaconnG8Pump.isTempBasalInProgress = diaconnG8Pump.tbStatus == 1
-        aapsLogger.debug(LTag.PUMPCOMM, "isTempBasalInProgress > " + diaconnG8Pump.isTempBasalInProgress)
-
-        // if rate type is percent
-        if (diaconnG8Pump.tbInjectRateRatio >= 50000) {
-            diaconnG8Pump.tempBasalPercent = diaconnG8Pump.tbInjectRateRatio - 50000
-
-            var absoluteValue = diaconnG8Pump.baseAmount * (diaconnG8Pump.tempBasalPercent / 100.0)
-            absoluteValue = pumpDesc.pumpType.determineCorrectBasalSize(absoluteValue)
-            diaconnG8Pump.tempBasalAbsoluteRate = absoluteValue
-        }
-
-        // if rate type is absolute
-        if(diaconnG8Pump.tbInjectRateRatio in 1000..1600) {
-            diaconnG8Pump.tbInjectAbsoluteValue = (diaconnG8Pump.tbInjectRateRatio -1000) / 100.0
-            diaconnG8Pump.tempBasalAbsoluteRate = diaconnG8Pump.tbInjectAbsoluteValue
-        }
-
-        // extended bolus status
-        if(diaconnG8Pump.squareStatus == 1) { //square
-            diaconnG8Pump.extendedBolusMinutes = diaconnG8Pump.squareTime
-            diaconnG8Pump.extendedBolusAbsoluteRate = diaconnG8Pump.squareAmount
-            diaconnG8Pump.extendedBolusPassedMinutes = diaconnG8Pump.squareInjTime
-            diaconnG8Pump.extendedBolusRemainingMinutes = diaconnG8Pump.squareTime - diaconnG8Pump.squareInjTime
-            diaconnG8Pump.extendedBolusDeliveredSoFar = diaconnG8Pump.squareInjAmount
-        } else if (diaconnG8Pump.dualStatus == 1) { //dual
-            diaconnG8Pump.extendedBolusMinutes = diaconnG8Pump.dualSquareTime
-            diaconnG8Pump.extendedBolusAbsoluteRate = diaconnG8Pump.dualSquareAmount
-            diaconnG8Pump.extendedBolusPassedMinutes = diaconnG8Pump.dualInjSquareTime
-            diaconnG8Pump.extendedBolusRemainingMinutes = diaconnG8Pump.dualSquareTime - diaconnG8Pump.dualInjSquareTime
-            diaconnG8Pump.extendedBolusDeliveredSoFar = diaconnG8Pump.dualInjSquareAmount
-        }
-
         // pump time setting 'yyyy-MM-dd'T'HH:mm:ssZ'	“2019-07-04T12:30:30+0530”
         val time  = DateTime(diaconnG8Pump.year, diaconnG8Pump.month, diaconnG8Pump.day, diaconnG8Pump.hour, diaconnG8Pump.minute, diaconnG8Pump.second)
         diaconnG8Pump.setPumpTime(time.millis)

@@ -23,6 +23,6 @@ class LogStatusInquirePacket(
     }
 
     override fun getFriendlyName(): String {
-        return "PUMP_OG_STATUS_INQUIRE"
+        return "PUMP_LOG_STATUS_INQUIRE"
     }
 }

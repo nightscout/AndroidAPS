@@ -140,4 +140,9 @@
     <string name="diaconn_g8_logtubechange_title">튜브 교체</string>
     <string name="diaconn_g8_logtubechange_summary">로그 동기화 시 \"튜브 교체\" 노트 정보 자동 업로드</string>
     <string name="diaconn_g8_logtempstart">임시Basal 시작</string>
+    <string name="diaconn_g8_errorcode_32">LGS 동작 중 볼러스 주입 거절</string>
+    <string name="diaconn_g8_errorcode_33">LGS ON일때, ON 거절</string>
+    <string name="diaconn_g8_errorcode_34">LGS OFF일 때, OFF 거절</string>
+    <string name="diaconn_g8_errorcode_35">임시기저 설정중인 상태일 때, 임시기저 시작 명령 거절</string>
+    <string name="diaconn_g8_errorcode_36">임시기저 설정이 안 된 상태일 때, 임시기저 중지 명령 거절</string>
 </resources>

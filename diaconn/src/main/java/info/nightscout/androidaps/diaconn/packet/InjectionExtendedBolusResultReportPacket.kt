@@ -37,19 +37,17 @@ class InjectionExtendedBolusResultReportPacket(injector: HasAndroidInjector) : D
         val bolusAmountToBeDelivered  = getShortToInt(bufferData) / 100.0
         val deliveredBolusAmount = getShortToInt(bufferData) / 100.0
 
-        //diaconnG8Pump.isExtendedInProgress = result == 0
-        diaconnG8Pump.extendedBolusMinutes = settingMinutes
-        diaconnG8Pump.extendedBolusAbsoluteRate = bolusAmountToBeDelivered
-        diaconnG8Pump.extendedBolusPassedMinutes = elapsedTime
-        diaconnG8Pump.extendedBolusRemainingMinutes = settingMinutes - elapsedTime
-        diaconnG8Pump.extendedBolusDeliveredSoFar = deliveredBolusAmount
+        diaconnG8Pump.isExtendedInProgress = result == 0
+        diaconnG8Pump.squareTime = settingMinutes
+        diaconnG8Pump.squareInjTime = elapsedTime
+        diaconnG8Pump.squareAmount = bolusAmountToBeDelivered
+        diaconnG8Pump.squareInjAmount = deliveredBolusAmount
 
         aapsLogger.debug(LTag.PUMPCOMM, "Result: $result")
-        aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus running: " + diaconnG8Pump.extendedBolusAbsoluteRate + " U/h")
-        aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus duration: " + diaconnG8Pump.extendedBolusMinutes + " min")
-        aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus so far: " + diaconnG8Pump.extendedBolusSoFarInMinutes + " min")
-        aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus remaining minutes: " + diaconnG8Pump.extendedBolusRemainingMinutes + " min")
-        aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus delivered so far: " + diaconnG8Pump.extendedBolusDeliveredSoFar + " U")
+        aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus running: " + diaconnG8Pump.squareAmount + " U/h")
+        aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus duration: " + diaconnG8Pump.squareTime + " min")
+        aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus so far: " + diaconnG8Pump.squareInjTime + " min")
+        aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus delivered so far: " + diaconnG8Pump.squareInjAmount + " U")
     }
 
     override fun getFriendlyName(): String {
