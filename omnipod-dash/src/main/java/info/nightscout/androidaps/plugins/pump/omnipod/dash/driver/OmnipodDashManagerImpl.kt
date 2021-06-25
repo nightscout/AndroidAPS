@@ -173,8 +173,7 @@ class OmnipodDashManagerImpl @Inject constructor(
                 DefaultStatusResponse::class
             )
         }.doOnComplete {
-            // TODO: remove podStateManager.basalProgram?
-            podStateManager.basalProgram = basalProgram
+            podStateManager.timeZone = TimeZone.getDefault()
         }
     }
 
@@ -246,6 +245,7 @@ class OmnipodDashManagerImpl @Inject constructor(
                 observeVerifyPrime.doOnComplete(ActivationProgressUpdater(ActivationProgress.PRIME_COMPLETED))
             )
         }
+
         if (podStateManager.activationProgress.isBefore(ActivationProgress.PRIMING)) {
             observables.add(observeConnectToPod) // connection can time out while waiting
             observables.add(
@@ -270,6 +270,7 @@ class OmnipodDashManagerImpl @Inject constructor(
                 }.doOnComplete(ActivationProgressUpdater(ActivationProgress.PRIMING))
             )
         }
+
         if (podStateManager.activationProgress.isBefore(ActivationProgress.REPROGRAMMED_LUMP_OF_COAL_ALERT)) {
             observables.add(
                 observeSendProgramAlertsCommand(
@@ -304,6 +305,7 @@ class OmnipodDashManagerImpl @Inject constructor(
                 ).doOnComplete(ActivationProgressUpdater(ActivationProgress.PROGRAMMED_LOW_RESERVOIR_ALERTS))
             )
         }
+
         if (podStateManager.activationProgress.isBefore(ActivationProgress.SET_UNIQUE_ID)) {
             observables.add(
                 observeSendSetUniqueIdCommand.doOnComplete(ActivationProgressUpdater(ActivationProgress.SET_UNIQUE_ID))
@@ -425,9 +427,6 @@ class OmnipodDashManagerImpl @Inject constructor(
             observeConnectToPod,
             observeSendProgramBasalCommand(basalProgram, hasBasalBeepEnabled)
         )
-            .doOnComplete {
-                podStateManager.timeZone = TimeZone.getDefault()
-            }
             // TODO these would be common for any observable returned in a public function in this class
             .doOnNext(PodEventInterceptor())
             .doOnError(ErrorInterceptor())

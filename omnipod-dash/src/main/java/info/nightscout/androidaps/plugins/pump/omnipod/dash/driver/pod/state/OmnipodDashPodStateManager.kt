@@ -39,7 +39,7 @@ interface OmnipodDashPodStateManager {
     val lastUpdatedSystem: Long // System.currentTimeMillis()
     val lastStatusResponseReceived: Long
     val time: DateTime?
-    val timeBehind: Duration?
+    val timeDrift: Duration?
     val expiry: DateTime?
 
     val messageSequenceNumber: Short

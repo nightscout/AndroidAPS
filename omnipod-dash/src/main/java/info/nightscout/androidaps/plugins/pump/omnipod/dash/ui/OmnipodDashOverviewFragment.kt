@@ -45,7 +45,6 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
 import org.joda.time.Duration
 import java.util.*
 import javax.inject.Inject
@@ -69,7 +68,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
         private const val REFRESH_INTERVAL_MILLIS = 15 * 1000L // 15 seconds
         private const val PLACEHOLDER = "-"
-        private const val MAX_TIME_DEVIATION_MINUTES = 15L
+        private const val MAX_TIME_DEVIATION_MINUTES = 10L
     }
 
     private var disposables: CompositeDisposable = CompositeDisposable()
@@ -274,7 +273,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             } ?: PLACEHOLDER
 
             podInfoBinding.timeOnPod.setTextColor(
-                podStateManager.timeBehind?.let {
+                podStateManager.timeDrift?.let {
                     if (it.abs().isLongerThan(Duration.standardMinutes(MAX_TIME_DEVIATION_MINUTES))) {
                         Color.RED
                     } else {
@@ -526,7 +525,6 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     private fun updateRefreshStatusButton() {
         buttonBinding.buttonRefreshStatus.isEnabled =
             podStateManager.isUniqueIdSet &&
-            podStateManager.activationProgress.isAtLeast(ActivationProgress.PHASE_1_COMPLETED) &&
             isQueueEmpty()
     }
 

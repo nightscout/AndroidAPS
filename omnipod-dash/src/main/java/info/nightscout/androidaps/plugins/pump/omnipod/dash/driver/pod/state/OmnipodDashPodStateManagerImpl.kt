@@ -194,13 +194,13 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             return null
         }
 
-    override val timeBehind: Duration?
+    override val timeDrift: Duration?
         get() {
             return Duration(DateTime.now(), time)
         }
 
     override val expiry: DateTime?
-        // TODO: Consider storing expiry datetime in pod state saving continuesly recalculating to the same value
+        // TODO: Consider storing expiry datetime in pod state saving continuously recalculating to the same value
         get() {
             val podLifeInHours = podLifeInHours
             val activationTime = podState.activationTime
@@ -466,6 +466,9 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         podState.lastUpdatedSystem = System.currentTimeMillis()
         podState.lastStatusResponseReceived = SystemClock.elapsedRealtime()
         updateLastBolusFromResponse(response.bolusPulsesRemaining)
+        if (podState.activationTime == null) {
+            podState.activationTime = System.currentTimeMillis() - (response.minutesSinceActivation * 60000)
+        }
 
         store()
         rxBus.send(EventOmnipodDashPumpValuesChanged())
@@ -514,12 +517,6 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         podState.uniqueId = response.uniqueIdReceivedInCommand
 
         podState.lastUpdatedSystem = System.currentTimeMillis()
-        // TODO: what is considered to be the pod activation time?
-        //  LTK negotiation ?
-        //  setUniqueId?
-        //  compute it from the number of "minutesOnPod"?
-        podState.activationTime = System.currentTimeMillis()
-
         store()
         rxBus.send(EventOmnipodDashPumpValuesChanged())
     }
