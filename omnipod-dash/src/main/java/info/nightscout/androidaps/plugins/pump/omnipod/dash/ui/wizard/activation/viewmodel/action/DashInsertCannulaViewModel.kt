@@ -65,6 +65,12 @@ class DashInsertCannulaViewModel @Inject constructor(
                         pumpType = PumpType.OMNIPOD_DASH,
                         pumpSerial = podStateManager.uniqueId?.toString() ?: "n/a"
                     )
+                    pumpSync.insertTherapyEventIfNewWithTimestamp(
+                        timestamp = System.currentTimeMillis(),
+                        type = DetailedBolusInfo.EventType.INSULIN_CHANGE,
+                        pumpType = PumpType.OMNIPOD_DASH,
+                        pumpSerial = podStateManager.uniqueId?.toString() ?: "n/a"
+                    )
                     source.onSuccess(PumpEnactResult(injector).success(true))
                 }
             )
