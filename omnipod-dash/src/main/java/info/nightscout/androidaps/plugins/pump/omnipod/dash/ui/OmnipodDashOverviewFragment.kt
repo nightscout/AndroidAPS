@@ -386,9 +386,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             podInfoBinding.lastConnection.setTextColor(lastConnectionColor)
         } else {
             podInfoBinding.lastConnection.setTextColor(Color.WHITE)
-            podInfoBinding.lastConnection.text = readableDuration(
-                Duration(podStateManager.lastUpdatedSystem, System.currentTimeMillis())
-            )
+            podInfoBinding.lastConnection.text = PLACEHOLDER
         }
     }
 
