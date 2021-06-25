@@ -227,6 +227,7 @@
 <attr name="InMemoryGlucoseValue" format="reference" />
 <attr name="colorScheduled" format="reference" />
 <attr name="tempbasal" format="reference" />
+<attr name="colorInitializingBorder" format="reference" />
 
 <!-- Window background-->
 <attr name="windowBackground" format="reference|color" />

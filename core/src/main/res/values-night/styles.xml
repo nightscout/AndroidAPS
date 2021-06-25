@@ -266,6 +266,8 @@
         <item name="tddStatsActivityBackgroundColor" >@color/transparent</item>
         <item name="activity_title_background" >@color/background_dark</item>
         <item name="graphViwewportBackground" >@color/black_alpha_20</item>
+        <!---diaconn -->
+        <item name="colorInitializingBorder" >@color/colorInitializingBorder</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>

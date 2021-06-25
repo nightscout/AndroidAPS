@@ -44,6 +44,8 @@
     <color name="background_light">#EEEEEE</color>
     <color name="splashBackground">#FFFFFF</color>
 
+    <color name="activity_title_background">#121212</color>
+
     <!-- Default theme color -->
     <!-- This section describes the main theme colors -->
     <color name="primaryColorDefault">@color/gray</color>
@@ -110,6 +112,7 @@
     <color name="tempTargetDisabledBackground">#303F9F</color>
     <color name="basebasal">#3D15FF</color>
     <color name="blue_default">#007AFF</color>
+    <color name="colorInitializingBorder">#00695c</color>
     <color name="kobaltblue">#5F7BA6</color>
     <color name="mdtp_accent_color">#3A7EFF</color>
     <color name="mdtp_button_color">@color/mdtp_accent_color</color>
