@@ -99,7 +99,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             }
         }
 
-    override var timeZone: DateTimeZone
+    override var timeZone: String
         get() = podState.timeZone
         set(tz) {
             podState.timeZone = tz
@@ -197,6 +197,18 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     override val timeBehind: Duration?
         get() {
             return Duration(DateTime.now(), time)
+        }
+
+    override val expiry: DateTime?
+        // TODO: Consider storing expiry datetime in pod state saving continuesly recalculating to the same value
+        get() {
+            val podLifeInHours = podLifeInHours
+            val minutesSinceActivation = minutesSinceActivation
+            if (podLifeInHours != null && minutesSinceActivation != null) {
+                val expiresInMinutes = podLifeInHours * 60 - minutesSinceActivation
+                return DateTime().plusMinutes(expiresInMinutes)
+            }
+            return null
         }
 
     override var bluetoothConnectionState: OmnipodDashPodStateManager.BluetoothConnectionState
@@ -589,7 +601,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         var ltk: ByteArray? = null
         var eapAkaSequenceNumber: Long = 1
         var bolusPulsesRemaining: Short = 0
-        var timeZone = DateTimeZone.getDefault()
+        var timeZone: String = "" // DateTimeZone.getDefault()
 
         var bleVersion: SoftwareVersion? = null
         var firmwareVersion: SoftwareVersion? = null
