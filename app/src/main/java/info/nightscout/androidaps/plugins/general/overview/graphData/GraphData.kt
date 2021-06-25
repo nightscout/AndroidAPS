@@ -61,7 +61,6 @@ class GraphData(
     }
 
     fun addInRangeArea(fromTime: Long, toTime: Long, lowLine: Double, highLine: Double,context: Context) {
-        val inRangeAreaSeries: AreaGraphSeries<DoubleDataPoint>
         val inRangeAreaDataPoints = arrayOf(
             DoubleDataPoint(fromTime.toDouble(), lowLine, highLine),
             DoubleDataPoint(toTime.toDouble(), lowLine, highLine)
