@@ -61,6 +61,10 @@ class BleCommCallbacks(
         }
     }
 
+    fun startServiceDiscovery() {
+        serviceDiscoveryComplete = CountDownLatch(1)
+    }
+
     fun waitForServiceDiscovery(timeoutMs: Int) {
         try {
             serviceDiscoveryComplete.await(timeoutMs.toLong(), TimeUnit.MILLISECONDS)
