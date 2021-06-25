@@ -2,13 +2,17 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.wizard.activatio
 
 import androidx.annotation.StringRes
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.viewmodel.action.InsertCannulaViewModel
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.OmnipodDashManager
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.mapProfileToBasalProgram
 import io.reactivex.Single
 import io.reactivex.rxkotlin.subscribeBy
@@ -17,6 +21,8 @@ import javax.inject.Inject
 class DashInsertCannulaViewModel @Inject constructor(
     private val omnipodManager: OmnipodDashManager,
     private val profileFunction: ProfileFunction,
+    private val pumpSync: PumpSync,
+    private val podStateManager: OmnipodDashPodStateManager,
     injector: HasAndroidInjector,
     logger: AAPSLogger
 ) : InsertCannulaViewModel(injector, logger) {
@@ -52,6 +58,13 @@ class DashInsertCannulaViewModel @Inject constructor(
                 },
                 onComplete = {
                     logger.debug("Pod activation part 2 completed")
+                    pumpSync.connectNewPump()
+                    pumpSync.insertTherapyEventIfNewWithTimestamp(
+                        timestamp = System.currentTimeMillis(),
+                        type = DetailedBolusInfo.EventType.CANNULA_CHANGE,
+                        pumpType = PumpType.OMNIPOD_DASH,
+                        pumpSerial = podStateManager.uniqueId?.toString() ?: "n/a"
+                    )
                     source.onSuccess(PumpEnactResult(injector).success(true))
                 }
             )
