@@ -203,10 +203,9 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         // TODO: Consider storing expiry datetime in pod state saving continuesly recalculating to the same value
         get() {
             val podLifeInHours = podLifeInHours
-            val minutesSinceActivation = minutesSinceActivation
-            if (podLifeInHours != null && minutesSinceActivation != null) {
-                val expiresInMinutes = podLifeInHours * 60 - minutesSinceActivation
-                return DateTime().plusMinutes(expiresInMinutes)
+            val activationTime = podState.activationTime
+            if (podLifeInHours != null && activationTime != null) {
+                return DateTime(podState.activationTime).plusHours(podLifeInHours.toInt())
             }
             return null
         }
@@ -601,7 +600,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         var ltk: ByteArray? = null
         var eapAkaSequenceNumber: Long = 1
         var bolusPulsesRemaining: Short = 0
-        var timeZone: String = "" // DateTimeZone.getDefault()
+        var timeZone: String = "" // TimeZone ID (e.g. "Europe/Amsterdam")
 
         var bleVersion: SoftwareVersion? = null
         var firmwareVersion: SoftwareVersion? = null
