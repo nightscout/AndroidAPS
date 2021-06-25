@@ -269,7 +269,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                         rxBus.send(EventTempBasalChange())
                     }
                     .ignoreElements()
-            ).doFinally {
+            ).doOnComplete() {
                 notifyOnUnconfirmed(
                     Notification.FAILED_UPDATE_PROFILE,
                     "Suspend delivery is unconfirmed! " +
