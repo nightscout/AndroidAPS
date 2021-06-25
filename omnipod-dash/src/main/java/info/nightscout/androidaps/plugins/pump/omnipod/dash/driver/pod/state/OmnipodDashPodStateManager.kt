@@ -35,7 +35,7 @@ interface OmnipodDashPodStateManager {
     val isPodKaput: Boolean
     var bluetoothConnectionState: BluetoothConnectionState
 
-    var timeZone: String
+    var timeZone: TimeZone
     val lastUpdatedSystem: Long // System.currentTimeMillis()
     val lastStatusResponseReceived: Long
     val time: DateTime?

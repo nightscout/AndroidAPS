@@ -608,7 +608,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     //     // return getSafe(() -> podState.getTimeZone());
     //     return podStateManager.timeZone
     // }
-    private fun getTimeZone(): String {
+    private fun getTimeZone(): TimeZone {
         // Return timezone ID (e.g "Europe/Amsterdam")
         return podStateManager.timeZone
     }

@@ -425,6 +425,9 @@ class OmnipodDashManagerImpl @Inject constructor(
             observeConnectToPod,
             observeSendProgramBasalCommand(basalProgram, hasBasalBeepEnabled)
         )
+            .doOnComplete {
+                podStateManager.timeZone = TimeZone.getDefault()
+            }
             // TODO these would be common for any observable returned in a public function in this class
             .doOnNext(PodEventInterceptor())
             .doOnError(ErrorInterceptor())
