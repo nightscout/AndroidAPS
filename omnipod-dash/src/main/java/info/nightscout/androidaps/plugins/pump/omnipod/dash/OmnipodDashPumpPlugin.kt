@@ -884,7 +884,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     .ignoreElements()
             ).doFinally {
                 notifyOnUnconfirmed(
-                    Notification.PUMP_ERROR,
+                    Notification.FAILED_UPDATE_PROFILE,
                     "Unconfirmed resumeDelivery command. Please refresh pod status",
                     R.raw.boluserror
                 )
@@ -1013,6 +1013,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     )
                 }
                 rxBus.send(EventDismissNotification(Notification.OMNIPOD_TBR_ALERTS))
+                rxBus.send(EventDismissNotification(Notification.FAILED_UPDATE_PROFILE))
             }
 
             OmnipodCommandType.SET_TEMPORARY_BASAL -> {
