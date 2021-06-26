@@ -37,16 +37,17 @@ class MaintenancePlugin @Inject constructor(
     private val config: Config,
     private val fileListProvider: PrefFileListProvider,
     private val loggerUtils: LoggerUtils
-) : PluginBase(PluginDescription()
-    .mainType(PluginType.GENERAL)
-    .fragmentClass(MaintenanceFragment::class.java.name)
-    .alwaysVisible(false)
-    .alwaysEnabled(true)
-    .pluginIcon(R.drawable.ic_maintenance)
-    .pluginName(R.string.maintenance)
-    .shortName(R.string.maintenance_shortname)
-    .preferencesId(R.xml.pref_maintenance)
-    .description(R.string.description_maintenance),
+) : PluginBase(
+    PluginDescription()
+        .mainType(PluginType.GENERAL)
+        .fragmentClass(MaintenanceFragment::class.java.name)
+        .alwaysVisible(false)
+        .alwaysEnabled(true)
+        .pluginIcon(R.drawable.ic_maintenance)
+        .pluginName(R.string.maintenance)
+        .shortName(R.string.maintenance_shortname)
+        .preferencesId(R.xml.pref_maintenance)
+        .description(R.string.description_maintenance),
     aapsLogger, resourceHelper, injector
 ) {
 
@@ -58,7 +59,8 @@ class MaintenancePlugin @Inject constructor(
         val zipFile = File(zipDir, constructName())
         aapsLogger.debug("zipFile: ${zipFile.absolutePath}")
         val zip = zipLogs(zipFile, logs)
-        val attachmentUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider", zip)
+        val attachmentUri =
+            FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider", zip)
         val emailIntent: Intent = this.sendMail(attachmentUri, recipient, "Log Export")
         aapsLogger.debug("sending emailIntent")
         context.startActivity(emailIntent)
@@ -67,10 +69,6 @@ class MaintenancePlugin @Inject constructor(
     //todo replace this with a call on startup of the application, specifically to remove
     // unnecessary garbage from the log exports
     fun deleteLogs(keep: Int) {
-
-        if (true)
-            return
-        
         val logDir = File(loggerUtils.logDirectory)
         val files = logDir.listFiles { _: File?, name: String ->
             (name.startsWith("AndroidAPS") && name.endsWith(".zip"))
@@ -197,7 +195,12 @@ class MaintenancePlugin @Inject constructor(
      *
      * @return
      */
-    private fun sendMail(attachmentUri: Uri, recipient: String, subject: String, body: String): Intent {
+    private fun sendMail(
+        attachmentUri: Uri,
+        recipient: String,
+        subject: String,
+        body: String
+    ): Intent {
         aapsLogger.debug("sending email to $recipient with subject $subject")
         val emailIntent = Intent(Intent.ACTION_SEND)
         emailIntent.type = "text/plain"
@@ -212,8 +215,9 @@ class MaintenancePlugin @Inject constructor(
 
     override fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {
         super.preprocessPreferences(preferenceFragment)
-        val encryptSwitch = preferenceFragment.findPreference(resourceHelper.gs(R.string.key_maintenance_encrypt_exported_prefs)) as SwitchPreference?
-            ?: return
+        val encryptSwitch =
+            preferenceFragment.findPreference(resourceHelper.gs(R.string.key_maintenance_encrypt_exported_prefs)) as SwitchPreference?
+                ?: return
         encryptSwitch.isVisible = buildHelper.isEngineeringMode()
         encryptSwitch.isEnabled = buildHelper.isEngineeringMode()
     }
