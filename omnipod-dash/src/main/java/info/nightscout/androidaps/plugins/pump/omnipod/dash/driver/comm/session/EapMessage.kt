@@ -82,7 +82,7 @@ data class EapMessage(
             return EapMessage(
                 code = EapCode.byValue(payload[0]),
                 identifier = payload[1],
-                attributes = EapAkaAttribute.parseAttributes(aapsLogger, attributesPayload).toTypedArray(),
+                attributes = EapAkaAttribute.parseAttributes(attributesPayload).toTypedArray(),
                 subType = payload[5],
             )
         }
