@@ -1,6 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.activities.ErrorHelperActivity.Companion.runAlarm
 import info.nightscout.androidaps.data.DetailedBolusInfo
@@ -19,6 +21,7 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotifi
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
+import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.OmnipodDashManager
@@ -67,10 +70,14 @@ class OmnipodDashPumpPlugin @Inject constructor(
     commandQueue: CommandQueueProvider
 ) : PumpPluginBase(pluginDescription, injector, aapsLogger, resourceHelper, commandQueue), Pump {
     @Volatile var bolusCanceled = false
+    private val handler: Handler = Handler(Looper.getMainLooper())
+    lateinit private var statusChecker: Runnable
+    var nextPodWarningCheck : Long = 0
 
     companion object {
         private const val BOLUS_RETRY_INTERVAL_MS = 2000.toLong()
-        private const val BOLUS_RETRIES = 5 // numer of retries for cancel/get bolus status
+        private const val BOLUS_RETRIES = 5 // number of retries for cancel/get bolus status
+        private const val STATUS_CHECK_INTERVAL_MS = (60L * 1000)
 
         private val pluginDescription = PluginDescription()
             .mainType(PluginType.PUMP)
@@ -82,6 +89,52 @@ class OmnipodDashPumpPlugin @Inject constructor(
             .description(R.string.omnipod_dash_pump_description)
 
         private val pumpDescription = PumpDescription(PumpType.OMNIPOD_DASH)
+    }
+
+    init {
+        statusChecker = Runnable {
+            refreshStatusOnUnacknowledgedCommands()
+            updatePodWarnings()
+            handler.postDelayed(statusChecker, STATUS_CHECK_INTERVAL_MS)
+        }
+    }
+
+    private fun updatePodWarnings() {
+        if (System.currentTimeMillis() > nextPodWarningCheck) {
+            if (!podStateManager.isPodRunning) {
+                val notification =
+                    Notification(
+                        Notification.OMNIPOD_POD_NOT_ATTACHED,
+                        "Pod not activated",
+                        Notification.NORMAL
+                    )
+                rxBus.send(EventNewNotification(notification))
+            } else {
+                rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED))
+                if (podStateManager.isSuspended) {
+                    val notification =
+                        Notification(
+                            Notification.OMNIPOD_POD_SUSPENDED,
+                            "Insulin delivery suspended",
+                            Notification.NORMAL
+                        )
+                    rxBus.send(EventNewNotification(notification))
+                } else {
+                    rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_SUSPENDED))
+                    // TODO: time out of sync notification?
+                }
+            }
+            nextPodWarningCheck = DateTimeUtil.getTimeInFutureFromMinutes(15)
+        }
+    }
+
+    private fun refreshStatusOnUnacknowledgedCommands() {
+        if (podStateManager.isPodRunning &&
+            podStateManager.activeCommand != null &&
+            commandQueue.size() == 0 &&
+            commandQueue.performing() == null) {
+            commandQueue.readStatus("Unconfirmed command", null)
+        }
     }
 
     override fun isInitialized(): Boolean {
@@ -128,6 +181,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
     override fun stopConnecting() {
         // TODO
     }
+
+
 
     override fun getPumpStatus(reason: String) {
         if (reason != "REQUESTED BY USER" && !podStateManager.isActivationCompleted) {
@@ -279,16 +334,15 @@ class OmnipodDashPumpPlugin @Inject constructor(
             }
     }
 
-    /* override fun onStop() {
-         super.onStop()
-         disposable.clear()
-     }
-
-     */
-
     override fun onStart() {
         super.onStart()
         podStateManager.onStart()
+        handler.postDelayed(statusChecker, STATUS_CHECK_INTERVAL_MS)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        handler.removeCallbacks(statusChecker)
     }
 
     private fun observeDeliverySuspended(): Completable = Completable.defer {
@@ -979,7 +1033,19 @@ class OmnipodDashPumpPlugin @Inject constructor(
         val historyEntry = history.getById(command.historyId)
         aapsLogger.debug(LTag.PUMPCOMM, "handling command confirmation: $confirmation")
         when (historyEntry.commandType) {
-            OmnipodCommandType.CANCEL_TEMPORARY_BASAL,
+            OmnipodCommandType.CANCEL_TEMPORARY_BASAL -> {
+                if (confirmation.success) {
+                    pumpSync.syncStopTemporaryBasalWithPumpId(
+                        historyEntry.createdAt,
+                        historyEntry.pumpId(),
+                        PumpType.OMNIPOD_DASH,
+                        serialNumber()
+                    )
+                    podStateManager.tempBasal = null
+                }
+                rxBus.send(EventDismissNotification(Notification.OMNIPOD_TBR_ALERTS))
+
+            }
             OmnipodCommandType.RESUME_DELIVERY -> {
                 // We can't invalidate this command,
                 // and this is why it is pumpSync-ed at this point
@@ -991,6 +1057,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                         serialNumber()
                     )
                     podStateManager.tempBasal = null
+                    rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_SUSPENDED))
                 }
                 rxBus.send(EventDismissNotification(Notification.OMNIPOD_TBR_ALERTS))
             }
@@ -1011,6 +1078,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                         PumpType.OMNIPOD_DASH,
                         serialNumber()
                     )
+                    rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_SUSPENDED))
                 }
                 rxBus.send(EventDismissNotification(Notification.OMNIPOD_TBR_ALERTS))
                 rxBus.send(EventDismissNotification(Notification.FAILED_UPDATE_PROFILE))
