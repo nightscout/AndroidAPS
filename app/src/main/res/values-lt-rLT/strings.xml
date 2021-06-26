@@ -80,8 +80,6 @@
     <string name="careportal">Priežiūra</string>
     <string name="configbuilder_pump">Pompa</string>
     <string name="configbuilder_pump_description">Kokią pompą naudosite su AndroidAPS?</string>
-    <string name="configbuilder_treatments">Terapija</string>
-    <string name="configbuilder_treatments_description">Kuris įskiepis bus naudojamas terapijos tvarkymui?</string>
     <string name="configbuilder_profile">Profilis</string>
     <string name="configbuilder_profile_description">Kurį profilį naudos AndroidAPS?</string>
     <string name="configbuilder_aps">DKS</string>

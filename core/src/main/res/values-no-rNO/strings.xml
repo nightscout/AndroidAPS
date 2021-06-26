@@ -105,6 +105,7 @@
     <string name="notes_label">Merknader</string>
     <string name="remove_button">Fjern</string>
     <string name="addnew">Legg til ny</string>
+    <string name="wrong_pump_data">Data kommer fra forskjellige pumper. Bytt pumpevalg for å nullstille pumpens tilstand.</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Begrenser maks basal dose til %1$.2f E/t på grunn av %2$s</string>
     <string name="pumplimit">pumpebegrensning</string>
@@ -208,6 +209,10 @@
     <string name="wear">Wear</string>
     <string name="automation">Automatisering</string>
     <string name="custom">Egendefinert</string>
+    <string name="pump">Pumpe</string>
+    <string name="loop">Loop</string>
+    <string name="ns">NS</string>
+    <string name="record">Registrer</string>
     <!--    Command-->
     <string name="connectiontimedout">Tilkoblingen ble tidsavbrutt</string>
     <!--    PumpEnactResult-->
@@ -297,6 +302,7 @@
     <string name="uel_carbs">KARBO</string>
     <string name="uel_extended_carbs">FORLENGET KARBO</string>
     <string name="uel_temp_basal">TEMP BASAL</string>
+    <string name="uel_tt">MIDLERTIDIG BS MÅL</string>
     <string name="uel_new_profile">NY PROFIL</string>
     <string name="uel_clone_profile">KOPIER PROFIL</string>
     <string name="uel_store_profile">LAGRE PROFIL</string>
@@ -315,23 +321,33 @@
     <string name="uel_clear_pairing_keys">NULLSTILL PARRINGS NØKLER</string>
     <string name="uel_accepts_temp_basal">AKSEPTER TEMP BASAL</string>
     <string name="uel_cancel_temp_basal">AVBRYT TEMP BASAL</string>
+    <string name="uel_cancel_bolus">AVBRYT BOLUS</string>
     <string name="uel_cancel_extended_bolus">AVBRYT FORLENGET BOLUS</string>
+    <string name="uel_cancel_tt">AVBRYT MIDLERTIDIG BS MÅL</string>
     <string name="uel_careportal">CAREPORTAL</string>
+    <string name="uel_site_change">BYTTE SLANGESETT</string>
+    <string name="uel_reservoir_change">BYTTE RESERVOAR</string>
     <string name="uel_calibration">KALIBRERING</string>
     <string name="uel_prime_bolus">PRIME BOLUS</string>
     <string name="uel_treatment">BEHANDLING</string>
     <string name="uel_careportal_ns_refresh">CAREPORTAL NS OPPDATER</string>
     <string name="uel_profile_switch_ns_refresh">PROFILBYTTE NS OPPDATER</string>
     <string name="uel_treatments_ns_refresh">BEHANDLINGER NS OPPDATER</string>
+    <string name="uel_tt_ns_refresh">OPPDATER MIDLERTIDIG BS MÅL NS</string>
     <string name="uel_automation_removed">AUTOMASJON FJERNET</string>
     <string name="uel_bg_removed">BS FJERNET</string>
     <string name="uel_careportal_removed">CAREPORTAL FJERNET</string>
+    <string name="uel_bolus_removed">BOLUS FJERNET</string>
+    <string name="uel_carbs_removed">KARBO FJERNET</string>
+    <string name="uel_temp_basal_removed">MIDLERTIDIG BS MÅL FJERNET</string>
     <string name="uel_extended_bolus_removed">FORLENGET BOLUS FJERNET</string>
+    <string name="uel_food">MAT</string>
     <string name="uel_food_removed">MÅLTID FJERNET</string>
     <string name="uel_profile_removed">PROFIL FJERNET</string>
     <string name="uel_profile_switch_removed">PROFILBYTTE FJERNET</string>
     <string name="uel_restart_events_removed">RESTART HENDELSER FJERNET</string>
     <string name="uel_treatment_removed">BEHANDLING FJERNET</string>
+    <string name="uel_tt_removed">MIDLERTIDIG BS MÅL FJERNET</string>
     <string name="uel_ns_paused">NS PAUSET</string>
     <string name="uel_ns_resume">GJENOPPTA NS</string>
     <string name="uel_ns_queue_cleared">NS KØ SLETTET</string>
@@ -352,9 +368,23 @@
     <string name="uel_import_databases">IMPORTER DATABASER</string>
     <string name="uel_otp_export">OTP EKSPORT</string>
     <string name="uel_otp_reset">OTP RESET</string>
+    <string name="uel_stop_sms">STOPP SMS</string>
     <string name="uel_export_csv">EKSPORTER BRUKEROPPFØRINGER</string>
+    <string name="uel_start_aaps">START AAPS</string>
+    <string name="uel_exit_aaps">AVSLUTT AAPS</string>
+    <string name="uel_plugin_enabled">PLUGIN AKTIVERT</string>
+    <string name="uel_plugin_disabled">PLUGIN DEAKTIVERT</string>
     <string name="uel_unknown">UKJENT</string>
+    <string name="ue_string">Tekst</string>
+    <string name="ue_source">Kildekode</string>
+    <string name="ue_utc_offset">UTC tid forskyvning</string>
+    <string name="ue_action">Handling</string>
+    <string name="ue_timestamp">Tidspunkt</string>
+    <string name="ue_none">Ingen enhet</string>
     <string name="ue_export_to_csv">Eksporter brukeroppføringer til Excel (csv)</string>
+    <string name="uel_loop_change">LOOP ENDRET</string>
+    <string name="uel_loop_removed">LOOP FJERNET</string>
+    <string name="uel_other">ANNET</string>
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dager</item>

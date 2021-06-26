@@ -97,11 +97,11 @@ fun therapyEventFromJson(jsonObject: JSONObject): TherapyEvent? {
     return te
 }
 
-fun TherapyEvent.toJson(isAdd: Boolean): JSONObject =
+fun TherapyEvent.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
     JSONObject()
         .put("eventType", type.text)
         .put("isValid", isValid)
-        .put("created_at", timestamp)
+        .put("created_at", dateUtil.toISOString(timestamp))
         .put("enteredBy", enteredBy)
         .put("units", if (glucoseUnit == TherapyEvent.GlucoseUnit.MGDL) Constants.MGDL else Constants.MMOL)
         .also {

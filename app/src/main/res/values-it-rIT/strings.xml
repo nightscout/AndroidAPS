@@ -81,8 +81,6 @@
     <string name="careportal">Portale</string>
     <string name="configbuilder_pump">Micro</string>
     <string name="configbuilder_pump_description">Quale microinfusore desideri usare con AndroidAPS?</string>
-    <string name="configbuilder_treatments">Trattamenti</string>
-    <string name="configbuilder_treatments_description">Quale plugin dovrebbe essere usato per la gestione del trattamento?</string>
     <string name="configbuilder_profile">Profilo</string>
     <string name="configbuilder_profile_description">Quale profilo AndroidAPS dovrebbe usare?</string>
     <string name="configbuilder_aps">APS</string>
@@ -778,6 +776,7 @@
     <string name="randombg_short">BG</string>
     <string name="tools">Strumenti</string>
     <string name="show_calculation">Mostra calcolo</string>
+    <string name="show_removed">Mostra rimossi</string>
     <string name="clearqueueconfirm">Cancellare la coda? Tutti i dati in coda andranno persi!</string>
     <string name="ebstopsloop">L\'uso della funzione bolo esteso interromperà la modalità loop chiuso per il tempo di esecuzione del bolo esteso. Lo vuoi davvero?</string>
     <string name="closed_loop_disabled_with_eb">Loop chiuso disabilitato a causa dell\'esecuzione di un bolo esteso</string>
@@ -899,9 +898,27 @@
     <string name="profile_max_daily_basal_value">Valore max basale (profilo)</string>
     <string name="current_basal_value">Valore basale corrente</string>
     <string name="profile_carbs_ratio_value">Valore rapporto CHO (profilo)</string>
+    <string name="full_sync">Sincronizzazione completa</string>
+    <string name="prime">Caricamento</string>
+    <string name="ns_sync_options">Sincronizzazione</string>
+    <string name="ns_upload_summary">Profili, boli, CHO, basali temporanee vengono caricati su NS</string>
+    <string name="ns_upload">Carica dati su NS</string>
+    <string name="ns_receive_profile_store">Ricevi \"store\" profilo</string>
+    <string name="ns_receive_profile_store_summary">Sincronizza i profili da NS al profilo locale</string>
     <string name="ns_receive_temp_target">Ricevi target temporanei</string>
+    <string name="ns_receive_temp_target_summary">Accetta target temporanei inseriti tramite NS o NSClient</string>
     <string name="ns_receive_profile_switch">Ricevi cambi profilo</string>
+    <string name="ns_receive_profile_switch_summary">Accetta cambi profilo inseriti tramite NS o NSClient</string>
+    <string name="ns_receive_offline_event">Ricevi eventi APS offline</string>
+    <string name="ns_receive_offline_event_summary">Accetta eventi APS offline inseriti tramite NS o NSClient</string>
     <string name="ns_receive_insulin">Ricevi insulina</string>
+    <string name="ns_receive_insulin_summary">Accetta insulina inserita tramite NS o NSClient (non viene erogata, solo calcolata per IOB)</string>
     <string name="ns_receive_carbs">Ricevi CHO</string>
+    <string name="ns_receive_carbs_summary">Accetta CHO inseriti tramite NS o NSClient</string>
+    <string name="ns_receive_therapy_events">Ricevi eventi terapia</string>
+    <string name="ns_receive_therapy_events_summary">Accetta eventi terapia (cambio cannula, insulina, batteria, ecc.) inseriti tramite NS o NSClient</string>
+    <string name="ns_receive_cgm">Ricevi/riempi dati CGM</string>
     <string name="ns_receive_cgm_summary">Accetta dati CGM da NS</string>
+    <string name="sms_timeout_while_wating">Timeout nell\'attesa della fine della precedente comunicazione col micro.</string>
+    <string name="smscommunicator_another_bolus_in_queue">C\'è un altro bolo in coda. Riprova più tardi.</string>
 </resources>

@@ -482,7 +482,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
             for (pos in extendedBoluses.indices) {
                 val e = extendedBoluses[pos]
                 if (e.timestamp > toTime) continue
-                if (e.end > now) e.end = now
+                if (e.end > now) e.duration = now - e.timestamp
                 val profile = profileFunction.getProfile(e.timestamp) ?: return total
                 val calc = e.iobCalc(toTime, profile, activePlugin.activeInsulin)
                 total.plus(calc)
@@ -551,7 +551,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
             val t = temporaryBasals[pos]
             if (t.timestamp > toTime) continue
             val profile = profileFunction.getProfile(t.timestamp) ?: continue
-            if (t.end > now) t.end = now
+            if (t.end > now) t.duration = now - t.timestamp
             val calc = t.iobCalc(toTime, profile, activePlugin.activeInsulin)
             //log.debug("BasalIOB " + new Date(time) + " >>> " + calc.basalIob);
             total.plus(calc)
@@ -563,7 +563,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
                 val e = extendedBoluses[pos]
                 if (e.timestamp > toTime) continue
                 val profile = profileFunction.getProfile(e.timestamp) ?: continue
-                if (e.end > now) e.end = now
+                if (e.end > now) e.duration = now - e.timestamp
                 val calc = e.iobCalc(toTime, profile, activePlugin.activeInsulin)
                 totalExt.plus(calc)
             }
@@ -586,7 +586,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
             val t = temporaryBasals[pos]
             if (t.timestamp > toTime) continue
             val profile = profileFunction.getProfile(t.timestamp) ?: continue
-            if (t.end > now) t.end = now
+            if (t.end > now) t.duration = now - t.timestamp
             val calc = t.iobCalc(toTime, profile, lastAutosensResult, exercise_mode, half_basal_exercise_target, isTempTarget, activePlugin.activeInsulin)
             //log.debug("BasalIOB " + new Date(time) + " >>> " + calc.basalIob);
             total.plus(calc)
@@ -598,7 +598,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
                 val e = extendedBoluses[pos]
                 if (e.timestamp > toTime) continue
                 val profile = profileFunction.getProfile(e.timestamp) ?: continue
-                if (e.end > now) e.end = now
+                if (e.end > now) e.duration = now - e.timestamp
                 val calc = e.iobCalc(toTime, profile, lastAutosensResult, exercise_mode, half_basal_exercise_target, isTempTarget, activePlugin.activeInsulin)
                 totalExt.plus(calc)
             }

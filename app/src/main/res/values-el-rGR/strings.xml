@@ -77,8 +77,6 @@
     <string name="careportal">Φροντίδα</string>
     <string name="configbuilder_pump">Αντλία</string>
     <string name="configbuilder_pump_description">Ποια αντλία θα θέλατε να χρησιμοποιήσετε με το AndroidAPS;</string>
-    <string name="configbuilder_treatments">Θεραπείες</string>
-    <string name="configbuilder_treatments_description">Ποια προσθήκη πρέπει να χρησιμοποιηθεί για το χειρισμό της θεραπείας;</string>
     <string name="configbuilder_profile">Προφίλ</string>
     <string name="configbuilder_profile_description">Ποιο προφίλ πρέπει να χρησιμοποιήσει το AndroidAPS;</string>
     <string name="configbuilder_aps">APS</string>

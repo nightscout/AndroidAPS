@@ -29,6 +29,7 @@ import info.nightscout.androidaps.extensions.toStringMedium
 import info.nightscout.androidaps.extensions.toStringShort
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.activities.HistoryBrowseActivity
+import info.nightscout.androidaps.diaconn.DiaconnG8Plugin
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Config
@@ -304,7 +305,11 @@ class ActionsFragment : DaggerFragment() {
         val activeBgSource = activePlugin.activeBgSource
         historyBrowser?.visibility = (profile != null).toVisibility()
         fill?.visibility = (pump.pumpDescription.isRefillingCapable && pump.isInitialized() && !pump.isSuspended()).toVisibility()
-        pumpBatteryChange?.visibility = (pump.pumpDescription.isBatteryReplaceable || (pump is OmnipodErosPumpPlugin && pump.isUseRileyLinkBatteryLevel && pump.isBatteryChangeLoggingEnabled)).toVisibility()
+        if(pump is DiaconnG8Plugin) {
+            pumpBatteryChange?.visibility = (pump.pumpDescription.isBatteryReplaceable && !pump.isBatteryChangeLoggingEnabled()).toVisibility()
+        } else {
+            pumpBatteryChange?.visibility = (pump.pumpDescription.isBatteryReplaceable || (pump is OmnipodErosPumpPlugin && pump.isUseRileyLinkBatteryLevel && pump.isBatteryChangeLoggingEnabled)).toVisibility()
+        }
         tempTarget?.visibility = (profile != null && config.APS).toVisibility()
         tddStats?.visibility = pump.pumpDescription.supportsTDDs.toVisibility()
 

@@ -75,8 +75,6 @@
     <string name="careportal">Careportal</string>
     <string name="configbuilder_pump">Pomp</string>
     <string name="configbuilder_pump_description">Watter pomp wil jy gebruik met AndroidAPS?</string>
-    <string name="configbuilder_treatments">Behandelings</string>
-    <string name="configbuilder_treatments_description">Watter plugin moet gebruik word vir behandeling hantering?</string>
     <string name="configbuilder_profile">Profiel</string>
     <string name="configbuilder_profile_description">Watter profiel moet AndroidAPS gebruik?</string>
     <string name="configbuilder_aps">APS</string>

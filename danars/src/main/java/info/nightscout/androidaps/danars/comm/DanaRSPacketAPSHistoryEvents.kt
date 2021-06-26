@@ -137,7 +137,7 @@ open class DanaRSPacketAPSHistoryEvents(
                     isAbsolute = false,
                     type = temporaryBasalInfo?.type,
                     pumpId = pumpId,
-                    pumpType = PumpType.DANA_RS,
+                    pumpType = danaPump.pumpType(),
                     pumpSerial = danaPump.serialNumber)
                 aapsLogger.debug(LTag.PUMPCOMM, "[" + pumpId + "] " + (if (newRecord) "**NEW** " else "") + "EVENT TEMPSTART (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Ratio: " + param1 + "% Duration: " + param2 + "min")
                 status = "TEMPSTART " + dateUtil.timeString(datetime)
@@ -147,7 +147,7 @@ open class DanaRSPacketAPSHistoryEvents(
                 val newRecord = pumpSync.syncStopTemporaryBasalWithPumpId(
                     timestamp = datetime,
                     endPumpId = pumpId,
-                    pumpType = PumpType.DANA_RS,
+                    pumpType = danaPump.pumpType(),
                     pumpSerial = danaPump.serialNumber)
                 aapsLogger.debug(LTag.PUMPCOMM, "[" + pumpId + "] " + (if (newRecord) "**NEW** " else "") + "EVENT TEMPSTOP (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")")
                 status = "TEMPSTOP " + dateUtil.timeString(datetime)
@@ -160,7 +160,7 @@ open class DanaRSPacketAPSHistoryEvents(
                     duration = T.mins(param2.toLong()).msecs(),
                     isEmulatingTB = false,
                     pumpId = pumpId,
-                    pumpType = PumpType.DANA_RS,
+                    pumpType = danaPump.pumpType(),
                     pumpSerial = danaPump.serialNumber)
                 aapsLogger.debug(LTag.PUMPCOMM, "[" + pumpId + "] " + (if (newRecord) "**NEW** " else "") + "EVENT EXTENDEDSTART (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U Duration: " + param2 + "min")
                 status = "EXTENDEDSTART " + dateUtil.timeString(datetime)
@@ -170,7 +170,7 @@ open class DanaRSPacketAPSHistoryEvents(
                 val newRecord = pumpSync.syncStopExtendedBolusWithPumpId(
                     timestamp = datetime,
                     endPumpId = pumpId,
-                    pumpType = PumpType.DANA_RS,
+                    pumpType = danaPump.pumpType(),
                     pumpSerial = danaPump.serialNumber)
                 aapsLogger.debug(LTag.PUMPCOMM, "[" + pumpId + "] " + (if (newRecord) "**NEW** " else "") + "EVENT EXTENDEDSTOP (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Delivered: " + param1 / 100.0 + "U RealDuration: " + param2 + "min")
                 status = "EXTENDEDSTOP " + dateUtil.timeString(datetime)
@@ -183,7 +183,7 @@ open class DanaRSPacketAPSHistoryEvents(
                     amount = param1 / 100.0,
                     type = detailedBolusInfo?.bolusType,
                     pumpId = pumpId,
-                    pumpType = PumpType.DANA_RS,
+                    pumpType = danaPump.pumpType(),
                     pumpSerial = danaPump.serialNumber)
                 aapsLogger.debug(LTag.PUMPCOMM, "[" + pumpId + "] " + (if (newRecord) "**NEW** " else "") + "EVENT BOLUS (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Bolus: " + param1 / 100.0 + "U ")
                 status = "BOLUS " + dateUtil.timeString(datetime)
@@ -196,7 +196,7 @@ open class DanaRSPacketAPSHistoryEvents(
                     amount = param1 / 100.0,
                     type = detailedBolusInfo?.bolusType,
                     pumpId = pumpId,
-                    pumpType = PumpType.DANA_RS,
+                    pumpType = danaPump.pumpType(),
                     pumpSerial = danaPump.serialNumber)
                 aapsLogger.debug(LTag.PUMPCOMM, "[" + pumpId + "] " + (if (newRecord) "**NEW** " else "") + "EVENT DUALBOLUS (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Bolus: " + param1 / 100.0 + "U Duration: " + param2 + "min")
                 status = "DUALBOLUS " + dateUtil.timeString(datetime)
@@ -209,7 +209,7 @@ open class DanaRSPacketAPSHistoryEvents(
                     duration = T.mins(param2.toLong()).msecs(),
                     isEmulatingTB = false,
                     pumpId = pumpId,
-                    pumpType = PumpType.DANA_RS,
+                    pumpType = danaPump.pumpType(),
                     pumpSerial = danaPump.serialNumber)
                 aapsLogger.debug(LTag.PUMPCOMM, "[" + pumpId + "] " + (if (newRecord) "**NEW** " else "") + "EVENT DUALEXTENDEDSTART (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U Duration: " + param2 + "min")
                 status = "DUALEXTENDEDSTART " + dateUtil.timeString(datetime)
@@ -219,7 +219,7 @@ open class DanaRSPacketAPSHistoryEvents(
                 val newRecord = pumpSync.syncStopExtendedBolusWithPumpId(
                     timestamp = datetime,
                     endPumpId = pumpId,
-                    pumpType = PumpType.DANA_RS,
+                    pumpType = danaPump.pumpType(),
                     pumpSerial = danaPump.serialNumber)
                 aapsLogger.debug(LTag.PUMPCOMM, "[" + pumpId + "] " + (if (newRecord) "**NEW** " else "") + "EVENT DUALEXTENDEDSTOP (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Delivered: " + param1 / 100.0 + "U RealDuration: " + param2 + "min")
                 status = "DUALEXTENDEDSTOP " + dateUtil.timeString(datetime)
@@ -264,7 +264,7 @@ open class DanaRSPacketAPSHistoryEvents(
                     timestamp = datetime,
                     amount = param1.toDouble(),
                     pumpId = pumpId,
-                    pumpType = PumpType.DANA_RS,
+                    pumpType = danaPump.pumpType(),
                     pumpSerial = danaPump.serialNumber)
                 aapsLogger.debug(LTag.PUMPCOMM, "[" + pumpId + "] " + (if (newRecord) "**NEW** " else "") + "EVENT CARBS (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Carbs: " + param1 + "g")
                 status = "CARBS " + dateUtil.timeString(datetime)
