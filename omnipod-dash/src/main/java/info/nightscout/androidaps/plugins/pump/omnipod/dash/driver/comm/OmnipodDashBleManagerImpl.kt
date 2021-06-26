@@ -210,9 +210,10 @@ class OmnipodDashBleManagerImpl @Inject constructor(
             emitter.onNext(PodEvent.BluetoothConnected(podAddress))
 
             emitter.onNext(PodEvent.Pairing)
+            val mIO = conn.msgIO ?: throw ConnectException("Connection lost")
             val ltkExchanger = LTKExchanger(
                 aapsLogger,
-                conn.msgIO,
+                mIO,
                 ids,
             )
             val pairResult = ltkExchanger.negotiateLTK()
