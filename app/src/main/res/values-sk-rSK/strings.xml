@@ -81,8 +81,6 @@
     <string name="careportal">Starostlivosť</string>
     <string name="configbuilder_pump">Pumpa</string>
     <string name="configbuilder_pump_description">Akú pumpu chcete používať s AndroidAPS?</string>
-    <string name="configbuilder_treatments">Ošetrenia</string>
-    <string name="configbuilder_treatments_description">Aký modul chcete používať pre spracovanie ošetrení?</string>
     <string name="configbuilder_profile">Profil</string>
     <string name="configbuilder_profile_description">Aký profil má používať AndroidAPS?</string>
     <string name="configbuilder_aps">APS</string>
@@ -911,6 +909,8 @@
     <string name="ns_receive_temp_target_summary">Prijať dočasné ciele zadané prostredníctvom NS, alebo NSClienta</string>
     <string name="ns_receive_profile_switch">Prijímať prepnutia profilov</string>
     <string name="ns_receive_profile_switch_summary">Prijať prepnutia profilov zadané prostredníctvom NS, alebo NSClienta</string>
+    <string name="ns_receive_offline_event">Prijímať udalosti APS offline</string>
+    <string name="ns_receive_offline_event_summary">Prijať APS offline udalosti zadané prostredníctvom NS, alebo NSClienta</string>
     <string name="ns_receive_insulin">Prijímať inzulín</string>
     <string name="ns_receive_insulin_summary">Prijať inzulín vložený cez NS, alebo NSClient (nie je dodaný, iba započítaný do IOB)</string>
     <string name="ns_receive_carbs">Prijímať sacharidy</string>

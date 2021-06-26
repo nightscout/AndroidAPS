@@ -62,6 +62,7 @@
     <string name="eventtype">Тип събитие</string>
     <string name="mgdl">мг/дл</string>
     <string name="mmol">ммол/л</string>
+    <string name="shortgram">гр.</string>
     <string name="advancedsettings_title">Допълнителни настройки</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">BT ограничения</string>
@@ -202,6 +203,7 @@
     <string name="wear">Часовник</string>
     <string name="automation">Автоматизация</string>
     <string name="custom">По избор</string>
+    <string name="pump">Помпа</string>
     <string name="loop">Кръг - Loop</string>
     <!--    Command-->
     <string name="connectiontimedout">Времето за връзка изтече</string>
@@ -285,6 +287,13 @@
     <string name="saturday_short">С</string>
     <string name="sunday_short">Н</string>
     <!-- User Entry -->
+    <string name="uel_cancel_bolus">СПРИ БОЛУС</string>
+    <string name="ue_source">Източник</string>
+    <string name="ue_action">Действие</string>
+    <plurals name="hours">
+        <item quantity="one">%1$d час</item>
+        <item quantity="other">%1$d часа</item>
+    </plurals>
     <plurals name="minutes">
         <item quantity="one">%1$d минутa</item>
         <item quantity="other">%1$d минути</item>

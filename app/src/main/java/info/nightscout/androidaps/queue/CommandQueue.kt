@@ -68,12 +68,12 @@ open class CommandQueue @Inject constructor(
     private val disposable = CompositeDisposable()
 
     private val queue = LinkedList<Command>()
-    private var thread: QueueThread? = null
+    @Volatile private var thread: QueueThread? = null
 
-    var performing: Command? = null
+    @Volatile var performing: Command? = null
 
     init {
-        disposable.add(rxBus
+        disposable += rxBus
             .toObservable(EventProfileSwitchChanged::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({
@@ -109,8 +109,6 @@ open class CommandQueue @Inject constructor(
                     })
                 }
             }, fabricPrivacy::logException)
-        )
-
     }
 
     private fun executingNowError(): PumpEnactResult =
@@ -197,16 +195,17 @@ open class CommandQueue @Inject constructor(
         aapsLogger.debug(LTag.PUMPQUEUE, "Starting new queue")
         val tempCommandQueue = CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, activePlugin, context, sp, buildHelper, dateUtil, repository, fabricPrivacy)
         tempCommandQueue.readStatus(reason, callback)
+        tempCommandQueue.disposable.clear()
     }
 
     @Synchronized
     override fun bolusInQueue(): Boolean {
         if (isRunning(CommandType.BOLUS)) return true
+        if (isRunning(CommandType.SMB_BOLUS)) return true
         synchronized(queue) {
             for (i in queue.indices) {
-                if (queue[i].commandType == CommandType.BOLUS) {
-                    return true
-                }
+                if (queue[i].commandType == CommandType.BOLUS) return true
+                if (queue[i].commandType == CommandType.SMB_BOLUS) return true
             }
         }
         return false
@@ -243,13 +242,15 @@ open class CommandQueue @Inject constructor(
         }
         var type = if (detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB) CommandType.SMB_BOLUS else CommandType.BOLUS
         if (type == CommandType.SMB_BOLUS) {
-            if (isRunning(CommandType.BOLUS) || isRunning(CommandType.SMB_BOLUS) || bolusInQueue()) {
+            if (bolusInQueue()) {
                 aapsLogger.debug(LTag.PUMPQUEUE, "Rejecting SMB since a bolus is queue/running")
+                callback?.result(PumpEnactResult(injector).enacted(false).success(false))?.run()
                 return false
             }
             val lastBolusTime = repository.getLastBolusRecord()?.timestamp ?: 0L
             if (detailedBolusInfo.lastKnownBolusTime < lastBolusTime) {
                 aapsLogger.debug(LTag.PUMPQUEUE, "Rejecting bolus, another bolus was issued since request time")
+                callback?.result(PumpEnactResult(injector).enacted(false).success(false))?.run()
                 return false
             }
             removeAll(CommandType.SMB_BOLUS)

@@ -81,8 +81,6 @@
     <string name="careportal">Careportal</string>
     <string name="configbuilder_pump">Pumpe</string>
     <string name="configbuilder_pump_description">Hvilken pumpe ønsker du å bruke sammen med AndroidAPS?</string>
-    <string name="configbuilder_treatments">Behandlinger</string>
-    <string name="configbuilder_treatments_description">Hvilken plugin burde brukes til håndtering av behandlinger?</string>
     <string name="configbuilder_profile">Profil</string>
     <string name="configbuilder_profile_description">Hvilken profil bør AndroidAPS bruke?</string>
     <string name="configbuilder_aps">APS</string>
@@ -778,6 +776,7 @@
     <string name="randombg_short">BS</string>
     <string name="tools">Verktøy</string>
     <string name="show_calculation">Vis beregning</string>
+    <string name="show_removed">Vis slettede</string>
     <string name="clearqueueconfirm">Slett køen? All data i køen vil gå tapt!</string>
     <string name="ebstopsloop">Bruk av forlenget bolus funksjon vil deaktivere lukket loop i perioden med forlenget bolus. Vil du virkelig dette?</string>
     <string name="closed_loop_disabled_with_eb">Lukket loop deaktivert på grunn av forlenget bolus</string>
@@ -899,4 +898,25 @@
     <string name="profile_max_daily_basal_value">Profil maksimal basal dose</string>
     <string name="current_basal_value">Aktiv basal dose</string>
     <string name="profile_carbs_ratio_value">Profil karbohydratfaktor (IK)</string>
+    <string name="full_sync">Full synkronisering</string>
+    <string name="prime">Prime</string>
+    <string name="ns_sync_options">Synkronisering</string>
+    <string name="ns_upload_summary">Profiler, boluser, karbohydrater, midlertidige basaler lastes opp til NS</string>
+    <string name="ns_upload">Last opp data til NS</string>
+    <string name="ns_receive_profile_store">Hent lagrede profiler</string>
+    <string name="ns_receive_profile_store_summary">Synkroniser profiler fra NS til lokal profil</string>
+    <string name="ns_receive_temp_target">Motta midlertidige BS mål</string>
+    <string name="ns_receive_temp_target_summary">Aksepter midlertidige mål angitt med NS eller NSClient</string>
+    <string name="ns_receive_profile_switch">Motta profilbytter</string>
+    <string name="ns_receive_profile_switch_summary">Aksepter profilbytter som er angitt via NS eller NSClient</string>
+    <string name="ns_receive_offline_event">Motta APS offline hendelser</string>
+    <string name="ns_receive_offline_event_summary">Aksepter APS offline hendelser lagt inn gjennom NS eller NSKlient</string>
+    <string name="ns_receive_insulin">Motta insulin</string>
+    <string name="ns_receive_insulin_summary">Aksepter insulin angitt via NS eller NSClient (enhetene er ikke dosert, kun beregnet mot IOB)</string>
+    <string name="ns_receive_carbs">Motta karbohydrater</string>
+    <string name="ns_receive_carbs_summary">Aksepter karbohydrater angitt med NS eller NSClient</string>
+    <string name="ns_receive_therapy_events">Motta behandlingshendelser</string>
+    <string name="ns_receive_therapy_events_summary">Godta behandlingshendelser (kanyle, insulin, batteribytte osv.) som er lagt inn gjennom NS eller NSClient</string>
+    <string name="ns_receive_cgm">Motta/tilbakefyll CGM data</string>
+    <string name="ns_receive_cgm_summary">Aksepter CGM data fra NS</string>
 </resources>

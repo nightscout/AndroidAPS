@@ -17,24 +17,18 @@ abstract class MedtronicHistoryEntry : MedtronicHistoryEntryInterface {
     lateinit var rawData: List<Byte>
 
     protected var sizes = IntArray(3)
-        get() = field
 
     lateinit var head: ByteArray
     lateinit var datetime: ByteArray
     lateinit var body: ByteArray
 
     var id: Long = 0
-        set(value) {
-            field = value
-        }
 
     @Expose
     var DT: String? = null
-        get() = field
 
     @Expose
     var atechDateTime: Long = 0L
-        get() = field
         set(value) {
             field = value
             DT = DateTimeUtil.toString(value)
@@ -43,7 +37,6 @@ abstract class MedtronicHistoryEntry : MedtronicHistoryEntryInterface {
 
     @Expose
     var decodedData: MutableMap<String, Any> = mutableMapOf()
-        get() = field
 
     /**
      * Pump id that will be used with AAPS object (time * 1000 + historyType (max is FF = 255)
@@ -61,7 +54,6 @@ abstract class MedtronicHistoryEntry : MedtronicHistoryEntryInterface {
      * Linked object, see linked
      */
     var linkedObject: Any? = null
-        get() = field
         set(value) {
             linked = true
             field = value

@@ -3,10 +3,8 @@ package info.nightscout.androidaps.plugins.general.overview.graphExtensions
 import android.graphics.Color
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.androidaps.interfaces.GlucoseUnit
-import info.nightscout.androidaps.interfaces.Interval
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.Translator
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -17,7 +15,7 @@ class TherapyEventDataPoint @Inject constructor(
     private val resourceHelper: ResourceHelper,
     private val profileFunction: ProfileFunction,
     private val translator: Translator
-) : DataPointWithLabelInterface, Interval {
+) : DataPointWithLabelInterface {
 
     private var yValue = 0.0
 
@@ -52,7 +50,7 @@ class TherapyEventDataPoint @Inject constructor(
         if (data.note != null) data.note
         else translator.translate(data.type)
 
-    override fun getDuration(): Long = end() - start()
+    override fun getDuration(): Long = data.duration
     override fun getShape(): PointsWithLabelGraphSeries.Shape =
         when {
             data.type == TherapyEvent.Type.NS_MBG                -> PointsWithLabelGraphSeries.Shape.MBG
@@ -74,22 +72,4 @@ class TherapyEventDataPoint @Inject constructor(
             TherapyEvent.Type.APS_OFFLINE           -> Color.GRAY and -0x7f000001
             else                                    -> Color.GRAY
         }
-
-    // Interval interface
-    private var cutEnd: Long? = null
-
-    override fun durationInMsec(): Long = data.duration
-    override fun start(): Long = data.timestamp
-    override fun originalEnd(): Long = data.timestamp + durationInMsec()
-    override fun end(): Long = cutEnd ?: originalEnd()
-    override fun cutEndTo(end: Long) {
-        cutEnd = end
-    }
-
-    override fun match(time: Long): Boolean = start() <= time && end() >= time
-    override fun before(time: Long): Boolean = end() < time
-    override fun after(time: Long): Boolean = start() > time
-    override val isInProgress: Boolean get() = match(System.currentTimeMillis())
-    override val isEndingEvent: Boolean get() = durationInMsec() == 0L
-    override val isValid: Boolean get() = data.type == TherapyEvent.Type.APS_OFFLINE
 }

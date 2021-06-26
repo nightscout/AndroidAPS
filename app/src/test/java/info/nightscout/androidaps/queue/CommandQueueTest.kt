@@ -18,7 +18,7 @@ import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.general.maintenance.LoggerUtils
+import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.queue.commands.*
 import info.nightscout.androidaps.utils.DateUtil
@@ -44,16 +44,16 @@ import java.util.*
 @RunWith(PowerMockRunner::class)
 @PrepareForTest(
     ConstraintChecker::class, VirtualPumpPlugin::class, ToastUtils::class, Context::class,
-    FabricPrivacy::class, LoggerUtils::class, PowerManager::class,
+    FabricPrivacy::class, PrefFileListProvider::class, PowerManager::class,
     AppRepository::class)
 class CommandQueueTest : TestBaseWithProfile() {
 
     @Mock lateinit var constraintChecker: ConstraintChecker
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var sp: SP
-    @Mock lateinit var loggerUtils: LoggerUtils
     @Mock lateinit var powerManager: PowerManager
     @Mock lateinit var repository: AppRepository
+    @Mock lateinit var fileListProvider: PrefFileListProvider
 
     class CommandQueueMocked(
         injector: HasAndroidInjector,
@@ -106,7 +106,7 @@ class CommandQueueTest : TestBaseWithProfile() {
 
     @Before
     fun prepare() {
-        commandQueue = CommandQueueMocked(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, activePlugin, context, sp, BuildHelper(ConfigImpl(), loggerUtils), dateUtil, repository, fabricPrivacy)
+        commandQueue = CommandQueueMocked(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, activePlugin, context, sp, BuildHelper(ConfigImpl(), fileListProvider), dateUtil, repository, fabricPrivacy)
         testPumpPlugin = TestPumpPlugin(injector)
 
         testPumpPlugin.pumpDescription.basalMinimumRate = 0.1
@@ -137,7 +137,7 @@ class CommandQueueTest : TestBaseWithProfile() {
 
     @Test
     fun commandIsPickedUp() {
-        val commandQueue = CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, activePlugin, context, sp, BuildHelper(ConfigImpl(), loggerUtils), dateUtil, repository, fabricPrivacy)
+        val commandQueue = CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, activePlugin, context, sp, BuildHelper(ConfigImpl(), fileListProvider), dateUtil, repository, fabricPrivacy)
         // start with empty queue
         Assert.assertEquals(0, commandQueue.size())
 

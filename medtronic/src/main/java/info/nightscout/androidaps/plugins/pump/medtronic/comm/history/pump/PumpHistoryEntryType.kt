@@ -205,7 +205,6 @@ constructor(var code: Byte,
     private var specialRulesHead: MutableList<SpecialRule>? = null
     private var specialRulesBody: MutableList<SpecialRule>? = null
     private var hasSpecialRules = false
-        get() = field
 
     fun getTotalLength(medtronicDeviceType: MedtronicDeviceType): Int {
         return if (hasSpecialRules) {

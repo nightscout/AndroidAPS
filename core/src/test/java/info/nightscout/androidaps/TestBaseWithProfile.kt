@@ -4,7 +4,11 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.extensions.pureProfileFromJson
-import info.nightscout.androidaps.interfaces.*
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.androidaps.interfaces.Profile
+import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileStore
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DefaultValueHelper
@@ -21,7 +25,6 @@ open class TestBaseWithProfile : TestBase() {
 
     @Mock lateinit var activePluginProvider: ActivePlugin
     @Mock lateinit var resourceHelper: ResourceHelper
-    @Mock lateinit var treatmentsInterface: TreatmentsInterface
     @Mock lateinit var fabricPrivacy: FabricPrivacy
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var defaultValueHelper: DefaultValueHelper

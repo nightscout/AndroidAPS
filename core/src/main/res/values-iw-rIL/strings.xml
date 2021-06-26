@@ -382,6 +382,9 @@
     <string name="ue_timestamp">חתימת זמן</string>
     <string name="ue_none">ללא יחידה</string>
     <string name="ue_export_to_csv">יצוא ערכי משתמש לאקסל (csv)</string>
+    <string name="uel_loop_change">הלולאה שונתה</string>
+    <string name="uel_loop_removed">הלולאה הוסרה</string>
+    <string name="uel_other">אחר</string>
     <plurals name="days">
         <item quantity="one">%1$d יום</item>
         <item quantity="two">%1$d ימים</item>

@@ -35,7 +35,7 @@ class DanaRsPacketBolusSetStepBolusStartTest : DanaRSTestBase() {
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is DanaRS_Packet_Bolus_Set_Step_Bolus_Start) {
+            if (it is DanaRSPacketBolusSetStepBolusStart) {
                 it.aapsLogger = aapsLogger
                 it.danaPump = danaPump
                 it.constraintChecker = constraintChecker
@@ -44,9 +44,9 @@ class DanaRsPacketBolusSetStepBolusStartTest : DanaRSTestBase() {
     }
 
     @Test fun runTest() {
-        val packet = DanaRS_Packet_Bolus_Set_Step_Bolus_Start(packetInjector)
+        val packet = DanaRSPacketBolusSetStepBolusStart(packetInjector)
         // test params
-        val testParams = packet.requestParams
+        val testParams = packet.getRequestParams()
         Assert.assertEquals(0.toByte(), testParams[0])
         Assert.assertEquals(0.toByte(), testParams[2])
         // test message decoding

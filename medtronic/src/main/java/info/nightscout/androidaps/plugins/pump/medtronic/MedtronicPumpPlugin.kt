@@ -852,7 +852,7 @@ class MedtronicPumpPlugin @Inject constructor(
 
         //aapsLogger.debug(LTag.PUMP, "HST: Target Date: " + targetDate);
         val responseTask2 = rileyLinkMedtronicService.medtronicUIComm.executeCommand(MedtronicCommandType.GetHistoryData,
-            arrayListOf(/*lastPumpHistoryEntry*/ null, targetDate) as ArrayList<Any>?)
+            arrayListOf(/*lastPumpHistoryEntry*/ null, targetDate) as? ArrayList<Any>?)
         if (debugHistory) aapsLogger.debug(LTag.PUMP, "HST: After task")
         val historyResult = responseTask2.result as PumpHistoryResult?
         if (debugHistory) aapsLogger.debug(LTag.PUMP, "HST: History Result: " + historyResult.toString())

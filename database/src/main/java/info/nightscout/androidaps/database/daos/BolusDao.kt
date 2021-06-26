@@ -33,16 +33,16 @@ internal interface BolusDao : TraceableDao<Bolus> {
     @Query("SELECT * FROM $TABLE_BOLUSES WHERE temporaryId = :temporaryId AND pumpType = :pumpType AND pumpSerial = :pumpSerial AND referenceId IS NULL")
     fun findByPumpTempIds(temporaryId: Long, pumpType: InterfaceIDs.PumpType, pumpSerial: String): Bolus?
 
-    @Query("SELECT * FROM $TABLE_BOLUSES WHERE isValid = 1 AND type <> :exclude AND referenceId IS NULL ORDER BY id ASC LIMIT 1")
+    @Query("SELECT * FROM $TABLE_BOLUSES WHERE isValid = 1 AND type <> :exclude AND referenceId IS NULL ORDER BY timestamp DESC LIMIT 1")
     fun getLastBolusRecord(exclude: Bolus.Type = Bolus.Type.PRIMING): Bolus?
 
-    @Query("SELECT * FROM $TABLE_BOLUSES WHERE isValid = 1 AND type <> :exclude AND referenceId IS NULL ORDER BY id ASC LIMIT 1")
+    @Query("SELECT * FROM $TABLE_BOLUSES WHERE isValid = 1 AND type <> :exclude AND referenceId IS NULL ORDER BY timestamp DESC LIMIT 1")
     fun getLastBolusRecordMaybe(exclude: Bolus.Type = Bolus.Type.PRIMING): Maybe<Bolus>
 
-    @Query("SELECT * FROM $TABLE_BOLUSES WHERE isValid = 1 AND type == :only AND referenceId IS NULL ORDER BY id ASC LIMIT 1")
+    @Query("SELECT * FROM $TABLE_BOLUSES WHERE isValid = 1 AND type == :only AND referenceId IS NULL ORDER BY timestamp DESC LIMIT 1")
     fun getLastBolusRecordOfType(only: Bolus.Type): Bolus?
 
-    @Query("SELECT * FROM $TABLE_BOLUSES WHERE isValid = 1 AND type <> :exclude AND referenceId IS NULL ORDER BY id ASC LIMIT 1")
+    @Query("SELECT * FROM $TABLE_BOLUSES WHERE isValid = 1 AND type <> :exclude AND referenceId IS NULL ORDER BY timestamp ASC LIMIT 1")
     fun getOldestBolusRecord(exclude: Bolus.Type = Bolus.Type.PRIMING): Bolus?
 
     @Query("SELECT * FROM $TABLE_BOLUSES WHERE isValid = 1 AND timestamp >= :timestamp AND referenceId IS NULL ORDER BY id DESC")

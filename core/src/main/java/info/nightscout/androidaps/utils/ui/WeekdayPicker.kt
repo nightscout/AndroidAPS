@@ -10,7 +10,7 @@ import info.nightscout.androidaps.core.databinding.WeekdayPickerBinding
 import info.nightscout.androidaps.extensions.toVisibility
 import java.util.*
 
-class WeekdayPicker @JvmOverloads constructor(
+class WeekdayPicker constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
 

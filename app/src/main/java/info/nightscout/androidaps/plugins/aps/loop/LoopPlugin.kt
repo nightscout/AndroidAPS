@@ -166,11 +166,13 @@ open class LoopPlugin @Inject constructor(
     }
 
     override val isSuspended: Boolean
-        get()  = repository.getOfflineEventActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing
+        get() = repository.getOfflineEventActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing
 
     override var enabled: Boolean
         get() = isEnabled()
-        set(value) { setPluginEnabled(PluginType.LOOP, value)}
+        set(value) {
+            setPluginEnabled(PluginType.LOOP, value)
+        }
 
     val isLGS: Boolean
         get() {
@@ -210,6 +212,17 @@ open class LoopPlugin @Inject constructor(
     }
 
     @Synchronized
+    fun isEmptyQueue(): Boolean {
+        val maxMinutes = 2L
+        val start = dateUtil.now()
+        while (start + T.mins(maxMinutes).msecs() > dateUtil.now()) {
+            if (commandQueue.size() == 0 && commandQueue.performing() == null) return true
+            SystemClock.sleep(100)
+        }
+        return false
+    }
+
+    @Synchronized
     operator fun invoke(initiator: String, allowNotification: Boolean, tempBasalFallback: Boolean) {
         try {
             aapsLogger.debug(LTag.APS, "invoke from $initiator")
@@ -246,6 +259,12 @@ open class LoopPlugin @Inject constructor(
                 rxBus.send(EventLoopSetLastRunGui(resourceHelper.gs(R.string.noapsselected)))
                 return
             } else rxBus.send(EventLoopInvoked())
+
+            if (!isEmptyQueue()) {
+                aapsLogger.debug(LTag.APS, resourceHelper.gs(R.string.pumpbusy))
+                rxBus.send(EventLoopSetLastRunGui(resourceHelper.gs(R.string.pumpbusy)))
+                return
+            }
 
             // Prepare for pumps using % basals
             if (pump.pumpDescription.tempBasalStyle == PumpDescription.PERCENT && allowPercentage()) {
@@ -311,15 +330,15 @@ open class LoopPlugin @Inject constructor(
                             if (sp.getBoolean(R.string.key_enable_carbs_required_alert_local, true) && sp.getBoolean(R.string.key_raise_notifications_as_android_notifications, true)) {
                                 val intentAction5m = Intent(context, CarbSuggestionReceiver::class.java)
                                 intentAction5m.putExtra("ignoreDuration", 5)
-                                val pendingIntent5m = PendingIntent.getBroadcast(context, 1, intentAction5m, PendingIntent.FLAG_UPDATE_CURRENT)
+                                val pendingIntent5m = PendingIntent.getBroadcast(context, 1, intentAction5m, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
                                 val actionIgnore5m = NotificationCompat.Action(R.drawable.ic_notif_aaps, resourceHelper.gs(R.string.ignore5m, "Ignore 5m"), pendingIntent5m)
                                 val intentAction15m = Intent(context, CarbSuggestionReceiver::class.java)
                                 intentAction15m.putExtra("ignoreDuration", 15)
-                                val pendingIntent15m = PendingIntent.getBroadcast(context, 1, intentAction15m, PendingIntent.FLAG_UPDATE_CURRENT)
+                                val pendingIntent15m = PendingIntent.getBroadcast(context, 1, intentAction15m, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
                                 val actionIgnore15m = NotificationCompat.Action(R.drawable.ic_notif_aaps, resourceHelper.gs(R.string.ignore15m, "Ignore 15m"), pendingIntent15m)
                                 val intentAction30m = Intent(context, CarbSuggestionReceiver::class.java)
                                 intentAction30m.putExtra("ignoreDuration", 30)
-                                val pendingIntent30m = PendingIntent.getBroadcast(context, 1, intentAction30m, PendingIntent.FLAG_UPDATE_CURRENT)
+                                val pendingIntent30m = PendingIntent.getBroadcast(context, 1, intentAction30m, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
                                 val actionIgnore30m = NotificationCompat.Action(R.drawable.ic_notif_aaps, resourceHelper.gs(R.string.ignore30m, "Ignore 30m"), pendingIntent30m)
                                 val builder = NotificationCompat.Builder(context, CHANNEL_ID)
                                 builder.setSmallIcon(R.drawable.notif_icon)
@@ -357,8 +376,7 @@ open class LoopPlugin @Inject constructor(
                         }
                     }
                     if (resultAfterConstraints.isChangeRequested
-                        && !commandQueue.bolusInQueue()
-                        && !commandQueue.isRunning(Command.CommandType.BOLUS)) {
+                        && !commandQueue.bolusInQueue()) {
                         val waiting = PumpEnactResult(injector)
                         waiting.queued = true
                         if (resultAfterConstraints.tempBasalRequested) lastRun.tbrSetByPump = waiting
@@ -441,7 +459,7 @@ open class LoopPlugin @Inject constructor(
         stackBuilder.addParentStack(MainActivity::class.java)
         // Adds the Intent that starts the Activity to the top of the stack
         stackBuilder.addNextIntent(resultIntent)
-        val resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
+        val resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         builder.setContentIntent(resultPendingIntent)
         builder.setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
         val mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -613,7 +631,7 @@ open class LoopPlugin @Inject constructor(
             commandQueue.tempBasalAbsolute(0.0, durationInMinutes, true, profile, PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND, object : Callback() {
                 override fun run() {
                     if (!result.success) {
-                        ErrorHelperActivity.runAlarm(context, result.comment, resourceHelper.gs(R.string.tempbasaldeliveryerror), info.nightscout.androidaps.dana.R.raw.boluserror)
+                        ErrorHelperActivity.runAlarm(context, result.comment, resourceHelper.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
                     }
                 }
             })
@@ -621,7 +639,7 @@ open class LoopPlugin @Inject constructor(
             commandQueue.tempBasalPercent(0, durationInMinutes, true, profile, PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND, object : Callback() {
                 override fun run() {
                     if (!result.success) {
-                        ErrorHelperActivity.runAlarm(context, result.comment, resourceHelper.gs(R.string.tempbasaldeliveryerror), info.nightscout.androidaps.dana.R.raw.boluserror)
+                        ErrorHelperActivity.runAlarm(context, result.comment, resourceHelper.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
                     }
                 }
             })
@@ -630,7 +648,7 @@ open class LoopPlugin @Inject constructor(
             commandQueue.cancelExtended(object : Callback() {
                 override fun run() {
                     if (!result.success) {
-                        ErrorHelperActivity.runAlarm(context, result.comment, resourceHelper.gs(R.string.extendedbolusdeliveryerror), info.nightscout.androidaps.dana.R.raw.boluserror)
+                        ErrorHelperActivity.runAlarm(context, result.comment, resourceHelper.gs(R.string.extendedbolusdeliveryerror), R.raw.boluserror)
                     }
                 }
             })
@@ -648,7 +666,7 @@ open class LoopPlugin @Inject constructor(
         commandQueue.cancelTempBasal(true, object : Callback() {
             override fun run() {
                 if (!result.success) {
-                    ErrorHelperActivity.runAlarm(context, result.comment, resourceHelper.gs(R.string.tempbasaldeliveryerror), info.nightscout.androidaps.dana.R.raw.boluserror)
+                    ErrorHelperActivity.runAlarm(context, result.comment, resourceHelper.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
                 }
             }
         })

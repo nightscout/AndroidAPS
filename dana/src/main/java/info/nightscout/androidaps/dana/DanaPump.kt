@@ -406,7 +406,8 @@ class DanaPump @Inject constructor(
             0x05 -> PumpType.DANA_RS
             0x06 -> PumpType.DANA_RS_KOREAN
             0x07 -> PumpType.DANA_I
-            else -> PumpType.DANA_R
+            0x09 -> PumpType.DANA_I
+            else -> PumpType.USER
         }
 
     companion object {

@@ -81,8 +81,6 @@
     <string name="careportal">PortalOpieki</string>
     <string name="configbuilder_pump">Pompa</string>
     <string name="configbuilder_pump_description">Którą pompę chcesz wykorzystać do AndroidAPS?</string>
-    <string name="configbuilder_treatments">Terapia</string>
-    <string name="configbuilder_treatments_description">Która wtyczka powinna być używana do obsługi leczenia?</string>
     <string name="configbuilder_profile">Profil</string>
     <string name="configbuilder_profile_description">Który profil będzie używany w AndroidAPS?</string>
     <string name="configbuilder_aps">APS</string>

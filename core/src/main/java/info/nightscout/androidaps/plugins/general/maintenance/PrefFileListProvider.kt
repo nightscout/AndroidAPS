@@ -17,6 +17,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
 
+@Suppress("SpellCheckingInspection")
 @Singleton
 class PrefFileListProvider @Inject constructor(
     private val resourceHelper: ResourceHelper,
@@ -27,11 +28,14 @@ class PrefFileListProvider @Inject constructor(
     private val versionCheckerUtils: VersionCheckerUtils
 ) {
 
+    private val path = File(Environment.getExternalStorageDirectory().toString())
+    private val aapsPath = File(path, "AAPS" + File.separator + "preferences")
+    private val exportsPath = File(path, "AAPS" + File.separator + "exports")
+    private val tempPath = File(path, "AAPS" + File.separator + "temp")
+    private val extraPath = File(path, "AAPS" + File.separator + "extra")
+
     companion object {
 
-        private val path = File(Environment.getExternalStorageDirectory().toString())
-        private val aapsPath = File(path, "AAPS" + File.separator + "preferences")
-        private val exportsPath = File(path, "AAPS" + File.separator + "exports")
         private const val IMPORT_AGE_NOT_YET_OLD_DAYS = 60
     }
 
@@ -90,13 +94,28 @@ class PrefFileListProvider @Inject constructor(
         return File(path, resourceHelper.gs(R.string.app_name) + "Preferences")
     }
 
-    fun ensureExportDirExists() {
+    fun ensureExportDirExists(): File {
         if (!aapsPath.exists()) {
             aapsPath.mkdirs()
         }
         if (!exportsPath.exists()) {
             exportsPath.mkdirs()
         }
+        return exportsPath
+    }
+
+    fun ensureTempDirExists(): File {
+        if (!tempPath.exists()) {
+            tempPath.mkdirs()
+        }
+        return tempPath
+    }
+
+    fun ensureExtraDirExists(): File {
+        if (!extraPath.exists()) {
+            extraPath.mkdirs()
+        }
+        return extraPath
     }
 
     fun newExportFile(): File {
@@ -104,7 +123,7 @@ class PrefFileListProvider @Inject constructor(
         return File(aapsPath, timeLocal + "_" + config.FLAVOR + ".json")
     }
 
-    fun newExportXmlFile(): File {
+    fun newExportCsvFile(): File {
         val timeLocal = LocalDateTime.now().toString(DateTimeFormat.forPattern("yyyy-MM-dd'_'HHmmss"))
         return File(exportsPath, timeLocal + "_UserEntry.csv")
     }

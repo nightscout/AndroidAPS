@@ -10,12 +10,6 @@ apply from: "${project.rootDir}/gradle/android_dependencies.gradle"
 apply from: "${project.rootDir}/gradle/android_module_dependencies.gradle"
 apply from: "${project.rootDir}/gradle/test_dependencies.gradle"
 
-android {
-    defaultConfig {
-        versionCode 1
-        versionName "1.0"
-    }
-}
 
 allOpen {
     annotation 'info.nightscout.androidaps.plugins.pump.omnipod.dash.annotations.OpenClass'

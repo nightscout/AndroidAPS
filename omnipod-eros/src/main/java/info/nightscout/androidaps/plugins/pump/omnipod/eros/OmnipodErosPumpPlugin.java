@@ -648,10 +648,12 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
             return deliverBolus(detailedBolusInfo);
         } else {
             // no bolus required, carb only treatment
-            activePlugin.getActiveTreatments().addToHistoryTreatment(detailedBolusInfo, true);
+//            activePlugin.getActiveTreatments().addToHistoryTreatment(detailedBolusInfo, true);
 
-            return new PumpEnactResult(getInjector()).success(true).enacted(true).bolusDelivered(0d)
-                    .carbsDelivered(detailedBolusInfo.carbs);
+//            return new PumpEnactResult(getInjector()).success(true).enacted(true).bolusDelivered(0d)
+//                    .carbsDelivered(detailedBolusInfo.carbs);
+// Needs refactor
+            throw new IllegalStateException("Not implemented");
         }
     }
 

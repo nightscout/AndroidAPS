@@ -346,7 +346,6 @@ interface PumpSync {
 
     /**
      * Invalidate of temporary basals that failed to start
-     * Dash specific, replace by setting duration to zero ????
      *
      * If exists, isValid is set false
      * If db record doesn't exist data is ignored and false returned

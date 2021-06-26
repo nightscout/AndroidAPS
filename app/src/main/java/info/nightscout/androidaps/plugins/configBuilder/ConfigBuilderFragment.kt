@@ -114,7 +114,6 @@ class ConfigBuilderFragment : DaggerFragment() {
             createViewsForPlugins(R.string.configbuilder_loop, R.string.configbuilder_loop_description, PluginType.LOOP, activePlugin.getSpecificPluginsVisibleInList(PluginType.LOOP))
             createViewsForPlugins(R.string.constraints, R.string.configbuilder_constraints_description, PluginType.CONSTRAINTS, activePlugin.getSpecificPluginsVisibleInList(PluginType.CONSTRAINTS))
         }
-        createViewsForPlugins(R.string.configbuilder_treatments, R.string.configbuilder_treatments_description, PluginType.TREATMENT, activePlugin.getSpecificPluginsVisibleInList(PluginType.TREATMENT))
         createViewsForPlugins(R.string.configbuilder_general, R.string.configbuilder_general_description, PluginType.GENERAL, activePlugin.getSpecificPluginsVisibleInList(PluginType.GENERAL))
     }
 
@@ -139,22 +138,15 @@ class ConfigBuilderFragment : DaggerFragment() {
 
         @Suppress("InflateParams")
         val baseView: LinearLayout = fragment.layoutInflater.inflate(R.layout.configbuilder_single_plugin, null) as LinearLayout
-        private val enabledExclusive: RadioButton
-        private val enabledInclusive: CheckBox
-        private val pluginIcon: ImageView
-        private val pluginName: TextView
-        private val pluginDescription: TextView
-        private val pluginPreferences: ImageButton
-        private val pluginVisibility: CheckBox
+        private val enabledExclusive: RadioButton = baseView.findViewById(R.id.plugin_enabled_exclusive)
+        private val enabledInclusive: CheckBox = baseView.findViewById(R.id.plugin_enabled_inclusive)
+        private val pluginIcon: ImageView = baseView.findViewById(R.id.plugin_icon)
+        private val pluginName: TextView = baseView.findViewById(R.id.plugin_name)
+        private val pluginDescription: TextView = baseView.findViewById(R.id.plugin_description)
+        private val pluginPreferences: ImageButton = baseView.findViewById(R.id.plugin_preferences)
+        private val pluginVisibility: CheckBox = baseView.findViewById(R.id.plugin_visibility)
 
         init {
-            enabledExclusive = baseView.findViewById(R.id.plugin_enabled_exclusive)
-            enabledInclusive = baseView.findViewById(R.id.plugin_enabled_inclusive)
-            pluginIcon = baseView.findViewById(R.id.plugin_icon)
-            pluginName = baseView.findViewById(R.id.plugin_name)
-            pluginDescription = baseView.findViewById(R.id.plugin_description)
-            pluginPreferences = baseView.findViewById(R.id.plugin_preferences)
-            pluginVisibility = baseView.findViewById(R.id.plugin_visibility)
 
             pluginVisibility.setOnClickListener {
                 plugin.setFragmentVisible(pluginType, pluginVisibility.isChecked)
