@@ -91,7 +91,7 @@ interface OmnipodDashPodStateManager {
         requestedBolus: Double? = null
     ): Single<ActiveCommand>
     fun updateActiveCommand(): Maybe<CommandConfirmed>
-    fun observeNoActiveCommand(b: Boolean): Observable<PodEvent>
+    fun observeNoActiveCommand(check: Boolean): Observable<PodEvent>
     fun getCommandConfirmationFromState(): CommandConfirmationFromState
 
     fun createLastBolus(requestedUnits: Double, historyId: String, bolusType: DetailedBolusInfo.BolusType)

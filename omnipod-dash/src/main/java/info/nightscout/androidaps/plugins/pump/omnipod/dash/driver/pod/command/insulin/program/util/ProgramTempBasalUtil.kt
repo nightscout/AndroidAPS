@@ -24,7 +24,7 @@ object ProgramTempBasalUtil {
         val tenthPulsesPerSlot = ShortArray(durationInSlots)
         var i = 0
         while (durationInSlots > i) {
-            tenthPulsesPerSlot[i] = (roundToHalf(pulsesPerHour / 2.0) * 10).toShort()
+            tenthPulsesPerSlot[i] = (roundToHalf(pulsesPerHour / 2.0) * 10).toInt().toShort()
             i++
         }
         return tenthPulsesPerSlot

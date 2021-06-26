@@ -35,8 +35,6 @@ public class RileyLinkOmnipodService extends RileyLinkService {
 
     @Inject OmnipodErosPumpPlugin omnipodErosPumpPlugin;
     @Inject AapsOmnipodUtil aapsOmnipodUtil;
-    @Inject PodStateManager podStateManager;
-    @Inject AapsOmnipodErosManager aapsOmnipodErosManager;
     @Inject OmnipodRileyLinkCommunicationManager omnipodRileyLinkCommunicationManager;
 
     private final IBinder mBinder = new LocalBinder();

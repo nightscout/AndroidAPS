@@ -69,7 +69,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
                     emitter.tryOnError(MessageIOException("XXX random failure to test unconfirmed commands"))
                     return@create
                 }*/
-                when (val readResult = session.readAndAckResponse(responseType)) {
+                when (val readResult = session.readAndAckResponse()) {
                     is CommandReceiveSuccess ->
                         emitter.onNext(PodEvent.ResponseReceived(cmd, readResult.result))
 

@@ -443,6 +443,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
                     createdRealtime = now,
                     sentRealtime = now + 1
                 )
+                podState.activeCommand = newCommand
                 podState.lastStatusResponseReceived = 0
             }
 
