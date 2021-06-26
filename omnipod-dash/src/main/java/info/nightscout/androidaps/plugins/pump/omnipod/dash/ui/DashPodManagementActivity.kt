@@ -125,7 +125,7 @@ class DashPodManagementActivity : NoSplashAppCompatActivity() {
 
         binding.buttonActivatePod.isEnabled = podStateManager.activationProgress.isBefore(ActivationProgress.COMPLETED)
         binding.buttonDeactivatePod.isEnabled =
-            podStateManager.activationProgress.isAtLeast(ActivationProgress.SET_UNIQUE_ID) ||
+            podStateManager.ltk != null ||
             podStateManager.podStatus == PodStatus.ALARM
 
         if (podStateManager.activationProgress.isAtLeast(ActivationProgress.PHASE_1_COMPLETED)) {

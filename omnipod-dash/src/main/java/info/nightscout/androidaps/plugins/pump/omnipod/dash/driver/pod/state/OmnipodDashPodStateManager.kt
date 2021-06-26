@@ -35,11 +35,12 @@ interface OmnipodDashPodStateManager {
     val isPodKaput: Boolean
     var bluetoothConnectionState: BluetoothConnectionState
 
-    var timeZone: DateTimeZone
+    var timeZone: TimeZone
     val lastUpdatedSystem: Long // System.currentTimeMillis()
     val lastStatusResponseReceived: Long
     val time: DateTime?
-    val timeBehind: Duration?
+    val timeDrift: Duration?
+    val expiry: DateTime?
 
     val messageSequenceNumber: Short
     val sequenceNumberOfLastProgrammingCommand: Short?
@@ -96,6 +97,12 @@ interface OmnipodDashPodStateManager {
     fun createLastBolus(requestedUnits: Double, historyId: String, bolusType: DetailedBolusInfo.BolusType)
     fun markLastBolusComplete(): LastBolus?
     fun onStart()
+    /*
+    This is called only:. It overwrites activationStatus
+       - when activation was interrupted(application crash, killed, etc)
+       - after getPodStatus was successful(we have an up-to-date podStatus)
+     */
+    fun recoverActivationFromPodStatus(): String?
 
     data class ActiveCommand(
         val sequence: Short,

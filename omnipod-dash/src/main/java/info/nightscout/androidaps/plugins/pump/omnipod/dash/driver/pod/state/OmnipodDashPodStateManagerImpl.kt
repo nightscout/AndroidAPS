@@ -99,10 +99,10 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             }
         }
 
-    override var timeZone: DateTimeZone
-        get() = podState.timeZone
+    override var timeZone: TimeZone
+        get() = TimeZone.getTimeZone(podState.timeZone)
         set(tz) {
-            podState.timeZone = tz
+            podState.timeZone = tz.getDisplayName(true, TimeZone.SHORT)
             store()
         }
 
@@ -189,14 +189,25 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             if ((activationTime != null) && (minutesSinceActivation != null)) {
                 return DateTime(activationTime)
                     .plusMinutes(minutesSinceActivation.toInt())
-                    .plus(Duration(podState.lastStatusResponseReceived, System.currentTimeMillis()))
+                    .plus(Duration(podState.lastUpdatedSystem, System.currentTimeMillis()))
             }
             return null
         }
 
-    override val timeBehind: Duration?
+    override val timeDrift: Duration?
         get() {
             return Duration(DateTime.now(), time)
+        }
+
+    override val expiry: DateTime?
+        // TODO: Consider storing expiry datetime in pod state saving continuously recalculating to the same value
+        get() {
+            val podLifeInHours = podLifeInHours
+            val activationTime = podState.activationTime
+            if (podLifeInHours != null && activationTime != null) {
+                return DateTime(podState.activationTime).plusHours(podLifeInHours.toInt())
+            }
+            return null
         }
 
     override var bluetoothConnectionState: OmnipodDashPodStateManager.BluetoothConnectionState
@@ -312,6 +323,29 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         }
     }
 
+    override fun recoverActivationFromPodStatus(): String? {
+        val newActivationProgress = when (podState.podStatus) {
+            PodStatus.FILLED ->
+                ActivationProgress.NOT_STARTED
+            PodStatus.UID_SET ->
+                ActivationProgress.SET_UNIQUE_ID
+            PodStatus.ENGAGING_CLUTCH_DRIVE, PodStatus.PRIMING ->
+                return "Busy"
+            PodStatus.CLUTCH_DRIVE_ENGAGED ->
+                ActivationProgress.PRIME_COMPLETED
+            PodStatus.BASAL_PROGRAM_SET ->
+                ActivationProgress.PROGRAMMED_BASAL
+            PodStatus.RUNNING_ABOVE_MIN_VOLUME, PodStatus.RUNNING_BELOW_MIN_VOLUME ->
+                ActivationProgress.CANNULA_INSERTED
+            else ->
+                null
+        }
+        newActivationProgress?.let {
+            podState.activationProgress = it
+        }
+        return null
+    }
+
     @Synchronized
     override fun updateActiveCommand() = Maybe.create<CommandConfirmed> { source ->
         val activeCommand = podState.activeCommand
@@ -402,6 +436,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
                 podState.lastStatusResponseReceived = now + 2
                 podState.activeCommand = newCommand
             }
+
             CommandSendingNotConfirmed -> {
                 val now = System.currentTimeMillis()
                 val newCommand = podState.activeCommand?.copy(
@@ -410,10 +445,10 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
                 )
                 podState.lastStatusResponseReceived = 0
             }
+
             CommandSendingFailure, NoActiveCommand ->
                 podState.activeCommand = null
         }
-
     }
 
     override fun updateFromDefaultStatusResponse(response: DefaultStatusResponse) {
@@ -431,6 +466,9 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         podState.lastUpdatedSystem = System.currentTimeMillis()
         podState.lastStatusResponseReceived = SystemClock.elapsedRealtime()
         updateLastBolusFromResponse(response.bolusPulsesRemaining)
+        if (podState.activationTime == null) {
+            podState.activationTime = System.currentTimeMillis() - (response.minutesSinceActivation * 60000)
+        }
 
         store()
         rxBus.send(EventOmnipodDashPumpValuesChanged())
@@ -479,12 +517,6 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         podState.uniqueId = response.uniqueIdReceivedInCommand
 
         podState.lastUpdatedSystem = System.currentTimeMillis()
-        // TODO: what is considered to be the pod activation time?
-        //  LTK negotiation ?
-        //  setUniqueId?
-        //  compute it from the number of "minutesOnPod"?
-        podState.activationTime = System.currentTimeMillis()
-
         store()
         rxBus.send(EventOmnipodDashPumpValuesChanged())
     }
@@ -565,7 +597,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         var ltk: ByteArray? = null
         var eapAkaSequenceNumber: Long = 1
         var bolusPulsesRemaining: Short = 0
-        var timeZone = DateTimeZone.getDefault()
+        var timeZone: String = "" // TimeZone ID (e.g. "Europe/Amsterdam")
 
         var bleVersion: SoftwareVersion? = null
         var firmwareVersion: SoftwareVersion? = null

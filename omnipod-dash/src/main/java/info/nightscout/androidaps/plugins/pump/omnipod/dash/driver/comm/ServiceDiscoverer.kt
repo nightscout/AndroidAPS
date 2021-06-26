@@ -21,6 +21,7 @@ class ServiceDiscoverer(
      */
     fun discoverServices(): Map<CharacteristicType, BluetoothGattCharacteristic> {
         logger.debug(LTag.PUMPBTCOMM, "Discovering services")
+        bleCallbacks.startServiceDiscovery()
         val discover = gatt.discoverServices()
         if (!discover) {
             throw ConnectException("Could not start discovering services`")

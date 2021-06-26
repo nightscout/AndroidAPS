@@ -45,7 +45,6 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
 import org.joda.time.Duration
 import java.util.*
 import javax.inject.Inject
@@ -69,7 +68,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
         private const val REFRESH_INTERVAL_MILLIS = 15 * 1000L // 15 seconds
         private const val PLACEHOLDER = "-"
-        private const val MAX_TIME_DEVIATION_MINUTES = 15L
+        private const val MAX_TIME_DEVIATION_MINUTES = 10L
     }
 
     private var disposables: CompositeDisposable = CompositeDisposable()
@@ -237,31 +236,6 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             }
     }
 
-    // Get time on pod from activation time and minutes since activation
-    private fun getTimeOnPod(): DateTime? {
-        var timeOnPod: DateTime? = null
-        val minutesSinceActivation = podStateManager.minutesSinceActivation
-        val activationTime = podStateManager.activationTime
-        if ((activationTime != null) && (minutesSinceActivation != null)) {
-            timeOnPod = DateTime(activationTime)
-                .plusMinutes(minutesSinceActivation.toInt())
-                .plus(Duration(podStateManager.lastStatusResponseReceived, System.currentTimeMillis()))
-        }
-        return timeOnPod
-    }
-
-    // TODO: Consider storing expiry datetime in pod state saving continuesly recalculating to the same value
-    private fun getExpiryAt(): DateTime? {
-        var expiresAt: DateTime? = null
-        val podLifeInHours = podStateManager.podLifeInHours
-        val minutesSinceActivation = podStateManager.minutesSinceActivation
-        if (podLifeInHours != null && minutesSinceActivation != null) {
-            val expiresInMinutes = podLifeInHours * 60 - minutesSinceActivation
-            expiresAt = DateTime().plusMinutes(expiresInMinutes)
-        }
-        return expiresAt
-    }
-
     private fun updateOmnipodStatus() {
         updateLastConnection()
         updateLastBolus()
@@ -294,35 +268,34 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             )
 
             // Update time on Pod
-            // TODO: For now: derive from podStateManager.minutesSinceActivation
-            val timeOnPod = getTimeOnPod()
-            podInfoBinding.timeOnPod.text = podStateManager.time?.let{
+            podInfoBinding.timeOnPod.text = podStateManager.time?.let {
                 readableZonedTime(it)
             } ?: PLACEHOLDER
 
             podInfoBinding.timeOnPod.setTextColor(
-                podStateManager.timeBehind?.let {
+                podStateManager.timeDrift?.let {
                     if (it.abs().isLongerThan(Duration.standardMinutes(MAX_TIME_DEVIATION_MINUTES))) {
                         Color.RED
-                    }else {
+                    } else {
                         Color.WHITE
                     }
                 } ?: Color.WHITE
             )
 
-
             // Update Pod expiry time
-            val expiresAt = getExpiryAt()
+            val expiresAt = podStateManager.expiry
             if (expiresAt == null) {
                 podInfoBinding.podExpiryDate.text = PLACEHOLDER
                 podInfoBinding.podExpiryDate.setTextColor(Color.WHITE)
             } else {
                 podInfoBinding.podExpiryDate.text = readableZonedTime(expiresAt)
-                podInfoBinding.podExpiryDate.setTextColor(if (DateTime.now().isAfter(expiresAt)) {
-                    Color.RED
-                } else {
-                    Color.WHITE
-                })
+                podInfoBinding.podExpiryDate.setTextColor(
+                    if (DateTime.now().isAfter(expiresAt)) {
+                        Color.RED
+                    } else {
+                        Color.WHITE
+                    }
+                )
             }
 
             podStateManager.alarmType?.let {
@@ -413,9 +386,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             podInfoBinding.lastConnection.setTextColor(lastConnectionColor)
         } else {
             podInfoBinding.lastConnection.setTextColor(Color.WHITE)
-            podInfoBinding.lastConnection.text = readableDuration(
-                Duration(podStateManager.lastUpdatedSystem, System.currentTimeMillis())
-            )
+            podInfoBinding.lastConnection.text = PLACEHOLDER
         }
     }
 
@@ -552,7 +523,6 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     private fun updateRefreshStatusButton() {
         buttonBinding.buttonRefreshStatus.isEnabled =
             podStateManager.isUniqueIdSet &&
-            podStateManager.activationProgress.isAtLeast(ActivationProgress.PHASE_1_COMPLETED) &&
             isQueueEmpty()
     }
 
@@ -630,25 +600,41 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
         }
     }
 
-    private fun getTimeZone(): DateTimeZone {
-        // TODO: Get timezone as configured/podState
-        // return getSafe(() -> podState.getTimeZone());
-        return DateTimeZone.getDefault()
+    // private fun getTimeZone(): DateTimeZone {
+    //     // return getSafe(() -> podState.getTimeZone());
+    //     return podStateManager.timeZone
+    // }
+    private fun getTimeZone(): TimeZone {
+        // Return timezone ID (e.g "Europe/Amsterdam")
+        return podStateManager.timeZone
     }
 
     private fun readableZonedTime(time: DateTime): String {
         val timeAsJavaData = time.toLocalDateTime().toDate()
+        return dateUtil.dateAndTimeString(timeAsJavaData.time)
 
-        val timeZone = getTimeZone().toTimeZone()
-        if (timeZone == TimeZone.getDefault()) {
-            return dateUtil.dateAndTimeString(timeAsJavaData.time)
-        }
-
-        // Get full timezoned time
-        val isDaylightTime = timeZone.inDaylightTime(timeAsJavaData)
-        val locale = resources.configuration.locales.get(0)
-        val timeZoneDisplayName = timeZone.getDisplayName(isDaylightTime, TimeZone.SHORT, locale) + " " + timeZone.getDisplayName(isDaylightTime, TimeZone.LONG, locale)
-        return resourceHelper.gs(R.string.omnipod_common_time_with_timezone, dateUtil.dateAndTimeString(timeAsJavaData.time), timeZoneDisplayName)
+        // // TODO: Handle timeZone ID
+        // val timeZone = getTimeZone()
+        // if (timeZone == "") {
+        //     // No timezone defined, use local time (default)
+        //     return dateUtil.dateAndTimeString(timeAsJavaData.time)
+        // }
+        // else {
+        //     // Get full timezoned time
+        //     val isDaylightTime = timeZone.inDaylightTime(timeAsJavaData)
+        //     val locale = resources.configuration.locales.get(0)
+        //     val timeZoneDisplayName =
+        //         timeZone.getDisplayName(isDaylightTime, TimeZone.SHORT, locale) + " " + timeZone.getDisplayName(
+        //             isDaylightTime,
+        //             TimeZone.LONG,
+        //             locale
+        //         )
+        //     return resourceHelper.gs(
+        //         R.string.omnipod_common_time_with_timezone,
+        //         dateUtil.dateAndTimeString(timeAsJavaData.time),
+        //         timeZoneDisplayName
+        //     )
+        // }
     }
 
     private fun readableDuration(duration: Duration): String {
