@@ -6,7 +6,9 @@ class UpdateNsIdFoodTransaction(val food: Food) : Transaction<Unit>() {
 
     override fun run() {
         val current = database.foodDao.findById(food.id)
-        if (current != null && current.interfaceIDs.nightscoutId != food.interfaceIDs.nightscoutId)
-            database.foodDao.updateExistingEntry(food)
+        if (current != null && current.interfaceIDs.nightscoutId != food.interfaceIDs.nightscoutId) {
+            current.interfaceIDs.nightscoutId = food.interfaceIDs.nightscoutId
+            database.foodDao.updateExistingEntry(current)
+        }
     }
 }
