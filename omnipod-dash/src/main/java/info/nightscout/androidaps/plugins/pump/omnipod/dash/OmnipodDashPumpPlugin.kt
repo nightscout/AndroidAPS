@@ -1079,9 +1079,9 @@ class OmnipodDashPumpPlugin @Inject constructor(
                         serialNumber()
                     )
                     rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_SUSPENDED))
+                    rxBus.send(EventDismissNotification(Notification.FAILED_UPDATE_PROFILE))
+                    rxBus.send(EventDismissNotification(Notification.OMNIPOD_TBR_ALERTS))
                 }
-                rxBus.send(EventDismissNotification(Notification.OMNIPOD_TBR_ALERTS))
-                rxBus.send(EventDismissNotification(Notification.FAILED_UPDATE_PROFILE))
             }
 
             OmnipodCommandType.SET_TEMPORARY_BASAL -> {
