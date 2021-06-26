@@ -349,7 +349,7 @@ class MedtronicHistoryData @Inject constructor(
         aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "ProcessHistoryData: TBRs Processed [count=%d, items=%s]", tbrs.size, gson.toJson(tbrs)))
         if (tbrs.isNotEmpty()) {
             try {
-                processTBREntries(tbrs) // TODO not implemented yet
+                processTBREntries(tbrs)
             } catch (ex: Exception) {
                 aapsLogger.error(LTag.PUMP, "ProcessHistoryData: Error processing TBR entries: " + ex.message, ex)
                 throw ex
@@ -836,6 +836,9 @@ class MedtronicHistoryData @Inject constructor(
     private fun getSuspendResumeRecordsList(): List<TempBasalProcessDTO> {
         val filteredItems = getFilteredItems(newHistory,  //
             setOf(PumpHistoryEntryType.SuspendPump, PumpHistoryEntryType.ResumePump))
+
+        aapsLogger.debug(LTag.PUMP, "SuspendResume Records: $filteredItems")
+
         val outList: MutableList<TempBasalProcessDTO> = mutableListOf()
         if (filteredItems.size > 0) {
             val filtered2Items: MutableList<PumpHistoryEntry> = mutableListOf()
@@ -881,7 +884,8 @@ class MedtronicHistoryData @Inject constructor(
 
                     tbrProcess.itemTwo = filtered2Items[i + 1]
 
-                    outList.add(tbrProcess)
+                    if (tbrProcess.itemTwo != null)
+                        outList.add(tbrProcess)
 
                     i += 2
                 }
@@ -893,6 +897,9 @@ class MedtronicHistoryData @Inject constructor(
     private fun getNoDeliveryRewindPrimeRecordsList(): List<TempBasalProcessDTO> {
         val primeItems: MutableList<PumpHistoryEntry> = getFilteredItems(newHistory,  //
             setOf(PumpHistoryEntryType.Prime))
+
+        aapsLogger.debug(LTag.PUMP, "Prime Records: $primeItems")
+
         val outList: MutableList<TempBasalProcessDTO> = ArrayList()
         if (primeItems.size == 0) return outList
         val filteredItems: MutableList<PumpHistoryEntry> = getFilteredItems(newHistory,  //
@@ -902,6 +909,9 @@ class MedtronicHistoryData @Inject constructor(
                 PumpHistoryEntryType.Bolus,
                 PumpHistoryEntryType.TempBasalCombined)
         )
+
+        aapsLogger.debug(LTag.PUMP, "Filtered Records: $filteredItems")
+
         val tempData: MutableList<PumpHistoryEntry> = mutableListOf()
         var startedItems = false
         var finishedItems = false
@@ -940,7 +950,8 @@ class MedtronicHistoryData @Inject constructor(
         }
         showLogs("NoDeliveryRewindPrimeRecords: Records to evaluate: ", gson.toJson(tempData))
         var items: MutableList<PumpHistoryEntry> = getFilteredItems(tempData, PumpHistoryEntryType.Prime)
-        var itemTwo = items[0]
+        val itemTwo = items[0]
+
         items = getFilteredItems(tempData, PumpHistoryEntryType.NoDeliveryAlarm)
         if (items.size > 0) {
             val tbrProcess = TempBasalProcessDTO(
@@ -951,19 +962,28 @@ class MedtronicHistoryData @Inject constructor(
 
             tbrProcess.itemTwo = itemTwo
 
-            outList.add(tbrProcess)
+            if (tbrProcess.itemTwo != null)
+                outList.add(tbrProcess)
 
             return outList
         }
+
         items = getFilteredItems(tempData, PumpHistoryEntryType.Rewind)
         if (items.size > 0) {
-            outList.add(TempBasalProcessDTO(
+            val tbrProcess = TempBasalProcessDTO(
                 itemOne = items[0],
                 processOperation = TempBasalProcessDTO.Operation.Add,
                 aapsLogger = aapsLogger,
-                objectType = TempBasalProcessDTO.ObjectType.Suspend))
+                objectType = TempBasalProcessDTO.ObjectType.Suspend)
+
+            tbrProcess.itemTwo = itemTwo
+
+            if (tbrProcess.itemTwo != null)
+                outList.add(tbrProcess)
+
             return outList
         }
+
         return outList
     }
 
