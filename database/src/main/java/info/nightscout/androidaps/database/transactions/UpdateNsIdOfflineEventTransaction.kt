@@ -6,7 +6,9 @@ class UpdateNsIdOfflineEventTransaction(val offlineEvent: OfflineEvent) : Transa
 
     override fun run() {
         val current = database.offlineEventDao.findById(offlineEvent.id)
-        if (current != null && current.interfaceIDs.nightscoutId != offlineEvent.interfaceIDs.nightscoutId)
-            database.offlineEventDao.updateExistingEntry(offlineEvent)
+        if (current != null && current.interfaceIDs.nightscoutId != offlineEvent.interfaceIDs.nightscoutId) {
+            current.interfaceIDs.nightscoutId = offlineEvent.interfaceIDs.nightscoutId
+            database.offlineEventDao.updateExistingEntry(current)
+        }
     }
 }

@@ -6,7 +6,9 @@ class UpdateNsIdExtendedBolusTransaction(val bolus: ExtendedBolus) : Transaction
 
     override fun run() {
         val current = database.extendedBolusDao.findById(bolus.id)
-        if (current != null && current.interfaceIDs.nightscoutId != bolus.interfaceIDs.nightscoutId)
-            database.extendedBolusDao.updateExistingEntry(bolus)
+        if (current != null && current.interfaceIDs.nightscoutId != bolus.interfaceIDs.nightscoutId) {
+            current.interfaceIDs.nightscoutId = bolus.interfaceIDs.nightscoutId
+            database.extendedBolusDao.updateExistingEntry(current)
+        }
     }
 }
