@@ -71,7 +71,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
 ) : PumpPluginBase(pluginDescription, injector, aapsLogger, resourceHelper, commandQueue), Pump {
     @Volatile var bolusCanceled = false
     private val handler: Handler = Handler(Looper.getMainLooper())
-    lateinit private var statusChecker: Runnable
+    private lateinit var statusChecker: Runnable
     var nextPodWarningCheck : Long = 0
 
     companion object {

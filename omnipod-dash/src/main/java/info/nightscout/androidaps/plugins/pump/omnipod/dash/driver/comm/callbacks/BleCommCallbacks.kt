@@ -53,12 +53,13 @@ class BleCommCallbacks(
         }
     }
 
-    fun waitForConnection(timeoutMs: Int) {
+    fun waitForConnection(timeoutMs: Long): Boolean {
         try {
-            connected.await(timeoutMs.toLong(), TimeUnit.MILLISECONDS)
+            connected.await(timeoutMs, TimeUnit.MILLISECONDS)
         } catch (e: InterruptedException) {
             aapsLogger.warn(LTag.PUMPBTCOMM, "Interrupted while waiting for Connection")
         }
+        return connected.count == 0L
     }
 
     fun startServiceDiscovery() {

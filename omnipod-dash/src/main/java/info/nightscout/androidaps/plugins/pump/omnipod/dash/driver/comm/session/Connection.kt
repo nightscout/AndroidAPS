@@ -15,13 +15,14 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.callback
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.endecrypt.EnDecrypt
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.ConnectException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.FailedToConnectException
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.BleSendSuccess
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.CharacteristicType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.CmdBleIO
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.DataBleIO
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.IncomingPackets
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageIO
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
+import java.lang.IllegalArgumentException
+import java.util.concurrent.CountDownLatch
 
 sealed class ConnectionState
 
@@ -29,6 +30,17 @@ object Connecting: ConnectionState()
 object Handshaking: ConnectionState()
 object Connected : ConnectionState()
 object NotConnected : ConnectionState()
+
+data class ConnectionWaitCondition(val timeoutMs: Long?=null, val stopConnection: CountDownLatch?=null) {
+    init {
+        if (timeoutMs == null && stopConnection == null) {
+            throw IllegalArgumentException("One of timeoutMs or stopConnection has to be non null")
+        }
+        if (timeoutMs != null && stopConnection != null) {
+            throw IllegalArgumentException("One of timeoutMs or stopConnection has to be null")
+        }
+    }
+}
 
 class Connection(
     private val podDevice: BluetoothDevice,
@@ -50,8 +62,9 @@ class Connection(
     @Volatile
     var msgIO: MessageIO? = null
 
-    fun connect(timeoutMultiplier: Int) {
+    fun connect(connectionWaitCond: ConnectionWaitCondition) {
         aapsLogger.debug("Connecting")
+
         podState.bluetoothConnectionState = OmnipodDashPodStateManager.BluetoothConnectionState.CONNECTING
         val autoConnect = false
         val gatt = gattConnection ?:
@@ -60,8 +73,7 @@ class Connection(
         if (!gatt.connect()) {
             throw FailedToConnectException("connect() returned false")
         }
-        // TODO: loop
-        if (waitForConnection(timeoutMultiplier) !is Connected) {
+        if (waitForConnection(connectionWaitCond) !is Connected) {
             podState.bluetoothConnectionState = OmnipodDashPodStateManager.BluetoothConnectionState.DISCONNECTED
             throw FailedToConnectException(podDevice.address)
         }
@@ -103,9 +115,18 @@ class Connection(
         msgIO = null
     }
 
-    private fun waitForConnection(timeoutMultiplier: Int): ConnectionState {
+    private fun waitForConnection(connectionWaitCond: ConnectionWaitCondition): ConnectionState {
         try {
-            bleCommCallbacks.waitForConnection(BASE_CONNECT_TIMEOUT_MS * timeoutMultiplier)
+            connectionWaitCond.timeoutMs?.let {
+                bleCommCallbacks.waitForConnection(it)
+            }
+            connectionWaitCond.stopConnection?.let {
+                while (!bleCommCallbacks.waitForConnection(300)) {
+                    if (it.count == 0L) {
+                        return NotConnected
+                    }
+                }
+            }
         } catch (e: InterruptedException) {
             // We are still going to check if connection was successful
             aapsLogger.info(LTag.PUMPBTCOMM, "Interrupted while waiting for connection")
@@ -158,6 +179,6 @@ class Connection(
     }
 
     companion object {
-        private const val BASE_CONNECT_TIMEOUT_MS = 10000
+        const val BASE_CONNECT_TIMEOUT_MS = 10000L
     }
 }

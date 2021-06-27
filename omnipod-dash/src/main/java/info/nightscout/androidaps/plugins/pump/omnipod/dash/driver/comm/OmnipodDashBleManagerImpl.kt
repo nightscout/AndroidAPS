@@ -16,6 +16,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.b
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.Response
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 import io.reactivex.Observable
+import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -100,8 +101,19 @@ class OmnipodDashBleManagerImpl @Inject constructor(
         return connection?.let { it.connectionState() }
             ?: NotConnected
     }
+    // used for sync connections
+    override fun connect(timeoutMs: Long): Observable<PodEvent> {
+        return connect(ConnectionWaitCondition(timeoutMs = timeoutMs))
+    }
 
-    override fun connect(): Observable<PodEvent> = Observable.create { emitter ->
+    // used for async connections
+    override fun connect(stopConnectionLatch: CountDownLatch): Observable<PodEvent> {
+        return connect(ConnectionWaitCondition(stopConnection = stopConnectionLatch))
+    }
+
+    private fun connect(connectionWaitCond: ConnectionWaitCondition): Observable<PodEvent> = Observable
+        .create {
+            emitter ->
         if (!busy.compareAndSet(false, true)) {
             throw BusyException()
         }
@@ -121,20 +133,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
                 return@create
             }
 
-            // two retries
-            for (i in 1..MAX_NUMBER_OF_CONNECTION_ATTEMPTS) {
-                try {
-                    // wait i * CONNECTION_TIMEOUT
-                    conn.connect(4)
-                    break
-                } catch (e: Exception) {
-                    aapsLogger.warn(LTag.PUMPBTCOMM, "connect error=$e")
-                    if (i == MAX_NUMBER_OF_CONNECTION_ATTEMPTS) {
-                        emitter.onError(e)
-                        return@create
-                    }
-                }
-            }
+            conn.connect(connectionWaitCond)
 
             emitter.onNext(PodEvent.BluetoothConnected(podAddress))
             emitter.onNext(PodEvent.EstablishingSession)
@@ -207,6 +206,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
             val podDevice = bluetoothAdapter.getRemoteDevice(podAddress)
             val conn = Connection(podDevice, aapsLogger, context, podState)
             connection = conn
+            conn.connect(ConnectionWaitCondition(timeoutMs = 3 * Connection.BASE_CONNECT_TIMEOUT_MS))
             emitter.onNext(PodEvent.BluetoothConnected(podAddress))
 
             emitter.onNext(PodEvent.Pairing)
