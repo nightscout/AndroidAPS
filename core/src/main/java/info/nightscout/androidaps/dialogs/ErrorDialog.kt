@@ -17,7 +17,6 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.androidaps.utils.T
-import org.mozilla.javascript.tools.jsc.Main
 import javax.inject.Inject
 
 class ErrorDialog : DaggerDialogFragment() {

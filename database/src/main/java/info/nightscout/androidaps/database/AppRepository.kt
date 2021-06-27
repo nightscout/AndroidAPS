@@ -213,6 +213,11 @@ open class AppRepository @Inject internal constructor(
         return null
     }
 
+    fun getPermanentProfileSwitch(timestamp: Long): ProfileSwitch? =
+        database.profileSwitchDao.getPermanentProfileSwitchActiveAt(timestamp)
+            .subscribeOn(Schedulers.io())
+            .blockingGet()
+
     fun getAllProfileSwitches(): Single<List<ProfileSwitch>> =
         database.profileSwitchDao.getAllProfileSwitches()
             .subscribeOn(Schedulers.io())
