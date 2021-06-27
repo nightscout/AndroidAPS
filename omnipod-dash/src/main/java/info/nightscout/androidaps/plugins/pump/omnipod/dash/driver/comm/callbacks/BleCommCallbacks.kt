@@ -66,9 +66,9 @@ class BleCommCallbacks(
         serviceDiscoveryComplete = CountDownLatch(1)
     }
 
-    fun waitForServiceDiscovery(timeoutMs: Int) {
+    fun waitForServiceDiscovery(timeoutMs: Long) {
         try {
-            serviceDiscoveryComplete.await(timeoutMs.toLong(), TimeUnit.MILLISECONDS)
+            serviceDiscoveryComplete.await(timeoutMs, TimeUnit.MILLISECONDS)
         } catch (e: InterruptedException) {
             aapsLogger.warn(LTag.PUMPBTCOMM, "Interrupted while waiting for ServiceDiscovery")
         }
