@@ -111,7 +111,7 @@ android {
     defaultConfig {
         multiDexEnabled true
         versionCode 1500
-        version "2.8.2.1-dev-e5"
+        version "2.8.2.2-dev"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'
@@ -192,6 +192,7 @@ dependencies {
     implementation project(':omnipod-common')
     implementation project(':omnipod-eros')
     implementation project(':omnipod-dash')
+    implementation project(':diaconn')
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 

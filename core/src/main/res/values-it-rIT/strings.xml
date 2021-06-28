@@ -105,6 +105,7 @@
     <string name="notes_label">Note</string>
     <string name="remove_button">Rimuovi</string>
     <string name="addnew">Aggiungi nuovo</string>
+    <string name="wrong_pump_data">I dati arrivano da un micro differente. Cambia il driver del micro per resettarne lo stato.</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limitazione max velocità basale a %1$.2f U/h a causa di: %2$s</string>
     <string name="pumplimit">limite micro</string>
@@ -211,6 +212,7 @@
     <string name="pump">Micro</string>
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
+    <string name="record">Record</string>
     <!--    Command-->
     <string name="connectiontimedout">Time out connessione</string>
     <!--    PumpEnactResult-->
@@ -300,6 +302,7 @@
     <string name="uel_carbs">CHO</string>
     <string name="uel_extended_carbs">CHO ESTESI</string>
     <string name="uel_temp_basal">BASALE TEMPORANEA</string>
+    <string name="uel_tt">TARGET TEMPORANEO</string>
     <string name="uel_new_profile">NUOVO PROFILO</string>
     <string name="uel_clone_profile">CLONA PROFILO</string>
     <string name="uel_store_profile">MEMORIZZA PROFILO</string>
@@ -318,21 +321,25 @@
     <string name="uel_clear_pairing_keys">CANCELLA CHIAVI DI ASSOCIAZIONE</string>
     <string name="uel_accepts_temp_basal">ACCETTA BASALE TEMPORANEA</string>
     <string name="uel_cancel_temp_basal">CANCELLA BASALE TEMPORANEA</string>
+    <string name="uel_cancel_bolus">CANCELLA BOLO</string>
     <string name="uel_cancel_extended_bolus">CANCELLA BOLO ESTESO</string>
+    <string name="uel_cancel_tt">CANCELLA TARGET TEMPORANEO</string>
     <string name="uel_careportal">PORTALE</string>
     <string name="uel_site_change">CAMBIO POSIZIONE CANNULA</string>
     <string name="uel_reservoir_change">CAMBIO SERBATOIO</string>
     <string name="uel_calibration">CALIBRAZIONE</string>
     <string name="uel_prime_bolus">BOLO DI CARICAMENTO</string>
     <string name="uel_treatment">TRATTAMENTO</string>
-    <string name="uel_careportal_ns_refresh">PORTALE NS AGGIORNAMENTO</string>
-    <string name="uel_profile_switch_ns_refresh">CAMBIO PROFILO NS AGGIORNAMENTO</string>
-    <string name="uel_treatments_ns_refresh">TRATTAMENTI NS AGGIORNAMENTO</string>
+    <string name="uel_careportal_ns_refresh">PORTALE NS: AGGIORNAMENTO</string>
+    <string name="uel_profile_switch_ns_refresh">CAMBIO PROFILO NS: AGGIORNAMENTO</string>
+    <string name="uel_treatments_ns_refresh">TRATTAMENTI NS: AGGIORNAMENTO</string>
+    <string name="uel_tt_ns_refresh">TARGET TEMPORANEO NS: AGGIORNAMENTO</string>
     <string name="uel_automation_removed">AUTOMAZIONE RIMOSSA</string>
     <string name="uel_bg_removed">BG RIMOSSO</string>
     <string name="uel_careportal_removed">PORTALE RIMOSSO</string>
     <string name="uel_bolus_removed">BOLO RIMOSSO</string>
     <string name="uel_carbs_removed">CHO RIMOSSI</string>
+    <string name="uel_temp_basal_removed">BASALE TEMPORANEA RIMOSSA</string>
     <string name="uel_extended_bolus_removed">BOLO ESTESO RIMOSSO</string>
     <string name="uel_food">CIBO</string>
     <string name="uel_food_removed">CIBO RIMOSSO</string>
@@ -340,6 +347,7 @@
     <string name="uel_profile_switch_removed">CAMBIO PROFILO RIMOSSO</string>
     <string name="uel_restart_events_removed">EVENTI DI RIAVVIO RIMOSSI</string>
     <string name="uel_treatment_removed">TRATTAMENTO RIMOSSO</string>
+    <string name="uel_tt_removed">TARGET TEMPORANEO RIMOSSO</string>
     <string name="uel_ns_paused">NS IN PAUSA</string>
     <string name="uel_ns_resume">NS RIPRESA</string>
     <string name="uel_ns_queue_cleared">CODA NS CANCELLATA</string>
@@ -360,12 +368,23 @@
     <string name="uel_import_databases">IMPORTA DATABASE</string>
     <string name="uel_otp_export">ESPORTAZIONE OTP</string>
     <string name="uel_otp_reset">RESET OTP</string>
+    <string name="uel_stop_sms">STOP SMS</string>
     <string name="uel_export_csv">ESPORTA VOCI UTENTE</string>
+    <string name="uel_start_aaps">AVVIA AAPS</string>
+    <string name="uel_exit_aaps">USCITA AAPS</string>
+    <string name="uel_plugin_enabled">PLUGIN ABILITATO</string>
+    <string name="uel_plugin_disabled">PLUGIN DISABILITATO</string>
     <string name="uel_unknown">SCONOSCIUTO</string>
     <string name="ue_string">Stringa</string>
     <string name="ue_source">Fonte</string>
+    <string name="ue_utc_offset">Offset UTC</string>
     <string name="ue_action">Azione</string>
+    <string name="ue_timestamp">Data e ora</string>
+    <string name="ue_none">Nessuna unità</string>
     <string name="ue_export_to_csv">Esporta voci utente in Excel (csv)</string>
+    <string name="uel_loop_change">LOOP CAMBIATO</string>
+    <string name="uel_loop_removed">LOOP RIMOSSO</string>
+    <string name="uel_other">ALTRO</string>
     <plurals name="days">
         <item quantity="one">%1$d giorno</item>
         <item quantity="other">%1$d giorni</item>

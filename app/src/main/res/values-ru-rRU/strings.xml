@@ -81,8 +81,6 @@
     <string name="careportal">Портал лечения / назначений</string>
     <string name="configbuilder_pump">помпа</string>
     <string name="configbuilder_pump_description">Какой помпой вы хотели бы пользоваться с AndroidAPS?</string>
-    <string name="configbuilder_treatments">назначения</string>
-    <string name="configbuilder_treatments_description">Каким плагином пользоваться для выполнения назначений?</string>
     <string name="configbuilder_profile">профиль</string>
     <string name="configbuilder_profile_description">Какой профиль следует использовать в AndroidAPS?</string>
     <string name="configbuilder_aps">система ИПЖ</string>
@@ -921,4 +919,6 @@ Context | Edit Context</string>
     <string name="ns_receive_therapy_events_summary">Принимать события терапии (катетер, инсулин, изменение батареи и т. д.) через NS или NSClient</string>
     <string name="ns_receive_cgm">Получать/заполнять данные мониторинга CGM</string>
     <string name="ns_receive_cgm_summary">Принимать данные мониторинга CGM из NS</string>
+    <string name="sms_timeout_while_wating">Таймаут во время ожидания окончания предыдущего соединения с помпой</string>
+    <string name="smscommunicator_another_bolus_in_queue">В очереди есть еще один болюс. Повторите попытку позже.</string>
 </resources>

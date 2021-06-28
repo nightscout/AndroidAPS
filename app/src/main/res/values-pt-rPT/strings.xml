@@ -81,8 +81,6 @@
     <string name="careportal">Careportal</string>
     <string name="configbuilder_pump">Bomba</string>
     <string name="configbuilder_pump_description">Qual a bomba que gostaria de utilizar com AndroidAPS?</string>
-    <string name="configbuilder_treatments">Tratamentos</string>
-    <string name="configbuilder_treatments_description">Qual o plugin que deve ser usado para os tratamentos?</string>
     <string name="configbuilder_profile">Perfil</string>
     <string name="configbuilder_profile_description">Que perfil deverá ser usado pelo AndroidAPS?</string>
     <string name="configbuilder_aps">APS</string>

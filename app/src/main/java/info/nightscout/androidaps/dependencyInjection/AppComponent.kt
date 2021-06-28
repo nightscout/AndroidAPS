@@ -13,6 +13,7 @@ import info.nightscout.androidaps.danar.di.DanaRModule
 import info.nightscout.androidaps.danars.di.DanaRSModule
 import info.nightscout.androidaps.database.DatabaseModule
 import info.nightscout.androidaps.di.CoreModule
+import info.nightscout.androidaps.diaconn.di.DiaconnG8Module
 import info.nightscout.androidaps.insight.di.InsightDatabaseModule
 import info.nightscout.androidaps.insight.di.InsightModule
 import info.nightscout.androidaps.plugins.pump.common.di.PumpCommonModule
@@ -56,7 +57,8 @@ import javax.inject.Singleton
         InsightModule::class,
         InsightDatabaseModule::class,
         WorkersModule::class,
-        OHUploaderModule::class
+        OHUploaderModule::class,
+        DiaconnG8Module::class
     ]
 )
 interface AppComponent : AndroidInjector<MainApp> {

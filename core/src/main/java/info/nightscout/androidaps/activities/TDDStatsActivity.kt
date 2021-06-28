@@ -26,6 +26,7 @@ import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.queue.Callback
@@ -232,10 +233,14 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun loadDataFromDB() {
         historyList.clear()
-        historyList.addAll(repository.getLastTotalDailyDoses(10, false).blockingGet())
+        // timestamp DESC sorting!
+        historyList.addAll(repository.getLastTotalDailyDoses(10, true).blockingGet())
 
         //only use newest 10
         historyList = historyList.subList(0, min(10, historyList.size))
+
+        // dummies reset
+        dummies.clear()
 
         //fill single gaps
         val df: DateFormat = SimpleDateFormat("dd.MM.", Locale.getDefault())
@@ -425,7 +430,7 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
 
     private fun isOldData(historyList: List<TotalDailyDose>): Boolean {
         val type = activePlugin.activePump.pumpDescription.pumpType
-        val startsYesterday = type == PumpType.DANA_R || type == PumpType.DANA_RS || type == PumpType.DANA_RV2 || type == PumpType.DANA_R_KOREAN || type == PumpType.ACCU_CHEK_INSIGHT_VIRTUAL
+        val startsYesterday = type == PumpType.DANA_R || type == PumpType.DANA_RS || type == PumpType.DANA_RV2 || type == PumpType.DANA_R_KOREAN || type == PumpType.ACCU_CHEK_INSIGHT_VIRTUAL || type == PumpType.DIACONN_G8
         val df: DateFormat = SimpleDateFormat("dd.MM.", Locale.getDefault())
         return historyList.size < 3 || df.format(Date(historyList[0].timestamp)) != df.format(Date(System.currentTimeMillis() - if (startsYesterday) 1000 * 60 * 60 * 24 else 0))
     }
