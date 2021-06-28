@@ -6,7 +6,9 @@ class UpdateNsIdBolusCalculatorResultTransaction(val bolusCalculatorResult: Bolu
 
     override fun run() {
         val current = database.bolusCalculatorResultDao.findById(bolusCalculatorResult.id)
-        if (current != null && current.interfaceIDs.nightscoutId != bolusCalculatorResult.interfaceIDs.nightscoutId)
-            database.bolusCalculatorResultDao.updateExistingEntry(bolusCalculatorResult)
+        if (current != null && current.interfaceIDs.nightscoutId != bolusCalculatorResult.interfaceIDs.nightscoutId) {
+            current.interfaceIDs.nightscoutId = bolusCalculatorResult.interfaceIDs.nightscoutId
+            database.bolusCalculatorResultDao.updateExistingEntry(current)
+        }
     }
 }
