@@ -6,7 +6,9 @@ class UpdateNsIdTemporaryTargetTransaction(val temporaryTarget: TemporaryTarget)
 
     override fun run() {
         val current = database.temporaryTargetDao.findById(temporaryTarget.id)
-        if (current != null && current.interfaceIDs.nightscoutId != temporaryTarget.interfaceIDs.nightscoutId)
-            database.temporaryTargetDao.updateExistingEntry(temporaryTarget)
+        if (current != null && current.interfaceIDs.nightscoutId != temporaryTarget.interfaceIDs.nightscoutId) {
+            current.interfaceIDs.nightscoutId = temporaryTarget.interfaceIDs.nightscoutId
+            database.temporaryTargetDao.updateExistingEntry(current)
+        }
     }
 }
