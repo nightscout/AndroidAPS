@@ -48,8 +48,10 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import org.json.JSONObject
 import java.util.*
+import java.util.concurrent.CountDownLatch
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.concurrent.thread
 import kotlin.math.ceil
 import kotlin.random.Random
 
@@ -73,6 +75,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     private val handler: Handler = Handler(Looper.getMainLooper())
     private lateinit var statusChecker: Runnable
     var nextPodWarningCheck : Long = 0
+    @Volatile var stopConnecting: CountDownLatch? = null
 
     companion object {
         private const val BOLUS_RETRY_INTERVAL_MS = 2000.toLong()
@@ -171,18 +174,28 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     override fun connect(reason: String) {
-        // empty on purpose
+        thread(
+            start = true,
+            name = "ConnectionThread",
+        ) {
+            // TODO quadruple check that we are not creating a party of Threads here
+            try {
+                val stop = CountDownLatch(1)
+                stopConnecting = stop
+                omnipodManager.connect(stop)
+            } finally {
+                stopConnecting = null
+            }
+        }
     }
 
     override fun disconnect(reason: String) {
-        // TODO
+        omnipodManager.disconnect()
     }
 
     override fun stopConnecting() {
-        // TODO
+        stopConnecting?.let { it.countDown() }
     }
-
-
 
     override fun getPumpStatus(reason: String) {
         aapsLogger.debug(LTag.PUMP, "getPumpStatus reason=$reason")

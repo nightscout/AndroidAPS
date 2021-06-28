@@ -9,6 +9,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definitio
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.ResponseType
 import io.reactivex.Observable
 import java.util.*
+import java.util.concurrent.CountDownLatch
 
 interface OmnipodDashManager {
 
@@ -39,4 +40,7 @@ interface OmnipodDashManager {
     fun silenceAlerts(alertTypes: EnumSet<AlertType>): Observable<PodEvent>
 
     fun deactivatePod(): Observable<PodEvent>
+
+    fun disconnect()
+    fun connect(stop: CountDownLatch)
 }
