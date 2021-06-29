@@ -156,12 +156,13 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     override fun isConnected(): Boolean {
 
-        return true
+        return !podStateManager.isPodRunning ||
+        podStateManager.bluetoothConnectionState == OmnipodDashPodStateManager.BluetoothConnectionState.CONNECTED
     }
 
     override fun isConnecting(): Boolean {
         // TODO
-        return false
+        return stopConnecting != null
     }
 
     override fun isHandshakeInProgress(): Boolean {
@@ -182,7 +183,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
             try {
                 val stop = CountDownLatch(1)
                 stopConnecting = stop
-                omnipodManager.connect(stop)
+                val error = omnipodManager.connect(stop).ignoreElements().blockingGet()
+                aapsLogger.info(LTag.PUMPCOMM, "connect error=$error")
             } finally {
                 stopConnecting = null
             }
@@ -190,6 +192,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     override fun disconnect(reason: String) {
+        stopConnecting?.let { it.countDown() }
         omnipodManager.disconnect()
     }
 

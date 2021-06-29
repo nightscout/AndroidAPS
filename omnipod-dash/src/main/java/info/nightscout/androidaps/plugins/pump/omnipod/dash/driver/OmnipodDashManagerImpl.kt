@@ -15,6 +15,7 @@ import io.reactivex.Observable
 import io.reactivex.functions.Action
 import io.reactivex.functions.Consumer
 import java.util.*
+import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -73,6 +74,25 @@ class OmnipodDashManagerImpl @Inject constructor(
                 Observable.error(IllegalStateException("Pod is in an incorrect state"))
             }
         }
+
+    override fun disconnect() {
+        bleManager.disconnect()
+    }
+
+    override fun connect(stop: CountDownLatch): Observable<PodEvent> {
+        return observeConnectToPodWithStop(stop)
+            // TODO these would be common for any observable returned in a public function in this class
+            .doOnNext(PodEventInterceptor())
+            .doOnError(ErrorInterceptor())
+            .subscribeOn(aapsSchedulers.io)
+    }
+
+    private fun observeConnectToPodWithStop(stop: CountDownLatch): Observable<PodEvent> {
+        return Observable.defer {
+            bleManager.connect(stop)
+                .doOnError { throwable -> logger.warn(LTag.PUMPBTCOMM, "observeConnectToPodWithStop error=$throwable") }
+        }
+    }
 
     private val observeConnectToPod: Observable<PodEvent>
         get() = Observable.defer {
