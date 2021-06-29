@@ -53,6 +53,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.concurrent.thread
 import kotlin.math.ceil
+import kotlin.math.exp
 import kotlin.random.Random
 
 @Singleton
@@ -98,7 +99,28 @@ class OmnipodDashPumpPlugin @Inject constructor(
         statusChecker = Runnable {
             refreshStatusOnUnacknowledgedCommands()
             updatePodWarnings()
+            createFakeTBRWhenNoActivePod()
             handler.postDelayed(statusChecker, STATUS_CHECK_INTERVAL_MS)
+        }
+    }
+
+    private fun createFakeTBRWhenNoActivePod() {
+        if (!podStateManager.isPodRunning) {
+            val expectedState = pumpSync.expectedPumpState()
+            val tbr = expectedState.temporaryBasal
+            if (tbr == null || tbr.rate!=0.0) {
+                aapsLogger.info(LTag.PUMP, "createFakeTBRWhenNoActivePod")
+                pumpSync.syncTemporaryBasalWithPumpId(
+                    timestamp = System.currentTimeMillis(),
+                    rate = 0.0,
+                    duration = T.mins(PodConstants.MAX_POD_LIFETIME.standardMinutes).msecs(),
+                    isAbsolute = true,
+                    type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
+                    pumpId = Random.Default.nextLong(), // we don't use this, just make sure it's unique
+                    pumpType = PumpType.OMNIPOD_DASH,
+                    pumpSerial = serialNumber()
+                )
+            }
         }
     }
 
