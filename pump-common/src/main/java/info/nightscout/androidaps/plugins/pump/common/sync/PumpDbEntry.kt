@@ -59,5 +59,5 @@ data class PumpDbEntryCarbs(var date: Long,
 
 data class PumpDbEntryTBR(var rate: Double,
                           var isAbsolute: Boolean,
-                          var durationInMinutes: Int,
+                          var durationInSeconds: Int,
                           var tbrType: PumpSync.TemporaryBasalType)
