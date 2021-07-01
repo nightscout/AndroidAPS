@@ -6,7 +6,7 @@ buildscript {
         // kotlin 1.5.0 prevents travis from pass
         // remove @kotlin.ExperimentalStdlibApi everywhere when upgrade
         kotlin_version = '1.4.32'
-        coreVersion = '1.5.0'
+        coreVersion = '1.6.0'
         rxjava_version = '2.2.21'
         rxandroid_version = '2.1.1'
         rxkotlin_version = '2.4.0'
