@@ -77,7 +77,7 @@
     <!-- Yellow Colors -->
     <color name="lightyellow">#FFFF00</color>
     <color name="midyellow">#EBEB00</color>
-    <color name="devslopepos">#E5E500</color>
+    <color name="devslopepos">#CFCF00</color>
     <color name="ribbonWarning">#E4C700</color>
 
     <!-- Orange Colors -->
@@ -106,7 +106,7 @@
     <color name="info">#77dd77</color>
     <color name="colorCalculatorButton">#67e86a</color>
     <color name="loopGreen">#00C03E</color>
-    <color name="activity">#AFCD61</color>
+    <color name="activity">#95B259</color>
 
     <!-- Blue Colors -->
     <color name="tempTargetDisabledBackground">#303F9F</color>
