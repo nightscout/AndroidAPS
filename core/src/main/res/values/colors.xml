@@ -89,16 +89,16 @@
     <color name="notificationAnnouncement">#FF8C00</color>
     <color name="metadataTextWarning">#FF8C00</color>
     <color name="cob">#f0a30a</color>
-    <color name="carbsOrange">#EE9F01</color>
+    <color name="carbsOrange">#CF8901</color>
     <color name="midorange">#f0a30a</color>
 
     <!-- Green Colors -->
     <color name="emerald">#25912e</color>
     <color name="notificationInfo">#009705</color>
     <color name="sensGreen">#008585</color>
-    <color name="tempTargetConfirmation">#77dd77</color>
+    <color name="tempTargetConfirmation">#5BB65B</color>
     <color name="lightPastelGreen">#7200FF00</color>
-    <color name="lightGreen">#00D900</color>
+    <color name="lightGreen">#00C300</color>
     <color name="calcGreen">#67e86a</color>
     <color name="swampGreen">#c9bd60</color>
     <color name="toastOk">#77dd77</color>
@@ -129,7 +129,7 @@
     <color name="colorSetTempButton">#FF478EFF</color>
     <color name="bgi">#00DADA</color>
     <color name="cyan">#00C6C6</color>
-    <color name="cyan_blue">#65C9D2</color>
+    <color name="cyan_blue">#5AABB4</color>
 
     <!-- Gray colors -->
     <color name="darkgray">#323232</color>
