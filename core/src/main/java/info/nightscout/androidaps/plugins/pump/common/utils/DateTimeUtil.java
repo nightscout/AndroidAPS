@@ -6,6 +6,7 @@ package info.nightscout.androidaps.plugins.pump.common.utils;
 
 import org.joda.time.LocalDateTime;
 import org.joda.time.Minutes;
+import org.joda.time.Seconds;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -245,10 +246,14 @@ public class DateTimeUtil {
 
 
     public static int getATechDateDiferenceAsMinutes(Long date1, Long date2) {
-
         Minutes minutes = Minutes.minutesBetween(toLocalDateTime(date1), toLocalDateTime(date2));
-
         return minutes.getMinutes();
+    }
+
+
+    public static int getATechDateDiferenceAsSeconds(Long date1, Long date2) {
+        Seconds seconds = Seconds.secondsBetween(toLocalDateTime(date1), toLocalDateTime(date2));
+        return seconds.getSeconds();
     }
 
 
