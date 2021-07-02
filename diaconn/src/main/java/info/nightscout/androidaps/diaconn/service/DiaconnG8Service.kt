@@ -137,7 +137,7 @@ class DiaconnG8Service : DaggerService() {
 
             val pumpFirmwareVersion = sp.getString(resourceHelper.gs(R.string.pumpversion),"")
 
-            if(!StringUtils.emptyString(pumpFirmwareVersion) && PumplogUtil.isPumpVersionGe(pumpFirmwareVersion, 2, 83)) {
+            if(!StringUtils.emptyString(pumpFirmwareVersion) && PumplogUtil.isPumpVersionGe(pumpFirmwareVersion, 3, 0)) {
                 sendMessage(BigAPSMainInfoInquirePacket(injector)) // APS Pump Main Info
             } else {
                 sendMessage(BasalLimitInquirePacket(injector)) // basal Limit
