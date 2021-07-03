@@ -135,9 +135,13 @@
     <string name="diaconn_g8_errorcode_10">Annulé à cause d\'absence de réponse de la pompe.</string>
     <string name="diaconn_g8_errorcode_11">L\'injection n\'est pas possible en raison d\'une pile faible.</string>
     <string name="diaconn_g8_errorcode_12">Injection impossible en raison de manque d\'insuline.</string>
+    <string name="diaconn_g8_errotpreceivedyet">Commande non transmise. Veuillez réessayer.</string>
+    <string name="diaconn_g8_logtubechange_title">Enreg. changement de tubulure</string>
     <string name="diaconn_g8_logtubechange_summary">Ajouter \"Changement de tubulure\" à Careportal lorsqu\'il est détecté dans l\'historique</string>
     <string name="diaconn_g8_logtempstart">Début Basal Temp.</string>
     <string name="diaconn_g8_errorcode_32">En mode AGB, l\'injection d\'insuline est limitée</string>
     <string name="diaconn_g8_errorcode_33">Mode AGB activé, la commande de mise en marche est refusée.</string>
     <string name="diaconn_g8_errorcode_34">Mode AGB désactivé, la commande d\'arrêt est refusée.</string>
+    <string name="diaconn_g8_errorcode_35">Début de basal temp. rejeté quand une basal temp. est en cours d\'exécution</string>
+    <string name="diaconn_g8_errorcode_36">Arrêt de basal temp. rejeté quand une basal temp. n\'est pas en cours d\'exécution</string>
 </resources>
