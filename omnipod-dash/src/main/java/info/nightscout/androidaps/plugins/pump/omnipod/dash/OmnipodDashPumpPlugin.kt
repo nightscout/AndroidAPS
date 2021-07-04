@@ -1014,7 +1014,10 @@ class OmnipodDashPumpPlugin @Inject constructor(
         return Completable.concat(
             listOf(
                 pre,
-                podStateManager.observeNoActiveCommand(checkNoActiveCommand).ignoreElements(),
+                if (checkNoActiveCommand)
+                    podStateManager.observeNoActiveCommand()
+                else
+                    Completable.complete(),
                 historyEntry
                     .flatMap { activeCommandEntry(it) }
                     .ignoreElement(),
