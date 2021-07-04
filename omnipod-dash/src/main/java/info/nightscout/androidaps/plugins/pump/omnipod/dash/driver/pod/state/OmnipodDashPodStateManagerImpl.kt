@@ -18,6 +18,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.SetUniqueIdResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.VersionResponse
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -269,13 +270,13 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         }
 
     @Synchronized
-    override fun observeNoActiveCommand(check: Boolean): Observable<PodEvent> {
-        return Observable.defer {
-            if (activeCommand == null || !check) {
-                Observable.empty()
+    override fun observeNoActiveCommand(): Completable {
+        return Completable.defer {
+            if (activeCommand == null) {
+                Completable.complete()
             } else {
                 logger.warn(LTag.PUMP, "Active command already existing: $activeCommand")
-                Observable.error(
+                Completable.error(
                     java.lang.IllegalStateException(
                         "Trying to send a command " +
                             "and the last command was not confirmed"
