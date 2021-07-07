@@ -183,7 +183,7 @@ class BigMainInfoInquireResponsePacket(
         // pump time setting 'yyyy-MM-dd'T'HH:mm:ssZ'	“2019-07-04T12:30:30+0530”
         val time  = DateTime(diaconnG8Pump.year, diaconnG8Pump.month, diaconnG8Pump.day, diaconnG8Pump.hour, diaconnG8Pump.minute, diaconnG8Pump.second)
         diaconnG8Pump.setPumpTime(time.millis)
-        aapsLogger.debug(LTag.PUMPCOMM, "Pump time " + dateUtil.dateAndTimeString(time.millis))
+        aapsLogger.debug(LTag.PUMPCOMM, "Pump time " + dateUtil.dateAndTimeAndSecondsString(time.millis))
 
         // basal pattern from pump
         diaconnG8Pump.pumpProfiles = Array(4) { Array(24) { 0.0 } }
