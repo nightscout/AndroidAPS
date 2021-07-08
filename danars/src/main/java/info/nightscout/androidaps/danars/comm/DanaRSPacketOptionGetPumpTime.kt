@@ -27,7 +27,7 @@ class DanaRSPacketOptionGetPumpTime(
         val sec = byteArrayToInt(getBytes(data, DATA_START + 5, 1))
         val time = DateTime(2000 + year, month, day, hour, min, sec)
         danaPump.setPumpTime(time.millis)
-        aapsLogger.debug(LTag.PUMPCOMM, "Pump time " + dateUtil.dateAndTimeString(time.millis))
+        aapsLogger.debug(LTag.PUMPCOMM, "Pump time " + dateUtil.dateAndTimeAndSecondsString(time.millis))
     }
 
     override fun handleMessageNotReceived() {
