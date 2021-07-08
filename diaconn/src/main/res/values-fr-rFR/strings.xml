@@ -121,6 +121,9 @@
     <string name="diaconn_g8_logalarmblock">Injection bloquée (%s)</string>
     <string name="diaconn_g8_lgorelease">autorisation basale (%s)</string>
     <string name="diaconn_g8_lgosuspend">suspension basale (%s)</string>
+    <string name="diaconn_g8_logdualnormalsuccess">Succès du Double Normal</string>
+    <string name="diaconn_g8_logdualsquarestart">Début du double carré</string>
+    <string name="diaconn_g8_logdualsquaresuccess">Succès du double carré</string>
     <string name="diaconn_g8_logsquarestart">Début du carré</string>
     <string name="diaconn_g8_logsquaresuccess">Succès du carré</string>
     <string name="diaconn_g8_logmealfail">Repas échoué</string>
