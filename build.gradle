@@ -64,7 +64,6 @@ allprojects {
         mavenCentral()
         maven { url "https://maven.google.com" }
         maven { url 'https://jitpack.io' }
-        maven { url "https://google.bintray.com/flexbox-layout" }
         ivy {
             url 'https://github.com/'
             patternLayout {
