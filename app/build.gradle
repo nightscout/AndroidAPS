@@ -6,15 +6,7 @@ apply plugin: 'com.hiya.jacoco-android'
 apply plugin: 'com.google.firebase.crashlytics'
 
 apply from: "${project.rootDir}/gradle/android_dependencies.gradle"
-
-jacoco {
-    toolVersion = "0.8.6"
-}
-
-tasks.withType(Test) {
-    jacoco.includeNoLocationClasses = true
-    jacoco.excludes = ['jdk.internal.*']
-}
+apply from: "${project.rootDir}/gradle/jacoco_global.gradle"
 
 repositories {
     mavenCentral()
