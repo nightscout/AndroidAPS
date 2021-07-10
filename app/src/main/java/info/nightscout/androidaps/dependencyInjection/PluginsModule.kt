@@ -8,6 +8,7 @@ import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
 import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.danars.DanaRSPlugin
+import info.nightscout.androidaps.diaconn.DiaconnG8Plugin
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
@@ -157,6 +158,12 @@ abstract class PluginsModule {
     // @IntoMap
     // @IntKey(155)
     // abstract fun bindOmnipodPumpPlugin(plugin: OmnipodErosPumpPlugin): PluginBase
+
+    @Binds
+    @PumpDriver
+    @IntoMap
+    @IntKey(155)
+    abstract fun bindDiaconnG8Plugin(plugin: DiaconnG8Plugin): PluginBase
 
     @Binds
     @NotNSClient

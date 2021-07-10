@@ -6,7 +6,9 @@ class UpdateNsIdDeviceStatusTransaction(val deviceStatus: DeviceStatus) : Transa
 
     override fun run() {
         val current = database.deviceStatusDao.findById(deviceStatus.id)
-        if (current != null && current.interfaceIDs.nightscoutId != deviceStatus.interfaceIDs.nightscoutId)
-            database.deviceStatusDao.update(deviceStatus)
+        if (current != null && current.interfaceIDs.nightscoutId != deviceStatus.interfaceIDs.nightscoutId) {
+            current.interfaceIDs.nightscoutId = deviceStatus.interfaceIDs.nightscoutId
+            database.deviceStatusDao.update(current)
+        }
     }
 }

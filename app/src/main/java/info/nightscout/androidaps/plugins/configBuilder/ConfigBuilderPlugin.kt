@@ -134,7 +134,12 @@ class ConfigBuilderPlugin @Inject constructor(
 
     // Ask when switching to physical pump plugin
     fun switchAllowed(changedPlugin: PluginBase, newState: Boolean, activity: FragmentActivity?, type: PluginType) {
-        if (changedPlugin.getType() == PluginType.PUMP && changedPlugin.name != resourceHelper.gs(R.string.virtualpump)) confirmPumpPluginActivation(changedPlugin, newState, activity, type) else performPluginSwitch(changedPlugin, newState, type)
+        if (changedPlugin.getType() == PluginType.PUMP && changedPlugin.name != resourceHelper.gs(R.string.virtualpump))
+            confirmPumpPluginActivation(changedPlugin, newState, activity, type)
+        else if (changedPlugin.getType() == PluginType.PUMP) {
+            performPluginSwitch(changedPlugin, newState, type)
+            pumpSync.connectNewPump()
+        } else performPluginSwitch(changedPlugin, newState, type)
     }
 
     private fun confirmPumpPluginActivation(changedPlugin: PluginBase, newState: Boolean, activity: FragmentActivity?, type: PluginType) {

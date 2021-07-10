@@ -6,7 +6,9 @@ class UpdateNsIdProfileSwitchTransaction(val profileSwitch: ProfileSwitch) : Tra
 
     override fun run() {
         val current = database.profileSwitchDao.findById(profileSwitch.id)
-        if (current != null && current.interfaceIDs.nightscoutId != profileSwitch.interfaceIDs.nightscoutId)
-            database.profileSwitchDao.updateExistingEntry(profileSwitch)
+        if (current != null && current.interfaceIDs.nightscoutId != profileSwitch.interfaceIDs.nightscoutId) {
+            current.interfaceIDs.nightscoutId = profileSwitch.interfaceIDs.nightscoutId
+            database.profileSwitchDao.updateExistingEntry(current)
+        }
     }
 }

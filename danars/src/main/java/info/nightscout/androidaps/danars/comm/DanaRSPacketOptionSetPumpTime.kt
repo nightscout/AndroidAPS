@@ -14,7 +14,7 @@ class DanaRSPacketOptionSetPumpTime(
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE_OPTION__SET_PUMP_TIME
-        aapsLogger.debug(LTag.PUMPCOMM, "Setting pump time " + dateUtil.dateAndTimeString(time))
+        aapsLogger.debug(LTag.PUMPCOMM, "Setting pump time " + dateUtil.dateAndTimeAndSecondsString(time))
     }
 
     override fun getRequestParams(): ByteArray {

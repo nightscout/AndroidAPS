@@ -175,7 +175,7 @@ class DanaRSService : DaggerService() {
                             sendMessage(DanaRSPacketOptionSetPumpUTCAndTimeZone(injector, dateUtil.now(), offset))
                         }
 
-                        danaPump.protocol >= 6 -> { // can set seconds
+                        danaPump.protocol >= 5 -> { // can set seconds
                             sendMessage(DanaRSPacketOptionSetPumpTime(injector, dateUtil.now()))
                         }
 

@@ -174,7 +174,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
                             commandQueue.bolus(detailedBolusInfo, object : Callback() {
                                 override fun run() {
                                     if (!result.success) {
-                                        ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.treatmentdeliveryerror), info.nightscout.androidaps.dana.R.raw.boluserror)
+                                        ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
                                     }
                                 }
                             })

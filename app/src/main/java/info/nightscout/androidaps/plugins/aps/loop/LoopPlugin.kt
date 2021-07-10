@@ -631,7 +631,7 @@ open class LoopPlugin @Inject constructor(
             commandQueue.tempBasalAbsolute(0.0, durationInMinutes, true, profile, PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND, object : Callback() {
                 override fun run() {
                     if (!result.success) {
-                        ErrorHelperActivity.runAlarm(context, result.comment, resourceHelper.gs(R.string.tempbasaldeliveryerror), info.nightscout.androidaps.dana.R.raw.boluserror)
+                        ErrorHelperActivity.runAlarm(context, result.comment, resourceHelper.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
                     }
                 }
             })
@@ -639,7 +639,7 @@ open class LoopPlugin @Inject constructor(
             commandQueue.tempBasalPercent(0, durationInMinutes, true, profile, PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND, object : Callback() {
                 override fun run() {
                     if (!result.success) {
-                        ErrorHelperActivity.runAlarm(context, result.comment, resourceHelper.gs(R.string.tempbasaldeliveryerror), info.nightscout.androidaps.dana.R.raw.boluserror)
+                        ErrorHelperActivity.runAlarm(context, result.comment, resourceHelper.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
                     }
                 }
             })
@@ -648,7 +648,7 @@ open class LoopPlugin @Inject constructor(
             commandQueue.cancelExtended(object : Callback() {
                 override fun run() {
                     if (!result.success) {
-                        ErrorHelperActivity.runAlarm(context, result.comment, resourceHelper.gs(R.string.extendedbolusdeliveryerror), info.nightscout.androidaps.dana.R.raw.boluserror)
+                        ErrorHelperActivity.runAlarm(context, result.comment, resourceHelper.gs(R.string.extendedbolusdeliveryerror), R.raw.boluserror)
                     }
                 }
             })
@@ -666,7 +666,7 @@ open class LoopPlugin @Inject constructor(
         commandQueue.cancelTempBasal(true, object : Callback() {
             override fun run() {
                 if (!result.success) {
-                    ErrorHelperActivity.runAlarm(context, result.comment, resourceHelper.gs(R.string.tempbasaldeliveryerror), info.nightscout.androidaps.dana.R.raw.boluserror)
+                    ErrorHelperActivity.runAlarm(context, result.comment, resourceHelper.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
                 }
             }
         })
