@@ -911,6 +911,8 @@ Context | Edit Context</string>
     <string name="ns_receive_temp_target_summary">Принимать временные цели, установленные через NS или NSClient</string>
     <string name="ns_receive_profile_switch">Получать переключения профиля</string>
     <string name="ns_receive_profile_switch_summary">Принимать переключения профиля, введенные через NS или NSClient</string>
+    <string name="ns_receive_offline_event">Принимать события APS автономно</string>
+    <string name="ns_receive_offline_event_summary">Принимать события APS введенные через NS или клиент NS автономно</string>
     <string name="ns_receive_insulin">Принимать инсулин</string>
     <string name="ns_receive_insulin_summary">Принимать инсулин, введенный через NS или NSClient (не подается, только рассчитывается как активный IOB)</string>
     <string name="ns_receive_carbs">Принимать углеводы</string>

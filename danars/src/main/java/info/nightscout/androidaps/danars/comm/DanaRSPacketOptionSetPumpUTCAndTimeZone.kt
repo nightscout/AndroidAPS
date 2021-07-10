@@ -16,7 +16,7 @@ class DanaRSPacketOptionSetPumpUTCAndTimeZone(
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE_OPTION__SET_PUMP_UTC_AND_TIME_ZONE
-        aapsLogger.debug(LTag.PUMPCOMM, "Setting UTC pump time ${dateUtil.dateAndTimeString(time)} ZoneOffset: $zoneOffset")
+        aapsLogger.debug(LTag.PUMPCOMM, "Setting UTC pump time ${dateUtil.dateAndTimeAndSecondsString(time)} ZoneOffset: $zoneOffset")
     }
 
     override fun getRequestParams(): ByteArray {

@@ -7,6 +7,7 @@
     <string name="automation_missing_trigger">Nurodykite mažiausiai vieną sąlygą.</string>
     <string name="automation_missing_action">Nurodykite mažiausiai vieną veiksmą.</string>
     <string name="alarm_message">Aliarmas: %1$s</string>
+    <string name="alarm_short">Aliarmas:</string>
     <string name="message_short">Pranešimas:</string>
     <string name="alreadyenabled">Jau įjungta</string>
     <string name="alreadydisabled">Jau išjungta</string>
@@ -87,6 +88,7 @@
     <string name="glucose_u">Gliukozė [%1$s]:</string>
     <string name="lastboluslabel">Paskutinis bolusas</string>
     <string name="lastboluscompared">Paskutinis Bolusas prieš %1$s %2$s min</string>
+    <string name="triggercoblabel">AAO</string>
     <string name="cobcompared">AAO %1$s %2$.0f</string>
     <string name="iob_u">AIO [U]:</string>
     <string name="distance_short">Atstumas [m]:</string>
