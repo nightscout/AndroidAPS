@@ -52,6 +52,6 @@ class MsgStatusBolusExtended(
         return (floor(System.currentTimeMillis() / 1000.0) - tempBasalAgoSecs).toLong() * 1000
     }
 
-    // because there is no fixed timestamp of start allow update of tbr only if tbr start differs more
-    private fun isWithin3Sec(newStart: Long) = abs(newStart - danaPump.tempBasalStart) < 3000
+    // because there is no fixed timestamp of start allow update of eb only if tbr start differs more
+    private fun isWithin3Sec(newStart: Long) = abs(newStart - danaPump.extendedBolusStart) < 3000
 }

@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.general.nsclient.services
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ResolveInfo
 import android.os.*
 import androidx.work.OneTimeWorkRequest
 import com.google.common.base.Charsets
@@ -486,7 +487,7 @@ class NSClientService : DaggerService() {
                                 val intent = Intent(Intents.ACTION_NEW_PROFILE)
                                 intent.putExtras(bundle)
                                 intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
-                                sendBroadcast(intent)
+                                broadcast(intent)
                             }
                         }
                     }
@@ -514,7 +515,7 @@ class NSClientService : DaggerService() {
                                 val intent = Intent(Intents.ACTION_REMOVED_TREATMENT)
                                 intent.putExtras(bundle)
                                 intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
-                                sendBroadcast(intent)
+                                broadcast(intent)
                             }
                         }
                         if (addedOrUpdatedTreatments.length() > 0) {
@@ -531,7 +532,7 @@ class NSClientService : DaggerService() {
                                     val intent = Intent(Intents.ACTION_CHANGED_TREATMENT)
                                     intent.putExtras(bundle)
                                     intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
-                                    sendBroadcast(intent)
+                                    broadcast(intent)
                                 }
                             }
                         }
@@ -579,7 +580,7 @@ class NSClientService : DaggerService() {
                                 val intent = Intent(Intents.ACTION_NEW_SGV)
                                 intent.putExtras(bundle)
                                 intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
-                                sendBroadcast(intent)
+                                broadcast(intent)
                             }
                         }
                     }
@@ -717,6 +718,16 @@ class NSClientService : DaggerService() {
             ret.add(array)
         }
         return ret
+    }
+
+    private fun broadcast(intent: Intent) {
+        val receivers: List<ResolveInfo> = packageManager.queryBroadcastReceivers(intent, 0)
+        for (resolveInfo in receivers)
+            resolveInfo.activityInfo.packageName?.let {
+                intent.setPackage(it)
+                sendBroadcast(intent)
+                aapsLogger.debug(LTag.CORE, "Sending broadcast " + intent.action + " to: " + it)
+            }
     }
 
     init {

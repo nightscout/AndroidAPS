@@ -22,7 +22,7 @@ class PumpSyncStorage @Inject constructor(
     val aapsLogger: AAPSLogger
 ) {
 
-    val pumpSyncStorageKey: String = "pump_sync_storage_xstream"
+    val pumpSyncStorageKey: String = "pump_sync_storage_xstream_v2"
     var pumpSyncStorage: MutableMap<String, MutableList<PumpDbEntry>> = mutableMapOf()
     var TBR: String = "TBR"
     var BOLUS: String = "BOLUS"
@@ -32,6 +32,7 @@ class PumpSyncStorage @Inject constructor(
 
     init {
         initStorage()
+        cleanOldStorage();
     }
 
     fun initStorage() {
@@ -63,6 +64,15 @@ class PumpSyncStorage @Inject constructor(
         if (!isStorageEmpty()) {
             sp.putString(pumpSyncStorageKey, xstream.toXML(pumpSyncStorage))
             aapsLogger.debug(String.format("Saving Pump Sync Storage: boluses=%d, tbrs=%d.", pumpSyncStorage[BOLUS]!!.size, pumpSyncStorage[TBR]!!.size))
+        }
+    }
+
+    fun cleanOldStorage(): Unit {
+        val oldSpKeys = setOf("pump_sync_storage", "pump_sync_storage_xstream")
+
+        for (oldSpKey in oldSpKeys) {
+            if (sp.contains(oldSpKey))
+                sp.remove(oldSpKey)
         }
     }
 
@@ -129,7 +139,7 @@ class PumpSyncStorage @Inject constructor(
         val response = pumpSync.addTemporaryBasalWithTempId(
             timenow,
             temporaryBasal.rate,
-            (temporaryBasal.durationInMinutes * 60L * 1000L),
+            (temporaryBasal.durationInSeconds * 1000L),
             temporaryBasal.isAbsolute,
             temporaryId,
             temporaryBasal.tbrType,

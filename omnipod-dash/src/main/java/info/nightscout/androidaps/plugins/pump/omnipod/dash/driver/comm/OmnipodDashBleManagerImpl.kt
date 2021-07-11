@@ -243,5 +243,6 @@ class OmnipodDashBleManagerImpl @Inject constructor(
     companion object {
         const val MAX_NUMBER_OF_CONNECTION_ATTEMPTS = 2
         const val CONTROLLER_ID = 4242 // TODO read from preferences or somewhere else.
+        private const val CONNECT_TIMEOUT_MULTIPLIER = 4
     }
 }

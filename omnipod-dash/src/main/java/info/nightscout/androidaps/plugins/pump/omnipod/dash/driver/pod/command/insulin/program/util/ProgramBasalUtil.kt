@@ -199,7 +199,7 @@ object ProgramBasalUtil {
         val index = ((hourOfDay * 60 + minuteOfHour) / 30).toByte()
         val secondOfDay = secondOfMinute + hourOfDay * 3600 + minuteOfHour * 60
         val secondsRemaining = ((index + 1) * 1800 - secondOfDay).toShort()
-        val pulsesRemaining = (pulsesPerSlot!![index.toInt()].toDouble() * secondsRemaining / 1800).toShort()
+        val pulsesRemaining = (pulsesPerSlot!![index.toInt()].toDouble() * secondsRemaining / 1800).toInt().toShort()
         return CurrentSlot(index, (secondsRemaining * 8).toShort(), pulsesRemaining)
     }
 
