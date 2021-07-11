@@ -271,7 +271,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             podInfoBinding.timeOnPod.text = podStateManager.time?.let {
                 resourceHelper.gs(
                     R.string.omnipod_common_time_with_timezone,
-                    dateUtil.dateAndTimeString(it.toEpochSecond()),
+                    dateUtil.dateAndTimeString(it.toEpochSecond()*1000),
                     podStateManager.timeZone.getDisplayName(true, TimeZone.SHORT)
                 )
             } ?: PLACEHOLDER
@@ -292,7 +292,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             // Update Pod expiry time
             val expiresAt = podStateManager.expiry
             podInfoBinding.podExpiryDate.text = expiresAt?.let {
-                dateUtil.dateAndTimeString(it.toEpochSecond())
+                dateUtil.dateAndTimeString(it.toEpochSecond()*1000)
             }
                 ?: PLACEHOLDER
             podInfoBinding.podExpiryDate.setTextColor(

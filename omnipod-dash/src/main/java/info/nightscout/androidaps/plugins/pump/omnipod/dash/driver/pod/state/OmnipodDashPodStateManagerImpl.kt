@@ -23,6 +23,7 @@ import io.reactivex.Single
 import java.io.Serializable
 import java.time.Duration
 import java.time.Instant
+import java.time.LocalDateTime
 import java.time.ZonedDateTime
 import java.util.*
 import javax.inject.Inject
@@ -192,7 +193,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             val minutesSinceActivation = podState.minutesSinceActivation
             val activationTime = podState.activationTime
             if ((activationTime != null) && (minutesSinceActivation != null)) {
-                return ZonedDateTime.from(Instant.ofEpochMilli(activationTime))
+                return ZonedDateTime.ofInstant(Instant.ofEpochMilli(activationTime), timeZone.toZoneId())
                     .plusMinutes(minutesSinceActivation.toLong())
                     .plus(Duration.ofMillis(System.currentTimeMillis() - lastUpdatedSystem))
             }
@@ -208,10 +209,12 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         // TODO: Consider storing expiry datetime in pod state saving continuously recalculating to the same value
         get() {
             val podLifeInHours = podLifeInHours
-            val activationTime = podState.activationTime
-            if (podLifeInHours != null && activationTime != null) {
-                return return ZonedDateTime.from(Instant.ofEpochMilli(activationTime))
+            val minutesSinceActivation = podState.minutesSinceActivation
+            if (podLifeInHours != null && minutesSinceActivation != null) {
+                return ZonedDateTime.now()
                     .plusHours(podLifeInHours.toLong())
+                    .minusMinutes(minutesSinceActivation.toLong())
+                    .plus(Duration.ofMillis(System.currentTimeMillis() - lastUpdatedSystem))
             }
             return null
         }
