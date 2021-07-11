@@ -890,6 +890,13 @@
     <string name="privacy_summary">U kunt optioneel een e-mailadres opgeven als u op de hoogte wilt worden gebracht van applicatie crashes. Dit is geen geautomatiseerde service. De ontwikkelaars zullen contact met u opnemen bij gevaarlijke situaties.</string>
     <string name="profile_low_target">Profiel laag doel</string>
     <string name="profile_high_target">Profiel hoog doel</string>
+    <string name="temp_target_low_target">Tijdelijk streefdoel onder grens</string>
+    <string name="temp_target_high_target">Tijdelijk streefdoel boven grens</string>
+    <string name="temp_target_value">Tijdelijk streefdoel waarde</string>
+    <string name="profile_dia">Profiel DIA waarde</string>
+    <string name="profile_sensitivity_value">Profiel gevoeligheidswaarde</string>
+    <string name="profile_max_daily_basal_value">Maximale basaal waarde van het profiel</string>
+    <string name="current_basal_value">Huidige basaal waarde</string>
     <string name="full_sync">Volledige synchronisatie</string>
     <string name="prime">Vullen</string>
     <string name="ns_sync_options">Synchronisatie</string>
