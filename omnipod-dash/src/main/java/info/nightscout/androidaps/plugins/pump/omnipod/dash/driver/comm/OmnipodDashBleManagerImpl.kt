@@ -44,6 +44,14 @@ class OmnipodDashBleManagerImpl @Inject constructor(
                 val session = assertSessionEstablished()
 
                 emitter.onNext(PodEvent.CommandSending(cmd))
+            /*
+                if (Random.nextBoolean()) {
+                    // XXX use this to test "failed to confirm" commands
+                    emitter.onNext(PodEvent.CommandSendNotConfirmed(cmd))
+                    emitter.tryOnError(MessageIOException("XXX random failure to test unconfirmed commands"))
+                    return@create
+                }
+*/
                 when (session.sendCommand(cmd)) {
                     is CommandSendErrorSending -> {
                         emitter.tryOnError(CouldNotSendCommandException())
@@ -55,7 +63,12 @@ class OmnipodDashBleManagerImpl @Inject constructor(
                     is CommandSendErrorConfirming ->
                         emitter.onNext(PodEvent.CommandSendNotConfirmed(cmd))
                 }
-
+                /*
+                if (Random.nextBoolean()) {
+                    // XXX use this commands confirmed with success
+                    emitter.tryOnError(MessageIOException("XXX random failure to test unconfirmed commands"))
+                    return@create
+                }*/
                 when (val readResult = session.readAndAckResponse(responseType)) {
                     is CommandReceiveSuccess ->
                         emitter.onNext(PodEvent.ResponseReceived(cmd, readResult.result))
@@ -84,7 +97,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
     }
 
     override fun getStatus(): ConnectionState {
-        return connection?.let { getStatus() }
+        return connection?.let { it.connectionState() }
             ?: NotConnected
     }
 
@@ -102,18 +115,27 @@ class OmnipodDashBleManagerImpl @Inject constructor(
             val conn = connection
                 ?: Connection(podDevice, aapsLogger, context, podState)
             connection = conn
-            if (conn.connectionState() is Connected) {
-                if (conn.session == null) {
-                    emitter.onNext(PodEvent.EstablishingSession)
-                    establishSession(1.toByte())
-                    emitter.onNext(PodEvent.Connected)
-                } else {
-                    emitter.onNext(PodEvent.AlreadyConnected(podAddress))
-                }
+            if (conn.connectionState() is Connected && conn.session != null) {
+                emitter.onNext(PodEvent.AlreadyConnected(podAddress))
                 emitter.onComplete()
                 return@create
             }
-            conn.connect()
+
+            // two retries
+            for (i in 1..MAX_NUMBER_OF_CONNECTION_ATTEMPTS) {
+                try {
+                    // wait i * CONNECTION_TIMEOUT
+                    conn.connect(i)
+                    break
+                } catch (e: Exception) {
+                    aapsLogger.warn(LTag.PUMPBTCOMM, "connect error=$e")
+                    if (i == MAX_NUMBER_OF_CONNECTION_ATTEMPTS) {
+                        emitter.onError(e)
+                        return@create
+                    }
+                }
+            }
+
             emitter.onNext(PodEvent.BluetoothConnected(podAddress))
             emitter.onNext(PodEvent.EstablishingSession)
             establishSession(1.toByte())
@@ -218,7 +240,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
     }
 
     companion object {
-
+        const val MAX_NUMBER_OF_CONNECTION_ATTEMPTS = 3
         const val CONTROLLER_ID = 4242 // TODO read from preferences or somewhere else.
     }
 }

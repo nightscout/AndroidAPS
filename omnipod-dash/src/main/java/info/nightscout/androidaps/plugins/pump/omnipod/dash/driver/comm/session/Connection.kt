@@ -55,7 +55,7 @@ class Connection(
         podState.bluetoothConnectionState = OmnipodDashPodStateManager.BluetoothConnectionState.CONNECTING
         gattConnection = podDevice.connectGatt(context, autoConnect, bleCommCallbacks, BluetoothDevice.TRANSPORT_LE)
         // OnDisconnect can be called after this point!!!
-        val state = waitForConnection()
+        val state = waitForConnection(2)
         if (state !is Connected) {
             podState.bluetoothConnectionState = OmnipodDashPodStateManager.BluetoothConnectionState.DISCONNECTED
             throw FailedToConnectException(podDevice.address)
@@ -79,6 +79,7 @@ class Connection(
             gattConnection,
             bleCommCallbacks
         )
+
         val sendResult = cmdBleIO.hello()
         if (sendResult !is BleSendSuccess) {
             throw FailedToConnectException("Could not send HELLO command to ${podDevice.address}")
@@ -89,7 +90,7 @@ class Connection(
 
     val msgIO = MessageIO(aapsLogger, cmdBleIO, dataBleIO)
 
-    fun connect() {
+    fun connect(timeoutMultiplier: Int) {
         if (session != null) {
             disconnect()
         }
@@ -100,7 +101,7 @@ class Connection(
             throw FailedToConnectException("connect() returned false")
         }
 
-        if (waitForConnection() !is Connected) {
+        if (waitForConnection(timeoutMultiplier) !is Connected) {
             podState.bluetoothConnectionState = OmnipodDashPodStateManager.BluetoothConnectionState.DISCONNECTED
             throw FailedToConnectException(podDevice.address)
         }
@@ -111,6 +112,8 @@ class Connection(
         dataBleIO.characteristic = discovered[CharacteristicType.DATA]!!
         cmdBleIO.characteristic = discovered[CharacteristicType.CMD]!!
 
+        //  val ret = gattConnection.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH)
+        // aapsLogger.info(LTag.PUMPBTCOMM, "requestConnectionPriority: $ret")
         cmdBleIO.hello()
         cmdBleIO.readyToRead()
         dataBleIO.readyToRead()
@@ -125,9 +128,9 @@ class Connection(
         session = null
     }
 
-    private fun waitForConnection(): ConnectionState {
+    private fun waitForConnection(timeoutMultiplier: Int): ConnectionState {
         try {
-            bleCommCallbacks.waitForConnection(CONNECT_TIMEOUT_MS)
+            bleCommCallbacks.waitForConnection(BASE_CONNECT_TIMEOUT_MS * timeoutMultiplier)
         } catch (e: InterruptedException) {
             // We are still going to check if connection was successful
             aapsLogger.info(LTag.PUMPBTCOMM, "Interrupted while waiting for connection")
@@ -178,7 +181,6 @@ class Connection(
     }
 
     companion object {
-
-        private const val CONNECT_TIMEOUT_MS = 12000
+        private const val BASE_CONNECT_TIMEOUT_MS = 10000
     }
 }

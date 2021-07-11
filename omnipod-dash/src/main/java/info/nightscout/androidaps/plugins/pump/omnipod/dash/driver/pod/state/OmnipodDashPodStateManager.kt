@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state
 
+import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair.PairResult
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.event.PodEvent
@@ -8,6 +9,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.DefaultStatusResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.SetUniqueIdResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.VersionResponse
+import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -64,6 +66,7 @@ interface OmnipodDashPodStateManager {
     val tempBasalActive: Boolean
     var basalProgram: BasalProgram?
     val activeCommand: ActiveCommand?
+    val lastBolus: LastBolus?
 
     fun increaseMessageSequenceNumber()
     fun increaseEapAkaSequenceNumber(): ByteArray
@@ -75,11 +78,18 @@ interface OmnipodDashPodStateManager {
     fun updateFromPairing(uniqueId: Id, pairResult: PairResult)
     fun reset()
 
-    fun createActiveCommand(historyId: String, basalProgram: BasalProgram? = null, tempBasal: TempBasal? = null):
-        Single<ActiveCommand>
+    fun createActiveCommand(
+        historyId: String,
+        basalProgram: BasalProgram? = null,
+        tempBasal: TempBasal? = null,
+        requestedBolus: Double? = null
+    ): Single<ActiveCommand>
     fun updateActiveCommand(): Maybe<CommandConfirmed>
-    fun observeNoActiveCommand(): Observable<PodEvent>
+    fun observeNoActiveCommand(): Completable
     fun getCommandConfirmationFromState(): CommandConfirmationFromState
+
+    fun createLastBolus(requestedUnits: Double, historyId: String, bolusType: DetailedBolusInfo.BolusType)
+    fun markLastBolusComplete(): LastBolus?
 
     data class ActiveCommand(
         val sequence: Short,
@@ -88,10 +98,35 @@ interface OmnipodDashPodStateManager {
         val historyId: String,
         var sendError: Throwable?,
         var basalProgram: BasalProgram?,
-        val tempBasal: TempBasal?
+        val tempBasal: TempBasal?,
+        val requestedBolus: Double?
     )
+
     // TODO: set created to "now" on boot
     data class TempBasal(val startTime: Long, val rate: Double, val durationInMinutes: Short) : Serializable
+
+    data class LastBolus(
+        val startTime: Long,
+        val requestedUnits: Double,
+        var bolusUnitsRemaining: Double,
+        var deliveryComplete: Boolean,
+        val historyId: String,
+        val bolusType: DetailedBolusInfo.BolusType
+    ) {
+
+        fun deliveredUnits(): Double? {
+            return if (deliveryComplete) {
+                requestedUnits - bolusUnitsRemaining
+            } else {
+                null
+            }
+        }
+
+        fun markComplete(): Double {
+            this.deliveryComplete = true
+            return requestedUnits - bolusUnitsRemaining
+        }
+    }
 
     enum class BluetoothConnectionState {
         CONNECTING, CONNECTED, DISCONNECTED

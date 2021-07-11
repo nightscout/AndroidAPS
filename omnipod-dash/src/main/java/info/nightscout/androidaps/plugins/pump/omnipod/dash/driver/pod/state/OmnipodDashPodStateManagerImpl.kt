@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state
 
 import android.os.SystemClock
 import com.google.gson.Gson
+import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -17,6 +18,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.SetUniqueIdResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.VersionResponse
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -151,6 +153,10 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             store()
         }
 
+    override val lastBolus: OmnipodDashPodStateManager.LastBolus?
+        @Synchronized
+        get() = podState.lastBolus
+
     override val tempBasalActive: Boolean
         get() = !isSuspended && tempBasal?.let {
             it.startTime + it.durationInMinutes * 60 * 1000 > System.currentTimeMillis()
@@ -198,10 +204,45 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         get() = podState.activeCommand
 
     @Synchronized
+    override fun createLastBolus(requestedUnits: Double, historyId: String, bolusType: DetailedBolusInfo.BolusType) {
+        podState.lastBolus = OmnipodDashPodStateManager.LastBolus(
+            startTime = System.currentTimeMillis(),
+            requestedUnits = requestedUnits,
+            bolusUnitsRemaining = requestedUnits,
+            deliveryComplete = false, // cancelled, delivered 100% or pod failure
+            historyId = historyId,
+            bolusType = bolusType
+        )
+    }
+
+    @Synchronized
+    override fun markLastBolusComplete(): OmnipodDashPodStateManager.LastBolus? {
+        val lastBolus = podState.lastBolus
+
+        lastBolus?.run {
+            this.deliveryComplete = true
+        }
+            ?: logger.error(LTag.PUMP, "Trying to mark null bolus as complete")
+
+        return lastBolus
+    }
+
+    private fun updateLastBolusFromResponse(bolusPulsesRemaining: Short) {
+        podState.lastBolus?.run {
+            val remainingUnits = bolusPulsesRemaining.toDouble() * 0.05
+            this.bolusUnitsRemaining = remainingUnits
+            if (remainingUnits == 0.0) {
+                this.deliveryComplete = true
+            }
+        }
+    }
+
+    @Synchronized
     override fun createActiveCommand(
         historyId: String,
         basalProgram: BasalProgram?,
-        tempBasal: OmnipodDashPodStateManager.TempBasal?
+        tempBasal: OmnipodDashPodStateManager.TempBasal?,
+        requestedBolus: Double?
     ):
         Single<OmnipodDashPodStateManager.ActiveCommand> {
             return Single.create { source ->
@@ -213,6 +254,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
                         sendError = null,
                         basalProgram = basalProgram,
                         tempBasal = tempBasal,
+                        requestedBolus = requestedBolus
                     )
                     podState.activeCommand = command
                     source.onSuccess(command)
@@ -228,12 +270,13 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         }
 
     @Synchronized
-    override fun observeNoActiveCommand(): Observable<PodEvent> {
-        return Observable.defer {
+    override fun observeNoActiveCommand(): Completable {
+        return Completable.defer {
             if (activeCommand == null) {
-                Observable.empty()
+                Completable.complete()
             } else {
-                Observable.error(
+                logger.warn(LTag.PUMP, "Active command already existing: $activeCommand")
+                Completable.error(
                     java.lang.IllegalStateException(
                         "Trying to send a command " +
                             "and the last command was not confirmed"
@@ -257,7 +300,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             CommandSendingFailure -> {
                 podState.activeCommand = null
                 source.onError(
-                    activeCommand?.sendError
+                    activeCommand.sendError
                         ?: java.lang.IllegalStateException(
                             "Could not send command and sendError is " +
                                 "missing"
@@ -323,7 +366,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     }
 
     override fun updateFromDefaultStatusResponse(response: DefaultStatusResponse) {
-        logger.debug(LTag.PUMPBTCOMM, "Default status reponse :$response")
+        logger.debug(LTag.PUMPCOMM, "Default status response :$response")
         podState.deliveryStatus = response.deliveryStatus
         podState.podStatus = response.podStatus
         podState.pulsesDelivered = response.totalPulsesDelivered
@@ -336,6 +379,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
 
         podState.lastUpdatedSystem = System.currentTimeMillis()
         podState.lastStatusResponseReceived = SystemClock.elapsedRealtime()
+        updateLastBolusFromResponse(response.bolusPulsesRemaining)
 
         store()
         rxBus.send(EventOmnipodDashPumpValuesChanged())
@@ -384,6 +428,11 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         podState.uniqueId = response.uniqueIdReceivedInCommand
 
         podState.lastUpdatedSystem = System.currentTimeMillis()
+        // TODO: what is considered to be the pod activation time?
+        //  LTK negotiation ?
+        //  setUniqueId?
+        //  compute it from the number of "minutesOnPod"?
+        podState.activationTime = System.currentTimeMillis()
 
         store()
         rxBus.send(EventOmnipodDashPumpValuesChanged())
@@ -397,6 +446,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         podState.deliveryStatus = response.deliveryStatus
         podState.podStatus = response.podStatus
         podState.pulsesDelivered = response.totalPulsesDelivered
+
         if (response.reservoirPulsesRemaining < 1023) {
             podState.pulsesRemaining = response.reservoirPulsesRemaining
         }
@@ -407,6 +457,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
 
         podState.lastUpdatedSystem = System.currentTimeMillis()
         podState.lastStatusResponseReceived = SystemClock.elapsedRealtime()
+        updateLastBolusFromResponse(response.bolusPulsesRemaining)
 
         store()
         rxBus.send(EventOmnipodDashPumpValuesChanged())
@@ -462,6 +513,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         var bluetoothAddress: String? = null
         var ltk: ByteArray? = null
         var eapAkaSequenceNumber: Long = 1
+        var bolusPulsesRemaining: Short = 0
 
         var bleVersion: SoftwareVersion? = null
         var firmwareVersion: SoftwareVersion? = null
@@ -484,5 +536,6 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         var basalProgram: BasalProgram? = null
         var tempBasal: OmnipodDashPodStateManager.TempBasal? = null
         var activeCommand: OmnipodDashPodStateManager.ActiveCommand? = null
+        var lastBolus: OmnipodDashPodStateManager.LastBolus? = null
     }
 }
