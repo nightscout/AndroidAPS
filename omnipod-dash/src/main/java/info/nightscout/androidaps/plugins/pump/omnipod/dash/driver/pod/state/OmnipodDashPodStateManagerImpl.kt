@@ -468,7 +468,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         podState.lastStatusResponseReceived = SystemClock.elapsedRealtime()
         updateLastBolusFromResponse(response.bolusPulsesRemaining)
         if (podState.activationTime == null) {
-            podState.activationTime = System.currentTimeMillis() - (response.minutesSinceActivation * 60000)
+            podState.activationTime = System.currentTimeMillis() - (response.minutesSinceActivation * 60_000)
         }
 
         store()
