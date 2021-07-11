@@ -77,6 +77,7 @@ class OverviewData @Inject constructor(
     var endTime: Long = 0
     var fromTimeData: Long = 0
     var endTimeData: Long = 0
+    var predictionHours = 0
 
     fun reset() {
         profile = null
@@ -93,8 +94,8 @@ class OverviewData @Inject constructor(
         temporaryTarget = null
         lastAutosensData = null
         bgReadingsArray = ArrayList()
-        bucketedGraphSeries = PointsWithLabelGraphSeries()
-        bgReadingGraphSeries = PointsWithLabelGraphSeries()
+        bucketedListArray = java.util.ArrayList()
+        bgReadingGraphArray = java.util.ArrayList()
         predictionsGraphSeries = PointsWithLabelGraphSeries()
         baseBasalGraphSeries = LineGraphSeries()
         tempBasalGraphSeries = LineGraphSeries()
@@ -128,7 +129,8 @@ class OverviewData @Inject constructor(
         }
 
         toTime = calendar.timeInMillis + 100000 // little bit more to avoid wrong rounding - GraphView specific
-        //fromTime = toTime - T.hours(rangeToDisplay.toLong()).msecs()
+        fromTimeData = toTime - T.hours(rangeMaxToDisplay.toLong()).msecs()
+        endTimeData = toTime + T.hours(predictionHours.toLong()).msecs()
         fromTimeArray = longArrayOf(
             endTimeData - T.hours(minRangeToDisplay.toLong()).msecs(),
             toTime - T.hours(minRangeToDisplay.toLong()).msecs(),
@@ -139,9 +141,7 @@ class OverviewData @Inject constructor(
             endTimeData - T.hours(minRangeToDisplay.toLong()).msecs() * 4,
             toTime - T.hours(minRangeToDisplay.toLong()).msecs() * 4,
         )
-        endTime = toTime
-        fromTimeData = toTime - T.hours(rangeMaxToDisplay.toLong()).msecs()
-        endTimeData = toTime
+        endTime = toTime + if (predictAvailable) T.hours(predictionHours.toLong()).msecs() else 0
     }
 
     /*
@@ -299,8 +299,18 @@ class OverviewData @Inject constructor(
     var maxBgArray = doubleArrayOf(Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE)
     var maxBgValue = Double.MIN_VALUE
         get() = maxBgArray.get(indexRange)
+    var bucketedListArray: MutableList<DataPointWithLabelInterface> = java.util.ArrayList()
     var bucketedGraphSeries: PointsWithLabelGraphSeries<DataPointWithLabelInterface> = PointsWithLabelGraphSeries()
+        get() {
+            val BdArray = bucketedListArray.filter { it.x >= fromTime.toDouble() && it.x <= endTime.toDouble()}
+            return PointsWithLabelGraphSeries(Array(BdArray.size) { i -> BdArray[i] })
+        }
+    var bgReadingGraphArray: MutableList<DataPointWithLabelInterface> = java.util.ArrayList()
     var bgReadingGraphSeries: PointsWithLabelGraphSeries<DataPointWithLabelInterface> = PointsWithLabelGraphSeries()
+        get() {
+            val BgArray = bgReadingGraphArray.filter { it.x >= fromTime.toDouble() && it.x <= endTime.toDouble()}
+            return PointsWithLabelGraphSeries(Array(BgArray.size) { i -> BgArray[i] })
+        }
     var predictionsGraphSeries: PointsWithLabelGraphSeries<DataPointWithLabelInterface> = PointsWithLabelGraphSeries()
 
     var maxBasalArray = doubleArrayOf(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
@@ -380,14 +390,14 @@ class OverviewData @Inject constructor(
 //        val start = dateUtil.now()
         maxBgArray = doubleArrayOf(Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE)
         bgReadingsArray = repository.compatGetBgReadingsDataFromTime(fromTimeData, toTime, false).blockingGet()
-        val bgListArray: MutableList<DataPointWithLabelInterface> = java.util.ArrayList()
+        bgReadingGraphArray = java.util.ArrayList()
         for (bg in bgReadingsArray) {
             if (bg.timestamp < fromTimeData || bg.timestamp > toTime) continue
             //if (bg.value > maxBgValue) maxBgValue = bg.value
             maxTime(maxBgArray, bg.timestamp, bg.value)
-            bgListArray.add(GlucoseValueDataPoint(bg, defaultValueHelper, profileFunction, resourceHelper))
+            bgReadingGraphArray.add(GlucoseValueDataPoint(bg, defaultValueHelper, profileFunction, resourceHelper))
         }
-        bgReadingGraphSeries = PointsWithLabelGraphSeries(Array(bgListArray.size) { i -> bgListArray[i] })
+        //bgReadingGraphSeries = PointsWithLabelGraphSeries(Array(bgListArray.size) { i -> bgListArray[i] })
         maxBgArray = maxBgArray.map { addUpperChartMargin(max(Profile.fromMgdlToUnits(it, profileFunction.getUnits()), defaultValueHelper.determineHighLine())) }.toDoubleArray()
 //        profiler.log(LTag.UI, "prepareBgData() $from", start)
     }
@@ -408,7 +418,7 @@ class OverviewData @Inject constructor(
             it[Calendar.MINUTE] = 0
             it.add(Calendar.HOUR, 1)
         }
-        var predictionHours = apsResult?.let { (ceil(it.latestPredictionsTime - System.currentTimeMillis().toDouble()) / (60 * 60 * 1000)).toInt() }
+        predictionHours = apsResult?.let { (ceil(it.latestPredictionsTime - System.currentTimeMillis().toDouble()) / (60 * 60 * 1000)).toInt() }
             ?: 0
         predictionHours = min(2, predictionHours)
         predictionHours = max(0, predictionHours)
@@ -424,7 +434,6 @@ class OverviewData @Inject constructor(
             endTimeData - T.hours(minRangeToDisplay.toLong()).msecs() * 4,
             toTime - T.hours(minRangeToDisplay.toLong()).msecs() * 4,
         )
-        val hoursToFetch = rangeToDisplay - predictionHours
         if (predictionsAvailable && apsResult != null && menuChartSettings[0][OverviewMenus.CharType.PRE.ordinal]) {
             //fromTime = toTime - T.hours(hoursToFetch.toLong()).msecs()
             endTime = toTime + T.hours(predictionHours.toLong()).msecs()
@@ -454,12 +463,12 @@ class OverviewData @Inject constructor(
             aapsLogger.debug("No bucketed data.")
             return
         }
-        val bucketedListArray: MutableList<DataPointWithLabelInterface> = java.util.ArrayList()
+        bucketedListArray = java.util.ArrayList()
         for (inMemoryGlucoseValue in bucketedData) {
             if (inMemoryGlucoseValue.timestamp < fromTimeData || inMemoryGlucoseValue.timestamp > toTime) continue
             bucketedListArray.add(InMemoryGlucoseValueDataPoint(inMemoryGlucoseValue, profileFunction, resourceHelper))
         }
-        bucketedGraphSeries = PointsWithLabelGraphSeries(Array(bucketedListArray.size) { i -> bucketedListArray[i] })
+//        bucketedGraphSeries = PointsWithLabelGraphSeries(Array(bucketedListArray.size) { i -> bucketedListArray[i] })
 //        profiler.log(LTag.UI, "prepareBucketedData() $from", start)
     }
 
