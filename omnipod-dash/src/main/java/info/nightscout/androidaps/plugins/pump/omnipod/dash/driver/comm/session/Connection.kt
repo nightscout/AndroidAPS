@@ -24,15 +24,14 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 import java.lang.IllegalArgumentException
 import java.util.concurrent.CountDownLatch
-import kotlin.math.absoluteValue
 
 sealed class ConnectionState
 
-object Connecting: ConnectionState()
+object Connecting : ConnectionState()
 object Connected : ConnectionState()
 object NotConnected : ConnectionState()
 
-data class ConnectionWaitCondition(var timeoutMs: Long?=null, val stopConnection: CountDownLatch?=null) {
+data class ConnectionWaitCondition(var timeoutMs: Long? = null, val stopConnection: CountDownLatch? = null) {
     init {
         if (timeoutMs == null && stopConnection == null) {
             throw IllegalArgumentException("One of timeoutMs or stopConnection has to be non null")
@@ -68,8 +67,8 @@ class Connection(
 
         podState.bluetoothConnectionState = OmnipodDashPodStateManager.BluetoothConnectionState.CONNECTING
         val autoConnect = false
-        val gatt = gattConnection ?:
-            podDevice.connectGatt(context, autoConnect, bleCommCallbacks, BluetoothDevice.TRANSPORT_LE)
+        val gatt = gattConnection
+            ?: podDevice.connectGatt(context, autoConnect, bleCommCallbacks, BluetoothDevice.TRANSPORT_LE)
         gattConnection = gatt
         if (!gatt.connect()) {
             throw FailedToConnectException("connect() returned false")

@@ -11,7 +11,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair.PairResult
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.EapSqn
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.event.PodEvent
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.AlarmStatusResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.DefaultStatusResponse
@@ -20,10 +19,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.Completable
 import io.reactivex.Maybe
-import io.reactivex.Observable
 import io.reactivex.Single
 import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
 import org.joda.time.Duration
 import java.io.Serializable
 import java.util.*
@@ -283,29 +280,29 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         requestedBolus: Double?
     ):
         Single<OmnipodDashPodStateManager.ActiveCommand> {
-            return Single.create { source ->
-                if (activeCommand == null) {
-                    val command = OmnipodDashPodStateManager.ActiveCommand(
-                        podState.messageSequenceNumber,
-                        createdRealtime = SystemClock.elapsedRealtime(),
-                        historyId = historyId,
-                        sendError = null,
-                        basalProgram = basalProgram,
-                        tempBasal = tempBasal,
-                        requestedBolus = requestedBolus
+        return Single.create { source ->
+            if (activeCommand == null) {
+                val command = OmnipodDashPodStateManager.ActiveCommand(
+                    podState.messageSequenceNumber,
+                    createdRealtime = SystemClock.elapsedRealtime(),
+                    historyId = historyId,
+                    sendError = null,
+                    basalProgram = basalProgram,
+                    tempBasal = tempBasal,
+                    requestedBolus = requestedBolus
+                )
+                podState.activeCommand = command
+                source.onSuccess(command)
+            } else {
+                source.onError(
+                    java.lang.IllegalStateException(
+                        "Trying to send a command " +
+                            "and the last command was not confirmed"
                     )
-                    podState.activeCommand = command
-                    source.onSuccess(command)
-                } else {
-                    source.onError(
-                        java.lang.IllegalStateException(
-                            "Trying to send a command " +
-                                "and the last command was not confirmed"
-                        )
-                    )
-                }
+                )
             }
         }
+    }
 
     @Synchronized
     override fun observeNoActiveCommand(): Completable {

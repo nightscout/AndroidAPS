@@ -53,7 +53,6 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.concurrent.thread
 import kotlin.math.ceil
-import kotlin.math.exp
 import kotlin.random.Random
 
 @Singleton
@@ -75,7 +74,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     @Volatile var bolusCanceled = false
     private val handler: Handler = Handler(Looper.getMainLooper())
     private lateinit var statusChecker: Runnable
-    var nextPodWarningCheck : Long = 0
+    var nextPodWarningCheck: Long = 0
     @Volatile var stopConnecting: CountDownLatch? = null
 
     companion object {
@@ -99,7 +98,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         statusChecker = Runnable {
             refreshStatusOnUnacknowledgedCommands()
             updatePodWarnings()
-           // createFakeTBRWhenNoActivePod()
+            // createFakeTBRWhenNoActivePod()
             // TODO: this is called from the main thread
             handler.postDelayed(statusChecker, STATUS_CHECK_INTERVAL_MS)
         }
@@ -109,7 +108,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         if (!podStateManager.isPodRunning) {
             val expectedState = pumpSync.expectedPumpState()
             val tbr = expectedState.temporaryBasal
-            if (tbr == null || tbr.rate!=0.0) {
+            if (tbr == null || tbr.rate != 0.0) {
                 aapsLogger.info(LTag.PUMP, "createFakeTBRWhenNoActivePod")
                 pumpSync.syncTemporaryBasalWithPumpId(
                     timestamp = System.currentTimeMillis(),
@@ -147,7 +146,17 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     rxBus.send(EventNewNotification(notification))
                 } else {
                     rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_SUSPENDED))
-                    // TODO: time out of sync notification?
+                    if (!TimeZone.getDefault().equals(podStateManager.timeZone)) {
+                        val notification =
+                            Notification(
+                                Notification.OMNIPOD_TIME_OUT_OF_SYNC,
+                                "Timezone on pod is different from the timezone on phone. " +
+                                    "Basal rate is incorrect" +
+                                    "Switch profile to fix",
+                                Notification.NORMAL
+                            )
+                        rxBus.send(EventNewNotification(notification))
+                    }
                 }
             }
             nextPodWarningCheck = DateTimeUtil.getTimeInFutureFromMinutes(15)
@@ -158,7 +167,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
         if (podStateManager.isPodRunning &&
             podStateManager.activeCommand != null &&
             commandQueue.size() == 0 &&
-            commandQueue.performing() == null) {
+            commandQueue.performing() == null
+        ) {
             commandQueue.readStatus("Unconfirmed command", null)
         }
     }
@@ -180,7 +190,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     override fun isConnected(): Boolean {
 
         return !podStateManager.isPodRunning ||
-        podStateManager.bluetoothConnectionState == OmnipodDashPodStateManager.BluetoothConnectionState.CONNECTED
+            podStateManager.bluetoothConnectionState == OmnipodDashPodStateManager.BluetoothConnectionState.CONNECTED
     }
 
     override fun isConnecting(): Boolean {

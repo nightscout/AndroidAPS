@@ -11,7 +11,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.StringLengthPrefixEncoding.Companion.parseKeys
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.Command
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.Response
-import kotlin.reflect.KClass
 
 sealed class CommandSendResult
 object CommandSendSuccess : CommandSendResult()
@@ -113,10 +112,10 @@ class Session(
 
         // TODO verify length
 
-        //val uniqueId = data.copyOfRange(0, 4)
-        //val lenghtAndSequenceNumber = data.copyOfRange(4, 6)
+        // val uniqueId = data.copyOfRange(0, 4)
+        // val lenghtAndSequenceNumber = data.copyOfRange(4, 6)
         val payload = data.copyOfRange(6, data.size - 2)
-        //val crc = data.copyOfRange(data.size - 2, data.size)
+        // val crc = data.copyOfRange(data.size - 2, data.size)
 
         // TODO validate uniqueId, sequenceNumber and crc
 

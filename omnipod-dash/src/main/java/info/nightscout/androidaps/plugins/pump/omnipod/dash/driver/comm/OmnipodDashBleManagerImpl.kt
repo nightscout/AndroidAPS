@@ -114,40 +114,40 @@ class OmnipodDashBleManagerImpl @Inject constructor(
     private fun connect(connectionWaitCond: ConnectionWaitCondition): Observable<PodEvent> = Observable
         .create {
             emitter ->
-        if (!busy.compareAndSet(false, true)) {
-            throw BusyException()
-        }
-        try {
-            emitter.onNext(PodEvent.BluetoothConnecting)
-
-            val podAddress =
-                podState.bluetoothAddress
-                    ?: throw FailedToConnectException("Missing bluetoothAddress, activate the pod first")
-            val podDevice = bluetoothAdapter.getRemoteDevice(podAddress)
-            val conn = connection
-                ?: Connection(podDevice, aapsLogger, context, podState)
-            connection = conn
-            if (conn.connectionState() is Connected && conn.session != null) {
-                emitter.onNext(PodEvent.AlreadyConnected(podAddress))
-                emitter.onComplete()
-                return@create
+            if (!busy.compareAndSet(false, true)) {
+                throw BusyException()
             }
+            try {
+                emitter.onNext(PodEvent.BluetoothConnecting)
 
-            conn.connect(connectionWaitCond)
+                val podAddress =
+                    podState.bluetoothAddress
+                        ?: throw FailedToConnectException("Missing bluetoothAddress, activate the pod first")
+                val podDevice = bluetoothAdapter.getRemoteDevice(podAddress)
+                val conn = connection
+                    ?: Connection(podDevice, aapsLogger, context, podState)
+                connection = conn
+                if (conn.connectionState() is Connected && conn.session != null) {
+                    emitter.onNext(PodEvent.AlreadyConnected(podAddress))
+                    emitter.onComplete()
+                    return@create
+                }
 
-            emitter.onNext(PodEvent.BluetoothConnected(podAddress))
-            emitter.onNext(PodEvent.EstablishingSession)
-            establishSession(1.toByte())
-            emitter.onNext(PodEvent.Connected)
+                conn.connect(connectionWaitCond)
 
-            emitter.onComplete()
-        } catch (ex: Exception) {
-            disconnect()
-            emitter.tryOnError(ex)
-        } finally {
-            busy.set(false)
+                emitter.onNext(PodEvent.BluetoothConnected(podAddress))
+                emitter.onNext(PodEvent.EstablishingSession)
+                establishSession(1.toByte())
+                emitter.onNext(PodEvent.Connected)
+
+                emitter.onComplete()
+            } catch (ex: Exception) {
+                disconnect()
+                emitter.tryOnError(ex)
+            } finally {
+                busy.set(false)
+            }
         }
-    }
 
     private fun establishSession(msgSeq: Byte) {
         val conn = assertConnected()
