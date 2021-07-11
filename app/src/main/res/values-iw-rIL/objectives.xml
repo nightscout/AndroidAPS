@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="objectives_button_start">התחל</string>
-    <string name="objectives_button_verify">אמת</string>
+    <string name="objectives_button_verify">סיום</string>
     <string name="nth_objective">%1$d. משימה</string>
     <string name="objectivenotstarted">מטרה %1$d לא החלה</string>
     <string name="objectivenotfinished">משימה %1$d לא בוצעה במלואה</string>
