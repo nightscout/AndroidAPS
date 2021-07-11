@@ -125,7 +125,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
             for (i in 1..MAX_NUMBER_OF_CONNECTION_ATTEMPTS) {
                 try {
                     // wait i * CONNECTION_TIMEOUT
-                    conn.connect(4)
+                    conn.connect(CONNECT_TIMEOUT_MULTIPLIER)
                     break
                 } catch (e: Exception) {
                     aapsLogger.warn(LTag.PUMPBTCOMM, "connect error=$e")
@@ -242,5 +242,6 @@ class OmnipodDashBleManagerImpl @Inject constructor(
     companion object {
         const val MAX_NUMBER_OF_CONNECTION_ATTEMPTS = 2
         const val CONTROLLER_ID = 4242 // TODO read from preferences or somewhere else.
+        private const val CONNECT_TIMEOUT_MULTIPLIER = 4
     }
 }
