@@ -13,6 +13,9 @@ import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
+import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
+import org.joda.time.Duration
 import java.io.Serializable
 import java.util.*
 
@@ -33,8 +36,12 @@ interface OmnipodDashPodStateManager {
     val isPodKaput: Boolean
     var bluetoothConnectionState: BluetoothConnectionState
 
+    var timeZone: TimeZone
     val lastUpdatedSystem: Long // System.currentTimeMillis()
     val lastStatusResponseReceived: Long
+    val time: DateTime?
+    val timeDrift: Duration?
+    val expiry: DateTime?
 
     val messageSequenceNumber: Short
     val sequenceNumberOfLastProgrammingCommand: Short?
@@ -90,6 +97,13 @@ interface OmnipodDashPodStateManager {
 
     fun createLastBolus(requestedUnits: Double, historyId: String, bolusType: DetailedBolusInfo.BolusType)
     fun markLastBolusComplete(): LastBolus?
+    fun onStart()
+    /*
+    This is called only:. It overwrites activationStatus
+       - when activation was interrupted(application crash, killed, etc)
+       - after getPodStatus was successful(we have an up-to-date podStatus)
+     */
+    fun recoverActivationFromPodStatus(): String?
 
     data class ActiveCommand(
         val sequence: Short,
