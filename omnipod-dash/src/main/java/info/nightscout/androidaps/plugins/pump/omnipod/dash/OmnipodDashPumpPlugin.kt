@@ -500,7 +500,6 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     private fun updateBolusProgressDialog(msg: String, percent: Int) {
         val progressUpdateEvent = EventOverviewBolusProgress
-        val percent = percent
         progressUpdateEvent.status = msg
         progressUpdateEvent.percent = percent
         rxBus.send(progressUpdateEvent)

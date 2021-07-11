@@ -4,7 +4,7 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.dana.DanaPump
-import info.nightscout.androidaps.danars.comm.DanaRS_Packet
+import info.nightscout.androidaps.danars.comm.DanaRSPacket
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Before
 import org.mockito.ArgumentMatchers
@@ -42,13 +42,13 @@ open class DanaRSTestBase : TestBaseWithProfile() {
 
     @Suppress("unused")
     fun putIntToArray(array: ByteArray, position: Int, value: Int): ByteArray {
-        array[DanaRS_Packet.DATA_START + position] = (value and 0xFF).toByte()
-        array[DanaRS_Packet.DATA_START + position + 1] = ((value and 0xFF00) shr 8).toByte()
+        array[DanaRSPacket.DATA_START + position] = (value and 0xFF).toByte()
+        array[DanaRSPacket.DATA_START + position + 1] = ((value and 0xFF00) shr 8).toByte()
         return array
     }
 
     fun putByteToArray(array: ByteArray, position: Int, value: Byte): ByteArray {
-        array[DanaRS_Packet.DATA_START + position] = value
+        array[DanaRSPacket.DATA_START + position] = value
         return array
     }
 

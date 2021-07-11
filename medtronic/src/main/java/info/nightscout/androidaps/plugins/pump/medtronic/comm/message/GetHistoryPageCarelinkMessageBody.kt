@@ -22,10 +22,6 @@ class GetHistoryPageCarelinkMessageBody : CarelinkLongMessageBody {
     override val length: Int
         get() = data!!.size
 
-    override fun init(rxData: ByteArray?) {
-        super.init(rxData)
-    }
-
     fun init(pageNum: Int) {
         val numArgs: Byte = 1
         super.init(byteArrayOf(numArgs, pageNum.toByte()))

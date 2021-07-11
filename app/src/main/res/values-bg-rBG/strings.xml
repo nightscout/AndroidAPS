@@ -81,8 +81,6 @@
     <string name="careportal">Careportal</string>
     <string name="configbuilder_pump">Помпа</string>
     <string name="configbuilder_pump_description">Каква помпа използвате с AndroidAPS?</string>
-    <string name="configbuilder_treatments">Лечения</string>
-    <string name="configbuilder_treatments_description">Коя приставка да използваме за леченията?</string>
     <string name="configbuilder_profile">Профил</string>
     <string name="configbuilder_profile_description">Кой тип профил да използва AndroidAPS?</string>
     <string name="configbuilder_aps">Алгоритъм за APS</string>

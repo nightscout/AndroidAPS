@@ -81,8 +81,6 @@
     <string name="careportal">Careportal</string>
     <string name="configbuilder_pump">Pumpe</string>
     <string name="configbuilder_pump_description">Welche Pumpe möchtest Du mit AndroidAPS nutzen?</string>
-    <string name="configbuilder_treatments">Behandlungen</string>
-    <string name="configbuilder_treatments_description">Welches Plugin soll zum Verarbeiten von Behandlungen genutzt werden?</string>
     <string name="configbuilder_profile">Profil</string>
     <string name="configbuilder_profile_description">Welches Profil soll AndroidAPS nutzen?</string>
     <string name="configbuilder_aps">APS</string>
@@ -918,4 +916,6 @@ Unerwartetes Verhalten.</string>
     <string name="ns_receive_therapy_events_summary">Ereignisse (Kanülen-, Ampullen-, Batteriewechsel etc.) akzeptieren, die in NS oder NSClient eingegeben wurden</string>
     <string name="ns_receive_cgm">Historische CGM Daten ergänzen</string>
     <string name="ns_receive_cgm_summary">CGM Daten von NS akzeptieren</string>
+    <string name="sms_timeout_while_wating">Zeitüberschreitung beim Warten auf das Ende der vorherigen Kommunikation mit der Pumpe</string>
+    <string name="smscommunicator_another_bolus_in_queue">In der Warteschlange befindet sich ein weiterer Bolus. Bitte später erneut versuchen.</string>
 </resources>

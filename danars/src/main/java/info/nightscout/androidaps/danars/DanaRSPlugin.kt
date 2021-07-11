@@ -9,13 +9,15 @@ import android.text.format.DateFormat
 import androidx.preference.Preference
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.dana.DanaPump
+import info.nightscout.androidaps.dana.comm.RecordTypes
 import info.nightscout.androidaps.danars.events.EventDanaRSDeviceChange
 import info.nightscout.androidaps.danars.services.DanaRSService
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.events.EventAppExit
 import info.nightscout.androidaps.events.EventConfigBuilderChange
+import info.nightscout.androidaps.extensions.convertedToAbsolute
+import info.nightscout.androidaps.extensions.plannedRemainingMinutes
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -31,8 +33,6 @@ import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalSt
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.T.Companion.mins
-import info.nightscout.androidaps.extensions.convertedToAbsolute
-import info.nightscout.androidaps.extensions.plannedRemainingMinutes
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -622,7 +622,7 @@ class DanaRSPlugin @Inject constructor(
     }
 
     override val isFakingTempsByExtendedBoluses: Boolean = false
-    override fun loadTDDs(): PumpEnactResult = loadHistory(info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_DAILY)
+    override fun loadTDDs(): PumpEnactResult = loadHistory(RecordTypes.RECORD_TYPE_DAILY)
     override fun canHandleDST(): Boolean = false
     override fun clearPairing() {
         sp.remove(resourceHelper.gs(R.string.key_danars_pairingkey) + mDeviceName)

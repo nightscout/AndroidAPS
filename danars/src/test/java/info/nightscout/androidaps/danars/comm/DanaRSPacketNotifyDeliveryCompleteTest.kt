@@ -25,7 +25,7 @@ class DanaRSPacketNotifyDeliveryCompleteTest : DanaRSTestBase() {
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is DanaRS_Packet_Notify_Delivery_Complete) {
+            if (it is DanaRSPacketNotifyDeliveryComplete) {
                 it.aapsLogger = aapsLogger
                 it.rxBus = rxBus
                 it.resourceHelper = resourceHelper
@@ -38,9 +38,9 @@ class DanaRSPacketNotifyDeliveryCompleteTest : DanaRSTestBase() {
         `when`(resourceHelper.gs(anyInt(), anyDouble())).thenReturn("SomeString")
 
         danaPump.bolusingTreatment = EventOverviewBolusProgress.Treatment(0.0, 0, true)
-        val packet = DanaRS_Packet_Notify_Delivery_Complete(packetInjector)
+        val packet = DanaRSPacketNotifyDeliveryComplete(packetInjector)
         // test params
-        Assert.assertEquals(null, packet.requestParams)
+        Assert.assertEquals(0, packet.getRequestParams().size)
         // test message decoding
         packet.handleMessage(createArray(17, 0.toByte()))
         Assert.assertEquals(true, danaPump.bolusDone)

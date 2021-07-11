@@ -322,7 +322,7 @@ class MedtronicFragment : DaggerFragment() {
         val tbrRemainingTime: Int? = medtronicPumpStatus.tbrRemainingTime
 
         if (tbrRemainingTime != null) {
-            tbrStr = resourceHelper.gs(R.string.mdt_tbr_remaining, medtronicPumpStatus.tempBasalAmount, tbrRemainingTime);
+            tbrStr = resourceHelper.gs(R.string.mdt_tbr_remaining, medtronicPumpStatus.tempBasalAmount, tbrRemainingTime)
         }
         binding.tempBasal.text = tbrStr
 

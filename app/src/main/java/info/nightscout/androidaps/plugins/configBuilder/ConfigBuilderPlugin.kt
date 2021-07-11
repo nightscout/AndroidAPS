@@ -120,7 +120,6 @@ class ConfigBuilderPlugin @Inject constructor(
         for (p in activePlugin.getPluginsList()) {
             aapsLogger.debug(LTag.CONFIGBUILDER, p.name + ":" +
                 (if (p.isEnabled(PluginType.GENERAL)) " GENERAL" else "") +
-                (if (p.isEnabled(PluginType.TREATMENT)) " TREATMENT" else "") +
                 (if (p.isEnabled(PluginType.SENSITIVITY)) " SENSITIVITY" else "") +
                 (if (p.isEnabled(PluginType.PROFILE)) " PROFILE" else "") +
                 (if (p.isEnabled(PluginType.APS)) " APS" else "") +
@@ -135,7 +134,12 @@ class ConfigBuilderPlugin @Inject constructor(
 
     // Ask when switching to physical pump plugin
     fun switchAllowed(changedPlugin: PluginBase, newState: Boolean, activity: FragmentActivity?, type: PluginType) {
-        if (changedPlugin.getType() == PluginType.PUMP && changedPlugin.name != resourceHelper.gs(R.string.virtualpump)) confirmPumpPluginActivation(changedPlugin, newState, activity, type) else performPluginSwitch(changedPlugin, newState, type)
+        if (changedPlugin.getType() == PluginType.PUMP && changedPlugin.name != resourceHelper.gs(R.string.virtualpump))
+            confirmPumpPluginActivation(changedPlugin, newState, activity, type)
+        else if (changedPlugin.getType() == PluginType.PUMP) {
+            performPluginSwitch(changedPlugin, newState, type)
+            pumpSync.connectNewPump()
+        } else performPluginSwitch(changedPlugin, newState, type)
     }
 
     private fun confirmPumpPluginActivation(changedPlugin: PluginBase, newState: Boolean, activity: FragmentActivity?, type: PluginType) {
@@ -185,7 +189,6 @@ class ConfigBuilderPlugin @Inject constructor(
             PluginType.APS         -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(APS::class.java)
             PluginType.PROFILE     -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(ProfileSource::class.java)
             PluginType.BGSOURCE    -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(BgSource::class.java)
-            PluginType.TREATMENT   -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(TreatmentsInterface::class.java)
             PluginType.PUMP        -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Pump::class.java)
 
             else                   -> {

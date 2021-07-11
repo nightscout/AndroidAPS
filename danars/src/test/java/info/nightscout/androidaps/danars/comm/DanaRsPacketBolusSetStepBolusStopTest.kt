@@ -24,7 +24,7 @@ class DanaRsPacketBolusSetStepBolusStopTest : DanaRSTestBase() {
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is DanaRS_Packet_Bolus_Set_Step_Bolus_Stop) {
+            if (it is DanaRSPacketBolusSetStepBolusStop) {
                 it.aapsLogger = aapsLogger
                 it.rxBus = rxBus
                 it.resourceHelper = resourceHelper
@@ -37,7 +37,7 @@ class DanaRsPacketBolusSetStepBolusStopTest : DanaRSTestBase() {
         `when`(resourceHelper.gs(Mockito.anyInt())).thenReturn("SomeString")
 
         danaPump.bolusingTreatment = EventOverviewBolusProgress.Treatment(0.0, 0, true)
-        val testPacket = DanaRS_Packet_Bolus_Set_Step_Bolus_Stop(packetInjector)
+        val testPacket = DanaRSPacketBolusSetStepBolusStop(packetInjector)
         // test message decoding
         testPacket.handleMessage(byteArrayOf(0.toByte(), 0.toByte(), 0.toByte()))
         Assert.assertEquals(false, testPacket.failed)

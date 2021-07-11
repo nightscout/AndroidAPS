@@ -22,7 +22,7 @@ class PumpSyncStorage @Inject constructor(
     val aapsLogger: AAPSLogger
 ) {
 
-    val pumpSyncStorageKey: String = "pump_sync_storage_xstream"
+    val pumpSyncStorageKey: String = "pump_sync_storage_xstream_v2"
     var pumpSyncStorage: MutableMap<String, MutableList<PumpDbEntry>> = mutableMapOf()
     var TBR: String = "TBR"
     var BOLUS: String = "BOLUS"
@@ -32,6 +32,7 @@ class PumpSyncStorage @Inject constructor(
 
     init {
         initStorage()
+        cleanOldStorage();
     }
 
     fun initStorage() {
@@ -46,7 +47,9 @@ class PumpSyncStorage @Inject constructor(
             if (!jsonData.isBlank()) {
                 pumpSyncStorage = xstream.fromXML(jsonData, MutableMap::class.java) as MutableMap<String, MutableList<PumpDbEntry>>
 
-                aapsLogger.debug(String.format("Loading Pump Sync Storage: boluses=%d, tbrs=%d.", pumpSyncStorage[BOLUS]!!.size, pumpSyncStorage[TBR]!!.size))
+                aapsLogger.debug(LTag.PUMP, String.format("Loading Pump Sync Storage: boluses=%d, tbrs=%d.", pumpSyncStorage[BOLUS]!!.size, pumpSyncStorage[TBR]!!.size))
+                aapsLogger.debug(LTag.PUMP, "DD: PumpSyncStorage=$pumpSyncStorage")
+
                 loaded = true
             }
         }
@@ -61,6 +64,15 @@ class PumpSyncStorage @Inject constructor(
         if (!isStorageEmpty()) {
             sp.putString(pumpSyncStorageKey, xstream.toXML(pumpSyncStorage))
             aapsLogger.debug(String.format("Saving Pump Sync Storage: boluses=%d, tbrs=%d.", pumpSyncStorage[BOLUS]!!.size, pumpSyncStorage[TBR]!!.size))
+        }
+    }
+
+    fun cleanOldStorage(): Unit {
+        val oldSpKeys = setOf("pump_sync_storage", "pump_sync_storage_xstream")
+
+        for (oldSpKey in oldSpKeys) {
+            if (sp.contains(oldSpKey))
+                sp.remove(oldSpKey)
         }
     }
 
@@ -97,7 +109,11 @@ class PumpSyncStorage @Inject constructor(
         if (result && writeToInternalHistory) {
             val innerList: MutableList<PumpDbEntry> = pumpSyncStorage[BOLUS]!!
 
-            innerList.add(PumpDbEntry(temporaryId, detailedBolusInfo.timestamp, creator.model(), creator.serialNumber(), detailedBolusInfo))
+            val dbEntry = PumpDbEntry(temporaryId, detailedBolusInfo.timestamp, creator.model(), creator.serialNumber(), detailedBolusInfo)
+
+            aapsLogger.debug("PumpDbEntry: $dbEntry")
+
+            innerList.add(dbEntry)
             pumpSyncStorage[BOLUS] = innerList
             saveStorage()
         }
@@ -123,7 +139,7 @@ class PumpSyncStorage @Inject constructor(
         val response = pumpSync.addTemporaryBasalWithTempId(
             timenow,
             temporaryBasal.rate,
-            (temporaryBasal.durationInMinutes * 60L * 1000L),
+            (temporaryBasal.durationInSeconds * 1000L),
             temporaryBasal.isAbsolute,
             temporaryId,
             temporaryBasal.tbrType,

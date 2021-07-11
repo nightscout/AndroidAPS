@@ -66,7 +66,6 @@ class ActionStartTempTargetTest : ActionsTestBase() {
         }
 
         val updated = mutableListOf<TemporaryTarget>().apply {
-            // TODO insert all updated TTs
         }
 
         `when`(

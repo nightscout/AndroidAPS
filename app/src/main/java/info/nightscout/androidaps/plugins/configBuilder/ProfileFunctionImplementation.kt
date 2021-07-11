@@ -67,14 +67,15 @@ class ProfileFunctionImplementation @Inject constructor(
     override fun getProfile(): Profile? =
         getProfile(dateUtil.now())
 
+    @Synchronized
     override fun getProfile(time: Long): Profile? {
         val rounded = time - time % 1000
         val cached = cache[rounded]
         if (cached != null) {
-//            aapsLogger.debug("XXXXXXXXXXXXXXX HIT getProfile for $time $rounded")
+//            aapsLogger.debug("HIT getProfile for $time $rounded")
             return cached
         }
-//        aapsLogger.debug("XXXXXXXXXXXXXXX getProfile called for $time")
+//        aapsLogger.debug("getProfile called for $time")
         val ps = repository.getEffectiveProfileSwitchActiveAt(time).blockingGet()
         if (ps is ValueWrapper.Existing) {
             val sealed = ProfileSealed.EPS(ps.value)
@@ -116,9 +117,27 @@ class ProfileFunctionImplementation @Inject constructor(
     }
 
     override fun createProfileSwitch(durationInMinutes: Int, percentage: Int, timeShiftInHours: Int) {
-        val profileStore = activePlugin.activeProfileSource.profile ?: return
-        val profileName = activePlugin.activeProfileSource.profile?.getDefaultProfileName()
-            ?: return
-        createProfileSwitch(profileStore, profileName, durationInMinutes, percentage, timeShiftInHours, dateUtil.now())
+        val profile = repository.getPermanentProfileSwitch(dateUtil.now())
+            ?: throw InvalidParameterSpecException("No active ProfileSwitch")
+        val ps = ProfileSwitch(
+            timestamp = dateUtil.now(),
+            basalBlocks = profile.basalBlocks,
+            isfBlocks = profile.isfBlocks,
+            icBlocks = profile.icBlocks,
+            targetBlocks = profile.targetBlocks,
+            glucoseUnit = profile.glucoseUnit,
+            profileName = profile.profileName,
+            timeshift = T.hours(timeShiftInHours.toLong()).msecs(),
+            percentage = percentage,
+            duration = T.mins(durationInMinutes.toLong()).msecs(),
+            insulinConfiguration = activePlugin.activeInsulin.insulinConfiguration
+        )
+        disposable += repository.runTransactionForResult(InsertOrUpdateProfileSwitch(ps))
+            .subscribe({ result ->
+                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted ProfileSwitch $it") }
+                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated ProfileSwitch $it") }
+            }, {
+                aapsLogger.error(LTag.DATABASE, "Error while saving ProfileSwitch", it)
+            })
     }
 }

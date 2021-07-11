@@ -168,6 +168,10 @@ class DanaFragment : DaggerFragment() {
                     binding.danaPumpstatuslayout.visibility = View.GONE
                 }
             }, fabricPrivacy::logException)
+        binding.danaPumpstatus.text = ""
+        binding.danaPumpstatuslayout.visibility = View.GONE
+        @Suppress("SetTextI18n")
+        binding.btconnection.text = "{fa-bluetooth-b}"
         updateGUI()
     }
 
@@ -191,14 +195,14 @@ class DanaFragment : DaggerFragment() {
         val pump = danaPump
         val plugin: Pump = activePlugin.activePump
         if (pump.lastConnection != 0L) {
-            val agoMsec = System.currentTimeMillis() - pump.lastConnection
-            val agoMin = (agoMsec.toDouble() / 60.0 / 1000.0).toInt()
+            val agoMilliseconds = System.currentTimeMillis() - pump.lastConnection
+            val agoMin = (agoMilliseconds.toDouble() / 60.0 / 1000.0).toInt()
             binding.lastconnection.text = dateUtil.timeString(pump.lastConnection) + " (" + resourceHelper.gs(R.string.minago, agoMin) + ")"
             warnColors.setColor(binding.lastconnection, agoMin.toDouble(), 16.0, 31.0)
         }
         if (pump.lastBolusTime != 0L) {
-            val agoMsec = System.currentTimeMillis() - pump.lastBolusTime
-            val agoHours = agoMsec.toDouble() / 60.0 / 60.0 / 1000.0
+            val agoMilliseconds = System.currentTimeMillis() - pump.lastBolusTime
+            val agoHours = agoMilliseconds.toDouble() / 60.0 / 60.0 / 1000.0
             if (agoHours < 6)
             // max 6h back
                 binding.lastbolus.text = dateUtil.timeString(pump.lastBolusTime) + " " + dateUtil.sinceString(pump.lastBolusTime, resourceHelper) + " " + resourceHelper.gs(R.string.formatinsulinunits, pump.lastBolusAmount)

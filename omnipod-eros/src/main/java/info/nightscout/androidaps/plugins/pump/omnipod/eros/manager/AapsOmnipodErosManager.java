@@ -16,14 +16,13 @@ import javax.inject.Singleton;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.activities.ErrorHelperActivity;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
-import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.OmnipodHistoryRecord;
 import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.extensions.PumpStateExtensionKt;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
-import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
+import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
@@ -97,7 +96,6 @@ public class AapsOmnipodErosManager {
     private final ActivePlugin activePlugin;
     private final SP sp;
     private final OmnipodManager delegate;
-    private final DatabaseHelperInterface databaseHelper;
     private final OmnipodAlertUtil omnipodAlertUtil;
     private final Context context;
     private final PumpSync pumpSync;
@@ -128,7 +126,6 @@ public class AapsOmnipodErosManager {
                                   ResourceHelper resourceHelper,
                                   HasAndroidInjector injector,
                                   ActivePlugin activePlugin,
-                                  DatabaseHelperInterface databaseHelper,
                                   OmnipodAlertUtil omnipodAlertUtil,
                                   Context context,
                                   PumpSync pumpSync) {
@@ -141,7 +138,6 @@ public class AapsOmnipodErosManager {
         this.resourceHelper = resourceHelper;
         this.injector = injector;
         this.activePlugin = activePlugin;
-        this.databaseHelper = databaseHelper;
         this.omnipodAlertUtil = omnipodAlertUtil;
         this.context = context;
         this.pumpSync = pumpSync;
@@ -704,13 +700,15 @@ public class AapsOmnipodErosManager {
             carbInfo.setCarbsTimestamp(detailedBolusInfo.getCarbsTimestamp());
             carbInfo.carbs = detailedBolusInfo.carbs;
             carbInfo.setPumpType(PumpType.USER);
-            activePlugin.getActiveTreatments().addToHistoryTreatment(carbInfo, false);
-
+//            activePlugin.getActiveTreatments().addToHistoryTreatment(carbInfo, false);
+// Needs refactor
             // remove carbs from bolusInfo to not trigger any unwanted code paths in
             // TreatmentsPlugin.addToHistoryTreatment() method
             detailedBolusInfo.carbs = 0;
         }
-        activePlugin.getActiveTreatments().addToHistoryTreatment(detailedBolusInfo, false);
+//        activePlugin.getActiveTreatments().addToHistoryTreatment(detailedBolusInfo, false);
+// Needs refactor
+        throw new IllegalStateException("Not implemented");
     }
 
     public synchronized void createSuspendedFakeTbrIfNotExists() {
@@ -749,8 +747,9 @@ public class AapsOmnipodErosManager {
     public boolean hasSuspendedFakeTbr() {
         PumpSync.PumpState pumpState = pumpSync.expectedPumpState();
         if (pumpState.getTemporaryBasal() != null && pumpState.getTemporaryBasal().getPumpId() != null) {
-            OmnipodHistoryRecord historyRecord = databaseHelper.findOmnipodHistoryRecordByPumpId(pumpState.getTemporaryBasal().getPumpId());
-            return historyRecord != null && PodHistoryEntryType.getByCode(historyRecord.getPodEntryTypeCode()).equals(PodHistoryEntryType.SET_FAKE_SUSPENDED_TEMPORARY_BASAL);
+//            OmnipodHistoryRecord historyRecord = databaseHelper.findOmnipodHistoryRecordByPumpId(pumpState.getTemporaryBasal().getPumpId());
+//            return historyRecord != null && PodHistoryEntryType.getByCode(historyRecord.getPodEntryTypeCode()).equals(PodHistoryEntryType.SET_FAKE_SUSPENDED_TEMPORARY_BASAL);
+            throw new IllegalStateException("Not implemented");
         }
         return false;
     }
@@ -853,9 +852,9 @@ public class AapsOmnipodErosManager {
         omnipodHistoryRecord.setSuccess(success);
         omnipodHistoryRecord.setPodSerial(podStateManager.hasPodState() ? String.valueOf(podStateManager.getAddress()) : "None");
 
-        databaseHelper.createOrUpdate(omnipodHistoryRecord);
-
-        return omnipodHistoryRecord.getPumpId();
+//        databaseHelper.createOrUpdate(omnipodHistoryRecord);
+//        return omnipodHistoryRecord.getPumpId();
+        throw new IllegalStateException("Not implemented");
     }
 
     private void executeCommand(Runnable runnable) {

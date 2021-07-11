@@ -41,11 +41,6 @@ interface ActivePlugin {
     val activeSensitivity: Sensitivity
 
     /**
-     *  Currently selected Treatments plugin
-     */
-    val activeTreatments: TreatmentsInterface
-
-    /**
      *  Currently selected Overview plugin
      *  Always OverviewPlugin
      */

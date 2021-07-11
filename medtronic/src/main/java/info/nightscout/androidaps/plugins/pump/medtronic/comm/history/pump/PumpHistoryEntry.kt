@@ -24,16 +24,9 @@ class PumpHistoryEntry : MedtronicHistoryEntry() {
     override var opCode: Byte? = null
         // this is set only when we have unknown entry...
         get() = if (field == null) entryType.code else field
-        set(value) {
-            field = value
-        }
 
     var offset = 0
     var displayableValue = ""
-        get() = field
-        set(value) {
-            field = value
-        }
 
     fun setEntryType(medtronicDeviceType: MedtronicDeviceType, entryType: PumpHistoryEntryType, opCode: Byte? = null) {
         this.entryType = entryType
@@ -56,17 +49,6 @@ class PumpHistoryEntry : MedtronicHistoryEntry() {
         get() = ("PumpHistoryEntry [type=" + StringUtil.getStringInLength(entryType.name, 20) + " ["
             + StringUtil.getStringInLength("" + opCode, 3) + ", 0x"
             + ByteUtil.shortHexString(opCode!!) + "]")
-
-    override fun toString(): String {
-        return super.toString()
-        //        Object object = this.getDecodedDataEntry("Object");
-//
-//        if (object == null) {
-//            return super.toString();
-//        } else {
-//            return super.toString() + "PumpHistoryEntry [type=" + StringUtil.getStringInLength(entryType.name(), 20) + ", DT: " + DT + ", Object=" + object.toString() + "]";
-//        }
-    }
 
     override val entryTypeName: String
         get() = entryType.name
@@ -116,9 +98,6 @@ class PumpHistoryEntry : MedtronicHistoryEntry() {
                 field = generatePumpId()
             }
             return field
-        }
-        set(pumpId) {
-            field = pumpId
         }
 
     fun hasBolusChanged(entry: PumpHistoryEntry): Boolean {

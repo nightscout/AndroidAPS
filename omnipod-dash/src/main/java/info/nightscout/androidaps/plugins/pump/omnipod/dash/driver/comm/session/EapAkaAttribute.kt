@@ -29,7 +29,7 @@ sealed class EapAkaAttribute {
 
         const val SIZE_MULTIPLIER = 4 // The length for EAP-AKA attributes is a multiple of 4
 
-        fun parseAttributes(aapsLogger: AAPSLogger, payload: ByteArray): List<EapAkaAttribute> {
+        fun parseAttributes(payload: ByteArray): List<EapAkaAttribute> {
             var tail = payload
             val ret = LinkedList<EapAkaAttribute>()
             while (tail.isNotEmpty()) {

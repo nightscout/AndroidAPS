@@ -8,7 +8,6 @@ import dagger.Provides
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.db.DatabaseHelperProvider
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
@@ -20,7 +19,6 @@ import info.nightscout.androidaps.plugins.general.nsclient.DataSyncSelectorImple
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.pump.PumpSyncImplementation
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.CommandQueue
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.androidNotification.NotificationHolderImpl
@@ -56,9 +54,7 @@ open class AppModule {
 
     @Provides
     @Singleton
-    fun provideStorage(): Storage {
-        return FileStorage()
-    }
+    fun provideStorage(): Storage = FileStorage()
 
     @Provides
     @Singleton
@@ -66,9 +62,8 @@ open class AppModule {
 
     @Provides
     @Singleton
-    fun provideProfileFunction(aapsLogger: AAPSLogger, sp: SP, resourceHelper: ResourceHelper, activePlugin: ActivePlugin, repository: AppRepository, dateUtil: DateUtil): ProfileFunction {
-        return ProfileFunctionImplementation(aapsLogger, sp, resourceHelper, activePlugin, repository, dateUtil)
-    }
+    fun provideProfileFunction(aapsLogger: AAPSLogger, sp: SP, resourceHelper: ResourceHelper, activePlugin: ActivePlugin, repository: AppRepository, dateUtil: DateUtil): ProfileFunction =
+        ProfileFunctionImplementation(aapsLogger, sp, resourceHelper, activePlugin, repository, dateUtil)
 
     @Module
     interface AppBindings {
@@ -79,11 +74,7 @@ open class AppModule {
         @Binds fun bindCommandQueueProvider(commandQueue: CommandQueue): CommandQueueProvider
         @Binds fun bindConfigInterface(config: ConfigImpl): Config
 
-        @Binds
-        fun bindConfigBuilderInterface(configBuilderPlugin: ConfigBuilderPlugin): ConfigBuilder
-        @Binds fun bindTreatmentsInterface(treatmentsPlugin: TreatmentsPlugin): TreatmentsInterface
-
-        @Binds fun bindDatabaseHelperInterface(databaseHelperProvider: DatabaseHelperProvider): DatabaseHelperInterface
+        @Binds fun bindConfigBuilderInterface(configBuilderPlugin: ConfigBuilderPlugin): ConfigBuilder
         @Binds fun bindNotificationHolderInterface(notificationHolder: NotificationHolderImpl): NotificationHolder
         @Binds fun bindImportExportPrefsInterface(importExportPrefs: ImportExportPrefsImpl): ImportExportPrefs
         @Binds fun bindIconsProviderInterface(iconsProvider: IconsProviderImplementation): IconsProvider
@@ -93,7 +84,6 @@ open class AppModule {
         @Binds fun bindDataSyncSelector(dataSyncSelectorImplementation: DataSyncSelectorImplementation): DataSyncSelector
 
         @Binds fun bindPumpSync(pumpSyncImplementation: PumpSyncImplementation): PumpSync
-
     }
 }
 

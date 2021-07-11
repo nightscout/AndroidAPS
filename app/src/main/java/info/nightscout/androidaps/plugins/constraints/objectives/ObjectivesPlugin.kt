@@ -45,6 +45,7 @@ class ObjectivesPlugin @Inject constructor(
     var objectives: MutableList<Objective> = ArrayList()
 
     companion object {
+
         const val FIRST_OBJECTIVE = 0
         @Suppress("unused") const val USAGE_OBJECTIVE = 1
         @Suppress("unused") const val EXAM_OBJECTIVE = 2
@@ -60,32 +61,11 @@ class ObjectivesPlugin @Inject constructor(
 
     public override fun onStart() {
         super.onStart()
-        convertSP()
         setupObjectives()
     }
 
     override fun specialEnableCondition(): Boolean {
         return activePlugin.activePump.pumpDescription.isTempBasalCapable
-    }
-
-    // convert 2.3 SP version
-    private fun convertSP() {
-        doConvertSP(0, "config")
-        doConvertSP(1, "openloop")
-        doConvertSP(2, "maxbasal")
-        doConvertSP(3, "maxiobzero")
-        doConvertSP(4, "maxiob")
-        doConvertSP(5, "autosens")
-        doConvertSP(6, "ama")
-        doConvertSP(7, "smb")
-    }
-
-    private fun doConvertSP(number: Int, name: String) {
-        if (!sp.contains("Objectives_" + name + "_started")) {
-            sp.putLong("Objectives_" + name + "_started", sp.getLong("Objectives" + number + "started", 0L))
-            sp.putLong("Objectives_" + name + "_accomplished", sp.getLong("Objectives" + number + "accomplished", 0L))
-        }
-        // TODO: we can remove Objectives1accomplished sometimes later
     }
 
     private fun setupObjectives() {
@@ -125,7 +105,7 @@ class ObjectivesPlugin @Inject constructor(
         val requestCode = sp.getString(R.string.key_objectives_request_code, "")
         var url = sp.getString(R.string.key_nsclientinternal_url, "").lowercase(Locale.getDefault())
         if (!url.endsWith("/")) url = "$url/"
-        @Suppress("DEPRECATION") val hashNS = Hashing.sha1().hashString(url + BuildConfig.APPLICATION_ID + "/" + requestCode, Charsets.UTF_8).toString()
+        @Suppress("DEPRECATION", "UnstableApiUsage") val hashNS = Hashing.sha1().hashString(url + BuildConfig.APPLICATION_ID + "/" + requestCode, Charsets.UTF_8).toString()
         if (request.equals(hashNS.substring(0, 10), ignoreCase = true)) {
             sp.putLong("Objectives_" + "openloop" + "_started", dateUtil.now())
             sp.putLong("Objectives_" + "openloop" + "_accomplished", dateUtil.now())
