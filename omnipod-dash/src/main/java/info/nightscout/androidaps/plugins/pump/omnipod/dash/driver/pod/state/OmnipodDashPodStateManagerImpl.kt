@@ -20,9 +20,10 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
-import org.joda.time.DateTime
-import org.joda.time.Duration
 import java.io.Serializable
+import java.time.Duration
+import java.time.Instant
+import java.time.ZonedDateTime
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -104,6 +105,12 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             store()
         }
 
+    override val sameTimeZone: Boolean
+        get() {
+            val now = System.currentTimeMillis()
+            return TimeZone.getDefault().getOffset(now) == timeZone.getOffset(now)
+        }
+
     override val bluetoothVersion: SoftwareVersion?
         get() = podState.bleVersion
 
@@ -180,30 +187,31 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     override val lastStatusResponseReceived: Long
         get() = podState.lastStatusResponseReceived
 
-    override val time: DateTime?
+    override val time: ZonedDateTime?
         get() {
             val minutesSinceActivation = podState.minutesSinceActivation
             val activationTime = podState.activationTime
             if ((activationTime != null) && (minutesSinceActivation != null)) {
-                return DateTime(activationTime)
-                    .plusMinutes(minutesSinceActivation.toInt())
-                    .plus(Duration(podState.lastUpdatedSystem, System.currentTimeMillis()))
+                return ZonedDateTime.from(Instant.ofEpochMilli(activationTime))
+                    .plusMinutes(minutesSinceActivation.toLong())
+                    .plus(Duration.ofMillis(System.currentTimeMillis() - lastUpdatedSystem))
             }
             return null
         }
 
     override val timeDrift: Duration?
         get() {
-            return Duration(DateTime.now(), time)
+            return Duration.between(ZonedDateTime.now(), time)
         }
 
-    override val expiry: DateTime?
+    override val expiry: ZonedDateTime?
         // TODO: Consider storing expiry datetime in pod state saving continuously recalculating to the same value
         get() {
             val podLifeInHours = podLifeInHours
             val activationTime = podState.activationTime
             if (podLifeInHours != null && activationTime != null) {
-                return DateTime(podState.activationTime).plusHours(podLifeInHours.toInt())
+                return return ZonedDateTime.from(Instant.ofEpochMilli(activationTime))
+                    .plusHours(podLifeInHours.toLong())
             }
             return null
         }

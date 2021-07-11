@@ -113,7 +113,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 pumpSync.syncTemporaryBasalWithPumpId(
                     timestamp = System.currentTimeMillis(),
                     rate = 0.0,
-                    duration = T.mins(PodConstants.MAX_POD_LIFETIME.standardMinutes).msecs(),
+                    duration = T.mins(PodConstants.MAX_POD_LIFETIME.toMinutes()).msecs(),
                     isAbsolute = true,
                     type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
                     pumpId = Random.Default.nextLong(), // we don't use this, just make sure it's unique
@@ -146,7 +146,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     rxBus.send(EventNewNotification(notification))
                 } else {
                     rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_SUSPENDED))
-                    if (!TimeZone.getDefault().equals(podStateManager.timeZone)) {
+                    if (!podStateManager.sameTimeZone) {
                         val notification =
                             Notification(
                                 Notification.OMNIPOD_TIME_OUT_OF_SYNC,
@@ -277,7 +277,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 pumpSync.syncTemporaryBasalWithPumpId(
                     timestamp = System.currentTimeMillis(),
                     rate = 0.0,
-                    duration = T.mins(PodConstants.MAX_POD_LIFETIME.standardMinutes).msecs(),
+                    duration = T.mins(PodConstants.MAX_POD_LIFETIME.toMinutes()).msecs(),
                     isAbsolute = true,
                     type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
                     pumpId = Random.Default.nextLong(), // we don't use this, just make sure it's unique
@@ -371,7 +371,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     .map {
                         pumpSyncTempBasal(
                             0.0,
-                            PodConstants.MAX_POD_LIFETIME.standardMinutes,
+                            PodConstants.MAX_POD_LIFETIME.toMinutes(),
                             PumpSync.TemporaryBasalType.PUMP_SUSPEND
                         )
                         rxBus.send(EventTempBasalChange())
@@ -961,7 +961,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 .map {
                     pumpSyncTempBasal(
                         0.0,
-                        PodConstants.MAX_POD_LIFETIME.standardMinutes,
+                        PodConstants.MAX_POD_LIFETIME.toMinutes(),
                         PumpSync.TemporaryBasalType.PUMP_SUSPEND
                     )
                 }
@@ -1116,6 +1116,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_SUSPENDED))
                 }
                 rxBus.send(EventDismissNotification(Notification.OMNIPOD_TBR_ALERTS))
+                rxBus.send(EventDismissNotification(Notification.OMNIPOD_TIME_OUT_OF_SYNC))
             }
 
             OmnipodCommandType.SET_BASAL_PROFILE -> {
@@ -1137,6 +1138,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_SUSPENDED))
                     rxBus.send(EventDismissNotification(Notification.FAILED_UPDATE_PROFILE))
                     rxBus.send(EventDismissNotification(Notification.OMNIPOD_TBR_ALERTS))
+                    rxBus.send(EventDismissNotification(Notification.OMNIPOD_TIME_OUT_OF_SYNC))
                 }
             }
 

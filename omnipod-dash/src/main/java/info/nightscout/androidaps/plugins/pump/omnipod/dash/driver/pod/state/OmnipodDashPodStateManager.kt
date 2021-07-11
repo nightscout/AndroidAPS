@@ -11,9 +11,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
-import org.joda.time.DateTime
-import org.joda.time.Duration
 import java.io.Serializable
+import java.time.ZonedDateTime
 import java.util.*
 
 sealed class CommandConfirmationFromState
@@ -34,11 +33,12 @@ interface OmnipodDashPodStateManager {
     var bluetoothConnectionState: BluetoothConnectionState
 
     var timeZone: TimeZone
+    val sameTimeZone: Boolean // The TimeZone is the same on the phone and on the pod
     val lastUpdatedSystem: Long // System.currentTimeMillis()
     val lastStatusResponseReceived: Long
-    val time: DateTime?
-    val timeDrift: Duration?
-    val expiry: DateTime?
+    val time: ZonedDateTime?
+    val timeDrift: java.time.Duration?
+    val expiry: ZonedDateTime?
 
     val messageSequenceNumber: Short
     val sequenceNumberOfLastProgrammingCommand: Short?
