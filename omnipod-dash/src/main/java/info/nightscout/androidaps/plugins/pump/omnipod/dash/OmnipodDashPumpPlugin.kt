@@ -198,6 +198,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     override fun connect(reason: String) {
+        aapsLogger.info(LTag.PUMP, "connect reason=$reason")
         thread(
             start = true,
             name = "ConnectionThread",
@@ -215,11 +216,13 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     override fun disconnect(reason: String) {
+        aapsLogger.info(LTag.PUMP, "disconnect reason=$reason")
         stopConnecting?.let { it.countDown() }
         omnipodManager.disconnect()
     }
 
     override fun stopConnecting() {
+        aapsLogger.info(LTag.PUMP, "stopConnecting")
         stopConnecting?.let { it.countDown() }
     }
 
