@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.ui
 
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
@@ -284,19 +285,15 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
             // Update Pod expiry time
             val expiresAt = podStateManager.expiry
-            if (expiresAt == null) {
-                podInfoBinding.podExpiryDate.text = PLACEHOLDER
-                podInfoBinding.podExpiryDate.setTextColor(Color.WHITE)
-            } else {
-                podInfoBinding.podExpiryDate.text = readableZonedTime(expiresAt)
-                podInfoBinding.podExpiryDate.setTextColor(
-                    if (DateTime.now().isAfter(expiresAt)) {
-                        Color.RED
-                    } else {
-                        Color.WHITE
-                    }
-                )
-            }
+            podInfoBinding.podExpiryDate.text = expiresAt?.let {
+                readableZonedTime(it) }
+                ?: PLACEHOLDER
+            podInfoBinding.podExpiryDate.setTextColor(
+                if (expiresAt != null && DateTime.now().isAfter(expiresAt))
+                    Color.RED
+                 else
+                    Color.WHITE
+            )
 
             podStateManager.alarmType?.let {
                 errors.add(

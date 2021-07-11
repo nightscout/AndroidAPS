@@ -29,7 +29,6 @@ import kotlin.math.absoluteValue
 sealed class ConnectionState
 
 object Connecting: ConnectionState()
-object Handshaking: ConnectionState()
 object Connected : ConnectionState()
 object NotConnected : ConnectionState()
 
