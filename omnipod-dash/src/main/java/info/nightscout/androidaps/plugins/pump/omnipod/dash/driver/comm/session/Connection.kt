@@ -127,6 +127,7 @@ class Connection(
     }
 
     private fun waitForConnection(connectionWaitCond: ConnectionWaitCondition): ConnectionState {
+        aapsLogger.debug(LTag.PUMPBTCOMM, "waitForConnection connectionWaitCond=$connectionWaitCond")
         try {
             connectionWaitCond.timeoutMs?.let {
                 bleCommCallbacks.waitForConnection(it)
@@ -134,7 +135,7 @@ class Connection(
             connectionWaitCond.stopConnection?.let {
                 while (!bleCommCallbacks.waitForConnection(STOP_CONNECTING_CHECK_INTERVAL_MS)) {
                     if (it.count == 0L) {
-                        ConnectException("stopConnecting called")
+                        throw ConnectException("stopConnecting called")
                     }
                 }
             }

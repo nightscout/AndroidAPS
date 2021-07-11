@@ -203,7 +203,6 @@ class OmnipodDashPumpPlugin @Inject constructor(
             start = true,
             name = "ConnectionThread",
         ) {
-            // TODO quadruple check that we are not creating a party of Threads here
             try {
                 val stop = CountDownLatch(1)
                 stopConnecting = stop
