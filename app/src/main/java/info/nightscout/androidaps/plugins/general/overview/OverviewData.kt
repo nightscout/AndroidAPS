@@ -96,6 +96,7 @@ class OverviewData @Inject constructor(
         bgReadingsArray = ArrayList()
         bucketedListArray = java.util.ArrayList()
         bgReadingGraphArray = java.util.ArrayList()
+        filteredTreatments = java.util.ArrayList()
         predictionsGraphSeries = PointsWithLabelGraphSeries()
         baseBasalGraphSeries = LineGraphSeries()
         tempBasalGraphSeries = LineGraphSeries()
@@ -334,9 +335,12 @@ class OverviewData @Inject constructor(
     var maxTreatmentsArray = doubleArrayOf(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
     var maxTreatmentsValue = 0.0
         get() = maxTreatmentsArray.get(indexRange)
-
+    var filteredTreatments: MutableList<DataPointWithLabelInterface> = java.util.ArrayList()
     var treatmentsSeries: PointsWithLabelGraphSeries<DataPointWithLabelInterface> = PointsWithLabelGraphSeries()
-
+        get() {
+            val treatmentsArray = filteredTreatments.filter { it.x >= fromTime.toDouble() && it.x <= endTime.toDouble()}
+            return PointsWithLabelGraphSeries(Array(treatmentsArray.size) { i -> treatmentsArray[i] })
+        }
     var maxIobArray = doubleArrayOf(Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE)
     var maxIobValueFound = Double.MIN_VALUE
         get() = maxIobArray.get(indexRange)
@@ -612,7 +616,7 @@ class OverviewData @Inject constructor(
     fun prepareTreatmentsData(from: String) {
 //        val start = dateUtil.now()
         maxTreatmentsArray = doubleArrayOf(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
-        val filteredTreatments: MutableList<DataPointWithLabelInterface> = java.util.ArrayList()
+        filteredTreatments = java.util.ArrayList()
         repository.getBolusesIncludingInvalidFromTimeToTime(fromTimeData, endTimeData, true).blockingGet()
             .map { BolusDataPoint(it, resourceHelper, activePlugin, defaultValueHelper) }
             .filter { it.data.type != Bolus.Type.SMB || it.data.isValid }
@@ -660,7 +664,7 @@ class OverviewData @Inject constructor(
                 filteredTreatments.add(it)
             }
 
-        treatmentsSeries = PointsWithLabelGraphSeries(filteredTreatments.toTypedArray())
+        //treatmentsSeries = PointsWithLabelGraphSeries(filteredTreatments.toTypedArray())
 //        profiler.log(LTag.UI, "prepareTreatmentsData() $from", start)
     }
 
