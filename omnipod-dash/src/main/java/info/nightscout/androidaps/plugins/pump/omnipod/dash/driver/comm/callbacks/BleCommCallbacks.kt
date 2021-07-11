@@ -66,12 +66,13 @@ class BleCommCallbacks(
         serviceDiscoveryComplete = CountDownLatch(1)
     }
 
-    fun waitForServiceDiscovery(timeoutMs: Long) {
+    fun waitForServiceDiscovery(timeoutMs: Long): Boolean {
         try {
             serviceDiscoveryComplete.await(timeoutMs, TimeUnit.MILLISECONDS)
         } catch (e: InterruptedException) {
             aapsLogger.warn(LTag.PUMPBTCOMM, "Interrupted while waiting for ServiceDiscovery")
         }
+        return serviceDiscoveryComplete.count == 0L
     }
 
     fun confirmWrite(expectedPayload: ByteArray, expectedUUID: String, timeoutMs: Long): WriteConfirmation {

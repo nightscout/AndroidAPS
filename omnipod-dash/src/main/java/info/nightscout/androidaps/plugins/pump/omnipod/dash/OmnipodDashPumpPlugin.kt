@@ -99,7 +99,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
         statusChecker = Runnable {
             refreshStatusOnUnacknowledgedCommands()
             updatePodWarnings()
-            createFakeTBRWhenNoActivePod()
+           // createFakeTBRWhenNoActivePod()
+            // TODO: this is called from the main thread
             handler.postDelayed(statusChecker, STATUS_CHECK_INTERVAL_MS)
         }
     }

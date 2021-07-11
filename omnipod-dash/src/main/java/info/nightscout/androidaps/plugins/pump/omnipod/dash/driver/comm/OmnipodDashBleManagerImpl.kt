@@ -186,7 +186,6 @@ class OmnipodDashBleManagerImpl @Inject constructor(
             throw BusyException()
         }
         try {
-
             if (podState.ltk != null) {
                 emitter.onNext(PodEvent.AlreadyPaired)
                 emitter.onComplete()
@@ -222,7 +221,6 @@ class OmnipodDashBleManagerImpl @Inject constructor(
             if (BuildConfig.DEBUG) {
                 aapsLogger.info(LTag.PUMPCOMM, "Got LTK: ${pairResult.ltk.toHex()}")
             }
-
             emitter.onNext(PodEvent.EstablishingSession)
             establishSession(pairResult.msgSeq)
             emitter.onNext(PodEvent.Connected)
@@ -241,8 +239,6 @@ class OmnipodDashBleManagerImpl @Inject constructor(
     }
 
     companion object {
-        const val MAX_NUMBER_OF_CONNECTION_ATTEMPTS = 2
         const val CONTROLLER_ID = 4242 // TODO read from preferences or somewhere else.
-        private const val CONNECT_TIMEOUT_MULTIPLIER = 4
     }
 }
