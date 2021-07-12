@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.testing.utils;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.Objects;
@@ -36,7 +37,7 @@ public class BasalWatchDataExt extends BasalWatchData {
 
     @Override
     public boolean equals(@Nullable Object obj) {
-        if ((obj instanceof BasalWatchData)||(obj instanceof BasalWatchDataExt)) {
+        if (obj instanceof BasalWatchData) {
             return (this.startTime == ((BasalWatchData) obj).startTime)
                 && (this.endTime == ((BasalWatchData) obj).endTime)
                 && (this.amount == ((BasalWatchData) obj).amount);
@@ -45,7 +46,7 @@ public class BasalWatchDataExt extends BasalWatchData {
         }
     }
 
-    @Override
+    @NonNull @Override
     public String toString() {
         return startTime+", "+endTime+", "+amount;
     }

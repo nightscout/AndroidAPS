@@ -2,12 +2,12 @@ package info.nightscout.androidaps.plugins.sensitivity
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interfaces.IobCobCalculatorInterface
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
-import info.nightscout.androidaps.interfaces.SensitivityInterface
+import info.nightscout.androidaps.interfaces.Sensitivity
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.SafeParse
@@ -22,9 +22,9 @@ abstract class AbstractSensitivityPlugin(
     aapsLogger: AAPSLogger,
     resourceHelper: ResourceHelper,
     val sp: SP
-) : PluginBase(pluginDescription, aapsLogger, resourceHelper, injector), SensitivityInterface {
+) : PluginBase(pluginDescription, aapsLogger, resourceHelper, injector), Sensitivity {
 
-    abstract override fun detectSensitivity(plugin: IobCobCalculatorInterface, fromTime: Long, toTime: Long): AutosensResult
+    abstract override fun detectSensitivity(ads: AutosensDataStore, fromTime: Long, toTime: Long): AutosensResult
 
     fun fillResult(ratio: Double, carbsAbsorbed: Double, pastSensitivity: String,
                    ratioLimit: String, sensResult: String, deviationsArraySize: Int): AutosensResult {
@@ -46,11 +46,11 @@ abstract class AbstractSensitivityPlugin(
         //If not-excluded data <= MIN_HOURS -> don't do Autosens
         //If not-excluded data >= MIN_HOURS_FULL_AUTOSENS -> full Autosens
         //Between MIN_HOURS and MIN_HOURS_FULL_AUTOSENS: gradually increase autosens
-        val autosensContrib = (min(max(SensitivityInterface.MIN_HOURS, deviationsArraySize / 12.0),
-            SensitivityInterface.MIN_HOURS_FULL_AUTOSENS) - SensitivityInterface.MIN_HOURS) / (SensitivityInterface.MIN_HOURS_FULL_AUTOSENS - SensitivityInterface.MIN_HOURS)
+        val autosensContrib = (min(max(Sensitivity.MIN_HOURS, deviationsArraySize / 12.0),
+            Sensitivity.MIN_HOURS_FULL_AUTOSENS) - Sensitivity.MIN_HOURS) / (Sensitivity.MIN_HOURS_FULL_AUTOSENS - Sensitivity.MIN_HOURS)
         ratio = autosensContrib * (ratio - 1) + 1
         if (autosensContrib != 1.0) {
-            ratioLimit += "(" + deviationsArraySize + " of " + SensitivityInterface.MIN_HOURS_FULL_AUTOSENS * 12 + " values) "
+            ratioLimit += "(" + deviationsArraySize + " of " + Sensitivity.MIN_HOURS_FULL_AUTOSENS * 12 + " values) "
         }
         if (ratio != rawRatio) {
             ratioLimit += "Ratio limited from $rawRatio to $ratio"

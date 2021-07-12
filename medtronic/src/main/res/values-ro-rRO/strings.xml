@@ -24,6 +24,7 @@
     <string name="medtronic_pump_battery_nizn">NiZn (Afișare extinsă)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (Afișare extinsă)</string>
     <string name="medtronic_bolus_debugging">Depanare Bolus/Tratamente</string>
+    <!-- MDT Fragment -->
     <!-- MDT Errors -->
     <string name="medtronic_errors">Erori</string>
     <string name="medtronic_error_serial_not_set">Număr serial nesetat.</string>

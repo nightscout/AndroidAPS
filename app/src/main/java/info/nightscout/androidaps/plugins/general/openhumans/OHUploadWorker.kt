@@ -28,7 +28,10 @@ class OHUploadWorker(context: Context, workerParameters: WorkerParameters)
     @Inject
     lateinit var resourceHelper: ResourceHelper
 
-    override fun createWork(): Single<Result> = Single.defer {
+    @kotlin.ExperimentalStdlibApi
+    override fun createWork(): Single<Result> =Single.just(Result.success())
+/*
+    = Single.defer {
 
         // Here we inject every time we create work
         // We could build our own WorkerFactory with dagger but this will create conflicts with other Workers
@@ -49,7 +52,7 @@ class OHUploadWorker(context: Context, workerParameters: WorkerParameters)
             Single.just(Result.retry())
         }
     }
-
+*/
     private fun createForegroundInfo(): ForegroundInfo {
         val title = resourceHelper.gs(info.nightscout.androidaps.R.string.open_humans)
 

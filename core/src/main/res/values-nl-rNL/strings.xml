@@ -190,32 +190,9 @@
     <!--    Ntp-->
     <string name="timedetection">Tijd detectie</string>
     <string name="format_hour_minute">%1$du %2$dm</string>
-    <!-- PumoCommon - Pump Abstract -->
-    <string name="pump_operation_not_supported_by_pump_driver">Bewerking niet ondersteund door pomp en/of driver.</string>
-    <string name="pump_operation_not_yet_supported_by_pump">Operatie NU nog niet ondersteund door pomp.</string>
-    <string name="common_resultok">OK</string>
-    <!-- PumoCommon - Pump Status -->
-    <string name="pump_status_never_contacted">Nooit verbonden</string>
-    <string name="pump_status_waking_up">Ontwaken</string>
-    <string name="pump_status_error_comm">Communicatiefout</string>
-    <string name="pump_status_timeout_comm">Time-out op de communicatie</string>
-    <string name="pump_status_pump_unreachable">Pomp niet beschikbaar</string>
-    <string name="pump_status_invalid_config">Ongeldige configuratie</string>
-    <string name="pump_status_active">Actief</string>
-    <string name="pump_status_sleeping">Slapen</string>
-    <!-- PumpCommon - History Group -->
-    <string name="history_group_basal">Basalen</string>
-    <string name="history_group_configuration">Instellingen</string>
-    <string name="history_group_notification">Meldingen</string>
-    <string name="history_group_statistic">Statistieken</string>
-    <string name="history_group_unknown">Onbekend</string>
-    <string name="history_group_all">Alle</string>
-    <string name="history_group_bolus">Bolussen</string>
-    <string name="history_group_prime">Vullen</string>
-    <string name="history_group_alarm">Alarmen</string>
-    <string name="history_group_glucose">Glucose</string>
     <string name="mute5min">5 minuten dempen</string>
     <!-- Maintenance -->
+    <string name="metadata_label_format">Bestandsformaat</string>
     <string name="metadata_label_created_at">Gemaakt op</string>
     <string name="metadata_label_aaps_version">AAPS versie</string>
     <string name="metadata_label_aaps_flavour">Build variant</string>
@@ -254,4 +231,19 @@
     <string name="running_invalid_version">We hebben gedetecteerd dat je een ongeldige versie gebruikt. Loop is uitgeschakeld!</string>
     <string name="versionavailable">Versie %1$s is beschikbaar</string>
     <!-- Permissions -->
+    <string name="alert_dialog_storage_permission_text">Herstart je telefoon of herstart AndroidAPS vanuit de systeem instellingen. \nAnders zullen er voor AndroidAPS geen logs worden aangemaakt (dit is belangrijk voor de ontwikkelaars, zo kunnen zij controleren of de algoritmes correct werken)!</string>
+    <!-- WeekdayPicker -->
+    <!-- User Entry -->
+    <plurals name="days">
+        <item quantity="one">%1$d dag</item>
+        <item quantity="other">%1$d dagen</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d uur</item>
+        <item quantity="other">%1$d uren</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d minuut</item>
+        <item quantity="other">%1$d minuten</item>
+    </plurals>
 </resources>

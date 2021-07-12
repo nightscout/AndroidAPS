@@ -27,20 +27,21 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.joanzapata.iconify.Iconify
 import com.joanzapata.iconify.fonts.FontAwesomeModule
 import dev.doubledot.doki.ui.DokiActivity
-import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
-import info.nightscout.androidaps.activities.PreferencesActivity
-import info.nightscout.androidaps.activities.ProfileHelperActivity
-import info.nightscout.androidaps.activities.SingleFragmentActivity
-import info.nightscout.androidaps.activities.StatsActivity
+import info.nightscout.androidaps.activities.*
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.databinding.ActivityMainBinding
 import info.nightscout.androidaps.events.EventAppExit
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.events.EventRebuildTabs
-import info.nightscout.androidaps.historyBrowser.HistoryBrowseActivity
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.activities.HistoryBrowseActivity
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.androidaps.interfaces.IconsProvider
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
@@ -56,11 +57,10 @@ import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.extensions.isRunningRealPumpTest
 import info.nightscout.androidaps.utils.locale.LocaleHelper
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
-import info.nightscout.androidaps.utils.resources.IconsProvider
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.tabs.TabPageAdapter
 import info.nightscout.androidaps.utils.ui.UIRunnable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import java.util.*
 import javax.inject.Inject
@@ -71,6 +71,7 @@ class MainActivity : NoSplashAppCompatActivity() {
     private val disposable = CompositeDisposable()
 
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var androidPermission: AndroidPermission
     @Inject lateinit var sp: SP
@@ -79,13 +80,14 @@ class MainActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var loopPlugin: LoopPlugin
     @Inject lateinit var nsSettingsStatus: NSSettingsStatus
     @Inject lateinit var buildHelper: BuildHelper
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var iconsProvider: IconsProvider
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var signatureVerifierPlugin: SignatureVerifierPlugin
     @Inject lateinit var config: Config
+    @Inject lateinit var uel: UserEntryLogger
 
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private var pluginPreferencesMenuItem: MenuItem? = null
@@ -93,6 +95,7 @@ class MainActivity : NoSplashAppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
+    @kotlin.ExperimentalStdlibApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Iconify.with(FontAwesomeModule())
@@ -125,7 +128,7 @@ class MainActivity : NoSplashAppCompatActivity() {
         setupViews()
         disposable.add(rxBus
             .toObservable(EventRebuildTabs::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({
                 if (it.recreate) recreate()
                 else setupViews()
@@ -134,10 +137,10 @@ class MainActivity : NoSplashAppCompatActivity() {
         )
         disposable.add(rxBus
             .toObservable(EventPreferenceChange::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({ processPreferenceChange(it) }, fabricPrivacy::logException)
         )
-        if (!sp.getBoolean(R.string.key_setupwizard_processed, false) && !isRunningRealPumpTest()) {
+        if (startWizard() && !isRunningRealPumpTest()) {
             protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, {
                 startActivity(Intent(this, SetupWizardActivity::class.java))
             })
@@ -154,6 +157,9 @@ class MainActivity : NoSplashAppCompatActivity() {
     private fun checkPluginPreferences(viewPager: ViewPager2) {
         if (viewPager.currentItem >= 0) pluginPreferencesMenuItem?.isEnabled = (viewPager.adapter as TabPageAdapter).getPluginAt(viewPager.currentItem).preferencesId != -1
     }
+
+    private fun startWizard() : Boolean =
+        !sp.getBoolean(R.string.key_setupwizard_processed, false)
 
     override fun onPostCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
         super.onPostCreate(savedInstanceState, persistentState)
@@ -281,6 +287,11 @@ class MainActivity : NoSplashAppCompatActivity() {
                 return true
             }
 
+            R.id.nav_treatments -> {
+                startActivity(Intent(this, TreatmentsActivity::class.java))
+                return true
+            }
+
             R.id.nav_setupwizard -> {
                 protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, {
                     startActivity(Intent(this, SetupWizardActivity::class.java))
@@ -291,7 +302,7 @@ class MainActivity : NoSplashAppCompatActivity() {
             R.id.nav_about -> {
                 var message = "Build: ${BuildConfig.BUILDVERSION}\n"
                 message += "Flavor: ${BuildConfig.FLAVOR}${BuildConfig.BUILD_TYPE}\n"
-                message += "${resourceHelper.gs(R.string.configbuilder_nightscoutversion_label)} ${nsSettingsStatus.nightscoutVersionName}"
+                message += "${resourceHelper.gs(R.string.configbuilder_nightscoutversion_label)} ${nsSettingsStatus.getVersion()}"
                 if (buildHelper.isEngineeringMode()) message += "\n${resourceHelper.gs(R.string.engineering_mode_enabled)}"
                 if (!fabricPrivacy.fabricEnabled()) message += "\n${resourceHelper.gs(R.string.fabric_upload_disabled)}"
                 message += resourceHelper.gs(R.string.about_link_urls)
@@ -312,6 +323,7 @@ class MainActivity : NoSplashAppCompatActivity() {
 
             R.id.nav_exit -> {
                 aapsLogger.debug(LTag.CORE, "Exiting")
+                uel.log(Action.EXIT_AAPS, Sources.Aaps)
                 rxBus.send(EventAppExit())
                 finish()
                 System.runFinalization()
@@ -349,11 +361,12 @@ class MainActivity : NoSplashAppCompatActivity() {
     // Correct place for calling setUserStats() would be probably MainApp
     // but we need to have it called at least once a day. Thus this location
 
+    @kotlin.ExperimentalStdlibApi
     private fun setUserStats() {
         if (!fabricPrivacy.fabricEnabled()) return
         val closedLoopEnabled = if (constraintChecker.isClosedLoopAllowed().value()) "CLOSED_LOOP_ENABLED" else "CLOSED_LOOP_DISABLED"
         // Size is limited to 36 chars
-        val remote = BuildConfig.REMOTE.toLowerCase(Locale.getDefault())
+        val remote = BuildConfig.REMOTE.lowercase(Locale.getDefault())
             .replace("https://", "")
             .replace("http://", "")
             .replace(".git", "")
@@ -371,7 +384,7 @@ class MainActivity : NoSplashAppCompatActivity() {
         if (!config.NSCLIENT && !config.PUMPCONTROL)
             activePlugin.activeAPS.let { fabricPrivacy.firebaseAnalytics.setUserProperty("Aps", it::class.java.simpleName) }
         activePlugin.activeBgSource.let { fabricPrivacy.firebaseAnalytics.setUserProperty("BgSource", it::class.java.simpleName) }
-        fabricPrivacy.firebaseAnalytics.setUserProperty("Profile", activePlugin.activeProfileInterface.javaClass.simpleName)
+        fabricPrivacy.firebaseAnalytics.setUserProperty("Profile", activePlugin.activeProfileSource.javaClass.simpleName)
         activePlugin.activeSensitivity.let { fabricPrivacy.firebaseAnalytics.setUserProperty("Sensitivity", it::class.java.simpleName) }
         activePlugin.activeInsulin.let { fabricPrivacy.firebaseAnalytics.setUserProperty("Insulin", it::class.java.simpleName) }
         // Add to crash log too
@@ -380,6 +393,7 @@ class MainActivity : NoSplashAppCompatActivity() {
         FirebaseCrashlytics.getInstance().setCustomKey("Remote", remote)
         FirebaseCrashlytics.getInstance().setCustomKey("Committed", BuildConfig.COMMITTED)
         FirebaseCrashlytics.getInstance().setCustomKey("Hash", hashes[0])
+        FirebaseCrashlytics.getInstance().setCustomKey("Email", sp.getString(R.string.key_email_for_crash_report, ""))
     }
 
 }

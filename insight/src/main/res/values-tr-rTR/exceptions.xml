@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="connection_failed">Bağlantı başarısız oldu</string>
+    <string name="connection_lost">Bağlantı kesildi</string>
+    <string name="pairing_rejected">Eşleştirme reddedildi</string>
+    <string name="socket_creation_failed">Soket oluşturma başarısız oldu</string>
+    <string name="timeout">Zaman aşımı</string>
+    <string name="maximum_number_of_bolus_type_already_running">Yürütülmekte olan maksimum bolus tipi sayısı</string>
+    <string name="no_active_tbr_to_cancel">İptal edilebilecek aktif TBR Geçici Bazal Oranı yok</string>
+    <string name="no_active_tbr_to_change">Değiştirilebilecek aktif TBR Geçici Bazal Oranı yok</string>
+    <string name="no_such_bolus_to_cancel">İptal etmek için böyle bir bolus</string>
+    <string name="pump_already_in_that_state_exception">Pompa zaten bu modda</string>
+    <string name="run_mode_not_allowed">Çalıştır moduna izin yok</string>
+</resources>

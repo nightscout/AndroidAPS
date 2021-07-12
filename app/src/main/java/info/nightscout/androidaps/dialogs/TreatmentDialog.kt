@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.dialogs
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -9,16 +8,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.common.base.Joiner
-import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.ValueWithUnit
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.databinding.DialogTreatmentBinding
-import info.nightscout.androidaps.db.CareportalEvent
-import info.nightscout.androidaps.db.Source
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
+import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DecimalFormatter
@@ -26,8 +29,10 @@ import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.SafeParse
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.extensions.formatColor
+import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import java.text.DecimalFormat
 import java.util.*
 import javax.inject.Inject
@@ -37,10 +42,14 @@ class TreatmentDialog : DialogFragmentWithDate() {
 
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var ctx: Context
     @Inject lateinit var config: Config
+    @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var repository: AppRepository
+
+    private val disposable = CompositeDisposable()
 
     private val textWatcher: TextWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable) {}
@@ -128,29 +137,51 @@ class TreatmentDialog : DialogFragmentWithDate() {
         if (insulinAfterConstraints > 0 || carbsAfterConstraints > 0) {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.overview_treatment_label), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
-                    aapsLogger.debug("USER ENTRY: BOLUS insulin $insulin carbs: $carbs")
+                    val action = when {
+                        insulinAfterConstraints.equals(0.0) -> Action.CARBS
+                        carbsAfterConstraints.equals(0)     -> Action.BOLUS
+                        else                                -> Action.TREATMENT
+                    }
                     val detailedBolusInfo = DetailedBolusInfo()
-                    if (insulinAfterConstraints == 0.0) detailedBolusInfo.eventType = CareportalEvent.CARBCORRECTION
-                    if (carbsAfterConstraints == 0) detailedBolusInfo.eventType = CareportalEvent.CORRECTIONBOLUS
+                    if (insulinAfterConstraints == 0.0) detailedBolusInfo.eventType = DetailedBolusInfo.EventType.CARBS_CORRECTION
+                    if (carbsAfterConstraints == 0) detailedBolusInfo.eventType = DetailedBolusInfo.EventType.CORRECTION_BOLUS
                     detailedBolusInfo.insulin = insulinAfterConstraints
                     detailedBolusInfo.carbs = carbsAfterConstraints.toDouble()
                     detailedBolusInfo.context = context
-                    detailedBolusInfo.source = Source.USER
-                    if (!(recordOnlyChecked && (detailedBolusInfo.insulin > 0 || pumpDescription.storesCarbInfo))) {
-                        commandQueue.bolus(detailedBolusInfo, object : Callback() {
-                            override fun run() {
-                                if (!result.success) {
-                                    val i = Intent(ctx, ErrorHelperActivity::class.java)
-                                    i.putExtra("soundid", R.raw.boluserror)
-                                    i.putExtra("status", result.comment)
-                                    i.putExtra("title", resourceHelper.gs(R.string.treatmentdeliveryerror))
-                                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                    ctx.startActivity(i)
+                    if (recordOnlyChecked) {
+                        uel.log(action, Sources.TreatmentDialog, if (insulinAfterConstraints != 0.0) resourceHelper.gs(R.string.record) else "",
+                            ValueWithUnit.Timestamp(detailedBolusInfo.timestamp).takeIf { eventTimeChanged },
+                            ValueWithUnit.SimpleString(resourceHelper.gsNotLocalised(R.string.record)).takeIf { insulinAfterConstraints != 0.0 },
+                            ValueWithUnit.Insulin(insulinAfterConstraints).takeIf { insulinAfterConstraints != 0.0 },
+                            ValueWithUnit.Gram(carbsAfterConstraints).takeIf { carbsAfterConstraints != 0 })
+                        if (detailedBolusInfo.insulin > 0)
+                            disposable += repository.runTransactionForResult(detailedBolusInfo.insertBolusTransaction())
+                                .subscribe(
+                                    { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted bolus $it") } },
+                                    { aapsLogger.error(LTag.DATABASE, "Error while saving bolus", it) }
+                                )
+                        if (detailedBolusInfo.carbs > 0)
+                            disposable += repository.runTransactionForResult(detailedBolusInfo.insertCarbsTransaction())
+                                .subscribe(
+                                    { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted carbs $it") } },
+                                    { aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it) }
+                                )
+                    } else {
+                        if (detailedBolusInfo.insulin > 0) {
+                            uel.log(action, Sources.TreatmentDialog,
+                                ValueWithUnit.Insulin(insulinAfterConstraints),
+                                ValueWithUnit.Gram(carbsAfterConstraints).takeIf { carbsAfterConstraints != 0 })
+                            commandQueue.bolus(detailedBolusInfo, object : Callback() {
+                                override fun run() {
+                                    if (!result.success) {
+                                        ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
+                                    }
                                 }
-                            }
-                        })
-                    } else
-                        activePlugin.activeTreatments.addToHistoryTreatment(detailedBolusInfo, false)
+                            })
+                        } else
+                            uel.log(action, Sources.TreatmentDialog,
+                                ValueWithUnit.Gram(carbsAfterConstraints).takeIf { carbs != 0 })
+                    }
                 })
             }
         } else

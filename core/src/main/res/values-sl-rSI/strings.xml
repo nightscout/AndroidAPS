@@ -20,10 +20,9 @@
     <!--    CarbsReq-->
     <!--    TDDStatsActivity-->
     <!--    Ntp-->
-    <!-- PumoCommon - Pump Abstract -->
-    <!-- PumoCommon - Pump Status -->
-    <!-- PumpCommon - History Group -->
     <!-- Maintenance -->
     <!-- VersionChecker -->
     <!-- Permissions -->
+    <!-- WeekdayPicker -->
+    <!-- User Entry -->
 </resources>

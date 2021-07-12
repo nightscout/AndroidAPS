@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs;
 import java.util.HashMap;
 import java.util.Map;
 
-import info.nightscout.androidaps.plugins.pump.common.R;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.R;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 public enum RileyLinkEncodingType {
@@ -21,11 +21,11 @@ public enum RileyLinkEncodingType {
     private static Map<String, RileyLinkEncodingType> encodingTypeMap;
 
     RileyLinkEncodingType(int value) {
-        this.value = (byte)value;
+        this.value = (byte) value;
     }
 
     RileyLinkEncodingType(int value, Integer resourceId) {
-        this.value = (byte)value;
+        this.value = (byte) value;
         this.resourceId = resourceId;
     }
 
@@ -33,7 +33,7 @@ public enum RileyLinkEncodingType {
         encodingTypeMap = new HashMap<>();
 
         for (RileyLinkEncodingType encType : values()) {
-            if (encType.resourceId!=null) {
+            if (encType.resourceId != null) {
                 encodingTypeMap.put(resourceHelper.gs(encType.resourceId), encType);
             }
         }

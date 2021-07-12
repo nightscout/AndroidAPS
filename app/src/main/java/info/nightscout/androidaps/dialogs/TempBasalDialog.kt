@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.dialogs
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,18 +8,18 @@ import android.view.ViewGroup
 import com.google.common.base.Joiner
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
+import info.nightscout.androidaps.database.entities.ValueWithUnit
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.databinding.DialogTempbasalBinding
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.interfaces.CommandQueueProvider
-import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.PumpDescription
+import info.nightscout.androidaps.interfaces.*
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.SafeParse
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.extensions.formatColor
+import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import java.text.DecimalFormat
 import java.util.*
@@ -32,9 +31,10 @@ class TempBasalDialog : DialogFragmentWithDate() {
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var ctx: Context
+    @Inject lateinit var uel: UserEntryLogger
 
     private var isPercentPump = true
 
@@ -71,7 +71,7 @@ class TempBasalDialog : DialogFragmentWithDate() {
             ?: 100.0, 0.0, maxTempPercent, tempPercentStep, DecimalFormat("0"), true, binding.okcancel.ok)
 
         binding.basalabsoluteinput.setParams(savedInstanceState?.getDouble("basalabsoluteinput")
-            ?: profile.basal, 0.0, pumpDescription.maxTempAbsolute, pumpDescription.tempAbsoluteStep, DecimalFormat("0.00"), true, binding.okcancel.ok)
+            ?: profile.getBasal(), 0.0, pumpDescription.maxTempAbsolute, pumpDescription.tempAbsoluteStep, DecimalFormat("0.00"), true, binding.okcancel.ok)
 
         val tempDurationStep = pumpDescription.tempDurationStep.toDouble()
         val tempMaxDuration = pumpDescription.tempMaxDuration.toDouble()
@@ -119,21 +119,20 @@ class TempBasalDialog : DialogFragmentWithDate() {
                 val callback: Callback = object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            val i = Intent(ctx, ErrorHelperActivity::class.java)
-                            i.putExtra("soundid", R.raw.boluserror)
-                            i.putExtra("status", result.comment)
-                            i.putExtra("title", resourceHelper.gs(R.string.tempbasaldeliveryerror))
-                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            ctx.startActivity(i)
+                            ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
                         }
                     }
                 }
                 if (isPercentPump) {
-                    aapsLogger.debug("USER ENTRY: TEMP BASAL $percent% duration: $durationInMinutes")
-                    commandQueue.tempBasalPercent(percent, durationInMinutes, true, profile, callback)
+                    uel.log(Action.TEMP_BASAL, Sources.TempBasalDialog,
+                        ValueWithUnit.Percent(percent),
+                        ValueWithUnit.Minute(durationInMinutes))
+                    commandQueue.tempBasalPercent(percent, durationInMinutes, true, profile, PumpSync.TemporaryBasalType.NORMAL, callback)
                 } else {
-                    aapsLogger.debug("USER ENTRY: TEMP BASAL $absolute duration: $durationInMinutes")
-                    commandQueue.tempBasalAbsolute(absolute, durationInMinutes, true, profile, callback)
+                    uel.log(Action.TEMP_BASAL, Sources.TempBasalDialog,
+                        ValueWithUnit.Insulin(absolute),
+                        ValueWithUnit.Minute(durationInMinutes))
+                    commandQueue.tempBasalAbsolute(absolute, durationInMinutes, true, profile, PumpSync.TemporaryBasalType.NORMAL, callback)
                 }
             })
         }

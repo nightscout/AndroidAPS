@@ -1,11 +1,11 @@
 package info.nightscout.androidaps.utils.protection
 
-import androidx.biometric.BiometricConstants
 import androidx.biometric.BiometricPrompt
+import androidx.biometric.BiometricPrompt.*
 import androidx.fragment.app.FragmentActivity
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.utils.ToastUtils
-import info.nightscout.androidaps.utils.extensions.runOnUiThread
+import info.nightscout.androidaps.extensions.runOnUiThread
 import java.util.concurrent.Executors
 
 object BiometricCheck {
@@ -16,43 +16,43 @@ object BiometricCheck {
             override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                 super.onAuthenticationError(errorCode, errString)
                 when (errorCode) {
-                    BiometricConstants.ERROR_UNABLE_TO_PROCESS,
-                    BiometricConstants.ERROR_TIMEOUT,
-                    BiometricConstants.ERROR_CANCELED,
-                    BiometricConstants.ERROR_LOCKOUT,
-                    BiometricConstants.ERROR_VENDOR,
-                    BiometricConstants.ERROR_LOCKOUT_PERMANENT,
-                    BiometricConstants.ERROR_USER_CANCELED        -> {
+                    ERROR_UNABLE_TO_PROCESS,
+                    ERROR_TIMEOUT,
+                    ERROR_CANCELED,
+                    ERROR_LOCKOUT,
+                    ERROR_VENDOR,
+                    ERROR_LOCKOUT_PERMANENT,
+                    ERROR_USER_CANCELED        -> {
                         ToastUtils.showToastInUiThread(activity.baseContext, errString.toString())
                         // fallback to master password
-                        runOnUiThread(Runnable {
+                        runOnUiThread {
                             passwordCheck.queryPassword(activity, R.string.master_password, R.string.key_master_password, { ok?.run() }, { cancel?.run() }, { fail?.run() })
-                        })
+                        }
                     }
 
-                    BiometricConstants.ERROR_NEGATIVE_BUTTON      ->
+                    ERROR_NEGATIVE_BUTTON      ->
                         cancel?.run()
 
-                    BiometricConstants.ERROR_NO_DEVICE_CREDENTIAL -> {
+                    ERROR_NO_DEVICE_CREDENTIAL -> {
                         ToastUtils.showToastInUiThread(activity.baseContext, errString.toString())
                         // no pin set
                         // fallback to master password
-                        runOnUiThread(Runnable {
+                        runOnUiThread {
                             passwordCheck.queryPassword(activity, R.string.master_password, R.string.key_master_password, { ok?.run() }, { cancel?.run() }, { fail?.run() })
-                        })
+                        }
                     }
 
-                    BiometricConstants.ERROR_NO_SPACE,
-                    BiometricConstants.ERROR_HW_UNAVAILABLE,
-                    BiometricConstants.ERROR_HW_NOT_PRESENT,
-                    BiometricConstants.ERROR_NO_BIOMETRICS        ->
-                        runOnUiThread(Runnable {
+                    ERROR_NO_SPACE,
+                    ERROR_HW_UNAVAILABLE,
+                    ERROR_HW_NOT_PRESENT,
+                    ERROR_NO_BIOMETRICS        ->
+                        runOnUiThread {
                             passwordCheck.queryPassword(activity, R.string.master_password, R.string.key_master_password, { ok?.run() }, { cancel?.run() }, { fail?.run() })
-                        })
+                        }
                 }
             }
 
-            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+            override fun onAuthenticationSucceeded(result: AuthenticationResult) {
                 super.onAuthenticationSucceeded(result)
                 // Called when a biometric is recognized.
                 ok?.run()
@@ -65,7 +65,7 @@ object BiometricCheck {
             }
         })
 
-        val promptInfo = BiometricPrompt.PromptInfo.Builder()
+        val promptInfo = PromptInfo.Builder()
             .setTitle(activity.getString(title))
             .setDescription(activity.getString(R.string.biometric_title))
             .setNegativeButtonText(activity.getString(R.string.cancel)) // not possible with setDeviceCredentialAllowed

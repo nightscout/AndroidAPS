@@ -2,8 +2,8 @@ package info.nightscout.androidaps.plugins.general.maintenance.formats
 
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.utils.CryptoUtil
-import info.nightscout.androidaps.utils.extensions.hexStringToByteArray
-import info.nightscout.androidaps.utils.extensions.toHex
+import info.nightscout.androidaps.extensions.hexStringToByteArray
+import info.nightscout.androidaps.extensions.toHex
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.storage.Storage
 import org.json.JSONException
@@ -24,11 +24,11 @@ class EncryptedPrefsFormat @Inject constructor(
 
     companion object {
 
-        val FORMAT_KEY_ENC = "aaps_encrypted"
-        val FORMAT_KEY_NOENC = "aaps_structured"
+        const val FORMAT_KEY_ENC = "aaps_encrypted"
+        const val FORMAT_KEY_NOENC = "aaps_structured"
 
-        private val KEY_CONSCIENCE = "if you remove/change this, please make sure you know the consequences!"
-        private val FORMAT_TEST_REGEX = Regex("(\\\"format\\\"\\s*\\:\\s*\\\"aaps_[^\"]*\\\")")
+        private const val KEY_CONSCIENCE = "if you remove/change this, please make sure you know the consequences!"
+        private val FORMAT_TEST_REGEX = Regex("(\"format\"\\s*:\\s*\"aaps_[^\"]*\")")
     }
 
     override fun isPreferencesFile(file: File, preloadedContents: String?): Boolean {
@@ -94,7 +94,7 @@ class EncryptedPrefsFormat @Inject constructor(
             var fileContents = container.toString(2)
             val fileHash = cryptoUtil.hmac256(fileContents, KEY_CONSCIENCE)
 
-            fileContents = fileContents.replace(Regex("(\\\"file_hash\\\"\\s*\\:\\s*\\\")(--to-be-calculated--)(\\\")"), "$1" + fileHash + "$3")
+            fileContents = fileContents.replace(Regex("(\"file_hash\"\\s*:\\s*\")(--to-be-calculated--)(\")"), "$1$fileHash$3")
 
             storage.putFileContents(file, fileContents)
 
@@ -105,6 +105,7 @@ class EncryptedPrefsFormat @Inject constructor(
         }
     }
 
+    @kotlin.ExperimentalStdlibApi
     override fun loadPreferences(file: File, masterPassword: String?): Prefs {
 
         val entries: MutableMap<String, String> = mutableMapOf()
@@ -112,7 +113,7 @@ class EncryptedPrefsFormat @Inject constructor(
         try {
 
             val jsonBody = storage.getFileContents(file)
-            val fileContents = jsonBody.replace(Regex("(?is)(\\\"file_hash\\\"\\s*\\:\\s*\\\")([^\"]*)(\\\")"), "$1--to-be-calculated--$3")
+            val fileContents = jsonBody.replace(Regex("(?is)(\"file_hash\"\\s*:\\s*\")([^\"]*)(\")"), "$1--to-be-calculated--$3")
             val calculatedFileHash = cryptoUtil.hmac256(fileContents, KEY_CONSCIENCE)
             val container = JSONObject(jsonBody)
             val metadata: MutableMap<PrefsMetadataKey, PrefMetadata> = loadMetadata(container)
@@ -192,7 +193,7 @@ class EncryptedPrefsFormat @Inject constructor(
 
                 if (decryptedOk && contentJsonObj != null) {
                     for (key in contentJsonObj.keys()) {
-                        entries.put(key, contentJsonObj[key].toString())
+                        entries[key] = contentJsonObj[key].toString()
                     }
                 }
 
@@ -213,7 +214,7 @@ class EncryptedPrefsFormat @Inject constructor(
         } catch (e: IOException) {
             throw PrefIOError(file.absolutePath)
         } catch (e: JSONException) {
-            throw PrefFormatError("Mallformed preferences JSON file: " + e)
+            throw PrefFormatError("Mallformed preferences JSON file: $e")
         }
     }
 

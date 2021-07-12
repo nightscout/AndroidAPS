@@ -3,53 +3,62 @@ package info.nightscout.androidaps.plugins.general.wear
 import android.app.NotificationManager
 import android.content.Context
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.dana.DanaPump
+import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
+import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
+import info.nightscout.androidaps.danar.DanaRPlugin
+import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.db.CareportalEvent
-import info.nightscout.androidaps.db.Source
-import info.nightscout.androidaps.db.TDD
-import info.nightscout.androidaps.db.TempTarget
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.interfaces.CommandQueueProvider
-import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.interfaces.PluginBase
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.ValueWrapper
+import info.nightscout.androidaps.database.entities.TemporaryTarget
+import info.nightscout.androidaps.database.entities.TotalDailyDose
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.ValueWithUnit
+import info.nightscout.androidaps.database.interfaces.end
+import info.nightscout.androidaps.database.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
+import info.nightscout.androidaps.database.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
+import info.nightscout.androidaps.extensions.total
+import info.nightscout.androidaps.extensions.valueToUnits
+import info.nightscout.androidaps.interfaces.*
+import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
-import info.nightscout.androidaps.danar.DanaRPlugin
-import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
-import info.nightscout.androidaps.danars.DanaRSPlugin
-import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
+import info.nightscout.androidaps.plugins.general.wear.events.EventWearConfirmAction
+import info.nightscout.androidaps.plugins.general.wear.events.EventWearInitiateAction
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
-import info.nightscout.androidaps.plugins.treatments.CarbsGenerator
 import info.nightscout.androidaps.queue.Callback
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.androidaps.utils.HardLimits
-import info.nightscout.androidaps.utils.SafeParse
-import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.wizard.BolusWizard
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import java.text.DateFormat
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.abs
+import kotlin.math.min
 
+@Suppress("SpellCheckingInspection")
 @Singleton
 class ActionStringHandler @Inject constructor(
     private val sp: SP,
     private val rxBus: RxBusWrapper,
+    private val aapsLogger: AAPSLogger,
+    private val aapsSchedulers: AapsSchedulers,
     private val resourceHelper: ResourceHelper,
     private val injector: HasAndroidInjector,
     private val context: Context,
@@ -57,30 +66,48 @@ class ActionStringHandler @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val loopPlugin: LoopPlugin,
     private val wearPlugin: WearPlugin,
+    private val fabricPrivacy: FabricPrivacy,
     private val commandQueue: CommandQueueProvider,
-    private val activePlugin: ActivePluginProvider,
-    private val iobCobCalculatorPlugin: IobCobCalculatorPlugin,
+    private val activePlugin: ActivePlugin,
+    private val iobCobCalculator: IobCobCalculator,
     private val localInsightPlugin: LocalInsightPlugin,
     private val danaRPlugin: DanaRPlugin,
     private val danaRKoreanPlugin: DanaRKoreanPlugin,
     private val danaRv2Plugin: DanaRv2Plugin,
     private val danaRSPlugin: DanaRSPlugin,
     private val danaPump: DanaPump,
-    private val hardLimits: HardLimits,
-    private val carbsGenerator: CarbsGenerator,
     private val dateUtil: DateUtil,
-    private val config: Config
+    private val config: Config,
+    private val repository: AppRepository,
+    private val uel: UserEntryLogger
 ) {
 
-    private val TIMEOUT = 65 * 1000
+    private val timeout = 65 * 1000
     private var lastSentTimestamp: Long = 0
     private var lastConfirmActionString: String? = null
     private var lastBolusWizard: BolusWizard? = null
 
-    // TODO Adrian use RxBus instead of Lazy + cross dependency
+    private val disposable = CompositeDisposable()
+
+    fun setup() {
+        disposable += rxBus
+            .toObservable(EventWearInitiateAction::class.java)
+            .observeOn(aapsSchedulers.main)
+            .subscribe({ handleInitiate(it.action) }, fabricPrivacy::logException)
+
+        disposable += rxBus
+            .toObservable(EventWearConfirmAction::class.java)
+            .observeOn(aapsSchedulers.main)
+            .subscribe({ handleConfirmation(it.action) }, fabricPrivacy::logException)
+    }
+
+    fun tearDown() {
+        disposable.clear()
+    }
+
     @Synchronized
-    fun handleInitiate(actionString: String) {
-        if (!sp.getBoolean("wearcontrol", false)) return
+    private fun handleInitiate(actionString: String) {
+        if (!sp.getBoolean(R.string.key_wear_control, false)) return
         lastBolusWizard = null
         var rTitle = "CONFIRM" //TODO: i18n
         var rMessage = ""
@@ -88,14 +115,11 @@ class ActionStringHandler @Inject constructor(
         // do the parsing and check constraints
         val act = actionString.split("\\s+".toRegex()).toTypedArray()
         if ("fillpreset" == act[0]) { ///////////////////////////////////// PRIME/FILL
-            val amount: Double = if ("1" == act[1]) {
-                sp.getDouble("fill_button1", 0.3)
-            } else if ("2" == act[1]) {
-                sp.getDouble("fill_button2", 0.0)
-            } else if ("3" == act[1]) {
-                sp.getDouble("fill_button3", 0.0)
-            } else {
-                return
+            val amount: Double = when {
+                "1" == act[1] -> sp.getDouble("fill_button1", 0.3)
+                "2" == act[1] -> sp.getDouble("fill_button2", 0.0)
+                "3" == act[1] -> sp.getDouble("fill_button3", 0.0)
+                else          -> return
             }
             val insulinAfterConstraints = constraintChecker.applyBolusConstraints(Constraint(amount)).value()
             rMessage += resourceHelper.gs(R.string.primefill) + ": " + insulinAfterConstraints + "U"
@@ -120,7 +144,7 @@ class ActionStringHandler @Inject constructor(
             rAction += "bolus $insulinAfterConstraints $carbsAfterConstraints"
         } else if ("temptarget" == act[0]) { ///////////////////////////////////////////////////////// TEMPTARGET
             val isMGDL = java.lang.Boolean.parseBoolean(act[1])
-            if (profileFunction.getUnits() == Constants.MGDL != isMGDL) {
+            if (profileFunction.getUnits() == GlucoseUnit.MGDL != isMGDL) {
                 sendError("Different units used on watch and phone!")
                 return
             }
@@ -135,11 +159,11 @@ class ActionStringHandler @Inject constructor(
                     low *= Constants.MMOLL_TO_MGDL
                     high *= Constants.MMOLL_TO_MGDL
                 }
-                if (low < hardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[0] || low > hardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[1]) {
+                if (low < HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[0] || low > HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[1]) {
                     sendError("Min-BG out of range!")
                     return
                 }
-                if (high < hardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[0] || high > hardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[1]) {
+                if (high < HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[0] || high > HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[1]) {
                     sendError("Max-BG out of range!")
                     return
                 }
@@ -181,22 +205,25 @@ class ActionStringHandler @Inject constructor(
                 sendError("No profile found!")
                 return
             }
-            val bgReading = iobCobCalculatorPlugin.actualBg()
+            val bgReading = iobCobCalculator.ads.actualBg()
             if (bgReading == null) {
                 sendError("No recent BG to base calculation on!")
                 return
             }
-            val cobInfo = iobCobCalculatorPlugin.getCobInfo(false, "Wizard wear")
+            val cobInfo = iobCobCalculator.getCobInfo(false, "Wizard wear")
             if (cobInfo.displayCob == null) {
                 sendError("Unknown COB! BG reading missing or recent app restart?")
                 return
             }
             val format = DecimalFormat("0.00")
             val formatInt = DecimalFormat("0")
-            val bolusWizard = BolusWizard(injector).doCalc(profile, profileName, activePlugin.activeTreatments.tempTargetFromHistory,
-                carbsAfterConstraints, cobInfo.displayCob, bgReading.valueToUnits(profileFunction.getUnits()),
-                0.0, percentage.toDouble(), useBG, useCOB, useBolusIOB, useBasalIOB, false, useTT, useTrend, false)
-            if (Math.abs(bolusWizard.insulinAfterConstraints - bolusWizard.calculatedTotalInsulin) >= 0.01) {
+            val dbRecord = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
+            val tempTarget = if (dbRecord is ValueWrapper.Existing) dbRecord.value else null
+
+            val bolusWizard = BolusWizard(injector).doCalc(profile, profileName, tempTarget,
+                carbsAfterConstraints, if (cobInfo.displayCob != null) cobInfo.displayCob!! else 0.0, bgReading.valueToUnits(profileFunction.getUnits()),
+                0.0, percentage, useBG, useCOB, useBolusIOB, useBasalIOB, false, useTT, useTrend, false)
+            if (abs(bolusWizard.insulinAfterConstraints - bolusWizard.calculatedTotalInsulin) >= 0.01) {
                 sendError("Insulin constraint violation!" +
                     "\nCannot deliver " + format.format(bolusWizard.calculatedTotalInsulin) + "!")
                 return
@@ -222,43 +249,43 @@ class ActionStringHandler @Inject constructor(
             }
             lastBolusWizard = bolusWizard
         } else if ("opencpp" == act[0]) {
-            val activeProfileSwitch = activePlugin.activeTreatments.getProfileSwitchFromHistory(System.currentTimeMillis())
-            if (activeProfileSwitch == null) {
-                sendError("No active profile switch!")
-                return
-            } else { // read CPP values
+            val activeProfileSwitch = repository.getEffectiveProfileSwitchActiveAt(dateUtil.now()).blockingGet()
+            if (activeProfileSwitch is ValueWrapper.Existing) { // read CPP values
                 rTitle = "opencpp"
                 rMessage = "opencpp"
-                rAction = "opencpp" + " " + activeProfileSwitch.percentage + " " + activeProfileSwitch.timeshift
-            }
-        } else if ("cppset" == act[0]) {
-            val activeProfileSwitch = activePlugin.activeTreatments.getProfileSwitchFromHistory(System.currentTimeMillis())
-            if (activeProfileSwitch == null) {
+                rAction = "opencpp" + " " + activeProfileSwitch.value.originalPercentage + " " + activeProfileSwitch.value.originalTimeshift
+            } else {
                 sendError("No active profile switch!")
                 return
-            } else { // read CPP values
+            }
+        } else if ("cppset" == act[0]) {
+            val activeProfileSwitch = repository.getEffectiveProfileSwitchActiveAt(dateUtil.now()).blockingGet()
+            if (activeProfileSwitch is ValueWrapper.Existing) {
                 rMessage = "CPP:" + "\n\n" +
                     "Timeshift: " + act[1] + "\n" +
                     "Percentage: " + act[2] + "%"
                 rAction = actionString
+            } else { // read CPP values
+                sendError("No active profile switch!")
+                return
             }
         } else if ("tddstats" == act[0]) {
             val activePump = activePlugin.activePump
             // check if DB up to date
-            val dummies: MutableList<TDD> = LinkedList()
+            val dummies: MutableList<TotalDailyDose> = LinkedList()
             val historyList = getTDDList(dummies)
             if (isOldData(historyList)) {
                 rTitle = "TDD"
                 rAction = "statusmessage"
                 rMessage = "OLD DATA - "
                 //if pump is not busy: try to fetch data
-                if (activePump.isBusy) {
+                if (activePump.isBusy()) {
                     rMessage += resourceHelper.gs(R.string.pumpbusy)
                 } else {
                     rMessage += "trying to fetch data from pump."
                     commandQueue.loadTDDs(object : Callback() {
                         override fun run() {
-                            val dummies1: MutableList<TDD> = LinkedList()
+                            val dummies1: MutableList<TotalDailyDose> = LinkedList()
                             val historyList1 = getTDDList(dummies1)
                             if (isOldData(historyList1)) {
                                 sendStatusMessage("TDD: Still old data! Cannot load from pump.\n" + generateTDDMessage(historyList1, dummies1))
@@ -311,7 +338,7 @@ class ActionStringHandler @Inject constructor(
         lastConfirmActionString = rAction
     }
 
-    private fun generateTDDMessage(historyList: MutableList<TDD>, dummies: MutableList<TDD>): String {
+    private fun generateTDDMessage(historyList: MutableList<TotalDailyDose>, dummies: MutableList<TotalDailyDose>): String {
         val profile = profileFunction.getProfile() ?: return "No profile loaded :("
         if (historyList.isEmpty()) {
             return "No history data!"
@@ -320,8 +347,8 @@ class ActionStringHandler @Inject constructor(
         var message = ""
         val refTDD = profile.baseBasalSum() * 2
         val pump = activePlugin.activePump
-        if (df.format(Date(historyList[0].date)) == df.format(Date())) {
-            val tdd = historyList[0].getTotal()
+        if (df.format(Date(historyList[0].timestamp)) == df.format(Date())) {
+            val tdd = historyList[0].total
             historyList.removeAt(0)
             message += "Today: " + DecimalFormatter.to2Decimal(tdd) + "U " + (DecimalFormatter.to0Decimal(100 * tdd / refTDD) + "%") + "\n"
             message += "\n"
@@ -330,13 +357,12 @@ class ActionStringHandler @Inject constructor(
             message += "Today: " + DecimalFormatter.to2Decimal(tdd) + "U " + (DecimalFormatter.to0Decimal(100 * tdd / refTDD) + "%") + "\n"
             message += "\n"
         }
-        var i = 0
         var weighted03 = 0.0
         var weighted05 = 0.0
         var weighted07 = 0.0
-        Collections.reverse(historyList)
-        for (record in historyList) {
-            val tdd = record.getTotal()
+        historyList.reverse()
+        for ((i, record) in historyList.withIndex()) {
+            val tdd = record.total
             if (i == 0) {
                 weighted03 = tdd
                 weighted05 = tdd
@@ -346,50 +372,47 @@ class ActionStringHandler @Inject constructor(
                 weighted05 = weighted05 * 0.5 + tdd * 0.5
                 weighted03 = weighted03 * 0.7 + tdd * 0.3
             }
-            i++
         }
         message += "weighted:\n"
         message += "0.3: " + DecimalFormatter.to2Decimal(weighted03) + "U " + (DecimalFormatter.to0Decimal(100 * weighted03 / refTDD) + "%") + "\n"
         message += "0.5: " + DecimalFormatter.to2Decimal(weighted05) + "U " + (DecimalFormatter.to0Decimal(100 * weighted05 / refTDD) + "%") + "\n"
         message += "0.7: " + DecimalFormatter.to2Decimal(weighted07) + "U " + (DecimalFormatter.to0Decimal(100 * weighted07 / refTDD) + "%") + "\n"
         message += "\n"
-        Collections.reverse(historyList)
+        historyList.reverse()
         //add TDDs:
         for (record in historyList) {
-            val tdd = record.getTotal()
-            message += df.format(Date(record.date)) + " " + DecimalFormatter.to2Decimal(tdd) + "U " + (DecimalFormatter.to0Decimal(100 * tdd / refTDD) + "%") + (if (dummies.contains(record)) "x" else "") + "\n"
+            val tdd = record.total
+            message += df.format(Date(record.timestamp)) + " " + DecimalFormatter.to2Decimal(tdd) + "U " + (DecimalFormatter.to0Decimal(100 * tdd / refTDD) + "%") + (if (dummies.contains(record)) "x" else "") + "\n"
         }
         return message
     }
 
-    private fun isOldData(historyList: List<TDD>): Boolean {
+    private fun isOldData(historyList: List<TotalDailyDose>): Boolean {
         val activePump = activePlugin.activePump
         val startsYesterday = activePump === danaRPlugin || activePump === danaRSPlugin || activePump === danaRv2Plugin || activePump === danaRKoreanPlugin || activePump === localInsightPlugin
         val df: DateFormat = SimpleDateFormat("dd.MM.", Locale.getDefault())
-        return historyList.size < 3 || df.format(Date(historyList[0].date)) != df.format(Date(System.currentTimeMillis() - if (startsYesterday) 1000 * 60 * 60 * 24 else 0))
+        return historyList.size < 3 || df.format(Date(historyList[0].timestamp)) != df.format(Date(System.currentTimeMillis() - if (startsYesterday) 1000 * 60 * 60 * 24 else 0))
     }
 
-    private fun getTDDList(returnDummies: MutableList<TDD>): MutableList<TDD> {
-        var historyList = MainApp.getDbHelper().tdDs
-        historyList = historyList.subList(0, Math.min(10, historyList.size))
+    private fun getTDDList(returnDummies: MutableList<TotalDailyDose>): MutableList<TotalDailyDose> {
+        var historyList = repository.getLastTotalDailyDoses(10, false).blockingGet().toMutableList()
+        //var historyList = databaseHelper.getTDDs().toMutableList()
+        historyList = historyList.subList(0, min(10, historyList.size))
         //fill single gaps - only needed for Dana*R data
-        val dummies: MutableList<TDD> = returnDummies
+        val dummies: MutableList<TotalDailyDose> = returnDummies
         val df: DateFormat = SimpleDateFormat("dd.MM.", Locale.getDefault())
         for (i in 0 until historyList.size - 1) {
             val elem1 = historyList[i]
             val elem2 = historyList[i + 1]
-            if (df.format(Date(elem1!!.date)) != df.format(Date(elem2!!.date + 25 * 60 * 60 * 1000))) {
-                val dummy = TDD()
-                dummy.date = elem1.date - 24 * 60 * 60 * 1000
-                dummy.basal = elem1.basal / 2
-                dummy.bolus = elem1.bolus / 2
+            if (df.format(Date(elem1.timestamp)) != df.format(Date(elem2.timestamp + 25 * 60 * 60 * 1000))) {
+                val dummy = TotalDailyDose(timestamp = elem1.timestamp - T.hours(24).msecs(), bolusAmount = elem1.bolusAmount / 2, basalAmount = elem1.basalAmount / 2)
                 dummies.add(dummy)
-                elem1.basal /= 2.0
-                elem1.bolus /= 2.0
+                elem1.basalAmount /= 2.0
+                elem1.bolusAmount /= 2.0
             }
         }
         historyList.addAll(dummies)
-        Collections.sort(historyList) { lhs, rhs -> (rhs.date - lhs.date).toInt() }
+        historyList.sortWith { lhs, rhs -> (rhs.timestamp - lhs.timestamp).toInt() }
         return historyList
     }
 
@@ -429,15 +452,15 @@ class ActionStringHandler @Inject constructor(
             }
             val profile = profileFunction.getProfile() ?: return "No profile set :("
             //Check for Temp-Target:
-            val tempTarget = activePlugin.activeTreatments.tempTargetFromHistory
-            if (tempTarget != null) {
-                ret += "Temp Target: " + Profile.toTargetRangeString(tempTarget.low, tempTarget.low, Constants.MGDL, profileFunction.getUnits())
-                ret += "\nuntil: " + dateUtil.timeString(tempTarget.originalEnd())
+            val tempTarget = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
+            if (tempTarget is ValueWrapper.Existing) {
+                ret += "Temp Target: " + Profile.toTargetRangeString(tempTarget.value.lowTarget, tempTarget.value.lowTarget, GlucoseUnit.MGDL, profileFunction.getUnits())
+                ret += "\nuntil: " + dateUtil.timeString(tempTarget.value.end)
                 ret += "\n\n"
             }
             ret += "DEFAULT RANGE: "
-            ret += Profile.fromMgdlToUnits(profile.targetLowMgdl, profileFunction.getUnits()).toString() + " - " + Profile.fromMgdlToUnits(profile.targetHighMgdl, profileFunction.getUnits())
-            ret += " target: " + Profile.fromMgdlToUnits(profile.targetMgdl, profileFunction.getUnits())
+            ret += Profile.fromMgdlToUnits(profile.getTargetLowMgdl(), profileFunction.getUnits()).toString() + " - " + Profile.fromMgdlToUnits(profile.getTargetHighMgdl(), profileFunction.getUnits())
+            ret += " target: " + Profile.fromMgdlToUnits(profile.getTargetMgdl(), profileFunction.getUnits())
             return ret
         }
 
@@ -463,11 +486,11 @@ class ActionStringHandler @Inject constructor(
 
     @Synchronized
     fun handleConfirmation(actionString: String) {
-        if (!sp.getBoolean("wearcontrol", false)) return
+        if (!sp.getBoolean(R.string.key_wear_control, false)) return
         //Guard from old or duplicate confirmations
         if (lastConfirmActionString == null) return
         if (lastConfirmActionString != actionString) return
-        if (System.currentTimeMillis() - lastSentTimestamp > TIMEOUT) return
+        if (System.currentTimeMillis() - lastSentTimestamp > timeout) return
         lastConfirmActionString = null
         // do the parsing, check constraints and enact!
         val act = actionString.split("\\s+".toRegex()).toTypedArray()
@@ -492,13 +515,13 @@ class ActionStringHandler @Inject constructor(
             generateTempTarget(duration, low, high)
         } else if ("wizard2" == act[0]) {
             if (lastBolusWizard != null) { //use last calculation as confirmed string matches
-                doBolus(lastBolusWizard!!.calculatedTotalInsulin, lastBolusWizard!!.carbs)
+                doBolus(lastBolusWizard!!.calculatedTotalInsulin, lastBolusWizard!!.carbs, null, 0)
                 lastBolusWizard = null
             }
         } else if ("bolus" == act[0]) {
             val insulin = SafeParse.stringToDouble(act[1])
             val carbs = SafeParse.stringToInt(act[2])
-            doBolus(insulin, carbs)
+            doBolus(insulin, carbs, null, 0)
         } else if ("cppset" == act[0]) {
             val timeshift = SafeParse.stringToInt(act[1])
             val percentage = SafeParse.stringToInt(act[2])
@@ -516,16 +539,6 @@ class ActionStringHandler @Inject constructor(
             notificationManager.cancel(Constants.notificationID)
         }
         lastBolusWizard = null
-    }
-
-    private fun doECarbs(carbs: Int, time: Long, duration: Int) {
-        if (carbs > 0) {
-            if (duration == 0) {
-                carbsGenerator.createCarb(carbs, time, CareportalEvent.CARBCORRECTION, "watch")
-            } else {
-                carbsGenerator.generateCarbs(carbs, time, duration, "watch eCarbs")
-            }
-        }
     }
 
     private fun setCPP(timeshift: Int, percentage: Int) {
@@ -550,29 +563,50 @@ class ActionStringHandler @Inject constructor(
             lastConfirmActionString = rAction
             return
         }
-        //send profile to pumpe
-        activePlugin.activeTreatments.doProfileSwitch(0, percentage, timeshift)
+        //send profile to pump
+        uel.log(Action.PROFILE_SWITCH, Sources.Wear,
+            ValueWithUnit.Percent(percentage),
+            ValueWithUnit.Hour(timeshift).takeIf { timeshift != 0 })
+        profileFunction.createProfileSwitch(0, percentage, timeshift)
     }
 
     private fun generateTempTarget(duration: Int, low: Double, high: Double) {
-        val tempTarget = TempTarget()
-            .date(System.currentTimeMillis())
-            .duration(duration)
-            .reason("WearPlugin")
-            .source(Source.USER)
-        if (tempTarget.durationInMinutes != 0) {
-            tempTarget.low(low).high(high)
+        if (duration != 0) {
+            disposable += repository.runTransactionForResult(InsertAndCancelCurrentTemporaryTargetTransaction(
+                timestamp = System.currentTimeMillis(),
+                duration = TimeUnit.MINUTES.toMillis(duration.toLong()),
+                reason = TemporaryTarget.Reason.WEAR,
+                lowTarget = Profile.toMgdl(low, profileFunction.getUnits()),
+                highTarget = Profile.toMgdl(high, profileFunction.getUnits())
+            )).subscribe({ result ->
+                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }
+                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
+            }, {
+                aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
+            })
+            uel.log(Action.TT, Sources.Wear,
+                ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.WEAR),
+                ValueWithUnit.fromGlucoseUnit(low, profileFunction.getUnits().asText),
+                ValueWithUnit.fromGlucoseUnit(high, profileFunction.getUnits().asText).takeIf { low != high },
+                ValueWithUnit.Minute(duration))
         } else {
-            tempTarget.low(0.0).high(0.0)
+            disposable += repository.runTransactionForResult(CancelCurrentTemporaryTargetIfAnyTransaction(System.currentTimeMillis()))
+                .subscribe({ result ->
+                    result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
+                }, {
+                    aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
+                })
+            uel.log(Action.CANCEL_TT, Sources.Wear,
+                ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.WEAR))
         }
-        activePlugin.activeTreatments.addToHistoryTempTarget(tempTarget)
     }
 
     private fun doFillBolus(amount: Double) {
         val detailedBolusInfo = DetailedBolusInfo()
         detailedBolusInfo.insulin = amount
-        detailedBolusInfo.isValid = false
-        detailedBolusInfo.source = Source.USER
+        detailedBolusInfo.bolusType = DetailedBolusInfo.BolusType.PRIMING
+        uel.log(Action.PRIME_BOLUS, Sources.Wear,
+            ValueWithUnit.Insulin(amount).takeIf { amount != 0.0 })
         commandQueue.bolus(detailedBolusInfo, object : Callback() {
             override fun run() {
                 if (!result.success) {
@@ -584,13 +618,32 @@ class ActionStringHandler @Inject constructor(
         })
     }
 
-    private fun doBolus(amount: Double, carbs: Int) {
+    private fun doECarbs(carbs: Int, time: Long, duration: Int) {
+        uel.log(if (duration == 0) Action.CARBS else Action.EXTENDED_CARBS, Sources.Wear,
+            ValueWithUnit.Timestamp(time),
+            ValueWithUnit.Gram(carbs),
+            ValueWithUnit.Hour(duration).takeIf { duration != 0 })
+        doBolus(0.0, carbs, time, duration)
+    }
+
+    private fun doBolus(amount: Double, carbs: Int, carbsTime: Long?, carbsDuration: Int) {
         val detailedBolusInfo = DetailedBolusInfo()
         detailedBolusInfo.insulin = amount
         detailedBolusInfo.carbs = carbs.toDouble()
-        detailedBolusInfo.source = Source.USER
-        val storesCarbs = activePlugin.activePump.pumpDescription.storesCarbInfo
-        if (detailedBolusInfo.insulin > 0 || storesCarbs) {
+        detailedBolusInfo.bolusType = DetailedBolusInfo.BolusType.NORMAL
+        detailedBolusInfo.carbsTimestamp = carbsTime
+        detailedBolusInfo.carbsDuration = T.hours(carbsDuration.toLong()).msecs()
+        if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
+            val action = when {
+                amount.equals(0.0) -> Action.CARBS
+                carbs.equals(0)    -> Action.BOLUS
+                carbsDuration > 0  -> Action.EXTENDED_CARBS
+                else               -> Action.TREATMENT
+            }
+            uel.log(action, Sources.Wear,
+                ValueWithUnit.Insulin(amount).takeIf { amount != 0.0 },
+                ValueWithUnit.Gram(carbs).takeIf { carbs != 0 },
+                ValueWithUnit.Hour(carbsDuration).takeIf { carbsDuration != 0 })
             commandQueue.bolus(detailedBolusInfo, object : Callback() {
                 override fun run() {
                     if (!result.success) {
@@ -600,13 +653,11 @@ class ActionStringHandler @Inject constructor(
                     }
                 }
             })
-        } else {
-            activePlugin.activeTreatments.addToHistoryTreatment(detailedBolusInfo, false)
         }
     }
 
-    @Synchronized private fun sendError(errormessage: String) {
-        wearPlugin.requestActionConfirmation("ERROR", errormessage, "error")
+    @Synchronized private fun sendError(errorMessage: String) {
+        wearPlugin.requestActionConfirmation("ERROR", errorMessage, "error")
         lastSentTimestamp = System.currentTimeMillis()
         lastConfirmActionString = null
         lastBolusWizard = null
@@ -618,13 +669,5 @@ class ActionStringHandler @Inject constructor(
         lastSentTimestamp = System.currentTimeMillis()
         lastConfirmActionString = null
         lastBolusWizard = null
-    } /*
-    public synchronized static void expectNotificationAction(String message, int id) {
-        String actionstring = "dismissoverviewnotification " + id;
-        WearPlugin.getPlugin().requestActionConfirmation("DISMISS", message, actionstring);
-        lastSentTimestamp = System.currentTimeMillis();
-        lastConfirmActionString = actionstring;
-        lastBolusWizard = null;
     }
-*/
 }

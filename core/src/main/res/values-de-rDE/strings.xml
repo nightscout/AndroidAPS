@@ -2,6 +2,7 @@
 <resources>
     <!--    Keys-->
     <!--    General-->
+    <string name="refresh">Aktualisieren</string>
     <string name="error">Fehler</string>
     <string name="not_set_short">Nicht angegeben</string>
     <string name="failedupdatebasalprofile">Fehler beim Aktualisieren des Basalprofils</string>
@@ -68,6 +69,41 @@
     <string name="pairing">Koppeln</string>
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
+    <string name="loopdisabled">LOOP DEAKTIVIERT DURCH BESCHRÄNKUNGEN</string>
+    <string name="bolusdelivered">Bolus %1$.2f IE erfolgreich abgegeben</string>
+    <string name="virtualpump_resultok">OK</string>
+    <string name="novalidbasalrate">Von der Pumpe konnte keine gültige Basalrate eingelesen werden.</string>
+    <string name="limitingmaxiob">Begrenze max. IOB auf %1$.1f IE wegen %2$s</string>
+    <string name="unsafeusage">Unsichere Benutzung</string>
+    <string name="pump_unreachable">Pumpe nicht erreichbar</string>
+    <string name="extended_bolus">Verzögerter Bolus</string>
+    <string name="pump_time_updated">Pumpenzeit aktualisiert</string>
+    <string name="exit">Verlassen</string>
+    <string name="serial_number">Seriennummer</string>
+    <string name="removerecord">Eintrag löschen</string>
+    <string name="loopisdisabled">Loop ist deaktiviert.</string>
+    <string name="alarm">Alarm</string>
+    <string name="disableloop">Loop deaktivieren</string>
+    <string name="enableloop">Loop aktivieren</string>
+    <string name="resumeloop">Loop fortsetzen</string>
+    <string name="suspendloop">Loop pausieren</string>
+    <string name="duration_min_label">Dauer [min]</string>
+    <string name="notification">Benachrichtigung</string>
+    <string name="noprofile">Bisher noch kein Profil von Nightscout geladen</string>
+    <string name="exists">vorhanden</string>
+    <string name="notexists">nicht vorhanden</string>
+    <string name="glucose">Glukose</string>
+    <string name="iob">IOB</string>
+    <string name="cob">COB</string>
+    <string name="name_short">Name:</string>
+    <string name="time">Zeit</string>
+    <string name="ns_wifi_ssids">WLAN SSID</string>
+    <string name="loading">Lade…</string>
+    <string name="event_time_label">Ereignis-Zeit</string>
+    <string name="notes_label">Notizen</string>
+    <string name="remove_button">Löschen</string>
+    <string name="addnew">Weiteren hinzufügen</string>
+    <string name="wrong_pump_data">Daten kommen von einer anderen Pumpe. Wechsle den Pumpentreiber.</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Begrenzung der max. Basalrate auf %1$.2f IE/h wegen %2$s</string>
     <string name="pumplimit">Limit der Pumpe</string>
@@ -83,6 +119,7 @@
     <string name="dismiss">VERWERFEN</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth-Low-Energy nicht unterstützt.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy nicht unterstützt oder Gerät nicht verbunden.</string>
     <string name="ble_not_enabled">Bluetooth nicht aktiviert.</string>
     <string name="location_not_found_title">Standortdienst ist nicht aktiviert</string>
     <string name="location_not_found_message">Auf neueren Geräten muss für die Bluetooth-Erkennung der Standortdienst aktiviert sein. AAPS speichert keine Standortdaten und der Dienst kann nach erfolgreichem Pairing wieder deaktiviert werden.</string>
@@ -116,6 +153,7 @@
     <string name="profile_carbs_per_unit">g/IE</string>
     <!--    ProfileFunction-->
     <string name="noprofileselected">Kein Profil ausgewählt</string>
+    <string name="startprofile">Profil %1$d%% für %2$d Min. starten</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Bei der virtuellen Pumpe können nur einzelne Werte und keine Bereiche zur Festlegung der Basal/Bolus-Granularität gewählt werden.</string>
     <!--    APSResult-->
@@ -132,6 +170,7 @@
     <!--    TDD-->
     <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f IE</b> Bol: <b>%3$.2f U</b> Bas: <b>%4$.2f IE(%5$.0f%%)</b>]]></string>
     <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f IE</b> Bol: <b>%3$.2f U</b> Bas: <b>%4$.2f IE(%5$.0f%%)</b> KH: <b>%6$.0f g</b>]]></string>
+    <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> in <b>%3$d</b> Tagen<br>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">BZ-Test</string>
     <string name="careportal_mbg">Manueller BZ oder Kalibrierung</string>
@@ -142,6 +181,8 @@
     <string name="careportal_pumpsitechange">Pumpenkatheter-Wechsel</string>
     <string name="careportal_cgmsensorinsert">CGM-Sensor gesetzt</string>
     <string name="careportal_cgmsensorstart">CGM-Sensor Start</string>
+    <string name="careportal_cgm_sensor_stop">CGM-Sensor-Stopp</string>
+    <string name="careportal_dad_alert">D.A.D. Warnung</string>
     <string name="careportal_insulincartridgechange">Insulinreservoir-Wechsel</string>
     <string name="careportal_profileswitch">Profilwechsel</string>
     <string name="careportal_snackbolus">Snack-Bolus</string>
@@ -159,6 +200,16 @@
     <string name="glucosetype_sensor">Sensor</string>
     <string name="manual">Manuell</string>
     <string name="unknown">unbekannt</string>
+    <string name="eatingsoon">Bald essen</string>
+    <string name="hypo">Hypo</string>
+    <string name="activity">Aktivität</string>
+    <string name="wear">Wear</string>
+    <string name="automation">Automatisierung</string>
+    <string name="custom">Benutzerdefiniert</string>
+    <string name="pump">Pumpe</string>
+    <string name="loop">Loop</string>
+    <string name="ns">NS</string>
+    <string name="record">Eintrag</string>
     <!--    Command-->
     <string name="connectiontimedout">Zeitüberschreitung bei Verbindung</string>
     <!--    PumpEnactResult-->
@@ -190,32 +241,9 @@
     <!--    Ntp-->
     <string name="timedetection">Zeiterkennung</string>
     <string name="format_hour_minute">%1$dh %2$dm</string>
-    <!-- PumoCommon - Pump Abstract -->
-    <string name="pump_operation_not_supported_by_pump_driver">Aktion von Pumpe und/oder Treiber nicht unterstützt.</string>
-    <string name="pump_operation_not_yet_supported_by_pump">Operation NOCH NICHT von Pumpe unterstützt.</string>
-    <string name="common_resultok">OK</string>
-    <!-- PumoCommon - Pump Status -->
-    <string name="pump_status_never_contacted">Nie verbunden</string>
-    <string name="pump_status_waking_up">Aufwecken</string>
-    <string name="pump_status_error_comm">Fehler bei der Kommunikation</string>
-    <string name="pump_status_timeout_comm">Zeitüberschreitung bei Kommunikation</string>
-    <string name="pump_status_pump_unreachable">Pumpe nicht erreichbar</string>
-    <string name="pump_status_invalid_config">Ungültige Einstellung</string>
-    <string name="pump_status_active">Aktiv</string>
-    <string name="pump_status_sleeping">Schlafen</string>
-    <!-- PumpCommon - History Group -->
-    <string name="history_group_basal">Basal</string>
-    <string name="history_group_configuration">Konfigurationen</string>
-    <string name="history_group_notification">Benachrichtigungen</string>
-    <string name="history_group_statistic">Statistiken</string>
-    <string name="history_group_unknown">Unbekannte</string>
-    <string name="history_group_all">Alle</string>
-    <string name="history_group_bolus">Boli</string>
-    <string name="history_group_prime">Füllen</string>
-    <string name="history_group_alarm">Alarme</string>
-    <string name="history_group_glucose">Glukose</string>
     <string name="mute5min">Stumm schalten für 5 Minuten</string>
     <!-- Maintenance -->
+    <string name="metadata_label_format">Dateiformat</string>
     <string name="metadata_label_created_at">Erstellt am</string>
     <string name="metadata_label_aaps_version">AAPS-Version</string>
     <string name="metadata_label_aaps_flavour">Build-Variante</string>
@@ -254,4 +282,48 @@
     <string name="running_invalid_version">Wir haben festgestellt, dass Du eine ungültige Version verwendest. Loop deaktiviert!</string>
     <string name="versionavailable">Version %1$s ist verfügbar.</string>
     <!-- Permissions -->
+    <string name="alert_dialog_storage_permission_text">Bitte starte dein Telefon neu oder starte AndroidAPS in den System-Einstellungen neu.\nAndernfalls wird AndroidAPS nichts protokollieren (wichtig zum Nachverfolgen und Verifizieren, dass der Algorithmus korrekt funktioniert)!</string>
+    <!-- WeekdayPicker -->
+    <string name="monday_short">Mo</string>
+    <string name="tuesday_short">Di</string>
+    <string name="wednesday_short">Mi</string>
+    <string name="thursday_short">Do</string>
+    <string name="friday_short">Fr</string>
+    <string name="saturday_short">Sa</string>
+    <string name="sunday_short">So</string>
+    <!-- User Entry -->
+    <string name="uel_tt">TEMP. ZIEL</string>
+    <string name="uel_cancel_bolus">BOLUS ABBRECHEN</string>
+    <string name="uel_cancel_tt">TEMP. ZIEL ABBRECHEN</string>
+    <string name="uel_site_change">KANÜLENWECHSEL</string>
+    <string name="uel_reservoir_change">RESERVOIRWECHSEL</string>
+    <string name="uel_tt_ns_refresh">TEMP. ZIEL NS AKTUALISIEREN</string>
+    <string name="uel_bolus_removed">BOLUS ENTFERNT</string>
+    <string name="uel_carbs_removed">KOHLENHYDRATE ENTFERNT</string>
+    <string name="uel_temp_basal_removed">TEMP BASAL ENTFERNT</string>
+    <string name="uel_food">NAHRUNG</string>
+    <string name="uel_tt_removed">TEMP ZIEL ENTFERNT</string>
+    <string name="uel_stop_sms">STOP SMS</string>
+    <string name="uel_start_aaps">STARTE AAPS</string>
+    <string name="uel_exit_aaps">AAPS BEENDEN</string>
+    <string name="uel_plugin_enabled">PLUGIN AKTIVIERT</string>
+    <string name="uel_plugin_disabled">PLUGIN DEAKTIVIERT</string>
+    <string name="ue_string">Zeichenfolge</string>
+    <string name="ue_source">Quelle</string>
+    <string name="ue_utc_offset">UTC-Abstand</string>
+    <string name="ue_action">Aktion</string>
+    <string name="ue_timestamp">Zeitstempel</string>
+    <string name="ue_none">Keine Einheit</string>
+    <plurals name="days">
+        <item quantity="one">%1$d Tag</item>
+        <item quantity="other">%1$d Tage</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d Stunde</item>
+        <item quantity="other">%1$d Stunden</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d Minute</item>
+        <item quantity="other">%1$d Minuten</item>
+    </plurals>
 </resources>

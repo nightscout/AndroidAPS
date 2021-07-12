@@ -9,9 +9,6 @@ import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import info.nightscout.androidaps.R
-import kotlinx.android.synthetic.main.overview_fragment_nsclient.view.*
-import kotlinx.android.synthetic.main.overview_info_layout.view.*
-import kotlinx.android.synthetic.main.overview_statuslights_layout.view.*
 
 interface SkinInterface {
 
@@ -21,65 +18,70 @@ interface SkinInterface {
     val secondaryGraphHeight: Int // in dp
 
     @LayoutRes
-    fun overviewLayout(isLandscape: Boolean, isTablet: Boolean, isSmallHeight: Boolean): Int
-
-    @LayoutRes
     fun actionsLayout(isLandscape: Boolean, isSmallWidth: Boolean): Int = R.layout.actions_fragment
 
-    fun preProcessLandscapeOverviewLayout(dm: DisplayMetrics, view: View, isTablet: Boolean) {
+    fun preProcessLandscapeOverviewLayout(dm: DisplayMetrics, view: View, isLandscape: Boolean, isTablet: Boolean, isSmallHeight: Boolean) {
         // pre-process landscape mode
         val screenWidth = dm.widthPixels
         val screenHeight = dm.heightPixels
         val landscape = screenHeight < screenWidth
 
         if (landscape) {
-            val iobLayoutParams = view.overview_iob_llayout.layoutParams as ConstraintLayout.LayoutParams
+            val iobLayout = view.findViewById<LinearLayout>(R.id.iob_layout)
+            val iobLayoutParams = iobLayout.layoutParams as ConstraintLayout.LayoutParams
+            val timeLayout = view.findViewById<LinearLayout>(R.id.time_layout)
             iobLayoutParams.startToStart = ConstraintLayout.LayoutParams.UNSET
-            iobLayoutParams.startToEnd = view.overview_time_llayout.id
+            iobLayoutParams.startToEnd = timeLayout.id
             iobLayoutParams.topToBottom = ConstraintLayout.LayoutParams.UNSET
             iobLayoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-            val timeLayoutParams = view.overview_time_llayout.layoutParams as ConstraintLayout.LayoutParams
+            val timeLayoutParams = timeLayout.layoutParams as ConstraintLayout.LayoutParams
             timeLayoutParams.endToEnd = ConstraintLayout.LayoutParams.UNSET
-            timeLayoutParams.endToStart = view.overview_iob_llayout.id
-            val cobLayoutParams = view.overview_cob_llayout.layoutParams as ConstraintLayout.LayoutParams
+            timeLayoutParams.endToStart = iobLayout.id
+            val cobLayoutParams = view.findViewById<LinearLayout>(R.id.cob_layout).layoutParams as ConstraintLayout.LayoutParams
             cobLayoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-            val basalLayoutParams = view.overview_basal_llayout.layoutParams as ConstraintLayout.LayoutParams
+            val basalLayoutParams = view.findViewById<LinearLayout>(R.id.basal_layout).layoutParams as ConstraintLayout.LayoutParams
             basalLayoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-            val extendedLayoutParams = view.overview_extended_llayout.layoutParams as ConstraintLayout.LayoutParams
+            val extendedLayoutParams = view.findViewById<LinearLayout>(R.id.extended_layout).layoutParams as ConstraintLayout.LayoutParams
             extendedLayoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-            val asLayoutParams = view.overview_as_llayout.layoutParams as ConstraintLayout.LayoutParams
+            val asLayoutParams = view.findViewById<LinearLayout>(R.id.as_layout).layoutParams as ConstraintLayout.LayoutParams
             asLayoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
 
             if (isTablet) {
                 for (v in listOf<TextView?>(
-                    view.overview_bg,
-                    view.overview_time,
-                    view.overview_timeagoshort,
-                    view.overview_iob,
-                    view.overview_cob,
-                    view.overview_basebasal,
-                    view.overview_extendedbolus,
-                    view.overview_sensitivity
+                    view.findViewById(R.id.bg),
+                    view.findViewById(R.id.time),
+                    view.findViewById(R.id.time_ago_short),
+                    view.findViewById(R.id.iob),
+                    view.findViewById(R.id.cob),
+                    view.findViewById(R.id.base_basal),
+                    view.findViewById(R.id.extended_bolus),
+                    view.findViewById(R.id.sensitivity)
                 )) v?.setTextSize(COMPLEX_UNIT_PX, v.textSize * 1.5f)
                 for (v in listOf<TextView?>(
-                    view.overview_pump,
-                    view.overview_openaps,
-                    view.overview_uploader,
-                    view.careportal_canulaage,
-                    view.careportal_insulinage,
-                    view.careportal_reservoirlevel,
-                    view.careportal_reservoirlevel,
-                    view.careportal_sensorage,
-                    view.careportal_pbage,
-                    view.careportal_batterylevel
+                    view.findViewById(R.id.pump),
+                    view.findViewById(R.id.openaps),
+                    view.findViewById(R.id.uploader),
+                    view.findViewById(R.id.cannula_age),
+                    view.findViewById(R.id.insulin_age),
+                    view.findViewById(R.id.reservoir_level),
+                    view.findViewById(R.id.sensor_age),
+                    view.findViewById(R.id.pb_age),
+                    view.findViewById(R.id.battery_level)
                 )) v?.setTextSize(COMPLEX_UNIT_PX, v.textSize * 1.3f)
-                view.overview_time_llayout?.orientation = LinearLayout.HORIZONTAL
-                view.overview_timeagoshort?.setTextSize(COMPLEX_UNIT_PX, view.overview_time.textSize)
+                timeLayout?.orientation = LinearLayout.HORIZONTAL
+                view.findViewById<TextView>(R.id.time_ago_short)?.setTextSize(COMPLEX_UNIT_PX, view.findViewById<TextView>(R.id.time).textSize)
 
-                view.overview_delta_large?.visibility = View.VISIBLE
+                view.findViewById<TextView>(R.id.delta_large)?.visibility = View.VISIBLE
             } else {
-                view.overview_delta_large?.visibility = View.GONE
+                view.findViewById<TextView>(R.id.delta_large)?.visibility = View.GONE
             }
         }
+    }
+
+    fun moveButtonsLayout(root: LinearLayout) {
+        val buttonsLayout = root.findViewById<LinearLayout>(R.id.buttons_layout)
+        root.removeView(buttonsLayout)
+        val innerLayout = root.findViewById<LinearLayout>(R.id.inner_layout)
+        innerLayout.addView(buttonsLayout)
     }
 }

@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.dialogs
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -13,22 +12,34 @@ import androidx.fragment.app.FragmentManager
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.OfflineEvent
+import info.nightscout.androidaps.database.entities.ValueWithUnit
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.transactions.CancelCurrentOfflineEventIfAnyTransaction
+import info.nightscout.androidaps.database.transactions.InsertAndCancelCurrentOfflineEventTransaction
 import info.nightscout.androidaps.databinding.DialogLoopBinding
-import info.nightscout.androidaps.events.*
+import info.nightscout.androidaps.events.EventPreferenceChange
+import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.extensions.toVisibility
+import info.nightscout.androidaps.extensions.toVisibility
+import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import javax.inject.Inject
 
 class LoopDialog : DaggerDialogFragment() {
@@ -41,19 +52,24 @@ class LoopDialog : DaggerDialogFragment() {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var loopPlugin: LoopPlugin
-    @Inject lateinit var objectivesPlugin: ObjectivesPlugin
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var commandQueue: CommandQueueProvider
-    @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
+    @Inject lateinit var configBuilder: ConfigBuilder
+    @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var repository: AppRepository
 
     private var showOkCancel: Boolean = true
     private var _binding: DialogLoopBinding? = null
     private var loopHandler = Handler()
     private var refreshDialog: Runnable? = null
+
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+
+    val disposable = CompositeDisposable()
 
     override fun onStart() {
         super.onStart()
@@ -104,7 +120,7 @@ class LoopDialog : DaggerDialogFragment() {
         binding.cancel.setOnClickListener { dismiss() }
 
         refreshDialog = Runnable {
-            scheduleUpdateGUI("refreshDialog")
+            scheduleUpdateGUI()
             loopHandler.postDelayed(refreshDialog, 15 * 1000L)
         }
         loopHandler.postDelayed(refreshDialog, 15 * 1000L)
@@ -115,15 +131,16 @@ class LoopDialog : DaggerDialogFragment() {
         super.onDestroyView()
         _binding = null
         loopHandler.removeCallbacksAndMessages(null)
+        disposable.clear()
     }
 
     var task: Runnable? = null
 
-    private fun scheduleUpdateGUI(from: String) {
+    private fun scheduleUpdateGUI() {
         class UpdateRunnable : Runnable {
 
             override fun run() {
-                updateGUI(from)
+                updateGUI("refreshDialog")
                 task = null
             }
         }
@@ -137,8 +154,8 @@ class LoopDialog : DaggerDialogFragment() {
         if (_binding == null) return
         aapsLogger.debug("UpdateGUI from $from")
         val pumpDescription: PumpDescription = activePlugin.activePump.pumpDescription
-        val closedLoopAllowed = objectivesPlugin.isClosedLoopAllowed(Constraint(true))
-        val lgsEnabled = objectivesPlugin.isLgsAllowed(Constraint(true))
+        val closedLoopAllowed = constraintChecker.isClosedLoopAllowed(Constraint(true))
+        val lgsEnabled = constraintChecker.isLgsAllowed(Constraint(true))
         val apsMode = sp.getString(R.string.key_aps_mode, "open")
         if (profileFunction.isProfileValid("LoopDialogUpdateGUI")) {
             if (loopPlugin.isEnabled(PluginType.LOOP)) {
@@ -193,9 +210,10 @@ class LoopDialog : DaggerDialogFragment() {
                 binding.overviewDisconnectButtons.visibility = View.GONE
                 binding.overviewReconnect.visibility = View.VISIBLE
             }
+            binding.overviewLoop.visibility = (!loopPlugin.isSuspended && !loopPlugin.isDisconnected).toVisibility()
         }
         val profile = profileFunction.getProfile()
-        val profileStore = activePlugin.activeProfileInterface.profile
+        val profileStore = activePlugin.activeProfileSource.profile
 
         if (profile == null || profileStore == null) {
             ToastUtils.showToastInUiThread(ctx, resourceHelper.gs(R.string.noprofile))
@@ -208,22 +226,22 @@ class LoopDialog : DaggerDialogFragment() {
     private fun onClickOkCancelEnabled(v: View): Boolean {
         var description = ""
         when (v.id) {
-            R.id.overview_closeloop -> description = resourceHelper.gs(R.string.closedloop)
-            R.id.overview_lgsloop -> description = resourceHelper.gs(R.string.lowglucosesuspend)
-            R.id.overview_openloop -> description = resourceHelper.gs(R.string.openloop)
-            R.id.overview_disable -> description = resourceHelper.gs(R.string.disableloop)
-            R.id.overview_enable -> description = resourceHelper.gs(R.string.enableloop)
-            R.id.overview_resume -> description = resourceHelper.gs(R.string.resume)
-            R.id.overview_reconnect -> description = resourceHelper.gs(R.string.reconnect)
-            R.id.overview_suspend_1h -> description = resourceHelper.gs(R.string.suspendloopfor1h)
-            R.id.overview_suspend_2h -> description = resourceHelper.gs(R.string.suspendloopfor2h)
-            R.id.overview_suspend_3h -> description = resourceHelper.gs(R.string.suspendloopfor3h)
-            R.id.overview_suspend_10h -> description = resourceHelper.gs(R.string.suspendloopfor10h)
+            R.id.overview_closeloop      -> description = resourceHelper.gs(R.string.closedloop)
+            R.id.overview_lgsloop        -> description = resourceHelper.gs(R.string.lowglucosesuspend)
+            R.id.overview_openloop       -> description = resourceHelper.gs(R.string.openloop)
+            R.id.overview_disable        -> description = resourceHelper.gs(R.string.disableloop)
+            R.id.overview_enable         -> description = resourceHelper.gs(R.string.enableloop)
+            R.id.overview_resume         -> description = resourceHelper.gs(R.string.resume)
+            R.id.overview_reconnect      -> description = resourceHelper.gs(R.string.reconnect)
+            R.id.overview_suspend_1h     -> description = resourceHelper.gs(R.string.suspendloopfor1h)
+            R.id.overview_suspend_2h     -> description = resourceHelper.gs(R.string.suspendloopfor2h)
+            R.id.overview_suspend_3h     -> description = resourceHelper.gs(R.string.suspendloopfor3h)
+            R.id.overview_suspend_10h    -> description = resourceHelper.gs(R.string.suspendloopfor10h)
             R.id.overview_disconnect_15m -> description = resourceHelper.gs(R.string.disconnectpumpfor15m)
             R.id.overview_disconnect_30m -> description = resourceHelper.gs(R.string.disconnectpumpfor30m)
-            R.id.overview_disconnect_1h -> description = resourceHelper.gs(R.string.disconnectpumpfor1h)
-            R.id.overview_disconnect_2h -> description = resourceHelper.gs(R.string.disconnectpumpfor2h)
-            R.id.overview_disconnect_3h -> description = resourceHelper.gs(R.string.disconnectpumpfor3h)
+            R.id.overview_disconnect_1h  -> description = resourceHelper.gs(R.string.disconnectpumpfor1h)
+            R.id.overview_disconnect_2h  -> description = resourceHelper.gs(R.string.disconnectpumpfor2h)
+            R.id.overview_disconnect_3h  -> description = resourceHelper.gs(R.string.disconnectpumpfor3h)
         }
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.confirm), description, Runnable {
@@ -234,35 +252,34 @@ class LoopDialog : DaggerDialogFragment() {
     }
 
     fun onClick(v: View): Boolean {
-        val profile = profileFunction.getProfile() ?: return true
         when (v.id) {
-            R.id.overview_closeloop -> {
-                aapsLogger.debug("USER ENTRY: CLOSED LOOP MODE")
+            R.id.overview_closeloop                       -> {
+                uel.log(Action.CLOSED_LOOP_MODE, Sources.LoopDialog)
                 sp.putString(R.string.key_aps_mode, "closed")
                 rxBus.send(EventPreferenceChange(resourceHelper.gs(R.string.closedloop)))
                 return true
             }
 
-            R.id.overview_lgsloop -> {
-                aapsLogger.debug("USER ENTRY: LGS LOOP MODE")
+            R.id.overview_lgsloop                         -> {
+                uel.log(Action.LGS_LOOP_MODE, Sources.LoopDialog)
                 sp.putString(R.string.key_aps_mode, "lgs")
                 rxBus.send(EventPreferenceChange(resourceHelper.gs(R.string.lowglucosesuspend)))
                 return true
             }
 
-            R.id.overview_openloop -> {
-                aapsLogger.debug("USER ENTRY: OPEN LOOP MODE")
+            R.id.overview_openloop                        -> {
+                uel.log(Action.OPEN_LOOP_MODE, Sources.LoopDialog)
                 sp.putString(R.string.key_aps_mode, "open")
                 rxBus.send(EventPreferenceChange(resourceHelper.gs(R.string.lowglucosesuspend)))
                 return true
             }
 
-            R.id.overview_disable -> {
-                aapsLogger.debug("USER ENTRY: LOOP DISABLED")
+            R.id.overview_disable                         -> {
+                uel.log(Action.LOOP_DISABLED, Sources.LoopDialog)
                 loopPlugin.setPluginEnabled(PluginType.LOOP, false)
                 loopPlugin.setFragmentVisible(PluginType.LOOP, false)
-                configBuilderPlugin.storeSettings("DisablingLoop")
-                rxBus.send(EventRefreshOverview("suspendmenu"))
+                configBuilder.storeSettings("DisablingLoop")
+                rxBus.send(EventRefreshOverview("suspend_menu"))
                 commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {
                         if (!result.success) {
@@ -270,102 +287,121 @@ class LoopDialog : DaggerDialogFragment() {
                         }
                     }
                 })
-                loopPlugin.createOfflineEvent(24 * 60) // upload 24h, we don't know real duration
+                disposable += repository.runTransactionForResult(InsertAndCancelCurrentOfflineEventTransaction(dateUtil.now(), T.days(365).msecs(), OfflineEvent.Reason.DISABLE_LOOP))
+                    .subscribe({ result ->
+                        result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent $it") }
+                        result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted OfflineEvent $it") }
+                    }, {
+                        aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it)
+                    })
                 return true
             }
 
-            R.id.overview_enable -> {
-                aapsLogger.debug("USER ENTRY: LOOP ENABLED")
+            R.id.overview_enable                          -> {
+                uel.log(Action.LOOP_ENABLED, Sources.LoopDialog)
                 loopPlugin.setPluginEnabled(PluginType.LOOP, true)
                 loopPlugin.setFragmentVisible(PluginType.LOOP, true)
-                configBuilderPlugin.storeSettings("EnablingLoop")
-                rxBus.send(EventRefreshOverview("suspendmenu"))
-                loopPlugin.createOfflineEvent(0)
+                configBuilder.storeSettings("EnablingLoop")
+                rxBus.send(EventRefreshOverview("suspend_menu"))
+                disposable += repository.runTransactionForResult(CancelCurrentOfflineEventIfAnyTransaction(dateUtil.now()))
+                    .subscribe({ result ->
+                        result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent $it") }
+                    }, {
+                        aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it)
+                    })
                 return true
             }
 
             R.id.overview_resume, R.id.overview_reconnect -> {
-                aapsLogger.debug("USER ENTRY: RESUME")
-                loopPlugin.suspendTo(0L)
-                rxBus.send(EventRefreshOverview("suspendmenu"))
+                uel.log(if (v.id == R.id.overview_resume) Action.RESUME else Action.RECONNECT, Sources.LoopDialog)
+                disposable += repository.runTransactionForResult(CancelCurrentOfflineEventIfAnyTransaction(dateUtil.now()))
+                    .subscribe({ result ->
+                        result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent $it") }
+                    }, {
+                        aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it)
+                    })
+                rxBus.send(EventRefreshOverview("suspend_menu"))
                 commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            val i = Intent(ctx, ErrorHelperActivity::class.java)
-                            i.putExtra("soundid", R.raw.boluserror)
-                            i.putExtra("status", result.comment)
-                            i.putExtra("title", resourceHelper.gs(R.string.tempbasaldeliveryerror))
-                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            ctx.startActivity(i)
+                            ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
                         }
                     }
                 })
                 sp.putBoolean(R.string.key_objectiveusereconnect, true)
-                loopPlugin.createOfflineEvent(0)
                 return true
             }
 
-            R.id.overview_suspend_1h -> {
-                aapsLogger.debug("USER ENTRY: SUSPEND 1h")
-                loopPlugin.suspendLoop(60)
-                rxBus.send(EventRefreshOverview("suspendmenu"))
+            R.id.overview_suspend_1h                      -> {
+                uel.log(Action.SUSPEND, Sources.LoopDialog, ValueWithUnit.Hour(1))
+                loopPlugin.suspendLoop(T.hours(1).mins().toInt())
+                rxBus.send(EventRefreshOverview("suspend_menu"))
                 return true
             }
 
-            R.id.overview_suspend_2h -> {
-                aapsLogger.debug("USER ENTRY: SUSPEND 2h")
-                loopPlugin.suspendLoop(120)
-                rxBus.send(EventRefreshOverview("suspendmenu"))
+            R.id.overview_suspend_2h                      -> {
+                uel.log(Action.SUSPEND, Sources.LoopDialog, ValueWithUnit.Hour(2))
+                loopPlugin.suspendLoop(T.hours(2).mins().toInt())
+                rxBus.send(EventRefreshOverview("suspend_menu"))
                 return true
             }
 
-            R.id.overview_suspend_3h -> {
-                aapsLogger.debug("USER ENTRY: SUSPEND 3h")
-                loopPlugin.suspendLoop(180)
-                rxBus.send(EventRefreshOverview("suspendmenu"))
+            R.id.overview_suspend_3h                      -> {
+                uel.log(Action.SUSPEND, Sources.LoopDialog, ValueWithUnit.Hour(3))
+                loopPlugin.suspendLoop(T.hours(3).mins().toInt())
+                rxBus.send(EventRefreshOverview("suspend_menu"))
                 return true
             }
 
-            R.id.overview_suspend_10h -> {
-                aapsLogger.debug("USER ENTRY: SUSPEND 10h")
-                loopPlugin.suspendLoop(600)
-                rxBus.send(EventRefreshOverview("suspendmenu"))
+            R.id.overview_suspend_10h                     -> {
+                uel.log(Action.SUSPEND, Sources.LoopDialog, ValueWithUnit.Hour(10))
+                loopPlugin.suspendLoop(T.hours(10).mins().toInt())
+                rxBus.send(EventRefreshOverview("suspend_menu"))
                 return true
             }
 
-            R.id.overview_disconnect_15m -> {
-                aapsLogger.debug("USER ENTRY: DISCONNECT 15m")
-                loopPlugin.disconnectPump(15, profile)
-                rxBus.send(EventRefreshOverview("suspendmenu"))
+            R.id.overview_disconnect_15m                  -> {
+                profileFunction.getProfile()?.let { profile ->
+                    uel.log(Action.DISCONNECT, Sources.LoopDialog, ValueWithUnit.Minute(15))
+                    loopPlugin.goToZeroTemp(T.mins(15).mins().toInt(), profile, OfflineEvent.Reason.DISCONNECT_PUMP)
+                    rxBus.send(EventRefreshOverview("suspend_menu"))
+                }
                 return true
             }
 
-            R.id.overview_disconnect_30m -> {
-                aapsLogger.debug("USER ENTRY: DISCONNECT 30m")
-                loopPlugin.disconnectPump(30, profile)
-                rxBus.send(EventRefreshOverview("suspendmenu"))
+            R.id.overview_disconnect_30m                  -> {
+                profileFunction.getProfile()?.let { profile ->
+                    uel.log(Action.DISCONNECT, Sources.LoopDialog, ValueWithUnit.Minute(30))
+                    loopPlugin.goToZeroTemp(T.mins(30).mins().toInt(), profile, OfflineEvent.Reason.DISCONNECT_PUMP)
+                    rxBus.send(EventRefreshOverview("suspend_menu"))
+                }
                 return true
             }
 
-            R.id.overview_disconnect_1h -> {
-                aapsLogger.debug("USER ENTRY: DISCONNECT 1h")
-                loopPlugin.disconnectPump(60, profile)
-                sp.putBoolean(R.string.key_objectiveusedisconnect, true)
-                rxBus.send(EventRefreshOverview("suspendmenu"))
+            R.id.overview_disconnect_1h                   -> {
+                profileFunction.getProfile()?.let { profile ->
+                    uel.log(Action.DISCONNECT, Sources.LoopDialog, ValueWithUnit.Hour(1))
+                    loopPlugin.goToZeroTemp(T.hours(1).mins().toInt(), profile, OfflineEvent.Reason.DISCONNECT_PUMP)
+                    rxBus.send(EventRefreshOverview("suspend_menu"))
+                }
                 return true
             }
 
-            R.id.overview_disconnect_2h -> {
-                aapsLogger.debug("USER ENTRY: DISCONNECT 2h")
-                loopPlugin.disconnectPump(120, profile)
-                rxBus.send(EventRefreshOverview("suspendmenu"))
+            R.id.overview_disconnect_2h                   -> {
+                profileFunction.getProfile()?.let { profile ->
+                    uel.log(Action.DISCONNECT, Sources.LoopDialog, ValueWithUnit.Hour(2))
+                    loopPlugin.goToZeroTemp(T.hours(2).mins().toInt(), profile, OfflineEvent.Reason.DISCONNECT_PUMP)
+                    rxBus.send(EventRefreshOverview("suspend_menu"))
+                }
                 return true
             }
 
-            R.id.overview_disconnect_3h -> {
-                aapsLogger.debug("USER ENTRY: DISCONNECT 3h")
-                loopPlugin.disconnectPump(180, profile)
-                rxBus.send(EventRefreshOverview("suspendmenu"))
+            R.id.overview_disconnect_3h                   -> {
+                profileFunction.getProfile()?.let { profile ->
+                    uel.log(Action.DISCONNECT, Sources.LoopDialog, ValueWithUnit.Hour(3))
+                    loopPlugin.goToZeroTemp(T.hours(3).mins().toInt(), profile, OfflineEvent.Reason.DISCONNECT_PUMP)
+                    rxBus.send(EventRefreshOverview("suspend_menu"))
+                }
                 return true
             }
         }

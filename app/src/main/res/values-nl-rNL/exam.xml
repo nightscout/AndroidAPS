@@ -8,7 +8,7 @@
     <string name="dia_meaningisequaltodiapump">Als je er zeker van bent dat de waarde voor DIA die je in je pomp hebt gebruikt voor AndroidAPS, goed werkte, dan is het niet nodig om deze te wijzigen als je begint met loopen.</string>
     <string name="dia_valuemustbedetermined">Je moet voor jezelf de juiste waarde voor DIA bepalen.</string>
     <string name="hypott_label">Hypo Tijdelijk streefdoel</string>
-    <string name="hypott_whenhypott">Wat is de primaire reden om een Hypo tijdelijk streefdoel in te stellen?</string>
+    <string name="hypott_whenhypott">Wat is de belangrijkste reden om een tijdelijk hypo streefdoel in te stellen?</string>
     <string name="hypott_wrongbasal">Om te corrigeren voor hypo\'s veroorzaakt door onjuiste basaalstanden.</string>
     <string name="hypott_preventoversmb">Om te voorkomen dat AndroidAPS overcorrigeert voor een bloedglucosestijging veroorzaakt door de snel werkende koolhydraten die gebruikt worden voor een hypo.</string>
     <string name="hypott_exercise">Om te corrigeren voor een hypo veroorzaakt door inspanning.</string>
@@ -48,7 +48,7 @@
     <string name="exerciseprofile_label">Beweging en profielen</string>
     <string name="exerciseprofile_whattodo">Hoe kun je profielen gebruiken om het systeem het beste te helpen omgaan met conditietraining?</string>
     <string name="exerciseprofile_switchprofilebelow100">Doe een profielwissel naar minder dan 100%.</string>
-    <string name="exerciseprofile_switchprofileabove100">Doe een profielwissel naar meer dan 100%. </string>
+    <string name="exerciseprofile_switchprofileabove100">Pas het profiel percentage aan naar een waarde boven de 100%.</string>
     <string name="exerciseprofile_leaveat100">Laat het profiel op 100% staan.</string>
     <string name="exerciseprofile_suspendloop">Onderbreek de loop.</string>
     <string name="exerciseprofile_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/nl/Usage/temptarget.html#activiteit-tijdelijk-streefdoel</string>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod Dash - Description -->
+    <string name="omnipod_dash_pump_description">Integrace pumpy pro Omnipod Dash (nový model s funkcí Bluetooth a modrým krytem).</string>
+    <!-- Omnipod Dash - Keys -->
+    <!-- Omnipod Dash - Overview -->
+    <string name="omnipod_dash_bluetooth_status">Stav Bluetooth</string>
+    <string name="omnipod_dash_bluetooth_address">Adresa Bluetooth</string>
+</resources>

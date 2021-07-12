@@ -24,7 +24,7 @@
     <string name="unsupportedfirmware">Firmware bomba não suportado</string>
     <string name="pumperror">Erro Bomba</string>
     <string name="lowbattery">Bateria fraca</string>
-    <string name="basalcompare">A administrar menos que a taxa de base predefinida</string>
+    <string name="basalcompare">A administrar menos insulina basal que a predefinida</string>
     <string name="pumpshutdown">Encerrar Bomba</string>
     <string name="batterydischarged">Bateria da Bomba Descarregada</string>
     <string name="occlusion">Oclusão</string>
@@ -32,9 +32,9 @@
     <string name="checkshaft">Verificar Eixo</string>
     <string name="basalmax">Máx Basal</string>
     <string name="dailymax">Máx Diário</string>
-    <string name="bloodsugarmeasurementalert">Alerta medição da glicemia</string>
+    <string name="bloodsugarmeasurementalert">Alerta medição da glicose</string>
     <string name="remaininsulinalert">Nível de insulina restante</string>
-    <string name="missedbolus">Bólus não administrado</string>
+    <string name="missedbolus">Bólus Não Administrado</string>
     <string name="invalidpairing">Informações de emparelhamento inválidas. A solicitar novo emparelhamento</string>
     <string name="gettingpumpstatus">A obter estado bomba</string>
     <string name="gettingextendedbolusstatus">A procurar o estado do bólus prolongado</string>
@@ -68,7 +68,7 @@
     <string name="danar_useroptions">Opções do utilizador</string>
     <string name="danar_timedisplay">Formato hora</string>
     <string name="danar_buttonscroll">Botão rolamento</string>
-    <string name="danar_beep">Sinal ao pressionar botão</string>
+    <string name="danar_beep">Beep ao pressionar botão</string>
     <string name="danar_pumpalarm">Alarme</string>
     <string name="danar_pumpalarm_sound">Som</string>
     <string name="danar_pumpalarm_vibrate">Vibrar</string>
@@ -92,8 +92,8 @@
     <string name="danarv2pump">DanaRv2</string>
     <string name="danar_disableeasymode">Desactivar modo EasyUI na bomba</string>
     <string name="profile_set_failed">Não foi possível configurar o perfil de basal</string>
-    <string name="danar_bluetooth_status">Estado Bluetooth</string>
-    <string name="danar_iob_label">IOB Bomba</string>
+    <string name="danar_bluetooth_status">Estado do Bluetooth</string>
+    <string name="danar_iob_label">IA Bomba</string>
     <string name="basal_step">Incremento Basal</string>
     <string name="bolus_step">Incremento Bólus</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -105,8 +105,7 @@
     <string name="danar_bt_name_title">Dispositivo Bluetooth DanaR</string>
     <string name="danars_password_title">Senha da bomba (apenas v1)</string>
     <string name="danar_password_title">Senha da bomba</string>
-    <string name="danar_useextended_title">Usar bólus prolongado por &gt;200%%</string>
-    <string name="danar_visualizeextendedaspercentage_title">Visualizar bólus prolongado como %%</string>
+    <string name="danar_useextended_title">Utilizar bólus estendido por &gt;200%%</string>
     <string name="bolusspeed">Velocidade Bólus</string>
     <string name="selectedpump">Bomba seleccionada</string>
     <string name="rs_loginsulinchange_title">Registar mudança de reservatório</string>

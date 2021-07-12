@@ -1,89 +1,98 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsExtendedBolusesFragment">
+    android:orientation="vertical"
+    tools:context="info.nightscout.androidaps.plugins.general.food.TreatmentsFoodFragment">
+
+    <info.nightscout.androidaps.utils.ui.SingleClickButton
+        android:id="@+id/refresh_from_nightscout"
+        style="?android:attr/buttonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:drawableStart="@drawable/ic_refresh"
+        android:text="@string/refresheventsfromnightscout"
+        tools:visibility="visible" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <ImageView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:contentDescription="@string/filter"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            app:srcCompat="@android:drawable/ic_menu_search" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                app:srcCompat="@android:drawable/ic_menu_search"
-                android:layout_height="wrap_content" />
-
-            <EditText
-                android:id="@+id/food_filter"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="text"
-                android:text="" />
-
-            <ImageView
-                android:id="@+id/food_clearfilter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <EditText
+            android:id="@+id/filter"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:orientation="horizontal">
+            android:layout_weight="1"
+            android:autofillHints="@string/filter"
+            android:ems="10"
+            android:inputType="text"
+            android:text="" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/category" />
+        <ImageView
+            android:id="@+id/clearfilter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/clear_filter"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+    </LinearLayout>
 
-            <Spinner
-                android:id="@+id/food_category"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:minWidth="100dp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:text="@string/category" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/subcategory" />
+        <Spinner
+            android:id="@+id/category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:minWidth="100dp" />
 
-            <Spinner
-                android:id="@+id/food_subcategory"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:minWidth="100dp" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
-        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:text="@string/subcategory" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/food_recyclerview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        </androidx.recyclerview.widget.RecyclerView>
+        <Spinner
+            android:id="@+id/subcategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:minWidth="100dp" />
 
     </LinearLayout>
 
-</FrameLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+</LinearLayout>

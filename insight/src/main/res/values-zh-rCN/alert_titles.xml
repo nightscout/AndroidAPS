@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="alert_r1_title">输注大剂量</string>
+    <string name="alert_r2_title">缺失大剂量</string>
+    <string name="alert_r3_title">报警闹钟</string>
+    <string name="alert_r4_title">更换管路</string>
+    <string name="alert_r7_title">TBR 已完成</string>
+    <string name="alert_w31_title">储药器药量低</string>
+    <string name="alert_w32_title">电池电量低</string>
+    <string name="alert_w33_title">无效的时间/日期</string>
+    <string name="alert_w34_title">保修期结束</string>
+    <string name="alert_w36_title">TBR 已取消</string>
+    <string name="alert_w38_title">大剂量已经取消</string>
+    <string name="alert_w39_title">超时警告</string>
+    <string name="alert_m20_title">储药器没有插入</string>
+    <string name="alert_m21_title">储药器空了</string>
+    <string name="alert_m22_title">电池耗尽</string>
+    <string name="alert_m23_title">自动关闭 - 泵停止了</string>
+    <string name="alert_m24_title">堵管</string>
+    <string name="alert_m25_title">超时-结束操作</string>
+    <string name="alert_m26_title">储药器更换未完成</string>
+    <string name="alert_m27_title">数据下载失败</string>
+    <string name="alert_m28_title">暂停模式超时</string>
+    <string name="alert_m29_title">电池类型未设置</string>
+    <string name="alert_m30_title">储药器类型未设置</string>
+    <string name="alert_e6_title">机械错误</string>
+    <string name="alert_e10_title">螺杆复位错误</string>
+    <string name="alert_e13_title">语言错误</string>
+</resources>

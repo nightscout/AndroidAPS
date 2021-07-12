@@ -64,7 +64,7 @@
     <string name="riley_link_common_yes">Áno</string>
     <string name="riley_link_common_no">Nie</string>
     <!-- RileyLink - Preferences -->
-    <string name="riley_link_show_battery_level">Ukázať úroveň batérie nahlásenú OrangeLinkom/RileyLinkom</string>
+    <string name="riley_link_show_battery_level">Zobraziť úroveň batérie reportovanú prostredníctvom OrangeLink/EmaLink/DiaLink</string>
     <string name="riley_link_show_battery_level_summary">NEPRACUJE s pôvodným RileyLinkom. Nemusí pracovať s inými alternatívami RileyLinku.</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d deň</item>

@@ -4,6 +4,7 @@
     xmlns:validate="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
+        android:key="@string/key_localalert_settings"
         android:title="@string/localalertsettings_title"
         app:initialExpandedChildrenCount="0">
 
@@ -43,7 +44,7 @@
             validate:testType="numericRange" />
 
         <SwitchPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="@string/key_raise_notifications_as_android_notifications"
             android:title="@string/raise_notifications_as_android_notifications" />
 

@@ -8,7 +8,7 @@ import androidx.annotation.StringRes
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.setupwizard.SWValidator
 
-class SWHtmlLink(injector: HasAndroidInjector) : SWItem(injector, Type.HTMLLINK) {
+class SWHtmlLink(injector: HasAndroidInjector) : SWItem(injector, Type.HTML_LINK) {
 
     private var textLabel: String? = null
     private var l: TextView? = null

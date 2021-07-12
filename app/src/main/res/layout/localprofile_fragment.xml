@@ -26,7 +26,7 @@
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <Spinner
-                android:id="@+id/localprofile_spinner"
+                android:id="@+id/spinner"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -43,7 +43,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/localprofile_units"
+                android:id="@+id/units"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -58,7 +58,7 @@
                 android:layout_weight="1" />
 
             <ImageView
-                android:id="@+id/localprofile_profile_add"
+                android:id="@+id/profile_add"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_gravity="center_vertical"
@@ -67,7 +67,7 @@
                 app:srcCompat="@drawable/ic_add" />
 
             <ImageView
-                android:id="@+id/localprofile_profile_clone"
+                android:id="@+id/profile_clone"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_gravity="center_vertical"
@@ -76,7 +76,7 @@
                 app:srcCompat="@drawable/ic_clone" />
 
             <ImageView
-                android:id="@+id/localprofile_profile_remove"
+                android:id="@+id/profile_remove"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_gravity="center_vertical"
@@ -92,14 +92,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:weightSum="5"
-            android:paddingBottom="10dp">
+            android:paddingBottom="10dp"
+            android:weightSum="5">
 
             <TextView
                 android:id="@+id/dia_tab"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:text="@string/dia_short"
                 android:textAlignment="center"
@@ -110,7 +109,6 @@
                 android:id="@+id/ic_tab"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:text="@string/ic_short"
                 android:textAlignment="center"
@@ -121,7 +119,6 @@
                 android:id="@+id/isf_tab"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:text="@string/isf_short"
                 android:textAlignment="center"
@@ -132,7 +129,6 @@
                 android:id="@+id/basal_tab"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:text="@string/basal_short"
                 android:textAlignment="center"
@@ -143,7 +139,6 @@
                 android:id="@+id/target_tab"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:text="@string/target_short"
                 android:textAlignment="center"
@@ -152,7 +147,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/localprofile_dia_placeholder"
+            android:id="@+id/dia_placeholder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -168,12 +163,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_marginBottom="10dp"
-                    android:labelFor="@+id/localprofile_name"
+                    android:labelFor="@+id/name"
                     android:text="@string/profile_name"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <EditText
-                    android:id="@+id/localprofile_name"
+                    android:id="@+id/name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
@@ -200,7 +195,7 @@
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <info.nightscout.androidaps.utils.ui.NumberPicker
-                    android:id="@+id/localprofile_dia"
+                    android:id="@+id/dia"
                     android:layout_width="130dp"
                     android:layout_height="40dp"
                     android:layout_marginEnd="10dp"
@@ -218,28 +213,42 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/localprofile_ic"
+            android:id="@+id/ic"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="10dp"
             android:orientation="vertical" />
 
         <LinearLayout
-            android:id="@+id/localprofile_isf"
+            android:id="@+id/isf"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="10dp"
             android:orientation="vertical" />
 
         <LinearLayout
-            android:id="@+id/localprofile_basal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
-            android:orientation="vertical" />
+            android:id="@+id/basal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/basal_holder"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical" />
+
+            <info.nightscout.androidaps.utils.ui.ProfileGraph
+                android:id="@+id/basal_graph"
+                android:layout_width="match_parent"
+                android:layout_height="100dip"
+                android:layout_margin="20dp" />
+
+        </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/localprofile_target"
+            android:id="@+id/target"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="10dp"
@@ -248,20 +257,20 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/localprofile_profileswitch"
+            android:id="@+id/profileswitch"
             style="?android:attr/buttonStyle"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="3dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_marginTop="3dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="3dp"
             android:layout_weight="1"
+            android:drawableStart="@drawable/ic_local_activate"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:text="@string/activate_profile"
-            android:drawableStart="@drawable/ic_local_activate" />
+            android:text="@string/activate_profile" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -270,7 +279,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/localprofile_reset"
+                android:id="@+id/reset"
                 style="?android:attr/buttonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -286,7 +295,7 @@
                 android:text="@string/reset" />
 
             <Button
-                android:id="@+id/localprofile_save"
+                android:id="@+id/save"
                 style="?android:attr/buttonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.general.food
 
-import android.content.DialogInterface
+import android.annotation.SuppressLint
 import android.graphics.Paint
 import android.os.Bundle
 import android.text.Editable
@@ -10,55 +10,95 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.Food
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.ValueWithUnit
+import info.nightscout.androidaps.database.transactions.InvalidateFoodTransaction
+import info.nightscout.androidaps.databinding.FoodFragmentBinding
+import info.nightscout.androidaps.databinding.FoodItemBinding
 import info.nightscout.androidaps.events.EventFoodDatabaseChanged
+import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.general.food.FoodFragment.RecyclerViewAdapter.FoodsViewHolder
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
+import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog.showConfirmation
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import io.reactivex.android.schedulers.AndroidSchedulers
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import io.reactivex.Completable
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.food_fragment.*
+import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxkotlin.subscribeBy
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 
 class FoodFragment : DaggerFragment() {
 
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var foodPlugin: FoodPlugin
-    @Inject lateinit var nsUpload: NSUpload
+    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var uel: UserEntryLogger
 
     private val disposable = CompositeDisposable()
-    private lateinit var unfiltered: List<Food>
-    private lateinit var filtered: MutableList<Food>
+    private var unfiltered: List<Food> = arrayListOf()
+    private var filtered: MutableList<Food> = arrayListOf()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.food_fragment, container, false)
+    private var _binding: FoodFragmentBinding? = null
+
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = FoodFragmentBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
+    @kotlin.ExperimentalStdlibApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        food_recyclerview.setHasFixedSize(true)
-        food_recyclerview.layoutManager = LinearLayoutManager(view.context)
-        food_recyclerview.adapter = RecyclerViewAdapter(foodPlugin.service?.foodData ?: ArrayList())
+        binding.recyclerview.setHasFixedSize(true)
+        binding.recyclerview.layoutManager = LinearLayoutManager(view.context)
 
-        food_clearfilter.setOnClickListener {
-            food_filter.setText("")
-            food_category.setSelection(0)
-            food_subcategory.setSelection(0)
+        binding.refreshFromNightscout.setOnClickListener {
+            context?.let { context ->
+                OKDialog.showConfirmation(context, resourceHelper.gs(R.string.refresheventsfromnightscout) + " ?", {
+                    uel.log(Action.FOOD, Sources.Food, resourceHelper.gs(R.string.refresheventsfromnightscout),
+                        ValueWithUnit.SimpleString(resourceHelper.gsNotLocalised(R.string.refresheventsfromnightscout)))
+                    disposable += Completable.fromAction { repository.deleteAllFoods() }
+                        .subscribeOn(aapsSchedulers.io)
+                        .observeOn(aapsSchedulers.main)
+                        .subscribeBy(
+                            onError = { aapsLogger.error("Error removing foods", it) },
+                            onComplete = { rxBus.send(EventFoodDatabaseChanged()) }
+                        )
+
+                    rxBus.send(EventNSClientRestart())
+                })
+            }
+        }
+
+        binding.clearfilter.setOnClickListener {
+            binding.filter.setText("")
+            binding.category.setSelection(0)
+            binding.subcategory.setSelection(0)
             filterData()
         }
-        food_category.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding.category.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 fillSubcategories()
                 filterData()
@@ -69,7 +109,7 @@ class FoodFragment : DaggerFragment() {
                 filterData()
             }
         }
-        food_subcategory.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding.subcategory.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 filterData()
             }
@@ -78,7 +118,7 @@ class FoodFragment : DaggerFragment() {
                 filterData()
             }
         }
-        food_filter.addTextChangedListener(object : TextWatcher {
+        binding.filter.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 filterData()
@@ -86,51 +126,71 @@ class FoodFragment : DaggerFragment() {
 
             override fun afterTextChanged(s: Editable) {}
         })
-        loadData()
-        fillCategories()
-        fillSubcategories()
-        filterData()
     }
 
-    @Synchronized override fun onResume() {
+    @Synchronized
+    @kotlin.ExperimentalStdlibApi
+    override fun onResume() {
         super.onResume()
         disposable.add(rxBus
             .toObservable(EventFoodDatabaseChanged::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGui() }) { fabricPrivacy.logException(it) }
+            .observeOn(aapsSchedulers.main)
+            .debounce(1L, TimeUnit.SECONDS)
+            .subscribe({ swapAdapter() }, fabricPrivacy::logException)
         )
-        updateGui()
+        swapAdapter()
     }
 
-    @Synchronized override fun onPause() {
+    @kotlin.ExperimentalStdlibApi
+    private fun swapAdapter() {
+        disposable += repository
+            .getFoodData()
+            .observeOn(aapsSchedulers.main)
+            .subscribe { list ->
+                unfiltered = list
+                fillCategories()
+                fillSubcategories()
+                filterData()
+                binding.recyclerview.swapAdapter(RecyclerViewAdapter(filtered), true)
+            }
+    }
+
+    @Synchronized
+    override fun onPause() {
         super.onPause()
         disposable.clear()
     }
 
-    private fun loadData() {
-        unfiltered = foodPlugin.service?.foodData ?: ArrayList()
+    @Synchronized
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun fillCategories() {
         val catSet: MutableSet<CharSequence> = HashSet()
         for (f in unfiltered) {
-            if (f.category != null && f.category != "") catSet.add(f.category)
+            val category = f.category
+            if (!category.isNullOrBlank()) catSet.add(category)
         }
         // make it unique
         val categories = ArrayList(catSet)
         categories.add(0, resourceHelper.gs(R.string.none))
         context?.let { context ->
             val adapterCategories = ArrayAdapter(context, R.layout.spinner_centered, categories)
-            food_category.adapter = adapterCategories
+            binding.category.adapter = adapterCategories
         }
     }
 
     private fun fillSubcategories() {
-        val categoryFilter = food_category.selectedItem.toString()
+        val categoryFilter = binding.category.selectedItem.toString()
         val subCatSet: MutableSet<CharSequence> = HashSet()
         if (categoryFilter != resourceHelper.gs(R.string.none)) {
             for (f in unfiltered) {
-                if (f.category != null && f.category == categoryFilter) if (f.subcategory != null && f.subcategory != "") subCatSet.add(f.subcategory)
+                if (f.category != null && f.category == categoryFilter) {
+                    val subCategory = f.subCategory
+                    if (!subCategory.isNullOrEmpty()) subCatSet.add(subCategory)
+                }
             }
         }
         // make it unique
@@ -138,76 +198,75 @@ class FoodFragment : DaggerFragment() {
         subcategories.add(0, resourceHelper.gs(R.string.none))
         context?.let { context ->
             val adapterSubcategories = ArrayAdapter(context, R.layout.spinner_centered, subcategories)
-            food_subcategory.adapter = adapterSubcategories
+            binding.subcategory.adapter = adapterSubcategories
         }
     }
 
+    @kotlin.ExperimentalStdlibApi
     private fun filterData() {
-        val textFilter = food_filter.text.toString()
-        val categoryFilter = food_category.selectedItem.toString()
-        val subcategoryFilter = food_subcategory.selectedItem.toString()
-        val newfiltered = ArrayList<Food>()
+        val textFilter = binding.filter.text.toString()
+        val categoryFilter = binding.category.selectedItem?.toString()
+            ?: resourceHelper.gs(R.string.none)
+        val subcategoryFilter = binding.subcategory.selectedItem?.toString()
+            ?: resourceHelper.gs(R.string.none)
+        val newFiltered = ArrayList<Food>()
         for (f in unfiltered) {
-            if (f.name == null || f.category == null || f.subcategory == null) continue
-            if (subcategoryFilter != resourceHelper.gs(R.string.none) && f.subcategory != subcategoryFilter) continue
+            if (f.category == null || f.subCategory == null) continue
+            if (subcategoryFilter != resourceHelper.gs(R.string.none) && f.subCategory != subcategoryFilter) continue
             if (categoryFilter != resourceHelper.gs(R.string.none) && f.category != categoryFilter) continue
-            if (textFilter != "" && !f.name.toLowerCase(Locale.getDefault()).contains(textFilter.toLowerCase(Locale.getDefault()))) continue
-            newfiltered.add(f)
+            if (textFilter != "" && !f.name.lowercase(Locale.getDefault()).contains(textFilter.lowercase(Locale.getDefault()))) continue
+            newFiltered.add(f)
         }
-        filtered = newfiltered
-        updateGui()
+        filtered = newFiltered
+        binding.recyclerview.swapAdapter(RecyclerViewAdapter(filtered), true)
     }
 
-    protected fun updateGui() {
-        food_recyclerview?.swapAdapter(RecyclerViewAdapter(filtered), true)
-    }
+    fun Int?.isNotZero(): Boolean = this != null && this != 0
 
-    inner class RecyclerViewAdapter internal constructor(var foodList: List<Food>) : RecyclerView.Adapter<FoodsViewHolder>() {
+    inner class RecyclerViewAdapter internal constructor(private var foodList: List<Food>) : RecyclerView.Adapter<RecyclerViewAdapter.FoodsViewHolder>() {
+
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): FoodsViewHolder {
             val v = LayoutInflater.from(viewGroup.context).inflate(R.layout.food_item, viewGroup, false)
             return FoodsViewHolder(v)
         }
 
+        @SuppressLint("SetTextI18n")
         override fun onBindViewHolder(holder: FoodsViewHolder, position: Int) {
             val food = foodList[position]
-            holder.ns.visibility = if (food._id != null) View.VISIBLE else View.GONE
-            holder.name.text = food.name
-            holder.portion.text = food.portion.toString() + food.units
-            holder.carbs.text = food.carbs.toString() + resourceHelper.gs(R.string.shortgramm)
-            holder.fat.text = resourceHelper.gs(R.string.shortfat) + ": " + food.fat + resourceHelper.gs(R.string.shortgramm)
-            if (food.fat == 0) holder.fat.visibility = View.INVISIBLE
-            holder.protein.text = resourceHelper.gs(R.string.shortprotein) + ": " + food.protein + resourceHelper.gs(R.string.shortgramm)
-            if (food.protein == 0) holder.protein.visibility = View.INVISIBLE
-            holder.energy.text = resourceHelper.gs(R.string.shortenergy) + ": " + food.energy + resourceHelper.gs(R.string.shortkilojoul)
-            if (food.energy == 0) holder.energy.visibility = View.INVISIBLE
-            holder.remove.tag = food
+            holder.binding.nsSign.visibility = (food.interfaceIDs.nightscoutId != null).toVisibility()
+            holder.binding.name.text = food.name
+            holder.binding.portion.text = food.portion.toString() + food.unit
+            holder.binding.carbs.text = food.carbs.toString() + resourceHelper.gs(R.string.shortgramm)
+            holder.binding.fat.text = resourceHelper.gs(R.string.shortfat) + ": " + food.fat + resourceHelper.gs(R.string.shortgramm)
+            holder.binding.fat.visibility = food.fat.isNotZero().toVisibility()
+            holder.binding.protein.text = resourceHelper.gs(R.string.shortprotein) + ": " + food.protein + resourceHelper.gs(R.string.shortgramm)
+            holder.binding.protein.visibility = food.protein.isNotZero().toVisibility()
+            holder.binding.energy.text = resourceHelper.gs(R.string.shortenergy) + ": " + food.energy + resourceHelper.gs(R.string.shortkilojoul)
+            holder.binding.energy.visibility = food.energy.isNotZero().toVisibility()
+            holder.binding.remove.tag = food
         }
 
         override fun getItemCount(): Int = foodList.size
 
         inner class FoodsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            var name: TextView = itemView.findViewById(R.id.food_name)
-            var portion: TextView = itemView.findViewById(R.id.food_portion)
-            var carbs: TextView = itemView.findViewById(R.id.food_carbs)
-            var fat: TextView = itemView.findViewById(R.id.food_fat)
-            var protein: TextView = itemView.findViewById(R.id.food_protein)
-            var energy: TextView = itemView.findViewById(R.id.food_energy)
-            var ns: TextView = itemView.findViewById(R.id.ns_sign)
-            var remove: TextView = itemView.findViewById(R.id.food_remove)
+
+            val binding = FoodItemBinding.bind(itemView)
 
             init {
-                remove.setOnClickListener { v: View ->
+                binding.remove.setOnClickListener { v: View ->
                     val food = v.tag as Food
                     activity?.let { activity ->
-                        showConfirmation(activity, resourceHelper.gs(R.string.confirmation), resourceHelper.gs(R.string.removerecord) + "\n" + food.name, DialogInterface.OnClickListener { _: DialogInterface?, _: Int ->
-                            if (food._id != null && food._id != "") {
-                                nsUpload.removeFoodFromNS(food._id)
-                            }
-                            foodPlugin.service?.delete(food)
+                        OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord) + "\n" + food.name, {
+                            uel.log(Action.FOOD_REMOVED, Sources.Food, food.name)
+                            disposable += repository.runTransactionForResult(InvalidateFoodTransaction(food.id))
+                                .subscribe(
+                                    { aapsLogger.error(LTag.DATABASE, "Invalidated food $it") },
+                                    { aapsLogger.error(LTag.DATABASE, "Error while invalidating food", it) }
+                                )
                         }, null)
                     }
                 }
-                remove.paintFlags = remove.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+                binding.remove.paintFlags = binding.remove.paintFlags or Paint.UNDERLINE_TEXT_FLAG
             }
         }
     }

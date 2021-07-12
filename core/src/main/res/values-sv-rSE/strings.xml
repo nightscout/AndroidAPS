@@ -68,6 +68,28 @@
     <string name="pairing">Parkoppling</string>
     <string name="yes">Ja</string>
     <string name="no">Nej</string>
+    <string name="loopdisabled">LOOP INAKTIVERAD PGA BEGRÄNSNINGAR</string>
+    <string name="bolusdelivered">Bolus %1$.2f enheter levererat</string>
+    <string name="novalidbasalrate">Ingen giltig data om temp basaler fanns i pumpen</string>
+    <string name="limitingmaxiob">Begränsar max IOB till %1$.1f pga %2$s</string>
+    <string name="unsafeusage">osäker användning</string>
+    <string name="pump_unreachable">Pumpen kan inte nås</string>
+    <string name="pump_time_updated">Tiden uppdaterad i pumpen</string>
+    <string name="removerecord">Ta bort post</string>
+    <string name="disableloop">Inaktivera loop</string>
+    <string name="enableloop">Aktivera loop</string>
+    <string name="resumeloop">Återuppta loop</string>
+    <string name="suspendloop">Pausa loop</string>
+    <string name="notification">Avisering</string>
+    <string name="noprofile">Ingen profil laddad från Nightscout ännu</string>
+    <string name="exists">finns</string>
+    <string name="notexists">finns inte</string>
+    <string name="glucose">Glukos</string>
+    <string name="name_short">Namn:</string>
+    <string name="time">Tid</string>
+    <string name="ns_wifi_ssids">WiFi nätverksnamn</string>
+    <string name="event_time_label">När</string>
+    <string name="addnew">Lägg till</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Max basal: %1$.2f E/h pga %2$s</string>
     <string name="pumplimit">pumpbegränsning</string>
@@ -116,6 +138,7 @@
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
     <string name="noprofileselected">Ingen profil vald</string>
+    <string name="startprofile">Byt till profil %1$d%% i %2$d min</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Inga spann stöds som granularitet för basal/bolus i den virtuella pumpen. Endast enkla värden.</string>
     <!--    APSResult-->
@@ -155,10 +178,17 @@
     <string name="careportal_pumpbatterychange">Byte pumpbatteri</string>
     <string name="careportal_temporarytarget">Temp mål</string>
     <string name="careportal_temporarytargetcancel">Avbryt temp mål</string>
+    <string name="boluswizard">Kalkylator</string>
     <string name="glucosetype_finger">Finger</string>
     <string name="glucosetype_sensor">Sensor</string>
     <string name="manual">Manuell</string>
     <string name="unknown">okänd</string>
+    <string name="eatingsoon">Äta snart</string>
+    <string name="hypo">Hypo</string>
+    <string name="activity">Träning</string>
+    <string name="wear">Klocka (Wear)</string>
+    <string name="automation">Automation</string>
+    <string name="custom">Anpassad</string>
     <!--    Command-->
     <string name="connectiontimedout">Anslutningen tog för lång tid</string>
     <!--    PumpEnactResult-->
@@ -190,30 +220,6 @@
     <!--    Ntp-->
     <string name="timedetection">Tidsdetektering</string>
     <string name="format_hour_minute">%1$dh %2$dm</string>
-    <!-- PumoCommon - Pump Abstract -->
-    <string name="pump_operation_not_supported_by_pump_driver">Operation stöds inte av pumpen/pumpdrivrutinen.</string>
-    <string name="pump_operation_not_yet_supported_by_pump">Operationen stöds inte av pumpen ännu.</string>
-    <string name="common_resultok">OK</string>
-    <!-- PumoCommon - Pump Status -->
-    <string name="pump_status_never_contacted">Aldrig ansluten</string>
-    <string name="pump_status_waking_up">Väcker</string>
-    <string name="pump_status_error_comm">Kommunikationsfel</string>
-    <string name="pump_status_timeout_comm">Kommunikationstimeout</string>
-    <string name="pump_status_pump_unreachable">Pumpen kan inte nås</string>
-    <string name="pump_status_invalid_config">Felaktig konfiguration</string>
-    <string name="pump_status_active">Aktiv</string>
-    <string name="pump_status_sleeping">Sover</string>
-    <!-- PumpCommon - History Group -->
-    <string name="history_group_basal">Basaldoser</string>
-    <string name="history_group_configuration">Konfigurationer</string>
-    <string name="history_group_notification">Notiser</string>
-    <string name="history_group_statistic">Statistik</string>
-    <string name="history_group_unknown">Okända</string>
-    <string name="history_group_all">Alla</string>
-    <string name="history_group_bolus">Bolusar</string>
-    <string name="history_group_prime">Förfyllningar</string>
-    <string name="history_group_alarm">Larm</string>
-    <string name="history_group_glucose">Glukos</string>
     <string name="mute5min">Tysta i 5 minuter</string>
     <!-- Maintenance -->
     <string name="metadata_label_created_at">Skapad</string>
@@ -254,4 +260,6 @@
     <string name="running_invalid_version">Du kör en ogiltig version. Loop avstängd!</string>
     <string name="versionavailable">Version %1$s tillgänglig</string>
     <!-- Permissions -->
+    <!-- WeekdayPicker -->
+    <!-- User Entry -->
 </resources>

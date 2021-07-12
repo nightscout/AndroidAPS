@@ -3,6 +3,7 @@ package info.nightscout.androidaps.queue.commands
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.queue.Callback
@@ -17,6 +18,7 @@ abstract class Command(
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var repository: AppRepository
 
     enum class CommandType {
         BOLUS,
@@ -28,6 +30,7 @@ abstract class Command(
         READSTATUS,
         LOAD_HISTORY,  // TDDs and so far only Dana specific
         LOAD_EVENTS,  // so far only Dana specific
+        LOAD_TDD,
         SET_USER_SETTINGS,  // so far only Dana specific,
         START_PUMP,
         STOP_PUMP,
@@ -36,6 +39,7 @@ abstract class Command(
     }
 
     init {
+        @Suppress("LeakingThis")
         injector.androidInjector().inject(this)
     }
 

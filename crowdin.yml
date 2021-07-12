@@ -1,8 +1,6 @@
 files:
   - source: /app/src/main/res/values/strings.xml
     translation: /app/src/main/res/values-%android_code%/strings.xml
-  - source: /app/src/main/res/values/insight_*.xml
-    translation: /app/src/main/res/values-%android_code%/%original_file_name%
   - source: /app/src/main/res/values/exam.xml
     translation: /app/src/main/res/values-%android_code%/%original_file_name%
   - source: /app/src/main/res/values/objectives.xml
@@ -11,15 +9,35 @@ files:
     translation: /wear/src/main/res/values-%android_code%/strings.xml
   - source: /app/src/main/res/values/protection.xml
     translation: /app/src/main/res/values-%android_code%/protection.xml
-  - source: /app/src/main/res/values/validator.xml
-    translation: /app/src/main/res/values-%android_code%/validator.xml
+  - source: /core/src/main/res/values/validator.xml
+    translation: /core/src/main/res/values-%android_code%/validator.xml
   - source: /core/src/main/res/values/strings.xml
     translation: /core/src/main/res/values-%android_code%/strings.xml
+  - source: /combo/src/main/res/values/strings.xml
+    translation: /combo/src/main/res/values-%android_code%/strings.xml
   - source: /dana/src/main/res/values/strings.xml
     translation: /dana/src/main/res/values-%android_code%/strings.xml
   - source: /medtronic/src/main/res/values/strings.xml
     translation: /medtronic/src/main/res/values-%android_code%/strings.xml
-  - source: /omnipod/src/main/res/values/strings.xml
-    translation: /omnipod/src/main/res/values-%android_code%/strings.xml
+  - source: /omnipod-common/src/main/res/values/strings.xml
+    translation: /omnipod-common/src/main/res/values-%android_code%/strings.xml
+  - source: /omnipod-dash/src/main/res/values/strings.xml
+    translation: /omnipod-dash/src/main/res/values-%android_code%/strings.xml
+  - source: /omnipod-eros/src/main/res/values/strings.xml
+    translation: /omnipod-eros/src/main/res/values-%android_code%/strings.xml
   - source: /rileylink/src/main/res/values/strings.xml
     translation: /rileylink/src/main/res/values-%android_code%/strings.xml
+  - source: /insight/src/main/res/values/strings.xml
+    translation: /insight/src/main/res/values-%android_code%/strings.xml
+  - source: /insight/src/main/res/values/alert_codes.xml
+    translation: /insight/src/main/res/values-%android_code%/alert_codes.xml
+  - source: /insight/src/main/res/values/alert_descriptions.xml
+    translation: /insight/src/main/res/values-%android_code%/alert_descriptions.xml
+  - source: /insight/src/main/res/values/alert_titles.xml
+    translation: /insight/src/main/res/values-%android_code%/alert_titles.xml
+  - source: /insight/src/main/res/values/exceptions.xml
+    translation: /insight/src/main/res/values-%android_code%/exceptions.xml
+  - source: /automation/src/main/res/values/strings.xml
+    translation: /automation/src/main/res/values-%android_code%/strings.xml
+  - source: /diaconn/src/main/res/values/strings.xml
+    translation: /diaconn/src/main/res/values-%android_code%/strings.xml

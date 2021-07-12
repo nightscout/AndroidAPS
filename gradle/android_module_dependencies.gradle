@@ -1,0 +1,25 @@
+android {
+
+    flavorDimensions "standard"
+    productFlavors {
+        full {
+            dimension "standard"
+        }
+        pumpcontrol {
+            dimension "standard"
+        }
+        nsclient {
+            dimension "standard"
+        }
+        nsclient2 {
+            dimension "standard"
+        }
+    }
+}
+
+dependencies {
+    annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
+    annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
+    kapt "com.google.dagger:dagger-android-processor:$dagger_version"
+    kapt "com.google.dagger:dagger-compiler:$dagger_version"
+}

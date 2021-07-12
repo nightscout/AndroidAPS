@@ -5,7 +5,7 @@ import android.os.Build
 import com.scottyab.rootbeer.RootBeer
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interfaces.ConstraintsInterface
+import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
@@ -27,7 +27,7 @@ class PhoneCheckerPlugin @Inject constructor(
     .showInList(false)
     .pluginName(R.string.phonechecker),
     aapsLogger, resourceHelper, injector
-), ConstraintsInterface {
+), Constraints {
 
     var phoneRooted: Boolean = false
     var devMode: Boolean = false

@@ -7,8 +7,9 @@ import android.widget.TextView
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.events.EventStatus
 import info.nightscout.androidaps.setupwizard.elements.SWItem
-import io.reactivex.android.schedulers.AndroidSchedulers
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import javax.inject.Inject
 
 class SWEventListener constructor(
     injector: HasAndroidInjector,
@@ -21,11 +22,13 @@ class SWEventListener constructor(
     private var textView: TextView? = null
     private var visibilityValidator: SWValidator? = null
 
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
+
     // TODO: Adrian how to clear disposable in this case?
     init {
         disposable.add(rxBus
             .toObservable(clazz)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe { event: Any ->
                 status = (event as EventStatus).getStatus(resourceHelper)
                 @SuppressLint("SetTextI18n")

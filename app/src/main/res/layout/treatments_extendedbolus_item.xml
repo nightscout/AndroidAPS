@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/extendedboluses_cardview"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
@@ -23,115 +23,62 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:gravity="center_vertical|right"
-                android:paddingLeft="10dp"
-                android:paddingRight="5dp"
-                android:text="{fa-clock-o}" />
+                android:gravity="center_vertical"
+                android:paddingStart="10dp"
+                android:paddingEnd="5dp"
+                android:text="{fa-clock-o}"
+                tools:ignore="HardcodedText" />
 
             <TextView
-                android:id="@+id/extendedboluses_date"
+                android:id="@+id/date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1.1.2000 18:00"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                tools:ignore="HardcodedText" />
 
             <TextView
-                android:id="@+id/extendedboluses_insulin"
+                android:id="@+id/insulin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
+                android:paddingStart="10dp"
                 android:text="150%"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                tools:ignore="HardcodedText,RtlSymmetry" />
 
             <TextView
-                android:id="@+id/extendedboluses_duration"
+                android:id="@+id/duration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
+                android:paddingStart="10dp"
                 android:text="30 min"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                tools:ignore="HardcodedText,RtlSymmetry" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                android:paddingLeft="10dp"
-                android:paddingRight="5dp"
-                android:text="@string/tempbasals_realduration_label_string"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-
-            <TextView
-                android:id="@+id/extendedboluses_realduration"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:paddingRight="10dp"
-                android:text="10 min"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                android:paddingRight="5dp"
-                android:text="@string/tempbasals_netratio_label_string"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-
-            <TextView
-                android:id="@+id/extendedboluses_ratio"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:paddingRight="10dp"
-                android:text="0.05 U/h"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                android:paddingRight="5dp"
-                android:text="@string/tempbasals_netinsulin_label_string"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-
-            <TextView
-                android:id="@+id/extendedboluses_netinsulin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:paddingRight="10dp"
-                android:text="0.05 U"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="1"
                 android:text="" />
 
             <TextView
-                android:id="@+id/pump_sign"
+                android:id="@+id/ph"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
                 android:text="PH"
-                android:textColor="@color/colorSetTempButton" />
+                android:textColor="@color/colorSetTempButton"
+                tools:ignore="HardcodedText" />
 
             <TextView
-                android:id="@+id/ns_sign"
+                android:id="@+id/ns"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
                 android:text="NS"
-                android:textColor="@color/colorSetTempButton" />
+                android:textColor="@color/colorSetTempButton"
+                tools:ignore="HardcodedText" />
 
         </LinearLayout>
 
@@ -145,40 +92,79 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
                 android:paddingLeft="10dp"
+                android:paddingEnd="5dp"
+                android:text="@string/tempbasals_netratio_label_string"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                tools:ignore="RtlSymmetry" />
+
+            <TextView
+                android:id="@+id/ratio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:paddingEnd="10dp"
+                android:text="0.05 U/h"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText,RtlSymmetry" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
                 android:paddingRight="10dp"
                 android:text="@string/tempbasals_iob_label_string"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/extendedboluses_iob"
+                android:id="@+id/iob"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginRight="30dp"
+                android:layout_marginEnd="30dp"
                 android:text="0.12 U"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
 
             <TextView
-                android:id="@+id/extendedboluses_remove"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="1"
-                android:text="@string/overview_quickwizard_item_remove_button"
+                android:text="" />
+
+            <TextView
+                android:id="@+id/invalid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="@string/invalid"
+                android:textColor="@android:color/holo_red_light" />
+
+            <TextView
+                android:id="@+id/remove"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="@string/remove_button"
                 android:textAlignment="viewEnd"
                 android:textColor="@android:color/holo_orange_light" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                tools:ignore="RtlSymmetry" />
 
         </LinearLayout>
 
         <View
             android:layout_width="fill_parent"
             android:layout_height="2dip"
-            android:layout_alignParentBottom="true"
             android:layout_marginBottom="5dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginTop="5dp"
-            android:background="@color/listdelimiter" />
+            android:background="@color/list_delimiter" />
 
     </LinearLayout>
 

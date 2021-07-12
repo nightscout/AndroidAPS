@@ -2,7 +2,6 @@
 <resources>
     <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
-    <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="nav_preferences_plugin">%1$s Sainroghanna</string>
     <string name="nav_preferences">Sainroghanna</string>
@@ -32,17 +31,14 @@
     <string name="openapsma_profile_label">Próifíl</string>
     <string name="result">Toradh</string>
     <string name="result_insulin_carbs">Toradh: %1$s %2$s</string>
-    <string name="glucose">Glúcóis</string>
     <string name="delta">Deilte</string>
     <string name="sms_delta">Deilte:</string>
     <string name="treatments">Cóireálacha</string>
     <string name="configbuilder_pump">Caidéil</string>
-    <string name="configbuilder_treatments">Cóireálacha</string>
     <string name="configbuilder_profile">Próifíl</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_general">Ginearálta</string>
     <string name="constraints">Srianta</string>
-    <string name="loop">Lúb</string>
     <string name="configbuilder_loop">Lúb</string>
     <string name="loop_aps_label">APS</string>
     <string name="overview_calculator_label">Áireamhán</string>
@@ -55,14 +51,10 @@
     <string name="closedloop">Lúb dúnta</string>
     <string name="openloop">Lúb oscailte</string>
     <string name="disabledloop">Lúb díchumasaithe</string>
-    <string name="disableloop">Díchumasaigh lúb</string>
-    <string name="enableloop">Cumasaigh lúb</string>
-    <string name="loopdisabled">LÚB DÍCHUMASAITHE LE SRIANTA</string>
     <string name="treatments_wizard_basaliob_label">Bunaidh IOB</string>
     <string name="careportal_newnstreatment_other">Eile</string>
     <string name="careportal_newnstreatment_sensor">Braiteoir</string>
     <string name="careportal_newnstreatment_duration_label">Fad</string>
-    <string name="careportal_newnstreatment_notes_label">Nótaí</string>
     <string name="careportal_newnstreatment_profile_label">Próifíl</string>
     <string name="careportal_newnstreatment_glucosetype">Glúcóis cineál</string>
     <string name="exported">Easpórtáil Socruithe</string>
@@ -72,11 +64,8 @@
     <string name="check_preferences_import_btn">Iompórtáil</string>
     <string name="save">Sábháil</string>
     <string name="reloadprofile">Athlódáil próifíl</string>
-    <string name="bolusstopped">Bólas stopadh</string>
-    <string name="bolusstopping">Ag stopadh bólas</string>
     <string name="smscommunicator_loophasbeendisabled">Is lúb díchumasaithe</string>
     <string name="smscommunicator_loophasbeenenabled">Is lúb cumasaithe</string>
-    <string name="smscommunicator_loopisdisabled">Is lúb díchumasaithe</string>
     <string name="smscommunicator_loopisenabled">Is lúb cumasaithe</string>
     <string name="smscommunicator_tempbasalcancelfailed">Cealú TBR teip</string>
     <string name="overview_editquickwizard_carbs">Carbí:</string>
@@ -99,7 +88,6 @@
     <string name="sms_minago">%1$dnóim ó shin</string>
     <string name="localprofile">Próifíl áitiúil</string>
     <string name="openapsama">OpenAPS AMA</string>
-    <string name="activity">Gníomhaíocht</string>
     <string name="actions_shortname">GNÍ</string>
     <string name="loop_shortname">LÚB</string>
     <string name="oaps_shortname">OAPS</string>
@@ -122,12 +110,10 @@
     <string name="Glimp">Glimp</string>
     <string name="loopsuspended">Lúb ar fionraí</string>
     <string name="loopsuspendedfor">Ar fionraí (%1$d nóim)</string>
-    <string name="suspendloop">Fionraí lúb</string>
     <string name="suspendloopfor1h">Fionraí lúb do 1 u</string>
     <string name="suspendloopfor2h">Fionraí lúb do 2 u</string>
     <string name="suspendloopfor3h">Fionraí lúb do 3 u</string>
     <string name="suspendloopfor10h">Fionraí lúb do 10 u</string>
-    <string name="suspendloopforXmin">Fionraí lúb do %1$d nóim</string>
     <string name="disconnectpump">Dhícheangal Caidéil</string>
     <string name="disconnectpumpfor15m">Dhícheangal Caidéil do 15 nóim</string>
     <string name="disconnectpumpfor30m">Dhícheangal Caidéil do 30 nóim</string>
@@ -146,8 +132,6 @@
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="ultrafastactinginsulincomment">Fiasp</string>
     <string name="insulin_shortname">INS</string>
-    <string name="iob">IOB</string>
-    <string name="cob">COB</string>
     <string name="basal_shortname">BUN</string>
     <string name="activity_shortname">GNÍ</string>
     <string name="nav_about">Faoi</string>
@@ -157,13 +141,11 @@
     <string name="careportal_pb_label">Caidéil ceallraí</string>
     <string name="careportal_age_label">aois:</string>
     <string name="ns_alarmoptions">Aláraim roghanna</string>
-    <string name="pump">Caidéil</string>
     <string name="openaps">OpenAPS</string>
     <string name="openaps_short">OAPS</string>
     <string name="basal_short">BUN</string>
     <string name="mdtp_ok">Ceart go leor</string>
     <string name="mdtp_cancel">Cuir ar ceal</string>
-    <string name="careportal_newnstreatment_duration_min_label">Fad [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
     <string name="lyumjev">Lyumjev</string>
@@ -175,29 +157,6 @@
     <string name="shortkilojoul">kJ</string>
     <string name="loopenabled">Lúb cumasaithe</string>
     <string name="apsselected">APS  roghnaithe</string>
-    <string name="combo_programming_bolus">Cláir Caidéil bólas</string>
-    <string name="combo_refresh">Athnuachan</string>
-    <string name="combo_pump_state_label">Stáit</string>
-    <string name="combo_pump_activity_label">Gníomhaíocht</string>
-    <string name="combo_no_pump_connection">Níl nasc le haghaidh %1$d nóim</string>
-    <string name="combo_tbr_remaining">%1$d%% (%2$d nóim fágtha)</string>
-    <string name="combo_pump_state_initializing">Tosaithe</string>
-    <string name="combo_pump_state_suspended_due_to_error">Ar fionraí ag earráid</string>
-    <string name="combo_pump_state_suspended_by_user">Ar fionraí ag úsáideoir</string>
-    <string name="combo_pump_state_running">Ag reáchtáil</string>
-    <string name="combo_pump_action_cancelling_tbr">Cealú BRS</string>
-    <string name="combo_pump_action_setting_tbr">Socrú BRS (%1$d%% / %2$d nóim)</string>
-    <string name="combo_pump_action_bolusing">Ag bólas (%1$.1f A)</string>
-    <string name="combo_pump_action_refreshing">Athnuaigh</string>
-    <string name="combo_pump_connected_now">Anois</string>
-    <string name="combo_activity_reading_pump_history">Léigh stair caidéil</string>
-    <string name="combo_activity_setting_basal_profile">Socrú próifíl bunaidh</string>
-    <string name="combo_pump_cartridge_low_warrning">Is leibhéal cartús íseal</string>
-    <string name="combo_pump_battery_low_warrning">Is ceallraí Caidéil íseal</string>
-    <string name="combo_reservoir_low">Íseal</string>
-    <string name="combo_reservoir_empty">Folamh</string>
-    <string name="combo_reservoir_normal">Gnáth</string>
-    <string name="combo_notification_check_time_date">Is nuashonrú gá clog Caidéil</string>
     <string name="overview_insulin_label">Inslin</string>
     <string name="overview_buttons_selection">Cnaipi</string>
     <string name="overview_cgm">CGM</string>
@@ -205,61 +164,23 @@
     <string name="category">Catagóir</string>
     <string name="overview_show_activity">Gníomhaíocht</string>
     <string name="overview_show_basals">Bunaidhi</string>
-    <string name="combo_actvity_reading_basal_profile">Léigh próifíl bunaidh</string>
-    <string name="combo_activity_checking_pump_state">Athnuaigh caidéil stáit</string>
-    <string name="combo_activity_checking_for_history_changes">Ag féachaint d\'athruithe stair</string>
     <string name="food_short">Bia</string>
-    <string name="pump_stopped">Caidéil stopadh</string>
-    <string name="pump_started">Caidéil tosú</string>
-    <string name="pump_paused">Caidéil ar sos</string>
-    <string name="time">Am</string>
     <string name="next_button">Ar Aghaidh</string>
     <string name="previous_button">Roimhe seo</string>
     <string name="cgm">CGM</string>
     <string name="ns_wifionly">Úsáid WiFi nasc amháin</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
     <string name="wear_general_settings">Socruithe Ginearálta</string>
-    <string name="exit">Scoir</string>
     <string name="poctech">Poctech</string>
     <string name="treatments_wizard_total_label">Lomlán</string>
-    <string name="insight_local">Accu-Chek Insight</string>
-    <string name="insight_delivered">%1$.2f A / %2$.2f A seachadta</string>
-    <string name="insight_alert_formatter">%1$s: %2$s</string>
-    <string name="mute_alert">Balbh</string>
-    <string name="serial_number">Sraithuimhir</string>
-    <string name="insight_status">Stádas</string>
-    <string name="tdd_bolus">TDD Bólas</string>
-    <string name="tdd_basal">TDD Bunaidh</string>
-    <string name="tdd_total">TDD Lomlán</string>
-    <string name="started">Thosaigh</string>
-    <string name="refresh">Athnuachan</string>
-    <string name="short_status_tdd">TDD: %1$.2f</string>
-    <string name="short_status_battery">Ceal.: %1$d%%</string>
-    <string name="resumeloop">Lúb Atosú</string>
-    <string name="iobcompared">IOB %1$s %2$.1f</string>
-    <string name="and">Agus</string>
-    <string name="or">Nó</string>
     <string name="profile_total">== ∑  %1$s A</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
-    <string name="never">Riamh</string>
-    <string name="action">Gníomh:</string>
-    <string name="iob_u">IOB [U]:</string>
-    <string name="glucose_u">Glúcóis [%1$s]:</string>
-    <string name="add_short">CUIR</string>
-    <string name="addnew">Cuir nua</string>
     <string name="twohours">2u</string>
     <string name="dexcom_app_patched">Dexcom App (patched)</string>
     <string name="dexcom_short">DXCM</string>
-    <string name="alarm_message">Aláram: %1$s</string>
-    <string name="alarm_short">Aláram:</string>
-    <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
-    <string name="name_short">Ainm:</string>
-    <string name="locationis">%1$s %2$s</string>
-    <string name="triggercoblabel">COB</string>
-    <string name="cobcompared">COB %1$s %2$.0f</string>
     <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
@@ -273,5 +194,4 @@
     <string name="age">Aois:</string>
     <string name="randombg_short">BG</string>
     <!-- SMS Communicator & OTP Authenticator -->
-    <string name="alarm">Aláram</string>
 </resources>

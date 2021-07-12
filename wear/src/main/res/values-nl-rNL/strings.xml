@@ -90,6 +90,9 @@
     <string name="action_confirm">BEVESTIGEN</string>
     <string name="action_timeshift">tijdsverschuiving</string>
     <string name="action_bolus">bolus</string>
+    <string name="bolus_progress">Bolus voortgang</string>
+    <string name="press_to_cancel">druk om te annuleren</string>
+    <string name="cancel_bolus">BOLUS ANNULEREN</string>
     <string name="status_pump">Pomp</string>
     <string name="status_loop">Loop</string>
     <string name="status_cpp">CPP</string>
@@ -129,4 +132,8 @@
     <string name="digitalstyle_pref_your_color">Jouw kleur:</string>
     <string name="digitalstyle_pref_your_color_saturation">Jouw kleurverzadiging:</string>
     <string name="digitalstyle_pref_your_color_opacity">Jouw kleurendoorzichtigheid:</string>
+    <string name="bolus_progress_channel_name">AAPS Bolus Voortgang</string>
+    <string name="bolus_progress_silent_channel_name">AAPS Bolus Voortgang Stil</string>
+    <string name="bolus_progress_channel_description">Bolus voortgang en annuleer</string>
+    <string name="bolus_progress_silent_channel_description">Bolus voortgang en annuleer met minder trillingen</string>
 </resources>

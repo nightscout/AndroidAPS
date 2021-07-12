@@ -172,7 +172,7 @@ public class NOChart extends WatchFace implements SharedPreferences.OnSharedPref
     }
 
     private boolean isLowRes(WatchMode watchMode) {
-        return (watchMode == WatchMode.LOW_BIT) || (watchMode == WatchMode.LOW_BIT_BURN_IN) || (watchMode == WatchMode.LOW_BIT_BURN_IN);
+        return (watchMode == WatchMode.LOW_BIT) || (watchMode == WatchMode.LOW_BIT_BURN_IN);
     }
 
 

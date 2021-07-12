@@ -2,6 +2,7 @@
 <resources>
     <!--    Keys-->
     <!--    General-->
+    <string name="refresh">Oppdater</string>
     <string name="error">Feil</string>
     <string name="not_set_short">Ikke angitt</string>
     <string name="failedupdatebasalprofile">Kunne ikke oppdatere basal profil</string>
@@ -61,6 +62,8 @@
     <string name="eventtype">Hendelsestype</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
+    <string name="shortgram">g</string>
+    <string name="shortpercent">%</string>
     <string name="advancedsettings_title">Avanserte innstillinger</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">BT overvåker</string>
@@ -68,6 +71,41 @@
     <string name="pairing">Kobler sammen</string>
     <string name="yes">Ja</string>
     <string name="no">Nei</string>
+    <string name="loopdisabled">LOOP DEAKTIVERT PGA BEGRENSNINGER</string>
+    <string name="bolusdelivered">Bolus %1$.2f E er levert vellykket</string>
+    <string name="virtualpump_resultok">OK</string>
+    <string name="novalidbasalrate">Ingen gyldige basal doser ble lest fra pumpen</string>
+    <string name="limitingmaxiob">Begrenser maks IOB til %1$.1f E på grunn av %2$s</string>
+    <string name="unsafeusage">usikker bruk</string>
+    <string name="pump_unreachable">Pumpe er utilgjengelig</string>
+    <string name="extended_bolus">Forlenget bolus</string>
+    <string name="pump_time_updated">Pumpens tid er oppdatert</string>
+    <string name="exit">Avslutt</string>
+    <string name="serial_number">Serienummer</string>
+    <string name="removerecord">Fjern registrering</string>
+    <string name="loopisdisabled">Loop er deaktivert</string>
+    <string name="alarm">Alarm</string>
+    <string name="disableloop">Stans loop</string>
+    <string name="enableloop">Aktiver loop</string>
+    <string name="resumeloop">Gjenoppta loop</string>
+    <string name="suspendloop">Pause loop</string>
+    <string name="duration_min_label">Varighet [min]</string>
+    <string name="notification">Varsling</string>
+    <string name="noprofile">Ingen profil innlest fra NS enda</string>
+    <string name="exists">finnes</string>
+    <string name="notexists">finnes ikke</string>
+    <string name="glucose">Glukose</string>
+    <string name="iob">IOB</string>
+    <string name="cob">COB</string>
+    <string name="name_short">Navn:</string>
+    <string name="time">Tid</string>
+    <string name="ns_wifi_ssids">WiFi nettverksnavn</string>
+    <string name="loading">Laster…</string>
+    <string name="event_time_label">Hendelse tidspunkt</string>
+    <string name="notes_label">Merknader</string>
+    <string name="remove_button">Fjern</string>
+    <string name="addnew">Legg til ny</string>
+    <string name="wrong_pump_data">Data kommer fra forskjellige pumper. Bytt pumpevalg for å nullstille pumpens tilstand.</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Begrenser maks basal dose til %1$.2f E/t på grunn av %2$s</string>
     <string name="pumplimit">pumpebegrensning</string>
@@ -83,6 +121,7 @@
     <string name="dismiss">Avvis</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Lavenergi Bluetooth BLE er ikke støttet.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy er ikke støttet eller enheten er ikke paret.</string>
     <string name="ble_not_enabled">Bluetooth er ikke aktivert.</string>
     <string name="location_not_found_title">Stedstjeneste er ikke aktivert</string>
     <string name="location_not_found_message">Bluetooth søk på nye mobiler virker bare når posisjonstjeneste er aktivert. AAPS lagrer ikke dine posisjonsdata og den kan derfor slås av etter vellykket sammenkobling.</string>
@@ -116,6 +155,7 @@
     <string name="profile_carbs_per_unit">g/E</string>
     <!--    ProfileFunction-->
     <string name="noprofileselected">Ingen profil valgt</string>
+    <string name="startprofile">Start profil %1$d%% i %2$d min</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Bare konkrete verdier støttes som granularitet for basal/bolus i virtuell pumpe, ingen verdiområder.</string>
     <!--    APSResult-->
@@ -132,6 +172,7 @@
     <!--    TDD-->
     <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f E</b> Bol: <b>%3$.2f E</b> Bas: <b>%4$.2f E(%5$.0f%%)</b>]]></string>
     <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f E</b> Bol: <b>%3$.2f E</b> Bas: <b>%4$.2f E(%5$.0f%%)</b> Karbo: <b>%6$.0f g</b>]]></string>
+    <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> i <b>%3$d</b> dager<br>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">BS kontroll</string>
     <string name="careportal_mbg">Manuelt BS eller kalibrering</string>
@@ -142,6 +183,8 @@
     <string name="careportal_pumpsitechange">Bytte av pumpens kanyle</string>
     <string name="careportal_cgmsensorinsert">Bytte av CGM sensor</string>
     <string name="careportal_cgmsensorstart">CGM sensor start</string>
+    <string name="careportal_cgm_sensor_stop">CGM sensor stopp</string>
+    <string name="careportal_dad_alert">Logg diabetes hund varsel</string>
     <string name="careportal_insulincartridgechange">Bytte insulinreservoar</string>
     <string name="careportal_profileswitch">Profil bytte</string>
     <string name="careportal_snackbolus">Mellommåltids bolus</string>
@@ -155,10 +198,21 @@
     <string name="careportal_pumpbatterychange">Bytte pumpebatteri</string>
     <string name="careportal_temporarytarget">Temp mål</string>
     <string name="careportal_temporarytargetcancel">Avbryt temp mål</string>
+    <string name="boluswizard">Bolus assistent</string>
     <string name="glucosetype_finger">Finger</string>
     <string name="glucosetype_sensor">Sensor</string>
     <string name="manual">Manuell</string>
     <string name="unknown">ukjent</string>
+    <string name="eatingsoon">Spise snart</string>
+    <string name="hypo">Hypo</string>
+    <string name="activity">Aktivitet</string>
+    <string name="wear">Wear</string>
+    <string name="automation">Automatisering</string>
+    <string name="custom">Egendefinert</string>
+    <string name="pump">Pumpe</string>
+    <string name="loop">Loop</string>
+    <string name="ns">NS</string>
+    <string name="record">Registrer</string>
     <!--    Command-->
     <string name="connectiontimedout">Tilkoblingen ble tidsavbrutt</string>
     <!--    PumpEnactResult-->
@@ -190,30 +244,6 @@
     <!--    Ntp-->
     <string name="timedetection">Tidsdetektering</string>
     <string name="format_hour_minute">%1$dt %2$dm</string>
-    <!-- PumoCommon - Pump Abstract -->
-    <string name="pump_operation_not_supported_by_pump_driver">Operasjonen støttes ikke av pumpen og/eller driveren.</string>
-    <string name="pump_operation_not_yet_supported_by_pump">Operasjonen støttes ikke av pumpen ennå.</string>
-    <string name="common_resultok">OK</string>
-    <!-- PumoCommon - Pump Status -->
-    <string name="pump_status_never_contacted">Aldri kontaktet</string>
-    <string name="pump_status_waking_up">Våkner opp</string>
-    <string name="pump_status_error_comm">Kommunikasjonsfeil</string>
-    <string name="pump_status_timeout_comm">Tidsavbrudd kommunikasjon</string>
-    <string name="pump_status_pump_unreachable">Pumpe utilgjengelig</string>
-    <string name="pump_status_invalid_config">Ugyldig oppsett</string>
-    <string name="pump_status_active">Aktiv</string>
-    <string name="pump_status_sleeping">Sover</string>
-    <!-- PumpCommon - History Group -->
-    <string name="history_group_basal">Basaldoser</string>
-    <string name="history_group_configuration">Innstillinger</string>
-    <string name="history_group_notification">Varsler</string>
-    <string name="history_group_statistic">Statistikk</string>
-    <string name="history_group_unknown">Ukjente</string>
-    <string name="history_group_all">Alle</string>
-    <string name="history_group_bolus">Boluser</string>
-    <string name="history_group_prime">Prime</string>
-    <string name="history_group_alarm">Alarmer</string>
-    <string name="history_group_glucose">Glukose</string>
     <string name="mute5min">Demp i 5 minutter</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">Filformat</string>
@@ -256,6 +286,105 @@
     <string name="versionavailable">Versjon %1$s er tilgjengelig</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Vennligst start mobilen på nytt eller restart AndroidAPS fra Innstillinger \nellers vil ikke AndroidAPS ha aktivert loggføring (viktig for å spore og kontrollere at algoritmene fungerer riktig!)</string>
+    <!-- WeekdayPicker -->
+    <string name="monday_short">M</string>
+    <string name="tuesday_short">T</string>
+    <string name="wednesday_short">O</string>
+    <string name="thursday_short">T</string>
+    <string name="friday_short">F</string>
+    <string name="saturday_short">L</string>
+    <string name="sunday_short">S</string>
+    <!-- User Entry -->
+    <string name="uel_bolus">BOLUS</string>
+    <string name="uel_bolus_advisor">BOLUS ASSISTENT</string>
+    <string name="uel_extended_bolus">FORLENGET BOLUS</string>
+    <string name="uel_superbolus_tbr">SUPERBOLUS TBR</string>
+    <string name="uel_carbs">KARBO</string>
+    <string name="uel_extended_carbs">FORLENGET KARBO</string>
+    <string name="uel_temp_basal">TEMP BASAL</string>
+    <string name="uel_tt">MIDLERTIDIG BS MÅL</string>
+    <string name="uel_new_profile">NY PROFIL</string>
+    <string name="uel_clone_profile">KOPIER PROFIL</string>
+    <string name="uel_store_profile">LAGRE PROFIL</string>
+    <string name="uel_profile_switch">BYTT PROFIL</string>
+    <string name="uel_profile_switch_cloned">PROFILBYTTE KOPIERT</string>
+    <string name="uel_closed_loop_mode">LUKKET LOOP MODUS</string>
+    <string name="uel_lgs_loop_mode">LAV GLUKOSESTOPP MODUS</string>
+    <string name="uel_open_loop_mode">ÅPEN LOOP MODUS</string>
+    <string name="uel_loop_disabled">LOOP DEAKTIVERT</string>
+    <string name="uel_loop_enabled">LOOP AKTIVERT</string>
+    <string name="uel_reconnect">KOBLE TIL</string>
+    <string name="uel_disconnect">KOBLE FRA</string>
+    <string name="uel_resume">GJENOPPTA</string>
+    <string name="uel_suspend">PAUSE</string>
+    <string name="uel_hw_pump_allowed">HW PUMPE TILLATT</string>
+    <string name="uel_clear_pairing_keys">NULLSTILL PARRINGS NØKLER</string>
+    <string name="uel_accepts_temp_basal">AKSEPTER TEMP BASAL</string>
+    <string name="uel_cancel_temp_basal">AVBRYT TEMP BASAL</string>
+    <string name="uel_cancel_bolus">AVBRYT BOLUS</string>
+    <string name="uel_cancel_extended_bolus">AVBRYT FORLENGET BOLUS</string>
+    <string name="uel_cancel_tt">AVBRYT MIDLERTIDIG BS MÅL</string>
+    <string name="uel_careportal">CAREPORTAL</string>
+    <string name="uel_site_change">BYTTE SLANGESETT</string>
+    <string name="uel_reservoir_change">BYTTE RESERVOAR</string>
+    <string name="uel_calibration">KALIBRERING</string>
+    <string name="uel_prime_bolus">PRIME BOLUS</string>
+    <string name="uel_treatment">BEHANDLING</string>
+    <string name="uel_careportal_ns_refresh">CAREPORTAL NS OPPDATER</string>
+    <string name="uel_profile_switch_ns_refresh">PROFILBYTTE NS OPPDATER</string>
+    <string name="uel_treatments_ns_refresh">BEHANDLINGER NS OPPDATER</string>
+    <string name="uel_tt_ns_refresh">OPPDATER MIDLERTIDIG BS MÅL NS</string>
+    <string name="uel_automation_removed">AUTOMASJON FJERNET</string>
+    <string name="uel_bg_removed">BS FJERNET</string>
+    <string name="uel_careportal_removed">CAREPORTAL FJERNET</string>
+    <string name="uel_bolus_removed">BOLUS FJERNET</string>
+    <string name="uel_carbs_removed">KARBO FJERNET</string>
+    <string name="uel_temp_basal_removed">MIDLERTIDIG BS MÅL FJERNET</string>
+    <string name="uel_extended_bolus_removed">FORLENGET BOLUS FJERNET</string>
+    <string name="uel_food">MAT</string>
+    <string name="uel_food_removed">MÅLTID FJERNET</string>
+    <string name="uel_profile_removed">PROFIL FJERNET</string>
+    <string name="uel_profile_switch_removed">PROFILBYTTE FJERNET</string>
+    <string name="uel_restart_events_removed">RESTART HENDELSER FJERNET</string>
+    <string name="uel_treatment_removed">BEHANDLING FJERNET</string>
+    <string name="uel_tt_removed">MIDLERTIDIG BS MÅL FJERNET</string>
+    <string name="uel_ns_paused">NS PAUSET</string>
+    <string name="uel_ns_resume">GJENOPPTA NS</string>
+    <string name="uel_ns_queue_cleared">NS KØ SLETTET</string>
+    <string name="uel_ns_settings_copied">NS INNSTILLINGER KOPIERT</string>
+    <string name="uel_error_dialog_ok">FEILDIALOG OK</string>
+    <string name="uel_error_dialog_mute">FEILDIALOG LYDLØS </string>
+    <string name="uel_error_dialog_mute_5min">FEILDIALOG LYDLØS 5MIN</string>
+    <string name="uel_objective_started">LÆRINGSMÅL STARTET</string>
+    <string name="uel_objective_unstarted">LÆRINGSMÅL IKKE STARTET</string>
+    <string name="uel_objectives_skipped">LÆRINGSMÅL HOPPET OVER</string>
+    <string name="uel_stat_reset">TILBAKESTILL STATISTIKK</string>
+    <string name="uel_delete_logs">SLETT LOGGER</string>
+    <string name="uel_delete_future_treatments">SLETT FRAMTIDIG BEHANDLING</string>
+    <string name="uel_export_settings">EKSPORTER INNSTILLINGER</string>
+    <string name="uel_import_settings">IMPORTER INNSTILLINGER</string>
+    <string name="uel_reset_databases">TILBAKESTILL DATABASER</string>
+    <string name="uel_export_databases">EKSPORTER DATABASER</string>
+    <string name="uel_import_databases">IMPORTER DATABASER</string>
+    <string name="uel_otp_export">OTP EKSPORT</string>
+    <string name="uel_otp_reset">OTP RESET</string>
+    <string name="uel_stop_sms">STOPP SMS</string>
+    <string name="uel_export_csv">EKSPORTER BRUKEROPPFØRINGER</string>
+    <string name="uel_start_aaps">START AAPS</string>
+    <string name="uel_exit_aaps">AVSLUTT AAPS</string>
+    <string name="uel_plugin_enabled">PLUGIN AKTIVERT</string>
+    <string name="uel_plugin_disabled">PLUGIN DEAKTIVERT</string>
+    <string name="uel_unknown">UKJENT</string>
+    <string name="ue_string">Tekst</string>
+    <string name="ue_source">Kildekode</string>
+    <string name="ue_utc_offset">UTC tid forskyvning</string>
+    <string name="ue_action">Handling</string>
+    <string name="ue_timestamp">Tidspunkt</string>
+    <string name="ue_none">Ingen enhet</string>
+    <string name="ue_export_to_csv">Eksporter brukeroppføringer til Excel (csv)</string>
+    <string name="uel_loop_change">LOOP ENDRET</string>
+    <string name="uel_loop_removed">LOOP FJERNET</string>
+    <string name="uel_other">ANNET</string>
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dager</item>

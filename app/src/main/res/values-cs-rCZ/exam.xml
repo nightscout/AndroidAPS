@@ -48,7 +48,7 @@
     <string name="exerciseprofile_label">Cvičení a profily</string>
     <string name="exerciseprofile_whattodo">Jak můžete použít profily, abyste mohli nejlépe pomoci systému řešit aerobní cvičení?</string>
     <string name="exerciseprofile_switchprofilebelow100">Přepnout na profil pod 100 %.</string>
-    <string name="exerciseprofile_switchprofileabove100">Přepnout profil na více než 100 %.</string>
+    <string name="exerciseprofile_switchprofileabove100">Přepněte profil na více než 100 %.</string>
     <string name="exerciseprofile_leaveat100">Ponechte profil nastavený na hodnotu 100%.</string>
     <string name="exerciseprofile_suspendloop">Pozastavte smyčku.</string>
     <string name="exerciseprofile_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Usage/temptarget.html#docasny-cil-pri-pohybove-aktivite</string>
@@ -195,7 +195,7 @@
     <string name="profileswitchtime_iwant">Pokud se probudíte o 2h dříve než obvykle, jak byste měli oznámit AndroidAPS tuto změnu?</string>
     <string name="profileswitchtime_2">Proveďte přepnutí profilu s posunem času 2</string>
     <string name="profileswitchtime__2">Proveďte přepnutí profilu s posunem času -2</string>
-    <string name="profileswitchtime_tt">Nastavte dočasný cíl pro blížící se jídlo.</string>
+    <string name="profileswitchtime_tt">Nastavte dočasný cíl Před jídlem.</string>
     <string name="profileswitchtime_100">Přepněte profil na více než 100%. </string>
     <string name="profileswitchtime_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Usage/Profiles.html#posun-casu</string>
     <string name="profileswitch4_label">Změna profilu</string>

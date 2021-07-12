@@ -19,7 +19,7 @@ class MsgSetExtendedBolusStop(
             aapsLogger.debug(LTag.PUMPBTCOMM, "Set extended bolus stop result: $result FAILED!!!")
         } else {
             failed = false
-            aapsLogger.debug(LTag.PUMPBTCOMM, "Set extended bolus stop result: $result")
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Set extended bolus stop result: $result OK")
         }
     }
 }

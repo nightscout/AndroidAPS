@@ -2,7 +2,6 @@
 <resources>
     <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
-    <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="treatmentssafety_title">Tedavilerin güvenlik ayarları</string>
     <string name="treatmentssafety_maxbolus_title">Max izin verilen bolus [U]</string>
@@ -26,8 +25,6 @@
     <string name="description_smb">İleri düzey kullanıcılar için en yeni algoritma</string>
     <string name="description_overview">En yaygın eylemler için Döngü ve düğmelerinizin geçerli durumunu görüntüler</string>
     <string name="description_persistent_notification">Döngünün şu anda ne yaptığını hızlıca gözden geçirerek sürekli bir bildirim gösterir</string>
-    <string name="description_profile_nightscout">Nightscout\'ta tanımladığınız profili sağlar</string>
-    <string name="description_pump_combo">Accu-Chek Combo pompalar için pompa entegrasyonu, ruffy yüklü olması gerektirir</string>
     <string name="description_pump_mdi">Diyabet tedavisi için günde birden fazla enjeksiyon yapan kişiler için pompa entegrasyonu</string>
     <string name="description_pump_virtual">Henüz herhangi bir sürücüye sahip olmayan pompalar için pompa entegrasyonu (Açık Döngü)</string>
     <string name="description_sensitivity_aaps">Duyarlılık, Oref0 gibi aynı şekilde hesaplanır ancak geçmiş zaman çerçevesi belirtebilirsiniz. Minimal karbonhidrat emilimi, tercihlerden maksimum karbonhidrat emilim süresinden hesaplanır.</string>
@@ -57,7 +54,6 @@
     <string name="treatments_wizard_bolusiob_label">Bolus IOB</string>
     <string name="openapsma_run">Şimdi Çalıştır</string>
     <string name="vitualpump_label">SANAL POMPA</string>
-    <string name="virtualpump_resultok">Tamam</string>
     <string name="openapsma_lastrun_label">Son Çalıştırma</string>
     <string name="openapsma_inputparameters_label">Girdi Parametreleri</string>
     <string name="openapsma_glucosestatus_label">Glikoz durumu</string>
@@ -68,19 +64,15 @@
     <string name="result">Sonuç</string>
     <string name="openapsma_noglucosedata">Glikoz verisi yok</string>
     <string name="openapsma_request_label">İstek</string>
-    <string name="glucose">Glikoz</string>
     <string name="delta">Delta</string>
     <string name="sms_delta">Delta:</string>
     <string name="configbuilder">Konfigurasyon oluştur</string>
     <string name="overview">Genel Bakış</string>
-    <string name="nsprofile">Nightscout Profil</string>
     <string name="treatments">Tedaviler</string>
     <string name="virtualpump">Sanal pompa</string>
     <string name="careportal">Careportal</string>
     <string name="configbuilder_pump">Pompa</string>
     <string name="configbuilder_pump_description">Hangi pompa ile AndroidAPS kullanmak istersiniz?</string>
-    <string name="configbuilder_treatments">Tedaviler</string>
-    <string name="configbuilder_treatments_description">Hangi eklenti tedavi işleme için kullanılsın?</string>
     <string name="configbuilder_profile">Profil</string>
     <string name="configbuilder_profile_description">Hangi profili AndroidAPS kullanmalı?</string>
     <string name="configbuilder_aps">APS (YPS)</string>
@@ -89,7 +81,6 @@
     <string name="configbuilder_general_description">Kullanışlı bulabileceğiniz bazı genel eklentiler.</string>
     <string name="configbuilder_constraints_description">Hangi kısıtlamaları uygula?</string>
     <string name="constraints">Kısıtlamalar</string>
-    <string name="loop">Döngü</string>
     <string name="configbuilder_loop">Döngü</string>
     <string name="configbuilder_loop_description">AndroidAPS döngü entegrasyonunu etkinleştirmek için bunu kullanın.</string>
     <string name="loop_aps_label">APS</string>
@@ -114,11 +105,8 @@
     <string name="closedloop">Kapalı Döngü</string>
     <string name="openloop">Açık Döngü</string>
     <string name="disabledloop">Döngü devre dışı</string>
-    <string name="disableloop">Döngü devre dışı bırak</string>
-    <string name="enableloop">Döngü etkinleştir</string>
     <string name="openloop_newsuggestion">Yeni öneri mevcut</string>
     <string name="unsupportednsversion">Nightscout\'un desteklenmeyen sürümü</string>
-    <string name="loopdisabled">DÖNGÜ KISITLAMALARDAN İPTAL EDİLDİ</string>
     <string name="treatments_wizard_basaliob_label">Bazal IOB</string>
     <string name="bolusconstraintapplied">Bolus kısıtlaması uygulandı</string>
     <string name="carbsconstraintapplied">Karbonhidrat kısıtlaması uygulandı</string>
@@ -127,10 +115,8 @@
     <string name="careportal_newnstreatment_sensor">Sensör</string>
     <string name="careportal_newnstreatment_carbtime_label">Karb zaman</string>
     <string name="careportal_newnstreatment_duration_label">Süre</string>
-    <string name="careportal_newnstreatment_notes_label">Notlar</string>
     <string name="careportal_newnstreatment_profile_label">Profil</string>
     <string name="careportal_newnstreatment_glucosetype">Glikoz türü</string>
-    <string name="noprofile">Henüz NightSout\'tan profil yüklenmedi</string>
     <string name="overview_tempbasal_button">Geçici Bazal</string>
     <string name="overview_extendedbolus_button">Yayım Bolus</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout sürümü:</string>
@@ -156,11 +142,8 @@
     <string name="smscommunicator_calibrationreplywithcode">Kalibrasyon %1$.2f gönderilecek, kod ile cevap ver %2$s</string>
     <string name="smscommunicator_bolusfailed">Bolus başarısız oldu</string>
     <string name="smscommunicator_remotecommandsallowed">SMS ile uzaktan komutlara izin ver</string>
-    <string name="bolusstopped">Bolus durdu</string>
-    <string name="bolusstopping">Bolus durdurma</string>
     <string name="smscommunicator_loophasbeendisabled">Döngü devre dışı bırakıldı</string>
     <string name="smscommunicator_loophasbeenenabled">Döngü etkinleştirildi</string>
-    <string name="smscommunicator_loopisdisabled">Döngü devre dışı</string>
     <string name="smscommunicator_loopisenabled">Döngü etkin</string>
     <string name="valuelimitedto">%1$.2f dan %2$.2f olarak sınırlı</string>
     <string name="smscommunicator_remotecommandnotallowed">Uzaktan komuta izin verilmez</string>
@@ -176,7 +159,6 @@
     <string name="overview_editquickwizard_valid">Geçerli:</string>
     <string name="overview_editquickwizardlistactivity_add">Ekle</string>
     <string name="overview_quickwizard_item_edit_button">Düzenle</string>
-    <string name="overview_quickwizard_item_remove_button">Kaldır</string>
     <string name="mealbolus">Ögün</string>
     <string name="correctionbous">Düzeltme</string>
     <string name="actions">Eylemler</string>
@@ -204,16 +186,10 @@
     <string name="sms_minago">%1$ddak önce</string>
     <string name="localprofile">Yerel profil</string>
     <string name="openapsama">OpenAPS AMA</string>
-    <string name="short_avgdelta">Kısa ortalama delta</string>
-    <string name="long_avgdelta">Uzun ortalama delta</string>
     <string name="array_of_elements">%1$d öğelerin dizisi.\nGerçek değer:</string>
     <string name="openapsma_autosensdata_label">Autosens verileri</string>
     <string name="openapsma_scriptdebugdata_label">Skriptte hata ayıkla</string>
-    <string name="refresheventsfromnightscout">NS\'den olayları yenile</string>
     <string name="deletefuturetreatments">Gelecekte tedavileri sil</string>
-    <string name="eatingsoon">Yakında Öğün</string>
-    <string name="hypo">Hipo</string>
-    <string name="activity">Eğzersiz</string>
     <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">KONF</string>
     <string name="loop_shortname">DÖNGÜ</string>
@@ -221,7 +197,6 @@
     <string name="localprofile_shortname">LP</string>
     <string name="overview_shortname">HOME</string>
     <string name="virtualpump_shortname">VPOMP</string>
-    <string name="profileviewer_shortname">NSPROFIL</string>
     <string name="treatments_shortname">TEDAVİ</string>
     <string name="objectives_shortname">OBJ</string>
     <string name="wear_shortname">WEAR</string>
@@ -260,7 +235,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="show_queue">Sıra göster</string>
     <string name="queue">Kuyruk:</string>
     <string name="status">Durum:</string>
-    <string name="paused">Durduruldu</string>
     <string name="clearlog">Log Kayıtlarını Sil</string>
     <string name="nowritepermission">NSCLIENT yazma izni yok. Yanlış API Key ?</string>
     <string name="wear_settings">Wear ayarları</string>
@@ -274,7 +248,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="Glimp">Glimp</string>
     <string name="loopsuspended">Döngü durduldu</string>
     <string name="loopsuspendedfor">Askıya alındı (%1$d m)</string>
-    <string name="suspendloop">Döngüyü duraklat</string>
     <string name="suspendloopfor1h">Döngü 1s\'liğine askıya alındı</string>
     <string name="suspendloopfor2h">Döngü 2s\'liğine askıya alındı</string>
     <string name="suspendloopfor3h">Döngü 3s\'liğine askıya alındı</string>
@@ -300,23 +273,18 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="insulin_shortname">INS</string>
     <string name="enablesuperbolus">SuperBolus sihirbazını etkinleştir</string>
     <string name="enablesuperbolus_summary">Kurulum sihirbazında superbolus işlevselliğini etkinleştirin. Gerçekten ne yaptığınızı öğrenene kadar etkinleştirmeyin. BİLİNÇSİZ KULLANILDIĞINDA AŞIRI DOS İNSÜLIN VERİLEBİLİR!</string>
-    <string name="iob">IOB</string>
-    <string name="cob">COB</string>
     <string name="nav_about">Hakkında</string>
     <string name="smscommunicator_missingsmspermission">SMS izni eksik</string>
     <string name="smscommunicator_missingphonestatepermission">Kayıp telefon durum yetkilendirmesi</string>
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">BGI göster</string>
     <string name="wear_showbgi_summary">BGI\'yı durum satırına ekle</string>
-    <string name="ns_noupload">NightScout\'a yükleme yok</string>
-    <string name="ns_noupload_summary">NS\'ye gönderilen tüm veriler düştü. AAPS NS\'ye bağlandı, ancak NS\'de hiçbir değişiklik yapılmadı</string>
     <string name="overview_extendedbolus_cancel_button">Yayma Bolusu iptal et</string>
     <string name="ns_alarmoptions">Alarm türleri</string>
     <string name="nsalarm_staledatavalue_label">Eski veri eşiği [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Acil durum verileri eşiği [min]</string>
     <string name="openapsama_autosens_period">Autosens [h] için aralık</string>
     <string name="openapsama_autosens_period_summary">Duyarlılık tespiti için geçmişte geçen saat miktarı (karbonhidrat emilim süresi hariç)</string>
-    <string name="pump">Pompa</string>
     <string name="openaps">OpenAPS</string>
     <string name="uploader">Aktar</string>
     <string name="configbuilder_sensitivity">Duyarlılık algılaması</string>
@@ -339,7 +307,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="notloadedplugins">Tüm profiller yüklenmedi!</string>
     <string name="valuesnotstored">Değerler saklanmadı!</string>
     <string name="ns_localbroadcasts_title">Yerel yayınları etkinleştirin.</string>
-    <string name="careportal_newnstreatment_duration_min_label">Süre [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="enableuam">UAM etkinleştir</string>
     <string name="enablesmb">SMB (Super Micro Bolus) etkinleştir</string>
@@ -373,7 +340,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="shortfat">Yağ</string>
     <string name="active"><![CDATA[<Aktif>]]></string>
     <string name="executingrightnow">Komut şu anda çalıştırıldı</string>
-    <string name="pump_unreachable">Pompa ulaşılamıyor</string>
     <string name="missed_bg_readings">Kaçırılan KŞ Okumaları</string>
     <string name="raise_notifications_as_android_notifications">Uyarılar ve bildirimler için sistem bildirimlerini kullan</string>
     <string name="localalertsettings_title">Yerel uyarıları</string>
@@ -404,39 +370,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="closedmodeenabled">Kapalı Döngü etkinleştirildi</string>
     <string name="maxiobset">Maksimal IOB doğru şekilde ayarlandı</string>
     <string name="hasbgdata">Seçili kaynaktan KŞ kullanılabilir</string>
-    <string name="combo_programming_bolus">Pompa bolus vermek için hazırlanıyor</string>
-    <string name="combo_refresh">Yenile</string>
-    <string name="combo_pump_state_label">Durum</string>
-    <string name="combo_pump_activity_label">Aktivite</string>
-    <string name="combo_no_pump_connection">%1$d dk için bağlantı yok</string>
-    <string name="combo_tbr_remaining">%1$d%% (%2$d dak. kaldı)</string>
-    <string name="combo_pump_state_initializing">Başlatılıyor</string>
-    <string name="combo_pump_state_suspended_due_to_error">Hatadan dolayı durduruldu</string>
-    <string name="combo_pump_state_suspended_by_user">Kullanıcı tarafından durduruldu</string>
-    <string name="combo_pump_state_running">Çalışıyor</string>
-    <string name="combo_pump_action_cancelling_tbr">TBR (Geçici Bazal Oranı) İptal ediliyor</string>
-    <string name="combo_pump_action_setting_tbr">TBR(Geçici Bazal Oranı) ayarı (%1$d%% / %2$d dak)</string>
-    <string name="combo_pump_action_refreshing">Yenileniyor...</string>
-    <string name="combo_pump_unsupported_operation">İstenen işlem pompası tarafından desteklenmiyor</string>
-    <string name="combo_low_suspend_forced_notification">Güvensiz kullanım: yayım veya çoklu dalgalı (kare dalgalı) boluslar aktiftir. Döngü modu 6 saat içinde ekstra insülin vermeyecektir. Döngü modunda sadece normal boluslar desteklenir</string>
-    <string name="combo_force_disabled_notification">Güvenli olmayan kullanım: Pompa, ilkinden farklı bir bazal oranı profili kullanıyor. Döngü devre dışı bırakıldı. Pompadaki ilk profili seçin ve yenileyin.</string>
-    <string name="bolus_frequency_exceeded">Son iki dakikada aynı miktarda bir bolus talep edildi. Yanlışlıkla yapılan çift bolusları önlemek ve hatalara karşı koruma sağlamak için buna izin verilmez.</string>
-    <string name="combo_pump_connected_now">Şimdi</string>
-    <string name="combo_activity_reading_pump_history">Pompa geçmişi okunuyor</string>
-    <string name="combo_activity_setting_basal_profile">Bazal profil ayarlanıyor</string>
-    <string name="combo_pump_cartridge_low_warrning">Pompa rezervuar seviyesi düşük</string>
-    <string name="combo_pump_battery_low_warrning">Pompa pili düşük</string>
-    <string name="combo_is_in_error_state">Pompa, E%1$d: %2$s hatasını gösteriyor</string>
-    <string name="combo_reservoir_low">Düşük</string>
-    <string name="combo_reservoir_empty">Boş</string>
-    <string name="combo_reservoir_normal">Normal</string>
-    <string name="combo_notification_check_time_date">Pompa saati güncellemesi gerekli</string>
-    <string name="combo_pump_tbr_cancelled_warrning">Uyarı \"TBR İptal\" kabul edildi</string>
-    <string name="combo_error_no_connection_no_bolus_delivered">Pompaya ulaşılamadı. Bolus verilmedi</string>
-    <string name="combo_error_no_bolus_delivered">Bolus teslimatı başarısız oldu. Görünüşe göre bolus teslim edilemedi. Emin olmak için, lütfen çift bolustan ve daha sonra tekrar bolustan kaçınmak için pompayı kontrol edin. Yazılımsal hatalardan korunmak için, bolus otomatik olarak tekrar denenmemeli.</string>
-    <string name="combo_error_partial_bolus_delivered">Bir hata nedeniyle %2$.2f U istenen bolusun sadece %1$.2f U gönderildi.Bunu doğrulamak ve uygun önlemleri almak için lütfen pompayı kontrol edin.</string>
-    <string name="combo_error_bolus_verification_failed">Bolusun teslimi ve pompa tarihinin doğrulanması başarısız oldu. Lütfen pompanızı kontrol edin. Bir bolus verildiğinde, sonraki bağlantıdaki tedavilere eklenir.</string>
-    <string name="combo_reservoir_level_insufficient_for_bolus">Rezervuarda bolus için yeterli insülin yok</string>
     <string name="extendedbolusdeliveryerror">Yayım bolus gönderme hatası</string>
     <string name="enablesmbalways">SMB\'yi her zaman etkinleştir</string>
     <string name="enablesmbalways_summary">SMB\'yi her zaman bağımsız olarak boluslarla etkinleştirin. G5 gibi verilerin yalnızca filtrelenmesiyle yalnızca KŞ kaynağıyla mümkündür</string>
@@ -471,7 +404,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="do_not_bolus_record_only">Bolusu sadece kayıt altına al</string>
     <string name="category">Kategori</string>
     <string name="subcategory">Alt kategori</string>
-    <string name="ns_autobackfill_summary">Nightscout\'tan eksik kan şekeri değerlerini otomatik olarak yükleyin</string>
     <string name="loop_smbsetbypump_label">SMB (Supermicroboluses) pompa tarafından verildi</string>
     <string name="overview_show_sensitivity">Duyarlılık</string>
     <string name="overview_show_deviations">Sapma</string>
@@ -482,22 +414,8 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="start_hypo_tt">Hypo TT başlat</string>
     <string name="closed_loop_disabled_on_dev_branch">Dev sürümü çalışıyor. Kapalı Döngü devre dışı.</string>
     <string name="engineering_mode_enabled">Geliştirici modu aktivleşti</string>
-    <string name="combo_actvity_reading_basal_profile">Bazal oranı profili okunuyor</string>
-    <string name="combo_bolus_rejected_due_to_pump_history_change">Bolus hesaplaması yapıldıktan sonra pompa geçmişi değişti. Bolus teslim edilmedi. Bir bolus hala gerekli ise lütfen yeniden hesaplayın.</string>
-    <string name="combo_error_updating_treatment_record">Bolus başarıyla gönderildi, ancak tedavi girişinin eklenmesi başarısız oldu. Son iki dakika içinde aynı boyutta iki küçük bolüs verilirse bu durum meydana gelebilir. Lütfen pompa geçmişini ve tedavi girişlerini kontrol edin ve eksik girişler eklemek için Careportal\'ı kullanın. Aynı dakika ve aynı tutar için herhangi bir giriş eklemediğinizden emin olun.</string>
-    <string name="combo_high_temp_rejected_due_to_pump_history_changes">Hesaplamadan sonra pompa geçmişinde yeni bolus girişleri bulunduğundan yüksek geçici Bazal oranı ayarlanmadı</string>
-    <string name="combo_activity_checking_pump_state">Pompa durumu güncelleniyor</string>
-    <string name="combo_warning_pump_basal_rate_changed">Pompadaki bazal oran değişti ve yakında güncellenecek</string>
-    <string name="combo_error_failure_reading_changed_basal_rate">Bazal oranı pompada değiştirildi, ancak okuma başarısız oldu</string>
-    <string name="combo_activity_checking_for_history_changes">Geçmiş değişiklikleri kontrol ediliyor</string>
-    <string name="combo_error_multiple_boluses_with_identical_timestamp">Aynı dakika içinde aynı miktarda birden fazla boluslar eklenildi. Tedavilere sadece bir kayıt eklenebilir. Lütfen pompayı kontrol edin ve Careportal sekmesini kullanarak elle bir bolus kaydı ekleyin. Başka bolus kullanmayan bir zamana sahip bir bolus oluşturduğunuzdan emin olun.</string>
-    <string name="combo_check_date">Son bolus 24 saatten daha eski veya gelecekte. Lütfen pompadaki tarihin doğru ayarlandığını kontrol edin.</string>
-    <string name="combo_suspious_bolus_time">Teslim edilen bolusun pompadaki zamanı/tarihı yanlış görünüyor, IOB (Insulin On Board) muhtemelen yanlıştır. Lütfen pompa zamanını/tarihini kontrol edin.</string>
     <string name="profileswitch_ismissing">Profildeğiştir kayıp. Lütfen bir profil değiştir seçin veya YerelPorfil\'de \"Profili Etkinleştir\" düğmesine basın.</string>
-    <string name="combo_bolus_count">Bolus sayısı</string>
-    <string name="combo_tbr_count">TBR (GBO) Geçici Bazal Oranı sayısı</string>
     <string name="pumpisnottempbasalcapable">Pompa geçici bazal yetenekli değil</string>
-    <string name="novalidbasalrate">Pompadan okunan geçerli bir bazal oranı yok</string>
     <string name="closedmodedisabledinpreferences">Kapalı Döngü tercihlerde devre dışı bırakıldı</string>
     <string name="autosensdisabledinpreferences">Autosens tercihlerde devre dışı bırakıldı</string>
     <string name="smbdisabledinpreferences">SMB tercihleri devre dışı</string>
@@ -508,12 +426,10 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="smb_frequency_exceeded">Son 3 dakika içerisinde bir bolus gönderildi, SMB (Super Micro Bolus) atlandı</string>
     <string name="basal_set_correctly">Bazal oranı doğru ayarlanmış</string>
     <string name="limitingextendedbolus">%2$s\'den dolayı yayım bolus %1$.1f U ile sınırlandırılıyor</string>
-    <string name="limitingmaxiob">%2$s\'den dolayı max IOB\'yi (Aktif İnsülin) %1$.1f U ile sınırlandırılıyor</string>
     <string name="limitingcarbs">%2$s\'den dolayı karbonhidratlar %1$d g ile sınırlandırılıyor</string>
     <string name="limitingiob">%2$s\'den dolayı IOB (Aktif İnsülin)%1$.1f U ile sınırlandırılıyor</string>
     <string name="maxvalueinpreferences">tercihlerde maksimum değer</string>
     <string name="hardlimit">sabit sınır</string>
-    <string name="unsafeusage">güvenli olmayan kullanım</string>
     <string name="readstatusfailed">Durumu okumak başarısız oldu</string>
     <string name="record_pump_site_change">İnfüzyon seti değişimini kaydet</string>
     <string name="record_insulin_cartridge_change">Rezervuar değişimini kaydet</string>
@@ -523,12 +439,8 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="reset">sıfırla</string>
     <string name="openapssmb_maxiob_title">OpenAPS tarafından aşılmayacak, maksimum toplam IOB(Aktif İnsülin)[U]</string>
     <string name="openapssmb_maxiob_summary">Bu değer OpenAPS bağlamında Max IOB (Aktif İnsülin) olarak adlandırılır\nOpenAPS, mevcut IOB bu değerden daha büyükse daha fazla insülin eklemez</string>
-    <string name="pump_stopped">Pompa durduruldu</string>
-    <string name="pump_started">Pompa başlatıldı</string>
-    <string name="pump_paused">Pompa duraklatıldı</string>
     <string name="absorption_cutoff_title">Besinin maksimum emilim süresi [h]</string>
     <string name="absorption_cutoff_summary">Herhangi bir öğünün emildiği kabul edilen zaman. Kalan karbonhidratlar kesilecek.</string>
-    <string name="time">Zaman</string>
     <string name="overview_show_notes_field_in_dialogs_title">Tedavi diyaloglarında not alanını göster</string>
     <string name="next_button">Sonraki</string>
     <string name="previous_button">Önceki</string>
@@ -556,7 +468,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="virtualpump_type">Sanal pompa tipi</string>
     <string name="virtualpump_definition">Pompa tanımı</string>
     <string name="virtualpump_pump_def">Bolus: Adım=%1$s\nYayım Bolus: [Step=%2$s, Süre=%3$smin-%4$sh]\nBasal: Adım=%5$s\nTBR: %6$s (ile %7$s), Süre=%8$smin-%9$sh\n%10$s</string>
-    <string name="ns_autobackfill_title">KŞ Otomatik doldur</string>
     <string name="wear_wizard_settings">Kurulum Sihirbazı Ayarları</string>
     <string name="wear_wizard_settings_summary">Sihirbaz sonucuna dahil edilen hesaplamalar:</string>
     <string name="wear_display_settings">Ayarları Görüntüle</string>
@@ -564,19 +475,16 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="enable_nsclient">NSClient etkinleştir</string>
     <string name="welcometosetupwizard">Kurulum sihirbazına hoş geldiniz. Kurulum işleminde size rehberlik edecektir\n</string>
     <string name="readstatus">Durum oku</string>
-    <string name="adjustprofileinns">Değişiklikler Nightscout\'da yapılmalıdır</string>
     <string name="exitwizard">Kurulum sihirbazını atla</string>
     <string name="setupwizard_loop_description">AndroidAPS\'ın bazal değişiklikleri önerme/yapmasını sağlamak için aşağıdaki düğmeye basın</string>
     <string name="setupwizard_sensitivity_description">Duyarlılık eklentisi, duyarlılık tespiti ve COB hesaplaması için kullanılır. Daha fazla bilgi için ziyaret edin:</string>
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
     <string name="diawarning">Lütfen unutmayın: yeni insülin profilleri en az 5 saat DIA gerektirir. Yeni profildeki DIA 5–6 saat, eski insülin profillerinde DIA 3saat\'e eşittir.</string>
-    <string name="setupwizard_profile_description">Lütfen profil kaynağını seçiniz. Hasta bir çocuksa Nightscout profilini kullanmalısınız. Eğer Nightscout\'ta seni takip eden kimse yoksa muhtemelen yerel profili tercih edersiniz. Lütfen sadece profil kaynağını seçtiğinizi unutmayın. Bunu kullanmak için \"Profil değiştir\" i çalıştırarak etkinleştirmelisiniz</string>
     <string name="setupwizard_aps_description">Mevcut algoritmalardan birini seçin. En eskiden en yeniye ayrılırlar. Yeni algoritma genellikle daha güçlü ve daha agresiftir. Böylece eğer yeni bir Döngü\'cü iseniz, muhtemelen AMA ile başlayabilirsin, en sonuncusuyla değil. OpenAPS belgelerini okumayı ve kullanmadan önce yapılandırmayı unutmayın.</string>
     <string name="startobjective">İlk hedefinize başlayın</string>
     <string name="permission">Yetki</string>
     <string name="askforpermission">İzin için sorunuz</string>
     <string name="request">İstek</string>
-    <string name="exit">Çıkış</string>
     <string name="open_navigation">Navigasyonu aç</string>
     <string name="close_navigation">Navigasyonu kapat</string>
     <string name="nav_plugin_preferences">Eklenti tercihleri</string>
@@ -590,7 +498,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Geçici Hedefleri için duyarlılığı artırın >= 100]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Düşük geçici hedefler duyarlılığı azaltır</string>
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Geçici Hedefi < 100 duyarlılığı düşürün]]></string>
-    <string name="combo_invalid_setup">Geçersiz pompa kurulumu, dokümanları kontrol edin ve Hızlı Bilgi menüsünün 360 konfigürasyon yazılımını kullanarak QUICK INFO olarak adlandırıldığını doğrulayın.</string>
     <string name="careportal_removestartedevents">Temiz AndroidAPS başladı</string>
     <string name="storedsettingsfound">Saklanan ayarlar bulundu</string>
     <string name="allow_hardware_pump_text">Dikkat: Eğer bir donanım pompasını etkinleştirir ve bağlarsanız, AndroidAPS, bazal ayarları profilden pompaya aktaracaktır ve pompada kayıtlı mevcut bazal oranlarının üzerine yazacaktır. AndroidAPS\'de doğru ayarların olduğundan emin olun. Emin değilseniz veya pompanızdaki bazal ayarların üzerine yazmak istemiyorsanız, iptal tuşuna basın ve daha sonra tekrar deneyin.</string>

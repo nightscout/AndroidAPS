@@ -279,7 +279,7 @@
                 android:layout_gravity="center_horizontal"
                 android:labelFor="@+id/notes"
                 android:padding="10dp"
-                android:text="@string/careportal_newnstreatment_notes_label"
+                android:text="@string/notes_label"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textStyle="bold" />
 
@@ -289,7 +289,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:autofillHints="@string/careportal_newnstreatment_notes_label"
+                android:autofillHints="@string/notes_label"
                 android:gravity="start"
                 android:inputType="text|textCapSentences"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -345,7 +345,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="-15dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/listdelimiter" />
+            android:background="@color/list_delimiter" />
 
         <TableLayout
             android:id="@+id/resulttable"

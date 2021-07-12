@@ -2,11 +2,12 @@ package info.nightscout.androidaps.plugins.constraints.objectives
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Constraint
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -17,14 +18,18 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
+import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
+@PrepareForTest(UserEntryLogger::class, DateUtil::class)
 class ObjectivesPluginTest : TestBase() {
 
     @Mock lateinit var resourceHelper: ResourceHelper
-    @Mock lateinit var activePlugin: ActivePluginProvider
+    @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var sp: SP
+    @Mock lateinit var dateUtil: DateUtil
+    @Mock lateinit var uel: UserEntryLogger
 
     private lateinit var objectivesPlugin: ObjectivesPlugin
 
@@ -33,12 +38,13 @@ class ObjectivesPluginTest : TestBase() {
             if (it is Objective) {
                 it.sp = sp
                 it.resourceHelper = resourceHelper
+                it.dateUtil = dateUtil
             }
         }
     }
 
     @Before fun prepareMock() {
-        objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, resourceHelper, activePlugin, sp, Config())
+        objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, resourceHelper, activePlugin, sp, ConfigImpl(), dateUtil, uel)
         objectivesPlugin.onStart()
         `when`(resourceHelper.gs(R.string.objectivenotstarted)).thenReturn("Objective %1\$d not started")
     }
@@ -49,7 +55,7 @@ class ObjectivesPluginTest : TestBase() {
         c = objectivesPlugin.isLoopInvocationAllowed(c)
         Assert.assertEquals("Objectives: Objective 1 not started", c.getReasons(aapsLogger))
         Assert.assertEquals(false, c.value())
-        objectivesPlugin.objectives[ObjectivesPlugin.FIRST_OBJECTIVE].startedOn = DateUtil.now()
+        objectivesPlugin.objectives[ObjectivesPlugin.FIRST_OBJECTIVE].startedOn = dateUtil.now()
     }
 
     @Test fun notStartedObjective6ShouldLimitClosedLoop() {

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod Dash - Description -->
+    <string name="omnipod_dash_name" translatable="false">Dash</string>
+    <string name="omnipod_dash_name_short" translatable="false">Dash</string>
+    <string name="omnipod_dash_pump_description">Pump integration for Omnipod Dash (the new, Bluetooth-enabled model with a blue needle cap).</string>
+
+    <!-- Omnipod Dash - Keys -->
+    <string name="key_omnipod_dash_pod_state" translatable="false">AAPS.OmnipodDash.pod_state</string>
+
+    <!-- Omnipod Dash - Overview -->
+    <string name="omnipod_dash_bluetooth_status">Bluetooth Status</string>
+    <string name="omnipod_dash_bluetooth_address">Bluetooth Address</string>
+    <string name="key_omnipod_common_preferences_category_confirmation_beeps" translatable="false">omnipod_common_preferences_category_confirmation</string>
+    <string name="key_common_preferences_category_other_settings" translatable="false">common_preferences_category_other</string>
+</resources>

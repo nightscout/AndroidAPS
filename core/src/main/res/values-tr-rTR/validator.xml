@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_only_numeric_digits_allowed">Yalnızca sayısal rakam girebilirsiniz.</string>
+    <string name="error_only_numeric_digits_range_allowed">%1$s - %2$s aralığında yalnızca sayısal rakamlar kullanılabilir.</string>
+    <string name="error_field_must_not_be_empty">Alan boş olmamalı</string>
+    <string name="error_phone_not_valid">Telefon numarası geçerli değil</string>
+</resources>

@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="info.nightscout.androidaps">
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -26,6 +25,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="com.dexcom.cgm.EXTERNAL_PERMISSION" />
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
 
     <uses-permission-sdk-23 android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
@@ -52,7 +52,8 @@
             android:name="com.google.android.gms.car.application"
             android:resource="@xml/automotive_app_desc" />
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
@@ -60,7 +61,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.PreferencesActivity" />
-        <activity android:name=".plugins.general.overview.activities.QuickWizardListActivity">
+        <activity android:name=".plugins.general.overview.activities.QuickWizardListActivity"
+            android:exported="false">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity" />
 
@@ -68,15 +70,20 @@
             </intent-filter>
         </activity>
         <activity android:name=".plugins.general.maintenance.activities.PrefImportListActivity" />
-        <activity android:name=".historyBrowser.HistoryBrowseActivity" />
+        <activity android:name=".activities.HistoryBrowseActivity" />
+        <activity android:name=".activities.TreatmentsActivity" />
         <activity android:name=".activities.SurveyActivity" />
         <activity android:name=".activities.ProfileHelperActivity"
             android:theme="@style/ProfileHelperAppTheme" />
         <activity android:name=".activities.StatsActivity" />
         <activity
             android:name="com.google.firebase.auth.internal.FederatedSignInActivity"
-            tools:replace="android:launchMode"
-            android:launchMode="standard" />
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:launchMode="singleInstance"
+            android:permission="com.google.firebase.auth.api.gms.permission.LAUNCH_FEDERATED_SIGN_IN"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            tools:replace="android:launchMode" />
 
         <!-- Receive new BG readings from other local apps -->
         <receiver
@@ -110,11 +117,11 @@
             </intent-filter>
         </receiver>
 
-        <!-- Receiver keepalive, scheduled every 30 min -->
+        <!-- Receiver keep alive, scheduled every 30 min -->
         <receiver android:name=".receivers.KeepAliveReceiver" />
 
         <!-- Receive ignore 5m, 15m, 30m requests for carb notifications -->
-        <receiver android:name=".plugins.aps.loop.CarbSuggestionReceiver"></receiver>
+        <receiver android:name=".plugins.aps.loop.CarbSuggestionReceiver" />
 
         <!-- Auto start -->
         <receiver
@@ -136,13 +143,6 @@
                 android:resource="@xml/filepaths" />
         </provider>
 
-        <!-- Service processing incomming data -->
-        <service
-            android:name=".services.DataService"
-            android:exported="false" />
-        <service
-            android:name=".services.LocationService"
-            android:exported="false" />
         <service
             android:name=".plugins.general.wear.wearintegration.WatchUpdaterService"
             android:exported="true">
@@ -219,8 +219,6 @@
             android:exported="false" />
 
         <service android:name=".plugins.general.persistentNotification.DummyService" />
-        <service android:name=".plugins.pump.insight.connection_service.InsightConnectionService" />
-        <service android:name=".plugins.pump.insight.InsightAlertService" />
 
         <meta-data
             android:name="io.fabric.ApiKey"
@@ -236,20 +234,6 @@
             android:name=".activities.SingleFragmentActivity"
             android:theme="@style/AppTheme" />
         <activity android:name=".plugins.general.maintenance.activities.LogSettingActivity" />
-        <activity
-            android:name=".plugins.pump.insight.activities.InsightPairingActivity"
-            android:label="@string/insight_pairing"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".plugins.pump.insight.activities.InsightAlertActivity"
-            android:label="@string/pump_alert"
-            android:excludeFromRecents="true"
-            android:launchMode="singleInstance"
-            android:theme="@style/InsightAlertDialog" />
-        <activity
-            android:name=".plugins.pump.insight.activities.InsightPairingInformationActivity"
-            android:label="@string/pairing_information"
-            android:theme="@style/AppTheme" />
         <activity android:name=".activities.RequestDexcomPermissionActivity" />
         <activity android:name=".plugins.general.smsCommunicator.activities.SmsCommunicatorOtpActivity">
             <intent-filter>
@@ -259,13 +243,6 @@
             </intent-filter>
         </activity>
 
-        <!-- Medtronic service and activities -->
-        <service
-            android:name=".plugins.pump.medtronic.service.RileyLinkMedtronicService"
-            android:enabled="true"
-            android:exported="true" />
-
-        <activity android:name=".plugins.pump.medtronic.dialog.MedtronicHistoryActivity" />
         <activity android:name=".plugins.general.openhumans.OpenHumansLoginActivity"
             android:launchMode="singleTop">
             <intent-filter>

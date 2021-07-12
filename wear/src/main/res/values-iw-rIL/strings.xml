@@ -23,7 +23,7 @@
     <string name="pref_show_iob">הצג אינסולין IOB</string>
     <string name="pref_show_cob">הצג COB</string>
     <string name="pref_show_delta">הצג דלתא</string>
-    <string name="pref_show_avgdelta">הצגת דלתא ממוצעת</string>
+    <string name="pref_show_avgdelta">הצג דלתא ממוצעת</string>
     <string name="pref_show_phone_battery">הצג את סוללת הטלפון</string>
     <string name="pref_show_rig_battery">הצג את סוללת ה-Rig</string>
     <string name="pref_show_basal_rate">הצג קצב בזאלי</string>

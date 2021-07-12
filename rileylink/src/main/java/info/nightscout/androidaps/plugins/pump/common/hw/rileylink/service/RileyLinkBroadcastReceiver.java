@@ -20,7 +20,7 @@ import javax.inject.Inject;
 
 import dagger.android.DaggerBroadcastReceiver;
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
@@ -47,7 +47,7 @@ public class RileyLinkBroadcastReceiver extends DaggerBroadcastReceiver {
     @Inject AAPSLogger aapsLogger;
     @Inject RileyLinkServiceData rileyLinkServiceData;
     @Inject ServiceTaskExecutor serviceTaskExecutor;
-    @Inject ActivePluginProvider activePlugin;
+    @Inject ActivePlugin activePlugin;
 
     RileyLinkService serviceInstance;
     protected Map<String, List<String>> broadcastIdentifiers = null;

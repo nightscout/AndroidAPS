@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod Eros - Description -->
+    <!-- Omnipod Eros - Keys -->
+    <!-- Omnipod Eros - Overview -->
+    <!-- Omnipod Eros - Preferences -->
+    <string name="omnipod_eros_preferences_riley_link_configuration">RileyLink-Konfiguration</string>
+    <string name="omnipod_eros_preferences_category_notifications">Benachrichtigungen</string>
+    <string name="omnipod_eros_preferences_pulse_log_button_enabled">Button \'Pulse Log\' im Menü Pod Mgmt. anzeigen</string>
+    <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Button \'RileyLink Status\' im Menü Pod Mgmt. anzeigen</string>
+    <string name="omnipod_eros_preferences_battery_change_logging_enabled">Aktiviere die Protokollierung des Akkuwechsels im Aktionen-Tab/Menü</string>
+    <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_tbr_sound_enabled">Ton für unsichere TBR-Benachrichtigungen aktiviert</string>
+    <!-- Omnipod Eros - History -->
+    <!-- Omnipod Eros - Short Status -->
+    <!-- Omnipod Eros - Error -->
+    <!-- Omnipod Eros - Pod Management -->
+    <!-- Omnipod Eros - Pod Activation Wizard -->
+    <string name="omnipod_eros_pod_activation_wizard_start_pod_activation_text">Befülle den neuen Pod mit ausreichend Insulin für 3 Tage.\n\nAchte auch zwei Pieptöne vom Pod während des Füllens. Diese zeigen an, dass der Pod mit der Mindestmenge von 80 IE befüllt wurde. Leere die Spritze komplett, auch wenn Du die beiden Pieptöne gehört hast.\n\nKlicke <b>Weiter</b> nachdem Du den Pod befüllt hast.\n\n<b>Hinweis:</b> Entferne den Nadelschutz des Pods noch nicht.\n<b>Hinweis:</b> Bringe den RileyLink in eine aufrechte Position und platziere den Pod einige Zentimeter entfernt davon.</string>
+    <!-- Omnipod Eros - Other -->
+</resources>

@@ -18,6 +18,16 @@
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
     </style>
 
+    <style name="Theme.AppCompat.NoTitle" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
     <style name="AppThemeWarningDialog" parent="AppTheme">
         <item name="alertDialogTheme">@style/AppThemeWarningDialogTheme</item>
         <item name="dialogTitleBackground">@color/warningAlertBackground</item>

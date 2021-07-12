@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_only_numeric_digits_allowed">Se acceptă doar valori numerice.</string>
+    <string name="error_only_numeric_digits_range_allowed">Se acceptă doar valori numerice între %1$s - %2$s.</string>
+    <string name="error_this_field_cannot_contain_special_character">Acest câmp nu poate conține caractere speciale</string>
+    <string name="error_only_standard_letters_are_allowed">Sunt permise doar litere standard</string>
+    <string name="error_field_must_not_be_empty">Acest câmp nu trebuie lăsat necompletat</string>
+    <string name="error_email_address_not_valid">Adresă de e-mail nu este validă</string>
+    <string name="error_creditcard_number_not_valid">Numărul cardului de credit nu este valid</string>
+    <string name="error_phone_not_valid">Numărul de telefon nu este valid</string>
+    <string name="error_domain_not_valid">Numele domeniului nu este valid</string>
+    <string name="error_ip_not_valid">Adresa IP nu este validă</string>
+    <string name="error_url_not_valid">Url-ul web nu este valid</string>
+    <string name="error_notvalid_personname">Numele sau prenumele nu este valid.</string>
+    <string name="error_notvalid_personfullname">Nu este un nume valid.</string>
+    <string name="error_date_not_valid">Formatul nu este valid</string>
+    <string name="error_mustbe4digitnumber">Trebuie sa conțină 4 cifre</string>
+    <string name="error_mustbe6digitnumber">Trebuie sa conțină 6 cifre</string>
+    <string name="error_mustbe12hexadidits">Trebuie să conțină 12 caractere din șirul ABCDEF0123456789</string>
+    <string name="error_mustbe8hexadidits">Trebuie să conțină 8 caractere din șirul ABCDEF0123456789</string>
+    <string name="error_mustbe4hexadidits">Trebuie să conțină 4 caractere din șirul ABCDEF0123456789</string>
+    <string name="error_not_a_minimum_length">Nu respecta lungimea minimă</string>
+    <string name="error_pin_not_valid">Pinul trebuie să fie format din 3 până la 6 cifre neconsecutive și care nu se repeta</string>
+</resources>

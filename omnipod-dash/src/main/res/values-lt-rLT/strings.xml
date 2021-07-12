@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod Dash - Description -->
+    <string name="omnipod_dash_pump_description">Pompos integracija Omnipod Dash (naujas, Bluetooth palaikantis modelis su mėlynu adatos dangteliu).</string>
+    <!-- Omnipod Dash - Keys -->
+    <!-- Omnipod Dash - Overview -->
+    <string name="omnipod_dash_bluetooth_status">Bluetooth statusas</string>
+    <string name="omnipod_dash_bluetooth_address">Bluetooth adresas</string>
+</resources>

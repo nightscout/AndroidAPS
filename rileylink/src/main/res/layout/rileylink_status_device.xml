@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusDevice">
+    tools:context=".plugins.pump.medtronic.dialog.RileyLinkStatusDevice">
 
     <LinearLayout
         android:layout_width="match_parent"

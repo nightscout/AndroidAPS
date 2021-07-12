@@ -68,6 +68,27 @@
     <string name="pairing">Parowanie</string>
     <string name="yes">Tak</string>
     <string name="no">Nie</string>
+    <string name="loopdisabled">PĘTLA WYLĄCZONA Z UWAGI NA OGRANICZENIA</string>
+    <string name="bolusdelivered">Bolus %1$.2f U podany prawidłowo</string>
+    <string name="novalidbasalrate">Brak prawidłowej dawki bazowej odczytanej z pompy</string>
+    <string name="limitingmaxiob">Ograniczam max IOB do %1$.1f U z uwagi na %2$s</string>
+    <string name="unsafeusage">niebezpieczne użycie</string>
+    <string name="pump_unreachable">Pompa nieosiągalna</string>
+    <string name="pump_time_updated">Czas pompy uaktualniony</string>
+    <string name="removerecord">Usuń wpis</string>
+    <string name="disableloop">Wyłącz pętle</string>
+    <string name="enableloop">Włącz pętle</string>
+    <string name="resumeloop">Wznów pętlę</string>
+    <string name="suspendloop">Wstrzymaj pętle</string>
+    <string name="notification">Powiadomienie</string>
+    <string name="noprofile">Nie załadowano profilu z NS</string>
+    <string name="exists">istnieje</string>
+    <string name="notexists">nie istnieje</string>
+    <string name="glucose">Glukoza</string>
+    <string name="name_short">Nazwa:</string>
+    <string name="time">Czas</string>
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="addnew">Dodaj nowy</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Ograniczam maks. dawkę bazową do %1$.2f U/h z uwagi na %2$s</string>
     <string name="pumplimit">ograniczenie pompy</string>
@@ -116,6 +137,7 @@
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
     <string name="noprofileselected">Nie wybrano profilu</string>
+    <string name="startprofile">Uruchom profil %1$d%% na %2$d min</string>
     <!--    PumpType-->
     <string name="def_extended_note">*Tylko wartości dyskretne, nie zakresy są wspierane jako dawki bazowe/bolusy w pompie wirtualnej.</string>
     <!--    APSResult-->
@@ -155,10 +177,17 @@
     <string name="careportal_pumpbatterychange">Zmiana baterii pompy</string>
     <string name="careportal_temporarytarget">Cel tymczasowy (TT)</string>
     <string name="careportal_temporarytargetcancel">Odrzuć Cel tymczasowy</string>
+    <string name="boluswizard">Kalkulator bolusa</string>
     <string name="glucosetype_finger">Palec</string>
     <string name="glucosetype_sensor">Sensor</string>
     <string name="manual">Ręczne</string>
     <string name="unknown">nieznany</string>
+    <string name="eatingsoon">Wkrótce posiłek</string>
+    <string name="hypo">Hipo</string>
+    <string name="activity">Ćwiczenia</string>
+    <string name="wear">Oprogramowanie Wear (Smartwatch)</string>
+    <string name="automation">Automatyzacja</string>
+    <string name="custom">Niestandardowe</string>
     <!--    Command-->
     <string name="connectiontimedout">Przekroczono limit czasu połączenia</string>
     <!--    PumpEnactResult-->
@@ -190,30 +219,6 @@
     <!--    Ntp-->
     <string name="timedetection">Wykrywanie czasu</string>
     <string name="format_hour_minute">%1$dh %2$dm</string>
-    <!-- PumoCommon - Pump Abstract -->
-    <string name="pump_operation_not_supported_by_pump_driver">Operacja nie jest wspierana przez pompę i/lub sterownik pompy.</string>
-    <string name="pump_operation_not_yet_supported_by_pump">Operacja nie jest JESZCZE wspierana przez pompę.</string>
-    <string name="common_resultok">OK</string>
-    <!-- PumoCommon - Pump Status -->
-    <string name="pump_status_never_contacted">Nigdy nie połączona</string>
-    <string name="pump_status_waking_up">Wybudzanie</string>
-    <string name="pump_status_error_comm">Błąd komunikacji</string>
-    <string name="pump_status_timeout_comm">Przekroczony limit czasu połączenia</string>
-    <string name="pump_status_pump_unreachable">Pompa nieosiągalna</string>
-    <string name="pump_status_invalid_config">Nieprawidłowe ustawienia</string>
-    <string name="pump_status_active">Aktywna</string>
-    <string name="pump_status_sleeping">Uśpiona</string>
-    <!-- PumpCommon - History Group -->
-    <string name="history_group_basal">Dawki Bazowe</string>
-    <string name="history_group_configuration">Ustawienia</string>
-    <string name="history_group_notification">Powiadomienia</string>
-    <string name="history_group_statistic">Statystyki</string>
-    <string name="history_group_unknown">Nieznane</string>
-    <string name="history_group_all">Wszystko</string>
-    <string name="history_group_bolus">Bolusy</string>
-    <string name="history_group_prime">Napełnianie</string>
-    <string name="history_group_alarm">Alarmy</string>
-    <string name="history_group_glucose">Glukoza</string>
     <string name="mute5min">Wycisz na 5 minut</string>
     <!-- Maintenance -->
     <string name="metadata_label_created_at">Data utworzenia</string>
@@ -254,4 +259,6 @@
     <string name="running_invalid_version">Wykryliśmy, że używasz nieprawidlowej wersji. Pętla wyłączona!</string>
     <string name="versionavailable">Wersja %1$s dostępna</string>
     <!-- Permissions -->
+    <!-- WeekdayPicker -->
+    <!-- User Entry -->
 </resources>

@@ -3,7 +3,11 @@ package info.nightscout.androidaps.danar.di
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import info.nightscout.androidaps.danaRKorean.comm.*
-import info.nightscout.androidaps.danaRv2.comm.*
+import info.nightscout.androidaps.danaRv2.comm.MsgCheckValue_v2
+import info.nightscout.androidaps.danaRv2.comm.MsgHistoryEvents_v2
+import info.nightscout.androidaps.danaRv2.comm.MsgSetAPSTempBasalStart_v2
+import info.nightscout.androidaps.danaRv2.comm.MsgSetHistoryEntry_v2
+import info.nightscout.androidaps.danaRv2.comm.MsgStatusAPS_v2
 import info.nightscout.androidaps.danar.comm.*
 
 @Module
@@ -69,8 +73,6 @@ abstract class DanaRCommModule {
     @ContributesAndroidInjector abstract fun contributesMsgSetAPSTempBasalStart_v2(): MsgSetAPSTempBasalStart_v2
     @ContributesAndroidInjector abstract fun contributesMsgSetHistoryEntry_v2(): MsgSetHistoryEntry_v2
     @ContributesAndroidInjector abstract fun contributesMsgStatusAPS_v2(): MsgStatusAPS_v2
-    @ContributesAndroidInjector abstract fun contributesMsgStatusBolusExtended_v2(): MsgStatusBolusExtended_v2
-    @ContributesAndroidInjector abstract fun contributesMsgStatusTempBasal_v2(): MsgStatusTempBasal_v2
 
     @ContributesAndroidInjector abstract fun contributesMsgCheckValue_k(): MsgCheckValue_k
     @ContributesAndroidInjector abstract fun contributesMsgInitConnStatusBasic_k(): MsgInitConnStatusBasic_k

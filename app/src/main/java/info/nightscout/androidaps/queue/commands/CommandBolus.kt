@@ -4,7 +4,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.dialogs.BolusProgressDialog
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
@@ -19,7 +19,7 @@ class CommandBolus(
 ) : Command(injector, type, callback) {
 
     @Inject lateinit var rxBus: RxBusWrapper
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
 
     override fun execute() {
         val r = activePlugin.activePump.deliverTreatment(detailedBolusInfo)

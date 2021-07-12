@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/careportal_cardview"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
@@ -26,31 +26,27 @@
                 android:gravity="center_vertical|end"
                 android:paddingStart="10dp"
                 android:paddingEnd="5dp"
-                android:text="{fa-clock-o}" />
+                android:text="{fa-clock-o}"
+                tools:ignore="HardcodedText" />
 
             <TextView
-                android:id="@+id/careportal_date"
+                android:id="@+id/date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingEnd="10dp"
                 android:text="1.1.2000 18:00"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                tools:ignore="HardcodedText,RtlSymmetry" />
 
             <TextView
-                android:id="@+id/careportal_duration"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:paddingEnd="10dp"/>
-
-            <TextView
-                android:id="@+id/careportal_type"
+                android:id="@+id/type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:paddingEnd="10dp"
                 android:text=""
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:ignore="RtlSymmetry" />
 
             <TextView
                 android:layout_width="0dp"
@@ -60,12 +56,22 @@
                 android:text="" />
 
             <TextView
-                android:id="@+id/ns_sign"
+                android:id="@+id/ns"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
                 android:text="NS"
-                android:textColor="@color/colorSetTempButton" />
+                android:textColor="@color/colorSetTempButton"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/invalid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:text="@string/invalid"
+                android:textColor="@android:color/holo_red_light" />
 
         </LinearLayout>
 
@@ -75,21 +81,30 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/careportal_note"
+                android:id="@+id/duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                tools:ignore="RtlSymmetry" />
+
+            <TextView
+                android:id="@+id/note"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:paddingLeft="10dp"
                 android:paddingEnd="10dp"
-                android:text="Activity" />
+                android:text="Activity"
+                tools:ignore="HardcodedText,RtlSymmetry" />
 
             <TextView
-                android:id="@+id/careportal_remove"
+                android:id="@+id/remove"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
-                android:text="@string/overview_quickwizard_item_remove_button"
+                android:text="@string/remove_button"
                 android:textAlignment="viewEnd"
                 android:textColor="@android:color/holo_orange_light" />
 
@@ -98,11 +113,11 @@
         <View
             android:layout_width="fill_parent"
             android:layout_height="2dip"
-            android:layout_marginBottom="5dp"
             android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
             android:layout_marginTop="5dp"
-            android:background="@color/listdelimiter" />
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="@color/list_delimiter" />
 
     </LinearLayout>
 

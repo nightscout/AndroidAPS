@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.dialogs
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -10,21 +11,28 @@ import androidx.annotation.StringRes
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.ValueWithUnit
+import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import info.nightscout.androidaps.databinding.DialogCareBinding
-import info.nightscout.androidaps.db.CareportalEvent
-import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.logging.UserEntryLogger
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.utils.HtmlHelper
+import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.Translator
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.androidaps.extensions.fromConstant
+import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import org.json.JSONObject
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import java.text.DecimalFormat
 import java.util.*
 import javax.inject.Inject
@@ -32,11 +40,15 @@ import javax.inject.Inject
 class CareDialog : DialogFragmentWithDate() {
 
     @Inject lateinit var injector: HasAndroidInjector
-    @Inject lateinit var mainApp: MainApp
+    @Inject lateinit var ctx: Context
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var nsUpload: NSUpload
     @Inject lateinit var translator: Translator
+    @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
+
+    private val disposable = CompositeDisposable()
 
     enum class EventType {
         BGCHECK,
@@ -49,6 +61,8 @@ class CareDialog : DialogFragmentWithDate() {
     }
 
     private var options: EventType = EventType.BGCHECK
+    //private var valuesWithUnit = mutableListOf<XXXValueWithUnit?>()
+    private var valuesWithUnit = mutableListOf<ValueWithUnit?>()
 
     @StringRes
     private var event: Int = R.string.none
@@ -110,7 +124,7 @@ class CareDialog : DialogFragmentWithDate() {
         when (options) {
             EventType.QUESTION,
             EventType.ANNOUNCEMENT,
-            EventType.BGCHECK -> {
+            EventType.BGCHECK        -> {
                 binding.durationLayout.visibility = View.GONE
             }
 
@@ -122,13 +136,13 @@ class CareDialog : DialogFragmentWithDate() {
             }
 
             EventType.NOTE,
-            EventType.EXERCISE -> {
+            EventType.EXERCISE       -> {
                 binding.bgLayout.visibility = View.GONE
                 binding.bgsource.visibility = View.GONE
             }
         }
 
-        val bg = Profile.fromMgdlToUnits(GlucoseStatus(injector).glucoseStatusData?.glucose
+        val bg = Profile.fromMgdlToUnits(glucoseStatusProvider.glucoseStatusData?.glucose
             ?: 0.0, profileFunction.getUnits())
         val bgTextWatcher: TextWatcher = object : TextWatcher {
             override fun afterTextChanged(s: Editable) {}
@@ -138,7 +152,7 @@ class CareDialog : DialogFragmentWithDate() {
             }
         }
 
-        if (profileFunction.getUnits() == Constants.MMOL) {
+        if (profileFunction.getUnits() == GlucoseUnit.MMOL) {
             binding.bgunits.text = resourceHelper.gs(R.string.mmol)
             binding.bg.setParams(savedInstanceState?.getDouble("bg")
                 ?: bg, 2.0, 30.0, 0.1, DecimalFormat("0.0"), false, binding.okcancel.ok, bgTextWatcher)
@@ -149,7 +163,7 @@ class CareDialog : DialogFragmentWithDate() {
         }
         binding.duration.setParams(savedInstanceState?.getDouble("duration")
             ?: 0.0, 0.0, Constants.MAX_PROFILE_SWITCH_DURATION, 10.0, DecimalFormat("0"), false, binding.okcancel.ok)
-        if (options == EventType.NOTE || options == EventType.QUESTION || options == EventType.ANNOUNCEMENT)
+        if (options == EventType.NOTE || options == EventType.QUESTION || options == EventType.ANNOUNCEMENT || options == EventType.EXERCISE)
             binding.notesLayout.root.visibility = View.VISIBLE // independent to preferences
     }
 
@@ -159,70 +173,75 @@ class CareDialog : DialogFragmentWithDate() {
     }
 
     override fun submit(): Boolean {
-        val enteredBy = sp.getString("careportal_enteredby", "")
-        val unitResId = if (profileFunction.getUnits() == Constants.MGDL) R.string.mgdl else R.string.mmol
+        val enteredBy = sp.getString("careportal_enteredby", "AndroidAPS")
+        val unitResId = if (profileFunction.getUnits() == GlucoseUnit.MGDL) R.string.mgdl else R.string.mmol
 
-        val json = JSONObject()
+        eventTime -= eventTime % 1000
+
+        val therapyEvent = TherapyEvent(
+            timestamp = eventTime,
+            type = when (options) {
+                EventType.BGCHECK        -> TherapyEvent.Type.FINGER_STICK_BG_VALUE
+                EventType.SENSOR_INSERT  -> TherapyEvent.Type.SENSOR_CHANGE
+                EventType.BATTERY_CHANGE -> TherapyEvent.Type.PUMP_BATTERY_CHANGE
+                EventType.NOTE           -> TherapyEvent.Type.NOTE
+                EventType.EXERCISE       -> TherapyEvent.Type.EXERCISE
+                EventType.QUESTION       -> TherapyEvent.Type.QUESTION
+                EventType.ANNOUNCEMENT   -> TherapyEvent.Type.ANNOUNCEMENT
+            },
+            glucoseUnit = TherapyEvent.GlucoseUnit.fromConstant(profileFunction.getUnits())
+        )
+
         val actions: LinkedList<String> = LinkedList()
         if (options == EventType.BGCHECK || options == EventType.QUESTION || options == EventType.ANNOUNCEMENT) {
-            val type =
+            val meterType =
                 when {
-                    binding.meter.isChecked  -> CareportalEvent.FINGER
-                    binding.sensor.isChecked -> CareportalEvent.SENSOR
-                    else                     -> CareportalEvent.MANUAL
+                    binding.meter.isChecked  -> TherapyEvent.MeterType.FINGER
+                    binding.sensor.isChecked -> TherapyEvent.MeterType.SENSOR
+                    else                     -> TherapyEvent.MeterType.MANUAL
                 }
-            actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_glucosetype) + ": " + translator.translate(type))
+            actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_glucosetype) + ": " + translator.translate(meterType))
             actions.add(resourceHelper.gs(R.string.treatments_wizard_bg_label) + ": " + Profile.toCurrentUnitsString(profileFunction, binding.bg.value) + " " + resourceHelper.gs(unitResId))
-            json.put("glucose", binding.bg.value)
-            json.put("glucoseType", type)
+            therapyEvent.glucoseType = meterType
+            therapyEvent.glucose = binding.bg.value
+            valuesWithUnit.add(ValueWithUnit.fromGlucoseUnit(binding.bg.value.toDouble(), profileFunction.getUnits().asText))
+            valuesWithUnit.add(ValueWithUnit.TherapyEventMeterType(meterType))
         }
         if (options == EventType.NOTE || options == EventType.EXERCISE) {
             actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_duration_label) + ": " + resourceHelper.gs(R.string.format_mins, binding.duration.value.toInt()))
-            json.put("duration", binding.duration.value.toInt())
+            therapyEvent.duration = T.mins(binding.duration.value.toLong()).msecs()
+            valuesWithUnit.add(ValueWithUnit.Minute(binding.duration.value.toInt()).takeIf { !binding.duration.value.equals(0.0) } )
         }
         val notes = binding.notesLayout.notes.text.toString()
         if (notes.isNotEmpty()) {
-            actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_notes_label) + ": " + notes)
-            json.put("notes", notes)
+            actions.add(resourceHelper.gs(R.string.notes_label) + ": " + notes)
+            therapyEvent.note = notes
         }
-        eventTime -= eventTime % 1000
 
-        if (eventTimeChanged)
-            actions.add(resourceHelper.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
+        if (eventTimeChanged) actions.add(resourceHelper.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
 
-        json.put("created_at", DateUtil.toISOString(eventTime))
-        json.put("mills", eventTime)
-        json.put("eventType", when (options) {
-            EventType.BGCHECK        -> CareportalEvent.BGCHECK
-            EventType.SENSOR_INSERT  -> CareportalEvent.SENSORCHANGE
-            EventType.BATTERY_CHANGE -> CareportalEvent.PUMPBATTERYCHANGE
-            EventType.NOTE           -> CareportalEvent.NOTE
-            EventType.EXERCISE       -> CareportalEvent.EXERCISE
-            EventType.QUESTION       -> CareportalEvent.QUESTION
-            EventType.ANNOUNCEMENT   -> CareportalEvent.ANNOUNCEMENT
-        })
-        json.put("units", profileFunction.getUnits())
-        if (enteredBy.isNotEmpty())
-            json.put("enteredBy", enteredBy)
+        therapyEvent.enteredBy = enteredBy
+
+        var source = when  (options) {
+            EventType.BGCHECK        -> Sources.BgCheck
+            EventType.SENSOR_INSERT  -> Sources.SensorInsert
+            EventType.BATTERY_CHANGE -> Sources.BatteryChange
+            EventType.NOTE           -> Sources.Note
+            EventType.EXERCISE       -> Sources.Exercise
+            EventType.QUESTION       -> Sources.Question
+            EventType.ANNOUNCEMENT   -> Sources.Announcement
+        }
 
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, resourceHelper.gs(event), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
-                val careportalEvent = CareportalEvent(injector)
-                careportalEvent.date = eventTime
-                careportalEvent.source = Source.USER
-                careportalEvent.eventType = when (options) {
-                    EventType.BGCHECK        -> CareportalEvent.BGCHECK
-                    EventType.SENSOR_INSERT  -> CareportalEvent.SENSORCHANGE
-                    EventType.BATTERY_CHANGE -> CareportalEvent.PUMPBATTERYCHANGE
-                    EventType.NOTE           -> CareportalEvent.NOTE
-                    EventType.EXERCISE       -> CareportalEvent.EXERCISE
-                    EventType.QUESTION       -> CareportalEvent.QUESTION
-                    EventType.ANNOUNCEMENT   -> CareportalEvent.ANNOUNCEMENT
-                }
-                careportalEvent.json = json.toString()
-                aapsLogger.debug("USER ENTRY: CAREPORTAL ${careportalEvent.eventType} json: ${careportalEvent.json}")
-                MainApp.getDbHelper().createOrUpdate(careportalEvent)
-                nsUpload.uploadCareportalEntryToNS(json)
+                disposable += repository.runTransactionForResult(InsertIfNewByTimestampTherapyEventTransaction(therapyEvent))
+                    .subscribe(
+                        { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted therapy event $it") } },
+                        { aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it) }
+                    )
+                valuesWithUnit.add(0, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged })
+                valuesWithUnit.add(1, ValueWithUnit.TherapyEventType(therapyEvent.type))
+                uel.log(Action.CAREPORTAL, source, notes, valuesWithUnit)
             }, null)
         }
         return true

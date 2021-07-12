@@ -21,6 +21,7 @@
     <string name="medtronic_pump_battery_no">Μη επιλεγμένη (Simple View)</string>
     <string name="medtronic_pump_battery_alkaline">Αλκαλική (Extended view)</string>
     <string name="medtronic_pump_battery_lithium">Λιθίου (Extended view)</string>
+    <!-- MDT Fragment -->
     <!-- MDT Errors -->
     <string name="medtronic_error_serial_not_set">Δεν ορίστηκε # Serial.</string>
     <string name="medtronic_error_serial_invalid">Serial # μη έγκυρο.</string>

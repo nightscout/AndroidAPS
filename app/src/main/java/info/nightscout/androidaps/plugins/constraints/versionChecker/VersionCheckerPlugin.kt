@@ -4,7 +4,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.interfaces.ConstraintsInterface
+import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
@@ -35,7 +35,7 @@ class VersionCheckerPlugin @Inject constructor(
     .showInList(false)
     .pluginName(R.string.versionChecker),
     aapsLogger, resourceHelper, injector
-), ConstraintsInterface {
+), Constraints {
 
     enum class GracePeriod(val warning: Long, val old: Long, val veryOld: Long) {
         RELEASE(30, 60, 90),
@@ -82,7 +82,7 @@ class VersionCheckerPlugin @Inject constructor(
                 gracePeriod.old,
                 gracePeriod.veryOld
             )
-            val notification = Notification(Notification.OLDVERSION, message, Notification.NORMAL)
+            val notification = Notification(Notification.OLD_VERSION, message, Notification.NORMAL)
             rxBus.send(EventNewNotification(notification))
         }
     }

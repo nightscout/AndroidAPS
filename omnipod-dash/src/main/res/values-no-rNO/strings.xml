@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod Dash - Description -->
+    <string name="omnipod_dash_pump_description">Pumpeintegrering for Omnipod Dash (den nye, Bluetooth-aktiverte modellen med en blå kanylehette).</string>
+    <!-- Omnipod Dash - Keys -->
+    <!-- Omnipod Dash - Overview -->
+    <string name="omnipod_dash_bluetooth_status">Bluetooth status</string>
+    <string name="omnipod_dash_bluetooth_address">Bluetooth adresse</string>
+</resources>

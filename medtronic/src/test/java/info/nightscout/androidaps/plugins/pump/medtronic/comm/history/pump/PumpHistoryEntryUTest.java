@@ -16,7 +16,7 @@ public class PumpHistoryEntryUTest {
         long queryObject = 20191009000000L;
 
         PumpHistoryEntry phe = new PumpHistoryEntry();
-        phe.atechDateTime = dateObject;
+        phe.setAtechDateTime(dateObject);
 
         Assert.assertTrue(phe.isAfter(queryObject));
     }

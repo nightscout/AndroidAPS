@@ -194,7 +194,7 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
 
         IntentFilter messageFilter = new IntentFilter(Intent.ACTION_SEND);
 
-        messageReceiver = new BaseComplicationProviderService.MessageReceiver();
+        messageReceiver = new MessageReceiver();
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
         localBroadcastManager.registerReceiver(messageReceiver, messageFilter);
 
@@ -395,7 +395,7 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
     /*
      * Listen to broadcast --> new data was stored by ListenerService to Persistence
      */
-    public class MessageReceiver extends BroadcastReceiver {
+    public static class MessageReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             Set<String> complications = Persistence.setOf(KEY_COMPLICATIONS);

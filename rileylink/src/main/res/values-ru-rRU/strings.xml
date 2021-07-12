@@ -64,7 +64,7 @@
     <string name="riley_link_common_yes">Да</string>
     <string name="riley_link_common_no">Нет</string>
     <!-- RileyLink - Preferences -->
-    <string name="riley_link_show_battery_level">Использовать уровень заряда батареи, который передает OrangeLink/EmaLink</string>
+    <string name="riley_link_show_battery_level">Показать уровень батареи от OrangeLink/EmaLink/DiaLink</string>
     <string name="riley_link_show_battery_level_summary">НЕ РАБОТАЕТ с оригинальной RileyLink. Может не работать с альтернативными RileyLink.</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d день</item>

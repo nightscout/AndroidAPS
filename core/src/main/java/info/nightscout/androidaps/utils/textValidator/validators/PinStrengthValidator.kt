@@ -6,6 +6,7 @@ class PinStrengthValidator(val _customErrorMessage: String?) : Validator(_custom
 
     val regex = "[0-9]{3,6}".toRegex()
 
+    @kotlin.ExperimentalStdlibApi
     override fun isValid(editText: EditText): Boolean {
         return try {
             val value = editText.text.toString()
@@ -22,11 +23,11 @@ class PinStrengthValidator(val _customErrorMessage: String?) : Validator(_custom
                         same = false
                     }
 
-                    if (last.toInt() + 1 != c.toInt()) {
+                    if (last.code + 1 != c.code) {
                         falling = false
                     }
 
-                    if (last.toInt() != c.toInt() + 1) {
+                    if (last.code != c.code + 1) {
                         rising = false
                     }
                 }

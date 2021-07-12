@@ -24,6 +24,8 @@
     <string name="medtronic_pump_battery_nizn">NiZn (Utvidet visning)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (Utvidet visning)</string>
     <string name="medtronic_bolus_debugging">Feilsøking bolus/behandlingsinformasjon</string>
+    <!-- MDT Fragment -->
+    <string name="rl_battery_label">RileyLink batteri</string>
     <!-- MDT Errors -->
     <string name="medtronic_errors">Feil</string>
     <string name="medtronic_error_serial_not_set">Serienummer ikke definert.</string>
@@ -63,13 +65,17 @@
     <string name="medtronic_cmd_desc_get_history">Henter historikk - side %1$d (%2$d/16)</string>
     <string name="medtronic_cmd_desc_get_history_request">Henter historikk - side %1$d</string>
     <string name="medtronic_cmd_desc_get_time">Henter pumpe tid</string>
+    <string name="medtronic_cmd_desc_set_time">Still pumpens klokke</string>
+    <string name="medtronic_cmd_desc_get_battery_status">Les batteri status</string>
     <string name="medtronic_cmd_desc_get_settings">Henter innstillinger</string>
     <string name="medtronic_cmd_desc_get_model">Henter pumpe modell</string>
     <string name="medtronic_cmd_desc_get_basal_profile">Henter basal profil</string>
     <string name="medtronic_cmd_desc_set_basal_profile">Angi basal profil</string>
     <string name="medtronic_cmd_desc_get_tbr">Henter Temp Basal</string>
     <string name="medtronic_cmd_desc_set_tbr">Angi Temp Basal</string>
+    <string name="medtronic_cmd_desc_cancel_tbr">Avbryt temp basal</string>
     <string name="medtronic_cmd_desc_set_bolus">Angi Bolus</string>
+    <string name="medtronic_cmd_desc_get_remaining_insulin">Oppdater status insulinvolum</string>
     <string name="medtronic_pump_status_pump_unreachable">Pumpe utilgjengelig</string>
     <string name="medtronic_warning">Advarsel</string>
     <!-- medtronic_warning -->
@@ -83,4 +89,5 @@
     <string name="pump_time_updated">Pumpens tid ble oppdatert</string>
     <string name="set_neutral_temps_title">Sett nøytrale temp basaler</string>
     <string name="set_neutral_temps_summary">Hvis aktivert så vil den stoppe en temp basal rett før hver hele time for å stoppe noen pumpers varsler/vibreringer på hver hele time.</string>
+    <string name="mdt_tbr_remaining">%1$.1f E/t (%2$d min gjenstår)</string>
 </resources>

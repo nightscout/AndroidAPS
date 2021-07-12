@@ -4,7 +4,7 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interfaces.InsulinInterface
+import info.nightscout.androidaps.interfaces.Insulin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -54,7 +54,7 @@ class InsulinOrefFreePeakPluginTest : TestBase() {
 
     @Test
     fun getIdTest() {
-        assertEquals(InsulinInterface.InsulinType.OREF_FREE_PEAK, sut.id)
+        assertEquals(Insulin.InsulinType.OREF_FREE_PEAK, sut.id)
     }
 
     @Test

@@ -41,14 +41,14 @@
     <string name="noisycgm_label">Citiri zgomotoase ale CGM</string>
     <string name="noisycgm_whattodo">Ce ar trebui făcut dacă valorile CGM sunt nesigure?</string>
     <string name="noisycgm_nothing">Nu faceți nimic - AndroidAPS se va ocupa de acest lucru.</string>
-    <string name="noisycgm_pause">Dezactivaţi bucla închisă pentru a evita o posibilă supradozare sau subdozare.</string>
+    <string name="noisycgm_pause">Dezactivați bucla închisă pentru a evita o posibilă supradozare sau subdozare.</string>
     <string name="noisycgm_replacesensor">Înlocuiți senzorii zgomotoși sau inexacti.</string>
     <string name="noisycgm_checksmoothing">Verificaţi că aplicaţia dumneavoastră CGM furnizează date filtrate.</string>
     <string name="noisycgm_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Smoothing-Blood-Glucose-Data-in-xDrip.html#smoothing-blood-glucose-data</string>
     <string name="exerciseprofile_label">Exercițiu și Profiluri</string>
     <string name="exerciseprofile_whattodo">Cum poți folosi profilurile pentru a ajuta sistemul să facă față exercițiilor aerobe?</string>
     <string name="exerciseprofile_switchprofilebelow100">Faceți un schimb de profil la mai puțin de 100%.</string>
-    <string name="exerciseprofile_switchprofileabove100">Faceți un schimb de profil la peste 100%</string>
+    <string name="exerciseprofile_switchprofileabove100">Faceți un schimb de profil de peste 100%.</string>
     <string name="exerciseprofile_leaveat100">Lasă profilul setat la 100%.</string>
     <string name="exerciseprofile_suspendloop">Suspendă bucla.</string>
     <string name="exerciseprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>

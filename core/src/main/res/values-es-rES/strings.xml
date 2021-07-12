@@ -68,6 +68,24 @@
     <string name="pairing">Emparejando</string>
     <string name="yes">Si</string>
     <string name="no">No</string>
+    <string name="bolusdelivered">Bolo %1$.2fU enviado correctamente</string>
+    <string name="novalidbasalrate">Tasa Basal no valida en la bomba</string>
+    <string name="limitingmaxiob">Limitando max IOB a %1$.1f U debido a %2$s</string>
+    <string name="unsafeusage">uso no seguro</string>
+    <string name="pump_unreachable">Bomba no alcanzable</string>
+    <string name="disableloop">Desactivar lazo</string>
+    <string name="enableloop">Activar lazo</string>
+    <string name="resumeloop">Reactivar el lazo</string>
+    <string name="suspendloop">Suspender lazo</string>
+    <string name="notification">Notificación</string>
+    <string name="noprofile">Pendiente carga perfil NS</string>
+    <string name="notexists">no existe</string>
+    <string name="iob">IOB</string>
+    <string name="name_short">Nombre:</string>
+    <string name="time">Tiempo</string>
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="event_time_label">Hora del evento</string>
+    <string name="addnew">Añadir nuevo</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limitando max basal rate a %1$.2f U/h debido a %2$s</string>
     <string name="pumplimit">límite de la bomba</string>
@@ -116,6 +134,7 @@
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
     <string name="noprofileselected">Ningun perfil seleccionado</string>
+    <string name="startprofile">Iniciar perfil %1$d%% durante %2$d min</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Sólo se soportan valores discretos, no rangos, como entrada de datos para basal/bolo en la bomba virtual.</string>
     <!--    APSResult-->
@@ -190,32 +209,9 @@
     <!--    Ntp-->
     <string name="timedetection">Detección de tiempo</string>
     <string name="format_hour_minute">%1$dhoras %2$dmin</string>
-    <!-- PumoCommon - Pump Abstract -->
-    <string name="pump_operation_not_supported_by_pump_driver">Operación no soportada por bomba y/o controlador.</string>
-    <string name="pump_operation_not_yet_supported_by_pump">Operación no soportada todavía por la bomba.</string>
-    <string name="common_resultok">Ok</string>
-    <!-- PumoCommon - Pump Status -->
-    <string name="pump_status_never_contacted">Nunca conectados</string>
-    <string name="pump_status_waking_up">En fase de inicio</string>
-    <string name="pump_status_error_comm">Error con la comunicación</string>
-    <string name="pump_status_timeout_comm">Tiempo de espera en la comunicación</string>
-    <string name="pump_status_pump_unreachable">Bomba no alcanzable</string>
-    <string name="pump_status_invalid_config">Configuración no válida</string>
-    <string name="pump_status_active">Activo</string>
-    <string name="pump_status_sleeping">Suspendida</string>
-    <!-- PumpCommon - History Group -->
-    <string name="history_group_basal">Basales</string>
-    <string name="history_group_configuration">Ajustes</string>
-    <string name="history_group_notification">Notificaciones</string>
-    <string name="history_group_statistic">Estadísticas</string>
-    <string name="history_group_unknown">Desconocido/a</string>
-    <string name="history_group_all">Todos</string>
-    <string name="history_group_bolus">Bolos</string>
-    <string name="history_group_prime">Cebado</string>
-    <string name="history_group_alarm">Alarmas</string>
-    <string name="history_group_glucose">Glucosa</string>
     <string name="mute5min">Silenciar por 5 minutos</string>
     <!-- Maintenance -->
+    <string name="metadata_label_format">Formato del archivo</string>
     <string name="metadata_label_created_at">Creado el</string>
     <string name="metadata_label_aaps_version">Versión de AAPS</string>
     <string name="metadata_label_aaps_flavour">Construir Variante</string>
@@ -254,4 +250,19 @@
     <string name="running_invalid_version">Hemos detectado que está ejecutando una versión no válida. ¡Bucle desactivado!</string>
     <string name="versionavailable">Versión %1$s disponible</string>
     <!-- Permissions -->
+    <string name="alert_dialog_storage_permission_text">Por favor reinicia el teléfono o AndroidAPS desde ajustes de sistema, sino AndroidAPS no guardará registros (importante para trazar y verificar que el algoritmo funcione correctamente)!</string>
+    <!-- WeekdayPicker -->
+    <!-- User Entry -->
+    <plurals name="days">
+        <item quantity="one">%1$d día</item>
+        <item quantity="other">%1$d días</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d hora</item>
+        <item quantity="other">%1$d horas</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d minuto</item>
+        <item quantity="other">%1$d minutos</item>
+    </plurals>
 </resources>

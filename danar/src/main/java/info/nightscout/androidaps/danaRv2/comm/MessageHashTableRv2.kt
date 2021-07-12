@@ -19,8 +19,8 @@ class MessageHashTableRv2 @Inject constructor(
         put(MsgBolusStartWithSpeed(injector, 0.0, 0))       // 0x0104 CMD_MEALINS_START_DATA_SPEED
         put(MsgBolusProgress(injector))             // 0x0202 CMD_PUMP_THIS_REMAINDER_MEAL_INS
         put(MsgStatusProfile(injector))             // 0x0204 CMD_PUMP_CALCULATION_SETTING
-        put(MsgStatusTempBasal_v2(injector))        // 0x0205 CMD_PUMP_EXERCISE_MODE
-        put(MsgStatusBolusExtended_v2(injector))    // 0x0207 CMD_PUMP_EXPANS_INS_I
+        put(MsgStatusTempBasal(injector))           // 0x0205 CMD_PUMP_EXERCISE_MODE
+        put(MsgStatusBolusExtended(injector))    // 0x0207 CMD_PUMP_EXPANS_INS_I
         put(MsgStatusBasic(injector))               // 0x020A CMD_PUMP_INITVIEW_I
         put(MsgStatus(injector))                    // 0x020B CMD_PUMP_STATUS
         put(MsgInitConnStatusTime(injector))        // 0x0301 CMD_PUMPINIT_TIME_INFO

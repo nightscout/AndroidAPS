@@ -2,21 +2,22 @@ package info.nightscout.androidaps.utils.wizard
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.db.BgReading
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.ValueWrapper
+import info.nightscout.androidaps.database.entities.GlucoseValue
+import info.nightscout.androidaps.extensions.valueToUnits
+import info.nightscout.androidaps.interfaces.IobCobCalculator
+import info.nightscout.androidaps.interfaces.Profile
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
-import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper.safeGetInt
 import info.nightscout.androidaps.utils.JsonHelper.safeGetString
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.json.JSONException
 import org.json.JSONObject
-import java.util.*
 import javax.inject.Inject
 
 class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjector) {
@@ -24,14 +25,17 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var sp: SP
     @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var loopPlugin: LoopPlugin
-    @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
+    @Inject lateinit var iobCobCalculator: IobCobCalculator
+    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
 
     lateinit var storage: JSONObject
     var position: Int = -1
 
     companion object {
+
         const val YES = 0
         const val NO = 1
         private const val POSITIVE_ONLY = 2
@@ -69,10 +73,11 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
         return this
     }
 
-    fun isActive(): Boolean = Profile.secondsFromMidnight() >= validFrom() && Profile.secondsFromMidnight() <= validTo()
+    fun isActive(): Boolean = profileFunction.secondsFromMidnight() >= validFrom() && profileFunction.secondsFromMidnight() <= validTo()
 
-    fun doCalc(profile: Profile, profileName: String, lastBG: BgReading, _synchronized: Boolean): BolusWizard {
-        val tempTarget = treatmentsPlugin.tempTargetFromHistory
+    fun doCalc(profile: Profile, profileName: String, lastBG: GlucoseValue, _synchronized: Boolean): BolusWizard {
+        val dbRecord = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
+        val tempTarget = if (dbRecord is ValueWrapper.Existing) dbRecord.value else null
         //BG
         var bg = 0.0
         if (useBG() == YES) {
@@ -81,8 +86,8 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
         // COB
         var cob = 0.0
         if (useCOB() == YES) {
-            val cobInfo = iobCobCalculatorPlugin.getCobInfo(_synchronized, "QuickWizard COB")
-            if (cobInfo.displayCob != null) cob = cobInfo.displayCob
+            val cobInfo = iobCobCalculator.getCobInfo(_synchronized, "QuickWizard COB")
+            if (cobInfo.displayCob != null) cob = cobInfo.displayCob!!
         }
         // Bolus IOB
         var bolusIOB = false
@@ -90,8 +95,7 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
             bolusIOB = true
         }
         // Basal IOB
-        treatmentsPlugin.updateTotalIOBTempBasals()
-        val basalIob = treatmentsPlugin.lastCalculationTempBasals.round()
+        val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
         var basalIOB = false
         if (useBasalIOB() == YES) {
             basalIOB = true
@@ -107,30 +111,30 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
         }
         if (loopPlugin.isEnabled(loopPlugin.getType()) && loopPlugin.isSuperBolus) superBolus = false
         // Trend
-        val glucoseStatus = GlucoseStatus(injector).glucoseStatusData
+        val glucoseStatus = glucoseStatusProvider.glucoseStatusData
         var trend = false
         if (useTrend() == YES) {
             trend = true
-        } else if (useTrend() == POSITIVE_ONLY && glucoseStatus != null && glucoseStatus.short_avgdelta > 0) {
+        } else if (useTrend() == POSITIVE_ONLY && glucoseStatus != null && glucoseStatus.shortAvgDelta > 0) {
             trend = true
-        } else if (useTrend() == NEGATIVE_ONLY && glucoseStatus != null && glucoseStatus.short_avgdelta < 0) {
+        } else if (useTrend() == NEGATIVE_ONLY && glucoseStatus != null && glucoseStatus.shortAvgDelta < 0) {
             trend = true
         }
-        val percentage = sp.getDouble(R.string.key_boluswizard_percentage, 100.0)
-        return BolusWizard(injector).doCalc(profile, profileName, tempTarget, carbs(), cob, bg, 0.0, percentage, true, useCOB() == YES, bolusIOB, basalIOB, superBolus, useTempTarget() == YES, trend, false, "QuickWizard")
+        val percentage = sp.getInt(R.string.key_boluswizard_percentage, 100)
+        return BolusWizard(injector).doCalc(profile, profileName, tempTarget, carbs(), cob, bg, 0.0, percentage, true, useCOB() == YES, bolusIOB, basalIOB, superBolus, useTempTarget() == YES, trend, false, buttonText(), quickWizard = true) //tbc, ok if only quickwizard, but if other sources elsewhere use Sources.QuickWiard
     }
 
     fun buttonText(): String = safeGetString(storage, "buttonText", "")
 
     fun carbs(): Int = safeGetInt(storage, "carbs")
 
-    fun validFromDate(): Date = DateUtil.toDate(validFrom())
+    fun validFromDate(): Long = dateUtil.secondsOfTheDayToMilliseconds(validFrom())
 
-    fun validToDate(): Date = DateUtil.toDate(validTo())
+    fun validToDate(): Long = dateUtil.secondsOfTheDayToMilliseconds(validTo())
 
     fun validFrom(): Int = safeGetInt(storage, "validFrom")
 
-    fun validTo(): Int = safeGetInt(storage, "validTo")
+    private fun validTo(): Int = safeGetInt(storage, "validTo")
 
     fun useBG(): Int = safeGetInt(storage, "useBG", YES)
 

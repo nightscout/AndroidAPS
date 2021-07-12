@@ -12,7 +12,7 @@ class TabPageAdapter(private val activity: AppCompatActivity) : FragmentStateAda
 
     override fun getItemCount(): Int = visibleFragmentList.size
     override fun createFragment(position: Int): Fragment =
-        activity.supportFragmentManager.fragmentFactory.instantiate(ClassLoader.getSystemClassLoader(), visibleFragmentList[position].pluginDescription.fragmentClass)
+        activity.supportFragmentManager.fragmentFactory.instantiate(ClassLoader.getSystemClassLoader(), visibleFragmentList[position].pluginDescription.fragmentClass ?: Fragment::class.java.name)
 
     fun getPluginAt(position: Int): PluginBase = visibleFragmentList[position]
 

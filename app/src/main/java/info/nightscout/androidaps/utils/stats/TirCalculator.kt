@@ -3,9 +3,9 @@ package info.nightscout.androidaps.utils.stats
 import android.text.Spanned
 import android.util.LongSparseArray
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
+import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HtmlHelper
@@ -19,18 +19,20 @@ import javax.inject.Singleton
 class TirCalculator @Inject constructor(
     private val resourceHelper: ResourceHelper,
     private val profileFunction: ProfileFunction,
-    private val dateUtil: DateUtil
-){
+    private val dateUtil: DateUtil,
+    private val repository: AppRepository
+) {
+
     fun calculate(days: Long, lowMgdl: Double, highMgdl: Double): LongSparseArray<TIR> {
         if (lowMgdl < 39) throw RuntimeException("Low below 39")
         if (lowMgdl > highMgdl) throw RuntimeException("Low > High")
-        val startTime = MidnightTime.calc(DateUtil.now() - T.days(days).msecs())
-        val endTime = MidnightTime.calc(DateUtil.now())
+        val startTime = MidnightTime.calc(dateUtil.now() - T.days(days).msecs())
+        val endTime = MidnightTime.calc(dateUtil.now())
 
-        val bgReadings = MainApp.getDbHelper().getBgreadingsDataFromTime(startTime, endTime, true)
+        val bgReadings = repository.compatGetBgReadingsDataFromTime(startTime, endTime, true).blockingGet()
         val result = LongSparseArray<TIR>()
         for (bg in bgReadings) {
-            val midnight = MidnightTime.calc(bg.date)
+            val midnight = MidnightTime.calc(bg.timestamp)
             var tir = result[midnight]
             if (tir == null) {
                 tir = TIR(midnight, lowMgdl, highMgdl)

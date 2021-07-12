@@ -81,7 +81,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
 
 
     private static final String ACTION_RESEND_BULK = "com.dexdrip.stephenblack.nightwatch.RESEND_BULK_DATA";
-    private static final String AAPS_NOTIFY_CHANNEL_ID_OPENLOOP = "AndroidAPS-Openloop";
+    private static final String AAPS_NOTIFY_CHANNEL_ID_OPENLOOP = "AndroidAPS-OpenLoop";
     private static final String AAPS_NOTIFY_CHANNEL_ID_BOLUSPROGRESS = "bolus progress vibration";
     private static final String AAPS_NOTIFY_CHANNEL_ID_BOLUSPROGRESS_SILENT = "bolus progress  silent";
 
@@ -532,7 +532,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putBoolean("wearcontrol", wearcontrol);
-                        editor.commit();
+                        editor.apply();
                     }
                 } else if (path.equals(NEW_CHANGECONFIRMATIONREQUEST_PATH)) {
                     String title = DataMapItem.fromDataItem(event.getDataItem()).getDataMap().getString("title");
@@ -589,7 +589,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
         intent.putExtras(params);
 
         PendingIntent resultPendingIntent =
-                PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
 
         builder = builder.setContentIntent(resultPendingIntent);
 

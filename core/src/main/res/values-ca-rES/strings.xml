@@ -9,20 +9,19 @@
     <!--    Protection-->
     <!--    Profile-->
     <!--    ProfileFunction-->
+    <string name="startprofile">Iniciar perfil %1$d%% durant %2$d min</string>
     <!--    PumpType-->
     <!--    APSResult-->
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    TDD-->
     <!--    Translator-->
+    <string name="loop">Llaç</string>
     <!--    Command-->
     <!--    PumpEnactResult-->
     <!--    CarbsReq-->
     <!--    TDDStatsActivity-->
     <!--    Ntp-->
-    <!-- PumoCommon - Pump Abstract -->
-    <!-- PumoCommon - Pump Status -->
-    <!-- PumpCommon - History Group -->
     <!-- Maintenance -->
     <string name="metadata_label_created_at">Creat:</string>
     <string name="metadata_label_aaps_version">Versió d\'AAPS</string>
@@ -55,4 +54,6 @@
     <string name="prefdecrypt_issue_wrong_algorithm">Algoritme d\'encriptació no compatible o no especificat!</string>
     <!-- VersionChecker -->
     <!-- Permissions -->
+    <!-- WeekdayPicker -->
+    <!-- User Entry -->
 </resources>

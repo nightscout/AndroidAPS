@@ -2,7 +2,7 @@ package info.nightscout.androidaps.interfaces
 
 import android.text.Spanned
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.queue.commands.CustomCommand
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.queue.commands.Command
@@ -22,12 +22,12 @@ interface CommandQueueProvider {
     fun stopPump(callback: Callback?)
     fun startPump(callback: Callback?)
     fun setTBROverNotification(callback: Callback?, enable: Boolean)
-    fun tempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, profile: Profile, callback: Callback?): Boolean
-    fun tempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, profile: Profile, callback: Callback?): Boolean
+    fun tempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, profile: Profile, tbrType: PumpSync.TemporaryBasalType, callback: Callback?): Boolean
+    fun tempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, profile: Profile, tbrType: PumpSync.TemporaryBasalType, callback: Callback?): Boolean
     fun extendedBolus(insulin: Double, durationInMinutes: Int, callback: Callback?): Boolean
     fun cancelTempBasal(enforceNew: Boolean, callback: Callback?): Boolean
     fun cancelExtended(callback: Callback?): Boolean
-    fun setProfile(profile: Profile, callback: Callback?): Boolean
+    fun setProfile(profile: Profile, hasNsId: Boolean, callback: Callback?): Boolean
     fun readStatus(reason: String, callback: Callback?): Boolean
     fun statusInQueue(): Boolean
     fun loadHistory(type: Byte, callback: Callback?): Boolean
@@ -38,5 +38,5 @@ interface CommandQueueProvider {
     fun isCustomCommandRunning(customCommandType: Class<out CustomCommand>): Boolean
     fun isCustomCommandInQueue(customCommandType: Class<out CustomCommand>): Boolean
     fun spannedStatus(): Spanned
-    fun isThisProfileSet(profile: Profile): Boolean
+    fun isThisProfileSet(requestedProfile: Profile): Boolean
 }

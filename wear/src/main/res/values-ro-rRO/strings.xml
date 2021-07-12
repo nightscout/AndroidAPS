@@ -69,6 +69,7 @@
     <string name="menu_ecarb">eCarb</string>
     <string name="menu_settings">Setări</string>
     <string name="menu_status">Stare</string>
+    <string name="menu_resync">Re-Sincronizare</string>
     <string name="menu_prime_fill">Amorsare/Umplere</string>
     <string name="menu_none">Nimic</string>
     <string name="menu_default">Implicit</string>
@@ -89,6 +90,9 @@
     <string name="action_confirm">CONFIRMARE</string>
     <string name="action_timeshift">timp</string>
     <string name="action_bolus">bolus</string>
+    <string name="bolus_progress">Progres bolus</string>
+    <string name="press_to_cancel">apasă pentru a anula</string>
+    <string name="cancel_bolus">ANULARE BOLUS</string>
     <string name="status_pump">Pompă</string>
     <string name="status_loop">Buclă</string>
     <string name="status_cpp">CPP</string>
@@ -128,4 +132,8 @@
     <string name="digitalstyle_pref_your_color">Culoarea ta:</string>
     <string name="digitalstyle_pref_your_color_saturation">Saturaţie culori:</string>
     <string name="digitalstyle_pref_your_color_opacity">Opacitate culori:</string>
+    <string name="bolus_progress_channel_name">Progres bolus AAPS</string>
+    <string name="bolus_progress_silent_channel_name">Progres bolus AAPS silențios</string>
+    <string name="bolus_progress_channel_description">Progres bolus și anulare</string>
+    <string name="bolus_progress_silent_channel_description">Progres bolus şi anulare cu mai puţine vibraţii</string>
 </resources>

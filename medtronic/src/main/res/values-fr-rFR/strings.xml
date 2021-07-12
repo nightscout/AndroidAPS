@@ -24,6 +24,8 @@
     <string name="medtronic_pump_battery_nizn">NiZn (vue étendue)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (vue Étendue)</string>
     <string name="medtronic_bolus_debugging">Débogage de Bolus/Traitements</string>
+    <!-- MDT Fragment -->
+    <string name="rl_battery_label">Batterie RileyLink</string>
     <!-- MDT Errors -->
     <string name="medtronic_errors">Erreurs</string>
     <string name="medtronic_error_serial_not_set">Numéro de série non défini.</string>
@@ -63,13 +65,17 @@
     <string name="medtronic_cmd_desc_get_history">Obtenir l\'historique - Page %1$d (%2$d/16)</string>
     <string name="medtronic_cmd_desc_get_history_request">Obtenir l\'historique - Page %1$d</string>
     <string name="medtronic_cmd_desc_get_time">Obtenir l\'heure de la pompe</string>
+    <string name="medtronic_cmd_desc_set_time">Régler l\'heure de la pompe</string>
+    <string name="medtronic_cmd_desc_get_battery_status">Obtenir l\'état de la batterie</string>
     <string name="medtronic_cmd_desc_get_settings">Obtenir les paramètres</string>
     <string name="medtronic_cmd_desc_get_model">Obtenir le modèle de pompe</string>
     <string name="medtronic_cmd_desc_get_basal_profile">Obtenir le profil Basal</string>
     <string name="medtronic_cmd_desc_set_basal_profile">Obtenir le profil Basal</string>
     <string name="medtronic_cmd_desc_get_tbr">Obtenir le Basal Temporaire</string>
     <string name="medtronic_cmd_desc_set_tbr">Définir le Basal Temporaire</string>
+    <string name="medtronic_cmd_desc_cancel_tbr">Annuler basal temporaire</string>
     <string name="medtronic_cmd_desc_set_bolus">Définir le Bolus</string>
+    <string name="medtronic_cmd_desc_get_remaining_insulin">Obtenir l\'insuline restante</string>
     <string name="medtronic_pump_status_pump_unreachable">Pompe hors de portée</string>
     <string name="medtronic_warning">Attention</string>
     <!-- medtronic_warning -->
@@ -83,4 +89,5 @@
     <string name="pump_time_updated">Mise à jour de l\'heure de la pompe</string>
     <string name="set_neutral_temps_title">Définir des basals temp neutres</string>
     <string name="set_neutral_temps_summary">Si activé, cela annulera une basal temp avant la fin de chaque heure. Cela peut aider à supprimer les bips/vibrations à chaque heure.</string>
+    <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d min restantes)</string>
 </resources>

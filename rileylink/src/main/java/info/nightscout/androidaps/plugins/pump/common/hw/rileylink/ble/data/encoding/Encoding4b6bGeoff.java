@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkCommunicationException;
@@ -121,7 +122,7 @@ public class Encoding4b6bGeoff extends Encoding4b6bAbstract {
                      */
                 } else {
                     // LOG.debug(String.format("i=%d,x=%08X, coding error: highcode=0x%02X, lowcode=0x%02X, %d bits remaining",i,x,highcode,lowcode,availableBits));
-                    errorMessageBuilder.append(String.format(
+                    errorMessageBuilder.append(String.format(Locale.ENGLISH,
                             "decode4b6b: i=%d,x=%08X, coding error: highcode=0x%02X, lowcode=0x%02X, %d bits remaining.\n",
                             i, x, highcode, lowcode, availableBits));
                     codingErrors++;

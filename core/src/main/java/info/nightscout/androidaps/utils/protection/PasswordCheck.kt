@@ -2,12 +2,10 @@ package info.nightscout.androidaps.utils.protection
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.utils.CryptoUtil
@@ -20,7 +18,6 @@ import javax.inject.Singleton
 // since androidx.autofill.HintConstants are not available
 const val AUTOFILL_HINT_NEW_PASSWORD = "newPassword"
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Singleton
 class PasswordCheck @Inject constructor(
     val sp: SP,

@@ -24,6 +24,8 @@
     <string name="medtronic_pump_battery_nizn">NiZn (Extended view)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (Extended view)</string>
     <string name="medtronic_bolus_debugging">Debug Bolo/Trattamenti</string>
+    <!-- MDT Fragment -->
+    <string name="rl_battery_label">Batteria RileyLink</string>
     <!-- MDT Errors -->
     <string name="medtronic_errors">Errori</string>
     <string name="medtronic_error_serial_not_set"># seriale non impostato.</string>
@@ -63,13 +65,17 @@
     <string name="medtronic_cmd_desc_get_history">Ottieni storico - Pagina %1$d (%2$d/16)</string>
     <string name="medtronic_cmd_desc_get_history_request">Ottieni storico - Pagina %1$d</string>
     <string name="medtronic_cmd_desc_get_time">Ottieni ora micro</string>
+    <string name="medtronic_cmd_desc_set_time">Imposta ora del micro</string>
+    <string name="medtronic_cmd_desc_get_battery_status">Ottieni stato batteria</string>
     <string name="medtronic_cmd_desc_get_settings">Ottieni impostazioni</string>
     <string name="medtronic_cmd_desc_get_model">Ottieni modello micro</string>
     <string name="medtronic_cmd_desc_get_basal_profile">Ottieni profilo basale</string>
     <string name="medtronic_cmd_desc_set_basal_profile">Imposta profilo basale</string>
     <string name="medtronic_cmd_desc_get_tbr">Ottieni basale temporanea</string>
     <string name="medtronic_cmd_desc_set_tbr">Imposta basale temporanea</string>
+    <string name="medtronic_cmd_desc_cancel_tbr">Cancella basale temporanea</string>
     <string name="medtronic_cmd_desc_set_bolus">Imposta bolo</string>
+    <string name="medtronic_cmd_desc_get_remaining_insulin">Ottieni insulina rimanente</string>
     <string name="medtronic_pump_status_pump_unreachable">Micro irraggiungibile</string>
     <string name="medtronic_warning">Avviso</string>
     <!-- medtronic_warning -->
@@ -83,4 +89,5 @@
     <string name="pump_time_updated">Ora del micro aggiornata</string>
     <string name="set_neutral_temps_title">Imposta basali temporanee neutre</string>
     <string name="set_neutral_temps_summary">Se abilitato, cancellerà una basale temporanea prima della fine di ogni ora. Questo metodo può aiutare a fermare alcuni micro dall\'emettere un suono/vibrare allo scoccare dell\'ora.</string>
+    <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d min rimanenti/e)</string>
 </resources>

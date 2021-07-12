@@ -7,22 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.lifecycle.Observer
-import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.Event
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.rxkotlin.plusAssign
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -37,31 +33,29 @@ class OpenHumansFragment : DaggerFragment() {
     private var queueSizeValue = 0L
     private val compositeDisposable = CompositeDisposable()
 
-    @Inject
-    lateinit var rxBus: RxBusWrapper
-
-    @Inject
-    lateinit var openHumansUploader: OpenHumansUploader
-
-    @Inject
-    lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var openHumansUploader: OpenHumansUploader
+    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        compositeDisposable += Single.fromCallable { MainApp.getDbHelper().ohQueueSize }
-            .subscribeOn(Schedulers.io())
-            .repeatWhen { rxBus.toObservable(UpdateViewEvent::class.java)
-                .cast(Any::class.java)
-                .mergeWith(rxBus.toObservable(UpdateQueueEvent::class.java)
-                    .throttleLatest(5, TimeUnit.SECONDS))
-                .toFlowable(BackpressureStrategy.LATEST) }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                queueSizeValue = it
-                updateGUI()
-            }, {})
+        // compositeDisposable += Single.fromCallable { databaseHelper.getOHQueueSize() }
+        //     .subscribeOn(aapsSchedulers.io)
+        //     .repeatWhen {
+        //         rxBus.toObservable(UpdateViewEvent::class.java)
+        //             .cast(Any::class.java)
+        //             .mergeWith(rxBus.toObservable(UpdateQueueEvent::class.java)
+        //                 .throttleLatest(5, TimeUnit.SECONDS))
+        //             .toFlowable(BackpressureStrategy.LATEST)
+        //     }
+        //     .observeOn(aapsSchedulers.main)
+        //     .subscribe({
+        //         queueSizeValue = it
+        //         updateGUI()
+        //     }, {})
         context?.applicationContext?.let { appContext ->
-            WorkManager.getInstance(appContext).getWorkInfosForUniqueWorkLiveData(OpenHumansUploader.WORK_NAME).observe(this, Observer<List<WorkInfo>> {
+            WorkManager.getInstance(appContext).getWorkInfosForUniqueWorkLiveData(OpenHumansUploader.WORK_NAME).observe(this, {
                 val workInfo = it.lastOrNull()
                 if (workInfo == null) {
                     workerState?.visibility = View.GONE
@@ -87,7 +81,7 @@ class OpenHumansFragment : DaggerFragment() {
         workerState = view.findViewById(R.id.worker_state)
         login!!.setOnClickListener { startActivity(Intent(context, OpenHumansLoginActivity::class.java)) }
         logout!!.setOnClickListener {
-            activity?.let { activity -> OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.oh_logout_confirmation), Runnable { openHumansUploader.logout() }) }
+            activity?.let { activity -> OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.oh_logout_confirmation)) { openHumansUploader.logout() } }
         }
         viewsCreated = true
         updateGUI()

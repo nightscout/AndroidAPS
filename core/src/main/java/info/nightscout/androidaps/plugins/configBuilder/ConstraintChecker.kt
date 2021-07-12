@@ -1,22 +1,25 @@
 package info.nightscout.androidaps.plugins.configBuilder
 
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.Profile
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.interfaces.ConstraintsInterface
+import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.PluginType
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ConstraintChecker @Inject constructor(private val activePlugin: ActivePluginProvider) : ConstraintsInterface {
+class ConstraintChecker @Inject constructor(private val activePlugin: ActivePlugin) : Constraints {
 
     fun isLoopInvocationAllowed(): Constraint<Boolean> =
         isLoopInvocationAllowed(Constraint(true))
 
     fun isClosedLoopAllowed(): Constraint<Boolean> =
         isClosedLoopAllowed(Constraint(true))
+
+    fun isLgsAllowed(): Constraint<Boolean> =
+        isLgsAllowed(Constraint(true))
 
     fun isAutosensModeEnabled(): Constraint<Boolean> =
         isAutosensModeEnabled(Constraint(true))
@@ -58,9 +61,9 @@ class ConstraintChecker @Inject constructor(private val activePlugin: ActivePlug
         isAutomationEnabled(Constraint(true))
 
     override fun isLoopInvocationAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
-        val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(ConstraintsInterface::class.java)
+        val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(Constraints::class.java)
         for (p in constraintsPlugins) {
-            val constraint = p as ConstraintsInterface
+            val constraint = p as Constraints
             if (!p.isEnabled(PluginType.CONSTRAINTS)) continue
             constraint.isLoopInvocationAllowed(value)
         }
@@ -68,19 +71,29 @@ class ConstraintChecker @Inject constructor(private val activePlugin: ActivePlug
     }
 
     override fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
-        val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(ConstraintsInterface::class.java)
+        val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(Constraints::class.java)
         for (p in constraintsPlugins) {
-            val constraint = p as ConstraintsInterface
+            val constraint = p as Constraints
             if (!p.isEnabled(PluginType.CONSTRAINTS)) continue
             constraint.isClosedLoopAllowed(value)
         }
         return value
     }
 
-    override fun isAutosensModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
-        val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(ConstraintsInterface::class.java)
+    override fun isLgsAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
+        val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(Constraints::class.java)
         for (p in constraintsPlugins) {
-            val constraint = p as ConstraintsInterface
+            val constraint = p as Constraints
+            if (!p.isEnabled(PluginType.CONSTRAINTS)) continue
+            constraint.isLgsAllowed(value)
+        }
+        return value
+    }
+
+    override fun isAutosensModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
+        val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(Constraints::class.java)
+        for (p in constraintsPlugins) {
+            val constraint = p as Constraints
             if (!p.isEnabled(PluginType.CONSTRAINTS)) continue
             constraint.isAutosensModeEnabled(value)
         }
@@ -88,9 +101,9 @@ class ConstraintChecker @Inject constructor(private val activePlugin: ActivePlug
     }
 
     override fun isAMAModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
-        val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(ConstraintsInterface::class.java)
+        val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(Constraints::class.java)
         for (p in constraintsPlugins) {
-            val constrain = p as ConstraintsInterface
+            val constrain = p as Constraints
             if (!p.isEnabled(PluginType.CONSTRAINTS)) continue
             constrain.isAMAModeEnabled(value)
         }
@@ -98,9 +111,9 @@ class ConstraintChecker @Inject constructor(private val activePlugin: ActivePlug
     }
 
     override fun isSMBModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
-        val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(ConstraintsInterface::class.java)
+        val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(Constraints::class.java)
         for (p in constraintsPlugins) {
-            val constraint = p as ConstraintsInterface
+            val constraint = p as Constraints
             if (!p.isEnabled(PluginType.CONSTRAINTS)) continue
             constraint.isSMBModeEnabled(value)
         }
@@ -108,9 +121,9 @@ class ConstraintChecker @Inject constructor(private val activePlugin: ActivePlug
     }
 
     override fun isUAMEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
-        val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(ConstraintsInterface::class.java)
+        val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(Constraints::class.java)
         for (p in constraintsPlugins) {
-            val constraint = p as ConstraintsInterface
+            val constraint = p as Constraints
             if (!p.isEnabled(PluginType.CONSTRAINTS)) continue
             constraint.isUAMEnabled(value)
         }
@@ -118,9 +131,9 @@ class ConstraintChecker @Inject constructor(private val activePlugin: ActivePlug
     }
 
     override fun isAdvancedFilteringEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
-        val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(ConstraintsInterface::class.java)
+        val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(Constraints::class.java)
         for (p in constraintsPlugins) {
-            val constraint = p as ConstraintsInterface
+            val constraint = p as Constraints
             if (!p.isEnabled(PluginType.CONSTRAINTS)) continue
             constraint.isAdvancedFilteringEnabled(value)
         }
@@ -128,9 +141,9 @@ class ConstraintChecker @Inject constructor(private val activePlugin: ActivePlug
     }
 
     override fun isSuperBolusEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
-        val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(ConstraintsInterface::class.java)
+        val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(Constraints::class.java)
         for (p in constraintsPlugins) {
-            val constraint = p as ConstraintsInterface
+            val constraint = p as Constraints
             if (!p.isEnabled(PluginType.CONSTRAINTS)) continue
             constraint.isSuperBolusEnabled(value)
         }
@@ -138,9 +151,9 @@ class ConstraintChecker @Inject constructor(private val activePlugin: ActivePlug
     }
 
     override fun applyBasalConstraints(absoluteRate: Constraint<Double>, profile: Profile): Constraint<Double> {
-        val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(ConstraintsInterface::class.java)
+        val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(Constraints::class.java)
         for (p in constraintsPlugins) {
-            val constraint = p as ConstraintsInterface
+            val constraint = p as Constraints
             if (!p.isEnabled(PluginType.CONSTRAINTS)) continue
             constraint.applyBasalConstraints(absoluteRate, profile)
         }
@@ -148,9 +161,9 @@ class ConstraintChecker @Inject constructor(private val activePlugin: ActivePlug
     }
 
     override fun applyBasalPercentConstraints(percentRate: Constraint<Int>, profile: Profile): Constraint<Int> {
-        val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(ConstraintsInterface::class.java)
+        val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(Constraints::class.java)
         for (p in constraintsPlugins) {
-            val constrain = p as ConstraintsInterface
+            val constrain = p as Constraints
             if (!p.isEnabled(PluginType.CONSTRAINTS)) continue
             constrain.applyBasalPercentConstraints(percentRate, profile)
         }
@@ -158,9 +171,9 @@ class ConstraintChecker @Inject constructor(private val activePlugin: ActivePlug
     }
 
     override fun applyBolusConstraints(insulin: Constraint<Double>): Constraint<Double> {
-        val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(ConstraintsInterface::class.java)
+        val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(Constraints::class.java)
         for (p in constraintsPlugins) {
-            val constrain = p as ConstraintsInterface
+            val constrain = p as Constraints
             if (!p.isEnabled(PluginType.CONSTRAINTS)) continue
             constrain.applyBolusConstraints(insulin)
         }
@@ -168,9 +181,9 @@ class ConstraintChecker @Inject constructor(private val activePlugin: ActivePlug
     }
 
     override fun applyExtendedBolusConstraints(insulin: Constraint<Double>): Constraint<Double> {
-        val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(ConstraintsInterface::class.java)
+        val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(Constraints::class.java)
         for (p in constraintsPlugins) {
-            val constrain = p as ConstraintsInterface
+            val constrain = p as Constraints
             if (!p.isEnabled(PluginType.CONSTRAINTS)) continue
             constrain.applyExtendedBolusConstraints(insulin)
         }
@@ -178,9 +191,9 @@ class ConstraintChecker @Inject constructor(private val activePlugin: ActivePlug
     }
 
     override fun applyCarbsConstraints(carbs: Constraint<Int>): Constraint<Int> {
-        val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(ConstraintsInterface::class.java)
+        val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(Constraints::class.java)
         for (p in constraintsPlugins) {
-            val constrain = p as ConstraintsInterface
+            val constrain = p as Constraints
             if (!p.isEnabled(PluginType.CONSTRAINTS)) continue
             constrain.applyCarbsConstraints(carbs)
         }
@@ -188,9 +201,9 @@ class ConstraintChecker @Inject constructor(private val activePlugin: ActivePlug
     }
 
     override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> {
-        val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(ConstraintsInterface::class.java)
+        val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(Constraints::class.java)
         for (p in constraintsPlugins) {
-            val constrain = p as ConstraintsInterface
+            val constrain = p as Constraints
             if (!p.isEnabled(PluginType.CONSTRAINTS)) continue
             constrain.applyMaxIOBConstraints(maxIob)
         }
@@ -198,9 +211,9 @@ class ConstraintChecker @Inject constructor(private val activePlugin: ActivePlug
     }
 
     override fun isAutomationEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
-        val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(ConstraintsInterface::class.java)
+        val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(Constraints::class.java)
         for (p in constraintsPlugins) {
-            val constraint = p as ConstraintsInterface
+            val constraint = p as Constraints
             if (!p.isEnabled(PluginType.CONSTRAINTS)) continue
             constraint.isAutomationEnabled(value)
         }

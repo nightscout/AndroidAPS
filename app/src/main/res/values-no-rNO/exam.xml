@@ -48,7 +48,7 @@
     <string name="exerciseprofile_label">Trening og profiler</string>
     <string name="exerciseprofile_whattodo">Hvordan kan du bruke profiler for å hjelpe systemet med å håndtere treninger?</string>
     <string name="exerciseprofile_switchprofilebelow100">Gjør et profilbytte til mindre enn 100%.</string>
-    <string name="exerciseprofile_switchprofileabove100">Gjør et profilbytte til mer enn 100%</string>
+    <string name="exerciseprofile_switchprofileabove100">For å gjøre et profilbytte til mer enn 100%.</string>
     <string name="exerciseprofile_leaveat100">La profilen være på 100%.</string>
     <string name="exerciseprofile_suspendloop">Pause loop.</string>
     <string name="exerciseprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#active temp-target</string>

@@ -2,6 +2,7 @@
 <resources>
     <!--    Keys-->
     <!--    General-->
+    <string name="refresh">Обнови</string>
     <string name="error">Грешка</string>
     <string name="not_set_short">Не е зададен</string>
     <string name="failedupdatebasalprofile">Неуспешно обновяване на базалния профил</string>
@@ -61,6 +62,7 @@
     <string name="eventtype">Тип събитие</string>
     <string name="mgdl">мг/дл</string>
     <string name="mmol">ммол/л</string>
+    <string name="shortgram">гр.</string>
     <string name="advancedsettings_title">Допълнителни настройки</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">BT ограничения</string>
@@ -68,6 +70,40 @@
     <string name="pairing">Сдвояване</string>
     <string name="yes">Да</string>
     <string name="no">Не</string>
+    <string name="loopdisabled">LOOP Е СПРЯН ОТ ОГРАНИЧЕНИЯТА</string>
+    <string name="bolusdelivered">Болус от %1$.2fЕ доставен успешно</string>
+    <string name="virtualpump_resultok">ОК</string>
+    <string name="novalidbasalrate">Няма валиден базал в помпата</string>
+    <string name="limitingmaxiob">Ограничаване на макс. IOB до %1$.1f Е поради %2$s</string>
+    <string name="unsafeusage">опасно използване</string>
+    <string name="pump_unreachable">Помпата е недостъпна</string>
+    <string name="extended_bolus">Удължен болус</string>
+    <string name="pump_time_updated">Актуализирано време на помпата</string>
+    <string name="exit">Изход</string>
+    <string name="serial_number">Сериен номер</string>
+    <string name="removerecord">Премахни</string>
+    <string name="loopisdisabled">APS е изключен</string>
+    <string name="alarm">Аларма</string>
+    <string name="disableloop">Изключи Loop</string>
+    <string name="enableloop">Включи Loop</string>
+    <string name="resumeloop">Възстанови loop</string>
+    <string name="suspendloop">Изключи APS</string>
+    <string name="duration_min_label">Продължителност [мин.]</string>
+    <string name="notification">Известие</string>
+    <string name="noprofile">Още не е зареден профила от NS</string>
+    <string name="exists">съществува</string>
+    <string name="notexists">не съществува</string>
+    <string name="glucose">Кръвна захар</string>
+    <string name="iob">IOB</string>
+    <string name="cob">СОВ</string>
+    <string name="name_short">Име:</string>
+    <string name="time">Време</string>
+    <string name="ns_wifi_ssids">WiFi име</string>
+    <string name="loading">Зареждане…</string>
+    <string name="event_time_label">Време</string>
+    <string name="notes_label">Бележки</string>
+    <string name="remove_button">Изтрий</string>
+    <string name="addnew">Добави нов</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Ограничаване на макс. базална стойност до %1$.2f Е/ч поради %2$s</string>
     <string name="pumplimit">лимит на помпата</string>
@@ -116,6 +152,7 @@
     <string name="profile_carbs_per_unit">гр/Е</string>
     <!--    ProfileFunction-->
     <string name="noprofileselected">Няма избран профил</string>
+    <string name="startprofile">Стартирай профил %1$d%% за %2$d мин</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Само конкретни стойности! Диапазони не се поддържат за базал/болус при виртуална помпа.</string>
     <!--    APSResult-->
@@ -155,10 +192,19 @@
     <string name="careportal_pumpbatterychange">Смяна на батерия</string>
     <string name="careportal_temporarytarget">Временна цел</string>
     <string name="careportal_temporarytargetcancel">Откажи временна цел</string>
+    <string name="boluswizard">Болус калкулатор</string>
     <string name="glucosetype_finger">Пръст</string>
     <string name="glucosetype_sensor">Сензор</string>
     <string name="manual">Друго</string>
     <string name="unknown">неизвестно</string>
+    <string name="eatingsoon">Преди хранене</string>
+    <string name="hypo">Хипоглекимия</string>
+    <string name="activity">Физ.активност</string>
+    <string name="wear">Часовник</string>
+    <string name="automation">Автоматизация</string>
+    <string name="custom">По избор</string>
+    <string name="pump">Помпа</string>
+    <string name="loop">Кръг - Loop</string>
     <!--    Command-->
     <string name="connectiontimedout">Времето за връзка изтече</string>
     <!--    PumpEnactResult-->
@@ -190,32 +236,9 @@
     <!--    Ntp-->
     <string name="timedetection">Засичане на времето</string>
     <string name="format_hour_minute">%1$dч:%2$dм</string>
-    <!-- PumoCommon - Pump Abstract -->
-    <string name="pump_operation_not_supported_by_pump_driver">Помпата не поддържа тази операция.</string>
-    <string name="pump_operation_not_yet_supported_by_pump">Операцията не се поддържа от помпата (ВСЕ ОЩЕ).</string>
-    <string name="common_resultok">ОК</string>
-    <!-- PumoCommon - Pump Status -->
-    <string name="pump_status_never_contacted">Никога не сме се свързвали</string>
-    <string name="pump_status_waking_up">Събуждане</string>
-    <string name="pump_status_error_comm">Грешка в комуникацията</string>
-    <string name="pump_status_timeout_comm">Изтече времето за връзка</string>
-    <string name="pump_status_pump_unreachable">Помпата е недостъпна</string>
-    <string name="pump_status_invalid_config">Грешна конфигурация</string>
-    <string name="pump_status_active">Активна</string>
-    <string name="pump_status_sleeping">Спинка си</string>
-    <!-- PumpCommon - History Group -->
-    <string name="history_group_basal">Базали</string>
-    <string name="history_group_configuration">Конфигурации</string>
-    <string name="history_group_notification">Известия</string>
-    <string name="history_group_statistic">Статистика</string>
-    <string name="history_group_unknown">Неизвестни</string>
-    <string name="history_group_all">Всички</string>
-    <string name="history_group_bolus">Болуси</string>
-    <string name="history_group_prime">Пълнене</string>
-    <string name="history_group_alarm">Аларми</string>
-    <string name="history_group_glucose">Кръвна захар</string>
     <string name="mute5min">Изключи за 5 минути</string>
     <!-- Maintenance -->
+    <string name="metadata_label_format">Формат на файла</string>
     <string name="metadata_label_created_at">Създаден на</string>
     <string name="metadata_label_aaps_version">Версия на AAPS</string>
     <string name="metadata_label_aaps_flavour">вариант</string>
@@ -254,4 +277,25 @@
     <string name="running_invalid_version">Използвате грешна версия. APS е изключен!</string>
     <string name="versionavailable">Има налично обновяване до версия %1$s </string>
     <!-- Permissions -->
+    <string name="alert_dialog_storage_permission_text">Рестартирайте телефона или AndroidAPS от системните настройки \nили Android APS няма да записва проблемите (което е важно за работата на алгоритъма)!</string>
+    <!-- WeekdayPicker -->
+    <string name="monday_short">П</string>
+    <string name="tuesday_short">Вт</string>
+    <string name="wednesday_short">Ср</string>
+    <string name="thursday_short">Ч</string>
+    <string name="friday_short">П</string>
+    <string name="saturday_short">С</string>
+    <string name="sunday_short">Н</string>
+    <!-- User Entry -->
+    <string name="uel_cancel_bolus">СПРИ БОЛУС</string>
+    <string name="ue_source">Източник</string>
+    <string name="ue_action">Действие</string>
+    <plurals name="hours">
+        <item quantity="one">%1$d час</item>
+        <item quantity="other">%1$d часа</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d минутa</item>
+        <item quantity="other">%1$d минути</item>
+    </plurals>
 </resources>

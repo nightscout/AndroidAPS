@@ -142,7 +142,7 @@ public class ComplicationTapBroadcastReceiver extends BroadcastReceiver {
         // Pass complicationId as the requestCode to ensure that different complications get
         // different intents.
         return PendingIntent.getBroadcast(
-                context, complicationId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                context, complicationId, intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     /**
@@ -161,7 +161,7 @@ public class ComplicationTapBroadcastReceiver extends BroadcastReceiver {
         // Pass complicationId as the requestCode to ensure that different complications get
         // different intents.
         return PendingIntent.getBroadcast(
-                context, complicationId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                context, complicationId, intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
 }

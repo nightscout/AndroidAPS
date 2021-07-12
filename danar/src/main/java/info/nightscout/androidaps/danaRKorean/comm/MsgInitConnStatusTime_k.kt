@@ -29,6 +29,7 @@ class MsgInitConnStatusTime_k(
             danaRPlugin.setPluginEnabled(PluginType.PUMP, true)
             danaRPlugin.setFragmentVisible(PluginType.PUMP, true)
             danaPump.reset() // mark not initialized
+            pumpSync.connectNewPump()
             //If profile coming from pump, switch it as well
             configBuilder.storeSettings("ChangingKoreanDanaDriver")
             rxBus.send(EventRebuildTabs())

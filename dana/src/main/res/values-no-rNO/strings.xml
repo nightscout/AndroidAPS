@@ -106,7 +106,6 @@
     <string name="danars_password_title">Pumpe passord (kun v1)</string>
     <string name="danar_password_title">Pumpe passord</string>
     <string name="danar_useextended_title">Bruk forlenget bolus i &gt;200%%</string>
-    <string name="danar_visualizeextendedaspercentage_title">Vis forlenget bolus som %%</string>
     <string name="bolusspeed">Bolus hastighet</string>
     <string name="selectedpump">Valgt pumpe</string>
     <string name="rs_loginsulinchange_title">Logg reservoar bytte</string>

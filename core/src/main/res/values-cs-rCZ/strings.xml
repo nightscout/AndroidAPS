@@ -2,6 +2,7 @@
 <resources>
     <!--    Keys-->
     <!--    General-->
+    <string name="refresh">Obnovit</string>
     <string name="error">Chyba</string>
     <string name="not_set_short">Nenastaveno</string>
     <string name="failedupdatebasalprofile">Chyba při nastavení bazálního profilu</string>
@@ -61,6 +62,8 @@
     <string name="eventtype">Typ události</string>
     <string name="mgdl">mg/dL</string>
     <string name="mmol">mmol/L</string>
+    <string name="shortgram">g</string>
+    <string name="shortpercent">%</string>
     <string name="advancedsettings_title">Rozšířené nastavení</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">Hlídač BT</string>
@@ -68,6 +71,41 @@
     <string name="pairing">Párování</string>
     <string name="yes">Ano</string>
     <string name="no">Ne</string>
+    <string name="loopdisabled">SMYČKA ZAKÁZÁNA OMEZENÍM</string>
+    <string name="bolusdelivered">Bolus %1$.2f U aplikován úspěšně</string>
+    <string name="virtualpump_resultok">OK</string>
+    <string name="novalidbasalrate">Z pumpy nepřečten žádný platný bazál</string>
+    <string name="limitingmaxiob">Max IOB omezeno na %1$.1f U: %2$s</string>
+    <string name="unsafeusage">nebezpečné použití</string>
+    <string name="pump_unreachable">Pumpa nedostupná</string>
+    <string name="extended_bolus">Prodloužený bolus</string>
+    <string name="pump_time_updated">Čas v pumpě aktualizován</string>
+    <string name="exit">Konec</string>
+    <string name="serial_number">Sériové číslo</string>
+    <string name="removerecord">Odstranit záznam</string>
+    <string name="loopisdisabled">Smyčka je zakázána</string>
+    <string name="alarm">Alarm</string>
+    <string name="disableloop">Zakázat smyčku</string>
+    <string name="enableloop">Povolit smyčku</string>
+    <string name="resumeloop">Obnovit smyčku</string>
+    <string name="suspendloop">Pozastavit smyčku</string>
+    <string name="duration_min_label">Trvání [min]</string>
+    <string name="notification">Oznámení</string>
+    <string name="noprofile">Dosud nebyl načten profil z NS</string>
+    <string name="exists">existuje</string>
+    <string name="notexists">neexistuje</string>
+    <string name="glucose">Glykémie</string>
+    <string name="iob">IOB</string>
+    <string name="cob">COB</string>
+    <string name="name_short">Jméno:</string>
+    <string name="time">Čas</string>
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="loading">Načítání…</string>
+    <string name="event_time_label">Čas události</string>
+    <string name="notes_label">Poznámky</string>
+    <string name="remove_button">Odstranit</string>
+    <string name="addnew">Přidat nový</string>
+    <string name="wrong_pump_data">Data přicházejí z jiné pumpy. Změňte ovladač pro obnovení stavu pumpy.</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Max bazál omezen na %1$.2f U/h: %2$s</string>
     <string name="pumplimit">limit pumpy</string>
@@ -83,6 +121,7 @@
     <string name="dismiss">POTVRDIT</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy nepodporováno.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy není podporováno, nebo zařízení není spárováno.</string>
     <string name="ble_not_enabled">Bluetooth není povoleno.</string>
     <string name="location_not_found_title">Zjišťování polohy není povoleno</string>
     <string name="location_not_found_message">Pro vyhledání Bluetooth zařízení na novějších telefonech musí být povoleno zjišťování polohy. AAPS vás nesleduje a po provedení párování můžete tuto volbu opět zakázat.</string>
@@ -116,6 +155,7 @@
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
     <string name="noprofileselected">Není vybrán žádný profil</string>
+    <string name="startprofile">Spustit profil %1$d%% na %2$d min</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Pouze diskrétní hodnoty a ne rozsahy jsou podporovány pro bazál/bolus ve virtuální pumpě.</string>
     <!--    APSResult-->
@@ -132,6 +172,7 @@
     <!--    TDD-->
     <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f U</b> Bol: <b>%3$.2f U</b> Baz: <b>%4$.2f U(%5$.0f%%)</b>]]></string>
     <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f U</b> Bol: <b>%3$.2f U</b> Baz: <b>%4$.2f U(%5$.0f%%)</b> Sach.: <b>%6$.0f g</b>]]></string>
+    <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> ve <b>%3$d</b> dnech<br>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">Kontrola glykémie</string>
     <string name="careportal_mbg">Ruční glykémie nebo kalibrace</string>
@@ -142,6 +183,8 @@
     <string name="careportal_pumpsitechange">Výměna setu</string>
     <string name="careportal_cgmsensorinsert">Výměna senzoru</string>
     <string name="careportal_cgmsensorstart">Znovu spuštění senzoru</string>
+    <string name="careportal_cgm_sensor_stop">Zastavení senzoru</string>
+    <string name="careportal_dad_alert">Hlášení psa</string>
     <string name="careportal_insulincartridgechange">Výměna inzulínu</string>
     <string name="careportal_profileswitch">Přepnutí profilu</string>
     <string name="careportal_snackbolus">Bolus na svačinu</string>
@@ -155,10 +198,21 @@
     <string name="careportal_pumpbatterychange">Výměna baterie pumpy</string>
     <string name="careportal_temporarytarget">Dočasný cíl</string>
     <string name="careportal_temporarytargetcancel">Dočasný cíl konec</string>
+    <string name="boluswizard">Bolusová kalkulačka</string>
     <string name="glucosetype_finger">Glukoměr</string>
     <string name="glucosetype_sensor">Senzor</string>
     <string name="manual">Ručně</string>
     <string name="unknown">neznámý</string>
+    <string name="eatingsoon">Před jídlem</string>
+    <string name="hypo">Hypoglykémie</string>
+    <string name="activity">Aktivita</string>
+    <string name="wear">Wear</string>
+    <string name="automation">Automatizace</string>
+    <string name="custom">Volitelný</string>
+    <string name="pump">Pumpa</string>
+    <string name="loop">Smyčka</string>
+    <string name="ns">NS</string>
+    <string name="record">Záznam</string>
     <!--    Command-->
     <string name="connectiontimedout">Vypršel čas připojování</string>
     <!--    PumpEnactResult-->
@@ -190,30 +244,6 @@
     <!--    Ntp-->
     <string name="timedetection">Detekce času</string>
     <string name="format_hour_minute">%1$dh %2$dm</string>
-    <!-- PumoCommon - Pump Abstract -->
-    <string name="pump_operation_not_supported_by_pump_driver">Operace není podporována pumpou a/nebo ovladačem.</string>
-    <string name="pump_operation_not_yet_supported_by_pump">Operace prozatím pumpou nepodporována.</string>
-    <string name="common_resultok">OK</string>
-    <!-- PumoCommon - Pump Status -->
-    <string name="pump_status_never_contacted">Nikdy nekontaktováno</string>
-    <string name="pump_status_waking_up">Probouzení</string>
-    <string name="pump_status_error_comm">Chyba komunikace</string>
-    <string name="pump_status_timeout_comm">Vypršel časový limit komunikace</string>
-    <string name="pump_status_pump_unreachable">Pumpa nedostupná</string>
-    <string name="pump_status_invalid_config">Neplatná konfigurace</string>
-    <string name="pump_status_active">Aktivní</string>
-    <string name="pump_status_sleeping">Spánek</string>
-    <!-- PumpCommon - History Group -->
-    <string name="history_group_basal">Bazály</string>
-    <string name="history_group_configuration">Konfigurace</string>
-    <string name="history_group_notification">Oznámení</string>
-    <string name="history_group_statistic">Statistika</string>
-    <string name="history_group_unknown">Neznámé</string>
-    <string name="history_group_all">Vše</string>
-    <string name="history_group_bolus">Bolusy</string>
-    <string name="history_group_prime">Doplňování</string>
-    <string name="history_group_alarm">Alarmy</string>
-    <string name="history_group_glucose">Glykémie</string>
     <string name="mute5min">Ztlumit na 5 minut</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">Formát souboru</string>
@@ -256,6 +286,105 @@
     <string name="versionavailable">Verze %1$s je k dispozici</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Prosím restartujte Váš telefon nebo restartujte AndroidAPS z nastavení systému\njinak nebude AndroidAPS zaznamenával logy (důležité pro sledování a kontrolu, zda algoritmus pracuje správně)!</string>
+    <!-- WeekdayPicker -->
+    <string name="monday_short">Po</string>
+    <string name="tuesday_short">Út</string>
+    <string name="wednesday_short">St</string>
+    <string name="thursday_short">Čt</string>
+    <string name="friday_short">Pá</string>
+    <string name="saturday_short">So</string>
+    <string name="sunday_short">Ne</string>
+    <!-- User Entry -->
+    <string name="uel_bolus">BOLUS</string>
+    <string name="uel_bolus_advisor">POMOCNÍK S BOLUSEM</string>
+    <string name="uel_extended_bolus">PRODLOUŽENÝ BOLUS</string>
+    <string name="uel_superbolus_tbr">SUPERBOLUS TBR</string>
+    <string name="uel_carbs">SACHARIDY</string>
+    <string name="uel_extended_carbs">ROZLOŽENÉ SACHARIDY</string>
+    <string name="uel_temp_basal">DOČASNÝ BAZÁL</string>
+    <string name="uel_tt">DOČASNÝ CÍL</string>
+    <string name="uel_new_profile">NOVÝ PROFIL</string>
+    <string name="uel_clone_profile">KLONOVAT PROFIL</string>
+    <string name="uel_store_profile">ULOŽIT PROFIL</string>
+    <string name="uel_profile_switch">PŘEPNUTÍ PROFILU</string>
+    <string name="uel_profile_switch_cloned">PŘEPNUTÍ PROFILU NAKLONOVÁNO</string>
+    <string name="uel_closed_loop_mode">REŽIM UZAVŘENÉ SMYČKY</string>
+    <string name="uel_lgs_loop_mode">REŽIM SMYČKY LGS</string>
+    <string name="uel_open_loop_mode">REŽIM OTEVŘENÉ SMYČKY</string>
+    <string name="uel_loop_disabled">SMYČKA VYPNUTA</string>
+    <string name="uel_loop_enabled">SMYČKA ZAPNUTA</string>
+    <string name="uel_reconnect">ZNOVU PŘIPOJIT</string>
+    <string name="uel_disconnect">ODPOJIT</string>
+    <string name="uel_resume">OBNOVIT</string>
+    <string name="uel_suspend">POZASTAVIT</string>
+    <string name="uel_hw_pump_allowed">HW PUMPA POVOLENA</string>
+    <string name="uel_clear_pairing_keys">VYMAZAT PÁROVACÍ KLÍČE</string>
+    <string name="uel_accepts_temp_basal">PŘIJMOUT DOČASNÝ BAZÁL</string>
+    <string name="uel_cancel_temp_basal">ZRUŠIT DOČASNÝ BAZÁL</string>
+    <string name="uel_cancel_bolus">ZRUŠIT BOLUS</string>
+    <string name="uel_cancel_extended_bolus">ZRUŠIT PRODLOUŽENÝ BOLUS</string>
+    <string name="uel_cancel_tt">ZRUŠIT DOČASNÝ CÍL</string>
+    <string name="uel_careportal">OŠETŘENÍ</string>
+    <string name="uel_site_change">VÝMĚNA SETU</string>
+    <string name="uel_reservoir_change">VÝMĚNA ZÁSOBNÍKU</string>
+    <string name="uel_calibration">KALIBRACE</string>
+    <string name="uel_prime_bolus">PLNICÍ BOLUS</string>
+    <string name="uel_treatment">OŠETŘENÍ</string>
+    <string name="uel_careportal_ns_refresh">OBNOVENÍ CAREPORTÁLU Z NS</string>
+    <string name="uel_profile_switch_ns_refresh">OBNOVENÍ PŘEPNUTÍ PROFILU Z NS</string>
+    <string name="uel_treatments_ns_refresh">OBNOVENÍ OŠETŘENÍ Z NS</string>
+    <string name="uel_tt_ns_refresh">OBNOVENÍ DOČASNÝCH CÍLŮ Z NS</string>
+    <string name="uel_automation_removed">AUTOMATIZACE ODEBRÁNA</string>
+    <string name="uel_bg_removed">GLYKÉMIE ODEBRÁNA</string>
+    <string name="uel_careportal_removed">CAREPORTAL ODEBRÁN</string>
+    <string name="uel_bolus_removed">BOLUS ODSTRANĚN</string>
+    <string name="uel_carbs_removed">SACHARIDY ODSTRANĚNY</string>
+    <string name="uel_temp_basal_removed">DOČASNÝ BAZÁL ODSTRANĚN</string>
+    <string name="uel_extended_bolus_removed">PRODLOUŽENÝ BOLUS ODEBRÁN</string>
+    <string name="uel_food">JÍDLO</string>
+    <string name="uel_food_removed">JÍDLO ODEBRÁNO</string>
+    <string name="uel_profile_removed">PROFIL ODEBRÁN</string>
+    <string name="uel_profile_switch_removed">PŘEPNUTÍ PROFILU ODEBRÁNO</string>
+    <string name="uel_restart_events_removed">UDÁLOSTI RESTARTU ODEBRÁNY</string>
+    <string name="uel_treatment_removed">OŠETŘENÍ ODEBRÁNO</string>
+    <string name="uel_tt_removed">DOČASNÝ CÍL ODSTRANĚN</string>
+    <string name="uel_ns_paused">NS POZASTAVEN</string>
+    <string name="uel_ns_resume">NS OBNOVEN</string>
+    <string name="uel_ns_queue_cleared">FRONTA NS VYMAZÁNA</string>
+    <string name="uel_ns_settings_copied">NASTAVENÍ NS ZKOPÍROVÁNO</string>
+    <string name="uel_error_dialog_ok">DIALOGOVÉ OKNO CHYBY OK</string>
+    <string name="uel_error_dialog_mute">DIALOGOVÉ OKNO CHYBY ZTLUMENO</string>
+    <string name="uel_error_dialog_mute_5min">DIALOGOVÉ OKNO CHYBY ZTLUMENO NA 5 MIN</string>
+    <string name="uel_objective_started">CÍL ZAHÁJEN</string>
+    <string name="uel_objective_unstarted">CÍL OD-ZAHÁJEN</string>
+    <string name="uel_objectives_skipped">CÍL PŘESKOČEN</string>
+    <string name="uel_stat_reset">RESET STATISTIK</string>
+    <string name="uel_delete_logs">VYMAZAT LOGY</string>
+    <string name="uel_delete_future_treatments">VYMAZAT BUDOUCÍ OŠETŘENÍ</string>
+    <string name="uel_export_settings">EXPORTOVAT NASTAVENÍ</string>
+    <string name="uel_import_settings">IMPORTOVAT NASTAVENÍ</string>
+    <string name="uel_reset_databases">RESETOVAT DATABÁZE</string>
+    <string name="uel_export_databases">EXPORTOVAT DATABÁZE</string>
+    <string name="uel_import_databases">IMPORTOVAT DATABÁZE</string>
+    <string name="uel_otp_export">EXPORT OTP</string>
+    <string name="uel_otp_reset">RESET OTP</string>
+    <string name="uel_stop_sms">STOP SMS</string>
+    <string name="uel_export_csv">EXPORTOVAT UŽIVATELSKÉ ZÁZNAMY</string>
+    <string name="uel_start_aaps">START AAPS</string>
+    <string name="uel_exit_aaps">KONEC AAPS</string>
+    <string name="uel_plugin_enabled">PLUG-IN POVOLEN</string>
+    <string name="uel_plugin_disabled">PLUG-IN ZAKÁZÁN</string>
+    <string name="uel_unknown">NEZNÁMÉ</string>
+    <string name="ue_string">Text</string>
+    <string name="ue_source">Zdroj</string>
+    <string name="ue_utc_offset">Posun UTC</string>
+    <string name="ue_action">Akce</string>
+    <string name="ue_timestamp">Datum</string>
+    <string name="ue_none">Žádné jednotky</string>
+    <string name="ue_export_to_csv">Exportovat uživatelské záznamy do Excelu (csv)</string>
+    <string name="uel_loop_change">SMYČKA ZMĚNĚNA</string>
+    <string name="uel_loop_removed">SMYČKA ODEBRÁNA</string>
+    <string name="uel_other">JINÉ</string>
     <plurals name="days">
         <item quantity="one">%1$d den</item>
         <item quantity="few">%1$d dnů</item>

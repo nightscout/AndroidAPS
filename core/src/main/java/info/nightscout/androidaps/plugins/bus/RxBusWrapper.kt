@@ -1,14 +1,16 @@
 package info.nightscout.androidaps.plugins.bus
 
 import info.nightscout.androidaps.events.Event
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.Observable
-import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-open class RxBusWrapper @Inject constructor() {
+open class RxBusWrapper @Inject constructor(
+    val aapsSchedulers: AapsSchedulers
+) {
 
     private val publisher = PublishSubject.create<Event>()
 
@@ -20,6 +22,6 @@ open class RxBusWrapper @Inject constructor() {
     // Using ofType we filter only events that match that class type
     fun <T> toObservable(eventType: Class<T>): Observable<T> =
         publisher
-            .subscribeOn(Schedulers.io())
+            .subscribeOn(aapsSchedulers.io)
             .ofType(eventType)
 }

@@ -4,6 +4,7 @@
     xmlns:validate="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
+        android:key="@string/key_overview_settings"
         android:title="@string/overview"
         app:initialExpandedChildrenCount="0">
 

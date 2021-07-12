@@ -132,4 +132,8 @@
     <string name="digitalstyle_pref_your_color">Ваш цвет:</string>
     <string name="digitalstyle_pref_your_color_saturation">Ваша цветовая насыщенность:</string>
     <string name="digitalstyle_pref_your_color_opacity">Непрозрачность вашего цвета:</string>
+    <string name="bolus_progress_channel_name">Подается болюс</string>
+    <string name="bolus_progress_silent_channel_name">Беззвучная подача болюса</string>
+    <string name="bolus_progress_channel_description">Подача и отмена болюса</string>
+    <string name="bolus_progress_silent_channel_description">Подача и отмена болюса с меньшими вибрациями</string>
 </resources>

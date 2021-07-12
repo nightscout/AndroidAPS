@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.constraints.versionChecker
 import android.content.Context
 import android.net.ConnectivityManager
 import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.interfaces.ConfigInterface
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -23,7 +23,7 @@ class VersionCheckerUtils @Inject constructor(
     val sp: SP,
     val resourceHelper: ResourceHelper,
     val rxBus: RxBusWrapper,
-    private val config: ConfigInterface,
+    private val config: Config,
     val context: Context
 ) {
 
@@ -107,7 +107,7 @@ class VersionCheckerUtils @Inject constructor(
         val now = System.currentTimeMillis()
         if (now > sp.getLong(R.string.key_last_versionchecker_warning, 0) + WARN_EVERY) {
             aapsLogger.debug(LTag.CORE, "Version $currentVersion outdated. Found $newVersion")
-            val notification = Notification(Notification.NEWVERSIONDETECTED, resourceHelper.gs(R.string.versionavailable, newVersion.toString()), Notification.LOW)
+            val notification = Notification(Notification.NEW_VERSION_DETECTED, resourceHelper.gs(R.string.versionavailable, newVersion.toString()), Notification.LOW)
             rxBus.send(EventNewNotification(notification))
             sp.putLong(R.string.key_last_versionchecker_warning, now)
         }
@@ -140,7 +140,7 @@ fun String.numericVersionPart(): String =
     "(((\\d+)\\.)+(\\d+))(\\D(.*))?".toRegex().matchEntire(this)?.groupValues?.getOrNull(1)
         ?: ""
 
-fun findVersion(file: String?): String? {
+@Suppress("unused") fun findVersion(file: String?): String? {
     val regex = "(.*)version(.*)\"(((\\d+)\\.)+(\\d+))\"(.*)".toRegex()
     return file?.lines()?.filter { regex.matches(it) }?.mapNotNull { regex.matchEntire(it)?.groupValues?.getOrNull(3) }?.firstOrNull()
 }

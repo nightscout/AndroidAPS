@@ -1,18 +1,13 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".plugins.general.smsCommunicator.SmsCommunicatorFragment">
 
-    <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+    <TextView
+        android:id="@+id/log"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="" />
 
-        <TextView
-            android:id="@+id/smscommunicator_log"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:text=""/>
-    </ScrollView>
-
-</FrameLayout>
+</ScrollView>

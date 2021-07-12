@@ -51,6 +51,7 @@
 
 
         <LinearLayout
+            android:id="@+id/overview_loop"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -159,7 +160,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
-                android:background="@color/listdelimiter" />
+                android:background="@color/list_delimiter" />
 
         </LinearLayout>
 
@@ -269,7 +270,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
-                android:background="@color/listdelimiter" />
+                android:background="@color/list_delimiter" />
 
         </LinearLayout>
 
@@ -391,7 +392,7 @@
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/listdelimiter" />
+            android:background="@color/list_delimiter" />
 
         <Button
             android:id="@+id/cancel"

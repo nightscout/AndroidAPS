@@ -11,11 +11,11 @@ import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.extensions.hexStringToByteArray
+import info.nightscout.androidaps.extensions.hexStringToByteArray
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.textValidator.DefaultEditTextValidator
 import info.nightscout.androidaps.utils.textValidator.EditTextValidator
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 import kotlin.experimental.xor
@@ -27,11 +27,13 @@ class EnterPinActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var danaRSPlugin: DanaRSPlugin
     @Inject lateinit var sp: SP
     @Inject lateinit var bleComm: BLEComm
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
 
     private val disposable = CompositeDisposable()
 
     private lateinit var binding: DanarsEnterPinActivityBinding
 
+    @kotlin.ExperimentalStdlibApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DanarsEnterPinActivityBinding.inflate(layoutInflater)
@@ -55,8 +57,7 @@ class EnterPinActivity : NoSplashAppCompatActivity() {
                 if (result) {
                     bleComm.finishV3Pairing()
                     finish()
-                }
-                else OKDialog.show(this, resourceHelper.gs(R.string.error), resourceHelper.gs(R.string.invalidinput))
+                } else OKDialog.show(this, resourceHelper.gs(R.string.error), resourceHelper.gs(R.string.invalidinput))
             }
         }
         binding.okcancel.cancel.setOnClickListener { finish() }
@@ -66,8 +67,8 @@ class EnterPinActivity : NoSplashAppCompatActivity() {
         super.onResume()
         disposable.add(rxBus
             .toObservable(EventPumpStatusChanged::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ if (it.status == EventPumpStatusChanged.Status.DISCONNECTED) finish() }) { fabricPrivacy.logException(it) }
+            .observeOn(aapsSchedulers.main)
+            .subscribe({ if (it.status == EventPumpStatusChanged.Status.DISCONNECTED) finish() }, fabricPrivacy::logException)
         )
     }
 

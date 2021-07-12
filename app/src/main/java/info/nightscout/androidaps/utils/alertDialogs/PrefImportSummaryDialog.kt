@@ -20,7 +20,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.plugins.general.maintenance.formats.Prefs
 import info.nightscout.androidaps.plugins.general.maintenance.formats.PrefsStatus
 import info.nightscout.androidaps.utils.ToastUtils
-import info.nightscout.androidaps.utils.extensions.runOnUiThread
+import info.nightscout.androidaps.extensions.runOnUiThread
 import java.util.*
 
 object PrefImportSummaryDialog {

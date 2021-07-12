@@ -24,6 +24,7 @@
     <string name="medtronic_pump_battery_nizn">NiZn (Vista Estendida)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (Visualização estendida)</string>
     <string name="medtronic_bolus_debugging">Depuração de Bólus/Tratamentos</string>
+    <!-- MDT Fragment -->
     <!-- MDT Errors -->
     <string name="medtronic_error_serial_not_set">Núm. Série não definido.</string>
     <string name="medtronic_error_serial_invalid">Núm. Série inválido.</string>

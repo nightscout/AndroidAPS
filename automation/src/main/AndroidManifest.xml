@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="info.nightscout.androidaps.automation">
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <application>
+        <service
+            android:name="info.nightscout.androidaps.services.LocationService"
+            android:exported="false" />
+
+    </application>
+</manifest>

@@ -6,21 +6,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.dana.R
 import info.nightscout.androidaps.dana.comm.RecordTypes
+import info.nightscout.androidaps.dana.database.DanaHistoryRecord
+import info.nightscout.androidaps.dana.database.DanaHistoryRecordDao
 import info.nightscout.androidaps.dana.databinding.DanarHistoryActivityBinding
-import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.db.DanaRHistoryRecord
+import info.nightscout.androidaps.dana.databinding.DanarHistoryItemBinding
 import info.nightscout.androidaps.events.EventDanaRSyncStatus
 import info.nightscout.androidaps.events.EventPumpStatusChanged
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
-import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -30,9 +30,10 @@ import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.extensions.plusAssign
-import io.reactivex.android.schedulers.AndroidSchedulers
+import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import java.util.*
 import javax.inject.Inject
 
@@ -42,15 +43,15 @@ class DanaHistoryActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var commandQueue: CommandQueueProvider
-    @Inject lateinit var databaseHelper: DatabaseHelperInterface
+    @Inject lateinit var danaHistoryRecordDao: DanaHistoryRecordDao
     @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
 
     private val disposable = CompositeDisposable()
 
     private var showingType = RecordTypes.RECORD_TYPE_ALARM
-    private var historyList: List<DanaRHistoryRecord> = ArrayList()
 
     class TypeList internal constructor(var type: Byte, var name: String) {
 
@@ -63,15 +64,16 @@ class DanaHistoryActivity : NoSplashAppCompatActivity() {
         super.onResume()
         disposable += rxBus
             .toObservable(EventPumpStatusChanged::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ binding.status.text = it.getStatus(resourceHelper) }) { fabricPrivacy.logException(it) }
+            .observeOn(aapsSchedulers.main)
+            .subscribe({ binding.status.text = it.getStatus(resourceHelper) }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventDanaRSyncStatus::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({
                 aapsLogger.debug(LTag.PUMP, "EventDanaRSyncStatus: " + it.message)
                 binding.status.text = it.message
-            }) { fabricPrivacy.logException(it) }
+            }, fabricPrivacy::logException)
+        swapAdapter(showingType)
     }
 
     override fun onPause() {
@@ -86,12 +88,11 @@ class DanaHistoryActivity : NoSplashAppCompatActivity() {
 
         binding.recyclerview.setHasFixedSize(true)
         binding.recyclerview.layoutManager = LinearLayoutManager(this)
-        binding.recyclerview.adapter = RecyclerViewAdapter(historyList)
         binding.status.visibility = View.GONE
 
         val pump = activePlugin.activePump
-        val isKorean = pump.pumpDescription.pumpType == PumpType.DanaRKorean
-        val isRS = pump.pumpDescription.pumpType == PumpType.DanaRS
+        val isKorean = pump.pumpDescription.pumpType == PumpType.DANA_R_KOREAN
+        val isRS = pump.pumpDescription.pumpType == PumpType.DANA_RS
 
         // Types
         val typeList = ArrayList<TypeList>()
@@ -114,14 +115,12 @@ class DanaHistoryActivity : NoSplashAppCompatActivity() {
         binding.reload.setOnClickListener {
             val selected = binding.spinner.selectedItem as TypeList?
                 ?: return@setOnClickListener
-            runOnUiThread {
-                binding.reload.visibility = View.GONE
-                binding.status.visibility = View.VISIBLE
-            }
+            binding.reload.visibility = View.GONE
+            binding.status.visibility = View.VISIBLE
             clearCardView()
             commandQueue.loadHistory(selected.type, object : Callback() {
                 override fun run() {
-                    loadDataFromDB(selected.type)
+                    swapAdapter(selected.type)
                     runOnUiThread {
                         binding.reload.visibility = View.VISIBLE
                         binding.status.visibility = View.GONE
@@ -132,7 +131,7 @@ class DanaHistoryActivity : NoSplashAppCompatActivity() {
         binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val selected = typeList[position]
-                loadDataFromDB(selected.type)
+                swapAdapter(selected.type)
                 showingType = selected.type
             }
 
@@ -142,95 +141,95 @@ class DanaHistoryActivity : NoSplashAppCompatActivity() {
         }
     }
 
-    inner class RecyclerViewAdapter internal constructor(private var historyList: List<DanaRHistoryRecord>) : RecyclerView.Adapter<RecyclerViewAdapter.HistoryViewHolder>() {
+    inner class RecyclerViewAdapter internal constructor(private var historyList: List<DanaHistoryRecord>) : RecyclerView.Adapter<RecyclerViewAdapter.HistoryViewHolder>() {
 
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): HistoryViewHolder =
             HistoryViewHolder(LayoutInflater.from(viewGroup.context).inflate(R.layout.danar_history_item, viewGroup, false))
 
         override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
             val record = historyList[position]
-            holder.time.text = dateUtil.dateAndTimeString(record.recordDate)
-            holder.value.text = DecimalFormatter.to2Decimal(record.recordValue)
-            holder.stringValue.text = record.stringRecordValue
-            holder.bolusType.text = record.bolusType
-            holder.duration.text = DecimalFormatter.to0Decimal(record.recordDuration.toDouble())
-            holder.alarm.text = record.recordAlarm
+            holder.binding.time.text = dateUtil.dateAndTimeString(record.timestamp)
+            holder.binding.value.text = DecimalFormatter.to2Decimal(record.value)
+            holder.binding.stringValue.text = record.stringValue
+            holder.binding.bolusType.text = record.bolusType
+            holder.binding.duration.text = record.duration.toString()
+            holder.binding.alarm.text = record.alarm
             when (showingType) {
-                RecordTypes.RECORD_TYPE_ALARM -> {
-                    holder.time.visibility = View.VISIBLE
-                    holder.value.visibility = View.VISIBLE
-                    holder.stringValue.visibility = View.GONE
-                    holder.bolusType.visibility = View.GONE
-                    holder.duration.visibility = View.GONE
-                    holder.dailyBasal.visibility = View.GONE
-                    holder.dailyBolus.visibility = View.GONE
-                    holder.dailyTotal.visibility = View.GONE
-                    holder.alarm.visibility = View.VISIBLE
+                RecordTypes.RECORD_TYPE_ALARM                                                                                                                                                              -> {
+                    holder.binding.time.visibility = View.VISIBLE
+                    holder.binding.value.visibility = View.VISIBLE
+                    holder.binding.stringValue.visibility = View.GONE
+                    holder.binding.bolusType.visibility = View.GONE
+                    holder.binding.duration.visibility = View.GONE
+                    holder.binding.dailyBasal.visibility = View.GONE
+                    holder.binding.dailyBolus.visibility = View.GONE
+                    holder.binding.dailyTotal.visibility = View.GONE
+                    holder.binding.alarm.visibility = View.VISIBLE
                 }
 
-                RecordTypes.RECORD_TYPE_BOLUS -> {
-                    holder.time.visibility = View.VISIBLE
-                    holder.value.visibility = View.VISIBLE
-                    holder.stringValue.visibility = View.GONE
-                    holder.bolusType.visibility = View.VISIBLE
-                    holder.duration.visibility = View.VISIBLE
-                    holder.dailyBasal.visibility = View.GONE
-                    holder.dailyBolus.visibility = View.GONE
-                    holder.dailyTotal.visibility = View.GONE
-                    holder.alarm.visibility = View.GONE
+                RecordTypes.RECORD_TYPE_BOLUS                                                                                                                                                              -> {
+                    holder.binding.time.visibility = View.VISIBLE
+                    holder.binding.value.visibility = View.VISIBLE
+                    holder.binding.stringValue.visibility = View.GONE
+                    holder.binding.bolusType.visibility = View.VISIBLE
+                    holder.binding.duration.visibility = View.VISIBLE
+                    holder.binding.dailyBasal.visibility = View.GONE
+                    holder.binding.dailyBolus.visibility = View.GONE
+                    holder.binding.dailyTotal.visibility = View.GONE
+                    holder.binding.alarm.visibility = View.GONE
                 }
 
-                RecordTypes.RECORD_TYPE_DAILY -> {
-                    holder.dailyBasal.text = resourceHelper.gs(R.string.formatinsulinunits, record.recordDailyBasal)
-                    holder.dailyBolus.text = resourceHelper.gs(R.string.formatinsulinunits, record.recordDailyBolus)
-                    holder.dailyTotal.text = resourceHelper.gs(R.string.formatinsulinunits, record.recordDailyBolus + record.recordDailyBasal)
-                    holder.time.text = DateUtil.dateString(record.recordDate)
-                    holder.time.visibility = View.VISIBLE
-                    holder.value.visibility = View.GONE
-                    holder.stringValue.visibility = View.GONE
-                    holder.bolusType.visibility = View.GONE
-                    holder.duration.visibility = View.GONE
-                    holder.dailyBasal.visibility = View.VISIBLE
-                    holder.dailyBolus.visibility = View.VISIBLE
-                    holder.dailyTotal.visibility = View.VISIBLE
-                    holder.alarm.visibility = View.GONE
+                RecordTypes.RECORD_TYPE_DAILY                                                                                                                                                              -> {
+                    holder.binding.dailyBasal.text = resourceHelper.gs(R.string.formatinsulinunits, record.dailyBasal)
+                    holder.binding.dailyBolus.text = resourceHelper.gs(R.string.formatinsulinunits, record.dailyBolus)
+                    holder.binding.dailyTotal.text = resourceHelper.gs(R.string.formatinsulinunits, record.dailyBolus + record.dailyBasal)
+                    holder.binding.time.text = dateUtil.dateString(record.timestamp)
+                    holder.binding.time.visibility = View.VISIBLE
+                    holder.binding.value.visibility = View.GONE
+                    holder.binding.stringValue.visibility = View.GONE
+                    holder.binding.bolusType.visibility = View.GONE
+                    holder.binding.duration.visibility = View.GONE
+                    holder.binding.dailyBasal.visibility = View.VISIBLE
+                    holder.binding.dailyBolus.visibility = View.VISIBLE
+                    holder.binding.dailyTotal.visibility = View.VISIBLE
+                    holder.binding.alarm.visibility = View.GONE
                 }
 
-                RecordTypes.RECORD_TYPE_GLUCOSE -> {
-                    holder.value.text = Profile.toUnitsString(record.recordValue, record.recordValue * Constants.MGDL_TO_MMOLL, profileFunction.getUnits())
-                    holder.time.visibility = View.VISIBLE
-                    holder.value.visibility = View.VISIBLE
-                    holder.stringValue.visibility = View.GONE
-                    holder.bolusType.visibility = View.GONE
-                    holder.duration.visibility = View.GONE
-                    holder.dailyBasal.visibility = View.GONE
-                    holder.dailyBolus.visibility = View.GONE
-                    holder.dailyTotal.visibility = View.GONE
-                    holder.alarm.visibility = View.GONE
+                RecordTypes.RECORD_TYPE_GLUCOSE                                                                                                                                                            -> {
+                    holder.binding.value.text = Profile.toUnitsString(record.value, record.value * Constants.MGDL_TO_MMOLL, profileFunction.getUnits())
+                    holder.binding.time.visibility = View.VISIBLE
+                    holder.binding.value.visibility = View.VISIBLE
+                    holder.binding.stringValue.visibility = View.GONE
+                    holder.binding.bolusType.visibility = View.GONE
+                    holder.binding.duration.visibility = View.GONE
+                    holder.binding.dailyBasal.visibility = View.GONE
+                    holder.binding.dailyBolus.visibility = View.GONE
+                    holder.binding.dailyTotal.visibility = View.GONE
+                    holder.binding.alarm.visibility = View.GONE
                 }
 
                 RecordTypes.RECORD_TYPE_CARBO, RecordTypes.RECORD_TYPE_BASALHOUR, RecordTypes.RECORD_TYPE_ERROR, RecordTypes.RECORD_TYPE_PRIME, RecordTypes.RECORD_TYPE_REFILL, RecordTypes.RECORD_TYPE_TB -> {
-                    holder.time.visibility = View.VISIBLE
-                    holder.value.visibility = View.VISIBLE
-                    holder.stringValue.visibility = View.GONE
-                    holder.bolusType.visibility = View.GONE
-                    holder.duration.visibility = View.GONE
-                    holder.dailyBasal.visibility = View.GONE
-                    holder.dailyBolus.visibility = View.GONE
-                    holder.dailyTotal.visibility = View.GONE
-                    holder.alarm.visibility = View.GONE
+                    holder.binding.time.visibility = View.VISIBLE
+                    holder.binding.value.visibility = View.VISIBLE
+                    holder.binding.stringValue.visibility = View.GONE
+                    holder.binding.bolusType.visibility = View.GONE
+                    holder.binding.duration.visibility = View.GONE
+                    holder.binding.dailyBasal.visibility = View.GONE
+                    holder.binding.dailyBolus.visibility = View.GONE
+                    holder.binding.dailyTotal.visibility = View.GONE
+                    holder.binding.alarm.visibility = View.GONE
                 }
 
-                RecordTypes.RECORD_TYPE_SUSPEND -> {
-                    holder.time.visibility = View.VISIBLE
-                    holder.value.visibility = View.GONE
-                    holder.stringValue.visibility = View.VISIBLE
-                    holder.bolusType.visibility = View.GONE
-                    holder.duration.visibility = View.GONE
-                    holder.dailyBasal.visibility = View.GONE
-                    holder.dailyBolus.visibility = View.GONE
-                    holder.dailyTotal.visibility = View.GONE
-                    holder.alarm.visibility = View.GONE
+                RecordTypes.RECORD_TYPE_SUSPEND                                                                                                                                                            -> {
+                    holder.binding.time.visibility = View.VISIBLE
+                    holder.binding.value.visibility = View.GONE
+                    holder.binding.stringValue.visibility = View.VISIBLE
+                    holder.binding.bolusType.visibility = View.GONE
+                    holder.binding.duration.visibility = View.GONE
+                    holder.binding.dailyBasal.visibility = View.GONE
+                    holder.binding.dailyBolus.visibility = View.GONE
+                    holder.binding.dailyTotal.visibility = View.GONE
+                    holder.binding.alarm.visibility = View.GONE
                 }
             }
         }
@@ -241,25 +240,17 @@ class DanaHistoryActivity : NoSplashAppCompatActivity() {
 
         inner class HistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-            var time: TextView = itemView.findViewById(R.id.danar_history_time)
-            var value: TextView = itemView.findViewById(R.id.danar_history_value)
-            var bolusType: TextView = itemView.findViewById(R.id.danar_history_bolustype)
-            var stringValue: TextView = itemView.findViewById(R.id.danar_history_stringvalue)
-            var duration: TextView = itemView.findViewById(R.id.danar_history_duration)
-            var dailyBasal: TextView = itemView.findViewById(R.id.danar_history_dailybasal)
-            var dailyBolus: TextView = itemView.findViewById(R.id.danar_history_dailybolus)
-            var dailyTotal: TextView = itemView.findViewById(R.id.danar_history_dailytotal)
-            var alarm: TextView = itemView.findViewById(R.id.danar_history_alarm)
+            val binding = DanarHistoryItemBinding.bind(itemView)
         }
     }
 
-    private fun loadDataFromDB(type: Byte) {
-        historyList = databaseHelper.getDanaRHistoryRecordsByType(type)
-        runOnUiThread { binding.recyclerview.swapAdapter(RecyclerViewAdapter(historyList), false) }
+    private fun swapAdapter(type: Byte) {
+        disposable += danaHistoryRecordDao
+            .allFromByType(dateUtil.now() - T.months(1).msecs(), type)
+            .subscribeOn(aapsSchedulers.io)
+            .observeOn(aapsSchedulers.main)
+            .subscribe { historyList -> binding.recyclerview.swapAdapter(RecyclerViewAdapter(historyList), false) }
     }
 
-    private fun clearCardView() {
-        historyList = ArrayList()
-        runOnUiThread { binding.recyclerview.swapAdapter(RecyclerViewAdapter(historyList), false) }
-    }
+    private fun clearCardView() = binding.recyclerview.swapAdapter(RecyclerViewAdapter(ArrayList()), false)
 }

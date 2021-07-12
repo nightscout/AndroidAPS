@@ -1,23 +1,32 @@
 package info.nightscout.androidaps.plugins.source
 
-import android.content.Intent
+import android.content.Context
+import androidx.work.Worker
+import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Config
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.db.BgReading
-import info.nightscout.androidaps.interfaces.BgSourceInterface
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.GlucoseValue
+import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
+import info.nightscout.androidaps.interfaces.BgSource
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSgv
-import info.nightscout.androidaps.utils.JsonHelper.safeGetLong
-import info.nightscout.androidaps.utils.JsonHelper.safeGetString
+import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
+import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
+import info.nightscout.androidaps.receivers.DataWorker
+import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.XDripBroadcast
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import org.json.JSONArray
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -27,7 +36,6 @@ class NSClientSourcePlugin @Inject constructor(
     injector: HasAndroidInjector,
     resourceHelper: ResourceHelper,
     aapsLogger: AAPSLogger,
-    private val sp: SP,
     config: Config
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
@@ -36,7 +44,7 @@ class NSClientSourcePlugin @Inject constructor(
     .pluginName(R.string.nsclientbg)
     .description(R.string.description_source_ns_client),
     aapsLogger, resourceHelper, injector
-), BgSourceInterface {
+), BgSource {
 
     private var lastBGTimeStamp: Long = 0
     private var isAdvancedFilteringEnabled = false
@@ -53,43 +61,109 @@ class NSClientSourcePlugin @Inject constructor(
         return isAdvancedFilteringEnabled
     }
 
-    override fun handleNewData(intent: Intent) {
-        if (!isEnabled(PluginType.BGSOURCE) && !sp.getBoolean(R.string.key_ns_autobackfill, true)) return
-        val bundles = intent.extras ?: return
-        try {
-            if (bundles.containsKey("sgv")) {
-                val sgvString = bundles.getString("sgv")
-                aapsLogger.debug(LTag.BGSOURCE, "Received NS Data: $sgvString")
-                val sgvJson = JSONObject(sgvString)
-                storeSgv(sgvJson)
-            }
-            if (bundles.containsKey("sgvs")) {
-                val sgvString = bundles.getString("sgvs")
-                aapsLogger.debug(LTag.BGSOURCE, "Received NS Data: $sgvString")
-                val jsonArray = JSONArray(sgvString)
-                for (i in 0 until jsonArray.length()) {
-                    val sgvJson = jsonArray.getJSONObject(i)
-                    storeSgv(sgvJson)
-                }
-            }
-        } catch (e: Exception) {
-            aapsLogger.error("Unhandled exception", e)
+    override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean = false
+
+    private fun detectSource(glucoseValue: GlucoseValue) {
+        if (glucoseValue.timestamp > lastBGTimeStamp) {
+            isAdvancedFilteringEnabled = arrayOf(
+                GlucoseValue.SourceSensor.DEXCOM_NATIVE_UNKNOWN,
+                GlucoseValue.SourceSensor.DEXCOM_G6_NATIVE,
+                GlucoseValue.SourceSensor.DEXCOM_G5_NATIVE,
+                GlucoseValue.SourceSensor.DEXCOM_G6_NATIVE_XDRIP,
+                GlucoseValue.SourceSensor.DEXCOM_G5_NATIVE_XDRIP
+            ).any { it == glucoseValue.sourceSensor }
+            lastBGTimeStamp = glucoseValue.timestamp
         }
-        // Objectives 0
-        sp.putBoolean(R.string.key_ObjectivesbgIsAvailableInNS, true)
     }
 
-    private fun storeSgv(sgvJson: JSONObject) {
-        val nsSgv = NSSgv(sgvJson)
-        val bgReading = BgReading(injector, nsSgv)
-        MainApp.getDbHelper().createIfNotExists(bgReading, "NS")
-        detectSource(safeGetString(sgvJson, "device", "none"), safeGetLong(sgvJson, "mills"))
-    }
+    // cannot be inner class because of needed injection
+    class NSClientSourceWorker(
+        context: Context,
+        params: WorkerParameters
+    ) : Worker(context, params) {
 
-    private fun detectSource(source: String, timeStamp: Long) {
-        if (timeStamp > lastBGTimeStamp) {
-            isAdvancedFilteringEnabled = source.contains("G5 Native") || source.contains("G6 Native") || source.contains("AndroidAPS-DexcomG5") || source.contains("AndroidAPS-DexcomG6")
-            lastBGTimeStamp = timeStamp
+        @Inject lateinit var nsClientSourcePlugin: NSClientSourcePlugin
+        @Inject lateinit var injector: HasAndroidInjector
+        @Inject lateinit var aapsLogger: AAPSLogger
+        @Inject lateinit var sp: SP
+        @Inject lateinit var rxBus: RxBusWrapper
+        @Inject lateinit var dateUtil: DateUtil
+        @Inject lateinit var dataWorker: DataWorker
+        @Inject lateinit var repository: AppRepository
+        @Inject lateinit var broadcastToXDrip: XDripBroadcast
+        @Inject lateinit var dexcomPlugin: DexcomPlugin
+        @Inject lateinit var nsClientPlugin: NSClientPlugin
+
+        init {
+            (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
+        }
+
+        private fun toGv(jsonObject: JSONObject): CgmSourceTransaction.TransactionGlucoseValue? {
+            val sgv = NSSgv(jsonObject)
+            return CgmSourceTransaction.TransactionGlucoseValue(
+                timestamp = sgv.mills ?: return null,
+                value = sgv.mgdl?.toDouble() ?: return null,
+                noise = null,
+                raw = sgv.filtered?.toDouble() ?: sgv.mgdl?.toDouble(),
+                trendArrow = GlucoseValue.TrendArrow.fromString(sgv.direction),
+                nightscoutId = sgv.id,
+                sourceSensor = GlucoseValue.SourceSensor.fromString(sgv.device)
+            )
+        }
+
+        @Suppress("SpellCheckingInspection")
+        override fun doWork(): Result {
+            var ret = Result.success()
+
+            if (!nsClientSourcePlugin.isEnabled() && !sp.getBoolean(R.string.key_ns_receive_cgm, true) && !dexcomPlugin.isEnabled()) return Result.success(workDataOf("Result" to "Sync not enabled"))
+
+            val sgvs = dataWorker.pickupJSONArray(inputData.getLong(DataWorker.STORE_KEY, -1))
+                ?: return Result.failure(workDataOf("Error" to "missing input data"))
+
+            try {
+                var latestDateInReceivedData: Long = 0
+
+                aapsLogger.debug(LTag.BGSOURCE, "Received NS Data: $sgvs")
+                val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
+                for (i in 0 until sgvs.length()) {
+                    val sgv = toGv(sgvs.getJSONObject(i)) ?: continue
+                    if (sgv.timestamp < dateUtil.now() && sgv.timestamp > latestDateInReceivedData) latestDateInReceivedData = sgv.timestamp
+                    glucoseValues += sgv
+
+                }
+                // Was that sgv more less 5 mins ago ?
+                if (T.msecs(dateUtil.now() - latestDateInReceivedData).mins() < 5L) {
+                    rxBus.send(EventDismissNotification(Notification.NS_ALARM))
+                    rxBus.send(EventDismissNotification(Notification.NS_URGENT_ALARM))
+                }
+
+                nsClientPlugin.updateLatestDateReceivedIfNewer(latestDateInReceivedData)
+
+                repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null, !nsClientSourcePlugin.isEnabled()))
+                    .doOnError {
+                        aapsLogger.error(LTag.DATABASE, "Error while saving values from NSClient App", it)
+                        ret = Result.failure(workDataOf("Error" to it.toString()))
+                    }
+                    .blockingGet()
+                    .also { result ->
+                        result.updated.forEach {
+                            broadcastToXDrip(it)
+                            nsClientSourcePlugin.detectSource(it)
+                            aapsLogger.debug(LTag.DATABASE, "Updated bg $it")
+                        }
+                        result.inserted.forEach {
+                            broadcastToXDrip(it)
+                            nsClientSourcePlugin.detectSource(it)
+                            aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
+                        }
+                    }
+            } catch (e: Exception) {
+                aapsLogger.error("Unhandled exception", e)
+                ret = Result.failure(workDataOf("Error" to e.toString()))
+            }
+            // Objectives 0
+            sp.putBoolean(R.string.key_ObjectivesbgIsAvailableInNS, true)
+            return ret
         }
     }
 }

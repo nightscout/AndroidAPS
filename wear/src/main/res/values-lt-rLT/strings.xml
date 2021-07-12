@@ -89,6 +89,9 @@
     <string name="action_confirm">PATVIRTINTI</string>
     <string name="action_timeshift">laiko postūmis</string>
     <string name="action_bolus">bolusas</string>
+    <string name="bolus_progress">Leidžiamas bolusas</string>
+    <string name="press_to_cancel">paspauskite atšaukimui</string>
+    <string name="cancel_bolus">ATŠAUKTI BOLUSĄ</string>
     <string name="status_pump">Pompa</string>
     <string name="status_loop">Ciklas</string>
     <string name="status_cpp">CPP (Procentinis dienos profilis)</string>

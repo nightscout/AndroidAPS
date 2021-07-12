@@ -9,7 +9,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.utils.extensions.runOnUiThread
+import info.nightscout.androidaps.extensions.runOnUiThread
 
 object TwoMessagesAlertDialog {
 

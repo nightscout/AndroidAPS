@@ -9,17 +9,17 @@
 
     <RadioButton
         android:id="@+id/plugin_enabled_exclusive"
-        android:saveEnabled="false"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="6dp" />
+        android:layout_marginEnd="6dp"
+        android:saveEnabled="false" />
 
     <CheckBox
         android:id="@+id/plugin_enabled_inclusive"
-        android:saveEnabled="false"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="6dp" />
+        android:layout_marginEnd="6dp"
+        android:saveEnabled="false" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -31,14 +31,21 @@
             android:id="@+id/plugin_icon"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:layout_marginEnd="8dp"
-            android:layout_gravity="center_vertical"/>
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="8dp" />
+
+        <ImageView
+            android:id="@+id/plugin_icon2"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="8dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
             android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
             android:orientation="vertical">
 
             <TextView
@@ -69,7 +76,7 @@
 
     <CheckBox
         android:id="@+id/plugin_visibility"
-        android:saveEnabled="false"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:saveEnabled="false" />
 </LinearLayout>
