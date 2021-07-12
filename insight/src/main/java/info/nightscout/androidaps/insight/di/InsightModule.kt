@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.insight.di
 
 import dagger.Module
-import dagger.android.ContributesAndroidInjector
 
 @Module(includes = [
     InsightCommModule::class,

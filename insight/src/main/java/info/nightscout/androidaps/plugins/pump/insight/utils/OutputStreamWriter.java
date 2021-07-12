@@ -22,7 +22,7 @@ public class OutputStreamWriter extends Thread {
         try {
             while (!isInterrupted()) {
                 synchronized (buffer) {
-                    if (buffer.getSize() != 0) {
+                    if (buffer.getFilledSize() != 0) {
                         outputStream.write(buffer.readBytes());
                         outputStream.flush();
                         buffer.notifyAll();

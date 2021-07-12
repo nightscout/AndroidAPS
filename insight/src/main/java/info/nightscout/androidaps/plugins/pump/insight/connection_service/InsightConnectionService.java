@@ -25,6 +25,7 @@ import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.ReadParameterBlockMessage;
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.Service;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.configuration.CloseConfigurationWriteSessionMessage;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.configuration.OpenConfigurationWriteSessionMessage;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.configuration.WriteConfigurationBlockMessage;
@@ -61,7 +62,6 @@ import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.Sa
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlPairingRejectedException;
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlUndefinedErrorException;
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlWrongStateException;
-import info.nightscout.androidaps.plugins.pump.insight.ids.ServiceIDs;
 import info.nightscout.androidaps.plugins.pump.insight.satl.ConnectionRequest;
 import info.nightscout.androidaps.plugins.pump.insight.satl.ConnectionResponse;
 import info.nightscout.androidaps.plugins.pump.insight.satl.DataMessage;
@@ -118,7 +118,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
     private KeyPair keyPair;
     private byte[] randomBytes;
     private final MessageQueue messageQueue = new MessageQueue();
-    private final List<info.nightscout.androidaps.plugins.pump.insight.app_layer.Service> activatedServices = new ArrayList<>();
+    private final List<Service> activatedServices = new ArrayList<>();
     private long lastDataTime;
     private long lastConnected;
     private long recoveryDuration = 0;
@@ -203,7 +203,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
     }
 
     public synchronized boolean isPaired() {
-        return pairingDataStorage.isPaired();
+        return pairingDataStorage.getPaired();
     }
 
     public synchronized <T extends AppLayerMessage> MessageRequest<T> requestMessage(T message) {
@@ -231,17 +231,17 @@ public class InsightConnectionService extends DaggerService implements Connectio
     private void requestNextMessage() {
         while (messageQueue.getActiveRequest() == null && messageQueue.hasPendingMessages()) {
             messageQueue.nextRequest();
-            info.nightscout.androidaps.plugins.pump.insight.app_layer.Service service = messageQueue.getActiveRequest().request.getService();
-            if (service != info.nightscout.androidaps.plugins.pump.insight.app_layer.Service.CONNECTION && !activatedServices.contains(service)) {
+            Service service = messageQueue.getActiveRequest().request.getService();
+            if (service != Service.CONNECTION && !activatedServices.contains(service)) {
                 if (service.getServicePassword() == null) {
                     ActivateServiceMessage activateServiceMessage = new ActivateServiceMessage();
-                    activateServiceMessage.setServiceID(ServiceIDs.IDS.getID(service));
+                    activateServiceMessage.setServiceID(service.getId());
                     activateServiceMessage.setVersion(service.getVersion());
                     activateServiceMessage.setServicePassword(new byte[16]);
                     sendAppLayerMessage(activateServiceMessage);
                 } else {
                     ServiceChallengeMessage serviceChallengeMessage = new ServiceChallengeMessage();
-                    serviceChallengeMessage.setServiceID(ServiceIDs.IDS.getID(service));
+                    serviceChallengeMessage.setServiceID(service.getId());
                     serviceChallengeMessage.setVersion(service.getVersion());
                     sendAppLayerMessage(serviceChallengeMessage);
                 }
@@ -257,7 +257,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
     public synchronized void onCreate() {
         super.onCreate();
         pairingDataStorage = new PairingDataStorage(this);
-        state = pairingDataStorage.isPaired() ? InsightState.DISCONNECTED : InsightState.NOT_PAIRED;
+        state = pairingDataStorage.getPaired() ? InsightState.DISCONNECTED : InsightState.NOT_PAIRED;
         wakeLock = ((PowerManager) getSystemService(POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:InsightConnectionService");
     }
 
@@ -279,7 +279,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
             disconnectTimer.interrupt();
             disconnectTimer = null;
         }
-        if (state == InsightState.DISCONNECTED && pairingDataStorage.isPaired()) {
+        if (state == InsightState.DISCONNECTED && pairingDataStorage.getPaired()) {
             recoveryDuration = 0;
             timeoutDuringHandshakeCounter = 0;
             connect();
@@ -300,7 +300,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
                 disconnectTimeout = Math.min(disconnectTimeout, 15);
                 disconnectTimeout = Math.max(disconnectTimeout, 0);
                 aapsLogger.info(LTag.PUMP, "Last connection lock released, will disconnect in " + disconnectTimeout + " seconds");
-                disconnectTimer = DelayedActionThread.runDelayed("Disconnect Timer", disconnectTimeout * 1000, this::disconnect);
+                disconnectTimer = DelayedActionThread.Companion.runDelayed("Disconnect Timer", disconnectTimeout * 1000, this::disconnect);
             }
         }
     }
@@ -344,7 +344,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
         keyPair = null;
         randomBytes = null;
         activatedServices.clear();
-        if (!pairingDataStorage.isPaired()) {
+        if (!pairingDataStorage.getPaired()) {
             bluetoothSocket = null;
             bluetoothDevice = null;
             pairingDataStorage.reset();
@@ -359,7 +359,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
                 return;
         }
         aapsLogger.info(LTag.PUMP, "Exception occurred: " + e.getClass().getSimpleName());
-        if (pairingDataStorage.isPaired()) {
+        if (pairingDataStorage.getPaired()) {
             if (e instanceof TimeoutException && (state == InsightState.SATL_SYN_REQUEST || state == InsightState.APP_CONNECT_MESSAGE)) {
                 if (++timeoutDuringHandshakeCounter == TIMEOUT_DURING_HANDSHAKE_NOTIFICATION_THRESHOLD) {
                     for (StateCallback stateCallback : stateCallbacks) {
@@ -380,7 +380,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
                     increaseRecoveryDuration();
                     if (recoveryDuration == 0) connect();
                     else {
-                        recoveryTimer = DelayedActionThread.runDelayed("RecoveryTimer", recoveryDuration, () -> {
+                        recoveryTimer = DelayedActionThread.Companion.runDelayed("RecoveryTimer", recoveryDuration, () -> {
                             recoveryTimer = null;
                             synchronized (InsightConnectionService.this) {
                                 if (!Thread.currentThread().isInterrupted()) connect();
@@ -403,7 +403,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
             sendSatlMessageAndWait(new info.nightscout.androidaps.plugins.pump.insight.satl.DisconnectMessage());
         }
         cleanup(true);
-        setState(pairingDataStorage.isPaired() ? InsightState.DISCONNECTED : InsightState.NOT_PAIRED);
+        setState(pairingDataStorage.getPaired() ? InsightState.DISCONNECTED : InsightState.NOT_PAIRED);
     }
 
     public synchronized void reset() {
@@ -412,7 +412,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
     }
 
     public synchronized void pair(String macAddress) {
-        if (pairingDataStorage.isPaired())
+        if (pairingDataStorage.getPaired())
             throw new IllegalStateException("Pump must be unbonded first.");
         if (connectionRequests.size() == 0)
             throw new IllegalStateException("A connection lock must be hold for pairing");
@@ -426,7 +426,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
         if (bluetoothDevice == null)
             bluetoothDevice = bluetoothAdapter.getRemoteDevice(pairingDataStorage.getMacAddress());
         setState(InsightState.CONNECTING);
-        connectionEstablisher = new ConnectionEstablisher(this, !pairingDataStorage.isPaired(), bluetoothAdapter, bluetoothDevice, bluetoothSocket);
+        connectionEstablisher = new ConnectionEstablisher(this, !pairingDataStorage.getPaired(), bluetoothAdapter, bluetoothDevice, bluetoothSocket);
         connectionEstablisher.start();
     }
 
@@ -443,7 +443,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
             outputStreamWriter = new OutputStreamWriter(bluetoothSocket.getOutputStream(), this);
             inputStreamReader.start();
             outputStreamWriter.start();
-            if (pairingDataStorage.isPaired()) {
+            if (pairingDataStorage.getPaired()) {
                 setState(InsightState.SATL_SYN_REQUEST);
                 sendSatlMessage(new SynRequest());
             } else {
@@ -480,9 +480,9 @@ public class InsightConnectionService extends DaggerService implements Connectio
             pairingDataStorage.setLastNonceSent(nonce);
             satlMessage.setNonce(nonce);
         }
-        ByteBuf serialized = satlMessage.serialize(satlMessage.getClass(), pairingDataStorage.getOutgoingKey());
+        ByteBuf serialized = satlMessage.serialize(pairingDataStorage.getOutgoingKey());
         if (timeoutTimer != null) timeoutTimer.interrupt();
-        timeoutTimer = DelayedActionThread.runDelayed("TimeoutTimer", RESPONSE_TIMEOUT, () -> {
+        timeoutTimer = DelayedActionThread.Companion.runDelayed("TimeoutTimer", RESPONSE_TIMEOUT, () -> {
             timeoutTimer = null;
             handleException(new TimeoutException());
         });
@@ -689,9 +689,9 @@ public class InsightConnectionService extends DaggerService implements Connectio
         }
         setState(InsightState.APP_ACTIVATE_STATUS_SERVICE);
         ActivateServiceMessage activateServiceMessage = new ActivateServiceMessage();
-        activateServiceMessage.setServiceID(ServiceIDs.IDS.getID(info.nightscout.androidaps.plugins.pump.insight.app_layer.Service.STATUS));
+        activateServiceMessage.setServiceID(Service.STATUS.getId());
         activateServiceMessage.setServicePassword(new byte[16]);
-        activateServiceMessage.setVersion(info.nightscout.androidaps.plugins.pump.insight.app_layer.Service.STATUS.getVersion());
+        activateServiceMessage.setVersion(Service.STATUS.getVersion());
         sendAppLayerMessage(activateServiceMessage);
     }
 
@@ -703,7 +703,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
         pairingDataStorage.setFirmwareVersions(message.getFirmwareVersions());
         setState(InsightState.APP_ACTIVATE_PARAMETER_SERVICE);
         ActivateServiceMessage activateServiceMessage = new ActivateServiceMessage();
-        activateServiceMessage.setServiceID(ServiceIDs.IDS.getID(info.nightscout.androidaps.plugins.pump.insight.app_layer.Service.PARAMETER));
+        activateServiceMessage.setServiceID(Service.PARAMETER.getId());
         activateServiceMessage.setServicePassword(new byte[16]);
         activateServiceMessage.setVersion(info.nightscout.androidaps.plugins.pump.insight.app_layer.Service.PARAMETER.getVersion());
         sendAppLayerMessage(activateServiceMessage);
@@ -758,9 +758,9 @@ public class InsightConnectionService extends DaggerService implements Connectio
         if (messageQueue.getActiveRequest() == null) {
             handleException(new TooChattyPumpException());
         } else {
-            info.nightscout.androidaps.plugins.pump.insight.app_layer.Service service = messageQueue.getActiveRequest().request.getService();
+            Service service = messageQueue.getActiveRequest().request.getService();
             ActivateServiceMessage activateServiceMessage = new ActivateServiceMessage();
-            activateServiceMessage.setServiceID(ServiceIDs.IDS.getID(service));
+            activateServiceMessage.setServiceID(service.getId());
             activateServiceMessage.setVersion(service.getVersion());
             activateServiceMessage.setServicePassword(Cryptograph.getServicePasswordHash(service.getServicePassword(), serviceChallengeMessage.getRandomData()));
             sendAppLayerMessage(activateServiceMessage);
