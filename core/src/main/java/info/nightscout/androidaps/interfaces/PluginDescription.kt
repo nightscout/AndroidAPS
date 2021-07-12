@@ -16,6 +16,7 @@ open class PluginDescription {
     var visibleByDefault = false
     var defaultPlugin = false
     var pluginIcon = -1
+    var pluginIcon2 = -1
 
     fun mainType(mainType: PluginType): PluginDescription = this.also { it.mainType = mainType }
     fun fragmentClass(fragmentClass: String?): PluginDescription = this.also { it.fragmentClass = fragmentClass }
@@ -24,6 +25,7 @@ open class PluginDescription {
     fun neverVisible(neverVisible: Boolean): PluginDescription = this.also { it.neverVisible = neverVisible }
     fun showInList(showInList: Boolean): PluginDescription = this.also { it.showInList = showInList }
     fun pluginIcon(pluginIcon: Int): PluginDescription = this.also { it.pluginIcon = pluginIcon }
+    fun pluginIcon2(pluginIcon2: Int): PluginDescription = this.also { it.pluginIcon2 = pluginIcon2 }
     fun pluginName(pluginName: Int): PluginDescription = this.also { it.pluginName = pluginName }
     fun shortName(shortName: Int): PluginDescription = this.also { it.shortName = shortName }
     fun preferencesId(preferencesId: Int): PluginDescription = this.also { it.preferencesId = preferencesId }

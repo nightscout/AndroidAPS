@@ -7,9 +7,13 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.activities.TDDStatsActivity
+import info.nightscout.androidaps.dana.activities.DanaHistoryActivity
+import info.nightscout.androidaps.dana.activities.DanaUserOptionsActivity
 import info.nightscout.androidaps.dana.databinding.DanarFragmentBinding
+import info.nightscout.androidaps.dana.events.EventDanaRNewStatus
 import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.events.EventExtendedBolusChange
 import info.nightscout.androidaps.events.EventInitializationChanged
@@ -84,7 +88,7 @@ class DanaFragment : DaggerFragment() {
 
         binding.danaPumpstatus.setBackgroundColor(resourceHelper.gc(R.color.colorInitializingBorder))
 
-        binding.history.setOnClickListener { startActivity(Intent(context, info.nightscout.androidaps.dana.activities.DanaHistoryActivity::class.java)) }
+        binding.history.setOnClickListener { startActivity(Intent(context, DanaHistoryActivity::class.java)) }
         binding.viewprofile.setOnClickListener {
             val profile = danaPump.createConvertedProfile()?.getDefaultProfileJson()
                 ?: return@setOnClickListener
@@ -101,7 +105,7 @@ class DanaFragment : DaggerFragment() {
             }.show(childFragmentManager, "ProfileViewDialog")
         }
         binding.stats.setOnClickListener { startActivity(Intent(context, TDDStatsActivity::class.java)) }
-        binding.userOptions.setOnClickListener { startActivity(Intent(context, info.nightscout.androidaps.dana.activities.DanaUserOptionsActivity::class.java)) }
+        binding.userOptions.setOnClickListener { startActivity(Intent(context, DanaUserOptionsActivity::class.java)) }
         binding.btconnection.setOnClickListener {
             aapsLogger.debug(LTag.PUMP, "Clicked connect to pump")
             danaPump.reset()
@@ -128,7 +132,7 @@ class DanaFragment : DaggerFragment() {
             .observeOn(aapsSchedulers.main)
             .subscribe({ updateGUI() }, fabricPrivacy::logException)
         disposable += rxBus
-            .toObservable(info.nightscout.androidaps.dana.events.EventDanaRNewStatus::class.java)
+            .toObservable(EventDanaRNewStatus::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ updateGUI() }, fabricPrivacy::logException)
         disposable += rxBus
@@ -232,6 +236,8 @@ class DanaFragment : DaggerFragment() {
             binding.queue.visibility = View.VISIBLE
             binding.queue.text = status
         }
+        val icon = if (danaPump.pumpType() == PumpType.DANA_I) R.drawable.ic_dana_i else R.drawable.ic_dana_rs
+        binding.danaIcon.setImageDrawable(context?.let { ContextCompat.getDrawable(it, icon) })
         //hide user options button if not an RS pump or old firmware
         // also excludes pump with model 03 because of untested error
         binding.userOptions.visibility = (pump.hwModel != 1 && pump.protocol != 0x00).toVisibility()

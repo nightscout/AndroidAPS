@@ -141,6 +141,7 @@ class ConfigBuilderFragment : DaggerFragment() {
         private val enabledExclusive: RadioButton = baseView.findViewById(R.id.plugin_enabled_exclusive)
         private val enabledInclusive: CheckBox = baseView.findViewById(R.id.plugin_enabled_inclusive)
         private val pluginIcon: ImageView = baseView.findViewById(R.id.plugin_icon)
+        private val pluginIcon2: ImageView = baseView.findViewById(R.id.plugin_icon2)
         private val pluginName: TextView = baseView.findViewById(R.id.plugin_name)
         private val pluginDescription: TextView = baseView.findViewById(R.id.plugin_description)
         private val pluginPreferences: ImageButton = baseView.findViewById(R.id.plugin_preferences)
@@ -184,6 +185,12 @@ class ConfigBuilderFragment : DaggerFragment() {
             if (plugin.menuIcon != -1) {
                 pluginIcon.visibility = View.VISIBLE
                 pluginIcon.setImageDrawable(context?.let { ContextCompat.getDrawable(it, plugin.menuIcon) })
+                if (plugin.menuIcon2 != -1) {
+                    pluginIcon2.visibility = View.VISIBLE
+                    pluginIcon2.setImageDrawable(context?.let { ContextCompat.getDrawable(it, plugin.menuIcon2) })
+                } else {
+                    pluginIcon2.visibility = View.GONE
+                }
             } else {
                 pluginIcon.visibility = View.GONE
             }
