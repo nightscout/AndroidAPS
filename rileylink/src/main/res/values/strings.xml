@@ -88,5 +88,7 @@
         <item quantity="one">%1$d hour</item>
         <item quantity="other">%1$d hours</item>
     </plurals>
-
+    <string name="orange_use_scanning_level">Use Scanning</string>
+    <string name="orange_use_scanning_level_summary">Scan before connecting to OrangeLink, it should improve connections (can also be used with other RileyLink clones, if needed)</string>
+    <string name="key_orange_use_scanning" translatable="false">pref_orange_use_scanning</string>
 </resources>

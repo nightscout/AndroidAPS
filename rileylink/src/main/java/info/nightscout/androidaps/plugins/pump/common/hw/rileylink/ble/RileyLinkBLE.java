@@ -8,11 +8,19 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothProfile;
+import android.bluetooth.le.BluetoothLeScanner;
+import android.bluetooth.le.ScanCallback;
+import android.bluetooth.le.ScanFilter;
+import android.bluetooth.le.ScanResult;
+import android.bluetooth.le.ScanSettings;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.os.SystemClock;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -364,18 +372,32 @@ public class RileyLinkBLE {
         return true;
     }
 
+    String macAddress;
 
     public void findRileyLink(String RileyLinkAddress) {
         aapsLogger.debug(LTag.PUMPBTCOMM, "RileyLink address: " + RileyLinkAddress);
         // Must verify that this is a valid MAC, or crash.
-
-        rileyLinkDevice = bluetoothAdapter.getRemoteDevice(RileyLinkAddress);
-        // if this succeeds, we get a connection state change callback?
-
-        if (rileyLinkDevice != null) {
-            connectGatt();
+        macAddress = RileyLinkAddress;
+        boolean useScanning = sp.getBoolean(RileyLinkConst.Prefs.OrangeUseScanning, false);
+        if (useScanning) {
+            startScan();
         } else {
-            aapsLogger.error(LTag.PUMPBTCOMM, "RileyLink device not found with address: " + RileyLinkAddress);
+            rileyLinkDevice = bluetoothAdapter.getRemoteDevice(RileyLinkAddress);
+            // if this succeeds, we get a connection state change callback?
+            if (rileyLinkDevice != null) {
+                connectGatt();
+            } else {
+                aapsLogger.error(LTag.PUMPBTCOMM, "RileyLink device not found with address: " + RileyLinkAddress);
+            }
+        }
+    }
+
+    public void connectGattCheckOrange() {
+        boolean useScanning = sp.getBoolean(RileyLinkConst.Prefs.OrangeUseScanning, false);
+        if (useScanning) {
+            startScan();
+        } else {
+            connectGatt();
         }
     }
 
@@ -593,5 +615,118 @@ public class RileyLinkBLE {
         }
 
         return statusMessage;
+    }
+
+    private List<ScanFilter> buildScanFilters() {
+        ArrayList scanFilterList = new ArrayList<>();
+        ScanFilter.Builder scanFilterBuilder = new ScanFilter.Builder();
+        scanFilterBuilder.setDeviceAddress(macAddress);
+        scanFilterList.add(scanFilterBuilder.build());
+        return scanFilterList;
+    }
+
+    private ScanSettings buildScanSettings() {
+        ScanSettings.Builder scanSettingBuilder = new ScanSettings.Builder();
+        scanSettingBuilder.setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY);
+        scanSettingBuilder.setMatchMode(ScanSettings.MATCH_MODE_AGGRESSIVE);
+        scanSettingBuilder.setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES);
+        return scanSettingBuilder.build();
+    }
+
+    public void startScan() {
+        try {
+            stopScan();
+            aapsLogger.debug(LTag.PUMPBTCOMM, "startScan");
+            handler.sendEmptyMessageDelayed(TIME_OUT_WHAT, TIME_OUT);
+            BluetoothLeScanner bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
+            if (bluetoothLeScanner == null) {
+                bluetoothAdapter.startLeScan(mLeScanCallback);
+                return;
+            }
+            bluetoothLeScanner.startScan(buildScanFilters(), buildScanSettings(), scanCallback);
+        } catch (Exception e) {
+            e.printStackTrace();
+            aapsLogger.error(LTag.PUMPBTCOMM, e.getMessage());
+        }
+
+
+    }
+
+    ScanCallback scanCallback = new ScanCallback() {
+        @Override
+        public void onScanResult(int callbackType, ScanResult result) {
+            super.onScanResult(callbackType, result);
+            String name = result.getDevice().getName();
+            String address = result.getDevice().getAddress();
+            if (macAddress.equals(address)) {
+                stopScan();
+                rileyLinkDevice = result.getDevice();
+                connectGatt();
+
+            }
+        }
+
+        @Override
+        public void onBatchScanResults(List<ScanResult> results) {
+            super.onBatchScanResults(results);
+        }
+
+        @Override
+        public void onScanFailed(int errorCode) {
+            super.onScanFailed(errorCode);
+            stopScan();
+        }
+    };
+    private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
+        public void onLeScan(final BluetoothDevice device, final int rssi,
+                             final byte[] scanRecord) {
+            if (macAddress.equals(device.getAddress())) {
+                stopScan();
+                rileyLinkDevice = device;
+                connectGatt();
+            }
+        }
+    };
+    public static final int TIME_OUT = 90 * 1000;
+    public static final int TIME_OUT_WHAT = 0x12;
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case TIME_OUT_WHAT:
+                    stopScan();
+                    break;
+            }
+        }
+    };
+
+    public void stopScan() {
+        handler.removeMessages(TIME_OUT_WHAT);
+        if (bluetoothAdapter == null) {
+            return;
+        }
+        try {
+            BluetoothLeScanner bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
+            if (bluetoothLeScanner == null) {
+                if (isBluetoothAvailable()) {
+                    bluetoothAdapter.stopLeScan(mLeScanCallback);
+                }
+                return;
+            }
+            if (isBluetoothAvailable()) {
+                bluetoothLeScanner.stopScan(scanCallback);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            aapsLogger.error(LTag.PUMPBTCOMM, e.getMessage());
+        }
+
+    }
+
+    public boolean isBluetoothAvailable() {
+        return (bluetoothAdapter != null &&
+                bluetoothAdapter.isEnabled() &&
+                bluetoothAdapter.getState() == BluetoothAdapter.STATE_ON);
     }
 }
