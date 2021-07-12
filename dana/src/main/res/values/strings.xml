@@ -19,9 +19,9 @@
     <string name="danars_pairingok">Pairing OK</string>
     <string name="danars_pairingtimedout">Pairing timed out</string>
     <string name="danars_waitingforpairing">Waiting for pairing on pump</string>
-    <string name="danarspump">DanaRS</string>
+    <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
-    <string name="description_pump_dana_rs">Pump integration for DANA Diabecare RS pumps</string>
+    <string name="description_pump_dana_rs">Pump integration for DANA Diabecare RS and Dana-i pumps</string>
     <string name="maxbolusviolation">Max bolus violation</string>
     <string name="commanderror">Command error</string>
     <string name="speederror">Speed error</string>
