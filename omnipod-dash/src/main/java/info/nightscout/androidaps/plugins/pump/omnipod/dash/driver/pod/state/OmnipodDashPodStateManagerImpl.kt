@@ -436,7 +436,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     override fun onStart() {
         when (getCommandConfirmationFromState()) {
             CommandConfirmationSuccess, CommandConfirmationDenied -> {
-                val now = System.currentTimeMillis()
+                val now = SystemClock.elapsedRealtime()
                 val newCommand = podState.activeCommand?.copy(
                     createdRealtime = now,
                     sentRealtime = now + 1
@@ -446,7 +446,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             }
 
             CommandSendingNotConfirmed -> {
-                val now = System.currentTimeMillis()
+                val now = SystemClock.elapsedRealtime()
                 val newCommand = podState.activeCommand?.copy(
                     createdRealtime = now,
                     sentRealtime = now + 1
