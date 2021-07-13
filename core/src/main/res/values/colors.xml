@@ -76,7 +76,7 @@
 
     <!-- Yellow Colors -->
     <color name="lightyellow">#FFFF00</color>
-    <color name="midyellow">#EBEB00</color>
+    <color name="midyellow">#BABA00</color>
     <color name="devslopepos">#CFCF00</color>
     <color name="ribbonWarning">#E4C700</color>
 
@@ -89,7 +89,7 @@
     <color name="notificationAnnouncement">#FF8C00</color>
     <color name="metadataTextWarning">#FF8C00</color>
     <color name="cob">#f0a30a</color>
-    <color name="carbsOrange">#CF8901</color>
+    <color name="carbsOrange">#C98301</color>
     <color name="midorange">#f0a30a</color>
 
     <!-- Green Colors -->
