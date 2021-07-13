@@ -28,7 +28,7 @@ class DanaRSPacketOptionGetPumpUTCAndTimeZone(
         val zoneOffset = getBytes(data, DATA_START + 6, 1)[0].toInt()
         val time = DateTime(2000 + year, month, day, hour, min, sec)
         danaPump.setPumpTime(time.millis, zoneOffset)
-        aapsLogger.debug(LTag.PUMPCOMM, "Pump time ${dateUtil.dateAndTimeString(danaPump.getPumpTime())} ZoneOffset: $zoneOffset")
+        aapsLogger.debug(LTag.PUMPCOMM, "Pump time ${dateUtil.dateAndTimeAndSecondsString(danaPump.getPumpTime())} ZoneOffset: $zoneOffset")
     }
 
     override fun handleMessageNotReceived() {

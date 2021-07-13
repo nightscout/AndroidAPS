@@ -26,6 +26,8 @@ abstract class PluginBase(
 
     open val menuIcon: Int
         get() = pluginDescription.pluginIcon
+    open val menuIcon2: Int
+        get() = pluginDescription.pluginIcon2
 
     open val name: String
         get() = if (pluginDescription.pluginName == -1) "UNKNOWN" else resourceHelper.gs(pluginDescription.pluginName)

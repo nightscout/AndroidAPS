@@ -3,6 +3,7 @@
     <string name="description_pump_combo">Accu-Chek Combo pompos integracija, reikalinga Ruffy programėlė</string>
     <string name="combo_programming_bolus">Programuojamas bolusas</string>
     <string name="combo_pump_state_label">Būsena</string>
+    <string name="combo_pump_activity_label">Aktyvumas</string>
     <string name="combo_no_pump_connection">Nėra ryšio su pompa %1$d min</string>
     <string name="combo_tbr_remaining">%1$d%% (liko%2$d min)</string>
     <string name="combo_pump_state_initializing">Inicijuojama</string>
