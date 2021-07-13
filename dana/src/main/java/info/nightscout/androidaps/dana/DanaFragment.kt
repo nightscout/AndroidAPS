@@ -86,7 +86,8 @@ class DanaFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.danaPumpstatus.setBackgroundColor(resourceHelper.gc(R.color.colorInitializingBorder))
+        binding.danaPumpstatus.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.informationBackground))
+        binding.danaPumpstatus.setTextColor(resourceHelper.getAttributeColor(context, R.attr.informationText))
 
         binding.history.setOnClickListener { startActivity(Intent(context, DanaHistoryActivity::class.java)) }
         binding.viewprofile.setOnClickListener {
@@ -202,7 +203,9 @@ class DanaFragment : DaggerFragment() {
             val agoMilliseconds = System.currentTimeMillis() - pump.lastConnection
             val agoMin = (agoMilliseconds.toDouble() / 60.0 / 1000.0).toInt()
             binding.lastconnection.text = dateUtil.timeString(pump.lastConnection) + " (" + resourceHelper.gs(R.string.minago, agoMin) + ")"
-            warnColors.setColor(binding.lastconnection, agoMin.toDouble(), 16.0, 31.0)
+            warnColors.setColor(binding.lastconnection, agoMin.toDouble(), 16.0, 31.0, resourceHelper.getAttributeColor(context, R.attr.statuslightNormal),
+                resourceHelper.getAttributeColor(context, R.attr.statuslightWarning),
+                resourceHelper.getAttributeColor(context, R.attr.statuslightAlarm))
         }
         if (pump.lastBolusTime != 0L) {
             val agoMilliseconds = System.currentTimeMillis() - pump.lastBolusTime
@@ -215,15 +218,21 @@ class DanaFragment : DaggerFragment() {
         }
 
         binding.dailyunits.text = resourceHelper.gs(R.string.reservoirvalue, pump.dailyTotalUnits, pump.maxDailyTotalUnits)
-        warnColors.setColor(binding.dailyunits, pump.dailyTotalUnits, pump.maxDailyTotalUnits * 0.75, pump.maxDailyTotalUnits * 0.9)
+        warnColors.setColor(binding.dailyunits, pump.dailyTotalUnits, pump.maxDailyTotalUnits * 0.75, pump.maxDailyTotalUnits * 0.9 , resourceHelper.getAttributeColor(context, R.attr.statuslightNormal),
+            resourceHelper.getAttributeColor(context, R.attr.statuslightWarning),
+            resourceHelper.getAttributeColor(context, R.attr.statuslightAlarm))
         binding.basabasalrate.text = "( " + (pump.activeProfile + 1) + " )  " + resourceHelper.gs(R.string.pump_basebasalrate, plugin.baseBasalRate)
         // DanaRPlugin, DanaRKoreanPlugin
         binding.tempbasal.text = danaPump.temporaryBasalToString()
         binding.extendedbolus.text = danaPump.extendedBolusToString()
         binding.reservoir.text = resourceHelper.gs(R.string.reservoirvalue, pump.reservoirRemainingUnits, 300)
-        warnColors.setColorInverse(binding.reservoir, pump.reservoirRemainingUnits, 50.0, 20.0)
+        warnColors.setColorInverse(binding.reservoir, pump.reservoirRemainingUnits, 50.0, 20.0 , resourceHelper.getAttributeColor(context, R.attr.statuslightNormal),
+            resourceHelper.getAttributeColor(context, R.attr.statuslightWarning),
+            resourceHelper.getAttributeColor(context, R.attr.statuslightAlarm))
         binding.battery.text = "{fa-battery-" + pump.batteryRemaining / 25 + "}"
-        warnColors.setColorInverse(binding.battery, pump.batteryRemaining.toDouble(), 51.0, 26.0)
+        warnColors.setColorInverse(binding.battery, pump.batteryRemaining.toDouble(), 51.0, 26.0 , resourceHelper.getAttributeColor(context, R.attr.statuslightNormal),
+            resourceHelper.getAttributeColor(context, R.attr.statuslightWarning),
+            resourceHelper.getAttributeColor(context, R.attr.statuslightAlarm))
         binding.iob.text = resourceHelper.gs(R.string.formatinsulinunits, pump.iob)
         binding.firmware.text = resourceHelper.gs(R.string.dana_model, pump.modelFriendlyName(), pump.hwModel, pump.protocol, pump.productCode)
         binding.basalstep.text = pump.basalStep.toString()

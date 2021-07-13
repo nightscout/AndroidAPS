@@ -10,6 +10,6 @@
         android:shape="rectangle">
         <corners android:radius="2dp" />
         <solid android:color="@color/background_floating_material_dark" />
-        <stroke android:color="@color/errorAlertBackground" android:width="3dp" />
+        <stroke android:color="@color/red" android:width="3dp" />
     </shape></inset>
 

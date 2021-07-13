@@ -7,6 +7,7 @@
     android:focusableInTouchMode="true"
     android:minWidth="300dp"
     android:orientation="vertical"
+    android:background="?attr/windowBackground"
     tools:context=".dialogs.InsulinDialog">
 
     <LinearLayout
@@ -18,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@color/dialog_title_background"
+            android:background="?attr/dialogTitleBackground"
             android:orientation="horizontal"
             android:padding="5dp">
 
@@ -55,7 +56,8 @@
 
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginBottom="1dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -85,7 +87,8 @@
 
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginBottom="1dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -116,7 +119,8 @@
 
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginBottom="1dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -147,7 +151,8 @@
             <TableRow
                 android:layout_width="match_parent"
                 android:gravity="center_vertical"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginBottom="1dp">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -159,8 +164,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="2dp"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="2dp"
                         android:text="@string/careportal_newnstreatment_carbtime_label"
                         android:gravity="center_vertical"
                         android:layout_weight="1"
@@ -247,9 +252,9 @@
                 android:id="@+id/total"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/background_darkgray"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
+                android:background="@drawable/background_total"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
                 android:text="2.35U 28g"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -258,44 +263,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:background="@drawable/background_darkgray"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
+                android:background="@drawable/background_total"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
                 android:text="50%"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@color/iob" />
 
         </LinearLayout>
 
-        <LinearLayout
+        <include
             android:id="@+id/notes_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:labelFor="@+id/notes"
-                android:padding="10dp"
-                android:text="@string/notes_label"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/notes"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:autofillHints="@string/notes_label"
-                android:gravity="start"
-                android:inputType="text|textCapSentences"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-
-        </LinearLayout>
-
+            layout="@layout/notes" />
+        
         <LinearLayout
             android:id="@+id/done_background"
             android:layout_width="match_parent"
@@ -345,7 +325,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="-15dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/list_delimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
         <TableLayout
             android:id="@+id/resulttable"

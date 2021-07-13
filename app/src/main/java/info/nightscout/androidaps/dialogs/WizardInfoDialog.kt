@@ -47,7 +47,7 @@ class WizardInfoDialog : DaggerDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.close.setOnClickListener { dismiss() }
+        binding.closeWizardinfo.setOnClickListener { dismiss() }
         val units = profileFunction.getUnits()
         val bgString = Profile.toUnitsString(data.glucoseValue, data.glucoseValue * Constants.MGDL_TO_MMOLL, units)
         // BG

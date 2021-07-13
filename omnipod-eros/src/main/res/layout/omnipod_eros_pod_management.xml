@@ -77,9 +77,11 @@
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/button_activate_pod"
-                style="?android:attr/buttonStyle"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
                 android:drawableTop="@drawable/ic_pod_management_activate_pod"
                 android:text="@string/omnipod_common_pod_management_button_activate_pod"
                 android:textAllCaps="false"
@@ -98,9 +100,11 @@
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/button_deactivate_pod"
-                style="?android:attr/buttonStyle"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
                 android:drawableTop="@drawable/ic_pod_management_deactivate_pod"
                 android:text="@string/omnipod_common_pod_management_button_deactivate_pod"
                 android:textAllCaps="false"
@@ -127,9 +131,11 @@
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/button_play_test_beep"
-                style="?android:attr/buttonStyle"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
                 android:drawableTop="@drawable/ic_pod_management_play_test_beep"
                 android:text="@string/omnipod_common_pod_management_button_play_test_beep"
                 android:textAllCaps="false"
@@ -148,9 +154,11 @@
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/button_discard_pod"
-                style="?android:attr/buttonStyle"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
                 android:drawableTop="@drawable/ic_pod_management_discard_pod"
                 android:text="@string/omnipod_common_pod_management_button_discard_pod"
                 android:textAllCaps="false"
@@ -187,9 +195,11 @@
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/button_reset_rileylink_config"
-                style="?android:attr/buttonStyle"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
                 android:drawableTop="@drawable/ic_pod_activity_reset_rileylink_config"
                 android:text="@string/omnipod_eros_pod_management_button_reset_riley_link_config"
                 android:textAllCaps="false"
@@ -208,9 +218,11 @@
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/button_pod_history"
-                style="?android:attr/buttonStyle"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
                 android:drawableTop="@drawable/ic_pod_management_pod_history"
                 android:text="@string/omnipod_common_pod_management_button_pod_history"
                 android:textAllCaps="false"
@@ -237,9 +249,11 @@
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/button_rileylink_stats"
-                style="?android:attr/buttonStyle"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
                 android:drawableTop="@drawable/ic_pod_management_rl_stats"
                 android:text="@string/omnipod_eros_pod_management_button_riley_link_stats"
                 android:textAllCaps="false"
@@ -258,9 +272,11 @@
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/button_pulse_log"
-                style="?android:attr/buttonStyle"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
                 android:drawableTop="@drawable/ic_pod_management_pulse_log"
                 android:text="@string/omnipod_eros_pod_management_button_read_pulse_log"
                 android:textAllCaps="false"

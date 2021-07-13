@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.combo;
 
 
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -54,6 +55,11 @@ public class ComboFragment extends DaggerFragment {
     private Button refreshButton;
     private TextView bolusCount;
     private TextView tbrCount;
+    private ColorStateList defaultStateTextColors = null;
+    private ColorStateList defaultActivityColors = null;
+    private ColorStateList defaultBatteryColors = null;
+    private ColorStateList defaultReservoirColors = null;
+    private ColorStateList defaultConnectionColors = null;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -116,54 +122,63 @@ public class ComboFragment extends DaggerFragment {
 
     public void updateGui() {
 
+        if (this.defaultStateTextColors == null) {
+            this.defaultStateTextColors = stateView.getTextColors();
+        }
         // state
         stateView.setText(comboPlugin.getStateSummary());
         PumpState ps = comboPlugin.getPump().state;
         if (ps.insulinState == PumpState.EMPTY || ps.batteryState == PumpState.EMPTY
                 || ps.activeAlert != null && ps.activeAlert.errorCode != null) {
-            stateView.setTextColor(Color.RED);
+            stateView.setTextColor(resourceHelper.getAttributeColor(getContext(), R.attr.statuslightAlarm));
             stateView.setTypeface(null, Typeface.BOLD);
         } else if (comboPlugin.getPump().state.suspended
                 || ps.activeAlert != null && ps.activeAlert.warningCode != null) {
-            stateView.setTextColor(Color.YELLOW);
+            stateView.setTextColor(resourceHelper.getAttributeColor(getContext(), R.attr.statuslightAlarm));
             stateView.setTypeface(null, Typeface.BOLD);
         } else {
-            stateView.setTextColor(Color.WHITE);
+            stateView.setTextColor(this.defaultStateTextColors);
             stateView.setTypeface(null, Typeface.NORMAL);
         }
 
+        if (this.defaultActivityColors == null) {
+            this.defaultActivityColors = activityView.getTextColors();
+        }
         // activity
         String activity = comboPlugin.getPump().activity;
         if (activity != null) {
-            activityView.setTextColor(Color.WHITE);
+            activityView.setTextColor(this.defaultActivityColors);
             activityView.setTextSize(14);
             activityView.setText(activity);
         } else if (commandQueue.size() > 0) {
-            activityView.setTextColor(Color.WHITE);
+            activityView.setTextColor(this.defaultActivityColors);
             activityView.setTextSize(14);
             activityView.setText("");
         } else if (comboPlugin.isInitialized()) {
-            activityView.setTextColor(Color.WHITE);
+            activityView.setTextColor(this.defaultActivityColors);
             activityView.setTextSize(20);
             activityView.setText("{fa-bed}");
         } else {
-            activityView.setTextColor(Color.RED);
+            activityView.setTextColor(resourceHelper.getAttributeColor(getContext(), R.attr.statuslightAlarm));
             activityView.setTextSize(14);
             activityView.setText(resourceHelper.gs(R.string.pump_unreachable));
         }
 
         if (comboPlugin.isInitialized()) {
+            if (this.defaultBatteryColors == null) {
+                this.defaultBatteryColors = batteryView.getTextColors();
+            }
             // battery
             batteryView.setTextSize(20);
             if (ps.batteryState == PumpState.EMPTY) {
                 batteryView.setText("{fa-battery-empty}");
-                batteryView.setTextColor(Color.RED);
+                batteryView.setTextColor(resourceHelper.getAttributeColor(getContext(), R.attr.statuslightAlarm));
             } else if (ps.batteryState == PumpState.LOW) {
                 batteryView.setText("{fa-battery-quarter}");
-                batteryView.setTextColor(Color.YELLOW);
+                batteryView.setTextColor(resourceHelper.getAttributeColor(getContext(), R.attr.statuslightWarning));
             } else {
                 batteryView.setText("{fa-battery-full}");
-                batteryView.setTextColor(Color.WHITE);
+                batteryView.setTextColor(this.defaultBatteryColors);
             }
 
             // reservoir
@@ -178,32 +193,38 @@ public class ComboFragment extends DaggerFragment {
                 reservoirView.setText(resourceHelper.gs(R.string.combo_reservoir_normal));
             }
 
+            if (this.defaultReservoirColors == null) {
+                this.defaultReservoirColors = reservoirView.getTextColors();
+            }
             if (ps.insulinState == PumpState.UNKNOWN) {
-                reservoirView.setTextColor(Color.WHITE);
+                reservoirView.setTextColor(this.defaultReservoirColors);
                 reservoirView.setTypeface(null, Typeface.NORMAL);
             } else if (ps.insulinState == PumpState.LOW) {
-                reservoirView.setTextColor(Color.YELLOW);
+                reservoirView.setTextColor(resourceHelper.getAttributeColor(getContext(), R.attr.statuslightWarning));
                 reservoirView.setTypeface(null, Typeface.BOLD);
             } else if (ps.insulinState == PumpState.EMPTY) {
-                reservoirView.setTextColor(Color.RED);
+                reservoirView.setTextColor(resourceHelper.getAttributeColor(getContext(), R.attr.statuslightAlarm));
                 reservoirView.setTypeface(null, Typeface.BOLD);
             } else {
-                reservoirView.setTextColor(Color.WHITE);
+                reservoirView.setTextColor(this.defaultReservoirColors);
                 reservoirView.setTypeface(null, Typeface.NORMAL);
             }
 
+            if (this.defaultConnectionColors == null) {
+                this.defaultConnectionColors = lastConnectionView.getTextColors();
+            }
             // last connection
             String minAgo = dateUtil.minAgo(resourceHelper, comboPlugin.getPump().lastSuccessfulCmdTime);
             long min = (System.currentTimeMillis() - comboPlugin.getPump().lastSuccessfulCmdTime) / 1000 / 60;
             if (comboPlugin.getPump().lastSuccessfulCmdTime + 60 * 1000 > System.currentTimeMillis()) {
                 lastConnectionView.setText(R.string.combo_pump_connected_now);
-                lastConnectionView.setTextColor(Color.WHITE);
+                lastConnectionView.setTextColor(this.defaultConnectionColors);
             } else if (comboPlugin.getPump().lastSuccessfulCmdTime + 30 * 60 * 1000 < System.currentTimeMillis()) {
                 lastConnectionView.setText(resourceHelper.gs(R.string.combo_no_pump_connection, min));
-                lastConnectionView.setTextColor(Color.RED);
+                lastConnectionView.setTextColor(resourceHelper.getAttributeColor(getContext(), R.attr.statuslightAlarm));
             } else {
                 lastConnectionView.setText(minAgo);
-                lastConnectionView.setTextColor(Color.WHITE);
+                lastConnectionView.setTextColor(this.defaultConnectionColors);
             }
 
             // last bolus

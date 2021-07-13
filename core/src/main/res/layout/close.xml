@@ -9,8 +9,8 @@
     android:layout_gravity="center_vertical"
     android:paddingBottom="8dp">
 
-    <Button
-        android:id="@+id/close"
+    <info.nightscout.androidaps.utils.ui.SingleClickButton
+        android:id="@+id/closeButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"

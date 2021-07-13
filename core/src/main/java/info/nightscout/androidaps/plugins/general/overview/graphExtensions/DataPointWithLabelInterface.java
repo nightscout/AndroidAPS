@@ -23,6 +23,8 @@ package info.nightscout.androidaps.plugins.general.overview.graphExtensions;
  * Added by mike
  */
 
+import android.content.Context;
+
 import com.jjoe64.graphview.series.DataPointInterface;
 
 /**
@@ -54,5 +56,5 @@ public interface DataPointWithLabelInterface extends DataPointInterface{
     long getDuration();
     PointsWithLabelGraphSeries.Shape getShape();
     float getSize();
-    int getColor();
+    int getColor(Context context);
 }

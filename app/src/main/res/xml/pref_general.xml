@@ -24,9 +24,8 @@
         <EditTextPreference
             android:inputType="textPersonName"
             android:key="@string/key_patient_name"
-            android:title="@string/patient_name"
             android:summary="@string/patient_name_summary"
-            />
+            android:title="@string/patient_name" />
 
         <PreferenceCategory
             android:key="@string/key_protection_settings"
@@ -35,8 +34,7 @@
             <Preference
                 android:inputType="textPassword"
                 android:key="@string/key_master_password"
-                android:title="@string/master_password"
-                />
+                android:title="@string/master_password" />
 
             <ListPreference
                 android:defaultValue="0"
@@ -79,6 +77,14 @@
         <info.nightscout.androidaps.skins.SkinListPreference
             android:key="@string/key_skin"
             android:title="@string/skin" />
+
+        <ListPreference
+            android:defaultValue="dark"
+            android:entries="@array/darkMode"
+            android:entryValues="@array/darkModeValues"
+            android:key="@string/key_use_dark_mode"
+            android:summary="@string/theme_switcher_summary"
+            android:title="@string/app_color_scheme" />
 
     </PreferenceCategory>
 

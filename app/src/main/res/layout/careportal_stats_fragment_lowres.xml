@@ -28,7 +28,6 @@
             android:gravity="center_vertical"
             android:paddingLeft="2dp"
             android:paddingRight="2dp"
-            android:textColor="@android:color/white"
             android:textSize="14sp" />
 
 
@@ -39,7 +38,6 @@
             android:layout_marginEnd="20dp"
             android:gravity="center_vertical"
             android:paddingStart="2dp"
-            android:textColor="@android:color/white"
             android:textSize="14sp"
             tools:ignore="RtlSymmetry" />
 
@@ -57,7 +55,7 @@
             android:layout_marginRight="20dp"
             android:layout_marginBottom="2dp"
             android:layout_span="3"
-            android:background="@color/list_delimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
     </TableRow>
 
@@ -83,7 +81,6 @@
             android:gravity="center_vertical"
             android:paddingLeft="2dp"
             android:paddingRight="2dp"
-            android:textColor="@android:color/white"
             android:textSize="14sp" />
 
 
@@ -94,7 +91,6 @@
             android:layout_marginEnd="20dp"
             android:gravity="center_vertical"
             android:paddingStart="2dp"
-            android:textColor="@android:color/white"
             android:textSize="14sp"
             tools:ignore="RtlSymmetry" />
 
@@ -112,7 +108,7 @@
             android:layout_marginRight="20dp"
             android:layout_marginBottom="2dp"
             android:layout_span="3"
-            android:background="@color/list_delimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
     </TableRow>
 
@@ -137,7 +133,6 @@
             android:gravity="center_vertical"
             android:paddingLeft="2dp"
             android:paddingRight="2dp"
-            android:textColor="@android:color/white"
             android:textSize="14sp" />
 
         <TextView
@@ -147,7 +142,6 @@
             android:gravity="center_vertical"
             android:paddingStart="2dp"
             android:text=""
-            android:textColor="@android:color/white"
             android:textSize="14sp"
             tools:ignore="RtlSymmetry" />
 
@@ -165,7 +159,7 @@
             android:layout_marginRight="20dp"
             android:layout_marginBottom="2dp"
             android:layout_span="3"
-            android:background="@color/list_delimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
     </TableRow>
 
@@ -192,7 +186,6 @@
             android:gravity="center_vertical"
             android:paddingLeft="2dp"
             android:paddingRight="2dp"
-            android:textColor="@android:color/white"
             android:textSize="14sp" />
 
         <TextView
@@ -202,7 +195,6 @@
             android:layout_marginEnd="20dp"
             android:gravity="center_vertical"
             android:paddingStart="2dp"
-            android:textColor="@android:color/white"
             android:textSize="14sp"
             tools:ignore="RtlSymmetry" />
 
@@ -220,7 +212,7 @@
             android:layout_marginRight="20dp"
             android:layout_marginBottom="2dp"
             android:layout_span="3"
-            android:background="@color/list_delimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
     </TableRow>
 

@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@color/activity_title_background"
+            android:background="?attr/activity_title_background"
             android:orientation="horizontal"
             android:padding="5dp">
 
@@ -67,7 +67,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/list_delimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
         <Switch
             android:id="@+id/buttonscroll"
@@ -86,7 +86,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/list_delimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
         <Switch
             android:id="@+id/beep"
@@ -105,7 +105,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/list_delimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -158,7 +158,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/list_delimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -181,8 +181,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_gravity="end"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp" />
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp" />
 
         </LinearLayout>
 
@@ -193,7 +193,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/list_delimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -218,8 +218,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_gravity="end"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp" />
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp" />
 
         </LinearLayout>
 
@@ -230,7 +230,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/list_delimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
         <Switch
             android:id="@+id/units"
@@ -251,7 +251,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/list_delimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -274,8 +274,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_gravity="end"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp" />
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp" />
 
         </LinearLayout>
 
@@ -286,7 +286,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/list_delimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -311,17 +311,22 @@
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_gravity="end"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp" />
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp" />
 
         </LinearLayout>
 
-        <Button
+        <info.nightscout.androidaps.utils.ui.SingleClickButton
             android:id="@+id/save_user_options"
-            style="@style/Widget.AppCompat.Button"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_local_save"
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="2dp"
+            app:icon="@drawable/ic_local_save"
+            app:iconTint="?attr/iconColorToolbar"
+            app:iconGravity="start"
+            android:textAlignment="center"
             android:text="@string/danar_saveuseroptions" />
 
     </LinearLayout>

@@ -284,7 +284,8 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                 holder.binding.iob.text = resourceHelper.gs(R.string.formatinsulinunits, iob.iobContrib)
                 holder.binding.iobLabel.visibility = (iob.iobContrib != 0.0).toVisibility()
                 holder.binding.iob.visibility = (iob.iobContrib != 0.0).toVisibility()
-                if (bolus.timestamp > dateUtil.now()) holder.binding.date.setTextColor(resourceHelper.gc(R.color.colorScheduled)) else holder.binding.date.setTextColor(holder.binding.carbs.currentTextColor)
+                if (bolus.timestamp > dateUtil.now()) holder.binding.date.setTextColor(resourceHelper.getAttributeColor(
+                    view?.context, R.attr.colorScheduled)) else holder.binding.date.setTextColor(holder.binding.carbs.currentTextColor)
                 holder.binding.mealOrCorrection.text =
                     when (ml.bolus.type) {
                         Bolus.Type.SMB     -> "SMB"

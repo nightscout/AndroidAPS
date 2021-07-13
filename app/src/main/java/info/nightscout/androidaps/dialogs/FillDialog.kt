@@ -27,7 +27,7 @@ import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.SafeParse
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.extensions.formatColor
+import info.nightscout.androidaps.utils.extensions.formatColorFromAttribute
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
@@ -38,7 +38,6 @@ import kotlin.math.abs
 class FillDialog : DialogFragmentWithDate() {
 
     @Inject lateinit var constraintChecker: ConstraintChecker
-    @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var ctx: Context
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var activePlugin: ActivePlugin
@@ -113,17 +112,17 @@ class FillDialog : DialogFragmentWithDate() {
         if (insulinAfterConstraints > 0) {
             actions.add(resourceHelper.gs(R.string.fillwarning))
             actions.add("")
-            actions.add(resourceHelper.gs(R.string.bolus) + ": " + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump, resourceHelper).formatColor(resourceHelper, R.color.colorInsulinButton))
+            actions.add(resourceHelper.gs(R.string.bolus) + ": " + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump, resourceHelper).formatColorFromAttribute( resourceHelper.getAttributeColor(context, R.attr.colorInsulinButton )))
             if (abs(insulinAfterConstraints - insulin) > 0.01)
-                actions.add(resourceHelper.gs(R.string.bolusconstraintappliedwarn, insulin, insulinAfterConstraints).formatColor(resourceHelper, R.color.warning))
+                actions.add(resourceHelper.gs(R.string.bolusconstraintappliedwarn, insulin, insulinAfterConstraints).formatColorFromAttribute( resourceHelper.getAttributeColor(context, R.attr.dialogUrgent )))
         }
         val siteChange = binding.fillCatheterChange.isChecked
         if (siteChange)
-            actions.add(resourceHelper.gs(R.string.record_pump_site_change).formatColor(resourceHelper, R.color.actionsConfirm))
+            actions.add(resourceHelper.gs(R.string.record_pump_site_change).formatColorFromAttribute(resourceHelper.getAttributeColor(context, R.attr.actionsConfirm)))
         val insulinChange = binding.fillCartridgeChange.isChecked
         if (insulinChange)
-            actions.add(resourceHelper.gs(R.string.record_insulin_cartridge_change).formatColor(resourceHelper, R.color.actionsConfirm))
-        val notes: String = binding.notesLayout.notes.text.toString()
+            actions.add(resourceHelper.gs(R.string.record_insulin_cartridge_change).formatColorFromAttribute(resourceHelper.getAttributeColor(context, R.attr.actionsConfirm)))
+        val notes = binding.notesLayout.notes.text.toString()
         if (notes.isNotEmpty())
             actions.add(resourceHelper.gs(R.string.notes_label) + ": " + notes)
         eventTime -= eventTime % 1000

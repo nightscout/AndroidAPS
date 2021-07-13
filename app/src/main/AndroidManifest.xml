@@ -53,6 +53,7 @@
             android:resource="@xml/automotive_app_desc" />
 
         <activity android:name=".MainActivity"
+            android:theme="@style/AppTheme"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -60,9 +61,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.PreferencesActivity" />
-        <activity android:name=".plugins.general.overview.activities.QuickWizardListActivity"
-            android:exported="false">
+
+        <activity android:name=".activities.PreferencesActivity"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".plugins.general.overview.activities.QuickWizardListActivity" android:exported="false">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity" />
 
@@ -70,12 +72,15 @@
             </intent-filter>
         </activity>
         <activity android:name=".plugins.general.maintenance.activities.PrefImportListActivity" />
-        <activity android:name=".activities.HistoryBrowseActivity" />
-        <activity android:name=".activities.TreatmentsActivity" />
-        <activity android:name=".activities.SurveyActivity" />
+        <activity android:name=".activities.HistoryBrowseActivity"
+            android:theme="@style/AppTheme"  />
+        <activity android:name=".activities.SurveyActivity"
+            android:theme="@style/AppTheme" />
+            <activity android:name=".activities.TreatmentsActivity" />
         <activity android:name=".activities.ProfileHelperActivity"
             android:theme="@style/ProfileHelperAppTheme" />
-        <activity android:name=".activities.StatsActivity" />
+        <activity android:name=".activities.StatsActivity"
+            android:theme="@style/AppTheme" />
         <activity
             android:name="com.google.firebase.auth.internal.FederatedSignInActivity"
             android:excludeFromRecents="true"

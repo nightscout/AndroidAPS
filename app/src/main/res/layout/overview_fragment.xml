@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="?attr/fragmentbackground"
     tools:context=".plugins.general.overview.OverviewFragment">
 
     <ScrollView
@@ -54,7 +55,6 @@
                     android:paddingStart="4sp"
                     android:paddingEnd="4sp"
                     android:text="Pump: running"
-                    android:textColor="@android:color/white"
                     android:textSize="16sp"
                     tools:ignore="HardcodedText" />
 
@@ -66,7 +66,6 @@
                     android:paddingStart="4sp"
                     android:paddingEnd="4sp"
                     android:text="OpenAPS: 3 min ago"
-                    android:textColor="@android:color/white"
                     android:textSize="16sp"
                     tools:ignore="HardcodedText" />
 
@@ -78,7 +77,6 @@
                     android:paddingStart="4sp"
                     android:paddingEnd="4sp"
                     android:text="Uploader: 84%"
-                    android:textColor="@android:color/white"
                     android:textSize="16sp"
                     tools:ignore="HardcodedText" />
 

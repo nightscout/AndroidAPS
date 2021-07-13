@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.TEXT_ALIGNMENT_CENTER
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -314,10 +315,14 @@ class ActionsFragment : DaggerFragment() {
         tddStats?.visibility = pump.pumpDescription.supportsTDDs.toVisibility()
 
         if (!config.NSCLIENT) {
-            statusLightHandler.updateStatusLights(cannulaAge, insulinAge, reservoirLevel, sensorAge, sensorLevel, pbAge, batteryLevel)
+            statusLightHandler.updateStatusLights(cannulaAge, insulinAge, reservoirLevel, sensorAge, sensorLevel, pbAge, batteryLevel,resourceHelper.getAttributeColor(context, R.attr.statuslightNormal),
+                resourceHelper.getAttributeColor(context, R.attr.statuslightWarning),
+                resourceHelper.getAttributeColor(context, R.attr.statuslightAlarm))
             sensorLevelLabel?.text = if (activeBgSource.sensorBatteryLevel == -1) "" else resourceHelper.gs(R.string.careportal_level_label)
         } else {
-            statusLightHandler.updateStatusLights(cannulaAge, insulinAge, null, sensorAge, null, pbAge, null)
+            statusLightHandler.updateStatusLights(cannulaAge, insulinAge, null, sensorAge, null, pbAge, null, resourceHelper.getAttributeColor(context, R.attr.statuslightNormal),
+                resourceHelper.getAttributeColor(context, R.attr.statuslightWarning),
+                resourceHelper.getAttributeColor(context, R.attr.statuslightAlarm))
             sensorLevelLabel?.text = ""
             insulinLevelLabel?.text = ""
             pbLevelLabel?.text = ""
@@ -335,8 +340,9 @@ class ActionsFragment : DaggerFragment() {
         for (customAction in customActions) {
             if (!customAction.isEnabled) continue
 
-            val btn = SingleClickButton(currentContext, null, android.R.attr.buttonStyle)
+            val btn = SingleClickButton(currentContext, null, info.nightscout.androidaps.core.R.style.Widget_MaterialComponents_Button_UnelevatedButton)
             btn.text = resourceHelper.gs(customAction.name)
+            btn.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.colorPrimary))
 
             val layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 0.5f)
@@ -351,6 +357,7 @@ class ActionsFragment : DaggerFragment() {
             }
             val top = activity?.let { ContextCompat.getDrawable(it, customAction.iconResourceId) }
             btn.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null)
+            btn.textAlignment = TEXT_ALIGNMENT_CENTER
 
             buttonsLayout?.addView(btn)
 

@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.overview.graphExtensions
 
+import android.content.Context
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.entities.Carbs
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -20,9 +21,9 @@ class CarbsDataPoint @Inject constructor(
 
     override fun getShape(): PointsWithLabelGraphSeries.Shape = PointsWithLabelGraphSeries.Shape.CARBS
 
-    override fun getColor(): Int =
-        if (data.isValid) resourceHelper.gc(R.color.carbs)
-        else resourceHelper.gc(android.R.color.holo_red_light)
+    override fun getColor(context: Context): Int =
+        if (data.isValid) resourceHelper.getAttributeColor(context,R.attr.carbsColor)
+        else resourceHelper.getAttributeColor(context,R.attr.statuslightAlarm)
 
     override fun setY(y: Double) {
         yValue = y

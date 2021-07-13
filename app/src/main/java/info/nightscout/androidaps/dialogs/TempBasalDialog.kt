@@ -19,7 +19,7 @@ import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.SafeParse
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.extensions.formatColor
+import info.nightscout.androidaps.utils.extensions.formatColorFromAttribute
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import java.text.DecimalFormat
 import java.util.*
@@ -29,7 +29,6 @@ import kotlin.math.abs
 class TempBasalDialog : DialogFragmentWithDate() {
 
     @Inject lateinit var constraintChecker: ConstraintChecker
-    @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var commandQueue: CommandQueueProvider
@@ -112,7 +111,7 @@ class TempBasalDialog : DialogFragmentWithDate() {
             actions.add(resourceHelper.gs(R.string.tempbasal_label) + ": " + resourceHelper.gs(R.string.pump_basebasalrate, absolute))
             actions.add(resourceHelper.gs(R.string.duration) + ": " + resourceHelper.gs(R.string.format_mins, durationInMinutes))
             if (abs(absolute - basalAbsoluteInput) > 0.01)
-                actions.add(resourceHelper.gs(R.string.constraintapllied).formatColor(resourceHelper, R.color.warning))
+                actions.add(resourceHelper.gs(R.string.constraintapllied).formatColorFromAttribute( resourceHelper.getAttributeColor(context, R.attr.dialogUrgent )))
         }
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.tempbasal_label), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {

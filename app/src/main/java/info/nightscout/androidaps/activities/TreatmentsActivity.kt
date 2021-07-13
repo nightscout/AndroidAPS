@@ -67,14 +67,14 @@ class TreatmentsActivity : NoSplashAppCompatActivity() {
     }
 
     private fun setBackgroundColorOnSelected(selected: View) {
-        binding.treatments.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        binding.extendedBoluses.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        binding.tempBasals.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        binding.tempTargets.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        binding.profileSwitches.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        binding.careportal.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        binding.userentry.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        selected.setBackgroundColor(resourceHelper.gc(R.color.tabBgColorSelected))
+        binding.treatments.setBackgroundColor(resourceHelper.getAttributeColor( selected.context, R.attr.defaultBackground))
+        binding.extendedBoluses.setBackgroundColor(resourceHelper.getAttributeColor( selected.context, R.attr.defaultBackground))
+        binding.tempBasals.setBackgroundColor(resourceHelper.getAttributeColor( selected.context, R.attr.defaultBackground))
+        binding.tempTargets.setBackgroundColor(resourceHelper.getAttributeColor( selected.context, R.attr.defaultBackground))
+        binding.profileSwitches.setBackgroundColor(resourceHelper.getAttributeColor( selected.context, R.attr.defaultBackground))
+        binding.careportal.setBackgroundColor(resourceHelper.getAttributeColor( selected.context, R.attr.defaultBackground))
+        binding.userentry.setBackgroundColor(resourceHelper.getAttributeColor( selected.context, R.attr.defaultBackground))
+        selected.setBackgroundColor(resourceHelper.getAttributeColor( selected.context, R.attr.tabBgColorSelected))
     }
 
 }

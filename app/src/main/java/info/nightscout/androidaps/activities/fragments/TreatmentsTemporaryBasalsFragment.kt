@@ -167,7 +167,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
             holder.binding.ph.visibility = (tempBasal.interfaceIDs.pumpId != null).toVisibility()
             if (tempBasal.isInProgress) {
                 holder.binding.date.text = dateUtil.dateAndTimeString(tempBasal.timestamp)
-                holder.binding.date.setTextColor(resourceHelper.gc(R.color.colorActive))
+                holder.binding.date.setTextColor(resourceHelper.getAttributeColor(view?.context, R.attr.treatmentActive))
             } else {
                 holder.binding.date.text = dateUtil.dateAndTimeRangeString(tempBasal.timestamp, tempBasal.end)
                 holder.binding.date.setTextColor(holder.binding.duration.currentTextColor)
@@ -184,7 +184,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
             holder.binding.suspendFlag.visibility = (tempBasal.type == TemporaryBasal.Type.PUMP_SUSPEND).toVisibility()
             holder.binding.emulatedSuspendFlag.visibility = (tempBasal.type == TemporaryBasal.Type.EMULATED_PUMP_SUSPEND).toVisibility()
             holder.binding.superBolusFlag.visibility = (tempBasal.type == TemporaryBasal.Type.SUPERBOLUS).toVisibility()
-            if (abs(iob.basaliob) > 0.01) holder.binding.iob.setTextColor(resourceHelper.gc(R.color.colorActive)) else holder.binding.iob.setTextColor(holder.binding.duration.currentTextColor)
+            if (abs(iob.basaliob) > 0.01) holder.binding.iob.setTextColor(resourceHelper.getAttributeColor(view?.context, R.attr.treatmentActive)) else holder.binding.iob.setTextColor(holder.binding.duration.currentTextColor)
             holder.binding.remove.tag = tempBasal
         }
 

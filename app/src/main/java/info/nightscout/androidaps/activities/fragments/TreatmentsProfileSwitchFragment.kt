@@ -179,8 +179,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
             holder.binding.date.text = dateUtil.dateAndTimeString(profileSwitch.timestamp)
             holder.binding.duration.text = resourceHelper.gs(R.string.format_mins, T.msecs(profileSwitch.duration ?: 0L).mins())
             holder.binding.name.text = if (profileSwitch is ProfileSealed.PS) profileSwitch.value.getCustomizedName() else if (profileSwitch is ProfileSealed.EPS) profileSwitch.value.originalCustomizedName else ""
-            if (profileSwitch.isInProgress(dateUtil)) holder.binding.date.setTextColor(resourceHelper.gc(R.color.colorActive))
-            else holder.binding.date.setTextColor(holder.binding.duration.currentTextColor)
+            if (profileSwitch.isInProgress(dateUtil)) holder.binding.date.setTextColor(resourceHelper.getAttributeColor(context, R.attr.treatmentActive)) else holder.binding.date.setTextColor(holder.binding.duration.currentTextColor)
             holder.binding.remove.tag = profileSwitch
             holder.binding.clone.tag = profileSwitch
             holder.binding.name.tag = profileSwitch
@@ -190,7 +189,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
             holder.binding.remove.visibility = (profileSwitch is ProfileSealed.PS).toVisibility()
             holder.binding.clone.visibility = (profileSwitch is ProfileSealed.PS).toVisibility()
             holder.binding.spacer.visibility = (profileSwitch is ProfileSealed.PS).toVisibility()
-            holder.binding.root.setBackgroundColor(resourceHelper.gc(if (profileSwitch is ProfileSealed.PS) R.color.defaultbackground else R.color.list_delimiter))
+            holder.binding.root.setBackgroundColor(resourceHelper.getAttributeColor(view?.context, if (profileSwitch is ProfileSealed.PS) R.attr.colorSurface else R.attr.okBackground))
         }
 
         override fun getItemCount(): Int {

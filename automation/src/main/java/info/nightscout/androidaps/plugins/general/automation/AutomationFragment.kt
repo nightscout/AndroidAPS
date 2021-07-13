@@ -167,7 +167,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
         @SuppressLint("ClickableViewAccessibility")
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val event = automationPlugin.at(position)
-            holder.binding.rootLayout.setBackgroundColor(resourceHelper.gc(if (event.areActionsValid()) R.color.ribbonDefault else R.color.errorAlertBackground))
+            holder.binding.rootLayout.setBackgroundColor(if (event.areActionsValid()) resourceHelper.getAttributeColor(context, R.attr.ribbonDefault) else resourceHelper.getAttributeColor(context, R.attr.automationBgUrgent) )
             holder.binding.eventTitle.text = event.title
             holder.binding.enabled.isChecked = event.isEnabled
             holder.binding.enabled.isEnabled = !event.readOnly
@@ -245,7 +245,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
                         automationPlugin.removeAt(position)
                         notifyItemRemoved(position)
                         rxBus.send(EventAutomationDataChanged())
-                    }, Runnable { rxBus.send(EventAutomationUpdateGui()) })
+                    }, { rxBus.send(EventAutomationUpdateGui()) })
             }
         }
 
@@ -253,9 +253,9 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
 
             val binding = AutomationEventItemBinding.bind(view)
 
-            override fun onItemSelected() = itemView.setBackgroundColor(Color.LTGRAY)
+            override fun onItemSelected() = itemView.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.automationSelectedItemBackground))
 
-            override fun onItemClear() = itemView.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
+            override fun onItemClear() = itemView.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.ribbonDefault))
         }
     }
 }

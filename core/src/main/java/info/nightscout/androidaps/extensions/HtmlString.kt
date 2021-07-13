@@ -1,11 +1,11 @@
 package info.nightscout.androidaps.extensions
 
+import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 
 fun String.formatBold(): String =
     "<b>$this</b>"
 
-fun String.formatColor(resourceHelper: ResourceHelper, @ColorRes colorId: Int): String =
-    "<font color='" + resourceHelper.gc(colorId) + "'>" + this + "</font>"
-
+fun String.formatColorFromAttribute (@ColorInt colorId: Int): String =
+    "<font color='" + colorId + "'>" + this + "</font>"

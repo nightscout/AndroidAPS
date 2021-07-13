@@ -89,11 +89,12 @@ class MedtronicFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.pumpStatus.setBackgroundColor(resourceHelper.gc(R.color.colorInitializingBorder))
+        binding.pumpStatus.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.informationBackground))
+        binding.pumpStatus.setTextColor(resourceHelper.getAttributeColor(context, R.attr.informationText))
 
         binding.rlStatus.text = resourceHelper.gs(RileyLinkServiceState.NotStarted.resourceId)
 
-        binding.pumpStatusIcon.setTextColor(Color.WHITE)
+        binding.pumpStatusIcon.setTextColor(resourceHelper.getAttributeColor(context,R.attr.iconColorToolbar ))
         @SuppressLint("SetTextI18n")
         binding.pumpStatusIcon.text = "{fa-bed}"
 
@@ -201,7 +202,7 @@ class MedtronicFragment : DaggerFragment() {
                 rileyLinkServiceData.rileyLinkServiceState.isError && rileyLinkError != null   -> "{fa-bluetooth-b}   " + resourceHelper.gs(rileyLinkError.getResourceId(RileyLinkTargetDevice.MedtronicPump))
                 else                                                                           -> "{fa-bluetooth-b}   " + resourceHelper.gs(resourceId)
             }
-        binding.rlStatus.setTextColor(if (rileyLinkError != null) Color.RED else Color.WHITE)
+        binding.rlStatus.setTextColor(if (rileyLinkError != null) resourceHelper.getAttributeColor(context, R.attr.statuslightAlarm)  else resourceHelper.getAttributeColor(context, R.attr.defaultTextColor))
 
         binding.errors.text =
             rileyLinkServiceData.rileyLinkError?.let {
@@ -273,7 +274,7 @@ class MedtronicFragment : DaggerFragment() {
             val min = (System.currentTimeMillis() - medtronicPumpStatus.lastConnection) / 1000 / 60
             if (medtronicPumpStatus.lastConnection + 60 * 1000 > System.currentTimeMillis()) {
                 binding.lastConnection.setText(R.string.medtronic_pump_connected_now)
-                binding.lastConnection.setTextColor(Color.WHITE)
+                binding.lastConnection.setTextColor(resourceHelper.getAttributeColor(context, R.attr.defaultTextColor))
             } else if (medtronicPumpStatus.lastConnection + 30 * 60 * 1000 < System.currentTimeMillis()) {
 
                 if (min < 60) {
@@ -289,10 +290,10 @@ class MedtronicFragment : DaggerFragment() {
                     binding.lastConnection.text = (resourceHelper.gq(R.plurals.duration_days, d, d) + " "
                         + resourceHelper.gs(R.string.ago))
                 }
-                binding.lastConnection.setTextColor(Color.RED)
+                binding.lastConnection.setTextColor(resourceHelper.getAttributeColor(context, R.attr.statuslightAlarm))
             } else {
                 binding.lastConnection.text = minAgo
-                binding.lastConnection.setTextColor(Color.WHITE)
+                binding.lastConnection.setTextColor(resourceHelper.getAttributeColor(context, R.attr.defaultTextColor))
             }
         }
 
@@ -311,6 +312,7 @@ class MedtronicFragment : DaggerFragment() {
             binding.lastBolus.text = resourceHelper.gs(R.string.mdt_last_bolus, bolus, unit, ago)
         } else {
             binding.lastBolus.text = ""
+            binding.lastBolus.setTextColor(resourceHelper.getAttributeColor(context, R.attr.defaultTextColor))
         }
 
         // base basal rate
@@ -332,11 +334,16 @@ class MedtronicFragment : DaggerFragment() {
         } else {
             binding.pumpStateBattery.text = "{fa-battery-" + medtronicPumpStatus.batteryRemaining / 25 + "}  " + medtronicPumpStatus.batteryRemaining + "%" + String.format("  (%.2f V)", medtronicPumpStatus.batteryVoltage)
         }
-        warnColors.setColorInverse(binding.pumpStateBattery, medtronicPumpStatus.batteryRemaining.toDouble(), 25.0, 10.0)
+        warnColors.setColorInverse(binding.pumpStateBattery, medtronicPumpStatus.batteryRemaining.toDouble(), 25.0, 10.0, resourceHelper.getAttributeColor(context, R.attr.statuslightNormal),
+            resourceHelper.getAttributeColor(context, R.attr.statuslightWarning),
+            resourceHelper.getAttributeColor(context, R.attr.statuslightAlarm))
+
 
         // reservoir
         binding.reservoir.text = resourceHelper.gs(R.string.reservoirvalue, medtronicPumpStatus.reservoirRemainingUnits, medtronicPumpStatus.reservoirFullUnits)
-        warnColors.setColorInverse(binding.reservoir, medtronicPumpStatus.reservoirRemainingUnits, 50.0, 20.0)
+        warnColors.setColorInverse(binding.reservoir, medtronicPumpStatus.reservoirRemainingUnits, 50.0, 20.0, resourceHelper.getAttributeColor(context, R.attr.statuslightNormal),
+            resourceHelper.getAttributeColor(context, R.attr.statuslightWarning),
+            resourceHelper.getAttributeColor(context, R.attr.statuslightAlarm))
 
         medtronicPumpPlugin.rileyLinkService.verifyConfiguration()
         binding.errors.text = medtronicPumpStatus.errorInfo

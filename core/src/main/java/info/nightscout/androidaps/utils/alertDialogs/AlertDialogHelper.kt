@@ -8,15 +8,15 @@ import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
 import androidx.annotation.StyleRes
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.view.ContextThemeWrapper
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import info.nightscout.androidaps.core.R
 
 object AlertDialogHelper {
 
     @Suppress("FunctionName")
     fun Builder(context: Context, @StyleRes themeResId: Int = R.style.AppTheme) =
-        AlertDialog.Builder(ContextThemeWrapper(context, themeResId))
+        MaterialAlertDialogBuilder(ContextThemeWrapper(context, themeResId))
 
     fun buildCustomTitle(context: Context, title: String,
                          @DrawableRes iconResource: Int = R.drawable.ic_check_while_48dp,

@@ -132,7 +132,8 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
         override fun onBindViewHolder(holder: UserEntryViewHolder, position: Int) {
             val current = entries[position]
             holder.binding.date.text = dateUtil.dateAndTimeAndSecondsString(current.timestamp)
-            holder.binding.action.text = userEntryPresentationHelper.actionToColoredString(current.action)
+            holder.binding.action.text =
+                view?.let { userEntryPresentationHelper.actionToColoredString(it.context, current.action) }
             holder.binding.s.text = current.note
             holder.binding.s.visibility = if (current.note != "") View.VISIBLE else View.GONE
             holder.binding.iconSource.setImageResource(userEntryPresentationHelper.iconId(current.source))

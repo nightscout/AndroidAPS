@@ -4,9 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingStart="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingEnd="@dimen/activity_horizontal_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context=".plugins.general.overview.activities.QuickWizardListActivity">
 
@@ -18,10 +18,13 @@
         android:textAlignment="center"
         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/add_button"
+        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:layout_marginEnd="2dp"
         android:text="@string/overview_editquickwizardlistactivity_add" />
 
     <androidx.recyclerview.widget.RecyclerView

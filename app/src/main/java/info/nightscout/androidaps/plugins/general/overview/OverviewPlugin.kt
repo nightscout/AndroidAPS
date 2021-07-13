@@ -311,5 +311,4 @@ class OverviewPlugin @Inject constructor(
 
         overviewBus.send(EventUpdateOverview(from, OverviewData.Property.IOB_COB))
     }
-
 }

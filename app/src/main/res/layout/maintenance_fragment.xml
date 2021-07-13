@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <Button
+        <info.nightscout.androidaps.utils.ui.SingleClickButton
             android:id="@+id/nav_logsettings"
             style="?android:attr/buttonStyle"
             android:layout_width="fill_parent"
@@ -20,10 +20,9 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="3dp"
             android:layout_weight="0.5"
-            android:text="@string/nav_logsettings"
-            android:textColor="@color/colorTreatmentButton" />
+            android:text="@string/nav_logsettings" />
 
-       <Button
+        <info.nightscout.androidaps.utils.ui.SingleClickButton
             android:id="@+id/log_send"
             style="?android:attr/buttonStyle"
             android:layout_width="fill_parent"
@@ -33,10 +32,9 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="3dp"
             android:layout_weight="0.5"
-            android:text="@string/send_all_logs"
-            android:textColor="@color/colorTreatmentButton" />
+            android:text="@string/send_all_logs" />
 
-        <Button
+        <info.nightscout.androidaps.utils.ui.SingleClickButton
             android:id="@+id/log_delete"
             style="?android:attr/buttonStyle"
             android:layout_width="fill_parent"
@@ -46,10 +44,9 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="3dp"
             android:layout_weight="0.5"
-            android:text="@string/delete_logs"
-            android:textColor="@color/colorTreatmentButton" />
+            android:text="@string/delete_logs" />
 
-        <Button
+        <info.nightscout.androidaps.utils.ui.SingleClickButton
             android:id="@+id/nav_export"
             style="?android:attr/buttonStyle"
             android:layout_width="fill_parent"
@@ -59,10 +56,9 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="3dp"
             android:layout_weight="0.5"
-            android:text="@string/nav_export"
-            android:textColor="@color/colorTreatmentButton" />
+            android:text="@string/nav_export" />
 
-        <Button
+        <info.nightscout.androidaps.utils.ui.SingleClickButton
             android:id="@+id/nav_import"
             style="?android:attr/buttonStyle"
             android:layout_width="fill_parent"
@@ -72,11 +68,10 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="3dp"
             android:layout_weight="0.5"
-            android:text="@string/nav_import"
-            android:textColor="@color/colorTreatmentButton" />
+            android:text="@string/nav_import" />
 
 
-        <Button
+        <info.nightscout.androidaps.utils.ui.SingleClickButton
             android:id="@+id/export_csv"
             style="?android:attr/buttonStyle"
             android:layout_width="fill_parent"
@@ -86,8 +81,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="3dp"
             android:layout_weight="0.5"
-            android:text="@string/ue_export_to_csv"
-            android:textColor="@color/colorTreatmentButton" />
+            android:text="@string/ue_export_to_csv"/>
 
         <Button
             android:id="@+id/nav_resetdb"
@@ -99,8 +93,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="3dp"
             android:layout_weight="0.5"
-            android:text="@string/nav_resetdb"
-            android:textColor="@color/colorTreatmentButton" />
+            android:text="@string/nav_resetdb" />
 
     </LinearLayout>
 

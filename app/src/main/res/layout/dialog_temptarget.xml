@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@color/dialog_title_background"
+            android:background="?attr/dialogTitleBackground"
             android:orientation="horizontal"
             android:padding="5dp">
 
@@ -51,6 +51,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="1dp"
             android:orientation="horizontal">
 
             <TextView
@@ -136,8 +137,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp" />
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp" />
 
         </LinearLayout>
 
@@ -154,8 +155,8 @@
                 android:layout_marginEnd="-4dp"
                 android:layout_weight="0.5"
                 android:drawableTop="@drawable/ic_target_cancel"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
                 android:text="@string/cancel"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/tempTargetConfirmation"
@@ -169,11 +170,11 @@
                 android:layout_marginEnd="-4dp"
                 android:layout_weight="0.5"
                 android:drawableTop="@drawable/ic_target_eatingsoon"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
                 android:text="@string/eatingsoon"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@color/carbs"
+                android:textColor="?attr/carbsColor"
                 android:textSize="11sp" />
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
@@ -184,11 +185,11 @@
                 android:layout_marginEnd="-4dp"
                 android:layout_weight="0.5"
                 android:drawableTop="@drawable/ic_target_activity"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
                 android:text="@string/activity"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@color/exercise"
+                android:textColor="@color/cyan_blue"
                 android:textSize="11sp" />
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
@@ -198,11 +199,11 @@
                 android:layout_height="fill_parent"
                 android:layout_weight="0.5"
                 android:drawableTop="@drawable/ic_target_hypo"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
                 android:text="@string/hypo"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@color/low"
+                android:textColor="@color/red"
                 android:textSize="11sp" />
 
         </LinearLayout>

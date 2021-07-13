@@ -20,7 +20,8 @@
         android:scaleX="2"
         android:scaleY="2"
         app:srcCompat="@drawable/ic_cp_age_cannula"
-        android:contentDescription="@string/cannula" />
+        android:contentDescription="@string/cannula"
+        app:tint="?attr/iconColorToolbar" />
 
     <TextView
         android:id="@+id/cannula_age"
@@ -39,6 +40,7 @@
         android:scaleType="centerInside"
         android:scaleX="1.8"
         android:scaleY="1.8"
+        app:tint="?attr/iconColorToolbar"
         app:srcCompat="@drawable/ic_cp_age_insulin"
         android:contentDescription="@string/insulin_label" />
 
@@ -66,6 +68,7 @@
         android:scaleType="centerInside"
         android:scaleX="2"
         android:scaleY="2"
+        app:tint="?attr/iconColorToolbar"
         app:srcCompat="@drawable/ic_cp_age_sensor"
         android:contentDescription="@string/careportal_sensor_label" />
 
@@ -86,6 +89,7 @@
         android:scaleType="centerInside"
         android:scaleX="2"
         android:scaleY="2"
+        app:tint="?attr/iconColorToolbar"
         app:srcCompat="@drawable/ic_cp_age_battery"
         android:contentDescription="@string/battery_label" />
 

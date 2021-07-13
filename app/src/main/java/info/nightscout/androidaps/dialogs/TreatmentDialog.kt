@@ -29,7 +29,7 @@ import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.SafeParse
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.extensions.formatColor
+import info.nightscout.androidaps.utils.extensions.formatColorFromAttribute
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
@@ -41,7 +41,6 @@ import kotlin.math.abs
 class TreatmentDialog : DialogFragmentWithDate() {
 
     @Inject lateinit var constraintChecker: ConstraintChecker
-    @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var ctx: Context
@@ -123,16 +122,16 @@ class TreatmentDialog : DialogFragmentWithDate() {
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(carbs)).value()
 
         if (insulinAfterConstraints > 0) {
-            actions.add(resourceHelper.gs(R.string.bolus) + ": " + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump, resourceHelper).formatColor(resourceHelper, R.color.bolus))
+            actions.add(resourceHelper.gs(R.string.bolus) + ": " + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump, resourceHelper).formatColorFromAttribute( resourceHelper.getAttributeColor(context, R.attr.bolus )))
             if (recordOnlyChecked)
-                actions.add(resourceHelper.gs(R.string.bolusrecordedonly).formatColor(resourceHelper, R.color.warning))
+                actions.add(resourceHelper.gs(R.string.bolusrecordedonly).formatColorFromAttribute( resourceHelper.getAttributeColor(context, R.attr.dialogUrgent )))
             if (abs(insulinAfterConstraints - insulin) > pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))
-                actions.add(resourceHelper.gs(R.string.bolusconstraintappliedwarn, insulin, insulinAfterConstraints).formatColor(resourceHelper, R.color.warning))
+                actions.add(resourceHelper.gs(R.string.bolusconstraintappliedwarn, insulin, insulinAfterConstraints).formatColorFromAttribute( resourceHelper.getAttributeColor(context, R.attr.dialogUrgent )))
         }
         if (carbsAfterConstraints > 0) {
-            actions.add(resourceHelper.gs(R.string.carbs) + ": " + resourceHelper.gs(R.string.format_carbs, carbsAfterConstraints).formatColor(resourceHelper, R.color.carbs))
+            actions.add(resourceHelper.gs(R.string.carbs) + ": " + resourceHelper.gs(R.string.format_carbs, carbsAfterConstraints).formatColorFromAttribute( resourceHelper.getAttributeColor(context, R.attr.carbsColor )))
             if (carbsAfterConstraints != carbs)
-                actions.add(resourceHelper.gs(R.string.carbsconstraintapplied).formatColor(resourceHelper, R.color.warning))
+                actions.add(resourceHelper.gs(R.string.carbsconstraintapplied).formatColorFromAttribute( resourceHelper.getAttributeColor(context, R.attr.dialogUrgent )))
         }
         if (insulinAfterConstraints > 0 || carbsAfterConstraints > 0) {
             activity?.let { activity ->

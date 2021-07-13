@@ -12,8 +12,9 @@
         android:id="@+id/header"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:background="@color/activity_title_background"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center"
+        android:background="?attr/activity_title_background"
         android:orientation="horizontal"
         android:padding="5dp"
         app:layout_constraintBottom_toTopOf="@+id/spinner"
@@ -87,20 +88,23 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/reload"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/status" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/reload"
+        android:layout_below="@+id/status" />
 
-    <Button
+    <info.nightscout.androidaps.utils.ui.SingleClickButton
         android:id="@+id/reload"
-        style="@style/Widget.AppCompat.Button"
-        android:layout_width="0dp"
+        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="1dp"
-        android:drawableStart="@drawable/ic_actions_refill"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="2dp"
+        android:layout_marginEnd="2dp"
+        app:icon="@drawable/ic_actions_refill"
+        app:iconTint="?attr/iconColorToolbar"
+        app:iconGravity="start"
+        android:textAlignment="center"
         android:text="@string/reload"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

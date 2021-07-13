@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.dialogs
 
+import android.graphics.PorterDuff
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Spanned
 import android.view.LayoutInflater
@@ -7,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import androidx.core.content.ContextCompat
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.Constants
@@ -74,6 +77,13 @@ class ProfileViewerDialog : DaggerDialogFragment() {
 
         dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
+
+        val drawable: Drawable? = context?.let { ContextCompat.getDrawable(it, R.drawable.dialog) }
+        if (drawable != null) {
+            drawable.setColorFilter( resourceHelper.getAttributeColor(context, R.attr.windowBackground ), PorterDuff.Mode.SRC_IN)
+        }
+        dialog?.window?.setBackgroundDrawable(drawable)
+
         isCancelable = true
         dialog?.setCanceledOnTouchOutside(false)
 
@@ -84,7 +94,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.closeLayout.close.setOnClickListener { dismiss() }
+        binding.closeLayoutProfileviewer.closeButton.setOnClickListener { dismiss() }
 
         val profile: ProfileSealed?
         val profile2: ProfileSealed?
@@ -193,20 +203,20 @@ class ProfileViewerDialog : DaggerDialogFragment() {
     }
 
     private fun formatColors(label: String, text1: String, text2: String, units: String): String {
-        var s = "<font color='${resourceHelper.gc(R.color.white)}'>$label</font>"
+        var s = "<font color='${resourceHelper.getAttributeColor(context, R.attr.profilViewerLabel)}'>$label</font>"
         s += "    "
-        s += "<font color='${resourceHelper.gc(R.color.tempbasal)}'>$text1</font>"
+        s += "<font color='${resourceHelper.getAttributeColor(context, R.attr.lightblue)}'>$text1</font>"
         s += "    "
-        s += "<font color='${resourceHelper.gc(R.color.examinedProfile)}'>$text2</font>"
+        s += "<font color='${resourceHelper.getAttributeColor(context, R.attr.dialogUrgent)}'>$text2</font>"
         s += "    "
-        s += "<font color='${resourceHelper.gc(R.color.white)}'>$units</font>"
+        s += "<font color='${resourceHelper.getAttributeColor(context, R.attr.profilViewerLabel)}'>$units</font>"
         return s
     }
 
     private fun formatColors(text1: String, text2: String): String {
-        var s = "<font color='${resourceHelper.gc(R.color.tempbasal)}'>$text1</font>"
+        var s = "<font color='${resourceHelper.getAttributeColor(context, R.attr.lightblue)}'>$text1</font>"
         s += "<BR/>"
-        s += "<font color='${resourceHelper.gc(R.color.examinedProfile)}'>$text2</font>"
+        s += "<font color='${resourceHelper.getAttributeColor(context, R.attr.dialogUrgent)}'>$text2</font>"
         return s
     }
 

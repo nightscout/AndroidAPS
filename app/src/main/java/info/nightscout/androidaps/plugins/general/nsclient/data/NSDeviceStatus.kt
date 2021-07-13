@@ -158,7 +158,7 @@ class NSDeviceStatus @Inject constructor(
 
             //String[] ALL_STATUS_FIELDS = {"reservoir", "battery", "clock", "status", "device"};
             val string = StringBuilder()
-                .append("<span style=\"color:${resourceHelper.gcs(R.color.defaulttext)}\">")
+                .append("<span style=\"color:${resourceHelper.getAttributeColor(null, R.attr.defaultTextColor)}\">")
                 .append(resourceHelper.gs(R.string.pump))
                 .append(": </span>")
 
@@ -267,7 +267,7 @@ class NSDeviceStatus @Inject constructor(
     val openApsStatus: Spanned
         get() {
             val string = StringBuilder()
-                .append("<span style=\"color:${resourceHelper.gcs(R.color.defaulttext)}\">")
+                .append("<span style=\"color:${resourceHelper.getAttributeColor(null, R.attr.defaultTextColor)}\">")
                 .append(resourceHelper.gs(R.string.openaps_short))
                 .append(": </span>")
 
@@ -346,7 +346,7 @@ class NSDeviceStatus @Inject constructor(
     val uploaderStatusSpanned: Spanned
         get() {
             val string = StringBuilder()
-            string.append("<span style=\"color:${resourceHelper.gcs(R.color.defaulttext)}\">")
+            string.append("<span style=\"color:${resourceHelper.getAttributeColor(null, R.attr.defaultTextColor)}\">")
             string.append(resourceHelper.gs(R.string.uploader_short))
             string.append(": </span>")
             val iterator: Iterator<*> = uploaderMap.entries.iterator()

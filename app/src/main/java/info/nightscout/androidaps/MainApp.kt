@@ -5,6 +5,8 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import android.os.Build
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
@@ -73,6 +75,7 @@ class MainApp : DaggerApplication() {
         disposable += compatDBHelper.dbChangeDisposable()
         registerActivityLifecycleCallbacks(activityMonitor)
         JodaTimeAndroid.init(this)
+        selectThemeMode()
         aapsLogger.debug("Version: " + BuildConfig.VERSION_NAME)
         aapsLogger.debug("BuildVersion: " + BuildConfig.BUILDVERSION)
         aapsLogger.debug("Remote: " + BuildConfig.REMOTE)
@@ -87,6 +90,14 @@ class MainApp : DaggerApplication() {
         keepAliveManager.setAlarm(this)
         doMigrations()
         uel.log(UserEntry.Action.START_AAPS, UserEntry.Sources.Aaps)
+    }
+
+    private fun selectThemeMode() {
+        when(sp.getString(R.string.key_use_dark_mode, "dark")) {
+            sp.getString(R.string.value_dark_theme, "dark") -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            sp.getString(R.string.value_light_theme, "light") -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        }
     }
 
     private fun doMigrations() {

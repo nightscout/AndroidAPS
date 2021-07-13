@@ -19,7 +19,6 @@ import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import info.nightscout.androidaps.databinding.DialogCarbsBinding
-import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.IobCobCalculator
@@ -31,6 +30,7 @@ import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.queue.CommandQueue
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.androidaps.utils.extensions.formatColorFromAttribute
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
@@ -43,7 +43,6 @@ import kotlin.math.max
 class CarbsDialog : DialogFragmentWithDate() {
 
     @Inject lateinit var ctx: Context
-    @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var profileFunction: ProfileFunction
@@ -187,29 +186,29 @@ class CarbsDialog : DialogFragmentWithDate() {
 
         val activitySelected = binding.activityTt.isChecked
         if (activitySelected)
-            actions.add(resourceHelper.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(activityTT) + " " + unitLabel + " (" + resourceHelper.gs(R.string.format_mins, activityTTDuration) + ")").formatColor(resourceHelper, R.color.tempTargetConfirmation))
+            actions.add(resourceHelper.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(activityTT) + " " + unitLabel + " (" + resourceHelper.gs(R.string.format_mins, activityTTDuration) + ")").formatColorFromAttribute(resourceHelper.getAttributeColor(context,R.attr.tempTargetConfirmation )))
         val eatingSoonSelected = binding.eatingSoonTt.isChecked
         if (eatingSoonSelected)
-            actions.add(resourceHelper.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(eatingSoonTT) + " " + unitLabel + " (" + resourceHelper.gs(R.string.format_mins, eatingSoonTTDuration) + ")").formatColor(resourceHelper, R.color.tempTargetConfirmation))
+            actions.add(resourceHelper.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(eatingSoonTT) + " " + unitLabel + " (" + resourceHelper.gs(R.string.format_mins, eatingSoonTTDuration) + ")").formatColorFromAttribute(resourceHelper.getAttributeColor(context,R.attr.tempTargetConfirmation )))
         val hypoSelected = binding.hypoTt.isChecked
         if (hypoSelected)
-            actions.add(resourceHelper.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(hypoTT) + " " + unitLabel + " (" + resourceHelper.gs(R.string.format_mins, hypoTTDuration) + ")").formatColor(resourceHelper, R.color.tempTargetConfirmation))
-
+            actions.add(resourceHelper.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(hypoTT) + " " + unitLabel + " (" + resourceHelper.gs(R.string.format_mins, hypoTTDuration) + ")").formatColorFromAttribute(resourceHelper.getAttributeColor(context,R.attr.tempTargetConfirmation )))
         val timeOffset = binding.time.value.toInt()
         eventTime -= eventTime % 1000
         val time = eventTime + timeOffset * 1000 * 60
         if (timeOffset != 0)
             actions.add(resourceHelper.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(time))
         if (useAlarm && carbs > 0 && timeOffset > 0)
-            actions.add(resourceHelper.gs(R.string.alarminxmin, timeOffset).formatColor(resourceHelper, R.color.info))
+            actions.add(resourceHelper.gs(R.string.alarminxmin, timeOffset).formatColorFromAttribute(R.attr.info))
         val duration = binding.duration.value.toInt()
         if (duration > 0)
             actions.add(resourceHelper.gs(R.string.duration) + ": " + duration + resourceHelper.gs(R.string.shorthour))
         if (carbsAfterConstraints > 0) {
-            actions.add(resourceHelper.gs(R.string.carbs) + ": " + "<font color='" + resourceHelper.gc(R.color.carbs) + "'>" + resourceHelper.gs(R.string.format_carbs, carbsAfterConstraints) + "</font>")
+            actions.add(resourceHelper.gs(R.string.carbs) + ": " + "<font color='" + resourceHelper.getAttributeColor(context,R.attr.carbsColor ) + "'>" + resourceHelper.gs(R.string.format_carbs, carbsAfterConstraints) + "</font>")
             if (carbsAfterConstraints != carbs)
-                actions.add("<font color='" + resourceHelper.gc(R.color.warning) + "'>" + resourceHelper.gs(R.string.carbsconstraintapplied) + "</font>")
+                actions.add("<font color='" + resourceHelper.getAttributeColor(context,R.attr.dialogUrgent ) + "'>" + resourceHelper.gs(R.string.carbsconstraintapplied) + "</font>")
         }
+
         val notes = binding.notesLayout.notes.text.toString()
         if (notes.isNotEmpty())
             actions.add(resourceHelper.gs(R.string.notes_label) + ": " + notes)

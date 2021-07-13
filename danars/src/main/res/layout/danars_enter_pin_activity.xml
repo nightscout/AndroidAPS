@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@color/activity_title_background"
+        android:background="?attr/activity_title_background"
         android:orientation="horizontal"
         android:padding="5dp">
 
@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/pairing"
-            app:srcCompat="@drawable/ic_bluetooth_white_48dp" />
+            app:srcCompat="@drawable/ic_bluetooth_48dp" />
 
         <TextView
             android:layout_width="match_parent"

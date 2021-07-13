@@ -209,7 +209,7 @@ class LocalProfileFragment : DaggerFragment() {
         @Suppress("SetTextI18n")
         binding.units.text = resourceHelper.gs(R.string.units_colon) + " " + (if (currentProfile.mgdl) resourceHelper.gs(R.string.mgdl) else resourceHelper.gs(R.string.mmol))
 
-        binding.profileswitch.setOnClickListener {
+        binding.profileSwitchlocal.setOnClickListener {
             ProfileSwitchDialog()
                 .also { it.arguments = Bundle().also { bundle -> bundle.putInt("profileIndex", localProfilePlugin.currentProfileIndex) } }
                 .show(childFragmentManager, "NewNSTreatmentDialog")
@@ -264,19 +264,19 @@ class LocalProfileFragment : DaggerFragment() {
         val isValid = localProfilePlugin.isValidEditState()
         val isEdited = localProfilePlugin.isEdited
         if (isValid) {
-            this.view?.setBackgroundColor(resourceHelper.gc(R.color.ok_background))
+            this.view?.setBackgroundColor(resourceHelper.getAttributeColor(context,R.attr.okBackground))
 
             if (isEdited) {
                 //edited profile -> save first
-                binding.profileswitch.visibility = View.GONE
+                binding.profileSwitchlocal.visibility = View.GONE
                 binding.save.visibility = View.VISIBLE
             } else {
-                binding.profileswitch.visibility = View.VISIBLE
+                binding.profileSwitchlocal.visibility = View.VISIBLE
                 binding.save.visibility = View.GONE
             }
         } else {
-            this.view?.setBackgroundColor(resourceHelper.gc(R.color.error_background))
-            binding.profileswitch.visibility = View.GONE
+            this.view?.setBackgroundColor(resourceHelper.getAttributeColor(context,R.attr.errorBackground))
+            binding.profileSwitchlocal.visibility = View.GONE
             binding.save.visibility = View.GONE //don't save an invalid profile
         }
 
@@ -289,12 +289,12 @@ class LocalProfileFragment : DaggerFragment() {
     }
 
     private fun processVisibilityOnClick(selected: View) {
-        binding.diaTab.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        binding.icTab.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        binding.isfTab.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        binding.basalTab.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        binding.targetTab.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        selected.setBackgroundColor(resourceHelper.gc(R.color.tabBgColorSelected))
+        binding.diaTab.setBackgroundColor(resourceHelper.getAttributeColor(context,R.attr.defaultBackground))
+        binding.icTab.setBackgroundColor(resourceHelper.getAttributeColor(context,R.attr.defaultBackground))
+        binding.isfTab.setBackgroundColor(resourceHelper.getAttributeColor(context,R.attr.defaultBackground))
+        binding.basalTab.setBackgroundColor(resourceHelper.getAttributeColor(context,R.attr.defaultBackground))
+        binding.targetTab.setBackgroundColor(resourceHelper.getAttributeColor(context,R.attr.defaultBackground))
+        selected.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.tabBgColorSelected))
         binding.diaPlaceholder.visibility = View.GONE
         binding.ic.visibility = View.GONE
         binding.isf.visibility = View.GONE

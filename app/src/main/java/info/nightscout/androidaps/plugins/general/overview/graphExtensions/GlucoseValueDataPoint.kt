@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.general.overview.graphExtensions
 
+import android.content.Context
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.entities.GlucoseValue
@@ -36,27 +38,26 @@ class GlucoseValueDataPoint @Inject constructor(
 
     override fun getSize(): Float = 1f
 
-    override fun getColor(): Int {
+    override fun getColor(context: Context): Int {
         val units = profileFunction.getUnits()
         val lowLine = defaultValueHelper.determineLowLine()
         val highLine = defaultValueHelper.determineHighLine()
         return when {
             isPrediction                   -> predictionColor
-            valueToUnits(units) < lowLine  -> resourceHelper.gc(R.color.low)
-            valueToUnits(units) > highLine -> resourceHelper.gc(R.color.high)
-            else                           -> resourceHelper.gc(R.color.inrange)
+            valueToUnits(units) < lowLine  -> resourceHelper.getAttributeColor(context, R.attr.bgLow)
+            valueToUnits(units) > highLine -> resourceHelper.getAttributeColor(context, R.attr.bgHigh)
+            else                           -> resourceHelper.getAttributeColor(context, R.attr.bgInRange)
         }
     }
 
     val predictionColor: Int
         get() {
             return when (data.sourceSensor) {
-                GlucoseValue.SourceSensor.IOB_PREDICTION  -> resourceHelper.gc(R.color.iob)
-                GlucoseValue.SourceSensor.COB_PREDICTION   -> resourceHelper.gc(R.color.cob)
-                GlucoseValue.SourceSensor.A_COB_PREDICTION -> -0x7f000001 and resourceHelper.gc(R.color.cob)
-                GlucoseValue.SourceSensor.UAM_PREDICTION   -> resourceHelper.gc(R.color.uam)
-                GlucoseValue.SourceSensor.ZT_PREDICTION   -> resourceHelper.gc(R.color.zt)
-                else                                      -> R.color.white
+                GlucoseValue.SourceSensor.IOB_PREDICTION -> resourceHelper.getAttributeColor(null, R.attr.iobColor)
+                GlucoseValue.SourceSensor.COB_PREDICTION -> -0x7f000001 and resourceHelper.getAttributeColor(null, R.attr.cobColor)
+                GlucoseValue.SourceSensor.UAM_PREDICTION ->  resourceHelper.getAttributeColor(null, R.attr.uamColor)
+                GlucoseValue.SourceSensor.ZT_PREDICTION -> resourceHelper.getAttributeColor(null, R.attr.ztColor)
+                else                                      -> resourceHelper.getAttributeColor(null, R.attr.defaultColor)
             }
         }
 

@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="4dp"
-            app:tint="?android:attr/colorAccent"
+            android:tint="?android:attr/colorAccent"
             app:srcCompat="@drawable/ic_visibility" />
     </LinearLayout>
 

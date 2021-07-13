@@ -104,8 +104,7 @@
                 android:layout_marginTop="3dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginBottom="3dp"
-                android:text="@string/smscommunicator_otp_reset_btn"
-                android:textColor="@color/colorTreatmentButton" />
+                android:text="@string/smscommunicator_otp_reset_btn" />
 
         </LinearLayout>
     </ScrollView>

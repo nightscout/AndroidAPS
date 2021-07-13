@@ -24,7 +24,7 @@ import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.extensions.formatColor
+import info.nightscout.androidaps.utils.extensions.formatColorFromAttribute
 import info.nightscout.androidaps.utils.extensions.toSignedString
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.*
@@ -41,7 +41,6 @@ import kotlin.math.max
 class InsulinDialog : DialogFragmentWithDate() {
 
     @Inject lateinit var constraintChecker: ConstraintChecker
-    @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var commandQueue: CommandQueueProvider
@@ -157,16 +156,16 @@ class InsulinDialog : DialogFragmentWithDate() {
         val eatingSoonChecked = binding.startEatingSoonTt.isChecked
 
         if (insulinAfterConstraints > 0) {
-            actions.add(resourceHelper.gs(R.string.bolus) + ": " + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump, resourceHelper).formatColor(resourceHelper, R.color.bolus))
+            actions.add(resourceHelper.gs(R.string.bolus) + ": " + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump, resourceHelper).formatColorFromAttribute( resourceHelper.getAttributeColor(context, R.attr.bolus )))
             if (recordOnlyChecked)
-                actions.add(resourceHelper.gs(R.string.bolusrecordedonly).formatColor(resourceHelper, R.color.warning))
+                actions.add(resourceHelper.gs(R.string.bolusrecordedonly).formatColorFromAttribute( resourceHelper.getAttributeColor(context, R.attr.dialogUrgent )))
             if (abs(insulinAfterConstraints - insulin) > pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))
-                actions.add(resourceHelper.gs(R.string.bolusconstraintappliedwarn, insulin, insulinAfterConstraints).formatColor(resourceHelper, R.color.warning))
+                actions.add(resourceHelper.gs(R.string.bolusconstraintappliedwarn, insulin, insulinAfterConstraints).formatColorFromAttribute( resourceHelper.getAttributeColor(context, R.attr.dialogUrgent )))
         }
         val eatingSoonTTDuration = defaultValueHelper.determineEatingSoonTTDuration()
         val eatingSoonTT = defaultValueHelper.determineEatingSoonTT()
         if (eatingSoonChecked)
-            actions.add(resourceHelper.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(eatingSoonTT) + " " + unitLabel + " (" + resourceHelper.gs(R.string.format_mins, eatingSoonTTDuration) + ")").formatColor(resourceHelper, R.color.tempTargetConfirmation))
+            actions.add(resourceHelper.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(eatingSoonTT) + " " + unitLabel + " (" + resourceHelper.gs(R.string.format_mins, eatingSoonTTDuration) + ")").formatColorFromAttribute( resourceHelper.getAttributeColor(context, R.attr.tempTargetConfirmation )))
 
         val timeOffset = binding.time.value.toInt()
         val time = dateUtil.now() + T.mins(timeOffset.toLong()).msecs()

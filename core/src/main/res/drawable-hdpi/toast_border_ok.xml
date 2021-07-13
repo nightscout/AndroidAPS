@@ -7,6 +7,6 @@
     <solid android:color="@color/background_floating_material_dark" />
     <stroke
         android:width="3dp"
-        android:color="@color/toastBorder" />
+        android:color="@color/plastic_grey" />
 </shape>
 

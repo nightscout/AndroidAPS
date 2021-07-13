@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="info.nightscout.androidaps.activities.HistoryBrowseActivity">
+    android:background="?attr/fragmentbackground"
+    tools:context="info.nightscout.androidaps.historyBrowser.HistoryBrowseActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
