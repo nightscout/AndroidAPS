@@ -1,12 +1,9 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlin_version = '1.5.10'
     ext {
-        // kotlin 1.5.0 prevents travis from pass
-        // remove @kotlin.ExperimentalStdlibApi everywhere when upgrade
-        kotlin_version = '1.4.32'
-        coreVersion = '1.5.0'
+        kotlin_version = '1.5.10'
+        coreVersion = '1.6.0'
         rxjava_version = '2.2.21'
         rxandroid_version = '2.1.1'
         rxkotlin_version = '2.4.0'
@@ -28,7 +25,7 @@ buildscript {
         work_version = '2.5.0'
 
         junit_version = '4.13.2'
-        mockitoVersion = '3.11.1'
+        mockitoVersion = '3.11.2'
         powermockVersion = '2.0.9'
         dexmakerVersion = "1.2"
         retrofit2Version = '2.9.0'
@@ -44,7 +41,7 @@ buildscript {
         maven { url "https://plugins.gradle.org/m2/" } // jacoco 0.2
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.1.0-alpha02'
+        classpath 'com.android.tools.build:gradle:4.2.2'
         classpath 'com.google.gms:google-services:4.3.8'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.7.1'
 
@@ -67,7 +64,6 @@ allprojects {
         mavenCentral()
         maven { url "https://maven.google.com" }
         maven { url 'https://jitpack.io' }
-        maven { url "https://google.bintray.com/flexbox-layout" }
         ivy {
             url 'https://github.com/'
             patternLayout {

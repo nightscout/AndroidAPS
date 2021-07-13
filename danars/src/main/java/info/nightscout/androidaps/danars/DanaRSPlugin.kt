@@ -8,6 +8,7 @@ import android.os.IBinder
 import android.text.format.DateFormat
 import androidx.preference.Preference
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.dana.DanaFragment
 import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.dana.comm.RecordTypes
 import info.nightscout.androidaps.danars.events.EventDanaRSDeviceChange
@@ -37,6 +38,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject
@@ -62,14 +64,16 @@ class DanaRSPlugin @Inject constructor(
     private val temporaryBasalStorage: TemporaryBasalStorage,
     private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil
-) : PumpPluginBase(PluginDescription()
-    .mainType(PluginType.PUMP)
-    .fragmentClass(info.nightscout.androidaps.dana.DanaFragment::class.java.name)
-    .pluginIcon(R.drawable.ic_danars_128)
-    .pluginName(R.string.danarspump)
-    .shortName(R.string.danarspump_shortname)
-    .preferencesId(R.xml.pref_danars)
-    .description(R.string.description_pump_dana_rs),
+) : PumpPluginBase(
+    PluginDescription()
+        .mainType(PluginType.PUMP)
+        .fragmentClass(DanaFragment::class.java.name)
+        .pluginIcon(R.drawable.ic_danai_128)
+        .pluginIcon2(R.drawable.ic_danars_128)
+        .pluginName(R.string.danarspump)
+        .shortName(R.string.danarspump_shortname)
+        .preferencesId(R.xml.pref_danars)
+        .description(R.string.description_pump_dana_rs),
     injector, aapsLogger, resourceHelper, commandQueue
 ), Pump, Dana, Constraints {
 
@@ -93,25 +97,21 @@ class DanaRSPlugin @Inject constructor(
         super.onStart()
         val intent = Intent(context, DanaRSService::class.java)
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
-        disposable.add(rxBus
+        disposable += rxBus
             .toObservable(EventAppExit::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ context.unbindService(mConnection) }, fabricPrivacy::logException)
-        )
-        disposable.add(rxBus
+        disposable += rxBus
             .toObservable(EventConfigBuilderChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe { danaPump.reset() }
-        )
-        disposable.add(rxBus
+        disposable += rxBus
             .toObservable(EventDanaRSDeviceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({
                 pumpSync.connectNewPump()
                 changePump()
-
             }, fabricPrivacy::logException)
-        )
         changePump() // load device name
     }
 
@@ -584,17 +584,9 @@ class DanaRSPlugin @Inject constructor(
         return pumpJson
     }
 
-    override fun manufacturer(): ManufacturerType {
-        return ManufacturerType.Sooil
-    }
-
-    override fun model(): PumpType {
-        return PumpType.DANA_RS
-    }
-
-    override fun serialNumber(): String {
-        return danaPump.serialNumber
-    }
+    override fun manufacturer(): ManufacturerType = ManufacturerType.Sooil
+    override fun model(): PumpType = danaPump.pumpType()
+    override fun serialNumber(): String = danaPump.serialNumber
 
     @Suppress("SpellCheckingInspection")
     override fun shortStatus(veryShort: Boolean): String {
