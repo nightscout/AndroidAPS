@@ -7,6 +7,8 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.callbacks.BleCommCallbacks
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.ConnectException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.CharacteristicType
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.Connected
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.Connection
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.Connection.Companion.STOP_CONNECTING_CHECK_INTERVAL_MS
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.ConnectionWaitCondition
 import java.math.BigInteger
@@ -15,7 +17,8 @@ import java.util.*
 class ServiceDiscoverer(
     private val logger: AAPSLogger,
     private val gatt: BluetoothGatt,
-    private val bleCallbacks: BleCommCallbacks
+    private val bleCallbacks: BleCommCallbacks,
+    private val connection: Connection
 ) {
 
     /***
@@ -33,7 +36,7 @@ class ServiceDiscoverer(
         }
         connectionWaitCond.stopConnection?.let {
             while (!bleCallbacks.waitForServiceDiscovery(STOP_CONNECTING_CHECK_INTERVAL_MS)) {
-                if (it.count == 0L) {
+                if (it.count == 0L || connection.connectionState() !is Connected)  {
                     throw ConnectException("stopConnecting called")
                 }
             }

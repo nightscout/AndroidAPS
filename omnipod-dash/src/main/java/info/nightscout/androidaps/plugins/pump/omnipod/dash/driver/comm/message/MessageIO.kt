@@ -35,7 +35,12 @@ class MessageIO(
 
     @Suppress("ReturnCount")
     fun sendMessage(msg: MessagePacket): MessageSendResult {
-        cmdBleIO.flushIncomingQueue()
+        val foundRTS = cmdBleIO.flushIncomingQueue()
+        if (foundRTS) {
+            val msg = receiveMessage()
+            aapsLogger.warn(LTag.PUMPBTCOMM, "sendMessage received message=$msg")
+            throw IllegalStateException("Received message while trying to send")
+        }
         dataBleIO.flushIncomingQueue()
 
         val rtsSendResult = cmdBleIO.sendAndConfirmPacket(BleCommandRTS.data)
@@ -219,6 +224,6 @@ class MessageIO(
     companion object {
 
         private const val MAX_PACKET_READ_TRIES = 4
-        private const val MESSAGE_READ_TIMEOUT_MS = 2500.toLong()
+        private const val MESSAGE_READ_TIMEOUT_MS = 5000.toLong()
     }
 }

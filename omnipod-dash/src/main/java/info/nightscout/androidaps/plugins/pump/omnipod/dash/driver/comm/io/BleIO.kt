@@ -11,6 +11,7 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.callbacks.BleCommCallbacks
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.callbacks.WriteConfirmationError
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.callbacks.WriteConfirmationSuccess
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.command.BleCommandRTS
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.*
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.TimeUnit
@@ -84,12 +85,17 @@ open class BleIO(
      * Called before sending a new message.
      * The incoming queues should be empty, so we log when they are not.
      */
-    fun flushIncomingQueue() {
+    open fun flushIncomingQueue(): Boolean {
+        var foundRTS = false
         do {
             val found = incomingPackets.poll()?.also {
-                aapsLogger.warn(LTag.PUMPBTCOMM, "BleIO: queue not empty, flushing: {${it.toHex()}")
+                aapsLogger.warn(LTag.PUMPBTCOMM, "BleIO: queue not empty, flushing: ${it.toHex()}")
+                if (it.isNotEmpty() && it[0] == BleCommandRTS.data[0]) {
+                    foundRTS = true
+                }
             }
         } while (found != null)
+        return foundRTS
     }
 
     /**
