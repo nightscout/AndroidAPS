@@ -157,6 +157,7 @@ data class UserEntry(
         DanaRC,             //No entry currently
         DanaRv2,            //No entry currently
         DanaRS,             //No entry currently
+        DiaconnG8,          //No entry currently
         Insight,            //No entry currently
         Combo,              //No entry currently
         Medtronic,          //No entry currently

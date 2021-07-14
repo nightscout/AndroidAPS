@@ -129,6 +129,7 @@ class UserEntryMapper {
         DanaRC (UserEntry.Sources.DanaRC),
         DanaRv2 (UserEntry.Sources.DanaRv2),
         DanaRS (UserEntry.Sources.DanaRS),
+        DiaconnG8 (UserEntry.Sources.DiaconnG8),
         Insight (UserEntry.Sources.Insight),
         Combo (UserEntry.Sources.Combo),
         Medtronic (UserEntry.Sources.Medtronic),
