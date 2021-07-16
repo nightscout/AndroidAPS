@@ -73,6 +73,7 @@ class DashInsertCannulaViewModel @Inject constructor(
                 },
                 onComplete = {
                     logger.debug("Pod activation part 2 completed")
+                    podStateManager.basalProgram = basalProgram
                     pumpSync.connectNewPump()
                     pumpSync.insertTherapyEventIfNewWithTimestamp(
                         timestamp = System.currentTimeMillis(),

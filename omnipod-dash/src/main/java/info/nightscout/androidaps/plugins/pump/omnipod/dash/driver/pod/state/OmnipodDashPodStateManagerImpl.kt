@@ -218,7 +218,9 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         }
 
     override var bluetoothConnectionState: OmnipodDashPodStateManager.BluetoothConnectionState
+        @Synchronized
         get() = podState.bluetoothConnectionState
+        @Synchronized
         set(bluetoothConnectionState) {
             podState.bluetoothConnectionState = bluetoothConnectionState
             rxBus.send(EventOmnipodDashPumpValuesChanged())

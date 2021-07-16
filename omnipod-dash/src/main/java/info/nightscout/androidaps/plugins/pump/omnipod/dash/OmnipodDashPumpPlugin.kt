@@ -200,11 +200,12 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     override fun isConnecting(): Boolean {
-        return stopConnecting != null && podStateManager.bluetoothConnectionState == OmnipodDashPodStateManager.BluetoothConnectionState.CONNECTING
+        return stopConnecting != null
     }
 
     override fun isHandshakeInProgress(): Boolean {
-        return stopConnecting != null
+        return stopConnecting != null &&
+            podStateManager.bluetoothConnectionState == OmnipodDashPodStateManager.BluetoothConnectionState.CONNECTED
     }
 
     override fun finishHandshaking() {
@@ -212,6 +213,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     override fun connect(reason: String) {
         aapsLogger.info(LTag.PUMP, "connect reason=$reason")
+        podStateManager.bluetoothConnectionState = OmnipodDashPodStateManager.BluetoothConnectionState.CONNECTING
         thread(
             start = true,
             name = "ConnectionThread",
@@ -437,7 +439,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         // TODO: what do we have to answer here if delivery is suspended?
         val running = podStateManager.basalProgram
         val equal = (mapProfileToBasalProgram(profile) == running)
-        aapsLogger.info(LTag.PUMP, "isThisProfileSet: $equal")
+        aapsLogger.info(LTag.PUMP, "set: $equal. profile=$profile, running=$running")
         return equal
     }
 
