@@ -181,7 +181,6 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     override fun isInitialized(): Boolean {
-        // TODO
         return true
     }
 
@@ -201,17 +200,15 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     override fun isConnecting(): Boolean {
-        // TODO
-        return stopConnecting != null
+        return stopConnecting != null && podStateManager.bluetoothConnectionState == OmnipodDashPodStateManager.BluetoothConnectionState.CONNECTING
     }
 
     override fun isHandshakeInProgress(): Boolean {
-        // TODO
-        return false
+        return stopConnecting != null
     }
 
     override fun finishHandshaking() {
-        // TODO
+
     }
 
     override fun connect(reason: String) {
@@ -337,8 +334,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 podStateManager.createActiveCommand(historyId, basalProgram = basalProgram)
             },
             command = omnipodManager.setBasalProgram(basalProgram, hasBasalBeepEnabled()).ignoreElements(),
-            post = failWhenUnconfirmed(deliverySuspended), // mark as failed even if it worked OK and try again vs. mark ok and
-            // deny later
+            post = failWhenUnconfirmed(deliverySuspended),
+            // mark as failed even if it worked OK and try again vs. mark ok and deny later
         ).toPumpEnactResult()
     }
 
