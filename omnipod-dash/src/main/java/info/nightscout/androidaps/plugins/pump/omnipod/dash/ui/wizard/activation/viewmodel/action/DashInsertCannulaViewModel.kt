@@ -15,8 +15,10 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.viewmodel.action.InsertCannulaViewModel
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.OmnipodDashManager
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertTrigger
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.mapProfileToBasalProgram
+import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.Single
 import io.reactivex.rxkotlin.subscribeBy
 import javax.inject.Inject
@@ -27,6 +29,7 @@ class DashInsertCannulaViewModel @Inject constructor(
     private val pumpSync: PumpSync,
     private val podStateManager: OmnipodDashPodStateManager,
     private val rxBus: RxBusWrapper,
+    private val sp: SP,
 
     injector: HasAndroidInjector,
     logger: AAPSLogger
@@ -50,7 +53,15 @@ class DashInsertCannulaViewModel @Inject constructor(
                 profile,
                 basalProgram
             )
-            val disposable = omnipodManager.activatePodPart2(basalProgram).subscribeBy(
+            val expirationReminderEnabled = sp.getBoolean(R.string.key_omnipod_common_expiration_reminder_enabled, true)
+            val expirationHours = sp.getInt(R.string.key_omnipod_common_expiration_reminder_hours_before_shutdown, 9)
+
+            val expirationHoursBeforeShutdown = if (expirationReminderEnabled)
+                expirationHours.toLong()
+            else
+                null
+
+            val disposable = omnipodManager.activatePodPart2(basalProgram, expirationHoursBeforeShutdown).subscribeBy(
                 onNext = { podEvent ->
                     logger.debug(
                         LTag.PUMP,
@@ -82,6 +93,7 @@ class DashInsertCannulaViewModel @Inject constructor(
                         pumpType = PumpType.OMNIPOD_DASH,
                         pumpSerial = podStateManager.uniqueId?.toString() ?: "n/a"
                     )
+                    podStateManager.updateExpirationAlertSettings(expirationReminderEnabled, expirationHours)
                     rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED))
                     source.onSuccess(PumpEnactResult(injector).success(true))
                 }

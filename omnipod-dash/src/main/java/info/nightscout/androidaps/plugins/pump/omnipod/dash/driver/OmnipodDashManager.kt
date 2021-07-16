@@ -15,7 +15,7 @@ interface OmnipodDashManager {
 
     fun activatePodPart1(lowReservoirAlertTrigger: AlertTrigger.ReservoirVolumeTrigger?): Observable<PodEvent>
 
-    fun activatePodPart2(basalProgram: BasalProgram): Observable<PodEvent>
+    fun activatePodPart2(basalProgram: BasalProgram, userConfiguredExpirationHours: Long?): Observable<PodEvent>
 
     fun getStatus(type: ResponseType.StatusResponseType): Observable<PodEvent>
 

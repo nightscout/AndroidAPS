@@ -70,7 +70,6 @@
             android:defaultValue="false"
             android:key="@string/key_omnipod_common_automatically_silence_alerts_enabled"
             android:title="@string/omnipod_common_preferences_automatically_silence_alerts" />
-
     </PreferenceCategory>
 
     <PreferenceCategory

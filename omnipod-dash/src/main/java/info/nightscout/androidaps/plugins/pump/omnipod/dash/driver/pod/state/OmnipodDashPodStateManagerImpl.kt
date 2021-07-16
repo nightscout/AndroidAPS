@@ -205,7 +205,6 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         }
 
     override val expiry: ZonedDateTime?
-        // TODO: Consider storing expiry datetime in pod state saving continuously recalculating to the same value
         get() {
             val podLifeInHours = podLifeInHours
             val minutesSinceActivation = podState.minutesSinceActivation
@@ -396,6 +395,32 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
                 source.onComplete()
             }
         }
+    }
+
+    override fun differentAlertSettings(
+        expirationReminderEnabled: Boolean,
+        expirationHours: Int,
+        lowReservoirAlertEnabled: Boolean,
+        lowReservoirAlertUnits: Int
+    ): Boolean {
+        return podState.expirationReminderEnabled == expirationReminderEnabled &&
+            podState.expirationHours == expirationHours &&
+            podState.lowReservoirAlertEnabled == lowReservoirAlertEnabled &&
+            podState.lowReservoirAlertUnits == lowReservoirAlertUnits
+    }
+
+    override fun updateExpirationAlertSettings(expirationReminderEnabled: Boolean, expirationHours: Int) :
+        Completable = Completable.defer{
+        podState.expirationReminderEnabled = expirationReminderEnabled
+        podState.expirationHours = expirationHours
+        Completable.complete()
+    }
+
+    override fun updateLowReservoirAlertSettings(lowReservoirAlertEnabled: Boolean, lowReservoirAlertUnits: Int):
+        Completable = Completable.defer {
+        podState.lowReservoirAlertEnabled = lowReservoirAlertEnabled
+        podState.lowReservoirAlertUnits = lowReservoirAlertUnits
+        Completable.complete()
     }
 
     @Synchronized
@@ -617,6 +642,11 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         var podLifeInHours: Short? = null
         var firstPrimeBolusVolume: Short? = null
         var secondPrimeBolusVolume: Short? = null
+
+        var expirationReminderEnabled: Boolean? = null
+        var expirationHours: Int? = null
+        var lowReservoirAlertEnabled: Boolean? = null
+        var lowReservoirAlertUnits: Int? = null
 
         var pulsesDelivered: Short? = null
         var pulsesRemaining: Short? = null
