@@ -7,6 +7,7 @@
     <string name="danars_waitingforpairing">In attesa di associare il micro</string>
     <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
+    <string name="description_pump_dana_rs">Integrazione dei microinfusori DANA Diabecare RS e Dana-i</string>
     <string name="maxbolusviolation">Violazione bolo massimo</string>
     <string name="commanderror">Errore comando</string>
     <string name="speederror">Errore velocità</string>
