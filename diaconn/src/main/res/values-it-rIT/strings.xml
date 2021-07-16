@@ -97,8 +97,12 @@
     <string name="diaconn_g8_loginjectorprime">Caricamento erogatore :%1$.2fU</string>
     <string name="diaconn_g8_logtubeprime">Caricamento cambio catetere :%1$.2fU</string>
     <string name="diaconn_g8_resetfactoryreset">Reset dopo ripristino impostazioni di fabbrica</string>
+    <string name="diaconn_g8_resetemergencyoff">Reset dopo Emergency Off</string>
+    <string name="diaconn_g8_resetbatteryreplacement">Reset dopo sostituzione batteria dell\'utente</string>
     <string name="diaconn_g8_resetaftercalibration">Reset dopo calibrazione</string>
+    <string name="diaconn_g8_resetpreshipment">Reset dopo la configurazione iniziale</string>
     <string name="diaconn_g8_resetunexpected">Reset sistema inatteso</string>
+    <string name="diaconn_g8_reasoncomplete">Completato</string>
     <string name="diaconn_g8_reasoninjectonblock">Blocco erogazione</string>
     <string name="diaconn_g8_reasonbatteryshortage">Carenza batteria</string>
     <string name="diaconn_g8_reasoninsulinshortage">Carenza insulina</string>
@@ -131,6 +135,7 @@
     <string name="diaconn_g8_errorcode_3">Impostazione non possibile - errore di specifica del protocollo.</string>
     <string name="diaconn_g8_errorcode_4">Pasti programmati, erogazione non possibile ora.</string>
     <string name="diaconn_g8_errorcode_6">Cancellato dal micro</string>
+    <string name="diaconn_g8_errorcode_7">Altre azioni in corso, limitazione impostazioni app.</string>
     <string name="diaconn_g8_errorcode_8">Durante l\'erogazione di un altro bolo, l\'erogazione è limitata.</string>
     <string name="diaconn_g8_errorcode_9">Richiedi di riprendere l\'erogazione della basale</string>
     <string name="diaconn_g8_errorcode_10">Cancellato a causa della mancata risposta del micro.</string>
