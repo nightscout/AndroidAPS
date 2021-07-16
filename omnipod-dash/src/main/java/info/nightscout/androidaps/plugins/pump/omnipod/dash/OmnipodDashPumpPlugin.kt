@@ -208,7 +208,6 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     override fun finishHandshaking() {
-
     }
 
     override fun connect(reason: String) {
@@ -400,10 +399,15 @@ class OmnipodDashPumpPlugin @Inject constructor(
             .observeOn(aapsSchedulers.main)
             .subscribe(
                 {
-                    if (it.isChanged(resourceHelper,
-                                     R.string.key_omnipod_common_expiration_reminder_enabled) ||
-                        it.isChanged(resourceHelper,
-                                     R.string.key_omnipod_common_expiration_reminder_hours_before_shutdown)) {
+                    if (it.isChanged(
+                            resourceHelper,
+                            R.string.key_omnipod_common_expiration_reminder_enabled
+                        ) ||
+                        it.isChanged(
+                                resourceHelper,
+                                R.string.key_omnipod_common_expiration_reminder_hours_before_shutdown
+                            )
+                    ) {
                         commandQueue.customCommand(CommandUpdateAlertConfiguration(), null)
                     }
                 },
@@ -1043,25 +1047,29 @@ class OmnipodDashPumpPlugin @Inject constructor(
         val expirationReminderEnabled = sp.getBoolean(R.string.key_omnipod_common_expiration_reminder_enabled, true)
         val expirationHours = sp.getInt(R.string.key_omnipod_common_expiration_reminder_hours_before_shutdown, 7)
         val lowReservoirAlertEnabled = sp.getBoolean(R.string.key_omnipod_common_low_reservoir_alert_enabled, true)
-        val lowReservoirAlertUnits = sp.getInt(R.string.key_omnipod_common_low_reservoir_alert_units ,10)
+        val lowReservoirAlertUnits = sp.getInt(R.string.key_omnipod_common_low_reservoir_alert_units, 10)
 
         if (!podStateManager.differentAlertSettings(
                 expirationReminderEnabled,
                 expirationHours,
                 lowReservoirAlertEnabled,
                 lowReservoirAlertUnits
-        )) {
+            )
+        ) {
             return PumpEnactResult(injector).success(true).enacted(false)
         }
 
         val podLifeLeft = Duration.between(ZonedDateTime.now(), podStateManager.expiry)
         val expiryAlertDelay = podLifeLeft.minus(Duration.ofHours(expirationHours.toLong()))
         if (expiryAlertDelay.isNegative) {
-            aapsLogger.warn(LTag.PUMPBTCOMM, "updateAlertConfiguration negative " +
-                "expiryAlertDuration=$expiryAlertDelay")
+            aapsLogger.warn(
+                LTag.PUMPBTCOMM,
+                "updateAlertConfiguration negative " +
+                    "expiryAlertDuration=$expiryAlertDelay"
+            )
             PumpEnactResult(injector).success(false).enacted(false)
         }
-        val alerts = listOf (
+        val alerts = listOf(
             AlertConfiguration(
                 AlertType.LOW_RESERVOIR,
                 enabled = lowReservoirAlertEnabled,
@@ -1088,7 +1096,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
             command = omnipodManager.programAlerts(alerts).ignoreElements(),
             post = podStateManager.updateExpirationAlertSettings(
                 expirationReminderEnabled,
-                expirationHours).andThen(
+                expirationHours
+            ).andThen(
                 podStateManager.updateExpirationAlertSettings(
                     lowReservoirAlertEnabled,
                     lowReservoirAlertUnits

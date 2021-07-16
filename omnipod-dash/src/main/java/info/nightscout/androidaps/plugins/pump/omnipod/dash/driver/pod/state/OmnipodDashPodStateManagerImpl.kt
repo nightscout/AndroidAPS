@@ -409,8 +409,8 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             podState.lowReservoirAlertUnits == lowReservoirAlertUnits
     }
 
-    override fun updateExpirationAlertSettings(expirationReminderEnabled: Boolean, expirationHours: Int) :
-        Completable = Completable.defer{
+    override fun updateExpirationAlertSettings(expirationReminderEnabled: Boolean, expirationHours: Int):
+        Completable = Completable.defer {
         podState.expirationReminderEnabled = expirationReminderEnabled
         podState.expirationHours = expirationHours
         Completable.complete()

@@ -36,7 +36,7 @@ class ServiceDiscoverer(
         }
         connectionWaitCond.stopConnection?.let {
             while (!bleCallbacks.waitForServiceDiscovery(STOP_CONNECTING_CHECK_INTERVAL_MS)) {
-                if (it.count == 0L || connection.connectionState() !is Connected)  {
+                if (it.count == 0L || connection.connectionState() !is Connected) {
                     throw ConnectException("stopConnecting called")
                 }
             }
