@@ -364,7 +364,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             }
             Completable.error(java.lang.IllegalStateException("Command not confirmed"))
         } else {
-            showNotification(Notification.PROFILE_SET_OK, "Profile set OK", Notification.INFO, null);
+            showNotification(Notification.PROFILE_SET_OK, "Profile set OK", Notification.INFO, null)
 
             Completable.complete()
         }
@@ -413,6 +413,14 @@ class OmnipodDashPumpPlugin @Inject constructor(
                         it.isChanged(
                                 resourceHelper,
                                 R.string.key_omnipod_common_expiration_reminder_hours_before_shutdown
+                            ) ||
+                        it.isChanged(
+                                resourceHelper,
+                                R.string.key_omnipod_common_low_reservoir_alert_enabled
+                            ) ||
+                        it.isChanged(
+                                resourceHelper,
+                                R.string.key_omnipod_common_low_reservoir_alert_units
                             )
                     ) {
                         commandQueue.customCommand(CommandUpdateAlertConfiguration(), null)
@@ -551,9 +559,12 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     )
                 } else {
                     if (podStateManager.activeCommand != null) {
-                        val sound = if (sp.getBoolean(R.string
-                                                       .key_omnipod_common_notification_uncertain_bolus_sound_enabled,
-                                                      true))
+                        val sound = if (sp.getBoolean(
+                                R.string
+                                    .key_omnipod_common_notification_uncertain_bolus_sound_enabled,
+                                true
+                            )
+                        )
                             R.raw.boluserror
                         else
                             0
@@ -1345,8 +1356,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
         rxBus.send(EventNewNotification(notification))
     }
 
-    private fun soundEnabledForNotificationType(notificationType: Int): Boolean{
-        return when(notificationType) {
+    private fun soundEnabledForNotificationType(notificationType: Int): Boolean {
+        return when (notificationType) {
             Notification.OMNIPOD_TBR_ALERTS ->
                 sp.getBoolean(R.string.key_omnipod_common_notification_uncertain_tbr_sound_enabled, true)
             Notification.OMNIPOD_UNCERTAIN_SMB ->
