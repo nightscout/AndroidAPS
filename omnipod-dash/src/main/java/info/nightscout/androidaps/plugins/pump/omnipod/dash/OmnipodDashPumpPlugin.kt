@@ -364,6 +364,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
             }
             Completable.error(java.lang.IllegalStateException("Command not confirmed"))
         } else {
+            showNotification(Notification.PROFILE_SET_OK, "Profile set OK", Notification.INFO, null);
+
             Completable.complete()
         }
     }
@@ -549,9 +551,16 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     )
                 } else {
                     if (podStateManager.activeCommand != null) {
+                        val sound = if (sp.getBoolean(R.string
+                                                       .key_omnipod_common_notification_uncertain_tbr_sound_enabled,
+                                                      true))
+                            R.raw.boluserror
+                        else
+                            0
+
                         showErrorDialog(
                             "Bolus delivery status uncertain. Refresh pod status to confirm or deny.",
-                            R.raw.boluserror
+                            sound
                         )
                     }
                 }
@@ -1330,12 +1339,20 @@ class OmnipodDashPumpPlugin @Inject constructor(
             message,
             urgency
         )
-        // TODO add back sound when we have options to disable it
-        /*
-        if (sound != null) {
+        if (sound != null && soundEnabledForNotificationType(id)) {
             notification.soundId = sound
-        }*/
+        }
         rxBus.send(EventNewNotification(notification))
+    }
+
+    private fun soundEnabledForNotificationType(notificationType: Int): Boolean{
+        return when(notificationType) {
+            Notification.OMNIPOD_TBR_ALERTS ->
+                sp.getBoolean(R.string.key_omnipod_common_notification_uncertain_tbr_sound_enabled, true)
+            Notification.OMNIPOD_UNCERTAIN_SMB ->
+                sp.getBoolean(R.string.key_omnipod_common_notification_uncertain_smb_sound_enabled, true)
+            else -> true
+        }
     }
 
     private fun dismissNotification(id: Int) {
