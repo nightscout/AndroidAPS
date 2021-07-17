@@ -552,7 +552,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 } else {
                     if (podStateManager.activeCommand != null) {
                         val sound = if (sp.getBoolean(R.string
-                                                       .key_omnipod_common_notification_uncertain_tbr_sound_enabled,
+                                                       .key_omnipod_common_notification_uncertain_bolus_sound_enabled,
                                                       true))
                             R.raw.boluserror
                         else
