@@ -41,7 +41,7 @@ interface OmnipodDashManager {
 
     fun deactivatePod(): Observable<PodEvent>
 
-    fun disconnect()
+    fun disconnect(closeGatt: Boolean=false)
 
     fun connect(stop: CountDownLatch): Observable<PodEvent>
 }

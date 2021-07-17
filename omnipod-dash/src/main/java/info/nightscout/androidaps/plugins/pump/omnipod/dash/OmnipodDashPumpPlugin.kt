@@ -78,6 +78,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
     commandQueue: CommandQueueProvider
 ) : PumpPluginBase(pluginDescription, injector, aapsLogger, resourceHelper, commandQueue), Pump {
     @Volatile var bolusCanceled = false
+    @Volatile var bolusDeliveryInProgress = false
+
     private val handler: Handler = Handler(Looper.getMainLooper())
     private lateinit var statusChecker: Runnable
     var nextPodWarningCheck: Long = 0
@@ -232,12 +234,13 @@ class OmnipodDashPumpPlugin @Inject constructor(
     override fun disconnect(reason: String) {
         aapsLogger.info(LTag.PUMP, "disconnect reason=$reason")
         stopConnecting?.let { it.countDown() }
-        omnipodManager.disconnect()
+        omnipodManager.disconnect(false)
     }
 
     override fun stopConnecting() {
         aapsLogger.info(LTag.PUMP, "stopConnecting")
         stopConnecting?.let { it.countDown() }
+        omnipodManager.disconnect(true)
     }
 
     override fun getPumpStatus(reason: String) {
@@ -476,6 +479,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         try {
+            bolusDeliveryInProgress = true
             aapsLogger.info(LTag.PUMP, "Delivering treatment: $detailedBolusInfo $bolusCanceled")
             val beepsConfigurationKey = if (detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB)
                 R.string.key_omnipod_common_smb_beeps_enabled
@@ -563,6 +567,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             return ret
         } finally {
             bolusCanceled = false
+            bolusDeliveryInProgress = false
         }
     }
 
@@ -697,7 +702,9 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     override fun stopBolusDelivering() {
         aapsLogger.info(LTag.PUMP, "stopBolusDelivering called")
-        bolusCanceled = true
+        if (bolusDeliveryInProgress) {
+            bolusCanceled = true
+        }
     }
 
     override fun setTempBasalAbsolute(

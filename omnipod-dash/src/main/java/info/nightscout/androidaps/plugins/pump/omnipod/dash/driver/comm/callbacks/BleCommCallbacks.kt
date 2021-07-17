@@ -40,7 +40,8 @@ class BleCommCallbacks(
         if (newState == BluetoothProfile.STATE_CONNECTED && status == BluetoothGatt.GATT_SUCCESS) {
             connected.countDown()
         }
-        if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+        if (newState == BluetoothProfile.STATE_DISCONNECTED && status != BluetoothGatt.GATT_SUCCESS ) {
+            // If status == SUCCESS, it means that we initiated the disconnect.
             disconnectHandler.onConnectionLost(status)
         }
     }
@@ -54,12 +55,13 @@ class BleCommCallbacks(
     }
 
     fun waitForConnection(timeoutMs: Long): Boolean {
+        val latch = connected
         try {
-            connected.await(timeoutMs, TimeUnit.MILLISECONDS)
+            latch.await(timeoutMs, TimeUnit.MILLISECONDS)
         } catch (e: InterruptedException) {
             aapsLogger.warn(LTag.PUMPBTCOMM, "Interrupted while waiting for Connection")
         }
-        return connected.count == 0L
+        return latch.count == 0L
     }
 
     fun startServiceDiscovery() {
@@ -67,12 +69,13 @@ class BleCommCallbacks(
     }
 
     fun waitForServiceDiscovery(timeoutMs: Long): Boolean {
+        val latch = serviceDiscoveryComplete
         try {
-            serviceDiscoveryComplete.await(timeoutMs, TimeUnit.MILLISECONDS)
+            latch.await(timeoutMs, TimeUnit.MILLISECONDS)
         } catch (e: InterruptedException) {
             aapsLogger.warn(LTag.PUMPBTCOMM, "Interrupted while waiting for ServiceDiscovery")
         }
-        return serviceDiscoveryComplete.count == 0L
+        return latch.count == 0L
     }
 
     fun confirmWrite(expectedPayload: ByteArray, expectedUUID: String, timeoutMs: Long): WriteConfirmation {
@@ -208,6 +211,8 @@ class BleCommCallbacks(
 
     fun resetConnection() {
         aapsLogger.debug(LTag.PUMPBTCOMM, "Reset connection")
+        connected?.countDown()
+        serviceDiscoveryComplete?.countDown()
         connected = CountDownLatch(1)
         serviceDiscoveryComplete = CountDownLatch(1)
         flushConfirmationQueue()

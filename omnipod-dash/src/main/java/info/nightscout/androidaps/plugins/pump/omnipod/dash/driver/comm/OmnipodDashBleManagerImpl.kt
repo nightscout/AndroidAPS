@@ -84,7 +84,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
                 }
                 emitter.onComplete()
             } catch (ex: Exception) {
-                disconnect()
+                disconnect(false)
                 emitter.tryOnError(ex)
             } finally {
                 busy.set(false)
@@ -142,7 +142,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
 
                 emitter.onComplete()
             } catch (ex: Exception) {
-                disconnect()
+                disconnect(false)
                 emitter.tryOnError(ex)
             } finally {
                 busy.set(false)
@@ -226,15 +226,15 @@ class OmnipodDashBleManagerImpl @Inject constructor(
             emitter.onNext(PodEvent.Connected)
             emitter.onComplete()
         } catch (ex: Exception) {
-            disconnect()
+            disconnect(false)
             emitter.tryOnError(ex)
         } finally {
             busy.set(false)
         }
     }
 
-    override fun disconnect() {
-        connection?.disconnect()
+    override fun disconnect(closeGatt: Boolean) {
+        connection?.disconnect(closeGatt)
             ?: aapsLogger.info(LTag.PUMPBTCOMM, "Trying to disconnect a null connection")
     }
 

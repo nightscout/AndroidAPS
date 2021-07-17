@@ -78,8 +78,8 @@ class OmnipodDashManagerImpl @Inject constructor(
             }
         }
 
-    override fun disconnect() {
-        bleManager.disconnect()
+    override fun disconnect(closeGatt: Boolean) {
+        bleManager.disconnect(closeGatt)
     }
 
     override fun connect(stop: CountDownLatch): Observable<PodEvent> {
