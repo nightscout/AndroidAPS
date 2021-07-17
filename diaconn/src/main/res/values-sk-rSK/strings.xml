@@ -1,2 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="resetpairing">Zrušiť párovanie</string>
+    <string name="diaconn_nodeviceavailable">Nie sú k dispozícii žiadne zariadenia</string>
+    <string name="diaconn_pairing">Párovanie pumpy Diaconn</string>
+    <string name="pumperror">Chyba pumpy</string>
+    <string name="diaconn_g8_history_alarm">Alarmy</string>
+    <string name="diaconn_g8_history_basalhours">Hodinové bazály</string>
+    <string name="diaconn_g8_history_bolus">Bolusy</string>
+    <string name="diaconn_g8_history_dailyinsulin">Denný inzulín</string>
+    <string name="diaconn_g8_history_errors">Chyby</string>
+    <string name="diaconn_g8_history_prime">Doplňovanie</string>
+    <string name="diaconn_g8_history_refill">Plnenie</string>
+    <string name="diaconn_g8_history_suspend">Pozastaviť</string>
+    <string name="diaconn_g8_pairingok">Spárované</string>
+    <string name="diaconn_g8_waitingforpairing">Čakanie na párovanie</string>
+    <string name="diaconn_firmware_version">Verzia</string>
+    <string name="invalidpairing">Neplatné informácie o párovaní. Požiadavka na nové párovanie</string>
+    <string name="gettingpumpsettings">Získavam nastavenia pumpy</string>
+    <string name="gettingpumptime">Získavam čas z pumpy</string>
+    <string name="largetimediff">Veľký rozdiel v čase:\nČas v pumpe sa líši minimálne o 1,5 h.\nProsím upravte čas v pumpe manuálne a vymažte históriu pumpy.\nPokiaľ je to potrebné, pozastavte uzavretý okruh aspoň na \"DIA\" hodín.</string>
+    <string name="largetimedifftitle">Veľký rozdiel v čase</string>
+    <string name="approachingdailylimit">Blíži sa denný limit inzulínu</string>
+    <string name="startingbolus">Spúšťam podávanie bolusu</string>
+    <string name="waitingforestimatedbolusend">Čakanie na predpokladaný koniec bolusu</string>
+    <string name="gettingbolusstatus">Získavam stav bolusov</string>
+    <string name="stoppingtempbasal">Zastavujem dočasný bazál</string>
+    <string name="settingtempbasal">Nastavujem dočasný bazál</string>
+    <string name="settingextendedbolus">Nastavujem predĺžený bolus</string>
+    <string name="stoppingextendedbolus">Zastavujem predĺžený bolus</string>
+    <string name="updatingbasalrates">Aktualizujem bazály</string>
+    <string name="description_pump_diaconn_g8">Integrácia pumpy pre pumpy Diaconn G8</string>
+    <string name="diaconn_g8_pump">Diaconn G8</string>
+    <string name="diacon_g8_blockreplacetube">VYMEŇTE HADIČKU</string>
+    <string name="diacon_g8_blockreplaceneedle">VYMEŇTE KANYLU</string>
+    <string name="diacon_g8_blockreplacesyringe">VYMEŇTE ZÁSOBNÍK</string>
+    <string name="diaconn_g8_logalarmblock">Zablokované vydávanie (%s)</string>
+    <string name="diaconn_g8_lgorelease">výdaj bazálu (%s)</string>
+    <string name="diaconn_g8_lgosuspend">bazál pozastavený (%s)</string>
+    <string name="diaconn_g8_logdualnormalsuccess">Kombinovaný bolus vydaný</string>
+    <string name="diaconn_g8_logmealfail">Jedlo zlyhalo</string>
+    <string name="diaconn_g8_logsuccess">Hotovo</string>
+    <string name="diaconn_g8_logmealsuccess">Jedlo úspešné</string>
+    <string name="key_diaconn_g8_logtubechange">diaconn_g8_logtubechange</string>
+    <string name="diaconn_g8_errorcode_1">Nie je možné vyhľadať kvôli chybe CRC.</string>
+    <string name="diaconn_g8_errorcode_2">Nemôže byť nastavené na základe chybných vstupných parametrov.</string>
+    <string name="diaconn_g8_errorcode_3">Nemôže byť nastavené na základe chyby špecifikácie protokolu.</string>
+    <string name="diaconn_g8_errorcode_4">Čas na jedlo nastavený. Nie je možný výdaj inzulínu.</string>
+    <string name="diaconn_g8_errorcode_6">Zrušené pumpou</string>
+    <string name="diaconn_g8_errorcode_7">Prijímanie ďalších akcií, obmedzenie nastavenia aplikácie.</string>
+    <string name="diaconn_g8_errorcode_8">V priebehu podávania bolusu je ďalší bolus obmedzený.</string>
+    <string name="diaconn_g8_errorcode_9">Vyžaduje sa obnovenie bazálu</string>
+    <string name="diaconn_g8_errorcode_10">Zrušené, pretože pumpa neodpovedá.</string>
+    <string name="diaconn_g8_errorcode_11">Podávanie nie je možné z dôvodu slabej batérie.</string>
+</resources>
