@@ -5,9 +5,7 @@
     <string name="danars_pairingok">Pairing OK</string>
     <string name="danars_pairingtimedout">Zeitüberschreitung beim Pairing</string>
     <string name="danars_waitingforpairing">Auf Verbindung warten</string>
-    <string name="danarspump">DanaRS</string>
     <string name="danarspump_shortname">Dana</string>
-    <string name="description_pump_dana_rs">Pumpen-Integration für Dana Diabecare RS Pumpen</string>
     <string name="maxbolusviolation">Max. Bolus überschritten</string>
     <string name="commanderror">Fehler bei Befehl</string>
     <string name="speederror">Geschwindigkeits-Fehler</string>

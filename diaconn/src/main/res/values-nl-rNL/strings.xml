@@ -1,2 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="resetpairing">Koppeling verwijderen</string>
+    <string name="diaconn_nodeviceavailable">Geen apparaat beschikbaar</string>
+    <string name="diaconn_pairing">Diaconn Pomp Koppeling</string>
+    <string name="pumperror">Pomp storing</string>
+    <string name="diaconn_g8_history_alarm">Alarmen</string>
+    <string name="diaconn_g8_history_bolus">Bolussen</string>
+    <string name="diaconn_g8_history_dailyinsulin">Dagtotaal insuline</string>
+    <string name="diaconn_g8_history_errors">Foutmeldingen</string>
+    <string name="diaconn_g8_history_prime">Vullen</string>
+    <string name="diaconn_g8_history_suspend">Onderbreken</string>
+    <string name="diaconn_g8_pairingok">Koppeling geslaagd</string>
+    <string name="diaconn_g8_waitingforpairing">Wachten op koppeling</string>
+    <string name="diaconn_firmware_version">Versie</string>
+    <string name="invalidpairing">Ongeldige koppelingsinformatie. Nieuwe koppelingspoging wordt uitgevoerd</string>
+    <string name="gettingpumpsettings">Pomp instellingen aan het ophalen</string>
+    <string name="gettingpumptime">Pomp tijd aan het ophalen</string>
+    <string name="approachingdailylimit">Insuline daglimiet aan het benaderen</string>
+    <string name="startingbolus">Bolus toediening gestart</string>
+    <string name="gettingbolusstatus">Bolus status aan het ophalen</string>
+    <string name="stoppingtempbasal">Stoppen van tijdelijk basaal</string>
+    <string name="settingtempbasal">Instellen tijdelijk basaal</string>
+    <string name="settingextendedbolus">Instellen van vertraagde bolus</string>
+    <string name="stoppingextendedbolus">Stoppen van vertraagde bolus</string>
+    <string name="updatingbasalrates">Bijwerken basaal profiel</string>
+    <string name="description_pump_diaconn_g8">Pomp integratie voor Diaconn G8 Pompen</string>
+</resources>

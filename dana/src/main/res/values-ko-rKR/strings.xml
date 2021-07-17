@@ -5,9 +5,7 @@
     <string name="danars_pairingok">연동완료</string>
     <string name="danars_pairingtimedout">연동시간초과</string>
     <string name="danars_waitingforpairing">펌프연동 대기중</string>
-    <string name="danarspump">다나RS</string>
     <string name="danarspump_shortname">Dana</string>
-    <string name="description_pump_dana_rs">다나RS 펌프와 연동</string>
     <string name="maxbolusviolation">최대 Bolus 위반</string>
     <string name="commanderror">명령 오류</string>
     <string name="speederror">속도 오류</string>

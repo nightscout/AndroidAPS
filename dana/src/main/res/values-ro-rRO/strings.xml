@@ -5,9 +5,7 @@
     <string name="danars_pairingok">Conectare OK</string>
     <string name="danars_pairingtimedout">Conectare nereușită</string>
     <string name="danars_waitingforpairing">Se așteaptă conectarea la pompă</string>
-    <string name="danarspump">DanaRS</string>
     <string name="danarspump_shortname">Dana</string>
-    <string name="description_pump_dana_rs">Integrare cu pompele DANA Diabcare RS</string>
     <string name="maxbolusviolation">Încălcare a valorii maxime a bolusului</string>
     <string name="commanderror">Eroare de comandă</string>
     <string name="speederror">Eroare de viteză</string>

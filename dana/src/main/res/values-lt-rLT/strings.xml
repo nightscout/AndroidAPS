@@ -5,9 +5,7 @@
     <string name="danars_pairingok">Sujungta</string>
     <string name="danars_pairingtimedout">Sujungimui skirtas laikas baigėsi</string>
     <string name="danars_waitingforpairing">Laukiama ryšio su pompa</string>
-    <string name="danarspump">DanaRS</string>
     <string name="danarspump_shortname">Dana</string>
-    <string name="description_pump_dana_rs">DANA Diabecare RS pompos integracija</string>
     <string name="maxbolusviolation">Pažeistas maks boluso limitas</string>
     <string name="commanderror">Komandos klaida</string>
     <string name="speederror">Greičio klaida</string>
