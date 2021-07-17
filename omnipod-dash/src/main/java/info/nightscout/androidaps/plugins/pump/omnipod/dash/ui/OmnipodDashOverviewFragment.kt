@@ -432,12 +432,14 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             }
         }
 
-        val podStatusColor =
-            if (!podStateManager.isActivationCompleted || podStateManager.isPodKaput || podStateManager.isSuspended) {
+        val podStatusColor = when {
+            !podStateManager.isActivationCompleted || podStateManager.isPodKaput || podStateManager.isSuspended ->
                 Color.RED
-            } else {
+            podStateManager.activeCommand != null ->
+                Color.YELLOW
+            else ->
                 Color.WHITE
-            }
+        }
         podInfoBinding.podStatus.setTextColor(podStatusColor)
     }
 

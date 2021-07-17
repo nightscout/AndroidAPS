@@ -37,7 +37,7 @@ class MessageIO(
     fun sendMessage(msg: MessagePacket): MessageSendResult {
         val foundRTS = cmdBleIO.flushIncomingQueue()
         if (foundRTS) {
-            val msg = receiveMessage()
+            val msg = receiveMessage(false)
             aapsLogger.warn(LTag.PUMPBTCOMM, "sendMessage received message=$msg")
             throw IllegalStateException("Received message while trying to send")
         }
@@ -90,11 +90,13 @@ class MessageIO(
     }
 
     @Suppress("ReturnCount")
-    fun receiveMessage(): MessagePacket? {
-        val expectRTS = cmdBleIO.expectCommandType(BleCommandRTS, MESSAGE_READ_TIMEOUT_MS)
-        if (expectRTS !is BleConfirmSuccess) {
-            aapsLogger.warn(LTag.PUMPBTCOMM, "Error reading RTS: $expectRTS")
-            return null
+    fun receiveMessage(readRTS: Boolean = true): MessagePacket? {
+        if (readRTS) {
+            val expectRTS = cmdBleIO.expectCommandType(BleCommandRTS, MESSAGE_READ_TIMEOUT_MS)
+            if (expectRTS !is BleConfirmSuccess) {
+                aapsLogger.warn(LTag.PUMPBTCOMM, "Error reading RTS: $expectRTS")
+                return null
+            }
         }
 
         val sendResult = cmdBleIO.sendAndConfirmPacket(BleCommandCTS.data)
