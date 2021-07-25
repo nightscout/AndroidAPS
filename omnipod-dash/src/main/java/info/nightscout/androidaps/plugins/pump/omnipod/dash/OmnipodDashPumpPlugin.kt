@@ -9,6 +9,7 @@ import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.events.EventProfileSwitchChanged
+import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.events.EventTempBasalChange
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -231,9 +232,9 @@ class OmnipodDashPumpPlugin @Inject constructor(
             name = "ConnectionThread",
         ) {
             try {
-                stopConnecting?.let{
+                stopConnecting?.let {
                     val error = omnipodManager.connect(it).ignoreElements().blockingGet()
-                    aapsLogger.info(LTag.PUMPCOMM, "connect error=${error}")
+                    aapsLogger.info(LTag.PUMPCOMM, "connect error=$error")
                 }
             } finally {
                 synchronized(this) {
@@ -1203,9 +1204,15 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     .map { handleCommandConfirmation(it) }
                     .ignoreElement(),
                 checkPodKaput(),
+                refreshOverview(),
                 post,
             )
         )
+    }
+
+    private fun refreshOverview(): Completable = Completable.defer {
+        rxBus.send(EventRefreshOverview("Dash command", false))
+        Completable.complete()
     }
 
     private fun handleCommandConfirmation(confirmation: CommandConfirmed) {
