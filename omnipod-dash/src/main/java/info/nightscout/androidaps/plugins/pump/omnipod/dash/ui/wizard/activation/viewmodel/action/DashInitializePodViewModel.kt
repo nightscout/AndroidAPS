@@ -30,7 +30,6 @@ class DashInitializePodViewModel @Inject constructor(
 
     override fun doExecuteAction(): Single<PumpEnactResult> =
         Single.create { source ->
-            // TODO use configured value for low reservoir trigger
             val lowReservoirAlertEnabled = sp.getBoolean(R.string.key_omnipod_common_low_reservoir_alert_enabled, true)
             val lowReservoirAlertUnits = sp.getInt(R.string.key_omnipod_common_low_reservoir_alert_units, 10)
             val lowReservoirAlertTrigger = if (lowReservoirAlertEnabled) {
