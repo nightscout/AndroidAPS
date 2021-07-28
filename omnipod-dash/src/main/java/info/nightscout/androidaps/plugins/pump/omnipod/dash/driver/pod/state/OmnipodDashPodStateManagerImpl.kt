@@ -11,7 +11,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair.PairResult
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.EapSqn
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.event.PodEvent
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.AlarmStatusResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.DefaultStatusResponse
@@ -20,12 +19,11 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.Completable
 import io.reactivex.Maybe
-import io.reactivex.Observable
 import io.reactivex.Single
-import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
-import org.joda.time.Duration
 import java.io.Serializable
+import java.time.Duration
+import java.time.Instant
+import java.time.ZonedDateTime
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -107,6 +105,12 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             store()
         }
 
+    override val sameTimeZone: Boolean
+        get() {
+            val now = System.currentTimeMillis()
+            return TimeZone.getDefault().getOffset(now) == timeZone.getOffset(now)
+        }
+
     override val bluetoothVersion: SoftwareVersion?
         get() = podState.bleVersion
 
@@ -183,36 +187,40 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     override val lastStatusResponseReceived: Long
         get() = podState.lastStatusResponseReceived
 
-    override val time: DateTime?
+    override val time: ZonedDateTime?
         get() {
             val minutesSinceActivation = podState.minutesSinceActivation
             val activationTime = podState.activationTime
             if ((activationTime != null) && (minutesSinceActivation != null)) {
-                return DateTime(activationTime)
-                    .plusMinutes(minutesSinceActivation.toInt())
-                    .plus(Duration(podState.lastUpdatedSystem, System.currentTimeMillis()))
+                return ZonedDateTime.ofInstant(Instant.ofEpochMilli(activationTime), timeZone.toZoneId())
+                    .plusMinutes(minutesSinceActivation.toLong())
+                    .plus(Duration.ofMillis(System.currentTimeMillis() - lastUpdatedSystem))
             }
             return null
         }
 
     override val timeDrift: Duration?
         get() {
-            return Duration(DateTime.now(), time)
+            return Duration.between(ZonedDateTime.now(), time)
         }
 
-    override val expiry: DateTime?
-        // TODO: Consider storing expiry datetime in pod state saving continuously recalculating to the same value
+    override val expiry: ZonedDateTime?
         get() {
             val podLifeInHours = podLifeInHours
-            val activationTime = podState.activationTime
-            if (podLifeInHours != null && activationTime != null) {
-                return DateTime(podState.activationTime).plusHours(podLifeInHours.toInt())
+            val minutesSinceActivation = podState.minutesSinceActivation
+            if (podLifeInHours != null && minutesSinceActivation != null) {
+                return ZonedDateTime.now()
+                    .plusHours(podLifeInHours.toLong())
+                    .minusMinutes(minutesSinceActivation.toLong())
+                    .plus(Duration.ofMillis(System.currentTimeMillis() - lastUpdatedSystem))
             }
             return null
         }
 
     override var bluetoothConnectionState: OmnipodDashPodStateManager.BluetoothConnectionState
+        @Synchronized
         get() = podState.bluetoothConnectionState
+        @Synchronized
         set(bluetoothConnectionState) {
             podState.bluetoothConnectionState = bluetoothConnectionState
             rxBus.send(EventOmnipodDashPumpValuesChanged())
@@ -283,29 +291,29 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         requestedBolus: Double?
     ):
         Single<OmnipodDashPodStateManager.ActiveCommand> {
-            return Single.create { source ->
-                if (activeCommand == null) {
-                    val command = OmnipodDashPodStateManager.ActiveCommand(
-                        podState.messageSequenceNumber,
-                        createdRealtime = SystemClock.elapsedRealtime(),
-                        historyId = historyId,
-                        sendError = null,
-                        basalProgram = basalProgram,
-                        tempBasal = tempBasal,
-                        requestedBolus = requestedBolus
+        return Single.create { source ->
+            if (activeCommand == null) {
+                val command = OmnipodDashPodStateManager.ActiveCommand(
+                    podState.messageSequenceNumber,
+                    createdRealtime = SystemClock.elapsedRealtime(),
+                    historyId = historyId,
+                    sendError = null,
+                    basalProgram = basalProgram,
+                    tempBasal = tempBasal,
+                    requestedBolus = requestedBolus
+                )
+                podState.activeCommand = command
+                source.onSuccess(command)
+            } else {
+                source.onError(
+                    java.lang.IllegalStateException(
+                        "Trying to send a command " +
+                            "and the last command was not confirmed"
                     )
-                    podState.activeCommand = command
-                    source.onSuccess(command)
-                } else {
-                    source.onError(
-                        java.lang.IllegalStateException(
-                            "Trying to send a command " +
-                                "and the last command was not confirmed"
-                        )
-                    )
-                }
+                )
             }
         }
+    }
 
     @Synchronized
     override fun observeNoActiveCommand(): Completable {
@@ -391,6 +399,32 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         }
     }
 
+    override fun differentAlertSettings(
+        expirationReminderEnabled: Boolean,
+        expirationHours: Int,
+        lowReservoirAlertEnabled: Boolean,
+        lowReservoirAlertUnits: Int
+    ): Boolean {
+        return podState.expirationReminderEnabled == expirationReminderEnabled &&
+            podState.expirationHours == expirationHours &&
+            podState.lowReservoirAlertEnabled == lowReservoirAlertEnabled &&
+            podState.lowReservoirAlertUnits == lowReservoirAlertUnits
+    }
+
+    override fun updateExpirationAlertSettings(expirationReminderEnabled: Boolean, expirationHours: Int):
+        Completable = Completable.defer {
+        podState.expirationReminderEnabled = expirationReminderEnabled
+        podState.expirationHours = expirationHours
+        Completable.complete()
+    }
+
+    override fun updateLowReservoirAlertSettings(lowReservoirAlertEnabled: Boolean, lowReservoirAlertUnits: Int):
+        Completable = Completable.defer {
+        podState.lowReservoirAlertEnabled = lowReservoirAlertEnabled
+        podState.lowReservoirAlertUnits = lowReservoirAlertUnits
+        Completable.complete()
+    }
+
     @Synchronized
     override fun getCommandConfirmationFromState(): CommandConfirmationFromState {
         return podState.activeCommand?.run {
@@ -429,7 +463,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     override fun onStart() {
         when (getCommandConfirmationFromState()) {
             CommandConfirmationSuccess, CommandConfirmationDenied -> {
-                val now = System.currentTimeMillis()
+                val now = SystemClock.elapsedRealtime()
                 val newCommand = podState.activeCommand?.copy(
                     createdRealtime = now,
                     sentRealtime = now + 1
@@ -439,7 +473,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             }
 
             CommandSendingNotConfirmed -> {
-                val now = System.currentTimeMillis()
+                val now = SystemClock.elapsedRealtime()
                 val newCommand = podState.activeCommand?.copy(
                     createdRealtime = now,
                     sentRealtime = now + 1
@@ -610,6 +644,11 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         var podLifeInHours: Short? = null
         var firstPrimeBolusVolume: Short? = null
         var secondPrimeBolusVolume: Short? = null
+
+        var expirationReminderEnabled: Boolean? = null
+        var expirationHours: Int? = null
+        var lowReservoirAlertEnabled: Boolean? = null
+        var lowReservoirAlertUnits: Int? = null
 
         var pulsesDelivered: Short? = null
         var pulsesRemaining: Short? = null

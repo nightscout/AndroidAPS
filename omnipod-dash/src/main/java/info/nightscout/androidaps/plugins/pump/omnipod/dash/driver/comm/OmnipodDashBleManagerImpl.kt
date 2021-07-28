@@ -16,6 +16,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.b
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.Response
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 import io.reactivex.Observable
+import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -83,7 +84,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
                 }
                 emitter.onComplete()
             } catch (ex: Exception) {
-                disconnect()
+                disconnect(false)
                 emitter.tryOnError(ex)
             } finally {
                 busy.set(false)
@@ -100,55 +101,53 @@ class OmnipodDashBleManagerImpl @Inject constructor(
         return connection?.let { it.connectionState() }
             ?: NotConnected
     }
-
-    override fun connect(): Observable<PodEvent> = Observable.create { emitter ->
-        if (!busy.compareAndSet(false, true)) {
-            throw BusyException()
-        }
-        try {
-            emitter.onNext(PodEvent.BluetoothConnecting)
-
-            val podAddress =
-                podState.bluetoothAddress
-                    ?: throw FailedToConnectException("Missing bluetoothAddress, activate the pod first")
-            val podDevice = bluetoothAdapter.getRemoteDevice(podAddress)
-            val conn = connection
-                ?: Connection(podDevice, aapsLogger, context, podState)
-            connection = conn
-            if (conn.connectionState() is Connected && conn.session != null) {
-                emitter.onNext(PodEvent.AlreadyConnected(podAddress))
-                emitter.onComplete()
-                return@create
-            }
-
-            // two retries
-            for (i in 1..MAX_NUMBER_OF_CONNECTION_ATTEMPTS) {
-                try {
-                    // wait i * CONNECTION_TIMEOUT
-                    conn.connect(CONNECT_TIMEOUT_MULTIPLIER)
-                    break
-                } catch (e: Exception) {
-                    aapsLogger.warn(LTag.PUMPBTCOMM, "connect error=$e")
-                    if (i == MAX_NUMBER_OF_CONNECTION_ATTEMPTS) {
-                        emitter.onError(e)
-                        return@create
-                    }
-                }
-            }
-
-            emitter.onNext(PodEvent.BluetoothConnected(podAddress))
-            emitter.onNext(PodEvent.EstablishingSession)
-            establishSession(1.toByte())
-            emitter.onNext(PodEvent.Connected)
-
-            emitter.onComplete()
-        } catch (ex: Exception) {
-            disconnect()
-            emitter.tryOnError(ex)
-        } finally {
-            busy.set(false)
-        }
+    // used for sync connections
+    override fun connect(timeoutMs: Long): Observable<PodEvent> {
+        return connect(ConnectionWaitCondition(timeoutMs = timeoutMs))
     }
+
+    // used for async connections
+    override fun connect(stopConnectionLatch: CountDownLatch): Observable<PodEvent> {
+        return connect(ConnectionWaitCondition(stopConnection = stopConnectionLatch))
+    }
+
+    private fun connect(connectionWaitCond: ConnectionWaitCondition): Observable<PodEvent> = Observable
+        .create {
+            emitter ->
+            if (!busy.compareAndSet(false, true)) {
+                throw BusyException()
+            }
+            try {
+                emitter.onNext(PodEvent.BluetoothConnecting)
+
+                val podAddress =
+                    podState.bluetoothAddress
+                        ?: throw FailedToConnectException("Missing bluetoothAddress, activate the pod first")
+                val podDevice = bluetoothAdapter.getRemoteDevice(podAddress)
+                val conn = connection
+                    ?: Connection(podDevice, aapsLogger, context, podState)
+                connection = conn
+                if (conn.connectionState() is Connected && conn.session != null) {
+                    emitter.onNext(PodEvent.AlreadyConnected(podAddress))
+                    emitter.onComplete()
+                    return@create
+                }
+
+                conn.connect(connectionWaitCond)
+
+                emitter.onNext(PodEvent.BluetoothConnected(podAddress))
+                emitter.onNext(PodEvent.EstablishingSession)
+                establishSession(1.toByte())
+                emitter.onNext(PodEvent.Connected)
+
+                emitter.onComplete()
+            } catch (ex: Exception) {
+                disconnect(false)
+                emitter.tryOnError(ex)
+            } finally {
+                busy.set(false)
+            }
+        }
 
     private fun establishSession(msgSeq: Byte) {
         val conn = assertConnected()
@@ -187,7 +186,6 @@ class OmnipodDashBleManagerImpl @Inject constructor(
             throw BusyException()
         }
         try {
-
             if (podState.ltk != null) {
                 emitter.onNext(PodEvent.AlreadyPaired)
                 emitter.onComplete()
@@ -207,12 +205,14 @@ class OmnipodDashBleManagerImpl @Inject constructor(
             val podDevice = bluetoothAdapter.getRemoteDevice(podAddress)
             val conn = Connection(podDevice, aapsLogger, context, podState)
             connection = conn
+            conn.connect(ConnectionWaitCondition(timeoutMs = 3 * Connection.BASE_CONNECT_TIMEOUT_MS))
             emitter.onNext(PodEvent.BluetoothConnected(podAddress))
 
             emitter.onNext(PodEvent.Pairing)
+            val mIO = conn.msgIO ?: throw ConnectException("Connection lost")
             val ltkExchanger = LTKExchanger(
                 aapsLogger,
-                conn.msgIO,
+                mIO,
                 ids,
             )
             val pairResult = ltkExchanger.negotiateLTK()
@@ -221,27 +221,24 @@ class OmnipodDashBleManagerImpl @Inject constructor(
             if (BuildConfig.DEBUG) {
                 aapsLogger.info(LTag.PUMPCOMM, "Got LTK: ${pairResult.ltk.toHex()}")
             }
-
             emitter.onNext(PodEvent.EstablishingSession)
             establishSession(pairResult.msgSeq)
             emitter.onNext(PodEvent.Connected)
             emitter.onComplete()
         } catch (ex: Exception) {
-            disconnect()
+            disconnect(false)
             emitter.tryOnError(ex)
         } finally {
             busy.set(false)
         }
     }
 
-    override fun disconnect() {
-        connection?.disconnect()
+    override fun disconnect(closeGatt: Boolean) {
+        connection?.disconnect(closeGatt)
             ?: aapsLogger.info(LTag.PUMPBTCOMM, "Trying to disconnect a null connection")
     }
 
     companion object {
-        const val MAX_NUMBER_OF_CONNECTION_ATTEMPTS = 2
         const val CONTROLLER_ID = 4242 // TODO read from preferences or somewhere else.
-        private const val CONNECT_TIMEOUT_MULTIPLIER = 4
     }
 }

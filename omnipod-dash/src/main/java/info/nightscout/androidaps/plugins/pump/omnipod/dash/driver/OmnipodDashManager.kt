@@ -9,12 +9,13 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definitio
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.ResponseType
 import io.reactivex.Observable
 import java.util.*
+import java.util.concurrent.CountDownLatch
 
 interface OmnipodDashManager {
 
     fun activatePodPart1(lowReservoirAlertTrigger: AlertTrigger.ReservoirVolumeTrigger?): Observable<PodEvent>
 
-    fun activatePodPart2(basalProgram: BasalProgram): Observable<PodEvent>
+    fun activatePodPart2(basalProgram: BasalProgram, userConfiguredExpirationHours: Long?): Observable<PodEvent>
 
     fun getStatus(type: ResponseType.StatusResponseType): Observable<PodEvent>
 
@@ -39,4 +40,8 @@ interface OmnipodDashManager {
     fun silenceAlerts(alertTypes: EnumSet<AlertType>): Observable<PodEvent>
 
     fun deactivatePod(): Observable<PodEvent>
+
+    fun disconnect(closeGatt: Boolean = false)
+
+    fun connect(stop: CountDownLatch): Observable<PodEvent>
 }

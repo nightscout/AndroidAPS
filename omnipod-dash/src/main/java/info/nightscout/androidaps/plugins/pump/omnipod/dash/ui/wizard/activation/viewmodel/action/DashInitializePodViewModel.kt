@@ -9,6 +9,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activati
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.OmnipodDashManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertTrigger
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
+import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.Single
 import io.reactivex.rxkotlin.subscribeBy
 import javax.inject.Inject
@@ -16,9 +18,10 @@ import javax.inject.Inject
 class DashInitializePodViewModel @Inject constructor(
     private val omnipodManager: OmnipodDashManager,
     injector: HasAndroidInjector,
-    logger: AAPSLogger
+    logger: AAPSLogger,
+    private val sp: SP,
+    private val podStateManager: OmnipodDashPodStateManager,
 ) : InitializePodViewModel(injector, logger) {
-
     override fun isPodInAlarm(): Boolean = false // TODO
 
     override fun isPodActivationTimeExceeded(): Boolean = false // TODO
@@ -27,8 +30,14 @@ class DashInitializePodViewModel @Inject constructor(
 
     override fun doExecuteAction(): Single<PumpEnactResult> =
         Single.create { source ->
-            // TODO use configured value for low reservoir trigger
-            val disposable = omnipodManager.activatePodPart1(AlertTrigger.ReservoirVolumeTrigger(200)).subscribeBy(
+            val lowReservoirAlertEnabled = sp.getBoolean(R.string.key_omnipod_common_low_reservoir_alert_enabled, true)
+            val lowReservoirAlertUnits = sp.getInt(R.string.key_omnipod_common_low_reservoir_alert_units, 10)
+            val lowReservoirAlertTrigger = if (lowReservoirAlertEnabled) {
+                AlertTrigger.ReservoirVolumeTrigger((lowReservoirAlertUnits * 10).toShort())
+            } else
+                null
+
+            val disposable = omnipodManager.activatePodPart1(lowReservoirAlertTrigger).subscribeBy(
                 onNext = { podEvent ->
                     logger.debug(
                         LTag.PUMP,
@@ -41,6 +50,7 @@ class DashInitializePodViewModel @Inject constructor(
                 },
                 onComplete = {
                     logger.debug("Pod activation part 1 completed")
+                    podStateManager.updateLowReservoirAlertSettings(lowReservoirAlertEnabled, lowReservoirAlertUnits)
                     source.onSuccess(PumpEnactResult(injector).success(true))
                 }
             )

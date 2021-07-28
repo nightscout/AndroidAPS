@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair.PairResult
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.event.PodEvent
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.AlarmStatusResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.DefaultStatusResponse
@@ -11,12 +10,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.VersionResponse
 import io.reactivex.Completable
 import io.reactivex.Maybe
-import io.reactivex.Observable
 import io.reactivex.Single
-import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
-import org.joda.time.Duration
 import java.io.Serializable
+import java.time.ZonedDateTime
 import java.util.*
 
 sealed class CommandConfirmationFromState
@@ -37,11 +33,12 @@ interface OmnipodDashPodStateManager {
     var bluetoothConnectionState: BluetoothConnectionState
 
     var timeZone: TimeZone
+    val sameTimeZone: Boolean // The TimeZone is the same on the phone and on the pod
     val lastUpdatedSystem: Long // System.currentTimeMillis()
     val lastStatusResponseReceived: Long
-    val time: DateTime?
-    val timeDrift: Duration?
-    val expiry: DateTime?
+    val time: ZonedDateTime?
+    val timeDrift: java.time.Duration?
+    val expiry: ZonedDateTime?
 
     val messageSequenceNumber: Short
     val sequenceNumberOfLastProgrammingCommand: Short?
@@ -104,6 +101,9 @@ interface OmnipodDashPodStateManager {
        - after getPodStatus was successful(we have an up-to-date podStatus)
      */
     fun recoverActivationFromPodStatus(): String?
+    fun differentAlertSettings(expirationReminderEnabled: Boolean, expirationHours: Int, lowReservoirAlertEnabled: Boolean, lowReservoirAlertUnits: Int): Boolean
+    fun updateExpirationAlertSettings(expirationReminderEnabled: Boolean, expirationHours: Int): Completable
+    fun updateLowReservoirAlertSettings(lowReservoirAlertEnabled: Boolean, lowReservoirAlertUnits: Int): Completable
 
     data class ActiveCommand(
         val sequence: Short,

@@ -8,13 +8,17 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.event.PodEven
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.GetVersionCommand.Companion.DEFAULT_UNIQUE_ID
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.*
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants.Companion.MAX_POD_LIFETIME
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.Observable
 import io.reactivex.functions.Action
 import io.reactivex.functions.Consumer
+import java.time.Duration
+import java.time.ZonedDateTime
 import java.util.*
+import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -73,6 +77,22 @@ class OmnipodDashManagerImpl @Inject constructor(
                 Observable.error(IllegalStateException("Pod is in an incorrect state"))
             }
         }
+
+    override fun disconnect(closeGatt: Boolean) {
+        bleManager.disconnect(closeGatt)
+    }
+
+    override fun connect(stop: CountDownLatch): Observable<PodEvent> {
+        return observeConnectToPodWithStop(stop)
+            .interceptPodEvents()
+    }
+
+    private fun observeConnectToPodWithStop(stop: CountDownLatch): Observable<PodEvent> {
+        return Observable.defer {
+            bleManager.connect(stop)
+                .doOnError { throwable -> logger.warn(LTag.PUMPBTCOMM, "observeConnectToPodWithStop error=$throwable") }
+        }
+    }
 
     private val observeConnectToPod: Observable<PodEvent>
         get() = Observable.defer {
@@ -221,10 +241,7 @@ class OmnipodDashManagerImpl @Inject constructor(
             observeConnectToPod,
             observeActivationPart1Commands(lowReservoirAlertTrigger)
         ).doOnComplete(ActivationProgressUpdater(ActivationProgress.PHASE_1_COMPLETED))
-            // TODO these would be common for any observable returned in a public function in this class
-            .doOnNext(PodEventInterceptor())
-            .doOnError(ErrorInterceptor())
-            .subscribeOn(aapsSchedulers.io)
+            .interceptPodEvents()
     }
 
     private fun observeActivationPart1Commands(lowReservoirAlertTrigger: AlertTrigger.ReservoirVolumeTrigger?): Observable<PodEvent> {
@@ -320,20 +337,19 @@ class OmnipodDashManagerImpl @Inject constructor(
         return observables.reversed()
     }
 
-    override fun activatePodPart2(basalProgram: BasalProgram): Observable<PodEvent> {
+    override fun activatePodPart2(basalProgram: BasalProgram, userConfiguredExpirationHours: Long?):
+        Observable<PodEvent> {
         return Observable.concat(
             observePodReadyForActivationPart2,
             observeConnectToPod,
-            observeActivationPart2Commands(basalProgram)
+            observeActivationPart2Commands(basalProgram, userConfiguredExpirationHours)
         ).doOnComplete(ActivationProgressUpdater(ActivationProgress.COMPLETED))
-            // TODO these would be common for any observable returned in a public function in this class
-            .doOnNext(PodEventInterceptor())
-            .doOnError(ErrorInterceptor())
-            .subscribeOn(aapsSchedulers.io)
+            .interceptPodEvents()
     }
 
-    private fun observeActivationPart2Commands(basalProgram: BasalProgram): Observable<PodEvent> {
-        val observables = createActivationPart2Observables(basalProgram)
+    private fun observeActivationPart2Commands(basalProgram: BasalProgram, userConfiguredExpirationHours: Long?):
+        Observable<PodEvent> {
+        val observables = createActivationPart2Observables(basalProgram, userConfiguredExpirationHours)
 
         return if (observables.isEmpty()) {
             Observable.empty()
@@ -342,7 +358,11 @@ class OmnipodDashManagerImpl @Inject constructor(
         }
     }
 
-    private fun createActivationPart2Observables(basalProgram: BasalProgram): List<Observable<PodEvent>> {
+    private fun createActivationPart2Observables(
+        basalProgram: BasalProgram,
+        userConfiguredExpirationHours: Long?
+    ):
+        List<Observable<PodEvent>> {
         val observables = ArrayList<Observable<PodEvent>>()
 
         if (podStateManager.activationProgress.isBefore(ActivationProgress.CANNULA_INSERTED)) {
@@ -368,33 +388,60 @@ class OmnipodDashManagerImpl @Inject constructor(
             )
         }
         if (podStateManager.activationProgress.isBefore(ActivationProgress.UPDATED_EXPIRATION_ALERTS)) {
+            val podLifeLeft = Duration.between(ZonedDateTime.now(), podStateManager.expiry)
+
+            val alerts = mutableListOf(
+                AlertConfiguration(
+                    AlertType.EXPIRATION,
+                    enabled = true,
+                    durationInMinutes = TimeUnit.HOURS.toMinutes(7).toShort(),
+                    autoOff = false,
+                    AlertTrigger.TimerTrigger(
+                        TimeUnit.HOURS.toMinutes(72).toShort()
+                    ), // FIXME use activation time
+                    BeepType.FOUR_TIMES_BIP_BEEP,
+                    BeepRepetitionType.XXX3
+                ),
+                AlertConfiguration(
+                    AlertType.EXPIRATION_IMMINENT,
+                    enabled = true,
+                    durationInMinutes = 0,
+                    autoOff = false,
+                    AlertTrigger.TimerTrigger(
+                        TimeUnit.HOURS.toMinutes(79).toShort()
+                    ), // FIXME use activation time
+                    BeepType.FOUR_TIMES_BIP_BEEP,
+                    BeepRepetitionType.XXX4
+                )
+            )
+            val userExpiryAlertDelay = podLifeLeft.minus(
+                Duration.ofHours(userConfiguredExpirationHours ?: MAX_POD_LIFETIME.toHours() + 1)
+            )
+            if (userExpiryAlertDelay.isNegative) {
+                logger.warn(
+                    LTag.PUMPBTCOMM,
+                    "createActivationPart2Observables negative " +
+                        "expiryAlertDuration=$userExpiryAlertDelay"
+                )
+            } else {
+                alerts.add(
+                    AlertConfiguration(
+                        AlertType.USER_SET_EXPIRATION,
+                        enabled = true,
+                        durationInMinutes = 0,
+                        autoOff = false,
+                        AlertTrigger.TimerTrigger(
+                            userExpiryAlertDelay.toMinutes().toShort()
+                        ),
+                        BeepType.FOUR_TIMES_BIP_BEEP,
+                        BeepRepetitionType.XXX2
+                    )
+                )
+            }
+
             observables.add(
                 observeSendProgramAlertsCommand(
-                    listOf(
-                        // FIXME use user configured expiration alert
-                        AlertConfiguration(
-                            AlertType.EXPIRATION,
-                            enabled = true,
-                            durationInMinutes = TimeUnit.HOURS.toMinutes(7).toShort(),
-                            autoOff = false,
-                            AlertTrigger.TimerTrigger(
-                                TimeUnit.HOURS.toMinutes(73).toShort()
-                            ), // FIXME use activation time
-                            BeepType.FOUR_TIMES_BIP_BEEP,
-                            BeepRepetitionType.XXX3
-                        ),
-                        AlertConfiguration(
-                            AlertType.EXPIRATION_IMMINENT,
-                            enabled = true,
-                            durationInMinutes = TimeUnit.HOURS.toMinutes(1).toShort(),
-                            autoOff = false,
-                            AlertTrigger.TimerTrigger(
-                                TimeUnit.HOURS.toMinutes(79).toShort()
-                            ), // FIXME use activation time
-                            BeepType.FOUR_TIMES_BIP_BEEP,
-                            BeepRepetitionType.XXX4
-                        )
-                    ),
+                    alerts,
                     multiCommandFlag = true
                 ).doOnComplete(ActivationProgressUpdater(ActivationProgress.UPDATED_EXPIRATION_ALERTS))
             )
@@ -414,11 +461,7 @@ class OmnipodDashManagerImpl @Inject constructor(
             observeUniqueIdSet,
             observeConnectToPod,
             observeSendGetPodStatusCommand(type)
-        )
-            // TODO these would be common for any observable returned in a public function in this class
-            .doOnNext(PodEventInterceptor())
-            .doOnError(ErrorInterceptor())
-            .subscribeOn(aapsSchedulers.io)
+        ).interceptPodEvents()
     }
 
     override fun setBasalProgram(basalProgram: BasalProgram, hasBasalBeepEnabled: Boolean): Observable<PodEvent> {
@@ -426,11 +469,7 @@ class OmnipodDashManagerImpl @Inject constructor(
             observePodRunning,
             observeConnectToPod,
             observeSendProgramBasalCommand(basalProgram, hasBasalBeepEnabled)
-        )
-            // TODO these would be common for any observable returned in a public function in this class
-            .doOnNext(PodEventInterceptor())
-            .doOnError(ErrorInterceptor())
-            .subscribeOn(aapsSchedulers.io)
+        ).interceptPodEvents()
     }
 
     private fun observeSendStopDeliveryCommand(
@@ -461,11 +500,7 @@ class OmnipodDashManagerImpl @Inject constructor(
             observePodRunning,
             observeConnectToPod,
             observeSendStopDeliveryCommand(StopDeliveryCommand.DeliveryType.ALL, hasBasalBeepEnabled)
-        )
-            // TODO these would be common for any observable returned in a public function in this class
-            .doOnNext(PodEventInterceptor())
-            .doOnError(ErrorInterceptor())
-            .subscribeOn(aapsSchedulers.io)
+        ).interceptPodEvents()
     }
 
     override fun setTime(): Observable<PodEvent> {
@@ -495,11 +530,7 @@ class OmnipodDashManagerImpl @Inject constructor(
             observePodRunning,
             observeConnectToPod,
             observeSendProgramTempBasalCommand(rate, durationInMinutes, tempBasalBeeps)
-        )
-            // TODO these would be common for any observable returned in a public function in this class
-            .doOnNext(PodEventInterceptor())
-            .doOnError(ErrorInterceptor())
-            .subscribeOn(aapsSchedulers.io)
+        ).interceptPodEvents()
     }
 
     override fun stopTempBasal(hasTempBasalBeepEnabled: Boolean): Observable<PodEvent> {
@@ -507,11 +538,7 @@ class OmnipodDashManagerImpl @Inject constructor(
             observePodRunning,
             observeConnectToPod,
             observeSendStopDeliveryCommand(StopDeliveryCommand.DeliveryType.TEMP_BASAL, hasTempBasalBeepEnabled)
-        )
-            // TODO these would be common for any observable returned in a public function in this class
-            .doOnNext(PodEventInterceptor())
-            .doOnError(ErrorInterceptor())
-            .subscribeOn(aapsSchedulers.io)
+        ).interceptPodEvents()
     }
 
     override fun bolus(units: Double, confirmationBeeps: Boolean, completionBeeps: Boolean): Observable<PodEvent> {
@@ -524,11 +551,7 @@ class OmnipodDashManagerImpl @Inject constructor(
                 confirmationBeeps,
                 completionBeeps
             )
-        )
-            // TODO these would be common for any observable returned in a public function in this class
-            .doOnNext(PodEventInterceptor())
-            .doOnError(ErrorInterceptor())
-            .subscribeOn(aapsSchedulers.io)
+        ).interceptPodEvents()
     }
 
     override fun stopBolus(beep: Boolean): Observable<PodEvent> {
@@ -536,11 +559,7 @@ class OmnipodDashManagerImpl @Inject constructor(
             observePodRunning,
             observeConnectToPod,
             observeSendStopDeliveryCommand(StopDeliveryCommand.DeliveryType.BOLUS, beep)
-        )
-            // TODO these would be common for any observable returned in a public function in this class
-            .doOnNext(PodEventInterceptor())
-            .doOnError(ErrorInterceptor())
-            .subscribeOn(aapsSchedulers.io)
+        ).interceptPodEvents()
     }
 
     private fun observeSendConfigureBeepsCommand(
@@ -569,11 +588,7 @@ class OmnipodDashManagerImpl @Inject constructor(
             observePodRunning,
             observeConnectToPod,
             observeSendConfigureBeepsCommand(immediateBeepType = beepType)
-        )
-            // TODO these would be common for any observable returned in a public function in this class
-            .doOnNext(PodEventInterceptor())
-            .doOnError(ErrorInterceptor())
-            .subscribeOn(aapsSchedulers.io)
+        ).interceptPodEvents()
     }
 
     override fun programAlerts(alertConfigurations: List<AlertConfiguration>): Observable<PodEvent> {
@@ -581,11 +596,7 @@ class OmnipodDashManagerImpl @Inject constructor(
             observePodRunning,
             observeConnectToPod,
             observeSendProgramAlertsCommand(alertConfigurations)
-        )
-            // TODO these would be common for any observable returned in a public function in this class
-            .doOnNext(PodEventInterceptor())
-            .doOnError(ErrorInterceptor())
-            .subscribeOn(aapsSchedulers.io)
+        ).interceptPodEvents()
     }
 
     private fun observeSendSilenceAlertsCommand(alertTypes: EnumSet<AlertType>): Observable<PodEvent> {
@@ -607,11 +618,7 @@ class OmnipodDashManagerImpl @Inject constructor(
             observePodRunning,
             observeConnectToPod,
             observeSendSilenceAlertsCommand(alertTypes)
-        )
-            // TODO these would be common for any observable returned in a public function in this class
-            .doOnNext(PodEventInterceptor())
-            .doOnError(ErrorInterceptor())
-            .subscribeOn(aapsSchedulers.io)
+        ).interceptPodEvents()
     }
 
     private val observeSendDeactivateCommand: Observable<PodEvent>
@@ -630,11 +637,7 @@ class OmnipodDashManagerImpl @Inject constructor(
         return Observable.concat(
             observeConnectToPod,
             observeSendDeactivateCommand
-        )
-            // TODO these would be common for any observable returned in a public function in this class
-            .doOnNext(PodEventInterceptor())
-            .doOnError(ErrorInterceptor())
-            .subscribeOn(aapsSchedulers.io)
+        ).interceptPodEvents()
             //
             .doOnComplete(podStateManager::reset)
     }
@@ -709,6 +712,12 @@ class OmnipodDashManagerImpl @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun Observable<PodEvent>.interceptPodEvents(): Observable<PodEvent> {
+        return this.doOnNext(PodEventInterceptor())
+            .doOnError(ErrorInterceptor())
+            .subscribeOn(aapsSchedulers.io)
     }
 
     inner class ErrorInterceptor : Consumer<Throwable> {

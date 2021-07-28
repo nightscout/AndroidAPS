@@ -44,8 +44,8 @@ import info.nightscout.androidaps.utils.ui.UIRunnable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import org.apache.commons.lang3.StringUtils
-import org.joda.time.DateTime
-import org.joda.time.Duration
+import java.time.Duration
+import java.time.ZonedDateTime
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
@@ -269,34 +269,41 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
             // Update time on Pod
             podInfoBinding.timeOnPod.text = podStateManager.time?.let {
-                readableZonedTime(it)
+                resourceHelper.gs(
+                    R.string.omnipod_common_time_with_timezone,
+                    dateUtil.dateAndTimeString(it.toEpochSecond() * 1000),
+                    podStateManager.timeZone.getDisplayName(true, TimeZone.SHORT)
+                )
             } ?: PLACEHOLDER
 
+            val timeDeviationTooBig = podStateManager.timeDrift?.let {
+                Duration.ofMinutes(MAX_TIME_DEVIATION_MINUTES).minus(
+                    it.abs()
+                ).isNegative
+            } ?: false
             podInfoBinding.timeOnPod.setTextColor(
-                podStateManager.timeDrift?.let {
-                    if (it.abs().isLongerThan(Duration.standardMinutes(MAX_TIME_DEVIATION_MINUTES))) {
-                        Color.RED
-                    } else {
+                when {
+                    !podStateManager.sameTimeZone ->
+                        Color.MAGENTA
+                    timeDeviationTooBig ->
+                        Color.YELLOW
+                    else ->
                         Color.WHITE
-                    }
-                } ?: Color.WHITE
+                }
             )
 
             // Update Pod expiry time
             val expiresAt = podStateManager.expiry
-            if (expiresAt == null) {
-                podInfoBinding.podExpiryDate.text = PLACEHOLDER
-                podInfoBinding.podExpiryDate.setTextColor(Color.WHITE)
-            } else {
-                podInfoBinding.podExpiryDate.text = readableZonedTime(expiresAt)
-                podInfoBinding.podExpiryDate.setTextColor(
-                    if (DateTime.now().isAfter(expiresAt)) {
-                        Color.RED
-                    } else {
-                        Color.WHITE
-                    }
-                )
+            podInfoBinding.podExpiryDate.text = expiresAt?.let {
+                dateUtil.dateAndTimeString(it.toEpochSecond() * 1000)
             }
+                ?: PLACEHOLDER
+            podInfoBinding.podExpiryDate.setTextColor(
+                if (expiresAt != null && ZonedDateTime.now().isAfter(expiresAt))
+                    Color.RED
+                else
+                    Color.WHITE
+            )
 
             podStateManager.alarmType?.let {
                 errors.add(
@@ -371,14 +378,14 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     private fun updateLastConnection() {
         if (podStateManager.isUniqueIdSet) {
             podInfoBinding.lastConnection.text = readableDuration(
-                Duration(
-                    podStateManager.lastUpdatedSystem,
-                    System
-                        .currentTimeMillis()
+                Duration.ofMillis(
+                    System.currentTimeMillis() -
+                        podStateManager.lastUpdatedSystem,
+
                 )
             )
             val lastConnectionColor =
-                if (omnipodDashPumpPlugin.isUnreachableAlertTimeoutExceeded(getPumpUnreachableTimeout().millis)) {
+                if (omnipodDashPumpPlugin.isUnreachableAlertTimeoutExceeded(getPumpUnreachableTimeout().toMillis())) {
                     Color.RED
                 } else {
                     Color.WHITE
@@ -425,12 +432,14 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             }
         }
 
-        val podStatusColor =
-            if (!podStateManager.isActivationCompleted || podStateManager.isPodKaput || podStateManager.isSuspended) {
+        val podStatusColor = when {
+            !podStateManager.isActivationCompleted || podStateManager.isPodKaput || podStateManager.isSuspended ->
                 Color.RED
-            } else {
+            podStateManager.activeCommand != null ->
+                Color.YELLOW
+            else ->
                 Color.WHITE
-            }
+        }
         podInfoBinding.podStatus.setTextColor(podStatusColor)
     }
 
@@ -444,7 +453,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                     R.string.omnipod_common_overview_last_bolus_value,
                     omnipodDashPumpPlugin.model().determineCorrectBolusSize(requestedBolus),
                     resourceHelper.gs(R.string.insulin_unit_shortname),
-                    readableDuration(Duration(it.createdRealtime, SystemClock.elapsedRealtime()))
+                    readableDuration(Duration.ofMillis(SystemClock.elapsedRealtime() - it.createdRealtime))
                 )
                 text += " (uncertain) "
                 textColor = Color.RED
@@ -464,7 +473,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 R.string.omnipod_common_overview_last_bolus_value,
                 omnipodDashPumpPlugin.model().determineCorrectBolusSize(bolusSize),
                 resourceHelper.gs(R.string.insulin_unit_shortname),
-                readableDuration(Duration(it.startTime, System.currentTimeMillis()))
+                readableDuration(Duration.ofMillis(System.currentTimeMillis() - it.startTime))
             )
             if (!it.deliveryComplete) {
                 textColor = Color.YELLOW
@@ -600,47 +609,10 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
         }
     }
 
-    // private fun getTimeZone(): DateTimeZone {
-    //     // return getSafe(() -> podState.getTimeZone());
-    //     return podStateManager.timeZone
-    // }
-    private fun getTimeZone(): TimeZone {
-        // Return timezone ID (e.g "Europe/Amsterdam")
-        return podStateManager.timeZone
-    }
-
-    private fun readableZonedTime(time: DateTime): String {
-        val timeAsJavaData = time.toLocalDateTime().toDate()
-        return dateUtil.dateAndTimeString(timeAsJavaData.time)
-
-        // // TODO: Handle timeZone ID
-        // val timeZone = getTimeZone()
-        // if (timeZone == "") {
-        //     // No timezone defined, use local time (default)
-        //     return dateUtil.dateAndTimeString(timeAsJavaData.time)
-        // }
-        // else {
-        //     // Get full timezoned time
-        //     val isDaylightTime = timeZone.inDaylightTime(timeAsJavaData)
-        //     val locale = resources.configuration.locales.get(0)
-        //     val timeZoneDisplayName =
-        //         timeZone.getDisplayName(isDaylightTime, TimeZone.SHORT, locale) + " " + timeZone.getDisplayName(
-        //             isDaylightTime,
-        //             TimeZone.LONG,
-        //             locale
-        //         )
-        //     return resourceHelper.gs(
-        //         R.string.omnipod_common_time_with_timezone,
-        //         dateUtil.dateAndTimeString(timeAsJavaData.time),
-        //         timeZoneDisplayName
-        //     )
-        // }
-    }
-
     private fun readableDuration(duration: Duration): String {
-        val hours = duration.standardHours.toInt()
-        val minutes = duration.standardMinutes.toInt()
-        val seconds = duration.standardSeconds.toInt()
+        val hours = duration.toHours().toInt()
+        val minutes = duration.toMinutes().toInt()
+        val seconds = duration.seconds
         when {
             seconds < 10 -> {
                 return resourceHelper.gs(R.string.omnipod_common_moments_ago)
@@ -683,7 +655,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
     // FIXME ideally we should just have access to LocalAlertUtils here
     private fun getPumpUnreachableTimeout(): Duration {
-        return Duration.standardMinutes(
+        return Duration.ofMinutes(
             sp.getInt(
                 R.string.key_pump_unreachable_threshold_minutes,
                 Constants.DEFAULT_PUMP_UNREACHABLE_THRESHOLD_MINUTES

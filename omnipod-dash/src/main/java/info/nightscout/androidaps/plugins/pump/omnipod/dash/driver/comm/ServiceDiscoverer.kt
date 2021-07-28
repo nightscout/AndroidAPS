@@ -7,26 +7,40 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.callbacks.BleCommCallbacks
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.ConnectException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.CharacteristicType
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.Connected
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.Connection
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.Connection.Companion.STOP_CONNECTING_CHECK_INTERVAL_MS
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.ConnectionWaitCondition
 import java.math.BigInteger
 import java.util.*
 
 class ServiceDiscoverer(
     private val logger: AAPSLogger,
     private val gatt: BluetoothGatt,
-    private val bleCallbacks: BleCommCallbacks
+    private val bleCallbacks: BleCommCallbacks,
+    private val connection: Connection
 ) {
 
     /***
      * This is first step after connection establishment
      */
-    fun discoverServices(): Map<CharacteristicType, BluetoothGattCharacteristic> {
+    fun discoverServices(connectionWaitCond: ConnectionWaitCondition): Map<CharacteristicType, BluetoothGattCharacteristic> {
         logger.debug(LTag.PUMPBTCOMM, "Discovering services")
         bleCallbacks.startServiceDiscovery()
         val discover = gatt.discoverServices()
         if (!discover) {
             throw ConnectException("Could not start discovering services`")
         }
-        bleCallbacks.waitForServiceDiscovery(DISCOVER_SERVICES_TIMEOUT_MS)
+        connectionWaitCond.timeoutMs?.let {
+            bleCallbacks.waitForServiceDiscovery(it)
+        }
+        connectionWaitCond.stopConnection?.let {
+            while (!bleCallbacks.waitForServiceDiscovery(STOP_CONNECTING_CHECK_INTERVAL_MS)) {
+                if (it.count == 0L || connection.connectionState() !is Connected) {
+                    throw ConnectException("stopConnecting called")
+                }
+            }
+        }
         logger.debug(LTag.PUMPBTCOMM, "Services discovered")
         val service = gatt.getService(SERVICE_UUID.toUuid())
             ?: throw ConnectException("Service not found: $SERVICE_UUID")
@@ -34,11 +48,10 @@ class ServiceDiscoverer(
             ?: throw ConnectException("Characteristic not found: ${CharacteristicType.CMD.value}")
         val dataChar = service.getCharacteristic(CharacteristicType.DATA.uuid)
             ?: throw ConnectException("Characteristic not found: ${CharacteristicType.DATA.value}")
-        var chars = mapOf(
+        return mapOf(
             CharacteristicType.CMD to cmdChar,
             CharacteristicType.DATA to dataChar
         )
-        return chars
     }
 
     private fun String.toUuid(): UUID = UUID(
@@ -49,6 +62,5 @@ class ServiceDiscoverer(
     companion object {
 
         private const val SERVICE_UUID = "1a7e-4024-e3ed-4464-8b7e-751e03d0dc5f"
-        private const val DISCOVER_SERVICES_TIMEOUT_MS = 5000
     }
 }
