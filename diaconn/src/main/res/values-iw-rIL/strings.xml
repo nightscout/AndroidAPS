@@ -1,2 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="resetpairing">מחיקת צימוד</string>
+    <string name="diaconn_nodeviceavailable">אין מכשירים זמינים</string>
+    <string name="diaconn_pairing">צימוד משאבת Diaconn</string>
+</resources>
