@@ -382,6 +382,9 @@
     <string name="ue_timestamp">Отметка времени</string>
     <string name="ue_none">Нет единиц</string>
     <string name="ue_export_to_csv">Экспорт пользовательских записей в Excel (csv)</string>
+    <string name="uel_loop_change">КОНТУР ИЗМЕНЕН</string>
+    <string name="uel_loop_removed">КОНТУР УДАЛЕН</string>
+    <string name="uel_other">ДРУГОЕ</string>
     <plurals name="days">
         <item quantity="one">%1$d день</item>
         <item quantity="few">%1$d дня</item>
