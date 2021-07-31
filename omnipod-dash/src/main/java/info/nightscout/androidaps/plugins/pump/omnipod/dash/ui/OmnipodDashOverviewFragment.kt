@@ -232,11 +232,11 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             ?: PLACEHOLDER
         bluetoothStatusBinding.omnipodDashBluetoothStatus.text =
             when (podStateManager.bluetoothConnectionState) {
-                OmnipodDashPodStateManager.BluetoothConnectionState.CONNECTED    ->
+                OmnipodDashPodStateManager.BluetoothConnectionState.CONNECTED ->
                     "{fa-bluetooth}"
                 OmnipodDashPodStateManager.BluetoothConnectionState.DISCONNECTED ->
                     "{fa-bluetooth-b}"
-                OmnipodDashPodStateManager.BluetoothConnectionState.CONNECTING   ->
+                OmnipodDashPodStateManager.BluetoothConnectionState.CONNECTING ->
                     "{fa-bluetooth-b spin}"
             }
 
@@ -250,7 +250,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 Color.WHITE
             connectionSuccessPercentage > 60 ->
                 Color.YELLOW
-            else                             ->
+            else ->
                 Color.RED
         }
         bluetoothStatusBinding.omnipodDashBluetoothConnectionQuality.setTextColor(connectionStatsColor)
@@ -308,9 +308,9 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 when {
                     !podStateManager.sameTimeZone ->
                         Color.MAGENTA
-                    timeDeviationTooBig           ->
+                    timeDeviationTooBig ->
                         Color.YELLOW
-                    else                          ->
+                    else ->
                         Color.WHITE
                 }
             )
@@ -406,7 +406,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                     System.currentTimeMillis() -
                         podStateManager.lastUpdatedSystem,
 
-                    )
+                )
             )
             val lastConnectionColor =
                 if (omnipodDashPumpPlugin.isUnreachableAlertTimeoutExceeded(getPumpUnreachableTimeout().toMillis())) {
@@ -455,9 +455,9 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
         val podStatusColor = when {
             !podStateManager.isActivationCompleted || podStateManager.isPodKaput || podStateManager.isSuspended ->
                 Color.RED
-            podStateManager.activeCommand != null                                                               ->
+            podStateManager.activeCommand != null ->
                 Color.YELLOW
-            else                                                                                                ->
+            else ->
                 Color.WHITE
         }
         podInfoBinding.podStatus.setTextColor(podStatusColor)
@@ -552,7 +552,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     private fun updateRefreshStatusButton() {
         buttonBinding.buttonRefreshStatus.isEnabled =
             podStateManager.isUniqueIdSet &&
-                isQueueEmpty()
+            isQueueEmpty()
     }
 
     private fun updateResumeDeliveryButton() {
@@ -634,15 +634,15 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
         val minutes = duration.toMinutes().toInt()
         val seconds = duration.seconds
         when {
-            seconds < 10           -> {
+            seconds < 10 -> {
                 return resourceHelper.gs(R.string.omnipod_common_moments_ago)
             }
 
-            seconds < 60           -> {
+            seconds < 60 -> {
                 return resourceHelper.gs(R.string.omnipod_common_less_than_a_minute_ago)
             }
 
-            seconds < 60 * 60      -> { // < 1 hour
+            seconds < 60 * 60 -> { // < 1 hour
                 return resourceHelper.gs(
                     R.string.omnipod_common_time_ago,
                     resourceHelper.gq(R.plurals.omnipod_common_minutes, minutes, minutes)
@@ -666,7 +666,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 )
             }
 
-            else                   -> {
+            else -> {
                 val days = hours / 24
                 val hoursLeft = hours % 24
                 if (hoursLeft > 0)
