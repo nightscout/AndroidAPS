@@ -36,6 +36,7 @@ import info.nightscout.androidaps.queue.events.EventQueueChanged
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -62,6 +63,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var pumpSync: PumpSync
+    @Inject lateinit var buildHelper: BuildHelper
 
     companion object {
 
