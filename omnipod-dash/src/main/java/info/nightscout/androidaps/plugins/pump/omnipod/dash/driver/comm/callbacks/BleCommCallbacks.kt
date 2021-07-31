@@ -211,8 +211,8 @@ class BleCommCallbacks(
 
     fun resetConnection() {
         aapsLogger.debug(LTag.PUMPBTCOMM, "Reset connection")
-        connected?.countDown()
-        serviceDiscoveryComplete?.countDown()
+        connected.countDown()
+        serviceDiscoveryComplete.countDown()
         connected = CountDownLatch(1)
         serviceDiscoveryComplete = CountDownLatch(1)
         flushConfirmationQueue()

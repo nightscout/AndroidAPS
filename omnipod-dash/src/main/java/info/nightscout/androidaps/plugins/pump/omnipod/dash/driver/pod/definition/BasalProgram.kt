@@ -15,8 +15,6 @@ class BasalProgram(
 
     fun hasZeroUnitSegments() = segments.any { it.basalRateInHundredthUnitsPerHour == 0 }
 
-    fun isZeroBasal() = segments.sumBy(Segment::basalRateInHundredthUnitsPerHour) == 0
-
     fun rateAt(date: Date): Double {
         val instance = Calendar.getInstance()
         instance.time = date
