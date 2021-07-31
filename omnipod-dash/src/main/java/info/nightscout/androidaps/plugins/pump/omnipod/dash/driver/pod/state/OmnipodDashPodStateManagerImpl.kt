@@ -98,6 +98,22 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             }
         }
 
+    override var connectionAttempts: Int
+        @Synchronized
+        get() = podState.connectionAttempts
+        @Synchronized
+        set(value) {
+            podState.connectionAttempts = value
+        }
+
+    override var successfulConnections: Int
+        @Synchronized
+        get() = podState.successfulConnections
+        @Synchronized
+        set(value) {
+            podState.successfulConnections = value
+        }
+
     override var timeZone: TimeZone
         get() = TimeZone.getTimeZone(podState.timeZone)
         set(tz) {
@@ -588,6 +604,14 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         podState.uniqueId = uniqueId.toLong()
     }
 
+    override fun connectionSuccessRatio(): Float {
+        val attempts = connectionAttempts
+        if (attempts == 0) {
+            return 1.0F
+        }
+        return successfulConnections.toFloat() * 100 / attempts.toFloat()
+    }
+
     override fun reset() {
         podState = PodState()
         store()
@@ -625,6 +649,8 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         var lastStatusResponseReceived: Long = 0
         var bluetoothConnectionState: OmnipodDashPodStateManager.BluetoothConnectionState =
             OmnipodDashPodStateManager.BluetoothConnectionState.DISCONNECTED
+        var connectionAttempts = 0
+        var successfulConnections = 0
         var messageSequenceNumber: Short = 0
         var sequenceNumberOfLastProgrammingCommand: Short? = null
         var activationTime: Long? = null

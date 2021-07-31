@@ -24,7 +24,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.Comm
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandResumeDelivery
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandSilenceAlerts
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandSuspendDelivery
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.BuildConfig
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.EventOmnipodDashPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.OmnipodDashPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
@@ -83,17 +82,17 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
         }
     }
 
-    var _binding: OmnipodDashOverviewBinding? = null
-    var _bluetoothStatusBinding: OmnipodDashOverviewBluetoothStatusBinding? = null
-    var _podInfoBinding: OmnipodCommonOverviewPodInfoBinding? = null
-    var _buttonBinding: OmnipodCommonOverviewButtonsBinding? = null
+    private var _binding: OmnipodDashOverviewBinding? = null
+    private var _bluetoothStatusBinding: OmnipodDashOverviewBluetoothStatusBinding? = null
+    private var _podInfoBinding: OmnipodCommonOverviewPodInfoBinding? = null
+    private var _buttonBinding: OmnipodCommonOverviewButtonsBinding? = null
 
     // These properties are only valid between onCreateView and
     // onDestroyView.
     val binding get() = _binding!!
     val bluetoothStatusBinding get() = _bluetoothStatusBinding!!
-    val podInfoBinding get() = _podInfoBinding!!
-    val buttonBinding get() = _buttonBinding!!
+    private val podInfoBinding get() = _podInfoBinding!!
+    private val buttonBinding get() = _buttonBinding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         OmnipodDashOverviewBinding.inflate(inflater, container, false).also {
@@ -234,6 +233,23 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 OmnipodDashPodStateManager.BluetoothConnectionState.CONNECTING ->
                     "{fa-bluetooth-b spin}"
             }
+
+        val connectionSuccessPercentage = podStateManager.connectionSuccessRatio() * 100
+        val successPercentageString = String.format("%.2f %", podStateManager.connectionSuccessRatio())
+        val connectionQuality = "${podStateManager.successfulConnections}/${podStateManager.connectionAttempts} :: $successPercentageString"
+        bluetoothStatusBinding.omnipodDashBluetoothConnectionQuality.text = connectionQuality
+        val connectionStatsColor = when {
+            connectionSuccessPercentage > 90 ->
+                Color.WHITE
+            connectionSuccessPercentage > 60 ->
+                Color.YELLOW
+            else                             ->
+                Color.RED
+        }
+        bluetoothStatusBinding.omnipodDashBluetoothConnectionQuality.setTextColor(connectionStatsColor)
+        bluetoothStatusBinding.omnipodDashDeliveryStatus.text = podStateManager.deliveryStatus?.let {
+            podStateManager.deliveryStatus.toString()
+        } ?: PLACEHOLDER
     }
 
     private fun updateOmnipodStatus() {
@@ -361,8 +377,8 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 )
             }
 
-            podInfoBinding.podActiveAlerts.text = podStateManager.activeAlerts?.let {
-                it.map { it.toString() }.joinToString(",")
+            podInfoBinding.podActiveAlerts.text = podStateManager.activeAlerts?.let { it ->
+                it.joinToString(",") { it.toString() }
             } ?: PLACEHOLDER
         }
 
@@ -415,12 +431,8 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 if (podStateManager.isSuspended) {
                     resourceHelper.gs(R.string.omnipod_common_pod_status_suspended)
                 } else {
-                    resourceHelper.gs(R.string.omnipod_common_pod_status_running) +
-                        if (BuildConfig.DEBUG)
-                            podStateManager.deliveryStatus?.let { " " + podStateManager.deliveryStatus.toString() }
-                        else ""
+                    resourceHelper.gs(R.string.omnipod_common_pod_status_running)
                 }
-                // TODO
                 /*
             } else if (podStateManager.podStatus == PodProgressStatus.FAULT_EVENT_OCCURRED) {
                 resourceHelper.gs(R.string.omnipod_common_pod_status_pod_fault)
@@ -466,10 +478,10 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
         podInfoBinding.lastBolus.setTextColor(textColor)
         podStateManager.lastBolus?.let {
             // display requested units if delivery is in progress
-            var bolusSize = it.deliveredUnits()
+            val bolusSize = it.deliveredUnits()
                 ?: it.requestedUnits
 
-            var text = resourceHelper.gs(
+            val text = resourceHelper.gs(
                 R.string.omnipod_common_overview_last_bolus_value,
                 omnipodDashPumpPlugin.model().determineCorrectBolusSize(bolusSize),
                 resourceHelper.gs(R.string.insulin_unit_shortname),

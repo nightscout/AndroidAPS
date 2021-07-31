@@ -166,7 +166,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
                 throw SessionEstablishmentException("Received resynchronization SQN for the second time")
             }
         }
-
+        podState.successfulConnections++
         podState.commitEapAkaSequenceNumber()
     }
 
@@ -223,6 +223,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
             }
             emitter.onNext(PodEvent.EstablishingSession)
             establishSession(pairResult.msgSeq)
+            podState.successfulConnections++
             emitter.onNext(PodEvent.Connected)
             emitter.onComplete()
         } catch (ex: Exception) {
