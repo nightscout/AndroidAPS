@@ -218,6 +218,9 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        _bluetoothStatusBinding = null
+        _buttonBinding = null
+        _podInfoBinding = null
     }
 
     private fun updateUi() {
