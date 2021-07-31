@@ -19,7 +19,6 @@ import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective
 import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin
-import info.nightscout.androidaps.plugins.general.maintenance.LoggerUtils
 import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin

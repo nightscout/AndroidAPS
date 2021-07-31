@@ -36,6 +36,7 @@ import info.nightscout.androidaps.queue.events.EventQueueChanged
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -62,6 +63,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var pumpSync: PumpSync
+    @Inject lateinit var buildHelper: BuildHelper
 
     companion object {
 
@@ -165,6 +167,10 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                     .messageOnSuccess(resourceHelper.gs(R.string.omnipod_common_confirmation_time_on_pod_updated))
             )
         }
+        if (buildHelper.isEngineeringMode()) {
+            bluetoothStatusBinding.deliveryStatus.visibility = View.VISIBLE
+            bluetoothStatusBinding.connectionQuality.visibility = View.VISIBLE
+        }
     }
 
     override fun onResume() {
@@ -226,18 +232,19 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             ?: PLACEHOLDER
         bluetoothStatusBinding.omnipodDashBluetoothStatus.text =
             when (podStateManager.bluetoothConnectionState) {
-                OmnipodDashPodStateManager.BluetoothConnectionState.CONNECTED ->
+                OmnipodDashPodStateManager.BluetoothConnectionState.CONNECTED    ->
                     "{fa-bluetooth}"
                 OmnipodDashPodStateManager.BluetoothConnectionState.DISCONNECTED ->
                     "{fa-bluetooth-b}"
-                OmnipodDashPodStateManager.BluetoothConnectionState.CONNECTING ->
+                OmnipodDashPodStateManager.BluetoothConnectionState.CONNECTING   ->
                     "{fa-bluetooth-b spin}"
             }
 
         val connectionSuccessPercentage = podStateManager.connectionSuccessRatio() * 100
-        val successPercentageString = String.format("%.2f %", podStateManager.connectionSuccessRatio())
-        val connectionQuality = "${podStateManager.successfulConnections}/${podStateManager.connectionAttempts} :: $successPercentageString"
-        bluetoothStatusBinding.omnipodDashBluetoothConnectionQuality.text = connectionQuality
+        val successPercentageString = String.format("%.2f %%", podStateManager.connectionSuccessRatio())
+        val quality =
+            "${podStateManager.successfulConnections}/${podStateManager.connectionAttempts} :: $successPercentageString"
+        bluetoothStatusBinding.omnipodDashBluetoothConnectionQuality.text = quality
         val connectionStatsColor = when {
             connectionSuccessPercentage > 90 ->
                 Color.WHITE
@@ -301,9 +308,9 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 when {
                     !podStateManager.sameTimeZone ->
                         Color.MAGENTA
-                    timeDeviationTooBig ->
+                    timeDeviationTooBig           ->
                         Color.YELLOW
-                    else ->
+                    else                          ->
                         Color.WHITE
                 }
             )
@@ -332,15 +339,16 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             }
 
             // base basal rate
-            podInfoBinding.baseBasalRate.text = if (podStateManager.basalProgram != null && !podStateManager.isSuspended) {
-                resourceHelper.gs(
-                    R.string.pump_basebasalrate,
-                    omnipodDashPumpPlugin.model()
-                        .determineCorrectBasalSize(podStateManager.basalProgram!!.rateAt(Date()))
-                )
-            } else {
-                PLACEHOLDER
-            }
+            podInfoBinding.baseBasalRate.text =
+                if (podStateManager.basalProgram != null && !podStateManager.isSuspended) {
+                    resourceHelper.gs(
+                        R.string.pump_basebasalrate,
+                        omnipodDashPumpPlugin.model()
+                            .determineCorrectBasalSize(podStateManager.basalProgram!!.rateAt(Date()))
+                    )
+                } else {
+                    PLACEHOLDER
+                }
 
             // total delivered
             podInfoBinding.totalDelivered.text =
@@ -398,7 +406,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                     System.currentTimeMillis() -
                         podStateManager.lastUpdatedSystem,
 
-                )
+                    )
             )
             val lastConnectionColor =
                 if (omnipodDashPumpPlugin.isUnreachableAlertTimeoutExceeded(getPumpUnreachableTimeout().toMillis())) {
@@ -447,9 +455,9 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
         val podStatusColor = when {
             !podStateManager.isActivationCompleted || podStateManager.isPodKaput || podStateManager.isSuspended ->
                 Color.RED
-            podStateManager.activeCommand != null ->
+            podStateManager.activeCommand != null                                                               ->
                 Color.YELLOW
-            else ->
+            else                                                                                                ->
                 Color.WHITE
         }
         podInfoBinding.podStatus.setTextColor(podStatusColor)
@@ -544,7 +552,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     private fun updateRefreshStatusButton() {
         buttonBinding.buttonRefreshStatus.isEnabled =
             podStateManager.isUniqueIdSet &&
-            isQueueEmpty()
+                isQueueEmpty()
     }
 
     private fun updateResumeDeliveryButton() {
@@ -626,16 +634,19 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
         val minutes = duration.toMinutes().toInt()
         val seconds = duration.seconds
         when {
-            seconds < 10 -> {
+            seconds < 10           -> {
                 return resourceHelper.gs(R.string.omnipod_common_moments_ago)
             }
 
-            seconds < 60 -> {
+            seconds < 60           -> {
                 return resourceHelper.gs(R.string.omnipod_common_less_than_a_minute_ago)
             }
 
-            seconds < 60 * 60 -> { // < 1 hour
-                return resourceHelper.gs(R.string.omnipod_common_time_ago, resourceHelper.gq(R.plurals.omnipod_common_minutes, minutes, minutes))
+            seconds < 60 * 60      -> { // < 1 hour
+                return resourceHelper.gs(
+                    R.string.omnipod_common_time_ago,
+                    resourceHelper.gq(R.plurals.omnipod_common_minutes, minutes, minutes)
+                )
             }
 
             seconds < 24 * 60 * 60 -> { // < 1 day
@@ -643,20 +654,34 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 if (minutesLeft > 0)
                     return resourceHelper.gs(
                         R.string.omnipod_common_time_ago,
-                        resourceHelper.gs(R.string.omnipod_common_composite_time, resourceHelper.gq(R.plurals.omnipod_common_hours, hours, hours), resourceHelper.gq(R.plurals.omnipod_common_minutes, minutesLeft, minutesLeft))
+                        resourceHelper.gs(
+                            R.string.omnipod_common_composite_time,
+                            resourceHelper.gq(R.plurals.omnipod_common_hours, hours, hours),
+                            resourceHelper.gq(R.plurals.omnipod_common_minutes, minutesLeft, minutesLeft)
+                        )
                     )
-                return resourceHelper.gs(R.string.omnipod_common_time_ago, resourceHelper.gq(R.plurals.omnipod_common_hours, hours, hours))
+                return resourceHelper.gs(
+                    R.string.omnipod_common_time_ago,
+                    resourceHelper.gq(R.plurals.omnipod_common_hours, hours, hours)
+                )
             }
 
-            else -> {
+            else                   -> {
                 val days = hours / 24
                 val hoursLeft = hours % 24
                 if (hoursLeft > 0)
                     return resourceHelper.gs(
                         R.string.omnipod_common_time_ago,
-                        resourceHelper.gs(R.string.omnipod_common_composite_time, resourceHelper.gq(R.plurals.omnipod_common_days, days, days), resourceHelper.gq(R.plurals.omnipod_common_hours, hoursLeft, hoursLeft))
+                        resourceHelper.gs(
+                            R.string.omnipod_common_composite_time,
+                            resourceHelper.gq(R.plurals.omnipod_common_days, days, days),
+                            resourceHelper.gq(R.plurals.omnipod_common_hours, hoursLeft, hoursLeft)
+                        )
                     )
-                return resourceHelper.gs(R.string.omnipod_common_time_ago, resourceHelper.gq(R.plurals.omnipod_common_days, days, days))
+                return resourceHelper.gs(
+                    R.string.omnipod_common_time_ago,
+                    resourceHelper.gq(R.plurals.omnipod_common_days, days, days)
+                )
             }
         }
     }

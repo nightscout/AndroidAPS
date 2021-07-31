@@ -79,9 +79,11 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/connectionQuality"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="match_parent"
@@ -112,15 +114,16 @@
             android:gravity="start"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
-            android:text="{fa-bluetooth-b} "
             android:textSize="14sp"
             tools:ignore="HardcodedText" />
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/deliveryStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="match_parent"
@@ -151,7 +154,6 @@
             android:gravity="start"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
-            android:text="{fa-bluetooth-b} "
             android:textSize="14sp"
             tools:ignore="HardcodedText" />
     </LinearLayout>
