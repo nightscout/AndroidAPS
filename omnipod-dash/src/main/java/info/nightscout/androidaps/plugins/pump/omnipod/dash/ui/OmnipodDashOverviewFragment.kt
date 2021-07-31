@@ -169,6 +169,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
         }
         if (buildHelper.isEngineeringMode()) {
             bluetoothStatusBinding.deliveryStatus.visibility = View.VISIBLE
+            bluetoothStatusBinding.connectionQuality.visibility = View.VISIBLE
         }
     }
 
@@ -240,10 +241,10 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             }
 
         val connectionSuccessPercentage = podStateManager.connectionSuccessRatio() * 100
-        val successPercentageString = String.format("%.2f %", podStateManager.connectionSuccessRatio())
-        val connectionQuality =
+        val successPercentageString = String.format("%.2f %%", podStateManager.connectionSuccessRatio())
+        val quality =
             "${podStateManager.successfulConnections}/${podStateManager.connectionAttempts} :: $successPercentageString"
-        bluetoothStatusBinding.omnipodDashBluetoothConnectionQuality.text = connectionQuality
+        bluetoothStatusBinding.omnipodDashBluetoothConnectionQuality.text = quality
         val connectionStatsColor = when {
             connectionSuccessPercentage > 90 ->
                 Color.WHITE
