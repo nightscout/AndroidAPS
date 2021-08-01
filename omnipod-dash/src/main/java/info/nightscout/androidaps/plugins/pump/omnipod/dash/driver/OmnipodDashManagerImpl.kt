@@ -412,7 +412,16 @@ class OmnipodDashManagerImpl @Inject constructor(
                     ), // FIXME use activation time
                     BeepType.FOUR_TIMES_BIP_BEEP,
                     BeepRepetitionType.XXX4
-                )
+                ),
+                AlertConfiguration(
+                    AlertType.SUSPEND_IN_PROGRESS,
+                    enabled = true,
+                    durationInMinutes = 15,
+                    autoOff = false,
+                    AlertTrigger.TimerTrigger(15),
+                    BeepType.XXX,
+                    BeepRepetitionType.XXX4
+                ),
             )
             val userExpiryAlertDelay = podLifeLeft.minus(
                 Duration.ofHours(userConfiguredExpirationHours ?: MAX_POD_LIFETIME.toHours() + 1)

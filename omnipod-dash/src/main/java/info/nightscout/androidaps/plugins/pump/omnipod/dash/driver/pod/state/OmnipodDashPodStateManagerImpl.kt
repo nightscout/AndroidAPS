@@ -117,7 +117,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     override var timeZone: TimeZone
         get() = TimeZone.getTimeZone(podState.timeZone)
         set(tz) {
-            podState.timeZone = tz.getDisplayName(true, TimeZone.SHORT)
+            podState.timeZone = tz.getDisplayName(false, TimeZone.SHORT)
             store()
         }
 
