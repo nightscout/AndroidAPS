@@ -147,13 +147,12 @@ class OmnipodDashPumpPlugin @Inject constructor(
             } else {
                 rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED))
                 if (podStateManager.isSuspended) {
-                    val notification =
-                        Notification(
-                            Notification.OMNIPOD_POD_SUSPENDED,
-                            "Insulin delivery suspended",
-                            Notification.NORMAL
-                        )
-                    rxBus.send(EventNewNotification(notification))
+                    showNotification(
+                        Notification.OMNIPOD_POD_SUSPENDED,
+                        "Insulin delivery suspended",
+                        Notification.NORMAL,
+                        R.raw.boluserror
+                    )
                 } else {
                     rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_SUSPENDED))
                     if (!podStateManager.sameTimeZone) {
@@ -1391,6 +1390,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 sp.getBoolean(R.string.key_omnipod_common_notification_uncertain_tbr_sound_enabled, true)
             Notification.OMNIPOD_UNCERTAIN_SMB ->
                 sp.getBoolean(R.string.key_omnipod_common_notification_uncertain_smb_sound_enabled, true)
+            Notification.OMNIPOD_POD_SUSPENDED ->
+                sp.getBoolean(R.string.key_omnipod_common_notification_delivery_suspended_sound_enabled, true)
             else -> true
         }
     }
