@@ -4,6 +4,6 @@ import java.time.Duration
 
 class PodConstants {
     companion object {
-        val MAX_POD_LIFETIME = Duration.ofMinutes(80)
+        val MAX_POD_LIFETIME = Duration.ofHours(80)
     }
 }
