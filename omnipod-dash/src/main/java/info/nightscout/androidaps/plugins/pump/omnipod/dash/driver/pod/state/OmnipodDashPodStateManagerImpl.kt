@@ -233,6 +233,13 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             return null
         }
 
+    override var alarmSynced: Boolean
+        get() = podState.alarmSynced
+        set(value) {
+            podState.alarmSynced = value
+            store()
+        }
+
     override var bluetoothConnectionState: OmnipodDashPodStateManager.BluetoothConnectionState
         @Synchronized
         get() = podState.bluetoothConnectionState
@@ -498,8 +505,10 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
                 podState.lastStatusResponseReceived = 0
             }
 
-            CommandSendingFailure, NoActiveCommand ->
+            CommandSendingFailure, NoActiveCommand -> {
                 podState.activeCommand = null
+                podState.lastStatusResponseReceived = 0
+            }
         }
     }
 
@@ -660,6 +669,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         var eapAkaSequenceNumber: Long = 1
         var bolusPulsesRemaining: Short = 0
         var timeZone: String = "" // TimeZone ID (e.g. "Europe/Amsterdam")
+        var alarmSynced: Boolean = false
 
         var bleVersion: SoftwareVersion? = null
         var firmwareVersion: SoftwareVersion? = null

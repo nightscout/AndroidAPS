@@ -328,6 +328,15 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 Notification.URGENT,
                 R.raw.boluserror
             )
+            if (!podStateManager.alarmSynced) {
+                pumpSync.insertAnnouncement(
+                    error = podStateManager.alarmType?.toString() ?: "Unknown pod failure",
+                    pumpId = Random.Default.nextLong(),
+                    pumpType = PumpType.OMNIPOD_DASH,
+                    pumpSerial = serialNumber()
+                )
+                podStateManager.alarmSynced = true
+            }
         }
         Completable.complete()
     }
@@ -1068,7 +1077,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
     private fun deactivatePod(): PumpEnactResult {
         val ret = executeProgrammingCommand(
             historyEntry = history.createRecord(OmnipodCommandType.DEACTIVATE_POD),
-            command = omnipodManager.deactivatePod().ignoreElements()
+            command = omnipodManager.deactivatePod().ignoreElements(),
+            checkNoActiveCommand = false,
         ).doOnComplete {
             rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_FAULT))
         }.toPumpEnactResult()
