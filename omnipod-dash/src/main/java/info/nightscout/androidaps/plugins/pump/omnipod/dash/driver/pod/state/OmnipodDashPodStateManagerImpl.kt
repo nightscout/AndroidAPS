@@ -124,9 +124,18 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     override val sameTimeZone: Boolean
         get() {
             val now = System.currentTimeMillis()
-            val currentOffset = TimeZone.getDefault().getOffset(now)
+            val currentTimezone = TimeZone.getDefault()
+            val currentOffset = currentTimezone.getOffset(now)
             val podOffset = timeZone.getOffset(now)
-            logger.debug(LTag.PUMPCOMM, "sameTimeZone currentOffset=$currentOffset podOffset=$podOffset")
+            logger.debug(
+                LTag.PUMPCOMM,
+                "sameTimeZone currentTimezone=${currentTimezone.getDisplayName(
+                    true,
+                    TimeZone.SHORT
+                )} " +
+                    "currentOffset=$currentOffset " +
+                    "podOffset=$podOffset"
+            )
             return currentOffset == podOffset
         }
 
@@ -588,7 +597,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     override fun updateFromAlarmStatusResponse(response: AlarmStatusResponse) {
         logger.info(
             LTag.PUMP,
-            "Received AlarmStatusReponse: $response"
+            "Received AlarmStatusResponse: $response"
         )
         podState.deliveryStatus = response.deliveryStatus
         podState.podStatus = response.podStatus
