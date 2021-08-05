@@ -64,7 +64,7 @@ class Connection(
 
     fun connect(connectionWaitCond: ConnectionWaitCondition) {
         aapsLogger.debug("Connecting connectionWaitCond=$connectionWaitCond")
-
+        podState.connectionAttempts++
         podState.bluetoothConnectionState = OmnipodDashPodStateManager.BluetoothConnectionState.CONNECTING
         val autoConnect = false
         val gatt = gattConnection

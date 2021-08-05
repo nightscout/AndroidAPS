@@ -4,14 +4,11 @@ import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
 import java.io.File
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class BuildHelper @Inject constructor(
+class BuildHelperImpl constructor(
     private val config: Config,
     fileListProvider: PrefFileListProvider
-) {
+) : BuildHelper {
 
     private var devBranch = false
     private var engineeringMode = false
@@ -23,11 +20,10 @@ class BuildHelper @Inject constructor(
         devBranch = BuildConfig.VERSION.contains("-") || BuildConfig.VERSION.matches(Regex(".*[a-zA-Z]+.*"))
     }
 
-    fun isEngineeringModeOrRelease(): Boolean =
+    override fun isEngineeringModeOrRelease(): Boolean =
         if (!config.APS) true else engineeringMode || !devBranch
 
-    fun isEngineeringMode(): Boolean =
-        engineeringMode
+    override fun isEngineeringMode(): Boolean = engineeringMode
 
-    fun isDev(): Boolean = devBranch
+    override fun isDev(): Boolean = devBranch
 }

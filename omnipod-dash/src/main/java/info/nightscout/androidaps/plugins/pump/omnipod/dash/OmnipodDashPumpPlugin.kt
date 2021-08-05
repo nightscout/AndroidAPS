@@ -147,13 +147,12 @@ class OmnipodDashPumpPlugin @Inject constructor(
             } else {
                 rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED))
                 if (podStateManager.isSuspended) {
-                    val notification =
-                        Notification(
-                            Notification.OMNIPOD_POD_SUSPENDED,
-                            "Insulin delivery suspended",
-                            Notification.NORMAL
-                        )
-                    rxBus.send(EventNewNotification(notification))
+                    showNotification(
+                        Notification.OMNIPOD_POD_SUSPENDED,
+                        "Insulin delivery suspended",
+                        Notification.NORMAL,
+                        R.raw.boluserror
+                    )
                 } else {
                     rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_SUSPENDED))
                     if (!podStateManager.sameTimeZone) {
@@ -246,13 +245,13 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     override fun disconnect(reason: String) {
         aapsLogger.info(LTag.PUMP, "disconnect reason=$reason")
-        stopConnecting?.let { it.countDown() }
+        stopConnecting?.countDown()
         omnipodManager.disconnect(false)
     }
 
     override fun stopConnecting() {
         aapsLogger.info(LTag.PUMP, "stopConnecting")
-        stopConnecting?.let { it.countDown() }
+        stopConnecting?.countDown()
         omnipodManager.disconnect(true)
     }
 
@@ -328,6 +327,15 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 Notification.URGENT,
                 R.raw.boluserror
             )
+            if (!podStateManager.alarmSynced) {
+                pumpSync.insertAnnouncement(
+                    error = podStateManager.alarmType?.toString() ?: "Unknown pod failure",
+                    pumpId = Random.Default.nextLong(),
+                    pumpType = PumpType.OMNIPOD_DASH,
+                    pumpSerial = serialNumber()
+                )
+                podStateManager.alarmSynced = true
+            }
         }
         Completable.complete()
     }
@@ -817,7 +825,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         val ret = pumpSync.syncTemporaryBasalWithPumpId(
             timestamp = historyEntry.createdAt,
             rate = absoluteRate,
-            duration = T.mins(durationInMinutes.toLong()).msecs(),
+            duration = T.mins(durationInMinutes).msecs(),
             isAbsolute = true,
             type = tbrType,
             pumpId = historyEntry.pumpId(),
@@ -833,7 +841,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             when {
                 podStateManager.deliveryStatus !in
                     arrayOf(DeliveryStatus.TEMP_BASAL_ACTIVE, DeliveryStatus.BOLUS_AND_TEMP_BASAL_ACTIVE) -> {
-                    // TODO: what happens if we try to cancel inexistent temp basal?
+                    // TODO: what happens if we try to cancel nonexistent temp basal?
                     aapsLogger.info(LTag.PUMP, "No temporary basal to cancel")
                     Completable.complete()
                 }
@@ -841,7 +849,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 !enforceNew ->
                     Completable.error(
                         IllegalStateException(
-                            "Temporary basal already active and enforeNew is not set."
+                            "Temporary basal already active and enforceNew is not set."
                         )
                     )
 
@@ -979,7 +987,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         aapsLogger.warn(LTag.PUMP, "Unsupported custom action: $customActionType")
     }
 
-    override fun executeCustomCommand(customCommand: CustomCommand): PumpEnactResult? {
+    override fun executeCustomCommand(customCommand: CustomCommand): PumpEnactResult {
         return when (customCommand) {
             is CommandSilenceAlerts ->
                 silenceAlerts()
@@ -1068,7 +1076,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
     private fun deactivatePod(): PumpEnactResult {
         val ret = executeProgrammingCommand(
             historyEntry = history.createRecord(OmnipodCommandType.DEACTIVATE_POD),
-            command = omnipodManager.deactivatePod().ignoreElements()
+            command = omnipodManager.deactivatePod().ignoreElements(),
+            checkNoActiveCommand = false,
         ).doOnComplete {
             rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_FAULT))
         }.toPumpEnactResult()
@@ -1381,11 +1390,9 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 sp.getBoolean(R.string.key_omnipod_common_notification_uncertain_tbr_sound_enabled, true)
             Notification.OMNIPOD_UNCERTAIN_SMB ->
                 sp.getBoolean(R.string.key_omnipod_common_notification_uncertain_smb_sound_enabled, true)
+            Notification.OMNIPOD_POD_SUSPENDED ->
+                sp.getBoolean(R.string.key_omnipod_common_notification_delivery_suspended_sound_enabled, true)
             else -> true
         }
-    }
-
-    private fun dismissNotification(id: Int) {
-        rxBus.send(EventDismissNotification(id))
     }
 }

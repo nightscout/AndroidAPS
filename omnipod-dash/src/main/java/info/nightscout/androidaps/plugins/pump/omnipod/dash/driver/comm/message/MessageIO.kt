@@ -37,8 +37,8 @@ class MessageIO(
     fun sendMessage(msg: MessagePacket): MessageSendResult {
         val foundRTS = cmdBleIO.flushIncomingQueue()
         if (foundRTS) {
-            val msg = receiveMessage(false)
-            aapsLogger.warn(LTag.PUMPBTCOMM, "sendMessage received message=$msg")
+            val receivedMessage = receiveMessage(false)
+            aapsLogger.warn(LTag.PUMPBTCOMM, "sendMessage received message=$receivedMessage")
             throw IllegalStateException("Received message while trying to send")
         }
         dataBleIO.flushIncomingQueue()

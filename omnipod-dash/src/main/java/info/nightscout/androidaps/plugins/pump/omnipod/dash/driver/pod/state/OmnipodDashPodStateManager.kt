@@ -31,6 +31,8 @@ interface OmnipodDashPodStateManager {
     val isPodRunning: Boolean
     val isPodKaput: Boolean
     var bluetoothConnectionState: BluetoothConnectionState
+    var connectionAttempts: Int
+    var successfulConnections: Int
 
     var timeZone: TimeZone
     val sameTimeZone: Boolean // The TimeZone is the same on the phone and on the pod
@@ -39,6 +41,7 @@ interface OmnipodDashPodStateManager {
     val time: ZonedDateTime?
     val timeDrift: java.time.Duration?
     val expiry: ZonedDateTime?
+    var alarmSynced: Boolean
 
     val messageSequenceNumber: Short
     val sequenceNumberOfLastProgrammingCommand: Short?
@@ -81,6 +84,7 @@ interface OmnipodDashPodStateManager {
     fun updateFromAlarmStatusResponse(response: AlarmStatusResponse)
     fun updateFromPairing(uniqueId: Id, pairResult: PairResult)
     fun reset()
+    fun connectionSuccessRatio(): Float
 
     fun createActiveCommand(
         historyId: String,
