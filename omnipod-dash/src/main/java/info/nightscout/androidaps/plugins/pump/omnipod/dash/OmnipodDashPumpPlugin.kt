@@ -147,13 +147,12 @@ class OmnipodDashPumpPlugin @Inject constructor(
             } else {
                 rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED))
                 if (podStateManager.isSuspended) {
-                    val notification =
-                        Notification(
-                            Notification.OMNIPOD_POD_SUSPENDED,
-                            "Insulin delivery suspended",
-                            Notification.NORMAL
-                        )
-                    rxBus.send(EventNewNotification(notification))
+                    showNotification(
+                        Notification.OMNIPOD_POD_SUSPENDED,
+                        "Insulin delivery suspended",
+                        Notification.NORMAL,
+                        R.raw.boluserror
+                    )
                 } else {
                     rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_SUSPENDED))
                     if (!podStateManager.sameTimeZone) {
@@ -328,6 +327,15 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 Notification.URGENT,
                 R.raw.boluserror
             )
+            if (!podStateManager.alarmSynced) {
+                pumpSync.insertAnnouncement(
+                    error = podStateManager.alarmType?.toString() ?: "Unknown pod failure",
+                    pumpId = Random.Default.nextLong(),
+                    pumpType = PumpType.OMNIPOD_DASH,
+                    pumpSerial = serialNumber()
+                )
+                podStateManager.alarmSynced = true
+            }
         }
         Completable.complete()
     }
@@ -1068,7 +1076,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
     private fun deactivatePod(): PumpEnactResult {
         val ret = executeProgrammingCommand(
             historyEntry = history.createRecord(OmnipodCommandType.DEACTIVATE_POD),
-            command = omnipodManager.deactivatePod().ignoreElements()
+            command = omnipodManager.deactivatePod().ignoreElements(),
+            checkNoActiveCommand = false,
         ).doOnComplete {
             rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_FAULT))
         }.toPumpEnactResult()
@@ -1381,6 +1390,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 sp.getBoolean(R.string.key_omnipod_common_notification_uncertain_tbr_sound_enabled, true)
             Notification.OMNIPOD_UNCERTAIN_SMB ->
                 sp.getBoolean(R.string.key_omnipod_common_notification_uncertain_smb_sound_enabled, true)
+            Notification.OMNIPOD_POD_SUSPENDED ->
+                sp.getBoolean(R.string.key_omnipod_common_notification_delivery_suspended_sound_enabled, true)
             else -> true
         }
     }
