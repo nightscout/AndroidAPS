@@ -124,7 +124,10 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     override val sameTimeZone: Boolean
         get() {
             val now = System.currentTimeMillis()
-            return TimeZone.getDefault().getOffset(now) == timeZone.getOffset(now)
+            val currentOffset = TimeZone.getDefault().getOffset(now)
+            val podOffset = timeZone.getOffset(now)
+            logger.debug(LTag.PUMPCOMM, "sameTimeZone currentOffset=$currentOffset podOffset=$podOffset")
+            return currentOffset == podOffset
         }
 
     override val bluetoothVersion: SoftwareVersion?
