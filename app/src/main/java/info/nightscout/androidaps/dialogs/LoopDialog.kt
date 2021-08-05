@@ -63,7 +63,7 @@ class LoopDialog : DaggerDialogFragment() {
     private var showOkCancel: Boolean = true
     private var _binding: DialogLoopBinding? = null
     private var loopHandler = Handler()
-    private var refreshDialog: Runnable? = null
+    private lateinit var refreshDialog: Runnable
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -415,7 +415,7 @@ class LoopDialog : DaggerDialogFragment() {
                 it.commitAllowingStateLoss()
             }
         } catch (e: IllegalStateException) {
-            aapsLogger.debug(e.localizedMessage)
+            aapsLogger.debug(e.localizedMessage ?: e.toString())
         }
     }
 }
