@@ -41,6 +41,7 @@ interface OmnipodDashPodStateManager {
     val time: ZonedDateTime?
     val timeDrift: java.time.Duration?
     val expiry: ZonedDateTime?
+    var alarmSynced: Boolean
 
     val messageSequenceNumber: Short
     val sequenceNumberOfLastProgrammingCommand: Short?

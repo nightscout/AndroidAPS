@@ -124,7 +124,19 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     override val sameTimeZone: Boolean
         get() {
             val now = System.currentTimeMillis()
-            return TimeZone.getDefault().getOffset(now) == timeZone.getOffset(now)
+            val currentTimezone = TimeZone.getDefault()
+            val currentOffset = currentTimezone.getOffset(now)
+            val podOffset = timeZone.getOffset(now)
+            logger.debug(
+                LTag.PUMPCOMM,
+                "sameTimeZone currentTimezone=${currentTimezone.getDisplayName(
+                    true,
+                    TimeZone.SHORT
+                )} " +
+                    "currentOffset=$currentOffset " +
+                    "podOffset=$podOffset"
+            )
+            return currentOffset == podOffset
         }
 
     override val bluetoothVersion: SoftwareVersion?
@@ -231,6 +243,13 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
                     .plus(Duration.ofMillis(System.currentTimeMillis() - lastUpdatedSystem))
             }
             return null
+        }
+
+    override var alarmSynced: Boolean
+        get() = podState.alarmSynced
+        set(value) {
+            podState.alarmSynced = value
+            store()
         }
 
     override var bluetoothConnectionState: OmnipodDashPodStateManager.BluetoothConnectionState
@@ -498,8 +517,10 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
                 podState.lastStatusResponseReceived = 0
             }
 
-            CommandSendingFailure, NoActiveCommand ->
+            CommandSendingFailure, NoActiveCommand -> {
                 podState.activeCommand = null
+                podState.lastStatusResponseReceived = 0
+            }
         }
     }
 
@@ -576,7 +597,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     override fun updateFromAlarmStatusResponse(response: AlarmStatusResponse) {
         logger.info(
             LTag.PUMP,
-            "Received AlarmStatusReponse: $response"
+            "Received AlarmStatusResponse: $response"
         )
         podState.deliveryStatus = response.deliveryStatus
         podState.podStatus = response.podStatus
@@ -660,6 +681,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         var eapAkaSequenceNumber: Long = 1
         var bolusPulsesRemaining: Short = 0
         var timeZone: String = "" // TimeZone ID (e.g. "Europe/Amsterdam")
+        var alarmSynced: Boolean = false
 
         var bleVersion: SoftwareVersion? = null
         var firmwareVersion: SoftwareVersion? = null
