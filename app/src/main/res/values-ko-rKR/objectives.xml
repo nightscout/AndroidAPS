@@ -19,7 +19,10 @@
     <string name="objectives_autosens_gate">섭취한 탄수화물양을 입력하고 1주일동안 낮시간대에 loop를 성공적으로 사용하여 봅니다</string>
     <string name="objectives_ama_objective">AMA(Advanced Meal Assist)같은 낮시간대를 위한 추가적인 기능들을 실행하여 봅니다</string>
     <string name="objectives_smb_objective">낮시간대에 SMB(Super Micro Bolus)같은 추가기능을 활성화해 사용해봅니다</string>
+    <string name="objectives_auto_objective">자동화 사용</string>
     <string name="objectives_smb_gate">SMB가 잘 작동하게 하기위해서 wiki를 반드시 읽은 다음 maxIOB 값을 올려보세요! maxIOB=평균 식사 Bolus + 3 x 최대하루 Basal이면 적당한 시작값입니다</string>
+    <string name="objectives_auto_gate">자동화가 어떻게 작동하는지 설명서를 확인하세요. 간단한 첫 번째 규칙을 만들어 보십시오. 실행하기 전에 AAPS가 알림을 보여주도록 설정합니다. 자동화가 적시에 잘 작동하는 것을 확인하면 알림을 실제 실행으로 변경하십시오.
+(https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">NS에서 혈당이 확인 가능합니다</string>
     <string name="objectives_pumpstatusavailableinns">NS에서 펌프상태가 확인 가능합니다</string>
     <string name="objectives_manualenacts">수동 주입</string>
@@ -34,9 +37,11 @@
     <string name="objectives_useloop">Loop 플러그인 내용을 표시합니다</string>
     <string name="objectives_usescale">홈의 혈당 차트를 길게 눌러 차트 시간을 변경하세요</string>
     <string name="objectives_button_enter">입력</string>
+    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">다른 시스템에서 closed loop을 적어도 3개월 동안 사용한 경우 목표를 건너뛸 수 있는 코드를 받을 수 있습니다. 자세한 정보는 https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives를 참고하십시오.</string>
     <string name="codeaccepted">코드 인증</string>
     <string name="codeinvalid">잘못된 코드</string>
     <string name="objectives_exam_objective">당신의 지식을 확인해봅니다</string>
+    <string name="objectives_exam_gate">문제들에 대한 공부. 각각의 질문에 네 개의 답변이 주어집니다. 한 개 이상의 정답이 있을 수 있습니다. 올바른 것을 모두 체크하고, 확인을 선택하십시오.</string>
     <string name="answerdisabledto">다음 시간까지 답변 불가능: %1$s</string>
     <string name="wronganswer">잘못된 답변!</string>
     <string name="unfinshed_button">다음 미답변</string>

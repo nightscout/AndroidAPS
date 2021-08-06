@@ -555,7 +555,7 @@ class BLEComm @Inject internal constructor(
                 sendEasyMenuCheck()
             }
             // response OK BLE5
-        } else if (decryptedBuffer.size == 14 && decryptedBuffer[2] == 'O'.toByte() && decryptedBuffer[3] == 'K'.toByte()) {
+        } else if (decryptedBuffer.size == 14 && decryptedBuffer[2] == 'O'.code.toByte() && decryptedBuffer[3] == 'K'.code.toByte()) {
             // v3 2nd layer encryption
             encryption = EncryptionType.ENCRYPTION_BLE5
             danaPump.ignoreUserPassword = true
