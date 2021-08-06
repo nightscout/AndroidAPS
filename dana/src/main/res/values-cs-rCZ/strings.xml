@@ -5,9 +5,9 @@
     <string name="danars_pairingok">Spárováno</string>
     <string name="danars_pairingtimedout">Vypršel časový limit pro párování</string>
     <string name="danars_waitingforpairing">Čekání na spárování na pumpě</string>
-    <string name="danarspump">DanaRS</string>
+    <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
-    <string name="description_pump_dana_rs">Ovladač pumpy pro DanaRS</string>
+    <string name="description_pump_dana_rs">Integrace pumpy pro pumpy DANA Diabecare RS a Dana-i</string>
     <string name="maxbolusviolation">Překročen maximální bolus</string>
     <string name="commanderror">Chyba příkazu</string>
     <string name="speederror">Chyba rychlosti</string>

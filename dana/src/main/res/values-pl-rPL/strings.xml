@@ -5,9 +5,7 @@
     <string name="danars_pairingok">Parowanie OK</string>
     <string name="danars_pairingtimedout">Przekroczono limit czasu parowania</string>
     <string name="danars_waitingforpairing">Oczekiwanie na pompę na sparowanie</string>
-    <string name="danarspump">DanaRS</string>
     <string name="danarspump_shortname">Dana</string>
-    <string name="description_pump_dana_rs">Integracja z pompą DANA RS Diabecare</string>
     <string name="maxbolusviolation">Przekroczenie ograniczenia maks. bolusa</string>
     <string name="commanderror">Błąd polecenia</string>
     <string name="speederror">Błąd prędkości</string>
