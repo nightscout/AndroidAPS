@@ -132,4 +132,8 @@
     <string name="digitalstyle_pref_your_color">Dine farger:</string>
     <string name="digitalstyle_pref_your_color_saturation">Din fargemetning:</string>
     <string name="digitalstyle_pref_your_color_opacity">Din farge gjennomsiktighet:</string>
+    <string name="bolus_progress_channel_name">AAPS bolus framdrift</string>
+    <string name="bolus_progress_silent_channel_name">AAPS stille bolus framdrift</string>
+    <string name="bolus_progress_channel_description">Bolus framdrift og avbryt</string>
+    <string name="bolus_progress_silent_channel_description">Bolus framdrift og avbryt med mindre vibrasjoner</string>
 </resources>

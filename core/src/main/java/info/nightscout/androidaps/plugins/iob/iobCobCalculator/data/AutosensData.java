@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.iob.iobCobCalculator.data;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -9,8 +11,8 @@ import javax.inject.Inject;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.core.R;
-import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.interfaces.Profile;
+import info.nightscout.androidaps.database.entities.Carbs;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
@@ -40,22 +42,22 @@ public class AutosensData implements DataPointWithLabelInterface {
     }
 
     public class CarbsInPast {
-        long time = 0L;
-        double carbs = 0d;
-        public double min5minCarbImpact = 0d;
-        double remaining = 0d;
+        long time;
+        double carbs;
+        public double min5minCarbImpact;
+        double remaining;
 
-        public CarbsInPast(Treatment t, boolean isAAPSOrWeighted) {
-            time = t.date;
-            carbs = t.carbs;
-            remaining = t.carbs;
+        public CarbsInPast(Carbs t, boolean isAAPSOrWeighted) {
+            time = t.getTimestamp();
+            carbs = t.getAmount();
+            remaining = t.getAmount();
             if (isAAPSOrWeighted) {
                 double maxAbsorptionHours = sp.getDouble(R.string.key_absorption_maxtime, Constants.DEFAULT_MAX_ABSORPTION_TIME);
-                Profile profile = profileFunction.getProfile(t.date);
-                double sens = profile.getIsfMgdl(t.date);
-                double ic = profile.getIc(t.date);
-                min5minCarbImpact = t.carbs / (maxAbsorptionHours * 60 / 5) * sens / ic;
-                aapsLogger.debug(LTag.AUTOSENS, "Min 5m carbs impact for " + carbs + "g @" + dateUtil.dateAndTimeString(t.date) + " for " + maxAbsorptionHours + "h calculated to " + min5minCarbImpact + " ISF: " + sens + " IC: " + ic);
+                Profile profile = profileFunction.getProfile(t.getTimestamp());
+                double sens = profile.getIsfMgdl(t.getTimestamp());
+                double ic = profile.getIc(t.getTimestamp());
+                min5minCarbImpact = t.getAmount() / (maxAbsorptionHours * 60 / 5) * sens / ic;
+                aapsLogger.debug(LTag.AUTOSENS, "Min 5m carbs impact for " + carbs + "g @" + dateUtil.dateAndTimeString(t.getTimestamp()) + " for " + maxAbsorptionHours + "h calculated to " + min5minCarbImpact + " ISF: " + sens + " IC: " + ic);
             } else {
                 min5minCarbImpact = sp.getDouble(R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact);
             }
@@ -68,7 +70,7 @@ public class AutosensData implements DataPointWithLabelInterface {
             this.remaining = other.remaining;
         }
 
-        @Override
+        @NonNull @Override
         public String toString() {
             return String.format(Locale.ENGLISH, "CarbsInPast: time: %s carbs: %.02f min5minCI: %.02f remaining: %.2f", dateUtil.dateAndTimeString(time), carbs, min5minCarbImpact, remaining);
         }
@@ -103,10 +105,10 @@ public class AutosensData implements DataPointWithLabelInterface {
     public boolean uam = false;
     public List<Double> extraDeviation = new ArrayList<>();
 
-    @Override
+    @NonNull @Override
     public String toString() {
         return String.format(Locale.ENGLISH, "AutosensData: %s pastSensitivity=%s  delta=%.02f  avgDelta=%.02f bgi=%.02f deviation=%.02f avgDeviation=%.02f absorbed=%.02f carbsFromBolus=%.02f cob=%.02f autosensRatio=%.02f slopeFromMaxDeviation=%.02f slopeFromMinDeviation=%.02f activeCarbsList=%s",
-                dateUtil.dateAndTimeString(time), pastSensitivity, delta, avgDelta, bgi, deviation, avgDeviation, absorbed, carbsFromBolus, cob, autosensResult.ratio, slopeFromMaxDeviation, slopeFromMinDeviation, activeCarbsList.toString());
+                dateUtil.dateAndTimeString(time), pastSensitivity, delta, avgDelta, bgi, deviation, avgDeviation, absorbed, carbsFromBolus, cob, autosensResult.getRatio(), slopeFromMaxDeviation, slopeFromMinDeviation, activeCarbsList.toString());
     }
 
     public List<CarbsInPast> cloneCarbsList() {
@@ -121,7 +123,7 @@ public class AutosensData implements DataPointWithLabelInterface {
 
     // remove carbs older than timeframe
     public void removeOldCarbs(long toTime, boolean isAAPSOrWeighted) {
-        double maxAbsorptionHours = Constants.DEFAULT_MAX_ABSORPTION_TIME;
+        double maxAbsorptionHours;
         if (isAAPSOrWeighted) {
             maxAbsorptionHours = sp.getDouble(R.string.key_absorption_maxtime, Constants.DEFAULT_MAX_ABSORPTION_TIME);
         } else {

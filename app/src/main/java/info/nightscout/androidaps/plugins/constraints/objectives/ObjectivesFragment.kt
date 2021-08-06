@@ -9,8 +9,6 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -19,11 +17,17 @@ import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.constraints.objectives.activities.ObjectivesExamDialog
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.ValueWithUnit
+import info.nightscout.androidaps.databinding.ObjectivesFragmentBinding
+import info.nightscout.androidaps.databinding.ObjectivesItemBinding
 import info.nightscout.androidaps.dialogs.NtpProgressDialog
 import info.nightscout.androidaps.events.EventNtpStatus
+import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.UserEntryLogger
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.constraints.objectives.activities.ObjectivesExamDialog
 import info.nightscout.androidaps.plugins.constraints.objectives.events.EventObjectivesUpdateGui
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective.ExamTask
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
@@ -31,19 +35,20 @@ import info.nightscout.androidaps.setupwizard.events.EventSWUpdate
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.SntpClient
-import info.nightscout.androidaps.utils.extensions.plusAssign
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import io.reactivex.rxkotlin.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.objectives_fragment.*
 import javax.inject.Inject
 
 class ObjectivesFragment : DaggerFragment() {
+
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var sp: SP
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
@@ -51,6 +56,7 @@ class ObjectivesFragment : DaggerFragment() {
     @Inject lateinit var receiverStatusStore: ReceiverStatusStore
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var sntpClient: SntpClient
+    @Inject lateinit var uel: UserEntryLogger
 
     private val objectivesAdapter = ObjectivesAdapter()
     private val handler = Handler(Looper.getMainLooper())
@@ -64,19 +70,23 @@ class ObjectivesFragment : DaggerFragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.objectives_fragment, container, false)
-    }
+    private var _binding: ObjectivesFragmentBinding? = null
+
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+        ObjectivesFragmentBinding.inflate(inflater, container, false).also { _binding = it }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        objectives_recyclerview.layoutManager = LinearLayoutManager(view.context)
-        objectives_recyclerview.adapter = objectivesAdapter
-        objectives_fake.setOnClickListener { updateGUI() }
-        objectives_reset.setOnClickListener {
+        binding.recyclerview.layoutManager = LinearLayoutManager(view.context)
+        binding.recyclerview.adapter = objectivesAdapter
+        binding.fake.setOnClickListener { updateGUI() }
+        binding.reset.setOnClickListener {
             objectivesPlugin.reset()
-            objectives_recyclerview.adapter?.notifyDataSetChanged()
+            binding.recyclerview.adapter?.notifyDataSetChanged()
             scrollToCurrentObjective()
         }
         scrollToCurrentObjective()
@@ -88,11 +98,10 @@ class ObjectivesFragment : DaggerFragment() {
         super.onResume()
         disposable += rxBus
             .toObservable(EventObjectivesUpdateGui::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({
-                objectives_recyclerview.adapter?.notifyDataSetChanged()
-            }, { fabricPrivacy.logException(it) }
-            )
+                binding.recyclerview.adapter?.notifyDataSetChanged()
+            }, fabricPrivacy::logException)
     }
 
     @Synchronized
@@ -105,6 +114,7 @@ class ObjectivesFragment : DaggerFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         handler.removeCallbacks(objectiveUpdater)
+        _binding = null
     }
 
     private fun startUpdateTimer() {
@@ -129,7 +139,7 @@ class ObjectivesFragment : DaggerFragment() {
                             override fun calculateTimeForScrolling(dx: Int): Int = super.calculateTimeForScrolling(dx) * 4
                         }
                         smoothScroller.targetPosition = i
-                        objectives_recyclerview.layoutManager?.startSmoothScroll(smoothScroller)
+                        binding.recyclerview.layoutManager?.startSmoothScroll(smoothScroller)
                     }
                     break
                 }
@@ -145,67 +155,66 @@ class ObjectivesFragment : DaggerFragment() {
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val objective = objectivesPlugin.objectives[position]
-            holder.title.text = resourceHelper.gs(R.string.nth_objective, position + 1)
+            holder.binding.title.text = resourceHelper.gs(R.string.nth_objective, position + 1)
             if (objective.objective != 0) {
-                holder.objective.visibility = View.VISIBLE
-                holder.objective.text = resourceHelper.gs(objective.objective)
+                holder.binding.objective.visibility = View.VISIBLE
+                holder.binding.objective.text = resourceHelper.gs(objective.objective)
             } else
-                holder.objective.visibility = View.GONE
+                holder.binding.objective.visibility = View.GONE
             if (objective.gate != 0) {
-                holder.gate.visibility = View.VISIBLE
-                holder.gate.text = resourceHelper.gs(objective.gate)
+                holder.binding.gate.visibility = View.VISIBLE
+                holder.binding.gate.text = resourceHelper.gs(objective.gate)
             } else
-                holder.gate.visibility = View.GONE
+                holder.binding.gate.visibility = View.GONE
             if (!objective.isStarted) {
-                holder.gate.setTextColor(-0x1)
-                holder.verify.visibility = View.GONE
-                holder.progress.visibility = View.GONE
-                holder.accomplished.visibility = View.GONE
-                holder.unFinish.visibility = View.GONE
-                holder.unStart.visibility = View.GONE
+                holder.binding.gate.setTextColor(-0x1)
+                holder.binding.verify.visibility = View.GONE
+                holder.binding.progress.visibility = View.GONE
+                holder.binding.accomplished.visibility = View.GONE
+                holder.binding.unfinish.visibility = View.GONE
+                holder.binding.unstart.visibility = View.GONE
                 if (position == 0 || objectivesPlugin.allPriorAccomplished(position))
-                    holder.start.visibility = View.VISIBLE
+                    holder.binding.start.visibility = View.VISIBLE
                 else
-                    holder.start.visibility = View.GONE
+                    holder.binding.start.visibility = View.GONE
             } else if (objective.isAccomplished) {
-                holder.gate.setTextColor(-0xb350b0)
-                holder.verify.visibility = View.GONE
-                holder.progress.visibility = View.GONE
-                holder.start.visibility = View.GONE
-                holder.accomplished.visibility = View.VISIBLE
-                holder.unFinish.visibility = View.VISIBLE
-                holder.unStart.visibility = View.GONE
+                holder.binding.gate.setTextColor(-0xb350b0)
+                holder.binding.verify.visibility = View.GONE
+                holder.binding.progress.visibility = View.GONE
+                holder.binding.start.visibility = View.GONE
+                holder.binding.accomplished.visibility = View.VISIBLE
+                holder.binding.unfinish.visibility = View.VISIBLE
+                holder.binding.unstart.visibility = View.GONE
             } else if (objective.isStarted) {
-                holder.gate.setTextColor(-0x1)
-                holder.verify.visibility = View.VISIBLE
-                holder.verify.isEnabled = objective.isCompleted || objectives_fake.isChecked
-                holder.start.visibility = View.GONE
-                holder.accomplished.visibility = View.GONE
-                holder.unFinish.visibility = View.GONE
-                holder.unStart.visibility = View.VISIBLE
-                holder.progress.visibility = View.VISIBLE
-                holder.progress.removeAllViews()
+                holder.binding.gate.setTextColor(-0x1)
+                holder.binding.verify.visibility = View.VISIBLE
+                holder.binding.verify.isEnabled = objective.isCompleted || binding.fake.isChecked
+                holder.binding.start.visibility = View.GONE
+                holder.binding.accomplished.visibility = View.GONE
+                holder.binding.unfinish.visibility = View.GONE
+                holder.binding.unstart.visibility = View.VISIBLE
+                holder.binding.progress.visibility = View.VISIBLE
+                holder.binding.progress.removeAllViews()
                 for (task in objective.tasks) {
                     if (task.shouldBeIgnored()) continue
                     // name
-                    val name = TextView(holder.progress.context)
-                    @Suppress("SetTextlI8n")
-                    name.text = resourceHelper.gs(task.task) + ":"
+                    val name = TextView(holder.binding.progress.context)
+                    name.text = "${resourceHelper.gs(task.task)}:"
                     name.setTextColor(-0x1)
-                    holder.progress.addView(name, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                    holder.binding.progress.addView(name, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                     // hint
                     task.hints.forEach { h ->
-                        if (!task.isCompleted)
-                            holder.progress.addView(h.generate(context))
+                        if (!task.isCompleted())
+                            context?.let { holder.binding.progress.addView(h.generate(it)) }
                     }
                     // state
-                    val state = TextView(holder.progress.context)
+                    val state = TextView(holder.binding.progress.context)
                     state.setTextColor(-0x1)
                     val basicHTML = "<font color=\"%1\$s\"><b>%2\$s</b></font>"
-                    val formattedHTML = String.format(basicHTML, if (task.isCompleted) "#4CAF50" else "#FF9800", task.progress)
+                    val formattedHTML = String.format(basicHTML, if (task.isCompleted()) "#4CAF50" else "#FF9800", task.progress)
                     state.text = HtmlHelper.fromHtml(formattedHTML)
                     state.gravity = Gravity.END
-                    holder.progress.addView(state, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                    holder.binding.progress.addView(state, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                     if (task is ExamTask) {
                         state.setOnClickListener {
                             val dialog = ObjectivesExamDialog()
@@ -218,17 +227,17 @@ class ObjectivesFragment : DaggerFragment() {
                         }
                     }
                     // horizontal line
-                    val separator = View(holder.progress.context)
+                    val separator = View(holder.binding.progress.context)
                     separator.setBackgroundColor(Color.DKGRAY)
-                    holder.progress.addView(separator, LinearLayout.LayoutParams.MATCH_PARENT, 2)
+                    holder.binding.progress.addView(separator, LinearLayout.LayoutParams.MATCH_PARENT, 2)
                 }
             }
-            holder.accomplished.text = resourceHelper.gs(R.string.accomplished, dateUtil.dateAndTimeString(objective.accomplishedOn))
-            holder.accomplished.setTextColor(-0x3e3e3f)
-            holder.verify.setOnClickListener {
+            holder.binding.accomplished.text = resourceHelper.gs(R.string.accomplished, dateUtil.dateAndTimeString(objective.accomplishedOn))
+            holder.binding.accomplished.setTextColor(-0x3e3e3f)
+            holder.binding.verify.setOnClickListener {
                 receiverStatusStore.updateNetworkStatus()
-                if (objectives_fake.isChecked) {
-                    objective.accomplishedOn = DateUtil.now()
+                if (binding.fake.isChecked) {
+                    objective.accomplishedOn = dateUtil.now()
                     scrollToCurrentObjective()
                     startUpdateTimer()
                     rxBus.send(EventObjectivesUpdateGui())
@@ -240,7 +249,7 @@ class ObjectivesFragment : DaggerFragment() {
                         rxBus.send(EventNtpStatus(resourceHelper.gs(R.string.timedetection), 0))
                         sntpClient.ntpTime(object : SntpClient.Callback() {
                             override fun run() {
-                                aapsLogger.debug("NTP time: $time System time: ${DateUtil.now()}")
+                                aapsLogger.debug("NTP time: $time System time: ${dateUtil.now()}")
                                 SystemClock.sleep(300)
                                 if (!networkConnected) {
                                     rxBus.send(EventNtpStatus(resourceHelper.gs(R.string.notconnected), 99))
@@ -264,10 +273,10 @@ class ObjectivesFragment : DaggerFragment() {
                     }.start()
                 }
             }
-            holder.start.setOnClickListener {
+            holder.binding.start.setOnClickListener {
                 receiverStatusStore.updateNetworkStatus()
-                if (objectives_fake.isChecked) {
-                    objective.startedOn = DateUtil.now()
+                if (binding.fake.isChecked) {
+                    objective.startedOn = dateUtil.now()
                     scrollToCurrentObjective()
                     startUpdateTimer()
                     rxBus.send(EventObjectivesUpdateGui())
@@ -279,7 +288,7 @@ class ObjectivesFragment : DaggerFragment() {
                         rxBus.send(EventNtpStatus(resourceHelper.gs(R.string.timedetection), 0))
                         sntpClient.ntpTime(object : SntpClient.Callback() {
                             override fun run() {
-                                aapsLogger.debug("NTP time: $time System time: ${DateUtil.now()}")
+                                aapsLogger.debug("NTP time: $time System time: ${dateUtil.now()}")
                                 SystemClock.sleep(300)
                                 if (!networkConnected) {
                                     rxBus.send(EventNtpStatus(resourceHelper.gs(R.string.notconnected), 99))
@@ -298,9 +307,11 @@ class ObjectivesFragment : DaggerFragment() {
                         }, receiverStatusStore.isConnected)
                     }.start()
             }
-            holder.unStart.setOnClickListener {
+            holder.binding.unstart.setOnClickListener {
                 activity?.let { activity ->
                     OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.objectives), resourceHelper.gs(R.string.doyouwantresetstart), Runnable {
+                        uel.log(Action.OBJECTIVE_UNSTARTED, Sources.Objectives,
+                            ValueWithUnit.SimpleInt(position + 1))
                         objective.startedOn = 0
                         scrollToCurrentObjective()
                         rxBus.send(EventObjectivesUpdateGui())
@@ -308,7 +319,7 @@ class ObjectivesFragment : DaggerFragment() {
                     })
                 }
             }
-            holder.unFinish.setOnClickListener {
+            holder.binding.unfinish.setOnClickListener {
                 objective.accomplishedOn = 0
                 scrollToCurrentObjective()
                 rxBus.send(EventObjectivesUpdateGui())
@@ -318,21 +329,21 @@ class ObjectivesFragment : DaggerFragment() {
                 // generate random request code if none exists
                 val request = sp.getString(R.string.key_objectives_request_code, String.format("%1$05d", (Math.random() * 99999).toInt()))
                 sp.putString(R.string.key_objectives_request_code, request)
-                holder.requestCode.text = resourceHelper.gs(R.string.requestcode, request)
-                holder.requestCode.visibility = View.VISIBLE
-                holder.enterButton.visibility = View.VISIBLE
-                holder.input.visibility = View.VISIBLE
-                holder.inputHint.visibility = View.VISIBLE
-                holder.enterButton.setOnClickListener {
-                    val input = holder.input.text.toString()
-                    objective.specialAction(activity, input)
+                holder.binding.requestcode.text = resourceHelper.gs(R.string.requestcode, request)
+                holder.binding.requestcode.visibility = View.VISIBLE
+                holder.binding.enterbutton.visibility = View.VISIBLE
+                holder.binding.input.visibility = View.VISIBLE
+                holder.binding.inputhint.visibility = View.VISIBLE
+                holder.binding.enterbutton.setOnClickListener {
+                    val input = holder.binding.input.text.toString()
+                    activity?.let { activity -> objective.specialAction(activity, input) }
                     rxBus.send(EventObjectivesUpdateGui())
                 }
             } else {
-                holder.enterButton.visibility = View.GONE
-                holder.input.visibility = View.GONE
-                holder.inputHint.visibility = View.GONE
-                holder.requestCode.visibility = View.GONE
+                holder.binding.enterbutton.visibility = View.GONE
+                holder.binding.input.visibility = View.GONE
+                holder.binding.inputhint.visibility = View.GONE
+                holder.binding.requestcode.visibility = View.GONE
             }
         }
 
@@ -340,20 +351,9 @@ class ObjectivesFragment : DaggerFragment() {
             return objectivesPlugin.objectives.size
         }
 
-        inner class ViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            val title: TextView = itemView.findViewById(R.id.objective_title)
-            val objective: TextView = itemView.findViewById(R.id.objective_objective)
-            val gate: TextView = itemView.findViewById(R.id.objective_gate)
-            val accomplished: TextView = itemView.findViewById(R.id.objective_accomplished)
-            val progress: LinearLayout = itemView.findViewById(R.id.objective_progress)
-            val verify: Button = itemView.findViewById(R.id.objective_verify)
-            val start: Button = itemView.findViewById(R.id.objective_start)
-            val unFinish: Button = itemView.findViewById(R.id.objective_unfinish)
-            val unStart: Button = itemView.findViewById(R.id.objective_unstart)
-            val inputHint: TextView = itemView.findViewById(R.id.objective_inputhint)
-            val input: EditText = itemView.findViewById(R.id.objective_input)
-            val enterButton: Button = itemView.findViewById(R.id.objective_enterbutton)
-            val requestCode: TextView = itemView.findViewById(R.id.objective_requestcode)
+        inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+            val binding = ObjectivesItemBinding.bind(itemView)
         }
     }
 

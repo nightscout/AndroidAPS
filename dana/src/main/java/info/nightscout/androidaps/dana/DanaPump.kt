@@ -2,11 +2,15 @@ package info.nightscout.androidaps.dana
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.db.Treatment
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileStore
+import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
+import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.joda.time.DateTime
@@ -18,14 +22,15 @@ import java.text.DecimalFormat
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.max
+import kotlin.math.min
+import kotlin.math.roundToInt
 
-/**
- * Created by mike on 04.07.2016.
- */
 @Singleton
 class DanaPump @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val sp: SP,
+    private val dateUtil: DateUtil,
     private val injector: HasAndroidInjector
 ) {
 
@@ -38,6 +43,7 @@ class DanaPump @Inject constructor(
         NOPRIME(0x10);
 
         companion object {
+
             private val map = values().associateBy(ErrorState::code)
             operator fun get(value: Int) = map[value]
         }
@@ -45,6 +51,8 @@ class DanaPump @Inject constructor(
 
     var lastConnection: Long = 0
     var lastSettingsRead: Long = 0
+    @JvmField var lastHistoryFetched: Long = 0
+    @JvmField var historyDoneReceived: Boolean = false // true when last history message is received
 
     // Info
     var serialNumber = ""
@@ -109,20 +117,105 @@ class DanaPump @Inject constructor(
     var lastBolusTime: Long = 0
     var lastBolusAmount = 0.0
     var currentBasal = 0.0
-    var isTempBasalInProgress = false
-    var tempBasalPercent = 0
-    var tempBasalRemainingMin = 0
-    var tempBasalTotalSec = 0
+
+    /*
+     * TEMP BASALS
+     */
+
     var tempBasalStart: Long = 0
-    var isDualBolusInProgress = false
-    var isExtendedInProgress = false
-    var extendedBolusMinutes = 0
-    var extendedBolusAmount = 0.0
-    var extendedBolusAbsoluteRate = 0.0
-    var extendedBolusSoFarInMinutes = 0
+    var tempBasalDuration: Long = 0 // in milliseconds
+    var tempBasalPercent = 0
+
+    var tempBasalTotalSec: Long
+        set(durationInSec) {
+            tempBasalDuration = T.secs(durationInSec).msecs()
+        }
+        get() = T.msecs(tempBasalDuration).mins()
+    var isTempBasalInProgress: Boolean
+        get() = tempBasalStart != 0L && dateUtil.now() in tempBasalStart..tempBasalStart + tempBasalDuration
+        set(isRunning) {
+            if (isRunning) throw IllegalArgumentException("Use to cancel TBR only")
+            else {
+                tempBasalStart = 0L
+                tempBasalDuration = 0L
+                tempBasalPercent = 0
+            }
+        }
+    val tempBasalRemainingMin: Int
+        get() = max(T.msecs(tempBasalStart + tempBasalDuration - dateUtil.now()).mins().toInt(), 0)
+
+    fun temporaryBasalToString(): String {
+        if (!isTempBasalInProgress) return ""
+
+        val passedMin = ((min(dateUtil.now(), tempBasalStart + tempBasalDuration) - tempBasalStart) / 60.0 / 1000).roundToInt()
+        return tempBasalPercent.toString() + "% @" +
+            dateUtil.timeString(tempBasalStart) +
+            " " + passedMin + "/" + T.msecs(tempBasalDuration).mins() + "'"
+    }
+
+    fun fromTemporaryBasal(tbr: PumpSync.PumpState.TemporaryBasal?) {
+        if (tbr == null) {
+            tempBasalStart = 0
+            tempBasalDuration = 0
+            tempBasalPercent = 0
+        } else {
+            tempBasalStart = tbr.timestamp
+            tempBasalDuration = tbr.duration
+            tempBasalPercent = tbr.rate.toInt()
+        }
+    }
+
+    /*
+        * EXTENDED BOLUSES
+        */
+
     var extendedBolusStart: Long = 0
-    var extendedBolusRemainingMinutes = 0
-    var extendedBolusDeliveredSoFar = 0.0 //RS only = 0.0
+    var extendedBolusDuration: Long = 0
+    var extendedBolusAmount = 0.0
+
+    var isExtendedInProgress: Boolean
+        get() = extendedBolusStart != 0L && dateUtil.now() in extendedBolusStart..extendedBolusStart + extendedBolusDuration
+        set(isRunning) {
+            if (isRunning) throw IllegalArgumentException("Use to cancel EB only")
+            else {
+                extendedBolusStart = 0L
+                extendedBolusDuration = 0L
+                extendedBolusAmount = 0.0
+            }
+        }
+    val extendedBolusPassedMinutes: Int
+        get() = T.msecs(max(0, dateUtil.now() - extendedBolusStart)).mins().toInt()
+    val extendedBolusRemainingMinutes: Int
+        get() = max(T.msecs(extendedBolusStart + extendedBolusDuration - dateUtil.now()).mins().toInt(), 0)
+    private val extendedBolusDurationInMinutes: Int
+        get() = T.msecs(extendedBolusDuration).mins().toInt()
+    var extendedBolusAbsoluteRate: Double
+        get() = extendedBolusAmount * T.hours(1).msecs() / extendedBolusDuration
+        set(rate) {
+            extendedBolusAmount = rate * extendedBolusDuration / T.hours(1).msecs()
+        }
+
+    fun extendedBolusToString(): String {
+        if (!isExtendedInProgress) return ""
+
+        return "E " + DecimalFormatter.to2Decimal(extendedBolusAbsoluteRate) + "U/h @" +
+            dateUtil.timeString(extendedBolusStart) +
+            " " + extendedBolusPassedMinutes + "/" + extendedBolusDurationInMinutes + "'"
+    }
+
+    fun fromExtendedBolus(eb: PumpSync.PumpState.ExtendedBolus?) {
+        if (eb == null) {
+            extendedBolusStart = 0
+            extendedBolusDuration = 0
+            extendedBolusAmount = 0.0
+        } else {
+            extendedBolusStart = eb.timestamp
+            extendedBolusDuration = eb.duration
+            extendedBolusAmount = eb.amount
+        }
+    }
+
+    var isDualBolusInProgress = false
 
     // Profile R,RSv1
     var units = 0
@@ -156,7 +249,7 @@ class DanaPump @Inject constructor(
 
     // DanaRS specific
     var rsPassword = ""
-    var v3RSPump = false
+    var ignoreUserPassword = false // true if replaced by enhanced encryption
 
     // User settings
     var timeDisplayType24 = false
@@ -169,6 +262,7 @@ class DanaPump @Inject constructor(
     var lowReservoirRate = 0
     var cannulaVolume = 0
     var refillAmount = 0
+    var target = 0 // mgdl 40~400 mmol 2.2~22 => 220~2200
     var userOptionsFrompump: ByteArray? = null
     var initialBolusAmount = 0.0
 
@@ -180,8 +274,7 @@ class DanaPump @Inject constructor(
     }
 
     var bolusStartErrorCode: Int = 0 // last start bolus erroCode
-    var historyDoneReceived: Boolean = false // true when last history message is received
-    var bolusingTreatment: Treatment? = null // actually delivered treatment
+    var bolusingTreatment: EventOverviewBolusProgress.Treatment? = null // actually delivered treatment
     var bolusAmountToBeDelivered = 0.0 // amount to be delivered
     var bolusProgressLastTimeStamp: Long = 0 // timestamp of last bolus progress message
     var bolusStopped = false // bolus finished
@@ -189,7 +282,7 @@ class DanaPump @Inject constructor(
     var bolusDone = false // success end
     var lastEventTimeLoaded: Long = 0 // timestamp of last received event
 
-    val lastKnownHistoryId: Int = 0 // hwver 7+, 1-2000
+    // val lastKnownHistoryId: Int = 0 // hwver 7+, 1-2000
 
     fun createConvertedProfile(): ProfileStore? {
         pumpProfiles?.let {
@@ -253,7 +346,7 @@ class DanaPump @Inject constructor(
             } catch (e: Exception) {
                 return null
             }
-            return ProfileStore(injector, json)
+            return ProfileStore(injector, json, dateUtil)
         }
         return null
     }
@@ -274,30 +367,51 @@ class DanaPump @Inject constructor(
         get() = password == sp.getInt(R.string.key_danar_password, -2)
 
     val isRSPasswordOK: Boolean
-        get() = rsPassword.equals(sp.getString(R.string.key_danars_password, ""), ignoreCase = true) || v3RSPump
+        get() = rsPassword.equals(sp.getString(R.string.key_danars_password, ""), ignoreCase = true) || ignoreUserPassword
 
     fun reset() {
         aapsLogger.debug(LTag.PUMP, "DanaRPump reset")
         lastConnection = 0
         lastSettingsRead = 0
+        lastHistoryFetched = 0
     }
 
     fun modelFriendlyName(): String =
         when (hwModel) {
             0x01 -> "DanaR Korean"
             0x03 ->
-                if (protocol == 0x00) "DanaR old"
-                else if (protocol == 0x02) "DanaR v2"
-                else "DanaR" // 0x01 and 0x03 known
+                when (protocol) {
+                    0x00 -> "DanaR old"
+                    0x02 -> "DanaR v2"
+                    else -> "DanaR" // 0x01 and 0x03 known
+                }
             0x05 ->
                 if (protocol < 10) "DanaRS"
                 else "DanaRS v3"
             0x06 -> "DanaRS Korean"
-            0x07 -> "Dana-i"
+            0x07 -> "Dana-i (BLE4.2)"
+            0x09 -> "Dana-i (BLE5)"
             else -> "Unknown Dana pump"
         }
 
+    fun pumpType(): PumpType =
+        when (hwModel) {
+            0x01 -> PumpType.DANA_R_KOREAN
+            0x03 ->
+                when (protocol) {
+                    0x00 -> PumpType.DANA_R
+                    0x02 -> PumpType.DANA_RV2
+                    else -> PumpType.DANA_R // 0x01 and 0x03 known
+                }
+            0x05 -> PumpType.DANA_RS
+            0x06 -> PumpType.DANA_RS_KOREAN
+            0x07 -> PumpType.DANA_I
+            0x09 -> PumpType.DANA_I
+            else -> PumpType.USER
+        }
+
     companion object {
+
         const val UNITS_MGDL = 0
         const val UNITS_MMOL = 1
         const val DELIVERY_PRIME = 0x01

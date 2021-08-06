@@ -2,6 +2,7 @@
 <resources>
     <!--    Keys-->
     <!--    General-->
+    <string name="refresh">Atnaujinti</string>
     <string name="error">Klaida</string>
     <string name="not_set_short">Nenustatyta</string>
     <string name="failedupdatebasalprofile">Nepavyko atnaujinti bazės profilio</string>
@@ -68,6 +69,26 @@
     <string name="pairing">Sujungiama</string>
     <string name="yes">Taip</string>
     <string name="no">Ne</string>
+    <string name="loopdisabled">CIKLAS NEAKTYVUS DĖL APRIBOJIMŲ</string>
+    <string name="bolusdelivered">%1$.2f vv bolusas sėkmingai suleistas</string>
+    <string name="novalidbasalrate">Jokio tinkamo bazės kiekio nenuskaityta iš pompos</string>
+    <string name="limitingmaxiob">Ribojamas maks AIO iki %1$.1f vv dėl %2$s</string>
+    <string name="unsafeusage">Nesaugus naudojimas</string>
+    <string name="pump_unreachable">Pompa nepasiekiama</string>
+    <string name="pump_time_updated">Pompos laikas pakeistas</string>
+    <string name="disableloop">Išjungti Ciklą</string>
+    <string name="enableloop">Įjungti Ciklą</string>
+    <string name="resumeloop">Atnaujinti ciklą</string>
+    <string name="suspendloop">Sustabdyti ciklą</string>
+    <string name="notification">Pranešimas</string>
+    <string name="noprofile">Dar negautas joks profilis iš NS</string>
+    <string name="exists">egzistuoja</string>
+    <string name="notexists">neegzistuoja</string>
+    <string name="glucose">Gliukozė</string>
+    <string name="name_short">Vardas:</string>
+    <string name="time">Laikas</string>
+    <string name="ns_wifi_ssids">WiFi pavadinimas</string>
+    <string name="addnew">Pridėti naują</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Ribojamas maksimalus bazės dydis%1$.2f vv/val dėl %2$s</string>
     <string name="pumplimit">pompos limitas</string>
@@ -116,6 +137,7 @@
     <string name="profile_carbs_per_unit">g/vv</string>
     <!--    ProfileFunction-->
     <string name="noprofileselected">Nepasirinktas profilis</string>
+    <string name="startprofile">Pradėti profilį %1$d%% %2$d min</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Virtualioje pompoje palaikomos tik atskiros vertės, o ne diapazonas detalumui užtikrinti.</string>
     <!--    APSResult-->
@@ -155,10 +177,16 @@
     <string name="careportal_pumpbatterychange">Baterijos keitimas</string>
     <string name="careportal_temporarytarget">Laikinas tikslas</string>
     <string name="careportal_temporarytargetcancel">Laikino tikslo atšaukimas</string>
+    <string name="boluswizard">Boluso patarėjas</string>
     <string name="glucosetype_finger">Iš piršto</string>
     <string name="glucosetype_sensor">Iš sensoriaus</string>
     <string name="manual">Rankiniu būdu</string>
     <string name="unknown">nežinoma</string>
+    <string name="eatingsoon">Netrukus valgysiu</string>
+    <string name="hypo">Hipo</string>
+    <string name="wear">Išmanieji laikrodžiai</string>
+    <string name="automation">Automatiškai</string>
+    <string name="custom">Pasirinktinis</string>
     <!--    Command-->
     <string name="connectiontimedout">Prijungimo laikas baigėsi</string>
     <!--    PumpEnactResult-->
@@ -190,30 +218,6 @@
     <!--    Ntp-->
     <string name="timedetection">Laiko nustatymas</string>
     <string name="format_hour_minute">%1$dh %2$dm</string>
-    <!-- PumoCommon - Pump Abstract -->
-    <string name="pump_operation_not_supported_by_pump_driver">Pompa ir/ar jos valdiklis nepalaiko operacijos.</string>
-    <string name="pump_operation_not_yet_supported_by_pump">Pompa dar nepalaiko operacijos.</string>
-    <string name="common_resultok">Gerai</string>
-    <!-- PumoCommon - Pump Status -->
-    <string name="pump_status_never_contacted">Niekada nebuvo sujungta</string>
-    <string name="pump_status_waking_up">Pažadinimas</string>
-    <string name="pump_status_error_comm">Ryšio klaida</string>
-    <string name="pump_status_timeout_comm">Ryšiui skirtas laikas baigėsi</string>
-    <string name="pump_status_pump_unreachable">Pompa nepasiekiama</string>
-    <string name="pump_status_invalid_config">Neteisinga konfigūracija</string>
-    <string name="pump_status_active">Aktyvi</string>
-    <string name="pump_status_sleeping">Užmigusi</string>
-    <!-- PumpCommon - History Group -->
-    <string name="history_group_basal">Bazė</string>
-    <string name="history_group_configuration">Nustatymai</string>
-    <string name="history_group_notification">Pranešimai</string>
-    <string name="history_group_statistic">Statistika</string>
-    <string name="history_group_unknown">Nežinoma</string>
-    <string name="history_group_all">Visi</string>
-    <string name="history_group_bolus">Bolusai</string>
-    <string name="history_group_prime">Užpildyti sistemą</string>
-    <string name="history_group_alarm">Aliarmai</string>
-    <string name="history_group_glucose">Gliukozė</string>
     <string name="mute5min">Nutildyti 5 minutėms</string>
     <!-- Maintenance -->
     <string name="metadata_label_created_at">Sukurta</string>
@@ -254,4 +258,31 @@
     <string name="running_invalid_version">Nustatyta, kad naudojate neteisingą versiją. Ciklas išjungtas!</string>
     <string name="versionavailable">Versiją %1$s jau galima naudoti</string>
     <!-- Permissions -->
+    <!-- WeekdayPicker -->
+    <string name="monday_short">P</string>
+    <string name="tuesday_short">A</string>
+    <string name="wednesday_short">T</string>
+    <string name="thursday_short">K</string>
+    <string name="friday_short">Pn</string>
+    <string name="saturday_short">Š</string>
+    <string name="sunday_short">S</string>
+    <!-- User Entry -->
+    <plurals name="days">
+        <item quantity="one">%1$d d.</item>
+        <item quantity="few">%1$d d.</item>
+        <item quantity="many">%1$d d.</item>
+        <item quantity="other">%1$d d.</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d val.</item>
+        <item quantity="few">%1$d val.</item>
+        <item quantity="many">%1$d val.</item>
+        <item quantity="other">%1$d val.</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d min.</item>
+        <item quantity="few">%1$d min.</item>
+        <item quantity="many">%1$d min.</item>
+        <item quantity="other">%1$d min.</item>
+    </plurals>
 </resources>

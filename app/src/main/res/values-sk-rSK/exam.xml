@@ -8,7 +8,7 @@
     <string name="dia_meaningisequaltodiapump">Pokiaľ ste spokojní s tým, že hodnota DIA použitá v pumpe pred AndroidAPS dobre fungovala, nie je potrebné ju meniť, keď začínate s uzavretým okruhom.</string>
     <string name="dia_valuemustbedetermined">Mali by ste si pre seba určiť príslušnú hodnotu DIA.</string>
     <string name="hypott_label">Dočasný cieľ pri hypoglykémii</string>
-    <string name="hypott_whenhypott">Čo je primárnym dôvodom k nastaveniu dočasného cieľa Hypoglykémie?</string>
+    <string name="hypott_whenhypott">Čo je primárnym dôvodom k nastaveniu dočasného cieľa \"Hypoglykémia\"?</string>
     <string name="hypott_wrongbasal">Upravovať hypoglykémie, spôsobené nesprávnym nastavením bazálu.</string>
     <string name="hypott_preventoversmb">Aby sa zabránilo prehnanej korekcii, spôsobenej rýchlymi sacharidmi, použitými k liečbe hypoglykémie.</string>
     <string name="hypott_exercise">Napraviť hypo, ako dôsledok fyzickej aktivity.</string>
@@ -48,7 +48,7 @@
     <string name="exerciseprofile_label">Cvičenie a profily</string>
     <string name="exerciseprofile_whattodo">Ako môžete použiť profily, aby ste mohli najlepšie pomocou systému riešiť aeróbne cvičenie?</string>
     <string name="exerciseprofile_switchprofilebelow100">Prepnúť na profil pod 100 %.</string>
-    <string name="exerciseprofile_switchprofileabove100">Prepnúť profil na viac ako 100 %.</string>
+    <string name="exerciseprofile_switchprofileabove100">Prepnite profil na viac ako 100 %.</string>
     <string name="exerciseprofile_leaveat100">Ponechajte profil nastavený na hodnotu 100%.</string>
     <string name="exerciseprofile_suspendloop">Pozastavte uzavretý okruh.</string>
     <string name="exerciseprofile_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Usage/temptarget.html#docasny-cil-pri-pohybove-aktivite</string>

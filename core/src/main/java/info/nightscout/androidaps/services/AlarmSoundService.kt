@@ -8,8 +8,9 @@ import android.os.Binder
 import android.os.Handler
 import android.os.IBinder
 import dagger.android.DaggerService
+import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.interfaces.NotificationHolderInterface
+import info.nightscout.androidaps.interfaces.NotificationHolder
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -22,7 +23,7 @@ class AlarmSoundService : DaggerService() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var notificationHolder: NotificationHolderInterface
+    @Inject lateinit var notificationHolder: NotificationHolder
     @Inject lateinit var sp: SP
 
     private var player: MediaPlayer? = null
@@ -69,7 +70,7 @@ class AlarmSoundService : DaggerService() {
 
         player?.let { if (it.isPlaying) it.stop() }
 
-        if (intent?.hasExtra("soundid") == true) resourceId = intent.getIntExtra("soundid", R.raw.error)
+        if (intent?.hasExtra(ErrorHelperActivity.SOUND_ID) == true) resourceId = intent.getIntExtra(ErrorHelperActivity.SOUND_ID, R.raw.error)
         player = MediaPlayer()
         try {
             val afd = resourceHelper.openRawResourceFd(resourceId) ?: return START_STICKY

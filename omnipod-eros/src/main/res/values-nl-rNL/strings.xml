@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod Eros - Description -->
+    <!-- Omnipod Eros - Keys -->
+    <!-- Omnipod Eros - Overview -->
+    <!-- Omnipod Eros - Preferences -->
+    <string name="omnipod_eros_preferences_riley_link_configuration">RileyLink Configuratie</string>
+    <string name="omnipod_eros_preferences_category_notifications">Meldingen</string>
+    <string name="omnipod_eros_preferences_pulse_log_button_enabled">Knop voor het uitlezen van het Pulslog weergeven in het Podbeheer menu</string>
+    <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Knop voor RileyLink statistieken weergeven in het Omnipod-tabblad</string>
+    <string name="omnipod_eros_preferences_battery_change_logging_enabled">Loggen van batterijwissel in Acties inschakelen</string>
+    <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_tbr_sound_enabled">Geluid voor onzekere TBR notificaties ingeschakeld</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_smb_sound_enabled">Geluid voor onzekere SMB notificaties ingeschakeld</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_bolus_sound_enabled">Geluid voor onzekere bolus notificaties ingeschakeld</string>
+    <!-- Omnipod Eros - History -->
+    <string name="omnipod_eros_history_title">Pod Historie</string>
+    <string name="omnipod_eros_history_item_description">Beschrijving</string>
+    <string name="omnipod_eros_history_item_source">Bron</string>
+    <string name="omnipod_eros_history_item_date">Datum</string>
+    <string name="omnipod_eros_history_type">Type:</string>
+    <string name="omnipod_eros_history_bolus_value">%1$.2f E</string>
+    <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f E, KH=%2$.1f g</string>
+    <string name="omnipod_eros_history_tbr_value">Basaal: %1$.2f E, Duur: %2$d min</string>
+    <!-- Omnipod Eros - Short Status -->
+    <string name="omnipod_eros_short_status_riley_link_battery">RL Batterij: %1$d</string>
+    <!-- Omnipod Eros - Error -->
+    <string name="omnipod_eros_error_riley_link_address_invalid">RileyLink adres ongeldig.</string>
+    <string name="omnipod_eros_error_crc_mismatch">Communicatie mislukt: berichtintegriteit kon niet worden geverifieerd</string>
+    <string name="omnipod_eros_error_invalid_packet_type">Communicatie mislukt: ongeldige gegevens ontvangen van de Pod</string>
+    <string name="omnipod_eros_error_invalid_progress_state">Communicatie mislukt: de Pod bevindt zich in een verkeerde staat</string>
+    <string name="omnipod_eros_error_invalid_response">Communicatie mislukt: ongeldig antwoord ontvangen van de Pod</string>
+    <string name="omnipod_eros_error_invalid_message_sequence_number">Communicatie mislukt: bericht met ongeldig volgnummer ontvangen van de Pod</string>
+    <string name="omnipod_eros_error_invalid_message_address">Communicatie mislukt: bericht met ongeldig adres ontvangen van de Pod</string>
+    <string name="omnipod_eros_error_message_decoding_failed">Communicatie is mislukt: kon bericht van de Pod niet decoderen</string>
+    <string name="omnipod_eros_error_nonce_resync_failed">Communicatie mislukt: nonce resync is mislukt</string>
+    <string name="omnipod_eros_error_nonce_out_of_sync">Communicatie mislukt: nonce out of sync</string>
+    <string name="omnipod_eros_error_not_enough_data">Communicatie mislukt: onvoldoende gegevens ontvangen van de Pod</string>
+    <string name="omnipod_eros_error_pod_fault">Een Podfout (%1$03d %2$s) is gedetecteerd. Deactiveer de Pod en activeer een nieuwe</string>
+    <string name="omnipod_eros_error_pod_returned_error_response">Communicatie mislukt: de Pod heeft een foutmelding gegeven</string>
+    <string name="omnipod_eros_error_communication_failed_no_response_from_riley_link">Geen reactie van RileyLink</string>
+    <string name="omnipod_eros_error_communication_failed_riley_link_interrupted">RileyLink onderbroken</string>
+    <string name="omnipod_eros_error_communication_failed_no_response_from_pod">Geen reactie van de Pod</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">Instellen van basaal profiel is mislukt. De insulinetoediening kan onderbroken zijn! Vernieuw de Pod-status handmatig in het Omnipod tabblad en hervat de toediening indien nodig.</string>
+    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">Instellen van basaal profiel is misschien mislukt. De insulinetoediening kan onderbroken zijn! Vernieuw de Pod-status handmatig in het Omnipod-tabblad en hervat de toediening indien nodig.</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">Instellen van basaal profiel is mislukt. Insulinetoediening is onderbroken! Hervat de toediening handmatig vanaf het Omnipod tabblad.</string>
+    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">Het annuleren van de tijdelijk basaal is mogelijk mislukt. Vernieuw de Pod-status handmatig vanaf het Omnipod-tabblad.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Het instellen van een tijdelijke basaal is mislukt. Als een tijdelijk basaal eerder actief was, is deze mogelijk geannuleerd. Vernieuw de Pod-status handmatig vanaf het Omnipod tabblad.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Het instellen van een tijdelijk basaal is mogelijk mislukt. Als een tijdelijke basaal eerder actief was, is deze geannuleerd. Vernieuw de Pod-status handmatig vanaf het Omnipod tabblad.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_validation">Tijdelijke basaal duur moet groter zijn dan nul en een veelvoud van %1$s minuten.</string>
+    <!-- Omnipod Eros - Pod Management -->
+    <!-- Omnipod Eros - Pod Activation Wizard -->
+    <!-- Omnipod Eros - Other -->
+</resources>

@@ -2,6 +2,8 @@ package info.nightscout.androidaps.plugins.general.maintenance.formats
 
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.core.R
+import info.nightscout.androidaps.database.entities.UserEntry
+import info.nightscout.androidaps.utils.userEntry.UserEntryPresentationHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.storage.Storage
 import java.io.File
@@ -13,6 +15,7 @@ import javax.inject.Singleton
 @Singleton
 class ClassicPrefsFormat @Inject constructor(
     private var resourceHelper: ResourceHelper,
+    private var userEntryPresentationHelper: UserEntryPresentationHelper,
     private var storage: Storage
 ) : PrefsFormat {
 
@@ -67,4 +70,14 @@ class ClassicPrefsFormat @Inject constructor(
         return metadata
     }
 
+    fun saveCsv(file: File, userEntries: List<UserEntry>) {
+        try {
+            val contents = userEntryPresentationHelper.userEntriesToCsv(userEntries)
+            storage.putFileContents(file, contents)
+        } catch (e: FileNotFoundException) {
+            throw PrefFileNotFoundError(file.absolutePath)
+        } catch (e: IOException) {
+            throw PrefIOError(file.absolutePath)
+        }
+    }
 }

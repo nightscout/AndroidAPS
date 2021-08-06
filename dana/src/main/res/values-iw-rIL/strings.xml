@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="danars_pairing">מצומד</string>
+    <string name="danars_pairing">מצמד</string>
     <string name="danars_nodeviceavailable">לא נמצאו מכשירים עד כה</string>
     <string name="danars_pairingok">הצימוד הצליח</string>
     <string name="danars_pairingtimedout">הצימוד חרג ממגבלת הזמן</string>
@@ -106,7 +106,6 @@
     <string name="danars_password_title">סיסמת משאבה (v1 בלבד)</string>
     <string name="danar_password_title">סיסמת משאבה</string>
     <string name="danar_useextended_title">השתמש בבולוס ממושך של &gt;200%%</string>
-    <string name="danar_visualizeextendedaspercentage_title">הצגת בולוס ממושך כ-%%</string>
     <string name="bolusspeed">מהירות בולוס</string>
     <string name="selectedpump">בחרו משאבה</string>
     <string name="rs_loginsulinchange_title">רשום החלפת מכל</string>

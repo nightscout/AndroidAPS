@@ -61,6 +61,26 @@
     <string name="pairing">A emparelhar</string>
     <string name="yes">Sim</string>
     <string name="no">Não</string>
+    <string name="loopdisabled">LOOP DESATIVADO POR RESTRIÇÕES</string>
+    <string name="novalidbasalrate">Nenhum valor de basal temporaria valido foi lido da bomba</string>
+    <string name="limitingmaxiob">A limitar IOB máx. para %1$.1f U porque %2$s</string>
+    <string name="unsafeusage">uso não seguro</string>
+    <string name="pump_unreachable">Bomba inacessível</string>
+    <string name="pump_time_updated">Hora da bomba actualizada</string>
+    <string name="disableloop">Desativar loop</string>
+    <string name="enableloop">Ativar loop</string>
+    <string name="resumeloop">Retomar loop</string>
+    <string name="suspendloop">Suspender loop</string>
+    <string name="notification">Notificação</string>
+    <string name="noprofile">Nenhum perfil carregado de NS ainda</string>
+    <string name="exists">existe</string>
+    <string name="notexists">não existe</string>
+    <string name="glucose">Glicose</string>
+    <string name="name_short">Nome:</string>
+    <string name="time">Hora</string>
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="event_time_label">Hora do Evento</string>
+    <string name="addnew">Adicionar novo</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">A basal max está limitada a %1$.2f U/h por %2$s</string>
     <string name="pumplimit">limite bomba</string>
@@ -105,6 +125,7 @@
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
     <string name="noprofileselected">Nenhum perfil selecionado</string>
+    <string name="startprofile">Iniciar perfil %1$d%% para %2$d min</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Somente valores discretos nos intervalos são suportados como granularidade para basal/bolus na bomba virtual.</string>
     <!--    APSResult-->
@@ -140,10 +161,16 @@
     <string name="careportal_pumpbatterychange">Mudança de Bateria</string>
     <string name="careportal_temporarytarget">Alvo Temporário</string>
     <string name="careportal_temporarytargetcancel">Cancelar alvo temporário</string>
+    <string name="boluswizard">Assistente de Bólus</string>
     <string name="glucosetype_finger">Dedo</string>
     <string name="glucosetype_sensor">Sensor</string>
     <string name="manual">Manual</string>
     <string name="unknown">desconhecido</string>
+    <string name="eatingsoon">Comer em breve</string>
+    <string name="hypo">Hipo</string>
+    <string name="wear">Wear</string>
+    <string name="automation">Automatização</string>
+    <string name="custom">Personalizado</string>
     <!--    Command-->
     <string name="connectiontimedout">Ligação expirou</string>
     <!--    PumpEnactResult-->
@@ -172,10 +199,6 @@
     <string name="tbb2">Basal diária * 2</string>
     <!--    Ntp-->
     <string name="timedetection">Detecção de tempo</string>
-    <!-- PumoCommon - Pump Abstract -->
-    <string name="pump_operation_not_yet_supported_by_pump">Operação não suportada ainda pela Bomba.</string>
-    <!-- PumoCommon - Pump Status -->
-    <!-- PumpCommon - History Group -->
     <!-- Maintenance -->
     <string name="metadata_label_created_at">Criado em</string>
     <string name="metadata_label_aaps_version">Versão AAPS</string>
@@ -211,4 +234,6 @@
     <string name="running_invalid_version">Detectamos que está  a correr uma versão inválida. Loop desactivado!</string>
     <string name="versionavailable">Disponível %1$s disponível</string>
     <!-- Permissions -->
+    <!-- WeekdayPicker -->
+    <!-- User Entry -->
 </resources>

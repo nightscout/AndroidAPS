@@ -1,27 +1,26 @@
 package info.nightscout.androidaps.plugins.general.wear
 
+import android.content.Context
 import android.content.Intent
 import dagger.Lazy
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.*
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.aps.events.EventOpenAPSUpdateGui
+import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.plugins.general.wear.wearintegration.WatchUpdaterService
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -30,11 +29,13 @@ class WearPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     resourceHelper: ResourceHelper,
+    private val aapsSchedulers: AapsSchedulers,
     private val sp: SP,
-    private val mainApp: MainApp,
+    private val ctx: Context,
     private val fabricPrivacy: FabricPrivacy,
     private val loopPlugin: Lazy<LoopPlugin>,
-    private val rxBus: RxBusWrapper
+    private val rxBus: RxBusWrapper,
+    private val actionStringHandler: Lazy<ActionStringHandler>
 
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
@@ -52,57 +53,57 @@ class WearPlugin @Inject constructor(
         super.onStart()
         disposable.add(rxBus
             .toObservable(EventOpenAPSUpdateGui::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ sendDataToWatch(status = true, basals = true, bgValue = false) }) { fabricPrivacy.logException(it) })
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ sendDataToWatch(status = true, basals = true, bgValue = false) }, fabricPrivacy::logException))
         disposable.add(rxBus
             .toObservable(EventExtendedBolusChange::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ sendDataToWatch(status = true, basals = true, bgValue = false) }) { fabricPrivacy.logException(it) })
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ sendDataToWatch(status = true, basals = true, bgValue = false) }, fabricPrivacy::logException))
         disposable.add(rxBus
             .toObservable(EventTempBasalChange::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ sendDataToWatch(status = true, basals = true, bgValue = false) }) { fabricPrivacy.logException(it) })
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ sendDataToWatch(status = true, basals = true, bgValue = false) }, fabricPrivacy::logException))
         disposable.add(rxBus
             .toObservable(EventTreatmentChange::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ sendDataToWatch(status = true, basals = true, bgValue = false) }) { fabricPrivacy.logException(it) })
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ sendDataToWatch(status = true, basals = true, bgValue = false) }, fabricPrivacy::logException))
         disposable.add(rxBus
             .toObservable(EventNewBasalProfile::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ sendDataToWatch(status = false, basals = true, bgValue = false) }) { fabricPrivacy.logException(it) })
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ sendDataToWatch(status = false, basals = true, bgValue = false) }, fabricPrivacy::logException))
         disposable.add(rxBus
             .toObservable(EventAutosensCalculationFinished::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ sendDataToWatch(status = true, basals = true, bgValue = true) }) { fabricPrivacy.logException(it) })
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ sendDataToWatch(status = true, basals = true, bgValue = true) }, fabricPrivacy::logException))
         disposable.add(rxBus
             .toObservable(EventPreferenceChange::class.java)
-            .observeOn(Schedulers.io())
+            .observeOn(aapsSchedulers.io)
             .subscribe({
                 // possibly new high or low mark
                 resendDataToWatch()
                 // status may be formatted differently
                 sendDataToWatch(status = true, basals = false, bgValue = false)
-            }) { fabricPrivacy.logException(it) })
+            }, fabricPrivacy::logException))
         disposable.add(rxBus
             .toObservable(EventRefreshOverview::class.java)
-            .observeOn(Schedulers.io())
+            .observeOn(aapsSchedulers.io)
             .subscribe({
                 if (WatchUpdaterService.shouldReportLoopStatus(loopPlugin.get().isEnabled(PluginType.LOOP)))
                     sendDataToWatch(status = true, basals = false, bgValue = false)
-            }) { fabricPrivacy.logException(it) })
+            }, fabricPrivacy::logException))
         disposable.add(rxBus
             .toObservable(EventBolusRequested::class.java)
-            .observeOn(Schedulers.io())
+            .observeOn(aapsSchedulers.io)
             .subscribe({ event: EventBolusRequested ->
                 val status = String.format(resourceHelper.gs(R.string.bolusrequested), event.amount)
-                val intent = Intent(mainApp, WatchUpdaterService::class.java).setAction(WatchUpdaterService.ACTION_SEND_BOLUSPROGRESS)
+                val intent = Intent(ctx, WatchUpdaterService::class.java).setAction(WatchUpdaterService.ACTION_SEND_BOLUSPROGRESS)
                 intent.putExtra("progresspercent", 0)
                 intent.putExtra("progressstatus", status)
-                mainApp.startService(intent)
-            }) { fabricPrivacy.logException(it) })
+                ctx.startService(intent)
+            }, fabricPrivacy::logException))
         disposable.add(rxBus
             .toObservable(EventDismissBolusProgressIfRunning::class.java)
-            .observeOn(Schedulers.io())
+            .observeOn(aapsSchedulers.io)
             .subscribe({ event: EventDismissBolusProgressIfRunning ->
                 if (event.result == null) return@subscribe
                 val status: String = if (event.result!!.success) {
@@ -110,27 +111,29 @@ class WearPlugin @Inject constructor(
                 } else {
                     resourceHelper.gs(R.string.nosuccess)
                 }
-                val intent = Intent(mainApp, WatchUpdaterService::class.java).setAction(WatchUpdaterService.ACTION_SEND_BOLUSPROGRESS)
+                val intent = Intent(ctx, WatchUpdaterService::class.java).setAction(WatchUpdaterService.ACTION_SEND_BOLUSPROGRESS)
                 intent.putExtra("progresspercent", 100)
                 intent.putExtra("progressstatus", status)
-                mainApp.startService(intent)
-            }) { fabricPrivacy.logException(it) })
+                ctx.startService(intent)
+            }, fabricPrivacy::logException))
         disposable.add(rxBus
             .toObservable(EventOverviewBolusProgress::class.java)
-            .observeOn(Schedulers.io())
+            .observeOn(aapsSchedulers.io)
             .subscribe({ event: EventOverviewBolusProgress ->
                 if (!event.isSMB() || sp.getBoolean("wear_notifySMB", true)) {
-                    val intent = Intent(mainApp, WatchUpdaterService::class.java).setAction(WatchUpdaterService.ACTION_SEND_BOLUSPROGRESS)
+                    val intent = Intent(ctx, WatchUpdaterService::class.java).setAction(WatchUpdaterService.ACTION_SEND_BOLUSPROGRESS)
                     intent.putExtra("progresspercent", event.percent)
                     intent.putExtra("progressstatus", event.status)
-                    mainApp.startService(intent)
+                    ctx.startService(intent)
                 }
-            }) { fabricPrivacy.logException(it) })
+            }, fabricPrivacy::logException))
+        actionStringHandler.get().setup()
     }
 
     override fun onStop() {
         disposable.clear()
         super.onStop()
+        actionStringHandler.get().tearDown()
     }
 
     private fun sendDataToWatch(status: Boolean, basals: Boolean, bgValue: Boolean) {
@@ -138,47 +141,47 @@ class WearPlugin @Inject constructor(
         if (isEnabled(getType())) {
             // only start service when this plugin is enabled
             if (bgValue) {
-                mainApp.startService(Intent(mainApp, WatchUpdaterService::class.java))
+                ctx.startService(Intent(ctx, WatchUpdaterService::class.java))
             }
             if (basals) {
-                mainApp.startService(Intent(mainApp, WatchUpdaterService::class.java).setAction(WatchUpdaterService.ACTION_SEND_BASALS))
+                ctx.startService(Intent(ctx, WatchUpdaterService::class.java).setAction(WatchUpdaterService.ACTION_SEND_BASALS))
             }
             if (status) {
-                mainApp.startService(Intent(mainApp, WatchUpdaterService::class.java).setAction(WatchUpdaterService.ACTION_SEND_STATUS))
+                ctx.startService(Intent(ctx, WatchUpdaterService::class.java).setAction(WatchUpdaterService.ACTION_SEND_STATUS))
             }
         }
     }
 
     fun resendDataToWatch() {
         //Log.d(TAG, "WR: WearPlugin:resendDataToWatch");
-        mainApp.startService(Intent(mainApp, WatchUpdaterService::class.java).setAction(WatchUpdaterService.ACTION_RESEND))
+        ctx.startService(Intent(ctx, WatchUpdaterService::class.java).setAction(WatchUpdaterService.ACTION_RESEND))
     }
 
     fun openSettings() {
         //Log.d(TAG, "WR: WearPlugin:openSettings");
-        mainApp.startService(Intent(mainApp, WatchUpdaterService::class.java).setAction(WatchUpdaterService.ACTION_OPEN_SETTINGS))
+        ctx.startService(Intent(ctx, WatchUpdaterService::class.java).setAction(WatchUpdaterService.ACTION_OPEN_SETTINGS))
     }
 
     fun requestNotificationCancel(actionString: String?) { //Log.d(TAG, "WR: WearPlugin:requestNotificationCancel");
-        val intent = Intent(mainApp, WatchUpdaterService::class.java)
+        val intent = Intent(ctx, WatchUpdaterService::class.java)
             .setAction(WatchUpdaterService.ACTION_CANCEL_NOTIFICATION)
         intent.putExtra("actionstring", actionString)
-        mainApp.startService(intent)
+        ctx.startService(intent)
     }
 
     fun requestActionConfirmation(title: String, message: String, actionString: String) {
-        val intent = Intent(mainApp, WatchUpdaterService::class.java).setAction(WatchUpdaterService.ACTION_SEND_ACTIONCONFIRMATIONREQUEST)
+        val intent = Intent(ctx, WatchUpdaterService::class.java).setAction(WatchUpdaterService.ACTION_SEND_ACTIONCONFIRMATIONREQUEST)
         intent.putExtra("title", title)
         intent.putExtra("message", message)
         intent.putExtra("actionstring", actionString)
-        mainApp.startService(intent)
+        ctx.startService(intent)
     }
 
     fun requestChangeConfirmation(title: String, message: String, actionString: String) {
-        val intent = Intent(mainApp, WatchUpdaterService::class.java).setAction(WatchUpdaterService.ACTION_SEND_CHANGECONFIRMATIONREQUEST)
+        val intent = Intent(ctx, WatchUpdaterService::class.java).setAction(WatchUpdaterService.ACTION_SEND_CHANGECONFIRMATIONREQUEST)
         intent.putExtra("title", title)
         intent.putExtra("message", message)
         intent.putExtra("actionstring", actionString)
-        mainApp.startService(intent)
+        ctx.startService(intent)
     }
 }

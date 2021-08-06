@@ -1,29 +1,14 @@
-buildscript {
-    repositories {
-        jcenter()
-        maven { url "https://plugins.gradle.org/m2/" } // jacoco 0.2
-    }
-
-    dependencies {
-        //classpath 'com.dicedmelon.gradle:jacoco-android:0.1.4'
-        classpath 'com.hiya:jacoco-android:0.2'
-    }
-}
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.gms.google-services'
-//apply plugin: 'jacoco-android'
 apply plugin: 'com.hiya.jacoco-android'
 apply plugin: 'com.google.firebase.crashlytics'
 
-jacoco {
-    toolVersion = "0.8.3"
-}
+apply from: "${project.rootDir}/gradle/android_dependencies.gradle"
+apply from: "${project.rootDir}/gradle/jacoco_global.gradle"
 
 repositories {
-    jcenter { url "https://jcenter.bintray.com/" }
     mavenCentral()
     google()
 }
@@ -108,57 +93,27 @@ def allCommitted = { ->
 
 tasks.matching { it instanceof Test }.all {
     testLogging.events = ["failed", "skipped", "started"]
+    // testLogging.events = ["failed", "skipped", "started", "standard_out"] use to display stdout in travis
     testLogging.exceptionFormat = "full"
 }
 
 android {
-    compileSdkVersion 28
     ndkVersion "21.1.6352462"
 
     defaultConfig {
-        minSdkVersion 26
-        targetSdkVersion 28
         multiDexEnabled true
         versionCode 1500
-        version "2.8.2"
+        version "2.8.2.2-dev"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'
         buildConfigField "String", "HEAD", '"' + generateGitBuild() + '"'
         buildConfigField "String", "COMMITTED", '"' + allCommitted() + '"'
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        // if you change minSdkVersion to less than 11, you need to change executeTask for wear
 
-        ndk {
-            moduleName "BleCommandUtil"
-        }
     }
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
-    buildFeatures {
-        viewBinding true
-    }
-    lintOptions {
-        checkReleaseBuilds false
-        disable 'MissingTranslation'
-        disable 'ExtraTranslation'
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-        debug {
-            testCoverageEnabled(project.hasProperty('coverage'))
-        }
-        firebaseDisable {
-            System.setProperty("disableFirebase", "true")
-            ext.enableCrashlytics = false
-        }
-    }
+
+    flavorDimensions "standard"
     productFlavors {
-        flavorDimensions "standard"
         full {
             applicationId "info.nightscout.androidaps"
             dimension "standard"
@@ -200,28 +155,8 @@ android {
             ]
         }
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    testOptions {
-        unitTests {
-            returnDefaultValues = true
-            includeAndroidResources = true
-
-            all {
-                maxParallelForks = 10
-                forkEvery = 20
-            }
-        }
-    }
 
     useLibrary "org.apache.http.legacy"
-
-    configurations.all {
-        resolutionStrategy.force 'com.google.code.findbugs:jsr305:1.3.9'
-    }
 }
 
 allprojects {
@@ -236,49 +171,36 @@ dependencies {
     wearApp project(':wear')
 
     implementation project(':core')
+    implementation project(':automation')
+    implementation project(':combo')
+    implementation project(':database')
     implementation project(':dana')
     implementation project(':danars')
     implementation project(':danar')
+    implementation project(':insight')
+    implementation project(':pump-common')
     implementation project(':rileylink')
     implementation project(':medtronic')
-    implementation project(':omnipod')
+    implementation project(':omnipod-common')
+    implementation project(':omnipod-eros')
+    implementation project(':omnipod-dash')
+    implementation project(':diaconn')
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    testImplementation "junit:junit:$junit_version"
-    testImplementation 'org.json:json:20200518'
-    testImplementation "org.mockito:mockito-core:${mockitoVersion}"
-    testImplementation "org.powermock:powermock-api-mockito2:${powermockVersion}"
-    testImplementation "org.powermock:powermock-module-junit4-rule-agent:${powermockVersion}"
-    testImplementation "org.powermock:powermock-module-junit4-rule:${powermockVersion}"
-    testImplementation "org.powermock:powermock-module-junit4:${powermockVersion}"
-    testImplementation 'joda-time:joda-time:2.10.6'
-    testImplementation('com.google.truth:truth:1.0.1') {
-        exclude group: "com.google.guava", module: "guava"
-        exclude group: "com.google.code.findbugs", module: "jsr305"
-    }
-    testImplementation "org.skyscreamer:jsonassert:1.5.0"
-    testImplementation "org.hamcrest:hamcrest-all:1.3"
-
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-alpha03'
-    androidTestImplementation "androidx.test.ext:junit:$androidx_junit"
-    androidTestImplementation "androidx.test:rules:$androidx_rules"
-    androidTestImplementation 'com.google.code.findbugs:jsr305:3.0.2'
-
     /* Dagger2 - We are going to use dagger.android which includes
-    * support for Activity and fragment injection so we need to include
-    * the following dependencies */
-
-
+     * support for Activity and fragment injection so we need to include
+     * the following dependencies */
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
     annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
     kapt "com.google.dagger:dagger-android-processor:$dagger_version"
 
     /* Dagger2 - default dependency */
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
-
-    androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
 }
+
+apply from: "${project.rootDir}/gradle/test_dependencies.gradle"
+
 
 /*
 // Run 'adb' shell command to clear application data of main app for 'debug' variant

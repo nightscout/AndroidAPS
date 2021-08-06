@@ -1,19 +1,18 @@
 package info.nightscout.androidaps.plugins.constraints.safety
 
-import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBaseWithProfile
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
 import info.nightscout.androidaps.plugins.source.GlimpPlugin
@@ -38,18 +37,17 @@ class SafetyPluginTest : TestBaseWithProfile() {
     @Mock lateinit var openAPSAMAPlugin: OpenAPSAMAPlugin
     @Mock lateinit var openAPSSMBPlugin: OpenAPSSMBPlugin
     @Mock lateinit var sensitivityOref1Plugin: SensitivityOref1Plugin
-    @Mock lateinit var activePlugin: ActivePluginProvider
+    @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var buildHelper: BuildHelper
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Mock lateinit var glimpPlugin: GlimpPlugin
-    @Mock lateinit var context: Context
-    @Mock lateinit var nsUpload: NSUpload
+    @Mock lateinit var repository: AppRepository
 
     private lateinit var hardLimits: HardLimits
     private lateinit var safetyPlugin: SafetyPlugin
 
     val injector = HasAndroidInjector { AndroidInjector { } }
-    val pumpDescription = PumpDescription()
+    private val pumpDescription = PumpDescription()
 
     @Before
     fun prepare() {
@@ -75,8 +73,8 @@ class SafetyPluginTest : TestBaseWithProfile() {
 
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         `when`(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)
-        hardLimits = HardLimits(aapsLogger, rxBus, sp, resourceHelper, context, nsUpload)
-        safetyPlugin = SafetyPlugin(injector, aapsLogger, resourceHelper, sp, rxBus, constraintChecker, openAPSAMAPlugin, openAPSSMBPlugin, sensitivityOref1Plugin, activePlugin, hardLimits, buildHelper, treatmentsPlugin, Config())
+        hardLimits = HardLimits(aapsLogger, rxBus, sp, resourceHelper, context, repository)
+        safetyPlugin = SafetyPlugin(injector, aapsLogger, resourceHelper, sp, rxBus, constraintChecker, openAPSAMAPlugin, openAPSSMBPlugin, sensitivityOref1Plugin, activePlugin, hardLimits, buildHelper, iobCobCalculator, ConfigImpl(), dateUtil)
     }
 
     @Test fun pumpDescriptionShouldLimitLoopInvocation() {
@@ -198,7 +196,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
         `when`(sp.getString(R.string.key_age, "")).thenReturn("child")
         var d = Constraint(Constants.REALLYHIGHBOLUS)
         d = safetyPlugin.applyBolusConstraints(d)
-        Assert.assertEquals(3.0, d.value()!!, 0.01)
+        Assert.assertEquals(3.0, d.value(), 0.01)
         Assert.assertEquals("""
     Safety: Limiting bolus to 3.0 U because of max value in preferences
     Safety: Limiting bolus to 5.0 U because of hard limit
@@ -240,7 +238,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
         // Apply all limits
         var d = Constraint(Constants.REALLYHIGHIOB)
         d = safetyPlugin.applyMaxIOBConstraints(d)
-        Assert.assertEquals(1.5, d.value()!!, 0.01)
+        Assert.assertEquals(1.5, d.value(), 0.01)
         Assert.assertEquals("""
     Safety: Limiting IOB to 1.5 U because of max value in preferences
     """.trimIndent(), d.getReasons(aapsLogger))

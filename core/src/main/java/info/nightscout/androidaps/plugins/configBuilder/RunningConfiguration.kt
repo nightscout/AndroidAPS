@@ -1,11 +1,11 @@
 package info.nightscout.androidaps.plugins.configBuilder
 
 import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.interfaces.ConfigBuilderInterface
-import info.nightscout.androidaps.interfaces.InsulinInterface
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.ConfigBuilder
+import info.nightscout.androidaps.interfaces.Insulin
 import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.interfaces.SensitivityInterface
+import info.nightscout.androidaps.interfaces.Sensitivity
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
@@ -18,14 +18,14 @@ import javax.inject.Singleton
 
 @Singleton
 class RunningConfiguration @Inject constructor(
-    private val activePlugin: ActivePluginProvider,
-    private val configBuilder: ConfigBuilderInterface,
+    private val activePlugin: ActivePlugin,
+    private val configBuilder: ConfigBuilder,
     private val sp: SP,
     private val aapsLogger: AAPSLogger
 ) {
 
     private var counter = 0
-    private val every = 20 // Send only every 20 devicestatus to save traffic
+    private val every = 20 // Send only every 20 device status to save traffic
 
     // called in AAPS mode only
     fun configuration(): JSONObject {
@@ -52,9 +52,9 @@ class RunningConfiguration @Inject constructor(
     // called in NSClient mode only
     fun apply(configuration: JSONObject) {
         if (configuration.has("insulin")) {
-            val insulin = InsulinInterface.InsulinType.fromInt(JsonHelper.safeGetInt(configuration, "insulin", InsulinInterface.InsulinType.UNKNOWN.value))
-            for (p in activePlugin.getSpecificPluginsListByInterface(InsulinInterface::class.java)) {
-                val insulinPlugin = p as InsulinInterface
+            val insulin = Insulin.InsulinType.fromInt(JsonHelper.safeGetInt(configuration, "insulin", Insulin.InsulinType.UNKNOWN.value))
+            for (p in activePlugin.getSpecificPluginsListByInterface(Insulin::class.java)) {
+                val insulinPlugin = p as Insulin
                 if (insulinPlugin.id == insulin) {
                     if (!p.isEnabled()) {
                         aapsLogger.debug(LTag.CORE, "Changing insulin plugin to ${insulin.name}")
@@ -66,9 +66,9 @@ class RunningConfiguration @Inject constructor(
         }
 
         if (configuration.has("sensitivity")) {
-            val sensitivity = SensitivityInterface.SensitivityType.fromInt(JsonHelper.safeGetInt(configuration, "sensitivity", SensitivityInterface.SensitivityType.UNKNOWN.value))
-            for (p in activePlugin.getSpecificPluginsListByInterface(SensitivityInterface::class.java)) {
-                val sensitivityPlugin = p as SensitivityInterface
+            val sensitivity = Sensitivity.SensitivityType.fromInt(JsonHelper.safeGetInt(configuration, "sensitivity", Sensitivity.SensitivityType.UNKNOWN.value))
+            for (p in activePlugin.getSpecificPluginsListByInterface(Sensitivity::class.java)) {
+                val sensitivityPlugin = p as Sensitivity
                 if (sensitivityPlugin.id == sensitivity) {
                     if (!p.isEnabled()) {
                         aapsLogger.debug(LTag.CORE, "Changing sensitivity plugin to ${sensitivity.name}")
@@ -80,10 +80,10 @@ class RunningConfiguration @Inject constructor(
         }
 
         if (configuration.has("pump")) {
-            val pumpType = JsonHelper.safeGetString(configuration, "pump", PumpType.GenericAAPS.description)
+            val pumpType = JsonHelper.safeGetString(configuration, "pump", PumpType.GENERIC_AAPS.description)
             sp.putString(R.string.key_virtualpump_type, pumpType)
-            activePlugin.activePump.pumpDescription.setPumpDescription(PumpType.getByDescription(pumpType))
-            aapsLogger.debug(LTag.CORE, "Changing pump type to ${pumpType}")
+            activePlugin.activePump.pumpDescription.fillFor(PumpType.getByDescription(pumpType))
+            aapsLogger.debug(LTag.CORE, "Changing pump type to $pumpType")
         }
 
         if (configuration.has("overviewConfiguration"))

@@ -48,7 +48,7 @@
     <string name="exerciseprofile_label">Ejercicio y perfiles</string>
     <string name="exerciseprofile_whattodo">¿Cómo puede usar perfiles para ayudar mejor al sistema a hacer frente al ejercicio aeróbico?</string>
     <string name="exerciseprofile_switchprofilebelow100">Haga un cambio de perfil a menos de 100%.</string>
-    <string name="exerciseprofile_switchprofileabove100">Haga un cambio de perfil a más de 100%. </string>
+    <string name="exerciseprofile_switchprofileabove100">Haga un cambio de perfil a más de 100%.</string>
     <string name="exerciseprofile_leaveat100">Deja el perfil fijado a 100%.</string>
     <string name="exerciseprofile_suspendloop">Suspender el bucle.</string>
     <string name="exerciseprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>

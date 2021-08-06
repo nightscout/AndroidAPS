@@ -21,7 +21,7 @@
     <string name="objectives_smb_objective">Activation de fonctionnalités supplémentaires pour l\'utilisation en journée, telles que la fonction SMB</string>
     <string name="objectives_auto_objective">Activation de l\'automatisation</string>
     <string name="objectives_smb_gate">Lisez le wiki et augmentez le maxIA pour que les SMBs fonctionnent correctement ! Un bon début est maxIA = moyenne des Bolus Repas + 3 x maximum débit Basal quotidien</string>
-    <string name="objectives_auto_gate">Lisez la documentation comment l\'automatisation fonctionne. Configurez vos premières règles simples. Au lieu de mettre une action, configurez une notification. Quand vous êtes sûr que l\'automatisation est déclenchée au bon moment, remplacez la notification par une action réelle. (https://androidaps.readthedocs.io/en/latest/CROWDIN/fr/Usage/Automation.html)</string>
+    <string name="objectives_auto_gate">Lisez la documentation comment l\'automatisation fonctionne. Configurez vos premières règles simples. Au lieu de mettre une action, configurez une notification. Quand vous êtes sûr que l\'automatisation est déclenchée au bon moment, remplacez la notification par une action réelle. (https://androidaps.readthedocs.io/fr/latest/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">Glycémie disponible sur NS</string>
     <string name="objectives_pumpstatusavailableinns">Statut de la pompe disponible sur NS</string>
     <string name="objectives_manualenacts">Activation manuelle</string>
@@ -32,11 +32,11 @@
     <string name="objectives_usedisconnectpump">Simulation d\'une douche. Déconnectez la pompe pendant 1h (Appui long sur Boucle Ouverte)</string>
     <string name="objectives_usereconnectpump">... et reconnectez la pompe de la même façon</string>
     <string name="objectives_usetemptarget">Créer une cible temporaire personnalisée avec une durée de 10 min (Appui long sur votre cible actuelle)</string>
-    <string name="objectives_useactions">Dans le Générateur de configuration, activez le plugin Actions, rendez le visible et affichez son contenu dans le menu supérieur</string>
+    <string name="objectives_useactions">Dans la Configuration, activez le plugin Actions, rendez le visible et affichez son contenu dans le menu supérieur</string>
     <string name="objectives_useloop">Affichage du contenu du plugin Boucle</string>
     <string name="objectives_usescale">Modification de l\'échelle du graphique par un appui long sur la courbe de glycémie</string>
     <string name="objectives_button_enter">Entrer</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Si vous avez au moins 3 mois d\'expérience de boucle fermée avec d\'autres systèmes, vous pourriez avoir droit à un code permettant d\'ignorer les objectifs. Voir https://androidaps.readthedocs.io/en/latest/CROWDIN/fr/Usage/Objectives.html#ignorer-les-objectifs pour plus de détails.</string>
+    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Si vous avez au moins 3 mois d\'expérience de boucle fermée avec d\'autres systèmes, vous pourriez avoir droit à un code permettant d\'ignorer les objectifs. Voir https://androidaps.readthedocs.io/fr/latest/Usage/Objectives.html#ignorer-les-objectifs pour plus de détails.</string>
     <string name="codeaccepted">Code accepté</string>
     <string name="codeinvalid">Code invalide</string>
     <string name="objectives_exam_objective">Prouver ses connaissances</string>
@@ -46,10 +46,10 @@
     <string name="unfinshed_button">Prochain non terminé</string>
     <string name="requestcode">Code requis : %1$s</string>
     <string name="objectives_hint">(Sélectionnez toutes les bonnes réponses)</string>
-    <string name="disconnectpump_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/CROWDIN/fr/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/CROWDIN/fr/Getting-Started/Screenshots.html#the-homescreen</string>
-    <string name="useaction_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/CROWDIN/fr/Getting-Started/Screenshots.html#config-builder</string>
-    <string name="usescale_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/CROWDIN/fr/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="disconnectpump_hint" formatted="false">https://androidaps.readthedocs.io/fr/latest/Getting-Started/FAQ.html#que-faire-pour-prendre-une-douche-ou-un-bain</string>
+    <string name="usetemptarget_hint" formatted="false">https://androidaps.readthedocs.io/fr/latest/Getting-Started/Screenshots.html</string>
+    <string name="useaction_hint" formatted="false">https://androidaps.readthedocs.io/fr/latest/Configuration/Config-Builder.html</string>
+    <string name="usescale_hint" formatted="false">https://androidaps.readthedocs.io/fr/latest/Getting-Started/Screenshots.html</string>
     <string name="notconnected">Non connecté à Internet</string>
     <string name="failedretrievetime">Échec de la récupération de l\'heure</string>
     <string name="requirementnotmet">Exigences de l\'objectif non atteintes</string>

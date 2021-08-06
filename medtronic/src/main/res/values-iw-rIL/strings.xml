@@ -24,6 +24,8 @@
     <string name="medtronic_pump_battery_nizn">NiZn (תצוגה מורחבת)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (תצוגה מורחבת)</string>
     <string name="medtronic_bolus_debugging">איתור באגים בבולוס או טיפולים</string>
+    <!-- MDT Fragment -->
+    <string name="rl_battery_label">סוללת ריילילינק</string>
     <!-- MDT Errors -->
     <string name="medtronic_errors">שגיאות</string>
     <string name="medtronic_error_serial_not_set">מס\' סידורי לא הוגדר.</string>
@@ -62,14 +64,18 @@
     <string name="medtronic_cmd_basal_profile_not_set_is_same">הפרופיל הנוכחי זהה ולכן לא יוגדר מחדש.</string>
     <string name="medtronic_cmd_desc_get_history">קבלת היסטוריה-עמוד %1$d (%2$d/16)</string>
     <string name="medtronic_cmd_desc_get_history_request">קבלת היסטוריה-עמוד %1$d</string>
-    <string name="medtronic_cmd_desc_get_time">קבלת זמן המשאבה</string>
-    <string name="medtronic_cmd_desc_get_settings">קבלת הגדרות</string>
-    <string name="medtronic_cmd_desc_get_model">קבלת דגם המשאבה</string>
-    <string name="medtronic_cmd_desc_get_basal_profile">קבלת פרופיל בזאלי</string>
+    <string name="medtronic_cmd_desc_get_time">אחזר זמן המשאבה</string>
+    <string name="medtronic_cmd_desc_set_time">הגדרת שעון המשאבה</string>
+    <string name="medtronic_cmd_desc_get_battery_status">מצב הסוללה</string>
+    <string name="medtronic_cmd_desc_get_settings">אחזר הגדרות</string>
+    <string name="medtronic_cmd_desc_get_model">אחזר דגם המשאבה</string>
+    <string name="medtronic_cmd_desc_get_basal_profile">אחזר פרופיל בזאלי</string>
     <string name="medtronic_cmd_desc_set_basal_profile">הגדרת פרופיל בזאלי</string>
     <string name="medtronic_cmd_desc_get_tbr">קבלת בזאלי זמני</string>
     <string name="medtronic_cmd_desc_set_tbr">הגדרת בזאלי זמני</string>
+    <string name="medtronic_cmd_desc_cancel_tbr">ביטול בזאלי זמני</string>
     <string name="medtronic_cmd_desc_set_bolus">הגדרת בולוס</string>
+    <string name="medtronic_cmd_desc_get_remaining_insulin">אחזור אינסולין שנותר</string>
     <string name="medtronic_pump_status_pump_unreachable">המשאבה אינה זמינה</string>
     <string name="medtronic_warning">אזהרה</string>
     <!-- medtronic_warning -->
@@ -83,4 +89,5 @@
     <string name="pump_time_updated">שעון המשאבה עודכן</string>
     <string name="set_neutral_temps_title">הגדרת מינון בזאלי ניטרלי</string>
     <string name="set_neutral_temps_summary">אם תופעל, היא תבטל בזאלי זמני לפני תום כל שעה. שיטה זו יכולה לעזור לבטל ציפצופים ורטט רבים בחלק מהמשאבות.</string>
+    <string name="mdt_tbr_remaining">%1$.1f יחידות\\שעה (נותרו %2$d דקות) </string>
 </resources>

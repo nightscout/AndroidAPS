@@ -43,7 +43,7 @@
     <string name="gettingpumpsettings">Obtenir les paramètres pompe</string>
     <string name="gettingpumptime">Obtenir l\'heure de la pompe</string>
     <string name="largetimedifftitle">Différence horaire importante</string>
-    <string name="largetimediff">Différence horaire importante:\nL\'heure de la pompe est en écart de plus d\'une heure et demi.\nMerci d\'ajuster manuellement l\'heure de la pompe et assurez-vous que la lecture de l\'historique de la pompe ne cause pas de dysfonctionnements.\nSi possible, effacez l\'historique de la pompe avant de modifier l\'heure ou désactivez la Boucle Fermée pour une DAI après la dernière entrée erronée de l\'historique et au minimum une DAI à partir de maintenant.</string>
+    <string name="largetimediff">Différence horaire importante:\nL\'heure de la pompe est en écart de plus d\'une heure et demi.\nVeuillez ajuster manuellement l\'heure de la pompe et assurez-vous que la lecture de l\'historique de la pompe ne cause pas de dysfonctionnements.\nSi possible, effacez l\'historique de la pompe avant de modifier l\'heure ou désactivez la Boucle Fermée pour une DAI après la dernière entrée erronée de l\'historique et au minimum une DAI à partir de maintenant.</string>
     <string name="pairfirst">Veuillez appairer votre pompe avec votre téléphone !</string>
     <string name="approachingdailylimit">Limite quotidienne d\'insuline proche</string>
     <string name="startingbolus">Injection du bolus démarrée</string>
@@ -106,7 +106,6 @@
     <string name="danars_password_title">Mot de passe pompe (v1 uniquement)</string>
     <string name="danar_password_title">Mot de passe pompe</string>
     <string name="danar_useextended_title">Utiliser les bolus étendus pour &gt; 200%%</string>
-    <string name="danar_visualizeextendedaspercentage_title">Afficher le bolus étendu en %%</string>
     <string name="bolusspeed">Vitesse bolus</string>
     <string name="selectedpump">Pompe sélectionnée</string>
     <string name="rs_loginsulinchange_title">Enreg. changement de réservoir</string>

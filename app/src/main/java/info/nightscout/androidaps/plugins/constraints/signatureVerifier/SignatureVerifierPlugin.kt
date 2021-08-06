@@ -5,7 +5,7 @@ import android.content.pm.PackageManager
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.interfaces.ConstraintsInterface
+import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
@@ -46,7 +46,7 @@ class SignatureVerifierPlugin @Inject constructor(
     .showInList(false)
     .pluginName(R.string.signature_verifier),
     aapsLogger, resourceHelper, injector
-), ConstraintsInterface {
+), Constraints {
 
     private val REVOKED_CERTS_URL = "https://raw.githubusercontent.com/nightscout/AndroidAPS/master/app/src/main/assets/revoked_certs.txt"
     private val UPDATE_INTERVAL = TimeUnit.DAYS.toMillis(1)
@@ -152,12 +152,13 @@ class SignatureVerifierPlugin @Inject constructor(
         return sb.toString()
     }
 
+    @kotlin.ExperimentalStdlibApi
     fun singleCharUnMap(shortHash: String): String {
         val array = ByteArray(shortHash.length)
         val sb = StringBuilder()
         for (i in array.indices) {
             if (i != 0) sb.append(":")
-            sb.append(String.format("%02X", 0xFF and map[map.indexOf(shortHash[i])].toInt()))
+            sb.append(String.format("%02X", 0xFF and map[map.indexOf(shortHash[i])].code))
         }
         return sb.toString()
     }

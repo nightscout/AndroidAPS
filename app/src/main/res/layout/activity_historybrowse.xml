@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="info.nightscout.androidaps.historyBrowser.HistoryBrowseActivity">
+    tools:context="info.nightscout.androidaps.activities.HistoryBrowseActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,7 +12,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/historybrowse_noprofile"
+            android:id="@+id/noprofile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -28,32 +28,32 @@
             android:orientation="horizontal">
 
             <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/historybrowse_left"
+                android:id="@+id/left"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 app:srcCompat="@drawable/ic_chevron_left_black_24dp" />
 
             <Button
-                android:id="@+id/historybrowse_date"
+                android:id="@+id/date"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="Button" />
+                android:text="@string/date" />
 
             <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/historybrowse_right"
+                android:id="@+id/right"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 app:srcCompat="@drawable/ic_chevron_right_black_24dp" />
 
             <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/historybrowse_end"
+                android:id="@+id/end"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 app:srcCompat="@drawable/ic_last_page_black_24dp" />
 
             <Button
-                android:id="@+id/historybrowse_zoom"
+                android:id="@+id/zoom"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -72,16 +72,17 @@
                 android:layout_weight="1">
 
                 <com.jjoe64.graphview.GraphView
-                    android:id="@+id/historybrowse_bggraph"
+                    android:id="@+id/bg_graph"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent" />
 
                 <ImageButton
-                    android:id="@+id/overview_chartMenuButton"
+                    android:id="@+id/chart_menu_button"
                     android:layout_width="30dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
+                    android:contentDescription="@string/chart_menu"
                     android:paddingTop="5dp"
                     app:srcCompat="@drawable/ic_arrow_drop_down_white_24dp" />
 
@@ -95,7 +96,7 @@
             </RelativeLayout>
 
             <LinearLayout
-                android:id="@+id/history_iobgraph"
+                android:id="@+id/iob_graph"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical" />

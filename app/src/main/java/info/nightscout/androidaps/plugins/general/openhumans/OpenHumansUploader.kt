@@ -14,26 +14,29 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.work.*
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.GlucoseValue
+import info.nightscout.androidaps.database.entities.TemporaryTarget
+import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.db.*
 import info.nightscout.androidaps.events.EventPreferenceChange
+import info.nightscout.androidaps.extensions.toConstant
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
-import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.rxkotlin.plusAssign
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -52,10 +55,11 @@ class OpenHumansUploader @Inject constructor(
     injector: HasAndroidInjector,
     resourceHelper: ResourceHelper,
     aapsLogger: AAPSLogger,
-    val sp: SP,
-    val rxBus: RxBusWrapper,
-    val context: Context,
-    val treatmentsPlugin: TreatmentsPlugin
+    private val aapsSchedulers: AapsSchedulers,
+    private val sp: SP,
+    private val rxBus: RxBusWrapper,
+    private val context: Context,
+    val repository: AppRepository
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
@@ -85,6 +89,7 @@ class OpenHumansUploader @Inject constructor(
     }
 
     private val openHumansAPI = OpenHumansAPI(OPEN_HUMANS_URL, CLIENT_ID, CLIENT_SECRET, REDIRECT_URL)
+
     @Suppress("PrivatePropertyName")
     private val FILE_NAME_DATE_FORMAT = SimpleDateFormat("yyyyMMdd'T'HHmmss", Locale.US).apply { timeZone = TimeZone.getTimeZone("UTC") }
 
@@ -159,120 +164,111 @@ class OpenHumansUploader @Inject constructor(
         super.onStop()
     }
 
-    fun enqueueBGReading(bgReading: BgReading?) = bgReading?.let {
+    fun enqueueBGReading(glucoseValue: GlucoseValue?) = glucoseValue?.let {
         insertQueueItem("BgReadings") {
-            put("date", bgReading.date)
-            put("isValid", bgReading.isValid)
-            put("value", bgReading.value)
-            put("direction", bgReading.direction)
-            put("raw", bgReading.raw)
-            put("source", bgReading.source)
-            put("nsId", bgReading._id)
+            put("date", glucoseValue.timestamp)
+            put("isValid", glucoseValue.isValid)
+            put("value", glucoseValue.value)
+            put("direction", glucoseValue.trendArrow)
+            put("raw", glucoseValue.raw)
+            put("source", glucoseValue.sourceSensor)
+            put("nsId", glucoseValue.interfaceIDs.nightscoutId)
         }
     }
 
-    @JvmOverloads
-    fun enqueueTreatment(treatment: Treatment?, deleted: Boolean = false) = treatment?.let {
-        insertQueueItem("Treatments") {
-            put("date", treatment.date)
-            put("isValid", treatment.isValid)
-            put("source", treatment.source)
-            put("nsId", treatment._id)
-            put("boluscalc", treatment.boluscalc)
-            put("carbs", treatment.carbs)
-            put("dia", treatment.dia)
-            put("insulin", treatment.insulin)
-            put("insulinInterfaceID", treatment.insulinInterfaceID)
-            put("isSMB", treatment.isSMB)
-            put("mealBolus", treatment.mealBolus)
-            put("bolusCalcJson", treatment.getBoluscalc())
-            put("isDeletion", deleted)
-        }
-    }
+    // @JvmOverloads
+    // fun enqueueTreatment(treatment: Treatment?, deleted: Boolean = false) = treatment?.let {
+    //     insertQueueItem("Treatments") {
+    //         put("date", treatment.date)
+    //         put("isValid", treatment.isValid)
+    //         put("source", treatment.source)
+    //         put("nsId", treatment._id)
+    //         put("boluscalc", treatment.boluscalc)
+    //         put("carbs", treatment.carbs)
+    //         put("dia", treatment.dia)
+    //         put("insulin", treatment.insulin)
+    //         put("insulinInterfaceID", treatment.insulinInterfaceID)
+    //         put("isSMB", treatment.isSMB)
+    //         put("mealBolus", treatment.mealBolus)
+    //         put("bolusCalcJson", treatment.getBoluscalc())
+    //         put("isDeletion", deleted)
+    //     }
+    // }
 
     @JvmOverloads
-    fun enqueueCareportalEvent(careportalEvent: CareportalEvent, deleted: Boolean = false) = insertQueueItem("CareportalEvents") {
-        put("date", careportalEvent.date)
-        put("isValid", careportalEvent.isValid)
-        put("source", careportalEvent.source)
-        put("nsId", careportalEvent._id)
-        put("eventType", careportalEvent.eventType)
-        val data = JSONObject(careportalEvent.json)
-        val reducedData = JSONObject()
-        if (data.has("mgdl")) reducedData.put("mgdl", data.getDouble("mgdl"))
-        if (data.has("glucose")) reducedData.put("glucose", data.getDouble("glucose"))
-        if (data.has("units")) reducedData.put("units", data.getString("units"))
-        if (data.has("created_at")) reducedData.put("created_at", data.getString("created_at"))
-        if (data.has("glucoseType")) reducedData.put("glucoseType", data.getString("glucoseType"))
-        if (data.has("duration")) reducedData.put("duration", data.getInt("duration"))
-        if (data.has("mills")) reducedData.put("mills", data.getLong("mills"))
-        if (data.has("eventType")) reducedData.put("eventType", data.getString("eventType"))
-        put("data", reducedData)
+    fun enqueueTherapyEvent(therapyEvent: TherapyEvent, deleted: Boolean = false) = insertQueueItem("TherapyEvents") {
+        put("date", therapyEvent.timestamp)
+        put("isValid", therapyEvent.isValid)
+        put("nsId", therapyEvent.interfaceIDs.nightscoutId)
+        put("eventType", therapyEvent.type.text)
+        put("glucose", therapyEvent.glucose)
+        put("units", therapyEvent.glucoseUnit.toConstant())
+        put("glucoseType", therapyEvent.glucoseType?.text)
+        put("duration", therapyEvent.duration)
         put("isDeletion", deleted)
     }
 
-    @JvmOverloads
-    fun enqueueExtendedBolus(extendedBolus: ExtendedBolus, deleted: Boolean = false) = insertQueueItem("ExtendedBoluses") {
-        put("date", extendedBolus.date)
-        put("isValid", extendedBolus.isValid)
-        put("source", extendedBolus.source)
-        put("nsId", extendedBolus._id)
-        put("pumpId", extendedBolus.pumpId)
-        put("insulin", extendedBolus.insulin)
-        put("durationInMinutes", extendedBolus.durationInMinutes)
-        put("isDeletion", deleted)
-    }
+    // @JvmOverloads
+    // fun enqueueExtendedBolus(extendedBolus: ExtendedBolus, deleted: Boolean = false) = insertQueueItem("ExtendedBoluses") {
+    //     put("date", extendedBolus.date)
+    //     put("isValid", extendedBolus.isValid)
+    //     put("source", extendedBolus.source)
+    //     put("nsId", extendedBolus._id)
+    //     put("pumpId", extendedBolus.pumpId)
+    //     put("insulin", extendedBolus.insulin)
+    //     put("durationInMinutes", extendedBolus.durationInMinutes)
+    //     put("isDeletion", deleted)
+    // }
+
+    // @JvmOverloads
+    // fun enqueueProfileSwitch(profileSwitch: ProfileSwitch, deleted: Boolean = false) = insertQueueItem("ProfileSwitches") {
+    //     put("date", profileSwitch.date)
+    //     put("isValid", profileSwitch.isValid)
+    //     put("source", profileSwitch.source)
+    //     put("nsId", profileSwitch._id)
+    //     put("isCPP", profileSwitch.isCPP)
+    //     put("timeshift", profileSwitch.timeshift)
+    //     put("percentage", profileSwitch.percentage)
+    //     put("profile", JSONObject(profileSwitch.profileJson))
+    //     put("profilePlugin", profileSwitch.profilePlugin)
+    //     put("durationInMinutes", profileSwitch.durationInMinutes)
+    //     put("isDeletion", deleted)
+    // }
+
+    // fun enqueueTotalDailyDose(tdd: TDD) = insertQueueItem("TotalDailyDoses") {
+    //     put("double", tdd.date)
+    //     put("double", tdd.bolus)
+    //     put("double", tdd.basal)
+    //     put("double", tdd.total)
+    // }
+
+    // @JvmOverloads
+    // fun enqueueTemporaryBasal(temporaryBasal: TemporaryBasal?, deleted: Boolean = false) = temporaryBasal?.let {
+    //     insertQueueItem("TemporaryBasals") {
+    //         put("date", temporaryBasal.date)
+    //         put("isValid", temporaryBasal.isValid)
+    //         put("source", temporaryBasal.source)
+    //         put("nsId", temporaryBasal._id)
+    //         put("pumpId", temporaryBasal.pumpId)
+    //         put("durationInMinutes", temporaryBasal.durationInMinutes)
+    //         put("durationInMinutes", temporaryBasal.durationInMinutes)
+    //         put("isAbsolute", temporaryBasal.isAbsolute)
+    //         put("percentRate", temporaryBasal.percentRate)
+    //         put("absoluteRate", temporaryBasal.absoluteRate)
+    //         put("isDeletion", deleted)
+    //     }
+    // }
 
     @JvmOverloads
-    fun enqueueProfileSwitch(profileSwitch: ProfileSwitch, deleted: Boolean = false) = insertQueueItem("ProfileSwitches") {
-        put("date", profileSwitch.date)
-        put("isValid", profileSwitch.isValid)
-        put("source", profileSwitch.source)
-        put("nsId", profileSwitch._id)
-        put("isCPP", profileSwitch.isCPP)
-        put("timeshift", profileSwitch.timeshift)
-        put("percentage", profileSwitch.percentage)
-        put("profile", JSONObject(profileSwitch.profileJson))
-        put("profilePlugin", profileSwitch.profilePlugin)
-        put("durationInMinutes", profileSwitch.durationInMinutes)
-        put("isDeletion", deleted)
-    }
-
-    fun enqueueTotalDailyDose(tdd: TDD) = insertQueueItem("TotalDailyDoses") {
-        put("double", tdd.date)
-        put("double", tdd.bolus)
-        put("double", tdd.basal)
-        put("double", tdd.total)
-    }
-
-    @JvmOverloads
-    fun enqueueTemporaryBasal(temporaryBasal: TemporaryBasal?, deleted: Boolean = false) = temporaryBasal?.let {
-        insertQueueItem("TemporaryBasals") {
-            put("date", temporaryBasal.date)
-            put("isValid", temporaryBasal.isValid)
-            put("source", temporaryBasal.source)
-            put("nsId", temporaryBasal._id)
-            put("pumpId", temporaryBasal.pumpId)
-            put("durationInMinutes", temporaryBasal.durationInMinutes)
-            put("durationInMinutes", temporaryBasal.durationInMinutes)
-            put("isAbsolute", temporaryBasal.isAbsolute)
-            put("percentRate", temporaryBasal.percentRate)
-            put("absoluteRate", temporaryBasal.absoluteRate)
-            put("isDeletion", deleted)
-        }
-    }
-
-    @JvmOverloads
-    fun enqueueTempTarget(tempTarget: TempTarget?, deleted: Boolean = false) = tempTarget?.let {
+    fun enqueueTempTarget(tempTarget: TemporaryTarget?, deleted: Boolean = false) = tempTarget?.let {
         insertQueueItem("TempTargets") {
-            put("date", tempTarget.date)
+            put("date", tempTarget.timestamp)
             put("isValid", tempTarget.isValid)
-            put("source", tempTarget.source)
-            put("nsId", tempTarget._id)
-            put("low", tempTarget.low)
-            put("high", tempTarget.high)
+            put("nsId", tempTarget.interfaceIDs_backing?.nightscoutId)
+            put("low", tempTarget.lowTarget)
+            put("high", tempTarget.highTarget)
             put("reason", tempTarget.reason)
-            put("durationInMinutes", tempTarget.durationInMinutes)
+            put("durationInMinutes", tempTarget.duration)
             put("isDeletion", deleted)
         }
     }
@@ -308,11 +304,11 @@ class OpenHumansUploader @Inject constructor(
                 jsonObject.put("structureVersion", structureVersion)
                 jsonObject.put("queuedOn", System.currentTimeMillis())
                 generator(jsonObject)
-                val queueItem = OHQueueItem(
-                    file = file,
-                    content = jsonObject.toString()
-                )
-                MainApp.getDbHelper().createOrUpdate(queueItem)
+//                val queueItem = OHQueueItem(
+//                    file = file,
+//                    content = jsonObject.toString()
+//                )
+//                databaseHelper.createOrUpdate(queueItem)
                 rxBus.send(OpenHumansFragment.UpdateQueueEvent)
             } catch (e: JSONException) {
                 e.printStackTrace()
@@ -342,7 +338,7 @@ class OpenHumansUploader @Inject constructor(
         isSetup = false
         oAuthTokens = null
         projectMemberId = null
-        MainApp.getDbHelper().clearOpenHumansQueue()
+//        databaseHelper.clearOpenHumansQueue()
         rxBus.send(OpenHumansFragment.UpdateViewEvent)
     }
 
@@ -355,54 +351,54 @@ class OpenHumansUploader @Inject constructor(
             //Updating the notification for every item drastically slows down the operation
             if (currentProgress % 1000L == 0L) showOngoingNotification(maxProgress, currentProgress)
         }
-        copyDisposable = Completable.fromCallable { MainApp.getDbHelper().clearOpenHumansQueue() }
-            .andThen(Single.defer { Single.just(MainApp.getDbHelper().countOfAllRows + treatmentsPlugin.service.count()) })
-            .doOnSuccess { maxProgress = it }
-            .flatMapObservable { Observable.defer { Observable.fromIterable(treatmentsPlugin.service.treatmentData) } }
-            .map { enqueueTreatment(it); increaseCounter() }
-            .ignoreElements()
-            .andThen(Observable.defer { Observable.fromIterable(MainApp.getDbHelper().allBgReadings) })
-            .map { enqueueBGReading(it); increaseCounter() }
-            .ignoreElements()
-            .andThen(Observable.defer { Observable.fromIterable(MainApp.getDbHelper().allCareportalEvents) })
-            .map { enqueueCareportalEvent(it); increaseCounter() }
-            .ignoreElements()
-            .andThen(Observable.defer { Observable.fromIterable(MainApp.getDbHelper().allExtendedBoluses) })
-            .map { enqueueExtendedBolus(it); increaseCounter() }
-            .ignoreElements()
-            .andThen(Observable.defer { Observable.fromIterable(MainApp.getDbHelper().allProfileSwitches) })
-            .map { enqueueProfileSwitch(it); increaseCounter() }
-            .ignoreElements()
-            .andThen(Observable.defer { Observable.fromIterable(MainApp.getDbHelper().allTDDs) })
-            .map { enqueueTotalDailyDose(it); increaseCounter() }
-            .ignoreElements()
-            .andThen(Observable.defer { Observable.fromIterable(MainApp.getDbHelper().allTemporaryBasals) })
-            .map { enqueueTemporaryBasal(it); increaseCounter() }
-            .ignoreElements()
-            .andThen(Observable.defer { Observable.fromIterable(MainApp.getDbHelper().allTempTargets) })
-            .map { enqueueTempTarget(it); increaseCounter() }
-            .ignoreElements()
-            .doOnSubscribe {
-                wakeLock.acquire(TimeUnit.MINUTES.toMillis(30))
-                showOngoingNotification()
-            }
-            .doOnComplete {
-                isSetup = true
-                scheduleWorker(false)
-                showSetupFinishedNotification()
-            }
-            .doOnError {
-                logout()
-                showSetupFailedNotification()
-            }
-            .doFinally {
-                copyDisposable = null
-                NotificationManagerCompat.from(context).cancel(COPY_NOTIFICATION_ID)
-                wakeLock.release()
-            }
-            .onErrorComplete()
-            .subscribeOn(Schedulers.io())
-            .subscribe()
+//        copyDisposable = Completable.fromCallable { databaseHelper.clearOpenHumansQueue() }
+//            .andThen(Single.defer { Single.just(databaseHelper.getCountOfAllRows() + treatmentsPlugin.service.count()) })
+//            .doOnSuccess { maxProgress = it }
+//            .flatMapObservable { Observable.defer { Observable.fromIterable(treatmentsPlugin.service.getTreatmentData()) } }
+//            .map { enqueueTreatment(it); increaseCounter() }
+//            .ignoreElements()
+//            .andThen(Observable.defer { Observable.fromIterable(repository.compatGetBgReadingsDataFromTime(0, true).blockingGet()) })
+//            .map { enqueueBGReading(it); increaseCounter() }
+//            .ignoreElements()
+//            .andThen(Observable.defer { Observable.fromIterable(repository.compatGetTherapyEventDataFromTime(0, true).blockingGet()) })
+//            .map { enqueueTherapyEvent(it); increaseCounter() }
+//            .ignoreElements()
+//            .andThen(Observable.defer { Observable.fromIterable(databaseHelper.getAllExtendedBoluses()) })
+//            .map { enqueueExtendedBolus(it); increaseCounter() }
+//            .ignoreElements()
+//             .andThen(Observable.defer { Observable.fromIterable(databaseHelper.getAllProfileSwitches()) })
+//             .map { enqueueProfileSwitch(it); increaseCounter() }
+//             .ignoreElements()
+            // .andThen(Observable.defer { Observable.fromIterable(databaseHelper.getAllTDDs()) })
+            // .map { enqueueTotalDailyDose(it); increaseCounter() }
+            // .ignoreElements()
+            // .andThen(Observable.defer { Observable.fromIterable(databaseHelper.getAllTemporaryBasals()) })
+            // .map { enqueueTemporaryBasal(it); increaseCounter() }
+            // .ignoreElements()
+//            .andThen(Observable.defer { Observable.fromIterable(repository.compatGetTemporaryTargetData().blockingGet()) })
+//            .map { enqueueTempTarget(it); increaseCounter() }
+//            .ignoreElements()
+//            .doOnSubscribe {
+//                wakeLock.acquire(TimeUnit.MINUTES.toMillis(30))
+//                showOngoingNotification()
+//            }
+//            .doOnComplete {
+//                isSetup = true
+//                scheduleWorker(false)
+//                showSetupFinishedNotification()
+//            }
+//            .doOnError {
+//                logout()
+//                showSetupFailedNotification()
+//            }
+//            .doFinally {
+//                copyDisposable = null
+//                NotificationManagerCompat.from(context).cancel(COPY_NOTIFICATION_ID)
+//                wakeLock.release()
+//            }
+//            .onErrorComplete()
+//            .subscribeOn(aapsSchedulers.io)
+//            .subscribe()
     }
 
     private fun showOngoingNotification(maxProgress: Long? = null, currentProgress: Long? = null) {
@@ -440,10 +436,11 @@ class OpenHumansUploader @Inject constructor(
         val notificationManager = NotificationManagerCompat.from(context)
         notificationManager.notify(FAILURE_NOTIFICATION_ID, notification)
     }
-
+/*
+    @kotlin.ExperimentalStdlibApi
     fun uploadDataSegmentally(): Completable =
         uploadData(UPLOAD_SEGMENT_SIZE)
-            .repeatUntil { MainApp.getDbHelper().ohQueueSize == 0L }
+            .repeatUntil { databaseHelper.getOHQueueSize() == 0L }
             .doOnSubscribe {
                 aapsLogger.info(LTag.OHUPLOADER, "Starting segmental upload")
             }
@@ -454,8 +451,9 @@ class OpenHumansUploader @Inject constructor(
                 aapsLogger.error(LTag.OHUPLOADER, "Segmental upload exceptional", it)
             }
 
+    @kotlin.ExperimentalStdlibApi
     @Suppress("SameParameterValue")
-    private fun uploadData(maxEntries: Long?): Completable = gatherData(maxEntries)
+    private fun uploadData(maxEntries: Long): Completable = gatherData(maxEntries)
         .flatMap { data -> refreshAccessTokensIfNeeded().map { accessToken -> accessToken to data } }
         .flatMap { uploadFile(it.first, it.second).andThen(Single.just(it.second)) }
         .flatMapCompletable {
@@ -478,7 +476,7 @@ class OpenHumansUploader @Inject constructor(
         .doOnSubscribe {
             aapsLogger.info(LTag.OHUPLOADER, "Starting upload")
         }
-
+*/
     private fun uploadFile(accessToken: String, uploadData: UploadData) = Completable.defer {
         openHumansAPI.prepareFileUpload(accessToken, uploadData.fileName, uploadData.metadata)
             .flatMap { openHumansAPI.uploadFile(it.uploadURL, uploadData.content).andThen(Single.just(it.fileId)) }
@@ -495,9 +493,10 @@ class OpenHumansUploader @Inject constructor(
             Single.just(oAuthTokens.accessToken)
         }
     }
-
-    private fun gatherData(maxEntries: Long?) = Single.defer {
-        val items = MainApp.getDbHelper().getAllOHQueueItems(maxEntries)
+/*
+    @kotlin.ExperimentalStdlibApi
+    private fun gatherData(maxEntries: Long) = Single.defer {
+        val items = databaseHelper.getAllOHQueueItems(maxEntries)
         val baos = ByteArrayOutputStream()
         val zos = ZipOutputStream(baos)
         val tags = mutableListOf<String>()
@@ -570,7 +569,7 @@ class OpenHumansUploader @Inject constructor(
             highestQueueId = items.map { it.id }.maxOrNull()
         ))
     }
-
+*/
     private fun ZipOutputStream.writeFile(name: String, bytes: ByteArray) {
         putNextEntry(ZipEntry(name))
         write(bytes)
@@ -578,7 +577,7 @@ class OpenHumansUploader @Inject constructor(
     }
 
     private fun removeUploadedEntriesFromQueue(highestId: Long) = Completable.fromCallable {
-        MainApp.getDbHelper().removeAllOHQueueItemsWithIdSmallerThan(highestId)
+//        databaseHelper.removeAllOHQueueItemsWithIdSmallerThan(highestId)
     }
 
     private fun handleSignOut() {
@@ -648,4 +647,5 @@ class OpenHumansUploader @Inject constructor(
     private fun onSharedPreferenceChanged(event: EventPreferenceChange) {
         if (event.changedKey == "key_oh_charging_only" && isSetup) scheduleWorker(true)
     }
+
 }

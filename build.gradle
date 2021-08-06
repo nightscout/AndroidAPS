@@ -2,72 +2,79 @@
 
 buildscript {
     ext {
-        kotlin_version = '1.4.21'
-        coreVersion = '1.3.2'
-        rxjava_version = '2.2.19'
+        kotlin_version = '1.5.10'
+        coreVersion = '1.6.0'
+        rxjava_version = '2.2.21'
         rxandroid_version = '2.1.1'
         rxkotlin_version = '2.4.0'
-        room_version = '2.2.5'
-        lifecycle_version = '2.2.0'
-        dagger_version = '2.30.1'
-        coroutinesVersion = '1.3.7'
-        activityVersion = '1.2.0-rc01'
-        fragmentktx_version = '1.3.0-rc01'
+        room_version = '2.3.0'
+        lifecycle_version = '2.3.1'
+        dagger_version = '2.37'
+        coroutinesVersion = '1.4.1'
+        activityVersion = '1.2.0'
+        fragmentktx_version = '1.3.0'
         ormLiteVersion = '4.46'
-        nav_version = '2.3.2'
-        appcompat_verison = '1.2.0'
-        material_version = '1.2.1'
+        nav_version = '2.3.3'
+        appcompat_version = '1.3.0'
+        material_version = '1.3.0'
         constraintlayout_version = '2.0.4'
         preferencektx_version = '1.1.1'
         commonslang3_version = '3.11'
-        work_version = '2.4.0'
+        commonscodec_version = '1.15'
+        jodatime_version = '2.10.10'
+        work_version = '2.5.0'
 
-        junit_version = '4.13.1'
-        mockitoVersion = '2.8.47'
-        powermockVersion = "1.7.3"
+        junit_version = '4.13.2'
+        mockitoVersion = '3.11.2'
+        powermockVersion = '2.0.9'
         dexmakerVersion = "1.2"
         retrofit2Version = '2.9.0'
         okhttp3Version = '4.9.0'
+        byteBuddyVersion = '1.11.5'
 
         androidx_junit = '1.1.2'
-        androidx_rules = '1.3.1-alpha02'
+        androidx_rules = '1.4.0-alpha04'
     }
     repositories {
         google()
-        jcenter()
+        mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" } // jacoco 0.2
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.1'
-        classpath 'com.google.gms:google-services:4.3.4'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.4.1'
+        classpath 'com.android.tools.build:gradle:4.2.2'
+        classpath 'com.google.gms:google-services:4.3.8'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.7.1'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
 
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.hiya:jacoco-android:0.2'
+        modules {
+            module("org.jetbrains.trove4j:trove4j") {
+                replacedBy("org.jetbrains.intellij.deps:trove4j")
+            }
+        }
     }
 }
 
 allprojects {
     repositories {
         google()
-        jcenter()
-
-        maven {
-            url "https://maven.google.com"
-        }
+        mavenCentral()
+        maven { url "https://maven.google.com" }
+        maven { url 'https://jitpack.io' }
         ivy {
             url 'https://github.com/'
             patternLayout {
                 artifact '/[organisation]/[module]/archive/[revision].[ext]'
             }
         }
-        maven { url 'https://jitpack.io' }
     }
     //Support @JvmDefault
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
         kotlinOptions {
-            freeCompilerArgs = ['-Xjvm-default=enable'] //enable or compatibility
+            freeCompilerArgs = ['-Xjvm-default=all']
             jvmTarget = "1.8"
         }
     }

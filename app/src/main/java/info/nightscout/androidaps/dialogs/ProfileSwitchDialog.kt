@@ -8,14 +8,18 @@ import android.widget.ArrayAdapter
 import com.google.common.base.Joiner
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.databinding.DialogProfileswitchBinding
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import io.reactivex.disposables.CompositeDisposable
 import java.text.DecimalFormat
 import java.util.*
 import javax.inject.Inject
@@ -24,10 +28,13 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
 
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
+    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var uel: UserEntryLogger
 
     private var profileIndex: Int? = null
+
+    private val disposable = CompositeDisposable()
 
     private var _binding: DialogProfileswitchBinding? = null
 
@@ -64,7 +71,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
 
         // profile
         context?.let { context ->
-            val profileStore = activePlugin.activeProfileInterface.profile
+            val profileStore = activePlugin.activeProfileSource.profile
                 ?: return
             val profileList = profileStore.getProfileList()
             val adapter = ArrayAdapter(context, R.layout.spinner_centered, profileList)
@@ -74,17 +81,17 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
                 binding.profile.setSelection(profileIndex as Int)
             else
                 for (p in profileList.indices)
-                    if (profileList[p] == profileFunction.getProfileName(false))
+                    if (profileList[p] == profileFunction.getOriginalProfileName())
                         binding.profile.setSelection(p)
         } ?: return
 
-        treatmentsPlugin.getProfileSwitchFromHistory(DateUtil.now())?.let { ps ->
-            if (ps.isCPP) {
+        profileFunction.getProfile()?.let { profile ->
+            if (profile.percentage != 100 || profile.timeshift != 0) {
                 binding.reuselayout.visibility = View.VISIBLE
-                binding.reusebutton.text = resourceHelper.gs(R.string.reuse_profile_pct_hours, ps.percentage, ps.timeshift)
+                binding.reusebutton.text = resourceHelper.gs(R.string.reuse_profile_pct_hours, profile.percentage, profile.timeshift)
                 binding.reusebutton.setOnClickListener {
-                    binding.percentage.value = ps.percentage.toDouble()
-                    binding.timeshift.value = ps.timeshift.toDouble()
+                    binding.percentage.value = profile.percentage.toDouble()
+                    binding.timeshift.value = profile.timeshift.toDouble()
                 }
             } else {
                 binding.reuselayout.visibility = View.GONE
@@ -94,20 +101,21 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        disposable.clear()
         _binding = null
     }
 
     override fun submit(): Boolean {
         if (_binding == null) return false
-        val profileStore = activePlugin.activeProfileInterface.profile
+        val profileStore = activePlugin.activeProfileSource.profile
             ?: return false
 
         val actions: LinkedList<String> = LinkedList()
         val duration = binding.duration.value?.toInt() ?: return false
-        if (duration > 0)
+        if (duration > 0L)
             actions.add(resourceHelper.gs(R.string.duration) + ": " + resourceHelper.gs(R.string.format_mins, duration))
-        val profile = binding.profile.selectedItem.toString()
-        actions.add(resourceHelper.gs(R.string.profile) + ": " + profile)
+        val profileName = binding.profile.selectedItem.toString()
+        actions.add(resourceHelper.gs(R.string.profile) + ": " + profileName)
         val percent = binding.percentage.value.toInt()
         if (percent != 100)
             actions.add(resourceHelper.gs(R.string.percent) + ": " + percent + "%")
@@ -116,14 +124,26 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
             actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_timeshift_label) + ": " + resourceHelper.gs(R.string.format_hours, timeShift.toDouble()))
         val notes = binding.notesLayout.notes.text.toString()
         if (notes.isNotEmpty())
-            actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_notes_label) + ": " + notes)
+            actions.add(resourceHelper.gs(R.string.notes_label) + ": " + notes)
         if (eventTimeChanged)
             actions.add(resourceHelper.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
 
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal_profileswitch), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
-                aapsLogger.debug("USER ENTRY: PROFILE SWITCH $profile percent: $percent timeshift: $timeShift duration: $duration")
-                treatmentsPlugin.doProfileSwitch(profileStore, profile, duration, percent, timeShift, eventTime)
+                profileFunction.createProfileSwitch(profileStore,
+                    profileName = profileName,
+                    durationInMinutes = duration,
+                    percentage = percent,
+                    timeShiftInHours = timeShift,
+                    timestamp = eventTime)
+                uel.log(Action.PROFILE_SWITCH,
+                    Sources.ProfileSwitchDialog,
+                    notes,
+                    ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
+                    ValueWithUnit.SimpleString(profileName),
+                    ValueWithUnit.Percent(percent),
+                    ValueWithUnit.Hour(timeShift).takeIf { timeShift != 0 },
+                    ValueWithUnit.Minute(duration).takeIf { duration != 0 })
             })
         }
         return true

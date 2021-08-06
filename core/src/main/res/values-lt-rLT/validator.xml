@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_only_numeric_digits_allowed">Galimi tik skaičiai.</string>
+    <string name="error_only_numeric_digits_range_allowed">Galimi tik skaičiai intervale %1$s - %2$s.</string>
+    <string name="error_field_must_not_be_empty">Laukas negali būti tuščias</string>
+    <string name="error_phone_not_valid">Telefono numeris negalioja</string>
+</resources>

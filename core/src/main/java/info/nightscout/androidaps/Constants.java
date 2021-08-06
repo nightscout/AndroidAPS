@@ -1,13 +1,14 @@
 package info.nightscout.androidaps;
 
+import info.nightscout.androidaps.database.entities.ValueWithUnit;
 import info.nightscout.androidaps.utils.T;
 
 /**
  * Created by mike on 07.06.2016.
  */
 public class Constants {
-    public static final String MGDL = "mg/dl"; // This is Nightscout's representation
-    public static final String MMOL = "mmol";
+    public static final String MGDL = ValueWithUnit.MGDL; // This is Nightscout's representation
+    public static final String MMOL = ValueWithUnit.MMOL;
 
     public static final double MMOLL_TO_MGDL = 18; // 18.0182;
     public static final double MGDL_TO_MMOLL = 1 / MMOLL_TO_MGDL;
@@ -46,9 +47,9 @@ public class Constants {
     public static final int defaultEatingSoonTTDuration = 45; // min
     public static final double defaultEatingSoonTTmgdl = 90d;
     public static final double defaultEatingSoonTTmmol = 5d;
-    public static final int defaultHypoTTDuration = 30; // min
-    public static final double defaultHypoTTmgdl = 120d;
-    public static final double defaultHypoTTmmol = 6.5d;
+    public static final int defaultHypoTTDuration = 60; // min
+    public static final double defaultHypoTTmgdl = 160d;
+    public static final double defaultHypoTTmmol = 8d;
 
     public static final double MIN_TT_MGDL = 72d;
     public static final double MAX_TT_MGDL = 180d;
@@ -71,7 +72,7 @@ public class Constants {
     public static final int MIN_WATCHDOG_INTERVAL_IN_SECONDS = 12 * 60;
 
     //SMS Communicator
-    public static final long SMS_CONFIRM_TIMEOUT = T.mins(5).msecs();
+    public static final long SMS_CONFIRM_TIMEOUT = T.mins(5L).msecs();
 
     //Storage [MB]
     public static final long MINIMUM_FREE_SPACE = 200;

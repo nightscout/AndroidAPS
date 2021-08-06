@@ -14,19 +14,20 @@ import javax.inject.Inject;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.dana.DanaPump;
+import info.nightscout.androidaps.dana.database.DanaHistoryRecordDao;
 import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.danaRv2.DanaRv2Plugin;
 import info.nightscout.androidaps.danar.DanaRPlugin;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
-import info.nightscout.androidaps.interfaces.ConfigBuilderInterface;
-import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
+import info.nightscout.androidaps.interfaces.ConfigBuilder;
+import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage;
+import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalStorage;
 import info.nightscout.androidaps.utils.CRC;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
@@ -46,13 +47,14 @@ public class MessageBase {
     @Inject public DanaRv2Plugin danaRv2Plugin;
     @Inject public RxBusWrapper rxBus;
     @Inject public ResourceHelper resourceHelper;
-    @Inject public ActivePluginProvider activePlugin;
-    @Inject public ConfigBuilderInterface configBuilder;
+    @Inject public ActivePlugin activePlugin;
+    @Inject public ConfigBuilder configBuilder;
     @Inject public CommandQueueProvider commandQueue;
     @Inject public DetailedBolusInfoStorage detailedBolusInfoStorage;
+    @Inject public TemporaryBasalStorage temporaryBasalStorage;
     @Inject public ConstraintChecker constraintChecker;
-    @Inject public NSUpload nsUpload;
-    @Inject public DatabaseHelperInterface databaseHelper;
+    @Inject public PumpSync pumpSync;
+    @Inject public DanaHistoryRecordDao danaHistoryRecordDao;
     HasAndroidInjector injector;
 
     public byte[] buffer = new byte[512];
@@ -63,7 +65,7 @@ public class MessageBase {
 
     public MessageBase(HasAndroidInjector injector) {
         injector.androidInjector().inject(this);
-        this. injector = injector;
+        this.injector = injector;
     }
 
     public void SetCommand(int cmd) {

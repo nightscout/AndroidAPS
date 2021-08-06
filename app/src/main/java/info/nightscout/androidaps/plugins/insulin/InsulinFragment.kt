@@ -6,25 +6,38 @@ import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.databinding.InsulinFragmentBinding
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import kotlinx.android.synthetic.main.insulin_fragment.*
 import javax.inject.Inject
 
 class InsulinFragment : DaggerFragment() {
-    @Inject lateinit var activePlugin: ActivePluginProvider
+
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var resourceHelper: ResourceHelper
 
+    private var _binding: InsulinFragmentBinding? = null
+
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.insulin_fragment, container, false)
+                              savedInstanceState: Bundle?): View {
+        _binding = InsulinFragmentBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onResume() {
         super.onResume()
-        insulin_name?.text = activePlugin.activeInsulin.friendlyName
-        insulin_comment?.text = activePlugin.activeInsulin.comment
-        insulin_dia?.text = resourceHelper.gs(R.string.dia) + ":  " + activePlugin.activeInsulin.dia + "h"
-        insulin_graph?.show(activePlugin.activeInsulin)
+        binding.name.text = activePlugin.activeInsulin.friendlyName
+        binding.comment.text = activePlugin.activeInsulin.comment
+        binding.dia.text = resourceHelper.gs(R.string.dia) + ":  " + resourceHelper.gs(R.string.format_hours, activePlugin.activeInsulin.dia)
+        binding.graph.show(activePlugin.activeInsulin)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

@@ -1,0 +1,15 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'com.hiya.jacoco-android'
+
+apply from: "${project.rootDir}/gradle/android_dependencies.gradle"
+apply from: "${project.rootDir}/gradle/android_module_dependencies.gradle"
+apply from: "${project.rootDir}/gradle/test_dependencies.gradle"
+apply from: "${project.rootDir}/gradle/jacoco_global.gradle"
+
+
+dependencies {
+    implementation project(':core')
+    implementation project(':database')
+}

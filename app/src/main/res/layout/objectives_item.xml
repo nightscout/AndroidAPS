@@ -6,8 +6,8 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
     android:layout_marginTop="16dp"
+    android:layout_marginRight="16dp"
     app:cardBackgroundColor="@color/colorPrimary"
     app:cardCornerRadius="2dp"
     app:cardUseCompatPadding="true"
@@ -19,7 +19,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/objective_title"
+            android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-medium"
@@ -28,7 +28,7 @@
             tools:text="1. Title" />
 
         <TextView
-            android:id="@+id/objective_objective"
+            android:id="@+id/objective"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -36,7 +36,7 @@
             tools:text="Objective" />
 
         <TextView
-            android:id="@+id/objective_gate"
+            android:id="@+id/gate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -45,61 +45,61 @@
             tools:text="Gate" />
 
         <LinearLayout
-            android:id="@+id/objective_progress"
+            android:id="@+id/progress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
         </LinearLayout>
 
         <Button
-            android:id="@+id/objective_verify"
+            android:id="@+id/verify"
             style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/objectives_button_verify" />
 
         <Button
-            android:id="@+id/objective_start"
+            android:id="@+id/start"
             style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/objectives_button_start" />
 
         <Button
-            android:id="@+id/objective_unfinish"
+            android:id="@+id/unfinish"
             style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/objectives_button_unfinish" />
 
         <Button
-            android:id="@+id/objective_unstart"
+            android:id="@+id/unstart"
             style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/objectives_button_unstart" />
 
         <TextView
-            android:id="@+id/objective_inputhint"
+            android:id="@+id/inputhint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives" />
 
         <TextView
-            android:id="@+id/objective_requestcode"
+            android:id="@+id/requestcode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Request code: XXXXX" />
 
         <LinearLayout
-           android:layout_width="match_parent"
-           android:layout_height="match_parent"
-           android:orientation="horizontal" >
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
             <EditText
-                android:id="@+id/objective_input"
+                android:id="@+id/input"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -108,16 +108,16 @@
                 android:inputType="text" />
 
             <Button
-               android:id="@+id/objective_enterbutton"
-               style="@style/Widget.AppCompat.Button.Borderless.Colored"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:text="@string/objectives_button_enter" />
+                android:id="@+id/enterbutton"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/objectives_button_enter" />
 
         </LinearLayout>
 
         <TextView
-            android:id="@+id/objective_accomplished"
+            android:id="@+id/accomplished"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"

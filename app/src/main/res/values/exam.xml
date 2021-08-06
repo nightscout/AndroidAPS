@@ -8,7 +8,7 @@
     <string name="dia_meaningisequaltodiapump">If you are satisfied that the value for DIA that you used in your pump prior to AndroidAPS worked well, there is no need to change this when you start looping.</string>
     <string name="dia_valuemustbedetermined">You should determine for yourself the appropriate value for DIA.</string>
     <string name="hypott_label">Hypo Temp-Target</string>
-    <string name="hypott_whenhypott">What is primary reason to set a hypo  temp target?</string>
+    <string name="hypott_whenhypott">What is primary reason to set a hypo temp target?</string>
     <string name="hypott_wrongbasal">To correct for hypos caused by incorrect basal rate settings.</string>
     <string name="hypott_preventoversmb">To prevent AndroidAPS from overcorrecting for a blood glucose rise caused by the fast acting carbs used to treat a hypo.</string>
     <string name="hypott_exercise">To correct for a hypo induced as a result of exercise.</string>
@@ -41,14 +41,14 @@
     <string name="noisycgm_label">Noisy CGM Readings</string>
     <string name="noisycgm_whattodo">What should be done if CGM data is noisy?</string>
     <string name="noisycgm_nothing">Do nothing - AndroidAPS will deal with it.</string>
-    <string name="noisycgm_pause">Disable the closed loop to avoid possible over- or underdosing.</string>
+    <string name="noisycgm_pause">Disable the closed loop to avoid possible over or underdosing.</string>
     <string name="noisycgm_replacesensor">Replace consistently noisy or inaccurate sensors.</string>
     <string name="noisycgm_checksmoothing">Verify that your CGM app provides smoothed data.</string>
     <string name="noisycgm_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Smoothing-Blood-Glucose-Data-in-xDrip.html#smoothing-blood-glucose-data</string>
     <string name="exerciseprofile_label">Exercise and Profiles</string>
     <string name="exerciseprofile_whattodo">How can you use profiles to best help the system deal with aerobic exercise?</string>
     <string name="exerciseprofile_switchprofilebelow100">Do a profile switch to less than 100%.</string>
-    <string name="exerciseprofile_switchprofileabove100">Do a profile switch to more than 100%. </string>
+    <string name="exerciseprofile_switchprofileabove100">Do a profile switch to more than 100%.</string>
     <string name="exerciseprofile_leaveat100">Leave the profile set to 100%.</string>
     <string name="exerciseprofile_suspendloop">Suspend the loop.</string>
     <string name="exerciseprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>

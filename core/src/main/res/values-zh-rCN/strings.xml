@@ -5,6 +5,27 @@
     <string name="pump_basebasalrate">%1$.2f U/h</string>
     <string name="yes">是</string>
     <string name="no">否</string>
+    <string name="loopdisabled">按约束条件禁用循环</string>
+    <string name="novalidbasalrate">从泵中无法读取有效的基础率</string>
+    <string name="limitingmaxiob">由于 %2$s, 将最大 IOB(活性胰岛素) 限制为 %1$.1f U</string>
+    <string name="unsafeusage">不安全的用法</string>
+    <string name="pump_unreachable">泵无法连接</string>
+    <string name="pump_time_updated">泵时间已经更新</string>
+    <string name="removerecord">删除记录</string>
+    <string name="disableloop">禁用闭环</string>
+    <string name="enableloop">启用闭环</string>
+    <string name="resumeloop">恢复闭环</string>
+    <string name="suspendloop">暂停闭环</string>
+    <string name="notification">通知</string>
+    <string name="noprofile">尚未从 NS 加载配置文件</string>
+    <string name="exists">存在</string>
+    <string name="notexists">不存在</string>
+    <string name="glucose">血糖</string>
+    <string name="cob">COB活性碳水</string>
+    <string name="name_short">名称:</string>
+    <string name="time">时间</string>
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="addnew">添加新条目</string>
     <!--    Constraints-->
     <!--    Dialogs-->
     <!--    BlePreCheck-->
@@ -12,21 +33,25 @@
     <!--    Protection-->
     <!--    Profile-->
     <!--    ProfileFunction-->
+    <string name="startprofile">启动配置文件 %1$d%%在 %2$d 分钟</string>
     <!--    PumpType-->
     <!--    APSResult-->
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    TDD-->
     <!--    Translator-->
+    <string name="boluswizard">大剂量向导</string>
+    <string name="eatingsoon">很快吃饭</string>
+    <string name="hypo">低</string>
+    <string name="activity">活动</string>
+    <string name="wear">手表</string>
+    <string name="automation">自动操作</string>
+    <string name="custom">自定义</string>
     <!--    Command-->
     <!--    PumpEnactResult-->
     <!--    CarbsReq-->
     <!--    TDDStatsActivity-->
     <!--    Ntp-->
-    <!-- PumoCommon - Pump Abstract -->
-    <string name="pump_operation_not_yet_supported_by_pump">泵不支持操作 YYT 。</string>
-    <!-- PumoCommon - Pump Status -->
-    <!-- PumpCommon - History Group -->
     <!-- Maintenance -->
     <string name="metadata_label_created_at">创建于</string>
     <string name="metadata_label_aaps_version">AAPS 版本</string>
@@ -63,4 +88,6 @@
     <string name="running_invalid_version">我们检测到您运行的版本无效。 已禁用循环!</string>
     <string name="versionavailable">版本 %1$s 可用</string>
     <!-- Permissions -->
+    <!-- WeekdayPicker -->
+    <!-- User Entry -->
 </resources>

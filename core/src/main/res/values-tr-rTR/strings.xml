@@ -5,6 +5,21 @@
     <string name="pump_basebasalrate">%1$.2f U/h</string>
     <string name="yes">Evet</string>
     <string name="no">Hayır</string>
+    <string name="loopdisabled">DÖNGÜ KISITLAMALARDAN İPTAL EDİLDİ</string>
+    <string name="novalidbasalrate">Pompadan okunan geçerli bir bazal oranı yok</string>
+    <string name="limitingmaxiob">%2$s\'den dolayı max IOB\'yi (Aktif İnsülin) %1$.1f U ile sınırlandırılıyor</string>
+    <string name="unsafeusage">güvenli olmayan kullanım</string>
+    <string name="pump_unreachable">Pompa ulaşılamıyor</string>
+    <string name="pump_time_updated">Pompa zamanı güncellendi</string>
+    <string name="serial_number">Seri numarası</string>
+    <string name="disableloop">Döngü devre dışı bırak</string>
+    <string name="enableloop">Döngü etkinleştir</string>
+    <string name="resumeloop">Döngüyü başlat</string>
+    <string name="suspendloop">Döngüyü duraklat</string>
+    <string name="noprofile">Henüz NightSout\'tan profil yüklenmedi</string>
+    <string name="glucose">Glikoz</string>
+    <string name="time">Zaman</string>
+    <string name="ns_wifi_ssids">WiFi SSID</string>
     <!--    Constraints-->
     <!--    Dialogs-->
     <!--    BlePreCheck-->
@@ -18,16 +33,19 @@
     <!--    Temptarget-->
     <!--    TDD-->
     <!--    Translator-->
+    <string name="eatingsoon">Yakında Öğün</string>
+    <string name="hypo">Hipo</string>
+    <string name="wear">Wear</string>
+    <string name="custom">Özel</string>
     <!--    Command-->
     <!--    PumpEnactResult-->
     <!--    CarbsReq-->
     <!--    TDDStatsActivity-->
     <!--    Ntp-->
-    <!-- PumoCommon - Pump Abstract -->
-    <!-- PumoCommon - Pump Status -->
-    <!-- PumpCommon - History Group -->
     <!-- Maintenance -->
     <!-- VersionChecker -->
     <string name="versionavailable">Sürüm %1$s mevcut</string>
     <!-- Permissions -->
+    <!-- WeekdayPicker -->
+    <!-- User Entry -->
 </resources>

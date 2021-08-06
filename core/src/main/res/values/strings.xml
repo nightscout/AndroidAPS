@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    Keys-->
-    <string name="key_enable_fabric" translatable="false">enable_fabric</string>
+    <string name="key_enable_fabric" translatable="false">enable_fabric2</string>
     <string name="key_language" translatable="false">language</string>
     <string name="key_units" translatable="false">units</string>
     <string name="key_loop_openmode_min_change" translatable="false">loop_openmode_min_change</string>
     <string name="key_absorption_maxtime" translatable="false">absorption_maxtime</string>
     <string name="key_openapsama_min_5m_carbimpact" translatable="false">openapsama_min_5m_carbimpact</string>
     <string name="key_absorption_cutoff" translatable="false">absorption_cutoff</string>
-    <string name="key_danar_visualizeextendedaspercentage" translatable="false">danar_visualizeextendedaspercentage"</string>
     <string name="key_danar_useextended" translatable="false">danar_useextended</string>
     <string name="key_eatingsoon_duration" translatable="false">eatingsoon_duration</string>
     <string name="key_eatingsoon_target" translatable="false">eatingsoon_target</string>
@@ -20,7 +19,6 @@
     <string name="key_high_mark" translatable="false">high_mark</string>
     <string name="key_ns_create_announcements_from_errors" translatable="false">ns_create_announcements_from_errors</string>
     <string name="key_ns_logappstartedevent" translatable="false">ns_logappstartedevent</string>
-    <string name="key_ns_uploadlocalprofile" translatable="false">ns_uploadlocalprofile</string>
     <string name="key_btwatchdog" translatable="false">bt_watchdog</string>
     <string name="key_btwatchdog_lastbark" translatable="false">bt_watchdog_last</string>
     <string name="key_pump_unreachable_threshold_minutes" translatable="false">pump_unreachable_threshold</string>
@@ -29,8 +27,39 @@
     <string name="key_ns_sync_use_absolute" translatable="false">ns_sync_use_absolute</string>
     <string name="key_virtualpump_type" translatable="false">virtualpump_type</string>
     <string name="key_quickwizard" translatable="false">QuickWizard</string>
+    <string name="key_wear_control" translatable="false">wearcontrol</string>
+    <string name="key_show_notes_entry_dialogs" translatable="false">show_notes_entry_dialogs</string>
+    <string name="key_openapsama_autosens_max" translatable="false">autosens_max</string>
+    <string name="key_openapsama_autosens_min" translatable="false">autosens_min</string>
+    <string name="key_treatmentssafety_maxcarbs" translatable="false">treatmentssafety_maxcarbs</string>
+    <string name="key_bgsource_upload_settings" translatable="false">bgsource_upload_settings</string>
+    <string name="key_localalert_settings" translatable="false">localalert_settings</string>
+    <string name="key_wear_settings" translatable="false">wear_settings</string>
+    <string name="key_configbuilder_general_settings" translatable="false">configbuilder_general_settings</string>
+    <string name="key_maintenance_settings" translatable="false">maintenance_settings</string>
+    <string name="key_smscommunicator_settings" translatable="false">smscommunicator_settings</string>
+    <string name="key_openapssmb_settings" translatable="false">openapssmb_settings</string>
+    <string name="key_treatmentssafety_settings" translatable="false">treatmentssafety_settings</string>
+    <string name="key_loop_settings" translatable="false">loop_settings</string>
+    <string name="key_virtualpump_settings" translatable="false">virtualpump_settings</string>
+    <string name="key_pump_settings" translatable="false">pump_settings</string>
+    <string name="key_tidepool_settings" translatable="false">tidepool_settings</string>
+    <string name="key_absorption_settings" translatable="false">absorption_settings</string>
+    <string name="key_overview_settings" translatable="false">overview_settings</string>
+    <string name="key_openapsma_settings" translatable="false">openapsma_settings</string>
+    <string name="key_medtronic_settings" translatable="false">medtronic_settings</string>
+    <string name="key_danars_settings" translatable="false">danars_settings</string>
+    <string name="key_xdripstatus_settings" translatable="false">xdripstatus_settings</string>
+    <string name="key_nsclientinternal_settings" translatable="false">nsclientinternal_settings</string>
+    <string name="key_insight_local_settings" translatable="false">insight_local_settings</string>
+    <string name="key_data_choices_settings" translatable="false">data_choices_settings</string>
+    <string name="key_dexcom_settings" translatable="false">dexcom_settings</string>
+    <string name="key_active_pump_change_timestamp" translatable="false">active_pump_change_timestamp</string>
+    <string name="key_active_pump_type" translatable="false">active_pump_type</string>
+    <string name="key_active_pump_serial_number" translatable="false">active_pump_serial_number</string>
 
     <!--    General-->
+    <string name="refresh">Refresh</string>
     <string name="error">Error</string>
     <string name="not_set_short">Not set</string>
     <string name="failedupdatebasalprofile">Failed to update basal profile</string>
@@ -90,6 +119,8 @@
     <string name="eventtype">Event type</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
+    <string name="shortgram">g</string>
+    <string name="shortpercent">%</string>
     <string name="advancedsettings_title">Advanced Settings</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">BT Watchdog</string>
@@ -97,6 +128,41 @@
     <string name="pairing">Pairing</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="loopdisabled">LOOP DISABLED BY CONSTRAINTS</string>
+    <string name="bolusdelivered">Bolus %1$.2f U delivered successfully</string>
+    <string name="virtualpump_resultok">OK</string>
+    <string name="novalidbasalrate">No valid basal rate read from pump</string>
+    <string name="limitingmaxiob">Limiting max IOB to %1$.1f U because of %2$s</string>
+    <string name="unsafeusage">unsafe usage</string>
+    <string name="pump_unreachable">Pump unreachable</string>
+    <string name="extended_bolus">Extended bolus</string>
+    <string name="pump_time_updated">Pump time updated</string>
+    <string name="exit">Exit</string>
+    <string name="serial_number">Serial number</string>
+    <string name="removerecord">Remove record</string>
+    <string name="loopisdisabled">Loop is disabled</string>
+    <string name="alarm">Alarm</string>
+    <string name="disableloop">Disable loop</string>
+    <string name="enableloop">Enable loop</string>
+    <string name="resumeloop">Resume loop</string>
+    <string name="suspendloop">Suspend loop</string>
+    <string name="duration_min_label">Duration [min]</string>
+    <string name="notification">Notification</string>
+    <string name="noprofile">No profile loaded from NS yet</string>
+    <string name="exists">exists</string>
+    <string name="notexists">not exists</string>
+    <string name="glucose">Glucose</string>
+    <string name="iob">IOB</string>
+    <string name="cob">COB</string>
+    <string name="name_short">Name:</string>
+    <string name="time">Time</string>
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="loading">Loading …</string>
+    <string name="event_time_label">Event time</string>
+    <string name="notes_label">Notes</string>
+    <string name="remove_button">Remove</string>
+    <string name="addnew">Add new</string>
+    <string name="wrong_pump_data">Data is coming from different pump. Change pump driver to reset pump state.</string>
 
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>
@@ -115,6 +181,7 @@
 
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy not supported.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy not supported or device not paired.</string>
     <string name="ble_not_enabled">Bluetooth not enabled.</string>
     <string name="location_not_found_title">Location Is Not Enabled</string>
     <string name="location_not_found_message">For Bluetooth discovery to work on newer devices, location must be enabled. AAPS does not track your location and it can be disabled after pairing is successful.</string>
@@ -152,6 +219,7 @@
 
     <!--    ProfileFunction-->
     <string name="noprofileselected">No profile selected</string>
+    <string name="startprofile">Start profile %1$d%% for %2$d min</string>
 
     <!--    PumpType-->
     <string name="def_extended_note">* Only discrete values no ranges are supported as granularity for basal/bolus in virtual pump.</string>
@@ -173,6 +241,7 @@
     <!--    TDD-->
     <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f U</b> Bol: <b>%3$.2f U</b> Bas: <b>%4$.2f U(%5$.0f%%)</b>]]></string>
     <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f U</b> Bol: <b>%3$.2f U</b> Bas: <b>%4$.2f U(%5$.0f%%)</b> Carbs: <b>%6$.0f g</b>]]></string>
+    <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> in <b>%3$d</b> days<br>]]></string>
 
     <!--    Translator-->
     <string name="careportal_bgcheck">BG Check</string>
@@ -184,6 +253,8 @@
     <string name="careportal_pumpsitechange">Pump Site Change</string>
     <string name="careportal_cgmsensorinsert">CGM Sensor Insert</string>
     <string name="careportal_cgmsensorstart">CGM Sensor Start</string>
+    <string name="careportal_cgm_sensor_stop">CGM Sensor Stop</string>
+    <string name="careportal_dad_alert">D.A.D. Alert</string>
     <string name="careportal_insulincartridgechange">Insulin Cartridge Change</string>
     <string name="careportal_profileswitch">Profile switch</string>
     <string name="careportal_snackbolus">Snack Bolus</string>
@@ -197,10 +268,21 @@
     <string name="careportal_pumpbatterychange">Pump Battery Change</string>
     <string name="careportal_temporarytarget">Temporary target</string>
     <string name="careportal_temporarytargetcancel">Temporary target cancel</string>
+    <string name="boluswizard">Bolus wizard</string>
     <string name="glucosetype_finger">Finger</string>
     <string name="glucosetype_sensor">Sensor</string>
     <string name="manual">Manual</string>
     <string name="unknown">unknown</string>
+    <string name="eatingsoon">Eating Soon</string>
+    <string name="hypo">Hypo</string>
+    <string name="activity">Activity</string>
+    <string name="wear">Wear</string>
+    <string name="automation">Automation</string>
+    <string name="custom">Custom</string>
+    <string name="pump">Pump</string>
+    <string name="loop">Loop</string>
+    <string name="ns">NS</string>
+    <string name="record">Record</string>
 
     <!--    Command-->
     <string name="connectiontimedout">Connection timed out</string>
@@ -238,32 +320,6 @@
     <string name="timedetection">Time detection</string>
     <string name="format_hour_minute">%1$dh %2$dm</string>
 
-    <!-- PumoCommon - Pump Abstract -->
-    <string name="pump_operation_not_supported_by_pump_driver">Operation not supported by pump and/or driver.</string>
-    <string name="pump_operation_not_yet_supported_by_pump">Operation not YET supported by pump.</string>
-    <string name="common_resultok">OK</string>
-
-    <!-- PumoCommon - Pump Status -->
-    <string name="pump_status_never_contacted">Never contacted</string>
-    <string name="pump_status_waking_up">Waking up</string>
-    <string name="pump_status_error_comm">Error with communication</string>
-    <string name="pump_status_timeout_comm">Timeout on communication</string>
-    <string name="pump_status_pump_unreachable">Pump unreachable</string>
-    <string name="pump_status_invalid_config">Invalid configuration</string>
-    <string name="pump_status_active">Active</string>
-    <string name="pump_status_sleeping">Sleeping</string>
-
-    <!-- PumpCommon - History Group -->
-    <string name="history_group_basal">Basals</string>
-    <string name="history_group_configuration">Configurations</string>
-    <string name="history_group_notification">Notifications</string>
-    <string name="history_group_statistic">Statistics</string>
-    <string name="history_group_unknown">Unknowns</string>
-    <string name="history_group_all">All</string>
-    <string name="history_group_bolus">Boluses</string>
-    <string name="history_group_prime">Prime</string>
-    <string name="history_group_alarm">Alarms</string>
-    <string name="history_group_glucose">Glucose</string>
     <string name="mute5min">Mute for 5 minutes</string>
 
     <!-- Maintenance -->
@@ -313,6 +369,108 @@
 
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Please reboot your phone or restart AndroidAPS from the System Settings \notherwise Android APS will not have logging (important to track and verify that the algorithms are working correctly)!</string>
+
+    <!-- WeekdayPicker -->
+    <string name="monday_short">M</string>
+    <string name="tuesday_short">T</string>
+    <string name="wednesday_short">W</string>
+    <string name="thursday_short">T</string>
+    <string name="friday_short">F</string>
+    <string name="saturday_short">S</string>
+    <string name="sunday_short">S</string>
+
+    <!-- User Entry -->
+    <string name="uel_bolus">BOLUS</string>
+    <string name="uel_bolus_advisor">BOLUS ADVISOR</string>
+    <string name="uel_extended_bolus">EXTENDED BOLUS</string>
+    <string name="uel_superbolus_tbr">SUPERBOLUS TBR</string>
+    <string name="uel_carbs">CARBS</string>
+    <string name="uel_extended_carbs">EXTENDED CARBS</string>
+    <string name="uel_temp_basal">TEMP BASAL</string>
+    <string name="uel_tt">TEMP TARGET</string>
+    <string name="uel_new_profile">NEW PROFILE</string>
+    <string name="uel_clone_profile">CLONE PROFILE</string>
+    <string name="uel_store_profile">STORE PROFILE</string>
+    <string name="uel_profile_switch">PROFILE SWITCH</string>
+    <string name="uel_profile_switch_cloned">PROFILE SWITCH CLONED</string>
+    <string name="uel_closed_loop_mode">CLOSED LOOP MODE</string>
+    <string name="uel_lgs_loop_mode">LGS LOOP MODE</string>
+    <string name="uel_open_loop_mode">OPEN LOOP MODE</string>
+    <string name="uel_loop_disabled">LOOP DISABLED</string>
+    <string name="uel_loop_enabled">LOOP ENABLED</string>
+    <string name="uel_reconnect">RECONNECT</string>
+    <string name="uel_disconnect">DISCONNECT</string>
+    <string name="uel_resume">RESUME</string>
+    <string name="uel_suspend">SUSPEND</string>
+    <string name="uel_hw_pump_allowed">HW PUMP ALLOWED</string>
+    <string name="uel_clear_pairing_keys">CLEAR PAIRING KEYS</string>
+    <string name="uel_accepts_temp_basal">ACCEPTS TEMP BASAL</string>
+    <string name="uel_cancel_temp_basal">CANCEL TEMP BASAL</string>
+    <string name="uel_cancel_bolus">CANCEL BOLUS</string>
+    <string name="uel_cancel_extended_bolus">CANCEL EXTENDED BOLUS</string>
+    <string name="uel_cancel_tt">CANCEL TEMP TARGET</string>
+    <string name="uel_careportal">CAREPORTAL</string>
+    <string name="uel_site_change">SITE CHANGE</string>
+    <string name="uel_reservoir_change">RESERVOIR CHANGE</string>
+    <string name="uel_calibration">CALIBRATION</string>
+    <string name="uel_prime_bolus">PRIME BOLUS</string>
+    <string name="uel_treatment">TREATMENT</string>
+    <string name="uel_careportal_ns_refresh">CAREPORTAL NS REFRESH</string>
+    <string name="uel_profile_switch_ns_refresh">PROFILE SWITCH NS REFRESH</string>
+    <string name="uel_treatments_ns_refresh">TREATMENTS NS REFRESH</string>
+    <string name="uel_tt_ns_refresh">TEMP TARGET NS REFRESH</string>
+    <string name="uel_automation_removed">AUTOMATION REMOVED</string>
+    <string name="uel_bg_removed">BG REMOVED</string>
+    <string name="uel_careportal_removed">CAREPORTAL REMOVED</string>
+    <string name="uel_bolus_removed">BOLUS REMOVED</string>
+    <string name="uel_carbs_removed">CARBS REMOVED</string>
+    <string name="uel_temp_basal_removed">TEMP BASAL REMOVED</string>
+    <string name="uel_extended_bolus_removed">EXTENDED BOLUS REMOVED</string>
+    <string name="uel_food">FOOD</string>
+    <string name="uel_food_removed">FOOD REMOVED</string>
+    <string name="uel_profile_removed">PROFILE REMOVED</string>
+    <string name="uel_profile_switch_removed">PROFILE SWITCH REMOVED</string>
+    <string name="uel_restart_events_removed">RESTART EVENTS REMOVED</string>
+    <string name="uel_treatment_removed">TREATMENT REMOVED</string>
+    <string name="uel_tt_removed">TEMP TARGET REMOVED</string>
+    <string name="uel_ns_paused">NS PAUSED</string>
+    <string name="uel_ns_resume">NS RESUME</string>
+    <string name="uel_ns_queue_cleared">NS QUEUE CLEARED</string>
+    <string name="uel_ns_settings_copied">NS SETTINGS COPIED</string>
+    <string name="uel_error_dialog_ok">ERROR DIALOG OK</string>
+    <string name="uel_error_dialog_mute">ERROR DIALOG MUTE </string>
+    <string name="uel_error_dialog_mute_5min">ERROR DIALOG MUTE 5MIN</string>
+    <string name="uel_objective_started">OBJECTIVE STARTED</string>
+    <string name="uel_objective_unstarted">OBJECTIVE UNSTARTED</string>
+    <string name="uel_objectives_skipped">OBJECTIVES SKIPPED</string>
+    <string name="uel_stat_reset">STAT RESET</string>
+    <string name="uel_delete_logs">DELETE LOGS</string>
+    <string name="uel_delete_future_treatments">DELETE FUTURE TREATMENTS</string>
+    <string name="uel_export_settings">EXPORT SETTINGS</string>
+    <string name="uel_import_settings">IMPORT SETTINGS</string>
+    <string name="uel_reset_databases">RESET DATABASES</string>
+    <string name="uel_export_databases">EXPORT DATABASES</string>
+    <string name="uel_import_databases">IMPORT DATABASES</string>
+    <string name="uel_otp_export">OTP EXPORT</string>
+    <string name="uel_otp_reset">OTP RESET</string>
+    <string name="uel_stop_sms">STOP SMS</string>
+    <string name="uel_export_csv">EXPORT USER ENTRIES</string>
+    <string name="uel_start_aaps">START AAPS</string>
+    <string name="uel_exit_aaps">EXIT AAPS</string>
+    <string name="uel_plugin_enabled">PLUGIN ENABLED</string>
+    <string name="uel_plugin_disabled">PLUGIN DISABLED</string>
+    <string name="uel_unknown">UNKNOWN</string>
+    <string name="ue_string">String</string>
+    <string name="ue_source">Source</string>
+    <string name="ue_utc_offset">UTC Offset</string>
+    <string name="ue_action">Action</string>
+    <string name="ue_timestamp">Timestamp</string>
+    <string name="ue_none">No Unit</string>
+    <string name="ue_export_to_csv">Export User Entries to Excel (csv)</string>
+    <string name="ue_csv_header" translatable="false">"%1$s;%2$s;%3$s;%4$s;%5$s;%6$s;%7$s;%8$s;%9$s;%10$s;%11$s;%12$s;%13$s;%14$s;%15$s;%16$s;%17$s"</string>
+    <string name="uel_loop_change">LOOP CHANGED</string>
+    <string name="uel_loop_removed">LOOP REMOVED</string>
+    <string name="uel_other">OTHER</string>
 
     <plurals name="days">
         <item quantity="one">%1$d day</item>

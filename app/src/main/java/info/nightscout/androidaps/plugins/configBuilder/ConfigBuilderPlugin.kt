@@ -3,15 +3,19 @@ package info.nightscout.androidaps.plugins.configBuilder
 import androidx.fragment.app.FragmentActivity
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.events.EventAppInitialized
 import info.nightscout.androidaps.events.EventConfigBuilderChange
 import info.nightscout.androidaps.events.EventRebuildTabs
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.events.EventConfigBuilderUpdateGui
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog.showConfirmation
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.util.*
@@ -25,7 +29,9 @@ class ConfigBuilderPlugin @Inject constructor(
     resourceHelper: ResourceHelper,
     private val sp: SP,
     private val rxBus: RxBusWrapper,
-    private val activePlugin: ActivePluginProvider
+    private val activePlugin: ActivePlugin,
+    private val uel: UserEntryLogger,
+    private val pumpSync: PumpSync
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(ConfigBuilderFragment::class.java.name)
@@ -37,9 +43,9 @@ class ConfigBuilderPlugin @Inject constructor(
     .shortName(R.string.configbuilder_shortname)
     .description(R.string.description_config_builder),
     aapsLogger, resourceHelper, injector
-), ConfigBuilderInterface {
+), ConfigBuilder {
 
-    fun initialize() {
+    override fun initialize() {
         (activePlugin as PluginStore).loadDefaults()
         loadSettings()
         setAlwaysEnabledPluginsEnabled()
@@ -63,7 +69,7 @@ class ConfigBuilderPlugin @Inject constructor(
             if (p.pluginDescription.alwaysEnabled && p.pluginDescription.neverVisible) continue
             savePref(p, type, true)
             if (type == PluginType.PUMP) {
-                if (p is ProfileInterface) { // Store state of optional Profile interface
+                if (p is ProfileSource) { // Store state of optional Profile interface
                     savePref(p, PluginType.PROFILE, false)
                 }
             }
@@ -87,7 +93,7 @@ class ConfigBuilderPlugin @Inject constructor(
             val type = p.getType()
             loadPref(p, type, true)
             if (p.getType() == PluginType.PUMP) {
-                if (p is ProfileInterface) {
+                if (p is ProfileSource) {
                     loadPref(p, PluginType.PROFILE, false)
                 }
             }
@@ -114,7 +120,6 @@ class ConfigBuilderPlugin @Inject constructor(
         for (p in activePlugin.getPluginsList()) {
             aapsLogger.debug(LTag.CONFIGBUILDER, p.name + ":" +
                 (if (p.isEnabled(PluginType.GENERAL)) " GENERAL" else "") +
-                (if (p.isEnabled(PluginType.TREATMENT)) " TREATMENT" else "") +
                 (if (p.isEnabled(PluginType.SENSITIVITY)) " SENSITIVITY" else "") +
                 (if (p.isEnabled(PluginType.PROFILE)) " PROFILE" else "") +
                 (if (p.isEnabled(PluginType.APS)) " APS" else "") +
@@ -129,19 +134,28 @@ class ConfigBuilderPlugin @Inject constructor(
 
     // Ask when switching to physical pump plugin
     fun switchAllowed(changedPlugin: PluginBase, newState: Boolean, activity: FragmentActivity?, type: PluginType) {
-        if (changedPlugin.getType() == PluginType.PUMP && changedPlugin.name != resourceHelper.gs(R.string.virtualpump)) confirmPumpPluginActivation(changedPlugin, newState, activity, type) else performPluginSwitch(changedPlugin, newState, type)
+        if (changedPlugin.getType() == PluginType.PUMP && changedPlugin.name != resourceHelper.gs(R.string.virtualpump))
+            confirmPumpPluginActivation(changedPlugin, newState, activity, type)
+        else if (changedPlugin.getType() == PluginType.PUMP) {
+            performPluginSwitch(changedPlugin, newState, type)
+            pumpSync.connectNewPump()
+        } else performPluginSwitch(changedPlugin, newState, type)
     }
 
     private fun confirmPumpPluginActivation(changedPlugin: PluginBase, newState: Boolean, activity: FragmentActivity?, type: PluginType) {
         val allowHardwarePump = sp.getBoolean("allow_hardware_pump", false)
         if (allowHardwarePump || activity == null) {
             performPluginSwitch(changedPlugin, newState, type)
+            pumpSync.connectNewPump()
         } else {
-            showConfirmation(activity, resourceHelper.gs(R.string.allow_hardware_pump_text), Runnable {
+            OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.allow_hardware_pump_text), {
                 performPluginSwitch(changedPlugin, newState, type)
+                pumpSync.connectNewPump()
                 sp.putBoolean("allow_hardware_pump", true)
+                uel.log(Action.HW_PUMP_ALLOWED, Sources.ConfigBuilder, resourceHelper.gs(changedPlugin.pluginDescription.pluginName),
+                    ValueWithUnit.SimpleString(resourceHelper.gsNotLocalised(changedPlugin.pluginDescription.pluginName)))
                 aapsLogger.debug(LTag.PUMP, "First time HW pump allowed!")
-            }, Runnable {
+            }, {
                 rxBus.send(EventConfigBuilderUpdateGui())
                 aapsLogger.debug(LTag.PUMP, "User does not allow switching to HW pump!")
             })
@@ -149,6 +163,14 @@ class ConfigBuilderPlugin @Inject constructor(
     }
 
     override fun performPluginSwitch(changedPlugin: PluginBase, enabled: Boolean, type: PluginType) {
+        if(enabled && !changedPlugin.isEnabled()) {
+            uel.log(Action.PLUGIN_ENABLED, Sources.ConfigBuilder, resourceHelper.gs(changedPlugin.pluginDescription.pluginName),
+                ValueWithUnit.SimpleString(resourceHelper.gsNotLocalised(changedPlugin.pluginDescription.pluginName)))
+        }
+        else if(!enabled) {
+            uel.log(Action.PLUGIN_DISABLED, Sources.ConfigBuilder, resourceHelper.gs(changedPlugin.pluginDescription.pluginName),
+                ValueWithUnit.SimpleString(resourceHelper.gsNotLocalised(changedPlugin.pluginDescription.pluginName)))
+        }
         changedPlugin.setPluginEnabled(type, enabled)
         changedPlugin.setFragmentVisible(type, enabled)
         processOnEnabledCategoryChanged(changedPlugin, type)
@@ -162,13 +184,12 @@ class ConfigBuilderPlugin @Inject constructor(
     fun processOnEnabledCategoryChanged(changedPlugin: PluginBase, type: PluginType?) {
         var pluginsInCategory: ArrayList<PluginBase>? = null
         when (type) {
-            PluginType.INSULIN     -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(InsulinInterface::class.java)
-            PluginType.SENSITIVITY -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(SensitivityInterface::class.java)
-            PluginType.APS         -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(APSInterface::class.java)
-            PluginType.PROFILE     -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(ProfileInterface::class.java)
-            PluginType.BGSOURCE    -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(BgSourceInterface::class.java)
-            PluginType.TREATMENT   -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(TreatmentsInterface::class.java)
-            PluginType.PUMP        -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(PumpInterface::class.java)
+            PluginType.INSULIN     -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Insulin::class.java)
+            PluginType.SENSITIVITY -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Sensitivity::class.java)
+            PluginType.APS         -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(APS::class.java)
+            PluginType.PROFILE     -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(ProfileSource::class.java)
+            PluginType.BGSOURCE    -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(BgSource::class.java)
+            PluginType.PUMP        -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Pump::class.java)
 
             else                   -> {
             }

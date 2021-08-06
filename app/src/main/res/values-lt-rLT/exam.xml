@@ -48,7 +48,7 @@
     <string name="exerciseprofile_label">Aktyvumas ir Profiliai</string>
     <string name="exerciseprofile_whattodo">Kaip naudoti profilius, kad sistema geriausiai susitvarkytų su aerobiniais pratimais?</string>
     <string name="exerciseprofile_switchprofilebelow100">Perjungti profilį į žemesnį nei 100%.</string>
-    <string name="exerciseprofile_switchprofileabove100">Perjungti profilį į aukštesnį nei 100%. </string>
+    <string name="exerciseprofile_switchprofileabove100">Perjungti profilį į aukštesnį nei 100%.</string>
     <string name="exerciseprofile_leaveat100">Palikti 100% profilį.</string>
     <string name="exerciseprofile_suspendloop">Sustabdyti ciklą.</string>
     <string name="exerciseprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
@@ -71,9 +71,9 @@
     <string name="basaltest_fixed">Vieną kartą nustatytos ir patvirtintos, šios reikšmės daugiau neturėtų būti keičiamos.</string>
     <string name="basaltest_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#androidaps-settings</string>
     <string name="prerequisites_label">Būtinosios sąlygos</string>
-    <string name="prerequisites_what">Ko reikia norint įvesti nustatymus ir naudoti AndroidAPS?</string>
-    <string name="prerequisites_determinedcorrectprofile">Patikrinti profilio duomenis (valandines bazes, IA, JIF, IVT).</string>
-    <string name="prerequisites_computer">Kompiuterio su įdiegta ir sukonfigūruota Android Studio.</string>
+    <string name="prerequisites_what">Ko reikia norint įvesti nustatymus ir pradėti naudoti AndroidAPS?</string>
+    <string name="prerequisites_determinedcorrectprofile">Turėti patikrintus profilio duomenis (valandines bazes, IA, JIF, IVT).</string>
+    <string name="prerequisites_computer">Kompiuterio su įdiegta ir sukonfigūruota Android Studio programa.</string>
     <string name="prerequisites_phone">Tinkamo telefono.</string>
     <string name="prerequisites_pump">Tinkamos insulino pompos, jei ketinate naudotis uždaru ciklu.</string>
     <string name="prerequisites_nightscout">Nightscout, kad galima būtų išsaugoti ir peržiūrėti visų duomenų bei nustatymų istoriją.</string>
@@ -89,7 +89,7 @@
     <string name="prerequisites2_what">Ko reikia norint įvesti nustatymus ir naudoti AndroidAPS?</string>
     <string name="prerequisites2_profile">Patikrintos profilio informacijos (JIF, IA, bazė, IVT ir pan.).</string>
     <string name="prerequisites2_device">Suderinamo Android įrenginio (pvz.: išmaniojo telefono, laikrodžio su full Android ar planšetės).</string>
-    <string name="prerequisites2_internet">AndroidAPS reikalingas interneto ryšys, kad veiktų uždaras ciklas.</string>
+    <string name="prerequisites2_internet">Interneto ryšio, kad veiktų uždaras ciklas AndroidAPS programoje.</string>
     <string name="prerequisites2_supportedcgm">Palaikomo NGJ ir tinkamos programėlės glikemijos duomenims gauti telefone/įrenginyje.</string>
     <string name="prerequisites2_hint1">https://androidaps.readthedocs.io/en/latest/EN/Module/module.html</string>
     <string name="update_label">AndroidAPS atnaujinimas</string>
@@ -149,9 +149,9 @@
     <string name="breadgrams_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="extendedcarbs_label">i-AV</string>
     <string name="extendedcarbs_handling">Kam naudojami i-AV (ištęsti angliavandeniai)?</string>
-    <string name="extendedcarbs_future">Planuojant būsimus angliavandenius, kurie gali būti paskirstyti laiko intervale (panašiai kaip ištęstas boliusas, kai insulinas suleidžiamas dalimis laiko intervale).</string>
-    <string name="extendedcarbs_free">Norint įrašyti netikrus angliavandenius dėl fizinės veiklos, ir kuriuos norite paslėpti nuo AndroidAPS.</string>
-    <string name="extendedcarbs_fat">i-AV (paskirstyti ateityje) gali padėti AndroidAPS susitvarkyti su maistu, turinčiu daug riebalų/baltymų.</string>
+    <string name="extendedcarbs_future">Įvesti angliavandenius, kurie dar tik bus ateityje, galimai pasiskirstę laike (panašiai kaip ištęstas bolusas paskirsto laike insuliną).</string>
+    <string name="extendedcarbs_free">Norint įrašyti \"laisvus\" angliavandenius sportui, kuriuos norite nuslėpti nuo AndroidAPS.</string>
+    <string name="extendedcarbs_fat">Laike paskirstyti i-AV gali padėti AndroidAPS susitvarkyti su maistu, turinčiu daug riebalų/baltymų.</string>
     <string name="extendedcarbs_rescue">Norint įrašyti angliavandenius, kuriuos suvartojote esant žemai glikemijai. </string>
     <string name="extendedcarbs_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Extended-Carbs.html</string>
     <string name="nsclient_label">Nuotolinis stebėjimas</string>
@@ -180,17 +180,17 @@
     <string name="ic_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#carbohydrate-to-insulin-ratio-cr-g-u</string>
     <string name="profileswitch_label">Profilio keitimas</string>
     <string name="profileswitch_pctwillchange"> Kai nustatomas 90% profilio keitimas, kurie atsakymai yra teisingi?</string>
-    <string name="profileswitch_basallower">Bazė bus 10% žemesnė.</string>
+    <string name="profileswitch_basallower">Valandinė bazė bus 10% mažesnė.</string>
     <string name="profileswitch_isfhigher">JIF reikšmė bus 10% didesnė.</string>
-    <string name="profileswitch_iclower">IA santykio reikšmė bus 10% mažesnis skaičius.</string>
-    <string name="profileswitch_unchanged">JIF ir IA santykio reikšmės nebus pakeistos.</string>
+    <string name="profileswitch_iclower">IA santykio reikšmė bus 10% mažesnė.</string>
+    <string name="profileswitch_unchanged">JIF ir IA reikšmės nebus pakeistos.</string>
     <string name="profileswitch_hint1" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#profile-switch</string>
     <string name="profileswitch2_label">Profilio keitimas</string>
-    <string name="profileswitch2_pctwillchange"> Kai nustatomas 120% profilio keitimas, kurie atsakymai yra teisingi?</string>
+    <string name="profileswitch2_pctwillchange"> Kai nustatomas 120% profilis, kurie atsakymai yra teisingi?</string>
     <string name="profileswitch2_bghigher">Tikslinė glikemija bus 20% aukštesnė.</string>
-    <string name="profileswitch2_basalhigher">Bazė bus 20% aukštesnė.</string>
+    <string name="profileswitch2_basalhigher">Valandinė bazė bus 20% didesnė.</string>
     <string name="profileswitch2_bgunchanged">Tikslinė glikemija nebus pakeista.</string>
-    <string name="profileswitch2_isfhigher">JIF reikšmė bus 20% aukštesnė.</string>
+    <string name="profileswitch2_isfhigher">JIF reikšmė bus 20% didesnė.</string>
     <string name="profileswitchtime_label">Profilio keitimas</string>
     <string name="profileswitchtime_iwant">Jei atsikeliate 2 valandomis anksčiau nei įprastai, kaip turėtumėte pranešti AndroidAPS apie savo tvarkaraščio pasikeitimą?</string>
     <string name="profileswitchtime_2">Perjunkite profilį su laiko poslinkiu +2</string>

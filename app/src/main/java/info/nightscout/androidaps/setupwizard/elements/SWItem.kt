@@ -27,24 +27,18 @@ open class SWItem(val injector: HasAndroidInjector, var type: Type) {
     private var scheduledEventPost: ScheduledFuture<*>? = null
 
     init {
+        @Suppress("LeakingThis")
         injector.androidInjector().inject(this)
     }
 
+    @Suppress("unused")
     enum class Type {
-        NONE, TEXT, HTMLLINK, BREAK, LISTENER, URL, STRING, NUMBER, DECIMALNUMBER, CHECKBOX, RADIOBUTTON, PLUGIN, BUTTON, FRAGMENT, UNITNUMBER
+        NONE, TEXT, HTML_LINK, BREAK, LISTENER, URL, STRING, NUMBER, DECIMAL_NUMBER, RADIOBUTTON, PLUGIN, BUTTON, FRAGMENT, UNIT_NUMBER, PREFERENCE
     }
 
     var label: Int? = null
     var comment: Int? = null
     var preferenceId = 0
-
-    fun getLabel(): String {
-        return label?.let { resourceHelper.gs(it) } ?: ""
-    }
-
-    fun getComment(): String {
-        return comment?.let { resourceHelper.gs(it) } ?: ""
-    }
 
     open fun label(@StringRes label: Int): SWItem {
         this.label = label
@@ -72,6 +66,7 @@ open class SWItem(val injector: HasAndroidInjector, var type: Type) {
 
     fun scheduleChange(updateDelay: Long) {
         class PostRunnable : Runnable {
+
             override fun run() {
                 aapsLogger.debug(LTag.CORE, "Firing EventPreferenceChange")
                 rxBus.send(EventPreferenceChange(resourceHelper, preferenceId))

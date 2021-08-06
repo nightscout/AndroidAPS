@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.general.nsclient
 
 import android.content.Context
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.events.EventChargingState
@@ -25,7 +24,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(MainApp::class, SP::class, Context::class)
+@PrepareForTest(SP::class, Context::class)
 class NsClientReceiverDelegateTest : TestBase() {
 
     @Mock lateinit var context: Context
@@ -33,7 +32,7 @@ class NsClientReceiverDelegateTest : TestBase() {
     @Mock lateinit var resourceHelper: ResourceHelper
 
     lateinit var receiverStatusStore: ReceiverStatusStore
-    val rxBus: RxBusWrapper = RxBusWrapper()
+    val rxBus = RxBusWrapper(aapsSchedulers)
 
     private var sut: NsClientReceiverDelegate? = null
 

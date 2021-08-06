@@ -2,6 +2,7 @@
 <resources>
     <!--    Keys-->
     <!--    General-->
+    <string name="refresh">Aggiorna</string>
     <string name="error">Errore</string>
     <string name="not_set_short">Non impostato</string>
     <string name="failedupdatebasalprofile">Impossibile aggiornare il profilo basale</string>
@@ -61,6 +62,8 @@
     <string name="eventtype">Tipo evento</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
+    <string name="shortgram">g</string>
+    <string name="shortpercent">%</string>
     <string name="advancedsettings_title">Impostazioni avanzate</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">BT Watchdog</string>
@@ -68,6 +71,41 @@
     <string name="pairing">Associazione</string>
     <string name="yes">Sì</string>
     <string name="no">No</string>
+    <string name="loopdisabled">LOOP DISABILITATO DAI VINCOLI</string>
+    <string name="bolusdelivered">Bolo di %1$.2f U erogato con successo</string>
+    <string name="virtualpump_resultok">OK</string>
+    <string name="novalidbasalrate">Nessuna velocità basale valida letta dal micro</string>
+    <string name="limitingmaxiob">Limitazione max IOB a %1$.1f U a causa di: %2$s</string>
+    <string name="unsafeusage">uso non sicuro</string>
+    <string name="pump_unreachable">Micro irraggiungibile</string>
+    <string name="extended_bolus">Bolo esteso</string>
+    <string name="pump_time_updated">Ora del micro aggiornata</string>
+    <string name="exit">Esci</string>
+    <string name="serial_number">Numero seriale</string>
+    <string name="removerecord">Rimuovi record</string>
+    <string name="loopisdisabled">Il loop è disabilitato</string>
+    <string name="alarm">Allarme</string>
+    <string name="disableloop">Disabilita loop</string>
+    <string name="enableloop">Abilita loop</string>
+    <string name="resumeloop">Riprendi loop</string>
+    <string name="suspendloop">Sospendi loop</string>
+    <string name="duration_min_label">Durata [min]</string>
+    <string name="notification">Notifica</string>
+    <string name="noprofile">Nessun profilo ancora caricato da NS</string>
+    <string name="exists">esiste</string>
+    <string name="notexists">non esiste</string>
+    <string name="glucose">Glicemia</string>
+    <string name="iob">IOB</string>
+    <string name="cob">COB</string>
+    <string name="name_short">Nome:</string>
+    <string name="time">Tempo</string>
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="loading">Caricamento…</string>
+    <string name="event_time_label">Ora evento</string>
+    <string name="notes_label">Note</string>
+    <string name="remove_button">Rimuovi</string>
+    <string name="addnew">Aggiungi nuovo</string>
+    <string name="wrong_pump_data">I dati arrivano da un micro differente. Cambia il driver del micro per resettarne lo stato.</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limitazione max velocità basale a %1$.2f U/h a causa di: %2$s</string>
     <string name="pumplimit">limite micro</string>
@@ -83,6 +121,7 @@
     <string name="dismiss">RIMUOVI</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy non supportato.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy non supportato o dispositivo non associato.</string>
     <string name="ble_not_enabled">Bluetooth non abilitato.</string>
     <string name="location_not_found_title">La localizzazione non è abilitata</string>
     <string name="location_not_found_message">Affinché la ricerca bluetooth funzioni sui dispositivi più recenti, la localizzazione deve essere abilitata, ma può essere disabilitata dopo l\'associazione. AAPS non tiene traccia della tua posizione.</string>
@@ -116,6 +155,7 @@
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
     <string name="noprofileselected">Nessun profilo selezionato</string>
+    <string name="startprofile">Avvia profilo %1$d%% per %2$d min</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Sono supportati solo valori discreti, non intervalli di valori, come incrementi per basale/bolo nel micro virtuale.</string>
     <!--    APSResult-->
@@ -132,6 +172,7 @@
     <!--    TDD-->
     <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f U</b> Bol: <b>%3$.2f U</b> Bas: <b>%4$.2f U(%5$.0f%%)</b>]]></string>
     <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f U</b> Bol: <b>%3$.2f U</b> Bas: <b>%4$.2f U(%5$.0f%%)</b> CHO: <b>%6$.0f g</b>]]></string>
+    <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> in <b>%3$d</b> giorni<br>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">Controllo BG</string>
     <string name="careportal_mbg">BG manuale o Calibrazione</string>
@@ -142,6 +183,8 @@
     <string name="careportal_pumpsitechange">Cambio posizione cannula</string>
     <string name="careportal_cgmsensorinsert">Inserimento sensore</string>
     <string name="careportal_cgmsensorstart">Avvio sensore</string>
+    <string name="careportal_cgm_sensor_stop">Arresto Sensore CGM</string>
+    <string name="careportal_dad_alert">Avviso D.A.D.</string>
     <string name="careportal_insulincartridgechange">Cambio cartuccia insulina</string>
     <string name="careportal_profileswitch">Cambio profilo</string>
     <string name="careportal_snackbolus">Bolo spuntino</string>
@@ -155,10 +198,21 @@
     <string name="careportal_pumpbatterychange">Cambio batteria micro</string>
     <string name="careportal_temporarytarget">Target temporaneo</string>
     <string name="careportal_temporarytargetcancel">Cancellazione temp-target</string>
+    <string name="boluswizard">Calcolatore</string>
     <string name="glucosetype_finger">Dito</string>
     <string name="glucosetype_sensor">Sensore</string>
     <string name="manual">Manuale</string>
     <string name="unknown">sconosciuto</string>
+    <string name="eatingsoon">Pasto a breve</string>
+    <string name="hypo">Ipoglicemia</string>
+    <string name="activity">Attività</string>
+    <string name="wear">Smartwatch</string>
+    <string name="automation">Automazione</string>
+    <string name="custom">Personalizzato</string>
+    <string name="pump">Micro</string>
+    <string name="loop">Loop</string>
+    <string name="ns">NS</string>
+    <string name="record">Record</string>
     <!--    Command-->
     <string name="connectiontimedout">Time out connessione</string>
     <!--    PumpEnactResult-->
@@ -190,30 +244,6 @@
     <!--    Ntp-->
     <string name="timedetection">Rilevamento tempo</string>
     <string name="format_hour_minute">%1$dh %2$dm</string>
-    <!-- PumoCommon - Pump Abstract -->
-    <string name="pump_operation_not_supported_by_pump_driver">Operazione non supportata dal micro e/o dal driver.</string>
-    <string name="pump_operation_not_yet_supported_by_pump">Operazione NON ANCORA supportata dal micro.</string>
-    <string name="common_resultok">OK</string>
-    <!-- PumoCommon - Pump Status -->
-    <string name="pump_status_never_contacted">Mai connesso</string>
-    <string name="pump_status_waking_up">Risveglio</string>
-    <string name="pump_status_error_comm">Errore nella comunicazione</string>
-    <string name="pump_status_timeout_comm">Timeout della comunicazione</string>
-    <string name="pump_status_pump_unreachable">Micro irraggiungibile</string>
-    <string name="pump_status_invalid_config">Configurazione non valida</string>
-    <string name="pump_status_active">Attivo</string>
-    <string name="pump_status_sleeping">In sospensione</string>
-    <!-- PumpCommon - History Group -->
-    <string name="history_group_basal">Basali</string>
-    <string name="history_group_configuration">Configurazioni</string>
-    <string name="history_group_notification">Notifiche</string>
-    <string name="history_group_statistic">Statistiche</string>
-    <string name="history_group_unknown">Sconosciuti</string>
-    <string name="history_group_all">Tutto</string>
-    <string name="history_group_bolus">Boli</string>
-    <string name="history_group_prime">Caricamento</string>
-    <string name="history_group_alarm">Allarmi</string>
-    <string name="history_group_glucose">Glicemia</string>
     <string name="mute5min">Muto per 5 minuti</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">Formato file</string>
@@ -256,6 +286,105 @@
     <string name="versionavailable">Versione %1$s disponibile</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Per favore riavvia il tuo telefono oppure fai ripartire AndroidAPS dalle impostazioni di sistema \naltrimenti Android APS non farà il log (è importante monitorare e verificare che gli algoritmi stiano funzionando correttamente)!</string>
+    <!-- WeekdayPicker -->
+    <string name="monday_short">L</string>
+    <string name="tuesday_short">M</string>
+    <string name="wednesday_short">M</string>
+    <string name="thursday_short">G</string>
+    <string name="friday_short">V</string>
+    <string name="saturday_short">S</string>
+    <string name="sunday_short">D</string>
+    <!-- User Entry -->
+    <string name="uel_bolus">BOLO</string>
+    <string name="uel_bolus_advisor">CONSIGLIO BOLO</string>
+    <string name="uel_extended_bolus">BOLO ESTESO</string>
+    <string name="uel_superbolus_tbr">TBR SUPERBOLO</string>
+    <string name="uel_carbs">CHO</string>
+    <string name="uel_extended_carbs">CHO ESTESI</string>
+    <string name="uel_temp_basal">BASALE TEMPORANEA</string>
+    <string name="uel_tt">TARGET TEMPORANEO</string>
+    <string name="uel_new_profile">NUOVO PROFILO</string>
+    <string name="uel_clone_profile">CLONA PROFILO</string>
+    <string name="uel_store_profile">MEMORIZZA PROFILO</string>
+    <string name="uel_profile_switch">CAMBIO PROFILO</string>
+    <string name="uel_profile_switch_cloned">CAMBIO PROFILO CLONATO</string>
+    <string name="uel_closed_loop_mode">MODALITÀ LOOP CHIUSO</string>
+    <string name="uel_lgs_loop_mode">MODALITÀ LOOP LGS</string>
+    <string name="uel_open_loop_mode">MODALITÀ LOOP APERTO</string>
+    <string name="uel_loop_disabled">LOOP DISABILITATO</string>
+    <string name="uel_loop_enabled">LOOP ABILITATO</string>
+    <string name="uel_reconnect">RICONNETTI</string>
+    <string name="uel_disconnect">DISCONNETTI</string>
+    <string name="uel_resume">RIPRENDI</string>
+    <string name="uel_suspend">SOSPENDI</string>
+    <string name="uel_hw_pump_allowed">HW MICRO CONSENTITO</string>
+    <string name="uel_clear_pairing_keys">CANCELLA CHIAVI DI ASSOCIAZIONE</string>
+    <string name="uel_accepts_temp_basal">ACCETTA BASALE TEMPORANEA</string>
+    <string name="uel_cancel_temp_basal">CANCELLA BASALE TEMPORANEA</string>
+    <string name="uel_cancel_bolus">CANCELLA BOLO</string>
+    <string name="uel_cancel_extended_bolus">CANCELLA BOLO ESTESO</string>
+    <string name="uel_cancel_tt">CANCELLA TARGET TEMPORANEO</string>
+    <string name="uel_careportal">PORTALE</string>
+    <string name="uel_site_change">CAMBIO POSIZIONE CANNULA</string>
+    <string name="uel_reservoir_change">CAMBIO SERBATOIO</string>
+    <string name="uel_calibration">CALIBRAZIONE</string>
+    <string name="uel_prime_bolus">BOLO DI CARICAMENTO</string>
+    <string name="uel_treatment">TRATTAMENTO</string>
+    <string name="uel_careportal_ns_refresh">PORTALE NS: AGGIORNAMENTO</string>
+    <string name="uel_profile_switch_ns_refresh">CAMBIO PROFILO NS: AGGIORNAMENTO</string>
+    <string name="uel_treatments_ns_refresh">TRATTAMENTI NS: AGGIORNAMENTO</string>
+    <string name="uel_tt_ns_refresh">TARGET TEMPORANEO NS: AGGIORNAMENTO</string>
+    <string name="uel_automation_removed">AUTOMAZIONE RIMOSSA</string>
+    <string name="uel_bg_removed">BG RIMOSSO</string>
+    <string name="uel_careportal_removed">PORTALE RIMOSSO</string>
+    <string name="uel_bolus_removed">BOLO RIMOSSO</string>
+    <string name="uel_carbs_removed">CHO RIMOSSI</string>
+    <string name="uel_temp_basal_removed">BASALE TEMPORANEA RIMOSSA</string>
+    <string name="uel_extended_bolus_removed">BOLO ESTESO RIMOSSO</string>
+    <string name="uel_food">CIBO</string>
+    <string name="uel_food_removed">CIBO RIMOSSO</string>
+    <string name="uel_profile_removed">PROFILO RIMOSSO</string>
+    <string name="uel_profile_switch_removed">CAMBIO PROFILO RIMOSSO</string>
+    <string name="uel_restart_events_removed">EVENTI DI RIAVVIO RIMOSSI</string>
+    <string name="uel_treatment_removed">TRATTAMENTO RIMOSSO</string>
+    <string name="uel_tt_removed">TARGET TEMPORANEO RIMOSSO</string>
+    <string name="uel_ns_paused">NS IN PAUSA</string>
+    <string name="uel_ns_resume">NS RIPRESA</string>
+    <string name="uel_ns_queue_cleared">CODA NS CANCELLATA</string>
+    <string name="uel_ns_settings_copied">IMPOSTAZIONI NS COPIATE</string>
+    <string name="uel_error_dialog_ok">FINESTRA DI ERRORE OK</string>
+    <string name="uel_error_dialog_mute">FINESTRA DI ERRORE MUTO </string>
+    <string name="uel_error_dialog_mute_5min">FINESTRA DI ERRORE MUTO 5MIN</string>
+    <string name="uel_objective_started">OBIETTIVO AVVIATO</string>
+    <string name="uel_objective_unstarted">OBIETTIVO NON AVVIATO</string>
+    <string name="uel_objectives_skipped">OBIETTIVI IGNORATI</string>
+    <string name="uel_stat_reset">RESET STAT</string>
+    <string name="uel_delete_logs">ELIMINA LOG</string>
+    <string name="uel_delete_future_treatments">ELIMINA TRATTAMENTI FUTURI</string>
+    <string name="uel_export_settings">ESPORTA IMPOSTAZIONI</string>
+    <string name="uel_import_settings">IMPORTA IMPOSTAZIONI</string>
+    <string name="uel_reset_databases">RESETTA DATABASE</string>
+    <string name="uel_export_databases">ESPORTA DATABASE</string>
+    <string name="uel_import_databases">IMPORTA DATABASE</string>
+    <string name="uel_otp_export">ESPORTAZIONE OTP</string>
+    <string name="uel_otp_reset">RESET OTP</string>
+    <string name="uel_stop_sms">STOP SMS</string>
+    <string name="uel_export_csv">ESPORTA VOCI UTENTE</string>
+    <string name="uel_start_aaps">AVVIA AAPS</string>
+    <string name="uel_exit_aaps">USCITA AAPS</string>
+    <string name="uel_plugin_enabled">PLUGIN ABILITATO</string>
+    <string name="uel_plugin_disabled">PLUGIN DISABILITATO</string>
+    <string name="uel_unknown">SCONOSCIUTO</string>
+    <string name="ue_string">Stringa</string>
+    <string name="ue_source">Fonte</string>
+    <string name="ue_utc_offset">Offset UTC</string>
+    <string name="ue_action">Azione</string>
+    <string name="ue_timestamp">Data e ora</string>
+    <string name="ue_none">Nessuna unità</string>
+    <string name="ue_export_to_csv">Esporta voci utente in Excel (csv)</string>
+    <string name="uel_loop_change">LOOP CAMBIATO</string>
+    <string name="uel_loop_removed">LOOP RIMOSSO</string>
+    <string name="uel_other">ALTRO</string>
     <plurals name="days">
         <item quantity="one">%1$d giorno</item>
         <item quantity="other">%1$d giorni</item>

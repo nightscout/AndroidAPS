@@ -24,6 +24,7 @@
     <string name="medtronic_pump_battery_nizn">NiZn батерия</string>
     <string name="medtronic_pump_battery_nimh">NiMH (батерия)</string>
     <string name="medtronic_bolus_debugging">Болус/Корекция подробно</string>
+    <!-- MDT Fragment -->
     <!-- MDT Errors -->
     <string name="medtronic_errors">Грешки</string>
     <string name="medtronic_error_serial_not_set">Сериен номер не е зададен.</string>
@@ -69,6 +70,7 @@
     <string name="medtronic_cmd_desc_set_basal_profile">Приложи базалният профил</string>
     <string name="medtronic_cmd_desc_get_tbr">Получи временния базал</string>
     <string name="medtronic_cmd_desc_set_tbr">Приложи временен базал</string>
+    <string name="medtronic_cmd_desc_cancel_tbr">Откажи временен базал</string>
     <string name="medtronic_cmd_desc_set_bolus">Стартирай болус</string>
     <string name="medtronic_pump_status_pump_unreachable">Помпата е недостъпна</string>
     <string name="medtronic_warning">Внимание</string>

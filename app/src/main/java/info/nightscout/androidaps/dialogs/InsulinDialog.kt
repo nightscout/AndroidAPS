@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.dialogs
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -9,30 +8,32 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.common.base.Joiner
-import info.nightscout.androidaps.Config
-import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.ValueWithUnit
+import info.nightscout.androidaps.database.entities.TemporaryTarget
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import info.nightscout.androidaps.databinding.DialogInsulinBinding
-import info.nightscout.androidaps.db.CareportalEvent
-import info.nightscout.androidaps.db.Source
-import info.nightscout.androidaps.db.TempTarget
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.interfaces.CommandQueueProvider
-import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.extensions.formatColor
+import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.utils.extensions.toSignedString
-import info.nightscout.androidaps.utils.extensions.toVisibility
+import info.nightscout.androidaps.extensions.toVisibility
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import java.text.DecimalFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.max
@@ -44,9 +45,11 @@ class InsulinDialog : DialogFragmentWithDate() {
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var commandQueue: CommandQueueProvider
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var ctx: Context
+    @Inject lateinit var repository: AppRepository
     @Inject lateinit var config: Config
+    @Inject lateinit var uel: UserEntryLogger
 
     companion object {
 
@@ -54,6 +57,8 @@ class InsulinDialog : DialogFragmentWithDate() {
         private const val PLUS2_DEFAULT = 1.0
         private const val PLUS3_DEFAULT = 2.0
     }
+
+    private val disposable = CompositeDisposable()
 
     private val textWatcher: TextWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable) {
@@ -136,6 +141,7 @@ class InsulinDialog : DialogFragmentWithDate() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        disposable.clear()
         _binding = null
     }
 
@@ -146,7 +152,7 @@ class InsulinDialog : DialogFragmentWithDate() {
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(Constraint(insulin)).value()
         val actions: LinkedList<String?> = LinkedList()
         val units = profileFunction.getUnits()
-        val unitLabel = if (units == Constants.MMOL) resourceHelper.gs(R.string.mmol) else resourceHelper.gs(R.string.mgdl)
+        val unitLabel = if (units == GlucoseUnit.MMOL) resourceHelper.gs(R.string.mmol) else resourceHelper.gs(R.string.mgdl)
         val recordOnlyChecked = binding.recordOnly.isChecked
         val eatingSoonChecked = binding.startEatingSoonTt.isChecked
 
@@ -163,51 +169,62 @@ class InsulinDialog : DialogFragmentWithDate() {
             actions.add(resourceHelper.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(eatingSoonTT) + " " + unitLabel + " (" + resourceHelper.gs(R.string.format_mins, eatingSoonTTDuration) + ")").formatColor(resourceHelper, R.color.tempTargetConfirmation))
 
         val timeOffset = binding.time.value.toInt()
-        val time = DateUtil.now() + T.mins(timeOffset.toLong()).msecs()
+        val time = dateUtil.now() + T.mins(timeOffset.toLong()).msecs()
         if (timeOffset != 0)
             actions.add(resourceHelper.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(time))
 
         val notes = binding.notesLayout.notes.text.toString()
         if (notes.isNotEmpty())
-            actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_notes_label) + ": " + notes)
+            actions.add(resourceHelper.gs(R.string.notes_label) + ": " + notes)
 
         if (insulinAfterConstraints > 0 || eatingSoonChecked) {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.bolus), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     if (eatingSoonChecked) {
-                        aapsLogger.debug("USER ENTRY: TEMPTARGET EATING SOON $eatingSoonTT duration: $eatingSoonTTDuration")
-                        val tempTarget = TempTarget()
-                            .date(System.currentTimeMillis())
-                            .duration(eatingSoonTTDuration)
-                            .reason(resourceHelper.gs(R.string.eatingsoon))
-                            .source(Source.USER)
-                            .low(Profile.toMgdl(eatingSoonTT, profileFunction.getUnits()))
-                            .high(Profile.toMgdl(eatingSoonTT, profileFunction.getUnits()))
-                        activePlugin.activeTreatments.addToHistoryTempTarget(tempTarget)
+                        uel.log(Action.TT, Sources.InsulinDialog,
+                            notes,
+                            ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.EATING_SOON),
+                            ValueWithUnit.fromGlucoseUnit(eatingSoonTT, units.asText),
+                            ValueWithUnit.Minute(eatingSoonTTDuration))
+                        disposable += repository.runTransactionForResult(InsertAndCancelCurrentTemporaryTargetTransaction(
+                            timestamp = System.currentTimeMillis(),
+                            duration = TimeUnit.MINUTES.toMillis(eatingSoonTTDuration.toLong()),
+                            reason = TemporaryTarget.Reason.EATING_SOON,
+                            lowTarget = Profile.toMgdl(eatingSoonTT, profileFunction.getUnits()),
+                            highTarget = Profile.toMgdl(eatingSoonTT, profileFunction.getUnits())
+                        )).subscribe({ result ->
+                            result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }
+                            result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
+                        }, {
+                            aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
+                        })
                     }
                     if (insulinAfterConstraints > 0) {
                         val detailedBolusInfo = DetailedBolusInfo()
-                        detailedBolusInfo.eventType = CareportalEvent.CORRECTIONBOLUS
+                        detailedBolusInfo.eventType = DetailedBolusInfo.EventType.CORRECTION_BOLUS
                         detailedBolusInfo.insulin = insulinAfterConstraints
                         detailedBolusInfo.context = context
-                        detailedBolusInfo.source = Source.USER
                         detailedBolusInfo.notes = notes
+                        detailedBolusInfo.timestamp = time
                         if (recordOnlyChecked) {
-                            aapsLogger.debug("USER ENTRY: BOLUS RECORD ONLY $insulinAfterConstraints")
-                            detailedBolusInfo.date = time
-                            activePlugin.activeTreatments.addToHistoryTreatment(detailedBolusInfo, false)
+                            uel.log(Action.BOLUS, Sources.InsulinDialog,
+                                resourceHelper.gs(R.string.record) + if (notes.isNotEmpty()) ": " + notes else "",
+                                ValueWithUnit.SimpleString(resourceHelper.gsNotLocalised(R.string.record)),
+                                ValueWithUnit.Insulin(insulinAfterConstraints),
+                                ValueWithUnit.Minute(timeOffset).takeIf { timeOffset!= 0 })
+                            disposable += repository.runTransactionForResult(detailedBolusInfo.insertBolusTransaction())
+                                .subscribe(
+                                    { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted bolus $it") } },
+                                    { aapsLogger.error(LTag.DATABASE, "Error while saving bolus", it) }
+                                )
                         } else {
-                            aapsLogger.debug("USER ENTRY: BOLUS $insulinAfterConstraints")
-                            detailedBolusInfo.date = DateUtil.now()
+                            uel.log(Action.BOLUS, Sources.InsulinDialog,
+                                notes,
+                                ValueWithUnit.Insulin(insulinAfterConstraints))
                             commandQueue.bolus(detailedBolusInfo, object : Callback() {
                                 override fun run() {
                                     if (!result.success) {
-                                        val i = Intent(ctx, ErrorHelperActivity::class.java)
-                                        i.putExtra("soundid", R.raw.boluserror)
-                                        i.putExtra("status", result.comment)
-                                        i.putExtra("title", resourceHelper.gs(R.string.treatmentdeliveryerror))
-                                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                        ctx.startActivity(i)
+                                        ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
                                     }
                                 }
                             })

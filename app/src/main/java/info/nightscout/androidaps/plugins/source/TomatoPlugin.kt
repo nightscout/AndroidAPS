@@ -1,17 +1,21 @@
 package info.nightscout.androidaps.plugins.source
 
-import android.content.Intent
+import android.content.Context
+import androidx.work.Worker
+import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.db.BgReading
-import info.nightscout.androidaps.interfaces.BgSourceInterface
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.GlucoseValue
+import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
+import info.nightscout.androidaps.interfaces.BgSource
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
+import info.nightscout.androidaps.utils.XDripBroadcast
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
@@ -22,8 +26,7 @@ class TomatoPlugin @Inject constructor(
     injector: HasAndroidInjector,
     resourceHelper: ResourceHelper,
     aapsLogger: AAPSLogger,
-    private val sp: SP,
-    private val nsUpload: NSUpload
+    private val sp: SP
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
@@ -33,25 +36,56 @@ class TomatoPlugin @Inject constructor(
     .shortName(R.string.tomato_short)
     .description(R.string.description_source_tomato),
     aapsLogger, resourceHelper, injector
-), BgSourceInterface {
+), BgSource {
 
-    override fun advancedFilteringSupported(): Boolean {
-        return false
+    // cannot be inner class because of needed injection
+    class TomatoWorker(
+        context: Context,
+        params: WorkerParameters
+    ) : Worker(context, params) {
+
+        @Inject lateinit var injector: HasAndroidInjector
+        @Inject lateinit var tomatoPlugin: TomatoPlugin
+        @Inject lateinit var aapsLogger: AAPSLogger
+        @Inject lateinit var sp: SP
+        @Inject lateinit var repository: AppRepository
+        @Inject lateinit var broadcastToXDrip: XDripBroadcast
+
+        init {
+            (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
+        }
+
+        @Suppress("SpellCheckingInspection")
+        override fun doWork(): Result {
+            var ret = Result.success()
+
+            if (!tomatoPlugin.isEnabled(PluginType.BGSOURCE)) return Result.success(workDataOf("Result" to "Plugin not enabled"))
+            val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
+            glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
+                timestamp = inputData.getLong("com.fanqies.tomatofn.Extras.Time", 0),
+                value = inputData.getDouble("com.fanqies.tomatofn.Extras.BgEstimate", 0.0),
+                raw = 0.0,
+                noise = null,
+                trendArrow = GlucoseValue.TrendArrow.NONE,
+                sourceSensor = GlucoseValue.SourceSensor.LIBRE_1_TOMATO
+            )
+            repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
+                .doOnError {
+                    aapsLogger.error(LTag.DATABASE, "Error while saving values from Tomato App", it)
+                    ret = Result.failure(workDataOf("Error" to it.toString()))
+                }
+                .blockingGet()
+                .also { savedValues ->
+                    savedValues.inserted.forEach {
+                        broadcastToXDrip(it)
+                        aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
+                    }
+                }
+            return ret
+        }
     }
 
-    override fun handleNewData(intent: Intent) {
-        if (!isEnabled(PluginType.BGSOURCE)) return
-        val bundle = intent.extras ?: return
-        val bgReading = BgReading()
-        aapsLogger.debug(LTag.BGSOURCE, "Received Tomato Data")
-        bgReading.value = bundle.getDouble("com.fanqies.tomatofn.Extras.BgEstimate")
-        bgReading.date = bundle.getLong("com.fanqies.tomatofn.Extras.Time")
-        val isNew = MainApp.getDbHelper().createIfNotExists(bgReading, "Tomato")
-        if (isNew && sp.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
-            nsUpload.uploadBg(bgReading, "AndroidAPS-Tomato")
-        }
-        if (isNew && sp.getBoolean(R.string.key_dexcomg5_xdripupload, false)) {
-            nsUpload.sendToXdrip(bgReading)
-        }
-    }
+    override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean =
+        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.LIBRE_1_TOMATO && sp.getBoolean(R.string.key_dexcomg5_nsupload, false)
+
 }

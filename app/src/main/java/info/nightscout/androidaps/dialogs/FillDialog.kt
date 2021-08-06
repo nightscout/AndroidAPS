@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.dialogs
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,21 +9,28 @@ import com.google.common.base.Joiner
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.ValueWithUnit
+import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import info.nightscout.androidaps.databinding.DialogFillBinding
-import info.nightscout.androidaps.db.CareportalEvent
-import info.nightscout.androidaps.db.Source
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
+import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.SafeParse
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.extensions.formatColor
+import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import java.util.*
 import javax.inject.Inject
 import kotlin.math.abs
@@ -34,9 +40,12 @@ class FillDialog : DialogFragmentWithDate() {
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var ctx: Context
-    @Inject lateinit var nsUpload: NSUpload
     @Inject lateinit var commandQueue: CommandQueueProvider
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
+    @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var repository: AppRepository
+
+    private val disposable = CompositeDisposable()
 
     private var _binding: DialogFillBinding? = null
 
@@ -114,9 +123,9 @@ class FillDialog : DialogFragmentWithDate() {
         val insulinChange = binding.fillCartridgeChange.isChecked
         if (insulinChange)
             actions.add(resourceHelper.gs(R.string.record_insulin_cartridge_change).formatColor(resourceHelper, R.color.actionsConfirm))
-        val notes = binding.notesLayout.notes.text.toString()
+        val notes: String = binding.notesLayout.notes.text.toString()
         if (notes.isNotEmpty())
-            actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_notes_label) + ": " + notes)
+            actions.add(resourceHelper.gs(R.string.notes_label) + ": " + notes)
         eventTime -= eventTime % 1000
 
         if (eventTimeChanged)
@@ -126,17 +135,41 @@ class FillDialog : DialogFragmentWithDate() {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.primefill), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     if (insulinAfterConstraints > 0) {
-                        aapsLogger.debug("USER ENTRY: PRIME BOLUS $insulinAfterConstraints")
+                        uel.log(Action.PRIME_BOLUS, Sources.FillDialog,
+                            notes,
+                            ValueWithUnit.Insulin(insulinAfterConstraints).takeIf { insulinAfterConstraints != 0.0 })
                         requestPrimeBolus(insulinAfterConstraints, notes)
                     }
                     if (siteChange) {
-                        aapsLogger.debug("USER ENTRY: SITE CHANGE")
-                        nsUpload.generateCareportalEvent(CareportalEvent.SITECHANGE, eventTime, notes)
+                        uel.log(Action.SITE_CHANGE, Sources.FillDialog,
+                            notes,
+                            ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
+                            ValueWithUnit.TherapyEventType(TherapyEvent.Type.CANNULA_CHANGE))
+                        disposable += repository.runTransactionForResult(InsertIfNewByTimestampTherapyEventTransaction(
+                            timestamp = eventTime,
+                            type = TherapyEvent.Type.CANNULA_CHANGE,
+                            note = notes,
+                            glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
+                        )).subscribe(
+                            { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted therapy event $it") } },
+                            { aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it) }
+                        )
                     }
                     if (insulinChange) {
                         // add a second for case of both checked
-                        aapsLogger.debug("USER ENTRY: INSULIN CHANGE")
-                        nsUpload.generateCareportalEvent(CareportalEvent.INSULINCHANGE, eventTime + 1000, notes)
+                        uel.log(Action.RESERVOIR_CHANGE, Sources.FillDialog,
+                            notes,
+                            ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
+                            ValueWithUnit.TherapyEventType(TherapyEvent.Type.INSULIN_CHANGE))
+                        disposable += repository.runTransactionForResult(InsertIfNewByTimestampTherapyEventTransaction(
+                            timestamp = eventTime + 1000,
+                            type = TherapyEvent.Type.INSULIN_CHANGE,
+                            note = notes,
+                            glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
+                        )).subscribe(
+                            { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted therapy event $it") } },
+                            { aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it) }
+                        )
                     }
                 }, null)
             }
@@ -153,18 +186,12 @@ class FillDialog : DialogFragmentWithDate() {
         val detailedBolusInfo = DetailedBolusInfo()
         detailedBolusInfo.insulin = insulin
         detailedBolusInfo.context = context
-        detailedBolusInfo.source = Source.USER
-        detailedBolusInfo.isValid = false // do not count it in IOB (for pump history)
+        detailedBolusInfo.bolusType = DetailedBolusInfo.BolusType.PRIMING
         detailedBolusInfo.notes = notes
         commandQueue.bolus(detailedBolusInfo, object : Callback() {
             override fun run() {
                 if (!result.success) {
-                    val i = Intent(ctx, ErrorHelperActivity::class.java)
-                    i.putExtra("soundid", R.raw.boluserror)
-                    i.putExtra("status", result.comment)
-                    i.putExtra("title", resourceHelper.gs(R.string.treatmentdeliveryerror))
-                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    ctx.startActivity(i)
+                    ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
                 }
             }
         })

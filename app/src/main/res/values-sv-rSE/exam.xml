@@ -48,7 +48,7 @@
     <string name="exerciseprofile_label">Träning och profiler</string>
     <string name="exerciseprofile_whattodo">Hur kan du använda profiler för att bäst hjälpa systemet att hantera aerobisk träning?</string>
     <string name="exerciseprofile_switchprofilebelow100">Gör ett profilbyte till mindre än 100%.</string>
-    <string name="exerciseprofile_switchprofileabove100">Gör ett profilbyte till mer än 100%. </string>
+    <string name="exerciseprofile_switchprofileabove100">Gör ett profilbyte till mer än 100%.</string>
     <string name="exerciseprofile_leaveat100">Lämna profilen på 100%.</string>
     <string name="exerciseprofile_suspendloop">Pausa loopen.</string>
     <string name="exerciseprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>

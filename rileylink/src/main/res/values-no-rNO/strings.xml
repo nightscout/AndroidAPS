@@ -64,7 +64,7 @@
     <string name="riley_link_common_yes">Ja</string>
     <string name="riley_link_common_no">Nei</string>
     <!-- RileyLink - Preferences -->
-    <string name="riley_link_show_battery_level">Vis batterinivå rapportert av OrangeLink/EmaLink</string>
+    <string name="riley_link_show_battery_level">Vis batterinivå rapportert av OrangeLink/EmaLink/DiaLink</string>
     <string name="riley_link_show_battery_level_summary">Virker IKKE med RileyLink. Kan hende den ikke fungerer med andre RileyLink alternativer.</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d dag</item>

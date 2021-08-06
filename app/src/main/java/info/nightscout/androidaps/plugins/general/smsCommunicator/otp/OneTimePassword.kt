@@ -18,7 +18,8 @@ import javax.inject.Singleton
 @Singleton
 class OneTimePassword @Inject constructor(
     private val sp: SP,
-    private val resourceHelper: ResourceHelper
+    private val resourceHelper: ResourceHelper,
+    private val dateUtil: DateUtil
 ) {
 
     private var key: SecretKey? = null
@@ -26,22 +27,7 @@ class OneTimePassword @Inject constructor(
     private val totp = HmacOneTimePasswordGenerator()
 
     init {
-        instance = this
         configure()
-    }
-
-    companion object {
-        private lateinit var instance: OneTimePassword
-
-        @JvmStatic
-        fun getInstance(): OneTimePassword = instance
-    }
-
-    /**
-     * If OTP Authenticator support is enabled by user
-     */
-    fun isEnabled(): Boolean {
-        return sp.getBoolean(R.string.key_smscommunicator_otp_enabled, true)
     }
 
     /**
@@ -100,7 +86,7 @@ class OneTimePassword @Inject constructor(
             return OneTimePasswordValidationResult.ERROR_WRONG_PIN
         }
 
-        val counter: Long = DateUtil.now() / 30000L
+        val counter: Long = dateUtil.now() / 30000L
 
         val acceptableTokens: MutableList<String> = mutableListOf(generateOneTimePassword(counter))
         for (i in 0 until Constants.OTP_ACCEPT_OLD_TOKENS_COUNT) {

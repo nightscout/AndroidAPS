@@ -23,7 +23,9 @@
     <string name="medtronic_pump_battery_lithium">리튬(확장뷰)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (확장 뷰)</string>
     <string name="medtronic_bolus_debugging">Bolus/관리 디버깅</string>
+    <!-- MDT Fragment -->
     <!-- MDT Errors -->
+    <string name="medtronic_errors">에러</string>
     <string name="medtronic_error_serial_not_set">일련번호 # 설정되지 않음</string>
     <string name="medtronic_error_serial_invalid">일련번호 # 유효하지않음.</string>
     <string name="medtronic_error_pump_type_not_set">펌프 타입이 설정되지 않았습니다.</string>
@@ -46,6 +48,7 @@
     <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
+    <string name="medtronic_pump_history">메드트로닉 펌프 이력</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">펌프에서 이미 설정된 Bolus를 취소했습니다. 메드트로닉 펌프는 취소를 지원하지 않으므로 수동으로 취소해야합니다. (여전히 취소하길 원한다면) 펌프를 일시 중단 모드로 전환 한 다음 다시 시작하십시오. 다음 업데이트시 (5 분 이내에) 변경 사항을 적용합니다.</string>
     <string name="medtronic_cmd_cant_read_tbr">현재 TBR을 읽을 수 없습니다.</string>
@@ -68,9 +71,14 @@
     <string name="medtronic_cmd_desc_set_tbr">임시 Basal 설정</string>
     <string name="medtronic_cmd_desc_set_bolus">Bolus 설정</string>
     <string name="medtronic_pump_status_pump_unreachable">펌프에 연결할 수 없습니다</string>
+    <string name="medtronic_warning">경고</string>
     <!-- medtronic_warning -->
+    <string name="medtronic_pump_connected_now">현재</string>
     <!-- combo_pump_connected_now -->
+    <string name="ago">전</string>
+    <string name="medtronic_notification_check_time_date">펌프 시간 업데이트가 필요합니다.</string>
     <!-- combo_notification_check_time_date -->
+    <string name="common_on">켜짐</string>
     <string name="common_off">끄기</string>
     <string name="pump_time_updated">펌프 시간 업데이트</string>
 </resources>

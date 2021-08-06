@@ -24,6 +24,8 @@
     <string name="medtronic_pump_battery_nizn">Nickel-Zink-Akku (erweiterte Ansicht)</string>
     <string name="medtronic_pump_battery_nimh">Nickel-Zink-Akku (erweiterte Ansicht)</string>
     <string name="medtronic_bolus_debugging">Fehlersuche Bolus/Behandlungen</string>
+    <!-- MDT Fragment -->
+    <string name="rl_battery_label">RileyLink-Batterie</string>
     <!-- MDT Errors -->
     <string name="medtronic_errors">Fehler</string>
     <string name="medtronic_error_serial_not_set">Seriennummer nicht angegeben.</string>
@@ -63,13 +65,17 @@
     <string name="medtronic_cmd_desc_get_history">Hole Verlauf - Seite %1$d (%2$d/16)</string>
     <string name="medtronic_cmd_desc_get_history_request">Hole Verlauf - Seite %1$d</string>
     <string name="medtronic_cmd_desc_get_time">Hole Pumpen-Zeit</string>
+    <string name="medtronic_cmd_desc_set_time">Pumpen-Zeit einstellen</string>
+    <string name="medtronic_cmd_desc_get_battery_status">Akku-Status abfragen</string>
     <string name="medtronic_cmd_desc_get_settings">Hole Einstellungen</string>
     <string name="medtronic_cmd_desc_get_model">Hole Pumpenmodel</string>
     <string name="medtronic_cmd_desc_get_basal_profile">Hole Basal-Profil</string>
     <string name="medtronic_cmd_desc_set_basal_profile">Setzte Basal-Profil</string>
     <string name="medtronic_cmd_desc_get_tbr">Hole Temporäre Basalraten</string>
     <string name="medtronic_cmd_desc_set_tbr">Setze Temporäre Basalrate</string>
+    <string name="medtronic_cmd_desc_cancel_tbr">Temp. Basalrate abbrechen</string>
     <string name="medtronic_cmd_desc_set_bolus">Setze Bolus</string>
+    <string name="medtronic_cmd_desc_get_remaining_insulin">Verbleibendes Insulin abfragen</string>
     <string name="medtronic_pump_status_pump_unreachable">Pumpe nicht erreichbar</string>
     <string name="medtronic_warning">Warnung</string>
     <!-- medtronic_warning -->
@@ -83,4 +89,5 @@
     <string name="pump_time_updated">Pumpenzeit aktualisiert</string>
     <string name="set_neutral_temps_title">Neutrale TBR setzen</string>
     <string name="set_neutral_temps_summary">Wenn diese Option aktiviert ist, wird die TBR vor Ende jeder Stunde abgebrochen. Dies kann dazu beitragen, einige Pumpen davon abzuhalten, zur vollen Stunde zu vibrieren / zu piepsen.</string>
+    <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d Minuten verbleibend)</string>
 </resources>

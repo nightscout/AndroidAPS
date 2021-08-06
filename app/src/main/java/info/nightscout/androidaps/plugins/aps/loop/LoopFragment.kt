@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.databinding.LoopFragmentBinding
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopSetLastRunGui
@@ -14,16 +15,17 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper
-import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.loop_fragment.*
+import io.reactivex.rxkotlin.plusAssign
 import javax.inject.Inject
 
 class LoopFragment : DaggerFragment() {
+
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var sp: SP
     @Inject lateinit var resourceHelper: ResourceHelper
@@ -33,16 +35,23 @@ class LoopFragment : DaggerFragment() {
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
+    private var _binding: LoopFragmentBinding? = null
+
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.loop_fragment, container, false)
+                              savedInstanceState: Bundle?): View {
+        _binding = LoopFragmentBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        loop_run.setOnClickListener {
-            loop_lastrun.text = resourceHelper.gs(R.string.executing)
+        binding.run.setOnClickListener {
+            binding.lastrun.text = resourceHelper.gs(R.string.executing)
             Thread { loopPlugin.invoke("Loop button", true) }.start()
         }
     }
@@ -52,18 +61,18 @@ class LoopFragment : DaggerFragment() {
         super.onResume()
         disposable += rxBus
             .toObservable(EventLoopUpdateGui::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({
                 updateGUI()
-            }, { fabricPrivacy.logException(it) })
+            }, fabricPrivacy::logException)
 
         disposable += rxBus
             .toObservable(EventLoopSetLastRunGui::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({
                 clearGUI()
-                loop_lastrun?.text = it.text
-            }, { fabricPrivacy.logException(it) })
+                binding.lastrun.text = it.text
+            }, fabricPrivacy::logException)
 
         updateGUI()
         sp.putBoolean(R.string.key_objectiveuseloop, true)
@@ -76,22 +85,27 @@ class LoopFragment : DaggerFragment() {
     }
 
     @Synchronized
-    fun updateGUI() {
-        if (loop_request == null) return
-        loopPlugin.lastRun?.let {
-            loop_request?.text = it.request?.toSpanned() ?: ""
-            loop_constraintsprocessed?.text = it.constraintsProcessed?.toSpanned() ?: ""
-            loop_source?.text = it.source ?: ""
-            loop_lastrun?.text = dateUtil.dateAndTimeString(it.lastAPSRun)
-                ?: ""
-            loop_smbrequest_time?.text = dateUtil.dateAndTimeAndSecondsString(it.lastSMBRequest)
-            loop_smbexecution_time?.text = dateUtil.dateAndTimeAndSecondsString(it.lastSMBEnact)
-            loop_tbrrequest_time?.text = dateUtil.dateAndTimeAndSecondsString(it.lastTBRRequest)
-            loop_tbrexecution_time?.text = dateUtil.dateAndTimeAndSecondsString(it.lastTBREnact)
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
-            loop_tbrsetbypump?.text = it.tbrSetByPump?.let { tbrSetByPump -> HtmlHelper.fromHtml(tbrSetByPump.toHtml()) }
+    @Synchronized
+    fun updateGUI() {
+        if (_binding == null) return
+        loopPlugin.lastRun?.let {
+            binding.request.text = it.request?.toSpanned() ?: ""
+            binding.constraintsprocessed.text = it.constraintsProcessed?.toSpanned() ?: ""
+            binding.source.text = it.source ?: ""
+            binding.lastrun.text = dateUtil.dateAndTimeString(it.lastAPSRun)
+            binding.smbrequestTime.text = dateUtil.dateAndTimeAndSecondsString(it.lastSMBRequest)
+            binding.smbexecutionTime.text = dateUtil.dateAndTimeAndSecondsString(it.lastSMBEnact)
+            binding.tbrrequestTime.text = dateUtil.dateAndTimeAndSecondsString(it.lastTBRRequest)
+            binding.tbrexecutionTime.text = dateUtil.dateAndTimeAndSecondsString(it.lastTBREnact)
+
+            binding.tbrsetbypump.text = it.tbrSetByPump?.let { tbrSetByPump -> HtmlHelper.fromHtml(tbrSetByPump.toHtml()) }
                 ?: ""
-            loop_smbsetbypump?.text = it.smbSetByPump?.let { smbSetByPump -> HtmlHelper.fromHtml(smbSetByPump.toHtml()) }
+            binding.smbsetbypump.text = it.smbSetByPump?.let { smbSetByPump -> HtmlHelper.fromHtml(smbSetByPump.toHtml()) }
                 ?: ""
 
             val constraints =
@@ -101,22 +115,22 @@ class LoopFragment : DaggerFragment() {
                     constraintsProcessed.smbConstraint?.let { smbConstraint -> allConstraints.copyReasons(smbConstraint) }
                     allConstraints.getMostLimitedReasons(aapsLogger)
                 } ?: ""
-            loop_constraints?.text = constraints
+            binding.constraints.text = constraints
         }
     }
 
     @Synchronized
     private fun clearGUI() {
-        loop_request?.text = ""
-        loop_constraints?.text = ""
-        loop_constraintsprocessed?.text = ""
-        loop_source?.text = ""
-        loop_lastrun?.text = ""
-        loop_smbrequest_time?.text = ""
-        loop_smbexecution_time?.text = ""
-        loop_tbrrequest_time?.text = ""
-        loop_tbrexecution_time?.text = ""
-        loop_tbrsetbypump?.text = ""
-        loop_smbsetbypump?.text = ""
+        binding.request.text = ""
+        binding.constraints.text = ""
+        binding.constraintsprocessed.text = ""
+        binding.source.text = ""
+        binding.lastrun.text = ""
+        binding.smbrequestTime.text = ""
+        binding.smbexecutionTime.text = ""
+        binding.tbrrequestTime.text = ""
+        binding.tbrexecutionTime.text = ""
+        binding.tbrsetbypump.text = ""
+        binding.smbsetbypump.text = ""
     }
 }

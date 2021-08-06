@@ -11,6 +11,10 @@
         app:showAsAction="never"
         android:title="@string/nav_plugin_preferences" />
     <item
+        android:id="@+id/nav_treatments"
+        app:showAsAction="never"
+        android:title="@string/treatments" />
+    <item
         android:id="@+id/nav_historybrowser"
         app:showAsAction="never"
         android:title="@string/nav_historybrowser" />

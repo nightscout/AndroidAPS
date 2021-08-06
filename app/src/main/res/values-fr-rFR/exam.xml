@@ -8,7 +8,7 @@
     <string name="dia_meaningisequaltodiapump">Si vous êtes convaincu que la valeur de DAI que vous avez utilisée dans votre pompe avant AndroidAPS marche bien, il n\'y a pas besoin de la changer lorsque vous commencez à boucler.</string>
     <string name="dia_valuemustbedetermined">Vous devez déterminer par vous-même la valeur appropriée pour la DAI.</string>
     <string name="hypott_label">Cible temporaire Hypo</string>
-    <string name="hypott_whenhypott">Quelle est la principale raison de fixer une cible temp. hypo ?</string>
+    <string name="hypott_whenhypott">Quelle est la raison principale pour définir une cible temporaire hypo?</string>
     <string name="hypott_wrongbasal">Pour corriger les hypos causés par des paramètres de débit basal incorrects.</string>
     <string name="hypott_preventoversmb">Pour empêcher AndroidAPS de surcorriger une hausse de glycémie causée par les glucides à action rapide utilisés pour traiter une hypo.</string>
     <string name="hypott_exercise">Pour corriger une hypo due à un exercice.</string>
@@ -48,7 +48,7 @@
     <string name="exerciseprofile_label">Exercices et profils</string>
     <string name="exerciseprofile_whattodo">Comment utiliser les profils pour aider au mieux le système à gérer un exercice aérobique ?</string>
     <string name="exerciseprofile_switchprofilebelow100">Faites un changement de profil à moins de 100%.</string>
-    <string name="exerciseprofile_switchprofileabove100">Faites un changement de profil à plus de 100 %.</string>
+    <string name="exerciseprofile_switchprofileabove100">Faites un changement de profil à plus de 100%.</string>
     <string name="exerciseprofile_leaveat100">Laissez le profil fixé à 100%.</string>
     <string name="exerciseprofile_suspendloop">Suspendez la boucle.</string>
     <string name="exerciseprofile_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/fr/Usage/temptarget.html#cible-temporaire-activite</string>
@@ -138,7 +138,7 @@
     <string name="iob_label">Insuline Active (IA)</string>
     <string name="iob_which">Sélectionnez toutes les bonnes réponses.</string>
     <string name="iob_value">La valeur de l\'IA est impactée par les débits de basal temporaires émis.</string>
-    <string name="iob_hightemp">Une basal temp. haute ne sera pas donnée quand votre glycémie est en dessous de la cible.</string>
+    <string name="iob_hightemp">Une basale temp haute ne sera pas donnée quand votre glycémie est en dessous de la cible.</string>
     <string name="iob_negiob">Une IA négative pendant une période significative en l\'absence d\'exercice indique que votre profil est trop fort et qu\'il faut moins d\'insuline dans vos paramètres.</string>
     <string name="iob_posiob">Une IA positive pendant une période significative indique une résistance à l\'insuline ou des repas non signalés.</string>
     <string name="breadgrams_label">Entrée de glucides et bolus</string>
