@@ -138,6 +138,8 @@
     <string name="diaconn_g8_errorcode_10">Annulé à cause d\'absence de réponse de la pompe.</string>
     <string name="diaconn_g8_errorcode_11">L\'injection n\'est pas possible en raison d\'une pile faible.</string>
     <string name="diaconn_g8_errorcode_12">Injection impossible en raison de manque d\'insuline.</string>
+    <string name="diaconn_g8_errorcode_14">L\'injection ne peut pas être effectuée car elle dépasse le volume d\'injection d\'aujourd\'hui.</string>
+    <string name="diaconn_g8_errorcode_15">Une fois la configuration du basal terminée, l\'injection de basal peut être effectuée.</string>
     <string name="diaconn_g8_errotpreceivedyet">Commande non transmise. Veuillez réessayer.</string>
     <string name="diaconn_g8_logtubechange_title">Enreg. changement de tubulure</string>
     <string name="diaconn_g8_logtubechange_summary">Ajouter \"Changement de tubulure\" à Careportal lorsqu\'il est détecté dans l\'historique</string>
