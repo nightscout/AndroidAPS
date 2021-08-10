@@ -5,9 +5,7 @@
     <string name="danars_pairingok">Parkopplingen klar</string>
     <string name="danars_pairingtimedout">Parkopplingen tog för lång tid</string>
     <string name="danars_waitingforpairing">Väntar på parkoppling med pump</string>
-    <string name="danarspump">Dana RS</string>
     <string name="danarspump_shortname">Dana</string>
-    <string name="description_pump_dana_rs">Pumpintegration för DANA Diabecare RS</string>
     <string name="maxbolusviolation">Max bolus nådd</string>
     <string name="commanderror">Kommandofel</string>
     <string name="speederror">Felaktig hastighet</string>

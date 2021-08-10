@@ -919,4 +919,6 @@
     <string name="ns_receive_therapy_events_summary">Godta behandlingshendelser (kanyle, insulin, batteribytte osv.) som er lagt inn gjennom NS eller NSClient</string>
     <string name="ns_receive_cgm">Motta/tilbakefyll CGM data</string>
     <string name="ns_receive_cgm_summary">Aksepter CGM data fra NS</string>
+    <string name="sms_timeout_while_wating">Tidsavbrudd fordi vi ventet på avslutning av forrige pumpekommunikasjon</string>
+    <string name="smscommunicator_another_bolus_in_queue">Det ligger en annen bolus i køen. Prøv igjen senere.</string>
 </resources>

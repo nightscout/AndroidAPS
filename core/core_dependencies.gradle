@@ -87,7 +87,7 @@ dependencies {
     api 'com.google.android.gms:play-services-wearable:17.0.0'
     api 'com.google.android.gms:play-services-location:17.1.0'
 
-    api("com.google.android.flexbox:flexbox:3.0.0")
+    api 'com.google.android.flexbox:flexbox:3.0.0'
     api("io.socket:socket.io-client:1.0.0") {
         // excluding org.json which is provided by Android
         exclude group: "org.json", module: "json"
