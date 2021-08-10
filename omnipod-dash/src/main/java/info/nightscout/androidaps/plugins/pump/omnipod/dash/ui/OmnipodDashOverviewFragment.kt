@@ -244,7 +244,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             }
 
         val connectionSuccessPercentage = podStateManager.connectionSuccessRatio() * 100
-        val successPercentageString = String.format("%.2f %%", podStateManager.connectionSuccessRatio())
+        val successPercentageString = String.format("%.2f %%", connectionSuccessPercentage)
         val quality =
             "${podStateManager.successfulConnections}/${podStateManager.connectionAttempts} :: $successPercentageString"
         bluetoothStatusBinding.omnipodDashBluetoothConnectionQuality.text = quality
