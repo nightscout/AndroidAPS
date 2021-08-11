@@ -226,7 +226,6 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         outState.putInt("rangeToDisplay", rangeToDisplay)
         outState.putLong("start", overviewData.fromTime)
         outState.putLong("end", overviewData.toTime)
-
     }
 
     private fun prepareGraphsIfNeeded(numOfGraphs: Int) {

@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.maintenance
 
+import android.content.Context
 import android.os.Environment
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.interfaces.Config
@@ -25,7 +26,8 @@ class PrefFileListProvider @Inject constructor(
     private val classicPrefsFormat: ClassicPrefsFormat,
     private val encryptedPrefsFormat: EncryptedPrefsFormat,
     private val storage: Storage,
-    private val versionCheckerUtils: VersionCheckerUtils
+    private val versionCheckerUtils: VersionCheckerUtils,
+    context: Context
 ) {
 
     private val path = File(Environment.getExternalStorageDirectory().toString())

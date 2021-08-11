@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.di
 
 import android.content.Context
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import dagger.Module
 import dagger.Provides
 import info.nightscout.androidaps.logging.AAPSLogger

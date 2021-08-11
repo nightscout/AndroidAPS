@@ -85,9 +85,8 @@ class MaintenancePlugin @Inject constructor(
         }
         val exportDir = fileListProvider.ensureTempDirExists()
         if (exportDir.exists()) {
-            val expFiles = exportDir.listFiles()
-            for (file in expFiles) {
-                file.delete()
+            exportDir.listFiles()?.let { expFiles ->
+                for (file in expFiles) file.delete()
             }
             exportDir.delete()
         }

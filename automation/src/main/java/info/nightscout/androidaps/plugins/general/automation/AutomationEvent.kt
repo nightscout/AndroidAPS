@@ -64,7 +64,7 @@ class AutomationEvent(private val injector: HasAndroidInjector) {
             .toString()
     }
 
-    fun fromJSON(data: String?): AutomationEvent {
+    fun fromJSON(data: String): AutomationEvent {
         val d = JSONObject(data)
         title = d.optString("title", "")
         isEnabled = d.optBoolean("enabled", true)

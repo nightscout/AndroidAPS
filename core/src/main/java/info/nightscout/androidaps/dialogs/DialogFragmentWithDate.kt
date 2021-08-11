@@ -40,7 +40,10 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        dialog?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
     }
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
@@ -67,22 +70,24 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
         eventTimeView?.text = dateUtil.timeString(eventTime)
 
         // create an OnDateSetListener
-        val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
-            val cal = Calendar.getInstance()
-            cal.timeInMillis = eventTime
-            cal.set(Calendar.YEAR, year)
-            cal.set(Calendar.MONTH, monthOfYear)
-            cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-            eventTime = cal.timeInMillis
-            eventTimeChanged = true
-            eventDateView?.text = dateUtil.dateString(eventTime)
-        }
+        val dateSetListener =
+            DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
+                val cal = Calendar.getInstance()
+                cal.timeInMillis = eventTime
+                cal.set(Calendar.YEAR, year)
+                cal.set(Calendar.MONTH, monthOfYear)
+                cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                eventTime = cal.timeInMillis
+                eventTimeChanged = true
+                eventDateView?.text = dateUtil.dateString(eventTime)
+            }
 
         eventDateView?.setOnClickListener {
             context?.let {
                 val cal = Calendar.getInstance()
                 cal.timeInMillis = eventTime
-                DatePickerDialog(it, dateSetListener,
+                DatePickerDialog(
+                    it, dateSetListener,
                     cal.get(Calendar.YEAR),
                     cal.get(Calendar.MONTH),
                     cal.get(Calendar.DAY_OF_MONTH)
@@ -96,7 +101,10 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
             cal.timeInMillis = eventTime
             cal.set(Calendar.HOUR_OF_DAY, hour)
             cal.set(Calendar.MINUTE, minute)
-            cal.set(Calendar.SECOND, seconds++) // randomize seconds to prevent creating record of the same time, if user choose time manually
+            cal.set(
+                Calendar.SECOND,
+                seconds++
+            ) // randomize seconds to prevent creating record of the same time, if user choose time manually
             eventTime = cal.timeInMillis
             eventTimeChanged = true
             eventTimeView?.text = dateUtil.timeString(eventTime)
@@ -106,7 +114,8 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
             context?.let {
                 val cal = Calendar.getInstance()
                 cal.timeInMillis = eventTime
-                TimePickerDialog(it, timeSetListener,
+                TimePickerDialog(
+                    it, timeSetListener,
                     cal.get(Calendar.HOUR_OF_DAY),
                     cal.get(Calendar.MINUTE),
                     DateFormat.is24HourFormat(context)
@@ -114,7 +123,8 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
             }
         }
 
-        (view.findViewById(R.id.notes_layout) as View?)?.visibility = sp.getBoolean(R.string.key_show_notes_entry_dialogs, false).toVisibility()
+        (view.findViewById(R.id.notes_layout) as View?)?.visibility =
+            sp.getBoolean(R.string.key_show_notes_entry_dialogs, false).toVisibility()
 
         (view.findViewById(R.id.ok) as Button?)?.setOnClickListener {
             synchronized(okClicked) {
@@ -137,7 +147,7 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
                 it.commitAllowingStateLoss()
             }
         } catch (e: IllegalStateException) {
-            aapsLogger.debug(e.localizedMessage)
+            aapsLogger.debug(e.localizedMessage ?: "")
         }
     }
 
