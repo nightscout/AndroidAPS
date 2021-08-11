@@ -109,6 +109,7 @@
     <string name="diaconn_g8_logalarmblock">חסימת הזרקה (%s)</string>
     <string name="diaconn_g8_logsuccess">הצלחה</string>
     <string name="key_diaconn_g8_logtubechange">רישום החלפת צינורית</string>
+    <string name="diaconn_g8_errorcode_6">בוטל על ידי המשאבה</string>
     <string name="diaconn_g8_errorcode_10">בוטל עקב חוסר תגובה מהמשאבה.</string>
     <string name="diaconn_g8_errorcode_11">ההזרקה לא אפשרית עקב סוללה חלשה.</string>
     <string name="diaconn_g8_logtubechange_title">רישום החלפת צינורית</string>
