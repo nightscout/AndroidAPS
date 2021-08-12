@@ -133,6 +133,7 @@
     <string name="configbuilder_nightscoutversion_label">Nightscout-Version:</string>
     <string name="missing_carbs">%1$d g fehlen</string>
     <string name="exported">Einstellungen exportiert</string>
+    <string name="ue_exported">Benutzereinträge exportiert</string>
     <string name="export_to">Einstellungen exportieren nach</string>
     <string name="import_from">Importiere Einstellungen von</string>
     <string name="setting_imported">Einstellungen importiert</string>
@@ -904,6 +905,7 @@ Unerwartetes Verhalten.</string>
     <string name="ns_upload_summary">Profile, Boli, Kohlenhydrate und temporäre Basalraten werden zu NS hochgeladen</string>
     <string name="ns_upload">Daten zu NS hochladen</string>
     <string name="ns_receive_profile_store">Gespeicherte Profile abrufen</string>
+    <string name="ns_receive_profile_store_summary">Profile vom NS-Profil-Editors zu lokalen Profil synchronisieren</string>
     <string name="ns_receive_temp_target">Temporäre Ziele abrufen</string>
     <string name="ns_receive_temp_target_summary">Temp. Ziele akzeptieren, die in NS oder NSClient eingegeben wurden</string>
     <string name="ns_receive_profile_switch">Profilwechsel abrufen</string>
