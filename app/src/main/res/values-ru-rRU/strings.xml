@@ -923,4 +923,5 @@ Context | Edit Context</string>
     <string name="ns_receive_cgm_summary">Принимать данные мониторинга CGM из NS</string>
     <string name="sms_timeout_while_wating">Таймаут во время ожидания окончания предыдущего соединения с помпой</string>
     <string name="smscommunicator_another_bolus_in_queue">В очереди есть еще один болюс. Повторите попытку позже.</string>
+    <string name="calculation_in_progress">Идет подсчет</string>
 </resources>
