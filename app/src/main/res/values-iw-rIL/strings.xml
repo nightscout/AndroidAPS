@@ -289,7 +289,7 @@
     <string name="openapsama_autosens_adjusttargets">וויסות ערכי מטרה ע\"י Autosens</string>
     <string name="openapsama_autosens_adjusttargets_summary">ערך ברירת מחדל: התאמה מדויקת\n נועד לאפשר ל-Autosens לשנות את המטרה של ערכי הסוכר, בנוסף ליחס התיקון והבזאלים.</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">ערך ברירת מחדל: 2\n מעכב בולוס מופעל אחרי שאתם מזריקים בולוס ארוחה, כך שהלולאה לא תפצה ע\"י בזאלי זמני נמוך אחרי הארוחה. הדוגמה כאן וברירת המחדל היא 2; כך שהגדרה של משך פעילות אינסולין של 3 שעות משמעה שהעיכוב יחלוף בהדרגה בתוך 1.5 שעות (3 ש\' לחלק ל-2).</string>
-    <string name="openapsama_min_5m_carbimpact_summary">ערך ברירת מחדל: 3.0 (AMA) או 8.0 (SMB). זוהי הגדרת ברירת מחדל לספיגת פחמימות ב-5 דקות. ברירת המחדל היא 3mg/dL/5min. פעולה זו משפיעה על קצב הדעיכה של פחמ\' פעילות, ועל הנחת קצב ספיגת הפחמ\' בחישוב רמות סוכר עתידיות כשהן בירידה מהירה מהצפוי או עליה איטית מהצפוי.</string>
+    <string name="openapsama_min_5m_carbimpact_summary">ערך ברירת מחדל: 3.0 (AMA) או 8.0 (SMB). זוהי הגדרת ברירת מחדל להשפעת פחמימות על הסוכר בדם ב-5 דקות. ברירת המחדל היא 3mg/dL/5min. פעולה זו משפיעה על קצב הדעיכה של פחמ\' פעילות, ועל הנחת קצב ספיגת הפחמ\' בחישוב רמות סוכר עתידיות כשהן בירידה מהירה מהצפוי או עליה איטית מהצפוי.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">שימו לב!\nבדרך כלל אינכם צריכים לשנות את הערכים שלהלן. נא ללחוץ כאן, לקרוא את הטקסט ולוודא שאתם מבינים אותו לפני שתשנו ערכים אלה.</string>
     <string name="smscommunicator_invalidphonennumber">מספר טלפון ל-SMS אינו תקין</string>
     <string name="overview_calibration">כיול</string>
@@ -359,7 +359,7 @@
     <string name="smscommunicator_wrongduration">משך שגוי</string>
     <string name="smscommunicator_loopsuspended">לולאה מושהית</string>
     <string name="smscommunicator_loopresumed">לולאה חודשה</string>
-    <string name="treatments_wizard_bgtrend_label">מגמה 15 דקות</string>
+    <string name="treatments_wizard_bgtrend_label">מגמת 15 דקות</string>
     <string name="treatments_wizard_cob_label">פחמ\' פעילות</string>
     <string name="superbolus">סופר בולוס</string>
     <string name="ns_logappstartedevent">רשום הפעלת AAPS ב-Nightscout</string>
