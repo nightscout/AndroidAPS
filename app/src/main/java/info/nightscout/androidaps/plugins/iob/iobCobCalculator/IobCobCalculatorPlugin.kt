@@ -5,6 +5,7 @@ import androidx.collection.LongSparseArray
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.data.MealData
 import info.nightscout.androidaps.database.AppRepository
@@ -42,8 +43,9 @@ import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.min
 
+@OpenForTesting
 @Singleton
-open class IobCobCalculatorPlugin @Inject constructor(
+class IobCobCalculatorPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     private val aapsSchedulers: AapsSchedulers,

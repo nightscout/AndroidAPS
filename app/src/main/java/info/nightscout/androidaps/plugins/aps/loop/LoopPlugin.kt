@@ -12,6 +12,7 @@ import androidx.core.app.NotificationCompat
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.*
 import info.nightscout.androidaps.activities.ErrorHelperActivity
+import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
@@ -65,8 +66,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
 
+@OpenForTesting
 @Singleton
-open class LoopPlugin @Inject constructor(
+class LoopPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     private val aapsSchedulers: AapsSchedulers,

@@ -49,6 +49,7 @@ buildscript {
         // in the individual module build.gradle files
 
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version"
         classpath 'com.hiya:jacoco-android:0.2'
         modules {
             module("org.jetbrains.trove4j:trove4j") {

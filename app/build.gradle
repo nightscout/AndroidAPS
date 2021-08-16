@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-allopen'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.hiya.jacoco-android'
 apply plugin: 'com.google.firebase.crashlytics'
@@ -11,6 +12,11 @@ apply from: "${project.rootDir}/gradle/jacoco_global.gradle"
 repositories {
     mavenCentral()
     google()
+}
+
+allOpen {
+    // allows mocking for classes w/o directly opening them for release builds
+    annotation 'info.nightscout.androidaps.annotations.OpenForTesting'
 }
 
 def generateGitBuild = { ->
