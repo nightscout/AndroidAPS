@@ -9,7 +9,6 @@ import info.nightscout.androidaps.queue.Callback
 import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject
-import kotlin.reflect.full.primaryConstructor
 
 abstract class Action(val injector: HasAndroidInjector) {
 
@@ -48,10 +47,37 @@ abstract class Action(val injector: HasAndroidInjector) {
     fun instantiate(obj: JSONObject): Action? {
         try {
             val type = obj.getString("type")
-            val data = obj.optJSONObject("data")
-            val clazz = Class.forName(type).kotlin
-            return (clazz.primaryConstructor?.call(injector) as Action).fromJSON(data?.toString()
-                ?: "")
+            val data = obj.getJSONObject("data")
+            when (type) {
+                ActionAlarm::class.java.name,              // backward compatibility
+                ActionAlarm::class.java.simpleName                -> ActionAlarm(injector).fromJSON(data.toString())
+                ActionDummy::class.java.name,
+                ActionDummy::class.java.simpleName                -> ActionDummy(injector).fromJSON(data.toString())
+                ActionLoopDisable::class.java.name,
+                ActionLoopDisable::class.java.simpleName          -> ActionLoopDisable(injector).fromJSON(data.toString())
+                ActionLoopEnable::class.java.name,
+                ActionLoopEnable::class.java.simpleName           -> ActionLoopEnable(injector).fromJSON(data.toString())
+                ActionLoopResume::class.java.name,
+                ActionLoopResume::class.java.simpleName           -> ActionLoopResume(injector).fromJSON(data.toString())
+                ActionLoopSuspend::class.java.name,
+                ActionLoopSuspend::class.java.simpleName          -> ActionLoopSuspend(injector).fromJSON(data.toString())
+                ActionNotification::class.java.name,
+                ActionNotification::class.java.simpleName         -> ActionNotification(injector).fromJSON(data.toString())
+                ActionProfileSwitch::class.java.name,
+                ActionProfileSwitch::class.java.simpleName        -> ActionProfileSwitch(injector).fromJSON(data.toString())
+                ActionProfileSwitchPercent::class.java.name,
+                ActionProfileSwitchPercent::class.java.simpleName -> ActionProfileSwitchPercent(injector).fromJSON(data.toString())
+                ActionSendSMS::class.java.name,
+                ActionSendSMS::class.java.simpleName              -> ActionSendSMS(injector).fromJSON(data.toString())
+                ActionStartTempTarget::class.java.name,
+                ActionStartTempTarget::class.java.simpleName      -> ActionStartTempTarget(injector).fromJSON(data.toString())
+                ActionStopTempTarget::class.java.name,
+                ActionStopTempTarget::class.java.simpleName       -> ActionStopTempTarget(injector).fromJSON(data.toString())
+                else                                              -> throw ClassNotFoundException(type)
+            }
+            //val clazz = Class.forName(type).kotlin
+            //return (clazz.primaryConstructor?.call(injector) as Action).fromJSON(data?.toString()
+            //    ?: "")
             //return (clazz.newInstance() as Action).fromJSON(data?.toString() ?: "")
         } catch (e: ClassNotFoundException) {
             aapsLogger.error("Unhandled exception", e)
