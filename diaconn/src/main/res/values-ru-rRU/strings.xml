@@ -142,4 +142,9 @@
     <string name="diaconn_g8_errorcode_11">Подача невозможна из-за низкого заряда батареи.</string>
     <string name="diaconn_g8_errorcode_12">Нехватка инсулина, подача невозможна.</string>
     <string name="diaconn_g8_errorcode_13">Подача невозможнаб превышен лимит.</string>
+    <string name="diaconn_g8_errorcode_14">Подача инсулина невозможна т. к. превышен суточный объем.</string>
+    <string name="diaconn_g8_errorcode_15">По завершении настройки базала возможна подача базального инсулина.</string>
+    <string name="diaconn_g8_errotpreceivedyet">Команда не выполнена. Попробуйте еще раз.</string>
+    <string name="diaconn_g8_logtubechange_title">Внести запись о замене катетера</string>
+    <string name="diaconn_g8_logtubechange_summary">Добавить событие \"Замена катетера\" в портал терапии при обнаружении в журнале</string>
 </resources>
