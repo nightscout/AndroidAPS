@@ -159,6 +159,85 @@ class LoopDialog : DaggerDialogFragment() {
         val lgsEnabled = constraintChecker.isLgsAllowed(Constraint(true))
         val apsMode = sp.getString(R.string.key_aps_mode, "open")
         val pump = activePlugin.activePump
+
+        when {
+            pump.isSuspended()                                     -> {
+                binding.overviewLoop.visibility = View.GONE
+                binding.overviewSuspend.visibility = View.GONE
+                binding.overviewPump.visibility = View.GONE
+            }
+
+            !profileFunction.isProfileValid("LoopDialogUpdateGUI") -> {
+                binding.overviewLoop.visibility = View.GONE
+                binding.overviewSuspend.visibility = View.GONE
+                binding.overviewPump.visibility = View.GONE
+            }
+
+            !loopPlugin.isEnabled(PluginType.LOOP)                  -> {
+                binding.overviewLoop.visibility = View.VISIBLE
+                binding.overviewEnable.visibility = View.VISIBLE
+                binding.overviewDisable.visibility = View.GONE
+                binding.overviewSuspend.visibility = View.GONE
+                binding.overviewPump.visibility = View.GONE
+            }
+
+            loopPlugin.isDisconnected                              -> {
+                binding.overviewLoop.visibility = View.GONE
+                binding.overviewSuspend.visibility = View.GONE
+                binding.overviewPump.visibility = View.VISIBLE
+                binding.overviewPumpHeader.text = resourceHelper.gs(R.string.reconnect)
+                binding.overviewDisconnectButtons.visibility = View.GONE
+                binding.overviewReconnect.visibility = View.VISIBLE
+            }
+
+            loopPlugin.isSuspended                                 -> {
+                binding.overviewLoop.visibility = View.GONE
+                binding.overviewSuspend.visibility = View.VISIBLE
+                binding.overviewSuspendHeader.text = resourceHelper.gs(R.string.resumeloop)
+                binding.overviewSuspendButtons.visibility = View.GONE
+                binding.overviewResume.visibility = View.VISIBLE
+                binding.overviewPump.visibility = View.GONE
+            }
+
+            else                                                   -> {
+                binding.overviewLoop.visibility = View.VISIBLE
+                binding.overviewEnable.visibility = View.GONE
+                when {
+                    closedLoopAllowed.value() -> {
+                        binding.overviewCloseloop.visibility = (apsMode != "closed").toVisibility()
+                        binding.overviewLgsloop.visibility = (apsMode != "lgs").toVisibility()
+                        binding.overviewOpenloop.visibility = (apsMode != "open").toVisibility()
+                    }
+
+                    lgsEnabled.value()        -> {
+                        binding.overviewCloseloop.visibility = View.GONE
+                        binding.overviewLgsloop.visibility = (apsMode != "lgs").toVisibility()
+                        binding.overviewOpenloop.visibility = (apsMode != "open").toVisibility()
+                    }
+
+                    else                      -> {
+                        binding.overviewCloseloop.visibility = View.GONE
+                        binding.overviewLgsloop.visibility = View.GONE
+                        binding.overviewOpenloop.visibility = View.GONE
+                    }
+                }
+                binding.overviewSuspend.visibility = View.VISIBLE
+                binding.overviewSuspendHeader.text = resourceHelper.gs(R.string.suspendloop)
+                binding.overviewSuspendButtons.visibility = View.VISIBLE
+                binding.overviewResume.visibility = View.GONE
+
+                binding.overviewPump.visibility = View.VISIBLE
+                binding.overviewPumpHeader.text = resourceHelper.gs(R.string.disconnectpump)
+                binding.overviewDisconnectButtons.visibility = View.VISIBLE
+                binding.overviewDisconnect15m.visibility = pumpDescription.tempDurationStep15mAllowed.toVisibility()
+                binding.overviewDisconnect30m.visibility = pumpDescription.tempDurationStep30mAllowed.toVisibility()
+                binding.overviewReconnect.visibility = View.GONE
+
+            }
+        }
+
+
+        /**************************************************************************************************
         if (profileFunction.isProfileValid("LoopDialogUpdateGUI")) {
             binding.overviewLoop.visibility = View.VISIBLE
             binding.overviewEnable.visibility = View.VISIBLE
@@ -229,6 +308,7 @@ class LoopDialog : DaggerDialogFragment() {
             dismiss()
             return
         }
+        **************************************************************************************************/
 
     }
 
