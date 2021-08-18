@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="resetpairing">Удалить сопряжение</string>
+    <string name="resetpairing">Сбросить сопряжение</string>
     <string name="diaconn_nodeviceavailable">Нет доступных устройств</string>
     <string name="diaconn_pairing">Сопражение с помпой Diaconn</string>
     <string name="pumperror">Ошибка помпы</string>
@@ -147,4 +147,10 @@
     <string name="diaconn_g8_errotpreceivedyet">Команда не выполнена. Попробуйте еще раз.</string>
     <string name="diaconn_g8_logtubechange_title">Внести запись о замене катетера</string>
     <string name="diaconn_g8_logtubechange_summary">Добавить событие \"Замена катетера\" в портал терапии при обнаружении в журнале</string>
+    <string name="diaconn_g8_logtempstart">Начало подачи врем базала</string>
+    <string name="diaconn_g8_errorcode_32">Во время приостановки на низких подача инсулина невозможна</string>
+    <string name="diaconn_g8_errorcode_33">Работает Приостановка на низких, команда ВКЛ отклонена.</string>
+    <string name="diaconn_g8_errorcode_34">Приостановка на низких отключена, команда ВЫКЛ отклонена.</string>
+    <string name="diaconn_g8_errorcode_35">Запуск временного базала отклоняется при работе tempbasal</string>
+    <string name="diaconn_g8_errorcode_36">Остановка временного базала отклоняется при неработающем tempbasal</string>
 </resources>
