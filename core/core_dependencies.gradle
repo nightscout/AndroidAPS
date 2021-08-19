@@ -15,7 +15,7 @@ dependencies {
     api "androidx.activity:activity-ktx:${activityVersion}"
     api "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
     api 'androidx.cardview:cardview:1.0.0'
-    api 'androidx.recyclerview:recyclerview:1.1.0'
+    api 'androidx.recyclerview:recyclerview:1.2.1'
     api 'androidx.gridlayout:gridlayout:1.0.0'
     api 'androidx.percentlayout:percentlayout:1.0.0'
     api "com.google.android.material:material:$material_version"
@@ -55,7 +55,7 @@ dependencies {
     api "com.j256.ormlite:ormlite-android:${ormLiteVersion}"
 
     // pumpCommon
-    api "com.google.code.gson:gson:2.8.6"
+    api "com.google.code.gson:gson:2.8.7"
 
     // don't kill my app
     api('dev.doubledot.doki:library:0.0.1@aar') {
@@ -103,5 +103,6 @@ dependencies {
     api "commons-codec:commons-codec:$commonscodec_version"
 
     // Phone checker
+    // updating to 0.0.9 prevents AAPS from build
     api 'com.scottyab:rootbeer-lib:0.0.8'
 }
