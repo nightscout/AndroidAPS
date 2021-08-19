@@ -186,7 +186,9 @@ class LoopDialog : DaggerDialogFragment() {
                 binding.overviewSuspend.visibility = View.GONE
                 binding.overviewPump.visibility = View.VISIBLE
                 binding.overviewPumpHeader.text = resourceHelper.gs(R.string.reconnect)
-                binding.overviewDisconnectButtons.visibility = View.GONE
+                binding.overviewDisconnectButtons.visibility = View.VISIBLE
+                binding.overviewDisconnect15m.visibility = pumpDescription.tempDurationStep15mAllowed.toVisibility()
+                binding.overviewDisconnect30m.visibility = pumpDescription.tempDurationStep30mAllowed.toVisibility()
                 binding.overviewReconnect.visibility = View.VISIBLE
             }
 
@@ -194,7 +196,7 @@ class LoopDialog : DaggerDialogFragment() {
                 binding.overviewLoop.visibility = View.GONE
                 binding.overviewSuspend.visibility = View.VISIBLE
                 binding.overviewSuspendHeader.text = resourceHelper.gs(R.string.resumeloop)
-                binding.overviewSuspendButtons.visibility = View.GONE
+                binding.overviewSuspendButtons.visibility = View.VISIBLE
                 binding.overviewResume.visibility = View.VISIBLE
                 binding.overviewPump.visibility = View.GONE
             }
