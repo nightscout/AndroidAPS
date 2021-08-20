@@ -5,9 +5,9 @@
     <string name="danars_pairingok">הצימוד הצליח</string>
     <string name="danars_pairingtimedout">הצימוד חרג ממגבלת הזמן</string>
     <string name="danars_waitingforpairing">מחכה לצימוד עם משאבה</string>
-    <string name="danarspump">DanaRS</string>
+    <string name="danarspump">Dana-i / RS</string>
     <string name="danarspump_shortname">Dana</string>
-    <string name="description_pump_dana_rs">חיבור משאבת DANA Diabecare RS</string>
+    <string name="description_pump_dana_rs">חיבור משאבות DANA RS/i</string>
     <string name="maxbolusviolation">בולוס גבוה מדי</string>
     <string name="commanderror">שגיאת פקודה</string>
     <string name="speederror">שגיאת מהירות</string>

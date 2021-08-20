@@ -44,7 +44,7 @@ class PumpSyncStorage @Inject constructor(
         if (sp.contains(pumpSyncStorageKey)) {
             val jsonData: String = sp.getString(pumpSyncStorageKey, "");
 
-            if (!jsonData.isBlank()) {
+            if (jsonData.isNotBlank()) {
                 pumpSyncStorage = xstream.fromXML(jsonData, MutableMap::class.java) as MutableMap<String, MutableList<PumpDbEntry>>
 
                 aapsLogger.debug(LTag.PUMP, String.format("Loading Pump Sync Storage: boluses=%d, tbrs=%d.", pumpSyncStorage[BOLUS]!!.size, pumpSyncStorage[TBR]!!.size))

@@ -1,9 +1,11 @@
-package info.nightscout.androidaps.plugins.constraints.versionChecker
+package info.nightscout.androidaps.plugins.contraints.versionChecker
 
 import android.content.Context
-import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.TestBase
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
+import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Assert.assertArrayEquals
@@ -14,17 +16,18 @@ import org.mockito.Mock
 
 class VersionCheckerUtilsKtTest : TestBase() {
 
-    lateinit var versionCheckerUtils: VersionCheckerUtils
+    private lateinit var versionCheckerUtils: VersionCheckerUtils
 
     @Mock lateinit var sp: SP
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var context: Context
-    val config = ConfigImpl()
+    @Mock lateinit var receiverStatusStore: ReceiverStatusStore
+    @Mock lateinit var config: Config
 
     private val rxBus = RxBusWrapper(aapsSchedulers)
 
     @Before fun setup() {
-        versionCheckerUtils = VersionCheckerUtils(aapsLogger, sp, resourceHelper, rxBus, config, context)
+        versionCheckerUtils = VersionCheckerUtils(aapsLogger, sp, resourceHelper, rxBus, config, context, receiverStatusStore)
     }
 
     @Test
@@ -124,6 +127,7 @@ class VersionCheckerUtilsKtTest : TestBase() {
         }
 
     */
+    @Suppress("SpellCheckingInspection")
     @Test
     fun findVersionMatchesRegularVersion() {
         val buildGradle = """blabla

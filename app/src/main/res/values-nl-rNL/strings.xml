@@ -133,6 +133,7 @@
     <string name="configbuilder_nightscoutversion_label">Nightscout versie:</string>
     <string name="missing_carbs">Er ontbreekt %1$d g</string>
     <string name="exported">Instellingen geëxporteerd</string>
+    <string name="ue_exported">Gebruikers invoer geëxporteerd</string>
     <string name="export_to">Exporteer instellingen naar</string>
     <string name="import_from">Importeer instellingen van</string>
     <string name="setting_imported">Instellingen geïmporteerd</string>
@@ -189,6 +190,7 @@
     <string name="smscommunicator_loophasbeenenabled">Loop was ingeschakeld</string>
     <string name="smscommunicator_loopisenabled">Loop is ingeschakeld</string>
     <string name="valuelimitedto">%1$.2f gelimiteerd tot %2$.2f</string>
+    <string name="valueoutofrange">»Waarde %1$s is buiten de toegestane limieten</string>
     <string name="smscommunicator_pumpconnectwithcode">Om verbinding te maken met pomp antwoord met code %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Verbinding maken met pomp is mislukt</string>
     <string name="smscommunicator_pumpdisconnectwithcode">Om de pomp te ontkoppelen gedurende %1$d minuten antwoord met code %2$s</string>
@@ -263,6 +265,7 @@
     <string name="openapsma_autosensdata_label">Autosens gegevens</string>
     <string name="openapsma_scriptdebugdata_label">Script debug</string>
     <string name="openapsama_useautosens">Gebruik Autosens functie</string>
+    <string name="refresheventsfromnightscout">Vernieuwen vanaf NS</string>
     <string name="deletefuturetreatments">Verwijder behandelingen in de toekomst</string>
     <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">CONF</string>
@@ -386,6 +389,7 @@
     <string name="basal_shortname">BAS</string>
     <string name="deviation_shortname">DEV</string>
     <string name="activity_shortname">ACT</string>
+    <string name="bgi_shortname">-BGI</string>
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="nav_about">Over</string>
@@ -553,6 +557,7 @@
     <string name="bolusrecordedonly">Bolus wordt alleen geregistreerd (niet toegediend door pomp)</string>
     <string name="loop_smbsetbypump_label">SMB op de pomp ingesteld</string>
     <string name="overview_show_activity">Activiteit</string>
+    <string name="overview_show_bgi">Bloedglucose impact</string>
     <string name="overview_show_sensitivity">Gevoeligheid</string>
     <string name="overview_show_deviations">Afwijkingen</string>
     <string name="overview_show_cob">Opgenomen Koolhydraten</string>
@@ -874,6 +879,24 @@
     <string name="fabric_upload_disabled">Upload van crashrapporten is uitgeschakeld!</string>
     <string name="graph_menu_divider_header">Grafiek</string>
     <string name="chart_menu">Grafiek menu</string>
+    <string name="clear_filter">Verwijder filter</string>
+    <string name="trend_arrow">Trendpijl</string>
+    <string name="cannula">Canule</string>
+    <string name="userentry">Gebruikersinvoer</string>
+    <string name="common_values">Gebruik de waarden van je grootste maaltijd die je gewoonlijk eet\n</string>
+    <string name="summary_email_for_crash_report">Dit e-mailadres zal gekoppeld worden aan crashrapporten, zodat we in dringende gevallen contact met u kunnen opnemen. Het is optioneel.</string>
+    <string name="email_address">E-mailadres</string>
+    <string name="privacy_settings">Privacyinstellingen</string>
+    <string name="privacy_summary">U kunt optioneel een e-mailadres opgeven als u op de hoogte wilt worden gebracht van applicatie crashes. Dit is geen geautomatiseerde service. De ontwikkelaars zullen contact met u opnemen bij gevaarlijke situaties.</string>
+    <string name="profile_low_target">Profiel laag doel</string>
+    <string name="profile_high_target">Profiel hoog doel</string>
+    <string name="temp_target_low_target">Tijdelijk streefdoel onder grens</string>
+    <string name="temp_target_high_target">Tijdelijk streefdoel boven grens</string>
+    <string name="temp_target_value">Tijdelijk streefdoel waarde</string>
+    <string name="profile_dia">Profiel DIA waarde</string>
+    <string name="profile_sensitivity_value">Profiel gevoeligheidswaarde</string>
+    <string name="profile_max_daily_basal_value">Maximale basaal waarde van het profiel</string>
+    <string name="current_basal_value">Huidige basaal waarde</string>
     <string name="full_sync">Volledige synchronisatie</string>
     <string name="prime">Vullen</string>
     <string name="ns_sync_options">Synchronisatie</string>

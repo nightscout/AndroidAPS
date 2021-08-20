@@ -143,10 +143,7 @@ class MedtronicUIPostprocessor @Inject constructor(
     }
 
     private fun postProcessSettings(uiTask: MedtronicUITask) {
-        val settings = uiTask.result as? Map<String, PumpSettingDTO>
-
-        if (settings == null)
-            return
+        val settings = uiTask.result as? Map<String, PumpSettingDTO> ?: return
 
         medtronicUtil.settings = settings
         var checkValue: PumpSettingDTO

@@ -93,11 +93,11 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         overviewData = OverviewData(injector, aapsLogger, resourceHelper, dateUtil, sp, activePlugin, defaultValueHelper, profileFunction, config, loopPlugin, nsDeviceStatus, repository, overviewMenus, iobCobCalculator, translator)
 
         binding.left.setOnClickListener {
-            setTime(overviewData.fromTime - T.hours(rangeToDisplay.toLong()).msecs())
+            adjustTimeRange(overviewData.fromTime - T.hours(rangeToDisplay.toLong()).msecs())
             loadAll("onClickLeft")
         }
         binding.right.setOnClickListener {
-            setTime(overviewData.fromTime + T.hours(rangeToDisplay.toLong()).msecs())
+            adjustTimeRange(overviewData.fromTime + T.hours(rangeToDisplay.toLong()).msecs())
             loadAll("onClickRight")
         }
         binding.end.setOnClickListener {
@@ -226,7 +226,6 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         outState.putInt("rangeToDisplay", rangeToDisplay)
         outState.putLong("start", overviewData.fromTime)
         outState.putLong("end", overviewData.toTime)
-
     }
 
     private fun prepareGraphsIfNeeded(numOfGraphs: Int) {
@@ -266,6 +265,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
 
     @Suppress("SameParameterValue")
     private fun loadAll(from: String) {
+        updateDate()
         Thread {
             overviewData.prepareBasalData(from)
             overviewData.prepareTemporaryTargetData(from)
@@ -277,16 +277,20 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
     }
 
     private fun setTime(start: Long) {
-        Calendar.getInstance().also { calendar ->
+        GregorianCalendar().also { calendar ->
             calendar.timeInMillis = start
             calendar[Calendar.MILLISECOND] = 0
             calendar[Calendar.SECOND] = 0
             calendar[Calendar.MINUTE] = 0
-            calendar[Calendar.HOUR_OF_DAY] = 0
-            overviewData.fromTime = calendar.timeInMillis
-            overviewData.toTime = overviewData.fromTime + T.hours(rangeToDisplay.toLong()).msecs()
-            overviewData.endTime = overviewData.toTime
+            calendar[Calendar.HOUR_OF_DAY] -= (calendar[Calendar.HOUR_OF_DAY] % rangeToDisplay)
+            adjustTimeRange(calendar.timeInMillis)
         }
+    }
+
+    private fun adjustTimeRange(start: Long) {
+        overviewData.fromTime = start
+        overviewData.toTime = overviewData.fromTime + T.hours(rangeToDisplay.toLong()).msecs()
+        overviewData.endTime = overviewData.toTime
     }
 
     private fun runCalculation(from: String) {
@@ -308,13 +312,17 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         runningRefresh = false
     }
 
+    fun updateDate() {
+        binding.date.text = dateUtil.dateAndTimeString(overviewData.fromTime)
+        binding.zoom.text = rangeToDisplay.toString()
+    }
+
     @Suppress("UNUSED_PARAMETER")
     @SuppressLint("SetTextI18n")
     fun updateGUI(from: String) {
         aapsLogger.debug(LTag.UI, "updateGui $from")
 
-        binding.date.text = dateUtil.dateAndTimeString(overviewData.fromTime)
-        binding.zoom.text = rangeToDisplay.toString()
+        updateDate()
 
         val pump = activePlugin.activePump
         val graphData = GraphData(injector, binding.bgGraph, overviewData)

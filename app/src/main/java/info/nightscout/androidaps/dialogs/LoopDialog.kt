@@ -3,6 +3,7 @@ package info.nightscout.androidaps.dialogs
 import android.content.Context
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -62,8 +63,8 @@ class LoopDialog : DaggerDialogFragment() {
 
     private var showOkCancel: Boolean = true
     private var _binding: DialogLoopBinding? = null
-    private var loopHandler = Handler()
-    private var refreshDialog: Runnable? = null
+    private var loopHandler = Handler(Looper.getMainLooper())
+    private lateinit var refreshDialog: Runnable
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -415,7 +416,7 @@ class LoopDialog : DaggerDialogFragment() {
                 it.commitAllowingStateLoss()
             }
         } catch (e: IllegalStateException) {
-            aapsLogger.debug(e.localizedMessage)
+            aapsLogger.debug(e.localizedMessage ?: e.toString())
         }
     }
 }

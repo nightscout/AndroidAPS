@@ -87,41 +87,41 @@ abstract class Trigger(val injector: HasAndroidInjector) {
         //return (clazz.primaryConstructor?.call(injector) as Trigger).fromJSON(data?.toString() ?: "")
         return when (type) {
             TriggerAutosensValue::class.java.name,              // backward compatibility
-            TriggerAutosensValue::class.java.simpleName      -> TriggerAutosensValue(injector).fromJSON(data?.toString() ?: "")
+            TriggerAutosensValue::class.java.simpleName      -> TriggerAutosensValue(injector).fromJSON(data.toString())
             TriggerBg::class.java.name,
-            TriggerBg::class.java.simpleName                 -> TriggerBg(injector).fromJSON(data?.toString() ?: "")
+            TriggerBg::class.java.simpleName                 -> TriggerBg(injector).fromJSON(data.toString())
             TriggerBolusAgo::class.java.name,
-            TriggerBolusAgo::class.java.simpleName           -> TriggerBolusAgo(injector).fromJSON(data?.toString() ?: "")
+            TriggerBolusAgo::class.java.simpleName           -> TriggerBolusAgo(injector).fromJSON(data.toString())
             TriggerBTDevice::class.java.name,
-            TriggerBTDevice::class.java.simpleName           -> TriggerBTDevice(injector).fromJSON(data?.toString() ?: "")
+            TriggerBTDevice::class.java.simpleName           -> TriggerBTDevice(injector).fromJSON(data.toString())
             TriggerIob::class.java.name,
-            TriggerIob::class.java.simpleName                -> TriggerIob(injector).fromJSON(data?.toString() ?: "")
+            TriggerIob::class.java.simpleName                -> TriggerIob(injector).fromJSON(data.toString())
             TriggerCOB::class.java.name,
-            TriggerCOB::class.java.simpleName                -> TriggerCOB(injector).fromJSON(data?.toString() ?: "")
+            TriggerCOB::class.java.simpleName                -> TriggerCOB(injector).fromJSON(data.toString())
             TriggerConnector::class.java.name,
-            TriggerConnector::class.java.simpleName          -> TriggerConnector(injector).fromJSON(data?.toString() ?: "")
+            TriggerConnector::class.java.simpleName          -> TriggerConnector(injector).fromJSON(data.toString())
             TriggerDelta::class.java.name,
-            TriggerDelta::class.java.simpleName              -> TriggerDelta(injector).fromJSON(data?.toString() ?: "")
+            TriggerDelta::class.java.simpleName              -> TriggerDelta(injector).fromJSON(data.toString())
             TriggerDummy::class.java.name,
-            TriggerDummy::class.java.simpleName              -> TriggerDummy(injector).fromJSON(data?.toString() ?: "")
+            TriggerDummy::class.java.simpleName              -> TriggerDummy(injector).fromJSON(data.toString())
             TriggerIob::class.java.name,
-            TriggerIob::class.java.simpleName                -> TriggerIob(injector).fromJSON(data?.toString() ?: "")
+            TriggerIob::class.java.simpleName                -> TriggerIob(injector).fromJSON(data.toString())
             TriggerLocation::class.java.name,
-            TriggerLocation::class.java.simpleName           -> TriggerLocation(injector).fromJSON(data?.toString() ?: "")
+            TriggerLocation::class.java.simpleName           -> TriggerLocation(injector).fromJSON(data.toString())
             TriggerProfilePercent::class.java.name,
-            TriggerProfilePercent::class.java.simpleName     -> TriggerProfilePercent(injector).fromJSON(data?.toString() ?: "")
+            TriggerProfilePercent::class.java.simpleName     -> TriggerProfilePercent(injector).fromJSON(data.toString())
             TriggerPumpLastConnection::class.java.name,
-            TriggerPumpLastConnection::class.java.simpleName -> TriggerPumpLastConnection(injector).fromJSON(data?.toString() ?: "")
+            TriggerPumpLastConnection::class.java.simpleName -> TriggerPumpLastConnection(injector).fromJSON(data.toString())
             TriggerRecurringTime::class.java.name,
-            TriggerRecurringTime::class.java.simpleName      -> TriggerRecurringTime(injector).fromJSON(data?.toString() ?: "")
+            TriggerRecurringTime::class.java.simpleName      -> TriggerRecurringTime(injector).fromJSON(data.toString())
             TriggerTempTarget::class.java.name,
-            TriggerTempTarget::class.java.simpleName         -> TriggerTempTarget(injector).fromJSON(data?.toString() ?: "")
+            TriggerTempTarget::class.java.simpleName         -> TriggerTempTarget(injector).fromJSON(data.toString())
             TriggerTime::class.java.name,
-            TriggerTime::class.java.simpleName               -> TriggerTime(injector).fromJSON(data?.toString() ?: "")
+            TriggerTime::class.java.simpleName               -> TriggerTime(injector).fromJSON(data.toString())
             TriggerTimeRange::class.java.name,
-            TriggerTimeRange::class.java.simpleName          -> TriggerTimeRange(injector).fromJSON(data?.toString() ?: "")
+            TriggerTimeRange::class.java.simpleName          -> TriggerTimeRange(injector).fromJSON(data.toString())
             TriggerWifiSsid::class.java.name,
-            TriggerWifiSsid::class.java.simpleName           -> TriggerWifiSsid(injector).fromJSON(data?.toString() ?: "")
+            TriggerWifiSsid::class.java.simpleName           -> TriggerWifiSsid(injector).fromJSON(data.toString())
             else                                             -> throw ClassNotFoundException(type)
         }
     }

@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.aps.openAPSAMA
 import android.content.Context
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
@@ -27,8 +28,9 @@ import org.json.JSONException
 import javax.inject.Inject
 import javax.inject.Singleton
 
+@OpenForTesting
 @Singleton
-open class OpenAPSAMAPlugin @Inject constructor(
+class OpenAPSAMAPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     private val rxBus: RxBusWrapper,
