@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.database
 
+import info.nightscout.androidaps.database.data.NewEntries
 import info.nightscout.androidaps.database.entities.*
 import info.nightscout.androidaps.database.interfaces.DBEntry
 import info.nightscout.androidaps.database.transactions.Transaction
@@ -830,7 +831,25 @@ open class AppRepository @Inject internal constructor(
             .subscribeOn(Schedulers.io())
             .toWrappedSingle()
 
-
+    suspend fun collectNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int) = NewEntries(
+        apsResults = database.apsResultDao.getNewEntriesSince(since, until, limit, offset),
+        apsResultLinks = database.apsResultLinkDao.getNewEntriesSince(since, until, limit, offset),
+        bolusCalculatorResults = database.bolusCalculatorResultDao.getNewEntriesSince(since, until, limit, offset),
+        boluses = database.bolusDao.getNewEntriesSince(since, until, limit, offset),
+        carbs = database.carbsDao.getNewEntriesSince(since, until, limit, offset),
+        effectiveProfileSwitches = database.effectiveProfileSwitchDao.getNewEntriesSince(since, until, limit, offset),
+        extendedBoluses = database.extendedBolusDao.getNewEntriesSince(since, until, limit, offset),
+        glucoseValues = database.glucoseValueDao.getNewEntriesSince(since, until, limit, offset),
+        multiwaveBolusLinks = database.multiwaveBolusLinkDao.getNewEntriesSince(since, until, limit, offset),
+        offlineEvents = database.offlineEventDao.getNewEntriesSince(since, until, limit, offset),
+        preferencesChanges = database.preferenceChangeDao.getNewEntriesSince(since, until, limit, offset),
+        profileSwitches = database.profileSwitchDao.getNewEntriesSince(since, until, limit, offset),
+        temporaryBasals = database.temporaryBasalDao.getNewEntriesSince(since, until, limit, offset),
+        temporaryTarget = database.temporaryTargetDao.getNewEntriesSince(since, until, limit, offset),
+        therapyEvents = database.therapyEventDao.getNewEntriesSince(since, until, limit, offset),
+        totalDailyDoses = database.totalDailyDoseDao.getNewEntriesSince(since, until, limit, offset),
+        versionChanges = database.versionChangeDao.getNewEntriesSince(since, until, limit, offset),
+    )
 }
 
 @Suppress("USELESS_CAST")
