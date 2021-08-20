@@ -6,7 +6,7 @@ import java.nio.charset.StandardCharsets;
 
 public class ByteBuf {
 
-    private byte[] bytes;
+    private final byte[] bytes;
     private int size = 0;
 
     public ByteBuf(int length) {

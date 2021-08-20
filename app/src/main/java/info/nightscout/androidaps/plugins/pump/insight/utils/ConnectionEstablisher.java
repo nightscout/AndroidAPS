@@ -10,10 +10,10 @@ import java.util.UUID;
 
 public class ConnectionEstablisher extends Thread {
 
-    private Callback callback;
-    private boolean forPairing;
-    private BluetoothAdapter bluetoothAdapter;
-    private BluetoothDevice bluetoothDevice;
+    private final Callback callback;
+    private final boolean forPairing;
+    private final BluetoothAdapter bluetoothAdapter;
+    private final BluetoothDevice bluetoothDevice;
     private BluetoothSocket socket;
 
     public ConnectionEstablisher(Callback callback, boolean forPairing, BluetoothAdapter bluetoothAdapter, BluetoothDevice bluetoothDevice, BluetoothSocket socket) {

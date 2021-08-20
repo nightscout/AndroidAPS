@@ -24,12 +24,12 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
  */
 
 public class QueueThread extends Thread {
-    private CommandQueue queue;
-    private AAPSLogger aapsLogger;
-    private RxBusWrapper rxBus;
-    private ActivePluginProvider activePlugin;
-    private ResourceHelper resourceHelper;
-    private SP sp;
+    private final CommandQueue queue;
+    private final AAPSLogger aapsLogger;
+    private final RxBusWrapper rxBus;
+    private final ActivePluginProvider activePlugin;
+    private final ResourceHelper resourceHelper;
+    private final SP sp;
 
     private boolean connectLogged = false;
     boolean waitingForDisconnect = false;
@@ -81,11 +81,13 @@ public class QueueThread extends Thread {
                         pump.stopConnecting();
                         pump.disconnect("watchdog");
                         SystemClock.sleep(1000);
-                        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-                        mBluetoothAdapter.disable();
-                        SystemClock.sleep(1000);
-                        mBluetoothAdapter.enable();
-                        SystemClock.sleep(1000);
+                        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                        if (bluetoothAdapter != null) {
+                            bluetoothAdapter.disable();
+                            SystemClock.sleep(1000);
+                            bluetoothAdapter.enable();
+                            SystemClock.sleep(1000);
+                        }
                         //start over again once after watchdog barked
                         //Notification notification = new Notification(Notification.OLD_NSCLIENT, "Watchdog", Notification.URGENT);
                         //rxBus.send(new EventNewNotification(notification));

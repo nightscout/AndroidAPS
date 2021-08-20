@@ -15,8 +15,8 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.Interval;
-import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
+import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
@@ -380,6 +380,12 @@ public class TemporaryBasal implements Interval, DbObjectBase {
         float remainingMin = (end() - System.currentTimeMillis()) / 1000f / 60;
         return (remainingMin < 0) ? 0 : Math.round(remainingMin);
     }
+
+    public int getPlannedRemainingMinutesRoundedUp() {
+        float remainingMin = (end() - System.currentTimeMillis()) / 1000f / 60;
+        return (remainingMin < 0) ? 0 : (int) Math.ceil(remainingMin);
+    }
+
 
     public double tempBasalConvertedToAbsolute(long time, Profile profile) {
         if (isFakeExtended) {

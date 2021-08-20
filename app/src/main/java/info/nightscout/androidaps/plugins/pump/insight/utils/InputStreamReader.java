@@ -7,8 +7,8 @@ public class InputStreamReader extends Thread {
 
     private static final int BUFFER_SIZE = 1024;
 
-    private InputStream inputStream;
-    private Callback callback;
+    private final InputStream inputStream;
+    private final Callback callback;
 
     public InputStreamReader(InputStream inputStream, Callback callback) {
         setName(getClass().getSimpleName());

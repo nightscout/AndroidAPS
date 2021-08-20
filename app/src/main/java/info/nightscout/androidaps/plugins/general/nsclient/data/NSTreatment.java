@@ -10,9 +10,9 @@ import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 
 public class NSTreatment {
-    private static Logger log = StacktraceLoggerWrapper.getLogger(LTag.NSCLIENT);
+    private static final Logger log = StacktraceLoggerWrapper.getLogger(LTag.NSCLIENT);
 
-    private JSONObject data;
+    private final JSONObject data;
     private String action = null; // "update", "remove" or null (add)
 
     public NSTreatment(JSONObject obj) {

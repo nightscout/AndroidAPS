@@ -6,7 +6,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.mess
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertSet;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertSlot;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.ActionInitializationException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 
@@ -16,12 +15,12 @@ public class AcknowledgeAlertsAction implements OmnipodAction<StatusResponse> {
 
     public AcknowledgeAlertsAction(PodStateManager podStateManager, AlertSet alerts) {
         if (podStateManager == null) {
-            throw new ActionInitializationException("Pod state manager cannot be null");
+            throw new IllegalArgumentException("Pod state manager cannot be null");
         }
         if (alerts == null) {
-            throw new ActionInitializationException("Alert set can not be null");
+            throw new IllegalArgumentException("Alert set can not be null");
         } else if (alerts.size() == 0) {
-            throw new ActionInitializationException("Alert set can not be empty");
+            throw new IllegalArgumentException("Alert set can not be empty");
         }
         this.podStateManager = podStateManager;
         this.alerts = alerts;

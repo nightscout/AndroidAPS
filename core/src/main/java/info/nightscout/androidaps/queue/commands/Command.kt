@@ -31,7 +31,8 @@ abstract class Command(
         SET_USER_SETTINGS,  // so far only Dana specific,
         START_PUMP,
         STOP_PUMP,
-        INSIGHT_SET_TBR_OVER_ALARM // insight only
+        INSIGHT_SET_TBR_OVER_ALARM, // insight only
+        CUSTOM_COMMAND
     }
 
     init {

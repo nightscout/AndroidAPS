@@ -115,8 +115,7 @@
     <string name="rs_logcanulachange_summary">Logga kanylbyte automatiskt när det upptäcks i historiken</string>
     <string name="pin1">PIN1</string>
     <string name="pin2">PIN2</string>
-    <string name="press_ok_on_the_pump">Tryck på OK på pumpen och skriv in de två\nnycklarna som visas på pumpens skärm.\n
-\nFör att förhindra att skärmen släcks, tryck\npå minus (-) tills du skrivit in nycklarna.</string>
+    <string name="press_ok_on_the_pump">Tryck på OK på pumpen och skriv in nycklarna som visas på skärmen. För att förhindra att pumpskärmen släcks, tryck på minus (-) ibland.</string>
     <string name="num1pin">1: (12 tecken)</string>
     <string name="num2pin">2: (8 tecken)</string>
 </resources>

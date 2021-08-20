@@ -72,7 +72,8 @@ public class RileyLinkOmnipodService extends RileyLinkService {
         rileyLinkServiceData.targetDevice = RileyLinkTargetDevice.Omnipod;
         rileyLinkServiceData.rileyLinkTargetFrequency = RileyLinkTargetFrequency.Omnipod;
 
-        rileyLinkServiceData.rileylinkAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "");
+        rileyLinkServiceData.rileyLinkAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "");
+        rileyLinkServiceData.rileyLinkName = sp.getString(RileyLinkConst.Prefs.RileyLinkName, "");
 
         rfspy.startReader();
 
@@ -109,7 +110,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
     }
 
     @Override
-    public boolean verifyConfiguration() {
+    public boolean verifyConfiguration(boolean forceRileyLinkAddressRenewal) {
         try {
             errorDescription = null;
 
@@ -133,7 +134,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
 
             rileyLinkServiceData.rileyLinkTargetFrequency = RileyLinkTargetFrequency.Omnipod;
 
-            reconfigureService();
+            reconfigureService(forceRileyLinkAddressRenewal);
 
             return true;
 
@@ -144,9 +145,9 @@ public class RileyLinkOmnipodService extends RileyLinkService {
         }
     }
 
-    private boolean reconfigureService() {
+    private boolean reconfigureService(boolean forceRileyLinkAddressRenewal) {
         if (!inPreInit) {
-            if (rileyLinkAddressChanged) {
+            if (rileyLinkAddressChanged || forceRileyLinkAddressRenewal) {
                 rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkNewAddressSet, this);
                 rileyLinkAddressChanged = false;
             }
@@ -158,6 +159,6 @@ public class RileyLinkOmnipodService extends RileyLinkService {
     public boolean setNotInPreInit() {
         this.inPreInit = false;
 
-        return reconfigureService();
+        return reconfigureService(false);
     }
 }

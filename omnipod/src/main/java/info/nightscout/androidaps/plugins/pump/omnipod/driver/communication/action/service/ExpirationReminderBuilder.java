@@ -17,11 +17,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.util.AlertConfigur
 public final class ExpirationReminderBuilder {
     private final Map<AlertSlot, AlertConfiguration> alerts = new HashMap<>();
     private final DateTime endOfServiceTime;
-    private final PodStateManager podStateManager;
 
     public ExpirationReminderBuilder(PodStateManager podStateManager) {
         this.endOfServiceTime = podStateManager.getActivatedAt().plus(OmnipodConstants.SERVICE_DURATION);
-        this.podStateManager = podStateManager;
     }
 
     public ExpirationReminderBuilder defaults() {
@@ -45,21 +43,17 @@ public final class ExpirationReminderBuilder {
     public ExpirationReminderBuilder expirationAdvisory(boolean active, Duration timeBeforeShutdown) {
         DateTime expirationAdvisoryAlarmTime = endOfServiceTime.minus(timeBeforeShutdown);
 
-        if (DateTime.now().isBefore(expirationAdvisoryAlarmTime)) {
-            Duration timeUntilExpirationAdvisoryAlarm = new Duration(DateTime.now(),
-                    expirationAdvisoryAlarmTime);
-            AlertConfiguration expirationAdvisoryAlertConfiguration = AlertConfigurationUtil.createExpirationAdvisoryAlertConfiguration(active,
-                    timeUntilExpirationAdvisoryAlarm, timeBeforeShutdown);
-            alerts.put(expirationAdvisoryAlertConfiguration.getAlertSlot(), expirationAdvisoryAlertConfiguration);
-        }
+        Duration timeUntilExpirationAdvisoryAlarm = DateTime.now().isBefore(expirationAdvisoryAlarmTime) ? new Duration(DateTime.now(),
+                expirationAdvisoryAlarmTime) : Duration.ZERO;
+        AlertConfiguration expirationAdvisoryAlertConfiguration = AlertConfigurationUtil.createExpirationAdvisoryAlertConfiguration(active,
+                timeUntilExpirationAdvisoryAlarm, timeBeforeShutdown);
+        alerts.put(expirationAdvisoryAlertConfiguration.getAlertSlot(), expirationAdvisoryAlertConfiguration);
         return this;
     }
 
     public ExpirationReminderBuilder lowReservoir(boolean active, int units) {
-        if (podStateManager.getReservoirLevel() == null || podStateManager.getReservoirLevel().intValue() > units) {
-            AlertConfiguration lowReservoirAlertConfiguration = AlertConfigurationUtil.createLowReservoirAlertConfiguration(active, (double) units);
-            alerts.put(lowReservoirAlertConfiguration.getAlertSlot(), lowReservoirAlertConfiguration);
-        }
+        AlertConfiguration lowReservoirAlertConfiguration = AlertConfigurationUtil.createLowReservoirAlertConfiguration(active, (double) units);
+        alerts.put(lowReservoirAlertConfiguration.getAlertSlot(), lowReservoirAlertConfiguration);
         return this;
     }
 

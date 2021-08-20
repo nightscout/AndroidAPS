@@ -15,10 +15,13 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.interfaces.ConfigInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.aps.loop.APSResult;
+import info.nightscout.androidaps.plugins.configBuilder.RunningConfiguration;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.HtmlHelper;
 import info.nightscout.androidaps.utils.Round;
@@ -85,6 +88,8 @@ public class NSDeviceStatus {
     private final SP sp;
     private final ResourceHelper resourceHelper;
     private final NSSettingsStatus nsSettingsStatus;
+    private final ConfigInterface config;
+    private final RunningConfiguration runningConfiguration;
 
     private JSONObject data = null;
 
@@ -93,12 +98,16 @@ public class NSDeviceStatus {
             AAPSLogger aapsLogger,
             SP sp,
             ResourceHelper resourceHelper,
-            NSSettingsStatus nsSettingsStatus
+            NSSettingsStatus nsSettingsStatus,
+            ConfigInterface config,
+            RunningConfiguration runningConfiguration
     ) {
         this.aapsLogger = aapsLogger;
         this.sp = sp;
         this.resourceHelper = resourceHelper;
         this.nsSettingsStatus = nsSettingsStatus;
+        this.config = config;
+        this.runningConfiguration = runningConfiguration;
     }
 
     public void handleNewData(JSONArray devicestatuses) {
@@ -114,8 +123,13 @@ public class NSDeviceStatus {
                         // Objectives 0
                         sp.putBoolean(R.string.key_ObjectivespumpStatusIsAvailableInNS, true);
                     }
+                    if (devicestatusJson.has("configuration") && config.getNSCLIENT()) {
+                        // copy configuration of Insulin and Sensitivity from main AAPS
+                        runningConfiguration.apply(devicestatusJson.getJSONObject("configuration"));
+                    }
                 }
-            } catch (JSONException ignored) {
+            } catch (JSONException jsonException) {
+                jsonException.printStackTrace();
             }
         }
     }
@@ -375,7 +389,7 @@ public class NSDeviceStatus {
 
     // ********* Uploader data ***********
 
-    private static HashMap<String, Uploader> uploaders = new HashMap<>();
+    private static final HashMap<String, Uploader> uploaders = new HashMap<>();
 
     static class Uploader {
         long clock = 0L;

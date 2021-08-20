@@ -1,0 +1,228 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    tools:context=".plugins.general.actions.ActionsFragment">
+
+    <TableLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:stretchColumns="0,2,4">
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:drawableLeft="@drawable/ic_cp_age_sensor"
+                android:gravity="center_vertical"
+                android:paddingRight="2dp"
+                android:paddingStart="15dp"
+                android:text="@string/careportal_sensor_label"
+                android:textSize="14sp" />
+
+
+            <TextView
+                android:id="@+id/careportal_sensorage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingRight="2dp"
+                android:paddingLeft="2dp"
+                android:textColor="@android:color/white"
+                android:textSize="14sp" />
+
+
+            <TextView
+                android:id="@+id/careportal_sensorlevel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_marginRight="20dp"
+                android:paddingLeft="2dp"
+                android:textColor="@android:color/white"
+                android:textSize="14sp" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dip"
+                android:layout_span="3"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="2dp"
+                android:background="@color/listdelimiter" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:drawableLeft="@drawable/ic_cp_age_insulin"
+                android:gravity="center_vertical"
+                android:paddingStart="15dp"
+                android:paddingRight="2dp"
+                android:text="@string/careportal_insulin_label"
+                android:textSize="14sp" />
+
+
+            <TextView
+                android:id="@+id/careportal_insulinage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingRight="2dp"
+                android:paddingLeft="2dp"
+                android:textColor="@android:color/white"
+                android:textSize="14sp" />
+
+
+            <TextView
+                android:id="@+id/careportal_reservoirlevel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_marginRight="20dp"
+                android:paddingLeft="2dp"
+                android:textColor="@android:color/white"
+                android:textSize="14sp" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dip"
+                android:layout_span="3"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="2dp"
+                android:background="@color/listdelimiter" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:drawableLeft="@drawable/ic_cp_age_canula"
+                android:gravity="center_vertical"
+                android:paddingStart="15dp"
+                android:paddingRight="2dp"
+                android:text="@string/careportal_canula_label"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/careportal_canulaage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingRight="2dp"
+                android:paddingLeft="2dp"
+                android:textColor="@android:color/white"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_marginRight="20dp"
+                android:text=""
+                android:paddingLeft="2dp"
+                android:textColor="@android:color/white"
+                android:textSize="14sp" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dip"
+                android:layout_span="3"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="2dp"
+                android:background="@color/listdelimiter" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/careportal_pblabel"
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:drawableLeft="@drawable/ic_cp_age_battery"
+                android:gravity="center_vertical"
+                android:paddingRight="2dp"
+                android:paddingStart="15dp"
+                android:text="@string/pump"
+                android:textSize="14sp" />
+
+
+            <TextView
+                android:id="@+id/careportal_pbage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingRight="2dp"
+                android:paddingLeft="2dp"
+                android:textColor="@android:color/white"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/careportal_batterylevel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_marginRight="20dp"
+                android:paddingLeft="2dp"
+                android:textColor="@android:color/white"
+                android:textSize="14sp" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dip"
+                android:layout_span="3"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="2dp"
+                android:background="@color/listdelimiter" />
+
+        </TableRow>
+
+    </TableLayout>
+
+</FrameLayout>

@@ -1,2 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="alert_r7_description"><![CDATA[Mengde: <b>%1$d%%</b>\nVarighet: <b>%2$s t</b>]]></string>
+    <string name="alert_w31_description"><![CDATA[Ampullens innhold: <b>%1$s E</b>]]></string>
+    <string name="alert_w32_description">Bytt batteri.</string>
+    <string name="alert_w33_description">Angi tidspunkt/dato.</string>
+    <string name="alert_w34_description">Kontakt Accu-Chek kundestøtte.</string>
+    <string name="alert_w36_description"><![CDATA[Mengde: <b>%1$d%%</b><br/>\nVarighet: <b>%2$s t</b>]]></string>
+    <string name="alert_w38_description"><![CDATA[Angitt: <b>%1$s E</b><br/>Levert: <b>%2$s E</b>]]></string>
+    <string name="alert_m20_description">Sett inn ampulle.</string>
+    <string name="alert_m21_description">Bytt ampulle.</string>
+    <string name="alert_m22_description">Bytt batteri.</string>
+    <string name="alert_m23_description">Kontroller pumpestatus.</string>
+    <string name="alert_m24_description">Bytt infusjonssett.</string>
+    <string name="alert_m25_description">Kontakt Accu-Chek kundestøtte.</string>
+    <string name="alert_m26_description">Bytt ampulle.</string>
+    <string name="alert_m27_description">Restart nedlasting av data.</string>
+    <string name="alert_m28_description">Kontroller pumpestatus.</string>
+    <string name="alert_m29_description">Angi batteritype.</string>
+    <string name="alert_m30_description">Angi ampulle type.</string>
+    <string name="alert_e6_description">Bytt batteri og ampulle.</string>
+    <string name="alert_e10_description">Bytt ampulle.</string>
+    <string name="alert_e13_description">Bytt språk.</string>
+</resources>

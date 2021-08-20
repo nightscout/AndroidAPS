@@ -54,7 +54,7 @@ class InsulinOrefFreePeakPluginTest : TestBase() {
 
     @Test
     fun getIdTest() {
-        assertEquals(InsulinInterface.OREF_FREE_PEAK, sut.id)
+        assertEquals(InsulinInterface.InsulinType.OREF_FREE_PEAK, sut.id)
     }
 
     @Test

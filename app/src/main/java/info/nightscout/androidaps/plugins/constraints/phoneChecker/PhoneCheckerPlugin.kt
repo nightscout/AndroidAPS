@@ -36,12 +36,12 @@ class PhoneCheckerPlugin @Inject constructor(
 
     private fun isDevModeEnabled(): Boolean {
         return android.provider.Settings.Secure.getInt(context.contentResolver,
-            android.provider.Settings.Global.DEVELOPMENT_SETTINGS_ENABLED, 0) != 0;
+            android.provider.Settings.Global.DEVELOPMENT_SETTINGS_ENABLED, 0) != 0
     }
 
     override fun onStart() {
         super.onStart()
-        phoneRooted = RootBeer(context).isRooted()
+        phoneRooted = RootBeer(context).isRooted
         devMode = isDevModeEnabled()
     }
 }

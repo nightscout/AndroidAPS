@@ -9,7 +9,7 @@ import com.google.android.gms.wearable.DataMap;
 
 import java.util.Set;
 
-import info.nightscout.androidaps.aaps;
+import info.nightscout.androidaps.Aaps;
 
 /**
  * Created by dlvoy on 2019-11-12
@@ -21,7 +21,7 @@ public class Persistence {
             "info.nightscout.androidaps.complications.COMPLICATION_PROVIDER_PREFERENCES_FILE_KEY";
 
     public Persistence() {
-        preferences = aaps.getAppContext().getSharedPreferences(COMPLICATION_PROVIDER_PREFERENCES_FILE_KEY, 0);
+        preferences = Aaps.getAppContext().getSharedPreferences(COMPLICATION_PROVIDER_PREFERENCES_FILE_KEY, 0);
     }
 
     @Nullable

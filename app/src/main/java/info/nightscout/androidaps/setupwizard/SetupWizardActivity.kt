@@ -1,11 +1,9 @@
 package info.nightscout.androidaps.setupwizard
 
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
-import androidx.core.app.ActivityCompat
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.MainActivity
 import info.nightscout.androidaps.R
@@ -16,14 +14,12 @@ import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientStatus
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
+import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.setupwizard.elements.SWItem
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate
-import info.nightscout.androidaps.utils.AndroidPermission
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.locale.LocaleHelper.update
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog.show
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog.showConfirmation
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.locale.LocaleHelper.update
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -38,7 +34,6 @@ class SetupWizardActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var localProfilePlugin: LocalProfilePlugin
     @Inject lateinit var swDefinition: SWDefinition
     @Inject lateinit var rxBus: RxBusWrapper
-    @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var sp: SP
     @Inject lateinit var fabricPrivacy: FabricPrivacy
 
@@ -82,6 +77,11 @@ class SetupWizardActivity : NoSplashAppCompatActivity() {
             .subscribe({ updateButtons() }) { fabricPrivacy.logException(it) }
         )
         disposable.add(rxBus
+            .toObservable(EventRileyLinkDeviceStatusChange::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ updateButtons() }) { fabricPrivacy.logException(it) }
+        )
+        disposable.add(rxBus
             .toObservable(EventNSClientStatus::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ updateButtons() }) { fabricPrivacy.logException(it) }
@@ -104,6 +104,7 @@ class SetupWizardActivity : NoSplashAppCompatActivity() {
                 updateButtons()
             }) { fabricPrivacy.logException(it) }
         )
+        updateButtons()
     }
 
     private fun generateLayout() {
@@ -116,7 +117,7 @@ class SetupWizardActivity : NoSplashAppCompatActivity() {
         sw_scrollview?.smoothScrollTo(0, 0)
     }
 
-    private fun updateButtons() {
+    override fun updateButtons() {
         runOnUiThread {
             val currentScreen = screens[currentWizardPage]
             if (currentScreen.validator == null || currentScreen.validator!!.isValid || currentScreen.skippable) {
@@ -172,7 +173,7 @@ class SetupWizardActivity : NoSplashAppCompatActivity() {
         finish()
     }
 
-    @Suppress("UNUSED_PARAMETER","SameParameterValue")
+    @Suppress("UNUSED_PARAMETER", "SameParameterValue")
     private fun nextPage(view: View?): Int {
         var page = currentWizardPage + 1
         while (page < screens.size) {
@@ -182,7 +183,7 @@ class SetupWizardActivity : NoSplashAppCompatActivity() {
         return min(currentWizardPage, screens.size - 1)
     }
 
-    @Suppress("UNUSED_PARAMETER","SameParameterValue")
+    @Suppress("UNUSED_PARAMETER", "SameParameterValue")
     private fun previousPage(view: View?): Int {
         var page = currentWizardPage - 1
         while (page >= 0) {
@@ -190,26 +191,5 @@ class SetupWizardActivity : NoSplashAppCompatActivity() {
             page--
         }
         return max(currentWizardPage, 0)
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (permissions.isNotEmpty()) {
-            if (ActivityCompat.checkSelfPermission(this, permissions[0]) == PackageManager.PERMISSION_GRANTED) {
-                when (requestCode) {
-                    AndroidPermission.CASE_STORAGE                                                              ->                         //show dialog after permission is granted
-                        show(this, resourceHelper.gs(R.string.permission), resourceHelper.gs(R.string.alert_dialog_storage_permission_text))
-
-                    AndroidPermission.CASE_LOCATION, AndroidPermission.CASE_SMS, AndroidPermission.CASE_BATTERY -> {
-                    }
-                }
-            }
-        }
-        updateButtons()
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == AndroidPermission.CASE_BATTERY) updateButtons()
     }
 }

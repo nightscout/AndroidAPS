@@ -7,8 +7,8 @@ public class OutputStreamWriter extends Thread {
 
     private static final int BUFFER_SIZE = 1024;
 
-    private OutputStream outputStream;
-    private Callback callback;
+    private final OutputStream outputStream;
+    private final Callback callback;
     private final ByteBuf buffer = new ByteBuf(BUFFER_SIZE);
 
     public OutputStreamWriter(OutputStream outputStream, Callback callback) {

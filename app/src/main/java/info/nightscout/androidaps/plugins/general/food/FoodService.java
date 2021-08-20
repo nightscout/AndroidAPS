@@ -48,7 +48,7 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
     @Inject RxBusWrapper rxBus;
     @Inject FabricPrivacy fabricPrivacy;
 
-    private CompositeDisposable disposable = new CompositeDisposable();
+    private final CompositeDisposable disposable = new CompositeDisposable();
 
     private static final ScheduledExecutorService foodEventWorker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledFoodEventPost = null;

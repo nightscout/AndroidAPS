@@ -5,7 +5,6 @@ import java.util.List;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.command.ConfigureAlertsCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertConfiguration;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.ActionInitializationException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 
@@ -15,10 +14,10 @@ public class ConfigureAlertsAction implements OmnipodAction<StatusResponse> {
 
     public ConfigureAlertsAction(PodStateManager podStateManager, List<AlertConfiguration> alertConfigurations) {
         if (podStateManager == null) {
-            throw new ActionInitializationException("Pod state manager cannot be null");
+            throw new IllegalArgumentException("Pod state manager cannot be null");
         }
         if (alertConfigurations == null) {
-            throw new ActionInitializationException("Alert configurations cannot be null");
+            throw new IllegalArgumentException("Alert configurations cannot be null");
         }
         this.podStateManager = podStateManager;
         this.alertConfigurations = alertConfigurations;

@@ -2,46 +2,63 @@ package info.nightscout.androidaps.activities
 
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceScreen
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.databinding.ActivityPreferencesBinding
 import info.nightscout.androidaps.utils.locale.LocaleHelper
-import info.nightscout.androidaps.utils.resources.ResourceHelper
-import javax.inject.Inject
 
 class PreferencesActivity : NoSplashAppCompatActivity(), PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
 
-    @Inject lateinit var resourceHelper: ResourceHelper
+    private var preferenceId = 0
+    private var myPreferenceFragment: MyPreferenceFragment? = null
 
-    var preferenceId = 0
+    private lateinit var binding: ActivityPreferencesBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_single_fragment)
+        binding = ActivityPreferencesBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        binding.prefFilter.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                filterPreferences()
+            }
+
+            override fun afterTextChanged(s: Editable) {}
+        })
+
         title = resourceHelper.gs(R.string.nav_preferences)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-        val myPreferenceFragment = MyPreferenceFragment()
+        myPreferenceFragment = MyPreferenceFragment()
         preferenceId = intent.getIntExtra("id", -1)
-        val args = Bundle()
-        args.putInt("id", preferenceId)
-        myPreferenceFragment.arguments = args
-        supportFragmentManager.beginTransaction().replace(R.id.frame_layout, myPreferenceFragment).commit()
+        myPreferenceFragment?.arguments = Bundle().also {
+            it.putInt("id", preferenceId)
+            it.putString("filter", binding.prefFilter.text.toString())
+        }
+        if (savedInstanceState == null)
+            supportFragmentManager.beginTransaction().replace(R.id.frame_layout, myPreferenceFragment!!).commit()
     }
 
     override fun onPreferenceStartScreen(caller: PreferenceFragmentCompat, pref: PreferenceScreen): Boolean {
         val fragment = MyPreferenceFragment()
-        val args = Bundle()
-        args.putString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, pref.key)
-        args.putInt("id", preferenceId)
-        fragment.arguments = args
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.frame_layout, fragment, pref.key)
-            .addToBackStack(pref.key)
-            .commit()
+        fragment.arguments = Bundle().also {
+            it.putString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, pref.key)
+            it.putInt("id", preferenceId)
+        }
+        supportFragmentManager.beginTransaction().replace(R.id.frame_layout, fragment, pref.key).addToBackStack(pref.key).commit()
         return true
     }
 
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.wrap(newBase))
+    }
+
+    private fun filterPreferences() {
+        myPreferenceFragment?.setFilter(binding.prefFilter.text.toString())
     }
 }

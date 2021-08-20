@@ -2,8 +2,8 @@ package info.nightscout.androidaps.plugins.pump.insight.utils;
 
 public class DelayedActionThread extends Thread {
 
-    private long duration;
-    private Runnable runnable;
+    private final long duration;
+    private final Runnable runnable;
 
     private DelayedActionThread(String name, long duration, Runnable runnable) {
         setName(name);

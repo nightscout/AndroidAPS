@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.mes
 import org.joda.time.Duration;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
@@ -54,7 +53,7 @@ public class PodInfoActiveAlerts extends PodInfo {
     @Override
     public String toString() {
         return "PodInfoActiveAlerts{" +
-                "word278=" + Arrays.toString(word278) +
+                "word278=" + ByteUtil.shortHexString(word278) +
                 ", alertActivations=" + alertActivations +
                 '}';
     }

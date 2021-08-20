@@ -11,9 +11,9 @@ import java.io.Serializable;
 public class DoubleDataPoint implements DataPointInterface, Serializable {
     private static final long serialVersionUID=1428267322645L;
 
-    private double x;
-    private double y1;
-    private double y2;
+    private final double x;
+    private final double y1;
+    private final double y2;
 
     public DoubleDataPoint(double x, double y1, double y2) {
         this.x=x;

@@ -11,6 +11,7 @@
     <string name="key_danars_v3_randomsynckey" translatable="false">danars_v3_randomsync_key_</string>
     <string name="key_rs_logcanulachange" translatable="false">rs_logcanulachange</string>
     <string name="key_rs_loginsulinchange" translatable="false">rs_loginsulinchange</string>
+    <string name="key_rs_last_clear_key_request" translatable="false">rs_last_clear_key_request</string>
     <string name="key_danar_bt_name" translatable="false">danar_bt_name</string>
 
     <string name="danars_pairing">Pairing</string>

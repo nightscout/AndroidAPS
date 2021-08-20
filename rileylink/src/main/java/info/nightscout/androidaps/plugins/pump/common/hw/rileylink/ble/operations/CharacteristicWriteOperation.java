@@ -19,7 +19,7 @@ public class CharacteristicWriteOperation extends BLECommOperation {
 
     private final AAPSLogger aapsLogger;
 
-    private BluetoothGattCharacteristic characteristic;
+    private final BluetoothGattCharacteristic characteristic;
 
 
     public CharacteristicWriteOperation(AAPSLogger aapsLogger, BluetoothGatt gatt, BluetoothGattCharacteristic chara, byte[] value) {

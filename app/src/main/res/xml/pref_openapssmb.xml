@@ -2,10 +2,10 @@
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:validate="http://schemas.android.com/apk/res-auto">
-    
+
     <PreferenceCategory
-        app:initialExpandedChildrenCount="0"
-        android:title="@string/openapssmb">
+        android:title="@string/openapssmb"
+        app:initialExpandedChildrenCount="0">
 
         <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
             android:defaultValue="1"
@@ -88,10 +88,15 @@
 
         <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
             android:defaultValue="30"
+            android:digits="0123456789"
             android:entries="@array/smbMaxMinutes"
             android:entryValues="@array/smbMaxMinutes"
+            android:inputType="number"
             android:key="@string/key_smbmaxminutes"
-            android:title="@string/smbmaxminutes_summary" />
+            android:title="@string/smbmaxminutes_summary"
+            validate:maxNumber="120"
+            validate:minNumber="15"
+            validate:testType="numericRange" />
 
         <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
             android:defaultValue="30"
@@ -119,14 +124,12 @@
             android:defaultValue="true"
             android:key="@string/key_sensitivity_raises_target"
             android:summary="@string/sensitivity_raises_target_summary"
-            android:title="@string/sensitivity_raises_target_title"
-            />
+            android:title="@string/sensitivity_raises_target_title" />
         <SwitchPreference
             android:defaultValue="false"
             android:key="@string/key_resistance_lowers_target"
             android:summary="@string/resistance_lowers_target_summary"
-            android:title="@string/resistance_lowers_target_title"
-            />
+            android:title="@string/resistance_lowers_target_title" />
         <!-- TODO AS-FIX -->
         <SwitchPreference
             android:defaultValue="false"
@@ -142,21 +145,21 @@
             android:key="@string/key_low_temptarget_lowers_sensitivity"
             android:summary="@string/low_temptarget_lowers_sensitivity_summary"
             android:title="@string/low_temptarget_lowers_sensitivity_title" />
-            
+
         <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
-            android:key="@string/key_carbsReqThreshold"
-            android:title="@string/carbsReqThreshold"
-            android:summary="@string/carbsReqThreshold_summary"
             android:defaultValue="1"
             android:dialogMessage="@string/carbsReqThreshold_summary"
             android:digits="0123456789"
             android:inputType="number"
+            android:key="@string/key_carbsReqThreshold"
             android:maxLines="20"
             android:selectAllOnFocus="true"
             android:singleLine="true"
+            android:summary="@string/carbsReqThreshold_summary"
+            android:title="@string/carbsReqThreshold"
             validate:maxNumber="10"
             validate:minNumber="1"
-            validate:testType="numericRange"/>
+            validate:testType="numericRange" />
 
         <androidx.preference.PreferenceScreen
             android:key="absorption_smb_advanced"

@@ -8,11 +8,14 @@ public enum ManufacturerType {
 
     Tandem("Tandem"),
     Insulet("Insulet"),
-    Animas("Animas"), Cellnovo("Cellnovo"), Roche("Roche");
+    Animas("Animas"),
+    Cellnovo("Cellnovo"),
+    Roche("Roche"),
+    Ypsomed("Ypsomed");
 
 
 
-    private String description;
+    private final String description;
 
     ManufacturerType(String description) {
 

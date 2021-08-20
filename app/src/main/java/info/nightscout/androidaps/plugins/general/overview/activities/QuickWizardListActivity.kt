@@ -17,7 +17,6 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventQuickWiza
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.extensions.plusAssign
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.wizard.QuickWizard
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -26,14 +25,13 @@ import javax.inject.Inject
 
 class QuickWizardListActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var rxBus: RxBusWrapper
-    @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var quickWizard: QuickWizard
     @Inject lateinit var dateUtil: DateUtil
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
-    private inner class RecyclerViewAdapter internal constructor(internal var fragmentManager: FragmentManager) : RecyclerView.Adapter<RecyclerViewAdapter.QuickWizardEntryViewHolder>() {
+    private inner class RecyclerViewAdapter(var fragmentManager: FragmentManager) : RecyclerView.Adapter<RecyclerViewAdapter.QuickWizardEntryViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuickWizardEntryViewHolder {
             return QuickWizardEntryViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.overview_quickwizardlist_item, parent, false), fragmentManager)
@@ -48,7 +46,7 @@ class QuickWizardListActivity : NoSplashAppCompatActivity() {
 
         override fun getItemCount(): Int = quickWizard.size()
 
-        private inner class QuickWizardEntryViewHolder internal constructor(itemView: View, internal var fragmentManager: FragmentManager) : RecyclerView.ViewHolder(itemView) {
+        private inner class QuickWizardEntryViewHolder(itemView: View, var fragmentManager: FragmentManager) : RecyclerView.ViewHolder(itemView) {
             val buttonText: TextView = itemView.findViewById(R.id.overview_quickwizard_item_buttonText)
             val carbs: TextView = itemView.findViewById(R.id.overview_quickwizard_item_carbs)
             val from: TextView = itemView.findViewById(R.id.overview_quickwizard_item_from)

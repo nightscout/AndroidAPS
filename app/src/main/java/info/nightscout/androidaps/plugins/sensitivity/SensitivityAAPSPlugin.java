@@ -3,6 +3,10 @@ package info.nightscout.androidaps.plugins.sensitivity;
 import androidx.annotation.NonNull;
 import androidx.collection.LongSparseArray;
 
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -11,6 +15,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
@@ -22,6 +27,7 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
+import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
@@ -36,8 +42,8 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 @Singleton
 public class SensitivityAAPSPlugin extends AbstractSensitivityPlugin {
 
-    private ProfileFunction profileFunction;
-    private DateUtil dateUtil;
+    private final ProfileFunction profileFunction;
+    private final DateUtil dateUtil;
 
     @Inject
     public SensitivityAAPSPlugin(
@@ -50,6 +56,7 @@ public class SensitivityAAPSPlugin extends AbstractSensitivityPlugin {
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.SENSITIVITY)
+                        .pluginIcon(R.drawable.ic_generic_icon)
                         .pluginName(R.string.sensitivityaaps)
                         .shortName(R.string.sensitivity_shortname)
                         .preferencesId(R.xml.pref_absorption_aaps)
@@ -178,5 +185,37 @@ public class SensitivityAAPSPlugin extends AbstractSensitivityPlugin {
         getAapsLogger().debug(LTag.AUTOSENS, "Sensitivity to: deviations " + Arrays.toString(deviations));
 
         return output;
+    }
+
+    @NotNull @Override public SensitivityType getId() {
+        return SensitivityType.SENSITIVITY_AAPS;
+    }
+
+    @NotNull @Override public JSONObject configuration() {
+        JSONObject c = new JSONObject();
+        try {
+            c.put(getResourceHelper().gs(R.string.key_absorption_maxtime), getSp().getDouble(R.string.key_absorption_maxtime, Constants.DEFAULT_MAX_ABSORPTION_TIME));
+            c.put(getResourceHelper().gs(R.string.key_openapsama_autosens_period), getSp().getInt(R.string.key_openapsama_autosens_period, 24));
+            c.put(getResourceHelper().gs(R.string.key_openapsama_autosens_max), getSp().getDouble(R.string.key_openapsama_autosens_max, 1.2));
+            c.put(getResourceHelper().gs(R.string.key_openapsama_autosens_min), getSp().getDouble(R.string.key_openapsama_autosens_min, 0.7));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return c;
+    }
+
+    @Override public void applyConfiguration(@NotNull JSONObject configuration) {
+        try {
+            if (configuration.has(getResourceHelper().gs(R.string.key_absorption_maxtime)))
+                getSp().putDouble(R.string.key_absorption_maxtime, configuration.getDouble(getResourceHelper().gs(R.string.key_absorption_maxtime)));
+            if (configuration.has(getResourceHelper().gs(R.string.key_openapsama_autosens_period)))
+                getSp().putDouble(R.string.key_openapsama_autosens_period, configuration.getDouble(getResourceHelper().gs(R.string.key_openapsama_autosens_period)));
+            if (configuration.has(getResourceHelper().gs(R.string.key_openapsama_autosens_max)))
+                getSp().getDouble(R.string.key_openapsama_autosens_max, configuration.getDouble(getResourceHelper().gs(R.string.key_openapsama_autosens_max)));
+            if (configuration.has(getResourceHelper().gs(R.string.key_openapsama_autosens_min)))
+                getSp().getDouble(R.string.key_openapsama_autosens_min, configuration.getDouble(getResourceHelper().gs(R.string.key_openapsama_autosens_min)));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

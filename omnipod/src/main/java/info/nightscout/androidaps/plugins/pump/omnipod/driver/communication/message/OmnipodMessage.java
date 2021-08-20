@@ -1,12 +1,18 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.command.CancelDeliveryCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.command.GetStatusCommand;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.DeliveryType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.MessageBlockType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodCrc;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PacketType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.CrcMismatchException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.MessageDecodingException;
@@ -26,7 +32,7 @@ public class OmnipodMessage {
 
     public OmnipodMessage(int address, List<MessageBlock> messageBlocks, int sequenceNumber) {
         this.address = address;
-        this.messageBlocks = messageBlocks;
+        this.messageBlocks = new ArrayList<>(messageBlocks);
         this.sequenceNumber = sequenceNumber;
     }
 
@@ -49,7 +55,7 @@ public class OmnipodMessage {
             throw new CrcMismatchException(calculatedCrc, crc);
         }
         List<MessageBlock> blocks = decodeBlocks(ByteUtil.substring(data, 6, data.length - 6 - 2));
-        if (blocks == null || blocks.size() == 0) {
+        if (blocks.size() == 0) {
             throw new MessageDecodingException("No blocks decoded");
         }
 
@@ -91,8 +97,11 @@ public class OmnipodMessage {
         return encodedData;
     }
 
-    public void padWithGetStatusCommands(int packetSize) {
-        while (getEncoded().length < packetSize) {
+    public void padWithGetStatusCommands(int packetSize, AAPSLogger aapsLogger) {
+        while (getEncoded().length <= packetSize) {
+            if (getEncoded().length == PacketType.PDM.getMaxBodyLength()) {
+                aapsLogger.debug(LTag.PUMPBTCOMM, "Message length equals max body length: {}", this);
+            }
             messageBlocks.add(new GetStatusCommand(PodInfoType.NORMAL));
         }
     }
@@ -102,7 +111,7 @@ public class OmnipodMessage {
     }
 
     public List<MessageBlock> getMessageBlocks() {
-        return messageBlocks;
+        return new ArrayList<>(messageBlocks);
     }
 
     public int getSequenceNumber() {
@@ -137,6 +146,18 @@ public class OmnipodMessage {
             }
         }
         return false;
+    }
+
+    public boolean isGetStatusMessage() {
+        return messageBlocks.size() == 1 && messageBlocks.get(0).getType() == MessageBlockType.GET_STATUS;
+    }
+
+    public boolean isSuspendDeliveryMessage() {
+        return isCancelDeliveryMessage() && EnumSet.allOf(DeliveryType.class).equals(((CancelDeliveryCommand) messageBlocks.get(0)).getDeliveryTypes());
+    }
+
+    private boolean isCancelDeliveryMessage() {
+        return messageBlocks.size() >= 1 && messageBlocks.get(0).getType() == MessageBlockType.CANCEL_DELIVERY;
     }
 
     @Override

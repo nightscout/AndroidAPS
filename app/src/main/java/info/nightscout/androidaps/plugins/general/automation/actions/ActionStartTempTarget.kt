@@ -37,7 +37,7 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
 
     override fun friendlyName(): Int = R.string.starttemptarget
     override fun shortDescription(): String = resourceHelper.gs(R.string.starttemptarget) + ": " + tt().friendlyDescription(value.units, resourceHelper)
-    @DrawableRes override fun icon(): Int = R.drawable.ic_cp_cgm_target
+    @DrawableRes override fun icon(): Int = R.drawable.ic_temptarget_high
 
     override fun doAction(callback: Callback) {
         activePlugin.activeTreatments.addToHistoryTempTarget(tt())

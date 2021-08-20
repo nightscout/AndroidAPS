@@ -15,7 +15,7 @@
 
         <SwitchPreference
             android:defaultValue="false"
-            android:key="virtualpump_uploadstatus"
+            android:key="@string/key_virtualpump_uploadstatus"
             android:title="@string/virtualpump_uploadstatus_title" />
 
     </PreferenceCategory>

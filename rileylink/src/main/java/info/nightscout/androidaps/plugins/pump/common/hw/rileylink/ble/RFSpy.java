@@ -2,19 +2,22 @@ package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble;
 
 import android.os.SystemClock;
 
+import org.apache.commons.lang3.ArrayUtils;
+
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
-
+import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.pump.common.R;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.command.Reset;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.command.RileyLinkCommand;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.command.SendAndListen;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.command.SetHardwareEncoding;
@@ -34,7 +37,6 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.Riley
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.ThreadUtil;
-
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
@@ -43,28 +45,32 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
  */
 @Singleton
 public class RFSpy {
+    private static final long DEFAULT_BATTERY_CHECK_INTERVAL_MILLIS = 30 * 60 * 1_000; // 30 minutes;
+    private static final long LOW_BATTERY_BATTERY_CHECK_INTERVAL_MILLIS = 10 * 60 * 1_000; // 10 minutes;
+    private static final int LOW_BATTERY_PERCENTAGE_THRESHOLD = 20;
 
     @Inject AAPSLogger aapsLogger;
     @Inject ResourceHelper resourceHelper;
     @Inject SP sp;
     @Inject RileyLinkServiceData rileyLinkServiceData;
     @Inject RileyLinkUtil rileyLinkUtil;
+    @Inject RxBusWrapper rxBus;
 
     private final HasAndroidInjector injector;
 
     private static final long RILEYLINK_FREQ_XTAL = 24000000;
     private static final int EXPECTED_MAX_BLUETOOTH_LATENCY_MS = 7500; // 1500
     public int notConnectedCount = 0;
-    private RileyLinkBLE rileyLinkBle;
+    private final RileyLinkBLE rileyLinkBle;
     private RFSpyReader reader;
-    private UUID radioServiceUUID = UUID.fromString(GattAttributes.SERVICE_RADIO);
-    private UUID radioDataUUID = UUID.fromString(GattAttributes.CHARA_RADIO_DATA);
-    private UUID radioVersionUUID = UUID.fromString(GattAttributes.CHARA_RADIO_VERSION);
-    //private UUID responseCountUUID = UUID.fromString(GattAttributes.CHARA_RADIO_RESPONSE_COUNT);
-    private RileyLinkFirmwareVersion firmwareVersion;
+    private final UUID radioServiceUUID = UUID.fromString(GattAttributes.SERVICE_RADIO);
+    private final UUID radioDataUUID = UUID.fromString(GattAttributes.CHARA_RADIO_DATA);
+    private final UUID radioVersionUUID = UUID.fromString(GattAttributes.CHARA_RADIO_VERSION);
+    private final UUID batteryServiceUUID = UUID.fromString(GattAttributes.SERVICE_BATTERY);
+    private final UUID batteryLevelUUID = UUID.fromString(GattAttributes.CHARA_BATTERY_UNK);
     private String bleVersion; // We don't use it so no need of sofisticated logic
     private Double currentFrequencyMHz;
-
+    private long nextBatteryCheck = 0;
 
     @Inject
     public RFSpy(HasAndroidInjector injector, RileyLinkBLE rileyLinkBle) {
@@ -78,16 +84,9 @@ public class RFSpy {
         reader = new RFSpyReader(aapsLogger, rileyLinkBle);
     }
 
-
-    public RileyLinkFirmwareVersion getRLVersionCached() {
-        return firmwareVersion;
-    }
-
-
     public String getBLEVersionCached() {
         return bleVersion;
     }
-
 
     // Call this after the RL services are discovered.
     // Starts an async task to read when data is available
@@ -96,14 +95,14 @@ public class RFSpy {
         reader.start();
     }
 
-
     // Here should go generic RL initialisation + protocol adjustments depending on
     // firmware version
     public void initializeRileyLink() {
         bleVersion = getVersion();
-        rileyLinkServiceData.firmwareVersion = getFirmwareVersion();
+        String cc1110Version = getCC1110Version();
+        rileyLinkServiceData.versionCC110 = cc1110Version;
+        rileyLinkServiceData.firmwareVersion = getFirmwareVersion(aapsLogger, bleVersion, cc1110Version);
     }
-
 
     // Call this from the "response count" notification handler.
     private void newDataIsAvailable() {
@@ -111,6 +110,21 @@ public class RFSpy {
         reader.newDataIsAvailable();
     }
 
+    public Integer retrieveBatteryLevel() {
+        BLECommOperationResult result = rileyLinkBle.readCharacteristic_blocking(batteryServiceUUID, batteryLevelUUID);
+        if (result.resultCode == BLECommOperationResult.RESULT_SUCCESS) {
+            if (ArrayUtils.isNotEmpty(result.value)) {
+                int value = result.value[0];
+                aapsLogger.debug(LTag.PUMPBTCOMM, "BLE battery level: {}", value);
+                return value;
+            } else {
+                aapsLogger.error(LTag.PUMPBTCOMM, "getBatteryLevel received an empty result. Value: " + result.value);
+            }
+        } else {
+            aapsLogger.error(LTag.PUMPBTCOMM, "getBatteryLevel failed with code: " + result.resultCode);
+        }
+        return null;
+    }
 
     // This gets the version from the BLE113, not from the CC1110.
     // I.e., this gets the version from the BLE interface, not from the radio.
@@ -126,15 +140,7 @@ public class RFSpy {
         }
     }
 
-    public boolean isRileyLinkStillAvailable() {
-        RileyLinkFirmwareVersion firmwareVersion = getFirmwareVersion();
-
-        return (firmwareVersion != RileyLinkFirmwareVersion.UnknownVersion);
-    }
-
-
-    private RileyLinkFirmwareVersion getFirmwareVersion() {
-
+    private String getCC1110Version() {
         aapsLogger.debug(LTag.PUMPBTCOMM, "Firmware Version. Get Version - Start");
 
         for (int i = 0; i < 5; i++) {
@@ -149,16 +155,26 @@ public class RFSpy {
             if (response != null) { // && response[0] == (byte) 0xDD) {
 
                 String versionString = StringUtil.fromBytes(response);
-
-                RileyLinkFirmwareVersion version = RileyLinkFirmwareVersion.getByVersionString(StringUtil
-                        .fromBytes(response));
-
-                aapsLogger.debug(LTag.PUMPBTCOMM, "Firmware Version string: {}, resolved to {}.", versionString, version);
-
-                if (version != RileyLinkFirmwareVersion.UnknownVersion)
-                    return version;
-
+                if (versionString.length() > 3) {
+                    if (versionString.indexOf('s') >= 0) {
+                        versionString = versionString.substring(versionString.indexOf('s'));
+                    }
+                    return versionString;
+                }
                 SystemClock.sleep(1000);
+            }
+        }
+
+        return null;
+    }
+
+    static RileyLinkFirmwareVersion getFirmwareVersion(AAPSLogger aapsLogger, String bleVersion, String cc1110Version) {
+        if (cc1110Version != null) {
+            RileyLinkFirmwareVersion version = RileyLinkFirmwareVersion.getByVersionString(cc1110Version);
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Firmware Version string: {}, resolved to {}.", cc1110Version, version);
+
+            if (version != RileyLinkFirmwareVersion.UnknownVersion) {
+                return version;
             }
         }
 
@@ -170,7 +186,6 @@ public class RFSpy {
 
         return RileyLinkFirmwareVersion.UnknownVersion;
     }
-
 
     private byte[] writeToDataRaw(byte[] bytes, int responseTimeout_ms) {
         SystemClock.sleep(100);
@@ -194,13 +209,11 @@ public class RFSpy {
             aapsLogger.error(LTag.PUMPBTCOMM, "BLE Write operation failed, code=" + writeCheck.resultCode);
             return null; // will be a null (invalid) response
         }
+
         SystemClock.sleep(100);
-        // Log.i(TAG,ThreadUtil.sig()+String.format(" writeToData:(timeout %d) %s",(responseTimeout_ms),ByteUtil.shortHexString(prepended)));
-        byte[] rawResponse = reader.poll(responseTimeout_ms);
-        return rawResponse;
 
+        return reader.poll(responseTimeout_ms);
     }
-
 
     // The caller has to know how long the RFSpy will be busy with what was sent to it.
     private RFSpyResponse writeToData(RileyLinkCommand command, int responseTimeout_ms) {
@@ -212,66 +225,35 @@ public class RFSpy {
         if (rawResponse == null) {
             aapsLogger.error(LTag.PUMPBTCOMM, "writeToData: No response from RileyLink");
             notConnectedCount++;
+        } else if (resp.wasInterrupted()) {
+            aapsLogger.error(LTag.PUMPBTCOMM, "writeToData: RileyLink was interrupted");
+        } else if (resp.wasTimeout()) {
+            aapsLogger.error(LTag.PUMPBTCOMM, "writeToData: RileyLink reports timeout");
+            notConnectedCount++;
+        } else if (resp.isOK()) {
+            aapsLogger.warn(LTag.PUMPBTCOMM, "writeToData: RileyLink reports OK");
+            resetNotConnectedCount();
         } else {
-            if (resp.wasInterrupted()) {
-                aapsLogger.error(LTag.PUMPBTCOMM, "writeToData: RileyLink was interrupted");
-            } else if (resp.wasTimeout()) {
-                aapsLogger.error(LTag.PUMPBTCOMM, "writeToData: RileyLink reports timeout");
-                notConnectedCount++;
-            } else if (resp.isOK()) {
-                aapsLogger.warn(LTag.PUMPBTCOMM, "writeToData: RileyLink reports OK");
+            if (resp.looksLikeRadioPacket()) {
+                aapsLogger.debug(LTag.PUMPBTCOMM, "writeToData: received radio response. Will decode at upper level");
                 resetNotConnectedCount();
-            } else {
-                if (resp.looksLikeRadioPacket()) {
-                    // RadioResponse radioResp = resp.getRadioResponse();
-                    // byte[] responsePayload = radioResp.getPayload();
-                    aapsLogger.debug(LTag.PUMPBTCOMM, "writeToData: received radio response. Will decode at upper level");
-                    resetNotConnectedCount();
-                }
-                // Log.i(TAG, "writeToData: raw response is " + ByteUtil.shortHexString(rawResponse));
             }
         }
         return resp;
     }
 
-
     private void resetNotConnectedCount() {
         this.notConnectedCount = 0;
     }
-
 
     private byte[] getByteArray(byte... input) {
         return input;
     }
 
-
-    private byte[] getCommandArray(RileyLinkCommandType command, byte[] body) {
-        int bodyLength = body == null ? 0 : body.length;
-
-        byte[] output = new byte[bodyLength + 1];
-
-        output[0] = command.code;
-
-        if (body != null) {
-            for (int i = 0; i < body.length; i++) {
-                output[i + 1] = body[i];
-            }
-        }
-
-        return output;
-    }
-
-
     public RFSpyResponse transmitThenReceive(RadioPacket pkt, byte sendChannel, byte repeatCount, byte delay_ms,
                                              byte listenChannel, int timeout_ms, byte retryCount) {
         return transmitThenReceive(pkt, sendChannel, repeatCount, delay_ms, listenChannel, timeout_ms, retryCount, null);
     }
-
-
-    public RFSpyResponse transmitThenReceive(RadioPacket pkt, int timeout_ms) {
-        return transmitThenReceive(pkt, (byte) 0, (byte) 0, (byte) 0, (byte) 0, timeout_ms, (byte) 0);
-    }
-
 
     public RFSpyResponse transmitThenReceive(RadioPacket pkt, byte sendChannel, byte repeatCount, byte delay_ms,
                                              byte listenChannel, int timeout_ms, byte retryCount, Integer extendPreamble_ms) {
@@ -282,15 +264,28 @@ public class RFSpy {
         SendAndListen command = new SendAndListen(injector, sendChannel, repeatCount, delay_ms, listenChannel, timeout_ms,
                 retryCount, extendPreamble_ms, pkt);
 
-        return writeToData(command, sendDelay + receiveDelay + EXPECTED_MAX_BLUETOOTH_LATENCY_MS);
+        RFSpyResponse rfSpyResponse = writeToData(command, sendDelay + receiveDelay + EXPECTED_MAX_BLUETOOTH_LATENCY_MS);
+
+        if (System.currentTimeMillis() >= nextBatteryCheck) {
+            updateBatteryLevel();
+        }
+
+        return rfSpyResponse;
     }
 
+    private void updateBatteryLevel() {
+        rileyLinkServiceData.batteryLevel = retrieveBatteryLevel();
+        nextBatteryCheck = System.currentTimeMillis() +
+                (Optional.ofNullable(rileyLinkServiceData.batteryLevel).orElse(0) <= LOW_BATTERY_PERCENTAGE_THRESHOLD ? LOW_BATTERY_BATTERY_CHECK_INTERVAL_MILLIS : DEFAULT_BATTERY_CHECK_INTERVAL_MILLIS);
+
+        // The Omnipod plugin reports the RL battery as the pump battery (as the Omnipod battery level is unknown)
+        // So update overview when the battery level has been updated
+        rxBus.send(new EventRefreshOverview("RL battery level updated", false));
+    }
 
     private RFSpyResponse updateRegister(CC111XRegister reg, int val) {
-        RFSpyResponse resp = writeToData(new UpdateRegister(reg, (byte) val), EXPECTED_MAX_BLUETOOTH_LATENCY_MS);
-        return resp;
+        return writeToData(new UpdateRegister(reg, (byte) val), EXPECTED_MAX_BLUETOOTH_LATENCY_MS);
     }
-
 
     public void setBaseFrequency(double freqMHz) {
         int value = (int) (freqMHz * 1000000 / ((double) (RILEYLINK_FREQ_XTAL) / Math.pow(2.0, 16.0)));
@@ -304,69 +299,56 @@ public class RFSpy {
         configureRadioForRegion(rileyLinkServiceData.rileyLinkTargetFrequency);
     }
 
-
     private void configureRadioForRegion(RileyLinkTargetFrequency frequency) {
-
         // we update registers only on first run, or if region changed
         aapsLogger.error(LTag.PUMPBTCOMM, "RileyLinkTargetFrequency: " + frequency);
 
         switch (frequency) {
-            case Medtronic_WorldWide: {
-                // updateRegister(CC111X_MDMCFG4, (byte) 0x59);
+            case Medtronic_WorldWide:
                 setRXFilterMode(RXFilterMode.Wide);
-                // updateRegister(CC111X_MDMCFG3, (byte) 0x66);
-                // updateRegister(CC111X_MDMCFG2, (byte) 0x33);
                 updateRegister(CC111XRegister.mdmcfg1, 0x62);
                 updateRegister(CC111XRegister.mdmcfg0, 0x1A);
                 updateRegister(CC111XRegister.deviatn, 0x13);
                 setMedtronicEncoding();
-            }
-            break;
+                break;
 
-            case Medtronic_US: {
-                // updateRegister(CC111X_MDMCFG4, (byte) 0x99);
+            case Medtronic_US:
                 setRXFilterMode(RXFilterMode.Narrow);
-                // updateRegister(CC111X_MDMCFG3, (byte) 0x66);
-                // updateRegister(CC111X_MDMCFG2, (byte) 0x33);
                 updateRegister(CC111XRegister.mdmcfg1, 0x61);
                 updateRegister(CC111XRegister.mdmcfg0, 0x7E);
                 updateRegister(CC111XRegister.deviatn, 0x15);
                 setMedtronicEncoding();
-            }
-            break;
+                break;
 
-            case Omnipod: {
-                RFSpyResponse r = null;
+            case Omnipod:
                 // RL initialization for Omnipod is a copy/paste from OmniKit implementation.
                 // Last commit from original repository: 5c3beb4144
                 // so if something is terribly wrong, please check git diff PodCommsSession.swift since that commit
-                r = updateRegister(CC111XRegister.pktctrl1, 0x20);
-                r = updateRegister(CC111XRegister.agcctrl0, 0x00);
-                r = updateRegister(CC111XRegister.fsctrl1, 0x06);
-                r = updateRegister(CC111XRegister.mdmcfg4, 0xCA);
-                r = updateRegister(CC111XRegister.mdmcfg3, 0xBC);
-                r = updateRegister(CC111XRegister.mdmcfg2, 0x06);
-                r = updateRegister(CC111XRegister.mdmcfg1, 0x70);
-                r = updateRegister(CC111XRegister.mdmcfg0, 0x11);
-                r = updateRegister(CC111XRegister.deviatn, 0x44);
-                r = updateRegister(CC111XRegister.mcsm0, 0x18);
-                r = updateRegister(CC111XRegister.foccfg, 0x17);
-                r = updateRegister(CC111XRegister.fscal3, 0xE9);
-                r = updateRegister(CC111XRegister.fscal2, 0x2A);
-                r = updateRegister(CC111XRegister.fscal1, 0x00);
-                r = updateRegister(CC111XRegister.fscal0, 0x1F);
+                updateRegister(CC111XRegister.pktctrl1, 0x20);
+                updateRegister(CC111XRegister.agcctrl0, 0x00);
+                updateRegister(CC111XRegister.fsctrl1, 0x06);
+                updateRegister(CC111XRegister.mdmcfg4, 0xCA);
+                updateRegister(CC111XRegister.mdmcfg3, 0xBC);
+                updateRegister(CC111XRegister.mdmcfg2, 0x06);
+                updateRegister(CC111XRegister.mdmcfg1, 0x70);
+                updateRegister(CC111XRegister.mdmcfg0, 0x11);
+                updateRegister(CC111XRegister.deviatn, 0x44);
+                updateRegister(CC111XRegister.mcsm0, 0x18);
+                updateRegister(CC111XRegister.foccfg, 0x17);
+                updateRegister(CC111XRegister.fscal3, 0xE9);
+                updateRegister(CC111XRegister.fscal2, 0x2A);
+                updateRegister(CC111XRegister.fscal1, 0x00);
+                updateRegister(CC111XRegister.fscal0, 0x1F);
 
-                r = updateRegister(CC111XRegister.test1, 0x31);
-                r = updateRegister(CC111XRegister.test0, 0x09);
-                r = updateRegister(CC111XRegister.paTable0, 0x84);
-                r = updateRegister(CC111XRegister.sync1, 0xA5);
-                r = updateRegister(CC111XRegister.sync0, 0x5A);
+                updateRegister(CC111XRegister.test1, 0x31);
+                updateRegister(CC111XRegister.test0, 0x09);
+                updateRegister(CC111XRegister.paTable0, 0x84);
+                updateRegister(CC111XRegister.sync1, 0xA5);
+                updateRegister(CC111XRegister.sync0, 0x5A);
 
-                r = setRileyLinkEncoding(RileyLinkEncodingType.Manchester);
-                r = setPreamble(0x6665);
-
-            }
-            break;
+                setRileyLinkEncoding(RileyLinkEncodingType.Manchester);
+                setPreamble(0x6665);
+                break;
             default:
                 aapsLogger.warn(LTag.PUMPBTCOMM, "No region configuration for RfSpy and {}", frequency.name());
                 break;
@@ -374,11 +356,11 @@ public class RFSpy {
         }
     }
 
-
     private void setMedtronicEncoding() {
         RileyLinkEncodingType encoding = RileyLinkEncodingType.FourByteSixByteLocal;
 
-        if (RileyLinkFirmwareVersion.isSameVersion(rileyLinkServiceData.firmwareVersion, RileyLinkFirmwareVersion.Version2AndHigher)) {
+        if (rileyLinkServiceData.firmwareVersion!=null &&
+                rileyLinkServiceData.firmwareVersion.isSameVersion(RileyLinkFirmwareVersion.Version2AndHigher)) {
             if (sp.getString(RileyLinkConst.Prefs.Encoding, "None")
                     .equals(resourceHelper.gs(R.string.key_medtronic_pump_encoding_4b6b_rileylink))) {
                 encoding = RileyLinkEncodingType.FourByteSixByteRileyLink;
@@ -390,7 +372,6 @@ public class RFSpy {
         aapsLogger.debug(LTag.PUMPBTCOMM, "Set Encoding for Medtronic: " + encoding.name());
     }
 
-
     private RFSpyResponse setPreamble(int preamble) {
         RFSpyResponse resp = null;
         try {
@@ -400,7 +381,6 @@ public class RFSpy {
         }
         return resp;
     }
-
 
     public RFSpyResponse setRileyLinkEncoding(RileyLinkEncodingType encoding) {
         RFSpyResponse resp = writeToData(new SetHardwareEncoding(encoding), EXPECTED_MAX_BLUETOOTH_LATENCY_MS);
@@ -413,9 +393,7 @@ public class RFSpy {
         return resp;
     }
 
-
     private void setRXFilterMode(RXFilterMode mode) {
-
         byte drate_e = (byte) 0x9; // exponent of symbol rate (16kbps)
         byte chanbw = mode.value;
 
@@ -428,10 +406,5 @@ public class RFSpy {
     public void resetRileyLinkConfiguration() {
         if (this.currentFrequencyMHz != null)
             this.setBaseFrequency(this.currentFrequencyMHz);
-    }
-
-
-    public void stopReader() {
-        reader.stop();
     }
 }

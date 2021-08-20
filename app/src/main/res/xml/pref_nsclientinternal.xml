@@ -148,7 +148,7 @@
 
             <SwitchPreference
                 android:defaultValue="false"
-                android:key="ns_sync_use_absolute"
+                android:key="@string/key_ns_sync_use_absolute"
                 android:title="@string/ns_sync_use_absolute_title" />
 
         </androidx.preference.PreferenceScreen>

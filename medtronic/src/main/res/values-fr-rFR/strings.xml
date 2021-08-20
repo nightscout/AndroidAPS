@@ -81,4 +81,6 @@
     <string name="common_on">Activé</string>
     <string name="common_off">Off</string>
     <string name="pump_time_updated">Mise à jour de l\'heure de la pompe</string>
+    <string name="set_neutral_temps_title">Définir des basals temp neutres</string>
+    <string name="set_neutral_temps_summary">Si activé, cela annulera une basal temp avant la fin de chaque heure. Cela peut aider à supprimer les bips/vibrations à chaque heure.</string>
 </resources>

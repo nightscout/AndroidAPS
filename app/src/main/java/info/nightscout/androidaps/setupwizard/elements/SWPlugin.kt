@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.setupwizard.elements
 
+import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -7,15 +8,17 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.activities.MyPreferenceFragment
 import info.nightscout.androidaps.events.EventConfigBuilderChange
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
+import info.nightscout.androidaps.setupwizard.SWDefinition
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate
 import javax.inject.Inject
 
-class SWPlugin(injector: HasAndroidInjector) : SWItem(injector, Type.PLUGIN) {
+class SWPlugin(injector: HasAndroidInjector, val definition: SWDefinition) : SWItem(injector, Type.PLUGIN) {
 
     @Inject lateinit var pluginStore: PluginStore
     @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
@@ -24,6 +27,8 @@ class SWPlugin(injector: HasAndroidInjector) : SWItem(injector, Type.PLUGIN) {
     private var radioGroup: RadioGroup? = null
     private var pluginDescription = 0
     private var makeVisible = true
+
+    private var fragment: MyPreferenceFragment? = null
 
     fun option(pType: PluginType, pluginDescription: Int): SWPlugin {
         this.pType = pType
@@ -37,26 +42,30 @@ class SWPlugin(injector: HasAndroidInjector) : SWItem(injector, Type.PLUGIN) {
     }
 
     override fun generateDialog(layout: LinearLayout) {
+        var selectedPlugin: PluginBase? = null
         val context = layout.context
         radioGroup = RadioGroup(context)
         radioGroup?.clearCheck()
         val pluginsInCategory = pluginStore.getSpecificPluginsList(pType!!)
         radioGroup?.orientation = LinearLayout.VERTICAL
         radioGroup?.visibility = View.VISIBLE
-        val pdesc = TextView(context)
-        pdesc.setText(pluginDescription)
+        val pDesc = TextView(context)
+        pDesc.setText(pluginDescription)
         var params = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         params.setMargins(0, 0, 0, 40)
-        pdesc.layoutParams = params
-        layout.addView(pdesc)
+        pDesc.layoutParams = params
+        layout.addView(pDesc)
         for (i in pluginsInCategory.indices) {
-            val rdbtn = RadioButton(context)
+            val rdBtn = RadioButton(context)
             val p = pluginsInCategory[i]
-            rdbtn.id = View.generateViewId()
-            rdbtn.text = p.name
-            if (p.isEnabled(pType!!)) rdbtn.isChecked = true
-            rdbtn.tag = p
-            radioGroup?.addView(rdbtn)
+            rdBtn.id = View.generateViewId()
+            rdBtn.text = p.name
+            if (p.isEnabled(pType!!)) {
+                rdBtn.isChecked = true
+                selectedPlugin = p
+            }
+            rdBtn.tag = p
+            radioGroup?.addView(rdBtn)
             params = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             params.setMargins(80, 0, 0, 0)
             val desc = TextView(context)
@@ -73,8 +82,27 @@ class SWPlugin(injector: HasAndroidInjector) : SWItem(injector, Type.PLUGIN) {
             configBuilderPlugin.storeSettings("SetupWizard")
             rxBus.send(EventConfigBuilderChange())
             rxBus.send(EventSWUpdate(false))
+            addConfiguration(layout, plugin)
         }
         layout.addView(radioGroup)
+        selectedPlugin?.let { addConfiguration(layout, it) }
         super.generateDialog(layout)
+    }
+
+    fun addConfiguration(layout: LinearLayout, plugin: PluginBase) {
+        if (plugin.preferencesId != -1) {
+            fragment = MyPreferenceFragment()
+            fragment?.arguments = Bundle().also { it.putInt("id", plugin.preferencesId) }
+            definition.activity.supportFragmentManager.beginTransaction().run {
+                replace(layout.id, fragment!!)
+                commit()
+            }
+        } else {
+            definition.activity.supportFragmentManager.beginTransaction().run {
+                if (fragment != null) remove(fragment!!)
+                fragment = null
+                commit()
+            }
+        }
     }
 }

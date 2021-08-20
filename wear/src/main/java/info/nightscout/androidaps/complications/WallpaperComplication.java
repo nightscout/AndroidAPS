@@ -14,7 +14,7 @@ import android.view.WindowManager;
 import java.io.IOException;
 import java.io.InputStream;
 
-import info.nightscout.androidaps.aaps;
+import info.nightscout.androidaps.Aaps;
 import info.nightscout.androidaps.data.RawDisplayData;
 
 /*
@@ -33,7 +33,7 @@ public abstract class WallpaperComplication extends BaseComplicationProviderServ
         if (dataType == ComplicationData.TYPE_LARGE_IMAGE) {
 
             DisplayMetrics metrics = new DisplayMetrics();
-            WindowManager windowManager = (WindowManager) aaps.getAppContext()
+            WindowManager windowManager = (WindowManager) Aaps.getAppContext()
                     .getSystemService(Context.WINDOW_SERVICE);
             windowManager.getDefaultDisplay().getMetrics(metrics);
             int width = metrics.widthPixels;

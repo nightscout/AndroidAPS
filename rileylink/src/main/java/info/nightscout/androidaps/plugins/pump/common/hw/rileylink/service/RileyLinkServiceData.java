@@ -20,6 +20,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLin
  * Created by andy on 16/05/2018.
  */
 
+// FIXME encapsulation
 @Singleton
 public class RileyLinkServiceData {
 
@@ -32,19 +33,20 @@ public class RileyLinkServiceData {
     public RileyLinkError rileyLinkError;
     public RileyLinkServiceState rileyLinkServiceState = RileyLinkServiceState.NotStarted;
     private long lastServiceStateChange = 0L;
-    public RileyLinkFirmwareVersion firmwareVersion;
-    public RileyLinkTargetFrequency rileyLinkTargetFrequency; // TODO this might not be correct place
-
-    public String rileylinkAddress;
+    public RileyLinkFirmwareVersion firmwareVersion; // here we have "compatibility level" version
+    public RileyLinkTargetFrequency rileyLinkTargetFrequency;
+    public String rileyLinkAddress;
+    public String rileyLinkName;
+    public Integer batteryLevel;
     long lastTuneUpTime = 0L;
     public Double lastGoodFrequency;
 
     // bt version
     public String versionBLE113;
     // radio version
-    public RileyLinkFirmwareVersion versionCC110;
+    public String versionCC110;
 
-    public RileyLinkTargetDevice targetDevice; // TODO this might not be correct place
+    public RileyLinkTargetDevice targetDevice;
 
     // Medtronic Pump
     public String pumpID;
@@ -76,9 +78,7 @@ public class RileyLinkServiceData {
     }
 
     private synchronized RileyLinkServiceState workWithServiceState(RileyLinkServiceState newState, RileyLinkError errorCode, boolean set) {
-
         if (set) {
-
             rileyLinkServiceState = newState;
             lastServiceStateChange = System.currentTimeMillis();
             this.rileyLinkError = errorCode;
@@ -86,13 +86,11 @@ public class RileyLinkServiceData {
             aapsLogger.info(LTag.PUMP, "RileyLink State Changed: {} {}", newState, errorCode == null ? "" : " - Error State: " + errorCode.name());
 
             rileyLinkUtil.getRileyLinkHistory().add(new RLHistoryItem(rileyLinkServiceState, errorCode, targetDevice));
-            rxBus.send(new EventRileyLinkDeviceStatusChange(newState, errorCode));
+            rxBus.send(new EventRileyLinkDeviceStatusChange(targetDevice, newState, errorCode));
             return null;
-
         } else {
             return rileyLinkServiceState;
         }
-
     }
 
 }

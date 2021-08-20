@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="objectives_button_back">Naspäť</string>
     <string name="objectives_button_start">Začiatok</string>
-    <string name="objectives_button_verify">Overenie</string>
+    <string name="objectives_button_verify">Kontrola</string>
     <string name="nth_objective">%1$d. Cieľ</string>
     <string name="objectivenotstarted">Výukový cieľ %1$d nespustený</string>
     <string name="objectivenotfinished">Výukový cieľ %1$d nedokončený</string>
@@ -41,7 +40,7 @@
     <string name="codeaccepted">Kód akceptovaný</string>
     <string name="codeinvalid">Neplatný kód</string>
     <string name="objectives_exam_objective">Preukážte svoje znalosti</string>
-    <string name="objectives_exam_gate">Preštudujte a správne odpovedajte na otázky</string>
+    <string name="objectives_exam_gate">Preštudujte si otázky. Dostali ste štyri možné odpovede na každú otázku. Môže existovať viac ako jedna správna odpoveď. Zaškrtnite všetky správne odpovede a potvrďte voľbou KONTROLA.</string>
     <string name="answerdisabledto">Odpovedanie zakázané do: %1$s</string>
     <string name="wronganswer">Nesprávna odpoveď!</string>
     <string name="unfinshed_button">Ďalšia nedokončená</string>
@@ -54,22 +53,4 @@
     <string name="notconnected">Nie ste pripojený k internetu</string>
     <string name="failedretrievetime">Vyčítanie času zlyhalo</string>
     <string name="requirementnotmet">Požiadavky cieľa nie sú splnené</string>
-    <plurals name="objective_days">
-        <item quantity="one">%1$d deň</item>
-        <item quantity="few">%1$d dní</item>
-        <item quantity="many">%1$d dní</item>
-        <item quantity="other">%1$d dní</item>
-    </plurals>
-    <plurals name="objective_hours">
-        <item quantity="one">%1$d hodina</item>
-        <item quantity="few">%1$d hodín</item>
-        <item quantity="many">%1$d hodín</item>
-        <item quantity="other">%1$d hodín</item>
-    </plurals>
-    <plurals name="objective_minutes">
-        <item quantity="one">%1$d minúta</item>
-        <item quantity="few">%1$d minút</item>
-        <item quantity="many">%1$d minút</item>
-        <item quantity="other">%1$d minút</item>
-    </plurals>
 </resources>

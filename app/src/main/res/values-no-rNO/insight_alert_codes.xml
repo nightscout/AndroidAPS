@@ -1,2 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="alert_r1_code">Påminnelses R1</string>
+    <string name="alert_r2_code">Påminnelse R2</string>
+    <string name="alert_r3_code">Påminnelse R3</string>
+    <string name="alert_r4_code">Påminnelse R4</string>
+    <string name="alert_r7_code">Påminnelse R7</string>
+    <string name="alert_w31_code">Advarsel W31</string>
+    <string name="alert_w32_code">Advarsel W32</string>
+    <string name="alert_w33_code">Advarsel W33</string>
+    <string name="alert_w34_code">Advarsel W34</string>
+    <string name="alert_w36_code">Advarsel W36</string>
+    <string name="alert_w38_code">8Advarsel W38</string>
+    <string name="alert_w39_code">Advarsel W39</string>
+    <string name="alert_m20_code">Vedlikehold M20</string>
+    <string name="alert_m21_code">Vedlikehold M21</string>
+    <string name="alert_m22_code">Vedlikehold M22</string>
+    <string name="alert_m23_code">Vedlikehold M23</string>
+    <string name="alert_m24_code">Vedlikehold M24</string>
+    <string name="alert_m25_code">Vedlikehold M25</string>
+    <string name="alert_m26_code">Vedlikehold M26</string>
+    <string name="alert_m27_code">Vedlikehold M27</string>
+    <string name="alert_m28_code">Vedlikehold M28</string>
+    <string name="alert_m29_code">Vedlikehold M29</string>
+    <string name="alert_m30_code">Vedlikehold M30</string>
+    <string name="alert_e6_code">Feil E6</string>
+    <string name="alert_e10_code">Feil E10</string>
+    <string name="alert_e13_code">Feil E13</string>
+</resources>

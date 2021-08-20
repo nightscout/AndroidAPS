@@ -41,13 +41,13 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 @Singleton
 public class MedtronicUtil {
 
-    private int ENVELOPE_SIZE = 4; // 0xA7 S1 S2 S3 CMD PARAM_COUNT [PARAMS]
-    private static boolean lowLevelDebug = true;
+    private final int ENVELOPE_SIZE = 4; // 0xA7 S1 S2 S3 CMD PARAM_COUNT [PARAMS]
+    private static final boolean lowLevelDebug = true;
     //private MedtronicDeviceType medtronicPumpModel;
     private MedtronicCommandType currentCommand;
     private Map<String, PumpSettingDTO> settings;
-    private int BIG_FRAME_LENGTH = 65;
-    private int doneBit = 1 << 7;
+    private final int BIG_FRAME_LENGTH = 65;
+    private final int doneBit = 1 << 7;
     private ClockDTO pumpTime;
     public Gson gsonInstance = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
@@ -243,7 +243,7 @@ public class MedtronicUtil {
 
 
     public byte[] buildCommandPayload(RileyLinkServiceData rileyLinkServiceData, MedtronicCommandType commandType, byte[] parameters) {
-        return buildCommandPayload(rileyLinkServiceData, (byte) commandType.commandCode, parameters);
+        return buildCommandPayload(rileyLinkServiceData, commandType.commandCode, parameters);
     }
 
 

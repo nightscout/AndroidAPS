@@ -375,6 +375,7 @@ public class DeviceStatus {
     public JSONObject iob = null;
     public int uploaderBattery = 0;
     public String created_at = null;
+    public JSONObject configuration = null;
 
     public DeviceStatus(AAPSLogger aapsLogger) {
         this.aapsLogger = aapsLogger;
@@ -393,6 +394,7 @@ public class DeviceStatus {
             record.put("openaps", openaps);
             if (uploaderBattery != 0) record.put("uploaderBattery", uploaderBattery);
             if (created_at != null) record.put("created_at", created_at);
+            if (configuration != null) record.put("configuration", configuration);
         } catch (JSONException e) {
             aapsLogger.error("Unhandled exception", e);
         }

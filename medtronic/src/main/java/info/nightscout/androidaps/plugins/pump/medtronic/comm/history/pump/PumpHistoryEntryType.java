@@ -158,7 +158,7 @@ public enum PumpHistoryEntryType // implements CodeEnum
     TempBasalCombined(0xfe, "TBR", PumpHistoryEntryGroup.Basal), //
     UnknownBasePacket(0xff, "Unknown Base Packet", PumpHistoryEntryGroup.Unknown);
 
-    private static Map<Integer, PumpHistoryEntryType> opCodeMap = new HashMap<>();
+    private static final Map<Integer, PumpHistoryEntryType> opCodeMap = new HashMap<>();
 
     static {
         for (PumpHistoryEntryType type : values()) {
@@ -168,19 +168,19 @@ public enum PumpHistoryEntryType // implements CodeEnum
         setSpecialRulesForEntryTypes();
     }
 
-    private int opCode;
-    private String description;
-    private int headLength;
-    private int dateLength;
+    private final int opCode;
+    private final String description;
+    private final int headLength;
+    private final int dateLength;
     // private MinimedDeviceType deviceType;
-    private int bodyLength;
-    private int totalLength;
+    private final int bodyLength;
+    private final int totalLength;
     // special rules need to be put in list from highest to lowest (e.g.:
     // 523andHigher=12, 515andHigher=10 and default (set in cnstr) would be 8)
     private List<SpecialRule> specialRulesHead;
     private List<SpecialRule> specialRulesBody;
     private boolean hasSpecialRules = false;
-    private PumpHistoryEntryGroup group;
+    private final PumpHistoryEntryGroup group;
 
 
     PumpHistoryEntryType(int opCode, String name, PumpHistoryEntryGroup group) {

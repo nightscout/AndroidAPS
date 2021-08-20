@@ -60,7 +60,7 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
     @Inject DatabaseHelperInterface databaseHelper;
     @Inject FabricPrivacy fabricPrivacy;
 
-    private CompositeDisposable disposable = new CompositeDisposable();
+    private final CompositeDisposable disposable = new CompositeDisposable();
 
     TextView statusView, statsMessage, totalBaseBasal2;
     EditText totalBaseBasal;

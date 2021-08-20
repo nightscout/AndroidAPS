@@ -1,2 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="pumpdisconnect_whattodo">Wat moet gedoen word wanneer pomp ontkoppel word?</string>
+</resources>

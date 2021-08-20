@@ -72,7 +72,7 @@ public class IobCobCalculatorPlugin extends PluginBase implements IobCobCalculat
     private final FabricPrivacy fabricPrivacy;
     private final DateUtil dateUtil;
 
-    private CompositeDisposable disposable = new CompositeDisposable();
+    private final CompositeDisposable disposable = new CompositeDisposable();
 
     private LongSparseArray<IobTotal> iobTable = new LongSparseArray<>(); // oldest at index 0
     private LongSparseArray<IobTotal> absIobTable = new LongSparseArray<>(); // oldest at index 0, absolute insulin in the body

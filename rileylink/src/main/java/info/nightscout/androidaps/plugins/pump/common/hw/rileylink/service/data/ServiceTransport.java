@@ -135,7 +135,7 @@ public class ServiceTransport extends ServiceMessage {
     }
 
 
-    public ServiceTransport clone() {
+    @Override public ServiceTransport clone() {
         Parcel p = Parcel.obtain();
         Parcel p2 = Parcel.obtain();
         getMap().writeToParcel(p, 0);

@@ -3,6 +3,7 @@
     <!-- Medtronic (MDT) - Base -->
     <!-- MDT Configuration -->
     <!-- MDT Errors -->
+    <string name="medtronic_errors">Earráidí</string>
     <!-- MDT History -->
     <!--    <string name="medtronic_history_group_basal">Basals</string>-->
     <!--    <string name="medtronic_history_group_configuration">Configurations</string>-->
@@ -11,7 +12,11 @@
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
+    <string name="medtronic_warning">Rabhadh</string>
     <!-- medtronic_warning -->
+    <string name="medtronic_pump_connected_now">Anois</string>
     <!-- combo_pump_connected_now -->
+    <string name="ago">ó shin</string>
+    <string name="medtronic_notification_check_time_date">Is nuashonrú gá clog Caidéil</string>
     <!-- combo_notification_check_time_date -->
 </resources>

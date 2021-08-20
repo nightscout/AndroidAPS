@@ -55,7 +55,6 @@ class BolusWizardTest : TestBase() {
                 it.rxBus = RxBusWrapper()
                 it.profileFunction = profileFunction
                 it.constraintChecker = constraintChecker
-                it.context = context
                 it.activePlugin = activePlugin
                 it.commandQueue = commandQueue
                 it.loopPlugin = loopPlugin
@@ -95,9 +94,9 @@ class BolusWizardTest : TestBase() {
         /** Should calculate the same bolus when different blood glucose but both in target range  */
     fun shouldCalculateTheSameBolusWhenBGsInRange() {
         val profile = setupProfile(4.0, 8.0, 20.0, 12.0)
-        var bw = BolusWizard(injector).doCalc(profile, "", null, 20, 0.0, 4.2, 0.0, 100.0, true, true, true, true, false, false, false)
+        var bw = BolusWizard(injector).doCalc(profile, "", null, 20, 0.0, 4.2, 0.0, 100.0, true, true, true, true, false, false, false, false)
         val bolusForBg42 = bw.calculatedTotalInsulin
-        bw = BolusWizard(injector).doCalc(profile, "", null, 20, 0.0, 5.4, 0.0, 100.0, true, true, true, true, false, false, false)
+        bw = BolusWizard(injector).doCalc(profile, "", null, 20, 0.0, 5.4, 0.0, 100.0, true, true, true, true, false, false, false, false)
         val bolusForBg54 = bw.calculatedTotalInsulin
         Assert.assertEquals(bolusForBg42, bolusForBg54, 0.01)
     }
@@ -105,9 +104,9 @@ class BolusWizardTest : TestBase() {
     @Test
     fun shouldCalculateHigherBolusWhenHighBG() {
         val profile = setupProfile(4.0, 8.0, 20.0, 12.0)
-        var bw = BolusWizard(injector).doCalc(profile, "", null, 20, 0.0, 9.8, 0.0, 100.0, true, true, true, true, false, false, false)
+        var bw = BolusWizard(injector).doCalc(profile, "", null, 20, 0.0, 9.8, 0.0, 100.0, true, true, true, true, false, false, false, false)
         val bolusForHighBg = bw.calculatedTotalInsulin
-        bw = BolusWizard(injector).doCalc(profile, "", null, 20, 0.0, 5.4, 0.0, 100.0, true, true, true, true, false, false, false)
+        bw = BolusWizard(injector).doCalc(profile, "", null, 20, 0.0, 5.4, 0.0, 100.0, true, true, true, true, false, false, false, false)
         val bolusForBgInRange = bw.calculatedTotalInsulin
         Assert.assertTrue(bolusForHighBg > bolusForBgInRange)
     }
@@ -115,9 +114,9 @@ class BolusWizardTest : TestBase() {
     @Test
     fun shouldCalculateLowerBolusWhenLowBG() {
         val profile = setupProfile(4.0, 8.0, 20.0, 12.0)
-        var bw = BolusWizard(injector).doCalc(profile, "", null, 20, 0.0, 3.6, 0.0, 100.0, true, true, true, true, false, false, false)
+        var bw = BolusWizard(injector).doCalc(profile, "", null, 20, 0.0, 3.6, 0.0, 100.0, true, true, true, true, false, false, false, false)
         val bolusForLowBg = bw.calculatedTotalInsulin
-        bw = BolusWizard(injector).doCalc(profile, "", null, 20, 0.0, 5.4, 0.0, 100.0, true, true, true, true, false, false, false)
+        bw = BolusWizard(injector).doCalc(profile, "", null, 20, 0.0, 5.4, 0.0, 100.0, true, true, true, true, false, false, false, false)
         val bolusForBgInRange = bw.calculatedTotalInsulin
         Assert.assertTrue(bolusForLowBg < bolusForBgInRange)
     }

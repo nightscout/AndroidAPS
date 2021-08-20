@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <ListPreference
+        android:key="digitalstyle_frameStyle"
+        android:title="@string/digitalstyle_pref_your_style"
+        android:defaultValue="full"
+        android:entries="@array/digitalstyle_styles_name"
+        android:entryValues="@array/digitalstyle_styles_values"/>
+
+    <ListPreference
+        android:key="digitalstyle_frameColor"
+        android:title="@string/digitalstyle_pref_your_color"
+        android:defaultValue="red"
+        android:entries="@array/digitalstyle_color_name"
+        android:entryValues="@array/digitalstyle_color_values"/>
+    <ListPreference
+        android:key="digitalstyle_frameColorSaturation"
+        android:title="@string/digitalstyle_pref_your_color_saturation"
+        android:defaultValue="700"
+        android:entries="@array/digitalstyle_color_saturation"
+        android:entryValues="@array/digitalstyle_color_saturation"/>
+
+    <ListPreference
+        android:key="digitalstyle_frameColorOpacity"
+        android:title="@string/digitalstyle_pref_your_color_opacity"
+        android:defaultValue="1"
+        android:entries="@array/digitalstyle_color_opacity_name"
+        android:entryValues="@array/digitalstyle_color_opacity_value"/>
+
+    <CheckBoxPreference
+        android:key="show_date"
+        android:title="@string/pref_show_date"
+        android:defaultValue="true"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:key="show_weeknumber"
+        android:title="@string/pref_show_weeknumber"
+        android:defaultValue="false"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:key="vibrate_Hourly"
+        android:title="@string/pref_vibrate_hourly"
+        android:defaultValue="false"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+</PreferenceScreen>

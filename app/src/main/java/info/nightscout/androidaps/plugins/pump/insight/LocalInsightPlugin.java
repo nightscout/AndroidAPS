@@ -6,12 +6,12 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -133,6 +133,7 @@ import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_erro
 import info.nightscout.androidaps.plugins.pump.insight.utils.ExceptionTranslator;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ParameterBlockUtil;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.queue.commands.CustomCommand;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.TimeChangeType;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
@@ -155,11 +156,11 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
 
     public static final String ALERT_CHANNEL_ID = "AndroidAPS-InsightAlert";
 
-    private PumpDescription pumpDescription;
+    private final PumpDescription pumpDescription;
     private InsightAlertService alertService;
     private InsightConnectionService connectionService;
     private long timeOffset;
-    private ServiceConnection serviceConnection = new ServiceConnection() {
+    private final ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
             if (binder instanceof InsightConnectionService.LocalBinder) {
@@ -217,6 +218,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             DateUtil dateUtil
     ) {
         super(new PluginDescription()
+                        .pluginIcon(R.drawable.ic_insight_128)
                         .pluginName(R.string.insight_local)
                         .shortName(R.string.insightpump_shortname)
                         .mainType(PluginType.PUMP)
@@ -291,12 +293,10 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     }
 
     private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            NotificationChannel channel = new NotificationChannel(ALERT_CHANNEL_ID, resourceHelper.gs(R.string.insight_alert_notification_channel), NotificationManager.IMPORTANCE_HIGH);
-            channel.setSound(null, null);
-            notificationManager.createNotificationChannel(channel);
-        }
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationChannel channel = new NotificationChannel(ALERT_CHANNEL_ID, resourceHelper.gs(R.string.insight_alert_notification_channel), NotificationManager.IMPORTANCE_HIGH);
+        channel.setSound(null, null);
+        notificationManager.createNotificationChannel(channel);
     }
 
     @Override
@@ -367,7 +367,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     }
 
     @Override
-    public void getPumpStatus() {
+    public void getPumpStatus(String reason) {
         try {
             tbrOverNotificationBlock = ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, TBROverNotificationBlock.class);
             readHistory();
@@ -597,7 +597,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                     bolusMessage.setDuration(0);
                     bolusMessage.setExtendedAmount(0);
                     bolusMessage.setImmediateAmount(insulin);
-                    bolusMessage.setVibration(sp.getBoolean(detailedBolusInfo.isSMB ? R.string.key_disable_vibration_auto : R.string.key_disable_vibration ,false));
+                    bolusMessage.setVibration(sp.getBoolean(detailedBolusInfo.isSMB ? R.string.key_disable_vibration_auto : R.string.key_disable_vibration, false));
                     bolusID = connectionService.requestMessage(bolusMessage).await().getBolusId();
                     bolusCancelled = false;
                 }
@@ -721,8 +721,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                     PumpEnactResult cancelTBRResult = cancelTempBasalOnly();
                     if (cancelTBRResult.success) {
                         PumpEnactResult ebResult = setExtendedBolusOnly((absoluteRate - getBaseBasalRate()) / 60D
-                                * ((double) durationInMinutes), durationInMinutes,
-                                sp.getBoolean(R.string.key_disable_vibration_auto,false));
+                                        * ((double) durationInMinutes), durationInMinutes,
+                                sp.getBoolean(R.string.key_disable_vibration_auto, false));
                         if (ebResult.success) {
                             result.success = true;
                             result.enacted = true;
@@ -800,7 +800,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     @NonNull @Override
     public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
         PumpEnactResult result = cancelExtendedBolusOnly();
-        if (result.success) result = setExtendedBolusOnly(insulin, durationInMinutes, sp.getBoolean(R.string.key_disable_vibration,false));
+        if (result.success)
+            result = setExtendedBolusOnly(insulin, durationInMinutes, sp.getBoolean(R.string.key_disable_vibration, false));
         try {
             fetchStatus();
             readHistory();
@@ -1171,7 +1172,10 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
 
     @Override
     public void executeCustomAction(CustomActionType customActionType) {
+    }
 
+    @Nullable @Override public PumpEnactResult executeCustomCommand(CustomCommand customCommand) {
+        return null;
     }
 
     private void readHistory() {

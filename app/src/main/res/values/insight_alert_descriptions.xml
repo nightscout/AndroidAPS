@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="alert_r7_description"><![CDATA[Amount: <b>%1$d%%</b>\nDuration: <b>%2$s h</b>]]></string>
-
     <string name="alert_w31_description"><![CDATA[Cartridge content: <b>%1$s U</b>]]></string>
     <string name="alert_w32_description">Change battery.</string>
     <string name="alert_w33_description">Set time/date.</string>
     <string name="alert_w34_description">Contact Accu-Chek support.</string>
     <string name="alert_w36_description"><![CDATA[Amount: <b>%1$d%%</b><br/>Duration: <b>%2$s h</b>]]></string>
     <string name="alert_w38_description"><![CDATA[Programmed: <b>%1$s U</b><br/>Delivered: <b>%2$s U</b>]]></string>
-
     <string name="alert_m20_description">Insert cartridge.</string>
     <string name="alert_m21_description">Change cartridge.</string>
     <string name="alert_m22_description">Change battery.</string>
@@ -20,7 +18,6 @@
     <string name="alert_m28_description">Check pump status.</string>
     <string name="alert_m29_description">Set battery type.</string>
     <string name="alert_m30_description">Set cartridge type.</string>
-
     <string name="alert_e6_description">Change battery and cartridge.</string>
     <string name="alert_e10_description">Change cartridge.</string>
     <string name="alert_e13_description">Change language.</string>

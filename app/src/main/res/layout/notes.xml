@@ -13,7 +13,7 @@
         android:width="120dp"
         android:padding="10dp"
         android:text="@string/careportal_newnstreatment_notes_label"
-        android:textAppearance="@android:style/TextAppearance.Material.Small"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textStyle="bold" />
 
     <EditText

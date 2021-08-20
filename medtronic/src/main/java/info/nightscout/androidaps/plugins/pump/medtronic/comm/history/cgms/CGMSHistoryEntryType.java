@@ -32,7 +32,7 @@ public enum CGMSHistoryEntryType {
     Something19(0x13, "19-Something", 1, 0, 0, DateType.PreviousTimeStamp),
     GlucoseSensorData(0xFF, "GlucoseSensorData", 1, 0, 0, DateType.PreviousTimeStamp);
 
-    private static Map<Integer, CGMSHistoryEntryType> opCodeMap = new HashMap<>();
+    private static final Map<Integer, CGMSHistoryEntryType> opCodeMap = new HashMap<>();
 
     static {
         for (CGMSHistoryEntryType type : values()) {
@@ -41,13 +41,13 @@ public enum CGMSHistoryEntryType {
     }
 
     public boolean schemaSet;
-    private int opCode;
-    private String description;
-    private int headLength;
-    private int dateLength;
-    private int bodyLength;
-    private int totalLength;
-    private DateType dateType;
+    private final int opCode;
+    private final String description;
+    private final int headLength;
+    private final int dateLength;
+    private final int bodyLength;
+    private final int totalLength;
+    private final DateType dateType;
 
 
     CGMSHistoryEntryType(int opCode, String name, int head, int date, int body, DateType dateType) {

@@ -1,9 +1,11 @@
 package info.nightscout.androidaps.plugins.aps.loop
 
+import android.app.NotificationManager
 import android.content.Context
 import dagger.Lazy
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
@@ -51,7 +53,7 @@ class LoopPluginTest : TestBase() {
     @Mock lateinit var fabricPrivacy: FabricPrivacy
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
     @Mock lateinit var nsUpload: NSUpload
-
+    @Mock lateinit var notificationManager: NotificationManager
     private lateinit var hardLimits: HardLimits
 
     lateinit var loopPlugin: LoopPlugin
@@ -60,8 +62,9 @@ class LoopPluginTest : TestBase() {
     @Before fun prepareMock() {
         hardLimits = HardLimits(aapsLogger, rxBus, sp, resourceHelper, context, nsUpload)
 
-        loopPlugin = LoopPlugin(injector, aapsLogger, rxBus, sp, constraintChecker, resourceHelper, profileFunction, context, commandQueue, activePlugin, treatmentsPlugin, virtualPumpPlugin, actionStringHandler, iobCobCalculatorPlugin, receiverStatusStore, fabricPrivacy, nsUpload, hardLimits)
-        `when`(activePlugin.getActivePump()).thenReturn(virtualPumpPlugin)
+        loopPlugin = LoopPlugin(injector, aapsLogger, rxBus, sp, Config(), constraintChecker, resourceHelper, profileFunction, context, commandQueue, activePlugin, treatmentsPlugin, virtualPumpPlugin, actionStringHandler, iobCobCalculatorPlugin, receiverStatusStore, fabricPrivacy, nsUpload, hardLimits)
+        `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
+        `when`(context.getSystemService(Context.NOTIFICATION_SERVICE)).thenReturn(notificationManager)
     }
 
     @Test

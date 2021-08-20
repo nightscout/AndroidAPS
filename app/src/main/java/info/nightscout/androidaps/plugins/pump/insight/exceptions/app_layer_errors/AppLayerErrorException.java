@@ -4,7 +4,7 @@ import info.nightscout.androidaps.plugins.pump.insight.exceptions.AppLayerExcept
 
 public abstract class AppLayerErrorException extends AppLayerException {
 
-    private int errorCode;
+    private final int errorCode;
 
     public AppLayerErrorException(int errorCode) {
         this.errorCode = errorCode;

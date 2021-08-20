@@ -3,9 +3,7 @@ package info.nightscout.androidaps.plugins.general.tidepool.elements
 import com.google.gson.annotations.Expose
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.db.ProfileSwitch
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.general.tidepool.comm.TidepoolUploader
-import info.nightscout.androidaps.utils.InstanceId
 import java.util.*
 import kotlin.collections.ArrayList
 

@@ -36,7 +36,7 @@
             android:id="@+id/automation_action_image"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/ic_action_orange_48dp" />
+            app:srcCompat="@drawable/ic_action_orange_48dp" />
 
         <TextView
             android:id="@+id/automation_viewActionTitle"

@@ -1,2 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="alert_r1_code">תזכורת R1</string>
+    <string name="alert_r2_code">תזכורת R2</string>
+    <string name="alert_r3_code">תזכורת R3</string>
+    <string name="alert_r4_code">תזכורת R4</string>
+    <string name="alert_r7_code">תזכורת R7</string>
+    <string name="alert_w31_code">אזהרה W31</string>
+    <string name="alert_w32_code">אזהרה W32</string>
+    <string name="alert_w33_code">אזהרה W33</string>
+    <string name="alert_w34_code">אזהרה W34</string>
+    <string name="alert_w36_code">אזהרה W36</string>
+    <string name="alert_w38_code">אזהרה W38</string>
+    <string name="alert_w39_code">אזהרה W39</string>
+    <string name="alert_m20_code">תחזוקה M20</string>
+    <string name="alert_m21_code">תחזוקה M21</string>
+    <string name="alert_m22_code">תחזוקה M22</string>
+    <string name="alert_m23_code">תחזוקה M23</string>
+    <string name="alert_m24_code">תחזוקה M24</string>
+    <string name="alert_m25_code">תחזוקה M25</string>
+    <string name="alert_m26_code">תחזוקה M26</string>
+    <string name="alert_m27_code">תחזוקה M27</string>
+    <string name="alert_m28_code">תחזוקה M28</string>
+    <string name="alert_m29_code">תחזוקה M29</string>
+    <string name="alert_m30_code">תחזוקה M30</string>
+    <string name="alert_e6_code">שגיאה E6</string>
+    <string name="alert_e10_code">שגיאה E10</string>
+    <string name="alert_e13_code">שגיאה E13</string>
+</resources>

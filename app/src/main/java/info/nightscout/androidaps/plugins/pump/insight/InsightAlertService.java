@@ -44,11 +44,11 @@ public class InsightAlertService extends DaggerService implements InsightConnect
 
     private static final int NOTIFICATION_ID = 31345;
 
-    private LocalBinder localBinder = new LocalBinder();
+    private final LocalBinder localBinder = new LocalBinder();
     private boolean connectionRequested;
     private final Object $alertLock = new Object[0];
     private Alert alert = null;
-    private MutableLiveData<Alert> alertLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Alert> alertLiveData = new MutableLiveData<>();
     private Thread thread;
     private Vibrator vibrator;
     private boolean vibrating;
@@ -56,7 +56,7 @@ public class InsightAlertService extends DaggerService implements InsightConnect
     private long ignoreTimestamp;
     private AlertType ignoreType;
 
-    private ServiceConnection serviceConnection = new ServiceConnection() {
+    private final ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
             connectionService = ((InsightConnectionService.LocalBinder) binder).getService();

@@ -105,9 +105,7 @@ public class Food {
             return false;
         if (!Objects.equals(subcategory, other.subcategory))
             return false;
-       if (!Objects.equals(units, other.units))
-            return false;
-        return true;
+        return Objects.equals(units, other.units);
     }
 
     public void copyFrom(Food other) {

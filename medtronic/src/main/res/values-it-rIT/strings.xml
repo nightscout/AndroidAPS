@@ -81,4 +81,6 @@
     <string name="common_on">On</string>
     <string name="common_off">Off</string>
     <string name="pump_time_updated">Ora del micro aggiornata</string>
+    <string name="set_neutral_temps_title">Imposta basali temporanee neutre</string>
+    <string name="set_neutral_temps_summary">Se abilitato, cancellerà una basale temporanea prima della fine di ogni ora. Questo metodo può aiutare a fermare alcuni micro dall\'emettere un suono/vibrare allo scoccare dell\'ora.</string>
 </resources>

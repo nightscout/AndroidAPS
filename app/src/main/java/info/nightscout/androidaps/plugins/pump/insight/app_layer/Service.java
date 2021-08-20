@@ -9,7 +9,7 @@ public enum Service {
     PARAMETER((short) 0x0200, null),
     REMOTE_CONTROL((short) 0x0100, "MAbcV2X6PVjxuz+R");
 
-    private short version;
+    private final short version;
     private String servicePassword;
 
     Service(short version, String servicePassword) {

@@ -32,6 +32,7 @@ class DanaRS_Packet_Option_Get_Pump_UTC_And_TimeZone(
     }
 
     override fun handleMessageNotReceived() {
+        super.handleMessageNotReceived()
         danaPump.resetPumpTime()
     }
 

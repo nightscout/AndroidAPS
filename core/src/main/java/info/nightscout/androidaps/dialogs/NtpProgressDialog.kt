@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.core.R
+import info.nightscout.androidaps.core.databinding.DialogBolusprogressBinding
 import info.nightscout.androidaps.events.EventNtpStatus
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -16,10 +17,10 @@ import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.dialog_bolusprogress.*
 import javax.inject.Inject
 
 class NtpProgressDialog : DaggerDialogFragment() {
+
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var resourceHelper: ResourceHelper
@@ -30,26 +31,33 @@ class NtpProgressDialog : DaggerDialogFragment() {
     private var state: String? = null
     private var percent = 0
 
+    private var _binding: DialogBolusprogressBinding? = null
+
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         isCancelable = false
 
         state = savedInstanceState?.getString("state", null)
         percent = savedInstanceState?.getInt("percent", 0) ?: 0
 
-        return inflater.inflate(R.layout.dialog_bolusprogress, container, false)
+        _binding = DialogBolusprogressBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val defaultMessage = resourceHelper.gs(R.string.timedetection)
         dialog?.setTitle(resourceHelper.gs(R.string.objectives))
-        overview_bolusprogress_stop.setOnClickListener { dismiss() }
-        overview_bolusprogress_status.text = state ?: defaultMessage
-        overview_bolusprogress_progressbar.max = 100
-        overview_bolusprogress_progressbar.progress = percent
-        overview_bolusprogress_stop.text = resourceHelper.gs(R.string.close)
-        overview_bolusprogress_title.text = resourceHelper.gs(R.string.please_wait)
+        binding.stop.setOnClickListener { dismiss() }
+        binding.status.text = state ?: defaultMessage
+        binding.progressbar.max = 100
+        binding.progressbar.progress = percent
+        binding.stop.text = resourceHelper.gs(R.string.close)
+        binding.title.text = resourceHelper.gs(R.string.please_wait)
     }
 
     override fun onResume() {
@@ -65,22 +73,30 @@ class NtpProgressDialog : DaggerDialogFragment() {
             .toObservable(EventNtpStatus::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ event: EventNtpStatus ->
-                aapsLogger.debug(LTag.UI, "Status: " + event.status + " Percent: " + event.percent)
-                overview_bolusprogress_status?.text = event.status
-                overview_bolusprogress_progressbar?.progress = event.percent
-                if (event.percent == 100) {
-                    SystemClock.sleep(100)
-                    dismiss()
+                if (_binding != null) {
+                    aapsLogger.debug(LTag.UI, "Status: " + event.status + " Percent: " + event.percent)
+                    binding.status.text = event.status
+                    binding.progressbar.progress = event.percent
+                    if (event.percent == 100) {
+                        SystemClock.sleep(100)
+                        dismiss()
+                    }
+                    state = event.status
+                    percent = event.percent
                 }
-                state = event.status
-                percent = event.percent
-            }) { fabricPrivacy.logException(it) }
+            }, fabricPrivacy::logException)
     }
 
     override fun onPause() {
         aapsLogger.debug(LTag.UI, "onPause")
         super.onPause()
         disposable.clear()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        disposable.clear()
+        _binding = null
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

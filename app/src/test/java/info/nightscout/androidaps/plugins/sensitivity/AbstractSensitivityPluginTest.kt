@@ -5,11 +5,13 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.interfaces.IobCobCalculatorInterface
 import info.nightscout.androidaps.interfaces.PluginDescription
+import info.nightscout.androidaps.interfaces.SensitivityInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -28,6 +30,13 @@ class AbstractSensitivityPluginTest : TestBase() {
         override fun detectSensitivity(plugin: IobCobCalculatorInterface, fromTime: Long, toTime: Long): AutosensResult {
             return AutosensResult()
         }
+
+        override val id: SensitivityInterface.SensitivityType
+            get() = SensitivityInterface.SensitivityType.UNKNOWN
+
+        override fun configuration(): JSONObject = JSONObject()
+
+        override fun applyConfiguration(configuration: JSONObject) { }
     }
 
     @Test

@@ -38,7 +38,7 @@ public class Profile {
     @Inject public FabricPrivacy fabricPrivacy;
     @Inject public ConfigInterface configInterface;
 
-    private HasAndroidInjector injector;
+    private final HasAndroidInjector injector;
 
     private JSONObject json;
     private String units;
@@ -138,7 +138,7 @@ public class Profile {
     public String log() {
         String ret = "\n";
         for (Integer hour = 0; hour < 24; hour++) {
-            double value = getBasalTimeFromMidnight((Integer) (hour * 60 * 60));
+            double value = getBasalTimeFromMidnight(hour * 60 * 60);
             ret += "NS basal value for " + hour + ":00 is " + value + "\n";
         }
         ret += "NS units: " + getUnits();

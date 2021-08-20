@@ -58,7 +58,7 @@
             android:layout_marginEnd="-4dp"
             android:layout_weight="0.5"
             android:drawableTop="@drawable/ic_cp_bolus_carbs"
-            android:text="@string/overview_carbs_label"
+            android:text="@string/treatments_wizard_carbs_label"
             android:textColor="@color/colorCarbsButton"
             android:textSize="10sp" />
 

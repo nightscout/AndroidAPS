@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.driver.definition;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class AlertSet {
     private final List<AlertSlot> alertSlots;
@@ -37,6 +38,17 @@ public class AlertSet {
             value |= alertSlot.getBitMaskValue();
         }
         return value;
+    }
+
+    @Override public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AlertSet alertSet = (AlertSet) o;
+        return alertSlots.equals(alertSet.alertSlots);
+    }
+
+    @Override public int hashCode() {
+        return Objects.hash(alertSlots);
     }
 
     @Override

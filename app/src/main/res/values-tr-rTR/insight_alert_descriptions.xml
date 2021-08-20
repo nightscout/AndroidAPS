@@ -1,2 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="alert_r7_description"><![CDATA[Miktar: <b>%1$d%%</b>\nSüre: </b>%2$s st.</b>]]></string>
+    <string name="alert_w36_description"><![CDATA[Miktar: <b>%1$d%%</b><br/>Süre: <b>%2$s st.</b>]]></string>
+</resources>

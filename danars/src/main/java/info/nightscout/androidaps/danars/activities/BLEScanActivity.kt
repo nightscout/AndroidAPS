@@ -15,11 +15,11 @@ import android.widget.BaseAdapter
 import android.widget.TextView
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.danars.R
+import info.nightscout.androidaps.danars.databinding.DanarsBlescannerActivityBinding
+import info.nightscout.androidaps.danars.events.EventDanaRSDeviceChange
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.common.ble.BlePreCheck
-import info.nightscout.androidaps.danars.events.EventDanaRSDeviceChange
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import kotlinx.android.synthetic.main.danars_blescanner_activity.*
 import java.util.*
 import java.util.regex.Pattern
 import javax.inject.Inject
@@ -34,17 +34,20 @@ class BLEScanActivity : NoSplashAppCompatActivity() {
     private val devices = ArrayList<BluetoothDeviceItem>()
     private var bluetoothLeScanner: BluetoothLeScanner? = null
 
+    private lateinit var binding: DanarsBlescannerActivityBinding
+
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.danars_blescanner_activity)
+        binding = DanarsBlescannerActivityBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         blePreCheck.prerequisitesCheck(this)
 
         listAdapter = ListAdapter()
-        danars_blescanner_listview.emptyView = findViewById(R.id.danars_blescanner_nodevice)
-        danars_blescanner_listview.adapter = listAdapter
+        binding.blescannerListview.emptyView = binding.blescannerNodevice
+        binding.blescannerListview.adapter = listAdapter
         listAdapter?.notifyDataSetChanged()
     }
 
@@ -63,13 +66,17 @@ class BLEScanActivity : NoSplashAppCompatActivity() {
         stopScan()
     }
 
-    private fun startScan() {
-        if (bluetoothLeScanner != null) bluetoothLeScanner!!.startScan(mBleScanCallback)
-    }
+    private fun startScan() =
+        try {
+            bluetoothLeScanner?.startScan(mBleScanCallback)
+        } catch (e: IllegalStateException) {
+        } // ignore BT not on
 
-    private fun stopScan() {
-        if (bluetoothLeScanner != null) bluetoothLeScanner!!.stopScan(mBleScanCallback)
-    }
+    private fun stopScan() =
+        try {
+            bluetoothLeScanner?.stopScan(mBleScanCallback)
+        } catch (e: IllegalStateException) {
+        } // ignore BT not on
 
     private fun addBleDevice(device: BluetoothDevice?) {
         if (device == null || device.name == null || device.name == "") {
@@ -90,6 +97,7 @@ class BLEScanActivity : NoSplashAppCompatActivity() {
     }
 
     internal inner class ListAdapter : BaseAdapter() {
+
         override fun getCount(): Int = devices.size
         override fun getItem(i: Int): BluetoothDeviceItem = devices[i]
         override fun getItemId(i: Int): Long = 0
@@ -110,7 +118,8 @@ class BLEScanActivity : NoSplashAppCompatActivity() {
             return v!!
         }
 
-        private inner class ViewHolder internal constructor(v: View) : View.OnClickListener {
+        private inner class ViewHolder(v: View) : View.OnClickListener {
+
             private lateinit var item: BluetoothDeviceItem
             private val name: TextView = v.findViewById(R.id.ble_name)
             private val address: TextView = v.findViewById(R.id.ble_address)

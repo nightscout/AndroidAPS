@@ -1,0 +1,65 @@
+package info.nightscout.androidaps.plugins.insulin
+
+import dagger.android.AndroidInjector
+import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.R
+import info.nightscout.androidaps.interfaces.InsulinInterface
+import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.utils.resources.ResourceHelper
+import org.junit.Assert.assertEquals
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+import org.mockito.ArgumentMatchers.eq
+import org.mockito.Mock
+import org.mockito.Mockito.`when`
+import org.mockito.junit.MockitoJUnit
+import org.mockito.junit.MockitoRule
+
+class InsulinLyumjevPluginTest {
+
+    @get:Rule
+    val mockitoRule: MockitoRule = MockitoJUnit.rule()
+
+    private lateinit var sut: InsulinLyumjevPlugin
+
+    @Mock lateinit var resourceHelper: ResourceHelper
+    @Mock lateinit var rxBus: RxBusWrapper
+    @Mock lateinit var profileFunction: ProfileFunction
+    @Mock lateinit var aapsLogger: AAPSLogger
+
+    private var injector: HasAndroidInjector = HasAndroidInjector {
+        AndroidInjector {
+        }
+    }
+
+    @Before
+    fun setup() {
+        sut = InsulinLyumjevPlugin(injector, resourceHelper, profileFunction, rxBus, aapsLogger)
+    }
+
+    @Test
+    fun `simple peak test`() {
+        assertEquals(45, sut.peak)
+    }
+
+    @Test
+    fun getIdTest() {
+        assertEquals(InsulinInterface.InsulinType.OREF_LYUMJEV, sut.id)
+    }
+
+    @Test
+    fun commentStandardTextTest() {
+        `when`(resourceHelper.gs(eq(R.string.lyumjev))).thenReturn("Lyumjev")
+        assertEquals("Lyumjev", sut.commentStandardText())
+    }
+
+    @Test
+    fun getFriendlyNameTest() {
+        `when`(resourceHelper.gs(eq(R.string.lyumjev))).thenReturn("Lyumjev")
+        assertEquals("Lyumjev", sut.friendlyName)
+    }
+
+}

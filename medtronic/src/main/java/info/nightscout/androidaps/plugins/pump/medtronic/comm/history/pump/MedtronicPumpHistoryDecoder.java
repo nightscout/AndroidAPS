@@ -106,8 +106,10 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
                 int els = getUnsignedInt(elements);
 
                 for (int k = 0; k < (els - 2); k++) {
-                    listRawData.add(dataClear.get(counter));
-                    counter++;
+                    if (counter<1022) {
+                        listRawData.add(dataClear.get(counter));
+                        counter++;
+                    }
                 }
 
                 special = true;
@@ -515,8 +517,8 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
 
 
     private void decodePrime(PumpHistoryEntry entry) {
-        float amount = bitUtils.toInt(entry.getHead()[2], entry.getHead()[3]) / 10.0f;
-        float fixed = bitUtils.toInt(entry.getHead()[0], entry.getHead()[1]) / 10.0f;
+        float amount = ByteUtil.toInt(entry.getHead()[2], entry.getHead()[3]) / 10.0f;
+        float fixed = ByteUtil.toInt(entry.getHead()[0], entry.getHead()[1]) / 10.0f;
 
 //        amount = (double)(asUINT8(data[4]) << 2) / 40.0;
 //        programmedAmount = (double)(asUINT8(data[2]) << 2) / 40.0;

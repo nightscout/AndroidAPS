@@ -10,14 +10,13 @@
     <string name="label_xdrip_v2">AAPSv2</string>
     <string name="label_xdrip_cockpit">AAPS(Cockpit)</string>
     <string name="label_xdrip_steampunk">AAPS(Steampunk)</string>
+    <string name="label_digitalstyle">AAPS(DigitalStyle)</string>
     <string name="label_warning_sync">Nėra duomenų!</string>
     <string name="label_warning_old">Seni duomenys!</string>
     <string name="label_warning_since">Nuo %1$s</string>
     <string name="label_warning_sync_aaps">Sinchronizavimas su AAPS!</string>
     <string name="msg_warning_sync">Nėra duomenų nuo %1$s! Patikrinkite, ar AAPS telefone siunčia duomenis laikrodžiui</string>
     <string name="msg_warning_old">AAPS duomenys yra %1$s senumo! Patikrinkite sensorių, xDrip+, NS, AAPS konfigūratorių ar kt.!</string>
-    <string name="pref_on">Įjungti</string>
-    <string name="pref_off">Išjungti</string>
     <string name="pref_vibrate_on_bolus">Vibruoti, kai leidžiamas bolusas</string>
     <string name="pref_units_for_actions">Veiksmų vienetai</string>
     <string name="pref_show_date">Rodyti datą</string>
@@ -62,6 +61,8 @@
     <string name="pref_complication_tap_action">Elementų skirtuko veiksmai</string>
     <string name="pref_unicode_in_complications">Unikodas elementuose</string>
     <string name="pref_version">Versija:</string>
+    <string name="pref_moreWatchfaceSettings">Daugiau laikrodžio ekrano nustatymų</string>
+    <string name="pref_lookInYourWatchfaceConfiguration">Prašom žiūrėti Watchface konfigūraciją.</string>
     <string name="menu_tempt">LaikinasTikslas</string>
     <string name="menu_wizard">Vedlys</string>
     <string name="menu_bolus">Bolusas</string>
@@ -86,10 +87,7 @@
     <string name="action_preset_3">Ruošinys 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Užpildymo kiekis</string>
     <string name="action_confirm">PATVIRTINTI</string>
-    <string name="action_status_pump">POMPOS BŪKLĖ</string>
-    <string name="action_status_loop">CIKLO STATUSAS</string>
     <string name="action_timeshift">laiko postūmis</string>
-    <string name="action_tdd_weighted">BPD įvertinta</string>
     <string name="action_bolus">bolusas</string>
     <string name="status_pump">Pompa</string>
     <string name="status_loop">Ciklas</string>
@@ -98,12 +96,36 @@
     <string name="activity_carb">AV</string>
     <string name="activity_IOB">AIO</string>
     <string name="activity_no_status">nėra statuso</string>
-    <string name="unit_mg_dl">mg/dl</string>
-    <string name="unit_mmol_l">mmol/l</string>
-    <string name="unit_g" comment="Shortcut for ISO unit: gram">g</string>
-    <string name="unit_u" comment="Shortcut for: insulin Unit">vv</string>
-    <string name="unit_u_p_h" comment="Shortcut for: insulin Unit per Hour">Vv/val</string>
-    <string name="unit_h" comment="One letter shortcut for: Hour" maxLength="1">val</string>
-    <string name="unit_d" comment="One letter shortcut for: Day" maxLength="1">d.</string>
-    <string name="unit_w" comment="One letter shortcut for: Week" maxLength="1">s</string>
+    <string name="color_name_red">raudona</string>
+    <string name="color_name_pink">rožinė</string>
+    <string name="color_name_purple">violetinė</string>
+    <string name="color_name_deeppurple">tamsiai violetinė</string>
+    <string name="color_name_indigo">indigo</string>
+    <string name="color_name_blue">mėlyna</string>
+    <string name="color_name_lightblue">žydra</string>
+    <string name="color_name_cyan">ciano</string>
+    <string name="color_name_teal">žalsvai mėlyna</string>
+    <string name="color_name_green">žalia</string>
+    <string name="color_name_lightgreen">šviesiai žalia</string>
+    <string name="color_name_lime">gelsvai žalsva</string>
+    <string name="color_name_yellow">geltona</string>
+    <string name="color_name_amber">gintaro spalvos</string>
+    <string name="color_name_orange">oranžinė</string>
+    <string name="color_name_deeporange">tamsiai oranžinė</string>
+    <string name="color_name_brown">ruda</string>
+    <string name="color_name_gray">pilka</string>
+    <string name="color_name_bluegray">mėlynai pilka</string>
+    <string name="color_name_white">balta</string>
+    <string name="color_name_black">juoda</string>
+    <string name="color_name_multicolor">daug spalvų</string>
+    <string name="pref_vibrate_hourly">Vibruoti kas valandą</string>
+    <string name="pref_show_weeknumber">Rodyti savaitės numerį</string>
+    <string name="digitalstyle_pref_your_style">Jūsų stilius:</string>
+    <string name="digitalstyle_style_none">jokio stiliaus</string>
+    <string name="digitalstyle_style_minimal">minimalus stilius</string>
+    <string name="digitalstyle_style_shape">formos stilius</string>
+    <string name="digitalstyle_style_full">pilnas stilius</string>
+    <string name="digitalstyle_pref_your_color">Jūsų spalva:</string>
+    <string name="digitalstyle_pref_your_color_saturation">Jūsų spalvų sodrumas:</string>
+    <string name="digitalstyle_pref_your_color_opacity">Jūsų spalvų nepermatomumas:</string>
 </resources>

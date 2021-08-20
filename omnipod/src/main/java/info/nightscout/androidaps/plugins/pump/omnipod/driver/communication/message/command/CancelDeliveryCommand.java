@@ -60,6 +60,10 @@ public class CancelDeliveryCommand extends NonceResyncableMessageBlock {
         encode();
     }
 
+    public EnumSet<DeliveryType> getDeliveryTypes() {
+        return deliveryTypes.clone();
+    }
+
     @Override
     public String toString() {
         return "CancelDeliveryCommand{" +

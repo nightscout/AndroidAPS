@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/overview_statuslights"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="3dp"
     android:layout_marginBottom="3dp"
-    android:background="?android:attr/colorControlHighlight"
+    android:background="?attr/colorControlHighlight"
     android:orientation="horizontal"
     android:paddingTop="4dp"
     android:paddingBottom="4dp">
@@ -18,7 +19,7 @@
         android:scaleType="centerInside"
         android:scaleX="2"
         android:scaleY="2"
-        android:src="@drawable/ic_cp_age_canula" />
+        app:srcCompat="@drawable/ic_cp_age_canula" />
 
     <TextView
         android:id="@+id/careportal_canulaage"
@@ -37,7 +38,7 @@
         android:scaleType="centerInside"
         android:scaleX="1.8"
         android:scaleY="1.8"
-        android:src="@drawable/ic_cp_age_insulin" />
+        app:srcCompat="@drawable/ic_cp_age_insulin" />
 
     <TextView
         android:id="@+id/careportal_insulinage"
@@ -63,7 +64,7 @@
         android:scaleType="centerInside"
         android:scaleX="2"
         android:scaleY="2"
-        android:src="@drawable/ic_cp_age_sensor" />
+        app:srcCompat="@drawable/ic_cp_age_sensor" />
 
     <TextView
         android:id="@+id/careportal_sensorage"
@@ -82,7 +83,7 @@
         android:scaleType="centerInside"
         android:scaleX="2"
         android:scaleY="2"
-        android:src="@drawable/ic_cp_age_battery" />
+        app:srcCompat="@drawable/ic_cp_age_battery" />
 
     <TextView
         android:id="@+id/careportal_pbage"

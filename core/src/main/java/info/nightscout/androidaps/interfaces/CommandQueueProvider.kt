@@ -3,6 +3,7 @@ package info.nightscout.androidaps.interfaces
 import android.text.Spanned
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.queue.commands.CustomCommand
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.queue.commands.Command
 
@@ -33,6 +34,9 @@ interface CommandQueueProvider {
     fun setUserOptions(callback: Callback?): Boolean
     fun loadTDDs(callback: Callback?): Boolean
     fun loadEvents(callback: Callback?): Boolean
+    fun customCommand(customCommand: CustomCommand, callback: Callback?): Boolean
+    fun isCustomCommandRunning(customCommandType: Class<out CustomCommand>): Boolean
+    fun isCustomCommandInQueue(customCommandType: Class<out CustomCommand>): Boolean
     fun spannedStatus(): Spanned
     fun isThisProfileSet(profile: Profile): Boolean
 }

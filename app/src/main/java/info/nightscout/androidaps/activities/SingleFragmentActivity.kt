@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
@@ -13,7 +12,8 @@ import info.nightscout.androidaps.utils.locale.LocaleHelper
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import javax.inject.Inject
 
-class SingleFragmentActivity : DaggerAppCompatActivity() {
+class SingleFragmentActivity : DaggerAppCompatActivityWithResult() {
+
     @Inject lateinit var pluginStore: PluginStore
     @Inject lateinit var protectionCheck: ProtectionCheck
 

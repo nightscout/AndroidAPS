@@ -81,4 +81,6 @@
     <string name="common_on">Activado</string>
     <string name="common_off">Desactivado</string>
     <string name="pump_time_updated">Hora del infusor actualizada</string>
+    <string name="set_neutral_temps_title">Establecer basales temporales neutras</string>
+    <string name="set_neutral_temps_summary">Si está activado, cancelará un basal temporal antes del final de cada hora. Este método puede ayudar a evitar que algunas bombas pitan/vibran al final de la hora.</string>
 </resources>

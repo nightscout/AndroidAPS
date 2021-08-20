@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:startDestination="@id/fillPodInfoFragment">
+    <fragment
+        android:id="@+id/fillPodInfoFragment"
+        android:name="info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.activation.fragment.FillPodInfoFragment"
+        android:label="FillPodInfoFragment">
+        <action
+            android:id="@+id/action_fillPodInfoFragment_to_initializePodActionFragment"
+            app:destination="@id/initializePodActionFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/initializePodActionFragment"
+        android:name="info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.activation.fragment.InitializePodActionFragment"
+        android:label="initializePodActionFragment">
+        <action
+            android:id="@+id/action_initializePodActionFragment_to_attachPodInfoFragment"
+            app:destination="@id/attachPodInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/attachPodInfoFragment"
+        android:name="info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.activation.fragment.AttachPodInfoFragment"
+        android:label="AttachPodInfoFragment">
+        <action
+            android:id="@+id/action_attachPodInfoFragment_to_insertCannulaActionFragment"
+            app:destination="@id/insertCannulaActionFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/insertCannulaActionFragment"
+        android:name="info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.activation.fragment.InsertCannulaActionFragment"
+        android:label="InsertCannulaActionFragment">
+        <action
+            android:id="@+id/action_insertCannulaActionFragment_to_PodActivatedInfoFragment"
+            app:destination="@id/PodActivatedInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/PodActivatedInfoFragment"
+        android:name="info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.activation.fragment.PodActivatedInfoFragment"
+        android:label="PodActivatedInfoFragment" />
+</navigation>

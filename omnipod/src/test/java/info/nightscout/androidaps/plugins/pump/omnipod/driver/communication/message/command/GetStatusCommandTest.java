@@ -24,7 +24,7 @@ public class GetStatusCommandTest {
 
     @Test
     public void testPodInfoTypeFaultEvents() {
-        GetStatusCommand getStatusCommand = new GetStatusCommand(PodInfoType.FAULT_EVENT);
+        GetStatusCommand getStatusCommand = new GetStatusCommand(PodInfoType.DETAILED_STATUS);
 
         assertArrayEquals(ByteUtil.fromHexString("0e0102"), getStatusCommand.getRawData());
     }

@@ -33,11 +33,11 @@ public class PlusMinusEditText implements View.OnKeyListener,
     boolean allowZero = false;
     boolean roundRobin;
 
-    private Handler mHandler;
+    private final Handler mHandler;
     private ScheduledExecutorService mUpdater;
 
     private class UpdateCounterTask implements Runnable {
-        private boolean mInc;
+        private final boolean mInc;
         private int repeated = 0;
         private int multiplier = 1;
 
@@ -70,9 +70,9 @@ public class PlusMinusEditText implements View.OnKeyListener,
     }
 
     public PlusMinusEditText(View view, int editTextID, int plusID, int minusID, Double initValue, Double minValue, Double maxValue, Double step, NumberFormat formater, boolean allowZero, boolean roundRobin) {
-        editText = (TextView) view.findViewById(editTextID);
-        minusImage = (ImageView) view.findViewById(minusID);
-        plusImage = (ImageView) view.findViewById(plusID);
+        editText = view.findViewById(editTextID);
+        minusImage = view.findViewById(minusID);
+        plusImage = view.findViewById(plusID);
 
         this.value = initValue;
         this.minValue = minValue;

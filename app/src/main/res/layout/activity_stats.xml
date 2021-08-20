@@ -48,21 +48,21 @@
             android:padding="5dp" />
 
         <TextView
-            android:id="@+id/stats_tdds"
+            android:id="@+id/tdds"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <TextView
-            android:id="@+id/stats_tir"
+            android:id="@+id/tir"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <TextView
-            android:id="@+id/stats_activity"
+            android:id="@+id/activity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -79,7 +79,7 @@
             android:paddingBottom="8dp">
 
             <Button
-                android:id="@+id/stats_reset"
+                android:id="@+id/reset"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_marginEnd="8dp"

@@ -23,6 +23,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.CobInfo
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentService
 import info.nightscout.androidaps.queue.Callback
@@ -37,6 +38,8 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
@@ -160,6 +163,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         `when`(virtualPumpPlugin.shortStatus(ArgumentMatchers.anyBoolean())).thenReturn("Virtual Pump")
         `when`(virtualPumpPlugin.isSuspended).thenReturn(false)
         `when`(virtualPumpPlugin.pumpDescription).thenReturn(PumpDescription())
+        `when`(virtualPumpPlugin.model()).thenReturn(PumpType.GenericAAPS);
 
         `when`(treatmentsPlugin.lastCalculationTreatments).thenReturn(IobTotal(0))
         `when`(treatmentsPlugin.lastCalculationTempBasals).thenReturn(IobTotal(0))
@@ -186,6 +190,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         `when`(resourceHelper.gs(R.string.smscommunicator_loopisdisabled)).thenReturn("Loop is disabled")
         `when`(resourceHelper.gs(R.string.smscommunicator_loopisenabled)).thenReturn("Loop is enabled")
         `when`(resourceHelper.gs(R.string.wrongformat)).thenReturn("Wrong format")
+        `when`(resourceHelper.gs(eq(R.string.wrongTbrDuration), any())).thenAnswer({ i: InvocationOnMock -> "TBR duration must be a multiple of " + i.getArguments()[1] + " minutes and greater than 0."})
         `when`(resourceHelper.gs(R.string.smscommunicator_loophasbeendisabled)).thenReturn("Loop has been disabled")
         `when`(resourceHelper.gs(R.string.smscommunicator_loophasbeenenabled)).thenReturn("Loop has been enabled")
         `when`(resourceHelper.gs(R.string.smscommunicator_tempbasalcanceled)).thenReturn("Temp basal canceled")
@@ -777,19 +782,26 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         sms = Sms("1234", "BASAL 10% 0")
         smsCommunicatorPlugin.processSms(sms)
         Assert.assertEquals("BASAL 10% 0", smsCommunicatorPlugin.messages[0].text)
-        Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
-        `when`(constraintChecker.applyBasalPercentConstraints(anyObject(), anyObject())).thenReturn(Constraint<Int>(20))
+        Assert.assertEquals("TBR duration must be a multiple of 30 minutes and greater than 0.", smsCommunicatorPlugin.messages[1].text)
 
         //BASAL 20% 20
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "BASAL 20% 20")
         smsCommunicatorPlugin.processSms(sms)
         Assert.assertEquals("BASAL 20% 20", smsCommunicatorPlugin.messages[0].text)
-        Assert.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("To start basal 20% for 20 min reply with code"))
+        Assert.assertEquals("TBR duration must be a multiple of 30 minutes and greater than 0.", smsCommunicatorPlugin.messages[1].text)
+        `when`(constraintChecker.applyBasalPercentConstraints(anyObject(), anyObject())).thenReturn(Constraint<Int>(20))
+
+        //BASAL 20% 30
+        smsCommunicatorPlugin.messages = ArrayList()
+        sms = Sms("1234", "BASAL 20% 30")
+        smsCommunicatorPlugin.processSms(sms)
+        Assert.assertEquals("BASAL 20% 30", smsCommunicatorPlugin.messages[0].text)
+        Assert.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("To start basal 20% for 30 min reply with code"))
         passCode = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
         Assert.assertEquals(passCode, smsCommunicatorPlugin.messages[2].text)
-        Assert.assertEquals("Temp basal 20% for 20 min started successfully\nVirtual Pump", smsCommunicatorPlugin.messages[3].text)
+        Assert.assertEquals("Temp basal 20% for 30 min started successfully\nVirtual Pump", smsCommunicatorPlugin.messages[3].text)
 
         //BASAL a
         smsCommunicatorPlugin.messages = ArrayList()
@@ -803,7 +815,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         sms = Sms("1234", "BASAL 1 0")
         smsCommunicatorPlugin.processSms(sms)
         Assert.assertEquals("BASAL 1 0", smsCommunicatorPlugin.messages[0].text)
-        Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
+        Assert.assertEquals("TBR duration must be a multiple of 30 minutes and greater than 0.", smsCommunicatorPlugin.messages[1].text)
         `when`(constraintChecker.applyBasalConstraints(anyObject(), anyObject())).thenReturn(Constraint<Double>(1.0))
 
         //BASAL 1 20
@@ -811,11 +823,19 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         sms = Sms("1234", "BASAL 1 20")
         smsCommunicatorPlugin.processSms(sms)
         Assert.assertEquals("BASAL 1 20", smsCommunicatorPlugin.messages[0].text)
-        Assert.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("To start basal 1.00U/h for 20 min reply with code"))
+        Assert.assertEquals("TBR duration must be a multiple of 30 minutes and greater than 0.", smsCommunicatorPlugin.messages[1].text)
+        `when`(constraintChecker.applyBasalConstraints(anyObject(), anyObject())).thenReturn(Constraint<Double>(1.0))
+
+        //BASAL 1 30
+        smsCommunicatorPlugin.messages = ArrayList()
+        sms = Sms("1234", "BASAL 1 30")
+        smsCommunicatorPlugin.processSms(sms)
+        Assert.assertEquals("BASAL 1 30", smsCommunicatorPlugin.messages[0].text)
+        Assert.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("To start basal 1.00U/h for 30 min reply with code"))
         passCode = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
         Assert.assertEquals(passCode, smsCommunicatorPlugin.messages[2].text)
-        Assert.assertEquals("Temp basal 1.00U/h for 20 min started successfully\nVirtual Pump", smsCommunicatorPlugin.messages[3].text)
+        Assert.assertEquals("Temp basal 1.00U/h for 30 min started successfully\nVirtual Pump", smsCommunicatorPlugin.messages[3].text)
     }
 
     @Test fun processExtendedTest() {

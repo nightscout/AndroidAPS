@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="objectives_button_back">Voltar</string>
     <string name="objectives_button_start">Iniciar</string>
     <string name="objectives_button_verify">Verificar</string>
     <string name="nth_objective">%1$d. Objectivo</string>
@@ -22,7 +21,6 @@
     <string name="objectives_smb_objective">Activando recursos adicionais para uso durante o dia, como SMB</string>
     <string name="objectives_auto_objective">A activar a automação</string>
     <string name="objectives_smb_gate">Deverá ler a wiki e aumentar a IOB máx para que os SMBs funcionem devidamente! Inicialmente poderá considerar maxIOB=média dos bólus + 3 x a basal máxima</string>
-    <string name="objectives_auto_gate">Leia os documentos de como a automação funciona. Configure primeiro regras simples. Em vez de acção deixe AAPS apresentar apenas a notificação. Quando tem certeza de automação é accionada no momento certo substitua a notificação por acção real. (https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">Glic disponível no NS</string>
     <string name="objectives_pumpstatusavailableinns">Estado da Bomba disponível no NS</string>
     <string name="objectives_manualenacts">Execução manual</string>
@@ -30,18 +28,16 @@
     <string name="objectives_usage_objective">Aprenda como controlar AndroidAPS</string>
     <string name="objectives_usage_gate">Executar diferentes acções no AndroidAPS</string>
     <string name="objectives_useprofileswitch">Definir perfil de 90% por 10 min (pressione longo no nome de perfil na Visão Geral)</string>
-    <string name="objectives_usedisconnectpump">Simular chuveiro. Desligar a bomba de 1h (Pressione longo em Open Loop)</string>
+    <string name="objectives_usedisconnectpump">Simular chuveiro. Desconectar a bomba por 1h (Pressione longo em Open Loop)</string>
     <string name="objectives_usereconnectpump">... e volte a ligar de volta da mesma forma</string>
     <string name="objectives_usetemptarget">Crie um alvo temporário personalizado com 10 min de duração (pressione longo no seu alvo actual)</string>
     <string name="objectives_useactions">No Configurador active o plugiin de Acções, torne-o visível e exiba o seu conteúdo no menu superior</string>
     <string name="objectives_useloop">Mostrar conteúdo do plugin Loop</string>
     <string name="objectives_usescale">Utilizar a função de escala premindo longamente gráfico Glic</string>
     <string name="objectives_button_enter">Inserir</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Se tiver pelo menos 3 meses de experiência com Close Loop com outros sistemas, pode-se qualificar para um código para ignorar objectivos. Ver https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives para mais detalhes.</string>
     <string name="codeaccepted">Código aceite</string>
     <string name="codeinvalid">Código inválido</string>
     <string name="objectives_exam_objective">Prove seu conhecimento</string>
-    <string name="objectives_exam_gate">Estude e responda as perguntas correctamente</string>
     <string name="answerdisabledto">Responder desactivado até: %1$s</string>
     <string name="wronganswer">Resposta errada!</string>
     <string name="unfinshed_button">Próximo inacabado</string>
@@ -54,16 +50,4 @@
     <string name="notconnected">Não está ligado à internet</string>
     <string name="failedretrievetime">Falha ao recuperar tempo</string>
     <string name="requirementnotmet">Requisitos de objectivo não cumpridos</string>
-    <plurals name="objective_days">
-        <item quantity="one">%1$d dia</item>
-        <item quantity="other">%1$d dias</item>
-    </plurals>
-    <plurals name="objective_hours">
-        <item quantity="one">%1$d hora</item>
-        <item quantity="other">%1$d horas</item>
-    </plurals>
-    <plurals name="objective_minutes">
-        <item quantity="one">%1$d minuto</item>
-        <item quantity="other">%1$d minutos</item>
-    </plurals>
 </resources>

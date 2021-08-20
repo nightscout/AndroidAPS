@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.pump.common.utils;
 import org.joda.time.LocalDateTime;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,7 @@ public class StringUtil {
         if (ra == null)
             return "null array";
         else
-            return new String(ra, Charset.forName("UTF-8"));
+            return new String(ra, StandardCharsets.UTF_8);
     }
 
 

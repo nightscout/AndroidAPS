@@ -11,7 +11,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 
 class SWEventListener constructor(
-    injector:HasAndroidInjector,
+    injector: HasAndroidInjector,
     clazz: Class<out EventStatus>
 ) : SWItem(injector, Type.LISTENER) {
 
@@ -19,6 +19,7 @@ class SWEventListener constructor(
     private var textLabel = 0
     private var status = ""
     private var textView: TextView? = null
+    private var visibilityValidator: SWValidator? = null
 
     // TODO: Adrian how to clear disposable in this case?
     init {
@@ -43,6 +44,11 @@ class SWEventListener constructor(
         return this
     }
 
+    fun visibility(visibilityValidator: SWValidator): SWEventListener {
+        this.visibilityValidator = visibilityValidator
+        return this
+    }
+
     @SuppressLint("SetTextI18n")
     override fun generateDialog(layout: LinearLayout) {
         val context = layout.context
@@ -50,5 +56,9 @@ class SWEventListener constructor(
         textView?.id = View.generateViewId()
         textView?.text = (if (textLabel != 0) resourceHelper.gs(textLabel) else "") + " " + status
         layout.addView(textView)
+    }
+
+    override fun processVisibility() {
+        if (visibilityValidator != null && !visibilityValidator!!.isValid) textView?.visibility = View.GONE else textView?.visibility = View.VISIBLE
     }
 }

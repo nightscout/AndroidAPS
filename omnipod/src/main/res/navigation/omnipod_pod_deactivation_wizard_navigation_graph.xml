@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:startDestination="@id/deactivatePodInfoFragment">
+    <fragment
+        android:id="@+id/deactivatePodInfoFragment"
+        android:name="info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.deactivation.fragment.DeactivatePodInfoFragment"
+        android:label="DeactivatePodInfoFragment">
+        <action
+            android:id="@+id/action_deactivatePodInfoFragment_to_deactivatePodActionFragment"
+            app:destination="@id/deactivatePodActionFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/deactivatePodActionFragment"
+        android:name="info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.deactivation.fragment.DeactivatePodActionFragment"
+        android:label="DeactivatePodActionFragment">
+        <action
+            android:id="@+id/action_deactivatePodActionFragment_to_podDeactivatedInfoFragment"
+            app:destination="@id/podDeactivatedInfoFragment" />
+        <action
+            android:id="@+id/action_deactivatePodActionFragment_to_podDiscardedInfoFragment"
+            app:destination="@id/podDiscardedInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/podDeactivatedInfoFragment"
+        android:name="info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.deactivation.fragment.PodDeactivatedInfoFragment"
+        android:label="PodDeactivatedInfoFragment" />
+    <fragment
+        android:id="@+id/podDiscardedInfoFragment"
+        android:name="info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.deactivation.fragment.PodDiscardedInfoFragment"
+        android:label="PodDiscardedInfoFragment" />
+</navigation>

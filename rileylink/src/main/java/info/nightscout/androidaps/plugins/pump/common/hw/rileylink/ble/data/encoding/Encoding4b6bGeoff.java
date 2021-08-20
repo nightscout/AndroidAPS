@@ -19,7 +19,7 @@ public class Encoding4b6bGeoff extends Encoding4b6bAbstract {
     public static final Logger LOG = StacktraceLoggerWrapper.getLogger(Encoding4b6bGeoff.class);
 
 
-    public byte[] encode4b6b(byte[] data) {
+    @Override public byte[] encode4b6b(byte[] data) {
         // if ((data.length % 2) != 0) {
         // LOG.error("Warning: data is odd number of bytes");
         // }
@@ -77,7 +77,7 @@ public class Encoding4b6bGeoff extends Encoding4b6bAbstract {
      * @return
      * @throws NumberFormatException
      */
-    public byte[] decode4b6b(byte[] raw) throws RileyLinkCommunicationException {
+    @Override public byte[] decode4b6b(byte[] raw) throws RileyLinkCommunicationException {
 
         StringBuilder errorMessageBuilder = new StringBuilder();
 

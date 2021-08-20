@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
@@ -37,7 +38,7 @@
         android:layout_height="35dp"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="15dp"
-        android:src="@drawable/ic_add" />
+        app:srcCompat="@drawable/ic_add" />
 
     <ImageView
         android:id="@+id/timelistedit_remove"
@@ -45,5 +46,5 @@
         android:layout_height="35dp"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="15dp"
-        android:src="@drawable/ic_remove" />
+        app:srcCompat="@drawable/ic_remove" />
 </LinearLayout>

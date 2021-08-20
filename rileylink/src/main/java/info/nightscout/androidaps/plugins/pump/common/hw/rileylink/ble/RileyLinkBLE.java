@@ -35,6 +35,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLin
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.ThreadUtil;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 /**
  * Created by geoff on 5/26/16.
@@ -46,16 +47,17 @@ public class RileyLinkBLE {
     @Inject AAPSLogger aapsLogger;
     @Inject RileyLinkServiceData rileyLinkServiceData;
     @Inject RileyLinkUtil rileyLinkUtil;
+    @Inject SP sp;
 
     private final Context context;
-    private boolean gattDebugEnabled = true;
+    private final boolean gattDebugEnabled = true;
     private boolean manualDisconnect = false;
-    private BluetoothAdapter bluetoothAdapter;
-    private BluetoothGattCallback bluetoothGattCallback;
+    private final BluetoothAdapter bluetoothAdapter;
+    private final BluetoothGattCallback bluetoothGattCallback;
     private BluetoothDevice rileyLinkDevice;
     private BluetoothGatt bluetoothConnectionGatt = null;
     private BLECommOperation mCurrentOperation;
-    private Semaphore gattOperationSema = new Semaphore(1, true);
+    private final Semaphore gattOperationSema = new Semaphore(1, true);
     private Runnable radioResponseCountNotified;
     private boolean mIsConnected = false;
 
@@ -151,8 +153,8 @@ public class RileyLinkBLE {
 
                 } else if ((newState == BluetoothProfile.STATE_CONNECTING) || //
                         (newState == BluetoothProfile.STATE_DISCONNECTING)) {
-                    aapsLogger.debug(LTag.PUMPBTCOMM,"We are in {} state.", status == BluetoothProfile.STATE_CONNECTING ? "Connecting" :
-                     "Disconnecting");
+                    aapsLogger.debug(LTag.PUMPBTCOMM, "We are in {} state.", status == BluetoothProfile.STATE_CONNECTING ? "Connecting" :
+                            "Disconnecting");
                 } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                     rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkDisconnected, context);
                     if (manualDisconnect)
@@ -392,6 +394,17 @@ public class RileyLinkBLE {
             if (gattDebugEnabled) {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "Gatt Connected.");
             }
+
+            String deviceName = bluetoothConnectionGatt.getDevice().getName();
+            if (StringUtils.isNotEmpty(deviceName)) {
+                // Update stored name upon connecting (also for backwards compatibility for device where a name was not yet stored)
+                sp.putString(RileyLinkConst.Prefs.RileyLinkName, deviceName);
+            } else {
+                sp.remove(RileyLinkConst.Prefs.RileyLinkName);
+            }
+
+            rileyLinkServiceData.rileyLinkName = deviceName;
+            rileyLinkServiceData.rileyLinkAddress = bluetoothConnectionGatt.getDevice().getAddress();
         }
     }
 

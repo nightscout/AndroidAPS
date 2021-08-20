@@ -1,12 +1,18 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks;
 
+import javax.inject.Inject;
+
 import dagger.android.HasAndroidInjector;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpDevice;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.data.ServiceTransport;
 
 /**
  * Created by geoff on 7/9/16.
  */
 public class ServiceTask implements Runnable {
+
+    @Inject protected ActivePluginProvider activePlugin;
 
     public boolean completed = false;
     protected ServiceTransport mTransport;
@@ -56,4 +62,10 @@ public class ServiceTask implements Runnable {
      * RoundtripService.getInstance().sendServiceTransportResponse(mTransport,result);
      * }
      */
+
+    public boolean isRileyLinkDevice() {
+        return (activePlugin.getActivePump() instanceof RileyLinkPumpDevice);
+    }
+
+
 }

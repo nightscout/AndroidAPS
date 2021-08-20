@@ -52,7 +52,7 @@ import io.reactivex.schedulers.Schedulers;
 // When using this class, make sure that your first step is to create mConnection (see MedtronicPumpPlugin)
 
 public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpInterface, ConstraintsInterface {
-    private CompositeDisposable disposable = new CompositeDisposable();
+    private final CompositeDisposable disposable = new CompositeDisposable();
 
     protected HasAndroidInjector injector;
     protected AAPSLogger aapsLogger;

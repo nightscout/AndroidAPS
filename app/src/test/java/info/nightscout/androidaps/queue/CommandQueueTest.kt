@@ -11,6 +11,7 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.queue.commands.CustomCommand
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.commands.Command
@@ -191,5 +192,93 @@ class CommandQueueTest : TestBaseWithProfile() {
         // then
         Assert.assertFalse(queued)
         Assert.assertEquals(commandQueue.size(), 0)
+    }
+
+    @Test
+    fun isCustomCommandRunning() {
+        // given
+        Assert.assertEquals(0, commandQueue.size())
+
+        // when
+        val queued1 = commandQueue.customCommand(CustomCommand1(), null)
+        val queued2 = commandQueue.customCommand(CustomCommand2(), null)
+        commandQueue.pickup()
+
+        // then
+        Assert.assertTrue(queued1)
+        Assert.assertTrue(queued2)
+        Assert.assertTrue(commandQueue.isCustomCommandInQueue(CustomCommand1::class.java))
+        Assert.assertTrue(commandQueue.isCustomCommandInQueue(CustomCommand2::class.java))
+        Assert.assertFalse(commandQueue.isCustomCommandInQueue(CustomCommand3::class.java))
+
+        Assert.assertTrue(commandQueue.isCustomCommandRunning(CustomCommand1::class.java))
+        Assert.assertFalse(commandQueue.isCustomCommandRunning(CustomCommand2::class.java))
+        Assert.assertFalse(commandQueue.isCustomCommandRunning(CustomCommand3::class.java))
+
+
+        Assert.assertEquals(1, commandQueue.size())
+    }
+
+    @Test
+    fun isCustomCommandInQueue() {
+        // given
+        Assert.assertEquals(0, commandQueue.size())
+
+        // when
+        val queued1 = commandQueue.customCommand(CustomCommand1(), null)
+        val queued2 = commandQueue.customCommand(CustomCommand2(), null)
+
+        // then
+        Assert.assertTrue(queued1)
+        Assert.assertTrue(queued2)
+        Assert.assertTrue(commandQueue.isCustomCommandInQueue(CustomCommand1::class.java))
+        Assert.assertTrue(commandQueue.isCustomCommandInQueue(CustomCommand2::class.java))
+        Assert.assertFalse(commandQueue.isCustomCommandInQueue(CustomCommand3::class.java))
+        Assert.assertEquals(2, commandQueue.size())
+    }
+
+    @Test
+    fun differentCustomCommandsAllowed() {
+        // given
+        Assert.assertEquals(0, commandQueue.size())
+
+        // when
+        val queued1 = commandQueue.customCommand(CustomCommand1(), null)
+        val queued2 = commandQueue.customCommand(CustomCommand2(), null)
+
+        // then
+        Assert.assertTrue(queued1)
+        Assert.assertTrue(queued2)
+        Assert.assertEquals(2, commandQueue.size())
+    }
+
+    @Test
+    fun sameCustomCommandNotAllowed() {
+        // given
+        Assert.assertEquals(0, commandQueue.size())
+
+        // when
+        val queued1 = commandQueue.customCommand(CustomCommand1(), null)
+        val queued2 = commandQueue.customCommand(CustomCommand1(), null)
+
+        // then
+        Assert.assertTrue(queued1)
+        Assert.assertFalse(queued2)
+        Assert.assertEquals(1, commandQueue.size())
+    }
+
+    private class CustomCommand1 : CustomCommand {
+        override val statusDescription: String
+            get() = "CUSTOM COMMAND 1"
+    }
+
+    private class CustomCommand2 : CustomCommand {
+        override val statusDescription: String
+            get() = "CUSTOM COMMAND 2"
+    }
+
+    private class CustomCommand3 : CustomCommand {
+        override val statusDescription: String
+            get() = "CUSTOM COMMAND 3"
     }
 }

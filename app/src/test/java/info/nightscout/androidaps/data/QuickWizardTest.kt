@@ -2,6 +2,7 @@ package info.nightscout.androidaps.data
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -56,7 +57,7 @@ class QuickWizardTest : TestBase() {
     fun mock() {
         PowerMockito.mockStatic(Profile::class.java)
         PowerMockito.`when`<Any>(Profile::class.java, "secondsFromMidnight").thenReturn(0)
-        `when`(sp.getString("QuickWizard", "[]")).thenReturn("[]")
+        `when`(sp.getString(R.string.key_quickwizard, "[]")).thenReturn("[]")
         quickWizard = QuickWizard(sp, injector)
     }
 

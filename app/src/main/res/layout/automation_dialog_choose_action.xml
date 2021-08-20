@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -25,10 +26,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/please_choose_an_action_type"
-                android:src="@drawable/ic_action_orange_48dp" />
+                app:srcCompat="@drawable/ic_action_orange_48dp" />
 
             <TextView
-                android:id="@+id/actions_care_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -49,10 +49,10 @@
             android:padding="5dp" />
 
         <RadioGroup
-            android:id="@+id/automation_radioGroup"
+            android:id="@+id/radioGroup"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="10dp"/>
+            android:padding="10dp" />
 
         <include layout="@layout/okcancel" />
 

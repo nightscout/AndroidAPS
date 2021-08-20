@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.danar;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,9 +10,9 @@ import java.util.Date;
 import java.util.List;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.dana.DanaPumpInterface;
 import info.nightscout.androidaps.dana.DanaFragment;
 import info.nightscout.androidaps.dana.DanaPump;
+import info.nightscout.androidaps.dana.DanaPumpInterface;
 import info.nightscout.androidaps.dana.comm.RecordTypes;
 import info.nightscout.androidaps.danar.services.AbstractDanaRExecutionService;
 import info.nightscout.androidaps.data.Profile;
@@ -37,6 +38,7 @@ import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
+import info.nightscout.androidaps.queue.commands.CustomCommand;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
@@ -83,6 +85,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
         super(new PluginDescription()
                         .mainType(PluginType.PUMP)
                         .fragmentClass(DanaFragment.class.getName())
+                        .pluginIcon(R.drawable.ic_danars_128)
                         .pluginName(R.string.danarspump)
                         .shortName(R.string.danarpump_shortname)
                         .preferencesId(R.xml.pref_danar)
@@ -358,7 +361,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     }
 
     @Override
-    public void getPumpStatus() {
+    public void getPumpStatus(String reason) {
         if (sExecutionService != null) {
             sExecutionService.getPumpStatus();
             pumpDescription.basalStep = danaPump.getBasalStep();
@@ -511,7 +514,10 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
 
     @Override
     public void executeCustomAction(CustomActionType customActionType) {
+    }
 
+    @Nullable @Override public PumpEnactResult executeCustomCommand(CustomCommand customCommand) {
+        return null;
     }
 
     @Override

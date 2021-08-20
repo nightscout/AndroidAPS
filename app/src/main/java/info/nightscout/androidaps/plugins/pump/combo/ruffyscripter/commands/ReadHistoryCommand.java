@@ -21,7 +21,7 @@ import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.Tbr;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.Tdd;
 
 public class ReadHistoryCommand extends BaseCommand {
-    private static Logger log = StacktraceLoggerWrapper.getLogger(ReadHistoryCommand.class);
+    private static final Logger log = StacktraceLoggerWrapper.getLogger(ReadHistoryCommand.class);
 
     private final PumpHistoryRequest request;
     private final PumpHistory history = new PumpHistory();

@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.interfaces;
 
+import androidx.annotation.Nullable;
+
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
@@ -11,7 +13,9 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
+import info.nightscout.androidaps.queue.commands.CustomCommand;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
+import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.utils.TimeChangeType;
 
 /**
@@ -39,7 +43,7 @@ public interface PumpInterface {
 
     void stopConnecting();
 
-    void getPumpStatus();
+    void getPumpStatus(String reason);
 
     // Upload to pump new basal profile
     @NotNull
@@ -105,9 +109,31 @@ public interface PumpInterface {
 
     boolean canHandleDST();
 
+    /**
+     * Provides a list of custom actions to be displayed in the Actions tab.
+     * Plese note that these actions will not be queued upon execution
+     *
+     * @return list of custom actions
+     */
+    @Nullable
     List<CustomAction> getCustomActions();
 
+    /**
+     * Executes a custom action. Please note that these actions will not be queued
+     *
+     * @param customActionType action to be executed
+     */
     void executeCustomAction(CustomActionType customActionType);
+
+    /**
+     * Executes a custom queued command
+     * See {@link CommandQueueProvider#customCommand(CustomCommand, Callback)} for queuing a custom command.
+     *
+     * @param customCommand the custom command to be executed
+     * @return PumpEnactResult that represents the command execution result
+     */
+    @Nullable
+    PumpEnactResult executeCustomCommand(CustomCommand customCommand);
 
     /**
      * This method will be called when time or Timezone changes, and pump driver can then do a specific action (for

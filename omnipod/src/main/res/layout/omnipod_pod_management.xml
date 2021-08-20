@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/omnipod_pod_management"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="10dp"
+        android:layout_weight="0.5"
+        android:gravity="center"
+        android:text="@string/omnipod_pod_management_title"
+        android:textAlignment="center"
+        android:textSize="12pt"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:id="@+id/omnipod_pod_management_waiting_for_rl_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="25dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="0.5"
+            android:gravity="center"
+            android:text="@string/omnipod_pod_management_waiting_for_rileylink_connection"
+            android:textAlignment="center"
+            android:textSize="8pt" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="15dp"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
+        android:text="@string/omnipod_pod_management_heading_actions" />
+
+    <LinearLayout
+        android:id="@+id/action_buttons_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp">
+
+        <info.nightscout.androidaps.utils.ui.SingleClickButton
+            android:id="@+id/omnipod_pod_management_button_activate_pod"
+            style="?android:attr/buttonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="0.5"
+            android:drawableTop="@drawable/ic_pod_management_activate_pod"
+            android:text="@string/omnipod_pod_management_button_activate_pod"
+            android:textAllCaps="false" />
+
+
+        <info.nightscout.androidaps.utils.ui.SingleClickButton
+            android:id="@+id/omnipod_pod_management_button_deactivate_pod"
+            style="?android:attr/buttonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="0.5"
+            android:drawableTop="@drawable/ic_pod_management_deactivate_pod"
+            android:text="@string/omnipod_pod_management_button_deactivate_pod"
+            android:textAllCaps="false" />
+    </LinearLayout>
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp">
+
+        <Button
+            android:id="@+id/omnipod_pod_management_button_play_test_beep"
+            style="?android:attr/buttonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="0.5"
+            android:drawableTop="@drawable/ic_pod_management_play_test_beep"
+            android:text="@string/omnipod_pod_management_button_play_test_beep"
+            android:textAllCaps="false" />
+
+
+        <info.nightscout.androidaps.utils.ui.SingleClickButton
+            android:id="@+id/omnipod_pod_management_button_discard_pod"
+            style="?android:attr/buttonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="0.5"
+            android:drawableTop="@drawable/ic_pod_management_discard_pod"
+            android:text="@string/omnipod_pod_management_button_discard_pod"
+            android:textAllCaps="false"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="15dp"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
+        android:text="@string/omnipod_pod_management_heading_tools" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp">
+
+        <info.nightscout.androidaps.utils.ui.SingleClickButton
+            android:id="@+id/omnipod_pod_management_button_pod_history"
+            style="?android:attr/buttonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="0.5"
+            android:drawableTop="@drawable/ic_pod_management_pod_history"
+            android:text="@string/omnipod_pod_management_button_pod_history"
+            android:textAllCaps="false" />
+
+        <info.nightscout.androidaps.utils.ui.SingleClickButton
+            android:id="@+id/omnipod_pod_management_button_rileylink_stats"
+            style="?android:attr/buttonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="0.5"
+            android:drawableTop="@drawable/ic_pod_management_rl_stats"
+            android:text="@string/omnipod_pod_management_button_riley_link_stats"
+            android:textAllCaps="false"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp">
+
+        <Button
+            android:id="@+id/omnipod_pod_management_button_pulse_log"
+            style="?android:attr/buttonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="0.5"
+            android:drawableTop="@drawable/ic_pod_management_pulse_log"
+            android:text="@string/omnipod_pod_management_button_read_pulse_log"
+            android:textAllCaps="false"
+            android:visibility="gone" />
+
+        <info.nightscout.androidaps.utils.ui.SingleClickButton
+            android:id="@+id/omnipod_pod_management_button_reset_rileylink_config"
+            style="?android:attr/buttonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="0.5"
+            android:drawableTop="@drawable/ic_pod_activity_reset_rileylink_config"
+            android:text="@string/omnipod_pod_management_button_reset_riley_link_config"
+            android:textAllCaps="false" />
+
+    </LinearLayout>
+
+</LinearLayout>

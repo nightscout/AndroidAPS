@@ -6,11 +6,11 @@ package info.nightscout.androidaps.plugins.pump.common.data;
 
 public class DoseSettings {
 
-    private double step;
-    private int durationStep;
-    private int maxDuration;
-    private double minDose;
-    private Double maxDose;
+    private final double step;
+    private final int durationStep;
+    private final int maxDuration;
+    private final double minDose;
+    private final Double maxDose;
 
     public DoseSettings(double step, int durationStep, int maxDuration, double minDose, Double maxDose)
     {

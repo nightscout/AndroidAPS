@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
@@ -10,7 +11,7 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_margin="4dp"
-        android:src="@drawable/ic_toast_check" />
+        app:srcCompat="@drawable/ic_toast_check" />
 
     <ImageView
         android:id="@+id/summary_icon"
@@ -19,7 +20,7 @@
         android:layout_marginTop="4dp"
         android:layout_marginRight="4dp"
         android:layout_marginBottom="4dp"
-        android:src="@drawable/ic_meta_format"
+        app:srcCompat="@drawable/ic_meta_format"
         android:tint="#ffffff" />
 
     <TextView

@@ -27,6 +27,7 @@ class TomatoPlugin @Inject constructor(
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
+    .pluginIcon(R.drawable.ic_sensor)
     .pluginName(R.string.tomato)
     .preferencesId(R.xml.pref_bgsource)
     .shortName(R.string.tomato_short)

@@ -37,7 +37,7 @@ public class NSClientFragment extends DaggerFragment implements View.OnClickList
     @Inject UploadQueue uploadQueue;
     @Inject FabricPrivacy fabricPrivacy;
 
-    private CompositeDisposable disposable = new CompositeDisposable();
+    private final CompositeDisposable disposable = new CompositeDisposable();
 
     private TextView logTextView;
     private TextView queueTextView;

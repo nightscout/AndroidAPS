@@ -55,6 +55,8 @@ public interface TreatmentsInterface {
 
     NonOverlappingIntervals<TemporaryBasal> getTemporaryBasalsFromHistory();
 
+    void removeTempBasal(TemporaryBasal temporaryBasal);
+
     boolean isInHistoryExtendedBoluslInProgress();
 
     ExtendedBolus getExtendedBolusFromHistory(long time);

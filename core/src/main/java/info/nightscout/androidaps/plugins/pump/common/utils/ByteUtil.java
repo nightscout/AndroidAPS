@@ -145,7 +145,7 @@ public class ByteUtil {
 
 
     public static String showPrintable(byte[] ra) {
-        String s = new String();
+        String s = "";
         for (int i = 0; i < ra.length; i++) {
             char c = (char) ra[i];
             if (((c >= '0') && (c <= '9')) || ((c >= 'A') && (c <= 'Z')) || ((c >= 'a') && (c <= 'z'))) {

@@ -6,7 +6,6 @@ import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.MessageBlock;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.MessageBlockType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.CommandInitializationException;
 
 public class BolusExtraCommand extends MessageBlock {
     private final boolean acknowledgementBeep;
@@ -29,9 +28,9 @@ public class BolusExtraCommand extends MessageBlock {
                              boolean acknowledgementBeep, boolean completionBeep,
                              Duration programReminderInterval, Duration timeBetweenPulses) {
         if (units <= 0D) {
-            throw new CommandInitializationException("Units should be > 0");
+            throw new IllegalArgumentException("Units should be > 0");
         } else if (units > OmnipodConstants.MAX_BOLUS) {
-            throw new CommandInitializationException("Units exceeds max bolus");
+            throw new IllegalArgumentException("Units exceeds max bolus");
         }
         this.units = units;
         this.squareWaveUnits = squareWaveUnits;

@@ -80,6 +80,7 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
         super(new PluginDescription()
                         .mainType(PluginType.APS)
                         .fragmentClass(OpenAPSAMAFragment.class.getName())
+                        .pluginIcon(R.drawable.ic_generic_icon)
                         .pluginName(R.string.openapsama)
                         .shortName(R.string.oaps_shortname)
                         .preferencesId(R.xml.pref_openapsama)
@@ -189,9 +190,9 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
         }
 
 
-        if (!hardLimits.checkOnlyHardLimits(profile.getDia(), "dia", hardLimits.getMINDIA(), hardLimits.getMAXDIA()))
+        if (!hardLimits.checkOnlyHardLimits(profile.getDia(), "dia", hardLimits.minDia(), hardLimits.maxDia()))
             return;
-        if (!hardLimits.checkOnlyHardLimits(profile.getIcTimeFromMidnight(Profile.secondsFromMidnight()), "carbratio", hardLimits.getMINIC(), hardLimits.getMAXIC()))
+        if (!hardLimits.checkOnlyHardLimits(profile.getIcTimeFromMidnight(Profile.secondsFromMidnight()), "carbratio", hardLimits.minIC(), hardLimits.maxIC()))
             return;
         if (!hardLimits.checkOnlyHardLimits(profile.getIsfMgdl(), "sens", hardLimits.getMINISF(), hardLimits.getMAXISF()))
             return;

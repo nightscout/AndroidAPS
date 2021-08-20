@@ -14,7 +14,6 @@ class SkinClassic @Inject constructor(private val config: Config): SkinInterface
 
     override fun overviewLayout(isLandscape: Boolean, isTablet: Boolean, isSmallHeight: Boolean): Int =
         when {
-            config.NSCLIENT && isTablet  -> R.layout.overview_fragment_nsclient_tablet
             config.NSCLIENT              -> R.layout.overview_fragment_nsclient
             isSmallHeight || isLandscape -> R.layout.overview_fragment_landscape
             else                         -> R.layout.overview_fragment

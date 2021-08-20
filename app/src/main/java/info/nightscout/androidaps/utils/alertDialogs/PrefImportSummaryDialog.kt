@@ -53,7 +53,7 @@ object PrefImportSummaryDialog {
         for ((metaKey, metaEntry) in prefs.metadata) {
             val rowLayout = LayoutInflater.from(themedCtx).inflate(R.layout.import_summary_item, null)
             val label = (rowLayout.findViewById<View>(R.id.summary_text) as TextView)
-            label.setText(metaKey.formatForDisplay(context, metaEntry.value))
+            label.text = metaKey.formatForDisplay(context, metaEntry.value)
             (rowLayout.findViewById<View>(R.id.summary_icon) as ImageView).setImageResource(metaKey.icon)
             (rowLayout.findViewById<View>(R.id.status_icon) as ImageView).setImageResource(metaEntry.status.icon)
 
@@ -66,7 +66,7 @@ object PrefImportSummaryDialog {
                 rowLayout.setOnClickListener {
                     val msg = "[${context.getString(metaKey.label)}] ${metaEntry.info}"
                     when (metaEntry.status) {
-                        PrefsStatus.WARN  -> ToastUtils.Long.warnToast(context, msg)
+                        PrefsStatus.WARN -> ToastUtils.Long.warnToast(context, msg)
                         PrefsStatus.ERROR -> ToastUtils.Long.errorToast(context, msg)
                         else              -> ToastUtils.Long.infoToast(context, msg)
                     }
@@ -84,9 +84,9 @@ object PrefImportSummaryDialog {
             detailsBtn.setOnClickListener {
                 val detailsLayout = LayoutInflater.from(context).inflate(R.layout.import_summary_details, null)
                 val wview = detailsLayout.findViewById<View>(R.id.details_webview) as WebView
-                wview.loadData("<!doctype html><html><head><meta charset=\"utf-8\"><style>body { color: white; }</style></head><body>" + details.joinToString("<hr>"), "text/html; charset=utf-8", "utf-8");
-                wview.setBackgroundColor(Color.TRANSPARENT);
-                wview.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);
+                wview.loadData("<!doctype html><html><head><meta charset=\"utf-8\"><style>body { color: white; }</style></head><body>" + details.joinToString("<hr>"), "text/html; charset=utf-8", "utf-8")
+                wview.setBackgroundColor(Color.TRANSPARENT)
+                wview.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null)
 
                 AlertDialogHelper.Builder(context, R.style.AppTheme)
                     .setCustomTitle(AlertDialogHelper.buildCustomTitle(
@@ -132,6 +132,9 @@ object PrefImportSummaryDialog {
         }
 
         val dialog = builder.show()
+        val textView = dialog.findViewById<View>(android.R.id.message) as TextView?
+        textView?.textSize = 12f
+        textView?.setPadding(10,0,0,0)
         dialog.setCanceledOnTouchOutside(false)
     }
 

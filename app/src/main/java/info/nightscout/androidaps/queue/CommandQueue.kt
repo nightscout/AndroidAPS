@@ -20,16 +20,16 @@ import info.nightscout.androidaps.events.EventProfileNeedsUpdate
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.queue.commands.CustomCommand
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
-import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.androidaps.queue.commands.*
 import info.nightscout.androidaps.queue.commands.Command.CommandType
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -260,7 +260,7 @@ class CommandQueue @Inject constructor(
         } else {
             add(CommandBolus(injector, detailedBolusInfo, callback, type))
             if (type == CommandType.BOLUS) { // Bring up bolus progress dialog (start here, so the dialog is shown when the bolus is requested,
-// not when the Bolus command is starting. The command closes the dialog upon completion).
+                // not when the Bolus command is starting. The command closes the dialog upon completion).
                 showBolusProgressDialog(detailedBolusInfo.insulin, detailedBolusInfo.context)
                 // Notify Wear about upcoming bolus
                 rxBus.send(EventBolusRequested(detailedBolusInfo.insulin))
@@ -483,6 +483,55 @@ class CommandQueue @Inject constructor(
         add(CommandLoadEvents(injector, callback))
         notifyAboutNewCommand()
         return true
+    }
+
+    override fun customCommand(customCommand: CustomCommand, callback: Callback?): Boolean {
+        if (isCustomCommandInQueue(customCommand.javaClass)) {
+            callback?.result(executingNowError())?.run()
+            return false
+        }
+        // remove all unfinished
+        removeAllCustomCommands(customCommand.javaClass)
+        // add new command to queue
+        add(CommandCustomCommand(injector, customCommand, callback))
+        notifyAboutNewCommand()
+        return true
+    }
+
+    @Synchronized
+    override fun isCustomCommandInQueue(customCommandType: Class<out CustomCommand>): Boolean {
+        if(isCustomCommandRunning(customCommandType)) {
+            return true
+        }
+        synchronized(queue) {
+            for (i in queue.indices) {
+                val command = queue[i]
+                if (command is CommandCustomCommand && customCommandType.isInstance(command.customCommand)) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    override fun isCustomCommandRunning(customCommandType: Class<out CustomCommand>): Boolean {
+        val performing = this.performing
+        if (performing is CommandCustomCommand && customCommandType.isInstance(performing.customCommand)) {
+            return true
+        }
+        return false
+    }
+
+    @Synchronized
+    private fun removeAllCustomCommands(targetType: Class<out CustomCommand>) {
+        synchronized(queue) {
+            for (i in queue.indices.reversed()) {
+                val command = queue[i]
+                if (command is CustomCommand && targetType.isInstance(command.commandType)) {
+                    queue.removeAt(i)
+                }
+            }
+        }
     }
 
     override fun spannedStatus(): Spanned {

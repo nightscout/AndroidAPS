@@ -315,7 +315,7 @@ public class AreaGraphSeries<E extends DoubleDataPoint> extends BaseSeries<E> {
                 canvas.drawPath(mPath, paint);
                 canvas.drawPath(mSecondPath, paint);
                 if (mStyles.drawBackground) {
-                    canvas.drawRect((float)startX, (float)startY2, endX, endY1, mPaintBackground);
+                    canvas.drawRect(startX, startY2, endX, endY1, mPaintBackground);
                 }
             } else if (mStyles.drawDataPoints) {
                 //fix: last value not drawn as datapoint. Draw first point here, and then on every step the end values (above)

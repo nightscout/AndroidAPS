@@ -88,6 +88,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
         super(new PluginDescription()
                         .mainType(PluginType.APS)
                         .fragmentClass(OpenAPSSMBFragment.class.getName())
+                        .pluginIcon(R.drawable.ic_generic_icon)
                         .pluginName(R.string.openapssmb)
                         .shortName(R.string.smb_shortname)
                         .preferencesId(R.xml.pref_openapssmb)
@@ -220,9 +221,9 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
         }
 
 
-        if (!hardLimits.checkOnlyHardLimits(profile.getDia(), "dia", hardLimits.getMINDIA(), hardLimits.getMAXDIA()))
+        if (!hardLimits.checkOnlyHardLimits(profile.getDia(), "dia", hardLimits.minDia(), hardLimits.maxDia()))
             return;
-        if (!hardLimits.checkOnlyHardLimits(profile.getIcTimeFromMidnight(Profile.secondsFromMidnight()), "carbratio", hardLimits.getMINIC(), hardLimits.getMAXIC()))
+        if (!hardLimits.checkOnlyHardLimits(profile.getIcTimeFromMidnight(Profile.secondsFromMidnight()), "carbratio", hardLimits.minIC(), hardLimits.maxIC()))
             return;
         if (!hardLimits.checkOnlyHardLimits(profile.getIsfMgdl(), "sens", hardLimits.getMINISF(), hardLimits.getMAXISF()))
             return;
@@ -270,7 +271,8 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
                     isTempTarget,
                     smbAllowed.value(),
                     uam.value(),
-                    advancedFiltering.value()
+                    advancedFiltering.value(),
+                    activePlugin.getActiveBgSource().getClass().getSimpleName().equals("DexcomPlugin")
             );
         } catch (JSONException e) {
             fabricPrivacy.logException(e);

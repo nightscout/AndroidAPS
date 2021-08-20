@@ -40,7 +40,7 @@ class ProfileTest : TestBaseWithProfile() {
 
     @Before
     fun prepare() {
-        `when`(activePluginProvider.getActivePump()).thenReturn(virtualPumpPlugin)
+        `when`(activePluginProvider.activePump).thenReturn(virtualPumpPlugin)
         `when`(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)
         `when`(resourceHelper.gs(R.string.profile_per_unit)).thenReturn("/U")
         `when`(resourceHelper.gs(R.string.profile_carbs_per_unit)).thenReturn("g/U")

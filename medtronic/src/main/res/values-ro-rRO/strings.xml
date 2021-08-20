@@ -81,4 +81,6 @@
     <string name="common_on">Pornit</string>
     <string name="common_off">Oprit</string>
     <string name="pump_time_updated">Timpul din pompă a fost actualizat</string>
+    <string name="set_neutral_temps_title">Setați bazale temporare neutre</string>
+    <string name="set_neutral_temps_summary">Dacă este activată, va anula o bazală temporară înainte de sfârșitul fiecărei ore. Aceasta metoda poate ajuta la oprirea vibrațiilor/bipurilor orare pe anumite pompe.</string>
 </resources>

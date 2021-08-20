@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.operations;
 
+import android.bluetooth.BluetoothGatt;
+
 import java.util.UUID;
 import java.util.concurrent.Semaphore;
-
-import android.bluetooth.BluetoothGatt;
 
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkBLE;
 

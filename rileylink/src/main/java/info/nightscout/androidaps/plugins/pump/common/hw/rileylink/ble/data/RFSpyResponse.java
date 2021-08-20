@@ -21,23 +21,18 @@ public class RFSpyResponse {
     protected RadioResponse radioResponse;
     private RileyLinkCommand command;
 
-
     public RFSpyResponse() {
         init(new byte[0]);
     }
-
 
     public RFSpyResponse(byte[] bytes) {
         init(bytes);
     }
 
-
     public RFSpyResponse(RileyLinkCommand command, byte[] rawResponse) {
-
         this.command = command;
         init(rawResponse);
     }
-
 
     public void init(byte[] bytes) {
         if (bytes == null) {
@@ -45,9 +40,7 @@ public class RFSpyResponse {
         } else {
             raw = bytes;
         }
-
     }
-
 
     public RadioResponse getRadioResponse(HasAndroidInjector injector) throws RileyLinkCommunicationException {
         if (looksLikeRadioPacket()) {
@@ -59,64 +52,48 @@ public class RFSpyResponse {
         return radioResponse;
     }
 
+    public boolean wasNoResponseFromRileyLink() {
+        return raw.length == 0;
+    }
 
     public boolean wasTimeout() {
         if ((raw.length == 1) || (raw.length == 2)) {
-            if (raw[0] == (byte)0xaa) {
-                return true;
-            }
+            return raw[0] == (byte) 0xaa;
         }
         return false;
     }
-
 
     public boolean wasInterrupted() {
         if ((raw.length == 1) || (raw.length == 2)) {
-            if (raw[0] == (byte)0xbb) {
-                return true;
-            }
+            return raw[0] == (byte) 0xbb;
         }
         return false;
     }
-
 
     public boolean isInvalidParam() {
         if ((raw.length == 1) || (raw.length == 2)) {
-            if (raw[0] == (byte)0x11) {
-                return true;
-            }
+            return raw[0] == (byte) 0x11;
         }
         return false;
     }
-
 
     public boolean isUnknownCommand() {
         if ((raw.length == 1) || (raw.length == 2)) {
-            if (raw[0] == (byte)0x22) {
-                return true;
-            }
+            return raw[0] == (byte) 0x22;
         }
         return false;
     }
-
 
     public boolean isOK() {
         if ((raw.length == 1) || (raw.length == 2)) {
-            if (raw[0] == (byte)0x01 || raw[0] == (byte)0xDD) {
-                return true;
-            }
+            return raw[0] == (byte) 0x01 || raw[0] == (byte) 0xDD;
         }
         return false;
     }
-
 
     public boolean looksLikeRadioPacket() {
-        if (raw.length > 2) {
-            return true;
-        }
-        return false;
+        return raw.length > 2;
     }
-
 
     @Override
     public String toString() {
@@ -124,10 +101,9 @@ public class RFSpyResponse {
             return "Radio packet";
         } else {
             RFSpyRLResponse r = RFSpyRLResponse.fromByte(raw[0]);
-            return r.toString();
+            return r == null ? "" : r.toString();
         }
     }
-
 
     public byte[] getRaw() {
         return raw;

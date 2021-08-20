@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="40dp"
+    android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:paddingStart="20dp">
+    android:paddingStart="20dp"
+    android:paddingTop="10dp"
+    android:paddingEnd="20dp">
 
     <TextView
         android:id="@+id/omnipod_history_time"
         android:layout_width="88dp"
         android:layout_height="match_parent"
-        android:gravity="center_vertical"
         android:text="@string/omnipod_history_item_date"
         android:textSize="12sp" />
 
@@ -17,7 +18,6 @@
         android:id="@+id/omnipod_history_source"
         android:layout_width="132dp"
         android:layout_height="match_parent"
-        android:gravity="center_vertical"
         android:text="@string/omnipod_history_item_source"
         android:textSize="12sp" />
 
@@ -25,7 +25,6 @@
         android:id="@+id/omnipod_history_description"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
-        android:gravity="center_vertical"
         android:text="@string/omnipod_history_item_description"
         android:textSize="12sp" />
 

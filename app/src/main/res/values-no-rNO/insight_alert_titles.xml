@@ -1,2 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="alert_r1_title">Tilfør bolus</string>
+    <string name="alert_r2_title">Manglende bolus</string>
+    <string name="alert_r3_title">Alarmklokke</string>
+    <string name="alert_r4_title">Bytt infusjonssett</string>
+    <string name="alert_r7_title">Midlertidig basaldose fullført</string>
+    <string name="alert_w31_title">Lavt ampulleinnhold</string>
+    <string name="alert_w32_title">Batteri lavt</string>
+    <string name="alert_w33_title">Ugyldig klokkeslett/dato</string>
+    <string name="alert_w34_title">Slutt på garanti</string>
+    <string name="alert_w36_title">Midlertidig basaldose avbrutt</string>
+    <string name="alert_w38_title">Bolus avbrutt</string>
+    <string name="alert_w39_title">Lånetidsadvarsel</string>
+    <string name="alert_m20_title">Ampulle ikke satt inn</string>
+    <string name="alert_m21_title">Ampulle tom</string>
+    <string name="alert_m22_title">Batteri tomt</string>
+    <string name="alert_m23_title">Automatisk av - pumpe stoppet</string>
+    <string name="alert_m24_title">Tilstopping</string>
+    <string name="alert_m25_title">Lånetid over - drift stoppes</string>
+    <string name="alert_m26_title">Bytte av ampulle ikke fullført</string>
+    <string name="alert_m27_title">Nedlasting av data mislyktes</string>
+    <string name="alert_m28_title">Tidsavbrudd for pausemodus</string>
+    <string name="alert_m29_title">Batteritype ikke angitt</string>
+    <string name="alert_m30_title">Ampulletype ikke angitt</string>
+    <string name="alert_e6_title">Mekanisk feil</string>
+    <string name="alert_e10_title">Tilbakespolingsfeil</string>
+    <string name="alert_e13_title">Språkfeil</string>
+</resources>

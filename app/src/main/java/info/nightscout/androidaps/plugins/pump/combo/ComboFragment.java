@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 
 import javax.inject.Inject;
 
@@ -39,7 +40,7 @@ public class ComboFragment extends DaggerFragment implements View.OnClickListene
     @Inject SP sp;
     @Inject FabricPrivacy fabricPrivacy;
 
-    private CompositeDisposable disposable = new CompositeDisposable();
+    private final CompositeDisposable disposable = new CompositeDisposable();
 
     private TextView stateView;
     private TextView activityView;
@@ -98,7 +99,7 @@ public class ComboFragment extends DaggerFragment implements View.OnClickListene
     }
 
     private void runOnUiThread(Runnable action) {
-        Activity activity = getActivity();
+        FragmentActivity activity = getActivity();
         if (activity != null) {
             activity.runOnUiThread(action);
         }

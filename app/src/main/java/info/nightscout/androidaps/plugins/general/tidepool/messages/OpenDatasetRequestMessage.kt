@@ -2,10 +2,8 @@ package info.nightscout.androidaps.plugins.general.tidepool.messages
 
 import com.google.gson.annotations.Expose
 import info.nightscout.androidaps.BuildConfig
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.general.tidepool.comm.TidepoolUploader
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.InstanceId
 import info.nightscout.androidaps.utils.T
 import java.util.*
 

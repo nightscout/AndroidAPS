@@ -6,23 +6,23 @@
     tools:context="info.nightscout.androidaps.plugins.general.automation.AutomationFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/automation_eventListView"
+        android:id="@+id/eventListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/automation_logView"
+        android:layout_above="@+id/logView"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginBottom="15dp" />
 
     <TextView
-        android:id="@+id/automation_logView"
+        android:id="@+id/logView"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:scrollbars = "vertical"
         android:layout_alignParentBottom="true" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/automation_fabAddEvent"
+        android:id="@+id/fabAddEvent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -32,6 +32,7 @@
         android:clickable="true"
         android:focusable="true"
         android:src="@drawable/ic_add_black_24dp"
-        tools:ignore="RelativeOverlap" />
+        tools:ignore="RelativeOverlap"
+        android:contentDescription="@string/addnew" />
 
 </RelativeLayout>

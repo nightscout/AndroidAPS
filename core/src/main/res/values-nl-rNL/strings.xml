@@ -8,15 +8,22 @@
     <string name="profile_set_ok">Basaal profiel in pomp bijgewerkt</string>
     <string name="invalidinput">Ongeldige invoer</string>
     <string name="tempbasaldeliveryerror">Storing toedienen tijdelijk basaal</string>
+    <string name="goingtodeliver">%1$.2f E toedienen</string>
     <string name="waitingforpump">Wacht op pomp</string>
     <string name="connectingfor">Verbinding maken gedurende %1$d s</string>
+    <string name="bolusdelivering">%1$.2f E worden toegediend</string>
     <string name="handshaking">Handshaking</string>
     <string name="connecting">Verbining maken</string>
     <string name="connected">Verbonden</string>
     <string name="disconnected">Verbinding verbroken</string>
     <string name="disconnecting">Verbinding aan het verbreken</string>
     <string name="androidaps_start">AndroidAPS gestart</string>
+    <string name="formatinsulinunits1">%1$.1f E</string>
+    <string name="formatinsulinunits">%1$.2f E</string>
+    <string name="formatsignedinsulinunits">%1$+.2f E</string>
+    <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d E</string>
+    <string name="pump_basebasalrate">%1$.2f E/uur</string>
     <string name="format_hours">%1$.2f u</string>
     <string name="format_mins">%1$d minuten</string>
     <string name="pumpbusy">Pomp is bezig</string>
@@ -35,7 +42,7 @@
     <string name="date">Datum</string>
     <string name="units_label">Eenheden</string>
     <string name="dia_label">DIA</string>
-    <string name="ic_label">KH ratio</string>
+    <string name="ic_label">KH-ratio</string>
     <string name="isf_label">ISF</string>
     <string name="basal_label">Basaal</string>
     <string name="target_label">Streefdoel</string>
@@ -59,6 +66,8 @@
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Zet de bluetooth van de telefoon even kort uit en weer aan. Dit kan op sommige gsm\'s een vastgelopen bluetooth service verhelpen.</string>
     <string name="pairing">Koppelen</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nee</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Beperken van basaal tot max %1$.2f E/uur wegens de %2$s</string>
     <string name="pumplimit">Pomp limiet</string>
@@ -78,6 +87,8 @@
     <string name="location_not_found_title">Locatie is niet ingeschakeld</string>
     <string name="location_not_found_message">Om Bluetooth discovery met nieuwere apparaten te laten werken moet locatie worden ingeschakeld. AAPS volgt je locatie niet en locatie kan ook weer worden uitgeschakeld nadat het koppelen is gelukt.</string>
     <!--    DateUtil-->
+    <string name="minago">%1$d m geleden</string>
+    <string name="hoursago">%1$.1f u geleden</string>
     <string name="shorthour">u</string>
     <string name="days">dagen</string>
     <string name="hours">uren</string>
@@ -94,6 +105,8 @@
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
     <!--    Protection-->
+    <string name="wrongpassword">Verkeerd wachtwoord</string>
+    <string name="passwords_dont_match">Wachtwoorden komen niet overeen</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Basaalstanden niet ingesteld in hele uren: %1$s</string>
     <string name="minimalbasalvaluereplaced">Basale waarde vervangen door minimaal ondersteunde waarde; %1$s</string>
@@ -115,9 +128,13 @@
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">Ongeldig profiel: %1$s</string>
     <!--    Temptarget-->
+    <string name="mins">%1$d min</string>
     <!--    TDD-->
+    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f E</b> Bol: <b>%3$.2f E</b> Bas: <b>%4$.2f E(%5$.0f%%)</b>]]></string>
+    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f E</b> Bol: <b>%3$.2f E</b> Bas: <b>%4$.2f E(%5$.0f%%)</b> Koolh. <b>%6$.0f g</b>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">BG Controle</string>
+    <string name="careportal_mbg">Handmatige BG of calibratie</string>
     <string name="careportal_announcement">Mededeling</string>
     <string name="careportal_note">Notitie</string>
     <string name="careportal_question">Vraag</string>
@@ -155,6 +172,7 @@
     <string name="waitingforpumpresult">Wachtend op resultaat</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
+    <string name="carbsreq">%1$d g extra koolhydraten nodig binnen %2$d minuten</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Statistieken</string>
     <string name="cumulative_tdd">Cumulatieve TDD</string>
@@ -171,28 +189,69 @@
     <string name="tbb2">TBB * 2</string>
     <!--    Ntp-->
     <string name="timedetection">Tijd detectie</string>
+    <string name="format_hour_minute">%1$du %2$dm</string>
     <!-- PumoCommon - Pump Abstract -->
+    <string name="pump_operation_not_supported_by_pump_driver">Bewerking niet ondersteund door pomp en/of driver.</string>
     <string name="pump_operation_not_yet_supported_by_pump">Operatie NU nog niet ondersteund door pomp.</string>
+    <string name="common_resultok">OK</string>
     <!-- PumoCommon - Pump Status -->
+    <string name="pump_status_never_contacted">Nooit verbonden</string>
+    <string name="pump_status_waking_up">Ontwaken</string>
+    <string name="pump_status_error_comm">Communicatiefout</string>
+    <string name="pump_status_timeout_comm">Time-out op de communicatie</string>
+    <string name="pump_status_pump_unreachable">Pomp niet beschikbaar</string>
+    <string name="pump_status_invalid_config">Ongeldige configuratie</string>
+    <string name="pump_status_active">Actief</string>
+    <string name="pump_status_sleeping">Slapen</string>
     <!-- PumpCommon - History Group -->
-    <!--    <string name="medtronic_pump_status_never_contacted">Never contacted</string>-->
-    <!--    <string name="medtronic_pump_status_waking_up">Waking up</string>-->
-    <!--    <string name="medtronic_pump_status_error_comm">Error with communication</string>-->
-    <!--    <string name="medtronic_pump_status_timeout_comm">Timeout on communication</string>-->
-    <!--    <string name="medtronic_pump_status_pump_unreachable">Pump unreachable</string>-->
-    <!--    <string name="medtronic_pump_status_invalid_config">Invalid configuration</string>-->
-    <!--    <string name="medtronic_pump_status_active">Active</string>-->
-    <!--    <string name="medtronic_pump_status_sleeping">Sleeping</string>-->
-    <!--    <string name="danar_history_alarm">Alarms</string>-->
-    <!--    <string name="danar_history_glucose">Glucose</string>-->
-    <!--    All(R.string.medtronic_history_group_all), //-->
-    <!--    Bolus(R.string.danar_history_bolus), //-->
-    <!--    Basal(R.string.medtronic_history_group_basal), //-->
-    <!--    Prime(R.string.danar_history_prime), //-->
-    <!--    Configuration(R.string.medtronic_history_group_configuration), //-->
-    <!--    Alarm(R.string.danar_history_alarm), //-->
-    <!--    Glucose(R.string.danar_history_glucose), //-->
-    <!--    Notification(R.string.medtronic_history_group_notification), //-->
-    <!--    Statistic(R.string.medtronic_history_group_statistic),-->
-    <!--    Unknown(R.string.medtronic_history_group_unknown), //-->
+    <string name="history_group_basal">Basalen</string>
+    <string name="history_group_configuration">Instellingen</string>
+    <string name="history_group_notification">Meldingen</string>
+    <string name="history_group_statistic">Statistieken</string>
+    <string name="history_group_unknown">Onbekend</string>
+    <string name="history_group_all">Alle</string>
+    <string name="history_group_bolus">Bolussen</string>
+    <string name="history_group_prime">Vullen</string>
+    <string name="history_group_alarm">Alarmen</string>
+    <string name="history_group_glucose">Glucose</string>
+    <string name="mute5min">5 minuten dempen</string>
+    <!-- Maintenance -->
+    <string name="metadata_label_created_at">Gemaakt op</string>
+    <string name="metadata_label_aaps_version">AAPS versie</string>
+    <string name="metadata_label_aaps_flavour">Build variant</string>
+    <string name="metadata_label_device_name">Patiëntnaam van exporterend apparaat</string>
+    <string name="metadata_label_device_model">Modelnaam/nr van exporterend apparaat</string>
+    <string name="metadata_label_encryption">Bestandsversleuteling</string>
+    <string name="metadata_format_old">Oude export indeling</string>
+    <string name="metadata_format_new">Nieuwe versleutelde indeling</string>
+    <string name="metadata_format_debug">Nieuwe debug indeling (onversleuteld)</string>
+    <string name="metadata_format_other">Onbekende export indeling</string>
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">%1$s geleden geëxporteerd</string>
+    <string name="exported_at" comment="at placeholder we add export date">geëxporteerd op %1$s</string>
+    <string name="exported_less_than_hour_ago">minder dan een uur geleden geëxporteerd</string>
+    <string name="in_directory" comment="placeholder is for exported file path">in map: %1$s</string>
+    <string name="preferences_import_list_title">Kies bestand om te importeren</string>
+    <string name="metadata_warning_different_flavour">Instellingen zijn gemaakt met een andere variant van AAPS (%1$s) terwijl je nu: %2$s gebruikt.\n\nEr kunnen instellingen ontbreken of ongeldig zijn - controleer aub jouw instellingen na het importeren en corrigeer ze zonodig.</string>
+    <string name="metadata_warning_different_device">Instellingen zijn gemaakt op een ander apparaat. Het is OK als ze zijn geïmporteerd van een oude/andere telefoon, maar zorg ervoor dat de geïmporteerde instellingen correct zijn!</string>
+    <string name="metadata_warning_outdated_format">Je gebruikt de verouderde indeling van een vorige AAPS versie, dit is niet veilig! Gebruik dit alleen als je niet anders kunt, wanneer je geen export hebt met de huidige JSON-indeling.</string>
+    <string name="metadata_warning_old_export">Geïmporteerde instellingen zijn al %1$s dagen oud! Misschien heb je een meer recente versie of heb je het verkeerde bestand gekozen? Vergeet niet om regelmatig jouw instellingen te exporteren!</string>
+    <string name="metadata_warning_date_format">Ongeldige notatie voor datum/tijd!</string>
+    <string name="metadata_warning_different_version">Instellingen zijn afkomstig van een vorige minor versie van de AAPS app. Het is OK als je deze importeert na een app upgrade, maar controleer na importeren dan wel of de instellingen nog steeds correct zijn!</string>
+    <string name="metadata_urgent_different_version">Instellingen van een andere major versie van de AAPS app. Deze versies kunnen aanzienlijk verschillen en kunnen instellingen hebben die incompatibel zijn! Zorg ervoor dat na het importeren alle instellingen nog steeds correct zijn!</string>
+    <string name="prefdecrypt_settings_tampered">Geknoeid met instellingenbestand</string>
+    <string name="prefdecrypt_settings_secure">Instellingenbestand is veilig</string>
+    <string name="prefdecrypt_settings_unencrypted">Gebruikt niet veilige, niet-versleutelde indeling voor instellingen</string>
+    <string name="prefdecrypt_wrong_json">JSON-indelingsfout, vereist veld ontbreekt (indeling, inhoud, metagegevens of beveiliging)</string>
+    <string name="prefdecrypt_wrong_password">Decryptie fout, het opgegeven wachtwoord kan het bestand niet ontsleutelen</string>
+    <string name="prefdecrypt_issue_missing_file_hash">Bestand checksum (hash) ontbreekt, kan de authenticiteit van instellingen niet controleren!</string>
+    <string name="prefdecrypt_issue_modified">Bestand is gewijzigd na export!</string>
+    <string name="prefdecrypt_issue_parsing">Decoderingsfout, uitlezen van instellingen is mislukt!</string>
+    <string name="prefdecrypt_issue_wrong_pass">Decoderingsfout, het opgegeven wachtwoord is ongeldig of het instellingenbestand is gewijzigd / mee geknoeid. Wellicht was het geïmporteerde bestand geëxporteerd met een ander masterwachtwoord.</string>
+    <string name="prefdecrypt_issue_wrong_format">Ontbrekende versleutelingsconfiguratie, instellingen indeling is ongeldig!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">Niet-ondersteund of niet opgegeven versleutelingsalgoritme!</string>
+    <!-- VersionChecker -->
+    <string name="signature_verifier">Handtekening controle</string>
+    <string name="running_invalid_version">We hebben gedetecteerd dat je een ongeldige versie gebruikt. Loop is uitgeschakeld!</string>
+    <string name="versionavailable">Versie %1$s is beschikbaar</string>
+    <!-- Permissions -->
 </resources>

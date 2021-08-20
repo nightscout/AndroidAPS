@@ -417,6 +417,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             getDaoBgReadings().update(bgReading);
             openHumansUploader.enqueueBGReading(bgReading);
+            aapsLogger.debug(LTag.DATABASE, "BG: Updating record from: "+ bgReading.toString());
+            scheduleBgHistoryChange(bgReading.date); // trigger cache invalidation
         } catch (SQLException e) {
             aapsLogger.error("Unhandled exception", e);
         }

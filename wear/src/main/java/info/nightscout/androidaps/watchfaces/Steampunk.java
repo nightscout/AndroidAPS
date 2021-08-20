@@ -123,7 +123,7 @@ public class Steampunk extends BaseWatchFace {
         //set the delta gauge and rotate the delta pointer
         float deltaIsNegative = 1f;         //by default go clockwise
         if (!rawData.sAvgDelta.equals("--")) {      //if a legitimate delta value is received, then...
-            if (rawData.sAvgDelta.substring(0,1).equals("-")) deltaIsNegative = -1f;  //if the delta is negative, go counter-clockwise
+            if (rawData.sAvgDelta.charAt(0) == '-') deltaIsNegative = -1f;  //if the delta is negative, go counter-clockwise
             Float AbssAvgDelta = SafeParse.stringToFloat(rawData.sAvgDelta.substring(1)) ;   //get rid of the sign so it can be converted to float.
             String autogranularity = "0" ;                                                   //autogranularity off
             //ensure the delta gauge is the right units and granularity

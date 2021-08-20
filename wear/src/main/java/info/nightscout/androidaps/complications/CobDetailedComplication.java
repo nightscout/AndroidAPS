@@ -48,5 +48,5 @@ public class CobDetailedComplication extends BaseComplicationProviderService {
     @Override
     public ComplicationAction getComplicationAction() {
         return ComplicationAction.WIZARD;
-    };
+    }
 }

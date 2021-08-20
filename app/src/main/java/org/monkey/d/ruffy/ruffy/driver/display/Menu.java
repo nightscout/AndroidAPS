@@ -19,8 +19,8 @@ import java.util.Map;
  */
 
 public class Menu implements Parcelable{
-    private MenuType type;
-    private Map<MenuAttribute,Object> attributes = new HashMap<>();
+    private final MenuType type;
+    private final Map<MenuAttribute,Object> attributes = new HashMap<>();
 
     public Menu(MenuType type)
     {
@@ -53,7 +53,7 @@ public class Menu implements Parcelable{
                     } else if (BolusType.class.toString().equals(clas)) {
                         o = BolusType.valueOf(value);
                     } else if (String.class.toString().equals(clas)) {
-                        o = new String(value);
+                        o = value;
                     }
 
                     if (o != null) {

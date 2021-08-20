@@ -23,8 +23,8 @@ public enum MedtronicNotificationType {
     ;
 
     private int notificationType;
-    private int resourceId;
-    private int notificationUrgency;
+    private final int resourceId;
+    private final int notificationUrgency;
 
 
     MedtronicNotificationType(int resourceId, int notificationUrgency) {

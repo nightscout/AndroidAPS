@@ -25,6 +25,7 @@ class MM640gPlugin @Inject constructor(
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
+    .pluginIcon(R.drawable.ic_generic_cgm)
     .pluginName(R.string.MM640g)
     .description(R.string.description_source_mm640g),
     aapsLogger, resourceHelper, injector

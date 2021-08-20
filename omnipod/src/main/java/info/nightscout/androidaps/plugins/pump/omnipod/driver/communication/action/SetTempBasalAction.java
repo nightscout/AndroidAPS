@@ -10,7 +10,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.mess
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.command.SetInsulinScheduleCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.command.TempBasalExtraCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.StatusResponse;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.ActionInitializationException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 
@@ -24,10 +23,10 @@ public class SetTempBasalAction implements OmnipodAction<StatusResponse> {
     public SetTempBasalAction(PodStateManager podStateManager, double rate, Duration duration,
                               boolean acknowledgementBeep, boolean completionBeep) {
         if (podStateManager == null) {
-            throw new ActionInitializationException("Pod state manager cannot be null");
+            throw new IllegalArgumentException("Pod state manager cannot be null");
         }
         if (duration == null) {
-            throw new ActionInitializationException("Duration cannot be null");
+            throw new IllegalArgumentException("Duration cannot be null");
         }
         this.podStateManager = podStateManager;
         this.rate = rate;

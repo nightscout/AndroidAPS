@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 class CommandReadStatus(
     injector: HasAndroidInjector,
-    private val reason: String,
+    val reason: String,
     callback: Callback?
 ) : Command(injector, CommandType.READSTATUS, callback) {
 
@@ -19,7 +19,7 @@ class CommandReadStatus(
     @Inject lateinit var localAlertUtils: LocalAlertUtils
 
     override fun execute() {
-        activePlugin.activePump.getPumpStatus()
+        activePlugin.activePump.getPumpStatus(reason)
         localAlertUtils.notifyPumpStatusRead()
         aapsLogger.debug(LTag.PUMPQUEUE, "CommandReadStatus executed. Reason: $reason")
         val pump = activePlugin.activePump

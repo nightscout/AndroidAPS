@@ -43,39 +43,16 @@ dependencies {
     implementation project(':core')
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
 
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.legacy:legacy-support-v13:1.0.0'
-    implementation 'androidx.core:core-ktx:1.2.0'
-    implementation "androidx.preference:preference-ktx:1.1.1"
-    implementation "androidx.activity:activity-ktx:${activityVersion}"
-    implementation 'com.google.android.material:material:1.1.0'
-
-    implementation "io.reactivex.rxjava2:rxandroid:${rxandroid_version}"
-
-    // Graphview cannot be upgraded
-    implementation "com.jjoe64:graphview:4.0.1"
-
-    implementation "com.joanzapata.iconify:android-iconify-fontawesome:2.2.2"
-
-    // rileylink - start
-    implementation 'org.apache.commons:commons-lang3:3.10'
-    implementation 'net.danlew:android.joda:2.10.6'
-    implementation 'org.slf4j:slf4j-api:1.7.30'
-    // rileylink - end
-
-    implementation "com.google.dagger:dagger-android:$dagger_version"
-    implementation "com.google.dagger:dagger-android-support:$dagger_version"
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
     annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
     kapt "com.google.dagger:dagger-android-processor:$dagger_version"
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
 
-    testImplementation 'junit:junit:4.13'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    testImplementation "junit:junit:$junit_version"
+    testImplementation "org.mockito:mockito-core:${mockitoVersion}"
+    testImplementation "org.powermock:powermock-api-mockito2:${powermockVersion}"
+    testImplementation "org.powermock:powermock-module-junit4:${powermockVersion}"
+    androidTestImplementation "androidx.test.ext:junit:$androidx_junit"
+    androidTestImplementation "androidx.test:rules:$androidx_rules"
 }

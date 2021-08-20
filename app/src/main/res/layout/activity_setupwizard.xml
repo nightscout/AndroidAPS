@@ -31,7 +31,7 @@
             android:layout_weight="1"
             android:text="@string/exit"
             android:onClick="exitPressed"
-            android:textAppearance="@android:style/TextAppearance.Material.Medium"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textStyle="bold" />
     </LinearLayout>
 

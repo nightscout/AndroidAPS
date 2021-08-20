@@ -40,6 +40,7 @@ class MaintenancePlugin @Inject constructor(
     .fragmentClass(MaintenanceFragment::class.java.name)
     .alwaysVisible(false)
     .alwaysEnabled(true)
+    .pluginIcon(R.drawable.ic_maintenance)
     .pluginName(R.string.maintenance)
     .shortName(R.string.maintenance_shortname)
     .preferencesId(R.xml.pref_maintenance)

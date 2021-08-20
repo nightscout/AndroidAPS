@@ -95,8 +95,14 @@
             android:key="@string/key_rileylink_mac_address"
             android:summary=""
             android:title="RileyLink Configuration">
-            <intent android:action="info.nightscout.androidaps.plugins.PumpCommon.dialog.RileyLinkBLEScanActivity" />
+            <intent android:action="info.nightscout.androidaps.plugins.PumpCommon.dialog.RileyLinkBLEConfigActivity" />
         </Preference>
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_riley_link_show_battery_level"
+            android:summary="@string/riley_link_show_battery_level_summary"
+            android:title="@string/riley_link_show_battery_level" />
 
         <SwitchPreference
             android:defaultValue="true"

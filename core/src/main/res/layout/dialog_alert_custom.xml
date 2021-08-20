@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   Loading this view directly, without proper Theme, will likely result in crash due to lack of ?dialog... attribute definitions
   Please use AlertDialogHelper or wrap inflater context with ContextThemeWrapper(context, R.style.AppTheme)
 -->
@@ -29,8 +28,14 @@
             android:layout_centerInParent="true"
             android:layout_gravity="center"
             android:layout_marginStart="2dp"
-            android:layout_marginEnd="50dp"
+            android:layout_marginEnd="40dp"
             android:layout_toEndOf="@id/alertdialog_icon"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
             android:textAlignment="center"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="?dialogTitleColor" />

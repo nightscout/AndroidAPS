@@ -6,8 +6,8 @@ import info.nightscout.androidaps.plugins.pump.insight.app_layer.configuration.O
 
 public class ConfigurationMessageRequest<T extends AppLayerMessage> extends MessageRequest<T> {
 
-    private MessageRequest<OpenConfigurationWriteSessionMessage> openRequest;
-    private MessageRequest<CloseConfigurationWriteSessionMessage> closeRequest;
+    private final MessageRequest<OpenConfigurationWriteSessionMessage> openRequest;
+    private final MessageRequest<CloseConfigurationWriteSessionMessage> closeRequest;
 
     public ConfigurationMessageRequest(T request, MessageRequest<OpenConfigurationWriteSessionMessage> openRequest, MessageRequest<CloseConfigurationWriteSessionMessage> closeRequest) {
         super(request);

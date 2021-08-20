@@ -40,10 +40,10 @@ public class ViewSelectorActivity extends Activity {
 
         if (design == 4){
             //@LadyViktoria: Here the label can be set differently, if you like.
-            final TextView textView = (TextView) view.findViewById(R.id.label);
+            final TextView textView = view.findViewById(R.id.label);
             textView.setText(labelText);
         } else {
-            final TextView textView = (TextView) view.findViewById(R.id.label);
+            final TextView textView = view.findViewById(R.id.label);
             textView.setText(labelText);
         }
     }

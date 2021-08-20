@@ -24,8 +24,8 @@ public class RFSpyReader {
     private final AAPSLogger aapsLogger;
     private static AsyncTask<Void, Void, Void> readerTask;
     private RileyLinkBLE rileyLinkBle;
-    private Semaphore waitForRadioData = new Semaphore(0, true);
-    private LinkedBlockingQueue<byte[]> mDataQueue = new LinkedBlockingQueue<>();
+    private final Semaphore waitForRadioData = new Semaphore(0, true);
+    private final LinkedBlockingQueue<byte[]> mDataQueue = new LinkedBlockingQueue<>();
     private int acquireCount = 0;
     private int releaseCount = 0;
     private boolean stopAtNull = true;

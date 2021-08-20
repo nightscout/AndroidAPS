@@ -3,7 +3,6 @@ package info.nightscout.androidaps.testing.mockers;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import org.junit.Assert;
 import org.mockito.ArgumentMatchers;
 import org.mockito.invocation.InvocationOnMock;
 import org.powermock.api.mockito.PowerMockito;
@@ -11,7 +10,7 @@ import org.powermock.api.mockito.PowerMockito;
 import java.util.HashMap;
 import java.util.Map;
 
-import info.nightscout.androidaps.aaps;
+import info.nightscout.androidaps.Aaps;
 import info.nightscout.androidaps.testing.mocks.SharedPreferencesMock;
 
 import static org.mockito.Mockito.mock;
@@ -24,9 +23,9 @@ public class AAPSMocker {
 
     public static void prepareMock() throws Exception {
         Context mockedContext = mock(Context.class);
-        mockStatic(aaps.class, InvocationOnMock::callRealMethod);
+        mockStatic(Aaps.class, InvocationOnMock::callRealMethod);
 
-        PowerMockito.when(aaps.class, "getAppContext").thenReturn(mockedContext);
+        PowerMockito.when(Aaps.class, "getAppContext").thenReturn(mockedContext);
         PowerMockito.when(mockedContext, "getSharedPreferences",  ArgumentMatchers.anyString(), ArgumentMatchers.anyInt()).thenAnswer(invocation -> {
 
             final String key = invocation.getArgument(0);
@@ -38,7 +37,7 @@ public class AAPSMocker {
                 return newPrefs;
             }
         });
-        PowerMockito.when(aaps.class, "areComplicationsUnicode").thenAnswer(invocation -> unicodeComplicationsOn);
+        PowerMockito.when(Aaps.class, "areComplicationsUnicode").thenAnswer(invocation -> unicodeComplicationsOn);
 
         setMockedUnicodeComplicationsOn(true);
         resetMockedSharedPrefs();

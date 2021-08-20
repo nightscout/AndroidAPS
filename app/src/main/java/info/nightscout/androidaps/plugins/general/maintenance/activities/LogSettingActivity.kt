@@ -7,37 +7,41 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
+import info.nightscout.androidaps.databinding.ActivityLogsettingBinding
 import info.nightscout.androidaps.logging.L
-import kotlinx.android.synthetic.main.activity_logsetting.*
 import javax.inject.Inject
 
 class LogSettingActivity : NoSplashAppCompatActivity() {
 
-    @Inject lateinit var l :L
+    @Inject lateinit var l: L
+
+    private lateinit var binding: ActivityLogsettingBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_logsetting)
+        binding = ActivityLogsettingBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         createViewsForSettings()
 
-        logsettings_reset.setOnClickListener {
+        binding.reset.setOnClickListener {
             l.resetToDefaults()
             createViewsForSettings()
         }
-        ok.setOnClickListener { finish() }
+        binding.ok.setOnClickListener { finish() }
     }
 
     private fun createViewsForSettings() {
-        logsettings_placeholder.removeAllViews()
+        binding.placeholder.removeAllViews()
         for (element in l.getLogElements()) {
             val logViewHolder = LogViewHolder(element)
-            logsettings_placeholder.addView(logViewHolder.baseView)
+            binding.placeholder.addView(logViewHolder.baseView)
         }
 
     }
 
     internal inner class LogViewHolder(element: L.LogElement) {
+
         @Suppress("InflateParams")
         var baseView = layoutInflater.inflate(R.layout.logsettings_item, null) as LinearLayout
 

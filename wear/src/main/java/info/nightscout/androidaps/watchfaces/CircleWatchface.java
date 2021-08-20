@@ -54,8 +54,8 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
     private float angleSMALL = 0f;
     private int hour, minute;
     private int color;
-    private Paint circlePaint = new Paint();
-    private Paint removePaint = new Paint();
+    private final Paint circlePaint = new Paint();
+    private final Paint removePaint = new Paint();
     private RectF rect, rectDelete;
     private boolean overlapping;
 
@@ -64,7 +64,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
 
 
     public Point displaySize = new Point();
-    private MessageReceiver messageReceiver = new MessageReceiver();
+    private final MessageReceiver messageReceiver = new MessageReceiver();
 
     private int sgvLevel = 0;
     private String sgvString = "999";
@@ -150,8 +150,8 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
         // prepare fields
 
         TextView textView;
-        mSgv = (TextView) myLayout.findViewById(R.id.sgvString);
-        textView = (TextView) myLayout.findViewById(R.id.sgvString);
+        mSgv = myLayout.findViewById(R.id.sgvString);
+        textView = myLayout.findViewById(R.id.sgvString);
         if (sharedPrefs.getBoolean("showBG", true)) {
             textView.setVisibility(View.VISIBLE);
             textView.setText(getSgvString());
@@ -162,7 +162,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
             textView.setVisibility(View.INVISIBLE);
         }
 
-        textView = (TextView) myLayout.findViewById(R.id.statusString);
+        textView = myLayout.findViewById(R.id.statusString);
         if (sharedPrefs.getBoolean("showExternalStatus", true)) {
             textView.setVisibility(View.VISIBLE);
             textView.setText(getStatusString());
@@ -173,7 +173,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
             textView.setVisibility(View.GONE);
         }
 
-        textView = (TextView) myLayout.findViewById(R.id.agoString);
+        textView = myLayout.findViewById(R.id.agoString);
         if (sharedPrefs.getBoolean("showAgo", true)) {
             textView.setVisibility(View.VISIBLE);
 
@@ -189,7 +189,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
             textView.setVisibility(View.INVISIBLE);
         }
 
-        textView = (TextView) myLayout.findViewById(R.id.deltaString);
+        textView = myLayout.findViewById(R.id.deltaString);
         if (sharedPrefs.getBoolean("showDelta", true)) {
             textView.setVisibility(View.VISIBLE);
             textView.setText(getDelta());
@@ -214,9 +214,9 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
     }
 
     public String getMinutes() {
-        String minutes = "--\'";
+        String minutes = "--'";
         if (getDatetime() != 0) {
-            minutes = ((int) Math.floor((System.currentTimeMillis() - getDatetime()) / 60000.0)) + "\'";
+            minutes = ((int) Math.floor((System.currentTimeMillis() - getDatetime()) / 60000.0)) + "'";
         }
         return minutes;
     }

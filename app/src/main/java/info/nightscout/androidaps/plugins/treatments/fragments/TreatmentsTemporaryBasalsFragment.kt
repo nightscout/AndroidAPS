@@ -11,7 +11,6 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Intervals
 import info.nightscout.androidaps.data.IobTotal
@@ -19,33 +18,29 @@ import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.db.TemporaryBasal
 import info.nightscout.androidaps.events.EventTempBasalChange
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
-import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsTemporaryBasalsFragment.RecyclerViewAdapter.TempBasalsViewHolder
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog.showConfirmation
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.treatments_tempbasals_fragment.*
 import javax.inject.Inject
 
 class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
+
     private val disposable = CompositeDisposable()
 
     @Inject lateinit var rxBus: RxBusWrapper
-    @Inject lateinit var sp: SP
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var nsUpload: NSUpload
-    @Inject lateinit var uploadQueue: UploadQueue
     @Inject lateinit var dateUtil: DateUtil
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -81,6 +76,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
     }
 
     inner class RecyclerViewAdapter internal constructor(private var tempBasalList: Intervals<TemporaryBasal>) : RecyclerView.Adapter<TempBasalsViewHolder>() {
+
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): TempBasalsViewHolder {
             val v = LayoutInflater.from(viewGroup.context).inflate(R.layout.treatments_tempbasals_item, viewGroup, false)
             return TempBasalsViewHolder(v)
@@ -142,6 +138,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
         }
 
         inner class TempBasalsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
             var cv: CardView = itemView.findViewById(R.id.tempbasals_cardview)
             var date: TextView = itemView.findViewById(R.id.tempbasals_date)
             var duration: TextView = itemView.findViewById(R.id.tempbasals_duration)
@@ -166,10 +163,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
                 ${resourceHelper.gs(R.string.date)}: ${dateUtil.dateAndTimeString(tempBasal.date)}
                 """.trimIndent(),
                             DialogInterface.OnClickListener { _: DialogInterface?, _: Int ->
-                                val id = tempBasal._id
-                                if (NSUpload.isIdValid(id)) nsUpload.removeCareportalEntryFromNS(id)
-                                else uploadQueue.removeID("dbAdd", id)
-                                MainApp.getDbHelper().delete(tempBasal)
+                                activePlugin.activeTreatments.removeTempBasal(tempBasal)
                             }, null)
                     }
                 }

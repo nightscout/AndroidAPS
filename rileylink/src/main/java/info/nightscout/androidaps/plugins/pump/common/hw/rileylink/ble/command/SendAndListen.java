@@ -16,14 +16,14 @@ public class SendAndListen extends RileyLinkCommand {
 
     @Inject RileyLinkServiceData rileyLinkServiceData;
 
-    private byte sendChannel;
-    private byte repeatCount;
-    private int delayBetweenPackets_ms;
-    private byte listenChannel;
-    private int timeout_ms;
-    private byte retryCount;
-    private Integer preambleExtension_ms;
-    private RadioPacket packetToSend;
+    private final byte sendChannel;
+    private final byte repeatCount;
+    private final int delayBetweenPackets_ms;
+    private final byte listenChannel;
+    private final int timeout_ms;
+    private final byte retryCount;
+    private final Integer preambleExtension_ms;
+    private final RadioPacket packetToSend;
 
 
     public SendAndListen(HasAndroidInjector injector, byte sendChannel, byte repeatCount, byte delayBetweenPackets_ms, byte listenChannel,

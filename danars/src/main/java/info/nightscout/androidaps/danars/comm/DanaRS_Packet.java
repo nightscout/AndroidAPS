@@ -38,6 +38,9 @@ public class DanaRS_Packet {
         injector.androidInjector().inject(this);
     }
 
+    public boolean success() {
+        return !failed;
+    }
     public void setReceived() {
         received = true;
     }
@@ -74,6 +77,7 @@ public class DanaRS_Packet {
     }
 
     public void handleMessageNotReceived() {
+        failed = true;
     }
 
     public String getFriendlyName() {
@@ -194,7 +198,7 @@ public class DanaRS_Packet {
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
 
-    public String asciiStringFromBuff(byte[] buff, int offset, int length) {
+    public static String asciiStringFromBuff(byte[] buff, int offset, int length) {
         byte[] strbuff = new byte[length];
         System.arraycopy(buff, offset, strbuff, 0, length);
         return new String(strbuff, StandardCharsets.UTF_8);

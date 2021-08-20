@@ -248,13 +248,14 @@ public class PodHistoryActivity extends NoSplashAppCompatActivity {
                 PodHistoryEntryType entryType = PodHistoryEntryType.getByCode(historyEntry.getPodEntryTypeCode());
                 switch (entryType) {
 
-                    case SET_TEMPORARY_BASAL: {
+                    case SET_TEMPORARY_BASAL:
+                    case SPLIT_TEMPORARY_BASAL: {
                         TempBasalPair tempBasalPair = aapsOmnipodUtil.getGsonInstance().fromJson(historyEntry.getData(), TempBasalPair.class);
-                        valueView.setText(resourceHelper.gs(R.string.omnipod_cmd_tbr_value, tempBasalPair.getInsulinRate(), tempBasalPair.getDurationMinutes()));
+                        valueView.setText(resourceHelper.gs(R.string.omnipod_history_tbr_value, tempBasalPair.getInsulinRate(), tempBasalPair.getDurationMinutes()));
                     }
                     break;
 
-                    case FILL_CANNULA_SET_BASAL_PROFILE:
+                    case INSERT_CANNULA:
                     case SET_BASAL_SCHEDULE: {
                         if (historyEntry.getData() != null) {
                             setProfileValue(historyEntry.getData(), valueView);
@@ -265,23 +266,29 @@ public class PodHistoryActivity extends NoSplashAppCompatActivity {
                     case SET_BOLUS: {
                         if (historyEntry.getData().contains(";")) {
                             String[] splitVal = historyEntry.getData().split(";");
-                            valueView.setText(resourceHelper.gs(R.string.omnipod_cmd_bolus_value_with_carbs, Double.valueOf(splitVal[0]), Double.valueOf(splitVal[1])));
+                            valueView.setText(resourceHelper.gs(R.string.omnipod_history_bolus_value_with_carbs, Double.valueOf(splitVal[0]), Double.valueOf(splitVal[1])));
                         } else {
-                            valueView.setText(resourceHelper.gs(R.string.omnipod_cmd_bolus_value, Double.valueOf(historyEntry.getData())));
+                            valueView.setText(resourceHelper.gs(R.string.omnipod_history_bolus_value, Double.valueOf(historyEntry.getData())));
                         }
                     }
                     break;
 
+                    case PLAY_TEST_BEEP: {
+                        if (historyEntry.getData() != null) {
+                            valueView.setText(historyEntry.getData());
+                        }
+                    }
+                    break;
                     case GET_POD_STATUS:
                     case GET_POD_INFO:
                     case SET_TIME:
-                    case PAIR_AND_PRIME:
+                    case INITIALIZE_POD:
                     case CANCEL_TEMPORARY_BASAL_BY_DRIVER:
                     case CANCEL_TEMPORARY_BASAL:
                     case CONFIGURE_ALERTS:
                     case CANCEL_BOLUS:
                     case DEACTIVATE_POD:
-                    case RESET_POD_STATE:
+                    case DISCARD_POD:
                     case ACKNOWLEDGE_ALERTS:
                     case SUSPEND_DELIVERY:
                     case RESUME_DELIVERY:

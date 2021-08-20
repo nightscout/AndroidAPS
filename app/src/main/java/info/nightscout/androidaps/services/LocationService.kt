@@ -1,3 +1,5 @@
+@file:Suppress("PrivatePropertyName")
+
 package info.nightscout.androidaps.services
 
 import android.Manifest
@@ -8,6 +10,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
+import android.os.Binder
 import android.os.Bundle
 import android.os.IBinder
 import androidx.core.app.ActivityCompat
@@ -44,8 +47,17 @@ class LocationService : DaggerService() {
     private val LOCATION_INTERVAL_PASSIVE = T.mins(1).msecs() // this doesn't cost more power
 
     companion object {
+
         private const val LOCATION_DISTANCE = 10f
     }
+
+    inner class LocalBinder : Binder() {
+
+        fun getService(): LocationService = this@LocationService
+    }
+
+    private val binder = LocalBinder()
+    override fun onBind(intent: Intent): IBinder = binder
 
     inner class LocationListener internal constructor(val provider: String) : android.location.LocationListener {
 
@@ -147,8 +159,6 @@ class LocationService : DaggerService() {
         }
         disposable.clear()
     }
-
-    override fun onBind(intent: Intent?): IBinder? = null
 
     private fun initializeLocationManager() {
         aapsLogger.debug(LTag.LOCATION, "initializeLocationManager - Provider: " + sp.getString(R.string.key_location, "NONE"))

@@ -185,7 +185,7 @@ private val allowedKeys = """
     tidepool_only_while_charging
     tidepool_only_while_unmetered
     virtualpump
-    virtualpump_uploadstatus
+    key_virtualpump_uploadstatus
     virtualpump_type
     wearplugin
     wearcontrol

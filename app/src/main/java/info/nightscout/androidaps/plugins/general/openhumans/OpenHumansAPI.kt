@@ -43,8 +43,8 @@ class OpenHumansAPI(
         .toSingle()
         .map { response ->
             response.use { _ ->
-                val body = response.body
-                val jsonObject = body?.let { JSONObject(it.string()) }
+                val responseBody = response.body
+                val jsonObject = responseBody?.let { JSONObject(it.string()) }
                 if (!response.isSuccessful) throw OHHttpException(response.code, response.message, jsonObject?.getString("error"))
                 if (jsonObject == null) throw OHHttpException(response.code, response.message, "No body")
                 if (!jsonObject.has("expires_in")) throw OHMissingFieldException("expires_in")

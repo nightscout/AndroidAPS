@@ -13,7 +13,7 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/danar_buttons"
+            android:layout_above="@+id/buttons"
             android:fillViewport="true">
 
             <LinearLayout
@@ -66,7 +66,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/danar_serialnumber"
+                        android:id="@+id/serial_number"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -112,7 +112,7 @@
                         android:textSize="14sp" />
 
                     <com.joanzapata.iconify.widget.IconTextView
-                        android:id="@+id/danar_btconnection"
+                        android:id="@+id/btconnection"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -126,7 +126,7 @@
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/danar_queue"
+                    android:id="@+id/queue"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="content"
@@ -166,7 +166,7 @@
                         android:textSize="14sp" />
 
                     <com.joanzapata.iconify.widget.IconTextView
-                        android:id="@+id/danar_battery"
+                        android:id="@+id/battery"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -212,7 +212,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/danar_lastconnection"
+                        android:id="@+id/lastconnection"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -257,7 +257,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/danar_lastbolus"
+                        android:id="@+id/lastbolus"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -302,7 +302,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/danar_dailyunits"
+                        android:id="@+id/dailyunits"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -347,7 +347,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/danar_basabasalrate"
+                        android:id="@+id/basabasalrate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -392,7 +392,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/danar_tempbasal"
+                        android:id="@+id/tempbasal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -437,7 +437,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/danar_extendedbolus"
+                        android:id="@+id/extendedbolus"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -482,7 +482,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/danar_reservoir"
+                        android:id="@+id/reservoir"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -527,7 +527,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/danar_iob"
+                        android:id="@+id/iob"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -572,7 +572,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/danar_basalstep"
+                        android:id="@+id/basalstep"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -617,7 +617,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/danar_bolusstep"
+                        android:id="@+id/bolusstep"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -662,7 +662,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/danar_firmware"
+                        android:id="@+id/firmware"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -682,12 +682,19 @@
                     android:layout_marginTop="5dp"
                     android:background="@color/listdelimiter" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:drawableTop="@drawable/ic_danars"
+                    android:paddingTop="10dp" />
+
             </LinearLayout>
 
         </ScrollView>
 
         <LinearLayout
-            android:id="@+id/danar_buttons"
+            android:id="@+id/buttons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -699,7 +706,7 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/danar_viewprofile"
+                    android:id="@+id/viewprofile"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -711,7 +718,7 @@
 
 
                 <Button
-                    android:id="@+id/danar_history"
+                    android:id="@+id/history"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -722,7 +729,7 @@
                     android:text="@string/pumphistory" />
 
                 <Button
-                    android:id="@+id/danar_stats"
+                    android:id="@+id/stats"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -733,7 +740,7 @@
                     android:text="@string/stats" />
 
                 <Button
-                    android:id="@+id/danar_user_options"
+                    android:id="@+id/user_options"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

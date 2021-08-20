@@ -49,7 +49,7 @@ class FoodFragment : DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         food_recyclerview.setHasFixedSize(true)
-        food_recyclerview.setLayoutManager(LinearLayoutManager(view.context))
+        food_recyclerview.layoutManager = LinearLayoutManager(view.context)
         food_recyclerview.adapter = RecyclerViewAdapter(foodPlugin.service?.foodData ?: ArrayList())
 
         food_clearfilter.setOnClickListener {
@@ -69,7 +69,7 @@ class FoodFragment : DaggerFragment() {
                 filterData()
             }
         }
-        food_subcategory.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+        food_subcategory.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 filterData()
             }
@@ -77,7 +77,7 @@ class FoodFragment : DaggerFragment() {
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 filterData()
             }
-        })
+        }
         food_filter.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {

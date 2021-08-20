@@ -81,4 +81,6 @@
     <string name="common_on">På</string>
     <string name="common_off">Av</string>
     <string name="pump_time_updated">Tiden uppdaterad i pumpen</string>
+    <string name="set_neutral_temps_title">Sätt neutrala temp basaler</string>
+    <string name="set_neutral_temps_summary">Om aktiverad, kommer en eventuell temporär basal automatiskt avbrytas före utgången av varje timme. Denna metod kan förhindra att vissa pumpar piper/vibrerar.</string>
 </resources>

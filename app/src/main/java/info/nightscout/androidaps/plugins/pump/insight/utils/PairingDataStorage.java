@@ -10,7 +10,7 @@ import info.nightscout.androidaps.plugins.pump.insight.descriptors.SystemIdentif
 
 public class PairingDataStorage {
 
-    private SharedPreferences preferences;
+    private final SharedPreferences preferences;
 
     private boolean paired;
     private String macAddress;

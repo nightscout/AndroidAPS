@@ -148,8 +148,7 @@ public abstract class SatlMessage {
 
     public static boolean hasCompletePacket(ByteBuf byteBuf) {
         if (byteBuf.getSize() < 37) return false;
-        if (byteBuf.getSize() < byteBuf.getUInt16LE(4) + 8) return false;
-        return true;
+        return byteBuf.getSize() >= byteBuf.getUInt16LE(4) + 8;
     }
 
     public Nonce getNonce() {

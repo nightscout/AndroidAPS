@@ -175,7 +175,7 @@
                                 android:layout_weight="1"
                                 android:text="---"
                                 android:textColor="@color/primary_text_dark"
-                                android:textSize="34sp" />
+                                android:textSize="30sp" />
 
                         </LinearLayout>
 

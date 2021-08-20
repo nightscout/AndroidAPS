@@ -14,8 +14,8 @@ public class Constraint<T extends Comparable<T>> {
     private T value;
     private T originalValue;
 
-    private List<String> reasons = new ArrayList<>();
-    private List<String> mostLimiting = new ArrayList<>();
+    private final List<String> reasons = new ArrayList<>();
+    private final List<String> mostLimiting = new ArrayList<>();
 
     public Constraint(T value) {
         this.value = value;

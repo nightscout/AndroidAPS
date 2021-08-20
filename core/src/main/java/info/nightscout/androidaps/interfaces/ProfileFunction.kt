@@ -13,5 +13,6 @@ interface ProfileFunction {
     fun getProfile(): Profile?
     fun getUnits(): String
     fun getProfile(time: Long): Profile?
+    fun getProfile(time: Long, activeTreatments: TreatmentsInterface): Profile?
     fun prepareProfileSwitch(profileStore: ProfileStore, profileName: String, duration: Int, percentage: Int, timeShift: Int, date: Long): ProfileSwitch
 }

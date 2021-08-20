@@ -18,12 +18,12 @@ public class AlertConfigurationUtil {
 
     public static AlertConfiguration createExpirationAdvisoryAlertConfiguration(boolean active, Duration timeUntilAlert, Duration duration) {
         return new AlertConfiguration(AlertType.EXPIRATION_ADVISORY_ALERT, AlertSlot.SLOT7, active, false, duration,
-                new TimerAlertTrigger(timeUntilAlert), BeepType.BIP_BEEP_BIP_BEEP_BIP_BEEP_BIP_BEEP, BeepRepeat.EVERY_15_MINUTES);
+                new TimerAlertTrigger(timeUntilAlert), BeepType.BIP_BEEP_BIP_BEEP_BIP_BEEP_BIP_BEEP, BeepRepeat.EVERY_MINUTE_FOR_3_MINUTES_REPEAT_EVERY_15_MINUTES);
     }
 
     public static AlertConfiguration createShutdownImminentAlertConfiguration(Duration timeUntilAlert) {
         return new AlertConfiguration(AlertType.SHUTDOWN_IMMINENT_ALARM, AlertSlot.SLOT2, true, false, Duration.ZERO,
-                new TimerAlertTrigger(timeUntilAlert), BeepType.BIP_BEEP_BIP_BEEP_BIP_BEEP_BIP_BEEP, BeepRepeat.EVERY_MINUTE_FOR_3_MINUTES_REPEAT_EVERY_15_MINUTES);
+                new TimerAlertTrigger(timeUntilAlert), BeepType.BIP_BEEP_BIP_BEEP_BIP_BEEP_BIP_BEEP, BeepRepeat.EVERY_15_MINUTES);
     }
 
     public static AlertConfiguration createAutoOffAlertConfiguration(boolean active, Duration countdownDuration) {

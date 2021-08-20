@@ -1,16 +1,16 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.driver.exception;
 
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoFaultEvent;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoDetailedStatus;
 
 public class PodFaultException extends OmnipodException {
-    private final PodInfoFaultEvent faultEvent;
+    private final PodInfoDetailedStatus detailedStatus;
 
-    public PodFaultException(PodInfoFaultEvent faultEvent) {
-        super(faultEvent.getFaultEventCode().toString(), true);
-        this.faultEvent = faultEvent;
+    public PodFaultException(PodInfoDetailedStatus detailedStatus) {
+        super(detailedStatus.getFaultEventCode().toString(), true);
+        this.detailedStatus = detailedStatus;
     }
 
-    public PodInfoFaultEvent getFaultEvent() {
-        return faultEvent;
+    public PodInfoDetailedStatus getDetailedStatus() {
+        return detailedStatus;
     }
 }

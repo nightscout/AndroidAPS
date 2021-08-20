@@ -9,7 +9,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.mess
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.command.SetInsulinScheduleCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.schedule.BolusDeliverySchedule;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.ActionInitializationException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 
@@ -23,10 +22,10 @@ public class BolusAction implements OmnipodAction<StatusResponse> {
     public BolusAction(PodStateManager podStateManager, double units, Duration timeBetweenPulses,
                        boolean acknowledgementBeep, boolean completionBeep) {
         if (podStateManager == null) {
-            throw new ActionInitializationException("Pod state manager cannot be null");
+            throw new IllegalArgumentException("Pod state manager cannot be null");
         }
         if (timeBetweenPulses == null) {
-            throw new ActionInitializationException("Time between pulses cannot be null");
+            throw new IllegalArgumentException("Time between pulses cannot be null");
         }
         this.podStateManager = podStateManager;
         this.units = units;
