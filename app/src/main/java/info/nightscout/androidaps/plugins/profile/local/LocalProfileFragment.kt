@@ -55,7 +55,7 @@ class LocalProfileFragment : DaggerFragment() {
 
     private val save = Runnable {
         doEdit()
-        basalView?.updateLabel(resourceHelper.gs(R.string.basal_label) + ": " + sumLabel())
+        basalView?.updateLabel(resourceHelper.gs(R.string.basal_label) + ": " + sumLabel(spinner?.selectedItem.toString()))
         localProfilePlugin.profile?.getSpecificProfile(spinner?.selectedItem.toString())?.let {
             binding.basalGraph.show(ProfileSealed.Pure(it))
         }
@@ -71,8 +71,8 @@ class LocalProfileFragment : DaggerFragment() {
         }
     }
 
-    private fun sumLabel(): String {
-        val profile = localProfilePlugin.profile?.getDefaultProfile()
+    private fun sumLabel(profileName: String?): String {
+        val profile = profileName?.let { localProfilePlugin.profile?.getSpecificProfile(profileName) }
         val sum = profile?.let { ProfileSealed.Pure(profile).baseBasalSum() } ?: 0.0
         return " ∑" + DecimalFormatter.to2Decimal(sum) + resourceHelper.gs(R.string.insulin_unit_shortname)
     }
@@ -129,7 +129,7 @@ class LocalProfileFragment : DaggerFragment() {
         binding.dia.setParams(currentProfile.dia, hardLimits.minDia(), hardLimits.maxDia(), 0.1, DecimalFormat("0.0"), false, binding.save, textWatch)
         binding.dia.tag = "LP_DIA"
         TimeListEdit(context, aapsLogger, dateUtil, view, R.id.ic, "IC", resourceHelper.gs(R.string.ic_label), currentProfile.ic, null, hardLimits.minIC(), hardLimits.maxIC(), 0.1, DecimalFormat("0.0"), save)
-        basalView = TimeListEdit(context, aapsLogger, dateUtil, view, R.id.basal_holder, "BASAL", resourceHelper.gs(R.string.basal_label) + ": " + sumLabel(), currentProfile.basal, null, pumpDescription.basalMinimumRate, pumpDescription.basalMaximumRate, 0.01, DecimalFormat("0.00"), save)
+        basalView = TimeListEdit(context, aapsLogger, dateUtil, view, R.id.basal_holder, "BASAL", resourceHelper.gs(R.string.basal_label) + ": " + sumLabel(currentProfile.name), currentProfile.basal, null, pumpDescription.basalMinimumRate, pumpDescription.basalMaximumRate, 0.01, DecimalFormat("0.00"), save)
         if (units == Constants.MGDL) {
             TimeListEdit(context, aapsLogger, dateUtil, view, R.id.isf, "ISF", resourceHelper.gs(R.string.isf_label), currentProfile.isf, null, HardLimits.MIN_ISF, HardLimits.MAX_ISF, 1.0, DecimalFormat("0"), save)
             TimeListEdit(context, aapsLogger, dateUtil, view, R.id.target, "TARGET", resourceHelper.gs(R.string.target_label), currentProfile.targetLow, currentProfile.targetHigh, HardLimits.VERY_HARD_LIMIT_TARGET_BG[0].toDouble(), HardLimits.VERY_HARD_LIMIT_TARGET_BG[1].toDouble(), 1.0, DecimalFormat("0"), save)
