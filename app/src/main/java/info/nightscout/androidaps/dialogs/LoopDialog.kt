@@ -160,6 +160,8 @@ class LoopDialog : DaggerDialogFragment() {
         val apsMode = sp.getString(R.string.key_aps_mode, "open")
         val pump = activePlugin.activePump
 
+        binding.overviewDisconnect15m.visibility = pumpDescription.tempDurationStep15mAllowed.toVisibility()
+        binding.overviewDisconnect30m.visibility = pumpDescription.tempDurationStep30mAllowed.toVisibility()
         when {
             pump.isSuspended()                                     -> {
                 binding.overviewLoop.visibility = View.GONE
@@ -178,7 +180,8 @@ class LoopDialog : DaggerDialogFragment() {
                 binding.overviewEnable.visibility = View.VISIBLE
                 binding.overviewDisable.visibility = View.GONE
                 binding.overviewSuspend.visibility = View.GONE
-                binding.overviewPump.visibility = View.GONE
+                binding.overviewPump.visibility = View.VISIBLE
+                binding.overviewReconnect.visibility = View.GONE
             }
 
             loopPlugin.isDisconnected                              -> {
@@ -187,8 +190,6 @@ class LoopDialog : DaggerDialogFragment() {
                 binding.overviewPump.visibility = View.VISIBLE
                 binding.overviewPumpHeader.text = resourceHelper.gs(R.string.reconnect)
                 binding.overviewDisconnectButtons.visibility = View.VISIBLE
-                binding.overviewDisconnect15m.visibility = pumpDescription.tempDurationStep15mAllowed.toVisibility()
-                binding.overviewDisconnect30m.visibility = pumpDescription.tempDurationStep30mAllowed.toVisibility()
                 binding.overviewReconnect.visibility = View.VISIBLE
             }
 
@@ -198,7 +199,8 @@ class LoopDialog : DaggerDialogFragment() {
                 binding.overviewSuspendHeader.text = resourceHelper.gs(R.string.resumeloop)
                 binding.overviewSuspendButtons.visibility = View.VISIBLE
                 binding.overviewResume.visibility = View.VISIBLE
-                binding.overviewPump.visibility = View.GONE
+                binding.overviewPump.visibility = View.VISIBLE
+                binding.overviewReconnect.visibility = View.GONE
             }
 
             else                                                   -> {
@@ -231,8 +233,6 @@ class LoopDialog : DaggerDialogFragment() {
                 binding.overviewPump.visibility = View.VISIBLE
                 binding.overviewPumpHeader.text = resourceHelper.gs(R.string.disconnectpump)
                 binding.overviewDisconnectButtons.visibility = View.VISIBLE
-                binding.overviewDisconnect15m.visibility = pumpDescription.tempDurationStep15mAllowed.toVisibility()
-                binding.overviewDisconnect30m.visibility = pumpDescription.tempDurationStep30mAllowed.toVisibility()
                 binding.overviewReconnect.visibility = View.GONE
 
             }
