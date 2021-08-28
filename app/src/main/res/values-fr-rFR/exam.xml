@@ -132,7 +132,6 @@
     <string name="wronginsulin_label">Erreurs de saisie/injection d\'insuline</string>
     <string name="wronginsulin_whattodo">Que devriez-vous faire si vous avez reçu moins d\'insuline que l\'historique de la pompe suggère par ex. à cause d\'une occlusion, d\'une mauvaise canule ou d\'un oubli de rebranchement de la pompe après une douche ?</string>
     <string name="wronginsulin_careportal">Supprimez les données d\'insuline de Nightscout Careportal pour le retirer de l\'historique de la pompe.</string>
-    <string name="wronginsulin_compare">Comparez les valeurs dans l\'historique de la pompe et AndroidAPS.</string>
     <string name="wronginsulin_prime">Faites un bolus du montant de votre insuline calculée « manquante » soit par seringue / stylo ou en utilisant un amorçage.</string>
     <string name="wronginsulin_donothing">Ne faites rien et laissez AndroidAPS corriger tout taux élevé de glycémie qui en résulte.</string>
     <string name="iob_label">Insuline Active (IA)</string>
