@@ -74,7 +74,10 @@ class LoopDialog : DaggerDialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        dialog?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
     }
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
@@ -211,6 +214,12 @@ class LoopDialog : DaggerDialogFragment() {
                         binding.overviewCloseloop.visibility = (apsMode != "closed").toVisibility()
                         binding.overviewLgsloop.visibility = (apsMode != "lgs").toVisibility()
                         binding.overviewOpenloop.visibility = (apsMode != "open").toVisibility()
+                    }
+
+                    apsMode == "open"         -> {
+                        binding.overviewCloseloop.visibility = View.VISIBLE
+                        binding.overviewLgsloop.visibility = View.GONE
+                        binding.overviewOpenloop.visibility = View.GONE
                     }
 
                     lgsEnabled.value()        -> {
