@@ -921,4 +921,5 @@
     <string name="ns_receive_cgm_summary">Aksepter CGM data fra NS</string>
     <string name="sms_timeout_while_wating">Tidsavbrudd fordi vi ventet på avslutning av forrige pumpekommunikasjon</string>
     <string name="smscommunicator_another_bolus_in_queue">Det ligger en annen bolus i køen. Prøv igjen senere.</string>
+    <string name="calculation_in_progress">Beregning pågår</string>
 </resources>
