@@ -240,7 +240,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
                 return ZonedDateTime.now()
                     .plusHours(podLifeInHours.toLong())
                     .minusMinutes(minutesSinceActivation.toLong())
-                    .plus(Duration.ofMillis(System.currentTimeMillis() - lastUpdatedSystem))
+                    .minus(Duration.ofMillis(System.currentTimeMillis() - lastUpdatedSystem))
             }
             return null
         }
