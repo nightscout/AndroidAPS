@@ -48,7 +48,7 @@ abstract class Action(val injector: HasAndroidInjector) {
         try {
             val type = obj.getString("type")
             val data = obj.getJSONObject("data")
-            when (type) {
+            return when (type) {
                 ActionAlarm::class.java.name,              // backward compatibility
                 ActionAlarm::class.java.simpleName                -> ActionAlarm(injector).fromJSON(data.toString())
                 ActionDummy::class.java.name,
