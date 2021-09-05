@@ -279,7 +279,7 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
         if (cartridgeStatus == null) return;
         String status;
         if (cartridgeStatus.isInserted())
-            status = DecimalFormatter.INSTANCE.to2Decimal(localInsightPlugin.getCartridgeStatus().getRemainingAmount()) + "U";
+            status = DecimalFormatter.INSTANCE.to2Decimal(localInsightPlugin.getCartridgeStatus().getRemainingAmount() * localInsightPlugin.concentration) + "U";
         else status = resourceHelper.gs(R.string.not_inserted);
         statusItems.add(getStatusItem(resourceHelper.gs(R.string.reservoir_label), status));
     }
@@ -287,16 +287,16 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
     private void getTDDItems(List<View> statusItems) {
         if (localInsightPlugin.getTotalDailyDose() == null) return;
         TotalDailyDose tdd = localInsightPlugin.getTotalDailyDose();
-        statusItems.add(getStatusItem(resourceHelper.gs(R.string.tdd_bolus), DecimalFormatter.INSTANCE.to2Decimal(tdd.getBolus())));
-        statusItems.add(getStatusItem(resourceHelper.gs(R.string.tdd_basal), DecimalFormatter.INSTANCE.to2Decimal(tdd.getBasal())));
-        statusItems.add(getStatusItem(resourceHelper.gs(R.string.tdd_total), DecimalFormatter.INSTANCE.to2Decimal(tdd.getBolusAndBasal())));
+        statusItems.add(getStatusItem(resourceHelper.gs(R.string.tdd_bolus), DecimalFormatter.INSTANCE.to2Decimal(tdd.getBolus() * localInsightPlugin.concentration)));
+        statusItems.add(getStatusItem(resourceHelper.gs(R.string.tdd_basal), DecimalFormatter.INSTANCE.to2Decimal(tdd.getBasal() * localInsightPlugin.concentration)));
+        statusItems.add(getStatusItem(resourceHelper.gs(R.string.tdd_total), DecimalFormatter.INSTANCE.to2Decimal(tdd.getBolusAndBasal() * localInsightPlugin.concentration)));
     }
 
     private void getBaseBasalRateItem(List<View> statusItems) {
         if (localInsightPlugin.getActiveBasalRate() == null) return;
         ActiveBasalRate activeBasalRate = localInsightPlugin.getActiveBasalRate();
         statusItems.add(getStatusItem(resourceHelper.gs(R.string.basebasalrate_label),
-                DecimalFormatter.INSTANCE.to2Decimal(activeBasalRate.getActiveBasalRate()) + " U/h (" + activeBasalRate.getActiveBasalProfileName() + ")"));
+                DecimalFormatter.INSTANCE.to2Decimal(activeBasalRate.getActiveBasalRate() * localInsightPlugin.concentration) + " U/h (" + activeBasalRate.getActiveBasalProfileName() + ")"));
     }
 
     private void getTBRItem(List<View> statusItems) {
@@ -320,7 +320,7 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
                 default:
                     continue;
             }
-            statusItems.add(getStatusItem(label, resourceHelper.gs(R.string.eb_formatter, activeBolus.getRemainingAmount(), activeBolus.getInitialAmount(), activeBolus.getRemainingDuration())));
+            statusItems.add(getStatusItem(label, resourceHelper.gs(R.string.eb_formatter, activeBolus.getRemainingAmount() * localInsightPlugin.concentration, activeBolus.getInitialAmount() * localInsightPlugin.concentration, activeBolus.getRemainingDuration())));
         }
     }
 }

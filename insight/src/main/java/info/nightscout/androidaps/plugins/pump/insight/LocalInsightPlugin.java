@@ -190,7 +190,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     private List<ActiveBolus> activeBoluses;
     private boolean statusLoaded;
     private TBROverNotificationBlock tbrOverNotificationBlock;
-    private double concentration;
+    public double concentration;
 
     @Inject
     public LocalInsightPlugin(
@@ -262,9 +262,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     }
 
     public ActiveBasalRate getActiveBasalRate() {
-        ActiveBasalRate convertedActiveBasalRate = activeBasalRate;
-        convertedActiveBasalRate.setActiveBasalRate(activeBasalRate.getActiveBasalRate() * concentration);
-        return convertedActiveBasalRate;
+        return activeBasalRate;
     }
 
     public ActiveTBR getActiveTBR() {
@@ -272,12 +270,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     }
 
     public List<ActiveBolus> getActiveBoluses() {
-        List<ActiveBolus> convertedActiveBoluses = activeBoluses;
-        for (ActiveBolus bolus : convertedActiveBoluses) {
-            bolus.setInitialAmount(bolus.getInitialAmount() * concentration);
-            bolus.setRemainingAmount(bolus.getRemainingAmount() * concentration);
-        }
-        return convertedActiveBoluses;
+        return activeBoluses;
     }
 
     @Override
@@ -702,7 +695,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         PumpEnactResult result = new PumpEnactResult(getInjector());
         if (activeBasalRate == null) return result;
         if (activeBasalRate.getActiveBasalRate() == 0) return result;
-        double percent = 100D / activeBasalRate.getActiveBasalRate() * absoluteRate;
+        double percent = 100D / (activeBasalRate.getActiveBasalRate() * concentration) * absoluteRate;
         if (isFakingTempsByExtendedBoluses()) {
             PumpEnactResult cancelEBResult = cancelExtendedBolusOnly();
             if (cancelEBResult.getSuccess()) {
