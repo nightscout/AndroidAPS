@@ -234,7 +234,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     }
 
     private void updateConcentration() {
-        concentration = sp.getString(R.string.key_typeinsulin,"U100") == "U100" ? 1.0 : 2.0 ;
+        concentration = sp.getString(R.string.key_typeinsulin,"U100").equals("U100") ? 1.0 : 2.0 ;
     }
 
     public TBROverNotificationBlock getTBROverNotificationBlock() {
@@ -254,22 +254,27 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     }
 
     public CartridgeStatus getCartridgeStatus() {
+        updateConcentration();
         return cartridgeStatus;
     }
 
     public TotalDailyDose getTotalDailyDose() {
+        updateConcentration();
         return totalDailyDose;
     }
 
     public ActiveBasalRate getActiveBasalRate() {
+        updateConcentration();
         return activeBasalRate;
     }
 
     public ActiveTBR getActiveTBR() {
+        updateConcentration();
         return activeTBR;
     }
 
     public List<ActiveBolus> getActiveBoluses() {
+        updateConcentration();
         return activeBoluses;
     }
 
