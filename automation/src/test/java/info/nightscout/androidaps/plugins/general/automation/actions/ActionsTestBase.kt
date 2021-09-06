@@ -90,21 +90,25 @@ open class ActionsTestBase : TestBaseWithProfile() {
                 it.dateUtil = dateUtil
             }
             if (it is ActionProfileSwitchPercent) {
+                it.aapsLogger = aapsLogger
                 it.resourceHelper = resourceHelper
                 it.profileFunction = profileFunction
                 it.uel = uel
             }
             if (it is ActionNotification) {
+                it.aapsLogger = aapsLogger
                 it.resourceHelper = resourceHelper
                 it.rxBus = rxBus
             }
             if (it is ActionLoopSuspend) {
+                it.aapsLogger = aapsLogger
                 it.loopPlugin = loopPlugin
                 it.resourceHelper = resourceHelper
                 it.rxBus = rxBus
                 it.uel = uel
             }
             if (it is ActionLoopResume) {
+                it.aapsLogger = aapsLogger
                 it.loopPlugin = loopPlugin
                 it.resourceHelper = resourceHelper
                 it.configBuilder = configBuilder
@@ -114,6 +118,7 @@ open class ActionsTestBase : TestBaseWithProfile() {
                 it.uel = uel
             }
             if (it is ActionLoopEnable) {
+                it.aapsLogger = aapsLogger
                 it.loopPlugin = loopPlugin
                 it.resourceHelper = resourceHelper
                 it.configBuilder = configBuilder
@@ -121,6 +126,7 @@ open class ActionsTestBase : TestBaseWithProfile() {
                 it.uel = uel
             }
             if (it is ActionLoopDisable) {
+                it.aapsLogger = aapsLogger
                 it.loopPlugin = loopPlugin
                 it.resourceHelper = resourceHelper
                 it.configBuilder = configBuilder

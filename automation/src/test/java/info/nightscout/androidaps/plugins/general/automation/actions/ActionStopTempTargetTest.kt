@@ -66,7 +66,7 @@ class ActionStopTempTargetTest : ActionsTestBase() {
     }
 
     @Test fun toJSONTest() {
-        Assert.assertEquals("{\"type\":\"info.nightscout.androidaps.plugins.general.automation.actions.ActionStopTempTarget\"}", sut.toJSON())
+        Assert.assertEquals("{\"type\":\"ActionStopTempTarget\"}", sut.toJSON())
     }
 
     @Test fun fromJSONTest() {
