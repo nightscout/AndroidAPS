@@ -191,6 +191,7 @@ dependencies {
     implementation project(':omnipod-eros')
     implementation project(':omnipod-dash')
     implementation project(':diaconn')
+    implementation project(':openhumans')
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 

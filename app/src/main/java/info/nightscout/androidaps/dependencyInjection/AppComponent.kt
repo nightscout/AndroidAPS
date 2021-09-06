@@ -16,6 +16,7 @@ import info.nightscout.androidaps.di.CoreModule
 import info.nightscout.androidaps.diaconn.di.DiaconnG8Module
 import info.nightscout.androidaps.insight.di.InsightDatabaseModule
 import info.nightscout.androidaps.insight.di.InsightModule
+import info.nightscout.androidaps.plugin.general.openhumans.dagger.OpenHumansModule
 import info.nightscout.androidaps.plugins.pump.common.di.PumpCommonModule
 import info.nightscout.androidaps.plugins.pump.common.di.RileyLinkModule
 import info.nightscout.androidaps.plugins.pump.medtronic.di.MedtronicModule
@@ -57,8 +58,8 @@ import javax.inject.Singleton
         InsightModule::class,
         InsightDatabaseModule::class,
         WorkersModule::class,
-        OHUploaderModule::class,
-        DiaconnG8Module::class
+        DiaconnG8Module::class,
+        OpenHumansModule::class
     ]
 )
 interface AppComponent : AndroidInjector<MainApp> {

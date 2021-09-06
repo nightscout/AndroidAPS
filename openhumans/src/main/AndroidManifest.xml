@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="info.nightscout.androidaps.plugin.general.openhumans">
+
+    <application>
+        <activity
+            android:name=".ui.OHLoginActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/OpenHumans"
+            android:label="Setup Open Humans"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="setup-openhumans"
+                    android:scheme="androidaps" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
