@@ -2,8 +2,10 @@ package info.nightscout.androidaps.database.daos
 
 import androidx.room.Dao
 import androidx.room.Query
+import info.nightscout.androidaps.database.TABLE_TEMPORARY_TARGETS
 import info.nightscout.androidaps.database.TABLE_TOTAL_DAILY_DOSES
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
+import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.TotalDailyDose
 import io.reactivex.Single
 
@@ -28,5 +30,8 @@ internal interface TotalDailyDoseDao : TraceableDao<TotalDailyDose> {
 
     @Query("SELECT * FROM $TABLE_TOTAL_DAILY_DOSES WHERE isValid = 1 AND referenceId IS NULL ORDER BY timestamp DESC LIMIT :count")
     fun getLastTotalDailyDoses(count: Int): Single<List<TotalDailyDose>>
+
+    @Query("SELECT * FROM $TABLE_TOTAL_DAILY_DOSES WHERE dateCreated > :since AND dateCreated <= :until LIMIT :limit OFFSET :offset")
+    suspend fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<TotalDailyDose>
 
 }

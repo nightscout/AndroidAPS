@@ -17,7 +17,6 @@ import info.nightscout.androidaps.plugins.aps.logger.LoggerCallback
 import info.nightscout.androidaps.plugins.aps.loop.ScriptReader
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.general.openhumans.OpenHumansUploader
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.json.JSONArray
@@ -40,7 +39,6 @@ class DetermineBasalAdapterAMAJS internal constructor(scriptReader: ScriptReader
     @Inject lateinit var sp: SP
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var iobCobCalculator: IobCobCalculator
-    @Inject lateinit var openHumansUploader: OpenHumansUploader
 
     private val mScriptReader: ScriptReader
     private var profile = JSONObject()
@@ -116,7 +114,6 @@ class DetermineBasalAdapterAMAJS internal constructor(scriptReader: ScriptReader
                 aapsLogger.debug(LTag.APS, "Result: $result")
                 try {
                     val resultJson = JSONObject(result)
-                    openHumansUploader.enqueueAMAData(profile, glucoseStatus, iobData, mealData, currentTemp, autosensData, resultJson)
                     determineBasalResultAMA = DetermineBasalResultAMA(injector, jsResult, resultJson)
                 } catch (e: JSONException) {
                     aapsLogger.error(LTag.APS, "Unhandled exception", e)
