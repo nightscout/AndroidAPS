@@ -115,7 +115,10 @@ class ActionsFragment : DaggerFragment() {
                               savedInstanceState: Bundle?): View? {
         //check screen width
         dm = DisplayMetrics()
-        activity?.windowManager?.defaultDisplay?.getMetrics(dm)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R)
+            activity?.display?.getRealMetrics(dm)
+        else
+            @Suppress("DEPRECATION") activity?.windowManager?.defaultDisplay?.getMetrics(dm)
 
         val screenWidth = dm.widthPixels
         val screenHeight = dm.heightPixels

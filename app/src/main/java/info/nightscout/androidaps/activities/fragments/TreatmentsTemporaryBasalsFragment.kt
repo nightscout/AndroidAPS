@@ -190,7 +190,6 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
 
         override fun getItemCount(): Int = tempBasalList.size
 
-        @Deprecated("remove remove functionality after finish")
         inner class TempBasalsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
             val binding = TreatmentsTempbasalsItemBinding.bind(itemView)

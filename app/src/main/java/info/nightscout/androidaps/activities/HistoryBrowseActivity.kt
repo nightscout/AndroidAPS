@@ -151,7 +151,11 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         }
 
         val dm = DisplayMetrics()
-        windowManager?.defaultDisplay?.getMetrics(dm)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R)
+            display?.getRealMetrics(dm)
+        else
+            @Suppress("DEPRECATION") windowManager.defaultDisplay.getMetrics(dm)
+
 
         axisWidth = if (dm.densityDpi <= 120) 3 else if (dm.densityDpi <= 160) 10 else if (dm.densityDpi <= 320) 35 else if (dm.densityDpi <= 420) 50 else if (dm.densityDpi <= 560) 70 else 80
         binding.bgGraph.gridLabelRenderer?.gridColor = resourceHelper.gc(R.color.graphgrid)
