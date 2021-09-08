@@ -2,9 +2,11 @@ package info.nightscout.androidaps.database.daos
 
 import androidx.room.Dao
 import androidx.room.Query
+import info.nightscout.androidaps.database.TABLE_GLUCOSE_VALUES
 import info.nightscout.androidaps.database.TABLE_PROFILE_SWITCHES
 import info.nightscout.androidaps.database.daos.workaround.ProfileSwitchDaoWorkaround
 import info.nightscout.androidaps.database.data.checkSanity
+import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.entities.ProfileSwitch
 import io.reactivex.Maybe
 import io.reactivex.Single
@@ -53,6 +55,9 @@ internal interface ProfileSwitchDao : ProfileSwitchDaoWorkaround {
 
     @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE id = :referenceId")
     fun getCurrentFromHistoric(referenceId: Long): Maybe<ProfileSwitch>
+
+    @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE dateCreated > :since AND dateCreated <= :until LIMIT :limit OFFSET :offset")
+    suspend fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<ProfileSwitch>
 }
 
 internal fun ProfileSwitchDao.insertNewEntryImpl(entry: ProfileSwitch): Long {

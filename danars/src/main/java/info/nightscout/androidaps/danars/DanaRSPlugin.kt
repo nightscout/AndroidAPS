@@ -33,7 +33,7 @@ import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInf
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalStorage
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.utils.*
-import info.nightscout.androidaps.utils.T.Companion.mins
+import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -141,7 +141,6 @@ class DanaRSPlugin @Inject constructor(
         commandQueue.readStatus("DeviceChanged", null)
     }
 
-    @kotlin.ExperimentalStdlibApi
     override fun connect(reason: String) {
         aapsLogger.debug(LTag.PUMP, "RS connect from: $reason")
         if (danaRSService != null && mDeviceAddress != "" && mDeviceName != "") {
@@ -371,7 +370,7 @@ class DanaRSPlugin @Inject constructor(
                     }
                 }
             }
-            temporaryBasalStorage.add(PumpSync.PumpState.TemporaryBasal(dateUtil.now(), mins(durationInMinutes.toLong()).msecs(), percentRate.toDouble(), false, tbrType, 0L, 0L))
+            temporaryBasalStorage.add(PumpSync.PumpState.TemporaryBasal(dateUtil.now(), T.mins(durationInMinutes.toLong()).msecs(), percentRate.toDouble(), false, tbrType, 0L, 0L))
             // Convert duration from minutes to hours
             aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Setting temp basal $percentRate% for $durationInMinutes minutes (doLowTemp || doHighTemp)")
             result = if (percentRate == 0 && durationInMinutes > 30) {
@@ -418,7 +417,7 @@ class DanaRSPlugin @Inject constructor(
             aapsLogger.debug(LTag.PUMP, "setTempBasalPercent: Correct value already set")
             return result
         }
-        temporaryBasalStorage.add(PumpSync.PumpState.TemporaryBasal(dateUtil.now(), mins(durationInMinutes.toLong()).msecs(), percent.toDouble(), false, tbrType, 0L, 0L))
+        temporaryBasalStorage.add(PumpSync.PumpState.TemporaryBasal(dateUtil.now(), T.mins(durationInMinutes.toLong()).msecs(), percent.toDouble(), false, tbrType, 0L, 0L))
         val connectionOK: Boolean = if (durationInMinutes == 15 || durationInMinutes == 30) {
             danaRSService?.tempBasalShortDuration(percentAfterConstraint, durationInMinutes)
                 ?: false

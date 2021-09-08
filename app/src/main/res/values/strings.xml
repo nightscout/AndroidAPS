@@ -29,7 +29,6 @@
 
     <string name="key_email_for_crash_report" translatable="false">email_for_crash_report</string>
     <string name="key_smscommunicator_settings" translatable="false">smscommunicator</string>
-    <string name="key_open_humans_settings" translatable="false">open_humans</string>
     <string name="key_protection_settings" translatable="false">protection</string>
     <string name="key_absorption_category_settings" translatable="false">absorption_category_settings</string>
     <string name="key_insulin_oref_peak_settings" translatable="false">insulin_oref_peak_settings</string>
@@ -1055,36 +1054,6 @@
     <string name="basalpctfromtdd_label">% of basal</string>
     <string name="dpvdefaultprofile">DPV Default profile</string>
 
-    <string name="open_humans">Open Humans</string>
-    <string name="finishing_open_humans_setup">Finishing Open Humans setup…</string>
-    <string name="this_may_take_a_while">This may take a while. Do not turn your phone or this plugin off.</string>
-    <string name="setup_finished">Setup finished</string>
-    <string name="your_phone_will_upload_data">Your phone will upload data to Open Humans soon.</string>
-    <string name="your_phone_is_upload_data">Your phone is uploading data to Open Humans now.</string>
-    <string name="setup_failed">Setup failed</string>
-    <string name="there_was_an_error">There was an error. Please try to log in again in order to proceed. Sorry &amp; Thank you!</string>
-    <string name="open_humans_terms">This is an open source tool that will copy your data to Open Humans. We retain no rights to share your data with third parties without your explicit authorization. The data the project and app receive are identified via a random user ID and will only be securely transmitted to an Open Humans account with your authorization of that process. You can stop uploading and delete your upload data at any time via www.openhumans.org.</string>
-    <string name="i_understand_and_agree">I understand and agree.</string>
-    <string name="login">Login</string>
-    <string name="logout">Logout</string>
-    <string name="oh_logout_confirmation">Do you really want to log out and stop donating data to science?</string>
-    <string name="project_member_id">Project Member ID: %s</string>
-    <string name="queue_size">Queue Size: %d</string>
-    <string name="terms_of_use">Terms of Use</string>
-    <string name="not_logged_in">Not logged in</string>
-    <string name="you_need_to_accept_the_of_use_first">You need to accept the terms of use first.</string>
-    <string name="successfully_logged_in">Successfully logged in</string>
-    <string name="setup_will_continue_in_background">The setup will be completed in background now. Thanks for uploading your data.\n\nPlease keep this plugin and your phone turned on for a short while for the setup to complete.</string>
-    <string name="completing_login">Completing login…</string>
-    <string name="donate_your_data_to_science">Donate your data to science</string>
-    <string name="open_humans_short">OH</string>
-    <string name="you_have_been_signed_out_of_open_humans">You have been signed out of Open Humans</string>
-    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Click here to sign in again if this wasn\'t on purpose.</string>
-    <string name="only_upload_if_connected_to_wifi">Only upload if connected to WiFi</string>
-    <string name="only_upload_if_charging">Only upload if charging</string>
-    <string name="worker_state">Worker State: %s</string>
-    <string name="uploaded_data">Uploaded Data</string>
-    <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">The following data will be uploaded to your Open Humans account: Glucose values, boluses, carbs, careportal events (except notes), extended boluses, profile switches, total daily doses, temporary basals, temp targets, preferences, application version, device model and screen dimensions. Secret or private information such as your Nightscout URL or API secret will not be uploaded.</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink status:</string>
     <string name="filter">Filter</string>
     <string name="copytolocalprofile_invalid">Unable to create local profile. Profile is invalid.</string>

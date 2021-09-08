@@ -22,7 +22,6 @@ import java.io.File
 @PowerMockIgnore("javax.crypto.*")
 @RunWith(PowerMockRunner::class)
 @PrepareForTest(File::class)
-@kotlin.ExperimentalStdlibApi
 class EncryptedPrefsFormatTest : TestBase() {
 
     @Mock lateinit var resourceHelper: ResourceHelper

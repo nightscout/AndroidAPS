@@ -2,8 +2,10 @@ package info.nightscout.androidaps.database.daos
 
 import androidx.room.Dao
 import androidx.room.Query
+import info.nightscout.androidaps.database.TABLE_GLUCOSE_VALUES
 import info.nightscout.androidaps.database.TABLE_TEMPORARY_BASALS
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
+import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.entities.TemporaryBasal
 import io.reactivex.Maybe
 import io.reactivex.Single
@@ -76,4 +78,7 @@ internal interface TemporaryBasalDao : TraceableDao<TemporaryBasal> {
 
     @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE isValid = 1 AND referenceId IS NULL ORDER BY id ASC LIMIT 1")
     fun getOldestRecord(): TemporaryBasal?
+
+    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE dateCreated > :since AND dateCreated <= :until LIMIT :limit OFFSET :offset")
+    suspend fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<TemporaryBasal>
 }
