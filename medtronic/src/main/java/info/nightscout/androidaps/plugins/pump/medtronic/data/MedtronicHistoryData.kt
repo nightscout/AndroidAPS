@@ -473,7 +473,7 @@ class MedtronicHistoryData @Inject constructor(
         for (bolus in entryList) {
 
             val bolusDTO = bolus.decodedData["Object"] as BolusDTO
-            var type: DetailedBolusInfo.BolusType? = DetailedBolusInfo.BolusType.NORMAL
+            var type: DetailedBolusInfo.BolusType = DetailedBolusInfo.BolusType.NORMAL
             var multiwave = false
 
             if (bolusDTO.bolusType == PumpBolusType.Extended) {
@@ -500,7 +500,7 @@ class MedtronicHistoryData @Inject constructor(
                     temporaryId = entryWithTempId.temporaryId
                     pumpSyncStorage.removeBolusWithTemporaryId(temporaryId)
                     boluses.remove(entryWithTempId)
-                    type = entryWithTempId.bolusData?.bolusType
+                    type = entryWithTempId.bolusData!!.bolusType
                 }
             }
 
