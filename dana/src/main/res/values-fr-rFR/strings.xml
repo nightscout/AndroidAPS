@@ -5,7 +5,9 @@
     <string name="danars_pairingok">Appairage OK</string>
     <string name="danars_pairingtimedout">Délai d\'appairage expiré</string>
     <string name="danars_waitingforpairing">Attente appairage pompe</string>
+    <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
+    <string name="description_pump_dana_rs">Intégration des pompes DANA Diabecare RS et Dana-i</string>
     <string name="maxbolusviolation">Violation bolus Max</string>
     <string name="commanderror">Erreur de commande</string>
     <string name="speederror">Erreur de vitesse</string>
