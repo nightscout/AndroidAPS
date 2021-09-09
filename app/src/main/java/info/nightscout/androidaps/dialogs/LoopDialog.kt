@@ -205,7 +205,7 @@ class LoopDialog : DaggerDialogFragment() {
                 binding.overviewSuspendHeader.text = resourceHelper.gs(R.string.resumeloop)
                 binding.overviewSuspendButtons.visibility = View.VISIBLE
                 binding.overviewResume.visibility = View.VISIBLE
-                binding.overviewPump.visibility = View.VISIBLE
+                binding.overviewPump.visibility = View.GONE
                 binding.overviewReconnect.visibility = View.GONE
             }
 
@@ -249,17 +249,6 @@ class LoopDialog : DaggerDialogFragment() {
 
             }
         }
-
-        /**************************************************************************************************
-        val profile = profileFunction.getProfile()
-        val profileStore = activePlugin.activeProfileSource.profile
-
-        if (profile == null || profileStore == null) {
-            ToastUtils.showToastInUiThread(ctx, resourceHelper.gs(R.string.noprofile))
-            dismiss()
-            return
-        }
-        **************************************************************************************************/
     }
 
     private fun onClickOkCancelEnabled(v: View): Boolean {
