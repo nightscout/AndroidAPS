@@ -105,7 +105,6 @@ class EncryptedPrefsFormat @Inject constructor(
         }
     }
 
-    @kotlin.ExperimentalStdlibApi
     override fun loadPreferences(file: File, masterPassword: String?): Prefs {
 
         val entries: MutableMap<String, String> = mutableMapOf()
@@ -214,7 +213,7 @@ class EncryptedPrefsFormat @Inject constructor(
         } catch (e: IOException) {
             throw PrefIOError(file.absolutePath)
         } catch (e: JSONException) {
-            throw PrefFormatError("Mallformed preferences JSON file: $e")
+            throw PrefFormatError("Malformed preferences JSON file: $e")
         }
     }
 

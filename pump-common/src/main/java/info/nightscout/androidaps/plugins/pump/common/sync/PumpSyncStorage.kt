@@ -1,9 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.common.sync
 
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import com.thoughtworks.xstream.security.AnyTypePermission
 import com.thoughtworks.xstream.XStream
+import com.thoughtworks.xstream.security.AnyTypePermission
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -23,17 +21,20 @@ class PumpSyncStorage @Inject constructor(
     val aapsLogger: AAPSLogger
 ) {
 
-    val pumpSyncStorageKey: String = "pump_sync_storage_xstream_v2"
+    companion object {
+
+        const val pumpSyncStorageKey: String = "pump_sync_storage_xstream_v2"
+        const val TBR: String = "TBR"
+        const val BOLUS: String = "BOLUS"
+    }
+
     var pumpSyncStorage: MutableMap<String, MutableList<PumpDbEntry>> = mutableMapOf()
-    var TBR: String = "TBR"
-    var BOLUS: String = "BOLUS"
-    var storageInitialized: Boolean = false
-    var gson: Gson = GsonBuilder().create()
-    var xstream: XStream = XStream()
+    private var storageInitialized: Boolean = false
+    private var xstream: XStream = XStream()
 
     init {
         initStorage()
-        cleanOldStorage();
+        cleanOldStorage()
     }
 
     fun initStorage() {
@@ -43,10 +44,11 @@ class PumpSyncStorage @Inject constructor(
         var loaded = false
 
         if (sp.contains(pumpSyncStorageKey)) {
-            val jsonData: String = sp.getString(pumpSyncStorageKey, "");
+            val jsonData: String = sp.getString(pumpSyncStorageKey, "")
 
             if (jsonData.isNotBlank()) {
                 xstream.addPermission(AnyTypePermission.ANY)
+                @Suppress("UNCHECKED_CAST")
                 pumpSyncStorage = xstream.fromXML(jsonData, MutableMap::class.java) as MutableMap<String, MutableList<PumpDbEntry>>
 
                 aapsLogger.debug(LTag.PUMP, String.format("Loading Pump Sync Storage: boluses=%d, tbrs=%d.", pumpSyncStorage[BOLUS]!!.size, pumpSyncStorage[TBR]!!.size))
@@ -69,7 +71,7 @@ class PumpSyncStorage @Inject constructor(
         }
     }
 
-    fun cleanOldStorage(): Unit {
+    private fun cleanOldStorage() {
         val oldSpKeys = setOf("pump_sync_storage", "pump_sync_storage_xstream")
 
         for (oldSpKey in oldSpKeys) {
@@ -78,16 +80,16 @@ class PumpSyncStorage @Inject constructor(
         }
     }
 
-    fun isStorageEmpty(): Boolean {
+    private fun isStorageEmpty(): Boolean {
         return pumpSyncStorage[BOLUS]!!.isEmpty() && pumpSyncStorage[TBR]!!.isEmpty()
     }
 
     fun getBoluses(): MutableList<PumpDbEntry> {
-        return pumpSyncStorage[BOLUS]!!;
+        return pumpSyncStorage[BOLUS]!!
     }
 
     fun getTBRs(): MutableList<PumpDbEntry> {
-        return pumpSyncStorage[TBR]!!;
+        return pumpSyncStorage[TBR]!!
     }
 
     fun addBolusWithTempId(detailedBolusInfo: DetailedBolusInfo, writeToInternalHistory: Boolean, creator: PumpSyncEntriesCreator): Boolean {
@@ -135,11 +137,11 @@ class PumpSyncStorage @Inject constructor(
     }
 
     fun addTemporaryBasalRateWithTempId(temporaryBasal: PumpDbEntryTBR, writeToInternalHistory: Boolean, creator: PumpSyncEntriesCreator): Boolean {
-        val timenow: Long = System.currentTimeMillis()
-        val temporaryId = creator.generateTempId(timenow)
+        val timeNow: Long = System.currentTimeMillis()
+        val temporaryId = creator.generateTempId(timeNow)
 
         val response = pumpSync.addTemporaryBasalWithTempId(
-            timenow,
+            timeNow,
             temporaryBasal.rate,
             (temporaryBasal.durationInSeconds * 1000L),
             temporaryBasal.isAbsolute,
@@ -151,12 +153,12 @@ class PumpSyncStorage @Inject constructor(
         if (response && writeToInternalHistory) {
             val innerList: MutableList<PumpDbEntry> = pumpSyncStorage[TBR]!!
 
-            innerList.add(PumpDbEntry(temporaryId, timenow, creator.model(), creator.serialNumber(), null, temporaryBasal))
+            innerList.add(PumpDbEntry(temporaryId, timeNow, creator.model(), creator.serialNumber(), null, temporaryBasal))
             pumpSyncStorage[BOLUS] = innerList
             saveStorage()
         }
 
-        return response;
+        return response
     }
 
     fun removeBolusWithTemporaryId(temporaryId: Long) {

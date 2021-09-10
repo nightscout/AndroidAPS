@@ -58,7 +58,6 @@ import java.util.*
     SmsManager::class, CommandQueue::class, LocalProfilePlugin::class, DateUtil::class,
     OneTimePassword::class, UserEntryLogger::class, LoopPlugin::class,
     AppRepository::class, DateUtil::class, AutosensDataStore::class)
-@kotlin.ExperimentalStdlibApi
 class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
     @Mock lateinit var sp: SP

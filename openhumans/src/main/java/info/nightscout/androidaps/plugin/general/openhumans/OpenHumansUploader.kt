@@ -5,7 +5,6 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.util.DisplayMetrics
 import android.view.WindowManager
 import androidx.core.app.NotificationCompat
@@ -225,16 +224,20 @@ class OpenHumansUploader @Inject internal constructor(
         tags.add("ApplicationInfo")
 
         val deviceInfo = JSONObject()
-        deviceInfo.put("brand", Build.BRAND)
-        deviceInfo.put("device", Build.DEVICE)
-        deviceInfo.put("manufacturer", Build.MANUFACTURER)
-        deviceInfo.put("model", Build.MODEL)
-        deviceInfo.put("product", Build.PRODUCT)
+        deviceInfo.put("brand", android.os.Build.BRAND)
+        deviceInfo.put("device", android.os.Build.DEVICE)
+        deviceInfo.put("manufacturer", android.os.Build.MANUFACTURER)
+        deviceInfo.put("model", android.os.Build.MODEL)
+        deviceInfo.put("product", android.os.Build.PRODUCT)
         zos.writeFile("DeviceInfo.json", deviceInfo.toString().toByteArray())
         tags.add("DeviceInfo")
 
         val displayMetrics = DisplayMetrics()
-        (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.getMetrics(displayMetrics)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R)
+            context.display?.getRealMetrics(displayMetrics)
+        else
+            @Suppress("DEPRECATION") (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.getMetrics(displayMetrics)
+
         val displayInfo = JSONObject()
         displayInfo.put("height", displayMetrics.heightPixels)
         displayInfo.put("width", displayMetrics.widthPixels)

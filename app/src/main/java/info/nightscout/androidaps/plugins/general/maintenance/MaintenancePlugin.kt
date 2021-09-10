@@ -73,7 +73,7 @@ class MaintenancePlugin @Inject constructor(
         val files = logDir.listFiles { _: File?, name: String ->
             (name.startsWith("AndroidAPS") && name.endsWith(".zip"))
         }
-        if (files.isEmpty()) return
+        if (files == null || files.isEmpty()) return
         Arrays.sort(files) { f1: File, f2: File -> f2.name.compareTo(f1.name) }
         var delFiles = listOf(*files)
         val amount = sp.getInt(R.string.key_logshipper_amount, keep)
@@ -109,7 +109,7 @@ class MaintenancePlugin @Inject constructor(
             (name.startsWith("AndroidAPS")
                 && (name.endsWith(".log")
                 || name.endsWith(".zip") && !name.endsWith(loggerUtils.suffix)))
-        }
+        } ?: emptyArray()
         Arrays.sort(files) { f1: File, f2: File -> f2.name.compareTo(f1.name) }
         val result = listOf(*files)
         var toIndex = amount

@@ -112,7 +112,6 @@ class NSClientService : DaggerService() {
     var latestDateInReceivedData: Long = 0
 
     @SuppressLint("WakelockTimeout")
-    @kotlin.ExperimentalStdlibApi
     override fun onCreate() {
         super.onCreate()
         wakeLock = (getSystemService(Context.POWER_SERVICE) as PowerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:NSClientService")
@@ -236,7 +235,6 @@ class NSClientService : DaggerService() {
         return START_STICKY
     }
 
-    @kotlin.ExperimentalStdlibApi
     fun initialize() {
         dataCounter = 0
         readPreferences()
@@ -651,7 +649,6 @@ class NSClientService : DaggerService() {
         }
     }
 
-    @kotlin.ExperimentalStdlibApi
     fun restart() {
         destroy()
         initialize()

@@ -138,7 +138,10 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             _binding = it
             //check screen width
             dm = DisplayMetrics()
-            activity?.windowManager?.defaultDisplay?.getMetrics(dm)
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R)
+                activity?.display?.getRealMetrics(dm)
+            else
+                @Suppress("DEPRECATION") activity?.windowManager?.defaultDisplay?.getMetrics(dm)
         }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
