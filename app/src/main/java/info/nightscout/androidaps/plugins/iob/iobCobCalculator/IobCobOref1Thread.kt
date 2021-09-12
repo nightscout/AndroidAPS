@@ -297,7 +297,7 @@ class IobCobOref1Thread internal constructor(
                 // add an extra negative deviation if a high temp target is running and exercise mode is set
                 // TODO AS-FIX
                 @Suppress("SimplifyBooleanWithConstants")
-                if (false && sp.getBoolean(R.string.key_high_temptarget_raises_sensitivity, SMBDefaults.high_temptarget_raises_sensitivity)) {
+                if (sp.getBoolean(R.string.key_high_temptarget_raises_sensitivity, SMBDefaults.high_temptarget_raises_sensitivity)) {
                     val tempTarget = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
                     if (tempTarget is ValueWrapper.Existing && tempTarget.value.target() >= 100) {
                         autosensData.extraDeviation.add(-(tempTarget.value.target() - 100) / 20)
