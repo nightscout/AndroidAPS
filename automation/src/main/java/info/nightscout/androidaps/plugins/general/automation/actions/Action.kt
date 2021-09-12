@@ -6,7 +6,6 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger
 import info.nightscout.androidaps.queue.Callback
-import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject
@@ -48,7 +47,7 @@ abstract class Action(val injector: HasAndroidInjector) {
     fun instantiate(obj: JSONObject): Action? {
         try {
             val type = obj.getString("type")
-            val data = if (obj.has("data")) obj.getJSONArray("data") else JSONArray()
+            val data = if (obj.has("data")) obj.getJSONObject("data") else JSONObject()
             return when (type) {
                 ActionAlarm::class.java.name,              // backward compatibility
                 ActionAlarm::class.java.simpleName                -> ActionAlarm(injector).fromJSON(data.toString())
