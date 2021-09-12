@@ -146,7 +146,9 @@ class OpenAPSSMBPlugin @Inject constructor(
         } else {
             lastAutosensResult.sensResult = "autosens disabled"
         }
-        val iobArray = iobCobCalculator.calculateIobArrayForSMB(lastAutosensResult, SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
+        val halfbasaltarget =
+            sp.getInt(R.string.key_openapssmb_half_basal_exercise_target, SMBDefaults.half_basal_exercise_target)
+        val iobArray = iobCobCalculator.calculateIobArrayForSMB(lastAutosensResult, SMBDefaults.exercise_mode, halfbasaltarget, isTempTarget)
         profiler.log(LTag.APS, "calculateIobArrayInDia()", startPart)
         startPart = System.currentTimeMillis()
         val smbAllowed = Constraint(!tempBasalFallback).also {

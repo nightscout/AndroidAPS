@@ -492,6 +492,8 @@
     <string name="smbmaxminutes_summary">Верхний лимит минут базала на SMB</string>
     <string name="uamsmbmaxminutes">Максимум минут микроболюса SMB для непредвиденного приема пищи UAM</string>
     <string name="uamsmbmaxminutes_summary">Максимум минут базала ограничивающего микроболюсы SMB на непредвиденный прием пищи UAM</string>
+    <string name="halfbasalexercisetarget">Уменьшение вдвое базальной потребности при упражнении</string>
+    <string name="halfbasalexercisetarget_summary">Уровень ГК (мг/дл) временной цели, для которого потребности будет уменьшаться вдвое</string>
     <string name="carbsReqThreshold">Минимальный порог для напоминания о необходимых углеводах</string>
     <string name="carbsReqThreshold_summary">Минимум граммов для активации предложения углеводов. Предложения ниже этой величины не будут инициировать уведомление.</string>
     <string name="dexcomg5_xdripupload_title">Отправить данные СК на xDrip+</string>
