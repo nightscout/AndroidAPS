@@ -35,6 +35,12 @@
 
         <SwitchPreference
             android:defaultValue="false"
+            android:key="@string/key_a52_risk_enable"
+            android:title="@string/a52_risk_enable"
+            android:summary="@string/a52_risk_enable_summary" />
+
+        <SwitchPreference
+            android:defaultValue="false"
             android:key="@string/key_use_smb"
             android:summary="@string/enablesmb_summary"
             android:title="@string/enablesmb" />

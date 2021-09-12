@@ -329,6 +329,8 @@
     <string name="openapsma_autosensdata_label">Autosens data</string>
     <string name="openapsma_scriptdebugdata_label">Script debug</string>
     <string name="openapsama_useautosens">Use Autosens feature</string>
+    <string name="a52_risk_enable">A52 risk enable</string>
+    <string name="a52_risk_enable_summary">Flag to disable Medtronic A52 error safety (should lead to more agressive bolusing)</string>
     <string name="refresheventsfromnightscout">Refresh from NS</string>
     <string name="deletefuturetreatments">Delete treatments in the future</string>
     <string name="actions_shortname">ACT</string>
@@ -721,6 +723,7 @@
     <string name="maxvalueinpreferences">max value in preferences</string>
     <string name="hardlimit">hard limit</string>
     <string name="key_openapsama_useautosens" translatable="false">openapsama_useautosens</string>
+    <string name="key_a52_risk_enable" translatable="false">a52_risk_enable</string>
     <string name="readstatusfailed">Read status failed</string>
     <string name="record_pump_site_change">Record pump site change</string>
     <string name="record_insulin_cartridge_change">Record insulin cartridge change</string>
