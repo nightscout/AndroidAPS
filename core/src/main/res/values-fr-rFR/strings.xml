@@ -385,6 +385,7 @@
     <string name="uel_loop_change">BOUCLE CHANGÉE</string>
     <string name="uel_loop_removed">BOUCLE SUPPRIMÉE</string>
     <string name="uel_other">AUTRE</string>
+    <!-- HardLimits -->
     <plurals name="days">
         <item quantity="one">%1$d jour</item>
         <item quantity="other">%1$d jours</item>
