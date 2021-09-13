@@ -385,6 +385,7 @@
     <string name="uel_loop_change">LOOP CAMBIATO</string>
     <string name="uel_loop_removed">LOOP RIMOSSO</string>
     <string name="uel_other">ALTRO</string>
+    <!-- HardLimits -->
     <plurals name="days">
         <item quantity="one">%1$d giorno</item>
         <item quantity="other">%1$d giorni</item>
