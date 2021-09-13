@@ -385,6 +385,7 @@
     <string name="uel_loop_change">הלולאה שונתה</string>
     <string name="uel_loop_removed">הלולאה הוסרה</string>
     <string name="uel_other">אחר</string>
+    <!-- HardLimits -->
     <plurals name="days">
         <item quantity="one">%1$d יום</item>
         <item quantity="two">%1$d ימים</item>
