@@ -353,6 +353,7 @@
     <string name="uel_export_csv">EXPORTAR ENTRADAS DO UTILIZADOR</string>
     <string name="uel_unknown">DESCONHECIDO</string>
     <string name="ue_export_to_csv">Exportar Entradas do Utilizador para o Excel (csv)</string>
+    <!-- HardLimits -->
     <plurals name="days">
         <item quantity="one">%1$d dia</item>
         <item quantity="other">%1$d dias</item>
