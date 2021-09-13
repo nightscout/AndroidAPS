@@ -349,6 +349,7 @@
     <string name="ue_action">Aktion</string>
     <string name="ue_timestamp">Zeitstempel</string>
     <string name="ue_none">Keine Einheit</string>
+    <!-- HardLimits -->
     <plurals name="days">
         <item quantity="one">%1$d Tag</item>
         <item quantity="other">%1$d Tage</item>
