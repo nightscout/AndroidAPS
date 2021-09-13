@@ -236,6 +236,7 @@
     <!-- WeekdayPicker -->
     <!-- User Entry -->
     <string name="ue_action">실행</string>
+    <!-- HardLimits -->
     <plurals name="days">
         <item quantity="other">%1$d 일</item>
     </plurals>
