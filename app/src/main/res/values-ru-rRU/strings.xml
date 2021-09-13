@@ -189,8 +189,6 @@
     <string name="smscommunicator_loophasbeendisabled">зцикл был деактивирован</string>
     <string name="smscommunicator_loophasbeenenabled">зцикл был активирован</string>
     <string name="smscommunicator_loopisenabled">зцикл работает</string>
-    <string name="valuelimitedto">%1$.2f ограничено до %2$.2f</string>
-    <string name="valueoutofrange">»%1$s«за пределами жестких ограничений</string>
     <string name="smscommunicator_pumpconnectwithcode">Чтобы подсоединить помпу ответьте кодом %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Ошибка подключения к помпе</string>
     <string name="smscommunicator_pumpdisconnectwithcode">Для разъединения с помпой на %1$d мин ответьте кодом %2$s</string>
@@ -860,16 +858,6 @@ Context | Edit Context</string>
     <string name="email_address">Адрес электронной почты</string>
     <string name="privacy_settings">Настройки конфиденцальности</string>
     <string name="privacy_summary">Вы можете указать дополнительно адрес электронной почты, если хотите получать уведомления о сбоях приложения; что является не автоматизированной рассылкой, а способом связи с разработчиками в опасных ситуациях.</string>
-    <string name="profile_low_target">Нижнее целевое значение профиля</string>
-    <string name="profile_high_target">Верхнее целевое значение профиля</string>
-    <string name="temp_target_low_target">Нижнее значение временного целевого уровня</string>
-    <string name="temp_target_high_target">Верхнее значение временного целевого уровня</string>
-    <string name="temp_target_value">Временное целевое значение</string>
-    <string name="profile_dia">Значение длительности действия инсулина DIA в профиле</string>
-    <string name="profile_sensitivity_value">Значение чувствительности в профиле</string>
-    <string name="profile_max_daily_basal_value">Максимальное значение базала в профиле</string>
-    <string name="current_basal_value">Текущее значение базала</string>
-    <string name="profile_carbs_ratio_value">Коэффициент углеводов в профиле</string>
     <string name="full_sync">Полная синхронизация</string>
     <string name="prime">Заполнение инфузионной системы</string>
     <string name="ns_sync_options">Синхронизация</string>
