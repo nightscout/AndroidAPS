@@ -57,6 +57,12 @@
     <string name="key_active_pump_change_timestamp" translatable="false">active_pump_change_timestamp</string>
     <string name="key_active_pump_type" translatable="false">active_pump_type</string>
     <string name="key_active_pump_serial_number" translatable="false">active_pump_serial_number</string>
+    <string name="key_age" translatable="false">age</string>
+    <string name="key_child" translatable="false">child</string>
+    <string name="key_teenage" translatable="false">teenage</string>
+    <string name="key_adult" translatable="false">adult</string>
+    <string name="key_resistantadult" translatable="false">resistantadult</string>
+    <string name="key_pregnant" translatable="false">pregnant</string>
 
     <!--    General-->
     <string name="refresh">Refresh</string>
@@ -471,6 +477,22 @@
     <string name="uel_loop_change">LOOP CHANGED</string>
     <string name="uel_loop_removed">LOOP REMOVED</string>
     <string name="uel_other">OTHER</string>
+
+    <!-- HardLimits -->
+    <string name="profile_low_target">Profile low target</string>
+    <string name="profile_high_target">Profile high target</string>
+    <string name="temp_target_low_target">Temporary target bottom value</string>
+    <string name="temp_target_high_target">Temporary target top value</string>
+    <string name="temp_target_value">Temporary target value</string>
+    <string name="profile_dia">Profile DIA value</string>
+    <string name="profile_sensitivity_value">Profile sensitivity value</string>
+    <string name="profile_max_daily_basal_value">Maximal profile basal value</string>
+    <string name="current_basal_value">Current basal value</string>
+    <string name="profile_carbs_ratio_value">Profile carbs ratio value</string>
+    <string name="valuelimitedto">%1$.2f limited to %2$.2f</string>
+    <string name="valueoutofrange">»%1$s« is out of hard limits</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f is out of hard limits</string>
+    <string name="basal_value">Basal value</string>
 
     <plurals name="days">
         <item quantity="one">%1$d day</item>

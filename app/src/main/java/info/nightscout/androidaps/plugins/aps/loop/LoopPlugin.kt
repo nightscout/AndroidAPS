@@ -46,7 +46,6 @@ import info.nightscout.androidaps.plugins.general.wear.events.EventWearConfirmAc
 import info.nightscout.androidaps.plugins.general.wear.events.EventWearInitiateAction
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.queue.Callback
-import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
