@@ -290,6 +290,7 @@
     <string name="uel_cancel_bolus">СПРИ БОЛУС</string>
     <string name="ue_source">Източник</string>
     <string name="ue_action">Действие</string>
+    <!-- HardLimits -->
     <plurals name="hours">
         <item quantity="one">%1$d час</item>
         <item quantity="other">%1$d часа</item>
