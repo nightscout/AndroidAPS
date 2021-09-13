@@ -357,16 +357,18 @@ class LocalProfilePlugin @Inject constructor(
         try {
             for (i in 0 until numOfProfiles) {
                 profiles[i].run {
-                    val profile = JSONObject()
-                    profile.put("dia", dia)
-                    profile.put("carbratio", ic)
-                    profile.put("sens", isf)
-                    profile.put("basal", basal)
-                    profile.put("target_low", targetLow)
-                    profile.put("target_high", targetHigh)
-                    profile.put("units", if (mgdl) Constants.MGDL else Constants.MMOL)
-                    profile.put("timezone", TimeZone.getDefault().id)
-                    store.put(name, profile)
+                    name?.let { name ->
+                        val profile = JSONObject()
+                        profile.put("dia", dia)
+                        profile.put("carbratio", ic)
+                        profile.put("sens", isf)
+                        profile.put("basal", basal)
+                        profile.put("target_low", targetLow)
+                        profile.put("target_high", targetHigh)
+                        profile.put("units", if (mgdl) Constants.MGDL else Constants.MMOL)
+                        profile.put("timezone", TimeZone.getDefault().id)
+                        store.put(name, profile)
+                    }
                 }
             }
             if (numOfProfiles > 0) json.put("defaultProfile", currentProfile()?.name)
@@ -410,7 +412,7 @@ class LocalProfilePlugin @Inject constructor(
         override fun doWork(): Result {
             val profileJson = dataWorker.pickupJSONObject(inputData.getLong(DataWorker.STORE_KEY, -1))
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))
-            if (sp.getBoolean(R.string.key_ns_receive_profile_store, false) || config.NSCLIENT) {
+            if (sp.getBoolean(R.string.key_ns_receive_profile_store, true) || config.NSCLIENT) {
                 val store = ProfileStore(injector, profileJson, dateUtil)
                 val startDate = store.getStartDate()
                 val lastLocalChange = sp.getLong(R.string.key_local_profile_last_change, 0)

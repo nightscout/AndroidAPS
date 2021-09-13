@@ -5,6 +5,7 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RLMessage
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandType
+import kotlin.math.min
 
 /**
  * Created by geoff on 5/29/16.
@@ -15,7 +16,7 @@ class PumpMessage : RLMessage {
     private var packetType: PacketType? = PacketType.Carelink
     var address: ByteArray? = byteArrayOf(0, 0, 0)
     var commandType: MedtronicCommandType? = null
-    var invalidCommandType: Byte? = null
+    private var invalidCommandType: Byte? = null
     var messageBody: MessageBody? = MessageBody()
     var error: String? = null
 
@@ -33,7 +34,7 @@ class PumpMessage : RLMessage {
         this.aapsLogger = aapsLogger
     }
 
-    val isErrorResponse: Boolean
+    @Suppress("unused") val isErrorResponse: Boolean
         get() = error != null
 
     fun init(packetType: PacketType?, address: ByteArray?, commandType: MedtronicCommandType?, messageBody: MessageBody?) {
@@ -47,7 +48,7 @@ class PumpMessage : RLMessage {
         if (rxData == null) {
             return
         }
-        if (rxData.size > 0) {
+        if (rxData.isNotEmpty()) {
             packetType = PacketType.getByValue(rxData[0].toShort())
         }
         if (rxData.size > 3) {
@@ -87,7 +88,7 @@ class PumpMessage : RLMessage {
     // rawContent = just response without code (contents-2, messageBody.txData-1);
     val rawContent: ByteArray
         get() {
-            if (messageBody == null || messageBody!!.txData == null || messageBody!!.txData!!.size == 0) return byteArrayOf()
+            if (messageBody == null || messageBody!!.txData == null || messageBody?.txData?.size == 0) return byteArrayOf()
             val data = messageBody!!.txData
             var length = ByteUtil.asUINT8(data!![0]) // length is not always correct so, we check whole array if we have
             // data, after length
@@ -109,7 +110,9 @@ class PumpMessage : RLMessage {
                 length = data.size - 1
             }
             val arrayOut = ByteArray(length)
-            System.arraycopy(messageBody!!.txData, 1, arrayOut, 0, length)
+            messageBody?.txData?.let {
+                System.arraycopy(it, 1, arrayOut, 0, length)
+            }
 
 //        if (isLogEnabled())
 //            LOG.debug("PumpMessage - Length: " + length + ", Original Length: " + originalLength + ", CommandType: "
@@ -120,10 +123,10 @@ class PumpMessage : RLMessage {
     val rawContentOfFrame: ByteArray
         get() {
             val raw = messageBody!!.txData
-            return if (raw == null || raw.size == 0) {
+            return if (raw == null || raw.isEmpty()) {
                 byteArrayOf()
             } else {
-                ByteUtil.substring(raw, 1, Math.min(FRAME_DATA_LENGTH, raw.size - 1))
+                ByteUtil.substring(raw, 1, min(FRAME_DATA_LENGTH, raw.size - 1))
             }
         }
 

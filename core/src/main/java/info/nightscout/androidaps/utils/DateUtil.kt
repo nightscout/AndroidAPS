@@ -2,6 +2,7 @@ package info.nightscout.androidaps.utils
 
 import android.content.Context
 import androidx.collection.LongSparseArray
+import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.joda.time.DateTime
@@ -26,8 +27,9 @@ import kotlin.math.abs
  * The Class DateUtil. A simple wrapper around SimpleDateFormat to ease the handling of iso date string &lt;-&gt; date obj
  * with TZ
  */
+@OpenForTesting
 @Singleton
-open class DateUtil @Inject constructor(private val context: Context) {
+class DateUtil @Inject constructor(private val context: Context) {
 
     /**
      * The date format in iso.

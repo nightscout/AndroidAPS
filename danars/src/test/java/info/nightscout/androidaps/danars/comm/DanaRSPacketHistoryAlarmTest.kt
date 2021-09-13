@@ -31,7 +31,6 @@ class DanaRSPacketHistoryAlarmTest : DanaRSTestBase() {
     }
 
     @Test
-    @kotlin.ExperimentalStdlibApi
     fun runTest() {
         val packet = DanaRSPacketHistoryAlarm(packetInjector, 0)
 

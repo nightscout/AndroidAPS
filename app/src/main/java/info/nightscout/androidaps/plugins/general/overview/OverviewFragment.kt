@@ -119,7 +119,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     private var smallHeight = false
     private lateinit var dm: DisplayMetrics
     private var axisWidth: Int = 0
-    private var refreshLoop: Runnable? = null
+    private lateinit var refreshLoop: Runnable
     private lateinit var handler: Handler
 
     private val secondaryGraphs = ArrayList<GraphView>()
@@ -138,7 +138,10 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             _binding = it
             //check screen width
             dm = DisplayMetrics()
-            activity?.windowManager?.defaultDisplay?.getMetrics(dm)
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R)
+                activity?.display?.getRealMetrics(dm)
+            else
+                @Suppress("DEPRECATION") activity?.windowManager?.defaultDisplay?.getMetrics(dm)
         }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -583,9 +586,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 task = null
             }
         }
-        handler.removeCallbacks(task)
+        task?.let { handler.removeCallbacks(it) }
         task = UpdateRunnable()
-        handler.postDelayed(task, 500)
+        task?.let { handler.postDelayed(it, 500) }
     }
 
     @Suppress("UNUSED_PARAMETER")

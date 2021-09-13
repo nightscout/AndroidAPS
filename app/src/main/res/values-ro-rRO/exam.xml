@@ -132,7 +132,6 @@
     <string name="wronginsulin_label">Erori de livrare/introducere insulină</string>
     <string name="wronginsulin_whattodo">Ce trebuie să faci dacă ai primit mai putină insulină decât sugerează istoricul pompei, de exemplu datorită unei ocluzii, a unei canule defecte sau pentru ca ai uitat sa reatașezi pompa după un dus? </string>
     <string name="wronginsulin_careportal">Șterge datele despre insulină din Nightscout Careportal pentru a le înlătura din istoricul pompei.</string>
-    <string name="wronginsulin_compare">Compară valorile din AndroidAPS cu cele din istoricul pompei.</string>
     <string name="wronginsulin_prime">Bolusati o cantitate parțiala de insulina din insulina calculata ca fiind lipsa utilizând seringa/penul sau amorsarea.</string>
     <string name="wronginsulin_donothing">Nu faceți nimic și permiteți AndroidAPS să corecteze valorile mari ale glicemiei.</string>
     <string name="iob_label">Insulină activă (IOB)</string>

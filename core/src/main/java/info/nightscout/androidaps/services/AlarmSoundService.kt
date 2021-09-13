@@ -7,6 +7,7 @@ import android.media.MediaPlayer
 import android.os.Binder
 import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import dagger.android.DaggerService
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.core.R
@@ -37,7 +38,7 @@ class AlarmSoundService : DaggerService() {
         private const val VOLUME_INCREASE_MIN_DELAY_MILLIS = 2_000L // Minimum delay between volume increments
 
         /*
-         * Delay until the next volumen increment will be the lowest value of VOLUME_INCREASE_MIN_DELAY_MILLIS and
+         * Delay until the next volume increment will be the lowest value of VOLUME_INCREASE_MIN_DELAY_MILLIS and
          * VOLUME_INCREASE_BASE_DELAY_MILLIS - (currentVolumeLevel - 1) ^ VOLUME_INCREASE_DELAY_DECREMENT_EXPONENT * 1000
          *
          */
@@ -53,7 +54,7 @@ class AlarmSoundService : DaggerService() {
     private val binder = LocalBinder()
     override fun onBind(intent: Intent): IBinder = binder
 
-    private val increaseVolumeHandler = Handler()
+    private val increaseVolumeHandler = Handler(Looper.getMainLooper())
     private var currentVolumeLevel = 0
 
     override fun onCreate() {

@@ -1,28 +1,21 @@
 dependencies {
     testImplementation "junit:junit:$junit_version"
-    testImplementation 'org.json:json:20201115'
+    testImplementation 'org.json:json:20210307'
     testImplementation "org.mockito:mockito-core:${mockitoVersion}"
     testImplementation "org.powermock:powermock-api-mockito2:${powermockVersion}"
     testImplementation "org.powermock:powermock-module-junit4-rule-agent:${powermockVersion}"
     testImplementation "org.powermock:powermock-module-junit4-rule:${powermockVersion}"
     testImplementation "org.powermock:powermock-module-junit4:${powermockVersion}"
     testImplementation "joda-time:joda-time:$jodatime_version"
-    testImplementation('com.google.truth:truth:1.1.2') {
+    testImplementation('com.google.truth:truth:1.1.3') {
         exclude group: "com.google.guava", module: "guava"
     }
     testImplementation "org.skyscreamer:jsonassert:1.5.0"
     testImplementation "org.hamcrest:hamcrest-all:1.3"
 
-
-    // newer integration test libraries might not work
-    // https://stackoverflow.com/questions/64700104/attribute-androidforcequeryable-not-found-in-android-studio-when-running-espres
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.3.0'
-
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test:rules:1.3.0'
-    androidTestImplementation 'androidx.test:runner:1.3.0'
-
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    androidTestImplementation "androidx.test.ext:junit:$androidx_junit"
+    androidTestImplementation "androidx.test:rules:$androidx_rules"
 
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
     testImplementation 'org.mockito:mockito-inline:2.8.47'

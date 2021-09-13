@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="open_humans">Проект Open Humans</string>
+    <string name="open_humans_short">OH</string>
+    <string name="logout">Выход</string>
+    <string name="only_upload_if_connected_to_wifi">Загружать только при подключении к WiFi</string>
+    <string name="only_upload_if_charging">Загружать только при зарядке</string>
+    <string name="you_have_been_signed_out_of_open_humans">Вы вышли из Open Humans</string>
+    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Нажмите здесь, чтобы снова войти в систему, если выход произошел случайно.</string>
+</resources>

@@ -10,8 +10,6 @@ apply from: "${project.rootDir}/gradle/jacoco_global.gradle"
 
 android {
     defaultConfig {
-        versionCode 1
-        versionName "1.0"
         kapt {
             arguments {
                 arg("room.incremental", "true")
