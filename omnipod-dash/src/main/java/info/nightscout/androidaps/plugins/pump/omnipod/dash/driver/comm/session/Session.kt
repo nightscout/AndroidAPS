@@ -37,7 +37,6 @@ class Session(
         aapsLogger.debug(LTag.PUMPBTCOMM, "Sending command: ${cmd.encoded.toHex()} in packet $cmd")
 
         val msg = getCmdMessage(cmd)
-        var possiblyUnconfirmedCommand = false
         for (i in 0..MAX_TRIES) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "Sending command(wrapped): ${msg.payload.toHex()}")
 
@@ -46,8 +45,8 @@ class Session(
                     return CommandSendSuccess
 
                 is MessageSendErrorConfirming -> {
-                    possiblyUnconfirmedCommand = true
                     aapsLogger.debug(LTag.PUMPBTCOMM, "Error confirming command: $sendResult")
+                    return CommandSendErrorConfirming(sendResult.msg)
                 }
 
                 is MessageSendErrorSending ->
@@ -55,11 +54,8 @@ class Session(
             }
         }
 
-        val errMsg = "Maximum number of tries reached. Could not send command\""
-        return if (possiblyUnconfirmedCommand)
-            CommandSendErrorConfirming(errMsg)
-        else
-            CommandSendErrorSending(errMsg)
+        val errMsg = "Maximum number of tries reached. Could not send command"
+        return CommandSendErrorSending(errMsg)
     }
 
     @Suppress("ReturnCount")
