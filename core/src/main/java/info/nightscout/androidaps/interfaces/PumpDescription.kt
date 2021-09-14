@@ -63,7 +63,7 @@ class PumpDescription() {
         is30minBasalRatesCapable = false
         isRefillingCapable = true
         isBatteryReplaceable = true
-        storesCarbInfo = false
+        storesCarbInfo = true
         supportsTDDs = false
         needsManualTDDLoad = true
         hasCustomUnreachableAlertCheck = false

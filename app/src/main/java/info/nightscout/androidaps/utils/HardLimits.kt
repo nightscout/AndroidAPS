@@ -1,8 +1,7 @@
 package info.nightscout.androidaps.utils
 
 import android.content.Context
-import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.androidaps.core.R
+import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.transactions.InsertTherapyEventAnnouncementTransaction
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -16,7 +15,6 @@ import javax.inject.Singleton
 import kotlin.math.max
 import kotlin.math.min
 
-@OpenForTesting
 @Singleton
 class HardLimits @Inject constructor(
     private val aapsLogger: AAPSLogger,
@@ -83,11 +81,8 @@ class HardLimits @Inject constructor(
     fun maxIC(): Double = MAX_IC[loadAge()]
 
     // safety checks
-    fun checkHardLimits(value: Double, valueName: Int, lowLimit: Double, highLimit: Double): Boolean =
+    fun checkOnlyHardLimits(value: Double, valueName: Int, lowLimit: Double, highLimit: Double): Boolean =
          value == verifyHardLimits(value, valueName, lowLimit, highLimit)
-
-    fun isInRange(value: Double, lowLimit: Double, highLimit: Double): Boolean =
-        value in lowLimit..highLimit
 
     fun verifyHardLimits(value: Double, valueName: Int, lowLimit: Double, highLimit: Double): Double {
         var newValue = value
