@@ -161,7 +161,7 @@ sealed class ProfileSealed(
                 break
             }
         for (target in targetBlocks) {
-            if (hardLimits.isInRange(
+            if (!hardLimits.isInRange(
                     Round.roundTo(target.lowTarget, 0.1),
                     HardLimits.VERY_HARD_LIMIT_MIN_BG[0].toDouble(),
                     HardLimits.VERY_HARD_LIMIT_MIN_BG[1].toDouble()
@@ -171,7 +171,7 @@ sealed class ProfileSealed(
                 validityCheck.reasons.add(resourceHelper.gs(R.string.value_out_of_hard_limits, resourceHelper.gs(R.string.profile_low_target), target.lowTarget))
                 break
             }
-            if (hardLimits.isInRange(
+            if (!hardLimits.isInRange(
                     Round.roundTo(target.highTarget, 0.1),
                     HardLimits.VERY_HARD_LIMIT_MAX_BG[0].toDouble(),
                     HardLimits.VERY_HARD_LIMIT_MAX_BG[1].toDouble()
