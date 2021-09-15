@@ -10,6 +10,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.OmnipodDashManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertTrigger
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.I8n
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.Single
 import io.reactivex.rxkotlin.subscribeBy
@@ -21,6 +23,7 @@ class DashInitializePodViewModel @Inject constructor(
     logger: AAPSLogger,
     private val sp: SP,
     private val podStateManager: OmnipodDashPodStateManager,
+    private val resourceHelper: ResourceHelper
 ) : InitializePodViewModel(injector, logger) {
     override fun isPodInAlarm(): Boolean = false // TODO
 
@@ -46,7 +49,11 @@ class DashInitializePodViewModel @Inject constructor(
                 },
                 onError = { throwable ->
                     logger.error(LTag.PUMP, "Error in Pod activation part 1", throwable)
-                    source.onSuccess(PumpEnactResult(injector).success(false).comment(throwable.toString()))
+                    source.onSuccess(
+                        PumpEnactResult(injector)
+                            .success(false)
+                            .comment(I8n.textFromException(throwable, resourceHelper))
+                    )
                 },
                 onComplete = {
                     logger.debug("Pod activation part 1 completed")
