@@ -250,8 +250,6 @@
     <string name="smscommunicator_loophasbeendisabled">Loop has been disabled</string>
     <string name="smscommunicator_loophasbeenenabled">Loop has been enabled</string>
     <string name="smscommunicator_loopisenabled">Loop is enabled</string>
-    <string name="valuelimitedto">%1$.2f limited to %2$.2f</string>
-    <string name="valueoutofrange">»%1$s« is out of hard limits</string>
     <string name="smscommunicator_pumpconnectwithcode">To connect pump reply with code %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Connection to pump failed</string>
     <string name="smscommunicator_pumpdisconnectwithcode">To disconnect pump for %1$d minutes reply with code %2$s</string>
@@ -400,12 +398,6 @@
     <string name="adult">Adult</string>
     <string name="resistantadult">Insulin resistant adult</string>
     <string name="pregnant">Pregnancy</string>
-    <string name="key_age" translatable="false">age</string>
-    <string name="key_child" translatable="false">child</string>
-    <string name="key_teenage" translatable="false">teenage</string>
-    <string name="key_adult" translatable="false">adult</string>
-    <string name="key_resistantadult" translatable="false">resistantadult</string>
-    <string name="key_pregnant" translatable="false">pregnant</string>
     <string name="patientage_summary">Please select patient type to setup safety limits</string>
     <string name="patient_name">Patient name</string>
     <string name="patient_name_summary">Please provide patient name or nickname to differentiate among multiple setups</string>
@@ -1082,16 +1074,6 @@
     <string name="email_address">Email address</string>
     <string name="privacy_settings">Privacy setting</string>
     <string name="privacy_summary">You can provide optional email address if you want to be notified about app crashes. This is not an automated service. You will be contacted by developers in dangerous situations.</string>
-    <string name="profile_low_target">Profile low target</string>
-    <string name="profile_high_target">Profile high target</string>
-    <string name="temp_target_low_target">Temporary target bottom value</string>
-    <string name="temp_target_high_target">Temporary target top value</string>
-    <string name="temp_target_value">Temporary target value</string>
-    <string name="profile_dia">Profile DIA value</string>
-    <string name="profile_sensitivity_value">Profile sensitivity value</string>
-    <string name="profile_max_daily_basal_value">Maximal profile basal value</string>
-    <string name="current_basal_value">Current basal value</string>
-    <string name="profile_carbs_ratio_value">Profile carbs ratio value</string>
     <string name="full_sync">Full sync</string>
     <string name="prime">Prime</string>
     <string name="ns_sync_options">Synchronization</string>

@@ -8,14 +8,18 @@ import android.widget.ArrayAdapter
 import com.google.common.base.Joiner
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.databinding.DialogProfileswitchBinding
 import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -31,6 +35,9 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var config: Config
+    @Inject lateinit var hardLimits: HardLimits
+    @Inject lateinit var rxBus: RxBusWrapper
 
     private var profileIndex: Int? = null
 
@@ -129,22 +136,33 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
             actions.add(resourceHelper.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
 
         activity?.let { activity ->
-            OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal_profileswitch), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
-                profileFunction.createProfileSwitch(profileStore,
-                    profileName = profileName,
-                    durationInMinutes = duration,
-                    percentage = percent,
-                    timeShiftInHours = timeShift,
-                    timestamp = eventTime)
-                uel.log(Action.PROFILE_SWITCH,
-                    Sources.ProfileSwitchDialog,
-                    notes,
-                    ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
-                    ValueWithUnit.SimpleString(profileName),
-                    ValueWithUnit.Percent(percent),
-                    ValueWithUnit.Hour(timeShift).takeIf { timeShift != 0 },
-                    ValueWithUnit.Minute(duration).takeIf { duration != 0 })
-            })
+            val ps = profileFunction.buildProfileSwitch(profileStore, profileName, duration, percent, timeShift, eventTime)
+            val validity = ProfileSealed.PS(ps).isValid(resourceHelper.gs(R.string.careportal_profileswitch), activePlugin.activePump, config, resourceHelper, rxBus, hardLimits)
+            if (validity.isValid)
+                OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal_profileswitch), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
+                    profileFunction.createProfileSwitch(profileStore,
+                        profileName = profileName,
+                        durationInMinutes = duration,
+                        percentage = percent,
+                        timeShiftInHours = timeShift,
+                        timestamp = eventTime)
+                    uel.log(Action.PROFILE_SWITCH,
+                        Sources.ProfileSwitchDialog,
+                        notes,
+                        ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
+                        ValueWithUnit.SimpleString(profileName),
+                        ValueWithUnit.Percent(percent),
+                        ValueWithUnit.Hour(timeShift).takeIf { timeShift != 0 },
+                        ValueWithUnit.Minute(duration).takeIf { duration != 0 })
+                })
+            else {
+                OKDialog.show(
+                    activity,
+                    resourceHelper.gs(R.string.careportal_profileswitch),
+                    HtmlHelper.fromHtml(Joiner.on("<br/>").join(validity.reasons))
+                )
+                return false
+            }
         }
         return true
     }
