@@ -162,7 +162,7 @@ sealed class ProfileSealed(
             }
         for (target in targetBlocks) {
             if (!hardLimits.isInRange(
-                    Round.roundTo(target.lowTarget, 0.1),
+                    Profile.toMgdl(target.lowTarget, units),
                     HardLimits.VERY_HARD_LIMIT_MIN_BG[0].toDouble(),
                     HardLimits.VERY_HARD_LIMIT_MIN_BG[1].toDouble()
                 )
@@ -172,7 +172,7 @@ sealed class ProfileSealed(
                 break
             }
             if (!hardLimits.isInRange(
-                    Round.roundTo(target.highTarget, 0.1),
+                    Profile.toMgdl(target.highTarget, units),
                     HardLimits.VERY_HARD_LIMIT_MAX_BG[0].toDouble(),
                     HardLimits.VERY_HARD_LIMIT_MAX_BG[1].toDouble()
                 )

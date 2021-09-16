@@ -178,6 +178,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             overviewData.rangeToDisplay = if (overviewData.rangeToDisplay > 24) 6 else overviewData.rangeToDisplay
             sp.putInt(R.string.key_rangetodisplay, overviewData.rangeToDisplay)
             overviewData.initRange()
+            overviewData.prepareBucketedData("EventBucketedDataCreated")
+            overviewData.prepareBgData("EventBucketedDataCreated")
             updateGUI("rangeChange", OverviewData.Property.GRAPH)
             rxBus.send(EventPreferenceChange(resourceHelper, R.string.key_rangetodisplay))
             sp.putBoolean(R.string.key_objectiveusescale, true)
