@@ -90,7 +90,6 @@ class BLEComm @Inject internal constructor(
     private var uartWrite: BluetoothGattCharacteristic? = null
 
     @Synchronized
-    @kotlin.ExperimentalStdlibApi
     fun connect(from: String, address: String?): Boolean {
         aapsLogger.debug(LTag.PUMPBTCOMM, "Initializing BLEComm.")
         if (bluetoothManager == null) {
@@ -227,7 +226,6 @@ class BLEComm @Inject internal constructor(
         bluetoothGatt = null
     }
 
-    @kotlin.ExperimentalStdlibApi
     private val mGattCallback: BluetoothGattCallback = object : BluetoothGattCallback() {
         override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
             onConnectionStateChangeSynchronized(gatt, newState) // call it synchronized
@@ -384,7 +382,6 @@ class BLEComm @Inject internal constructor(
         }
     }
 
-    @kotlin.ExperimentalStdlibApi
     private fun readDataParsing(receivedData: ByteArray) {
         //aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< readDataParsing " + DanaRS_Packet.toHexString(receivedData))
         var packetIsValid = false
@@ -518,7 +515,6 @@ class BLEComm @Inject internal constructor(
         writeCharacteristicNoResponse(uartWriteBTGattChar, bytes)
     }
 
-    @kotlin.ExperimentalStdlibApi
     // 1st packet response
     private fun processConnectResponse(decryptedBuffer: ByteArray) {
         // response OK v1

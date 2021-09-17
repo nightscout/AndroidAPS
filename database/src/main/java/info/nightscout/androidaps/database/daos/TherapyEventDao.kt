@@ -2,7 +2,9 @@ package info.nightscout.androidaps.database.daos
 
 import androidx.room.Dao
 import androidx.room.Query
+import info.nightscout.androidaps.database.TABLE_TEMPORARY_TARGETS
 import info.nightscout.androidaps.database.TABLE_THERAPY_EVENTS
+import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import io.reactivex.Maybe
 import io.reactivex.Single
@@ -56,4 +58,7 @@ internal interface TherapyEventDao : TraceableDao<TherapyEvent> {
 
     @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE id = :referenceId")
     fun getCurrentFromHistoric(referenceId: Long): Maybe<TherapyEvent>
+
+    @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE dateCreated > :since AND dateCreated <= :until LIMIT :limit OFFSET :offset")
+    suspend fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<TherapyEvent>
 }

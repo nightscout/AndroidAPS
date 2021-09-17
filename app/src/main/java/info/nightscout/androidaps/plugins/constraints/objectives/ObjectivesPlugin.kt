@@ -100,7 +100,6 @@ class ObjectivesPlugin @Inject constructor(
         sp.putBoolean(R.string.key_objectiveusescale, false)
     }
 
-    @kotlin.ExperimentalStdlibApi
     fun completeObjectives(activity: FragmentActivity, request: String) {
         val requestCode = sp.getString(R.string.key_objectives_request_code, "")
         var url = sp.getString(R.string.key_nsclientinternal_url, "").lowercase(Locale.getDefault())

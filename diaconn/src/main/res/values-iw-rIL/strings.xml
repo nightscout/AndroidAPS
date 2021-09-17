@@ -106,9 +106,17 @@
     <string name="diaconn_g8_reasonsystemreset">אתחול מערכת</string>
     <string name="diaconn_g8_reasonother">אחר</string>
     <string name="diaconn_g8_reasonemergencystop">עצירת חירום</string>
+    <string name="diacon_g8_blockreplacetube">החלפת צינורית</string>
+    <string name="diacon_g8_blockreplaceneedle">החלפת מחט</string>
+    <string name="diacon_g8_blockreplacesyringe">החלפת מכל</string>
     <string name="diaconn_g8_logalarmblock">חסימת הזרקה (%s)</string>
+    <string name="diaconn_g8_logmealfail">רישום המזון נכשל</string>
     <string name="diaconn_g8_logsuccess">הצלחה</string>
+    <string name="diaconn_g8_logmealsuccess">רישום המזון הצליח</string>
     <string name="key_diaconn_g8_logtubechange">רישום החלפת צינורית</string>
+    <string name="diaconn_g8_errorcode_3">לא ניתן להגדיר שגיאת פרוטוקול ספציפי.</string>
+    <string name="diaconn_g8_errorcode_4">הארוחה נרשמה, לא ניתן להזריק.</string>
+    <string name="diaconn_g8_errorcode_6">בוטל על ידי המשאבה</string>
     <string name="diaconn_g8_errorcode_10">בוטל עקב חוסר תגובה מהמשאבה.</string>
     <string name="diaconn_g8_errorcode_11">ההזרקה לא אפשרית עקב סוללה חלשה.</string>
     <string name="diaconn_g8_logtubechange_title">רישום החלפת צינורית</string>

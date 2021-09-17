@@ -2,7 +2,7 @@
 
 buildscript {
     ext {
-        kotlin_version = '1.5.21'
+        kotlin_version = '1.5.30'
         coreVersion = '1.6.0'
         rxjava_version = '2.2.21'
         rxandroid_version = '2.1.1'
@@ -25,12 +25,12 @@ buildscript {
         work_version = '2.5.0'
 
         junit_version = '4.13.2'
-        mockitoVersion = '3.11.2'
+        mockitoVersion = '3.12.4'
         powermockVersion = '2.0.9'
         dexmakerVersion = "1.2"
         retrofit2Version = '2.9.0'
         okhttp3Version = '4.9.0'
-        byteBuddyVersion = '1.11.12'
+        byteBuddyVersion = '1.11.13'
 
         androidx_junit = '1.1.2'
         androidx_rules = '1.4.0-alpha04'
@@ -41,7 +41,7 @@ buildscript {
         maven { url "https://plugins.gradle.org/m2/" } // jacoco 0.2
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.0'
+        classpath 'com.android.tools.build:gradle:7.0.2'
         classpath 'com.google.gms:google-services:4.3.10'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.7.1'
 

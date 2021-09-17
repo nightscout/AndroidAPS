@@ -2,6 +2,7 @@ package info.nightscout.androidaps.database.daos
 
 import androidx.room.Dao
 import androidx.room.Query
+import info.nightscout.androidaps.database.TABLE_APS_RESULTS
 import info.nightscout.androidaps.database.TABLE_BOLUS_CALCULATOR_RESULTS
 import info.nightscout.androidaps.database.entities.BolusCalculatorResult
 import io.reactivex.Maybe
@@ -37,4 +38,7 @@ internal interface BolusCalculatorResultDao : TraceableDao<BolusCalculatorResult
 
     @Query("SELECT * FROM $TABLE_BOLUS_CALCULATOR_RESULTS WHERE id = :referenceId")
     fun getCurrentFromHistoric(referenceId: Long): Maybe<BolusCalculatorResult>
+
+    @Query("SELECT * FROM $TABLE_BOLUS_CALCULATOR_RESULTS WHERE dateCreated > :since AND dateCreated <= :until LIMIT :limit OFFSET :offset")
+    suspend fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<BolusCalculatorResult>
 }

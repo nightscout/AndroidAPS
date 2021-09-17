@@ -28,6 +28,7 @@ import info.nightscout.androidaps.setupwizard.elements.*
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate
 import info.nightscout.androidaps.utils.AndroidPermission
 import info.nightscout.androidaps.utils.CryptoUtil
+import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.extensions.isRunningTest
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -53,7 +54,8 @@ class SWDefinition @Inject constructor(
     private val importExportPrefs: ImportExportPrefs,
     private val androidPermission: AndroidPermission,
     private val cryptoUtil: CryptoUtil,
-    private val config: Config
+    private val config: Config,
+    private val hardLimits: HardLimits
 ) {
 
     lateinit var activity: AppCompatActivity
@@ -255,7 +257,7 @@ class SWDefinition @Inject constructor(
         .add(SWFragment(injector, this)
             .add(LocalProfileFragment()))
         .validator {
-            localProfilePlugin.profile?.getDefaultProfile()?.let { ProfileSealed.Pure(it).isValid("StartupWizard", activePlugin.activePump, config, resourceHelper, rxBus) }
+            localProfilePlugin.profile?.getDefaultProfile()?.let { ProfileSealed.Pure(it).isValid("StartupWizard", activePlugin.activePump, config, resourceHelper, rxBus, hardLimits).isValid }
                 ?: false
         }
         .visibility { localProfilePlugin.isEnabled() }

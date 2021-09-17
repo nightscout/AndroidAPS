@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.pump.virtual
 
 import android.os.Bundle
 import android.os.Handler
+import android.os.HandlerThread
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.VirtualpumpFragmentBinding
 import info.nightscout.androidaps.events.EventExtendedBolusChange
 import info.nightscout.androidaps.events.EventTempBasalChange
+import info.nightscout.androidaps.extensions.toStringFull
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -17,7 +19,6 @@ import info.nightscout.androidaps.plugins.pump.virtual.events.EventVirtualPumpUp
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.extensions.toStringFull
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -37,15 +38,8 @@ class VirtualPumpFragment : DaggerFragment() {
 
     private val disposable = CompositeDisposable()
 
-    private val loopHandler = Handler()
     private lateinit var refreshLoop: Runnable
-
-    init {
-        refreshLoop = Runnable {
-            activity?.runOnUiThread { updateGui() }
-            loopHandler.postDelayed(refreshLoop, T.mins(1).msecs())
-        }
-    }
+    private lateinit var handler: Handler
 
     private var _binding: VirtualpumpFragmentBinding? = null
 
@@ -58,7 +52,11 @@ class VirtualPumpFragment : DaggerFragment() {
         return binding.root
     }
 
-    @Synchronized
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
+    }
+        @Synchronized
     override fun onResume() {
         super.onResume()
         disposable += rxBus
@@ -73,7 +71,11 @@ class VirtualPumpFragment : DaggerFragment() {
             .toObservable(EventExtendedBolusChange::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ updateGui() }, fabricPrivacy::logException)
-        loopHandler.postDelayed(refreshLoop, T.mins(1).msecs())
+        refreshLoop = Runnable {
+            activity?.runOnUiThread { updateGui() }
+            handler.postDelayed(refreshLoop, T.mins(1).msecs())
+        }
+        handler.postDelayed(refreshLoop, T.mins(1).msecs())
         updateGui()
     }
 
@@ -81,7 +83,7 @@ class VirtualPumpFragment : DaggerFragment() {
     override fun onPause() {
         super.onPause()
         disposable.clear()
-        loopHandler.removeCallbacks(refreshLoop)
+        handler.removeCallbacksAndMessages(null)
     }
 
     @Synchronized

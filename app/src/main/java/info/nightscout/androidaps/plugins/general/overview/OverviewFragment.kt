@@ -138,7 +138,10 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             _binding = it
             //check screen width
             dm = DisplayMetrics()
-            activity?.windowManager?.defaultDisplay?.getMetrics(dm)
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R)
+                activity?.display?.getRealMetrics(dm)
+            else
+                @Suppress("DEPRECATION") activity?.windowManager?.defaultDisplay?.getMetrics(dm)
         }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -175,6 +178,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             overviewData.rangeToDisplay = if (overviewData.rangeToDisplay > 24) 6 else overviewData.rangeToDisplay
             sp.putInt(R.string.key_rangetodisplay, overviewData.rangeToDisplay)
             overviewData.initRange()
+            overviewData.prepareBucketedData("EventBucketedDataCreated")
+            overviewData.prepareBgData("EventBucketedDataCreated")
             updateGUI("rangeChange", OverviewData.Property.GRAPH)
             rxBus.send(EventPreferenceChange(resourceHelper, R.string.key_rangetodisplay))
             sp.putBoolean(R.string.key_objectiveusescale, true)
@@ -737,7 +742,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 graphData.addTreatments()
                 if (menuChartSettings[0][OverviewMenus.CharType.ACT.ordinal])
                     graphData.addActivity(0.8)
-                if (pump.pumpDescription.isTempBasalCapable && menuChartSettings[0][OverviewMenus.CharType.BAS.ordinal])
+                if ((pump.pumpDescription.isTempBasalCapable || config.NSCLIENT) && menuChartSettings[0][OverviewMenus.CharType.BAS.ordinal])
                     graphData.addBasals()
                 graphData.addTargetLine()
                 graphData.addNowLine(dateUtil.now())
