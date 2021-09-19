@@ -548,14 +548,14 @@ class OverviewData @Inject constructor(
 //        val start = dateUtil.now()
         maxTreatmentsValue = 0.0
         val filteredTreatments: MutableList<DataPointWithLabelInterface> = java.util.ArrayList()
-        repository.getBolusesIncludingInvalidFromTimeToTime(fromTime, endTime, true).blockingGet()
+        repository.getBolusesDataFromTimeToTime(fromTime, endTime, true).blockingGet()
             .map { BolusDataPoint(it, resourceHelper, activePlugin, defaultValueHelper) }
-            .filter { it.data.type != Bolus.Type.SMB || it.data.isValid }
+            .filter { it.data.type == Bolus.Type.NORMAL || it.data.type == Bolus.Type.SMB }
             .forEach {
                 it.y = getNearestBg(it.x.toLong())
                 filteredTreatments.add(it)
             }
-        repository.getCarbsIncludingInvalidFromTimeToTimeExpanded(fromTime, endTime, true).blockingGet()
+        repository.getCarbsDataFromTimeToTimeExpanded(fromTime, endTime, true).blockingGet()
             .map { CarbsDataPoint(it, resourceHelper) }
             .forEach {
                 it.y = getNearestBg(it.x.toLong())
