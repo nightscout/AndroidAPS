@@ -680,14 +680,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     activity?.let { OKDialog.show(it, resourceHelper.gs(R.string.iob), overviewData.iobDialogText) }
                 }
                 // cob
-                var cobText: String = resourceHelper.gs(R.string.value_unavailable_short)
-                overviewData.cobInfo?.let { cobInfo ->
-                    if (cobInfo.displayCob != null) {
-                        cobText = resourceHelper.gs(R.string.format_carbs, cobInfo.displayCob!!.toInt())
-                        if (cobInfo.futureCarbs > 0) cobText += "(" + DecimalFormatter.to0Decimal(cobInfo.futureCarbs) + ")"
-                    }
-                }
-                binding.infoLayout.cob.text = cobText
+                var cobText = overviewData.cobInfo?.displayText(resourceHelper, dateUtil, buildHelper.isDev()) ?: resourceHelper.gs(R.string.value_unavailable_short)
 
                 val constraintsProcessed = loopPlugin.lastRun?.constraintsProcessed
                 val lastRun = loopPlugin.lastRun
@@ -695,7 +688,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     if (constraintsProcessed.carbsReq > 0) {
                         //only display carbsreq when carbs have not been entered recently
                         if (overviewData.lastCarbsTime < lastRun.lastAPSRun) {
-                            cobText = cobText + " | " + constraintsProcessed.carbsReq + " " + resourceHelper.gs(R.string.required)
+                            cobText += " | " + constraintsProcessed.carbsReq + " " + resourceHelper.gs(R.string.required)
                         }
                         if (carbAnimation?.isRunning == false)
                             carbAnimation?.start()
@@ -704,6 +697,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                         carbAnimation?.selectDrawable(0)
                     }
                 }
+                binding.infoLayout.cob.text = cobText
             }
 
             OverviewData.Property.TEMPORARY_TARGET -> {

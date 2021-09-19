@@ -119,7 +119,7 @@ class DateUtil @Inject constructor(private val context: Context) {
         return DateTime(mills).toString(DateTimeFormat.forPattern(format))
     }
 
-    private fun timeStringWithSeconds(mills: Long): String {
+    fun timeStringWithSeconds(mills: Long): String {
         var format = "hh:mm:ssa"
         if (android.text.format.DateFormat.is24HourFormat(context)) {
             format = "HH:mm:ss"
