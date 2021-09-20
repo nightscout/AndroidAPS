@@ -366,7 +366,7 @@ public class AapsOmnipodErosManager {
             bolusCommandResult = executeCommand(() -> delegate.bolus(PumpType.OMNIPOD_EROS.determineCorrectBolusSize(detailedBolusInfo.insulin), beepsEnabled, beepsEnabled, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB ? null :
                     (estimatedUnitsDelivered, percentage) -> {
                         EventOverviewBolusProgress progressUpdateEvent = EventOverviewBolusProgress.INSTANCE;
-                        progressUpdateEvent.setStatus(getStringResource(R.string.bolusdelivering, detailedBolusInfo.insulin));
+                        progressUpdateEvent.setStatus(getStringResource(R.string.goingtodeliver, detailedBolusInfo.insulin));
                         progressUpdateEvent.setPercent(percentage);
                         sendEvent(progressUpdateEvent);
                     }));
