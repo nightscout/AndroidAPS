@@ -97,7 +97,7 @@ class LocalProfilePlugin @Inject constructor(
     var numOfProfiles = 0
     internal var currentProfileIndex = 0
 
-    fun currentProfile(): SingleProfile? = if (numOfProfiles > 0) profiles[currentProfileIndex] else null
+    fun currentProfile(): SingleProfile? = if (numOfProfiles > 0 && currentProfileIndex < numOfProfiles) profiles[currentProfileIndex] else null
 
     @Synchronized
     fun isValidEditState(): Boolean {
