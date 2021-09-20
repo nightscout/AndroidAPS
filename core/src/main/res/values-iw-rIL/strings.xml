@@ -81,7 +81,6 @@
     <string name="extended_bolus">בולוס ממושך</string>
     <string name="pump_time_updated">שעון המשאבה עודכן</string>
     <string name="exit">יציאה</string>
-    <string name="serial_number">מספר סידורי</string>
     <string name="removerecord">מחיקת רשומה</string>
     <string name="loopisdisabled">הלולאה מושבתת</string>
     <string name="alarm">התראה</string>
