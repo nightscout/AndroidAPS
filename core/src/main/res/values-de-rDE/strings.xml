@@ -81,7 +81,6 @@
     <string name="extended_bolus">Verzögerter Bolus</string>
     <string name="pump_time_updated">Pumpenzeit aktualisiert</string>
     <string name="exit">Verlassen</string>
-    <string name="serial_number">Seriennummer</string>
     <string name="removerecord">Eintrag löschen</string>
     <string name="loopisdisabled">Loop ist deaktiviert.</string>
     <string name="alarm">Alarm</string>
