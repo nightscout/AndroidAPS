@@ -80,7 +80,6 @@
     <string name="extended_bolus">Удължен болус</string>
     <string name="pump_time_updated">Актуализирано време на помпата</string>
     <string name="exit">Изход</string>
-    <string name="serial_number">Сериен номер</string>
     <string name="removerecord">Премахни</string>
     <string name="loopisdisabled">APS е изключен</string>
     <string name="alarm">Аларма</string>
