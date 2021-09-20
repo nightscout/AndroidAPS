@@ -181,7 +181,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             double carbs = detailedBolusInfo.carbs;
             detailedBolusInfo.carbs = 0;
             long carbTimeStamp = detailedBolusInfo.getCarbsTimestamp() != null ? detailedBolusInfo.getCarbsTimestamp() : detailedBolusInfo.timestamp;
-            if (carbTimeStamp == detailedBolusInfo.timestamp) carbTimeStamp -= T.mins(1).msecs(); // better set 1 min back to prevents clash with insulin
+            if (carbTimeStamp == detailedBolusInfo.timestamp) carbTimeStamp -= T.Companion.mins(1).msecs(); // better set 1 min back to prevents clash with insulin
 
             detailedBolusInfoStorage.add(detailedBolusInfo); // will be picked up on reading history
 
@@ -259,7 +259,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
                     }
                 }
             }
-            temporaryBasalStorage.add(new PumpSync.PumpState.TemporaryBasal(dateUtil.now(), T.mins(durationInMinutes).msecs(), percentRate, false, tbrType, 0L, 0L));
+            temporaryBasalStorage.add(new PumpSync.PumpState.TemporaryBasal(dateUtil.now(), T.Companion.mins(durationInMinutes).msecs(), percentRate, false, tbrType, 0L, 0L));
             // Convert duration from minutes to hours
             aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Setting temp basal " + percentRate + "% for " + durationInMinutes + " minutes (doLowTemp || doHighTemp)");
             if (percentRate == 0 && durationInMinutes > 30) {
@@ -298,7 +298,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             aapsLogger.debug(LTag.PUMP, "setTempBasalPercent: Correct value already set");
             return result;
         }
-        temporaryBasalStorage.add(new PumpSync.PumpState.TemporaryBasal(dateUtil.now(), T.mins(durationInMinutes).msecs(), percent, false, tbrType, 0L, 0L));
+        temporaryBasalStorage.add(new PumpSync.PumpState.TemporaryBasal(dateUtil.now(), T.Companion.mins(durationInMinutes).msecs(), percent, false, tbrType, 0L, 0L));
         boolean connectionOK;
         if (durationInMinutes == 15 || durationInMinutes == 30) {
             connectionOK = sExecutionService.tempBasalShortDuration(percent, durationInMinutes);

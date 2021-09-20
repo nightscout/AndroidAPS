@@ -16,8 +16,8 @@ class NSAddAck(
 ) : Event(), Ack {
 
     var id: String? = null
-    @JvmField var nsClientID: String? = null
-    @JvmField var json: JSONObject? = null
+    var nsClientID: String? = null
+    var json: JSONObject? = null
     override fun call(vararg args: Any) {
         // Regular response
         try {

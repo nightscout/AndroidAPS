@@ -19,7 +19,6 @@ object ProfileUtil {
         return if (stringBuilder.length > 3) stringBuilder.substring(0, stringBuilder.length - 2) else stringBuilder.toString()
     }
 
-    @JvmStatic
     fun getBasalProfilesDisplayable(profiles: Array<ProfileValue>, pumpType: PumpType): String {
         val stringBuilder = StringBuilder()
         for (basalValue in profiles) {
@@ -32,7 +31,6 @@ object ProfileUtil {
         return if (stringBuilder.length > 3) stringBuilder.substring(0, stringBuilder.length - 2) else stringBuilder.toString()
     }
 
-    @JvmStatic
     fun getBasalProfilesDisplayableAsStringOfArray(profile: Profile, pumpType: PumpType): String? {
         val stringBuilder = java.lang.StringBuilder()
         // for (basalValue in profiles) {

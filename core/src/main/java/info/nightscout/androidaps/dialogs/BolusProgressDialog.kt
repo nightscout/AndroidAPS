@@ -40,11 +40,7 @@ class BolusProgressDialog : DaggerDialogFragment() {
     private val disposable = CompositeDisposable()
 
     companion object {
-
-        @JvmField
         var bolusEnded = false
-
-        @JvmField
         var stopPressed = false
     }
 

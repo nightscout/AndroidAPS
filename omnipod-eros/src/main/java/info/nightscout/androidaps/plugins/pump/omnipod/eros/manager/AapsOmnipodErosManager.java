@@ -93,7 +93,6 @@ public class AapsOmnipodErosManager {
     private final RxBusWrapper rxBus;
     private final ResourceHelper resourceHelper;
     private final HasAndroidInjector injector;
-    private final ActivePlugin activePlugin;
     private final SP sp;
     private final OmnipodManager delegate;
     private final OmnipodAlertUtil omnipodAlertUtil;
@@ -125,7 +124,6 @@ public class AapsOmnipodErosManager {
                                   SP sp,
                                   ResourceHelper resourceHelper,
                                   HasAndroidInjector injector,
-                                  ActivePlugin activePlugin,
                                   OmnipodAlertUtil omnipodAlertUtil,
                                   Context context,
                                   PumpSync pumpSync) {
@@ -137,7 +135,6 @@ public class AapsOmnipodErosManager {
         this.sp = sp;
         this.resourceHelper = resourceHelper;
         this.injector = injector;
-        this.activePlugin = activePlugin;
         this.omnipodAlertUtil = omnipodAlertUtil;
         this.context = context;
         this.pumpSync = pumpSync;
@@ -779,7 +776,6 @@ public class AapsOmnipodErosManager {
 
     // Cancels current TBR and adds a new TBR for the remaining duration
     private void splitActiveTbr() {
-        PumpSync.PumpState pumpState = pumpSync.expectedPumpState();
         PumpSync.PumpState.TemporaryBasal previouslyRunningTempBasal = pumpSync.expectedPumpState().getTemporaryBasal();
         if (previouslyRunningTempBasal != null) {
             // Cancel the previously running TBR and start a NEW TBR here for the remaining duration,
@@ -810,7 +806,7 @@ public class AapsOmnipodErosManager {
         pumpSync.syncTemporaryBasalWithPumpId(
                 time,
                 tempBasalPair.getInsulinRate(),
-                T.mins(tempBasalPair.getDurationMinutes()).msecs(),
+                T.Companion.mins(tempBasalPair.getDurationMinutes()).msecs(),
                 true,
                 PumpSync.TemporaryBasalType.NORMAL,
                 pumpId,
