@@ -81,7 +81,6 @@
     <string name="extended_bolus">Prodloužený bolus</string>
     <string name="pump_time_updated">Čas v pumpě aktualizován</string>
     <string name="exit">Konec</string>
-    <string name="serial_number">Sériové číslo</string>
     <string name="removerecord">Odstranit záznam</string>
     <string name="loopisdisabled">Smyčka je zakázána</string>
     <string name="alarm">Alarm</string>
