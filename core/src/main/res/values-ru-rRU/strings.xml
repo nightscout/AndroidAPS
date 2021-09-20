@@ -81,7 +81,6 @@
     <string name="extended_bolus">Пролонгированный болюс</string>
     <string name="pump_time_updated">Время на помпе обновлено</string>
     <string name="exit">Выйти</string>
-    <string name="serial_number">Серийный номер</string>
     <string name="removerecord">Удалить запись</string>
     <string name="loopisdisabled">Зцикл не работает</string>
     <string name="alarm">Оповещения об опасности</string>
