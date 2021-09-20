@@ -109,5 +109,6 @@ class VirtualPumpFragment : DaggerFragment() {
 
         binding.type.text = pumpType?.description
         binding.typeDef.text = pumpType?.getFullDescription(resourceHelper.gs(R.string.virtualpump_pump_def), pumpType.hasExtendedBasals(), resourceHelper)
+        binding.serialNumber.text = virtualPumpPlugin.serialNumber()
     }
 }
