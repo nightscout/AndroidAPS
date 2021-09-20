@@ -678,7 +678,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
 
         if (tbrCurrent != null) {
             aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute: Current Basal: duration: {} min, rate={}",
-                    T.msecs(tbrCurrent.getDuration()).mins(), tbrCurrent.getRate());
+                    T.Companion.msecs(tbrCurrent.getDuration()).mins(), tbrCurrent.getRate());
         }
 
         if (tbrCurrent != null && !enforceNew) {

@@ -39,8 +39,8 @@ internal interface TherapyEventDao : TraceableDao<TherapyEvent> {
     @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE timestamp >= :timestamp AND referenceId IS NULL ORDER BY timestamp ASC")
     fun getTherapyEventDataIncludingInvalidFromTime(timestamp: Long): Single<List<TherapyEvent>>
 
-    @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE type = :type AND isValid = 1 ORDER BY id DESC LIMIT 1")
-    fun getLastTherapyRecord(type: TherapyEvent.Type): Maybe<TherapyEvent>
+    @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE type = :type AND isValid = 1 AND timestamp <= :now ORDER BY id DESC LIMIT 1")
+    fun getLastTherapyRecord(type: TherapyEvent.Type, now: Long): Maybe<TherapyEvent>
 
     @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE timestamp >= :timestamp AND isValid = 1 AND referenceId IS NULL ORDER BY timestamp ASC")
     fun compatGetTherapyEventDataFromTime(timestamp: Long): Single<List<TherapyEvent>>

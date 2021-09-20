@@ -78,7 +78,6 @@ class ObjectivesPlugin @Inject constructor(
         objectives.add(Objective5(injector))
         objectives.add(Objective6(injector))
         objectives.add(Objective7(injector))
-        objectives.add(Objective8(injector))
         objectives.add(Objective9(injector))
         objectives.add(Objective10(injector))
     }
