@@ -28,7 +28,7 @@ class TriggerCOBTest : TriggerTestBase() {
 
     @Test fun shouldRunTest() {
         // COB value is 6
-        PowerMockito.`when`(iobCobCalculator.getCobInfo(false, "AutomationTriggerCOB")).thenReturn(CobInfo(6.0, 2.0))
+        PowerMockito.`when`(iobCobCalculator.getCobInfo(false, "AutomationTriggerCOB")).thenReturn(CobInfo(0, 6.0, 2.0))
         var t: TriggerCOB = TriggerCOB(injector).setValue(1.0).comparator(Comparator.Compare.IS_EQUAL)
         Assert.assertFalse(t.shouldRun())
         t = TriggerCOB(injector).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL)
@@ -72,6 +72,6 @@ class TriggerCOBTest : TriggerTestBase() {
     }
 
     fun generateCobInfo(): CobInfo {
-        return CobInfo(6.0, 0.0)
+        return CobInfo(0, 6.0, 0.0)
     }
 }
