@@ -81,7 +81,6 @@
     <string name="extended_bolus">Bolo esteso</string>
     <string name="pump_time_updated">Ora del micro aggiornata</string>
     <string name="exit">Esci</string>
-    <string name="serial_number">Numero seriale</string>
     <string name="removerecord">Rimuovi record</string>
     <string name="loopisdisabled">Il loop è disabilitato</string>
     <string name="alarm">Allarme</string>
