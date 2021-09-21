@@ -189,7 +189,7 @@ object ProgramBasalUtil {
         return pulsesPerSlot
     }
 
-    fun calculateCurrentSlot(pulsesPerSlot: ShortArray?, currentTime: Date?): CurrentSlot {
+    fun calculateCurrentSlot(pulsesPerSlot: ShortArray?, currentTime: Date): CurrentSlot {
         val instance = Calendar.getInstance()
         instance.time = currentTime
         val hourOfDay = instance[Calendar.HOUR_OF_DAY]
@@ -205,7 +205,7 @@ object ProgramBasalUtil {
 
     fun calculateCurrentLongInsulinProgramElement(
         elements: List<BasalInsulinProgramElement>,
-        currentTime: Date?
+        currentTime: Date
     ): CurrentBasalInsulinProgramElement {
         val instance = Calendar.getInstance()
         instance.time = currentTime

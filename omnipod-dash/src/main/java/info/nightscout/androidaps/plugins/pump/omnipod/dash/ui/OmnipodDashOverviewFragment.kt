@@ -13,6 +13,7 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.events.EventPreferenceChange
+import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -206,6 +207,16 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 },
                 fabricPrivacy::logException
             )
+
+        disposables += rxBus
+            .toObservable(EventPumpStatusChanged::class.java)
+            .observeOn(aapsSchedulers.main)
+            .subscribe(
+                {
+                    updateBluetoothConnectionStatus(it)
+                },
+                fabricPrivacy::logException
+            )
         updateUi()
     }
 
@@ -231,18 +242,13 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
         updateQueueStatus()
     }
 
+    private fun updateBluetoothConnectionStatus(event: EventPumpStatusChanged) {
+        bluetoothStatusBinding.omnipodDashBluetoothStatus.text = event.getStatus(resourceHelper)
+    }
+
     private fun updateBluetoothStatus() {
         bluetoothStatusBinding.omnipodDashBluetoothAddress.text = podStateManager.bluetoothAddress
             ?: PLACEHOLDER
-        bluetoothStatusBinding.omnipodDashBluetoothStatus.text =
-            when (podStateManager.bluetoothConnectionState) {
-                OmnipodDashPodStateManager.BluetoothConnectionState.CONNECTED ->
-                    "{fa-bluetooth}"
-                OmnipodDashPodStateManager.BluetoothConnectionState.DISCONNECTED ->
-                    "{fa-bluetooth-b}"
-                OmnipodDashPodStateManager.BluetoothConnectionState.CONNECTING ->
-                    "{fa-bluetooth-b spin}"
-            }
 
         val connectionSuccessPercentage = podStateManager.connectionSuccessRatio() * 100
         val successPercentageString = String.format("%.2f %%", connectionSuccessPercentage)

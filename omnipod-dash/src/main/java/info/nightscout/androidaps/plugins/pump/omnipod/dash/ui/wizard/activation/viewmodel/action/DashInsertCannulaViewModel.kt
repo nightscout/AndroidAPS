@@ -63,7 +63,7 @@ class DashInsertCannulaViewModel @Inject constructor(
             else
                 null
 
-            val disposable = omnipodManager.activatePodPart2(basalProgram, expirationHoursBeforeShutdown).subscribeBy(
+            omnipodManager.activatePodPart2(basalProgram, expirationHoursBeforeShutdown).subscribeBy(
                 onNext = { podEvent ->
                     logger.debug(
                         LTag.PUMP,

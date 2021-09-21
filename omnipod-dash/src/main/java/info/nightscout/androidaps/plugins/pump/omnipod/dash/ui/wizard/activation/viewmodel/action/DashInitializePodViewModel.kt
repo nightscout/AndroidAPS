@@ -40,7 +40,7 @@ class DashInitializePodViewModel @Inject constructor(
             } else
                 null
 
-            val disposable = omnipodManager.activatePodPart1(lowReservoirAlertTrigger).subscribeBy(
+            omnipodManager.activatePodPart1(lowReservoirAlertTrigger).subscribeBy(
                 onNext = { podEvent ->
                     logger.debug(
                         LTag.PUMP,
