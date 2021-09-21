@@ -27,7 +27,7 @@
 
     <!-- Exceptions -->
     <string name="omnipod_dash_failed_to_connect">Failed to connect to pod</string>
-    <string name="omnipod_dash_found_too_many_pods">Found too many pods when scanning</string>
-    <string name="omnipod_dash_scan_failed">Could not find any available pod for activation</string>
+    <string name="omnipod_dash_found_too_many_pods">Found too many pods for activation</string>
+    <string name="omnipod_dash_scan_failed">Could not find an available pod for activation</string>
     <string name="omnipod_dash_generic_error">Generic error: %1$s</string>
 </resources>
