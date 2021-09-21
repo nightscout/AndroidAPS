@@ -74,14 +74,6 @@ class ObjectivesPluginTest : TestBase() {
         Assert.assertEquals(false, c.value())
     }
 
-    @Test fun notStartedObjective9ShouldLimitAMAMode() {
-        objectivesPlugin.objectives[ObjectivesPlugin.AMA_OBJECTIVE].startedOn = 0
-        var c = Constraint(true)
-        c = objectivesPlugin.isAMAModeEnabled(c)
-        Assert.assertEquals(true, c.getReasons(aapsLogger).contains("Objective 9 not started"))
-        Assert.assertEquals(false, c.value())
-    }
-
     @Test fun notStartedObjective10ShouldLimitSMBMode() {
         objectivesPlugin.objectives[ObjectivesPlugin.SMB_OBJECTIVE].startedOn = 0
         var c = Constraint(true)
