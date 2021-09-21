@@ -100,22 +100,23 @@ class ProgramBasalCommand private constructor(
         }
 
         override fun buildCommand(): ProgramBasalCommand {
-            requireNotNull(basalProgram) { "basalProgram can not be null" }
-            requireNotNull(programReminder) { "programReminder can not be null" }
-            requireNotNull(currentTime) { "currentTime can not be null" }
-            val pulsesPerSlot = ProgramBasalUtil.mapBasalProgramToPulsesPerSlot(basalProgram!!)
-            val currentSlot = ProgramBasalUtil.calculateCurrentSlot(pulsesPerSlot, currentTime)
+            val program = requireNotNull(basalProgram) { "basalProgram can not be null" }
+            val reminder = requireNotNull(programReminder) { "programReminder can not be null" }
+            val time = requireNotNull(currentTime) { "currentTime can not be null" }
+
+            val pulsesPerSlot = ProgramBasalUtil.mapBasalProgramToPulsesPerSlot(program)
+            val currentSlot = ProgramBasalUtil.calculateCurrentSlot(pulsesPerSlot, time)
             val checksum = ProgramBasalUtil.calculateChecksum(pulsesPerSlot, currentSlot)
             val longInsulinProgramElements: List<BasalInsulinProgramElement> =
                 mapTenthPulsesPerSlotToLongInsulinProgramElements(
-                    ProgramBasalUtil.mapBasalProgramToTenthPulsesPerSlot(basalProgram!!)
+                    ProgramBasalUtil.mapBasalProgramToTenthPulsesPerSlot(program)
                 )
             val shortInsulinProgramElements = ProgramBasalUtil.mapPulsesPerSlotToShortInsulinProgramElements(
                 pulsesPerSlot
             )
             val currentBasalInsulinProgramElement = ProgramBasalUtil.calculateCurrentLongInsulinProgramElement(
                 longInsulinProgramElements,
-                currentTime
+                time
             )
             val interlockCommand = ProgramInsulinCommand(
                 uniqueId!!, sequenceNumber!!, multiCommandFlag, nonce!!,
@@ -128,7 +129,7 @@ class ProgramBasalCommand private constructor(
                 sequenceNumber!!,
                 multiCommandFlag,
                 longInsulinProgramElements,
-                programReminder!!,
+                reminder,
                 currentBasalInsulinProgramElement.index,
                 currentBasalInsulinProgramElement.remainingTenthPulses,
                 currentBasalInsulinProgramElement.delayUntilNextTenthPulseInUsec
