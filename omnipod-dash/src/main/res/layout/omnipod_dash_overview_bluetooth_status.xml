@@ -73,7 +73,6 @@
             android:gravity="start"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
-            android:text="{fa-bluetooth-b} "
             android:textSize="14sp"
             tools:ignore="HardcodedText" />
     </LinearLayout>
