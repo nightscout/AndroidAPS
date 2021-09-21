@@ -13,6 +13,7 @@ import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.OfflineEvent
@@ -59,6 +60,7 @@ import javax.inject.Singleton
 import kotlin.math.max
 import kotlin.math.min
 
+@OpenForTesting
 @Singleton
 class SmsCommunicatorPlugin @Inject constructor(
     injector: HasAndroidInjector,

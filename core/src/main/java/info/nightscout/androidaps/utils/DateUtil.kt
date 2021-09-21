@@ -58,10 +58,9 @@ class DateUtil @Inject constructor(private val context: Context) {
      * @param tz     - tz to set to, if not specified uses local timezone
      * @return the iso-formatted date string
      */
-    @JvmOverloads
-    fun toISOString(date: Long, format: String = FORMAT_DATE_ISO_OUT, tz: TimeZone = TimeZone.getTimeZone("UTC")): String {
-        val f: DateFormat = SimpleDateFormat(format, Locale.getDefault())
-        f.timeZone = tz
+    fun toISOString(date: Long): String {
+        val f: DateFormat = SimpleDateFormat(FORMAT_DATE_ISO_OUT, Locale.getDefault())
+        f.timeZone = TimeZone.getTimeZone("UTC")
         return f.format(date)
     }
 

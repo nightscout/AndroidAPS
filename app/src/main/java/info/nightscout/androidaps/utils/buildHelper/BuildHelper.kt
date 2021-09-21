@@ -1,12 +1,14 @@
 package info.nightscout.androidaps.utils.buildHelper
 
 import info.nightscout.androidaps.BuildConfig
+import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
 
+@OpenForTesting
 @Singleton
 class BuildHelper @Inject constructor(
     private val config: Config,

@@ -10,7 +10,7 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.powermock.api.mockito.PowerMockito
+import org.mockito.Mockito.`when`
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
@@ -21,7 +21,7 @@ class TriggerTimeTest : TriggerTestBase() {
     var now = 1514766900000L
 
     @Before fun mock() {
-        PowerMockito.`when`(dateUtil.now()).thenReturn(now)
+        `when`(dateUtil.now()).thenReturn(now)
     }
 
     @Test fun shouldRunTest() {

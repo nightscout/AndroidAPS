@@ -13,7 +13,6 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
-import org.powermock.api.mockito.PowerMockito
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
@@ -65,14 +64,14 @@ class TriggerAutosensValueTest : TriggerTestBase() {
         t.autosens.value = 390.0
         t.comparator.value = Comparator.Compare.IS_EQUAL_OR_LESSER
         Assert.assertTrue(t.shouldRun())
-        PowerMockito.`when`(autosensDataStore.getLastAutosensData(anyObject(), anyObject(), anyObject())).thenReturn(AutosensData(injector))
+        `when`(autosensDataStore.getLastAutosensData(anyObject(), anyObject(), anyObject())).thenReturn(AutosensData(injector))
         t = TriggerAutosensValue(injector)
         t.autosens.value = 80.0
         t.comparator.value = Comparator.Compare.IS_EQUAL_OR_LESSER
         Assert.assertFalse(t.shouldRun())
 
         // Test autosensData == null and Comparator == IS_NOT_AVAILABLE
-        PowerMockito.`when`(autosensDataStore.getLastAutosensData(anyObject(), anyObject(), anyObject())).thenReturn(null)
+        `when`(autosensDataStore.getLastAutosensData(anyObject(), anyObject(), anyObject())).thenReturn(null)
         t = TriggerAutosensValue(injector)
         t.comparator.value = Comparator.Compare.IS_NOT_AVAILABLE
         Assert.assertTrue(t.shouldRun())
@@ -114,7 +113,7 @@ class TriggerAutosensValueTest : TriggerTestBase() {
 
     @Before
     fun mock() {
-        PowerMockito.`when`(dateUtil.now()).thenReturn(now)
+        `when`(dateUtil.now()).thenReturn(now)
     }
 
     private fun generateAutosensData(): AutosensData {

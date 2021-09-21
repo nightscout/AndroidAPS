@@ -52,6 +52,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 import java.util.*
 
+// Powermock needed to mock SmsManager
 @RunWith(PowerMockRunner::class)
 @PrepareForTest(
     ConstraintChecker::class, FabricPrivacy::class, VirtualPumpPlugin::class, XdripCalibrations::class,
@@ -310,7 +311,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         `when`(sp.getBoolean(R.string.key_smscommunicator_remotecommandsallowed, false)).thenReturn(true)
 
         //LOOP STATUS : disabled
-        PowerMockito.`when`(loopPlugin.enabled).thenReturn(false)
+        `when`(loopPlugin.enabled).thenReturn(false)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP STATUS")
         smsCommunicatorPlugin.processSms(sms)
@@ -318,9 +319,9 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         Assert.assertEquals("Loop is disabled", smsCommunicatorPlugin.messages[1].text)
 
         //LOOP STATUS : suspended
-        PowerMockito.`when`(loopPlugin.minutesToEndOfSuspend()).thenReturn(10)
-        PowerMockito.`when`(loopPlugin.enabled).thenReturn(true)
-        PowerMockito.`when`(loopPlugin.isSuspended).thenReturn(true)
+        `when`(loopPlugin.minutesToEndOfSuspend()).thenReturn(10)
+        `when`(loopPlugin.enabled).thenReturn(true)
+        `when`(loopPlugin.isSuspended).thenReturn(true)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP STATUS")
         smsCommunicatorPlugin.processSms(sms)
@@ -328,8 +329,8 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         Assert.assertEquals("Suspended (10 m)", smsCommunicatorPlugin.messages[1].text)
 
         //LOOP STATUS : enabled
-        PowerMockito.`when`(loopPlugin.enabled).thenReturn(true)
-        PowerMockito.`when`(loopPlugin.isSuspended).thenReturn(false)
+        `when`(loopPlugin.enabled).thenReturn(true)
+        `when`(loopPlugin.isSuspended).thenReturn(false)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP STATUS")
         smsCommunicatorPlugin.processSms(sms)
@@ -338,7 +339,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         Assert.assertEquals("Loop is enabled", smsCommunicatorPlugin.messages[1].text)
 
         //LOOP : wrong format
-        PowerMockito.`when`(loopPlugin.enabled).thenReturn(true)
+        `when`(loopPlugin.enabled).thenReturn(true)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP")
         smsCommunicatorPlugin.processSms(sms)
@@ -347,7 +348,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
 
         //LOOP DISABLE : already disabled
-        PowerMockito.`when`(loopPlugin.enabled).thenReturn(false)
+        `when`(loopPlugin.enabled).thenReturn(false)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP DISABLE")
         smsCommunicatorPlugin.processSms(sms)
@@ -357,7 +358,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
         //LOOP DISABLE : from enabled
         hasBeenRun = false
-        PowerMockito.`when`(loopPlugin.enabled).thenReturn(true)
+        `when`(loopPlugin.enabled).thenReturn(true)
         // PowerMockito.doAnswer(Answer {
         //     hasBeenRun = true
         //     null
@@ -375,7 +376,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         //Assert.assertTrue(hasBeenRun)
 
         //LOOP ENABLE : already enabled
-        PowerMockito.`when`(loopPlugin.enabled).thenReturn(true)
+        `when`(loopPlugin.enabled).thenReturn(true)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP ENABLE")
         smsCommunicatorPlugin.processSms(sms)
@@ -385,7 +386,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
         //LOOP ENABLE : from disabled
         hasBeenRun = false
-        PowerMockito.`when`(loopPlugin.enabled).thenReturn(false)
+        `when`(loopPlugin.enabled).thenReturn(false)
         // PowerMockito.doAnswer(Answer {
         //     hasBeenRun = true
         //     null
@@ -479,8 +480,8 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
 
         //NSCLIENT RESTART
-        PowerMockito.`when`(loopPlugin.isEnabled(PluginType.LOOP)).thenReturn(true)
-        PowerMockito.`when`(loopPlugin.isSuspended).thenReturn(false)
+        `when`(loopPlugin.isEnabled(PluginType.LOOP)).thenReturn(true)
+        `when`(loopPlugin.isSuspended).thenReturn(false)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "NSCLIENT RESTART")
         smsCommunicatorPlugin.processSms(sms)
@@ -489,8 +490,8 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         Assert.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("NSCLIENT RESTART"))
 
         //NSCLIENT BLA BLA
-        PowerMockito.`when`(loopPlugin.isEnabled(PluginType.LOOP)).thenReturn(true)
-        PowerMockito.`when`(loopPlugin.isSuspended).thenReturn(false)
+        `when`(loopPlugin.isEnabled(PluginType.LOOP)).thenReturn(true)
+        `when`(loopPlugin.isSuspended).thenReturn(false)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "NSCLIENT BLA BLA")
         smsCommunicatorPlugin.processSms(sms)
@@ -499,8 +500,8 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
 
         //NSCLIENT BLABLA
-        PowerMockito.`when`(loopPlugin.isEnabled(PluginType.LOOP)).thenReturn(true)
-        PowerMockito.`when`(loopPlugin.isSuspended).thenReturn(false)
+        `when`(loopPlugin.isEnabled(PluginType.LOOP)).thenReturn(true)
+        `when`(loopPlugin.isSuspended).thenReturn(false)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "NSCLIENT BLABLA")
         smsCommunicatorPlugin.processSms(sms)
@@ -536,7 +537,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
             repository.runTransactionForResult(anyObject<Transaction<CancelCurrentOfflineEventIfAnyTransaction.TransactionResult>>())
         ).thenReturn(Single.just(CancelCurrentOfflineEventIfAnyTransaction.TransactionResult().apply {
         }))
-        PowerMockito.`when`(loopPlugin.enabled).thenReturn(true)
+        `when`(loopPlugin.enabled).thenReturn(true)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "PUMP CONNECT")
         smsCommunicatorPlugin.processSms(sms)
@@ -902,7 +903,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         Assert.assertEquals("BOLUS", smsCommunicatorPlugin.messages[0].text)
         Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
         `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(Constraint(1.0))
-        PowerMockito.`when`(dateUtilMocked.now()).thenReturn(1000L)
+        `when`(dateUtilMocked.now()).thenReturn(1000L)
         `when`(sp.getLong(R.string.key_smscommunicator_remotebolusmindistance, T.msecs(Constants.remoteBolusMinDistance).mins())).thenReturn(15L)
         //BOLUS 1
         smsCommunicatorPlugin.messages = ArrayList()
@@ -911,7 +912,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         Assert.assertEquals("BOLUS 1", smsCommunicatorPlugin.messages[0].text)
         Assert.assertEquals("Remote bolus not available. Try again later.", smsCommunicatorPlugin.messages[1].text)
         `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(Constraint(0.0))
-        PowerMockito.`when`(dateUtilMocked.now()).thenReturn(Constants.remoteBolusMinDistance + 1002L)
+        `when`(dateUtilMocked.now()).thenReturn(Constants.remoteBolusMinDistance + 1002L)
 
         //BOLUS 0
         smsCommunicatorPlugin.messages = ArrayList()
@@ -942,13 +943,13 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
         //BOLUS 1 (Suspended pump)
         smsCommunicatorPlugin.lastRemoteBolusTime = 0
-        PowerMockito.`when`(virtualPumpPlugin.isSuspended()).thenReturn(true)
+        `when`(virtualPumpPlugin.isSuspended()).thenReturn(true)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "BOLUS 1")
         smsCommunicatorPlugin.processSms(sms)
         Assert.assertEquals("BOLUS 1", smsCommunicatorPlugin.messages[0].text)
         Assert.assertEquals("Pump suspended", smsCommunicatorPlugin.messages[1].text)
-        PowerMockito.`when`(virtualPumpPlugin.isSuspended()).thenReturn(false)
+        `when`(virtualPumpPlugin.isSuspended()).thenReturn(false)
 
         //BOLUS 1 a
         smsCommunicatorPlugin.messages = ArrayList()
@@ -993,7 +994,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(sms)
         Assert.assertEquals("CAL 0", smsCommunicatorPlugin.messages[0].text)
         Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
-        PowerMockito.`when`(xdripCalibrations.sendIntent(ArgumentMatchers.anyDouble())).thenReturn(true)
+        `when`(xdripCalibrations.sendIntent(ArgumentMatchers.anyDouble())).thenReturn(true)
         //CAL 1
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "CAL 1")
@@ -1007,7 +1008,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     }
 
     @Test fun processCarbsTest() {
-        PowerMockito.`when`(dateUtilMocked.now()).thenReturn(1000000L)
+        `when`(dateUtilMocked.now()).thenReturn(1000000L)
         `when`(sp.getBoolean(R.string.key_smscommunicator_remotecommandsallowed, false)).thenReturn(false)
         //CAL
         smsCommunicatorPlugin.messages = ArrayList()
