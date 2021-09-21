@@ -156,7 +156,7 @@ class ActionsFragment : DaggerFragment() {
         pbLevelLabel = view.findViewById(R.id.pb_level_label)
 
         profileSwitch?.setOnClickListener {
-            ProfileSwitchDialog().show(childFragmentManager, "Actions")
+            ProfileSwitchDialog().show(childFragmentManager, "ProfileSwitchDialog")
         }
         tempTarget?.setOnClickListener {
             TempTargetDialog().show(childFragmentManager, "Actions")

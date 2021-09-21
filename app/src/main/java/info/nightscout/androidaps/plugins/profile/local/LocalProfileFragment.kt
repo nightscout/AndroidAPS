@@ -212,7 +212,7 @@ class LocalProfileFragment : DaggerFragment() {
         binding.profileswitch.setOnClickListener {
             ProfileSwitchDialog()
                 .also { it.arguments = Bundle().also { bundle -> bundle.putInt("profileIndex", localProfilePlugin.currentProfileIndex) } }
-                .show(childFragmentManager, "NewNSTreatmentDialog")
+                .show(childFragmentManager, "ProfileSwitchDialog")
         }
 
         binding.reset.setOnClickListener {
@@ -259,7 +259,7 @@ class LocalProfileFragment : DaggerFragment() {
         updateGUI()
     }
 
-    fun updateGUI() {
+    private fun updateGUI() {
         if (_binding == null) return
         val isValid = localProfilePlugin.isValidEditState()
         val isEdited = localProfilePlugin.isEdited
