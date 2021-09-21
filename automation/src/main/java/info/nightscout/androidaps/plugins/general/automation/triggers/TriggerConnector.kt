@@ -95,7 +95,7 @@ class TriggerConnector(injector: HasAndroidInjector) : Trigger(injector) {
         val array = d.getJSONArray("triggerList")
         list.clear()
         for (i in 0 until array.length()) {
-            instantiate(JSONObject(array.getString(i)))?.let {
+            instantiate(JSONObject(array.getString(i))).let {
                 list.add(it)
             }
         }
