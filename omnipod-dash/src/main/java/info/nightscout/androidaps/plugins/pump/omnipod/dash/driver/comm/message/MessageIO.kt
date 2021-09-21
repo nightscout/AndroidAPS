@@ -177,7 +177,7 @@ class MessageIO(
             }
 
             BleCommandSuccess -> {
-                if (index == packets.size-1)
+                if (index == packets.size - 1)
                     MessageSendSuccess
                 else
                     MessageSendErrorSending("Received SUCCESS before sending all the data. $index")

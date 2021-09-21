@@ -241,6 +241,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
                     .plusHours(podLifeInHours.toLong())
                     .minusMinutes(minutesSinceActivation.toLong())
                     .minus(Duration.ofMillis(System.currentTimeMillis() - lastUpdatedSystem))
+                    .minusHours(8)
             }
             return null
         }

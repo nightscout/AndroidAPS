@@ -13,6 +13,7 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.events.EventPreferenceChange
+import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -30,6 +31,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.databinding.OmnipodDashOverviewBinding
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.databinding.OmnipodDashOverviewBluetoothStatusBinding
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.ActivationProgress
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.queue.events.EventQueueChanged
@@ -205,6 +207,16 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 },
                 fabricPrivacy::logException
             )
+
+        disposables += rxBus
+            .toObservable(EventPumpStatusChanged::class.java)
+            .observeOn(aapsSchedulers.main)
+            .subscribe(
+                {
+                    updateBluetoothConnectionStatus(it)
+                },
+                fabricPrivacy::logException
+            )
         updateUi()
     }
 
@@ -230,18 +242,18 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
         updateQueueStatus()
     }
 
+    private fun updateBluetoothConnectionStatus(event: EventPumpStatusChanged) {
+        var status = event.getStatus(resourceHelper)
+        if (status.isEmpty()) {
+            status = resourceHelper.gs(R.string.disconnected)
+        }
+        bluetoothStatusBinding.omnipodDashBluetoothStatus.text = status
+
+    }
+
     private fun updateBluetoothStatus() {
         bluetoothStatusBinding.omnipodDashBluetoothAddress.text = podStateManager.bluetoothAddress
             ?: PLACEHOLDER
-        bluetoothStatusBinding.omnipodDashBluetoothStatus.text =
-            when (podStateManager.bluetoothConnectionState) {
-                OmnipodDashPodStateManager.BluetoothConnectionState.CONNECTED ->
-                    "{fa-bluetooth}"
-                OmnipodDashPodStateManager.BluetoothConnectionState.DISCONNECTED ->
-                    "{fa-bluetooth-b}"
-                OmnipodDashPodStateManager.BluetoothConnectionState.CONNECTING ->
-                    "{fa-bluetooth-b spin}"
-            }
 
         val connectionSuccessPercentage = podStateManager.connectionSuccessRatio() * 100
         val successPercentageString = String.format("%.2f %%", connectionSuccessPercentage)
@@ -389,7 +401,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             }
 
             podInfoBinding.podActiveAlerts.text = podStateManager.activeAlerts?.let { it ->
-                it.joinToString(",") { it.toString() }
+                it.joinToString(System.lineSeparator()) { t -> translatedActiveAlert(t) }
             } ?: PLACEHOLDER
         }
 
@@ -400,6 +412,24 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             podInfoBinding.errors.text = StringUtils.join(errors, System.lineSeparator())
             podInfoBinding.errors.setTextColor(Color.RED)
         }
+    }
+
+    private fun translatedActiveAlert(alert: AlertType): String {
+        val id = when (alert) {
+            AlertType.LOW_RESERVOIR ->
+                R.string.omnipod_common_alert_low_reservoir
+            AlertType.EXPIRATION ->
+                R.string.omnipod_common_alert_expiration_advisory
+            AlertType.EXPIRATION_IMMINENT ->
+                R.string.omnipod_common_alert_expiration
+            AlertType.USER_SET_EXPIRATION ->
+                R.string.omnipod_common_alert_expiration_advisory
+            AlertType.AUTO_OFF ->
+                R.string.omnipod_common_alert_shutdown_imminent
+            else ->
+                R.string.omnipod_common_alert_unknown_alert
+        }
+        return resourceHelper.gs(id)
     }
 
     private fun updateLastConnection() {
