@@ -3,25 +3,19 @@ package info.nightscout.androidaps.plugins.general.automation.triggers
 import com.google.common.base.Optional
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator
-import info.nightscout.androidaps.utils.DateUtil
 import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.powermock.api.mockito.PowerMockito
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
+import org.mockito.Mockito.`when`
 
-@RunWith(PowerMockRunner::class)
-@PrepareForTest(DateUtil::class)
 class TriggerPumpLastConnectionTest : TriggerTestBase() {
 
     var now = 1514766900000L
 
     @Before
     fun mock() {
-        PowerMockito.`when`(dateUtil.now()).thenReturn(now)
+        `when`(dateUtil.now()).thenReturn(now)
     }
 
     @Test
@@ -29,7 +23,7 @@ class TriggerPumpLastConnectionTest : TriggerTestBase() {
 //        System.currentTimeMillis() is always 0
 //        and so is every last connection time
         Assert.assertEquals(0L, testPumpPlugin.lastDataTime())
-        PowerMockito.`when`(dateUtil.now()).thenReturn(now + 10 * 60 * 1000) // set current time to now + 10 min
+        `when`(dateUtil.now()).thenReturn(now + 10 * 60 * 1000) // set current time to now + 10 min
         var t = TriggerPumpLastConnection(injector).setValue(110).comparator(Comparator.Compare.IS_EQUAL)
         Assert.assertEquals(110, t.minutesAgo.value)
         Assert.assertEquals(Comparator.Compare.IS_EQUAL, t.comparator.value)

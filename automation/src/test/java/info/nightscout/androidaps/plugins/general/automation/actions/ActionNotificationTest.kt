@@ -6,23 +6,26 @@ import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
+import info.nightscout.androidaps.database.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
+import info.nightscout.androidaps.database.transactions.InsertTherapyEventAnnouncementTransaction
+import info.nightscout.androidaps.database.transactions.Transaction
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.automation.elements.InputString
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import io.reactivex.Completable
+import io.reactivex.Single
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
+import org.mockito.Mockito.any
+import org.mockito.Mockito.doNothing
 
-@RunWith(PowerMockRunner::class)
-@PrepareForTest(RxBusWrapper::class)
 class ActionNotificationTest : TestBase() {
 
     @Mock lateinit var resourceHelper: ResourceHelper
@@ -47,7 +50,14 @@ class ActionNotificationTest : TestBase() {
     fun setup() {
         `when`(resourceHelper.gs(R.string.ok)).thenReturn("OK")
         `when`(resourceHelper.gs(R.string.notification)).thenReturn("Notification")
-        `when`(resourceHelper.gs(ArgumentMatchers.eq(R.string.notification_message), ArgumentMatchers.anyString())).thenReturn("Notification: %s")
+        `when`(
+            resourceHelper.gs(
+                ArgumentMatchers.eq(R.string.notification_message),
+                ArgumentMatchers.anyString()
+            )
+        ).thenReturn("Notification: %s")
+        `when`(repository.runTransaction(anyObject<Transaction<InsertTherapyEventAnnouncementTransaction.TransactionResult>>()))
+            .thenReturn(Completable.fromAction {})
 
         sut = ActionNotification(injector)
     }
@@ -81,7 +91,10 @@ class ActionNotificationTest : TestBase() {
 
     @Test fun toJSONTest() {
         sut.text = InputString("Asd")
-        Assert.assertEquals("{\"data\":{\"text\":\"Asd\"},\"type\":\"info.nightscout.androidaps.plugins.general.automation.actions.ActionNotification\"}", sut.toJSON())
+        Assert.assertEquals(
+            "{\"data\":{\"text\":\"Asd\"},\"type\":\"info.nightscout.androidaps.plugins.general.automation.actions.ActionNotification\"}",
+            sut.toJSON()
+        )
     }
 
     @Test fun fromJSONTest() {

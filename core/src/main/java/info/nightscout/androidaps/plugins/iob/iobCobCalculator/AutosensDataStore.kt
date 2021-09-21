@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.iob.iobCobCalculator
 
 import androidx.collection.LongSparseArray
+import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.data.InMemoryGlucoseValue
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
@@ -14,6 +15,7 @@ import info.nightscout.androidaps.utils.T
 import kotlin.math.abs
 import kotlin.math.roundToLong
 
+@OpenForTesting
 class AutosensDataStore {
 
     private val dataLock = Any()

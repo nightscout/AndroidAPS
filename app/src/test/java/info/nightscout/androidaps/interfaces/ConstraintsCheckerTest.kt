@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.interfaces
 
-import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
@@ -36,22 +35,13 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
 import java.util.*
 
 /**
  * Created by mike on 18.03.2018.
  */
-@RunWith(PowerMockRunner::class)
-@PrepareForTest(
-    ConstraintChecker::class, SP::class, Context::class,
-    OpenAPSAMAPlugin::class, OpenAPSSMBPlugin::class,
-    VirtualPumpPlugin::class, DetailedBolusInfoStorage::class, TemporaryBasalStorage::class, GlimpPlugin::class, Profiler::class,
-    UserEntryLogger::class, PrefFileListProvider::class, AppRepository::class, InsightDatabaseDao::class)
 class ConstraintsCheckerTest : TestBaseWithProfile() {
 
     @Mock lateinit var activePlugin: ActivePlugin
@@ -98,7 +88,6 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     fun prepare() {
         `when`(resourceHelper.gs(R.string.closed_loop_disabled_on_dev_branch)).thenReturn("Running dev version. Closed loop is disabled.")
         `when`(resourceHelper.gs(R.string.closedmodedisabledinpreferences)).thenReturn("Closed loop mode disabled in preferences")
-        `when`(resourceHelper.gs(R.string.objectivenotstarted)).thenReturn("Objective %d not started")
         `when`(resourceHelper.gs(R.string.novalidbasalrate)).thenReturn("No valid basal rate read from pump")
         `when`(resourceHelper.gs(R.string.autosensdisabledinpreferences)).thenReturn("Autosens disabled in preferences")
         `when`(resourceHelper.gs(R.string.smbdisabledinpreferences)).thenReturn("SMB disabled in preferences")
@@ -125,6 +114,10 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         `when`(resourceHelper.gs(R.string.limitingbasalratio, 0.8, "pump limit")).thenReturn("")
         `when`(resourceHelper.gs(R.string.limitingpercentrate, 200, "pump limit")).thenReturn("")
         `when`(resourceHelper.gs(R.string.combo_pump_unsupported_operation)).thenReturn("Requested operation not supported by pump")
+        `when`(resourceHelper.gs(R.string.objectivenotstarted, 9)).thenReturn("Objective 9 not started")
+        `when`(resourceHelper.gs(R.string.objectivenotstarted, 8)).thenReturn("Objective 8 not started")
+        `when`(resourceHelper.gs(R.string.objectivenotstarted, 6)).thenReturn("Objective 6 not started")
+        `when`(resourceHelper.gs(R.string.objectivenotstarted, 1)).thenReturn("Objective 1 not started")
 
         // RS constructor
         `when`(sp.getString(R.string.key_danars_address, "")).thenReturn("")

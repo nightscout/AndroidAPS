@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.constraints.objectives
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.interfaces.ActivePlugin
@@ -10,19 +9,15 @@ import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
 
-@RunWith(PowerMockRunner::class)
-@PrepareForTest(UserEntryLogger::class, DateUtil::class)
 class ObjectivesPluginTest : TestBase() {
 
     @Mock lateinit var resourceHelper: ResourceHelper
@@ -46,7 +41,10 @@ class ObjectivesPluginTest : TestBase() {
     @Before fun prepareMock() {
         objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, resourceHelper, activePlugin, sp, ConfigImpl(), dateUtil, uel)
         objectivesPlugin.onStart()
-        `when`(resourceHelper.gs(R.string.objectivenotstarted)).thenReturn("Objective %1\$d not started")
+        `when`(resourceHelper.gs(R.string.objectivenotstarted, 9)).thenReturn("Objective 9 not started")
+        `when`(resourceHelper.gs(R.string.objectivenotstarted, 8)).thenReturn("Objective 8 not started")
+        `when`(resourceHelper.gs(R.string.objectivenotstarted, 6)).thenReturn("Objective 6 not started")
+        `when`(resourceHelper.gs(R.string.objectivenotstarted, 1)).thenReturn("Objective 1 not started")
     }
 
     @Test fun notStartedObjectivesShouldLimitLoopInvocation() {
@@ -78,7 +76,7 @@ class ObjectivesPluginTest : TestBase() {
         objectivesPlugin.objectives[ObjectivesPlugin.SMB_OBJECTIVE].startedOn = 0
         var c = Constraint(true)
         c = objectivesPlugin.isSMBModeEnabled(c)
-        Assert.assertEquals(true, c.getReasons(aapsLogger).contains("Objective 10 not started"))
+        Assert.assertEquals(true, c.getReasons(aapsLogger).contains("Objective 9 not started"))
         Assert.assertEquals(false, c.value())
     }
 }
