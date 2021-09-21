@@ -203,7 +203,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
                 } else {
                     waitForWholeMinute(); // Dana can set only whole minute
                     // add 10sec to be sure we are over minute (will be cutted off anyway)
-                    mSerialIOThread.sendMessage(new MsgSetTime(injector, dateUtil.now() + T.secs(10).msecs()));
+                    mSerialIOThread.sendMessage(new MsgSetTime(injector, dateUtil.now() + T.Companion.secs(10).msecs()));
                     mSerialIOThread.sendMessage(new MsgSettingPumpTime(injector));
                     timeDiff = (danaPump.getPumpTime() - System.currentTimeMillis()) / 1000L;
                     aapsLogger.debug(LTag.PUMP, "Pump time difference: " + timeDiff + " seconds");
@@ -327,7 +327,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
 
     public boolean bolus(final double amount, int carbs, long carbtime, final EventOverviewBolusProgress.Treatment t) {
         if (!isConnected()) return false;
-        if (BolusProgressDialog.stopPressed) return false;
+        if (BolusProgressDialog.Companion.getStopPressed()) return false;
 
         rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.startingbolus)));
         danaPump.setBolusingTreatment(t);
@@ -346,7 +346,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
             mSerialIOThread.sendMessage(msg);
             MsgSetHistoryEntry_v2 msgSetHistoryEntry_v2 = new MsgSetHistoryEntry_v2(injector, DanaPump.CARBS, carbtime, carbs, 0);
             mSerialIOThread.sendMessage(msgSetHistoryEntry_v2);
-            danaPump.lastHistoryFetched = Math.min(danaPump.lastHistoryFetched, carbtime - T.mins(1).msecs());
+            danaPump.lastHistoryFetched = Math.min(danaPump.lastHistoryFetched, carbtime - T.Companion.mins(1).msecs());
         }
 
         final long bolusStart = System.currentTimeMillis();
@@ -415,7 +415,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
         mSerialIOThread.sendMessage(msg);
         MsgSetHistoryEntry_v2 msgSetHistoryEntry_v2 = new MsgSetHistoryEntry_v2(injector, DanaPump.CARBS, time, amount, 0);
         mSerialIOThread.sendMessage(msgSetHistoryEntry_v2);
-        danaPump.lastHistoryFetched = Math.min(danaPump.lastHistoryFetched, time - T.mins(1).msecs());
+        danaPump.lastHistoryFetched = Math.min(danaPump.lastHistoryFetched, time - T.Companion.mins(1).msecs());
         return true;
     }
 
@@ -439,7 +439,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
         }
         SystemClock.sleep(200);
         if (danaRv2Plugin.lastEventTimeLoaded != 0)
-            danaPump.lastHistoryFetched = danaRv2Plugin.lastEventTimeLoaded - T.mins(1).msecs();
+            danaPump.lastHistoryFetched = danaRv2Plugin.lastEventTimeLoaded - T.Companion.mins(1).msecs();
         else
             danaPump.lastHistoryFetched = 0;
         danaPump.setLastConnection(System.currentTimeMillis());

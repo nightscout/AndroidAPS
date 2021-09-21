@@ -133,7 +133,6 @@ class BolusWizard @Inject constructor(
     private var carbTime: Int = 0
     private var quickWizard: Boolean = true
 
-    @JvmOverloads
     fun doCalc(profile: Profile,
                profileName: String,
                tempTarget: TemporaryTarget?,

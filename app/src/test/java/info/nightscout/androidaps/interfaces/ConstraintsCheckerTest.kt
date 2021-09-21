@@ -198,16 +198,6 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         Assert.assertEquals(java.lang.Boolean.FALSE, c.value())
     }
 
-    // Objectives
-    @Test
-    fun isAMAModeEnabledTest() {
-        objectivesPlugin.objectives[ObjectivesPlugin.AMA_OBJECTIVE].startedOn = 0
-        val c = constraintChecker.isAMAModeEnabled()
-        Assert.assertEquals(true, c.reasonList.size == 1) // Objectives
-        Assert.assertEquals(true, c.mostLimitedReasonList.size == 1) // Objectives
-        Assert.assertEquals(java.lang.Boolean.FALSE, c.value())
-    }
-
     // Safety
     @Test
     fun isAdvancedFilteringEnabledTest() {

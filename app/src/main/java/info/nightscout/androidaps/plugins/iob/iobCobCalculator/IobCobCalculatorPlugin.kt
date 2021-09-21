@@ -270,18 +270,19 @@ class IobCobCalculatorPlugin @Inject constructor(
         var displayCob: Double? = null
         var futureCarbs = 0.0
         val now = dateUtil.now()
-        val carbs = repository.getCarbsDataFromTimeExpanded(now, true).blockingGet()
+        var timestamp = now
+        val carbs = repository.getCarbsDataFromTimeExpanded(autosensData?.time ?: now, true).blockingGet()
         if (autosensData != null) {
             displayCob = autosensData.cob
             carbs.forEach { carb ->
-                if (ads.roundUpTime(carb.timestamp) > ads.roundUpTime(autosensData.time) && carb.timestamp <= now) {
+                if (carb.timestamp > autosensData.time && carb.timestamp <= now)
                     displayCob += carb.amount
-                }
             }
+            timestamp = autosensData.time
         }
         // Future carbs
         carbs.forEach { carb -> if (carb.timestamp > now) futureCarbs += carb.amount }
-        return CobInfo(displayCob, futureCarbs)
+        return CobInfo(timestamp, displayCob, futureCarbs)
     }
 
     override fun getMealDataWithWaitingForCalculationFinish(): MealData {
@@ -579,7 +580,7 @@ class IobCobCalculatorPlugin @Inject constructor(
         return total
     }
 
-    open fun getCalculationToTimeTempBasals(toTime: Long, lastAutosensResult: AutosensResult, exercise_mode: Boolean, half_basal_exercise_target: Int, isTempTarget: Boolean): IobTotal {
+    fun getCalculationToTimeTempBasals(toTime: Long, lastAutosensResult: AutosensResult, exercise_mode: Boolean, half_basal_exercise_target: Int, isTempTarget: Boolean): IobTotal {
         val total = IobTotal(toTime)
         val pumpInterface = activePlugin.activePump
         val now = dateUtil.now()

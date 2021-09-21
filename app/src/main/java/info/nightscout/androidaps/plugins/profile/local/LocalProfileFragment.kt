@@ -72,7 +72,7 @@ class LocalProfileFragment : DaggerFragment() {
     }
 
     private fun sumLabel(): String {
-        val profile = localProfilePlugin.profile?.getDefaultProfile()
+        val profile = localProfilePlugin.getEditProfile()
         val sum = profile?.let { ProfileSealed.Pure(profile).baseBasalSum() } ?: 0.0
         return " ∑" + DecimalFormatter.to2Decimal(sum) + resourceHelper.gs(R.string.insulin_unit_shortname)
     }
@@ -212,7 +212,7 @@ class LocalProfileFragment : DaggerFragment() {
         binding.profileswitch.setOnClickListener {
             ProfileSwitchDialog()
                 .also { it.arguments = Bundle().also { bundle -> bundle.putInt("profileIndex", localProfilePlugin.currentProfileIndex) } }
-                .show(childFragmentManager, "NewNSTreatmentDialog")
+                .show(childFragmentManager, "ProfileSwitchDialog")
         }
 
         binding.reset.setOnClickListener {
@@ -259,7 +259,7 @@ class LocalProfileFragment : DaggerFragment() {
         updateGUI()
     }
 
-    fun updateGUI() {
+    private fun updateGUI() {
         if (_binding == null) return
         val isValid = localProfilePlugin.isValidEditState()
         val isEdited = localProfilePlugin.isEdited

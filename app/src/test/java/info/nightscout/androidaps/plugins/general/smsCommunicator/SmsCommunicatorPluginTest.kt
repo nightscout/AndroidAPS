@@ -98,7 +98,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         val bgList: MutableList<GlucoseValue> = ArrayList()
         bgList.add(reading)
 
-        `when`(iobCobCalculator.getCobInfo(false, "SMS COB")).thenReturn(CobInfo(10.0, 2.0))
+        `when`(iobCobCalculator.getCobInfo(false, "SMS COB")).thenReturn(CobInfo(0, 10.0, 2.0))
         `when`(iobCobCalculator.ads).thenReturn(autosensDataStore)
         `when`(autosensDataStore.lastBg()).thenReturn(reading)
 

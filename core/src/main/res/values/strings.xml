@@ -144,7 +144,6 @@
     <string name="extended_bolus">Extended bolus</string>
     <string name="pump_time_updated">Pump time updated</string>
     <string name="exit">Exit</string>
-    <string name="serial_number">Serial number</string>
     <string name="removerecord">Remove record</string>
     <string name="loopisdisabled">Loop is disabled</string>
     <string name="alarm">Alarm</string>

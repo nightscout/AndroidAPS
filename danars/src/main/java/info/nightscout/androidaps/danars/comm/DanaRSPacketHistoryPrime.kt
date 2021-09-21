@@ -4,7 +4,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.danars.encryption.BleEncryption
 
-class DanaRSPacketHistoryPrime @JvmOverloads constructor(
+class DanaRSPacketHistoryPrime constructor(
     injector: HasAndroidInjector,
     from: Long = 0
 ) : DanaRSPacketHistory(injector, from) {
