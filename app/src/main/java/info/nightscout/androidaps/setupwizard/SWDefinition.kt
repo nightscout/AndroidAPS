@@ -267,7 +267,7 @@ class SWDefinition @Inject constructor(
             .label(R.string.profileswitch_ismissing))
         .add(SWButton(injector)
             .text(R.string.doprofileswitch)
-            .action { ProfileSwitchDialog().show(activity.supportFragmentManager, "SetupWizard") })
+            .action { ProfileSwitchDialog().show(activity.supportFragmentManager, "ProfileSwitchDialog") })
         .validator { profileFunction.getProfile() != null }
         .visibility { profileFunction.getProfile() == null }
     private val screenPump = SWScreen(injector, R.string.configbuilder_pump)
