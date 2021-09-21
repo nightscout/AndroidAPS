@@ -243,7 +243,12 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     }
 
     private fun updateBluetoothConnectionStatus(event: EventPumpStatusChanged) {
-        bluetoothStatusBinding.omnipodDashBluetoothStatus.text = event.getStatus(resourceHelper)
+        var status = event.getStatus(resourceHelper)
+        if (status.isEmpty()) {
+            status = resourceHelper.gs(R.string.disconnected)
+        }
+        bluetoothStatusBinding.omnipodDashBluetoothStatus.text = status
+
     }
 
     private fun updateBluetoothStatus() {
