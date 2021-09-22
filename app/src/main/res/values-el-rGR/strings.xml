@@ -149,7 +149,6 @@
     <string name="smscommunicator_loophasbeendisabled">Το κύκλωμα απενεργοποιήθηκε</string>
     <string name="smscommunicator_loophasbeenenabled">Το κύκλωμα ενεργοποιήθηκε</string>
     <string name="smscommunicator_loopisenabled">Κύκλωμα ενεργοποιημένο</string>
-    <string name="valuelimitedto">Το %1$.2f περιορίζεται σε %2$.2f</string>
     <string name="smscommunicator_remotecommandnotallowed">Δεν επιτρέπεται απομακρυσμένη εντολή</string>
     <string name="smscommunicator_remotebolusnotallowed">Απομακρυσμένο bolus μη διαθέσιμο. Δοκιμάστε ξανά αργότερα.</string>
     <string name="smscommunicator_profilereplywithcode">Για αλλαγή προφίλ σε %1$s %2$d%% στείλτε κωδικό %3$s</string>

@@ -81,7 +81,6 @@
     <string name="extended_bolus">Bólus Prolongado</string>
     <string name="pump_time_updated">Hora da bomba actualizada</string>
     <string name="exit">Sair</string>
-    <string name="serial_number">Número de Série</string>
     <string name="removerecord">Remover registo</string>
     <string name="loopisdisabled">Loop está desactivado</string>
     <string name="alarm">Alarme</string>
@@ -353,6 +352,7 @@
     <string name="uel_export_csv">EXPORTAR ENTRADAS DO UTILIZADOR</string>
     <string name="uel_unknown">DESCONHECIDO</string>
     <string name="ue_export_to_csv">Exportar Entradas do Utilizador para o Excel (csv)</string>
+    <!-- HardLimits -->
     <plurals name="days">
         <item quantity="one">%1$d dia</item>
         <item quantity="other">%1$d dias</item>

@@ -17,7 +17,6 @@
     <string name="objectives_maxiob_gate">Utilizar por alguns dias e pelo menos uma noite sem alarmes de Glic baixa, antes de baixar Glic</string>
     <string name="objectives_autosens_objective">Ajuste as basais e os rácios, se necessário, e, em seguida, active o auto-sens</string>
     <string name="objectives_autosens_gate">1 semana de looping durante o dia com sucesso com entrada regular de hidratos de carbono</string>
-    <string name="objectives_ama_objective">A ativar recursos adicionais para uso durante o dia, como assistente avançado de refeição</string>
     <string name="objectives_smb_objective">Ativando recursos adicionais para uso durante o dia, como SMB</string>
     <string name="objectives_auto_objective">A ativar a automação</string>
     <string name="objectives_smb_gate">Deverá ler a wiki e aumentar a IOB máx para que os SMBs funcionem devidamente! Inicialmente poderá considerar maxIOB=média dos bólus + 3 x a basal máxima</string>

@@ -81,7 +81,6 @@
     <string name="extended_bolus">Пролонгированный болюс</string>
     <string name="pump_time_updated">Время на помпе обновлено</string>
     <string name="exit">Выйти</string>
-    <string name="serial_number">Серийный номер</string>
     <string name="removerecord">Удалить запись</string>
     <string name="loopisdisabled">Зцикл не работает</string>
     <string name="alarm">Оповещения об опасности</string>
@@ -385,6 +384,21 @@
     <string name="uel_loop_change">КОНТУР ИЗМЕНЕН</string>
     <string name="uel_loop_removed">КОНТУР УДАЛЕН</string>
     <string name="uel_other">ДРУГОЕ</string>
+    <!-- HardLimits -->
+    <string name="profile_low_target">Нижнее целевое значение профиля</string>
+    <string name="profile_high_target">Верхнее целевое значение профиля</string>
+    <string name="temp_target_low_target">Нижнее значение временного целевого уровня</string>
+    <string name="temp_target_high_target">Верхнее значение временного целевого уровня</string>
+    <string name="temp_target_value">Временное целевое значение</string>
+    <string name="profile_dia">Значение длительности действия инсулина DIA в профиле</string>
+    <string name="profile_sensitivity_value">Значение чувствительности в профиле</string>
+    <string name="profile_max_daily_basal_value">Максимальное значение базала в профиле</string>
+    <string name="current_basal_value">Текущее значение базала</string>
+    <string name="profile_carbs_ratio_value">Коэффициент углеводов в профиле</string>
+    <string name="valuelimitedto">%1$.2f ограничено до %2$.2f</string>
+    <string name="valueoutofrange">»%1$s« за пределами жестких ограничений</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f за пределами жестких ограничений</string>
+    <string name="basal_value">Величина базала</string>
     <plurals name="days">
         <item quantity="one">%1$d день</item>
         <item quantity="few">%1$d дня</item>

@@ -188,7 +188,6 @@
     <string name="smscommunicator_loophasbeendisabled">APS е деактивиран</string>
     <string name="smscommunicator_loophasbeenenabled">APS е активиран</string>
     <string name="smscommunicator_loopisenabled">APS е включен</string>
-    <string name="valuelimitedto">%1$.2f ограничен до %2$.2f</string>
     <string name="smscommunicator_pumpconnectwithcode">За свързване с помпа отговорете с код %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Връзката с помпата е неуспешна</string>
     <string name="smscommunicator_pumpdisconnectwithcode">За да спрете помпата за %1$d минути отговорете с код %2$s</string>

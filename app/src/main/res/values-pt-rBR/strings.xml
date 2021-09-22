@@ -175,7 +175,6 @@
     <string name="smscommunicator_loophasbeendisabled">Loop foi desativado</string>
     <string name="smscommunicator_loophasbeenenabled">Loop foi ativado</string>
     <string name="smscommunicator_loopisenabled">Loop ativado</string>
-    <string name="valuelimitedto">%1$.2f limitado a %2$.2f</string>
     <string name="smscommunicator_pumpdisconnected">Bomba desconectada</string>
     <string name="smscommunicator_reconnect">Bomba reconectada</string>
     <string name="smscommunicator_remotecommandnotallowed">O comando remoto não é permitido</string>
