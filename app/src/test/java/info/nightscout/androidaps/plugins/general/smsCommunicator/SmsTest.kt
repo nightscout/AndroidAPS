@@ -4,14 +4,15 @@ import android.telephony.SmsMessage
 import info.nightscout.androidaps.TestBase
 import org.junit.Assert
 import org.junit.Test
-import org.powermock.api.mockito.PowerMockito
+import org.mockito.Mockito
+import org.mockito.Mockito.`when`
 
 class SmsTest : TestBase() {
 
     @Test fun doTests() {
-        val smsMessage = PowerMockito.mock(SmsMessage::class.java)
-        PowerMockito.`when`(smsMessage.originatingAddress).thenReturn("aNumber")
-        PowerMockito.`when`(smsMessage.messageBody).thenReturn("aBody")
+        val smsMessage = Mockito.mock(SmsMessage::class.java)
+        `when`(smsMessage.originatingAddress).thenReturn("aNumber")
+        `when`(smsMessage.messageBody).thenReturn("aBody")
         var sms = Sms(smsMessage)
         Assert.assertEquals(sms.phoneNumber, "aNumber")
         Assert.assertEquals(sms.text, "aBody")

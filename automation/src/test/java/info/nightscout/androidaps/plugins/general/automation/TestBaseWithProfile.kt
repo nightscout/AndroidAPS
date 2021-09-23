@@ -19,10 +19,8 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.json.JSONObject
 import org.junit.Before
 import org.mockito.Mock
-import org.powermock.core.classloader.annotations.PrepareForTest
 
 @Suppress("SpellCheckingInspection")
-@PrepareForTest(FabricPrivacy::class, AppRepository::class)
 open class TestBaseWithProfile : TestBase() {
 
     @Mock lateinit var activePluginProvider: ActivePlugin

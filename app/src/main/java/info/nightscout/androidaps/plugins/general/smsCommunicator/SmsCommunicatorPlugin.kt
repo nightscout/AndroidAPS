@@ -66,6 +66,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     resourceHelper: ResourceHelper,
+    private val smsManager: SmsManager,
     private val aapsSchedulers: AapsSchedulers,
     private val sp: SP,
     private val constraintChecker: ConstraintChecker,
@@ -1090,7 +1091,6 @@ class SmsCommunicatorPlugin @Inject constructor(
     }
 
     fun sendSMS(sms: Sms): Boolean {
-        val smsManager = SmsManager.getDefault()
         sms.text = stripAccents(sms.text)
         try {
             aapsLogger.debug(LTag.SMS, "Sending SMS to " + sms.phoneNumber + ": " + sms.text)

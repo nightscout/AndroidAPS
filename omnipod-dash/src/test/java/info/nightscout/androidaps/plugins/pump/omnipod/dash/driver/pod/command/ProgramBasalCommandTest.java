@@ -1,33 +1,39 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command;
 
+import static org.junit.Assert.assertArrayEquals;
+
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.Date;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BasalProgram;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.ProgramReminder;
 
-import static org.junit.Assert.assertArrayEquals;
-
 public class ProgramBasalCommandTest {
     @Test
     public void testProgramBasalCommand() throws DecoderException {
-        List<BasalProgram.Segment> segments = Arrays.asList(
+        List<BasalProgram.Segment> segments = Collections.singletonList(
                 new BasalProgram.Segment((short) 0, (short) 48, 300)
         );
         BasalProgram basalProgram = new BasalProgram(segments);
-        Date date = new Date(2021, 1, 17, 14, 47, 43);
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, 2021);
+        cal.set(Calendar.MONTH, Calendar.FEBRUARY);
+        cal.set(Calendar.DAY_OF_MONTH, 17);
+        cal.set(Calendar.HOUR_OF_DAY, 14);
+        cal.set(Calendar.MINUTE, 47);
+        cal.set(Calendar.SECOND, 43);
 
         byte[] encoded = new ProgramBasalCommand.Builder() //
                 .setUniqueId(37879809) //
                 .setNonce(1229869870) //
                 .setSequenceNumber((short) 10) //
                 .setBasalProgram(basalProgram) //
-                .setCurrentTime(date) //
+                .setCurrentTime(cal.getTime()) //
                 .setProgramReminder(new ProgramReminder(false, true, (byte) 0)) //
                 .build() //
                 .getEncoded();

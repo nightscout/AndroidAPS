@@ -21,16 +21,15 @@ buildscript {
         preferencektx_version = '1.1.1'
         commonslang3_version = '3.11'
         commonscodec_version = '1.15'
-        jodatime_version = '2.10.10'
+        jodatime_version = '2.10.11'
         work_version = '2.5.0'
 
         junit_version = '4.13.2'
         mockitoVersion = '3.12.4'
-        powermockVersion = '2.0.9'
         dexmakerVersion = "1.2"
         retrofit2Version = '2.9.0'
         okhttp3Version = '4.9.0'
-        byteBuddyVersion = '1.11.16'
+        byteBuddyVersion = '1.11.18'
 
         androidx_junit = '1.1.2'
         androidx_rules = '1.4.0-alpha04'

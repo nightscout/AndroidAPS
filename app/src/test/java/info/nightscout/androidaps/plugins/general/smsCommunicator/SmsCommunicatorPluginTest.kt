@@ -1,5 +1,3 @@
-@file:Suppress("SpellCheckingInspection")
-
 package info.nightscout.androidaps.plugins.general.smsCommunicator
 
 import android.telephony.SmsManager
@@ -29,9 +27,7 @@ import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.queue.Callback
-import info.nightscout.androidaps.queue.CommandQueue
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.XdripCalibrations
 import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
@@ -40,25 +36,15 @@ import io.reactivex.Single
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.anyLong
 import org.mockito.invocation.InvocationOnMock
-import org.powermock.api.mockito.PowerMockito
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
 import java.util.*
 
-// Powermock needed to mock SmsManager
-@RunWith(PowerMockRunner::class)
-@PrepareForTest(
-    ConstraintChecker::class, FabricPrivacy::class, VirtualPumpPlugin::class, XdripCalibrations::class,
-    SmsManager::class, CommandQueue::class, LocalProfilePlugin::class, DateUtil::class,
-    OneTimePassword::class, UserEntryLogger::class, LoopPlugin::class,
-    AppRepository::class, DateUtil::class, AutosensDataStore::class)
+@Suppress("SpellCheckingInspection")
 class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
     @Mock lateinit var sp: SP
@@ -74,6 +60,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     @Mock lateinit var repository: AppRepository
     @Mock lateinit var dateUtilMocked: DateUtil
     @Mock lateinit var autosensDataStore: AutosensDataStore
+    @Mock lateinit var smsManager: SmsManager
 
     var injector: HasAndroidInjector = HasAndroidInjector {
         AndroidInjector {
@@ -103,9 +90,6 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         `when`(iobCobCalculator.ads).thenReturn(autosensDataStore)
         `when`(autosensDataStore.lastBg()).thenReturn(reading)
 
-        PowerMockito.mockStatic(SmsManager::class.java)
-        val smsManager = PowerMockito.mock(SmsManager::class.java)
-        `when`(SmsManager.getDefault()).thenReturn(smsManager)
         `when`(sp.getString(R.string.key_smscommunicator_allowednumbers, "")).thenReturn("1234;5678")
 
         `when`(
@@ -114,7 +98,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         }))
         val glucoseStatusProvider = GlucoseStatusProvider(aapsLogger = aapsLogger, iobCobCalculator = iobCobCalculator, dateUtil = dateUtilMocked)
 
-        smsCommunicatorPlugin = SmsCommunicatorPlugin(injector, aapsLogger, resourceHelper, aapsSchedulers, sp, constraintChecker, rxBus, profileFunction, fabricPrivacy, activePlugin, commandQueue, loopPlugin, iobCobCalculator, xdripCalibrations, otp, ConfigImpl(), dateUtilMocked, uel, glucoseStatusProvider, repository)
+        smsCommunicatorPlugin = SmsCommunicatorPlugin(injector, aapsLogger, resourceHelper, smsManager, aapsSchedulers, sp, constraintChecker, rxBus, profileFunction, fabricPrivacy, activePlugin, commandQueue, loopPlugin, iobCobCalculator, xdripCalibrations, otp, ConfigImpl(), dateUtilMocked, uel, glucoseStatusProvider, repository)
         smsCommunicatorPlugin.setPluginEnabled(PluginType.GENERAL, true)
         Mockito.doAnswer { invocation: InvocationOnMock ->
             val callback = invocation.getArgument<Callback>(1)
