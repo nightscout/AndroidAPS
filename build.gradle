@@ -21,7 +21,7 @@ buildscript {
         preferencektx_version = '1.1.1'
         commonslang3_version = '3.11'
         commonscodec_version = '1.15'
-        jodatime_version = '2.10.10'
+        jodatime_version = '2.10.11'
         work_version = '2.5.0'
 
         junit_version = '4.13.2'
