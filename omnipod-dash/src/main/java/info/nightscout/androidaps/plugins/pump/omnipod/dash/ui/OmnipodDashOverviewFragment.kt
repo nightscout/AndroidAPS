@@ -540,7 +540,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             val rate = tempBasal.rate
             val duration = tempBasal.durationInMinutes
 
-            val minutesRunning = 0 // TODO
+            val minutesRunning = Duration.ofMillis(System.currentTimeMillis() - startTime).toMinutes()
 
             podInfoBinding.tempBasal.text = resourceHelper.gs(
                 R.string.omnipod_common_overview_temp_basal_value,
