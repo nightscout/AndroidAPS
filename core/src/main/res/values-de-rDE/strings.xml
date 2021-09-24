@@ -81,7 +81,6 @@
     <string name="extended_bolus">Verzögerter Bolus</string>
     <string name="pump_time_updated">Pumpenzeit aktualisiert</string>
     <string name="exit">Verlassen</string>
-    <string name="serial_number">Seriennummer</string>
     <string name="removerecord">Eintrag löschen</string>
     <string name="loopisdisabled">Loop ist deaktiviert.</string>
     <string name="alarm">Alarm</string>
@@ -349,6 +348,19 @@
     <string name="ue_action">Aktion</string>
     <string name="ue_timestamp">Zeitstempel</string>
     <string name="ue_none">Keine Einheit</string>
+    <!-- HardLimits -->
+    <string name="profile_low_target">Profil unteres Ziel</string>
+    <string name="profile_high_target">Profil oberes Ziel</string>
+    <string name="temp_target_low_target">Temp. Ziel unterer Wert</string>
+    <string name="temp_target_high_target">Temp. Ziel oberer Wert</string>
+    <string name="temp_target_value">Temp. Ziel Wert</string>
+    <string name="profile_dia">Profil Insulinwirkdauer</string>
+    <string name="profile_sensitivity_value">Profil Sensitivitätswert</string>
+    <string name="profile_max_daily_basal_value">Profil max. Basalwert</string>
+    <string name="current_basal_value">Aktueller Basalwert</string>
+    <string name="profile_carbs_ratio_value">Profil KH-Faktor</string>
+    <string name="valuelimitedto">%1$.2f limitiert auf %2$.2f</string>
+    <string name="valueoutofrange">»%1$s« ist außerhalb der fest programmierten Grenzen</string>
     <plurals name="days">
         <item quantity="one">%1$d Tag</item>
         <item quantity="other">%1$d Tage</item>

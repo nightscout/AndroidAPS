@@ -189,8 +189,6 @@
     <string name="smscommunicator_loophasbeendisabled">הלולאה הושבתה</string>
     <string name="smscommunicator_loophasbeenenabled">הלולאה הופעלה</string>
     <string name="smscommunicator_loopisenabled">לולאה פעילה</string>
-    <string name="valuelimitedto">%1$.2f מוגבלת ל- %2$.2f</string>
-    <string name="valueoutofrange">»הערך %1$s« מחוץ לתחום הקשיח</string>
     <string name="smscommunicator_pumpconnectwithcode">לחיבור המשאבה יש להשיב עם הקוד %1$s</string>
     <string name="smscommunicator_pumpconnectfail">החיבור אל המשאבה נכשל</string>
     <string name="smscommunicator_pumpdisconnectwithcode">לניתוק המשאבה למשך %1$d דקות השיבו עם הקוד %2$s</string>
@@ -858,16 +856,6 @@
     <string name="email_address">כתובת דוא\"ל</string>
     <string name="privacy_settings">הגדרות פרטיות</string>
     <string name="privacy_summary">אם תרצו, תוכלו לספק כתובת דוא\"ל כדי לקבל דיווח על קריסות יישום. שירות זה אינו אוטומטי. המפתחים יצרו איתכם קשר במצבים מסוכנים.</string>
-    <string name="profile_low_target">ערך המטרה הנמוך של הפרופיל</string>
-    <string name="profile_high_target">ערך המטרה הגבוה של הפרופיל</string>
-    <string name="temp_target_low_target">ערך תחתון של המטרה הזמנית</string>
-    <string name="temp_target_high_target">ערך עליון של המטרה הזמנית</string>
-    <string name="temp_target_value">ערך המטרה הזמני</string>
-    <string name="profile_dia">ערך DIA של הפרופיל</string>
-    <string name="profile_sensitivity_value">ערך הרגישות של הפרופיל</string>
-    <string name="profile_max_daily_basal_value">ערך מינון בזאלי מרבי של הפרופיל</string>
-    <string name="current_basal_value">מינון בזאלי נוכחי</string>
-    <string name="profile_carbs_ratio_value">יחס הפחמימות של הפרופיל</string>
     <string name="full_sync">סינכרון מלא</string>
     <string name="prime">תיחול</string>
     <string name="ns_sync_options">סינכרון</string>

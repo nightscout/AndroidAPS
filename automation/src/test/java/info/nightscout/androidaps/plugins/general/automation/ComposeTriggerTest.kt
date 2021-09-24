@@ -8,12 +8,7 @@ import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerCon
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerDummy
 import org.junit.Assert
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
 
-@RunWith(PowerMockRunner::class)
-@PrepareForTest
 class ComposeTriggerTest : TestBase() {
 
     var injector: HasAndroidInjector = HasAndroidInjector { AndroidInjector { } }

@@ -7,12 +7,9 @@ import info.nightscout.androidaps.dana.database.DanaHistoryRecordDao
 import info.nightscout.androidaps.danars.DanaRSTestBase
 import org.junit.Assert
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.powermock.modules.junit4.PowerMockRunner
 import java.util.*
 
-@RunWith(PowerMockRunner::class)
 class DanaRSPacketHistoryAlarmTest : DanaRSTestBase() {
 
     @Mock lateinit var danaHistoryRecordDao: DanaHistoryRecordDao

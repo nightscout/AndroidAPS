@@ -28,6 +28,7 @@ ext {
     wearableVersion = "2.8.1"
     // playServicesWearable 17.1.0 breaks test
     playServicesWearable = "17.0.0"
+    powermockVersion = '2.0.9'
 }
 
 def generateGitBuild = { ->

@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.data
 
-import android.text.Html
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
@@ -9,14 +8,9 @@ import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mockito.`when`
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
 import org.skyscreamer.jsonassert.JSONAssert
 
-@RunWith(PowerMockRunner::class)
-@PrepareForTest(Html::class)
 class PumpEnactResultTest : TestBaseWithProfile() {
 
     val injector = HasAndroidInjector {

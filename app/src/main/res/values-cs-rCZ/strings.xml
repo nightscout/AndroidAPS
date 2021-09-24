@@ -189,8 +189,6 @@
     <string name="smscommunicator_loophasbeendisabled">Smyčka byla zakázána</string>
     <string name="smscommunicator_loophasbeenenabled">Smyčka byla povolena</string>
     <string name="smscommunicator_loopisenabled">Smyčka je povolena</string>
-    <string name="valuelimitedto">%1$.2f omezeno na %2$.2f</string>
-    <string name="valueoutofrange">»%1$s« je mimo pevně nastavené limity</string>
     <string name="smscommunicator_pumpconnectwithcode">Chcete-li připojit pumpu, odpovězte pomocí SMS s kódem %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Připojení k pumpě selhalo</string>
     <string name="smscommunicator_pumpdisconnectwithcode">Chcete-li odpojit pumpu na %1$d minut, odpovězte pomocí SMS s kódem %2$s</string>
@@ -858,16 +856,6 @@
     <string name="email_address">E-mailová adresa</string>
     <string name="privacy_settings">Nastavení soukromí</string>
     <string name="privacy_summary">Pokud chcete být upozorněni na selhání aplikace, můžete zadat volitelně e-mailovou adresu. Toto není automatizovaná služba. Vývojáři vás budou kontaktovat v nebezpečných situacích.</string>
-    <string name="profile_low_target">Dolní cíl profilu</string>
-    <string name="profile_high_target">Horní cíl profilu</string>
-    <string name="temp_target_low_target">Dolní hodnota dočasného cíle</string>
-    <string name="temp_target_high_target">Horní hodnota dočasného cíle</string>
-    <string name="temp_target_value">Hodnota dočasného cíle</string>
-    <string name="profile_dia">Hodnota DIA profilu</string>
-    <string name="profile_sensitivity_value">Hodnota citlivosti profilu</string>
-    <string name="profile_max_daily_basal_value">Maximální hodnota bazálu profilu</string>
-    <string name="current_basal_value">Aktuální hodnota bazálu</string>
-    <string name="profile_carbs_ratio_value">Inzulino-sacharidový poměr profilu</string>
     <string name="full_sync">Úplná synchronizace</string>
     <string name="prime">Doplňování</string>
     <string name="ns_sync_options">Synchronizace</string>

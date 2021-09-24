@@ -2,20 +2,14 @@ package info.nightscout.androidaps.plugins.general.automation.triggers
 
 import com.google.common.base.Optional
 import info.nightscout.androidaps.automation.R
-import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import org.json.JSONException
 import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mockito.`when`
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
 
-@RunWith(PowerMockRunner::class)
-@PrepareForTest(DateUtil::class)
 class TriggerTimeTest : TriggerTestBase() {
 
     var now = 1514766900000L

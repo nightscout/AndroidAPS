@@ -9,19 +9,12 @@ import org.junit.Assert
 import org.junit.Assume
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.Mockito
-import org.powermock.core.classloader.annotations.PowerMockIgnore
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
 import java.io.File
 
 @Suppress("SpellCheckingInspection")
-@PowerMockIgnore("javax.crypto.*")
-@RunWith(PowerMockRunner::class)
-@PrepareForTest(File::class)
 class EncryptedPrefsFormatTest : TestBase() {
 
     @Mock lateinit var resourceHelper: ResourceHelper

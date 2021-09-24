@@ -147,7 +147,6 @@
     <string name="smscommunicator_loophasbeendisabled">Loop is gedeaktiveer</string>
     <string name="smscommunicator_loophasbeenenabled">Loop is geaktiveerd</string>
     <string name="smscommunicator_loopisenabled">Lus geaktiveer</string>
-    <string name="valuelimitedto">%1$.2f beperk tot %2$.2f</string>
     <string name="smscommunicator_remotecommandnotallowed">Afstandbeheerde bevel word nie toegelaat nie</string>
     <string name="smscommunicator_remotebolusnotallowed">Afstandbeheerde bolus nie beskikbaar nie. Probeer later weer.</string>
     <string name="smscommunicator_profilereplywithcode">Om profiel te verander na %1$s %2$d%% antwoord met %3$s</string>

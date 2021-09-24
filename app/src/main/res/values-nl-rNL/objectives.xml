@@ -17,7 +17,6 @@
     <string name="objectives_maxiob_gate">Test enkele dagen als ook minstens 1 nacht zonder een laag BG alarm voordat je jouw streef BG verlaagt</string>
     <string name="objectives_autosens_objective">Pas het basaal en de ratios aan indien nodig, activeer hierna de auto-sens optie</string>
     <string name="objectives_autosens_gate">Gedurende 1 week succesvol overdag loopen met regelmatige invoer van koolhydraten</string>
-    <string name="objectives_ama_objective">Activeren van extra functies overdag zoals AMA (geavanceerde maaltijdhulp, Advanced Meal Assist)</string>
     <string name="objectives_smb_objective">Activeren van extra functies overdag zoals SMB (super micro bolus)</string>
     <string name="objectives_auto_objective">Automatisering inschakelen</string>
     <string name="objectives_smb_gate">Lees de wiki en verhoog maxIOB om SMB goed werkend te krijgen. Een goed begin is maxIOB=gemiddelde maaltijdbolus + 3 x max dagelijkse basaal</string>

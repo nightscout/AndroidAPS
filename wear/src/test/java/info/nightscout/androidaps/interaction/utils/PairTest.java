@@ -1,12 +1,5 @@
 package info.nightscout.androidaps.interaction.utils;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.modules.junit4.PowerMockRunner;
-
-import java.util.HashSet;
-import java.util.Set;
-
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -14,7 +7,11 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-@RunWith(PowerMockRunner.class)
+import org.junit.Test;
+
+import java.util.HashSet;
+import java.util.Set;
+
 public class PairTest {
 
     @Test
