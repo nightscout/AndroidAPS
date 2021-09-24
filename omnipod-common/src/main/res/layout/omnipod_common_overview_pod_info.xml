@@ -6,6 +6,7 @@
 
     <!-- Unique ID -->
     <LinearLayout
+        android:id="@+id/omnipod_common_overview_pod_unique_id_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -45,6 +46,7 @@
 
     <!-- Pod Lot -->
     <LinearLayout
+        android:id="@+id/omnipod_common_overview_lot_number_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
