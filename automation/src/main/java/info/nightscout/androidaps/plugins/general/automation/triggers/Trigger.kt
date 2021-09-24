@@ -131,6 +131,10 @@ abstract class Trigger(val injector: HasAndroidInjector) {
             TriggerTempTarget::class.java.simpleName         -> TriggerTempTarget(injector).fromJSON(
                 data.toString()
             )
+            TriggerTempTargetValue::class.java.name,
+            TriggerTempTargetValue::class.java.simpleName         -> TriggerTempTargetValue(injector).fromJSON(
+                data.toString()
+            )
             TriggerTime::class.java.name,
             TriggerTime::class.java.simpleName               -> TriggerTime(injector).fromJSON(data.toString())
             TriggerTimeRange::class.java.name,
