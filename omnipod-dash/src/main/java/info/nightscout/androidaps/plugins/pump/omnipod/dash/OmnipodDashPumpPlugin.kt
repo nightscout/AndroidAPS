@@ -49,6 +49,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxkotlin.subscribeBy
 import org.json.JSONObject
 import java.time.Duration
 import java.time.ZonedDateTime
@@ -108,18 +109,27 @@ class OmnipodDashPumpPlugin @Inject constructor(
         statusChecker = Runnable {
             refreshStatusOnUnacknowledgedCommands()
             updatePodWarnings()
-            // createFakeTBRWhenNoActivePod()
-            // TODO: this is called from the main thread
+            aapsLogger.info(LTag.PUMP, "statusChecker")
+
+            createFakeTBRWhenNoActivePod()
+                .subscribeOn(aapsSchedulers.io)
+                .subscribeBy(
+                    onError = {
+                        aapsLogger.warn(LTag.PUMP, "Error on createFakeTBRWhenNoActivePod=$it")
+                    }
+                )
             handler.postDelayed(statusChecker, STATUS_CHECK_INTERVAL_MS)
         }
     }
 
-    private fun createFakeTBRWhenNoActivePod() {
+    private fun createFakeTBRWhenNoActivePod(): Completable = Completable.defer {
         if (!podStateManager.isPodRunning) {
             val expectedState = pumpSync.expectedPumpState()
             val tbr = expectedState.temporaryBasal
             if (tbr == null || tbr.rate != 0.0) {
                 aapsLogger.info(LTag.PUMP, "createFakeTBRWhenNoActivePod")
+                // calling connectNewPump() here because pumpSerial could have changed(from 4241 to "n/a")
+                pumpSync.connectNewPump()
                 pumpSync.syncTemporaryBasalWithPumpId(
                     timestamp = System.currentTimeMillis(),
                     rate = 0.0,
@@ -132,6 +142,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 )
             }
         }
+        Completable.complete()
     }
 
     private fun updatePodWarnings() {
@@ -1078,6 +1089,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             historyEntry = history.createRecord(OmnipodCommandType.DEACTIVATE_POD),
             command = omnipodManager.deactivatePod().ignoreElements(),
             checkNoActiveCommand = false,
+            post = createFakeTBRWhenNoActivePod(),
         ).doOnComplete {
             rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_FAULT))
         }.toPumpEnactResult()
