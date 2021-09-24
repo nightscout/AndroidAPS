@@ -56,7 +56,7 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
 
     private val MAX_COMMAND_TRIES = 3
     private val DEFAULT_TIMEOUT = 2000
-    private val RILEYLINK_TIMEOUT: Long = 15 * 60 * 1000 // 15 min
+    private val RILEYLINK_TIMEOUT: Long = 15 * 60 * 1000L // 15 min
 
     var errorResponse: String? = null
         private set
@@ -64,7 +64,7 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
     private var doWakeUpBeforeCommand = true
 
     @Inject
-    fun onInit(): Unit {
+    fun onInit() {
         // we can't do this in the constructor, as sp only gets injected after the constructor has returned
         medtronicPumpStatus.previousConnection = sp.getLong(
             RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, 0L)

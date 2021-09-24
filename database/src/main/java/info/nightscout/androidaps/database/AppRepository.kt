@@ -263,6 +263,10 @@ open class AppRepository @Inject internal constructor(
                 }
             }
 
+    fun getModifiedEffectiveProfileSwitchDataFromId(lastId: Long): Single<List<EffectiveProfileSwitch>> =
+        database.effectiveProfileSwitchDao.getModifiedFrom(lastId)
+            .subscribeOn(Schedulers.io())
+
     fun createEffectiveProfileSwitch(profileSwitch: EffectiveProfileSwitch) {
         database.effectiveProfileSwitchDao.insert(profileSwitch)
     }
