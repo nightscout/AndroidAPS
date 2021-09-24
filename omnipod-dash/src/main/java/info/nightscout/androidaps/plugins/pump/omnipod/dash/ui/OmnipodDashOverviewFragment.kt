@@ -94,7 +94,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     // These properties are only valid between onCreateView and
     // onDestroyView.
     val binding get() = _binding!!
-    val bluetoothStatusBinding get() = _bluetoothStatusBinding!!
+    private val bluetoothStatusBinding get() = _bluetoothStatusBinding!!
     private val podInfoBinding get() = _podInfoBinding!!
     private val buttonBinding get() = _buttonBinding!!
 
@@ -245,7 +245,6 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     private fun updateBluetoothConnectionStatus(event: EventPumpStatusChanged) {
         var status = event.getStatus(resourceHelper)
         bluetoothStatusBinding.omnipodDashBluetoothStatus.text = status
-
     }
 
     private fun updateBluetoothStatus() {
