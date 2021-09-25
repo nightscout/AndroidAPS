@@ -173,6 +173,8 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             bluetoothStatusBinding.deliveryStatus.visibility = View.VISIBLE
             bluetoothStatusBinding.connectionQuality.visibility = View.VISIBLE
         }
+        podInfoBinding.omnipodCommonOverviewLotNumberLayout.visibility = View.GONE
+        podInfoBinding.omnipodCommonOverviewPodUniqueIdLayout.visibility = View.GONE
     }
 
     override fun onResume() {
@@ -333,10 +335,14 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             }
                 ?: PLACEHOLDER
             podInfoBinding.podExpiryDate.setTextColor(
-                if (expiresAt != null && ZonedDateTime.now().isAfter(expiresAt))
-                    Color.RED
-                else
-                    Color.WHITE
+                when {
+                    expiresAt != null && ZonedDateTime.now().isAfter(expiresAt) ->
+                        Color.RED
+                    expiresAt != null && ZonedDateTime.now().isAfter(expiresAt.minusHours(4)) ->
+                        Color.YELLOW
+                    else ->
+                        Color.WHITE
+                }
             )
 
             podStateManager.alarmType?.let {
