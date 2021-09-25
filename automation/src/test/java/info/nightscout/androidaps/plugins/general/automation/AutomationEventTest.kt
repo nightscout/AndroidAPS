@@ -14,11 +14,8 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.powermock.modules.junit4.PowerMockRunner
 
-@RunWith(PowerMockRunner::class)
 class AutomationEventTest : TestBase() {
 
     @Mock lateinit var loopPlugin: Loop
@@ -48,7 +45,6 @@ class AutomationEventTest : TestBase() {
         val event = AutomationEvent(injector)
         event.title = "Test"
         event.trigger = TriggerDummy(injector).instantiate(JSONObject(TriggerConnectorTest.oneItem))
-            ?: throw Exception()
         event.addAction(ActionLoopEnable(injector))
 
         // export to json

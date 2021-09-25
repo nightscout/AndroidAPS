@@ -189,8 +189,6 @@
     <string name="smscommunicator_loophasbeendisabled">Il loop è stato disabilitato</string>
     <string name="smscommunicator_loophasbeenenabled">Il loop è stato abilitato</string>
     <string name="smscommunicator_loopisenabled">Il loop è abilitato</string>
-    <string name="valuelimitedto">%1$.2f limitato a %2$.2f</string>
-    <string name="valueoutofrange">»%1$s« è fuori dai limiti consentiti</string>
     <string name="smscommunicator_pumpconnectwithcode">Per connettere il micro rispondi col codice %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Connessione al micro fallita</string>
     <string name="smscommunicator_pumpdisconnectwithcode">Per disconnettere il micro per %1$d minuti rispondi col codice %2$s</string>
@@ -858,16 +856,6 @@
     <string name="email_address">Indirizzo email</string>
     <string name="privacy_settings">Impostazioni privacy</string>
     <string name="privacy_summary">Puoi fornire un indirizzo e-mail opzionale se desideri essere avvisato in caso di arresti anomali dell\'app. Questo non è un servizio automatizzato. Sarai contattato dagli sviluppatori in situazioni pericolose.</string>
-    <string name="profile_low_target">Target basso (profilo)</string>
-    <string name="profile_high_target">Target alto (profilo)</string>
-    <string name="temp_target_low_target">Valore inferiore target temporaneo</string>
-    <string name="temp_target_high_target">Valore superiore target temporaneo</string>
-    <string name="temp_target_value">Valore target temporaneo</string>
-    <string name="profile_dia">Valore DIA (profilo)</string>
-    <string name="profile_sensitivity_value">Valore sensibilità (profilo)</string>
-    <string name="profile_max_daily_basal_value">Valore max basale (profilo)</string>
-    <string name="current_basal_value">Valore basale corrente</string>
-    <string name="profile_carbs_ratio_value">Valore rapporto CHO (profilo)</string>
     <string name="full_sync">Sincronizzazione completa</string>
     <string name="prime">Caricamento</string>
     <string name="ns_sync_options">Sincronizzazione</string>

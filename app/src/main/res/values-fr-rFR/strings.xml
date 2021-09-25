@@ -190,8 +190,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="smscommunicator_loophasbeendisabled">La Boucle a été désactivée</string>
     <string name="smscommunicator_loophasbeenenabled">La Boucle a été activée</string>
     <string name="smscommunicator_loopisenabled">La Boucle est activée</string>
-    <string name="valuelimitedto">%1$.2f limité à %2$.2f</string>
-    <string name="valueoutofrange">\"%1$s\" est en dehors des limites</string>
     <string name="smscommunicator_pumpconnectwithcode">Pour connecter la pompe, renvoyez le code %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Echec de la connexion pompe</string>
     <string name="smscommunicator_pumpdisconnectwithcode">Pour déconnecter la pompe pendant %1$d min, renvoyez le code %2$s</string>
@@ -859,16 +857,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="email_address">Adresse e-mail</string>
     <string name="privacy_settings">Paramètres de confidentialité</string>
     <string name="privacy_summary">Vous pouvez fournir une adresse e-mail facultative si vous voulez être informé des plantages de l\'application. Ce n\'est pas un service automatisé. Vous serez contacté par les développeurs dans des situations dangereuses.</string>
-    <string name="profile_low_target">Cible basse du profil</string>
-    <string name="profile_high_target">Cible haute du profil</string>
-    <string name="temp_target_low_target">Valeur basse de cible temporaire</string>
-    <string name="temp_target_high_target">Valeur haute de cible temporaire</string>
-    <string name="temp_target_value">Valeur de cible temporaire</string>
-    <string name="profile_dia">Valeur DAI du profil</string>
-    <string name="profile_sensitivity_value">Valeur de sensibilité du profil</string>
-    <string name="profile_max_daily_basal_value">Basale maximale du profil</string>
-    <string name="current_basal_value">Basale actuelle</string>
-    <string name="profile_carbs_ratio_value">Rapport glucides/insuline de profil</string>
     <string name="full_sync">Synchro. complète</string>
     <string name="prime">Amorcer</string>
     <string name="ns_sync_options">Synchronisation</string>
@@ -892,4 +880,5 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="ns_receive_cgm_summary">Accepter les données MGC de NS</string>
     <string name="sms_timeout_while_wating">Délai d\'attente pour finir la communication précédente avec la pompe</string>
     <string name="smscommunicator_another_bolus_in_queue">Un autre bolus est en file d\'attente. Réessayez plus tard.</string>
+    <string name="calculation_in_progress">Calcul en cours</string>
 </resources>

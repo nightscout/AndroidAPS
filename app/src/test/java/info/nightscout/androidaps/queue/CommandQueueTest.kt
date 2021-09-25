@@ -19,11 +19,9 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
-import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.queue.commands.*
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -33,19 +31,11 @@ import io.reactivex.Single
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.anyLong
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
 import java.util.*
 
-@RunWith(PowerMockRunner::class)
-@PrepareForTest(
-    ConstraintChecker::class, VirtualPumpPlugin::class, ToastUtils::class, Context::class,
-    FabricPrivacy::class, PrefFileListProvider::class, PowerManager::class,
-    AppRepository::class)
 class CommandQueueTest : TestBaseWithProfile() {
 
     @Mock lateinit var constraintChecker: ConstraintChecker

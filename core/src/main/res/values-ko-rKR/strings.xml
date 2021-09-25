@@ -75,7 +75,6 @@
     <string name="extended_bolus">확장 Bolus</string>
     <string name="pump_time_updated">펌프 시간 업데이트</string>
     <string name="exit">종료</string>
-    <string name="serial_number">시리얼번호</string>
     <string name="removerecord">기록 삭제</string>
     <string name="loopisdisabled">Loop가 중지중입니다.</string>
     <string name="alarm">알람</string>
@@ -236,6 +235,7 @@
     <!-- WeekdayPicker -->
     <!-- User Entry -->
     <string name="ue_action">실행</string>
+    <!-- HardLimits -->
     <plurals name="days">
         <item quantity="other">%1$d 일</item>
     </plurals>

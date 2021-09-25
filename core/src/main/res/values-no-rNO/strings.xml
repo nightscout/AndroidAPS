@@ -81,7 +81,6 @@
     <string name="extended_bolus">Forlenget bolus</string>
     <string name="pump_time_updated">Pumpens tid er oppdatert</string>
     <string name="exit">Avslutt</string>
-    <string name="serial_number">Serienummer</string>
     <string name="removerecord">Fjern registrering</string>
     <string name="loopisdisabled">Loop er deaktivert</string>
     <string name="alarm">Alarm</string>
@@ -385,6 +384,7 @@
     <string name="uel_loop_change">LOOP ENDRET</string>
     <string name="uel_loop_removed">LOOP FJERNET</string>
     <string name="uel_other">ANNET</string>
+    <!-- HardLimits -->
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dager</item>

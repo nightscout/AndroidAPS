@@ -4,31 +4,25 @@ import com.google.common.base.Optional
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.CobInfo
-import info.nightscout.androidaps.utils.DateUtil
 import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers
-import org.powermock.api.mockito.PowerMockito
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
+import org.mockito.Mockito.`when`
 
-@RunWith(PowerMockRunner::class)
-@PrepareForTest(DateUtil::class)
 class TriggerCOBTest : TriggerTestBase() {
 
     var now = 1514766900000L
 
     @Before fun mock() {
-        PowerMockito.`when`(dateUtil.now()).thenReturn(now)
-        PowerMockito.`when`(sp.getInt(ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt())).thenReturn(48)
+        `when`(dateUtil.now()).thenReturn(now)
+        `when`(sp.getInt(ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt())).thenReturn(48)
     }
 
     @Test fun shouldRunTest() {
         // COB value is 6
-        PowerMockito.`when`(iobCobCalculator.getCobInfo(false, "AutomationTriggerCOB")).thenReturn(CobInfo(0, 6.0, 2.0))
+        `when`(iobCobCalculator.getCobInfo(false, "AutomationTriggerCOB")).thenReturn(CobInfo(0, 6.0, 2.0))
         var t: TriggerCOB = TriggerCOB(injector).setValue(1.0).comparator(Comparator.Compare.IS_EQUAL)
         Assert.assertFalse(t.shouldRun())
         t = TriggerCOB(injector).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL)

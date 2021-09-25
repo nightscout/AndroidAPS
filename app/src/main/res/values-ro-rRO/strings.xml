@@ -188,7 +188,6 @@
     <string name="smscommunicator_loophasbeendisabled">Bucla a fost dezactivată</string>
     <string name="smscommunicator_loophasbeenenabled">Bucla a fost activată</string>
     <string name="smscommunicator_loopisenabled">Bucla este activată</string>
-    <string name="valuelimitedto">%1$.2f este limitată la %2$.2f</string>
     <string name="smscommunicator_pumpconnectwithcode">Pentru a conecta pompa raspundeti cu codul %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Conectarea cu pompa a esuat</string>
     <string name="smscommunicator_pumpdisconnectwithcode">Pentru a deconecta pompa timp de %1$d minute, răspundeți cu: %2$s</string>

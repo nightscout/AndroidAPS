@@ -4,17 +4,11 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
 
 @Suppress("SpellCheckingInspection")
-@RunWith(PowerMockRunner::class)
-@PrepareForTest(FabricPrivacy::class, AppRepository::class)
 class TreatmentsPluginTest : TestBaseWithProfile() {
 
     @Mock lateinit var sp: SP
