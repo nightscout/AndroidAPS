@@ -1,34 +1,19 @@
-# Reporting an issue for AAPS-DASH
+---
+name: Custom issue template
+about: Describe this issue template's purpose here.
+title: ''
+labels: ''
+assignees: ''
 
-## AndroidAPS (see about screen)
+---
 
-- version: ...
-
-- Build number: ...
-
-- Flavor: ...
-
-### Phone:
-
-- Hardware Brand and Type: ...
-
-- Android OS version: ...
-
-## Problem description:
-...
-
-#### Additional information and reproduction steps:
-...
-
-#### Additional information and reproduction steps:
-...
-
-#### Time of event:
-
-- Please enter the exact time of the event here
-
-## Logfiles:
-
-When possible, please add logfiles from the time of the event!
-Developers need your logfiles to trace the origin of the issue and possibly solve it.
-_For how-to get the logfile, see FAQ on Wiki: [Logfiles](https://github.com/0pen-dash/AndroidAPS/wiki/2.-FAQ-&-Troubleshooting#logfiles)_
+Reporting bugs
+--------------
+- **Note the precise time the problem occurred** and describe the circumstances and steps that caused
+  the problem
+- Note the Build version (found in the About dialog in the app, when pressing the three dots in the
+  upper-right corner).
+- Obtain the app's log files, which can be found on the phone in
+  _/storage/emulated/0/Android/data/info.nightscout.androidaps/_
+  See https://androidaps.readthedocs.io/en/latest/Usage/Accessing-logfiles.html
+- Open an issue at https://github.com/nightscout/AndroidAPS/issues/new
