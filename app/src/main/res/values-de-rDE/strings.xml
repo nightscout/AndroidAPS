@@ -189,8 +189,6 @@
     <string name="smscommunicator_loophasbeendisabled">Loop wurde deaktiviert.</string>
     <string name="smscommunicator_loophasbeenenabled">Lopp wurde aktiviert.</string>
     <string name="smscommunicator_loopisenabled">Loop ist aktiviert.</string>
-    <string name="valuelimitedto">%1$.2f limitiert auf %2$.2f</string>
-    <string name="valueoutofrange">»%1$s« ist außerhalb der fest programmierten Grenzen</string>
     <string name="smscommunicator_pumpconnectwithcode">Um die Pumpe zu verbinden, antworte mit dem Code %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Verbindung zur Pumpe fehlgeschlagen</string>
     <string name="smscommunicator_pumpdisconnectwithcode">Um die Verbindung zur Pumpe für %1$d Minuten zu trennen, antworte mit dem Code %2$s</string>
@@ -859,16 +857,6 @@ Unerwartetes Verhalten.</string>
     <string name="email_address">E‐Mail‐Adresse</string>
     <string name="privacy_settings">Privatsphäre-Einstellungen</string>
     <string name="privacy_summary">Du kannst optional eine E-Mail-Adresse angeben, wenn Du bei Absturzberichten kontaktiert werden möchtest. Dies ist keine Automatik, Du wirst von den Entwicklern in gefährlichen Situationen kontaktiert. </string>
-    <string name="profile_low_target">Profil unteres Ziel</string>
-    <string name="profile_high_target">Profil oberes Ziel</string>
-    <string name="temp_target_low_target">Temp. Ziel unterer Wert</string>
-    <string name="temp_target_high_target">Temp. Ziel oberer Wert</string>
-    <string name="temp_target_value">Temp. Ziel Wert</string>
-    <string name="profile_dia">Profil Insulinwirkdauer</string>
-    <string name="profile_sensitivity_value">Profil Sensitivitätswert</string>
-    <string name="profile_max_daily_basal_value">Profil max. Basalwert</string>
-    <string name="current_basal_value">Aktueller Basalwert</string>
-    <string name="profile_carbs_ratio_value">Profil KH-Faktor</string>
     <string name="full_sync">Vollständige Sync</string>
     <string name="prime">Füllen</string>
     <string name="ns_sync_options">Synchronisierung</string>

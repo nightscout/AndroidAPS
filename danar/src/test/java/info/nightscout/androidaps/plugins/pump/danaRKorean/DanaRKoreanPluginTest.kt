@@ -17,14 +17,9 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
 
-@RunWith(PowerMockRunner::class)
-@PrepareForTest(SP::class, ConstraintChecker::class)
 class DanaRKoreanPluginTest : TestBaseWithProfile() {
 
     @Mock lateinit var context: Context

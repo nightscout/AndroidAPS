@@ -189,8 +189,6 @@
     <string name="smscommunicator_loophasbeendisabled">Uzavretý okruh bol deaktivovaný</string>
     <string name="smscommunicator_loophasbeenenabled">Uzavretý okruh bol aktivovaný</string>
     <string name="smscommunicator_loopisenabled">Uzavretý okruh je aktivovaný</string>
-    <string name="valuelimitedto">%1$.2f obmedzené na %2$.2f</string>
-    <string name="valueoutofrange">»%1$s« je mimo pevne nastavené limity</string>
     <string name="smscommunicator_pumpconnectwithcode">Ak chcete pripojiť pumpu, odpovedzte pomocou SMS s kódom %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Pripojenie k pumpe zlyhalo</string>
     <string name="smscommunicator_pumpdisconnectwithcode">Ak chcete odpojiť pumpu na %1$d minút, odpovedzte pomocou SMS s kódom %2$s</string>
@@ -858,16 +856,6 @@
     <string name="email_address">Emailová adresa</string>
     <string name="privacy_settings">Nastavenia súkromia</string>
     <string name="privacy_summary">Pokiaľ chcete byť upozornení na zlyhanie aplikácie, môžete zadať voliteľne e-mailovú adresu. Toto nie je automatizovaná služba. Vývojári vás budú kontaktovať v nebezpečných situáciách.</string>
-    <string name="profile_low_target">Dolný cieľ profilu</string>
-    <string name="profile_high_target">Horný cieľ profilu</string>
-    <string name="temp_target_low_target">Dolná hodnota dočasného cieľa</string>
-    <string name="temp_target_high_target">Horná hodnota dočasného cieľa</string>
-    <string name="temp_target_value">Hodnota dočasného cieľa</string>
-    <string name="profile_dia">Profilová hodnota DIA</string>
-    <string name="profile_sensitivity_value">Profilová hodnota citlivosti</string>
-    <string name="profile_max_daily_basal_value">Profilová maximálna hodnota bazálu</string>
-    <string name="current_basal_value">Aktuálna hodnota bazálu</string>
-    <string name="profile_carbs_ratio_value">Profilový inzulino-sacharidový pomer</string>
     <string name="full_sync">Úplná synchronizácia</string>
     <string name="prime">Plnenie</string>
     <string name="ns_sync_options">Synchronizácia</string>

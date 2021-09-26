@@ -14,8 +14,3 @@ apply from: "${project.rootDir}/gradle/jacoco_global.gradle"
 dependencies {
     implementation project(':database')
 }
-
-allOpen {
-    // allows mocking for classes w/o directly opening them for release builds
-    annotation 'info.nightscout.androidaps.annotations.OpenForTesting'
-}

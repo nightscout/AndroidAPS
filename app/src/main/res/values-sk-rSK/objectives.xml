@@ -17,7 +17,6 @@
     <string name="objectives_maxiob_gate">Používať uzavretý okruh niekoľko dní s aspoň jednou nocou bez alarmov na nízku glykémiu</string>
     <string name="objectives_autosens_objective">Upraviť bazály a pomery, ak je to potrebné, a povoliť automatickú detekciu citlivosti na inzulín</string>
     <string name="objectives_autosens_gate">Jeden týždeň úspešného používania s bežným príjmom sacharidov</string>
-    <string name="objectives_ama_objective">Povolenie doplnkových funkcií pre každodenné použitie, ako napr. pokročilý asistent jedál (AMA)</string>
     <string name="objectives_smb_objective">Povoliť ďalšie funkcie pre bežné používanie ako SMB</string>
     <string name="objectives_auto_objective">Povolenie automatiky</string>
     <string name="objectives_smb_gate">Prečítať si dokumentáciu a zvýšiť maximálne IOB, aby mohlo správne fungovať SMB! Pre začiatok sa dá použiť veľkosť bežného bolusu + 3x maximálny denný bazál</string>

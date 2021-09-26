@@ -188,7 +188,6 @@
     <string name="smscommunicator_loophasbeendisabled">Pętla (Loop) została wyłączona</string>
     <string name="smscommunicator_loophasbeenenabled">Pętla (Loop) została włączona</string>
     <string name="smscommunicator_loopisenabled">Pętla (Loop) jest włączona</string>
-    <string name="valuelimitedto">%1$.2f ograniczone do %2$.2f</string>
     <string name="smscommunicator_pumpconnectwithcode">Aby podłączyć pompę odpowiedz kodem %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Połączenie z pompą nie powiodło się</string>
     <string name="smscommunicator_pumpdisconnectwithcode">Aby odłączyć pompę na %1$d minut odpowiedz kodem %2$s</string>

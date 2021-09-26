@@ -15,7 +15,6 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
-import org.powermock.api.mockito.PowerMockito
 
 class QuickWizardTest : TestBase() {
 
@@ -44,7 +43,7 @@ class QuickWizardTest : TestBase() {
 
     @Before
     fun mock() {
-        PowerMockito.`when`(profileFunction.secondsFromMidnight()).thenReturn(0)
+        `when`(profileFunction.secondsFromMidnight()).thenReturn(0)
         `when`(sp.getString(R.string.key_quickwizard, "[]")).thenReturn("[]")
         quickWizard = QuickWizard(sp, injector)
     }

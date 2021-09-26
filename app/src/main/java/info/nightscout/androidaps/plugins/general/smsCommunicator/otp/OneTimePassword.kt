@@ -5,6 +5,7 @@ import com.eatthepath.otp.HmacOneTimePasswordGenerator
 import com.google.common.io.BaseEncoding
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -15,6 +16,7 @@ import javax.crypto.spec.SecretKeySpec
 import javax.inject.Inject
 import javax.inject.Singleton
 
+@OpenForTesting
 @Singleton
 class OneTimePassword @Inject constructor(
     private val sp: SP,

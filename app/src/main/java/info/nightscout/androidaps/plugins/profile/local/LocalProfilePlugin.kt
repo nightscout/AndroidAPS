@@ -8,6 +8,7 @@ import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.data.PureProfile
 import info.nightscout.androidaps.events.EventProfileStoreChanged
@@ -35,6 +36,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.collections.ArrayList
 
+@OpenForTesting
 @Singleton
 class LocalProfilePlugin @Inject constructor(
     injector: HasAndroidInjector,

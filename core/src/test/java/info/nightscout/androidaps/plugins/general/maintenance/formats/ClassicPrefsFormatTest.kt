@@ -5,15 +5,10 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.userEntry.UserEntryPresentationHelper
 import org.junit.Assert
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
 import java.io.File
 
-@RunWith(PowerMockRunner::class)
-@PrepareForTest(File::class, UserEntryPresentationHelper::class)
 class ClassicPrefsFormatTest : TestBase() {
 
     @Mock lateinit var resourceHelper: ResourceHelper
