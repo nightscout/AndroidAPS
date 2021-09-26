@@ -126,6 +126,59 @@ public class NSClientService extends DaggerService {
     private final int WATCHDOG_INTERVAL_MINUTES = 2;
     private final int WATCHDOG_RECONNECT_IN = 15;
     private final int WATCHDOG_MAXCONNECTIONS = 5;
+    //++(ReconnectTread)
+    private final int MIN_QUEUE_SIZE_FOR_RESEND = 3;
+    private Long reconnectionTime = Long.MAX_VALUE;  // ~ 300 million years - should say "never"
+
+    private class ReconnectThread extends Thread {
+        private final Object mutex;
+
+        public ReconnectThread(Object mutex) {
+            this.mutex = mutex;
+        }
+
+        public void run() {
+            //rxBus.send(new EventNSClientNewLog("REENABLE", "background task started"));
+
+            while (reconnectionTime > 0 && !interrupted()) {
+                long millis;
+
+                while ((millis = reconnectionTime - System.currentTimeMillis()) > 0) {
+                    synchronized (mutex) {
+                        try {
+                            mutex.wait(millis);
+                        } catch (InterruptedException ie) {
+                            // ignore
+                        }
+                    }
+
+                    //rxBus.send(new EventNSClientNewLog("REENABLE", "(1) click millis = " + millis));
+                }
+
+                if (!interrupted() && reconnectionTime > 0) {
+                    rxBus.send(new EventNSClientNewLog("REENABLE", "reenabling NSClient"));
+                    nsClientPlugin.pause(false);
+
+                    // wait until reconnectionTime got greater than current time
+                    while ((millis = reconnectionTime - System.currentTimeMillis()) <= 0) {
+                        synchronized (mutex) {
+                            try {
+                                mutex.wait(T.mins(WATCHDOG_RECONNECT_IN).msecs());
+                            } catch (InterruptedException ie) {
+                                // ignore
+                            }
+                        }
+                        //rxBus.send(new EventNSClientNewLog("REENABLE", "(2) click millis = " + millis));
+                    }
+                }
+            }
+            rxBus.send(new EventNSClientNewLog("REENABLE", "background task stopping soon"));
+        }
+    }
+
+    private Thread reconnectThread = null;
+    private final Object reconnectMutex = new Object();
+    //--(ReconnectTread)
 
     public NSClientService() {
         super();
@@ -133,6 +186,10 @@ public class NSClientService extends DaggerService {
             HandlerThread handlerThread = new HandlerThread(NSClientService.class.getSimpleName() + "Handler");
             handlerThread.start();
             handler = new Handler(handlerThread.getLooper());
+        }
+
+        if (nsEnabled) {
+            reenableNSCafterWait(WATCHDOG_INTERVAL_MINUTES);
         }
     }
 
@@ -250,6 +307,11 @@ public class NSClientService extends DaggerService {
             rxBus.send(new EventNewNotification(noperm));
         } else {
             rxBus.send(new EventDismissNotification(Notification.NSCLIENT_NO_WRITE_PERMISSION));
+
+            // why not sending new records if wh have some
+            if (uploadQueue.size() > 0) {
+              resend("cause connected");
+            }
         }
     }
 
@@ -334,13 +396,37 @@ public class NSClientService extends DaggerService {
         }
     };
 
+    //++(ReconnectTread)
+    void reenableNSCafterWait(int waitMinutes) {
+        long targetTime = System.currentTimeMillis() + T.mins(waitMinutes).msecs();
+
+        if (targetTime >= reconnectionTime && reconnectionTime > System.currentTimeMillis()) {
+            rxBus.send(new EventNSClientNewLog("REENABLE", "allready waiting; reconnect in " + T.msecs(reconnectionTime - System.currentTimeMillis()).mins() + " mins"));
+        } else {
+            synchronized (reconnectionTime) {
+                reconnectionTime = targetTime;
+            }
+            rxBus.send(new EventNSClientNewLog("REENABLE", "reconnect in " + waitMinutes + " mins"));
+        }
+
+        if (reconnectThread == null || reconnectThread.getState() == Thread.State.TERMINATED) {
+            reconnectThread = new ReconnectThread(reconnectMutex);
+            reconnectThread.start();
+        }
+
+        synchronized (reconnectMutex){
+            reconnectMutex.notify();
+        }
+    }
+    //--(ReconnectTread)
+
     void watchdog() {
         synchronized (reconnections) {
             long now = DateUtil.now();
             reconnections.add(now);
             for (int i = 0; i < reconnections.size(); i++) {
                 Long r = reconnections.get(i);
-                if (r < now - T.mins(WATCHDOG_INTERVAL_MINUTES).msecs()) {
+                if (r <= now - T.mins(WATCHDOG_INTERVAL_MINUTES).msecs()) {
                     reconnections.remove(r);
                 }
             }
@@ -351,11 +437,15 @@ public class NSClientService extends DaggerService {
                 rxBus.send(new EventNSClientNewLog("WATCHDOG", "pausing for " + WATCHDOG_RECONNECT_IN + " mins"));
                 nsClientPlugin.pause(true);
                 rxBus.send(new EventNSClientUpdateGUI());
+                
+                /*** moved to reenableNSCafterWait()
                 new Thread(() -> {
                     SystemClock.sleep(T.mins(WATCHDOG_RECONNECT_IN).msecs());
                     rxBus.send(new EventNSClientNewLog("WATCHDOG", "reenabling NSClient"));
                     nsClientPlugin.pause(false);
                 }).start();
+                ***/
+                reenableNSCafterWait(WATCHDOG_RECONNECT_IN);
             }
         }
     }
@@ -365,6 +455,13 @@ public class NSClientService extends DaggerService {
         public void call(Object... args) {
             aapsLogger.debug(LTag.NSCLIENT, "disconnect reason: {}", args);
             rxBus.send(new EventNSClientNewLog("NSCLIENT", "disconnect event"));
+            
+            // stop if we are done and wait for a while
+            if (uploadQueue.size() <= 0) {
+                nsClientPlugin.pause(true);
+                rxBus.send(new EventNSClientUpdateGUI());
+                reenableNSCafterWait(WATCHDOG_RECONNECT_IN);
+            }
         }
     };
 
@@ -787,10 +884,23 @@ public class NSClientService extends DaggerService {
     }
 
     public void resend(final String reason) {
-        if (uploadQueue.size() == 0)
+        if (uploadQueue.size() == 0) {
+            rxBus.send(new EventNSClientNewLog("QUEUE", "Resend initialized: " + reason + " but queue is empty"));
             return;
+        }
 
-        if (!isConnected || !hasWriteAuth) return;
+        if (!isConnected) {
+            rxBus.send(new EventNSClientNewLog("QUEUE", "Resend initialized: " + reason + " but not connected"));
+            if (uploadQueue.size() >= MIN_QUEUE_SIZE_FOR_RESEND)
+                reenableNSCafterWait(0);  // reenable soon
+            
+            return;
+        }
+
+        if (!hasWriteAuth) {
+            rxBus.send(new EventNSClientNewLog("QUEUE", "Resend initialized: " + reason + " but no write auth"));
+            return;
+        }
 
         handler.post(() -> {
             if (mSocket == null || !mSocket.connected()) return;
