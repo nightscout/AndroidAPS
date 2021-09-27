@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Omnipod Dash - Description -->
+    <string name="omnipod_dash_pump_description">Pumpen-Integration für Omnipod Dash (das neue, bluetooth-fähige Modell mit blauer Nadelkappe).</string>
     <!-- Omnipod Dash - Keys -->
     <!-- Omnipod Dash - Overview -->
+    <string name="omnipod_dash_bluetooth_status">Bluetooth-Status</string>
+    <string name="omnipod_dash_bluetooth_address">Bluetooth-Adresse</string>
 </resources>
