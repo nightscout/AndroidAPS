@@ -751,7 +751,7 @@
     <string name="saveorresetchangesfirst">יש לשמור או לאפס תחילה את השינויים הנוכחיים</string>
     <string name="deletecurrentprofile">למחוק את הפרופיל הנוכחי?</string>
     <string name="copytolocalprofile">ליצור פרופיל מקומי חדש מפרופיל זה?</string>
-    <string name="profilenamecontainsdot">שם הפרפיל מכיל נקודות.\nשם כזה אינו נתמך ע\"י Nightscout \n הפרופיל לא הועלה ל-Nightscout.</string>
+    <string name="profilenamecontainsdot">שם הפרופיל מכיל נקודות.\nשם כזה אינו נתמך ע\"י Nightscout \n הפרופיל לא הועלה ל-Nightscout.</string>
     <string name="low_mark_comment">ערך נמוך יותר באזור הטווח (הצגה בלבד)</string>
     <string name="high_mark_comment">ערך גבוה יותר באזור הטווח (הצגה בלבד)</string>
     <string name="age">גיל:</string>
