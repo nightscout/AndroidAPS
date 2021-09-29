@@ -600,13 +600,14 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                         null
                 ));
                 InsightBolusID insightBolusID = insightDbHelper.getInsightBolusID(serial, bolusID, now);
-                pumpSync.syncBolusWithPumpId(
+                Boolean psRseult = pumpSync.syncBolusWithPumpId(
                         insightBolusID.getTimestamp(),
                         detailedBolusInfo.insulin,
                         detailedBolusInfo.getBolusType(),
                         insightBolusID.getId(),
                         PumpType.ACCU_CHEK_INSIGHT,
                         serialNumber());
+                aapsLogger.debug(LTag.PUMP, "XXXX deliverTreatment " + insightBolusID.getId() + " Update database sent: " + dateUtil.dateAndTimeString(insightBolusID.getTimestamp()) + " amount: " + detailedBolusInfo.insulin + " Result: " + psRseult);
                 while (true) {
                     synchronized ($bolusLock) {
                         if (bolusCancelled) break;
