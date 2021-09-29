@@ -376,6 +376,7 @@ class DanaRSService : DaggerService() {
         sendMessage(msgTBR)
         loadEvents()
         val tbr = pumpSync.expectedPumpState().temporaryBasal
+        aapsLogger.debug(LTag.PUMPCOMM, "Expected TBR found: $tbr")
         danaPump.fromTemporaryBasal(tbr)
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
         return msgTBR.success()
