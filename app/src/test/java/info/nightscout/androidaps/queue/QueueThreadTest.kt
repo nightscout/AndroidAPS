@@ -15,7 +15,7 @@ import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
 import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.androidaps.queue.commands.CommandTempBasalAbsolute
-import info.nightscout.androidaps.utils.buildHelper.BuildHelper
+import info.nightscout.androidaps.utils.buildHelper.BuildHelperImpl
 import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Assert
@@ -52,7 +52,11 @@ class QueueThreadTest : TestBaseWithProfile() {
     @Before
     fun prepare() {
         pumpPlugin = TestPumpPlugin(injector)
-        commandQueue = CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, activePlugin, context, sp, BuildHelper(ConfigImpl(), fileListProvider), dateUtil, repository, fabricPrivacy)
+        commandQueue = CommandQueue(
+            injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker,
+            profileFunction, activePlugin, context, sp,
+            BuildHelperImpl(ConfigImpl(), fileListProvider), dateUtil, repository, fabricPrivacy
+        )
 
         val pumpDescription = PumpDescription()
         pumpDescription.basalMinimumRate = 0.1
@@ -69,7 +73,8 @@ class QueueThreadTest : TestBaseWithProfile() {
         val rateConstraint = Constraint(0.0)
         Mockito.`when`(constraintChecker.applyBasalConstraints(anyObject(), anyObject())).thenReturn(rateConstraint)
         val percentageConstraint = Constraint(0)
-        Mockito.`when`(constraintChecker.applyBasalPercentConstraints(anyObject(), anyObject())).thenReturn(percentageConstraint)
+        Mockito.`when`(constraintChecker.applyBasalPercentConstraints(anyObject(), anyObject()))
+            .thenReturn(percentageConstraint)
 
         sut = QueueThread(commandQueue, context, aapsLogger, rxBus, activePlugin, resourceHelper, sp)
     }
