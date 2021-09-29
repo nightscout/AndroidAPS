@@ -4,6 +4,6 @@
     <string name="omnipod_dash_pump_description">Pumpen-Integration für Omnipod Dash (das neue, bluetooth-fähige Modell mit blauer Nadelkappe).</string>
     <!-- Omnipod Dash - Keys -->
     <!-- Omnipod Dash - Overview -->
-    <string name="omnipod_dash_bluetooth_status">Bluetooth-Status</string>
-    <string name="omnipod_dash_bluetooth_address">Bluetooth-Adresse</string>
+    <!-- Omnipod Dash - Pod Activation Wizard -->
+    <!-- Exceptions -->
 </resources>
