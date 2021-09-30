@@ -27,5 +27,5 @@ dependencies {
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-rxjava2:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
-    implementation 'com.github.guepardoapps:kulid:1.1.2.0'
+    implementation 'com.github.guepardoapps:kulid:2.0.0.0'
 }
