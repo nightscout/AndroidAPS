@@ -12,6 +12,7 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpSync
@@ -60,8 +61,10 @@ class CommandQueueTest : TestBaseWithProfile() {
         buildHelper: BuildHelper,
         dateUtil: DateUtil,
         repository: AppRepository,
-        fabricPrivacy: FabricPrivacy
-    ) : CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, activePlugin, context, sp, buildHelper, dateUtil, repository, fabricPrivacy) {
+        fabricPrivacy: FabricPrivacy,
+        config: Config
+    ) : CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction,
+                     activePlugin, context, sp, buildHelper, dateUtil, repository, fabricPrivacy, config) {
 
         override fun notifyAboutNewCommand() {}
 
@@ -100,7 +103,7 @@ class CommandQueueTest : TestBaseWithProfile() {
         commandQueue = CommandQueueMocked(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper,
                                           constraintChecker, profileFunction, activePlugin, context, sp,
                                          BuildHelperImpl(ConfigImpl(), fileListProvider), dateUtil, repository,
-                                          fabricPrivacy)
+                                          fabricPrivacy, config)
         testPumpPlugin = TestPumpPlugin(injector)
 
         testPumpPlugin.pumpDescription.basalMinimumRate = 0.1
@@ -132,7 +135,9 @@ class CommandQueueTest : TestBaseWithProfile() {
     @Test
     fun commandIsPickedUp() {
         val commandQueue = CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper,
-                                        constraintChecker, profileFunction, activePlugin, context, sp, BuildHelperImpl(ConfigImpl(), fileListProvider), dateUtil, repository, fabricPrivacy)
+                                        constraintChecker, profileFunction, activePlugin, context, sp,
+                                        BuildHelperImpl(ConfigImpl(), fileListProvider), dateUtil, repository,
+                                        fabricPrivacy, config)
         // start with empty queue
         Assert.assertEquals(0, commandQueue.size())
 
