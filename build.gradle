@@ -39,7 +39,6 @@ buildscript {
         google()
         mavenCentral()
         maven { url "https://plugins.gradle.org/m2/" } // jacoco 0.2
-        maven { url "https://dl.bintray.com/kotlin/kotlinx" }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.0.2'
@@ -52,11 +51,6 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version"
         classpath 'com.hiya:jacoco-android:0.2'
-        modules {
-            module("org.jetbrains.trove4j:trove4j") {
-                replacedBy("org.jetbrains.intellij.deps:trove4j")
-            }
-        }
     }
 }
 
@@ -71,20 +65,6 @@ allprojects {
         mavenCentral()
         maven { url "https://maven.google.com" }
         maven { url 'https://jitpack.io' }
-        ivy {
-            url 'https://github.com/'
-            patternLayout {
-                artifact '/[organisation]/[module]/archive/[revision].[ext]'
-            }
-        }
-        maven { url 'https://jitpack.io' }
-        jcenter() {
-            content {
-                includeModule("com.google.android", "flexbox")
-                includeModule("org.jetbrains.trove4j", "trove4j")
-            }
-        }
-        maven { url "https://dl.bintray.com/kotlin/kotlinx" }
     }
     //Support @JvmDefault
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
