@@ -2,6 +2,7 @@ package info.nightscout.androidaps.utils
 
 import android.content.Context
 import androidx.collection.LongSparseArray
+import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.joda.time.DateTime
@@ -26,8 +27,9 @@ import kotlin.math.abs
  * The Class DateUtil. A simple wrapper around SimpleDateFormat to ease the handling of iso date string &lt;-&gt; date obj
  * with TZ
  */
+@OpenForTesting
 @Singleton
-open class DateUtil @Inject constructor(private val context: Context) {
+class DateUtil @Inject constructor(private val context: Context) {
 
     /**
      * The date format in iso.
@@ -56,10 +58,9 @@ open class DateUtil @Inject constructor(private val context: Context) {
      * @param tz     - tz to set to, if not specified uses local timezone
      * @return the iso-formatted date string
      */
-    @JvmOverloads
-    fun toISOString(date: Long, format: String = FORMAT_DATE_ISO_OUT, tz: TimeZone = TimeZone.getTimeZone("UTC")): String {
-        val f: DateFormat = SimpleDateFormat(format, Locale.getDefault())
-        f.timeZone = tz
+    fun toISOString(date: Long): String {
+        val f: DateFormat = SimpleDateFormat(FORMAT_DATE_ISO_OUT, Locale.getDefault())
+        f.timeZone = TimeZone.getTimeZone("UTC")
         return f.format(date)
     }
 
@@ -117,7 +118,7 @@ open class DateUtil @Inject constructor(private val context: Context) {
         return DateTime(mills).toString(DateTimeFormat.forPattern(format))
     }
 
-    private fun timeStringWithSeconds(mills: Long): String {
+    fun timeStringWithSeconds(mills: Long): String {
         var format = "hh:mm:ssa"
         if (android.text.format.DateFormat.is24HourFormat(context)) {
             format = "HH:mm:ss"

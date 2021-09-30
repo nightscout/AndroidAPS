@@ -3,10 +3,7 @@ package info.nightscout.androidaps.interfaces
 import androidx.fragment.app.Fragment
 import org.junit.Assert
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.powermock.modules.junit4.PowerMockRunner
 
-@RunWith(PowerMockRunner::class)
 class PluginDescriptionTest {
 
     @Test fun mainTypeTest() {

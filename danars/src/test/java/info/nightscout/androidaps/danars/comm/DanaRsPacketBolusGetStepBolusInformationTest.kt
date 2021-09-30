@@ -5,11 +5,8 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.DanaRSTestBase
 import org.junit.Assert
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.powermock.modules.junit4.PowerMockRunner
 import java.util.*
 
-@RunWith(PowerMockRunner::class)
 class DanaRsPacketBolusGetStepBolusInformationTest : DanaRSTestBase() {
 
     private val packetInjector = HasAndroidInjector {

@@ -9,6 +9,7 @@ import android.bluetooth.le.ScanResult
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
@@ -87,7 +88,7 @@ class BLEScanActivity : NoSplashAppCompatActivity() {
             return
         }
         devices.add(item)
-        Handler().post { listAdapter!!.notifyDataSetChanged() }
+        Handler(Looper.getMainLooper()).post { listAdapter?.notifyDataSetChanged() }
     }
 
     private val mBleScanCallback: ScanCallback = object : ScanCallback() {
@@ -172,7 +173,7 @@ class BLEScanActivity : NoSplashAppCompatActivity() {
         override fun hashCode(): Int = device.hashCode()
     }
 
-    private fun isSNCheck(sn: String?): Boolean {
+    private fun isSNCheck(sn: String): Boolean {
         val regex = "^([a-zA-Z]{3})([0-9]{5})([a-zA-Z]{2})$"
         val p = Pattern.compile(regex)
         val m = p.matcher(sn)

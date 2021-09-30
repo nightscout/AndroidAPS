@@ -81,7 +81,7 @@ class PrefImportListActivity : DaggerAppCompatActivity() {
                 filelistName.text = prefFile.file.name
                 filelistName.tag = prefFile
 
-                filelistDir.text = resourceHelper.gs(R.string.in_directory, prefFile.file.parentFile.absolutePath)
+                filelistDir.text = resourceHelper.gs(R.string.in_directory, prefFile.file.parentFile?.absolutePath)
 
                 val visible = (prefFile.handler != PrefsFormatsHandler.CLASSIC).toVisibility()
                 metalineName.visibility = visible

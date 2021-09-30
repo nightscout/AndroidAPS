@@ -5,9 +5,9 @@
     <string name="danars_pairingok">Sammenkobling OK</string>
     <string name="danars_pairingtimedout">Sammenkobling ble tidsavbrutt</string>
     <string name="danars_waitingforpairing">Venter på sammenkobling med pumpen</string>
-    <string name="danarspump">DanaRS</string>
+    <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
-    <string name="description_pump_dana_rs">Pumpeintegrasjon for DANA Diabecare RS-pumper</string>
+    <string name="description_pump_dana_rs">Pumpeintegrasjon for DANA Diabecare RS og Dana-i-pumper</string>
     <string name="maxbolusviolation">Max bolus nådd</string>
     <string name="commanderror">Kommando feil</string>
     <string name="speederror">Hastighetsfeil</string>

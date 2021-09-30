@@ -17,7 +17,6 @@
     <string name="objectives_maxiob_gate">Прекарайте няколко дни по този начин, като поне една нощ нямате аларма за ниска КЗ</string>
     <string name="objectives_autosens_objective">Настройване на базалния инсулин и коефициенти ако е необходимо и активиране на auto-sens</string>
     <string name="objectives_autosens_gate">Една седмица успешно дневно използване с редовно въвеждане на въглехидрати</string>
-    <string name="objectives_ama_objective">Активиране на допълнителни функции за дневно използване, включително и advanced meal assist (АМА)</string>
     <string name="objectives_smb_objective">Добавяне на допълнителни функции за използване през деня, като SMB</string>
     <string name="objectives_auto_objective">Разрешаване на автоматизация</string>
     <string name="objectives_smb_gate">Трябва да прочетете wiki и увеличите maxIOB за да може SMB да работи добре! Добро начало е maxIOB = средния болус за хранене + 3 пъти най-големия базал от профила</string>

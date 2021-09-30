@@ -11,5 +11,4 @@ var DBEntryWithTimeAndDuration.end
         require(duration > 0)
     }
 
-@JvmOverloads
 fun DBEntryWithTimeAndDuration.getRemainingDuration(current: Long = System.currentTimeMillis()) = min(0L, end - current)

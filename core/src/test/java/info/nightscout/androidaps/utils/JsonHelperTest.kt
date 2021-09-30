@@ -3,11 +3,8 @@ package info.nightscout.androidaps.utils
 import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.powermock.modules.junit4.PowerMockRunner
 
 @Suppress("SpellCheckingInspection")
-@RunWith(PowerMockRunner::class)
 class JsonHelperTest {
 
     private val jsonString = "{\"d\":\"3.0\",\"i\":\"4\",\"s\":\"5\",\"b\":\"true\",\"j\":{\"a\": \"1\"}}"

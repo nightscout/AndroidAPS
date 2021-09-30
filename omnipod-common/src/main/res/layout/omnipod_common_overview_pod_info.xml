@@ -6,6 +6,7 @@
 
     <!-- Unique ID -->
     <LinearLayout
+        android:id="@+id/omnipod_common_overview_pod_unique_id_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -32,7 +33,7 @@
             tools:ignore="HardcodedText" />
 
         <TextView
-            android:id="@+id/pod_address"
+            android:id="@+id/unique_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -45,6 +46,7 @@
 
     <!-- Pod Lot -->
     <LinearLayout
+        android:id="@+id/omnipod_common_overview_lot_number_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -110,7 +112,7 @@
             tools:ignore="HardcodedText" />
 
         <TextView
-            android:id="@+id/pod_tid"
+            android:id="@+id/pod_sequence_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"

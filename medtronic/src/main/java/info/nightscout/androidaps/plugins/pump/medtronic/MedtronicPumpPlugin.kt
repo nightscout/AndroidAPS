@@ -851,6 +851,7 @@ class MedtronicPumpPlugin @Inject constructor(
         }
 
         //aapsLogger.debug(LTag.PUMP, "HST: Target Date: " + targetDate);
+        @Suppress("UNCHECKED_CAST")
         val responseTask2 = rileyLinkMedtronicService.medtronicUIComm.executeCommand(MedtronicCommandType.GetHistoryData,
             arrayListOf(/*lastPumpHistoryEntry*/ null, targetDate) as? ArrayList<Any>?)
         if (debugHistory) aapsLogger.debug(LTag.PUMP, "HST: After task")

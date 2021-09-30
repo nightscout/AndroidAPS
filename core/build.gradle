@@ -2,6 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-parcelize'
+apply plugin: 'kotlin-allopen'
 apply plugin: 'com.hiya.jacoco-android'
 
 apply from: 'core_dependencies.gradle'
@@ -13,4 +14,3 @@ apply from: "${project.rootDir}/gradle/jacoco_global.gradle"
 dependencies {
     implementation project(':database')
 }
-

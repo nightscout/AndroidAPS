@@ -132,7 +132,7 @@
     <string name="wronginsulin_label">שגיאות ברישום\\הזרקת אינסולין</string>
     <string name="wronginsulin_whattodo">מה עליכם לעשות אם מקבלים פחות אינסולין מאשר המוצע ע\"י היסטוריית המשאבה, למשל עקב חסימה, צינורית כושלת או אי חיבור מחדש של המשאבה אחרי מקלחת? </string>
     <string name="wronginsulin_careportal">מחקו את נתוני האינסולין מפורטל הטיפולים של נייטסקאוט כדי לסלק אותם מהיסטוריית המשאבה.</string>
-    <string name="wronginsulin_compare">השוו את הערכים שב-AndroidAPS לאלה שבהיסטוריית משאבה.</string>
+    <string name="wronginsulin_compare">השוו את הרשומות שב-AndroidAPS עם היסטוריית המשאבה (אם המשאבה תומכת בכך).</string>
     <string name="wronginsulin_prime">מזריקים בולוס על חלק מהאינסולין המחושב \"שחסר\" עם מזרק\\עט או באמצעות תיחול (Prime).</string>
     <string name="wronginsulin_donothing">לא לעשות דבר ולאפשר ל-AndroidAPS לתקן כל רמת סוכר גבוהה.</string>
     <string name="iob_label">אינסולין פעיל בגוף (IOB)</string>

@@ -5,11 +5,8 @@ import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerDum
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerTestBase
 import org.junit.Assert
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mockito.`when`
-import org.powermock.modules.junit4.PowerMockRunner
 
-@RunWith(PowerMockRunner::class)
 class StaticLabelTest : TriggerTestBase() {
 
     @Test fun constructor() {

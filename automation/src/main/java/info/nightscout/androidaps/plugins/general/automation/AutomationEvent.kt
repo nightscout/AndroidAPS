@@ -64,7 +64,7 @@ class AutomationEvent(private val injector: HasAndroidInjector) {
             .toString()
     }
 
-    fun fromJSON(data: String?): AutomationEvent {
+    fun fromJSON(data: String): AutomationEvent {
         val d = JSONObject(data)
         title = d.optString("title", "")
         isEnabled = d.optBoolean("enabled", true)
@@ -72,7 +72,6 @@ class AutomationEvent(private val injector: HasAndroidInjector) {
         readOnly = d.optBoolean("readOnly", false)
         autoRemove = d.optBoolean("autoRemove", false)
         trigger = TriggerDummy(injector).instantiate(JSONObject(d.getString("trigger")))
-            ?: TriggerConnector(injector)
         val array = d.getJSONArray("actions")
         actions.clear()
         for (i in 0 until array.length()) {

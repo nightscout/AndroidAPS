@@ -15,6 +15,7 @@ import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctionImplementation
 import info.nightscout.androidaps.plugins.general.maintenance.ImportExportPrefsImpl
+import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
 import info.nightscout.androidaps.plugins.general.nsclient.DataSyncSelectorImplementation
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
@@ -22,6 +23,8 @@ import info.nightscout.androidaps.plugins.pump.PumpSyncImplementation
 import info.nightscout.androidaps.queue.CommandQueue
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.androidNotification.NotificationHolderImpl
+import info.nightscout.androidaps.utils.buildHelper.BuildHelper
+import info.nightscout.androidaps.utils.buildHelper.BuildHelperImpl
 import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.utils.resources.IconsProviderImplementation
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -55,6 +58,10 @@ open class AppModule {
     @Provides
     @Singleton
     fun provideStorage(): Storage = FileStorage()
+
+    @Provides
+    @Singleton
+    fun provideBuildHelper(config: Config, fileListProvider: PrefFileListProvider): BuildHelper = BuildHelperImpl(config, fileListProvider)
 
     @Provides
     @Singleton

@@ -5,6 +5,7 @@ import androidx.collection.LongSparseArray
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.data.MealData
 import info.nightscout.androidaps.database.AppRepository
@@ -42,8 +43,9 @@ import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.min
 
+@OpenForTesting
 @Singleton
-open class IobCobCalculatorPlugin @Inject constructor(
+class IobCobCalculatorPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     private val aapsSchedulers: AapsSchedulers,
@@ -268,18 +270,19 @@ open class IobCobCalculatorPlugin @Inject constructor(
         var displayCob: Double? = null
         var futureCarbs = 0.0
         val now = dateUtil.now()
-        val carbs = repository.getCarbsDataFromTimeExpanded(now, true).blockingGet()
+        var timestamp = now
+        val carbs = repository.getCarbsDataFromTimeExpanded(autosensData?.time ?: now, true).blockingGet()
         if (autosensData != null) {
             displayCob = autosensData.cob
             carbs.forEach { carb ->
-                if (ads.roundUpTime(carb.timestamp) > ads.roundUpTime(autosensData.time) && carb.timestamp <= now) {
+                if (carb.timestamp > autosensData.time && carb.timestamp <= now)
                     displayCob += carb.amount
-                }
             }
+            timestamp = autosensData.time
         }
         // Future carbs
         carbs.forEach { carb -> if (carb.timestamp > now) futureCarbs += carb.amount }
-        return CobInfo(displayCob, futureCarbs)
+        return CobInfo(timestamp, displayCob, futureCarbs)
     }
 
     override fun getMealDataWithWaitingForCalculationFinish(): MealData {
@@ -577,7 +580,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
         return total
     }
 
-    open fun getCalculationToTimeTempBasals(toTime: Long, lastAutosensResult: AutosensResult, exercise_mode: Boolean, half_basal_exercise_target: Int, isTempTarget: Boolean): IobTotal {
+    fun getCalculationToTimeTempBasals(toTime: Long, lastAutosensResult: AutosensResult, exercise_mode: Boolean, half_basal_exercise_target: Int, isTempTarget: Boolean): IobTotal {
         val total = IobTotal(toTime)
         val pumpInterface = activePlugin.activePump
         val now = dateUtil.now()

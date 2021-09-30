@@ -4,27 +4,19 @@ import com.google.common.base.Optional
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.events.EventNetworkChange
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator
-import info.nightscout.androidaps.receivers.NetworkChangeReceiver
-import info.nightscout.androidaps.utils.DateUtil
 import org.json.JSONException
 import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.powermock.api.mockito.PowerMockito
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
+import org.mockito.Mockito.`when`
 
-@RunWith(PowerMockRunner::class)
-@PrepareForTest(NetworkChangeReceiver::class, DateUtil::class)
 class TriggerWifiSsidTest : TriggerTestBase() {
 
     var now = 1514766900000L
 
     @Before fun mock() {
-        PowerMockito.mockStatic(NetworkChangeReceiver::class.java)
-        PowerMockito.`when`(dateUtil.now()).thenReturn(now)
+        `when`(dateUtil.now()).thenReturn(now)
     }
 
     @Test fun shouldRunTest() {
