@@ -59,7 +59,7 @@
     <string name="exercise_setunchanged">השאירו את ערך מטרת הסוכר ללא שינוי.</string>
     <string name="exercise_15g">המתינו עד שהגלוקוז בדם יירד מתחת לערך המטרה של היפו ואז אכלו 15 גרם של פחמימות מהירות.</string>
     <string name="exercise_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
-    <string name="suspendloop_label">השבתת / השהיית לולאה</string>
+    <string name="suspendloop_label">השבתת \\ השהיית לולאה</string>
     <string name="suspendloop_doigetinsulin">האם אני מקבל\\ת אינסולין כאשר הלולאה מושבתת\\מושהית?</string>
     <string name="suspendloop_yes">כן, אינסולין בזאלי ממשיך להינתן.</string>
     <string name="suspendloop_no">לא, אספקת האינסולין נפסקת.</string>
@@ -161,10 +161,10 @@
     <string name="nsclient_data">ע\"מ לעקוב אחר AndroidAPS מרחוק, שני ההתקנים חייבים להיות בעלי גישה לאינטרנט (למשל באמצעות רשת אינטרנט אלחוטית או אינטרנט סלולרי).</string>
     <string name="nsclient_fullcontrol">אפליקציית NS Client אצל עוקב משמשת לניטור מרוחק ומאפשרת שליטה מלאה ב-AndroidAPS.</string>
     <string name="nsclient_hint1">https://androidaps.readthedocs.io/en/latest/EN/Children/Children.html</string>
-    <string name="isf_label_exam">יחס התיקון (ISF) </string>
+    <string name="isf_label_exam">יחס התיקון (ISF)</string>
     <string name="isf_increasingvalue">עלייה בערך יחס התיקון תביא למתן יותר אינסולין לכיסוי כמות נתונה של פחמימות.</string>
-    <string name="isf_decreasingvalue">הפחתת ערך יחס התיקון (ISF) מובילים למתן יותר אינסולין כדי לתקן רמת סוכר שמעל ערך המטרה.</string>
-    <string name="isf_noeffect">העלאת או הורדת יחס התיקון (ISF) אינו משפיע על מינון האינסולין כאשר רמות הגלוקוז בדם הן מתחת לערך המטרה.</string>
+    <string name="isf_decreasingvalue">הפחתת ערך יחס התיקון (ISF) מובילה למתן יותר אינסולין כדי לתקן רמת סוכר שמעל ערך המטרה.</string>
+    <string name="isf_noeffect">העלאת או הורדת יחס התיקון (ISF) אינה משפיעה על מינון האינסולין כאשר רמות הגלוקוז בדם הן מתחת לערך המטרה.</string>
     <string name="isf_preferences">יש להזין את יחס התיקון בהעדפות ב-AndroidAPS.</string>
     <string name="isf_profile">שינוי ערך ISF בפרופיל שלכם מספיק כדי להחיל את השינוי.</string>
     <string name="isf_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-sensitivity-factor-isf-mmol-l-u-or-mg-dl-u</string>
@@ -179,7 +179,7 @@
     <string name="ic_meaning">יחס הפחמימות (IC) הוא: כמה יחידות לחם מכוסות ע\"י יחידת אינסולין אחת.</string>
     <string name="ic_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#carbohydrate-to-insulin-ratio-cr-g-u</string>
     <string name="profileswitch_label">החלפת פרופילים</string>
-    <string name="profileswitch_pctwillchange"> בעת החלפה לפרופיל 90%, מהם ההיגדים הנכונים?</string>
+    <string name="profileswitch_pctwillchange"> בעת החלפה לפרופיל 90%, מהם כל ההיגדים הנכונים?</string>
     <string name="profileswitch_basallower">המינון הבזאלי יהיה נמוך ב-10%.</string>
     <string name="profileswitch_isfhigher">ערך פקטור התיקון (ISF) יהיה גבוה ב-10%.</string>
     <string name="profileswitch_iclower">ערך יחס הפחמימות יהיה נמוך ב-10%.</string>
