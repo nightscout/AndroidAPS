@@ -1463,10 +1463,10 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     bolusID.getId(),
                     PumpType.ACCU_CHEK_INSIGHT,
                     serial);
-            aapsLogger.debug(LTag.PUMP, "XXXX Last bolus delivered " + bolusID.getId() + " Update database sent: " + dateUtil.dateAndTimeString(startTimestamp) + " amount: " + event.getImmediateAmount() + " Result: " + result);
+            aapsLogger.debug(LTag.PUMP, "XXXX Last bolus delivered " + bolusID.getId() + " Update database sent: " + dateUtil.dateAndTimeString(bolusID.getTimestamp()) + " amount: " + event.getImmediateAmount() + " Result: " + result);
             lastRecordedBolus = pumpSync.expectedPumpState().getBolus();
             aapsLogger.error(LTag.PUMP, "XXXX Last bolus in Database after update " + dateUtil.dateAndTimeString(lastRecordedBolus.getTimestamp()) + " amount: " + lastRecordedBolus.getAmount());
-            if (!checkLastBolusRecorded(startTimestamp, event.getImmediateAmount())) {
+            if (!checkLastBolusRecorded(bolusID.getTimestamp(), event.getImmediateAmount())) {
                 aapsLogger.error(LTag.PUMP, "XXXX Last bolus delevered " + bolusID.getId() + " not recorded in database");
                 Notification notification = new Notification(Notification.INFO, "Last Bolus delevered " + event.getImmediateAmount() + " not recorded in database", Notification.URGENT);
                 rxBus.send(new EventNewNotification(notification));
