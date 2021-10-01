@@ -66,10 +66,13 @@ allprojects {
         maven { url "https://maven.google.com" }
         maven { url 'https://jitpack.io' }
     }
-    //Support @JvmDefault
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
         kotlinOptions {
-            freeCompilerArgs = ['-Xjvm-default=all']
+            freeCompilerArgs = [
+                    // Ignore warning for  @ExperimentalCoroutinesApi
+                    "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi",
+                    '-Xjvm-default=all'     //Support @JvmDefault
+            ]
             jvmTarget = "1.8"
         }
     }
