@@ -1594,8 +1594,6 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     }
 
     private long parseRelativeDate(int year, int month, int day, int hour, int minute, int second, int relativeHour, int relativeMinute, int relativeSecond) {
-        if (relativeHour * 60 * 60 + relativeMinute * 60 + relativeSecond >= hour * 60 * 60 * minute * 60 + second)
-            day--;
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         calendar.set(Calendar.YEAR, year);
         calendar.set(Calendar.MONTH, month - 1);
@@ -1603,7 +1601,9 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         calendar.set(Calendar.HOUR_OF_DAY, relativeHour);
         calendar.set(Calendar.MINUTE, relativeMinute);
         calendar.set(Calendar.SECOND, relativeSecond);
-        return calendar.getTimeInMillis();
+        long dayOffset =
+                relativeHour * 60 * 60 + relativeMinute * 60 + relativeSecond >= hour * 60 * 60 + minute * 60 + second ? T.Companion.days(1).msecs() : 0L;
+        return calendar.getTimeInMillis() - dayOffset;
     }
 
     private void uploadCareportalEvent(long date, DetailedBolusInfo.EventType event) {
