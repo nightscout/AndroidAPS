@@ -1433,7 +1433,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         bolusID = insightDbHelper.getInsightBolusID(serial, event.getBolusID(), startTimestamp); // Line added to get id
         if (event.getBolusType() == BolusType.STANDARD || event.getBolusType() == BolusType.MULTIWAVE) {
             pumpSync.syncBolusWithPumpId(
-                    startTimestamp,
+                    bolusID.getTimestamp(),
                     event.getImmediateAmount(),
                     null,
                     bolusID.getId(),
@@ -1443,7 +1443,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         if (event.getBolusType() == BolusType.EXTENDED || event.getBolusType() == BolusType.MULTIWAVE) {
             if (event.getDuration() > 0 && profileFunction.getProfile(bolusID.getTimestamp()) != null)
                     pumpSync.syncExtendedBolusWithPumpId(
-                            startTimestamp,
+                            bolusID.getTimestamp(),
                             event.getExtendedAmount(),
                             timestamp - startTimestamp,
                             isFakingTempsByExtendedBoluses(),
