@@ -22,7 +22,7 @@
 
     <string name="key_omnipod_common_preferences_category_confirmation_beeps" translatable="false">omnipod_common_preferences_category_confirmation</string>
     <string name="key_common_preferences_category_other_settings" translatable="false">common_preferences_category_other</string>
-    <string name="key_omnipod_common_notification_delivery_suspended_sound_enabled">AAPS.Omnipod.notification_delivery_suspended_sound_enabled</string>
+    <string name="key_omnipod_common_notification_delivery_suspended_sound_enabled" translatable="false">AAPS.Omnipod.notification_delivery_suspended_sound_enabled</string>
     <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Sound when delivery suspended notification enabled</string>
 
     <!-- Exceptions -->
