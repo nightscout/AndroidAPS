@@ -21,7 +21,7 @@ data class UserEntry(
     var action: Action,
     var source: Sources,
     var note: String,
-    var values: List<ValueWithUnit?>
+    var values: List<@JvmSuppressWildcards ValueWithUnit?>
 ) : DBEntry, DBEntryWithTime {
     enum class Action (val colorGroup: ColorGroup) {
         BOLUS (ColorGroup.InsulinTreatment),

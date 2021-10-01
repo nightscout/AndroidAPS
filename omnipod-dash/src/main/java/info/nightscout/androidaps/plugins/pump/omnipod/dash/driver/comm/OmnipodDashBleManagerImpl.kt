@@ -98,7 +98,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
     }
 
     override fun getStatus(): ConnectionState {
-        return connection?.let { it.connectionState() }
+        return connection?.connectionState()
             ?: NotConnected
     }
     // used for sync connections
@@ -154,7 +154,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
 
         val ltk = assertPaired()
 
-        var eapSqn = podState.increaseEapAkaSequenceNumber()
+        val eapSqn = podState.increaseEapAkaSequenceNumber()
 
         var newSqn = conn.establishSession(ltk, msgSeq, ids, eapSqn)
 
@@ -180,7 +180,6 @@ class OmnipodDashBleManagerImpl @Inject constructor(
             ?: throw FailedToConnectException("connection lost")
     }
 
-    @kotlin.ExperimentalStdlibApi
     override fun pairNewPod(): Observable<PodEvent> = Observable.create { emitter ->
         if (!busy.compareAndSet(false, true)) {
             throw BusyException()
