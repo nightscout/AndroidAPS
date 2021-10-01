@@ -17,13 +17,13 @@ class AlertConfiguration(
         get() {
             var firstByte = (type.index.toInt() shl 4).toByte()
             if (enabled) {
-                firstByte = firstByte or (1 shl 3)
+                firstByte = firstByte or (1 shl 3).toByte()
             }
             if (trigger is AlertTrigger.ReservoirVolumeTrigger) {
-                firstByte = firstByte or (1 shl 2)
+                firstByte = firstByte or (1 shl 2).toByte()
             }
             if (autoOff) {
-                firstByte = firstByte or (1 shl 1)
+                firstByte = firstByte or (1 shl 1).toByte()
             }
             firstByte = firstByte or ((durationInMinutes.toInt() shr 8 and 0x01).toByte())
             return ByteBuffer.allocate(6)

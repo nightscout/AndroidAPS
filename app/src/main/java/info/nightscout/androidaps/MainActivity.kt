@@ -165,7 +165,7 @@ class MainActivity : NoSplashAppCompatActivity() {
         actionBarDrawerToggle.syncState()
     }
 
-    public override fun onDestroy() {
+    override fun onDestroy() {
         super.onDestroy()
         disposable.clear()
     }

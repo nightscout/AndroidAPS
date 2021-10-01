@@ -23,7 +23,6 @@ internal class LTKExchanger(
     private val keyExchange = KeyExchange(aapsLogger, X25519KeyGenerator(), RandomByteGenerator())
     private var seq: Byte = 1
 
-    @kotlin.ExperimentalStdlibApi
     @Throws(PairingException::class)
     fun negotiateLTK(): PairResult {
         val sp1sp2 = PairMessage(
@@ -114,7 +113,6 @@ internal class LTKExchanger(
         keyExchange.validatePodConf(payload)
     }
 
-    @kotlin.ExperimentalStdlibApi
     private fun sp2(): ByteArray {
         // This is GetPodStatus command, with page 0 parameter.
         // We could replace that in the future with the serialized GetPodStatus()
@@ -127,7 +125,7 @@ internal class LTKExchanger(
         val payload = parseKeys(arrayOf(P0), msg.payload)[0]
         aapsLogger.debug(LTag.PUMPBTCOMM, "P0 payload from pod: ${payload.toHex()}")
         if (!payload.contentEquals(UNKNOWN_P0_PAYLOAD)) {
-            aapsLogger.warn(LTag.PUMPBTCOMM, "Reveived invalid P0 payload: ${payload.toHex()}")
+            aapsLogger.warn(LTag.PUMPBTCOMM, "Received invalid P0 payload: ${payload.toHex()}")
         }
     }
 

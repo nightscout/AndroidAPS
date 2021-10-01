@@ -69,7 +69,6 @@ abstract class PumpPluginAbstract protected constructor(
     protected var displayConnectionMessages = false
 
     var pumpType: PumpType = PumpType.GENERIC_AAPS
-        get() = field
         set(value) {
             field = value
             pumpDescription.fillFor(value)

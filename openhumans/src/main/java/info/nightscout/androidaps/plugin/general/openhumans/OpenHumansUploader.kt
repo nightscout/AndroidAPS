@@ -267,7 +267,7 @@ class OpenHumansUploader @Inject internal constructor(
                 put("currentTemp", JSONObject(it.currentTempJson))
                 put("iobData", JSONObject(it.iobDataJson))
                 put("profile", JSONObject(it.profileJson))
-                put("autosensData", JSONObject(it.autosensDataJson))
+                put("autosensData", JSONObject(it.autosensDataJson ?: ""))
                 put("mealData", JSONObject(it.mealDataJson))
                 put("isMicroBolusAllowed", it.isMicroBolusAllowed)
                 put("result", JSONObject(it.resultJson))

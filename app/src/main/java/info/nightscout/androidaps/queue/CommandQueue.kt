@@ -177,8 +177,7 @@ class CommandQueue @Inject constructor(
 
     // After new command added to the queue
     // start thread again if not already running
-    @Synchronized
-    fun notifyAboutNewCommand() {
+    @Synchronized fun notifyAboutNewCommand() {
         waitForFinishedThread()
         if (thread == null || thread!!.state == Thread.State.TERMINATED) {
             thread = QueueThread(this, context, aapsLogger, rxBus, activePlugin, resourceHelper, sp)
