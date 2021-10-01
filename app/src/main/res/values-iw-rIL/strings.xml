@@ -113,7 +113,7 @@
     <string name="apsmode_title">מצב APS</string>
     <string name="closedloop">לולאה סגורה</string>
     <string name="openloop">לולאה פתוחה</string>
-    <string name="lowglucosesuspend">השהיה בגלל ערך סוכר נמוך</string>
+    <string name="lowglucosesuspend">השהיה עקב ערך סוכר נמוך</string>
     <string name="disabledloop">לולאה כבויה</string>
     <string name="openloop_newsuggestion">הצעה חדשה זמינה</string>
     <string name="carbssuggestion">המלצת פחמימות</string>
@@ -241,7 +241,7 @@
     <string name="units_colon">יחידות:</string>
     <string name="units">יחידות</string>
     <string name="dia">משך פעילות אינסולין</string>
-    <string name="prefs_range_title">טווח להדמיה</string>
+    <string name="prefs_range_title">טווח הצגה</string>
     <string name="prefs_range_summary">סימוני גבוה ונמוך בתרשים סקירה כללית ובשעון חכם</string>
     <string name="low_mark">סימון נמוך</string>
     <string name="high_mark">סימון גבוה</string>
@@ -329,7 +329,7 @@
     <string name="resistantadult">מבוגר\\ת עם תנגודת אינסולין גבוהה</string>
     <string name="pregnant">הריון</string>
     <string name="patientage_summary">נא לבחור את גיל המטופל\\ת להתאמת מגבלות בטיחות</string>
-    <string name="patient_name">שם מטופל\\ת</string>
+    <string name="patient_name">שם המטופל\\ת</string>
     <string name="patient_name_summary">נא לציין את שם המטופל\\ת או כינוי, להבחנה בין מספר הגדרות</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">משתמש</string>
     <string name="Glimp">Glimp</string>
@@ -751,7 +751,7 @@
     <string name="saveorresetchangesfirst">יש לשמור או לאפס תחילה את השינויים הנוכחיים</string>
     <string name="deletecurrentprofile">למחוק את הפרופיל הנוכחי?</string>
     <string name="copytolocalprofile">ליצור פרופיל מקומי חדש מפרופיל זה?</string>
-    <string name="profilenamecontainsdot">שם הפרפיל מכיל נקודות.\nשם כזה אינו נתמך ע\"י Nightscout \n הפרופיל לא הועלה ל-Nightscout.</string>
+    <string name="profilenamecontainsdot">שם הפרופיל מכיל נקודות.\nשם כזה אינו נתמך ע\"י Nightscout \n הפרופיל לא הועלה ל-Nightscout.</string>
     <string name="low_mark_comment">ערך נמוך יותר באזור הטווח (הצגה בלבד)</string>
     <string name="high_mark_comment">ערך גבוה יותר באזור הטווח (הצגה בלבד)</string>
     <string name="age">גיל:</string>

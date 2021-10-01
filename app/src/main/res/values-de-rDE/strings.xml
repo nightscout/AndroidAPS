@@ -868,6 +868,8 @@ Unerwartetes Verhalten.</string>
     <string name="ns_receive_temp_target_summary">Temp. Ziele akzeptieren, die in NS oder NSClient eingegeben wurden</string>
     <string name="ns_receive_profile_switch">Profilwechsel abrufen</string>
     <string name="ns_receive_profile_switch_summary">Profilwechsel akzeptieren, die in NS oder NSClient eingegeben wurden</string>
+    <string name="ns_receive_offline_event">APS Offline-Ereignisse empfangen</string>
+    <string name="ns_receive_offline_event_summary">APS Offline-Ereignisse akzeptieren, die über NS oder NSClient eingegeben wurden</string>
     <string name="ns_receive_insulin">Insulin abrufen</string>
     <string name="ns_receive_insulin_summary">Insulin akzeptieren, das in NS oder NSClient eingegeben wurden</string>
     <string name="ns_receive_carbs">Kohlenhydrate abrufen</string>
@@ -878,4 +880,5 @@ Unerwartetes Verhalten.</string>
     <string name="ns_receive_cgm_summary">CGM Daten von NS akzeptieren</string>
     <string name="sms_timeout_while_wating">Zeitüberschreitung beim Warten auf das Ende der vorherigen Kommunikation mit der Pumpe</string>
     <string name="smscommunicator_another_bolus_in_queue">In der Warteschlange befindet sich ein weiterer Bolus. Bitte später erneut versuchen.</string>
+    <string name="calculation_in_progress">Kalkulation wird gerade durchgeführt</string>
 </resources>
