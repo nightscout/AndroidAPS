@@ -1457,7 +1457,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             PumpSync.PumpState.Bolus lastRecordedBolus = pumpSync.expectedPumpState().getBolus();
             aapsLogger.error(LTag.PUMP, "XXXX Last bolus in Database before update " + dateUtil.dateAndTimeString(lastRecordedBolus.getTimestamp()) + " amount: " + lastRecordedBolus.getAmount());
             Boolean result = pumpSync.syncBolusWithPumpId(
-                    startTimestamp,
+                    bolusID.getTimestamp(),
                     event.getImmediateAmount(),
                     null,
                     bolusID.getId(),
@@ -1475,7 +1475,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         if (event.getBolusType() == BolusType.EXTENDED || event.getBolusType() == BolusType.MULTIWAVE) {
             if (event.getDuration() > 0 && profileFunction.getProfile(bolusID.getTimestamp()) != null)
                     pumpSync.syncExtendedBolusWithPumpId(
-                            startTimestamp,
+                            bolusID.getTimestamp(),
                             event.getExtendedAmount(),
                             timestamp - startTimestamp,
                             isFakingTempsByExtendedBoluses(),
