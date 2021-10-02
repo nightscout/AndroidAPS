@@ -54,9 +54,12 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
     @Inject lateinit var medtronicUtil: MedtronicUtil
     @Inject lateinit var medtronicPumpHistoryDecoder: MedtronicPumpHistoryDecoder
 
-    private val MAX_COMMAND_TRIES = 3
-    private val DEFAULT_TIMEOUT = 2000
-    private val RILEYLINK_TIMEOUT: Long = 15 * 60 * 1000 // 15 min
+    companion object {
+
+        private const val MAX_COMMAND_TRIES = 3
+        private const val DEFAULT_TIMEOUT = 2000
+        private const val RILEYLINK_TIMEOUT: Long = 15 * 60 * 1000L // 15 min
+    }
 
     var errorResponse: String? = null
         private set
@@ -64,7 +67,7 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
     private var doWakeUpBeforeCommand = true
 
     @Inject
-    fun onInit(): Unit {
+    fun onInit() {
         // we can't do this in the constructor, as sp only gets injected after the constructor has returned
         medtronicPumpStatus.previousConnection = sp.getLong(
             RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, 0L)
@@ -92,7 +95,7 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
      *
      * @return
      */
-    fun isDeviceReachable(canPreventTuneUp: Boolean): Boolean {
+    private fun isDeviceReachable(canPreventTuneUp: Boolean): Boolean {
         val state = medtronicPumpStatus.pumpDeviceState
         if (state !== PumpDeviceState.PumpUnreachable) medtronicPumpStatus.pumpDeviceState = PumpDeviceState.WakingUp
         for (retry in 0..4) {
@@ -189,6 +192,7 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
         }
     }
 
+    @Suppress("SameParameterValue")
     @Throws(RileyLinkCommunicationException::class)
     private fun runCommandWithFrames(commandType: MedtronicCommandType, frames: List<List<Byte>>): PumpMessage? {
         aapsLogger.debug(LTag.PUMPCOMM, "Run command with Frames: " + commandType.name)
@@ -266,7 +270,7 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
             while (!done) {
                 // examine current response for problems.
                 val frameData = currentResponse.frameData
-                if (frameData.size > 0 && currentResponse.frameNumber == expectedFrameNum) {
+                if (frameData.isNotEmpty() && currentResponse.frameNumber == expectedFrameNum) {
                     // success! got a frame.
                     if (frameData.size != 64) {
                         aapsLogger.warn(LTag.PUMPCOMM, "Expected frame of length 64, got frame of length " + frameData.size)
@@ -286,12 +290,12 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
                         done = true // successful completion
                     }
                 } else {
-                    if (frameData.size == 0) {
+                    if (frameData.isEmpty()) {
                         aapsLogger.error(LTag.PUMPCOMM, "null frame data, retrying")
                     } else if (currentResponse.frameNumber != expectedFrameNum) {
                         aapsLogger.warn(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "Expected frame number %d, received %d (retrying)", expectedFrameNum,
                             currentResponse.frameNumber))
-                    } else if (frameData.size == 0) {
+                    } else if (frameData.isEmpty()) {
                         aapsLogger.warn(LTag.PUMPCOMM, "Frame has zero length, retrying")
                     }
                     failures++
@@ -381,8 +385,7 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
         medtronicPumpStatus.pumpDeviceState = PumpDeviceState.Active
 
         // create message
-        val msg: PumpMessage
-        msg = bodyData?.let { makePumpMessage(commandType, it) } ?: makePumpMessage(commandType)
+        val msg: PumpMessage = bodyData?.let { makePumpMessage(commandType, it) } ?: makePumpMessage(commandType)
 
         // send and wait for response
         val response = sendAndListen(msg, timeoutMs)
@@ -396,8 +399,7 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
     }
 
     // All pump communications go through this function.
-    @Throws(RileyLinkCommunicationException::class)
-    protected /*override*/ fun sendAndListen(msg: PumpMessage, timeout_ms: Int): PumpMessage {
+    @Throws(RileyLinkCommunicationException::class) private /*override*/ fun sendAndListen(msg: PumpMessage, timeout_ms: Int): PumpMessage {
         return super.sendAndListen(msg, timeout_ms)!!
     }
 
@@ -451,7 +453,7 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
             return responseData
         }
         val contents = response.rawContent
-        return if (contents.size > 0) {
+        return if (contents.isNotEmpty()) {
             if (contents.size >= expectedLength) {
                 aapsLogger.debug(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "%s: Content: %s", method, ByteUtil.shortHexString(contents)))
                 null
@@ -493,8 +495,7 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
         for (retries in 0..MAX_COMMAND_TRIES) {
             try {
                 // create message
-                var msg: PumpMessage
-                msg = makePumpMessage(commandType)
+                val msg: PumpMessage = makePumpMessage(commandType)
 
                 // send and wait for response
                 var response = sendAndListen(msg, DEFAULT_TIMEOUT + DEFAULT_TIMEOUT * retries)
@@ -527,7 +528,7 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
 
                 aapsLogger.debug(LTag.PUMPCOMM, "End Response: {}", ByteUtil.getHex(data))
 
-                var basalProfile: BasalProfile? = medtronicConverter.decodeBasalProfile(medtronicPumpPlugin.pumpDescription.pumpType, data)
+                val basalProfile: BasalProfile? = medtronicConverter.decodeBasalProfile(medtronicPumpPlugin.pumpDescription.pumpType, data)
                 // checkResponseRawContent(data, commandType) {
                 //     basalProfile = medtronicConverter.decodeBasalProfile(medtronicPumpPlugin.pumpDescription.pumpType, data)
                 // }

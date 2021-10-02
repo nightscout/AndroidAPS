@@ -2,9 +2,7 @@ package info.nightscout.androidaps.database.daos
 
 import androidx.room.Dao
 import androidx.room.Query
-import info.nightscout.androidaps.database.TABLE_CARBS
 import info.nightscout.androidaps.database.TABLE_EFFECTIVE_PROFILE_SWITCHES
-import info.nightscout.androidaps.database.entities.Carbs
 import info.nightscout.androidaps.database.entities.EffectiveProfileSwitch
 import io.reactivex.Maybe
 import io.reactivex.Single
@@ -21,6 +19,12 @@ internal interface EffectiveProfileSwitchDao : TraceableDao<EffectiveProfileSwit
 
     @Query("SELECT id FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES ORDER BY id DESC limit 1")
     fun getLastId(): Maybe<Long>
+
+    @Query("SELECT * FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES WHERE timestamp = :timestamp AND referenceId IS NULL")
+    fun findByTimestamp(timestamp: Long): EffectiveProfileSwitch?
+
+    @Query("SELECT * FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES WHERE nightscoutId = :nsId AND referenceId IS NULL")
+    fun findByNSId(nsId: String): EffectiveProfileSwitch?
 
     @Query("SELECT * FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES WHERE isValid = 1 AND referenceId IS NULL ORDER BY id ASC LIMIT 1")
     fun getOldestEffectiveProfileSwitchRecord(): EffectiveProfileSwitch?

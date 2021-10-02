@@ -4,6 +4,6 @@
     <string name="omnipod_dash_pump_description">Integrácia pumpy pre Omnipod Dash (nový model s funkciou Bluetooth a modrým krytom).</string>
     <!-- Omnipod Dash - Keys -->
     <!-- Omnipod Dash - Overview -->
-    <string name="omnipod_dash_bluetooth_status">Stav Bluetooth</string>
-    <string name="omnipod_dash_bluetooth_address">Adresa Bluetooth</string>
+    <!-- Omnipod Dash - Pod Activation Wizard -->
+    <!-- Exceptions -->
 </resources>

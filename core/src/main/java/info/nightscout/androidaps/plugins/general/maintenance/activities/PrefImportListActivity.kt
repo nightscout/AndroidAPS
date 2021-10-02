@@ -127,7 +127,7 @@ class PrefImportListActivity : DaggerAppCompatActivity() {
         return false
     }
 
-    public override fun attachBaseContext(newBase: Context) {
+    override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.wrap(newBase))
     }
 }

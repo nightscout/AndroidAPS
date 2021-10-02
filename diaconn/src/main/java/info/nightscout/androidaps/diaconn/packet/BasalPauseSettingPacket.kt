@@ -21,7 +21,7 @@ class BasalPauseSettingPacket(
     }
 
     override fun encode(msgSeq:Int): ByteArray {
-        val buffer = prefixEncode(msgType, msgSeq, MSG_CON_END);
+        val buffer = prefixEncode(msgType, msgSeq, MSG_CON_END)
         buffer.put(status.toByte()) // (1:pause, 2: cancel pause)
         return suffixEncode(buffer)
     }
