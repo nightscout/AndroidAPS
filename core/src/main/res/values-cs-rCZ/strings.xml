@@ -81,7 +81,6 @@
     <string name="extended_bolus">Prodloužený bolus</string>
     <string name="pump_time_updated">Čas v pumpě aktualizován</string>
     <string name="exit">Konec</string>
-    <string name="serial_number">Sériové číslo</string>
     <string name="removerecord">Odstranit záznam</string>
     <string name="loopisdisabled">Smyčka je zakázána</string>
     <string name="alarm">Alarm</string>
@@ -385,6 +384,21 @@
     <string name="uel_loop_change">SMYČKA ZMĚNĚNA</string>
     <string name="uel_loop_removed">SMYČKA ODEBRÁNA</string>
     <string name="uel_other">JINÉ</string>
+    <!-- HardLimits -->
+    <string name="profile_low_target">Dolní cíl profilu</string>
+    <string name="profile_high_target">Horní cíl profilu</string>
+    <string name="temp_target_low_target">Dolní hodnota dočasného cíle</string>
+    <string name="temp_target_high_target">Horní hodnota dočasného cíle</string>
+    <string name="temp_target_value">Hodnota dočasného cíle</string>
+    <string name="profile_dia">Hodnota DIA profilu</string>
+    <string name="profile_sensitivity_value">Hodnota citlivosti profilu</string>
+    <string name="profile_max_daily_basal_value">Maximální hodnota profilu bazálu</string>
+    <string name="current_basal_value">Aktuální hodnota bazálu</string>
+    <string name="profile_carbs_ratio_value">Inzulino-sacharidový poměr profilu</string>
+    <string name="valuelimitedto">%1$.2f omezeno na %2$.2f</string>
+    <string name="valueoutofrange">»%1$s« je mimo pevně nastavené limity</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f je mimo pevně nastavené limity</string>
+    <string name="basal_value">Hodnota bazálu</string>
     <plurals name="days">
         <item quantity="one">%1$d den</item>
         <item quantity="few">%1$d dnů</item>

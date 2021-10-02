@@ -20,8 +20,8 @@ class DetailedBolusInfo {
 
     // Additional requesting parameters
     @JvmField var timestamp = System.currentTimeMillis()
-    @JvmField var lastKnownBolusTime: Long = 0 // for SMB check
-    @JvmField var deliverAtTheLatest: Long = 0 // SMB should be delivered within 1 min from this time
+    var lastKnownBolusTime: Long = 0 // for SMB check
+    var deliverAtTheLatest: Long = 0 // SMB should be delivered within 1 min from this time
     @Transient var context: Context? = null // context for progress dialog
 
     // Prefilled info for storing to db

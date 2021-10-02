@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.configBuilder
 
 import info.nightscout.androidaps.Constants
+import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Constraint
@@ -9,6 +10,7 @@ import info.nightscout.androidaps.interfaces.PluginType
 import javax.inject.Inject
 import javax.inject.Singleton
 
+@OpenForTesting
 @Singleton
 class ConstraintChecker @Inject constructor(private val activePlugin: ActivePlugin) : Constraints {
 
@@ -23,9 +25,6 @@ class ConstraintChecker @Inject constructor(private val activePlugin: ActivePlug
 
     fun isAutosensModeEnabled(): Constraint<Boolean> =
         isAutosensModeEnabled(Constraint(true))
-
-    fun isAMAModeEnabled(): Constraint<Boolean> =
-        isAMAModeEnabled(Constraint(true))
 
     fun isSMBModeEnabled(): Constraint<Boolean> =
         isSMBModeEnabled(Constraint(true))
@@ -96,16 +95,6 @@ class ConstraintChecker @Inject constructor(private val activePlugin: ActivePlug
             val constraint = p as Constraints
             if (!p.isEnabled(PluginType.CONSTRAINTS)) continue
             constraint.isAutosensModeEnabled(value)
-        }
-        return value
-    }
-
-    override fun isAMAModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
-        val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(Constraints::class.java)
-        for (p in constraintsPlugins) {
-            val constrain = p as Constraints
-            if (!p.isEnabled(PluginType.CONSTRAINTS)) continue
-            constrain.isAMAModeEnabled(value)
         }
         return value
     }

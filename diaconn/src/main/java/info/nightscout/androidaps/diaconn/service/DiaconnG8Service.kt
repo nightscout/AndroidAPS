@@ -176,7 +176,7 @@ class DiaconnG8Service : DaggerService() {
             val instant = DateTime.now().millis
             val offsetInMilliseconds = tz.getOffset(instant).toLong()
             val offset = TimeUnit.MILLISECONDS.toHours(offsetInMilliseconds).toInt()
-            if (abs(timeDiff) > 60) {
+            if (timeDiff > 0 || abs(timeDiff) > 60) {
                 if (abs(timeDiff) > 60 * 60 * 1.5) {
                     aapsLogger.debug(LTag.PUMPCOMM, "Pump time difference: $timeDiff seconds - large difference")
                     //If time-diff is very large, warn user until we can synchronize history readings properly
@@ -464,42 +464,6 @@ class DiaconnG8Service : DaggerService() {
         diaconnG8Pump.fromTemporaryBasal(tbr)
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
         return msgTBR.success()
-    }
-
-    fun highTempBasal(absoluteRate: Double): Boolean {
-        // temp state check
-        sendMessage(TempBasalInquirePacket(injector))
-
-        if (diaconnG8Pump.tbStatus ==1 ) {
-            rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.stoppingtempbasal)))
-            val msgPacket = TempBasalSettingPacket(injector, 2, diaconnG8Pump.tbTime, diaconnG8Pump.tbInjectRateRatio)
-            // tempbasal stop
-            sendMessage(msgPacket)
-            // otp process
-            if(!processConfirm(msgPacket.msgType)) return false
-            diaconnG8Pump.tempBasalStart= dateUtil.now()
-            // SystemClock.sleep(500)
-        }
-        rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.settingtempbasal)))
-
-        val tbTime = 2 // 2: 30min, 3:45min, 4:60min
-        var newAbsoluteRate = absoluteRate
-        if (absoluteRate < 0.0)  newAbsoluteRate = 0.0
-        if (absoluteRate > 6.0) newAbsoluteRate = 6.0 // pump Temp Max percent = 200
-
-        aapsLogger.debug(LTag.PUMPCOMM, "APS Temp basal start absoluteRate: $newAbsoluteRate duration 30 min")
-        val tbInjectRate = absoluteRate * 100 + 1000
-        val msgTBR = TempBasalSettingPacket(injector, 1, tbTime, tbInjectRate.toInt())
-        sendMessage(msgTBR)
-        // otp process
-        if(!processConfirm(msgTBR.msgType)) return false
-        sendMessage(TempBasalInquirePacket(injector))
-        SystemClock.sleep(500)
-        loadHistory()
-        val tbr = pumpSync.expectedPumpState().temporaryBasal
-        diaconnG8Pump.fromTemporaryBasal(tbr)
-        rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
-        return true
     }
 
     fun tempBasalShortDuration(absoluteRate: Double, durationInMinutes: Int): Boolean {

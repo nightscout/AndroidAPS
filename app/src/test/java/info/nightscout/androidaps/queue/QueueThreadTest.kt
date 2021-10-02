@@ -12,29 +12,18 @@ import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.general.maintenance.LoggerUtils
 import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
-import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.androidaps.queue.commands.CommandTempBasalAbsolute
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.ToastUtils
-import info.nightscout.androidaps.utils.buildHelper.BuildHelper
+import info.nightscout.androidaps.utils.buildHelper.BuildHelperImpl
 import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
 
-@RunWith(PowerMockRunner::class)
-@PrepareForTest(
-    ConstraintChecker::class, VirtualPumpPlugin::class, ToastUtils::class, Context::class,
-    FabricPrivacy::class, PrefFileListProvider::class, PowerManager::class)
 class QueueThreadTest : TestBaseWithProfile() {
 
     @Mock lateinit var constraintChecker: ConstraintChecker
@@ -63,7 +52,11 @@ class QueueThreadTest : TestBaseWithProfile() {
     @Before
     fun prepare() {
         pumpPlugin = TestPumpPlugin(injector)
-        commandQueue = CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, activePlugin, context, sp, BuildHelper(ConfigImpl(), fileListProvider), dateUtil, repository, fabricPrivacy)
+        commandQueue = CommandQueue(
+            injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker,
+            profileFunction, activePlugin, context, sp,
+            BuildHelperImpl(ConfigImpl(), fileListProvider), dateUtil, repository, fabricPrivacy, config
+        )
 
         val pumpDescription = PumpDescription()
         pumpDescription.basalMinimumRate = 0.1
@@ -80,7 +73,8 @@ class QueueThreadTest : TestBaseWithProfile() {
         val rateConstraint = Constraint(0.0)
         Mockito.`when`(constraintChecker.applyBasalConstraints(anyObject(), anyObject())).thenReturn(rateConstraint)
         val percentageConstraint = Constraint(0)
-        Mockito.`when`(constraintChecker.applyBasalPercentConstraints(anyObject(), anyObject())).thenReturn(percentageConstraint)
+        Mockito.`when`(constraintChecker.applyBasalPercentConstraints(anyObject(), anyObject()))
+            .thenReturn(percentageConstraint)
 
         sut = QueueThread(commandQueue, context, aapsLogger, rxBus, activePlugin, resourceHelper, sp)
     }

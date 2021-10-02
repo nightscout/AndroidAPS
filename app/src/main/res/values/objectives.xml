@@ -29,7 +29,6 @@
     <string name="objectives_maxiob_gate">Run for a few days, and at least one night with no low BG alarms, before dropping BG</string>
     <string name="objectives_autosens_objective">Adjust basals and ratios if needed, and then enable auto-sens</string>
     <string name="objectives_autosens_gate">1 week successful daytime looping with regular carb entry</string>
-    <string name="objectives_ama_objective">Enabling additional features for daytime use, such as advanced meal assist</string>
     <string name="objectives_smb_objective">Enabling additional features for daytime use, such as SMB</string>
     <string name="objectives_auto_objective">Enabling automation</string>
     <string name="objectives_smb_gate">You must read the wiki and rise maxIOB to get SMBs working fine! A good start is maxIOB=average mealbolus + 3 x max daily basal</string>

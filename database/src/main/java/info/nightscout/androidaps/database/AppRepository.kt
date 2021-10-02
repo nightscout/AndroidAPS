@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.database
 
+import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.androidaps.database.data.NewEntries
 import info.nightscout.androidaps.database.entities.*
 import info.nightscout.androidaps.database.interfaces.DBEntry
 import info.nightscout.androidaps.database.transactions.Transaction
@@ -14,8 +16,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.roundToInt
 
-@Singleton
-open class AppRepository @Inject internal constructor(
+@OpenForTesting
+@Singleton class AppRepository @Inject internal constructor(
     internal val database: AppDatabase
 ) {
 
@@ -260,6 +262,10 @@ open class AppRepository @Inject internal constructor(
                 }
             }
 
+    fun getModifiedEffectiveProfileSwitchDataFromId(lastId: Long): Single<List<EffectiveProfileSwitch>> =
+        database.effectiveProfileSwitchDao.getModifiedFrom(lastId)
+            .subscribeOn(Schedulers.io())
+
     fun createEffectiveProfileSwitch(profileSwitch: EffectiveProfileSwitch) {
         database.effectiveProfileSwitchDao.insert(profileSwitch)
     }
@@ -341,8 +347,8 @@ open class AppRepository @Inject internal constructor(
     fun deleteAllTherapyEventsEntries() =
         database.therapyEventDao.deleteAllEntries()
 
-    fun getLastTherapyRecord(type: TherapyEvent.Type): Single<ValueWrapper<TherapyEvent>> =
-        database.therapyEventDao.getLastTherapyRecord(type).toWrappedSingle()
+    fun getLastTherapyRecordUpToNow(type: TherapyEvent.Type): Single<ValueWrapper<TherapyEvent>> =
+        database.therapyEventDao.getLastTherapyRecord(type, System.currentTimeMillis()).toWrappedSingle()
             .subscribeOn(Schedulers.io())
 
     fun getTherapyEventByTimestamp(type: TherapyEvent.Type, timestamp: Long): TherapyEvent? =
@@ -482,7 +488,7 @@ open class AppRepository @Inject internal constructor(
     private fun Single<List<Carbs>>.expand() = this.map { it.map(::expandCarbs).flatten() }
     private fun Single<List<Carbs>>.filterOutExtended() = this.map { it.filter { c -> c.duration == 0L } }
     private fun Single<List<Carbs>>.fromTo(from: Long, to: Long) = this.map { it.filter { c -> c.timestamp in from..to } }
-    private fun Single<List<Carbs>>.until(to: Long) = this.map { it.filter { c -> c.timestamp <= to } }
+    private infix fun Single<List<Carbs>>.until(to: Long) = this.map { it.filter { c -> c.timestamp <= to } }
     private fun Single<List<Carbs>>.from(start: Long) = this.map { it.filter { c -> c.timestamp >= start } }
     private fun Single<List<Carbs>>.sort() = this.map { it.sortedBy { c -> c.timestamp } }
 
@@ -830,7 +836,25 @@ open class AppRepository @Inject internal constructor(
             .subscribeOn(Schedulers.io())
             .toWrappedSingle()
 
-
+    suspend fun collectNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int) = NewEntries(
+        apsResults = database.apsResultDao.getNewEntriesSince(since, until, limit, offset),
+        apsResultLinks = database.apsResultLinkDao.getNewEntriesSince(since, until, limit, offset),
+        bolusCalculatorResults = database.bolusCalculatorResultDao.getNewEntriesSince(since, until, limit, offset),
+        boluses = database.bolusDao.getNewEntriesSince(since, until, limit, offset),
+        carbs = database.carbsDao.getNewEntriesSince(since, until, limit, offset),
+        effectiveProfileSwitches = database.effectiveProfileSwitchDao.getNewEntriesSince(since, until, limit, offset),
+        extendedBoluses = database.extendedBolusDao.getNewEntriesSince(since, until, limit, offset),
+        glucoseValues = database.glucoseValueDao.getNewEntriesSince(since, until, limit, offset),
+        multiwaveBolusLinks = database.multiwaveBolusLinkDao.getNewEntriesSince(since, until, limit, offset),
+        offlineEvents = database.offlineEventDao.getNewEntriesSince(since, until, limit, offset),
+        preferencesChanges = database.preferenceChangeDao.getNewEntriesSince(since, until, limit, offset),
+        profileSwitches = database.profileSwitchDao.getNewEntriesSince(since, until, limit, offset),
+        temporaryBasals = database.temporaryBasalDao.getNewEntriesSince(since, until, limit, offset),
+        temporaryTarget = database.temporaryTargetDao.getNewEntriesSince(since, until, limit, offset),
+        therapyEvents = database.therapyEventDao.getNewEntriesSince(since, until, limit, offset),
+        totalDailyDoses = database.totalDailyDoseDao.getNewEntriesSince(since, until, limit, offset),
+        versionChanges = database.versionChangeDao.getNewEntriesSince(since, until, limit, offset),
+    )
 }
 
 @Suppress("USELESS_CAST")

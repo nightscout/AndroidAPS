@@ -1,10 +1,12 @@
 package info.nightscout.androidaps.utils
 
+import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import javax.inject.Inject
 import javax.inject.Singleton
 
+@OpenForTesting
 @Singleton
 class Profiler @Inject constructor(val aapsLogger: AAPSLogger) {
 

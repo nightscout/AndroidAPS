@@ -12,20 +12,14 @@ import info.nightscout.androidaps.utils.T
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
-import org.powermock.api.mockito.PowerMockito
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
 import java.util.*
 
 /**
  * Created by mike on 26.03.2018.
  */
 @Suppress("SpellCheckingInspection")
-@RunWith(PowerMockRunner::class)
-@PrepareForTest(DateUtil::class, AutosensDataStore::class)
 class GlucoseStatusTest : TestBase() {
 
     @Mock lateinit var dateUtil: DateUtil
@@ -48,7 +42,7 @@ class GlucoseStatusTest : TestBase() {
     }
 
     @Test fun calculateValidGlucoseStatus() {
-        PowerMockito.`when`(autosensDataStore.getBgReadingsDataTableCopy()).thenReturn(generateValidBgData())
+        `when`(autosensDataStore.getBgReadingsDataTableCopy()).thenReturn(generateValidBgData())
         val glucoseStatus = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin, dateUtil).glucoseStatusData!!
         Assert.assertEquals(214.0, glucoseStatus.glucose, 0.001)
         Assert.assertEquals(-2.0, glucoseStatus.delta, 0.001)
@@ -58,7 +52,7 @@ class GlucoseStatusTest : TestBase() {
     }
 
     @Test fun calculateMostRecentGlucoseStatus() {
-        PowerMockito.`when`(autosensDataStore.getBgReadingsDataTableCopy()).thenReturn(generateMostRecentBgData())
+        `when`(autosensDataStore.getBgReadingsDataTableCopy()).thenReturn(generateMostRecentBgData())
         val glucoseStatus: GlucoseStatus = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin, dateUtil).glucoseStatusData!!
         Assert.assertEquals(215.0, glucoseStatus.glucose, 0.001) // (214+216) / 2
         Assert.assertEquals(-1.0, glucoseStatus.delta, 0.001)
@@ -68,7 +62,7 @@ class GlucoseStatusTest : TestBase() {
     }
 
     @Test fun oneRecordShouldProduceZeroDeltas() {
-        PowerMockito.`when`(autosensDataStore.getBgReadingsDataTableCopy()).thenReturn(generateOneCurrentRecordBgData())
+        `when`(autosensDataStore.getBgReadingsDataTableCopy()).thenReturn(generateOneCurrentRecordBgData())
         val glucoseStatus: GlucoseStatus = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin, dateUtil).glucoseStatusData!!
         Assert.assertEquals(214.0, glucoseStatus.glucose, 0.001)
         Assert.assertEquals(0.0, glucoseStatus.delta, 0.001)
@@ -78,19 +72,19 @@ class GlucoseStatusTest : TestBase() {
     }
 
     @Test fun insufficientDataShouldReturnNull() {
-        PowerMockito.`when`(autosensDataStore.getBgReadingsDataTableCopy()).thenReturn(generateInsufficientBgData())
+        `when`(autosensDataStore.getBgReadingsDataTableCopy()).thenReturn(generateInsufficientBgData())
         val glucoseStatus: GlucoseStatus? = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin, dateUtil).glucoseStatusData
         Assert.assertEquals(null, glucoseStatus)
     }
 
     @Test fun oldDataShouldReturnNull() {
-        PowerMockito.`when`(autosensDataStore.getBgReadingsDataTableCopy()).thenReturn(generateOldBgData())
+        `when`(autosensDataStore.getBgReadingsDataTableCopy()).thenReturn(generateOldBgData())
         val glucoseStatus: GlucoseStatus? = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin, dateUtil).glucoseStatusData
         Assert.assertEquals(null, glucoseStatus)
     }
 
     @Test fun returnOldDataIfAllowed() {
-        PowerMockito.`when`(autosensDataStore.getBgReadingsDataTableCopy()).thenReturn(generateOldBgData())
+        `when`(autosensDataStore.getBgReadingsDataTableCopy()).thenReturn(generateOldBgData())
         val glucoseStatus: GlucoseStatus? = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin, dateUtil).getGlucoseStatusData(true)
         Assert.assertNotEquals(null, glucoseStatus)
     }
@@ -100,7 +94,7 @@ class GlucoseStatusTest : TestBase() {
     }
 
     @Test fun calculateGlucoseStatusForLibreTestBgData() {
-        PowerMockito.`when`(autosensDataStore.getBgReadingsDataTableCopy()).thenReturn(generateLibreTestData())
+        `when`(autosensDataStore.getBgReadingsDataTableCopy()).thenReturn(generateLibreTestData())
         val glucoseStatus: GlucoseStatus = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin, dateUtil).glucoseStatusData!!
         Assert.assertEquals(100.0, glucoseStatus.glucose, 0.001) //
         Assert.assertEquals(-10.0, glucoseStatus.delta, 0.001)

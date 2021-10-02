@@ -17,7 +17,6 @@
     <string name="objectives_maxiob_gate">Bevor Du den Zielwert niedriger einstellst, musst Du einige Tage Erfahrung sammeln und mindestens eine Nacht ohne Hypoalarm schaffen</string>
     <string name="objectives_autosens_objective">Passe Basalraten und Faktoren bei Bedarf an und schalte anschließend Autosens ein.</string>
     <string name="objectives_autosens_gate">Loope eine Woche tagsüber mit regelmäßiger Kohlenhydrat-Eingabe</string>
-    <string name="objectives_ama_objective">Aktiviere zusätzliche Funktionen für die Nutzung tagsüber wie z. B. den erweiterten Mahlzeitenassistenten (AMA)</string>
     <string name="objectives_smb_objective">Aktiviere zusätzliche Funktionen für die Nutzung tagsüber wie z. B. SMB</string>
     <string name="objectives_auto_objective">Automatisierung aktivieren</string>
     <string name="objectives_smb_gate">Lies das Wiki und erhöhe maxIOB, damit der SMB gut funktioniert. Ein guter Anfang ist

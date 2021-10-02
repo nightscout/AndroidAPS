@@ -9,6 +9,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.BolusProgressHelperActivity
 import info.nightscout.androidaps.activities.ErrorHelperActivity
+import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.data.PumpEnactResult
@@ -47,8 +48,9 @@ import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
+@OpenForTesting
 @Singleton
-open class CommandQueue @Inject constructor(
+class CommandQueue @Inject constructor(
     private val injector: HasAndroidInjector,
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBusWrapper,
@@ -62,7 +64,8 @@ open class CommandQueue @Inject constructor(
     private val buildHelper: BuildHelper,
     private val dateUtil: DateUtil,
     private val repository: AppRepository,
-    private val fabricPrivacy: FabricPrivacy
+    private val fabricPrivacy: FabricPrivacy,
+    private val config: Config
 ) : CommandQueueProvider {
 
     private val disposable = CompositeDisposable()
@@ -77,6 +80,10 @@ open class CommandQueue @Inject constructor(
             .toObservable(EventProfileSwitchChanged::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({
+                if (config.NSCLIENT) { // Effective profileswitch should be synced over NS
+                    rxBus.send(EventNewBasalProfile())
+                    return@subscribe
+                }
                 aapsLogger.debug(LTag.PROFILE, "onProfileSwitch")
                 profileFunction.getRequestedProfile()?.let {
                     val nonCustomized = ProfileSealed.PS(it).convertToNonCustomizedProfile(dateUtil)
@@ -170,8 +177,7 @@ open class CommandQueue @Inject constructor(
 
     // After new command added to the queue
     // start thread again if not already running
-    @Synchronized
-    open fun notifyAboutNewCommand() {
+    @Synchronized fun notifyAboutNewCommand() {
         waitForFinishedThread()
         if (thread == null || thread!!.state == Thread.State.TERMINATED) {
             thread = QueueThread(this, context, aapsLogger, rxBus, activePlugin, resourceHelper, sp)
@@ -193,7 +199,9 @@ open class CommandQueue @Inject constructor(
 
     override fun independentConnect(reason: String, callback: Callback?) {
         aapsLogger.debug(LTag.PUMPQUEUE, "Starting new queue")
-        val tempCommandQueue = CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, activePlugin, context, sp, buildHelper, dateUtil, repository, fabricPrivacy)
+        val tempCommandQueue = CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper,
+                                            constraintChecker, profileFunction, activePlugin, context, sp,
+                                            buildHelper, dateUtil, repository, fabricPrivacy, config)
         tempCommandQueue.readStatus(reason, callback)
         tempCommandQueue.disposable.clear()
     }

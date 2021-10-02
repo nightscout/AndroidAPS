@@ -300,7 +300,6 @@ class BasalProfile {
             return if (b < 0) b + 256 else b.toInt()
         }
 
-        @JvmStatic
         fun getProfilesByHourToString(data: DoubleArray): String {
             val stringBuilder = StringBuilder()
             for (value in data) {
@@ -310,7 +309,6 @@ class BasalProfile {
             return stringBuilder.toString()
         }
 
-        @JvmStatic
         fun isBasalProfileByHourUndefined(basalByHour: DoubleArray): Boolean {
             for (i in 0..23) {
                 if (basalByHour[i] > 0.0) {

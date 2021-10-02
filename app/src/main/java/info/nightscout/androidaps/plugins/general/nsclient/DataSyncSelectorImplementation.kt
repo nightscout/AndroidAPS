@@ -34,6 +34,7 @@ class DataSyncSelectorImplementation @Inject constructor(
             processChangedTemporaryBasalsCompat()
             processChangedExtendedBolusesCompat()
             processChangedProfileSwitchesCompat()
+            processChangedEffectiveProfileSwitchesCompat()
             processChangedGlucoseValuesCompat()
             processChangedTempTargetsCompat()
             processChangedFoodsCompat()
@@ -56,6 +57,7 @@ class DataSyncSelectorImplementation @Inject constructor(
         sp.remove(R.string.key_ns_extended_bolus_last_synced_id)
         sp.remove(R.string.key_ns_therapy_event_last_synced_id)
         sp.remove(R.string.key_ns_profile_switch_last_synced_id)
+        sp.remove(R.string.key_ns_effective_profile_switch_last_synced_id)
         sp.remove(R.string.key_ns_offline_event_last_synced_id)
         sp.remove(R.string.key_ns_profile_store_last_synced_timestamp)
     }
@@ -78,8 +80,8 @@ class DataSyncSelectorImplementation @Inject constructor(
             }
     }
 
-    private var lastBolusId = -1L
-    private var lastBolusTime = -1L
+    @Volatile private var lastBolusId = -1L
+    @Volatile private var lastBolusTime = -1L
     override fun processChangedBolusesCompat(): Boolean {
         val lastDbIdWrapped = appRepository.getLastBolusIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
@@ -121,8 +123,8 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
     }
 
-    private var lastCarbsId = -1L
-    private var lastCarbsTime = -1L
+    @Volatile private var lastCarbsId = -1L
+    @Volatile private var lastCarbsTime = -1L
     override fun processChangedCarbsCompat(): Boolean {
         val lastDbIdWrapped = appRepository.getLastCarbsIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
@@ -164,8 +166,8 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
     }
 
-    private var lastBcrId = -1L
-    private var lastBcrTime = -1L
+    @Volatile private var lastBcrId = -1L
+    @Volatile private var lastBcrTime = -1L
     override fun processChangedBolusCalculatorResultsCompat(): Boolean {
         val lastDbIdWrapped = appRepository.getLastBolusCalculatorResultIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
@@ -207,8 +209,8 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
     }
 
-    private var lastTtId = -1L
-    private var lastTtTime = -1L
+    @Volatile private var lastTtId = -1L
+    @Volatile private var lastTtTime = -1L
     override fun processChangedTempTargetsCompat(): Boolean {
         val lastDbIdWrapped = appRepository.getLastTempTargetIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
@@ -250,8 +252,8 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
     }
 
-    private var lastFoodId = -1L
-    private var lastFoodTime = -1L
+    @Volatile private var lastFoodId = -1L
+    @Volatile private var lastFoodTime = -1L
     override fun processChangedFoodsCompat(): Boolean {
         val lastDbIdWrapped = appRepository.getLastFoodIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
@@ -293,8 +295,8 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
     }
 
-    private var lastGvId = -1L
-    private var lastGvTime = -1L
+    @Volatile private var lastGvId = -1L
+    @Volatile private var lastGvTime = -1L
     override fun processChangedGlucoseValuesCompat(): Boolean {
         val lastDbIdWrapped = appRepository.getLastGlucoseValueIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
@@ -342,8 +344,8 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
     }
 
-    private var lastTeId = -1L
-    private var lastTeTime = -1L
+    @Volatile private var lastTeId = -1L
+    @Volatile private var lastTeTime = -1L
     override fun processChangedTherapyEventsCompat(): Boolean {
         val lastDbIdWrapped = appRepository.getLastTherapyEventIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
@@ -384,8 +386,8 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
     }
 
-    private var lastDsId = -1L
-    private var lastDsTime = -1L
+    @Volatile private var lastDsId = -1L
+    @Volatile private var lastDsTime = -1L
     override fun processChangedDeviceStatusesCompat(): Boolean {
         val lastDbIdWrapped = appRepository.getLastDeviceStatusIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
@@ -426,8 +428,8 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
     }
 
-    private var lastTbrId = -1L
-    private var lastTbrTime = -1L
+    @Volatile private var lastTbrId = -1L
+    @Volatile private var lastTbrTime = -1L
     override fun processChangedTemporaryBasalsCompat(): Boolean {
         val useAbsolute = sp.getBoolean(R.string.key_ns_sync_use_absolute, false)
         val lastDbIdWrapped = appRepository.getLastTemporaryBasalIdWrapped().blockingGet()
@@ -477,8 +479,8 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
     }
 
-    private var lastEbId = -1L
-    private var lastEbTime = -1L
+    @Volatile private var lastEbId = -1L
+    @Volatile private var lastEbTime = -1L
     override fun processChangedExtendedBolusesCompat(): Boolean {
         val useAbsolute = sp.getBoolean(R.string.key_ns_sync_use_absolute, false)
         val lastDbIdWrapped = appRepository.getLastExtendedBolusIdWrapped().blockingGet()
@@ -527,8 +529,8 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
     }
 
-    private var lastPsId = -1L
-    private var lastPsTime = -1L
+    @Volatile private var lastPsId = -1L
+    @Volatile private var lastPsTime = -1L
     override fun processChangedProfileSwitchesCompat(): Boolean {
         val lastDbIdWrapped = appRepository.getLastProfileSwitchIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
@@ -555,6 +557,48 @@ class DataSyncSelectorImplementation @Inject constructor(
         return false
     }
 
+    override fun confirmLastEffectiveProfileSwitchIdIfGreater(lastSynced: Long) {
+        if (lastSynced > sp.getLong(R.string.key_ns_effective_profile_switch_last_synced_id, 0)) {
+            aapsLogger.debug(LTag.NSCLIENT, "Setting EffectiveProfileSwitch data sync from $lastSynced")
+            sp.putLong(R.string.key_ns_effective_profile_switch_last_synced_id, lastSynced)
+        }
+    }
+
+    override fun changedEffectiveProfileSwitch(): List<EffectiveProfileSwitch> {
+        val startId = sp.getLong(R.string.key_ns_effective_profile_switch_last_synced_id, 0)
+        return appRepository.getModifiedEffectiveProfileSwitchDataFromId(startId).blockingGet().also {
+            aapsLogger.debug(LTag.NSCLIENT, "Loading EffectiveProfileSwitch data for sync from $startId. Records ${it.size}")
+        }
+    }
+
+    @Volatile private var lastEpsId = -1L
+    @Volatile private var lastEpsTime = -1L
+    override fun processChangedEffectiveProfileSwitchesCompat(): Boolean {
+        val lastDbIdWrapped = appRepository.getLastEffectiveProfileSwitchIdWrapped().blockingGet()
+        val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
+        var startId = sp.getLong(R.string.key_ns_effective_profile_switch_last_synced_id, 0)
+        if (startId > lastDbId) {
+            sp.putLong(R.string.key_ns_effective_profile_switch_last_synced_id, 0)
+            startId = 0
+        }
+        if (startId == lastEpsId && dateUtil.now() - lastEpsTime < 5000) return false
+        lastEpsId = startId
+        lastEpsTime = dateUtil.now()
+        appRepository.getNextSyncElementEffectiveProfileSwitch(startId).blockingGet()?.let { ps ->
+            aapsLogger.info(LTag.DATABASE, "Loading EffectiveProfileSwitch data Start: $startId ID: ${ps.first.id} HistoryID: ${ps.second} ")
+            when {
+                // without nsId = create new
+                ps.first.interfaceIDs.nightscoutId == null ->
+                    nsClientPlugin.nsClientService?.dbAdd("treatments", ps.first.toJson(true, dateUtil), DataSyncSelector.PairEffectiveProfileSwitch(ps.first, ps.second), "$startId/$lastDbId")
+                // with nsId = update
+                ps.first.interfaceIDs.nightscoutId != null ->
+                    nsClientPlugin.nsClientService?.dbUpdate("treatments", ps.first.interfaceIDs.nightscoutId, ps.first.toJson(false, dateUtil), DataSyncSelector.PairEffectiveProfileSwitch(ps.first, ps.second), "$startId/$lastDbId")
+            }
+            return true
+        }
+        return false
+    }
+
     override fun confirmLastOfflineEventIdIfGreater(lastSynced: Long) {
         if (lastSynced > sp.getLong(R.string.key_ns_offline_event_last_synced_id, 0)) {
             aapsLogger.debug(LTag.NSCLIENT, "Setting OfflineEvent data sync from $lastSynced")
@@ -570,8 +614,8 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
     }
 
-    private var lastOeId = -1L
-    private var lastOeTime = -1L
+    @Volatile private var lastOeId = -1L
+    @Volatile private var lastOeTime = -1L
     override fun processChangedOfflineEventsCompat(): Boolean {
         val lastDbIdWrapped = appRepository.getLastOfflineEventIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L

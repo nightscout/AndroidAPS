@@ -2,19 +2,13 @@ package info.nightscout.androidaps.data
 
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
 
 /**
  * Created by mike on 19.03.2018.
  */
-@RunWith(PowerMockRunner::class)
-@PrepareForTest(SP::class)
 class ConstraintTest : TestBase() {
 
     @Test fun doTests() {

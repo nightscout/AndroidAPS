@@ -4,12 +4,17 @@ import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.InsertTherapyEventAnnouncementTransaction
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
@@ -38,7 +43,8 @@ class LocalAlertUtils @Inject constructor(
     private val smsCommunicatorPlugin: SmsCommunicatorPlugin,
     private val config: Config,
     private val repository: AppRepository,
-    private val dateUtil: DateUtil
+    private val dateUtil: DateUtil,
+    private val uel: UserEntryLogger
 ) {
 
     private val disposable = CompositeDisposable()
@@ -59,6 +65,7 @@ class LocalAlertUtils @Inject constructor(
                 aapsLogger.debug(LTag.CORE, "Generating pump unreachable alarm. lastConnection: " + dateUtil.dateAndTimeString(lastConnection) + " isStatusOutdated: " + isStatusOutdated)
                 sp.putLong("nextPumpDisconnectedAlarm", System.currentTimeMillis() + pumpUnreachableThreshold())
                 rxBus.send(EventNewNotification(Notification(Notification.PUMP_UNREACHABLE, resourceHelper.gs(R.string.pump_unreachable), Notification.URGENT).also { it.soundId = R.raw.alarm }))
+                uel.log(Action.CAREPORTAL, Sources.Aaps, resourceHelper.gs(R.string.pump_unreachable), ValueWithUnit.TherapyEventType(TherapyEvent.Type.ANNOUNCEMENT))
                 if (sp.getBoolean(R.string.key_ns_create_announcements_from_errors, true))
                     disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(resourceHelper.gs(R.string.pump_unreachable))).subscribe()
             }
@@ -117,6 +124,7 @@ class LocalAlertUtils @Inject constructor(
             n.soundId = R.raw.alarm
             sp.putLong("nextMissedReadingsAlarm", System.currentTimeMillis() + missedReadingsThreshold())
             rxBus.send(EventNewNotification(n))
+            uel.log(Action.CAREPORTAL, Sources.Aaps, resourceHelper.gs(R.string.missed_bg_readings), ValueWithUnit.TherapyEventType(TherapyEvent.Type.ANNOUNCEMENT))
             if (sp.getBoolean(R.string.key_ns_create_announcements_from_errors, true)) {
                 n.text?.let { disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(it)).subscribe() }
             }

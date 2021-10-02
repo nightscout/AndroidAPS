@@ -11,6 +11,7 @@ import android.bluetooth.le.ScanSettings
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.os.ParcelUuid
 import android.view.View
 import android.view.ViewGroup
@@ -72,10 +73,10 @@ class DiaconnG8BLEScanActivity : NoSplashAppCompatActivity() {
     private fun startScan() =
         try {
             val filters: MutableList<ScanFilter> = ArrayList()
-            val scan_filter = ScanFilter.Builder()
+            val scanFilter = ScanFilter.Builder()
                 .setServiceUuid(ParcelUuid(serviceUUID))
                 .build()
-            filters.add(scan_filter)
+            filters.add(scanFilter)
 
             val settings = ScanSettings.Builder()
                 .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
@@ -100,7 +101,7 @@ class DiaconnG8BLEScanActivity : NoSplashAppCompatActivity() {
             return
         }
         devices.add(item)
-        Handler().post { listAdapter!!.notifyDataSetChanged() }
+        Handler(Looper.getMainLooper()).post { listAdapter?.notifyDataSetChanged() }
     }
 
     private val mBleScanCallback: ScanCallback = object : ScanCallback() {

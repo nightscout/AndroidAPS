@@ -22,7 +22,7 @@ class AppConfirmSettingPacket(
     }
 
     override fun encode(msgSeq:Int): ByteArray {
-        val buffer = prefixEncode(msgType, msgSeq, MSG_CON_END);
+        val buffer = prefixEncode(msgType, msgSeq, MSG_CON_END)
 
         buffer.put(reqMsgType)  // 명령코드
         buffer.putInt(otp) //  응답시 전달받은 opt (random 6digit numbner)

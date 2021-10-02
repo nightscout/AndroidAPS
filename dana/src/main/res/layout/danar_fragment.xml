@@ -682,11 +682,12 @@
                     android:layout_marginTop="5dp"
                     android:background="@color/list_delimiter" />
 
-                <TextView
+                <ImageView
+                    android:id="@+id/dana_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:drawableTop="@drawable/ic_danars"
+                    android:drawableTop="@drawable/ic_dana_rs"
                     android:paddingTop="10dp" />
 
             </LinearLayout>
