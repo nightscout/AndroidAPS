@@ -54,6 +54,7 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.ExceptionTranslator
 import info.nightscout.androidaps.plugins.pump.insight.utils.ParameterBlockUtil
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T.Companion.mins
+import info.nightscout.androidaps.utils.T.Companion.days
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.json.JSONException
@@ -1228,16 +1229,16 @@ class LocalInsightPlugin @Inject constructor(
         bolusID = insightDbHelper.getInsightBolusID(serial, event.bolusID, startTimestamp) // Line added to get id
         if (event.bolusType == BolusType.STANDARD || event.bolusType == BolusType.MULTIWAVE) {
             pumpSync.syncBolusWithPumpId(
-                timestamp = startTimestamp,
+                timestamp = bolusID!!.timestamp,
                 amount = event.immediateAmount,
                 type = null,
-                pumpId = bolusID!!.id,
+                pumpId = bolusID.id,
                 pumpType = PumpType.ACCU_CHEK_INSIGHT,
                 pumpSerial = serial)
         }
         if (event.bolusType == BolusType.EXTENDED || event.bolusType == BolusType.MULTIWAVE) {
             if (event.duration > 0 && profileFunction.getProfile(bolusID!!.timestamp) != null) pumpSync.syncExtendedBolusWithPumpId(
-                timestamp = startTimestamp,
+                timestamp = bolusID.timestamp,
                 amount = event.extendedAmount,
                 duration = timestamp - startTimestamp,
                 isEmulatingTB = isFakingTempsByExtendedBoluses,
@@ -1370,16 +1371,14 @@ class LocalInsightPlugin @Inject constructor(
     }
 
     private fun parseRelativeDate(year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Int, relativeHour: Int, relativeMinute: Int, relativeSecond: Int): Long {
-        var day1 = day
-        if (relativeHour * 60 * 60 + relativeMinute * 60 + relativeSecond >= hour * 60 * 60 * minute * 60 + second) day1--
         val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
         calendar[Calendar.YEAR] = year
         calendar[Calendar.MONTH] = month - 1
-        calendar[Calendar.DAY_OF_MONTH] = day1
+        calendar[Calendar.DAY_OF_MONTH] = day
         calendar[Calendar.HOUR_OF_DAY] = relativeHour
         calendar[Calendar.MINUTE] = relativeMinute
         calendar[Calendar.SECOND] = relativeSecond
-        return calendar.timeInMillis
+        return calendar.timeInMillis - if (relativeHour * 60 * 60 + relativeMinute * 60 + relativeSecond >= hour * 60 * 60 + minute * 60 + second) days(1).msecs() else 0
     }
 
     private fun uploadCareportalEvent(date: Long, event: DetailedBolusInfo.EventType) {
