@@ -311,6 +311,7 @@ class AutomationPlugin @Inject constructor(
             TriggerCOB(injector),
             TriggerProfilePercent(injector),
             TriggerTempTarget(injector),
+            TriggerTempTargetValue(injector),
             TriggerWifiSsid(injector),
             TriggerLocation(injector),
             TriggerAutosensValue(injector),
