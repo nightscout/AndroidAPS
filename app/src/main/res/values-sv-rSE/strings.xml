@@ -190,8 +190,6 @@ Eversense-appen.</string>
     <string name="smscommunicator_loophasbeendisabled">Loop inaktiverad.</string>
     <string name="smscommunicator_loophasbeenenabled">Loop aktiverad</string>
     <string name="smscommunicator_loopisenabled">Loop är aktiverad</string>
-    <string name="valuelimitedto">%1$.2f begränsat till %2$.2f</string>
-    <string name="valueoutofrange">»%1$s« är utanför de hårda gränserna</string>
     <string name="smscommunicator_pumpconnectwithcode">För att ansluta pumpen, svara med kod %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Anslutning till pump misslyckades</string>
     <string name="smscommunicator_pumpdisconnectwithcode">För att koppla från pumpen i %1$d minuter, svara med kod %2$s</string>
@@ -859,16 +857,6 @@ Eversense-appen.</string>
     <string name="email_address">E-postadress</string>
     <string name="privacy_settings">Sekretessinställningar</string>
     <string name="privacy_summary">Du kan ange valfri e-postadress om du vill få meddelanden om appkrascher. Det här är ingen automatiserad tjänst. Du kommer att kontaktas av utvecklare i farliga situationer.</string>
-    <string name="profile_low_target">Nedre målvärde för profilen</string>
-    <string name="profile_high_target">Övre målvärde för profilen</string>
-    <string name="temp_target_low_target">Nedre värde för temp mål</string>
-    <string name="temp_target_high_target">Övre värde för temp mål</string>
-    <string name="temp_target_value">Temp målvärde</string>
-    <string name="profile_dia">Profilens DIA</string>
-    <string name="profile_sensitivity_value">Profilens insulinkänslighetsvärde</string>
-    <string name="profile_max_daily_basal_value">Maximal basaldos för profil</string>
-    <string name="current_basal_value">Nuvarande basaldos</string>
-    <string name="profile_carbs_ratio_value">Profilens KH-kvot</string>
     <string name="full_sync">Full synkronisering</string>
     <string name="prime">Förfyllning</string>
     <string name="ns_sync_options">Synkronisering</string>

@@ -768,7 +768,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
             pumpSync.syncTemporaryBasalWithPumpId(
                     state.timestamp,
                     state.tbrPercent,
-                    T.mins(state.tbrRemainingDuration).msecs(),
+                    T.Companion.mins(state.tbrRemainingDuration).msecs(),
                     false,
                     tbrType,
                     // There are no IDs for TBRs on the pump and none is calculated (in contrast to boluses).
@@ -974,7 +974,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
                 pumpSync.syncTemporaryBasalWithPumpId(
                         now,
                         0.0,
-                        T.mins(15).msecs(),
+                        T.Companion.mins(15).msecs(),
                         false,
                         PumpSync.TemporaryBasalType.PUMP_SUSPEND,
                         // Combo doesn't have nor uses IDs for TBRs, see note in #setTempBasalPercent
@@ -1107,7 +1107,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
             pumpSync.syncTemporaryBasalWithPumpId(
                     now,
                     state.tbrPercent,
-                    T.mins(state.tbrRemainingDuration).msecs(),
+                    T.Companion.mins(state.tbrRemainingDuration).msecs(),
                     false,
                     PumpSync.TemporaryBasalType.NORMAL,
                     tbrId,
@@ -1140,7 +1140,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
             pumpSync.syncTemporaryBasalWithPumpId(
                     now,
                     state.tbrPercent,
-                    T.mins(state.tbrRemainingDuration).msecs(),
+                    T.Companion.mins(state.tbrRemainingDuration).msecs(),
                     false,
                     PumpSync.TemporaryBasalType.NORMAL,
                     tbrId,

@@ -3,10 +3,7 @@ package info.nightscout.androidaps.plugins.pump.danaR.comm
 import info.nightscout.androidaps.danar.comm.MsgStatus
 import org.junit.Assert
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.powermock.modules.junit4.PowerMockRunner
 
-@RunWith(PowerMockRunner::class)
 class MsgStatusTest : DanaRTestBase() {
 
     @Test fun runTest() {

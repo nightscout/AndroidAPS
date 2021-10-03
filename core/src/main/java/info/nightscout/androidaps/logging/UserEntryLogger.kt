@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.logging
 
+import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.entities.UserEntry.Action
@@ -14,6 +15,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import javax.inject.Inject
 import javax.inject.Singleton
 
+@OpenForTesting
 @Singleton
 class UserEntryLogger @Inject constructor(
     private val aapsLogger: AAPSLogger,

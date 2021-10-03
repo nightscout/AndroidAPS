@@ -113,7 +113,7 @@
     <string name="apsmode_title">מצב APS</string>
     <string name="closedloop">לולאה סגורה</string>
     <string name="openloop">לולאה פתוחה</string>
-    <string name="lowglucosesuspend">השהיה בגלל ערך סוכר נמוך</string>
+    <string name="lowglucosesuspend">השהיה עקב ערך סוכר נמוך</string>
     <string name="disabledloop">לולאה כבויה</string>
     <string name="openloop_newsuggestion">הצעה חדשה זמינה</string>
     <string name="carbssuggestion">המלצת פחמימות</string>
@@ -189,8 +189,6 @@
     <string name="smscommunicator_loophasbeendisabled">הלולאה הושבתה</string>
     <string name="smscommunicator_loophasbeenenabled">הלולאה הופעלה</string>
     <string name="smscommunicator_loopisenabled">לולאה פעילה</string>
-    <string name="valuelimitedto">%1$.2f מוגבלת ל- %2$.2f</string>
-    <string name="valueoutofrange">»הערך %1$s« מחוץ לתחום הקשיח</string>
     <string name="smscommunicator_pumpconnectwithcode">לחיבור המשאבה יש להשיב עם הקוד %1$s</string>
     <string name="smscommunicator_pumpconnectfail">החיבור אל המשאבה נכשל</string>
     <string name="smscommunicator_pumpdisconnectwithcode">לניתוק המשאבה למשך %1$d דקות השיבו עם הקוד %2$s</string>
@@ -243,7 +241,7 @@
     <string name="units_colon">יחידות:</string>
     <string name="units">יחידות</string>
     <string name="dia">משך פעילות אינסולין</string>
-    <string name="prefs_range_title">טווח להדמיה</string>
+    <string name="prefs_range_title">טווח הצגה</string>
     <string name="prefs_range_summary">סימוני גבוה ונמוך בתרשים סקירה כללית ובשעון חכם</string>
     <string name="low_mark">סימון נמוך</string>
     <string name="high_mark">סימון גבוה</string>
@@ -331,7 +329,7 @@
     <string name="resistantadult">מבוגר\\ת עם תנגודת אינסולין גבוהה</string>
     <string name="pregnant">הריון</string>
     <string name="patientage_summary">נא לבחור את גיל המטופל\\ת להתאמת מגבלות בטיחות</string>
-    <string name="patient_name">שם מטופל\\ת</string>
+    <string name="patient_name">שם המטופל\\ת</string>
     <string name="patient_name_summary">נא לציין את שם המטופל\\ת או כינוי, להבחנה בין מספר הגדרות</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">משתמש</string>
     <string name="Glimp">Glimp</string>
@@ -753,7 +751,7 @@
     <string name="saveorresetchangesfirst">יש לשמור או לאפס תחילה את השינויים הנוכחיים</string>
     <string name="deletecurrentprofile">למחוק את הפרופיל הנוכחי?</string>
     <string name="copytolocalprofile">ליצור פרופיל מקומי חדש מפרופיל זה?</string>
-    <string name="profilenamecontainsdot">שם הפרפיל מכיל נקודות.\nשם כזה אינו נתמך ע\"י Nightscout \n הפרופיל לא הועלה ל-Nightscout.</string>
+    <string name="profilenamecontainsdot">שם הפרופיל מכיל נקודות.\nשם כזה אינו נתמך ע\"י Nightscout \n הפרופיל לא הועלה ל-Nightscout.</string>
     <string name="low_mark_comment">ערך נמוך יותר באזור הטווח (הצגה בלבד)</string>
     <string name="high_mark_comment">ערך גבוה יותר באזור הטווח (הצגה בלבד)</string>
     <string name="age">גיל:</string>
@@ -858,16 +856,6 @@
     <string name="email_address">כתובת דוא\"ל</string>
     <string name="privacy_settings">הגדרות פרטיות</string>
     <string name="privacy_summary">אם תרצו, תוכלו לספק כתובת דוא\"ל כדי לקבל דיווח על קריסות יישום. שירות זה אינו אוטומטי. המפתחים יצרו איתכם קשר במצבים מסוכנים.</string>
-    <string name="profile_low_target">ערך המטרה הנמוך של הפרופיל</string>
-    <string name="profile_high_target">ערך המטרה הגבוה של הפרופיל</string>
-    <string name="temp_target_low_target">ערך תחתון של המטרה הזמנית</string>
-    <string name="temp_target_high_target">ערך עליון של המטרה הזמנית</string>
-    <string name="temp_target_value">ערך המטרה הזמני</string>
-    <string name="profile_dia">ערך DIA של הפרופיל</string>
-    <string name="profile_sensitivity_value">ערך הרגישות של הפרופיל</string>
-    <string name="profile_max_daily_basal_value">ערך מינון בזאלי מרבי של הפרופיל</string>
-    <string name="current_basal_value">מינון בזאלי נוכחי</string>
-    <string name="profile_carbs_ratio_value">יחס הפחמימות של הפרופיל</string>
     <string name="full_sync">סינכרון מלא</string>
     <string name="prime">תיחול</string>
     <string name="ns_sync_options">סינכרון</string>

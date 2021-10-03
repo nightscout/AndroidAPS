@@ -81,7 +81,6 @@
     <string name="extended_bolus">Bolo esteso</string>
     <string name="pump_time_updated">Ora del micro aggiornata</string>
     <string name="exit">Esci</string>
-    <string name="serial_number">Numero seriale</string>
     <string name="removerecord">Rimuovi record</string>
     <string name="loopisdisabled">Il loop è disabilitato</string>
     <string name="alarm">Allarme</string>
@@ -385,6 +384,21 @@
     <string name="uel_loop_change">LOOP CAMBIATO</string>
     <string name="uel_loop_removed">LOOP RIMOSSO</string>
     <string name="uel_other">ALTRO</string>
+    <!-- HardLimits -->
+    <string name="profile_low_target">Target basso (profilo)</string>
+    <string name="profile_high_target">Target alto (profilo)</string>
+    <string name="temp_target_low_target">Valore inferiore target temporaneo</string>
+    <string name="temp_target_high_target">Valore superiore target temporaneo</string>
+    <string name="temp_target_value">Valore target temporaneo</string>
+    <string name="profile_dia">Valore DIA (profilo)</string>
+    <string name="profile_sensitivity_value">Valore sensibilità (profilo)</string>
+    <string name="profile_max_daily_basal_value">Valore max basale (profilo)</string>
+    <string name="current_basal_value">Valore basale corrente</string>
+    <string name="profile_carbs_ratio_value">Valore rapporto CHO (profilo)</string>
+    <string name="valuelimitedto">%1$.2f limitato a %2$.2f</string>
+    <string name="valueoutofrange">»%1$s« è fuori dai limiti consentiti</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f è fuori dai limiti consentiti</string>
+    <string name="basal_value">Valore basale</string>
     <plurals name="days">
         <item quantity="one">%1$d giorno</item>
         <item quantity="other">%1$d giorni</item>

@@ -10,14 +10,14 @@ object MedtronicConst {
     const val Prefix = "AAPS.Medtronic."
 
     object Prefs {
-        @JvmField val PumpSerial = R.string.key_medtronic_serial
-        @JvmField val PumpType = R.string.key_medtronic_pump_type
-        @JvmField val PumpFrequency = R.string.key_medtronic_frequency
-        @JvmField val MaxBolus = R.string.key_medtronic_max_bolus
-        @JvmField val MaxBasal = R.string.key_medtronic_max_basal
-        @JvmField val BolusDelay = R.string.key_medtronic_bolus_delay
-        @JvmField val Encoding = R.string.key_medtronic_encoding
-        @JvmField val BatteryType = R.string.key_medtronic_battery_type
+        val PumpSerial = R.string.key_medtronic_serial
+        val PumpType = R.string.key_medtronic_pump_type
+        val PumpFrequency = R.string.key_medtronic_frequency
+        val MaxBolus = R.string.key_medtronic_max_bolus
+        val MaxBasal = R.string.key_medtronic_max_basal
+        val BolusDelay = R.string.key_medtronic_bolus_delay
+        val Encoding = R.string.key_medtronic_encoding
+        val BatteryType = R.string.key_medtronic_battery_type
         val BolusDebugEnabled = R.string.key_medtronic_bolus_debug
     }
 

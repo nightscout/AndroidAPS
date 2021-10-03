@@ -189,8 +189,6 @@
     <string name="smscommunicator_loophasbeendisabled">Loop was uitgeschakeld</string>
     <string name="smscommunicator_loophasbeenenabled">Loop was ingeschakeld</string>
     <string name="smscommunicator_loopisenabled">Loop is ingeschakeld</string>
-    <string name="valuelimitedto">%1$.2f gelimiteerd tot %2$.2f</string>
-    <string name="valueoutofrange">»Waarde %1$s is buiten de toegestane limieten</string>
     <string name="smscommunicator_pumpconnectwithcode">Om verbinding te maken met pomp antwoord met code %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Verbinding maken met pomp is mislukt</string>
     <string name="smscommunicator_pumpdisconnectwithcode">Om de pomp te ontkoppelen gedurende %1$d minuten antwoord met code %2$s</string>
@@ -858,15 +856,6 @@
     <string name="email_address">E-mailadres</string>
     <string name="privacy_settings">Privacyinstellingen</string>
     <string name="privacy_summary">U kunt optioneel een e-mailadres opgeven als u op de hoogte wilt worden gebracht van applicatie crashes. Dit is geen geautomatiseerde service. De ontwikkelaars zullen contact met u opnemen bij gevaarlijke situaties.</string>
-    <string name="profile_low_target">Profiel laag doel</string>
-    <string name="profile_high_target">Profiel hoog doel</string>
-    <string name="temp_target_low_target">Tijdelijk streefdoel onder grens</string>
-    <string name="temp_target_high_target">Tijdelijk streefdoel boven grens</string>
-    <string name="temp_target_value">Tijdelijk streefdoel waarde</string>
-    <string name="profile_dia">Profiel DIA waarde</string>
-    <string name="profile_sensitivity_value">Profiel gevoeligheidswaarde</string>
-    <string name="profile_max_daily_basal_value">Maximale basaal waarde van het profiel</string>
-    <string name="current_basal_value">Huidige basaal waarde</string>
     <string name="full_sync">Volledige synchronisatie</string>
     <string name="prime">Vullen</string>
     <string name="ns_sync_options">Synchronisatie</string>

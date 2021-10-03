@@ -46,6 +46,7 @@ dependencies {
 
     //CryptoUtil
     api 'com.madgag.spongycastle:core:1.58.0.0'
+    api "com.google.crypto.tink:tink-android:$tink_version"
 
     // Graphview cannot be upgraded
     api "com.jjoe64:graphview:4.0.1"

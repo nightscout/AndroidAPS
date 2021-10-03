@@ -186,7 +186,6 @@
     <string name="smscommunicator_loophasbeendisabled">Ciklas buvo išjungtas</string>
     <string name="smscommunicator_loophasbeenenabled">Ciklas buvo įjungtas</string>
     <string name="smscommunicator_loopisenabled">Ciklas įjungtas</string>
-    <string name="valuelimitedto">%1$.2f apribotas iki %2$.2f</string>
     <string name="smscommunicator_pumpconnectwithcode">Pompos prijungimui atsakykite su kodu %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Nepavyko prisijungti prie pompos</string>
     <string name="smscommunicator_pumpdisconnectwithcode">Norėdami atjungti pompą %1$d min., atsakykite kodu %2$s</string>

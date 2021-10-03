@@ -20,7 +20,7 @@ class InjectionBasalSettingPacket(
     }
 
     override fun encode(msgSeq:Int): ByteArray {
-        val buffer = prefixEncode(msgType, msgSeq, MSG_CON_END);
+        val buffer = prefixEncode(msgType, msgSeq, MSG_CON_END)
         buffer.put(pattern.toByte())
         return suffixEncode(buffer)
     }

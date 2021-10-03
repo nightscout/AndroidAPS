@@ -8,10 +8,12 @@ import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.data.PureProfile
 import info.nightscout.androidaps.events.EventProfileStoreChanged
 import info.nightscout.androidaps.extensions.blockFromJsonArray
+import info.nightscout.androidaps.extensions.pureProfileFromJson
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -21,6 +23,7 @@ import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.HardLimits
+import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -33,6 +36,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.collections.ArrayList
 
+@OpenForTesting
 @Singleton
 class LocalProfilePlugin @Inject constructor(
     injector: HasAndroidInjector,
@@ -97,7 +101,7 @@ class LocalProfilePlugin @Inject constructor(
     var numOfProfiles = 0
     internal var currentProfileIndex = 0
 
-    fun currentProfile(): SingleProfile? = if (numOfProfiles > 0) profiles[currentProfileIndex] else null
+    fun currentProfile(): SingleProfile? = if (numOfProfiles > 0 && currentProfileIndex < numOfProfiles) profiles[currentProfileIndex] else null
 
     @Synchronized
     fun isValidEditState(): Boolean {
@@ -106,16 +110,17 @@ class LocalProfilePlugin @Inject constructor(
             if (dia < hardLimits.minDia() || dia > hardLimits.maxDia()) return false
             if (name.isNullOrEmpty()) return false
             if (blockFromJsonArray(ic, dateUtil)?.any { it.amount < hardLimits.minIC() || it.amount > hardLimits.maxIC() } != false) return false
-            if (blockFromJsonArray(isf, dateUtil)?.any { it.amount < HardLimits.MIN_ISF || it.amount > HardLimits.MAX_ISF } != false) return false
             if (blockFromJsonArray(basal, dateUtil)?.any { it.amount < pumpDescription.basalMinimumRate || it.amount > 10.0 } != false) return false
             val low = blockFromJsonArray(targetLow, dateUtil)
             val high = blockFromJsonArray(targetHigh, dateUtil)
             if (profileFunction.getUnits() == GlucoseUnit.MGDL) {
                 if (low?.any { it.amount < HardLimits.VERY_HARD_LIMIT_TARGET_BG[0].toDouble() || it.amount > HardLimits.VERY_HARD_LIMIT_TARGET_BG[1].toDouble() } != false) return false
                 if (high?.any { it.amount < HardLimits.VERY_HARD_LIMIT_TARGET_BG[0].toDouble() || it.amount > HardLimits.VERY_HARD_LIMIT_TARGET_BG[1].toDouble() } != false) return false
+                if (blockFromJsonArray(isf, dateUtil)?.any { it.amount < HardLimits.MIN_ISF || it.amount > HardLimits.MAX_ISF } != false) return false
             } else {
                 if (low?.any { it.amount < Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_TARGET_BG[0].toDouble(), GlucoseUnit.MMOL) || it.amount > Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_TARGET_BG[1].toDouble(), GlucoseUnit.MMOL) } != false) return false
                 if (high?.any { it.amount < Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_TARGET_BG[0].toDouble(), GlucoseUnit.MMOL) || it.amount > Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_TARGET_BG[1].toDouble(), GlucoseUnit.MMOL) } != false) return false
+                if (blockFromJsonArray(isf, dateUtil)?.any { it.amount < Profile.fromMgdlToUnits(HardLimits.MIN_ISF, GlucoseUnit.MMOL) || it.amount > Profile.fromMgdlToUnits(HardLimits.MAX_ISF, GlucoseUnit.MMOL) } != false) return false
             }
             for (i in low.indices) if (low[i].amount > high[i].amount) return false
         }
@@ -123,18 +128,37 @@ class LocalProfilePlugin @Inject constructor(
     }
 
     @Synchronized
+    fun getEditProfile(): PureProfile? {
+        val profile = JSONObject()
+        with(profiles[currentProfileIndex]) {
+            profile.put("dia", dia)
+            profile.put("carbratio", ic)
+            profile.put("sens", isf)
+            profile.put("basal", basal)
+            profile.put("target_low", targetLow)
+            profile.put("target_high", targetHigh)
+            profile.put("units", if (mgdl) Constants.MGDL else Constants.MMOL)
+            profile.put("timezone", TimeZone.getDefault().id)
+        }
+        val defaultUnits = JsonHelper.safeGetStringAllowNull(profile, "units", null)
+        return pureProfileFromJson(profile, dateUtil, defaultUnits)
+    }
+
+    @Synchronized
     fun storeSettings(activity: FragmentActivity? = null) {
         for (i in 0 until numOfProfiles) {
             profiles[i].run {
-                val localProfileNumbered = Constants.LOCAL_PROFILE + "_" + i + "_"
-                sp.putString(localProfileNumbered + "name", name!!)
-                sp.putBoolean(localProfileNumbered + "mgdl", mgdl)
-                sp.putDouble(localProfileNumbered + "dia", dia)
-                sp.putString(localProfileNumbered + "ic", ic.toString())
-                sp.putString(localProfileNumbered + "isf", isf.toString())
-                sp.putString(localProfileNumbered + "basal", basal.toString())
-                sp.putString(localProfileNumbered + "targetlow", targetLow.toString())
-                sp.putString(localProfileNumbered + "targethigh", targetHigh.toString())
+                name?.let { name ->
+                    val localProfileNumbered = Constants.LOCAL_PROFILE + "_" + i + "_"
+                    sp.putString(localProfileNumbered + "name", name)
+                    sp.putBoolean(localProfileNumbered + "mgdl", mgdl)
+                    sp.putDouble(localProfileNumbered + "dia", dia)
+                    sp.putString(localProfileNumbered + "ic", ic.toString())
+                    sp.putString(localProfileNumbered + "isf", isf.toString())
+                    sp.putString(localProfileNumbered + "basal", basal.toString())
+                    sp.putString(localProfileNumbered + "targetlow", targetLow.toString())
+                    sp.putString(localProfileNumbered + "targethigh", targetHigh.toString())
+                }
             }
         }
         sp.putInt(Constants.LOCAL_PROFILE + "_profiles", numOfProfiles)

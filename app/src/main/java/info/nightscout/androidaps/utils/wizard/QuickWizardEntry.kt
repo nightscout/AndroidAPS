@@ -84,11 +84,9 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
             bg = lastBG.valueToUnits(profileFunction.getUnits())
         }
         // COB
-        var cob = 0.0
-        if (useCOB() == YES) {
-            val cobInfo = iobCobCalculator.getCobInfo(_synchronized, "QuickWizard COB")
-            if (cobInfo.displayCob != null) cob = cobInfo.displayCob!!
-        }
+        val cob =
+            if (useCOB() == YES) iobCobCalculator.getCobInfo(_synchronized, "QuickWizard COB").displayCob ?: 0.0
+            else 0.0
         // Bolus IOB
         var bolusIOB = false
         if (useBolusIOB() == YES) {
@@ -121,7 +119,7 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
             trend = true
         }
         val percentage = sp.getInt(R.string.key_boluswizard_percentage, 100)
-        return BolusWizard(injector).doCalc(profile, profileName, tempTarget, carbs(), cob, bg, 0.0, percentage, true, useCOB() == YES, bolusIOB, basalIOB, superBolus, useTempTarget() == YES, trend, false, buttonText(), quickWizard = true) //tbc, ok if only quickwizard, but if other sources elsewhere use Sources.QuickWiard
+        return BolusWizard(injector).doCalc(profile, profileName, tempTarget, carbs(), cob, bg, 0.0, percentage, true, useCOB() == YES, bolusIOB, basalIOB, superBolus, useTempTarget() == YES, trend, false, buttonText(), quickWizard = true) //tbc, ok if only quickwizard, but if other sources elsewhere use Sources.QuickWizard
     }
 
     fun buttonText(): String = safeGetString(storage, "buttonText", "")

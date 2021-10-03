@@ -43,7 +43,6 @@ enum class PumpHistoryEntryGroup(val resourceId: Int) {
             }
         }
 
-        @JvmStatic
         fun getTranslatedList(resourceHelper: ResourceHelper): List<PumpHistoryEntryGroup> {
             if (translatedList == null) doTranslation(resourceHelper)
             return translatedList!!

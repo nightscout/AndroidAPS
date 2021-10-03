@@ -79,7 +79,6 @@
     <string name="extended_bolus">Bolus extins</string>
     <string name="pump_time_updated">Timpul din pompă a fost actualizat</string>
     <string name="exit">Ieșire</string>
-    <string name="serial_number">Număr serial</string>
     <string name="removerecord">Șterge înregistrarea</string>
     <string name="loopisdisabled">Bucla este dezactivată</string>
     <string name="alarm">Alarmă</string>
@@ -284,6 +283,7 @@
     <string name="saturday_short">S</string>
     <string name="sunday_short">D</string>
     <!-- User Entry -->
+    <!-- HardLimits -->
     <plurals name="days">
         <item quantity="one">%1$d zi</item>
         <item quantity="few">%1$d zile</item>

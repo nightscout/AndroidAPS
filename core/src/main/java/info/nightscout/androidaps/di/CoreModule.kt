@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.di
 
 import android.content.Context
+import android.telephony.SmsManager
 import androidx.preference.PreferenceManager
 import dagger.Module
 import dagger.Provides
@@ -31,5 +32,8 @@ open class CoreModule {
     @Provides
     @Singleton
     fun provideAAPSLogger(l: L): AAPSLogger = AAPSLoggerProduction(l)
+
+    @Provides
+    fun smsManager() : SmsManager = SmsManager.getDefault()
 
 }

@@ -189,8 +189,6 @@
     <string name="smscommunicator_loophasbeendisabled">Loop har blitt deaktivert</string>
     <string name="smscommunicator_loophasbeenenabled">Loop har blitt aktivert</string>
     <string name="smscommunicator_loopisenabled">Loop er aktivert</string>
-    <string name="valuelimitedto">%1$.2f begrenset til %2$.2f</string>
-    <string name="valueoutofrange">»%1$s« er utenfor lovlige grenseverdier</string>
     <string name="smscommunicator_pumpconnectwithcode">For å koble til pumpen, svar med kode %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Tilkobling til pumpen mislyktes</string>
     <string name="smscommunicator_pumpdisconnectwithcode">For å koble fra pumpen i %1$d minutter, svar med koden %2$s</string>
@@ -858,16 +856,6 @@
     <string name="email_address">E-postadresse</string>
     <string name="privacy_settings">Personverninnstillinger</string>
     <string name="privacy_summary">Du kan oppgi valgfri e-postadresse hvis du ønsker å bli varslet om krasj. Dette er ikke en automatisert tjeneste. Du vil bli kontaktet av utviklere ved farlige hendelser.</string>
-    <string name="profile_low_target">Profil lavt blodsukkermål</string>
-    <string name="profile_high_target">Profil høyt blodsukkermål</string>
-    <string name="temp_target_low_target">Midlertidig mål bunnverdi</string>
-    <string name="temp_target_high_target">Midlertidig mål toppverdi</string>
-    <string name="temp_target_value">Midlertidig målverdi</string>
-    <string name="profile_dia">Profil insulinvarighet (DIA)</string>
-    <string name="profile_sensitivity_value">Profil sensitivitetsverdi (IF)</string>
-    <string name="profile_max_daily_basal_value">Profil maksimal basal dose</string>
-    <string name="current_basal_value">Aktiv basal dose</string>
-    <string name="profile_carbs_ratio_value">Profil karbohydratfaktor (IK)</string>
     <string name="full_sync">Full synkronisering</string>
     <string name="prime">Prime</string>
     <string name="ns_sync_options">Synkronisering</string>

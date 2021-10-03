@@ -267,6 +267,7 @@
     <string name="saturday_short">Š</string>
     <string name="sunday_short">S</string>
     <!-- User Entry -->
+    <!-- HardLimits -->
     <plurals name="days">
         <item quantity="one">%1$d d.</item>
         <item quantity="few">%1$d d.</item>

@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.database
 
+import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.database.data.NewEntries
 import info.nightscout.androidaps.database.entities.*
 import info.nightscout.androidaps.database.interfaces.DBEntry
@@ -15,8 +16,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.roundToInt
 
-@Singleton
-open class AppRepository @Inject internal constructor(
+@OpenForTesting
+@Singleton class AppRepository @Inject internal constructor(
     internal val database: AppDatabase
 ) {
 
@@ -261,6 +262,10 @@ open class AppRepository @Inject internal constructor(
                 }
             }
 
+    fun getModifiedEffectiveProfileSwitchDataFromId(lastId: Long): Single<List<EffectiveProfileSwitch>> =
+        database.effectiveProfileSwitchDao.getModifiedFrom(lastId)
+            .subscribeOn(Schedulers.io())
+
     fun createEffectiveProfileSwitch(profileSwitch: EffectiveProfileSwitch) {
         database.effectiveProfileSwitchDao.insert(profileSwitch)
     }
@@ -342,8 +347,8 @@ open class AppRepository @Inject internal constructor(
     fun deleteAllTherapyEventsEntries() =
         database.therapyEventDao.deleteAllEntries()
 
-    fun getLastTherapyRecord(type: TherapyEvent.Type): Single<ValueWrapper<TherapyEvent>> =
-        database.therapyEventDao.getLastTherapyRecord(type).toWrappedSingle()
+    fun getLastTherapyRecordUpToNow(type: TherapyEvent.Type): Single<ValueWrapper<TherapyEvent>> =
+        database.therapyEventDao.getLastTherapyRecord(type, System.currentTimeMillis()).toWrappedSingle()
             .subscribeOn(Schedulers.io())
 
     fun getTherapyEventByTimestamp(type: TherapyEvent.Type, timestamp: Long): TherapyEvent? =
@@ -483,7 +488,7 @@ open class AppRepository @Inject internal constructor(
     private fun Single<List<Carbs>>.expand() = this.map { it.map(::expandCarbs).flatten() }
     private fun Single<List<Carbs>>.filterOutExtended() = this.map { it.filter { c -> c.duration == 0L } }
     private fun Single<List<Carbs>>.fromTo(from: Long, to: Long) = this.map { it.filter { c -> c.timestamp in from..to } }
-    private fun Single<List<Carbs>>.until(to: Long) = this.map { it.filter { c -> c.timestamp <= to } }
+    private infix fun Single<List<Carbs>>.until(to: Long) = this.map { it.filter { c -> c.timestamp <= to } }
     private fun Single<List<Carbs>>.from(start: Long) = this.map { it.filter { c -> c.timestamp >= start } }
     private fun Single<List<Carbs>>.sort() = this.map { it.sortedBy { c -> c.timestamp } }
 

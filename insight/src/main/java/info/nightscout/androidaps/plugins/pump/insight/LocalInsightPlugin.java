@@ -602,7 +602,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 bolusingEvent.setPercent(0);
                 rxBus.send(bolusingEvent);
                 int trials = 0;
-                Long now = dateUtil.now();
+                long now = dateUtil.now();
                 String serial = serialNumber();
                 insightDbHelper.createOrUpdate( new InsightBolusID(
                         now,
@@ -1196,8 +1196,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         for (InsightPumpID pumpID : pumpStartedEvents) {
             InsightPumpID stoppedEvent = insightDbHelper.getPumpStoppedEvent(pumpID.getPumpSerial(), pumpID.getTimestamp());
             if (stoppedEvent != null && stoppedEvent.getEventType().equals(EventType.PumpStopped)) {             // Search if Stop event is after 15min of Pause
-                InsightPumpID pauseEvent = insightDbHelper.getPumpStoppedEvent(pumpID.getPumpSerial(), stoppedEvent.getTimestamp() - T.mins(1).msecs());
-                if (pauseEvent != null && pauseEvent.getEventType().equals(EventType.PumpPaused) && (stoppedEvent.getTimestamp() - pauseEvent.getTimestamp() < T.mins(16).msecs())) {
+                InsightPumpID pauseEvent = insightDbHelper.getPumpStoppedEvent(pumpID.getPumpSerial(), stoppedEvent.getTimestamp() - T.Companion.mins(1).msecs());
+                if (pauseEvent != null && pauseEvent.getEventType().equals(EventType.PumpPaused) && (stoppedEvent.getTimestamp() - pauseEvent.getTimestamp() < T.Companion.mins(16).msecs())) {
                     stoppedEvent = pauseEvent;
                     stoppedEvent.setEventType(EventType.PumpStopped);
                 }
@@ -1356,7 +1356,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 event.getEventPosition()));
         temporaryBasals.add(new TemporaryBasal(
                 timestamp,
-                T.mins(event.getDuration()).msecs(),
+                T.Companion.mins(event.getDuration()).msecs(),
                 event.getAmount(),
                 false,
                 PumpSync.TemporaryBasalType.NORMAL,
@@ -1419,7 +1419,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 pumpSync.syncExtendedBolusWithPumpId(
                         bolusID.getTimestamp(),
                         event.getExtendedAmount()*concentration,
-                        T.mins(event.getDuration()).msecs(),
+                        T.Companion.mins(event.getDuration()).msecs(),
                         isFakingTempsByExtendedBoluses(),
                         bolusID.getId(),
                         PumpType.ACCU_CHEK_INSIGHT,
@@ -1446,7 +1446,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         bolusID = insightDbHelper.getInsightBolusID(serial, event.getBolusID(), startTimestamp); // Line added to get id
         if (event.getBolusType() == BolusType.STANDARD || event.getBolusType() == BolusType.MULTIWAVE) {
             pumpSync.syncBolusWithPumpId(
-                    startTimestamp,
+                    bolusID.getTimestamp(),
                     event.getImmediateAmount()*concentration,
                     null,
                     bolusID.getId(),
@@ -1456,7 +1456,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         if (event.getBolusType() == BolusType.EXTENDED || event.getBolusType() == BolusType.MULTIWAVE) {
             if (event.getDuration() > 0 && profileFunction.getProfile(bolusID.getTimestamp()) != null)
                     pumpSync.syncExtendedBolusWithPumpId(
-                            startTimestamp,
+                            bolusID.getTimestamp(),
                             event.getExtendedAmount()*concentration,
                             timestamp - startTimestamp,
                             isFakingTempsByExtendedBoluses(),
@@ -1570,8 +1570,6 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     }
 
     private long parseRelativeDate(int year, int month, int day, int hour, int minute, int second, int relativeHour, int relativeMinute, int relativeSecond) {
-        if (relativeHour * 60 * 60 + relativeMinute * 60 + relativeSecond >= hour * 60 * 60 * minute * 60 + second)
-            day--;
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         calendar.set(Calendar.YEAR, year);
         calendar.set(Calendar.MONTH, month - 1);
@@ -1579,7 +1577,9 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         calendar.set(Calendar.HOUR_OF_DAY, relativeHour);
         calendar.set(Calendar.MINUTE, relativeMinute);
         calendar.set(Calendar.SECOND, relativeSecond);
-        return calendar.getTimeInMillis();
+        long dayOffset =
+                relativeHour * 60 * 60 + relativeMinute * 60 + relativeSecond >= hour * 60 * 60 + minute * 60 + second ? T.Companion.days(1).msecs() : 0L;
+        return calendar.getTimeInMillis() - dayOffset;
     }
 
     private void uploadCareportalEvent(long date, DetailedBolusInfo.EventType event) {

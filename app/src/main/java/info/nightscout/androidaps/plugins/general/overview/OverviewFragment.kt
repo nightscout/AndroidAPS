@@ -178,6 +178,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             overviewData.rangeToDisplay = if (overviewData.rangeToDisplay > 24) 6 else overviewData.rangeToDisplay
             sp.putInt(R.string.key_rangetodisplay, overviewData.rangeToDisplay)
             overviewData.initRange()
+            overviewData.prepareBucketedData("EventBucketedDataCreated")
+            overviewData.prepareBgData("EventBucketedDataCreated")
             updateGUI("rangeChange", OverviewData.Property.GRAPH)
             rxBus.send(EventPreferenceChange(resourceHelper, R.string.key_rangetodisplay))
             sp.putBoolean(R.string.key_objectiveusescale, true)
@@ -375,7 +377,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             }
 
             R.id.temp_target         -> v.performClick()
-            R.id.active_profile      -> activity?.let { activity -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { ProfileSwitchDialog().show(childFragmentManager, "Overview") }) }
+            R.id.active_profile      -> activity?.let { activity -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { ProfileSwitchDialog().show(childFragmentManager, "ProfileSwitchDialog") }) }
 
         }
         return false
@@ -678,14 +680,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     activity?.let { OKDialog.show(it, resourceHelper.gs(R.string.iob), overviewData.iobDialogText) }
                 }
                 // cob
-                var cobText: String = resourceHelper.gs(R.string.value_unavailable_short)
-                overviewData.cobInfo?.let { cobInfo ->
-                    if (cobInfo.displayCob != null) {
-                        cobText = resourceHelper.gs(R.string.format_carbs, cobInfo.displayCob!!.toInt())
-                        if (cobInfo.futureCarbs > 0) cobText += "(" + DecimalFormatter.to0Decimal(cobInfo.futureCarbs) + ")"
-                    }
-                }
-                binding.infoLayout.cob.text = cobText
+                var cobText = overviewData.cobInfo?.displayText(resourceHelper, dateUtil, buildHelper.isDev()) ?: resourceHelper.gs(R.string.value_unavailable_short)
 
                 val constraintsProcessed = loopPlugin.lastRun?.constraintsProcessed
                 val lastRun = loopPlugin.lastRun
@@ -693,7 +688,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     if (constraintsProcessed.carbsReq > 0) {
                         //only display carbsreq when carbs have not been entered recently
                         if (overviewData.lastCarbsTime < lastRun.lastAPSRun) {
-                            cobText = cobText + " | " + constraintsProcessed.carbsReq + " " + resourceHelper.gs(R.string.required)
+                            cobText += " | " + constraintsProcessed.carbsReq + " " + resourceHelper.gs(R.string.required)
                         }
                         if (carbAnimation?.isRunning == false)
                             carbAnimation?.start()
@@ -702,6 +697,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                         carbAnimation?.selectDrawable(0)
                     }
                 }
+                binding.infoLayout.cob.text = cobText
             }
 
             OverviewData.Property.TEMPORARY_TARGET -> {
@@ -740,7 +736,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 graphData.addTreatments()
                 if (menuChartSettings[0][OverviewMenus.CharType.ACT.ordinal])
                     graphData.addActivity(0.8)
-                if (pump.pumpDescription.isTempBasalCapable && menuChartSettings[0][OverviewMenus.CharType.BAS.ordinal])
+                if ((pump.pumpDescription.isTempBasalCapable || config.NSCLIENT) && menuChartSettings[0][OverviewMenus.CharType.BAS.ordinal])
                     graphData.addBasals()
                 graphData.addTargetLine()
                 graphData.addNowLine(dateUtil.now())

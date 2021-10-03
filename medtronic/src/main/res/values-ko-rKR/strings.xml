@@ -22,8 +22,10 @@
     <string name="medtronic_pump_battery_alkaline">알카라인(확장뷰)</string>
     <string name="medtronic_pump_battery_lithium">리튬(확장뷰)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (확장 뷰)</string>
+    <string name="medtronic_pump_battery_nimh">니켈수소전지 (연장 뷰)</string>
     <string name="medtronic_bolus_debugging">Bolus/관리 디버깅</string>
     <!-- MDT Fragment -->
+    <string name="rl_battery_label">RileyLink 배터리</string>
     <!-- MDT Errors -->
     <string name="medtronic_errors">에러</string>
     <string name="medtronic_error_serial_not_set">일련번호 # 설정되지 않음</string>
@@ -63,13 +65,17 @@
     <string name="medtronic_cmd_desc_get_history">이력 받기 - 페이지 %1$d (%2$d/16)</string>
     <string name="medtronic_cmd_desc_get_history_request">이력 받기 - 페이지 %1$d</string>
     <string name="medtronic_cmd_desc_get_time">펌프 시간 받기</string>
+    <string name="medtronic_cmd_desc_set_time">펌프 시간 설정</string>
+    <string name="medtronic_cmd_desc_get_battery_status">배터리 상태 확인</string>
     <string name="medtronic_cmd_desc_get_settings">설정 받기</string>
     <string name="medtronic_cmd_desc_get_model">펌프 모델 받기</string>
     <string name="medtronic_cmd_desc_get_basal_profile">Basal 프로파일 받기</string>
     <string name="medtronic_cmd_desc_set_basal_profile">Basal 프로파일 설정</string>
     <string name="medtronic_cmd_desc_get_tbr">임시 Basal 받기</string>
     <string name="medtronic_cmd_desc_set_tbr">임시 Basal 설정</string>
+    <string name="medtronic_cmd_desc_cancel_tbr">임시 basal 취소</string>
     <string name="medtronic_cmd_desc_set_bolus">Bolus 설정</string>
+    <string name="medtronic_cmd_desc_get_remaining_insulin">잔여 인슐린 확인</string>
     <string name="medtronic_pump_status_pump_unreachable">펌프에 연결할 수 없습니다</string>
     <string name="medtronic_warning">경고</string>
     <!-- medtronic_warning -->
@@ -81,4 +87,7 @@
     <string name="common_on">켜짐</string>
     <string name="common_off">끄기</string>
     <string name="pump_time_updated">펌프 시간 업데이트</string>
+    <string name="set_neutral_temps_title">기본 임시 basal 설정</string>
+    <string name="set_neutral_temps_summary">활성화되면, 매 한 시간 전에 임시 basal을 취소할 것입니다. 이 기능은 일부 펌프에서 한 시간마다 울리는 소리/진동 경고를 멈추게 합니다.</string>
+    <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d 분 남음)</string>
 </resources>

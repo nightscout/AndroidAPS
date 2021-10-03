@@ -73,7 +73,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.exception.Ril
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.exception.RileyLinkUnexpectedException;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.exception.RileyLinkUnreachableException;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.OmnipodManager;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.PodStateManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.ErosPodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodErosPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil;
@@ -87,13 +87,12 @@ import io.reactivex.subjects.SingleSubject;
 @Singleton
 public class AapsOmnipodErosManager {
 
-    private final PodStateManager podStateManager;
+    private final ErosPodStateManager podStateManager;
     private final AapsOmnipodUtil aapsOmnipodUtil;
     private final AAPSLogger aapsLogger;
     private final RxBusWrapper rxBus;
     private final ResourceHelper resourceHelper;
     private final HasAndroidInjector injector;
-    private final ActivePlugin activePlugin;
     private final SP sp;
     private final OmnipodManager delegate;
     private final OmnipodAlertUtil omnipodAlertUtil;
@@ -117,7 +116,7 @@ public class AapsOmnipodErosManager {
 
     @Inject
     public AapsOmnipodErosManager(OmnipodRileyLinkCommunicationManager communicationService,
-                                  PodStateManager podStateManager,
+                                  ErosPodStateManager podStateManager,
                                   AapsOmnipodUtil aapsOmnipodUtil,
                                   AAPSLogger aapsLogger,
                                   AapsSchedulers aapsSchedulers,
@@ -125,7 +124,6 @@ public class AapsOmnipodErosManager {
                                   SP sp,
                                   ResourceHelper resourceHelper,
                                   HasAndroidInjector injector,
-                                  ActivePlugin activePlugin,
                                   OmnipodAlertUtil omnipodAlertUtil,
                                   Context context,
                                   PumpSync pumpSync) {
@@ -137,7 +135,6 @@ public class AapsOmnipodErosManager {
         this.sp = sp;
         this.resourceHelper = resourceHelper;
         this.injector = injector;
-        this.activePlugin = activePlugin;
         this.omnipodAlertUtil = omnipodAlertUtil;
         this.context = context;
         this.pumpSync = pumpSync;
@@ -366,7 +363,7 @@ public class AapsOmnipodErosManager {
             bolusCommandResult = executeCommand(() -> delegate.bolus(PumpType.OMNIPOD_EROS.determineCorrectBolusSize(detailedBolusInfo.insulin), beepsEnabled, beepsEnabled, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB ? null :
                     (estimatedUnitsDelivered, percentage) -> {
                         EventOverviewBolusProgress progressUpdateEvent = EventOverviewBolusProgress.INSTANCE;
-                        progressUpdateEvent.setStatus(getStringResource(R.string.bolusdelivering, detailedBolusInfo.insulin));
+                        progressUpdateEvent.setStatus(getStringResource(R.string.goingtodeliver, detailedBolusInfo.insulin));
                         progressUpdateEvent.setPercent(percentage);
                         sendEvent(progressUpdateEvent);
                     }));
@@ -779,7 +776,6 @@ public class AapsOmnipodErosManager {
 
     // Cancels current TBR and adds a new TBR for the remaining duration
     private void splitActiveTbr() {
-        PumpSync.PumpState pumpState = pumpSync.expectedPumpState();
         PumpSync.PumpState.TemporaryBasal previouslyRunningTempBasal = pumpSync.expectedPumpState().getTemporaryBasal();
         if (previouslyRunningTempBasal != null) {
             // Cancel the previously running TBR and start a NEW TBR here for the remaining duration,
@@ -810,7 +806,7 @@ public class AapsOmnipodErosManager {
         pumpSync.syncTemporaryBasalWithPumpId(
                 time,
                 tempBasalPair.getInsulinRate(),
-                T.mins(tempBasalPair.getDurationMinutes()).msecs(),
+                T.Companion.mins(tempBasalPair.getDurationMinutes()).msecs(),
                 true,
                 PumpSync.TemporaryBasalType.NORMAL,
                 pumpId,

@@ -83,6 +83,8 @@ class UserEntryPresentationHelper @Inject constructor(
         Sources.DanaRC              -> R.drawable.ic_danars_128
         Sources.DanaRv2             -> R.drawable.ic_danars_128
         Sources.DanaRS              -> R.drawable.ic_danars_128
+        Sources.DanaI               -> R.drawable.ic_danai_128
+        Sources.DiaconnG8           -> R.drawable.ic_diaconn_g8
         Sources.Insight             -> R.drawable.ic_insight_128
         Sources.Combo               -> R.drawable.ic_combo_128
         Sources.Medtronic           -> R.drawable.ic_veo_128

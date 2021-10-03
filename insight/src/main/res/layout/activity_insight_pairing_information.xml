@@ -14,7 +14,7 @@
             android:layout_height="wrap_content"
             android:textColor="#FFFFFF"
             android:textSize="16sp"
-            android:text="@string/serial_number" />
+            android:text="@string/serialnumber" />
 
         <TextView
             android:id="@+id/serial_number"
