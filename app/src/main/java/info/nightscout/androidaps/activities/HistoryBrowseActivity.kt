@@ -271,9 +271,12 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
     private fun loadAll(from: String) {
         updateDate()
         Thread {
-            overviewData.prepareBasalData(from)
-            overviewData.prepareTemporaryTargetData(from)
+            overviewData.prepareBgData("$from")
             overviewData.prepareTreatmentsData(from)
+            rxBus.send(EventRefreshOverview("loadAll_$from"))
+            overviewData.prepareTemporaryTargetData(from)
+            rxBus.send(EventRefreshOverview("loadAll_$from"))
+            overviewData.prepareBasalData(from)
             rxBus.send(EventRefreshOverview(from))
             aapsLogger.debug(LTag.UI, "loadAll $from finished")
             runCalculation(from)
