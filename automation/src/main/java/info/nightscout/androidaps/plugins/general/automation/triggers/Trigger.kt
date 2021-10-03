@@ -145,7 +145,7 @@ abstract class Trigger(val injector: HasAndroidInjector) {
             TriggerWifiSsid::class.java.simpleName           -> TriggerWifiSsid(injector).fromJSON(
                 data.toString()
             )
-            else                                             -> throw ClassNotFoundException(type)
+            else                                             -> TriggerConnector(injector)
         }
     }
 
