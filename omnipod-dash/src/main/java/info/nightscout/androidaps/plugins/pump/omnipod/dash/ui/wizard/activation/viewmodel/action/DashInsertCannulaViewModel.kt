@@ -21,6 +21,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.mapProfileToBas
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.Single
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 import javax.inject.Inject
 
@@ -36,6 +37,7 @@ class DashInsertCannulaViewModel @Inject constructor(
     injector: HasAndroidInjector,
     logger: AAPSLogger
 ) : InsertCannulaViewModel(injector, logger) {
+    private val disposable = CompositeDisposable()
 
     override fun isPodInAlarm(): Boolean = false // TODO
 
@@ -63,7 +65,7 @@ class DashInsertCannulaViewModel @Inject constructor(
             else
                 null
 
-            omnipodManager.activatePodPart2(basalProgram, expirationHoursBeforeShutdown).subscribeBy(
+            val subscription = omnipodManager.activatePodPart2(basalProgram, expirationHoursBeforeShutdown).subscribeBy(
                 onNext = { podEvent ->
                     logger.debug(
                         LTag.PUMP,
@@ -101,7 +103,13 @@ class DashInsertCannulaViewModel @Inject constructor(
                     source.onSuccess(PumpEnactResult(injector).success(true))
                 }
             )
+            disposable.add(subscription)
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        disposable.clear()
     }
 
     @StringRes
