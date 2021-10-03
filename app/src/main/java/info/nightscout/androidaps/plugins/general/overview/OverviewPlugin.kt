@@ -227,6 +227,7 @@ class OverviewPlugin @Inject constructor(
         if (runningRefresh) return
         runningRefresh = true
         loadIobCobResults(from)
+        overviewBus.send(EventUpdateOverview(from, OverviewData.Property.PROFILE))
         overviewBus.send(EventUpdateOverview(from, OverviewData.Property.BG))
         overviewBus.send(EventUpdateOverview(from, OverviewData.Property.TIME))
         overviewBus.send(EventUpdateOverview(from, OverviewData.Property.TEMPORARY_BASAL))
@@ -264,9 +265,6 @@ class OverviewPlugin @Inject constructor(
     }
 
     private fun loadProfile(from: String) {
-        overviewData.profile = profileFunction.getProfile()
-        overviewData.profileName = profileFunction.getProfileName()
-        overviewData.profileNameWithRemainingTime = profileFunction.getProfileNameWithRemainingTime()
         overviewBus.send(EventUpdateOverview(from, OverviewData.Property.PROFILE))
     }
 

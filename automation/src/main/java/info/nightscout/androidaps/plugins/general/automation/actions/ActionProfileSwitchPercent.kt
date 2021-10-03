@@ -9,6 +9,7 @@ import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDuration
@@ -43,10 +44,17 @@ class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector
     }
 
     override fun doAction(callback: Callback) {
-        uel.log(UserEntry.Action.PROFILE_SWITCH, Sources.Automation, title + ": " + resourceHelper.gs(R.string.startprofile, pct.value.toInt(), duration.value),
-            ValueWithUnit.Percent(pct.value.toInt()),
-            ValueWithUnit.Minute(duration.value))
-        profileFunction.createProfileSwitch(duration.value, pct.value.toInt(), 0)
+        if (profileFunction.createProfileSwitch(duration.value, pct.value.toInt(), 0)) {
+            uel.log(
+                UserEntry.Action.PROFILE_SWITCH,
+                Sources.Automation,
+                title + ": " + resourceHelper.gs(R.string.startprofile, pct.value.toInt(), duration.value),
+                ValueWithUnit.Percent(pct.value.toInt()),
+                ValueWithUnit.Minute(duration.value)
+            )
+        } else {
+            aapsLogger.error(LTag.AUTOMATION, "Final profile not valid")
+        }
         callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok))?.run()
     }
 
