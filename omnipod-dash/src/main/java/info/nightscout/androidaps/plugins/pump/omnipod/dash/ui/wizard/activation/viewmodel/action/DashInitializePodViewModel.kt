@@ -14,6 +14,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.I8n
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.Single
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
+import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import javax.inject.Inject
 
@@ -40,7 +43,7 @@ class DashInitializePodViewModel @Inject constructor(
             } else
                 null
 
-            omnipodManager.activatePodPart1(lowReservoirAlertTrigger).subscribeBy(
+            super.disposable += omnipodManager.activatePodPart1(lowReservoirAlertTrigger).subscribeBy(
                 onNext = { podEvent ->
                     logger.debug(
                         LTag.PUMP,
