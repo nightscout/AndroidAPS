@@ -42,6 +42,7 @@ class NSClientSourcePlugin @Inject constructor(
     .fragmentClass(BGSourceFragment::class.java.name)
     .pluginIcon(R.drawable.ic_nsclient_bg)
     .pluginName(R.string.nsclientbg)
+    .shortName(R.string.nsclientbgshort)
     .description(R.string.description_source_ns_client),
     aapsLogger, resourceHelper, injector
 ), BgSource {
