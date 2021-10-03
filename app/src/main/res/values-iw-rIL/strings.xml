@@ -494,6 +494,7 @@
     <string name="dexcomg5_xdripupload_title">שליחת נתוני סוכר אל xDrip</string>
     <string name="dexcomg5_xdripupload_summary">ב-xDrip בחרו 640g/Eversense כמקור נתונים</string>
     <string name="nsclientbg">רמת סוכר מ-NSClient</string>
+    <string name="nsclientbgshort">סוכר NS</string>
     <string name="overview_editquickwizard_usebg">חישוב רמת הסוכר</string>
     <string name="overview_editquickwizard_usebolusiob">חישוב IOB של בולוס</string>
     <string name="overview_editquickwizard_usebasaliob">חישוב IOB של בזאלי</string>
