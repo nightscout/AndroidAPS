@@ -54,6 +54,8 @@ data class EffectiveProfileSwitch(
 
     enum class GlucoseUnit {
         MGDL,
-        MMOL
+        MMOL;
+
+        companion object
     }
 }

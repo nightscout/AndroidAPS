@@ -90,7 +90,7 @@ class OverviewPlugin @Inject constructor(
                 }, fabricPrivacy::logException)
         disposable += rxBus
                 .toObservable(EventIobCalculationProgress::class.java)
-                .observeOn(aapsSchedulers.main)
+                .observeOn(aapsSchedulers.io)
                 .subscribe({ overviewData.calcProgress = it.progress; overviewBus.send(EventUpdateOverview("EventIobCalculationProgress", OverviewData.Property.CALC_PROGRESS)) }, fabricPrivacy::logException)
         disposable += rxBus
                 .toObservable(EventTempBasalChange::class.java)
@@ -227,6 +227,7 @@ class OverviewPlugin @Inject constructor(
         if (runningRefresh) return
         runningRefresh = true
         loadIobCobResults(from)
+        overviewBus.send(EventUpdateOverview(from, OverviewData.Property.PROFILE))
         overviewBus.send(EventUpdateOverview(from, OverviewData.Property.BG))
         overviewBus.send(EventUpdateOverview(from, OverviewData.Property.TIME))
         overviewBus.send(EventUpdateOverview(from, OverviewData.Property.TEMPORARY_BASAL))
@@ -264,9 +265,6 @@ class OverviewPlugin @Inject constructor(
     }
 
     private fun loadProfile(from: String) {
-        overviewData.profile = profileFunction.getProfile()
-        overviewData.profileName = profileFunction.getProfileName()
-        overviewData.profileNameWithRemainingTime = profileFunction.getProfileNameWithRemainingTime()
         overviewBus.send(EventUpdateOverview(from, OverviewData.Property.PROFILE))
     }
 

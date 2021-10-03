@@ -72,9 +72,6 @@ class OverviewData @Inject constructor(
     var endTime: Long = 0
 
     fun reset() {
-        profile = null
-        profileName = null
-        profileNameWithRemainingTime = null
         calcProgress = ""
         lastBg = null
         temporaryBasal = null
@@ -126,27 +123,6 @@ class OverviewData @Inject constructor(
     }
 
     /*
-     * PROFILE
-     */
-    var profile: Profile? = null
-    var profileName: String? = null
-    var profileNameWithRemainingTime: String? = null
-
-    val profileBackgroundColor: Int
-        get() =
-            profile?.let { profile ->
-                if (profile.percentage != 100 || profile.timeshift != 0) resourceHelper.gc(R.color.ribbonWarning)
-                else resourceHelper.gc(R.color.ribbonDefault)
-            } ?: resourceHelper.gc(R.color.ribbonTextDefault)
-
-    val profileTextColor: Int
-        get() =
-            profile?.let { profile ->
-                if (profile.percentage != 100 || profile.timeshift != 0) resourceHelper.gc(R.color.ribbonTextWarning)
-                else resourceHelper.gc(R.color.ribbonTextDefault)
-            } ?: resourceHelper.gc(R.color.ribbonTextDefault)
-
-    /*
      * CALC PROGRESS
      */
 
@@ -181,14 +157,14 @@ class OverviewData @Inject constructor(
 
     val temporaryBasalText: String
         get() =
-            profile?.let { profile ->
+            profileFunction.getProfile()?.let { profile ->
                 if (temporaryBasal?.isInProgress == false) temporaryBasal = null
                 temporaryBasal?.let { "T:" + it.toStringShort() }
                     ?: resourceHelper.gs(R.string.pump_basebasalrate, profile.getBasal())
             } ?: resourceHelper.gs(R.string.notavailable)
 
     val temporaryBasalDialogText: String
-        get() = profile?.let { profile ->
+        get() = profileFunction.getProfile()?.let { profile ->
             temporaryBasal?.let { temporaryBasal ->
                 "${resourceHelper.gs(R.string.basebasalrate_label)}: ${resourceHelper.gs(R.string.pump_basebasalrate, profile.getBasal())}" +
                     "\n" + resourceHelper.gs(R.string.tempbasal_label) + ": " + temporaryBasal.toStringFull(profile, dateUtil)
@@ -198,7 +174,7 @@ class OverviewData @Inject constructor(
 
     val temporaryBasalIcon: Int
         get() =
-            profile?.let { profile ->
+            profileFunction.getProfile()?.let { profile ->
                 temporaryBasal?.let { temporaryBasal ->
                     val percentRate = temporaryBasal.convertedToPercent(dateUtil.now(), profile)
                     when {
@@ -510,7 +486,7 @@ class OverviewData @Inject constructor(
     @Synchronized
     fun prepareTemporaryTargetData(from: String) {
 //        val start = dateUtil.now()
-        val profile = profile ?: return
+        val profile = profileFunction.getProfile() ?: return
         val units = profileFunction.getUnits()
         var toTime = toTime
         val targetsSeriesArray: MutableList<DataPoint> = java.util.ArrayList()

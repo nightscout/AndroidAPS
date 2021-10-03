@@ -24,7 +24,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLin
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData
 import info.nightscout.androidaps.plugins.pump.omnipod.common.databinding.OmnipodCommonOverviewButtonsBinding
 import info.nightscout.androidaps.plugins.pump.omnipod.common.databinding.OmnipodCommonOverviewPodInfoBinding
-import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandAcknowledgeAlerts
+import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandSilenceAlerts
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandHandleTimeChange
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandResumeDelivery
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandSuspendDelivery
@@ -35,7 +35,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.databinding.OmnipodE
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.ActivationProgress
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.OmnipodConstants
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.PodProgressStatus
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.PodStateManager
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.ErosPodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.util.TimeUtil
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodErosPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodErosManager
@@ -74,7 +74,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var omnipodErosPumpPlugin: OmnipodErosPumpPlugin
-    @Inject lateinit var podStateManager: PodStateManager
+    @Inject lateinit var podStateManager: ErosPodStateManager
     @Inject lateinit var sp: SP
     @Inject lateinit var omnipodUtil: AapsOmnipodUtil
     @Inject lateinit var omnipodAlertUtil: OmnipodAlertUtil
@@ -148,7 +148,8 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
 
         buttonBinding.buttonSilenceAlerts.setOnClickListener {
             disablePodActionButtons()
-            commandQueue.customCommand(CommandAcknowledgeAlerts(),
+            commandQueue.customCommand(
+                CommandSilenceAlerts(),
                 DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_common_error_failed_to_silence_alerts), false)
                     .messageOnSuccess(resourceHelper.gs(R.string.omnipod_common_confirmation_silenced_alerts))
                     .actionOnSuccess { rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_ALERTS)) })
@@ -254,13 +255,13 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
         }
 
         if (!podStateManager.hasPodState() || !podStateManager.isPodInitialized) {
-            podInfoBinding.podAddress.text = if (podStateManager.hasPodState()) {
+            podInfoBinding.uniqueId.text = if (podStateManager.hasPodState()) {
                 podStateManager.address.toString()
             } else {
                 PLACEHOLDER
             }
             podInfoBinding.podLot.text = PLACEHOLDER
-            podInfoBinding.podTid.text = PLACEHOLDER
+            podInfoBinding.podSequenceNumber.text = PLACEHOLDER
             podInfoBinding.firmwareVersion.text = PLACEHOLDER
             podInfoBinding.timeOnPod.text = PLACEHOLDER
             podInfoBinding.podExpiryDate.text = PLACEHOLDER
@@ -271,9 +272,9 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
             podInfoBinding.reservoir.setTextColor(Color.WHITE)
             podInfoBinding.podActiveAlerts.text = PLACEHOLDER
         } else {
-            podInfoBinding.podAddress.text = podStateManager.address.toString()
+            podInfoBinding.uniqueId.text = podStateManager.address.toString()
             podInfoBinding.podLot.text = podStateManager.lot.toString()
-            podInfoBinding.podTid.text = podStateManager.tid.toString()
+            podInfoBinding.podSequenceNumber.text = podStateManager.tid.toString()
             podInfoBinding.firmwareVersion.text = resourceHelper.gs(R.string.omnipod_eros_overview_firmware_version_value, podStateManager.pmVersion.toString(), podStateManager.piVersion.toString())
 
             podInfoBinding.timeOnPod.text = readableZonedTime(podStateManager.time)
@@ -513,7 +514,8 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
     }
 
     private fun updateSilenceAlertsButton() {
-        if (!omnipodManager.isAutomaticallyAcknowledgeAlertsEnabled && podStateManager.isPodRunning && (podStateManager.hasActiveAlerts() || commandQueue.isCustomCommandInQueue(CommandAcknowledgeAlerts::class.java))) {
+        if (!omnipodManager.isAutomaticallyAcknowledgeAlertsEnabled && podStateManager.isPodRunning && (podStateManager.hasActiveAlerts() || commandQueue.isCustomCommandInQueue(
+                CommandSilenceAlerts::class.java))) {
             buttonBinding.buttonSilenceAlerts.visibility = View.VISIBLE
             buttonBinding.buttonSilenceAlerts.isEnabled = rileyLinkServiceData.rileyLinkServiceState.isReady && isQueueEmpty()
         } else {

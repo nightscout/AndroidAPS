@@ -27,6 +27,7 @@ abstract class AutomationModule {
     @ContributesAndroidInjector abstract fun triggerBTDeviceInjector(): TriggerBTDevice
     @ContributesAndroidInjector abstract fun triggerRecurringTimeInjector(): TriggerRecurringTime
     @ContributesAndroidInjector abstract fun triggerTempTargetInjector(): TriggerTempTarget
+    @ContributesAndroidInjector abstract fun triggerTempTargetValueInjector(): TriggerTempTargetValue
     @ContributesAndroidInjector abstract fun triggerTime(): TriggerTime
     @ContributesAndroidInjector abstract fun triggerTimeRangeInjector(): TriggerTimeRange
     @ContributesAndroidInjector abstract fun triggerWifiSsidInjector(): TriggerWifiSsid

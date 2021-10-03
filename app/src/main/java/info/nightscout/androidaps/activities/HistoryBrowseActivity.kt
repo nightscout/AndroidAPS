@@ -171,7 +171,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         }
     }
 
-    public override fun onPause() {
+    override fun onPause() {
         super.onPause()
         disposable.clear()
         iobCobCalculator.stopCalculation("onPause")
@@ -183,7 +183,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         super.onDestroy()
     }
 
-    public override fun onResume() {
+    override fun onResume() {
         super.onResume()
         disposable.add(rxBus
                 .toObservable(EventAutosensCalculationFinished::class.java)
@@ -271,9 +271,12 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
     private fun loadAll(from: String) {
         updateDate()
         Thread {
-            overviewData.prepareBasalData(from)
-            overviewData.prepareTemporaryTargetData(from)
+            overviewData.prepareBgData("$from")
             overviewData.prepareTreatmentsData(from)
+            rxBus.send(EventRefreshOverview("loadAll_$from"))
+            overviewData.prepareTemporaryTargetData(from)
+            rxBus.send(EventRefreshOverview("loadAll_$from"))
+            overviewData.prepareBasalData(from)
             rxBus.send(EventRefreshOverview(from))
             aapsLogger.debug(LTag.UI, "loadAll $from finished")
             runCalculation(from)

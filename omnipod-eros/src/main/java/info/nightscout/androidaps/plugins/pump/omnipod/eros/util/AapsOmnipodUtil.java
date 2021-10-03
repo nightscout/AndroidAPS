@@ -20,7 +20,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.R;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.AlertSet;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.AlertSlot;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.AlertType;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.PodStateManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.ErosPodStateManager;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 /**
@@ -56,7 +56,7 @@ public class AapsOmnipodUtil {
         return this.gsonInstance;
     }
 
-    public List<String> getTranslatedActiveAlerts(PodStateManager podStateManager) {
+    public List<String> getTranslatedActiveAlerts(ErosPodStateManager podStateManager) {
         List<String> translatedAlerts = new ArrayList<>();
         AlertSet activeAlerts = podStateManager.getActiveAlerts();
 

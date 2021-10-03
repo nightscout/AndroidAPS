@@ -62,7 +62,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLin
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType;
-import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandAcknowledgeAlerts;
+import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandSilenceAlerts;
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandDeactivatePod;
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandHandleTimeChange;
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandPlayTestBeep;
@@ -78,7 +78,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.Al
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.AlertSet;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.BeepConfigType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.OmnipodConstants;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.PodStateManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.ErosPodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.util.TimeUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodErosActiveAlertsChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodErosFaultEventChanged;
@@ -122,7 +122,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
     public static final int STARTUP_STATUS_REQUEST_TRIES = 2;
     public static final double RESERVOIR_OVER_50_UNITS_DEFAULT = 75.0;
 
-    private final PodStateManager podStateManager;
+    private final ErosPodStateManager podStateManager;
     private final RileyLinkServiceData rileyLinkServiceData;
     private final AapsOmnipodErosManager aapsOmnipodErosManager;
     private final AapsOmnipodUtil aapsOmnipodUtil;
@@ -168,7 +168,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
             ResourceHelper resourceHelper,
             ActivePlugin activePlugin,
             SP sp,
-            PodStateManager podStateManager,
+            ErosPodStateManager podStateManager,
             AapsOmnipodErosManager aapsOmnipodErosManager,
             CommandQueueProvider commandQueue,
             FabricPrivacy fabricPrivacy,
@@ -254,7 +254,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
                     }
 
                     if (aapsOmnipodErosManager.isAutomaticallyAcknowledgeAlertsEnabled() && podStateManager.isPodActivationCompleted() && !podStateManager.isPodDead() &&
-                            podStateManager.getActiveAlerts().size() > 0 && !getCommandQueue().isCustomCommandInQueue(CommandAcknowledgeAlerts.class)) {
+                            podStateManager.getActiveAlerts().size() > 0 && !getCommandQueue().isCustomCommandInQueue(CommandSilenceAlerts.class)) {
                         queueAcknowledgeAlertsCommand();
                     }
                 } else {
@@ -413,7 +413,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
                 rxBus.send(new EventNewNotification(notification));
                 pumpSync.insertAnnouncement(notificationText, null, PumpType.OMNIPOD_EROS, serialNumber());
 
-                if (aapsOmnipodErosManager.isAutomaticallyAcknowledgeAlertsEnabled() && !getCommandQueue().isCustomCommandInQueue(CommandAcknowledgeAlerts.class)) {
+                if (aapsOmnipodErosManager.isAutomaticallyAcknowledgeAlertsEnabled() && !getCommandQueue().isCustomCommandInQueue(CommandSilenceAlerts.class)) {
                     queueAcknowledgeAlertsCommand();
                 }
             }
@@ -440,7 +440,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
     }
 
     private void queueAcknowledgeAlertsCommand() {
-        getCommandQueue().customCommand(new CommandAcknowledgeAlerts(), new Callback() {
+        getCommandQueue().customCommand(new CommandSilenceAlerts(), new Callback() {
             @Override public void run() {
                 if (result != null) {
                     aapsLogger.debug(LTag.PUMP, "Acknowledge alerts result: {} ({})", result.getSuccess(), result.getComment());
@@ -829,7 +829,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
 
     @Override
     public PumpEnactResult executeCustomCommand(@NonNull CustomCommand command) {
-        if (command instanceof CommandAcknowledgeAlerts) {
+        if (command instanceof CommandSilenceAlerts) {
             return executeCommand(OmnipodCommandType.ACKNOWLEDGE_ALERTS, aapsOmnipodErosManager::acknowledgeAlerts);
         }
         if (command instanceof CommandGetPodStatus) {
