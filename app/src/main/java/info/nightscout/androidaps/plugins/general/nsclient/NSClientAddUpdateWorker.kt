@@ -187,7 +187,7 @@ class NSClientAddUpdateWorker(
                     }
                 eventType == TherapyEvent.Type.NOTE.text  && json.isEffectiveProfileSwitch()        -> // replace this by new Type when available in NS
                     if (sp.getBoolean(R.string.key_ns_receive_profile_switch, false) && buildHelper.isEngineeringMode() || config.NSCLIENT) {
-                        effectiveProfileSwitchFromJson(json, dateUtil, activePlugin)?.let { effectiveProfileSwitch ->
+                        effectiveProfileSwitchFromJson(json, dateUtil)?.let { effectiveProfileSwitch ->
                             repository.runTransactionForResult(SyncNsEffectiveProfileSwitchTransaction(effectiveProfileSwitch, invalidateByNsOnly = false))
                                 .doOnError {
                                     aapsLogger.error(LTag.DATABASE, "Error while saving EffectiveProfileSwitch", it)

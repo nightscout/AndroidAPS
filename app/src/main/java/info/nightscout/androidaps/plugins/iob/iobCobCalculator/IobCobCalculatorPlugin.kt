@@ -510,10 +510,11 @@ class IobCobCalculatorPlugin @Inject constructor(
 
         val tb = repository.getTemporaryBasalActiveAt(timestamp).blockingGet()
         if (tb is ValueWrapper.Existing) return tb.value
-        val eb = repository.getExtendedBolusActiveAt(timestamp).blockingGet()
-        val profile = profileFunction.getProfile(timestamp) ?: return null
-        if (eb is ValueWrapper.Existing && activePlugin.activePump.isFakingTempsByExtendedBoluses)
-            return eb.value.toTemporaryBasal(profile)
+        if (activePlugin.activePump.isFakingTempsByExtendedBoluses) {
+            val eb = repository.getExtendedBolusActiveAt(timestamp).blockingGet()
+            val profile = profileFunction.getProfile(timestamp) ?: return null
+            if (eb is ValueWrapper.Existing) return eb.value.toTemporaryBasal(profile)
+        }
         return null
     }
 
