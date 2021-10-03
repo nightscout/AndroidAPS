@@ -26,6 +26,7 @@ import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
@@ -598,7 +599,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     fun updateGUI(from: String, what: OverviewData.Property) {
 //        if (what != OverviewData.Property.CALC_PROGRESS)
 //            aapsLogger.debug(LTag.UI, "UpdateGui $from $what")
-        if (overviewData.profile == null) {
+        if (profileFunction.getProfile() == null) {
             binding.loopPumpStatusLayout.pumpStatus.setText(R.string.noprofileset)
             binding.loopPumpStatusLayout.pumpStatusLayout.visibility = View.VISIBLE
             binding.loopPumpStatusLayout.loopLayout.visibility = View.GONE
@@ -641,10 +642,25 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             }
 
             OverviewData.Property.PROFILE          -> {
-                binding.loopPumpStatusLayout.activeProfile.text = overviewData.profileNameWithRemainingTime
-                    ?: ""
-                binding.loopPumpStatusLayout.activeProfile.setBackgroundColor(overviewData.profileBackgroundColor)
-                binding.loopPumpStatusLayout.activeProfile.setTextColor(overviewData.profileTextColor)
+                val profileBackgroundColor =
+                    profileFunction.getProfile()?.let {
+                        val profile = (it as ProfileSealed.EPS).value
+                        if (profile.originalPercentage != 100 || profile.originalTimeshift != 0L || profile.originalDuration != 0L)
+                            resourceHelper.gc(R.color.ribbonWarning)
+                        else resourceHelper.gc(R.color.ribbonDefault)
+                    } ?: resourceHelper.gc(R.color.ribbonTextDefault)
+
+                val profileTextColor =
+                    profileFunction.getProfile()?.let {
+                        val profile = (it as ProfileSealed.EPS).value
+                        if (profile.originalPercentage != 100 || profile.originalTimeshift != 0L || profile.originalDuration != 0L)
+                            resourceHelper.gc(R.color.ribbonTextWarning)
+                        else resourceHelper.gc(R.color.ribbonTextDefault)
+                    } ?: resourceHelper.gc(R.color.ribbonTextDefault)
+
+                binding.loopPumpStatusLayout.activeProfile.text = profileFunction.getProfileNameWithRemainingTime()
+                binding.loopPumpStatusLayout.activeProfile.setBackgroundColor(profileBackgroundColor)
+                binding.loopPumpStatusLayout.activeProfile.setTextColor(profileTextColor)
             }
 
             OverviewData.Property.TEMPORARY_BASAL  -> {
@@ -710,7 +726,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     binding.loopPumpStatusLayout.tempTarget.text = Profile.toTargetRangeString(tempTarget.lowTarget, tempTarget.highTarget, GlucoseUnit.MGDL, units) + " " + dateUtil.untilString(tempTarget.end, resourceHelper)
                 } else {
                     // If the target is not the same as set in the profile then oref has overridden it
-                    overviewData.profile?.let { profile ->
+                    profileFunction.getProfile()?.let { profile ->
                         val targetUsed = loopPlugin.lastRun?.constraintsProcessed?.targetBG ?: 0.0
 
                         if (targetUsed != 0.0 && abs(profile.getTargetMgdl() - targetUsed) > 0.01) {

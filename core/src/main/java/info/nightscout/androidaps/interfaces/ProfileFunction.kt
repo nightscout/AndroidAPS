@@ -76,8 +76,9 @@ interface ProfileFunction {
      * @param durationInMinutes
      * @param percentage        100 = no modification
      * @param timeShiftInHours  0 = no modification
+     * @return true if profile switch is created
      */
-    fun createProfileSwitch(durationInMinutes: Int, percentage: Int, timeShiftInHours: Int)
+    fun createProfileSwitch(durationInMinutes: Int, percentage: Int, timeShiftInHours: Int): Boolean
 
     /*
      * Midnight time conversion

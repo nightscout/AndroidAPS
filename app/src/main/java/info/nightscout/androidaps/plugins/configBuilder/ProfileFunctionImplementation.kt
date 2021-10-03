@@ -9,14 +9,12 @@ import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.ProfileSwitch
 import info.nightscout.androidaps.database.transactions.InsertOrUpdateProfileSwitch
 import info.nightscout.androidaps.extensions.fromConstant
-import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.GlucoseUnit
-import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.ProfileStore
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -30,10 +28,13 @@ import javax.inject.Singleton
 class ProfileFunctionImplementation @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val sp: SP,
+    private val rxBus: RxBusWrapper,
     private val resourceHelper: ResourceHelper,
     private val activePlugin: ActivePlugin,
     private val repository: AppRepository,
-    private val dateUtil: DateUtil
+    private val dateUtil: DateUtil,
+    private val config: Config,
+    private val hardLimits: HardLimits
 ) : ProfileFunction {
 
     val cache = LongSparseArray<Profile>()
@@ -115,35 +116,39 @@ class ProfileFunctionImplementation @Inject constructor(
         val ps = buildProfileSwitch(profileStore, profileName, durationInMinutes, percentage, timeShiftInHours, timestamp)
         disposable += repository.runTransactionForResult(InsertOrUpdateProfileSwitch(ps))
             .subscribe({ result ->
-                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted ProfileSwitch $it") }
-                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated ProfileSwitch $it") }
-            }, {
-                aapsLogger.error(LTag.DATABASE, "Error while saving ProfileSwitch", it)
-            })
+                           result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted ProfileSwitch $it") }
+                           result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated ProfileSwitch $it") }
+                       }, {
+                           aapsLogger.error(LTag.DATABASE, "Error while saving ProfileSwitch", it)
+                       })
     }
 
-    override fun createProfileSwitch(durationInMinutes: Int, percentage: Int, timeShiftInHours: Int) {
+    override fun createProfileSwitch(durationInMinutes: Int, percentage: Int, timeShiftInHours: Int): Boolean {
         val profile = repository.getPermanentProfileSwitch(dateUtil.now())
             ?: throw InvalidParameterSpecException("No active ProfileSwitch")
-        val ps = ProfileSwitch(
-            timestamp = dateUtil.now(),
-            basalBlocks = profile.basalBlocks,
-            isfBlocks = profile.isfBlocks,
-            icBlocks = profile.icBlocks,
-            targetBlocks = profile.targetBlocks,
-            glucoseUnit = profile.glucoseUnit,
-            profileName = profile.profileName,
-            timeshift = T.hours(timeShiftInHours.toLong()).msecs(),
-            percentage = percentage,
-            duration = T.mins(durationInMinutes.toLong()).msecs(),
-            insulinConfiguration = activePlugin.activeInsulin.insulinConfiguration
+        val profileStore = activePlugin.activeProfileSource.profile ?: return false
+        val ps = buildProfileSwitch(profileStore, profile.profileName, durationInMinutes, percentage, 0, dateUtil.now())
+        val validity = ProfileSealed.PS(ps).isValid(
+            resourceHelper.gs(info.nightscout.androidaps.automation.R.string.careportal_profileswitch),
+            activePlugin.activePump,
+            config,
+            resourceHelper,
+            rxBus,
+            hardLimits
         )
-        disposable += repository.runTransactionForResult(InsertOrUpdateProfileSwitch(ps))
-            .subscribe({ result ->
-                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted ProfileSwitch $it") }
-                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated ProfileSwitch $it") }
-            }, {
-                aapsLogger.error(LTag.DATABASE, "Error while saving ProfileSwitch", it)
-            })
+        var returnValue = true
+        if (validity.isValid) {
+            repository.runTransactionForResult(InsertOrUpdateProfileSwitch(ps))
+                .doOnError {
+                    aapsLogger.error(LTag.DATABASE, "Error while saving ProfileSwitch", it)
+                    returnValue = false
+                }
+                .blockingGet()
+                .also { result ->
+                    result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted ProfileSwitch $it") }
+                    result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated ProfileSwitch $it") }
+                }
+        } else returnValue = false
+        return returnValue
     }
 }
