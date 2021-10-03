@@ -50,7 +50,7 @@ class StorageConstraintPlugin @Inject constructor(
         return value
     }
 
-    open fun availableInternalMemorySize(): Long {
+    fun availableInternalMemorySize(): Long {
         val path = Environment.getDataDirectory()
         val stat = StatFs(path.path)
         val blockSize = stat.blockSizeLong

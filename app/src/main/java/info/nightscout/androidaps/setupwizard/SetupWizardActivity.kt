@@ -70,7 +70,7 @@ class SetupWizardActivity : NoSplashAppCompatActivity() {
         }
     }
 
-    public override fun onPause() {
+    override fun onPause() {
         super.onPause()
         disposable.clear()
     }

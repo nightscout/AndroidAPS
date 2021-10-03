@@ -58,7 +58,7 @@ public class WearUtilMocker {
         return REF_NOW - (Constants.DAY_IN_MS * d + Constants.HOUR_IN_MS * h + Constants.MINUTE_IN_MS * m + Constants.SECOND_IN_MS * s);
     }
 
-    private static Answer bundleToDataMapMock = invocation -> {
+    private static final Answer bundleToDataMapMock = invocation -> {
         DataMap map = new DataMap();
         Bundle bundle = invocation.getArgument(0);
         for(String key: bundle.keySet()) {

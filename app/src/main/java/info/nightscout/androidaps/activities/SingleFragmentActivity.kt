@@ -19,7 +19,7 @@ class SingleFragmentActivity : DaggerAppCompatActivityWithResult() {
 
     private var plugin: PluginBase? = null
 
-    public override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_single_fragment)
         plugin = pluginStore.plugins[intent.getIntExtra("plugin", -1)]
@@ -52,7 +52,7 @@ class SingleFragmentActivity : DaggerAppCompatActivityWithResult() {
         return super.onCreateOptionsMenu(menu)
     }
 
-    public override fun attachBaseContext(newBase: Context) {
+    override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.wrap(newBase))
     }
 }

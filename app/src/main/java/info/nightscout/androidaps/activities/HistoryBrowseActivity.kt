@@ -171,7 +171,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         }
     }
 
-    public override fun onPause() {
+    override fun onPause() {
         super.onPause()
         disposable.clear()
         iobCobCalculator.stopCalculation("onPause")
@@ -183,7 +183,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         super.onDestroy()
     }
 
-    public override fun onResume() {
+    override fun onResume() {
         super.onResume()
         disposable.add(rxBus
                 .toObservable(EventAutosensCalculationFinished::class.java)
