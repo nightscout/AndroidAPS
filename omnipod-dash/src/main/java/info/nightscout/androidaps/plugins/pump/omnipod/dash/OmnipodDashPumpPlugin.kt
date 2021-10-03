@@ -111,13 +111,12 @@ class OmnipodDashPumpPlugin @Inject constructor(
             updatePodWarnings()
             aapsLogger.info(LTag.PUMP, "statusChecker")
 
-            createFakeTBRWhenNoActivePod()
+            val err = createFakeTBRWhenNoActivePod()
                 .subscribeOn(aapsSchedulers.io)
-                .subscribeBy(
-                    onError = {
-                        aapsLogger.warn(LTag.PUMP, "Error on createFakeTBRWhenNoActivePod=$it")
-                    }
-                )
+                .blockingGet()
+            err?.let {
+                aapsLogger.warn(LTag.PUMP, "Error on createFakeTBRWhenNoActivePod=$it")
+            }
             handler.postDelayed(statusChecker, STATUS_CHECK_INTERVAL_MS)
         }
     }
