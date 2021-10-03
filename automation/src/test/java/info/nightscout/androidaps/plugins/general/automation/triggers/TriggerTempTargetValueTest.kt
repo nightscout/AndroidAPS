@@ -2,8 +2,11 @@ package info.nightscout.androidaps.plugins.general.automation.triggers
 
 import com.google.common.base.Optional
 import info.nightscout.androidaps.automation.R
+import info.nightscout.androidaps.database.ValueWrapper
+import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator
+import io.reactivex.Single
 import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Before
@@ -20,10 +23,9 @@ class TriggerTempTargetValueTest : TriggerTestBase() {
         `when`(dateUtil.now()).thenReturn(now)
     }
 
-    /*
     @Test
     fun shouldRunTest() {
-        `when`(repository.getTemporaryTargetActiveAt(dateUtil.now())).thenReturn(generateOneCurrentRecordTtData())
+        `when`(repository.getTemporaryTargetActiveAt(dateUtil.now())).thenReturn(Single.just(ValueWrapper.Existing(TemporaryTarget(duration = 60000, highTarget = 140.0, lowTarget = 140.0, reason = TemporaryTarget.Reason.CUSTOM, timestamp = now - 1))))
         var t: TriggerTempTargetValue = TriggerTempTargetValue(injector).setUnits(GlucoseUnit.MMOL).setValue(7.7).comparator(Comparator.Compare.IS_EQUAL)
         Assert.assertFalse(t.shouldRun())
         t = TriggerTempTargetValue(injector).setUnits(GlucoseUnit.MGDL).setValue(140.0).comparator(Comparator.Compare.IS_EQUAL)
@@ -42,13 +44,12 @@ class TriggerTempTargetValueTest : TriggerTestBase() {
         Assert.assertTrue(t.shouldRun())
         t = TriggerTempTargetValue(injector).setUnits(GlucoseUnit.MGDL).setValue(139.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         Assert.assertFalse(t.shouldRun())
-        //`when`(autosensDataStore.getBgReadingsDataTableCopy()).thenReturn(ArrayList())
-        //t = TriggerTempTargetValue(injector).setUnits(GlucoseUnit.MGDL).setValue(213.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         Assert.assertFalse(t.shouldRun())
         t = TriggerTempTargetValue(injector).comparator(Comparator.Compare.IS_NOT_AVAILABLE)
+        Assert.assertFalse(t.shouldRun())
+        `when`(repository.getTemporaryTargetActiveAt(dateUtil.now())).thenReturn(Single.just(ValueWrapper.Absent()))
         Assert.assertTrue(t.shouldRun())
     }
-    */
 
     @Test
     fun copyConstructorTest() {
@@ -80,12 +81,5 @@ class TriggerTempTargetValueTest : TriggerTestBase() {
     fun iconTest() {
         Assert.assertEquals(Optional.of(R.drawable.ic_keyboard_tab), TriggerTempTargetValue(injector).icon())
     }
-
-    /* Different trial made to create a Single<ValueWrapper<TemporaryTarget>>, but none works...
-    private fun generateOneCurrentRecordTtData(): Single<ValueWrapper<TemporaryTarget>> {
-        val temporaryTarget = TemporaryTarget(duration = 60000, highTarget = 140.0, lowTarget = 140.0, reason = TemporaryTarget.Reason.CUSTOM, timestamp = now - 1)
-        return ValueWrapper.Existing(temporaryTarget) as Single<ValueWrapper<TemporaryTarget>>
-    }
-    */
 }
 
