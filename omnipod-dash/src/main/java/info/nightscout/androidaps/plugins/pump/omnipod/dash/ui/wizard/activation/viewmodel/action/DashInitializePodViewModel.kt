@@ -15,6 +15,8 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
+import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import javax.inject.Inject
 
@@ -26,8 +28,6 @@ class DashInitializePodViewModel @Inject constructor(
     private val podStateManager: OmnipodDashPodStateManager,
     private val resourceHelper: ResourceHelper
 ) : InitializePodViewModel(injector, logger) {
-    private val disposable = CompositeDisposable()
-
     override fun isPodInAlarm(): Boolean = false // TODO
 
     override fun isPodActivationTimeExceeded(): Boolean = false // TODO
@@ -43,7 +43,7 @@ class DashInitializePodViewModel @Inject constructor(
             } else
                 null
 
-            val subscription = omnipodManager.activatePodPart1(lowReservoirAlertTrigger).subscribeBy(
+            super.disposable += omnipodManager.activatePodPart1(lowReservoirAlertTrigger).subscribeBy(
                 onNext = { podEvent ->
                     logger.debug(
                         LTag.PUMP,
@@ -64,13 +64,7 @@ class DashInitializePodViewModel @Inject constructor(
                     source.onSuccess(PumpEnactResult(injector).success(true))
                 }
             )
-            disposable.add(subscription)
         }
-
-    override fun onCleared() {
-        super.onCleared()
-        disposable.clear()
-    }
 
     @StringRes
     override fun getTitleId(): Int = R.string.omnipod_common_pod_activation_wizard_initialize_pod_title
