@@ -63,7 +63,8 @@ class OverviewData @Inject constructor(
         BG,
         IOB_COB,
         SENSITIVITY,
-        GRAPH
+        GRAPH,
+        PUMPSTATUS
     }
 
     var rangeToDisplay = 6 // for graph
@@ -72,6 +73,7 @@ class OverviewData @Inject constructor(
     var endTime: Long = 0
 
     fun reset() {
+        pumpStatus = ""
         calcProgress = ""
         lastBg = null
         temporaryBasal = null
@@ -121,6 +123,12 @@ class OverviewData @Inject constructor(
         fromTime = toTime - T.hours(rangeToDisplay.toLong()).msecs()
         endTime = toTime
     }
+
+    /*
+     * PUMP STATUS
+     */
+
+    var pumpStatus: String = ""
 
     /*
      * CALC PROGRESS

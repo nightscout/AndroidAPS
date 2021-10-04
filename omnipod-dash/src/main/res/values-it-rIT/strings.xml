@@ -4,6 +4,15 @@
     <string name="omnipod_dash_pump_description">Integrazione del microinfusore Omnipod Dash (il nuovo modello, abilitato al Bluetooth e con la protezione ago di colore blu).</string>
     <!-- Omnipod Dash - Keys -->
     <!-- Omnipod Dash - Overview -->
+    <string name="omnipod_dash_overview_bluetooth_status">Stato bluetooth</string>
+    <string name="omnipod_dash_overview_bluetooth_address">Indirizzo bluetooth</string>
+    <string name="omnipod_dash_overview_firmware_version_value">Firmware %1$s / Bluetooth %2$s</string>
+    <string name="omnipod_dash_overview_bluetooth_connection_quality">Qualità connessione</string>
+    <string name="omnipod_dash_overview_delivery_status">Stato erogazione</string>
     <!-- Omnipod Dash - Pod Activation Wizard -->
     <!-- Exceptions -->
+    <string name="omnipod_dash_failed_to_connect">Impossibile connettersi al pod</string>
+    <string name="omnipod_dash_found_too_many_pods">Trovati troppi pod per l\'attivazione</string>
+    <string name="omnipod_dash_scan_failed">Nessun pod disponibile per l\'attivazione</string>
+    <string name="omnipod_dash_generic_error">Errore generico: %1$s</string>
 </resources>
