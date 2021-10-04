@@ -92,8 +92,6 @@
     <string name="profile_set_failed">Nepavyko nustatyti bazės profilio</string>
     <string name="danar_bluetooth_status">Bluetooth statusas</string>
     <string name="danar_iob_label">Pompos AIO</string>
-    <string name="basal_step">Bazės žingsnis</string>
-    <string name="bolus_step">Boluso žingsnis</string>
     <string name="virtualpump_firmware_label">Programinė įranga</string>
     <string name="danar_pump_settings">Dana pompos nustatymai</string>
     <string name="timeformat12h">12h</string>
