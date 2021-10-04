@@ -38,6 +38,9 @@
     <string name="glucoseisnotavailable">Glukosewert nicht verfügbar</string>
     <string name="glucosecomparedmgdl">Glukosewert %1$s %2$.0f %3$s</string>
     <string name="glucosecomparedmmol">Glukosewert %1$s %2$.1f %3$s</string>
+    <string name="notemptarget">Kein temporäres Ziel vorhanden</string>
+    <string name="temptargetcomparedmgdl">Temp. Zielwert %1$s %2$.0f %3$s</string>
+    <string name="temptargetcomparedmmol">Temp. Zielwert %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">Profil-Prozentsatz %1$s %2$d</string>
     <string name="iobcompared">IOB %1$s %2$.1f</string>
     <string name="and">Und</string>
@@ -86,6 +89,7 @@
     <string name="latitude_short">Breitengrad:</string>
     <string name="longitude_short">Längengrad:</string>
     <string name="glucose_u">Glukosewert [%1$s]:</string>
+    <string name="target_u">Zielwert [%1$s]:</string>
     <string name="lastboluslabel">Letzter Bolus vor</string>
     <string name="lastboluscompared">Letzter Bolus vor %1$s %2$s Min</string>
     <string name="triggercoblabel">COB</string>
