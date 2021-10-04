@@ -210,6 +210,33 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/tt_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:width="120dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="@string/careportal_temporarytarget"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textStyle="bold" />
+
+            <CheckBox
+                android:id="@+id/tt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="@string/activity" />
+
+        </LinearLayout>
+
         <include
             android:id="@+id/notes_layout"
             layout="@layout/notes" />

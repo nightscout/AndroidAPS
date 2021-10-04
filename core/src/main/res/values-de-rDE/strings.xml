@@ -196,6 +196,7 @@
     <string name="careportal_openapsoffline">OpenAPS offline</string>
     <string name="careportal_pumpbatterychange">Pumpenbatterie-Wechsel</string>
     <string name="careportal_temporarytarget">Temporäres Ziel</string>
+    <string name="careportal_temporarytargetvalue">Temporärer Zielwert</string>
     <string name="careportal_temporarytargetcancel">Temporäres Ziel abbrechen</string>
     <string name="boluswizard">Bolus-Rechner</string>
     <string name="glucosetype_finger">Finger</string>

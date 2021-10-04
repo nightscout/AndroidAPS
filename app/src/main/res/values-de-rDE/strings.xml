@@ -494,6 +494,7 @@
     <string name="dexcomg5_xdripupload_title">Sende BZ-Werte zu xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">Wähle in xDrip+ 640g/Eversense als Daten-Quelle.</string>
     <string name="nsclientbg">Nightscout-Client BZ</string>
+    <string name="nsclientbgshort">NS BZ</string>
     <string name="overview_editquickwizard_usebg">BZ Berechnung</string>
     <string name="overview_editquickwizard_usebolusiob">Bolus-IOB Berechnung</string>
     <string name="overview_editquickwizard_usebasaliob">Basal-IOB Berechnung</string>

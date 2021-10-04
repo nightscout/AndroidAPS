@@ -166,6 +166,9 @@ class PluginStore @Inject constructor(
     override val activeOverview: Overview
         get() = getSpecificPluginsListByInterface(Overview::class.java).first() as Overview
 
+    override val activeSafety: Safety
+        get() = getSpecificPluginsListByInterface(Safety::class.java).first() as Safety
+
     override fun getPluginsList(): ArrayList<PluginBase> = ArrayList(plugins)
 
 }

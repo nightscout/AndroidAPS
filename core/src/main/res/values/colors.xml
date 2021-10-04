@@ -12,7 +12,7 @@
     <color name="black_overlay">#66000000</color>
 
     <!--    Fragments-->
-    <color name="colorInitializingBorder">#00695c</color>
+    <color name="pumpStatusBackground">#505050</color>
 
     <!--    Dialogs-->
     <color name="dialog_title_background">#303030</color>
