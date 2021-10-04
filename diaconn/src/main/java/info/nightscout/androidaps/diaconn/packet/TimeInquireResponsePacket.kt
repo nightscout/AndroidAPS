@@ -31,7 +31,7 @@ class TimeInquireResponsePacket(
         val result2 =  getByteToInt(bufferData)
         if(!isSuccInquireResponseResult(result2)) {
             failed = true
-            return;
+            return
         }
     }
 

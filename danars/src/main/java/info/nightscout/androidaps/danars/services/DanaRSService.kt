@@ -190,6 +190,7 @@ class DanaRSService : DaggerService() {
                     aapsLogger.debug(LTag.PUMPCOMM, "Pump time difference: $timeDiff seconds")
                 }
             }
+            rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.reading_pump_history)))
             loadEvents()
             // RS doesn't provide exact timestamp = rely on history
             val eb = pumpSync.expectedPumpState().extendedBolus
@@ -376,6 +377,7 @@ class DanaRSService : DaggerService() {
         sendMessage(msgTBR)
         loadEvents()
         val tbr = pumpSync.expectedPumpState().temporaryBasal
+        aapsLogger.debug(LTag.PUMPCOMM, "Expected TBR found: $tbr")
         danaPump.fromTemporaryBasal(tbr)
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
         return msgTBR.success()

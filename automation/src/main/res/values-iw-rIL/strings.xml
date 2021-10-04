@@ -38,6 +38,9 @@
     <string name="glucoseisnotavailable">גלוקוז אינו זמין</string>
     <string name="glucosecomparedmgdl">גלוקוז %1$s %2$.0f %3$s</string>
     <string name="glucosecomparedmmol">גלוקוז %1$s %2$.1f %3$s</string>
+    <string name="notemptarget">ערך המטרה הזמני לא קיים</string>
+    <string name="temptargetcomparedmgdl">ערך מטרה זמני %1$s %2$.0f %3$s</string>
+    <string name="temptargetcomparedmmol">ערך מטרה זמני %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">אחוז פרופיל %1$s %2$d</string>
     <string name="iobcompared">אינסולין פעיל %1$s %2$.1f</string>
     <string name="and">וגם</string>
@@ -86,6 +89,7 @@
     <string name="latitude_short">רוחב:</string>
     <string name="longitude_short">אורך:</string>
     <string name="glucose_u">גלוקוז [%1$s]:</string>
+    <string name="target_u">מטרה [%1$s]:</string>
     <string name="lastboluslabel">בולוס אחרון</string>
     <string name="lastboluscompared">הבולוס האחרון היה לפני %1$s %2$s דק\'</string>
     <string name="triggercoblabel">פחמ\' פעילות</string>

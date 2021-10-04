@@ -34,6 +34,7 @@ class DataSyncSelectorImplementation @Inject constructor(
             processChangedTemporaryBasalsCompat()
             processChangedExtendedBolusesCompat()
             processChangedProfileSwitchesCompat()
+            processChangedEffectiveProfileSwitchesCompat()
             processChangedGlucoseValuesCompat()
             processChangedTempTargetsCompat()
             processChangedFoodsCompat()
@@ -56,6 +57,7 @@ class DataSyncSelectorImplementation @Inject constructor(
         sp.remove(R.string.key_ns_extended_bolus_last_synced_id)
         sp.remove(R.string.key_ns_therapy_event_last_synced_id)
         sp.remove(R.string.key_ns_profile_switch_last_synced_id)
+        sp.remove(R.string.key_ns_effective_profile_switch_last_synced_id)
         sp.remove(R.string.key_ns_offline_event_last_synced_id)
         sp.remove(R.string.key_ns_profile_store_last_synced_timestamp)
     }
@@ -549,6 +551,48 @@ class DataSyncSelectorImplementation @Inject constructor(
                 // with nsId = update
                 ps.first.interfaceIDs.nightscoutId != null ->
                     nsClientPlugin.nsClientService?.dbUpdate("treatments", ps.first.interfaceIDs.nightscoutId, ps.first.toJson(false, dateUtil), DataSyncSelector.PairProfileSwitch(ps.first, ps.second), "$startId/$lastDbId")
+            }
+            return true
+        }
+        return false
+    }
+
+    override fun confirmLastEffectiveProfileSwitchIdIfGreater(lastSynced: Long) {
+        if (lastSynced > sp.getLong(R.string.key_ns_effective_profile_switch_last_synced_id, 0)) {
+            aapsLogger.debug(LTag.NSCLIENT, "Setting EffectiveProfileSwitch data sync from $lastSynced")
+            sp.putLong(R.string.key_ns_effective_profile_switch_last_synced_id, lastSynced)
+        }
+    }
+
+    override fun changedEffectiveProfileSwitch(): List<EffectiveProfileSwitch> {
+        val startId = sp.getLong(R.string.key_ns_effective_profile_switch_last_synced_id, 0)
+        return appRepository.getModifiedEffectiveProfileSwitchDataFromId(startId).blockingGet().also {
+            aapsLogger.debug(LTag.NSCLIENT, "Loading EffectiveProfileSwitch data for sync from $startId. Records ${it.size}")
+        }
+    }
+
+    @Volatile private var lastEpsId = -1L
+    @Volatile private var lastEpsTime = -1L
+    override fun processChangedEffectiveProfileSwitchesCompat(): Boolean {
+        val lastDbIdWrapped = appRepository.getLastEffectiveProfileSwitchIdWrapped().blockingGet()
+        val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
+        var startId = sp.getLong(R.string.key_ns_effective_profile_switch_last_synced_id, 0)
+        if (startId > lastDbId) {
+            sp.putLong(R.string.key_ns_effective_profile_switch_last_synced_id, 0)
+            startId = 0
+        }
+        if (startId == lastEpsId && dateUtil.now() - lastEpsTime < 5000) return false
+        lastEpsId = startId
+        lastEpsTime = dateUtil.now()
+        appRepository.getNextSyncElementEffectiveProfileSwitch(startId).blockingGet()?.let { ps ->
+            aapsLogger.info(LTag.DATABASE, "Loading EffectiveProfileSwitch data Start: $startId ID: ${ps.first.id} HistoryID: ${ps.second} ")
+            when {
+                // without nsId = create new
+                ps.first.interfaceIDs.nightscoutId == null ->
+                    nsClientPlugin.nsClientService?.dbAdd("treatments", ps.first.toJson(true, dateUtil), DataSyncSelector.PairEffectiveProfileSwitch(ps.first, ps.second), "$startId/$lastDbId")
+                // with nsId = update
+                ps.first.interfaceIDs.nightscoutId != null ->
+                    nsClientPlugin.nsClientService?.dbUpdate("treatments", ps.first.interfaceIDs.nightscoutId, ps.first.toJson(false, dateUtil), DataSyncSelector.PairEffectiveProfileSwitch(ps.first, ps.second), "$startId/$lastDbId")
             }
             return true
         }

@@ -185,6 +185,32 @@ class NSClientAddUpdateWorker(
                                 }
                         } ?: aapsLogger.error("Error parsing TT json $json")
                     }
+                eventType == TherapyEvent.Type.NOTE.text  && json.isEffectiveProfileSwitch()        -> // replace this by new Type when available in NS
+                    if (sp.getBoolean(R.string.key_ns_receive_profile_switch, false) && buildHelper.isEngineeringMode() || config.NSCLIENT) {
+                        effectiveProfileSwitchFromJson(json, dateUtil)?.let { effectiveProfileSwitch ->
+                            repository.runTransactionForResult(SyncNsEffectiveProfileSwitchTransaction(effectiveProfileSwitch, invalidateByNsOnly = false))
+                                .doOnError {
+                                    aapsLogger.error(LTag.DATABASE, "Error while saving EffectiveProfileSwitch", it)
+                                    ret = Result.failure(workDataOf("Error" to it.toString()))
+                                }
+                                .blockingGet()
+                                .also { result ->
+                                    result.inserted.forEach {
+                                        uel.log(Action.PROFILE_SWITCH, Sources.NSClient,
+                                            ValueWithUnit.Timestamp(it.timestamp))
+                                        aapsLogger.debug(LTag.DATABASE, "Inserted EffectiveProfileSwitch $it")
+                                    }
+                                    result.invalidated.forEach {
+                                        uel.log(Action.PROFILE_SWITCH_REMOVED, Sources.NSClient,
+                                            ValueWithUnit.Timestamp(it.timestamp))
+                                        aapsLogger.debug(LTag.DATABASE, "Invalidated EffectiveProfileSwitch $it")
+                                    }
+                                    result.updatedNsId.forEach {
+                                        aapsLogger.debug(LTag.DATABASE, "Updated nsId EffectiveProfileSwitch $it")
+                                    }
+                                }
+                        } ?: aapsLogger.error("Error parsing EffectiveProfileSwitch json $json")
+                    }
                 eventType == TherapyEvent.Type.CANNULA_CHANGE.text ||
                     eventType == TherapyEvent.Type.INSULIN_CHANGE.text ||
                     eventType == TherapyEvent.Type.SENSOR_CHANGE.text ||

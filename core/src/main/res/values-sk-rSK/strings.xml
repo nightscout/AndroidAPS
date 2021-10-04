@@ -196,6 +196,7 @@
     <string name="careportal_openapsoffline">OpenAPS vypnuté</string>
     <string name="careportal_pumpbatterychange">Výmena batérie v pumpe</string>
     <string name="careportal_temporarytarget">Dočasný cieľ</string>
+    <string name="careportal_temporarytargetvalue">Hodnota dočasného cieľa</string>
     <string name="careportal_temporarytargetcancel">Zrušiť dočasný cieľ</string>
     <string name="boluswizard">Bolusová kalkulačka</string>
     <string name="glucosetype_finger">Prst</string>
@@ -385,6 +386,20 @@
     <string name="uel_loop_removed">UZAVRETÝ OKRUH ODSTRÁNENÝ</string>
     <string name="uel_other">INÉ</string>
     <!-- HardLimits -->
+    <string name="profile_low_target">Dolný cieľ profilu</string>
+    <string name="profile_high_target">Horný cieľ profilu</string>
+    <string name="temp_target_low_target">Dolná hodnota dočasného cieľa</string>
+    <string name="temp_target_high_target">Horná hodnota dočasného cieľa</string>
+    <string name="temp_target_value">Hodnota dočasného cieľa</string>
+    <string name="profile_dia">Profilová hodnota DIA</string>
+    <string name="profile_sensitivity_value">Profilová hodnota citlivosti</string>
+    <string name="profile_max_daily_basal_value">Profilová maximálna hodnota bazálu</string>
+    <string name="current_basal_value">Aktuálna hodnota bazálu</string>
+    <string name="profile_carbs_ratio_value">Profilový inzulino-sacharidový pomer</string>
+    <string name="valuelimitedto">%1$.2f obmedzené na %2$.2f</string>
+    <string name="valueoutofrange">»%1$s« je mimo pevne nastavené limity</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f je mimo pevne nastavených limitov</string>
+    <string name="basal_value">Hodnota bazálu</string>
     <plurals name="days">
         <item quantity="one">%1$d deň</item>
         <item quantity="few">%1$d dní</item>

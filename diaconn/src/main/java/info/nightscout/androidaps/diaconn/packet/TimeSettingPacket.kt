@@ -25,7 +25,7 @@ class TimeSettingPacket(
     }
 
     override fun encode(msgSeq:Int): ByteArray {
-        val buffer = prefixEncode(msgType, msgSeq, MSG_CON_END);
+        val buffer = prefixEncode(msgType, msgSeq, MSG_CON_END)
         val date = DateTime(time).withZone(DateTimeZone.UTC)
         buffer.put((date.year - 2000 and 0xff).toByte())
         buffer.put((date.monthOfYear and 0xff).toByte())

@@ -52,6 +52,8 @@
     <string name="diagonn_g8_useroptions">BENUTZER-OPTIONEN</string>
     <string name="pairfirst">Bitte kopple deine Pumpe mit deinem Telefon!</string>
     <string name="processinghistory">"Ereignis wird verarbeitet "</string>
+    <string name="apslastLogNum">aps_last_log_num</string>
+    <string name="apsWrappingCount">aps_wrapping_count</string>
     <string name="diaconn_g8_history_tempbasal">Temporäre Basalrate</string>
     <string name="diaconng8_pump_settings">Diaconn-Pumpen Einstellungen</string>
     <string name="diaconn_g8_pumpalarm">Töne</string>
@@ -79,6 +81,9 @@
     <string name="insulinlackwarning">Warnung Insulinmangel</string>
     <string name="needbatteryreplace">Batteriewechsel erforderlich</string>
     <string name="needinsullinreplace">Neues Insulin erforderlich</string>
+    <string name="pumpversion">pump_version</string>
+    <string name="apsIncarnationNo">aps_incarnation_no</string>
+    <string name="pumpserialno">pump_serial_no</string>
     <string name="diaconn_g8_loginsulinchange_title">Reservoirwechsel aufzeichnen</string>
     <string name="diaconn_g8_loginsulinchange_summary">Reservoirwechsel im Careportal hinzufügen, falls dies in der Historie gefunden wird.</string>
     <string name="diaconn_g8_logcanulachange_title">Kanülenwechsel protokollieren</string>
@@ -112,6 +117,7 @@
     <string name="diacon_g8_blockdualbolus">DUAL BOLUS</string>
     <string name="diacon_g8_blockreplacetube">KATHETER WECHSELN</string>
     <string name="diacon_g8_blockreplaceneedle">KANÜLE WECHSELN</string>
+    <string name="diacon_g8_blockreplacesyringe">NADEL WECHSELN</string>
     <string name="diaconn_g8_logalarmblock">Verstopfung (%s)</string>
     <string name="diaconn_g8_lgorelease">Basalabgabe (%s)</string>
     <string name="diaconn_g8_lgosuspend">Basal unterbrechen (%s)</string>

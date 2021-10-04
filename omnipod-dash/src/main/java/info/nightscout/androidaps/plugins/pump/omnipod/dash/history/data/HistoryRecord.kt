@@ -16,6 +16,6 @@ data class HistoryRecord(
 ) {
     fun pumpId(): Long {
         val entropy = ULID.getEntropy(id)
-        return ByteBuffer.wrap(entropy).getLong()
+        return ByteBuffer.wrap(entropy).long
     }
 }

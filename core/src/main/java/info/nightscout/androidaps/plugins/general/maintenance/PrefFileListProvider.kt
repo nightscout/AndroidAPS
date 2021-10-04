@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.general.maintenance
 
-import android.content.Context
 import android.os.Environment
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.core.R
@@ -30,7 +29,7 @@ class PrefFileListProvider @Inject constructor(
     private val storage: Storage,
     private val versionCheckerUtils: VersionCheckerUtils
 ) {
-
+    @Suppress("DEPRECATION")
     private val path = File(Environment.getExternalStorageDirectory().toString())
     private val aapsPath = File(path, "AAPS" + File.separator + "preferences")
     private val exportsPath = File(path, "AAPS" + File.separator + "exports")

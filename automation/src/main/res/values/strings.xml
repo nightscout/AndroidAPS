@@ -40,6 +40,9 @@
     <string name="glucoseisnotavailable">Glucose is not available</string>
     <string name="glucosecomparedmgdl">Glucose %1$s %2$.0f %3$s</string>
     <string name="glucosecomparedmmol">Glucose %1$s %2$.1f %3$s</string>
+    <string name="notemptarget">Temp Target does not exist</string>
+    <string name="temptargetcomparedmgdl">Temp Target %1$s %2$.0f %3$s</string>
+    <string name="temptargetcomparedmmol">Temp Target %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">Profile pct %1$s %2$d</string>
     <string name="iobcompared">IOB %1$s %2$.1f</string>
     <string name="and">And</string>
@@ -88,6 +91,7 @@
     <string name="latitude_short">Lat:</string>
     <string name="longitude_short">Lon:</string>
     <string name="glucose_u">Glucose [%1$s]:</string>
+    <string name="target_u">Target [%1$s]:</string>
     <string name="lastboluslabel">Last bolus ago</string>
     <string name="lastboluscompared">Last bolus time %1$s %2$s min ago</string>
     <string name="triggercoblabel">COB</string>
