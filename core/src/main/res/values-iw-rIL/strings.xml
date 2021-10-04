@@ -196,6 +196,7 @@
     <string name="careportal_openapsoffline">OpenAPS במצב לא מקוון</string>
     <string name="careportal_pumpbatterychange">החלפת סוללת משאבה</string>
     <string name="careportal_temporarytarget">ערך מטרה זמני</string>
+    <string name="careportal_temporarytargetvalue">ערך המטרה הזמני</string>
     <string name="careportal_temporarytargetcancel">ביטול ערך מטרה זמני</string>
     <string name="boluswizard">אשף בולוס</string>
     <string name="glucosetype_finger">אצבע</string>

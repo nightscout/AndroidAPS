@@ -494,6 +494,7 @@
     <string name="dexcomg5_xdripupload_title">Odesílat data do xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">V xDrip+ vyberte zdroj dat 640g/Eversense</string>
     <string name="nsclientbg">Glykémie z NS</string>
+    <string name="nsclientbgshort">NSGL</string>
     <string name="overview_editquickwizard_usebg">Kalkulace glykémie</string>
     <string name="overview_editquickwizard_usebolusiob">Kalkulace bolusového IOB</string>
     <string name="overview_editquickwizard_usebasaliob">Kalkulace bazálního IOB</string>

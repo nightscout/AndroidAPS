@@ -61,7 +61,11 @@ import info.nightscout.androidaps.plugins.source.DexcomPlugin
 import info.nightscout.androidaps.plugins.source.XdripPlugin
 import info.nightscout.androidaps.queue.CommandQueue
 import info.nightscout.androidaps.skins.SkinProvider
-import info.nightscout.androidaps.utils.*
+import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.DefaultValueHelper
+import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.androidaps.utils.TrendCalculator
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
@@ -73,6 +77,7 @@ import info.nightscout.androidaps.utils.wizard.QuickWizard
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 import kotlin.math.abs
@@ -159,8 +164,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         skinProvider.activeSkin().preProcessLandscapeOverviewLayout(dm, view, landscape, resourceHelper.gb(R.bool.isTablet), smallHeight)
         binding.nsclientLayout.visibility = config.NSCLIENT.toVisibility()
 
-        binding.loopPumpStatusLayout.pumpStatus.setBackgroundColor(resourceHelper.gc(R.color.colorInitializingBorder))
-
         binding.notifications.setHasFixedSize(false)
         binding.notifications.layoutManager = LinearLayoutManager(view.context)
         axisWidth = if (dm.densityDpi <= 120) 3 else if (dm.densityDpi <= 160) 10 else if (dm.densityDpi <= 320) 35 else if (dm.densityDpi <= 420) 50 else if (dm.densityDpi <= 560) 70 else 80
@@ -189,10 +192,10 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         prepareGraphsIfNeeded(overviewMenus.setting.size)
         overviewMenus.setupChartMenu(binding.graphsLayout.chartMenuButton)
 
-        binding.loopPumpStatusLayout.activeProfile.setOnClickListener(this)
-        binding.loopPumpStatusLayout.activeProfile.setOnLongClickListener(this)
-        binding.loopPumpStatusLayout.tempTarget.setOnClickListener(this)
-        binding.loopPumpStatusLayout.tempTarget.setOnLongClickListener(this)
+        binding.activeProfile.setOnClickListener(this)
+        binding.activeProfile.setOnLongClickListener(this)
+        binding.tempTarget.setOnClickListener(this)
+        binding.tempTarget.setOnLongClickListener(this)
         binding.buttonsLayout.acceptTempButton.setOnClickListener(this)
         binding.buttonsLayout.treatmentButton.setOnClickListener(this)
         binding.buttonsLayout.wizardButton.setOnClickListener(this)
@@ -204,7 +207,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         binding.buttonsLayout.quickWizardButton.setOnLongClickListener(this)
         binding.infoLayout.apsMode.setOnClickListener(this)
         binding.infoLayout.apsMode.setOnLongClickListener(this)
-        binding.loopPumpStatusLayout.activeProfile.setOnLongClickListener(this)
+        binding.activeProfile.setOnLongClickListener(this)
     }
 
     @Synchronized
@@ -245,10 +248,14 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             .toObservable(EventNewOpenLoopNotification::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ scheduleUpdateGUI("EventNewOpenLoopNotification") }, fabricPrivacy::logException))
-        disposable.add(rxBus
+        disposable += rxBus
             .toObservable(EventPumpStatusChanged::class.java)
             .observeOn(aapsSchedulers.main)
-            .subscribe({ updatePumpStatus(it) }, fabricPrivacy::logException))
+            .delay (30, TimeUnit.MILLISECONDS, aapsSchedulers.main)
+            .subscribe({
+                overviewData.pumpStatus = it.getStatus(resourceHelper)
+                updateGUI("EventPumpStatusChanged", OverviewData.Property.PUMPSTATUS)
+            }, fabricPrivacy::logException)
 
         refreshLoop = Runnable {
             overviewPlugin.refreshLoop("refreshLoop")
@@ -403,18 +410,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     wizard.confirmAndExecute(it)
                 }
             }
-        }
-    }
-
-    private fun updatePumpStatus(event: EventPumpStatusChanged) {
-        val status = event.getStatus(resourceHelper)
-        if (status != "") {
-            binding.loopPumpStatusLayout.pumpStatus.text = status
-            binding.loopPumpStatusLayout.pumpStatusLayout.visibility = View.VISIBLE
-            binding.loopPumpStatusLayout.loopLayout.visibility = View.GONE
-        } else {
-            binding.loopPumpStatusLayout.pumpStatusLayout.visibility = View.GONE
-            binding.loopPumpStatusLayout.loopLayout.visibility = View.VISIBLE
         }
     }
 
@@ -600,14 +595,11 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 //        if (what != OverviewData.Property.CALC_PROGRESS)
 //            aapsLogger.debug(LTag.UI, "UpdateGui $from $what")
         if (profileFunction.getProfile() == null) {
-            binding.loopPumpStatusLayout.pumpStatus.setText(R.string.noprofileset)
-            binding.loopPumpStatusLayout.pumpStatusLayout.visibility = View.VISIBLE
-            binding.loopPumpStatusLayout.loopLayout.visibility = View.GONE
+            binding.activeProfile.setText(R.string.noprofileset)
+            binding.activeProfile.setBackgroundColor(resourceHelper.gc(R.color.errorAlertBackground))
             return
         }
         binding.notifications.let { notificationStore.updateNotifications(it) }
-        binding.loopPumpStatusLayout.pumpStatusLayout.visibility = View.GONE
-        binding.loopPumpStatusLayout.loopLayout.visibility = View.VISIBLE
 
         val units = profileFunction.getUnits()
         val pump = activePlugin.activePump
@@ -658,9 +650,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                         else resourceHelper.gc(R.color.ribbonTextDefault)
                     } ?: resourceHelper.gc(R.color.ribbonTextDefault)
 
-                binding.loopPumpStatusLayout.activeProfile.text = profileFunction.getProfileNameWithRemainingTime()
-                binding.loopPumpStatusLayout.activeProfile.setBackgroundColor(profileBackgroundColor)
-                binding.loopPumpStatusLayout.activeProfile.setTextColor(profileTextColor)
+                binding.activeProfile.text = profileFunction.getProfileNameWithRemainingTime()
+                binding.activeProfile.setBackgroundColor(profileBackgroundColor)
+                binding.activeProfile.setTextColor(profileTextColor)
             }
 
             OverviewData.Property.TEMPORARY_BASAL  -> {
@@ -721,9 +713,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 if (overviewData.temporaryTarget?.isInProgress(dateUtil) == false) overviewData.temporaryTarget = null
                 val tempTarget = overviewData.temporaryTarget
                 if (tempTarget != null) {
-                    binding.loopPumpStatusLayout.tempTarget.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
-                    binding.loopPumpStatusLayout.tempTarget.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning))
-                    binding.loopPumpStatusLayout.tempTarget.text = Profile.toTargetRangeString(tempTarget.lowTarget, tempTarget.highTarget, GlucoseUnit.MGDL, units) + " " + dateUtil.untilString(tempTarget.end, resourceHelper)
+                    binding.tempTarget.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
+                    binding.tempTarget.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning))
+                    binding.tempTarget.text = Profile.toTargetRangeString(tempTarget.lowTarget, tempTarget.highTarget, GlucoseUnit.MGDL, units) + " " + dateUtil.untilString(tempTarget.end, resourceHelper)
                 } else {
                     // If the target is not the same as set in the profile then oref has overridden it
                     profileFunction.getProfile()?.let { profile ->
@@ -731,13 +723,13 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
                         if (targetUsed != 0.0 && abs(profile.getTargetMgdl() - targetUsed) > 0.01) {
                             aapsLogger.debug("Adjusted target. Profile: ${profile.getTargetMgdl()} APS: $targetUsed")
-                            binding.loopPumpStatusLayout.tempTarget.text = Profile.toTargetRangeString(targetUsed, targetUsed, GlucoseUnit.MGDL, units)
-                            binding.loopPumpStatusLayout.tempTarget.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
-                            binding.loopPumpStatusLayout.tempTarget.setBackgroundColor(resourceHelper.gc(R.color.tempTargetBackground))
+                            binding.tempTarget.text = Profile.toTargetRangeString(targetUsed, targetUsed, GlucoseUnit.MGDL, units)
+                            binding.tempTarget.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
+                            binding.tempTarget.setBackgroundColor(resourceHelper.gc(R.color.tempTargetBackground))
                         } else {
-                            binding.loopPumpStatusLayout.tempTarget.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault))
-                            binding.loopPumpStatusLayout.tempTarget.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
-                            binding.loopPumpStatusLayout.tempTarget.text = Profile.toTargetRangeString(profile.getTargetLowMgdl(), profile.getTargetHighMgdl(), GlucoseUnit.MGDL, units)
+                            binding.tempTarget.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault))
+                            binding.tempTarget.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
+                            binding.tempTarget.text = Profile.toTargetRangeString(profile.getTargetLowMgdl(), profile.getTargetHighMgdl(), GlucoseUnit.MGDL, units)
                         }
                     }
                 }
@@ -831,6 +823,12 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     overviewData.lastAutosensData?.let { autosensData ->
                         String.format(Locale.ENGLISH, "%.0f%%", autosensData.autosensResult.ratio * 100)
                     } ?: ""
+            }
+
+            OverviewData.Property.PUMPSTATUS      -> {
+                val status = overviewData.pumpStatus
+                binding.pumpStatus.text = status
+                binding.pumpStatusLayout.visibility = (status != "").toVisibility()
             }
         }
     }
