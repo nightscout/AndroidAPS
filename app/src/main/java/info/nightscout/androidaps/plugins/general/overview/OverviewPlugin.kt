@@ -135,16 +135,22 @@ class OverviewPlugin @Inject constructor(
                 .toObservable(EventLoopInvoked::class.java)
                 .observeOn(aapsSchedulers.io)
                 .subscribe({ overviewData.preparePredictions("EventLoopInvoked") }, fabricPrivacy::logException)
-        disposable.add(rxBus
+        disposable += rxBus
                 .toObservable(EventNewBasalProfile::class.java)
                 .observeOn(aapsSchedulers.io)
-                .subscribe({ loadProfile("EventNewBasalProfile") }, fabricPrivacy::logException))
-        disposable.add(rxBus
+                .subscribe({ loadProfile("EventNewBasalProfile") }, fabricPrivacy::logException)
+        disposable += rxBus
                 .toObservable(EventAutosensCalculationFinished::class.java)
                 .observeOn(aapsSchedulers.io)
                 .subscribe({
                     if (it.cause !is EventCustomCalculationFinished) refreshLoop("EventAutosensCalculationFinished")
-                }, fabricPrivacy::logException))
+                }, fabricPrivacy::logException)
+        disposable += rxBus
+               .toObservable(EventPumpStatusChanged::class.java)
+               .observeOn(aapsSchedulers.io)
+               .subscribe({
+                    overviewData.pumpStatus = it.getStatus(resourceHelper)
+               }, fabricPrivacy::logException)
 
         Thread { loadAll("onResume") }.start()
     }

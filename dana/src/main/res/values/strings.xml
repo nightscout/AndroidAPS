@@ -108,8 +108,6 @@
     <string name="profile_set_failed">Setting of basal profile failed</string>
     <string name="danar_bluetooth_status">Bluetooth status</string>
     <string name="danar_iob_label">Pump IOB</string>
-    <string name="basal_step">Basal Step</string>
-    <string name="bolus_step">Bolus Step</string>
     <string name="virtualpump_firmware_label">Firmware</string>
     <string name="danar_pump_settings">Dana pump settings</string>
     <string name="timeformat12h">12h</string>
@@ -131,5 +129,6 @@
     <string name="press_ok_on_the_pump">Press OK on the pump\nand enter 2 displayed numbers\nKeep display on pump ON by pressing minus button until you finish entering code.</string>
     <string name="num1pin">1: (12 digits)</string>
     <string name="num2pin">2: (8 digits)</string>
+    <string name="basal_bolus_step">Basal/bolus step</string>
 
 </resources>
