@@ -22,8 +22,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.mapProfileToBas
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.Single
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import javax.inject.Inject
@@ -68,48 +66,48 @@ class DashInsertCannulaViewModel @Inject constructor(
 
             super.disposable += omnipodManager.activatePodPart2(basalProgram, expirationHoursBeforeShutdown)
                 .subscribeBy(
-                onNext = { podEvent ->
-                    logger.debug(
-                        LTag.PUMP,
-                        "Received PodEvent in Pod activation part 2: $podEvent"
-                    )
-                },
-                onError = { throwable ->
-                    logger.error(LTag.PUMP, "Error in Pod activation part 2", throwable)
-                    source.onSuccess(PumpEnactResult(injector).success(false).comment(I8n.textFromException(throwable, resourceHelper)))
-                },
-                onComplete = {
-                    logger.debug("Pod activation part 2 completed")
-                    podStateManager.basalProgram = basalProgram
+                    onNext = { podEvent ->
+                        logger.debug(
+                            LTag.PUMP,
+                            "Received PodEvent in Pod activation part 2: $podEvent"
+                        )
+                    },
+                    onError = { throwable ->
+                        logger.error(LTag.PUMP, "Error in Pod activation part 2", throwable)
+                        source.onSuccess(PumpEnactResult(injector).success(false).comment(I8n.textFromException(throwable, resourceHelper)))
+                    },
+                    onComplete = {
+                        logger.debug("Pod activation part 2 completed")
+                        podStateManager.basalProgram = basalProgram
 
-                    pumpSync.syncStopTemporaryBasalWithPumpId(
-                        timestamp = System.currentTimeMillis(),
-                        endPumpId = System.currentTimeMillis(),
-                        pumpType = PumpType.OMNIPOD_DASH,
-                        pumpSerial = Constants.PUMP_SERIAL_FOR_FAKE_TBR // cancel the fake TBR with the same pump
-                        // serial that it was created with
-                    )
+                        pumpSync.syncStopTemporaryBasalWithPumpId(
+                            timestamp = System.currentTimeMillis(),
+                            endPumpId = System.currentTimeMillis(),
+                            pumpType = PumpType.OMNIPOD_DASH,
+                            pumpSerial = Constants.PUMP_SERIAL_FOR_FAKE_TBR // cancel the fake TBR with the same pump
+                            // serial that it was created with
+                        )
 
-                    pumpSync.connectNewPump()
+                        pumpSync.connectNewPump()
 
-                    pumpSync.insertTherapyEventIfNewWithTimestamp(
-                        timestamp = System.currentTimeMillis(),
-                        type = DetailedBolusInfo.EventType.CANNULA_CHANGE,
-                        pumpType = PumpType.OMNIPOD_DASH,
-                        pumpSerial = podStateManager.uniqueId?.toString() ?: "n/a"
-                    )
-                    pumpSync.insertTherapyEventIfNewWithTimestamp(
-                        timestamp = System.currentTimeMillis(),
-                        type = DetailedBolusInfo.EventType.INSULIN_CHANGE,
-                        pumpType = PumpType.OMNIPOD_DASH,
-                        pumpSerial = podStateManager.uniqueId?.toString() ?: "n/a"
-                    )
+                        pumpSync.insertTherapyEventIfNewWithTimestamp(
+                            timestamp = System.currentTimeMillis(),
+                            type = DetailedBolusInfo.EventType.CANNULA_CHANGE,
+                            pumpType = PumpType.OMNIPOD_DASH,
+                            pumpSerial = podStateManager.uniqueId?.toString() ?: "n/a"
+                        )
+                        pumpSync.insertTherapyEventIfNewWithTimestamp(
+                            timestamp = System.currentTimeMillis(),
+                            type = DetailedBolusInfo.EventType.INSULIN_CHANGE,
+                            pumpType = PumpType.OMNIPOD_DASH,
+                            pumpSerial = podStateManager.uniqueId?.toString() ?: "n/a"
+                        )
 
-                    podStateManager.updateExpirationAlertSettings(expirationReminderEnabled, expirationHours)
-                    rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED))
-                    source.onSuccess(PumpEnactResult(injector).success(true))
-                }
-            )
+                        podStateManager.updateExpirationAlertSettings(expirationReminderEnabled, expirationHours)
+                        rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED))
+                        source.onSuccess(PumpEnactResult(injector).success(true))
+                    }
+                )
         }
     }
 

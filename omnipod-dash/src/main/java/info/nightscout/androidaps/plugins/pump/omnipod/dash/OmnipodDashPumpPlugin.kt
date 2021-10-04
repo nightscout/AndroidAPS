@@ -50,7 +50,6 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
-import io.reactivex.rxkotlin.subscribeBy
 import org.json.JSONObject
 import java.time.Duration
 import java.time.ZonedDateTime
