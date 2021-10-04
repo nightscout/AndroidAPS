@@ -600,13 +600,14 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                         null
                 ));
                 InsightBolusID insightBolusID = insightDbHelper.getInsightBolusID(serial, bolusID, now);
-                pumpSync.syncBolusWithPumpId(
+                Boolean psRseult = pumpSync.syncBolusWithPumpId(
                         insightBolusID.getTimestamp(),
                         detailedBolusInfo.insulin,
                         detailedBolusInfo.getBolusType(),
                         insightBolusID.getId(),
                         PumpType.ACCU_CHEK_INSIGHT,
                         serialNumber());
+                aapsLogger.debug(LTag.PUMP, "XXXX deliverTreatment " + insightBolusID.getId() + " Update database sent: " + dateUtil.dateAndTimeString(insightBolusID.getTimestamp()) + " amount: " + detailedBolusInfo.insulin + " Result: " + psRseult);
                 while (true) {
                     synchronized ($bolusLock) {
                         if (bolusCancelled) break;
@@ -1408,7 +1409,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     bolusID.getId(),
                     PumpType.ACCU_CHEK_INSIGHT,
                     serial);
-            aapsLogger.debug(LTag.PUMP, "XXXX Last bolus programmed " + bolusID.getId() + " Update database sent");
+            aapsLogger.debug(LTag.PUMP, "XXXX Last bolus programmed " + bolusID.getId() + " Update database sent " + dateUtil.dateAndTimeString(bolusID.getTimestamp()) + " amount: " + event.getImmediateAmount());
             if (!checkLastBolusRecorded(bolusID.getTimestamp(), event.getImmediateAmount())) {
                 aapsLogger.error(LTag.PUMP, "XXXX Last bolus programmed " + bolusID.getId() + " not recorded in database");
                 Notification notification = new Notification(Notification.INFO, "Last Bolus programmed " + event.getImmediateAmount() + " not recorded in database", Notification.URGENT);
@@ -1453,15 +1454,19 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         insightDbHelper.createOrUpdate(bolusID);
         bolusID = insightDbHelper.getInsightBolusID(serial, event.getBolusID(), startTimestamp); // Line added to get id
         if (event.getBolusType() == BolusType.STANDARD || event.getBolusType() == BolusType.MULTIWAVE) {
-            pumpSync.syncBolusWithPumpId(
+            PumpSync.PumpState.Bolus lastRecordedBolus = pumpSync.expectedPumpState().getBolus();
+            aapsLogger.error(LTag.PUMP, "XXXX Last bolus in Database before update " + dateUtil.dateAndTimeString(lastRecordedBolus.getTimestamp()) + " amount: " + lastRecordedBolus.getAmount());
+            Boolean result = pumpSync.syncBolusWithPumpId(
                     bolusID.getTimestamp(),
                     event.getImmediateAmount(),
                     null,
                     bolusID.getId(),
                     PumpType.ACCU_CHEK_INSIGHT,
                     serial);
-            aapsLogger.debug(LTag.PUMP, "XXXX Last bolus delivered " + bolusID.getId() + " Update database sent");
-            if (!checkLastBolusRecorded(startTimestamp, event.getImmediateAmount())) {
+            aapsLogger.debug(LTag.PUMP, "XXXX Last bolus delivered " + bolusID.getId() + " Update database sent: " + dateUtil.dateAndTimeString(bolusID.getTimestamp()) + " amount: " + event.getImmediateAmount() + " Result: " + result);
+            lastRecordedBolus = pumpSync.expectedPumpState().getBolus();
+            aapsLogger.error(LTag.PUMP, "XXXX Last bolus in Database after update " + dateUtil.dateAndTimeString(lastRecordedBolus.getTimestamp()) + " amount: " + lastRecordedBolus.getAmount());
+            if (!checkLastBolusRecorded(bolusID.getTimestamp(), event.getImmediateAmount())) {
                 aapsLogger.error(LTag.PUMP, "XXXX Last bolus delevered " + bolusID.getId() + " not recorded in database");
                 Notification notification = new Notification(Notification.INFO, "Last Bolus delevered " + event.getImmediateAmount() + " not recorded in database", Notification.URGENT);
                 rxBus.send(new EventNewNotification(notification));
