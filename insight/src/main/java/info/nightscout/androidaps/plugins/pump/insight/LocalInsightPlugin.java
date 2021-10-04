@@ -190,6 +190,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     private List<ActiveBolus> activeBoluses;
     private boolean statusLoaded;
     private TBROverNotificationBlock tbrOverNotificationBlock;
+    public double lastBolusAmount = 0;
+    public long lastBolusTimestamp = 0L;
 
     @Inject
     public LocalInsightPlugin(
@@ -600,14 +602,13 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                         null
                 ));
                 InsightBolusID insightBolusID = insightDbHelper.getInsightBolusID(serial, bolusID, now);
-                Boolean psRseult = pumpSync.syncBolusWithPumpId(
+                pumpSync.syncBolusWithPumpId(
                         insightBolusID.getTimestamp(),
                         detailedBolusInfo.insulin,
                         detailedBolusInfo.getBolusType(),
                         insightBolusID.getId(),
                         PumpType.ACCU_CHEK_INSIGHT,
                         serialNumber());
-                aapsLogger.debug(LTag.PUMP, "XXXX deliverTreatment " + insightBolusID.getId() + " Update database sent: " + dateUtil.dateAndTimeString(insightBolusID.getTimestamp()) + " amount: " + detailedBolusInfo.insulin + " Result: " + psRseult);
                 while (true) {
                     synchronized ($bolusLock) {
                         if (bolusCancelled) break;
@@ -1378,17 +1379,9 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         if (bolusID != null && bolusID.getEndID() != null) {
             bolusID.setStartID(event.getEventPosition());
             insightDbHelper.createOrUpdate(bolusID);
-            aapsLogger.debug(LTag.PUMP, "XXXX Bolus Programmed " + bolusID.getId() + "/" + bolusID.getStartID() + "/" + bolusID.getEndID() +" already recorded in Insight database");
             return;
         }
         if (bolusID == null || bolusID.getStartID() != null) {                        //In rare edge cases two boluses can share the same ID
-            if (bolusID != null) {
-                Notification notification = new Notification(Notification.INFO, "Two Boluses shared the same ID " + dateUtil.dateAndTimeString(bolusID.getTimestamp()) + " and " + dateUtil.dateAndTimeString(timestamp), Notification.URGENT);
-                rxBus.send(new EventNewNotification(notification));
-                aapsLogger.debug(LTag.PUMP, "XXXX Bolus Programmed " + bolusID.getId() + "/" + bolusID.getStartID() + " two boluses share the same ID : " + bolusID.getTimestamp() + " and " + timestamp); //In rare edge cases two boluses can share the same ID
-            } else {
-                aapsLogger.debug(LTag.PUMP, "XXXX Bolus Programmed " + event.getEventPosition() + " missing in Insight database");
-            }
             insightDbHelper.createOrUpdate(new InsightBolusID(
                     timestamp,
                     serial,
@@ -1409,12 +1402,6 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     bolusID.getId(),
                     PumpType.ACCU_CHEK_INSIGHT,
                     serial);
-            aapsLogger.debug(LTag.PUMP, "XXXX Last bolus programmed " + bolusID.getId() + " Update database sent " + dateUtil.dateAndTimeString(bolusID.getTimestamp()) + " amount: " + event.getImmediateAmount());
-            if (!checkLastBolusRecorded(bolusID.getTimestamp(), event.getImmediateAmount())) {
-                aapsLogger.error(LTag.PUMP, "XXXX Last bolus programmed " + bolusID.getId() + " not recorded in database");
-                Notification notification = new Notification(Notification.INFO, "Last Bolus programmed " + event.getImmediateAmount() + " not recorded in database", Notification.URGENT);
-                rxBus.send(new EventNewNotification(notification));
-            }
         }
         if ((event.getBolusType() == BolusType.EXTENDED || event.getBolusType() == BolusType.MULTIWAVE)) {
             if (profileFunction.getProfile(bolusID.getTimestamp()) != null)
@@ -1436,41 +1423,26 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 event.getEventMinute(), event.getEventSecond(), event.getStartHour(), event.getStartMinute(), event.getStartSecond()) + timeOffset;
         InsightBolusID bolusID = insightDbHelper.getInsightBolusID(serial, event.getBolusID(), timestamp);
         if (bolusID == null || bolusID.getEndID() != null) {                        // TODO() Check if test EndID is necessary
-            if (bolusID == null) {
-                aapsLogger.debug(LTag.PUMP, "XXXX Delivered Bolus " + event.getBolusID() + "/" + event.getEventPosition() + " not recorded in Insight database");
-            } else {
-                aapsLogger.debug(LTag.PUMP, "XXXX Delivered Bolus " + bolusID.getId() + "/" + bolusID.getStartID() + "/" + bolusID.getEndID() + "=?" + event.getEventPosition() + " already recorded in Insight database");
-            }
             bolusID = new InsightBolusID(
                     startTimestamp,
                     serial,
                     event.getBolusID(),
                     bolusID == null ? event.getEventPosition() : bolusID.getStartID(),
                     event.getEventPosition());
-        } else {
-            aapsLogger.debug(LTag.PUMP, "XXXX Delivered Bolus " + bolusID.getId() + "!=" + event.getBolusID() + "/" + event.getEventPosition() + " already recorded in Insight database");
         }
         bolusID.setEndID(event.getEventPosition());
         insightDbHelper.createOrUpdate(bolusID);
         bolusID = insightDbHelper.getInsightBolusID(serial, event.getBolusID(), startTimestamp); // Line added to get id
         if (event.getBolusType() == BolusType.STANDARD || event.getBolusType() == BolusType.MULTIWAVE) {
-            PumpSync.PumpState.Bolus lastRecordedBolus = pumpSync.expectedPumpState().getBolus();
-            aapsLogger.error(LTag.PUMP, "XXXX Last bolus in Database before update " + dateUtil.dateAndTimeString(lastRecordedBolus.getTimestamp()) + " amount: " + lastRecordedBolus.getAmount());
-            Boolean result = pumpSync.syncBolusWithPumpId(
+            pumpSync.syncBolusWithPumpId(
                     bolusID.getTimestamp(),
                     event.getImmediateAmount(),
                     null,
                     bolusID.getId(),
                     PumpType.ACCU_CHEK_INSIGHT,
                     serial);
-            aapsLogger.debug(LTag.PUMP, "XXXX Last bolus delivered " + bolusID.getId() + " Update database sent: " + dateUtil.dateAndTimeString(bolusID.getTimestamp()) + " amount: " + event.getImmediateAmount() + " Result: " + result);
-            lastRecordedBolus = pumpSync.expectedPumpState().getBolus();
-            aapsLogger.error(LTag.PUMP, "XXXX Last bolus in Database after update " + dateUtil.dateAndTimeString(lastRecordedBolus.getTimestamp()) + " amount: " + lastRecordedBolus.getAmount());
-            if (!checkLastBolusRecorded(bolusID.getTimestamp(), event.getImmediateAmount())) {
-                aapsLogger.error(LTag.PUMP, "XXXX Last bolus delevered " + bolusID.getId() + " not recorded in database");
-                Notification notification = new Notification(Notification.INFO, "Last Bolus delevered " + event.getImmediateAmount() + " not recorded in database", Notification.URGENT);
-                rxBus.send(new EventNewNotification(notification));
-            }
+            lastBolusTimestamp = bolusID.getTimestamp();
+            lastBolusAmount = event.getImmediateAmount();
         }
         if (event.getBolusType() == BolusType.EXTENDED || event.getBolusType() == BolusType.MULTIWAVE) {
             if (event.getDuration() > 0 && profileFunction.getProfile(bolusID.getTimestamp()) != null)
@@ -1483,11 +1455,6 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                             PumpType.ACCU_CHEK_INSIGHT,
                             serial);
         }
-    }
-
-    private boolean checkLastBolusRecorded(long startTimestamp, double immediateAmount) {
-        PumpSync.PumpState.Bolus lastRecordedBolus = pumpSync.expectedPumpState().getBolus();
-        return lastRecordedBolus == null ? false : lastRecordedBolus.getTimestamp() == startTimestamp && lastRecordedBolus.getAmount() == immediateAmount;
     }
 
     private void processOccurrenceOfAlertEvent(OccurrenceOfAlertEvent event) {
