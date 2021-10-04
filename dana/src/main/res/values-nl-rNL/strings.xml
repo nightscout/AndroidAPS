@@ -92,8 +92,6 @@
     <string name="profile_set_failed">Instellen van basaal profiel mislukt</string>
     <string name="danar_bluetooth_status">Bluetooth status</string>
     <string name="danar_iob_label">Pomp IOB</string>
-    <string name="basal_step">Basaal Stap</string>
-    <string name="bolus_step">Bolus Stap</string>
     <string name="virtualpump_firmware_label">Firmware</string>
     <string name="danar_pump_settings">Dana pomp instellingen</string>
     <string name="timeformat12h">12u</string>
