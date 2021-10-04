@@ -92,8 +92,6 @@
     <string name="profile_set_failed">Error al activar perfil basal</string>
     <string name="danar_bluetooth_status">Estado de bluetooth</string>
     <string name="danar_iob_label">Bomba IOB</string>
-    <string name="basal_step">Nivel base</string>
-    <string name="bolus_step">Nivel bolo</string>
     <string name="virtualpump_firmware_label">Firmware</string>
     <string name="danar_pump_settings">Ajustes de la bomba Dana</string>
     <string name="timeformat12h">12 h</string>
