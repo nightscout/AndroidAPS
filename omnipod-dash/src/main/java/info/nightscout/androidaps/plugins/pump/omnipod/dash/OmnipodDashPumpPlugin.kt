@@ -36,6 +36,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.BolusRe
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.BolusType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.TempBasalRecord
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.OmnipodDashOverviewFragment
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.Constants
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.mapProfileToBasalProgram
 import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.androidaps.queue.commands.CustomCommand
@@ -127,8 +128,6 @@ class OmnipodDashPumpPlugin @Inject constructor(
             val tbr = expectedState.temporaryBasal
             if (tbr == null || tbr.rate != 0.0) {
                 aapsLogger.info(LTag.PUMP, "createFakeTBRWhenNoActivePod")
-                // calling connectNewPump() here because pumpSerial could have changed(from 4241 to "n/a")
-                pumpSync.connectNewPump()
                 pumpSync.syncTemporaryBasalWithPumpId(
                     timestamp = System.currentTimeMillis(),
                     rate = 0.0,
@@ -137,7 +136,9 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
                     pumpId = Random.Default.nextLong(), // we don't use this, just make sure it's unique
                     pumpType = PumpType.OMNIPOD_DASH,
-                    pumpSerial = serialNumber()
+                    pumpSerial = Constants.PUMP_SERIAL_FOR_FAKE_TBR // switching the serialNumber here would need a
+                    // call to connectNewPump. If we do that, then we will have a TBR started by the "n/a" pump and
+                    // cancelled by "4241". This did not work ok.
                 )
             }
         }

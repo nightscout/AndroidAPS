@@ -16,6 +16,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activati
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.OmnipodDashManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.Constants
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.I8n
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.mapProfileToBasalProgram
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -80,7 +81,17 @@ class DashInsertCannulaViewModel @Inject constructor(
                 onComplete = {
                     logger.debug("Pod activation part 2 completed")
                     podStateManager.basalProgram = basalProgram
+
+                    pumpSync.syncStopTemporaryBasalWithPumpId(
+                        timestamp = System.currentTimeMillis(),
+                        endPumpId = System.currentTimeMillis(),
+                        pumpType = PumpType.OMNIPOD_DASH,
+                        pumpSerial = Constants.PUMP_SERIAL_FOR_FAKE_TBR // cancel the fake TBR with the same pump
+                        // serial that it was created with
+                    )
+
                     pumpSync.connectNewPump()
+
                     pumpSync.insertTherapyEventIfNewWithTimestamp(
                         timestamp = System.currentTimeMillis(),
                         type = DetailedBolusInfo.EventType.CANNULA_CHANGE,
@@ -93,12 +104,7 @@ class DashInsertCannulaViewModel @Inject constructor(
                         pumpType = PumpType.OMNIPOD_DASH,
                         pumpSerial = podStateManager.uniqueId?.toString() ?: "n/a"
                     )
-                    pumpSync.syncStopTemporaryBasalWithPumpId(
-                        timestamp = System.currentTimeMillis(),
-                        endPumpId = System.currentTimeMillis(),
-                        pumpType = PumpType.OMNIPOD_DASH,
-                        pumpSerial = podStateManager.uniqueId?.toString() ?: "n/a"
-                    )
+
                     podStateManager.updateExpirationAlertSettings(expirationReminderEnabled, expirationHours)
                     rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED))
                     source.onSuccess(PumpEnactResult(injector).success(true))
