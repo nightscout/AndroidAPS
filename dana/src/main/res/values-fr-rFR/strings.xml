@@ -115,4 +115,5 @@
     <string name="press_ok_on_the_pump">Appuyez sur OK sur la pompe\net entrez les 2 numéros affichés\nConserver l\'affichage ACTIF sur la pompe en appuyant sur le bouton &lt;b&gt;moins&lt;b&gt; jusqu\'à ce que le code soit entré.</string>
     <string name="num1pin">1: (12 chiffres)</string>
     <string name="num2pin">2: (8 chiffres)</string>
+    <string name="basal_bolus_step">Étape Basal/Bolus</string>
 </resources>
