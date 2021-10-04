@@ -94,8 +94,6 @@
     <string name="profile_set_failed">Lyckades inte sätta basalprofilen</string>
     <string name="danar_bluetooth_status">Bluetoothstatus</string>
     <string name="danar_iob_label">Pumpens IOB</string>
-    <string name="basal_step">Basalsteg</string>
-    <string name="bolus_step">Bolussteg</string>
     <string name="virtualpump_firmware_label">Firmwareversion</string>
     <string name="danar_pump_settings">Dana R pumpinställningar</string>
     <string name="timeformat12h">12 tim</string>
