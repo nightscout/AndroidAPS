@@ -115,4 +115,5 @@
     <string name="press_ok_on_the_pump">Stlačte OK na pumpe\na zadajte 2 zobrazené čísla\nUdržujte display na pumpe zapnutý stlačením tlačítka mínus, kým nedokončíte zadanie kódu.</string>
     <string name="num1pin">1: (12 číslic)</string>
     <string name="num2pin">2: (8 číslic)</string>
+    <string name="basal_bolus_step">Krok bazálu/bolusu</string>
 </resources>
