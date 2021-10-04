@@ -311,7 +311,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
 
     private fun updateLastBolusFromResponse(bolusPulsesRemaining: Short) {
         podState.lastBolus?.run {
-            val remainingUnits = bolusPulsesRemaining.toDouble() * 0.05
+            val remainingUnits = bolusPulsesRemaining.toDouble() * PodConstants.POD_PULSE_BOLUS_UNITS
             this.bolusUnitsRemaining = remainingUnits
             if (remainingUnits == 0.0) {
                 this.deliveryComplete = true
