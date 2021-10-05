@@ -92,6 +92,17 @@ public class RileyLinkBLE {
                 if (radioResponseCountNotified != null) {
                     radioResponseCountNotified.run();
                 }
+
+                if (characteristic.getUuid().toString().equals(GattAttributes.UUID_NOTIF_CHARACTER.toString())) {
+                    final byte[] data = characteristic.getValue();
+                    int first = 0xff & data[0];
+                    aapsLogger.info(LTag.PUMPBTCOMM,
+                            "onCharacteristicChanged " + ByteUtil.shortHexString(characteristic.getValue()) + "=====" + first);
+                    String fv = data[3] + "." + data[4];
+                    String hv = data[5] + "." + data[6];
+                    rileyLinkServiceData.versionOrangeFV = fv;
+                    rileyLinkServiceData.versionOrangeHV = hv;
+                }
             }
 
 
@@ -242,6 +253,9 @@ public class RileyLinkBLE {
                         if (gattDebugEnabled) {
                             debugService(service, 0);
                         }
+                        if (GattAttributes.isOrange(uuidService)) {
+                            rileyLinkServiceData.isOrange = true;
+                        }
                     }
 
                     if (gattDebugEnabled) {
@@ -369,9 +383,21 @@ public class RileyLinkBLE {
             aapsLogger.error(LTag.PUMPBTCOMM, "Error setting response count notification");
             return false;
         }
+        if(rileyLinkServiceData.isOrange){
+            enableNotificationsOrange();
+        }
         return true;
     }
-
+    public boolean enableNotificationsOrange() {
+        aapsLogger.error(LTag.PUMPBTCOMM, "enableNotificationsORG");
+        BLECommOperationResult result = setNotification_blocking(GattAttributes.UUID_NOTIF_SERVICE, //
+                GattAttributes.UUID_NOTIF_CHARACTER);
+        if (result.resultCode != BLECommOperationResult.RESULT_SUCCESS) {
+            aapsLogger.error(LTag.PUMPBTCOMM, "Error setting response count notification");
+            return false;
+        }
+        return true;
+    }
     String macAddress;
 
     public void findRileyLink(String RileyLinkAddress) {
