@@ -27,7 +27,7 @@ class DefaultStatusResponseTest {
     }
 
     /**
-     * response (hex) 08202EAA0C0A1D1905281000004387D3039A
+     * response (hex) 1D1905281000004387D3039A
      Status response: 29
      Pod status: RUNNING_BELOW_MIN_VOLUME
      Basal active: true
@@ -66,7 +66,7 @@ class DefaultStatusResponseTest {
     }
 
     /**
-     * response (hex) 08202EAA080A1D180519C00E0039A7FF8085
+     * response (hex) 1D180519C00E0039A7FF8085
      Status response: 29
      Pod status: RUNNING_ABOVE_MIN_VOLUME
      Basal active: true
@@ -102,5 +102,35 @@ class DefaultStatusResponseTest {
         Assert.assertEquals(3689.toShort(), response.minutesSinceActivation)
         Assert.assertEquals(1023.toShort(), response.reservoirPulsesRemaining)
         Assert.assertEquals(2611.toShort(), response.totalPulsesDelivered)
+    }
+
+    /** response (hex) 1D990714201F0042ED8801DE
+        Status response: 29
+        Pod status: RUNNING_BELOW_MIN_VOLUME
+        Basal active: true
+        Temp Basal active: false
+        Immediate bolus active: false
+        Extended bolus active: true
+        Bolus pulses remaining: 31
+        sequence number of last programing command: 4
+        Total full pulses delivered: 3624
+        Full reservoir pulses remaining: 392
+        Time since activation: 4283
+     */
+    @Test @Throws(DecoderException::class) fun testValidResponseBolusPulsesRemaining2() {
+        val encoded = Hex.decodeHex("1D990714201F0042ED8801DE")
+        val response = DefaultStatusResponse(encoded)
+        Assert.assertArrayEquals(encoded, response.encoded)
+        Assert.assertNotSame(encoded, response.encoded)
+        Assert.assertEquals(ResponseType.DEFAULT_STATUS_RESPONSE, response.responseType)
+        Assert.assertEquals(ResponseType.DEFAULT_STATUS_RESPONSE.value, response.messageType)
+        Assert.assertEquals(DeliveryStatus.UNKNOWN, response.deliveryStatus) // Extended bolus active
+        Assert.assertEquals(PodStatus.RUNNING_BELOW_MIN_VOLUME, response.podStatus)
+        Assert.assertEquals(4.toShort(), response.sequenceNumberOfLastProgrammingCommand)
+        Assert.assertEquals(31.toShort(), response.bolusPulsesRemaining)
+        Assert.assertEquals(0, response.activeAlerts.size)
+        Assert.assertEquals(4283.toShort(), response.minutesSinceActivation)
+        Assert.assertEquals(392.toShort(), response.reservoirPulsesRemaining)
+        Assert.assertEquals(3624.toShort(), response.totalPulsesDelivered)
     }
 }
