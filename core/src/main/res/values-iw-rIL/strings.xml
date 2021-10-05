@@ -30,7 +30,7 @@
     <string name="format_mins">%1$d דק\'</string>
     <string name="pumpbusy">המשאבה אינה פנויה</string>
     <string name="connectionerror">שגיאה בחיבור המשאבה</string>
-    <string name="youareonallowedlimit">הגיעתם למגבלה המותרת</string>
+    <string name="youareonallowedlimit">הגעתם למגבלה המותרת</string>
     <string name="objectives">משימות</string>
     <string name="close">סגור</string>
     <string name="please_wait">נא להמתין…</string>
