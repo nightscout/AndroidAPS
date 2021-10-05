@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.constraints.versionChecker
 
 import android.content.Context
 import android.net.ConnectivityManager
+import android.os.Build
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
@@ -39,7 +40,8 @@ fun triggerCheckVersion() {
 private fun checkVersion() = if (isConnected()) {
     Thread {
         try {
-            val version: String? = findVersion(URL("https://raw.githubusercontent.com/MilosKozak/AndroidAPS/master/app/build.gradle").readText())
+            val definition: String = URL("https://raw.githubusercontent.com/nightscout/AndroidAPS/versions/definition.json").readText()
+            val version: String? = AllowedVersions().findByApi(definition, Build.VERSION.SDK_INT)?.optString("supported")
             compareWithCurrentVersion(version, BuildConfig.VERSION_NAME)
         } catch (e: IOException) {
             log.debug("Github master version check error: $e")
