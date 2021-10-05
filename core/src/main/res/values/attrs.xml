@@ -1,7 +1,0 @@
-<resources>
-
-    <attr name="dialogTitleBackground" format="reference" />
-    <attr name="dialogTitleColor" format="reference" />
-    <attr name="dialogTitleIconTint" format="reference" />
-
-</resources>
