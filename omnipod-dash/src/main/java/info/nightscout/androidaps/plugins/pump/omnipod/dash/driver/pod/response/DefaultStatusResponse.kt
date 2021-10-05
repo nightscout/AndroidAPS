@@ -24,7 +24,7 @@ class DefaultStatusResponse(
         AlertUtil.decodeAlertSet((encoded[6].toInt() and 0xff shl 1 or (encoded[7] ushr 7)).toByte())
     val minutesSinceActivation: Short =
         (encoded[7] and 0x7f shl 6 or (encoded[8].toInt() and 0xff ushr 2 and 0x3f)).toShort()
-    val reservoirPulsesRemaining: Short = (encoded[8] shl 8 or encoded[9].toInt() and 0x3ff).toShort()
+    val reservoirPulsesRemaining: Short = (encoded[8] shl 8 or (encoded[9].toInt() and 0xff) and 0x3ff).toShort()
 
     override fun toString(): String {
         return "DefaultStatusResponse(" +
