@@ -6,7 +6,6 @@ import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.os.Build
-import com.j256.ormlite.android.apptools.OpenHelperManager
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import info.nightscout.androidaps.database.AppRepository
@@ -15,11 +14,10 @@ import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import info.nightscout.androidaps.database.transactions.VersionChangeTransaction
 import info.nightscout.androidaps.db.CompatDBHelper
-import info.nightscout.androidaps.db.DatabaseHelper
-import info.nightscout.androidaps.db.StaticInjector
+import info.nightscout.androidaps.di.StaticInjector
 import info.nightscout.androidaps.dependencyInjection.DaggerAppComponent
-import info.nightscout.androidaps.interfaces.ConfigBuilder
 import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.androidaps.interfaces.ConfigBuilder
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -34,6 +32,7 @@ import info.nightscout.androidaps.receivers.TimeDateOrTZChangeReceiver
 import info.nightscout.androidaps.utils.ActivityMonitor
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.locale.LocaleHelper.update
+import info.nightscout.androidaps.utils.protection.PasswordCheck
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
@@ -58,12 +57,12 @@ class MainApp : DaggerApplication() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var staticInjector: StaticInjector// TODO avoid , here fake only to initialize
     @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var passwordCheck: PasswordCheck
 
     override fun onCreate() {
         super.onCreate()
         aapsLogger.debug("onCreate")
         update(this)
-        dbHelper = OpenHelperManager.getHelper(this, DatabaseHelper::class.java)
 
         var gitRemote: String? = BuildConfig.REMOTE
         var commitHash: String? = BuildConfig.HEAD
@@ -90,6 +89,7 @@ class MainApp : DaggerApplication() {
         keepAliveManager.setAlarm(this)
         doMigrations()
         uel.log(UserEntry.Action.START_AAPS, UserEntry.Sources.Aaps)
+        passwordCheck.passwordResetCheck(this)
     }
 
     private fun doMigrations() {
@@ -133,10 +133,5 @@ class MainApp : DaggerApplication() {
         unregisterActivityLifecycleCallbacks(activityMonitor)
         keepAliveManager.cancelAlarm(this)
         super.onTerminate()
-    }
-
-    companion object {
-
-        lateinit var dbHelper: DatabaseHelper
     }
 }

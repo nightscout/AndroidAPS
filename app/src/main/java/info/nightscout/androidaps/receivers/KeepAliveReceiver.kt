@@ -28,6 +28,7 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.RunningConfiguration
+import info.nightscout.androidaps.plugins.general.maintenance.MaintenancePlugin
 import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -72,6 +73,7 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
         @Inject lateinit var rxBus: RxBusWrapper
         @Inject lateinit var commandQueue: CommandQueueProvider
         @Inject lateinit var fabricPrivacy: FabricPrivacy
+        @Inject lateinit var maintenancePlugin: MaintenancePlugin
 
         init {
             (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
@@ -93,6 +95,8 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
             localAlertUtils.checkStaleBGAlert()
             checkPump()
             checkAPS()
+            maintenancePlugin.deleteLogs(30)
+
             return Result.success()
         }
 
@@ -119,18 +123,18 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
         private fun checkPump() {
             val pump = activePlugin.activePump
             val ps = profileFunction.getRequestedProfile() ?: return
-            val profile = ProfileSealed.PS(ps)
+            val requestedProfile = ProfileSealed.PS(ps)
+            val runningProfile = profileFunction.getProfile()
             val lastConnection = pump.lastDataTime()
             val isStatusOutdated = lastConnection + STATUS_UPDATE_FREQUENCY < System.currentTimeMillis()
-            val isBasalOutdated = abs(profile.getBasal() - pump.baseBasalRate) > pump.pumpDescription.basalStep
+            val isBasalOutdated = abs(requestedProfile.getBasal() - pump.baseBasalRate) > pump.pumpDescription.basalStep
             aapsLogger.debug(LTag.CORE, "Last connection: " + dateUtil.dateAndTimeString(lastConnection))
             // sometimes keep alive broadcast stops
             // as as workaround test if readStatus was requested before an alarm is generated
             if (lastReadStatus != 0L && lastReadStatus > System.currentTimeMillis() - T.mins(5).msecs()) {
                 localAlertUtils.checkPumpUnreachableAlarm(lastConnection, isStatusOutdated, loopPlugin.isDisconnected)
             }
-            if (!pump.isThisProfileSet(profile) && !commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)
-                || profileFunction.getProfile() == null) {
+            if (runningProfile == null || ((!pump.isThisProfileSet(requestedProfile) || !requestedProfile.isEqual(runningProfile)) && !commandQueue.isRunning(Command.CommandType.BASAL_PROFILE))) {
                 rxBus.send(EventProfileSwitchChanged())
             } else if (isStatusOutdated && !pump.isBusy()) {
                 lastReadStatus = System.currentTimeMillis()

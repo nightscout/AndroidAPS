@@ -5,6 +5,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.ktx.Firebase
+import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -17,8 +18,9 @@ import javax.inject.Singleton
  * to disable them and make calls from a potentially invalid singleton reference. This wrapper
  * emulates the methods but ignores the request if the instance is null or invalid.
  */
+@OpenForTesting
 @Singleton
-open class FabricPrivacy @Inject constructor(
+class FabricPrivacy @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val sp: SP
 ) {

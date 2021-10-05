@@ -81,7 +81,6 @@
     <string name="extended_bolus">Prodloužený bolus</string>
     <string name="pump_time_updated">Čas v pumpě aktualizován</string>
     <string name="exit">Konec</string>
-    <string name="serial_number">Sériové číslo</string>
     <string name="removerecord">Odstranit záznam</string>
     <string name="loopisdisabled">Smyčka je zakázána</string>
     <string name="alarm">Alarm</string>
@@ -197,6 +196,7 @@
     <string name="careportal_openapsoffline">OpenAPS vypnuto</string>
     <string name="careportal_pumpbatterychange">Výměna baterie pumpy</string>
     <string name="careportal_temporarytarget">Dočasný cíl</string>
+    <string name="careportal_temporarytargetvalue">Hodnota dočasného cíle</string>
     <string name="careportal_temporarytargetcancel">Dočasný cíl konec</string>
     <string name="boluswizard">Bolusová kalkulačka</string>
     <string name="glucosetype_finger">Glukoměr</string>
@@ -244,30 +244,6 @@
     <!--    Ntp-->
     <string name="timedetection">Detekce času</string>
     <string name="format_hour_minute">%1$dh %2$dm</string>
-    <!-- PumoCommon - Pump Abstract -->
-    <string name="pump_operation_not_supported_by_pump_driver">Operace není podporována pumpou a/nebo ovladačem.</string>
-    <string name="pump_operation_not_yet_supported_by_pump">Operace prozatím pumpou nepodporována.</string>
-    <string name="common_resultok">OK</string>
-    <!-- PumoCommon - Pump Status -->
-    <string name="pump_status_never_contacted">Nikdy nekontaktováno</string>
-    <string name="pump_status_waking_up">Probouzení</string>
-    <string name="pump_status_error_comm">Chyba komunikace</string>
-    <string name="pump_status_timeout_comm">Vypršel časový limit komunikace</string>
-    <string name="pump_status_pump_unreachable">Pumpa nedostupná</string>
-    <string name="pump_status_invalid_config">Neplatná konfigurace</string>
-    <string name="pump_status_active">Aktivní</string>
-    <string name="pump_status_sleeping">Spánek</string>
-    <!-- PumpCommon - History Group -->
-    <string name="history_group_basal">Bazály</string>
-    <string name="history_group_configuration">Konfigurace</string>
-    <string name="history_group_notification">Oznámení</string>
-    <string name="history_group_statistic">Statistika</string>
-    <string name="history_group_unknown">Neznámé</string>
-    <string name="history_group_all">Vše</string>
-    <string name="history_group_bolus">Bolusy</string>
-    <string name="history_group_prime">Doplňování</string>
-    <string name="history_group_alarm">Alarmy</string>
-    <string name="history_group_glucose">Glykémie</string>
     <string name="mute5min">Ztlumit na 5 minut</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">Formát souboru</string>
@@ -406,6 +382,24 @@
     <string name="ue_timestamp">Datum</string>
     <string name="ue_none">Žádné jednotky</string>
     <string name="ue_export_to_csv">Exportovat uživatelské záznamy do Excelu (csv)</string>
+    <string name="uel_loop_change">SMYČKA ZMĚNĚNA</string>
+    <string name="uel_loop_removed">SMYČKA ODEBRÁNA</string>
+    <string name="uel_other">JINÉ</string>
+    <!-- HardLimits -->
+    <string name="profile_low_target">Dolní cíl profilu</string>
+    <string name="profile_high_target">Horní cíl profilu</string>
+    <string name="temp_target_low_target">Dolní hodnota dočasného cíle</string>
+    <string name="temp_target_high_target">Horní hodnota dočasného cíle</string>
+    <string name="temp_target_value">Hodnota dočasného cíle</string>
+    <string name="profile_dia">Hodnota DIA profilu</string>
+    <string name="profile_sensitivity_value">Hodnota citlivosti profilu</string>
+    <string name="profile_max_daily_basal_value">Maximální hodnota profilu bazálu</string>
+    <string name="current_basal_value">Aktuální hodnota bazálu</string>
+    <string name="profile_carbs_ratio_value">Inzulino-sacharidový poměr profilu</string>
+    <string name="valuelimitedto">%1$.2f omezeno na %2$.2f</string>
+    <string name="valueoutofrange">»%1$s« je mimo pevně nastavené limity</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f je mimo pevně nastavené limity</string>
+    <string name="basal_value">Hodnota bazálu</string>
     <plurals name="days">
         <item quantity="one">%1$d den</item>
         <item quantity="few">%1$d dnů</item>

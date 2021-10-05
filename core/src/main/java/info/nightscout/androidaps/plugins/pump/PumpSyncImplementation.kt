@@ -11,6 +11,7 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
@@ -30,7 +31,8 @@ class PumpSyncImplementation @Inject constructor(
     private val rxBus: RxBusWrapper,
     private val resourceHelper: ResourceHelper,
     private val profileFunction: ProfileFunction,
-    private val repository: AppRepository
+    private val repository: AppRepository,
+    private val uel: UserEntryLogger
 ) : PumpSync {
 
     private val disposable = CompositeDisposable()
@@ -68,9 +70,9 @@ class PumpSyncImplementation @Inject constructor(
             return true
         }
 
-        if (type.description != storedType || serialNumber != storedSerial)
+        if ((type.description != storedType || serialNumber != storedSerial) && timestamp >= storedTimestamp)
             rxBus.send(EventNewNotification(Notification(Notification.WRONG_PUMP_DATA, resourceHelper.gs(R.string.wrong_pump_data), Notification.URGENT)))
-        aapsLogger.error(LTag.PUMP, "Ignoring pump history record  Allowed: ${dateUtil.dateAndTimeAndSecondsString(storedTimestamp)} $storedType $storedSerial Received: $timestamp ${dateUtil.dateAndTimeAndSecondsString(timestamp)}${type.description} $serialNumber")
+        aapsLogger.error(LTag.PUMP, "Ignoring pump history record  Allowed: ${dateUtil.dateAndTimeAndSecondsString(storedTimestamp)} $storedType $storedSerial Received: $timestamp ${dateUtil.dateAndTimeAndSecondsString(timestamp)} ${type.description} $serialNumber")
         return false
     }
 
@@ -213,6 +215,7 @@ class PumpSyncImplementation @Inject constructor(
                 pumpType = pumpType.toDbPumpType(),
                 pumpSerial = pumpSerial)
         )
+        uel.log(UserEntry.Action.CAREPORTAL, pumpType.source, note, ValueWithUnit.Timestamp(timestamp), ValueWithUnit.TherapyEventType(type.toDBbEventType()))
         repository.runTransactionForResult(InsertIfNewByTimestampTherapyEventTransaction(therapyEvent))
             .doOnError {
                 aapsLogger.error(LTag.DATABASE, "Error while saving TherapyEvent", it)
@@ -320,6 +323,19 @@ class PumpSyncImplementation @Inject constructor(
 
     override fun invalidateTemporaryBasal(id: Long): Boolean {
         repository.runTransactionForResult(InvalidateTemporaryBasalTransaction(id))
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating TemporaryBasal", it) }
+            .blockingGet()
+            .also { result ->
+                result.invalidated.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryBasal $it")
+                }
+                return result.invalidated.size > 0
+            }
+    }
+
+    override fun invalidateTemporaryBasalWithPumpId(pumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean {
+        repository.runTransactionForResult(InvalidateTemporaryBasalTransactionWithPumpId(pumpId, pumpType.toDbPumpType(),
+                                                                                         pumpSerial))
             .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating TemporaryBasal", it) }
             .blockingGet()
             .also { result ->

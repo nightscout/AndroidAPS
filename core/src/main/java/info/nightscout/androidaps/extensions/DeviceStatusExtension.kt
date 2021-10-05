@@ -3,7 +3,7 @@ package info.nightscout.androidaps.extensions
 import android.os.Build
 import info.nightscout.androidaps.database.entities.DeviceStatus
 import info.nightscout.androidaps.interfaces.IobCobCalculator
-import info.nightscout.androidaps.interfaces.LoopInterface
+import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.Pump
 import info.nightscout.androidaps.plugins.configBuilder.RunningConfiguration
@@ -16,19 +16,19 @@ fun DeviceStatus.toJson(dateUtil: DateUtil): JSONObject =
         .put("created_at", dateUtil.toISOString(timestamp))
         .also {
             if (device != null) it.put("device", device)
-            if (pump != null) it.put("pump", JSONObject(pump))
+            pump?.let { pump -> it.put("pump", JSONObject(pump)) }
             it.put("openaps", JSONObject().also { openaps ->
-                if (enacted != null) openaps.put("enacted", JSONObject(enacted))
-                if (suggested != null) openaps.put("suggested", JSONObject(suggested))
-                if (iob != null) openaps.put("iob", iob)
+                enacted?.let { enacted -> openaps.put("enacted", JSONObject(enacted)) }
+                suggested?.let { suggested -> openaps.put("suggested", JSONObject(suggested)) }
+                iob?.let { iob -> openaps.put("iob", JSONObject(iob)) }
             })
             if (uploaderBattery != 0) it.put("uploaderBattery", uploaderBattery)
-            if (configuration != null) it.put("configuration", JSONObject(configuration))
+            configuration?.let { configuration ->  it.put("configuration", JSONObject(configuration)) }
         }
 
 fun buildDeviceStatus(
     dateUtil: DateUtil,
-    loopPlugin: LoopInterface,
+    loopPlugin: Loop,
     iobCobCalculatorPlugin: IobCobCalculator,
     profileFunction: ProfileFunction,
     pump: Pump,

@@ -27,6 +27,8 @@ interface IobCobCalculator {
     fun iobArrayToString(array: Array<IobTotal>): String
     fun convertToJSONArray(iobArray: Array<IobTotal>): JSONArray
 
+    fun clearCache()
+
     /**
      *  Calculate CobInfo to now()
      *

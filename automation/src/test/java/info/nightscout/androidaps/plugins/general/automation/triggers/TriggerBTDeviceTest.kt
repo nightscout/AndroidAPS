@@ -6,11 +6,8 @@ import info.nightscout.androidaps.plugins.general.automation.elements.Comparator
 import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.powermock.modules.junit4.PowerMockRunner
 
 @Suppress("SpellCheckingInspection")
-@RunWith(PowerMockRunner::class)
 class TriggerBTDeviceTest : TriggerTestBase() {
 
     var now = 1514766900000L

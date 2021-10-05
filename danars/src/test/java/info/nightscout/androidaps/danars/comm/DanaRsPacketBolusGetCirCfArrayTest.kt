@@ -6,15 +6,12 @@ import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danars.DanaRSTestBase
 import org.junit.Assert
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.powermock.modules.junit4.PowerMockRunner
 
-@RunWith(PowerMockRunner::class)
 class DanaRsPacketBolusGetCirCfArrayTest : DanaRSTestBase() {
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is DanaRS_Packet_Bolus_Get_CIR_CF_Array) {
+            if (it is DanaRSPacketBolusGetCIRCFArray) {
                 it.aapsLogger = aapsLogger
                 it.danaPump = danaPump
             }
@@ -22,9 +19,9 @@ class DanaRsPacketBolusGetCirCfArrayTest : DanaRSTestBase() {
     }
 
     @Test fun runTest() {
-        val packet = DanaRS_Packet_Bolus_Get_CIR_CF_Array(packetInjector)
+        val packet = DanaRSPacketBolusGetCIRCFArray(packetInjector)
         // test params
-        Assert.assertEquals(null, packet.requestParams)
+        Assert.assertEquals(0, packet.getRequestParams().size)
         // test message decoding
         packet.handleMessage(createArray(34, 0.toByte()))
         // are pump units MG/DL ???

@@ -132,13 +132,13 @@
     <string name="wronginsulin_label">Erreurs de saisie/injection d\'insuline</string>
     <string name="wronginsulin_whattodo">Que devriez-vous faire si vous avez reçu moins d\'insuline que l\'historique de la pompe suggère par ex. à cause d\'une occlusion, d\'une mauvaise canule ou d\'un oubli de rebranchement de la pompe après une douche ?</string>
     <string name="wronginsulin_careportal">Supprimez les données d\'insuline de Nightscout Careportal pour le retirer de l\'historique de la pompe.</string>
-    <string name="wronginsulin_compare">Comparez les valeurs dans l\'historique de la pompe et AndroidAPS.</string>
+    <string name="wronginsulin_compare">Comparer les valeurs dans l\'historique d\'AndroidAPS et de la pompe (si la pompe le permet).</string>
     <string name="wronginsulin_prime">Faites un bolus du montant de votre insuline calculée « manquante » soit par seringue / stylo ou en utilisant un amorçage.</string>
     <string name="wronginsulin_donothing">Ne faites rien et laissez AndroidAPS corriger tout taux élevé de glycémie qui en résulte.</string>
     <string name="iob_label">Insuline Active (IA)</string>
     <string name="iob_which">Sélectionnez toutes les bonnes réponses.</string>
     <string name="iob_value">La valeur de l\'IA est impactée par les débits de basal temporaires émis.</string>
-    <string name="iob_hightemp">Une basal temp. haute ne sera pas donnée quand votre glycémie est en dessous de la cible.</string>
+    <string name="iob_hightemp">Une basale temp haute ne sera pas donnée quand votre glycémie est en dessous de la cible.</string>
     <string name="iob_negiob">Une IA négative pendant une période significative en l\'absence d\'exercice indique que votre profil est trop fort et qu\'il faut moins d\'insuline dans vos paramètres.</string>
     <string name="iob_posiob">Une IA positive pendant une période significative indique une résistance à l\'insuline ou des repas non signalés.</string>
     <string name="breadgrams_label">Entrée de glucides et bolus</string>

@@ -10,10 +10,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -24,14 +23,13 @@ import java.util.List;
 import javax.inject.Inject;
 
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
-import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.db.OmnipodHistoryRecord;
-import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
+import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.pump.common.defs.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpHistoryEntryGroup;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
+import info.nightscout.androidaps.plugins.pump.common.defs.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.common.utils.ProfileUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.R;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.definition.PodHistoryEntryType;
@@ -43,7 +41,6 @@ public class ErosPodHistoryActivity extends NoSplashAppCompatActivity {
     @Inject AAPSLogger aapsLogger;
     @Inject AapsOmnipodUtil aapsOmnipodUtil;
     @Inject ResourceHelper resourceHelper;
-    @Inject DatabaseHelperInterface databaseHelper;
 
     private Spinner historyTypeSpinner;
     private TextView statusView;
@@ -69,9 +66,9 @@ public class ErosPodHistoryActivity extends NoSplashAppCompatActivity {
         GregorianCalendar gc = new GregorianCalendar();
         gc.add(Calendar.HOUR_OF_DAY, -24);
 
-        databaseHelper.getAllOmnipodHistoryRecordsFromTimestamp(gc.getTimeInMillis(), false);
-
-        fullHistoryList.addAll(databaseHelper.getAllOmnipodHistoryRecordsFromTimestamp(gc.getTimeInMillis(), true));
+//        databaseHelper.getAllOmnipodHistoryRecordsFromTimestamp(gc.getTimeInMillis(), false);
+//        fullHistoryList.addAll(databaseHelper.getAllOmnipodHistoryRecordsFromTimestamp(gc.getTimeInMillis(), true));
+        throw new IllegalStateException("Not implemented");
     }
 
 
@@ -149,7 +146,7 @@ public class ErosPodHistoryActivity extends NoSplashAppCompatActivity {
 
         statusView.setVisibility(View.GONE);
 
-        typeListFull = getTypeList(PumpHistoryEntryGroup.getTranslatedList(resourceHelper));
+        typeListFull = getTypeList(PumpHistoryEntryGroup.Companion.getTranslatedList(resourceHelper));
 
         ArrayAdapter<TypeList> spinnerAdapter = new ArrayAdapter<>(this, R.layout.spinner_centered, typeListFull);
         historyTypeSpinner.setAdapter(spinnerAdapter);
@@ -309,7 +306,7 @@ public class ErosPodHistoryActivity extends NoSplashAppCompatActivity {
 
             try {
                 Profile.ProfileValue[] profileValuesArray = aapsOmnipodUtil.getGsonInstance().fromJson(data, Profile.ProfileValue[].class);
-                valueView.setText(ProfileUtil.getBasalProfilesDisplayable(profileValuesArray, PumpType.OMNIPOD_EROS));
+                valueView.setText(ProfileUtil.INSTANCE.getBasalProfilesDisplayable(profileValuesArray, PumpType.OMNIPOD_EROS));
             } catch (Exception e) {
                 aapsLogger.error(LTag.PUMP, "Problem parsing Profile json. Ex: {}, Data:\n{}", e.getMessage(), data);
                 valueView.setText("");
@@ -324,7 +321,7 @@ public class ErosPodHistoryActivity extends NoSplashAppCompatActivity {
 
 
         @Override
-        public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
             super.onAttachedToRecyclerView(recyclerView);
         }
 

@@ -6,7 +6,9 @@ class UpdateNsIdTherapyEventTransaction(val therapyEvent: TherapyEvent) : Transa
 
     override fun run() {
         val current = database.therapyEventDao.findById(therapyEvent.id)
-        if (current != null && current.interfaceIDs.nightscoutId != therapyEvent.interfaceIDs.nightscoutId)
-            database.therapyEventDao.updateExistingEntry(therapyEvent)
+        if (current != null && current.interfaceIDs.nightscoutId != therapyEvent.interfaceIDs.nightscoutId) {
+            current.interfaceIDs.nightscoutId = therapyEvent.interfaceIDs.nightscoutId
+            database.therapyEventDao.updateExistingEntry(current)
+        }
     }
 }

@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.constraints.safety
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.extensions.*
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -20,6 +21,7 @@ import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.floor
@@ -49,7 +51,7 @@ class SafetyPlugin @Inject constructor(
     .pluginName(R.string.safety)
     .preferencesId(R.xml.pref_safety),
     aapsLogger, resourceHelper, injector
-), Constraints {
+), Constraints, Safety {
 
     /**
      * Constraints interface
@@ -186,11 +188,23 @@ class SafetyPlugin @Inject constructor(
 
     override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> {
         val apsMode = sp.getString(R.string.key_aps_mode, "open")
-        val maxIobPref: Double = if (openAPSSMBPlugin.isEnabled(PluginType.APS)) sp.getDouble(R.string.key_openapssmb_max_iob, 3.0) else sp.getDouble(R.string.key_openapsma_max_iob, 1.5)
+        val maxIobPref: Double = if (openAPSSMBPlugin.isEnabled()) sp.getDouble(R.string.key_openapssmb_max_iob, 3.0) else sp.getDouble(R.string.key_openapsma_max_iob, 1.5)
         maxIob.setIfSmaller(aapsLogger, maxIobPref, String.format(resourceHelper.gs(R.string.limitingiob), maxIobPref, resourceHelper.gs(R.string.maxvalueinpreferences)), this)
-        if (openAPSAMAPlugin.isEnabled(PluginType.APS)) maxIob.setIfSmaller(aapsLogger, hardLimits.maxIobAMA(), String.format(resourceHelper.gs(R.string.limitingiob), hardLimits.maxIobAMA(), resourceHelper.gs(R.string.hardlimit)), this)
-        if (openAPSSMBPlugin.isEnabled(PluginType.APS)) maxIob.setIfSmaller(aapsLogger, hardLimits.maxIobSMB(), String.format(resourceHelper.gs(R.string.limitingiob), hardLimits.maxIobSMB(), resourceHelper.gs(R.string.hardlimit)), this)
+        if (openAPSAMAPlugin.isEnabled()) maxIob.setIfSmaller(aapsLogger, hardLimits.maxIobAMA(), String.format(resourceHelper.gs(R.string.limitingiob), hardLimits.maxIobAMA(), resourceHelper.gs(R.string.hardlimit)), this)
+        if (openAPSSMBPlugin.isEnabled()) maxIob.setIfSmaller(aapsLogger, hardLimits.maxIobSMB(), String.format(resourceHelper.gs(R.string.limitingiob), hardLimits.maxIobSMB(), resourceHelper.gs(R.string.hardlimit)), this)
         if (apsMode == "lgs") maxIob.setIfSmaller(aapsLogger, HardLimits.MAX_IOB_LGS, String.format(resourceHelper.gs(R.string.limitingiob), HardLimits.MAX_IOB_LGS, resourceHelper.gs(R.string.lowglucosesuspend)), this)
         return maxIob
+    }
+
+    override fun configuration(): JSONObject =
+        JSONObject()
+            .putString(R.string.key_age, sp, resourceHelper)
+            .putDouble(R.string.key_treatmentssafety_maxbolus, sp, resourceHelper)
+            .putDouble(R.string.key_treatmentssafety_maxcarbs, sp, resourceHelper)
+
+    override fun applyConfiguration(configuration: JSONObject) {
+        configuration.storeString(R.string.key_age, sp, resourceHelper)
+        configuration.storeDouble(R.string.key_treatmentssafety_maxbolus, sp, resourceHelper)
+        configuration.storeDouble(R.string.key_treatmentssafety_maxcarbs, sp, resourceHelper)
     }
 }

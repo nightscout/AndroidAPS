@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.database.entities
 
-import androidx.annotation.StringRes
-
 sealed class ValueWithUnit {
 
     object UNKNOWN : ValueWithUnit() // formerly None used as fallback
@@ -34,6 +32,8 @@ sealed class ValueWithUnit {
 
     data class TherapyEventTTReason(val value: TemporaryTarget.Reason) : ValueWithUnit()
 
+    data class OfflineEventReason(val value: OfflineEvent.Reason) : ValueWithUnit()
+
     fun value(): Any? {
         return when(this) {
             is Gram -> this.value
@@ -47,6 +47,7 @@ sealed class ValueWithUnit {
             is SimpleString -> this.value
             is TherapyEventMeterType -> this.value
             is TherapyEventTTReason -> this.value
+            is OfflineEventReason -> this.value
             is TherapyEventType -> this.value
             is Timestamp -> this.value
             is UnitPerHour -> this.value

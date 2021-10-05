@@ -5,24 +5,21 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.DanaRSTestBase
 import org.junit.Assert
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.powermock.modules.junit4.PowerMockRunner
 
-@RunWith(PowerMockRunner::class)
 class DanaRsPacketGeneralSetUserTimeChangeFlagClearTest : DanaRSTestBase() {
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is DanaRS_Packet_General_Set_User_Time_Change_Flag_Clear) {
+            if (it is DanaRSPacketGeneralSetUserTimeChangeFlagClear) {
                 it.aapsLogger = aapsLogger
             }
         }
     }
 
     @Test fun runTest() {
-        val packet = DanaRS_Packet_General_Set_User_Time_Change_Flag_Clear(packetInjector)
+        val packet = DanaRSPacketGeneralSetUserTimeChangeFlagClear(packetInjector)
         // test params
-        Assert.assertEquals(null, packet.requestParams)
+        Assert.assertEquals(0, packet.getRequestParams().size)
         // test message decoding
         packet.handleMessage(createArray(3, 0.toByte()))
         Assert.assertEquals(false, packet.failed)

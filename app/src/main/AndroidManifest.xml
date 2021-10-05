@@ -52,7 +52,8 @@
             android:name="com.google.android.gms.car.application"
             android:resource="@xml/automotive_app_desc" />
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
@@ -60,7 +61,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.PreferencesActivity" />
-        <activity android:name=".plugins.general.overview.activities.QuickWizardListActivity">
+        <activity android:name=".plugins.general.overview.activities.QuickWizardListActivity"
+            android:exported="false">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity" />
 
@@ -68,7 +70,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".plugins.general.maintenance.activities.PrefImportListActivity" />
-        <activity android:name=".historyBrowser.HistoryBrowseActivity" />
+        <activity android:name=".activities.HistoryBrowseActivity" />
         <activity android:name=".activities.TreatmentsActivity" />
         <activity android:name=".activities.SurveyActivity" />
         <activity android:name=".activities.ProfileHelperActivity"
@@ -115,11 +117,11 @@
             </intent-filter>
         </receiver>
 
-        <!-- Receiver keepalive, scheduled every 30 min -->
+        <!-- Receiver keep alive, scheduled every 30 min -->
         <receiver android:name=".receivers.KeepAliveReceiver" />
 
         <!-- Receive ignore 5m, 15m, 30m requests for carb notifications -->
-        <receiver android:name=".plugins.aps.loop.CarbSuggestionReceiver"></receiver>
+        <receiver android:name=".plugins.aps.loop.CarbSuggestionReceiver" />
 
         <!-- Auto start -->
         <receiver
@@ -238,20 +240,6 @@
                 <action android:name="info.nightscout.androidaps.plugins.general.smsCommunicator.activities.SmsCommunicatorOtpActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
-        <activity android:name=".plugins.general.openhumans.OpenHumansLoginActivity"
-            android:launchMode="singleTop">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="setup-openhumans"
-                    android:scheme="androidaps" />
             </intent-filter>
         </activity>
 

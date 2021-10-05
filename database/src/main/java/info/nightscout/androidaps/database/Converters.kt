@@ -183,4 +183,9 @@ class Converters {
         return list
     }
 
+    @TypeConverter
+    fun fromOfflineEventReason(reason: OfflineEvent.Reason?) = reason?.name
+
+    @TypeConverter
+    fun toOfflineEventReason(reason: String?) = reason?.let { OfflineEvent.Reason.valueOf(it) }
 }

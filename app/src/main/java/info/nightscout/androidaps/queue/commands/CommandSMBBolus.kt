@@ -23,6 +23,7 @@ class CommandSMBBolus(
     override fun execute() {
         val r: PumpEnactResult
         val lastBolusTime = repository.getLastBolusRecord()?.timestamp ?: 0L
+        aapsLogger.debug(LTag.PUMPQUEUE, "Last bolus: $lastBolusTime ${dateUtil.dateAndTimeAndSecondsString(lastBolusTime)}")
         if (lastBolusTime != 0L && lastBolusTime + T.mins(3).msecs() > dateUtil.now()) {
             aapsLogger.debug(LTag.PUMPQUEUE, "SMB requested but still in 3 min interval")
             r = PumpEnactResult(injector).enacted(false).success(false).comment("SMB requested but still in 3 min interval")

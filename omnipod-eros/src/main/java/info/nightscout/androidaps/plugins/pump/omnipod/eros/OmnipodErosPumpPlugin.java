@@ -1,10 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros;
 
-import static info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.OmnipodConstants.BASAL_STEP_DURATION;
-import static info.nightscout.androidaps.extensions.PumpStateExtensionKt.convertedToAbsolute;
-import static info.nightscout.androidaps.extensions.PumpStateExtensionKt.getPlannedRemainingMinutes;
-import static info.nightscout.androidaps.extensions.PumpStateExtensionKt.toStringFull;
-
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -34,7 +29,6 @@ import javax.inject.Singleton;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.activities.ErrorHelperActivity;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
-import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventAppInitialized;
@@ -44,9 +38,10 @@ import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
-import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.Pump;
+import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
 import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
@@ -67,7 +62,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLin
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType;
-import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandAcknowledgeAlerts;
+import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandSilenceAlerts;
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandDeactivatePod;
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandHandleTimeChange;
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandPlayTestBeep;
@@ -83,7 +78,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.Al
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.AlertSet;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.BeepConfigType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.OmnipodConstants;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.PodStateManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.ErosPodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.util.TimeUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodErosActiveAlertsChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodErosFaultEventChanged;
@@ -110,6 +105,11 @@ import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
 
+import static info.nightscout.androidaps.extensions.PumpStateExtensionKt.convertedToAbsolute;
+import static info.nightscout.androidaps.extensions.PumpStateExtensionKt.getPlannedRemainingMinutes;
+import static info.nightscout.androidaps.extensions.PumpStateExtensionKt.toStringFull;
+import static info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.OmnipodConstants.BASAL_STEP_DURATION;
+
 /**
  * Created by andy on 23.04.18.
  *
@@ -122,7 +122,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
     public static final int STARTUP_STATUS_REQUEST_TRIES = 2;
     public static final double RESERVOIR_OVER_50_UNITS_DEFAULT = 75.0;
 
-    private final PodStateManager podStateManager;
+    private final ErosPodStateManager podStateManager;
     private final RileyLinkServiceData rileyLinkServiceData;
     private final AapsOmnipodErosManager aapsOmnipodErosManager;
     private final AapsOmnipodUtil aapsOmnipodUtil;
@@ -168,7 +168,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
             ResourceHelper resourceHelper,
             ActivePlugin activePlugin,
             SP sp,
-            PodStateManager podStateManager,
+            ErosPodStateManager podStateManager,
             AapsOmnipodErosManager aapsOmnipodErosManager,
             CommandQueueProvider commandQueue,
             FabricPrivacy fabricPrivacy,
@@ -254,7 +254,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
                     }
 
                     if (aapsOmnipodErosManager.isAutomaticallyAcknowledgeAlertsEnabled() && podStateManager.isPodActivationCompleted() && !podStateManager.isPodDead() &&
-                            podStateManager.getActiveAlerts().size() > 0 && !getCommandQueue().isCustomCommandInQueue(CommandAcknowledgeAlerts.class)) {
+                            podStateManager.getActiveAlerts().size() > 0 && !getCommandQueue().isCustomCommandInQueue(CommandSilenceAlerts.class)) {
                         queueAcknowledgeAlertsCommand();
                     }
                 } else {
@@ -413,7 +413,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
                 rxBus.send(new EventNewNotification(notification));
                 pumpSync.insertAnnouncement(notificationText, null, PumpType.OMNIPOD_EROS, serialNumber());
 
-                if (aapsOmnipodErosManager.isAutomaticallyAcknowledgeAlertsEnabled() && !getCommandQueue().isCustomCommandInQueue(CommandAcknowledgeAlerts.class)) {
+                if (aapsOmnipodErosManager.isAutomaticallyAcknowledgeAlertsEnabled() && !getCommandQueue().isCustomCommandInQueue(CommandSilenceAlerts.class)) {
                     queueAcknowledgeAlertsCommand();
                 }
             }
@@ -440,7 +440,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
     }
 
     private void queueAcknowledgeAlertsCommand() {
-        getCommandQueue().customCommand(new CommandAcknowledgeAlerts(), new Callback() {
+        getCommandQueue().customCommand(new CommandSilenceAlerts(), new Callback() {
             @Override public void run() {
                 if (result != null) {
                     aapsLogger.debug(LTag.PUMP, "Acknowledge alerts result: {} ({})", result.getSuccess(), result.getComment());
@@ -648,10 +648,12 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
             return deliverBolus(detailedBolusInfo);
         } else {
             // no bolus required, carb only treatment
-            activePlugin.getActiveTreatments().addToHistoryTreatment(detailedBolusInfo, true);
+//            activePlugin.getActiveTreatments().addToHistoryTreatment(detailedBolusInfo, true);
 
-            return new PumpEnactResult(getInjector()).success(true).enacted(true).bolusDelivered(0d)
-                    .carbsDelivered(detailedBolusInfo.carbs).comment(info.nightscout.androidaps.core.R.string.common_resultok);
+//            return new PumpEnactResult(getInjector()).success(true).enacted(true).bolusDelivered(0d)
+//                    .carbsDelivered(detailedBolusInfo.carbs);
+// Needs refactor
+            throw new IllegalStateException("Not implemented");
         }
     }
 
@@ -676,7 +678,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
 
         if (tbrCurrent != null) {
             aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute: Current Basal: duration: {} min, rate={}",
-                    T.msecs(tbrCurrent.getDuration()).mins(), tbrCurrent.getRate());
+                    T.Companion.msecs(tbrCurrent.getDuration()).mins(), tbrCurrent.getRate());
         }
 
         if (tbrCurrent != null && !enforceNew) {
@@ -827,7 +829,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
 
     @Override
     public PumpEnactResult executeCustomCommand(@NonNull CustomCommand command) {
-        if (command instanceof CommandAcknowledgeAlerts) {
+        if (command instanceof CommandSilenceAlerts) {
             return executeCommand(OmnipodCommandType.ACKNOWLEDGE_ALERTS, aapsOmnipodErosManager::acknowledgeAlerts);
         }
         if (command instanceof CommandGetPodStatus) {
@@ -1040,17 +1042,17 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
 
     @NonNull @Override public PumpEnactResult setExtendedBolus(double insulin, int durationInMinutes) {
         aapsLogger.debug(LTag.PUMP, "setExtendedBolus [OmnipodPumpPlugin] - Not implemented.");
-        return getOperationNotSupportedWithCustomText(info.nightscout.androidaps.core.R.string.pump_operation_not_supported_by_pump_driver);
+        return getOperationNotSupportedWithCustomText(info.nightscout.androidaps.plugins.pump.common.R.string.pump_operation_not_supported_by_pump_driver);
     }
 
     @NonNull @Override public PumpEnactResult cancelExtendedBolus() {
         aapsLogger.debug(LTag.PUMP, "cancelExtendedBolus [OmnipodPumpPlugin] - Not implemented.");
-        return getOperationNotSupportedWithCustomText(info.nightscout.androidaps.core.R.string.pump_operation_not_supported_by_pump_driver);
+        return getOperationNotSupportedWithCustomText(info.nightscout.androidaps.plugins.pump.common.R.string.pump_operation_not_supported_by_pump_driver);
     }
 
     @NonNull @Override public PumpEnactResult loadTDDs() {
         aapsLogger.debug(LTag.PUMP, "loadTDDs [OmnipodPumpPlugin] - Not implemented.");
-        return getOperationNotSupportedWithCustomText(info.nightscout.androidaps.core.R.string.pump_operation_not_supported_by_pump_driver);
+        return getOperationNotSupportedWithCustomText(info.nightscout.androidaps.plugins.pump.common.R.string.pump_operation_not_supported_by_pump_driver);
     }
 
     public boolean isUseRileyLinkBatteryLevel() {

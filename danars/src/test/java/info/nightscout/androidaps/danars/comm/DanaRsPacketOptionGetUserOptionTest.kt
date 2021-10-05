@@ -5,15 +5,12 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.DanaRSTestBase
 import org.junit.Assert
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.powermock.modules.junit4.PowerMockRunner
 
-@RunWith(PowerMockRunner::class)
 class DanaRsPacketOptionGetUserOptionTest : DanaRSTestBase() {
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is DanaRS_Packet_Option_Get_User_Option) {
+            if (it is DanaRSPacketOptionGetUserOption) {
                 it.aapsLogger = aapsLogger
                 it.danaPump = danaPump
             }
@@ -21,9 +18,9 @@ class DanaRsPacketOptionGetUserOptionTest : DanaRSTestBase() {
     }
 
     @Test fun runTest() {
-        val packet = DanaRS_Packet_Option_Get_User_Option(packetInjector)
+        val packet = DanaRSPacketOptionGetUserOption(packetInjector)
         // test params
-        Assert.assertEquals(null, packet.requestParams)
+        Assert.assertEquals(0, packet.getRequestParams().size)
         // test message decoding
         packet.handleMessage(createArray(20, 0.toByte()))
         Assert.assertEquals(true, packet.failed)

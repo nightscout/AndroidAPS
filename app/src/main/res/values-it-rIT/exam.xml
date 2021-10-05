@@ -132,7 +132,7 @@
     <string name="wronginsulin_label">Errori erogazione/inserimento insulina</string>
     <string name="wronginsulin_whattodo">Cosa dovresti fare se hai ricevuto meno insulina di quanto lo storico del micro suggerisce? Ad esempio a causa di un\'occlusione, una cannula difettosa o l\'aver dimenticato di riattaccare il micro dopo una doccia? </string>
     <string name="wronginsulin_careportal">Eliminare dal portale Nightscout i dati relativi all\'insulina per rimuoverli dallo storico del micro.</string>
-    <string name="wronginsulin_compare">Confrontare i valori in AndroidAPS con lo storico del micro.</string>
+    <string name="wronginsulin_compare">Compara i valori in AndroidAPS con lo storico micro (se supportato).</string>
     <string name="wronginsulin_prime">Erogare un bolo con parte della tua insulina calcolata \"mancante\" usando una siringa/penna o la funzione caricamento.</string>
     <string name="wronginsulin_donothing">Non fare nulla e permettere ad AndroidAPS di correggere eventuali glicemie alte.</string>
     <string name="iob_label">Insulina attiva (IOB)</string>

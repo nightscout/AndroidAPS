@@ -11,8 +11,6 @@ build/
 .idea/*
 !.idea/codeStyles/
 full/
-debug/
-release/
 app/com.crashlytics.settings.json
 app/session_analytics.tap
 .project

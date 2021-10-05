@@ -4,36 +4,18 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.db.TemporaryBasal
-import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
 
 @Suppress("SpellCheckingInspection")
-@RunWith(PowerMockRunner::class)
-@PrepareForTest(FabricPrivacy::class, DatabaseHelperInterface::class, AppRepository::class)
 class TreatmentsPluginTest : TestBaseWithProfile() {
 
     @Mock lateinit var sp: SP
-    @Mock lateinit var treatmentService: TreatmentService
     @Mock lateinit var repository: AppRepository
-    @Mock lateinit var databaseHelper: DatabaseHelperInterface
 
     val injector = HasAndroidInjector {
         AndroidInjector {
-            if (it is TemporaryBasal) {
-                it.aapsLogger = aapsLogger
-                it.activePlugin = activePluginProvider
-                it.profileFunction = profileFunction
-                it.sp = sp
-                it.dateUtil = DateUtil(context)
-            }
         }
     }
 

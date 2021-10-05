@@ -8,15 +8,19 @@ import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.automation.di.AutomationModule
 import info.nightscout.androidaps.combo.di.ComboModule
 import info.nightscout.androidaps.dana.di.DanaHistoryModule
-import info.nightscout.androidaps.di.CoreModule
 import info.nightscout.androidaps.dana.di.DanaModule
 import info.nightscout.androidaps.danar.di.DanaRModule
 import info.nightscout.androidaps.danars.di.DanaRSModule
 import info.nightscout.androidaps.database.DatabaseModule
+import info.nightscout.androidaps.di.CoreModule
+import info.nightscout.androidaps.diaconn.di.DiaconnG8Module
 import info.nightscout.androidaps.insight.di.InsightDatabaseModule
 import info.nightscout.androidaps.insight.di.InsightModule
+import info.nightscout.androidaps.plugin.general.openhumans.dagger.OpenHumansModule
+import info.nightscout.androidaps.plugins.pump.common.di.PumpCommonModule
 import info.nightscout.androidaps.plugins.pump.common.di.RileyLinkModule
 import info.nightscout.androidaps.plugins.pump.medtronic.di.MedtronicModule
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.dagger.OmnipodDashModule
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.dagger.OmnipodErosModule
 import javax.inject.Singleton
 
@@ -36,8 +40,10 @@ import javax.inject.Singleton
         CommandQueueModule::class,
         ObjectivesModule::class,
         WizardModule::class,
+        PumpCommonModule::class,
         RileyLinkModule::class,
         MedtronicModule::class,
+        OmnipodDashModule::class,
         OmnipodErosModule::class,
         APSModule::class,
         PreferencesModule::class,
@@ -54,7 +60,8 @@ import javax.inject.Singleton
         InsightModule::class,
         InsightDatabaseModule::class,
         WorkersModule::class,
-        OHUploaderModule::class
+        DiaconnG8Module::class,
+        OpenHumansModule::class
     ]
 )
 interface AppComponent : AndroidInjector<MainApp> {

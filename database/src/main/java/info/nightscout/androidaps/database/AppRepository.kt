@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.database
 
+import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.androidaps.database.data.NewEntries
 import info.nightscout.androidaps.database.entities.*
 import info.nightscout.androidaps.database.interfaces.DBEntry
 import info.nightscout.androidaps.database.transactions.Transaction
@@ -14,8 +16,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.roundToInt
 
-@Singleton
-open class AppRepository @Inject internal constructor(
+@OpenForTesting
+@Singleton class AppRepository @Inject internal constructor(
     internal val database: AppDatabase
 ) {
 
@@ -213,6 +215,11 @@ open class AppRepository @Inject internal constructor(
         return null
     }
 
+    fun getPermanentProfileSwitch(timestamp: Long): ProfileSwitch? =
+        database.profileSwitchDao.getPermanentProfileSwitchActiveAt(timestamp)
+            .subscribeOn(Schedulers.io())
+            .blockingGet()
+
     fun getAllProfileSwitches(): Single<List<ProfileSwitch>> =
         database.profileSwitchDao.getAllProfileSwitches()
             .subscribeOn(Schedulers.io())
@@ -254,6 +261,10 @@ open class AppRepository @Inject internal constructor(
                         .map { it to nextIdElement.id }
                 }
             }
+
+    fun getModifiedEffectiveProfileSwitchDataFromId(lastId: Long): Single<List<EffectiveProfileSwitch>> =
+        database.effectiveProfileSwitchDao.getModifiedFrom(lastId)
+            .subscribeOn(Schedulers.io())
 
     fun createEffectiveProfileSwitch(profileSwitch: EffectiveProfileSwitch) {
         database.effectiveProfileSwitchDao.insert(profileSwitch)
@@ -336,8 +347,8 @@ open class AppRepository @Inject internal constructor(
     fun deleteAllTherapyEventsEntries() =
         database.therapyEventDao.deleteAllEntries()
 
-    fun getLastTherapyRecord(type: TherapyEvent.Type): Single<ValueWrapper<TherapyEvent>> =
-        database.therapyEventDao.getLastTherapyRecord(type).toWrappedSingle()
+    fun getLastTherapyRecordUpToNow(type: TherapyEvent.Type): Single<ValueWrapper<TherapyEvent>> =
+        database.therapyEventDao.getLastTherapyRecord(type, System.currentTimeMillis()).toWrappedSingle()
             .subscribeOn(Schedulers.io())
 
     fun getTherapyEventByTimestamp(type: TherapyEvent.Type, timestamp: Long): TherapyEvent? =
@@ -477,7 +488,7 @@ open class AppRepository @Inject internal constructor(
     private fun Single<List<Carbs>>.expand() = this.map { it.map(::expandCarbs).flatten() }
     private fun Single<List<Carbs>>.filterOutExtended() = this.map { it.filter { c -> c.duration == 0L } }
     private fun Single<List<Carbs>>.fromTo(from: Long, to: Long) = this.map { it.filter { c -> c.timestamp in from..to } }
-    private fun Single<List<Carbs>>.until(to: Long) = this.map { it.filter { c -> c.timestamp <= to } }
+    private infix fun Single<List<Carbs>>.until(to: Long) = this.map { it.filter { c -> c.timestamp <= to } }
     private fun Single<List<Carbs>>.from(start: Long) = this.map { it.filter { c -> c.timestamp >= start } }
     private fun Single<List<Carbs>>.sort() = this.map { it.sortedBy { c -> c.timestamp } }
 
@@ -768,6 +779,82 @@ open class AppRepository @Inject internal constructor(
         database.extendedBolusDao.getLastId()
             .subscribeOn(Schedulers.io())
             .toWrappedSingle()
+
+    // OFFLINE EVENT
+    /*
+       * returns a Pair of the next entity to sync and the ID of the "update".
+       * The update id might either be the entry id itself if it is a new entry - or the id
+       * of the update ("historic") entry. The sync counter should be incremented to that id if it was synced successfully.
+       *
+       * It is a Maybe as there might be no next element.
+       * */
+    fun getNextSyncElementOfflineEvent(id: Long): Maybe<Pair<OfflineEvent, Long>> =
+        database.offlineEventDao.getNextModifiedOrNewAfter(id)
+            .flatMap { nextIdElement ->
+                val nextIdElemReferenceId = nextIdElement.referenceId
+                if (nextIdElemReferenceId == null) {
+                    Maybe.just(nextIdElement to nextIdElement.id)
+                } else {
+                    database.offlineEventDao.getCurrentFromHistoric(nextIdElemReferenceId)
+                        .map { it to nextIdElement.id }
+                }
+            }
+
+    fun compatGetOfflineEventData(): Single<List<OfflineEvent>> =
+        database.offlineEventDao.getOfflineEventData()
+            .subscribeOn(Schedulers.io())
+
+    fun getOfflineEventDataFromTime(timestamp: Long, ascending: Boolean): Single<List<OfflineEvent>> =
+        database.offlineEventDao.getOfflineEventDataFromTime(timestamp)
+            .map { if (!ascending) it.reversed() else it }
+            .subscribeOn(Schedulers.io())
+
+    fun getOfflineEventDataIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<OfflineEvent>> =
+        database.offlineEventDao.getOfflineEventDataIncludingInvalidFromTime(timestamp)
+            .map { if (!ascending) it.reversed() else it }
+            .subscribeOn(Schedulers.io())
+
+    fun getOfflineEventDataFromTimeToTime(start: Long, end: Long, ascending: Boolean): Single<List<OfflineEvent>> =
+        database.offlineEventDao.getOfflineEventDataFromTimeToTime(start, end)
+            .map { if (!ascending) it.reversed() else it }
+            .subscribeOn(Schedulers.io())
+
+    fun getModifiedOfflineEventsDataFromId(lastId: Long): Single<List<OfflineEvent>> =
+        database.offlineEventDao.getModifiedFrom(lastId)
+            .subscribeOn(Schedulers.io())
+
+    fun getOfflineEventActiveAt(timestamp: Long): Single<ValueWrapper<OfflineEvent>> =
+        database.offlineEventDao.getOfflineEventActiveAt(timestamp)
+            .subscribeOn(Schedulers.io())
+            .toWrappedSingle()
+
+    fun deleteAllOfflineEventEntries() =
+        database.offlineEventDao.deleteAllEntries()
+
+    fun getLastOfflineEventIdWrapped(): Single<ValueWrapper<Long>> =
+        database.offlineEventDao.getLastId()
+            .subscribeOn(Schedulers.io())
+            .toWrappedSingle()
+
+    suspend fun collectNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int) = NewEntries(
+        apsResults = database.apsResultDao.getNewEntriesSince(since, until, limit, offset),
+        apsResultLinks = database.apsResultLinkDao.getNewEntriesSince(since, until, limit, offset),
+        bolusCalculatorResults = database.bolusCalculatorResultDao.getNewEntriesSince(since, until, limit, offset),
+        boluses = database.bolusDao.getNewEntriesSince(since, until, limit, offset),
+        carbs = database.carbsDao.getNewEntriesSince(since, until, limit, offset),
+        effectiveProfileSwitches = database.effectiveProfileSwitchDao.getNewEntriesSince(since, until, limit, offset),
+        extendedBoluses = database.extendedBolusDao.getNewEntriesSince(since, until, limit, offset),
+        glucoseValues = database.glucoseValueDao.getNewEntriesSince(since, until, limit, offset),
+        multiwaveBolusLinks = database.multiwaveBolusLinkDao.getNewEntriesSince(since, until, limit, offset),
+        offlineEvents = database.offlineEventDao.getNewEntriesSince(since, until, limit, offset),
+        preferencesChanges = database.preferenceChangeDao.getNewEntriesSince(since, until, limit, offset),
+        profileSwitches = database.profileSwitchDao.getNewEntriesSince(since, until, limit, offset),
+        temporaryBasals = database.temporaryBasalDao.getNewEntriesSince(since, until, limit, offset),
+        temporaryTarget = database.temporaryTargetDao.getNewEntriesSince(since, until, limit, offset),
+        therapyEvents = database.therapyEventDao.getNewEntriesSince(since, until, limit, offset),
+        totalDailyDoses = database.totalDailyDoseDao.getNewEntriesSince(since, until, limit, offset),
+        versionChanges = database.versionChangeDao.getNewEntriesSince(since, until, limit, offset),
+    )
 }
 
 @Suppress("USELESS_CAST")

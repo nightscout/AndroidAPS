@@ -228,6 +228,25 @@ class NSClientAddAckWorker(
                 dataSyncSelector.processChangedProfileSwitchesCompat()
             }
 
+            is PairEffectiveProfileSwitch         -> {
+                val pair = ack.originalObject
+                pair.value.interfaceIDs.nightscoutId = ack.id
+                repository.runTransactionForResult(UpdateNsIdEffectiveProfileSwitchTransaction(pair.value))
+                    .doOnError { error ->
+                        aapsLogger.error(LTag.DATABASE, "Updated ns id of EffectiveProfileSwitch failed", error)
+                        ret = Result.failure((workDataOf("Error" to error.toString())))
+                    }
+                    .doOnSuccess {
+                        ret = Result.success(workDataOf("ProcessedData" to pair.toString()))
+                        aapsLogger.debug(LTag.DATABASE, "Updated ns id of EffectiveProfileSwitch " + pair.value)
+                        dataSyncSelector.confirmLastEffectiveProfileSwitchIdIfGreater(pair.updateRecordId)
+                    }
+                    .blockingGet()
+                rxBus.send(EventNSClientNewLog("DBADD", "Acked EffectiveProfileSwitch " + pair.value.interfaceIDs.nightscoutId))
+                // Send new if waiting
+                dataSyncSelector.processChangedEffectiveProfileSwitchesCompat()
+            }
+
             is DeviceStatus              -> {
                 val deviceStatus = ack.originalObject
                 deviceStatus.interfaceIDs.nightscoutId = ack.id
@@ -251,6 +270,26 @@ class NSClientAddAckWorker(
                 dataSyncSelector.confirmLastProfileStore(ack.originalObject.timestampSync)
                 rxBus.send(EventNSClientNewLog("DBADD", "Acked ProfileStore " + ack.id))
             }
+
+            is PairOfflineEvent       -> {
+                val pair = ack.originalObject
+                pair.value.interfaceIDs.nightscoutId = ack.id
+                repository.runTransactionForResult(UpdateNsIdOfflineEventTransaction(pair.value))
+                    .doOnError { error ->
+                        aapsLogger.error(LTag.DATABASE, "Updated ns id of OfflineEvent failed", error)
+                        ret = Result.failure((workDataOf("Error" to error.toString())))
+                    }
+                    .doOnSuccess {
+                        ret = Result.success(workDataOf("ProcessedData" to pair.toString()))
+                        aapsLogger.debug(LTag.DATABASE, "Updated ns id of OfflineEvent " + pair.value)
+                        dataSyncSelector.confirmLastOfflineEventIdIfGreater(pair.updateRecordId)
+                    }
+                    .blockingGet()
+                rxBus.send(EventNSClientNewLog("DBADD", "Acked OfflineEvent " + pair.value.interfaceIDs.nightscoutId))
+                // Send new if waiting
+                dataSyncSelector.processChangedOfflineEventsCompat()
+            }
+
         }
         return ret
     }

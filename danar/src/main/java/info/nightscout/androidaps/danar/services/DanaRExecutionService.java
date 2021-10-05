@@ -264,7 +264,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
 
     public boolean bolus(double amount, int carbs, long carbTimeStamp, final EventOverviewBolusProgress.Treatment t) {
         if (!isConnected()) return false;
-        if (BolusProgressDialog.stopPressed) return false;
+        if (BolusProgressDialog.Companion.getStopPressed()) return false;
 
         danaPump.setBolusingTreatment(t);
         danaPump.setBolusDone(false);

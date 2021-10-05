@@ -38,6 +38,9 @@
     <string name="glucoseisnotavailable">Glykémie není k dispozici</string>
     <string name="glucosecomparedmgdl">Glykémie %1$s %2$.0f %3$s</string>
     <string name="glucosecomparedmmol">Glykémie %1$s %2$.1f %3$s</string>
+    <string name="notemptarget">Dočasný cíl neexistuje</string>
+    <string name="temptargetcomparedmgdl">Dočasný cíl %1$s %2$.0f %3$s</string>
+    <string name="temptargetcomparedmmol">Dočasný cíl %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">Profil pct %1$s %2$d</string>
     <string name="iobcompared">IOB %1$s %2$.1f</string>
     <string name="and">A</string>
@@ -86,6 +89,7 @@
     <string name="latitude_short">Zem. šířka:</string>
     <string name="longitude_short">Zem. délka:</string>
     <string name="glucose_u">Glykémie [%1$s]:</string>
+    <string name="target_u">Cíl [%1$s]:</string>
     <string name="lastboluslabel">Poslední bolus</string>
     <string name="lastboluscompared">Poslední bolus %1$s před %2$s min</string>
     <string name="triggercoblabel">COB</string>

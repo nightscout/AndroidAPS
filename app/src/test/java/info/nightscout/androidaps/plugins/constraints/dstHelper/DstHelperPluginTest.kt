@@ -11,14 +11,11 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.powermock.modules.junit4.PowerMockRunner
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-@RunWith(PowerMockRunner::class)
 class DstHelperPluginTest : TestBase() {
 
     @Mock lateinit var resourceHelper: ResourceHelper
@@ -42,31 +39,31 @@ class DstHelperPluginTest : TestBase() {
         var cal = Calendar.getInstance(tz, Locale.ITALIAN)
         val df: DateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ITALIAN)
         var dateBeforeDST = df.parse("2018-03-25 01:55")
-        cal.time = dateBeforeDST
+        cal.time = dateBeforeDST!!
         Assert.assertEquals(false, plugin.wasDST(cal))
         Assert.assertEquals(true, plugin.willBeDST(cal))
         TimeZone.setDefault(tz)
         cal = Calendar.getInstance(tz, Locale.ITALIAN)
         dateBeforeDST = df.parse("2018-03-25 03:05")
-        cal.time = dateBeforeDST
+        cal.time = dateBeforeDST!!
         Assert.assertEquals(true, plugin.wasDST(cal))
         Assert.assertEquals(false, plugin.willBeDST(cal))
         TimeZone.setDefault(tz)
         cal = Calendar.getInstance(tz, Locale.ITALIAN)
         dateBeforeDST = df.parse("2018-03-25 02:05") //Cannot happen!!!
-        cal.time = dateBeforeDST
+        cal.time = dateBeforeDST!!
         Assert.assertEquals(true, plugin.wasDST(cal))
         Assert.assertEquals(false, plugin.willBeDST(cal))
         TimeZone.setDefault(tz)
         cal = Calendar.getInstance(tz, Locale.ITALIAN)
         dateBeforeDST = df.parse("2018-03-25 05:55") //Cannot happen!!!
-        cal.time = dateBeforeDST
+        cal.time = dateBeforeDST!!
         Assert.assertEquals(true, plugin.wasDST(cal))
         Assert.assertEquals(false, plugin.willBeDST(cal))
         TimeZone.setDefault(tz)
         cal = Calendar.getInstance(tz, Locale.ITALIAN)
         dateBeforeDST = df.parse("2018-03-25 06:05") //Cannot happen!!!
-        cal.time = dateBeforeDST
+        cal.time = dateBeforeDST!!
         Assert.assertEquals(false, plugin.wasDST(cal))
         Assert.assertEquals(false, plugin.willBeDST(cal))
     }

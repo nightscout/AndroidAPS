@@ -5,23 +5,20 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.DanaRSTestBase
 import org.junit.Assert
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.powermock.modules.junit4.PowerMockRunner
 
-@RunWith(PowerMockRunner::class)
 class DanaRsPacketBolusSetExtendedBolusCancelTest : DanaRSTestBase() {
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is DanaRS_Packet_Bolus_Set_Extended_Bolus_Cancel) {
+            if (it is DanaRSPacketBolusSetExtendedBolusCancel) {
                 it.aapsLogger = aapsLogger
             }
         }
     }
 
     @Test fun runTest() {
-        val packet = DanaRS_Packet_Bolus_Set_Extended_Bolus_Cancel(packetInjector)
-        Assert.assertEquals(null, packet.requestParams)
+        val packet = DanaRSPacketBolusSetExtendedBolusCancel(packetInjector)
+        Assert.assertEquals(0, packet.getRequestParams().size)
         // test message decoding
         packet.handleMessage(createArray(34, 0.toByte()))
         Assert.assertEquals(false, packet.failed)

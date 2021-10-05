@@ -12,7 +12,7 @@ import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
-import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
+import info.nightscout.androidaps.database.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.LTag
@@ -59,7 +59,7 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
     @DrawableRes override fun icon(): Int = R.drawable.ic_temptarget_high
 
     override fun doAction(callback: Callback) {
-        disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(tt()))
+        disposable += repository.runTransactionForResult(InsertAndCancelCurrentTemporaryTargetTransaction(tt()))
             .subscribe({ result ->
                 result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }
                 result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }

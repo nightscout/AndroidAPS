@@ -36,12 +36,14 @@ class RunningConfiguration @Inject constructor(
                 val sensitivityInterface = activePlugin.activeSensitivity
                 val pumpInterface = activePlugin.activePump
                 val overviewInterface = activePlugin.activeOverview
+                val safetyInterface = activePlugin.activeSafety
 
                 json.put("insulin", insulinInterface.id.value)
                 json.put("insulinConfiguration", insulinInterface.configuration())
                 json.put("sensitivity", sensitivityInterface.id.value)
                 json.put("sensitivityConfiguration", sensitivityInterface.configuration())
                 json.put("overviewConfiguration", overviewInterface.configuration())
+                json.put("safetyConfiguration", safetyInterface.configuration())
                 json.put("pump", pumpInterface.model().description)
             } catch (e: JSONException) {
                 aapsLogger.error("Unhandled exception", e)
@@ -88,5 +90,8 @@ class RunningConfiguration @Inject constructor(
 
         if (configuration.has("overviewConfiguration"))
             activePlugin.activeOverview.applyConfiguration(configuration.getJSONObject("overviewConfiguration"))
+
+        if (configuration.has("safetyConfiguration"))
+            activePlugin.activeSafety.applyConfiguration(configuration.getJSONObject("safetyConfiguration"))
     }
 }

@@ -26,6 +26,7 @@ import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
@@ -38,6 +39,7 @@ import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.extensions.directionToIcon
+import info.nightscout.androidaps.extensions.isInProgress
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.extensions.valueToUnitsString
 import info.nightscout.androidaps.interfaces.*
@@ -57,10 +59,13 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProv
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.source.DexcomPlugin
 import info.nightscout.androidaps.plugins.source.XdripPlugin
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.CommandQueue
 import info.nightscout.androidaps.skins.SkinProvider
-import info.nightscout.androidaps.utils.*
+import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.DefaultValueHelper
+import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.androidaps.utils.TrendCalculator
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
@@ -72,6 +77,7 @@ import info.nightscout.androidaps.utils.wizard.QuickWizard
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 import kotlin.math.abs
@@ -92,7 +98,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Inject lateinit var nsDeviceStatus: NSDeviceStatus
     @Inject lateinit var loopPlugin: LoopPlugin
     @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var dexcomPlugin: DexcomPlugin
     @Inject lateinit var dexcomMediator: DexcomPlugin.DexcomMediator
@@ -108,7 +113,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Inject lateinit var trendCalculator: TrendCalculator
     @Inject lateinit var config: Config
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var databaseHelper: DatabaseHelperInterface
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
@@ -121,7 +125,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     private var smallHeight = false
     private lateinit var dm: DisplayMetrics
     private var axisWidth: Int = 0
-    private var refreshLoop: Runnable? = null
+    private lateinit var refreshLoop: Runnable
     private lateinit var handler: Handler
 
     private val secondaryGraphs = ArrayList<GraphView>()
@@ -140,7 +144,10 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             _binding = it
             //check screen width
             dm = DisplayMetrics()
-            activity?.windowManager?.defaultDisplay?.getMetrics(dm)
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R)
+                activity?.display?.getRealMetrics(dm)
+            else
+                @Suppress("DEPRECATION") activity?.windowManager?.defaultDisplay?.getMetrics(dm)
         }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -156,8 +163,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
         skinProvider.activeSkin().preProcessLandscapeOverviewLayout(dm, view, landscape, resourceHelper.gb(R.bool.isTablet), smallHeight)
         binding.nsclientLayout.visibility = config.NSCLIENT.toVisibility()
-
-        binding.loopPumpStatusLayout.pumpStatus.setBackgroundColor(resourceHelper.gc(R.color.colorInitializingBorder))
 
         binding.notifications.setHasFixedSize(false)
         binding.notifications.layoutManager = LinearLayoutManager(view.context)
@@ -177,6 +182,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             overviewData.rangeToDisplay = if (overviewData.rangeToDisplay > 24) 6 else overviewData.rangeToDisplay
             sp.putInt(R.string.key_rangetodisplay, overviewData.rangeToDisplay)
             overviewData.initRange()
+            overviewData.prepareBucketedData("EventBucketedDataCreated")
+            overviewData.prepareBgData("EventBucketedDataCreated")
             updateGUI("rangeChange", OverviewData.Property.GRAPH)
             rxBus.send(EventPreferenceChange(resourceHelper, R.string.key_rangetodisplay))
             sp.putBoolean(R.string.key_objectiveusescale, true)
@@ -185,10 +192,10 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         prepareGraphsIfNeeded(overviewMenus.setting.size)
         overviewMenus.setupChartMenu(binding.graphsLayout.chartMenuButton)
 
-        binding.loopPumpStatusLayout.activeProfile.setOnClickListener(this)
-        binding.loopPumpStatusLayout.activeProfile.setOnLongClickListener(this)
-        binding.loopPumpStatusLayout.tempTarget.setOnClickListener(this)
-        binding.loopPumpStatusLayout.tempTarget.setOnLongClickListener(this)
+        binding.activeProfile.setOnClickListener(this)
+        binding.activeProfile.setOnLongClickListener(this)
+        binding.tempTarget.setOnClickListener(this)
+        binding.tempTarget.setOnLongClickListener(this)
         binding.buttonsLayout.acceptTempButton.setOnClickListener(this)
         binding.buttonsLayout.treatmentButton.setOnClickListener(this)
         binding.buttonsLayout.wizardButton.setOnClickListener(this)
@@ -200,7 +207,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         binding.buttonsLayout.quickWizardButton.setOnLongClickListener(this)
         binding.infoLayout.apsMode.setOnClickListener(this)
         binding.infoLayout.apsMode.setOnLongClickListener(this)
-        binding.loopPumpStatusLayout.activeProfile.setOnLongClickListener(this)
+        binding.activeProfile.setOnLongClickListener(this)
     }
 
     @Synchronized
@@ -241,10 +248,14 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             .toObservable(EventNewOpenLoopNotification::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ scheduleUpdateGUI("EventNewOpenLoopNotification") }, fabricPrivacy::logException))
-        disposable.add(rxBus
+        disposable += rxBus
             .toObservable(EventPumpStatusChanged::class.java)
             .observeOn(aapsSchedulers.main)
-            .subscribe({ updatePumpStatus(it) }, fabricPrivacy::logException))
+            .delay (30, TimeUnit.MILLISECONDS, aapsSchedulers.main)
+            .subscribe({
+                overviewData.pumpStatus = it.getStatus(resourceHelper)
+                updateGUI("EventPumpStatusChanged", OverviewData.Property.PUMPSTATUS)
+            }, fabricPrivacy::logException)
 
         refreshLoop = Runnable {
             overviewPlugin.refreshLoop("refreshLoop")
@@ -374,7 +385,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             }
 
             R.id.temp_target         -> v.performClick()
-            R.id.active_profile      -> activity?.let { activity -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { ProfileSwitchDialog().show(childFragmentManager, "Overview") }) }
+            R.id.active_profile      -> activity?.let { activity -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { ProfileSwitchDialog().show(childFragmentManager, "ProfileSwitchDialog") }) }
 
         }
         return false
@@ -399,18 +410,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     wizard.confirmAndExecute(it)
                 }
             }
-        }
-    }
-
-    private fun updatePumpStatus(event: EventPumpStatusChanged) {
-        val status = event.getStatus(resourceHelper)
-        if (status != "") {
-            binding.loopPumpStatusLayout.pumpStatus.text = status
-            binding.loopPumpStatusLayout.pumpStatusLayout.visibility = View.VISIBLE
-            binding.loopPumpStatusLayout.loopLayout.visibility = View.GONE
-        } else {
-            binding.loopPumpStatusLayout.pumpStatusLayout.visibility = View.GONE
-            binding.loopPumpStatusLayout.loopLayout.visibility = View.VISIBLE
         }
     }
 
@@ -585,9 +584,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 task = null
             }
         }
-        handler.removeCallbacks(task)
+        task?.let { handler.removeCallbacks(it) }
         task = UpdateRunnable()
-        handler.postDelayed(task, 500)
+        task?.let { handler.postDelayed(it, 500) }
     }
 
     @Suppress("UNUSED_PARAMETER")
@@ -595,15 +594,12 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     fun updateGUI(from: String, what: OverviewData.Property) {
 //        if (what != OverviewData.Property.CALC_PROGRESS)
 //            aapsLogger.debug(LTag.UI, "UpdateGui $from $what")
-        if (overviewData.profile == null) {
-            binding.loopPumpStatusLayout.pumpStatus.setText(R.string.noprofileset)
-            binding.loopPumpStatusLayout.pumpStatusLayout.visibility = View.VISIBLE
-            binding.loopPumpStatusLayout.loopLayout.visibility = View.GONE
+        if (profileFunction.getProfile() == null) {
+            binding.activeProfile.setText(R.string.noprofileset)
+            binding.activeProfile.setBackgroundColor(resourceHelper.gc(R.color.errorAlertBackground))
             return
         }
         binding.notifications.let { notificationStore.updateNotifications(it) }
-        binding.loopPumpStatusLayout.pumpStatusLayout.visibility = View.GONE
-        binding.loopPumpStatusLayout.loopLayout.visibility = View.VISIBLE
 
         val units = profileFunction.getUnits()
         val pump = activePlugin.activePump
@@ -623,7 +619,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     binding.infoLayout.avgDelta.text = Profile.toSignedUnitsString(glucoseStatus.shortAvgDelta, glucoseStatus.shortAvgDelta * Constants.MGDL_TO_MMOLL, units)
                     binding.infoLayout.longAvgDelta.text = Profile.toSignedUnitsString(glucoseStatus.longAvgDelta, glucoseStatus.longAvgDelta * Constants.MGDL_TO_MMOLL, units)
                 } else {
-                    binding.infoLayout.deltaLarge.text = "Δ " + resourceHelper.gs(R.string.notavailable)
+                    binding.infoLayout.deltaLarge.text = ""
                     binding.infoLayout.delta.text = "Δ " + resourceHelper.gs(R.string.notavailable)
                     binding.infoLayout.avgDelta.text = ""
                     binding.infoLayout.longAvgDelta.text = ""
@@ -638,10 +634,25 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             }
 
             OverviewData.Property.PROFILE          -> {
-                binding.loopPumpStatusLayout.activeProfile.text = overviewData.profileNameWithRemainingTime
-                    ?: ""
-                binding.loopPumpStatusLayout.activeProfile.setBackgroundColor(overviewData.profileBackgroudColor)
-                binding.loopPumpStatusLayout.activeProfile.setTextColor(overviewData.profileTextColor)
+                val profileBackgroundColor =
+                    profileFunction.getProfile()?.let {
+                        val profile = (it as ProfileSealed.EPS).value
+                        if (profile.originalPercentage != 100 || profile.originalTimeshift != 0L || profile.originalDuration != 0L)
+                            resourceHelper.gc(R.color.ribbonWarning)
+                        else resourceHelper.gc(R.color.ribbonDefault)
+                    } ?: resourceHelper.gc(R.color.ribbonTextDefault)
+
+                val profileTextColor =
+                    profileFunction.getProfile()?.let {
+                        val profile = (it as ProfileSealed.EPS).value
+                        if (profile.originalPercentage != 100 || profile.originalTimeshift != 0L || profile.originalDuration != 0L)
+                            resourceHelper.gc(R.color.ribbonTextWarning)
+                        else resourceHelper.gc(R.color.ribbonTextDefault)
+                    } ?: resourceHelper.gc(R.color.ribbonTextDefault)
+
+                binding.activeProfile.text = profileFunction.getProfileNameWithRemainingTime()
+                binding.activeProfile.setBackgroundColor(profileBackgroundColor)
+                binding.activeProfile.setTextColor(profileTextColor)
             }
 
             OverviewData.Property.TEMPORARY_BASAL  -> {
@@ -655,7 +666,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
             OverviewData.Property.EXTENDED_BOLUS   -> {
                 binding.infoLayout.extendedBolus.text = overviewData.extendedBolusText
-                binding.infoLayout.extendedBolus.setOnClickListener {
+                binding.infoLayout.extendedLayout.setOnClickListener {
                     activity?.let { OKDialog.show(it, resourceHelper.gs(R.string.extended_bolus), overviewData.extendedBolusDialogText) }
                 }
                 binding.infoLayout.extendedLayout.visibility = (overviewData.extendedBolus != null && !pump.isFakingTempsByExtendedBoluses).toVisibility()
@@ -677,14 +688,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     activity?.let { OKDialog.show(it, resourceHelper.gs(R.string.iob), overviewData.iobDialogText) }
                 }
                 // cob
-                var cobText: String = resourceHelper.gs(R.string.value_unavailable_short)
-                overviewData.cobInfo?.let { cobInfo ->
-                    if (cobInfo.displayCob != null) {
-                        cobText = resourceHelper.gs(R.string.format_carbs, cobInfo.displayCob!!.toInt())
-                        if (cobInfo.futureCarbs > 0) cobText += "(" + DecimalFormatter.to0Decimal(cobInfo.futureCarbs) + ")"
-                    }
-                }
-                binding.infoLayout.cob.text = cobText
+                var cobText = overviewData.cobInfo?.displayText(resourceHelper, dateUtil, buildHelper.isDev()) ?: resourceHelper.gs(R.string.value_unavailable_short)
 
                 val constraintsProcessed = loopPlugin.lastRun?.constraintsProcessed
                 val lastRun = loopPlugin.lastRun
@@ -692,7 +696,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     if (constraintsProcessed.carbsReq > 0) {
                         //only display carbsreq when carbs have not been entered recently
                         if (overviewData.lastCarbsTime < lastRun.lastAPSRun) {
-                            cobText = cobText + " | " + constraintsProcessed.carbsReq + " " + resourceHelper.gs(R.string.required)
+                            cobText += " | " + constraintsProcessed.carbsReq + " " + resourceHelper.gs(R.string.required)
                         }
                         if (carbAnimation?.isRunning == false)
                             carbAnimation?.start()
@@ -701,36 +705,38 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                         carbAnimation?.selectDrawable(0)
                     }
                 }
+                binding.infoLayout.cob.text = cobText
             }
 
             OverviewData.Property.TEMPORARY_TARGET -> {
                 // temp target
-                val tempTarget = overviewData.temporarytarget
+                if (overviewData.temporaryTarget?.isInProgress(dateUtil) == false) overviewData.temporaryTarget = null
+                val tempTarget = overviewData.temporaryTarget
                 if (tempTarget != null) {
-                    binding.loopPumpStatusLayout.tempTarget.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
-                    binding.loopPumpStatusLayout.tempTarget.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning))
-                    binding.loopPumpStatusLayout.tempTarget.text = Profile.toTargetRangeString(tempTarget.lowTarget, tempTarget.highTarget, GlucoseUnit.MGDL, units) + " " + dateUtil.untilString(tempTarget.end, resourceHelper)
+                    binding.tempTarget.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
+                    binding.tempTarget.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning))
+                    binding.tempTarget.text = Profile.toTargetRangeString(tempTarget.lowTarget, tempTarget.highTarget, GlucoseUnit.MGDL, units) + " " + dateUtil.untilString(tempTarget.end, resourceHelper)
                 } else {
                     // If the target is not the same as set in the profile then oref has overridden it
-                    overviewData.profile?.let { profile ->
+                    profileFunction.getProfile()?.let { profile ->
                         val targetUsed = loopPlugin.lastRun?.constraintsProcessed?.targetBG ?: 0.0
 
                         if (targetUsed != 0.0 && abs(profile.getTargetMgdl() - targetUsed) > 0.01) {
                             aapsLogger.debug("Adjusted target. Profile: ${profile.getTargetMgdl()} APS: $targetUsed")
-                            binding.loopPumpStatusLayout.tempTarget.text = Profile.toTargetRangeString(targetUsed, targetUsed, GlucoseUnit.MGDL, units)
-                            binding.loopPumpStatusLayout.tempTarget.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
-                            binding.loopPumpStatusLayout.tempTarget.setBackgroundColor(resourceHelper.gc(R.color.tempTargetBackground))
+                            binding.tempTarget.text = Profile.toTargetRangeString(targetUsed, targetUsed, GlucoseUnit.MGDL, units)
+                            binding.tempTarget.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
+                            binding.tempTarget.setBackgroundColor(resourceHelper.gc(R.color.tempTargetBackground))
                         } else {
-                            binding.loopPumpStatusLayout.tempTarget.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault))
-                            binding.loopPumpStatusLayout.tempTarget.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
-                            binding.loopPumpStatusLayout.tempTarget.text = Profile.toTargetRangeString(profile.getTargetLowMgdl(), profile.getTargetHighMgdl(), GlucoseUnit.MGDL, units)
+                            binding.tempTarget.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault))
+                            binding.tempTarget.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
+                            binding.tempTarget.text = Profile.toTargetRangeString(profile.getTargetLowMgdl(), profile.getTargetHighMgdl(), GlucoseUnit.MGDL, units)
                         }
                     }
                 }
             }
 
             OverviewData.Property.GRAPH            -> {
-                val graphData = GraphData(injector, binding.graphsLayout.bgGraph)
+                val graphData = GraphData(injector, binding.graphsLayout.bgGraph, overviewData)
                 val menuChartSettings = overviewMenus.setting
                 graphData.addInRangeArea(overviewData.fromTime, overviewData.endTime, defaultValueHelper.determineLowLine(), defaultValueHelper.determineHighLine())
                 graphData.addBgReadings(menuChartSettings[0][OverviewMenus.CharType.PRE.ordinal])
@@ -738,7 +744,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 graphData.addTreatments()
                 if (menuChartSettings[0][OverviewMenus.CharType.ACT.ordinal])
                     graphData.addActivity(0.8)
-                if (pump.pumpDescription.isTempBasalCapable && menuChartSettings[0][OverviewMenus.CharType.BAS.ordinal])
+                if ((pump.pumpDescription.isTempBasalCapable || config.NSCLIENT) && menuChartSettings[0][OverviewMenus.CharType.BAS.ordinal])
                     graphData.addBasals()
                 graphData.addTargetLine()
                 graphData.addNowLine(dateUtil.now())
@@ -755,7 +761,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
                 val now = System.currentTimeMillis()
                 for (g in 0 until min(secondaryGraphs.size, menuChartSettings.size + 1)) {
-                    val secondGraphData = GraphData(injector, secondaryGraphs[g])
+                    val secondGraphData = GraphData(injector, secondaryGraphs[g], overviewData)
                     var useABSForScale = false
                     var useIobForScale = false
                     var useCobForScale = false
@@ -780,7 +786,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     if (menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal]) secondGraphData.addDeviations(useDevForScale, 1.0)
                     if (menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal]) secondGraphData.addMinusBGI(useBGIForScale, if (alignDevBgiScale) 1.0 else 0.8)
                     if (menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal]) secondGraphData.addRatio(useRatioForScale, if (useRatioForScale) 1.0 else 0.8)
-                    if (menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] && buildHelper.isDev()) secondGraphData.addDeviationSlope(useDSForScale, 1.0)
+                    if (menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] && buildHelper.isDev()) secondGraphData.addDeviationSlope(useDSForScale, if(useDSForScale) 1.0 else 0.8, useRatioForScale)
 
                     // set manual x bounds to have nice steps
                     secondGraphData.formatAxis(overviewData.fromTime, overviewData.endTime)
@@ -817,6 +823,12 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     overviewData.lastAutosensData?.let { autosensData ->
                         String.format(Locale.ENGLISH, "%.0f%%", autosensData.autosensResult.ratio * 100)
                     } ?: ""
+            }
+
+            OverviewData.Property.PUMPSTATUS      -> {
+                val status = overviewData.pumpStatus
+                binding.pumpStatus.text = status
+                binding.pumpStatusLayout.visibility = (status != "").toVisibility()
             }
         }
     }

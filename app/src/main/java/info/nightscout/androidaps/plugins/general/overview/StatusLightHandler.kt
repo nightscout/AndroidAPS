@@ -74,7 +74,7 @@ class StatusLightHandler @Inject constructor(
     private fun handleAge(view: TextView?, type: TherapyEvent.Type, @StringRes warnSettings: Int, defaultWarnThreshold: Double, @StringRes urgentSettings: Int, defaultUrgentThreshold: Double) {
         val warn = sp.getDouble(warnSettings, defaultWarnThreshold)
         val urgent = sp.getDouble(urgentSettings, defaultUrgentThreshold)
-        val therapyEvent = repository.getLastTherapyRecord(type).blockingGet()
+        val therapyEvent = repository.getLastTherapyRecordUpToNow(type).blockingGet()
         if (therapyEvent is ValueWrapper.Existing) {
             warnColors.setColorByAge(view, therapyEvent.value, warn, urgent)
             view?.text = therapyEvent.value.age(resourceHelper.shortTextMode(), resourceHelper, dateUtil)

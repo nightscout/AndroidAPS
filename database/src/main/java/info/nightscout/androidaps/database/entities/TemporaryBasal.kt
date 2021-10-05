@@ -45,8 +45,7 @@ data class TemporaryBasal(
 ) : TraceableDBEntry, DBEntryWithTimeAndDuration {
 
     init {
-        if (duration <= 0)
-            require(duration > 0)
+        require(duration > 0)
     }
 
     enum class Type {

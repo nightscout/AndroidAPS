@@ -28,7 +28,8 @@ import info.nightscout.androidaps.events.EventTherapyEventChange
 import info.nightscout.androidaps.extensions.toStringMedium
 import info.nightscout.androidaps.extensions.toStringShort
 import info.nightscout.androidaps.extensions.toVisibility
-import info.nightscout.androidaps.historyBrowser.HistoryBrowseActivity
+import info.nightscout.androidaps.activities.HistoryBrowseActivity
+import info.nightscout.androidaps.diaconn.DiaconnG8Plugin
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Config
@@ -114,7 +115,10 @@ class ActionsFragment : DaggerFragment() {
                               savedInstanceState: Bundle?): View? {
         //check screen width
         dm = DisplayMetrics()
-        activity?.windowManager?.defaultDisplay?.getMetrics(dm)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R)
+            activity?.display?.getRealMetrics(dm)
+        else
+            @Suppress("DEPRECATION") activity?.windowManager?.defaultDisplay?.getMetrics(dm)
 
         val screenWidth = dm.widthPixels
         val screenHeight = dm.heightPixels
@@ -152,7 +156,7 @@ class ActionsFragment : DaggerFragment() {
         pbLevelLabel = view.findViewById(R.id.pb_level_label)
 
         profileSwitch?.setOnClickListener {
-            ProfileSwitchDialog().show(childFragmentManager, "Actions")
+            ProfileSwitchDialog().show(childFragmentManager, "ProfileSwitchDialog")
         }
         tempTarget?.setOnClickListener {
             TempTargetDialog().show(childFragmentManager, "Actions")
@@ -304,7 +308,11 @@ class ActionsFragment : DaggerFragment() {
         val activeBgSource = activePlugin.activeBgSource
         historyBrowser?.visibility = (profile != null).toVisibility()
         fill?.visibility = (pump.pumpDescription.isRefillingCapable && pump.isInitialized() && !pump.isSuspended()).toVisibility()
-        pumpBatteryChange?.visibility = (pump.pumpDescription.isBatteryReplaceable || (pump is OmnipodErosPumpPlugin && pump.isUseRileyLinkBatteryLevel && pump.isBatteryChangeLoggingEnabled)).toVisibility()
+        if(pump is DiaconnG8Plugin) {
+            pumpBatteryChange?.visibility = (pump.pumpDescription.isBatteryReplaceable && !pump.isBatteryChangeLoggingEnabled()).toVisibility()
+        } else {
+            pumpBatteryChange?.visibility = (pump.pumpDescription.isBatteryReplaceable || (pump is OmnipodErosPumpPlugin && pump.isUseRileyLinkBatteryLevel && pump.isBatteryChangeLoggingEnabled)).toVisibility()
+        }
         tempTarget?.visibility = (profile != null && config.APS).toVisibility()
         tddStats?.visibility = pump.pumpDescription.supportsTDDs.toVisibility()
 

@@ -55,12 +55,10 @@ object OKDialog {
             .setCanceledOnTouchOutside(false)
     }
 
-    @JvmStatic
     fun showConfirmation(activity: FragmentActivity, message: String, ok: Runnable?) {
         showConfirmation(activity, activity.getString(R.string.confirmation), message, ok, null)
     }
 
-    @JvmStatic
     fun showConfirmation(activity: FragmentActivity, message: Spanned, ok: Runnable?) {
         showConfirmation(activity, activity.getString(R.string.confirmation), message, ok, null)
     }
@@ -153,15 +151,11 @@ object OKDialog {
             .setCanceledOnTouchOutside(false)
     }
 
-    @JvmStatic
-    @JvmOverloads
     fun showConfirmation(context: Context, message: String, ok: Runnable?, cancel: Runnable? = null) {
         showConfirmation(context, context.getString(R.string.confirmation), message, ok, cancel)
     }
 
     @SuppressLint("InflateParams")
-    @JvmStatic
-    @JvmOverloads
     fun showConfirmation(context: Context, title: String, message: String, ok: Runnable?, cancel: Runnable? = null) {
         var okClicked = false
         AlertDialogHelper.Builder(context)
@@ -190,8 +184,6 @@ object OKDialog {
     }
 
     @SuppressLint("InflateParams")
-    @JvmStatic
-    @JvmOverloads
     fun showConfirmation(context: Context, title: String, message: String, ok: DialogInterface.OnClickListener?, cancel: DialogInterface.OnClickListener? = null) {
         var okClicked = false
         AlertDialogHelper.Builder(context)

@@ -75,8 +75,6 @@
     <string name="careportal">Careportal</string>
     <string name="configbuilder_pump">Pomp</string>
     <string name="configbuilder_pump_description">Watter pomp wil jy gebruik met AndroidAPS?</string>
-    <string name="configbuilder_treatments">Behandelings</string>
-    <string name="configbuilder_treatments_description">Watter plugin moet gebruik word vir behandeling hantering?</string>
     <string name="configbuilder_profile">Profiel</string>
     <string name="configbuilder_profile_description">Watter profiel moet AndroidAPS gebruik?</string>
     <string name="configbuilder_aps">APS</string>
@@ -149,7 +147,6 @@
     <string name="smscommunicator_loophasbeendisabled">Loop is gedeaktiveer</string>
     <string name="smscommunicator_loophasbeenenabled">Loop is geaktiveerd</string>
     <string name="smscommunicator_loopisenabled">Lus geaktiveer</string>
-    <string name="valuelimitedto">%1$.2f beperk tot %2$.2f</string>
     <string name="smscommunicator_remotecommandnotallowed">Afstandbeheerde bevel word nie toegelaat nie</string>
     <string name="smscommunicator_remotebolusnotallowed">Afstandbeheerde bolus nie beskikbaar nie. Probeer later weer.</string>
     <string name="smscommunicator_profilereplywithcode">Om profiel te verander na %1$s %2$d%% antwoord met %3$s</string>

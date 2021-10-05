@@ -21,7 +21,7 @@ data class UserEntry(
     var action: Action,
     var source: Sources,
     var note: String,
-    var values: List<ValueWithUnit?>
+    var values: List<@JvmSuppressWildcards ValueWithUnit?>
 ) : DBEntry, DBEntryWithTime {
     enum class Action (val colorGroup: ColorGroup) {
         BOLUS (ColorGroup.InsulinTreatment),
@@ -43,6 +43,8 @@ data class UserEntry(
         OPEN_LOOP_MODE (ColorGroup.Loop),
         LOOP_DISABLED (ColorGroup.Loop),
         LOOP_ENABLED (ColorGroup.Loop),
+        LOOP_CHANGE (ColorGroup.Loop),
+        LOOP_REMOVED (ColorGroup.Loop),
         RECONNECT (ColorGroup.Pump),
         DISCONNECT (ColorGroup.Pump),
         RESUME (ColorGroup.Loop),
@@ -151,18 +153,20 @@ data class UserEntry(
         Objectives,         //From Objectives plugin
         Pump,               //To update with one Source per pump
         Dana,               //Only one UserEntry in Common module Dana
-        DanaR,              //No entry currently
-        DanaRC,             //No entry currently
-        DanaRv2,            //No entry currently
-        DanaRS,             //No entry currently
-        Insight,            //No entry currently
-        Combo,              //No entry currently
-        Medtronic,          //No entry currently
+        DanaR,
+        DanaRC,
+        DanaRv2,
+        DanaRS,
+        DanaI,
+        DiaconnG8,
+        Insight,
+        Combo,
+        Medtronic,
         Omnipod,            //No entry currently
-        OmnipodEros,        //No entry currently
+        OmnipodEros,
         OmnipodDash,        //No entry currently
-        MDI,                //No entry currently
-        VirtualPump,        //No entry currently
+        MDI,
+        VirtualPump,
         SMS,                //From SMS plugin
         Treatments,         //From Treatments plugin
         Wear,               //From Wear plugin

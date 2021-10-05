@@ -78,8 +78,6 @@
     <string name="careportal">Careportal</string>
     <string name="configbuilder_pump">Bomba</string>
     <string name="configbuilder_pump_description">Qual a bomba que gostaria de usar com AndroidAPS?</string>
-    <string name="configbuilder_treatments">Tratamentos</string>
-    <string name="configbuilder_treatments_description">Qual o plugin que deve ser usado para os tratamentos?</string>
     <string name="configbuilder_profile">Perfil</string>
     <string name="configbuilder_profile_description">Qual perfil o AndroidAPS deve usar?</string>
     <string name="configbuilder_aps">APS</string>
@@ -177,7 +175,6 @@
     <string name="smscommunicator_loophasbeendisabled">Loop foi desativado</string>
     <string name="smscommunicator_loophasbeenenabled">Loop foi ativado</string>
     <string name="smscommunicator_loopisenabled">Loop ativado</string>
-    <string name="valuelimitedto">%1$.2f limitado a %2$.2f</string>
     <string name="smscommunicator_pumpdisconnected">Bomba desconectada</string>
     <string name="smscommunicator_reconnect">Bomba reconectada</string>
     <string name="smscommunicator_remotecommandnotallowed">O comando remoto não é permitido</string>

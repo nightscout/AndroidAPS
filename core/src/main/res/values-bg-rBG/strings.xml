@@ -62,6 +62,7 @@
     <string name="eventtype">Тип събитие</string>
     <string name="mgdl">мг/дл</string>
     <string name="mmol">ммол/л</string>
+    <string name="shortgram">гр.</string>
     <string name="advancedsettings_title">Допълнителни настройки</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">BT ограничения</string>
@@ -79,7 +80,6 @@
     <string name="extended_bolus">Удължен болус</string>
     <string name="pump_time_updated">Актуализирано време на помпата</string>
     <string name="exit">Изход</string>
-    <string name="serial_number">Сериен номер</string>
     <string name="removerecord">Премахни</string>
     <string name="loopisdisabled">APS е изключен</string>
     <string name="alarm">Аларма</string>
@@ -151,6 +151,7 @@
     <string name="profile_carbs_per_unit">гр/Е</string>
     <!--    ProfileFunction-->
     <string name="noprofileselected">Няма избран профил</string>
+    <string name="startprofile">Стартирай профил %1$d%% за %2$d мин</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Само конкретни стойности! Диапазони не се поддържат за базал/болус при виртуална помпа.</string>
     <!--    APSResult-->
@@ -190,10 +191,19 @@
     <string name="careportal_pumpbatterychange">Смяна на батерия</string>
     <string name="careportal_temporarytarget">Временна цел</string>
     <string name="careportal_temporarytargetcancel">Откажи временна цел</string>
+    <string name="boluswizard">Болус калкулатор</string>
     <string name="glucosetype_finger">Пръст</string>
     <string name="glucosetype_sensor">Сензор</string>
     <string name="manual">Друго</string>
     <string name="unknown">неизвестно</string>
+    <string name="eatingsoon">Преди хранене</string>
+    <string name="hypo">Хипоглекимия</string>
+    <string name="activity">Физ.активност</string>
+    <string name="wear">Часовник</string>
+    <string name="automation">Автоматизация</string>
+    <string name="custom">По избор</string>
+    <string name="pump">Помпа</string>
+    <string name="loop">Кръг - Loop</string>
     <!--    Command-->
     <string name="connectiontimedout">Времето за връзка изтече</string>
     <!--    PumpEnactResult-->
@@ -225,30 +235,6 @@
     <!--    Ntp-->
     <string name="timedetection">Засичане на времето</string>
     <string name="format_hour_minute">%1$dч:%2$dм</string>
-    <!-- PumoCommon - Pump Abstract -->
-    <string name="pump_operation_not_supported_by_pump_driver">Помпата не поддържа тази операция.</string>
-    <string name="pump_operation_not_yet_supported_by_pump">Операцията не се поддържа от помпата (ВСЕ ОЩЕ).</string>
-    <string name="common_resultok">ОК</string>
-    <!-- PumoCommon - Pump Status -->
-    <string name="pump_status_never_contacted">Никога не сме се свързвали</string>
-    <string name="pump_status_waking_up">Събуждане</string>
-    <string name="pump_status_error_comm">Грешка в комуникацията</string>
-    <string name="pump_status_timeout_comm">Изтече времето за връзка</string>
-    <string name="pump_status_pump_unreachable">Помпата е недостъпна</string>
-    <string name="pump_status_invalid_config">Грешна конфигурация</string>
-    <string name="pump_status_active">Активна</string>
-    <string name="pump_status_sleeping">Спинка си</string>
-    <!-- PumpCommon - History Group -->
-    <string name="history_group_basal">Базали</string>
-    <string name="history_group_configuration">Конфигурации</string>
-    <string name="history_group_notification">Известия</string>
-    <string name="history_group_statistic">Статистика</string>
-    <string name="history_group_unknown">Неизвестни</string>
-    <string name="history_group_all">Всички</string>
-    <string name="history_group_bolus">Болуси</string>
-    <string name="history_group_prime">Пълнене</string>
-    <string name="history_group_alarm">Аларми</string>
-    <string name="history_group_glucose">Кръвна захар</string>
     <string name="mute5min">Изключи за 5 минути</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">Формат на файла</string>
@@ -300,6 +286,14 @@
     <string name="saturday_short">С</string>
     <string name="sunday_short">Н</string>
     <!-- User Entry -->
+    <string name="uel_cancel_bolus">СПРИ БОЛУС</string>
+    <string name="ue_source">Източник</string>
+    <string name="ue_action">Действие</string>
+    <!-- HardLimits -->
+    <plurals name="hours">
+        <item quantity="one">%1$d час</item>
+        <item quantity="other">%1$d часа</item>
+    </plurals>
     <plurals name="minutes">
         <item quantity="one">%1$d минутa</item>
         <item quantity="other">%1$d минути</item>

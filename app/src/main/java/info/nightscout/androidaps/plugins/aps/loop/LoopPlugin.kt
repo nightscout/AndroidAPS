@@ -12,22 +12,24 @@ import androidx.core.app.NotificationCompat
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.*
 import info.nightscout.androidaps.activities.ErrorHelperActivity
+import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.androidaps.database.ValueWrapper
+import info.nightscout.androidaps.database.entities.OfflineEvent
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
-import info.nightscout.androidaps.database.transactions.InsertIfNewByTimestampTherapyEventTransaction
+import info.nightscout.androidaps.database.transactions.InsertAndCancelCurrentOfflineEventTransaction
 import info.nightscout.androidaps.database.transactions.InsertTherapyEventAnnouncementTransaction
 import info.nightscout.androidaps.events.EventAcceptOpenLoopChange
 import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.events.EventNewBG
 import info.nightscout.androidaps.events.EventTempTargetChange
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.interfaces.LoopInterface.LastRun
+import info.nightscout.androidaps.interfaces.Loop.LastRun
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -44,7 +46,6 @@ import info.nightscout.androidaps.plugins.general.wear.events.EventWearConfirmAc
 import info.nightscout.androidaps.plugins.general.wear.events.EventWearInitiateAction
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.queue.Callback
-import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -64,8 +65,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
 
+@OpenForTesting
 @Singleton
-open class LoopPlugin @Inject constructor(
+class LoopPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     private val aapsSchedulers: AapsSchedulers,
@@ -96,7 +98,7 @@ open class LoopPlugin @Inject constructor(
     .enableByDefault(config.APS)
     .description(R.string.description_loop),
     aapsLogger, resourceHelper, injector
-), LoopInterface {
+), Loop {
 
     private val disposable = CompositeDisposable()
     private var lastBgTriggeredRun: Long = 0
@@ -158,48 +160,21 @@ open class LoopPlugin @Inject constructor(
         }
     }
 
-    override fun suspendTo(endTime: Long) {
-        sp.putLong("loopSuspendedTill", endTime)
-        sp.putBoolean("isSuperBolus", false)
-        sp.putBoolean("isDisconnected", false)
+    override fun minutesToEndOfSuspend(): Int {
+        val offlineEventWrapped = repository.getOfflineEventActiveAt(dateUtil.now()).blockingGet()
+        return if (offlineEventWrapped is ValueWrapper.Existing) T.msecs(offlineEventWrapped.value.timestamp + offlineEventWrapped.value.duration - dateUtil.now()).mins().toInt()
+        else 0
     }
 
-    fun superBolusTo(endTime: Long) {
-        sp.putLong("loopSuspendedTill", endTime)
-        sp.putBoolean("isSuperBolus", true)
-        sp.putBoolean("isDisconnected", false)
-    }
-
-    private fun disconnectTo(endTime: Long) {
-        sp.putLong("loopSuspendedTill", endTime)
-        sp.putBoolean("isSuperBolus", false)
-        sp.putBoolean("isDisconnected", true)
-    }
-
-    fun minutesToEndOfSuspend(): Int {
-        val loopSuspendedTill = sp.getLong("loopSuspendedTill", 0L)
-        if (loopSuspendedTill == 0L) return 0
-        val now = System.currentTimeMillis()
-        val millisDiff = loopSuspendedTill - now
-        if (loopSuspendedTill <= now) { // time exceeded
-            suspendTo(0L)
-            return 0
-        }
-        return (millisDiff / 60.0 / 1000.0).toInt()
-    }
-
-    // time exceeded
     override val isSuspended: Boolean
-        get() {
-            val loopSuspendedTill = sp.getLong("loopSuspendedTill", 0L)
-            if (loopSuspendedTill == 0L) return false
-            val now = System.currentTimeMillis()
-            if (loopSuspendedTill <= now) { // time exceeded
-                suspendTo(0L)
-                return false
-            }
-            return true
+        get() = repository.getOfflineEventActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing
+
+    override var enabled: Boolean
+        get() = isEnabled()
+        set(value) {
+            setPluginEnabled(PluginType.LOOP, value)
         }
+
     val isLGS: Boolean
         get() {
             val closedLoopEnabled = constraintChecker.isClosedLoopAllowed()
@@ -211,30 +186,16 @@ open class LoopPlugin @Inject constructor(
             return isLGS
         }
 
-    // time exceeded
     val isSuperBolus: Boolean
         get() {
-            val loopSuspendedTill = sp.getLong("loopSuspendedTill", 0L)
-            if (loopSuspendedTill == 0L) return false
-            val now = System.currentTimeMillis()
-            if (loopSuspendedTill <= now) { // time exceeded
-                suspendTo(0L)
-                return false
-            }
-            return sp.getBoolean("isSuperBolus", false)
+            val offlineEventWrapped = repository.getOfflineEventActiveAt(dateUtil.now()).blockingGet()
+            return offlineEventWrapped is ValueWrapper.Existing && offlineEventWrapped.value.reason == OfflineEvent.Reason.SUPER_BOLUS
         }
 
-    // time exceeded
     val isDisconnected: Boolean
         get() {
-            val loopSuspendedTill = sp.getLong("loopSuspendedTill", 0L)
-            if (loopSuspendedTill == 0L) return false
-            val now = System.currentTimeMillis()
-            if (loopSuspendedTill <= now) { // time exceeded
-                suspendTo(0L)
-                return false
-            }
-            return sp.getBoolean("isDisconnected", false)
+            val offlineEventWrapped = repository.getOfflineEventActiveAt(dateUtil.now()).blockingGet()
+            return offlineEventWrapped is ValueWrapper.Existing && offlineEventWrapped.value.reason == OfflineEvent.Reason.DISCONNECT_PUMP
         }
 
     @Suppress("SameParameterValue")
@@ -249,6 +210,17 @@ open class LoopPlugin @Inject constructor(
 
     @Synchronized operator fun invoke(initiator: String, allowNotification: Boolean) {
         invoke(initiator, allowNotification, false)
+    }
+
+    @Synchronized
+    fun isEmptyQueue(): Boolean {
+        val maxMinutes = 2L
+        val start = dateUtil.now()
+        while (start + T.mins(maxMinutes).msecs() > dateUtil.now()) {
+            if (commandQueue.size() == 0 && commandQueue.performing() == null) return true
+            SystemClock.sleep(100)
+        }
+        return false
     }
 
     @Synchronized
@@ -288,6 +260,12 @@ open class LoopPlugin @Inject constructor(
                 rxBus.send(EventLoopSetLastRunGui(resourceHelper.gs(R.string.noapsselected)))
                 return
             } else rxBus.send(EventLoopInvoked())
+
+            if (!isEmptyQueue()) {
+                aapsLogger.debug(LTag.APS, resourceHelper.gs(R.string.pumpbusy))
+                rxBus.send(EventLoopSetLastRunGui(resourceHelper.gs(R.string.pumpbusy)))
+                return
+            }
 
             // Prepare for pumps using % basals
             if (pump.pumpDescription.tempBasalStyle == PumpDescription.PERCENT && allowPercentage()) {
@@ -353,15 +331,15 @@ open class LoopPlugin @Inject constructor(
                             if (sp.getBoolean(R.string.key_enable_carbs_required_alert_local, true) && sp.getBoolean(R.string.key_raise_notifications_as_android_notifications, true)) {
                                 val intentAction5m = Intent(context, CarbSuggestionReceiver::class.java)
                                 intentAction5m.putExtra("ignoreDuration", 5)
-                                val pendingIntent5m = PendingIntent.getBroadcast(context, 1, intentAction5m, PendingIntent.FLAG_UPDATE_CURRENT)
+                                val pendingIntent5m = PendingIntent.getBroadcast(context, 1, intentAction5m, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
                                 val actionIgnore5m = NotificationCompat.Action(R.drawable.ic_notif_aaps, resourceHelper.gs(R.string.ignore5m, "Ignore 5m"), pendingIntent5m)
                                 val intentAction15m = Intent(context, CarbSuggestionReceiver::class.java)
                                 intentAction15m.putExtra("ignoreDuration", 15)
-                                val pendingIntent15m = PendingIntent.getBroadcast(context, 1, intentAction15m, PendingIntent.FLAG_UPDATE_CURRENT)
+                                val pendingIntent15m = PendingIntent.getBroadcast(context, 1, intentAction15m, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
                                 val actionIgnore15m = NotificationCompat.Action(R.drawable.ic_notif_aaps, resourceHelper.gs(R.string.ignore15m, "Ignore 15m"), pendingIntent15m)
                                 val intentAction30m = Intent(context, CarbSuggestionReceiver::class.java)
                                 intentAction30m.putExtra("ignoreDuration", 30)
-                                val pendingIntent30m = PendingIntent.getBroadcast(context, 1, intentAction30m, PendingIntent.FLAG_UPDATE_CURRENT)
+                                val pendingIntent30m = PendingIntent.getBroadcast(context, 1, intentAction30m, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
                                 val actionIgnore30m = NotificationCompat.Action(R.drawable.ic_notif_aaps, resourceHelper.gs(R.string.ignore30m, "Ignore 30m"), pendingIntent30m)
                                 val builder = NotificationCompat.Builder(context, CHANNEL_ID)
                                 builder.setSmallIcon(R.drawable.notif_icon)
@@ -399,8 +377,7 @@ open class LoopPlugin @Inject constructor(
                         }
                     }
                     if (resultAfterConstraints.isChangeRequested
-                        && !commandQueue.bolusInQueue()
-                        && !commandQueue.isRunning(Command.CommandType.BOLUS)) {
+                        && !commandQueue.bolusInQueue()) {
                         val waiting = PumpEnactResult(injector)
                         waiting.queued = true
                         if (resultAfterConstraints.tempBasalRequested) lastRun.tbrSetByPump = waiting
@@ -483,7 +460,7 @@ open class LoopPlugin @Inject constructor(
         stackBuilder.addParentStack(MainActivity::class.java)
         // Adds the Intent that starts the Activity to the top of the stack
         stackBuilder.addNextIntent(resultIntent)
-        val resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
+        val resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         builder.setContentIntent(resultPendingIntent)
         builder.setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
         val mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -642,22 +619,28 @@ open class LoopPlugin @Inject constructor(
         return virtualPumpPlugin.isEnabled(PluginType.PUMP)
     }
 
-    fun disconnectPump(durationInMinutes: Int, profile: Profile?) {
+    override fun goToZeroTemp(durationInMinutes: Int, profile: Profile, reason: OfflineEvent.Reason) {
         val pump = activePlugin.activePump
-        disconnectTo(System.currentTimeMillis() + durationInMinutes * 60 * 1000L)
+        disposable += repository.runTransactionForResult(InsertAndCancelCurrentOfflineEventTransaction(dateUtil.now(), T.mins(durationInMinutes.toLong()).msecs(), reason))
+            .subscribe({ result ->
+                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent $it") }
+                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted OfflineEvent $it") }
+            }, {
+                aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it)
+            })
         if (pump.pumpDescription.tempBasalStyle == PumpDescription.ABSOLUTE) {
-            commandQueue.tempBasalAbsolute(0.0, durationInMinutes, true, profile!!, PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND, object : Callback() {
+            commandQueue.tempBasalAbsolute(0.0, durationInMinutes, true, profile, PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND, object : Callback() {
                 override fun run() {
                     if (!result.success) {
-                        ErrorHelperActivity.runAlarm(context, result.comment, resourceHelper.gs(R.string.tempbasaldeliveryerror), info.nightscout.androidaps.dana.R.raw.boluserror)
+                        ErrorHelperActivity.runAlarm(context, result.comment, resourceHelper.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
                     }
                 }
             })
         } else {
-            commandQueue.tempBasalPercent(0, durationInMinutes, true, profile!!, PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND, object : Callback() {
+            commandQueue.tempBasalPercent(0, durationInMinutes, true, profile, PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND, object : Callback() {
                 override fun run() {
                     if (!result.success) {
-                        ErrorHelperActivity.runAlarm(context, result.comment, resourceHelper.gs(R.string.tempbasaldeliveryerror), info.nightscout.androidaps.dana.R.raw.boluserror)
+                        ErrorHelperActivity.runAlarm(context, result.comment, resourceHelper.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
                     }
                 }
             })
@@ -666,37 +649,28 @@ open class LoopPlugin @Inject constructor(
             commandQueue.cancelExtended(object : Callback() {
                 override fun run() {
                     if (!result.success) {
-                        ErrorHelperActivity.runAlarm(context, result.comment, resourceHelper.gs(R.string.extendedbolusdeliveryerror), info.nightscout.androidaps.dana.R.raw.boluserror)
+                        ErrorHelperActivity.runAlarm(context, result.comment, resourceHelper.gs(R.string.extendedbolusdeliveryerror), R.raw.boluserror)
                     }
                 }
             })
         }
-        createOfflineEvent(durationInMinutes)
     }
 
     override fun suspendLoop(durationInMinutes: Int) {
-        suspendTo(System.currentTimeMillis() + durationInMinutes * 60 * 1000)
+        disposable += repository.runTransactionForResult(InsertAndCancelCurrentOfflineEventTransaction(dateUtil.now(), T.mins(durationInMinutes.toLong()).msecs(), OfflineEvent.Reason.SUSPEND))
+            .subscribe({ result ->
+                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent $it") }
+                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted OfflineEvent $it") }
+            }, {
+                aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it)
+            })
         commandQueue.cancelTempBasal(true, object : Callback() {
             override fun run() {
                 if (!result.success) {
-                    ErrorHelperActivity.runAlarm(context, result.comment, resourceHelper.gs(R.string.tempbasaldeliveryerror), info.nightscout.androidaps.dana.R.raw.boluserror)
+                    ErrorHelperActivity.runAlarm(context, result.comment, resourceHelper.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
                 }
             }
         })
-        createOfflineEvent(durationInMinutes)
-    }
-
-    override fun createOfflineEvent(durationInMinutes: Int) {
-        disposable += repository.runTransactionForResult(InsertIfNewByTimestampTherapyEventTransaction(
-            timestamp = dateUtil.now(),
-            type = TherapyEvent.Type.APS_OFFLINE,
-            duration = T.mins(durationInMinutes.toLong()).msecs(),
-            enteredBy = "openaps://" + "AndroidAPS",
-            glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
-        )).subscribe(
-            { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted therapy event $it") } },
-            { aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it) }
-        )
     }
 
     companion object {

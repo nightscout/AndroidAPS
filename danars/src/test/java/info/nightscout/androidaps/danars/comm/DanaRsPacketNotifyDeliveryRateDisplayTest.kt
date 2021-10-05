@@ -8,7 +8,6 @@ import info.nightscout.androidaps.danars.DanaRSTestBase
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
@@ -16,15 +15,10 @@ import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalSt
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
 
-@RunWith(PowerMockRunner::class)
-@PrepareForTest(ConstraintChecker::class, RxBusWrapper::class, DetailedBolusInfoStorage::class, TemporaryBasalStorage::class)
 class DanaRsPacketNotifyDeliveryRateDisplayTest : DanaRSTestBase() {
 
     @Mock lateinit var activePlugin: ActivePlugin
@@ -39,7 +33,7 @@ class DanaRsPacketNotifyDeliveryRateDisplayTest : DanaRSTestBase() {
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is DanaRS_Packet_Notify_Delivery_Rate_Display) {
+            if (it is DanaRSPacketNotifyDeliveryRateDisplay) {
                 it.aapsLogger = aapsLogger
                 it.rxBus = rxBus
                 it.resourceHelper = resourceHelper
@@ -51,11 +45,11 @@ class DanaRsPacketNotifyDeliveryRateDisplayTest : DanaRSTestBase() {
     @Test fun runTest() {
         `when`(resourceHelper.gs(ArgumentMatchers.anyInt(), anyObject())).thenReturn("SomeString")
         // val packet = DanaRS_Packet_Notify_Delivery_Rate_Display(1.0, Treatment(treatmentInjector))
-        val packet = DanaRS_Packet_Notify_Delivery_Rate_Display(packetInjector)
+        val packet = DanaRSPacketNotifyDeliveryRateDisplay(packetInjector)
         // test params
-        Assert.assertEquals(null, packet.requestParams)
+        Assert.assertEquals(0, packet.getRequestParams().size)
         // test message decoding
-// 0% delivered
+        // 0% delivered
         packet.handleMessage(createArray(17, 0.toByte()))
         Assert.assertEquals(true, packet.failed)
         // 100 % delivered

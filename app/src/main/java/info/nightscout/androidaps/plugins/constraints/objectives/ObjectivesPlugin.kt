@@ -45,6 +45,7 @@ class ObjectivesPlugin @Inject constructor(
     var objectives: MutableList<Objective> = ArrayList()
 
     companion object {
+
         const val FIRST_OBJECTIVE = 0
         @Suppress("unused") const val USAGE_OBJECTIVE = 1
         @Suppress("unused") const val EXAM_OBJECTIVE = 2
@@ -53,40 +54,17 @@ class ObjectivesPlugin @Inject constructor(
         const val MAXIOB_ZERO_CL_OBJECTIVE = 5
         @Suppress("unused") const val MAXIOB_OBJECTIVE = 6
         const val AUTOSENS_OBJECTIVE = 7
-        const val AMA_OBJECTIVE = 8
-        const val SMB_OBJECTIVE = 9
-        const val AUTO_OBJECTIVE = 10
+        const val SMB_OBJECTIVE = 8
+        const val AUTO_OBJECTIVE = 9
     }
 
     public override fun onStart() {
         super.onStart()
-        convertSP()
         setupObjectives()
     }
 
-    override fun specialEnableCondition(): Boolean {
-        return activePlugin.activePump.pumpDescription.isTempBasalCapable
-    }
-
-    // convert 2.3 SP version
-    private fun convertSP() {
-        doConvertSP(0, "config")
-        doConvertSP(1, "openloop")
-        doConvertSP(2, "maxbasal")
-        doConvertSP(3, "maxiobzero")
-        doConvertSP(4, "maxiob")
-        doConvertSP(5, "autosens")
-        doConvertSP(6, "ama")
-        doConvertSP(7, "smb")
-    }
-
-    private fun doConvertSP(number: Int, name: String) {
-        if (!sp.contains("Objectives_" + name + "_started")) {
-            sp.putLong("Objectives_" + name + "_started", sp.getLong("Objectives" + number + "started", 0L))
-            sp.putLong("Objectives_" + name + "_accomplished", sp.getLong("Objectives" + number + "accomplished", 0L))
-        }
-        // TODO: we can remove Objectives1accomplished sometimes later
-    }
+    override fun specialEnableCondition(): Boolean =
+        activePlugin.activePump.pumpDescription.isTempBasalCapable
 
     private fun setupObjectives() {
         objectives.clear()
@@ -98,9 +76,9 @@ class ObjectivesPlugin @Inject constructor(
         objectives.add(Objective5(injector))
         objectives.add(Objective6(injector))
         objectives.add(Objective7(injector))
-        objectives.add(Objective8(injector))
         objectives.add(Objective9(injector))
         objectives.add(Objective10(injector))
+        // edit companion object if you remove/add Objective
     }
 
     fun reset() {
@@ -120,12 +98,11 @@ class ObjectivesPlugin @Inject constructor(
         sp.putBoolean(R.string.key_objectiveusescale, false)
     }
 
-    @kotlin.ExperimentalStdlibApi
     fun completeObjectives(activity: FragmentActivity, request: String) {
         val requestCode = sp.getString(R.string.key_objectives_request_code, "")
         var url = sp.getString(R.string.key_nsclientinternal_url, "").lowercase(Locale.getDefault())
         if (!url.endsWith("/")) url = "$url/"
-        @Suppress("DEPRECATION") val hashNS = Hashing.sha1().hashString(url + BuildConfig.APPLICATION_ID + "/" + requestCode, Charsets.UTF_8).toString()
+        @Suppress("DEPRECATION", "UnstableApiUsage") val hashNS = Hashing.sha1().hashString(url + BuildConfig.APPLICATION_ID + "/" + requestCode, Charsets.UTF_8).toString()
         if (request.equals(hashNS.substring(0, 10), ignoreCase = true)) {
             sp.putLong("Objectives_" + "openloop" + "_started", dateUtil.now())
             sp.putLong("Objectives_" + "openloop" + "_accomplished", dateUtil.now())
@@ -137,8 +114,6 @@ class ObjectivesPlugin @Inject constructor(
             sp.putLong("Objectives_" + "maxiob" + "_accomplished", dateUtil.now())
             sp.putLong("Objectives_" + "autosens" + "_started", dateUtil.now())
             sp.putLong("Objectives_" + "autosens" + "_accomplished", dateUtil.now())
-            sp.putLong("Objectives_" + "ama" + "_started", dateUtil.now())
-            sp.putLong("Objectives_" + "ama" + "_accomplished", dateUtil.now())
             sp.putLong("Objectives_" + "smb" + "_started", dateUtil.now())
             sp.putLong("Objectives_" + "smb" + "_accomplished", dateUtil.now())
             sp.putLong("Objectives_" + "auto" + "_started", dateUtil.now())
@@ -164,49 +139,43 @@ class ObjectivesPlugin @Inject constructor(
      */
     override fun isLoopInvocationAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         if (!objectives[FIRST_OBJECTIVE].isStarted)
-            value.set(aapsLogger, false, String.format(resourceHelper.gs(R.string.objectivenotstarted), FIRST_OBJECTIVE + 1), this)
+            value.set(aapsLogger, false, resourceHelper.gs(R.string.objectivenotstarted, FIRST_OBJECTIVE + 1), this)
         return value
     }
 
     override fun isLgsAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         if (!objectives[MAXBASAL_OBJECTIVE].isStarted)
-            value.set(aapsLogger, false, String.format(resourceHelper.gs(R.string.objectivenotstarted), MAXBASAL_OBJECTIVE + 1), this)
+            value.set(aapsLogger, false, resourceHelper.gs(R.string.objectivenotstarted, MAXBASAL_OBJECTIVE + 1), this)
         return value
     }
 
     override fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         if (!objectives[MAXIOB_ZERO_CL_OBJECTIVE].isStarted)
-            value.set(aapsLogger, false, String.format(resourceHelper.gs(R.string.objectivenotstarted), MAXIOB_ZERO_CL_OBJECTIVE + 1), this)
+            value.set(aapsLogger, false, resourceHelper.gs(R.string.objectivenotstarted, MAXIOB_ZERO_CL_OBJECTIVE + 1), this)
         return value
     }
 
     override fun isAutosensModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         if (!objectives[AUTOSENS_OBJECTIVE].isStarted)
-            value.set(aapsLogger, false, String.format(resourceHelper.gs(R.string.objectivenotstarted), AUTOSENS_OBJECTIVE + 1), this)
-        return value
-    }
-
-    override fun isAMAModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
-        if (!objectives[AMA_OBJECTIVE].isStarted)
-            value.set(aapsLogger, false, String.format(resourceHelper.gs(R.string.objectivenotstarted), AMA_OBJECTIVE + 1), this)
+            value.set(aapsLogger, false, resourceHelper.gs(R.string.objectivenotstarted, AUTOSENS_OBJECTIVE + 1), this)
         return value
     }
 
     override fun isSMBModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         if (!objectives[SMB_OBJECTIVE].isStarted)
-            value.set(aapsLogger, false, String.format(resourceHelper.gs(R.string.objectivenotstarted), SMB_OBJECTIVE + 1), this)
+            value.set(aapsLogger, false, resourceHelper.gs(R.string.objectivenotstarted, SMB_OBJECTIVE + 1), this)
         return value
     }
 
     override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> {
         if (objectives[MAXIOB_ZERO_CL_OBJECTIVE].isStarted && !objectives[MAXIOB_ZERO_CL_OBJECTIVE].isAccomplished)
-            maxIob.set(aapsLogger, 0.0, String.format(resourceHelper.gs(R.string.objectivenotfinished), MAXIOB_ZERO_CL_OBJECTIVE + 1), this)
+            maxIob.set(aapsLogger, 0.0, resourceHelper.gs(R.string.objectivenotfinished, MAXIOB_ZERO_CL_OBJECTIVE + 1), this)
         return maxIob
     }
 
     override fun isAutomationEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         if (!objectives[AUTO_OBJECTIVE].isStarted)
-            value.set(aapsLogger, false, String.format(resourceHelper.gs(R.string.objectivenotstarted), AUTO_OBJECTIVE + 1), this)
+            value.set(aapsLogger, false, resourceHelper.gs(R.string.objectivenotstarted, AUTO_OBJECTIVE + 1), this)
         return value
     }
 }

@@ -5,26 +5,23 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.DanaRSTestBase
 import org.junit.Assert
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.powermock.modules.junit4.PowerMockRunner
 
-@RunWith(PowerMockRunner::class)
 class DanaRsPacketHistoryCarbohydrateTest : DanaRSTestBase() {
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is DanaRS_Packet) {
+            if (it is DanaRSPacket) {
                 it.aapsLogger = aapsLogger
                 it.dateUtil = dateUtil
             }
-            if (it is DanaRS_Packet_History_Carbohydrate) {
+            if (it is DanaRSPacketHistoryCarbohydrate) {
                 it.rxBus = rxBus
             }
         }
     }
 
     @Test fun runTest() {
-        val packet = DanaRS_Packet_History_Carbohydrate(packetInjector, System.currentTimeMillis())
+        val packet = DanaRSPacketHistoryCarbohydrate(packetInjector, System.currentTimeMillis())
         Assert.assertEquals("REVIEW__CARBOHYDRATE", packet.friendlyName)
     }
 }

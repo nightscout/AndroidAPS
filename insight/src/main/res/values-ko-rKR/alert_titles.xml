@@ -3,6 +3,7 @@
     <string name="alert_r1_title">Bolus 주입.</string>
     <string name="alert_r2_title">Bolus 누락</string>
     <string name="alert_r3_title">알람 시계</string>
+    <string name="alert_r4_title">주입세트를 교체</string>
     <string name="alert_r7_title">TBR 완료</string>
     <string name="alert_w31_title">카트리지 부족</string>
     <string name="alert_w32_title">베터리 부족</string>

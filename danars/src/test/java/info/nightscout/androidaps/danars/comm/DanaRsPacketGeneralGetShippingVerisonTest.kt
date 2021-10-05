@@ -5,15 +5,12 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.DanaRSTestBase
 import org.junit.Assert
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.powermock.modules.junit4.PowerMockRunner
 
-@RunWith(PowerMockRunner::class)
-class DanaRsPacketGeneralGetShippingVerisonTest : DanaRSTestBase() {
+class DanaRsPacketGeneralGetShippingVersionTest : DanaRSTestBase() {
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is DanaRS_Packet_General_Get_Shipping_Version) {
+            if (it is DanaRSPacketGeneralGetShippingVersion) {
                 it.aapsLogger = aapsLogger
                 it.danaPump = danaPump
             }
@@ -21,7 +18,7 @@ class DanaRsPacketGeneralGetShippingVerisonTest : DanaRSTestBase() {
     }
 
     @Test fun runTest() {
-        val packet = DanaRS_Packet_General_Get_Shipping_Version(packetInjector)
+        val packet = DanaRSPacketGeneralGetShippingVersion(packetInjector)
         // test message decoding
         val ver = byteArrayOf((-78).toByte(), (-127).toByte(), (66).toByte(), (80).toByte(), (78).toByte(), (45).toByte(), (51).toByte(), (46).toByte(), (48).toByte(), (46).toByte(), (48).toByte())
         packet.handleMessage(ver)

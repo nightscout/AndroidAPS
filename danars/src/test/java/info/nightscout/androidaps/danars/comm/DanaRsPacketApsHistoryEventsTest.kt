@@ -3,23 +3,16 @@ package info.nightscout.androidaps.danars.comm
 import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.danars.DanaRSTestBase
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalStorage
 import org.junit.Assert
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
 import java.util.*
 
-@RunWith(PowerMockRunner::class)
-@PrepareForTest(RxBusWrapper::class, DetailedBolusInfoStorage::class, TemporaryBasalStorage::class, DanaRSPlugin::class)
 class DanaRsPacketApsHistoryEventsTest : DanaRSTestBase() {
 
     @Mock lateinit var context: Context
@@ -30,11 +23,11 @@ class DanaRsPacketApsHistoryEventsTest : DanaRSTestBase() {
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is DanaRS_Packet) {
+            if (it is DanaRSPacket) {
                 it.aapsLogger = aapsLogger
                 it.dateUtil = dateUtil
             }
-            if (it is DanaRS_Packet_APS_History_Events) {
+            if (it is DanaRSPacketAPSHistoryEvents) {
                 it.rxBus = rxBus
                 it.resourceHelper = resourceHelper
                 it.pumpSync = pumpSync
@@ -49,9 +42,9 @@ class DanaRsPacketApsHistoryEventsTest : DanaRSTestBase() {
     @Test fun runTest() {
         val now = dateUtil.now()
 
-        val testPacket = DanaRS_Packet_APS_History_Events(packetInjector, now)
+        val testPacket = DanaRSPacketAPSHistoryEvents(packetInjector, now)
         // test getRequestedParams
-        val returnedValues = testPacket.requestParams
+        val returnedValues = testPacket.getRequestParams()
         val expectedValues = getCalender(now)
         //year
         Assert.assertEquals(expectedValues[0], returnedValues[0])

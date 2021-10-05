@@ -11,25 +11,27 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.ValueWithUnit
+import info.nightscout.androidaps.database.entities.OfflineEvent
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.ValueWithUnit
+import info.nightscout.androidaps.database.transactions.CancelCurrentOfflineEventIfAnyTransaction
 import info.nightscout.androidaps.database.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
-import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
+import info.nightscout.androidaps.database.transactions.InsertAndCancelCurrentOfflineEventTransaction
+import info.nightscout.androidaps.database.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.events.EventRefreshOverview
+import info.nightscout.androidaps.extensions.valueToUnitsString
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
@@ -41,7 +43,6 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProv
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.*
-import info.nightscout.androidaps.extensions.valueToUnitsString
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -59,11 +60,13 @@ import javax.inject.Singleton
 import kotlin.math.max
 import kotlin.math.min
 
+@OpenForTesting
 @Singleton
 class SmsCommunicatorPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     resourceHelper: ResourceHelper,
+    private val smsManager: SmsManager,
     private val aapsSchedulers: AapsSchedulers,
     private val sp: SP,
     private val constraintChecker: ConstraintChecker,
@@ -72,7 +75,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     private val fabricPrivacy: FabricPrivacy,
     private val activePlugin: ActivePlugin,
     private val commandQueue: CommandQueueProvider,
-    private val loopPlugin: LoopPlugin,
+    private val loop: Loop,
     private val iobCobCalculator: IobCobCalculator,
     private val xdripCalibrations: XdripCalibrations,
     private var otp: OneTimePassword,
@@ -94,8 +97,8 @@ class SmsCommunicatorPlugin @Inject constructor(
 
     private val disposable = CompositeDisposable()
     var allowedNumbers: MutableList<String> = ArrayList()
-    var messageToConfirm: AuthRequest? = null
-    var lastRemoteBolusTime: Long = 0
+    @Volatile var messageToConfirm: AuthRequest? = null
+    @Volatile var lastRemoteBolusTime: Long = 0
     var messages = ArrayList<Sms>()
 
     val commands = mapOf(
@@ -181,7 +184,6 @@ class SmsCommunicatorPlugin @Inject constructor(
         }
 
         @Suppress("SpellCheckingInspection")
-        @kotlin.ExperimentalStdlibApi
         override fun doWork(): Result {
             val bundle = dataWorker.pickupBundle(inputData.getLong(DataWorker.STORE_KEY, -1))
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))
@@ -224,7 +226,6 @@ class SmsCommunicatorPlugin @Inject constructor(
         return false
     }
 
-    @kotlin.ExperimentalStdlibApi
     fun processSms(receivedSms: Sms) {
         if (!isEnabled(PluginType.GENERAL)) {
             aapsLogger.debug(LTag.SMS, "Ignoring SMS. Plugin disabled.")
@@ -278,6 +279,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                     else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
                 "BOLUS"    ->
                     if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_remotecommandnotallowed)))
+                    else if (commandQueue.bolusInQueue()) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_another_bolus_in_queue)))
                     else if (divided.size == 2 && dateUtil.now() - lastRemoteBolusTime < minDistance) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_remotebolusnotallowed)))
                     else if (divided.size == 2 && pump.isSuspended()) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.pumpsuspended)))
                     else if (divided.size == 2 || divided.size == 3) processBOLUS(divided, receivedSms)
@@ -303,9 +305,13 @@ class SmsCommunicatorPlugin @Inject constructor(
                     else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
                 else       ->
                     if (messageToConfirm?.requester?.phoneNumber == receivedSms.phoneNumber) {
-                        messageToConfirm?.action(divided[0])
+                        val execute = messageToConfirm
                         messageToConfirm = null
-                    } else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_unknowncommand)))
+                        execute?.action(divided[0])
+                    } else {
+                        messageToConfirm = null
+                        sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_unknowncommand)))
+                    }
             }
         }
         rxBus.send(EventSmsCommunicatorUpdateGui())
@@ -336,18 +342,17 @@ class SmsCommunicatorPlugin @Inject constructor(
         receivedSms.processed = true
     }
 
-    @kotlin.ExperimentalStdlibApi
     private fun processLOOP(divided: Array<String>, receivedSms: Sms) {
         when (divided[1].uppercase(Locale.getDefault())) {
             "DISABLE", "STOP" -> {
-                if (loopPlugin.isEnabled(PluginType.LOOP)) {
+                if (loop.enabled) {
                     val passCode = generatePassCode()
                     val reply = String.format(resourceHelper.gs(R.string.smscommunicator_loopdisablereplywithcode), passCode)
                     receivedSms.processed = true
-                    messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction() {
+                    messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = false) {
                         override fun run() {
                             uel.log(Action.LOOP_DISABLED, Sources.SMS)
-                            loopPlugin.setPluginEnabled(PluginType.LOOP, false)
+                            loop.enabled = false
                             commandQueue.cancelTempBasal(true, object : Callback() {
                                 override fun run() {
                                     rxBus.send(EventRefreshOverview("SMS_LOOP_STOP"))
@@ -364,14 +369,14 @@ class SmsCommunicatorPlugin @Inject constructor(
             }
 
             "ENABLE", "START" -> {
-                if (!loopPlugin.isEnabled(PluginType.LOOP)) {
+                if (!loop.enabled) {
                     val passCode = generatePassCode()
                     val reply = String.format(resourceHelper.gs(R.string.smscommunicator_loopenablereplywithcode), passCode)
                     receivedSms.processed = true
-                    messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction() {
+                    messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = false) {
                         override fun run() {
                             uel.log(Action.LOOP_ENABLED, Sources.SMS)
-                            loopPlugin.setPluginEnabled(PluginType.LOOP, true)
+                            loop.enabled = true
                             sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_loophasbeenenabled)))
                             rxBus.send(EventRefreshOverview("SMS_LOOP_START"))
                         }
@@ -382,8 +387,8 @@ class SmsCommunicatorPlugin @Inject constructor(
             }
 
             "STATUS"          -> {
-                val reply = if (loopPlugin.isEnabled(PluginType.LOOP)) {
-                    if (loopPlugin.isSuspended) String.format(resourceHelper.gs(R.string.loopsuspendedfor), loopPlugin.minutesToEndOfSuspend())
+                val reply = if (loop.enabled) {
+                    if (loop.isSuspended) String.format(resourceHelper.gs(R.string.loopsuspendedfor), loop.minutesToEndOfSuspend())
                     else resourceHelper.gs(R.string.smscommunicator_loopisenabled)
                 } else
                     resourceHelper.gs(R.string.loopisdisabled)
@@ -395,10 +400,15 @@ class SmsCommunicatorPlugin @Inject constructor(
                 val passCode = generatePassCode()
                 val reply = String.format(resourceHelper.gs(R.string.smscommunicator_loopresumereplywithcode), passCode)
                 receivedSms.processed = true
-                messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction() {
+                messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = true) {
                     override fun run() {
                         uel.log(Action.RESUME, Sources.SMS)
-                        loopPlugin.suspendTo(0L)
+                        disposable += repository.runTransactionForResult(CancelCurrentOfflineEventIfAnyTransaction(dateUtil.now()))
+                            .subscribe({ result ->
+                                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent $it") }
+                            }, {
+                                aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it)
+                            })
                         rxBus.send(EventRefreshOverview("SMS_LOOP_RESUME"))
                         commandQueue.cancelTempBasal(true, object : Callback() {
                             override fun run() {
@@ -409,7 +419,6 @@ class SmsCommunicatorPlugin @Inject constructor(
                                 }
                             }
                         })
-                        loopPlugin.createOfflineEvent(0)
                         sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_loopresumed)))
                     }
                 })
@@ -428,14 +437,19 @@ class SmsCommunicatorPlugin @Inject constructor(
                     val passCode = generatePassCode()
                     val reply = String.format(resourceHelper.gs(R.string.smscommunicator_suspendreplywithcode), duration, passCode)
                     receivedSms.processed = true
-                    messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(duration) {
+                    messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = true, duration) {
                         override fun run() {
                             uel.log(Action.SUSPEND, Sources.SMS)
                             commandQueue.cancelTempBasal(true, object : Callback() {
                                 override fun run() {
                                     if (result.success) {
-                                        loopPlugin.suspendTo(dateUtil.now() + anInteger() * 60L * 1000)
-                                        loopPlugin.createOfflineEvent(anInteger() * 60)
+                                        disposable += repository.runTransactionForResult(InsertAndCancelCurrentOfflineEventTransaction(dateUtil.now(), T.mins(anInteger().toLong()).msecs(), OfflineEvent.Reason.SUSPEND))
+                                            .subscribe({ result ->
+                                                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent $it") }
+                                                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted OfflineEvent $it") }
+                                            }, {
+                                                aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it)
+                                            })
                                         rxBus.send(EventRefreshOverview("SMS_LOOP_SUSPENDED"))
                                         val replyText = resourceHelper.gs(R.string.smscommunicator_loopsuspended) + " " +
                                             resourceHelper.gs(if (result.success) R.string.smscommunicator_tempbasalcanceled else R.string.smscommunicator_tempbasalcancelfailed)
@@ -456,7 +470,6 @@ class SmsCommunicatorPlugin @Inject constructor(
         }
     }
 
-    @kotlin.ExperimentalStdlibApi
     private fun processNSCLIENT(divided: Array<String>, receivedSms: Sms) {
         if (divided[1].uppercase(Locale.getDefault()) == "RESTART") {
             rxBus.send(EventNSClientRestart())
@@ -466,10 +479,9 @@ class SmsCommunicatorPlugin @Inject constructor(
             sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
     }
 
-    @kotlin.ExperimentalStdlibApi
     private fun processHELP(divided: Array<String>, receivedSms: Sms) {
         when {
-            divided.size == 1                                                               -> {
+            divided.size == 1                                                             -> {
                 sendSMS(Sms(receivedSms.phoneNumber, commands.keys.toString().replace("[", "").replace("]", "")))
                 receivedSms.processed = true
             }
@@ -481,7 +493,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 }
             }
 
-            else                                                                            -> sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
+            else                                                                          -> sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
         }
     }
 
@@ -504,7 +516,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             val passCode = generatePassCode()
             val reply = String.format(resourceHelper.gs(R.string.smscommunicator_pumpconnectwithcode), passCode)
             receivedSms.processed = true
-            messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction() {
+            messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = true) {
                 override fun run() {
                     uel.log(Action.RECONNECT, Sources.SMS)
                     commandQueue.cancelTempBasal(true, object : Callback() {
@@ -512,10 +524,14 @@ class SmsCommunicatorPlugin @Inject constructor(
                             if (!result.success) {
                                 sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_pumpconnectfail)))
                             } else {
-                                loopPlugin.suspendTo(0L)
+                                disposable += repository.runTransactionForResult(CancelCurrentOfflineEventIfAnyTransaction(dateUtil.now()))
+                                    .subscribe({ result ->
+                                        result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent $it") }
+                                    }, {
+                                        aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it)
+                                    })
                                 sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_reconnect)))
                                 rxBus.send(EventRefreshOverview("SMS_PUMP_START"))
-                                loopPlugin.createOfflineEvent(0)
                             }
                         }
                     })
@@ -533,11 +549,11 @@ class SmsCommunicatorPlugin @Inject constructor(
                 val passCode = generatePassCode()
                 val reply = String.format(resourceHelper.gs(R.string.smscommunicator_pumpdisconnectwithcode), duration, passCode)
                 receivedSms.processed = true
-                messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction() {
+                messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = true) {
                     override fun run() {
                         uel.log(Action.DISCONNECT, Sources.SMS)
-                        val profile = profileFunction.getProfile()
-                        loopPlugin.disconnectPump(duration, profile)
+                        val profile = profileFunction.getProfile() ?: return
+                        loop.goToZeroTemp(duration, profile, OfflineEvent.Reason.DISCONNECT_PUMP)
                         rxBus.send(EventRefreshOverview("SMS_PUMP_DISCONNECT"))
                         sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_pumpdisconnected)))
                     }
@@ -549,7 +565,6 @@ class SmsCommunicatorPlugin @Inject constructor(
         }
     }
 
-    @kotlin.ExperimentalStdlibApi
     private fun processPROFILE(divided: Array<String>, receivedSms: Sms) { // load profiles
         val anInterface = activePlugin.activeProfileSource
         val store = anInterface.profile
@@ -588,7 +603,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                     val reply = String.format(resourceHelper.gs(R.string.smscommunicator_profilereplywithcode), list[pIndex - 1], percentage, passCode)
                     receivedSms.processed = true
                     val finalPercentage = percentage
-                    messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(list[pIndex - 1] as String, finalPercentage) {
+                    messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = true, list[pIndex - 1] as String, finalPercentage) {
                         override fun run() {
                             profileFunction.createProfileSwitch(store, list[pIndex - 1] as String, 0, finalPercentage, 0, dateUtil.now())
                             val replyText = resourceHelper.gs(R.string.profileswitchcreated)
@@ -603,13 +618,12 @@ class SmsCommunicatorPlugin @Inject constructor(
         receivedSms.processed = true
     }
 
-    @kotlin.ExperimentalStdlibApi
     private fun processBASAL(divided: Array<String>, receivedSms: Sms) {
         if (divided[1].uppercase(Locale.getDefault()) == "CANCEL" || divided[1].uppercase(Locale.getDefault()) == "STOP") {
             val passCode = generatePassCode()
             val reply = String.format(resourceHelper.gs(R.string.smscommunicator_basalstopreplywithcode), passCode)
             receivedSms.processed = true
-            messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction() {
+            messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = true) {
                 override fun run() {
                     commandQueue.cancelTempBasal(true, object : Callback() {
                         override fun run() {
@@ -644,7 +658,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 val passCode = generatePassCode()
                 val reply = String.format(resourceHelper.gs(R.string.smscommunicator_basalpctreplywithcode), tempBasalPct, duration, passCode)
                 receivedSms.processed = true
-                messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(tempBasalPct, duration) {
+                messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = true, tempBasalPct, duration) {
                     override fun run() {
                         commandQueue.tempBasalPercent(anInteger(), secondInteger(), true, profile, PumpSync.TemporaryBasalType.NORMAL, object : Callback() {
                             override fun run() {
@@ -688,7 +702,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 val passCode = generatePassCode()
                 val reply = String.format(resourceHelper.gs(R.string.smscommunicator_basalreplywithcode), tempBasal, duration, passCode)
                 receivedSms.processed = true
-                messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(tempBasal, duration) {
+                messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = true, tempBasal, duration) {
                     override fun run() {
                         commandQueue.tempBasalAbsolute(aDouble(), secondInteger(), true, profile, PumpSync.TemporaryBasalType.NORMAL, object : Callback() {
                             override fun run() {
@@ -720,13 +734,12 @@ class SmsCommunicatorPlugin @Inject constructor(
         }
     }
 
-    @kotlin.ExperimentalStdlibApi
     private fun processEXTENDED(divided: Array<String>, receivedSms: Sms) {
         if (divided[1].uppercase(Locale.getDefault()) == "CANCEL" || divided[1].uppercase(Locale.getDefault()) == "STOP") {
             val passCode = generatePassCode()
             val reply = String.format(resourceHelper.gs(R.string.smscommunicator_extendedstopreplywithcode), passCode)
             receivedSms.processed = true
-            messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction() {
+            messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = true) {
                 override fun run() {
                     commandQueue.cancelExtended(object : Callback() {
                         override fun run() {
@@ -756,7 +769,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 val passCode = generatePassCode()
                 val reply = String.format(resourceHelper.gs(R.string.smscommunicator_extendedreplywithcode), extended, duration, passCode)
                 receivedSms.processed = true
-                messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(extended, duration) {
+                messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = true, extended, duration) {
                     override fun run() {
                         commandQueue.extendedBolus(aDouble(), secondInteger(), object : Callback() {
                             override fun run() {
@@ -802,7 +815,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             else
                 String.format(resourceHelper.gs(R.string.smscommunicator_bolusreplywithcode), bolus, passCode)
             receivedSms.processed = true
-            messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(bolus) {
+            messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = true, bolus) {
                 override fun run() {
                     val detailedBolusInfo = DetailedBolusInfo()
                     detailedBolusInfo.insulin = aDouble()
@@ -832,7 +845,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                                                         currentProfile.units == GlucoseUnit.MMOL -> Constants.defaultEatingSoonTTmmol
                                                         else                                     -> Constants.defaultEatingSoonTTmgdl
                                                     }
-                                                disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
+                                                disposable += repository.runTransactionForResult(InsertAndCancelCurrentTemporaryTargetTransaction(
                                                     timestamp = dateUtil.now(),
                                                     duration = TimeUnit.MINUTES.toMillis(eatingSoonTTDuration.toLong()),
                                                     reason = TemporaryTarget.Reason.EATING_SOON,
@@ -887,7 +900,6 @@ class SmsCommunicatorPlugin @Inject constructor(
         return retVal
     }
 
-    @kotlin.ExperimentalStdlibApi
     private fun processCARBS(divided: Array<String>, receivedSms: Sms) {
         var grams = SafeParse.stringToInt(divided[1])
         var time = dateUtil.now()
@@ -904,7 +916,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             val passCode = generatePassCode()
             val reply = String.format(resourceHelper.gs(R.string.smscommunicator_carbsreplywithcode), grams, dateUtil.timeString(time), passCode)
             receivedSms.processed = true
-            messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(grams, time) {
+            messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = true, grams, time) {
                 override fun run() {
                     val detailedBolusInfo = DetailedBolusInfo()
                     detailedBolusInfo.carbs = anInteger().toDouble()
@@ -931,7 +943,6 @@ class SmsCommunicatorPlugin @Inject constructor(
         }
     }
 
-    @kotlin.ExperimentalStdlibApi
     private fun processTARGET(divided: Array<String>, receivedSms: Sms) {
         val isMeal = divided[1].equals("MEAL", ignoreCase = true)
         val isActivity = divided[1].equals("ACTIVITY", ignoreCase = true)
@@ -941,7 +952,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             val passCode = generatePassCode()
             val reply = String.format(resourceHelper.gs(R.string.smscommunicator_temptargetwithcode), divided[1].uppercase(Locale.getDefault()), passCode)
             receivedSms.processed = true
-            messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction() {
+            messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = false) {
                 override fun run() {
                     val units = profileFunction.getUnits()
                     var keyDuration = 0
@@ -979,7 +990,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                     var tt = sp.getDouble(keyTarget, if (units == GlucoseUnit.MMOL) defaultTargetMMOL else defaultTargetMGDL)
                     tt = Profile.toCurrentUnits(profileFunction, tt)
                     tt = if (tt > 0) tt else if (units == GlucoseUnit.MMOL) defaultTargetMMOL else defaultTargetMGDL
-                    disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
+                    disposable += repository.runTransactionForResult(InsertAndCancelCurrentTemporaryTargetTransaction(
                         timestamp = dateUtil.now(),
                         duration = TimeUnit.MINUTES.toMillis(ttDuration.toLong()),
                         reason = TemporaryTarget.Reason.EATING_SOON,
@@ -1003,7 +1014,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             val passCode = generatePassCode()
             val reply = String.format(resourceHelper.gs(R.string.smscommunicator_temptargetcancel), passCode)
             receivedSms.processed = true
-            messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction() {
+            messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = false) {
                 override fun run() {
                     disposable += repository.runTransactionForResult(CancelCurrentTemporaryTargetIfAnyTransaction(dateUtil.now()))
                         .subscribe({ result ->
@@ -1028,7 +1039,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             val passCode = generatePassCode()
             val reply = String.format(resourceHelper.gs(R.string.smscommunicator_stopsmswithcode), passCode)
             receivedSms.processed = true
-            messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction() {
+            messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = false) {
                 override fun run() {
                     sp.putBoolean(R.string.key_smscommunicator_remotecommandsallowed, false)
                     val replyText = String.format(resourceHelper.gs(R.string.smscommunicator_stoppedsms))
@@ -1046,7 +1057,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             val passCode = generatePassCode()
             val reply = String.format(resourceHelper.gs(R.string.smscommunicator_calibrationreplywithcode), cal, passCode)
             receivedSms.processed = true
-            messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(cal) {
+            messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = false, cal) {
                 override fun run() {
                     val result = xdripCalibrations.sendIntent(aDouble!!)
                     val replyText =
@@ -1080,7 +1091,6 @@ class SmsCommunicatorPlugin @Inject constructor(
     }
 
     fun sendSMS(sms: Sms): Boolean {
-        val smsManager = SmsManager.getDefault()
         sms.text = stripAccents(sms.text)
         try {
             aapsLogger.debug(LTag.SMS, "Sending SMS to " + sms.phoneNumber + ": " + sms.text)

@@ -9,6 +9,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.BolusProgressHelperActivity
 import info.nightscout.androidaps.activities.ErrorHelperActivity
+import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.data.PumpEnactResult
@@ -47,8 +48,9 @@ import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
+@OpenForTesting
 @Singleton
-open class CommandQueue @Inject constructor(
+class CommandQueue @Inject constructor(
     private val injector: HasAndroidInjector,
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBusWrapper,
@@ -62,21 +64,26 @@ open class CommandQueue @Inject constructor(
     private val buildHelper: BuildHelper,
     private val dateUtil: DateUtil,
     private val repository: AppRepository,
-    private val fabricPrivacy: FabricPrivacy
+    private val fabricPrivacy: FabricPrivacy,
+    private val config: Config
 ) : CommandQueueProvider {
 
     private val disposable = CompositeDisposable()
 
     private val queue = LinkedList<Command>()
-    private var thread: QueueThread? = null
+    @Volatile private var thread: QueueThread? = null
 
-    var performing: Command? = null
+    @Volatile var performing: Command? = null
 
     init {
-        disposable.add(rxBus
+        disposable += rxBus
             .toObservable(EventProfileSwitchChanged::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({
+                if (config.NSCLIENT) { // Effective profileswitch should be synced over NS
+                    rxBus.send(EventNewBasalProfile())
+                    return@subscribe
+                }
                 aapsLogger.debug(LTag.PROFILE, "onProfileSwitch")
                 profileFunction.getRequestedProfile()?.let {
                     val nonCustomized = ProfileSealed.PS(it).convertToNonCustomizedProfile(dateUtil)
@@ -86,7 +93,6 @@ open class CommandQueue @Inject constructor(
                                 ErrorHelperActivity.runAlarm(context, result.comment, resourceHelper.gs(R.string.failedupdatebasalprofile), R.raw.boluserror)
                             }
                             if (result.enacted) {
-                                rxBus.send(EventNewBasalProfile())
                                 repository.createEffectiveProfileSwitch(
                                     EffectiveProfileSwitch(
                                         timestamp = dateUtil.now(),
@@ -104,13 +110,12 @@ open class CommandQueue @Inject constructor(
                                         insulinConfiguration = it.insulinConfiguration
                                     )
                                 )
+                                rxBus.send(EventNewBasalProfile())
                             }
                         }
                     })
                 }
             }, fabricPrivacy::logException)
-        )
-
     }
 
     private fun executingNowError(): PumpEnactResult =
@@ -172,8 +177,7 @@ open class CommandQueue @Inject constructor(
 
     // After new command added to the queue
     // start thread again if not already running
-    @Synchronized
-    open fun notifyAboutNewCommand() {
+    @Synchronized fun notifyAboutNewCommand() {
         waitForFinishedThread()
         if (thread == null || thread!!.state == Thread.State.TERMINATED) {
             thread = QueueThread(this, context, aapsLogger, rxBus, activePlugin, resourceHelper, sp)
@@ -195,18 +199,21 @@ open class CommandQueue @Inject constructor(
 
     override fun independentConnect(reason: String, callback: Callback?) {
         aapsLogger.debug(LTag.PUMPQUEUE, "Starting new queue")
-        val tempCommandQueue = CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, activePlugin, context, sp, buildHelper, dateUtil, repository, fabricPrivacy)
+        val tempCommandQueue = CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper,
+                                            constraintChecker, profileFunction, activePlugin, context, sp,
+                                            buildHelper, dateUtil, repository, fabricPrivacy, config)
         tempCommandQueue.readStatus(reason, callback)
+        tempCommandQueue.disposable.clear()
     }
 
     @Synchronized
     override fun bolusInQueue(): Boolean {
         if (isRunning(CommandType.BOLUS)) return true
+        if (isRunning(CommandType.SMB_BOLUS)) return true
         synchronized(queue) {
             for (i in queue.indices) {
-                if (queue[i].commandType == CommandType.BOLUS) {
-                    return true
-                }
+                if (queue[i].commandType == CommandType.BOLUS) return true
+                if (queue[i].commandType == CommandType.SMB_BOLUS) return true
             }
         }
         return false
@@ -243,13 +250,15 @@ open class CommandQueue @Inject constructor(
         }
         var type = if (detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB) CommandType.SMB_BOLUS else CommandType.BOLUS
         if (type == CommandType.SMB_BOLUS) {
-            if (isRunning(CommandType.BOLUS) || isRunning(CommandType.SMB_BOLUS) || bolusInQueue()) {
+            if (bolusInQueue()) {
                 aapsLogger.debug(LTag.PUMPQUEUE, "Rejecting SMB since a bolus is queue/running")
+                callback?.result(PumpEnactResult(injector).enacted(false).success(false))?.run()
                 return false
             }
             val lastBolusTime = repository.getLastBolusRecord()?.timestamp ?: 0L
             if (detailedBolusInfo.lastKnownBolusTime < lastBolusTime) {
                 aapsLogger.debug(LTag.PUMPQUEUE, "Rejecting bolus, another bolus was issued since request time")
+                callback?.result(PumpEnactResult(injector).enacted(false).success(false))?.run()
                 return false
             }
             removeAll(CommandType.SMB_BOLUS)
@@ -566,11 +575,12 @@ open class CommandQueue @Inject constructor(
         return HtmlHelper.fromHtml(s)
     }
 
-    override fun isThisProfileSet(profile: Profile): Boolean {
-        val result = activePlugin.activePump.isThisProfileSet(profile)
+    override fun isThisProfileSet(requestedProfile: Profile): Boolean {
+        val runningProfile = profileFunction.getProfile() ?: return false
+        val result = activePlugin.activePump.isThisProfileSet(requestedProfile) && requestedProfile.isEqual(runningProfile)
         if (!result) {
             aapsLogger.debug(LTag.PUMPQUEUE, "Current profile: ${profileFunction.getProfile()}")
-            aapsLogger.debug(LTag.PUMPQUEUE, "New profile: $profile")
+            aapsLogger.debug(LTag.PUMPQUEUE, "New profile: $requestedProfile")
         }
         return result
     }

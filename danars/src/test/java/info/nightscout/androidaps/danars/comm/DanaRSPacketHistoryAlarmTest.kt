@@ -7,23 +7,20 @@ import info.nightscout.androidaps.dana.database.DanaHistoryRecordDao
 import info.nightscout.androidaps.danars.DanaRSTestBase
 import org.junit.Assert
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.powermock.modules.junit4.PowerMockRunner
 import java.util.*
 
-@RunWith(PowerMockRunner::class)
 class DanaRSPacketHistoryAlarmTest : DanaRSTestBase() {
 
     @Mock lateinit var danaHistoryRecordDao: DanaHistoryRecordDao
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is DanaRS_Packet) {
+            if (it is DanaRSPacket) {
                 it.aapsLogger = aapsLogger
                 it.dateUtil = dateUtil
             }
-            if (it is DanaRS_Packet_History_Alarm) {
+            if (it is DanaRSPacketHistoryAlarm) {
                 it.rxBus = rxBus
                 it.danaHistoryRecordDao = danaHistoryRecordDao
             }
@@ -31,9 +28,8 @@ class DanaRSPacketHistoryAlarmTest : DanaRSTestBase() {
     }
 
     @Test
-    @kotlin.ExperimentalStdlibApi
     fun runTest() {
-        val packet = DanaRS_Packet_History_Alarm(packetInjector, 0)
+        val packet = DanaRSPacketHistoryAlarm(packetInjector, 0)
 
         val array = createArray(12, 0.toByte()) // 10 + 2
         putByteToArray(array, 0, 0x0A) // record code alarm

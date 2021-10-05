@@ -4,12 +4,17 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.activities.TDDStatsActivity
+import info.nightscout.androidaps.dana.activities.DanaHistoryActivity
+import info.nightscout.androidaps.dana.activities.DanaUserOptionsActivity
 import info.nightscout.androidaps.dana.databinding.DanarFragmentBinding
+import info.nightscout.androidaps.dana.events.EventDanaRNewStatus
 import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.events.EventExtendedBolusChange
 import info.nightscout.androidaps.events.EventInitializationChanged
@@ -57,8 +62,10 @@ class DanaFragment : DaggerFragment() {
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
-    private val loopHandler = Handler()
+    private val loopHandler = Handler(Looper.getMainLooper())
     private lateinit var refreshLoop: Runnable
+    private var pumpStatus = ""
+    private var pumpStatusIcon = "{fa-bluetooth-b}"
 
     private var _binding: DanarFragmentBinding? = null
 
@@ -82,10 +89,8 @@ class DanaFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.danaPumpstatus.setBackgroundColor(resourceHelper.gc(R.color.colorInitializingBorder))
-
-        binding.history.setOnClickListener { startActivity(Intent(context, info.nightscout.androidaps.dana.activities.DanaHistoryActivity::class.java)) }
-        binding.viewprofile.setOnClickListener {
+        binding.history.setOnClickListener { startActivity(Intent(context, DanaHistoryActivity::class.java)) }
+        binding.viewProfile.setOnClickListener {
             val profile = danaPump.createConvertedProfile()?.getDefaultProfileJson()
                 ?: return@setOnClickListener
             val profileName = danaPump.createConvertedProfile()?.getDefaultProfileName()
@@ -101,7 +106,7 @@ class DanaFragment : DaggerFragment() {
             }.show(childFragmentManager, "ProfileViewDialog")
         }
         binding.stats.setOnClickListener { startActivity(Intent(context, TDDStatsActivity::class.java)) }
-        binding.userOptions.setOnClickListener { startActivity(Intent(context, info.nightscout.androidaps.dana.activities.DanaUserOptionsActivity::class.java)) }
+        binding.userOptions.setOnClickListener { startActivity(Intent(context, DanaUserOptionsActivity::class.java)) }
         binding.btconnection.setOnClickListener {
             aapsLogger.debug(LTag.PUMP, "Clicked connect to pump")
             danaPump.reset()
@@ -128,7 +133,7 @@ class DanaFragment : DaggerFragment() {
             .observeOn(aapsSchedulers.main)
             .subscribe({ updateGUI() }, fabricPrivacy::logException)
         disposable += rxBus
-            .toObservable(info.nightscout.androidaps.dana.events.EventDanaRNewStatus::class.java)
+            .toObservable(EventDanaRNewStatus::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ updateGUI() }, fabricPrivacy::logException)
         disposable += rxBus
@@ -147,27 +152,25 @@ class DanaFragment : DaggerFragment() {
             .toObservable(EventPumpStatusChanged::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({
-                when (it.status) {
+                pumpStatusIcon = when (it.status) {
                     EventPumpStatusChanged.Status.CONNECTING   ->
-                        @Suppress("SetTextI18n")
-                        binding.btconnection.text = "{fa-bluetooth-b spin} ${it.secondsElapsed}s"
+                        "{fa-bluetooth-b spin} ${it.secondsElapsed}s"
                     EventPumpStatusChanged.Status.CONNECTED    ->
-                        @Suppress("SetTextI18n")
-                        binding.btconnection.text = "{fa-bluetooth}"
+                        "{fa-bluetooth}"
                     EventPumpStatusChanged.Status.DISCONNECTED ->
-                        @Suppress("SetTextI18n")
-                        binding.btconnection.text = "{fa-bluetooth-b}"
+                        "{fa-bluetooth-b}"
 
-                    else                                       -> {
-                    }
+                    else                                       ->
+                        "{fa-bluetooth-b}"
                 }
-                if (it.getStatus(resourceHelper) != "") {
-                    binding.danaPumpstatus.text = it.getStatus(resourceHelper)
-                    binding.danaPumpstatuslayout.visibility = View.VISIBLE
-                } else {
-                    binding.danaPumpstatuslayout.visibility = View.GONE
-                }
+                binding.btconnection.text = pumpStatusIcon
+                pumpStatus = it.getStatus(resourceHelper)
+                binding.pumpStatus.text = pumpStatus
+                binding.pumpStatusLayout.visibility = (pumpStatus != "").toVisibility()
             }, fabricPrivacy::logException)
+
+        pumpStatus = ""
+        pumpStatusIcon = "{fa-bluetooth-b}"
         updateGUI()
     }
 
@@ -176,6 +179,8 @@ class DanaFragment : DaggerFragment() {
         super.onPause()
         disposable.clear()
         loopHandler.removeCallbacks(refreshLoop)
+        pumpStatus = ""
+        pumpStatusIcon = "{fa-bluetooth-b}"
     }
 
     @Synchronized
@@ -188,17 +193,22 @@ class DanaFragment : DaggerFragment() {
     @Synchronized
     fun updateGUI() {
         if (_binding == null) return
+        binding.btconnection.text = pumpStatusIcon
+        binding.pumpStatus.text = pumpStatus
+        binding.pumpStatusLayout.visibility = (pumpStatus != "").toVisibility()
+        binding.queue.text = commandQueue.spannedStatus()
+        binding.queueStatusLayout.visibility = (commandQueue.spannedStatus().toString() != "").toVisibility()
         val pump = danaPump
         val plugin: Pump = activePlugin.activePump
         if (pump.lastConnection != 0L) {
-            val agoMsec = System.currentTimeMillis() - pump.lastConnection
-            val agoMin = (agoMsec.toDouble() / 60.0 / 1000.0).toInt()
+            val agoMilliseconds = System.currentTimeMillis() - pump.lastConnection
+            val agoMin = (agoMilliseconds.toDouble() / 60.0 / 1000.0).toInt()
             binding.lastconnection.text = dateUtil.timeString(pump.lastConnection) + " (" + resourceHelper.gs(R.string.minago, agoMin) + ")"
             warnColors.setColor(binding.lastconnection, agoMin.toDouble(), 16.0, 31.0)
         }
         if (pump.lastBolusTime != 0L) {
-            val agoMsec = System.currentTimeMillis() - pump.lastBolusTime
-            val agoHours = agoMsec.toDouble() / 60.0 / 60.0 / 1000.0
+            val agoMilliseconds = System.currentTimeMillis() - pump.lastBolusTime
+            val agoHours = agoMilliseconds.toDouble() / 60.0 / 60.0 / 1000.0
             if (agoHours < 6)
             // max 6h back
                 binding.lastbolus.text = dateUtil.timeString(pump.lastBolusTime) + " " + dateUtil.sinceString(pump.lastBolusTime, resourceHelper) + " " + resourceHelper.gs(R.string.formatinsulinunits, pump.lastBolusAmount)
@@ -216,18 +226,11 @@ class DanaFragment : DaggerFragment() {
         warnColors.setColorInverse(binding.reservoir, pump.reservoirRemainingUnits, 50.0, 20.0)
         binding.battery.text = "{fa-battery-" + pump.batteryRemaining / 25 + "}"
         warnColors.setColorInverse(binding.battery, pump.batteryRemaining.toDouble(), 51.0, 26.0)
-        binding.iob.text = resourceHelper.gs(R.string.formatinsulinunits, pump.iob)
         binding.firmware.text = resourceHelper.gs(R.string.dana_model, pump.modelFriendlyName(), pump.hwModel, pump.protocol, pump.productCode)
-        binding.basalstep.text = pump.basalStep.toString()
-        binding.bolusstep.text = pump.bolusStep.toString()
+        binding.basalBolusStep.text = pump.basalStep.toString() + "/" + pump.bolusStep.toString()
         binding.serialNumber.text = pump.serialNumber
-        val status = commandQueue.spannedStatus()
-        if (status.toString() == "") {
-            binding.queue.visibility = View.GONE
-        } else {
-            binding.queue.visibility = View.VISIBLE
-            binding.queue.text = status
-        }
+        val icon = if (danaPump.pumpType() == PumpType.DANA_I) R.drawable.ic_dana_i else R.drawable.ic_dana_rs
+        binding.danaIcon.setImageDrawable(context?.let { ContextCompat.getDrawable(it, icon) })
         //hide user options button if not an RS pump or old firmware
         // also excludes pump with model 03 because of untested error
         binding.userOptions.visibility = (pump.hwModel != 1 && pump.protocol != 0x00).toVisibility()

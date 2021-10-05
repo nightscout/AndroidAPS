@@ -13,21 +13,15 @@ import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.junit.Assert
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.invocation.InvocationOnMock
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
 
-@RunWith(PowerMockRunner::class)
-@PrepareForTest(ConstraintChecker::class, VirtualPumpPlugin::class, DateUtil::class, AutosensDataStore::class)
 class BolusWizardTest : TestBase() {
 
     private val pumpBolusStep = 0.1
@@ -40,7 +34,6 @@ class BolusWizardTest : TestBase() {
     @Mock lateinit var commandQueue: CommandQueueProvider
     @Mock lateinit var loopPlugin: LoopPlugin
     @Mock lateinit var iobCobCalculator: IobCobCalculator
-    @Mock lateinit var treatmentsPlugin: TreatmentsPlugin
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var autosensDataStore: AutosensDataStore
@@ -71,7 +64,6 @@ class BolusWizardTest : TestBase() {
         `when`(profile.getIc()).thenReturn(insulinToCarbRatio)
 
         `when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
-        `when`(activePlugin.activeTreatments).thenReturn(treatmentsPlugin)
         `when`(iobCobCalculator.calculateIobFromBolus()).thenReturn(IobTotal(System.currentTimeMillis()))
         `when`(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(IobTotal(System.currentTimeMillis()))
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)

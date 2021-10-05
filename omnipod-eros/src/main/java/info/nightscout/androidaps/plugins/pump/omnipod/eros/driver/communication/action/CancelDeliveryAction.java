@@ -14,15 +14,15 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.BeepConfigType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.BeepType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.DeliveryType;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.PodStateManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.ErosPodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 
 public class CancelDeliveryAction implements OmnipodAction<StatusResponse> {
-    private final PodStateManager podStateManager;
+    private final ErosPodStateManager podStateManager;
     private final EnumSet<DeliveryType> deliveryTypes;
     private final boolean acknowledgementBeep;
 
-    public CancelDeliveryAction(PodStateManager podStateManager, EnumSet<DeliveryType> deliveryTypes,
+    public CancelDeliveryAction(ErosPodStateManager podStateManager, EnumSet<DeliveryType> deliveryTypes,
                                 boolean acknowledgementBeep) {
         if (podStateManager == null) {
             throw new IllegalArgumentException("Pod state manager cannot be null");

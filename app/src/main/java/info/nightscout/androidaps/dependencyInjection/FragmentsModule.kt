@@ -20,8 +20,6 @@ import info.nightscout.androidaps.plugins.general.automation.dialogs.EditTrigger
 import info.nightscout.androidaps.plugins.general.food.FoodFragment
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenanceFragment
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientFragment
-import info.nightscout.androidaps.plugins.general.openhumans.OpenHumansFragment
-import info.nightscout.androidaps.plugins.general.openhumans.OpenHumansLoginActivity
 import info.nightscout.androidaps.plugins.general.overview.OverviewFragment
 import info.nightscout.androidaps.plugins.general.overview.dialogs.EditQuickWizardDialog
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorFragment
@@ -70,8 +68,6 @@ abstract class FragmentsModule {
 
     @ContributesAndroidInjector abstract fun contributesVirtualPumpFragment(): VirtualPumpFragment
 
-    @ContributesAndroidInjector abstract fun contributesOpenHumansFragment(): OpenHumansFragment
-
     @ContributesAndroidInjector abstract fun contributesCalibrationDialog(): CalibrationDialog
     @ContributesAndroidInjector abstract fun contributesCarbsDialog(): CarbsDialog
     @ContributesAndroidInjector abstract fun contributesCareDialog(): CareDialog
@@ -94,8 +90,6 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesTreatmentDialog(): TreatmentDialog
     @ContributesAndroidInjector abstract fun contributesWizardDialog(): WizardDialog
     @ContributesAndroidInjector abstract fun contributesWizardInfoDialog(): WizardInfoDialog
-
-    @ContributesAndroidInjector abstract fun contributesExchangeAuthTokenDialog(): OpenHumansLoginActivity.ExchangeAuthTokenDialog
 
     @ContributesAndroidInjector abstract fun contributesPasswordCheck(): PasswordCheck
 }
