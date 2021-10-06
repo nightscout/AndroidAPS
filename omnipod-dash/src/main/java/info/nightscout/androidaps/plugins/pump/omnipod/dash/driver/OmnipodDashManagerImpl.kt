@@ -9,9 +9,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.GetVersionCommand.Companion.DEFAULT_UNIQUE_ID
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants.Companion.MAX_POD_LIFETIME
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants.Companion.POD_EXPIRATION_ALERT_MINUTES_DURATION
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants.Companion.POD_EXPIRATION_IMMINENT_ALERT_MINUTES
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants.Companion.POD_EXPIRATION_ALERT_MINUTES
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants.Companion.POD_EXPIRATION_ALERT_HOURS_DURATION
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants.Companion.POD_EXPIRATION_IMMINENT_ALERT_HOURS
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants.Companion.POD_EXPIRATION_ALERT_HOURS
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
@@ -397,9 +397,11 @@ class OmnipodDashManagerImpl @Inject constructor(
                 AlertConfiguration(
                     AlertType.EXPIRATION,
                     enabled = true,
-                    durationInMinutes = POD_EXPIRATION_ALERT_MINUTES_DURATION.toShort(),
+                    durationInMinutes = TimeUnit.HOURS.toMinutes(POD_EXPIRATION_ALERT_HOURS_DURATION).toShort(),
                     autoOff = false,
-                    AlertTrigger.TimerTrigger(POD_EXPIRATION_ALERT_MINUTES.toShort()), // FIXME use activation time
+                    AlertTrigger.TimerTrigger(
+                        TimeUnit.HOURS.toMinutes(POD_EXPIRATION_ALERT_HOURS).toShort()
+                    ), // FIXME use activation time
                     BeepType.FOUR_TIMES_BIP_BEEP,
                     BeepRepetitionType.XXX3
                 ),
@@ -408,7 +410,9 @@ class OmnipodDashManagerImpl @Inject constructor(
                     enabled = true,
                     durationInMinutes = 0,
                     autoOff = false,
-                    AlertTrigger.TimerTrigger(POD_EXPIRATION_IMMINENT_ALERT_MINUTES.toShort()), // FIXME use activation time
+                    AlertTrigger.TimerTrigger(
+                        TimeUnit.HOURS.toMinutes(POD_EXPIRATION_IMMINENT_ALERT_HOURS).toShort()
+                    ), // FIXME use activation time
                     BeepType.FOUR_TIMES_BIP_BEEP,
                     BeepRepetitionType.XXX4
                 )

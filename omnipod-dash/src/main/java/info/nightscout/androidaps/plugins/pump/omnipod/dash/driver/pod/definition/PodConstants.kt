@@ -7,12 +7,12 @@ class PodConstants {
     companion object {
         val MAX_POD_LIFETIME : Duration = Duration.ofHours(80)
 
-        // Expiration alerts duration in minutes
-        const val POD_EXPIRATION_ALERT_MINUTES_DURATION = 60 * 7
-        // Expiration alert time in minutes since activation
-        const val POD_EXPIRATION_ALERT_MINUTES = 60 * 72
+        // Expiration alert time in minutes since activation and  duration in minutes
+        const val POD_EXPIRATION_ALERT_HOURS = 72L
+        const val POD_EXPIRATION_ALERT_HOURS_DURATION = 7L
+
         // Expiration eminent alert time in minutes since activation
-        const val POD_EXPIRATION_IMMINENT_ALERT_MINUTES = 60 * 79
+        const val POD_EXPIRATION_IMMINENT_ALERT_HOURS = 79L
 
         // Bolus & Priming units
         const val POD_PULSE_BOLUS_UNITS = 0.05
