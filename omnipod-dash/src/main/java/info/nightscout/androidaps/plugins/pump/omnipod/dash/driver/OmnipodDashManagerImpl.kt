@@ -10,7 +10,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.G
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants.Companion.MAX_POD_LIFETIME
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants.Companion.POD_EXPIRATION_ALERT_MINUTES_DURATION
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants.Companion.POD_EXPIRATION_EMINENT_ALERT_MINUTES
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants.Companion.POD_EXPIRATION_IMMINENT_ALERT_MINUTES
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants.Companion.POD_EXPIRATION_ALERT_MINUTES
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
@@ -281,7 +281,7 @@ class OmnipodDashManagerImpl @Inject constructor(
                             .setUniqueId(podStateManager.uniqueId!!.toInt())
                             .setSequenceNumber(podStateManager.messageSequenceNumber)
                             .setNonce(NONCE)
-                            .setNumberOfUnits(podStateManager.firstPrimeBolusVolume!! * PodConstants.POD_PRIMING_BOLUS_UNITS)
+                            .setNumberOfUnits(podStateManager.firstPrimeBolusVolume!! * PodConstants.POD_PULSE_BOLUS_UNITS)
                             .setDelayBetweenPulsesInEighthSeconds(podStateManager.primePulseRate!!.toByte())
                             .setProgramReminder(ProgramReminder(atStart = false, atEnd = false, atInterval = 0))
                             .build(),
@@ -383,7 +383,7 @@ class OmnipodDashManagerImpl @Inject constructor(
             )
             observables.add(
                 observeSendProgramBolusCommand(
-                    podStateManager.secondPrimeBolusVolume!! * PodConstants.POD_CANNULA_INSERTION_BOLUS_UNITS,
+                    podStateManager.secondPrimeBolusVolume!! * PodConstants.POD_PULSE_BOLUS_UNITS,
                     podStateManager.primePulseRate!!.toByte(),
                     confirmationBeeps = false,
                     completionBeeps = false
@@ -408,7 +408,7 @@ class OmnipodDashManagerImpl @Inject constructor(
                     enabled = true,
                     durationInMinutes = 0,
                     autoOff = false,
-                    AlertTrigger.TimerTrigger(POD_EXPIRATION_EMINENT_ALERT_MINUTES.toShort()), // FIXME use activation time
+                    AlertTrigger.TimerTrigger(POD_EXPIRATION_IMMINENT_ALERT_MINUTES.toShort()), // FIXME use activation time
                     BeepType.FOUR_TIMES_BIP_BEEP,
                     BeepRepetitionType.XXX4
                 )

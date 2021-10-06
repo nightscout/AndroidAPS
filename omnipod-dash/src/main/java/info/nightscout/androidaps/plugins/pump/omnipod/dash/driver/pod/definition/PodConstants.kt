@@ -12,14 +12,10 @@ class PodConstants {
         // Expiration alert time in minutes since activation
         const val POD_EXPIRATION_ALERT_MINUTES = 60 * 72
         // Expiration eminent alert time in minutes since activation
-        const val POD_EXPIRATION_EMINENT_ALERT_MINUTES = 60 * 79
+        const val POD_EXPIRATION_IMMINENT_ALERT_MINUTES = 60 * 79
 
-        // Bolus units
+        // Bolus & Priming units
         const val POD_PULSE_BOLUS_UNITS = 0.05
-
-        // Priming units
-        const val POD_PRIMING_BOLUS_UNITS = 0.05
-        const val POD_CANNULA_INSERTION_BOLUS_UNITS = 0.05
 
         // Reservoir units alert threshold
         const val DEFAULT_MAX_RESERVOIR_ALERT_THRESHOLD : Short = 20
