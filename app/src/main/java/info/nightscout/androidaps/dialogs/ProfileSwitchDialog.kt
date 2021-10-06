@@ -1,6 +1,8 @@
 package info.nightscout.androidaps.dialogs
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,22 +12,30 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
+import info.nightscout.androidaps.database.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import info.nightscout.androidaps.databinding.DialogProfileswitchBinding
+import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import java.text.DecimalFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class ProfileSwitchDialog : DialogFragmentWithDate() {
@@ -38,6 +48,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
     @Inject lateinit var config: Config
     @Inject lateinit var hardLimits: HardLimits
     @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var defaultValueHelper: DefaultValueHelper
 
     private var profileIndex: Int? = null
 
@@ -48,6 +59,17 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+
+    private val textWatcher: TextWatcher = object : TextWatcher {
+        override fun afterTextChanged(s: Editable) {
+            val isDuration = binding.duration.value > 0
+            val isLowerPercentage = binding.percentage.value < 100
+            binding.ttLayout.visibility = (isDuration && isLowerPercentage).toVisibility()
+        }
+
+        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+    }
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState)
@@ -70,9 +92,11 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.duration.setParams(savedInstanceState?.getDouble("duration")
-            ?: 0.0, 0.0, Constants.MAX_PROFILE_SWITCH_DURATION, 10.0, DecimalFormat("0"), false, binding.okcancel.ok)
+            ?: 0.0, 0.0, Constants.MAX_PROFILE_SWITCH_DURATION, 10.0, DecimalFormat("0"), false, binding.okcancel.ok,
+                                   textWatcher)
         binding.percentage.setParams(savedInstanceState?.getDouble("percentage")
-            ?: 100.0, Constants.CPP_MIN_PERCENTAGE.toDouble(), Constants.CPP_MAX_PERCENTAGE.toDouble(), 5.0, DecimalFormat("0"), false, binding.okcancel.ok)
+            ?: 100.0, Constants.CPP_MIN_PERCENTAGE.toDouble(), Constants.CPP_MAX_PERCENTAGE.toDouble(), 5.0,
+                                     DecimalFormat("0"), false, binding.okcancel.ok, textWatcher)
         binding.timeshift.setParams(savedInstanceState?.getDouble("timeshift")
             ?: 0.0, Constants.CPP_MIN_TIMESHIFT.toDouble(), Constants.CPP_MAX_TIMESHIFT.toDouble(), 1.0, DecimalFormat("0"), false, binding.okcancel.ok)
 
@@ -104,6 +128,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
                 binding.reuselayout.visibility = View.GONE
             }
         }
+        binding.ttLayout.visibility = View.GONE
     }
 
     override fun onDestroyView() {
@@ -135,6 +160,12 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
         if (eventTimeChanged)
             actions.add(resourceHelper.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
 
+        val isTT = binding.duration.value > 0 && binding.percentage.value < 100 && binding.tt.isChecked
+        val target = defaultValueHelper.determineActivityTT()
+        val units = profileFunction.getUnits()
+        if (isTT)
+            actions.add(resourceHelper.gs(R.string.careportal_temporarytarget) + ": " + resourceHelper.gs(R.string.activity))
+
         activity?.let { activity ->
             val ps = profileFunction.buildProfileSwitch(profileStore, profileName, duration, percent, timeShift, eventTime)
             val validity = ProfileSealed.PS(ps).isValid(resourceHelper.gs(R.string.careportal_profileswitch), activePlugin.activePump, config, resourceHelper, rxBus, hardLimits)
@@ -154,6 +185,24 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
                         ValueWithUnit.Percent(percent),
                         ValueWithUnit.Hour(timeShift).takeIf { timeShift != 0 },
                         ValueWithUnit.Minute(duration).takeIf { duration != 0 })
+                    if (isTT) {
+                        disposable += repository.runTransactionForResult(
+                            InsertAndCancelCurrentTemporaryTargetTransaction(
+                                timestamp = eventTime,
+                                duration = TimeUnit.MINUTES.toMillis(duration.toLong()),
+                                reason =  TemporaryTarget.Reason.ACTIVITY,
+                                lowTarget = Profile.toMgdl(target, profileFunction.getUnits()),
+                                highTarget = Profile.toMgdl(target, profileFunction.getUnits())
+                        )
+                        ).subscribe({ result ->
+                                         result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }
+                                         result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
+                                     }, {
+                                         aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
+                                     })
+                        uel.log(Action.TT, Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, ValueWithUnit.TherapyEventTTReason(
+                            TemporaryTarget.Reason.ACTIVITY), ValueWithUnit.fromGlucoseUnit(target, units.asText), ValueWithUnit.Minute(duration))
+                    }
                 })
             else {
                 OKDialog.show(
