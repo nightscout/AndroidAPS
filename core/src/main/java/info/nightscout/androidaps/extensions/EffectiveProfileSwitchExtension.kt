@@ -35,6 +35,7 @@ fun EffectiveProfileSwitch.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObjec
         .put("originalPercentage", originalPercentage)
         .put("originalDuration", originalDuration)
         .put("originalEnd", originalEnd)
+        .put("notes", originalCustomizedName)
         .also {
             if (interfaceIDs.pumpId != null) it.put("pumpId", interfaceIDs.pumpId)
             if (interfaceIDs.pumpType != null) it.put("pumpType", interfaceIDs.pumpType!!.name)
