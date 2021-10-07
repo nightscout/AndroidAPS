@@ -142,7 +142,7 @@
     <string name="diaconn_g8_logmealfail">Meal Failed</string>
     <string name="diaconn_g8_logsuccess">Success</string>
     <string name="diaconn_g8_logmealsuccess">Meal Success</string>
-    <string name="key_diaconn_g8_logtubechange">diaconn_g8_logtubechange</string>
+    <string name="key_diaconn_g8_logtubechange" translatable="false">diaconn_g8_logtubechange</string>
     <string name="diaconn_g8_errorcode_1">Can\'t lookup due to packet CRC error.</string>
     <string name="diaconn_g8_errorcode_2">Can\'t be set to an input parameter error.</string>
     <string name="diaconn_g8_errorcode_3">Can\'t be set to a protocol specification error.</string>
