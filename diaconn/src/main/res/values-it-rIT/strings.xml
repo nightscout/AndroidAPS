@@ -129,7 +129,6 @@
     <string name="diaconn_g8_logmealfail">Pasto: fallito</string>
     <string name="diaconn_g8_logsuccess">OK</string>
     <string name="diaconn_g8_logmealsuccess">Pasto: OK</string>
-    <string name="key_diaconn_g8_logtubechange">diaconn_g8_logtubechange</string>
     <string name="diaconn_g8_errorcode_1">Ricerca non possibile a causa di un errore CRC del pacchetto.</string>
     <string name="diaconn_g8_errorcode_2">Impostazione non possibile - errore di un parametro di input.</string>
     <string name="diaconn_g8_errorcode_3">Impostazione non possibile - errore di specifica del protocollo.</string>
