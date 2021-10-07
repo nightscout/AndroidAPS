@@ -21,6 +21,7 @@
     <string name="tbr_formatter">%1$d%% למשך %2$d/%3$d דק\'</string>
     <string name="multiwave_bolus">בולוס רב שלבי</string>
     <string name="eb_formatter">%1$.2f / %2$.2f יח\' במשך %3$d דק\'</string>
+    <string name="insight_last_bolus">בולוס אחרון</string>
     <string name="searching_for_devices">מחפש התקנים…</string>
     <string name="pairing_completed">הצימוד הושלם</string>
     <string name="code_compare">האם הקודים המוצגים בהתקן זה ובמשאבה זהים?</string>

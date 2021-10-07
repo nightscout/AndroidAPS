@@ -129,7 +129,6 @@
     <string name="diaconn_g8_logmealfail">식사 실패</string>
     <string name="diaconn_g8_logsuccess">성공</string>
     <string name="diaconn_g8_logmealsuccess">식사 성공</string>
-    <string name="key_diaconn_g8_logtubechange">디아콘_g8_로그튜브변경</string>
     <string name="diaconn_g8_errorcode_1">패킷 CRC 오류로 조회 불가합니다.</string>
     <string name="diaconn_g8_errorcode_2">입력 파라미터 오류로 설정 불가합니다.</string>
     <string name="diaconn_g8_errorcode_3">프로토콜 규격 오류로 설정 불가합니다.</string>

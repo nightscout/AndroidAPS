@@ -494,6 +494,7 @@
     <string name="dexcomg5_xdripupload_title">Send BS data til xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">I xDrip+ velg 640G/Eversens som datakilde</string>
     <string name="nsclientbg">NSClient BS</string>
+    <string name="nsclientbgshort">NS BS</string>
     <string name="overview_editquickwizard_usebg">BS beregning</string>
     <string name="overview_editquickwizard_usebolusiob">Bolus IOB beregning</string>
     <string name="overview_editquickwizard_usebasaliob">Basal IOB beregning</string>

@@ -18,6 +18,7 @@
     <string name="connected">Pripojené</string>
     <string name="disconnected">Odpojené</string>
     <string name="disconnecting">Odpájanie</string>
+    <string name="waiting_for_disconnection">Čakám na odpojenie</string>
     <string name="androidaps_start">AndroidAPS spustený</string>
     <string name="formatinsulinunits1">%1$.1f JI</string>
     <string name="formatinsulinunits">%1$.2f JI</string>
@@ -213,6 +214,8 @@
     <string name="loop">Uzavretý okruh</string>
     <string name="ns">NS</string>
     <string name="record">Záznam</string>
+    <string name="reading_pump_history">Načítavam históriu z pumpy</string>
+    <string name="pump_icon">Ikona pumpy</string>
     <!--    Command-->
     <string name="connectiontimedout">Vypršal čas na pripojenie</string>
     <!--    PumpEnactResult-->

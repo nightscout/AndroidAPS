@@ -18,6 +18,7 @@
     <string name="connected">מחובר</string>
     <string name="disconnected">מנותק</string>
     <string name="disconnecting">מתנתק</string>
+    <string name="waiting_for_disconnection">ממתין לניתוק</string>
     <string name="androidaps_start">AndroidAPS הופעל</string>
     <string name="formatinsulinunits1">%1$.1f יח\'</string>
     <string name="formatinsulinunits">%1$.2f יח\'</string>
@@ -29,7 +30,7 @@
     <string name="format_mins">%1$d דק\'</string>
     <string name="pumpbusy">המשאבה אינה פנויה</string>
     <string name="connectionerror">שגיאה בחיבור המשאבה</string>
-    <string name="youareonallowedlimit">הגיעתם למגבלה המותרת</string>
+    <string name="youareonallowedlimit">הגעתם למגבלה המותרת</string>
     <string name="objectives">משימות</string>
     <string name="close">סגור</string>
     <string name="please_wait">נא להמתין…</string>
@@ -213,6 +214,8 @@
     <string name="loop">לולאה</string>
     <string name="ns">נייטסקאוט</string>
     <string name="record">הקלטה</string>
+    <string name="reading_pump_history">קורא היסטוריית משאבה</string>
+    <string name="pump_icon">צלמית משאבה</string>
     <!--    Command-->
     <string name="connectiontimedout">החיבור חרג ממגבלת הזמן</string>
     <!--    PumpEnactResult-->

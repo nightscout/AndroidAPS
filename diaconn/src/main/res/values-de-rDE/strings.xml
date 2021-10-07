@@ -129,7 +129,6 @@
     <string name="diaconn_g8_logmealfail">Mahlzeit fehlgeschlagen</string>
     <string name="diaconn_g8_logsuccess">Erfolgreich</string>
     <string name="diaconn_g8_logmealsuccess">Mahlzeit erfolgreich</string>
-    <string name="key_diaconn_g8_logtubechange">diaconn_g8_logtubechange</string>
     <string name="diaconn_g8_errorcode_1">CRC Fehler - Lookup nicht möglich.</string>
     <string name="diaconn_g8_errorcode_2">Kann nicht auf fehlerhaften Eingabeparameter gesetzt werden.</string>
     <string name="diaconn_g8_errorcode_3">Kann nicht auf fehlerhafte Protokollspezifikation gesetzt werden.</string>

@@ -38,6 +38,9 @@
     <string name="glucoseisnotavailable">BG-data är inte tillgängligt</string>
     <string name="glucosecomparedmgdl">BG %1$s %2$.0f %3$s</string>
     <string name="glucosecomparedmmol">BG %1$s %2$.1f %3$s</string>
+    <string name="notemptarget">Temp mål finns inte</string>
+    <string name="temptargetcomparedmgdl">Temp mål %1$s %2$.0f %3$s</string>
+    <string name="temptargetcomparedmmol">Temp mål %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">Profil pct %1$s %2$d</string>
     <string name="iobcompared">IOB %1$s %2$.1f</string>
     <string name="and">och</string>
@@ -86,6 +89,7 @@
     <string name="latitude_short">Lat:</string>
     <string name="longitude_short">Lon:</string>
     <string name="glucose_u">BG [%1$s]:</string>
+    <string name="target_u">Mål [%1$s]:</string>
     <string name="lastboluslabel">Senaste bolus</string>
     <string name="lastboluscompared">Senaste bolus %1$s %2$s min sedan</string>
     <string name="triggercoblabel">COB</string>
