@@ -115,4 +115,5 @@
     <string name="press_ok_on_the_pump">Tryck på OK på pumpen och skriv in nycklarna som visas på skärmen. För att förhindra att pumpskärmen släcks, tryck på minus (-) ibland.</string>
     <string name="num1pin">1: (12 tecken)</string>
     <string name="num2pin">2: (8 tecken)</string>
+    <string name="basal_bolus_step">Basal/bolus steg</string>
 </resources>
