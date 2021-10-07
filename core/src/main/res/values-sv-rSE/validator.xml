@@ -16,6 +16,9 @@
     <string name="error_date_not_valid">Ogiltigt format</string>
     <string name="error_mustbe4digitnumber">Måste vara fyra siffror</string>
     <string name="error_mustbe6digitnumber">Måste vara sex siffror</string>
+    <string name="error_mustbe12hexadidits">Måste vara 12 tecken med ABCDEF0123456789</string>
+    <string name="error_mustbe8hexadidits">Måste vara 8 tecken med ABCDEF0123456789</string>
+    <string name="error_mustbe4hexadidits">Måste vara 4 tecken med ABCDEF0123456789</string>
     <string name="error_not_a_minimum_length">För kort</string>
     <string name="error_pin_not_valid">Pin ska vara 3-6 siffror, inte samma eller efter varandra</string>
 </resources>
