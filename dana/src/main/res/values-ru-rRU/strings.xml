@@ -94,8 +94,6 @@
     <string name="profile_set_failed">настройка базального профиля не состоялась</string>
     <string name="danar_bluetooth_status">статус блутус</string>
     <string name="danar_iob_label">активный инсулин на помпе</string>
-    <string name="basal_step">шаг базала</string>
-    <string name="bolus_step">шаг болюса</string>
     <string name="virtualpump_firmware_label">прошивка</string>
     <string name="danar_pump_settings">Настройки помпы Dana</string>
     <string name="timeformat12h">12 ч</string>
