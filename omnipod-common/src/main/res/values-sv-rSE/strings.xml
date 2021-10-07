@@ -188,4 +188,8 @@
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagar</item>
     </plurals>
+    <plurals name="omnipod_common_pod_alerts">
+        <item quantity="one">Pod-varning: %1$s</item>
+        <item quantity="other">Pod-varningar: %1$s</item>
+    </plurals>
 </resources>
