@@ -63,6 +63,7 @@ fun ExtendedBolus.toRealJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
         .put("enteredBy", "openaps://" + "AndroidAPS")
         .put("eventType", TherapyEvent.Type.COMBO_BOLUS.text)
         .put("duration", T.msecs(duration).mins())
+        .put("durationInMilliseconds", duration)
         .put("splitNow", 0)
         .put("splitExt", 100)
         .put("enteredinsulin", amount)
@@ -99,6 +100,7 @@ fun extendedBolusFromJson(jsonObject: JSONObject): ExtendedBolus? {
     if (JsonHelper.safeGetIntAllowNull(jsonObject, "splitExt") != 100) return null
     val amount = JsonHelper.safeGetDoubleAllowNull(jsonObject, "enteredinsulin") ?: return null
     val duration = JsonHelper.safeGetLongAllowNull(jsonObject, "duration") ?: return null
+    val durationInMilliseconds = JsonHelper.safeGetLongAllowNull(jsonObject, "durationInMilliseconds")
     val isValid = JsonHelper.safeGetBoolean(jsonObject, "isValid", true)
     val isEmulatingTempBasal = JsonHelper.safeGetBoolean(jsonObject, "isEmulatingTempBasal", false)
     val id = JsonHelper.safeGetStringAllowNull(jsonObject, "_id", null) ?: return null
@@ -114,7 +116,7 @@ fun extendedBolusFromJson(jsonObject: JSONObject): ExtendedBolus? {
     return ExtendedBolus(
         timestamp = timestamp,
         amount = amount,
-        duration = T.mins(duration).msecs(),
+        duration = durationInMilliseconds ?: T.mins(duration).msecs(),
         isEmulatingTempBasal = isEmulatingTempBasal,
         isValid = isValid
     ).also {

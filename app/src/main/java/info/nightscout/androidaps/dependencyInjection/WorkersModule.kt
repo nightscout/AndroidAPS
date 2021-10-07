@@ -6,7 +6,6 @@ import info.nightscout.androidaps.plugins.general.food.FoodPlugin
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientAddAckWorker
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientAddUpdateWorker
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientMbgWorker
-import info.nightscout.androidaps.plugins.general.nsclient.NSClientRemoveWorker
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientUpdateRemoveAckWorker
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
@@ -29,7 +28,6 @@ abstract class WorkersModule {
     @ContributesAndroidInjector abstract fun contributesNSClientWorker(): NSClientAddUpdateWorker
     @ContributesAndroidInjector abstract fun contributesNSClientAddAckWorker(): NSClientAddAckWorker
     @ContributesAndroidInjector abstract fun contributesNSClientUpdateRemoveAckWorker(): NSClientUpdateRemoveAckWorker
-    @ContributesAndroidInjector abstract fun contributesNSClientRemoveWorker(): NSClientRemoveWorker
     @ContributesAndroidInjector abstract fun contributesNSClientMbgWorker(): NSClientMbgWorker
     @ContributesAndroidInjector abstract fun contributesFoodWorker(): FoodPlugin.FoodWorker
 }

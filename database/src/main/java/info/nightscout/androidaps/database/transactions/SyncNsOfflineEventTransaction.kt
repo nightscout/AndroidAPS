@@ -7,7 +7,8 @@ import kotlin.math.abs
 /**
  * Sync the OfflineEvent from NS
  */
-class SyncNsOfflineEventTransaction(private val offlineEvent: OfflineEvent, private val invalidateByNsOnly: Boolean) : Transaction<SyncNsOfflineEventTransaction.TransactionResult>() {
+class SyncNsOfflineEventTransaction(private val offlineEvent: OfflineEvent) :
+    Transaction<SyncNsOfflineEventTransaction.TransactionResult>() {
 
     override fun run(): TransactionResult {
         val result = TransactionResult()
@@ -26,10 +27,13 @@ class SyncNsOfflineEventTransaction(private val offlineEvent: OfflineEvent, priv
                     database.offlineEventDao.updateExistingEntry(current)
                     result.invalidated.add(current)
                 }
+                if (current.duration != offlineEvent.duration) {
+                    current.duration = offlineEvent.duration
+                    database.offlineEventDao.updateExistingEntry(current)
+                    result.updatedDuration.add(current)
+                }
                 return result
             }
-
-            if (invalidateByNsOnly) return result
 
             // not known nsId
             val running = database.offlineEventDao.getOfflineEventActiveAt(offlineEvent.timestamp).blockingGet()
@@ -66,6 +70,7 @@ class SyncNsOfflineEventTransaction(private val offlineEvent: OfflineEvent, priv
     class TransactionResult {
 
         val updatedNsId = mutableListOf<OfflineEvent>()
+        val updatedDuration = mutableListOf<OfflineEvent>()
         val inserted = mutableListOf<OfflineEvent>()
         val invalidated = mutableListOf<OfflineEvent>()
         val ended = mutableListOf<OfflineEvent>()

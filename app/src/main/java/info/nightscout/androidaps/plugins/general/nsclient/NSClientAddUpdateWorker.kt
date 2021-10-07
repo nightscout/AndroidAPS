@@ -74,7 +74,7 @@ class NSClientAddUpdateWorker(
             if (insulin > 0) {
                 if (sp.getBoolean(R.string.key_ns_receive_insulin, false) && buildHelper.isEngineeringMode() || config.NSCLIENT) {
                     bolusFromJson(json)?.let { bolus ->
-                        repository.runTransactionForResult(SyncNsBolusTransaction(bolus, invalidateByNsOnly = false))
+                        repository.runTransactionForResult(SyncNsBolusTransaction(bolus))
                             .doOnError {
                                 aapsLogger.error(LTag.DATABASE, "Error while saving bolus", it)
                                 ret = Result.failure(workDataOf("Error" to it.toString()))
@@ -105,7 +105,7 @@ class NSClientAddUpdateWorker(
             if (carbs > 0) {
                 if (sp.getBoolean(R.string.key_ns_receive_carbs, false) && buildHelper.isEngineeringMode() || config.NSCLIENT) {
                     carbsFromJson(json)?.let { carb ->
-                        repository.runTransactionForResult(SyncNsCarbsTransaction(carb, invalidateByNsOnly = false))
+                        repository.runTransactionForResult(SyncNsCarbsTransaction(carb))
                             .doOnError {
                                 aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it)
                                 ret = Result.failure(workDataOf("Error" to it.toString()))
@@ -145,7 +145,7 @@ class NSClientAddUpdateWorker(
                 eventType == TherapyEvent.Type.TEMPORARY_TARGET.text        ->
                     if (sp.getBoolean(R.string.key_ns_receive_temp_target, false) && buildHelper.isEngineeringMode() || config.NSCLIENT) {
                         temporaryTargetFromJson(json)?.let { temporaryTarget ->
-                            repository.runTransactionForResult(SyncNsTemporaryTargetTransaction(temporaryTarget, invalidateByNsOnly = false))
+                            repository.runTransactionForResult(SyncNsTemporaryTargetTransaction(temporaryTarget))
                                 .doOnError {
                                     aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
                                     ret = Result.failure(workDataOf("Error" to it.toString()))
@@ -182,13 +182,16 @@ class NSClientAddUpdateWorker(
                                     result.updatedNsId.forEach {
                                         aapsLogger.debug(LTag.DATABASE, "Updated nsId TemporaryTarget $it")
                                     }
+                                    result.updatedDuration.forEach {
+                                        aapsLogger.debug(LTag.DATABASE, "Updated duration TemporaryTarget $it")
+                                    }
                                 }
                         } ?: aapsLogger.error("Error parsing TT json $json")
                     }
                 eventType == TherapyEvent.Type.NOTE.text  && json.isEffectiveProfileSwitch()        -> // replace this by new Type when available in NS
                     if (sp.getBoolean(R.string.key_ns_receive_profile_switch, false) && buildHelper.isEngineeringMode() || config.NSCLIENT) {
                         effectiveProfileSwitchFromJson(json, dateUtil)?.let { effectiveProfileSwitch ->
-                            repository.runTransactionForResult(SyncNsEffectiveProfileSwitchTransaction(effectiveProfileSwitch, invalidateByNsOnly = false))
+                            repository.runTransactionForResult(SyncNsEffectiveProfileSwitchTransaction(effectiveProfileSwitch))
                                 .doOnError {
                                     aapsLogger.error(LTag.DATABASE, "Error while saving EffectiveProfileSwitch", it)
                                     ret = Result.failure(workDataOf("Error" to it.toString()))
@@ -223,7 +226,7 @@ class NSClientAddUpdateWorker(
                     eventType == TherapyEvent.Type.PUMP_BATTERY_CHANGE.text ->
                     if (sp.getBoolean(R.string.key_ns_receive_therapy_events, false) || config.NSCLIENT) {
                         therapyEventFromJson(json)?.let { therapyEvent ->
-                            repository.runTransactionForResult(SyncNsTherapyEventTransaction(therapyEvent, invalidateByNsOnly = false))
+                            repository.runTransactionForResult(SyncNsTherapyEventTransaction(therapyEvent))
                                 .doOnError {
                                     aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it)
                                     ret = Result.failure(workDataOf("Error" to it.toString()))
@@ -254,13 +257,16 @@ class NSClientAddUpdateWorker(
                                     result.updatedNsId.forEach {
                                         aapsLogger.debug(LTag.DATABASE, "Updated nsId TherapyEvent $it")
                                     }
+                                    result.updatedDuration.forEach {
+                                        aapsLogger.debug(LTag.DATABASE, "Updated nsId TherapyEvent $it")
+                                    }
                                 }
                         } ?: aapsLogger.error("Error parsing TherapyEvent json $json")
                     }
                 eventType == TherapyEvent.Type.COMBO_BOLUS.text             ->
                     if (config.NSCLIENT) {
                         extendedBolusFromJson(json)?.let { extendedBolus ->
-                            repository.runTransactionForResult(SyncNsExtendedBolusTransaction(extendedBolus, invalidateByNsOnly = false))
+                            repository.runTransactionForResult(SyncNsExtendedBolusTransaction(extendedBolus))
                                 .doOnError {
                                     aapsLogger.error(LTag.DATABASE, "Error while saving extended bolus", it)
                                     ret = Result.failure(workDataOf("Error" to it.toString()))
@@ -297,13 +303,16 @@ class NSClientAddUpdateWorker(
                                     result.updatedNsId.forEach {
                                         aapsLogger.debug(LTag.DATABASE, "Updated nsId ExtendedBolus $it")
                                     }
+                                    result.updatedDuration.forEach {
+                                        aapsLogger.debug(LTag.DATABASE, "Updated duration ExtendedBolus $it")
+                                    }
                                 }
                         } ?: aapsLogger.error("Error parsing ExtendedBolus json $json")
                     }
                 eventType == TherapyEvent.Type.TEMPORARY_BASAL.text         ->
                     if (config.NSCLIENT) {
                         temporaryBasalFromJson(json)?.let { temporaryBasal ->
-                            repository.runTransactionForResult(SyncNsTemporaryBasalTransaction(temporaryBasal, invalidateByNsOnly = false))
+                            repository.runTransactionForResult(SyncNsTemporaryBasalTransaction(temporaryBasal))
                                 .doOnError {
                                     aapsLogger.error(LTag.DATABASE, "Error while saving temporary basal", it)
                                     ret = Result.failure(workDataOf("Error" to it.toString()))
@@ -337,13 +346,16 @@ class NSClientAddUpdateWorker(
                                     result.updatedNsId.forEach {
                                         aapsLogger.debug(LTag.DATABASE, "Updated nsId TemporaryBasal $it")
                                     }
+                                    result.updatedDuration.forEach {
+                                        aapsLogger.debug(LTag.DATABASE, "Updated duration TemporaryBasal $it")
+                                    }
                                 }
                         } ?: aapsLogger.error("Error parsing TemporaryBasal json $json")
                     }
                 eventType == TherapyEvent.Type.PROFILE_SWITCH.text          ->
                     if (sp.getBoolean(R.string.key_ns_receive_profile_switch, false) && buildHelper.isEngineeringMode() || config.NSCLIENT) {
                         profileSwitchFromJson(json, dateUtil, activePlugin)?.let { profileSwitch ->
-                            repository.runTransactionForResult(SyncNsProfileSwitchTransaction(profileSwitch, invalidateByNsOnly = false))
+                            repository.runTransactionForResult(SyncNsProfileSwitchTransaction(profileSwitch))
                                 .doOnError {
                                     aapsLogger.error(LTag.DATABASE, "Error while saving ProfileSwitch", it)
                                     ret = Result.failure(workDataOf("Error" to it.toString()))
@@ -369,7 +381,7 @@ class NSClientAddUpdateWorker(
                 eventType == TherapyEvent.Type.APS_OFFLINE.text          ->
                     if (sp.getBoolean(R.string.key_ns_receive_offline_event, false) && buildHelper.isEngineeringMode() || config.NSCLIENT) {
                         offlineEventFromJson(json)?.let { offlineEvent ->
-                            repository.runTransactionForResult(SyncNsOfflineEventTransaction(offlineEvent, invalidateByNsOnly = false))
+                            repository.runTransactionForResult(SyncNsOfflineEventTransaction(offlineEvent))
                                 .doOnError {
                                     aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it)
                                     ret = Result.failure(workDataOf("Error" to it.toString()))
@@ -399,6 +411,9 @@ class NSClientAddUpdateWorker(
                                     }
                                     result.updatedNsId.forEach {
                                         aapsLogger.debug(LTag.DATABASE, "Updated nsId OfflineEvent $it")
+                                    }
+                                    result.updatedDuration.forEach {
+                                        aapsLogger.debug(LTag.DATABASE, "Updated duration OfflineEvent $it")
                                     }
                                 }
                         } ?: aapsLogger.error("Error parsing OfflineEvent json $json")
