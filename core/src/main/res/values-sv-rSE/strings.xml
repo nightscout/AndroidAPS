@@ -2,6 +2,7 @@
 <resources>
     <!--    Keys-->
     <!--    General-->
+    <string name="refresh">Uppdatera</string>
     <string name="error">Fel</string>
     <string name="not_set_short">Ej vald</string>
     <string name="failedupdatebasalprofile">Lyckades inte uppdatera basalprofilen</string>
@@ -17,6 +18,7 @@
     <string name="connected">Ansluten</string>
     <string name="disconnected">Frånkopplad</string>
     <string name="disconnecting">Kopplar från</string>
+    <string name="waiting_for_disconnection">Väntar på frånkoppling</string>
     <string name="androidaps_start">AndroidAPS startad</string>
     <string name="formatinsulinunits1">%1$.1fU</string>
     <string name="formatinsulinunits">%1$.2fU</string>
@@ -61,6 +63,8 @@
     <string name="eventtype">Händelsetyp</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
+    <string name="shortgram">g</string>
+    <string name="shortpercent">%</string>
     <string name="advancedsettings_title">Avancerade inställningar</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">Bluetooth-övervakare</string>
@@ -70,26 +74,38 @@
     <string name="no">Nej</string>
     <string name="loopdisabled">LOOP INAKTIVERAD PGA BEGRÄNSNINGAR</string>
     <string name="bolusdelivered">Bolus %1$.2f enheter levererat</string>
+    <string name="virtualpump_resultok">OK</string>
     <string name="novalidbasalrate">Ingen giltig data om temp basaler fanns i pumpen</string>
     <string name="limitingmaxiob">Begränsar max IOB till %1$.1f pga %2$s</string>
     <string name="unsafeusage">osäker användning</string>
     <string name="pump_unreachable">Pumpen kan inte nås</string>
+    <string name="extended_bolus">Förlängd bolus</string>
     <string name="pump_time_updated">Tiden uppdaterad i pumpen</string>
+    <string name="exit">Avsluta</string>
     <string name="removerecord">Ta bort post</string>
+    <string name="loopisdisabled">Loop är inaktiverad</string>
+    <string name="alarm">Larm</string>
     <string name="disableloop">Inaktivera loop</string>
     <string name="enableloop">Aktivera loop</string>
     <string name="resumeloop">Återuppta loop</string>
     <string name="suspendloop">Pausa loop</string>
+    <string name="duration_min_label">Duration [min]</string>
     <string name="notification">Avisering</string>
     <string name="noprofile">Ingen profil laddad från Nightscout ännu</string>
     <string name="exists">finns</string>
     <string name="notexists">finns inte</string>
     <string name="glucose">Glukos</string>
+    <string name="iob">IOB</string>
+    <string name="cob">COB</string>
     <string name="name_short">Namn:</string>
     <string name="time">Tid</string>
     <string name="ns_wifi_ssids">WiFi nätverksnamn</string>
+    <string name="loading">Laddar…</string>
     <string name="event_time_label">När</string>
+    <string name="notes_label">Anteckning</string>
+    <string name="remove_button">Ta bort</string>
     <string name="addnew">Lägg till</string>
+    <string name="wrong_pump_data">Data kommer från en annan pump. Byt pumpdrivrutin för att återställa.</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Max basal: %1$.2f E/h pga %2$s</string>
     <string name="pumplimit">pumpbegränsning</string>
@@ -105,6 +121,7 @@
     <string name="dismiss">TA BORT</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Enheten stöder inte BLE.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy stöds inte, eller så är enheten inte parkopplad.</string>
     <string name="ble_not_enabled">Bluetooth är avstängt.</string>
     <string name="location_not_found_title">Platsdata är inte aktiverat</string>
     <string name="location_not_found_message">För att Bluetooth ska fungera med nyare enheter, måste platsdata vara aktiverat. AAPS sparar inte din plats och det kan stängas av efter att enheten har parkopplats.</string>
@@ -155,6 +172,7 @@
     <!--    TDD-->
     <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fU</b> Bol: <b>%3$.2fU</b> Bas: <b>%4$.2fU(%5$.0f%%)</b>]]></string>
     <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fU</b> Bol: <b>%3$.2fU</b> Bas: <b>%4$.2fU(%5$.0f%%)</b> KH: <b>%6$.0fg</b>]]></string>
+    <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> om <b>%3$d</b> dagar<br>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">BG-kontroll</string>
     <string name="careportal_mbg">Manuellt BG eller kalibrering</string>
@@ -165,6 +183,8 @@
     <string name="careportal_pumpsitechange">Byte pumpkanyl</string>
     <string name="careportal_cgmsensorinsert">Byte CGM-sensor</string>
     <string name="careportal_cgmsensorstart">Start CGM-sensor</string>
+    <string name="careportal_cgm_sensor_stop">Stoppa CGM-sensor</string>
+    <string name="careportal_dad_alert">Diabeteshundlarm</string>
     <string name="careportal_insulincartridgechange">Byte insulinreservoar</string>
     <string name="careportal_profileswitch">Profilbyte</string>
     <string name="careportal_snackbolus">Mellanmålsbolus</string>
@@ -177,6 +197,7 @@
     <string name="careportal_openapsoffline">OpenAPS Offline</string>
     <string name="careportal_pumpbatterychange">Byte pumpbatteri</string>
     <string name="careportal_temporarytarget">Temp mål</string>
+    <string name="careportal_temporarytargetvalue">Temp målvärde</string>
     <string name="careportal_temporarytargetcancel">Avbryt temp mål</string>
     <string name="boluswizard">Kalkylator</string>
     <string name="glucosetype_finger">Finger</string>
@@ -189,6 +210,12 @@
     <string name="wear">Klocka (Wear)</string>
     <string name="automation">Automation</string>
     <string name="custom">Anpassad</string>
+    <string name="pump">Pump</string>
+    <string name="loop">Loop</string>
+    <string name="ns">NS</string>
+    <string name="record">Post</string>
+    <string name="reading_pump_history">Läser historik från pumpen</string>
+    <string name="pump_icon">Pumpikon</string>
     <!--    Command-->
     <string name="connectiontimedout">Anslutningen tog för lång tid</string>
     <!--    PumpEnactResult-->
@@ -222,6 +249,7 @@
     <string name="format_hour_minute">%1$dh %2$dm</string>
     <string name="mute5min">Tysta i 5 minuter</string>
     <!-- Maintenance -->
+    <string name="metadata_label_format">Filformat</string>
     <string name="metadata_label_created_at">Skapad</string>
     <string name="metadata_label_aaps_version">AAPS-version</string>
     <string name="metadata_label_aaps_flavour">Build-variant</string>
@@ -260,7 +288,131 @@
     <string name="running_invalid_version">Du kör en ogiltig version. Loop avstängd!</string>
     <string name="versionavailable">Version %1$s tillgänglig</string>
     <!-- Permissions -->
+    <string name="alert_dialog_storage_permission_text">Starta om telefonen eller AndroidAPS från systeminställningar,\nannars kommer AndroidAPS inte kunna logga fel (viktigt att kunna spåra och verifiera att algoritmerna fungerar korrekt)!</string>
     <!-- WeekdayPicker -->
+    <string name="monday_short">M</string>
+    <string name="tuesday_short">T</string>
+    <string name="wednesday_short">O</string>
+    <string name="thursday_short">T</string>
+    <string name="friday_short">F</string>
+    <string name="saturday_short">L</string>
+    <string name="sunday_short">S</string>
     <!-- User Entry -->
+    <string name="uel_bolus">BOLUS</string>
+    <string name="uel_bolus_advisor">BOLUS KALKYLATOR</string>
+    <string name="uel_extended_bolus">FÖRLÄNGD BOLUS</string>
+    <string name="uel_superbolus_tbr">SUPERBOLUS TEMPBASAL</string>
+    <string name="uel_carbs">KH</string>
+    <string name="uel_extended_carbs">FÖRLÄNGDA KH</string>
+    <string name="uel_temp_basal">TEMP BASAL</string>
+    <string name="uel_tt">TEMP MÅL</string>
+    <string name="uel_new_profile">NY PROFIL</string>
+    <string name="uel_clone_profile">KLONA PROFIL</string>
+    <string name="uel_store_profile">SPARA PROFIL</string>
+    <string name="uel_profile_switch">PROFILBYTE</string>
+    <string name="uel_profile_switch_cloned">PROFILBYTE KLONAT</string>
+    <string name="uel_closed_loop_mode">CLOSED LOOP-LÄGE</string>
+    <string name="uel_lgs_loop_mode">LGS LOOP-LÄGE</string>
+    <string name="uel_open_loop_mode">OPEN LOOP-LÄGE</string>
+    <string name="uel_loop_disabled">LOOP INAKTIVERAD</string>
+    <string name="uel_loop_enabled">LOOP AKTIVERAD</string>
+    <string name="uel_reconnect">ÅTERANSLUT</string>
+    <string name="uel_disconnect">KOPPLA IFRÅN</string>
+    <string name="uel_resume">ÅTERUPPTA</string>
+    <string name="uel_suspend">PAUSA</string>
+    <string name="uel_hw_pump_allowed">HW PUMP TILLÅTEN</string>
+    <string name="uel_clear_pairing_keys">RADERA PARKOPPLINGSNYCKLAR</string>
+    <string name="uel_accepts_temp_basal">TILLÅTER TEMP BASAL</string>
+    <string name="uel_cancel_temp_basal">AVBRYT TEMP BASAL</string>
+    <string name="uel_cancel_bolus">AVBRYT BOLUS</string>
+    <string name="uel_cancel_extended_bolus">AVBRYT FÖRLÄNGD BOLUS</string>
+    <string name="uel_cancel_tt">AVBRYT TEMP MÅL</string>
+    <string name="uel_careportal">CAREPORTAL</string>
+    <string name="uel_site_change">NÅLBYTE</string>
+    <string name="uel_reservoir_change">RESERVOARBYTE</string>
+    <string name="uel_calibration">KALIBRERING</string>
+    <string name="uel_prime_bolus">FÖRFYLLNINGSBOLUS</string>
+    <string name="uel_treatment">BEHANDLING</string>
+    <string name="uel_careportal_ns_refresh">HÄMTA CAREPORTAL NS</string>
+    <string name="uel_profile_switch_ns_refresh">HÄMTA PROFILBYTEN NS</string>
+    <string name="uel_treatments_ns_refresh">HÄMTA BEHANDLINGAR NS</string>
+    <string name="uel_tt_ns_refresh">HÄMTA TEMP MÅL NS</string>
+    <string name="uel_automation_removed">AUTOMATION BORTTAGEN</string>
+    <string name="uel_bg_removed">BG BORTTAGET</string>
+    <string name="uel_careportal_removed">CAREBORTAL BORTTAGEN</string>
+    <string name="uel_bolus_removed">BOLUS BORTTAGEN</string>
+    <string name="uel_carbs_removed">KH BORTTAGNA</string>
+    <string name="uel_temp_basal_removed">TEMP BASAL BORTTAGEN</string>
+    <string name="uel_extended_bolus_removed">FÖRLÄNGD BOLUS BORTTAGEN</string>
+    <string name="uel_food">MAT</string>
+    <string name="uel_food_removed">MAT BORTTAGEN</string>
+    <string name="uel_profile_removed">PROFIL BORTTAGEN</string>
+    <string name="uel_profile_switch_removed">PROFILBYTE BORTTAGET</string>
+    <string name="uel_restart_events_removed">OMSTARTER BORTTAGNA</string>
+    <string name="uel_treatment_removed">BEHANDLING BORTTAGEN</string>
+    <string name="uel_tt_removed">TEMP MÅL BORTTAGET</string>
+    <string name="uel_ns_paused">NS PAUSAT</string>
+    <string name="uel_ns_resume">ÅTERUPPTA NS</string>
+    <string name="uel_ns_queue_cleared">NS KÖ TÖMD</string>
+    <string name="uel_ns_settings_copied">NS INSTÄLLNINGAR KOPIERADE</string>
+    <string name="uel_error_dialog_ok">FELDIALOG OK</string>
+    <string name="uel_error_dialog_mute">FELDIALOG SNOOZAD </string>
+    <string name="uel_error_dialog_mute_5min">FELDIALOG SNOOZAD 5 MIN</string>
+    <string name="uel_objective_started">MÅL STARTAT</string>
+    <string name="uel_objective_unstarted">MÅL EJ STARTAT</string>
+    <string name="uel_objectives_skipped">MÅL SKIPPAT</string>
+    <string name="uel_stat_reset">ÅTERSTÄLL STATISTIK</string>
+    <string name="uel_delete_logs">RADERA LOGGAR</string>
+    <string name="uel_delete_future_treatments">RADERA FRAMTIDA BEHANDLINGAR</string>
+    <string name="uel_export_settings">EXPORTERA INSTÄLLNINGAR</string>
+    <string name="uel_import_settings">IMPORTERA INSTÄLLNINGAR</string>
+    <string name="uel_reset_databases">ÅTERSTÄLL DATABASERNA</string>
+    <string name="uel_export_databases">EXPORTERA DATABASERNA</string>
+    <string name="uel_import_databases">IMPORTERA DATABASER</string>
+    <string name="uel_otp_export">EXPORTERA OTP</string>
+    <string name="uel_otp_reset">ÅTERSTÄLL OTP</string>
+    <string name="uel_stop_sms">STOPPA SMS</string>
+    <string name="uel_export_csv">EXPORTERA ANVÄNDARINMATNINGAR</string>
+    <string name="uel_start_aaps">STARTA AAPS</string>
+    <string name="uel_exit_aaps">AVSLUTA AAPS</string>
+    <string name="uel_plugin_enabled">INSTICKSMODUL AKTIVERAD</string>
+    <string name="uel_plugin_disabled">INSTICKSMODUL INAKTIVERAD</string>
+    <string name="uel_unknown">OKÄND</string>
+    <string name="ue_string">Sträng</string>
+    <string name="ue_source">Källa</string>
+    <string name="ue_utc_offset">UTC Offset</string>
+    <string name="ue_action">Åtgärd</string>
+    <string name="ue_timestamp">Tidsstämpel</string>
+    <string name="ue_none">Ingen enhet</string>
+    <string name="ue_export_to_csv">Exportera användarposter till Excel (csv)</string>
+    <string name="uel_loop_change">LOOP ÄNDRAD</string>
+    <string name="uel_loop_removed">LOOP BORTTAGEN</string>
+    <string name="uel_other">ANNAT</string>
     <!-- HardLimits -->
+    <string name="profile_low_target">Nedre målvärde för profilen</string>
+    <string name="profile_high_target">Övre målvärde för profilen</string>
+    <string name="temp_target_low_target">Nedre värde för temp mål</string>
+    <string name="temp_target_high_target">Övre värde för temp mål</string>
+    <string name="temp_target_value">Temp målvärde</string>
+    <string name="profile_dia">Profilens DIA</string>
+    <string name="profile_sensitivity_value">Profilens insulinkänslighetsvärde</string>
+    <string name="profile_max_daily_basal_value">Maximal basaldos för profil</string>
+    <string name="current_basal_value">Nuvarande basaldos</string>
+    <string name="profile_carbs_ratio_value">Profilens KH-kvot</string>
+    <string name="valuelimitedto">%1$.2f begränsat till %2$.2f</string>
+    <string name="valueoutofrange">»%1$s« är utanför de hårda gränserna</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f är utanför hårda gränser</string>
+    <string name="basal_value">Basaldos</string>
+    <plurals name="days">
+        <item quantity="one">%1$d dag</item>
+        <item quantity="other">%1$d dagar</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d tim</item>
+        <item quantity="other">%1$d tim</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d min</item>
+        <item quantity="other">%1$d min</item>
+    </plurals>
 </resources>
