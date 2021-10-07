@@ -495,6 +495,7 @@ Eversense-appen.</string>
     <string name="dexcomg5_xdripupload_title">Skicka BG-data till xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">Välj \"640G/Eversense\" som datakälla i xDrip+</string>
     <string name="nsclientbg">NSClient BG</string>
+    <string name="nsclientbgshort">NS BG</string>
     <string name="overview_editquickwizard_usebg">Använd BG</string>
     <string name="overview_editquickwizard_usebolusiob">Använd bolus-IOB</string>
     <string name="overview_editquickwizard_usebasaliob">Använd basal-IOB</string>
