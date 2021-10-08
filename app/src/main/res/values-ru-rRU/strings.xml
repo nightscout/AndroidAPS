@@ -494,6 +494,7 @@
     <string name="dexcomg5_xdripupload_title">Отправить данные СК на xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">В xDrip + выберите источник данных 640g/Eversense</string>
     <string name="nsclientbg">СК с клиента Nightscout</string>
+    <string name="nsclientbgshort">ГК с NS </string>
     <string name="overview_editquickwizard_usebg">Вычисление СК</string>
     <string name="overview_editquickwizard_usebolusiob">Расчет болюсного активного инсулина IOB</string>
     <string name="overview_editquickwizard_usebasaliob">Расчет базального активного инсулина IOB</string>
