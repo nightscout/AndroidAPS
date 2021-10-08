@@ -15,7 +15,7 @@ class MsgSettingUserOptions(
 
     override fun handleMessage(packet: ByteArray) {
         val bytes = getDataBytes(packet, packet.size - 10)
-        danaPump.userOptionsFrompump = bytes.copyOf(bytes.size) // saving pumpDataBytes to use it in MsgSetUserOptions
+        danaPump.userOptionsFromPump = bytes.copyOf(bytes.size) // saving pumpDataBytes to use it in MsgSetUserOptions
         for (pos in bytes.indices) {
             aapsLogger.debug(LTag.PUMPCOMM, "[" + pos + "]" + bytes[pos])
         }

@@ -67,7 +67,7 @@ class MessageHashTableRv2 @Inject constructor(
         put(MsgCheckValue_v2(injector))        // 0xF0F1 CMD_PUMP_CHECK_VALUE
         put(MsgStatusAPS_v2(injector))              // 0xE001 CMD_PUMPSTATUS_APS
         put(MsgSetAPSTempBasalStart_v2(injector, 0, false, false))   // 0xE002 CMD_PUMPSET_APSTEMP
-        put(MsgHistoryEvents_v2(injector))          // 0xE003 CMD_GET_HISTORY
+        put(MsgHistoryEventsV2(injector))          // 0xE003 CMD_GET_HISTORY
         put(MsgSetHistoryEntry_v2(injector, 0, 0, 0, 0))        // 0xE004 CMD_SET_HISTORY_ENTRY
     }
 
