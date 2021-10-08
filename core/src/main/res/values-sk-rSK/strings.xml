@@ -403,6 +403,7 @@
     <string name="valueoutofrange">»%1$s« je mimo pevne nastavené limity</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f je mimo pevne nastavených limitov</string>
     <string name="basal_value">Hodnota bazálu</string>
+    <string name="nsclient_version_does_not_match">Verzia NSClienta nesúhlasí z verziou AndroidAPS. Prosím aktualizujte si ju.</string>
     <plurals name="days">
         <item quantity="one">%1$d deň</item>
         <item quantity="few">%1$d dní</item>
