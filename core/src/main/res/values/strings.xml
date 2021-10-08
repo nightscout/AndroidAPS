@@ -496,6 +496,7 @@
     <string name="valueoutofrange">»%1$s« is out of hard limits</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f is out of hard limits</string>
     <string name="basal_value">Basal value</string>
+    <string name="nsclient_version_does_not_match">NSClient version doesn\'t match to AndroidAPS. Please update.</string>
 
     <plurals name="days">
         <item quantity="one">%1$d day</item>
