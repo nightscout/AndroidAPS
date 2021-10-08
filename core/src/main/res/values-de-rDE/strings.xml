@@ -403,6 +403,7 @@
     <string name="valueoutofrange">»%1$s« ist außerhalb der fest programmierten Grenzen</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f ist außerhalb der fest programmierten Grenzen</string>
     <string name="basal_value">Basal-Wert</string>
+    <string name="nsclient_version_does_not_match">Die Versionen von NSClient und AndroidAPS passen nicht zueinander. Führe bitte ein Update durch.</string>
     <plurals name="days">
         <item quantity="one">%1$d Tag</item>
         <item quantity="other">%1$d Tage</item>
