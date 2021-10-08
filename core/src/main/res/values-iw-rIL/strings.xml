@@ -403,6 +403,7 @@
     <string name="valueoutofrange">»הערך %1$s« מחוץ לתחום הקשיח</string>
     <string name="value_out_of_hard_limits">»הערך %1$s« %2$.2f מחוץ לתחום הקשיח</string>
     <string name="basal_value">ערך בזאלי</string>
+    <string name="nsclient_version_does_not_match">גרסת NSClient לא תואמת את גרסת AndroidAPS. נא לעדכן.</string>
     <plurals name="days">
         <item quantity="one">%1$d יום</item>
         <item quantity="two">%1$d ימים</item>
