@@ -78,7 +78,6 @@
     <string name="overview">Privire de ansamblu</string>
     <string name="treatments">Tratamente</string>
     <string name="virtualpump">Pompă virtuală</string>
-    <string name="careportal">Careportal</string>
     <string name="configbuilder_pump">Pompă</string>
     <string name="configbuilder_pump_description">Ce pompă doriți să folosiți cu AndroidAPS?</string>
     <string name="configbuilder_profile">Profil</string>
