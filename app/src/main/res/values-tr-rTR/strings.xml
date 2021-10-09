@@ -70,7 +70,6 @@
     <string name="overview">Genel Bakış</string>
     <string name="treatments">Tedaviler</string>
     <string name="virtualpump">Sanal pompa</string>
-    <string name="careportal">Careportal</string>
     <string name="configbuilder_pump">Pompa</string>
     <string name="configbuilder_pump_description">Hangi pompa ile AndroidAPS kullanmak istersiniz?</string>
     <string name="configbuilder_profile">Profil</string>
