@@ -74,7 +74,6 @@
     <string name="overview">Επισκόπηση</string>
     <string name="treatments">Θεραπείες</string>
     <string name="virtualpump">Εικονική Αντλία</string>
-    <string name="careportal">Φροντίδα</string>
     <string name="configbuilder_pump">Αντλία</string>
     <string name="configbuilder_pump_description">Ποια αντλία θα θέλατε να χρησιμοποιήσετε με το AndroidAPS;</string>
     <string name="configbuilder_profile">Προφίλ</string>
