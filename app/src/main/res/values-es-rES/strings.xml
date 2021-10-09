@@ -78,7 +78,6 @@
     <string name="overview">Inicio</string>
     <string name="treatments">Tratamientos</string>
     <string name="virtualpump">Bomba virtual</string>
-    <string name="careportal">Portal de Tratamientos</string>
     <string name="configbuilder_pump">Bomba</string>
     <string name="configbuilder_pump_description">¿Qué bomba quieres utilizar con AndroidAPS?</string>
     <string name="configbuilder_profile">Perfil</string>
