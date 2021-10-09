@@ -78,7 +78,6 @@
     <string name="overview">Начало</string>
     <string name="treatments">Терапия</string>
     <string name="virtualpump">Виртуальная помпа</string>
-    <string name="careportal">Портал лечения / назначений</string>
     <string name="configbuilder_pump">помпа</string>
     <string name="configbuilder_pump_description">Какой помпой вы хотели бы пользоваться с AndroidAPS?</string>
     <string name="configbuilder_profile">профиль</string>
