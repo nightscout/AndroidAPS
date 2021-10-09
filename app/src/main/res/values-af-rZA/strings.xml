@@ -72,7 +72,6 @@
     <string name="overview">Oorsig</string>
     <string name="treatments">Behandelings</string>
     <string name="virtualpump">Virtuele Pomp</string>
-    <string name="careportal">Careportal</string>
     <string name="configbuilder_pump">Pomp</string>
     <string name="configbuilder_pump_description">Watter pomp wil jy gebruik met AndroidAPS?</string>
     <string name="configbuilder_profile">Profiel</string>
