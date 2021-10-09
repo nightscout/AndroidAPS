@@ -78,7 +78,6 @@
     <string name="overview">Prehľad</string>
     <string name="treatments">Ošetrenia</string>
     <string name="virtualpump">Virtuálna pumpa</string>
-    <string name="careportal">Starostlivosť</string>
     <string name="configbuilder_pump">Pumpa</string>
     <string name="configbuilder_pump_description">Akú pumpu chcete používať s AndroidAPS?</string>
     <string name="configbuilder_profile">Profil</string>
