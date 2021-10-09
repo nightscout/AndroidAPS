@@ -5,7 +5,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definitio
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.AlertUtil
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.byValue
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.Flag
 import java.nio.ByteBuffer
 import java.util.*
 import kotlin.experimental.and
@@ -20,7 +19,7 @@ class DefaultStatusResponse(
     private var last4bytes = ByteBuffer.wrap(byteArrayOf(encoded[6], encoded[7], encoded[8], encoded[9])).int
 
     val podStatus: PodStatus = byValue((encoded[1] and 0x0f), PodStatus.UNKNOWN)
-    val deliveryStatus: DeliveryStatus = byValue(( (encoded[1].toInt() and 0xff) shr 4 and 0x0f).toByte(), DeliveryStatus.UNKNOWN)
+    val deliveryStatus: DeliveryStatus = byValue(((encoded[1].toInt() and 0xff) shr 4 and 0x0f).toByte(), DeliveryStatus.UNKNOWN)
 
     val totalPulsesDelivered: Short = (first4bytes ushr 11 ushr 4 and 0x1FFF).toShort()
     val sequenceNumberOfLastProgrammingCommand: Short = (first4bytes ushr 11 and 0X0F).toShort()

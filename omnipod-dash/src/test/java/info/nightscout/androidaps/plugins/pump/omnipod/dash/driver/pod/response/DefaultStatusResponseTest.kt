@@ -106,17 +106,17 @@ class DefaultStatusResponseTest {
     }
 
     /** response (hex) 1D990714201F0042ED8801DE
-        Status response: 29
-        Pod status: RUNNING_BELOW_MIN_VOLUME
-        Basal active: true
-        Temp Basal active: false
-        Immediate bolus active: false
-        Extended bolus active: true
-        Bolus pulses remaining: 31
-        sequence number of last programing command: 4
-        Total full pulses delivered: 3624
-        Full reservoir pulses remaining: 392
-        Time since activation: 4283
+     Status response: 29
+     Pod status: RUNNING_BELOW_MIN_VOLUME
+     Basal active: true
+     Temp Basal active: false
+     Immediate bolus active: false
+     Extended bolus active: true
+     Bolus pulses remaining: 31
+     sequence number of last programing command: 4
+     Total full pulses delivered: 3624
+     Full reservoir pulses remaining: 392
+     Time since activation: 4283
      */
     @Test @Throws(DecoderException::class) fun testValidResponseReservoirPulsesRemaining() {
         val encoded = Hex.decodeHex("1D990714201F0042ED8801DE")
@@ -136,17 +136,17 @@ class DefaultStatusResponseTest {
     }
 
     /** response (hex) 1d68002601f400002bff0368
-    Status response: 29
-    Pod status: RUNNING_BELOW_MIN_VOLUME
-    Basal active: true
-    Temp Basal active: false
-    Immediate bolus active: false
-    Extended bolus active: true
-    Bolus pulses remaining: 31
-    sequence number of last programing command: 4
-    Total full pulses delivered: 3624
-    Full reservoir pulses remaining: 392
-    Time since activation: 4283
+     Status response: 29
+     Pod status: RUNNING_BELOW_MIN_VOLUME
+     Basal active: true
+     Temp Basal active: false
+     Immediate bolus active: false
+     Extended bolus active: true
+     Bolus pulses remaining: 31
+     sequence number of last programing command: 4
+     Total full pulses delivered: 3624
+     Full reservoir pulses remaining: 392
+     Time since activation: 4283
      */
     @Test @Throws(DecoderException::class) fun testValidResponseBolusPulsesRemaining3() {
         val encoded = Hex.decodeHex("1d68002601f400002bff0368")
@@ -157,17 +157,17 @@ class DefaultStatusResponseTest {
         Assert.assertEquals(0, response.activeAlerts.size)
     }
     /** response (hex) 1d28002e91e400002fff8256
-    Status response: 29
-    Pod status: RUNNING_BELOW_MIN_VOLUME
-    Basal active: true
-    Temp Basal active: false
-    Immediate bolus active: false
-    Extended bolus active: true
-    Bolus pulses remaining: 31
-    sequence number of last programing command: 4
-    Total full pulses delivered: 3624
-    Full reservoir pulses remaining: 392
-    Time since activation: 4283
+     Status response: 29
+     Pod status: RUNNING_BELOW_MIN_VOLUME
+     Basal active: true
+     Temp Basal active: false
+     Immediate bolus active: false
+     Extended bolus active: true
+     Bolus pulses remaining: 31
+     sequence number of last programing command: 4
+     Total full pulses delivered: 3624
+     Full reservoir pulses remaining: 392
+     Time since activation: 4283
      */
     @Test @Throws(DecoderException::class) fun testValidResponseBolusPulsesRemaining4() {
         val encoded = Hex.decodeHex("1d28002e91e400002fff8256")

@@ -9,9 +9,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.GetVersionCommand.Companion.DEFAULT_UNIQUE_ID
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants.Companion.MAX_POD_LIFETIME
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants.Companion.POD_EXPIRATION_ALERT_HOURS
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants.Companion.POD_EXPIRATION_ALERT_HOURS_DURATION
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants.Companion.POD_EXPIRATION_IMMINENT_ALERT_HOURS
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants.Companion.POD_EXPIRATION_ALERT_HOURS
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
