@@ -79,7 +79,6 @@ Eversense-appen.</string>
     <string name="overview">Översikt</string>
     <string name="treatments">Behandlingar</string>
     <string name="virtualpump">Virtuell pump</string>
-    <string name="careportal">Careportal</string>
     <string name="configbuilder_pump">Pump</string>
     <string name="configbuilder_pump_description">Vilken pump vill du använda med AndroidAPS?</string>
     <string name="configbuilder_profile">Profil</string>
