@@ -77,7 +77,6 @@
     <string name="overview">Apžvalga</string>
     <string name="treatments">Terapija</string>
     <string name="virtualpump">Virtuali pompa</string>
-    <string name="careportal">Priežiūra</string>
     <string name="configbuilder_pump">Pompa</string>
     <string name="configbuilder_pump_description">Kokią pompą naudosite su AndroidAPS?</string>
     <string name="configbuilder_profile">Profilis</string>
