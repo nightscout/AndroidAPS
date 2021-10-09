@@ -71,7 +71,6 @@
     <string name="overview">首页概览</string>
     <string name="treatments">治疗</string>
     <string name="virtualpump">虚拟泵</string>
-    <string name="careportal">护理记录</string>
     <string name="configbuilder_pump">胰岛素泵</string>
     <string name="configbuilder_pump_description">你想用 AndroidAPS连接哪个胰岛素泵？</string>
     <string name="configbuilder_profile">配置文件</string>
