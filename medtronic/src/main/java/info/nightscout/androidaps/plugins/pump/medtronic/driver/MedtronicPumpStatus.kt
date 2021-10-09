@@ -7,6 +7,7 @@ import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDevic
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
+import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryTBR
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.BasalProfileStatus
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.BatteryType
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType
@@ -32,7 +33,7 @@ class MedtronicPumpStatus @Inject constructor(private val resourceHelper: Resour
     var pumpFrequency: String? = null
     var maxBolus: Double? = null
     var maxBasal: Double? = null
-    var runningTBR: info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntry? = null
+    var runningTBR: PumpDbEntryTBR? = null
 
     // statuses
     var pumpDeviceState = PumpDeviceState.NeverContacted

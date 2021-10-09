@@ -10,6 +10,7 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntry
+import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryBolus
 import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryTBR
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil
@@ -490,17 +491,17 @@ class MedtronicHistoryData @Inject constructor(
             var temporaryId: Long? = null
 
             if (!multiwave) {
-                val entryWithTempId = findDbEntry(bolus, boluses)
+                val entryWithTempId = findDbEntry(bolus, boluses as MutableList<PumpDbEntry>) as PumpDbEntryBolus?
 
                 aapsLogger.debug(LTag.PUMP, "DD: entryWithTempId=$entryWithTempId")
 
                 if (entryWithTempId != null) {
-                    aapsLogger.debug(LTag.PUMP, String.format("DD: entryWithTempId.bolusData=%s", if (entryWithTempId.bolusData == null) "null" else entryWithTempId.bolusData))
+                    //aapsLogger.debug(LTag.PUMP, String.format("DD: entryWithTempId.bolusData=%s", if (entryWithTempId.bolusData == null) "null" else entryWithTempId.bolusData))
 
                     temporaryId = entryWithTempId.temporaryId
                     pumpSyncStorage.removeBolusWithTemporaryId(temporaryId)
                     boluses.remove(entryWithTempId)
-                    type = entryWithTempId.bolusData!!.bolusType
+                    type = entryWithTempId.bolusType
                 }
             }
 
@@ -619,7 +620,7 @@ class MedtronicHistoryData @Inject constructor(
                 aapsLogger.debug(LTag.PUMP, "DD: tempBasalProcessDTO.itemOne: " + gson.toJson(tempBasalProcessDTO.itemOne))
                 aapsLogger.debug(LTag.PUMP, "DD: tempBasalProcessDTO.itemTwo: " + (if (tempBasalProcessDTO.itemTwo == null) "null" else gson.toJson(tempBasalProcessDTO.itemTwo!!)))
 
-                val entryWithTempId = findDbEntry(tempBasalProcessDTO.itemOne, tbrRecords)
+                val entryWithTempId = findDbEntry(tempBasalProcessDTO.itemOne, tbrRecords  as MutableList<PumpDbEntry>) as PumpDbEntryTBR?
 
                 aapsLogger.debug(LTag.PUMP, "DD: entryWithTempId: " + (if (entryWithTempId == null) "null" else entryWithTempId.toString()))
 
@@ -697,16 +698,16 @@ class MedtronicHistoryData @Inject constructor(
                         if (isTBRActive(startTimestamp = tryToGetByLocalTime(tempBasalProcessDTO.atechDateTime),
                                 durationSeconds = tempBasalProcessDTO.durationAsSeconds)) {
                             if (medtronicPumpStatus.runningTBR == null) {
-                                medtronicPumpStatus.runningTBR = info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntry(0L,
-                                    tryToGetByLocalTime(tempBasalProcessDTO.atechDateTime),
-                                    medtronicPumpStatus.pumpType,
-                                    medtronicPumpStatus.serialNumber,
-                                    null,
-                                    PumpDbEntryTBR(rate = tbrEntry.insulinRate,
+                                medtronicPumpStatus.runningTBR = PumpDbEntryTBR(
+                                    temporaryId = 0L,
+                                    date = tryToGetByLocalTime(tempBasalProcessDTO.atechDateTime),
+                                    pumpType = medtronicPumpStatus.pumpType,
+                                    serialNumber = medtronicPumpStatus.serialNumber,
+                                    entry = PumpDbEntryTBR(rate = tbrEntry.insulinRate,
                                         isAbsolute = !tbrEntry.isPercent,
                                         durationInSeconds = tempBasalProcessDTO.durationAsSeconds,
                                         tbrType = PumpSync.TemporaryBasalType.NORMAL),
-                                    tempBasalProcessDTO.pumpId)
+                                    pumpId = tempBasalProcessDTO.pumpId)
                             }
                         }
                     } else {
@@ -717,10 +718,12 @@ class MedtronicHistoryData @Inject constructor(
         } // collection
     }
 
-    fun isTBRActive(dbEntry: PumpDbEntry): Boolean {
+
+
+    fun isTBRActive(dbEntry: PumpDbEntryTBR): Boolean {
         return isTBRActive(
             startTimestamp = dbEntry.date,
-            durationSeconds = dbEntry.tbrData!!.durationInSeconds)
+            durationSeconds = dbEntry.durationInSeconds)
     }
 
     fun isTBRActive(startTimestamp: Long, durationSeconds: Int): Boolean {
