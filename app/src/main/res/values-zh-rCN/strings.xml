@@ -195,7 +195,6 @@
     <string name="ongoingnotificaction">持续的的通知</string>
     <string name="old_data">旧数据</string>
     <string name="sms_minago">%1$d分钟前</string>
-    <string name="localprofile">本地配置文件</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">%1$d 元素的数组. \n 实际值:</string>
     <string name="openapsma_autosensdata_label">Autosens 数据</string>
