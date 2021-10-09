@@ -510,7 +510,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
             // Omnipod only reports reservoir level when there's < 1023 pulses left
             return podStateManager.pulsesRemaining?.let {
-                it * 0.05
+                it * PodConstants.POD_PULSE_BOLUS_UNITS
             } ?: 75.0
         }
 
@@ -724,7 +724,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     private fun estimateBolusDeliverySeconds(requestedBolusAmount: Double): Long {
-        return ceil(requestedBolusAmount / 0.05).toLong() * 2 + 3
+        return ceil(requestedBolusAmount / PodConstants.POD_PULSE_BOLUS_UNITS).toLong() * 2 + 3
     }
 
     private fun pumpSyncBolusStart(
