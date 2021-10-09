@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import android.text.format.DateFormat
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.activities.ErrorHelperActivity.Companion.runAlarm
 import info.nightscout.androidaps.data.DetailedBolusInfo
@@ -13,6 +14,7 @@ import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.events.EventTempBasalChange
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes
+import info.nightscout.androidaps.extensions.toStringFull
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -43,6 +45,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.mapProfileToBas
 import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.androidaps.queue.commands.CustomCommand
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.DecimalFormatter.to2Decimal
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.TimeChangeType
@@ -1013,8 +1016,33 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     override fun shortStatus(veryShort: Boolean): String {
-        // TODO
-        return "TODO"
+        if (!podStateManager.isActivationCompleted) {
+            return resourceHelper.gs(R.string.omnipod_common_short_status_no_active_pod)
+        }
+        var ret = ""
+        if (podStateManager.lastUpdatedSystem != 0L) {
+            val agoMsec: Long = System.currentTimeMillis() - podStateManager.lastUpdatedSystem
+            val agoMin = (agoMsec / 60.0 / 1000.0).toInt()
+            ret += resourceHelper.gs(R.string.omnipod_common_short_status_last_connection, agoMin) + "\n"
+        }
+        podStateManager.lastBolus?.run {
+            ret += resourceHelper.gs(
+                R.string.omnipod_common_short_status_last_bolus, to2Decimal(this.deliveredUnits() ?: this.requestedUnits),
+                DateFormat.format("HH:mm", Date(this.startTime))
+            ) + "\n"
+        }
+        val (temporaryBasal, extendedBolus, _, profile) = pumpSync.expectedPumpState()
+        temporaryBasal?.run {
+            ret += resourceHelper.gs(
+                R.string.omnipod_common_short_status_temp_basal,
+                this.toStringFull(dateUtil)
+            ) + "\n"
+        }
+        ret += resourceHelper.gs(
+            R.string.omnipod_common_short_status_reservoir,
+            podStateManager.pulsesRemaining?.let { reservoirLevel.toString() } ?: "50+"
+        )
+        return ret.trim()
     }
 
     override val isFakingTempsByExtendedBoluses: Boolean
