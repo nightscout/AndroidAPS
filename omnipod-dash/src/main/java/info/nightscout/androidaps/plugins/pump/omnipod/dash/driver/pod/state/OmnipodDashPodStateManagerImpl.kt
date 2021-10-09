@@ -629,8 +629,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     override fun connectionSuccessRatio(): Float {
         if (connectionAttempts == 0) {
             return 0.0F
-        }
-        else if (connectionAttempts <= successfulConnections) {
+        } else if (connectionAttempts <= successfulConnections) {
             // Prevent bogus quality > 1 during initialisation
             return 1.0F
         }
