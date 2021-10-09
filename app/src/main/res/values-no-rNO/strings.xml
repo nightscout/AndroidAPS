@@ -78,7 +78,6 @@
     <string name="overview">Oversikt</string>
     <string name="treatments">Behandlinger</string>
     <string name="virtualpump">Virtuell pumpe</string>
-    <string name="careportal">Careportal</string>
     <string name="configbuilder_pump">Pumpe</string>
     <string name="configbuilder_pump_description">Hvilken pumpe ønsker du å bruke sammen med AndroidAPS?</string>
     <string name="configbuilder_profile">Profil</string>
