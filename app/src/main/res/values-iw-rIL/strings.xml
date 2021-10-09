@@ -78,7 +78,6 @@
     <string name="overview">סקירה כללית</string>
     <string name="treatments">טיפולים</string>
     <string name="virtualpump">משאבה וירטואלית</string>
-    <string name="careportal">פורטל טיפולים</string>
     <string name="configbuilder_pump">משאבה</string>
     <string name="configbuilder_pump_description">עם איזו משאבה אתם מעוניינים להשתמש ב-AndroidAPS?</string>
     <string name="configbuilder_profile">פרופיל</string>
