@@ -78,7 +78,6 @@
     <string name="overview">Общ</string>
     <string name="treatments">Лечения</string>
     <string name="virtualpump">Виртуална помпа</string>
-    <string name="careportal">Careportal</string>
     <string name="configbuilder_pump">Помпа</string>
     <string name="configbuilder_pump_description">Каква помпа използвате с AndroidAPS?</string>
     <string name="configbuilder_profile">Профил</string>
