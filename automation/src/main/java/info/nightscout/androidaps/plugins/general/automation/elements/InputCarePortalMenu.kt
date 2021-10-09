@@ -22,7 +22,7 @@ class InputCarePortalMenu(private val resourceHelper: ResourceHelper) : Element(
         QUESTION (TherapyEvent.Type.QUESTION),
         ANNOUNCEMENT (TherapyEvent.Type.ANNOUNCEMENT);
 
-        @get:StringRes val stringRes: Int
+        @get:StringRes val stringResWithValue: Int
             get() = when (this) {
                 NOTE            -> R.string.careportal_note_message
                 EXERCISE        -> R.string.careportal_exercise_message
@@ -30,6 +30,13 @@ class InputCarePortalMenu(private val resourceHelper: ResourceHelper) : Element(
                 ANNOUNCEMENT    -> R.string.careportal_announcement_message
             }
 
+        @get:StringRes val stringRes: Int
+            get() = when (this) {
+                NOTE            -> R.string.careportal_note
+                EXERCISE        -> R.string.careportal_exercise
+                QUESTION        -> R.string.careportal_question
+                ANNOUNCEMENT    -> R.string.careportal_announcement
+            }
         @get:DrawableRes val drawableRes: Int
             get() = when (this) {
                 NOTE            -> R.drawable.ic_cp_note

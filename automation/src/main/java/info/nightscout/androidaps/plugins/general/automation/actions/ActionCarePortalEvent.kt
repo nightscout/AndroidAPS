@@ -49,7 +49,7 @@ class ActionCarePortalEvent(injector: HasAndroidInjector) : Action(injector) {
     }
 
     override fun friendlyName(): Int = R.string.careportal
-    override fun shortDescription(): String = resourceHelper.gs(cpEvent.value.stringRes, note.value)
+    override fun shortDescription(): String = resourceHelper.gs(cpEvent.value.stringResWithValue, note.value)
 
     @DrawableRes override fun icon(): Int = cpEvent.value.drawableRes
 
