@@ -257,7 +257,6 @@
     <string name="ongoingnotificaction">התראה מתמשכת</string>
     <string name="old_data">נתונים ישנים</string>
     <string name="sms_minago">לפני %1$d דקות</string>
-    <string name="localprofile">פרופיל מקומי</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">מערך של %1$d אלמנטים. \n ערך נוכחי:</string>
     <string name="openapsma_autosensdata_label">נתוני חישוב רגישות אוטו\'</string>
@@ -751,7 +750,6 @@
     <string name="clone_label">שכפול</string>
     <string name="saveorresetchangesfirst">יש לשמור או לאפס תחילה את השינויים הנוכחיים</string>
     <string name="deletecurrentprofile">למחוק את הפרופיל הנוכחי?</string>
-    <string name="copytolocalprofile">ליצור פרופיל מקומי חדש מפרופיל זה?</string>
     <string name="profilenamecontainsdot">שם הפרופיל מכיל נקודות.\nשם כזה אינו נתמך ע\"י Nightscout \n הפרופיל לא הועלה ל-Nightscout.</string>
     <string name="low_mark_comment">ערך נמוך יותר באזור הטווח (הצגה בלבד)</string>
     <string name="high_mark_comment">ערך גבוה יותר באזור הטווח (הצגה בלבד)</string>
@@ -833,7 +831,6 @@
     <string name="dpvdefaultprofile">פרופיל ברירת מחדל</string>
     <string name="setupwizard_pump_riley_link_status">מצב ריילילינק:</string>
     <string name="filter">סינון</string>
-    <string name="copytolocalprofile_invalid">לא ניתן ליצור פרופיל מקומי. הפרופיל אינו חוקי.</string>
     <string name="cta_dont_kill_my_app_info">לא להשבית את האפליקציה שלי?</string>
     <string name="smscommunicator_report_pump_ureachable_summary">שולח SMS אם מופעל אירוע \"המשאבה אינה נגישה\"</string>
     <string name="smscommunicator_pump_ureachable">דווח שהמשאבה אינה נגישה</string>
@@ -863,7 +860,6 @@
     <string name="ns_upload_summary">פרופילים, בולוסים, פחמימות ומינונים בזאליים זמניים נטענים לנייטסקאוט</string>
     <string name="ns_upload">טעינת נתוני סוכר לנייטסקאוט</string>
     <string name="ns_receive_profile_store">אחזר פרופילים שמורים</string>
-    <string name="ns_receive_profile_store_summary">סינכרון פרופילים מעורך הפרופיל של נייטסקאוט לפרופיל מקומי</string>
     <string name="ns_receive_temp_target">קבלת ערכי מטרה זמניים</string>
     <string name="ns_receive_temp_target_summary">קבלת ערכי מטרה זמניים שהוגדרו בנייטסקאוט או ב-NSClient</string>
     <string name="ns_receive_profile_switch">קבלת החלפות פרופיל</string>
