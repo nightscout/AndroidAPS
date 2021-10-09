@@ -252,7 +252,6 @@
     <string name="ongoingnotificaction">Nuolatinis pranešimas</string>
     <string name="old_data">SENI DUOMENYS</string>
     <string name="sms_minago">prieš %1$dmin</string>
-    <string name="localprofile">Vietinis profilis</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">%1$d elementų masyvas. \naktuali vertė:</string>
     <string name="openapsma_autosensdata_label">Autosens duomenys</string>
@@ -730,7 +729,6 @@
     <string name="clone_label">Klonuoti</string>
     <string name="saveorresetchangesfirst">Pirmiausia išsaugoti arba anuliuoti dabartinius pokyčius</string>
     <string name="deletecurrentprofile">Ištrinti esamą profilį?</string>
-    <string name="copytolocalprofile">Kurti naują vietinį profilį iš šito?</string>
     <string name="profilenamecontainsdot">Profilio pavadinime yra taškų.\nŠios funkcijos NS nepalaiko.\nProfilis neįkeltas į NS.</string>
     <string name="low_mark_comment">Mažiausia tikslinės srities vertė (tik rodymui)</string>
     <string name="high_mark_comment">Didžiausia tikslinės srities vertė (tik rodymui)</string>
@@ -811,7 +809,6 @@
     <string name="dpvdefaultprofile">Numatytasis profilis</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink statusas:</string>
     <string name="filter">Filtruoti</string>
-    <string name="copytolocalprofile_invalid">Nepavyksta sukurti vietinio profilio. Profilis neteisingas.</string>
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Siųsti SMS, jei aptinkamas įrašas apie nepasiekiamą pompą</string>
     <string name="advisoralarm">Pranešti apie laiką valgyti</string>
