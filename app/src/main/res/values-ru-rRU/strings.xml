@@ -256,6 +256,7 @@
     <string name="ongoingnotificaction">текущие уведомления</string>
     <string name="old_data">старые данные</string>
     <string name="sms_minago">%1$d мин. назад</string>
+    <string name="localprofile">Профиль</string>
     <string name="openapsama">Помощник болюса OpenAPS AMA</string>
     <string name="array_of_elements">Массив %1$d элементов. \nActual актуальная величина:</string>
     <string name="openapsma_autosensdata_label">данные autosens</string>
@@ -751,6 +752,7 @@ Context | Edit Context</string>
     <string name="clone_label">Клонировать</string>
     <string name="saveorresetchangesfirst">Сначала сохраните или сбросьте текущие изменения</string>
     <string name="deletecurrentprofile">Удалить текущий профиль?</string>
+    <string name="copytolocalprofile">Создать новый локальный профиль из этого?</string>
     <string name="profilenamecontainsdot">Имя профиля содержит точки.\nЭто не поддерживается NS.\nПрофиль не выгружен в NS.</string>
     <string name="low_mark_comment">Меньшее значение диапазона целевых значений (только для дисплея)</string>
     <string name="high_mark_comment">Большее значение диапазона целевых значений (только для дисплея)</string>
@@ -832,6 +834,7 @@ Context | Edit Context</string>
     <string name="dpvdefaultprofile">Значение для профиля по умолчанию</string>
     <string name="setupwizard_pump_riley_link_status">Статус RileyLink:</string>
     <string name="filter">Фильтр</string>
+    <string name="copytolocalprofile_invalid">Не удается создать локальный профиль. Настройки профиля неправильны.</string>
     <string name="cta_dont_kill_my_app_info">Не закрывать приложение?</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Отправить SMS, если инициируется запись о недоступности помпы</string>
     <string name="smscommunicator_pump_ureachable">Сообщить о недоступности помпы</string>
@@ -861,6 +864,7 @@ Context | Edit Context</string>
     <string name="ns_upload_summary">Профили, болюсы, углеводы, временные базалы закачиваются в NS</string>
     <string name="ns_upload">Передать данные в NS</string>
     <string name="ns_receive_profile_store">Принимать хранилище профилей</string>
+    <string name="ns_receive_profile_store_summary">Синхронизировать профили из редактора NS профиля в локальный профиль</string>
     <string name="ns_receive_temp_target">Получить временные цели</string>
     <string name="ns_receive_temp_target_summary">Принимать временные цели, установленные через NS или NSClient</string>
     <string name="ns_receive_profile_switch">Получать переключения профиля</string>
