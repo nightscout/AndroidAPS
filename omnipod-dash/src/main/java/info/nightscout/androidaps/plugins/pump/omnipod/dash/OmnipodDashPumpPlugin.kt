@@ -731,6 +731,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
         requestedBolusAmount: Double,
         bolusType: DetailedBolusInfo.BolusType
     ): Boolean {
+        require(requestedBolusAmount > 0) {"requestedBolusAmount has to be positive"}
+
         val activeCommand = podStateManager.activeCommand
         if (activeCommand == null) {
             throw IllegalArgumentException(
@@ -1356,6 +1358,10 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 if (confirmation.success) {
                     podStateManager.lastBolus?.run {
                         val deliveredUnits = markComplete()
+                        if (deliveredUnits < 0){
+                            aapsLogger.error(LTag.PUMP, "Negative delivered units!!! $deliveredUnits")
+                            return
+                        }
                         val bolusHistoryEntry = history.getById(historyId)
                         val sync = pumpSync.syncBolusWithPumpId(
                             timestamp = bolusHistoryEntry.createdAt,
