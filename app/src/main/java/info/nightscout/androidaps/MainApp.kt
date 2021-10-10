@@ -6,6 +6,7 @@ import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.os.Build
+import com.uber.rxdogtag.RxDogTag
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import info.nightscout.androidaps.database.AppRepository
@@ -62,6 +63,7 @@ class MainApp : DaggerApplication() {
     override fun onCreate() {
         super.onCreate()
         aapsLogger.debug("onCreate")
+        RxDogTag.install()
         update(this)
 
         var gitRemote: String? = BuildConfig.REMOTE
