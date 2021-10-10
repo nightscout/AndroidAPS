@@ -103,7 +103,14 @@ class DashInsertCannulaViewModel @Inject constructor(
                             pumpSerial = podStateManager.uniqueId?.toString() ?: "n/a"
                         )
 
-                        podStateManager.updateExpirationAlertSettings(expirationReminderEnabled, expirationHours)
+                        val err = podStateManager.updateExpirationAlertSettings(
+                            expirationReminderEnabled,
+                            expirationHours
+                        )
+                            .blockingGet()
+                        err?.let {
+                            logger.warn(LTag.PUMP, "Error updating local alert settings: $err")
+                        }
                         rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED))
                         source.onSuccess(PumpEnactResult(injector).success(true))
                     }

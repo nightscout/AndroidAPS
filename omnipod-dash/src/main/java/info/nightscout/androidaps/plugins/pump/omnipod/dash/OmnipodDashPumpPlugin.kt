@@ -1229,7 +1229,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 expirationReminderEnabled,
                 expirationHours
             ).andThen(
-                podStateManager.updateExpirationAlertSettings(
+                podStateManager.updateLowReservoirAlertSettings(
                     lowReservoirAlertEnabled,
                     lowReservoirAlertUnits
                 )
