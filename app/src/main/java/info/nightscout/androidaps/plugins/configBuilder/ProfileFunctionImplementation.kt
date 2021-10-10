@@ -8,15 +8,18 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.ProfileSwitch
 import info.nightscout.androidaps.database.transactions.InsertOrUpdateProfileSwitch
+import info.nightscout.androidaps.events.EventEffectiveProfileSwitchChanged
 import info.nightscout.androidaps.extensions.fromConstant
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
@@ -34,12 +37,32 @@ class ProfileFunctionImplementation @Inject constructor(
     private val repository: AppRepository,
     private val dateUtil: DateUtil,
     private val config: Config,
-    private val hardLimits: HardLimits
+    private val hardLimits: HardLimits,
+    private val aapsSchedulers: AapsSchedulers,
+    private val fabricPrivacy: FabricPrivacy
 ) : ProfileFunction {
 
     val cache = LongSparseArray<Profile>()
 
     private val disposable = CompositeDisposable()
+
+    init {
+        disposable += rxBus
+            .toObservable(EventEffectiveProfileSwitchChanged::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe(
+                {
+                    for (index in cache.size() - 1 downTo 0) {
+                        if (cache.keyAt(index) > it.startDate) {
+                            aapsLogger.debug(LTag.AUTOSENS, "Removing from profileCache: " + dateUtil.dateAndTimeAndSecondsString(cache.keyAt(index)))
+                            cache.removeAt(index)
+                        } else {
+                            break
+                        }
+                    }
+                }, fabricPrivacy::logException
+            )
+    }
 
     override fun getProfileName(): String =
         getProfileName(System.currentTimeMillis(), customized = true, showRemainingTime = false)
@@ -92,7 +115,7 @@ class ProfileFunctionImplementation @Inject constructor(
         if (sp.getString(R.string.key_units, Constants.MGDL) == Constants.MGDL) GlucoseUnit.MGDL
         else GlucoseUnit.MMOL
 
-    override fun buildProfileSwitch(profileStore: ProfileStore, profileName: String, durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long) : ProfileSwitch {
+    override fun buildProfileSwitch(profileStore: ProfileStore, profileName: String, durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long): ProfileSwitch {
         val pureProfile = profileStore.getSpecificProfile(profileName)
             ?: throw InvalidParameterSpecException(profileName)
         return ProfileSwitch(
