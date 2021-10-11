@@ -14,7 +14,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.joda.time.Duration;
+import org.joda.time.Instant;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -148,6 +150,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
     // variables for handling statuses and history
     private boolean firstRun = true;
     private boolean hasTimeDateOrTimeZoneChanged = false;
+    private Instant lastTimeDateOrTimeZoneUpdate = Instant.ofEpochSecond(0L);
     private final boolean displayConnectionMessages = false;
     private RileyLinkOmnipodService rileyLinkOmnipodService;
     private boolean busy = false;
@@ -958,15 +961,18 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
     public void timezoneOrDSTChanged(TimeChangeType timeChangeType) {
         aapsLogger.info(LTag.PUMP, "Time, Date and/or TimeZone changed. [changeType=" + timeChangeType.name() + ", eventHandlingEnabled=" + aapsOmnipodErosManager.isTimeChangeEventEnabled() + "]");
 
-        if (timeChangeType == TimeChangeType.TimeChanged) {
-            aapsLogger.info(LTag.PUMP, "Ignoring time change because it is not a DST or TZ change");
+        Instant now = Instant.now();
+        if (timeChangeType == TimeChangeType.TimeChanged && now.isBefore(lastTimeDateOrTimeZoneUpdate.plus(Duration.standardDays(1L)))){
+            aapsLogger.info(LTag.PUMP, "Ignoring time change because not a TZ or DST time change and the last one happened less than 24 hours ago.");
             return;
-        } else if (!podStateManager.isPodRunning()) {
+        }
+        if (!podStateManager.isPodRunning()) {
             aapsLogger.info(LTag.PUMP, "Ignoring time change because no Pod is active");
             return;
         }
 
         aapsLogger.info(LTag.PUMP, "DST and/or TimeZone changed event will be consumed by driver");
+        lastTimeDateOrTimeZoneUpdate = now;
         hasTimeDateOrTimeZoneChanged = true;
     }
 
