@@ -174,12 +174,17 @@
     <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fU</b> Bol: <b>%3$.2fU</b> Bas: <b>%4$.2fU (%5$.0f%%)</b> Gluc: <b>%6$.0fg</b>]]></string>
     <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> en <b>%3$d</b> jours<br>]]></string>
     <!--    Translator-->
+    <string name="careportal">Careportal</string>
     <string name="careportal_bgcheck">Contrôle Glycémie</string>
     <string name="careportal_mbg">Gly manuelle/Calib.</string>
     <string name="careportal_announcement">Notification</string>
     <string name="careportal_note">Remarque</string>
     <string name="careportal_question">Question</string>
     <string name="careportal_exercise">Activité Physique</string>
+    <string name="careportal_announcement_message">Annonce : %1$s</string>
+    <string name="careportal_note_message">Note : %1$s</string>
+    <string name="careportal_question_message">Question : %1$s</string>
+    <string name="careportal_exercise_message">Exercice : %1$s</string>
     <string name="careportal_pumpsitechange">Changement de site</string>
     <string name="careportal_cgmsensorinsert">Insertion Capteur MGC</string>
     <string name="careportal_cgmsensorstart">Démarrage Capteur MGC</string>
@@ -403,6 +408,7 @@
     <string name="valueoutofrange">\"%1$s\" est en dehors des limites</string>
     <string name="value_out_of_hard_limits">\"%1$s\" %2$.2f est en dehors des limites</string>
     <string name="basal_value">Valeur de Basal</string>
+    <string name="nsclient_version_does_not_match">La version NSClient ne correspond pas à AndroidAPS. Faites une mise à jour.</string>
     <plurals name="days">
         <item quantity="one">%1$d jour</item>
         <item quantity="other">%1$d jours</item>
