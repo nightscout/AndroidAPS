@@ -829,7 +829,7 @@
     <string name="formatwittddandpct">גיל: %1$.0f יח\' מינון יומי כולל: %2$.0f יח\' %3$d%%</string>
     <string name="formatwithweight">גיל: %1$.0f יח\' משקל: %2$.0f ק\"ג</string>
     <string name="basalpctfromtdd_label">% של הבזאלי</string>
-    <string name="dpvdefaultprofile">פרופיל ברירת מחדל</string>
+    <string name="dpvdefaultprofile">פרופיל ברירת מחדל DPV</string>
     <string name="setupwizard_pump_riley_link_status">מצב ריילילינק:</string>
     <string name="filter">סינון</string>
     <string name="copytolocalprofile_invalid">לא ניתן ליצור פרופיל מקומי. הפרופיל אינו חוקי.</string>
