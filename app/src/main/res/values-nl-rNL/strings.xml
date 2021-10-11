@@ -801,10 +801,10 @@
     <string name="smscommunicator_otp_step3_test_header">3. Test eenmalig wachtwoord (One Time Password)</string>
     <string name="smscommunicator_otp_reset_header">Reset Authentificatie</string>
     <string name="smscommunicator_otp_install_info">Installeer de Authenticator-app op elke volger telefoon die RFC 6238 TOTP tokens ondersteunt. Populaire gratis apps zijn:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">Door de Athentificator te resetten, maak je alle Authentificatie-instellingen van reeds verbonden telefoons ongeldig! Je zult ze opnieuw moeten instellen!</string>
+    <string name="smscommunicator_otp_reset_warning">Door de Authentificator te resetten, maak je alle Authentificatie-instellingen van reeds verbonden telefoons ongeldig! Je zult ze opnieuw moeten instellen!</string>
     <string name="overview_show_predictions">Voorspellingen</string>
     <string name="overview_show_deviationslope">Richtingscoëfficiënt afwijking</string>
-    <string name="authorizationfailed">Authorisatie mislukt</string>
+    <string name="authorizationfailed">Autorisatie mislukt</string>
     <string name="overview_show_absinsulin">Absolute insuline</string>
     <string name="master_password_summary">Het masterwachtwoord wordt gebruikt voor het versleutelen van backups en om de app-beveiligingen te kunnen overschrijven. Onthoud het goed of bewaar het op een veilige plaats.</string>
     <string name="current_master_password">Huidig masterwachtwoord</string>
