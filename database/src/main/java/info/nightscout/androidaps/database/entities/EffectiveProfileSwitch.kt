@@ -14,17 +14,20 @@ import info.nightscout.androidaps.database.interfaces.DBEntryWithTime
 import info.nightscout.androidaps.database.interfaces.TraceableDBEntry
 import java.util.*
 
-@Entity(tableName = TABLE_EFFECTIVE_PROFILE_SWITCHES,
+@Entity(
+    tableName = TABLE_EFFECTIVE_PROFILE_SWITCHES,
     foreignKeys = [ForeignKey(
         entity = EffectiveProfileSwitch::class,
         parentColumns = ["id"],
-        childColumns = ["referenceId"])],
+        childColumns = ["referenceId"]
+    )],
     indices = [
         Index("id"),
         Index("referenceId"),
         Index("timestamp"),
         Index("isValid")
-    ])
+    ]
+)
 data class EffectiveProfileSwitch(
     @PrimaryKey(autoGenerate = true)
     override var id: Long = 0,
@@ -51,6 +54,28 @@ data class EffectiveProfileSwitch(
     @Embedded
     var insulinConfiguration: InsulinConfiguration
 ) : TraceableDBEntry, DBEntryWithTime {
+
+    private fun contentEqualsTo(other: EffectiveProfileSwitch): Boolean =
+        isValid == other.isValid &&
+            timestamp == other.timestamp &&
+            utcOffset == other.utcOffset &&
+            basalBlocks == other.basalBlocks &&
+            isfBlocks == other.isfBlocks &&
+            icBlocks == other.icBlocks &&
+            targetBlocks == other.targetBlocks &&
+            glucoseUnit == other.glucoseUnit &&
+            originalProfileName == other.originalProfileName &&
+            originalCustomizedName == other.originalCustomizedName &&
+            originalTimeshift == other.originalTimeshift &&
+            originalPercentage == other.originalPercentage &&
+            originalDuration == other.originalDuration &&
+            originalEnd == other.originalEnd
+
+    fun onlyNsIdAdded(previous: EffectiveProfileSwitch): Boolean =
+        previous.id != id &&
+            contentEqualsTo(previous) &&
+            previous.interfaceIDs.nightscoutId == null &&
+            interfaceIDs.nightscoutId != null
 
     enum class GlucoseUnit {
         MGDL,
