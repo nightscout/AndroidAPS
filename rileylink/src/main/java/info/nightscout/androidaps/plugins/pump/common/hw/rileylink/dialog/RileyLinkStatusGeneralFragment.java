@@ -107,8 +107,14 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
             RileyLinkError rileyLinkError = rileyLinkServiceData.rileyLinkError;
             this.connectionError.setText(rileyLinkError == null ? PLACEHOLDER : resourceHelper.gs(rileyLinkError.getResourceId(targetDevice)));
 
-            this.firmwareVersion.setText(resourceHelper.gs(R.string.rileylink_firmware_version_value,
-                    Optional.ofNullable(rileyLinkServiceData.versionBLE113).orElse(PLACEHOLDER), Optional.ofNullable(rileyLinkServiceData.versionCC110).orElse(PLACEHOLDER)));
+
+            if(rileyLinkServiceData.isOrange){
+                this.firmwareVersion.setText("FV:"+Optional.ofNullable(rileyLinkServiceData.versionOrangeFV).orElse(PLACEHOLDER)+"\nHV:"+Optional.ofNullable(rileyLinkServiceData.versionOrangeHV).orElse(PLACEHOLDER));
+            }else{
+                this.firmwareVersion.setText(resourceHelper.gs(R.string.rileylink_firmware_version_value,
+                        Optional.ofNullable(rileyLinkServiceData.versionBLE113).orElse(PLACEHOLDER), Optional.ofNullable(rileyLinkServiceData.versionCC110).orElse(PLACEHOLDER)));
+
+            }
         }
 
         RileyLinkPumpDevice rileyLinkPumpDevice = (RileyLinkPumpDevice) activePlugin.getActivePump();

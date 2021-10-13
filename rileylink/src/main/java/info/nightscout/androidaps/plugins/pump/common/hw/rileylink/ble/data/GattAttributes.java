@@ -29,6 +29,9 @@ public class GattAttributes {
     public static String CHARA_RADIO_CUSTOM_NAME = "d93b2af0-1e28-11e4-8c21-0800200c9a66";
     public static String CHARA_RADIO_VERSION = "30d99dc9-7c91-4295-a051-0a104d238cf2";
     public static String CHARA_RADIO_LED_MODE = "c6d84241-f1a7-4f9c-a25f-fce16732f14e";
+    //Orange Radio Service
+    public static UUID UUID_NOTIF_SERVICE = UUID.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e");
+    public static UUID UUID_NOTIF_CHARACTER = UUID.fromString("6e400003-b5a3-f393-e0a9-e50e24dcca9e");
 
     private static final Map<String, String> attributes;
     private static final Map<String, String> attributesRileyLinkSpecific;
@@ -82,6 +85,9 @@ public class GattAttributes {
     // we check for specific UUID (Radio ones, because thoose seem to be unique
     public static boolean isRileyLink(UUID uuid) {
         return attributesRileyLinkSpecific.containsKey(uuid.toString());
+    }
+    public static boolean isOrange(UUID uuid) {
+        return UUID_NOTIF_SERVICE.equals(uuid.toString());
     }
 
 }
