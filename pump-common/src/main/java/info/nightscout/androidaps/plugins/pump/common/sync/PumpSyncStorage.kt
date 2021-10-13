@@ -68,7 +68,7 @@ class PumpSyncStorage @Inject constructor(
                 aapsLogger.debug(LTag.PUMP, "DD: PumpSyncStorageTBR=$pumpSyncStorageTBR")
             }
         }
-
+        storageInitialized = true
     }
 
     fun saveStorageBolus() {
