@@ -5,6 +5,7 @@
     <string name="danars_pairingok">Sujungta</string>
     <string name="danars_pairingtimedout">Sujungimui skirtas laikas baigėsi</string>
     <string name="danars_waitingforpairing">Laukiama ryšio su pompa</string>
+    <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
     <string name="maxbolusviolation">Pažeistas maks boluso limitas</string>
     <string name="commanderror">Komandos klaida</string>
@@ -113,4 +114,5 @@
     <string name="press_ok_on_the_pump">Paspauskite pompos mygtuką OK\n ir įveskite 2 rodomus skaičius\nĮjunkite pompos ekraną spausdami minuso mygtuką, kol baigsite įvesti kodą.</string>
     <string name="num1pin">1: (12 skaitmenų)</string>
     <string name="num2pin">2: (8 skaitmenys)</string>
+    <string name="basal_bolus_step">Bazės / boluso žingsnis</string>
 </resources>

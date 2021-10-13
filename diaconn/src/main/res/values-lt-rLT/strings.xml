@@ -1,2 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="largetimediff">Didelis laiko skirtumas:\nLaikas pompoje skiriasi daugiau nei 1,5 val.\nNustatykite laiką pompoje rankiniu būdu ir įsitikinkite, kad įrašai iš pompos istorijos nesukels netikėtų sistemos veiksmų.\nJei įmanoma, ištrinkite istoriją pompoje prieš keisdami laiką arba atjunkite uždarąjį ciklą vienai IVT po paskutinio neteisingo istorijos įrašo ar mažiausiai vienai IVT nuo dabar.</string>
+</resources>

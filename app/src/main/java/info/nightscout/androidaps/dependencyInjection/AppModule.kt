@@ -23,6 +23,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorP
 import info.nightscout.androidaps.plugins.pump.PumpSyncImplementation
 import info.nightscout.androidaps.queue.CommandQueue
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.androidNotification.NotificationHolderImpl
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
@@ -74,11 +75,12 @@ open class AppModule {
     fun provideProfileFunction(
         aapsLogger: AAPSLogger, sp: SP, rxBus: RxBusWrapper, resourceHelper:
         ResourceHelper, activePlugin:
-        ActivePlugin, repository: AppRepository, dateUtil: DateUtil, config: Config, hardLimits: HardLimits
+        ActivePlugin, repository: AppRepository, dateUtil: DateUtil, config: Config, hardLimits: HardLimits,
+        aapsSchedulers: AapsSchedulers, fabricPrivacy: FabricPrivacy
     ): ProfileFunction =
         ProfileFunctionImplementation(
             aapsLogger, sp, rxBus, resourceHelper, activePlugin, repository, dateUtil,
-            config, hardLimits
+            config, hardLimits, aapsSchedulers, fabricPrivacy
         )
 
     @Module

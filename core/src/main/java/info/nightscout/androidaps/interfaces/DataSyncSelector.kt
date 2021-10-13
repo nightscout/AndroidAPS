@@ -20,6 +20,8 @@ interface DataSyncSelector {
     data class PairOfflineEvent(val value: OfflineEvent, val updateRecordId: Long)
     data class PairProfileStore(val value: JSONObject, val timestampSync: Long)
 
+    fun queueSize(): Long
+
     fun doUpload()
 
     fun resetToNextFullSync()

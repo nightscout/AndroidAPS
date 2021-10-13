@@ -20,7 +20,6 @@ import info.nightscout.androidaps.database.entities.ProfileSwitch
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.dialogs.BolusProgressDialog
 import info.nightscout.androidaps.events.EventBolusRequested
-import info.nightscout.androidaps.events.EventNewBasalProfile
 import info.nightscout.androidaps.events.EventProfileSwitchChanged
 import info.nightscout.androidaps.extensions.getCustomizedName
 import info.nightscout.androidaps.interfaces.*
@@ -80,8 +79,7 @@ class CommandQueue @Inject constructor(
             .toObservable(EventProfileSwitchChanged::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({
-                if (config.NSCLIENT) { // Effective profileswitch should be synced over NS
-                    rxBus.send(EventNewBasalProfile())
+                if (config.NSCLIENT) { // Effective profileswitch should be synced over NS, do not create EffectiveProfileSwitch here
                     return@subscribe
                 }
                 aapsLogger.debug(LTag.PROFILE, "onProfileSwitch")
@@ -110,7 +108,6 @@ class CommandQueue @Inject constructor(
                                         insulinConfiguration = it.insulinConfiguration
                                     )
                                 )
-                                rxBus.send(EventNewBasalProfile())
                             }
                         }
                     })

@@ -78,7 +78,6 @@
     <string name="overview">Aperçu</string>
     <string name="treatments">Traitements</string>
     <string name="virtualpump">Pompe virtuelle</string>
-    <string name="careportal">Careportal</string>
     <string name="configbuilder_pump">Pompe</string>
     <string name="configbuilder_pump_description">Quelle pompe souhaitez-vous utiliser avec AndroidAPS ?</string>
     <string name="configbuilder_profile">Profil</string>
@@ -258,7 +257,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="ongoingnotificaction">Notification en cours</string>
     <string name="old_data">DONNÉES ANCIENNES</string>
     <string name="sms_minago">il y a %1$d min</string>
-    <string name="localprofile">Profil Local</string>
+    <string name="localprofile">Profil</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Tableau de %1$d éléments.\nValeur Actuelle :</string>
     <string name="openapsma_autosensdata_label">Données Autosens</string>
@@ -752,7 +751,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="clone_label">Dupliquer</string>
     <string name="saveorresetchangesfirst">Sauver ou réinitialiser les modifications actuelles en premier</string>
     <string name="deletecurrentprofile">Supprimer le profil actuel ?</string>
-    <string name="copytolocalprofile">Créer un nouveau profil local à partir de ce profil ?</string>
+    <string name="copytolocalprofile">Créer un nouveau profil à partir de ce profil ?</string>
     <string name="profilenamecontainsdot">Le nom du profil contient des points.\nCe n\'est pas pris en charge par NS.\nLe profil n\'est pas remonté dans NS.</string>
     <string name="low_mark_comment">Valeur inférieure dans la plage (affichage uniquement)</string>
     <string name="high_mark_comment">Valeur supérieure dans la plage (affichage uniquement)</string>
@@ -834,7 +833,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="dpvdefaultprofile">Profil par défaut DPV</string>
     <string name="setupwizard_pump_riley_link_status">État du RileyLink :</string>
     <string name="filter">Filtrer</string>
-    <string name="copytolocalprofile_invalid">Impossible de créer le profil local. Le profil est invalide.</string>
+    <string name="copytolocalprofile_invalid">Impossible de créer le profil. Le profil est invalide.</string>
     <string name="cta_dont_kill_my_app_info">Garder l\'appli en arrière plan ?</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Envoyer un SMS si l\'événement Pompe hors de portée est déclenché</string>
     <string name="smscommunicator_pump_ureachable">Signaler Pompe hors de portée</string>
@@ -864,7 +863,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="ns_upload_summary">Profils, boluses, glucides, basals temporaires sont téléchargés vers NS</string>
     <string name="ns_upload">Télécharger des données vers NS</string>
     <string name="ns_receive_profile_store">Recevoir les profils sauvegardés</string>
-    <string name="ns_receive_profile_store_summary">Synchroniser les profils à partir de l\'éditeur de profil NS vers le profil local</string>
+    <string name="ns_receive_profile_store_summary">Synchroniser les profils à partir de l\'éditeur de profil NS</string>
     <string name="ns_receive_temp_target">Recevoir les cibles temporaires</string>
     <string name="ns_receive_temp_target_summary">Accepter les cibles temporaires entrées via NS ou NSClient</string>
     <string name="ns_receive_profile_switch">Recevoir les changements de profil</string>

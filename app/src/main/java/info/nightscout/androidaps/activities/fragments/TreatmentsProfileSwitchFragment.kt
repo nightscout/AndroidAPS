@@ -31,6 +31,7 @@ import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
 import info.nightscout.androidaps.events.EventTreatmentUpdateGui
 import info.nightscout.androidaps.activities.fragments.TreatmentsProfileSwitchFragment.RecyclerProfileViewAdapter.ProfileSwitchViewHolder
+import info.nightscout.androidaps.events.EventEffectiveProfileSwitchChanged
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
@@ -92,6 +93,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
                                 onError = { aapsLogger.error("Error removing entries", it) },
                                 onComplete = {
                                     rxBus.send(EventProfileSwitchChanged())
+                                    rxBus.send(EventEffectiveProfileSwitchChanged(0L))
                                     rxBus.send(EventNewHistoryData(0, false))
                                 }
                             )

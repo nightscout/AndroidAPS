@@ -48,6 +48,9 @@ public class RileyLinkServiceData {
     public String versionBLE113;
     // radio version
     public String versionCC110;
+    public boolean isOrange;
+    public String versionOrangeFV;
+    public String versionOrangeHV;
 
     public RileyLinkTargetDevice targetDevice;
 

@@ -48,6 +48,21 @@ data class TemporaryBasal(
         require(duration > 0)
     }
 
+    private fun contentEqualsTo(other: TemporaryBasal): Boolean =
+        isValid == other.isValid &&
+            timestamp == other.timestamp &&
+            utcOffset == other.utcOffset &&
+            isAbsolute == other.isAbsolute &&
+            type == other.type &&
+            duration == other.duration &&
+            rate == other.rate
+
+    fun onlyNsIdAdded(previous: TemporaryBasal): Boolean =
+        previous.id != id &&
+            contentEqualsTo(previous) &&
+            previous.interfaceIDs.nightscoutId == null &&
+            interfaceIDs.nightscoutId != null
+
     enum class Type {
         NORMAL,
         EMULATED_PUMP_SUSPEND,

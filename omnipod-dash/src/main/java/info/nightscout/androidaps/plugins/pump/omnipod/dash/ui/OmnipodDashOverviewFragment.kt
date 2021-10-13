@@ -32,6 +32,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.databinding.OmnipodD
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.databinding.OmnipodDashOverviewBluetoothStatusBinding
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.ActivationProgress
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertType
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.queue.events.EventQueueChanged
@@ -68,7 +69,6 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     @Inject lateinit var buildHelper: BuildHelper
 
     companion object {
-
         private const val REFRESH_INTERVAL_MILLIS = 15 * 1000L // 15 seconds
         private const val PLACEHOLDER = "-"
         private const val MAX_TIME_DEVIATION_MINUTES = 10L
@@ -372,7 +372,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 if (podStateManager.isActivationCompleted && podStateManager.pulsesDelivered != null) {
                     resourceHelper.gs(
                         R.string.omnipod_common_overview_total_delivered_value,
-                        podStateManager.pulsesDelivered!! * 0.05
+                        (podStateManager.pulsesDelivered!! * PodConstants.POD_PULSE_BOLUS_UNITS)
                     )
                 } else {
                     PLACEHOLDER
@@ -387,11 +387,11 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 // TODO
                 // val lowReservoirThreshold = (omnipodAlertUtil.lowReservoirAlertUnits
                 //    ?: OmnipodConstants.DEFAULT_MAX_RESERVOIR_ALERT_THRESHOLD).toDouble()
-                val lowReservoirThreshold: Short = 20
+                val lowReservoirThreshold: Short = PodConstants.DEFAULT_MAX_RESERVOIR_ALERT_THRESHOLD
 
                 podInfoBinding.reservoir.text = resourceHelper.gs(
                     R.string.omnipod_common_overview_reservoir_value,
-                    (podStateManager.pulsesRemaining!! * 0.05)
+                    (podStateManager.pulsesRemaining!! * PodConstants.POD_PULSE_BOLUS_UNITS)
                 )
                 podInfoBinding.reservoir.setTextColor(
                     if (podStateManager.pulsesRemaining!! < lowReservoirThreshold) {

@@ -6,6 +6,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
+import info.nightscout.androidaps.database.entities.EffectiveProfileSwitch
 import info.nightscout.androidaps.events.*
 import info.nightscout.androidaps.extensions.*
 import info.nightscout.androidaps.interfaces.*
@@ -136,9 +137,12 @@ class OverviewPlugin @Inject constructor(
                 .observeOn(aapsSchedulers.io)
                 .subscribe({ overviewData.preparePredictions("EventLoopInvoked") }, fabricPrivacy::logException)
         disposable += rxBus
-                .toObservable(EventNewBasalProfile::class.java)
+                .toObservable(EventEffectiveProfileSwitchChanged::class.java)
                 .observeOn(aapsSchedulers.io)
-                .subscribe({ loadProfile("EventNewBasalProfile") }, fabricPrivacy::logException)
+                .subscribe({
+                               loadProfile("EventEffectiveProfileSwitchChanged")
+                               overviewData.prepareBasalData("EventEffectiveProfileSwitchChanged")
+                           }, fabricPrivacy::logException)
         disposable += rxBus
                 .toObservable(EventAutosensCalculationFinished::class.java)
                 .observeOn(aapsSchedulers.io)

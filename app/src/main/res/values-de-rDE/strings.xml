@@ -78,7 +78,6 @@
     <string name="overview">Übersicht</string>
     <string name="treatments">Behandlungen</string>
     <string name="virtualpump">Virtuelle Pumpe</string>
-    <string name="careportal">Careportal</string>
     <string name="configbuilder_pump">Pumpe</string>
     <string name="configbuilder_pump_description">Welche Pumpe möchtest Du mit AndroidAPS nutzen?</string>
     <string name="configbuilder_profile">Profil</string>
@@ -257,7 +256,7 @@
     <string name="ongoingnotificaction">Anhaltende Benachrichtigung</string>
     <string name="old_data">VERALTETE DATEN</string>
     <string name="sms_minago">%1$d\' her</string>
-    <string name="localprofile">Lokales Profil</string>
+    <string name="localprofile">Profil</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Array mit %1$d Elementen.\nWert:</string>
     <string name="openapsma_autosensdata_label">Autosens-Daten</string>
@@ -752,7 +751,7 @@ Unerwartetes Verhalten.</string>
     <string name="clone_label">Klonen</string>
     <string name="saveorresetchangesfirst">Speichere oder verwerfe die aktuellen Änderungen zuerst</string>
     <string name="deletecurrentprofile">Aktuelles Profil löschen?</string>
-    <string name="copytolocalprofile">Neues lokales Profil auf Basis dieses Profils erstellen?</string>
+    <string name="copytolocalprofile">Neues Profil auf Basis dieses Profils erstellen?</string>
     <string name="profilenamecontainsdot">Profilname enthält Punkte.\nDies wird von NS nicht unterstützt.\nProfil wird nicht zu NS hochgeladen.</string>
     <string name="low_mark_comment">Unterer Wert des Zielbereichs (nur Anzeige)</string>
     <string name="high_mark_comment">Oberer Wert des Zielbereichs (nur Anzeige)</string>
@@ -834,7 +833,7 @@ Unerwartetes Verhalten.</string>
     <string name="dpvdefaultprofile">DPV-Standard-Profil</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink Status:</string>
     <string name="filter">Filter</string>
-    <string name="copytolocalprofile_invalid">Lokales Profil kann nicht erstellt werden. Profil ist ungültig.</string>
+    <string name="copytolocalprofile_invalid">Profil kann nicht erstellt werden. Profil ist ungültig.</string>
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
     <string name="smscommunicator_report_pump_ureachable_summary">SMS senden, wenn Pumpe nicht erreichbar</string>
     <string name="smscommunicator_pump_ureachable">Hinweis Pumpe nicht erreichbar</string>
@@ -864,7 +863,7 @@ Unerwartetes Verhalten.</string>
     <string name="ns_upload_summary">Profile, Boli, Kohlenhydrate und temporäre Basalraten werden zu NS hochgeladen</string>
     <string name="ns_upload">Daten zu NS hochladen</string>
     <string name="ns_receive_profile_store">Gespeicherte Profile abrufen</string>
-    <string name="ns_receive_profile_store_summary">Profile vom NS-Profil-Editors zu lokalen Profil synchronisieren</string>
+    <string name="ns_receive_profile_store_summary">Profile mit NS Profil-Editor synchronisieren</string>
     <string name="ns_receive_temp_target">Temporäre Ziele abrufen</string>
     <string name="ns_receive_temp_target_summary">Temp. Ziele akzeptieren, die in NS oder NSClient eingegeben wurden</string>
     <string name="ns_receive_profile_switch">Profilwechsel abrufen</string>

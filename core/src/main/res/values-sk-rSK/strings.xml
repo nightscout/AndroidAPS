@@ -174,12 +174,17 @@
     <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f JI</b> Bol: <b>%3$.2f JI</b> Baz: <b>%4$.2f JI(%5$.0f%%)</b> Sach.: <b>%6$.0f g</b>]]></string>
     <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> v <b>%3$d</b> dňoch<br>]]></string>
     <!--    Translator-->
+    <string name="careportal">Starostlivosť</string>
     <string name="careportal_bgcheck">Kontrola glykémie</string>
     <string name="careportal_mbg">Ručné meranie, alebo kalibrácia</string>
     <string name="careportal_announcement">Oznámenie</string>
     <string name="careportal_note">Poznámka</string>
     <string name="careportal_question">Otázka</string>
     <string name="careportal_exercise">Pohyb</string>
+    <string name="careportal_announcement_message">Oznámenie: %1$s</string>
+    <string name="careportal_note_message">Poznámka : %1$s</string>
+    <string name="careportal_question_message">Otázka: %1$s</string>
+    <string name="careportal_exercise_message">Cvičenie : %1$s</string>
     <string name="careportal_pumpsitechange">Výmena setu</string>
     <string name="careportal_cgmsensorinsert">Výmena senzora</string>
     <string name="careportal_cgmsensorstart">Spustenie senzora</string>
@@ -403,6 +408,7 @@
     <string name="valueoutofrange">»%1$s« je mimo pevne nastavené limity</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f je mimo pevne nastavených limitov</string>
     <string name="basal_value">Hodnota bazálu</string>
+    <string name="nsclient_version_does_not_match">Verzia NSClienta nesúhlasí z verziou AndroidAPS. Prosím aktualizujte si ju.</string>
     <plurals name="days">
         <item quantity="one">%1$d deň</item>
         <item quantity="few">%1$d dní</item>
