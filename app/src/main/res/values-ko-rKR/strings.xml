@@ -78,7 +78,6 @@
     <string name="overview">홈</string>
     <string name="treatments">관리</string>
     <string name="virtualpump">가상펌프</string>
-    <string name="careportal">케어포털</string>
     <string name="configbuilder_pump">펌프</string>
     <string name="configbuilder_pump_description">어떤 펌프를 AndroidAPS에서 사용하시겠습니까?</string>
     <string name="configbuilder_profile">프로파일</string>
@@ -257,7 +256,6 @@
     <string name="ongoingnotificaction">연속 알림</string>
     <string name="old_data">오래된 데이터</string>
     <string name="sms_minago">%dmin ago</string>
-    <string name="localprofile">로컬 프로파일</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">%1$d 요소의 배열.\n실제 값:</string>
     <string name="openapsma_autosensdata_label">Autosens 정보</string>
@@ -750,7 +748,6 @@
     <string name="clone_label">복사</string>
     <string name="saveorresetchangesfirst">우선 현재 변경사항을을 저장하거나 재설정하세요</string>
     <string name="deletecurrentprofile">현재 프로파일을 삭제 하시겠습니까?</string>
-    <string name="copytolocalprofile">프로파일에서 새로운 로컬 프로파일을 만드시겠습니까?</string>
     <string name="profilenamecontainsdot">프로파일명에 점을 포함하고 있습니다.\n이는 NS에서 지원하지 않습니다.\n프로파일이 NS에 업로드되지 않습니다.</string>
     <string name="low_mark_comment">혈당 정상범위의 하한값(표시 전용)</string>
     <string name="high_mark_comment">혈당 정상범위의 상한값(표시 전용)</string>
@@ -832,7 +829,6 @@
     <string name="dpvdefaultprofile">DPV 기본 프로파일</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink 상태:</string>
     <string name="filter">필터</string>
-    <string name="copytolocalprofile_invalid">로컬 프로파일 생성 불가능. 프로파일이 유효하지 않습니다.</string>
     <string name="cta_dont_kill_my_app_info">앱이 종료되지 않도록 합니다?</string>
     <string name="smscommunicator_report_pump_ureachable_summary">허용되지 않는 펌프 이벤트가 발생하면 SMS를 보내기</string>
     <string name="smscommunicator_pump_ureachable">허용되지 않는 펌프 기록</string>
@@ -862,7 +858,6 @@
     <string name="ns_upload_summary">프로파일, bolus, 탄수화물, 임시 basal이 NS에 업로드 됨</string>
     <string name="ns_upload">NS에 데이터 업로드하기</string>
     <string name="ns_receive_profile_store">프로파일 목록 받기</string>
-    <string name="ns_receive_profile_store_summary">NS 프로파일 편집기에서 로컬 프로파일로 프로파일들 동기화하기</string>
     <string name="ns_receive_temp_target">임시 목표들 받기</string>
     <string name="ns_receive_temp_target_summary">NS 또는 NSClient에서 입력한 임시 목표 수락하기</string>
     <string name="ns_receive_profile_switch">프로파일 변경 받기</string>

@@ -78,7 +78,6 @@
     <string name="overview">Przegląd</string>
     <string name="treatments">Terapia</string>
     <string name="virtualpump">Pompa wirtualna</string>
-    <string name="careportal">PortalOpieki</string>
     <string name="configbuilder_pump">Pompa</string>
     <string name="configbuilder_pump_description">Którą pompę chcesz wykorzystać do AndroidAPS?</string>
     <string name="configbuilder_profile">Profil</string>
@@ -256,7 +255,6 @@
     <string name="ongoingnotificaction">Nadchodzące powiadomienia</string>
     <string name="old_data">NIEAKTUALNE DANE</string>
     <string name="sms_minago">%1$dmin temu</string>
-    <string name="localprofile">Lokalny Profil</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Lista %1$d elementów.\n Bieżąca wartość:</string>
     <string name="openapsma_autosensdata_label">Dane Autosens</string>
@@ -745,7 +743,6 @@
     <string name="clone_label">Sklonuj</string>
     <string name="saveorresetchangesfirst">Najpierw zapisz lub wycofaj bieżące zmiany</string>
     <string name="deletecurrentprofile">Skasować bieżący profil?</string>
-    <string name="copytolocalprofile">Utworzyć nowy profil lokalny z wybranego profilu?</string>
     <string name="profilenamecontainsdot">Nazwa profilu zawiera kropki.\nTo nie jest obsługiwane przez NS.\nProfil nie zostanie przesyłany do NS.</string>
     <string name="low_mark_comment">Dolna wartość zakresu docelowego (tylko do wyświetlania)</string>
     <string name="high_mark_comment">Górna wartość zakresu docelowego (tylko do wyświetlania)</string>
@@ -826,7 +823,6 @@
     <string name="dpvdefaultprofile">Domyślny profil DPV</string>
     <string name="setupwizard_pump_riley_link_status">Stan RileyLink:</string>
     <string name="filter">Filtr</string>
-    <string name="copytolocalprofile_invalid">Nie można utworzyć profilu lokalnego. Profil jest niepoprawny.</string>
     <string name="cta_dont_kill_my_app_info">Nie zabij mojej aplikacji?</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Wyślij SMS, jeśli wyzwolone jest zdarzenie pompy nieosiągalnej</string>
     <string name="smscommunicator_pump_ureachable">Zgłoś nieosiągalną pompę</string>

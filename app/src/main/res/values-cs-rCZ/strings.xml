@@ -78,7 +78,6 @@
     <string name="overview">Přehled</string>
     <string name="treatments">Ošetření</string>
     <string name="virtualpump">Virtuální pumpa</string>
-    <string name="careportal">Péče</string>
     <string name="configbuilder_pump">Pumpa</string>
     <string name="configbuilder_pump_description">Jakou pumpu chcete používat s AndroidAPS?</string>
     <string name="configbuilder_profile">Profil</string>
@@ -257,7 +256,7 @@
     <string name="ongoingnotificaction">Průběžné oznámení</string>
     <string name="old_data">ZASTARALÉ</string>
     <string name="sms_minago">před %1$d min</string>
-    <string name="localprofile">Místní profil</string>
+    <string name="localprofile">Profil</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Pole %1$d prvků.\nAktuální hodnota:</string>
     <string name="openapsma_autosensdata_label">Data detekce senzitivity</string>
@@ -751,7 +750,7 @@
     <string name="clone_label">Klonovat</string>
     <string name="saveorresetchangesfirst">Nejprve uložte nebo resetujte aktuální změny</string>
     <string name="deletecurrentprofile">Odstranit aktuální profil?</string>
-    <string name="copytolocalprofile">Vytvořit z tohoto profilu nový místní profil?</string>
+    <string name="copytolocalprofile">Vytvořit z tohoto profilu nový profil?</string>
     <string name="profilenamecontainsdot">Název profilu obsahuje tečky.\nToto není v NS podporováno.\nProfil není přenesen do NS.</string>
     <string name="low_mark_comment">Spodní hodnota oblasti v rozsahu (pouze zobrazování)</string>
     <string name="high_mark_comment">Horní hodnota oblasti v rozsahu (pouze zobrazování)</string>
@@ -833,7 +832,7 @@
     <string name="dpvdefaultprofile">Výchozí profil DPV</string>
     <string name="setupwizard_pump_riley_link_status">Status RileyLink:</string>
     <string name="filter">Filtr</string>
-    <string name="copytolocalprofile_invalid">Nelze vytvořit lokální profil. Profil je neplatný.</string>
+    <string name="copytolocalprofile_invalid">Nelze vytvořit profil. Profil je neplatný.</string>
     <string name="cta_dont_kill_my_app_info">Nezabíjet mou aplikaci?</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Odeslat SMS, pokud je detekována nedostupná pumpa</string>
     <string name="smscommunicator_pump_ureachable">Nahlásit nedostupnou pumpu</string>
@@ -863,7 +862,7 @@
     <string name="ns_upload_summary">Profily, bolusy, sacharidy, dočasné bazály jsou nahrány do NS</string>
     <string name="ns_upload">Nahrávat data do NS</string>
     <string name="ns_receive_profile_store">Přijímat úložiště profilu</string>
-    <string name="ns_receive_profile_store_summary">Synchronizovat profily z NS do místního profilu</string>
+    <string name="ns_receive_profile_store_summary">Synchronizovat profily z editoru profilu v NS</string>
     <string name="ns_receive_temp_target">Přijímat dočasné cíle</string>
     <string name="ns_receive_temp_target_summary">Přijmout dočasné cíle zadané prostřednictvím NS nebo NSClienta</string>
     <string name="ns_receive_profile_switch">Přijímat přepnutí profilu</string>

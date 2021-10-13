@@ -21,6 +21,7 @@
     <string name="tbr_formatter">%1$d%% - %2$d / %3$d min</string>
     <string name="multiwave_bolus">Daugiabangis bolusas</string>
     <string name="eb_formatter">%1$.2f / %2$.2f vv per %3$d min</string>
+    <string name="insight_last_bolus">Paskutinis bolusas</string>
     <string name="searching_for_devices">Ieškoma įrenginių…</string>
     <string name="pairing_completed">Sujungimas sėkmingas</string>
     <string name="code_compare">Ar kodas, kurį matote įrenginyje, sutampa su pompos kodu?</string>

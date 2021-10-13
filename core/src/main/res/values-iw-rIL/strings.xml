@@ -174,12 +174,17 @@
     <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f יחידות</b> בולוס: <b>%3$.2f יחידות</b> בזאלי: <b>%4$.2f יחידות(%5$.0f%%)</b> פחמ: <b>%6$.0f גרם</b>]]></string>
     <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> ב- <b>%3$d</b> ימים<br>]]></string>
     <!--    Translator-->
+    <string name="careportal">פורטל טיפולים</string>
     <string name="careportal_bgcheck">בדיקת רמת סוכר בדם</string>
     <string name="careportal_mbg">רמת סוכר ידנית או כיול</string>
-    <string name="careportal_announcement">הודעה</string>
+    <string name="careportal_announcement">הכרזה</string>
     <string name="careportal_note">הערה</string>
     <string name="careportal_question">שאלה</string>
     <string name="careportal_exercise">פעילות גופנית</string>
+    <string name="careportal_announcement_message">הכרזה: %1$s</string>
+    <string name="careportal_note_message">הערה: %1$s</string>
+    <string name="careportal_question_message">שאלה: %1$s</string>
+    <string name="careportal_exercise_message">פעילות גופנית: %1$s</string>
     <string name="careportal_pumpsitechange">החלפת פרפרית</string>
     <string name="careportal_cgmsensorinsert">חיבור סנסור</string>
     <string name="careportal_cgmsensorstart">התחלת סנסור חדש</string>
@@ -403,6 +408,7 @@
     <string name="valueoutofrange">»הערך %1$s« מחוץ לתחום הקשיח</string>
     <string name="value_out_of_hard_limits">»הערך %1$s« %2$.2f מחוץ לתחום הקשיח</string>
     <string name="basal_value">ערך בזאלי</string>
+    <string name="nsclient_version_does_not_match">גרסת NSClient לא תואמת את גרסת AndroidAPS. נא לעדכן.</string>
     <plurals name="days">
         <item quantity="one">%1$d יום</item>
         <item quantity="two">%1$d ימים</item>

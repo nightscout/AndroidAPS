@@ -115,4 +115,5 @@
     <string name="press_ok_on_the_pump">Нажмите OK на помпе\nи введите 2 отображаемых номера\nДержите экран помпы включенным нажимая кнопку минус, пока не закончите ввод кода.</string>
     <string name="num1pin">1: (12 цифр)</string>
     <string name="num2pin">2: (8 цифр)</string>
+    <string name="basal_bolus_step">Шаг Базала/болюса</string>
 </resources>

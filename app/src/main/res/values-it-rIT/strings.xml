@@ -78,7 +78,6 @@
     <string name="overview">Panoramica</string>
     <string name="treatments">Trattamenti</string>
     <string name="virtualpump">Micro virtuale</string>
-    <string name="careportal">Portale</string>
     <string name="configbuilder_pump">Micro</string>
     <string name="configbuilder_pump_description">Quale microinfusore desideri usare con AndroidAPS?</string>
     <string name="configbuilder_profile">Profilo</string>
@@ -257,7 +256,6 @@
     <string name="ongoingnotificaction">Notifica persistente</string>
     <string name="old_data">DATI VECCHI</string>
     <string name="sms_minago">%1$dmin fa</string>
-    <string name="localprofile">Profilo locale</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Matrice di %1$d elementi.\nValore attuale:</string>
     <string name="openapsma_autosensdata_label">Dati autosens</string>
@@ -750,7 +748,6 @@
     <string name="clone_label">Clona</string>
     <string name="saveorresetchangesfirst">Salva o resetta prima le modifiche correnti</string>
     <string name="deletecurrentprofile">Rimuovere il profilo corrente?</string>
-    <string name="copytolocalprofile">Creare un nuovo profilo locale da questo profilo?</string>
     <string name="profilenamecontainsdot">Il nome profilo contiene dei punti.\nQuesto non è supportato da NS.\nIl profilo non viene caricato in NS.</string>
     <string name="low_mark_comment">Valore più basso per l\'intervallo di visualizzazione dell\'area \"in range\"</string>
     <string name="high_mark_comment">Valore più alto per l\'intervallo di visualizzazione dell\'area \"in range\"</string>
@@ -832,7 +829,6 @@
     <string name="dpvdefaultprofile">Profilo DPV predefinito</string>
     <string name="setupwizard_pump_riley_link_status">Stato RileyLink:</string>
     <string name="filter">Filtro</string>
-    <string name="copytolocalprofile_invalid">Impossibile creare il profilo locale. Il profilo non è valido.</string>
     <string name="cta_dont_kill_my_app_info">Non terminare l\'app?</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Invia SMS se si verifica l\'evento \"micro irraggiungibile\"</string>
     <string name="smscommunicator_pump_ureachable">Segnala micro irraggiungibile</string>
@@ -862,7 +858,6 @@
     <string name="ns_upload_summary">Profili, boli, CHO, basali temporanee vengono caricati su NS</string>
     <string name="ns_upload">Carica dati su NS</string>
     <string name="ns_receive_profile_store">Ricevi \"store\" profilo</string>
-    <string name="ns_receive_profile_store_summary">Sincronizza i profili da NS al profilo locale</string>
     <string name="ns_receive_temp_target">Ricevi target temporanei</string>
     <string name="ns_receive_temp_target_summary">Accetta target temporanei inseriti tramite NS o NSClient</string>
     <string name="ns_receive_profile_switch">Ricevi cambi profilo</string>
