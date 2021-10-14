@@ -51,6 +51,7 @@ class ProfileFunctionImplementation @Inject constructor(
             .toObservable(EventEffectiveProfileSwitchChanged::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe(
+                @Synchronized
                 {
                     for (index in cache.size() - 1 downTo 0) {
                         if (cache.keyAt(index) > it.startDate) {
