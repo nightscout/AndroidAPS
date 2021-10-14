@@ -73,7 +73,7 @@ allprojects {
                     "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi",
                     '-Xjvm-default=all'     //Support @JvmDefault
             ]
-            jvmTarget = "1.8"
+            jvmTarget = "11"
         }
     }
 }
