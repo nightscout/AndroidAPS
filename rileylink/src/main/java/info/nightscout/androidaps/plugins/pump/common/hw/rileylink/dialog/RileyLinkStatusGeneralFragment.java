@@ -109,7 +109,7 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
 
 
             if(rileyLinkServiceData.isOrange){
-                this.firmwareVersion.setText("FV:"+Optional.ofNullable(rileyLinkServiceData.versionOrangeFV).orElse(PLACEHOLDER)+"\nHV:"+Optional.ofNullable(rileyLinkServiceData.versionOrangeHV).orElse(PLACEHOLDER));
+                this.firmwareVersion.setText("FV:"+Optional.ofNullable(rileyLinkServiceData.versionOrangeFirmware).orElse(PLACEHOLDER)+"\nHV:"+Optional.ofNullable(rileyLinkServiceData.versionOrangeHardware).orElse(PLACEHOLDER));
             }else{
                 this.firmwareVersion.setText(resourceHelper.gs(R.string.rileylink_firmware_version_value,
                         Optional.ofNullable(rileyLinkServiceData.versionBLE113).orElse(PLACEHOLDER), Optional.ofNullable(rileyLinkServiceData.versionCC110).orElse(PLACEHOLDER)));
