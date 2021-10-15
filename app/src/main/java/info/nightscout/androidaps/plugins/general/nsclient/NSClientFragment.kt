@@ -101,5 +101,6 @@ class NSClientFragment : DaggerFragment() {
         if (nsClientPlugin.autoscroll) binding.logScrollview.fullScroll(ScrollView.FOCUS_DOWN)
         binding.url.text = nsClientPlugin.url()
         binding.status.text = nsClientPlugin.status
+        binding.queue.text = dataSyncSelector.queueSize().toString()
     }
 }

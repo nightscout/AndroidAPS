@@ -16,7 +16,6 @@ import info.nightscout.androidaps.dana.events.EventDanaRNewStatus
 import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.danars.R
 import info.nightscout.androidaps.danars.comm.*
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.dialogs.BolusProgressDialog
 import info.nightscout.androidaps.events.EventAppExit
@@ -25,6 +24,7 @@ import info.nightscout.androidaps.events.EventProfileSwitchChanged
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -44,6 +44,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import java.util.concurrent.TimeUnit
@@ -79,11 +80,10 @@ class DanaRSService : DaggerService() {
 
     override fun onCreate() {
         super.onCreate()
-        disposable.add(rxBus
+        disposable += rxBus
             .toObservable(EventAppExit::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ stopSelf() }, fabricPrivacy::logException)
-        )
     }
 
     override fun onDestroy() {
@@ -204,7 +204,12 @@ class DanaRSService : DaggerService() {
                 if (System.currentTimeMillis() > lastApproachingDailyLimit + 30 * 60 * 1000) {
                     val reportFail = Notification(Notification.APPROACHING_DAILY_LIMIT, resourceHelper.gs(R.string.approachingdailylimit), Notification.URGENT)
                     rxBus.send(EventNewNotification(reportFail))
-                    pumpSync.insertAnnouncement(resourceHelper.gs(R.string.approachingdailylimit) + ": " + danaPump.dailyTotalUnits + "/" + danaPump.maxDailyTotalUnits + "U", null, danaPump.pumpType(), danaPump.serialNumber)
+                    pumpSync.insertAnnouncement(
+                        resourceHelper.gs(R.string.approachingdailylimit) + ": " + danaPump.dailyTotalUnits + "/" + danaPump.maxDailyTotalUnits + "U",
+                        null,
+                        danaPump.pumpType(),
+                        danaPump.serialNumber
+                    )
                     lastApproachingDailyLimit = System.currentTimeMillis()
                 }
             }
@@ -235,6 +240,8 @@ class DanaRSService : DaggerService() {
         }
         danaPump.lastHistoryFetched = if (danaPump.lastEventTimeLoaded != 0L) danaPump.lastEventTimeLoaded - T.mins(1).msecs() else 0
         aapsLogger.debug(LTag.PUMPCOMM, "Events loaded")
+        rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.gettingpumpstatus)))
+        sendMessage(DanaRSPacketGeneralInitialScreenInformation(injector))
         danaPump.lastConnection = System.currentTimeMillis()
         return PumpEnactResult(injector).success(msg.success())
     }
@@ -260,7 +267,7 @@ class DanaRSService : DaggerService() {
         if (carbs > 0) {
 //            MsgSetCarbsEntry msg = new MsgSetCarbsEntry(carbTime, carbs); ####
 //            sendMessage(msg);
-            val msgSetHistoryEntryV2 = DanaRSPacketAPSSetEventHistory(injector, DanaPump.CARBS, carbTime, carbs, 0)
+            val msgSetHistoryEntryV2 = DanaRSPacketAPSSetEventHistory(injector, DanaPump.HistoryEntry.CARBS.value, carbTime, carbs, 0)
             sendMessage(msgSetHistoryEntryV2)
             danaPump.lastHistoryFetched = min(danaPump.lastHistoryFetched, carbTime - T.mins(1).msecs())
         }

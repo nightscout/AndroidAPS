@@ -43,6 +43,7 @@ dependencies {
     api "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
     api "org.apache.commons:commons-lang3:$commonslang3_version"
     api "commons-codec:commons-codec:$commonscodec_version"
+    api "com.uber.rxdogtag:rxdogtag:1.0.1"
 
     //CryptoUtil
     api 'com.madgag.spongycastle:core:1.58.0.0'

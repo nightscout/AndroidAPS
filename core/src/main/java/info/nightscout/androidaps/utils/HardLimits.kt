@@ -40,7 +40,7 @@ class HardLimits @Inject constructor(
 
         // Very Hard Limits Ranges
         // First value is the Lowest and second value is the Highest a Limit can define
-        val VERY_HARD_LIMIT_MIN_BG = intArrayOf(72, 180)
+        val VERY_HARD_LIMIT_MIN_BG = intArrayOf(80, 180)
         val VERY_HARD_LIMIT_MAX_BG = intArrayOf(90, 270)
         val VERY_HARD_LIMIT_TARGET_BG = intArrayOf(80, 200)
 

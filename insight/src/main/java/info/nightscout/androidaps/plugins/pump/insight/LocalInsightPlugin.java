@@ -1081,7 +1081,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     @NonNull @Override
     public String shortStatus(boolean veryShort) {
         StringBuilder ret = new StringBuilder();
-        if (connectionService.getLastConnected() != 0) {
+        if (connectionService != null && connectionService.getLastConnected() != 0) {
             long agoMsec = dateUtil.now() - connectionService.getLastConnected();
             int agoMin = (int) (agoMsec / 60d / 1000d);
             ret.append(resourceHelper.gs(R.string.short_status_last_connected, agoMin)).append("\n");

@@ -84,9 +84,6 @@ open class Notification {
         const val UNSUPPORTED_FIRMWARE = 28
         const val MINIMAL_BASAL_VALUE_REPLACED = 29
         const val BASAL_PROFILE_NOT_ALIGNED_TO_HOURS = 30
-        const val ZERO_VALUE_IN_PROFILE = 31
-        const val PROFILE_SWITCH_MISSING = 32
-        @Suppress("unused") const val NOT_ENG_MODE_OR_RELEASE = 33
         const val WRONG_PUMP_PASSWORD = 34
         const val PERMISSION_STORAGE = 35
         const val PERMISSION_LOCATION = 36
@@ -122,7 +119,8 @@ open class Notification {
         const val OMNIPOD_STARTUP_STATUS_REFRESH_FAILED = 69
         const val OMNIPOD_TIME_OUT_OF_SYNC = 70
         const val UNSUPPORTED_ACTION_IN_PUMP = 71
-        const val WRONG_PUMP_DATA = 71
+        const val WRONG_PUMP_DATA = 72
+        const val NSCLIENT_VERSION_DOES_NOT_MATCH = 73
 
         const val USER_MESSAGE = 1000
 

@@ -8,7 +8,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 @Suppress("SpellCheckingInspection")
-class IobTotal(var time: Long) : DataPointWithLabelInterface {
+class IobTotal(val time: Long) : DataPointWithLabelInterface {
 
     @JvmField var iob = 0.0
     @JvmField var activity = 0.0

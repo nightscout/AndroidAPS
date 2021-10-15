@@ -130,7 +130,6 @@
     <string name="overview">Overview</string>
     <string name="treatments">Treatments</string>
     <string name="virtualpump">Virtual Pump</string>
-    <string name="careportal">Careportal</string>
 
 
     <string name="configbuilder_pump">Pump</string>
@@ -320,7 +319,7 @@
     <string name="ongoingnotificaction">Ongoing Notification</string>
     <string name="old_data">OLD DATA</string>
     <string name="sms_minago">%1$dmin ago</string>
-    <string name="localprofile">Local Profile</string>
+    <string name="localprofile">Profile</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Array of %1$d elements.\nActual value:</string>
     <string name="openapsma_autosensdata_label">Autosens data</string>
@@ -943,7 +942,7 @@
     <string name="clone_label">Clone</string>
     <string name="saveorresetchangesfirst">Save or reset current changes first</string>
     <string name="deletecurrentprofile">Delete current profile?</string>
-    <string name="copytolocalprofile">Create new local profile from this profile?</string>
+    <string name="copytolocalprofile">Create new profile from this profile?</string>
     <string name="profilenamecontainsdot">Profile name contains dots.\nThis is not supported by NS.\nProfile is not uploaded to NS.</string>
     <string name="low_mark_comment">Lower value of in range area (display only)</string>
     <string name="high_mark_comment">Higher value of in range area (display only)</string>
@@ -1050,7 +1049,7 @@
 
     <string name="setupwizard_pump_riley_link_status">RileyLink status:</string>
     <string name="filter">Filter</string>
-    <string name="copytolocalprofile_invalid">Unable to create local profile. Profile is invalid.</string>
+    <string name="copytolocalprofile_invalid">Unable to create profile. Profile is invalid.</string>
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
     <string name="key_smscommunicator_report_pump_ureachable" translatable="false">smscommunicator_report_pump_ureachable</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Send SMS if unreachable pump event is triggered</string>
@@ -1084,7 +1083,7 @@
     <string name="ns_upload">Upload data to NS</string>
     <string name="key_ns_receive_profile_store" translatable="false">ns_receive_profile_store</string>
     <string name="ns_receive_profile_store">Receive profile store</string>
-    <string name="ns_receive_profile_store_summary">Synchronize profiles from NS profile editor to Local profile</string>
+    <string name="ns_receive_profile_store_summary">Synchronize profiles from NS profile editor</string>
     <string name="key_ns_receive_temp_target" translatable="false">ns_receive_temp_target</string>
     <string name="ns_receive_temp_target">Receive temporary targets</string>
     <string name="ns_receive_temp_target_summary">Accept temporary targets entered through NS or NSClient</string>

@@ -71,7 +71,6 @@
     <string name="overview">首页概览</string>
     <string name="treatments">治疗</string>
     <string name="virtualpump">虚拟泵</string>
-    <string name="careportal">护理记录</string>
     <string name="configbuilder_pump">胰岛素泵</string>
     <string name="configbuilder_pump_description">你想用 AndroidAPS连接哪个胰岛素泵？</string>
     <string name="configbuilder_profile">配置文件</string>
@@ -195,7 +194,6 @@
     <string name="ongoingnotificaction">持续的的通知</string>
     <string name="old_data">旧数据</string>
     <string name="sms_minago">%1$d分钟前</string>
-    <string name="localprofile">本地配置文件</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">%1$d 元素的数组. \n 实际值:</string>
     <string name="openapsma_autosensdata_label">Autosens 数据</string>

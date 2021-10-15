@@ -5,7 +5,7 @@ import info.nightscout.androidaps.database.entities.EffectiveProfileSwitch
 /**
  * Sync the EffectiveProfileSwitch from NS
  */
-class SyncNsEffectiveProfileSwitchTransaction(private val effectiveProfileSwitch: EffectiveProfileSwitch, private val invalidateByNsOnly: Boolean) : Transaction<SyncNsEffectiveProfileSwitchTransaction.TransactionResult>() {
+class SyncNsEffectiveProfileSwitchTransaction(private val effectiveProfileSwitch: EffectiveProfileSwitch) : Transaction<SyncNsEffectiveProfileSwitchTransaction.TransactionResult>() {
 
     override fun run(): TransactionResult {
         val result = TransactionResult()
@@ -24,8 +24,6 @@ class SyncNsEffectiveProfileSwitchTransaction(private val effectiveProfileSwitch
             }
             return result
         }
-
-        if (invalidateByNsOnly) return result
 
         // not known nsId
         val existing = database.effectiveProfileSwitchDao.findByTimestamp(effectiveProfileSwitch.timestamp)

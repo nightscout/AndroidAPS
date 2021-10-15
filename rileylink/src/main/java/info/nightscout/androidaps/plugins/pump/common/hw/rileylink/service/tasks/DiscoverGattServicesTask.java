@@ -38,7 +38,7 @@ public class DiscoverGattServicesTask extends ServiceTask {
         RileyLinkPumpDevice pumpDevice = (RileyLinkPumpDevice) activePlugin.getActivePump();
 
         if (needToConnect) {
-            pumpDevice.getRileyLinkService().getRileyLinkBLE().connectGatt();
+            pumpDevice.getRileyLinkService().getRileyLinkBLE().connectGattCheckOrange();
         }
 
         pumpDevice.getRileyLinkService().getRileyLinkBLE().discoverServices();

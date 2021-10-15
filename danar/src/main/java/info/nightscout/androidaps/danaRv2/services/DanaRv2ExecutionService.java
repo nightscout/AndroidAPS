@@ -17,7 +17,7 @@ import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.danaRv2.DanaRv2Plugin;
 import info.nightscout.androidaps.danaRv2.comm.MessageHashTableRv2;
 import info.nightscout.androidaps.danaRv2.comm.MsgCheckValue_v2;
-import info.nightscout.androidaps.danaRv2.comm.MsgHistoryEvents_v2;
+import info.nightscout.androidaps.danaRv2.comm.MsgHistoryEventsV2;
 import info.nightscout.androidaps.danaRv2.comm.MsgSetAPSTempBasalStart_v2;
 import info.nightscout.androidaps.danaRv2.comm.MsgSetHistoryEntry_v2;
 import info.nightscout.androidaps.danar.R;
@@ -344,7 +344,8 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
         if (carbs > 0) {
             MsgSetCarbsEntry msg = new MsgSetCarbsEntry(injector, carbtime, carbs);
             mSerialIOThread.sendMessage(msg);
-            MsgSetHistoryEntry_v2 msgSetHistoryEntry_v2 = new MsgSetHistoryEntry_v2(injector, DanaPump.CARBS, carbtime, carbs, 0);
+            MsgSetHistoryEntry_v2 msgSetHistoryEntry_v2 = new MsgSetHistoryEntry_v2(injector,
+                    DanaPump.HistoryEntry.CARBS.getValue(), carbtime, carbs, 0);
             mSerialIOThread.sendMessage(msgSetHistoryEntry_v2);
             danaPump.lastHistoryFetched = Math.min(danaPump.lastHistoryFetched, carbtime - T.Companion.mins(1).msecs());
         }
@@ -413,7 +414,8 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
         if (!isConnected()) return false;
         MsgSetCarbsEntry msg = new MsgSetCarbsEntry(injector, time, amount);
         mSerialIOThread.sendMessage(msg);
-        MsgSetHistoryEntry_v2 msgSetHistoryEntry_v2 = new MsgSetHistoryEntry_v2(injector, DanaPump.CARBS, time, amount, 0);
+        MsgSetHistoryEntry_v2 msgSetHistoryEntry_v2 = new MsgSetHistoryEntry_v2(injector,
+                DanaPump.HistoryEntry.CARBS.getValue(), time, amount, 0);
         mSerialIOThread.sendMessage(msgSetHistoryEntry_v2);
         danaPump.lastHistoryFetched = Math.min(danaPump.lastHistoryFetched, time - T.Companion.mins(1).msecs());
         return true;
@@ -430,7 +432,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
         if (!isConnected())
             return new PumpEnactResult(injector).success(false);
         SystemClock.sleep(300);
-        MsgHistoryEvents_v2 msg = new MsgHistoryEvents_v2(injector, danaPump.lastHistoryFetched);
+        MsgHistoryEventsV2 msg = new MsgHistoryEventsV2(injector, danaPump.lastHistoryFetched);
         aapsLogger.debug(LTag.PUMP, "Loading event history from: " + dateUtil.dateAndTimeString(danaPump.lastHistoryFetched));
 
         mSerialIOThread.sendMessage(msg);

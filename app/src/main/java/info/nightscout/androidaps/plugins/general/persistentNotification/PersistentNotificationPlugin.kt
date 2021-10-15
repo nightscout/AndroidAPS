@@ -10,18 +10,17 @@ import androidx.core.app.RemoteInput
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.events.*
+import info.nightscout.androidaps.extensions.toStringShort
+import info.nightscout.androidaps.extensions.valueToUnitsString
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.extensions.toStringShort
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.androidaps.extensions.valueToUnitsString
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -89,7 +88,7 @@ class PersistentNotificationPlugin @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException))
         disposable.add(rxBus
-            .toObservable(EventNewBasalProfile::class.java)
+            .toObservable(EventEffectiveProfileSwitchChanged::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException))
         disposable.add(rxBus

@@ -68,7 +68,7 @@ class WearPlugin @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe({ sendDataToWatch(status = true, basals = true, bgValue = false) }, fabricPrivacy::logException))
         disposable.add(rxBus
-            .toObservable(EventNewBasalProfile::class.java)
+            .toObservable(EventEffectiveProfileSwitchChanged::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ sendDataToWatch(status = false, basals = true, bgValue = false) }, fabricPrivacy::logException))
         disposable.add(rxBus

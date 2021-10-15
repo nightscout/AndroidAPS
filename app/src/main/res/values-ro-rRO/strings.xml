@@ -78,7 +78,6 @@
     <string name="overview">Privire de ansamblu</string>
     <string name="treatments">Tratamente</string>
     <string name="virtualpump">Pompă virtuală</string>
-    <string name="careportal">Careportal</string>
     <string name="configbuilder_pump">Pompă</string>
     <string name="configbuilder_pump_description">Ce pompă doriți să folosiți cu AndroidAPS?</string>
     <string name="configbuilder_profile">Profil</string>
@@ -256,7 +255,6 @@
     <string name="ongoingnotificaction">Notificare activă</string>
     <string name="old_data">DATE VECHI</string>
     <string name="sms_minago">acum %1$dmin</string>
-    <string name="localprofile">Profil local</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Matrice de %1$d elemente.\nValoarea curentă:</string>
     <string name="openapsma_autosensdata_label">Date Autosens</string>
@@ -748,7 +746,6 @@
     <string name="clone_label">Clonează</string>
     <string name="saveorresetchangesfirst">Salvează sau resetează modificările curente mai întâi</string>
     <string name="deletecurrentprofile">Ştergeţi profilul curent?</string>
-    <string name="copytolocalprofile">Creați un profil local nou pe baza acestui profil?</string>
     <string name="profilenamecontainsdot">Numele profilului conține puncte.\nAcest lucru nu este permis de NS.\nProfilul nu a fost înregistrat în NS.</string>
     <string name="low_mark_comment">Valoarea inferioară a intervalului țintă (doar afișare)</string>
     <string name="high_mark_comment">Valoarea superioară a intervalului țintă (doar afișare)</string>
@@ -829,7 +826,6 @@
     <string name="dpvdefaultprofile">Profil implicit DPV</string>
     <string name="setupwizard_pump_riley_link_status">Stare RileyLink:</string>
     <string name="filter">Filtru</string>
-    <string name="copytolocalprofile_invalid">Nu se poate crea profilul local. Profilul este invalid.</string>
     <string name="cta_dont_kill_my_app_info">Nu-mi opri aplicația?</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Trimite SMS dacă este generata o alarma de eroare conexiune pompa</string>
     <string name="smscommunicator_pump_ureachable">Raportează pompa inaccesibilă</string>

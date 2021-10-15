@@ -4,7 +4,7 @@ import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import info.nightscout.androidaps.danaRKorean.comm.*
 import info.nightscout.androidaps.danaRv2.comm.MsgCheckValue_v2
-import info.nightscout.androidaps.danaRv2.comm.MsgHistoryEvents_v2
+import info.nightscout.androidaps.danaRv2.comm.MsgHistoryEventsV2
 import info.nightscout.androidaps.danaRv2.comm.MsgSetAPSTempBasalStart_v2
 import info.nightscout.androidaps.danaRv2.comm.MsgSetHistoryEntry_v2
 import info.nightscout.androidaps.danaRv2.comm.MsgStatusAPS_v2
@@ -69,7 +69,7 @@ abstract class DanaRCommModule {
     @ContributesAndroidInjector abstract fun contributesMsgHistoryNew(): MsgHistoryNew
 
     @ContributesAndroidInjector abstract fun contributesMsgCheckValue_v2(): MsgCheckValue_v2
-    @ContributesAndroidInjector abstract fun contributesMsgHistoryEvents_v2(): MsgHistoryEvents_v2
+    @ContributesAndroidInjector abstract fun contributesMsgHistoryEventsV2(): MsgHistoryEventsV2
     @ContributesAndroidInjector abstract fun contributesMsgSetAPSTempBasalStart_v2(): MsgSetAPSTempBasalStart_v2
     @ContributesAndroidInjector abstract fun contributesMsgSetHistoryEntry_v2(): MsgSetHistoryEntry_v2
     @ContributesAndroidInjector abstract fun contributesMsgStatusAPS_v2(): MsgStatusAPS_v2

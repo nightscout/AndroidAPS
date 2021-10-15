@@ -78,9 +78,9 @@ class CompatDBHelper @Inject constructor(
                 aapsLogger.debug(LTag.DATABASE, "Firing EventProfileSwitchChanged")
                 rxBus.send(EventProfileSwitchChanged())
             }
-            it.filterIsInstance<EffectiveProfileSwitch>().firstOrNull()?.let {
+            it.filterIsInstance<EffectiveProfileSwitch>().firstOrNull()?.let { eps ->
                 aapsLogger.debug(LTag.DATABASE, "Firing EventProfileSwitchChanged")
-                rxBus.send(EventProfileSwitchChanged())
+                rxBus.send(EventEffectiveProfileSwitchChanged(eps))
             }
             it.filterIsInstance<OfflineEvent>().firstOrNull()?.let {
                 aapsLogger.debug(LTag.DATABASE, "Firing EventOfflineChange")

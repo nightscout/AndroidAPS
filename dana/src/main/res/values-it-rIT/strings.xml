@@ -94,8 +94,6 @@
     <string name="profile_set_failed">Impostazione profilo basale fallita</string>
     <string name="danar_bluetooth_status">Stato bluetooth</string>
     <string name="danar_iob_label">IOB micro</string>
-    <string name="basal_step">Incremento basale</string>
-    <string name="bolus_step">Incremento bolo</string>
     <string name="virtualpump_firmware_label">Firmware</string>
     <string name="danar_pump_settings">Impostazioni micro Dana</string>
     <string name="timeformat12h">12h</string>

@@ -21,6 +21,7 @@
     <string name="tbr_formatter">%1$d%% for %2$d / %3$d min</string>
     <string name="multiwave_bolus">Duální bolus</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U for %3$d min</string>
+    <string name="insight_last_bolus">Poslední bolus</string>
     <string name="searching_for_devices">Vyhledávání zařízení…</string>
     <string name="pairing_completed">Párování dokončeno</string>
     <string name="code_compare">Souhlasí kódy zobrazené na tomto zařízení a na pumpě?</string>

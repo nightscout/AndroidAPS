@@ -129,7 +129,6 @@
     <string name="diaconn_g8_logmealfail">Repas échoué</string>
     <string name="diaconn_g8_logsuccess">Effectué</string>
     <string name="diaconn_g8_logmealsuccess">Repas réussi</string>
-    <string name="key_diaconn_g8_logtubechange">diaconn_g8_logtubechange</string>
     <string name="diaconn_g8_errorcode_1">Recherche impossible en raison d\'une erreur CRC de paquets.</string>
     <string name="diaconn_g8_errorcode_2">Impossible de définir à cause d\'une erreur de paramètre d\'entrée.</string>
     <string name="diaconn_g8_errorcode_3">Impossible de définir à cause d\'une erreur de spécification de protocole.</string>
