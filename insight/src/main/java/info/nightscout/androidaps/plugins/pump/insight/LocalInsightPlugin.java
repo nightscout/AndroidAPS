@@ -192,6 +192,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     private TBROverNotificationBlock tbrOverNotificationBlock;
     public double lastBolusAmount = 0;
     public long lastBolusTimestamp = 0L;
+    public double concentration;
 
     @Inject
     public LocalInsightPlugin(
@@ -229,9 +230,13 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         this.dateUtil = dateUtil;
         this.insightDbHelper = insightDbHelper;
         this.pumpSync = pumpSync;
-
+        updateConcentration();
         pumpDescription = new PumpDescription();
         pumpDescription.fillFor(PumpType.ACCU_CHEK_INSIGHT);
+    }
+
+    private void updateConcentration() {
+        concentration = sp.getString(R.string.key_typeinsulin,"U100").equals("U100") ? 1.0 : 2.0 ;
     }
 
     public TBROverNotificationBlock getTBROverNotificationBlock() {
@@ -251,22 +256,27 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     }
 
     public CartridgeStatus getCartridgeStatus() {
+        updateConcentration();
         return cartridgeStatus;
     }
 
     public TotalDailyDose getTotalDailyDose() {
+        updateConcentration();
         return totalDailyDose;
     }
 
     public ActiveBasalRate getActiveBasalRate() {
+        updateConcentration();
         return activeBasalRate;
     }
 
     public ActiveTBR getActiveTBR() {
+        updateConcentration();
         return activeTBR;
     }
 
     public List<ActiveBolus> getActiveBoluses() {
+        updateConcentration();
         return activeBoluses;
     }
 
@@ -470,6 +480,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
 
     @NonNull @Override
     public PumpEnactResult setNewBasalProfile(Profile profile) {
+        updateConcentration();
         PumpEnactResult result = new PumpEnactResult(getInjector());
         rxBus.send(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
         List<BasalProfileBlock> profileBlocks = new ArrayList<>();
@@ -479,7 +490,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             if (profile.getBasalValues().length > i + 1)
                 nextValue = profile.getBasalValues()[i + 1];
             BasalProfileBlock profileBlock = new BasalProfileBlock();
-            profileBlock.setBasalAmount(basalValue.getValue() > 5 ? Math.round(basalValue.getValue() / 0.1) * 0.1 : Math.round(basalValue.getValue() / 0.01) * 0.01);
+            profileBlock.setBasalAmount(basalValue.getValue() > 5 ? Math.round(basalValue.getValue() / concentration / 0.1) * 0.1 : Math.round(basalValue.getValue() / concentration / 0.01) * 0.01);
             profileBlock.setDuration((((nextValue != null ? nextValue.getTimeAsSeconds() : 24 * 60 * 60) - basalValue.getTimeAsSeconds()) / 60));
             profileBlocks.add(profileBlock);
         }
@@ -534,7 +545,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 nextValue = profile.getBasalValues()[i + 1];
             if (profileBlock.getDuration() * 60 != (nextValue != null ? nextValue.getTimeAsSeconds() : 24 * 60 * 60) - basalValue.getTimeAsSeconds())
                 return false;
-            if (Math.abs(profileBlock.getBasalAmount() - basalValue.getValue()) > (basalValue.getValue() > 5 ? 0.051 : 0.0051))
+            if (Math.abs(profileBlock.getBasalAmount() - basalValue.getValue() / concentration) > (basalValue.getValue() / concentration > 5 ? 0.051 : 0.0051))
                 return false;
         }
         return true;
@@ -549,14 +560,14 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     @Override
     public double getBaseBasalRate() {
         if (connectionService == null || alertService == null) return 0;
-        if (activeBasalRate != null) return activeBasalRate.getActiveBasalRate();
+        if (activeBasalRate != null) return activeBasalRate.getActiveBasalRate() * concentration;
         else return 0;
     }
 
     @Override
     public double getReservoirLevel() {
         if (cartridgeStatus == null) return 0;
-        return cartridgeStatus.getRemainingAmount();
+        return cartridgeStatus.getRemainingAmount() * concentration;
     }
 
     @Override
@@ -567,11 +578,12 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
 
     @NonNull @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
+        updateConcentration();
         if (detailedBolusInfo.insulin == 0 || detailedBolusInfo.carbs > 0) {
             throw new IllegalArgumentException(detailedBolusInfo.toString(), new Exception());
         }
         PumpEnactResult result = new PumpEnactResult(getInjector());
-        double insulin = Math.round(detailedBolusInfo.insulin / 0.01) * 0.01;
+        double insulin = Math.round(detailedBolusInfo.insulin / concentration / 0.01) * 0.01;
         if (insulin > 0) {
             try {
                 synchronized ($bolusLock) {
@@ -588,7 +600,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 EventOverviewBolusProgress.Treatment t = new EventOverviewBolusProgress.Treatment(0, 0, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB);
                 final EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.INSTANCE;
                 bolusingEvent.setT(t);
-                bolusingEvent.setStatus(resourceHelper.gs(R.string.insight_delivered, 0d, insulin));
+                bolusingEvent.setStatus(resourceHelper.gs(R.string.insight_delivered, 0d, insulin * concentration));
                 bolusingEvent.setPercent(0);
                 rxBus.send(bolusingEvent);
                 int trials = 0;
@@ -627,14 +639,14 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                         trials = -1;
                         int percentBefore = bolusingEvent.getPercent();
                         bolusingEvent.setPercent((int) (100D / activeBolus.getInitialAmount() * (activeBolus.getInitialAmount() - activeBolus.getRemainingAmount())));
-                        bolusingEvent.setStatus(resourceHelper.gs(R.string.insight_delivered, activeBolus.getInitialAmount() - activeBolus.getRemainingAmount(), activeBolus.getInitialAmount()));
+                        bolusingEvent.setStatus(resourceHelper.gs(R.string.insight_delivered, (activeBolus.getInitialAmount() - activeBolus.getRemainingAmount())*concentration, activeBolus.getInitialAmount() * concentration));
                         if (percentBefore != bolusingEvent.getPercent())
                             rxBus.send(bolusingEvent);
                     } else {
                         synchronized ($bolusLock) {
                             if (bolusCancelled || trials == -1 || trials++ >= 5) {
                                 if (!bolusCancelled) {
-                                    bolusingEvent.setStatus(resourceHelper.gs(R.string.insight_delivered, insulin, insulin));
+                                    bolusingEvent.setStatus(resourceHelper.gs(R.string.insight_delivered, insulin*concentration, insulin*concentration));
                                     bolusingEvent.setPercent(100);
                                     rxBus.send(bolusingEvent);
                                 }
@@ -686,10 +698,11 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
 
     @NonNull @Override
     public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, @NonNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
+        updateConcentration();
         PumpEnactResult result = new PumpEnactResult(getInjector());
         if (activeBasalRate == null) return result;
         if (activeBasalRate.getActiveBasalRate() == 0) return result;
-        double percent = 100D / activeBasalRate.getActiveBasalRate() * absoluteRate;
+        double percent = 100D / (activeBasalRate.getActiveBasalRate() * concentration) * absoluteRate;
         if (isFakingTempsByExtendedBoluses()) {
             PumpEnactResult cancelEBResult = cancelExtendedBolusOnly();
             if (cancelEBResult.getSuccess()) {
@@ -797,7 +810,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             DeliverBolusMessage bolusMessage = new DeliverBolusMessage();
             bolusMessage.setBolusType(BolusType.EXTENDED);
             bolusMessage.setDuration(durationInMinutes);
-            bolusMessage.setExtendedAmount(insulin);
+            bolusMessage.setExtendedAmount(insulin/concentration);
             bolusMessage.setImmediateAmount(0);
             bolusMessage.setVibration(disableVibration);
             int bolusID = connectionService.requestMessage(bolusMessage).await().getBolusId();
@@ -1093,13 +1106,13 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         if (activeBoluses != null) for (ActiveBolus activeBolus : activeBoluses) {
             if (activeBolus.getBolusType() == BolusType.STANDARD) continue;
             ret.append(resourceHelper.gs(activeBolus.getBolusType() == BolusType.MULTIWAVE ? R.string.short_status_multiwave : R.string.short_status_extended,
-                    activeBolus.getRemainingAmount(), activeBolus.getInitialAmount(), activeBolus.getRemainingDuration())).append("\n");
+                    activeBolus.getRemainingAmount()*concentration, activeBolus.getInitialAmount()*concentration, activeBolus.getRemainingDuration())).append("\n");
         }
         if (!veryShort && totalDailyDose != null) {
-            ret.append(resourceHelper.gs(R.string.short_status_tdd, totalDailyDose.getBolusAndBasal())).append("\n");
+            ret.append(resourceHelper.gs(R.string.short_status_tdd, totalDailyDose.getBolusAndBasal()*concentration)).append("\n");
         }
         if (cartridgeStatus != null) {
-            ret.append(resourceHelper.gs(R.string.short_status_reservoir, cartridgeStatus.getRemainingAmount())).append("\n");
+            ret.append(resourceHelper.gs(R.string.short_status_reservoir, cartridgeStatus.getRemainingAmount()*concentration)).append("\n");
         }
         if (batteryStatus != null) {
             ret.append(resourceHelper.gs(R.string.short_status_battery, batteryStatus.getBatteryAmount())).append("\n");
@@ -1276,8 +1289,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         calendar.set(Calendar.DAY_OF_MONTH, event.getTotalDay());
         pumpSync.createOrUpdateTotalDailyDose(
                 calendar.getTimeInMillis(),
-                event.getBolusTotal(),
-                event.getBasalTotal(),
+                event.getBolusTotal()*concentration,        //Todo timestamp of a insuline change
+                event.getBasalTotal()*concentration,
                 0.0, // will be calculated automatically
                 event.getEventPosition(),
                 PumpType.ACCU_CHEK_INSIGHT,
@@ -1397,7 +1410,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         if (event.getBolusType() == BolusType.STANDARD || event.getBolusType() == BolusType.MULTIWAVE) {
             pumpSync.syncBolusWithPumpId(
                     bolusID.getTimestamp(),
-                    event.getImmediateAmount(),
+                    event.getImmediateAmount()*concentration,
                     null,
                     bolusID.getId(),
                     PumpType.ACCU_CHEK_INSIGHT,
@@ -1407,7 +1420,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             if (profileFunction.getProfile(bolusID.getTimestamp()) != null)
                 pumpSync.syncExtendedBolusWithPumpId(
                         bolusID.getTimestamp(),
-                        event.getExtendedAmount(),
+                        event.getExtendedAmount()*concentration,
                         T.Companion.mins(event.getDuration()).msecs(),
                         isFakingTempsByExtendedBoluses(),
                         bolusID.getId(),
@@ -1436,7 +1449,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         if (event.getBolusType() == BolusType.STANDARD || event.getBolusType() == BolusType.MULTIWAVE) {
             pumpSync.syncBolusWithPumpId(
                     bolusID.getTimestamp(),
-                    event.getImmediateAmount(),
+                    event.getImmediateAmount()*concentration,
                     null,
                     bolusID.getId(),
                     PumpType.ACCU_CHEK_INSIGHT,
@@ -1448,7 +1461,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             if (event.getDuration() > 0 && profileFunction.getProfile(bolusID.getTimestamp()) != null)
                     pumpSync.syncExtendedBolusWithPumpId(
                             bolusID.getTimestamp(),
-                            event.getExtendedAmount(),
+                            event.getExtendedAmount()*concentration,
                             timestamp - startTimestamp,
                             isFakingTempsByExtendedBoluses(),
                             bolusID.getId(),

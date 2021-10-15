@@ -85,4 +85,8 @@
     <string name="min_recovery_duration">Min. recovery duration [s]</string>
     <string name="pump_alert">Pump alert</string>
     <string name="pairing_information">Pairing information</string>
+    <string name="key_typeinsulin" translatable="false">type_insulin</string>
+    <string name="typeinsulin_title">Select Insulin Concentration (default U100)</string>
+    <string name="typeinsulin_summary">Be very careful with this setting, selecting the wrong concentration may result in an insulin overdose.</string>
+
 </resources>

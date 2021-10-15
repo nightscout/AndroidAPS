@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="typeInsulinArray">
+        <item>U100</item>
+        <item>U200</item>
+    </string-array>
+    <string-array name="typeInsulinValues" translatable="false">
+        <item>U100</item>
+        <item>U200</item>
+    </string-array>
+</resources>
