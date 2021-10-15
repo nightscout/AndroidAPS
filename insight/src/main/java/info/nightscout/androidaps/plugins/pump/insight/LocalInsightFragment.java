@@ -178,6 +178,7 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
         getTDDItems(statusItems);
         getBaseBasalRateItem(statusItems);
         getTBRItem(statusItems);
+        getLastBolusItem(statusItems);
         getBolusItems(statusItems);
         for (int i = 0; i < statusItems.size(); i++) {
             statusItemContainer.addView(statusItems.get(i));
@@ -239,7 +240,16 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
             default:
                 long lastConnection = localInsightPlugin.getConnectionService().getLastConnected();
                 if (lastConnection == 0) return;
-                statusItems.add(getStatusItem(resourceHelper.gs(R.string.last_connected), dateUtil.timeString(lastConnection)));
+                long agoMsc = System.currentTimeMillis() - lastConnection;
+                double lastConnectionMinAgo = agoMsc / 60d / 1000d;
+                String ago;
+                if (lastConnectionMinAgo < 60) {
+                    ago = dateUtil.minAgo(resourceHelper, lastConnection);
+                } else {
+                    ago = dateUtil.hourAgo(lastConnection, resourceHelper);
+                }
+                statusItems.add(getStatusItem(resourceHelper.gs(R.string.last_connected),
+                        dateUtil.timeString(lastConnection) + " (" + ago + ")"));
         }
     }
 
@@ -304,6 +314,21 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
         ActiveTBR activeTBR = localInsightPlugin.getActiveTBR();
         statusItems.add(getStatusItem(resourceHelper.gs(R.string.tempbasal_label),
                 resourceHelper.gs(R.string.tbr_formatter, activeTBR.getPercentage(), activeTBR.getInitialDuration() - activeTBR.getRemainingDuration(), activeTBR.getInitialDuration())));
+    }
+
+    private void getLastBolusItem(List<View> statusItems) {
+        if (localInsightPlugin.lastBolusAmount == 0 || localInsightPlugin.lastBolusTimestamp == 0) return;
+        long agoMsc = System.currentTimeMillis() - localInsightPlugin.lastBolusTimestamp;
+        double bolusMinAgo = agoMsc / 60d / 1000d;
+        String unit = resourceHelper.gs(R.string.insulin_unit_shortname);
+        String ago;
+        if (bolusMinAgo < 60) {
+            ago = dateUtil.minAgo(resourceHelper, localInsightPlugin.lastBolusTimestamp);
+        } else {
+            ago = dateUtil.hourAgo(localInsightPlugin.lastBolusTimestamp, resourceHelper);
+        }
+        statusItems.add(getStatusItem(resourceHelper.gs(R.string.insight_last_bolus),
+                resourceHelper.gs(R.string.insight_last_bolus_formater, localInsightPlugin.lastBolusAmount, unit, ago)));
     }
 
     private void getBolusItems(List<View> statusItems) {

@@ -135,6 +135,7 @@ class QueueThread internal constructor(
                         aapsLogger.debug(LTag.PUMPQUEUE, "disconnected")
                         return
                     } else {
+                        rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.WAITING_FOR_DISCONNECTION))
                         aapsLogger.debug(LTag.PUMPQUEUE, "waiting for disconnect")
                         SystemClock.sleep(1000)
                     }

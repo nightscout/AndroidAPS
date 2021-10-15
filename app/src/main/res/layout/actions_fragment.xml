@@ -273,7 +273,7 @@
                 style="@style/ButtonSmallFontStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:drawableTop="@drawable/ic_danarhistory"
+                android:drawableTop="@drawable/ic_pump_history"
                 android:paddingLeft="0dp"
                 android:paddingRight="0dp"
                 android:text="@string/nav_historybrowser"

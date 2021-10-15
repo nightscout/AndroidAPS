@@ -10,6 +10,7 @@ class EventPumpStatusChanged : EventStatus {
         CONNECTED,
         HANDSHAKING,
         PERFORMING,
+        WAITING_FOR_DISCONNECTION,
         DISCONNECTING,
         DISCONNECTED
     }
@@ -46,12 +47,13 @@ class EventPumpStatusChanged : EventStatus {
     // status for startup wizard
     override fun getStatus(resourceHelper: ResourceHelper): String {
         return when (status) {
-            Status.CONNECTING    -> String.format(resourceHelper.gs(R.string.connectingfor), secondsElapsed)
-            Status.HANDSHAKING   -> resourceHelper.gs(R.string.handshaking)
-            Status.CONNECTED     -> resourceHelper.gs(R.string.connected)
-            Status.PERFORMING    -> performingAction
-            Status.DISCONNECTING -> resourceHelper.gs(R.string.disconnecting)
-            Status.DISCONNECTED  -> ""
+            Status.CONNECTING                -> String.format(resourceHelper.gs(R.string.connectingfor), secondsElapsed)
+            Status.HANDSHAKING               -> resourceHelper.gs(R.string.handshaking)
+            Status.CONNECTED                 -> resourceHelper.gs(R.string.connected)
+            Status.PERFORMING                -> performingAction
+            Status.WAITING_FOR_DISCONNECTION -> resourceHelper.gs(R.string.waiting_for_disconnection)
+            Status.DISCONNECTING             -> resourceHelper.gs(R.string.disconnecting)
+            Status.DISCONNECTED              -> ""
         }
     }
 }

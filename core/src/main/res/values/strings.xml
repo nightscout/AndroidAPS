@@ -81,6 +81,7 @@
     <string name="connected">Connected</string>
     <string name="disconnected">Disconnected</string>
     <string name="disconnecting">Disconnecting</string>
+    <string name="waiting_for_disconnection">Waiting for disconnection</string>
     <string name="androidaps_start">AndroidAPS started</string>
     <string name="formatinsulinunits1">%1$.1f U</string>
     <string name="formatinsulinunits">%1$.2f U</string>
@@ -249,12 +250,17 @@
     <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> in <b>%3$d</b> days<br>]]></string>
 
     <!--    Translator-->
+    <string name="careportal">Careportal</string>
     <string name="careportal_bgcheck">BG Check</string>
     <string name="careportal_mbg">Manual BG or Calibration</string>
     <string name="careportal_announcement">Announcement</string>
     <string name="careportal_note">Note</string>
     <string name="careportal_question">Question</string>
     <string name="careportal_exercise">Exercise</string>
+    <string name="careportal_announcement_message">Announcement : %1$s</string>
+    <string name="careportal_note_message">Note : %1$s</string>
+    <string name="careportal_question_message">Question : %1$s</string>
+    <string name="careportal_exercise_message">Exercise : %1$s</string>
     <string name="careportal_pumpsitechange">Pump Site Change</string>
     <string name="careportal_cgmsensorinsert">CGM Sensor Insert</string>
     <string name="careportal_cgmsensorstart">CGM Sensor Start</string>
@@ -272,6 +278,7 @@
     <string name="careportal_openapsoffline">OpenAPS Offline</string>
     <string name="careportal_pumpbatterychange">Pump Battery Change</string>
     <string name="careportal_temporarytarget">Temporary target</string>
+    <string name="careportal_temporarytargetvalue">Temporary target value</string>
     <string name="careportal_temporarytargetcancel">Temporary target cancel</string>
     <string name="boluswizard">Bolus wizard</string>
     <string name="glucosetype_finger">Finger</string>
@@ -288,6 +295,8 @@
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
     <string name="record">Record</string>
+    <string name="reading_pump_history">Reading pump history</string>
+    <string name="pump_icon">Pump icon</string>
 
     <!--    Command-->
     <string name="connectiontimedout">Connection timed out</string>
@@ -492,6 +501,7 @@
     <string name="valueoutofrange">»%1$s« is out of hard limits</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f is out of hard limits</string>
     <string name="basal_value">Basal value</string>
+    <string name="nsclient_version_does_not_match">NSClient version doesn\'t match to AndroidAPS. Please update.</string>
 
     <plurals name="days">
         <item quantity="one">%1$d day</item>

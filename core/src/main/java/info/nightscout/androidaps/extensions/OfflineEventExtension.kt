@@ -15,6 +15,7 @@ fun OfflineEvent.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
         .put("eventType", TherapyEvent.Type.APS_OFFLINE.text)
         .put("isValid", isValid)
         .put("duration", T.msecs(duration).mins())
+        .put("durationInMilliseconds", duration)
         .put("reason", reason.name)
         .also {
             if (interfaceIDs.pumpId != null) it.put("pumpId", interfaceIDs.pumpId)
@@ -39,6 +40,7 @@ fun OfflineEvent.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
 fun offlineEventFromJson(jsonObject: JSONObject): OfflineEvent? {
     val timestamp = JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null) ?: return null
     val duration = JsonHelper.safeGetLong(jsonObject, "duration")
+    val durationInMilliseconds = JsonHelper.safeGetLongAllowNull(jsonObject, "durationInMilliseconds")
     val isValid = JsonHelper.safeGetBoolean(jsonObject, "isValid", true)
     val id = JsonHelper.safeGetStringAllowNull(jsonObject, "_id", null)
     val pumpId = JsonHelper.safeGetLongAllowNull(jsonObject, "pumpId", null)
@@ -50,7 +52,7 @@ fun offlineEventFromJson(jsonObject: JSONObject): OfflineEvent? {
 
     return OfflineEvent(
         timestamp = timestamp,
-        duration = T.mins(duration).msecs(),
+        duration = durationInMilliseconds ?: T.mins(duration).msecs(),
         isValid = isValid,
         reason = reason
     ).also {

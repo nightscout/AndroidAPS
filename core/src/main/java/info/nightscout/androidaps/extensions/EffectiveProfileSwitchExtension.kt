@@ -4,7 +4,6 @@ import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.EffectiveProfileSwitch
 import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
@@ -36,6 +35,7 @@ fun EffectiveProfileSwitch.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObjec
         .put("originalPercentage", originalPercentage)
         .put("originalDuration", originalDuration)
         .put("originalEnd", originalEnd)
+        .put("notes", originalCustomizedName)
         .also {
             if (interfaceIDs.pumpId != null) it.put("pumpId", interfaceIDs.pumpId)
             if (interfaceIDs.pumpType != null) it.put("pumpType", interfaceIDs.pumpType!!.name)
@@ -43,7 +43,7 @@ fun EffectiveProfileSwitch.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObjec
             if (isAdd && interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId)
         }
 
-fun effectiveProfileSwitchFromJson(jsonObject: JSONObject, dateUtil: DateUtil, activePlugin: ActivePlugin): EffectiveProfileSwitch? {
+fun effectiveProfileSwitchFromJson(jsonObject: JSONObject, dateUtil: DateUtil): EffectiveProfileSwitch? {
     val timestamp = JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null) ?: return null
     val originalTimeshift = JsonHelper.safeGetLong(jsonObject, "originalTimeshift")
     val originalDuration = JsonHelper.safeGetLong(jsonObject, "originalDuration")

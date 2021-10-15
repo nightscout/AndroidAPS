@@ -78,7 +78,6 @@
     <string name="overview">Visão Geral</string>
     <string name="treatments">Tratamentos</string>
     <string name="virtualpump">Bomba virtual</string>
-    <string name="careportal">Careportal</string>
     <string name="configbuilder_pump">Bomba</string>
     <string name="configbuilder_pump_description">Qual a bomba que gostaria de utilizar com AndroidAPS?</string>
     <string name="configbuilder_profile">Perfil</string>
@@ -257,7 +256,6 @@
     <string name="ongoingnotificaction">Notificação em curso</string>
     <string name="old_data">DADOS ANTIGOS</string>
     <string name="sms_minago">%1$dmin atrás</string>
-    <string name="localprofile">Perfil local</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Array de %1$d elementos.\nValor actual:</string>
     <string name="openapsma_autosensdata_label">Dados Autosens</string>
@@ -750,7 +748,6 @@
     <string name="clone_label">Clone</string>
     <string name="saveorresetchangesfirst">Guardar ou repor as alterações actuais primeiro</string>
     <string name="deletecurrentprofile">Eliminar perfil actual?</string>
-    <string name="copytolocalprofile">Criar novo perfil local a partir deste perfil?</string>
     <string name="profilenamecontainsdot">Nome do perfil contém pontos.\nIsso não é suportado pelo NS.\nPerfil não é enviado para o NS.</string>
     <string name="low_mark_comment">Valor mais baixo da área de intervalo (apenas exibição)</string>
     <string name="high_mark_comment">Valor mais alto da área de intervalo (apenas exibição)</string>
@@ -831,7 +828,6 @@
     <string name="dpvdefaultprofile">Perfil Padrão DPV</string>
     <string name="setupwizard_pump_riley_link_status">Estado RileyLink:</string>
     <string name="filter">Filtro</string>
-    <string name="copytolocalprofile_invalid">Não é possível criar perfil local. Perfil é inválido.</string>
     <string name="cta_dont_kill_my_app_info">Não encerre minha app?</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Enviar SMS se evento de bomba inacessível for acionado</string>
     <string name="smscommunicator_pump_ureachable">Reportar bomba inacessível</string>

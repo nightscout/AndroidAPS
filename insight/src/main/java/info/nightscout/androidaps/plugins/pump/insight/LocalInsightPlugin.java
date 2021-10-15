@@ -190,6 +190,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     private List<ActiveBolus> activeBoluses;
     private boolean statusLoaded;
     private TBROverNotificationBlock tbrOverNotificationBlock;
+    public double lastBolusAmount = 0;
+    public long lastBolusTimestamp = 0L;
     public double concentration;
 
     @Inject
@@ -1092,7 +1094,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     @NonNull @Override
     public String shortStatus(boolean veryShort) {
         StringBuilder ret = new StringBuilder();
-        if (connectionService.getLastConnected() != 0) {
+        if (connectionService != null && connectionService.getLastConnected() != 0) {
             long agoMsec = dateUtil.now() - connectionService.getLastConnected();
             int agoMin = (int) (agoMsec / 60d / 1000d);
             ret.append(resourceHelper.gs(R.string.short_status_last_connected, agoMin)).append("\n");
@@ -1452,6 +1454,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     bolusID.getId(),
                     PumpType.ACCU_CHEK_INSIGHT,
                     serial);
+            lastBolusTimestamp = bolusID.getTimestamp();
+            lastBolusAmount = event.getImmediateAmount();
         }
         if (event.getBolusType() == BolusType.EXTENDED || event.getBolusType() == BolusType.MULTIWAVE) {
             if (event.getDuration() > 0 && profileFunction.getProfile(bolusID.getTimestamp()) != null)

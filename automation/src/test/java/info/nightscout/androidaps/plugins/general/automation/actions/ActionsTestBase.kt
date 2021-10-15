@@ -131,6 +131,14 @@ open class ActionsTestBase : TestBaseWithProfile() {
                 it.rxBus = rxBus
                 it.uel = uel
             }
+            if (it is ActionCarePortalEvent) {
+                it.resourceHelper = resourceHelper
+                it.repository = repository
+                it.sp = sp
+                it.dateUtil = dateUtil
+                it.profileFunction = profileFunction
+                it.uel = uel
+            }
             if (it is PumpEnactResult) {
                 it.resourceHelper = resourceHelper
             }

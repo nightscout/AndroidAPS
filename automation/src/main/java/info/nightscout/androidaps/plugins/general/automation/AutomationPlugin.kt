@@ -293,6 +293,7 @@ class AutomationPlugin @Inject constructor(
             ActionStopTempTarget(injector),
             ActionNotification(injector),
             ActionAlarm(injector),
+            ActionCarePortalEvent(injector),
             ActionProfileSwitchPercent(injector),
             ActionProfileSwitch(injector),
             ActionSendSMS(injector)
@@ -311,6 +312,7 @@ class AutomationPlugin @Inject constructor(
             TriggerCOB(injector),
             TriggerProfilePercent(injector),
             TriggerTempTarget(injector),
+            TriggerTempTargetValue(injector),
             TriggerWifiSsid(injector),
             TriggerLocation(injector),
             TriggerAutosensValue(injector),

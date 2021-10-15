@@ -237,7 +237,10 @@ class AutosensDataStore {
         }
         val newBucketedData = ArrayList<InMemoryGlucoseValue>()
         var currentTime = bgReadings[0].timestamp - bgReadings[0].timestamp % T.mins(5).msecs()
-        currentTime = adjustToReferenceTime(currentTime)
+        val adjustedTime = adjustToReferenceTime(currentTime)
+        // after adjusting time may be newer. In this case use T-5min
+        if (adjustedTime > currentTime) currentTime = adjustedTime - T.mins(5).msecs()
+        else currentTime = adjustedTime
         aapsLogger.debug("Adjusted time " + dateUtil.dateAndTimeAndSecondsString(currentTime))
         //log.debug("First reading: " + new Date(currentTime).toLocaleString());
         while (true) {

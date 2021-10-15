@@ -6,6 +6,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
+import info.nightscout.androidaps.database.entities.EffectiveProfileSwitch
 import info.nightscout.androidaps.events.*
 import info.nightscout.androidaps.extensions.*
 import info.nightscout.androidaps.interfaces.*
@@ -90,7 +91,7 @@ class OverviewPlugin @Inject constructor(
                 }, fabricPrivacy::logException)
         disposable += rxBus
                 .toObservable(EventIobCalculationProgress::class.java)
-                .observeOn(aapsSchedulers.main)
+                .observeOn(aapsSchedulers.io)
                 .subscribe({ overviewData.calcProgress = it.progress; overviewBus.send(EventUpdateOverview("EventIobCalculationProgress", OverviewData.Property.CALC_PROGRESS)) }, fabricPrivacy::logException)
         disposable += rxBus
                 .toObservable(EventTempBasalChange::class.java)
@@ -135,16 +136,25 @@ class OverviewPlugin @Inject constructor(
                 .toObservable(EventLoopInvoked::class.java)
                 .observeOn(aapsSchedulers.io)
                 .subscribe({ overviewData.preparePredictions("EventLoopInvoked") }, fabricPrivacy::logException)
-        disposable.add(rxBus
-                .toObservable(EventNewBasalProfile::class.java)
+        disposable += rxBus
+                .toObservable(EventEffectiveProfileSwitchChanged::class.java)
                 .observeOn(aapsSchedulers.io)
-                .subscribe({ loadProfile("EventNewBasalProfile") }, fabricPrivacy::logException))
-        disposable.add(rxBus
+                .subscribe({
+                               loadProfile("EventEffectiveProfileSwitchChanged")
+                               overviewData.prepareBasalData("EventEffectiveProfileSwitchChanged")
+                           }, fabricPrivacy::logException)
+        disposable += rxBus
                 .toObservable(EventAutosensCalculationFinished::class.java)
                 .observeOn(aapsSchedulers.io)
                 .subscribe({
                     if (it.cause !is EventCustomCalculationFinished) refreshLoop("EventAutosensCalculationFinished")
-                }, fabricPrivacy::logException))
+                }, fabricPrivacy::logException)
+        disposable += rxBus
+               .toObservable(EventPumpStatusChanged::class.java)
+               .observeOn(aapsSchedulers.io)
+               .subscribe({
+                    overviewData.pumpStatus = it.getStatus(resourceHelper)
+               }, fabricPrivacy::logException)
 
         Thread { loadAll("onResume") }.start()
     }
@@ -170,6 +180,7 @@ class OverviewPlugin @Inject constructor(
 
     override fun configuration(): JSONObject =
             JSONObject()
+                    .putInt(R.string.key_units, sp, resourceHelper)
                     .putString(R.string.key_quickwizard, sp, resourceHelper)
                     .putInt(R.string.key_eatingsoon_duration, sp, resourceHelper)
                     .putDouble(R.string.key_eatingsoon_target, sp, resourceHelper)
@@ -196,6 +207,7 @@ class OverviewPlugin @Inject constructor(
 
     override fun applyConfiguration(configuration: JSONObject) {
         configuration
+                .storeInt(R.string.key_units, sp, resourceHelper)
                 .storeString(R.string.key_quickwizard, sp, resourceHelper)
                 .storeInt(R.string.key_eatingsoon_duration, sp, resourceHelper)
                 .storeDouble(R.string.key_eatingsoon_target, sp, resourceHelper)
@@ -227,6 +239,7 @@ class OverviewPlugin @Inject constructor(
         if (runningRefresh) return
         runningRefresh = true
         loadIobCobResults(from)
+        overviewBus.send(EventUpdateOverview(from, OverviewData.Property.PROFILE))
         overviewBus.send(EventUpdateOverview(from, OverviewData.Property.BG))
         overviewBus.send(EventUpdateOverview(from, OverviewData.Property.TIME))
         overviewBus.send(EventUpdateOverview(from, OverviewData.Property.TEMPORARY_BASAL))
@@ -264,9 +277,6 @@ class OverviewPlugin @Inject constructor(
     }
 
     private fun loadProfile(from: String) {
-        overviewData.profile = profileFunction.getProfile()
-        overviewData.profileName = profileFunction.getProfileName()
-        overviewData.profileNameWithRemainingTime = profileFunction.getProfileNameWithRemainingTime()
         overviewBus.send(EventUpdateOverview(from, OverviewData.Property.PROFILE))
     }
 

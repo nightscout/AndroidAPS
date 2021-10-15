@@ -29,7 +29,7 @@ class MessageIO(
     private val dataBleIO: DataBleIO,
 ) {
 
-    val receivedOutOfOrder = LinkedHashMap<Byte, ByteArray>()
+    private val receivedOutOfOrder = LinkedHashMap<Byte, ByteArray>()
     var maxMessageReadTries = 3
     var messageReadTries = 0
 

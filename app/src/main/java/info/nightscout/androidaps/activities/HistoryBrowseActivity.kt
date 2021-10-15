@@ -185,36 +185,37 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        disposable.add(rxBus
-                .toObservable(EventAutosensCalculationFinished::class.java)
-                .observeOn(aapsSchedulers.io)
-                .subscribe({
-                    // catch only events from iobCobCalculator
-                    if (it.cause is EventCustomCalculationFinished)
-                        refreshLoop("EventAutosensCalculationFinished")
-                }, fabricPrivacy::logException)
-        )
-        disposable.add(rxBus
-                .toObservable(EventIobCalculationProgress::class.java)
-                .observeOn(aapsSchedulers.main)
-                .subscribe({
-                    if (it.cause is EventCustomCalculationFinished)
-                        binding.overviewIobcalculationprogess.text = it.progress
-                }, fabricPrivacy::logException)
-        )
-        disposable.add(rxBus
-                .toObservable(EventRefreshOverview::class.java)
-                .observeOn(aapsSchedulers.main)
-                .subscribe({ updateGUI("EventRefreshOverview") }, fabricPrivacy::logException)
-        )
         disposable += rxBus
-                .toObservable(EventBucketedDataCreated::class.java)
-                .observeOn(aapsSchedulers.io)
-                .subscribe({
-                    overviewData.prepareBucketedData("EventBucketedDataCreated")
-                    overviewData.prepareBgData("EventBucketedDataCreated")
-                    rxBus.send(EventRefreshOverview("EventBucketedDataCreated"))
-                }, fabricPrivacy::logException)
+            .toObservable(EventAutosensCalculationFinished::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({
+                           // catch only events from iobCobCalculator
+                           if (it.cause is EventCustomCalculationFinished)
+                               try {
+                                   refreshLoop("EventAutosensCalculationFinished")
+                               } catch (e: InterruptedException) {
+                                   fabricPrivacy.logException(e)
+                               }
+                       }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventIobCalculationProgress::class.java)
+            .observeOn(aapsSchedulers.main)
+            .subscribe({
+                           if (it.cause is EventCustomCalculationFinished)
+                               binding.overviewIobcalculationprogess.text = it.progress
+                       }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventRefreshOverview::class.java)
+            .observeOn(aapsSchedulers.main)
+            .subscribe({ updateGUI("EventRefreshOverview") }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventBucketedDataCreated::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({
+                           overviewData.prepareBucketedData("EventBucketedDataCreated")
+                           overviewData.prepareBgData("EventBucketedDataCreated")
+                           rxBus.send(EventRefreshOverview("EventBucketedDataCreated"))
+                       }, fabricPrivacy::logException)
 
         if (overviewData.fromTime == 0L) {
             // set start of current day
@@ -271,9 +272,12 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
     private fun loadAll(from: String) {
         updateDate()
         Thread {
-            overviewData.prepareBasalData(from)
-            overviewData.prepareTemporaryTargetData(from)
+            overviewData.prepareBgData("$from")
             overviewData.prepareTreatmentsData(from)
+            rxBus.send(EventRefreshOverview("loadAll_$from"))
+            overviewData.prepareTemporaryTargetData(from)
+            rxBus.send(EventRefreshOverview("loadAll_$from"))
+            overviewData.prepareBasalData(from)
             rxBus.send(EventRefreshOverview(from))
             aapsLogger.debug(LTag.UI, "loadAll $from finished")
             runCalculation(from)

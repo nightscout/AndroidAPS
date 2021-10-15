@@ -5,7 +5,7 @@ import info.nightscout.androidaps.database.entities.Carbs
 /**
  * Sync the carbs from NS
  */
-class SyncNsCarbsTransaction(private val carbs: Carbs, private val invalidateByNsOnly: Boolean) : Transaction<SyncNsCarbsTransaction.TransactionResult>() {
+class SyncNsCarbsTransaction(private val carbs: Carbs) : Transaction<SyncNsCarbsTransaction.TransactionResult>() {
 
     override fun run(): TransactionResult {
         val result = TransactionResult()
@@ -24,8 +24,6 @@ class SyncNsCarbsTransaction(private val carbs: Carbs, private val invalidateByN
             }
             return result
         }
-
-        if (invalidateByNsOnly) return result
 
         // not known nsId
         val existing = database.carbsDao.findByTimestamp(carbs.timestamp)

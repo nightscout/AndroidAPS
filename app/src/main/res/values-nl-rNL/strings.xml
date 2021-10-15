@@ -78,7 +78,6 @@
     <string name="overview">Overzicht</string>
     <string name="treatments">Behandelingen</string>
     <string name="virtualpump">Virtuele Pomp</string>
-    <string name="careportal">Careportal</string>
     <string name="configbuilder_pump">Pomp</string>
     <string name="configbuilder_pump_description">Welke pomp wil je gaan gebruiken met AndroidAPS?</string>
     <string name="configbuilder_profile">Profiel</string>
@@ -257,7 +256,6 @@
     <string name="ongoingnotificaction">Permanent bericht</string>
     <string name="old_data">Oude gegevens</string>
     <string name="sms_minago">%1$dmin geleden</string>
-    <string name="localprofile">Lokaal profiel</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Array van %1$d elementen. \nActuele waarde:</string>
     <string name="openapsma_autosensdata_label">Autosens gegevens</string>
@@ -750,7 +748,6 @@
     <string name="clone_label">Dupliceren</string>
     <string name="saveorresetchangesfirst">Huidige wijzigingen eerst opslaan of ongedaan maken</string>
     <string name="deletecurrentprofile">Huidige profiel verwijderen?</string>
-    <string name="copytolocalprofile">Nieuw lokaal profiel aanmaken van dit profiel?</string>
     <string name="profilenamecontainsdot">Profielnaam bevat punten.\nDit wordt niet ondersteund door NS.\nProfiel is niet geüpload naar NS.</string>
     <string name="low_mark_comment">Laagste waarde in bereik (alleen weergave)</string>
     <string name="high_mark_comment">Hoogste waarde in bereik (alleen weergave)</string>
@@ -804,10 +801,10 @@
     <string name="smscommunicator_otp_step3_test_header">3. Test eenmalig wachtwoord (One Time Password)</string>
     <string name="smscommunicator_otp_reset_header">Reset Authentificatie</string>
     <string name="smscommunicator_otp_install_info">Installeer de Authenticator-app op elke volger telefoon die RFC 6238 TOTP tokens ondersteunt. Populaire gratis apps zijn:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">Door de Athentificator te resetten, maak je alle Authentificatie-instellingen van reeds verbonden telefoons ongeldig! Je zult ze opnieuw moeten instellen!</string>
+    <string name="smscommunicator_otp_reset_warning">Door de Authentificator te resetten, maak je alle Authentificatie-instellingen van reeds verbonden telefoons ongeldig! Je zult ze opnieuw moeten instellen!</string>
     <string name="overview_show_predictions">Voorspellingen</string>
     <string name="overview_show_deviationslope">Richtingscoëfficiënt afwijking</string>
-    <string name="authorizationfailed">Authorisatie mislukt</string>
+    <string name="authorizationfailed">Autorisatie mislukt</string>
     <string name="overview_show_absinsulin">Absolute insuline</string>
     <string name="master_password_summary">Het masterwachtwoord wordt gebruikt voor het versleutelen van backups en om de app-beveiligingen te kunnen overschrijven. Onthoud het goed of bewaar het op een veilige plaats.</string>
     <string name="current_master_password">Huidig masterwachtwoord</string>
@@ -832,7 +829,6 @@
     <string name="dpvdefaultprofile">DPV Basis profiel</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink Status:</string>
     <string name="filter">Filter</string>
-    <string name="copytolocalprofile_invalid">Lokaal profiel kan niet worden gemaakt. Profiel is ongeldig.</string>
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Stuur SMS wanneer de pomp onbereikbaar is</string>
     <string name="smscommunicator_pump_ureachable">Melding pomp onbereikbaar</string>

@@ -45,7 +45,8 @@ class ProfileTest : TestBase() {
     private lateinit var testPumpPlugin: TestPumpPlugin
     private lateinit var hardLimits: HardLimits
 
-    private var okProfile = "{\"dia\":\"5\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"sens\":[{\"time\":\"00:00\",\"value\":\"6\"},{\"time\":\"2:00\",\"value\":\"6.2\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
+    private var okProfile = "{\"dia\":\"5\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}]," +
+        "\"sens\":[{\"time\":\"00:00\",\"value\":\"6\"},{\"time\":\"2:00\",\"value\":\"6.2\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
     private var belowLimitValidProfile = "{\"dia\":\"5\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.001\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
     private var notAlignedBasalValidProfile = "{\"dia\":\"5\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:30\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
     private var notStartingAtZeroValidProfile = "{\"dia\":\"5\",\"carbratio\":[{\"time\":\"00:30\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
@@ -102,11 +103,11 @@ class ProfileTest : TestBase() {
         Assert.assertEquals(2.4, p.percentageBasalSum(), 0.01)
         Assert.assertEquals(2.4, p.baseBasalSum(), 0.01)
 //        Assert.assertEquals(81.0, p.getTargetMgdl(2 * 60 * 60), 0.01)
-        Assert.assertEquals(72.0, p.getTargetLowMgdl(c.timeInMillis), 0.01)
+        Assert.assertEquals(90.0, p.getTargetLowMgdl(c.timeInMillis), 0.01)
 //        Assert.assertEquals(4.0, p.getTargetLowTimeFromMidnight(2 * 60 * 60), 0.01)
         Assert.assertEquals(90.0, p.getTargetHighMgdl(c.timeInMillis), 0.01)
 //        Assert.assertEquals(5.0, p.getTargetHighTimeFromMidnight(2 * 60 * 60), 0.01)
-        Assert.assertEquals("00:00    4,0 - 5,0 mmol", p.getTargetList(resourceHelper, dateUtil).replace(".", ","))
+        Assert.assertEquals("00:00    5,0 - 5,0 mmol", p.getTargetList(resourceHelper, dateUtil).replace(".", ","))
         Assert.assertEquals(100, p.percentage)
         Assert.assertEquals(0, p.timeshift)
         Assert.assertEquals(0.1, Profile.toMgdl(0.1, GlucoseUnit.MGDL), 0.01)

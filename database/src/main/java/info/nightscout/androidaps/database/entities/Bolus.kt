@@ -12,12 +12,14 @@ import info.nightscout.androidaps.database.interfaces.DBEntryWithTime
 import info.nightscout.androidaps.database.interfaces.TraceableDBEntry
 import java.util.*
 
-@Entity(tableName = TABLE_BOLUSES,
+@Entity(
+    tableName = TABLE_BOLUSES,
     foreignKeys = [
         ForeignKey(
             entity = Bolus::class,
             parentColumns = ["id"],
-            childColumns = ["referenceId"])],
+            childColumns = ["referenceId"]
+        )],
     indices = [
         Index("id"),
         Index("isValid"),
@@ -27,7 +29,8 @@ import java.util.*
         Index("pumpType"),
         Index("referenceId"),
         Index("timestamp")
-    ])
+    ]
+)
 data class Bolus(
     @PrimaryKey(autoGenerate = true)
     override var id: Long = 0,
@@ -45,6 +48,20 @@ data class Bolus(
     @Embedded
     var insulinConfiguration: InsulinConfiguration? = null
 ) : TraceableDBEntry, DBEntryWithTime {
+
+    private fun contentEqualsTo(other: Bolus): Boolean =
+        isValid == other.isValid &&
+            timestamp == other.timestamp &&
+            utcOffset == other.utcOffset &&
+            amount == other.amount &&
+            type == other.type &&
+            isBasalInsulin == other.isBasalInsulin
+
+    fun onlyNsIdAdded(previous: Bolus): Boolean =
+        previous.id != id &&
+            contentEqualsTo(previous) &&
+            previous.interfaceIDs.nightscoutId == null &&
+            interfaceIDs.nightscoutId != null
 
     enum class Type {
         NORMAL,

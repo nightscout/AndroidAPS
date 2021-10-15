@@ -50,6 +50,7 @@ fun temporaryTargetFromJson(jsonObject: JSONObject): TemporaryTarget? {
     val units = GlucoseUnit.fromText(JsonHelper.safeGetString(jsonObject, "units", Constants.MGDL))
     val timestamp = JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null) ?: return null
     val duration = JsonHelper.safeGetLongAllowNull(jsonObject, "duration", null) ?: return null
+    val durationInMilliseconds = JsonHelper.safeGetLongAllowNull(jsonObject, "durationInMilliseconds")
     var low = JsonHelper.safeGetDouble(jsonObject, "targetBottom")
     low = Profile.toMgdl(low, units)
     var high = JsonHelper.safeGetDouble(jsonObject, "targetTop")
@@ -81,7 +82,7 @@ fun temporaryTargetFromJson(jsonObject: JSONObject): TemporaryTarget? {
     }
     val tt = TemporaryTarget(
         timestamp = timestamp,
-        duration = TimeUnit.MINUTES.toMillis(duration),
+        duration = durationInMilliseconds ?: T.mins(duration).msecs(),
         reason = reason,
         lowTarget = low,
         highTarget = high,
@@ -95,6 +96,7 @@ fun TemporaryTarget.toJson(isAdd: Boolean, units: GlucoseUnit, dateUtil: DateUti
     JSONObject()
         .put("eventType", TherapyEvent.Type.TEMPORARY_TARGET.text)
         .put("duration", T.msecs(duration).mins())
+        .put("durationInMilliseconds", duration)
         .put("isValid", isValid)
         .put("created_at", dateUtil.toISOString(timestamp))
         .put("enteredBy", "AndroidAPS").also {

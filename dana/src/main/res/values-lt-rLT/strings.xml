@@ -5,6 +5,7 @@
     <string name="danars_pairingok">Sujungta</string>
     <string name="danars_pairingtimedout">Sujungimui skirtas laikas baigėsi</string>
     <string name="danars_waitingforpairing">Laukiama ryšio su pompa</string>
+    <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
     <string name="maxbolusviolation">Pažeistas maks boluso limitas</string>
     <string name="commanderror">Komandos klaida</string>
@@ -92,8 +93,6 @@
     <string name="profile_set_failed">Nepavyko nustatyti bazės profilio</string>
     <string name="danar_bluetooth_status">Bluetooth statusas</string>
     <string name="danar_iob_label">Pompos AIO</string>
-    <string name="basal_step">Bazės žingsnis</string>
-    <string name="bolus_step">Boluso žingsnis</string>
     <string name="virtualpump_firmware_label">Programinė įranga</string>
     <string name="danar_pump_settings">Dana pompos nustatymai</string>
     <string name="timeformat12h">12h</string>
@@ -115,4 +114,5 @@
     <string name="press_ok_on_the_pump">Paspauskite pompos mygtuką OK\n ir įveskite 2 rodomus skaičius\nĮjunkite pompos ekraną spausdami minuso mygtuką, kol baigsite įvesti kodą.</string>
     <string name="num1pin">1: (12 skaitmenų)</string>
     <string name="num2pin">2: (8 skaitmenys)</string>
+    <string name="basal_bolus_step">Bazės / boluso žingsnis</string>
 </resources>

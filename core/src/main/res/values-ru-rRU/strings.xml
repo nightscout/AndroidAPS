@@ -18,6 +18,7 @@
     <string name="connected">соединение установлено</string>
     <string name="disconnected">Разъединено</string>
     <string name="disconnecting">разъединение</string>
+    <string name="waiting_for_disconnection">Ожидание разъединения</string>
     <string name="androidaps_start">AndroidAPS запущен</string>
     <string name="formatinsulinunits1">%1$.1f ед</string>
     <string name="formatinsulinunits">%1$.2f ед</string>
@@ -173,12 +174,17 @@
     <string name="tddwithcarbsformat"><![CDATA[<b>%1$s</b>∑: <b>%2$.2fед</b> Бол: <b>%3$.2fед</b> Баз: <b>%4$.2fед(%5$.0f%%)</b> Угл: <b>%6$.0fг</b>]]></string>
     <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s</span></b> <b>%2$s</b>через<b>%3$d</b> дней<br>]]></string>
     <!--    Translator-->
+    <string name="careportal">Портал терапии</string>
     <string name="careportal_bgcheck">Проверка ГК</string>
     <string name="careportal_mbg">Ввести значение ГК или калибровку</string>
     <string name="careportal_announcement">Оповещение</string>
     <string name="careportal_note">Примечание</string>
     <string name="careportal_question">Вопрос</string>
     <string name="careportal_exercise">Нгрузка</string>
+    <string name="careportal_announcement_message">Оповещение: %1$s</string>
+    <string name="careportal_note_message">Примечание: %1$s</string>
+    <string name="careportal_question_message">Вопрос: %1$s</string>
+    <string name="careportal_exercise_message">Нагрузка: %1$s</string>
     <string name="careportal_pumpsitechange">Смена места катетера помпы</string>
     <string name="careportal_cgmsensorinsert">Установка сенсора мониторинга глюкозы</string>
     <string name="careportal_cgmsensorstart">Сарт сенсора</string>
@@ -196,6 +202,7 @@
     <string name="careportal_openapsoffline">OpenAPS в автономном режиме</string>
     <string name="careportal_pumpbatterychange">Замена батареи помпы</string>
     <string name="careportal_temporarytarget">Временная цель</string>
+    <string name="careportal_temporarytargetvalue">Временное целевое значение</string>
     <string name="careportal_temporarytargetcancel">Отмена временной цели</string>
     <string name="boluswizard">Мастер Болюса</string>
     <string name="glucosetype_finger">Палец</string>
@@ -212,6 +219,8 @@
     <string name="loop">Замкнутый цикл</string>
     <string name="ns">NS</string>
     <string name="record">Запись</string>
+    <string name="reading_pump_history">Чтение истории помпы</string>
+    <string name="pump_icon">Пиктограмма помпы</string>
     <!--    Command-->
     <string name="connectiontimedout">Истекло время ожидания соединения</string>
     <!--    PumpEnactResult-->
@@ -399,6 +408,7 @@
     <string name="valueoutofrange">»%1$s« за пределами жестких ограничений</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f за пределами жестких ограничений</string>
     <string name="basal_value">Величина базала</string>
+    <string name="nsclient_version_does_not_match">Версия NSClient не совпадает с версией AndroidAPS. Пожалуйста, обновите.</string>
     <plurals name="days">
         <item quantity="one">%1$d день</item>
         <item quantity="few">%1$d дня</item>

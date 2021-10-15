@@ -78,7 +78,6 @@
     <string name="overview">Начало</string>
     <string name="treatments">Терапия</string>
     <string name="virtualpump">Виртуальная помпа</string>
-    <string name="careportal">Портал лечения / назначений</string>
     <string name="configbuilder_pump">помпа</string>
     <string name="configbuilder_pump_description">Какой помпой вы хотели бы пользоваться с AndroidAPS?</string>
     <string name="configbuilder_profile">профиль</string>
@@ -257,7 +256,7 @@
     <string name="ongoingnotificaction">текущие уведомления</string>
     <string name="old_data">старые данные</string>
     <string name="sms_minago">%1$d мин. назад</string>
-    <string name="localprofile">локальный профиль</string>
+    <string name="localprofile">Профиль</string>
     <string name="openapsama">Помощник болюса OpenAPS AMA</string>
     <string name="array_of_elements">Массив %1$d элементов. \nActual актуальная величина:</string>
     <string name="openapsma_autosensdata_label">данные autosens</string>
@@ -494,6 +493,7 @@
     <string name="dexcomg5_xdripupload_title">Отправить данные СК на xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">В xDrip + выберите источник данных 640g/Eversense</string>
     <string name="nsclientbg">СК с клиента Nightscout</string>
+    <string name="nsclientbgshort">ГК с NS </string>
     <string name="overview_editquickwizard_usebg">Вычисление СК</string>
     <string name="overview_editquickwizard_usebolusiob">Расчет болюсного активного инсулина IOB</string>
     <string name="overview_editquickwizard_usebasaliob">Расчет базального активного инсулина IOB</string>
