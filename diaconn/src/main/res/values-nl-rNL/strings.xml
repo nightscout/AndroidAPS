@@ -9,6 +9,7 @@
     <string name="diaconn_g8_history_dailyinsulin">Dagtotaal insuline</string>
     <string name="diaconn_g8_history_errors">Foutmeldingen</string>
     <string name="diaconn_g8_history_prime">Vullen</string>
+    <string name="diaconn_g8_history_refill">Hervullen</string>
     <string name="diaconn_g8_history_suspend">Onderbreken</string>
     <string name="diaconn_g8_pairingok">Koppeling geslaagd</string>
     <string name="diaconn_g8_waitingforpairing">Wachten op koppeling</string>
@@ -25,4 +26,19 @@
     <string name="stoppingextendedbolus">Stoppen van vertraagde bolus</string>
     <string name="updatingbasalrates">Bijwerken basaal profiel</string>
     <string name="description_pump_diaconn_g8">Pomp integratie voor Diaconn G8 Pompen</string>
+    <string name="diaconn_g8_pump">Diaconn G8</string>
+    <string name="diaconn_g8_pump_shortname">Diaconn G8</string>
+    <string name="speederror">Snelheid fout</string>
+    <string name="diaconn_g8_valuenotsetproperly">Waarde niet correct ingesteld</string>
+    <string name="diaconn_g8_bt_name_title">Diaconn G8 Bluetooth-apparaat</string>
+    <string name="diaconn_g8_password_title">Pomp wachtwoord</string>
+    <string name="bolusspeed">Bolus snelheid</string>
+    <string name="selectedpump">Geselecteerde pomp</string>
+    <string name="diaconn_g8_bluetooth_status">Bluetooth Status</string>
+    <string name="diagonn_g8_tdd_label">TDD</string>
+    <string name="pump_firmware_label">Firmware</string>
+    <string name="diagonn_g8_useroptions">GEBRUIKER OPTIES</string>
+    <string name="diaconn_g8_logcanulachange_title">Infuus wissel noteren</string>
+    <string name="diaconn_g8_reasoncomplete">Voltooid</string>
+    <string name="diacon_g8_blockbasal">Basaal</string>
 </resources>
