@@ -864,4 +864,20 @@
     <string name="ns_receive_profile_store">Odbieraj zapisane profile</string>
     <string name="ns_receive_profile_store_summary">Synchronizuj profile z edytorem profilów NS</string>
     <string name="ns_receive_temp_target">Odbieraj cele tymczasowe</string>
+    <string name="ns_receive_temp_target_summary">Akceptuj cele tymczasowe wprowadzone przez NS lub NSClient</string>
+    <string name="ns_receive_profile_switch">Odbieraj zmiany profilu</string>
+    <string name="ns_receive_profile_switch_summary">Akceptuj zmiany profilu wprowadzone przez NS lub NSClient</string>
+    <string name="ns_receive_offline_event">Odbieraj zdarzenia o rozłączeniu APS</string>
+    <string name="ns_receive_offline_event_summary">Akceptuj zdarzenia o rozłączeniu APS wprowadzone przez NS lub NSClient</string>
+    <string name="ns_receive_insulin">Odbieraj wpisy o insulinie</string>
+    <string name="ns_receive_insulin_summary">Akceptuj wpisy o insulinie wprowadzone przez NS lub NSClient (insulina nie zostanie podana, jedynie obliczona do IOB)</string>
+    <string name="ns_receive_carbs">Odbieraj wpisy o węglowodanach</string>
+    <string name="ns_receive_carbs_summary">Akceptuj węglowodany wprowadzone przez NS lub NSClient</string>
+    <string name="ns_receive_therapy_events">Odbieraj zdarzenia związane z leczeniem</string>
+    <string name="ns_receive_therapy_events_summary">Akceptuj zdarzenia związane z leczeniem (kaniula, insulina, zmiana baterii itp.) wprowadzone przez NS lub NSClient</string>
+    <string name="ns_receive_cgm">Odbieraj/uzupełnij dane CGM</string>
+    <string name="ns_receive_cgm_summary">Akceptuj dane CGM z NS</string>
+    <string name="sms_timeout_while_wating">Przekroczono limit czasu oczekiwania na zakończenie poprzedniej komunikacji z pompą</string>
+    <string name="smscommunicator_another_bolus_in_queue">W kolejce oczekuje inny bolus. Spróbuj ponownie później.</string>
+    <string name="calculation_in_progress">Trwa obliczanie</string>
 </resources>
