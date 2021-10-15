@@ -5,7 +5,9 @@
     <string name="danars_pairingok">Parowanie OK</string>
     <string name="danars_pairingtimedout">Przekroczono limit czasu parowania</string>
     <string name="danars_waitingforpairing">Oczekiwanie na pompę na sparowanie</string>
+    <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
+    <string name="description_pump_dana_rs">Integracja z pompami DANA Diabecare RS i Dana-i</string>
     <string name="maxbolusviolation">Przekroczenie ograniczenia maks. bolusa</string>
     <string name="commanderror">Błąd polecenia</string>
     <string name="speederror">Błąd prędkości</string>
@@ -113,4 +115,5 @@
     <string name="press_ok_on_the_pump">Naciśnij OK na pompie\ni wpisz 2 wyświetlone numery\nUtrzymuj wyświetlacz pompy włączony poprzez naciskanie przycisku minus, aż do momentu zakończenia przepisywania kodu.</string>
     <string name="num1pin">1: (12 cyfr)</string>
     <string name="num2pin">2: (8 cyfr)</string>
+    <string name="basal_bolus_step">Rozmiar kroku Bazy/Bolusa</string>
 </resources>
