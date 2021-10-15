@@ -1031,7 +1031,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 DateFormat.format("HH:mm", Date(this.startTime))
             ) + "\n"
         }
-        val (temporaryBasal, extendedBolus, _, profile) = pumpSync.expectedPumpState()
+        val temporaryBasal = pumpSync.expectedPumpState().temporaryBasal
         temporaryBasal?.run {
             ret += resourceHelper.gs(
                 R.string.omnipod_common_short_status_temp_basal,
@@ -1229,7 +1229,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 expirationReminderEnabled,
                 expirationHours
             ).andThen(
-                podStateManager.updateExpirationAlertSettings(
+                podStateManager.updateLowReservoirAlertSettings(
                     lowReservoirAlertEnabled,
                     lowReservoirAlertUnits
                 )
