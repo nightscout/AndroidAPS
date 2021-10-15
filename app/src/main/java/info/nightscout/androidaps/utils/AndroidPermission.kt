@@ -58,7 +58,7 @@ class AndroidPermission @Inject constructor(
                     activity.callForBatteryOptimization.launch(null)
             } catch (e: ActivityNotFoundException) {
                 permissionBatteryOptimizationFailed = true
-                OKDialog.show(activity, resourceHelper.gs(R.string.permission), resourceHelper.gs(R.string.alert_dialog_permission_battery_optimization_failed), Runnable { activity.recreate() })
+                OKDialog.show(activity, resourceHelper.gs(R.string.permission), resourceHelper.gs(R.string.alert_dialog_permission_battery_optimization_failed)) { activity.recreate() }
             }
         }
     }
