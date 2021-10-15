@@ -337,6 +337,7 @@
     <string name="uel_reservoir_change">RESERVOIRWISSEL</string>
     <string name="uel_calibration">KALIBREREN</string>
     <string name="uel_prime_bolus">VUL BOLUS</string>
+    <string name="uel_treatment">BEHANDELING</string>
     <string name="uel_careportal_ns_refresh">CAREPORTAL NS VERVERSEN</string>
     <string name="uel_profile_switch_ns_refresh">PROFIEL WISSEL NS VERVERSEN</string>
     <string name="uel_treatments_ns_refresh">BEHANDELINGEN NS VERVERSEN</string>
