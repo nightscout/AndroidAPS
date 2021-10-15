@@ -17,7 +17,7 @@ import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
 import info.nightscout.androidaps.queue.commands.*
@@ -50,7 +50,7 @@ class CommandQueueTest : TestBaseWithProfile() {
     class CommandQueueMocked(
         injector: HasAndroidInjector,
         aapsLogger: AAPSLogger,
-        rxBus: RxBusWrapper,
+        rxBus: RxBus,
         aapsSchedulers: AapsSchedulers,
         resourceHelper: ResourceHelper,
         constraintChecker: ConstraintChecker,

@@ -9,7 +9,7 @@ import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.configBuilder.RunningConfiguration
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
@@ -28,7 +28,7 @@ import org.mockito.Mockito.`when`
 class LoopPluginTest : TestBase() {
 
     @Mock lateinit var sp: SP
-    private val rxBus: RxBusWrapper = RxBusWrapper(aapsSchedulers)
+    private val rxBus: RxBus = RxBus(aapsSchedulers)
     @Mock lateinit var constraintChecker: ConstraintChecker
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var profileFunction: ProfileFunction

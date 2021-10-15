@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.manager
 
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.FirmwareVersion
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.PodProgressStatus
 import info.nightscout.androidaps.utils.rx.TestAapsSchedulers
@@ -19,7 +19,7 @@ class AapsErosPodStateManagerTest : TestBase() {
 
     @Mock lateinit var sp: SP
 
-    private val rxBus = RxBusWrapper(TestAapsSchedulers())
+    private val rxBus = RxBus(TestAapsSchedulers())
 
     @Test fun times() {
         val timeZone = DateTimeZone.UTC

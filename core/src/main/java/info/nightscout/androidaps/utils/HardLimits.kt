@@ -6,7 +6,7 @@ import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.transactions.InsertTherapyEventAnnouncementTransaction
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
@@ -20,7 +20,7 @@ import kotlin.math.min
 @Singleton
 class HardLimits @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val rxBus: RxBusWrapper,
+    private val rxBus: RxBus,
     private val sp: SP,
     private val resourceHelper: ResourceHelper,
     private val context: Context,

@@ -8,7 +8,7 @@ import javax.inject.Singleton;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkFirmwareVersion;
@@ -28,7 +28,7 @@ public class RileyLinkServiceData {
 
     @Inject AAPSLogger aapsLogger;
     @Inject RileyLinkUtil rileyLinkUtil;
-    @Inject RxBusWrapper rxBus;
+    @Inject RxBus rxBus;
     @Inject ActivePlugin activePlugin;
 
     boolean tuneUpDone = false;

@@ -11,7 +11,7 @@ import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDuration
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder
@@ -24,7 +24,7 @@ import javax.inject.Inject
 class ActionLoopSuspend(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var loopPlugin: Loop
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var uel: UserEntryLogger
 
     var minutes = InputDuration(30, InputDuration.TimeUnit.MINUTES)

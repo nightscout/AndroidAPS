@@ -8,7 +8,7 @@ import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.common.defs.TempBasalPair
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
@@ -38,7 +38,7 @@ class OmnipodErosPumpPluginTest : TestBase() {
     @Mock lateinit var rileyLinkUtil: RileyLinkUtil
     @Mock lateinit var pumpSync: PumpSync
 
-    var rxBusWrapper = RxBusWrapper(TestAapsSchedulers())
+    var rxBusWrapper = RxBus(TestAapsSchedulers())
 
     @Before fun prepare() {
         `when`(resourceHelper.gs(ArgumentMatchers.anyInt(), ArgumentMatchers.anyLong()))

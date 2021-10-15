@@ -12,7 +12,7 @@ import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.aps.events.EventOpenAPSUpdateGui
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.plugins.general.wear.wearintegration.WatchUpdaterService
@@ -34,7 +34,7 @@ class WearPlugin @Inject constructor(
     private val ctx: Context,
     private val fabricPrivacy: FabricPrivacy,
     private val loopPlugin: Lazy<LoopPlugin>,
-    private val rxBus: RxBusWrapper,
+    private val rxBus: RxBus,
     private val actionStringHandler: Lazy<ActionStringHandler>
 
 ) : PluginBase(PluginDescription()

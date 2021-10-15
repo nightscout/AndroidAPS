@@ -10,7 +10,7 @@ import info.nightscout.androidaps.extensions.toStringShort
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -32,7 +32,7 @@ class StatusLinePlugin @Inject constructor(
     private val fabricPrivacy: FabricPrivacy,
     private val loopPlugin: LoopPlugin,
     private val iobCobCalculator: IobCobCalculator,
-    private val rxBus: RxBusWrapper,
+    private val rxBus: RxBus,
     aapsLogger: AAPSLogger
 ) : PluginBase(
     PluginDescription()

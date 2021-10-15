@@ -5,7 +5,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.Insulin
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.extensions.storeInt
 import info.nightscout.androidaps.extensions.putInt
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -23,7 +23,7 @@ class InsulinOrefFreePeakPlugin @Inject constructor(
     private val sp: SP,
     resourceHelper: ResourceHelper,
     profileFunction: ProfileFunction,
-    rxBus: RxBusWrapper, aapsLogger: AAPSLogger
+    rxBus: RxBus, aapsLogger: AAPSLogger
 ) : InsulinOrefBasePlugin(injector, resourceHelper, profileFunction, rxBus, aapsLogger) {
 
     override val id get(): Insulin.InsulinType = Insulin.InsulinType.OREF_FREE_PEAK

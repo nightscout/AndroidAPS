@@ -13,7 +13,7 @@ import info.nightscout.androidaps.events.EventProfileSwitchChanged
 import info.nightscout.androidaps.events.EventProfileStoreChanged
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientStatus
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
@@ -34,7 +34,7 @@ class SetupWizardActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var localProfilePlugin: LocalProfilePlugin
     @Inject lateinit var swDefinition: SWDefinition
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var sp: SP
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var aapsSchedulers: AapsSchedulers

@@ -20,7 +20,7 @@ import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.maintenance.activities.LogSettingActivity
 import info.nightscout.androidaps.plugins.general.overview.OverviewData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData
@@ -36,7 +36,7 @@ class MaintenanceFragment : DaggerFragment() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var maintenancePlugin: MaintenancePlugin
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var importExportPrefs: ImportExportPrefs
     @Inject lateinit var aapsSchedulers: AapsSchedulers

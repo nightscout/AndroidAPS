@@ -23,7 +23,7 @@ import info.nightscout.androidaps.extensions.waitMillis
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
@@ -43,7 +43,7 @@ class BLEComm @Inject internal constructor(
     private val aapsLogger: AAPSLogger,
     private val resourceHelper: ResourceHelper,
     private val context: Context,
-    private val rxBus: RxBusWrapper,
+    private val rxBus: RxBus,
     private val sp: SP,
     private val danaRSMessageHashTable: DanaRSMessageHashTable,
     private val danaPump: DanaPump,

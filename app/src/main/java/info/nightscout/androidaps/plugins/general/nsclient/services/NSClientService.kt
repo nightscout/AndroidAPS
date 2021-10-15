@@ -20,7 +20,7 @@ import info.nightscout.androidaps.interfaces.DataSyncSelector
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.food.FoodPlugin.FoodWorker
 import info.nightscout.androidaps.plugins.general.nsclient.*
 import info.nightscout.androidaps.plugins.general.nsclient.acks.NSAddAck
@@ -44,10 +44,8 @@ import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.services.Intents
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.JsonHelper.safeGetLong
 import info.nightscout.androidaps.utils.JsonHelper.safeGetString
 import info.nightscout.androidaps.utils.JsonHelper.safeGetStringAllowNull
-import info.nightscout.androidaps.utils.T.Companion.days
 import info.nightscout.androidaps.utils.T.Companion.mins
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -71,7 +69,7 @@ class NSClientService : DaggerService() {
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var nsSettingsStatus: NSSettingsStatus
     @Inject lateinit var nsDeviceStatus: NSDeviceStatus
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var sp: SP
     @Inject lateinit var fabricPrivacy: FabricPrivacy

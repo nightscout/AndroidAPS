@@ -62,7 +62,7 @@ import info.nightscout.androidaps.interfaces.Pump;
 import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
@@ -77,7 +77,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
     @Inject HasAndroidInjector injector;
     @Inject AAPSLogger aapsLogger;
-    @Inject RxBusWrapper rxBus;
+    @Inject RxBus rxBus;
     @Inject ResourceHelper resourceHelper;
     @Inject DanaPump danaPump;
     @Inject DanaRKoreanPlugin danaRKoreanPlugin;

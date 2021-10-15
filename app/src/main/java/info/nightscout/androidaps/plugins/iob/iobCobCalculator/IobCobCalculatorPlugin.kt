@@ -21,7 +21,7 @@ import info.nightscout.androidaps.extensions.toTemporaryBasal
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin
@@ -49,7 +49,7 @@ class IobCobCalculatorPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     private val aapsSchedulers: AapsSchedulers,
-    private val rxBus: RxBusWrapper,
+    private val rxBus: RxBus,
     private val sp: SP,
     resourceHelper: ResourceHelper,
     private val profileFunction: ProfileFunction,

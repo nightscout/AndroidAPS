@@ -9,7 +9,7 @@ import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Insulin
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.insulin.InsulinOrefBasePlugin.Companion.MIN_DIA
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -32,7 +32,7 @@ class InsulinOrefBasePluginTest {
         injector: HasAndroidInjector,
         resourceHelper: ResourceHelper,
         profileFunction: ProfileFunction,
-        rxBus: RxBusWrapper,
+        rxBus: RxBus,
         aapsLogger: AAPSLogger
     ) : InsulinOrefBasePlugin(
         injector, resourceHelper, profileFunction, rxBus, aapsLogger
@@ -63,7 +63,7 @@ class InsulinOrefBasePluginTest {
     @Mock lateinit var defaultValueHelper: DefaultValueHelper
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var profileFunction: ProfileFunction
-    @Mock lateinit var rxBus: RxBusWrapper
+    @Mock lateinit var rxBus: RxBus
     @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var activePlugin: ActivePlugin
 

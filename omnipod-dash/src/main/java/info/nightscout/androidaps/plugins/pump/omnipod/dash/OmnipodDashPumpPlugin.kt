@@ -18,7 +18,7 @@ import info.nightscout.androidaps.extensions.toStringFull
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.common.ManufacturerType
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType
@@ -76,7 +76,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val history: DashHistory,
     private val pumpSync: PumpSync,
-    private val rxBus: RxBusWrapper,
+    private val rxBus: RxBus,
     private val context: Context,
     private val aapsSchedulers: AapsSchedulers,
     private val fabricPrivacy: FabricPrivacy,

@@ -24,7 +24,7 @@ import info.nightscout.androidaps.interfaces.ImportExportPrefs
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.maintenance.formats.*
 import info.nightscout.androidaps.utils.AndroidPermission
 import info.nightscout.androidaps.utils.DateUtil
@@ -55,7 +55,7 @@ class ImportExportPrefsImpl @Inject constructor(
     private val resourceHelper: ResourceHelper,
     private val sp: SP,
     private val buildHelper: BuildHelper,
-    private val rxBus: RxBusWrapper,
+    private val rxBus: RxBus,
     private val passwordCheck: PasswordCheck,
     private val config: Config,
     private val androidPermission: AndroidPermission,

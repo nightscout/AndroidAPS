@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.contraints.versionChecker
 import android.content.Context
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.interfaces.Config
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -24,7 +24,7 @@ class VersionCheckerUtilsKtTest : TestBase() {
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
     @Mock lateinit var config: Config
 
-    private val rxBus = RxBusWrapper(aapsSchedulers)
+    private val rxBus = RxBus(aapsSchedulers)
 
     @Before fun setup() {
         versionCheckerUtils = VersionCheckerUtils(aapsLogger, sp, resourceHelper, rxBus, config, context, receiverStatusStore)

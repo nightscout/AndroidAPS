@@ -15,12 +15,11 @@ import info.nightscout.androidaps.interfaces.Profile.Companion.secondsFromMidnig
 import info.nightscout.androidaps.interfaces.Profile.Companion.toMgdl
 import info.nightscout.androidaps.interfaces.Profile.ProfileValue
 import info.nightscout.androidaps.interfaces.Pump
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HardLimits
-import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.json.JSONArray
@@ -96,7 +95,7 @@ sealed class ProfileSealed(
         value.timeZone.rawOffset.toLong()
     )
 
-    override fun isValid(from: String, pump: Pump, config: Config, resourceHelper: ResourceHelper, rxBus: RxBusWrapper, hardLimits: HardLimits): Profile.ValidityCheck {
+    override fun isValid(from: String, pump: Pump, config: Config, resourceHelper: ResourceHelper, rxBus: RxBus, hardLimits: HardLimits): Profile.ValidityCheck {
         val notify = true
         val validityCheck = Profile.ValidityCheck()
         val description = pump.pumpDescription
@@ -185,11 +184,11 @@ sealed class ProfileSealed(
         return validityCheck
     }
 
-    protected open fun sendBelowMinimumNotification(from: String, rxBus: RxBusWrapper, resourceHelper: ResourceHelper) {
+    protected open fun sendBelowMinimumNotification(from: String, rxBus: RxBus, resourceHelper: ResourceHelper) {
         rxBus.send(EventNewNotification(Notification(Notification.MINIMAL_BASAL_VALUE_REPLACED, resourceHelper.gs(R.string.minimalbasalvaluereplaced, from), Notification.NORMAL)))
     }
 
-    protected open fun sendAboveMaximumNotification(from: String, rxBus: RxBusWrapper, resourceHelper: ResourceHelper) {
+    protected open fun sendAboveMaximumNotification(from: String, rxBus: RxBus, resourceHelper: ResourceHelper) {
         rxBus.send(EventNewNotification(Notification(Notification.MAXIMUM_BASAL_VALUE_REPLACED, resourceHelper.gs(R.string.maximumbasalvaluereplaced, from), Notification.NORMAL)))
     }
 

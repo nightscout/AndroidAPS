@@ -32,7 +32,7 @@ import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
@@ -70,7 +70,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     private val aapsSchedulers: AapsSchedulers,
     private val sp: SP,
     private val constraintChecker: ConstraintChecker,
-    private val rxBus: RxBusWrapper,
+    private val rxBus: RxBus,
     private val profileFunction: ProfileFunction,
     private val fabricPrivacy: FabricPrivacy,
     private val activePlugin: ActivePlugin,

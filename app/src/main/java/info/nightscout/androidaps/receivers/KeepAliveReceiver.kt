@@ -26,7 +26,7 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.RunningConfiguration
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenancePlugin
 import info.nightscout.androidaps.queue.commands.Command
@@ -70,7 +70,7 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
         @Inject lateinit var profileFunction: ProfileFunction
         @Inject lateinit var runningConfiguration: RunningConfiguration
         @Inject lateinit var receiverStatusStore: ReceiverStatusStore
-        @Inject lateinit var rxBus: RxBusWrapper
+        @Inject lateinit var rxBus: RxBus
         @Inject lateinit var commandQueue: CommandQueueProvider
         @Inject lateinit var fabricPrivacy: FabricPrivacy
         @Inject lateinit var maintenancePlugin: MaintenancePlugin

@@ -20,7 +20,7 @@ import info.nightscout.androidaps.extensions.plannedRemainingMinutes
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.common.ManufacturerType
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
@@ -48,7 +48,7 @@ import kotlin.math.max
 class DiaconnG8Plugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
-    private val rxBus: RxBusWrapper,
+    private val rxBus: RxBus,
     private val context: Context,
     resourceHelper: ResourceHelper,
     private val constraintChecker: ConstraintChecker,

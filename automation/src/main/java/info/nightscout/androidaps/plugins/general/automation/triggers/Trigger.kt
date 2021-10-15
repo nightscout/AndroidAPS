@@ -15,7 +15,7 @@ import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.automation.dialogs.ChooseTriggerDialog
 import info.nightscout.androidaps.plugins.general.automation.events.EventTriggerChanged
 import info.nightscout.androidaps.plugins.general.automation.events.EventTriggerClone
@@ -31,7 +31,7 @@ import javax.inject.Inject
 abstract class Trigger(val injector: HasAndroidInjector) {
 
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var sp: SP

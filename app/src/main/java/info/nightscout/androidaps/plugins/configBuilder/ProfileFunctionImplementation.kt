@@ -13,7 +13,7 @@ import info.nightscout.androidaps.extensions.fromConstant
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HardLimits
@@ -31,7 +31,7 @@ import javax.inject.Singleton
 class ProfileFunctionImplementation @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val sp: SP,
-    private val rxBus: RxBusWrapper,
+    private val rxBus: RxBus,
     private val resourceHelper: ResourceHelper,
     private val activePlugin: ActivePlugin,
     private val repository: AppRepository,

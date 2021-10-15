@@ -55,7 +55,7 @@ import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.interfaces.PumpSync.PumpState.TemporaryBasal;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
@@ -137,7 +137,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constraints, InsightConnectionService.StateCallback {
 
     private final AAPSLogger aapsLogger;
-    private final RxBusWrapper rxBus;
+    private final RxBus rxBus;
     private final ResourceHelper resourceHelper;
     private final SP sp;
     private final CommandQueueProvider commandQueue;
@@ -197,7 +197,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     public LocalInsightPlugin(
             HasAndroidInjector injector,
             AAPSLogger aapsLogger,
-            RxBusWrapper rxBus,
+            RxBus rxBus,
             ResourceHelper resourceHelper,
             SP sp,
             CommandQueueProvider commandQueue,

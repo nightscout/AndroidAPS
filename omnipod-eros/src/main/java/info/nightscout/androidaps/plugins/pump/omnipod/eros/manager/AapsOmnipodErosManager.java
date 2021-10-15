@@ -21,12 +21,11 @@ import info.nightscout.androidaps.db.OmnipodHistoryRecord;
 import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.extensions.PumpStateExtensionKt;
-import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
@@ -90,7 +89,7 @@ public class AapsOmnipodErosManager {
     private final ErosPodStateManager podStateManager;
     private final AapsOmnipodUtil aapsOmnipodUtil;
     private final AAPSLogger aapsLogger;
-    private final RxBusWrapper rxBus;
+    private final RxBus rxBus;
     private final ResourceHelper resourceHelper;
     private final HasAndroidInjector injector;
     private final SP sp;
@@ -120,7 +119,7 @@ public class AapsOmnipodErosManager {
                                   AapsOmnipodUtil aapsOmnipodUtil,
                                   AAPSLogger aapsLogger,
                                   AapsSchedulers aapsSchedulers,
-                                  RxBusWrapper rxBus,
+                                  RxBus rxBus,
                                   SP sp,
                                   ResourceHelper resourceHelper,
                                   HasAndroidInjector injector,

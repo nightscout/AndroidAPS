@@ -23,7 +23,7 @@ import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.nsclient.data.AlarmAck
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSAlarm
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientNewLog
@@ -48,7 +48,7 @@ class NSClientPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     private val aapsSchedulers: AapsSchedulers,
-    private val rxBus: RxBusWrapper,
+    private val rxBus: RxBus,
     resourceHelper: ResourceHelper,
     private val context: Context,
     private val fabricPrivacy: FabricPrivacy,

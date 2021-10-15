@@ -25,7 +25,7 @@ import info.nightscout.androidaps.extensions.getCustomizedName
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
@@ -52,7 +52,7 @@ import javax.inject.Singleton
 class CommandQueue @Inject constructor(
     private val injector: HasAndroidInjector,
     private val aapsLogger: AAPSLogger,
-    private val rxBus: RxBusWrapper,
+    private val rxBus: RxBus,
     private val aapsSchedulers: AapsSchedulers,
     private val resourceHelper: ResourceHelper,
     private val constraintChecker: ConstraintChecker,

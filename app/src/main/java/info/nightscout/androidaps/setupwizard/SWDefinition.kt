@@ -14,7 +14,7 @@ import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesFragment
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin
@@ -39,7 +39,7 @@ import javax.inject.Singleton
 @Singleton
 class SWDefinition @Inject constructor(
     injector: HasAndroidInjector,
-    private val rxBus: RxBusWrapper,
+    private val rxBus: RxBus,
     private val context: Context,
     resourceHelper: ResourceHelper,
     private val sp: SP,

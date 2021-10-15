@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.databinding.OverviewQuickwizardlistActivityBinding
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.dialogs.EditQuickWizardDialog
 import info.nightscout.androidaps.plugins.general.overview.events.EventQuickWizardChange
 import info.nightscout.androidaps.utils.DateUtil
@@ -26,7 +26,7 @@ import javax.inject.Inject
 class QuickWizardListActivity : NoSplashAppCompatActivity() {
 
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var quickWizard: QuickWizard
     @Inject lateinit var dateUtil: DateUtil

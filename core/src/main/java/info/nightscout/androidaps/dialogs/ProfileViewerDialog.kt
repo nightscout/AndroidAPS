@@ -22,13 +22,12 @@ import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.json.JSONObject
-import java.io.File.separator
 import java.text.DecimalFormat
 import javax.inject.Inject
 
@@ -41,7 +40,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var config: Config
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var hardLimits: HardLimits
 
     private var time: Long = 0

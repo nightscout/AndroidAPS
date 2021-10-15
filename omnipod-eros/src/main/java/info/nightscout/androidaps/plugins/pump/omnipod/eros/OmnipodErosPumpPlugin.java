@@ -14,7 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.joda.time.DateTime;
-import org.joda.time.Days;
 import org.joda.time.Duration;
 import org.joda.time.Instant;
 import org.json.JSONException;
@@ -48,7 +47,7 @@ import info.nightscout.androidaps.interfaces.PumpPluginBase;
 import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
@@ -133,7 +132,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
     private final ProfileFunction profileFunction;
     private final AAPSLogger aapsLogger;
     private final AapsSchedulers aapsSchedulers;
-    private final RxBusWrapper rxBus;
+    private final RxBus rxBus;
     private final ActivePlugin activePlugin;
     private final Context context;
     private final FabricPrivacy fabricPrivacy;
@@ -166,7 +165,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
             HasAndroidInjector injector,
             AAPSLogger aapsLogger,
             AapsSchedulers aapsSchedulers,
-            RxBusWrapper rxBus,
+            RxBus rxBus,
             Context context,
             ResourceHelper resourceHelper,
             ActivePlugin activePlugin,
