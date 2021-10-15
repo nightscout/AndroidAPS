@@ -853,6 +853,15 @@
     <string name="userentry">Wpis użytkownika</string>
     <string name="common_values">Użyj wartości największego jedzenia, które zazwyczaj zjadasz\n</string>
     <string name="summary_email_for_crash_report">Ten adres e-mail zostanie dołączony do raportów o awariach, abyśmy mogli skontaktować się z Tobą w pilnych przypadkach. Jego podanie jest opcjonalne.</string>
+    <string name="email_address">Adres e-mail</string>
+    <string name="privacy_settings">Ustawienia prywatności</string>
+    <string name="privacy_summary">Możesz opcjonalnie podać adres e-mail, jeśli chcesz otrzymywać powiadomienia o awariach aplikacji. To nie jest usługa zautomatyzowana. W niebezpiecznych sytuacjach deweloperzy skontaktują się z Tobą.</string>
+    <string name="full_sync">Pełna synchronizacja</string>
     <string name="prime">Wypełnianie</string>
+    <string name="ns_sync_options">Synchronizacja</string>
+    <string name="ns_upload_summary">Profile, bolusy, węglowodany, tymczasowe bazy są przesyłane do NS</string>
+    <string name="ns_upload">Prześlij dane do NS</string>
+    <string name="ns_receive_profile_store">Odbieraj zapisane profile</string>
+    <string name="ns_receive_profile_store_summary">Synchronizuj profile z edytorem profilów NS</string>
     <string name="ns_receive_temp_target">Odbieraj cele tymczasowe</string>
 </resources>
