@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.device
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothAdapter.LeScanCallback
-import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.le.BluetoothLeScanner
 import android.bluetooth.le.ScanCallback
@@ -34,7 +33,7 @@ class OrangeLinkImpl @Inject constructor(
 
     lateinit var rileyLinkBLE: RileyLinkBLE
 
-    fun onCharacteristicChanged(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic) {
+    fun onCharacteristicChanged(characteristic: BluetoothGattCharacteristic) {
         if (characteristic.uuid.toString().equals(GattAttributes.CHARA_NOTIFICATION_ORANGE)) {
             val data = characteristic.value
             val first = 0xff and data[0].toInt()
@@ -50,6 +49,15 @@ class OrangeLinkImpl @Inject constructor(
     }
 
 
+    fun resetOrangeLinkData() {
+        rileyLinkServiceData.isOrange = false
+        rileyLinkServiceData.versionOrangeFirmware = null
+        rileyLinkServiceData.versionOrangeHardware = null
+    }
+
+    /**
+     * We are checking if this is special Orange (with ORANGE_NOTIFICTION_SERVICE)
+     */
     fun checkIsOrange(uuidService: UUID) {
         if (GattAttributes.isOrange(uuidService)) {
             rileyLinkServiceData.isOrange = true
@@ -94,7 +102,7 @@ class OrangeLinkImpl @Inject constructor(
             val bluetoothAdapter = rileyLinkBLE.getBluetoothAdapter()
             aapsLogger.debug(LTag.PUMPBTCOMM, "startScan")
             handler.sendEmptyMessageDelayed(TIME_OUT_WHAT, TIME_OUT.toLong())
-            val bluetoothLeScanner: BluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner()
+            val bluetoothLeScanner: BluetoothLeScanner = bluetoothAdapter.bluetoothLeScanner
             // if (bluetoothLeScanner == null) {
             //     bluetoothAdapter.startLeScan(mLeScanCallback)
             //     return

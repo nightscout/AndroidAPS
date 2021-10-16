@@ -30,7 +30,7 @@ public class GattAttributes {
     public static String CHARA_RADIO_VERSION = "30d99dc9-7c91-4295-a051-0a104d238cf2";
     public static String CHARA_RADIO_LED_MODE = "c6d84241-f1a7-4f9c-a25f-fce16732f14e";
 
-    //Orange Radio Service
+    // Orange Radio Service
     public static String SERVICE_RADIO_ORANGE = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
     public static String CHARA_NOTIFICATION_ORANGE = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
 
