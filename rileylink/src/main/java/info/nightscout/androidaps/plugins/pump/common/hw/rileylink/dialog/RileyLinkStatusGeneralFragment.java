@@ -106,9 +106,9 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
         this.connectionError.setText(rileyLinkError == null ? PLACEHOLDER : resourceHelper.gs(rileyLinkError.getResourceId(targetDevice)));
 
 
-        if (rileyLinkServiceData.isOrange) {
+        if (rileyLinkServiceData.isOrange && rileyLinkServiceData.versionOrangeFirmware!=null) {
             this.firmwareVersion.setText(resourceHelper.gs(R.string.rileylink_firmware_version_value_orange,
-                    Optional.ofNullable(rileyLinkServiceData.versionOrangeFirmware).orElse(PLACEHOLDER),
+                            rileyLinkServiceData.versionOrangeFirmware,
                             Optional.ofNullable(rileyLinkServiceData.versionOrangeHardware).orElse(PLACEHOLDER)));
         } else {
             this.firmwareVersion.setText(resourceHelper.gs(R.string.rileylink_firmware_version_value,
