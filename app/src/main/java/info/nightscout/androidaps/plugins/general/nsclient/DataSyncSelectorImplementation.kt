@@ -469,9 +469,8 @@ class DataSyncSelectorImplementation @Inject constructor(
                     gv.first.id != gv.second.id && gv.second.id <= sp.getLong(R.string.key_ns_glucose_value_new_data_id, 0) -> {
                         confirmLastGlucoseValueIdIfGreater(gv.second.id)
                         //lastGvId = -1
-                        processChangedGlucoseValuesCompat()
                         aapsLogger.info(LTag.DATABASE, "Ignoring GlucoseValue. Change within first sync ID: ${gv.first.id} HistoryID: ${gv.second.id} ")
-                        return false
+                        tailCall = true
                     }
                     // only NsId changed, no need to upload
                     gv.first.onlyNsIdAdded(gv.second)          -> {
