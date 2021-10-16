@@ -856,7 +856,6 @@
     <string name="email_address">E-mailadres</string>
     <string name="privacy_settings">Privacyinstellingen</string>
     <string name="privacy_summary">U kunt optioneel een e-mailadres opgeven als u op de hoogte wilt worden gebracht van applicatie crashes. Dit is geen geautomatiseerde service. De ontwikkelaars zullen contact met u opnemen bij gevaarlijke situaties.</string>
-    <string name="full_sync">Volledige synchronisatie</string>
     <string name="prime">Vullen</string>
     <string name="ns_sync_options">Synchronisatie</string>
     <string name="ns_upload_summary">Profielen, bolussen, koolhydraten, tijdelijke basaal standen worden geupload naar NS</string>
