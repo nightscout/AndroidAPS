@@ -70,7 +70,8 @@ class NSClientFragment : DaggerFragment() {
         binding.deliverNow.paintFlags = binding.deliverNow.paintFlags or Paint.UNDERLINE_TEXT_FLAG
         binding.fullSync.setOnClickListener {
             context?.let { context ->
-                OKDialog.showConfirmation(context, resourceHelper.gs(R.string.nsclientinternal), resourceHelper.gs(R.string.full_sync), Runnable {
+                OKDialog.showConfirmation(context, resourceHelper.gs(R.string.nsclientinternal),
+                                          resourceHelper.gs(R.string.full_sync_comment), Runnable {
                     dataSyncSelector.resetToNextFullSync()
                 })
             }
