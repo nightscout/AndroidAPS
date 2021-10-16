@@ -857,7 +857,6 @@
     <string name="email_address">כתובת דוא\"ל</string>
     <string name="privacy_settings">הגדרות פרטיות</string>
     <string name="privacy_summary">אם תרצו, תוכלו לספק כתובת דוא\"ל כדי לקבל דיווח על קריסות יישום. שירות זה אינו אוטומטי. המפתחים יצרו איתכם קשר במצבים מסוכנים.</string>
-    <string name="full_sync">סינכרון מלא</string>
     <string name="prime">תיחול</string>
     <string name="ns_sync_options">סינכרון</string>
     <string name="ns_upload_summary">פרופילים, בולוסים, פחמימות ומינונים בזאליים זמניים נטענים לנייטסקאוט</string>
