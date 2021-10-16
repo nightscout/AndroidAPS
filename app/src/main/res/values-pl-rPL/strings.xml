@@ -856,7 +856,6 @@
     <string name="email_address">Adres e-mail</string>
     <string name="privacy_settings">Ustawienia prywatności</string>
     <string name="privacy_summary">Możesz opcjonalnie podać adres e-mail, jeśli chcesz otrzymywać powiadomienia o awariach aplikacji. To nie jest usługa zautomatyzowana. W niebezpiecznych sytuacjach deweloperzy skontaktują się z Tobą.</string>
-    <string name="full_sync">Pełna synchronizacja</string>
     <string name="prime">Wypełnianie</string>
     <string name="ns_sync_options">Synchronizacja</string>
     <string name="ns_upload_summary">Profile, bolusy, węglowodany, tymczasowe bazy są przesyłane do NS</string>
