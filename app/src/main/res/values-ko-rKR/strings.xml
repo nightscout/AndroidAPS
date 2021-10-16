@@ -852,7 +852,6 @@
     <string name="email_address">이메일 주소</string>
     <string name="privacy_settings">개인정보 설정</string>
     <string name="privacy_summary">어플의 충돌에 대해 통지를 받기 원하는 경우 선택적으로 이메일 주소를 제공할 수 있습니다. 이는 자동 지원 서비스는 아닙니다. 위험 상황에서 개발자들에게 연락이 올 것입니다.</string>
-    <string name="full_sync">전체 동기화 됨</string>
     <string name="prime">교체</string>
     <string name="ns_sync_options">동기화</string>
     <string name="ns_upload_summary">프로파일, bolus, 탄수화물, 임시 basal이 NS에 업로드 됨</string>
