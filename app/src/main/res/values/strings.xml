@@ -1076,7 +1076,7 @@
     <string name="email_address">Email address</string>
     <string name="privacy_settings">Privacy setting</string>
     <string name="privacy_summary">You can provide optional email address if you want to be notified about app crashes. This is not an automated service. You will be contacted by developers in dangerous situations.</string>
-    <string name="full_sync">Full sync</string>
+    <string name="full_sync">Full synchronization? It may take many hours and until finish you\'ll not see new data in NS.</string>
     <string name="prime">Prime</string>
     <string name="ns_sync_options">Synchronization</string>
     <string name="key_ns_upload" translatable="false">ns_upload</string>
