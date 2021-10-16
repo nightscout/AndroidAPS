@@ -3,15 +3,12 @@ package info.nightscout.androidaps.plugins.constraints.versionChecker
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.interfaces.Constraints
-import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginDescription
-import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.extensions.daysToMillis
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -27,13 +24,16 @@ class VersionCheckerPlugin @Inject constructor(
     resourceHelper: ResourceHelper,
     private val versionCheckerUtils: VersionCheckerUtils,
     val rxBus: RxBus,
-    aapsLogger: AAPSLogger
-) : PluginBase(PluginDescription()
-    .mainType(PluginType.CONSTRAINTS)
-    .neverVisible(true)
-    .alwaysEnabled(true)
-    .showInList(false)
-    .pluginName(R.string.versionChecker),
+    aapsLogger: AAPSLogger,
+    private val config: Config,
+    private val dateUtil: DateUtil
+) : PluginBase(
+    PluginDescription()
+        .mainType(PluginType.CONSTRAINTS)
+        .neverVisible(true)
+        .alwaysEnabled(true)
+        .showInList(false)
+        .pluginName(R.string.versionChecker),
     aapsLogger, resourceHelper, injector
 ), Constraints {
 
@@ -50,6 +50,7 @@ class VersionCheckerPlugin @Inject constructor(
         }
 
     companion object {
+
         private val WARN_EVERY: Long
             get() = TimeUnit.DAYS.toMillis(1)
     }
@@ -57,10 +58,12 @@ class VersionCheckerPlugin @Inject constructor(
     override fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         checkWarning()
         versionCheckerUtils.triggerCheckVersion()
-        return if (isOldVersion(gracePeriod.veryOld.daysToMillis()))
-            value.set(aapsLogger,false, resourceHelper.gs(R.string.very_old_version), this)
-        else
-            value
+        if (isOldVersion(gracePeriod.veryOld.daysToMillis()))
+            value[aapsLogger, false, resourceHelper.gs(R.string.very_old_version)] = this
+        val endDate = sp.getLong(resourceHelper.gs(info.nightscout.androidaps.core.R.string.key_app_expiration) + "_" + config.VERSION_NAME, 0)
+        if (endDate != 0L && dateUtil.now() > endDate)
+            value[aapsLogger, false, resourceHelper.gs(R.string.application_expired)] = this
+        return value
     }
 
     private fun checkWarning() {
@@ -77,12 +80,23 @@ class VersionCheckerPlugin @Inject constructor(
             sp.putLong(R.string.key_last_versionchecker_plugin_warning, now)
 
             //notify
-            val message = resourceHelper.gs(R.string.new_version_warning,
+            val message = resourceHelper.gs(
+                R.string.new_version_warning,
                 ((now - sp.getLong(R.string.key_last_time_this_version_detected, now)) / 1L.daysToMillis().toDouble()).roundToInt(),
                 gracePeriod.old,
                 gracePeriod.veryOld
             )
             val notification = Notification(Notification.OLD_VERSION, message, Notification.NORMAL)
+            rxBus.send(EventNewNotification(notification))
+        }
+
+        val endDate = sp.getLong(resourceHelper.gs(info.nightscout.androidaps.core.R.string.key_app_expiration) + "_" + config.VERSION_NAME, 0)
+        if (endDate != 0L && dateUtil.now() > endDate && shouldWarnAgain(now)) {
+            // store last notification time
+            sp.putLong(R.string.key_last_versionchecker_plugin_warning, now)
+
+            //notify
+            val notification = Notification(Notification.VERSION_EXPIRE, resourceHelper.gs(R.string.application_expired), Notification.URGENT)
             rxBus.send(EventNewNotification(notification))
         }
     }
