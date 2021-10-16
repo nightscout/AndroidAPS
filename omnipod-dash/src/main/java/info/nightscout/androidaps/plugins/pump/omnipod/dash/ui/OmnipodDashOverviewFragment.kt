@@ -631,15 +631,12 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     }
 
     private fun updateSetTimeButton() {
-        // TODO
-        /*
-        if (podStateManager.isPodRunning && (podStateManager.timeDeviatesMoreThan(Duration.standardMinutes(5)) || commandQueue.isCustomCommandInQueue(CommandHandleTimeChange::class.java))) {
+        if (podStateManager.isActivationCompleted && !podStateManager.sameTimeZone) {
             buttonBinding.buttonSetTime.visibility = View.VISIBLE
-            buttonBinding.buttonSetTime.isEnabled = !podStateManager.isSuspended && rileyLinkServiceData.rileyLinkServiceState.isReady && isQueueEmpty()
+            buttonBinding.buttonSetTime.isEnabled = !podStateManager.isSuspended && isQueueEmpty()
         } else {
             buttonBinding.buttonSetTime.visibility = View.GONE
         }
-         */
     }
 
     private fun isAutomaticallySilenceAlertsEnabled(): Boolean {

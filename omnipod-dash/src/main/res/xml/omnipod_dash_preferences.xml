@@ -109,12 +109,11 @@
             android:defaultValue="false"
             android:key="@string/key_omnipod_common_suspend_delivery_button_enabled"
             android:title="@string/omnipod_common_preferences_suspend_delivery_button_enabled" />
-<!--
+
         <SwitchPreference
             android:defaultValue="true"
             android:key="@string/key_omnipod_common_time_change_event_enabled"
             android:title="@string/omnipod_common_preferences_time_change_enabled" />
--->
     </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>

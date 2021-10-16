@@ -65,13 +65,9 @@ class DashInsertCannulaViewModel @Inject constructor(
                 null
 
             super.disposable += omnipodManager.activatePodPart2(basalProgram, expirationHoursBeforeShutdown)
+                .ignoreElements()
+                .andThen(podStateManager.updateExpirationAlertSettings(expirationReminderEnabled, expirationHours))
                 .subscribeBy(
-                    onNext = { podEvent ->
-                        logger.debug(
-                            LTag.PUMP,
-                            "Received PodEvent in Pod activation part 2: $podEvent"
-                        )
-                    },
                     onError = { throwable ->
                         logger.error(LTag.PUMP, "Error in Pod activation part 2", throwable)
                         source.onSuccess(PumpEnactResult(injector).success(false).comment(I8n.textFromException(throwable, resourceHelper)))
@@ -103,7 +99,6 @@ class DashInsertCannulaViewModel @Inject constructor(
                             pumpSerial = podStateManager.uniqueId?.toString() ?: "n/a"
                         )
 
-                        podStateManager.updateExpirationAlertSettings(expirationReminderEnabled, expirationHours)
                         rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED))
                         source.onSuccess(PumpEnactResult(injector).success(true))
                     }
