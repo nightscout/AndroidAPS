@@ -852,7 +852,6 @@
     <string name="email_address">Indirizzo email</string>
     <string name="privacy_settings">Impostazioni privacy</string>
     <string name="privacy_summary">Puoi fornire un indirizzo e-mail opzionale se desideri essere avvisato in caso di arresti anomali dell\'app. Questo non è un servizio automatizzato. Sarai contattato dagli sviluppatori in situazioni pericolose.</string>
-    <string name="full_sync">Sincronizzazione completa</string>
     <string name="prime">Caricamento</string>
     <string name="ns_sync_options">Sincronizzazione</string>
     <string name="ns_upload_summary">Profili, boli, CHO, basali temporanee vengono caricati su NS</string>
