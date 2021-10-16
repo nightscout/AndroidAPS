@@ -84,21 +84,42 @@ class DataSyncSelectorImplementation @Inject constructor(
     }
 
     override fun resetToNextFullSync() {
-        sp.remove(R.string.key_ns_temporary_target_last_synced_id)
+        appRepository.getLastGlucoseValueIdWrapped().blockingGet().run {
+            val currentLast = if (this is ValueWrapper.Existing) this.value else 0L
+            sp.putLong(R.string.key_ns_glucose_value_new_data_id, currentLast)
+        }
         sp.remove(R.string.key_ns_glucose_value_last_synced_id)
+
+        appRepository.getLastTemporaryBasalIdWrapped().blockingGet().run {
+            val currentLast = if (this is ValueWrapper.Existing) this.value else 0L
+            sp.putLong(R.string.key_ns_temporary_basal_new_data_id, currentLast)
+        }
+        sp.remove(R.string.key_ns_temporary_basal_last_synced_id)
+
+        appRepository.getLastTempTargetIdWrapped().blockingGet().run {
+            val currentLast = if (this is ValueWrapper.Existing) this.value else 0L
+            sp.putLong(R.string.key_ns_temporary_target_new_data_id, currentLast)
+        }
+        sp.remove(R.string.key_ns_temporary_target_last_synced_id)
+
+        appRepository.getLastExtendedBolusIdWrapped().blockingGet().run {
+            val currentLast = if (this is ValueWrapper.Existing) this.value else 0L
+            sp.putLong(R.string.key_ns_extended_bolus_new_data_id, currentLast)
+        }
+        sp.remove(R.string.key_ns_extended_bolus_last_synced_id)
+
         sp.remove(R.string.key_ns_food_last_synced_id)
         sp.remove(R.string.key_ns_bolus_last_synced_id)
         sp.remove(R.string.key_ns_carbs_last_synced_id)
         sp.remove(R.string.key_ns_bolus_calculator_result_last_synced_id)
-        sp.remove(R.string.key_ns_temporary_basal_last_synced_id)
-        sp.remove(R.string.key_ns_extended_bolus_last_synced_id)
         sp.remove(R.string.key_ns_therapy_event_last_synced_id)
         sp.remove(R.string.key_ns_profile_switch_last_synced_id)
         sp.remove(R.string.key_ns_effective_profile_switch_last_synced_id)
         sp.remove(R.string.key_ns_offline_event_last_synced_id)
         sp.remove(R.string.key_ns_profile_store_last_synced_timestamp)
-        val lastDbIdWrapped = appRepository.getLastDeviceStatusIdWrapped().blockingGet()
-        if (lastDbIdWrapped is ValueWrapper.Existing) sp.putLong(R.string.key_ns_device_status_last_synced_id, lastDbIdWrapped.value)
+
+        val lastDeviceStatusDbIdWrapped = appRepository.getLastDeviceStatusIdWrapped().blockingGet()
+        if (lastDeviceStatusDbIdWrapped is ValueWrapper.Existing) sp.putLong(R.string.key_ns_device_status_last_synced_id, lastDeviceStatusDbIdWrapped.value)
         else sp.remove(R.string.key_ns_device_status_last_synced_id)
     }
 
@@ -313,6 +334,14 @@ class DataSyncSelectorImplementation @Inject constructor(
         appRepository.getNextSyncElementTemporaryTarget(startId).blockingGet()?.let { tt ->
             aapsLogger.info(LTag.DATABASE, "Loading TemporaryTarget data Start: $startId ID: ${tt.first.id} HistoryID: ${tt.second.id} ")
             when {
+                // record is not valid record and we are within first sync, no need to upload
+                tt.first.id != tt.second.id && tt.second.id <= sp.getLong(R.string.key_ns_temporary_target_new_data_id, 0) -> {
+                    confirmLastTempTargetsIdIfGreater(tt.second.id)
+                    //lastTbrId = -1
+                    processChangedTempTargetsCompat()
+                    aapsLogger.info(LTag.DATABASE, "Ignoring TemporaryTarget. Change within first sync ID: ${tt.first.id} HistoryID: ${tt.second.id} ")
+                    return false
+                }
                 // only NsId changed, no need to upload
                 tt.first.onlyNsIdAdded(tt.second)          -> {
                     confirmLastTempTargetsIdIfGreater(tt.second.id)
@@ -435,6 +464,14 @@ class DataSyncSelectorImplementation @Inject constructor(
             aapsLogger.info(LTag.DATABASE, "Loading GlucoseValue data ID: ${gv.first.id} HistoryID: ${gv.second.id} ")
             if (activePlugin.activeBgSource.shouldUploadToNs(gv.first)) {
                 when {
+                    // record is not valid record and we are within first sync, no need to upload
+                    gv.first.id != gv.second.id && gv.second.id <= sp.getLong(R.string.key_ns_glucose_value_new_data_id, 0) -> {
+                        confirmLastGlucoseValueIdIfGreater(gv.second.id)
+                        //lastGvId = -1
+                        processChangedGlucoseValuesCompat()
+                        aapsLogger.info(LTag.DATABASE, "Ignoring GlucoseValue. Change within first sync ID: ${gv.first.id} HistoryID: ${gv.second.id} ")
+                        return false
+                    }
                     // only NsId changed, no need to upload
                     gv.first.onlyNsIdAdded(gv.second)          -> {
                         confirmLastGlucoseValueIdIfGreater(gv.second.id)
@@ -601,6 +638,14 @@ class DataSyncSelectorImplementation @Inject constructor(
             val profile = profileFunction.getProfile(tb.first.timestamp)
             if (profile != null) {
                 when {
+                    // record is not valid record and we are within first sync, no need to upload
+                    tb.first.id != tb.second.id && tb.second.id <= sp.getLong(R.string.key_ns_temporary_basal_new_data_id, 0) -> {
+                        confirmLastTemporaryBasalIdIfGreater(tb.second.id)
+                        //lastTbrId = -1
+                        processChangedTemporaryBasalsCompat()
+                        aapsLogger.info(LTag.DATABASE, "Ignoring TemporaryBasal. Change within first sync ID: ${tb.first.id} HistoryID: ${tb.second.id} ")
+                        return false
+                    }
                     // only NsId changed, no need to upload
                     tb.first.onlyNsIdAdded(tb.second)          -> {
                         confirmLastTemporaryBasalIdIfGreater(tb.second.id)
@@ -672,6 +717,14 @@ class DataSyncSelectorImplementation @Inject constructor(
             val profile = profileFunction.getProfile(eb.first.timestamp)
             if (profile != null) {
                 when {
+                    // record is not valid record and we are within first sync, no need to upload
+                    eb.first.id != eb.second.id && eb.second.id <= sp.getLong(R.string.key_ns_extended_bolus_new_data_id, 0) -> {
+                        confirmLastExtendedBolusIdIfGreater(eb.second.id)
+                        //lastTbrId = -1
+                        processChangedExtendedBolusesCompat()
+                        aapsLogger.info(LTag.DATABASE, "Ignoring ExtendedBolus. Change within first sync ID: ${eb.first.id} HistoryID: ${eb.second.id} ")
+                        return false
+                    }
                     // only NsId changed, no need to upload
                     eb.first.onlyNsIdAdded(eb.second)          -> {
                         confirmLastExtendedBolusIdIfGreater(eb.second.id)
