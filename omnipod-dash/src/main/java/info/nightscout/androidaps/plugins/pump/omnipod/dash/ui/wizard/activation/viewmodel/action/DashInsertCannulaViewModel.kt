@@ -8,7 +8,7 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
@@ -31,7 +31,7 @@ class DashInsertCannulaViewModel @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val pumpSync: PumpSync,
     private val podStateManager: OmnipodDashPodStateManager,
-    private val rxBus: RxBusWrapper,
+    private val rxBus: RxBus,
     private val sp: SP,
     private val resourceHelper: ResourceHelper,
 
@@ -65,13 +65,9 @@ class DashInsertCannulaViewModel @Inject constructor(
                 null
 
             super.disposable += omnipodManager.activatePodPart2(basalProgram, expirationHoursBeforeShutdown)
+                .ignoreElements()
+                .andThen(podStateManager.updateExpirationAlertSettings(expirationReminderEnabled, expirationHours))
                 .subscribeBy(
-                    onNext = { podEvent ->
-                        logger.debug(
-                            LTag.PUMP,
-                            "Received PodEvent in Pod activation part 2: $podEvent"
-                        )
-                    },
                     onError = { throwable ->
                         logger.error(LTag.PUMP, "Error in Pod activation part 2", throwable)
                         source.onSuccess(PumpEnactResult(injector).success(false).comment(I8n.textFromException(throwable, resourceHelper)))
@@ -103,7 +99,6 @@ class DashInsertCannulaViewModel @Inject constructor(
                             pumpSerial = podStateManager.uniqueId?.toString() ?: "n/a"
                         )
 
-                        podStateManager.updateExpirationAlertSettings(expirationReminderEnabled, expirationHours)
                         rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED))
                         source.onSuccess(PumpEnactResult(injector).success(true))
                     }

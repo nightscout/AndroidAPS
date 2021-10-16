@@ -15,7 +15,7 @@ import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.tidepool.comm.TidepoolUploader
 import info.nightscout.androidaps.plugins.general.tidepool.comm.TidepoolUploader.ConnectionStatus.CONNECTED
 import info.nightscout.androidaps.plugins.general.tidepool.comm.TidepoolUploader.ConnectionStatus.DISCONNECTED
@@ -45,7 +45,7 @@ class TidepoolPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     resourceHelper: ResourceHelper,
     private val aapsSchedulers: AapsSchedulers,
-    private val rxBus: RxBusWrapper,
+    private val rxBus: RxBus,
     private val context: Context,
     private val fabricPrivacy: FabricPrivacy,
     private val tidepoolUploader: TidepoolUploader,

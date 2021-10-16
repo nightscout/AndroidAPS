@@ -15,7 +15,7 @@ import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.ConfigBuilder
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.utils.DateUtil
@@ -66,7 +66,7 @@ open class DanaRTestBase : TestBase() {
                 it.danaRPlugin = danaRPlugin
                 it.danaRKoreanPlugin = danaRKoreanPlugin
                 it.danaRv2Plugin = danaRv2Plugin
-                it.rxBus = RxBusWrapper(aapsSchedulers)
+                it.rxBus = RxBus(aapsSchedulers)
                 it.resourceHelper = resourceHelper
                 it.activePlugin = activePlugin
                 it.configBuilder = configBuilder

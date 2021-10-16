@@ -15,7 +15,7 @@ import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.R;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
@@ -55,7 +55,7 @@ public class RFSpy {
     @Inject SP sp;
     @Inject RileyLinkServiceData rileyLinkServiceData;
     @Inject RileyLinkUtil rileyLinkUtil;
-    @Inject RxBusWrapper rxBus;
+    @Inject RxBus rxBus;
 
     private final HasAndroidInjector injector;
 

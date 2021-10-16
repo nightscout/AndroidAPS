@@ -121,6 +121,7 @@ open class Notification {
         const val UNSUPPORTED_ACTION_IN_PUMP = 71
         const val WRONG_PUMP_DATA = 72
         const val NSCLIENT_VERSION_DOES_NOT_MATCH = 73
+        const val VERSION_EXPIRE = 74
 
         const val USER_MESSAGE = 1000
 

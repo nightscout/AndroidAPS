@@ -5,7 +5,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.events.EventChargingState
 import info.nightscout.androidaps.events.EventNetworkChange
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -26,7 +26,7 @@ class NsClientReceiverDelegateTest : TestBase() {
     @Mock lateinit var resourceHelper: ResourceHelper
 
     lateinit var receiverStatusStore: ReceiverStatusStore
-    val rxBus = RxBusWrapper(aapsSchedulers)
+    val rxBus = RxBus(aapsSchedulers)
 
     private var sut: NsClientReceiverDelegate? = null
 

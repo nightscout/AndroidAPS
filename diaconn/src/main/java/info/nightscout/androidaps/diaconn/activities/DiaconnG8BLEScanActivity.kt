@@ -21,7 +21,7 @@ import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.diaconn.events.EventDiaconnG8DeviceChange
 import info.nightscout.androidaps.diaconn.R
 import info.nightscout.androidaps.diaconn.databinding.DiaconnG8BlescannerActivityBinding
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.common.ble.BlePreCheck
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.util.*
@@ -30,7 +30,7 @@ import javax.inject.Inject
 class DiaconnG8BLEScanActivity : NoSplashAppCompatActivity() {
 
     @Inject lateinit var sp: SP
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var blePreCheck: BlePreCheck
 
     private var listAdapter: ListAdapter? = null

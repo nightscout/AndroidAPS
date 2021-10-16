@@ -19,7 +19,7 @@ import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.receivers.DataWorker
@@ -45,7 +45,7 @@ class NSClientAddUpdateWorker(
     @Inject lateinit var config: Config
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var uel: UserEntryLogger
 
     override fun doWork(): Result {

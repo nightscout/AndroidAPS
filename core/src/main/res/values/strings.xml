@@ -63,6 +63,7 @@
     <string name="key_adult" translatable="false">adult</string>
     <string name="key_resistantadult" translatable="false">resistantadult</string>
     <string name="key_pregnant" translatable="false">pregnant</string>
+    <string name="key_app_expiration" translatable="false">app_expiration</string>
 
     <!--    General-->
     <string name="refresh">Refresh</string>
@@ -374,12 +375,14 @@
 
     <!-- VersionChecker -->
     <string name="key_last_time_this_version_detected" translatable="false">last_time_this_version_detected</string>
-    <string name="key_last_versionchecker_warning" translatable="false">last_versionchecker_waring</string>
+    <string name="key_last_versionchecker_warning" translatable="false">last_versionchecker_warning</string>
+    <string name="key_last_expired_versionchecker_warning" translatable="false">last_expired_version_checker_warning</string>
     <string name="key_last_versionchecker_plugin_warning" translatable="false">last_versionchecker_plugin_waring</string>
     <string name="key_last_revoked_certs_check" translatable="false">last_revoked_certs_check</string>
     <string name="signature_verifier">Signature verifier</string>
     <string name="running_invalid_version">We have detected that you are running an invalid version. Loop disabled!</string>
     <string name="versionavailable">Version %1$s available</string>
+    <string name="version_expire">Version %1$s expire on %2$s</string>
 
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Please reboot your phone or restart AndroidAPS from the System Settings \notherwise Android APS will not have logging (important to track and verify that the algorithms are working correctly)!</string>

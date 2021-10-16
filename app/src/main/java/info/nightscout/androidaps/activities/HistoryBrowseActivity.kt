@@ -24,7 +24,7 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus
 import info.nightscout.androidaps.plugins.general.overview.OverviewData
 import info.nightscout.androidaps.plugins.general.overview.OverviewMenus
@@ -50,7 +50,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var sp: SP
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
@@ -185,36 +185,37 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        disposable.add(rxBus
-                .toObservable(EventAutosensCalculationFinished::class.java)
-                .observeOn(aapsSchedulers.io)
-                .subscribe({
-                    // catch only events from iobCobCalculator
-                    if (it.cause is EventCustomCalculationFinished)
-                        refreshLoop("EventAutosensCalculationFinished")
-                }, fabricPrivacy::logException)
-        )
-        disposable.add(rxBus
-                .toObservable(EventIobCalculationProgress::class.java)
-                .observeOn(aapsSchedulers.main)
-                .subscribe({
-                    if (it.cause is EventCustomCalculationFinished)
-                        binding.overviewIobcalculationprogess.text = it.progress
-                }, fabricPrivacy::logException)
-        )
-        disposable.add(rxBus
-                .toObservable(EventRefreshOverview::class.java)
-                .observeOn(aapsSchedulers.main)
-                .subscribe({ updateGUI("EventRefreshOverview") }, fabricPrivacy::logException)
-        )
         disposable += rxBus
-                .toObservable(EventBucketedDataCreated::class.java)
-                .observeOn(aapsSchedulers.io)
-                .subscribe({
-                    overviewData.prepareBucketedData("EventBucketedDataCreated")
-                    overviewData.prepareBgData("EventBucketedDataCreated")
-                    rxBus.send(EventRefreshOverview("EventBucketedDataCreated"))
-                }, fabricPrivacy::logException)
+            .toObservable(EventAutosensCalculationFinished::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({
+                           // catch only events from iobCobCalculator
+                           if (it.cause is EventCustomCalculationFinished)
+                               try {
+                                   refreshLoop("EventAutosensCalculationFinished")
+                               } catch (e: InterruptedException) {
+                                   fabricPrivacy.logException(e)
+                               }
+                       }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventIobCalculationProgress::class.java)
+            .observeOn(aapsSchedulers.main)
+            .subscribe({
+                           if (it.cause is EventCustomCalculationFinished)
+                               binding.overviewIobcalculationprogess.text = it.progress
+                       }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventRefreshOverview::class.java)
+            .observeOn(aapsSchedulers.main)
+            .subscribe({ updateGUI("EventRefreshOverview") }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventBucketedDataCreated::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({
+                           overviewData.prepareBucketedData("EventBucketedDataCreated")
+                           overviewData.prepareBgData("EventBucketedDataCreated")
+                           rxBus.send(EventRefreshOverview("EventBucketedDataCreated"))
+                       }, fabricPrivacy::logException)
 
         if (overviewData.fromTime == 0L) {
             // set start of current day

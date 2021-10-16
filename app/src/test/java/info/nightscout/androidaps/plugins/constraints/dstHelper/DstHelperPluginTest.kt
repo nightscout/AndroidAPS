@@ -5,7 +5,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Assert
@@ -29,7 +29,7 @@ class DstHelperPluginTest : TestBase() {
 
     @Before
     fun mock() {
-        plugin = DstHelperPlugin(injector, aapsLogger, RxBusWrapper(aapsSchedulers), resourceHelper, sp, activePlugin, loopPlugin)
+        plugin = DstHelperPlugin(injector, aapsLogger, RxBus(aapsSchedulers), resourceHelper, sp, activePlugin, loopPlugin)
     }
 
     @Test

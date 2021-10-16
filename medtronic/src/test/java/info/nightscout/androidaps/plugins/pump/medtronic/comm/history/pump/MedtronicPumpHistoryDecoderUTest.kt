@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RawHistoryPage
@@ -34,7 +34,7 @@ class MedtronicPumpHistoryDecoderUTest : TestBase() {
     private var medtronicPumpStatus: MedtronicPumpStatus? = null
     private var medtronicUtil: MedtronicUtil? = null
     private var decoder: MedtronicPumpHistoryDecoder? = null
-    var rxBusWrapper = RxBusWrapper(TestAapsSchedulers())
+    var rxBusWrapper = RxBus(TestAapsSchedulers())
     @Before fun setup() {
         medtronicPumpStatus =
             MedtronicPumpStatus(resourceHelper, sp, rxBusWrapper, rileyLinkUtil)

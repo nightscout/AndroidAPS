@@ -11,7 +11,7 @@ import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -40,7 +40,7 @@ class ProfileTest : TestBase() {
     @Mock lateinit var sp: SP
     @Mock lateinit var repository: AppRepository
 
-    private lateinit var rxBus: RxBusWrapper
+    private lateinit var rxBus: RxBus
     private lateinit var dateUtil: DateUtil
     private lateinit var testPumpPlugin: TestPumpPlugin
     private lateinit var hardLimits: HardLimits
@@ -59,7 +59,7 @@ class ProfileTest : TestBase() {
     fun prepare() {
         testPumpPlugin = TestPumpPlugin { AndroidInjector { } }
         dateUtil = DateUtil(context)
-        rxBus = RxBusWrapper(TestAapsSchedulers())
+        rxBus = RxBus(TestAapsSchedulers())
         hardLimits = HardLimits(aapsLogger, rxBus, sp, resourceHelper, context, repository)
         `when`(activePluginProvider.activePump).thenReturn(testPumpPlugin)
         `when`(resourceHelper.gs(R.string.profile_per_unit)).thenReturn("/U")

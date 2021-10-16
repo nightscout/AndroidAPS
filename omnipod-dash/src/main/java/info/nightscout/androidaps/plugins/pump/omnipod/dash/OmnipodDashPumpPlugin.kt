@@ -18,7 +18,7 @@ import info.nightscout.androidaps.extensions.toStringFull
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.common.ManufacturerType
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType
@@ -76,7 +76,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val history: DashHistory,
     private val pumpSync: PumpSync,
-    private val rxBus: RxBusWrapper,
+    private val rxBus: RxBus,
     private val context: Context,
     private val aapsSchedulers: AapsSchedulers,
     private val fabricPrivacy: FabricPrivacy,
@@ -1031,7 +1031,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 DateFormat.format("HH:mm", Date(this.startTime))
             ) + "\n"
         }
-        val (temporaryBasal, extendedBolus, _, profile) = pumpSync.expectedPumpState()
+        val temporaryBasal = pumpSync.expectedPumpState().temporaryBasal
         temporaryBasal?.run {
             ret += resourceHelper.gs(
                 R.string.omnipod_common_short_status_temp_basal,
@@ -1169,8 +1169,9 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     private fun handleTimeChange(): PumpEnactResult {
-        // TODO
-        return PumpEnactResult(injector).success(false).enacted(false).comment("NOT IMPLEMENTED")
+        return profileFunction.getProfile()?.let {
+            setNewBasalProfile(it)
+        } ?: PumpEnactResult(injector).success(true).enacted(false).comment("No profile active")
     }
 
     private fun updateAlertConfiguration(): PumpEnactResult {
@@ -1229,7 +1230,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 expirationReminderEnabled,
                 expirationHours
             ).andThen(
-                podStateManager.updateExpirationAlertSettings(
+                podStateManager.updateLowReservoirAlertSettings(
                     lowReservoirAlertEnabled,
                     lowReservoirAlertUnits
                 )
@@ -1252,14 +1253,20 @@ class OmnipodDashPumpPlugin @Inject constructor(
             "Time, Date and/or TimeZone changed. [timeChangeType=" + timeChangeType.name + ", eventHandlingEnabled=" + eventHandlingEnabled + "]"
         )
 
-        if (timeChangeType == TimeChangeType.TimeChanged) {
-            aapsLogger.info(LTag.PUMP, "Ignoring time change because it is not a DST or TZ change")
-            return
-        } else if (!podStateManager.isPodRunning) {
-            aapsLogger.info(LTag.PUMP, "Ignoring time change because no Pod is active")
-            return
+        when {
+            !eventHandlingEnabled -> {
+                aapsLogger.info(LTag.PUMP, "Ignoring time change because automatic time handling is disabled in configuration")
+                return
+            }
+            timeChangeType == TimeChangeType.TimeChanged -> {
+                aapsLogger.info(LTag.PUMP, "Ignoring time change because it is not a DST or TZ change")
+                return
+            }
+            !podStateManager.isPodRunning -> {
+                aapsLogger.info(LTag.PUMP, "Ignoring time change because no Pod is active")
+                return
+            }
         }
-
         aapsLogger.info(LTag.PUMP, "Handling time change")
 
         commandQueue.customCommand(CommandHandleTimeChange(false), null)
