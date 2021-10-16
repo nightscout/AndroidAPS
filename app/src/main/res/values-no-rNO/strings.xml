@@ -853,7 +853,6 @@
     <string name="email_address">E-postadresse</string>
     <string name="privacy_settings">Personverninnstillinger</string>
     <string name="privacy_summary">Du kan oppgi valgfri e-postadresse hvis du ønsker å bli varslet om krasj. Dette er ikke en automatisert tjeneste. Du vil bli kontaktet av utviklere ved farlige hendelser.</string>
-    <string name="full_sync">Full synkronisering</string>
     <string name="prime">Prime</string>
     <string name="ns_sync_options">Synkronisering</string>
     <string name="ns_upload_summary">Profiler, boluser, karbohydrater, midlertidige basaler lastes opp til NS</string>
