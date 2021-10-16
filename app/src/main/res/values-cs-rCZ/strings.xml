@@ -856,7 +856,6 @@
     <string name="email_address">E-mailová adresa</string>
     <string name="privacy_settings">Nastavení soukromí</string>
     <string name="privacy_summary">Pokud chcete být upozorněni na selhání aplikace, můžete zadat volitelně e-mailovou adresu. Toto není automatizovaná služba. Vývojáři vás budou kontaktovat v nebezpečných situacích.</string>
-    <string name="full_sync">Úplná synchronizace</string>
     <string name="prime">Doplňování</string>
     <string name="ns_sync_options">Synchronizace</string>
     <string name="ns_upload_summary">Profily, bolusy, sacharidy, dočasné bazály jsou nahrány do NS</string>
