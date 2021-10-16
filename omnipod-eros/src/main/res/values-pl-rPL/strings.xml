@@ -1,13 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Omnipod Eros - Description -->
+    <string name="omnipod_eros_pump_description">Integracja z pompą Omnipod Eros (starszy model z przezroczystą osłonką igły). Wymaga urządzenia RileyLink z firmware w wersji przynajmniej 2.0.</string>
     <!-- Omnipod Eros - Keys -->
     <!-- Omnipod Eros - Overview -->
     <!-- Omnipod Eros - Preferences -->
+    <string name="omnipod_eros_preferences_riley_link_configuration">Konfiguracja RileyLink</string>
+    <string name="omnipod_eros_preferences_category_notifications">Powiadomienia</string>
+    <string name="omnipod_eros_preferences_pulse_log_button_enabled">Pokaż przycisk Pulse Log w menu zarządzania Podem</string>
+    <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Pokaż przycisk Statystyki RileyLink w menu zarządzania Podem</string>
+    <string name="omnipod_eros_preferences_battery_change_logging_enabled">Włącz rejestrowanie zmiany baterii w Akcjach</string>
+    <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_tbr_sound_enabled">Dźwięk dla niepewnych powiadomień TBR włączony</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_smb_sound_enabled">Dźwięk dla niepewnych powiadomień SMB włączony</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_bolus_sound_enabled">Dźwięk dla niepewnych powiadomień o bolusie włączony</string>
     <!-- Omnipod Eros - History -->
+    <string name="omnipod_eros_history_title">Historia Poda</string>
     <!-- Omnipod Eros - Short Status -->
     <!-- Omnipod Eros - Error -->
     <!-- Omnipod Eros - Pod Management -->
     <!-- Omnipod Eros - Pod Activation Wizard -->
+    <string name="omnipod_eros_pod_activation_wizard_start_pod_activation_text">Napełnij nowego Poda ilością insuliny przewidzianą na 3 dni.\n\nNasłuchuj dwóch sygnałów dźwiękowych z Poda podczas procesu napełniania. Wskazują one, że minimalna ilość 80U została napełniona. Upewnij się, że ampułkostrzykawka jest całkowicie pusta, nawet po odsłuchaniu dwóch sygnałów dźwiękowych.\n\nPo napełnieniu Poda, proszę naciśnij <b>Dalej</b>.\n\n<b>Uwaga:</b> nie usuwaj w tym czasie osłonki igły Poda.\n<b>Uwaga:</b> proszę umieść RileyLink w pozycji pionowej i nie dalej niż kilkanaście centymetrów od niego.</string>
     <!-- Omnipod Eros - Other -->
 </resources>
