@@ -5,7 +5,9 @@
     <string name="danars_pairingok">Conexión OK</string>
     <string name="danars_pairingtimedout">Tiempo de Vinculación agotado</string>
     <string name="danars_waitingforpairing">Esperando para conectar con bomba</string>
+    <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
+    <string name="description_pump_dana_rs">Integración para bombas DANA Diabecare RS y Dana-i</string>
     <string name="maxbolusviolation">Violación de bolo Max</string>
     <string name="commanderror">Error de comando</string>
     <string name="speederror">Error de velocidad</string>
@@ -113,4 +115,5 @@
     <string name="press_ok_on_the_pump">Pulse Aceptar en la bomba\ny entre 2 números visualizados\nMantener la pantalla en la bomba ON pulsando el botón menos hasta que termine de introducir el código.</string>
     <string name="num1pin">1: (12 dígitos)</string>
     <string name="num2pin">2: (8 dígitos)</string>
+    <string name="basal_bolus_step">Paso basal/bolo</string>
 </resources>
