@@ -1,46 +1,36 @@
-package info.nightscout.androidaps.db;
+package info.nightscout.androidaps.plugins.pump.omnipod.eros.history.database;
 
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
+import androidx.room.Entity;
+import androidx.room.Index;
+import androidx.room.PrimaryKey;
 
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 
 /**
  * Created by andy on 30.11.2019.
  */
-@DatabaseTable(tableName = "PodHistory")
-public class OmnipodHistoryRecord implements Comparable<OmnipodHistoryRecord> {
+@Entity(tableName = "historyrecords", indices = {@Index("date")})
+public class ErosHistoryRecordEntity implements Comparable<ErosHistoryRecordEntity> {
 
-    @DatabaseField(id = true)
-    public long date;
-
-    @DatabaseField
-    private long podEntryTypeCode;
-
-    @DatabaseField
-    private String data;
-
-    @DatabaseField
-    private boolean success;
-
-    @DatabaseField
+    @PrimaryKey
     private long pumpId;
-
-    @DatabaseField
+    public long date;
+    private long podEntryTypeCode;
+    private String data;
+    private boolean success;
     private String podSerial;
-
-    @DatabaseField
     private Boolean successConfirmed;
 
-    public OmnipodHistoryRecord() {
+    public ErosHistoryRecordEntity() {
         generatePumpId();
     }
 
-    public OmnipodHistoryRecord(long dateTimeInMillis, long podEntryTypeCode) {
+    public ErosHistoryRecordEntity(long dateTimeInMillis, long podEntryTypeCode) {
         this.date = dateTimeInMillis;
         this.podEntryTypeCode = podEntryTypeCode;
         generatePumpId();
     }
+
 
     public long getDate() {
         return this.date;
@@ -108,7 +98,7 @@ public class OmnipodHistoryRecord implements Comparable<OmnipodHistoryRecord> {
     }
 
     @Override
-    public int compareTo(OmnipodHistoryRecord otherOne) {
+    public int compareTo(ErosHistoryRecordEntity otherOne) {
         return (int) (otherOne.date - this.date);
     }
 }
