@@ -1,2 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="resetpairing">Återställ parkoppling</string>
+    <string name="diaconn_nodeviceavailable">Ingen enhet tillgänglig</string>
+    <string name="diaconn_pairing">Diaconn parkoppling</string>
+    <string name="pumperror">Pumpfel</string>
+    <string name="diaconn_g8_pumplang_english">Engelska</string>
+    <string name="diaconn_g8_reasoninsulinshortage">Slut på insulin</string>
+    <string name="diaconn_g8_reasonuserstop">Användaren pausat</string>
+    <string name="diaconn_g8_reasonsystemreset">Systemåterställning</string>
+    <string name="diaconn_g8_reasonother">Övrigt</string>
+    <string name="diaconn_g8_reasonemergencystop">Nödstopp</string>
+    <string name="diacon_g8_blockbasal">BASAL</string>
+    <string name="diacon_g8_blockmealbolus">MÅLTIDSBOLUS</string>
+    <string name="diacon_g8_blocknormalbolus">NORMAL BOLUS</string>
+    <string name="diacon_g8_blocksquarebolus">FÖRLÄNGD BOLUS</string>
+    <string name="diacon_g8_blockdualbolus">KOMBIBOLUS</string>
+    <string name="diacon_g8_blockreplacetube">BYT SLANG</string>
+    <string name="diacon_g8_blockreplaceneedle">BYT NÅL</string>
+    <string name="diacon_g8_blockreplacesyringe">BYT KANYL</string>
+    <string name="diaconn_g8_logalarmblock">Ocklusion (%s)</string>
+    <string name="diaconn_g8_lgorelease">basaldos (%s)</string>
+    <string name="diaconn_g8_lgosuspend">basal avstängd (%s)</string>
+    <string name="diaconn_g8_logdualnormalsuccess">Normal slutförd</string>
+    <string name="diaconn_g8_logdualsquarestart">Kombi startad</string>
+    <string name="diaconn_g8_logdualsquaresuccess">Kombi slutförd</string>
+    <string name="diaconn_g8_logsquarestart">Förlängd startad</string>
+    <string name="diaconn_g8_logsquaresuccess">Förlängd slutförd</string>
+    <string name="diaconn_g8_logmealfail">Misslyckades ange måltid</string>
+    <string name="diaconn_g8_logsuccess">Slutfört</string>
+    <string name="diaconn_g8_logmealsuccess">Lyckades ange måltid</string>
+    <string name="diaconn_g8_errorcode_1">Kan inte kontrollera pga CRC-fel i överföringen.</string>
+    <string name="diaconn_g8_errorcode_2">Kan inte ställas in pga indatafel.</string>
+    <string name="diaconn_g8_errorcode_3">Kan inte ställas in pga ett protokollspecifikationsfel.</string>
+    <string name="diaconn_g8_errorcode_4">Måltiden tidsmäts. Kan inte ta bolus.</string>
+    <string name="diaconn_g8_errorcode_6">Avbruten av pumpen</string>
+    <string name="diaconn_g8_errorcode_7">Tar till andra åtgärder. Begränsar appinställningar.</string>
+    <string name="diaconn_g8_errorcode_8">Under en pågående bolus är ny bolus begränsad.</string>
+    <string name="diaconn_g8_errorcode_9">Återuppta basaldos</string>
+    <string name="diaconn_g8_errorcode_10">Avbruten på grund av att pumpen inte svarar.</string>
+    <string name="diaconn_g8_errorcode_11">Bolus är inte möjlig på grund av lågt batteri.</string>
+    <string name="diaconn_g8_errorcode_12">Bolus inte tillåten pga låg reservoarnivå.</string>
+    <string name="diaconn_g8_errorcode_13">Bolus blockerad eftersom det kommer överskrida gränsen.</string>
+    <string name="diaconn_g8_errorcode_14">Bolus blockerad eftersom den kommer överstiga max daglig dos.</string>
+    <string name="diaconn_g8_errorcode_15">Efter att konfigurationen är klar, kan basaldosen påbörjas.</string>
+    <string name="diaconn_g8_errotpreceivedyet">Kommandot levererades inte. Vänligen försök igen.</string>
+    <string name="diaconn_g8_logtubechange_title">Logga slangbyte</string>
+    <string name="diaconn_g8_logtubechange_summary">Lägg till händelse \"slangbyte\" när den upptäcks i historiken</string>
+    <string name="diaconn_g8_logtempstart">Temp basal start</string>
+    <string name="diaconn_g8_errorcode_32">Under LGS är bolus begränsad</string>
+    <string name="diaconn_g8_errorcode_33">LGS status är redan PÅ.</string>
+    <string name="diaconn_g8_errorcode_34">LGS status är redan AV.</string>
+    <string name="diaconn_g8_errorcode_35">\"Temp basal start\" ignoreras när temp basal redan är aktiv</string>
+    <string name="diaconn_g8_errorcode_36">\"Temp basal stopp\" ignoreras när ingen temp basal är aktiv</string>
+</resources>
