@@ -74,4 +74,6 @@
         <item quantity="one">%1$d tim</item>
         <item quantity="other">%1$d tim</item>
     </plurals>
+    <string name="orange_use_scanning_level">Använd sökning</string>
+    <string name="orange_use_scanning_level_summary">Gör en sökning innan du ansluter till OrangeLink. Det bör förbättra anslutningarna (kan även användas med andra RileyLink-kloner om det behövs)</string>
 </resources>
