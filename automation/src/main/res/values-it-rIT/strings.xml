@@ -86,6 +86,7 @@
     <string name="latitude_short">Lat:</string>
     <string name="longitude_short">Lon:</string>
     <string name="glucose_u">Glicemia [%1$s]:</string>
+    <string name="target_u">Target [%1$s]:</string>
     <string name="lastboluslabel">Ultimo bolo</string>
     <string name="lastboluscompared">Ora ultimo bolo %1$s %2$s min fa</string>
     <string name="triggercoblabel">COB</string>
