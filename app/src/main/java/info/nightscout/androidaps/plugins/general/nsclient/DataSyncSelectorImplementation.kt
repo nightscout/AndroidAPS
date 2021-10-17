@@ -448,7 +448,7 @@ class DataSyncSelectorImplementation @Inject constructor(
 
     //private var lastGvId = -1L
     //private var lastGvTime = -1L
-    override fun processChangedGlucoseValuesCompat(): Boolean {
+    override tailrec fun processChangedGlucoseValuesCompat() {
         val lastDbIdWrapped = appRepository.getLastGlucoseValueIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
         var startId = sp.getLong(R.string.key_ns_glucose_value_last_synced_id, 0)
@@ -460,6 +460,7 @@ class DataSyncSelectorImplementation @Inject constructor(
         //lastGvId = startId
         //lastGvTime = dateUtil.now()
         queueCounter.gvsRemaining = lastDbId - startId
+        var tailCall = false
         appRepository.getNextSyncElementGlucoseValue(startId).blockingGet()?.let { gv ->
             aapsLogger.info(LTag.DATABASE, "Loading GlucoseValue data ID: ${gv.first.id} HistoryID: ${gv.second.id} ")
             if (activePlugin.activeBgSource.shouldUploadToNs(gv.first)) {
@@ -468,23 +469,21 @@ class DataSyncSelectorImplementation @Inject constructor(
                     gv.first.id != gv.second.id && gv.second.id <= sp.getLong(R.string.key_ns_glucose_value_new_data_id, 0) -> {
                         confirmLastGlucoseValueIdIfGreater(gv.second.id)
                         //lastGvId = -1
-                        processChangedGlucoseValuesCompat()
                         aapsLogger.info(LTag.DATABASE, "Ignoring GlucoseValue. Change within first sync ID: ${gv.first.id} HistoryID: ${gv.second.id} ")
-                        return false
+                        tailCall = true
                     }
                     // only NsId changed, no need to upload
                     gv.first.onlyNsIdAdded(gv.second)          -> {
                         confirmLastGlucoseValueIdIfGreater(gv.second.id)
                         //lastGvId = -1
-                        processChangedGlucoseValuesCompat()
                         aapsLogger.info(LTag.DATABASE, "Ignoring GlucoseValue. Only NS id changed ID: ${gv.first.id} HistoryID: ${gv.second.id} ")
-                        return false
+                        tailCall = true
                     }
                     // without nsId = create new
                     gv.first.interfaceIDs.nightscoutId == null ->
                         nsClientPlugin.nsClientService?.dbAdd("entries", gv.first.toJson(true, dateUtil), DataSyncSelector.PairGlucoseValue(gv.first, gv.second.id), "$startId/$lastDbId")
                     // with nsId = update
-                    gv.first.interfaceIDs.nightscoutId != null ->
+                    else ->  //  gv.first.interfaceIDs.nightscoutId != null
                         nsClientPlugin.nsClientService?.dbUpdate(
                             "entries",
                             gv.first.interfaceIDs.nightscoutId,
@@ -493,14 +492,15 @@ class DataSyncSelectorImplementation @Inject constructor(
                             "$startId/$lastDbId"
                         )
                 }
-                return true
             } else {
                 confirmLastGlucoseValueIdIfGreater(gv.second.id)
                 //lastGvId = -1
-                processChangedGlucoseValuesCompat()
+                tailCall = true
             }
         }
-        return false
+        if (tailCall) {
+            processChangedGlucoseValuesCompat()
+        }
     }
 
     override fun confirmLastTherapyEventIdIfGreater(lastSynced: Long) {
