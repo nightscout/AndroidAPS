@@ -744,6 +744,7 @@
     <string name="objectives_button_unstart">Vymazanie začaté</string>
     <string name="doyouwantresetstart">Chcete resetovať začiatok cieľa? Môžete prísť o svoj pokrok.</string>
     <string name="setupwizard_units_prompt">Vyberte jednotky, v ktorých chcete zobraziť hodnoty</string>
+    <string name="dia_short">DIA</string>
     <string name="ic_short">I:C</string>
     <string name="isf_short">ISF</string>
     <string name="target_short">CIEĽ</string>
