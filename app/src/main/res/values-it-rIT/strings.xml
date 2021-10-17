@@ -493,6 +493,7 @@
     <string name="dexcomg5_xdripupload_title">Invia dati BG a xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">In xDrip+ seleziona origine dati 640g/Eversense</string>
     <string name="nsclientbg">BG NSClient</string>
+    <string name="nsclientbgshort">BG NS</string>
     <string name="overview_editquickwizard_usebg">Calcolo BG</string>
     <string name="overview_editquickwizard_usebolusiob">Calcolo IOB da bolo</string>
     <string name="overview_editquickwizard_usebasaliob">Calcolo IOB da basale</string>
