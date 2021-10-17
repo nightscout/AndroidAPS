@@ -717,6 +717,7 @@
     <string name="versionChecker">Versie Checker</string>
     <string name="old_version">oude versie</string>
     <string name="very_old_version">zeer oude versie</string>
+    <string name="application_expired">Applicatie is verlopen</string>
     <string name="new_version_warning">Nieuwe versie al zeker %1$d dagen beschikbaar! Terugval LGS na %2$d dagen, loop zal worden uitgeschakeld na %3$d dagen</string>
     <string name="twohours">2u</string>
     <string name="dexcom_app_patched">Dexcom App (patched)</string>
@@ -856,6 +857,8 @@
     <string name="email_address">E-mailadres</string>
     <string name="privacy_settings">Privacyinstellingen</string>
     <string name="privacy_summary">U kunt optioneel een e-mailadres opgeven als u op de hoogte wilt worden gebracht van applicatie crashes. Dit is geen geautomatiseerde service. De ontwikkelaars zullen contact met u opnemen bij gevaarlijke situaties.</string>
+    <string name="full_sync">Volledige synchronisatie</string>
+    <string name="full_sync_comment">Volledige synchronisatie? Dit kan een aantal uren duren. Je ziet dan geen nieuwe gegevens in Nightscout.</string>
     <string name="prime">Vullen</string>
     <string name="ns_sync_options">Synchronisatie</string>
     <string name="ns_upload_summary">Profielen, bolussen, koolhydraten, tijdelijke basaal standen worden geupload naar NS</string>

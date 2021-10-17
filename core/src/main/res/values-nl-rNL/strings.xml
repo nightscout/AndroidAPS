@@ -292,6 +292,7 @@
     <string name="signature_verifier">Handtekening controle</string>
     <string name="running_invalid_version">We hebben gedetecteerd dat je een ongeldige versie gebruikt. Loop is uitgeschakeld!</string>
     <string name="versionavailable">Versie %1$s is beschikbaar</string>
+    <string name="version_expire">Versie %1$s verloopt op %2$s</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Herstart je telefoon of herstart AndroidAPS vanuit de systeem instellingen. \nAnders zullen er voor AndroidAPS geen logs worden aangemaakt (dit is belangrijk voor de ontwikkelaars, zo kunnen zij controleren of de algoritmes correct werken)!</string>
     <!-- WeekdayPicker -->
