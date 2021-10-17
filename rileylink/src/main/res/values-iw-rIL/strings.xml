@@ -78,4 +78,6 @@
         <item quantity="many">%1$d שעות</item>
         <item quantity="other">%1$d שעות</item>
     </plurals>
+    <string name="orange_use_scanning_level">השתמש בסריקה</string>
+    <string name="orange_use_scanning_level_summary">סריקה לפני החיבור ל-OrangeLink, נועד לשפר את החיבורים (ניתן להשתמש בו גם עם מכשירים תואמי RileyLink אחרים, במידת הצורך)</string>
 </resources>

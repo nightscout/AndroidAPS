@@ -64,6 +64,7 @@
     <string name="riley_link_common_yes">Tak</string>
     <string name="riley_link_common_no">Nie</string>
     <!-- RileyLink - Preferences -->
+    <string name="riley_link_show_battery_level">Pokaż poziom baterii zgłaszany przez OrangeLink/EmaLink/DiaLink</string>
     <string name="riley_link_show_battery_level_summary">NIE działa z oryginalnym RileyLinkiem. Może nie działać z alternatywami RileyLink-a.</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d dzień</item>
@@ -77,4 +78,6 @@
         <item quantity="many">%1$d godzin</item>
         <item quantity="other">%1$d godzin</item>
     </plurals>
+    <string name="orange_use_scanning_level">Użyj skanowania</string>
+    <string name="orange_use_scanning_level_summary">Skanuj przed połączeniem z OrangeLink, to powinno poprawić jakość połączeń (w razie potrzeby można używać z innymi klonami RileyLink)</string>
 </resources>

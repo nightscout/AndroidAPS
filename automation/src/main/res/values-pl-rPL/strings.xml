@@ -7,6 +7,7 @@
     <string name="automation_missing_trigger">Proszę podać przynajmniej jedno wywołanie.</string>
     <string name="automation_missing_action">Proszę podać przynajmniej jedną akcję.</string>
     <string name="alarm_message">Alarm: %1$s</string>
+    <string name="alarm_short">Alarm:</string>
     <string name="message_short">Inf:</string>
     <string name="alreadyenabled">Już włączono</string>
     <string name="alreadydisabled">Już wyłączono</string>
@@ -37,6 +38,9 @@
     <string name="glucoseisnotavailable">Poziom jest nieznany</string>
     <string name="glucosecomparedmgdl">Poziom %1$s %2$.0f %3$s</string>
     <string name="glucosecomparedmmol">Poziom %1$s %2$.1f %3$s</string>
+    <string name="notemptarget">Cel tymczasowy nie istnieje</string>
+    <string name="temptargetcomparedmgdl">Cel tymczasowy %1$s %2$.0f %3$s</string>
+    <string name="temptargetcomparedmmol">Cel tymczasowy %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">Profil pct %1$s %2$d</string>
     <string name="iobcompared">IOB %1$s %2$.1f</string>
     <string name="and">i</string>
@@ -85,6 +89,7 @@
     <string name="latitude_short">Szerokość:</string>
     <string name="longitude_short">Długość:</string>
     <string name="glucose_u">Poziom [%1$s]:</string>
+    <string name="target_u">Cel [%1$s]:</string>
     <string name="lastboluslabel">Przed ostatnim bolusem</string>
     <string name="lastboluscompared">Czas ostatniego bolusa %1$s %2$s min temu</string>
     <string name="triggercoblabel">Węgle</string>

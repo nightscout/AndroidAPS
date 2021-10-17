@@ -292,6 +292,7 @@
     <string name="signature_verifier">מאמת חתימה</string>
     <string name="running_invalid_version">זיהינו שאתם משתמשים בגרסה לא תקפה. הלולאה מושבתת!</string>
     <string name="versionavailable">גרסה %1$s זמינה</string>
+    <string name="version_expire">גרסה: %1$s תפוג תוקפה: %2$s</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">נא לאתחל את הסמרטפון שלכם או הפעילו מחדש את אפלקציית AndroidAPS בהגדרות המערכת \nאחרת AndroidAPS לא יוכל לבצע רישום (חשוב לעקוב ולוודא כי האלגוריתמים פועלים כראוי!)</string>
     <!-- WeekdayPicker -->
