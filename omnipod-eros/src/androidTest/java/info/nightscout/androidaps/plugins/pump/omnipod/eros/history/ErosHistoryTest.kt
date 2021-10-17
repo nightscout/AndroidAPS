@@ -37,18 +37,16 @@ class ErosHistoryTest {
         var history = erosHistory.getAllErosHistoryRecordsFromTimestamp(0L, true);
         assert(history.isEmpty())
 
-        val type = PodHistoryEntryType.SET_BOLUS.code
-        val entity = ErosHistoryRecordEntity(1000L, type.toLong())
+        val type = PodHistoryEntryType.SET_BOLUS.code.toLong()
+        val entity = ErosHistoryRecordEntity(1000L, type)
         erosHistory.create(entity)
         erosHistory.create(ErosHistoryRecordEntity(3000L, PodHistoryEntryType.CANCEL_BOLUS.code.toLong()))
 
         history = erosHistory.getAllErosHistoryRecordsFromTimestamp(0L, true);
-        assert(!history.isEmpty())
         assert(history.size == 2)
         assert(type.equals(history.first().podEntryTypeCode))
 
         history = erosHistory.getAllErosHistoryRecordsFromTimestamp(0L, false);
-        assert(!history.isEmpty())
         assert(history.size == 2)
         assert(type.equals(history.last().podEntryTypeCode))
 
