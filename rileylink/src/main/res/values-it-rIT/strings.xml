@@ -74,4 +74,5 @@
         <item quantity="one">%1$d ora</item>
         <item quantity="other">%1$d ore</item>
     </plurals>
+    <string name="orange_use_scanning_level">Usa scansione</string>
 </resources>
