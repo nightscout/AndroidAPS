@@ -90,6 +90,9 @@
     <string name="action_confirm">POTWIERDŹ</string>
     <string name="action_timeshift">przesunięcie czasu</string>
     <string name="action_bolus">bolus</string>
+    <string name="bolus_progress">Postęp bolusa</string>
+    <string name="press_to_cancel">naciśnij aby anulować</string>
+    <string name="cancel_bolus">ANULUJ BOLUS</string>
     <string name="status_pump">Pompa</string>
     <string name="status_loop">Pętla</string>
     <string name="status_cpp">CPP</string>
@@ -129,4 +132,8 @@
     <string name="digitalstyle_pref_your_color">Kolor:</string>
     <string name="digitalstyle_pref_your_color_saturation">Nasycenie koloru:</string>
     <string name="digitalstyle_pref_your_color_opacity">Nieprzezroczystość:</string>
+    <string name="bolus_progress_channel_name">Postęp bolusa AAPS</string>
+    <string name="bolus_progress_silent_channel_name">Postęp bolusa AAPS (Cichszy)</string>
+    <string name="bolus_progress_channel_description">Informacja o postępie w podawaniu / anulowaniu bolusa</string>
+    <string name="bolus_progress_silent_channel_description">Informacja o postępie w podawaniu / anulowaniu bolusa - zmniejsza ilość wibracji</string>
 </resources>

@@ -78,4 +78,6 @@
         <item quantity="many">%1$d hodín</item>
         <item quantity="other">%1$d hodín</item>
     </plurals>
+    <string name="orange_use_scanning_level">Použi skenovanie</string>
+    <string name="orange_use_scanning_level_summary">Skenuj, predtým, ako sa pripojíš k OrangeLinku. Malo by to zlepšiť stabilitu pripojenia (môže byť použité i s inými klonmi RileyLinku, ak je to potrebné).</string>
 </resources>

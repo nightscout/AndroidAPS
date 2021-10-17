@@ -33,7 +33,9 @@
     <string name="key_absorption_category_settings" translatable="false">absorption_category_settings</string>
     <string name="key_insulin_oref_peak_settings" translatable="false">insulin_oref_peak_settings</string>
     <string name="key_ns_temporary_target_last_synced_id" translatable="false">ns_temporary_target_last_sync</string>
+    <string name="key_ns_temporary_target_new_data_id" translatable="false">temporary_target_new_data_id</string>
     <string name="key_ns_glucose_value_last_synced_id" translatable="false">ns_glucose_value_last_sync</string>
+    <string name="key_ns_glucose_value_new_data_id" translatable="false">ns_glucose_value_new_data_id</string>
     <string name="key_ns_food_last_synced_id" translatable="false">ns_food_last_sync</string>
     <string name="key_ns_therapy_event_last_synced_id" translatable="false">ns_therapy_event_last_sync</string>
     <string name="key_smscommunicator_remotebolusmindistance" translatable="false">smscommunicator_remotebolusmindistance</string>
@@ -44,7 +46,9 @@
     <string name="key_ns_bolus_last_synced_id" translatable="false">ns_bolus_last_synced_id</string>
     <string name="key_ns_device_status_last_synced_id" translatable="false">ns_device_status_last_synced_id</string>
     <string name="key_ns_temporary_basal_last_synced_id" translatable="false">ns_temporary_basal_last_synced_id</string>
+    <string name="key_ns_temporary_basal_new_data_id" translatable="false">ns_temporary_basal_new_data_id</string>
     <string name="key_ns_extended_bolus_last_synced_id" translatable="false">ns_extended_bolus_last_synced_id</string>
+    <string name="key_ns_extended_bolus_new_data_id" translatable="false">ns_extended_bolus_new_data_id</string>
     <string name="key_ns_profile_switch_last_synced_id" translatable="false">profile_switch_last_synced_id</string>
     <string name="key_ns_effective_profile_switch_last_synced_id" translatable="false">ns_effective_profile_switch_last_synced_id</string>
     <string name="key_ns_offline_event_last_synced_id" translatable="false">ns_offline_event_last_synced_id</string>
@@ -1076,7 +1080,8 @@
     <string name="email_address">Email address</string>
     <string name="privacy_settings">Privacy setting</string>
     <string name="privacy_summary">You can provide optional email address if you want to be notified about app crashes. This is not an automated service. You will be contacted by developers in dangerous situations.</string>
-    <string name="full_sync">Full synchronization? It may take many hours and until finish you\'ll not see new data in NS.</string>
+    <string name="full_sync">Full synchronization</string>
+    <string name="full_sync_comment">Full synchronization? It may take many hours and until finish you\'ll not see new data in NS.</string>
     <string name="prime">Prime</string>
     <string name="ns_sync_options">Synchronization</string>
     <string name="key_ns_upload" translatable="false">ns_upload</string>

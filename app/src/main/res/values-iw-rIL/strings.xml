@@ -717,6 +717,7 @@
     <string name="versionChecker">בודק גרסה</string>
     <string name="old_version">גרסה ישנה</string>
     <string name="very_old_version">גרסה ישנה מאוד</string>
+    <string name="application_expired">תוקף האפליקציה פג</string>
     <string name="new_version_warning">גרסה חדשה זמינה כבר %1$d ימים! הגבלה להשהיה עקב סוכר נמוך תחל אחרי %2$d ימים, הלולאה תושבת אחרי %3$d ימים</string>
     <string name="twohours">שעתיים</string>
     <string name="dexcom_app_patched">אפליקציית Dexcom עם פאץ\'</string>
@@ -857,6 +858,7 @@
     <string name="privacy_settings">הגדרות פרטיות</string>
     <string name="privacy_summary">אם תרצו, תוכלו לספק כתובת דוא\"ל כדי לקבל דיווח על קריסות יישום. שירות זה אינו אוטומטי. המפתחים יצרו איתכם קשר במצבים מסוכנים.</string>
     <string name="full_sync">סינכרון מלא</string>
+    <string name="full_sync_comment">סנכרון מלא? זה ייקח שעות מרובות ולא תוכלו לראות נתונים חדשים בנייטסקאוט.</string>
     <string name="prime">תיחול</string>
     <string name="ns_sync_options">סינכרון</string>
     <string name="ns_upload_summary">פרופילים, בולוסים, פחמימות ומינונים בזאליים זמניים נטענים לנייטסקאוט</string>

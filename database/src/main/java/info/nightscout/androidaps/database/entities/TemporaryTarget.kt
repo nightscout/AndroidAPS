@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.google.gson.annotations.SerializedName
 import info.nightscout.androidaps.database.TABLE_TEMPORARY_TARGETS
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.interfaces.DBEntryWithTimeAndDuration
@@ -62,11 +63,17 @@ data class TemporaryTarget(
             interfaceIDs.nightscoutId != null
 
     enum class Reason(val text: String) {
+        @SerializedName("Custom")
         CUSTOM("Custom"),
+        @SerializedName("Hypo")
         HYPOGLYCEMIA("Hypo"),
+        @SerializedName("Activity")
         ACTIVITY("Activity"),
+        @SerializedName("Eating Soon")
         EATING_SOON("Eating Soon"),
+        @SerializedName("Automation")
         AUTOMATION("Automation"),
+        @SerializedName("Wear")
         WEAR("Wear")
         ;
 

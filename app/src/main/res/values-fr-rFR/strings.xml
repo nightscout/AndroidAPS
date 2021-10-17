@@ -857,7 +857,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="email_address">Adresse e-mail</string>
     <string name="privacy_settings">Paramètres de confidentialité</string>
     <string name="privacy_summary">Vous pouvez fournir une adresse e-mail facultative si vous voulez être informé des plantages de l\'application. Ce n\'est pas un service automatisé. Vous serez contacté par les développeurs dans des situations dangereuses.</string>
-    <string name="full_sync">Synchro. complète</string>
     <string name="prime">Amorcer</string>
     <string name="ns_sync_options">Synchronisation</string>
     <string name="ns_upload_summary">Profils, boluses, glucides, basals temporaires sont téléchargés vers NS</string>

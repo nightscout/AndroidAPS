@@ -850,7 +850,6 @@
     <string name="email_address">El. pašto adresas</string>
     <string name="privacy_settings">Privatumo nuostatos</string>
     <string name="privacy_summary">Nurodykite el. pašto adresą (neprivaloma), jei norite gauti informaciją apie programos strigimus. Tai nėra automatizuota paslauga. Kūrėjai susisieks esant pavojingoms situacijoms.</string>
-    <string name="full_sync">Pilna sinchronizacija</string>
     <string name="prime">Užpildyti sistemą</string>
     <string name="ns_sync_options">Sinchronizacija</string>
     <string name="ns_upload_summary">Profiliai, bolusai, angliavandeniai, laikinos bazės įkeltos į NS</string>

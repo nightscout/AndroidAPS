@@ -74,4 +74,6 @@
         <item quantity="one">%1$d Stunde</item>
         <item quantity="other">%1$d Stunden</item>
     </plurals>
+    <string name="orange_use_scanning_level">Verwende Scannen</string>
+    <string name="orange_use_scanning_level_summary">Scanne, bevor Du mit dem OrangeLink verbindest. Das sollte die Stabilität der Verbindung verbessern und kann auch mit anderen RileyLink-Nachbauten probiert werden.</string>
 </resources>

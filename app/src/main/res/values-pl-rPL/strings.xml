@@ -132,6 +132,7 @@
     <string name="configbuilder_nightscoutversion_label">Wersja Nightscout:</string>
     <string name="missing_carbs">Brakuje %1$d g</string>
     <string name="exported">Ustawienia wyeksportowane</string>
+    <string name="ue_exported">Wyeksportowano wpisy użytkownika</string>
     <string name="export_to">Eksportuj ustawienia do</string>
     <string name="import_from">Importuj ustawienia z</string>
     <string name="setting_imported">Ustawienia zaimportowane</string>
@@ -255,11 +256,13 @@
     <string name="ongoingnotificaction">Nadchodzące powiadomienia</string>
     <string name="old_data">NIEAKTUALNE DANE</string>
     <string name="sms_minago">%1$dmin temu</string>
+    <string name="localprofile">Profil</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Lista %1$d elementów.\n Bieżąca wartość:</string>
     <string name="openapsma_autosensdata_label">Dane Autosens</string>
     <string name="openapsma_scriptdebugdata_label">Debugowanie skryptów</string>
     <string name="openapsama_useautosens">Użyj funkcji Autosens</string>
+    <string name="refresheventsfromnightscout">Odśwież z NS</string>
     <string name="deletefuturetreatments">Usuń zabiegi w przyszłości</string>
     <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">CONF</string>
@@ -383,6 +386,7 @@
     <string name="basal_shortname">BAZ</string>
     <string name="deviation_shortname">ODCH</string>
     <string name="activity_shortname">AKT</string>
+    <string name="bgi_shortname">-BGI</string>
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">KRZOD</string>
     <string name="nav_about">O programie</string>
@@ -453,6 +457,7 @@
     <string name="activity_target">Ćwiczenia cel</string>
     <string name="hypo_duration">Hipo czas trwania</string>
     <string name="hypo_target">Hipo cel</string>
+    <string name="reuse_profile_pct_hours">Użyj ponownie %1$d%% %2$dh</string>
     <string name="wearcontrol_title">Sterowanie z zegarka</string>
     <string name="wearcontrol_summary">Ustawiaj wartości docelowe i wprowadzaj leczenie z zegarka.</string>
     <string name="food">Posiłek</string>
@@ -488,6 +493,7 @@
     <string name="dexcomg5_xdripupload_title">Prześlij dane BG do xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">W xDrip+ wybierz źródło danych 640g/Eversense</string>
     <string name="nsclientbg">NSClient BG</string>
+    <string name="nsclientbgshort">NS BG</string>
     <string name="overview_editquickwizard_usebg">Obliczenia BG</string>
     <string name="overview_editquickwizard_usebolusiob">Obliczenia Bolus IOB</string>
     <string name="overview_editquickwizard_usebasaliob">Obliczenia IOB</string>
@@ -549,6 +555,7 @@
     <string name="bolusrecordedonly">Bolus zostanie jedynie odnotowany (nie będzie podany przez pompę)</string>
     <string name="loop_smbsetbypump_label">SMB ustawiony przez pompę</string>
     <string name="overview_show_activity">Aktywność</string>
+    <string name="overview_show_bgi">Wpływ na glikemię (BGI)</string>
     <string name="overview_show_sensitivity">Wrażliwość</string>
     <string name="overview_show_deviations">Odchylenia</string>
     <string name="overview_show_cob">COB (Aktywne Węglow.)</string>
@@ -743,6 +750,7 @@
     <string name="clone_label">Sklonuj</string>
     <string name="saveorresetchangesfirst">Najpierw zapisz lub wycofaj bieżące zmiany</string>
     <string name="deletecurrentprofile">Skasować bieżący profil?</string>
+    <string name="copytolocalprofile">Utworzyć nowy profil na bazie wybranego profilu?</string>
     <string name="profilenamecontainsdot">Nazwa profilu zawiera kropki.\nTo nie jest obsługiwane przez NS.\nProfil nie zostanie przesyłany do NS.</string>
     <string name="low_mark_comment">Dolna wartość zakresu docelowego (tylko do wyświetlania)</string>
     <string name="high_mark_comment">Górna wartość zakresu docelowego (tylko do wyświetlania)</string>
@@ -766,6 +774,7 @@
     <string name="randombg_short">BG (poziom cukru)</string>
     <string name="tools">Narzędzia</string>
     <string name="show_calculation">Pokaż obliczenia</string>
+    <string name="show_removed">Pokaż usunięte</string>
     <string name="clearqueueconfirm">Wyczyścić kolejkę? Wszystkie dane w kolejce zostaną utracone!</string>
     <string name="ebstopsloop">Użycie funkcji Extended bolus spowoduje zatrzymanie trybu pętli zamkniętej na czas działania przedłużonego bolusa. Czy na pewno tego chcesz?</string>
     <string name="closed_loop_disabled_with_eb">Zamknięta pętla wyłączona, ponieważ działa Extended Bolus (bolus przedłużony)</string>
@@ -823,6 +832,7 @@
     <string name="dpvdefaultprofile">Domyślny profil DPV</string>
     <string name="setupwizard_pump_riley_link_status">Stan RileyLink:</string>
     <string name="filter">Filtr</string>
+    <string name="copytolocalprofile_invalid">Nie można utworzyć profilu. Profil jest nieprawidłowy.</string>
     <string name="cta_dont_kill_my_app_info">Nie zabij mojej aplikacji?</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Wyślij SMS, jeśli wyzwolone jest zdarzenie pompy nieosiągalnej</string>
     <string name="smscommunicator_pump_ureachable">Zgłoś nieosiągalną pompę</string>
@@ -836,4 +846,37 @@
     <string name="timetoeat">Czas na jedzenie</string>
     <string name="fabric_upload_disabled">Przesyłanie dzienników awarii jest wyłączone!</string>
     <string name="graph_menu_divider_header">Wykres</string>
+    <string name="chart_menu">Menu wykresu</string>
+    <string name="clear_filter">Wyczyść filtr</string>
+    <string name="trend_arrow">Strzałka trendu</string>
+    <string name="cannula">Kaniula</string>
+    <string name="userentry">Wpis użytkownika</string>
+    <string name="common_values">Użyj wartości największego jedzenia, które zazwyczaj zjadasz\n</string>
+    <string name="summary_email_for_crash_report">Ten adres e-mail zostanie dołączony do raportów o awariach, abyśmy mogli skontaktować się z Tobą w pilnych przypadkach. Jego podanie jest opcjonalne.</string>
+    <string name="email_address">Adres e-mail</string>
+    <string name="privacy_settings">Ustawienia prywatności</string>
+    <string name="privacy_summary">Możesz opcjonalnie podać adres e-mail, jeśli chcesz otrzymywać powiadomienia o awariach aplikacji. To nie jest usługa zautomatyzowana. W niebezpiecznych sytuacjach deweloperzy skontaktują się z Tobą.</string>
+    <string name="prime">Wypełnianie</string>
+    <string name="ns_sync_options">Synchronizacja</string>
+    <string name="ns_upload_summary">Profile, bolusy, węglowodany, tymczasowe bazy są przesyłane do NS</string>
+    <string name="ns_upload">Prześlij dane do NS</string>
+    <string name="ns_receive_profile_store">Odbieraj zapisane profile</string>
+    <string name="ns_receive_profile_store_summary">Synchronizuj profile z edytorem profilów NS</string>
+    <string name="ns_receive_temp_target">Odbieraj cele tymczasowe</string>
+    <string name="ns_receive_temp_target_summary">Akceptuj cele tymczasowe wprowadzone przez NS lub NSClient</string>
+    <string name="ns_receive_profile_switch">Odbieraj zmiany profilu</string>
+    <string name="ns_receive_profile_switch_summary">Akceptuj zmiany profilu wprowadzone przez NS lub NSClient</string>
+    <string name="ns_receive_offline_event">Odbieraj zdarzenia o rozłączeniu APS</string>
+    <string name="ns_receive_offline_event_summary">Akceptuj zdarzenia o rozłączeniu APS wprowadzone przez NS lub NSClient</string>
+    <string name="ns_receive_insulin">Odbieraj wpisy o insulinie</string>
+    <string name="ns_receive_insulin_summary">Akceptuj wpisy o insulinie wprowadzone przez NS lub NSClient (insulina nie zostanie podana, jedynie obliczona do IOB)</string>
+    <string name="ns_receive_carbs">Odbieraj wpisy o węglowodanach</string>
+    <string name="ns_receive_carbs_summary">Akceptuj węglowodany wprowadzone przez NS lub NSClient</string>
+    <string name="ns_receive_therapy_events">Odbieraj zdarzenia związane z leczeniem</string>
+    <string name="ns_receive_therapy_events_summary">Akceptuj zdarzenia związane z leczeniem (kaniula, insulina, zmiana baterii itp.) wprowadzone przez NS lub NSClient</string>
+    <string name="ns_receive_cgm">Odbieraj/uzupełnij dane CGM</string>
+    <string name="ns_receive_cgm_summary">Akceptuj dane CGM z NS</string>
+    <string name="sms_timeout_while_wating">Przekroczono limit czasu oczekiwania na zakończenie poprzedniej komunikacji z pompą</string>
+    <string name="smscommunicator_another_bolus_in_queue">W kolejce oczekuje inny bolus. Spróbuj ponownie później.</string>
+    <string name="calculation_in_progress">Trwa obliczanie</string>
 </resources>

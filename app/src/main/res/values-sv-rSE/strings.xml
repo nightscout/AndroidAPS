@@ -854,7 +854,6 @@ Eversense-appen.</string>
     <string name="email_address">E-postadress</string>
     <string name="privacy_settings">Sekretessinställningar</string>
     <string name="privacy_summary">Du kan ange valfri e-postadress om du vill få meddelanden om appkrascher. Det här är ingen automatiserad tjänst. Du kommer att kontaktas av utvecklare i farliga situationer.</string>
-    <string name="full_sync">Full synkronisering</string>
     <string name="prime">Förfyllning</string>
     <string name="ns_sync_options">Synkronisering</string>
     <string name="ns_upload_summary">Profiler, bolus, kolhydrater och temp basaler laddas upp till NS</string>

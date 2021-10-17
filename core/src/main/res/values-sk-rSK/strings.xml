@@ -292,6 +292,7 @@
     <string name="signature_verifier">Overenie podpisu</string>
     <string name="running_invalid_version">Zistili sme, že používate neplatnú verziu. Uzavretý okruh zakázaný!</string>
     <string name="versionavailable">Verzia %1$s je k dispozícii</string>
+    <string name="version_expire">Verzia %1$s expiruje dňa %2$s</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Prosím reštartujte Váš telefón, alebo reštartujte AndroidAPS z nastavení \nv opačnom prípade AndroidAPS nebude mocť zaznamenávať logy (dôležité kvôli sledovaniu a overovaniu, že algoritmus pracuje správne)!</string>
     <!-- WeekdayPicker -->

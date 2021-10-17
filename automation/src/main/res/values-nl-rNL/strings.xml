@@ -7,6 +7,7 @@
     <string name="automation_missing_trigger">Voer minstens één trigger in.</string>
     <string name="automation_missing_action">Voer minstens één actie in.</string>
     <string name="alarm_message">Alarm: %1$s</string>
+    <string name="alarm_short">Alarm:</string>
     <string name="message_short">Boodsch:</string>
     <string name="alreadyenabled">Al ingeschakeld</string>
     <string name="alreadydisabled">Al uitgeschakeld</string>
@@ -37,6 +38,9 @@
     <string name="glucoseisnotavailable">Glucose is niet beschikbaar</string>
     <string name="glucosecomparedmgdl">Glucose %1$s %2$.0f %3$s</string>
     <string name="glucosecomparedmmol">Glucose %1$s %2$.1f %3$s</string>
+    <string name="notemptarget">Tijdelijk streefdoel bestaat niet</string>
+    <string name="temptargetcomparedmgdl">Tijdelijk streefdoel %1$s %2$.0f %3$s</string>
+    <string name="temptargetcomparedmmol">Tijdelijk streefdoel %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">Profiel pct %1$s %2$d</string>
     <string name="iobcompared">IOB %1$s %2$.1f</string>
     <string name="and">En</string>
@@ -85,8 +89,10 @@
     <string name="latitude_short">Br:</string>
     <string name="longitude_short">Leng:</string>
     <string name="glucose_u">Glucose [%1$s]:</string>
+    <string name="target_u">Streefdoel [%1$s]:</string>
     <string name="lastboluslabel">Laatste bolus</string>
     <string name="lastboluscompared">Laatste bolus %1$s %2$s min geleden</string>
+    <string name="triggercoblabel">COB</string>
     <string name="cobcompared">COB %1$s %2$.0f</string>
     <string name="iob_u">IOB [E]:</string>
     <string name="distance_short">Afst [m]:</string>

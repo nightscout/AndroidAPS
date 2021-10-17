@@ -15,7 +15,7 @@ import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.DaggerAppCompatActivityWithResult
 import info.nightscout.androidaps.activities.PreferencesActivity
-import info.nightscout.androidaps.database.entities.UserEntry
+import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.events.EventAppExit
@@ -28,6 +28,8 @@ import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.maintenance.formats.*
 import info.nightscout.androidaps.utils.AndroidPermission
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.MidnightTime
+import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.alertDialogs.PrefImportSummaryDialog
@@ -37,7 +39,6 @@ import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.protection.PasswordCheck
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import io.reactivex.Single
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -63,6 +64,7 @@ class ImportExportPrefsImpl @Inject constructor(
     private val encryptedPrefsFormat: EncryptedPrefsFormat,
     private val prefFileList: PrefFileListProvider,
     private val uel: UserEntryLogger,
+    private val repository: AppRepository,
     private val dateUtil: DateUtil
 ) : ImportExportPrefs {
 
@@ -360,8 +362,8 @@ class ImportExportPrefsImpl @Inject constructor(
         }
     }
 
-    override fun exportUserEntriesCsv(activity: FragmentActivity, singleEntries: Single<List<UserEntry>>) {
-        val entries = singleEntries.blockingGet()
+    override fun exportUserEntriesCsv(activity: FragmentActivity) {
+        val entries = repository.getUserEntryFilteredDataFromTime(MidnightTime.calc() - T.days(90).msecs()).blockingGet()
         prefFileList.ensureExportDirExists()
         val newFile = prefFileList.newExportCsvFile()
 
