@@ -104,7 +104,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:paddingStart="1dp"
-        android:paddingEnd="2dp"
+        android:paddingEnd="15dp"
         android:textSize="14sp" />
 
 </LinearLayout>
