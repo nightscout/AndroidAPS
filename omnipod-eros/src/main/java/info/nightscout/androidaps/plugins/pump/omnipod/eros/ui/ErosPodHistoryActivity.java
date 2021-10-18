@@ -68,7 +68,7 @@ public class ErosPodHistoryActivity extends NoSplashAppCompatActivity {
         GregorianCalendar gc = new GregorianCalendar();
         gc.add(Calendar.HOUR_OF_DAY, -24);
 
-        fullHistoryList.addAll(erosHistory.getAllErosHistoryRecordsFromTimestamp(gc.getTimeInMillis(), true));
+        fullHistoryList.addAll(erosHistory.getAllErosHistoryRecordsFromTimestamp(gc.getTimeInMillis()));
     }
 
 
