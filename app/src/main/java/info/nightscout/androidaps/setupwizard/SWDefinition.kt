@@ -235,7 +235,7 @@ class SWDefinition @Inject constructor(
         .validator {
             sp.contains(R.string.key_age)
                 && sp.getDouble(R.string.key_treatmentssafety_maxbolus, 0.0) > 0
-                && sp.getDouble(R.string.key_treatmentssafety_maxcarbs, 0.0) > 0
+                && sp.getInt(R.string.key_treatmentssafety_maxcarbs, 0) > 0
         }
     private val screenInsulin = SWScreen(injector, R.string.configbuilder_insulin)
         .skippable(false)
