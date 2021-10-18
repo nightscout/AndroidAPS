@@ -719,6 +719,7 @@ Context | Edit Context</string>
     <string name="versionChecker">Проверка версии</string>
     <string name="old_version">старая версия</string>
     <string name="very_old_version">очень старая версия</string>
+    <string name="application_expired">Истек срок действия приложения</string>
     <string name="new_version_warning">Новая версия доступна уже %1$d дней! По истечении %2$d дн алгоритм переходит в режим работы только с остановкой при низкой гликемии LGS, замкнутый цикл будет отключен через %3$d дн</string>
     <string name="twohours">2ч</string>
     <string name="dexcom_app_patched">Приложение Dexcom (модифицированное)</string>
@@ -858,6 +859,8 @@ Context | Edit Context</string>
     <string name="email_address">Адрес электронной почты</string>
     <string name="privacy_settings">Настройки конфиденцальности</string>
     <string name="privacy_summary">Вы можете указать дополнительно адрес электронной почты, если хотите получать уведомления о сбоях приложения; что является не автоматизированной рассылкой, а способом связи с разработчиками в опасных ситуациях.</string>
+    <string name="full_sync">Полная синхронизация</string>
+    <string name="full_sync_comment">Полная синхронизация? Это может занять много часов и до завершения вы не увидите новые данные в NS.</string>
     <string name="prime">Заполнение инфузионной системы</string>
     <string name="ns_sync_options">Синхронизация</string>
     <string name="ns_upload_summary">Профили, болюсы, углеводы, временные базалы закачиваются в NS</string>
