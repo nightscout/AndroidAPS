@@ -229,6 +229,7 @@
     <string name="correctionbous">Korekcija</string>
     <string name="actions">Veiksmai</string>
     <string name="ns_upload_only">(PAVOJINGA IŠJUNGTI) Tik įkeliama į NS</string>
+    <string name="ns_upload_only_summary">Tik įkelti į Nightscout (be sinchronizavimo). Netaikoma NGJ reikšmėms, nebent pasirinktas vietinis duomenų šaltinis, pvz., xDrip+. Taip pat netaikoma profilio duomenims, jei naudojamas NS profilis.\n!!! ĮSPĖJIMAS !!! Išjungus šią parinktį, galimas insulino perdozavimas, jei bet kuris iš komponentų (AAPS, NS, xDrip+) sukonfigūruotas neteisingai. Atidžiai stebėkite, ar AAPS rodomi duomenys atitinka pompos duomenis!</string>
     <string name="pumpNotInitialized">Pompa neprijungta!</string>
     <string name="primefill">Užpildymas</string>
     <string name="fillwarning">Įsitikinkite, kad nurodytas kiekis atitinka Jūsų infuzijos rinkinio specifikaciją!</string>
@@ -385,6 +386,7 @@
     <string name="basal_shortname">VB</string>
     <string name="deviation_shortname">DEV</string>
     <string name="activity_shortname">VEIKS</string>
+    <string name="bgi_shortname">-KGS</string>
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="nav_about">Apie</string>
@@ -715,6 +717,7 @@
     <string name="versionChecker">Versijos tikrintuvas</string>
     <string name="old_version">sena versija</string>
     <string name="very_old_version">labai sena versija</string>
+    <string name="application_expired">Aplikacijos laikas baigėsi</string>
     <string name="new_version_warning">Nauja versija pasiekiama mažiausiai %1$d d.! Po %2$d grįšite prie stabdymo prie žemo, po %3$d ciklas bus išjungtas</string>
     <string name="twohours">2 val</string>
     <string name="dexcom_app_patched">Dexcom programėlė (modifikuota)</string>
@@ -843,10 +846,14 @@
     <string name="time_to_eat">Laikas valgyti!\nĮjunkite Boluso patarėją ir atlikite skaičiavimą dar kartą.</string>
     <string name="timetoeat">Laikas valgyti</string>
     <string name="fabric_upload_disabled">Sutrikimų žurnalo įrašų įkėlimas išjungtas!</string>
+    <string name="graph_menu_divider_header">Grafikas</string>
+    <string name="chart_menu">Grafiko meniu</string>
     <string name="clear_filter">Valyti filtrą</string>
     <string name="trend_arrow">Tendencijos kryptis</string>
     <string name="cannula">Kaniulė</string>
     <string name="userentry">Naudotojo įrašas</string>
+    <string name="common_values">Naudokite gausiausio patiekalo, kurį paprastai valgote, reikšmes\n</string>
+    <string name="summary_email_for_crash_report">Šis el. pašto adresas bus pridėtas prie gedimų ataskaitų, kad skubiais atvejais galėtume su jumis susisiekti. Jis neprivalomas.</string>
     <string name="email_address">El. pašto adresas</string>
     <string name="privacy_settings">Privatumo nuostatos</string>
     <string name="privacy_summary">Nurodykite el. pašto adresą (neprivaloma), jei norite gauti informaciją apie programos strigimus. Tai nėra automatizuota paslauga. Kūrėjai susisieks esant pavojingoms situacijoms.</string>
