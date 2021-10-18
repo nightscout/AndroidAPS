@@ -79,4 +79,6 @@
         <item quantity="many">%1$d val.</item>
         <item quantity="other">%1$d val.</item>
     </plurals>
+    <string name="orange_use_scanning_level">Atlikti skanavimą</string>
+    <string name="orange_use_scanning_level_summary">Prieš suporuodami su OrangeLink, naudokite skanavimą, tai turėtų pagerinti ryšio kokybę (jei reikia, galite jį naudoti ir kituose RileyLink klonuose)</string>
 </resources>
