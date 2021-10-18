@@ -77,7 +77,7 @@ class PumpSyncImplementation @Inject constructor(
     }
 
     override fun expectedPumpState(): PumpSync.PumpState {
-        val bolus = repository.getLastBolusRecord()
+        val bolus = repository.getLastBolusRecordWrapped().blockingGet();
         val temporaryBasal = repository.getTemporaryBasalActiveAt(dateUtil.now()).blockingGet()
         val extendedBolus = repository.getExtendedBolusActiveAt(dateUtil.now()).blockingGet()
 
@@ -104,12 +104,14 @@ class PumpSyncImplementation @Inject constructor(
                 )
             else null,
             bolus =
-            bolus?.let {
-                PumpSync.PumpState.Bolus(
-                    timestamp = bolus.timestamp,
-                    amount = bolus.amount
-                )
-            },
+            if (bolus is ValueWrapper.Existing)
+                bolus.value.let {
+                    PumpSync.PumpState.Bolus(
+                        timestamp = bolus.value.timestamp,
+                        amount = bolus.value.amount
+                    )
+                }
+            else null,
             profile = profileFunction.getProfile()
         )
     }
