@@ -24,7 +24,6 @@ abstract class ErosHistoryDatabase : RoomDatabase() {
                 ErosHistoryDatabase::class.java,
                 "omnipod_eros_history_database.db"
             )
-                .allowMainThreadQueries()
                 .fallbackToDestructiveMigration()
                 .build()
     }
