@@ -37,7 +37,8 @@
             android:layout_marginTop="8dp"
             android:gravity="center"
             android:text="@string/setup_completed_info"
-            android:textAppearance="?textAppearanceBody2" />
+            android:textAppearance="?textAppearanceBody2"
+            android:textColor="@color/open_humans_text" />
 
         <TextView
             android:id="@+id/member_id"
@@ -46,6 +47,7 @@
             android:layout_marginTop="16dp"
             android:gravity="center"
             android:textAppearance="?textAppearanceBody1"
+            android:textColor="@color/open_humans_text"
             tools:text="Project Member ID: 5151515" />
 
         <com.google.android.material.button.MaterialButton
