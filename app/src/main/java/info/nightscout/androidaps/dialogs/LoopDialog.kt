@@ -412,6 +412,7 @@ class LoopDialog : DaggerDialogFragment() {
                     loopPlugin.goToZeroTemp(T.hours(1).mins().toInt(), profile, OfflineEvent.Reason.DISCONNECT_PUMP)
                     rxBus.send(EventRefreshOverview("suspend_menu"))
                 }
+                sp.putBoolean(R.string.key_objectiveusedisconnect, true)
                 return true
             }
 
