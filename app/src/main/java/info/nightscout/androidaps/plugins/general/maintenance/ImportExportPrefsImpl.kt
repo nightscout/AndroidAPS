@@ -11,10 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.work.OneTimeWorkRequest
-import androidx.work.Worker
-import androidx.work.WorkerParameters
-import androidx.work.workDataOf
+import androidx.work.*
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.MainApp
@@ -32,7 +29,6 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.maintenance.formats.*
-import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.AndroidPermission
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.MidnightTime
@@ -71,7 +67,6 @@ class ImportExportPrefsImpl @Inject constructor(
     private val encryptedPrefsFormat: EncryptedPrefsFormat,
     private val prefFileList: PrefFileListProvider,
     private val uel: UserEntryLogger,
-    private val dataWorker: DataWorker,
     private val dateUtil: DateUtil
 ) : ImportExportPrefs {
 
@@ -369,10 +364,11 @@ class ImportExportPrefsImpl @Inject constructor(
         }
     }
 
-    override fun exportUserEntriesCsv() {
-        dataWorker.enqueue(
-            OneTimeWorkRequest.Builder(CsvExportWorker::class.java)
-                .build()
+    override fun exportUserEntriesCsv(activity: FragmentActivity) {
+        WorkManager.getInstance(activity).enqueueUniqueWork(
+            "export",
+            ExistingWorkPolicy.APPEND_OR_REPLACE,
+            OneTimeWorkRequest.Builder(CsvExportWorker::class.java).build()
         )
     }
 

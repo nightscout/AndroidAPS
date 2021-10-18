@@ -14,5 +14,5 @@ interface ImportExportPrefs {
     fun prefsFileExists(): Boolean
     fun verifyStoragePermissions(fragment: Fragment, onGranted: Runnable)
     fun exportSharedPreferences(f: Fragment)
-    fun exportUserEntriesCsv()
+    fun exportUserEntriesCsv(activity: FragmentActivity)
 }
