@@ -62,7 +62,7 @@
     <string name="openapsma_run">בצע כעת</string>
     <string name="vitualpump_label">משאבה וירטואלית</string>
     <string name="openapsma_lastrun_label">ההפעלה האחרונה</string>
-    <string name="openapsma_inputparameters_label">טעינת פרמטרים</string>
+    <string name="openapsma_inputparameters_label">טוען פרמטרים</string>
     <string name="openapsma_glucosestatus_label">מצב סוכר</string>
     <string name="openapsma_currenttemp_label">בזאלי זמני נוכחי</string>
     <string name="openapsma_iobdata_label">נתוני אינסולין פעיל</string>
@@ -297,7 +297,7 @@
     <string name="pumpsuspended">משאבה מושהית</string>
     <string name="executing">מבצע</string>
     <string name="virtualpump_settings">הגדרות משאבה וירטואלית</string>
-    <string name="virtualpump_uploadstatus_title">טעינת מצב ל-Nightscout</string>
+    <string name="virtualpump_uploadstatus_title">טוען מצב ל-Nightscout</string>
     <string name="nsclientinternal">NSClient</string>
     <string name="nsclientinternal_shortname">NSCI</string>
     <string name="nsclientinternal_url">כתובת URL:</string>
@@ -480,7 +480,7 @@
     <string name="urgent_alarm">התראה דחופה</string>
     <string name="info">מידע</string>
     <string name="eversense">אפליקלציית Eversense (עם פאץ\')</string>
-    <string name="dexcomg5_nsupload_title">טעינת נתוני סוכר ל-Nightscout</string>
+    <string name="dexcomg5_nsupload_title">טוען נתוני סוכר ל-Nightscout</string>
     <string name="bgsource_upload">הגדרות העלאת ערכי סוכר בדם</string>
     <string name="wear_detailed_delta_title">הצגת דלתא מפורטת</string>
     <string name="wear_detailed_delta_summary">הצגת דלתא עם עוד נק\' עשרונית אחת</string>
@@ -821,7 +821,7 @@
     <string name="largedisplay_description">תצוגה גדולה</string>
     <string name="skin">סקין</string>
     <string name="comapareprofile">השוואת פרופילים</string>
-    <string name="nav_profilehelper">עוזר פרופילים</string>
+    <string name="nav_profilehelper">עוזר הפרופילים</string>
     <string name="motoldefaultprofile">פרופיל ברירת מחדל</string>
     <string name="currentprofile">פרופיל נוכחי</string>
     <string name="availableprofile">פרופיל זמין</string>
@@ -862,7 +862,7 @@
     <string name="prime">תיחול</string>
     <string name="ns_sync_options">סינכרון</string>
     <string name="ns_upload_summary">פרופילים, בולוסים, פחמימות ומינונים בזאליים זמניים נטענים לנייטסקאוט</string>
-    <string name="ns_upload">טעינת נתוני סוכר לנייטסקאוט</string>
+    <string name="ns_upload">טוען נתוני סוכר לנייטסקאוט</string>
     <string name="ns_receive_profile_store">אחזר פרופילים שמורים</string>
     <string name="ns_receive_profile_store_summary">סינכרון פרופילים מעורך הפרופיל של נייטסקאוט לפרופיל מקומי</string>
     <string name="ns_receive_temp_target">קבלת ערכי מטרה זמניים</string>
