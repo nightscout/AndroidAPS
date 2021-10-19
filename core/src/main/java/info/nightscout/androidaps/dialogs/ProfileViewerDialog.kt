@@ -152,7 +152,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
                 }
 
                 binding.noprofile.visibility = View.GONE
-                val validity = profile1.isValid("ProfileViewDialog", activePlugin.activePump, config, resourceHelper, rxBus, hardLimits)
+                val validity = profile1.isValid("ProfileViewDialog", activePlugin.activePump, config, resourceHelper, rxBus, hardLimits, false)
                 binding.invalidprofile.text = resourceHelper.gs(R.string.invalidprofile) + "\n" + validity.reasons.joinToString(separator = "\n")
                 binding.invalidprofile.visibility = validity.isValid.not().toVisibility()
             }
@@ -169,7 +169,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
                 binding.basalGraph.show(it)
 
                 binding.noprofile.visibility = View.GONE
-                val validity = it.isValid("ProfileViewDialog", activePlugin.activePump, config, resourceHelper, rxBus, hardLimits)
+                val validity = it.isValid("ProfileViewDialog", activePlugin.activePump, config, resourceHelper, rxBus, hardLimits, false)
                 binding.invalidprofile.text = resourceHelper.gs(R.string.invalidprofile) + "\n" + validity.reasons.joinToString(separator = "\n")
                 binding.invalidprofile.visibility = validity.isValid.not().toVisibility()
             }

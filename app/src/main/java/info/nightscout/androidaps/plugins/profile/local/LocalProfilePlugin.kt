@@ -203,8 +203,6 @@ class LocalProfilePlugin @Inject constructor(
                 aapsLogger.error("Exception", e)
             }
         }
-        // create at least one profile if doesn't exist
-        if (profiles.size < 1) profiles.add(defaultProfile())
         isEdited = false
         numOfProfiles = profiles.size
         createAndStoreConvertedProfile()
@@ -235,22 +233,6 @@ class LocalProfilePlugin @Inject constructor(
             aapsLogger.error("Error loading ProfileStore", e)
         }
     }
-
-    private fun defaultProfile(): SingleProfile =
-        SingleProfile().also { p ->
-            p.name = Constants.LOCAL_PROFILE
-            p.mgdl = profileFunction.getUnits() == GlucoseUnit.MGDL
-            p.dia = Constants.defaultDIA
-            try {
-                p.ic = JSONArray(defaultArray)
-                p.isf = JSONArray(defaultArray)
-                p.basal = JSONArray(defaultArray)
-                p.targetLow = JSONArray(defaultArray)
-                p.targetHigh = JSONArray(defaultArray)
-            } catch (e: JSONException) {
-                aapsLogger.error("Exception", e)
-            }
-        }
 
     fun copyFrom(pureProfile: PureProfile, newName: String): SingleProfile {
         var verifiedName = newName

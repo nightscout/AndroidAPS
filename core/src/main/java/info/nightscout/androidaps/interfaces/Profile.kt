@@ -16,7 +16,7 @@ interface Profile {
 
     class ValidityCheck(var isValid: Boolean = true, val reasons: ArrayList<String> = arrayListOf())
 
-    fun isValid(from: String, pump: Pump, config: Config, resourceHelper: ResourceHelper, rxBus: RxBus, hardLimits: HardLimits): ValidityCheck
+    fun isValid(from: String, pump: Pump, config: Config, resourceHelper: ResourceHelper, rxBus: RxBus, hardLimits: HardLimits, sendNotifications: Boolean): ValidityCheck
 
     /**
      * Units used for ISF & target

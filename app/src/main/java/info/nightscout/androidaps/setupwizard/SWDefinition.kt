@@ -257,7 +257,7 @@ class SWDefinition @Inject constructor(
         .add(SWFragment(injector, this)
             .add(LocalProfileFragment()))
         .validator {
-            localProfilePlugin.profile?.getDefaultProfile()?.let { ProfileSealed.Pure(it).isValid("StartupWizard", activePlugin.activePump, config, resourceHelper, rxBus, hardLimits).isValid }
+            localProfilePlugin.profile?.getDefaultProfile()?.let { ProfileSealed.Pure(it).isValid("StartupWizard", activePlugin.activePump, config, resourceHelper, rxBus, hardLimits, false).isValid }
                 ?: false
         }
         .visibility { localProfilePlugin.isEnabled() }

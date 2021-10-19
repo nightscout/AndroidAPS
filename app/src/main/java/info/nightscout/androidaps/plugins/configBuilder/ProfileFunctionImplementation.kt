@@ -163,7 +163,8 @@ class ProfileFunctionImplementation @Inject constructor(
             config,
             resourceHelper,
             rxBus,
-            hardLimits
+            hardLimits,
+            false
         )
         var returnValue = true
         if (validity.isValid) {

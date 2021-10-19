@@ -168,7 +168,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
 
         activity?.let { activity ->
             val ps = profileFunction.buildProfileSwitch(profileStore, profileName, duration, percent, timeShift, eventTime)
-            val validity = ProfileSealed.PS(ps).isValid(resourceHelper.gs(R.string.careportal_profileswitch), activePlugin.activePump, config, resourceHelper, rxBus, hardLimits)
+            val validity = ProfileSealed.PS(ps).isValid(resourceHelper.gs(R.string.careportal_profileswitch), activePlugin.activePump, config, resourceHelper, rxBus, hardLimits, false)
             if (validity.isValid)
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal_profileswitch), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     profileFunction.createProfileSwitch(profileStore,
