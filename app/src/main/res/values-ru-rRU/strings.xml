@@ -667,7 +667,6 @@ Context | Edit Context</string>
     <string name="error_adding_treatment_title">Данные терапии неполные</string>
     <string name="maintenance_settings">Параметры обслуживания</string>
     <string name="maintenance_email">Адрес электронной почты</string>
-    <string name="maintenance_encrypt_exported_prefs">Зашифровать экспортируемые параметры</string>
     <string name="maintenance_amount">Количество логов для отправки</string>
     <string name="maintenance">Обслуживание</string>
     <string name="maintenance_shortname">ОБСЛУЖ</string>
