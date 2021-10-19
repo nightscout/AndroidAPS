@@ -665,7 +665,6 @@
     <string name="error_adding_treatment_title">Dáta ošetrení neúplné</string>
     <string name="maintenance_settings">Nastavenie údržby</string>
     <string name="maintenance_email">E-Mail</string>
-    <string name="maintenance_encrypt_exported_prefs">Šifrovať exportované nastavenia</string>
     <string name="maintenance_amount">Počet protokolov na odoslanie</string>
     <string name="maintenance">Údržba</string>
     <string name="maintenance_shortname">Údržba</string>
