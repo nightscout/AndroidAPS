@@ -81,7 +81,7 @@ public class RFSpy {
 
     @Inject
     public void onInit() {
-        aapsLogger.debug("RileyLinkServiceData:" + rileyLinkServiceData);
+        //aapsLogger.debug("RileyLinkServiceData:" + rileyLinkServiceData);
         reader = new RFSpyReader(aapsLogger, rileyLinkBle);
     }
 

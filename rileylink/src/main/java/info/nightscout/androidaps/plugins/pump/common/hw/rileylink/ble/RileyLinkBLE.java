@@ -273,7 +273,7 @@ public class RileyLinkBLE {
 
     @Inject
     public void onInit() {
-        aapsLogger.debug(LTag.PUMPBTCOMM, "BT Adapter: " + this.bluetoothAdapter);
+        //aapsLogger.debug(LTag.PUMPBTCOMM, "BT Adapter: " + this.bluetoothAdapter);
         this.orangeLink.rileyLinkBLE = this;
     }
 
