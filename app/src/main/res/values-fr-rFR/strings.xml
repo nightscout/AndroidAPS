@@ -666,7 +666,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="error_adding_treatment_title">Données de traitement incomplètes</string>
     <string name="maintenance_settings">Paramètres de maintenance</string>
     <string name="maintenance_email">E-mail</string>
-    <string name="maintenance_encrypt_exported_prefs">Crypter les paramètres exportés</string>
     <string name="maintenance_amount">Nombre de journaux (Logs) à envoyer</string>
     <string name="maintenance">Maintenance</string>
     <string name="maintenance_shortname">MAINT</string>
