@@ -261,7 +261,6 @@
     <string name="metadata_label_device_name">Esportazione nome dispositivo paziente</string>
     <string name="metadata_label_device_model">Esportazione modello dispositivo</string>
     <string name="metadata_label_encryption">Crittografia file</string>
-    <string name="metadata_format_old">Vecchio formato esportazione</string>
     <string name="metadata_format_new">Nuovo formato crittografato</string>
     <string name="metadata_format_debug">Nuovo formato di debug (non crittografato)</string>
     <string name="metadata_format_other">Formato esportazione sconosciuto</string>
