@@ -241,7 +241,6 @@
     <string name="metadata_label_device_name">Exporta numele dispozitivului pacientului</string>
     <string name="metadata_label_device_model">Exportarea modelului dispozitivului</string>
     <string name="metadata_label_encryption">Criptarea fișierului</string>
-    <string name="metadata_format_old">Format vechi de export</string>
     <string name="metadata_format_new">Format nou criptat</string>
     <string name="metadata_format_debug">Format nou pentru debug (necriptat)</string>
     <string name="metadata_format_other">Format de export necunoscut</string>
