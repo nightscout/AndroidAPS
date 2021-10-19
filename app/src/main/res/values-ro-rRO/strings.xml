@@ -661,7 +661,6 @@
     <string name="error_adding_treatment_title">Date incomplete despre tratament</string>
     <string name="maintenance_settings">Setări de întreținere</string>
     <string name="maintenance_email">Destinatar email</string>
-    <string name="maintenance_encrypt_exported_prefs">Criptează setările exportate</string>
     <string name="maintenance_amount">Nr de loguri de trimis</string>
     <string name="maintenance">Mentenanță</string>
     <string name="maintenance_shortname">MENTN</string>
