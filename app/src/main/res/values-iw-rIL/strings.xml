@@ -665,7 +665,6 @@
     <string name="error_adding_treatment_title">נתוני טיפול לא שלמים</string>
     <string name="maintenance_settings">הגדרות תחזוקה</string>
     <string name="maintenance_email">נמען דוא\"ל</string>
-    <string name="maintenance_encrypt_exported_prefs">הצפנת הגדרות מיוצאות</string>
     <string name="maintenance_amount">מספר הרשומות למשלוח</string>
     <string name="maintenance">תחזוקה</string>
     <string name="maintenance_shortname">תחזוקה</string>
