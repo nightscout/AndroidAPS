@@ -261,7 +261,6 @@
     <string name="metadata_label_device_name">Имя пациента экспортируемого устройства</string>
     <string name="metadata_label_device_model">Модель экспортируемого устройства</string>
     <string name="metadata_label_encryption">Шифрование файла</string>
-    <string name="metadata_format_old">Старый формат экспорта</string>
     <string name="metadata_format_new">Новый зашифрованный формат</string>
     <string name="metadata_format_debug">Новый формат отладки (незашифрованный)</string>
     <string name="metadata_format_other">Неизвестный формат экспорта</string>
