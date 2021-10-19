@@ -261,7 +261,6 @@
     <string name="metadata_label_device_name">Eksporterer enhetens pasientnavn</string>
     <string name="metadata_label_device_model">Eksportere enhetsmodell</string>
     <string name="metadata_label_encryption">Fil kryptering</string>
-    <string name="metadata_format_old">Gammelt eksportformat</string>
     <string name="metadata_format_new">Nytt krypteringsformat</string>
     <string name="metadata_format_debug">Nytt feilsøkingsformat (ukryptert)</string>
     <string name="metadata_format_other">Ukjent eksportformat</string>
