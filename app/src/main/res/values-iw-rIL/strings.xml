@@ -360,7 +360,7 @@
     <string name="treatments_wizard_cob_label">פחמ\' פעילות</string>
     <string name="superbolus">סופר בולוס</string>
     <string name="ns_logappstartedevent">רשום הפעלת AAPS ב-Nightscout</string>
-    <string name="restartingapp">יציאה מ-AAPS כדי להחיל הגדרות.</string>
+    <string name="restartingapp">יוצא מ-AAPS כדי להחיל הגדרות.</string>
     <string name="configbuilder_insulin_description">באיזה סוג של אינסולין אתה משתמש?</string>
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
     <string name="ultrafastactinginsulincomment">Fiasp</string>
