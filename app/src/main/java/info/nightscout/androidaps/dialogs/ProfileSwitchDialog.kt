@@ -185,6 +185,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
                         ValueWithUnit.Percent(percent),
                         ValueWithUnit.Hour(timeShift).takeIf { timeShift != 0 },
                         ValueWithUnit.Minute(duration).takeIf { duration != 0 })
+                    if (percent == 90 && duration == 10) sp.putBoolean(R.string.key_objectiveuseprofileswitch, true)
                     if (isTT) {
                         disposable += repository.runTransactionForResult(
                             InsertAndCancelCurrentTemporaryTargetTransaction(

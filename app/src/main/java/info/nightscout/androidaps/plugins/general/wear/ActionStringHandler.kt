@@ -507,11 +507,6 @@ class ActionStringHandler @Inject constructor(
             val duration = SafeParse.stringToInt(act[2])
             var low = SafeParse.stringToDouble(act[3])
             var high = SafeParse.stringToDouble(act[4])
-            val isMGDL = java.lang.Boolean.parseBoolean(act[1])
-            if (!isMGDL) {
-                low *= Constants.MMOLL_TO_MGDL
-                high *= Constants.MMOLL_TO_MGDL
-            }
             generateTempTarget(duration, low, high)
         } else if ("wizard2" == act[0]) {
             if (lastBolusWizard != null) { //use last calculation as confirmed string matches

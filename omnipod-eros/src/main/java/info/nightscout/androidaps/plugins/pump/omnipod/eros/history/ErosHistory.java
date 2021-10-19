@@ -4,29 +4,28 @@ import java.util.List;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.database.ErosHistoryRecordDao;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.database.ErosHistoryRecordEntity;
+import io.reactivex.Single;
 
 public class ErosHistory
 {
-    private ErosHistoryRecordDao dao;
+    private final ErosHistoryRecordDao dao;
 
     public ErosHistory(ErosHistoryRecordDao dao) {
         this.dao = dao;
     }
 
-    public  List<ErosHistoryRecordEntity> getAllErosHistoryRecordsFromTimestamp(long timeInMillis, boolean ascending)     {
-        if (ascending){
-            return dao.allSinceAsc(timeInMillis);
-        }
-        else {
-            return dao.allSinceDesc(timeInMillis);
-        }
+    public List<ErosHistoryRecordEntity> getAllErosHistoryRecordsFromTimestamp(long timeInMillis)     {
+        return dao.allSinceAsc(timeInMillis).blockingGet();
+
     }
 
     public ErosHistoryRecordEntity findErosHistoryRecordByPumpId(long pumpId)  {
-        return dao.byId(pumpId);
+        Single<ErosHistoryRecordEntity> entity = dao.byId(pumpId);
+        return (entity == null) ? null: entity.blockingGet();
     }
 
     public void create(ErosHistoryRecordEntity historyRecord){
-        dao.insert(historyRecord);
+        // no need for rowId, but lose warnings in IDE and make sure transaction is completed.
+        long rowId = Single.just(dao.insert(historyRecord)).blockingGet();
     }
 }

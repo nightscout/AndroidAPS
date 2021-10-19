@@ -200,11 +200,11 @@ class SafetyPlugin @Inject constructor(
         JSONObject()
             .putString(R.string.key_age, sp, resourceHelper)
             .putDouble(R.string.key_treatmentssafety_maxbolus, sp, resourceHelper)
-            .putDouble(R.string.key_treatmentssafety_maxcarbs, sp, resourceHelper)
+            .putInt(R.string.key_treatmentssafety_maxcarbs, sp, resourceHelper)
 
     override fun applyConfiguration(configuration: JSONObject) {
         configuration.storeString(R.string.key_age, sp, resourceHelper)
         configuration.storeDouble(R.string.key_treatmentssafety_maxbolus, sp, resourceHelper)
-        configuration.storeDouble(R.string.key_treatmentssafety_maxcarbs, sp, resourceHelper)
+        configuration.storeInt(R.string.key_treatmentssafety_maxcarbs, sp, resourceHelper)
     }
 }
