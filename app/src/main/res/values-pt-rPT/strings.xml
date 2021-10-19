@@ -663,7 +663,6 @@
     <string name="error_adding_treatment_title">Dados tratamento incompletos</string>
     <string name="maintenance_settings">Definições de manutenção</string>
     <string name="maintenance_email">Email destinatário</string>
-    <string name="maintenance_encrypt_exported_prefs">Encriptar definições exportadas</string>
     <string name="maintenance_amount">Nr. de registos a enviar</string>
     <string name="maintenance">Manutenção</string>
     <string name="maintenance_shortname">MANU</string>
