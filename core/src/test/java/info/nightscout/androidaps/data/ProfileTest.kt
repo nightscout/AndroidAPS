@@ -73,7 +73,7 @@ class ProfileTest : TestBase() {
 
         // Test valid profile
         var p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(okProfile), dateUtil)!!)
-        Assert.assertEquals(true, p.isValid("Test", testPumpPlugin, config, resourceHelper, rxBus, hardLimits).isValid)
+        Assert.assertEquals(true, p.isValid("Test", testPumpPlugin, config, resourceHelper, rxBus, hardLimits, false).isValid)
 //        Assert.assertEquals(true, p.log().contains("NS units: mmol"))
 //        JSONAssert.assertEquals(JSONObject(okProfile), p.toPureNsJson(dateUtil), false)
         Assert.assertEquals(5.0, p.dia, 0.01)
@@ -125,7 +125,7 @@ class ProfileTest : TestBase() {
 
         //Test basal profile below limit
         p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(belowLimitValidProfile), dateUtil)!!)
-        p.isValid("Test", testPumpPlugin, config, resourceHelper, rxBus, hardLimits)
+        p.isValid("Test", testPumpPlugin, config, resourceHelper, rxBus, hardLimits, false)
 
         // Test profile w/o units
         Assert.assertNull(pureProfileFromJson(JSONObject(noUnitsValidProfile), dateUtil))
@@ -158,6 +158,6 @@ class ProfileTest : TestBase() {
         // Test hour alignment
         testPumpPlugin.pumpDescription.is30minBasalRatesCapable = false
         p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(notAlignedBasalValidProfile), dateUtil)!!)
-        p.isValid("Test", testPumpPlugin, config, resourceHelper, rxBus, hardLimits)
+        p.isValid("Test", testPumpPlugin, config, resourceHelper, rxBus, hardLimits, false)
     }
 }
