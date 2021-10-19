@@ -492,7 +492,7 @@
     <string name="carbsReqThreshold_summary">כמות הפחמ\' המינימלית (גר\') הדרושה כדי שתוצג התראה על הצעת פחמימות. לא תוצגנה התראות על הצעות הנמוכות מכמות זו.</string>
     <string name="dexcomg5_xdripupload_title">שליחת נתוני סוכר אל xDrip</string>
     <string name="dexcomg5_xdripupload_summary">ב-xDrip בחרו 640g/Eversense כמקור נתונים</string>
-    <string name="nsclientbg">רמת סוכר מ-NSClient</string>
+    <string name="nsclientbg">נתוני סוכר מ-NSClient</string>
     <string name="nsclientbgshort">סוכר NS</string>
     <string name="overview_editquickwizard_usebg">חישוב רמת הסוכר</string>
     <string name="overview_editquickwizard_usebolusiob">חישוב IOB של בולוס</string>
@@ -770,7 +770,7 @@
     <string name="activitymonitor">מוניטור פעילות</string>
     <string name="doyouwantresetstats">האם ברצונכם לאפס את הסטטיסטיקות הפעילות?</string>
     <string name="statistics">סטטיסטיקה</string>
-    <string name="randombg">רמת גלוקוז אקראית</string>
+    <string name="randombg">נתוני סוכר אקראיים</string>
     <string name="description_source_randombg">הפקת נתוני גלוקוז אקראיים (מצב הדגמה בלבד)</string>
     <string name="randombg_short">ערכי גלוקוז בדם</string>
     <string name="tools">כלים</string>
