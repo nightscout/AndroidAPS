@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.SystemClock;
@@ -159,7 +160,8 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
     private int timeChangeRetries;
     private long nextPodWarningCheck;
     private long lastConnectionTimeMillis;
-    private final Handler loopHandler = new Handler(Looper.getMainLooper());
+    private HandlerThread handlerThread;
+    private Handler loopHandler;
 
     private final Runnable statusChecker;
 
@@ -278,6 +280,12 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
     @Override
     protected void onStart() {
         super.onStart();
+
+        if (handlerThread == null) {
+            handlerThread = new HandlerThread(OmnipodErosPumpPlugin.class.getSimpleName());
+            handlerThread.start();
+            loopHandler = new Handler(handlerThread.getLooper());
+        }
 
         loopHandler.postDelayed(statusChecker, STATUS_CHECK_INTERVAL_MILLIS);
 
