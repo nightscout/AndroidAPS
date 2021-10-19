@@ -22,10 +22,10 @@ class ErosHistory(private val dao: ErosHistoryRecordDao) {
         return if (record is ValueWrapper.Existing) record.value else null
     }
 
-    fun create(historyRecord: ErosHistoryRecordEntity?) {
-        // no need for rowId, but lose warnings in IDE and make sure transaction is completed.
-        val rowId = Single.just(dao.insert(historyRecord!!)).blockingGet()
-    }
+    fun create(historyRecord: ErosHistoryRecordEntity?): Long =
+        Single.just(dao.insert(historyRecord!!))
+            .subscribeOn(Schedulers.io())
+            .blockingGet()
 }
 
 @Suppress("USELESS_CAST")
