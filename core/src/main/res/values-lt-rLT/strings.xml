@@ -261,7 +261,6 @@
     <string name="metadata_label_device_name">Eksportuojamas paciento vardas</string>
     <string name="metadata_label_device_model">Eksportuojamas prietaiso modelis</string>
     <string name="metadata_label_encryption">Failo šifravimas</string>
-    <string name="metadata_format_old">Senas eksporto formatas</string>
     <string name="metadata_format_new">Naujas šifruotas formatas</string>
     <string name="metadata_format_debug">Naujas derinimo formatas (nešifruotas)</string>
     <string name="metadata_format_other">Nežinomas eksporto formatas</string>
