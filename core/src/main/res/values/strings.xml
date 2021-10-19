@@ -345,7 +345,6 @@
     <string name="metadata_label_device_name">Exporting device patient name</string>
     <string name="metadata_label_device_model">Exporting device model</string>
     <string name="metadata_label_encryption">File encryption</string>
-    <string name="metadata_format_old">Old export format</string>
     <string name="metadata_format_new">New encrypted format</string>
     <string name="metadata_format_debug">New debug format (unencrypted)</string>
     <string name="metadata_format_other">Unknown export format</string>

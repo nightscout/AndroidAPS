@@ -14,11 +14,11 @@ import androidx.fragment.app.FragmentActivity
 import androidx.work.*
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.DaggerAppCompatActivityWithResult
 import info.nightscout.androidaps.activities.PreferencesActivity
 import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.events.EventAppExit
@@ -42,6 +42,8 @@ import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.protection.PasswordCheck
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.androidaps.utils.storage.Storage
+import info.nightscout.androidaps.utils.userEntry.UserEntryPresentationHelper
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -63,7 +65,6 @@ class ImportExportPrefsImpl @Inject constructor(
     private val passwordCheck: PasswordCheck,
     private val config: Config,
     private val androidPermission: AndroidPermission,
-    private val classicPrefsFormat: ClassicPrefsFormat,
     private val encryptedPrefsFormat: EncryptedPrefsFormat,
     private val prefFileList: PrefFileListProvider,
     private val uel: UserEntryLogger,
@@ -103,12 +104,7 @@ class ImportExportPrefsImpl @Inject constructor(
         metadata[PrefsMetadataKey.AAPS_VERSION] = PrefMetadata(BuildConfig.VERSION_NAME, PrefsStatus.OK)
         metadata[PrefsMetadataKey.AAPS_FLAVOUR] = PrefMetadata(BuildConfig.FLAVOR, PrefsStatus.OK)
         metadata[PrefsMetadataKey.DEVICE_MODEL] = PrefMetadata(config.currentDeviceModelString, PrefsStatus.OK)
-
-        if (prefsEncryptionIsDisabled()) {
-            metadata[PrefsMetadataKey.ENCRYPTION] = PrefMetadata("Disabled", PrefsStatus.DISABLED)
-        } else {
-            metadata[PrefsMetadataKey.ENCRYPTION] = PrefMetadata("Enabled", PrefsStatus.OK)
-        }
+        metadata[PrefsMetadataKey.ENCRYPTION] = PrefMetadata("Enabled", PrefsStatus.OK)
 
         return metadata
     }
@@ -132,9 +128,6 @@ class ImportExportPrefsImpl @Inject constructor(
         return if (patientName.isNotEmpty() && patientName != defaultPatientName) patientName else systemName
     }
 
-    private fun prefsEncryptionIsDisabled() =
-        buildHelper.isEngineeringMode() && !sp.getBoolean(R.string.key_maintenance_encrypt_exported_prefs, true)
-
     private fun askForMasterPass(activity: FragmentActivity, @StringRes canceledMsg: Int, then: ((password: String) -> Unit)) {
         passwordCheck.queryPassword(activity, R.string.master_password, R.string.key_master_password, { password ->
             then(password)
@@ -155,11 +148,7 @@ class ImportExportPrefsImpl @Inject constructor(
 
     @Suppress("SameParameterValue")
     private fun askForMasterPassIfNeeded(activity: FragmentActivity, @StringRes canceledMsg: Int, then: ((password: String) -> Unit)) {
-        if (prefsEncryptionIsDisabled()) {
-            then("")
-        } else {
             askForMasterPass(activity, canceledMsg, then)
-        }
     }
 
     private fun assureMasterPasswordSet(activity: FragmentActivity, @StringRes wrongPwdTitle: Int): Boolean {
@@ -179,7 +168,7 @@ class ImportExportPrefsImpl @Inject constructor(
     }
 
     private fun askToConfirmExport(activity: FragmentActivity, fileToExport: File, then: ((password: String) -> Unit)) {
-        if (!prefsEncryptionIsDisabled() && !assureMasterPasswordSet(activity, R.string.nav_export)) return
+        if (!assureMasterPasswordSet(activity, R.string.nav_export)) return
 
         TwoMessagesAlertDialog.showAlert(activity, resourceHelper.gs(R.string.nav_export),
             resourceHelper.gs(R.string.export_to) + " " + fileToExport.name + " ?",
@@ -189,20 +178,12 @@ class ImportExportPrefsImpl @Inject constructor(
     }
 
     private fun askToConfirmImport(activity: FragmentActivity, fileToImport: PrefsFile, then: ((password: String) -> Unit)) {
-
-        if (fileToImport.handler == PrefsFormatsHandler.ENCRYPTED) {
-            if (!assureMasterPasswordSet(activity, R.string.nav_import)) return
-            TwoMessagesAlertDialog.showAlert(activity, resourceHelper.gs(R.string.nav_import),
-                resourceHelper.gs(R.string.import_from) + " " + fileToImport.name + " ?",
-                resourceHelper.gs(R.string.password_preferences_decrypt_prompt), {
-                askForMasterPass(activity, R.string.preferences_import_canceled, then)
-            }, null, R.drawable.ic_header_import)
-
-        } else {
-            OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.nav_import),
-                resourceHelper.gs(R.string.import_from) + " " + fileToImport.file + " ?",
-                Runnable { then("") })
-        }
+        if (!assureMasterPasswordSet(activity, R.string.nav_import)) return
+        TwoMessagesAlertDialog.showAlert(activity, resourceHelper.gs(R.string.nav_import),
+            resourceHelper.gs(R.string.import_from) + " " + fileToImport.name + " ?",
+            resourceHelper.gs(R.string.password_preferences_decrypt_prompt), {
+            askForMasterPass(activity, R.string.preferences_import_canceled, then)
+        }, null, R.drawable.ic_header_import)
     }
 
     private fun promptForDecryptionPasswordIfNeeded(activity: FragmentActivity, prefs: Prefs, importOk: Boolean,
@@ -230,7 +211,6 @@ class ImportExportPrefsImpl @Inject constructor(
     private fun exportSharedPreferences(activity: FragmentActivity) {
 
         prefFileList.ensureExportDirExists()
-        val legacyFile = prefFileList.legacyFile()
         val newFile = prefFileList.newExportFile()
 
         askToConfirmExport(activity, newFile) { password ->
@@ -242,9 +222,6 @@ class ImportExportPrefsImpl @Inject constructor(
 
                 val prefs = Prefs(entries, prepareMetadata(activity))
 
-                if (BuildConfig.DEBUG && buildHelper.isEngineeringMode()) {
-                    classicPrefsFormat.savePreferences(legacyFile, prefs)
-                }
                 encryptedPrefsFormat.savePreferences(newFile, prefs, password)
 
                 ToastUtils.okToast(activity, resourceHelper.gs(R.string.exported))
@@ -292,10 +269,7 @@ class ImportExportPrefsImpl @Inject constructor(
 
         askToConfirmImport(activity, importFile) { password ->
 
-            val format: PrefsFormat = when (importFile.handler) {
-                PrefsFormatsHandler.CLASSIC -> classicPrefsFormat
-                PrefsFormatsHandler.ENCRYPTED -> encryptedPrefsFormat
-            }
+            val format: PrefsFormat =  encryptedPrefsFormat
 
             try {
 
@@ -380,10 +354,11 @@ class ImportExportPrefsImpl @Inject constructor(
         @Inject lateinit var injector: HasAndroidInjector
         @Inject lateinit var aapsLogger: AAPSLogger
         @Inject lateinit var repository: AppRepository
-        @Inject lateinit var classicPrefsFormat: ClassicPrefsFormat
         @Inject lateinit var resourceHelper: ResourceHelper
         @Inject lateinit var prefFileList: PrefFileListProvider
-        @Inject lateinit var mainApp: MainApp
+        @Inject lateinit var context: Context
+        @Inject lateinit var userEntryPresentationHelper: UserEntryPresentationHelper
+        @Inject lateinit var storage: Storage
 
         init {
             (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
@@ -395,18 +370,30 @@ class ImportExportPrefsImpl @Inject constructor(
             val newFile = prefFileList.newExportCsvFile()
             var ret = Result.success()
             try {
-                classicPrefsFormat.saveCsv(newFile, entries)
-                ToastUtils.okToast(mainApp, resourceHelper.gs(R.string.ue_exported))
+                saveCsv(newFile, entries)
+                ToastUtils.okToast(context, resourceHelper.gs(R.string.ue_exported))
             } catch (e: FileNotFoundException) {
-                ToastUtils.errorToast(mainApp, resourceHelper.gs(R.string.filenotfound) + " " + newFile)
+                ToastUtils.errorToast(context, resourceHelper.gs(R.string.filenotfound) + " " + newFile)
                 aapsLogger.error(LTag.CORE, "Unhandled exception", e)
                 ret = Result.failure(workDataOf("Error" to "Error FileNotFoundException"))
             } catch (e: IOException) {
-                ToastUtils.errorToast(mainApp, e.message)
+                ToastUtils.errorToast(context, e.message)
                 aapsLogger.error(LTag.CORE, "Unhandled exception", e)
                 ret = Result.failure(workDataOf("Error" to "Error IOException"))
             }
             return ret
         }
+
+        private fun saveCsv(file: File, userEntries: List<UserEntry>) {
+            try {
+                val contents = userEntryPresentationHelper.userEntriesToCsv(userEntries)
+                storage.putFileContents(file, contents)
+            } catch (e: FileNotFoundException) {
+                throw PrefFileNotFoundError(file.absolutePath)
+            } catch (e: IOException) {
+                throw PrefIOError(file.absolutePath)
+            }
+        }
+
     }
 }

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
+import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,10 +17,8 @@ import info.nightscout.androidaps.core.databinding.MaintenanceImportListItemBind
 import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
 import info.nightscout.androidaps.plugins.general.maintenance.PrefsFile
 import info.nightscout.androidaps.plugins.general.maintenance.PrefsFileContract
-import info.nightscout.androidaps.plugins.general.maintenance.PrefsFormatsHandler
 import info.nightscout.androidaps.plugins.general.maintenance.formats.PrefsMetadataKey
 import info.nightscout.androidaps.plugins.general.maintenance.formats.PrefsStatus
-import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.utils.locale.LocaleHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
@@ -83,38 +82,30 @@ class PrefImportListActivity : DaggerAppCompatActivity() {
 
                 filelistDir.text = resourceHelper.gs(R.string.in_directory, prefFile.file.parentFile?.absolutePath)
 
-                val visible = (prefFile.handler != PrefsFormatsHandler.CLASSIC).toVisibility()
-                metalineName.visibility = visible
-                metaDateTimeIcon.visibility = visible
-                metaAppVersion.visibility = visible
+                metalineName.visibility = View.VISIBLE
+                metaDateTimeIcon.visibility = View.VISIBLE
+                metaAppVersion.visibility = View.VISIBLE
 
-                if (prefFile.handler == PrefsFormatsHandler.CLASSIC) {
-                    metaVariantFormat.text = resourceHelper.gs(R.string.metadata_format_old)
-                    metaVariantFormat.setTextColor(resourceHelper.gc(R.color.metadataTextWarning))
-                    metaDateTime.text = " "
-                } else {
-
-                    prefFile.metadata[PrefsMetadataKey.AAPS_FLAVOUR]?.let {
-                        metaVariantFormat.text = it.value
-                        val color = if (it.status == PrefsStatus.OK) R.color.metadataOk else R.color.metadataTextWarning
-                        metaVariantFormat.setTextColor(resourceHelper.gc(color))
-                    }
-
-                    prefFile.metadata[PrefsMetadataKey.CREATED_AT]?.let {
-                        metaDateTime.text = prefFileListProvider.formatExportedAgo(it.value)
-                    }
-
-                    prefFile.metadata[PrefsMetadataKey.AAPS_VERSION]?.let {
-                        metaAppVersion.text = it.value
-                        val color = if (it.status == PrefsStatus.OK) R.color.metadataOk else R.color.metadataTextWarning
-                        metaAppVersion.setTextColor(resourceHelper.gc(color))
-                    }
-
-                    prefFile.metadata[PrefsMetadataKey.DEVICE_NAME]?.let {
-                        metaDeviceName.text = it.value
-                    }
-
+                prefFile.metadata[PrefsMetadataKey.AAPS_FLAVOUR]?.let {
+                    metaVariantFormat.text = it.value
+                    val color = if (it.status == PrefsStatus.OK) R.color.metadataOk else R.color.metadataTextWarning
+                    metaVariantFormat.setTextColor(resourceHelper.gc(color))
                 }
+
+                prefFile.metadata[PrefsMetadataKey.CREATED_AT]?.let {
+                    metaDateTime.text = prefFileListProvider.formatExportedAgo(it.value)
+                }
+
+                prefFile.metadata[PrefsMetadataKey.AAPS_VERSION]?.let {
+                    metaAppVersion.text = it.value
+                    val color = if (it.status == PrefsStatus.OK) R.color.metadataOk else R.color.metadataTextWarning
+                    metaAppVersion.setTextColor(resourceHelper.gc(color))
+                }
+
+                prefFile.metadata[PrefsMetadataKey.DEVICE_NAME]?.let {
+                    metaDeviceName.text = it.value
+                }
+
             }
         }
     }
