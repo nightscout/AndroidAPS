@@ -665,7 +665,6 @@
     <string name="error_adding_treatment_title">Behandlingsdata er ufullstendige</string>
     <string name="maintenance_settings">Vedlikeholds innstillinger</string>
     <string name="maintenance_email">E-post mottaker</string>
-    <string name="maintenance_encrypt_exported_prefs">Krypter eksporterte innstillinger</string>
     <string name="maintenance_amount">Antall logger du vil sende</string>
     <string name="maintenance">Vedlikehold</string>
     <string name="maintenance_shortname">VEDL</string>
