@@ -38,7 +38,7 @@ class ProfileFunctionImplementation @Inject constructor(
     private val dateUtil: DateUtil,
     private val config: Config,
     private val hardLimits: HardLimits,
-    private val aapsSchedulers: AapsSchedulers,
+    aapsSchedulers: AapsSchedulers,
     private val fabricPrivacy: FabricPrivacy
 ) : ProfileFunction {
 
@@ -51,14 +51,15 @@ class ProfileFunctionImplementation @Inject constructor(
             .toObservable(EventEffectiveProfileSwitchChanged::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe(
-                @Synchronized
                 {
-                    for (index in cache.size() - 1 downTo 0) {
-                        if (cache.keyAt(index) > it.startDate) {
-                            aapsLogger.debug(LTag.AUTOSENS, "Removing from profileCache: " + dateUtil.dateAndTimeAndSecondsString(cache.keyAt(index)))
-                            cache.removeAt(index)
-                        } else {
-                            break
+                    synchronized(cache) {
+                        for (index in cache.size() - 1 downTo 0) {
+                            if (cache.keyAt(index) > it.startDate) {
+                                aapsLogger.debug(LTag.AUTOSENS, "Removing from profileCache: " + dateUtil.dateAndTimeAndSecondsString(cache.keyAt(index)))
+                                cache.removeAt(index)
+                            } else {
+                                break
+                            }
                         }
                     }
                 }, fabricPrivacy::logException
@@ -92,24 +93,24 @@ class ProfileFunctionImplementation @Inject constructor(
     override fun getProfile(): Profile? =
         getProfile(dateUtil.now())
 
-    @Synchronized
     override fun getProfile(time: Long): Profile? {
-        // Clear cache after longer use
-        if (cache.size() > 30000) {
-            cache.clear()
-            aapsLogger.debug("Profile cache cleared")
-        }
         val rounded = time - time % 1000
-        val cached = cache[rounded]
-        if (cached != null) {
-//            aapsLogger.debug("HIT getProfile for $time $rounded")
-            return cached
+        // Clear cache after longer use
+        synchronized(cache) {
+            if (cache.size() > 30000) {
+                cache.clear()
+                aapsLogger.debug("Profile cache cleared")
+            }
+            val cached = cache[rounded]
+            if (cached != null) return cached
         }
 //        aapsLogger.debug("getProfile called for $time")
         val ps = repository.getEffectiveProfileSwitchActiveAt(time).blockingGet()
         if (ps is ValueWrapper.Existing) {
             val sealed = ProfileSealed.EPS(ps.value)
-            cache.put(rounded, sealed)
+            synchronized(cache) {
+                cache.put(rounded, sealed)
+            }
             return sealed
         }
         return null
