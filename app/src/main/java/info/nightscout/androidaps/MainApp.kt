@@ -15,8 +15,8 @@ import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import info.nightscout.androidaps.database.transactions.VersionChangeTransaction
 import info.nightscout.androidaps.db.CompatDBHelper
-import info.nightscout.androidaps.di.StaticInjector
 import info.nightscout.androidaps.dependencyInjection.DaggerAppComponent
+import info.nightscout.androidaps.di.StaticInjector
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.ConfigBuilder
 import info.nightscout.androidaps.interfaces.PluginBase
@@ -36,8 +36,12 @@ import info.nightscout.androidaps.utils.locale.LocaleHelper.update
 import info.nightscout.androidaps.utils.protection.PasswordCheck
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.exceptions.UndeliverableException
+import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.rxkotlin.plusAssign
 import net.danlew.android.joda.JodaTimeAndroid
+import java.io.IOException
+import java.net.SocketException
 import javax.inject.Inject
 
 class MainApp : DaggerApplication() {
@@ -64,6 +68,7 @@ class MainApp : DaggerApplication() {
         super.onCreate()
         aapsLogger.debug("onCreate")
         RxDogTag.install()
+        setRxErrorHandler()
         update(this)
 
         var gitRemote: String? = BuildConfig.REMOTE
@@ -92,6 +97,34 @@ class MainApp : DaggerApplication() {
         doMigrations()
         uel.log(UserEntry.Action.START_AAPS, UserEntry.Sources.Aaps)
         passwordCheck.passwordResetCheck(this)
+    }
+
+    private fun setRxErrorHandler() {
+        RxJavaPlugins.setErrorHandler { t: Throwable ->
+            var e = t
+            if (e is UndeliverableException) {
+                e = e.cause!!
+            }
+            if (e is IOException || e is SocketException) {
+                // fine, irrelevant network problem or API that throws on cancellation
+                return@setErrorHandler
+            }
+            if (e is InterruptedException) {
+                // fine, some blocking code was interrupted by a dispose call
+                return@setErrorHandler
+            }
+            if (e is NullPointerException || e is IllegalArgumentException) {
+                // that's likely a bug in the application
+                Thread.currentThread().uncaughtExceptionHandler?.uncaughtException(Thread.currentThread(), e)
+                return@setErrorHandler
+            }
+            if (e is IllegalStateException) {
+                // that's a bug in RxJava or in a custom operator
+                Thread.currentThread().uncaughtExceptionHandler?.uncaughtException(Thread.currentThread(), e)
+                return@setErrorHandler
+            }
+            aapsLogger.warn(LTag.CORE, "Undeliverable exception received, not sure what to do", e)
+        }
     }
 
     private fun doMigrations() {

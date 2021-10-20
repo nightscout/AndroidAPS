@@ -191,11 +191,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
             .subscribe({
                            // catch only events from iobCobCalculator
                            if (it.cause is EventCustomCalculationFinished)
-                               try {
-                                   refreshLoop("EventAutosensCalculationFinished")
-                               } catch (e: InterruptedException) {
-                                   fabricPrivacy.logException(e)
-                               }
+                               refreshLoop("EventAutosensCalculationFinished")
                        }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventIobCalculationProgress::class.java)
