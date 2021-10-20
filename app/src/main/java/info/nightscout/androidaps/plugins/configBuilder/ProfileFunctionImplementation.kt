@@ -154,8 +154,7 @@ class ProfileFunctionImplementation @Inject constructor(
     }
 
     override fun createProfileSwitch(durationInMinutes: Int, percentage: Int, timeShiftInHours: Int): Boolean {
-        val profile = repository.getPermanentProfileSwitch(dateUtil.now())
-            ?: throw InvalidParameterSpecException("No active ProfileSwitch")
+        val profile = repository.getPermanentProfileSwitch(dateUtil.now()) ?: return false
         val profileStore = activePlugin.activeProfileSource.profile ?: return false
         val ps = buildProfileSwitch(profileStore, profile.profileName, durationInMinutes, percentage, 0, dateUtil.now())
         val validity = ProfileSealed.PS(ps).isValid(
