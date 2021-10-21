@@ -718,6 +718,7 @@ Unerwartetes Verhalten.</string>
     <string name="versionChecker">Versionsprüfer</string>
     <string name="old_version">Vorherige Version</string>
     <string name="very_old_version">sehr alte Version</string>
+    <string name="application_expired">Anwendung abgelaufen</string>
     <string name="new_version_warning">Neue Version seit mindestens %1$d Tagen verfügbar! Rückfall zur sensorunterstützten Pumpentherapie nach %2$d Tagen, Loop wird nach  %3$d Tagen deaktiviert.</string>
     <string name="twohours">2h</string>
     <string name="dexcom_app_patched">gepatchte Dexcom App</string>
@@ -857,7 +858,8 @@ Unerwartetes Verhalten.</string>
     <string name="email_address">E‐Mail‐Adresse</string>
     <string name="privacy_settings">Privatsphäre-Einstellungen</string>
     <string name="privacy_summary">Du kannst optional eine E-Mail-Adresse angeben, wenn Du bei Absturzberichten kontaktiert werden möchtest. Dies ist keine Automatik, Du wirst von den Entwicklern in gefährlichen Situationen kontaktiert. </string>
-    <string name="full_sync">Vollständige Sync</string>
+    <string name="full_sync">Vollständige Synchronisierung</string>
+    <string name="full_sync_comment">Vollständige Synchronisierung? Es kann viele Stunden dauern und bis zur Fertigstellung wirst du keine neuen Daten in NS sehen.</string>
     <string name="prime">Füllen</string>
     <string name="ns_sync_options">Synchronisierung</string>
     <string name="ns_upload_summary">Profile, Boli, Kohlenhydrate und temporäre Basalraten werden zu NS hochgeladen</string>

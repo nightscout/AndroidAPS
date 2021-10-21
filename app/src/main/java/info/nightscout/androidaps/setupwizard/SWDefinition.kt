@@ -14,7 +14,7 @@ import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesFragment
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin
@@ -39,7 +39,7 @@ import javax.inject.Singleton
 @Singleton
 class SWDefinition @Inject constructor(
     injector: HasAndroidInjector,
-    private val rxBus: RxBusWrapper,
+    private val rxBus: RxBus,
     private val context: Context,
     resourceHelper: ResourceHelper,
     private val sp: SP,
@@ -227,7 +227,7 @@ class SWDefinition @Inject constructor(
             .updateDelay(5)
             .label(R.string.treatmentssafety_maxbolus_title)
             .comment(R.string.common_values))
-        .add(SWEditNumber(injector, 48.0, 1.0, 100.0)
+        .add(SWEditIntNumber(injector, 48, 1, 100)
             .preferenceId(R.string.key_treatmentssafety_maxcarbs)
             .updateDelay(5)
             .label(R.string.treatmentssafety_maxcarbs_title)
@@ -235,7 +235,7 @@ class SWDefinition @Inject constructor(
         .validator {
             sp.contains(R.string.key_age)
                 && sp.getDouble(R.string.key_treatmentssafety_maxbolus, 0.0) > 0
-                && sp.getDouble(R.string.key_treatmentssafety_maxcarbs, 0.0) > 0
+                && sp.getInt(R.string.key_treatmentssafety_maxcarbs, 0) > 0
         }
     private val screenInsulin = SWScreen(injector, R.string.configbuilder_insulin)
         .skippable(false)
@@ -257,7 +257,7 @@ class SWDefinition @Inject constructor(
         .add(SWFragment(injector, this)
             .add(LocalProfileFragment()))
         .validator {
-            localProfilePlugin.profile?.getDefaultProfile()?.let { ProfileSealed.Pure(it).isValid("StartupWizard", activePlugin.activePump, config, resourceHelper, rxBus, hardLimits).isValid }
+            localProfilePlugin.profile?.getDefaultProfile()?.let { ProfileSealed.Pure(it).isValid("StartupWizard", activePlugin.activePump, config, resourceHelper, rxBus, hardLimits, false).isValid }
                 ?: false
         }
         .visibility { localProfilePlugin.isEnabled() }

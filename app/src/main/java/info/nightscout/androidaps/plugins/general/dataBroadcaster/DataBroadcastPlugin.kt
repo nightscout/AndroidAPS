@@ -14,7 +14,7 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.events.EventOpenAPSUpdateGui
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
@@ -38,7 +38,7 @@ class DataBroadcastPlugin @Inject constructor(
     private val context: Context,
     private val dateUtil: DateUtil,
     private val fabricPrivacy: FabricPrivacy,
-    private val rxBus: RxBusWrapper,
+    private val rxBus: RxBus,
     private val iobCobCalculator: IobCobCalculator,
     private val profileFunction: ProfileFunction,
     private val defaultValueHelper: DefaultValueHelper,

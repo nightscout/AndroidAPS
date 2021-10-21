@@ -115,4 +115,5 @@
     <string name="press_ok_on_the_pump">Premi OK sul micro\ne inserisci i 2 numeri visualizzati\nMantieni acceso il display del micro premendo il tasto col simbolo del meno sino a che non hai finito di inserire il codice.</string>
     <string name="num1pin">1: (12 cifre)</string>
     <string name="num2pin">2: (8 cifre)</string>
+    <string name="basal_bolus_step">Incremento basale/bolo</string>
 </resources>

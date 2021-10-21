@@ -11,7 +11,7 @@ import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.utils.T
@@ -29,7 +29,7 @@ abstract class InsulinOrefBasePlugin(
     injector: HasAndroidInjector,
     resourceHelper: ResourceHelper,
     val profileFunction: ProfileFunction,
-    val rxBus: RxBusWrapper, aapsLogger: AAPSLogger
+    val rxBus: RxBus, aapsLogger: AAPSLogger
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.INSULIN)
     .fragmentClass(InsulinFragment::class.java.name)

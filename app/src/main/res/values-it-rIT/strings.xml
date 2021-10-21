@@ -256,6 +256,7 @@
     <string name="ongoingnotificaction">Notifica persistente</string>
     <string name="old_data">DATI VECCHI</string>
     <string name="sms_minago">%1$dmin fa</string>
+    <string name="localprofile">Profilo</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Matrice di %1$d elementi.\nValore attuale:</string>
     <string name="openapsma_autosensdata_label">Dati autosens</string>
@@ -492,6 +493,7 @@
     <string name="dexcomg5_xdripupload_title">Invia dati BG a xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">In xDrip+ seleziona origine dati 640g/Eversense</string>
     <string name="nsclientbg">BG NSClient</string>
+    <string name="nsclientbgshort">BG NS</string>
     <string name="overview_editquickwizard_usebg">Calcolo BG</string>
     <string name="overview_editquickwizard_usebolusiob">Calcolo IOB da bolo</string>
     <string name="overview_editquickwizard_usebasaliob">Calcolo IOB da basale</string>
@@ -715,6 +717,7 @@
     <string name="versionChecker">Controllo versione</string>
     <string name="old_version">versione datata</string>
     <string name="very_old_version">versione molto datata</string>
+    <string name="application_expired">Applicazione scaduta</string>
     <string name="new_version_warning">Nuova versione disponibile da almeno %1$d giorni! Ritorno a LGS dopo %2$d giorni, disattivazione del loop dopo %3$d giorni</string>
     <string name="twohours">2h</string>
     <string name="dexcom_app_patched">Dexcom app (modificata)</string>
@@ -748,6 +751,7 @@
     <string name="clone_label">Clona</string>
     <string name="saveorresetchangesfirst">Salva o resetta prima le modifiche correnti</string>
     <string name="deletecurrentprofile">Rimuovere il profilo corrente?</string>
+    <string name="copytolocalprofile">Creare un nuovo profilo da questo profilo?</string>
     <string name="profilenamecontainsdot">Il nome profilo contiene dei punti.\nQuesto non è supportato da NS.\nIl profilo non viene caricato in NS.</string>
     <string name="low_mark_comment">Valore più basso per l\'intervallo di visualizzazione dell\'area \"in range\"</string>
     <string name="high_mark_comment">Valore più alto per l\'intervallo di visualizzazione dell\'area \"in range\"</string>
@@ -829,6 +833,7 @@
     <string name="dpvdefaultprofile">Profilo DPV predefinito</string>
     <string name="setupwizard_pump_riley_link_status">Stato RileyLink:</string>
     <string name="filter">Filtro</string>
+    <string name="copytolocalprofile_invalid">Impossibile creare il profilo. Il profilo non è valido.</string>
     <string name="cta_dont_kill_my_app_info">Non terminare l\'app?</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Invia SMS se si verifica l\'evento \"micro irraggiungibile\"</string>
     <string name="smscommunicator_pump_ureachable">Segnala micro irraggiungibile</string>
@@ -853,11 +858,13 @@
     <string name="privacy_settings">Impostazioni privacy</string>
     <string name="privacy_summary">Puoi fornire un indirizzo e-mail opzionale se desideri essere avvisato in caso di arresti anomali dell\'app. Questo non è un servizio automatizzato. Sarai contattato dagli sviluppatori in situazioni pericolose.</string>
     <string name="full_sync">Sincronizzazione completa</string>
+    <string name="full_sync_comment">Sincronizzazione completa? Potrebbe richiedere molte ore e fino alla fine del processo non vedrai nuovi dati in NS.</string>
     <string name="prime">Caricamento</string>
     <string name="ns_sync_options">Sincronizzazione</string>
     <string name="ns_upload_summary">Profili, boli, CHO, basali temporanee vengono caricati su NS</string>
     <string name="ns_upload">Carica dati su NS</string>
     <string name="ns_receive_profile_store">Ricevi \"store\" profilo</string>
+    <string name="ns_receive_profile_store_summary">Sincronizza i profili dall\'editor profilo di NS</string>
     <string name="ns_receive_temp_target">Ricevi target temporanei</string>
     <string name="ns_receive_temp_target_summary">Accetta target temporanei inseriti tramite NS o NSClient</string>
     <string name="ns_receive_profile_switch">Ricevi cambi profilo</string>

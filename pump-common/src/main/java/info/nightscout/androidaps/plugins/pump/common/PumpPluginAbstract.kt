@@ -18,7 +18,7 @@ import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.interfaces.PumpSync.TemporaryBasalType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.common.ManufacturerType
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus
@@ -46,7 +46,7 @@ abstract class PumpPluginAbstract protected constructor(
     resourceHelper: ResourceHelper,
     aapsLogger: AAPSLogger,
     commandQueue: CommandQueueProvider,
-    var rxBus: RxBusWrapper,
+    var rxBus: RxBus,
     var activePlugin: ActivePlugin,
     var sp: SP,
     var context: Context,

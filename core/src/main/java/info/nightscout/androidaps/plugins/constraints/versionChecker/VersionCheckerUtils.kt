@@ -1,15 +1,15 @@
 package info.nightscout.androidaps.plugins.constraints.versionChecker
 
-import android.content.Context
 import android.os.Build
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.io.IOException
@@ -20,13 +20,13 @@ import javax.inject.Singleton
 
 @Singleton
 class VersionCheckerUtils @Inject constructor(
-    val aapsLogger: AAPSLogger,
-    val sp: SP,
-    val resourceHelper: ResourceHelper,
-    val rxBus: RxBusWrapper,
+    private val aapsLogger: AAPSLogger,
+    private val sp: SP,
+    private val resourceHelper: ResourceHelper,
+    private val rxBus: RxBus,
     private val config: Config,
-    val context: Context,
-    val receiverStatusStore: ReceiverStatusStore
+    private val receiverStatusStore: ReceiverStatusStore,
+    private val dateUtil: DateUtil
 ) {
 
     fun isConnected(): Boolean = receiverStatusStore.isConnected
@@ -37,12 +37,12 @@ class VersionCheckerUtils @Inject constructor(
             // On a new installation, set it as 30 days old in order to warn that there is a new version.
             sp.putLong(
                 R.string.key_last_time_this_version_detected,
-                System.currentTimeMillis() - TimeUnit.DAYS.toMillis(30)
+                dateUtil.now() - TimeUnit.DAYS.toMillis(30)
             )
         }
 
         // If we are good, only check once every day.
-        if (System.currentTimeMillis() > sp.getLong(
+        if (dateUtil.now() > sp.getLong(
                 R.string.key_last_time_this_version_detected,
                 0
             ) + CHECK_EVERY
@@ -51,18 +51,30 @@ class VersionCheckerUtils @Inject constructor(
         }
     }
 
-    private fun checkVersion() = if (isConnected()) {
-        Thread {
-            try {
-                val definition: String = URL("https://raw.githubusercontent.com/nightscout/AndroidAPS/versions/definition.json").readText()
-                val version: String? = AllowedVersions().findByApi(definition, Build.VERSION.SDK_INT)?.optString("supported")
-                compareWithCurrentVersion(version, config.VERSION_NAME)
-            } catch (e: IOException) {
-                aapsLogger.error(LTag.CORE, "Github master version check error: $e")
-            }
-        }.start()
-    } else
-        aapsLogger.debug(LTag.CORE, "Github master version not checked. No connectivity")
+    private fun checkVersion() =
+        if (isConnected()) {
+            Thread {
+                try {
+                    val definition: String = URL("https://raw.githubusercontent.com/nightscout/AndroidAPS/versions/definition.json").readText()
+                    val version: String? = AllowedVersions().findByApi(definition, Build.VERSION.SDK_INT)?.optString("supported")
+                    compareWithCurrentVersion(version, config.VERSION_NAME)
+
+                    // App expiration
+                    var endDate = sp.getLong(resourceHelper.gs(R.string.key_app_expiration) + "_" + config.VERSION_NAME, 0)
+                    AllowedVersions().findByVersion(definition, config.VERSION_NAME)?.let { expirationJson ->
+                        AllowedVersions().endDateToMilliseconds(expirationJson.getString("endDate"))?.let { ed ->
+                            sp.putLong(resourceHelper.gs(R.string.key_app_expiration) + "_" + config.VERSION_NAME, ed)
+                            endDate = ed
+                        }
+                    }
+                    if (endDate != 0L) onExpiredVersionDetected(config.VERSION_NAME, dateUtil.dateString(endDate))
+
+                } catch (e: IOException) {
+                    aapsLogger.error(LTag.CORE, "Github master version check error: $e")
+                }
+            }.start()
+        } else
+            aapsLogger.debug(LTag.CORE, "Github master version not checked. No connectivity")
 
     @Suppress("SameParameterValue")
     fun compareWithCurrentVersion(newVersion: String?, currentVersion: String) {
@@ -87,8 +99,8 @@ class VersionCheckerUtils @Inject constructor(
 
             (newElem - currElem).let {
                 when {
-                    it > 0 -> return onNewVersionDetected(currentVersion, newVersion)
-                    it < 0 -> return onOlderVersionDetected()
+                    it > 0  -> return onNewVersionDetected(currentVersion, newVersion)
+                    it < 0  -> return onOlderVersionDetected()
                     it == 0 -> Unit
                 }
             }
@@ -98,11 +110,11 @@ class VersionCheckerUtils @Inject constructor(
 
     private fun onOlderVersionDetected() {
         aapsLogger.debug(LTag.CORE, "Version newer than master. Are you developer?")
-        sp.putLong(R.string.key_last_time_this_version_detected, System.currentTimeMillis())
+        sp.putLong(R.string.key_last_time_this_version_detected, dateUtil.now())
     }
 
     private fun onSameVersionDetected() {
-        sp.putLong(R.string.key_last_time_this_version_detected, System.currentTimeMillis())
+        sp.putLong(R.string.key_last_time_this_version_detected, dateUtil.now())
     }
 
     private fun onVersionNotDetectable() {
@@ -110,7 +122,7 @@ class VersionCheckerUtils @Inject constructor(
     }
 
     private fun onNewVersionDetected(currentVersion: String, newVersion: String?) {
-        val now = System.currentTimeMillis()
+        val now = dateUtil.now()
         if (now > sp.getLong(R.string.key_last_versionchecker_warning, 0) + WARN_EVERY) {
             aapsLogger.debug(LTag.CORE, "Version $currentVersion outdated. Found $newVersion")
             val notification = Notification(
@@ -120,6 +132,20 @@ class VersionCheckerUtils @Inject constructor(
             )
             rxBus.send(EventNewNotification(notification))
             sp.putLong(R.string.key_last_versionchecker_warning, now)
+        }
+    }
+
+    private fun onExpiredVersionDetected(currentVersion: String, endDate: String?) {
+        val now = dateUtil.now()
+        if (now > sp.getLong(R.string.key_last_expired_versionchecker_warning, 0) + WARN_EVERY) {
+            aapsLogger.debug(LTag.CORE, "Version $currentVersion expired.")
+            val notification = Notification(
+                Notification.VERSION_EXPIRE,
+                resourceHelper.gs(R.string.version_expire, currentVersion, endDate),
+                Notification.LOW
+            )
+            rxBus.send(EventNewNotification(notification))
+            sp.putLong(R.string.key_last_expired_versionchecker_warning, now)
         }
     }
 
@@ -156,15 +182,3 @@ fun String.numericVersionPart(): String =
     return file?.lines()?.filter { regex.matches(it) }
         ?.mapNotNull { regex.matchEntire(it)?.groupValues?.getOrNull(3) }?.firstOrNull()
 }
-
-@Deprecated(
-    replaceWith = ReplaceWith("numericVersionPart()"),
-    message = "Will not work if RCs have another index number in it."
-)
-fun String.versionStrip() = this.mapNotNull {
-    when (it) {
-        in '0'..'9' -> it
-        '.'         -> it
-        else        -> null
-    }
-}.joinToString(separator = "")

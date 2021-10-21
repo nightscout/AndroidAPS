@@ -7,7 +7,7 @@ import info.nightscout.androidaps.database.entities.TemporaryBasal
 import info.nightscout.androidaps.events.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
@@ -17,7 +17,7 @@ import javax.inject.Singleton
 class CompatDBHelper @Inject constructor(
     val aapsLogger: AAPSLogger,
     val repository: AppRepository,
-    val rxBus: RxBusWrapper
+    val rxBus: RxBus
 ) {
 
     fun dbChangeDisposable(): Disposable = repository

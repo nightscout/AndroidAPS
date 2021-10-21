@@ -24,7 +24,6 @@ import kotlin.math.abs
 class PrefFileListProvider @Inject constructor(
     private val resourceHelper: ResourceHelper,
     private val config: Config,
-    private val classicPrefsFormat: ClassicPrefsFormat,
     private val encryptedPrefsFormat: EncryptedPrefsFormat,
     private val storage: Storage,
     private val versionCheckerUtils: VersionCheckerUtils
@@ -55,10 +54,8 @@ class PrefFileListProvider @Inject constructor(
         path.walk().maxDepth(1).filter { it.isFile && (it.name.endsWith(".json") || it.name.contains("Preferences")) }.forEach {
             val contents = storage.getFileContents(it)
             val detectedNew = encryptedPrefsFormat.isPreferencesFile(it, contents)
-            val detectedOld = !detectedNew && classicPrefsFormat.isPreferencesFile(it, contents)
-            if (detectedNew || detectedOld) {
-                val formatHandler = if (detectedNew) PrefsFormatsHandler.ENCRYPTED else PrefsFormatsHandler.CLASSIC
-                prefFiles.add(PrefsFile(it.name, it, path, PrefsImportDir.ROOT_DIR, formatHandler, metadataFor(loadMetadata, formatHandler, contents)))
+            if (detectedNew) {
+                prefFiles.add(PrefsFile(it.name, it, path, PrefsImportDir.ROOT_DIR, metadataFor(loadMetadata, contents)))
             }
         }
 
@@ -66,15 +63,14 @@ class PrefFileListProvider @Inject constructor(
         aapsPath.walk().filter { it.isFile && it.name.endsWith(".json") }.forEach {
             val contents = storage.getFileContents(it)
             if (encryptedPrefsFormat.isPreferencesFile(it, contents)) {
-                prefFiles.add(PrefsFile(it.name, it, aapsPath, PrefsImportDir.AAPS_DIR, PrefsFormatsHandler.ENCRYPTED, metadataFor(loadMetadata, PrefsFormatsHandler.ENCRYPTED, contents)))
+                prefFiles.add(PrefsFile(it.name, it, aapsPath, PrefsImportDir.AAPS_DIR, metadataFor(loadMetadata, contents)))
             }
         }
 
         // we sort only if we have metadata to be used for that
         if (loadMetadata) {
             prefFiles.sortWith(
-                compareByDescending<PrefsFile> { it.handler }
-                    .thenBy { it.metadata[PrefsMetadataKey.AAPS_FLAVOUR]?.status }
+                compareByDescending<PrefsFile> { it.metadata[PrefsMetadataKey.AAPS_FLAVOUR]?.status }
                     .thenByDescending { it.metadata[PrefsMetadataKey.CREATED_AT]?.value }
             )
         }
@@ -82,14 +78,11 @@ class PrefFileListProvider @Inject constructor(
         return prefFiles
     }
 
-    private fun metadataFor(loadMetadata: Boolean, formatHandler: PrefsFormatsHandler, contents: String): PrefMetadataMap {
+    private fun metadataFor(loadMetadata: Boolean, contents: String): PrefMetadataMap {
         if (!loadMetadata) {
             return mapOf()
         }
-        return checkMetadata(when (formatHandler) {
-            PrefsFormatsHandler.CLASSIC   -> classicPrefsFormat.loadMetadata(contents)
-            PrefsFormatsHandler.ENCRYPTED -> encryptedPrefsFormat.loadMetadata(contents)
-        })
+        return checkMetadata(encryptedPrefsFormat.loadMetadata(contents))
     }
 
     fun legacyFile(): File {

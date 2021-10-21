@@ -4,8 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.core.content.FileProvider
-import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.SwitchPreference
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.R
@@ -212,14 +210,4 @@ class MaintenancePlugin @Inject constructor(
         emailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         return emailIntent
     }
-
-    override fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {
-        super.preprocessPreferences(preferenceFragment)
-        val encryptSwitch =
-            preferenceFragment.findPreference(resourceHelper.gs(R.string.key_maintenance_encrypt_exported_prefs)) as SwitchPreference?
-                ?: return
-        encryptSwitch.isVisible = buildHelper.isEngineeringMode()
-        encryptSwitch.isEnabled = buildHelper.isEngineeringMode()
-    }
-
 }

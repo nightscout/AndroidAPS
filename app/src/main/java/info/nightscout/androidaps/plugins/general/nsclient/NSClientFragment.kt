@@ -13,7 +13,7 @@ import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.databinding.NsClientFragmentBinding
 import info.nightscout.androidaps.interfaces.DataSyncSelector
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientUpdateGUI
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -29,7 +29,7 @@ class NSClientFragment : DaggerFragment() {
     @Inject lateinit var nsClientPlugin: NSClientPlugin
     @Inject lateinit var sp: SP
     @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var dataSyncSelector: DataSyncSelector
@@ -70,7 +70,8 @@ class NSClientFragment : DaggerFragment() {
         binding.deliverNow.paintFlags = binding.deliverNow.paintFlags or Paint.UNDERLINE_TEXT_FLAG
         binding.fullSync.setOnClickListener {
             context?.let { context ->
-                OKDialog.showConfirmation(context, resourceHelper.gs(R.string.nsclientinternal), resourceHelper.gs(R.string.full_sync), Runnable {
+                OKDialog.showConfirmation(context, resourceHelper.gs(R.string.nsclientinternal),
+                                          resourceHelper.gs(R.string.full_sync_comment), Runnable {
                     dataSyncSelector.resetToNextFullSync()
                 })
             }

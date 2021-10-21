@@ -5,7 +5,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.Insulin
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.junit.Assert.assertEquals
@@ -26,7 +26,7 @@ class InsulinOrefUltraRapidActingPluginTest {
     private lateinit var sut: InsulinOrefUltraRapidActingPlugin
 
     @Mock lateinit var resourceHelper: ResourceHelper
-    @Mock lateinit var rxBus: RxBusWrapper
+    @Mock lateinit var rxBus: RxBus
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var aapsLogger: AAPSLogger
 

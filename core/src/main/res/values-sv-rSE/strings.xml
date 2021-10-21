@@ -174,12 +174,17 @@
     <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fU</b> Bol: <b>%3$.2fU</b> Bas: <b>%4$.2fU(%5$.0f%%)</b> KH: <b>%6$.0fg</b>]]></string>
     <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> om <b>%3$d</b> dagar<br>]]></string>
     <!--    Translator-->
+    <string name="careportal">Careportal</string>
     <string name="careportal_bgcheck">BG-kontroll</string>
     <string name="careportal_mbg">Manuellt BG eller kalibrering</string>
     <string name="careportal_announcement">Meddelande</string>
     <string name="careportal_note">Anteckning</string>
     <string name="careportal_question">Fråga</string>
     <string name="careportal_exercise">Träning</string>
+    <string name="careportal_announcement_message">Meddelande: %1$s</string>
+    <string name="careportal_note_message">Anteckning: %1$s</string>
+    <string name="careportal_question_message">Fråga : %1$s</string>
+    <string name="careportal_exercise_message">Träning : %1$s</string>
     <string name="careportal_pumpsitechange">Byte pumpkanyl</string>
     <string name="careportal_cgmsensorinsert">Byte CGM-sensor</string>
     <string name="careportal_cgmsensorstart">Start CGM-sensor</string>
@@ -287,6 +292,7 @@
     <string name="signature_verifier">Signaturverifierare</string>
     <string name="running_invalid_version">Du kör en ogiltig version. Loop avstängd!</string>
     <string name="versionavailable">Version %1$s tillgänglig</string>
+    <string name="version_expire">Version %1$s upphör att gälla %2$s</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Starta om telefonen eller AndroidAPS från systeminställningar,\nannars kommer AndroidAPS inte kunna logga fel (viktigt att kunna spåra och verifiera att algoritmerna fungerar korrekt)!</string>
     <!-- WeekdayPicker -->
@@ -403,6 +409,7 @@
     <string name="valueoutofrange">»%1$s« är utanför de hårda gränserna</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f är utanför hårda gränser</string>
     <string name="basal_value">Basaldos</string>
+    <string name="nsclient_version_does_not_match">NS Client-versionen matchar inte Android APS. Vänligen uppdatera.</string>
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagar</item>

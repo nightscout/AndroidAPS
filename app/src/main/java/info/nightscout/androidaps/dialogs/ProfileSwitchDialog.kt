@@ -25,7 +25,7 @@ import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.HtmlHelper
@@ -47,7 +47,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var config: Config
     @Inject lateinit var hardLimits: HardLimits
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
 
     private var profileIndex: Int? = null
@@ -168,7 +168,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
 
         activity?.let { activity ->
             val ps = profileFunction.buildProfileSwitch(profileStore, profileName, duration, percent, timeShift, eventTime)
-            val validity = ProfileSealed.PS(ps).isValid(resourceHelper.gs(R.string.careportal_profileswitch), activePlugin.activePump, config, resourceHelper, rxBus, hardLimits)
+            val validity = ProfileSealed.PS(ps).isValid(resourceHelper.gs(R.string.careportal_profileswitch), activePlugin.activePump, config, resourceHelper, rxBus, hardLimits, false)
             if (validity.isValid)
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal_profileswitch), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     profileFunction.createProfileSwitch(profileStore,
@@ -185,6 +185,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
                         ValueWithUnit.Percent(percent),
                         ValueWithUnit.Hour(timeShift).takeIf { timeShift != 0 },
                         ValueWithUnit.Minute(duration).takeIf { duration != 0 })
+                    if (percent == 90 && duration == 10) sp.putBoolean(R.string.key_objectiveuseprofileswitch, true)
                     if (isTT) {
                         disposable += repository.runTransactionForResult(
                             InsertAndCancelCurrentTemporaryTargetTransaction(

@@ -11,7 +11,7 @@ import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -40,7 +40,7 @@ class ProfileTest : TestBase() {
     @Mock lateinit var sp: SP
     @Mock lateinit var repository: AppRepository
 
-    private lateinit var rxBus: RxBusWrapper
+    private lateinit var rxBus: RxBus
     private lateinit var dateUtil: DateUtil
     private lateinit var testPumpPlugin: TestPumpPlugin
     private lateinit var hardLimits: HardLimits
@@ -59,7 +59,7 @@ class ProfileTest : TestBase() {
     fun prepare() {
         testPumpPlugin = TestPumpPlugin { AndroidInjector { } }
         dateUtil = DateUtil(context)
-        rxBus = RxBusWrapper(TestAapsSchedulers())
+        rxBus = RxBus(TestAapsSchedulers())
         hardLimits = HardLimits(aapsLogger, rxBus, sp, resourceHelper, context, repository)
         `when`(activePluginProvider.activePump).thenReturn(testPumpPlugin)
         `when`(resourceHelper.gs(R.string.profile_per_unit)).thenReturn("/U")
@@ -73,7 +73,7 @@ class ProfileTest : TestBase() {
 
         // Test valid profile
         var p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(okProfile), dateUtil)!!)
-        Assert.assertEquals(true, p.isValid("Test", testPumpPlugin, config, resourceHelper, rxBus, hardLimits).isValid)
+        Assert.assertEquals(true, p.isValid("Test", testPumpPlugin, config, resourceHelper, rxBus, hardLimits, false).isValid)
 //        Assert.assertEquals(true, p.log().contains("NS units: mmol"))
 //        JSONAssert.assertEquals(JSONObject(okProfile), p.toPureNsJson(dateUtil), false)
         Assert.assertEquals(5.0, p.dia, 0.01)
@@ -125,7 +125,7 @@ class ProfileTest : TestBase() {
 
         //Test basal profile below limit
         p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(belowLimitValidProfile), dateUtil)!!)
-        p.isValid("Test", testPumpPlugin, config, resourceHelper, rxBus, hardLimits)
+        p.isValid("Test", testPumpPlugin, config, resourceHelper, rxBus, hardLimits, false)
 
         // Test profile w/o units
         Assert.assertNull(pureProfileFromJson(JSONObject(noUnitsValidProfile), dateUtil))
@@ -158,6 +158,6 @@ class ProfileTest : TestBase() {
         // Test hour alignment
         testPumpPlugin.pumpDescription.is30minBasalRatesCapable = false
         p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(notAlignedBasalValidProfile), dateUtil)!!)
-        p.isValid("Test", testPumpPlugin, config, resourceHelper, rxBus, hardLimits)
+        p.isValid("Test", testPumpPlugin, config, resourceHelper, rxBus, hardLimits, false)
     }
 }

@@ -100,25 +100,17 @@ class SpinnerHelper(val spinner: Spinner) : AdapterView.OnItemSelectedListener {
         }
     }
 
-    override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         if (position != lastPosition && userTouched) {
             lastPosition = position
-            if (proxiedItemSelectedListener != null) {
-                proxiedItemSelectedListener!!.onItemSelected(
-                    parent, view, position, id
-                )
-            }
+            proxiedItemSelectedListener?.onItemSelected(parent, view, position, id)
         }
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
-        if (-1 != lastPosition) {
+        if (lastPosition != -1) {
             lastPosition = -1
-            if (proxiedItemSelectedListener != null) {
-                proxiedItemSelectedListener!!.onNothingSelected(
-                    parent
-                )
-            }
+            proxiedItemSelectedListener?.onNothingSelected(parent)
         }
     }
 
@@ -136,10 +128,14 @@ class SpinnerHelper(val spinner: Spinner) : AdapterView.OnItemSelectedListener {
 
     fun getItemAtPosition(position: Int): Any = spinner.getItemAtPosition(position)
 
-    fun getItemIdAtPosition(position: Int): Long  = spinner.getItemIdAtPosition(position)
+    fun getItemIdAtPosition(position: Int): Long = spinner.getItemIdAtPosition(position)
 
     val selectedItem: Any
-        get() = spinner.selectedItem
+        get() = try {
+            spinner.selectedItem
+        } catch (e: IndexOutOfBoundsException) {
+            adapter.getItem(adapter.count - 1)
+        }
     val selectedItemId: Long
         get() = spinner.selectedItemId
     val selectedItemPosition: Int

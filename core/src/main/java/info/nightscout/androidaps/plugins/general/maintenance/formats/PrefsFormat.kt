@@ -19,28 +19,25 @@ enum class PrefsMetadataKey(val key: String, @DrawableRes val icon: Int, @String
     ENCRYPTION("encryption", R.drawable.ic_meta_encryption, R.string.metadata_label_encryption);
 
     companion object {
+
         private val keyToEnumMap = HashMap<String, PrefsMetadataKey>()
 
         init {
-            for (value in values()) {
-                keyToEnumMap.put(value.key, value)
-            }
+            for (value in values()) keyToEnumMap[value.key] = value
         }
 
-        fun fromKey(key: String): PrefsMetadataKey? {
+        fun fromKey(key: String): PrefsMetadataKey? =
             if (keyToEnumMap.containsKey(key)) {
-                return keyToEnumMap.get(key)
+                keyToEnumMap[key]
             } else {
-                return null
+                null
             }
-        }
 
     }
 
     fun formatForDisplay(context: Context, value: String): String {
         return when (this) {
             FILE_FORMAT -> when (value) {
-                ClassicPrefsFormat.FORMAT_KEY         -> context.getString(R.string.metadata_format_old)
                 EncryptedPrefsFormat.FORMAT_KEY_ENC   -> context.getString(R.string.metadata_format_new)
                 EncryptedPrefsFormat.FORMAT_KEY_NOENC -> context.getString(R.string.metadata_format_debug)
                 else                                  -> context.getString(R.string.metadata_format_other)
@@ -60,6 +57,7 @@ typealias PrefMetadataMap = Map<PrefsMetadataKey, PrefMetadata>
 data class Prefs(val values: Map<String, String>, var metadata: PrefMetadataMap)
 
 interface PrefsFormat {
+
     fun savePreferences(file: File, prefs: Prefs, masterPassword: String? = null)
     fun loadPreferences(file: File, masterPassword: String? = null): Prefs
     fun loadMetadata(contents: String? = null): PrefMetadataMap

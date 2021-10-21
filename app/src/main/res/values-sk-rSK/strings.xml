@@ -717,6 +717,7 @@
     <string name="versionChecker">Kontrola verzie</string>
     <string name="old_version">stará verzia</string>
     <string name="very_old_version">veľmi stará verzia</string>
+    <string name="application_expired">Aplikácia expirovala</string>
     <string name="new_version_warning">Nová verzia je dostupná minimálne %1$d dní! Prepnutie na ochranu pred nízkou glykémiou po %2$d dňoch, vypnutie uzavretého okruhu po %3$d dňoch</string>
     <string name="twohours">2h</string>
     <string name="dexcom_app_patched">Dexcom aplikácia (upravená)</string>
@@ -857,6 +858,7 @@
     <string name="privacy_settings">Nastavenia súkromia</string>
     <string name="privacy_summary">Pokiaľ chcete byť upozornení na zlyhanie aplikácie, môžete zadať voliteľne e-mailovú adresu. Toto nie je automatizovaná služba. Vývojári vás budú kontaktovať v nebezpečných situáciách.</string>
     <string name="full_sync">Úplná synchronizácia</string>
+    <string name="full_sync_comment">Úplná synchronizácia? Môže to trvať niekoľko hodín a kým skončí, neuvidíte nové dáta v NS.</string>
     <string name="prime">Plnenie</string>
     <string name="ns_sync_options">Synchronizácia</string>
     <string name="ns_upload_summary">Profily, bolusy, sacharidy, dočasné bazály sú nahrávané do NS</string>

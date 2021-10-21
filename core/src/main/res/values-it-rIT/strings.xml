@@ -18,6 +18,7 @@
     <string name="connected">Connesso</string>
     <string name="disconnected">Disconnesso</string>
     <string name="disconnecting">Disconnessione</string>
+    <string name="waiting_for_disconnection">In attesa della disconnessione</string>
     <string name="androidaps_start">AndroidAPS avviato</string>
     <string name="formatinsulinunits1">%1$.1f U</string>
     <string name="formatinsulinunits">%1$.2f U</string>
@@ -173,12 +174,17 @@
     <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f U</b> Bol: <b>%3$.2f U</b> Bas: <b>%4$.2f U(%5$.0f%%)</b> CHO: <b>%6$.0f g</b>]]></string>
     <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> in <b>%3$d</b> giorni<br>]]></string>
     <!--    Translator-->
+    <string name="careportal">Portale</string>
     <string name="careportal_bgcheck">Controllo BG</string>
     <string name="careportal_mbg">BG manuale o Calibrazione</string>
     <string name="careportal_announcement">Avviso</string>
     <string name="careportal_note">Nota</string>
     <string name="careportal_question">Domanda</string>
     <string name="careportal_exercise">Esercizio fisico</string>
+    <string name="careportal_announcement_message">Avviso: %1$s</string>
+    <string name="careportal_note_message">Nota : %1$s</string>
+    <string name="careportal_question_message">Domanda : %1$s</string>
+    <string name="careportal_exercise_message">Esercizio : %1$s</string>
     <string name="careportal_pumpsitechange">Cambio posizione cannula</string>
     <string name="careportal_cgmsensorinsert">Inserimento sensore</string>
     <string name="careportal_cgmsensorstart">Avvio sensore</string>
@@ -196,6 +202,7 @@
     <string name="careportal_openapsoffline">OpenAPS Offline</string>
     <string name="careportal_pumpbatterychange">Cambio batteria micro</string>
     <string name="careportal_temporarytarget">Target temporaneo</string>
+    <string name="careportal_temporarytargetvalue">Valore target temporaneo</string>
     <string name="careportal_temporarytargetcancel">Cancellazione temp-target</string>
     <string name="boluswizard">Calcolatore</string>
     <string name="glucosetype_finger">Dito</string>
@@ -212,6 +219,8 @@
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
     <string name="record">Record</string>
+    <string name="reading_pump_history">Lettura storico micro</string>
+    <string name="pump_icon">Icona micro</string>
     <!--    Command-->
     <string name="connectiontimedout">Time out connessione</string>
     <!--    PumpEnactResult-->
@@ -283,6 +292,7 @@
     <string name="signature_verifier">Verificatore firma</string>
     <string name="running_invalid_version">Abbiamo rilevato che stai eseguendo una versione non valida. Loop disabilitato!</string>
     <string name="versionavailable">Versione %1$s disponibile</string>
+    <string name="version_expire">Versione: %1$s | Scadenza: %2$s</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Per favore riavvia il tuo telefono oppure fai ripartire AndroidAPS dalle impostazioni di sistema \naltrimenti Android APS non farà il log (è importante monitorare e verificare che gli algoritmi stiano funzionando correttamente)!</string>
     <!-- WeekdayPicker -->
@@ -399,6 +409,7 @@
     <string name="valueoutofrange">»%1$s« è fuori dai limiti consentiti</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f è fuori dai limiti consentiti</string>
     <string name="basal_value">Valore basale</string>
+    <string name="nsclient_version_does_not_match">La versione di NSClient non corrisponde ad AndroidAPS. Aggiorna.</string>
     <plurals name="days">
         <item quantity="one">%1$d giorno</item>
         <item quantity="other">%1$d giorni</item>

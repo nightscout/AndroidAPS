@@ -15,7 +15,7 @@ import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
@@ -38,7 +38,7 @@ public abstract class RileyLinkService extends DaggerService {
     @Inject protected AAPSLogger aapsLogger;
     @Inject protected SP sp;
     @Inject protected Context context;
-    @Inject protected RxBusWrapper rxBus;
+    @Inject protected RxBus rxBus;
     @Inject protected RileyLinkUtil rileyLinkUtil;
     @Inject protected HasAndroidInjector injector;
     @Inject protected ResourceHelper resourceHelper;

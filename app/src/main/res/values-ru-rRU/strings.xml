@@ -858,7 +858,6 @@ Context | Edit Context</string>
     <string name="email_address">Адрес электронной почты</string>
     <string name="privacy_settings">Настройки конфиденцальности</string>
     <string name="privacy_summary">Вы можете указать дополнительно адрес электронной почты, если хотите получать уведомления о сбоях приложения; что является не автоматизированной рассылкой, а способом связи с разработчиками в опасных ситуациях.</string>
-    <string name="full_sync">Полная синхронизация</string>
     <string name="prime">Заполнение инфузионной системы</string>
     <string name="ns_sync_options">Синхронизация</string>
     <string name="ns_upload_summary">Профили, болюсы, углеводы, временные базалы закачиваются в NS</string>
