@@ -882,4 +882,9 @@ Unerwartetes Verhalten.</string>
     <string name="sms_timeout_while_wating">Zeitüberschreitung beim Warten auf das Ende der vorherigen Kommunikation mit der Pumpe</string>
     <string name="smscommunicator_another_bolus_in_queue">In der Warteschlange befindet sich ein weiterer Bolus. Bitte später erneut versuchen.</string>
     <string name="calculation_in_progress">Kalkulation wird gerade durchgeführt</string>
+    <string name="missing_profile_name">Fehlender Profilname</string>
+    <string name="error_in_ic_values">Fehler in IC-Vaules</string>
+    <string name="error_in_basal_values">Fehler in den Basalwerten</string>
+    <string name="error_in_target_values">Fehler in den Zielwerten</string>
+    <string name="error_in_isf_values">Fehler in ISF-Werten</string>
 </resources>
