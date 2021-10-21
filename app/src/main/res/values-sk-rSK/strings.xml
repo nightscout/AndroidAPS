@@ -881,4 +881,9 @@
     <string name="sms_timeout_while_wating">Vypršal časový limit pri čakaní na dokončenie predchádzajúcej komunikácie s pumpou</string>
     <string name="smscommunicator_another_bolus_in_queue">Vo fronte je ďalší bolus. Skúste to znovu neskôr.</string>
     <string name="calculation_in_progress">Prebieha výpočet</string>
+    <string name="missing_profile_name">Chýba názov profilu</string>
+    <string name="error_in_ic_values">Chyba v hodnotách IC prevodov</string>
+    <string name="error_in_basal_values">Chyba v hodnotách bazálu</string>
+    <string name="error_in_target_values">Chyba v cieľových hodnotách</string>
+    <string name="error_in_isf_values">Chyba v hodnotách citlivosti</string>
 </resources>
