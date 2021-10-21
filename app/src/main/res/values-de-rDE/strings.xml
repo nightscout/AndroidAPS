@@ -665,7 +665,6 @@
     <string name="error_adding_treatment_title">Behandlungsdaten unvollständig</string>
     <string name="maintenance_settings">Wartungseinstellungen</string>
     <string name="maintenance_email">E-Mail</string>
-    <string name="maintenance_encrypt_exported_prefs">Exportierte Einstellungen verschlüsseln</string>
     <string name="maintenance_amount">Anzahl der zu sendenden Logs</string>
     <string name="maintenance">Wartung</string>
     <string name="maintenance_shortname">WRTNG</string>
