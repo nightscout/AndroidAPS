@@ -23,7 +23,7 @@ class ErosHistory(private val dao: ErosHistoryRecordDao) {
     }
 
     fun create(historyRecord: ErosHistoryRecordEntity?): Long =
-        Single.just(dao.insert(historyRecord!!))
+        Single.fromCallable { dao.insert(historyRecord!!) }
             .subscribeOn(Schedulers.io())
             .blockingGet()
 }
