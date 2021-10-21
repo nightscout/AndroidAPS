@@ -666,7 +666,6 @@ Eversense-appen.</string>
     <string name="error_adding_treatment_title">Behandlingsdata ofullständigt</string>
     <string name="maintenance_settings">Underhållsinställningar</string>
     <string name="maintenance_email">e-postmottagare</string>
-    <string name="maintenance_encrypt_exported_prefs">Kryptera exporterade inställningar</string>
     <string name="maintenance_amount">Antal loggar att skicka</string>
     <string name="maintenance">Underhåll</string>
     <string name="maintenance_shortname">UH</string>
