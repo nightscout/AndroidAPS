@@ -24,6 +24,7 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.JsonHelper
+import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -104,25 +105,62 @@ class LocalProfilePlugin @Inject constructor(
     fun currentProfile(): SingleProfile? = if (numOfProfiles > 0 && currentProfileIndex < numOfProfiles) profiles[currentProfileIndex] else null
 
     @Synchronized
-    fun isValidEditState(): Boolean {
+    fun isValidEditState(activity: FragmentActivity?): Boolean {
         val pumpDescription = activePlugin.activePump.pumpDescription
         with(profiles[currentProfileIndex]) {
-            if (dia < hardLimits.minDia() || dia > hardLimits.maxDia()) return false
-            if (name.isNullOrEmpty()) return false
-            if (blockFromJsonArray(ic, dateUtil)?.any { it.amount < hardLimits.minIC() || it.amount > hardLimits.maxIC() } != false) return false
-            if (blockFromJsonArray(basal, dateUtil)?.any { it.amount < pumpDescription.basalMinimumRate || it.amount > 10.0 } != false) return false
+            if (dia < hardLimits.minDia() || dia > hardLimits.maxDia()) {
+                ToastUtils.errorToast(activity,resourceHelper.gs(R.string.value_out_of_hard_limits, resourceHelper.gs(info.nightscout.androidaps.core.R.string.profile_dia), dia))
+                return false
+            }
+            if (name.isNullOrEmpty()){
+                ToastUtils.errorToast(activity,resourceHelper.gs(R.string.missing_profile_name))
+                return false
+            }
+            if (blockFromJsonArray(ic, dateUtil)?.any { it.amount < hardLimits.minIC() || it.amount > hardLimits.maxIC() } != false) {
+                ToastUtils.errorToast(activity,resourceHelper.gs(R.string.error_in_ic_values))
+                return false
+            }
             val low = blockFromJsonArray(targetLow, dateUtil)
             val high = blockFromJsonArray(targetHigh, dateUtil)
             if (profileFunction.getUnits() == GlucoseUnit.MGDL) {
-                if (low?.any { it.amount < HardLimits.VERY_HARD_LIMIT_TARGET_BG[0].toDouble() || it.amount > HardLimits.VERY_HARD_LIMIT_TARGET_BG[1].toDouble() } != false) return false
-                if (high?.any { it.amount < HardLimits.VERY_HARD_LIMIT_TARGET_BG[0].toDouble() || it.amount > HardLimits.VERY_HARD_LIMIT_TARGET_BG[1].toDouble() } != false) return false
-                if (blockFromJsonArray(isf, dateUtil)?.any { it.amount < HardLimits.MIN_ISF || it.amount > HardLimits.MAX_ISF } != false) return false
+                if (blockFromJsonArray(isf, dateUtil)?.any { it.amount < HardLimits.MIN_ISF || it.amount > HardLimits.MAX_ISF } != false) {
+                    ToastUtils.errorToast(activity,resourceHelper.gs(R.string.error_in_isf_values))
+                    return false
+                }
+                if (blockFromJsonArray(basal, dateUtil)?.any { it.amount < pumpDescription.basalMinimumRate || it.amount > 10.0 } != false)  {
+                    ToastUtils.errorToast(activity,resourceHelper.gs(R.string.error_in_basal_values))
+                    return false
+                }
+                if (low?.any { it.amount < HardLimits.VERY_HARD_LIMIT_TARGET_BG[0].toDouble() || it.amount > HardLimits.VERY_HARD_LIMIT_TARGET_BG[1].toDouble() } != false) {
+                    ToastUtils.errorToast(activity,resourceHelper.gs(R.string.error_in_target_values))
+                    return false
+                }
+                if (high?.any { it.amount < HardLimits.VERY_HARD_LIMIT_TARGET_BG[0].toDouble() || it.amount > HardLimits.VERY_HARD_LIMIT_TARGET_BG[1].toDouble() } != false) {
+                    ToastUtils.errorToast(activity,resourceHelper.gs(R.string.error_in_target_values))
+                    return false
+                }
             } else {
-                if (low?.any { it.amount < Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_TARGET_BG[0].toDouble(), GlucoseUnit.MMOL) || it.amount > Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_TARGET_BG[1].toDouble(), GlucoseUnit.MMOL) } != false) return false
-                if (high?.any { it.amount < Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_TARGET_BG[0].toDouble(), GlucoseUnit.MMOL) || it.amount > Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_TARGET_BG[1].toDouble(), GlucoseUnit.MMOL) } != false) return false
-                if (blockFromJsonArray(isf, dateUtil)?.any { it.amount < Profile.fromMgdlToUnits(HardLimits.MIN_ISF, GlucoseUnit.MMOL) || it.amount > Profile.fromMgdlToUnits(HardLimits.MAX_ISF, GlucoseUnit.MMOL) } != false) return false
+                if (blockFromJsonArray(isf, dateUtil)?.any { it.amount < Profile.fromMgdlToUnits(HardLimits.MIN_ISF, GlucoseUnit.MMOL) || it.amount > Profile.fromMgdlToUnits(HardLimits.MAX_ISF, GlucoseUnit.MMOL) } != false) {
+                    ToastUtils.errorToast(activity,resourceHelper.gs(R.string.error_in_isf_values))
+                    return false
+                }
+                if (blockFromJsonArray(basal, dateUtil)?.any { it.amount < pumpDescription.basalMinimumRate || it.amount > 10.0 } != false)  {
+                    ToastUtils.errorToast(activity,resourceHelper.gs(R.string.error_in_basal_values))
+                    return false
+                }
+                if (low?.any { it.amount < Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_TARGET_BG[0].toDouble(), GlucoseUnit.MMOL) || it.amount > Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_TARGET_BG[1].toDouble(), GlucoseUnit.MMOL) } != false) {
+                    ToastUtils.errorToast(activity,resourceHelper.gs(R.string.error_in_target_values))
+                    return false
+                }
+                if (high?.any { it.amount < Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_TARGET_BG[0].toDouble(), GlucoseUnit.MMOL) || it.amount > Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_TARGET_BG[1].toDouble(), GlucoseUnit.MMOL) } != false) {
+                    ToastUtils.errorToast(activity,resourceHelper.gs(R.string.error_in_target_values))
+                    return false
+                }
             }
-            for (i in low.indices) if (low[i].amount > high[i].amount) return false
+            for (i in low.indices) if (low[i].amount > high[i].amount) {
+                ToastUtils.errorToast(activity,resourceHelper.gs(R.string.error_in_target_values))
+                return false
+            }
         }
         return true
     }

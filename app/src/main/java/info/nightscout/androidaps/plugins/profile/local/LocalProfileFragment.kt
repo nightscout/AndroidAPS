@@ -221,7 +221,7 @@ class LocalProfileFragment : DaggerFragment() {
         }
 
         binding.save.setOnClickListener {
-            if (!localProfilePlugin.isValidEditState()) {
+            if (!localProfilePlugin.isValidEditState(activity)) {
                 return@setOnClickListener  //Should not happen as saveButton should not be visible if not valid
             }
             uel.log(Action.STORE_PROFILE, Sources.LocalProfile, ValueWithUnit.SimpleString(localProfilePlugin.currentProfile()?.name
@@ -261,7 +261,7 @@ class LocalProfileFragment : DaggerFragment() {
 
     private fun updateGUI() {
         if (_binding == null) return
-        val isValid = localProfilePlugin.isValidEditState()
+        val isValid = localProfilePlugin.isValidEditState(activity)
         val isEdited = localProfilePlugin.isEdited
         if (isValid) {
             this.view?.setBackgroundColor(resourceHelper.gc(R.color.ok_background))
