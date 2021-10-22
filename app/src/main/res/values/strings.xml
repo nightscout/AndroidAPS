@@ -844,6 +844,7 @@
     <string name="resettodefaults">Reset to defaults</string>
     <string name="nsmalfunction">NSClient malfunction. Consider NS and NSClient restart.</string>
     <string name="time_offset">Time offset</string>
+    <string name="bolus_reminder">Remind to bolus later</string>
     <string name="key_aps_mode" translatable="false">aps_mode</string>
     <string name="setupwizard_preferred_aps_mode">Preferred APS mode</string>
     <string name="treatments_wizard_total_label">Total</string>
@@ -1066,6 +1067,12 @@
     <string name="enablebolusadvisor_summary">Use reminder to start eating later instead of wizard result during high glycemia ("pre-bolus")</string>
     <string name="time_to_eat">Time to eat!\nRun Bolus wizard and do calculation again.</string>
     <string name="timetoeat">Time to eat</string>
+    <string name="bolusreminder">Bolus reminder</string>
+    <string name="key_usebolusreminder" translatable="false">use_bolus_reminder</string>
+    <string name="enablebolusreminder">Enable bolus reminder</string>
+    <string name="enablebolusreminder_summary">Use reminder to bolus later with wizard
+        ("post-bolus")</string>
+    <string name="time_to_bolus">Time to bolus!\nRun Bolus wizard and do calculation again.</string>
     <string name="fabric_upload_disabled">Crash logs upload disabled!</string>
     <string name="graph_menu_divider_header">Graph</string>
     <string name="chart_menu">Chart menu</string>

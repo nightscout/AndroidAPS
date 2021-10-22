@@ -234,6 +234,40 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/bolusReminder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:visibility="gone"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="@string/bolus_reminder"
+                android:gravity="center_vertical"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_access_alarm_24dp" />
+
+            <CheckBox
+                android:id="@+id/bolusReminderCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:checked="false"
+                android:padding="2dp" />
+        </LinearLayout>
+
         <include
             android:id="@+id/notes_layout"
             layout="@layout/notes" />

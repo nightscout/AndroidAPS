@@ -502,6 +502,12 @@
                 android:summary="@string/enablesuperbolus_summary"
                 android:title="@string/enablesuperbolus" />
 
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/key_usebolusreminder"
+                android:summary="@string/enablebolusreminder_summary"
+                android:title="@string/enablebolusreminder" />
+
         </androidx.preference.PreferenceScreen>
 
     </PreferenceCategory>
