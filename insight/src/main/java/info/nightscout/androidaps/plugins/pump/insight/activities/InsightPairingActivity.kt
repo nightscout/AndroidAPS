@@ -164,7 +164,7 @@ class InsightPairingActivity : NoSplashAppCompatActivity(), InsightConnectionSer
             val action = intent.action
             if (action == BluetoothAdapter.ACTION_DISCOVERY_FINISHED) BluetoothAdapter.getDefaultAdapter().startDiscovery() else if (action == BluetoothDevice.ACTION_FOUND) {
                 val bluetoothDevice = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
-                deviceAdapter.addDevice(bluetoothDevice)
+                bluetoothDevice?.let { deviceAdapter.addDevice(it) }
             }
         }
     }

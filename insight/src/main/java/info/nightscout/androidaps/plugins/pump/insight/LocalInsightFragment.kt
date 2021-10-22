@@ -12,7 +12,7 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.insight.R
 import info.nightscout.androidaps.insight.databinding.LocalInsightFragmentBinding
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.*
 import info.nightscout.androidaps.plugins.pump.insight.events.EventLocalInsightUpdateGUI
 import info.nightscout.androidaps.queue.Callback
@@ -29,7 +29,7 @@ class LocalInsightFragment : DaggerFragment(), View.OnClickListener {
 
     @Inject lateinit var localInsightPlugin: LocalInsightPlugin
     @Inject lateinit var  commandQueue: CommandQueueProvider
-    @Inject lateinit var  rxBus: RxBusWrapper
+    @Inject lateinit var  rxBus: RxBus
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var dateUtil: DateUtil
