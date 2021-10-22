@@ -51,6 +51,8 @@ abstract class Action(val injector: HasAndroidInjector) {
             return when (type) {
                 ActionAlarm::class.java.name,              // backward compatibility
                 ActionAlarm::class.java.simpleName                -> ActionAlarm(injector).fromJSON(data.toString())
+                ActionCarePortalEvent::class.java.name,
+                ActionCarePortalEvent::class.java.simpleName      -> ActionCarePortalEvent(injector).fromJSON(data.toString())
                 ActionDummy::class.java.name,
                 ActionDummy::class.java.simpleName                -> ActionDummy(injector).fromJSON(data.toString())
                 ActionLoopDisable::class.java.name,

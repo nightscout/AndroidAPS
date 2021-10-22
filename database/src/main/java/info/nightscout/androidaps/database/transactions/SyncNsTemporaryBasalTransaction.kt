@@ -7,7 +7,9 @@ import kotlin.math.abs
 /**
  * Sync the Temporary Basal from NS
  */
-class SyncNsTemporaryBasalTransaction(private val temporaryBasal: TemporaryBasal, private val invalidateByNsOnly: Boolean) : Transaction<SyncNsTemporaryBasalTransaction.TransactionResult>() {
+class SyncNsTemporaryBasalTransaction(
+    private val temporaryBasal: TemporaryBasal
+) : Transaction<SyncNsTemporaryBasalTransaction.TransactionResult>() {
 
     override fun run(): TransactionResult {
         val result = TransactionResult()
@@ -26,10 +28,13 @@ class SyncNsTemporaryBasalTransaction(private val temporaryBasal: TemporaryBasal
                     database.temporaryBasalDao.updateExistingEntry(current)
                     result.invalidated.add(current)
                 }
+                if (current.duration != temporaryBasal.duration) {
+                    current.duration = temporaryBasal.duration
+                    database.temporaryBasalDao.updateExistingEntry(current)
+                    result.updatedDuration.add(current)
+                }
                 return result
             }
-
-            if (invalidateByNsOnly) return result
 
             // not known nsId
             val running = database.temporaryBasalDao.getTemporaryBasalActiveAt(temporaryBasal.timestamp).blockingGet()
@@ -57,6 +62,7 @@ class SyncNsTemporaryBasalTransaction(private val temporaryBasal: TemporaryBasal
     class TransactionResult {
 
         val updatedNsId = mutableListOf<TemporaryBasal>()
+        val updatedDuration = mutableListOf<TemporaryBasal>()
         val inserted = mutableListOf<TemporaryBasal>()
         val invalidated = mutableListOf<TemporaryBasal>()
         val ended = mutableListOf<TemporaryBasal>()

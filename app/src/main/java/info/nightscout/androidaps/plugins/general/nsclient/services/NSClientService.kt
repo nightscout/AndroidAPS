@@ -20,7 +20,7 @@ import info.nightscout.androidaps.interfaces.DataSyncSelector
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.food.FoodPlugin.FoodWorker
 import info.nightscout.androidaps.plugins.general.nsclient.*
 import info.nightscout.androidaps.plugins.general.nsclient.acks.NSAddAck
@@ -44,10 +44,8 @@ import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.services.Intents
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.JsonHelper.safeGetLong
 import info.nightscout.androidaps.utils.JsonHelper.safeGetString
 import info.nightscout.androidaps.utils.JsonHelper.safeGetStringAllowNull
-import info.nightscout.androidaps.utils.T.Companion.days
 import info.nightscout.androidaps.utils.T.Companion.mins
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -71,7 +69,7 @@ class NSClientService : DaggerService() {
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var nsSettingsStatus: NSSettingsStatus
     @Inject lateinit var nsDeviceStatus: NSDeviceStatus
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var sp: SP
     @Inject lateinit var fabricPrivacy: FabricPrivacy
@@ -491,30 +489,13 @@ class NSClientService : DaggerService() {
                     }
                     if (data.has("treatments")) {
                         val treatments = data.getJSONArray("treatments")
-                        val removedTreatments = JSONArray()
                         val addedOrUpdatedTreatments = JSONArray()
                         if (treatments.length() > 0) rxBus.send(EventNSClientNewLog("DATA", "received " + treatments.length() + " treatments"))
                         for (index in 0 until treatments.length()) {
                             val jsonTreatment = treatments.getJSONObject(index)
                             val action = safeGetStringAllowNull(jsonTreatment, "action", null)
-                            val mills = safeGetLong(jsonTreatment, "mills")
-                            if (action == null) addedOrUpdatedTreatments.put(jsonTreatment) else if (action == "update") addedOrUpdatedTreatments.put(jsonTreatment) else if (action == "remove" && mills > dateUtil.now() - days(1).msecs()) // handle 1 day old deletions only
-                                removedTreatments.put(jsonTreatment)
-                        }
-                        if (removedTreatments.length() > 0) {
-                            dataWorker.enqueue(
-                                OneTimeWorkRequest.Builder(NSClientRemoveWorker::class.java)
-                                    .setInputData(dataWorker.storeInputData(removedTreatments, null))
-                                    .build())
-                            if (sp.getBoolean(R.string.key_nsclient_localbroadcasts, false)) {
-                                val bundle = Bundle()
-                                bundle.putString("treatments", removedTreatments.toString())
-                                bundle.putBoolean("delta", isDelta)
-                                val intent = Intent(Intents.ACTION_REMOVED_TREATMENT)
-                                intent.putExtras(bundle)
-                                intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
-                                broadcast(intent)
-                            }
+                            if (action == null) addedOrUpdatedTreatments.put(jsonTreatment)
+                            else if (action == "update") addedOrUpdatedTreatments.put(jsonTreatment)
                         }
                         if (addedOrUpdatedTreatments.length() > 0) {
                             dataWorker.enqueue(
@@ -602,7 +583,8 @@ class NSClientService : DaggerService() {
             message.put("_id", _id)
             message.put("data", data)
             socket?.emit("dbUpdate", message, NSUpdateAck("dbUpdate", _id, aapsLogger, rxBus, originalObject))
-            rxBus.send(EventNSClientNewLog("DBUPDATE $collection", "Sent " + originalObject.javaClass.simpleName + " " + _id + " " + progress))
+            rxBus.send(EventNSClientNewLog("DBUPDATE $collection", "Sent " + originalObject.javaClass.simpleName + " " +
+                "" + _id + " " + data + progress))
         } catch (e: JSONException) {
             aapsLogger.error("Unhandled exception", e)
         }

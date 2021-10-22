@@ -33,7 +33,9 @@
     <string name="key_absorption_category_settings" translatable="false">absorption_category_settings</string>
     <string name="key_insulin_oref_peak_settings" translatable="false">insulin_oref_peak_settings</string>
     <string name="key_ns_temporary_target_last_synced_id" translatable="false">ns_temporary_target_last_sync</string>
+    <string name="key_ns_temporary_target_new_data_id" translatable="false">temporary_target_new_data_id</string>
     <string name="key_ns_glucose_value_last_synced_id" translatable="false">ns_glucose_value_last_sync</string>
+    <string name="key_ns_glucose_value_new_data_id" translatable="false">ns_glucose_value_new_data_id</string>
     <string name="key_ns_food_last_synced_id" translatable="false">ns_food_last_sync</string>
     <string name="key_ns_therapy_event_last_synced_id" translatable="false">ns_therapy_event_last_sync</string>
     <string name="key_smscommunicator_remotebolusmindistance" translatable="false">smscommunicator_remotebolusmindistance</string>
@@ -44,7 +46,9 @@
     <string name="key_ns_bolus_last_synced_id" translatable="false">ns_bolus_last_synced_id</string>
     <string name="key_ns_device_status_last_synced_id" translatable="false">ns_device_status_last_synced_id</string>
     <string name="key_ns_temporary_basal_last_synced_id" translatable="false">ns_temporary_basal_last_synced_id</string>
+    <string name="key_ns_temporary_basal_new_data_id" translatable="false">ns_temporary_basal_new_data_id</string>
     <string name="key_ns_extended_bolus_last_synced_id" translatable="false">ns_extended_bolus_last_synced_id</string>
+    <string name="key_ns_extended_bolus_new_data_id" translatable="false">ns_extended_bolus_new_data_id</string>
     <string name="key_ns_profile_switch_last_synced_id" translatable="false">profile_switch_last_synced_id</string>
     <string name="key_ns_effective_profile_switch_last_synced_id" translatable="false">ns_effective_profile_switch_last_synced_id</string>
     <string name="key_ns_offline_event_last_synced_id" translatable="false">ns_offline_event_last_synced_id</string>
@@ -130,7 +134,6 @@
     <string name="overview">Overview</string>
     <string name="treatments">Treatments</string>
     <string name="virtualpump">Virtual Pump</string>
-    <string name="careportal">Careportal</string>
 
 
     <string name="configbuilder_pump">Pump</string>
@@ -320,7 +323,7 @@
     <string name="ongoingnotificaction">Ongoing Notification</string>
     <string name="old_data">OLD DATA</string>
     <string name="sms_minago">%1$dmin ago</string>
-    <string name="localprofile">Local Profile</string>
+    <string name="localprofile">Profile</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Array of %1$d elements.\nActual value:</string>
     <string name="openapsma_autosensdata_label">Autosens data</string>
@@ -605,6 +608,7 @@
     <string name="key_dexcomg5_xdripupload" translatable="false">dexcomg5_xdripupload</string>
     <string name="dexcomg5_xdripupload_summary">In xDrip+ select 640g/Eversense data source</string>
     <string name="nsclientbg">NSClient BG</string>
+    <string name="nsclientbgshort">NS BG</string>
     <string name="overview_editquickwizard_usebg">BG calculation</string>
     <string name="overview_editquickwizard_usebolusiob">Bolus IOB calculation</string>
     <string name="overview_editquickwizard_usebasaliob">Basal IOB calculation</string>
@@ -823,8 +827,6 @@
     <string name="error_adding_treatment_title">Treatment data incomplete</string>
     <string name="maintenance_settings">Maintenance Settings</string>
     <string name="maintenance_email">Email recipient</string>
-    <string name="key_maintenance_encrypt_exported_prefs" translatable="false">maintenance_encrypt_exported_prefs</string>
-    <string name="maintenance_encrypt_exported_prefs">Encrypt exported settings</string>
     <string name="key_maintenance_logs_email" translatable="false">maintenance_logs_email</string>
     <string name="key_maintenance_logs_amount" translatable="false">maintenance_logs_amount</string>
     <string name="key_logshipper_amount" translatable="false">logshipper_amount</string>
@@ -902,6 +904,7 @@
 
     <string name="old_version">old version</string>
     <string name="very_old_version">very old version</string>
+    <string name="application_expired">Application expired</string>
     <string name="new_version_warning">New version for at least %1$d days available! Fallback to LGS after %2$d days, loop will be disabled after %3$d days</string>
     <string name="twohours">2h</string>
 
@@ -942,7 +945,7 @@
     <string name="clone_label">Clone</string>
     <string name="saveorresetchangesfirst">Save or reset current changes first</string>
     <string name="deletecurrentprofile">Delete current profile?</string>
-    <string name="copytolocalprofile">Create new local profile from this profile?</string>
+    <string name="copytolocalprofile">Create new profile from this profile?</string>
     <string name="profilenamecontainsdot">Profile name contains dots.\nThis is not supported by NS.\nProfile is not uploaded to NS.</string>
     <string name="low_mark_comment">Lower value of in range area (display only)</string>
     <string name="high_mark_comment">Higher value of in range area (display only)</string>
@@ -1049,7 +1052,7 @@
 
     <string name="setupwizard_pump_riley_link_status">RileyLink status:</string>
     <string name="filter">Filter</string>
-    <string name="copytolocalprofile_invalid">Unable to create local profile. Profile is invalid.</string>
+    <string name="copytolocalprofile_invalid">Unable to create profile. Profile is invalid.</string>
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
     <string name="key_smscommunicator_report_pump_ureachable" translatable="false">smscommunicator_report_pump_ureachable</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Send SMS if unreachable pump event is triggered</string>
@@ -1075,7 +1078,8 @@
     <string name="email_address">Email address</string>
     <string name="privacy_settings">Privacy setting</string>
     <string name="privacy_summary">You can provide optional email address if you want to be notified about app crashes. This is not an automated service. You will be contacted by developers in dangerous situations.</string>
-    <string name="full_sync">Full sync</string>
+    <string name="full_sync">Full synchronization</string>
+    <string name="full_sync_comment">Full synchronization? It may take many hours and until finish you\'ll not see new data in NS.</string>
     <string name="prime">Prime</string>
     <string name="ns_sync_options">Synchronization</string>
     <string name="key_ns_upload" translatable="false">ns_upload</string>
@@ -1083,7 +1087,7 @@
     <string name="ns_upload">Upload data to NS</string>
     <string name="key_ns_receive_profile_store" translatable="false">ns_receive_profile_store</string>
     <string name="ns_receive_profile_store">Receive profile store</string>
-    <string name="ns_receive_profile_store_summary">Synchronize profiles from NS profile editor to Local profile</string>
+    <string name="ns_receive_profile_store_summary">Synchronize profiles from NS profile editor</string>
     <string name="key_ns_receive_temp_target" translatable="false">ns_receive_temp_target</string>
     <string name="ns_receive_temp_target">Receive temporary targets</string>
     <string name="ns_receive_temp_target_summary">Accept temporary targets entered through NS or NSClient</string>
@@ -1108,5 +1112,10 @@
     <string name="sms_timeout_while_wating">Timeout while waiting for finish of previous pump communication</string>
     <string name="smscommunicator_another_bolus_in_queue">There is another bolus in queue. Try again later.</string>
     <string name="calculation_in_progress">Calculation in progress</string>
+    <string name="missing_profile_name">Missing profile name</string>
+    <string name="error_in_ic_values">Error in IC vaules</string>
+    <string name="error_in_basal_values">Error in basal values</string>
+    <string name="error_in_target_values">Error in target values</string>
+    <string name="error_in_isf_values">Error in ISF values</string>
 
 </resources>

@@ -63,6 +63,7 @@
     <string name="key_adult" translatable="false">adult</string>
     <string name="key_resistantadult" translatable="false">resistantadult</string>
     <string name="key_pregnant" translatable="false">pregnant</string>
+    <string name="key_app_expiration" translatable="false">app_expiration</string>
 
     <!--    General-->
     <string name="refresh">Refresh</string>
@@ -81,6 +82,7 @@
     <string name="connected">Connected</string>
     <string name="disconnected">Disconnected</string>
     <string name="disconnecting">Disconnecting</string>
+    <string name="waiting_for_disconnection">Waiting for disconnection</string>
     <string name="androidaps_start">AndroidAPS started</string>
     <string name="formatinsulinunits1">%1$.1f U</string>
     <string name="formatinsulinunits">%1$.2f U</string>
@@ -249,12 +251,17 @@
     <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> in <b>%3$d</b> days<br>]]></string>
 
     <!--    Translator-->
+    <string name="careportal">Careportal</string>
     <string name="careportal_bgcheck">BG Check</string>
     <string name="careportal_mbg">Manual BG or Calibration</string>
     <string name="careportal_announcement">Announcement</string>
     <string name="careportal_note">Note</string>
     <string name="careportal_question">Question</string>
     <string name="careportal_exercise">Exercise</string>
+    <string name="careportal_announcement_message">Announcement : %1$s</string>
+    <string name="careportal_note_message">Note : %1$s</string>
+    <string name="careportal_question_message">Question : %1$s</string>
+    <string name="careportal_exercise_message">Exercise : %1$s</string>
     <string name="careportal_pumpsitechange">Pump Site Change</string>
     <string name="careportal_cgmsensorinsert">CGM Sensor Insert</string>
     <string name="careportal_cgmsensorstart">CGM Sensor Start</string>
@@ -272,6 +279,7 @@
     <string name="careportal_openapsoffline">OpenAPS Offline</string>
     <string name="careportal_pumpbatterychange">Pump Battery Change</string>
     <string name="careportal_temporarytarget">Temporary target</string>
+    <string name="careportal_temporarytargetvalue">Temporary target value</string>
     <string name="careportal_temporarytargetcancel">Temporary target cancel</string>
     <string name="boluswizard">Bolus wizard</string>
     <string name="glucosetype_finger">Finger</string>
@@ -288,6 +296,8 @@
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
     <string name="record">Record</string>
+    <string name="reading_pump_history">Reading pump history</string>
+    <string name="pump_icon">Pump icon</string>
 
     <!--    Command-->
     <string name="connectiontimedout">Connection timed out</string>
@@ -335,7 +345,6 @@
     <string name="metadata_label_device_name">Exporting device patient name</string>
     <string name="metadata_label_device_model">Exporting device model</string>
     <string name="metadata_label_encryption">File encryption</string>
-    <string name="metadata_format_old">Old export format</string>
     <string name="metadata_format_new">New encrypted format</string>
     <string name="metadata_format_debug">New debug format (unencrypted)</string>
     <string name="metadata_format_other">Unknown export format</string>
@@ -365,12 +374,14 @@
 
     <!-- VersionChecker -->
     <string name="key_last_time_this_version_detected" translatable="false">last_time_this_version_detected</string>
-    <string name="key_last_versionchecker_warning" translatable="false">last_versionchecker_waring</string>
+    <string name="key_last_versionchecker_warning" translatable="false">last_versionchecker_warning</string>
+    <string name="key_last_expired_versionchecker_warning" translatable="false">last_expired_version_checker_warning</string>
     <string name="key_last_versionchecker_plugin_warning" translatable="false">last_versionchecker_plugin_waring</string>
     <string name="key_last_revoked_certs_check" translatable="false">last_revoked_certs_check</string>
     <string name="signature_verifier">Signature verifier</string>
     <string name="running_invalid_version">We have detected that you are running an invalid version. Loop disabled!</string>
     <string name="versionavailable">Version %1$s available</string>
+    <string name="version_expire">Version %1$s expire on %2$s</string>
 
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Please reboot your phone or restart AndroidAPS from the System Settings \notherwise Android APS will not have logging (important to track and verify that the algorithms are working correctly)!</string>
@@ -492,6 +503,7 @@
     <string name="valueoutofrange">»%1$s« is out of hard limits</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f is out of hard limits</string>
     <string name="basal_value">Basal value</string>
+    <string name="nsclient_version_does_not_match">NSClient version doesn\'t match to AndroidAPS. Please update.</string>
 
     <plurals name="days">
         <item quantity="one">%1$d day</item>

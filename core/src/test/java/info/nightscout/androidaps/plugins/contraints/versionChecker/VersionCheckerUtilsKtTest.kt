@@ -3,18 +3,25 @@ package info.nightscout.androidaps.plugins.contraints.versionChecker
 import android.content.Context
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.interfaces.Config
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
+import info.nightscout.androidaps.plugins.constraints.versionChecker.numericVersionPart
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
+import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.anyString
+import org.mockito.Mockito.times
+import org.mockito.Mockito.verify
 
-class VersionCheckerUtilsKtTest : TestBase() {
+@Suppress("SpellCheckingInspection") class VersionCheckerUtilsKtTest : TestBase() {
 
     private lateinit var versionCheckerUtils: VersionCheckerUtils
 
@@ -23,11 +30,11 @@ class VersionCheckerUtilsKtTest : TestBase() {
     @Mock lateinit var context: Context
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
     @Mock lateinit var config: Config
-
-    private val rxBus = RxBusWrapper(aapsSchedulers)
+    @Mock lateinit var dateUtil: DateUtil
+    @Mock lateinit var rxBus: RxBus
 
     @Before fun setup() {
-        versionCheckerUtils = VersionCheckerUtils(aapsLogger, sp, resourceHelper, rxBus, config, context, receiverStatusStore)
+        versionCheckerUtils = VersionCheckerUtils(aapsLogger, sp, resourceHelper, rxBus, config, receiverStatusStore, dateUtil)
     }
 
     @Test
@@ -65,68 +72,66 @@ class VersionCheckerUtilsKtTest : TestBase() {
         assertArrayEquals(intArrayOf(67, 8, 31, 5), versionCheckerUtils.versionDigits("67.8.31.5.153.4.2"))
     }
 
-    /*
-        @Test
-        fun `should keep 2 digit version`() {
-            assertEquals("1.2", "1.2".numericVersionPart())
-        }
+    @Test
+    fun `should keep 2 digit version`() {
+        assertEquals("1.2", "1.2".numericVersionPart())
+    }
 
-        @Test
-        fun `should keep 3 digit version`() {
-            assertEquals("1.2.3", "1.2.3".numericVersionPart())
-        }
+    @Test
+    fun `should keep 3 digit version`() {
+        assertEquals("1.2.3", "1.2.3".numericVersionPart())
+    }
 
-        @Test
-        fun `should keep 4 digit version`() {
-            assertEquals("1.2.3.4", "1.2.3.4".numericVersionPart())
-        }
+    @Test
+    fun `should keep 4 digit version`() {
+        assertEquals("1.2.3.4", "1.2.3.4".numericVersionPart())
+    }
 
-        @Test
-        fun `should strip 2 digit version RC`() {
-            assertEquals("1.2", "1.2-RC1".numericVersionPart())
-        }
+    @Test
+    fun `should strip 2 digit version RC`() {
+        assertEquals("1.2", "1.2-RC1".numericVersionPart())
+    }
 
-        @Test
-        fun `should strip 2 digit version RC old format`() {
-            assertEquals("1.2", "1.2RC1".numericVersionPart())
-        }
+    @Test
+    fun `should strip 2 digit version RC old format`() {
+        assertEquals("1.2", "1.2RC1".numericVersionPart())
+    }
 
-        @Test
-        fun `should strip 2 digit version RC without digit`() {
-            assertEquals("1.2", "1.2-RC".numericVersionPart())
-        }
+    @Test
+    fun `should strip 2 digit version RC without digit`() {
+        assertEquals("1.2", "1.2-RC".numericVersionPart())
+    }
 
-        @Test
-        fun `should strip 2 digit version dev`() {
-            assertEquals("1.2", "1.2-dev".numericVersionPart())
-        }
+    @Test
+    fun `should strip 2 digit version dev`() {
+        assertEquals("1.2", "1.2-dev".numericVersionPart())
+    }
 
-        @Test
-        fun `should strip 2 digit version dev old format 1`() {
-            assertEquals("1.2", "1.2dev".numericVersionPart())
-        }
+    @Test
+    fun `should strip 2 digit version dev old format 1`() {
+        assertEquals("1.2", "1.2dev".numericVersionPart())
+    }
 
-        @Test
-        fun `should strip 2 digit version dev old format 2`() {
-            assertEquals("1.2", "1.2dev-a3".numericVersionPart())
-        }
+    @Test
+    fun `should strip 2 digit version dev old format 2`() {
+        assertEquals("1.2", "1.2dev-a3".numericVersionPart())
+    }
 
-        @Test
-        fun `should strip 3 digit version RC`() {
-            assertEquals("1.2.3", "1.2.3-RC1".numericVersionPart())
-        }
+    @Test
+    fun `should strip 3 digit version RC`() {
+        assertEquals("1.2.3", "1.2.3-RC1".numericVersionPart())
+    }
 
-        @Test
-        fun `should strip 4 digit version RC`() {
-            assertEquals("1.2.3.4", "1.2.3.4-RC5".numericVersionPart())
-        }
+    @Test
+    fun `should strip 4 digit version RC`() {
+        assertEquals("1.2.3.4", "1.2.3.4-RC5".numericVersionPart())
+    }
 
-        @Test
-        fun `should strip even with dot`() {
-            assertEquals("1.2", "1.2.RC5".numericVersionPart())
-        }
+    @Test
+    fun `should strip even with dot`() {
+        assertEquals("1.2", "1.2.RC5".numericVersionPart())
+    }
 
-    */
     @Suppress("SpellCheckingInspection")
     @Test
     fun findVersionMatchesRegularVersion() {
@@ -141,7 +146,6 @@ class VersionCheckerUtilsKtTest : TestBase() {
         assertEquals("2.2.2", detectedVersion)
     }
 
-    /* TODO finish this tests
     // In case we merge a "x.x.x-dev" into master, don't see it as update.
     @Test
     fun `should return null on non-digit versions on master`() {
@@ -163,138 +167,55 @@ class VersionCheckerUtilsKtTest : TestBase() {
         assertEquals(null, detectedVersion)
     }
 
-    /*
-        @Test
-        fun testVersionStrip() {
-            assertEquals("2.2.2", "2.2.2".versionStrip())
-            assertEquals("2.2.2", "2.2.2-dev".versionStrip())
-            assertEquals("2.2.2", "2.2.2dev".versionStrip())
-            assertEquals("2.2.2", """"2.2.2"""".versionStrip())
-        }
-    */
     @Test
-    @PrepareForTest(MainApp::class, L::class, SP::class)
     fun `should find update1`() {
-        prepareMainApp()
-
         versionCheckerUtils.compareWithCurrentVersion(newVersion = "2.2.3", currentVersion = "2.2.1")
-
-        //verify(bus, times(1)).post(any())
-
-        PowerMockito.verifyStatic(SP::class.java, times(1))
-        SP.getLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
-        PowerMockito.verifyStatic(SP::class.java, times(1))
-        SP.putLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
-        PowerMockito.verifyNoMoreInteractions(SP::class.java)
-
+        verify(rxBus, times(1)).send(anyObject())
     }
 
     @Test
-    @PrepareForTest(MainApp::class, L::class, SP::class)
     fun `should find update2`() {
-        prepareMainApp()
-
         versionCheckerUtils.compareWithCurrentVersion(newVersion = "2.2.3", currentVersion = "2.2.1-dev")
-
-        //verify(bus, times(1)).post(any())
-
-        PowerMockito.verifyStatic(SP::class.java, times(1))
-        SP.getLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
-        PowerMockito.verifyStatic(SP::class.java, times(1))
-        SP.putLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
-        PowerMockito.verifyNoMoreInteractions(SP::class.java)
+        verify(rxBus, times(1)).send(anyObject())
     }
 
     @Test
-    @PrepareForTest(MainApp::class, L::class, SP::class)
     fun `should find update3`() {
-        prepareMainApp()
-
         versionCheckerUtils.compareWithCurrentVersion(newVersion = "2.2.3", currentVersion = "2.1")
-
-        //verify(bus, times(1)).post(any())
-
-        PowerMockito.verifyStatic(SP::class.java, times(1))
-        SP.getLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
-        PowerMockito.verifyStatic(SP::class.java, times(1))
-        SP.putLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
-        PowerMockito.verifyNoMoreInteractions(SP::class.java)
+        verify(rxBus, times(1)).send(anyObject())
     }
 
     @Test
-    @PrepareForTest(MainApp::class, L::class, SP::class)
     fun `should find update4`() {
-        prepareMainApp()
-
         versionCheckerUtils.compareWithCurrentVersion(newVersion = "2.2", currentVersion = "2.1.1")
-
-        //verify(bus, times(1)).post(any())
-
-        PowerMockito.verifyStatic(SP::class.java, times(1))
-        SP.getLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
-        PowerMockito.verifyStatic(SP::class.java, times(1))
-        SP.putLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
-        PowerMockito.verifyNoMoreInteractions(SP::class.java)
+        verify(rxBus, times(1)).send(anyObject())
     }
 
     @Test
-    @PrepareForTest(MainApp::class, L::class, SP::class)
     fun `should find update5`() {
-        prepareMainApp()
         versionCheckerUtils.compareWithCurrentVersion(newVersion = "2.2.1", currentVersion = "2.2-dev")
-
-        //verify(bus, times(1)).post(any())
-
-        PowerMockito.verifyStatic(SP::class.java, times(1))
-        SP.getLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
-        PowerMockito.verifyStatic(SP::class.java, times(1))
-        SP.putLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
-        PowerMockito.verifyNoMoreInteractions(SP::class.java)
+        verify(rxBus, times(1)).send(anyObject())
     }
 
     @Test
-    @PrepareForTest(MainApp::class, L::class, SP::class)
     fun `should find update6`() {
-        prepareMainApp()
         versionCheckerUtils.compareWithCurrentVersion(newVersion = "2.2.1", currentVersion = "2.2dev")
-
-        //verify(bus, times(1)).post(any())
-
-        PowerMockito.verifyStatic(SP::class.java, times(1))
-        SP.getLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
-        PowerMockito.verifyStatic(SP::class.java, times(1))
-        SP.putLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
-        PowerMockito.verifyNoMoreInteractions(SP::class.java)
+        verify(rxBus, times(1)).send(anyObject())
     }
 
     @Test
-    @PrepareForTest(MainApp::class, L::class, SP::class)
     fun `should not find update on fourth version digit`() {
-        prepareMainApp()
         versionCheckerUtils.compareWithCurrentVersion(newVersion = "2.5.0", currentVersion = "2.5.0.1")
-
-        //verify(bus, times(0)).post(any())
-
-        PowerMockito.verifyStatic(SP::class.java, times(1))
-        SP.putLong(eq(R.string.key_last_time_this_version_detected), ArgumentMatchers.anyLong())
-        PowerMockito.verifyNoMoreInteractions(SP::class.java)
+        verify(rxBus, times(0)).send(anyObject())
     }
 
     @Test
-    @PrepareForTest(MainApp::class, L::class, SP::class)
     fun `should not find update on personal version with same number`() {
-        prepareMainApp()
         versionCheckerUtils.compareWithCurrentVersion(newVersion = "2.5.0", currentVersion = "2.5.0-myversion")
-
-        //verify(bus, times(0)).post(any())
-
-        PowerMockito.verifyStatic(SP::class.java, times(1))
-        SP.putLong(eq(R.string.key_last_time_this_version_detected), ArgumentMatchers.anyLong())
-        PowerMockito.verifyNoMoreInteractions(SP::class.java)
+        verify(rxBus, times(0)).send(anyObject())
     }
 
     @Test
-    @PrepareForTest(MainApp::class, L::class, SP::class)
     fun `find same version`() {
         val buildGradle = """blabla
             |   android {
@@ -303,18 +224,11 @@ class VersionCheckerUtilsKtTest : TestBase() {
             |   version = "2.2.2"
             |   appName = "Aaoeu"
         """.trimMargin()
-        prepareMainApp()
         versionCheckerUtils.compareWithCurrentVersion(versionCheckerUtils.findVersion(buildGradle), currentVersion = "2.2.2")
 
-        //verify(bus, times(0)).post(any())
-
-        PowerMockito.verifyStatic(SP::class.java, times(1))
-        SP.putLong(eq(R.string.key_last_time_this_version_detected), ArgumentMatchers.anyLong())
-        PowerMockito.verifyNoMoreInteractions(SP::class.java)
+        verify(rxBus, times(0)).send(anyObject())
     }
-
     @Test
-    @PrepareForTest(MainApp::class, L::class, SP::class)
     fun `find higher version`() {
         val buildGradle = """blabla
             |   android {
@@ -323,18 +237,11 @@ class VersionCheckerUtilsKtTest : TestBase() {
             |   version = "3.0.0"
             |   appName = "Aaoeu"
         """.trimMargin()
-        prepareMainApp()
         versionCheckerUtils.compareWithCurrentVersion(versionCheckerUtils.findVersion(buildGradle), currentVersion = "2.2.2")
-
-        PowerMockito.verifyStatic(SP::class.java, times(1))
-        SP.getLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
-        PowerMockito.verifyStatic(SP::class.java, times(1))
-        SP.putLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
-        PowerMockito.verifyNoMoreInteractions(SP::class.java)
+        verify(rxBus, times(1)).send(anyObject())
     }
 
     @Test
-    @PrepareForTest(MainApp::class, L::class, SP::class)
     fun `find higher version with longer number`() {
         val buildGradle = """blabla
             |   android {
@@ -343,18 +250,11 @@ class VersionCheckerUtilsKtTest : TestBase() {
             |   version = "3.0"
             |   appName = "Aaoeu"
         """.trimMargin()
-        prepareMainApp()
         versionCheckerUtils.compareWithCurrentVersion(versionCheckerUtils.findVersion(buildGradle), currentVersion = "2.2.2")
-
-        PowerMockito.verifyStatic(SP::class.java, times(1))
-        SP.getLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
-        PowerMockito.verifyStatic(SP::class.java, times(1))
-        SP.putLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
-        PowerMockito.verifyNoMoreInteractions(SP::class.java)
+        verify(rxBus, times(1)).send(anyObject())
     }
 
     @Test
-    @PrepareForTest(MainApp::class, L::class, SP::class)
     fun `find higher version after RC`() {
         val buildGradle = """blabla
             |   android {
@@ -363,18 +263,11 @@ class VersionCheckerUtilsKtTest : TestBase() {
             |   version = "3.0.0"
             |   appName = "Aaoeu"
         """.trimMargin()
-        prepareMainApp()
         versionCheckerUtils.compareWithCurrentVersion(versionCheckerUtils.findVersion(buildGradle), currentVersion = "3.0-RC04")
-
-        PowerMockito.verifyStatic(SP::class.java, times(1))
-        SP.getLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
-        PowerMockito.verifyStatic(SP::class.java, times(1))
-        SP.putLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
-        PowerMockito.verifyNoMoreInteractions(SP::class.java)
+        verify(rxBus, times(1)).send(anyObject())
     }
 
     @Test
-    @PrepareForTest(MainApp::class, L::class, SP::class)
     fun `find higher version after RC 2 - typo`() {
         val buildGradle = """blabla
             |   android {
@@ -383,18 +276,11 @@ class VersionCheckerUtilsKtTest : TestBase() {
             |   version = "3.0.0"
             |   appName = "Aaoeu"
         """.trimMargin()
-        prepareMainApp()
         versionCheckerUtils.compareWithCurrentVersion(versionCheckerUtils.findVersion(buildGradle), currentVersion = "3.0RC04")
-
-        PowerMockito.verifyStatic(SP::class.java, times(1))
-        SP.getLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
-        PowerMockito.verifyStatic(SP::class.java, times(1))
-        SP.putLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
-        PowerMockito.verifyNoMoreInteractions(SP::class.java)
+        verify(rxBus, times(1)).send(anyObject())
     }
 
     @Test
-    @PrepareForTest(MainApp::class, L::class, SP::class)
     fun `find higher version after RC 3 - typo`() {
         val buildGradle = """blabla
             |   android {
@@ -403,18 +289,11 @@ class VersionCheckerUtilsKtTest : TestBase() {
             |   version = "3.0.0"
             |   appName = "Aaoeu"
         """.trimMargin()
-        prepareMainApp()
         versionCheckerUtils.compareWithCurrentVersion(versionCheckerUtils.findVersion(buildGradle), currentVersion = "3.RC04")
-
-        PowerMockito.verifyStatic(SP::class.java, times(1))
-        SP.getLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
-        PowerMockito.verifyStatic(SP::class.java, times(1))
-        SP.putLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
-        PowerMockito.verifyNoMoreInteractions(SP::class.java)
+        verify(rxBus, times(1)).send(anyObject())
     }
 
     @Test
-    @PrepareForTest(MainApp::class, L::class, SP::class)
     fun `find higher version after RC 4 - typo`() {
         val buildGradle = """blabla
             |   android {
@@ -423,18 +302,11 @@ class VersionCheckerUtilsKtTest : TestBase() {
             |   version = "3.0.0"
             |   appName = "Aaoeu"
         """.trimMargin()
-        prepareMainApp()
         versionCheckerUtils.compareWithCurrentVersion(versionCheckerUtils.findVersion(buildGradle), currentVersion = "3.0.RC04")
-
-        PowerMockito.verifyStatic(SP::class.java, times(1))
-        SP.getLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
-        PowerMockito.verifyStatic(SP::class.java, times(1))
-        SP.putLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
-        PowerMockito.verifyNoMoreInteractions(SP::class.java)
+        verify(rxBus, times(1)).send(anyObject())
     }
 
     @Test
-    @PrepareForTest(MainApp::class, L::class, SP::class)
     fun `find higher version on multi digit numbers`() {
         val buildGradle = """blabla
             |   android {
@@ -443,18 +315,11 @@ class VersionCheckerUtilsKtTest : TestBase() {
             |   version = "3.7.12"
             |   appName = "Aaoeu"
         """.trimMargin()
-        prepareMainApp()
         versionCheckerUtils.compareWithCurrentVersion(versionCheckerUtils.findVersion(buildGradle), currentVersion = "3.7.9")
-
-        PowerMockito.verifyStatic(SP::class.java, times(1))
-        SP.getLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
-        PowerMockito.verifyStatic(SP::class.java, times(1))
-        SP.putLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
-        PowerMockito.verifyNoMoreInteractions(SP::class.java)
+        verify(rxBus, times(1)).send(anyObject())
     }
 
     @Test
-    @PrepareForTest(MainApp::class, L::class, SP::class)
     fun `don't find higher version on higher but shorter version`() {
         val buildGradle = """blabla
             |   android {
@@ -463,18 +328,11 @@ class VersionCheckerUtilsKtTest : TestBase() {
             |   version = "2.2.2"
             |   appName = "Aaoeu"
         """.trimMargin()
-        prepareMainApp()
         versionCheckerUtils.compareWithCurrentVersion(versionCheckerUtils.findVersion(buildGradle), currentVersion = "2.3")
-
-        //verify(bus, times(0)).post(any())
-
-        PowerMockito.verifyStatic(SP::class.java, times(1))
-        SP.putLong(eq(R.string.key_last_time_this_version_detected), ArgumentMatchers.anyLong())
-        PowerMockito.verifyNoMoreInteractions(SP::class.java)
+        verify(rxBus, times(0)).send(anyObject())
     }
 
     @Test
-    @PrepareForTest(MainApp::class, L::class, SP::class)
     fun `don't find higher version if on next RC`() {
         val buildGradle = """blabla
             |   android {
@@ -483,40 +341,42 @@ class VersionCheckerUtilsKtTest : TestBase() {
             |   version = "2.2.2"
             |   appName = "Aaoeu"
         """.trimMargin()
-        prepareMainApp()
         versionCheckerUtils.compareWithCurrentVersion(versionCheckerUtils.findVersion(buildGradle), currentVersion = "2.3-RC")
-
-        //verify(bus, times(0)).post(any())
-
-        PowerMockito.verifyStatic(SP::class.java, times(1))
-        SP.putLong(eq(R.string.key_last_time_this_version_detected), ArgumentMatchers.anyLong())
-        PowerMockito.verifyNoMoreInteractions(SP::class.java)
+        verify(rxBus, times(0)).send(anyObject())
     }
 
-    @Test
-    @PrepareForTest(System::class)
+   @Test
+    fun `warn on beta`() {
+        val buildGradle = """blabla
+            |   android {
+            |      aosenuthoae
+            |   }
+            |   version = "2.2.2"
+            |   appName = "Aaoeu"
+        """.trimMargin()
+        versionCheckerUtils.compareWithCurrentVersion(versionCheckerUtils.findVersion(buildGradle), currentVersion = "2.2-beta1")
+        verify(rxBus, times(1)).send(anyObject())
+    }
+
+   @Test
+    fun `warn on rc`() {
+        val buildGradle = """blabla
+            |   android {
+            |      aosenuthoae
+            |   }
+            |   version = "2.2.0"
+            |   appName = "Aaoeu"
+        """.trimMargin()
+        versionCheckerUtils.compareWithCurrentVersion(versionCheckerUtils.findVersion(buildGradle), currentVersion = "2.2-rc1")
+        verify(rxBus, times(1)).send(anyObject())
+    }
+
+    @Before
     fun `set time`() {
-        PowerMockito.spy(System::class.java)
-        PowerMockito.`when`(System.currentTimeMillis()).thenReturn(100L)
+        `when`(dateUtil.now()).thenReturn(10000000000L)
+        assertEquals(10000000000L, dateUtil.now())
 
-        assertEquals(100L, System.currentTimeMillis())
+        `when`(resourceHelper.gs(anyInt(), anyString())).thenReturn("")
     }
 
-    private fun prepareMainApp() {
-        PowerMockito.mockStatic(MainApp::class.java)
-        val mainApp = mock<MainApp>(MainApp::class.java)
-        `when`(MainApp.instance()).thenReturn(mainApp)
-        `when`(MainApp.gs(ArgumentMatchers.anyInt())).thenReturn("some dummy string")
-        prepareSP()
-    }
-
-    private fun prepareSP() {
-        PowerMockito.mockStatic(SP::class.java)
-    }
-
-    private fun prepareLogging() {
-        PowerMockito.mockStatic(L::class.java)
-        `when`(L.isEnabled(any())).thenReturn(true)
-    }
-    */
 }

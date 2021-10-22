@@ -7,12 +7,16 @@ import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import io.reactivex.Single
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
+import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 
 abstract class ActionViewModelBase(
     protected val injector: HasAndroidInjector,
     protected val logger: AAPSLogger
 ) : ViewModelBase() {
+    protected val disposable = CompositeDisposable()
 
     private val _isActionExecutingLiveData = MutableLiveData(false)
     val isActionExecutingLiveData: LiveData<Boolean> = _isActionExecutingLiveData
@@ -22,7 +26,7 @@ abstract class ActionViewModelBase(
 
     fun executeAction() {
         _isActionExecutingLiveData.postValue(true)
-        val disposable = doExecuteAction().subscribeBy(
+        disposable += doExecuteAction().subscribeBy(
             onSuccess = { result ->
                 _isActionExecutingLiveData.postValue(false)
                 _actionResultLiveData.postValue(result)
@@ -34,6 +38,12 @@ abstract class ActionViewModelBase(
                     throwable.message ?: "Caught exception in while executing action in ActionViewModelBase"))
             })
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        disposable.clear()
+    }
+
 
     protected abstract fun doExecuteAction(): Single<PumpEnactResult>
 }

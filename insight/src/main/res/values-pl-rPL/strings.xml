@@ -21,6 +21,7 @@
     <string name="tbr_formatter">%1$d%% na %2$d / %3$d min</string>
     <string name="multiwave_bolus">Bolus złożony (wielofalowy)</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U na %3$d min</string>
+    <string name="insight_last_bolus">Ostatni bolus</string>
     <string name="searching_for_devices">Wyszukiwanie urządzeń…</string>
     <string name="pairing_completed">Parowanie zakończone</string>
     <string name="code_compare">Czy kody wyświetlone na tym urządzeniu i na twojej pompie pasują?</string>
@@ -41,6 +42,7 @@
     <string name="pump_paused">Pompa wstrzymana</string>
     <string name="short_status_last_connected">Połączenie: %1$d min temu</string>
     <string name="short_status_tbr">TBR: %1$d%% na %2$d / %3$d min</string>
+    <string name="short_status_extended">Przedłużony: %1$.2f / %2$.2f U na %3$d min</string>
     <string name="short_status_multiwave">Multiwave (zwykły + przedłużony): %1$.2f / %2$.2f U for %3$d min</string>
     <string name="short_status_tdd">TDD: %1$.2f</string>
     <string name="short_status_reservoir">Zbiornik: %1$.2f U</string>

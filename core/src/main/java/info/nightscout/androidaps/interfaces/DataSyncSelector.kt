@@ -20,6 +20,8 @@ interface DataSyncSelector {
     data class PairOfflineEvent(val value: OfflineEvent, val updateRecordId: Long)
     data class PairProfileStore(val value: JSONObject, val timestampSync: Long)
 
+    fun queueSize(): Long
+
     fun doUpload()
 
     fun resetToNextFullSync()
@@ -47,7 +49,7 @@ interface DataSyncSelector {
     fun confirmLastGlucoseValueIdIfGreater(lastSynced: Long)
     fun changedGlucoseValues() : List<GlucoseValue>
     // Until NS v3
-    fun processChangedGlucoseValuesCompat(): Boolean
+    fun processChangedGlucoseValuesCompat()
 
     fun confirmLastTherapyEventIdIfGreater(lastSynced: Long)
     fun changedTherapyEvents() : List<TherapyEvent>

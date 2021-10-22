@@ -5,7 +5,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.Insulin
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -27,7 +27,7 @@ class InsulinOrefFreePeakPluginTest : TestBase() {
 
     @Mock lateinit var sp: SP
     @Mock lateinit var resourceHelper: ResourceHelper
-    @Mock lateinit var rxBus: RxBusWrapper
+    @Mock lateinit var rxBus: RxBus
     @Mock lateinit var profileFunction: ProfileFunction
 
     private var injector: HasAndroidInjector = HasAndroidInjector {

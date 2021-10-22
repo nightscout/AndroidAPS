@@ -8,7 +8,7 @@ import info.nightscout.androidaps.danars.R
 import info.nightscout.androidaps.danars.databinding.DanarsEnterPinActivityBinding
 import info.nightscout.androidaps.danars.services.BLEComm
 import info.nightscout.androidaps.events.EventPumpStatusChanged
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.extensions.hexStringToByteArray
@@ -22,7 +22,7 @@ import kotlin.experimental.xor
 
 class EnterPinActivity : NoSplashAppCompatActivity() {
 
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var danaRSPlugin: DanaRSPlugin
     @Inject lateinit var sp: SP

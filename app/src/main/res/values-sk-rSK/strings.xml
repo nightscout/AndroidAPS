@@ -78,7 +78,6 @@
     <string name="overview">Prehľad</string>
     <string name="treatments">Ošetrenia</string>
     <string name="virtualpump">Virtuálna pumpa</string>
-    <string name="careportal">Starostlivosť</string>
     <string name="configbuilder_pump">Pumpa</string>
     <string name="configbuilder_pump_description">Akú pumpu chcete používať s AndroidAPS?</string>
     <string name="configbuilder_profile">Profil</string>
@@ -257,7 +256,7 @@
     <string name="ongoingnotificaction">Priebežné notifikácie</string>
     <string name="old_data">ZASTARALÉ DÁTA</string>
     <string name="sms_minago">pred %1$d min</string>
-    <string name="localprofile">Lokálny profil</string>
+    <string name="localprofile">Profil</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Pole %1$d prvkov.\nAktuálna hodnota:</string>
     <string name="openapsma_autosensdata_label">Dáta detekcie citlivosti</string>
@@ -494,6 +493,7 @@
     <string name="dexcomg5_xdripupload_title">Odosielať glykémie do xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">V xDrip+ vyberte zdroj dát 640g/Eversense</string>
     <string name="nsclientbg">Glykémie z NS</string>
+    <string name="nsclientbgshort">NS GL</string>
     <string name="overview_editquickwizard_usebg">Výpočet glykémie</string>
     <string name="overview_editquickwizard_usebolusiob">Výpočet bolusového IOB</string>
     <string name="overview_editquickwizard_usebasaliob">Výpočet bazálneho IOB</string>
@@ -717,6 +717,7 @@
     <string name="versionChecker">Kontrola verzie</string>
     <string name="old_version">stará verzia</string>
     <string name="very_old_version">veľmi stará verzia</string>
+    <string name="application_expired">Aplikácia expirovala</string>
     <string name="new_version_warning">Nová verzia je dostupná minimálne %1$d dní! Prepnutie na ochranu pred nízkou glykémiou po %2$d dňoch, vypnutie uzavretého okruhu po %3$d dňoch</string>
     <string name="twohours">2h</string>
     <string name="dexcom_app_patched">Dexcom aplikácia (upravená)</string>
@@ -857,12 +858,13 @@
     <string name="privacy_settings">Nastavenia súkromia</string>
     <string name="privacy_summary">Pokiaľ chcete byť upozornení na zlyhanie aplikácie, môžete zadať voliteľne e-mailovú adresu. Toto nie je automatizovaná služba. Vývojári vás budú kontaktovať v nebezpečných situáciách.</string>
     <string name="full_sync">Úplná synchronizácia</string>
+    <string name="full_sync_comment">Úplná synchronizácia? Môže to trvať niekoľko hodín a kým skončí, neuvidíte nové dáta v NS.</string>
     <string name="prime">Plnenie</string>
     <string name="ns_sync_options">Synchronizácia</string>
     <string name="ns_upload_summary">Profily, bolusy, sacharidy, dočasné bazály sú nahrávané do NS</string>
     <string name="ns_upload">Nahrávať dáta do NS</string>
     <string name="ns_receive_profile_store">Prijímať úložisko profilov</string>
-    <string name="ns_receive_profile_store_summary">Synchronizovať profily z NS do miestneho profilu</string>
+    <string name="ns_receive_profile_store_summary">Synchronizovať profily z NS editora profilov</string>
     <string name="ns_receive_temp_target">Prijímať dočasné ciele</string>
     <string name="ns_receive_temp_target_summary">Prijať dočasné ciele zadané prostredníctvom NS, alebo NSClienta</string>
     <string name="ns_receive_profile_switch">Prijímať prepnutia profilov</string>

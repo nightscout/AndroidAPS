@@ -15,12 +15,11 @@ import info.nightscout.androidaps.interfaces.Profile.Companion.secondsFromMidnig
 import info.nightscout.androidaps.interfaces.Profile.Companion.toMgdl
 import info.nightscout.androidaps.interfaces.Profile.ProfileValue
 import info.nightscout.androidaps.interfaces.Pump
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HardLimits
-import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.json.JSONArray
@@ -96,8 +95,7 @@ sealed class ProfileSealed(
         value.timeZone.rawOffset.toLong()
     )
 
-    override fun isValid(from: String, pump: Pump, config: Config, resourceHelper: ResourceHelper, rxBus: RxBusWrapper, hardLimits: HardLimits): Profile.ValidityCheck {
-        val notify = true
+    override fun isValid(from: String, pump: Pump, config: Config, resourceHelper: ResourceHelper, rxBus: RxBus, hardLimits: HardLimits, sendNotifications: Boolean): Profile.ValidityCheck {
         val validityCheck = Profile.ValidityCheck()
         val description = pump.pumpDescription
         for (basal in basalBlocks) {
@@ -106,7 +104,7 @@ sealed class ProfileSealed(
                 // Check for hours alignment
                 val duration: Long = basal.duration
                 if (duration % 3600000 != 0L) {
-                    if (notify && config.APS) {
+                    if (sendNotifications && config.APS) {
                         val notification = Notification(
                             Notification.BASAL_PROFILE_NOT_ALIGNED_TO_HOURS,
                             resourceHelper.gs(R.string.basalprofilenotaligned, from),
@@ -127,13 +125,13 @@ sealed class ProfileSealed(
             // Check for minimal basal value
             if (basalAmount < description.basalMinimumRate) {
                 basal.amount = description.basalMinimumRate
-                if (notify) sendBelowMinimumNotification(from, rxBus, resourceHelper)
+                if (sendNotifications) sendBelowMinimumNotification(from, rxBus, resourceHelper)
                 validityCheck.isValid = false
                 validityCheck.reasons.add(resourceHelper.gs(R.string.minimalbasalvaluereplaced, from))
                 break
             } else if (basalAmount > description.basalMaximumRate) {
                 basal.amount = description.basalMaximumRate
-                if (notify) sendAboveMaximumNotification(from, rxBus, resourceHelper)
+                if (sendNotifications) sendAboveMaximumNotification(from, rxBus, resourceHelper)
                 validityCheck.isValid = false
                 validityCheck.reasons.add(resourceHelper.gs(R.string.maximumbasalvaluereplaced, from))
                 break
@@ -185,11 +183,11 @@ sealed class ProfileSealed(
         return validityCheck
     }
 
-    protected open fun sendBelowMinimumNotification(from: String, rxBus: RxBusWrapper, resourceHelper: ResourceHelper) {
+    protected open fun sendBelowMinimumNotification(from: String, rxBus: RxBus, resourceHelper: ResourceHelper) {
         rxBus.send(EventNewNotification(Notification(Notification.MINIMAL_BASAL_VALUE_REPLACED, resourceHelper.gs(R.string.minimalbasalvaluereplaced, from), Notification.NORMAL)))
     }
 
-    protected open fun sendAboveMaximumNotification(from: String, rxBus: RxBusWrapper, resourceHelper: ResourceHelper) {
+    protected open fun sendAboveMaximumNotification(from: String, rxBus: RxBus, resourceHelper: ResourceHelper) {
         rxBus.send(EventNewNotification(Notification(Notification.MAXIMUM_BASAL_VALUE_REPLACED, resourceHelper.gs(R.string.maximumbasalvaluereplaced, from), Notification.NORMAL)))
     }
 

@@ -18,6 +18,7 @@
     <string name="connected">מחובר</string>
     <string name="disconnected">מנותק</string>
     <string name="disconnecting">מתנתק</string>
+    <string name="waiting_for_disconnection">ממתין לניתוק</string>
     <string name="androidaps_start">AndroidAPS הופעל</string>
     <string name="formatinsulinunits1">%1$.1f יח\'</string>
     <string name="formatinsulinunits">%1$.2f יח\'</string>
@@ -29,7 +30,7 @@
     <string name="format_mins">%1$d דק\'</string>
     <string name="pumpbusy">המשאבה אינה פנויה</string>
     <string name="connectionerror">שגיאה בחיבור המשאבה</string>
-    <string name="youareonallowedlimit">הגיעתם למגבלה המותרת</string>
+    <string name="youareonallowedlimit">הגעתם למגבלה המותרת</string>
     <string name="objectives">משימות</string>
     <string name="close">סגור</string>
     <string name="please_wait">נא להמתין…</string>
@@ -173,12 +174,17 @@
     <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f יחידות</b> בולוס: <b>%3$.2f יחידות</b> בזאלי: <b>%4$.2f יחידות(%5$.0f%%)</b> פחמ: <b>%6$.0f גרם</b>]]></string>
     <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> ב- <b>%3$d</b> ימים<br>]]></string>
     <!--    Translator-->
+    <string name="careportal">פורטל טיפולים</string>
     <string name="careportal_bgcheck">בדיקת רמת סוכר בדם</string>
     <string name="careportal_mbg">רמת סוכר ידנית או כיול</string>
-    <string name="careportal_announcement">הודעה</string>
+    <string name="careportal_announcement">הכרזה</string>
     <string name="careportal_note">הערה</string>
     <string name="careportal_question">שאלה</string>
     <string name="careportal_exercise">פעילות גופנית</string>
+    <string name="careportal_announcement_message">הכרזה: %1$s</string>
+    <string name="careportal_note_message">הערה: %1$s</string>
+    <string name="careportal_question_message">שאלה: %1$s</string>
+    <string name="careportal_exercise_message">פעילות גופנית: %1$s</string>
     <string name="careportal_pumpsitechange">החלפת פרפרית</string>
     <string name="careportal_cgmsensorinsert">חיבור סנסור</string>
     <string name="careportal_cgmsensorstart">התחלת סנסור חדש</string>
@@ -196,6 +202,7 @@
     <string name="careportal_openapsoffline">OpenAPS במצב לא מקוון</string>
     <string name="careportal_pumpbatterychange">החלפת סוללת משאבה</string>
     <string name="careportal_temporarytarget">ערך מטרה זמני</string>
+    <string name="careportal_temporarytargetvalue">ערך המטרה הזמני</string>
     <string name="careportal_temporarytargetcancel">ביטול ערך מטרה זמני</string>
     <string name="boluswizard">אשף בולוס</string>
     <string name="glucosetype_finger">אצבע</string>
@@ -212,6 +219,8 @@
     <string name="loop">לולאה</string>
     <string name="ns">נייטסקאוט</string>
     <string name="record">הקלטה</string>
+    <string name="reading_pump_history">קורא היסטוריית משאבה</string>
+    <string name="pump_icon">צלמית משאבה</string>
     <!--    Command-->
     <string name="connectiontimedout">החיבור חרג ממגבלת הזמן</string>
     <!--    PumpEnactResult-->
@@ -283,6 +292,7 @@
     <string name="signature_verifier">מאמת חתימה</string>
     <string name="running_invalid_version">זיהינו שאתם משתמשים בגרסה לא תקפה. הלולאה מושבתת!</string>
     <string name="versionavailable">גרסה %1$s זמינה</string>
+    <string name="version_expire">גרסה: %1$s תפוג תוקפה: %2$s</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">נא לאתחל את הסמרטפון שלכם או הפעילו מחדש את אפלקציית AndroidAPS בהגדרות המערכת \nאחרת AndroidAPS לא יוכל לבצע רישום (חשוב לעקוב ולוודא כי האלגוריתמים פועלים כראוי!)</string>
     <!-- WeekdayPicker -->
@@ -399,6 +409,7 @@
     <string name="valueoutofrange">»הערך %1$s« מחוץ לתחום הקשיח</string>
     <string name="value_out_of_hard_limits">»הערך %1$s« %2$.2f מחוץ לתחום הקשיח</string>
     <string name="basal_value">ערך בזאלי</string>
+    <string name="nsclient_version_does_not_match">גרסת NSClient לא תואמת את גרסת AndroidAPS. נא לעדכן.</string>
     <plurals name="days">
         <item quantity="one">%1$d יום</item>
         <item quantity="two">%1$d ימים</item>

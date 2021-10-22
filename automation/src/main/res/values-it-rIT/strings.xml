@@ -38,6 +38,9 @@
     <string name="glucoseisnotavailable">Glicemia non disponibile</string>
     <string name="glucosecomparedmgdl">Glicemia %1$s %2$.0f %3$s</string>
     <string name="glucosecomparedmmol">Glicemia %1$s %2$.1f %3$s</string>
+    <string name="notemptarget">Il target temporaneo non esiste</string>
+    <string name="temptargetcomparedmgdl">Temp-Target %1$s %2$.0f %3$s</string>
+    <string name="temptargetcomparedmmol">Temp-Target %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">PCT profilo %1$s %2$d</string>
     <string name="iobcompared">IOB %1$s %2$.1f</string>
     <string name="and">E (AND)</string>
@@ -86,6 +89,7 @@
     <string name="latitude_short">Lat:</string>
     <string name="longitude_short">Lon:</string>
     <string name="glucose_u">Glicemia [%1$s]:</string>
+    <string name="target_u">Target [%1$s]:</string>
     <string name="lastboluslabel">Ultimo bolo</string>
     <string name="lastboluscompared">Ora ultimo bolo %1$s %2$s min fa</string>
     <string name="triggercoblabel">COB</string>

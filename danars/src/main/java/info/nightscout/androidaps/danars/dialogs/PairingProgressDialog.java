@@ -19,7 +19,7 @@ import info.nightscout.androidaps.danars.R;
 import info.nightscout.androidaps.danars.activities.PairingHelperActivity;
 import info.nightscout.androidaps.danars.databinding.DanarsPairingProgressDialogBinding;
 import info.nightscout.androidaps.danars.events.EventDanaRSPairingSuccess;
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.rx.AapsSchedulers;
@@ -30,7 +30,7 @@ public class PairingProgressDialog extends DaggerDialogFragment {
 
     @Inject AapsSchedulers aapsSchedulers;
     @Inject ResourceHelper resourceHelper;
-    @Inject RxBusWrapper rxBus;
+    @Inject RxBus rxBus;
     @Inject FabricPrivacy fabricPrivacy;
 
     private final CompositeDisposable disposable = new CompositeDisposable();

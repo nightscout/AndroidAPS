@@ -28,7 +28,7 @@
             android:contentDescription="@string/pumphistory"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_danarhistory" />
+            app:srcCompat="@drawable/ic_pump_history" />
 
         <TextView
             android:id="@+id/textView2"

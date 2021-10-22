@@ -18,6 +18,7 @@
     <string name="connected">Tilkoblet</string>
     <string name="disconnected">Frakoblet</string>
     <string name="disconnecting">Frakobler</string>
+    <string name="waiting_for_disconnection">Venter på frakobling</string>
     <string name="androidaps_start">AndroidAPS startet</string>
     <string name="formatinsulinunits1">%1$.1f E</string>
     <string name="formatinsulinunits">%1$.2f E</string>
@@ -196,6 +197,7 @@
     <string name="careportal_openapsoffline">OpenAPS offline</string>
     <string name="careportal_pumpbatterychange">Bytte pumpebatteri</string>
     <string name="careportal_temporarytarget">Temp mål</string>
+    <string name="careportal_temporarytargetvalue">Temp target verdi</string>
     <string name="careportal_temporarytargetcancel">Avbryt temp mål</string>
     <string name="boluswizard">Bolus assistent</string>
     <string name="glucosetype_finger">Finger</string>
@@ -212,6 +214,8 @@
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
     <string name="record">Registrer</string>
+    <string name="reading_pump_history">Leser pumpehistorikk</string>
+    <string name="pump_icon">Pumpe ikon</string>
     <!--    Command-->
     <string name="connectiontimedout">Tilkoblingen ble tidsavbrutt</string>
     <!--    PumpEnactResult-->
@@ -385,6 +389,20 @@
     <string name="uel_loop_removed">LOOP FJERNET</string>
     <string name="uel_other">ANNET</string>
     <!-- HardLimits -->
+    <string name="profile_low_target">Profil lavt blodsukkermål</string>
+    <string name="profile_high_target">Profil høyt blodsukkermål</string>
+    <string name="temp_target_low_target">Midlertidig mål nedre grense</string>
+    <string name="temp_target_high_target">Midlertidig mål øvre grense</string>
+    <string name="temp_target_value">Midlertidig målverdi</string>
+    <string name="profile_dia">Profil DIA verdi</string>
+    <string name="profile_sensitivity_value">Profil insulin følsomhet (IF)</string>
+    <string name="profile_max_daily_basal_value">Maksimal profil basalverdi</string>
+    <string name="current_basal_value">Nåværende basalverdi</string>
+    <string name="profile_carbs_ratio_value">Profil karbohydratfaktor (IK)</string>
+    <string name="valuelimitedto">%1$.2f begrenset til %2$.2f</string>
+    <string name="valueoutofrange">»%1$s« er utenfor lovlige grenseverdier</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f er utenfor lovlige grenseverdier</string>
+    <string name="basal_value">Basal verdi</string>
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dager</item>

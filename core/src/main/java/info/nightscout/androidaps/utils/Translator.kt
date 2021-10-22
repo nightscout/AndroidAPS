@@ -114,7 +114,7 @@ class Translator @Inject internal constructor(
         else                         -> ""
     }
 
-    fun translate(meterType: TherapyEvent.MeterType): String = when (meterType) {
+    fun translate(meterType: TherapyEvent.MeterType?): String = when (meterType) {
         TherapyEvent.MeterType.FINGER -> resourceHelper.gs(R.string.glucosetype_finger)
         TherapyEvent.MeterType.SENSOR -> resourceHelper.gs(R.string.glucosetype_sensor)
         TherapyEvent.MeterType.MANUAL -> resourceHelper.gs(R.string.manual)
@@ -122,7 +122,7 @@ class Translator @Inject internal constructor(
         else                          -> resourceHelper.gs(R.string.unknown)
     }
 
-    fun translate(type: TherapyEvent.Type): String = when (type) {
+    fun translate(type: TherapyEvent.Type?): String = when (type) {
         TherapyEvent.Type.FINGER_STICK_BG_VALUE   -> resourceHelper.gs(R.string.careportal_bgcheck)
         TherapyEvent.Type.SNACK_BOLUS             -> resourceHelper.gs(R.string.careportal_snackbolus)
         TherapyEvent.Type.MEAL_BOLUS              -> resourceHelper.gs(R.string.careportal_mealbolus)
@@ -173,7 +173,7 @@ class Translator @Inject internal constructor(
         else                                      -> resourceHelper.gs(R.string.unknown)
     }
 
-    fun translate(reason: TemporaryTarget.Reason): String = when (reason) {
+    fun translate(reason: TemporaryTarget.Reason?): String = when (reason) {
         TemporaryTarget.Reason.CUSTOM       -> resourceHelper.gs(R.string.custom)
         TemporaryTarget.Reason.HYPOGLYCEMIA -> resourceHelper.gs(R.string.hypo)
         TemporaryTarget.Reason.EATING_SOON  -> resourceHelper.gs(R.string.eatingsoon)
@@ -184,7 +184,7 @@ class Translator @Inject internal constructor(
         else                                -> resourceHelper.gs(R.string.unknown)
     }
 
-    fun translate(reason: OfflineEvent.Reason): String = when (reason) {
+    fun translate(reason: OfflineEvent.Reason?): String = when (reason) {
         OfflineEvent.Reason.SUSPEND         -> resourceHelper.gs(R.string.uel_suspend)
         OfflineEvent.Reason.DISABLE_LOOP    -> resourceHelper.gs(R.string.disableloop)
         OfflineEvent.Reason.DISCONNECT_PUMP -> resourceHelper.gs(R.string.uel_disconnect)

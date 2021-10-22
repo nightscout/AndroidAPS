@@ -11,7 +11,7 @@ import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -40,12 +40,13 @@ class ProfileTest : TestBase() {
     @Mock lateinit var sp: SP
     @Mock lateinit var repository: AppRepository
 
-    private lateinit var rxBus: RxBusWrapper
+    private lateinit var rxBus: RxBus
     private lateinit var dateUtil: DateUtil
     private lateinit var testPumpPlugin: TestPumpPlugin
     private lateinit var hardLimits: HardLimits
 
-    private var okProfile = "{\"dia\":\"5\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"sens\":[{\"time\":\"00:00\",\"value\":\"6\"},{\"time\":\"2:00\",\"value\":\"6.2\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
+    private var okProfile = "{\"dia\":\"5\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}]," +
+        "\"sens\":[{\"time\":\"00:00\",\"value\":\"6\"},{\"time\":\"2:00\",\"value\":\"6.2\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
     private var belowLimitValidProfile = "{\"dia\":\"5\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.001\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
     private var notAlignedBasalValidProfile = "{\"dia\":\"5\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:30\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
     private var notStartingAtZeroValidProfile = "{\"dia\":\"5\",\"carbratio\":[{\"time\":\"00:30\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
@@ -58,7 +59,7 @@ class ProfileTest : TestBase() {
     fun prepare() {
         testPumpPlugin = TestPumpPlugin { AndroidInjector { } }
         dateUtil = DateUtil(context)
-        rxBus = RxBusWrapper(TestAapsSchedulers())
+        rxBus = RxBus(TestAapsSchedulers())
         hardLimits = HardLimits(aapsLogger, rxBus, sp, resourceHelper, context, repository)
         `when`(activePluginProvider.activePump).thenReturn(testPumpPlugin)
         `when`(resourceHelper.gs(R.string.profile_per_unit)).thenReturn("/U")
@@ -72,7 +73,7 @@ class ProfileTest : TestBase() {
 
         // Test valid profile
         var p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(okProfile), dateUtil)!!)
-        Assert.assertEquals(true, p.isValid("Test", testPumpPlugin, config, resourceHelper, rxBus, hardLimits).isValid)
+        Assert.assertEquals(true, p.isValid("Test", testPumpPlugin, config, resourceHelper, rxBus, hardLimits, false).isValid)
 //        Assert.assertEquals(true, p.log().contains("NS units: mmol"))
 //        JSONAssert.assertEquals(JSONObject(okProfile), p.toPureNsJson(dateUtil), false)
         Assert.assertEquals(5.0, p.dia, 0.01)
@@ -102,11 +103,11 @@ class ProfileTest : TestBase() {
         Assert.assertEquals(2.4, p.percentageBasalSum(), 0.01)
         Assert.assertEquals(2.4, p.baseBasalSum(), 0.01)
 //        Assert.assertEquals(81.0, p.getTargetMgdl(2 * 60 * 60), 0.01)
-        Assert.assertEquals(72.0, p.getTargetLowMgdl(c.timeInMillis), 0.01)
+        Assert.assertEquals(90.0, p.getTargetLowMgdl(c.timeInMillis), 0.01)
 //        Assert.assertEquals(4.0, p.getTargetLowTimeFromMidnight(2 * 60 * 60), 0.01)
         Assert.assertEquals(90.0, p.getTargetHighMgdl(c.timeInMillis), 0.01)
 //        Assert.assertEquals(5.0, p.getTargetHighTimeFromMidnight(2 * 60 * 60), 0.01)
-        Assert.assertEquals("00:00    4,0 - 5,0 mmol", p.getTargetList(resourceHelper, dateUtil).replace(".", ","))
+        Assert.assertEquals("00:00    5,0 - 5,0 mmol", p.getTargetList(resourceHelper, dateUtil).replace(".", ","))
         Assert.assertEquals(100, p.percentage)
         Assert.assertEquals(0, p.timeshift)
         Assert.assertEquals(0.1, Profile.toMgdl(0.1, GlucoseUnit.MGDL), 0.01)
@@ -124,7 +125,7 @@ class ProfileTest : TestBase() {
 
         //Test basal profile below limit
         p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(belowLimitValidProfile), dateUtil)!!)
-        p.isValid("Test", testPumpPlugin, config, resourceHelper, rxBus, hardLimits)
+        p.isValid("Test", testPumpPlugin, config, resourceHelper, rxBus, hardLimits, false)
 
         // Test profile w/o units
         Assert.assertNull(pureProfileFromJson(JSONObject(noUnitsValidProfile), dateUtil))
@@ -157,6 +158,6 @@ class ProfileTest : TestBase() {
         // Test hour alignment
         testPumpPlugin.pumpDescription.is30minBasalRatesCapable = false
         p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(notAlignedBasalValidProfile), dateUtil)!!)
-        p.isValid("Test", testPumpPlugin, config, resourceHelper, rxBus, hardLimits)
+        p.isValid("Test", testPumpPlugin, config, resourceHelper, rxBus, hardLimits, false)
     }
 }

@@ -24,7 +24,7 @@ class CobInfo(val timestamp: Long, val displayCob: Double?, val futureCarbs: Dou
             var cobText = resourceHelper.gs(R.string.format_carbs, displayCob.toInt())
             if (futureCarbs > 0) cobText += "(" + DecimalFormatter.to0Decimal(futureCarbs) + ")"
             // This is only temporary for debugging
-            if (isDev) cobText += "\n" + dateUtil.timeStringWithSeconds(timestamp)
+            if (isDev) cobText += "\n" + dateUtil.timeString(timestamp)
             cobText
         } else null
 }

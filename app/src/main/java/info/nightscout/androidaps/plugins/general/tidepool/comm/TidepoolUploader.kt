@@ -8,7 +8,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolStatus
 import info.nightscout.androidaps.plugins.general.tidepool.messages.AuthReplyMessage
 import info.nightscout.androidaps.plugins.general.tidepool.messages.AuthRequestMessage
@@ -32,7 +32,7 @@ import javax.inject.Singleton
 @Singleton
 class TidepoolUploader @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val rxBus: RxBusWrapper,
+    private val rxBus: RxBus,
     private val ctx: Context,
     private val resourceHelper: ResourceHelper,
     private val sp: SP,

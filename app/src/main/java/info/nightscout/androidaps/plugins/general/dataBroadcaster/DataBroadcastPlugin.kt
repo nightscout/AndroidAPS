@@ -5,15 +5,16 @@ import android.content.Intent
 import android.content.pm.ResolveInfo
 import android.os.Bundle
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.*
+import info.nightscout.androidaps.extensions.durationInMinutes
+import info.nightscout.androidaps.extensions.toStringFull
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.events.EventOpenAPSUpdateGui
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
@@ -22,8 +23,6 @@ import info.nightscout.androidaps.services.Intents
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.extensions.durationInMinutes
-import info.nightscout.androidaps.extensions.toStringFull
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -39,7 +38,7 @@ class DataBroadcastPlugin @Inject constructor(
     private val context: Context,
     private val dateUtil: DateUtil,
     private val fabricPrivacy: FabricPrivacy,
-    private val rxBus: RxBusWrapper,
+    private val rxBus: RxBus,
     private val iobCobCalculator: IobCobCalculator,
     private val profileFunction: ProfileFunction,
     private val defaultValueHelper: DefaultValueHelper,
@@ -79,7 +78,7 @@ class DataBroadcastPlugin @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe({ sendData(it) }, fabricPrivacy::logException))
         disposable.add(rxBus
-            .toObservable(EventNewBasalProfile::class.java)
+            .toObservable(EventEffectiveProfileSwitchChanged::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ sendData(it) }, fabricPrivacy::logException))
         disposable.add(rxBus

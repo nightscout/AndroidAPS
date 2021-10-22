@@ -24,13 +24,14 @@ import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
 import info.nightscout.androidaps.events.EventTreatmentUpdateGui
 import info.nightscout.androidaps.activities.fragments.TreatmentsProfileSwitchFragment.RecyclerProfileViewAdapter.ProfileSwitchViewHolder
+import info.nightscout.androidaps.events.EventEffectiveProfileSwitchChanged
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
@@ -47,7 +48,7 @@ import javax.inject.Inject
 
 class TreatmentsProfileSwitchFragment : DaggerFragment() {
 
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var sp: SP
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var localProfilePlugin: LocalProfilePlugin
@@ -92,6 +93,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
                                 onError = { aapsLogger.error("Error removing entries", it) },
                                 onComplete = {
                                     rxBus.send(EventProfileSwitchChanged())
+                                    rxBus.send(EventEffectiveProfileSwitchChanged(0L))
                                     rxBus.send(EventNewHistoryData(0, false))
                                 }
                             )

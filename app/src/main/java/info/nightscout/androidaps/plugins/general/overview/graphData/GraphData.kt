@@ -202,7 +202,7 @@ class GraphData(
     }
 
     fun setNumVerticalLabels() {
-        graph.gridLabelRenderer.numVerticalLabels = if (units == GlucoseUnit.MGDL) (maxY / 40 + 1).toInt() else (maxY / 2 + 1).toInt()
+        graph.gridLabelRenderer.numVerticalLabels = max(3, if (units == GlucoseUnit.MGDL) (maxY / 40 + 1).toInt() else (maxY / 2 + 1).toInt())
     }
 
     fun formatAxis(fromTime: Long, endTime: Long) {

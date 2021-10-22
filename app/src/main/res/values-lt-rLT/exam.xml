@@ -132,6 +132,7 @@
     <string name="wronginsulin_label">Insulino suleidimo / įrašų klaidos</string>
     <string name="wronginsulin_whattodo">Ką turėtumėte daryti, jei buvo suleista mažiau insulino nei rodo pompos istorija, pvz. dėl užsikimšimo, neveikiančios kaniulės ar pamiršus po dušo vėl pritvirtinti pompą? </string>
     <string name="wronginsulin_careportal">Ištrinti insulino suleidimo įrašą per Nightscout Careportal, kad pašalintumėte jį iš pompos istorijos.</string>
+    <string name="wronginsulin_compare">Palyginti įrašus AndroidAPS ir pompos istorijoje (jei tai palaikoma pompoje).</string>
     <string name="wronginsulin_prime">Susileisti trūkstamą insulino kiekį švirkštu ar naudojantis infuzinės sistemos užpildymo funkcija.</string>
     <string name="wronginsulin_donothing">Nieko nedaryti ir leisti AndroidAPS koreguoti padidėjusį gliukozės kiekį kraujyje.</string>
     <string name="iob_label">Aktyvus insulinas organizme (AIO)</string>

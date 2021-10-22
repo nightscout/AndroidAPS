@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.general.nsclient.acks
 import info.nightscout.androidaps.events.Event
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import io.socket.client.Ack
 import org.json.JSONException
 import org.json.JSONObject
@@ -15,7 +15,7 @@ class NSUpdateAck(
     val action : String,
     var _id: String,
     private val aapsLogger: AAPSLogger,
-    private val rxBus: RxBusWrapper,
+    private val rxBus: RxBus,
     val originalObject: Any? = null
 ) : Event(), Ack {
 

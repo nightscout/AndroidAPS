@@ -92,8 +92,6 @@
     <string name="profile_set_failed">Неуспешно задаване на базален профил</string>
     <string name="danar_bluetooth_status">Bluetooh статус</string>
     <string name="danar_iob_label">IOB на помпата</string>
-    <string name="basal_step">Стъпка при базал</string>
-    <string name="bolus_step">Стъпка при болус</string>
     <string name="virtualpump_firmware_label">Фърмуер</string>
     <string name="danar_pump_settings">DanaR настройки</string>
     <string name="timeformat12h">12ч</string>

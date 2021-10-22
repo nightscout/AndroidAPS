@@ -23,7 +23,7 @@ import info.nightscout.androidaps.automation.databinding.AutomationFragmentBindi
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.automation.dialogs.EditEventDialog
 import info.nightscout.androidaps.plugins.general.automation.dragHelpers.ItemTouchHelperAdapter
 import info.nightscout.androidaps.plugins.general.automation.dragHelpers.ItemTouchHelperViewHolder
@@ -47,7 +47,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
 
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var automationPlugin: AutomationPlugin
     @Inject lateinit var injector: HasAndroidInjector

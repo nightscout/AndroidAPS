@@ -5,7 +5,7 @@ import com.google.gson.Gson
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.EventOmnipodDashPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
@@ -32,7 +32,7 @@ import javax.inject.Singleton
 class OmnipodDashPodStateManagerImpl @Inject constructor(
     private val logger: AAPSLogger,
     private val sharedPreferences: SP,
-    private val rxBus: RxBusWrapper
+    private val rxBus: RxBus
 ) : OmnipodDashPodStateManager {
 
     private var podState: PodState
@@ -311,7 +311,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
 
     private fun updateLastBolusFromResponse(bolusPulsesRemaining: Short) {
         podState.lastBolus?.run {
-            val remainingUnits = bolusPulsesRemaining.toDouble() * 0.05
+            val remainingUnits = bolusPulsesRemaining.toDouble() * PodConstants.POD_PULSE_BOLUS_UNITS
             this.bolusUnitsRemaining = remainingUnits
             if (remainingUnits == 0.0) {
                 this.deliveryComplete = true
@@ -627,11 +627,13 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     }
 
     override fun connectionSuccessRatio(): Float {
-        val attempts = connectionAttempts
-        if (attempts == 0) {
+        if (connectionAttempts == 0) {
             return 0.0F
+        } else if (connectionAttempts <= successfulConnections) {
+            // Prevent bogus quality > 1 during initialisation
+            return 1.0F
         }
-        return successfulConnections.toFloat() / attempts.toFloat()
+        return successfulConnections.toFloat() / connectionAttempts.toFloat()
     }
 
     override fun reset() {

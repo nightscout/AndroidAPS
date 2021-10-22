@@ -5,7 +5,7 @@ import info.nightscout.androidaps.database.entities.Food
 /**
  * Sync the TherapyEvents from NS
  */
-class SyncNsFoodTransaction(private val food: Food, private val invalidateByNsOnly: Boolean) : Transaction<SyncNsFoodTransaction.TransactionResult>() {
+class SyncNsFoodTransaction(private val food: Food) : Transaction<SyncNsFoodTransaction.TransactionResult>() {
 
     override fun run(): TransactionResult {
         val result = TransactionResult()
@@ -17,7 +17,7 @@ class SyncNsFoodTransaction(private val food: Food, private val invalidateByNsOn
 
         if (current != null) {
             // nsId exists, update if different
-            if (!current.isEqual(food)) {
+            if (!current.contentEqualsTo(food)) {
                 current.copyFrom(food)
                 database.foodDao.updateExistingEntry(current)
                 if (food.isValid && current.isValid) result.updated.add(current)
@@ -25,8 +25,6 @@ class SyncNsFoodTransaction(private val food: Food, private val invalidateByNsOn
             }
             return result
         }
-
-        if (invalidateByNsOnly) return result
 
         // not known nsId, add
         database.foodDao.insertNewEntry(food)

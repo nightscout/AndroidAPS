@@ -4,7 +4,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventChargingState
 import info.nightscout.androidaps.events.EventNetworkChange
 import info.nightscout.androidaps.events.EventPreferenceChange
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -13,7 +13,7 @@ import javax.inject.Singleton
 
 @Singleton
 class NsClientReceiverDelegate @Inject constructor(
-    private val rxBus: RxBusWrapper,
+    private val rxBus: RxBus,
     private val resourceHelper: ResourceHelper,
     private val sp: SP,
     private val receiverStatusStore: ReceiverStatusStore

@@ -4,6 +4,18 @@
     <string name="omnipod_dash_pump_description">Pompos integracija Omnipod Dash (naujas, Bluetooth palaikantis modelis su mėlynu adatos dangteliu).</string>
     <!-- Omnipod Dash - Keys -->
     <!-- Omnipod Dash - Overview -->
+    <string name="omnipod_dash_overview_bluetooth_status">Bluetooth būklė</string>
+    <string name="omnipod_dash_overview_bluetooth_address">Bluetooth adresas</string>
+    <string name="omnipod_dash_overview_firmware_version_value">Programinė įranga %1$s / Bluetooth %2$s</string>
+    <string name="omnipod_dash_overview_bluetooth_connection_quality">Ryšio kokybė</string>
+    <string name="omnipod_dash_overview_delivery_status">Leidimo būklė</string>
     <!-- Omnipod Dash - Pod Activation Wizard -->
+    <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">Užpildykite naują Pod        insulinu, kurio pakaktų 3 dienas.\n\nTaip pat atkreipkite dėmesį į du pyptelėjimus iš Pod, kai pildote. Tai rodo, kad rezervuaras buvo užpildytas mažiausiai 80vv. Visiškai ištuštinkite švirkštą, net jei girdėjote du pyptelėjimus.\n\nUžpildę Pod, spustelėkite <b>Kitas</b>.\n\n<b>Pastaba:</b> vykdant šiuos veiksmus, nenuimkite Pod adatos apsauginio dangtelio.</string>
+    <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Pabandykite suporuoti naują Pod ir jį užpildyti.\n\nSėkmingai užbaigę inicijavimo procesą, galite spustelėti <b>Kitas</b>.</string>
+    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Įjungtas pranešimų apie pristabdytą leidimą garsas</string>
     <!-- Exceptions -->
+    <string name="omnipod_dash_failed_to_connect">Nepavyko prisijungti prie Pod</string>
+    <string name="omnipod_dash_found_too_many_pods">Nustatyta, kad suaktyvinama per daug Pod įrenginių</string>
+    <string name="omnipod_dash_scan_failed">Nepavyksta rasti aktyvinamo Pod</string>
+    <string name="omnipod_dash_generic_error">Bendroji klaida: %1$s</string>
 </resources>
