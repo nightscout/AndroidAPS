@@ -883,6 +883,7 @@
     <string name="calculation_in_progress">Calcolo in corso</string>
     <string name="missing_profile_name">Nome profilo mancante</string>
     <string name="error_in_ic_values">Errore nei valori IC</string>
-    <string name="error_in_basal_values">Errore nei valori basali</string>
+    <string name="error_in_basal_values">Errore nei valori della basale</string>
+    <string name="error_in_target_values">Errore nei valori del target</string>
     <string name="error_in_isf_values">Errore nei valori ISF</string>
 </resources>
