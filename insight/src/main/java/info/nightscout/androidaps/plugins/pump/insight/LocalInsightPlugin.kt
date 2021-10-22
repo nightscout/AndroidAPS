@@ -139,6 +139,10 @@ class LocalInsightPlugin @Inject constructor(
     private var statusLoaded = false
     var tBROverNotificationBlock: TBROverNotificationBlock? = null
         private set
+    var lastBolusAmount = 0.0
+        private set
+    var lastBolusTimestamp = 0L
+        private set
 
     override fun onStart() {
         super.onStart()
@@ -1235,6 +1239,8 @@ class LocalInsightPlugin @Inject constructor(
                 pumpId = bolusID.id,
                 pumpType = PumpType.ACCU_CHEK_INSIGHT,
                 pumpSerial = serial)
+            lastBolusTimestamp = bolusID.timestamp
+            lastBolusAmount = event.immediateAmount
         }
         if (event.bolusType == BolusType.EXTENDED || event.bolusType == BolusType.MULTIWAVE) {
             if (event.duration > 0 && profileFunction.getProfile(bolusID!!.timestamp) != null) pumpSync.syncExtendedBolusWithPumpId(

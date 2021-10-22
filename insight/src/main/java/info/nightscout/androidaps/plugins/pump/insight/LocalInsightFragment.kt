@@ -145,6 +145,7 @@ class LocalInsightFragment : DaggerFragment(), View.OnClickListener {
         getTDDItems(statusItems)
         getBaseBasalRateItem(statusItems)
         getTBRItem(statusItems)
+        getLastBolusItem(statusItems)
         getBolusItems(statusItems)
         for (i in statusItems.indices) {
             binding.statusItemContainer.addView(statusItems[i])
@@ -193,7 +194,15 @@ class LocalInsightFragment : DaggerFragment(), View.OnClickListener {
             else                                            -> {
                 val lastConnection = localInsightPlugin.connectionService!!.lastConnected
                 if (lastConnection == 0L) return
-                statusItems.add(getStatusItem(resourceHelper.gs(R.string.last_connected), dateUtil.timeString(lastConnection)))
+                val agoMsc = System.currentTimeMillis() - lastConnection
+                val lastConnectionMinAgo = agoMsc / 60.0 / 1000.0
+                val ago: String = if (lastConnectionMinAgo < 60) {
+                        dateUtil.minAgo(resourceHelper, lastConnection)
+                    } else {
+                        dateUtil.hourAgo(lastConnection, resourceHelper)
+                    }
+                statusItems.add(getStatusItem(resourceHelper.gs(R.string.last_connected),dateUtil.timeString(lastConnection) + " (" + ago + ")")
+                )
             }
         }
     }
@@ -255,6 +264,25 @@ class LocalInsightFragment : DaggerFragment(), View.OnClickListener {
         val activeTBR = localInsightPlugin.activeTBR
         statusItems.add(getStatusItem(resourceHelper.gs(R.string.tempbasal_label),
             resourceHelper.gs(R.string.tbr_formatter, activeTBR!!.percentage, activeTBR.initialDuration - activeTBR.remainingDuration, activeTBR.initialDuration)))
+    }
+
+    private fun getLastBolusItem(statusItems: MutableList<View>) {
+        if (localInsightPlugin.lastBolusAmount.equals(0) || localInsightPlugin.lastBolusTimestamp.equals(0)) return
+        val agoMsc = System.currentTimeMillis() - localInsightPlugin.lastBolusTimestamp
+        val bolusMinAgo = agoMsc / 60.0 / 1000.0
+        val unit = resourceHelper.gs(R.string.insulin_unit_shortname)
+        val ago: String
+        ago = if (bolusMinAgo < 60) {
+            dateUtil.minAgo(resourceHelper, localInsightPlugin.lastBolusTimestamp)
+        } else {
+            dateUtil.hourAgo(localInsightPlugin.lastBolusTimestamp, resourceHelper)
+        }
+        statusItems.add(
+            getStatusItem(
+                resourceHelper.gs(R.string.insight_last_bolus),
+                resourceHelper.gs(R.string.insight_last_bolus_formater, localInsightPlugin.lastBolusAmount, unit, ago)
+            )
+        )
     }
 
     private fun getBolusItems(statusItems: MutableList<View>) {
