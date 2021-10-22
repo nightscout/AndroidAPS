@@ -1113,7 +1113,7 @@
     <string name="smscommunicator_another_bolus_in_queue">There is another bolus in queue. Try again later.</string>
     <string name="calculation_in_progress">Calculation in progress</string>
     <string name="missing_profile_name">Missing profile name</string>
-    <string name="error_in_ic_values">Error in IC vaules</string>
+    <string name="error_in_ic_values">Error in IC values</string>
     <string name="error_in_basal_values">Error in basal values</string>
     <string name="error_in_target_values">Error in target values</string>
     <string name="error_in_isf_values">Error in ISF values</string>
