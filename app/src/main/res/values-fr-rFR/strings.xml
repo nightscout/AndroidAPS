@@ -883,7 +883,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="smscommunicator_another_bolus_in_queue">Un autre bolus est en file d\'attente. Réessayez plus tard.</string>
     <string name="calculation_in_progress">Calcul en cours</string>
     <string name="missing_profile_name">Nom de profil manquant</string>
-    <string name="error_in_ic_values">Erreur dans les valeurs de G/I</string>
     <string name="error_in_basal_values">Erreur dans les valeurs de basal</string>
     <string name="error_in_target_values">Erreur dans les valeurs cibles</string>
     <string name="error_in_isf_values">Erreur dans les valeurs de SI</string>
