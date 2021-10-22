@@ -881,4 +881,5 @@
     <string name="sms_timeout_while_wating">Tiempo de espera agotado mientras finalizaba la comunicación anterior con la bomba</string>
     <string name="smscommunicator_another_bolus_in_queue">Hay otro bolo en cola. Inténtalo de nuevo más tarde.</string>
     <string name="calculation_in_progress">Cálculo en curso</string>
+    <string name="error_in_ic_values">Error en valores IC</string>
 </resources>
