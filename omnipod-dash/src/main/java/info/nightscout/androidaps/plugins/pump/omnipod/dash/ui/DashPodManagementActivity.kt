@@ -96,6 +96,10 @@ class DashPodManagementActivity : NoSplashAppCompatActivity() {
                 }
             )
         }
+
+        binding.buttonPodHistory.setOnClickListener {
+            startActivity(Intent(this, DashPodHistoryActivity::class.java))
+        }
     }
 
     override fun onResume() {
