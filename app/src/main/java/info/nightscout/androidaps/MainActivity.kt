@@ -34,11 +34,11 @@ import info.nightscout.androidaps.databinding.ActivityMainBinding
 import info.nightscout.androidaps.events.EventAppExit
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.events.EventRebuildTabs
-import info.nightscout.androidaps.activities.HistoryBrowseActivity
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.IconsProvider
 import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -62,6 +62,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.tabs.TabPageAdapter
 import info.nightscout.androidaps.utils.ui.UIRunnable
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import java.util.*
 import javax.inject.Inject
 import kotlin.system.exitProcess
@@ -88,6 +89,7 @@ class MainActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var signatureVerifierPlugin: SignatureVerifierPlugin
     @Inject lateinit var config: Config
     @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var profileFunction: ProfileFunction
 
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private var pluginPreferencesMenuItem: MenuItem? = null
@@ -125,20 +127,18 @@ class MainActivity : NoSplashAppCompatActivity() {
         if (!loopPlugin.isEnabled(PluginType.LOOP)) versionCheckerUtils.triggerCheckVersion()
         setUserStats()
         setupViews()
-        disposable.add(rxBus
+        disposable += rxBus
             .toObservable(EventRebuildTabs::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({
-                if (it.recreate) recreate()
-                else setupViews()
-                setWakeLock()
-            }, fabricPrivacy::logException)
-        )
-        disposable.add(rxBus
+                           if (it.recreate) recreate()
+                           else setupViews()
+                           setWakeLock()
+                       }, fabricPrivacy::logException)
+        disposable += rxBus
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ processPreferenceChange(it) }, fabricPrivacy::logException)
-        )
         if (startWizard() && !isRunningRealPumpTest()) {
             protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, {
                 startActivity(Intent(this, SetupWizardActivity::class.java))
@@ -157,7 +157,7 @@ class MainActivity : NoSplashAppCompatActivity() {
         if (viewPager.currentItem >= 0) pluginPreferencesMenuItem?.isEnabled = (viewPager.adapter as TabPageAdapter).getPluginAt(viewPager.currentItem).preferencesId != -1
     }
 
-    private fun startWizard() : Boolean =
+    private fun startWizard(): Boolean =
         !sp.getBoolean(R.string.key_setupwizard_processed, false)
 
     override fun onPostCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
@@ -173,8 +173,8 @@ class MainActivity : NoSplashAppCompatActivity() {
     override fun onResume() {
         super.onResume()
         protectionCheck.queryProtection(this, ProtectionCheck.Protection.APPLICATION, null,
-            UIRunnable { OKDialog.show(this, "", resourceHelper.gs(R.string.authorizationfailed)) { finish() } },
-            UIRunnable { OKDialog.show(this, "", resourceHelper.gs(R.string.authorizationfailed)) { finish() } }
+                                        UIRunnable { OKDialog.show(this, "", resourceHelper.gs(R.string.authorizationfailed)) { finish() } },
+                                        UIRunnable { OKDialog.show(this, "", resourceHelper.gs(R.string.authorizationfailed)) { finish() } }
         )
     }
 
@@ -229,8 +229,10 @@ class MainActivity : NoSplashAppCompatActivity() {
             binding.tabsCompact.visibility = View.GONE
             val typedValue = TypedValue()
             if (theme.resolveAttribute(R.attr.actionBarSize, typedValue, true)) {
-                binding.toolbar.layoutParams = LinearLayout.LayoutParams(Toolbar.LayoutParams.MATCH_PARENT,
-                    TypedValue.complexToDimensionPixelSize(typedValue.data, resources.displayMetrics))
+                binding.toolbar.layoutParams = LinearLayout.LayoutParams(
+                    Toolbar.LayoutParams.MATCH_PARENT,
+                    TypedValue.complexToDimensionPixelSize(typedValue.data, resources.displayMetrics)
+                )
             }
             TabLayoutMediator(binding.tabsNormal, binding.mainPager) { tab, position ->
                 tab.text = (binding.mainPager.adapter as TabPageAdapter).getPluginAt(position).name
@@ -261,6 +263,12 @@ class MainActivity : NoSplashAppCompatActivity() {
         }
     }
 
+    override fun onMenuOpened(featureId: Int, menu: Menu): Boolean {
+        val result = super.onMenuOpened(featureId, menu)
+        menu.findItem(R.id.nav_treatments)?.isEnabled = profileFunction.getProfile() != null
+        return result
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         this.menu = menu
         menuInflater.inflate(R.menu.menu_main, menu)
@@ -272,7 +280,7 @@ class MainActivity : NoSplashAppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.nav_preferences -> {
+            R.id.nav_preferences        -> {
                 protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, {
                     val i = Intent(this, PreferencesActivity::class.java)
                     i.putExtra("id", -1)
@@ -281,24 +289,24 @@ class MainActivity : NoSplashAppCompatActivity() {
                 return true
             }
 
-            R.id.nav_historybrowser -> {
+            R.id.nav_historybrowser     -> {
                 startActivity(Intent(this, HistoryBrowseActivity::class.java))
                 return true
             }
 
-            R.id.nav_treatments -> {
+            R.id.nav_treatments         -> {
                 startActivity(Intent(this, TreatmentsActivity::class.java))
                 return true
             }
 
-            R.id.nav_setupwizard -> {
+            R.id.nav_setupwizard        -> {
                 protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, {
                     startActivity(Intent(this, SetupWizardActivity::class.java))
                 })
                 return true
             }
 
-            R.id.nav_about -> {
+            R.id.nav_about              -> {
                 var message = "Build: ${BuildConfig.BUILDVERSION}\n"
                 message += "Flavor: ${BuildConfig.FLAVOR}${BuildConfig.BUILD_TYPE}\n"
                 message += "${resourceHelper.gs(R.string.configbuilder_nightscoutversion_label)} ${nsSettingsStatus.getVersion()}"
@@ -320,7 +328,7 @@ class MainActivity : NoSplashAppCompatActivity() {
                 return true
             }
 
-            R.id.nav_exit -> {
+            R.id.nav_exit               -> {
                 aapsLogger.debug(LTag.CORE, "Exiting")
                 uel.log(Action.EXIT_AAPS, Sources.Aaps)
                 rxBus.send(EventAppExit())
@@ -344,12 +352,12 @@ class MainActivity : NoSplashAppCompatActivity() {
                 return true
             }
 */
-            R.id.nav_defaultprofile -> {
+            R.id.nav_defaultprofile     -> {
                 startActivity(Intent(this, ProfileHelperActivity::class.java))
                 return true
             }
 
-            R.id.nav_stats -> {
+            R.id.nav_stats              -> {
                 startActivity(Intent(this, StatsActivity::class.java))
                 return true
             }
