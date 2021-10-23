@@ -18,6 +18,7 @@
     <string name="connected">Conectat</string>
     <string name="disconnected">Deconectat</string>
     <string name="disconnecting">Se deconectează</string>
+    <string name="waiting_for_disconnection">Se așteaptă deconectarea</string>
     <string name="androidaps_start">AndroidAPS a pornit</string>
     <string name="formatinsulinunits1">%1$.1f U</string>
     <string name="formatinsulinunits">%1$.2f U</string>
@@ -62,6 +63,8 @@
     <string name="eventtype">Tip eveniment</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
+    <string name="shortgram">g</string>
+    <string name="shortpercent">%</string>
     <string name="advancedsettings_title">Setări avansate</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">BT Watchdog</string>
@@ -102,6 +105,7 @@
     <string name="notes_label">Note</string>
     <string name="remove_button">Șterge</string>
     <string name="addnew">Adăugare</string>
+    <string name="wrong_pump_data">Datele vin de la o pompa diferita. Schimba driver-ul de pompa pentru a reseta starea pompei.</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Se limitează maximul ratei bazale la %1$.2f U/o datorită %2$s</string>
     <string name="pumplimit">limită pompă</string>
@@ -175,9 +179,15 @@
     <string name="careportal_note">Notă</string>
     <string name="careportal_question">Întrebare</string>
     <string name="careportal_exercise">Activitate fizică</string>
+    <string name="careportal_announcement_message">Anunț : %1$s</string>
+    <string name="careportal_note_message">Notă: %1$s</string>
+    <string name="careportal_question_message">Întrebare : %1$s</string>
+    <string name="careportal_exercise_message">Exercițiu fizic: %1$s</string>
     <string name="careportal_pumpsitechange">Schimbare loc pompă</string>
     <string name="careportal_cgmsensorinsert">Inserare senzor</string>
     <string name="careportal_cgmsensorstart">Start senzor</string>
+    <string name="careportal_cgm_sensor_stop">Stop senzor CGM</string>
+    <string name="careportal_dad_alert">Alertă D.A.D.</string>
     <string name="careportal_insulincartridgechange">Schimbare cartuș insulină</string>
     <string name="careportal_profileswitch">Schimbare de profil</string>
     <string name="careportal_snackbolus">Bolus Gustare</string>
@@ -190,6 +200,7 @@
     <string name="careportal_openapsoffline">OpenAPS Offline</string>
     <string name="careportal_pumpbatterychange">Schimbare baterie pompă</string>
     <string name="careportal_temporarytarget">Ţintă temporară</string>
+    <string name="careportal_temporarytargetvalue">Valoare țintă temporară</string>
     <string name="careportal_temporarytargetcancel">Oprire ţintă temporară</string>
     <string name="boluswizard">Asistent bolusare</string>
     <string name="glucosetype_finger">Deget</string>
@@ -198,9 +209,16 @@
     <string name="unknown">necunoscută</string>
     <string name="eatingsoon">Mănânc în curând</string>
     <string name="hypo">Hipo</string>
+    <string name="activity">Exercițiu fizic</string>
     <string name="wear">Ceas</string>
     <string name="automation">Automatizare</string>
     <string name="custom">Personalizat</string>
+    <string name="pump">Pompă</string>
+    <string name="loop">Buclă</string>
+    <string name="ns">NS</string>
+    <string name="record">Înregistrare</string>
+    <string name="reading_pump_history">Se citește istoricul din pompă</string>
+    <string name="pump_icon">Pictogramă pompă</string>
     <!--    Command-->
     <string name="connectiontimedout">Conectare eșuată</string>
     <!--    PumpEnactResult-->
@@ -271,6 +289,7 @@
     <string name="signature_verifier">Verificare semnătură</string>
     <string name="running_invalid_version">S-a detectat rularea unei versiuni invalide. Buclă dezactivată!</string>
     <string name="versionavailable">Versiunea %1$s este disponibilă</string>
+    <string name="version_expire">Versiunea %1$s expiră pe %2$s</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Restartați telefonul sau reporniți aplicația AndroidAPS din Setările de sistem \naltfel AndroidAPS nu va avea jurnalizare (importanta pentru monitorizare si verifica funcționarea corecta a algoritmilor)!</string>
     <!-- WeekdayPicker -->
@@ -282,6 +301,15 @@
     <string name="saturday_short">S</string>
     <string name="sunday_short">D</string>
     <!-- User Entry -->
+    <string name="uel_bolus">BOLUS</string>
+    <string name="uel_bolus_advisor">ASISTENT BOLUS</string>
+    <string name="uel_extended_bolus">BOLUS EXTINS</string>
+    <string name="uel_superbolus_tbr">RBT SUPERBOLUS</string>
+    <string name="uel_carbs">CARBO</string>
+    <string name="uel_extended_carbs">CARBO EXTINSI</string>
+    <string name="uel_temp_basal">BAZALA TEMPORARA</string>
+    <string name="uel_tt">TINTA TEMPORARA</string>
+    <string name="uel_new_profile">PROFIL NOW</string>
     <!-- HardLimits -->
     <plurals name="days">
         <item quantity="one">%1$d zi</item>
