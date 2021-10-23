@@ -132,6 +132,7 @@
     <string name="configbuilder_nightscoutversion_label">Versiune Nightscout:</string>
     <string name="missing_carbs">Lipsă %1$d g</string>
     <string name="exported">Am exportat preferințele</string>
+    <string name="ue_exported">Înregistrările de la Utilizator exportate</string>
     <string name="export_to">Exportă setările către</string>
     <string name="import_from">Importă setările din</string>
     <string name="setting_imported">Setări importate</string>
