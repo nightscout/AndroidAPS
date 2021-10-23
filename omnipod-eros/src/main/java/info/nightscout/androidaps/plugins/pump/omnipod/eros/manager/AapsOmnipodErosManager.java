@@ -209,6 +209,8 @@ public class AapsOmnipodErosManager {
         addToHistory(System.currentTimeMillis(), PodHistoryEntryType.INSERT_CANNULA, result.getComment(), result.getSuccess());
 
         if (result.getSuccess()) {
+            pumpSync.connectNewPump();
+
             uploadCareportalEvent(System.currentTimeMillis() - 1000, DetailedBolusInfo.EventType.INSULIN_CHANGE);
             uploadCareportalEvent(System.currentTimeMillis(), DetailedBolusInfo.EventType.CANNULA_CHANGE);
 
