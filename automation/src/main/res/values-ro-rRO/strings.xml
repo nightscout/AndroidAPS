@@ -38,6 +38,9 @@
     <string name="glucoseisnotavailable">Glicemia nu este disponibilă</string>
     <string name="glucosecomparedmgdl">Glicemie %1$s %2$.0f %3$s</string>
     <string name="glucosecomparedmmol">Glicemie %1$s %2$.1f %3$s</string>
+    <string name="notemptarget">Ținta temporară nu există</string>
+    <string name="temptargetcomparedmgdl">Tinta temporara %1$s %2$.0f %3$s</string>
+    <string name="temptargetcomparedmmol">Tinta temporara %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">Profil %1$s %2$d</string>
     <string name="iobcompared">IOB %1$s %2$.1f</string>
     <string name="and">Și</string>
@@ -86,6 +89,7 @@
     <string name="latitude_short">Lat:</string>
     <string name="longitude_short">Long:</string>
     <string name="glucose_u">Glicemie [%1$s]:</string>
+    <string name="target_u">Tinta [%1$s]:</string>
     <string name="lastboluslabel">Ultimul bolus</string>
     <string name="lastboluscompared">Ultimul bolus acum %1$s %2$s min</string>
     <string name="triggercoblabel">COB</string>
