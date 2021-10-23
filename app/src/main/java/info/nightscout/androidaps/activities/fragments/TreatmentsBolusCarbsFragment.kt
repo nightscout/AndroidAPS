@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.activities.fragments
 
+import android.annotation.SuppressLint
 import android.graphics.Paint
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -84,6 +85,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         TreatmentsBolusCarbsFragmentBinding.inflate(inflater, container, false).also { _binding = it }.root
 
+    @SuppressLint("CheckResult")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.recyclerview.setHasFixedSize(true)
@@ -320,7 +322,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
 
             init {
                 binding.calculation.setOnClickListener {
-                    val mealLinkLoaded = it.tag as MealLink
+                    val mealLinkLoaded = it.tag as MealLink? ?: return@setOnClickListener
                     mealLinkLoaded.bolusCalculatorResult?.let { bolusCalculatorResult ->
                         WizardInfoDialog().also { wizardDialog ->
                             wizardDialog.setData(bolusCalculatorResult)
