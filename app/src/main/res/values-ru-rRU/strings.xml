@@ -883,4 +883,9 @@ Context | Edit Context</string>
     <string name="sms_timeout_while_wating">Таймаут во время ожидания окончания предыдущего соединения с помпой</string>
     <string name="smscommunicator_another_bolus_in_queue">В очереди есть еще один болюс. Повторите попытку позже.</string>
     <string name="calculation_in_progress">Идет подсчет</string>
+    <string name="missing_profile_name">Отсутствует название профиля</string>
+    <string name="error_in_ic_values">Ошибка в значении углеводного коэффициента IC</string>
+    <string name="error_in_basal_values">Ошибка в величине базала</string>
+    <string name="error_in_target_values">Ошибка в целевых значениях</string>
+    <string name="error_in_isf_values">Ошибка в значении фактора чувствительности к инсулину ISF</string>
 </resources>
