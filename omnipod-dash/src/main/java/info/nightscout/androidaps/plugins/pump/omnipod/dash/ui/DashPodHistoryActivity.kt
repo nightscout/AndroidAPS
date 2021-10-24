@@ -102,33 +102,41 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.omnipod_dash_pod_history_activity)
-        historyTypeSpinner = findViewById<Spinner>(R.id.omnipod_historytype)
-        statusView = findViewById<TextView>(R.id.omnipod_historystatus)
-        recyclerView = findViewById<RecyclerView>(R.id.omnipod_history_recyclerview)
-        recyclerView!!.setHasFixedSize(true)
-        linearLayoutManager = LinearLayoutManager(this)
-        recyclerView!!.layoutManager = linearLayoutManager
-        prepareData()
-        recyclerViewAdapter = RecyclerViewAdapter(filteredHistoryList)
-        recyclerView!!.adapter = recyclerViewAdapter
-        statusView!!.visibility = View.GONE
-        typeListFull = getTypeList(PumpHistoryEntryGroup.Companion.getTranslatedList(resourceHelper))!!
-        val spinnerAdapter: ArrayAdapter<TypeList> = ArrayAdapter<TypeList>(this, R.layout.spinner_centered, typeListFull!!)
-        historyTypeSpinner!!.setAdapter(spinnerAdapter)
-        historyTypeSpinner!!.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
-                if (manualChange) return
-                val selected = historyTypeSpinner!!.getSelectedItem() as TypeList
-                selectedGroup = selected.entryGroup
-                filterHistory(selectedGroup)
-            }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                if (manualChange) return
-                filterHistory(PumpHistoryEntryGroup.All)
+        setContentView(R.layout.omnipod_dash_pod_history_activity)
+        prepareData()
+
+        recyclerView = findViewById<RecyclerView>(R.id.omnipod_history_recyclerview)
+        recyclerViewAdapter = RecyclerViewAdapter(filteredHistoryList)
+        linearLayoutManager = LinearLayoutManager(this)
+        recyclerView?.run {
+            setHasFixedSize(true)
+            layoutManager = linearLayoutManager
+            adapter = recyclerViewAdapter
+        }
+
+        statusView = findViewById<TextView>(R.id.omnipod_historystatus)
+        statusView?.run { visibility = View.GONE }
+
+        historyTypeSpinner = findViewById<Spinner>(R.id.omnipod_historytype)
+        typeListFull = getTypeList(PumpHistoryEntryGroup.Companion.getTranslatedList(resourceHelper))
+        val spinnerAdapter: ArrayAdapter<TypeList> = ArrayAdapter<TypeList>(this, R.layout.spinner_centered, typeListFull!!)
+        historyTypeSpinner?.run {
+            adapter = spinnerAdapter
+            onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+                    if (manualChange) return
+                    val selected = selectedItem as TypeList
+                    selectedGroup = selected.entryGroup
+                    filterHistory(selectedGroup)
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                    if (manualChange) return
+                    filterHistory(PumpHistoryEntryGroup.All)
+                }
             }
-        })
+        }
     }
 
     private fun getTypeList(list: List<PumpHistoryEntryGroup>): List<TypeList> {
@@ -155,8 +163,8 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
         var historyList: List<HistoryRecordEntity> = historyList
 
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): HistoryViewHolder {
-            val v: View = LayoutInflater.from(viewGroup.getContext()).inflate(
-                R.layout.omnipod_dash_pod_history_item,  //
+            val v: View = LayoutInflater.from(viewGroup.context).inflate(
+                R.layout.omnipod_dash_pod_history_item,
                 viewGroup, false
             )
             return HistoryViewHolder(v)
@@ -173,6 +181,8 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
 
         private fun setValue(historyEntry: HistoryRecordEntity, valueView: TextView) {
             valueView.text = historyEntry.toString()
+            //val entryType = historyEntry.commandType
+
             /* Here you define which information to show in history according to historyEntry Type
             if (historyEntry.isSuccess()) {
                 PodHistoryEntryType entryType = PodHistoryEntryType.getByCode(historyEntry.getPodEntryTypeCode());
@@ -236,7 +246,7 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
 
         private fun setProfileValue(data: String, valueView: TextView) {
             aapsLogger.debug(LTag.PUMP, "Profile json:\n$data")
-            valueView.setText("Profile informations from history")
+            valueView.text = "Profile informations from history"
             /*
             try {
                 Profile.ProfileValue[] profileValuesArray = aapsOmnipodUtil.getGsonInstance().fromJson(data, Profile.ProfileValue[].class);
