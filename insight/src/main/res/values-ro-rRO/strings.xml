@@ -21,6 +21,7 @@
     <string name="tbr_formatter">%1$d%% pentru %2$d / %3$d min</string>
     <string name="multiwave_bolus">Bolus multiwave</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U pentru %3$d min</string>
+    <string name="insight_last_bolus">Ultimul Bolus</string>
     <string name="searching_for_devices">Căutare dispozitive…</string>
     <string name="pairing_completed">Asociere reușită</string>
     <string name="code_compare">Sunt identice codurile afișate aici și cele de pe pompă?</string>
