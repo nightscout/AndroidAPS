@@ -39,7 +39,7 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
     private var statusView: TextView? = null
     private var recyclerView: RecyclerView? = null
     private var linearLayoutManager: LinearLayoutManager? = null
-    private val fullHistoryList: List<HistoryRecordEntity> = ArrayList<HistoryRecordEntity>()
+    private val fullHistoryList: MutableList<HistoryRecordEntity> = ArrayList<HistoryRecordEntity>()
     private val filteredHistoryList: MutableList<HistoryRecordEntity> = ArrayList<HistoryRecordEntity>()
     private var recyclerViewAdapter: RecyclerViewAdapter? = null
     private var manualChange = false
@@ -47,10 +47,14 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
 
     private fun prepareData() {
         val gc = GregorianCalendar()
-        gc.add(Calendar.HOUR_OF_DAY, -24)
+        // TODO: limit to the last 3 days. Using 30days here for testing
+        gc.add(Calendar.DAY_OF_MONTH, -30)
 
-        //
-        //fullHistoryList.addAll(dashHistory.getRecordsAfter(gc.getTimeInMillis()));
+        val since = gc.timeInMillis
+        val records = dashHistory.getRecordsAfter(since)
+            .subscribeOn(aapsSchedulers.io)
+            .blockingGet()
+        fullHistoryList.addAll(records)
     }
 
     private fun filterHistory(group: PumpHistoryEntryGroup) {
