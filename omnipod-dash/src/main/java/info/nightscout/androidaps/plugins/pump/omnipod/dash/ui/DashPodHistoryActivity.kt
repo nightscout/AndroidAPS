@@ -144,7 +144,7 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
         setContentView(R.layout.omnipod_dash_pod_history_activity)
         prepareData()
 
-        recyclerView = findViewById<RecyclerView>(R.id.omnipod_history_recyclerview)
+        recyclerView = findViewById(R.id.omnipod_history_recyclerview)
         recyclerViewAdapter = RecyclerViewAdapter(filteredHistoryList)
         linearLayoutManager = LinearLayoutManager(this)
         recyclerView?.run {
@@ -153,10 +153,10 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
             adapter = recyclerViewAdapter
         }
 
-        statusView = findViewById<TextView>(R.id.omnipod_historystatus)
+        statusView = findViewById(R.id.omnipod_historystatus)
         statusView?.run { visibility = View.GONE }
 
-        historyTypeSpinner = findViewById<Spinner>(R.id.omnipod_historytype)
+        historyTypeSpinner = findViewById(R.id.omnipod_historytype)
         typeListFull = getTypeList(PumpHistoryEntryGroup.Companion.getTranslatedList(resourceHelper))
         val spinnerAdapter: ArrayAdapter<TypeList> = ArrayAdapter<TypeList>(this, R.layout.spinner_centered, typeListFull!!)
         historyTypeSpinner?.run {
@@ -269,9 +269,9 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
         }
 
         inner class HistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            val timeView: TextView = itemView.findViewById<TextView>(R.id.omnipod_history_time)
-            val typeView: TextView = itemView.findViewById<TextView>(R.id.omnipod_history_source)
-            val valueView: TextView = itemView.findViewById<TextView>(R.id.omnipod_history_description)
+            val timeView: TextView = itemView.findViewById(R.id.omnipod_history_time)
+            val typeView: TextView = itemView.findViewById(R.id.omnipod_history_source)
+            val valueView: TextView = itemView.findViewById(R.id.omnipod_history_description)
         }
     }
 
