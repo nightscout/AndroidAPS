@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.ui
-//import info.nightscout.androidaps.plugins.pump.omnipod.dash.definition.PodHistoryEntryType;
-//import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.AapsOmnipodUtil;
+// import info.nightscout.androidaps.plugins.pump.omnipod.dash.definition.PodHistoryEntryType;
+// import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.AapsOmnipodUtil;
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.LayoutInflater
@@ -20,7 +20,6 @@ import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.DashHistory
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.database.HistoryRecordEntity
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import java.util.*
 import javax.inject.Inject
@@ -29,8 +28,8 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
 
-    //@Inject AapsOmnipodUtil aapsOmnipodUtil;
-    //@Inject lateinit var resourceHelper: ResourceHelper
+    // @Inject AapsOmnipodUtil aapsOmnipodUtil;
+    // @Inject lateinit var resourceHelper: ResourceHelper
 
     @Inject lateinit var dashHistory: DashHistory
     @Inject lateinit var aapsSchedulers: AapsSchedulers
@@ -155,7 +154,6 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
         override fun toString(): String {
             return name
         }
-
     }
 
     inner class RecyclerViewAdapter internal constructor(historyList: List<HistoryRecordEntity>) : RecyclerView.Adapter<RecyclerViewAdapter.HistoryViewHolder>() {
@@ -172,16 +170,19 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
 
         override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
             val record: HistoryRecordEntity = historyList[position]
-            if (record != null) {
-                holder.timeView.setText(DateTimeUtil.toStringFromTimeInMillis(record.date))
-                //holder.typeView.setText(PodHistoryEntryType.getByCode(record.getPodEntryTypeCode()).getResourceId());
+            record?.let {
+                holder.timeView.text = DateTimeUtil.toStringFromTimeInMillis(record.date)
                 setValue(record, holder.valueView)
+                setType(record, holder.typeView)
             }
+        }
+
+        private fun setType(record: HistoryRecordEntity, typeView: TextView) {
         }
 
         private fun setValue(historyEntry: HistoryRecordEntity, valueView: TextView) {
             valueView.text = historyEntry.toString()
-            //val entryType = historyEntry.commandType
+            // val entryType = historyEntry.commandType
 
             /* Here you define which information to show in history according to historyEntry Type
             if (historyEntry.isSuccess()) {
@@ -271,7 +272,6 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
             val typeView: TextView = itemView.findViewById<TextView>(R.id.omnipod_history_source)
             val valueView: TextView = itemView.findViewById<TextView>(R.id.omnipod_history_description)
         }
-
     }
 
     companion object {
