@@ -49,7 +49,7 @@ class DashHistory @Inject constructor(
     @Suppress("ReturnCount")
     fun createRecord(
         commandType: OmnipodCommandType,
-        date: Long = System.currentTimeMillis(),
+        date: Long = currentTimeMillis(),
         initialResult: InitialResult = InitialResult.NOT_SENT,
         tempBasalRecord: TempBasalRecord? = null,
         bolusRecord: BolusRecord? = null,

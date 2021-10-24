@@ -171,13 +171,14 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
         override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
             val record: HistoryRecordEntity = historyList[position]
             record?.let {
-                holder.timeView.text = DateTimeUtil.toStringFromTimeInMillis(record.date)
+                holder.timeView.text = DateTimeUtil.toStringFromTimeInMillis(record.displayTimestamp())
                 setValue(record, holder.valueView)
                 setType(record, holder.typeView)
             }
         }
 
         private fun setType(record: HistoryRecordEntity, typeView: TextView) {
+            typeView.text = resourceHelper.gs(record.commandType.resourceId)
         }
 
         private fun setValue(historyEntry: HistoryRecordEntity, valueView: TextView) {

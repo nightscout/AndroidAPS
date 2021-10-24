@@ -20,4 +20,15 @@ data class HistoryRecordEntity(
     @Embedded(prefix = "bolusRecord_") val bolusRecord: BolusRecord?,
     val resolvedResult: ResolvedResult?,
     val resolvedAt: Long?
-)
+) {
+    fun displayTimestamp(): Long {
+        resolvedAt?.let {
+            return it
+        }
+        return date
+    }
+
+    fun isSuccess(): Boolean {
+        return initialResult == InitialResult.SENT && resolvedResult == ResolvedResult.SUCCESS
+    }
+}
