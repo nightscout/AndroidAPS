@@ -862,6 +862,7 @@
     <string name="ns_sync_options">Sincronizare</string>
     <string name="ns_upload_summary">Profilurile, bolusurile, carbohidrații, bazalele temporare sunt încărcate în NS</string>
     <string name="ns_upload">Încarcă date în NS</string>
+    <string name="ns_receive_profile_store">Primire stocare profile</string>
     <string name="ns_receive_profile_store_summary">Sincronizează profilurile din editorul de profil NS</string>
     <string name="ns_receive_temp_target">Primește ținte temporare</string>
     <string name="ns_receive_temp_target_summary">Acceptați țintele temporare introduse prin NS sau NSClient</string>
