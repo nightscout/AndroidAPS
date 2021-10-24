@@ -257,16 +257,9 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
         }
 
         inner class HistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-            val timeView: TextView
-            val typeView: TextView
-            val valueView: TextView
-
-            init {
-                timeView = itemView.findViewById<TextView>(R.id.omnipod_history_time)
-                typeView = itemView.findViewById<TextView>(R.id.omnipod_history_source)
-                valueView = itemView.findViewById<TextView>(R.id.omnipod_history_description)
-            }
+            val timeView: TextView = itemView.findViewById<TextView>(R.id.omnipod_history_time)
+            val typeView: TextView = itemView.findViewById<TextView>(R.id.omnipod_history_source)
+            val valueView: TextView = itemView.findViewById<TextView>(R.id.omnipod_history_description)
         }
 
     }
