@@ -83,7 +83,8 @@ class DashHistory @Inject constructor(
     fun getRecords(): Single<List<HistoryRecord>> =
         dao.all().map { list -> list.map(historyMapper::entityToDomain) }
 
-    fun getRecordsAfter(time: Long): List<HistoryRecordEntity> = dao.allSince(time).blockingGet()
+    fun getRecordsAfter(time: Long): Single<List<HistoryRecordEntity>> =
+        dao.allSince(time)
 
     fun updateFromState(podState: OmnipodDashPodStateManager) = Completable.defer {
         val historyId = podState.activeCommand?.historyId
