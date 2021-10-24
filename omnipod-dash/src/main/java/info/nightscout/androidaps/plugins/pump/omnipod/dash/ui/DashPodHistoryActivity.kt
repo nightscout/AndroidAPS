@@ -17,8 +17,11 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpHistoryEntryGroup
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
+import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.DashHistory
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.InitialResult
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.ResolvedResult
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.database.HistoryRecordEntity
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import java.util.*
@@ -27,10 +30,6 @@ import javax.inject.Inject
 class DashPodHistoryActivity : NoSplashAppCompatActivity() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
-
-    // @Inject AapsOmnipodUtil aapsOmnipodUtil;
-    // @Inject lateinit var resourceHelper: ResourceHelper
-
     @Inject lateinit var dashHistory: DashHistory
     @Inject lateinit var aapsSchedulers: AapsSchedulers
 
@@ -56,20 +55,57 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
         fullHistoryList.addAll(records)
     }
 
+    private fun groupForCommandType(type: OmnipodCommandType): PumpHistoryEntryGroup {
+        return when(type) {
+            OmnipodCommandType.INITIALIZE_POD ->
+                PumpHistoryEntryGroup.Prime
+            OmnipodCommandType.INSERT_CANNULA ->
+                PumpHistoryEntryGroup.Prime
+            OmnipodCommandType.DEACTIVATE_POD ->
+                PumpHistoryEntryGroup.Prime
+            OmnipodCommandType.DISCARD_POD ->
+                PumpHistoryEntryGroup.Prime
+
+            OmnipodCommandType.CANCEL_TEMPORARY_BASAL ->
+                PumpHistoryEntryGroup.Basal
+            OmnipodCommandType.SET_BASAL_PROFILE ->
+                PumpHistoryEntryGroup.Basal
+            OmnipodCommandType.SET_TEMPORARY_BASAL ->
+                PumpHistoryEntryGroup.Basal
+            OmnipodCommandType.RESUME_DELIVERY ->
+                PumpHistoryEntryGroup.Basal
+            OmnipodCommandType.SUSPEND_DELIVERY ->
+                PumpHistoryEntryGroup.Basal
+
+            OmnipodCommandType.SET_BOLUS ->
+                PumpHistoryEntryGroup.Bolus
+            OmnipodCommandType.CANCEL_BOLUS ->
+                PumpHistoryEntryGroup.Bolus
+
+            OmnipodCommandType.ACKNOWLEDGE_ALERTS ->
+                PumpHistoryEntryGroup.Alarm
+            OmnipodCommandType.CONFIGURE_ALERTS ->
+                PumpHistoryEntryGroup.Alarm
+            OmnipodCommandType.PLAY_TEST_BEEP ->
+                PumpHistoryEntryGroup.Alarm
+
+            OmnipodCommandType.GET_POD_STATUS ->
+                PumpHistoryEntryGroup.Configuration
+            OmnipodCommandType.SET_TIME ->
+                PumpHistoryEntryGroup.Configuration
+
+            OmnipodCommandType.READ_POD_PULSE_LOG ->
+                PumpHistoryEntryGroup.Unknown
+        }
+    }
     private fun filterHistory(group: PumpHistoryEntryGroup) {
         filteredHistoryList.clear()
         aapsLogger.debug(LTag.PUMP, "Items on full list: {}", fullHistoryList.size)
         if (group === PumpHistoryEntryGroup.All) {
             filteredHistoryList.addAll(fullHistoryList)
-        } /* Here you can add dedicated dao according to type of event selection in history Block
-         disabled because PodHistoryEntryType doesn't exist in Dash module
-        else {
-            for (HistoryRecordEntity pumpHistoryEntry : fullHistoryList) {
-                if (PodHistoryEntryType.getByCode(pumpHistoryEntry.getPodEntryTypeCode()).getGroup() == group) {
-                    this.filteredHistoryList.add(pumpHistoryEntry);
-                }
-            }
-        }*/
+        } else {
+            filteredHistoryList.addAll(fullHistoryList.filter { groupForCommandType(it.commandType) == group })
+        }
         recyclerViewAdapter?.let {
             it.historyList = filteredHistoryList
             it.notifyDataSetChanged()
@@ -85,10 +121,13 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
 
     private fun setHistoryTypeSpinner() {
         manualChange = true
-        for (i in typeListFull!!.indices) {
-            if (typeListFull!![i].entryGroup === selectedGroup) {
-                historyTypeSpinner!!.setSelection(i)
-                break
+        val typeList = typeListFull
+        typeList?.let {
+            for (i in it.indices) {
+                if (it[i].entryGroup === selectedGroup) {
+                    historyTypeSpinner!!.setSelection(i)
+                    break
+                }
             }
         }
         SystemClock.sleep(200)
@@ -184,66 +223,27 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
         private fun setValue(historyEntry: HistoryRecordEntity, valueView: TextView) {
             valueView.text = historyEntry.toString()
             // val entryType = historyEntry.commandType
-
-            /* Here you define which information to show in history according to historyEntry Type
-            if (historyEntry.isSuccess()) {
-                PodHistoryEntryType entryType = PodHistoryEntryType.getByCode(historyEntry.getPodEntryTypeCode());
-                switch (entryType) {
-
-                    case SET_TEMPORARY_BASAL:
-                    case SPLIT_TEMPORARY_BASAL: {
-                        TempBasalPair tempBasalPair = aapsOmnipodUtil.getGsonInstance().fromJson(historyEntry.getData(), TempBasalPair.class);
-                        valueView.setText(resourceHelper.gs(R.string.omnipod_eros_history_tbr_value, tempBasalPair.getInsulinRate(), tempBasalPair.getDurationMinutes()));
-                    }
-                    break;
-
-                    case INSERT_CANNULA:
-                    case SET_BASAL_SCHEDULE: {
-                        if (historyEntry.getData() != null) {
-                            setProfileValue(historyEntry.getData(), valueView);
-                        }
-                    }
-                    break;
-
-                    case SET_BOLUS: {
-                        if (historyEntry.getData().contains(";")) {
-                            String[] splitVal = historyEntry.getData().split(";");
-                            valueView.setText(resourceHelper.gs(R.string.omnipod_eros_history_bolus_value_with_carbs, Double.valueOf(splitVal[0]), Double.valueOf(splitVal[1])));
-                        } else {
-                            valueView.setText(resourceHelper.gs(R.string.omnipod_eros_history_bolus_value, Double.valueOf(historyEntry.getData())));
-                        }
-                    }
-                    break;
-
-                    case PLAY_TEST_BEEP: {
-                        if (historyEntry.getData() != null) {
-                            valueView.setText(historyEntry.getData());
-                        }
-                    }
-                    break;
-                    case GET_POD_STATUS:
-                    case GET_POD_INFO:
-                    case SET_TIME:
-                    case INITIALIZE_POD:
-                    case CANCEL_TEMPORARY_BASAL_BY_DRIVER:
-                    case CANCEL_TEMPORARY_BASAL:
-                    case CONFIGURE_ALERTS:
-                    case CANCEL_BOLUS:
-                    case DEACTIVATE_POD:
-                    case DISCARD_POD:
-                    case ACKNOWLEDGE_ALERTS:
-                    case SUSPEND_DELIVERY:
-                    case RESUME_DELIVERY:
-                    case UNKNOWN_ENTRY_TYPE:
-                    default:
-                        valueView.setText("");
-                        break;
-
-                }
-            } else {
-                valueView.setText(historyEntry.toString());
+            if (!historyEntry.isSuccess()) {
+                valueView.text = resourceHelper.gs(translatedFailure(historyEntry))
+                return
             }
-            */
+            valueView.text = when (historyEntry.commandType) {
+                OmnipodCommandType.SET_TEMPORARY_BASAL -> {
+                    val tbr = historyEntry.tempBasalRecord
+                    tbr?.let {
+                        resourceHelper.gs(R.string.omnipod_common_history_tbr_value, it.rate, it.duration)
+                    } ?: "n/a"
+                }
+                OmnipodCommandType.SET_BOLUS -> {
+                    val bolus = historyEntry.bolusRecord
+                    bolus?.let {
+                        resourceHelper.gs(R.string.omnipod_common_history_bolus_value, it.amout)
+                    } ?: "n/a"
+                }
+                else ->
+                    ""
+
+            }
         }
 
         private fun setProfileValue(data: String, valueView: TextView) {
@@ -272,6 +272,20 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
             val timeView: TextView = itemView.findViewById<TextView>(R.id.omnipod_history_time)
             val typeView: TextView = itemView.findViewById<TextView>(R.id.omnipod_history_source)
             val valueView: TextView = itemView.findViewById<TextView>(R.id.omnipod_history_description)
+        }
+    }
+
+    private fun translatedFailure(historyEntry: HistoryRecordEntity): Int {
+        return when {
+            historyEntry.initialResult == InitialResult.FAILURE_SENDING ->
+                R.string.omnipod_dash_failed_to_send
+            historyEntry.initialResult == InitialResult.NOT_SENT ->
+                R.string.omnipod_dash_command_not_sent
+            historyEntry.initialResult == InitialResult.SENT &&
+                historyEntry.resolvedResult == ResolvedResult.FAILURE ->
+                R.string.omnipod_dash_command_not_received_by_the_pod
+            else ->
+                R.string.omnipod_dash_unknown
         }
     }
 

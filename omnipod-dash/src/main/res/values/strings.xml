@@ -40,4 +40,10 @@
     <string name="omnipod_dash_found_too_many_pods">Found too many pods for activation</string>
     <string name="omnipod_dash_scan_failed">Could not find an available pod for activation</string>
     <string name="omnipod_dash_generic_error">Generic error: %1$s</string>
+    <string name="omnipod_dash_failed_to_send">Failed to send the command</string>
+    <string name="omnipod_dash_command_not_sent">Command not sent</string>
+    <string name="omnipod_dash_command_not_received_by_the_pod">Command not received by the pod</string>
+    <string name="omnipod_dash_unknown">Unknown state for the command</string>
+    <string name="omnipod_common_history_tbr_value">Rate: %1$.2f U, duration: %2$d minutes</string>
+    <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
 </resources>
