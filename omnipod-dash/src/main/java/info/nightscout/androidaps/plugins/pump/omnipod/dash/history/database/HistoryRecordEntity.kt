@@ -31,5 +31,4 @@ data class HistoryRecordEntity(
     fun isSuccess(): Boolean {
         return initialResult == InitialResult.SENT && resolvedResult == ResolvedResult.SUCCESS
     }
-
 }

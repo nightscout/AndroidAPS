@@ -56,7 +56,7 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
     }
 
     private fun groupForCommandType(type: OmnipodCommandType): PumpHistoryEntryGroup {
-        return when(type) {
+        return when (type) {
             OmnipodCommandType.INITIALIZE_POD ->
                 PumpHistoryEntryGroup.Prime
             OmnipodCommandType.INSERT_CANNULA ->
@@ -242,7 +242,6 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
                 }
                 else ->
                     ""
-
             }
         }
 
@@ -290,7 +289,6 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
     }
 
     companion object {
-
         private var selectedGroup: PumpHistoryEntryGroup = PumpHistoryEntryGroup.All
     }
 }
