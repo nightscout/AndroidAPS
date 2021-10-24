@@ -71,9 +71,9 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
                 }
             }
         }*/
-        if (recyclerViewAdapter != null) {
-            recyclerViewAdapter!!.historyList = filteredHistoryList
-            recyclerViewAdapter!!.notifyDataSetChanged()
+        recyclerViewAdapter?.let {
+            it.historyList = filteredHistoryList
+            it.notifyDataSetChanged()
         }
         aapsLogger.debug(LTag.PUMP, "Items on filtered list: {}", filteredHistoryList.size)
     }
@@ -112,7 +112,7 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
         prepareData()
         recyclerViewAdapter = RecyclerViewAdapter(filteredHistoryList)
         recyclerView!!.adapter = recyclerViewAdapter
-        statusView!!.setVisibility(View.GONE)
+        statusView!!.visibility = View.GONE
         typeListFull = getTypeList(PumpHistoryEntryGroup.Companion.getTranslatedList(resourceHelper))!!
         val spinnerAdapter: ArrayAdapter<TypeList> = ArrayAdapter<TypeList>(this, R.layout.spinner_centered, typeListFull!!)
         historyTypeSpinner!!.setAdapter(spinnerAdapter)
@@ -141,21 +141,18 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
 
     internal class TypeList(entryGroup: PumpHistoryEntryGroup) {
 
-        val entryGroup: PumpHistoryEntryGroup
-        val name: String
+        val entryGroup: PumpHistoryEntryGroup = entryGroup
+        val name: String = entryGroup.translated ?: "XXX TODO"
+
         override fun toString(): String {
             return name
         }
 
-        init {
-            this.entryGroup = entryGroup
-            name = entryGroup.translated ?: "XXX TODO"
-        }
     }
 
     inner class RecyclerViewAdapter internal constructor(historyList: List<HistoryRecordEntity>) : RecyclerView.Adapter<RecyclerViewAdapter.HistoryViewHolder>() {
 
-        var historyList: List<HistoryRecordEntity>
+        var historyList: List<HistoryRecordEntity> = historyList
 
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): HistoryViewHolder {
             val v: View = LayoutInflater.from(viewGroup.getContext()).inflate(
@@ -175,7 +172,7 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
         }
 
         private fun setValue(historyEntry: HistoryRecordEntity, valueView: TextView) {
-            valueView.setText(historyEntry.toString())
+            valueView.text = historyEntry.toString()
             /* Here you define which information to show in history according to historyEntry Type
             if (historyEntry.isSuccess()) {
                 PodHistoryEntryType entryType = PodHistoryEntryType.getByCode(historyEntry.getPodEntryTypeCode());
@@ -272,9 +269,6 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
             }
         }
 
-        init {
-            this.historyList = historyList
-        }
     }
 
     companion object {
