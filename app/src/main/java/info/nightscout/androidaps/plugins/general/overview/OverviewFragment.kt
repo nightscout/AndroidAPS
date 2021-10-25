@@ -636,18 +636,28 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             OverviewData.Property.PROFILE          -> {
                 val profileBackgroundColor =
                     profileFunction.getProfile()?.let {
-                        val profile = (it as ProfileSealed.EPS).value
-                        if (profile.originalPercentage != 100 || profile.originalTimeshift != 0L || profile.originalDuration != 0L)
-                            resourceHelper.gc(R.color.ribbonWarning)
-                        else resourceHelper.gc(R.color.ribbonDefault)
-                    } ?: resourceHelper.gc(R.color.ribbonTextDefault)
+                        if (it is ProfileSealed.EPS) {
+                            if (it.value.originalPercentage != 100 || it.value.originalTimeshift != 0L || it.value.originalDuration != 0L)
+                                resourceHelper.gc(R.color.ribbonWarning)
+                            else resourceHelper.gc(R.color.ribbonDefault)
+                        } else if (it is ProfileSealed.PS) {
+                            resourceHelper.gc(R.color.ribbonDefault)
+                        } else {
+                            resourceHelper.gc(R.color.ribbonDefault)
+                        }
+                    } ?: resourceHelper.gc(R.color.ribbonCritical)
 
                 val profileTextColor =
                     profileFunction.getProfile()?.let {
-                        val profile = (it as ProfileSealed.EPS).value
-                        if (profile.originalPercentage != 100 || profile.originalTimeshift != 0L || profile.originalDuration != 0L)
-                            resourceHelper.gc(R.color.ribbonTextWarning)
-                        else resourceHelper.gc(R.color.ribbonTextDefault)
+                        if (it is ProfileSealed.EPS) {
+                            if (it.value.originalPercentage != 100 || it.value.originalTimeshift != 0L || it.value.originalDuration != 0L)
+                                resourceHelper.gc(R.color.ribbonTextWarning)
+                            else resourceHelper.gc(R.color.ribbonTextDefault)
+                        }else if (it is ProfileSealed.PS) {
+                            resourceHelper.gc(R.color.ribbonTextDefault)
+                        } else {
+                            resourceHelper.gc(R.color.ribbonTextDefault)
+                        }
                     } ?: resourceHelper.gc(R.color.ribbonTextDefault)
 
                 binding.activeProfile.text = profileFunction.getProfileNameWithRemainingTime()
