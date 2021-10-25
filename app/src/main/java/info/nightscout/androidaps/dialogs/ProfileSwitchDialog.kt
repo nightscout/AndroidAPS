@@ -29,6 +29,7 @@ import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.HtmlHelper
+import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.disposables.CompositeDisposable
@@ -78,8 +79,10 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
         savedInstanceState.putDouble("timeshift", binding.timeshift.value)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         onCreateViewGeneral()
         arguments?.let { bundle ->
             profileIndex = bundle.getInt("profileIndex", 0)
@@ -91,14 +94,20 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.duration.setParams(savedInstanceState?.getDouble("duration")
-            ?: 0.0, 0.0, Constants.MAX_PROFILE_SWITCH_DURATION, 10.0, DecimalFormat("0"), false, binding.okcancel.ok,
-                                   textWatcher)
-        binding.percentage.setParams(savedInstanceState?.getDouble("percentage")
-            ?: 100.0, Constants.CPP_MIN_PERCENTAGE.toDouble(), Constants.CPP_MAX_PERCENTAGE.toDouble(), 5.0,
-                                     DecimalFormat("0"), false, binding.okcancel.ok, textWatcher)
-        binding.timeshift.setParams(savedInstanceState?.getDouble("timeshift")
-            ?: 0.0, Constants.CPP_MIN_TIMESHIFT.toDouble(), Constants.CPP_MAX_TIMESHIFT.toDouble(), 1.0, DecimalFormat("0"), false, binding.okcancel.ok)
+        binding.duration.setParams(
+            savedInstanceState?.getDouble("duration")
+                ?: 0.0, 0.0, Constants.MAX_PROFILE_SWITCH_DURATION, 10.0, DecimalFormat("0"), false, binding.okcancel.ok,
+            textWatcher
+        )
+        binding.percentage.setParams(
+            savedInstanceState?.getDouble("percentage")
+                ?: 100.0, Constants.CPP_MIN_PERCENTAGE.toDouble(), Constants.CPP_MAX_PERCENTAGE.toDouble(), 5.0,
+            DecimalFormat("0"), false, binding.okcancel.ok, textWatcher
+        )
+        binding.timeshift.setParams(
+            savedInstanceState?.getDouble("timeshift")
+                ?: 0.0, Constants.CPP_MIN_TIMESHIFT.toDouble(), Constants.CPP_MAX_TIMESHIFT.toDouble(), 1.0, DecimalFormat("0"), false, binding.okcancel.ok
+        )
 
         // profile
         context?.let { context ->
@@ -117,16 +126,17 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
         } ?: return
 
         profileFunction.getProfile()?.let { profile ->
-            if (profile.percentage != 100 || profile.timeshift != 0) {
-                binding.reuselayout.visibility = View.VISIBLE
-                binding.reusebutton.text = resourceHelper.gs(R.string.reuse_profile_pct_hours, profile.percentage, profile.timeshift)
-                binding.reusebutton.setOnClickListener {
-                    binding.percentage.value = profile.percentage.toDouble()
-                    binding.timeshift.value = profile.timeshift.toDouble()
+            if (profile is ProfileSealed.EPS)
+                if (profile.value.originalPercentage != 100 || profile.value.originalTimeshift != 0L) {
+                    binding.reuselayout.visibility = View.VISIBLE
+                    binding.reusebutton.text = resourceHelper.gs(R.string.reuse_profile_pct_hours, profile.value.originalPercentage, T.msecs(profile.value.originalTimeshift).hours().toInt())
+                    binding.reusebutton.setOnClickListener {
+                        binding.percentage.value = profile.value.originalPercentage.toDouble()
+                        binding.timeshift.value = profile.value.originalTimeshift.toDouble()
+                    }
+                } else {
+                    binding.reuselayout.visibility = View.GONE
                 }
-            } else {
-                binding.reuselayout.visibility = View.GONE
-            }
         }
         binding.ttLayout.visibility = View.GONE
     }
@@ -171,38 +181,43 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
             val validity = ProfileSealed.PS(ps).isValid(resourceHelper.gs(R.string.careportal_profileswitch), activePlugin.activePump, config, resourceHelper, rxBus, hardLimits, false)
             if (validity.isValid)
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal_profileswitch), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
-                    profileFunction.createProfileSwitch(profileStore,
+                    profileFunction.createProfileSwitch(
+                        profileStore,
                         profileName = profileName,
                         durationInMinutes = duration,
                         percentage = percent,
                         timeShiftInHours = timeShift,
-                        timestamp = eventTime)
+                        timestamp = eventTime
+                    )
                     uel.log(Action.PROFILE_SWITCH,
-                        Sources.ProfileSwitchDialog,
-                        notes,
-                        ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
-                        ValueWithUnit.SimpleString(profileName),
-                        ValueWithUnit.Percent(percent),
-                        ValueWithUnit.Hour(timeShift).takeIf { timeShift != 0 },
-                        ValueWithUnit.Minute(duration).takeIf { duration != 0 })
+                            Sources.ProfileSwitchDialog,
+                            notes,
+                            ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
+                            ValueWithUnit.SimpleString(profileName),
+                            ValueWithUnit.Percent(percent),
+                            ValueWithUnit.Hour(timeShift).takeIf { timeShift != 0 },
+                            ValueWithUnit.Minute(duration).takeIf { duration != 0 })
                     if (percent == 90 && duration == 10) sp.putBoolean(R.string.key_objectiveuseprofileswitch, true)
                     if (isTT) {
                         disposable += repository.runTransactionForResult(
                             InsertAndCancelCurrentTemporaryTargetTransaction(
                                 timestamp = eventTime,
                                 duration = TimeUnit.MINUTES.toMillis(duration.toLong()),
-                                reason =  TemporaryTarget.Reason.ACTIVITY,
+                                reason = TemporaryTarget.Reason.ACTIVITY,
                                 lowTarget = Profile.toMgdl(target, profileFunction.getUnits()),
                                 highTarget = Profile.toMgdl(target, profileFunction.getUnits())
-                        )
+                            )
                         ).subscribe({ result ->
-                                         result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }
-                                         result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
-                                     }, {
-                                         aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
-                                     })
-                        uel.log(Action.TT, Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, ValueWithUnit.TherapyEventTTReason(
-                            TemporaryTarget.Reason.ACTIVITY), ValueWithUnit.fromGlucoseUnit(target, units.asText), ValueWithUnit.Minute(duration))
+                                        result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }
+                                        result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
+                                    }, {
+                                        aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
+                                    })
+                        uel.log(
+                            Action.TT, Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, ValueWithUnit.TherapyEventTTReason(
+                                TemporaryTarget.Reason.ACTIVITY
+                            ), ValueWithUnit.fromGlucoseUnit(target, units.asText), ValueWithUnit.Minute(duration)
+                        )
                     }
                 })
             else {
