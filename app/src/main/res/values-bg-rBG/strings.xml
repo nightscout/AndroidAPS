@@ -132,6 +132,7 @@
     <string name="configbuilder_nightscoutversion_label">Nightscout версия:</string>
     <string name="missing_carbs">Нужни %1$d гр</string>
     <string name="exported">Настройките са експортирани</string>
+    <string name="ue_exported">Потребителските настройки икспортирани</string>
     <string name="export_to">Експортирай настройките в </string>
     <string name="import_from">Импорт на настройки от</string>
     <string name="setting_imported">Настройките са импортирани</string>
@@ -255,11 +256,13 @@
     <string name="ongoingnotificaction">Текущи известия</string>
     <string name="old_data">СТАРИ ДАННИ</string>
     <string name="sms_minago">преди %1$d мин</string>
+    <string name="localprofile">Профил</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Общо %1$d елемента.\nАктуална стойност:</string>
     <string name="openapsma_autosensdata_label">Autosens данни</string>
     <string name="openapsma_scriptdebugdata_label">От скрипта</string>
     <string name="openapsama_useautosens">Използвайте функцията за Autosens</string>
+    <string name="refresheventsfromnightscout">Презареди от NS</string>
     <string name="deletefuturetreatments">Изтрий записите в бъдещето</string>
     <string name="actions_shortname">ДЕЙСТВ</string>
     <string name="configbuilder_shortname">КОНФ</string>
@@ -489,6 +492,7 @@
     <string name="dexcomg5_xdripupload_title">Изпращай данни за КЗ към xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">В xDrip+ изберете 640g/Eversense за източник на данни</string>
     <string name="nsclientbg">КЗ от NS</string>
+    <string name="nsclientbgshort">NS КЗ</string>
     <string name="overview_editquickwizard_usebg">Калкулиране на КЗ</string>
     <string name="overview_editquickwizard_usebolusiob">Калкулиране на Болус IOB</string>
     <string name="overview_editquickwizard_usebasaliob">Калкулиране на базален IOB</string>
@@ -550,6 +554,7 @@
     <string name="bolusrecordedonly">Болус само ще се запише (няма да се стартира в помпа)</string>
     <string name="loop_smbsetbypump_label">SMB в помпата</string>
     <string name="overview_show_activity">Активност</string>
+    <string name="overview_show_bgi">Въздействие на Кръвна Захар</string>
     <string name="overview_show_sensitivity">Чувствителност</string>
     <string name="overview_show_deviations">Отклонения</string>
     <string name="overview_show_cob">Активни въглехидрати</string>
@@ -743,6 +748,7 @@
     <string name="clone_label">Клонирай</string>
     <string name="saveorresetchangesfirst">Първо запазете или се откажете от промените</string>
     <string name="deletecurrentprofile">Изтриване на текущия профил?</string>
+    <string name="copytolocalprofile">Създай нов профил копирайки този?</string>
     <string name="profilenamecontainsdot">Името на профила съдържа точка.\nТова не се поддържа от НС.\nПрофилът не е качен в НС.</string>
     <string name="low_mark_comment">Ниската граница на диапазона (графика)</string>
     <string name="high_mark_comment">Високата граница на диапазона (графика)</string>
@@ -766,6 +772,7 @@
     <string name="randombg_short">КЗ</string>
     <string name="tools">Инструменти</string>
     <string name="show_calculation">Покажи изчисленията</string>
+    <string name="show_removed">Покажи премахнатите</string>
     <string name="clearqueueconfirm">Изтрий опашка? Всички данни ще се загубят!</string>
     <string name="ebstopsloop">Използване на удължен болус ще спре режим затворен цикъл за времето на болуса. Сигурни ли сте?</string>
     <string name="closed_loop_disabled_with_eb">Затворен цикъл е недостъпен поради стартиран Удължен болус</string>
@@ -823,6 +830,7 @@
     <string name="dpvdefaultprofile">Профил по подразбиране</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink статус:</string>
     <string name="filter">Филтър</string>
+    <string name="copytolocalprofile_invalid">Създаването на профила невъзможно. Профилът е невалиден.</string>
     <string name="cta_dont_kill_my_app_info">Не убивай приложението?</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Изпращане на SMS, ако помпата е недостъпна</string>
     <string name="smscommunicator_pump_ureachable">Докладвай недостъпна помпа</string>
@@ -840,5 +848,6 @@
     <string name="clear_filter">Премахни филтъра</string>
     <string name="trend_arrow">Стрелка тенденция</string>
     <string name="cannula">Канюла</string>
+    <string name="userentry">Потербителска настройка</string>
     <string name="prime">Пълнене</string>
 </resources>
