@@ -7,11 +7,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.Omnipod
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType.SET_BOLUS
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType.SET_TEMPORARY_BASAL
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.*
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.BolusRecord
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.HistoryRecord
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.InitialResult
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.ResolvedResult
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.TempBasalRecord
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.database.HistoryRecordDao
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.database.HistoryRecordEntity
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.mapper.HistoryMapper
@@ -53,6 +49,7 @@ class DashHistory @Inject constructor(
         initialResult: InitialResult = InitialResult.NOT_SENT,
         tempBasalRecord: TempBasalRecord? = null,
         bolusRecord: BolusRecord? = null,
+        basalProfileRecord: BasalValuesRecord? = null,
         resolveResult: ResolvedResult? = null,
         resolvedAt: Long? = null
     ): Single<String> = Single.defer {
@@ -72,6 +69,7 @@ class DashHistory @Inject constructor(
                         commandType = commandType,
                         tempBasalRecord = tempBasalRecord,
                         bolusRecord = bolusRecord,
+                        basalProfileRecord = basalProfileRecord,
                         initialResult = initialResult,
                         resolvedResult = resolveResult,
                         resolvedAt = resolvedAt
