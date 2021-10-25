@@ -214,6 +214,34 @@ class NSClientAddUpdateWorker(
                                 }
                         } ?: aapsLogger.error("Error parsing EffectiveProfileSwitch json $json")
                     }
+                eventType == TherapyEvent.Type.BOLUS_WIZARD.text             ->
+                    if (config.NSCLIENT) {
+                        bolusCalculatorResultFromJson(json)?.let { bolusCalculatorResult ->
+                            repository.runTransactionForResult(SyncNsBolusCalculatorResultTransaction(bolusCalculatorResult))
+                                .doOnError {
+                                    aapsLogger.error(LTag.DATABASE, "Error while saving BolusCalculatorResult", it)
+                                    ret = Result.failure(workDataOf("Error" to it.toString()))
+                                }
+                                .blockingGet()
+                                .also { result ->
+                                    result.inserted.forEach {
+                                        uel.log(Action.BOLUS_CALCULATOR_RESULT, Sources.NSClient,
+                                                ValueWithUnit.Timestamp(it.timestamp),
+                                        )
+                                        aapsLogger.debug(LTag.DATABASE, "Inserted BolusCalculatorResult $it")
+                                    }
+                                    result.invalidated.forEach {
+                                        uel.log(Action.BOLUS_CALCULATOR_RESULT_REMOVED, Sources.NSClient,
+                                                ValueWithUnit.Timestamp(it.timestamp),
+                                        )
+                                        aapsLogger.debug(LTag.DATABASE, "Invalidated BolusCalculatorResult $it")
+                                    }
+                                    result.updatedNsId.forEach {
+                                        aapsLogger.debug(LTag.DATABASE, "Updated nsId BolusCalculatorResult $it")
+                                    }
+                                }
+                        } ?: aapsLogger.error("Error parsing BolusCalculatorResult json $json")
+                    }
                 eventType == TherapyEvent.Type.CANNULA_CHANGE.text ||
                     eventType == TherapyEvent.Type.INSULIN_CHANGE.text ||
                     eventType == TherapyEvent.Type.SENSOR_CHANGE.text ||

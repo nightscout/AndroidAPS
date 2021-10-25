@@ -2,7 +2,6 @@ package info.nightscout.androidaps.database.daos
 
 import androidx.room.Dao
 import androidx.room.Query
-import info.nightscout.androidaps.database.TABLE_APS_RESULTS
 import info.nightscout.androidaps.database.TABLE_BOLUS_CALCULATOR_RESULTS
 import info.nightscout.androidaps.database.entities.BolusCalculatorResult
 import io.reactivex.Maybe
@@ -21,6 +20,12 @@ internal interface BolusCalculatorResultDao : TraceableDao<BolusCalculatorResult
 
     @Query("SELECT id FROM $TABLE_BOLUS_CALCULATOR_RESULTS ORDER BY id DESC limit 1")
     fun getLastId(): Maybe<Long>
+
+    @Query("SELECT * FROM $TABLE_BOLUS_CALCULATOR_RESULTS WHERE timestamp = :timestamp AND referenceId IS NULL")
+    fun findByTimestamp(timestamp: Long): BolusCalculatorResult?
+
+    @Query("SELECT * FROM $TABLE_BOLUS_CALCULATOR_RESULTS WHERE nightscoutId = :nsId AND referenceId IS NULL")
+    fun findByNSId(nsId: String): BolusCalculatorResult?
 
     @Query("SELECT * FROM $TABLE_BOLUS_CALCULATOR_RESULTS WHERE isValid = 1 AND timestamp >= :timestamp AND referenceId IS NULL ORDER BY id DESC")
     fun getBolusCalculatorResultsFromTime(timestamp: Long): Single<List<BolusCalculatorResult>>
