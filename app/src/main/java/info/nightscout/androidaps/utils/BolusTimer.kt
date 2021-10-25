@@ -33,7 +33,8 @@ class BolusTimer @Inject constructor(
 
                 // Bg above 70 mgdl and delta positive mgdl
                 list.add(TriggerBg(injector, 70.0, GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_GREATER))
-                list.add(TriggerDelta(injector, InputDelta(resourceHelper, -15.0, -360.0, 360.0, 1.0, DecimalFormat("0"), InputDelta.DeltaType.DELTA), GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_GREATER))
+                list.add(TriggerDelta(injector, InputDelta(resourceHelper, 0.0, -360.0, 360.0, 1.0, DecimalFormat("0"), InputDelta.DeltaType.DELTA), GlucoseUnit.MGDL, Comparator.Compare
+                    .IS_GREATER))
             }
             actions.add(ActionAlarm(injector, resourceHelper.gs(R.string.time_to_bolus)))
         }
