@@ -305,6 +305,7 @@
     <string name="sunday_short">D</string>
     <!-- User Entry -->
     <string name="uel_bolus">BOLUS</string>
+    <string name="uel_bolus_calculator">CALCULATOR DE BOLUS</string>
     <string name="uel_bolus_advisor">ASISTENT BOLUS</string>
     <string name="uel_extended_bolus">BOLUS EXTINS</string>
     <string name="uel_superbolus_tbr">RBT SUPERBOLUS</string>
