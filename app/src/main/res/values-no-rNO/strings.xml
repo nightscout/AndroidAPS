@@ -881,4 +881,9 @@
     <string name="sms_timeout_while_wating">Tidsavbrudd fordi vi ventet på avslutning av forrige pumpekommunikasjon</string>
     <string name="smscommunicator_another_bolus_in_queue">Det ligger en annen bolus i køen. Prøv igjen senere.</string>
     <string name="calculation_in_progress">Beregning pågår</string>
+    <string name="missing_profile_name">Mangler profilnavn</string>
+    <string name="error_in_ic_values">Feil i IK faktoren</string>
+    <string name="error_in_basal_values">Feil i basalverdiene</string>
+    <string name="error_in_target_values">Feil i BS mål verdiene</string>
+    <string name="error_in_isf_values">Feil i IF verdien</string>
 </resources>
