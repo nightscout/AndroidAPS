@@ -261,7 +261,6 @@
     <string name="metadata_label_device_name">Eksportowanie nazwy urządzenia pacjenta</string>
     <string name="metadata_label_device_model">Eksportowanie modelu urządzenia</string>
     <string name="metadata_label_encryption">Szyfrowanie pliku</string>
-    <string name="metadata_format_old">Stary format eksportu</string>
     <string name="metadata_format_new">Nowy zaszyfrowany format</string>
     <string name="metadata_format_debug">Nowy format testowy (niezaszyfrowany)</string>
     <string name="metadata_format_other">Nieznany format eksportu</string>
