@@ -746,7 +746,7 @@ Context | Edit Context</string>
     <string name="doyouwantresetstart">Хотите сбросить начатую цель? Можете потерять уже достигнутое.</string>
     <string name="setupwizard_units_prompt">Выберите единицы, в которых вы хотите отображать значения</string>
     <string name="dia_short">Время действия инсулина DIA</string>
-    <string name="ic_short">IC (инсулин/углеводы)</string>
+    <string name="ic_short">IC углкоэф ГУ/инс</string>
     <string name="isf_short">ISF (чувствительность к инсулину)</string>
     <string name="target_short">ЦЕЛЬ</string>
     <string name="clone_label">Клонировать</string>
