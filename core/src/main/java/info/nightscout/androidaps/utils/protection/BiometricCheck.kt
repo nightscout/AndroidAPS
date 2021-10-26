@@ -72,7 +72,9 @@ object BiometricCheck {
 //            .setDeviceCredentialAllowed(true) // setDeviceCredentialAllowed creates new activity when PIN is requested, activity.fragmentManager crash afterwards
             .build()
 
-        biometricPrompt.authenticate(promptInfo)
+        runOnUiThread {
+            biometricPrompt.authenticate(promptInfo)
+        }
     }
 
 }
