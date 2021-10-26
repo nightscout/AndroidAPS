@@ -431,9 +431,6 @@ class SWDefinition @Inject constructor(
             .add(screenNsClient)
             //.add(screenBgSource)
             .add(screenPatientName)
-            .add(screenAge)
-            .add(screenInsulin)
-            .add(screenSensitivity)
     }
 
     init {
