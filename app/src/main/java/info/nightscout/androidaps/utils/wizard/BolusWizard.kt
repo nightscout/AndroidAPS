@@ -29,13 +29,9 @@ import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.queue.Callback
-import info.nightscout.androidaps.utils.CarbTimer
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.HtmlHelper
-import info.nightscout.androidaps.utils.Round
-import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.extensions.formatColor
+import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
@@ -62,6 +58,7 @@ class BolusWizard @Inject constructor(
     @Inject lateinit var config: Config
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var carbTimer: CarbTimer
+    @Inject lateinit var bolusTimer: BolusTimer
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
     @Inject lateinit var repository: AppRepository
 
@@ -322,7 +319,10 @@ class BolusWizard @Inject constructor(
                 return
             }
             accepted = true
-
+            if (calculatedTotalInsulin > 0.0)
+                bolusTimer.removeBolusReminder()
+            if (carbs > 0.0)
+                carbTimer.removeEatReminder()
             if (sp.getBoolean(R.string.key_usebolusadvisor, false) && Profile.toMgdl(bg, profile.units) > 180 && carbs > 0 && carbTime >= 0)
                 OKDialog.showYesNoCancel(ctx, resourceHelper.gs(R.string.bolusadvisor), resourceHelper.gs(R.string.bolusadvisormessage),
                     { bolusAdvisorProcessing(ctx) },

@@ -27,7 +27,6 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.queue.CommandQueue
@@ -304,6 +303,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                             ValueWithUnit.Hour(duration).takeIf { duration != 0 })
                         commandQueue.bolus(detailedBolusInfo, object : Callback() {
                             override fun run() {
+                                carbTimer.removeEatReminder()
                                 if (!result.success) {
                                     ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
                                 } else  if (sp.getBoolean(R.string.key_usebolusreminder, false) && remindBolus)

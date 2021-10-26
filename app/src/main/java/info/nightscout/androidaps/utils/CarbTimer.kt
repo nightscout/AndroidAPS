@@ -60,4 +60,10 @@ class CarbTimer @Inject constructor(
         automationPlugin.addIfNotExists(event)
     }
 
+    fun removeEatReminder() {
+        val event = AutomationEvent(injector).apply {
+            title = resourceHelper.gs(R.string.bolusadvisor)
+        }
+        automationPlugin.removeIfExists(event)
+    }
 }

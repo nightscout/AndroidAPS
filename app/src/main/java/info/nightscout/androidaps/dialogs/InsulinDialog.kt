@@ -49,6 +49,7 @@ class InsulinDialog : DialogFragmentWithDate() {
     @Inject lateinit var ctx: Context
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var config: Config
+    @Inject lateinit var bolusTimer: BolusTimer
     @Inject lateinit var uel: UserEntryLogger
 
     companion object {
@@ -217,6 +218,8 @@ class InsulinDialog : DialogFragmentWithDate() {
                                     { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted bolus $it") } },
                                     { aapsLogger.error(LTag.DATABASE, "Error while saving bolus", it) }
                                 )
+                            if (timeOffset == 0)
+                                bolusTimer.removeBolusReminder()
                         } else {
                             uel.log(Action.BOLUS, Sources.InsulinDialog,
                                 notes,
@@ -225,6 +228,8 @@ class InsulinDialog : DialogFragmentWithDate() {
                                 override fun run() {
                                     if (!result.success) {
                                         ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
+                                    } else {
+                                        bolusTimer.removeBolusReminder()
                                     }
                                 }
                             })
