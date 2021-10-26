@@ -18,7 +18,7 @@ import javax.inject.Inject;
 import dagger.android.support.DaggerFragment;
 import info.nightscout.androidaps.combo.R;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.pump.combo.events.EventComboPumpUpdateGUI;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.PumpState;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.Bolus;
@@ -35,7 +35,7 @@ public class ComboFragment extends DaggerFragment {
     @Inject ComboPlugin comboPlugin;
     @Inject CommandQueueProvider commandQueue;
     @Inject ResourceHelper resourceHelper;
-    @Inject RxBusWrapper rxBus;
+    @Inject RxBus rxBus;
     @Inject SP sp;
     @Inject DateUtil dateUtil;
     @Inject FabricPrivacy fabricPrivacy;

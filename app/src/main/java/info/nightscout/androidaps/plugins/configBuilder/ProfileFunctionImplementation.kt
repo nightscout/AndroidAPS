@@ -13,7 +13,8 @@ import info.nightscout.androidaps.extensions.fromConstant
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.general.nsclient.data.DeviceStatusData
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HardLimits
@@ -31,15 +32,16 @@ import javax.inject.Singleton
 class ProfileFunctionImplementation @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val sp: SP,
-    private val rxBus: RxBusWrapper,
+    private val rxBus: RxBus,
     private val resourceHelper: ResourceHelper,
     private val activePlugin: ActivePlugin,
     private val repository: AppRepository,
     private val dateUtil: DateUtil,
     private val config: Config,
     private val hardLimits: HardLimits,
-    private val aapsSchedulers: AapsSchedulers,
-    private val fabricPrivacy: FabricPrivacy
+    aapsSchedulers: AapsSchedulers,
+    private val fabricPrivacy: FabricPrivacy,
+    private val deviceStatusData: DeviceStatusData
 ) : ProfileFunction {
 
     val cache = LongSparseArray<Profile>()
@@ -51,14 +53,15 @@ class ProfileFunctionImplementation @Inject constructor(
             .toObservable(EventEffectiveProfileSwitchChanged::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe(
-                @Synchronized
                 {
-                    for (index in cache.size() - 1 downTo 0) {
-                        if (cache.keyAt(index) > it.startDate) {
-                            aapsLogger.debug(LTag.AUTOSENS, "Removing from profileCache: " + dateUtil.dateAndTimeAndSecondsString(cache.keyAt(index)))
-                            cache.removeAt(index)
-                        } else {
-                            break
+                    synchronized(cache) {
+                        for (index in cache.size() - 1 downTo 0) {
+                            if (cache.keyAt(index) > it.startDate) {
+                                aapsLogger.debug(LTag.AUTOSENS, "Removing from profileCache: " + dateUtil.dateAndTimeAndSecondsString(cache.keyAt(index)))
+                                cache.removeAt(index)
+                            } else {
+                                break
+                            }
                         }
                     }
                 }, fabricPrivacy::logException
@@ -92,21 +95,43 @@ class ProfileFunctionImplementation @Inject constructor(
     override fun getProfile(): Profile? =
         getProfile(dateUtil.now())
 
-    @Synchronized
     override fun getProfile(time: Long): Profile? {
         val rounded = time - time % 1000
-        val cached = cache[rounded]
-        if (cached != null) {
-//            aapsLogger.debug("HIT getProfile for $time $rounded")
-            return cached
+        // Clear cache after longer use
+        synchronized(cache) {
+            if (cache.size() > 30000) {
+                cache.clear()
+                aapsLogger.debug("Profile cache cleared")
+            }
+            val cached = cache[rounded]
+            if (cached != null) return cached
         }
 //        aapsLogger.debug("getProfile called for $time")
         val ps = repository.getEffectiveProfileSwitchActiveAt(time).blockingGet()
         if (ps is ValueWrapper.Existing) {
             val sealed = ProfileSealed.EPS(ps.value)
-            cache.put(rounded, sealed)
+            synchronized(cache) {
+                cache.put(rounded, sealed)
+            }
             return sealed
         }
+        // In NSClient mode effective profile may not be received if older than 2 days
+        // Try to get it from device status
+        // Remove this code after switch to api v3
+        if (config.NSCLIENT && ps is ValueWrapper.Absent) {
+            deviceStatusData.pumpData?.activeProfileName?.let { activeProfile ->
+                activePlugin.activeProfileSource.profile?.getSpecificProfile(activeProfile)?.let { ap ->
+                    val sealed = ProfileSealed.Pure(ap)
+                    synchronized(cache) {
+                        cache.put(rounded, sealed)
+                    }
+                    return sealed
+                }
+
+            }
+        }
+
+
         return null
     }
 
@@ -148,8 +173,7 @@ class ProfileFunctionImplementation @Inject constructor(
     }
 
     override fun createProfileSwitch(durationInMinutes: Int, percentage: Int, timeShiftInHours: Int): Boolean {
-        val profile = repository.getPermanentProfileSwitch(dateUtil.now())
-            ?: throw InvalidParameterSpecException("No active ProfileSwitch")
+        val profile = repository.getPermanentProfileSwitch(dateUtil.now()) ?: return false
         val profileStore = activePlugin.activeProfileSource.profile ?: return false
         val ps = buildProfileSwitch(profileStore, profile.profileName, durationInMinutes, percentage, 0, dateUtil.now())
         val validity = ProfileSealed.PS(ps).isValid(
@@ -158,7 +182,8 @@ class ProfileFunctionImplementation @Inject constructor(
             config,
             resourceHelper,
             rxBus,
-            hardLimits
+            hardLimits,
+            false
         )
         var returnValue = true
         if (validity.isValid) {

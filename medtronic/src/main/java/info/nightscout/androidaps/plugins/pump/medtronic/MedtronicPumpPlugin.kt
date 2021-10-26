@@ -15,7 +15,7 @@ import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.interfaces.PumpSync.TemporaryBasalType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.common.ManufacturerType
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType
@@ -70,7 +70,7 @@ import javax.inject.Singleton
 class MedtronicPumpPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
-    rxBus: RxBusWrapper,
+    rxBus: RxBus,
     context: Context,
     resourceHelper: ResourceHelper,
     activePlugin: ActivePlugin,
@@ -1006,24 +1006,23 @@ class MedtronicPumpPlugin @Inject constructor(
                 if (medtronicHistoryData.isTBRActive(runningTBR)) {
 
                     val differenceTime = System.currentTimeMillis() - runningTBR.date
-                    val tbrData = runningTBR.tbrData!!
+                    //val tbrData = runningTBR
 
                     val result = pumpSync.syncTemporaryBasalWithPumpId(
                         runningTBR.date,
-                        tbrData.rate,
+                        runningTBR.rate,
                         differenceTime,
-                        tbrData.isAbsolute,
-                        tbrData.tbrType,
+                        runningTBR.isAbsolute,
+                        runningTBR.tbrType,
                         runningTBR.pumpId!!,
                         runningTBR.pumpType,
                         runningTBR.serialNumber)
 
                     val differenceTimeMin = Math.floor(differenceTime / (60.0 * 1000.0))
 
-                    aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "canceling running TBR - syncTemporaryBasalWithPumpId [date=%d, pumpId=%d, rate=%.2f U, duration=%d, pumpSerial=%s] - Result: %b",
-                        runningTBR.date, runningTBR.pumpId,
-                        tbrData.rate, differenceTimeMin.toInt(),
-                        medtronicPumpStatus.serialNumber, result))
+                    aapsLogger.debug(LTag.PUMP, "canceling running TBR - syncTemporaryBasalWithPumpId [date=${runningTBR.date}, " +
+                        "pumpId=${runningTBR.pumpId}, rate=${runningTBR.rate} U, duration=${differenceTimeMin.toInt()}, " +
+                        "pumpSerial=${medtronicPumpStatus.serialNumber}] - Result: $result")
                 }
             }
 

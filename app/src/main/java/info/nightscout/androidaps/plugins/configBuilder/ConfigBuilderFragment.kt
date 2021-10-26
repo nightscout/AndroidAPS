@@ -15,11 +15,12 @@ import info.nightscout.androidaps.activities.PreferencesActivity
 import info.nightscout.androidaps.databinding.ConfigbuilderFragmentBinding
 import info.nightscout.androidaps.events.EventRebuildTabs
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.events.EventConfigBuilderUpdateGui
 import info.nightscout.androidaps.utils.FabricPrivacy
 import io.reactivex.rxkotlin.plusAssign
 import info.nightscout.androidaps.extensions.toVisibility
+import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
@@ -30,13 +31,14 @@ import javax.inject.Inject
 class ConfigBuilderFragment : DaggerFragment() {
 
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var config: Config
+    @Inject lateinit var buildHelper: BuildHelper
 
     private var disposable: CompositeDisposable = CompositeDisposable()
     private val pluginViewHolders = ArrayList<PluginViewHolder>()
@@ -103,12 +105,14 @@ class ConfigBuilderFragment : DaggerFragment() {
         if (!config.NSCLIENT) {
             createViewsForPlugins(R.string.configbuilder_profile, R.string.configbuilder_profile_description, PluginType.PROFILE, activePlugin.getSpecificPluginsVisibleInList(PluginType.PROFILE))
         }
-        createViewsForPlugins(R.string.configbuilder_insulin, R.string.configbuilder_insulin_description, PluginType.INSULIN, activePlugin.getSpecificPluginsVisibleInList(PluginType.INSULIN))
+        if (config.APS || config.PUMPCONTROL || buildHelper.isEngineeringMode())
+            createViewsForPlugins(R.string.configbuilder_insulin, R.string.configbuilder_insulin_description, PluginType.INSULIN, activePlugin.getSpecificPluginsVisibleInList(PluginType.INSULIN))
         if (!config.NSCLIENT) {
             createViewsForPlugins(R.string.configbuilder_bgsource, R.string.configbuilder_bgsource_description, PluginType.BGSOURCE, activePlugin.getSpecificPluginsVisibleInList(PluginType.BGSOURCE))
             createViewsForPlugins(R.string.configbuilder_pump, R.string.configbuilder_pump_description, PluginType.PUMP, activePlugin.getSpecificPluginsVisibleInList(PluginType.PUMP))
         }
-        createViewsForPlugins(R.string.configbuilder_sensitivity, R.string.configbuilder_sensitivity_description, PluginType.SENSITIVITY, activePlugin.getSpecificPluginsVisibleInList(PluginType.SENSITIVITY))
+        if (config.APS || config.PUMPCONTROL || buildHelper.isEngineeringMode())
+            createViewsForPlugins(R.string.configbuilder_sensitivity, R.string.configbuilder_sensitivity_description, PluginType.SENSITIVITY, activePlugin.getSpecificPluginsVisibleInList(PluginType.SENSITIVITY))
         if (config.APS) {
             createViewsForPlugins(R.string.configbuilder_aps, R.string.configbuilder_aps_description, PluginType.APS, activePlugin.getSpecificPluginsVisibleInList(PluginType.APS))
             createViewsForPlugins(R.string.configbuilder_loop, R.string.configbuilder_loop_description, PluginType.LOOP, activePlugin.getSpecificPluginsVisibleInList(PluginType.LOOP))

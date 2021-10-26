@@ -91,30 +91,29 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
 
         this.connectionStatus.setText(resourceHelper.gs(rileyLinkServiceData.rileyLinkServiceState.getResourceId()));
 
-        // BS FIXME rileyLinkServiceData is injected so I suppose it cannot be null?
-        if (rileyLinkServiceData != null) {
-            this.configuredRileyLinkAddress.setText(Optional.ofNullable(rileyLinkServiceData.rileyLinkAddress).orElse(PLACEHOLDER));
-            this.configuredRileyLinkName.setText(Optional.ofNullable(rileyLinkServiceData.rileyLinkName).orElse(PLACEHOLDER));
+        this.configuredRileyLinkAddress.setText(Optional.ofNullable(rileyLinkServiceData.rileyLinkAddress).orElse(PLACEHOLDER));
+        this.configuredRileyLinkName.setText(Optional.ofNullable(rileyLinkServiceData.rileyLinkName).orElse(PLACEHOLDER));
 
-            if (sp.getBoolean(resourceHelper.gs(R.string.key_riley_link_show_battery_level), false)) {
-                batteryLevelRow.setVisibility(View.VISIBLE);
-                Integer batteryLevel = rileyLinkServiceData.batteryLevel;
-                this.batteryLevel.setText(batteryLevel == null ? PLACEHOLDER : resourceHelper.gs(R.string.rileylink_battery_level_value, batteryLevel));
-            } else {
-                batteryLevelRow.setVisibility(View.GONE);
-            }
+        if (sp.getBoolean(resourceHelper.gs(R.string.key_riley_link_show_battery_level), false)) {
+            batteryLevelRow.setVisibility(View.VISIBLE);
+            Integer batteryLevel = rileyLinkServiceData.batteryLevel;
+            this.batteryLevel.setText(batteryLevel == null ? PLACEHOLDER : resourceHelper.gs(R.string.rileylink_battery_level_value, batteryLevel));
+        } else {
+            batteryLevelRow.setVisibility(View.GONE);
+        }
 
-            RileyLinkError rileyLinkError = rileyLinkServiceData.rileyLinkError;
-            this.connectionError.setText(rileyLinkError == null ? PLACEHOLDER : resourceHelper.gs(rileyLinkError.getResourceId(targetDevice)));
+        RileyLinkError rileyLinkError = rileyLinkServiceData.rileyLinkError;
+        this.connectionError.setText(rileyLinkError == null ? PLACEHOLDER : resourceHelper.gs(rileyLinkError.getResourceId(targetDevice)));
 
 
-            if(rileyLinkServiceData.isOrange){
-                this.firmwareVersion.setText("FV:"+Optional.ofNullable(rileyLinkServiceData.versionOrangeFV).orElse(PLACEHOLDER)+"\nHV:"+Optional.ofNullable(rileyLinkServiceData.versionOrangeHV).orElse(PLACEHOLDER));
-            }else{
-                this.firmwareVersion.setText(resourceHelper.gs(R.string.rileylink_firmware_version_value,
-                        Optional.ofNullable(rileyLinkServiceData.versionBLE113).orElse(PLACEHOLDER), Optional.ofNullable(rileyLinkServiceData.versionCC110).orElse(PLACEHOLDER)));
-
-            }
+        if (rileyLinkServiceData.isOrange && rileyLinkServiceData.versionOrangeFirmware!=null) {
+            this.firmwareVersion.setText(resourceHelper.gs(R.string.rileylink_firmware_version_value_orange,
+                            rileyLinkServiceData.versionOrangeFirmware,
+                            Optional.ofNullable(rileyLinkServiceData.versionOrangeHardware).orElse(PLACEHOLDER)));
+        } else {
+            this.firmwareVersion.setText(resourceHelper.gs(R.string.rileylink_firmware_version_value,
+                    Optional.ofNullable(rileyLinkServiceData.versionBLE113).orElse(PLACEHOLDER),
+                    Optional.ofNullable(rileyLinkServiceData.versionCC110).orElse(PLACEHOLDER)));
         }
 
         RileyLinkPumpDevice rileyLinkPumpDevice = (RileyLinkPumpDevice) activePlugin.getActivePump();

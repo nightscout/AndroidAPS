@@ -26,8 +26,10 @@ class InputDropdownMenu(private val resourceHelper: ResourceHelper) : Element() 
 
     override fun addToLayout(root: LinearLayout) {
         val spinner = Spinner(root.context)
-        spinner.adapter = ArrayAdapter(root.context,
-            R.layout.spinner_centered, itemList).also {
+        spinner.adapter = ArrayAdapter(
+            root.context,
+            R.layout.spinner_centered, itemList
+        ).also {
             it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         }
         spinner.layoutParams = LinearLayout.LayoutParams(
@@ -42,7 +44,7 @@ class InputDropdownMenu(private val resourceHelper: ResourceHelper) : Element() 
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
-        spinner.setSelection(0)
+        for (i in 0 until itemList.size) if (itemList[i] == value) spinner.setSelection(i)
         root.addView(LinearLayout(root.context).also {
             it.orientation = LinearLayout.VERTICAL
             it.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)

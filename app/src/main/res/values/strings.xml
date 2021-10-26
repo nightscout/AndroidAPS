@@ -33,7 +33,9 @@
     <string name="key_absorption_category_settings" translatable="false">absorption_category_settings</string>
     <string name="key_insulin_oref_peak_settings" translatable="false">insulin_oref_peak_settings</string>
     <string name="key_ns_temporary_target_last_synced_id" translatable="false">ns_temporary_target_last_sync</string>
+    <string name="key_ns_temporary_target_new_data_id" translatable="false">temporary_target_new_data_id</string>
     <string name="key_ns_glucose_value_last_synced_id" translatable="false">ns_glucose_value_last_sync</string>
+    <string name="key_ns_glucose_value_new_data_id" translatable="false">ns_glucose_value_new_data_id</string>
     <string name="key_ns_food_last_synced_id" translatable="false">ns_food_last_sync</string>
     <string name="key_ns_therapy_event_last_synced_id" translatable="false">ns_therapy_event_last_sync</string>
     <string name="key_smscommunicator_remotebolusmindistance" translatable="false">smscommunicator_remotebolusmindistance</string>
@@ -44,7 +46,9 @@
     <string name="key_ns_bolus_last_synced_id" translatable="false">ns_bolus_last_synced_id</string>
     <string name="key_ns_device_status_last_synced_id" translatable="false">ns_device_status_last_synced_id</string>
     <string name="key_ns_temporary_basal_last_synced_id" translatable="false">ns_temporary_basal_last_synced_id</string>
+    <string name="key_ns_temporary_basal_new_data_id" translatable="false">ns_temporary_basal_new_data_id</string>
     <string name="key_ns_extended_bolus_last_synced_id" translatable="false">ns_extended_bolus_last_synced_id</string>
+    <string name="key_ns_extended_bolus_new_data_id" translatable="false">ns_extended_bolus_new_data_id</string>
     <string name="key_ns_profile_switch_last_synced_id" translatable="false">profile_switch_last_synced_id</string>
     <string name="key_ns_effective_profile_switch_last_synced_id" translatable="false">ns_effective_profile_switch_last_synced_id</string>
     <string name="key_ns_offline_event_last_synced_id" translatable="false">ns_offline_event_last_synced_id</string>
@@ -823,8 +827,6 @@
     <string name="error_adding_treatment_title">Treatment data incomplete</string>
     <string name="maintenance_settings">Maintenance Settings</string>
     <string name="maintenance_email">Email recipient</string>
-    <string name="key_maintenance_encrypt_exported_prefs" translatable="false">maintenance_encrypt_exported_prefs</string>
-    <string name="maintenance_encrypt_exported_prefs">Encrypt exported settings</string>
     <string name="key_maintenance_logs_email" translatable="false">maintenance_logs_email</string>
     <string name="key_maintenance_logs_amount" translatable="false">maintenance_logs_amount</string>
     <string name="key_logshipper_amount" translatable="false">logshipper_amount</string>
@@ -842,6 +844,7 @@
     <string name="resettodefaults">Reset to defaults</string>
     <string name="nsmalfunction">NSClient malfunction. Consider NS and NSClient restart.</string>
     <string name="time_offset">Time offset</string>
+    <string name="bolus_reminder">Remind to bolus later</string>
     <string name="key_aps_mode" translatable="false">aps_mode</string>
     <string name="setupwizard_preferred_aps_mode">Preferred APS mode</string>
     <string name="treatments_wizard_total_label">Total</string>
@@ -902,6 +905,7 @@
 
     <string name="old_version">old version</string>
     <string name="very_old_version">very old version</string>
+    <string name="application_expired">Application expired</string>
     <string name="new_version_warning">New version for at least %1$d days available! Fallback to LGS after %2$d days, loop will be disabled after %3$d days</string>
     <string name="twohours">2h</string>
 
@@ -1063,6 +1067,12 @@
     <string name="enablebolusadvisor_summary">Use reminder to start eating later instead of wizard result during high glycemia ("pre-bolus")</string>
     <string name="time_to_eat">Time to eat!\nRun Bolus wizard and do calculation again.</string>
     <string name="timetoeat">Time to eat</string>
+    <string name="bolusreminder">Bolus reminder</string>
+    <string name="key_usebolusreminder" translatable="false">use_bolus_reminder</string>
+    <string name="enablebolusreminder">Enable bolus reminder</string>
+    <string name="enablebolusreminder_summary">Use reminder to bolus later with wizard
+        ("post-bolus")</string>
+    <string name="time_to_bolus">Time to bolus!\nRun Bolus wizard and do calculation again.</string>
     <string name="fabric_upload_disabled">Crash logs upload disabled!</string>
     <string name="graph_menu_divider_header">Graph</string>
     <string name="chart_menu">Chart menu</string>
@@ -1075,7 +1085,8 @@
     <string name="email_address">Email address</string>
     <string name="privacy_settings">Privacy setting</string>
     <string name="privacy_summary">You can provide optional email address if you want to be notified about app crashes. This is not an automated service. You will be contacted by developers in dangerous situations.</string>
-    <string name="full_sync">Full sync</string>
+    <string name="full_sync">Full synchronization</string>
+    <string name="full_sync_comment">Full synchronization? It may take many hours and until finish you\'ll not see new data in NS.</string>
     <string name="prime">Prime</string>
     <string name="ns_sync_options">Synchronization</string>
     <string name="key_ns_upload" translatable="false">ns_upload</string>
@@ -1108,5 +1119,10 @@
     <string name="sms_timeout_while_wating">Timeout while waiting for finish of previous pump communication</string>
     <string name="smscommunicator_another_bolus_in_queue">There is another bolus in queue. Try again later.</string>
     <string name="calculation_in_progress">Calculation in progress</string>
+    <string name="missing_profile_name">Missing profile name</string>
+    <string name="error_in_ic_values">Error in IC values</string>
+    <string name="error_in_basal_values">Error in basal values</string>
+    <string name="error_in_target_values">Error in target values</string>
+    <string name="error_in_isf_values">Error in ISF values</string>
 
 </resources>

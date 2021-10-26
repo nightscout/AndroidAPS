@@ -14,7 +14,7 @@ import info.nightscout.androidaps.extensions.notify
 import info.nightscout.androidaps.extensions.waitMillis
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import java.util.*
 import java.util.concurrent.ScheduledFuture
@@ -27,7 +27,7 @@ class BLECommonService @Inject internal constructor(
     private val aapsLogger: AAPSLogger,
     private val resourceHelper: ResourceHelper,
     private val context: Context,
-    private val rxBus: RxBusWrapper,
+    private val rxBus: RxBus,
     private val diaconnG8ResponseMessageHashTable: DiaconnG8ResponseMessageHashTable,
     private val diaconnG8SettingResponseMessageHashTable: DiaconnG8SettingResponseMessageHashTable,
     private val diaconnG8Pump: DiaconnG8Pump,
@@ -167,16 +167,18 @@ class BLECommonService @Inject internal constructor(
     @Synchronized
     private fun writeCharacteristicNoResponse(characteristic: BluetoothGattCharacteristic, data: ByteArray) {
         Thread(Runnable {
-            SystemClock.sleep(WRITE_DELAY_MILLIS)
-            if (bluetoothAdapter == null || bluetoothGatt == null) {
-                aapsLogger.error("BluetoothAdapter not initialized_ERROR")
-                isConnecting = false
-                isConnected = false
-                return@Runnable
+            synchronized(this) {
+                SystemClock.sleep(WRITE_DELAY_MILLIS)
+                if (bluetoothAdapter == null || bluetoothGatt == null) {
+                    aapsLogger.error("BluetoothAdapter not initialized_ERROR")
+                    isConnecting = false
+                    isConnected = false
+                    return@Runnable
+                }
+                characteristic.value = data
+                characteristic.writeType = BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE
+                bluetoothGatt?.writeCharacteristic(characteristic)
             }
-            characteristic.value = data
-            characteristic.writeType = BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE
-            bluetoothGatt?.writeCharacteristic(characteristic)
         }).start()
         SystemClock.sleep(50)
     }
@@ -200,6 +202,7 @@ class BLECommonService @Inject internal constructor(
         return bluetoothGatt?.services
     }
 
+    @Synchronized
     private fun findCharacteristic() {
         val gattServices = getSupportedGattServices() ?: return
         var uuid: String
@@ -214,7 +217,7 @@ class BLECommonService @Inject internal constructor(
                     // nRF Connect 참고하여 추가함
                     val descriptor: BluetoothGattDescriptor = uartIndicate!!.getDescriptor(UUID.fromString(CHARACTERISTIC_CONFIG_UUID))
                     descriptor.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
-                    bluetoothGatt!!.writeDescriptor(descriptor)
+                    bluetoothGatt?.writeDescriptor(descriptor)
                 }
                 if (WRITE_UUID == uuid) {
                     uartWrite = gattCharacteristic

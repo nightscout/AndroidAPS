@@ -3,7 +3,7 @@ package info.nightscout.androidaps.danars.comm
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.R
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.dana.DanaPump
@@ -15,7 +15,7 @@ class DanaRSPacketGeneralGetPumpCheck(
     injector: HasAndroidInjector
 ) : DanaRSPacket(injector) {
 
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var danaPump: DanaPump
 

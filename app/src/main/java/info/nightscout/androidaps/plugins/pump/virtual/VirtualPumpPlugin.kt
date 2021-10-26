@@ -13,7 +13,7 @@ import info.nightscout.androidaps.extensions.plannedRemainingMinutes
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.common.ManufacturerType
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
@@ -40,7 +40,7 @@ import kotlin.math.min
 open class VirtualPumpPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
-    private val rxBus: RxBusWrapper,
+    private val rxBus: RxBus,
     private var fabricPrivacy: FabricPrivacy,
     resourceHelper: ResourceHelper,
     private val aapsSchedulers: AapsSchedulers,
@@ -51,15 +51,17 @@ open class VirtualPumpPlugin @Inject constructor(
     private val pumpSync: PumpSync,
     private val config: Config,
     private val dateUtil: DateUtil
-) : PumpPluginBase(PluginDescription()
-    .mainType(PluginType.PUMP)
-    .fragmentClass(VirtualPumpFragment::class.java.name)
-    .pluginIcon(R.drawable.ic_virtual_pump)
-    .pluginName(R.string.virtualpump)
-    .shortName(R.string.virtualpump_shortname)
-    .preferencesId(R.xml.pref_virtualpump)
-    .description(R.string.description_pump_virtual)
-    .setDefault(),
+) : PumpPluginBase(
+    PluginDescription()
+        .mainType(PluginType.PUMP)
+        .fragmentClass(VirtualPumpFragment::class.java.name)
+        .pluginIcon(R.drawable.ic_virtual_pump)
+        .pluginName(R.string.virtualpump)
+        .shortName(R.string.virtualpump_shortname)
+        .preferencesId(R.xml.pref_virtualpump)
+        .description(R.string.description_pump_virtual)
+        .setDefault()
+        .neverVisible(config.NSCLIENT),
     injector, aapsLogger, resourceHelper, commandQueue
 ), Pump {
 
@@ -203,14 +205,16 @@ open class VirtualPumpPlugin @Inject constructor(
                 type = detailedBolusInfo.bolusType,
                 pumpId = dateUtil.now(),
                 pumpType = pumpType ?: PumpType.GENERIC_AAPS,
-                pumpSerial = serialNumber())
+                pumpSerial = serialNumber()
+            )
         if (detailedBolusInfo.carbs > 0)
             pumpSync.syncCarbsWithTimestamp(
                 timestamp = detailedBolusInfo.carbsTimestamp ?: detailedBolusInfo.timestamp,
                 amount = detailedBolusInfo.carbs,
                 pumpId = null,
                 pumpType = pumpType ?: PumpType.GENERIC_AAPS,
-                pumpSerial = serialNumber())
+                pumpSerial = serialNumber()
+            )
         return result
     }
 

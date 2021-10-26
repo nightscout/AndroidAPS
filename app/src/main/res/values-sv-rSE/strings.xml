@@ -257,6 +257,7 @@ Eversense-appen.</string>
     <string name="ongoingnotificaction">Konstant avisering i telefonen</string>
     <string name="old_data">Aktuellt BG saknas!</string>
     <string name="sms_minago">%1$d min sedan</string>
+    <string name="localprofile">Profil</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">En serie med %1$d tal.\nVärde:</string>
     <string name="openapsma_autosensdata_label">Autosensdata</string>
@@ -717,6 +718,7 @@ Eversense-appen.</string>
     <string name="versionChecker">Versionskontroll</string>
     <string name="old_version">gammal version</string>
     <string name="very_old_version">väldigt gammal version</string>
+    <string name="application_expired">Applikationen inte giltig längre</string>
     <string name="new_version_warning">Ny version tillgänglig för %1$d dagar sedan. Systemet kommer att byta läge till \"stopp innan lågt\" efter %2$d dagar och sluta loopa helt efter %3$d dagar</string>
     <string name="twohours">2 tim</string>
     <string name="dexcom_app_patched">Dexcoms app (modifierad)</string>
@@ -750,6 +752,7 @@ Eversense-appen.</string>
     <string name="clone_label">Kopiera</string>
     <string name="saveorresetchangesfirst">Spara eller återställa aktuella ändringar först</string>
     <string name="deletecurrentprofile">Ta bort aktuell profil?</string>
+    <string name="copytolocalprofile">Skapa kopia av denna profil?</string>
     <string name="profilenamecontainsdot">Profilnamnet innehåller punkter.\nDetta stöds inte av NS.\nProfil överförs inte till NS.</string>
     <string name="low_mark_comment">Nedre värdet för målområde (endast visning)</string>
     <string name="high_mark_comment">Övre värdet för målområde (endast visning)</string>
@@ -831,6 +834,7 @@ Eversense-appen.</string>
     <string name="dpvdefaultprofile">DPV-standardprofil</string>
     <string name="setupwizard_pump_riley_link_status">Riley Link-status:</string>
     <string name="filter">Filter</string>
+    <string name="copytolocalprofile_invalid">Kan inte att skapa profilen. Profilen är felaktig.</string>
     <string name="cta_dont_kill_my_app_info">Döda inte min app?</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Skicka SMS om pumpen inte kan nås</string>
     <string name="smscommunicator_pump_ureachable">Rapportera om pump inte kan nås</string>
@@ -855,11 +859,13 @@ Eversense-appen.</string>
     <string name="privacy_settings">Sekretessinställningar</string>
     <string name="privacy_summary">Du kan ange valfri e-postadress om du vill få meddelanden om appkrascher. Det här är ingen automatiserad tjänst. Du kommer att kontaktas av utvecklare i farliga situationer.</string>
     <string name="full_sync">Full synkronisering</string>
+    <string name="full_sync_comment">Full synkronisering? Det kan ta flera timmar du kommer inte att se nya data i NS förrän den är klar.</string>
     <string name="prime">Förfyllning</string>
     <string name="ns_sync_options">Synkronisering</string>
     <string name="ns_upload_summary">Profiler, bolus, kolhydrater och temp basaler laddas upp till NS</string>
     <string name="ns_upload">Ladda upp data till NS</string>
     <string name="ns_receive_profile_store">Ladda ner profiler</string>
+    <string name="ns_receive_profile_store_summary">Synkronisera profiler från NS</string>
     <string name="ns_receive_temp_target">Ladda ner temporära mål</string>
     <string name="ns_receive_temp_target_summary">Godkänn temp mål som anges genom NS eller NSClient</string>
     <string name="ns_receive_profile_switch">Ladda ner profilbyten</string>

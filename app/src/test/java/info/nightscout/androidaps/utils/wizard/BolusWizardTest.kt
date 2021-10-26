@@ -8,7 +8,7 @@ import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
@@ -43,7 +43,7 @@ class BolusWizardTest : TestBase() {
             if (it is BolusWizard) {
                 it.aapsLogger = aapsLogger
                 it.resourceHelper = resourceHelper
-                it.rxBus = RxBusWrapper(aapsSchedulers)
+                it.rxBus = RxBus(aapsSchedulers)
                 it.profileFunction = profileFunction
                 it.constraintChecker = constraintChecker
                 it.activePlugin = activePlugin

@@ -34,7 +34,7 @@ class InputProfileName(private val resourceHelper: ResourceHelper, private val a
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
-        spinner.setSelection(0)
+        for (i in 0 until profileList.size) if (profileList[i] == value) spinner.setSelection(i)
         val l = LinearLayout(root.context)
         l.orientation = LinearLayout.VERTICAL
         l.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)

@@ -18,7 +18,7 @@ import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.ToastUtils
@@ -30,7 +30,7 @@ import javax.inject.Inject
 class DiaconnG8UserOptionsActivity : NoSplashAppCompatActivity() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var context: Context
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump

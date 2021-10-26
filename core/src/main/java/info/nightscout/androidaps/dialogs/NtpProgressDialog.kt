@@ -11,7 +11,7 @@ import info.nightscout.androidaps.core.databinding.DialogBolusprogressBinding
 import info.nightscout.androidaps.events.EventNtpStatus
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 class NtpProgressDialog : DaggerDialogFragment() {
 
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy

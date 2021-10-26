@@ -21,26 +21,23 @@ object TwoMessagesAlertDialog {
 
         val dialog = AlertDialogHelper.Builder(context)
             .setMessage(message)
-            .setCustomTitle(AlertDialogHelper.buildCustomTitle(context, title, icon
-                ?: R.drawable.ic_check_while_48dp))
+            .setCustomTitle(
+                AlertDialogHelper.buildCustomTitle(
+                    context, title, icon
+                        ?: R.drawable.ic_check_while_48dp
+                )
+            )
             .setView(secondMessageLayout)
             .setPositiveButton(android.R.string.ok) { dialog: DialogInterface, _: Int ->
                 dialog.dismiss()
                 SystemClock.sleep(100)
-                if (ok != null) {
-                    runOnUiThread(Runnable {
-                        ok()
-                    })
-                }
+                if (ok != null) runOnUiThread { ok() }
+
             }
             .setNegativeButton(android.R.string.cancel) { dialog: DialogInterface, _: Int ->
                 dialog.dismiss()
                 SystemClock.sleep(100)
-                if (cancel != null) {
-                    runOnUiThread(Runnable {
-                        cancel()
-                    })
-                }
+                if (cancel != null) runOnUiThread { cancel() }
             }
             .show()
         dialog.setCanceledOnTouchOutside(false)

@@ -6,14 +6,13 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
-import info.nightscout.androidaps.database.entities.EffectiveProfileSwitch
 import info.nightscout.androidaps.events.*
 import info.nightscout.androidaps.extensions.*
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.events.EventLoopInvoked
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverview
@@ -35,21 +34,21 @@ import javax.inject.Singleton
 
 @Singleton
 class OverviewPlugin @Inject constructor(
-        injector: HasAndroidInjector,
-        private val notificationStore: NotificationStore,
-        private val fabricPrivacy: FabricPrivacy,
-        private val rxBus: RxBusWrapper,
-        private val sp: SP,
-        aapsLogger: AAPSLogger,
-        private val aapsSchedulers: AapsSchedulers,
-        resourceHelper: ResourceHelper,
-        private val config: Config,
-        private val dateUtil: DateUtil,
-        private val profileFunction: ProfileFunction,
-        private val iobCobCalculator: IobCobCalculator,
-        private val repository: AppRepository,
-        private val overviewData: OverviewData,
-        private val overviewMenus: OverviewMenus
+    injector: HasAndroidInjector,
+    private val notificationStore: NotificationStore,
+    private val fabricPrivacy: FabricPrivacy,
+    private val rxBus: RxBus,
+    private val sp: SP,
+    aapsLogger: AAPSLogger,
+    private val aapsSchedulers: AapsSchedulers,
+    resourceHelper: ResourceHelper,
+    private val config: Config,
+    private val dateUtil: DateUtil,
+    private val profileFunction: ProfileFunction,
+    private val iobCobCalculator: IobCobCalculator,
+    private val repository: AppRepository,
+    private val overviewData: OverviewData,
+    private val overviewMenus: OverviewMenus
 ) : PluginBase(PluginDescription()
         .mainType(PluginType.GENERAL)
         .fragmentClass(OverviewFragment::class.qualifiedName)
@@ -65,7 +64,7 @@ class OverviewPlugin @Inject constructor(
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
-    override val overviewBus = RxBusWrapper(aapsSchedulers)
+    override val overviewBus = RxBus(aapsSchedulers)
 
     class DeviationDataPoint(x: Double, y: Double, var color: Int, scale: Scale) : ScaledDataPoint(x, y, scale)
 

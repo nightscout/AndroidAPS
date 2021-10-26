@@ -9,7 +9,7 @@ import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
@@ -119,7 +119,7 @@ import javax.inject.Singleton
 class NSSettingsStatus @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val resourceHelper: ResourceHelper,
-    private val rxBus: RxBusWrapper,
+    private val rxBus: RxBus,
     private val defaultValueHelper: DefaultValueHelper,
     private val sp: SP,
     private val config: Config,

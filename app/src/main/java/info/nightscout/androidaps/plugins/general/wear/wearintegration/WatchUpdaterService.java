@@ -48,7 +48,7 @@ import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.GlucoseValueDataPoint;
 import info.nightscout.androidaps.plugins.general.wear.WearPlugin;
@@ -69,7 +69,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
     @Inject public WearPlugin wearPlugin;
     @Inject public ResourceHelper resourceHelper;
     @Inject public SP sp;
-    @Inject public RxBusWrapper rxBus;
+    @Inject public RxBus rxBus;
     @Inject public ProfileFunction profileFunction;
     @Inject public DefaultValueHelper defaultValueHelper;
     @Inject public NSDeviceStatus nsDeviceStatus;

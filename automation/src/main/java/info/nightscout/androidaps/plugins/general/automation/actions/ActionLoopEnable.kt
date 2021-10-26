@@ -12,7 +12,7 @@ import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
@@ -22,7 +22,7 @@ class ActionLoopEnable(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var loopPlugin: Loop
     @Inject lateinit var configBuilder: ConfigBuilder
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var uel: UserEntryLogger
 
     override fun friendlyName(): Int = R.string.enableloop

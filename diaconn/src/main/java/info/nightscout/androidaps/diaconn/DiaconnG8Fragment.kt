@@ -23,7 +23,7 @@ import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Pump
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.queue.events.EventQueueChanged
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -38,7 +38,7 @@ import javax.inject.Inject
 
 class DiaconnG8Fragment : DaggerFragment() {
 
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var commandQueue: CommandQueueProvider

@@ -29,7 +29,7 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
@@ -56,7 +56,7 @@ import kotlin.math.min
 class DiaconnG8Service : DaggerService() {
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var sp: SP
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction

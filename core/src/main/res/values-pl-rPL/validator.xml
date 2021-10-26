@@ -3,7 +3,7 @@
     <string name="error_only_numeric_digits_allowed">Dozwolone są tylko cyfry.</string>
     <string name="error_only_numeric_digits_range_allowed">Dozwolone są tylko cyfry w zakresie %1$s - %2$s.</string>
     <string name="error_this_field_cannot_contain_special_character">To pole nie może zawierać znaków specjalnych</string>
-    <string name="error_only_standard_letters_are_allowed">Dozwolone są tylko standardowe litery</string>
+    <string name="error_only_standard_letters_are_allowed">Dozwolone są tylko standardowe litery (łacińskie, bez polskich znaków)</string>
     <string name="error_field_must_not_be_empty">Pole nie może być puste</string>
     <string name="error_email_address_not_valid">Nieprawidłowy adres e-mail</string>
     <string name="error_creditcard_number_not_valid">Numer karty kredytowej nie jest prawidłowy</string>
@@ -16,5 +16,9 @@
     <string name="error_date_not_valid">Nieprawidłowy format</string>
     <string name="error_mustbe4digitnumber">Trzeba podać 4-cyfrowy numer</string>
     <string name="error_mustbe6digitnumber">Trzeba podać 6-cyfrowy numer</string>
-    <string name="error_pin_not_valid">Pin powinien być od 3 do 6 cyfr, nie takich samych ani kolejnych</string>
+    <string name="error_mustbe12hexadidits">Musi składać się z 12 znaków w systemie szesnastkowym (ABCDEF0123456789)</string>
+    <string name="error_mustbe8hexadidits">Musi składać się z 8 znaków w systemie szesnastkowym (ABCDEF0123456789)</string>
+    <string name="error_mustbe4hexadidits">Musi składać się z 4 znaków w systemie szesnastkowym (ABCDEF0123456789)</string>
+    <string name="error_not_a_minimum_length">Wartość za krótka</string>
+    <string name="error_pin_not_valid">Pin powinien zawierać od 3 do 6 cyfr, nie takich samych ani kolejnych</string>
 </resources>

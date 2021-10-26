@@ -49,7 +49,7 @@ interface DataSyncSelector {
     fun confirmLastGlucoseValueIdIfGreater(lastSynced: Long)
     fun changedGlucoseValues() : List<GlucoseValue>
     // Until NS v3
-    fun processChangedGlucoseValuesCompat(): Boolean
+    fun processChangedGlucoseValuesCompat()
 
     fun confirmLastTherapyEventIdIfGreater(lastSynced: Long)
     fun changedTherapyEvents() : List<TherapyEvent>

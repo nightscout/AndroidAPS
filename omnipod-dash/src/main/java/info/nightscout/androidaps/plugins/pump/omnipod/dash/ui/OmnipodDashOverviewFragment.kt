@@ -16,7 +16,7 @@ import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.pump.omnipod.common.databinding.OmnipodCommonOverviewButtonsBinding
@@ -58,7 +58,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var omnipodDashPumpPlugin: OmnipodDashPumpPlugin
     @Inject lateinit var podStateManager: OmnipodDashPodStateManager
@@ -631,15 +631,12 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     }
 
     private fun updateSetTimeButton() {
-        // TODO
-        /*
-        if (podStateManager.isPodRunning && (podStateManager.timeDeviatesMoreThan(Duration.standardMinutes(5)) || commandQueue.isCustomCommandInQueue(CommandHandleTimeChange::class.java))) {
+        if (podStateManager.isActivationCompleted && !podStateManager.sameTimeZone) {
             buttonBinding.buttonSetTime.visibility = View.VISIBLE
-            buttonBinding.buttonSetTime.isEnabled = !podStateManager.isSuspended && rileyLinkServiceData.rileyLinkServiceState.isReady && isQueueEmpty()
+            buttonBinding.buttonSetTime.isEnabled = !podStateManager.isSuspended && isQueueEmpty()
         } else {
             buttonBinding.buttonSetTime.visibility = View.GONE
         }
-         */
     }
 
     private fun isAutomaticallySilenceAlertsEnabled(): Boolean {

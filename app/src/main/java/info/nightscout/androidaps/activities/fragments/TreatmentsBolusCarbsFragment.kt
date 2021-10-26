@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.activities.fragments
 
+import android.annotation.SuppressLint
 import android.graphics.Paint
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -29,7 +30,7 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.events.EventTreatmentUpdateGui
 import info.nightscout.androidaps.utils.DateUtil
@@ -52,7 +53,7 @@ import javax.inject.Inject
 
 class TreatmentsBolusCarbsFragment : DaggerFragment() {
 
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var sp: SP
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var resourceHelper: ResourceHelper
@@ -84,6 +85,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         TreatmentsBolusCarbsFragmentBinding.inflate(inflater, container, false).also { _binding = it }.root
 
+    @SuppressLint("CheckResult")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.recyclerview.setHasFixedSize(true)
@@ -320,7 +322,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
 
             init {
                 binding.calculation.setOnClickListener {
-                    val mealLinkLoaded = it.tag as MealLink
+                    val mealLinkLoaded = it.tag as MealLink? ?: return@setOnClickListener
                     mealLinkLoaded.bolusCalculatorResult?.let { bolusCalculatorResult ->
                         WizardInfoDialog().also { wizardDialog ->
                             wizardDialog.setData(bolusCalculatorResult)

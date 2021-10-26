@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.databinding.SmscommunicatorFragmentBinding
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.smsCommunicator.events.EventSmsCommunicatorUpdateGui
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -22,7 +22,7 @@ class SmsCommunicatorFragment : DaggerFragment() {
 
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
     @Inject lateinit var dateUtil: DateUtil
 

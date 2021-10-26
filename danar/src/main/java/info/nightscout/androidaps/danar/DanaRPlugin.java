@@ -26,7 +26,7 @@ import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
@@ -53,7 +53,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
             HasAndroidInjector injector,
             AAPSLogger aapsLogger,
             AapsSchedulers aapsSchedulers,
-            RxBusWrapper rxBus,
+            RxBus rxBus,
             Context context,
             ResourceHelper resourceHelper,
             ConstraintChecker constraintChecker,

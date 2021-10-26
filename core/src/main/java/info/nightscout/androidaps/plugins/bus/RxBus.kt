@@ -10,7 +10,7 @@ import javax.inject.Singleton
 
 @OpenForTesting
 @Singleton
-class RxBusWrapper @Inject constructor(
+class RxBus @Inject constructor(
     val aapsSchedulers: AapsSchedulers
 ) {
 

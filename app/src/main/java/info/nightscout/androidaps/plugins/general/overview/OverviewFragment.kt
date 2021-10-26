@@ -47,7 +47,7 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.aps.loop.events.EventNewOpenLoopNotification
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus
 import info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity
@@ -89,7 +89,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var sp: SP
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var profileFunction: ProfileFunction
@@ -636,18 +636,28 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             OverviewData.Property.PROFILE          -> {
                 val profileBackgroundColor =
                     profileFunction.getProfile()?.let {
-                        val profile = (it as ProfileSealed.EPS).value
-                        if (profile.originalPercentage != 100 || profile.originalTimeshift != 0L || profile.originalDuration != 0L)
-                            resourceHelper.gc(R.color.ribbonWarning)
-                        else resourceHelper.gc(R.color.ribbonDefault)
-                    } ?: resourceHelper.gc(R.color.ribbonTextDefault)
+                        if (it is ProfileSealed.EPS) {
+                            if (it.value.originalPercentage != 100 || it.value.originalTimeshift != 0L || it.value.originalDuration != 0L)
+                                resourceHelper.gc(R.color.ribbonWarning)
+                            else resourceHelper.gc(R.color.ribbonDefault)
+                        } else if (it is ProfileSealed.PS) {
+                            resourceHelper.gc(R.color.ribbonDefault)
+                        } else {
+                            resourceHelper.gc(R.color.ribbonDefault)
+                        }
+                    } ?: resourceHelper.gc(R.color.ribbonCritical)
 
                 val profileTextColor =
                     profileFunction.getProfile()?.let {
-                        val profile = (it as ProfileSealed.EPS).value
-                        if (profile.originalPercentage != 100 || profile.originalTimeshift != 0L || profile.originalDuration != 0L)
-                            resourceHelper.gc(R.color.ribbonTextWarning)
-                        else resourceHelper.gc(R.color.ribbonTextDefault)
+                        if (it is ProfileSealed.EPS) {
+                            if (it.value.originalPercentage != 100 || it.value.originalTimeshift != 0L || it.value.originalDuration != 0L)
+                                resourceHelper.gc(R.color.ribbonTextWarning)
+                            else resourceHelper.gc(R.color.ribbonTextDefault)
+                        }else if (it is ProfileSealed.PS) {
+                            resourceHelper.gc(R.color.ribbonTextDefault)
+                        } else {
+                            resourceHelper.gc(R.color.ribbonTextDefault)
+                        }
                     } ?: resourceHelper.gc(R.color.ribbonTextDefault)
 
                 binding.activeProfile.text = profileFunction.getProfileNameWithRemainingTime()
@@ -688,7 +698,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     activity?.let { OKDialog.show(it, resourceHelper.gs(R.string.iob), overviewData.iobDialogText) }
                 }
                 // cob
-                var cobText = overviewData.cobInfo?.displayText(resourceHelper, dateUtil, buildHelper.isDev()) ?: resourceHelper.gs(R.string.value_unavailable_short)
+                var cobText = overviewData.cobInfo?.displayText(resourceHelper, dateUtil, buildHelper.isEngineeringMode()) ?: resourceHelper.gs(R.string.value_unavailable_short)
 
                 val constraintsProcessed = loopPlugin.lastRun?.constraintsProcessed
                 val lastRun = loopPlugin.lastRun

@@ -15,8 +15,8 @@ import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import info.nightscout.androidaps.database.transactions.VersionChangeTransaction
 import info.nightscout.androidaps.db.CompatDBHelper
-import info.nightscout.androidaps.di.StaticInjector
 import info.nightscout.androidaps.dependencyInjection.DaggerAppComponent
+import info.nightscout.androidaps.di.StaticInjector
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.ConfigBuilder
 import info.nightscout.androidaps.interfaces.PluginBase
@@ -30,14 +30,19 @@ import info.nightscout.androidaps.receivers.ChargingStateReceiver
 import info.nightscout.androidaps.receivers.KeepAliveReceiver.KeepAliveManager
 import info.nightscout.androidaps.receivers.NetworkChangeReceiver
 import info.nightscout.androidaps.receivers.TimeDateOrTZChangeReceiver
+import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.androidaps.utils.ActivityMonitor
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.locale.LocaleHelper.update
+import info.nightscout.androidaps.utils.locale.LocaleHelper
 import info.nightscout.androidaps.utils.protection.PasswordCheck
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.exceptions.UndeliverableException
+import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.rxkotlin.plusAssign
 import net.danlew.android.joda.JodaTimeAndroid
+import java.io.IOException
+import java.net.SocketException
 import javax.inject.Inject
 
 class MainApp : DaggerApplication() {
@@ -59,12 +64,14 @@ class MainApp : DaggerApplication() {
     @Inject lateinit var staticInjector: StaticInjector// TODO avoid , here fake only to initialize
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var passwordCheck: PasswordCheck
+    @Inject lateinit var alarmSoundServiceHelper: AlarmSoundServiceHelper
 
     override fun onCreate() {
         super.onCreate()
         aapsLogger.debug("onCreate")
         RxDogTag.install()
-        update(this)
+        setRxErrorHandler()
+        LocaleHelper.update(this)
 
         var gitRemote: String? = BuildConfig.REMOTE
         var commitHash: String? = BuildConfig.HEAD
@@ -73,7 +80,17 @@ class MainApp : DaggerApplication() {
             commitHash = null
         }
         disposable += repository.runTransaction(VersionChangeTransaction(BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE, gitRemote, commitHash)).subscribe()
-        disposable += repository.runTransaction(InsertIfNewByTimestampTherapyEventTransaction(timestamp = dateUtil.now(), type = TherapyEvent.Type.NOTE, note = getString(info.nightscout.androidaps.core.R.string.androidaps_start).toString() + " - " + Build.MANUFACTURER + " " + Build.MODEL, glucoseUnit = TherapyEvent.GlucoseUnit.MGDL)).subscribe()
+        if (sp.getBoolean(R.string.key_ns_logappstartedevent, config.APS))
+            disposable += repository
+                .runTransaction(
+                    InsertIfNewByTimestampTherapyEventTransaction(
+                        timestamp = dateUtil.now(),
+                        type = TherapyEvent.Type.NOTE,
+                        note = getString(info.nightscout.androidaps.core.R.string.androidaps_start) + " - " + Build.MANUFACTURER + " " + Build.MODEL,
+                        glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
+                    )
+                )
+                .subscribe()
         disposable += compatDBHelper.dbChangeDisposable()
         registerActivityLifecycleCallbacks(activityMonitor)
         JodaTimeAndroid.init(this)
@@ -92,6 +109,34 @@ class MainApp : DaggerApplication() {
         doMigrations()
         uel.log(UserEntry.Action.START_AAPS, UserEntry.Sources.Aaps)
         passwordCheck.passwordResetCheck(this)
+    }
+
+    private fun setRxErrorHandler() {
+        RxJavaPlugins.setErrorHandler { t: Throwable ->
+            var e = t
+            if (e is UndeliverableException) {
+                e = e.cause!!
+            }
+            if (e is IOException || e is SocketException) {
+                // fine, irrelevant network problem or API that throws on cancellation
+                return@setErrorHandler
+            }
+            if (e is InterruptedException) {
+                // fine, some blocking code was interrupted by a dispose call
+                return@setErrorHandler
+            }
+            if (e is NullPointerException || e is IllegalArgumentException) {
+                // that's likely a bug in the application
+                Thread.currentThread().uncaughtExceptionHandler?.uncaughtException(Thread.currentThread(), e)
+                return@setErrorHandler
+            }
+            if (e is IllegalStateException) {
+                // that's a bug in RxJava or in a custom operator
+                Thread.currentThread().uncaughtExceptionHandler?.uncaughtException(Thread.currentThread(), e)
+                return@setErrorHandler
+            }
+            aapsLogger.warn(LTag.CORE, "Undeliverable exception received, not sure what to do", e)
+        }
     }
 
     private fun doMigrations() {
@@ -134,6 +179,7 @@ class MainApp : DaggerApplication() {
         aapsLogger.debug(LTag.CORE, "onTerminate")
         unregisterActivityLifecycleCallbacks(activityMonitor)
         keepAliveManager.cancelAlarm(this)
+        alarmSoundServiceHelper.stopService(this)
         super.onTerminate()
     }
 }

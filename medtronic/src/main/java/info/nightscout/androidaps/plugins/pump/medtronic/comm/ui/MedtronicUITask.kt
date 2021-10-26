@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.pump.medtronic.comm.ui
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.MedtronicCommunicationManager
@@ -24,7 +24,7 @@ import javax.inject.Inject
  */
 class MedtronicUITask {
 
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var medtronicPumpStatus: MedtronicPumpStatus
     @Inject lateinit var medtronicUtil: MedtronicUtil

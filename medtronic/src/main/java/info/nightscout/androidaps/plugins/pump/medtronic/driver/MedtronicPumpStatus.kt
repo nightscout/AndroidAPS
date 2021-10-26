@@ -1,12 +1,13 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.driver
 
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
+import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryTBR
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.BasalProfileStatus
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.BatteryType
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType
@@ -23,7 +24,7 @@ import javax.inject.Singleton
 @Singleton
 class MedtronicPumpStatus @Inject constructor(private val resourceHelper: ResourceHelper,
                                               private val sp: SP,
-                                              private val rxBus: RxBusWrapper,
+                                              private val rxBus: RxBus,
                                               private val rileyLinkUtil: RileyLinkUtil
 ) : info.nightscout.androidaps.plugins.pump.common.data.PumpStatus(PumpType.MEDTRONIC_522_722) {
 
@@ -32,7 +33,7 @@ class MedtronicPumpStatus @Inject constructor(private val resourceHelper: Resour
     var pumpFrequency: String? = null
     var maxBolus: Double? = null
     var maxBasal: Double? = null
-    var runningTBR: info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntry? = null
+    var runningTBR: PumpDbEntryTBR? = null
 
     // statuses
     var pumpDeviceState = PumpDeviceState.NeverContacted

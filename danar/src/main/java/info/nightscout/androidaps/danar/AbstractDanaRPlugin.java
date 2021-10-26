@@ -28,7 +28,7 @@ import info.nightscout.androidaps.interfaces.PumpPluginBase;
 import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
@@ -56,7 +56,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     protected PumpDescription pumpDescription = new PumpDescription();
     protected DanaPump danaPump;
     protected ConstraintChecker constraintChecker;
-    protected RxBusWrapper rxBus;
+    protected RxBus rxBus;
     protected ActivePlugin activePlugin;
     protected SP sp;
     protected DateUtil dateUtil;
@@ -71,7 +71,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
             AAPSLogger aapsLogger,
             AapsSchedulers aapsSchedulers,
             CommandQueueProvider commandQueue,
-            RxBusWrapper rxBus,
+            RxBus rxBus,
             ActivePlugin activePlugin,
             SP sp,
             DateUtil dateUtil,

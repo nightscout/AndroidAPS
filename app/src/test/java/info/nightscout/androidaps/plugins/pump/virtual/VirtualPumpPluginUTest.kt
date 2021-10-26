@@ -7,7 +7,7 @@ import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -22,7 +22,7 @@ import org.mockito.Mockito.`when`
 
 class VirtualPumpPluginUTest : TestBase() {
 
-    private val rxBus = RxBusWrapper(aapsSchedulers)
+    private val rxBus = RxBus(aapsSchedulers)
     @Mock lateinit var fabricPrivacy: FabricPrivacy
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var sp: SP

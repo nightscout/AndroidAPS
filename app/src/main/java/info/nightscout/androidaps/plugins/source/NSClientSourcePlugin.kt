@@ -16,7 +16,7 @@ import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSgv
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
@@ -87,7 +87,7 @@ class NSClientSourcePlugin @Inject constructor(
         @Inject lateinit var injector: HasAndroidInjector
         @Inject lateinit var aapsLogger: AAPSLogger
         @Inject lateinit var sp: SP
-        @Inject lateinit var rxBus: RxBusWrapper
+        @Inject lateinit var rxBus: RxBus
         @Inject lateinit var dateUtil: DateUtil
         @Inject lateinit var dataWorker: DataWorker
         @Inject lateinit var repository: AppRepository

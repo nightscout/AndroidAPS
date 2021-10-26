@@ -6,7 +6,7 @@ import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction
@@ -21,7 +21,7 @@ import javax.inject.Singleton
 class DstHelperPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
-    private var rxBus: RxBusWrapper,
+    private var rxBus: RxBus,
     resourceHelper: ResourceHelper,
     private var sp: SP,
     private var activePlugin: ActivePlugin,

@@ -16,7 +16,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.DaggerAppCompatActivityWithResult
 import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
@@ -30,7 +30,7 @@ import javax.inject.Singleton
 @Singleton
 class AndroidPermission @Inject constructor(
     val resourceHelper: ResourceHelper,
-    val rxBus: RxBusWrapper,
+    val rxBus: RxBus,
     val injector: HasAndroidInjector
 ) {
 
@@ -58,7 +58,7 @@ class AndroidPermission @Inject constructor(
                     activity.callForBatteryOptimization.launch(null)
             } catch (e: ActivityNotFoundException) {
                 permissionBatteryOptimizationFailed = true
-                OKDialog.show(activity, resourceHelper.gs(R.string.permission), resourceHelper.gs(R.string.alert_dialog_permission_battery_optimization_failed), Runnable { activity.recreate() })
+                OKDialog.show(activity, resourceHelper.gs(R.string.permission), resourceHelper.gs(R.string.alert_dialog_permission_battery_optimization_failed)) { activity.recreate() }
             }
         }
     }

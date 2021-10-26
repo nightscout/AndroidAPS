@@ -15,7 +15,7 @@ import info.nightscout.androidaps.extensions.toStringShort
 import info.nightscout.androidaps.extensions.valueToUnitsString
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -36,7 +36,7 @@ class PersistentNotificationPlugin @Inject constructor(
     private val fabricPrivacy: FabricPrivacy,
     private val activePlugins: ActivePlugin,
     private val iobCobCalculator: IobCobCalculator,
-    private val rxBus: RxBusWrapper,
+    private val rxBus: RxBus,
     private val context: Context,
     private val notificationHolder: NotificationHolder,
     private val dummyServiceHelper: DummyServiceHelper,

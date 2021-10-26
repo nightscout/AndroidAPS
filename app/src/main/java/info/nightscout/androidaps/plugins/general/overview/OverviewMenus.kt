@@ -14,7 +14,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -26,7 +26,7 @@ class OverviewMenus @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val resourceHelper: ResourceHelper,
     private val sp: SP,
-    private val rxBus: RxBusWrapper,
+    private val rxBus: RxBus,
     private val buildHelper: BuildHelper,
     private val loopPlugin: LoopPlugin,
     private val config: Config
