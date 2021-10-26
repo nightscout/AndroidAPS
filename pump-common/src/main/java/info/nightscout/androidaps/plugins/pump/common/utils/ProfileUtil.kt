@@ -25,8 +25,9 @@ object ProfileUtil {
             val basalValueValue = pumpType.determineCorrectBasalSize(basalValue.value)
             val hour = basalValue.timeAsSeconds / (60 * 60)
             stringBuilder.append((if (hour < 10) "0" else "") + hour + ":00")
+            stringBuilder.append(" ")
             stringBuilder.append(String.format(Locale.ENGLISH, "%.3f", basalValueValue))
-            stringBuilder.append(", ")
+            stringBuilder.append(",\n")
         }
         return if (stringBuilder.length > 3) stringBuilder.substring(0, stringBuilder.length - 2) else stringBuilder.toString()
     }
