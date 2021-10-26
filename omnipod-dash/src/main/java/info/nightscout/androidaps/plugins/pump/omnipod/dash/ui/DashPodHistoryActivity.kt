@@ -211,8 +211,40 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
             }
         }
 
+        private fun getTextColor(commandType: OmnipodCommandType): Int {
+            val textColor = when (commandType) {
+                // Operational
+                OmnipodCommandType.INITIALIZE_POD,
+                OmnipodCommandType.CONFIGURE_ALERTS,
+                OmnipodCommandType.INSERT_CANNULA,
+                OmnipodCommandType.DEACTIVATE_POD,
+                OmnipodCommandType.DISCARD_POD,
+                OmnipodCommandType.SUSPEND_DELIVERY,
+                OmnipodCommandType.RESUME_DELIVERY,
+                OmnipodCommandType.SET_BASAL_PROFILE -> {
+                    android.graphics.Color.CYAN
+                }
+                // User action
+                OmnipodCommandType.PLAY_TEST_BEEP,
+                OmnipodCommandType.ACKNOWLEDGE_ALERTS,
+                OmnipodCommandType.CANCEL_BOLUS        -> {
+                    android.graphics.Color.GREEN
+                }
+                // Insulin treatment
+                OmnipodCommandType.SET_BOLUS,
+                OmnipodCommandType.SET_TEMPORARY_BASAL -> {
+                    android.graphics.Color.WHITE
+                }
+                else                                   ->
+                    // Other
+                    android.graphics.Color.LTGRAY
+            }
+            return textColor
+        }
+
         private fun setType(record: HistoryRecord, typeView: TextView) {
             typeView.text = resourceHelper.gs(record.commandType.resourceId)
+            typeView.setTextColor(getTextColor(record.commandType))
         }
 
         private fun setValue(historyEntry: HistoryRecord, valueView: TextView) {
@@ -245,6 +277,7 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
                 else ->
                     ""
             }
+            valueView.setTextColor(getTextColor(historyEntry.commandType))
         }
 
         override fun getItemCount(): Int {
