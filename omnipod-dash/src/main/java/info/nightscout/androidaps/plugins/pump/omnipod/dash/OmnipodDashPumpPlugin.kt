@@ -519,7 +519,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             // Omnipod only reports reservoir level when there's < 1023 pulses left
             return podStateManager.pulsesRemaining?.let {
                 it * PodConstants.POD_PULSE_BOLUS_UNITS
-            } ?: 75.0
+            } ?: 50.0
         }
 
     override val batteryLevel: Int
