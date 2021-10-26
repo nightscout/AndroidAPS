@@ -4,6 +4,7 @@ import android.widget.LinearLayout
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.automation.R
+import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator
 import info.nightscout.androidaps.plugins.general.automation.elements.InputPercent
@@ -48,9 +49,11 @@ class TriggerProfilePercent(injector: HasAndroidInjector) : Trigger(injector) {
             aapsLogger.debug(LTag.AUTOMATION, "NOT ready for execution: " + friendlyDescription())
             return false
         }
-        if (comparator.value.check(profile.percentage.toDouble(), pct.value)) {
-            aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
-            return true
+        if (profile is ProfileSealed.EPS) {
+            if (comparator.value.check(profile.value.originalPercentage.toDouble(), pct.value)) {
+                aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
+                return true
+            }
         }
         aapsLogger.debug(LTag.AUTOMATION, "NOT ready for execution: " + friendlyDescription())
         return false

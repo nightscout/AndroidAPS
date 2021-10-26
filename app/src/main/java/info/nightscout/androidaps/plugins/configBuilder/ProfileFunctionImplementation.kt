@@ -14,6 +14,7 @@ import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.general.nsclient.data.DeviceStatusData
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HardLimits
@@ -39,7 +40,8 @@ class ProfileFunctionImplementation @Inject constructor(
     private val config: Config,
     private val hardLimits: HardLimits,
     aapsSchedulers: AapsSchedulers,
-    private val fabricPrivacy: FabricPrivacy
+    private val fabricPrivacy: FabricPrivacy,
+    private val deviceStatusData: DeviceStatusData
 ) : ProfileFunction {
 
     val cache = LongSparseArray<Profile>()
@@ -113,6 +115,23 @@ class ProfileFunctionImplementation @Inject constructor(
             }
             return sealed
         }
+        // In NSClient mode effective profile may not be received if older than 2 days
+        // Try to get it from device status
+        // Remove this code after switch to api v3
+        if (config.NSCLIENT && ps is ValueWrapper.Absent) {
+            deviceStatusData.pumpData?.activeProfileName?.let { activeProfile ->
+                activePlugin.activeProfileSource.profile?.getSpecificProfile(activeProfile)?.let { ap ->
+                    val sealed = ProfileSealed.Pure(ap)
+                    synchronized(cache) {
+                        cache.put(rounded, sealed)
+                    }
+                    return sealed
+                }
+
+            }
+        }
+
+
         return null
     }
 

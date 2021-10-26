@@ -15,6 +15,7 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.events.EventOpenAPSUpdateGui
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.general.nsclient.data.DeviceStatusData
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
@@ -43,6 +44,7 @@ class DataBroadcastPlugin @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val defaultValueHelper: DefaultValueHelper,
     private val nsDeviceStatus: NSDeviceStatus,
+    private val deviceStatusData: DeviceStatusData,
     private val loopPlugin: LoopPlugin,
     private val activePlugin: ActivePlugin,
     private var receiverStatusStore: ReceiverStatusStore,
@@ -158,7 +160,7 @@ class DataBroadcastPlugin @Inject constructor(
                 bundle.putString("enacted", loopPlugin.lastRun?.request?.json().toString())
             }
         } else { //NSClient or remote
-            val data = nsDeviceStatus.deviceStatusOpenAPSData
+            val data = deviceStatusData.openAPSData
             if (data.clockSuggested != 0L && data.suggested != null) {
                 bundle.putLong("suggestedTimeStamp", data.clockSuggested)
                 bundle.putString("suggested", data.suggested.toString())

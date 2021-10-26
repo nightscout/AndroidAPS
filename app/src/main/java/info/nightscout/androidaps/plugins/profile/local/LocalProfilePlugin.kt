@@ -458,11 +458,11 @@ class LocalProfilePlugin @Inject constructor(
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))
             if (sp.getBoolean(R.string.key_ns_receive_profile_store, true) || config.NSCLIENT) {
                 val store = ProfileStore(injector, profileJson, dateUtil)
-                val startDate = store.getStartDate()
+                val createdAt = store.getCreatedAt()
                 val lastLocalChange = sp.getLong(R.string.key_local_profile_last_change, 0)
-                aapsLogger.debug(LTag.PROFILE, "Received profileStore: StartDate: $startDate Local last modification: $lastLocalChange")
+                aapsLogger.debug(LTag.PROFILE, "Received profileStore: createdAt: $createdAt Local last modification: $lastLocalChange")
                 @Suppress("LiftReturnOrAssignment")
-                if (startDate > lastLocalChange || startDate % 1000 == 0L) {// whole second means edited in NS
+                if (createdAt > lastLocalChange || createdAt % 1000 == 0L) {// whole second means edited in NS
                     localProfilePlugin.loadFromStore(store)
                     aapsLogger.debug(LTag.PROFILE, "Received profileStore: $profileJson")
                     return Result.success(workDataOf("Data" to profileJson.toString().substring(0..min(5000, profileJson.length()))))

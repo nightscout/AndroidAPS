@@ -30,9 +30,10 @@ import info.nightscout.androidaps.receivers.ChargingStateReceiver
 import info.nightscout.androidaps.receivers.KeepAliveReceiver.KeepAliveManager
 import info.nightscout.androidaps.receivers.NetworkChangeReceiver
 import info.nightscout.androidaps.receivers.TimeDateOrTZChangeReceiver
+import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.androidaps.utils.ActivityMonitor
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.locale.LocaleHelper.update
+import info.nightscout.androidaps.utils.locale.LocaleHelper
 import info.nightscout.androidaps.utils.protection.PasswordCheck
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
@@ -63,13 +64,14 @@ class MainApp : DaggerApplication() {
     @Inject lateinit var staticInjector: StaticInjector// TODO avoid , here fake only to initialize
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var passwordCheck: PasswordCheck
+    @Inject lateinit var alarmSoundServiceHelper: AlarmSoundServiceHelper
 
     override fun onCreate() {
         super.onCreate()
         aapsLogger.debug("onCreate")
         RxDogTag.install()
         setRxErrorHandler()
-        update(this)
+        LocaleHelper.update(this)
 
         var gitRemote: String? = BuildConfig.REMOTE
         var commitHash: String? = BuildConfig.HEAD
@@ -78,7 +80,17 @@ class MainApp : DaggerApplication() {
             commitHash = null
         }
         disposable += repository.runTransaction(VersionChangeTransaction(BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE, gitRemote, commitHash)).subscribe()
-        disposable += repository.runTransaction(InsertIfNewByTimestampTherapyEventTransaction(timestamp = dateUtil.now(), type = TherapyEvent.Type.NOTE, note = getString(info.nightscout.androidaps.core.R.string.androidaps_start) + " - " + Build.MANUFACTURER + " " + Build.MODEL, glucoseUnit = TherapyEvent.GlucoseUnit.MGDL)).subscribe()
+        if (sp.getBoolean(R.string.key_ns_logappstartedevent, config.APS))
+            disposable += repository
+                .runTransaction(
+                    InsertIfNewByTimestampTherapyEventTransaction(
+                        timestamp = dateUtil.now(),
+                        type = TherapyEvent.Type.NOTE,
+                        note = getString(info.nightscout.androidaps.core.R.string.androidaps_start) + " - " + Build.MANUFACTURER + " " + Build.MODEL,
+                        glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
+                    )
+                )
+                .subscribe()
         disposable += compatDBHelper.dbChangeDisposable()
         registerActivityLifecycleCallbacks(activityMonitor)
         JodaTimeAndroid.init(this)
@@ -167,6 +179,7 @@ class MainApp : DaggerApplication() {
         aapsLogger.debug(LTag.CORE, "onTerminate")
         unregisterActivityLifecycleCallbacks(activityMonitor)
         keepAliveManager.cancelAlarm(this)
+        alarmSoundServiceHelper.stopService(this)
         super.onTerminate()
     }
 }
