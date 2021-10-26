@@ -27,6 +27,8 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.queue.CommandQueue
 import info.nightscout.androidaps.utils.*
@@ -48,8 +50,10 @@ class CarbsDialog : DialogFragmentWithDate() {
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var iobCobCalculator: IobCobCalculator
+    @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var carbTimer: CarbTimer
+    @Inject lateinit var bolusTimer: BolusTimer
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var repository: AppRepository
 
@@ -110,7 +114,12 @@ class CarbsDialog : DialogFragmentWithDate() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        if (sp.getBoolean(R.string.key_usebolusreminder, false)) {
+            glucoseStatusProvider.glucoseStatusData?.let { glucoseStatus ->
+                if (glucoseStatus.glucose + 3 * glucoseStatus.delta < 70.0)
+                    binding.bolusReminder.visibility = View.VISIBLE
+            }
+        }
         val maxCarbs = constraintChecker.getMaxCarbsAllowed().value().toDouble()
         binding.time.setParams(savedInstanceState?.getDouble("time")
             ?: 0.0, -12 * 60.0, 12 * 60.0, 5.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher)
@@ -184,6 +193,7 @@ class CarbsDialog : DialogFragmentWithDate() {
         val actions: LinkedList<String?> = LinkedList()
         val unitLabel = if (units == GlucoseUnit.MMOL) resourceHelper.gs(R.string.mmol) else resourceHelper.gs(R.string.mgdl)
         val useAlarm = binding.alarmCheckBox.isChecked
+        val remindBolus = binding.bolusReminderCheckBox.isChecked
 
         val activitySelected = binding.activityTt.isChecked
         if (activitySelected)
@@ -296,7 +306,8 @@ class CarbsDialog : DialogFragmentWithDate() {
                             override fun run() {
                                 if (!result.success) {
                                     ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
-                                }
+                                } else  if (sp.getBoolean(R.string.key_usebolusreminder, false) && remindBolus)
+                                    bolusTimer.scheduleBolusReminder()
                             }
                         })
                     }
