@@ -304,6 +304,7 @@
     <string name="sunday_short">Ne</string>
     <!-- User Entry -->
     <string name="uel_bolus">BOLUS</string>
+    <string name="uel_bolus_calculator">BOLUS KALKULÁTOR</string>
     <string name="uel_bolus_advisor">POMOCNÍK S BOLUSEM</string>
     <string name="uel_extended_bolus">PRODLOUŽENÝ BOLUS</string>
     <string name="uel_superbolus_tbr">SUPERBOLUS TBR</string>
