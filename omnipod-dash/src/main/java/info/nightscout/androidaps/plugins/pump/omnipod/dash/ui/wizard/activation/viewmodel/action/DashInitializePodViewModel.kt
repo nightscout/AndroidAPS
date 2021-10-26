@@ -12,6 +12,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.OmnipodDashMa
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertTrigger
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.DashHistory
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.InitialResult
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.ResolvedResult
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.I8n
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -48,7 +50,14 @@ class DashInitializePodViewModel @Inject constructor(
             super.disposable += omnipodManager.activatePodPart1(lowReservoirAlertTrigger)
                 .ignoreElements()
                 .andThen(podStateManager.updateLowReservoirAlertSettings(lowReservoirAlertEnabled, lowReservoirAlertUnits))
-                .andThen(history.createRecord(OmnipodCommandType.INITIALIZE_POD).ignoreElement())
+                .andThen(
+                    history.createRecord(
+                        OmnipodCommandType.INITIALIZE_POD,
+                        initialResult = InitialResult.SENT,
+                        resolveResult = ResolvedResult.SUCCESS,
+                        resolvedAt = System.currentTimeMillis(),
+                    ).ignoreElement()
+                )
                 .subscribeBy(
                     onError = { throwable ->
                         logger.error(LTag.PUMP, "Error in Pod activation part 1", throwable)

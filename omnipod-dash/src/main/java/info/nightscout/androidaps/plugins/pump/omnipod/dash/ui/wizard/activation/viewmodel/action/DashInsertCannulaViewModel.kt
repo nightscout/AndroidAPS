@@ -18,6 +18,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.OmnipodDashManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.DashHistory
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.BasalValuesRecord
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.InitialResult
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.ResolvedResult
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.Constants
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.I8n
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.mapProfileToBasalProgram
@@ -70,7 +73,15 @@ class DashInsertCannulaViewModel @Inject constructor(
             super.disposable += omnipodManager.activatePodPart2(basalProgram, expirationHoursBeforeShutdown)
                 .ignoreElements()
                 .andThen(podStateManager.updateExpirationAlertSettings(expirationReminderEnabled, expirationHours))
-                .andThen(history.createRecord(OmnipodCommandType.INSERT_CANNULA).ignoreElement())
+                .andThen(
+                    history.createRecord(
+                        OmnipodCommandType.INSERT_CANNULA,
+                        basalProfileRecord = BasalValuesRecord(profile.getBasalValues().toList()),
+                        initialResult = InitialResult.SENT,
+                        resolveResult = ResolvedResult.SUCCESS,
+                        resolvedAt = System.currentTimeMillis(),
+                    ).ignoreElement()
+                )
                 .subscribeBy(
                     onError = { throwable ->
                         logger.error(LTag.PUMP, "Error in Pod activation part 2", throwable)

@@ -364,8 +364,12 @@ class OmnipodDashPumpPlugin @Inject constructor(
             return PumpEnactResult(injector).success(true).enacted(true)
         }
         aapsLogger.debug(LTag.PUMP, "setNewBasalProfile profile=$profile")
-        val basalProgram = mapProfileToBasalProgram(profile)
+        return setNewBasalProfile(profile, OmnipodCommandType.SET_BASAL_PROFILE)
+    }
+
+    private fun setNewBasalProfile(profile: Profile, historyType: OmnipodCommandType): PumpEnactResult {
         var deliverySuspended = false
+        val basalProgram = mapProfileToBasalProgram(profile)
         return executeProgrammingCommand(
             pre = suspendDeliveryIfActive().doOnComplete {
                 if (podStateManager.activeCommand == null) {
@@ -374,7 +378,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 }
             },
             historyEntry = history.createRecord(
-                commandType = OmnipodCommandType.SET_BASAL_PROFILE,
+                commandType = historyType,
                 basalProfileRecord = BasalValuesRecord(profile.getBasalValues().toList())
             ),
             activeCommandEntry = { historyId ->
@@ -1157,16 +1161,20 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     private fun deactivatePod(): PumpEnactResult {
+        var success = true
         val ret = executeProgrammingCommand(
             historyEntry = history.createRecord(OmnipodCommandType.DEACTIVATE_POD),
             command = omnipodManager.deactivatePod().ignoreElements(),
             checkNoActiveCommand = false,
             post = createFakeTBRWhenNoActivePod(),
         ).doOnComplete {
+            if (podStateManager.activeCommand != null) {
+                success = false
+            }
+            podStateManager.reset()
             rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_FAULT))
         }.toPumpEnactResult()
-
-        if (podStateManager.activeCommand != null) {
+        if (!success) {
             ret.success(false)
         }
         return ret
@@ -1174,7 +1182,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     private fun handleTimeChange(): PumpEnactResult {
         return profileFunction.getProfile()?.let {
-            setNewBasalProfile(it)
+            setNewBasalProfile(it, OmnipodCommandType.SET_TIME)
         } ?: PumpEnactResult(injector).success(true).enacted(false).comment("No profile active")
     }
 

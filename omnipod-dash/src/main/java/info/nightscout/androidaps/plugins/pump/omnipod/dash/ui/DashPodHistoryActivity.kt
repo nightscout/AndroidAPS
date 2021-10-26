@@ -16,13 +16,13 @@ import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpHistoryEntryGroup
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
+import info.nightscout.androidaps.plugins.pump.common.utils.ProfileUtil
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.DashHistory
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.InitialResult
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.ResolvedResult
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.database.HistoryRecordEntity
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.*
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import java.util.*
 import javax.inject.Inject
@@ -37,16 +37,15 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
     private var statusView: TextView? = null
     private var recyclerView: RecyclerView? = null
     private var linearLayoutManager: LinearLayoutManager? = null
-    private val fullHistoryList: MutableList<HistoryRecordEntity> = ArrayList<HistoryRecordEntity>()
-    private val filteredHistoryList: MutableList<HistoryRecordEntity> = ArrayList<HistoryRecordEntity>()
+    private val fullHistoryList: MutableList<HistoryRecord> = ArrayList<HistoryRecord>()
+    private val filteredHistoryList: MutableList<HistoryRecord> = ArrayList<HistoryRecord>()
     private var recyclerViewAdapter: RecyclerViewAdapter? = null
     private var manualChange = false
     private var typeListFull: List<TypeList>? = null
 
     private fun prepareData() {
         val gc = GregorianCalendar()
-        // TODO: limit to the last 3 days. Using 30days here for testing
-        gc.add(Calendar.DAY_OF_MONTH, -30)
+        gc.add(Calendar.DAY_OF_MONTH, -DAYS_TO_DISPLAY)
 
         val since = gc.timeInMillis
         val records = dashHistory.getRecordsAfter(since)
@@ -134,10 +133,6 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
         manualChange = false
     }
 
-    override fun onPause() {
-        super.onPause()
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -195,9 +190,9 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
         }
     }
 
-    inner class RecyclerViewAdapter internal constructor(historyList: List<HistoryRecordEntity>) : RecyclerView.Adapter<RecyclerViewAdapter.HistoryViewHolder>() {
+    inner class RecyclerViewAdapter internal constructor(historyList: List<HistoryRecord>) : RecyclerView.Adapter<RecyclerViewAdapter.HistoryViewHolder>() {
 
-        var historyList: List<HistoryRecordEntity> = historyList
+        var historyList: List<HistoryRecord> = historyList
 
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): HistoryViewHolder {
             val v: View = LayoutInflater.from(viewGroup.context).inflate(
@@ -208,19 +203,19 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
-            val record: HistoryRecordEntity = historyList[position]
+            val record: HistoryRecord = historyList[position]
             record?.let {
-                holder.timeView.text = DateTimeUtil.toStringFromTimeInMillis(record.displayTimestamp())
-                setValue(record, holder.valueView)
-                setType(record, holder.typeView)
+                holder.timeView.text = DateTimeUtil.toStringFromTimeInMillis(it.displayTimestamp())
+                setValue(it, holder.valueView)
+                setType(it, holder.typeView)
             }
         }
 
-        private fun setType(record: HistoryRecordEntity, typeView: TextView) {
+        private fun setType(record: HistoryRecord, typeView: TextView) {
             typeView.text = resourceHelper.gs(record.commandType.resourceId)
         }
 
-        private fun setValue(historyEntry: HistoryRecordEntity, valueView: TextView) {
+        private fun setValue(historyEntry: HistoryRecord, valueView: TextView) {
             valueView.text = historyEntry.toString()
             // val entryType = historyEntry.commandType
             if (!historyEntry.isSuccess()) {
@@ -229,42 +224,31 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
             }
             valueView.text = when (historyEntry.commandType) {
                 OmnipodCommandType.SET_TEMPORARY_BASAL -> {
-                    val tbr = historyEntry.tempBasalRecord
+                    val tbr = historyEntry.record as TempBasalRecord
                     tbr?.let {
                         resourceHelper.gs(R.string.omnipod_common_history_tbr_value, it.rate, it.duration)
                     } ?: "n/a"
                 }
                 OmnipodCommandType.SET_BOLUS -> {
-                    val bolus = historyEntry.bolusRecord
+                    val bolus = historyEntry.record as BolusRecord
                     bolus?.let {
                         resourceHelper.gs(R.string.omnipod_common_history_bolus_value, it.amout)
                     } ?: "n/a"
+                }
+                OmnipodCommandType.SET_BASAL_PROFILE,
+                OmnipodCommandType.SET_TIME,
+                OmnipodCommandType.INSERT_CANNULA,
+                OmnipodCommandType.RESUME_DELIVERY -> {
+                    val basal = historyEntry.record as BasalValuesRecord
+                    ProfileUtil.getBasalProfilesDisplayable(basal.segments.toTypedArray(), PumpType.OMNIPOD_DASH)
                 }
                 else ->
                     ""
             }
         }
 
-        private fun setProfileValue(data: String, valueView: TextView) {
-            aapsLogger.debug(LTag.PUMP, "Profile json:\n$data")
-            valueView.text = "Profile informations from history"
-            /*
-            try {
-                Profile.ProfileValue[] profileValuesArray = aapsOmnipodUtil.getGsonInstance().fromJson(data, Profile.ProfileValue[].class);
-                valueView.setText(ProfileUtil.INSTANCE.getBasalProfilesDisplayable(profileValuesArray, PumpType.OMNIPOD_EROS));
-            } catch (Exception e) {
-                aapsLogger.error(LTag.PUMP, "Problem parsing Profile json. Ex: {}, Data:\n{}", e.getMessage(), data);
-                valueView.setText("");
-            }
-            */
-        }
-
         override fun getItemCount(): Int {
             return historyList.size
-        }
-
-        override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
-            super.onAttachedToRecyclerView(recyclerView)
         }
 
         inner class HistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -274,7 +258,7 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
         }
     }
 
-    private fun translatedFailure(historyEntry: HistoryRecordEntity): Int {
+    private fun translatedFailure(historyEntry: HistoryRecord): Int {
         return when {
             historyEntry.initialResult == InitialResult.FAILURE_SENDING ->
                 R.string.omnipod_dash_failed_to_send
@@ -290,5 +274,6 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
 
     companion object {
         private var selectedGroup: PumpHistoryEntryGroup = PumpHistoryEntryGroup.All
+        const val DAYS_TO_DISPLAY = 5
     }
 }

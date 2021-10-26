@@ -36,9 +36,7 @@ class DashHistory @Inject constructor(
 
     fun getById(id: String): HistoryRecord {
         val entry = dao.byIdBlocking(id)
-        if (entry == null) {
-            throw java.lang.IllegalArgumentException("history entry [$id] not found")
-        }
+            ?: throw java.lang.IllegalArgumentException("history entry [$id] not found")
         return historyMapper.entityToDomain(entry)
     }
 
@@ -81,8 +79,8 @@ class DashHistory @Inject constructor(
     fun getRecords(): Single<List<HistoryRecord>> =
         dao.all().map { list -> list.map(historyMapper::entityToDomain) }
 
-    fun getRecordsAfter(time: Long): Single<List<HistoryRecordEntity>> =
-        dao.allSince(time)
+    fun getRecordsAfter(time: Long): Single<List<HistoryRecord>> =
+        dao.allSince(time).map { list -> list.map(historyMapper::entityToDomain) }
 
     fun updateFromState(podState: OmnipodDashPodStateManager) = Completable.defer {
         val historyId = podState.activeCommand?.historyId
