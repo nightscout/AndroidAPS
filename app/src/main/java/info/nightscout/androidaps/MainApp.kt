@@ -30,6 +30,7 @@ import info.nightscout.androidaps.receivers.ChargingStateReceiver
 import info.nightscout.androidaps.receivers.KeepAliveReceiver.KeepAliveManager
 import info.nightscout.androidaps.receivers.NetworkChangeReceiver
 import info.nightscout.androidaps.receivers.TimeDateOrTZChangeReceiver
+import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.androidaps.utils.ActivityMonitor
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.locale.LocaleHelper
@@ -63,6 +64,7 @@ class MainApp : DaggerApplication() {
     @Inject lateinit var staticInjector: StaticInjector// TODO avoid , here fake only to initialize
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var passwordCheck: PasswordCheck
+    @Inject lateinit var alarmSoundServiceHelper: AlarmSoundServiceHelper
 
     override fun onCreate() {
         super.onCreate()
@@ -177,6 +179,7 @@ class MainApp : DaggerApplication() {
         aapsLogger.debug(LTag.CORE, "onTerminate")
         unregisterActivityLifecycleCallbacks(activityMonitor)
         keepAliveManager.cancelAlarm(this)
+        alarmSoundServiceHelper.stopService(this)
         super.onTerminate()
     }
 }
