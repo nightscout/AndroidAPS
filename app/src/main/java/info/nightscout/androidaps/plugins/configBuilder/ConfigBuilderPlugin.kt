@@ -187,7 +187,7 @@ class ConfigBuilderPlugin @Inject constructor(
         fun setContext(con: Context) {
             context=con
         }
-        if (matchIndex>=0) Log.d("TAGTAGTAG", "TAGTAGTAG")//context.startService(Intent(context, GlunovoServicePlugin::class.java));
+        if (matchIndex>=0) Log.d("TAGTAGTAG", "TAGTAGTAG");//context.startService(Intent(context, GlunovoServicePlugin::class.java));
     }
 
     fun processOnEnabledCategoryChanged(changedPlugin: PluginBase, type: PluginType?) {
