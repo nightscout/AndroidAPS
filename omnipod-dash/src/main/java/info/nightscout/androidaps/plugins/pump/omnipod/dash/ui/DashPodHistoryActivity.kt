@@ -211,8 +211,8 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
             }
         }
 
-        private fun setTextViewColor(includeresult: Boolean, textview: TextView, record: HistoryRecord) {
-            if (includeresult && !record.isSuccess()) {
+        private fun setTextViewColor(check_result: Boolean, textview: TextView, record: HistoryRecord) {
+            if (check_result && !record.isSuccess()) {
                 // Record says not success
                 textview.setTextColor(android.graphics.Color.YELLOW)
                 return
@@ -251,7 +251,7 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
         private fun setType(record: HistoryRecord, typeView: TextView) {
             typeView.text = resourceHelper.gs(record.commandType.resourceId)
             // Set some color, include result
-            setTextViewColor(includeresult=true, typeView, record)
+            setTextViewColor(check_result=true, typeView, record)
         }
 
         private fun setValue(historyEntry: HistoryRecord, valueView: TextView) {
@@ -285,7 +285,7 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
                     ""
             }
             // Set some color
-            setTextViewColor(includeresult=false, valueView, historyEntry)
+            setTextViewColor(check_result=false, valueView, historyEntry)
         }
 
         override fun getItemCount(): Int {
