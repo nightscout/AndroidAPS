@@ -363,13 +363,13 @@ abstract class PluginsModule {
     @Binds
     @NotNSClient
     @IntoMap
-    @IntKey(480)
+    @IntKey(490)
     abstract fun bindsOpenHumansPlugin(plugin: OpenHumansUploader): PluginBase
 
     @Binds
     @AllConfigs
     @IntoMap
-    @IntKey(490)
+    @IntKey(500)
     abstract fun bindConfigBuilderPlugin(plugin: ConfigBuilderPlugin): PluginBase
 
     @Qualifier

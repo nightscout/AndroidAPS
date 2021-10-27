@@ -67,11 +67,11 @@ class GlunovoPlugin @Inject constructor(
                 raw = 0.0,
                 noise = null,
                 trendArrow = GlucoseValue.TrendArrow.NONE,
-                sourceSensor = GlucoseValue.SourceSensor.LIBRE_1_TOMATO
+                sourceSensor = GlucoseValue.SourceSensor.GLUNOVO_NATIVE
             )
             repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
                 .doOnError {
-                    aapsLogger.error(LTag.DATABASE, "Error while saving values from Tomato App", it)
+                    aapsLogger.error(LTag.DATABASE, "Error while saving values from Glunovo App", it)
                     ret = Result.failure(workDataOf("Error" to it.toString()))
                 }
                 .blockingGet()
@@ -86,6 +86,6 @@ class GlunovoPlugin @Inject constructor(
     }
 
     override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean =
-        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.LIBRE_1_TOMATO && sp.getBoolean(R.string.key_dexcomg5_nsupload, false)
+        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.GLUNOVO_NATIVE && sp.getBoolean(R.string.key_dexcomg5_nsupload, false)
 
 }
