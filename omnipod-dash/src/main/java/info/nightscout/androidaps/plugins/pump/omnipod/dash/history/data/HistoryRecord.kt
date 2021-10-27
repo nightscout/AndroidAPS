@@ -20,9 +20,6 @@ data class HistoryRecord(
     }
 
     fun displayTimestamp(): Long {
-        resolvedAt?.let {
-            return it
-        }
         return date
     }
 
