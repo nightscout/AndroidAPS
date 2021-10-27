@@ -211,8 +211,14 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
             }
         }
 
-        private fun getTextColor(commandType: OmnipodCommandType): Int {
-            val textColor = when (commandType) {
+        private fun setTextViewColor(includeresult: Boolean, textview: TextView, record: HistoryRecord) {
+            if (includeresult && !record.isSuccess()) {
+                // Record says not success
+                textview.setTextColor(android.graphics.Color.YELLOW)
+                return
+            }
+            // On success set color
+            val textColor = when (record.commandType) {
                 // Operational
                 OmnipodCommandType.INITIALIZE_POD,
                 OmnipodCommandType.CONFIGURE_ALERTS,
@@ -239,12 +245,13 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
                     // Other
                     android.graphics.Color.LTGRAY
             }
-            return textColor
+            textview.setTextColor(textColor)
         }
 
         private fun setType(record: HistoryRecord, typeView: TextView) {
             typeView.text = resourceHelper.gs(record.commandType.resourceId)
-            typeView.setTextColor(getTextColor(record.commandType))
+            // Set some color, include result
+            setTextViewColor(includeresult=true, typeView, record)
         }
 
         private fun setValue(historyEntry: HistoryRecord, valueView: TextView) {
@@ -277,7 +284,8 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
                 else ->
                     ""
             }
-            valueView.setTextColor(getTextColor(historyEntry.commandType))
+            // Set some color
+            setTextViewColor(includeresult=false, valueView, historyEntry)
         }
 
         override fun getItemCount(): Int {
