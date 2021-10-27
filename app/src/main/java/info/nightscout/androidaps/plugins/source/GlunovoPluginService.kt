@@ -2,11 +2,58 @@ package info.nightscout.androidaps.plugins.source
 
 import android.app.Service
 import android.content.Intent
+import android.net.Uri
 import android.os.IBinder
+import android.os.Bundle
+import android.os.Handler
+import android.util.Log
+import java.lang.StringBuilder
 
 class GlunovoPluginService : Service() {
+    private val handler = Handler()
+    override fun onBind(intent: Intent): IBinder? {
+        return null
+    }
 
-    override fun onBind(intent: Intent): IBinder {
-        TODO("Return the communication channel to the service.")
+    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+        handler.postDelayed(mgetValue, 180000)
+        Log.d("TAG","TAG")
+        return super.onStartCommand(intent, flags, startId)
+    }
+
+    //180000
+    private val mgetValue: Runnable = object : Runnable {
+        override fun run() {
+            val cr = contentResolver.query(CONTENT_URI, null, null, null, null)
+            val stringbuilder = StringBuilder()
+            cr!!.moveToLast()
+            val time = cr.getLong(0)
+            val value = cr.getDouble(1) * 18.018 //value in mmol/l... transformed in mg/dl if value *18.018
+            val readingCurrent = cr.getDouble(2)
+            stringbuilder.append("$time   $value   $readingCurrent\n")
+            Log.d("Readings", stringbuilder.toString())
+            val intent = Intent()
+            intent.action = "home.glunovoservice.BgEstimate"
+            val bundle = Bundle()
+            //bundle.putLong("Time",time);
+            //bundle.putDouble("BgEstimate",value);
+            //bundle.putDouble("Current",readingCurrent);
+            intent.putExtra("Time", time)
+            intent.putExtra("BgEstimate", value)
+            intent.putExtra("Current", readingCurrent)
+            //intent.putExtra("bundle", bundle);
+            //caintent.addFlags(Intent.)
+            //intent.putExtra("data", "Nothing to see here, move along.");
+            sendBroadcast(intent)
+            val test = intent.action
+            Log.d("Time", test!!)
+            handler.postDelayed(this, 180000)
+        }
+    }
+
+    companion object {
+        const val AUTHORITY = "alexpr.co.uk.infinivocgm.cgm_db.CgmExternalProvider/"
+        const val TABLE_NAME = "CgmReading"
+        val CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + TABLE_NAME)
     }
 }
