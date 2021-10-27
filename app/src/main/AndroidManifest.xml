@@ -41,10 +41,6 @@
         android:roundIcon="${appIconRound}"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.Launcher">
-        <service
-            android:name=".plugins.source.GlunovoPluginService"
-            android:enabled="true"
-            android:exported="true"></service>
 
         <meta-data
             android:name="com.google.android.backup.api_key"
@@ -217,6 +213,10 @@
             android:name=".plugins.general.overview.notifications.DismissNotificationService"
             android:exported="false" />
         <service android:name=".plugins.general.persistentNotification.DummyService" />
+        <service
+            android:name=".plugins.source.GlunovoPluginService"
+            android:enabled="true"
+            android:exported="true"></service>
 
         <meta-data
             android:name="io.fabric.ApiKey"

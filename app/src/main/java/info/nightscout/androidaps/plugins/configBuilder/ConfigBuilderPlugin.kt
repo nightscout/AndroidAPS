@@ -1,5 +1,8 @@
 package info.nightscout.androidaps.plugins.configBuilder
 
+import android.content.Context
+import android.content.Intent
+import android.util.Log
 import androidx.fragment.app.FragmentActivity
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
@@ -179,6 +182,12 @@ class ConfigBuilderPlugin @Inject constructor(
         rxBus.send(EventConfigBuilderChange())
         rxBus.send(EventConfigBuilderUpdateGui())
         logPluginStatus()
+        val matchIndex = changedPlugin.toString().indexOf("Glunovo", 0)
+        lateinit var context: Context
+        fun setContext(con: Context) {
+            context=con
+        }
+        if (matchIndex>=0) Log.d("TAGTAGTAG", "TAGTAGTAG")//context.startService(Intent(context, GlunovoServicePlugin::class.java));
     }
 
     fun processOnEnabledCategoryChanged(changedPlugin: PluginBase, type: PluginType?) {
