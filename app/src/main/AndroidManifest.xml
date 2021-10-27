@@ -107,6 +107,8 @@
                 <action android:name="com.china.poctech.data" />
                 <!-- Receiver from Tomato -->
                 <action android:name="com.fanqies.tomatofn.BgEstimate" />
+                <!-- Receiver from Glunovo -->
+                <action android:name="com.fanqies.tomatofn.BgEstimate" />
             </intent-filter>
         </receiver> <!-- Receive new SMS messages -->
         <receiver

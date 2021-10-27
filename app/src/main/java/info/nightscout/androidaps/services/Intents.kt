@@ -31,6 +31,7 @@ interface Intents {
         const val EVERSENSE_BG = "com.senseonics.AndroidAPSEventSubscriber.BROADCAST"
         const val POCTECH_BG = "com.china.poctech.data"
         const val TOMATO_BG = "com.fanqies.tomatofn.BgEstimate"
+        const val GLUNOVO_BG = "com.fanqies.tomatofn.BgEstimate"
 
         // Broadcast status
         const val AAPS_BROADCAST = "info.nightscout.androidaps.status"

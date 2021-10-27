@@ -1124,5 +1124,7 @@
     <string name="error_in_basal_values">Error in basal values</string>
     <string name="error_in_target_values">Error in target values</string>
     <string name="error_in_isf_values">Error in ISF values</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Receive values from Glunovo</string>
 
 </resources>

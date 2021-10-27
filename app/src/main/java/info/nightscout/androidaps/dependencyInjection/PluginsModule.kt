@@ -346,6 +346,12 @@ abstract class PluginsModule {
     @AllConfigs
     @IntoMap
     @IntKey(470)
+    abstract fun bindGlunovoPlugin(plugin: GlunovoPlugin): PluginBase
+
+    @Binds
+    @AllConfigs
+    @IntoMap
+    @IntKey(480)
     abstract fun bindRandomBgPlugin(plugin: RandomBgPlugin): PluginBase
 
     // @Binds
