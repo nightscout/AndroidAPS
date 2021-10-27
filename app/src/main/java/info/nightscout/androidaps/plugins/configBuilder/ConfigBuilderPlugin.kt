@@ -183,7 +183,7 @@ class ConfigBuilderPlugin @Inject constructor(
         rxBus.send(EventConfigBuilderUpdateGui())
         logPluginStatus()
         val matchIndex = changedPlugin.toString().indexOf("Glunovo", 0)
-        Log.d("TAGTAGTAG", matchIndex.toString())
+        Log.d("TAGTAG2TAG", matchIndex.toString())
         lateinit var context: Context
         fun setContext(con: Context) {
             context=con
