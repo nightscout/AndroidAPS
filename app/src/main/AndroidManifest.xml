@@ -27,41 +27,45 @@
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
 
-    <uses-permission-sdk-23 android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
-
-    <!-- To receive data from xdrip. -->
+    <uses-permission-sdk-23 android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" /> <!-- To receive data from xdrip. -->
     <uses-permission android:name="com.eveningoutpost.dexdrip.permissions.RECEIVE_BG_ESTIMATE" />
 
     <application
         android:name=".MainApp"
         android:allowBackup="true"
+        android:backupAgent=".utils.SPBackupAgent"
+        android:fullBackupOnly="false"
         android:icon="${appIcon}"
         android:label="@string/app_name"
+        android:restoreAnyVersion="true"
         android:roundIcon="${appIconRound}"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme.Launcher"
-        android:fullBackupOnly="false"
-        android:backupAgent=".utils.SPBackupAgent"
-        android:restoreAnyVersion="true">
+        android:theme="@style/AppTheme.Launcher">
+        <service
+            android:name=".plugins.source.GlunovoPluginService"
+            android:enabled="true"
+            android:exported="true"></service>
 
         <meta-data
             android:name="com.google.android.backup.api_key"
             android:value="AEdPqrEAAAAI3JiApyMrbP2QFzZ2fYfCPsgjkRp53Dm2S1-zPQ" />
-
         <meta-data
             android:name="com.google.android.gms.car.application"
             android:resource="@xml/automotive_app_desc" />
 
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".activities.PreferencesActivity" />
-        <activity android:name=".plugins.general.overview.activities.QuickWizardListActivity"
+        <activity
+            android:name=".plugins.general.overview.activities.QuickWizardListActivity"
             android:exported="false">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity" />
@@ -73,7 +77,8 @@
         <activity android:name=".activities.HistoryBrowseActivity" />
         <activity android:name=".activities.TreatmentsActivity" />
         <activity android:name=".activities.SurveyActivity" />
-        <activity android:name=".activities.ProfileHelperActivity"
+        <activity
+            android:name=".activities.ProfileHelperActivity"
             android:theme="@style/ProfileHelperAppTheme" />
         <activity android:name=".activities.StatsActivity" />
         <activity
@@ -83,47 +88,38 @@
             android:launchMode="singleInstance"
             android:permission="com.google.firebase.auth.api.gms.permission.LAUNCH_FEDERATED_SIGN_IN"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            tools:replace="android:launchMode" />
-
-        <!-- Receive new BG readings from other local apps -->
+            tools:replace="android:launchMode" /> <!-- Receive new BG readings from other local apps -->
         <receiver
-                android:name=".receivers.DataReceiver"
-                android:enabled="true"
-                android:exported="true">
+            android:name=".receivers.DataReceiver"
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
+
                 <!-- Receiver from xDrip -->
-                <action android:name="com.eveningoutpost.dexdrip.BgEstimate"/>
+                <action android:name="com.eveningoutpost.dexdrip.BgEstimate" />
                 <!-- Receiver from 640g uploader -->
-                <action android:name="com.eveningoutpost.dexdrip.NS_EMULATOR"/>
+                <action android:name="com.eveningoutpost.dexdrip.NS_EMULATOR" />
                 <!-- Receiver from glimp -->
-                <action android:name="it.ct.glicemia.ACTION_GLUCOSE_MEASURED"/>
+                <action android:name="it.ct.glicemia.ACTION_GLUCOSE_MEASURED" />
                 <!-- Receiver from Dexcom -->
-                <action android:name="com.dexcom.cgm.EXTERNAL_BROADCAST"/>
+                <action android:name="com.dexcom.cgm.EXTERNAL_BROADCAST" />
                 <!-- Receiver from Poctech -->
-                <action android:name="com.china.poctech.data"/>
+                <action android:name="com.china.poctech.data" />
                 <!-- Receiver from Tomato -->
-                <action android:name="com.fanqies.tomatofn.BgEstimate"/>
+                <action android:name="com.fanqies.tomatofn.BgEstimate" />
             </intent-filter>
-        </receiver>
-
-        <!-- Receive new SMS messages -->
+        </receiver> <!-- Receive new SMS messages -->
         <receiver
-                android:name=".receivers.SmsReceiver"
-                android:enabled="true"
-                android:exported="true"
-                android:permission="android.permission.BROADCAST_SMS">
+            android:name=".receivers.SmsReceiver"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.BROADCAST_SMS">
             <intent-filter>
-                <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
-        </receiver>
-
-        <!-- Receiver keep alive, scheduled every 30 min -->
-        <receiver android:name=".receivers.KeepAliveReceiver" />
-
-        <!-- Receive ignore 5m, 15m, 30m requests for carb notifications -->
-        <receiver android:name=".plugins.aps.loop.CarbSuggestionReceiver" />
-
-        <!-- Auto start -->
+        </receiver> <!-- Receiver keep alive, scheduled every 30 min -->
+        <receiver android:name=".receivers.KeepAliveReceiver" /> <!-- Receive ignore 5m, 15m, 30m requests for carb notifications -->
+        <receiver android:name=".plugins.aps.loop.CarbSuggestionReceiver" /> <!-- Auto start -->
         <receiver
             android:name=".receivers.AutoStartReceiver"
             android:enabled="true"
@@ -147,6 +143,7 @@
             android:name=".plugins.general.wear.wearintegration.WatchUpdaterService"
             android:exported="true">
             <intent-filter>
+
                 <!-- <action android:name="com.google.android.gms.wearable.BIND_LISTENER" /> -->
                 <!-- listeners receive events that match the action and data filters -->
                 <action android:name="com.google.android.gms.wearable.CAPABILITY_CHANGED" />
@@ -217,7 +214,6 @@
         <service
             android:name=".plugins.general.overview.notifications.DismissNotificationService"
             android:exported="false" />
-
         <service android:name=".plugins.general.persistentNotification.DummyService" />
 
         <meta-data
@@ -229,7 +225,6 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_setup_wizard"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".activities.SingleFragmentActivity"
             android:theme="@style/AppTheme" />
@@ -243,8 +238,9 @@
             </intent-filter>
         </activity>
 
-        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
-
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
     </application>
 
 </manifest>
