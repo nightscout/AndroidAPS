@@ -3,6 +3,7 @@
     <string name="alert_r1_title">Poner bolo</string>
     <string name="alert_r2_title">Bolos perdidos</string>
     <string name="alert_r3_title">Reloj de alarma</string>
+    <string name="alert_r4_title">Cambiar set de infusión</string>
     <string name="alert_r7_title">TBR completada</string>
     <string name="alert_w31_title">Reservorio bajo</string>
     <string name="alert_w32_title">Pila baja</string>
