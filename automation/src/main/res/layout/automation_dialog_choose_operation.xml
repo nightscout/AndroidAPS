@@ -7,7 +7,7 @@
     android:focusableInTouchMode="true"
     android:minWidth="300dp"
     android:orientation="vertical"
-    tools:context="info.nightscout.androidaps.plugins.general.automation.dialogs.EditEventDialog">
+    tools:context="info.nightscout.androidaps.plugins.general.automation.dialogs.ChooseOperationDialog">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,7 +25,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/triggers"
+                android:contentDescription="@string/please_choose_a_operation_type"
                 app:srcCompat="@drawable/ic_trigger_green_48dp" />
 
             <TextView
@@ -35,18 +35,17 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:text="@string/triggers"
+                android:text="@string/please_choose_a_operation_type"
                 android:textAlignment="center"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
         </RelativeLayout>
 
-        <LinearLayout
-            android:id="@+id/layoutTrigger"
+        <RadioGroup
+            android:id="@+id/chooseOperationRadioGroup"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="0dp"
-            android:orientation="vertical" />
+            android:layout_height="match_parent"
+            android:padding="10dp"/>
 
         <include layout="@layout/okcancel" />
 

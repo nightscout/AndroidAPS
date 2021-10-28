@@ -4,6 +4,7 @@ import android.widget.LinearLayout
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.automation.R
+import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator
@@ -36,7 +37,8 @@ class TriggerBolusAgo(injector: HasAndroidInjector) : Trigger(injector) {
     }
 
     override fun shouldRun(): Boolean {
-        val lastBolusTime = repository.getLastBolusRecordOfType(Bolus.Type.NORMAL)?.timestamp ?: 0L
+        val lastBolus = repository.getLastBolusRecordOfTypeWrapped(Bolus.Type.NORMAL).blockingGet()
+        val lastBolusTime = if (lastBolus is ValueWrapper.Existing) lastBolus.value.timestamp else 0L
         if (lastBolusTime == 0L)
             return if (comparator.value == Comparator.Compare.IS_NOT_AVAILABLE) {
                 aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
@@ -81,7 +83,7 @@ class TriggerBolusAgo(injector: HasAndroidInjector) : Trigger(injector) {
         LayoutBuilder()
             .add(StaticLabel(resourceHelper, R.string.lastboluslabel, this))
             .add(comparator)
-            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.lastboluslabel) + ": ", "", minutesAgo))
+            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.lastboluslabel) + ": ", resourceHelper.gs(R.string.unit_minutes), minutesAgo))
             .build(root)
     }
 }

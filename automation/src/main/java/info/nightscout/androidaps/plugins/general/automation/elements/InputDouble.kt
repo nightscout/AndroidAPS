@@ -1,11 +1,13 @@
 package info.nightscout.androidaps.plugins.general.automation.elements
 
+import android.view.Gravity
 import android.widget.LinearLayout
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.utils.ui.NumberPicker
 import java.text.DecimalFormat
 
 class InputDouble() : Element() {
+
     var value = 0.0
     private var minValue = 0.0
     private var maxValue = 0.0
@@ -30,9 +32,11 @@ class InputDouble() : Element() {
     }
 
     override fun addToLayout(root: LinearLayout) {
-        numberPicker = NumberPicker(root.context, null)
-        numberPicker?.setParams(value, minValue, maxValue, step, decimalFormat, true, root.findViewById(R.id.ok))
-        numberPicker?.setOnValueChangedListener { value: Double -> this.value = value }
+        numberPicker = NumberPicker(root.context, null).apply {
+            setParams(value, minValue, maxValue, step, decimalFormat, true, root.findViewById(R.id.ok))
+            setOnValueChangedListener { value: Double -> this.value = value }
+            gravity = Gravity.CENTER_HORIZONTAL
+        }
         root.addView(numberPicker)
     }
 

@@ -1,9 +1,11 @@
 package info.nightscout.androidaps.plugins.general.automation.elements
 
+import android.view.Gravity
 import android.widget.Button
 import android.widget.LinearLayout
 
 class InputButton() : Element() {
+
     var text: String? = null
     var runnable: Runnable? = null
 
@@ -13,9 +15,11 @@ class InputButton() : Element() {
     }
 
     override fun addToLayout(root: LinearLayout) {
-        val button = Button(root.context)
-        button.text = text
-        button.setOnClickListener { runnable?.run() }
-        root.addView(button)
+        root.addView(
+            Button(root.context).apply {
+                text = text
+                setOnClickListener { runnable?.run() }
+                gravity = Gravity.CENTER_HORIZONTAL
+            })
     }
 }

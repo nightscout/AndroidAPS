@@ -107,12 +107,13 @@
     <string name="edit_short">EDIT</string>
     <string name="please_choose_an_action_type">Choose an action type</string>
     <string name="please_choose_a_trigger_type">Choose a trigger type</string>
+    <string name="please_choose_a_operation_type">Choose a operation type</string>
     <string name="triggers">Triggers:</string>
     <string name="remove_label">REMOVE</string>
     <string name="preconditions">Preconditions:</string>
     <string name="automation_event">Automation event</string>
     <string name="reorder_label">Reorder</string>
     <string name="key_automation_settings" translatable="false">automation_settings</string>
-
+    <string name="user_action">User action</string>
 
 </resources>

@@ -3,10 +3,8 @@ package info.nightscout.androidaps.database.daos
 import androidx.room.Dao
 import androidx.room.Query
 import info.nightscout.androidaps.database.TABLE_BOLUSES
-import info.nightscout.androidaps.database.TABLE_BOLUS_CALCULATOR_RESULTS
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.Bolus
-import info.nightscout.androidaps.database.entities.BolusCalculatorResult
 import io.reactivex.Maybe
 import io.reactivex.Single
 
@@ -42,7 +40,7 @@ internal interface BolusDao : TraceableDao<Bolus> {
     fun getLastBolusRecordMaybe(exclude: Bolus.Type = Bolus.Type.PRIMING): Maybe<Bolus>
 
     @Query("SELECT * FROM $TABLE_BOLUSES WHERE isValid = 1 AND type == :only AND referenceId IS NULL ORDER BY timestamp DESC LIMIT 1")
-    fun getLastBolusRecordOfType(only: Bolus.Type): Bolus?
+    fun getLastBolusRecordOfType(only: Bolus.Type): Maybe<Bolus>
 
     @Query("SELECT * FROM $TABLE_BOLUSES WHERE isValid = 1 AND type <> :exclude AND referenceId IS NULL ORDER BY timestamp ASC LIMIT 1")
     fun getOldestBolusRecord(exclude: Bolus.Type = Bolus.Type.PRIMING): Bolus?

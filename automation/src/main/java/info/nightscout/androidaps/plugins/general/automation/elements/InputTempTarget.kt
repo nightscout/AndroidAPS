@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.automation.elements
 
+import android.view.Gravity
 import android.widget.LinearLayout
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.automation.R
@@ -9,6 +10,7 @@ import info.nightscout.androidaps.utils.ui.NumberPicker
 import java.text.DecimalFormat
 
 class InputTempTarget(profileFunction: ProfileFunction) : Element() {
+
     var units: GlucoseUnit = GlucoseUnit.MGDL
     var value = 0.0
 
@@ -38,9 +40,12 @@ class InputTempTarget(profileFunction: ProfileFunction) : Element() {
             step = 1.0
             decimalFormat = DecimalFormat("0")
         }
-        val numberPicker = NumberPicker(root.context, null)
-        numberPicker.setParams(value, minValue, maxValue, step, decimalFormat, true, root.findViewById(R.id.ok))
-        numberPicker.setOnValueChangedListener { value: Double -> this.value = value }
-        root.addView(numberPicker)
+        root.addView(
+            NumberPicker(root.context, null).apply {
+                setParams(value, minValue, maxValue, step, decimalFormat, true, root.findViewById(R.id.ok))
+                setOnValueChangedListener { value: Double -> this.value = value }
+                gravity = Gravity.CENTER_HORIZONTAL
+
+            })
     }
 }

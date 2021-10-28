@@ -56,7 +56,7 @@ abstract class Trigger(val injector: HasAndroidInjector) {
     abstract fun icon(): Optional<Int?>
     abstract fun duplicate(): Trigger
 
-    private fun scanForActivity(cont: Context?): AppCompatActivity? {
+    fun scanForActivity(cont: Context?): AppCompatActivity? {
         return when (cont) {
             null                 -> null
             is AppCompatActivity -> cont
@@ -84,27 +84,19 @@ abstract class Trigger(val injector: HasAndroidInjector) {
         //return (clazz.primaryConstructor?.call(injector) as Trigger).fromJSON(data?.toString() ?: "")
         return when (type) {
             TriggerAutosensValue::class.java.name,              // backward compatibility
-            TriggerAutosensValue::class.java.simpleName      -> TriggerAutosensValue(injector).fromJSON(
-                data.toString()
-            )
+            TriggerAutosensValue::class.java.simpleName      -> TriggerAutosensValue(injector).fromJSON(data.toString())
             TriggerBg::class.java.name,
             TriggerBg::class.java.simpleName                 -> TriggerBg(injector).fromJSON(data.toString())
             TriggerBolusAgo::class.java.name,
-            TriggerBolusAgo::class.java.simpleName           -> TriggerBolusAgo(injector).fromJSON(
-                data.toString()
-            )
+            TriggerBolusAgo::class.java.simpleName           -> TriggerBolusAgo(injector).fromJSON(data.toString())
             TriggerBTDevice::class.java.name,
-            TriggerBTDevice::class.java.simpleName           -> TriggerBTDevice(injector).fromJSON(
-                data.toString()
-            )
+            TriggerBTDevice::class.java.simpleName           -> TriggerBTDevice(injector).fromJSON(data.toString())
             TriggerIob::class.java.name,
             TriggerIob::class.java.simpleName                -> TriggerIob(injector).fromJSON(data.toString())
             TriggerCOB::class.java.name,
             TriggerCOB::class.java.simpleName                -> TriggerCOB(injector).fromJSON(data.toString())
             TriggerConnector::class.java.name,
-            TriggerConnector::class.java.simpleName          -> TriggerConnector(injector).fromJSON(
-                data.toString()
-            )
+            TriggerConnector::class.java.simpleName          -> TriggerConnector(injector).fromJSON(data.toString())
             TriggerDelta::class.java.name,
             TriggerDelta::class.java.simpleName              -> TriggerDelta(injector).fromJSON(data.toString())
             TriggerDummy::class.java.name,
@@ -112,100 +104,73 @@ abstract class Trigger(val injector: HasAndroidInjector) {
             TriggerIob::class.java.name,
             TriggerIob::class.java.simpleName                -> TriggerIob(injector).fromJSON(data.toString())
             TriggerLocation::class.java.name,
-            TriggerLocation::class.java.simpleName           -> TriggerLocation(injector).fromJSON(
-                data.toString()
-            )
+            TriggerLocation::class.java.simpleName           -> TriggerLocation(injector).fromJSON(data.toString())
             TriggerProfilePercent::class.java.name,
-            TriggerProfilePercent::class.java.simpleName     -> TriggerProfilePercent(injector).fromJSON(
-                data.toString()
-            )
+            TriggerProfilePercent::class.java.simpleName     -> TriggerProfilePercent(injector).fromJSON(data.toString())
             TriggerPumpLastConnection::class.java.name,
-            TriggerPumpLastConnection::class.java.simpleName -> TriggerPumpLastConnection(injector).fromJSON(
-                data.toString()
-            )
+            TriggerPumpLastConnection::class.java.simpleName -> TriggerPumpLastConnection(injector).fromJSON(data.toString())
             TriggerRecurringTime::class.java.name,
-            TriggerRecurringTime::class.java.simpleName      -> TriggerRecurringTime(injector).fromJSON(
-                data.toString()
-            )
+            TriggerRecurringTime::class.java.simpleName      -> TriggerRecurringTime(injector).fromJSON(data.toString())
             TriggerTempTarget::class.java.name,
-            TriggerTempTarget::class.java.simpleName         -> TriggerTempTarget(injector).fromJSON(
-                data.toString()
-            )
+            TriggerTempTarget::class.java.simpleName         -> TriggerTempTarget(injector).fromJSON(data.toString())
             TriggerTempTargetValue::class.java.name,
-            TriggerTempTargetValue::class.java.simpleName         -> TriggerTempTargetValue(injector).fromJSON(
-                data.toString()
-            )
+            TriggerTempTargetValue::class.java.simpleName    -> TriggerTempTargetValue(injector).fromJSON(data.toString())
             TriggerTime::class.java.name,
             TriggerTime::class.java.simpleName               -> TriggerTime(injector).fromJSON(data.toString())
             TriggerTimeRange::class.java.name,
-            TriggerTimeRange::class.java.simpleName          -> TriggerTimeRange(injector).fromJSON(
-                data.toString()
-            )
+            TriggerTimeRange::class.java.simpleName          -> TriggerTimeRange(injector).fromJSON(data.toString())
             TriggerWifiSsid::class.java.name,
-            TriggerWifiSsid::class.java.simpleName           -> TriggerWifiSsid(injector).fromJSON(
-                data.toString()
-            )
+            TriggerWifiSsid::class.java.simpleName           -> TriggerWifiSsid(injector).fromJSON(data.toString())
             else                                             -> TriggerConnector(injector)
         }
     }
 
-    fun createAddButton(context: Context, trigger: TriggerConnector): ImageButton {
+    fun createAddButton(context: Context, trigger: TriggerConnector): ImageButton =
         // Button [+]
-        val buttonAdd = ImageButton(context)
-        val params = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
-        params.gravity = Gravity.CENTER
-        buttonAdd.layoutParams = params
-        buttonAdd.setImageResource(R.drawable.ic_add)
-        buttonAdd.contentDescription = resourceHelper.gs(R.string.add_short)
-        buttonAdd.setOnClickListener {
-            scanForActivity(context)?.supportFragmentManager?.let {
-                val dialog = ChooseTriggerDialog()
-                dialog.show(it, "ChooseTriggerDialog")
-                dialog.setOnClickListener(object : ChooseTriggerDialog.OnClickListener {
-                    override fun onClick(newTriggerObject: Trigger) {
-                        trigger.list.add(newTriggerObject)
-                        rxBus.send(EventTriggerChanged())
-                    }
-                })
+        ImageButton(context).apply {
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
+                gravity = Gravity.CENTER
+            }
+            setImageResource(R.drawable.ic_add)
+            contentDescription = resourceHelper.gs(R.string.add_short)
+            setOnClickListener {
+                scanForActivity(context)?.supportFragmentManager?.let {
+                    val dialog = ChooseTriggerDialog()
+                    dialog.show(it, "ChooseTriggerDialog")
+                    dialog.setOnClickListener(object : ChooseTriggerDialog.OnClickListener {
+                        override fun onClick(newTriggerObject: Trigger) {
+                            trigger.list.add(newTriggerObject)
+                            rxBus.send(EventTriggerChanged())
+                        }
+                    })
+                }
             }
         }
-        return buttonAdd
-    }
 
-    fun createDeleteButton(context: Context, trigger: Trigger): ImageButton {
+    fun createDeleteButton(context: Context, trigger: Trigger): ImageButton =
         // Button [-]
-        val buttonRemove = ImageButton(context)
-        val params = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
-        params.gravity = Gravity.CENTER
-        buttonRemove.layoutParams = params
-        buttonRemove.setImageResource(R.drawable.ic_remove)
-        buttonRemove.contentDescription = resourceHelper.gs(R.string.delete_short)
-        buttonRemove.setOnClickListener {
-            rxBus.send(EventTriggerRemove(trigger))
+        ImageButton(context).apply {
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
+                gravity = Gravity.CENTER
+            }
+            setImageResource(R.drawable.ic_remove)
+            contentDescription = resourceHelper.gs(R.string.delete_short)
+            setOnClickListener {
+                rxBus.send(EventTriggerRemove(trigger))
+            }
         }
-        return buttonRemove
-    }
 
-    fun createCloneButton(context: Context, trigger: Trigger): ImageButton {
+    fun createCloneButton(context: Context, trigger: Trigger): ImageButton =
         // Button [*]
-        val buttonClone = ImageButton(context)
-        val params = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
-        params.gravity = Gravity.CENTER
-        buttonClone.layoutParams = params
-        buttonClone.setImageResource(R.drawable.ic_clone)
-        buttonClone.contentDescription = resourceHelper.gs(R.string.copy_short)
-        buttonClone.setOnClickListener {
-            rxBus.send(EventTriggerClone(trigger))
+        ImageButton(context).apply {
+            val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
+                gravity = Gravity.CENTER
+            }
+            layoutParams = params
+            setImageResource(R.drawable.ic_clone)
+            contentDescription = resourceHelper.gs(R.string.copy_short)
+            setOnClickListener {
+                rxBus.send(EventTriggerClone(trigger))
+            }
         }
-        return buttonClone
-    }
 }

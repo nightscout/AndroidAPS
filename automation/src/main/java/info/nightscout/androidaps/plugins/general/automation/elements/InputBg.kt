@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.automation.elements
 
+import android.view.Gravity
 import android.widget.LinearLayout
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.interfaces.GlucoseUnit
@@ -26,13 +27,15 @@ class InputBg(profileFunction: ProfileFunction) : Element() {
     }
 
     override fun addToLayout(root: LinearLayout) {
-        val numberPicker = NumberPicker(root.context, null)
-        numberPicker.setParams(value, minValue, maxValue, step, decimalFormat, false, root.findViewById(R.id.ok))
-        numberPicker.setOnValueChangedListener { value: Double -> this.value = value }
-        root.addView(numberPicker)
+        root.addView(
+            NumberPicker(root.context, null).apply {
+                setParams(value, minValue, maxValue, step, decimalFormat, false, root.findViewById(R.id.ok))
+                setOnValueChangedListener { value: Double -> this.value = value }
+                gravity = Gravity.CENTER_HORIZONTAL
+            })
     }
 
-    fun setValue(value: Double) : InputBg {
+    fun setValue(value: Double): InputBg {
         this.value = value
         return this
     }
@@ -54,6 +57,7 @@ class InputBg(profileFunction: ProfileFunction) : Element() {
     }
 
     companion object {
+
         const val MMOL_MIN = 3.0
         const val MMOL_MAX = 20.0
         const val MGDL_MIN = 54.0
