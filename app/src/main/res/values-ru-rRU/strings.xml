@@ -850,7 +850,7 @@ Context | Edit Context</string>
     <string name="bolusreminder">Напоминание о болюсе</string>
     <string name="enablebolusreminder">Включить напоминание о болюсе</string>
     <string name="enablebolusreminder_summary">Применить напоминание о болюсе с помощью мастера (постболюс)</string>
-    <string name="time_to_bolus">Пора дать болюс!\nЗапустите помощник болюса снова для подсчета.</string>
+    <string name="time_to_bolus">Пора дать болюс!\nЗапустите помощник болюса и повторите расчет.</string>
     <string name="fabric_upload_disabled">Загрузка журналов сбоя на сервер отключена!</string>
     <string name="graph_menu_divider_header">График</string>
     <string name="chart_menu">Меню графика</string>
