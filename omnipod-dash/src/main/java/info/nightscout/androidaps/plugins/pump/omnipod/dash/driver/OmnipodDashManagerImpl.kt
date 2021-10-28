@@ -641,7 +641,6 @@ class OmnipodDashManagerImpl @Inject constructor(
             observeConnectToPod,
             observeSendDeactivateCommand
         ).interceptPodEvents()
-            .doOnComplete(podStateManager::reset)
     }
 
     inner class PodEventInterceptor : Consumer<PodEvent> {

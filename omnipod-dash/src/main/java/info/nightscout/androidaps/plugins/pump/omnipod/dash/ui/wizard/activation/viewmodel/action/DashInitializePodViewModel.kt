@@ -5,11 +5,15 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.viewmodel.action.InitializePodViewModel
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.OmnipodDashManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertTrigger
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.DashHistory
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.InitialResult
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.ResolvedResult
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.I8n
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -24,7 +28,9 @@ class DashInitializePodViewModel @Inject constructor(
     logger: AAPSLogger,
     private val sp: SP,
     private val podStateManager: OmnipodDashPodStateManager,
-    private val resourceHelper: ResourceHelper
+    private val resourceHelper: ResourceHelper,
+    private val history: DashHistory,
+
 ) : InitializePodViewModel(injector, logger) {
     override fun isPodInAlarm(): Boolean = false // TODO
 
@@ -41,27 +47,31 @@ class DashInitializePodViewModel @Inject constructor(
             } else
                 null
 
-            super.disposable += omnipodManager.activatePodPart1(lowReservoirAlertTrigger).subscribeBy(
-                onNext = { podEvent ->
-                    logger.debug(
-                        LTag.PUMP,
-                        "Received PodEvent in Pod activation part 1: $podEvent"
-                    )
-                },
-                onError = { throwable ->
-                    logger.error(LTag.PUMP, "Error in Pod activation part 1", throwable)
-                    source.onSuccess(
-                        PumpEnactResult(injector)
-                            .success(false)
-                            .comment(I8n.textFromException(throwable, resourceHelper))
-                    )
-                },
-                onComplete = {
-                    logger.debug("Pod activation part 1 completed")
-                    podStateManager.updateLowReservoirAlertSettings(lowReservoirAlertEnabled, lowReservoirAlertUnits)
-                    source.onSuccess(PumpEnactResult(injector).success(true))
-                }
-            )
+            super.disposable += omnipodManager.activatePodPart1(lowReservoirAlertTrigger)
+                .ignoreElements()
+                .andThen(podStateManager.updateLowReservoirAlertSettings(lowReservoirAlertEnabled, lowReservoirAlertUnits))
+                .andThen(
+                    history.createRecord(
+                        OmnipodCommandType.INITIALIZE_POD,
+                        initialResult = InitialResult.SENT,
+                        resolveResult = ResolvedResult.SUCCESS,
+                        resolvedAt = System.currentTimeMillis(),
+                    ).ignoreElement()
+                )
+                .subscribeBy(
+                    onError = { throwable ->
+                        logger.error(LTag.PUMP, "Error in Pod activation part 1", throwable)
+                        source.onSuccess(
+                            PumpEnactResult(injector)
+                                .success(false)
+                                .comment(I8n.textFromException(throwable, resourceHelper))
+                        )
+                    },
+                    onComplete = {
+                        logger.debug("Pod activation part 1 completed")
+                        source.onSuccess(PumpEnactResult(injector).success(true))
+                    }
+                )
         }
 
     @StringRes

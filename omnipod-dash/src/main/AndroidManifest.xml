@@ -11,5 +11,6 @@
         <activity android:name=".ui.wizard.activation.DashPodActivationWizardActivity" />
         <activity android:name=".ui.wizard.deactivation.DashPodDeactivationWizardActivity" />
         <activity android:name=".ui.DashPodManagementActivity" />
+        <activity android:name=".ui.DashPodHistoryActivity" />
     </application>
 </manifest>

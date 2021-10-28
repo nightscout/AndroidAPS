@@ -105,7 +105,7 @@ interface OmnipodDashPodStateManager {
        - after getPodStatus was successful(we have an up-to-date podStatus)
      */
     fun recoverActivationFromPodStatus(): String?
-    fun differentAlertSettings(expirationReminderEnabled: Boolean, expirationHours: Int, lowReservoirAlertEnabled: Boolean, lowReservoirAlertUnits: Int): Boolean
+    fun sameAlertSettings(expirationReminderEnabled: Boolean, expirationHours: Int, lowReservoirAlertEnabled: Boolean, lowReservoirAlertUnits: Int): Boolean
     fun updateExpirationAlertSettings(expirationReminderEnabled: Boolean, expirationHours: Int): Completable
     fun updateLowReservoirAlertSettings(lowReservoirAlertEnabled: Boolean, lowReservoirAlertUnits: Int): Completable
 
