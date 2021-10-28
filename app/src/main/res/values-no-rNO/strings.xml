@@ -256,6 +256,7 @@
     <string name="ongoingnotificaction">Pågående varslinger</string>
     <string name="old_data">GAMLE DATA</string>
     <string name="sms_minago">%1$d min siden</string>
+    <string name="localprofile">Profil</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Liste med %1$d elementer.\nFaktisk verdi:</string>
     <string name="openapsma_autosensdata_label">Autosens data</string>
@@ -664,7 +665,6 @@
     <string name="error_adding_treatment_title">Behandlingsdata er ufullstendige</string>
     <string name="maintenance_settings">Vedlikeholds innstillinger</string>
     <string name="maintenance_email">E-post mottaker</string>
-    <string name="maintenance_encrypt_exported_prefs">Krypter eksporterte innstillinger</string>
     <string name="maintenance_amount">Antall logger du vil sende</string>
     <string name="maintenance">Vedlikehold</string>
     <string name="maintenance_shortname">VEDL</string>
@@ -716,6 +716,7 @@
     <string name="versionChecker">Versjonskontroll</string>
     <string name="old_version">gammel versjon</string>
     <string name="very_old_version">veldig gammel versjon</string>
+    <string name="application_expired">Applikasjon utløpt - oppdater</string>
     <string name="new_version_warning">Ny versjon tilgjengelig i minst %1$d dager! Systemet vil bytte til \"stopp innen lavt (LGS)\" etter %2$d dager og loop vil deaktiveres etter %3$d dager</string>
     <string name="twohours">2t</string>
     <string name="dexcom_app_patched">Dexcom App (patchet)</string>
@@ -749,6 +750,7 @@
     <string name="clone_label">Klon</string>
     <string name="saveorresetchangesfirst">Lagre eller nullstill gjeldende endringer først</string>
     <string name="deletecurrentprofile">Slette gjeldende profil?</string>
+    <string name="copytolocalprofile">Opprett ny profil fra denne profilen?</string>
     <string name="profilenamecontainsdot">Profilnavnet inneholder prikker.\nDette støttes ikke av NS.\nProfilen er ikke lastet opp til NS.</string>
     <string name="low_mark_comment">Nedre verdi for målområdet (kun visning)</string>
     <string name="high_mark_comment">Øvre verdi for målområdet (kun visning)</string>
@@ -830,6 +832,7 @@
     <string name="dpvdefaultprofile">DPV standardprofil</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink status:</string>
     <string name="filter">Filter</string>
+    <string name="copytolocalprofile_invalid">Klarte ikke å opprette profil. Profilen er ikke gyldig.</string>
     <string name="cta_dont_kill_my_app_info">Avslutte app?</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Send SMS hvis det ikke oppnås kontakt med pumpa</string>
     <string name="smscommunicator_pump_ureachable">Rapporter når kontakt med pumpe ikke oppnås</string>
@@ -853,11 +856,14 @@
     <string name="email_address">E-postadresse</string>
     <string name="privacy_settings">Personverninnstillinger</string>
     <string name="privacy_summary">Du kan oppgi valgfri e-postadresse hvis du ønsker å bli varslet om krasj. Dette er ikke en automatisert tjeneste. Du vil bli kontaktet av utviklere ved farlige hendelser.</string>
+    <string name="full_sync">Full synkronisering</string>
+    <string name="full_sync_comment">Full synkronisering? Dette kan ta mange timer og du ser ikke nye data i NS før dette er ferdig.</string>
     <string name="prime">Prime</string>
     <string name="ns_sync_options">Synkronisering</string>
     <string name="ns_upload_summary">Profiler, boluser, karbohydrater, midlertidige basaler lastes opp til NS</string>
     <string name="ns_upload">Last opp data til NS</string>
     <string name="ns_receive_profile_store">Hent lagrede profiler</string>
+    <string name="ns_receive_profile_store_summary">Synkroniser profiler fra NS profileditor</string>
     <string name="ns_receive_temp_target">Motta midlertidige BS mål</string>
     <string name="ns_receive_temp_target_summary">Aksepter midlertidige mål angitt med NS eller NSClient</string>
     <string name="ns_receive_profile_switch">Motta profilbytter</string>
@@ -875,4 +881,9 @@
     <string name="sms_timeout_while_wating">Tidsavbrudd fordi vi ventet på avslutning av forrige pumpekommunikasjon</string>
     <string name="smscommunicator_another_bolus_in_queue">Det ligger en annen bolus i køen. Prøv igjen senere.</string>
     <string name="calculation_in_progress">Beregning pågår</string>
+    <string name="missing_profile_name">Mangler profilnavn</string>
+    <string name="error_in_ic_values">Feil i IK faktoren</string>
+    <string name="error_in_basal_values">Feil i basalverdiene</string>
+    <string name="error_in_target_values">Feil i BS mål verdiene</string>
+    <string name="error_in_isf_values">Feil i IF verdien</string>
 </resources>

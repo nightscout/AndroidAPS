@@ -62,7 +62,7 @@
     <string name="openapsma_run">בצע כעת</string>
     <string name="vitualpump_label">משאבה וירטואלית</string>
     <string name="openapsma_lastrun_label">ההפעלה האחרונה</string>
-    <string name="openapsma_inputparameters_label">טעינת פרמטרים</string>
+    <string name="openapsma_inputparameters_label">טוען פרמטרים</string>
     <string name="openapsma_glucosestatus_label">מצב סוכר</string>
     <string name="openapsma_currenttemp_label">בזאלי זמני נוכחי</string>
     <string name="openapsma_iobdata_label">נתוני אינסולין פעיל</string>
@@ -297,7 +297,7 @@
     <string name="pumpsuspended">משאבה מושהית</string>
     <string name="executing">מבצע</string>
     <string name="virtualpump_settings">הגדרות משאבה וירטואלית</string>
-    <string name="virtualpump_uploadstatus_title">טעינת מצב ל-Nightscout</string>
+    <string name="virtualpump_uploadstatus_title">טוען מצב ל-Nightscout</string>
     <string name="nsclientinternal">NSClient</string>
     <string name="nsclientinternal_shortname">NSCI</string>
     <string name="nsclientinternal_url">כתובת URL:</string>
@@ -360,7 +360,7 @@
     <string name="treatments_wizard_cob_label">פחמ\' פעילות</string>
     <string name="superbolus">סופר בולוס</string>
     <string name="ns_logappstartedevent">רשום הפעלת AAPS ב-Nightscout</string>
-    <string name="restartingapp">יציאה מ-AAPS כדי להחיל הגדרות.</string>
+    <string name="restartingapp">יוצא מ-AAPS כדי להחיל הגדרות.</string>
     <string name="configbuilder_insulin_description">באיזה סוג של אינסולין אתה משתמש?</string>
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
     <string name="ultrafastactinginsulincomment">Fiasp</string>
@@ -480,7 +480,7 @@
     <string name="urgent_alarm">התראה דחופה</string>
     <string name="info">מידע</string>
     <string name="eversense">אפליקלציית Eversense (עם פאץ\')</string>
-    <string name="dexcomg5_nsupload_title">טעינת נתוני סוכר ל-Nightscout</string>
+    <string name="dexcomg5_nsupload_title">טוען נתוני סוכר ל-Nightscout</string>
     <string name="bgsource_upload">הגדרות העלאת ערכי סוכר בדם</string>
     <string name="wear_detailed_delta_title">הצגת דלתא מפורטת</string>
     <string name="wear_detailed_delta_summary">הצגת דלתא עם עוד נק\' עשרונית אחת</string>
@@ -492,7 +492,7 @@
     <string name="carbsReqThreshold_summary">כמות הפחמ\' המינימלית (גר\') הדרושה כדי שתוצג התראה על הצעת פחמימות. לא תוצגנה התראות על הצעות הנמוכות מכמות זו.</string>
     <string name="dexcomg5_xdripupload_title">שליחת נתוני סוכר אל xDrip</string>
     <string name="dexcomg5_xdripupload_summary">ב-xDrip בחרו 640g/Eversense כמקור נתונים</string>
-    <string name="nsclientbg">רמת סוכר מ-NSClient</string>
+    <string name="nsclientbg">נתוני סוכר מ-NSClient</string>
     <string name="nsclientbgshort">סוכר NS</string>
     <string name="overview_editquickwizard_usebg">חישוב רמת הסוכר</string>
     <string name="overview_editquickwizard_usebolusiob">חישוב IOB של בולוס</string>
@@ -665,7 +665,6 @@
     <string name="error_adding_treatment_title">נתוני טיפול לא שלמים</string>
     <string name="maintenance_settings">הגדרות תחזוקה</string>
     <string name="maintenance_email">נמען דוא\"ל</string>
-    <string name="maintenance_encrypt_exported_prefs">הצפנת הגדרות מיוצאות</string>
     <string name="maintenance_amount">מספר הרשומות למשלוח</string>
     <string name="maintenance">תחזוקה</string>
     <string name="maintenance_shortname">תחזוקה</string>
@@ -679,6 +678,7 @@
     <string name="resettodefaults">אפס לברירת המחדל</string>
     <string name="nsmalfunction">תקלה ב-NSClient. שקלו להפעיל את Nightscout ו-NSClient מחדש.</string>
     <string name="time_offset">היסט זמן</string>
+    <string name="bolus_reminder">תזכורת להזרקת בולוס אח\"כ</string>
     <string name="setupwizard_preferred_aps_mode">מצב APS מועדף</string>
     <string name="treatments_wizard_total_label">סה\"כ</string>
     <string name="calculation_short">חישוב</string>
@@ -770,7 +770,7 @@
     <string name="activitymonitor">מוניטור פעילות</string>
     <string name="doyouwantresetstats">האם ברצונכם לאפס את הסטטיסטיקות הפעילות?</string>
     <string name="statistics">סטטיסטיקה</string>
-    <string name="randombg">רמת גלוקוז אקראית</string>
+    <string name="randombg">נתוני סוכר אקראיים</string>
     <string name="description_source_randombg">הפקת נתוני גלוקוז אקראיים (מצב הדגמה בלבד)</string>
     <string name="randombg_short">ערכי גלוקוז בדם</string>
     <string name="tools">כלים</string>
@@ -821,7 +821,7 @@
     <string name="largedisplay_description">תצוגה גדולה</string>
     <string name="skin">סקין</string>
     <string name="comapareprofile">השוואת פרופילים</string>
-    <string name="nav_profilehelper">עוזר פרופילים</string>
+    <string name="nav_profilehelper">עוזר הפרופילים</string>
     <string name="motoldefaultprofile">פרופיל ברירת מחדל</string>
     <string name="currentprofile">פרופיל נוכחי</string>
     <string name="availableprofile">פרופיל זמין</string>
@@ -845,6 +845,11 @@
     <string name="enablebolusadvisor_summary">מציג תזכורת לאכול אחר כך במקום להזריק את המינון שהומלץ ע\"י האשף בעת היפרגליקמיה (\"בולוס מקדים\")</string>
     <string name="time_to_eat">זמן לאכול!\nהפעילו את אשף הבולוסים וחשבו בולוס חדש.</string>
     <string name="timetoeat">זמן לאכול</string>
+    <string name="bolusreminder">תזכורת בולוס</string>
+    <string name="enablebolusreminder">אפשר את תזכורת בולוס</string>
+    <string name="enablebolusreminder_summary">השתמש בתזכורת כדי להזריק בולוס מאוחר יותר במחשבון
+        (\"פוסט-בולוס\")</string>
+    <string name="time_to_bolus">זמן להזריק בולוס!\nהשתמשו במחשבון וחשבו מחדש.</string>
     <string name="fabric_upload_disabled">העלאת רשומות קריסה מושבתת!</string>
     <string name="graph_menu_divider_header">גרף</string>
     <string name="chart_menu">תפריט הגרף</string>
@@ -862,7 +867,7 @@
     <string name="prime">תיחול</string>
     <string name="ns_sync_options">סינכרון</string>
     <string name="ns_upload_summary">פרופילים, בולוסים, פחמימות ומינונים בזאליים זמניים נטענים לנייטסקאוט</string>
-    <string name="ns_upload">טעינת נתוני סוכר לנייטסקאוט</string>
+    <string name="ns_upload">טוען נתוני סוכר לנייטסקאוט</string>
     <string name="ns_receive_profile_store">אחזר פרופילים שמורים</string>
     <string name="ns_receive_profile_store_summary">סינכרון פרופילים מעורך הפרופיל של נייטסקאוט לפרופיל מקומי</string>
     <string name="ns_receive_temp_target">קבלת ערכי מטרה זמניים</string>
@@ -882,4 +887,9 @@
     <string name="sms_timeout_while_wating">בהמתנה עד לסיום תקשורת קודמת עם המשאבה</string>
     <string name="smscommunicator_another_bolus_in_queue">ישנו בולוס נוסף בתור. נסו שוב מאוחר יותר.</string>
     <string name="calculation_in_progress">מבצע חישוב</string>
+    <string name="missing_profile_name">חסר שם לפרופיל</string>
+    <string name="error_in_ic_values">שגיאה בערכי יחס הפחמימות</string>
+    <string name="error_in_basal_values">שגיאה בערכי המינון הבזאלי</string>
+    <string name="error_in_target_values">שגיאה בערכי המטרה</string>
+    <string name="error_in_isf_values">שגיאה בערכי יחס התיקון</string>
 </resources>

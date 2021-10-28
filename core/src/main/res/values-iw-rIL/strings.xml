@@ -261,7 +261,6 @@
     <string name="metadata_label_device_name">מייצא את שם מכשיר המטופל\\ת</string>
     <string name="metadata_label_device_model">מייצא את דגם המכשיר</string>
     <string name="metadata_label_encryption">הצפנת קבצים</string>
-    <string name="metadata_format_old">פורמט ייצוא ישן</string>
     <string name="metadata_format_new">פורמט הצפנה חדש</string>
     <string name="metadata_format_debug">פורמט דיבאג חדש (בלתי מוצפן)</string>
     <string name="metadata_format_other">פורמט ייצוא לא ידוע</string>
@@ -305,6 +304,7 @@
     <string name="sunday_short">א\'</string>
     <!-- User Entry -->
     <string name="uel_bolus">בולוס</string>
+    <string name="uel_bolus_calculator">מחשבון הבולוסים</string>
     <string name="uel_bolus_advisor">יועץ בולוס</string>
     <string name="uel_extended_bolus">בולוס ממושך</string>
     <string name="uel_superbolus_tbr">בזאלי זמני של סופר בולוס</string>

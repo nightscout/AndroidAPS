@@ -261,7 +261,6 @@
     <string name="metadata_label_device_name">Patientenname des exportierenden Geräts</string>
     <string name="metadata_label_device_model">Modell des exportierenden Geräts</string>
     <string name="metadata_label_encryption">Dateiverschlüsselung</string>
-    <string name="metadata_format_old">Altes Exportformat</string>
     <string name="metadata_format_new">Neues verschlüsseltes Format</string>
     <string name="metadata_format_debug">Neues Debugformat (unverschlüsselt)</string>
     <string name="metadata_format_other">Unbekanntes Export-Format</string>
@@ -305,6 +304,7 @@
     <string name="sunday_short">So</string>
     <!-- User Entry -->
     <string name="uel_bolus">BOLUS</string>
+    <string name="uel_bolus_calculator">BOLUS-KALKULATOR</string>
     <string name="uel_bolus_advisor">BOLUS RATGEBER</string>
     <string name="uel_extended_bolus">VERLÄNGERTER BOLUS</string>
     <string name="uel_superbolus_tbr">SUPERBOLUS TBR</string>

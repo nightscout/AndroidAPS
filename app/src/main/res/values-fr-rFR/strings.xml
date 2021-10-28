@@ -666,7 +666,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="error_adding_treatment_title">Données de traitement incomplètes</string>
     <string name="maintenance_settings">Paramètres de maintenance</string>
     <string name="maintenance_email">E-mail</string>
-    <string name="maintenance_encrypt_exported_prefs">Crypter les paramètres exportés</string>
     <string name="maintenance_amount">Nombre de journaux (Logs) à envoyer</string>
     <string name="maintenance">Maintenance</string>
     <string name="maintenance_shortname">MAINT</string>
@@ -680,6 +679,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="resettodefaults">Réinitialiser les valeurs par défaut</string>
     <string name="nsmalfunction">Dysfonctionnement NSClient. Faites une réinitialisation de NS et de NSClient.</string>
     <string name="time_offset">Décalage horaire</string>
+    <string name="bolus_reminder">Rappel du bolus plus tard</string>
     <string name="setupwizard_preferred_aps_mode">Mode APS préféré</string>
     <string name="treatments_wizard_total_label">Total</string>
     <string name="calculation_short">Calc</string>
@@ -718,6 +718,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="versionChecker">Vérificateur de version</string>
     <string name="old_version">ancienne version</string>
     <string name="very_old_version">très ancienne version</string>
+    <string name="application_expired">Application expirée</string>
     <string name="new_version_warning">Nouvelle version disponible depuis %1$d jours ! Retour à Arrêt Glycémie Basse (AGB) dans %2$d jours, la boucle sera désactivée dans %3$d jours</string>
     <string name="twohours">2 h</string>
     <string name="dexcom_app_patched">App Dexcom (patchée)</string>
@@ -845,6 +846,10 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="enablebolusadvisor_summary">Utiliser un rappel pour commencer le repas à la place du résultat de l\'assistant quand la glycémie est élevée (\"pré-bolus\")</string>
     <string name="time_to_eat">Il est temps de manger !\nExécutez l\'assistant Bolus et refaites le calcul.</string>
     <string name="timetoeat">Il est temps de manger</string>
+    <string name="bolusreminder">Rappel bolus</string>
+    <string name="enablebolusreminder">Activer le rappel bolus</string>
+    <string name="enablebolusreminder_summary">Utiliser un rappel pour faire le bolus plus tard avec l\'Assistant (\"post-bolus\")</string>
+    <string name="time_to_bolus">Il est temps de faire le bolus !\nExécutez l\'Assistant et faites de nouveau le calcul.</string>
     <string name="fabric_upload_disabled">Téléchargement logs crashs désactivé!</string>
     <string name="graph_menu_divider_header">Graph</string>
     <string name="chart_menu">Menu graphique</string>
@@ -857,6 +862,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="email_address">Adresse e-mail</string>
     <string name="privacy_settings">Paramètres de confidentialité</string>
     <string name="privacy_summary">Vous pouvez fournir une adresse e-mail facultative si vous voulez être informé des plantages de l\'application. Ce n\'est pas un service automatisé. Vous serez contacté par les développeurs dans des situations dangereuses.</string>
+    <string name="full_sync">Synchronisation complète</string>
+    <string name="full_sync_comment">Synchronisation complète ? Cela peut prendre plusieurs heures et jusqu\'à la fin, vous ne verrez pas de nouvelles données sur NS.</string>
     <string name="prime">Amorcer</string>
     <string name="ns_sync_options">Synchronisation</string>
     <string name="ns_upload_summary">Profils, boluses, glucides, basals temporaires sont téléchargés vers NS</string>
@@ -880,4 +887,9 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="sms_timeout_while_wating">Délai d\'attente pour finir la communication précédente avec la pompe</string>
     <string name="smscommunicator_another_bolus_in_queue">Un autre bolus est en file d\'attente. Réessayez plus tard.</string>
     <string name="calculation_in_progress">Calcul en cours</string>
+    <string name="missing_profile_name">Nom de profil manquant</string>
+    <string name="error_in_ic_values">Erreur dans les valeurs de G/I</string>
+    <string name="error_in_basal_values">Erreur dans les valeurs de basal</string>
+    <string name="error_in_target_values">Erreur dans les valeurs cibles</string>
+    <string name="error_in_isf_values">Erreur dans les valeurs de SI</string>
 </resources>

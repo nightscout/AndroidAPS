@@ -261,7 +261,6 @@
     <string name="metadata_label_device_name">Esportazione nome dispositivo paziente</string>
     <string name="metadata_label_device_model">Esportazione modello dispositivo</string>
     <string name="metadata_label_encryption">Crittografia file</string>
-    <string name="metadata_format_old">Vecchio formato esportazione</string>
     <string name="metadata_format_new">Nuovo formato crittografato</string>
     <string name="metadata_format_debug">Nuovo formato di debug (non crittografato)</string>
     <string name="metadata_format_other">Formato esportazione sconosciuto</string>
@@ -305,6 +304,7 @@
     <string name="sunday_short">D</string>
     <!-- User Entry -->
     <string name="uel_bolus">BOLO</string>
+    <string name="uel_bolus_calculator">CALCOLATORE BOLO</string>
     <string name="uel_bolus_advisor">CONSIGLIO BOLO</string>
     <string name="uel_extended_bolus">BOLO ESTESO</string>
     <string name="uel_superbolus_tbr">TBR SUPERBOLO</string>

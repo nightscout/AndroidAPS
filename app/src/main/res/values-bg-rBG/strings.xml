@@ -132,6 +132,7 @@
     <string name="configbuilder_nightscoutversion_label">Nightscout версия:</string>
     <string name="missing_carbs">Нужни %1$d гр</string>
     <string name="exported">Настройките са експортирани</string>
+    <string name="ue_exported">Потребителските настройки икспортирани</string>
     <string name="export_to">Експортирай настройките в </string>
     <string name="import_from">Импорт на настройки от</string>
     <string name="setting_imported">Настройките са импортирани</string>
@@ -255,11 +256,13 @@
     <string name="ongoingnotificaction">Текущи известия</string>
     <string name="old_data">СТАРИ ДАННИ</string>
     <string name="sms_minago">преди %1$d мин</string>
+    <string name="localprofile">Профил</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Общо %1$d елемента.\nАктуална стойност:</string>
     <string name="openapsma_autosensdata_label">Autosens данни</string>
     <string name="openapsma_scriptdebugdata_label">От скрипта</string>
     <string name="openapsama_useautosens">Използвайте функцията за Autosens</string>
+    <string name="refresheventsfromnightscout">Презареди от NS</string>
     <string name="deletefuturetreatments">Изтрий записите в бъдещето</string>
     <string name="actions_shortname">ДЕЙСТВ</string>
     <string name="configbuilder_shortname">КОНФ</string>
@@ -489,6 +492,7 @@
     <string name="dexcomg5_xdripupload_title">Изпращай данни за КЗ към xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">В xDrip+ изберете 640g/Eversense за източник на данни</string>
     <string name="nsclientbg">КЗ от NS</string>
+    <string name="nsclientbgshort">NS КЗ</string>
     <string name="overview_editquickwizard_usebg">Калкулиране на КЗ</string>
     <string name="overview_editquickwizard_usebolusiob">Калкулиране на Болус IOB</string>
     <string name="overview_editquickwizard_usebasaliob">Калкулиране на базален IOB</string>
@@ -550,6 +554,7 @@
     <string name="bolusrecordedonly">Болус само ще се запише (няма да се стартира в помпа)</string>
     <string name="loop_smbsetbypump_label">SMB в помпата</string>
     <string name="overview_show_activity">Активност</string>
+    <string name="overview_show_bgi">Въздействие на Кръвна Захар</string>
     <string name="overview_show_sensitivity">Чувствителност</string>
     <string name="overview_show_deviations">Отклонения</string>
     <string name="overview_show_cob">Активни въглехидрати</string>
@@ -659,7 +664,6 @@
     <string name="error_adding_treatment_title">Данните за лечението не са пълни</string>
     <string name="maintenance_settings">Настройки за поддръжка</string>
     <string name="maintenance_email">Имейл</string>
-    <string name="maintenance_encrypt_exported_prefs">Криптиране на експортирани настройки</string>
     <string name="maintenance_amount">Брой логове за изпращане</string>
     <string name="maintenance">Поддръжка</string>
     <string name="maintenance_shortname">ПОДДР</string>
@@ -744,6 +748,7 @@
     <string name="clone_label">Клонирай</string>
     <string name="saveorresetchangesfirst">Първо запазете или се откажете от промените</string>
     <string name="deletecurrentprofile">Изтриване на текущия профил?</string>
+    <string name="copytolocalprofile">Създай нов профил копирайки този?</string>
     <string name="profilenamecontainsdot">Името на профила съдържа точка.\nТова не се поддържа от НС.\nПрофилът не е качен в НС.</string>
     <string name="low_mark_comment">Ниската граница на диапазона (графика)</string>
     <string name="high_mark_comment">Високата граница на диапазона (графика)</string>
@@ -767,6 +772,7 @@
     <string name="randombg_short">КЗ</string>
     <string name="tools">Инструменти</string>
     <string name="show_calculation">Покажи изчисленията</string>
+    <string name="show_removed">Покажи премахнатите</string>
     <string name="clearqueueconfirm">Изтрий опашка? Всички данни ще се загубят!</string>
     <string name="ebstopsloop">Използване на удължен болус ще спре режим затворен цикъл за времето на болуса. Сигурни ли сте?</string>
     <string name="closed_loop_disabled_with_eb">Затворен цикъл е недостъпен поради стартиран Удължен болус</string>
@@ -824,6 +830,7 @@
     <string name="dpvdefaultprofile">Профил по подразбиране</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink статус:</string>
     <string name="filter">Филтър</string>
+    <string name="copytolocalprofile_invalid">Създаването на профила невъзможно. Профилът е невалиден.</string>
     <string name="cta_dont_kill_my_app_info">Не убивай приложението?</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Изпращане на SMS, ако помпата е недостъпна</string>
     <string name="smscommunicator_pump_ureachable">Докладвай недостъпна помпа</string>
@@ -841,4 +848,37 @@
     <string name="clear_filter">Премахни филтъра</string>
     <string name="trend_arrow">Стрелка тенденция</string>
     <string name="cannula">Канюла</string>
+    <string name="userentry">Потербителска настройка</string>
+    <string name="summary_email_for_crash_report">Тази електронна поща ще бъде добавена към репорта за да можем да се свържем с вас в случай на нужда. Не е задължително.</string>
+    <string name="email_address">Електронна поща</string>
+    <string name="privacy_settings">Настройки за поверителност</string>
+    <string name="privacy_summary">Можете да посочите електронна поща, ако искате да бъдете уведомени за системни проблеми. Това не е автоматичен процес. Разработчиците ще се свържат с вас в случай на опасна ситуация.</string>
+    <string name="full_sync">Пълна синхронизация</string>
+    <string name="full_sync_comment">Пълна синхронизация? Може да отнеме много часове и докато не приключи вие няма да виждате нови данни в NS.</string>
+    <string name="prime">Пълнене</string>
+    <string name="ns_sync_options">Синхронизация</string>
+    <string name="ns_upload_summary">Профили, болуси, въглехидрати, и временни базали се изпращат към NS</string>
+    <string name="ns_upload">Изпратете данните към NS</string>
+    <string name="ns_receive_profile_store_summary">Синхорнизирай профили от NS профилния едитор</string>
+    <string name="ns_receive_temp_target">Получаване на временни цели</string>
+    <string name="ns_receive_temp_target_summary">Приеми временни цели зададени през NS или NS клиент</string>
+    <string name="ns_receive_profile_switch">Получаване на смяна на профили</string>
+    <string name="ns_receive_profile_switch_summary">Приеми смяна на профили от NS или NS клиент</string>
+    <string name="ns_receive_offline_event">Приеми изключване на APS</string>
+    <string name="ns_receive_offline_event_summary">Приеми изключвания на APS през NS или NS Клиент</string>
+    <string name="ns_receive_insulin">Получавай инсулин</string>
+    <string name="ns_receive_insulin_summary">Приеми инсулин зададен през NS или NS Клиент (не се инжектира, само се калкулира във формулата за IOB)</string>
+    <string name="ns_receive_carbs">Приемай въглехидрати</string>
+    <string name="ns_receive_carbs_summary">Приемай въглехидрати зададени през NS или NS Клиент</string>
+    <string name="ns_receive_therapy_events">Приемай смени (канула, инсулин, батерия и др.)</string>
+    <string name="ns_receive_therapy_events_summary">Приемай смени (канула, инсулин, батерия и др.) зададени от NS или NS Клиент</string>
+    <string name="ns_receive_cgm">Приеми история от данни от сензора</string>
+    <string name="ns_receive_cgm_summary">Приемай постояни данни от сензора идващи от NS</string>
+    <string name="sms_timeout_while_wating">Изтичане на времето на предишна комуникация с помпата</string>
+    <string name="smscommunicator_another_bolus_in_queue">В момента се обработва друг болус. Моля опитай по-късни.</string>
+    <string name="missing_profile_name">Липсва име на профила</string>
+    <string name="error_in_ic_values">Грешка в стойността на ВЧ (IC)</string>
+    <string name="error_in_basal_values">Грешка в базалните стойности</string>
+    <string name="error_in_target_values">Грешка в стойностите за цел</string>
+    <string name="error_in_isf_values">Грешка в стойностите за чувствителност (ISF)</string>
 </resources>

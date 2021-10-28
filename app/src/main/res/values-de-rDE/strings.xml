@@ -665,7 +665,6 @@
     <string name="error_adding_treatment_title">Behandlungsdaten unvollständig</string>
     <string name="maintenance_settings">Wartungseinstellungen</string>
     <string name="maintenance_email">E-Mail</string>
-    <string name="maintenance_encrypt_exported_prefs">Exportierte Einstellungen verschlüsseln</string>
     <string name="maintenance_amount">Anzahl der zu sendenden Logs</string>
     <string name="maintenance">Wartung</string>
     <string name="maintenance_shortname">WRTNG</string>
@@ -883,4 +882,9 @@ Unerwartetes Verhalten.</string>
     <string name="sms_timeout_while_wating">Zeitüberschreitung beim Warten auf das Ende der vorherigen Kommunikation mit der Pumpe</string>
     <string name="smscommunicator_another_bolus_in_queue">In der Warteschlange befindet sich ein weiterer Bolus. Bitte später erneut versuchen.</string>
     <string name="calculation_in_progress">Kalkulation wird gerade durchgeführt</string>
+    <string name="missing_profile_name">Fehlender Profilname</string>
+    <string name="error_in_ic_values">Fehler in IC-Werten</string>
+    <string name="error_in_basal_values">Fehler in den Basalwerten</string>
+    <string name="error_in_target_values">Fehler in den Zielwerten</string>
+    <string name="error_in_isf_values">Fehler in ISF-Werten</string>
 </resources>

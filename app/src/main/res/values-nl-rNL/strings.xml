@@ -665,7 +665,6 @@
     <string name="error_adding_treatment_title">Behandelingen data incompleet</string>
     <string name="maintenance_settings">Onderhoudsinstellingen</string>
     <string name="maintenance_email">E-mail</string>
-    <string name="maintenance_encrypt_exported_prefs">Geëxporteerde instellingen versleutelen</string>
     <string name="maintenance_amount">Aantal Logs om te verzenden</string>
     <string name="maintenance">Onderhoud</string>
     <string name="maintenance_shortname">ONDH</string>
@@ -882,4 +881,9 @@
     <string name="sms_timeout_while_wating">Time-out tijdens het wachten op het voltooien van de vorige pomp communicatie</string>
     <string name="smscommunicator_another_bolus_in_queue">Er staat een andere bolus in de wachtrij. Probeer het later opnieuw.</string>
     <string name="calculation_in_progress">Berekening wordt uitgevoerd</string>
+    <string name="missing_profile_name">Profielnaam ontbreekt</string>
+    <string name="error_in_ic_values">Fout in IC waarden</string>
+    <string name="error_in_basal_values">Fout in basaal waarden</string>
+    <string name="error_in_target_values">Fout in streefdoel</string>
+    <string name="error_in_isf_values">Fout in ISF waarden</string>
 </resources>
