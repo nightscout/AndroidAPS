@@ -665,7 +665,6 @@
     <string name="error_adding_treatment_title">Dáta ošetrení neúplné</string>
     <string name="maintenance_settings">Nastavenie údržby</string>
     <string name="maintenance_email">E-Mail</string>
-    <string name="maintenance_encrypt_exported_prefs">Šifrovať exportované nastavenia</string>
     <string name="maintenance_amount">Počet protokolov na odoslanie</string>
     <string name="maintenance">Údržba</string>
     <string name="maintenance_shortname">Údržba</string>
@@ -679,6 +678,7 @@
     <string name="resettodefaults">Obnoviť predvolené</string>
     <string name="nsmalfunction">Chyba NSClienta. Zvážte reštart NS a NSClienta.</string>
     <string name="time_offset">Časový posun</string>
+    <string name="bolus_reminder">Upozorniť na bolus neskôr</string>
     <string name="setupwizard_preferred_aps_mode">Preferovaný režim APS</string>
     <string name="treatments_wizard_total_label">Spolu</string>
     <string name="calculation_short">Kalk</string>
@@ -744,7 +744,7 @@
     <string name="objectives_button_unstart">Vymazanie začaté</string>
     <string name="doyouwantresetstart">Chcete resetovať začiatok cieľa? Môžete prísť o svoj pokrok.</string>
     <string name="setupwizard_units_prompt">Vyberte jednotky, v ktorých chcete zobraziť hodnoty</string>
-    <string name="dia_short">Doba pôsobenia inzulínu</string>
+    <string name="dia_short">DIA</string>
     <string name="ic_short">I:C</string>
     <string name="isf_short">ISF</string>
     <string name="target_short">CIEĽ</string>
@@ -845,6 +845,11 @@
     <string name="enablebolusadvisor_summary">Pri vysokej glykémii spustiť pripomienku namiesto výsledku z kalkulačky, aby ste začali jesť neskôr (tzv. \"prebolus\")</string>
     <string name="time_to_eat">Čas na jedlo!\nSpustite Bolusovú kalkulačku a urobte výpočet znova.</string>
     <string name="timetoeat">Čas na jedlo</string>
+    <string name="bolusreminder">Pripomenutie bolusu</string>
+    <string name="enablebolusreminder">Zapnúť pripomínanie bolusu</string>
+    <string name="enablebolusreminder_summary">Použite pripomenutie pre neskorší bolus s kalkulačkou
+        (\"oneskorený bolus\")</string>
+    <string name="time_to_bolus">Čas na bolus!\nSpustite Bolusovú kalkulačku a urobte výpočet znova.</string>
     <string name="fabric_upload_disabled">Odosielanie protokolov o zlyhaní je zakázané!</string>
     <string name="graph_menu_divider_header">Graf</string>
     <string name="chart_menu">Grafové menu</string>
@@ -882,4 +887,9 @@
     <string name="sms_timeout_while_wating">Vypršal časový limit pri čakaní na dokončenie predchádzajúcej komunikácie s pumpou</string>
     <string name="smscommunicator_another_bolus_in_queue">Vo fronte je ďalší bolus. Skúste to znovu neskôr.</string>
     <string name="calculation_in_progress">Prebieha výpočet</string>
+    <string name="missing_profile_name">Chýba názov profilu</string>
+    <string name="error_in_ic_values">Chyba v hodnotách inz./sach. prevodu</string>
+    <string name="error_in_basal_values">Chyba v hodnotách bazálu</string>
+    <string name="error_in_target_values">Chyba v cieľových hodnotách</string>
+    <string name="error_in_isf_values">Chyba v hodnotách citlivosti</string>
 </resources>
