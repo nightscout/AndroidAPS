@@ -665,7 +665,6 @@
     <string name="error_adding_treatment_title">Dati trattamento incompleti</string>
     <string name="maintenance_settings">Impostazioni manutenzione</string>
     <string name="maintenance_email">Destinatario email</string>
-    <string name="maintenance_encrypt_exported_prefs">Crittografa impostazioni esportate</string>
     <string name="maintenance_amount">Numero di log da inviare</string>
     <string name="maintenance">Manutenzione</string>
     <string name="maintenance_shortname">MANUT</string>
@@ -882,4 +881,9 @@
     <string name="sms_timeout_while_wating">Timeout nell\'attesa della fine della precedente comunicazione col micro.</string>
     <string name="smscommunicator_another_bolus_in_queue">C\'è un altro bolo in coda. Riprova più tardi.</string>
     <string name="calculation_in_progress">Calcolo in corso</string>
+    <string name="missing_profile_name">Nome profilo mancante</string>
+    <string name="error_in_ic_values">Errore nei valori IC</string>
+    <string name="error_in_basal_values">Errore nei valori della basale</string>
+    <string name="error_in_target_values">Errore nei valori del target</string>
+    <string name="error_in_isf_values">Errore nei valori ISF</string>
 </resources>
