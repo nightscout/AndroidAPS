@@ -19,6 +19,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.Omn
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.Constants
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.I8n
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.mapProfileToBasalProgram
+import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.Single
@@ -34,6 +35,7 @@ class DashInsertCannulaViewModel @Inject constructor(
     private val rxBus: RxBus,
     private val sp: SP,
     private val resourceHelper: ResourceHelper,
+    private val fabricPrivacy: FabricPrivacy,
 
     injector: HasAndroidInjector,
     logger: AAPSLogger
@@ -100,6 +102,7 @@ class DashInsertCannulaViewModel @Inject constructor(
                         )
 
                         rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED))
+                        fabricPrivacy.logCustom("OmnipodDashPodActivated")
                         source.onSuccess(PumpEnactResult(injector).success(true))
                     }
                 )
