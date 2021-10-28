@@ -268,6 +268,16 @@ class AutomationPlugin @Inject constructor(
     }
 
     @Synchronized
+    fun removeIfExists(event: AutomationEvent) {
+        for (e in automationEvents) {
+            if (event.title == e.title) {
+                automationEvents.remove(e)
+                rxBus.send(EventAutomationDataChanged())
+            }
+        }
+    }
+
+    @Synchronized
     fun set(event: AutomationEvent, index: Int) {
         automationEvents[index] = event
         rxBus.send(EventAutomationDataChanged())
