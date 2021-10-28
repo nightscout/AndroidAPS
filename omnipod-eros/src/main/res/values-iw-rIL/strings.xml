@@ -22,7 +22,7 @@
     <string name="omnipod_eros_history_type">סוג:</string>
     <string name="omnipod_eros_history_bolus_value">%1$.2f יח\'</string>
     <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f יח\', פחמ\'= %2$.1f גר\'</string>
-    <string name="omnipod_eros_history_tbr_value">קצב: %1$.2f יח\', משך: %2$d דק\'</string>
+    <string name="omnipod_eros_history_tbr_value">מינון: %1$.2f יח\', משך: %2$d דק\'</string>
     <!-- Omnipod Eros - Short Status -->
     <string name="omnipod_eros_short_status_riley_link_battery">סול\' ריילי: %1$d</string>
     <!-- Omnipod Eros - Error -->
