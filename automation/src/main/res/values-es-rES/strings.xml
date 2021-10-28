@@ -38,6 +38,9 @@
     <string name="glucoseisnotavailable">El valor de glucosa no está disponible</string>
     <string name="glucosecomparedmgdl">Glucosa %1$s %2$.0f %3$s</string>
     <string name="glucosecomparedmmol">Glucosa %1$s %2$.1f %3$s</string>
+    <string name="notemptarget">El objetivo temporal no existe</string>
+    <string name="temptargetcomparedmgdl">Objetivo Temporal %1$s %2$.0f %3$s</string>
+    <string name="temptargetcomparedmmol">Objetivo Temporal %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">Porcentaje de basal en perfil %1$s %2$d</string>
     <string name="iobcompared">IOB (Insulina a Bordo) %1$s %2$.1f</string>
     <string name="and">Y</string>
@@ -86,6 +89,7 @@
     <string name="latitude_short">Lat:</string>
     <string name="longitude_short">Long:</string>
     <string name="glucose_u">Glucosa [%1$s]:</string>
+    <string name="target_u">Objetivo [%1$s]:</string>
     <string name="lastboluslabel">Último bolo</string>
     <string name="lastboluscompared">Hora del último bolo: hace %1$s %2$s min</string>
     <string name="triggercoblabel">COB</string>
