@@ -435,7 +435,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         }
     }
 
-    override fun differentAlertSettings(
+    override fun sameAlertSettings(
         expirationReminderEnabled: Boolean,
         expirationHours: Int,
         lowReservoirAlertEnabled: Boolean,
