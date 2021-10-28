@@ -3,6 +3,7 @@
     <!-- Omnipod Dash - Description -->
     <string name="omnipod_dash_pump_description">חיבור משאבת Omnipod Dash (הדגם החדש, התומך בבלוטות\' ובעל מכסה מחט כחול).</string>
     <!-- Omnipod Dash - Keys -->
+    <!-- Omnipod Dash - History -->
     <!-- Omnipod Dash - Overview -->
     <string name="omnipod_dash_overview_bluetooth_status">מצב בלוטות\'</string>
     <string name="omnipod_dash_overview_bluetooth_address">כתובת בלוטות\'</string>
