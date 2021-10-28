@@ -132,6 +132,7 @@
     <string name="configbuilder_nightscoutversion_label">Versiune Nightscout:</string>
     <string name="missing_carbs">Lipsă %1$d g</string>
     <string name="exported">Am exportat preferințele</string>
+    <string name="ue_exported">Înregistrările de la Utilizator exportate</string>
     <string name="export_to">Exportă setările către</string>
     <string name="import_from">Importă setările din</string>
     <string name="setting_imported">Setări importate</string>
@@ -255,11 +256,13 @@
     <string name="ongoingnotificaction">Notificare activă</string>
     <string name="old_data">DATE VECHI</string>
     <string name="sms_minago">acum %1$dmin</string>
+    <string name="localprofile">Profil</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Matrice de %1$d elemente.\nValoarea curentă:</string>
     <string name="openapsma_autosensdata_label">Date Autosens</string>
     <string name="openapsma_scriptdebugdata_label">Depanare script</string>
     <string name="openapsama_useautosens">Folosește opțiunea de autosensibilitate</string>
+    <string name="refresheventsfromnightscout">Actualizează din NS</string>
     <string name="deletefuturetreatments">Ștergerea tratamentelor înregistrate în viitor</string>
     <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">CONF</string>
@@ -490,6 +493,7 @@
     <string name="dexcomg5_xdripupload_title">Trimite date glicemie la xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">Selectați 640g/Eversense ca sursă de date în xDrip+</string>
     <string name="nsclientbg">Glicemie NSClient</string>
+    <string name="nsclientbgshort">NS GL</string>
     <string name="overview_editquickwizard_usebg">Calcul glicemie</string>
     <string name="overview_editquickwizard_usebolusiob">Calcul IOB bolus</string>
     <string name="overview_editquickwizard_usebasaliob">Calcul IOB bazală</string>
@@ -661,7 +665,6 @@
     <string name="error_adding_treatment_title">Date incomplete despre tratament</string>
     <string name="maintenance_settings">Setări de întreținere</string>
     <string name="maintenance_email">Destinatar email</string>
-    <string name="maintenance_encrypt_exported_prefs">Criptează setările exportate</string>
     <string name="maintenance_amount">Nr de loguri de trimis</string>
     <string name="maintenance">Mentenanță</string>
     <string name="maintenance_shortname">MENTN</string>
@@ -713,6 +716,7 @@
     <string name="versionChecker">Verificator versiune</string>
     <string name="old_version">versiune veche</string>
     <string name="very_old_version">versiune foarte veche</string>
+    <string name="application_expired">Aplicația a expirat</string>
     <string name="new_version_warning">O versiune nouă este disponibilă de cel puțin %1$d zile! Reveniți la LGS după %2$d zile, bucla închisă va fi dezactivată după %3$d zile</string>
     <string name="twohours">2h</string>
     <string name="dexcom_app_patched">Aplicația Dexcom (modificată)</string>
@@ -746,6 +750,7 @@
     <string name="clone_label">Clonează</string>
     <string name="saveorresetchangesfirst">Salvează sau resetează modificările curente mai întâi</string>
     <string name="deletecurrentprofile">Ştergeţi profilul curent?</string>
+    <string name="copytolocalprofile">Creați un profil nou din acest profil?</string>
     <string name="profilenamecontainsdot">Numele profilului conține puncte.\nAcest lucru nu este permis de NS.\nProfilul nu a fost înregistrat în NS.</string>
     <string name="low_mark_comment">Valoarea inferioară a intervalului țintă (doar afișare)</string>
     <string name="high_mark_comment">Valoarea superioară a intervalului țintă (doar afișare)</string>
@@ -769,6 +774,7 @@
     <string name="randombg_short">Gl</string>
     <string name="tools">Instrumente</string>
     <string name="show_calculation">Arată calculul</string>
+    <string name="show_removed">Arată ștergerile</string>
     <string name="clearqueueconfirm">Ștergeți coada? Toate datele din coadă vor fi pierdute!</string>
     <string name="ebstopsloop">Utilizarea unui bolus extins va opri modul buclă închisă pe timpul livrării bolusului extins. Sigur doriți acest lucru?</string>
     <string name="closed_loop_disabled_with_eb">Bucla închisă dezactivată din cauza livrării bolusului extins</string>
@@ -826,6 +832,7 @@
     <string name="dpvdefaultprofile">Profil implicit DPV</string>
     <string name="setupwizard_pump_riley_link_status">Stare RileyLink:</string>
     <string name="filter">Filtru</string>
+    <string name="copytolocalprofile_invalid">Nu se poate crea profilul. Profilul este invalid.</string>
     <string name="cta_dont_kill_my_app_info">Nu-mi opri aplicația?</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Trimite SMS dacă este generata o alarma de eroare conexiune pompa</string>
     <string name="smscommunicator_pump_ureachable">Raportează pompa inaccesibilă</string>
@@ -849,4 +856,34 @@
     <string name="email_address">Adresă de e-mail</string>
     <string name="privacy_settings">Setări de confidenţialitate</string>
     <string name="privacy_summary">Puteți furniza o adresă de e-mail opțională dacă doriți să fiți notificat despre erorile aplicației. Acesta nu este un serviciu automat. Veți fi contactat de dezvoltatori în situații periculoase.</string>
+    <string name="full_sync">Sincronizare completă</string>
+    <string name="full_sync_comment">Sincronizare completă? Poate dura multe ore şi până la final nu veţi vedea date noi în NS.</string>
+    <string name="prime">Amorsare</string>
+    <string name="ns_sync_options">Sincronizare</string>
+    <string name="ns_upload_summary">Profilurile, bolusurile, carbohidrații, bazalele temporare sunt încărcate în NS</string>
+    <string name="ns_upload">Încarcă date în NS</string>
+    <string name="ns_receive_profile_store">Primire stocare profile</string>
+    <string name="ns_receive_profile_store_summary">Sincronizează profilurile din editorul de profil NS</string>
+    <string name="ns_receive_temp_target">Primește ținte temporare</string>
+    <string name="ns_receive_temp_target_summary">Acceptați țintele temporare introduse prin NS sau NSClient</string>
+    <string name="ns_receive_profile_switch">Primește schimbări de profil</string>
+    <string name="ns_receive_profile_switch_summary">Acceptați schimbările de profil introduse prin NS sau NSClient</string>
+    <string name="ns_receive_offline_event">Primiți evenimente APS offline</string>
+    <string name="ns_receive_offline_event_summary">Acceptați evenimente offline APS introduse prin NS sau NSClient</string>
+    <string name="ns_receive_insulin">Primiţi date insulina</string>
+    <string name="ns_receive_insulin_summary">Acceptaţi insulina introdusă prin NS sau NSClient (nu este livrată, ci doar calculată in IoB)</string>
+    <string name="ns_receive_carbs">Primește carbohidrați</string>
+    <string name="ns_receive_carbs_summary">Acceptați carbohidrați introduși prin NS sau NSClient</string>
+    <string name="ns_receive_therapy_events">Primește evenimente terapeutice</string>
+    <string name="ns_receive_therapy_events_summary">Acceptaţi evenimentele de tratament (canulă, insulină, modificarea bateriei etc.) introduse prin NS sau NSClient</string>
+    <string name="ns_receive_cgm">Primire/completare date CGM</string>
+    <string name="ns_receive_cgm_summary">Acceptați datele CGM din NS</string>
+    <string name="sms_timeout_while_wating">Timp expirat cat ce se aștepta terminarea comunicării anterioare a pompei</string>
+    <string name="smscommunicator_another_bolus_in_queue">Există un alt bolus în coada de așteptare. Încercați din nou mai târziu.</string>
+    <string name="calculation_in_progress">Calcul în desfășurare</string>
+    <string name="missing_profile_name">Lipsește numele profilului</string>
+    <string name="error_in_ic_values">Eroare in valorile IC</string>
+    <string name="error_in_basal_values">Eroare in valorile ratei bazale</string>
+    <string name="error_in_target_values">Eroare in valorile tinta</string>
+    <string name="error_in_isf_values">Eroare in valorile ISF</string>
 </resources>
