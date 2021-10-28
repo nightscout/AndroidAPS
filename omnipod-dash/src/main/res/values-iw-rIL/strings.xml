@@ -4,6 +4,14 @@
     <string name="omnipod_dash_pump_description">חיבור משאבת Omnipod Dash (הדגם החדש, התומך בבלוטות\' ובעל מכסה מחט כחול).</string>
     <!-- Omnipod Dash - Keys -->
     <!-- Omnipod Dash - History -->
+    <string name="omnipod_dash_history_title">היסטוריית הפוד</string>
+    <string name="omnipod_dash_history_item_description">תיאור</string>
+    <string name="omnipod_dash_history_item_source">מקור</string>
+    <string name="omnipod_dash_history_item_date">תאריך</string>
+    <string name="omnipod_dash_history_type">סוג:</string>
+    <string name="omnipod_dash_history_bolus_value">%1$.2f יח\'</string>
+    <string name="omnipod_dash_history_bolus_value_with_carbs">%1$.2f יח\', פחמ\'= %2$.1f גר\'</string>
+    <string name="omnipod_dash_history_tbr_value">מינון: %1$.2f יח\', משך: %2$d דק\'</string>
     <!-- Omnipod Dash - Overview -->
     <string name="omnipod_dash_overview_bluetooth_status">מצב בלוטות\'</string>
     <string name="omnipod_dash_overview_bluetooth_address">כתובת בלוטות\'</string>
@@ -19,4 +27,10 @@
     <string name="omnipod_dash_found_too_many_pods">נמצאו יותר מדי פודים להפעלה</string>
     <string name="omnipod_dash_scan_failed">לא נמצא פוד זמין להפעלה</string>
     <string name="omnipod_dash_generic_error">שגיאה גנרית: %1$s</string>
+    <string name="omnipod_dash_failed_to_send">שליחת הפקודה נכשלה</string>
+    <string name="omnipod_dash_command_not_sent">הפקודה לא נשלחה</string>
+    <string name="omnipod_dash_command_not_received_by_the_pod">הפקודה לא התקבלה ע\"י הפוד</string>
+    <string name="omnipod_dash_unknown">מצב לא ידוע עבור הפקודה</string>
+    <string name="omnipod_common_history_tbr_value">מינון: %1$.2f יח\', משך: %2$d דק\'</string>
+    <string name="omnipod_common_history_bolus_value">%1$.2f יח\'</string>
 </resources>
