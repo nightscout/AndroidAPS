@@ -665,7 +665,6 @@
     <string name="error_adding_treatment_title">Data ošetření neúplná</string>
     <string name="maintenance_settings">Nastavení údržby</string>
     <string name="maintenance_email">Příjemce e-mailu</string>
-    <string name="maintenance_encrypt_exported_prefs">Šifrovat exportované nastavení</string>
     <string name="maintenance_amount">Počet logů k odeslání</string>
     <string name="maintenance">Údržba</string>
     <string name="maintenance_shortname">ÚDRŽBA</string>
@@ -679,6 +678,7 @@
     <string name="resettodefaults">Obnovit výchozí</string>
     <string name="nsmalfunction">Chyba NSClienta. Zvažte restart NS a NSClienta.</string>
     <string name="time_offset">Časový posun</string>
+    <string name="bolus_reminder">Upozornit později na bolus</string>
     <string name="setupwizard_preferred_aps_mode">Preferovaný režim APS</string>
     <string name="treatments_wizard_total_label">Výsledek</string>
     <string name="calculation_short">Kalk</string>
@@ -845,6 +845,11 @@
     <string name="enablebolusadvisor_summary">Při vysoké glykémii použijte připomenutí, abyste začali jíst později, namísto výsledku z kalkulátoru („prebolus“)</string>
     <string name="time_to_eat">Čas k jídlu!\nSpusťte Bolusovou kalkulačku a proveďte výpočet znovu.</string>
     <string name="timetoeat">Čas k jídlu</string>
+    <string name="bolusreminder">Připomenutí bolusu</string>
+    <string name="enablebolusreminder">Povolit připomínání bolusu</string>
+    <string name="enablebolusreminder_summary">Použijte připomenutí pro pozdější bolus s kalkulátorem
+        (\"zpožděný bolus\")</string>
+    <string name="time_to_bolus">Čas na bolus!\nSpusťte Bolusovou kalkulačku a proveďte výpočet znovu.</string>
     <string name="fabric_upload_disabled">Nahrávání protokolů o pádech zakázáno!</string>
     <string name="graph_menu_divider_header">Graf</string>
     <string name="chart_menu">Možnosti grafu</string>
@@ -882,4 +887,10 @@
     <string name="sms_timeout_while_wating">Vypršel časový limit při čekání na dokončení předchozí komunikace s pumpou</string>
     <string name="smscommunicator_another_bolus_in_queue">Ve frontě je další bolus. Zkuste to znovu později.</string>
     <string name="calculation_in_progress">Probíhá výpočet</string>
+    <string name="missing_profile_name">Chybí název profilu</string>
+    <string name="error_in_ic_values">Chyba v hodnotách sach. poměru</string>
+    <string name="error_in_basal_values">Chyba v hodnotách bazálu</string>
+    <string name="error_in_target_values">Chyba v hodnotách cílové gl.</string>
+    <string name="error_in_isf_values">Chyba v hodnotách inz. citlivosti</string>
+    <string name="run_question">Spustit %s?</string>
 </resources>
