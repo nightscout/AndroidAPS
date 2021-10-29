@@ -105,9 +105,11 @@
     <string name="edit_short">REDIGER</string>
     <string name="please_choose_an_action_type">Velg en handling</string>
     <string name="please_choose_a_trigger_type">Velg en trigger type</string>
+    <string name="please_choose_a_operation_type">Velg en handling</string>
     <string name="triggers">Triggere:</string>
     <string name="remove_label">FJERN</string>
     <string name="preconditions">Forutsetninger:</string>
     <string name="automation_event">Automasjons hendelse</string>
     <string name="reorder_label">Endre rekkefølge</string>
+    <string name="user_action">Bruker handling</string>
 </resources>
