@@ -192,7 +192,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     private TBROverNotificationBlock tbrOverNotificationBlock;
     public double lastBolusAmount = 0;
     public long lastBolusTimestamp = 0L;
-    public double concentration;
+    private double concentration;
 
     @Inject
     public LocalInsightPlugin(
@@ -257,17 +257,36 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
 
     public CartridgeStatus getCartridgeStatus() {
         updateConcentration();
-        return cartridgeStatus;
+        if (cartridgeStatus==null)
+            return null;
+        CartridgeStatus convertedCartridgeStatus = new CartridgeStatus();
+        convertedCartridgeStatus.setRemainingAmount(cartridgeStatus.getRemainingAmount() * concentration);
+        convertedCartridgeStatus.setInserted(cartridgeStatus.isInserted());
+        convertedCartridgeStatus.setCartridgeType(cartridgeStatus.getCartridgeType());
+        convertedCartridgeStatus.setSymbolStatus(cartridgeStatus.getSymbolStatus());
+        return convertedCartridgeStatus;
     }
 
     public TotalDailyDose getTotalDailyDose() {
         updateConcentration();
-        return totalDailyDose;
+        if (totalDailyDose==null)
+            return null;
+        TotalDailyDose convertedTotalDailyDose = new TotalDailyDose();
+        convertedTotalDailyDose.setBasal(totalDailyDose.getBasal() * concentration);
+        convertedTotalDailyDose.setBolus(totalDailyDose.getBolus() * concentration);
+        convertedTotalDailyDose.setBolusAndBasal(totalDailyDose.getBolusAndBasal() * concentration);
+        return convertedTotalDailyDose;
     }
 
     public ActiveBasalRate getActiveBasalRate() {
         updateConcentration();
-        return activeBasalRate;
+        if (activeBasalRate==null)
+            return null;
+        ActiveBasalRate newActiveBasalRate = new ActiveBasalRate();
+        newActiveBasalRate.setActiveBasalRate(activeBasalRate.getActiveBasalRate() * concentration);
+        newActiveBasalRate.setActiveBasalProfile(activeBasalRate.getActiveBasalProfile());
+        newActiveBasalRate.setActiveBasalProfileName(activeBasalRate.getActiveBasalProfileName());
+        return newActiveBasalRate;
     }
 
     public ActiveTBR getActiveTBR() {
@@ -277,7 +296,17 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
 
     public List<ActiveBolus> getActiveBoluses() {
         updateConcentration();
-        return activeBoluses;
+        List<ActiveBolus> newActiveBoluses = null;
+        for (ActiveBolus activeBolus : activeBoluses) {
+            ActiveBolus newActiveBolus = new ActiveBolus();
+            newActiveBolus.setInitialAmount(activeBolus.getInitialAmount());
+            newActiveBolus.setRemainingAmount(activeBolus.getRemainingAmount() * concentration);
+            newActiveBolus.setBolusType(activeBolus.getBolusType());
+            newActiveBolus.setRemainingDuration(activeBolus.getRemainingDuration());
+            newActiveBolus.setBolusID(activeBolus.getBolusID());
+            newActiveBoluses.add(newActiveBolus);
+        }
+        return newActiveBoluses;
     }
 
     @Override
