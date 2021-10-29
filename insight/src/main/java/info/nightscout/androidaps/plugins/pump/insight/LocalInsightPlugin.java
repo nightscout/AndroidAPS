@@ -296,7 +296,9 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
 
     public List<ActiveBolus> getActiveBoluses() {
         updateConcentration();
-        List<ActiveBolus> newActiveBoluses = null;
+        if (activeBoluses==null)
+            return null;
+        List<ActiveBolus> newActiveBoluses = new ArrayList<>();
         for (ActiveBolus activeBolus : activeBoluses) {
             ActiveBolus newActiveBolus = new ActiveBolus();
             newActiveBolus.setInitialAmount(activeBolus.getInitialAmount());
