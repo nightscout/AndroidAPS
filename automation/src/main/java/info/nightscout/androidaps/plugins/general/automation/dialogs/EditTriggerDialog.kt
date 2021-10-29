@@ -16,9 +16,9 @@ import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerDummy
 import info.nightscout.androidaps.utils.FabricPrivacy
-import io.reactivex.rxkotlin.plusAssign
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import org.json.JSONObject
 import javax.inject.Inject
 
@@ -31,7 +31,7 @@ class EditTriggerDialog : DialogFragmentWithDate() {
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
-    private var triggers: Trigger? = null
+    private var triggers: TriggerConnector? = null
 
     private var _binding: AutomationDialogEditTriggerBinding? = null
 
@@ -39,11 +39,13 @@ class EditTriggerDialog : DialogFragmentWithDate() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         // load data from bundle
         (savedInstanceState ?: arguments)?.let { bundle ->
-            bundle.getString("trigger")?.let { triggers = TriggerDummy(injector).instantiate(JSONObject(it)) }
+            bundle.getString("trigger")?.let { triggers = TriggerDummy(injector).instantiate(JSONObject(it)) as TriggerConnector }
         }
 
         onCreateViewGeneral()
@@ -58,26 +60,26 @@ class EditTriggerDialog : DialogFragmentWithDate() {
             .toObservable(EventTriggerChanged::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({
-                binding.layoutTrigger.removeAllViews()
-                triggers?.generateDialog(binding.layoutTrigger)
-            }, fabricPrivacy::logException)
+                           binding.layoutTrigger.removeAllViews()
+                           triggers?.generateDialog(binding.layoutTrigger)
+                       }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventTriggerRemove::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({
-                findParent(triggers, it.trigger)?.list?.remove(it.trigger)
-                binding.layoutTrigger.removeAllViews()
-                triggers?.generateDialog(binding.layoutTrigger)
-            }, fabricPrivacy::logException)
+                           findParent(triggers, it.trigger)?.list?.remove(it.trigger)
+                           binding.layoutTrigger.removeAllViews()
+                           triggers?.generateDialog(binding.layoutTrigger)
+                       }, fabricPrivacy::logException)
 
         disposable += rxBus
             .toObservable(EventTriggerClone::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({
-                findParent(triggers, it.trigger)?.list?.add(it.trigger.duplicate())
-                binding.layoutTrigger.removeAllViews()
-                triggers?.generateDialog(binding.layoutTrigger)
-            }, fabricPrivacy::logException)
+                           findParent(triggers, it.trigger)?.list?.add(it.trigger.duplicate())
+                           binding.layoutTrigger.removeAllViews()
+                           triggers?.generateDialog(binding.layoutTrigger)
+                       }, fabricPrivacy::logException)
 
         // display root trigger
         triggers?.generateDialog(binding.layoutTrigger)

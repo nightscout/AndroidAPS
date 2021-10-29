@@ -11,6 +11,9 @@
     <color name="cardColorBackground">#121212</color>
     <color name="black_overlay">#66000000</color>
 
+    <color name="defaultbackground">#424242</color>
+    <color name="defaulttextcolor">#B3FFFFFF</color>
+
     <!--    Fragments-->
     <color name="pumpStatusBackground">#505050</color>
 

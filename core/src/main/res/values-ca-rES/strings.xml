@@ -29,7 +29,6 @@
     <string name="metadata_label_device_name">Exportant nom del pacient del dispositiu</string>
     <string name="metadata_label_device_model">Exportant model del dispositiu</string>
     <string name="metadata_label_encryption">Encriptació d\'arxius</string>
-    <string name="metadata_format_old">Format d\'exportació antic</string>
     <string name="metadata_format_new">Format nou d\'encriptació</string>
     <string name="metadata_format_debug">Nou format de debug (no encriptat)</string>
     <string name="metadata_format_other">Format d\'exportació desconegut</string>

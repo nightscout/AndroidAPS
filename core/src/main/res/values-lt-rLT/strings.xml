@@ -105,6 +105,7 @@
     <string name="notes_label">Pastabos</string>
     <string name="remove_button">Pašalinti</string>
     <string name="addnew">Pridėti naują</string>
+    <string name="wrong_pump_data">Duomenys gaunami iš kitos pompos. Pakeiskite pompos valdiklį.</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Ribojamas maksimalus bazės dydis%1$.2f vv/val dėl %2$s</string>
     <string name="pumplimit">pompos limitas</string>
@@ -171,6 +172,7 @@
     <!--    TDD-->
     <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f vv</b> Boluso: <b>%3$.2f vv</b> Bazės: <b>%4$.2f vv(%5$.0f%%)</b>]]></string>
     <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f vv</b> Boluso: <b>%3$.2f vv</b> Bazės: <b>%4$.2f vv(%5$.0f%%)</b> AV: <b>%6$.0f g</b>]]></string>
+    <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> už <b>%3$d</b> dienos(-ų)<br>]]></string>
     <!--    Translator-->
     <string name="careportal">Priežiūra</string>
     <string name="careportal_bgcheck">KG testas</string>
@@ -182,6 +184,7 @@
     <string name="careportal_announcement_message">Pranešimas: %1$s</string>
     <string name="careportal_note_message">Pastaba: %1$s</string>
     <string name="careportal_question_message">Klausimas: %1$s</string>
+    <string name="careportal_exercise_message">Aktyvumas: %1$s</string>
     <string name="careportal_pumpsitechange">Kateterio keitimas</string>
     <string name="careportal_cgmsensorinsert">NGJ įvedimas</string>
     <string name="careportal_cgmsensorstart">NGJ paleidimas</string>
@@ -258,7 +261,6 @@
     <string name="metadata_label_device_name">Eksportuojamas paciento vardas</string>
     <string name="metadata_label_device_model">Eksportuojamas prietaiso modelis</string>
     <string name="metadata_label_encryption">Failo šifravimas</string>
-    <string name="metadata_format_old">Senas eksporto formatas</string>
     <string name="metadata_format_new">Naujas šifruotas formatas</string>
     <string name="metadata_format_debug">Naujas derinimo formatas (nešifruotas)</string>
     <string name="metadata_format_other">Nežinomas eksporto formatas</string>
@@ -289,7 +291,9 @@
     <string name="signature_verifier">Parašo tikrinimas</string>
     <string name="running_invalid_version">Nustatyta, kad naudojate neteisingą versiją. Ciklas išjungtas!</string>
     <string name="versionavailable">Versiją %1$s jau galima naudoti</string>
+    <string name="version_expire">Versija %1$s baigia galioti %2$s</string>
     <!-- Permissions -->
+    <string name="alert_dialog_storage_permission_text">Prašome iš naujo paleisti telefoną arba sistemos nustatymuose iš naujo paleisti AndroidAPS \nkitaip AndroidAPS negalės registruoti prisijungimų (svarbu stebėti ir tikrinti, ar algoritmai veikia tinkamai)!</string>
     <!-- WeekdayPicker -->
     <string name="monday_short">P</string>
     <string name="tuesday_short">A</string>
@@ -302,6 +306,7 @@
     <string name="uel_bolus">BOLUSAS</string>
     <string name="uel_bolus_advisor">BOLUSO SKAIČIUOTUVAS</string>
     <string name="uel_extended_bolus">IŠTĘSTAS BOLUSAS</string>
+    <string name="uel_superbolus_tbr">SUPERBOLUSO LB</string>
     <string name="uel_carbs">AV</string>
     <string name="uel_extended_carbs">IŠTĘSTI AV</string>
     <string name="uel_temp_basal">LAIKINA BAZĖ</string>
@@ -312,6 +317,7 @@
     <string name="uel_profile_switch">PROFILIO KEITIMAS</string>
     <string name="uel_profile_switch_cloned">KLONUOTO PROFILIO KEITIMAS</string>
     <string name="uel_closed_loop_mode">UŽDARO CIKLO REŽIMAS</string>
+    <string name="uel_lgs_loop_mode">STABDYMAS PRIE ŽEMO</string>
     <string name="uel_open_loop_mode">ATVIRO CIKLO REŽIMAS</string>
     <string name="uel_loop_disabled">CIKLAS IŠJUNGTAS</string>
     <string name="uel_loop_enabled">CIKLAS ĮJUNGTAS</string>
@@ -319,6 +325,7 @@
     <string name="uel_disconnect">ATSIJUNGTI</string>
     <string name="uel_resume">ATNAUJINTI</string>
     <string name="uel_suspend">SUSTABDYTI</string>
+    <string name="uel_hw_pump_allowed">HW POMPA LEIDŽIAMA</string>
     <string name="uel_clear_pairing_keys">IŠVALYTI PORAVIMO KODUS</string>
     <string name="uel_accepts_temp_basal">PRIIMTI LAIKINĄ BAZĘ</string>
     <string name="uel_cancel_temp_basal">ATŠAUKTI LAIKINĄ BAZĘ</string>
@@ -326,25 +333,82 @@
     <string name="uel_cancel_extended_bolus">ATŠAUKTI IŠTĘSTĄ BOLUSĄ</string>
     <string name="uel_cancel_tt">ATŠAUKTI LAIKINĄ TIKSLĄ</string>
     <string name="uel_careportal">TERAPIJOS PORTALAS</string>
+    <string name="uel_site_change">KANIULĖS KEITIMAS</string>
     <string name="uel_reservoir_change">REZERVUARO KEITIMAS</string>
     <string name="uel_calibration">KALIBRACIJA</string>
     <string name="uel_prime_bolus">PIRMINIS UŽPILDYMAS</string>
     <string name="uel_treatment">TERAPIJA</string>
+    <string name="uel_careportal_ns_refresh">ATJAUNTI TERAPIJOS PORTALĄ NS</string>
+    <string name="uel_profile_switch_ns_refresh">ATNAUJINTI PROFILIO KEITIMĄ NS</string>
+    <string name="uel_treatments_ns_refresh">ATNAUJINTI TERAPIJĄ NS</string>
+    <string name="uel_tt_ns_refresh">ATNAUJINTI LAIKINĄ TIKSLĄ NS</string>
+    <string name="uel_automation_removed">AUTOMATIZAVIMAS PAŠALINTAS</string>
+    <string name="uel_bg_removed">KG PAŠALINTA</string>
+    <string name="uel_careportal_removed">TERAPIJOS PORTALAS PAŠALINTAS</string>
+    <string name="uel_bolus_removed">BOLUSAS PAŠALINTAS</string>
+    <string name="uel_carbs_removed">AV PAŠALINTI</string>
+    <string name="uel_temp_basal_removed">LAIKINA BAZĖ PAŠALINTA</string>
+    <string name="uel_extended_bolus_removed">IŠTĘSTAS BOLUSAS PAŠALINTAS</string>
+    <string name="uel_food">MAISTAS</string>
+    <string name="uel_food_removed">MAISTAS PAŠALINTAS</string>
+    <string name="uel_profile_removed">PROFILIS PAŠALINTAS</string>
+    <string name="uel_profile_switch_removed">PROFILIO KEITIMAS PAŠALINTAS</string>
+    <string name="uel_restart_events_removed">PERKROVIMO ĮVYKIAI PAŠALINTI</string>
+    <string name="uel_treatment_removed">TERAPIJA PAŠALINTA</string>
+    <string name="uel_tt_removed">LAIKINAS TIKSLAS PAŠALINTAS</string>
     <string name="uel_ns_paused">NS PRISTABDYTA</string>
     <string name="uel_ns_resume">NS ATNAUJINTA</string>
     <string name="uel_ns_queue_cleared">NS EILĖ IŠVALYTA</string>
     <string name="uel_ns_settings_copied">NS NUSTATYMAI KOPIJUOTI</string>
+    <string name="uel_error_dialog_ok">DIALOGO KLAIDA OK</string>
+    <string name="uel_error_dialog_mute">DIALOGO KLAIDA NUTILDYTI </string>
+    <string name="uel_error_dialog_mute_5min">DIALOGO KLAIDA NUTILDYTI 5MIN</string>
     <string name="uel_objective_started">TIKSLAS PRADĖTAS</string>
     <string name="uel_objective_unstarted">TIKSLAS NEPRADĖTAS</string>
     <string name="uel_objectives_skipped">TIKSLAS PRALEISTAS</string>
     <string name="uel_stat_reset">IŠVALYTI STATISTIKĄ</string>
     <string name="uel_delete_logs">IŠTRINTI ĮRAŠUS</string>
+    <string name="uel_delete_future_treatments">IŠTRINTI ATEITIES TERAPIJĄ</string>
     <string name="uel_export_settings">EKSPORTUOTI NUSTATYMUS</string>
     <string name="uel_import_settings">IMPORTUOTI NUSTATYMUS</string>
     <string name="uel_reset_databases">IŠVALYTI DUOMENŲ BAZES</string>
     <string name="uel_export_databases">EKSPORTUOTI DUOMENŲ BAZES</string>
+    <string name="uel_import_databases">IMPORTUOTI DUOMENŲ BAZES</string>
+    <string name="uel_otp_export">EKSPORTUOTI OTP</string>
+    <string name="uel_otp_reset">IŠVALYTI OTP</string>
+    <string name="uel_stop_sms">STABDYTI SMS</string>
     <string name="uel_export_csv">EKSPORTUOTI VARTOTOJO ĮRAŠUS</string>
+    <string name="uel_start_aaps">PALEISTI AAPS</string>
+    <string name="uel_exit_aaps">IŠEITI IŠ AAPS</string>
+    <string name="uel_plugin_enabled">ĮSKIEPIS ĮGALINTAS</string>
+    <string name="uel_plugin_disabled">ĮSKIEPIS IŠJUNGTAS</string>
+    <string name="uel_unknown">NEŽINOMAS</string>
+    <string name="ue_string">Eilutė</string>
+    <string name="ue_source">Šaltinis</string>
+    <string name="ue_utc_offset">Laiko skirtumas</string>
+    <string name="ue_action">Veiksmas</string>
+    <string name="ue_timestamp">Laiko žyma</string>
+    <string name="ue_none">Nėra vienetų</string>
+    <string name="ue_export_to_csv">Eksportuoti vartotojo įrašus į Excel (csv)</string>
+    <string name="uel_loop_change">CIKLAS PAKEISTAS</string>
+    <string name="uel_loop_removed">CIKLAS PAŠALINTAS</string>
+    <string name="uel_other">KITA</string>
     <!-- HardLimits -->
+    <string name="profile_low_target">Profilio tikslo žemoji riba</string>
+    <string name="profile_high_target">Profilio tikslo aukštoji riba</string>
+    <string name="temp_target_low_target">Laikino tikslo žemoji riba</string>
+    <string name="temp_target_high_target">Laikino tikslo viršutinė riba</string>
+    <string name="temp_target_value">Laikino tikslo reikšmė</string>
+    <string name="profile_dia">Profilio IVT reikšmė</string>
+    <string name="profile_sensitivity_value">Profilio JIF reikšmė</string>
+    <string name="profile_max_daily_basal_value">Maksimali profilio VB reikšmė</string>
+    <string name="current_basal_value">Dabartinė bazė</string>
+    <string name="profile_carbs_ratio_value">Profilio IA reikšmė</string>
+    <string name="valuelimitedto">%1$.2f apribota iki %2$.2f</string>
+    <string name="valueoutofrange">»%1$s« viršija griežtą limitą</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f viršija griežtą limitą</string>
+    <string name="basal_value">Valandinė bazė</string>
+    <string name="nsclient_version_does_not_match">NSClient ir AndroidAPS versijos nesutampa. Atnaujinkite.</string>
     <plurals name="days">
         <item quantity="one">%1$d d.</item>
         <item quantity="few">%1$d d.</item>

@@ -583,4 +583,6 @@
     <string name="format_percent">%1$d%%</string>
     <string name="unit_minute_short">min</string>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="overview_show_predictions">Projeksies</string>
+    <string name="prime">Prima</string>
 </resources>

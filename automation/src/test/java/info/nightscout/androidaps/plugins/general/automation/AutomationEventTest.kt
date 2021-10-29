@@ -8,6 +8,7 @@ import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.automation.actions.Action
 import info.nightscout.androidaps.plugins.general.automation.actions.ActionLoopEnable
+import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnectorTest
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerDummy
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -44,11 +45,12 @@ class AutomationEventTest : TestBase() {
         // create test object
         val event = AutomationEvent(injector)
         event.title = "Test"
-        event.trigger = TriggerDummy(injector).instantiate(JSONObject(TriggerConnectorTest.oneItem))
+        event.trigger = TriggerDummy(injector).instantiate(JSONObject(TriggerConnectorTest.oneItem)) as TriggerConnector
         event.addAction(ActionLoopEnable(injector))
 
         // export to json
-        val eventJsonExpected = "{\"autoRemove\":false,\"readOnly\":false,\"trigger\":\"{\\\"data\\\":{\\\"connectorType\\\":\\\"AND\\\",\\\"triggerList\\\":[\\\"{\\\\\\\"data\\\\\\\":{\\\\\\\"connectorType\\\\\\\":\\\\\\\"AND\\\\\\\",\\\\\\\"triggerList\\\\\\\":[]},\\\\\\\"type\\\\\\\":\\\\\\\"TriggerConnector\\\\\\\"}\\\"]},\\\"type\\\":\\\"TriggerConnector\\\"}\",\"title\":\"Test\",\"systemAction\":false,\"actions\":[\"{\\\"type\\\":\\\"ActionLoopEnable\\\"}\"],\"enabled\":true}"
+        val eventJsonExpected =
+            "{\"userAction\":false,\"autoRemove\":false,\"readOnly\":false,\"trigger\":\"{\\\"data\\\":{\\\"connectorType\\\":\\\"AND\\\",\\\"triggerList\\\":[\\\"{\\\\\\\"data\\\\\\\":{\\\\\\\"connectorType\\\\\\\":\\\\\\\"AND\\\\\\\",\\\\\\\"triggerList\\\\\\\":[]},\\\\\\\"type\\\\\\\":\\\\\\\"TriggerConnector\\\\\\\"}\\\"]},\\\"type\\\":\\\"TriggerConnector\\\"}\",\"title\":\"Test\",\"systemAction\":false,\"actions\":[\"{\\\"type\\\":\\\"ActionLoopEnable\\\"}\"],\"enabled\":true}"
         Assert.assertEquals(eventJsonExpected, event.toJSON())
 
         // clone

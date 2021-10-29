@@ -665,7 +665,6 @@
     <string name="error_adding_treatment_title">Niekompletne dane leczenie</string>
     <string name="maintenance_settings">Ustawienia Konserwacji</string>
     <string name="maintenance_email">Odbiorca E-maila</string>
-    <string name="maintenance_encrypt_exported_prefs">Zaszyfruj wyeksportowane ustawienia</string>
     <string name="maintenance_amount">Liczba logów do wysłania</string>
     <string name="maintenance">Konserwacja</string>
     <string name="maintenance_shortname">MAINT</string>

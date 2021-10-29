@@ -13,6 +13,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.automation.databinding.AutomationDialogEventBinding
 import info.nightscout.androidaps.dialogs.DialogFragmentWithDate
+import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.automation.AutomationEvent
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin
@@ -22,13 +23,11 @@ import info.nightscout.androidaps.plugins.general.automation.events.EventAutomat
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateAction
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateGui
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateTrigger
-import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.ToastUtils
-import io.reactivex.rxkotlin.plusAssign
-import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import javax.inject.Inject
 
 class EditEventDialog : DialogFragmentWithDate() {
@@ -73,6 +72,8 @@ class EditEventDialog : DialogFragmentWithDate() {
         binding.inputEventTitle.setText(event.title)
         binding.inputEventTitle.isFocusable = !event.readOnly
         binding.triggerDescription.text = event.trigger.friendlyDescription()
+        binding.userAction.isChecked = event.userAction
+        binding.enabled.isChecked = event.isEnabled
 
         binding.editTrigger.visibility = (!event.readOnly).toVisibility()
         binding.editTrigger.setOnClickListener {
@@ -131,9 +132,11 @@ class EditEventDialog : DialogFragmentWithDate() {
             return false
         }
         event.title = title
+        event.userAction = binding.userAction.isChecked
+        event.isEnabled = binding.enabled.isChecked
         // check for at least one trigger
-        val con = event.trigger as TriggerConnector
-        if (con.size() == 0) {
+        val con = event.trigger
+        if (con.size() == 0 && !event.userAction) {
             ToastUtils.showToastInUiThread(context, R.string.automation_missing_trigger)
             return false
         }

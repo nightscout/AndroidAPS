@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.general.automation.elements
 
+import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
@@ -17,28 +17,24 @@ class InputProfileName(private val resourceHelper: ResourceHelper, private val a
     override fun addToLayout(root: LinearLayout) {
         val profileStore = activePlugin.activeProfileSource.profile ?: return
         val profileList = profileStore.getProfileList()
-        val adapter = ArrayAdapter(root.context, R.layout.spinner_centered, profileList)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        val spinner = Spinner(root.context)
-        spinner.adapter = adapter
-        val spinnerParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
-        spinnerParams.setMargins(0, resourceHelper.dpToPx(4), 0, resourceHelper.dpToPx(4))
-        spinner.layoutParams = spinnerParams
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                value = profileList[position].toString()
-            }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-        }
-        for (i in 0 until profileList.size) if (profileList[i] == value) spinner.setSelection(i)
-        val l = LinearLayout(root.context)
-        l.orientation = LinearLayout.VERTICAL
-        l.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        l.addView(spinner)
-        root.addView(l)
+        root.addView(
+            Spinner(root.context).apply {
+                adapter = ArrayAdapter(root.context, R.layout.spinner_centered, profileList).apply {
+                    setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                }
+                layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
+                    setMargins(0, resourceHelper.dpToPx(4), 0, resourceHelper.dpToPx(4))
+                }
+                onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                        value = profileList[position].toString()
+                    }
+
+                    override fun onNothingSelected(parent: AdapterView<*>?) {}
+                }
+                for (i in 0 until profileList.size) if (profileList[i] == value) setSelection(i)
+                gravity = Gravity.CENTER_HORIZONTAL
+            })
     }
 }

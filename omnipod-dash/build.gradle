@@ -22,10 +22,12 @@ detekt { // TODO move to `subprojects` section in global build.gradle
 
 dependencies {
     implementation project(':core')
+    implementation project(':pump-common')
     implementation project(':omnipod-common')
 
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-rxjava2:$room_version"
+    implementation project(path: ':pump-common')
     kapt "androidx.room:room-compiler:$room_version"
     implementation 'com.github.guepardoapps:kulid:2.0.0.0'
 }

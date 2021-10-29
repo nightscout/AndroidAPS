@@ -16,6 +16,9 @@
     <string name="error_date_not_valid">Formato no válido</string>
     <string name="error_mustbe4digitnumber">Debe ser un número de 4 dígitos</string>
     <string name="error_mustbe6digitnumber">Debe ser un número de 6 dígitos</string>
+    <string name="error_mustbe12hexadidits">Debe contener 12 caracteres de ABCDEF0123456789</string>
+    <string name="error_mustbe8hexadidits">Debe contener 8 caracteres de ABCDEF0123456789</string>
+    <string name="error_mustbe4hexadidits">Debe contener 4 caracteres de ABCDEF0123456789</string>
     <string name="error_not_a_minimum_length">No supera la longitud mínima</string>
     <string name="error_pin_not_valid">El Pin debe tener de 3 a 6 dígitos, no el mismo ni en serie</string>
 </resources>

@@ -5,7 +5,9 @@
     <string name="danars_pairingok">Conectare OK</string>
     <string name="danars_pairingtimedout">Conectare nereușită</string>
     <string name="danars_waitingforpairing">Se așteaptă conectarea la pompă</string>
+    <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
+    <string name="description_pump_dana_rs">Integrare pentru pompele DANA Diabecare RS și Dana-i pumps</string>
     <string name="maxbolusviolation">Încălcare a valorii maxime a bolusului</string>
     <string name="commanderror">Eroare de comandă</string>
     <string name="speederror">Eroare de viteză</string>
@@ -113,4 +115,5 @@
     <string name="press_ok_on_the_pump">Apăsaţi OK pe pompă\nşi introduceţi cele 2 numere afişate\nPăstraţi ecranul pompei ACTIV apăsând butonul minus până când terminați introducerea codului.</string>
     <string name="num1pin">1: (12 cifre)</string>
     <string name="num2pin">2: (8 cifre)</string>
+    <string name="basal_bolus_step">Etapa bazală/bolus</string>
 </resources>
