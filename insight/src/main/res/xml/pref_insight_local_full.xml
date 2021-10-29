@@ -84,13 +84,16 @@
             android:key="absorption_oref1_advanced"
             android:title="@string/advancedsettings_title">
 
+            <Preference
+                android:summary="@string/typeinsulin_summary">
+            </Preference>
+
             <ListPreference
                 android:defaultValue="U100"
                 android:entries="@array/typeInsulinArray"
                 android:entryValues="@array/typeInsulinValues"
                 android:key="@string/key_typeinsulin"
-                android:title="@string/typeinsulin_title"
-                android:summary="@string/typeinsulin_summary" />
+                android:title="@string/typeinsulin_title" />
 
         </androidx.preference.PreferenceScreen>
 

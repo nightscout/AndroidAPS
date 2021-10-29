@@ -87,6 +87,10 @@
     <string name="pairing_information">Pairing information</string>
     <string name="key_typeinsulin" translatable="false">type_insulin</string>
     <string name="typeinsulin_title">Select Insulin Concentration (default U100)</string>
-    <string name="typeinsulin_summary">Be very careful with this setting, selecting the wrong concentration may result in an insulin overdose.</string>
+    <string name="typeinsulin_summary">CAUTION!\nSelecting a wrong insulin concentration may
+        cause an insulin overdosage.\n- Never change this setting if it\'s not during a
+        reservoir change\n- Always CANCEL Bolus (if not fully injected) or Extended Bolus when
+        you change this setting\n- UPDATE the Prime value for site change (for ex. if you need
+        0.70U to prime cannula with U100 then you should use 1.40U with U200 insulin)</string>
 
 </resources>
