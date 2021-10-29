@@ -41,10 +41,10 @@ class InputTempTarget(profileFunction: ProfileFunction) : Element() {
             decimalFormat = DecimalFormat("0")
         }
         root.addView(
-            NumberPicker(root.context, null).apply {
-                setParams(value, minValue, maxValue, step, decimalFormat, true, root.findViewById(R.id.ok))
-                setOnValueChangedListener { value: Double -> this.value = value }
-                gravity = Gravity.CENTER_HORIZONTAL
+            NumberPicker(root.context, null).also {
+                it.setParams(value, minValue, maxValue, step, decimalFormat, true, root.findViewById(R.id.ok))
+                it.setOnValueChangedListener { v: Double -> value = v }
+                it.gravity = Gravity.CENTER_HORIZONTAL
 
             })
     }

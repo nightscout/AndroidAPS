@@ -16,11 +16,10 @@ class InputPercent() : Element() {
 
     override fun addToLayout(root: LinearLayout) {
         root.addView(
-            NumberPicker(root.context, null).apply {
-                setParams(100.0, MIN, MAX, 5.0, DecimalFormat("0"), true, root.findViewById(R.id.ok))
-                value = value
-                setOnValueChangedListener { value: Double -> this.value = value }
-                gravity = Gravity.CENTER_HORIZONTAL
+            NumberPicker(root.context, null).also {
+                it.setParams(value, MIN, MAX, 5.0, DecimalFormat("0"), true, root.findViewById(R.id.ok))
+                it.setOnValueChangedListener { v: Double -> value = v }
+                it.gravity = Gravity.CENTER_HORIZONTAL
             })
     }
 

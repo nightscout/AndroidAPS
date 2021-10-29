@@ -81,10 +81,10 @@ class InputDelta(private val resourceHelper: ResourceHelper) : Element() {
                 gravity = Gravity.CENTER_HORIZONTAL
             })
         root.addView(
-            NumberPicker(root.context, null).apply {
-                setParams(value, minValue, maxValue, step, decimalFormat, true, null, null)
-                setOnValueChangedListener { value: Double -> this.value = value }
-                gravity = Gravity.CENTER_HORIZONTAL
+            NumberPicker(root.context, null).also {
+                it.setParams(value, minValue, maxValue, step, decimalFormat, true, null, null)
+                it.setOnValueChangedListener { v: Double -> value = v }
+                it.gravity = Gravity.CENTER_HORIZONTAL
             })
     }
 }
