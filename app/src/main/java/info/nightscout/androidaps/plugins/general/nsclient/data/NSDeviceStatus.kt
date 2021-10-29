@@ -89,7 +89,7 @@ class NSDeviceStatus @Inject constructor(
     fun handleNewData(deviceStatuses: JSONArray) {
         aapsLogger.debug(LTag.NSCLIENT, "Got NS deviceStatus: \$deviceStatuses")
         try {
-            for (i in 0 until deviceStatuses.length()) {
+            for (i in deviceStatuses.length() -1 downTo 0) {
                 val devicestatusJson = deviceStatuses.getJSONObject(i)
                 if (devicestatusJson != null) {
                     setData(devicestatusJson)
@@ -100,6 +100,7 @@ class NSDeviceStatus @Inject constructor(
                     if (devicestatusJson.has("configuration") && config.NSCLIENT) {
                         // copy configuration of Insulin and Sensitivity from main AAPS
                         runningConfiguration.apply(devicestatusJson.getJSONObject("configuration"))
+                        break
                     }
                 }
             }
