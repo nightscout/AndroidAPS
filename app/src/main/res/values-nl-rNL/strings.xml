@@ -432,7 +432,7 @@
     <string name="mdtp_cancel">Afbreken</string>
     <string name="notloadedplugins">Niet alle profielen zijn geladen!</string>
     <string name="valuesnotstored">Waarden niet opgeslagen!</string>
-    <string name="ns_localbroadcasts">Schakel lokaal data delen naar andere apps (zoals xDrip) in. Schakel dit niet in als je NSClient of meer dan één installatie van AAPS op je telefoon hebt staan!</string>
+    <string name="ns_localbroadcasts">Schakel lokaal data delen met andere apps (zoals xDrip) in. Schakel dit niet in als er meer dan één installatie van AAPS of NSClient zijn geinstalleerd!</string>
     <string name="ns_localbroadcasts_title">Activeer locaal delen.</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="enableuam">Activeer UAM</string>
