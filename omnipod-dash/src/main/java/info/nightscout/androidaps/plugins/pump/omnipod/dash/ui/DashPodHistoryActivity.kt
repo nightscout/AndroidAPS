@@ -180,9 +180,8 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
         return typeList
     }
 
-    internal class TypeList(entryGroup: PumpHistoryEntryGroup) {
+    internal class TypeList(val entryGroup: PumpHistoryEntryGroup) {
 
-        val entryGroup: PumpHistoryEntryGroup = entryGroup
         val name: String = entryGroup.translated ?: "XXX TODO"
 
         override fun toString(): String {
@@ -190,9 +189,7 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
         }
     }
 
-    inner class RecyclerViewAdapter internal constructor(historyList: List<HistoryRecord>) : RecyclerView.Adapter<RecyclerViewAdapter.HistoryViewHolder>() {
-
-        var historyList: List<HistoryRecord> = historyList
+    inner class RecyclerViewAdapter internal constructor(var historyList: List<HistoryRecord>) : RecyclerView.Adapter<RecyclerViewAdapter.HistoryViewHolder>() {
 
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): HistoryViewHolder {
             val v: View = LayoutInflater.from(viewGroup.context).inflate(
@@ -204,7 +201,7 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
 
         override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
             val record: HistoryRecord = historyList[position]
-            record?.let {
+            record.let {
                 holder.timeView.text = DateTimeUtil.toStringFromTimeInMillis(it.displayTimestamp())
                 setValue(it, holder.valueView)
                 setType(it, holder.typeView)
@@ -225,15 +222,15 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
             valueView.text = when (historyEntry.commandType) {
                 OmnipodCommandType.SET_TEMPORARY_BASAL -> {
                     val tbr = historyEntry.record as TempBasalRecord
-                    tbr?.let {
+                    tbr.let {
                         resourceHelper.gs(R.string.omnipod_common_history_tbr_value, it.rate, it.duration)
-                    } ?: "n/a"
+                    }
                 }
                 OmnipodCommandType.SET_BOLUS -> {
                     val bolus = historyEntry.record as BolusRecord
-                    bolus?.let {
+                    bolus.let {
                         resourceHelper.gs(R.string.omnipod_common_history_bolus_value, it.amout)
-                    } ?: "n/a"
+                    }
                 }
                 OmnipodCommandType.SET_BASAL_PROFILE,
                 OmnipodCommandType.SET_TIME,
