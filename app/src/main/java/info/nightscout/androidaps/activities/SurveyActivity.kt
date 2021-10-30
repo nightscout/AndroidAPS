@@ -5,7 +5,7 @@ import android.widget.ArrayAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.defaultProfile.DefaultProfile
+import info.nightscout.androidaps.utils.defaultProfile.DefaultProfile
 import info.nightscout.androidaps.databinding.ActivitySurveyBinding
 import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.interfaces.ActivePlugin

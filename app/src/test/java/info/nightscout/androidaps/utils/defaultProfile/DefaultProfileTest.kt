@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.data.defaultProfile
+package info.nightscout.androidaps.utils.defaultProfile
 
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.interfaces.GlucoseUnit

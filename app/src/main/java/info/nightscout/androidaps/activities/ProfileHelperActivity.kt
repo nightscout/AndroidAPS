@@ -9,8 +9,8 @@ import android.widget.PopupMenu
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.data.PureProfile
-import info.nightscout.androidaps.data.defaultProfile.DefaultProfile
-import info.nightscout.androidaps.data.defaultProfile.DefaultProfileDPV
+import info.nightscout.androidaps.utils.defaultProfile.DefaultProfile
+import info.nightscout.androidaps.utils.defaultProfile.DefaultProfileDPV
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.EffectiveProfileSwitch
 import info.nightscout.androidaps.databinding.ActivityProfilehelperBinding
