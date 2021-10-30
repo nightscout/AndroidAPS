@@ -26,6 +26,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.I8n
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.mapProfileToBasalProgram
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.Single
 import io.reactivex.rxkotlin.plusAssign
@@ -44,8 +45,10 @@ class DashInsertCannulaViewModel @Inject constructor(
     private val history: DashHistory,
 
     injector: HasAndroidInjector,
-    logger: AAPSLogger
-) : InsertCannulaViewModel(injector, logger) {
+    logger: AAPSLogger,
+    aapsSchedulers: AapsSchedulers
+) : InsertCannulaViewModel(injector, logger, aapsSchedulers) {
+
     override fun isPodInAlarm(): Boolean = false // TODO
 
     override fun isPodActivationTimeExceeded(): Boolean = false // TODO

@@ -10,6 +10,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.Comm
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.deactivation.viewmodel.action.DeactivatePodViewModel
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodErosManager
 import info.nightscout.androidaps.queue.Callback
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -17,8 +18,9 @@ class ErosDeactivatePodViewModel @Inject constructor(
     private val aapsOmnipodManager: AapsOmnipodErosManager,
     private val commandQueueProvider: CommandQueueProvider,
     injector: HasAndroidInjector,
-    logger: AAPSLogger
-) : DeactivatePodViewModel(injector, logger) {
+    logger: AAPSLogger,
+    aapsSchedulers: AapsSchedulers
+) : DeactivatePodViewModel(injector, logger, aapsSchedulers) {
 
     override fun doExecuteAction(): Single<PumpEnactResult> =
         Single.create { source ->
