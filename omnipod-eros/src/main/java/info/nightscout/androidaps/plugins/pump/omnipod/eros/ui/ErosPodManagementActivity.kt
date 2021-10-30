@@ -3,6 +3,8 @@ package info.nightscout.androidaps.plugins.pump.omnipod.eros.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.HandlerThread
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
@@ -54,6 +56,7 @@ class ErosPodManagementActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var aapsSchedulers: AapsSchedulers
 
     private var disposables: CompositeDisposable = CompositeDisposable()
+    private val loopHandler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
     private lateinit var binding: OmnipodErosPodManagementBinding
 
@@ -97,7 +100,7 @@ class ErosPodManagementActivity : NoSplashAppCompatActivity() {
 
         binding.buttonResetRileylinkConfig.setOnClickListener {
             // TODO improvement: properly disable button until task is finished
-            serviceTaskExecutor.startTask(ResetRileyLinkConfigurationTask(injector))
+            loopHandler.post { serviceTaskExecutor.startTask(ResetRileyLinkConfigurationTask(injector)) }
         }
 
         binding.buttonPlayTestBeep.setOnClickListener {
