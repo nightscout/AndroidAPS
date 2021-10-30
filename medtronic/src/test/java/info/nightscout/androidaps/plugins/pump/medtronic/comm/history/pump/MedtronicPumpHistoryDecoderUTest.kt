@@ -34,7 +34,7 @@ class MedtronicPumpHistoryDecoderUTest : TestBase() {
     private var medtronicPumpStatus: MedtronicPumpStatus? = null
     private var medtronicUtil: MedtronicUtil? = null
     private var decoder: MedtronicPumpHistoryDecoder? = null
-    var rxBusWrapper = RxBus(TestAapsSchedulers())
+    var rxBusWrapper = RxBus(TestAapsSchedulers(), aapsLogger)
     @Before fun setup() {
         medtronicPumpStatus =
             MedtronicPumpStatus(resourceHelper, sp, rxBusWrapper, rileyLinkUtil)
