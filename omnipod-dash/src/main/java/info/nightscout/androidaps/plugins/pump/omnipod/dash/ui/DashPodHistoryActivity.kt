@@ -157,7 +157,7 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
         historyTypeSpinner?.run {
             adapter = spinnerAdapter
             onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                     if (manualChange) return
                     val selected = selectedItem as TypeList
                     selectedGroup = selected.entryGroup
