@@ -137,6 +137,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
                 } else {
                     binding.reuselayout.visibility = View.GONE
                 }
+            else binding.reuselayout.visibility = View.GONE
         }
         binding.ttLayout.visibility = View.GONE
     }
