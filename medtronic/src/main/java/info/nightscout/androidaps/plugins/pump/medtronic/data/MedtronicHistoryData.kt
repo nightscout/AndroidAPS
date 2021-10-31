@@ -511,11 +511,10 @@ class MedtronicHistoryData @Inject constructor(
                     timestamp = tryToGetByLocalTime(bolus.atechDateTime),
                     amount = deliveredAmount,
                     temporaryId = temporaryId,
-                    type = type,
+                    type = null,
                     pumpId = bolus.pumpId,
                     pumpType = medtronicPumpStatus.pumpType,
-                    pumpSerial = medtronicPumpStatus.serialNumber,
-                    ignoreBolusTypeOnUpdate = true)
+                    pumpSerial = medtronicPumpStatus.serialNumber)
 
                 aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "syncBolusWithTempId [date=%d, temporaryId=%d, pumpId=%d, insulin=%.2f, pumpSerial=%s] - Result: %b",
                     bolus.atechDateTime, temporaryId, bolus.pumpId, deliveredAmount,
@@ -524,11 +523,10 @@ class MedtronicHistoryData @Inject constructor(
                 val result = pumpSync.syncBolusWithPumpId(
                     timestamp = tryToGetByLocalTime(bolus.atechDateTime),
                     amount = deliveredAmount,
-                    type = type,
+                    type = null,
                     pumpId = bolus.pumpId,
                     pumpType = medtronicPumpStatus.pumpType,
-                    pumpSerial = medtronicPumpStatus.serialNumber,
-                    ignoreBolusTypeOnUpdate = true)
+                    pumpSerial = medtronicPumpStatus.serialNumber)
 
                 aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "syncBolusWithPumpId [date=%d, pumpId=%d, insulin=%.2f, pumpSerial=%s] - Result: %b",
                     bolus.atechDateTime, bolus.pumpId, deliveredAmount,
