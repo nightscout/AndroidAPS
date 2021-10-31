@@ -7,7 +7,8 @@ import info.nightscout.androidaps.database.entities.Bolus
  */
 class SyncPumpBolusTransaction(
     private val bolus: Bolus,
-    private val bolusType: Bolus.Type? // extra parameter because field is not nullable in Bolus.class
+    private val bolusType: Bolus.Type?, // extra parameter because field is not nullable in Bolus.class
+    private val ignoreBolusTypeOnUpdate: Boolean
 ) : Transaction<SyncPumpBolusTransaction.TransactionResult>() {
 
     override fun run(): TransactionResult {
@@ -19,16 +20,28 @@ class SyncPumpBolusTransaction(
             database.bolusDao.insertNewEntry(bolus)
             result.inserted.add(bolus)
         } else {
-            if (
-                current.timestamp != bolus.timestamp ||
-                current.amount != bolus.amount ||
-                current.type != bolusType ?: current.type
-            ) {
-                current.timestamp = bolus.timestamp
-                current.amount = bolus.amount
-                current.type = bolusType ?: current.type
-                database.bolusDao.updateExistingEntry(current)
-                result.updated.add(current)
+            if (ignoreBolusTypeOnUpdate) {
+                if (
+                    current.timestamp != bolus.timestamp ||
+                    current.amount != bolus.amount
+                ) {
+                    current.timestamp = bolus.timestamp
+                    current.amount = bolus.amount
+                    database.bolusDao.updateExistingEntry(current)
+                    result.updated.add(current)
+                }
+            } else {
+                if (
+                    current.timestamp != bolus.timestamp ||
+                    current.amount != bolus.amount ||
+                    current.type != bolusType ?: current.type
+                ) {
+                    current.timestamp = bolus.timestamp
+                    current.amount = bolus.amount
+                    current.type = bolusType ?: current.type
+                    database.bolusDao.updateExistingEntry(current)
+                    result.updated.add(current)
+                }
             }
         }
         return result

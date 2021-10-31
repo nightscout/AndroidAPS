@@ -32,6 +32,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.Riley
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ResetRileyLinkConfigurationTask
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.WakeAndTuneTask
+import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryTBR
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
 import info.nightscout.androidaps.plugins.pump.common.utils.ProfileUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry
@@ -742,6 +743,7 @@ class MedtronicPumpPlugin @Inject constructor(
                 return PumpEnactResult(injector).success(false).enacted(false)
                     .comment(R.string.medtronic_cmd_cant_cancel_tbr_stop_op)
             } else {
+                cancelTBRWithTemporaryId()
                 aapsLogger.info(LTag.PUMP, logPrefix + "setTempBasalAbsolute - Current TBR cancelled.")
             }
         }
@@ -760,14 +762,70 @@ class MedtronicPumpPlugin @Inject constructor(
             medtronicPumpStatus.tempBasalAmount = absoluteRate
             medtronicPumpStatus.tempBasalLength = durationInMinutes
 
-            val tempData = info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryTBR(absoluteRate, true, durationInMinutes, tbrType)
+            val tempData = PumpDbEntryTBR(absoluteRate, true, durationInMinutes, tbrType)
 
+            medtronicPumpStatus.runningTBRWithTemp = tempData
             pumpSyncStorage.addTemporaryBasalRateWithTempId(tempData, true, this)
 
             incrementStatistics(MedtronicConst.Statistics.TBRsSet)
             finishAction("TBR")
             PumpEnactResult(injector).success(true).enacted(true) //
                 .absolute(absoluteRate).duration(durationInMinutes)
+        }
+    }
+
+    private fun cancelTBRWithTemporaryId() {
+        val tbrs : MutableList<PumpDbEntryTBR> = pumpSyncStorage.getTBRs()
+        if (tbrs.size > 0 && medtronicPumpStatus.runningTBRWithTemp!=null) {
+            aapsLogger.info(LTag.PUMP, logPrefix + "cancelTBRWithTemporaryId - TBR items: ${tbrs.size}")
+
+            var item : PumpDbEntryTBR? = null
+
+            if (tbrs.size==1) {
+                item = tbrs.get(0);
+            } else {
+                for (tbr in tbrs) {
+                    if (tbr.date == medtronicPumpStatus.runningTBRWithTemp!!.date) {
+                        item = tbr
+                        break;
+                    }
+                }
+            }
+
+            if (item!=null) {
+
+                aapsLogger.debug(LTag.PUMP, "DD: cancelTBRWithTemporaryId: tempIdEntry=${item}")
+
+                val differenceS = (System.currentTimeMillis() - item.date) / 1000
+
+                aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithTempId " +
+                    "[date=${item.date}, " +
+                    "rate=${item.rate}, " +
+                    "duration=${differenceS} s, " +
+                    "isAbsolute=${!item.isAbsolute}, temporaryId=${item.temporaryId}, " +
+                    "pumpId=NO, pumpType=${medtronicPumpStatus.pumpType}, " +
+                    "pumpSerial=${medtronicPumpStatus.serialNumber}]")
+
+                val result = pumpSync.syncTemporaryBasalWithTempId(
+                    timestamp = item.date,
+                    rate = item.rate,
+                    duration= differenceS * 1000L,
+                    isAbsolute = item.isAbsolute,
+                    temporaryId = item.temporaryId,
+                    type = item.tbrType,
+                    pumpId = null,
+                    pumpType = medtronicPumpStatus.pumpType,
+                    pumpSerial = medtronicPumpStatus.serialNumber)
+
+                aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithTempId - Result: $result")
+            }
+
+        } else {
+            aapsLogger.info(LTag.PUMP, logPrefix + "cancelTBRWithTemporaryId - TBR items: ${tbrs.size}, runningTBRWithTemp=${medtronicPumpStatus.runningTBRWithTemp}")
+        }
+
+        if (medtronicPumpStatus.runningTBRWithTemp!=null) {
+            medtronicPumpStatus.runningTBRWithTemp = null
         }
     }
 
@@ -1001,7 +1059,7 @@ class MedtronicPumpPlugin @Inject constructor(
             aapsLogger.info(LTag.PUMP, logPrefix + "cancelTempBasal - Cancel TBR successful.")
 
             val runningTBR = medtronicPumpStatus.runningTBR
-
+            // TODO
             if (runningTBR != null) {
                 if (medtronicHistoryData.isTBRActive(runningTBR)) {
 
@@ -1025,6 +1083,8 @@ class MedtronicPumpPlugin @Inject constructor(
                         "pumpSerial=${medtronicPumpStatus.serialNumber}] - Result: $result")
                 }
             }
+
+            cancelTBRWithTemporaryId()
 
             PumpEnactResult(injector).success(true).enacted(true) //
                 .isTempCancel(true)

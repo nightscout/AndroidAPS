@@ -90,8 +90,9 @@ interface PumpSync {
      **/
     fun addBolusWithTempId(timestamp: Long, amount: Double, temporaryId: Long, type: DetailedBolusInfo.BolusType, pumpType: PumpType, pumpSerial: String): Boolean
 
+
     /**
-     * Synchronization of boluses with temporary id
+     * Synchronization of boluses with temporary id (with
      *
      * Search for combination of  temporaryId, PumpType, pumpSerial
      *
@@ -110,12 +111,37 @@ interface PumpSync {
      * @param pumpId        pump id from history
      * @param pumpType      pump type like PumpType.ACCU_CHEK_COMBO
      * @param pumpSerial    pump serial number
+     * @param ignoreBolusTypeOnUpdate    bolusType won't be updated, if item already exists
      * @return true if record is successfully updated
      **/
-    fun syncBolusWithTempId(timestamp: Long, amount: Double, temporaryId: Long, type: DetailedBolusInfo.BolusType?, pumpId: Long?, pumpType: PumpType, pumpSerial: String): Boolean
+    fun syncBolusWithTempId(timestamp: Long, amount: Double, temporaryId: Long, type: DetailedBolusInfo.BolusType?, pumpId: Long?, pumpType: PumpType, pumpSerial: String, ignoreBolusTypeOnUpdate :
+    Boolean = false): Boolean
+
 
     /**
      * Synchronization of boluses
+     *
+     * Search for combination of pumpId, PumpType, pumpSerial
+     *
+     * If db record doesn't exist, new record is created.
+     * If exists, amount, type (if provided) and timestamp is updated
+     * isValid field is preserved
+     *
+     * NOTE: this method can be removed, when all drivers are in kotlin
+     *
+     * @param timestamp     timestamp of event from pump history
+     * @param amount        amount of insulin
+     * @param type          type of bolus (NORMAL, SMB, PRIME)
+     * @param pumpId        pump id from history
+     * @param pumpType      pump type like PumpType.ACCU_CHEK_COMBO
+     * @param pumpSerial    pump serial number
+     * @return true if new record is created
+     **/
+    fun syncBolusWithPumpId(timestamp: Long, amount: Double, type: DetailedBolusInfo.BolusType?, pumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean
+
+
+    /**
+     * Synchronization of boluses (with bolusType ignore)
      *
      * Search for combination of pumpId, PumpType, pumpSerial
      *
@@ -129,9 +155,12 @@ interface PumpSync {
      * @param pumpId        pump id from history
      * @param pumpType      pump type like PumpType.ACCU_CHEK_COMBO
      * @param pumpSerial    pump serial number
+     * @param ignoreBolusTypeOnUpdate    bolusType won't be updated, if item already exists
      * @return true if new record is created
      **/
-    fun syncBolusWithPumpId(timestamp: Long, amount: Double, type: DetailedBolusInfo.BolusType?, pumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean
+    fun syncBolusWithPumpId(timestamp: Long, amount: Double, type: DetailedBolusInfo.BolusType?, pumpId: Long, pumpType: PumpType, pumpSerial: String, ignoreBolusTypeOnUpdate :
+    Boolean = false): Boolean
+
 
     /**
      * Synchronization of carbs

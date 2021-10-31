@@ -508,25 +508,27 @@ class MedtronicHistoryData @Inject constructor(
 
             if (temporaryId != null) {
                 val result = pumpSync.syncBolusWithTempId(
-                    tryToGetByLocalTime(bolus.atechDateTime),
-                    deliveredAmount,
-                    temporaryId,
-                    type,
-                    bolus.pumpId,
-                    medtronicPumpStatus.pumpType,
-                    medtronicPumpStatus.serialNumber)
+                    timestamp = tryToGetByLocalTime(bolus.atechDateTime),
+                    amount = deliveredAmount,
+                    temporaryId = temporaryId,
+                    type = type,
+                    pumpId = bolus.pumpId,
+                    pumpType = medtronicPumpStatus.pumpType,
+                    pumpSerial = medtronicPumpStatus.serialNumber,
+                    ignoreBolusTypeOnUpdate = true)
 
                 aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "syncBolusWithTempId [date=%d, temporaryId=%d, pumpId=%d, insulin=%.2f, pumpSerial=%s] - Result: %b",
                     bolus.atechDateTime, temporaryId, bolus.pumpId, deliveredAmount,
                     medtronicPumpStatus.serialNumber, result))
             } else {
                 val result = pumpSync.syncBolusWithPumpId(
-                    tryToGetByLocalTime(bolus.atechDateTime),
-                    deliveredAmount,
-                    type,
-                    bolus.pumpId,
-                    medtronicPumpStatus.pumpType,
-                    medtronicPumpStatus.serialNumber)
+                    timestamp = tryToGetByLocalTime(bolus.atechDateTime),
+                    amount = deliveredAmount,
+                    type = type,
+                    pumpId = bolus.pumpId,
+                    pumpType = medtronicPumpStatus.pumpType,
+                    pumpSerial = medtronicPumpStatus.serialNumber,
+                    ignoreBolusTypeOnUpdate = true)
 
                 aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "syncBolusWithPumpId [date=%d, pumpId=%d, insulin=%.2f, pumpSerial=%s] - Result: %b",
                     bolus.atechDateTime, bolus.pumpId, deliveredAmount,
