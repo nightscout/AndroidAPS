@@ -210,7 +210,15 @@ class ConfigBuilderFragment : DaggerFragment() {
             pluginVisibility.visibility = plugin.hasFragment().toVisibility()
             pluginVisibility.isEnabled = !(plugin.pluginDescription.neverVisible || plugin.pluginDescription.alwaysVisible) && plugin.isEnabled(pluginType)
             pluginVisibility.isChecked = plugin.isFragmentVisible()
+
             if (plugin.isEnabled(pluginType)) Log.d("LOGLOGLOGLOGLOG", plugin.toString())
+            val matchIndex = plugin.toString().indexOf("Glunovo", 0)
+            //val context: Context
+            //(context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
+            //val intent:Intent = Intent (context, GlunovoPluginService::class.java)
+            //intent.action= "test"
+            if (matchIndex>=0) Log.d("TAGTAGTAG", "TAGTAGTAG");
+            //context.startService(intent);
         }
 
         private fun areMultipleSelectionsAllowed(type: PluginType): Boolean {

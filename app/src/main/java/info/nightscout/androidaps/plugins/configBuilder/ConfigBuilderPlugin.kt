@@ -184,14 +184,6 @@ class ConfigBuilderPlugin @Inject constructor(
         rxBus.send(EventConfigBuilderChange())
         rxBus.send(EventConfigBuilderUpdateGui())
         logPluginStatus()
-        val matchIndex = changedPlugin.toString().indexOf("Glunovo", 0)
-        //val context: Context
-        //(context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
-        //val intent:Intent = Intent (context, GlunovoPluginService::class.java)
-        //intent.action= "test"
-        if (matchIndex>=0) Log.d("TAGTAGTAG", "TAGTAGTAG");
-        //context.startService(intent);
-
     }
 
     fun processOnEnabledCategoryChanged(changedPlugin: PluginBase, type: PluginType?) {
