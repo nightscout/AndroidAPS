@@ -17,7 +17,6 @@ class GlunovoPluginService : Service() {
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         handler.postDelayed(mgetValue, 180000)
-        Log.d("TAG","TAG")
         return super.onStartCommand(intent, flags, startId)
     }
 

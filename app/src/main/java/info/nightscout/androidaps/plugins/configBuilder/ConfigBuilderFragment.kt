@@ -222,6 +222,10 @@ class ConfigBuilderFragment : DaggerFragment() {
                 if (context != null) {
                     context.startService(intent)
                 };
+            else
+                if (context != null) {
+                    context.stopService(intent)
+                }
         }
 
         private fun areMultipleSelectionsAllowed(type: PluginType): Boolean {
