@@ -52,6 +52,7 @@ class ConfigBuilderPlugin @Inject constructor(
 
     lateinit var context:Context
     init {
+        Log.d("INITIALIZATION","INIT")
         (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
     }
 
