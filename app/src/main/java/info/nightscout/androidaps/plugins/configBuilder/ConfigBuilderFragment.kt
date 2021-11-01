@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.configBuilder
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -21,6 +22,7 @@ import info.nightscout.androidaps.plugins.configBuilder.events.EventConfigBuilde
 import info.nightscout.androidaps.utils.FabricPrivacy
 import io.reactivex.rxkotlin.plusAssign
 import info.nightscout.androidaps.extensions.toVisibility
+import info.nightscout.androidaps.plugins.source.GlunovoPluginService
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -214,13 +216,12 @@ class ConfigBuilderFragment : DaggerFragment() {
             var matchIndex = -1
             if ((plugin.isEnabled(pluginType)) && (plugin.toString().indexOf("Glunovo", 0)>=0))
                 matchIndex = plugin.toString().indexOf("Glunovo", 0);
-            Log.d ("match", matchIndex.toString())
-            //val context: Context
-            //(context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
-            //val intent:Intent = Intent (context, GlunovoPluginService::class.java)
-            //intent.action= "test"
-            if (matchIndex>=0) Log.d("TAGTAGTAG", matchIndex.toString());
-            //context.startService(intent);
+            val context: Context? = this@ConfigBuilderFragment.context
+            val intent:Intent = Intent (context, GlunovoPluginService::class.java)
+            if (matchIndex>=0) //Log.d("TAGTAGTAG", matchIndex.toString())
+                if (context != null) {
+                    context.startService(intent)
+                };
         }
 
         private fun areMultipleSelectionsAllowed(type: PluginType): Boolean {
