@@ -29,7 +29,7 @@ open class DataReceiver : DaggerBroadcastReceiver() {
         val bundle = intent.extras ?: return
         aapsLogger.debug(LTag.DATABASE, "onReceive ${intent.action} ${BundleLogger.log(bundle)}")
 
-        Log.d("ReceivedReceived", intent.action)
+        intent.action?.let { Log.d("ReceivedReceived", it) }
         when (intent.action) {
             Intents.ACTION_NEW_BG_ESTIMATE            ->
                 OneTimeWorkRequest.Builder(XdripPlugin.XdripWorker::class.java)
@@ -52,6 +52,13 @@ open class DataReceiver : DaggerBroadcastReceiver() {
                     .setInputData(Data.Builder().also {
                         it.copyDouble("com.fanqies.tomatofn.Extras.BgEstimate", bundle)
                         it.copyLong("com.fanqies.tomatofn.Extras.Time", bundle)
+                    }.build()).build()
+            Intents.GLUNOVO_BG                         ->
+                @Suppress("SpellCheckingInspection")
+                OneTimeWorkRequest.Builder(GlunovoPlugin.GlunovoWorker::class.java)
+                    .setInputData(Data.Builder().also {
+                        it.copyDouble("com.glunovoservice.BgEstimate", bundle)
+                        it.copyLong("com.glunovoservice.BgEstimate", bundle)
                     }.build()).build()
             Intents.NS_EMULATOR                       ->
                 OneTimeWorkRequest.Builder(MM640gPlugin.MM640gWorker::class.java)
