@@ -183,6 +183,7 @@ class NotificationStore @Inject constructor(
                 binding.dismiss.setOnClickListener {
                     val notification = it.tag as Notification
                     rxBus.send(EventDismissNotification(notification.id))
+                    notification.contextForAction = itemView.context
                     notification.action?.run()
                 }
             }

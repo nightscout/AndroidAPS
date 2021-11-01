@@ -68,7 +68,7 @@ class ProfileStore(val injector: HasAndroidInjector, val data: JSONObject, val d
                 if (profile == null) {
                     JsonHelper.safeGetJSONObject(store, profileName, null)?.let { profileObject ->
                         profile = pureProfileFromJson(profileObject, dateUtil, defaultUnits)
-                        cachedObjects[profileName] = profile
+                        profile?.let { cachedObjects[profileName] = profile }
                     }
                 }
             }
