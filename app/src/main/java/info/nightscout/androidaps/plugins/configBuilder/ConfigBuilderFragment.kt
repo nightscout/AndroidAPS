@@ -217,15 +217,14 @@ class ConfigBuilderFragment : DaggerFragment() {
             if ((plugin.isEnabled(pluginType)) && (plugin.toString().indexOf("Glunovo", 0)>=0))
                 matchIndex = plugin.toString().indexOf("Glunovo", 0);
             val context: Context? = this@ConfigBuilderFragment.context
-            val intent:Intent = Intent (context, GlunovoPluginService::class.java)
-            if (matchIndex>=0) //Log.d("TAGTAGTAG", matchIndex.toString())
+            if (matchIndex>=0)
                 if (context != null) {
-                    context.startService(intent)
+                    context.startService(Intent (context, GlunovoPluginService::class.java))
                 };
             else
                 if (context != null) {
-                    context.stopService(intent)
-                }
+                    context.stopService(Intent (context, GlunovoPluginService::class.java))
+                };
         }
 
         private fun areMultipleSelectionsAllowed(type: PluginType): Boolean {

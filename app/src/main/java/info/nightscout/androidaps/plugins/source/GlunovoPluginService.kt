@@ -23,6 +23,7 @@ class GlunovoPluginService : Service() {
     //180000
     private val mgetValue: Runnable = object : Runnable {
         override fun run() {
+            Log.d("RUN","RUNRUNRUN")
             val cr = contentResolver.query(CONTENT_URI, null, null, null, null)
             val stringbuilder = StringBuilder()
             cr!!.moveToLast()
