@@ -63,6 +63,7 @@ class GlunovoPlugin @Inject constructor(
         override fun doWork(): Result {
             var ret = Result.success()
 
+            Log.d("GlunovoPlugin","GlunovoPlugin")
             if (!glunovoPlugin.isEnabled(PluginType.BGSOURCE)) return Result.success(workDataOf("Result" to "Plugin not enabled"))
             val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
             glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
