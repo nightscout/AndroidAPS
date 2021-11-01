@@ -3,6 +3,7 @@ package info.nightscout.androidaps.receivers
 import android.content.Context
 import android.content.Intent
 import android.provider.Telephony
+import android.util.Log
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequest
 import dagger.android.DaggerBroadcastReceiver
@@ -28,7 +29,7 @@ open class DataReceiver : DaggerBroadcastReceiver() {
         val bundle = intent.extras ?: return
         aapsLogger.debug(LTag.DATABASE, "onReceive ${intent.action} ${BundleLogger.log(bundle)}")
 
-
+        Log.d("ReceivedReceived", intent.action)
         when (intent.action) {
             Intents.ACTION_NEW_BG_ESTIMATE            ->
                 OneTimeWorkRequest.Builder(XdripPlugin.XdripWorker::class.java)

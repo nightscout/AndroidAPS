@@ -23,7 +23,6 @@ class GlunovoPluginService : Service() {
     //180000
     private val mgetValue: Runnable = object : Runnable {
         override fun run() {
-            Log.d("RUN","RUNRUNRUN")
             val cr = contentResolver.query(CONTENT_URI, null, null, null, null)
             val stringbuilder = StringBuilder()
             cr!!.moveToLast()
@@ -38,8 +37,6 @@ class GlunovoPluginService : Service() {
             intent.putExtra("BgEstimate", value)
             intent.putExtra("Current", readingCurrent)
             sendBroadcast(intent)
-            val test = intent.action
-            Log.d("Time", test!!)
             handler.postDelayed(this, 180000)
         }
     }
