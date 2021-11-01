@@ -54,6 +54,7 @@ class ConfigBuilderPlugin @Inject constructor(
     init {
         Log.d("INITIALIZATION","INIT")
         (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
+        Log.d("INITIALIZATION","INIT")
     }
 
     override fun initialize() {
