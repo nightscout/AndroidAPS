@@ -213,12 +213,12 @@ class ConfigBuilderFragment : DaggerFragment() {
 
             var matchIndex = -1
             if (plugin.isEnabled(pluginType)) matchIndex = plugin.toString().indexOf("Glunovo", 0)
-            Log.d ("match" ,matchIndex)
+            Log.d ("match" ,matchIndex.toString())
             //val context: Context
             //(context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
             //val intent:Intent = Intent (context, GlunovoPluginService::class.java)
             //intent.action= "test"
-            if (matchIndex>=0) Log.d("TAGTAGTAG", matchIndex);
+            if (matchIndex>=0) Log.d("TAGTAGTAG", matchIndex.toString());
             //context.startService(intent);
         }
 
