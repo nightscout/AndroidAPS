@@ -892,4 +892,5 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="error_in_basal_values">Erreur dans les valeurs de basal</string>
     <string name="error_in_target_values">Erreur dans les valeurs cibles</string>
     <string name="error_in_isf_values">Erreur dans les valeurs de SI</string>
+    <string name="run_question">Exécuter %s?</string>
 </resources>

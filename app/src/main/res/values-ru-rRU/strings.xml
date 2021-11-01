@@ -893,4 +893,5 @@ Context | Edit Context</string>
     <string name="error_in_basal_values">Ошибка в величине базала</string>
     <string name="error_in_target_values">Ошибка в целевых значениях</string>
     <string name="error_in_isf_values">Ошибка в значении фактора чувствительности к инсулину ISF</string>
+    <string name="run_question">Запустить %s?</string>
 </resources>

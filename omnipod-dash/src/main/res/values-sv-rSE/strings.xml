@@ -3,6 +3,7 @@
     <!-- Omnipod Dash - Description -->
     <string name="omnipod_dash_pump_description">Pumpintegration för Omnipod Dash (den nya, Bluetooth-aktiverade modellen med blå nålskydd).</string>
     <!-- Omnipod Dash - Keys -->
+    <!-- Omnipod Dash - History -->
     <!-- Omnipod Dash - Overview -->
     <string name="omnipod_dash_overview_bluetooth_status">Bluetooth-status</string>
     <string name="omnipod_dash_overview_bluetooth_address">Bluetooth-adress</string>

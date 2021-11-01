@@ -385,7 +385,7 @@
     <string name="uel_plugin_disabled">PLUGIN DISABILITATO</string>
     <string name="uel_unknown">SCONOSCIUTO</string>
     <string name="ue_string">Stringa</string>
-    <string name="ue_source">Fonte</string>
+    <string name="ue_source">Origine</string>
     <string name="ue_utc_offset">Offset UTC</string>
     <string name="ue_action">Azione</string>
     <string name="ue_timestamp">Data e ora</string>
