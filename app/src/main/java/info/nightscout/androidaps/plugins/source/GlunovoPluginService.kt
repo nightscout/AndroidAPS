@@ -28,8 +28,7 @@ class GlunovoPluginService : Service() {
             cr!!.moveToLast()
             val time = cr.getLong(0)
             val value = cr.getDouble(1) * 18.018 //value in mmol/l... transformed in mg/dl if value *18.018
-            val readingCurrent = cr.getDouble(2)
-            stringbuilder.append("$time   $value   $readingCurrent\n")
+            stringbuilder.append("$time   $value\n")
             Log.d("Readings", stringbuilder.toString())
             val intent = Intent()
             intent.action = "com.glunovoservice.BgEstimate"
