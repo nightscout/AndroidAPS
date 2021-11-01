@@ -210,7 +210,7 @@ class ConfigBuilderFragment : DaggerFragment() {
             pluginVisibility.visibility = plugin.hasFragment().toVisibility()
             pluginVisibility.isEnabled = !(plugin.pluginDescription.neverVisible || plugin.pluginDescription.alwaysVisible) && plugin.isEnabled(pluginType)
             pluginVisibility.isChecked = plugin.isFragmentVisible()
-            Log.d("LOGLOGLOGLOGLOG", (plugin.isEnabled(pluginType)).toString())
+            if (plugin.isEnabled(pluginType)) Log.d("LOGLOGLOGLOGLOG", plugin.toString())
         }
 
         private fun areMultipleSelectionsAllowed(type: PluginType): Boolean {
