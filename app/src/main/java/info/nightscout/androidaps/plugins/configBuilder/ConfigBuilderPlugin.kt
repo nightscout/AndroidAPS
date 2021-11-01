@@ -18,6 +18,8 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.events.EventConfigBuilderUpdateGui
+import info.nightscout.androidaps.plugins.source.GlunovoPlugin
+import info.nightscout.androidaps.plugins.source.GlunovoPluginService
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -47,6 +49,11 @@ class ConfigBuilderPlugin @Inject constructor(
     .description(R.string.description_config_builder),
     aapsLogger, resourceHelper, injector
 ), ConfigBuilder {
+
+    lateinit var context:Context
+    init {
+        (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
+    }
 
     override fun initialize() {
         (activePlugin as PluginStore).loadDefaults()
@@ -183,12 +190,11 @@ class ConfigBuilderPlugin @Inject constructor(
         rxBus.send(EventConfigBuilderUpdateGui())
         logPluginStatus()
         val matchIndex = changedPlugin.toString().indexOf("Glunovo", 0)
-        Log.d("TAGTAG2TAG", matchIndex.toString())
-        lateinit var context: Context
-        fun setContext(con: Context) {
-            context=con
-        }
-        if (matchIndex>=0) Log.d("TAGTAGTAG", "TAGTAGTAG");//context.startService(Intent(context, GlunovoServicePlugin::class.java));
+        val intent:Intent = Intent (context, GlunovoPluginService::class.java)
+        intent.action= "test"
+        if (matchIndex>=0) Log.d("TAGTAGTAG", "TAGTAGTAG")
+        context.startService(intent);
+
     }
 
     fun processOnEnabledCategoryChanged(changedPlugin: PluginBase, type: PluginType?) {
