@@ -5,7 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
@@ -79,7 +78,7 @@ class GlunovoPlugin @Inject constructor(
             Log.d("Readings", stringbuilder.toString())
             val intent = Intent()
             intent.action = "home.glunovoservice.BgEstimate"
-            val bundle = Bundle()
+            //val bundle = Bundle()
             //intent.putExtra("Time", time)
             // intent.putExtra("BgEstimate", value)
             //intent.putExtra("Current", readingCurrent)
