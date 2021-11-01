@@ -50,15 +50,6 @@ class ConfigBuilderPlugin @Inject constructor(
     aapsLogger, resourceHelper, injector
 ), ConfigBuilder {
 
-    lateinit var context:Context
-    init {
-        Log.d("INITIALIZATION","INIT")
-        context.applicationContext
-        Log.d("INITIALIZATION","INIT")
-        (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
-        Log.d("INITIALIZATION","INIT")
-    }
-
     override fun initialize() {
         (activePlugin as PluginStore).loadDefaults()
         loadSettings()
@@ -194,10 +185,12 @@ class ConfigBuilderPlugin @Inject constructor(
         rxBus.send(EventConfigBuilderUpdateGui())
         logPluginStatus()
         val matchIndex = changedPlugin.toString().indexOf("Glunovo", 0)
-        val intent:Intent = Intent (context, GlunovoPluginService::class.java)
-        intent.action= "test"
-        if (matchIndex>=0) Log.d("TAGTAGTAG", "TAGTAGTAG")
-        context.startService(intent);
+        //val context: Context
+        //(context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
+        //val intent:Intent = Intent (context, GlunovoPluginService::class.java)
+        //intent.action= "test"
+        if (matchIndex>=0) Log.d("TAGTAGTAG", "TAGTAGTAG");
+        //context.startService(intent);
 
     }
 

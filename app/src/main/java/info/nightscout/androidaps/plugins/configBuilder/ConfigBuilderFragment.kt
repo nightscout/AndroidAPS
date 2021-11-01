@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.configBuilder
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -209,6 +210,7 @@ class ConfigBuilderFragment : DaggerFragment() {
             pluginVisibility.visibility = plugin.hasFragment().toVisibility()
             pluginVisibility.isEnabled = !(plugin.pluginDescription.neverVisible || plugin.pluginDescription.alwaysVisible) && plugin.isEnabled(pluginType)
             pluginVisibility.isChecked = plugin.isFragmentVisible()
+            Log.d("LOGLOGLOGLOGLOG", "LOGLOGLOGLOGLOG")
         }
 
         private fun areMultipleSelectionsAllowed(type: PluginType): Boolean {
