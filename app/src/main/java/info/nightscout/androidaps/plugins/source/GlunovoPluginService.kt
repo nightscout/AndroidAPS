@@ -33,17 +33,10 @@ class GlunovoPluginService : Service() {
             stringbuilder.append("$time   $value   $readingCurrent\n")
             Log.d("Readings", stringbuilder.toString())
             val intent = Intent()
-            intent.action = "home.glunovoservice.BgEstimate"
-            val bundle = Bundle()
-            //bundle.putLong("Time",time);
-            //bundle.putDouble("BgEstimate",value);
-            //bundle.putDouble("Current",readingCurrent);
+            intent.action = "com.glunovoservice.BgEstimate"
             intent.putExtra("Time", time)
             intent.putExtra("BgEstimate", value)
             intent.putExtra("Current", readingCurrent)
-            //intent.putExtra("bundle", bundle);
-            //caintent.addFlags(Intent.)
-            //intent.putExtra("data", "Nothing to see here, move along.");
             sendBroadcast(intent)
             val test = intent.action
             Log.d("Time", test!!)

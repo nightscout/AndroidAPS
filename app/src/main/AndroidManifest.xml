@@ -104,7 +104,7 @@
                 <!-- Receiver from Tomato -->
                 <action android:name="com.fanqies.tomatofn.BgEstimate" />
                 <!-- Receiver from Glunovo -->
-                <action android:name="com.fanqies.tomatofn.BgEstimate" />
+                <action android:name="com.glunovoservice.BgEstimate" />
             </intent-filter>
         </receiver> <!-- Receive new SMS messages -->
         <receiver

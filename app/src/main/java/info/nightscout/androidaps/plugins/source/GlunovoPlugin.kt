@@ -63,32 +63,34 @@ class GlunovoPlugin @Inject constructor(
         override fun doWork(): Result {
             var ret = Result.success()
 
-            val AUTHORITY = "alexpr.co.uk.infinivocgm.cgm_db.CgmExternalProvider/"
-            val TABLE_NAME = "CgmReading"
-            val CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + TABLE_NAME)
-            val context: Context = applicationContext
-            val cr = context.contentResolver.query(CONTENT_URI, null, null, null, null)
-            val stringbuilder = StringBuilder()
-            stringbuilder.append("TEST OK")
-            cr!!.moveToLast()
-            val time = cr.getLong(0)
-            val value = cr.getDouble(1) * 18.018 //value in mmol/l... transformed in mg/dl if value *18.018
-            val readingCurrent = cr.getDouble(2)
-            stringbuilder.append("$time   $value   $readingCurrent\n")
-            Log.d("Readings", stringbuilder.toString())
-            val intent = Intent()
-            intent.action = "home.glunovoservice.BgEstimate"
-            //val bundle = Bundle()
-            //intent.putExtra("Time", time)
-            // intent.putExtra("BgEstimate", value)
-            //intent.putExtra("Current", readingCurrent)
+            if (!glunovoPlugin.isEnabled(PluginType.BGSOURCE)) return Result.success(workDataOf("Result" to "Plugin not enabled"))
+            val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
+            glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
+                timestamp = inputData.getLong("com.glunovoservice.BgEstimate", 0),
+                value = inputData.getDouble("com.glunovoservice.BgEstimate", 0.0),
+                raw = 0.0,
+                noise = null,
+                trendArrow = GlucoseValue.TrendArrow.NONE,
+                sourceSensor = GlucoseValue.SourceSensor.GLUNOVO_NATIVE
+            )
+            repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
+                .doOnError {
+                    aapsLogger.error(LTag.DATABASE, "Error while saving values from Glunovo App", it)
+                    ret = Result.failure(workDataOf("Error" to it.toString()))
+                }
+                .blockingGet()
+                .also { savedValues ->
+                    savedValues.inserted.forEach {
+                        broadcastToXDrip(it)
+                        aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
+                    }
+                }
             return ret
         }
-
     }
 
     override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean =
-        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.LIBRE_1_TOMATO && sp.getBoolean(R.string.key_dexcomg5_nsupload, false)
+        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.GLUNOVO_NATIVE && sp.getBoolean(R.string.key_dexcomg5_nsupload, false)
 
     fun startGSer():Boolean = true
 }
