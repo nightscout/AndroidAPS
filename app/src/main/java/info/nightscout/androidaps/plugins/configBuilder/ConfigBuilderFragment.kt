@@ -212,8 +212,9 @@ class ConfigBuilderFragment : DaggerFragment() {
             pluginVisibility.isChecked = plugin.isFragmentVisible()
 
             var matchIndex = -1
-            if (plugin.isEnabled(pluginType)) matchIndex = plugin.toString().indexOf("Glunovo", 0)
-            Log.d ("match" ,matchIndex.toString())
+            if ((plugin.isEnabled(pluginType)) && (plugin.toString().indexOf("Glunovo", 0)>=0))
+                matchIndex = plugin.toString().indexOf("Glunovo", 0);
+            Log.d ("match", matchIndex.toString())
             //val context: Context
             //(context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
             //val intent:Intent = Intent (context, GlunovoPluginService::class.java)
