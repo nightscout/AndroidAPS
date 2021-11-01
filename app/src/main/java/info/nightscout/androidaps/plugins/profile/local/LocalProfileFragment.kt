@@ -126,7 +126,7 @@ class LocalProfileFragment : DaggerFragment() {
         binding.name.removeTextChangedListener(textWatch)
         binding.name.setText(currentProfile.name)
         binding.name.addTextChangedListener(textWatch)
-        binding.dia.setParams(currentProfile.dia, hardLimits.minDia(), hardLimits.maxDia(), 0.1, DecimalFormat("0.0"), false, binding.save, textWatch)
+        binding.dia.setParams(currentProfile.dia, hardLimits.minDia(), hardLimits.maxDia(), 0.1, DecimalFormat("0.0"), false, null, textWatch)
         binding.dia.tag = "LP_DIA"
         TimeListEdit(context, aapsLogger, dateUtil, view, R.id.ic, "IC", resourceHelper.gs(R.string.ic_label), currentProfile.ic, null, hardLimits.minIC(), hardLimits.maxIC(), 0.1, DecimalFormat("0.0"), save)
         basalView = TimeListEdit(context, aapsLogger, dateUtil, view, R.id.basal_holder, "BASAL", resourceHelper.gs(R.string.basal_label) + ": " + sumLabel(), currentProfile.basal, null, pumpDescription.basalMinimumRate, pumpDescription.basalMaximumRate, 0.01, DecimalFormat("0.00"), save)
