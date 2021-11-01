@@ -35,7 +35,6 @@ class GlunovoPluginService : Service() {
             intent.action = "com.glunovoservice.BgEstimate"
             intent.putExtra("Time", time)
             intent.putExtra("BgEstimate", value)
-            intent.putExtra("Current", readingCurrent)
             sendBroadcast(intent)
             handler.postDelayed(this, 180000)
         }
