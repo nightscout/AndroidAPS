@@ -2,6 +2,14 @@
 <resources>
     <!-- RL keys -->
     <!-- RL BLE Config -->
+    <string name="riley_link_ble_config_button_scan_start">Tarama</string>
+    <string name="riley_link_ble_config_scan_stop">Dur</string>
+    <string name="riley_link_ble_config_scan_selected">Seçili</string>
+    <string name="riley_link_ble_config_scan_title">RileyLink Tarama</string>
+    <string name="riley_link_ble_config_scan_scanning">Taranıyor</string>
+    <string name="riley_link_ble_config_scan_finished">Tarama tamamlandı</string>
+    <string name="riley_link_ble_config_scan_error">Tarama Hatası:%1$d</string>
+    <string name="riley_link_ble_config_connected_never">Hiçbir zaman</string>
     <!-- RL Status Page -->
     <!-- RL State -->
     <!-- RL Errors -->
