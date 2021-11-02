@@ -23,11 +23,7 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
 import info.nightscout.androidaps.receivers.DataWorker
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.androidaps.utils.HardLimits
-import info.nightscout.androidaps.utils.JsonHelper
-import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -127,8 +123,8 @@ class LocalProfilePlugin @Inject constructor(
             val low = blockFromJsonArray(targetLow, dateUtil)
             val high = blockFromJsonArray(targetHigh, dateUtil)
             if (mgdl) {
-                if (blockFromJsonArray(isf, dateUtil)?.any { it.amount < HardLimits.MIN_ISF || it.amount > HardLimits.MAX_ISF } != false) {
-                    ToastUtils.errorToast(activity,resourceHelper.gs(R.string.error_in_isf_values))
+                if (blockFromJsonArray(isf, dateUtil)?.any {  hardLimits.isInRange(it.amount, HardLimits.MIN_ISF, HardLimits.MAX_ISF) } == false) {
+                    ToastUtils.errorToast(activity, resourceHelper.gs(R.string.error_in_isf_values))
                     return false
                 }
                 if (blockFromJsonArray(basal, dateUtil)?.any { it.amount < pumpDescription.basalMinimumRate || it.amount > 10.0 } != false)  {
@@ -144,8 +140,7 @@ class LocalProfilePlugin @Inject constructor(
                     return false
                 }
             } else {
-                if (blockFromJsonArray(isf, dateUtil)?.any { it.amount < Profile.toMgdl(HardLimits.MIN_ISF, GlucoseUnit.MMOL) || it.amount > Profile.toMgdl(HardLimits.MAX_ISF, GlucoseUnit.MMOL)
-                } != false) {
+                if (blockFromJsonArray(isf, dateUtil)?.any { hardLimits.isInRange(Profile.toMgdl(it.amount, GlucoseUnit.MMOL), HardLimits.MIN_ISF, HardLimits.MAX_ISF) } == false) {
                     ToastUtils.errorToast(activity,resourceHelper.gs(R.string.error_in_isf_values))
                     return false
                 }
@@ -482,7 +477,7 @@ class LocalProfilePlugin @Inject constructor(
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))
             if (sp.getBoolean(R.string.key_ns_receive_profile_store, true) || config.NSCLIENT) {
                 val store = ProfileStore(injector, profileJson, dateUtil)
-                val createdAt = store.getCreatedAt()
+                val createdAt = store.getStartDate()
                 val lastLocalChange = sp.getLong(R.string.key_local_profile_last_change, 0)
                 aapsLogger.debug(LTag.PROFILE, "Received profileStore: createdAt: $createdAt Local last modification: $lastLocalChange")
                 @Suppress("LiftReturnOrAssignment")
