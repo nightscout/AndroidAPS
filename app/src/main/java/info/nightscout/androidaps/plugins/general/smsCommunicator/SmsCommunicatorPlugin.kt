@@ -1132,6 +1132,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         var s = str
         s = Normalizer.normalize(s, Normalizer.Form.NFD)
         s = s.replace("[\\p{InCombiningDiacriticalMarks}]".toRegex(), "")
+        s = s.replace("ł", "l") // hack for Polish language (bug in libs)
         return s
     }
 
