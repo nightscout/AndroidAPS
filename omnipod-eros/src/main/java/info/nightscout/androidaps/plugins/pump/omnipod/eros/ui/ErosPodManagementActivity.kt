@@ -85,7 +85,7 @@ class ErosPodManagementActivity : NoSplashAppCompatActivity() {
 
         binding.buttonDiscardPod.setOnClickListener {
             OKDialog.showConfirmation(this,
-                resourceHelper.gs(R.string.omnipod_common_pod_management_discard_pod_confirmation), Thread {
+                rh.gs(R.string.omnipod_common_pod_management_discard_pod_confirmation), Thread {
                 aapsOmnipodManager.discardPodState()
             })
         }
@@ -110,7 +110,7 @@ class ErosPodManagementActivity : NoSplashAppCompatActivity() {
             commandQueue.customCommand(CommandPlayTestBeep(), object : Callback() {
                 override fun run() {
                     if (!result.success) {
-                        displayErrorDialog(resourceHelper.gs(R.string.omnipod_common_warning), resourceHelper.gs(R.string.omnipod_common_two_strings_concatenated_by_colon, resourceHelper.gs(R.string.omnipod_common_error_failed_to_play_test_beep), result.comment), false)
+                        displayErrorDialog(rh.gs(R.string.omnipod_common_warning), rh.gs(R.string.omnipod_common_two_strings_concatenated_by_colon, rh.gs(R.string.omnipod_common_error_failed_to_play_test_beep), result.comment), false)
                     }
                 }
             })
@@ -123,7 +123,7 @@ class ErosPodManagementActivity : NoSplashAppCompatActivity() {
             commandQueue.customCommand(CommandReadPulseLog(), object : Callback() {
                 override fun run() {
                     if (!result.success) {
-                        displayErrorDialog(resourceHelper.gs(R.string.omnipod_common_warning), resourceHelper.gs(R.string.omnipod_common_two_strings_concatenated_by_colon, resourceHelper.gs(R.string.omnipod_eros_error_failed_to_read_pulse_log), result.comment), false)
+                        displayErrorDialog(rh.gs(R.string.omnipod_common_warning), rh.gs(R.string.omnipod_common_two_strings_concatenated_by_colon, rh.gs(R.string.omnipod_eros_error_failed_to_read_pulse_log), result.comment), false)
                     }
                 }
             })
@@ -229,8 +229,8 @@ class ErosPodManagementActivity : NoSplashAppCompatActivity() {
     private fun displayNotConfiguredDialog() {
         context.let {
             UIRunnable {
-                OKDialog.show(it, resourceHelper.gs(R.string.omnipod_common_warning),
-                    resourceHelper.gs(R.string.omnipod_eros_error_operation_not_possible_no_configuration), null)
+                OKDialog.show(it, rh.gs(R.string.omnipod_common_warning),
+                    rh.gs(R.string.omnipod_eros_error_operation_not_possible_no_configuration), null)
             }.run()
         }
     }

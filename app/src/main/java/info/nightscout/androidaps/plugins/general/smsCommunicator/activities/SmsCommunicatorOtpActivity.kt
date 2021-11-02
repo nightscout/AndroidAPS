@@ -71,25 +71,25 @@ class SmsCommunicatorOtpActivity : NoSplashAppCompatActivity() {
 
         binding.otpReset.setOnClickListener {
             OKDialog.showConfirmation(this,
-                resourceHelper.gs(R.string.smscommunicator_otp_reset_title),
-                resourceHelper.gs(R.string.smscommunicator_otp_reset_prompt),
+                rh.gs(R.string.smscommunicator_otp_reset_title),
+                rh.gs(R.string.smscommunicator_otp_reset_prompt),
                 Runnable {
                     uel.log(Action.OTP_RESET, Sources.SMS)
                     otp.ensureKey(true)
                     updateGui()
-                    ToastUtils.Long.infoToast(this, resourceHelper.gs(R.string.smscommunicator_otp_reset_successful))
+                    ToastUtils.Long.infoToast(this, rh.gs(R.string.smscommunicator_otp_reset_successful))
                 })
         }
 
         binding.otpProvisioning.setOnLongClickListener {
             OKDialog.showConfirmation(this,
-                resourceHelper.gs(R.string.smscommunicator_otp_export_title),
-                resourceHelper.gs(R.string.smscommunicator_otp_export_prompt),
+                rh.gs(R.string.smscommunicator_otp_export_title),
+                rh.gs(R.string.smscommunicator_otp_export_prompt),
                 Runnable {
                     val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                     val clip = ClipData.newPlainText("OTP Secret", otp.provisioningSecret())
                     clipboard.setPrimaryClip(clip)
-                    ToastUtils.Long.infoToast(this, resourceHelper.gs(R.string.smscommunicator_otp_export_successful))
+                    ToastUtils.Long.infoToast(this, rh.gs(R.string.smscommunicator_otp_export_successful))
                     uel.log(Action.OTP_EXPORT, Sources.SMS)
                 })
 

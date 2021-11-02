@@ -65,7 +65,7 @@ class DanaHistoryActivity : NoSplashAppCompatActivity() {
         disposable += rxBus
             .toObservable(EventPumpStatusChanged::class.java)
             .observeOn(aapsSchedulers.main)
-            .subscribe({ binding.status.text = it.getStatus(resourceHelper) }, fabricPrivacy::logException)
+            .subscribe({ binding.status.text = it.getStatus(rh) }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventDanaRSyncStatus::class.java)
             .observeOn(aapsSchedulers.main)
@@ -96,19 +96,19 @@ class DanaHistoryActivity : NoSplashAppCompatActivity() {
 
         // Types
         val typeList = ArrayList<TypeList>()
-        typeList.add(TypeList(RecordTypes.RECORD_TYPE_ALARM, resourceHelper.gs(R.string.danar_history_alarm)))
-        typeList.add(TypeList(RecordTypes.RECORD_TYPE_BASALHOUR, resourceHelper.gs(R.string.danar_history_basalhours)))
-        typeList.add(TypeList(RecordTypes.RECORD_TYPE_BOLUS, resourceHelper.gs(R.string.danar_history_bolus)))
-        typeList.add(TypeList(RecordTypes.RECORD_TYPE_CARBO, resourceHelper.gs(R.string.danar_history_carbohydrates)))
-        typeList.add(TypeList(RecordTypes.RECORD_TYPE_DAILY, resourceHelper.gs(R.string.danar_history_dailyinsulin)))
-        typeList.add(TypeList(RecordTypes.RECORD_TYPE_GLUCOSE, resourceHelper.gs(R.string.danar_history_glucose)))
+        typeList.add(TypeList(RecordTypes.RECORD_TYPE_ALARM, rh.gs(R.string.danar_history_alarm)))
+        typeList.add(TypeList(RecordTypes.RECORD_TYPE_BASALHOUR, rh.gs(R.string.danar_history_basalhours)))
+        typeList.add(TypeList(RecordTypes.RECORD_TYPE_BOLUS, rh.gs(R.string.danar_history_bolus)))
+        typeList.add(TypeList(RecordTypes.RECORD_TYPE_CARBO, rh.gs(R.string.danar_history_carbohydrates)))
+        typeList.add(TypeList(RecordTypes.RECORD_TYPE_DAILY, rh.gs(R.string.danar_history_dailyinsulin)))
+        typeList.add(TypeList(RecordTypes.RECORD_TYPE_GLUCOSE, rh.gs(R.string.danar_history_glucose)))
         if (!isKorean && !isRS) {
-            typeList.add(TypeList(RecordTypes.RECORD_TYPE_ERROR, resourceHelper.gs(R.string.danar_history_errors)))
+            typeList.add(TypeList(RecordTypes.RECORD_TYPE_ERROR, rh.gs(R.string.danar_history_errors)))
         }
-        if (isRS) typeList.add(TypeList(RecordTypes.RECORD_TYPE_PRIME, resourceHelper.gs(R.string.danar_history_prime)))
+        if (isRS) typeList.add(TypeList(RecordTypes.RECORD_TYPE_PRIME, rh.gs(R.string.danar_history_prime)))
         if (!isKorean) {
-            typeList.add(TypeList(RecordTypes.RECORD_TYPE_REFILL, resourceHelper.gs(R.string.danar_history_refill)))
-            typeList.add(TypeList(RecordTypes.RECORD_TYPE_SUSPEND, resourceHelper.gs(R.string.danar_history_syspend)))
+            typeList.add(TypeList(RecordTypes.RECORD_TYPE_REFILL, rh.gs(R.string.danar_history_refill)))
+            typeList.add(TypeList(RecordTypes.RECORD_TYPE_SUSPEND, rh.gs(R.string.danar_history_syspend)))
         }
         binding.spinner.adapter = ArrayAdapter(this, R.layout.spinner_centered, typeList)
 
@@ -180,9 +180,9 @@ class DanaHistoryActivity : NoSplashAppCompatActivity() {
                 }
 
                 RecordTypes.RECORD_TYPE_DAILY                                                                                                                                                              -> {
-                    holder.binding.dailyBasal.text = resourceHelper.gs(R.string.formatinsulinunits, record.dailyBasal)
-                    holder.binding.dailyBolus.text = resourceHelper.gs(R.string.formatinsulinunits, record.dailyBolus)
-                    holder.binding.dailyTotal.text = resourceHelper.gs(R.string.formatinsulinunits, record.dailyBolus + record.dailyBasal)
+                    holder.binding.dailyBasal.text = rh.gs(R.string.formatinsulinunits, record.dailyBasal)
+                    holder.binding.dailyBolus.text = rh.gs(R.string.formatinsulinunits, record.dailyBolus)
+                    holder.binding.dailyTotal.text = rh.gs(R.string.formatinsulinunits, record.dailyBolus + record.dailyBasal)
                     holder.binding.time.text = dateUtil.dateString(record.timestamp)
                     holder.binding.time.visibility = View.VISIBLE
                     holder.binding.value.visibility = View.GONE

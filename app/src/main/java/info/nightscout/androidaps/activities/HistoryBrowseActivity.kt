@@ -89,8 +89,8 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         setContentView(binding.root)
 
         // We don't want to use injected singletons but own instance working on top of different data
-        iobCobCalculator = IobCobCalculatorPlugin(injector, aapsLogger, aapsSchedulers, rxBus, sp, resourceHelper, profileFunction, activePlugin, sensitivityOref1Plugin, sensitivityAAPSPlugin, sensitivityWeightedAveragePlugin, fabricPrivacy, dateUtil, repository)
-        overviewData = OverviewData(injector, aapsLogger, resourceHelper, dateUtil, sp, activePlugin, defaultValueHelper, profileFunction, config, loopPlugin, nsDeviceStatus, repository, overviewMenus, iobCobCalculator, translator)
+        iobCobCalculator = IobCobCalculatorPlugin(injector, aapsLogger, aapsSchedulers, rxBus, sp, rh, profileFunction, activePlugin, sensitivityOref1Plugin, sensitivityAAPSPlugin, sensitivityWeightedAveragePlugin, fabricPrivacy, dateUtil, repository)
+        overviewData = OverviewData(injector, aapsLogger, rh, dateUtil, sp, activePlugin, defaultValueHelper, profileFunction, config, loopPlugin, nsDeviceStatus, repository, overviewMenus, iobCobCalculator, translator)
 
         binding.left.setOnClickListener {
             adjustTimeRange(overviewData.fromTime - T.hours(rangeToDisplay.toLong()).msecs())
@@ -158,7 +158,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
 
 
         axisWidth = if (dm.densityDpi <= 120) 3 else if (dm.densityDpi <= 160) 10 else if (dm.densityDpi <= 320) 35 else if (dm.densityDpi <= 420) 50 else if (dm.densityDpi <= 560) 70 else 80
-        binding.bgGraph.gridLabelRenderer?.gridColor = resourceHelper.gc(R.color.graphgrid)
+        binding.bgGraph.gridLabelRenderer?.gridColor = rh.gc(R.color.graphgrid)
         binding.bgGraph.gridLabelRenderer?.reloadStyles()
         binding.bgGraph.gridLabelRenderer?.labelVerticalWidth = axisWidth
 
@@ -241,8 +241,8 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
                 relativeLayout.layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
 
                 val graph = GraphView(this)
-                graph.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, resourceHelper.dpToPx(100)).also { it.setMargins(0, resourceHelper.dpToPx(15), 0, resourceHelper.dpToPx(10)) }
-                graph.gridLabelRenderer?.gridColor = resourceHelper.gc(R.color.graphgrid)
+                graph.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, rh.dpToPx(100)).also { it.setMargins(0, rh.dpToPx(15), 0, rh.dpToPx(10)) }
+                graph.gridLabelRenderer?.gridColor = rh.gc(R.color.graphgrid)
                 graph.gridLabelRenderer?.reloadStyles()
                 graph.gridLabelRenderer?.isHorizontalLabelsVisible = false
                 graph.gridLabelRenderer?.labelVerticalWidth = axisWidth
@@ -251,7 +251,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
                 relativeLayout.addView(graph)
 
                 val label = TextView(this)
-                val layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).also { it.setMargins(resourceHelper.dpToPx(30), resourceHelper.dpToPx(25), 0, 0) }
+                val layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).also { it.setMargins(rh.dpToPx(30), rh.dpToPx(25), 0, 0) }
                 layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP)
                 layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
                 label.layoutParams = layoutParams
