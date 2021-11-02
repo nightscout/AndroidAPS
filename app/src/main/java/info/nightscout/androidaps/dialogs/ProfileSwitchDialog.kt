@@ -38,6 +38,7 @@ import java.text.DecimalFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 class ProfileSwitchDialog : DialogFragmentWithDate() {
 
@@ -113,7 +114,17 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
         context?.let { context ->
             val profileStore = activePlugin.activeProfileSource.profile
                 ?: return
-            val profileList = profileStore.getProfileList()
+            val profileListToCheck = profileStore.getProfileList()
+            val profileList = ArrayList<CharSequence>()
+            for (profileName in profileListToCheck) {
+                val profileToCheck = activePlugin.activeProfileSource.profile?.getSpecificProfile(profileName.toString())
+                if (profileToCheck != null && ProfileSealed.Pure(profileToCheck).isValid("ProfileSwitch", activePlugin.activePump, config, resourceHelper, rxBus, hardLimits, false).isValid)
+                    profileList.add(profileName)
+            }
+            if (profileList.isEmpty()) {
+                dismiss()
+                return
+            }
             val adapter = ArrayAdapter(context, R.layout.spinner_centered, profileList)
             binding.profile.adapter = adapter
             // set selected to actual profile
@@ -123,7 +134,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
                 for (p in profileList.indices)
                     if (profileList[p] == profileFunction.getOriginalProfileName())
                         binding.profile.setSelection(p)
-        } ?: return
+        }
 
         profileFunction.getProfile()?.let { profile ->
             if (profile is ProfileSealed.EPS)
@@ -183,13 +194,14 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
             if (validity.isValid)
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal_profileswitch), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     if (profileFunction.createProfileSwitch(
-                        profileStore,
-                        profileName = profileName,
-                        durationInMinutes = duration,
-                        percentage = percent,
-                        timeShiftInHours = timeShift,
-                        timestamp = eventTime
-                    )) {
+                            profileStore,
+                            profileName = profileName,
+                            durationInMinutes = duration,
+                            percentage = percent,
+                            timeShiftInHours = timeShift,
+                            timestamp = eventTime
+                        )
+                    ) {
                         uel.log(Action.PROFILE_SWITCH,
                                 Sources.ProfileSwitchDialog,
                                 notes,
