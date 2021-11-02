@@ -1,2 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="dia_whatmeansdia">İES (DIA) hakkında doğru olan nedir?</string>
+    <string name="dia_label_exam">İnsülin Etki Süresi (İES)</string>
+    <string name="dia_profile">Profilinizde İES değerini ayarlamalısınız.</string>
+    <string name="dia_minimumis5h">İzin verilen minimum değer 5 saattir.</string>
+    <string name="dia_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html?#insulin</string>
+    <string name="dia_meaningisequaltodiapump">AndroidAPS\'den önce pompanızda kullandığınız İES değerinin doğru olduğundan eminseniz, döngüye başladığınızda bunu değiştirmenize gerek yoktur.</string>
+    <string name="dia_valuemustbedetermined">İES için uygun değeri kendiniz belirlemelisiniz.</string>
+    <string name="hypott_label">Hipo Geçici-Hedef</string>
+    <string name="hypott_whenhypott">Hipo geçici hedef belirlemenin birincil nedeni nedir?</string>
+    <string name="hypott_wrongbasal">Yanlış bazal oranı ayarlarından kaynaklanan hipoları düzeltmek için.</string>
+    <string name="exerciseprofile_leaveat100">Profili %100 olarak bırakın.</string>
+</resources>
