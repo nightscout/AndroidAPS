@@ -3,21 +3,24 @@
     <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <string name="treatmentssafety_title">Tedavilerin güvenlik ayarları</string>
+    <string name="treatmentssafety_title">Tedavi güvenliği</string>
     <string name="treatmentssafety_maxbolus_title">Max izin verilen bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Max izin verilen karbonhidrat [g]</string>
+    <string name="nav_preferences_plugin">%1$s Tercihler</string>
     <string name="nav_preferences">Tercihler</string>
     <string name="nav_refreshtreatments">NS\'tan tedavileri güncelle</string>
     <string name="nav_resetdb">Veritabanlarını sıfırla</string>
     <string name="reset_db_confirm">Veritabanlarını gerçekten sıfırlamak istiyor musunuz?</string>
     <string name="nav_exit">Çıkış</string>
     <string name="ns_sync_use_absolute_title">Her zaman bazal mutlak değerleri kullan</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Bu cihaz, program için pil optimizasyonunu desteklemiyor gibi görünüyor - performans sorunları yaşayabilirsiniz.</string>
     <string name="description_actions">Ortak özelliklere hızlıca erişmek için bazı düğmeler</string>
     <string name="description_config_builder">Aktif eklentileri yapılandırmak için kullanılan</string>
     <string name="description_objectives">Eğitim programı</string>
     <string name="description_food">Nightscout\'ta tanımlanan gıda ön ayarlarını gösterir</string>
     <string name="description_insulin_rapid">Humalog ve NovoRapid / NovoLog için İnsülin Profili</string>
     <string name="description_insulin_ultra_rapid">Fiasp için insülim Profili</string>
+    <string name="description_insulin_lyumjev">Lyumjev için insülin ayarı</string>
     <string name="description_insulin_free_peak">İnsülin aktivitesinin zirvesini tanımlamanıza ve sadece ileri düzey kullanıcılar tarafından kullanılmasına izin verir</string>
     <string name="description_loop">Döngüyü tetikleyen uygulamayı etkinleştirin veya devre dışı bırakın.</string>
     <string name="description_ns_client">Nightscout ile verilerinizi senkronize eder</string>
@@ -25,13 +28,16 @@
     <string name="description_smb">İleri düzey kullanıcılar için en yeni algoritma</string>
     <string name="description_overview">En yaygın eylemler için Döngü ve düğmelerinizin geçerli durumunu görüntüler</string>
     <string name="description_persistent_notification">Döngünün şu anda ne yaptığını hızlıca gözden geçirerek sürekli bir bildirim gösterir</string>
+    <string name="description_profile_local">Çevrimdışı kullanılabilen bir profil tanımlayın.</string>
     <string name="description_pump_mdi">Diyabet tedavisi için günde birden fazla enjeksiyon yapan kişiler için pompa entegrasyonu</string>
     <string name="description_pump_virtual">Henüz herhangi bir sürücüye sahip olmayan pompalar için pompa entegrasyonu (Açık Döngü)</string>
     <string name="description_sensitivity_aaps">Duyarlılık, Oref0 gibi aynı şekilde hesaplanır ancak geçmiş zaman çerçevesi belirtebilirsiniz. Minimal karbonhidrat emilimi, tercihlerden maksimum karbonhidrat emilim süresinden hesaplanır.</string>
+    <string name="description_sensitivity_oref1">Duyarlılık, geçmişteki 8 veya 24 saatlik verilerden (hangisi daha hassas ise) hesaplanır. Karbonhidratlar (emilmemişse) tercihlerde belirtilen süreden sonra kesilir. Eklenti ayrıca UAM\'ı da (bildirilmemiş yemekler) hesaplar.</string>
     <string name="description_sensitivity_weighted_average">Duyarlılık, sapmalardan ağırlıklı ortalama olarak hesaplanır. Daha yeni sapmalar daha ağırdır. Minimal karbonhidrat emilimi, tercihlerden maksimum karbon emilim süresinden hesaplanır. Bu algoritma, aşağıdaki duyarlılık değişikliklerinden daha hızlıdır.</string>
+    <string name="description_source_eversense">Yamalı Eversense uygulamasından KŞ değerleri al.</string>
     <string name="description_source_glimp">Glimp\'ten KŞ değerleri alır.</string>
     <string name="description_source_mm640g">600SeriesAndroidUploader\'dan KŞ değerleri alın.</string>
-    <string name="description_source_ns_client">Nightscout\'tan KŞ verilerini yükler</string>
+    <string name="description_source_ns_client">Nightscout\'tan KŞ verilerini yükle</string>
     <string name="description_treatments">Yapılan tüm tedavileri kaydet</string>
     <string name="description_wear">WearOS saatinizi kullanarak AndroidAPS\'yi izleyin ve kontrol edin.</string>
     <string name="description_xdrip_status_line">Döngü\'yle ilgili bilgileri xDrip+ watchface\'inizde gösterin.</string>
