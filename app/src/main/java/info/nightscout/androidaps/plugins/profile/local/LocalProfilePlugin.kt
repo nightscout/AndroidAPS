@@ -126,7 +126,7 @@ class LocalProfilePlugin @Inject constructor(
             }
             val low = blockFromJsonArray(targetLow, dateUtil)
             val high = blockFromJsonArray(targetHigh, dateUtil)
-            if (profileFunction.getUnits() == GlucoseUnit.MGDL) {
+            if (mgdl) {
                 if (blockFromJsonArray(isf, dateUtil)?.any { it.amount < HardLimits.MIN_ISF || it.amount > HardLimits.MAX_ISF } != false) {
                     ToastUtils.errorToast(activity,resourceHelper.gs(R.string.error_in_isf_values))
                     return false
@@ -144,7 +144,8 @@ class LocalProfilePlugin @Inject constructor(
                     return false
                 }
             } else {
-                if (blockFromJsonArray(isf, dateUtil)?.any { it.amount < Profile.fromMgdlToUnits(HardLimits.MIN_ISF, GlucoseUnit.MMOL) || it.amount > Profile.fromMgdlToUnits(HardLimits.MAX_ISF, GlucoseUnit.MMOL) } != false) {
+                if (blockFromJsonArray(isf, dateUtil)?.any { it.amount < Profile.toMgdl(HardLimits.MIN_ISF, GlucoseUnit.MMOL) || it.amount > Profile.toMgdl(HardLimits.MAX_ISF, GlucoseUnit.MMOL)
+                } != false) {
                     ToastUtils.errorToast(activity,resourceHelper.gs(R.string.error_in_isf_values))
                     return false
                 }
