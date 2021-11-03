@@ -72,7 +72,7 @@
     <string name="pairing">Eşleştirme</string>
     <string name="yes">Evet</string>
     <string name="no">Hayır</string>
-    <string name="loopdisabled">DÖNGÜ KISITLAMALARDAN İPTAL EDİLDİ</string>
+    <string name="loopdisabled">DÖNGÜ KISITLAMALARDAN DEVREDIŞI BIRAKILDI</string>
     <string name="bolusdelivered">%1$.2f Ü bolus başarıyla gönderildi</string>
     <string name="virtualpump_resultok">Tamam</string>
     <string name="novalidbasalrate">Pompadan okunan geçerli bir bazal oranı yok</string>
@@ -91,7 +91,7 @@
     <string name="suspendloop">Döngüyü duraklat</string>
     <string name="duration_min_label">Süre [min]</string>
     <string name="notification">Bildirim</string>
-    <string name="noprofile">Henüz NightSout\'tan profil yüklenmedi</string>
+    <string name="noprofile">Henüz NS\'tan profil yüklenmedi</string>
     <string name="exists">var</string>
     <string name="notexists">yok</string>
     <string name="glucose">Glikoz</string>
