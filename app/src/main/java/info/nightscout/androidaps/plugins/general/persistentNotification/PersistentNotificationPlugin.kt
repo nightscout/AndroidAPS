@@ -22,6 +22,7 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -42,14 +43,15 @@ class PersistentNotificationPlugin @Inject constructor(
     private val dummyServiceHelper: DummyServiceHelper,
     private val iconsProvider: IconsProvider,
     private val glucoseStatusProvider: GlucoseStatusProvider
-) : PluginBase(PluginDescription()
-    .mainType(PluginType.GENERAL)
-    .neverVisible(true)
-    .pluginName(R.string.ongoingnotificaction)
-    .enableByDefault(true)
-    .alwaysEnabled(true)
-    .showInList(false)
-    .description(R.string.description_persistent_notification),
+) : PluginBase(
+    PluginDescription()
+        .mainType(PluginType.GENERAL)
+        .neverVisible(true)
+        .pluginName(R.string.ongoingnotificaction)
+        .enableByDefault(true)
+        .alwaysEnabled(true)
+        .showInList(false)
+        .description(R.string.description_persistent_notification),
     aapsLogger, resourceHelper, injector
 ) {
 
@@ -63,49 +65,48 @@ class PersistentNotificationPlugin @Inject constructor(
     // End Android auto
 
     private val disposable = CompositeDisposable()
+    private var channel: NotificationChannel? = null
 
     override fun onStart() {
         super.onStart()
-        createNotificationChannel() // make sure channels exist before triggering updates through the bus
-        disposable.add(rxBus
+        disposable += rxBus
             .toObservable(EventRefreshOverview::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException))
-        disposable.add(rxBus
+            .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException)
+        disposable += rxBus
             .toObservable(EventExtendedBolusChange::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException))
-        disposable.add(rxBus
+            .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException)
+        disposable += rxBus
             .toObservable(EventTempBasalChange::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException))
-        disposable.add(rxBus
+            .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException)
+        disposable += rxBus
             .toObservable(EventTreatmentChange::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException))
-        disposable.add(rxBus
+            .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException)
+        disposable += rxBus
             .toObservable(EventInitializationChanged::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException))
-        disposable.add(rxBus
+            .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException)
+        disposable += rxBus
             .toObservable(EventEffectiveProfileSwitchChanged::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException))
-        disposable.add(rxBus
+            .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException)
+        disposable += rxBus
             .toObservable(EventAutosensCalculationFinished::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException))
-        disposable.add(rxBus
+            .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException)
+        disposable += rxBus
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException))
-        triggerNotificationUpdate()
+            .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException)
     }
 
     private fun createNotificationChannel() {
         val mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val channel = NotificationChannel(notificationHolder.channelID, notificationHolder.channelID as CharSequence, NotificationManager.IMPORTANCE_HIGH)
-        mNotificationManager.createNotificationChannel(channel)
+        channel = NotificationChannel(notificationHolder.channelID, notificationHolder.channelID as CharSequence, NotificationManager.IMPORTANCE_HIGH)
+        channel?.let { mNotificationManager.createNotificationChannel(it) }
     }
 
     override fun onStop() {
@@ -115,6 +116,8 @@ class PersistentNotificationPlugin @Inject constructor(
     }
 
     private fun triggerNotificationUpdate() {
+        if (channel == null)
+            createNotificationChannel() // make sure channels exist before triggering updates through the bus
         updateNotification()
         dummyServiceHelper.startService(context)
     }
@@ -155,8 +158,16 @@ class PersistentNotificationPlugin @Inject constructor(
             //IOB
             val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
             val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
-            line2 = resourceHelper.gs(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U " + resourceHelper.gs(R.string.cob) + ": " + iobCobCalculator.getCobInfo(false, "PersistentNotificationPlugin").generateCOBString()
-            val line2aa = resourceHelper.gs(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U. " + resourceHelper.gs(R.string.cob) + ": " + iobCobCalculator.getCobInfo(false, "PersistentNotificationPlugin").generateCOBString() + "."
+            line2 =
+                resourceHelper.gs(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U " + resourceHelper.gs(R.string.cob) + ": " + iobCobCalculator.getCobInfo(
+                    false,
+                    "PersistentNotificationPlugin"
+                ).generateCOBString()
+            val line2aa =
+                resourceHelper.gs(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U. " + resourceHelper.gs(R.string.cob) + ": " + iobCobCalculator.getCobInfo(
+                    false,
+                    "PersistentNotificationPlugin"
+                ).generateCOBString() + "."
             line3 = DecimalFormatter.to2Decimal(pump.baseBasalRate) + " U/h"
             var line3aa = DecimalFormatter.to2Decimal(pump.baseBasalRate) + " U/h."
             line3 += " - " + profileFunction.getProfileName()
@@ -167,10 +178,12 @@ class PersistentNotificationPlugin @Inject constructor(
                 .setAction(READ_ACTION)
                 .putExtra(CONVERSATION_ID, notificationHolder.notificationID)
                 .setPackage(PACKAGE)
-            val msgReadPendingIntent = PendingIntent.getBroadcast(context,
+            val msgReadPendingIntent = PendingIntent.getBroadcast(
+                context,
                 notificationHolder.notificationID,
                 msgReadIntent,
-                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            )
             val msgReplyIntent = Intent()
                 .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
                 .setAction(REPLY_ACTION)
@@ -180,7 +193,8 @@ class PersistentNotificationPlugin @Inject constructor(
                 context,
                 notificationHolder.notificationID,
                 msgReplyIntent,
-                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            )
             // Build a RemoteInput for receiving voice input from devices
             val remoteInput = RemoteInput.Builder(EXTRA_VOICE_REPLY).build()
             // Create the UnreadConversation
@@ -205,8 +219,10 @@ class PersistentNotificationPlugin @Inject constructor(
         if (line3 != null) builder.setSubText(line3)
         /// Android Auto
         if (unreadConversationBuilder != null) {
-            builder.extend(NotificationCompat.CarExtender()
-                .setUnreadConversation(unreadConversationBuilder.build()))
+            builder.extend(
+                NotificationCompat.CarExtender()
+                    .setUnreadConversation(unreadConversationBuilder.build())
+            )
         }
         /// End Android Auto
         builder.setContentIntent(notificationHolder.openAppIntent(context))

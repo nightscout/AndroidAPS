@@ -32,7 +32,7 @@ open class TestBaseWithProfile : TestBase() {
     @Mock lateinit var context: Context
 
     lateinit var dateUtil: DateUtil
-    val rxBus = RxBus(aapsSchedulers)
+    val rxBus = RxBus(aapsSchedulers, aapsLogger)
 
     val profileInjector = HasAndroidInjector { AndroidInjector { } }
 

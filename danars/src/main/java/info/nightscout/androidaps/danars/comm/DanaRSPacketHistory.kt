@@ -77,7 +77,7 @@ abstract class DanaRSPacketHistory(
             dataIndex += dataSize
             dataSize = 2
             totalCount = byteArrayToInt(getBytes(data, dataIndex, dataSize))
-            aapsLogger.debug(LTag.PUMPCOMM, "History end. Code: " + error + " Success: " + (error == 0x00) + " Toatal count: " + totalCount)
+            aapsLogger.debug(LTag.PUMPCOMM, "History end. Code: " + error + " Success: " + (error == 0x00) + " Total count: " + totalCount)
         } else {
             val recordCode = byteArrayToInt(getBytes(data, DATA_START, 1))
             val historyYear = byteArrayToInt(getBytes(data, DATA_START + 1, 1))

@@ -66,7 +66,7 @@ open class DanaRTestBase : TestBase() {
                 it.danaRPlugin = danaRPlugin
                 it.danaRKoreanPlugin = danaRKoreanPlugin
                 it.danaRv2Plugin = danaRv2Plugin
-                it.rxBus = RxBus(aapsSchedulers)
+                it.rxBus = RxBus(aapsSchedulers, aapsLogger)
                 it.resourceHelper = resourceHelper
                 it.activePlugin = activePlugin
                 it.configBuilder = configBuilder

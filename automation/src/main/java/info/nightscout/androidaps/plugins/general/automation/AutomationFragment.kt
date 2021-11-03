@@ -100,14 +100,14 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
             .toObservable(EventAutomationUpdateGui::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({
-                updateGui()
-            }, fabricPrivacy::logException)
+                           updateGui()
+                       }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventAutomationDataChanged::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({
-                eventListAdapter.notifyDataSetChanged()
-            }, fabricPrivacy::logException)
+                           eventListAdapter.notifyDataSetChanged()
+                       }, fabricPrivacy::logException)
         updateGui()
     }
 
@@ -167,14 +167,19 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
         @SuppressLint("ClickableViewAccessibility")
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val event = automationPlugin.at(position)
-            holder.binding.rootLayout.setBackgroundColor(resourceHelper.gc(if (event.areActionsValid()) R.color.ribbonDefault else R.color.errorAlertBackground))
+            holder.binding.rootLayout.setBackgroundColor(resourceHelper.gc(
+                if (event.userAction) R.color.mdtp_line_dark
+                else if (event.areActionsValid()) R.color.ribbonDefault
+                else R.color.errorAlertBackground)
+            )
             holder.binding.eventTitle.text = event.title
             holder.binding.enabled.isChecked = event.isEnabled
             holder.binding.enabled.isEnabled = !event.readOnly
             holder.binding.iconLayout.removeAllViews()
             // trigger icons
             val triggerIcons = HashSet<Int>()
-            fillIconSet(event.trigger as TriggerConnector, triggerIcons)
+            if (event.userAction) triggerIcons.add(R.drawable.ic_danar_useropt)
+            fillIconSet(event.trigger, triggerIcons)
             for (res in triggerIcons) {
                 addImage(res, holder.context, holder.binding.iconLayout)
             }
@@ -217,13 +222,13 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
             // remove event
             holder.binding.iconTrash.setOnClickListener {
                 OKDialog.showConfirmation(requireContext(), resourceHelper.gs(R.string.removerecord) + " " + automationPlugin.at(position).title,
-                    {
-                        uel.log(Action.AUTOMATION_REMOVED, Sources.Automation, automationPlugin.at(position).title)
-                        automationPlugin.removeAt(position)
-                        notifyItemRemoved(position)
-                    }, {
-                    rxBus.send(EventAutomationUpdateGui())
-                })
+                                          {
+                                              uel.log(Action.AUTOMATION_REMOVED, Sources.Automation, automationPlugin.at(position).title)
+                                              automationPlugin.removeAt(position)
+                                              notifyItemRemoved(position)
+                                          }, {
+                                              rxBus.send(EventAutomationUpdateGui())
+                                          })
             }
             holder.binding.iconTrash.visibility = (!event.readOnly).toVisibility()
             holder.binding.aapsLogo.visibility = (event.systemAction).toVisibility()
@@ -239,13 +244,15 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
 
         override fun onItemDismiss(position: Int) {
             activity?.let { activity ->
-                OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord) + " " + automationPlugin.at(position).title,
-                    Runnable {
+                OKDialog.showConfirmation(
+                    activity,
+                    resourceHelper.gs(R.string.removerecord) + " " + automationPlugin.at(position).title,
+                    {
                         uel.log(Action.AUTOMATION_REMOVED, Sources.Automation, automationPlugin.at(position).title)
                         automationPlugin.removeAt(position)
                         notifyItemRemoved(position)
                         rxBus.send(EventAutomationDataChanged())
-                    }, Runnable { rxBus.send(EventAutomationUpdateGui()) })
+                    }, { rxBus.send(EventAutomationUpdateGui()) })
             }
         }
 

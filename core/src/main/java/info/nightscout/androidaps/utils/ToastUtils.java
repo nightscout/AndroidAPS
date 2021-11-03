@@ -22,6 +22,8 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 
 public class ToastUtils {
 
+    private static Toast lastToast = null;
+
     public static class Long {
 
         public static void warnToast(final Context ctx, final String string) {
@@ -76,10 +78,11 @@ public class ToastUtils {
             ImageView toastIcon = toastRoot.findViewById(android.R.id.icon);
             toastIcon.setImageResource(iconId);
 
-            Toast toast = new Toast(ctx);
-            toast.setDuration(isShort ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG);
-            toast.setView(toastRoot);
-            toast.show();
+            if (lastToast != null) lastToast.cancel();
+            lastToast = new Toast(ctx);
+            lastToast.setDuration(isShort ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG);
+            lastToast.setView(toastRoot);
+            lastToast.show();
         });
     }
 

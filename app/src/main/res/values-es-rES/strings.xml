@@ -132,6 +132,7 @@
     <string name="configbuilder_nightscoutversion_label">Nightscout versión:</string>
     <string name="missing_carbs">Falta %1$d g</string>
     <string name="exported">Preferencias exportadas</string>
+    <string name="ue_exported">Entradas de usuario exportadas</string>
     <string name="export_to">Exportar ajustes a</string>
     <string name="import_from">Importar configuración de</string>
     <string name="setting_imported">Ajustes importados</string>
@@ -255,11 +256,13 @@
     <string name="ongoingnotificaction">Avisos permanentes</string>
     <string name="old_data">DATOS CADUCADOS</string>
     <string name="sms_minago">hace %1$d min</string>
+    <string name="localprofile">Perfil</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Matriz de %1$d elementos.\nValor actual:</string>
     <string name="openapsma_autosensdata_label">Datos Autosens</string>
     <string name="openapsma_scriptdebugdata_label">Depurar script</string>
     <string name="openapsama_useautosens">Usar función Autosens</string>
+    <string name="refresheventsfromnightscout">Actualizar desde NS</string>
     <string name="deletefuturetreatments">Borrar tratamientos en el futuro</string>
     <string name="actions_shortname">ACC</string>
     <string name="configbuilder_shortname">CONF</string>
@@ -383,6 +386,7 @@
     <string name="basal_shortname">BAS</string>
     <string name="deviation_shortname">DEV</string>
     <string name="activity_shortname">ACT</string>
+    <string name="bgi_shortname">-BGI</string>
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="nav_about">Acerca de</string>
@@ -489,6 +493,7 @@
     <string name="dexcomg5_xdripupload_title">Mandar datos BG a xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">En xDrip+ elige 640g/Eversense como fuente de datos</string>
     <string name="nsclientbg">NSClient BG</string>
+    <string name="nsclientbgshort">NS BG</string>
     <string name="overview_editquickwizard_usebg">Cálculo BG</string>
     <string name="overview_editquickwizard_usebolusiob">Cálculo bolo IOB</string>
     <string name="overview_editquickwizard_usebasaliob">Cálculo basal IOB</string>
@@ -550,6 +555,7 @@
     <string name="bolusrecordedonly">Bolo sólo se registrará (no será entregado por la bomba)</string>
     <string name="loop_smbsetbypump_label">SMB administrado por bomba</string>
     <string name="overview_show_activity">Actividad</string>
+    <string name="overview_show_bgi">Impacto de glucosa en sangre</string>
     <string name="overview_show_sensitivity">Sensibilidad</string>
     <string name="overview_show_deviations">Desviaciones</string>
     <string name="overview_show_cob">Carbohidratos activos COB</string>
@@ -659,7 +665,6 @@
     <string name="error_adding_treatment_title">Datos de tratamiento incompletos</string>
     <string name="maintenance_settings">Ajustes de mantenimiento</string>
     <string name="maintenance_email">Email</string>
-    <string name="maintenance_encrypt_exported_prefs">Cifrar valores exportados</string>
     <string name="maintenance_amount">Ningún registro para enviar</string>
     <string name="maintenance">Mantenimiento</string>
     <string name="maintenance_shortname">MANT</string>
@@ -711,6 +716,7 @@
     <string name="versionChecker">Verificador de versión</string>
     <string name="old_version">versión antigua</string>
     <string name="very_old_version">versión muy antigua</string>
+    <string name="application_expired">Aplicación caducada</string>
     <string name="new_version_warning">Nueva versión desde al menos %1$d dias disponible! Respaldo a LGS después de %2$d días, se deshabilitará el lazo después de %3$d días</string>
     <string name="twohours">2h</string>
     <string name="dexcom_app_patched">DexcomG App (parcheada)</string>
@@ -744,6 +750,7 @@
     <string name="clone_label">Clonar</string>
     <string name="saveorresetchangesfirst">Guardar o restablecer los cambios actuales primero</string>
     <string name="deletecurrentprofile">¿Eliminar el perfil actual?</string>
+    <string name="copytolocalprofile">¿Crear nuevo perfil a partir de este perfil?</string>
     <string name="profilenamecontainsdot">El nombre de perfil contiene puntos.\nEsto no está soportado por NS.\nEl perfil no se carga en NS.</string>
     <string name="low_mark_comment">Valor inferior del área de rango (sólo visualización)</string>
     <string name="high_mark_comment">Valor superior al área de rango (sólo visualización)</string>
@@ -767,6 +774,7 @@
     <string name="randombg_short">BG</string>
     <string name="tools">Herramientas</string>
     <string name="show_calculation">Mostrar cálculo</string>
+    <string name="show_removed">Mostrar borrados</string>
     <string name="clearqueueconfirm">¿Borrar cola? ¡Se perderán todos los datos de la cola!</string>
     <string name="ebstopsloop">El uso de la función de bolo extendido detendrá el modo de bucle cerrado durante el tiempo de ejecución del bolo extendido. ¿Realmente quieres esto?</string>
     <string name="closed_loop_disabled_with_eb">Bucle cerrado inhabilitado debido a la ejecución del bolo extendido</string>
@@ -824,6 +832,7 @@
     <string name="dpvdefaultprofile">Perfil DPV por defecto</string>
     <string name="setupwizard_pump_riley_link_status">Estado de RileyLink:</string>
     <string name="filter">Filtro</string>
+    <string name="copytolocalprofile_invalid">No se puede crear el perfil. El perfil no es válido.</string>
     <string name="cta_dont_kill_my_app_info">¿No matar mi aplicación?</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Enviar SMS si se activa un evento de bomba inaccesible</string>
     <string name="smscommunicator_pump_ureachable">Reportar bomba inalcanzable</string>
@@ -839,4 +848,38 @@
     <string name="graph_menu_divider_header">Gráfico</string>
     <string name="chart_menu">Menú gráfico</string>
     <string name="clear_filter">Borrar filtro</string>
+    <string name="trend_arrow">Flecha de tendencia</string>
+    <string name="cannula">Cánula</string>
+    <string name="userentry">Entrada usuario</string>
+    <string name="common_values">Usa los valores de tu comida más grande que comes normalmente\n</string>
+    <string name="summary_email_for_crash_report">Esta dirección de correo electrónico se adjuntará a los informes de errores para que podamos contactarte en casos urgentes. Es opcional.</string>
+    <string name="email_address">Dirección de Correo Electrónico</string>
+    <string name="privacy_settings">Ajustes de privacidad</string>
+    <string name="privacy_summary">Puedes proporcionar una dirección de correo electrónico opcional si quieres ser notificado sobre fallos de la aplicación. Este no es un servicio automatizado. Los desarrolladores se comunicarán contigo en situaciones peligrosas.</string>
+    <string name="full_sync">Sincronización completa</string>
+    <string name="full_sync_comment">¿Sincronización completa? Puede tardar muchas horas y hasta que termine no verás nuevos datos en NS.</string>
+    <string name="prime">Llenado</string>
+    <string name="ns_sync_options">Sincronización</string>
+    <string name="ns_upload_summary">Perfiles, bolos, carbohidratos, basales temporales se suben a NS</string>
+    <string name="ns_upload">Subir datos a NS</string>
+    <string name="ns_receive_profile_store">Recibir perfil almacenado</string>
+    <string name="ns_receive_profile_store_summary">Sincronizar perfiles del editor de perfiles de NS</string>
+    <string name="ns_receive_temp_target">Recibir objetivos temporales</string>
+    <string name="ns_receive_temp_target_summary">Aceptar objetivos temporales registrados mediante NS o NSClient</string>
+    <string name="ns_receive_profile_switch">Recibir cambios de perfil</string>
+    <string name="ns_receive_profile_switch_summary">Aceptar cambios de perfil registrados mediante NS o NSClient</string>
+    <string name="ns_receive_offline_event">Recibir eventos de desconexión de APS</string>
+    <string name="ns_receive_offline_event_summary">Aceptar eventos de desconexión de APS registrados mediante NS o NSClient</string>
+    <string name="ns_receive_insulin">Recibir insulina</string>
+    <string name="ns_receive_insulin_summary">Aceptar insulina registrada mediante NS o NSClient (no se entrega, sólo se calcula para IOB)</string>
+    <string name="ns_receive_carbs">Recibir carbohidratos</string>
+    <string name="ns_receive_carbs_summary">Aceptar carbohidratos añadidos mediante NS o NSClient</string>
+    <string name="ns_receive_therapy_events">Recibir eventos de tratamientos</string>
+    <string name="ns_receive_therapy_events_summary">Aceptar registros de tratamientos (cánula, insulina, cambios de batería, etc.) añadidos mediante NS o NSClient</string>
+    <string name="ns_receive_cgm">Recibir/Rellenar datos del MCG</string>
+    <string name="ns_receive_cgm_summary">Aceptar valores MCG desde NS</string>
+    <string name="sms_timeout_while_wating">Tiempo de espera agotado mientras finalizaba la comunicación anterior con la bomba</string>
+    <string name="smscommunicator_another_bolus_in_queue">Hay otro bolo en cola. Inténtalo de nuevo más tarde.</string>
+    <string name="calculation_in_progress">Cálculo en curso</string>
+    <string name="error_in_ic_values">Error en valores IC</string>
 </resources>

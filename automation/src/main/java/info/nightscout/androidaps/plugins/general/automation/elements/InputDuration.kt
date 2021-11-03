@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.automation.elements
 
+import android.view.Gravity
 import android.widget.LinearLayout
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.utils.ui.MinutesNumberPicker
@@ -25,6 +26,7 @@ class InputDuration(
             numberPicker.setParams(value.toDouble(), 1.0, 24.0, 1.0, DecimalFormat("0"), false, root.findViewById(R.id.ok))
         }
         numberPicker.setOnValueChangedListener { value: Double -> this.value = value.toInt() }
+        numberPicker.gravity = Gravity.CENTER_HORIZONTAL
         root.addView(numberPicker)
     }
 

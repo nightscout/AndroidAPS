@@ -115,4 +115,5 @@
     <string name="press_ok_on_the_pump">Druk op OK op de pomp\nen voer 2 weergegeven nummers in.\nHoud het scherm vd pomp actief door de min-knop op de pomp ingedrukt te houden totdat je klaar bent met het invoeren van de codes.</string>
     <string name="num1pin">1: (12 cijfers)</string>
     <string name="num2pin">2: (8 cijfers)</string>
+    <string name="basal_bolus_step">Basaal/bolus stap</string>
 </resources>

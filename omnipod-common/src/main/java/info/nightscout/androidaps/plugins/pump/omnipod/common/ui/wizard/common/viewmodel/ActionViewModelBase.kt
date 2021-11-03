@@ -6,16 +6,18 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 
 abstract class ActionViewModelBase(
     protected val injector: HasAndroidInjector,
-    protected val logger: AAPSLogger
+    protected val logger: AAPSLogger,
+    private val aapsSchedulers: AapsSchedulers
 ) : ViewModelBase() {
+
     protected val disposable = CompositeDisposable()
 
     private val _isActionExecutingLiveData = MutableLiveData(false)
@@ -26,24 +28,29 @@ abstract class ActionViewModelBase(
 
     fun executeAction() {
         _isActionExecutingLiveData.postValue(true)
-        disposable += doExecuteAction().subscribeBy(
-            onSuccess = { result ->
-                _isActionExecutingLiveData.postValue(false)
-                _actionResultLiveData.postValue(result)
-            },
-            onError = { throwable ->
-                logger.error(LTag.PUMP, "Caught exception in while executing action in ActionViewModelBase", throwable)
-                _isActionExecutingLiveData.postValue(false)
-                _actionResultLiveData.postValue(PumpEnactResult(injector).success(false).comment(
-                    throwable.message ?: "Caught exception in while executing action in ActionViewModelBase"))
-            })
+        disposable += doExecuteAction()
+            .subscribeOn(aapsSchedulers.io)
+            .observeOn(aapsSchedulers.main)
+            .subscribeBy(
+                onSuccess = { result ->
+                    _isActionExecutingLiveData.postValue(false)
+                    _actionResultLiveData.postValue(result)
+                },
+                onError = { throwable ->
+                    logger.error(LTag.PUMP, "Caught exception in while executing action in ActionViewModelBase", throwable)
+                    _isActionExecutingLiveData.postValue(false)
+                    _actionResultLiveData.postValue(
+                        PumpEnactResult(injector).success(false).comment(
+                            throwable.message ?: "Caught exception in while executing action in ActionViewModelBase"
+                        )
+                    )
+                })
     }
 
     override fun onCleared() {
         super.onCleared()
         disposable.clear()
     }
-
 
     protected abstract fun doExecuteAction(): Single<PumpEnactResult>
 }

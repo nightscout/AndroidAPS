@@ -40,7 +40,7 @@ class OmnipodErosPumpPluginTest : TestBase() {
     @Mock lateinit var rileyLinkUtil: RileyLinkUtil
     @Mock lateinit var pumpSync: PumpSync
 
-    var rxBusWrapper = RxBus(TestAapsSchedulers())
+    var rxBusWrapper = RxBus(TestAapsSchedulers(), aapsLogger)
 
     @Before fun prepare() {
         `when`(resourceHelper.gs(ArgumentMatchers.anyInt(), ArgumentMatchers.anyLong()))

@@ -206,7 +206,6 @@
     <string name="metadata_label_device_name">Exportando nome do paciente do dispositivo</string>
     <string name="metadata_label_device_model">Exportando modelo do dispositivo</string>
     <string name="metadata_label_encryption">Criptografia do arquivo</string>
-    <string name="metadata_format_old">Antigo Formato de Exportação</string>
     <string name="metadata_format_new">Novo formato de encriptação</string>
     <string name="metadata_format_debug">Novo formato de depuração (não encriptado)</string>
     <string name="metadata_format_other">Formato de exportação desconhecido</string>

@@ -133,4 +133,7 @@
     <string name="digitalstyle_pref_your_color_saturation">Jūsų spalvų sodrumas:</string>
     <string name="digitalstyle_pref_your_color_opacity">Jūsų spalvų nepermatomumas:</string>
     <string name="bolus_progress_channel_name">AAPS leidžiamas bolusas</string>
+    <string name="bolus_progress_silent_channel_name">Nutildyti AAPS boluso suleidimą</string>
+    <string name="bolus_progress_channel_description">Boluso leidimas ir atšaukimas</string>
+    <string name="bolus_progress_silent_channel_description">Boluso leidimas ir atšaukimas su mažiau vibracijų</string>
 </resources>

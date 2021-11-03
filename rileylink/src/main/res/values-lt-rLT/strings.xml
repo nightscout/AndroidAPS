@@ -36,6 +36,7 @@
     <string name="rileylink_last_device_contact">Paskutinis įrenginio kontaktas:</string>
     <string name="rileylink_firmware_version">Programinės įrangos versija:</string>
     <string name="rileylink_firmware_version_value">BLE113: %1$s\nCC110: %2$s</string>
+    <string name="rileylink_firmware_version_value_orange">Fw: %1$s\nHw: %2$s</string>
     <string name="rileylink_pump_serial_number">Pompos serijos Nr:</string>
     <string name="rileylink_pump_frequency">Pompos dažnis:</string>
     <string name="rileylink_pump_frequency_value">%1$.2f MHz</string>
@@ -78,4 +79,6 @@
         <item quantity="many">%1$d val.</item>
         <item quantity="other">%1$d val.</item>
     </plurals>
+    <string name="orange_use_scanning_level">Atlikti skanavimą</string>
+    <string name="orange_use_scanning_level_summary">Prieš suporuodami su OrangeLink, naudokite skanavimą, tai turėtų pagerinti ryšio kokybę (jei reikia, galite jį naudoti ir kituose RileyLink klonuose)</string>
 </resources>

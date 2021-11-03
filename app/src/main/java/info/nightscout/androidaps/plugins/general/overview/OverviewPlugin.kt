@@ -64,7 +64,7 @@ class OverviewPlugin @Inject constructor(
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
-    override val overviewBus = RxBus(aapsSchedulers)
+    override val overviewBus = RxBus(aapsSchedulers, aapsLogger)
 
     class DeviationDataPoint(x: Double, y: Double, var color: Int, scale: Scale) : ScaledDataPoint(x, y, scale)
 

@@ -8,6 +8,7 @@ import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.data.DetailedBolusInfo
+import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.Bolus
@@ -91,6 +92,9 @@ class CommandQueueTest : TestBaseWithProfile() {
             }
             if (it is CommandLoadHistory) {
                 it.activePlugin = activePlugin
+            }
+           if (it is PumpEnactResult) {
+                it.resourceHelper = resourceHelper
             }
         }
     }

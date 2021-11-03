@@ -261,7 +261,6 @@
     <string name="metadata_label_device_name">Meno pacienta použité pri exporte</string>
     <string name="metadata_label_device_model">Model zariadenia použitý pri exporte</string>
     <string name="metadata_label_encryption">Šifrovanie súborov</string>
-    <string name="metadata_format_old">Zastaralý formát exportu</string>
     <string name="metadata_format_new">Nový šifrovaný formát</string>
     <string name="metadata_format_debug">Nový formát pre ladenie (nešifrovaný)</string>
     <string name="metadata_format_other">Neznámy formát exportu</string>
@@ -305,6 +304,7 @@
     <string name="sunday_short">Ne</string>
     <!-- User Entry -->
     <string name="uel_bolus">BOLUS</string>
+    <string name="uel_bolus_calculator">BOLUSOVÝ KALKULÁTOR</string>
     <string name="uel_bolus_advisor">BOLUSOVÝ PORADCA</string>
     <string name="uel_extended_bolus">PREDĹŽENÝ BOLUS</string>
     <string name="uel_superbolus_tbr">SUPERBOLUS TBR</string>

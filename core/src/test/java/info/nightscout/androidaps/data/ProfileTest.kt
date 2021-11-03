@@ -59,7 +59,7 @@ class ProfileTest : TestBase() {
     fun prepare() {
         testPumpPlugin = TestPumpPlugin { AndroidInjector { } }
         dateUtil = DateUtil(context)
-        rxBus = RxBus(TestAapsSchedulers())
+        rxBus = RxBus(TestAapsSchedulers(), aapsLogger)
         hardLimits = HardLimits(aapsLogger, rxBus, sp, resourceHelper, context, repository)
         `when`(activePluginProvider.activePump).thenReturn(testPumpPlugin)
         `when`(resourceHelper.gs(R.string.profile_per_unit)).thenReturn("/U")

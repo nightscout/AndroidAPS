@@ -261,7 +261,6 @@
     <string name="metadata_label_device_name">Patiëntnaam van exporterend apparaat</string>
     <string name="metadata_label_device_model">Modelnaam/nr van exporterend apparaat</string>
     <string name="metadata_label_encryption">Bestandsversleuteling</string>
-    <string name="metadata_format_old">Oude export indeling</string>
     <string name="metadata_format_new">Nieuwe versleutelde indeling</string>
     <string name="metadata_format_debug">Nieuwe debug indeling (onversleuteld)</string>
     <string name="metadata_format_other">Onbekende export indeling</string>
@@ -305,6 +304,7 @@
     <string name="sunday_short">S</string>
     <!-- User Entry -->
     <string name="uel_bolus">BOLUS</string>
+    <string name="uel_bolus_calculator">BOLUS CALCULATOR</string>
     <string name="uel_bolus_advisor">BOLUS ADVISEUR</string>
     <string name="uel_extended_bolus">VERLENGDE BOLUS</string>
     <string name="uel_superbolus_tbr">SUPERBOLUS TBR</string>

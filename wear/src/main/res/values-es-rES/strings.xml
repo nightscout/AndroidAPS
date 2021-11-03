@@ -63,7 +63,7 @@
     <string name="pref_version">Versión:</string>
     <string name="pref_moreWatchfaceSettings">más ajustes de Watchface</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Mire en la configuración de Watchface, por favor.</string>
-    <string name="menu_tempt">TempT</string>
+    <string name="menu_tempt">ObjetivoT</string>
     <string name="menu_wizard">Asistente</string>
     <string name="menu_bolus">Bolo</string>
     <string name="menu_ecarb">eCarb</string>
@@ -87,7 +87,7 @@
     <string name="action_preset_2">Predefinido 2</string>
     <string name="action_preset_3">Predefinido 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Importe gratuito</string>
-    <string name="action_confirm">Confirmar</string>
+    <string name="action_confirm">CONFIRMAR</string>
     <string name="action_timeshift">intervalo de tiempo</string>
     <string name="action_bolus">bolo</string>
     <string name="bolus_progress">Progreso del bolo</string>

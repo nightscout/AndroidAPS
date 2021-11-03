@@ -1126,5 +1126,9 @@
     <string name="error_in_isf_values">Error in ISF values</string>
     <string name="glunovo">Glunovo</string>
     <string name="description_source_glunovo">Receive values from Glunovo</string>
+    <string name="run_question">Run %s?</string>
+    <string name="invalid_profile_not_accepted">Invalid profile %1$s not accepted from NS</string>
+    <string name="view">View</string>
+    <string name="errors">Errors</string>
 
 </resources>

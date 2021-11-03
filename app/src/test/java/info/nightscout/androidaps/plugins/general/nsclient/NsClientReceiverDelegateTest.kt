@@ -26,7 +26,7 @@ class NsClientReceiverDelegateTest : TestBase() {
     @Mock lateinit var resourceHelper: ResourceHelper
 
     lateinit var receiverStatusStore: ReceiverStatusStore
-    val rxBus = RxBus(aapsSchedulers)
+    val rxBus = RxBus(aapsSchedulers, aapsLogger)
 
     private var sut: NsClientReceiverDelegate? = null
 
