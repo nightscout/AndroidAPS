@@ -56,8 +56,8 @@ open class DataReceiver : DaggerBroadcastReceiver() {
                 @Suppress("SpellCheckingInspection")
                 OneTimeWorkRequest.Builder(GlunovoPlugin.GlunovoWorker::class.java)
                     .setInputData(Data.Builder().also {
-                        it.copyDouble("com.glunovoservice.BgEstimate", bundle)
-                        it.copyLong("com.glunovoservice.BgEstimate", bundle)
+                        it.copyDouble("BgEstimate", bundle)
+                        it.copyLong("Time", bundle)
                     }.build()).build()
             Intents.NS_EMULATOR                       ->
                 OneTimeWorkRequest.Builder(MM640gPlugin.MM640gWorker::class.java)
