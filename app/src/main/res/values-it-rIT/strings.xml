@@ -891,4 +891,5 @@
     <string name="error_in_target_values">Errore nei valori del target</string>
     <string name="error_in_isf_values">Errore nei valori ISF</string>
     <string name="run_question">Eseguire %s?</string>
+    <string name="errors">Errori</string>
 </resources>
