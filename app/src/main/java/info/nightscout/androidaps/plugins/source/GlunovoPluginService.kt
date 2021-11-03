@@ -35,6 +35,11 @@ class GlunovoPluginService : Service() {
             intent.putExtra("Time", time)
             intent.putExtra("BgEstimate", value)
             intent.setPackage("info.nightscout.androidaps")
+            val bundle = Bundle()
+            bundle.putLong("Time",time);
+            bundle.putDouble("BgEstimate",value);
+            //bundle.putDouble("Current",readingCurrent);
+            intent.putExtra("bundle", bundle);
             Log.d("ReceivedReceived", intent.toString())
 
             sendBroadcast(intent)
