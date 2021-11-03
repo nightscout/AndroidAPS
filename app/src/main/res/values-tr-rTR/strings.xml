@@ -375,14 +375,14 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="statuslights_iage_critical">Kritik insülin ömrü (saat) [h]</string>
     <string name="statuslights_sage_warning">Sensör ömrü uyarısı (saat) [h]</string>
     <string name="statuslights_sage_critical">Kritik sensör ömrü (saat) [h]</string>
-    <string name="statuslights_sbat_warning">Sensör pili seviye uyarısı (%) [%]</string>
-    <string name="statuslights_sbat_critical">Kritik sensör pili (%) [%]</string>
+    <string name="statuslights_sbat_warning">Sensör pili seviye uyarısı [%]</string>
+    <string name="statuslights_sbat_critical">Kritik sensör pili [%]</string>
     <string name="statuslights_bage_warning">Pompa pil ömrü uyarısı (saat) [h]</string>
     <string name="statuslights_bage_critical">Kritik pompa pili (saat) [h]</string>
     <string name="statuslights_res_warning">Rezervuar seviye uyarısı (ünite) [U]</string>
     <string name="statuslights_res_critical">Kritik rezervuar seviyesi (ünite) [U]</string>
-    <string name="statuslights_bat_warning">Pompa pil seviye uyarısı (%) [%]</string>
-    <string name="statuslights_bat_critical">Kritik pompa pili seviyesi (%) [%]</string>
+    <string name="statuslights_bat_warning">Pompa pil seviye uyarısı [%]</string>
+    <string name="statuslights_bat_critical">Kritik pompa pili seviyesi [%]</string>
     <string name="prediction_shortname">TAHMİN</string>
     <string name="basal_shortname">BAZAL</string>
     <string name="deviation_shortname">SAPMA</string>
@@ -726,7 +726,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="description_source_dexcom">Yamalı Dexcom uygulamasından KŞ değerleri alır.</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="bolusconstraintappliedwarn">Bolus kısıtlaması uygulandı: %1$.2f Ü ile %2$.2f Ü</string>
-    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Yavaş karbonhidrat emilimi tespit edildi: zamanın %2$d%'si. Hesaplamanızı iki kez kontrol edin. Aktif Karbonhidrat (COB) olduğundan fazla tahmin edilebilir, bu nedenle daha fazla insülin verilebilir !!!!!</font>]]></string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Yavaş karbonhidrat emilimi tespit edildi: zamanın %2$d%\'si. Hesaplamanızı iki kez kontrol edin. Aktif Karbonhidrat (COB) olduğundan fazla tahmin edilebilir, bu nedenle daha fazla insülin verilebilir !!!!!</font>]]></string>
     <string name="partialboluswizard">Bolus sihirbazı sonucunun bu bölümünü ilet [%]</string>
     <string name="deliverpartofboluswizard">Bolus sihirbazı hesaplamayı gerçekleştirir ancak hesaplanan insülinin yalnızca bu kısmı iletilir. SMB algoritması ile kullanışlıdır.</string>
     <string name="snooze">Ertele</string>
