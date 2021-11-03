@@ -45,6 +45,7 @@
     <string name="largetimedifftitle">Büyük zaman farkı</string>
     <string name="danar_shutdown">Kapatma [hours]</string>
     <string name="danar_lowreservoir">Düşük rezervuar [Units]</string>
+    <string name="danarpump_shortname">DANA</string>
     <string name="virtualpump_firmware_label">Firmware</string>
     <string name="danar_pump_settings">Dana pompa ayarları</string>
     <string name="timeformat12h">12sa</string>
