@@ -282,7 +282,7 @@
     <string name="openapsama_max_daily_safety_multiplier_summary">Varsayılan değer: 3 Bu OpenAPS için önemli bir güvenlik ayarıdır. Maksimum bazal Iob\'u, en büyük bazal oranınızın üç katı (varsayılan olarak) ile sınırlar. Genel olarak, bu değeri değiştirmemelisiniz. Ama \"3x max günlük, 4x şuan\" ın bir güvenlik ayarı olarak ne anlama geldiğini bilmelisiniz.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Varsayılan ayar: 4 Bu, OpenAPS güvenlik ayarlarının diğer yarısı ve \"3x max günlük, 4x akım\" güvenlik korumasının diğer yarısıdır. Bu, başlangıç değerinizin, pompada ayarlanan taban maksimum değerinizden bağımsız olarak, mevcut bazal seviyenin bu sayısından daha yüksek olamayacağı anlamına gelir. Bu, insanların, algoritmanın nasıl çalıştığını anlamadan temel çizgiyi büyük ölçüde artırarak kendilerini tehlikeli durumlarda bulmalarını engellemektir. Varsayılan ayar 4x\'dir; Çoğu insan bu ayarları asla değiştirmek zorunda kalmayacak, ancak bu güvenlik sınırına yakınsa diğer terapi ayarlarını ayarlamalıdırlar.</string>
     <string name="openapsama_autosens_max_summary">Varsayılan değer: 1.2\nOtoduyarlılık (yakında otoayar) çarpanı. Varsayılan değere %20 maksimum limit atamak, otoduyarlılığın bazalları ne kadar yüksek ayarlayabileceğini, ISF ve KŞ hedefini de ne kadar düşük ayarlayabileceğini belirler.</string>
-    <string name="openapsama_autosens_min_summary">Varsayılan değer: 0.7\nBu autosens için diğer güvenlik önlemidir. Bazal oranların ne kadar düştüğünü ve İnsülin Duyarlılık Faktörü ve KŞ hedeflerini ne kadar yüksek tutabileceğini gösterir.</string>
+    <string name="openapsama_autosens_min_summary">Varsayılan değer: 0.7\nBu otoduyarlılık için diğer güvenlik önlemidir. Otoduyarlılığın bazal oranlarını ne kadar düşürebileceğini ve İnsülin Duyarlılık Faktörü ve KŞ hedeflerini ne kadar yüksek tutabileceğini gösterir.</string>
     <string name="openapsama_autosens_adjusttargets">Otoduyarlılık, hedefleri de ayarlar</string>
     <string name="openapsama_autosens_adjusttargets_summary">Varsayılan değer: true\nBu autosens in İnsülin Duyarlılık Faktörü ve bazallara ek olarak KŞ hedeflerinin ayarlanmasında kullanılır.</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">Varsayılan değer: 2\nEğer sadece öğününüzü yerseniz, öğün bolusu alındıktan sonra bolus ertelemesi devreye girer, bu şekilde Döngü karşı bir tetbir olarak geçici bazal oranını azaltmasın diye. Buaradaki örnekte olduğu gibi varsayılan 2; 3 saat DIA olacak şekilde bolus ertelemesi kademeli olarak 1,5 saat üzeri (3DIA/2=1,5).</string>
@@ -410,7 +410,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="ns_announcements">NS duyurularından bildirimler oluşturun</string>
     <string name="nsalarm_staledatavalue_label">Eski veri eşiği [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Acil durum verileri eşiği [min]</string>
-    <string name="openapsama_autosens_period">Autosens [h] için aralık</string>
+    <string name="openapsama_autosens_period">Otoduyarlılık süresi [h]</string>
     <string name="openapsama_autosens_period_summary">Duyarlılık tespiti için geçmişte geçen saat miktarı (karbonhidrat emilim süresi hariç)</string>
     <string name="openaps">OpenAPS</string>
     <string name="uploader">Aktar</string>
@@ -569,7 +569,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="profileswitch_ismissing">Profildeğiştir kayıp. Lütfen bir profil değiştir seçin veya YerelPorfil\'de \"Profili Etkinleştir\" düğmesine basın.</string>
     <string name="pumpisnottempbasalcapable">Pompa geçici bazal yetenekli değil</string>
     <string name="closedmodedisabledinpreferences">Kapalı Döngü tercihlerde devre dışı bırakıldı</string>
-    <string name="autosensdisabledinpreferences">Autosens tercihlerde devre dışı bırakıldı</string>
+    <string name="autosensdisabledinpreferences">Otoduyarlılık tercihlerde devre dışı bırakıldı</string>
     <string name="smbdisabledinpreferences">SMB tercihleri devre dışı</string>
     <string name="uamdisabledinpreferences">UAM (UnAnnounced Meals) tercihlerde devre dışı bırakıldı</string>
     <string name="uamdisabledoref1notselected">UAM (UnAnnounced Meals), Oref1 duyarlılık eklentisine bağlı olduğu için devre dışı bırakıldı</string>
