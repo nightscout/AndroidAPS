@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.source
 
 import android.content.Context
+import android.util.Log
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
@@ -68,6 +69,7 @@ class PoctechPlugin @Inject constructor(
                 aapsLogger.debug(LTag.BGSOURCE, "Received Poctech Data size:" + jsonArray.length())
                 for (i in 0 until jsonArray.length()) {
                     val json = jsonArray.getJSONObject(i)
+                    Log.d("POCTECH", "POCTECH")
                     glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
                         timestamp = json.getLong("date"),
                         value = if (safeGetString(json, "units", Constants.MGDL) == "mmol/L") json.getDouble("current")
