@@ -43,7 +43,7 @@ class GlunovoPlugin @Inject constructor(
 ), BgSource {
 
     // cannot be inner class because of needed injection
-    class GlunovoWorker(
+    public class GlunovoWorker(
         context: Context,
         params: WorkerParameters
     ) : Worker(context, params) {
