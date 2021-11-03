@@ -69,7 +69,7 @@ class PoctechPlugin @Inject constructor(
                 aapsLogger.debug(LTag.BGSOURCE, "Received Poctech Data size:" + jsonArray.length())
                 for (i in 0 until jsonArray.length()) {
                     val json = jsonArray.getJSONObject(i)
-                    Log.d("POCTECH", "POCTECH")
+                    Log.d("POCTECH", json.toString())
                     glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
                         timestamp = json.getLong("date"),
                         value = if (safeGetString(json, "units", Constants.MGDL) == "mmol/L") json.getDouble("current")

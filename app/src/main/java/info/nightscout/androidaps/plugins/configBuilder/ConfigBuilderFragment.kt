@@ -221,6 +221,10 @@ class ConfigBuilderFragment : DaggerFragment() {
                 if (context != null) {
                     context.startService(Intent (context, GlunovoPluginService::class.java))
                 };
+            //else
+            //    if (context != null) {
+            //        context.stopService(Intent (context, GlunovoPluginService::class.java))
+            //    };
         }
 
         private fun areMultipleSelectionsAllowed(type: PluginType): Boolean {
