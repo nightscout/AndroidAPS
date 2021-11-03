@@ -80,6 +80,7 @@ class ActionProfileSwitchTest : ActionsTestBase() {
 
         // do profile switch
         `when`(profileFunction.getProfileName()).thenReturn("Test")
+        `when`(profileFunction.createProfileSwitch(anyObject(), anyString(), anyInt(), anyInt(), anyInt(), anyLong())).thenReturn(true)
         sut.inputProfileName = InputProfileName(resourceHelper, activePlugin, TESTPROFILENAME)
         sut.doAction(object : Callback() {
             override fun run() {

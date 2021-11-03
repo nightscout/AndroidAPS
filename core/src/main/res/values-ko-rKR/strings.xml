@@ -252,7 +252,6 @@
     <string name="metadata_label_device_name">장치의 환자 이름 내보내기</string>
     <string name="metadata_label_device_model">장치 모델 내보내기</string>
     <string name="metadata_label_encryption">파일 암호화</string>
-    <string name="metadata_format_old">오래된 내보내기 형식</string>
     <string name="metadata_format_new">암호화된 새로운 형식</string>
     <string name="metadata_format_debug">오류가 제거된 새로운 형식 (암호화되지 않음)</string>
     <string name="metadata_format_other">알려지지 않은 내보내기 형식</string>

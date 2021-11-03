@@ -2,7 +2,28 @@
 <resources>
     <!-- Omnipod - Keys -->
     <!-- Omnipod - Pod Management -->
+    <string name="omnipod_common_pod_management_title">Administración de Pod</string>
+    <string name="omnipod_common_pod_management_heading_actions">Acciones</string>
+    <string name="omnipod_common_pod_management_heading_tools">Herramientas</string>
+    <string name="omnipod_common_pod_management_button_activate_pod">Activar Pod</string>
+    <string name="omnipod_common_pod_management_button_deactivate_pod">Desactivar Pod</string>
+    <string name="omnipod_common_pod_management_button_discard_pod">Descartar Pod</string>
+    <string name="omnipod_common_pod_management_button_play_test_beep">Reproducir pitido de prueba</string>
+    <string name="omnipod_common_pod_management_button_playing_test_beep">Reproduciendo pitido de prueba…</string>
+    <string name="omnipod_common_pod_management_button_pod_history">Historial de Pod</string>
     <!-- Omnipod - Error -->
+    <string name="omnipod_common_error_pod_not_attached">Ningún pod activo</string>
+    <string name="omnipod_common_error_set_basal_failed">Error al establecer el perfil basal.</string>
+    <string name="omnipod_common_error_bolus_did_not_succeed">Bolo no entregado.</string>
+    <string name="omnipod_common_error_set_initial_basal_schedule_no_profile">Ningún perfil basal está activo. Asegúrese de activar su perfil basal.</string>
+    <string name="omnipod_common_error_failed_to_refresh_status">Error al actualizar el estado</string>
+    <string name="omnipod_common_error_failed_to_refresh_status_on_startup">Error al actualizar el estado al iniciar</string>
+    <string name="omnipod_common_error_failed_to_suspend_delivery">Error al suspender la entrega</string>
+    <string name="omnipod_common_error_failed_to_set_time">Error al establecer la hora</string>
+    <string name="omnipod_common_error_failed_to_resume_delivery">Error al aceptar la entrega</string>
+    <string name="omnipod_common_error_failed_to_initialize_pod">Error al iniciar el Pod</string>
+    <string name="omnipod_common_error_pod_suspended">Pod suspendido</string>
+    <string name="omnipod_common_error_failed_to_play_test_beep">Error al reproducir el pitido de prueba</string>
     <!-- Omnipod - Confirmation -->
     <!-- Omnipod - Overview -->
     <!-- Omnipod - Wizard Base -->

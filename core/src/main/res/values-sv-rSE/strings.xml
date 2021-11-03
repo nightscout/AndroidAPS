@@ -261,7 +261,6 @@
     <string name="metadata_label_device_name">Exporterar patientens namn</string>
     <string name="metadata_label_device_model">Exporterar enhetsmodell</string>
     <string name="metadata_label_encryption">· Filkryptering</string>
-    <string name="metadata_format_old">Gammalt exportformat</string>
     <string name="metadata_format_new">Nytt krypterat format</string>
     <string name="metadata_format_debug">Nytt debug-format (okrypterat)</string>
     <string name="metadata_format_other">Okänt exportformat</string>

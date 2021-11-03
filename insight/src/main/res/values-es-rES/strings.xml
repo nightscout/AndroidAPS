@@ -21,6 +21,7 @@
     <string name="tbr_formatter">%1$d%% durante %2$d / %3$d minutos</string>
     <string name="multiwave_bolus">Bolus multionda</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U durante %3$d min</string>
+    <string name="insight_last_bolus">Último Bolo</string>
     <string name="searching_for_devices">Buscando dispositivos…</string>
     <string name="pairing_completed">Sincronización completada</string>
     <string name="code_compare">¿Coinciden los códigos mostrados en este dispositivo y en su infusor?</string>

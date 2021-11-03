@@ -2,6 +2,8 @@ package info.nightscout.androidaps.plugins.bus
 
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.events.Event
+import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
@@ -11,12 +13,14 @@ import javax.inject.Singleton
 @OpenForTesting
 @Singleton
 class RxBus @Inject constructor(
-    val aapsSchedulers: AapsSchedulers
+    val aapsSchedulers: AapsSchedulers,
+    val aapsLogger: AAPSLogger
 ) {
 
     private val publisher = PublishSubject.create<Event>()
 
     fun send(event: Event) {
+        aapsLogger.debug(LTag.EVENTS, "Sending $event")
         publisher.onNext(event)
     }
 

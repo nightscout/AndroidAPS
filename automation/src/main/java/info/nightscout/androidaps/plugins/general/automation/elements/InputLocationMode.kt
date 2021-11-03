@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.automation.elements
 
+import android.view.Gravity
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -30,6 +31,7 @@ class InputLocationMode(private val resourceHelper: ResourceHelper) : Element() 
         }
 
         companion object {
+
             fun labels(resourceHelper: ResourceHelper): List<String> {
                 val list: MutableList<String> = ArrayList()
                 for (c in values()) {
@@ -47,24 +49,24 @@ class InputLocationMode(private val resourceHelper: ResourceHelper) : Element() 
     }
 
     override fun addToLayout(root: LinearLayout) {
-        val adapter = ArrayAdapter(root.context, R.layout.spinner_centered, Mode.labels(resourceHelper))
-        val spinner = Spinner(root.context)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinner.adapter = adapter
-        val spinnerParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
-        spinnerParams.setMargins(0, resourceHelper.dpToPx(4), 0, resourceHelper.dpToPx(4))
-        spinner.layoutParams = spinnerParams
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                value = Mode.values()[position]
-            }
+        root.addView(
+            Spinner(root.context).apply {
+                adapter = ArrayAdapter(root.context, R.layout.spinner_centered, Mode.labels(resourceHelper)).apply {
+                    setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                }
+                val spinnerParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
+                    setMargins(0, resourceHelper.dpToPx(4), 0, resourceHelper.dpToPx(4))
+                }
+                layoutParams = spinnerParams
+                onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                        value = Mode.values()[position]
+                    }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-        }
-        spinner.setSelection(value.ordinal)
-        root.addView(spinner)
+                    override fun onNothingSelected(parent: AdapterView<*>?) {}
+                }
+                setSelection(value.ordinal)
+                gravity = Gravity.CENTER_HORIZONTAL
+            })
     }
 }

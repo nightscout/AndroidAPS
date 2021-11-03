@@ -39,12 +39,12 @@ class EnterPinActivity : NoSplashAppCompatActivity() {
         setContentView(binding.root)
 
         val p1 = DefaultEditTextValidator(binding.rsV3Pin1, this)
-            .setTestErrorString(resourceHelper.gs(R.string.error_mustbe12hexadidits), this)
-            .setCustomRegexp(resourceHelper.gs(R.string.twelvehexanumber), this)
+            .setTestErrorString(rh.gs(R.string.error_mustbe12hexadidits), this)
+            .setCustomRegexp(rh.gs(R.string.twelvehexanumber), this)
             .setTestType(EditTextValidator.TEST_REGEXP, this)
         val p2 = DefaultEditTextValidator(binding.rsV3Pin2, this)
-            .setTestErrorString(resourceHelper.gs(R.string.error_mustbe8hexadidits), this)
-            .setCustomRegexp(resourceHelper.gs(R.string.eighthexanumber), this)
+            .setTestErrorString(rh.gs(R.string.error_mustbe8hexadidits), this)
+            .setCustomRegexp(rh.gs(R.string.eighthexanumber), this)
             .setTestType(EditTextValidator.TEST_REGEXP, this)
 
         binding.okcancel.ok.setOnClickListener {
@@ -56,7 +56,7 @@ class EnterPinActivity : NoSplashAppCompatActivity() {
                 if (result) {
                     bleComm.finishV3Pairing()
                     finish()
-                } else OKDialog.show(this, resourceHelper.gs(R.string.error), resourceHelper.gs(R.string.invalidinput))
+                } else OKDialog.show(this, rh.gs(R.string.error), rh.gs(R.string.invalidinput))
             }
         }
         binding.okcancel.cancel.setOnClickListener { finish() }
@@ -86,12 +86,12 @@ class EnterPinActivity : NoSplashAppCompatActivity() {
         for (i in pairingKey.indices)
             pairingKeyCheckSum = pairingKeyCheckSum xor pairingKey[i]
 
-        sp.putString(resourceHelper.gs(R.string.key_danars_v3_pairingkey) + danaRSPlugin.mDeviceName, Base64.encodeToString(pairingKey, Base64.DEFAULT))
+        sp.putString(rh.gs(R.string.key_danars_v3_pairingkey) + danaRSPlugin.mDeviceName, Base64.encodeToString(pairingKey, Base64.DEFAULT))
 
         for (i in randomPairingKey.indices)
             pairingKeyCheckSum = pairingKeyCheckSum xor randomPairingKey[i]
 
-        sp.putString(resourceHelper.gs(R.string.key_danars_v3_randompairingkey) + danaRSPlugin.mDeviceName, Base64.encodeToString(randomPairingKey, Base64.DEFAULT))
+        sp.putString(rh.gs(R.string.key_danars_v3_randompairingkey) + danaRSPlugin.mDeviceName, Base64.encodeToString(randomPairingKey, Base64.DEFAULT))
 
         return checksum[0] == pairingKeyCheckSum
     }

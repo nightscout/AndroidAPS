@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.data.defaultProfile
+package info.nightscout.androidaps.utils.defaultProfile
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.PureProfile

@@ -105,9 +105,11 @@
     <string name="edit_short">РЕДАКТ</string>
     <string name="please_choose_an_action_type">Выберите тип действия</string>
     <string name="please_choose_a_trigger_type">Выберите тип триггера</string>
+    <string name="please_choose_a_operation_type">Выберите тип действия</string>
     <string name="triggers">Триггеры:</string>
     <string name="remove_label">УДАЛИТЬ</string>
     <string name="preconditions">Предусловия:</string>
     <string name="automation_event">Автоматизированное событие</string>
     <string name="reorder_label">Повторный заказ</string>
+    <string name="user_action">Действия пользователя</string>
 </resources>

@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.history.mapper
 
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.BasalValuesRecord
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.BolusRecord
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.HistoryRecord
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.TempBasalRecord
@@ -17,7 +18,8 @@ class HistoryMapper {
             tempBasalRecord = historyRecord.record as? TempBasalRecord,
             bolusRecord = historyRecord.record as? BolusRecord,
             resolvedResult = historyRecord.resolvedResult,
-            resolvedAt = historyRecord.resolvedAt
+            resolvedAt = historyRecord.resolvedAt,
+            basalProfileRecord = historyRecord.record as? BasalValuesRecord
         )
 
     fun entityToDomain(entity: HistoryRecordEntity): HistoryRecord =
@@ -27,7 +29,7 @@ class HistoryMapper {
             date = entity.date,
             initialResult = entity.initialResult,
             commandType = entity.commandType,
-            record = entity.bolusRecord ?: entity.tempBasalRecord,
+            record = entity.bolusRecord ?: entity.tempBasalRecord ?: entity.basalProfileRecord,
             resolvedResult = entity.resolvedResult,
             resolvedAt = entity.resolvedAt
         )

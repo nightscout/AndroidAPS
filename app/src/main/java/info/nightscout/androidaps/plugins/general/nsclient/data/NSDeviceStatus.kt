@@ -18,7 +18,6 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -89,7 +88,7 @@ class NSDeviceStatus @Inject constructor(
     fun handleNewData(deviceStatuses: JSONArray) {
         aapsLogger.debug(LTag.NSCLIENT, "Got NS deviceStatus: \$deviceStatuses")
         try {
-            for (i in 0 until deviceStatuses.length()) {
+            for (i in deviceStatuses.length() -1 downTo 0) {
                 val devicestatusJson = deviceStatuses.getJSONObject(i)
                 if (devicestatusJson != null) {
                     setData(devicestatusJson)
@@ -100,6 +99,7 @@ class NSDeviceStatus @Inject constructor(
                     if (devicestatusJson.has("configuration") && config.NSCLIENT) {
                         // copy configuration of Insulin and Sensitivity from main AAPS
                         runningConfiguration.apply(devicestatusJson.getJSONObject("configuration"))
+                        break
                     }
                 }
             }
@@ -194,7 +194,7 @@ class NSDeviceStatus @Inject constructor(
             if (clock == 0L || deviceStatusData.pumpData != null && clock < deviceStatusData.pumpData!!.clock) return
 
             // create new status and process data
-            var deviceStatusPumpData = DeviceStatusData.PumpData()
+            val deviceStatusPumpData = DeviceStatusData.PumpData()
             deviceStatusPumpData.clock = clock
             if (pump.has("status") && pump.getJSONObject("status").has("status")) deviceStatusPumpData.status = pump.getJSONObject("status").getString("status")
             if (pump.has("reservoir")) deviceStatusPumpData.reservoir = pump.getDouble("reservoir")

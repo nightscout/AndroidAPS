@@ -22,7 +22,7 @@ import org.mockito.Mockito.`when`
 
 class VirtualPumpPluginUTest : TestBase() {
 
-    private val rxBus = RxBus(aapsSchedulers)
+    private val rxBus = RxBus(aapsSchedulers, aapsLogger)
     @Mock lateinit var fabricPrivacy: FabricPrivacy
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var sp: SP

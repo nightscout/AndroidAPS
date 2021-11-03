@@ -158,7 +158,7 @@ class DiaconnG8UserOptionsActivity : NoSplashAppCompatActivity() {
                     val i = Intent(context, ErrorHelperActivity::class.java)
                     i.putExtra("soundid", R.raw.boluserror)
                     i.putExtra("status", result.comment)
-                    i.putExtra("title", resourceHelper.gs(R.string.pumperror))
+                    i.putExtra("title", rh.gs(R.string.pumperror))
                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     context.startActivity(i)
                 }
@@ -169,9 +169,9 @@ class DiaconnG8UserOptionsActivity : NoSplashAppCompatActivity() {
 
     private fun fillSoundCategory() {
         val categories = ArrayList<String>()
-        categories.add(resourceHelper.gs(R.string.diaconn_g8_pumpalarm_sound))
-        categories.add(resourceHelper.gs(R.string.diaconn_g8_pumpalarm_vibrate))
-        categories.add(resourceHelper.gs(R.string.diaconn_g8_pumpalarm_silent))
+        categories.add(rh.gs(R.string.diaconn_g8_pumpalarm_sound))
+        categories.add(rh.gs(R.string.diaconn_g8_pumpalarm_vibrate))
+        categories.add(rh.gs(R.string.diaconn_g8_pumpalarm_silent))
         context.let { context ->
             val adapterCategories = ArrayAdapter(context, R.layout.spinner_centered, categories)
             binding.beepAndAlarm.adapter = adapterCategories
@@ -180,9 +180,9 @@ class DiaconnG8UserOptionsActivity : NoSplashAppCompatActivity() {
 
     private fun fillSoundSubCategory() {
         val categories = ArrayList<String>()
-        categories.add(resourceHelper.gs(R.string.diaconn_g8_pumpalarm_intensity_low))
-        categories.add(resourceHelper.gs(R.string.diaconn_g8_pumpalarm_intensity_middle))
-        categories.add(resourceHelper.gs(R.string.diaconn_g8_pumpalarm_intensity_high))
+        categories.add(rh.gs(R.string.diaconn_g8_pumpalarm_intensity_low))
+        categories.add(rh.gs(R.string.diaconn_g8_pumpalarm_intensity_middle))
+        categories.add(rh.gs(R.string.diaconn_g8_pumpalarm_intensity_high))
         context.let { context ->
             val adapterCategories = ArrayAdapter(context, R.layout.spinner_centered, categories)
             binding.alarmIntesity.adapter = adapterCategories

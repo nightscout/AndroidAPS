@@ -19,7 +19,7 @@ abstract class HistoryRecordDao {
     @Query("SELECT * from historyrecords")
     abstract fun allBlocking(): List<HistoryRecordEntity>
 
-    @Query("SELECT * from historyrecords WHERE createdAt >= :since")
+    @Query("SELECT * from historyrecords WHERE createdAt >= :since ORDER BY createdAt DESC")
     abstract fun allSince(since: Long): Single<List<HistoryRecordEntity>>
 
     @Query("SELECT * FROM historyrecords WHERE id = :id LIMIT 1")

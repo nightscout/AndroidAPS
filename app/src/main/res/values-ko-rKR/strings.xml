@@ -663,7 +663,6 @@
     <string name="error_adding_treatment_title">관리 데이터가 불완전합니다</string>
     <string name="maintenance_settings">정비 설정</string>
     <string name="maintenance_email">Email</string>
-    <string name="maintenance_encrypt_exported_prefs">내보내는 설정을 암호화하기</string>
     <string name="maintenance_amount">전송할 로그 수</string>
     <string name="maintenance">정비</string>
     <string name="maintenance_shortname">MAINT</string>
