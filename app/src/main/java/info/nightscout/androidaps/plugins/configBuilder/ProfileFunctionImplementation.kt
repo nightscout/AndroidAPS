@@ -141,9 +141,8 @@ class ProfileFunctionImplementation @Inject constructor(
         if (sp.getString(R.string.key_units, Constants.MGDL) == Constants.MGDL) GlucoseUnit.MGDL
         else GlucoseUnit.MMOL
 
-    override fun buildProfileSwitch(profileStore: ProfileStore, profileName: String, durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long): ProfileSwitch {
-        val pureProfile = profileStore.getSpecificProfile(profileName)
-            ?: throw InvalidParameterSpecException(profileName)
+    override fun buildProfileSwitch(profileStore: ProfileStore, profileName: String, durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long): ProfileSwitch? {
+        val pureProfile = profileStore.getSpecificProfile(profileName) ?: return null
         return ProfileSwitch(
             timestamp = timestamp,
             basalBlocks = pureProfile.basalBlocks,
@@ -161,8 +160,8 @@ class ProfileFunctionImplementation @Inject constructor(
         )
     }
 
-    override fun createProfileSwitch(profileStore: ProfileStore, profileName: String, durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long) {
-        val ps = buildProfileSwitch(profileStore, profileName, durationInMinutes, percentage, timeShiftInHours, timestamp)
+    override fun createProfileSwitch(profileStore: ProfileStore, profileName: String, durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long): Boolean {
+        val ps = buildProfileSwitch(profileStore, profileName, durationInMinutes, percentage, timeShiftInHours, timestamp)  ?: return false
         disposable += repository.runTransactionForResult(InsertOrUpdateProfileSwitch(ps))
             .subscribe({ result ->
                            result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted ProfileSwitch $it") }
@@ -170,12 +169,13 @@ class ProfileFunctionImplementation @Inject constructor(
                        }, {
                            aapsLogger.error(LTag.DATABASE, "Error while saving ProfileSwitch", it)
                        })
+        return true
     }
 
     override fun createProfileSwitch(durationInMinutes: Int, percentage: Int, timeShiftInHours: Int): Boolean {
         val profile = repository.getPermanentProfileSwitch(dateUtil.now()) ?: return false
         val profileStore = activePlugin.activeProfileSource.profile ?: return false
-        val ps = buildProfileSwitch(profileStore, profile.profileName, durationInMinutes, percentage, 0, dateUtil.now())
+        val ps = buildProfileSwitch(profileStore, profile.profileName, durationInMinutes, percentage, 0, dateUtil.now()) ?: return false
         val validity = ProfileSealed.PS(ps).isValid(
             resourceHelper.gs(info.nightscout.androidaps.automation.R.string.careportal_profileswitch),
             activePlugin.activePump,

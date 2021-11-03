@@ -45,7 +45,7 @@ class QuickWizardListActivity : NoSplashAppCompatActivity() {
             holder.from.text = dateUtil.timeString(quickWizard[position].validFromDate())
             holder.to.text = dateUtil.timeString(quickWizard[position].validToDate())
             holder.buttonText.text = quickWizard[position].buttonText()
-            holder.carbs.text = resourceHelper.gs(R.string.format_carbs, quickWizard[position].carbs())
+            holder.carbs.text = rh.gs(R.string.format_carbs, quickWizard[position].carbs())
         }
 
         override fun getItemCount(): Int = quickWizard.size()

@@ -678,6 +678,7 @@
     <string name="resettodefaults">Ripristina valori predefiniti</string>
     <string name="nsmalfunction">Malfunzionamento NSClient. Considera il riavvio di NS e NSClient.</string>
     <string name="time_offset">Offset</string>
+    <string name="bolus_reminder">Ricorda di fare il bolo</string>
     <string name="setupwizard_preferred_aps_mode">Modalità APS preferita</string>
     <string name="treatments_wizard_total_label">Totale</string>
     <string name="calculation_short">Calc</string>
@@ -844,6 +845,9 @@
     <string name="enablebolusadvisor_summary">Usa un promemoria per iniziare a mangiare invece del risultato del calcolatore durante la glicemia alta (\"pre-bolo\")</string>
     <string name="time_to_eat">Tempo di mangiare!\nEsegui il calcolatore e fai di nuovi i calcoli.</string>
     <string name="timetoeat">Tempo di mangiare</string>
+    <string name="bolusreminder">Promemoria bolo</string>
+    <string name="enablebolusreminder">Abilita promemoria bolo</string>
+    <string name="time_to_bolus">Tempo di fare un bolo!\nEsegui il calcolatore e fai di nuovi i calcoli.</string>
     <string name="fabric_upload_disabled">Caricamento log dei crash disabilitato!</string>
     <string name="graph_menu_divider_header">Grafico</string>
     <string name="chart_menu">Menu grafico</string>
@@ -886,4 +890,5 @@
     <string name="error_in_basal_values">Errore nei valori della basale</string>
     <string name="error_in_target_values">Errore nei valori del target</string>
     <string name="error_in_isf_values">Errore nei valori ISF</string>
+    <string name="run_question">Eseguire %s?</string>
 </resources>

@@ -32,6 +32,6 @@ class ConfigBuilderPluginTest : TestBase() {
 
     @Before
     fun prepareMock() {
-        configBuilderPlugin = ConfigBuilderPlugin(injector, aapsLogger, resourceHelper, sp, RxBus(aapsSchedulers), activePlugin, uel, pumpSync)
+        configBuilderPlugin = ConfigBuilderPlugin(injector, aapsLogger, resourceHelper, sp, RxBus(aapsSchedulers, aapsLogger), activePlugin, uel, pumpSync)
     }
 }

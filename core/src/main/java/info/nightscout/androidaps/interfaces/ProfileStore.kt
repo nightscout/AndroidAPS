@@ -31,8 +31,8 @@ class ProfileStore(val injector: HasAndroidInjector, val data: JSONObject, val d
         return null
     }
 
-    fun getCreatedAt(): Long {
-        val iso = JsonHelper.safeGetString(data, "created_at") ?: return 0
+    fun getStartDate(): Long {
+        val iso = JsonHelper.safeGetString(data, "startDate") ?: return 0
         return try {
             dateUtil.fromISODateString(iso)
         } catch (e: Exception) {
@@ -68,7 +68,7 @@ class ProfileStore(val injector: HasAndroidInjector, val data: JSONObject, val d
                 if (profile == null) {
                     JsonHelper.safeGetJSONObject(store, profileName, null)?.let { profileObject ->
                         profile = pureProfileFromJson(profileObject, dateUtil, defaultUnits)
-                        cachedObjects[profileName] = profile
+                        profile?.let { cachedObjects[profileName] = profile }
                     }
                 }
             }

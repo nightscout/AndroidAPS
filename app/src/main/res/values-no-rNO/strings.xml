@@ -678,6 +678,7 @@
     <string name="resettodefaults">Gjenopprett standardinnstillinger</string>
     <string name="nsmalfunction">NSClient feil. Vurder omstart av NS og NSClient.</string>
     <string name="time_offset">Tidsforskyvning</string>
+    <string name="bolus_reminder">Påminnelse til å gi bolus senere</string>
     <string name="setupwizard_preferred_aps_mode">Foretrukket APS modus</string>
     <string name="treatments_wizard_total_label">Total</string>
     <string name="calculation_short">Kalkyle</string>
@@ -844,6 +845,11 @@
     <string name="enablebolusadvisor_summary">Bruk en påminnelse om å spise senere enn kalkulator resultatet fra wizard ved høyt blodsukker (\"pre-bolus\")</string>
     <string name="time_to_eat">Nå må du spise!\Bruk bolus veiviseren og beregn på nytt.</string>
     <string name="timetoeat">Nå må du spise</string>
+    <string name="bolusreminder">Bolus påminnelse</string>
+    <string name="enablebolusreminder">Aktiver bolus påminnelse</string>
+    <string name="enablebolusreminder_summary">Bruk påminnelse for å sette bolus dosen senere med veiviseren
+        («post bolus»)</string>
+    <string name="time_to_bolus">Tid for bolus!\nStart bolus-veiviser og gjør beregning på nytt.</string>
     <string name="fabric_upload_disabled">Opplast av krasj logger er deaktivert!</string>
     <string name="graph_menu_divider_header">Graf</string>
     <string name="chart_menu">Diagram meny</string>
@@ -886,4 +892,5 @@
     <string name="error_in_basal_values">Feil i basalverdiene</string>
     <string name="error_in_target_values">Feil i BS mål verdiene</string>
     <string name="error_in_isf_values">Feil i IF verdien</string>
+    <string name="run_question">Kjør %s?</string>
 </resources>

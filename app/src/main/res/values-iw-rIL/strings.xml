@@ -247,7 +247,7 @@
     <string name="wear">Wear</string>
     <string name="resend_all_data">שלח מחדש את כל הנתונים</string>
     <string name="open_settings_on_wear">פתיחת הגדרות Wear</string>
-    <string name="basal_rate">ערכים בזאליים:</string>
+    <string name="basal_rate">מינונים בזאליים:</string>
     <string name="basalvaluebelowminimum">ערך הבסיס מתחת למינימום. פרופיל אינו מוגדר!</string>
     <string name="sms_actualbg">ערכי סוכר בדם:</string>
     <string name="sms_lastbg">ערכי סוכר אחרונים:</string>
@@ -892,4 +892,5 @@
     <string name="error_in_basal_values">שגיאה בערכי המינון הבזאלי</string>
     <string name="error_in_target_values">שגיאה בערכי המטרה</string>
     <string name="error_in_isf_values">שגיאה בערכי יחס התיקון</string>
+    <string name="run_question">להפעיל %s?</string>
 </resources>

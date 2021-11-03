@@ -66,7 +66,7 @@ class DashPodManagementActivity : NoSplashAppCompatActivity() {
         binding.buttonDiscardPod.setOnClickListener {
             OKDialog.showConfirmation(
                 this,
-                resourceHelper.gs(R.string.omnipod_common_pod_management_discard_pod_confirmation),
+                rh.gs(R.string.omnipod_common_pod_management_discard_pod_confirmation),
                 Thread {
                     podStateManager.reset()
                 }
@@ -83,10 +83,10 @@ class DashPodManagementActivity : NoSplashAppCompatActivity() {
                     override fun run() {
                         if (!result.success) {
                             displayErrorDialog(
-                                resourceHelper.gs(R.string.omnipod_common_warning),
-                                resourceHelper.gs(
+                                rh.gs(R.string.omnipod_common_warning),
+                                rh.gs(
                                     R.string.omnipod_common_two_strings_concatenated_by_colon,
-                                    resourceHelper.gs(R.string.omnipod_common_error_failed_to_play_test_beep),
+                                    rh.gs(R.string.omnipod_common_error_failed_to_play_test_beep),
                                     result.comment
                                 ),
                                 false

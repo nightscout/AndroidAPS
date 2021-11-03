@@ -28,7 +28,7 @@ import org.mockito.Mockito.`when`
 class LoopPluginTest : TestBase() {
 
     @Mock lateinit var sp: SP
-    private val rxBus: RxBus = RxBus(aapsSchedulers)
+    private val rxBus: RxBus = RxBus(aapsSchedulers, aapsLogger)
     @Mock lateinit var constraintChecker: ConstraintChecker
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var profileFunction: ProfileFunction

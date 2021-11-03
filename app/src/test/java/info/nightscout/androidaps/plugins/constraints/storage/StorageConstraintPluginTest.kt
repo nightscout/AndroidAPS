@@ -18,7 +18,7 @@ import org.mockito.Mockito.anyLong
 class StorageConstraintPluginTest : TestBase() {
 
     @Mock lateinit var resourceHelper: ResourceHelper
-    private val rxBusWrapper = RxBus(aapsSchedulers)
+    private val rxBusWrapper = RxBus(aapsSchedulers, aapsLogger)
 
     private lateinit var storageConstraintPlugin: StorageConstraintPlugin
 

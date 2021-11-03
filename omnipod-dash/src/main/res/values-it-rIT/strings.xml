@@ -3,6 +3,15 @@
     <!-- Omnipod Dash - Description -->
     <string name="omnipod_dash_pump_description">Integrazione del microinfusore Omnipod Dash (il nuovo modello, abilitato al Bluetooth e con la protezione ago di colore blu).</string>
     <!-- Omnipod Dash - Keys -->
+    <!-- Omnipod Dash - History -->
+    <string name="omnipod_dash_history_title">Storico pod</string>
+    <string name="omnipod_dash_history_item_description">Descrizione</string>
+    <string name="omnipod_dash_history_item_source">Origine</string>
+    <string name="omnipod_dash_history_item_date">Data</string>
+    <string name="omnipod_dash_history_type">Tipo:</string>
+    <string name="omnipod_dash_history_bolus_value">%1$.2f U</string>
+    <string name="omnipod_dash_history_bolus_value_with_carbs">%1$.2f U, CHO=%2$.1f g</string>
+    <string name="omnipod_dash_history_tbr_value">Tasso: %1$.2f U, durata: %2$d minuti</string>
     <!-- Omnipod Dash - Overview -->
     <string name="omnipod_dash_overview_bluetooth_status">Stato bluetooth</string>
     <string name="omnipod_dash_overview_bluetooth_address">Indirizzo bluetooth</string>
@@ -18,4 +27,10 @@
     <string name="omnipod_dash_found_too_many_pods">Trovati troppi pod per l\'attivazione</string>
     <string name="omnipod_dash_scan_failed">Nessun pod disponibile per l\'attivazione</string>
     <string name="omnipod_dash_generic_error">Errore generico: %1$s</string>
+    <string name="omnipod_dash_failed_to_send">Impossibile inviare il comando</string>
+    <string name="omnipod_dash_command_not_sent">Comando non inviato</string>
+    <string name="omnipod_dash_command_not_received_by_the_pod">Comando non ricevuto dal pod</string>
+    <string name="omnipod_dash_unknown">Stato sconosciuto per il comando</string>
+    <string name="omnipod_common_history_tbr_value">Tasso: %1$.2f U, durata: %2$d minuti</string>
+    <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
 </resources>

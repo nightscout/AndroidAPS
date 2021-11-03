@@ -80,7 +80,6 @@ class TreatmentsCareportalFragment : DaggerFragment() {
                     uel.log(Action.CAREPORTAL_NS_REFRESH, Sources.Treatments)
                     disposable += Completable.fromAction { repository.deleteAllTherapyEventsEntries() }
                         .subscribeOn(aapsSchedulers.io)
-                        .observeOn(aapsSchedulers.main)
                         .subscribeBy(
                             onError = { aapsLogger.error("Error removing entries", it) },
                             onComplete = { rxBus.send(EventTherapyEventChange()) }

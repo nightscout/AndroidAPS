@@ -45,7 +45,7 @@ open class TriggerTestBase : TestBaseWithProfile() {
         AndroidInjector {
             if (it is Trigger) {
                 it.aapsLogger = aapsLogger
-                it.rxBus = RxBus(aapsSchedulers)
+                it.rxBus = RxBus(aapsSchedulers, aapsLogger)
                 it.resourceHelper = resourceHelper
                 it.profileFunction = profileFunction
                 it.sp = sp

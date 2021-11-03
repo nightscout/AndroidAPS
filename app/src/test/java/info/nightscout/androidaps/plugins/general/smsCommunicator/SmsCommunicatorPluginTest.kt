@@ -225,6 +225,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         `when`(resourceHelper.gs(R.string.smscommunicator_pumpdisconnected)).thenReturn("Pump disconnected")
         `when`(resourceHelper.gs(R.string.smscommunicator_code_from_authenticator_for)).thenReturn("from Authenticator app for: %1\$s followed by PIN")
         `when`(resourceHelper.gs(R.string.patient_name_default)).thenReturn("User")
+        `when`(resourceHelper.gs(R.string.invalidprofile)).thenReturn("Invalid profile !!!")
         `when`(resourceHelper.gsNotLocalised(R.string.loopsuspended)).thenReturn("Loop suspended")
         `when`(resourceHelper.gsNotLocalised(R.string.smscommunicator_stoppedsms)).thenReturn("SMS Remote Service stopped. To reactivate it, use AAPS on master smartphone.")
         `when`(resourceHelper.gsNotLocalised(R.string.profileswitchcreated)).thenReturn("Profile switch created")
@@ -707,6 +708,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         Assert.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("To switch profile to someProfile 100% reply with code"))
 
         //PROFILE 1 90(OK)
+        `when`(profileFunction.createProfileSwitch(anyObject(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt(), anyLong())).thenReturn(true)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "PROFILE 1 90")
         smsCommunicatorPlugin.processSms(sms)

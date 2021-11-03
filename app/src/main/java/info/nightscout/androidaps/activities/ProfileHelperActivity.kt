@@ -140,7 +140,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
             val profile = if (typeSelected[tabSelected] == ProfileType.MOTOL_DEFAULT) defaultProfile.profile(age, tdd, weight, profileFunction.getUnits())
             else defaultProfileDPV.profile(age, tdd, pct / 100.0, profileFunction.getUnits())
             profile?.let {
-                OKDialog.showConfirmation(this, resourceHelper.gs(R.string.careportal_profileswitch), resourceHelper.gs(R.string.copytolocalprofile), Runnable {
+                OKDialog.showConfirmation(this, rh.gs(R.string.careportal_profileswitch), rh.gs(R.string.copytolocalprofile), Runnable {
                     localProfilePlugin.addProfile(localProfilePlugin.copyFrom(it, "DefaultProfile " +
                         dateUtil.dateAndTimeAndSecondsString(dateUtil.now())
                             .replace(".", "/")
@@ -242,8 +242,8 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
 
     private fun getProfileName(age: Double, tdd: Double, weight: Double, basalSumPct: Double, tab: Int): String =
         when (typeSelected[tab]) {
-            ProfileType.MOTOL_DEFAULT     -> if (tdd > 0) resourceHelper.gs(R.string.formatwithtdd, age, tdd) else resourceHelper.gs(R.string.formatwithweight, age, weight)
-            ProfileType.DPV_DEFAULT       -> resourceHelper.gs(R.string.formatwittddandpct, age, tdd, (basalSumPct * 100).toInt())
+            ProfileType.MOTOL_DEFAULT     -> if (tdd > 0) rh.gs(R.string.formatwithtdd, age, tdd) else rh.gs(R.string.formatwithweight, age, weight)
+            ProfileType.DPV_DEFAULT       -> rh.gs(R.string.formatwittddandpct, age, tdd, (basalSumPct * 100).toInt())
             ProfileType.CURRENT           -> profileFunction.getProfileName()
             ProfileType.AVAILABLE_PROFILE -> profileList[profileUsed[tab]].toString()
             ProfileType.PROFILE_SWITCH    -> profileSwitch[profileSwitchUsed[tab]].originalCustomizedName
@@ -263,16 +263,16 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
 
         tabSelected = tab
         typeSelected[tabSelected] = newContent
-        binding.profiletypeTitle.defaultHintTextColor = ColorStateList.valueOf(resourceHelper.gc(if (tab == 0) R.color.tabBgColorSelected else R.color.examinedProfile))
+        binding.profiletypeTitle.defaultHintTextColor = ColorStateList.valueOf(rh.gc(if (tab == 0) R.color.tabBgColorSelected else R.color.examinedProfile))
 
         // show new content
         binding.profiletype.setText(
             when (typeSelected[tabSelected]) {
-                ProfileType.MOTOL_DEFAULT     -> resourceHelper.gs(R.string.motoldefaultprofile)
-                ProfileType.DPV_DEFAULT       -> resourceHelper.gs(R.string.dpvdefaultprofile)
-                ProfileType.CURRENT           -> resourceHelper.gs(R.string.currentprofile)
-                ProfileType.AVAILABLE_PROFILE -> resourceHelper.gs(R.string.availableprofile)
-                ProfileType.PROFILE_SWITCH    -> resourceHelper.gs(R.string.careportal_profileswitch)
+                ProfileType.MOTOL_DEFAULT     -> rh.gs(R.string.motoldefaultprofile)
+                ProfileType.DPV_DEFAULT       -> rh.gs(R.string.dpvdefaultprofile)
+                ProfileType.CURRENT           -> rh.gs(R.string.currentprofile)
+                ProfileType.AVAILABLE_PROFILE -> rh.gs(R.string.availableprofile)
+                ProfileType.PROFILE_SWITCH    -> rh.gs(R.string.careportal_profileswitch)
             })
         binding.defaultProfile.visibility = (newContent == ProfileType.MOTOL_DEFAULT || newContent == ProfileType.DPV_DEFAULT).toVisibility()
         binding.currentProfile.visibility = (newContent == ProfileType.CURRENT).toVisibility()
@@ -293,7 +293,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
     }
 
     private fun setBackgroundColorOnSelected(tab: Int) {
-        binding.menu1.setBackgroundColor(resourceHelper.gc(if (tab == 1) R.color.defaultbackground else R.color.tempbasal))
-        binding.menu2.setBackgroundColor(resourceHelper.gc(if (tab == 0) R.color.defaultbackground else R.color.examinedProfile))
+        binding.menu1.setBackgroundColor(rh.gc(if (tab == 1) R.color.defaultbackground else R.color.tempbasal))
+        binding.menu2.setBackgroundColor(rh.gc(if (tab == 0) R.color.defaultbackground else R.color.examinedProfile))
     }
 }

@@ -85,8 +85,7 @@
                 android:drawablePadding="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_clone"
-                android:text="@string/reuse_profile_pct_hours" />
+                android:drawableStart="@drawable/ic_clone" />
 
         </LinearLayout>
 

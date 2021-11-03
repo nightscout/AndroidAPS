@@ -153,7 +153,7 @@ class DanaUserOptionsActivity : NoSplashAppCompatActivity() {
         commandQueue.setUserOptions(object : Callback() {
             override fun run() {
                 if (!result.success) {
-                    ErrorHelperActivity.runAlarm(context, result.comment, resourceHelper.gs(R.string.pumperror), R.raw.boluserror)
+                    ErrorHelperActivity.runAlarm(context, result.comment, rh.gs(R.string.pumperror), R.raw.boluserror)
                 }
             }
         })

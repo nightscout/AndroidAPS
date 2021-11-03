@@ -19,7 +19,7 @@ class AapsErosPodStateManagerTest : TestBase() {
 
     @Mock lateinit var sp: SP
 
-    private val rxBus = RxBus(TestAapsSchedulers())
+    private val rxBus = RxBus(TestAapsSchedulers(), aapsLogger)
 
     @Test fun times() {
         val timeZone = DateTimeZone.UTC

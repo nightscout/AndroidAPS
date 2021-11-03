@@ -122,6 +122,11 @@ sealed class ProfileSealed(
                     break
                 }
             }
+            if (!hardLimits.isInRange(basalAmount, 0.01, hardLimits.maxBasal())) {
+                validityCheck.isValid = false
+                validityCheck.reasons.add(resourceHelper.gs(R.string.value_out_of_hard_limits, resourceHelper.gs(R.string.basal_value), basalAmount))
+                break
+            }
             // Check for minimal basal value
             if (basalAmount < description.basalMinimumRate) {
                 basal.amount = description.basalMinimumRate
@@ -134,11 +139,6 @@ sealed class ProfileSealed(
                 if (sendNotifications) sendAboveMaximumNotification(from, rxBus, resourceHelper)
                 validityCheck.isValid = false
                 validityCheck.reasons.add(resourceHelper.gs(R.string.maximumbasalvaluereplaced, from))
-                break
-            }
-            if (!hardLimits.isInRange(basalAmount, 0.01, hardLimits.maxBasal())) {
-                validityCheck.isValid = false
-                validityCheck.reasons.add(resourceHelper.gs(R.string.value_out_of_hard_limits, resourceHelper.gs(R.string.basal_value), basalAmount))
                 break
             }
         }
@@ -160,9 +160,9 @@ sealed class ProfileSealed(
             }
         for (target in targetBlocks) {
             if (!hardLimits.isInRange(
-                    Profile.toMgdl(target.lowTarget, units),
-                    HardLimits.VERY_HARD_LIMIT_MIN_BG[0].toDouble(),
-                    HardLimits.VERY_HARD_LIMIT_MIN_BG[1].toDouble()
+                    toMgdl(target.lowTarget, units),
+                    HardLimits.VERY_HARD_LIMIT_MIN_BG[0],
+                    HardLimits.VERY_HARD_LIMIT_MIN_BG[1]
                 )
             ) {
                 validityCheck.isValid = false
@@ -170,9 +170,9 @@ sealed class ProfileSealed(
                 break
             }
             if (!hardLimits.isInRange(
-                    Profile.toMgdl(target.highTarget, units),
-                    HardLimits.VERY_HARD_LIMIT_MAX_BG[0].toDouble(),
-                    HardLimits.VERY_HARD_LIMIT_MAX_BG[1].toDouble()
+                    toMgdl(target.highTarget, units),
+                    HardLimits.VERY_HARD_LIMIT_MAX_BG[0],
+                    HardLimits.VERY_HARD_LIMIT_MAX_BG[1]
                 )
             ) {
                 validityCheck.isValid = false
@@ -212,6 +212,7 @@ sealed class ProfileSealed(
             if (getTargetLowMgdlTimeFromMidnight(seconds) !=  profile.getTargetLowMgdlTimeFromMidnight(seconds)) return false
             if (getTargetHighMgdlTimeFromMidnight(seconds) !=  profile.getTargetHighMgdlTimeFromMidnight(seconds)) return false
             if (dia != profile.dia) return false
+            if ((profile is EPS) && profileName != profile.value.originalProfileName) return false // handle profile name change too
         }
         return true
     }

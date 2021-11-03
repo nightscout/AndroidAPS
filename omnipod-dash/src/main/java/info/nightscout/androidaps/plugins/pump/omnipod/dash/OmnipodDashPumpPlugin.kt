@@ -310,8 +310,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
     )
 
     private fun checkPodKaput(): Completable = Completable.defer {
-        val tbr = pumpSync.expectedPumpState().temporaryBasal
         if (podStateManager.isPodKaput) {
+            val tbr = pumpSync.expectedPumpState().temporaryBasal
             if (tbr == null || tbr.rate != 0.0) {
                 pumpSync.syncTemporaryBasalWithPumpId(
                     timestamp = System.currentTimeMillis(),
@@ -340,20 +340,23 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     aapsLogger.info(LTag.PUMP, "syncBolusWithPumpId on CANCEL_BOLUS returned: $sync")
                 }
             }
-            showNotification(
-                Notification.OMNIPOD_POD_FAULT,
-                podStateManager.alarmType.toString(),
-                Notification.URGENT,
-                R.raw.boluserror
-            )
-            if (!podStateManager.alarmSynced) {
-                pumpSync.insertAnnouncement(
-                    error = podStateManager.alarmType?.toString() ?: "Unknown pod failure",
-                    pumpId = Random.Default.nextLong(),
-                    pumpType = PumpType.OMNIPOD_DASH,
-                    pumpSerial = serialNumber()
+
+            podStateManager.alarmType?.let {
+                showNotification(
+                    Notification.OMNIPOD_POD_FAULT,
+                    it.toString(),
+                    Notification.URGENT,
+                    R.raw.boluserror
                 )
-                podStateManager.alarmSynced = true
+                if (!podStateManager.alarmSynced) {
+                    pumpSync.insertAnnouncement(
+                        error = it.toString(),
+                        pumpId = Random.Default.nextLong(),
+                        pumpType = PumpType.OMNIPOD_DASH,
+                        pumpSerial = serialNumber()
+                    )
+                    podStateManager.alarmSynced = true
+                }
             }
         }
         Completable.complete()
@@ -1165,14 +1168,14 @@ class OmnipodDashPumpPlugin @Inject constructor(
         val ret = executeProgrammingCommand(
             historyEntry = history.createRecord(OmnipodCommandType.DEACTIVATE_POD),
             command = omnipodManager.deactivatePod().ignoreElements(),
-            checkNoActiveCommand = false,
-            post = createFakeTBRWhenNoActivePod(),
+            checkNoActiveCommand = false
         ).doOnComplete {
             if (podStateManager.activeCommand != null) {
                 success = false
+            } else {
+                podStateManager.reset()
+                rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_FAULT))
             }
-            podStateManager.reset()
-            rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_FAULT))
         }.toPumpEnactResult()
         if (!success) {
             ret.success(false)
