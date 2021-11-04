@@ -67,8 +67,8 @@ class GlunovoPlugin @Inject constructor(
             if (!glunovoPlugin.isEnabled(PluginType.BGSOURCE)) return Result.success(workDataOf("Result" to "Plugin not enabled"))
             val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
             glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
-                timestamp = inputData.getLong("com.glunovoservice.BgEstimate", 0),
-                value = inputData.getDouble("com.glunovoservice.BgEstimate", 0.0),
+                timestamp = inputData.getLong("Time", 0),
+                value = inputData.getDouble("BgEstimate", 0.0),
                 raw = 0.0,
                 noise = null,
                 trendArrow = GlucoseValue.TrendArrow.NONE,
