@@ -8,6 +8,7 @@ import info.nightscout.androidaps.plugins.pump.insight.connection_service.Insigh
 
 object ParameterBlockUtil {
 
+    @Suppress("Unchecked_Cast")
     @Throws(Exception::class)
     fun <T : ParameterBlock?> readParameterBlock(connectionService: InsightConnectionService, service: Service?, parameterBlock: Class<out T>?): T? {
         val readMessage = ReadParameterBlockMessage()

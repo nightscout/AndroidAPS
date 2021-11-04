@@ -8,6 +8,7 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.spongycastle.crypto.InvalidCipherTextException;
@@ -210,7 +211,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
         MessageRequest<T> messageRequest;
         if (getState() != InsightState.CONNECTED) {
             messageRequest = new MessageRequest<>(message);
-            messageRequest.exception = new DisconnectedException();
+            messageRequest.setException(new DisconnectedException());
             return messageRequest;
         }
         if (message instanceof WriteConfigurationBlockMessage) {
@@ -231,7 +232,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
     private void requestNextMessage() {
         while (messageQueue.getActiveRequest() == null && messageQueue.hasPendingMessages()) {
             messageQueue.nextRequest();
-            Service service = messageQueue.getActiveRequest().request.getService();
+            Service service = messageQueue.getActiveRequest().getRequest().getService();
             if (service != Service.CONNECTION && !activatedServices.contains(service)) {
                 if (service.getServicePassword() == null) {
                     ActivateServiceMessage activateServiceMessage = new ActivateServiceMessage();
@@ -245,7 +246,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
                     serviceChallengeMessage.setVersion(service.getVersion());
                     sendAppLayerMessage(serviceChallengeMessage);
                 }
-            } else sendAppLayerMessage(messageQueue.getActiveRequest().request);
+            } else sendAppLayerMessage(messageQueue.getActiveRequest().getRequest());
         }
     }
 
@@ -456,7 +457,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
     }
 
     @Override
-    public synchronized void onReceiveBytes(byte[] buffer, int bytesRead) {
+    public synchronized void onReceiveBytes(@NonNull byte[] buffer, int bytesRead) {
         this.buffer.putBytes(buffer, bytesRead);
         try {
             while (SatlMessage.hasCompletePacket(this.buffer)) {
@@ -733,8 +734,8 @@ public class InsightConnectionService extends DaggerService implements Connectio
             if (messageQueue.getActiveRequest() == null) {
                 handleException(new TooChattyPumpException());
             } else {
-                activatedServices.add(messageQueue.getActiveRequest().request.getService());
-                sendAppLayerMessage(messageQueue.getActiveRequest().request);
+                activatedServices.add(messageQueue.getActiveRequest().getRequest().getService());
+                sendAppLayerMessage(messageQueue.getActiveRequest().getRequest());
             }
         }
     }
@@ -758,7 +759,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
         if (messageQueue.getActiveRequest() == null) {
             handleException(new TooChattyPumpException());
         } else {
-            Service service = messageQueue.getActiveRequest().request.getService();
+            Service service = messageQueue.getActiveRequest().getRequest().getService();
             ActivateServiceMessage activateServiceMessage = new ActivateServiceMessage();
             activateServiceMessage.setServiceID(service.getId());
             activateServiceMessage.setVersion(service.getVersion());

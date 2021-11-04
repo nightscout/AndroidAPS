@@ -134,7 +134,7 @@ class InsightConnectionServiceXX : DaggerService(), ConnectionEstablisher.Callba
     @get:Synchronized val isPaired: Boolean             // pairingDataStorage is a lateinit var
         get() = pairingDataStorage.paired
 
-    @Synchronized fun <T : AppLayerMessage?> requestMessage(message: T): MessageRequest<T> {
+    @Synchronized fun <T : AppLayerMessage> requestMessage(message: T): MessageRequest<T> {
         val messageRequest: MessageRequest<T>
         if (state !== InsightState.CONNECTED) {
             messageRequest = MessageRequest(message)

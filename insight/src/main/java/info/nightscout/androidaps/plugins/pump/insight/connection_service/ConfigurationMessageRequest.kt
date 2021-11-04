@@ -4,7 +4,7 @@ import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.configuration.CloseConfigurationWriteSessionMessage
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.configuration.OpenConfigurationWriteSessionMessage
 
-class ConfigurationMessageRequest<T : AppLayerMessage?>(
+class ConfigurationMessageRequest<T : AppLayerMessage>(
     request: T,
     private val openRequest: MessageRequest<OpenConfigurationWriteSessionMessage>,
     private val closeRequest: MessageRequest<CloseConfigurationWriteSessionMessage>

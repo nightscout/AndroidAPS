@@ -6,22 +6,28 @@ import java.util.*
 
 class MessageQueue {
 
-    var activeRequest: MessageRequest<*>? = null
-    val messageRequests: MutableList<MessageRequest<*>> = ArrayList()
-    fun completeActiveRequest(response: AppLayerMessage?) {
+    var activeRequest: MessageRequest<out AppLayerMessage>? = null
+    val messageRequests: MutableList<MessageRequest<out AppLayerMessage>> = ArrayList()
+
+    @Suppress("Unchecked_Cast")
+    fun completeActiveRequest(response: AppLayerMessage) {
         if (activeRequest == null) return
-        synchronized(activeRequest!!) {
-            activeRequest!!.response = response
-            activeRequest!!.notifyAll()
+        (activeRequest as MessageRequest<AppLayerMessage>?)?.let { activeRequest ->
+            synchronized(activeRequest) {
+                activeRequest.response = response
+                activeRequest.notifyAll()
+            }
         }
         activeRequest = null
     }
 
     fun completeActiveRequest(exception: Exception?) {
         if (activeRequest == null) return
-        synchronized(activeRequest!!) {
-            activeRequest!!.exception = exception
-            activeRequest!!.notifyAll()
+        activeRequest?.let { activeRequest ->
+            synchronized(activeRequest) {
+                activeRequest.exception = exception
+                activeRequest.notifyAll()
+            }
         }
         activeRequest = null
     }
@@ -38,7 +44,7 @@ class MessageQueue {
 
     fun enqueueRequest(messageRequest: MessageRequest<*>) {
         messageRequests.add(messageRequest)
-        Collections.sort(messageRequests)
+        messageRequests.sort()
     }
 
     fun nextRequest() {
