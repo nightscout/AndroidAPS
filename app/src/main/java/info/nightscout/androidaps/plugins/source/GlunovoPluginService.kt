@@ -40,7 +40,6 @@ class GlunovoPluginService : Service() {
             bundle.putDouble("BgEstimate",value);
             //bundle.putDouble("Current",readingCurrent);
             intent.putExtra("bundle", bundle);
-            Log.d("ReceivedReceived", intent.toString())
 
             sendBroadcast(intent)
             handler.postDelayed(this, 180000)
