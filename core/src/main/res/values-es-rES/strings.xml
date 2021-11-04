@@ -304,6 +304,7 @@
     <string name="sunday_short">D</string>
     <!-- User Entry -->
     <string name="uel_bolus">BOLO</string>
+    <string name="uel_bolus_calculator">CALCULADOR DE BOLO</string>
     <string name="uel_bolus_advisor">RECOMENDADOR BOLO</string>
     <string name="uel_extended_bolus">BOLO EXTENDIDO</string>
     <string name="uel_superbolus_tbr">SUPERBOLO TBR</string>
