@@ -75,7 +75,7 @@ class CommandQueueTest : TestBaseWithProfile() {
         AndroidInjector {
             if (it is Command) {
                 it.aapsLogger = aapsLogger
-                it.resourceHelper = resourceHelper
+                it.rh = resourceHelper
             }
             if (it is CommandTempBasalPercent) {
                 it.activePlugin = activePlugin

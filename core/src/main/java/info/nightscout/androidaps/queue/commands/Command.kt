@@ -17,7 +17,7 @@ abstract class Command(
 ) {
 
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var repository: AppRepository
 
     enum class CommandType {
@@ -49,7 +49,7 @@ abstract class Command(
     fun cancel() {
         val result = PumpEnactResult(injector)
         result.success = false
-        result.comment = resourceHelper.gs(R.string.connectiontimedout)
+        result.comment = rh.gs(R.string.connectiontimedout)
         aapsLogger.debug(LTag.PUMPQUEUE, "Result cancel")
         callback?.result(result)?.run()
     }

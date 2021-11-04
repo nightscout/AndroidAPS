@@ -37,7 +37,7 @@ class QueueThreadTest : TestBaseWithProfile() {
         AndroidInjector {
             if (it is Command) {
                 it.aapsLogger = aapsLogger
-                it.resourceHelper = resourceHelper
+                it.rh = resourceHelper
             }
             if (it is CommandTempBasalAbsolute) {
                 it.activePlugin = activePlugin

@@ -37,5 +37,5 @@ class CommandSMBBolus(
         callback?.result(r)?.run()
     }
 
-    override fun status(): String = "SMB BOLUS ${resourceHelper.gs(R.string.formatinsulinunits, detailedBolusInfo.insulin)}"
+    override fun status(): String = "SMB BOLUS ${rh.gs(R.string.formatinsulinunits, detailedBolusInfo.insulin)}"
 }

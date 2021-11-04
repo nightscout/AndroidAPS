@@ -41,7 +41,7 @@ class CommandSetProfile constructor(
         val profileSwitch = repository.getEffectiveProfileSwitchActiveAt(dateUtil.now()).blockingGet()
         if (profileSwitch is ValueWrapper.Existing && r.enacted && hasNsId && !config.NSCLIENT) {
             if (smsCommunicatorPlugin.isEnabled(PluginType.GENERAL))
-                smsCommunicatorPlugin.sendNotificationToAllNumbers(resourceHelper.gs(R.string.profile_set_ok))
+                smsCommunicatorPlugin.sendNotificationToAllNumbers(rh.gs(R.string.profile_set_ok))
         }
     }
 
