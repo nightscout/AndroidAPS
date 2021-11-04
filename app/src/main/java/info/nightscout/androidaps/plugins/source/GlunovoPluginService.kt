@@ -26,6 +26,11 @@ class GlunovoPluginService : Service() {
             val cr = contentResolver.query(CONTENT_URI, null, null, null, null)
             val stringbuilder = StringBuilder()
             cr!!.moveToLast()
+            var i: Int =1
+            while (i<=10) {
+                cr!!.moveToPrevious()
+                i = i + 1
+            }
             var time = cr.getLong(0)
             var value = cr.getDouble(1) * 18.018 //value in mmol/l... transformed in mg/dl if value *18.018
             stringbuilder.append("$time   $value\n")
@@ -42,10 +47,9 @@ class GlunovoPluginService : Service() {
             intent.putExtra("bundle", bundle);
             sendBroadcast(intent)
 
-            var i: Int =1
-            while (i<=10)
+            while (i>0)
             {
-                cr!!.moveToPrevious()
+                cr!!.moveToNext()
                 time = cr.getLong(0)
                 value = cr.getDouble(1) * 18.018 //value in mmol/l... transformed in mg/dl if value *18.018
                 stringbuilder.append("$time   $value\n")
@@ -60,7 +64,7 @@ class GlunovoPluginService : Service() {
                 //bundle.putDouble("Current",readingCurrent);
                 intent.putExtra("bundle", bundle);
                 sendBroadcast(intent)
-                i=i + 1
+                i = i - 1
             }
             handler.postDelayed(this, 180000)
         }
