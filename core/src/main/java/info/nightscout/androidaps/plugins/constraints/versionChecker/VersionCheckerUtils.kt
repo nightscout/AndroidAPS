@@ -10,6 +10,7 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotifi
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.io.IOException
@@ -63,8 +64,8 @@ class VersionCheckerUtils @Inject constructor(
                     var endDate = sp.getLong(rh.gs(R.string.key_app_expiration) + "_" + config.VERSION_NAME, 0)
                     AllowedVersions().findByVersion(definition, config.VERSION_NAME)?.let { expirationJson ->
                         AllowedVersions().endDateToMilliseconds(expirationJson.getString("endDate"))?.let { ed ->
-                            sp.putLong(rh.gs(R.string.key_app_expiration) + "_" + config.VERSION_NAME, ed)
-                            endDate = ed
+                            endDate = ed + T.days(1).msecs()
+                            sp.putLong(rh.gs(R.string.key_app_expiration) + "_" + config.VERSION_NAME, endDate)
                         }
                     }
                     if (endDate != 0L) onExpiredVersionDetected(config.VERSION_NAME, dateUtil.dateString(endDate))
