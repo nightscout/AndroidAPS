@@ -219,7 +219,7 @@ class ConfigBuilderFragment : DaggerFragment() {
             if (matchIndex>=0) {
                 if (context != null) {
                     val context: Context? = this@ConfigBuilderFragment.context
-                    context.startService(Intent(context, GlunovoPluginService::class.java))
+                    context?.startService(Intent(context, GlunovoPluginService::class.java))
                 }
             }
         }
