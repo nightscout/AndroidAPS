@@ -14,7 +14,7 @@ class GlunovoPluginService : Service() {
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        //handler.postDelayed(mgetValue, 0)
+        handler.postDelayed(mgetValue, 180000)
         return super.onStartCommand(intent, flags, startId)
     }
 
@@ -26,7 +26,7 @@ class GlunovoPluginService : Service() {
             cr!!.moveToLast()
             crfirst!!.moveToFirst()
             var i: Int =1
-            while ((i<=30) && (cr != crfirst)) {
+            while ((i<=90) && (cr != crfirst)) {
                 cr.moveToPrevious()
                 i = i + 1
             }
@@ -55,7 +55,13 @@ class GlunovoPluginService : Service() {
             }
 
             val curtime = System.currentTimeMillis()
-            handler.postDelayed(this, 18000-(curtime-time))
+            if (time != curtime) {
+                handler.postDelayed(this, 180000-(curtime-time))
+            }
+            else
+            {
+                handler.postDelayed(this, 180000)
+            }
         }
     }
 
