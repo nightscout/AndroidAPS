@@ -30,18 +30,18 @@ class GlunovoPluginService : Service() {
             crfirst!!.moveToFirst()
             var i: Int =1
             while ((i<=90) && (cr != crfirst)) {
-                cr!!.moveToPrevious()
+                cr.moveToPrevious()
                 i = i + 1
             }
             var time : Long
             var value : Double
             var intent : Intent
             var bundle : Bundle
-            cr!!.moveToPrevious()
+            cr.moveToPrevious()
 
             while (i>1)
             {
-                cr!!.moveToNext()
+                cr.moveToNext()
                 time = cr.getLong(0)
                 value = cr.getDouble(1) * 18.018 //value in mmol/l... transformed in mg/dl if value *18.018
                 intent = Intent()
