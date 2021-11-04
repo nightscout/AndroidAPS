@@ -2,6 +2,10 @@
 <resources>
     <string name="dia_whatmeansdia">Què és cert sobre la DIA (Durada de l\'Acció de la Insulina)?</string>
     <string name="dia_label_exam">Durada de l\'Acció de la Insulina (DIA)</string>
+    <string name="dia_profile">Heu de configurar el valor de la DIA al vostre perfil.</string>
+    <string name="dia_minimumis5h">El mínim permès son 5 hores.</string>
+    <string name="dia_meaningisequaltodiapump">Si esteu satisfets amb el valor de la DIA que fèieu servir a la bomba abans d\'utilitzar AndroidAPS, no cal canviar-la quan comenceu amb el llaç.</string>
+    <string name="dia_valuemustbedetermined">Heu de determinar vosaltres mateixos el valor apropiat per la DIA.</string>
     <string name="exercise_label">Esport i objectius temporals</string>
     <string name="exercise_whattodo">Com es poden utilitzar els objectius temporals per ajudar el sistema a gestionar l\'esport aeròbic?</string>
     <string name="exercise_settt">Establir un objectiu glucèmic d\'activitat, prou temps abans de començar l\'esport.</string>
