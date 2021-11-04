@@ -56,14 +56,14 @@ class GlunovoPluginService : Service() {
                 sendBroadcast(intent)
                 i = i - 1
             }
-            handler.postDelayed(this, 180000)
+
             val curtime = Calendar.getInstance().time
-            //if () {
-            //    handler.postDelayed(this, 180000)
+            //if (time == curtime) {
+                handler.postDelayed(this, 180000)
             //}
             //else
             //{
-            //    handler.postDelayed(this, 180000)
+            //    handler.postDelayed(this, 180000-(curtime-time))
             //}
         }
     }
