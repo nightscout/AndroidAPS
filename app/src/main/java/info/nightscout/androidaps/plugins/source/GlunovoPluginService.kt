@@ -14,7 +14,8 @@ class GlunovoPluginService : Service() {
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        handler.postDelayed(mgetValue, 180000)
+        //handler.postDelayed(mgetValue, 180000)
+        mgetValue
         return super.onStartCommand(intent, flags, startId)
     }
 
@@ -55,7 +56,7 @@ class GlunovoPluginService : Service() {
             }
 
             val curtime = System.currentTimeMillis()
-            handler.postDelayed(this, 180000-(curtime-time))
+            handler.postDelayed(this, 18000-(curtime-time))
         }
     }
 
