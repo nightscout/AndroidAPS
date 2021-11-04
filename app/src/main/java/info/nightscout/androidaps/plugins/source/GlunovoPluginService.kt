@@ -30,7 +30,7 @@ class GlunovoPluginService : Service() {
                 cr.moveToPrevious()
                 i = i + 1
             }
-            var time : Long
+            var time : Long = cr.getLong(0)
             var value : Double
             var intent : Intent
             var bundle : Bundle
@@ -55,13 +55,13 @@ class GlunovoPluginService : Service() {
             }
 
             val curtime = System.currentTimeMillis()
-            //if (time == curtime) {
+            if (time == curtime) {
                 handler.postDelayed(this, 180000)
-            //}
-            //else
-            //{
-            //    handler.postDelayed(this, 180000-(curtime-time))
-            //}
+            }
+            else
+            {
+                handler.postDelayed(this, 180000-(curtime-time))
+            }
         }
     }
 
