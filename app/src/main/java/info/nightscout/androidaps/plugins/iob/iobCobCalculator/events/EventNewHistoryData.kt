@@ -2,5 +2,17 @@ package info.nightscout.androidaps.plugins.iob.iobCobCalculator.events
 
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.events.Event
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
+import java.text.DateFormat
 
-class EventNewHistoryData(val oldDataTimestamp: Long, val reloadBgData: Boolean, val newestGlucoseValue : GlucoseValue? = null) : Event()
+class EventNewHistoryData(val oldDataTimestamp: Long, val reloadBgData: Boolean, val newestGlucoseValue : GlucoseValue? = null) : Event() {
+
+    override fun toString(): String {
+        return super.toString() +
+            " " +
+            DateFormat.getDateInstance(DateFormat.SHORT).format(oldDataTimestamp) +
+            " " +
+            DateTime(oldDataTimestamp).toString(DateTimeFormat.forPattern("HH:mm:ss"))
+    }
+}
