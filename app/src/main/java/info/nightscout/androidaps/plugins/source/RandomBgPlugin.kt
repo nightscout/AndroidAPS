@@ -31,7 +31,7 @@ import kotlin.math.sin
 @Singleton
 class RandomBgPlugin @Inject constructor(
     injector: HasAndroidInjector,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     aapsLogger: AAPSLogger,
     private val virtualPumpPlugin: VirtualPumpPlugin,
     private val buildHelper: BuildHelper,
@@ -47,7 +47,7 @@ class RandomBgPlugin @Inject constructor(
     .shortName(R.string.randombg_short)
     .preferencesId(R.xml.pref_bgsource)
     .description(R.string.description_source_randombg),
-    aapsLogger, resourceHelper, injector
+    aapsLogger, rh, injector
 ), BgSource {
 
     private val loopHandler: Handler = Handler(HandlerThread(RandomBgPlugin::class.java.simpleName + "Handler").also { it.start() }.looper)

@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 class ChooseOperationDialog : DialogFragmentWithDate() {
 
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
 
     private var checkedIndex = -1
 
@@ -61,7 +61,7 @@ class ChooseOperationDialog : DialogFragmentWithDate() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        for (t in TriggerConnector.Type.labels(resourceHelper)) {
+        for (t in TriggerConnector.Type.labels(rh)) {
             val radioButton = RadioButton(context)
             radioButton.text = t
             binding.chooseOperationRadioGroup.addView(radioButton)

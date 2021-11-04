@@ -7,11 +7,11 @@ import org.junit.Test
 class ComparatorExistsTest : TriggerTestBase() {
 
     @Test fun labelsTest() {
-        Assert.assertEquals(2, ComparatorExists.Compare.labels(resourceHelper).size)
+        Assert.assertEquals(2, ComparatorExists.Compare.labels(rh).size)
     }
 
     @Test fun setValueTest() {
-        val c = ComparatorExists(resourceHelper)
+        val c = ComparatorExists(rh)
         c.value = ComparatorExists.Compare.NOT_EXISTS
         Assert.assertEquals(ComparatorExists.Compare.NOT_EXISTS, c.value)
     }

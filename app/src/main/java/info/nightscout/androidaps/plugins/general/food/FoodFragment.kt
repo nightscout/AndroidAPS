@@ -47,7 +47,7 @@ class FoodFragment : DaggerFragment() {
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var uel: UserEntryLogger
@@ -75,9 +75,9 @@ class FoodFragment : DaggerFragment() {
 
         binding.refreshFromNightscout.setOnClickListener {
             context?.let { context ->
-                OKDialog.showConfirmation(context, resourceHelper.gs(R.string.refresheventsfromnightscout) + " ?", {
-                    uel.log(Action.FOOD, Sources.Food, resourceHelper.gs(R.string.refresheventsfromnightscout),
-                        ValueWithUnit.SimpleString(resourceHelper.gsNotLocalised(R.string.refresheventsfromnightscout)))
+                OKDialog.showConfirmation(context, rh.gs(R.string.refresheventsfromnightscout) + " ?", {
+                    uel.log(Action.FOOD, Sources.Food, rh.gs(R.string.refresheventsfromnightscout),
+                        ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.refresheventsfromnightscout)))
                     disposable += Completable.fromAction { repository.deleteAllFoods() }
                         .subscribeOn(aapsSchedulers.io)
                         .observeOn(aapsSchedulers.main)
@@ -172,7 +172,7 @@ class FoodFragment : DaggerFragment() {
         }
         // make it unique
         val categories = ArrayList(catSet)
-        categories.add(0, resourceHelper.gs(R.string.none))
+        categories.add(0, rh.gs(R.string.none))
         context?.let { context ->
             val adapterCategories = ArrayAdapter(context, R.layout.spinner_centered, categories)
             binding.category.adapter = adapterCategories
@@ -182,7 +182,7 @@ class FoodFragment : DaggerFragment() {
     private fun fillSubcategories() {
         val categoryFilter = binding.category.selectedItem.toString()
         val subCatSet: MutableSet<CharSequence> = HashSet()
-        if (categoryFilter != resourceHelper.gs(R.string.none)) {
+        if (categoryFilter != rh.gs(R.string.none)) {
             for (f in unfiltered) {
                 if (f.category != null && f.category == categoryFilter) {
                     val subCategory = f.subCategory
@@ -192,7 +192,7 @@ class FoodFragment : DaggerFragment() {
         }
         // make it unique
         val subcategories = ArrayList(subCatSet)
-        subcategories.add(0, resourceHelper.gs(R.string.none))
+        subcategories.add(0, rh.gs(R.string.none))
         context?.let { context ->
             val adapterSubcategories = ArrayAdapter(context, R.layout.spinner_centered, subcategories)
             binding.subcategory.adapter = adapterSubcategories
@@ -202,14 +202,14 @@ class FoodFragment : DaggerFragment() {
     private fun filterData() {
         val textFilter = binding.filter.text.toString()
         val categoryFilter = binding.category.selectedItem?.toString()
-            ?: resourceHelper.gs(R.string.none)
+            ?: rh.gs(R.string.none)
         val subcategoryFilter = binding.subcategory.selectedItem?.toString()
-            ?: resourceHelper.gs(R.string.none)
+            ?: rh.gs(R.string.none)
         val newFiltered = ArrayList<Food>()
         for (f in unfiltered) {
             if (f.category == null || f.subCategory == null) continue
-            if (subcategoryFilter != resourceHelper.gs(R.string.none) && f.subCategory != subcategoryFilter) continue
-            if (categoryFilter != resourceHelper.gs(R.string.none) && f.category != categoryFilter) continue
+            if (subcategoryFilter != rh.gs(R.string.none) && f.subCategory != subcategoryFilter) continue
+            if (categoryFilter != rh.gs(R.string.none) && f.category != categoryFilter) continue
             if (textFilter != "" && !f.name.lowercase(Locale.getDefault()).contains(textFilter.lowercase(Locale.getDefault()))) continue
             newFiltered.add(f)
         }
@@ -232,12 +232,12 @@ class FoodFragment : DaggerFragment() {
             holder.binding.nsSign.visibility = (food.interfaceIDs.nightscoutId != null).toVisibility()
             holder.binding.name.text = food.name
             holder.binding.portion.text = food.portion.toString() + food.unit
-            holder.binding.carbs.text = food.carbs.toString() + resourceHelper.gs(R.string.shortgramm)
-            holder.binding.fat.text = resourceHelper.gs(R.string.shortfat) + ": " + food.fat + resourceHelper.gs(R.string.shortgramm)
+            holder.binding.carbs.text = food.carbs.toString() + rh.gs(R.string.shortgramm)
+            holder.binding.fat.text = rh.gs(R.string.shortfat) + ": " + food.fat + rh.gs(R.string.shortgramm)
             holder.binding.fat.visibility = food.fat.isNotZero().toVisibility()
-            holder.binding.protein.text = resourceHelper.gs(R.string.shortprotein) + ": " + food.protein + resourceHelper.gs(R.string.shortgramm)
+            holder.binding.protein.text = rh.gs(R.string.shortprotein) + ": " + food.protein + rh.gs(R.string.shortgramm)
             holder.binding.protein.visibility = food.protein.isNotZero().toVisibility()
-            holder.binding.energy.text = resourceHelper.gs(R.string.shortenergy) + ": " + food.energy + resourceHelper.gs(R.string.shortkilojoul)
+            holder.binding.energy.text = rh.gs(R.string.shortenergy) + ": " + food.energy + rh.gs(R.string.shortkilojoul)
             holder.binding.energy.visibility = food.energy.isNotZero().toVisibility()
             holder.binding.remove.tag = food
         }
@@ -252,7 +252,7 @@ class FoodFragment : DaggerFragment() {
                 binding.remove.setOnClickListener { v: View ->
                     val food = v.tag as Food
                     activity?.let { activity ->
-                        OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord) + "\n" + food.name, {
+                        OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord) + "\n" + food.name, {
                             uel.log(Action.FOOD_REMOVED, Sources.Food, food.name)
                             disposable += repository.runTransactionForResult(InvalidateFoodTransaction(food.id))
                                 .subscribe(

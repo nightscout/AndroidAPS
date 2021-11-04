@@ -37,7 +37,7 @@ open class DanaRTestBase : TestBase() {
     @Mock lateinit var danaRPlugin: DanaRPlugin
     @Mock lateinit var danaRKoreanPlugin: DanaRKoreanPlugin
     @Mock lateinit var danaRv2Plugin: DanaRv2Plugin
-    @Mock lateinit var resourceHelper: ResourceHelper
+    @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var configBuilder: ConfigBuilder
     @Mock lateinit var commandQueue: CommandQueueProvider
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
@@ -54,7 +54,7 @@ open class DanaRTestBase : TestBase() {
         `when`(activePlugin.activePump).thenReturn(testPumpPlugin)
         doNothing().`when`(danaRKoreanPlugin).setPluginEnabled(anyObject(), anyBoolean())
         doNothing().`when`(danaRPlugin).setPluginEnabled(anyObject(), anyBoolean())
-        `when`(resourceHelper.gs(ArgumentMatchers.anyInt())).thenReturn("")
+        `when`(rh.gs(ArgumentMatchers.anyInt())).thenReturn("")
     }
 
     val injector = HasAndroidInjector {
@@ -67,7 +67,7 @@ open class DanaRTestBase : TestBase() {
                 it.danaRKoreanPlugin = danaRKoreanPlugin
                 it.danaRv2Plugin = danaRv2Plugin
                 it.rxBus = RxBus(aapsSchedulers, aapsLogger)
-                it.resourceHelper = resourceHelper
+                it.rh = rh
                 it.activePlugin = activePlugin
                 it.configBuilder = configBuilder
                 it.detailedBolusInfoStorage = detailedBolusInfoStorage

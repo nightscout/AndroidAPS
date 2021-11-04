@@ -10,10 +10,10 @@ import org.mockito.Mockito.`when`
 class StaticLabelTest : TriggerTestBase() {
 
     @Test fun constructor() {
-        var sl = StaticLabel(resourceHelper, "any", TriggerDummy(injector))
+        var sl = StaticLabel(rh, "any", TriggerDummy(injector))
         Assert.assertEquals("any", sl.label)
-        `when`(resourceHelper.gs(R.string.pumplimit)).thenReturn("pump limit")
-        sl = StaticLabel(resourceHelper, R.string.pumplimit, TriggerDummy(injector))
+        `when`(rh.gs(R.string.pumplimit)).thenReturn("pump limit")
+        sl = StaticLabel(rh, R.string.pumplimit, TriggerDummy(injector))
         Assert.assertEquals("pump limit", sl.label)
     }
 }

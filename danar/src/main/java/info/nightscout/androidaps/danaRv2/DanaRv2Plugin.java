@@ -47,7 +47,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
 
     private final AAPSLogger aapsLogger;
     private final Context context;
-    private final ResourceHelper resourceHelper;
+    private final ResourceHelper rh;
     private final ConstraintChecker constraintChecker;
     private final DetailedBolusInfoStorage detailedBolusInfoStorage;
     private final TemporaryBasalStorage temporaryBasalStorage;
@@ -62,7 +62,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             AapsSchedulers aapsSchedulers,
             RxBus rxBus,
             Context context,
-            ResourceHelper resourceHelper,
+            ResourceHelper rh,
             ConstraintChecker constraintChecker,
             ActivePlugin activePlugin,
             SP sp,
@@ -74,10 +74,10 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             FabricPrivacy fabricPrivacy,
             PumpSync pumpSync
     ) {
-        super(injector, danaPump, resourceHelper, constraintChecker, aapsLogger, aapsSchedulers, commandQueue, rxBus, activePlugin, sp, dateUtil, pumpSync);
+        super(injector, danaPump, rh, constraintChecker, aapsLogger, aapsSchedulers, commandQueue, rxBus, activePlugin, sp, dateUtil, pumpSync);
         this.aapsLogger = aapsLogger;
         this.context = context;
-        this.resourceHelper = resourceHelper;
+        this.rh = rh;
         this.constraintChecker = constraintChecker;
         this.detailedBolusInfoStorage = detailedBolusInfoStorage;
         this.temporaryBasalStorage = temporaryBasalStorage;
@@ -127,7 +127,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     @NonNull
     @Override
     public String getName() {
-        return resourceHelper.gs(R.string.danarv2pump);
+        return rh.gs(R.string.danarv2pump);
     }
 
     @Override
@@ -194,7 +194,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
                     .bolusDelivered(t.insulin)
                     .carbsDelivered(detailedBolusInfo.carbs);
             if (!result.getSuccess())
-                result.comment(resourceHelper.gs(R.string.boluserrorcode, detailedBolusInfo.insulin, t.insulin, danaPump.getBolusStartErrorCode()));
+                result.comment(rh.gs(R.string.boluserrorcode, detailedBolusInfo.insulin, t.insulin, danaPump.getBolusStartErrorCode()));
             else
                 result.comment(R.string.ok);
             aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.getBolusDelivered());

@@ -27,7 +27,7 @@ import javax.inject.Inject
 class CalibrationDialog : DialogFragmentWithDate() {
 
     @Inject lateinit var injector: HasAndroidInjector
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var xdripCalibrations: XdripCalibrations
     @Inject lateinit var uel: UserEntryLogger
@@ -63,7 +63,7 @@ class CalibrationDialog : DialogFragmentWithDate() {
         else
             binding.bg.setParams(savedInstanceState?.getDouble("bg")
                 ?: bg, 36.0, 500.0, 1.0, DecimalFormat("0"), false, binding.okcancel.ok)
-        binding.units.text = if (units == GlucoseUnit.MMOL) resourceHelper.gs(R.string.mmol) else resourceHelper.gs(R.string.mgdl)
+        binding.units.text = if (units == GlucoseUnit.MMOL) rh.gs(R.string.mmol) else rh.gs(R.string.mgdl)
     }
 
     override fun onDestroyView() {
@@ -74,20 +74,20 @@ class CalibrationDialog : DialogFragmentWithDate() {
     override fun submit(): Boolean {
         if (_binding == null) return false
         val units = profileFunction.getUnits()
-        val unitLabel = if (units == GlucoseUnit.MMOL) resourceHelper.gs(R.string.mmol) else resourceHelper.gs(R.string.mgdl)
+        val unitLabel = if (units == GlucoseUnit.MMOL) rh.gs(R.string.mmol) else rh.gs(R.string.mgdl)
         val actions: LinkedList<String?> = LinkedList()
         val bg = binding.bg.value ?: return false
-        actions.add(resourceHelper.gs(R.string.treatments_wizard_bg_label) + ": " + Profile.toCurrentUnitsString(profileFunction, bg) + " " + unitLabel)
+        actions.add(rh.gs(R.string.treatments_wizard_bg_label) + ": " + Profile.toCurrentUnitsString(profileFunction, bg) + " " + unitLabel)
         if (bg > 0) {
             activity?.let { activity ->
-                OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.overview_calibration), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
+                OKDialog.showConfirmation(activity, rh.gs(R.string.overview_calibration), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     uel.log(Action.CALIBRATION, Sources.CalibrationDialog, ValueWithUnit.fromGlucoseUnit(bg, units.asText))
                     xdripCalibrations.sendIntent(bg)
                 })
             }
         } else
             activity?.let { activity ->
-                OKDialog.show(activity, resourceHelper.gs(R.string.overview_calibration), resourceHelper.gs(R.string.no_action_selected))
+                OKDialog.show(activity, rh.gs(R.string.overview_calibration), rh.gs(R.string.no_action_selected))
             }
         return true
     }

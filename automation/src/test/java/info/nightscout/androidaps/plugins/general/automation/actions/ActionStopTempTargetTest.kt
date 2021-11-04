@@ -18,7 +18,7 @@ class ActionStopTempTargetTest : ActionsTestBase() {
 
     @Before
     fun setup() {
-        `when`(resourceHelper.gs(R.string.stoptemptarget)).thenReturn("Stop temp target")
+        `when`(rh.gs(R.string.stoptemptarget)).thenReturn("Stop temp target")
 
         sut = ActionStopTempTarget(injector)
     }

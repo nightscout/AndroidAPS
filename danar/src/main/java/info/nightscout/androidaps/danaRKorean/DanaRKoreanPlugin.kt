@@ -41,7 +41,7 @@ class DanaRKoreanPlugin @Inject constructor(
     aapsSchedulers: AapsSchedulers,
     rxBus: RxBus,
     private val context: Context,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     constraintChecker: ConstraintChecker,
     activePlugin: ActivePlugin,
     sp: SP,
@@ -50,7 +50,7 @@ class DanaRKoreanPlugin @Inject constructor(
     dateUtil: DateUtil,
     private val fabricPrivacy: FabricPrivacy,
     pumpSync: PumpSync
-) : AbstractDanaRPlugin(injector, danaPump, resourceHelper, constraintChecker, aapsLogger, aapsSchedulers, commandQueue, rxBus, activePlugin, sp, dateUtil, pumpSync) {
+) : AbstractDanaRPlugin(injector, danaPump, rh, constraintChecker, aapsLogger, aapsSchedulers, commandQueue, rxBus, activePlugin, sp, dateUtil, pumpSync) {
 
     init {
         pluginDescription.description(R.string.description_pump_dana_r_korean)
@@ -100,7 +100,7 @@ class DanaRKoreanPlugin @Inject constructor(
 
     // Plugin base interface
     override val name: String
-        get() = resourceHelper.gs(R.string.danarkoreanpump)
+        get() = rh.gs(R.string.danarkoreanpump)
     override val preferencesId: Int
         get() = R.xml.pref_danarkorean
 
@@ -130,7 +130,7 @@ class DanaRKoreanPlugin @Inject constructor(
             val result = PumpEnactResult(injector)
             result.success(connectionOK && abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.bolusStep)
                 .bolusDelivered(t.insulin)
-            if (!result.success) result.comment(resourceHelper.gs(R.string.boluserrorcode, detailedBolusInfo.insulin, t.insulin, danaPump.bolusStartErrorCode)) else result.comment(R.string.ok)
+            if (!result.success) result.comment(rh.gs(R.string.boluserrorcode, detailedBolusInfo.insulin, t.insulin, danaPump.bolusStartErrorCode)) else result.comment(R.string.ok)
             aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
             detailedBolusInfo.insulin = t.insulin
             detailedBolusInfo.timestamp = dateUtil.now()

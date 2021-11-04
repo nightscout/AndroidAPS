@@ -7,7 +7,7 @@ import android.widget.TextView
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 
 class LabelWithElement(
-    private val resourceHelper: ResourceHelper,
+    private val rh: ResourceHelper,
     var textPre: String = "",
     var textPost: String = "",
     var element: Element? = null,
@@ -15,7 +15,7 @@ class LabelWithElement(
 
     override fun addToLayout(root: LinearLayout) { // container layout
         // text view pre element
-        val px = resourceHelper.dpToPx(1)
+        val px = rh.dpToPx(1)
 
         root.addView(
             TextView(root.context).apply {

@@ -24,7 +24,7 @@ class RunningConfiguration @Inject constructor(
     private val sp: SP,
     private val aapsLogger: AAPSLogger,
     private val config: Config,
-    private val resourceHelper: ResourceHelper,
+    private val rh: ResourceHelper,
     private val rxBus: RxBus
 ) {
 
@@ -61,7 +61,7 @@ class RunningConfiguration @Inject constructor(
         if (configuration.has("version")) {
             rxBus.send(EventNSClientNewLog("VERSION", "Received AndroidAPS version  ${configuration.getString("version")}"))
             if (config.VERSION_NAME.startsWith(configuration.getString("version")).not()) {
-                rxBus.send(EventNewNotification(Notification(Notification.NSCLIENT_VERSION_DOES_NOT_MATCH, resourceHelper.gs(R.string.nsclient_version_does_not_match), Notification.NORMAL)))
+                rxBus.send(EventNewNotification(Notification(Notification.NSCLIENT_VERSION_DOES_NOT_MATCH, rh.gs(R.string.nsclient_version_does_not_match), Notification.NORMAL)))
             }
         }
         if (configuration.has("insulin")) {

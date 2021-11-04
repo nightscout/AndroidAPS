@@ -10,9 +10,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AlertUtils @Inject constructor(private val resourceHelper: ResourceHelper) {
+class AlertUtils @Inject constructor(private val rh: ResourceHelper) {
 
-    fun getAlertCode(alertType: AlertType) = resourceHelper.gs(when (alertType) {
+    fun getAlertCode(alertType: AlertType) = rh.gs(when (alertType) {
         AlertType.REMINDER_01    -> R.string.alert_r1_code
         AlertType.REMINDER_02    -> R.string.alert_r2_code
         AlertType.REMINDER_03    -> R.string.alert_r3_code
@@ -41,7 +41,7 @@ class AlertUtils @Inject constructor(private val resourceHelper: ResourceHelper)
         AlertType.ERROR_13       -> R.string.alert_e13_code
     })
 
-    fun getAlertTitle(alertType: AlertType) = resourceHelper.gs(when (alertType) {
+    fun getAlertTitle(alertType: AlertType) = rh.gs(when (alertType) {
         AlertType.REMINDER_01    -> R.string.alert_r1_title
         AlertType.REMINDER_02    -> R.string.alert_r2_title
         AlertType.REMINDER_03    -> R.string.alert_r3_title
@@ -79,28 +79,28 @@ class AlertUtils @Inject constructor(private val resourceHelper: ResourceHelper)
             AlertType.REMINDER_02    -> null
             AlertType.REMINDER_03    -> null
             AlertType.REMINDER_04    -> null
-            AlertType.REMINDER_07    -> resourceHelper.gs(R.string.alert_r7_description, alert.tbrAmount, DecimalFormat("#0").format(hours.toLong()) + ":" + DecimalFormat("00").format(minutes.toLong()))
-            AlertType.WARNING_31     -> resourceHelper.gs(R.string.alert_w31_description, decimalFormat.format(alert.cartridgeAmount))
-            AlertType.WARNING_32     -> resourceHelper.gs(R.string.alert_w32_description)
-            AlertType.WARNING_33     -> resourceHelper.gs(R.string.alert_w33_description)
-            AlertType.WARNING_34     -> resourceHelper.gs(R.string.alert_w34_description)
-            AlertType.WARNING_36     -> resourceHelper.gs(R.string.alert_w36_description, alert.tbrAmount, DecimalFormat("#0").format(hours.toLong()) + ":" + DecimalFormat("00").format(minutes.toLong()))
-            AlertType.WARNING_38     -> resourceHelper.gs(R.string.alert_w38_description, decimalFormat.format(alert.programmedBolusAmount), decimalFormat.format(alert.deliveredBolusAmount))
+            AlertType.REMINDER_07    -> rh.gs(R.string.alert_r7_description, alert.tbrAmount, DecimalFormat("#0").format(hours.toLong()) + ":" + DecimalFormat("00").format(minutes.toLong()))
+            AlertType.WARNING_31     -> rh.gs(R.string.alert_w31_description, decimalFormat.format(alert.cartridgeAmount))
+            AlertType.WARNING_32     -> rh.gs(R.string.alert_w32_description)
+            AlertType.WARNING_33     -> rh.gs(R.string.alert_w33_description)
+            AlertType.WARNING_34     -> rh.gs(R.string.alert_w34_description)
+            AlertType.WARNING_36     -> rh.gs(R.string.alert_w36_description, alert.tbrAmount, DecimalFormat("#0").format(hours.toLong()) + ":" + DecimalFormat("00").format(minutes.toLong()))
+            AlertType.WARNING_38     -> rh.gs(R.string.alert_w38_description, decimalFormat.format(alert.programmedBolusAmount), decimalFormat.format(alert.deliveredBolusAmount))
             AlertType.WARNING_39     -> null
-            AlertType.MAINTENANCE_20 -> resourceHelper.gs(R.string.alert_m20_description)
-            AlertType.MAINTENANCE_21 -> resourceHelper.gs(R.string.alert_m21_description)
-            AlertType.MAINTENANCE_22 -> resourceHelper.gs(R.string.alert_m22_description)
-            AlertType.MAINTENANCE_23 -> resourceHelper.gs(R.string.alert_m23_description)
-            AlertType.MAINTENANCE_24 -> resourceHelper.gs(R.string.alert_m24_description)
-            AlertType.MAINTENANCE_25 -> resourceHelper.gs(R.string.alert_m25_description)
-            AlertType.MAINTENANCE_26 -> resourceHelper.gs(R.string.alert_m26_description)
-            AlertType.MAINTENANCE_27 -> resourceHelper.gs(R.string.alert_m27_description)
-            AlertType.MAINTENANCE_28 -> resourceHelper.gs(R.string.alert_m28_description)
-            AlertType.MAINTENANCE_29 -> resourceHelper.gs(R.string.alert_m29_description)
-            AlertType.MAINTENANCE_30 -> resourceHelper.gs(R.string.alert_m30_description)
-            AlertType.ERROR_6        -> resourceHelper.gs(R.string.alert_e6_description)
-            AlertType.ERROR_10       -> resourceHelper.gs(R.string.alert_e10_description)
-            AlertType.ERROR_13       -> resourceHelper.gs(R.string.alert_e13_description)
+            AlertType.MAINTENANCE_20 -> rh.gs(R.string.alert_m20_description)
+            AlertType.MAINTENANCE_21 -> rh.gs(R.string.alert_m21_description)
+            AlertType.MAINTENANCE_22 -> rh.gs(R.string.alert_m22_description)
+            AlertType.MAINTENANCE_23 -> rh.gs(R.string.alert_m23_description)
+            AlertType.MAINTENANCE_24 -> rh.gs(R.string.alert_m24_description)
+            AlertType.MAINTENANCE_25 -> rh.gs(R.string.alert_m25_description)
+            AlertType.MAINTENANCE_26 -> rh.gs(R.string.alert_m26_description)
+            AlertType.MAINTENANCE_27 -> rh.gs(R.string.alert_m27_description)
+            AlertType.MAINTENANCE_28 -> rh.gs(R.string.alert_m28_description)
+            AlertType.MAINTENANCE_29 -> rh.gs(R.string.alert_m29_description)
+            AlertType.MAINTENANCE_30 -> rh.gs(R.string.alert_m30_description)
+            AlertType.ERROR_6        -> rh.gs(R.string.alert_e6_description)
+            AlertType.ERROR_10       -> rh.gs(R.string.alert_e10_description)
+            AlertType.ERROR_13       -> rh.gs(R.string.alert_e13_description)
         }
     }
 

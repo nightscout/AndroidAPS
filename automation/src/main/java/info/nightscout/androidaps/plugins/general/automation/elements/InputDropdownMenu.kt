@@ -10,17 +10,17 @@ import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import java.util.*
 
-class InputDropdownMenu(private val resourceHelper: ResourceHelper) : Element() {
+class InputDropdownMenu(private val rh: ResourceHelper) : Element() {
 
     private var itemList: ArrayList<CharSequence> = ArrayList()
     var value: String = ""
 
-    constructor(resourceHelper: ResourceHelper, name: String) : this(resourceHelper) {
+    constructor(rh: ResourceHelper, name: String) : this(rh) {
         value = name
     }
 
     @Suppress("unused")
-    constructor(resourceHelper: ResourceHelper, another: InputDropdownMenu) : this(resourceHelper) {
+    constructor(rh: ResourceHelper, another: InputDropdownMenu) : this(rh) {
         value = another.value
     }
 
@@ -31,7 +31,7 @@ class InputDropdownMenu(private val resourceHelper: ResourceHelper) : Element() 
                     setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 }
                 layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).also {
-                    it.setMargins(0, resourceHelper.dpToPx(4), 0, resourceHelper.dpToPx(4))
+                    it.setMargins(0, rh.dpToPx(4), 0, rh.dpToPx(4))
                 }
 
                 onItemSelectedListener = object : AdapterView.OnItemSelectedListener {

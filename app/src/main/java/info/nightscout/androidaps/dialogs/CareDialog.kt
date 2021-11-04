@@ -41,7 +41,7 @@ class CareDialog : DialogFragmentWithDate() {
 
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var ctx: Context
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var translator: Translator
     @Inject lateinit var uel: UserEntryLogger
@@ -111,7 +111,7 @@ class CareDialog : DialogFragmentWithDate() {
             EventType.QUESTION       -> R.drawable.ic_cp_question
             EventType.ANNOUNCEMENT   -> R.drawable.ic_cp_announcement
         })
-        binding.title.text = resourceHelper.gs(when (options) {
+        binding.title.text = rh.gs(when (options) {
             EventType.BGCHECK        -> R.string.careportal_bgcheck
             EventType.SENSOR_INSERT  -> R.string.careportal_cgmsensorinsert
             EventType.BATTERY_CHANGE -> R.string.careportal_pumpbatterychange
@@ -153,11 +153,11 @@ class CareDialog : DialogFragmentWithDate() {
         }
 
         if (profileFunction.getUnits() == GlucoseUnit.MMOL) {
-            binding.bgunits.text = resourceHelper.gs(R.string.mmol)
+            binding.bgunits.text = rh.gs(R.string.mmol)
             binding.bg.setParams(savedInstanceState?.getDouble("bg")
                 ?: bg, 2.0, 30.0, 0.1, DecimalFormat("0.0"), false, binding.okcancel.ok, bgTextWatcher)
         } else {
-            binding.bgunits.text = resourceHelper.gs(R.string.mgdl)
+            binding.bgunits.text = rh.gs(R.string.mgdl)
             binding.bg.setParams(savedInstanceState?.getDouble("bg")
                 ?: bg, 36.0, 500.0, 1.0, DecimalFormat("0"), false, binding.okcancel.ok, bgTextWatcher)
         }
@@ -200,25 +200,25 @@ class CareDialog : DialogFragmentWithDate() {
                     binding.sensor.isChecked -> TherapyEvent.MeterType.SENSOR
                     else                     -> TherapyEvent.MeterType.MANUAL
                 }
-            actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_glucosetype) + ": " + translator.translate(meterType))
-            actions.add(resourceHelper.gs(R.string.treatments_wizard_bg_label) + ": " + Profile.toCurrentUnitsString(profileFunction, binding.bg.value) + " " + resourceHelper.gs(unitResId))
+            actions.add(rh.gs(R.string.careportal_newnstreatment_glucosetype) + ": " + translator.translate(meterType))
+            actions.add(rh.gs(R.string.treatments_wizard_bg_label) + ": " + Profile.toCurrentUnitsString(profileFunction, binding.bg.value) + " " + rh.gs(unitResId))
             therapyEvent.glucoseType = meterType
             therapyEvent.glucose = binding.bg.value
             valuesWithUnit.add(ValueWithUnit.fromGlucoseUnit(binding.bg.value.toDouble(), profileFunction.getUnits().asText))
             valuesWithUnit.add(ValueWithUnit.TherapyEventMeterType(meterType))
         }
         if (options == EventType.NOTE || options == EventType.EXERCISE) {
-            actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_duration_label) + ": " + resourceHelper.gs(R.string.format_mins, binding.duration.value.toInt()))
+            actions.add(rh.gs(R.string.careportal_newnstreatment_duration_label) + ": " + rh.gs(R.string.format_mins, binding.duration.value.toInt()))
             therapyEvent.duration = T.mins(binding.duration.value.toLong()).msecs()
             valuesWithUnit.add(ValueWithUnit.Minute(binding.duration.value.toInt()).takeIf { !binding.duration.value.equals(0.0) } )
         }
         val notes = binding.notesLayout.notes.text.toString()
         if (notes.isNotEmpty()) {
-            actions.add(resourceHelper.gs(R.string.notes_label) + ": " + notes)
+            actions.add(rh.gs(R.string.notes_label) + ": " + notes)
             therapyEvent.note = notes
         }
 
-        if (eventTimeChanged) actions.add(resourceHelper.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
+        if (eventTimeChanged) actions.add(rh.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
 
         therapyEvent.enteredBy = enteredBy
 
@@ -233,7 +233,7 @@ class CareDialog : DialogFragmentWithDate() {
         }
 
         activity?.let { activity ->
-            OKDialog.showConfirmation(activity, resourceHelper.gs(event), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
+            OKDialog.showConfirmation(activity, rh.gs(event), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                 disposable += repository.runTransactionForResult(InsertIfNewByTimestampTherapyEventTransaction(therapyEvent))
                     .subscribe(
                         { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted therapy event $it") } },

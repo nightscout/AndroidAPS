@@ -35,7 +35,7 @@ class OpenAPSAMAPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val constraintChecker: ConstraintChecker,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     private val profileFunction: ProfileFunction,
     private val context: Context,
     private val activePlugin: ActivePlugin,
@@ -54,7 +54,7 @@ class OpenAPSAMAPlugin @Inject constructor(
     .shortName(R.string.oaps_shortname)
     .preferencesId(R.xml.pref_openapsama)
     .description(R.string.description_ama),
-    aapsLogger, resourceHelper, injector
+    aapsLogger, rh, injector
 ), APS {
 
     // last values
@@ -86,18 +86,18 @@ class OpenAPSAMAPlugin @Inject constructor(
         val profile = profileFunction.getProfile()
         val pump = activePlugin.activePump
         if (profile == null) {
-            rxBus.send(EventOpenAPSUpdateResultGui(resourceHelper.gs(R.string.noprofileselected)))
-            aapsLogger.debug(LTag.APS, resourceHelper.gs(R.string.noprofileselected))
+            rxBus.send(EventOpenAPSUpdateResultGui(rh.gs(R.string.noprofileselected)))
+            aapsLogger.debug(LTag.APS, rh.gs(R.string.noprofileselected))
             return
         }
         if (!isEnabled(PluginType.APS)) {
-            rxBus.send(EventOpenAPSUpdateResultGui(resourceHelper.gs(R.string.openapsma_disabled)))
-            aapsLogger.debug(LTag.APS, resourceHelper.gs(R.string.openapsma_disabled))
+            rxBus.send(EventOpenAPSUpdateResultGui(rh.gs(R.string.openapsma_disabled)))
+            aapsLogger.debug(LTag.APS, rh.gs(R.string.openapsma_disabled))
             return
         }
         if (glucoseStatus == null) {
-            rxBus.send(EventOpenAPSUpdateResultGui(resourceHelper.gs(R.string.openapsma_noglucosedata)))
-            aapsLogger.debug(LTag.APS, resourceHelper.gs(R.string.openapsma_noglucosedata))
+            rxBus.send(EventOpenAPSUpdateResultGui(rh.gs(R.string.openapsma_noglucosedata)))
+            aapsLogger.debug(LTag.APS, rh.gs(R.string.openapsma_noglucosedata))
             return
         }
         val inputConstraints = Constraint(0.0) // fake. only for collecting all results
@@ -134,7 +134,7 @@ class OpenAPSAMAPlugin @Inject constructor(
         if (constraintChecker.isAutosensModeEnabled().value()) {
             val autosensData = iobCobCalculator.getLastAutosensDataWithWaitForCalculationFinish("OpenAPSPlugin")
             if (autosensData == null) {
-                rxBus.send(EventOpenAPSUpdateResultGui(resourceHelper.gs(R.string.openaps_noasdata)))
+                rxBus.send(EventOpenAPSUpdateResultGui(rh.gs(R.string.openaps_noasdata)))
                 return
             }
             lastAutosensResult = autosensData.autosensResult

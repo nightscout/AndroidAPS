@@ -22,7 +22,7 @@ import javax.inject.Singleton
 class VersionCheckerUtils @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val sp: SP,
-    private val resourceHelper: ResourceHelper,
+    private val rh: ResourceHelper,
     private val rxBus: RxBus,
     private val config: Config,
     private val receiverStatusStore: ReceiverStatusStore,
@@ -60,10 +60,10 @@ class VersionCheckerUtils @Inject constructor(
                     compareWithCurrentVersion(version, config.VERSION_NAME)
 
                     // App expiration
-                    var endDate = sp.getLong(resourceHelper.gs(R.string.key_app_expiration) + "_" + config.VERSION_NAME, 0)
+                    var endDate = sp.getLong(rh.gs(R.string.key_app_expiration) + "_" + config.VERSION_NAME, 0)
                     AllowedVersions().findByVersion(definition, config.VERSION_NAME)?.let { expirationJson ->
                         AllowedVersions().endDateToMilliseconds(expirationJson.getString("endDate"))?.let { ed ->
-                            sp.putLong(resourceHelper.gs(R.string.key_app_expiration) + "_" + config.VERSION_NAME, ed)
+                            sp.putLong(rh.gs(R.string.key_app_expiration) + "_" + config.VERSION_NAME, ed)
                             endDate = ed
                         }
                     }
@@ -127,7 +127,7 @@ class VersionCheckerUtils @Inject constructor(
             aapsLogger.debug(LTag.CORE, "Version $currentVersion outdated. Found $newVersion")
             val notification = Notification(
                 Notification.NEW_VERSION_DETECTED,
-                resourceHelper.gs(R.string.versionavailable, newVersion.toString()),
+                rh.gs(R.string.versionavailable, newVersion.toString()),
                 Notification.LOW
             )
             rxBus.send(EventNewNotification(notification))
@@ -141,7 +141,7 @@ class VersionCheckerUtils @Inject constructor(
             aapsLogger.debug(LTag.CORE, "Version $currentVersion expired.")
             val notification = Notification(
                 Notification.VERSION_EXPIRE,
-                resourceHelper.gs(R.string.version_expire, currentVersion, endDate),
+                rh.gs(R.string.version_expire, currentVersion, endDate),
                 Notification.LOW
             )
             rxBus.send(EventNewNotification(notification))

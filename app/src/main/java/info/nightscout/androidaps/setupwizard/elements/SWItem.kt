@@ -24,7 +24,7 @@ open class SWItem(val injector: HasAndroidInjector, var type: Type) {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var sp: SP
     @Inject lateinit var passwordCheck: PasswordCheck
 
@@ -75,7 +75,7 @@ open class SWItem(val injector: HasAndroidInjector, var type: Type) {
 
             override fun run() {
                 aapsLogger.debug(LTag.CORE, "Firing EventPreferenceChange")
-                rxBus.send(EventPreferenceChange(resourceHelper, preferenceId))
+                rxBus.send(EventPreferenceChange(rh, preferenceId))
                 rxBus.send(EventSWUpdate(false))
                 scheduledEventPost = null
             }

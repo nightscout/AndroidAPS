@@ -29,7 +29,7 @@ class PumpSyncImplementation @Inject constructor(
     private val dateUtil: DateUtil,
     private val sp: SP,
     private val rxBus: RxBus,
-    private val resourceHelper: ResourceHelper,
+    private val rh: ResourceHelper,
     private val profileFunction: ProfileFunction,
     private val repository: AppRepository,
     private val uel: UserEntryLogger
@@ -71,7 +71,7 @@ class PumpSyncImplementation @Inject constructor(
         }
 
         if (showNotification && (type.description != storedType || serialNumber != storedSerial) && timestamp >= storedTimestamp)
-            rxBus.send(EventNewNotification(Notification(Notification.WRONG_PUMP_DATA, resourceHelper.gs(R.string.wrong_pump_data), Notification.URGENT)))
+            rxBus.send(EventNewNotification(Notification(Notification.WRONG_PUMP_DATA, rh.gs(R.string.wrong_pump_data), Notification.URGENT)))
         aapsLogger.error(LTag.PUMP, "Ignoring pump history record  Allowed: ${dateUtil.dateAndTimeAndSecondsString(storedTimestamp)} $storedType $storedSerial Received: $timestamp ${dateUtil.dateAndTimeAndSecondsString(timestamp)} ${type.description} $serialNumber")
         return false
     }

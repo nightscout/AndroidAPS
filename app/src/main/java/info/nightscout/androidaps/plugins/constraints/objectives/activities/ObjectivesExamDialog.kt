@@ -21,7 +21,7 @@ import javax.inject.Inject
 class ObjectivesExamDialog : DaggerDialogFragment() {
 
     @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var dateUtil: DateUtil
 
     companion object {
@@ -96,7 +96,7 @@ class ObjectivesExamDialog : DaggerDialogFragment() {
                 context?.let { binding.examHints.addView(h.generate(it)) }
             }
             // Disabled to
-            binding.examDisabledto.text = resourceHelper.gs(R.string.answerdisabledto, dateUtil.timeString(task.disabledTo))
+            binding.examDisabledto.text = rh.gs(R.string.answerdisabledto, dateUtil.timeString(task.disabledTo))
             binding.examDisabledto.visibility = if (task.isEnabledAnswer()) View.GONE else View.VISIBLE
             // Buttons
             binding.examVerify.isEnabled = !task.answered && task.isEnabledAnswer()

@@ -22,7 +22,7 @@ import kotlin.math.abs
 @OpenForTesting
 @Singleton
 class PrefFileListProvider @Inject constructor(
-    private val resourceHelper: ResourceHelper,
+    private val rh: ResourceHelper,
     private val config: Config,
     private val encryptedPrefsFormat: EncryptedPrefsFormat,
     private val storage: Storage,
@@ -86,7 +86,7 @@ class PrefFileListProvider @Inject constructor(
     }
 
     fun legacyFile(): File {
-        return File(path, resourceHelper.gs(R.string.app_name) + "Preferences")
+        return File(path, rh.gs(R.string.app_name) + "Preferences")
     }
 
     fun ensureExportDirExists(): File {
@@ -131,14 +131,14 @@ class PrefFileListProvider @Inject constructor(
             val flavourOfPrefs = flavour.value
             if (flavour.value != config.FLAVOR) {
                 flavour.status = PrefsStatus.WARN
-                flavour.info = resourceHelper.gs(R.string.metadata_warning_different_flavour, flavourOfPrefs, config.FLAVOR)
+                flavour.info = rh.gs(R.string.metadata_warning_different_flavour, flavourOfPrefs, config.FLAVOR)
             }
         }
 
         meta[PrefsMetadataKey.DEVICE_MODEL]?.let { model ->
             if (model.value != config.currentDeviceModelString) {
                 model.status = PrefsStatus.WARN
-                model.info = resourceHelper.gs(R.string.metadata_warning_different_device)
+                model.info = rh.gs(R.string.metadata_warning_different_device)
             }
         }
 
@@ -151,11 +151,11 @@ class PrefFileListProvider @Inject constructor(
 
                 if (daysOld > IMPORT_AGE_NOT_YET_OLD_DAYS) {
                     createdAt.status = PrefsStatus.WARN
-                    createdAt.info = resourceHelper.gs(R.string.metadata_warning_old_export, daysOld.toString())
+                    createdAt.info = rh.gs(R.string.metadata_warning_old_export, daysOld.toString())
                 }
             } catch (e: Exception) {
                 createdAt.status = PrefsStatus.WARN
-                createdAt.info = resourceHelper.gs(R.string.metadata_warning_date_format)
+                createdAt.info = rh.gs(R.string.metadata_warning_date_format)
             }
         }
 
@@ -165,12 +165,12 @@ class PrefFileListProvider @Inject constructor(
 
             if ((currentAppVer.size >= 2) && (metadataVer.size >= 2) && (abs(currentAppVer[1] - metadataVer[1]) > 1)) {
                 version.status = PrefsStatus.WARN
-                version.info = resourceHelper.gs(R.string.metadata_warning_different_version)
+                version.info = rh.gs(R.string.metadata_warning_different_version)
             }
 
             if ((currentAppVer.isNotEmpty()) && (metadataVer.isNotEmpty()) && (currentAppVer[0] != metadataVer[0])) {
                 version.status = PrefsStatus.WARN
-                version.info = resourceHelper.gs(R.string.metadata_urgent_different_version)
+                version.info = rh.gs(R.string.metadata_urgent_different_version)
             }
         }
 
@@ -184,13 +184,13 @@ class PrefFileListProvider @Inject constructor(
         val hours = Hours.hoursBetween(itTime, refTime).hours
 
         return if (hours == 0) {
-            resourceHelper.gs(R.string.exported_less_than_hour_ago)
+            rh.gs(R.string.exported_less_than_hour_ago)
         } else if ((hours < 24) && (hours > 0)) {
-            resourceHelper.gs(R.string.exported_ago, resourceHelper.gq(R.plurals.hours, hours, hours))
+            rh.gs(R.string.exported_ago, rh.gq(R.plurals.hours, hours, hours))
         } else if ((days < IMPORT_AGE_NOT_YET_OLD_DAYS) && (days > 0)) {
-            resourceHelper.gs(R.string.exported_ago, resourceHelper.gq(R.plurals.days, days, days))
+            rh.gs(R.string.exported_ago, rh.gq(R.plurals.days, days, days))
         } else {
-            resourceHelper.gs(R.string.exported_at, utcTime.substring(0, 10))
+            rh.gs(R.string.exported_at, utcTime.substring(0, 10))
         }
     }
 

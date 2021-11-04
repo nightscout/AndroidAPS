@@ -22,7 +22,7 @@ class DstHelperPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     private var rxBus: RxBus,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     private var sp: SP,
     private var activePlugin: ActivePlugin,
     private var loopPlugin: LoopPlugin
@@ -32,7 +32,7 @@ class DstHelperPlugin @Inject constructor(
     .alwaysEnabled(true)
     .showInList(false)
     .pluginName(R.string.dst_plugin_name),
-    aapsLogger, resourceHelper, injector
+    aapsLogger, rh, injector
 ), Constraints {
 
     companion object {
@@ -51,7 +51,7 @@ class DstHelperPlugin @Inject constructor(
         if (willBeDST(cal)) {
             val snoozedTo: Long = sp.getLong(R.string.key_snooze_dst_in24h, 0L)
             if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
-                val notification = NotificationWithAction(injector, Notification.DST_IN_24H, resourceHelper.gs(R.string.dst_in_24h_warning), Notification.LOW)
+                val notification = NotificationWithAction(injector, Notification.DST_IN_24H, rh.gs(R.string.dst_in_24h_warning), Notification.LOW)
                 notification.action(R.string.snooze, Runnable {
                     sp.putLong(R.string.key_snooze_dst_in24h, System.currentTimeMillis() + T.hours(24).msecs())
                 })
@@ -66,7 +66,7 @@ class DstHelperPlugin @Inject constructor(
             if (!loopPlugin.isSuspended) {
                 val snoozedTo: Long = sp.getLong(R.string.key_snooze_loopdisabled, 0L)
                 if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
-                    val notification = NotificationWithAction(injector, Notification.DST_LOOP_DISABLED, resourceHelper.gs(R.string.dst_loop_disabled_warning), Notification.LOW)
+                    val notification = NotificationWithAction(injector, Notification.DST_LOOP_DISABLED, rh.gs(R.string.dst_loop_disabled_warning), Notification.LOW)
                     notification.action(R.string.snooze, Runnable {
                         sp.putLong(R.string.key_snooze_loopdisabled, System.currentTimeMillis() + T.hours(24).msecs())
                     })

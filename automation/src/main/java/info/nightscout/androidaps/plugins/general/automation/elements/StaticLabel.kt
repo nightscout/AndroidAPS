@@ -7,28 +7,28 @@ import android.widget.TextView
 import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 
-class StaticLabel(private val resourceHelper: ResourceHelper) : Element() {
+class StaticLabel(private val rh: ResourceHelper) : Element() {
 
     var label = ""
     var trigger: Trigger? = null
 
-    constructor(resourceHelper: ResourceHelper, label: String, trigger: Trigger) : this(resourceHelper) {
+    constructor(rh: ResourceHelper, label: String, trigger: Trigger) : this(rh) {
         this.label = label
         this.trigger = trigger
     }
 
-    constructor(resourceHelper: ResourceHelper, resourceId: Int, trigger: Trigger) : this(resourceHelper) {
-        label = resourceHelper.gs(resourceId)
+    constructor(rh: ResourceHelper, resourceId: Int, trigger: Trigger) : this(rh) {
+        label = rh.gs(resourceId)
         this.trigger = trigger
     }
 
     override fun addToLayout(root: LinearLayout) {
-        val px = resourceHelper.dpToPx(10)
+        val px = rh.dpToPx(10)
         root.addView(
             LinearLayout(root.context).apply {
                 orientation = LinearLayout.HORIZONTAL
                 layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-                setBackgroundColor(resourceHelper.gc(android.R.color.black))
+                setBackgroundColor(rh.gc(android.R.color.black))
                 addView(
                     TextView(root.context).apply {
                         text = label

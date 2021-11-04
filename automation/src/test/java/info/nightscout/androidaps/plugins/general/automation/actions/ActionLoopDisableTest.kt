@@ -18,8 +18,8 @@ class ActionLoopDisableTest : ActionsTestBase() {
     fun setup() {
 
         testPumpPlugin.pumpDescription.isTempBasalCapable = true
-        `when`(resourceHelper.gs(R.string.disableloop)).thenReturn("Disable loop")
-        `when`(resourceHelper.gs(R.string.alreadydisabled)).thenReturn("Disable loop")
+        `when`(rh.gs(R.string.disableloop)).thenReturn("Disable loop")
+        `when`(rh.gs(R.string.alreadydisabled)).thenReturn("Disable loop")
 
         sut = ActionLoopDisable(injector)
     }

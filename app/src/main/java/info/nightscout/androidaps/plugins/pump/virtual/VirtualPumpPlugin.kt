@@ -42,7 +42,7 @@ open class VirtualPumpPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private var fabricPrivacy: FabricPrivacy,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     private val aapsSchedulers: AapsSchedulers,
     private val sp: SP,
     private val profileFunction: ProfileFunction,
@@ -62,7 +62,7 @@ open class VirtualPumpPlugin @Inject constructor(
         .description(R.string.description_pump_virtual)
         .setDefault()
         .neverVisible(config.NSCLIENT),
-    injector, aapsLogger, resourceHelper, commandQueue
+    injector, aapsLogger, rh, commandQueue
 ), Pump {
 
     private val disposable = CompositeDisposable()
@@ -108,7 +108,7 @@ open class VirtualPumpPlugin @Inject constructor(
         disposable += rxBus
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ event: EventPreferenceChange -> if (event.isChanged(resourceHelper, R.string.key_virtualpump_type)) refreshConfiguration() }, fabricPrivacy::logException)
+            .subscribe({ event: EventPreferenceChange -> if (event.isChanged(rh, R.string.key_virtualpump_type)) refreshConfiguration() }, fabricPrivacy::logException)
         refreshConfiguration()
     }
 
@@ -119,7 +119,7 @@ open class VirtualPumpPlugin @Inject constructor(
 
     override fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {
         super.preprocessPreferences(preferenceFragment)
-        val uploadStatus = preferenceFragment.findPreference(resourceHelper.gs(R.string.key_virtualpump_uploadstatus)) as SwitchPreference?
+        val uploadStatus = preferenceFragment.findPreference(rh.gs(R.string.key_virtualpump_uploadstatus)) as SwitchPreference?
             ?: return
         uploadStatus.isVisible = !config.NSCLIENT
     }
@@ -151,7 +151,7 @@ open class VirtualPumpPlugin @Inject constructor(
 
     override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
         lastDataTime = System.currentTimeMillis()
-        rxBus.send(EventNewNotification(Notification(Notification.PROFILE_SET_OK, resourceHelper.gs(R.string.profile_set_ok), Notification.INFO, 60)))
+        rxBus.send(EventNewNotification(Notification(Notification.PROFILE_SET_OK, rh.gs(R.string.profile_set_ok), Notification.INFO, 60)))
         // Do nothing here. we are using database profile
         return PumpEnactResult(injector).success(true).enacted(true)
     }
@@ -180,18 +180,18 @@ open class VirtualPumpPlugin @Inject constructor(
             .bolusDelivered(detailedBolusInfo.insulin)
             .carbsDelivered(detailedBolusInfo.carbs)
             .enacted(detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0)
-            .comment(resourceHelper.gs(R.string.virtualpump_resultok))
+            .comment(rh.gs(R.string.virtualpump_resultok))
         val bolusingEvent = EventOverviewBolusProgress
         var delivering = 0.0
         while (delivering < detailedBolusInfo.insulin) {
             SystemClock.sleep(200)
-            bolusingEvent.status = resourceHelper.gs(R.string.bolusdelivering, delivering)
+            bolusingEvent.status = rh.gs(R.string.bolusdelivering, delivering)
             bolusingEvent.percent = min((delivering / detailedBolusInfo.insulin * 100).toInt(), 100)
             rxBus.send(bolusingEvent)
             delivering += 0.1
         }
         SystemClock.sleep(200)
-        bolusingEvent.status = resourceHelper.gs(R.string.bolusdelivered, detailedBolusInfo.insulin)
+        bolusingEvent.status = rh.gs(R.string.bolusdelivered, detailedBolusInfo.insulin)
         bolusingEvent.percent = 100
         rxBus.send(bolusingEvent)
         SystemClock.sleep(1000)
@@ -226,7 +226,7 @@ open class VirtualPumpPlugin @Inject constructor(
         result.isTempCancel = false
         result.absolute = absoluteRate
         result.duration = durationInMinutes
-        result.comment = resourceHelper.gs(R.string.virtualpump_resultok)
+        result.comment = rh.gs(R.string.virtualpump_resultok)
         pumpSync.syncTemporaryBasalWithPumpId(
             timestamp = dateUtil.now(),
             rate = absoluteRate,
@@ -251,7 +251,7 @@ open class VirtualPumpPlugin @Inject constructor(
         result.isPercent = true
         result.isTempCancel = false
         result.duration = durationInMinutes
-        result.comment = resourceHelper.gs(R.string.virtualpump_resultok)
+        result.comment = rh.gs(R.string.virtualpump_resultok)
         pumpSync.syncTemporaryBasalWithPumpId(
             timestamp = dateUtil.now(),
             rate = percent.toDouble(),
@@ -276,7 +276,7 @@ open class VirtualPumpPlugin @Inject constructor(
         result.bolusDelivered = insulin
         result.isTempCancel = false
         result.duration = durationInMinutes
-        result.comment = resourceHelper.gs(R.string.virtualpump_resultok)
+        result.comment = rh.gs(R.string.virtualpump_resultok)
         pumpSync.syncExtendedBolusWithPumpId(
             timestamp = dateUtil.now(),
             amount = insulin,
@@ -296,7 +296,7 @@ open class VirtualPumpPlugin @Inject constructor(
         val result = PumpEnactResult(injector)
         result.success = true
         result.isTempCancel = true
-        result.comment = resourceHelper.gs(R.string.virtualpump_resultok)
+        result.comment = rh.gs(R.string.virtualpump_resultok)
         if (pumpSync.expectedPumpState().temporaryBasal != null) {
             result.enacted = true
             pumpSync.syncStopTemporaryBasalWithPumpId(
@@ -325,7 +325,7 @@ open class VirtualPumpPlugin @Inject constructor(
         result.success = true
         result.enacted = true
         result.isTempCancel = true
-        result.comment = resourceHelper.gs(R.string.virtualpump_resultok)
+        result.comment = rh.gs(R.string.virtualpump_resultok)
         aapsLogger.debug(LTag.PUMP, "Canceling extended bolus: $result")
         rxBus.send(EventVirtualPumpUpdateGui())
         lastDataTime = System.currentTimeMillis()

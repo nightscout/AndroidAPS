@@ -31,7 +31,7 @@ import javax.inject.Singleton
 class PersistentNotificationPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     private val aapsSchedulers: AapsSchedulers,
     private val profileFunction: ProfileFunction,
     private val fabricPrivacy: FabricPrivacy,
@@ -52,7 +52,7 @@ class PersistentNotificationPlugin @Inject constructor(
         .alwaysEnabled(true)
         .showInList(false)
         .description(R.string.description_persistent_notification),
-    aapsLogger, resourceHelper, injector
+    aapsLogger, rh, injector
 ) {
 
     // For Android Auto
@@ -142,12 +142,12 @@ class PersistentNotificationPlugin @Inject constructor(
                     line1aa += "  " + lastBG.trendArrow.symbol
                 } else {
                     line1 += " " +
-                        resourceHelper.gs(R.string.old_data) +
+                        rh.gs(R.string.old_data) +
                         " "
                     line1aa += "$line1."
                 }
             } else {
-                line1aa = resourceHelper.gs(R.string.missed_bg_readings)
+                line1aa = rh.gs(R.string.missed_bg_readings)
                 line1 = line1aa
             }
             val activeTemp = iobCobCalculator.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())
@@ -159,12 +159,12 @@ class PersistentNotificationPlugin @Inject constructor(
             val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
             val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
             line2 =
-                resourceHelper.gs(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U " + resourceHelper.gs(R.string.cob) + ": " + iobCobCalculator.getCobInfo(
+                rh.gs(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U " + rh.gs(R.string.cob) + ": " + iobCobCalculator.getCobInfo(
                     false,
                     "PersistentNotificationPlugin"
                 ).generateCOBString()
             val line2aa =
-                resourceHelper.gs(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U. " + resourceHelper.gs(R.string.cob) + ": " + iobCobCalculator.getCobInfo(
+                rh.gs(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U. " + rh.gs(R.string.cob) + ": " + iobCobCalculator.getCobInfo(
                     false,
                     "PersistentNotificationPlugin"
                 ).generateCOBString() + "."
@@ -206,14 +206,14 @@ class PersistentNotificationPlugin @Inject constructor(
             unreadConversationBuilder.addMessage(line3aa)
             /// End Android Auto
         } else {
-            line1 = resourceHelper.gs(R.string.noprofileset)
+            line1 = rh.gs(R.string.noprofileset)
         }
         val builder = NotificationCompat.Builder(context, notificationHolder.channelID)
         builder.setOngoing(true)
         builder.setOnlyAlertOnce(true)
         builder.setCategory(NotificationCompat.CATEGORY_STATUS)
         builder.setSmallIcon(iconsProvider.getNotificationIcon())
-        builder.setLargeIcon(resourceHelper.decodeResource(iconsProvider.getIcon()))
+        builder.setLargeIcon(rh.decodeResource(iconsProvider.getIcon()))
         builder.setContentTitle(line1)
         if (line2 != null) builder.setContentText(line2)
         if (line3 != null) builder.setSubText(line3)

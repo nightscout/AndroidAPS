@@ -20,7 +20,7 @@ import javax.inject.Singleton
 @Singleton
 class OneTimePassword @Inject constructor(
     private val sp: SP,
-    private val resourceHelper: ResourceHelper,
+    private val rh: ResourceHelper,
     private val dateUtil: DateUtil
 ) {
 
@@ -36,7 +36,7 @@ class OneTimePassword @Inject constructor(
      * Name of master device (target of OTP)
      */
     fun name(): String {
-        val defaultUserName = resourceHelper.gs(R.string.patient_name_default)
+        val defaultUserName = rh.gs(R.string.patient_name_default)
         var userName = sp.getString(R.string.key_patient_name, defaultUserName).replace(":", "").trim()
         if (userName.isEmpty())
             userName = defaultUserName

@@ -24,7 +24,7 @@ import javax.inject.Singleton
 @Singleton
 class XdripPlugin @Inject constructor(
     injector: HasAndroidInjector,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     aapsLogger: AAPSLogger
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
@@ -32,7 +32,7 @@ class XdripPlugin @Inject constructor(
     .pluginIcon((R.drawable.ic_blooddrop_48))
     .pluginName(R.string.xdrip)
     .description(R.string.description_source_xdrip),
-    aapsLogger, resourceHelper, injector
+    aapsLogger, rh, injector
 ), BgSource {
 
     private var advancedFiltering = false

@@ -44,7 +44,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
 
     private final AAPSLogger aapsLogger;
     private final Context context;
-    private final ResourceHelper resourceHelper;
+    private final ResourceHelper rh;
     private final ConstraintChecker constraintChecker;
     private final FabricPrivacy fabricPrivacy;
 
@@ -55,7 +55,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
             AapsSchedulers aapsSchedulers,
             RxBus rxBus,
             Context context,
-            ResourceHelper resourceHelper,
+            ResourceHelper rh,
             ConstraintChecker constraintChecker,
             ActivePlugin activePlugin,
             SP sp,
@@ -65,10 +65,10 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
             FabricPrivacy fabricPrivacy,
             PumpSync pumpSync
     ) {
-        super(injector, danaPump, resourceHelper, constraintChecker, aapsLogger, aapsSchedulers, commandQueue, rxBus, activePlugin, sp, dateUtil, pumpSync);
+        super(injector, danaPump, rh, constraintChecker, aapsLogger, aapsSchedulers, commandQueue, rxBus, activePlugin, sp, dateUtil, pumpSync);
         this.aapsLogger = aapsLogger;
         this.context = context;
-        this.resourceHelper = resourceHelper;
+        this.rh = rh;
         this.constraintChecker = constraintChecker;
         this.fabricPrivacy = fabricPrivacy;
 
@@ -128,7 +128,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
     @NonNull
     @Override
     public String getName() {
-        return resourceHelper.gs(R.string.danarpump);
+        return rh.gs(R.string.danarpump);
     }
 
     @Override
@@ -170,7 +170,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
                     .bolusDelivered(t.insulin)
                     .carbsDelivered(detailedBolusInfo.carbs);
             if (!result.getSuccess())
-                result.comment(resourceHelper.gs(R.string.boluserrorcode, detailedBolusInfo.insulin, t.insulin, danaPump.getBolusStartErrorCode()));
+                result.comment(rh.gs(R.string.boluserrorcode, detailedBolusInfo.insulin, t.insulin, danaPump.getBolusStartErrorCode()));
             else
                 result.comment(R.string.ok);
             aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.getBolusDelivered());

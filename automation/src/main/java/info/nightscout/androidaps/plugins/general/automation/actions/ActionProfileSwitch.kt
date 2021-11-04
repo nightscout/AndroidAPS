@@ -9,8 +9,8 @@ import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.automation.elements.InputProfileName
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement
@@ -18,21 +18,20 @@ import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuil
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.json.JSONObject
 import javax.inject.Inject
 
 class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
-    @Inject lateinit var resourceHelper: ResourceHelper
+
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var uel: UserEntryLogger
 
-    var inputProfileName: InputProfileName = InputProfileName(resourceHelper, activePlugin, "")
+    var inputProfileName: InputProfileName = InputProfileName(rh, activePlugin, "")
 
     override fun friendlyName(): Int = R.string.profilename
-    override fun shortDescription(): String = resourceHelper.gs(R.string.changengetoprofilename, inputProfileName.value)
+    override fun shortDescription(): String = rh.gs(R.string.changengetoprofilename, inputProfileName.value)
     @DrawableRes override fun icon(): Int = R.drawable.ic_actions_profileswitch
 
     override fun doAction(callback: Callback) {
@@ -59,16 +58,18 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
             callback.result(PumpEnactResult(injector).success(false).comment(R.string.notexists))?.run()
             return
         }
-        uel.log(UserEntry.Action.PROFILE_SWITCH, Sources.Automation, title,
+        uel.log(
+            UserEntry.Action.PROFILE_SWITCH, Sources.Automation, title,
             ValueWithUnit.SimpleString(inputProfileName.value),
-            ValueWithUnit.Percent(100))
+            ValueWithUnit.Percent(100)
+        )
         val result = profileFunction.createProfileSwitch(profileStore, inputProfileName.value, 0, 100, 0, dateUtil.now())
         callback.result(PumpEnactResult(injector).success(result).comment(R.string.ok))?.run()
     }
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.profilename), "", inputProfileName))
+            .add(LabelWithElement(rh, rh.gs(R.string.profilename), "", inputProfileName))
             .build(root)
     }
 

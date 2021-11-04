@@ -147,7 +147,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
             HasAndroidInjector injector,
             AAPSLogger aapsLogger,
             RxBus rxBus,
-            ResourceHelper resourceHelper,
+            ResourceHelper rh,
             ProfileFunction profileFunction,
             SP sp,
             CommandQueueProvider commandQueue,
@@ -162,7 +162,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
                         .pluginName(R.string.combopump)
                         .shortName(R.string.combopump_shortname)
                         .description(R.string.description_pump_combo),
-                injector, aapsLogger, resourceHelper, commandQueue
+                injector, aapsLogger, rh, commandQueue
         );
         this.rxBus = rxBus;
         this.profileFunction = profileFunction;
@@ -193,15 +193,15 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
                     ? "E" + ps.activeAlert.errorCode + ": " + ps.activeAlert.message
                     : "W" + ps.activeAlert.warningCode + ": " + ps.activeAlert.message;
         } else if (ps.suspended && (ps.batteryState == PumpState.EMPTY || ps.insulinState == PumpState.EMPTY)) {
-            return getResourceHelper().gs(R.string.combo_pump_state_suspended_due_to_error);
+            return getRh().gs(R.string.combo_pump_state_suspended_due_to_error);
         } else if (ps.suspended) {
-            return getResourceHelper().gs(R.string.combo_pump_state_suspended_by_user);
+            return getRh().gs(R.string.combo_pump_state_suspended_by_user);
         } else if (!pump.initialized) {
-            return getResourceHelper().gs(R.string.combo_pump_state_initializing);
+            return getRh().gs(R.string.combo_pump_state_initializing);
         } else if (!validBasalRateProfileSelectedOnPump) {
-            return getResourceHelper().gs(R.string.loopdisabled);
+            return getRh().gs(R.string.loopdisabled);
         }
-        return getResourceHelper().gs(R.string.combo_pump_state_running);
+        return getRh().gs(R.string.combo_pump_state_running);
     }
 
     @Override
@@ -263,7 +263,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
             // note that this should not happen anymore since the queue is present, which
             // issues a READSTATE when starting to issue commands which initializes the pump
             getAapsLogger().error("setNewBasalProfile not initialized");
-            Notification notification = new Notification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, getResourceHelper().gs(R.string.pumpNotInitializedProfileNotSet), Notification.URGENT);
+            Notification notification = new Notification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, getRh().gs(R.string.pumpNotInitializedProfileNotSet), Notification.URGENT);
             rxBus.send(new EventNewNotification(notification));
             return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(R.string.pumpNotInitializedProfileNotSet);
         }
@@ -281,10 +281,10 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
             return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(R.string.combo_force_disabled_notification);
         }
 
-        CommandResult setResult = runCommand(getResourceHelper().gs(R.string.combo_activity_setting_basal_profile), 2,
+        CommandResult setResult = runCommand(getRh().gs(R.string.combo_activity_setting_basal_profile), 2,
                 () -> ruffyScripter.setBasalProfile(requestedBasalProfile));
         if (!setResult.success) {
-            Notification notification = new Notification(Notification.FAILED_UPDATE_PROFILE, getResourceHelper().gs(R.string.failedupdatebasalprofile), Notification.URGENT);
+            Notification notification = new Notification(Notification.FAILED_UPDATE_PROFILE, getRh().gs(R.string.failedupdatebasalprofile), Notification.URGENT);
             rxBus.send(new EventNewNotification(notification));
             return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(R.string.failedupdatebasalprofile);
         }
@@ -295,7 +295,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
         rxBus.send(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
         rxBus.send(new EventDismissNotification(Notification.FAILED_UPDATE_PROFILE));
         //issue success notification
-        Notification notification = new Notification(Notification.PROFILE_SET_OK, getResourceHelper().gs(R.string.profile_set_ok), Notification.INFO, 60);
+        Notification notification = new Notification(Notification.PROFILE_SET_OK, getRh().gs(R.string.profile_set_ok), Notification.INFO, 60);
         rxBus.send(new EventNewNotification(notification));
         return new PumpEnactResult(getInjector()).success(true).enacted(true);
     }
@@ -370,7 +370,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
         CommandResult stateResult = runCommand(null, 1, ruffyScripter::readPumpState);
         if (stateResult.invalidSetup) {
             rxBus.send(new EventNewNotification(
-                    new Notification(Notification.COMBO_PUMP_ALARM, getResourceHelper().gs(R.string.combo_invalid_setup), Notification.URGENT)));
+                    new Notification(Notification.COMBO_PUMP_ALARM, getRh().gs(R.string.combo_invalid_setup), Notification.URGENT)));
             return;
         }
         if (!stateResult.success) {
@@ -386,7 +386,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
 
         if (stateResult.state.unsafeUsageDetected == PumpState.UNSUPPORTED_BASAL_RATE_PROFILE) {
             Notification n = new Notification(Notification.COMBO_PUMP_ALARM,
-                    getResourceHelper().gs(R.string.combo_force_disabled_notification),
+                    getRh().gs(R.string.combo_force_disabled_notification),
                     Notification.URGENT);
             n.setSoundId(R.raw.alarm);
             rxBus.send(new EventNewNotification(n));
@@ -394,7 +394,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
         }
 
         // read basal profile into cache (KeepAlive will trigger a profile update if needed)
-        CommandResult readBasalResult = runCommand(getResourceHelper().gs(R.string.combo_actvity_reading_basal_profile), 2, ruffyScripter::readBasalProfile);
+        CommandResult readBasalResult = runCommand(getRh().gs(R.string.combo_actvity_reading_basal_profile), 2, ruffyScripter::readBasalProfile);
         if (!readBasalResult.success) {
             return;
         }
@@ -410,7 +410,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
             long lastBolusTimestamp = recentBoluses.get(0).timestamp;
             long now = System.currentTimeMillis();
             if (lastBolusTimestamp < now - 24 * 60 * 60 * 1000 || lastBolusTimestamp > now + 5 * 60 * 1000) {
-                Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, getResourceHelper().gs(R.string.combo_check_date), Notification.URGENT);
+                Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, getRh().gs(R.string.combo_check_date), Notification.URGENT);
                 rxBus.send(new EventNewNotification(notification));
             }
         }
@@ -475,19 +475,19 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
         EventOverviewBolusProgress event = EventOverviewBolusProgress.INSTANCE;
         switch (state) {
             case PROGRAMMING:
-                event.setStatus(getResourceHelper().gs(R.string.combo_programming_bolus));
+                event.setStatus(getRh().gs(R.string.combo_programming_bolus));
                 break;
             case DELIVERING:
-                event.setStatus(getResourceHelper().gs(R.string.bolusdelivering, delivered));
+                event.setStatus(getRh().gs(R.string.bolusdelivering, delivered));
                 break;
             case DELIVERED:
-                event.setStatus(getResourceHelper().gs(R.string.bolusdelivered, delivered));
+                event.setStatus(getRh().gs(R.string.bolusdelivered, delivered));
                 break;
             case STOPPING:
-                event.setStatus(getResourceHelper().gs(R.string.bolusstopping));
+                event.setStatus(getRh().gs(R.string.bolusstopping));
                 break;
             case STOPPED:
-                event.setStatus(getResourceHelper().gs(R.string.bolusstopped));
+                event.setStatus(getRh().gs(R.string.bolusstopped));
                 break;
         }
         event.setPercent(percent);
@@ -503,7 +503,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
             throw new IllegalArgumentException(detailedBolusInfo.toString());
         }
         try {
-            pump.activity = getResourceHelper().gs(R.string.combo_pump_action_bolusing, detailedBolusInfo.insulin);
+            pump.activity = getRh().gs(R.string.combo_pump_action_bolusing, detailedBolusInfo.insulin);
             rxBus.send(new EventComboPumpUpdateGUI());
 
             // check pump is ready and all pump bolus records are known
@@ -608,7 +608,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
             // check pump bolus record has a sane timestamp
             long now = System.currentTimeMillis();
             if (lastPumpBolus.timestamp < now - 10 * 60 * 1000 || lastPumpBolus.timestamp > now + 10 * 60 * 1000) {
-                Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, getResourceHelper().gs(R.string.combo_suspious_bolus_time), Notification.URGENT);
+                Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, getRh().gs(R.string.combo_suspious_bolus_time), Notification.URGENT);
                 rxBus.send(new EventNewNotification(notification));
             }
 
@@ -622,7 +622,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
                     return new PumpEnactResult(getInjector()).success(true).enacted(true);
                 }
                 return new PumpEnactResult(getInjector()).success(false).enacted(true)
-                        .comment(getResourceHelper().gs(R.string.combo_error_partial_bolus_delivered,
+                        .comment(getRh().gs(R.string.combo_error_partial_bolus_delivered,
                                 lastPumpBolus.amount, detailedBolusInfo.insulin));
             }
 
@@ -681,7 +681,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
         } catch (Exception e) {
             getAapsLogger().error("Adding treatment record failed", e);
             if (detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB) {
-                Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, getResourceHelper().gs(R.string.combo_error_updating_treatment_record), Notification.URGENT);
+                Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, getRh().gs(R.string.combo_error_updating_treatment_record), Notification.URGENT);
                 rxBus.send(new EventNewNotification(notification));
             }
             return false;
@@ -756,7 +756,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
         }
 
         int finalAdjustedPercent = adjustedPercent;
-        CommandResult commandResult = runCommand(getResourceHelper().gs(R.string.combo_pump_action_setting_tbr, percent, durationInMinutes),
+        CommandResult commandResult = runCommand(getRh().gs(R.string.combo_pump_action_setting_tbr, percent, durationInMinutes),
                 3, () -> ruffyScripter.setTbr(finalAdjustedPercent, durationInMinutes));
         if (!commandResult.success) {
             return new PumpEnactResult(getInjector()).success(false).enacted(false);
@@ -807,7 +807,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
         getAapsLogger().debug(LTag.PUMP, "cancelTempBasal called");
         final PumpSync.PumpState.TemporaryBasal activeTemp = pumpSync.expectedPumpState().getTemporaryBasal();
         if (enforceNew) {
-            CommandResult stateResult = runCommand(getResourceHelper().gs(R.string.combo_pump_action_refreshing), 2, ruffyScripter::readPumpState);
+            CommandResult stateResult = runCommand(getRh().gs(R.string.combo_pump_action_refreshing), 2, ruffyScripter::readPumpState);
             if (!stateResult.success) {
                 return new PumpEnactResult(getInjector()).success(false).enacted(false);
             }
@@ -815,7 +815,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
                 return new PumpEnactResult(getInjector()).success(true).enacted(false);
             }
             getAapsLogger().debug(LTag.PUMP, "cancelTempBasal: hard-cancelling TBR since force requested");
-            CommandResult cancelResult = runCommand(getResourceHelper().gs(R.string.combo_pump_action_cancelling_tbr), 2, ruffyScripter::cancelTbr);
+            CommandResult cancelResult = runCommand(getRh().gs(R.string.combo_pump_action_cancelling_tbr), 2, ruffyScripter::cancelTbr);
             if (!cancelResult.success) {
                 return new PumpEnactResult(getInjector()).success(false).enacted(false);
             }
@@ -871,7 +871,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
         try {
             if (!ruffyScripter.isConnected()) {
                 String originalActivity = pump.activity;
-                pump.activity = getResourceHelper().gs(R.string.combo_activity_checking_pump_state);
+                pump.activity = getRh().gs(R.string.combo_activity_checking_pump_state);
                 rxBus.send(new EventComboPumpUpdateGUI());
                 CommandResult preCheckError = runOnConnectChecks();
                 pump.activity = originalActivity;
@@ -904,7 +904,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
                 if (validBasalRateProfileSelectedOnPump && commandResult.state.unsafeUsageDetected == PumpState.UNSUPPORTED_BASAL_RATE_PROFILE) {
                     setValidBasalRateProfileSelectedOnPump(false);
                     Notification n = new Notification(Notification.COMBO_PUMP_ALARM,
-                            getResourceHelper().gs(R.string.combo_force_disabled_notification),
+                            getRh().gs(R.string.combo_force_disabled_notification),
                             Notification.URGENT);
                     n.setSoundId(R.raw.alarm);
                     rxBus.send(new EventNewNotification(n));
@@ -954,7 +954,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
                 // so update the var with it, so the check routines below can work on it
                 preCheckResult = alertConfirmationResult;
             } else if (activeAlert.errorCode != null) {
-                Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, dateUtil.now(), getResourceHelper().gs(R.string.combo_is_in_error_state, activeAlert.errorCode, activeAlert.message), Notification.URGENT, 0);
+                Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, dateUtil.now(), getRh().gs(R.string.combo_is_in_error_state, activeAlert.errorCode, activeAlert.message), Notification.URGENT, 0);
                 rxBus.send(new EventNewNotification(notification));
                 return preCheckResult.success(false);
             }
@@ -1015,13 +1015,13 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
         }
 
         if (Math.abs(pumpBasalRate - getBaseBasalRate()) > 0.001) {
-            CommandResult readBasalResult = runCommand(getResourceHelper().gs(R.string.combo_actvity_reading_basal_profile), 2, ruffyScripter::readBasalProfile);
+            CommandResult readBasalResult = runCommand(getRh().gs(R.string.combo_actvity_reading_basal_profile), 2, ruffyScripter::readBasalProfile);
             if (readBasalResult.success) {
                 pump.basalProfile = readBasalResult.basalProfile;
-                Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, getResourceHelper().gs(R.string.combo_warning_pump_basal_rate_changed), Notification.NORMAL);
+                Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, getRh().gs(R.string.combo_warning_pump_basal_rate_changed), Notification.NORMAL);
                 rxBus.send(new EventNewNotification(notification));
             } else {
-                Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, getResourceHelper().gs(R.string.combo_error_failure_reading_changed_basal_rate), Notification.URGENT);
+                Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, getRh().gs(R.string.combo_error_failure_reading_changed_basal_rate), Notification.URGENT);
                 rxBus.send(new EventNewNotification(notification));
             }
         }
@@ -1036,11 +1036,11 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
             // time couldn't be read (e.g. a warning is displayed on the menu , hiding the time field)
         } else if (Math.abs(state.pumpTime - System.currentTimeMillis()) >= 10 * 60 * 1000) {
             getAapsLogger().debug(LTag.PUMP, "Pump clock needs update, pump time: " + state.pumpTime + " (" + new Date(state.pumpTime) + ")");
-            Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, getResourceHelper().gs(R.string.combo_notification_check_time_date), Notification.URGENT);
+            Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, getRh().gs(R.string.combo_notification_check_time_date), Notification.URGENT);
             rxBus.send(new EventNewNotification(notification));
         } else if (Math.abs(state.pumpTime - System.currentTimeMillis()) >= 3 * 60 * 1000) {
             getAapsLogger().debug(LTag.PUMP, "Pump clock needs update, pump time: " + state.pumpTime + " (" + new Date(state.pumpTime) + ")");
-            Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, getResourceHelper().gs(R.string.combo_notification_check_time_date), Notification.NORMAL);
+            Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, getRh().gs(R.string.combo_notification_check_time_date), Notification.NORMAL);
             rxBus.send(new EventNewNotification(notification));
         }
     }
@@ -1057,11 +1057,11 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
         notification.setId(Notification.COMBO_PUMP_ALARM);
         notification.setLevel(Notification.NORMAL);
         if (activeAlert.warningCode == PumpWarningCodes.CARTRIDGE_LOW) {
-            notification.setText(getResourceHelper().gs(R.string.combo_pump_cartridge_low_warrning));
+            notification.setText(getRh().gs(R.string.combo_pump_cartridge_low_warrning));
         } else if (activeAlert.warningCode == PumpWarningCodes.BATTERY_LOW) {
-            notification.setText(getResourceHelper().gs(R.string.combo_pump_battery_low_warrning));
+            notification.setText(getRh().gs(R.string.combo_pump_battery_low_warrning));
         } else if (activeAlert.warningCode == PumpWarningCodes.TBR_CANCELLED) {
-            notification.setText(getResourceHelper().gs(R.string.combo_pump_tbr_cancelled_warrning));
+            notification.setText(getRh().gs(R.string.combo_pump_tbr_cancelled_warrning));
         }
         rxBus.send(new EventNewNotification(notification));
     }
@@ -1083,7 +1083,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
             lowSuspendOnlyLoopEnforcedUntil = lastViolation + 6 * 60 * 60 * 1000;
             if (lowSuspendOnlyLoopEnforcedUntil > System.currentTimeMillis() && violationWarningRaisedForBolusAt != lowSuspendOnlyLoopEnforcedUntil) {
                 Notification n = new Notification(Notification.COMBO_PUMP_ALARM,
-                        getResourceHelper().gs(R.string.combo_low_suspend_forced_notification),
+                        getRh().gs(R.string.combo_low_suspend_forced_notification),
                         Notification.URGENT);
                 n.setSoundId(R.raw.alarm);
                 rxBus.send(new EventNewNotification(n));
@@ -1154,7 +1154,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
      * Reads the pump's history and updates the DB accordingly.
      */
     private boolean readHistory(@Nullable PumpHistoryRequest request) {
-        CommandResult historyResult = runCommand(getResourceHelper().gs(R.string.combo_activity_reading_pump_history), 3, () -> ruffyScripter.readHistory(request));
+        CommandResult historyResult = runCommand(getRh().gs(R.string.combo_activity_reading_pump_history), 3, () -> ruffyScripter.readHistory(request));
         PumpHistory history = historyResult.history;
         if (!historyResult.success || history == null) {
             return false;
@@ -1213,7 +1213,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
      * @return null on success or the failed command result
      */
     private CommandResult checkHistory() {
-        CommandResult quickInfoResult = runCommand(getResourceHelper().gs(R.string.combo_activity_checking_for_history_changes), 3,
+        CommandResult quickInfoResult = runCommand(getRh().gs(R.string.combo_activity_checking_for_history_changes), 3,
                 () -> ruffyScripter.readQuickInfo(2));
 
         // no history, nothing to check or complain about
@@ -1240,7 +1240,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
 
         // fetch new records
         long lastKnownPumpRecordTimestamp = recentBoluses.isEmpty() ? 0 : recentBoluses.get(0).timestamp;
-        CommandResult historyResult = runCommand(getResourceHelper().gs(R.string.combo_activity_reading_pump_history), 3, () ->
+        CommandResult historyResult = runCommand(getRh().gs(R.string.combo_activity_reading_pump_history), 3, () ->
                 ruffyScripter.readHistory(new PumpHistoryRequest().bolusHistory(lastKnownPumpRecordTimestamp)));
         if (!historyResult.success) {
             pumpHistoryChanged = true;
@@ -1254,7 +1254,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
         HashSet<Bolus> bolusSet = new HashSet<>(historyResult.history.bolusHistory);
         if (bolusSet.size() != historyResult.history.bolusHistory.size()) {
             getAapsLogger().debug(LTag.PUMP, "Bolus with same amount within the same minute imported. Only one will make it to the DB.");
-            Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, getResourceHelper().gs(R.string.
+            Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, getRh().gs(R.string.
                     combo_error_multiple_boluses_with_identical_timestamp), Notification.URGENT);
             rxBus.send(new EventNewNotification(notification));
         }
@@ -1409,14 +1409,14 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
     @NonNull @Override
     public Constraint<Boolean> isLoopInvocationAllowed(@NonNull Constraint<Boolean> value) {
         if (!validBasalRateProfileSelectedOnPump)
-            value.set(getAapsLogger(), false, getResourceHelper().gs(R.string.novalidbasalrate), this);
+            value.set(getAapsLogger(), false, getRh().gs(R.string.novalidbasalrate), this);
         return value;
     }
 
     @NonNull @Override
     public Constraint<Double> applyMaxIOBConstraints(@NonNull Constraint<Double> maxIob) {
         if (lowSuspendOnlyLoopEnforcedUntil > System.currentTimeMillis())
-            maxIob.setIfSmaller(getAapsLogger(), 0d, String.format(getResourceHelper().gs(R.string.limitingmaxiob), 0d, getResourceHelper().gs(R.string.unsafeusage)), this);
+            maxIob.setIfSmaller(getAapsLogger(), 0d, String.format(getRh().gs(R.string.limitingmaxiob), 0d, getRh().gs(R.string.unsafeusage)), this);
         return maxIob;
     }
 

@@ -32,7 +32,7 @@ class ConfigBuilderFragment : DaggerFragment() {
 
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var activePlugin: ActivePlugin
@@ -125,8 +125,8 @@ class ConfigBuilderFragment : DaggerFragment() {
         if (plugins.isEmpty()) return
         @Suppress("InflateParams")
         val parent = layoutInflater.inflate(R.layout.configbuilder_single_category, null) as LinearLayout
-        (parent.findViewById<View>(R.id.category_title) as TextView).text = resourceHelper.gs(title)
-        (parent.findViewById<View>(R.id.category_description) as TextView).text = resourceHelper.gs(description)
+        (parent.findViewById<View>(R.id.category_title) as TextView).text = rh.gs(title)
+        (parent.findViewById<View>(R.id.category_description) as TextView).text = rh.gs(description)
         val pluginContainer = parent.findViewById<LinearLayout>(R.id.category_plugins)
         for (plugin in plugins) {
             val pluginViewHolder = PluginViewHolder(this, pluginType, plugin)

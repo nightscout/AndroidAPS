@@ -26,7 +26,7 @@ import javax.inject.Singleton
 class StorageConstraintPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     private val rxBus: RxBus
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.CONSTRAINTS)
@@ -34,15 +34,15 @@ class StorageConstraintPlugin @Inject constructor(
     .alwaysEnabled(true)
     .showInList(false)
     .pluginName(R.string.storage),
-    aapsLogger, resourceHelper, injector
+    aapsLogger, rh, injector
 ), Constraints {
 
     override fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         val diskFree = availableInternalMemorySize()
         aapsLogger.debug(LTag.CONSTRAINTS, "Internal storage free (Mb):$diskFree")
         if (diskFree < Constants.MINIMUM_FREE_SPACE) {
-            value[aapsLogger, false, resourceHelper.gs(R.string.diskfull, Constants.MINIMUM_FREE_SPACE)] = this
-            val notification = Notification(Notification.DISK_FULL, resourceHelper.gs(R.string.diskfull, Constants.MINIMUM_FREE_SPACE), Notification.NORMAL)
+            value[aapsLogger, false, rh.gs(R.string.diskfull, Constants.MINIMUM_FREE_SPACE)] = this
+            val notification = Notification(Notification.DISK_FULL, rh.gs(R.string.diskfull, Constants.MINIMUM_FREE_SPACE), Notification.NORMAL)
             rxBus.send(EventNewNotification(notification))
         } else {
             rxBus.send(EventDismissNotification(Notification.DISK_FULL))

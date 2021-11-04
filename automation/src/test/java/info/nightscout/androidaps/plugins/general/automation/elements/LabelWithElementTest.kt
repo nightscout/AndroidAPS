@@ -8,7 +8,7 @@ class LabelWithElementTest : TriggerTestBase() {
 
     @Test
     fun constructorTest() {
-        val l = LabelWithElement(resourceHelper, "A", "B", InputInsulin())
+        val l = LabelWithElement(rh, "A", "B", InputInsulin())
         Assert.assertEquals("A", l.textPre)
         Assert.assertEquals("B", l.textPost)
         Assert.assertEquals(InputInsulin::class.java, l.element!!.javaClass)

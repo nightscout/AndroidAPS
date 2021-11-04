@@ -49,7 +49,7 @@ class NSClientPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     private val context: Context,
     private val fabricPrivacy: FabricPrivacy,
     private val sp: SP,
@@ -64,7 +64,7 @@ class NSClientPlugin @Inject constructor(
     .shortName(R.string.nsclientinternal_shortname)
     .preferencesId(R.xml.pref_nsclientinternal)
     .description(R.string.description_ns_client),
-    aapsLogger, resourceHelper, injector
+    aapsLogger, rh, injector
 ) {
 
     private val disposable = CompositeDisposable()
@@ -100,7 +100,7 @@ class NSClientPlugin @Inject constructor(
             .toObservable(EventNSClientStatus::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event: EventNSClientStatus ->
-                status = event.getStatus(resourceHelper)
+                status = event.getStatus(rh)
                 rxBus.send(EventNSClientUpdateGUI())
             }, fabricPrivacy::logException)
         )
@@ -148,17 +148,17 @@ class NSClientPlugin @Inject constructor(
     override fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {
         super.preprocessPreferences(preferenceFragment)
         if (config.NSCLIENT) {
-            preferenceFragment.findPreference<PreferenceScreen>(resourceHelper.gs(R.string.ns_sync_options))?.isVisible = false
+            preferenceFragment.findPreference<PreferenceScreen>(rh.gs(R.string.ns_sync_options))?.isVisible = false
 
-            preferenceFragment.findPreference<SwitchPreference>(resourceHelper.gs(R.string.key_ns_create_announcements_from_errors))?.isVisible = false
-            preferenceFragment.findPreference<SwitchPreference>(resourceHelper.gs(R.string.key_ns_create_announcements_from_carbs_req))?.isVisible = false
-            preferenceFragment.findPreference<SwitchPreference>(resourceHelper.gs(R.string.key_ns_sync_use_absolute))?.isVisible = false
+            preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_create_announcements_from_errors))?.isVisible = false
+            preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_create_announcements_from_carbs_req))?.isVisible = false
+            preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_sync_use_absolute))?.isVisible = false
         } else {
             // APS or pumpControl mode
-            preferenceFragment.findPreference<SwitchPreference>(resourceHelper.gs(R.string.key_ns_receive_profile_switch))?.isVisible = buildHelper.isEngineeringMode()
-            preferenceFragment.findPreference<SwitchPreference>(resourceHelper.gs(R.string.key_ns_receive_insulin))?.isVisible = buildHelper.isEngineeringMode()
-            preferenceFragment.findPreference<SwitchPreference>(resourceHelper.gs(R.string.key_ns_receive_carbs))?.isVisible = buildHelper.isEngineeringMode()
-            preferenceFragment.findPreference<SwitchPreference>(resourceHelper.gs(R.string.key_ns_receive_temp_target))?.isVisible = buildHelper.isEngineeringMode()
+            preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_receive_profile_switch))?.isVisible = buildHelper.isEngineeringMode()
+            preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_receive_insulin))?.isVisible = buildHelper.isEngineeringMode()
+            preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_receive_carbs))?.isVisible = buildHelper.isEngineeringMode()
+            preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_receive_temp_target))?.isVisible = buildHelper.isEngineeringMode()
         }
     }
 
@@ -217,7 +217,7 @@ class NSClientPlugin @Inject constructor(
     fun pause(newState: Boolean) {
         sp.putBoolean(R.string.key_nsclientinternal_paused, newState)
         paused = newState
-        rxBus.send(EventPreferenceChange(resourceHelper, R.string.key_nsclientinternal_paused))
+        rxBus.send(EventPreferenceChange(rh, R.string.key_nsclientinternal_paused))
     }
 
     fun url(): String = nsClientService?.nsURL ?: ""

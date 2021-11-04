@@ -15,19 +15,18 @@ import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.queue.Callback
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
 
 class ActionLoopDisable(injector: HasAndroidInjector) : Action(injector) {
+
     @Inject lateinit var loopPlugin: Loop
-    @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var configBuilder: ConfigBuilder
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var uel: UserEntryLogger
 
     override fun friendlyName(): Int = R.string.disableloop
-    override fun shortDescription(): String = resourceHelper.gs(R.string.disableloop)
+    override fun shortDescription(): String = rh.gs(R.string.disableloop)
     @DrawableRes override fun icon(): Int = R.drawable.ic_stop_24dp
 
     override fun doAction(callback: Callback) {

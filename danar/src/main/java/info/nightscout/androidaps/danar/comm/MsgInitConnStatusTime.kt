@@ -19,7 +19,7 @@ class MsgInitConnStatusTime(
 
     override fun handleMessage(bytes: ByteArray) {
         if (bytes.size - 10 > 7) {
-            val notification = Notification(Notification.WRONG_DRIVER, resourceHelper.gs(R.string.pumpdrivercorrected), Notification.NORMAL)
+            val notification = Notification(Notification.WRONG_DRIVER, rh.gs(R.string.pumpdrivercorrected), Notification.NORMAL)
             rxBus.send(EventNewNotification(notification))
             danaRPlugin.disconnect("Wrong Model")
             aapsLogger.debug(LTag.PUMPCOMM, "Wrong model selected. Switching to Korean DanaR")

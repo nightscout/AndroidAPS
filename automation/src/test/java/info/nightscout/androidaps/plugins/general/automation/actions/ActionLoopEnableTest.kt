@@ -17,8 +17,8 @@ class ActionLoopEnableTest : ActionsTestBase() {
     fun setup() {
 
         testPumpPlugin.pumpDescription.isTempBasalCapable = true
-        `when`(resourceHelper.gs(R.string.enableloop)).thenReturn("Enable loop")
-        `when`(resourceHelper.gs(R.string.alreadyenabled)).thenReturn("Already enabled")
+        `when`(rh.gs(R.string.enableloop)).thenReturn("Enable loop")
+        `when`(rh.gs(R.string.alreadyenabled)).thenReturn("Already enabled")
 
         sut = ActionLoopEnable(injector)
     }

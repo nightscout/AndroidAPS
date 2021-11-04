@@ -21,6 +21,6 @@ object DecimalFormatter {
     fun to3Decimal(value: Double): String = format3dec.format(value)
     fun to3Decimal(value: Double, unit: String): String = format3dec.format(value) + unit
     fun toPumpSupportedBolus(value: Double, pump: Pump): String = if (pump.pumpDescription.bolusStep <= 0.051) to2Decimal(value) else to1Decimal(value)
-    fun toPumpSupportedBolus(value: Double, pump: Pump, resourceHelper: ResourceHelper): String = if (pump.pumpDescription.bolusStep <= 0.051) resourceHelper.gs(R.string.formatinsulinunits, value) else resourceHelper.gs(R.string.formatinsulinunits1, value)
+    fun toPumpSupportedBolus(value: Double, pump: Pump, rh: ResourceHelper): String = if (pump.pumpDescription.bolusStep <= 0.051) rh.gs(R.string.formatinsulinunits, value) else rh.gs(R.string.formatinsulinunits1, value)
     fun pumpSupportedBolusFormat(pump: Pump): DecimalFormat = if (pump.pumpDescription.bolusStep <= 0.051) DecimalFormat("0.00") else DecimalFormat("0.0")
 }

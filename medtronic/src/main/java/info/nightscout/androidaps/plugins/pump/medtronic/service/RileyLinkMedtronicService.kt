@@ -69,10 +69,10 @@ class RileyLinkMedtronicService  // This empty constructor must be kept, otherwi
      * If you have customized RileyLinkServiceData you need to override this
      */
     override fun initRileyLinkServiceData() {
-        frequencies = arrayOf(resourceHelper.gs(R.string.key_medtronic_pump_frequency_us_ca),
-            resourceHelper.gs(R.string.key_medtronic_pump_frequency_worldwide))
-        // frequencies[0] = resourceHelper.gs(R.string.key_medtronic_pump_frequency_us_ca)
-        // frequencies[1] = resourceHelper.gs(R.string.key_medtronic_pump_frequency_worldwide)
+        frequencies = arrayOf(rh.gs(R.string.key_medtronic_pump_frequency_us_ca),
+            rh.gs(R.string.key_medtronic_pump_frequency_worldwide))
+        // frequencies[0] = rh.gs(R.string.key_medtronic_pump_frequency_us_ca)
+        // frequencies[1] = rh.gs(R.string.key_medtronic_pump_frequency_worldwide)
         rileyLinkServiceData.targetDevice = RileyLinkTargetDevice.MedtronicPump
         setPumpIDString(sp.getString(MedtronicConst.Prefs.PumpSerial, "000000"))
 
@@ -138,11 +138,11 @@ class RileyLinkMedtronicService  // This empty constructor must be kept, otherwi
             medtronicPumpStatus.errorDescription = "-"
             val serialNr = sp.getStringOrNull(MedtronicConst.Prefs.PumpSerial, null)
             if (serialNr == null) {
-                medtronicPumpStatus.errorDescription = resourceHelper.gs(R.string.medtronic_error_serial_not_set)
+                medtronicPumpStatus.errorDescription = rh.gs(R.string.medtronic_error_serial_not_set)
                 return false
             } else {
                 if (!serialNr.matches(regexSN.toRegex())) {
-                    medtronicPumpStatus.errorDescription = resourceHelper.gs(R.string.medtronic_error_serial_invalid)
+                    medtronicPumpStatus.errorDescription = rh.gs(R.string.medtronic_error_serial_invalid)
                     return false
                 } else {
                     if (serialNr != medtronicPumpStatus.serialNumber) {
@@ -153,12 +153,12 @@ class RileyLinkMedtronicService  // This empty constructor must be kept, otherwi
             }
             val pumpTypePref = sp.getStringOrNull(MedtronicConst.Prefs.PumpType, null)
             if (pumpTypePref == null) {
-                medtronicPumpStatus.errorDescription = resourceHelper.gs(R.string.medtronic_error_pump_type_not_set)
+                medtronicPumpStatus.errorDescription = rh.gs(R.string.medtronic_error_pump_type_not_set)
                 return false
             } else {
                 val pumpTypePart = pumpTypePref.substring(0, 3)
                 if (!pumpTypePart.matches("[0-9]{3}".toRegex())) {
-                    medtronicPumpStatus.errorDescription = resourceHelper.gs(R.string.medtronic_error_pump_type_invalid)
+                    medtronicPumpStatus.errorDescription = rh.gs(R.string.medtronic_error_pump_type_invalid)
                     return false
                 } else {
                     val pumpType = medtronicPumpStatus.medtronicPumpMap[pumpTypePart]!!
@@ -170,11 +170,11 @@ class RileyLinkMedtronicService  // This empty constructor must be kept, otherwi
             }
             val pumpFrequency = sp.getStringOrNull(MedtronicConst.Prefs.PumpFrequency, null)
             if (pumpFrequency == null) {
-                medtronicPumpStatus.errorDescription = resourceHelper.gs(R.string.medtronic_error_pump_frequency_not_set)
+                medtronicPumpStatus.errorDescription = rh.gs(R.string.medtronic_error_pump_frequency_not_set)
                 return false
             } else {
                 if (pumpFrequency != frequencies[0] && pumpFrequency != frequencies[1]) {
-                    medtronicPumpStatus.errorDescription = resourceHelper.gs(R.string.medtronic_error_pump_frequency_invalid)
+                    medtronicPumpStatus.errorDescription = rh.gs(R.string.medtronic_error_pump_frequency_invalid)
                     return false
                 } else {
                     medtronicPumpStatus.pumpFrequency = pumpFrequency
@@ -189,11 +189,11 @@ class RileyLinkMedtronicService  // This empty constructor must be kept, otherwi
             val rileyLinkAddress = sp.getStringOrNull(RileyLinkConst.Prefs.RileyLinkAddress, null)
             if (rileyLinkAddress == null) {
                 aapsLogger.debug(LTag.PUMP, "RileyLink address invalid: null")
-                medtronicPumpStatus.errorDescription = resourceHelper.gs(R.string.medtronic_error_rileylink_address_invalid)
+                medtronicPumpStatus.errorDescription = rh.gs(R.string.medtronic_error_rileylink_address_invalid)
                 return false
             } else {
                 if (!rileyLinkAddress.matches(regexMac.toRegex())) {
-                    medtronicPumpStatus.errorDescription = resourceHelper.gs(R.string.medtronic_error_rileylink_address_invalid)
+                    medtronicPumpStatus.errorDescription = rh.gs(R.string.medtronic_error_rileylink_address_invalid)
                     aapsLogger.debug(LTag.PUMP, "RileyLink address invalid: %s", rileyLinkAddress)
                 } else {
                     if (rileyLinkAddress != this.rileyLinkAddress) {
@@ -216,7 +216,7 @@ class RileyLinkMedtronicService  // This empty constructor must be kept, otherwi
             }
             val encodingTypeStr = sp.getStringOrNull(MedtronicConst.Prefs.Encoding, null)
                 ?: return false
-            val newEncodingType = RileyLinkEncodingType.getByDescription(encodingTypeStr, resourceHelper)
+            val newEncodingType = RileyLinkEncodingType.getByDescription(encodingTypeStr, rh)
             if (encodingType == null) {
                 encodingType = newEncodingType
             } else if (encodingType != newEncodingType) {
@@ -231,7 +231,7 @@ class RileyLinkMedtronicService  // This empty constructor must be kept, otherwi
             }
 
             //String bolusDebugEnabled = sp.getStringOrNull(MedtronicConst.Prefs.BolusDebugEnabled, null);
-            //boolean bolusDebug = bolusDebugEnabled != null && bolusDebugEnabled.equals(resourceHelper.gs(R.string.common_on));
+            //boolean bolusDebug = bolusDebugEnabled != null && bolusDebugEnabled.equals(rh.gs(R.string.common_on));
             //MedtronicHistoryData.doubleBolusDebug = bolusDebug;
             rileyLinkServiceData.showBatteryLevel = sp.getBoolean(RileyLinkConst.Prefs.ShowBatteryLevel, false)
             reconfigureService(forceRileyLinkAddressRenewal)

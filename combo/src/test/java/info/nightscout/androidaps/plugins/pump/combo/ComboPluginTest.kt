@@ -20,7 +20,7 @@ import org.mockito.Mockito.`when`
 
 class ComboPluginTest : TestBase() {
 
-    @Mock lateinit var resourceHelper: ResourceHelper
+    @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var commandQueue: CommandQueueProvider
@@ -32,7 +32,7 @@ class ComboPluginTest : TestBase() {
     val injector = HasAndroidInjector {
         AndroidInjector {
             if (it is PumpEnactResult) {
-                it.resourceHelper = resourceHelper
+                it.rh = rh
             }
         }
     }
@@ -41,9 +41,9 @@ class ComboPluginTest : TestBase() {
 
     @Before
     fun prepareMocks() {
-        `when`(resourceHelper.gs(R.string.novalidbasalrate)).thenReturn("No valid basal rate read from pump")
-        `when`(resourceHelper.gs(R.string.combo_pump_unsupported_operation)).thenReturn("Requested operation not supported by pump")
-        comboPlugin = ComboPlugin(injector, aapsLogger, RxBus(aapsSchedulers, aapsLogger), resourceHelper, profileFunction, sp, commandQueue, context, pumpSync, dateUtil)
+        `when`(rh.gs(R.string.novalidbasalrate)).thenReturn("No valid basal rate read from pump")
+        `when`(rh.gs(R.string.combo_pump_unsupported_operation)).thenReturn("Requested operation not supported by pump")
+        comboPlugin = ComboPlugin(injector, aapsLogger, RxBus(aapsSchedulers, aapsLogger), rh, profileFunction, sp, commandQueue, context, pumpSync, dateUtil)
     }
 
     @Test
