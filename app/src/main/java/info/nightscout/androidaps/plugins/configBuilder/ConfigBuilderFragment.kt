@@ -215,8 +215,10 @@ class ConfigBuilderFragment : DaggerFragment() {
 
             var matchIndex = plugin.toString().indexOf("Glunovo", 0);
             if (matchIndex>=0) {
-                val context: Context? = this@ConfigBuilderFragment.context
-                context?.startService(Intent(context, GlunovoPluginService::class.java))
+                if (context != null) {
+                    val context: Context? = this@ConfigBuilderFragment.context
+                    context?.startService(Intent(context, GlunovoPluginService::class.java))
+                }
             }
         }
 
