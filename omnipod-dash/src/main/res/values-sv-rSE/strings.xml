@@ -4,6 +4,14 @@
     <string name="omnipod_dash_pump_description">Pumpintegration för Omnipod Dash (den nya, Bluetooth-aktiverade modellen med blå nålskydd).</string>
     <!-- Omnipod Dash - Keys -->
     <!-- Omnipod Dash - History -->
+    <string name="omnipod_dash_history_title">Pod-historik</string>
+    <string name="omnipod_dash_history_item_description">Beskrivning</string>
+    <string name="omnipod_dash_history_item_source">Källa</string>
+    <string name="omnipod_dash_history_item_date">Datum</string>
+    <string name="omnipod_dash_history_type">Typ:</string>
+    <string name="omnipod_dash_history_bolus_value">%1$.2fU</string>
+    <string name="omnipod_dash_history_bolus_value_with_carbs">%1$.2f U, KH=%2$.1f g</string>
+    <string name="omnipod_dash_history_tbr_value">Dos: %1$.2f U, Duration: %2$d min</string>
     <!-- Omnipod Dash - Overview -->
     <string name="omnipod_dash_overview_bluetooth_status">Bluetooth-status</string>
     <string name="omnipod_dash_overview_bluetooth_address">Bluetooth-adress</string>
@@ -19,4 +27,10 @@
     <string name="omnipod_dash_found_too_many_pods">Hittade för många poddar för aktivering</string>
     <string name="omnipod_dash_scan_failed">Kunde inte hitta en tillgänglig pod för aktivering</string>
     <string name="omnipod_dash_generic_error">Allmänt fel: %1$s</string>
+    <string name="omnipod_dash_failed_to_send">Det gick inte att skicka kommandot</string>
+    <string name="omnipod_dash_command_not_sent">Kommandot har inte skickats</string>
+    <string name="omnipod_dash_command_not_received_by_the_pod">Kommando ej mottaget av poden</string>
+    <string name="omnipod_dash_unknown">Okänt tillstånd för kommandot</string>
+    <string name="omnipod_common_history_tbr_value">Dos: %1$.2f U, Duration: %2$d min</string>
+    <string name="omnipod_common_history_bolus_value">%1$.2fU</string>
 </resources>
