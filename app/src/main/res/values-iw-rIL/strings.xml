@@ -896,4 +896,5 @@
     <string name="invalid_profile_not_accepted">הפרופיל הבלתי חוקי %1$s מ-Nightscout לא מאושר</string>
     <string name="view">תצוגה</string>
     <string name="errors">שגיאות</string>
+    <string name="ns_sync_slow">האט העלאות</string>
 </resources>
