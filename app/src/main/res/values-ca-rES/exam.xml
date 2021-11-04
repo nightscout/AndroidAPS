@@ -1,2 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="dia_whatmeansdia">Què és cert sobre la DIA (Durada de l\'Acció de la Insulina)?</string>
+    <string name="dia_label_exam">Durada de l\'Acció de la Insulina (DIA)</string>
+    <string name="exercise_label">Esport i objectius temporals</string>
+    <string name="exercise_whattodo">Com es poden utilitzar els objectius temporals per ajudar el sistema a gestionar l\'esport aeròbic?</string>
+    <string name="exercise_settt">Establir un objectiu glucèmic d\'activitat, prou temps abans de començar l\'esport.</string>
+    <string name="exercise_setfinished">Establir un objectiu glucèmic d\'activitat un cop acabat l\'esport.</string>
+    <string name="exercise_setunchanged">Deixar l\'objectiu glucèmic com està.</string>
+</resources>
