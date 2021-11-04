@@ -887,4 +887,5 @@ Unerwartetes Verhalten.</string>
     <string name="error_in_basal_values">Fehler in den Basalwerten</string>
     <string name="error_in_target_values">Fehler in den Zielwerten</string>
     <string name="error_in_isf_values">Fehler in ISF-Werten</string>
+    <string name="ns_sync_slow">Hochladen verlangsamen</string>
 </resources>
