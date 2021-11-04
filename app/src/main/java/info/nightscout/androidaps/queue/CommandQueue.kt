@@ -89,8 +89,7 @@ class CommandQueue @Inject constructor(
                         override fun run() {
                             if (!result.success) {
                                 ErrorHelperActivity.runAlarm(context, result.comment, rh.gs(R.string.failedupdatebasalprofile), R.raw.boluserror)
-                            }
-                            if (result.enacted) {
+                            } else {
                                 repository.createEffectiveProfileSwitch(
                                     EffectiveProfileSwitch(
                                         timestamp = dateUtil.now(),
