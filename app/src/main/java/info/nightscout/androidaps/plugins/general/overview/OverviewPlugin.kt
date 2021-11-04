@@ -179,7 +179,7 @@ class OverviewPlugin @Inject constructor(
 
     override fun configuration(): JSONObject =
             JSONObject()
-                    .putInt(R.string.key_units, sp, resourceHelper)
+                    .putString(R.string.key_units, sp, resourceHelper)
                     .putString(R.string.key_quickwizard, sp, resourceHelper)
                     .putInt(R.string.key_eatingsoon_duration, sp, resourceHelper)
                     .putDouble(R.string.key_eatingsoon_target, sp, resourceHelper)
@@ -206,7 +206,7 @@ class OverviewPlugin @Inject constructor(
 
     override fun applyConfiguration(configuration: JSONObject) {
         configuration
-                .storeInt(R.string.key_units, sp, resourceHelper)
+                .storeString(R.string.key_units, sp, resourceHelper)
                 .storeString(R.string.key_quickwizard, sp, resourceHelper)
                 .storeInt(R.string.key_eatingsoon_duration, sp, resourceHelper)
                 .storeDouble(R.string.key_eatingsoon_target, sp, resourceHelper)
