@@ -27,7 +27,7 @@ class GlunovoPluginService : Service() {
             val stringbuilder = StringBuilder()
             cr!!.moveToLast()
             var i: Int =1
-            while (i<=10) {
+            while (i<=90) {
                 cr!!.moveToPrevious()
                 i = i + 1
             }
