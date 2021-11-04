@@ -325,9 +325,23 @@ class DanaRSPlugin @Inject constructor(
     override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         var result = PumpEnactResult(injector)
         val absoluteAfterConstrain = constraintChecker.applyBasalConstraints(Constraint(absoluteRate), profile).value()
-        val doTempOff = baseBasalRate - absoluteAfterConstrain == 0.0
+        var doTempOff = baseBasalRate - absoluteAfterConstrain == 0.0
         val doLowTemp = absoluteAfterConstrain < baseBasalRate
         val doHighTemp = absoluteAfterConstrain > baseBasalRate
+
+        var percentRate = 0
+        // Any basal less than 0.10u/h will be dumped once per hour, not every 4 minutes. So if it's less than .10u/h, set a zero temp.
+        if (absoluteAfterConstrain >= 0.10) {
+            percentRate = java.lang.Double.valueOf(absoluteAfterConstrain / baseBasalRate * 100).toInt()
+        } else {
+            aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Requested basal < 0.10u/h. Setting 0u/h (doLowTemp || doHighTemp)")
+        }
+        percentRate = if (percentRate < 100) Round.ceilTo(percentRate.toDouble(), 10.0).toInt() else Round.floorTo(percentRate.toDouble(), 10.0).toInt()
+        if (percentRate > 500) // Special high temp 500/15min
+            percentRate = 500
+
+        if (percentRate == 100) doTempOff = true
+
         if (doTempOff) {
             // If temp in progress
             if (danaPump.isTempBasalInProgress) {
@@ -343,16 +357,6 @@ class DanaRSPlugin @Inject constructor(
             return result
         }
         if (doLowTemp || doHighTemp) {
-            var percentRate = 0
-            // Any basal less than 0.10u/h will be dumped once per hour, not every 4 minutes. So if it's less than .10u/h, set a zero temp.
-            if (absoluteAfterConstrain >= 0.10) {
-                percentRate = java.lang.Double.valueOf(absoluteAfterConstrain / baseBasalRate * 100).toInt()
-            } else {
-                aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Requested basal < 0.10u/h. Setting 0u/h (doLowTemp || doHighTemp)")
-            }
-            percentRate = if (percentRate < 100) Round.ceilTo(percentRate.toDouble(), 10.0).toInt() else Round.floorTo(percentRate.toDouble(), 10.0).toInt()
-            if (percentRate > 500) // Special high temp 500/15min
-                percentRate = 500
             // Check if some temp is already in progress
             if (danaPump.isTempBasalInProgress) {
                 aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: currently running")

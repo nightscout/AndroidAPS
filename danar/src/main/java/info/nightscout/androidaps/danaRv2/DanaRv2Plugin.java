@@ -225,9 +225,20 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
 
         absoluteRate = constraintChecker.applyBasalConstraints(new Constraint<>(absoluteRate), profile).value();
 
-        final boolean doTempOff = getBaseBasalRate() - absoluteRate == 0d && absoluteRate >= 0.10d;
+        boolean doTempOff = getBaseBasalRate() - absoluteRate == 0d && absoluteRate >= 0.10d;
         final boolean doLowTemp = absoluteRate < getBaseBasalRate() || absoluteRate < 0.10d;
         final boolean doHighTemp = absoluteRate > getBaseBasalRate();
+
+        int percentRate = Double.valueOf(absoluteRate / getBaseBasalRate() * 100).intValue();
+        // Any basal less than 0.10u/h will be dumped once per hour, not every 4 minutes. So if it's less than .10u/h, set a zero temp.
+        if (absoluteRate < 0.10d) percentRate = 0;
+        if (percentRate < 100) percentRate = Round.ceilTo((double) percentRate, 10d).intValue();
+        else percentRate = Round.floorTo((double) percentRate, 10d).intValue();
+        if (percentRate > 500) // Special high temp 500/15min
+            percentRate = 500;
+        aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Calculated percent rate: " + percentRate);
+
+        if (percentRate == 100) doTempOff = true;
 
         if (doTempOff) {
             // If temp in progress
@@ -241,13 +252,6 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         }
 
         if (doLowTemp || doHighTemp) {
-            int percentRate = Double.valueOf(absoluteRate / getBaseBasalRate() * 100).intValue();
-            // Any basal less than 0.10u/h will be dumped once per hour, not every 4 minutes. So if it's less than .10u/h, set a zero temp.
-            if (absoluteRate < 0.10d) percentRate = 0;
-            if (percentRate < 100) percentRate = Round.ceilTo((double) percentRate, 10d).intValue();
-            else percentRate = Round.floorTo((double) percentRate, 10d).intValue();
-            if (percentRate > 500) // Special high temp 500/15min
-                percentRate = 500;
             // Check if some temp is already in progress
             if (danaPump.isTempBasalInProgress()) {
                 // Correct basal already set ?
