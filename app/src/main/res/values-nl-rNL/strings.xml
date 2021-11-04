@@ -432,7 +432,7 @@
     <string name="mdtp_cancel">Afbreken</string>
     <string name="notloadedplugins">Niet alle profielen zijn geladen!</string>
     <string name="valuesnotstored">Waarden niet opgeslagen!</string>
-    <string name="ns_localbroadcasts">Schakel lokaal data delen naar andere apps (zoals xDrip) in. Schakel dit niet in als je NSClient of meer dan één installatie van AAPS op je telefoon hebt staan!</string>
+    <string name="ns_localbroadcasts">Schakel lokaal data delen met andere apps (zoals xDrip) in. Schakel dit niet in als er meer dan één installatie van AAPS of NSClient zijn geinstalleerd!</string>
     <string name="ns_localbroadcasts_title">Activeer locaal delen.</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="enableuam">Activeer UAM</string>
@@ -678,6 +678,7 @@
     <string name="resettodefaults">Terug naar standaardinstellingen</string>
     <string name="nsmalfunction">NSClient werkt niet goed. Overweg een herstart van NS en NSClient.</string>
     <string name="time_offset">Tijdverschuiving</string>
+    <string name="bolus_reminder">Herinner later te bolussen</string>
     <string name="setupwizard_preferred_aps_mode">Voorkeur APS-modus</string>
     <string name="treatments_wizard_total_label">Totaal</string>
     <string name="calculation_short">Calc</string>
@@ -844,6 +845,11 @@
     <string name="enablebolusadvisor_summary">Gebruik bij een hoge bloedglucose niet het resultaat van de wizard, maar een herinnering om later met eten te beginnen (\"pre-bolus\")</string>
     <string name="time_to_eat">Tijd om te eten!\nVoer de boluswizard opnieuw uit.</string>
     <string name="timetoeat">Tijd om te eten</string>
+    <string name="bolusreminder">Bolus herinnering</string>
+    <string name="enablebolusreminder">Bolus herinnering inschakelen</string>
+    <string name="enablebolusreminder_summary">Gebruik herinnering om later te bolussen met de wizard
+        (\"post-bolus\")</string>
+    <string name="time_to_bolus">Tijd om te bolussen!\nVoer de boluswizard uit en maak de berekening opnieuw.</string>
     <string name="fabric_upload_disabled">Upload van crashrapporten is uitgeschakeld!</string>
     <string name="graph_menu_divider_header">Grafiek</string>
     <string name="chart_menu">Grafiek menu</string>

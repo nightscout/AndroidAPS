@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 open class DaggerAppCompatActivityWithResult : DaggerAppCompatActivity() {
 
-    @Inject lateinit var resourceHelper: ResourceHelperImplementation
+    @Inject lateinit var rh: ResourceHelperImplementation
     @Inject lateinit var importExportPrefs: ImportExportPrefs
 
     val callForPrefFile = registerForActivityResult(PrefsFileContract()) {
@@ -35,7 +35,7 @@ open class DaggerAppCompatActivityWithResult : DaggerAppCompatActivity() {
                     when (it.key) {
                         Manifest.permission.WRITE_EXTERNAL_STORAGE ->
                             //show dialog after permission is granted
-                            OKDialog.show(this, "", resourceHelper.gs(R.string.alert_dialog_storage_permission_text))
+                            OKDialog.show(this, "", rh.gs(R.string.alert_dialog_storage_permission_text))
                         //  ignore the rest
                     }
                 }

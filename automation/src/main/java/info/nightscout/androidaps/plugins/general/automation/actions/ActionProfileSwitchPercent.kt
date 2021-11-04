@@ -52,10 +52,11 @@ class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector
                 ValueWithUnit.Percent(pct.value.toInt()),
                 ValueWithUnit.Minute(duration.value)
             )
+            callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok))?.run()
         } else {
             aapsLogger.error(LTag.AUTOMATION, "Final profile not valid")
+            callback.result(PumpEnactResult(injector).success(false).comment(R.string.ok))?.run()
         }
-        callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok))?.run()
     }
 
     override fun generateDialog(root: LinearLayout) {

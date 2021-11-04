@@ -14,6 +14,7 @@ import androidx.core.app.NotificationCompat
 import androidx.recyclerview.widget.RecyclerView
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.OverviewNotificationItemBinding
+import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.interfaces.IconsProvider
 import info.nightscout.androidaps.interfaces.NotificationHolder
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -150,7 +151,8 @@ class NotificationStore @Inject constructor(
         }
     }
 
-    inner class NotificationRecyclerViewAdapter internal constructor(private val notificationsList: List<Notification>) : RecyclerView.Adapter<NotificationRecyclerViewAdapter.NotificationsViewHolder>() {
+    inner class NotificationRecyclerViewAdapter internal constructor(private val notificationsList: List<Notification>) :
+        RecyclerView.Adapter<NotificationRecyclerViewAdapter.NotificationsViewHolder>() {
 
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): NotificationsViewHolder =
             NotificationsViewHolder(LayoutInflater.from(viewGroup.context).inflate(R.layout.overview_notification_item, viewGroup, false))
@@ -182,8 +184,9 @@ class NotificationStore @Inject constructor(
             init {
                 binding.dismiss.setOnClickListener {
                     val notification = it.tag as Notification
-                    rxBus.send(EventDismissNotification(notification.id))
+                    notification.contextForAction = itemView.context
                     notification.action?.run()
+                    if (remove(notification.id)) rxBus.send(EventRefreshOverview("NotificationCleared"))
                 }
             }
         }

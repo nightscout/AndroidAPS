@@ -34,7 +34,7 @@ open class TestBaseWithProfile : TestBase() {
 
     val rxBus = RxBus(aapsSchedulers, aapsLogger)
 
-    val profileInjector = HasAndroidInjector {
+    private val profileInjector = HasAndroidInjector {
         AndroidInjector {
         }
     }

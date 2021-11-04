@@ -54,7 +54,7 @@
     <string name="lastconnection_label">התחברות אחרונה</string>
     <string name="lastbolus_label">בולוס אחרון</string>
     <string name="dailyunits">יחידות יומיות</string>
-    <string name="basebasalrate_label">בזאלי בסיסי</string>
+    <string name="basebasalrate_label">מינון בזאלי בסיסי</string>
     <string name="tempbasal_label">בזאלי זמני</string>
     <string name="virtualpump_extendedbolus_label">בולוס ממושך</string>
     <string name="reservoir_label">מכל</string>
@@ -245,7 +245,7 @@
     <string name="ratio">יחס</string>
     <string name="amount_days"># ימים</string>
     <string name="weight">משקל</string>
-    <string name="warning_Message">שימוש בבולוס למילוי / פריימינג עשוי לגרום לחוסר דיוק!</string>
+    <string name="warning_Message">שימוש בבולוס למילוי \\ תיחול עשוי לגרום לחוסר דיוק!</string>
     <string name="olddata_Message">הנתונים ישנים. לרענון לחצו \"טען מחדש\"</string>
     <string name="tbb">סה\"כ בזאלי בסיסי</string>
     <string name="tbb2">סה\"כ בזאלי בסיסי * 2</string>
