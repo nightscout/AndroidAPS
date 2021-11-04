@@ -39,7 +39,7 @@ class GlunovoPluginService : Service() {
             var bundle : Bundle
             cr.moveToPrevious()
 
-            while (i>1)
+            while (i>=1)
             {
                 cr.moveToNext()
                 time = cr.getLong(0)
@@ -57,7 +57,7 @@ class GlunovoPluginService : Service() {
                 i = i - 1
             }
 
-            val curtime = Calendar.getInstance().time
+            val curtime = Calendar.getInstance().time.time
             //if (time == curtime) {
                 handler.postDelayed(this, 180000)
             //}
