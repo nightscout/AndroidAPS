@@ -6,9 +6,6 @@ import android.net.Uri
 import android.os.IBinder
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
-import java.lang.StringBuilder
-import java.util.*
 
 class GlunovoPluginService : Service() {
     private val handler = Handler()
@@ -17,7 +14,7 @@ class GlunovoPluginService : Service() {
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        handler.postDelayed(mgetValue, 180000)
+        handler.postDelayed(mgetValue, 0)
         return super.onStartCommand(intent, flags, startId)
     }
 
@@ -28,12 +25,12 @@ class GlunovoPluginService : Service() {
             val crfirst = contentResolver.query(CONTENT_URI, null, null, null, null)
             cr!!.moveToLast()
             crfirst!!.moveToFirst()
-            var i: Int =1
+            var i = 1
             while ((i<=90) && (cr != crfirst)) {
                 cr.moveToPrevious()
                 i = i + 1
             }
-            var time : Long
+            var time : Long = cr.getLong(0)
             var value : Double
             var intent : Intent
             var bundle : Bundle
@@ -50,21 +47,25 @@ class GlunovoPluginService : Service() {
                 intent.putExtra("BgEstimate", value)
                 intent.setPackage("info.nightscout.androidaps")
                 bundle = Bundle()
-                bundle.putLong("Time",time);
-                bundle.putDouble("BgEstimate",value);
-                intent.putExtra("bundle", bundle);
+                bundle.putLong("Time",time)
+                bundle.putDouble("BgEstimate",value)
+                intent.putExtra("bundle", bundle)
                 sendBroadcast(intent)
                 i = i - 1
             }
 
-            val curtime = Calendar.getInstance().time.time
-            //if (time == curtime) {
+            val curtime = System.currentTimeMillis()
+            if (time != curtime) {
+                cr.close()
+                crfirst.close()
+                handler.postDelayed(this, 180000-(curtime-time))
+            }
+            else
+            {
+                cr.close()
+                crfirst.close()
                 handler.postDelayed(this, 180000)
-            //}
-            //else
-            //{
-            //    handler.postDelayed(this, 180000-(curtime-time))
-            //}
+            }
         }
     }
 
