@@ -897,4 +897,5 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="invalid_profile_not_accepted">Geçersiz profil %1$s NS tarafından kabul edilmiyor</string>
     <string name="view">Görünüm</string>
     <string name="errors">Hatalar</string>
+    <string name="ns_sync_slow">Yüklemeleri yavaşlat</string>
 </resources>
