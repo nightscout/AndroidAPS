@@ -34,8 +34,8 @@ class GlunovoPluginService : Service() {
             }
             var time : Long
             var value : Double
-            var intent = Intent()
-            var bundle :Bundle
+            var intent : Intent
+            var bundle : Bundle
             cr!!.moveToPrevious()
 
             while (i>1)
