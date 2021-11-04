@@ -240,11 +240,6 @@
             </intent-filter>
         </activity>
 
-        <provider
-            android:name="androidx.work.impl.WorkManagerInitializer"
-            android:authorities="${applicationId}.workmanager-init"
-            tools:node="remove" />
-
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
