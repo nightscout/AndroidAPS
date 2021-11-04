@@ -47,7 +47,7 @@ class GlunovoPluginService : Service() {
             intent.putExtra("bundle", bundle);
             sendBroadcast(intent)
 
-            while (i>0)
+            while (i>1)
             {
                 cr!!.moveToNext()
                 time = cr.getLong(0)
