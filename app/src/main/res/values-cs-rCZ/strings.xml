@@ -896,4 +896,5 @@
     <string name="invalid_profile_not_accepted">Neplatný profil %1$s nebyl přijat z NS</string>
     <string name="view">Zobrazit</string>
     <string name="errors">Chyby</string>
+    <string name="ns_sync_slow">Zpomalit odesílání</string>
 </resources>
