@@ -55,7 +55,7 @@ class GlunovoPluginService : Service() {
             }
 
             val curtime = System.currentTimeMillis()
-            handler.postDelayed(this, 60000-(curtime-time))
+            handler.postDelayed(this, 180000-(curtime-time))
         }
     }
 
