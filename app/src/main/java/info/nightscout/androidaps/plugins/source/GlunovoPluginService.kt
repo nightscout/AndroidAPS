@@ -26,22 +26,42 @@ class GlunovoPluginService : Service() {
             val cr = contentResolver.query(CONTENT_URI, null, null, null, null)
             val stringbuilder = StringBuilder()
             cr!!.moveToLast()
-            val time = cr.getLong(0)
-            val value = cr.getDouble(1) * 18.018 //value in mmol/l... transformed in mg/dl if value *18.018
+            var time = cr.getLong(0)
+            var value = cr.getDouble(1) * 18.018 //value in mmol/l... transformed in mg/dl if value *18.018
             stringbuilder.append("$time   $value\n")
-            Log.d("Readings", stringbuilder.toString())
-            val intent = Intent()
+
+            var intent = Intent()
             intent.action = "com.glunovoservice.BgEstimate"
             intent.putExtra("Time", time)
             intent.putExtra("BgEstimate", value)
             intent.setPackage("info.nightscout.androidaps")
-            val bundle = Bundle()
+            var bundle = Bundle()
             bundle.putLong("Time",time);
             bundle.putDouble("BgEstimate",value);
             //bundle.putDouble("Current",readingCurrent);
             intent.putExtra("bundle", bundle);
-
             sendBroadcast(intent)
+
+            var i: Int =1
+            while (i<=10)
+            {
+                cr!!.moveToPrevious()
+                time = cr.getLong(0)
+                value = cr.getDouble(1) * 18.018 //value in mmol/l... transformed in mg/dl if value *18.018
+                stringbuilder.append("$time   $value\n")
+                intent = Intent()
+                intent.action = "com.glunovoservice.BgEstimate"
+                intent.putExtra("Time", time)
+                intent.putExtra("BgEstimate", value)
+                intent.setPackage("info.nightscout.androidaps")
+                bundle = Bundle()
+                bundle.putLong("Time",time);
+                bundle.putDouble("BgEstimate",value);
+                //bundle.putDouble("Current",readingCurrent);
+                intent.putExtra("bundle", bundle);
+                sendBroadcast(intent)
+                i=i + 1
+            }
             handler.postDelayed(this, 180000)
         }
     }
