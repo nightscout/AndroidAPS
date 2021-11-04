@@ -26,7 +26,7 @@ class GlunovoPluginService : Service() {
             cr!!.moveToLast()
             crfirst!!.moveToFirst()
             var i = 1
-            while ((i<=90) && (cr != crfirst)) {
+            while ((i<=5) && (cr != crfirst)) {
                 cr.moveToPrevious()
                 i = i + 1
             }
