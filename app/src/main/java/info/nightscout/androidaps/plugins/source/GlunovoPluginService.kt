@@ -60,7 +60,7 @@ class GlunovoPluginService : Service() {
             }
             else
             {
-                handler.postDelayed(this, 180000)
+                handler.postDelayed(this, 120000)
             }
         }
     }
