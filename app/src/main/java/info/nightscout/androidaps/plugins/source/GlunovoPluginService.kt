@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import java.lang.StringBuilder
+import java.util.*
 
 class GlunovoPluginService : Service() {
     private val handler = Handler()
@@ -56,6 +57,14 @@ class GlunovoPluginService : Service() {
                 i = i - 1
             }
             handler.postDelayed(this, 180000)
+            val curtime = Calendar.getInstance().time
+            //if () {
+            //    handler.postDelayed(this, 180000)
+            //}
+            //else
+            //{
+            //    handler.postDelayed(this, 180000)
+            //}
         }
     }
 
