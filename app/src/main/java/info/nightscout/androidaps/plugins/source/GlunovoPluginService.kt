@@ -55,12 +55,12 @@ class GlunovoPluginService : Service() {
             }
 
             val curtime = System.currentTimeMillis()
-            if (time == curtime) {
-                handler.postDelayed(this, 180000)
+            if (time != curtime) {
+                handler.postDelayed(this, 180000-(curtime-time))
             }
             else
             {
-                handler.postDelayed(this, 180000-(curtime-time))
+                handler.postDelayed(this, 180000)
             }
         }
     }
