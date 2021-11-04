@@ -22,6 +22,7 @@ abstract class WorkersModule {
     @ContributesAndroidInjector abstract fun contributesGlimpWorker(): GlimpPlugin.GlimpWorker
     @ContributesAndroidInjector abstract fun contributesPoctechWorker(): PoctechPlugin.PoctechWorker
     @ContributesAndroidInjector abstract fun contributesTomatoWorker(): TomatoPlugin.TomatoWorker
+    @ContributesAndroidInjector abstract fun contributesGlunovoWorker(): GlunovoPlugin.GlunovoWorker
     @ContributesAndroidInjector abstract fun contributesEversenseWorker(): EversensePlugin.EversenseWorker
     @ContributesAndroidInjector abstract fun contributesNSClientSourceWorker(): NSClientSourcePlugin.NSClientSourceWorker
     @ContributesAndroidInjector abstract fun contributesNSProfileWorker(): LocalProfilePlugin.NSProfileWorker
