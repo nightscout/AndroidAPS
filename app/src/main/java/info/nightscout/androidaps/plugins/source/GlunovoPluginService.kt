@@ -20,7 +20,7 @@ class GlunovoPluginService : Service() {
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        //backgroundExecutor.execute {mgetValue()}
+        backgroundExecutor.execute {mgetValue()}
         return super.onStartCommand(intent, flags, startId)
     }
 
