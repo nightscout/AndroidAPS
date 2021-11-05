@@ -6,21 +6,26 @@ import android.net.Uri
 import android.os.IBinder
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
+import org.joda.time.Seconds
+import java.time.Duration
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.TimeUnit
 
 class GlunovoPluginService : Service() {
-    private val handler = Handler()
+    private val backgroundExecutor: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
     override fun onBind(intent: Intent): IBinder? {
         return null
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        handler.postDelayed(mgetValue, 0)
+        backgroundExecutor.execute {mgetValue()}
         return super.onStartCommand(intent, flags, startId)
     }
 
     //180000
-    private val mgetValue: Runnable = object : Runnable {
-        override fun run() {
+    fun mgetValue() {
             val cr = contentResolver.query(CONTENT_URI, null, null, null, null)
             val crfirst = contentResolver.query(CONTENT_URI, null, null, null, null)
             cr!!.moveToLast()
@@ -58,15 +63,15 @@ class GlunovoPluginService : Service() {
             if (time != curtime) {
                 cr.close()
                 crfirst.close()
-                handler.postDelayed(this, 180000-(curtime-time))
+                var dur : Long = (curtime-time).toLong()
+                backgroundExecutor.schedule({mgetValue()}, 3, TimeUnit.SECONDS)
             }
             else
             {
                 cr.close()
                 crfirst.close()
-                handler.postDelayed(this, 180000)
+                backgroundExecutor.schedule({mgetValue()}, 3, TimeUnit.MINUTES)
             }
-        }
     }
 
     companion object {
