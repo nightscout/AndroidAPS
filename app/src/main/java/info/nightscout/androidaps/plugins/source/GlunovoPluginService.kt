@@ -64,13 +64,13 @@ class GlunovoPluginService : Service() {
             cr.close()
             crfirst.close()
             var dur : Long = (curtime-time)
-            backgroundExecutor.schedule({mgetValue()}, 3, TimeUnit.SECONDS)
+            backgroundExecutor.schedule({mgetValue()}, 180, TimeUnit.SECONDS)
         }
         else
         {
             cr.close()
             crfirst.close()
-            backgroundExecutor.schedule({mgetValue()}, 3, TimeUnit.MINUTES)
+            backgroundExecutor.schedule({mgetValue()}, 180, TimeUnit.SECONDS)
         }
         backgroundExecutor.shutdown()
     }
