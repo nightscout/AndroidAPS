@@ -26,8 +26,13 @@ class GlunovoPluginService : Service() {
     private val mgetValue: Runnable = object : Runnable {
         override fun run() {
             val cr = contentResolver.query(CONTENT_URI, null, null, null, null)
+
+            if (cr == null) {
+                handler.postDelayed(this, 180000)
+                return
+            }
+            cr.moveToLast()
             val crfirst = contentResolver.query(CONTENT_URI, null, null, null, null)
-            cr!!.moveToLast()
             crfirst!!.moveToFirst()
             var i = 1
             while ((i<=10) && (cr != crfirst)) {
