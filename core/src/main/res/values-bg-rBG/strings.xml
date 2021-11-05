@@ -18,6 +18,7 @@
     <string name="connected">Свързана</string>
     <string name="disconnected">Не е сврзана</string>
     <string name="disconnecting">Разкачане</string>
+    <string name="waiting_for_disconnection">Изчакване за разкачане</string>
     <string name="androidaps_start">Стартиран AndroidAPS</string>
     <string name="formatinsulinunits1">%1$.1fЕ</string>
     <string name="formatinsulinunits">%1$.2fЕ</string>
@@ -63,6 +64,7 @@
     <string name="mgdl">мг/дл</string>
     <string name="mmol">ммол/л</string>
     <string name="shortgram">гр.</string>
+    <string name="shortpercent">%</string>
     <string name="advancedsettings_title">Допълнителни настройки</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">BT ограничения</string>
@@ -103,6 +105,7 @@
     <string name="notes_label">Бележки</string>
     <string name="remove_button">Изтрий</string>
     <string name="addnew">Добави нов</string>
+    <string name="wrong_pump_data">Данните идват от различна помпа. Сменете драйвера на помпата и за да възстановите състоянието на помпата.</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Ограничаване на макс. базална стойност до %1$.2f Е/ч поради %2$s</string>
     <string name="pumplimit">лимит на помпата</string>
@@ -118,6 +121,7 @@
     <string name="dismiss">Разбрах</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy не се поддържа.</string>
+    <string name="ble_not_supported_or_not_paired">Нискоенергиен Bluetooth не се потдържа или устройството не е сдвоено.</string>
     <string name="ble_not_enabled">Bluetooth не е включен.</string>
     <string name="location_not_found_title">Локацията не е включена</string>
     <string name="location_not_found_message">За да работи откриването на нови устройсва чрез Bluetooth, трябва да включите локацията. AAPS не проследява вашето местоположение и ще можете да я изключите след успешното свързване.</string>
@@ -168,7 +172,9 @@
     <!--    TDD-->
     <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fЕ</b> Бол: <b>%3$.2fЕ</b> Баз: <b>%4$.2fЕ(%5$.0f%%)</b>]]></string>
     <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fЕ</b> Бол: <b>%3$.2fЕ</b> Баз: <b>%4$.2fЕ(%5$.0f%%)</b> Въгл: <b>%6$.0fгр</b>]]></string>
+    <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> in <b>%3$d</b> days<br>]]></string>
     <!--    Translator-->
+    <string name="careportal">Careportal</string>
     <string name="careportal_bgcheck">Проверка на КЗ</string>
     <string name="careportal_mbg">Калибрация или ръчна КЗ</string>
     <string name="careportal_announcement">Известие</string>
@@ -285,10 +291,15 @@
     <string name="saturday_short">С</string>
     <string name="sunday_short">Н</string>
     <!-- User Entry -->
+    <string name="uel_disconnect">Разкачане</string>
     <string name="uel_cancel_bolus">СПРИ БОЛУС</string>
     <string name="ue_source">Източник</string>
     <string name="ue_action">Действие</string>
     <!-- HardLimits -->
+    <plurals name="days">
+        <item quantity="one">%1$d дeн</item>
+        <item quantity="other">%1$d дни</item>
+    </plurals>
     <plurals name="hours">
         <item quantity="one">%1$d час</item>
         <item quantity="other">%1$d часа</item>
