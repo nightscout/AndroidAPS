@@ -896,4 +896,5 @@
     <string name="invalid_profile_not_accepted">Ugyldig profil %1$s ikke akseptert fra NS</string>
     <string name="view">Visning</string>
     <string name="errors">Feil</string>
+    <string name="ns_sync_slow">Reduser opplastingshastighet</string>
 </resources>
