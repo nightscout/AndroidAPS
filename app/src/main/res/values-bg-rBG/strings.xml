@@ -677,6 +677,7 @@
     <string name="resettodefaults">Възстанови настройките по подразбиране</string>
     <string name="nsmalfunction">Грешка в NSClient. Рестартирайте Nightscout и NSClient</string>
     <string name="time_offset">времево отместване</string>
+    <string name="bolus_reminder">Напомни за болус по-късно</string>
     <string name="setupwizard_preferred_aps_mode">Предпочитаният режим на APS</string>
     <string name="treatments_wizard_total_label">Общо</string>
     <string name="calculation_short">Калк</string>
@@ -842,6 +843,10 @@
     <string name="enablebolusadvisor_summary">Използвай напомняне за старт на хранене вместо съветника по време на висока гликемия (\"пре-болус\")</string>
     <string name="time_to_eat">Време за ядене!\nИзпълнете болус съветника и направете изчисления отново.</string>
     <string name="timetoeat">Време е за ядене</string>
+    <string name="bolusreminder">Болус подсещане</string>
+    <string name="enablebolusreminder">Включи подсещането за болус</string>
+    <string name="enablebolusreminder_summary">Използвай подсещане за болус по-късно със съветник (\"след-болус\")</string>
+    <string name="time_to_bolus">Време е за болус!\nВключи болус съветника и направи изчисление отново.</string>
     <string name="fabric_upload_disabled">Качването на данни за проблеми е забранено!(Fabric)</string>
     <string name="graph_menu_divider_header">Графика</string>
     <string name="chart_menu">Меню на графиката</string>
@@ -849,6 +854,7 @@
     <string name="trend_arrow">Стрелка тенденция</string>
     <string name="cannula">Канюла</string>
     <string name="userentry">Потербителска настройка</string>
+    <string name="common_values">Използвай стойностите от вашето най-голямо хранен, с което обикновено се храните</string>
     <string name="summary_email_for_crash_report">Тази електронна поща ще бъде добавена към репорта за да можем да се свържем с вас в случай на нужда. Не е задължително.</string>
     <string name="email_address">Електронна поща</string>
     <string name="privacy_settings">Настройки за поверителност</string>
