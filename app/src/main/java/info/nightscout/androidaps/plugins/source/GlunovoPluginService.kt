@@ -52,9 +52,9 @@ class GlunovoPluginService : Service() {
                 value = cr.getDouble(1) * 18.018 //value in mmol/l... transformed in mg/dl if value *18.018
                 intent = Intent()
                 intent.action = "com.glunovoservice.BgEstimate"
-                intent.putExtra("Time", time)
-                intent.putExtra("BgEstimate", value)
-                intent.setPackage("info.nightscout.androidaps")
+                //intent.putExtra("Time", time)
+                //intent.putExtra("BgEstimate", value)
+                //intent.setPackage("info.nightscout.androidaps")
                 bundle = Bundle()
                 bundle.putLong("Time",time)
                 bundle.putDouble("BgEstimate",value)
