@@ -847,6 +847,8 @@
     <string name="timetoeat">Tempo di mangiare</string>
     <string name="bolusreminder">Promemoria bolo</string>
     <string name="enablebolusreminder">Abilita promemoria bolo</string>
+    <string name="enablebolusreminder_summary">Usa promemoria bolo con calcolatore
+        (\"post-bolo\")</string>
     <string name="time_to_bolus">Tempo di fare un bolo!\nEsegui il calcolatore e fai di nuovi i calcoli.</string>
     <string name="fabric_upload_disabled">Caricamento log dei crash disabilitato!</string>
     <string name="graph_menu_divider_header">Grafico</string>
@@ -891,4 +893,8 @@
     <string name="error_in_target_values">Errore nei valori del target</string>
     <string name="error_in_isf_values">Errore nei valori ISF</string>
     <string name="run_question">Eseguire %s?</string>
+    <string name="invalid_profile_not_accepted">Profilo %1$s non valido - non accettato da NS</string>
+    <string name="view">Vista</string>
+    <string name="errors">Errori</string>
+    <string name="ns_sync_slow">Rallenta caricamenti</string>
 </resources>

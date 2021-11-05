@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Omnipod Dash - Description -->
+    <string name="omnipod_dash_pump_description">Integración de bombas de insulina Omnipod Dash (el nuevo modelo, con bluetooth habilitado con tapa azul).</string>
     <!-- Omnipod Dash - Keys -->
     <!-- Omnipod Dash - History -->
     <!-- Omnipod Dash - Overview -->

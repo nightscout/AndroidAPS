@@ -5,7 +5,9 @@
     <string name="danars_pairingok">Сдвояване - ОК</string>
     <string name="danars_pairingtimedout">Времето за сдвояване изтече</string>
     <string name="danars_waitingforpairing">Очаква сдвояване с помпа</string>
+    <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
+    <string name="description_pump_dana_rs">Интеграция за помпа DANA Diabecare RS и Dana-i</string>
     <string name="maxbolusviolation">Превишавате макс болус</string>
     <string name="commanderror">Грешка при команда</string>
     <string name="speederror">Скорост грешка</string>
@@ -113,4 +115,5 @@
     <string name="press_ok_on_the_pump">Натиснете OK на помпата\nи въведете двата номера\nДръжте дисплея на помпата включен чрез натискане минус бутон, докато завършите въвеждане на код.</string>
     <string name="num1pin">1: (12 цифри)</string>
     <string name="num2pin">2: (8 цифри)</string>
+    <string name="basal_bolus_step">Базал/Болус стъпка</string>
 </resources>

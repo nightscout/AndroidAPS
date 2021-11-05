@@ -893,4 +893,8 @@
     <string name="error_in_target_values">Feil i BS mål verdiene</string>
     <string name="error_in_isf_values">Feil i IF verdien</string>
     <string name="run_question">Kjør %s?</string>
+    <string name="invalid_profile_not_accepted">Ugyldig profil %1$s ikke akseptert fra NS</string>
+    <string name="view">Visning</string>
+    <string name="errors">Feil</string>
+    <string name="ns_sync_slow">Reduser opplastingshastighet</string>
 </resources>

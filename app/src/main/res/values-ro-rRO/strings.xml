@@ -678,6 +678,7 @@
     <string name="resettodefaults">Resetare la setările implicite</string>
     <string name="nsmalfunction">Funcționare incorectă a NSClient. Aveți în vedere un restart al NS și al NSClient.</string>
     <string name="time_offset">Decalaj</string>
+    <string name="bolus_reminder">Amintește-mi sa fac bolus mai târziu</string>
     <string name="setupwizard_preferred_aps_mode">Modul APS preferat</string>
     <string name="treatments_wizard_total_label">Total</string>
     <string name="calculation_short">Calc</string>
@@ -844,6 +845,11 @@
     <string name="enablebolusadvisor_summary">Folosește o alarma de reamintire pentru a începe sa mănânci mai târziu în loc de alerta de la calculatorul de bolus din timpul hiperglicemiei (\"pre-bolus\")</string>
     <string name="time_to_eat">Timpul sa mănânci!\nRuleaza Calculatorul de Bolus pentru a face calculele din nou.</string>
     <string name="timetoeat">Timpul sa mănânci</string>
+    <string name="bolusreminder">Memento bolus</string>
+    <string name="enablebolusreminder">Activează memento bolus</string>
+    <string name="enablebolusreminder_summary">Folosește memento pentru a bolusa mai târziu cu asistentul
+        (\"post-bolus\")</string>
+    <string name="time_to_bolus">Timpul sa faci bolus!\nRuleaza Calculatorul de Bolus pentru a face calculele din nou.</string>
     <string name="fabric_upload_disabled">Încărcarea jurnalelor de erori este dezactivata!</string>
     <string name="graph_menu_divider_header">Grafic</string>
     <string name="chart_menu">Meniu diagramă</string>
@@ -886,4 +892,9 @@
     <string name="error_in_basal_values">Eroare in valorile ratei bazale</string>
     <string name="error_in_target_values">Eroare in valorile tinta</string>
     <string name="error_in_isf_values">Eroare in valorile ISF</string>
+    <string name="run_question">Executați %s?</string>
+    <string name="invalid_profile_not_accepted">Profilul invalid din NS %1$s nu este acceptat</string>
+    <string name="view">Vizualizare</string>
+    <string name="errors">Erori</string>
+    <string name="ns_sync_slow">Încarcă mai lent</string>
 </resources>

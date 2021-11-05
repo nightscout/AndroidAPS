@@ -4,6 +4,14 @@
     <string name="omnipod_dash_pump_description">Integrácia pumpy pre Omnipod Dash (nový model s funkciou Bluetooth a modrým krytom).</string>
     <!-- Omnipod Dash - Keys -->
     <!-- Omnipod Dash - History -->
+    <string name="omnipod_dash_history_title">História Podu</string>
+    <string name="omnipod_dash_history_item_description">Popis</string>
+    <string name="omnipod_dash_history_item_source">Zdroj</string>
+    <string name="omnipod_dash_history_item_date">Dátum</string>
+    <string name="omnipod_dash_history_type">Typ:</string>
+    <string name="omnipod_dash_history_bolus_value">%1$.2f JI</string>
+    <string name="omnipod_dash_history_bolus_value_with_carbs">%1$.2f JI, Sach=%2$.1f g</string>
+    <string name="omnipod_dash_history_tbr_value">Rýchlosť: %1$.2f JI, Doba trvania: %2$d minút</string>
     <!-- Omnipod Dash - Overview -->
     <string name="omnipod_dash_overview_bluetooth_status">Stav Bluetooth</string>
     <string name="omnipod_dash_overview_bluetooth_address">Adresa Bluetooth</string>
@@ -19,4 +27,10 @@
     <string name="omnipod_dash_found_too_many_pods">Našlo sa príliš veľa Podov na aktiváciu</string>
     <string name="omnipod_dash_scan_failed">Nemôžem nájsť dostupný Pod na aktiváciu</string>
     <string name="omnipod_dash_generic_error">Všeobecná chyba: %1$s</string>
+    <string name="omnipod_dash_failed_to_send">Nepodarilo sa odoslať príkaz</string>
+    <string name="omnipod_dash_command_not_sent">Príkaz nebol odoslaný</string>
+    <string name="omnipod_dash_command_not_received_by_the_pod">Príkaz nebol prijatý Podom</string>
+    <string name="omnipod_dash_unknown">Neznámy stav príkazu</string>
+    <string name="omnipod_common_history_tbr_value">Rýchlosť: %1$.2f JI, Doba trvania: %2$d minút</string>
+    <string name="omnipod_common_history_bolus_value">%1$.2f JI</string>
 </resources>
