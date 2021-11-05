@@ -105,6 +105,7 @@ class MainApp : DaggerApplication() {
         // Register all tabs in app here
         pluginStore.plugins = plugins
         configBuilder.initialize()
+        configBuilder.startGlunovoService(this)
         keepAliveManager.setAlarm(this)
         doMigrations()
         uel.log(UserEntry.Action.START_AAPS, UserEntry.Sources.Aaps)
