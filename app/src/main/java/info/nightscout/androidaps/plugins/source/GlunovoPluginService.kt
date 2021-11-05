@@ -27,7 +27,7 @@ class GlunovoPluginService : Service() {
         override fun run() {
             val cr = contentResolver.query(CONTENT_URI, null, null, null, null)
 
-            if (cr == null) {
+            if (cr == null) { //check if cr has not data
                 handler.postDelayed(this, 180000)
                 return
             }
@@ -35,7 +35,7 @@ class GlunovoPluginService : Service() {
             val crfirst = contentResolver.query(CONTENT_URI, null, null, null, null)
             crfirst!!.moveToFirst()
             var i = 1
-            while ((i<=10) && (cr != crfirst)) {
+            while ((i<=10) && (cr != crfirst)) { //go to 10th entry berofe the end
                 cr.moveToPrevious()
                 i = i + 1
             }
@@ -45,7 +45,7 @@ class GlunovoPluginService : Service() {
             var bundle : Bundle
             cr.moveToPrevious()
 
-            while (i>=1)
+            while (i>=1) //insert to db the last 10 entries
             {
                 cr.moveToNext()
                 time = cr.getLong(0)
@@ -64,10 +64,9 @@ class GlunovoPluginService : Service() {
             }
 
             val curtime = System.currentTimeMillis()
-            if (time != curtime) {
+            if (time != curtime) { //wait until next reading to enter
                 cr.close()
                 crfirst.close()
-
                 handler.postDelayed(this, 180000-(curtime-time))
             }
             else
