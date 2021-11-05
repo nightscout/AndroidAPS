@@ -145,10 +145,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
                         binding.percentage.value = profile.value.originalPercentage.toDouble()
                         binding.timeshift.value = profile.value.originalTimeshift.toDouble()
                     }
-                } else {
-                    binding.reuselayout.visibility = View.GONE
                 }
-            else binding.reuselayout.visibility = View.GONE
         }
         binding.ttLayout.visibility = View.GONE
     }
