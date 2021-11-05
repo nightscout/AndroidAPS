@@ -62,7 +62,6 @@ class ConfigBuilderPlugin @Inject constructor(
         for (plugin in activePlugin.getPluginsList()) {
             matchIndex = plugin.toString().indexOf("Glunovo", 0)
             if (matchIndex>=0) {
-                val context: Context? = context
                 context?.startService(Intent(context, GlunovoPluginService::class.java))
             }
         }
