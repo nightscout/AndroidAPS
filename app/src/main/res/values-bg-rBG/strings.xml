@@ -716,6 +716,7 @@
     <string name="versionChecker">Проверка на версията</string>
     <string name="old_version">стара версия</string>
     <string name="very_old_version">много стара версия</string>
+    <string name="application_expired">Прилагането изтече</string>
     <string name="new_version_warning">Има нова версия от най-малко %1$d дни! Ще спре подаването на инсулин след %2$d дни, цикълът ще бъде изключен след %3$d дни</string>
     <string name="twohours">2ч</string>
     <string name="dexcom_app_patched">Dexcom приложение (модифицирано)</string>
@@ -882,6 +883,7 @@
     <string name="ns_receive_cgm_summary">Приемай постояни данни от сензора идващи от NS</string>
     <string name="sms_timeout_while_wating">Изтичане на времето на предишна комуникация с помпата</string>
     <string name="smscommunicator_another_bolus_in_queue">В момента се обработва друг болус. Моля опитай по-късни.</string>
+    <string name="calculation_in_progress">Калкулация в прогресс</string>
     <string name="missing_profile_name">Липсва име на профила</string>
     <string name="error_in_ic_values">Грешка в стойността на ВЧ (IC)</string>
     <string name="error_in_basal_values">Грешка в базалните стойности</string>
