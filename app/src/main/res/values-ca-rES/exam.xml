@@ -59,4 +59,10 @@
     <string name="exercise_setunchanged">Deixar l\'objectiu glucèmic com està.</string>
     <string name="exercise_15g">Esperar que la glucèmia baixi per sota del vostre objectiu temporal d\'hipoglucèmia i llavors prendre 15g de carbohidrats d\'acció ràpida.</string>
     <string name="exercise_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
+    <string name="suspendloop_label">Llaç desactivat/aturat</string>
+    <string name="suspendloop_doigetinsulin">Rebo insulina quan el llaç està desactivat/aturat?</string>
+    <string name="insulin_fiasp">Fiasp®</string>
+    <string name="insulin_novorapid">NovoRapid®/Novolog®</string>
+    <string name="insulin_humalog">Humalog®</string>
+    <string name="insulin_actrapid">Actrapid®/Humalin R®/insulina humana \"estàndard\".</string>
 </resources>
