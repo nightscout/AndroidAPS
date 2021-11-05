@@ -21,11 +21,11 @@ import javax.inject.Singleton
 class DstHelperPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
-    private var rxBus: RxBus,
+    private val rxBus: RxBus,
     rh: ResourceHelper,
-    private var sp: SP,
-    private var activePlugin: ActivePlugin,
-    private var loopPlugin: LoopPlugin
+    private val sp: SP,
+    private val activePlugin: ActivePlugin,
+    private val loopPlugin: LoopPlugin
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.CONSTRAINTS)
     .neverVisible(true)
@@ -41,6 +41,7 @@ class DstHelperPlugin @Inject constructor(
     }
 
     //Return false if time to DST change happened in the last 3 hours.
+    @Suppress("ReplaceGetOrSet")
     override fun isLoopInvocationAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         val pump = activePlugin.activePump
         if (pump.canHandleDST()) {
@@ -52,9 +53,9 @@ class DstHelperPlugin @Inject constructor(
             val snoozedTo: Long = sp.getLong(R.string.key_snooze_dst_in24h, 0L)
             if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
                 val notification = NotificationWithAction(injector, Notification.DST_IN_24H, rh.gs(R.string.dst_in_24h_warning), Notification.LOW)
-                notification.action(R.string.snooze, Runnable {
+                notification.action(R.string.snooze) {
                     sp.putLong(R.string.key_snooze_dst_in24h, System.currentTimeMillis() + T.hours(24).msecs())
-                })
+                }
                 rxBus.send(EventNewNotification(notification))
             }
         }
@@ -67,9 +68,9 @@ class DstHelperPlugin @Inject constructor(
                 val snoozedTo: Long = sp.getLong(R.string.key_snooze_loopdisabled, 0L)
                 if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
                     val notification = NotificationWithAction(injector, Notification.DST_LOOP_DISABLED, rh.gs(R.string.dst_loop_disabled_warning), Notification.LOW)
-                    notification.action(R.string.snooze, Runnable {
+                    notification.action(R.string.snooze) {
                         sp.putLong(R.string.key_snooze_loopdisabled, System.currentTimeMillis() + T.hours(24).msecs())
-                    })
+                    }
                     rxBus.send(EventNewNotification(notification))
                 }
             } else {

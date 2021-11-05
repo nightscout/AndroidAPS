@@ -50,6 +50,7 @@ import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.aps.loop.events.EventNewOpenLoopNotification
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.plugins.constraints.bgQualityCheck.BgQualityCheckPlugin
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus
 import info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity
@@ -122,6 +123,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Inject lateinit var overviewData: OverviewData
     @Inject lateinit var overviewPlugin: OverviewPlugin
     @Inject lateinit var automationPlugin: AutomationPlugin
+    @Inject lateinit var bgQualityCheckPlugin: BgQualityCheckPlugin
 
     private val disposable = CompositeDisposable()
 
@@ -661,6 +663,15 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     else binding.infoLayout.bg.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
                 binding.infoLayout.timeAgo.text = dateUtil.minAgo(rh, overviewData.lastBg?.timestamp)
                 binding.infoLayout.timeAgoShort.text = "(" + dateUtil.minAgoShort(overviewData.lastBg?.timestamp) + ")"
+
+                val qualityIcon = bgQualityCheckPlugin.icon()
+                if (qualityIcon != 0) {
+                    binding.infoLayout.bgQuality.visibility = View.VISIBLE
+                    binding.infoLayout.bgQuality.setImageResource(qualityIcon)
+                } else {
+                    binding.infoLayout.bgQuality.visibility = View.GONE
+                }
+
             }
 
             OverviewData.Property.PROFILE          -> {
