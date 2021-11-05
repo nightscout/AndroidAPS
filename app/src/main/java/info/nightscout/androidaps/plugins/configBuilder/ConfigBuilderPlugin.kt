@@ -65,11 +65,6 @@ class ConfigBuilderPlugin @Inject constructor(
                 val context: Context? = context
                 context?.startService(Intent(context, GlunovoPluginService::class.java))
             }
-            if (matchIndex == -1)
-            {
-                val context: Context? = context
-                context?.stopService(Intent(context, GlunovoPluginService::class.java))
-            }
         }
     }
 
