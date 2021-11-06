@@ -35,7 +35,6 @@
     <string name="isequalorgreater">eşit veya büyükse</string>
     <string name="isgreater">büyükse</string>
     <string name="isnotavailable">mevcut değil</string>
-    <string name="glucoseisnotavailable">Glikoz verileri mevcut değil</string>
     <string name="glucosecomparedmgdl">Glukoz %1$s %2$.0f %3$s</string>
     <string name="glucosecomparedmmol">Glukoz %1$s %2$.1f %3$s</string>
     <string name="notemptarget">Geçici Hedef mevcut değil</string>
@@ -43,8 +42,6 @@
     <string name="temptargetcomparedmmol">Geçici Hedef %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">Profil yüzdesi %1$s %2$d</string>
     <string name="iobcompared">Aktif insülin %1$s %2$.1f</string>
-    <string name="and">Ve</string>
-    <string name="or">Veya</string>
     <string name="xor">Özel veya</string>
     <string name="atspecifiedtime">%1$s\'de</string>
     <string name="use_network_location">Ağ konumunu kullan</string>
@@ -53,9 +50,6 @@
     <string name="locationservice">Konum servisi</string>
     <string name="onconnect">Bağlandığında</string>
     <string name="ondisconnect">Bağlantı kesildiğinde</string>
-    <string name="short_avgdelta">Kısa ortalama delta</string>
-    <string name="long_avgdelta">Uzun ortalama delta</string>
-    <string name="delta">Delta</string>
     <string name="locationis">%1$s %2$s</string>
     <string name="location_mode">Ne zaman </string>
     <string name="location_inside">Bölgenin içindeyken</string>
@@ -65,11 +59,6 @@
     <string name="time_range">Zaman aralığı</string>
     <string name="timerange_value">%1$s ile %2$s arasında</string>
     <string name="between">Arasında </string>
-    <string name="weekday_sunday_short">Pzr</string>
-    <string name="weekday_saturday_short">Cts</string>
-    <string name="weekday_friday_short">Cum</string>
-    <string name="weekday_thursday_short">Prş</string>
-    <string name="weekday_wednesday_short">Çrş</string>
     <string name="weekday_tuesday_short">Salı</string>
     <string name="weekday_monday_short">Pzt</string>
     <string name="delete_short">SİL</string>
