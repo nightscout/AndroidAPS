@@ -34,20 +34,14 @@ class GlunovoPluginService : Service() {
             cr.moveToLast()
             val crfirst = contentResolver.query(CONTENT_URI, null, null, null, null)
             crfirst!!.moveToFirst()
-            var i = 1
-            while ((i<=10) && (cr != crfirst)) { //go to 10th entry berofe the end
-                cr.moveToPrevious()
-                i = i + 1
-            }
+            cr.moveToPosition(cr.count-11)
             var time : Long = cr.getLong(0)
             var value : Double
             var intent : Intent
             var bundle : Bundle
-            cr.moveToPrevious()
 
-            while (i>=1) //insert to db the last 10 entries
+            while ((cr.moveToNext()) && (cr.getLong(0) != crfirst.getLong(0)))
             {
-                cr.moveToNext()
                 time = cr.getLong(0)
                 value = cr.getDouble(1) * 18.018 //value in mmol/l... transformed in mg/dl if value *18.018
                 intent = Intent()
@@ -60,7 +54,6 @@ class GlunovoPluginService : Service() {
                 bundle.putDouble("BgEstimate",value)
                 intent.putExtra("bundle", bundle)
                 sendBroadcast(intent)
-                i = i - 1
             }
 
             val curtime = System.currentTimeMillis()
