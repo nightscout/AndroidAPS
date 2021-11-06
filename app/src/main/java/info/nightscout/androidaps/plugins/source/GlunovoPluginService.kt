@@ -44,7 +44,7 @@ class GlunovoPluginService : Service() {
             var bundle : Bundle
 
             var i = valuestotake
-            while (cr.moveToNext())
+            while (i>1)
             {
                 cr.moveToNext()
                 time = cr.getLong(0)
