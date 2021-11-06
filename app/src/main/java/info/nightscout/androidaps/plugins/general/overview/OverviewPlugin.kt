@@ -44,7 +44,6 @@ class OverviewPlugin @Inject constructor(
     rh: ResourceHelper,
     private val config: Config,
     private val dateUtil: DateUtil,
-    private val profileFunction: ProfileFunction,
     private val iobCobCalculator: IobCobCalculator,
     private val repository: AppRepository,
     private val overviewData: OverviewData,
@@ -153,6 +152,18 @@ class OverviewPlugin @Inject constructor(
                .observeOn(aapsSchedulers.io)
                .subscribe({
                     overviewData.pumpStatus = it.getStatus(rh)
+               }, fabricPrivacy::logException)
+        disposable += rxBus
+               .toObservable(EventPreferenceChange::class.java)
+               .observeOn(aapsSchedulers.io)
+               .subscribe({ event ->
+                    if (event.isChanged(rh, R.string.key_units)) {
+                        overviewData.reset()
+                        overviewData.prepareBucketedData("EventBucketedDataCreated")
+                        overviewData.prepareBgData("EventBucketedDataCreated")
+                        overviewBus.send(EventUpdateOverview("EventBucketedDataCreated", OverviewData.Property.GRAPH))
+                        loadAll("EventPreferenceChange")
+                    }
                }, fabricPrivacy::logException)
 
         Thread { loadAll("onResume") }.start()
