@@ -29,7 +29,7 @@ public class AutosensData implements DataPointWithLabelInterface {
 
     @Inject AAPSLogger aapsLogger;
     @Inject SP sp;
-    @Inject ResourceHelper resourceHelper;
+    @Inject ResourceHelper rh;
     @Inject ProfileFunction profileFunction;
     @Inject DateUtil dateUtil;
 
@@ -197,7 +197,7 @@ public class AutosensData implements DataPointWithLabelInterface {
 
     @Override
     public int getColor() {
-        return resourceHelper.gc(R.color.cob);
+        return rh.gc(R.color.cob);
     }
 
 }

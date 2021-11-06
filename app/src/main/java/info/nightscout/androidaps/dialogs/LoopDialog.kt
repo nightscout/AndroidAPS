@@ -51,7 +51,7 @@ class LoopDialog : DaggerDialogFragment() {
     @Inject lateinit var sp: SP
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var loopPlugin: LoopPlugin
     @Inject lateinit var activePlugin: ActivePlugin
@@ -185,7 +185,7 @@ class LoopDialog : DaggerDialogFragment() {
                 binding.overviewLoop.visibility = View.GONE
                 binding.overviewSuspend.visibility = View.GONE
                 binding.overviewPump.visibility = View.VISIBLE
-                binding.overviewPumpHeader.text = resourceHelper.gs(R.string.reconnect)
+                binding.overviewPumpHeader.text = rh.gs(R.string.reconnect)
                 binding.overviewDisconnectButtons.visibility = View.VISIBLE
                 binding.overviewReconnect.visibility = View.VISIBLE
             }
@@ -202,7 +202,7 @@ class LoopDialog : DaggerDialogFragment() {
             loopPlugin.isSuspended                                 -> {
                 binding.overviewLoop.visibility = View.GONE
                 binding.overviewSuspend.visibility = View.VISIBLE
-                binding.overviewSuspendHeader.text = resourceHelper.gs(R.string.resumeloop)
+                binding.overviewSuspendHeader.text = rh.gs(R.string.resumeloop)
                 binding.overviewSuspendButtons.visibility = View.VISIBLE
                 binding.overviewResume.visibility = View.VISIBLE
                 binding.overviewPump.visibility = View.GONE
@@ -238,12 +238,12 @@ class LoopDialog : DaggerDialogFragment() {
                     }
                 }
                 binding.overviewSuspend.visibility = View.VISIBLE
-                binding.overviewSuspendHeader.text = resourceHelper.gs(R.string.suspendloop)
+                binding.overviewSuspendHeader.text = rh.gs(R.string.suspendloop)
                 binding.overviewSuspendButtons.visibility = View.VISIBLE
                 binding.overviewResume.visibility = View.GONE
 
                 binding.overviewPump.visibility = View.VISIBLE
-                binding.overviewPumpHeader.text = resourceHelper.gs(R.string.disconnectpump)
+                binding.overviewPumpHeader.text = rh.gs(R.string.disconnectpump)
                 binding.overviewDisconnectButtons.visibility = View.VISIBLE
                 binding.overviewReconnect.visibility = View.GONE
 
@@ -254,25 +254,25 @@ class LoopDialog : DaggerDialogFragment() {
     private fun onClickOkCancelEnabled(v: View): Boolean {
         var description = ""
         when (v.id) {
-            R.id.overview_closeloop      -> description = resourceHelper.gs(R.string.closedloop)
-            R.id.overview_lgsloop        -> description = resourceHelper.gs(R.string.lowglucosesuspend)
-            R.id.overview_openloop       -> description = resourceHelper.gs(R.string.openloop)
-            R.id.overview_disable        -> description = resourceHelper.gs(R.string.disableloop)
-            R.id.overview_enable         -> description = resourceHelper.gs(R.string.enableloop)
-            R.id.overview_resume         -> description = resourceHelper.gs(R.string.resume)
-            R.id.overview_reconnect      -> description = resourceHelper.gs(R.string.reconnect)
-            R.id.overview_suspend_1h     -> description = resourceHelper.gs(R.string.suspendloopfor1h)
-            R.id.overview_suspend_2h     -> description = resourceHelper.gs(R.string.suspendloopfor2h)
-            R.id.overview_suspend_3h     -> description = resourceHelper.gs(R.string.suspendloopfor3h)
-            R.id.overview_suspend_10h    -> description = resourceHelper.gs(R.string.suspendloopfor10h)
-            R.id.overview_disconnect_15m -> description = resourceHelper.gs(R.string.disconnectpumpfor15m)
-            R.id.overview_disconnect_30m -> description = resourceHelper.gs(R.string.disconnectpumpfor30m)
-            R.id.overview_disconnect_1h  -> description = resourceHelper.gs(R.string.disconnectpumpfor1h)
-            R.id.overview_disconnect_2h  -> description = resourceHelper.gs(R.string.disconnectpumpfor2h)
-            R.id.overview_disconnect_3h  -> description = resourceHelper.gs(R.string.disconnectpumpfor3h)
+            R.id.overview_closeloop      -> description = rh.gs(R.string.closedloop)
+            R.id.overview_lgsloop        -> description = rh.gs(R.string.lowglucosesuspend)
+            R.id.overview_openloop       -> description = rh.gs(R.string.openloop)
+            R.id.overview_disable        -> description = rh.gs(R.string.disableloop)
+            R.id.overview_enable         -> description = rh.gs(R.string.enableloop)
+            R.id.overview_resume         -> description = rh.gs(R.string.resume)
+            R.id.overview_reconnect      -> description = rh.gs(R.string.reconnect)
+            R.id.overview_suspend_1h     -> description = rh.gs(R.string.suspendloopfor1h)
+            R.id.overview_suspend_2h     -> description = rh.gs(R.string.suspendloopfor2h)
+            R.id.overview_suspend_3h     -> description = rh.gs(R.string.suspendloopfor3h)
+            R.id.overview_suspend_10h    -> description = rh.gs(R.string.suspendloopfor10h)
+            R.id.overview_disconnect_15m -> description = rh.gs(R.string.disconnectpumpfor15m)
+            R.id.overview_disconnect_30m -> description = rh.gs(R.string.disconnectpumpfor30m)
+            R.id.overview_disconnect_1h  -> description = rh.gs(R.string.disconnectpumpfor1h)
+            R.id.overview_disconnect_2h  -> description = rh.gs(R.string.disconnectpumpfor2h)
+            R.id.overview_disconnect_3h  -> description = rh.gs(R.string.disconnectpumpfor3h)
         }
         activity?.let { activity ->
-            OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.confirm), description, Runnable {
+            OKDialog.showConfirmation(activity, rh.gs(R.string.confirm), description, Runnable {
                 onClick(v)
             })
         }
@@ -284,21 +284,21 @@ class LoopDialog : DaggerDialogFragment() {
             R.id.overview_closeloop                       -> {
                 uel.log(Action.CLOSED_LOOP_MODE, Sources.LoopDialog)
                 sp.putString(R.string.key_aps_mode, "closed")
-                rxBus.send(EventPreferenceChange(resourceHelper.gs(R.string.closedloop)))
+                rxBus.send(EventPreferenceChange(rh.gs(R.string.closedloop)))
                 return true
             }
 
             R.id.overview_lgsloop                         -> {
                 uel.log(Action.LGS_LOOP_MODE, Sources.LoopDialog)
                 sp.putString(R.string.key_aps_mode, "lgs")
-                rxBus.send(EventPreferenceChange(resourceHelper.gs(R.string.lowglucosesuspend)))
+                rxBus.send(EventPreferenceChange(rh.gs(R.string.lowglucosesuspend)))
                 return true
             }
 
             R.id.overview_openloop                        -> {
                 uel.log(Action.OPEN_LOOP_MODE, Sources.LoopDialog)
                 sp.putString(R.string.key_aps_mode, "open")
-                rxBus.send(EventPreferenceChange(resourceHelper.gs(R.string.lowglucosesuspend)))
+                rxBus.send(EventPreferenceChange(rh.gs(R.string.lowglucosesuspend)))
                 return true
             }
 
@@ -311,7 +311,7 @@ class LoopDialog : DaggerDialogFragment() {
                 commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            ToastUtils.showToastInUiThread(ctx, resourceHelper.gs(R.string.tempbasaldeliveryerror))
+                            ToastUtils.showToastInUiThread(ctx, rh.gs(R.string.tempbasaldeliveryerror))
                         }
                     }
                 })
@@ -352,7 +352,7 @@ class LoopDialog : DaggerDialogFragment() {
                 commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
+                            ErrorHelperActivity.runAlarm(ctx, result.comment, rh.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
                         }
                     }
                 })

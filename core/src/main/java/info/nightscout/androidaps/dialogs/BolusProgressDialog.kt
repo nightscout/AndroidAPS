@@ -31,7 +31,7 @@ class BolusProgressDialog : DaggerDialogFragment() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var aapsSchedulers: AapsSchedulers
@@ -81,7 +81,7 @@ class BolusProgressDialog : DaggerDialogFragment() {
         savedInstanceState?.let {
             amount = it.getDouble("amount")
         }
-        binding.title.text = resourceHelper.gs(R.string.goingtodeliver, amount)
+        binding.title.text = rh.gs(R.string.goingtodeliver, amount)
         binding.stop.setOnClickListener {
             aapsLogger.debug(LTag.UI, "Stop bolus delivery button pressed")
             stopPressed = true
@@ -90,7 +90,7 @@ class BolusProgressDialog : DaggerDialogFragment() {
             uel.log(Action.CANCEL_BOLUS, Sources.Overview, state)
             commandQueue.cancelAllBoluses()
         }
-        val defaultState = resourceHelper.gs(R.string.waitingforpump)
+        val defaultState = rh.gs(R.string.waitingforpump)
         binding.progressbar.max = 100
         state = savedInstanceState?.getString("state", defaultState) ?: defaultState
         binding.status.text = state
@@ -114,7 +114,7 @@ class BolusProgressDialog : DaggerDialogFragment() {
         disposable.add(rxBus
             .toObservable(EventPumpStatusChanged::class.java)
             .observeOn(aapsSchedulers.main)
-            .subscribe({ binding.status.text = it.getStatus(resourceHelper) }, fabricPrivacy::logException)
+            .subscribe({ binding.status.text = it.getStatus(rh) }, fabricPrivacy::logException)
         )
         disposable.add(rxBus
             .toObservable(EventDismissBolusProgressIfRunning::class.java)

@@ -38,6 +38,9 @@
     <string name="glucoseisnotavailable">КЗ не е достъпна</string>
     <string name="glucosecomparedmgdl">КЗ %1$s %2$.0f %3$s</string>
     <string name="glucosecomparedmmol">КЗ %1$s %2$.1f %3$s</string>
+    <string name="notemptarget">Времената цел не съществува</string>
+    <string name="temptargetcomparedmgdl">Временна цел %1$s %2$.0f %3$s</string>
+    <string name="temptargetcomparedmmol">Временна цел %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">Профил процент %1$s %2$d</string>
     <string name="iobcompared">IOB %1$s %2$.1f</string>
     <string name="and">И</string>
@@ -86,6 +89,7 @@
     <string name="latitude_short">Ширина:</string>
     <string name="longitude_short">Дължина:</string>
     <string name="glucose_u">КЗ [%1$s]:</string>
+    <string name="target_u">Цел [%1$s]:</string>
     <string name="lastboluslabel">Последен болус</string>
     <string name="lastboluscompared">Последен болус преди %1$s %2$s минути</string>
     <string name="triggercoblabel">Активни въглехидрати</string>
@@ -101,9 +105,11 @@
     <string name="edit_short">РЕД</string>
     <string name="please_choose_an_action_type">Избиране на действие</string>
     <string name="please_choose_a_trigger_type">Иберете условие</string>
+    <string name="please_choose_a_operation_type">Избери тип на операция</string>
     <string name="triggers">Активиращи условия:</string>
     <string name="remove_label">ИЗТРИИ</string>
     <string name="preconditions">Предварителни условия:</string>
     <string name="automation_event">Събитие</string>
     <string name="reorder_label">Подреди</string>
+    <string name="user_action">Потребителско действие</string>
 </resources>

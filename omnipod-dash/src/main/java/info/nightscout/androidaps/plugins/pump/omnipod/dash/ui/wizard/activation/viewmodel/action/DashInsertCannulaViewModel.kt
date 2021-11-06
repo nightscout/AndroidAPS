@@ -40,7 +40,7 @@ class DashInsertCannulaViewModel @Inject constructor(
     private val podStateManager: OmnipodDashPodStateManager,
     private val rxBus: RxBus,
     private val sp: SP,
-    private val resourceHelper: ResourceHelper,
+    private val rh: ResourceHelper,
     private val fabricPrivacy: FabricPrivacy,
     private val history: DashHistory,
 
@@ -90,7 +90,7 @@ class DashInsertCannulaViewModel @Inject constructor(
                 .subscribeBy(
                     onError = { throwable ->
                         logger.error(LTag.PUMP, "Error in Pod activation part 2", throwable)
-                        source.onSuccess(PumpEnactResult(injector).success(false).comment(I8n.textFromException(throwable, resourceHelper)))
+                        source.onSuccess(PumpEnactResult(injector).success(false).comment(I8n.textFromException(throwable, rh)))
                     },
                     onComplete = {
                         logger.debug("Pod activation part 2 completed")

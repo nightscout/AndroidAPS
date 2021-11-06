@@ -19,17 +19,17 @@ import javax.inject.Singleton
 @Singleton
 class CarbTimer @Inject constructor(
     private val injector: HasAndroidInjector,
-    private val resourceHelper: ResourceHelper,
+    private val rh: ResourceHelper,
     private val automationPlugin: AutomationPlugin,
     private val timerUtil: TimerUtil
 ) {
 
     fun scheduleReminder(time: Long, text: String? = null) =
-        timerUtil.scheduleReminder(time, text ?: resourceHelper.gs(R.string.timetoeat))
+        timerUtil.scheduleReminder(time, text ?: rh.gs(R.string.timetoeat))
 
     fun scheduleEatReminder() {
         val event = AutomationEvent(injector).apply {
-            title = resourceHelper.gs(R.string.bolusadvisor)
+            title = rh.gs(R.string.bolusadvisor)
             readOnly = true
             systemAction = true
             autoRemove = true
@@ -38,23 +38,23 @@ class CarbTimer @Inject constructor(
                 // Bg under 180 mgdl and dropping by 15 mgdl
                 list.add(TriggerConnector(injector, TriggerConnector.Type.AND).apply {
                     list.add(TriggerBg(injector, 180.0, GlucoseUnit.MGDL, Comparator.Compare.IS_LESSER))
-                    list.add(TriggerDelta(injector, InputDelta(resourceHelper, -15.0, -360.0, 360.0, 1.0, DecimalFormat("0"), InputDelta.DeltaType.DELTA), GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
-                    list.add(TriggerDelta(injector, InputDelta(resourceHelper, -8.0, -360.0, 360.0, 1.0, DecimalFormat("0"), InputDelta.DeltaType.SHORT_AVERAGE), GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
+                    list.add(TriggerDelta(injector, InputDelta(rh, -15.0, -360.0, 360.0, 1.0, DecimalFormat("0"), InputDelta.DeltaType.DELTA), GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
+                    list.add(TriggerDelta(injector, InputDelta(rh, -8.0, -360.0, 360.0, 1.0, DecimalFormat("0"), InputDelta.DeltaType.SHORT_AVERAGE), GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
                 })
                 // Bg under 160 mgdl and dropping by 9 mgdl
                 list.add(TriggerConnector(injector, TriggerConnector.Type.AND).apply {
                     list.add(TriggerBg(injector, 160.0, GlucoseUnit.MGDL, Comparator.Compare.IS_LESSER))
-                    list.add(TriggerDelta(injector, InputDelta(resourceHelper, -9.0, -360.0, 360.0, 1.0, DecimalFormat("0"), InputDelta.DeltaType.DELTA), GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
-                    list.add(TriggerDelta(injector, InputDelta(resourceHelper, -5.0, -360.0, 360.0, 1.0, DecimalFormat("0"), InputDelta.DeltaType.SHORT_AVERAGE), GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
+                    list.add(TriggerDelta(injector, InputDelta(rh, -9.0, -360.0, 360.0, 1.0, DecimalFormat("0"), InputDelta.DeltaType.DELTA), GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
+                    list.add(TriggerDelta(injector, InputDelta(rh, -5.0, -360.0, 360.0, 1.0, DecimalFormat("0"), InputDelta.DeltaType.SHORT_AVERAGE), GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
                 })
                 // Bg under 145 mgdl and dropping
                 list.add(TriggerConnector(injector, TriggerConnector.Type.AND).apply {
                     list.add(TriggerBg(injector, 145.0, GlucoseUnit.MGDL, Comparator.Compare.IS_LESSER))
-                    list.add(TriggerDelta(injector, InputDelta(resourceHelper, 0.0, -360.0, 360.0, 1.0, DecimalFormat("0"), InputDelta.DeltaType.DELTA), GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
-                    list.add(TriggerDelta(injector, InputDelta(resourceHelper, 0.0, -360.0, 360.0, 1.0, DecimalFormat("0"), InputDelta.DeltaType.SHORT_AVERAGE), GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
+                    list.add(TriggerDelta(injector, InputDelta(rh, 0.0, -360.0, 360.0, 1.0, DecimalFormat("0"), InputDelta.DeltaType.DELTA), GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
+                    list.add(TriggerDelta(injector, InputDelta(rh, 0.0, -360.0, 360.0, 1.0, DecimalFormat("0"), InputDelta.DeltaType.SHORT_AVERAGE), GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
                 })
             }
-            actions.add(ActionAlarm(injector, resourceHelper.gs(R.string.time_to_eat)))
+            actions.add(ActionAlarm(injector, rh.gs(R.string.time_to_eat)))
         }
 
         automationPlugin.addIfNotExists(event)
@@ -62,7 +62,7 @@ class CarbTimer @Inject constructor(
 
     fun removeEatReminder() {
         val event = AutomationEvent(injector).apply {
-            title = resourceHelper.gs(R.string.bolusadvisor)
+            title = rh.gs(R.string.bolusadvisor)
         }
         automationPlugin.removeIfExists(event)
     }

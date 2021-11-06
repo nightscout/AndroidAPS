@@ -37,7 +37,7 @@ class QueueThreadTest : TestBaseWithProfile() {
         AndroidInjector {
             if (it is Command) {
                 it.aapsLogger = aapsLogger
-                it.resourceHelper = resourceHelper
+                it.rh = rh
             }
             if (it is CommandTempBasalAbsolute) {
                 it.activePlugin = activePlugin
@@ -53,7 +53,7 @@ class QueueThreadTest : TestBaseWithProfile() {
     fun prepare() {
         pumpPlugin = TestPumpPlugin(injector)
         commandQueue = CommandQueue(
-            injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker,
+            injector, aapsLogger, rxBus, aapsSchedulers, rh, constraintChecker,
             profileFunction, activePlugin, context, sp,
             BuildHelperImpl(ConfigImpl(), fileListProvider), dateUtil, repository, fabricPrivacy, config
         )
@@ -76,7 +76,7 @@ class QueueThreadTest : TestBaseWithProfile() {
         Mockito.`when`(constraintChecker.applyBasalPercentConstraints(anyObject(), anyObject()))
             .thenReturn(percentageConstraint)
 
-        sut = QueueThread(commandQueue, context, aapsLogger, rxBus, activePlugin, resourceHelper, sp)
+        sut = QueueThread(commandQueue, context, aapsLogger, rxBus, activePlugin, rh, sp)
     }
 
     @Test

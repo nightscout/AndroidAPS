@@ -23,7 +23,7 @@ class QueueThread internal constructor(
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val activePlugin: ActivePlugin,
-    private val resourceHelper: ResourceHelper,
+    private val rh: ResourceHelper,
     private val sp: SP
 ) : Thread() {
 
@@ -32,7 +32,7 @@ class QueueThread internal constructor(
     private var mWakeLock: PowerManager.WakeLock? = null
 
     init {
-        mWakeLock = (context.getSystemService(Context.POWER_SERVICE) as PowerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, resourceHelper.gs(R.string.app_name) + ":QueueThread")
+        mWakeLock = (context.getSystemService(Context.POWER_SERVICE) as PowerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, rh.gs(R.string.app_name) + ":QueueThread")
     }
 
     override fun run() {
@@ -47,7 +47,7 @@ class QueueThread internal constructor(
                 val pump = activePlugin.activePump
                 if (!pump.isConnected() && secondsElapsed > Constants.PUMP_MAX_CONNECTION_TIME_IN_SECONDS) {
                     rxBus.send(EventDismissBolusProgressIfRunning(null))
-                    rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.connectiontimedout)))
+                    rxBus.send(EventPumpStatusChanged(rh.gs(R.string.connectiontimedout)))
                     aapsLogger.debug(LTag.PUMPQUEUE, "timed out")
                     pump.stopConnecting()
 

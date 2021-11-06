@@ -34,7 +34,7 @@ class NotificationStore @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val sp: SP,
     private val rxBus: RxBus,
-    private val resourceHelper: ResourceHelper,
+    private val rh: ResourceHelper,
     private val context: Context,
     private val iconsProvider: IconsProvider,
     private val alarmSoundServiceHelper: AlarmSoundServiceHelper,
@@ -104,7 +104,7 @@ class NotificationStore @Inject constructor(
 
     private fun raiseSystemNotification(n: Notification) {
         val mgr = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val largeIcon = resourceHelper.decodeResource(iconsProvider.getIcon())
+        val largeIcon = rh.decodeResource(iconsProvider.getIcon())
         val smallIcon = iconsProvider.getNotificationIcon()
         val sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
         val notificationBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
@@ -117,11 +117,11 @@ class NotificationStore @Inject constructor(
             .setContentIntent(notificationHolder.openAppIntent(context))
         if (n.level == Notification.URGENT) {
             notificationBuilder.setVibrate(longArrayOf(1000, 1000, 1000, 1000))
-                .setContentTitle(resourceHelper.gs(R.string.urgent_alarm))
+                .setContentTitle(rh.gs(R.string.urgent_alarm))
                 .setSound(sound, AudioManager.STREAM_ALARM)
         } else {
             notificationBuilder.setVibrate(longArrayOf(0, 100, 50, 100, 50))
-                .setContentTitle(resourceHelper.gs(R.string.info))
+                .setContentTitle(rh.gs(R.string.info))
         }
         mgr.notify(n.id, notificationBuilder.build())
     }
@@ -165,11 +165,11 @@ class NotificationStore @Inject constructor(
             @Suppress("SetTextI18n")
             holder.binding.text.text = dateUtil.timeString(notification.date) + " " + notification.text
             when (notification.level) {
-                Notification.URGENT       -> holder.binding.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationUrgent))
-                Notification.NORMAL       -> holder.binding.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationNormal))
-                Notification.LOW          -> holder.binding.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationLow))
-                Notification.INFO         -> holder.binding.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationInfo))
-                Notification.ANNOUNCEMENT -> holder.binding.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationAnnouncement))
+                Notification.URGENT       -> holder.binding.cv.setBackgroundColor(rh.gc(R.color.notificationUrgent))
+                Notification.NORMAL       -> holder.binding.cv.setBackgroundColor(rh.gc(R.color.notificationNormal))
+                Notification.LOW          -> holder.binding.cv.setBackgroundColor(rh.gc(R.color.notificationLow))
+                Notification.INFO         -> holder.binding.cv.setBackgroundColor(rh.gc(R.color.notificationInfo))
+                Notification.ANNOUNCEMENT -> holder.binding.cv.setBackgroundColor(rh.gc(R.color.notificationAnnouncement))
             }
         }
 

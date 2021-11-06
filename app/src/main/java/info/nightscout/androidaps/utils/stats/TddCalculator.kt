@@ -22,7 +22,7 @@ import javax.inject.Inject
 
 class TddCalculator @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val resourceHelper: ResourceHelper,
+    private val rh: ResourceHelper,
     private val activePlugin: ActivePlugin,
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
@@ -94,10 +94,10 @@ class TddCalculator @Inject constructor(
         val tdds = calculate(7)
         val averageTdd = averageTDD(tdds)
         return HtmlHelper.fromHtml(
-            "<b>" + resourceHelper.gs(R.string.tdd) + ":</b><br>" +
+            "<b>" + rh.gs(R.string.tdd) + ":</b><br>" +
                 toText(tdds, true) +
-                "<b>" + resourceHelper.gs(R.string.average) + ":</b><br>" +
-                averageTdd.toText(resourceHelper, tdds.size(), true)
+                "<b>" + rh.gs(R.string.average) + ":</b><br>" +
+                averageTdd.toText(rh, tdds.size(), true)
         )
     }
 
@@ -105,7 +105,7 @@ class TddCalculator @Inject constructor(
     private fun toText(tdds: LongSparseArray<TotalDailyDose>, includeCarbs: Boolean): String {
         var t = ""
         for (i in 0 until tdds.size()) {
-            t += "${tdds.valueAt(i).toText(resourceHelper, dateUtil, includeCarbs)}<br>"
+            t += "${tdds.valueAt(i).toText(rh, dateUtil, includeCarbs)}<br>"
         }
         return t
     }

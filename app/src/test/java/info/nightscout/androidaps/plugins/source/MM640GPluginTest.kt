@@ -14,12 +14,12 @@ class MM640GPluginTest : TestBase() {
 
     private lateinit var mM640gPlugin: MM640gPlugin
 
-    @Mock lateinit var resourceHelper: ResourceHelper
+    @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var sp: SP
 
     @Before
     fun setup() {
-        mM640gPlugin = MM640gPlugin(HasAndroidInjector { AndroidInjector { } }, resourceHelper, aapsLogger, sp)
+        mM640gPlugin = MM640gPlugin(HasAndroidInjector { AndroidInjector { } }, rh, aapsLogger, sp)
     }
 
     @Test fun advancedFilteringSupported() {

@@ -54,6 +54,7 @@
     <string name="key_ns_offline_event_last_synced_id" translatable="false">ns_offline_event_last_synced_id</string>
     <string name="key_ns_profile_store_last_synced_timestamp" translatable="false">ns_profile_store_last_synced_timestamp</string>
     <string name="key_local_profile_last_change" translatable="false">local_profile_last_change</string>
+    <string name="key_ns_sync_slow" translatable="false">ns_sync_slow</string>
 
     <string name="treatmentssafety_title">Treatments safety</string>
     <string name="treatmentssafety_maxbolus_title">Max allowed bolus [U]</string>
@@ -1128,5 +1129,6 @@
     <string name="invalid_profile_not_accepted">Invalid profile %1$s not accepted from NS</string>
     <string name="view">View</string>
     <string name="errors">Errors</string>
+    <string name="ns_sync_slow">Slow down uploads</string>
 
 </resources>

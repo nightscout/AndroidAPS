@@ -21,7 +21,7 @@ class ActionStartTempTargetTest : ActionsTestBase() {
 
     @Before
     fun setup() {
-        `when`(resourceHelper.gs(R.string.starttemptarget)).thenReturn("Start temp target")
+        `when`(rh.gs(R.string.starttemptarget)).thenReturn("Start temp target")
 
         sut = ActionStartTempTarget(injector)
     }

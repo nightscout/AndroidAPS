@@ -41,7 +41,7 @@ import javax.inject.Singleton
 class BLEComm @Inject internal constructor(
     private val injector: HasAndroidInjector,
     private val aapsLogger: AAPSLogger,
-    private val resourceHelper: ResourceHelper,
+    private val rh: ResourceHelper,
     private val context: Context,
     private val rxBus: RxBus,
     private val sp: SP,
@@ -169,9 +169,9 @@ class BLEComm @Inject internal constructor(
             val lastClearRequest = sp.getLong(R.string.key_rs_last_clear_key_request, 0)
             if (lastClearRequest != 0L && dateUtil.isOlderThan(lastClearRequest, 5)) {
                 aapsLogger.error("Clearing pairing keys !!!")
-                sp.remove(resourceHelper.gs(R.string.key_danars_v3_randompairingkey) + danaRSPlugin.mDeviceName)
-                sp.remove(resourceHelper.gs(R.string.key_danars_v3_pairingkey) + danaRSPlugin.mDeviceName)
-                sp.remove(resourceHelper.gs(R.string.key_danars_v3_randomsynckey) + danaRSPlugin.mDeviceName)
+                sp.remove(rh.gs(R.string.key_danars_v3_randompairingkey) + danaRSPlugin.mDeviceName)
+                sp.remove(rh.gs(R.string.key_danars_v3_pairingkey) + danaRSPlugin.mDeviceName)
+                sp.remove(rh.gs(R.string.key_danars_v3_randomsynckey) + danaRSPlugin.mDeviceName)
                 ToastUtils.showToastInUiThread(context, R.string.invalidpairing)
                 danaRSPlugin.changePump()
             } else if (lastClearRequest == 0L) {
@@ -506,7 +506,7 @@ class BLEComm @Inject internal constructor(
     private fun sendConnect() {
         val deviceName = connectDeviceName
         if (deviceName == null || deviceName == "") {
-            val n = Notification(Notification.DEVICE_NOT_PAIRED, resourceHelper.gs(R.string.pairfirst), Notification.URGENT)
+            val n = Notification(Notification.DEVICE_NOT_PAIRED, rh.gs(R.string.pairfirst), Notification.URGENT)
             rxBus.send(EventNewNotification(n))
             return
         }
@@ -523,7 +523,7 @@ class BLEComm @Inject internal constructor(
             encryption = EncryptionType.ENCRYPTION_DEFAULT
             danaPump.ignoreUserPassword = false
             // Grab pairing key from preferences if exists
-            val pairingKey = sp.getString(resourceHelper.gs(R.string.key_danars_pairingkey) + danaRSPlugin.mDeviceName, "")
+            val pairingKey = sp.getString(rh.gs(R.string.key_danars_pairingkey) + danaRSPlugin.mDeviceName, "")
             aapsLogger.debug(LTag.PUMPBTCOMM, "Using stored pairing key: $pairingKey")
             if (pairingKey.isNotEmpty()) {
                 sendPasskeyCheck(pairingKey)
@@ -539,7 +539,7 @@ class BLEComm @Inject internal constructor(
             danaPump.hwModel = decryptedBuffer[5].toInt()
             danaPump.protocol = decryptedBuffer[7].toInt()
             // grab randomSyncKey
-            sp.putString(resourceHelper.gs(R.string.key_danars_v3_randomsynckey) + danaRSPlugin.mDeviceName, String.format("%02x", decryptedBuffer[decryptedBuffer.size - 1]))
+            sp.putString(rh.gs(R.string.key_danars_v3_randomsynckey) + danaRSPlugin.mDeviceName, String.format("%02x", decryptedBuffer[decryptedBuffer.size - 1]))
 
             if (danaPump.hwModel == 0x05) {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK V3 (OK)" + " " + DanaRSPacket.toHexString(decryptedBuffer))
@@ -569,22 +569,22 @@ class BLEComm @Inject internal constructor(
         } else if (decryptedBuffer.size == 6 && decryptedBuffer[2] == 'P'.code.toByte() && decryptedBuffer[3] == 'U'.code.toByte() && decryptedBuffer[4] == 'M'.code.toByte() && decryptedBuffer[5] == 'P'.code.toByte()) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK (PUMP)" + " " + DanaRSPacket.toHexString(decryptedBuffer))
             mSendQueue.clear()
-            rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, resourceHelper.gs(R.string.pumperror)))
-            pumpSync.insertAnnouncement(resourceHelper.gs(R.string.pumperror), null, danaPump.pumpType(), danaPump.serialNumber)
-            val n = Notification(Notification.PUMP_ERROR, resourceHelper.gs(R.string.pumperror), Notification.URGENT)
+            rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, rh.gs(R.string.pumperror)))
+            pumpSync.insertAnnouncement(rh.gs(R.string.pumperror), null, danaPump.pumpType(), danaPump.serialNumber)
+            val n = Notification(Notification.PUMP_ERROR, rh.gs(R.string.pumperror), Notification.URGENT)
             rxBus.send(EventNewNotification(n))
             // response BUSY: error status
         } else if (decryptedBuffer.size == 6 && decryptedBuffer[2] == 'B'.code.toByte() && decryptedBuffer[3] == 'U'.code.toByte() && decryptedBuffer[4] == 'S'.code.toByte() && decryptedBuffer[5] == 'Y'.code.toByte()) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK (BUSY)" + " " + DanaRSPacket.toHexString(decryptedBuffer))
             mSendQueue.clear()
-            rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, resourceHelper.gs(R.string.pumpbusy)))
+            rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, rh.gs(R.string.pumpbusy)))
         } else {
             // ERROR in response, wrong serial number
             aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK (ERROR)" + " " + DanaRSPacket.toHexString(decryptedBuffer))
             mSendQueue.clear()
-            rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, resourceHelper.gs(R.string.connectionerror)))
+            rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, rh.gs(R.string.connectionerror)))
             danaRSPlugin.clearPairing()
-            val n = Notification(Notification.WRONG_SERIAL_NUMBER, resourceHelper.gs(R.string.password_cleared), Notification.URGENT)
+            val n = Notification(Notification.WRONG_SERIAL_NUMBER, rh.gs(R.string.password_cleared), Notification.URGENT)
             rxBus.send(EventNewNotification(n))
         }
     }
@@ -609,13 +609,13 @@ class BLEComm @Inject internal constructor(
     // 2nd packet v3
     // 0x00 Start encryption, 0x01 Request pairing
     private fun sendV3PairingInformation() {
-        val randomPairingKey = sp.getString(resourceHelper.gs(R.string.key_danars_v3_randompairingkey) + danaRSPlugin.mDeviceName, "")
-        val pairingKey = sp.getString(resourceHelper.gs(R.string.key_danars_v3_pairingkey) + danaRSPlugin.mDeviceName, "")
+        val randomPairingKey = sp.getString(rh.gs(R.string.key_danars_v3_randompairingkey) + danaRSPlugin.mDeviceName, "")
+        val pairingKey = sp.getString(rh.gs(R.string.key_danars_v3_pairingkey) + danaRSPlugin.mDeviceName, "")
         if (randomPairingKey.isNotEmpty() && pairingKey.isNotEmpty()) {
             val tPairingKey = Base64.decode(pairingKey, Base64.DEFAULT)
             val tRandomPairingKey = Base64.decode(randomPairingKey, Base64.DEFAULT)
             var tRandomSyncKey: Byte = 0
-            val randomSyncKey = sp.getString(resourceHelper.gs(R.string.key_danars_v3_randomsynckey) + danaRSPlugin.mDeviceName, "")
+            val randomSyncKey = sp.getString(rh.gs(R.string.key_danars_v3_randomsynckey) + danaRSPlugin.mDeviceName, "")
             if (randomSyncKey.isNotEmpty()) {
                 tRandomSyncKey = randomSyncKey.toInt(16).toByte()
             }
@@ -651,8 +651,8 @@ class BLEComm @Inject internal constructor(
         } else if (encryption == EncryptionType.ENCRYPTION_RSv3) {
             // decryptedBuffer[2] : 0x00 OK  0x01 Error, No pairing
             if (decryptedBuffer[2] == 0x00.toByte()) {
-                val randomPairingKey = sp.getString(resourceHelper.gs(R.string.key_danars_v3_randompairingkey) + danaRSPlugin.mDeviceName, "")
-                val pairingKey = sp.getString(resourceHelper.gs(R.string.key_danars_v3_pairingkey) + danaRSPlugin.mDeviceName, "")
+                val randomPairingKey = sp.getString(rh.gs(R.string.key_danars_v3_randompairingkey) + danaRSPlugin.mDeviceName, "")
+                val pairingKey = sp.getString(rh.gs(R.string.key_danars_v3_pairingkey) + danaRSPlugin.mDeviceName, "")
                 if (randomPairingKey.isNotEmpty() && pairingKey.isNotEmpty()) {
                     // expecting successful connect
                     isConnected = true
@@ -675,7 +675,7 @@ class BLEComm @Inject internal constructor(
             aapsLogger.debug(LTag.PUMPBTCOMM, "Pump user password: " + danaPump.rsPassword)
             if (!danaPump.isRSPasswordOK) {
                 aapsLogger.error(LTag.PUMPBTCOMM, "Wrong pump password")
-                rxBus.send(EventNewNotification(Notification(Notification.WRONG_PUMP_PASSWORD, resourceHelper.gs(R.string.wrongpumppassword), Notification.URGENT)))
+                rxBus.send(EventNewNotification(Notification(Notification.WRONG_PUMP_PASSWORD, rh.gs(R.string.wrongpumppassword), Notification.URGENT)))
                 disconnect("WrongPassword")
                 SystemClock.sleep(T.mins(1).msecs())
             } else {
@@ -707,8 +707,8 @@ class BLEComm @Inject internal constructor(
 
     // 3rd packet v3 : only after entering PIN codes
     fun finishV3Pairing() {
-        val randomPairingKey = sp.getString(resourceHelper.gs(R.string.key_danars_v3_randompairingkey) + danaRSPlugin.mDeviceName, "")
-        val pairingKey = sp.getString(resourceHelper.gs(R.string.key_danars_v3_pairingkey) + danaRSPlugin.mDeviceName, "")
+        val randomPairingKey = sp.getString(rh.gs(R.string.key_danars_v3_randompairingkey) + danaRSPlugin.mDeviceName, "")
+        val pairingKey = sp.getString(rh.gs(R.string.key_danars_v3_pairingkey) + danaRSPlugin.mDeviceName, "")
         if (randomPairingKey.isNotEmpty() && pairingKey.isNotEmpty()) {
             val tPairingKey = Base64.decode(pairingKey, Base64.DEFAULT)
             val tRandomPairingKey = Base64.decode(randomPairingKey, Base64.DEFAULT)
@@ -734,7 +734,7 @@ class BLEComm @Inject internal constructor(
         sendTimeInfo()
         val pairingKey = byteArrayOf(decryptedBuffer[2], decryptedBuffer[3])
         // store pairing key to preferences
-        sp.putString(resourceHelper.gs(R.string.key_danars_pairingkey) + danaRSPlugin.mDeviceName, DanaRSPacket.bytesToHex(pairingKey))
+        sp.putString(rh.gs(R.string.key_danars_pairingkey) + danaRSPlugin.mDeviceName, DanaRSPacket.bytesToHex(pairingKey))
         aapsLogger.debug(LTag.PUMPBTCOMM, "Got pairing key: " + DanaRSPacket.bytesToHex(pairingKey))
     }
 

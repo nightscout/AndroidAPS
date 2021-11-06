@@ -29,7 +29,7 @@ class DashInitializePodViewModel @Inject constructor(
     logger: AAPSLogger,
     private val sp: SP,
     private val podStateManager: OmnipodDashPodStateManager,
-    private val resourceHelper: ResourceHelper,
+    private val rh: ResourceHelper,
     private val history: DashHistory,
     aapsSchedulers: AapsSchedulers
 
@@ -67,7 +67,7 @@ class DashInitializePodViewModel @Inject constructor(
                         source.onSuccess(
                             PumpEnactResult(injector)
                                 .success(false)
-                                .comment(I8n.textFromException(throwable, resourceHelper))
+                                .comment(I8n.textFromException(throwable, rh))
                         )
                     },
                     onComplete = {

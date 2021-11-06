@@ -12,10 +12,10 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import java.util.*
 
-class InputDateTime(private val resourceHelper: ResourceHelper, private val dateUtil: DateUtil, var value: Long = dateUtil.now()) : Element() {
+class InputDateTime(private val rh: ResourceHelper, private val dateUtil: DateUtil, var value: Long = dateUtil.now()) : Element() {
 
     override fun addToLayout(root: LinearLayout) {
-        val px = resourceHelper.dpToPx(10)
+        val px = rh.dpToPx(10)
 
         root.addView(
             LinearLayout(root.context).apply {
@@ -23,7 +23,7 @@ class InputDateTime(private val resourceHelper: ResourceHelper, private val date
                 layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                 addView(
                     TextView(root.context).apply {
-                        text = resourceHelper.gs(R.string.atspecifiedtime, "")
+                        text = rh.gs(R.string.atspecifiedtime, "")
                         setTypeface(typeface, Typeface.BOLD)
                         setPadding(px, px, px, px)
                     })

@@ -25,7 +25,7 @@ import javax.inject.Singleton
 class BLECommonService @Inject internal constructor(
     private val injector: HasAndroidInjector,
     private val aapsLogger: AAPSLogger,
-    private val resourceHelper: ResourceHelper,
+    private val rh: ResourceHelper,
     private val context: Context,
     private val rxBus: RxBus,
     private val diaconnG8ResponseMessageHashTable: DiaconnG8ResponseMessageHashTable,
@@ -300,8 +300,8 @@ class BLECommonService @Inject internal constructor(
                 diaconnG8Pump.bolusBlocked = true
                 val i = Intent(context, ErrorHelperActivity::class.java)
                 i.putExtra("soundid", R.raw.boluserror)
-                i.putExtra("status", resourceHelper.gs(R.string.injectionblocked))
-                i.putExtra("title", resourceHelper.gs(R.string.injectionblocked))
+                i.putExtra("status", rh.gs(R.string.injectionblocked))
+                i.putExtra("title", rh.gs(R.string.injectionblocked))
                 i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 context.startActivity(i)
                 return
@@ -311,8 +311,8 @@ class BLECommonService @Inject internal constructor(
                 message.handleMessage(data)
                 val i = Intent(context, ErrorHelperActivity::class.java)
                 i.putExtra("soundid", R.raw.boluserror)
-                i.putExtra("status", resourceHelper.gs(R.string.needbatteryreplace))
-                i.putExtra("title", resourceHelper.gs(R.string.batterywarning))
+                i.putExtra("status", rh.gs(R.string.needbatteryreplace))
+                i.putExtra("title", rh.gs(R.string.batterywarning))
                 i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 context.startActivity(i)
                 return
@@ -323,8 +323,8 @@ class BLECommonService @Inject internal constructor(
                 message.handleMessage(data)
                 val i = Intent(context, ErrorHelperActivity::class.java)
                 i.putExtra("soundid", R.raw.boluserror)
-                i.putExtra("status", resourceHelper.gs(R.string.needinsullinreplace))
-                i.putExtra("title", resourceHelper.gs(R.string.insulinlackwarning))
+                i.putExtra("status", rh.gs(R.string.needinsullinreplace))
+                i.putExtra("title", rh.gs(R.string.insulinlackwarning))
                 i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 context.startActivity(i)
                 return

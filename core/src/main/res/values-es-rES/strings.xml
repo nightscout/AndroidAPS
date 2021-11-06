@@ -209,7 +209,7 @@
     <string name="glucosetype_sensor">Sensor</string>
     <string name="manual">Manualmente</string>
     <string name="unknown">desconocido</string>
-    <string name="eatingsoon">Comer pronto</string>
+    <string name="eatingsoon">Comiendo Pronto</string>
     <string name="hypo">Hipo</string>
     <string name="activity">Actividad</string>
     <string name="wear">Reloj</string>
@@ -304,6 +304,7 @@
     <string name="sunday_short">D</string>
     <!-- User Entry -->
     <string name="uel_bolus">BOLO</string>
+    <string name="uel_bolus_calculator">CALCULADOR DE BOLO</string>
     <string name="uel_bolus_advisor">RECOMENDADOR BOLO</string>
     <string name="uel_extended_bolus">BOLO EXTENDIDO</string>
     <string name="uel_superbolus_tbr">SUPERBOLO TBR</string>

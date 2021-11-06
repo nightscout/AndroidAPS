@@ -11,11 +11,11 @@ class EventPreferenceChange : Event {
         changedKey = key
     }
 
-    constructor(resourceHelper: ResourceHelper, resourceID: Int) {
-        changedKey = resourceHelper.gs(resourceID)
+    constructor(rh: ResourceHelper, resourceID: Int) {
+        changedKey = rh.gs(resourceID)
     }
 
-    fun isChanged(resourceHelper: ResourceHelper, id: Int): Boolean {
-        return changedKey == resourceHelper.gs(id)
+    fun isChanged(rh: ResourceHelper, id: Int): Boolean {
+        return changedKey == rh.gs(id)
     }
 }

@@ -22,7 +22,7 @@ import javax.inject.Singleton
  * Created by andy on 4/28/18.
  */
 @Singleton
-class MedtronicPumpStatus @Inject constructor(private val resourceHelper: ResourceHelper,
+class MedtronicPumpStatus @Inject constructor(private val rh: ResourceHelper,
                                               private val sp: SP,
                                               private val rxBus: RxBus,
                                               private val rileyLinkUtil: RileyLinkUtil
@@ -106,7 +106,7 @@ class MedtronicPumpStatus @Inject constructor(private val resourceHelper: Resour
     fun getBatteryTypeByDescription(batteryTypeStr: String?): BatteryType? {
         if (batteryTypeByDescMap.size == 0) {
             for (value in BatteryType.values()) {
-                batteryTypeByDescMap[resourceHelper.gs(value.description)] = value
+                batteryTypeByDescMap[rh.gs(value.description)] = value
             }
         }
         return if (batteryTypeByDescMap.containsKey(batteryTypeStr)) {

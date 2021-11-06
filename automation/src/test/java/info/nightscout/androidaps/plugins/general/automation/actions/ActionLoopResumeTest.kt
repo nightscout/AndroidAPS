@@ -18,8 +18,8 @@ class ActionLoopResumeTest : ActionsTestBase() {
     @Before
     fun setup() {
 
-        `when`(resourceHelper.gs(R.string.resumeloop)).thenReturn("Resume loop")
-        `when`(resourceHelper.gs(R.string.notsuspended)).thenReturn("Not suspended")
+        `when`(rh.gs(R.string.resumeloop)).thenReturn("Resume loop")
+        `when`(rh.gs(R.string.notsuspended)).thenReturn("Not suspended")
 
         sut = ActionLoopResume(injector)
     }

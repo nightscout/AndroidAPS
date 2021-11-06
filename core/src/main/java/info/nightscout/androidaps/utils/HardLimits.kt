@@ -22,7 +22,7 @@ class HardLimits @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val sp: SP,
-    private val resourceHelper: ResourceHelper,
+    private val rh: ResourceHelper,
     private val context: Context,
     private val repository: AppRepository
 ) {
@@ -65,11 +65,11 @@ class HardLimits @Inject constructor(
     }
 
     private fun loadAge(): Int = when (sp.getString(R.string.key_age, "")) {
-        resourceHelper.gs(R.string.key_child)          -> CHILD
-        resourceHelper.gs(R.string.key_teenage)        -> TEENAGE
-        resourceHelper.gs(R.string.key_adult)          -> ADULT
-        resourceHelper.gs(R.string.key_resistantadult) -> RESISTANT_ADULT
-        resourceHelper.gs(R.string.key_pregnant)       -> PREGNANT
+        rh.gs(R.string.key_child)          -> CHILD
+        rh.gs(R.string.key_teenage)        -> TEENAGE
+        rh.gs(R.string.key_adult)          -> ADULT
+        rh.gs(R.string.key_resistantadult) -> RESISTANT_ADULT
+        rh.gs(R.string.key_pregnant)       -> PREGNANT
         else                                           -> ADULT
     }
 
@@ -94,9 +94,9 @@ class HardLimits @Inject constructor(
         if (newValue < lowLimit || newValue > highLimit) {
             newValue = max(newValue, lowLimit)
             newValue = min(newValue, highLimit)
-            var msg = String.format(resourceHelper.gs(R.string.valueoutofrange), resourceHelper.gs(valueName))
+            var msg = String.format(rh.gs(R.string.valueoutofrange), rh.gs(valueName))
             msg += ".\n"
-            msg += String.format(resourceHelper.gs(R.string.valuelimitedto), value, newValue)
+            msg += String.format(rh.gs(R.string.valuelimitedto), value, newValue)
             aapsLogger.error(msg)
             disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(msg)).subscribe()
             ToastUtils.showToastInUiThread(context, rxBus, msg, R.raw.error)

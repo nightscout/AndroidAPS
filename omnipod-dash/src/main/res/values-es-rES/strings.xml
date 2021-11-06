@@ -1,9 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Omnipod Dash - Description -->
+    <string name="omnipod_dash_pump_description">Integración de bombas de insulina Omnipod Dash (el nuevo modelo, con bluetooth habilitado con tapa azul).</string>
     <!-- Omnipod Dash - Keys -->
     <!-- Omnipod Dash - History -->
+    <string name="omnipod_dash_history_title">Historial del POD</string>
+    <string name="omnipod_dash_history_item_description">Descripción</string>
+    <string name="omnipod_dash_history_item_source">Origen</string>
+    <string name="omnipod_dash_history_item_date">Fecha</string>
+    <string name="omnipod_dash_history_type">Tipo:</string>
+    <string name="omnipod_dash_history_bolus_value">%1$.2f U</string>
+    <string name="omnipod_dash_history_bolus_value_with_carbs">%1$.2f U, CH=%2$.1f g</string>
+    <string name="omnipod_dash_history_tbr_value">Tasa: %1$.2f U, duración: %2$d minutos</string>
     <!-- Omnipod Dash - Overview -->
+    <string name="omnipod_dash_overview_bluetooth_status">Estado de Bluetooth</string>
+    <string name="omnipod_dash_overview_bluetooth_address">Dirección Bluetooth</string>
+    <string name="omnipod_dash_overview_firmware_version_value">Firmware %1$s / Bluetooth %2$s</string>
+    <string name="omnipod_dash_overview_bluetooth_connection_quality">Calidad de la conexión</string>
     <!-- Omnipod Dash - Pod Activation Wizard -->
     <!-- Exceptions -->
 </resources>

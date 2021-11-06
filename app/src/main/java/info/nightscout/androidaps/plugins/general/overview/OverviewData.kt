@@ -38,7 +38,7 @@ import kotlin.math.min
 class OverviewData @Inject constructor(
     private val injector: HasAndroidInjector,
     private val aapsLogger: AAPSLogger,
-    private val resourceHelper: ResourceHelper,
+    private val rh: ResourceHelper,
     private val dateUtil: DateUtil,
     private val sp: SP,
     private val activePlugin: ActivePlugin,
@@ -145,11 +145,11 @@ class OverviewData @Inject constructor(
     val lastBgColor: Int
         get() = lastBg?.let { lastBg ->
             when {
-                lastBg.valueToUnits(profileFunction.getUnits()) < defaultValueHelper.determineLowLine()  -> resourceHelper.gc(R.color.low)
-                lastBg.valueToUnits(profileFunction.getUnits()) > defaultValueHelper.determineHighLine() -> resourceHelper.gc(R.color.high)
-                else                                                                                     -> resourceHelper.gc(R.color.inrange)
+                lastBg.valueToUnits(profileFunction.getUnits()) < defaultValueHelper.determineLowLine()  -> rh.gc(R.color.low)
+                lastBg.valueToUnits(profileFunction.getUnits()) > defaultValueHelper.determineHighLine() -> rh.gc(R.color.high)
+                else                                                                                     -> rh.gc(R.color.inrange)
             }
-        } ?: resourceHelper.gc(R.color.inrange)
+        } ?: rh.gc(R.color.inrange)
 
     val isActualBg: Boolean
         get() =
@@ -168,17 +168,17 @@ class OverviewData @Inject constructor(
             profileFunction.getProfile()?.let { profile ->
                 if (temporaryBasal?.isInProgress == false) temporaryBasal = null
                 temporaryBasal?.let { "T:" + it.toStringShort() }
-                    ?: resourceHelper.gs(R.string.pump_basebasalrate, profile.getBasal())
-            } ?: resourceHelper.gs(R.string.notavailable)
+                    ?: rh.gs(R.string.pump_basebasalrate, profile.getBasal())
+            } ?: rh.gs(R.string.notavailable)
 
     val temporaryBasalDialogText: String
         get() = profileFunction.getProfile()?.let { profile ->
             temporaryBasal?.let { temporaryBasal ->
-                "${resourceHelper.gs(R.string.basebasalrate_label)}: ${resourceHelper.gs(R.string.pump_basebasalrate, profile.getBasal())}" +
-                    "\n" + resourceHelper.gs(R.string.tempbasal_label) + ": " + temporaryBasal.toStringFull(profile, dateUtil)
+                "${rh.gs(R.string.basebasalrate_label)}: ${rh.gs(R.string.pump_basebasalrate, profile.getBasal())}" +
+                    "\n" + rh.gs(R.string.tempbasal_label) + ": " + temporaryBasal.toStringFull(profile, dateUtil)
             }
-                ?: "${resourceHelper.gs(R.string.basebasalrate_label)}: ${resourceHelper.gs(R.string.pump_basebasalrate, profile.getBasal())}"
-        } ?: resourceHelper.gs(R.string.notavailable)
+                ?: "${rh.gs(R.string.basebasalrate_label)}: ${rh.gs(R.string.pump_basebasalrate, profile.getBasal())}"
+        } ?: rh.gs(R.string.notavailable)
 
     val temporaryBasalIcon: Int
         get() =
@@ -194,8 +194,8 @@ class OverviewData @Inject constructor(
             } ?: R.drawable.ic_cp_basal_no_tbr
 
     val temporaryBasalColor: Int
-        get() = temporaryBasal?.let { resourceHelper.gc(R.color.basal) }
-            ?: resourceHelper.gc(R.color.defaulttextcolor)
+        get() = temporaryBasal?.let { rh.gc(R.color.basal) }
+            ?: rh.gc(R.color.defaulttextcolor)
 
     /*
      * EXTENDED BOLUS
@@ -209,7 +209,7 @@ class OverviewData @Inject constructor(
                 if (!extendedBolus.isInProgress(dateUtil)) {
                     this@OverviewData.extendedBolus = null
                     ""
-                } else if (!activePlugin.activePump.isFakingTempsByExtendedBoluses) resourceHelper.gs(R.string.pump_basebasalrate, extendedBolus.rate)
+                } else if (!activePlugin.activePump.isFakingTempsByExtendedBoluses) rh.gs(R.string.pump_basebasalrate, extendedBolus.rate)
                 else ""
             } ?: ""
 
@@ -229,19 +229,19 @@ class OverviewData @Inject constructor(
         get() =
             bolusIob?.let { bolusIob ->
                 basalIob?.let { basalIob ->
-                    resourceHelper.gs(R.string.formatinsulinunits, bolusIob.iob + basalIob.basaliob)
-                } ?: resourceHelper.gs(R.string.value_unavailable_short)
-            } ?: resourceHelper.gs(R.string.value_unavailable_short)
+                    rh.gs(R.string.formatinsulinunits, bolusIob.iob + basalIob.basaliob)
+                } ?: rh.gs(R.string.value_unavailable_short)
+            } ?: rh.gs(R.string.value_unavailable_short)
 
     val iobDialogText: String
         get() =
             bolusIob?.let { bolusIob ->
                 basalIob?.let { basalIob ->
-                    resourceHelper.gs(R.string.formatinsulinunits, bolusIob.iob + basalIob.basaliob) + "\n" +
-                        resourceHelper.gs(R.string.bolus) + ": " + resourceHelper.gs(R.string.formatinsulinunits, bolusIob.iob) + "\n" +
-                        resourceHelper.gs(R.string.basal) + ": " + resourceHelper.gs(R.string.formatinsulinunits, basalIob.basaliob)
-                } ?: resourceHelper.gs(R.string.value_unavailable_short)
-            } ?: resourceHelper.gs(R.string.value_unavailable_short)
+                    rh.gs(R.string.formatinsulinunits, bolusIob.iob + basalIob.basaliob) + "\n" +
+                        rh.gs(R.string.bolus) + ": " + rh.gs(R.string.formatinsulinunits, bolusIob.iob) + "\n" +
+                        rh.gs(R.string.basal) + ": " + rh.gs(R.string.formatinsulinunits, basalIob.basaliob)
+                } ?: rh.gs(R.string.value_unavailable_short)
+            } ?: rh.gs(R.string.value_unavailable_short)
 
     /*
      * TEMP TARGET
@@ -324,7 +324,7 @@ class OverviewData @Inject constructor(
         for (bg in bgReadingsArray) {
             if (bg.timestamp < fromTime || bg.timestamp > toTime) continue
             if (bg.value > maxBgValue) maxBgValue = bg.value
-            bgListArray.add(GlucoseValueDataPoint(bg, defaultValueHelper, profileFunction, resourceHelper))
+            bgListArray.add(GlucoseValueDataPoint(bg, defaultValueHelper, profileFunction, rh))
         }
         bgListArray.sortWith { o1: DataPointWithLabelInterface, o2: DataPointWithLabelInterface -> o1.x.compareTo(o2.x) }
         bgReadingGraphSeries = PointsWithLabelGraphSeries(Array(bgListArray.size) { i -> bgListArray[i] })
@@ -365,7 +365,7 @@ class OverviewData @Inject constructor(
 
         val bgListArray: MutableList<DataPointWithLabelInterface> = java.util.ArrayList()
         val predictions: MutableList<GlucoseValueDataPoint>? = apsResult?.predictions
-            ?.map { bg -> GlucoseValueDataPoint(bg, defaultValueHelper, profileFunction, resourceHelper) }
+            ?.map { bg -> GlucoseValueDataPoint(bg, defaultValueHelper, profileFunction, rh) }
             ?.toMutableList()
         if (predictions != null) {
             predictions.sortWith { o1: GlucoseValueDataPoint, o2: GlucoseValueDataPoint -> o1.x.compareTo(o2.x) }
@@ -387,7 +387,7 @@ class OverviewData @Inject constructor(
         val bucketedListArray: MutableList<DataPointWithLabelInterface> = java.util.ArrayList()
         for (inMemoryGlucoseValue in bucketedData) {
             if (inMemoryGlucoseValue.timestamp < fromTime || inMemoryGlucoseValue.timestamp > toTime) continue
-            bucketedListArray.add(InMemoryGlucoseValueDataPoint(inMemoryGlucoseValue, profileFunction, resourceHelper))
+            bucketedListArray.add(InMemoryGlucoseValueDataPoint(inMemoryGlucoseValue, profileFunction, rh))
         }
         bucketedListArray.sortWith { o1: DataPointWithLabelInterface, o2: DataPointWithLabelInterface -> o1.x.compareTo(o2.x) }
         bucketedGraphSeries = PointsWithLabelGraphSeries(Array(bucketedListArray.size) { i -> bucketedListArray[i] })
@@ -466,27 +466,27 @@ class OverviewData @Inject constructor(
         // create series
         baseBasalGraphSeries = LineGraphSeries(Array(baseBasalArray.size) { i -> baseBasalArray[i] }).also {
             it.isDrawBackground = true
-            it.backgroundColor = resourceHelper.gc(R.color.basebasal)
+            it.backgroundColor = rh.gc(R.color.basebasal)
             it.thickness = 0
         }
         tempBasalGraphSeries = LineGraphSeries(Array(tempBasalArray.size) { i -> tempBasalArray[i] }).also {
             it.isDrawBackground = true
-            it.backgroundColor = resourceHelper.gc(R.color.tempbasal)
+            it.backgroundColor = rh.gc(R.color.tempbasal)
             it.thickness = 0
         }
         basalLineGraphSeries = LineGraphSeries(Array(basalLineArray.size) { i -> basalLineArray[i] }).also {
             it.setCustomPaint(Paint().also { paint ->
                 paint.style = Paint.Style.STROKE
-                paint.strokeWidth = resourceHelper.getDisplayMetrics().scaledDensity * 2
+                paint.strokeWidth = rh.getDisplayMetrics().scaledDensity * 2
                 paint.pathEffect = DashPathEffect(floatArrayOf(2f, 4f), 0f)
-                paint.color = resourceHelper.gc(R.color.basal)
+                paint.color = rh.gc(R.color.basal)
             })
         }
         absoluteBasalGraphSeries = LineGraphSeries(Array(absoluteBasalLineArray.size) { i -> absoluteBasalLineArray[i] }).also {
             it.setCustomPaint(Paint().also { absolutePaint ->
                 absolutePaint.style = Paint.Style.STROKE
-                absolutePaint.strokeWidth = resourceHelper.getDisplayMetrics().scaledDensity * 2
-                absolutePaint.color = resourceHelper.gc(R.color.basal)
+                absolutePaint.strokeWidth = rh.getDisplayMetrics().scaledDensity * 2
+                absolutePaint.color = rh.gc(R.color.basal)
             })
         }
 //        profiler.log(LTag.UI, "prepareBasalData() $from", start)
@@ -522,7 +522,7 @@ class OverviewData @Inject constructor(
         // create series
         temporaryTargetSeries = LineGraphSeries(Array(targetsSeriesArray.size) { i -> targetsSeriesArray[i] }).also {
             it.isDrawBackground = false
-            it.color = resourceHelper.gc(R.color.tempTargetBackground)
+            it.color = rh.gc(R.color.tempTargetBackground)
             it.thickness = 2
         }
 //        profiler.log(LTag.UI, "prepareTemporaryTargetData() $from", start)
@@ -535,14 +535,14 @@ class OverviewData @Inject constructor(
         maxTreatmentsValue = 0.0
         val filteredTreatments: MutableList<DataPointWithLabelInterface> = java.util.ArrayList()
         repository.getBolusesDataFromTimeToTime(fromTime, endTime, true).blockingGet()
-            .map { BolusDataPoint(it, resourceHelper, activePlugin, defaultValueHelper) }
+            .map { BolusDataPoint(it, rh, activePlugin, defaultValueHelper) }
             .filter { it.data.type == Bolus.Type.NORMAL || it.data.type == Bolus.Type.SMB }
             .forEach {
                 it.y = getNearestBg(it.x.toLong())
                 filteredTreatments.add(it)
             }
         repository.getCarbsDataFromTimeToTimeExpanded(fromTime, endTime, true).blockingGet()
-            .map { CarbsDataPoint(it, resourceHelper) }
+            .map { CarbsDataPoint(it, rh) }
             .forEach {
                 it.y = getNearestBg(it.x.toLong())
                 filteredTreatments.add(it)
@@ -555,7 +555,7 @@ class OverviewData @Inject constructor(
 
         // OfflineEvent
         repository.getOfflineEventDataFromTimeToTime(fromTime, endTime, true).blockingGet()
-            .map { TherapyEventDataPoint(TherapyEvent(timestamp = it.timestamp, duration = it.duration, type = TherapyEvent.Type.APS_OFFLINE, glucoseUnit = TherapyEvent.GlucoseUnit.MMOL), resourceHelper, profileFunction, translator) }
+            .map { TherapyEventDataPoint(TherapyEvent(timestamp = it.timestamp, duration = it.duration, type = TherapyEvent.Type.APS_OFFLINE, glucoseUnit = TherapyEvent.GlucoseUnit.MMOL), rh, profileFunction, translator) }
             .forEach(filteredTreatments::add)
 
         // Extended bolus
@@ -571,7 +571,7 @@ class OverviewData @Inject constructor(
 
         // Careportal
         repository.compatGetTherapyEventDataFromToTime(fromTime - T.hours(6).msecs(), endTime).blockingGet()
-            .map { TherapyEventDataPoint(it, resourceHelper, profileFunction, translator) }
+            .map { TherapyEventDataPoint(it, rh, profileFunction, translator) }
             .filterTimeframe(fromTime, endTime)
             .forEach {
                 if (it.y == 0.0) it.y = getNearestBg(it.x.toLong())
@@ -682,15 +682,15 @@ class OverviewData @Inject constructor(
 
             // DEVIATIONS
             if (autosensData != null) {
-                var color = resourceHelper.gc(R.color.deviationblack) // "="
+                var color = rh.gc(R.color.deviationblack) // "="
                 if (autosensData.type == "" || autosensData.type == "non-meal") {
-                    if (autosensData.pastSensitivity == "C") color = resourceHelper.gc(R.color.deviationgrey)
-                    if (autosensData.pastSensitivity == "+") color = resourceHelper.gc(R.color.deviationgreen)
-                    if (autosensData.pastSensitivity == "-") color = resourceHelper.gc(R.color.deviationred)
+                    if (autosensData.pastSensitivity == "C") color = rh.gc(R.color.deviationgrey)
+                    if (autosensData.pastSensitivity == "+") color = rh.gc(R.color.deviationgreen)
+                    if (autosensData.pastSensitivity == "-") color = rh.gc(R.color.deviationred)
                 } else if (autosensData.type == "uam") {
-                    color = resourceHelper.gc(R.color.uam)
+                    color = rh.gc(R.color.uam)
                 } else if (autosensData.type == "csf") {
-                    color = resourceHelper.gc(R.color.deviationgrey)
+                    color = rh.gc(R.color.deviationgrey)
                 }
                 devArray.add(OverviewPlugin.DeviationDataPoint(time.toDouble(), autosensData.deviation, color, devScale))
                 maxDevValueFound = maxOf(maxDevValueFound, abs(autosensData.deviation), abs(bgi))
@@ -716,14 +716,14 @@ class OverviewData @Inject constructor(
         // IOB
         iobSeries = FixedLineGraphSeries(Array(iobArray.size) { i -> iobArray[i] }).also {
             it.isDrawBackground = true
-            it.backgroundColor = -0x7f000001 and resourceHelper.gc(R.color.iob) //50%
-            it.color = resourceHelper.gc(R.color.iob)
+            it.backgroundColor = -0x7f000001 and rh.gc(R.color.iob) //50%
+            it.color = rh.gc(R.color.iob)
             it.thickness = 3
         }
         absIobSeries = FixedLineGraphSeries(Array(absIobArray.size) { i -> absIobArray[i] }).also {
             it.isDrawBackground = true
-            it.backgroundColor = -0x7f000001 and resourceHelper.gc(R.color.iob) //50%
-            it.color = resourceHelper.gc(R.color.iob)
+            it.backgroundColor = -0x7f000001 and rh.gc(R.color.iob) //50%
+            it.color = rh.gc(R.color.iob)
             it.thickness = 3
         }
 
@@ -734,14 +734,14 @@ class OverviewData @Inject constructor(
             val iobPrediction: MutableList<DataPointWithLabelInterface> = java.util.ArrayList()
             val iobPredictionArray = iobCobCalculator.calculateIobArrayForSMB(lastAutosensResult, SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
             for (i in iobPredictionArray) {
-                iobPrediction.add(i.setColor(resourceHelper.gc(R.color.iobPredAS)))
+                iobPrediction.add(i.setColor(rh.gc(R.color.iobPredAS)))
                 maxIobValueFound = max(maxIobValueFound, abs(i.iob))
             }
             iobPredictions1Series = PointsWithLabelGraphSeries(Array(iobPrediction.size) { i -> iobPrediction[i] })
             val iobPrediction2: MutableList<DataPointWithLabelInterface> = java.util.ArrayList()
             val iobPredictionArray2 = iobCobCalculator.calculateIobArrayForSMB(AutosensResult(), SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
             for (i in iobPredictionArray2) {
-                iobPrediction2.add(i.setColor(resourceHelper.gc(R.color.iobPred)))
+                iobPrediction2.add(i.setColor(rh.gc(R.color.iobPred)))
                 maxIobValueFound = max(maxIobValueFound, abs(i.iob))
             }
             iobPredictions2Series = PointsWithLabelGraphSeries(Array(iobPrediction2.size) { i -> iobPrediction2[i] })
@@ -755,8 +755,8 @@ class OverviewData @Inject constructor(
         // COB
         cobSeries = FixedLineGraphSeries(Array(cobArray.size) { i -> cobArray[i] }).also {
             it.isDrawBackground = true
-            it.backgroundColor = -0x7f000001 and resourceHelper.gc(R.color.cob) //50%
-            it.color = resourceHelper.gc(R.color.cob)
+            it.backgroundColor = -0x7f000001 and rh.gc(R.color.cob) //50%
+            it.color = rh.gc(R.color.cob)
             it.thickness = 3
         }
         cobMinFailOverSeries = PointsWithLabelGraphSeries(Array(minFailOverActiveList.size) { i -> minFailOverActiveList[i] })
@@ -764,7 +764,7 @@ class OverviewData @Inject constructor(
         // ACTIVITY
         activitySeries = FixedLineGraphSeries(Array(actArrayHist.size) { i -> actArrayHist[i] }).also {
             it.isDrawBackground = false
-            it.color = resourceHelper.gc(R.color.activity)
+            it.color = rh.gc(R.color.activity)
             it.thickness = 3
         }
         activityPredictionSeries = FixedLineGraphSeries(Array(actArrayPrediction.size) { i -> actArrayPrediction[i] }).also {
@@ -772,14 +772,14 @@ class OverviewData @Inject constructor(
                 paint.style = Paint.Style.STROKE
                 paint.strokeWidth = 3f
                 paint.pathEffect = DashPathEffect(floatArrayOf(4f, 4f), 0f)
-                paint.color = resourceHelper.gc(R.color.activity)
+                paint.color = rh.gc(R.color.activity)
             })
         }
 
         // BGI
         minusBgiSeries = FixedLineGraphSeries(Array(bgiArrayHist.size) { i -> bgiArrayHist[i] }).also {
             it.isDrawBackground = false
-            it.color = resourceHelper.gc(R.color.bgi)
+            it.color = rh.gc(R.color.bgi)
             it.thickness = 3
         }
         minusBgiHistSeries = FixedLineGraphSeries(Array(bgiArrayPrediction.size) { i -> bgiArrayPrediction[i] }).also {
@@ -787,7 +787,7 @@ class OverviewData @Inject constructor(
                 paint.style = Paint.Style.STROKE
                 paint.strokeWidth = 3f
                 paint.pathEffect = DashPathEffect(floatArrayOf(4f, 4f), 0f)
-                paint.color = resourceHelper.gc(R.color.bgi)
+                paint.color = rh.gc(R.color.bgi)
             })
         }
 
@@ -798,17 +798,17 @@ class OverviewData @Inject constructor(
 
         // RATIO
         ratioSeries = LineGraphSeries(Array(ratioArray.size) { i -> ratioArray[i] }).also {
-            it.color = resourceHelper.gc(R.color.ratio)
+            it.color = rh.gc(R.color.ratio)
             it.thickness = 3
         }
 
         // DEV SLOPE
         dsMaxSeries = LineGraphSeries(Array(dsMaxArray.size) { i -> dsMaxArray[i] }).also {
-            it.color = resourceHelper.gc(R.color.devslopepos)
+            it.color = rh.gc(R.color.devslopepos)
             it.thickness = 3
         }
         dsMinSeries = LineGraphSeries(Array(dsMinArray.size) { i -> dsMinArray[i] }).also {
-            it.color = resourceHelper.gc(R.color.devslopeneg)
+            it.color = rh.gc(R.color.devslopeneg)
             it.thickness = 3
         }
 

@@ -66,7 +66,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     protected AbstractDanaRPlugin(
             HasAndroidInjector injector,
             DanaPump danaPump,
-            ResourceHelper resourceHelper,
+            ResourceHelper rh,
             ConstraintChecker constraintChecker,
             AAPSLogger aapsLogger,
             AapsSchedulers aapsSchedulers,
@@ -85,7 +85,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
                         .shortName(R.string.danarpump_shortname)
                         .preferencesId(R.xml.pref_danar)
                         .description(R.string.description_pump_dana_r),
-                injector, aapsLogger, resourceHelper, commandQueue
+                injector, aapsLogger, rh, commandQueue
         );
         this.danaPump = danaPump;
         this.constraintChecker = constraintChecker;
@@ -108,7 +108,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> {
-                    if (event.isChanged(getResourceHelper(), R.string.key_danar_bt_name)) {
+                    if (event.isChanged(getRh(), R.string.key_danar_bt_name)) {
                         danaPump.reset();
                         pumpSync.connectNewPump();
                         getCommandQueue().readStatus("DeviceChanged", null);
@@ -145,7 +145,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
         }
         if (!isInitialized()) {
             getAapsLogger().error("setNewBasalProfile not initialized");
-            Notification notification = new Notification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, getResourceHelper().gs(R.string.pumpNotInitializedProfileNotSet), Notification.URGENT);
+            Notification notification = new Notification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, getRh().gs(R.string.pumpNotInitializedProfileNotSet), Notification.URGENT);
             rxBus.send(new EventNewNotification(notification));
             result.comment(R.string.pumpNotInitializedProfileNotSet);
             return result;
@@ -153,13 +153,13 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
             rxBus.send(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
         }
         if (!sExecutionService.updateBasalsInPump(profile)) {
-            Notification notification = new Notification(Notification.FAILED_UPDATE_PROFILE, getResourceHelper().gs(R.string.failedupdatebasalprofile), Notification.URGENT);
+            Notification notification = new Notification(Notification.FAILED_UPDATE_PROFILE, getRh().gs(R.string.failedupdatebasalprofile), Notification.URGENT);
             rxBus.send(new EventNewNotification(notification));
             result.comment(R.string.failedupdatebasalprofile);
         } else {
             rxBus.send(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
             rxBus.send(new EventDismissNotification(Notification.FAILED_UPDATE_PROFILE));
-            Notification notification = new Notification(Notification.PROFILE_SET_OK, getResourceHelper().gs(R.string.profile_set_ok), Notification.INFO, 60);
+            Notification notification = new Notification(Notification.PROFILE_SET_OK, getRh().gs(R.string.profile_set_ok), Notification.INFO, 60);
             rxBus.send(new EventNewNotification(notification));
             result.success(true).enacted(true).comment("OK");
         }
@@ -456,21 +456,21 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
 
     @NonNull @Override
     public Constraint<Double> applyBasalConstraints(Constraint<Double> absoluteRate, @NonNull Profile profile) {
-        absoluteRate.setIfSmaller(getAapsLogger(), danaPump.getMaxBasal(), String.format(getResourceHelper().gs(R.string.limitingbasalratio), danaPump.getMaxBasal(), getResourceHelper().gs(R.string.pumplimit)), this);
+        absoluteRate.setIfSmaller(getAapsLogger(), danaPump.getMaxBasal(), String.format(getRh().gs(R.string.limitingbasalratio), danaPump.getMaxBasal(), getRh().gs(R.string.pumplimit)), this);
         return absoluteRate;
     }
 
     @NonNull @Override
     public Constraint<Integer> applyBasalPercentConstraints(Constraint<Integer> percentRate, @NonNull Profile profile) {
-        percentRate.setIfGreater(getAapsLogger(), 0, String.format(getResourceHelper().gs(R.string.limitingpercentrate), 0, getResourceHelper().gs(R.string.itmustbepositivevalue)), this);
-        percentRate.setIfSmaller(getAapsLogger(), getPumpDescription().getMaxTempPercent(), String.format(getResourceHelper().gs(R.string.limitingpercentrate), getPumpDescription().getMaxTempPercent(), getResourceHelper().gs(R.string.pumplimit)), this);
+        percentRate.setIfGreater(getAapsLogger(), 0, String.format(getRh().gs(R.string.limitingpercentrate), 0, getRh().gs(R.string.itmustbepositivevalue)), this);
+        percentRate.setIfSmaller(getAapsLogger(), getPumpDescription().getMaxTempPercent(), String.format(getRh().gs(R.string.limitingpercentrate), getPumpDescription().getMaxTempPercent(), getRh().gs(R.string.pumplimit)), this);
 
         return percentRate;
     }
 
     @NonNull @Override
     public Constraint<Double> applyBolusConstraints(Constraint<Double> insulin) {
-        insulin.setIfSmaller(getAapsLogger(), danaPump.getMaxBolus(), String.format(getResourceHelper().gs(R.string.limitingbolus), danaPump.getMaxBolus(), getResourceHelper().gs(R.string.pumplimit)), this);
+        insulin.setIfSmaller(getAapsLogger(), danaPump.getMaxBolus(), String.format(getRh().gs(R.string.limitingbolus), danaPump.getMaxBolus(), getRh().gs(R.string.pumplimit)), this);
         return insulin;
     }
 

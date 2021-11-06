@@ -34,7 +34,7 @@ import javax.inject.Singleton
 class DataBroadcastPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     private val aapsSchedulers: AapsSchedulers,
     private val context: Context,
     private val dateUtil: DateUtil,
@@ -57,7 +57,7 @@ class DataBroadcastPlugin @Inject constructor(
     .alwaysEnabled(true)
     .neverVisible(true)
     .showInList(false),
-    aapsLogger, resourceHelper, injector
+    aapsLogger, rh, injector
 ) {
 
     private val disposable = CompositeDisposable()

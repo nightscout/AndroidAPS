@@ -29,7 +29,7 @@ import io.reactivex.disposables.CompositeDisposable;
 public class PairingProgressDialog extends DaggerDialogFragment {
 
     @Inject AapsSchedulers aapsSchedulers;
-    @Inject ResourceHelper resourceHelper;
+    @Inject ResourceHelper rh;
     @Inject RxBus rxBus;
     @Inject FabricPrivacy fabricPrivacy;
 
@@ -146,7 +146,7 @@ public class PairingProgressDialog extends DaggerDialogFragment {
         if (binding != null) {
             binding.danarsPairingprogressProgressbar.setMax(100);
             binding.danarsPairingprogressProgressbar.setProgress(0);
-            binding.danarsPairingprogressStatus.setText(resourceHelper.gs(R.string.danars_waitingforpairing));
+            binding.danarsPairingprogressStatus.setText(rh.gs(R.string.danars_waitingforpairing));
             binding.ok.setVisibility(View.GONE);
             binding.ok.setOnClickListener(v -> dismiss());
         }

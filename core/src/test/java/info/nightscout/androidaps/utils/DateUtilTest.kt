@@ -13,7 +13,7 @@ import java.util.*
 class DateUtilTest : TestBase() {
 
     @Mock lateinit var context: Context
-    @Mock lateinit var resourceHelper: ResourceHelper
+    @Mock lateinit var rh: ResourceHelper
 
     @Test
     fun fromISODateStringTest() {
@@ -65,7 +65,7 @@ class DateUtilTest : TestBase() {
     }
     */
     @Test fun timeFrameStringTest() {
-        `when`(resourceHelper.gs(R.string.shorthour)).thenReturn("h")
-        Assert.assertEquals("(1h 1')", DateUtil(context).timeFrameString(T.hours(1).msecs() + T.mins(1).msecs(), resourceHelper))
+        `when`(rh.gs(R.string.shorthour)).thenReturn("h")
+        Assert.assertEquals("(1h 1')", DateUtil(context).timeFrameString(T.hours(1).msecs() + T.mins(1).msecs(), rh))
     }
 }

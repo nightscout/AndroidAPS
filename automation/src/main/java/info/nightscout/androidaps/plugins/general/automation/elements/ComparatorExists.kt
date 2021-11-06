@@ -10,7 +10,7 @@ import androidx.annotation.StringRes
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 
-class ComparatorExists(private val resourceHelper: ResourceHelper, var value: Compare = Compare.EXISTS) : Element() {
+class ComparatorExists(private val rh: ResourceHelper, var value: Compare = Compare.EXISTS) : Element() {
 
     enum class Compare {
         EXISTS, NOT_EXISTS;
@@ -23,9 +23,9 @@ class ComparatorExists(private val resourceHelper: ResourceHelper, var value: Co
 
         companion object {
 
-            fun labels(resourceHelper: ResourceHelper): List<String> {
+            fun labels(rh: ResourceHelper): List<String> {
                 val list: MutableList<String> = ArrayList()
-                for (c in values()) list.add(resourceHelper.gs(c.stringRes))
+                for (c in values()) list.add(rh.gs(c.stringRes))
                 return list
             }
         }
@@ -34,11 +34,11 @@ class ComparatorExists(private val resourceHelper: ResourceHelper, var value: Co
     override fun addToLayout(root: LinearLayout) {
         root.addView(
             Spinner(root.context).apply {
-                adapter = ArrayAdapter(root.context, R.layout.spinner_centered, Compare.labels(resourceHelper)).apply {
+                adapter = ArrayAdapter(root.context, R.layout.spinner_centered, Compare.labels(rh)).apply {
                     setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 }
                 layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
-                    setMargins(0, resourceHelper.dpToPx(4), 0, resourceHelper.dpToPx(4))
+                    setMargins(0, rh.dpToPx(4), 0, rh.dpToPx(4))
                 }
 
                 onItemSelectedListener = object : AdapterView.OnItemSelectedListener {

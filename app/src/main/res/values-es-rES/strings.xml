@@ -45,14 +45,14 @@
     <string name="description_sms_communicator">Control remoto de AndroidAPS mediante comandos SMS.</string>
     <string name="treatments_insulin_label_string">Insulina:</string>
     <string name="treatments_carbs_label_string">Carbohidratos:</string>
-    <string name="treatments_iob_label_string">IOB (Insulina Activa):</string>
-    <string name="sms_iob">IOB (Insulina Activa):</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="sms_iob">IOB:</string>
     <string name="treatments_iobtotal_label_string">IOB total:</string>
     <string name="treatments_iobactivitytotal_label_string">Actividad total IOB:</string>
     <string name="tempbasals_realduration_label_string">Dur:</string>
     <string name="tempbasals_netratio_label_string">Relación:</string>
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
-    <string name="tempbasals_iob_label_string">IOB (Insulina Activa):</string>
+    <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">IOB Total:</string>
     <string name="treatments_wizard_bg_label">BG</string>
     <string name="treatments_wizard_tt_label">OT</string>
@@ -402,8 +402,8 @@
     <string name="careportal_sensor_label">Sensor</string>
     <string name="careportal_insulin_label">Insulina</string>
     <string name="careportal_pb_label">Batería de la bomba</string>
-    <string name="careportal_age_label">edad:</string>
-    <string name="careportal_level_label">nivel:</string>
+    <string name="careportal_age_label">Edad:</string>
+    <string name="careportal_level_label">Nivel:</string>
     <string name="ns_alarmoptions">Opciones alarma</string>
     <string name="ns_alarms">Crear notificaciones de alarmas NS</string>
     <string name="ns_announcements">Crear notificaciones de avisos de NS</string>
@@ -452,7 +452,7 @@
     <string name="careportal_newnstreatment_timeshift_label">Cambio de tiempo</string>
     <string name="default_temptargets">Objetivo temporal por defecto</string>
     <string name="eatingsoon_duration">duración comiendopronto</string>
-    <string name="eatingsoon_target">objectivo comiendopronto</string>
+    <string name="eatingsoon_target">objetivo ComiendoPronto</string>
     <string name="activity_duration">duración actividad</string>
     <string name="activity_target">objetivo actividad</string>
     <string name="hypo_duration">Duración Hipo</string>
@@ -517,7 +517,6 @@
     <string name="enablesmbwithcob">Habilitar SMB con COB</string>
     <string name="enablesmbwithcob_summary">Habilitar SMB cuando hay Carbohidratos Activo COB.</string>
     <string name="enablesmbwithtemptarget">Habilitar SMB con Objetivos Temporales</string>
-    <string name="enablesmbwithtemptarget_summary">Habilitar SMB cuando hay un Objetivo Temporal (TT) activo (ComerPronto, Actividad)</string>
     <string name="enablesmbwithhightemptarget">Habilitar SMB con Objetivo Temporal Alto</string>
     <string name="enablesmbwithhightemptarget_summary">Habilitar SMB cuando hay un objetivo temporal alto activo (ejercicio, superior a 100 mg/dl o 5.5 mmol/l)</string>
     <string name="overview_insulin_label">Insulina</string>
@@ -547,7 +546,6 @@
     <string name="g5appnotdetected">Actualice su aplicación Dexcom a una versión compatible</string>
     <string name="dexcom_app_not_installed">La aplicación Dexcom no está instalada.</string>
     <string name="start_activity_tt">Inicio OT Actividad</string>
-    <string name="start_eating_soon_tt">Inicio OT ComiendoPronto</string>
     <string name="temptargetshort">OT</string>
     <string name="do_not_bolus_record_only">No administrar Bolo, solo anotar</string>
     <string name="category">Categoría</string>
@@ -559,7 +557,7 @@
     <string name="overview_show_sensitivity">Sensibilidad</string>
     <string name="overview_show_deviations">Desviaciones</string>
     <string name="overview_show_cob">Carbohidratos activos COB</string>
-    <string name="overview_show_iob">Insulina activa IOB</string>
+    <string name="overview_show_iob">Insulina activa</string>
     <string name="overview_show_basals">Basales</string>
     <string name="no_action_selected">Ninguna acción seleccionada, nada sucederá</string>
     <string name="start_hypo_tt">Inicio OT Hipo</string>
@@ -743,7 +741,7 @@
     <string name="objectives_button_unstart">Limpieza iniciada</string>
     <string name="doyouwantresetstart">¿Desea reiniciar el objetivo? Puedes perder tu progreso.</string>
     <string name="setupwizard_units_prompt">Seleccione las unidades en las que desea visualizar los valores</string>
-    <string name="dia_short">DIA (Duración Insulina Activa)</string>
+    <string name="dia_short">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
     <string name="target_short">TARG</string>
@@ -844,6 +842,7 @@
     <string name="enablebolusadvisor_summary">Utilice un recordatorio para empezar a comer más tarde en lugar del resultado del asistente durante la glicemia alta (\"pre-bolo\")</string>
     <string name="time_to_eat">¡Hora de comer!\nEjecutar el asistente de bolo y cálcular de nuevo.</string>
     <string name="timetoeat">Hora de comer</string>
+    <string name="bolusreminder">Recordatorio de bolo</string>
     <string name="fabric_upload_disabled">¡Carga de registros de errores desactivada!</string>
     <string name="graph_menu_divider_header">Gráfico</string>
     <string name="chart_menu">Menú gráfico</string>
@@ -882,4 +881,5 @@
     <string name="smscommunicator_another_bolus_in_queue">Hay otro bolo en cola. Inténtalo de nuevo más tarde.</string>
     <string name="calculation_in_progress">Cálculo en curso</string>
     <string name="error_in_ic_values">Error en valores IC</string>
+    <string name="ns_sync_slow">Ralentizar subidas</string>
 </resources>

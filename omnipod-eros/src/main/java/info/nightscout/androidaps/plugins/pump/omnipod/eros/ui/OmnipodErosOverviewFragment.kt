@@ -70,7 +70,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
     }
 
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var activePlugin: ActivePlugin
@@ -138,36 +138,36 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
         buttonBinding.buttonResumeDelivery.setOnClickListener {
             disablePodActionButtons()
             commandQueue.customCommand(CommandResumeDelivery(),
-                DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_common_error_failed_to_resume_delivery), true).messageOnSuccess(resourceHelper.gs(R.string.omnipod_common_confirmation_delivery_resumed)))
+                DisplayResultDialogCallback(rh.gs(R.string.omnipod_common_error_failed_to_resume_delivery), true).messageOnSuccess(rh.gs(R.string.omnipod_common_confirmation_delivery_resumed)))
         }
 
         buttonBinding.buttonRefreshStatus.setOnClickListener {
             disablePodActionButtons()
             commandQueue.customCommand(CommandGetPodStatus(),
-                DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_common_error_failed_to_refresh_status), false))
+                DisplayResultDialogCallback(rh.gs(R.string.omnipod_common_error_failed_to_refresh_status), false))
         }
 
         buttonBinding.buttonSilenceAlerts.setOnClickListener {
             disablePodActionButtons()
             commandQueue.customCommand(
                 CommandSilenceAlerts(),
-                DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_common_error_failed_to_silence_alerts), false)
-                    .messageOnSuccess(resourceHelper.gs(R.string.omnipod_common_confirmation_silenced_alerts))
+                DisplayResultDialogCallback(rh.gs(R.string.omnipod_common_error_failed_to_silence_alerts), false)
+                    .messageOnSuccess(rh.gs(R.string.omnipod_common_confirmation_silenced_alerts))
                     .actionOnSuccess { rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_ALERTS)) })
         }
 
         buttonBinding.buttonSuspendDelivery.setOnClickListener {
             disablePodActionButtons()
             commandQueue.customCommand(CommandSuspendDelivery(),
-                DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_common_error_failed_to_suspend_delivery), true)
-                    .messageOnSuccess(resourceHelper.gs(R.string.omnipod_common_confirmation_suspended_delivery)))
+                DisplayResultDialogCallback(rh.gs(R.string.omnipod_common_error_failed_to_suspend_delivery), true)
+                    .messageOnSuccess(rh.gs(R.string.omnipod_common_confirmation_suspended_delivery)))
         }
 
         buttonBinding.buttonSetTime.setOnClickListener {
             disablePodActionButtons()
             commandQueue.customCommand(CommandHandleTimeChange(true),
-                DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_common_error_failed_to_set_time), true)
-                    .messageOnSuccess(resourceHelper.gs(R.string.omnipod_common_confirmation_time_on_pod_updated)))
+                DisplayResultDialogCallback(rh.gs(R.string.omnipod_common_error_failed_to_set_time), true)
+                    .messageOnSuccess(rh.gs(R.string.omnipod_common_confirmation_time_on_pod_updated)))
         }
     }
 
@@ -232,11 +232,11 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
 
         rileyLinkStatusBinding.rileyLinkStatus.text =
             when {
-                rileyLinkServiceState == RileyLinkServiceState.NotStarted -> resourceHelper.gs(resourceId)
-                rileyLinkServiceState.isConnecting                        -> "{fa-bluetooth-b spin}   " + resourceHelper.gs(resourceId)
-                rileyLinkServiceState.isError && rileyLinkError == null   -> "{fa-bluetooth-b}   " + resourceHelper.gs(resourceId)
-                rileyLinkServiceState.isError && rileyLinkError != null   -> "{fa-bluetooth-b}   " + resourceHelper.gs(rileyLinkError.getResourceId(RileyLinkTargetDevice.Omnipod))
-                else                                                      -> "{fa-bluetooth-b}   " + resourceHelper.gs(resourceId)
+                rileyLinkServiceState == RileyLinkServiceState.NotStarted -> rh.gs(resourceId)
+                rileyLinkServiceState.isConnecting                        -> "{fa-bluetooth-b spin}   " + rh.gs(resourceId)
+                rileyLinkServiceState.isError && rileyLinkError == null   -> "{fa-bluetooth-b}   " + rh.gs(resourceId)
+                rileyLinkServiceState.isError && rileyLinkError != null   -> "{fa-bluetooth-b}   " + rh.gs(rileyLinkError.getResourceId(RileyLinkTargetDevice.Omnipod))
+                else                                                      -> "{fa-bluetooth-b}   " + rh.gs(resourceId)
             }
         rileyLinkStatusBinding.rileyLinkStatus.setTextColor(if (rileyLinkServiceState.isError || rileyLinkError != null) Color.RED else Color.WHITE)
     }
@@ -276,7 +276,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
             podInfoBinding.uniqueId.text = podStateManager.address.toString()
             podInfoBinding.podLot.text = podStateManager.lot.toString()
             podInfoBinding.podSequenceNumber.text = podStateManager.tid.toString()
-            podInfoBinding.firmwareVersion.text = resourceHelper.gs(R.string.omnipod_eros_overview_firmware_version_value, podStateManager.pmVersion.toString(), podStateManager.piVersion.toString())
+            podInfoBinding.firmwareVersion.text = rh.gs(R.string.omnipod_eros_overview_firmware_version_value, podStateManager.pmVersion.toString(), podStateManager.piVersion.toString())
 
             podInfoBinding.timeOnPod.text = readableZonedTime(podStateManager.time)
             podInfoBinding.timeOnPod.setTextColor(if (podStateManager.timeDeviatesMoreThan(OmnipodConstants.TIME_DEVIATION_THRESHOLD)) {
@@ -299,32 +299,32 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
 
             if (podStateManager.isPodFaulted) {
                 val faultEventCode = podStateManager.faultEventCode
-                errors.add(resourceHelper.gs(R.string.omnipod_common_pod_status_pod_fault_description, faultEventCode.value, faultEventCode.name))
+                errors.add(rh.gs(R.string.omnipod_common_pod_status_pod_fault_description, faultEventCode.value, faultEventCode.name))
             }
 
             // base basal rate
             podInfoBinding.baseBasalRate.text = if (podStateManager.isPodActivationCompleted) {
-                resourceHelper.gs(R.string.pump_basebasalrate, omnipodErosPumpPlugin.model().determineCorrectBasalSize(podStateManager.basalSchedule.rateAt(TimeUtil.toDuration(DateTime.now()))))
+                rh.gs(R.string.pump_basebasalrate, omnipodErosPumpPlugin.model().determineCorrectBasalSize(podStateManager.basalSchedule.rateAt(TimeUtil.toDuration(DateTime.now()))))
             } else {
                 PLACEHOLDER
             }
 
             // total delivered
             podInfoBinding.totalDelivered.text = if (podStateManager.isPodActivationCompleted && podStateManager.totalInsulinDelivered != null) {
-                resourceHelper.gs(R.string.omnipod_common_overview_total_delivered_value, podStateManager.totalInsulinDelivered - OmnipodConstants.POD_SETUP_UNITS)
+                rh.gs(R.string.omnipod_common_overview_total_delivered_value, podStateManager.totalInsulinDelivered - OmnipodConstants.POD_SETUP_UNITS)
             } else {
                 PLACEHOLDER
             }
 
             // reservoir
             if (podStateManager.reservoirLevel == null) {
-                podInfoBinding.reservoir.text = resourceHelper.gs(R.string.omnipod_common_overview_reservoir_value_over50)
+                podInfoBinding.reservoir.text = rh.gs(R.string.omnipod_common_overview_reservoir_value_over50)
                 podInfoBinding.reservoir.setTextColor(Color.WHITE)
             } else {
                 val lowReservoirThreshold = (omnipodAlertUtil.lowReservoirAlertUnits
                     ?: OmnipodConstants.DEFAULT_MAX_RESERVOIR_ALERT_THRESHOLD).toDouble()
 
-                podInfoBinding.reservoir.text = resourceHelper.gs(R.string.omnipod_common_overview_reservoir_value, podStateManager.reservoirLevel)
+                podInfoBinding.reservoir.text = rh.gs(R.string.omnipod_common_overview_reservoir_value, podStateManager.reservoirLevel)
                 podInfoBinding.reservoir.setTextColor(if (podStateManager.reservoirLevel < lowReservoirThreshold) {
                     Color.RED
                 } else {
@@ -370,34 +370,34 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
 
     private fun updatePodStatus() {
         podInfoBinding.podStatus.text = if (!podStateManager.hasPodState()) {
-            resourceHelper.gs(R.string.omnipod_common_pod_status_no_active_pod)
+            rh.gs(R.string.omnipod_common_pod_status_no_active_pod)
         } else if (!podStateManager.isPodActivationCompleted) {
             if (!podStateManager.isPodInitialized) {
-                resourceHelper.gs(R.string.omnipod_common_pod_status_waiting_for_activation)
+                rh.gs(R.string.omnipod_common_pod_status_waiting_for_activation)
             } else {
                 if (podStateManager.activationProgress.isBefore(ActivationProgress.PRIMING_COMPLETED)) {
-                    resourceHelper.gs(R.string.omnipod_common_pod_status_waiting_for_activation)
+                    rh.gs(R.string.omnipod_common_pod_status_waiting_for_activation)
                 } else {
-                    resourceHelper.gs(R.string.omnipod_common_pod_status_waiting_for_cannula_insertion)
+                    rh.gs(R.string.omnipod_common_pod_status_waiting_for_cannula_insertion)
                 }
             }
         } else {
             if (podStateManager.podProgressStatus.isRunning) {
                 var status = if (podStateManager.isSuspended) {
-                    resourceHelper.gs(R.string.omnipod_common_pod_status_suspended)
+                    rh.gs(R.string.omnipod_common_pod_status_suspended)
                 } else {
-                    resourceHelper.gs(R.string.omnipod_common_pod_status_running)
+                    rh.gs(R.string.omnipod_common_pod_status_running)
                 }
 
                 if (!podStateManager.isBasalCertain) {
-                    status += " (" + resourceHelper.gs(R.string.omnipod_eros_uncertain) + ")"
+                    status += " (" + rh.gs(R.string.omnipod_eros_uncertain) + ")"
                 }
 
                 status
             } else if (podStateManager.podProgressStatus == PodProgressStatus.FAULT_EVENT_OCCURRED) {
-                resourceHelper.gs(R.string.omnipod_common_pod_status_pod_fault)
+                rh.gs(R.string.omnipod_common_pod_status_pod_fault)
             } else if (podStateManager.podProgressStatus == PodProgressStatus.INACTIVE) {
-                resourceHelper.gs(R.string.omnipod_common_pod_status_inactive)
+                rh.gs(R.string.omnipod_common_pod_status_inactive)
             } else {
                 podStateManager.podProgressStatus.toString()
             }
@@ -413,14 +413,14 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
 
     private fun updateLastBolus() {
         if (podStateManager.isPodActivationCompleted && podStateManager.hasLastBolus()) {
-            var text = resourceHelper.gs(R.string.omnipod_common_overview_last_bolus_value, omnipodErosPumpPlugin.model().determineCorrectBolusSize(podStateManager.lastBolusAmount), resourceHelper.gs(R.string.insulin_unit_shortname), readableDuration(podStateManager.lastBolusStartTime))
+            var text = rh.gs(R.string.omnipod_common_overview_last_bolus_value, omnipodErosPumpPlugin.model().determineCorrectBolusSize(podStateManager.lastBolusAmount), rh.gs(R.string.insulin_unit_shortname), readableDuration(podStateManager.lastBolusStartTime))
             val textColor: Int
 
             if (podStateManager.isLastBolusCertain) {
                 textColor = Color.WHITE
             } else {
                 textColor = Color.RED
-                text += " (" + resourceHelper.gs(R.string.omnipod_eros_uncertain) + ")"
+                text += " (" + rh.gs(R.string.omnipod_eros_uncertain) + ")"
             }
 
             podInfoBinding.lastBolus.text = text
@@ -448,12 +448,12 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
 
                 var text: String
                 val textColor: Int
-                text = resourceHelper.gs(R.string.omnipod_common_overview_temp_basal_value, amount, dateUtil.timeString(startTime.millis), minutesRunning, duration.standardMinutes)
+                text = rh.gs(R.string.omnipod_common_overview_temp_basal_value, amount, dateUtil.timeString(startTime.millis), minutesRunning, duration.standardMinutes)
                 if (podStateManager.isTempBasalCertain) {
                     textColor = Color.WHITE
                 } else {
                     textColor = Color.RED
-                    text += " (" + resourceHelper.gs(R.string.omnipod_eros_uncertain) + ")"
+                    text += " (" + rh.gs(R.string.omnipod_eros_uncertain) + ")"
                 }
 
                 podInfoBinding.tempBasal.text = text
@@ -467,7 +467,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
                 textColor = Color.WHITE
             } else {
                 textColor = Color.RED
-                text += " (" + resourceHelper.gs(R.string.omnipod_eros_uncertain) + ")"
+                text += " (" + rh.gs(R.string.omnipod_eros_uncertain) + ")"
             }
 
             podInfoBinding.tempBasal.text = text
@@ -546,8 +546,8 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
     private fun displayNotConfiguredDialog() {
         context?.let {
             UIRunnable {
-                OKDialog.show(it, resourceHelper.gs(R.string.omnipod_common_warning),
-                    resourceHelper.gs(R.string.omnipod_eros_error_operation_not_possible_no_configuration), null)
+                OKDialog.show(it, rh.gs(R.string.omnipod_common_warning),
+                    rh.gs(R.string.omnipod_eros_error_operation_not_possible_no_configuration), null)
             }.run()
         }
     }
@@ -576,7 +576,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
         val isDaylightTime = timeZone.inDaylightTime(timeAsJavaData)
         val locale = resources.configuration.locales.get(0)
         val timeZoneDisplayName = timeZone.getDisplayName(isDaylightTime, TimeZone.SHORT, locale) + " " + timeZone.getDisplayName(isDaylightTime, TimeZone.LONG, locale)
-        return resourceHelper.gs(R.string.omnipod_common_time_with_timezone, dateUtil.dateAndTimeString(timeAsJavaData.time), timeZoneDisplayName)
+        return rh.gs(R.string.omnipod_common_time_with_timezone, dateUtil.dateAndTimeString(timeAsJavaData.time), timeZoneDisplayName)
     }
 
     private fun readableDuration(dateTime: DateTime): String {
@@ -586,32 +586,32 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
         val seconds = duration.standardSeconds.toInt()
         when {
             seconds < 10           -> {
-                return resourceHelper.gs(R.string.omnipod_common_moments_ago)
+                return rh.gs(R.string.omnipod_common_moments_ago)
             }
 
             seconds < 60           -> {
-                return resourceHelper.gs(R.string.omnipod_common_less_than_a_minute_ago)
+                return rh.gs(R.string.omnipod_common_less_than_a_minute_ago)
             }
 
             seconds < 60 * 60      -> { // < 1 hour
-                return resourceHelper.gs(R.string.omnipod_common_time_ago, resourceHelper.gq(R.plurals.omnipod_common_minutes, minutes, minutes))
+                return rh.gs(R.string.omnipod_common_time_ago, rh.gq(R.plurals.omnipod_common_minutes, minutes, minutes))
             }
 
             seconds < 24 * 60 * 60 -> { // < 1 day
                 val minutesLeft = minutes % 60
                 if (minutesLeft > 0)
-                    return resourceHelper.gs(R.string.omnipod_common_time_ago,
-                        resourceHelper.gs(R.string.omnipod_common_composite_time, resourceHelper.gq(R.plurals.omnipod_common_hours, hours, hours), resourceHelper.gq(R.plurals.omnipod_common_minutes, minutesLeft, minutesLeft)))
-                return resourceHelper.gs(R.string.omnipod_common_time_ago, resourceHelper.gq(R.plurals.omnipod_common_hours, hours, hours))
+                    return rh.gs(R.string.omnipod_common_time_ago,
+                        rh.gs(R.string.omnipod_common_composite_time, rh.gq(R.plurals.omnipod_common_hours, hours, hours), rh.gq(R.plurals.omnipod_common_minutes, minutesLeft, minutesLeft)))
+                return rh.gs(R.string.omnipod_common_time_ago, rh.gq(R.plurals.omnipod_common_hours, hours, hours))
             }
 
             else                   -> {
                 val days = hours / 24
                 val hoursLeft = hours % 24
                 if (hoursLeft > 0)
-                    return resourceHelper.gs(R.string.omnipod_common_time_ago,
-                        resourceHelper.gs(R.string.omnipod_common_composite_time, resourceHelper.gq(R.plurals.omnipod_common_days, days, days), resourceHelper.gq(R.plurals.omnipod_common_hours, hoursLeft, hoursLeft)))
-                return resourceHelper.gs(R.string.omnipod_common_time_ago, resourceHelper.gq(R.plurals.omnipod_common_days, days, days))
+                    return rh.gs(R.string.omnipod_common_time_ago,
+                        rh.gs(R.string.omnipod_common_composite_time, rh.gq(R.plurals.omnipod_common_days, days, days), rh.gq(R.plurals.omnipod_common_hours, hoursLeft, hoursLeft)))
+                return rh.gs(R.string.omnipod_common_time_ago, rh.gq(R.plurals.omnipod_common_days, days, days))
             }
         }
     }
@@ -634,11 +634,11 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
             if (result.success) {
                 val messageOnSuccess = this.messageOnSuccess
                 if (messageOnSuccess != null) {
-                    displayOkDialog(resourceHelper.gs(R.string.omnipod_common_confirmation), messageOnSuccess)
+                    displayOkDialog(rh.gs(R.string.omnipod_common_confirmation), messageOnSuccess)
                 }
                 actionOnSuccess?.run()
             } else {
-                displayErrorDialog(resourceHelper.gs(R.string.omnipod_common_warning), resourceHelper.gs(R.string.omnipod_common_two_strings_concatenated_by_colon, errorMessagePrefix, result.comment), withSoundOnError)
+                displayErrorDialog(rh.gs(R.string.omnipod_common_warning), rh.gs(R.string.omnipod_common_two_strings_concatenated_by_colon, errorMessagePrefix, result.comment), withSoundOnError)
             }
         }
 

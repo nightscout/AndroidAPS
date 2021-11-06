@@ -53,7 +53,7 @@ class DanaRSPlugin @Inject constructor(
     private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
     private val context: Context,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     private val constraintChecker: ConstraintChecker,
     private val profileFunction: ProfileFunction,
     private val sp: SP,
@@ -74,7 +74,7 @@ class DanaRSPlugin @Inject constructor(
         .shortName(R.string.danarspump_shortname)
         .preferencesId(R.xml.pref_danars)
         .description(R.string.description_pump_dana_rs),
-    injector, aapsLogger, resourceHelper, commandQueue
+    injector, aapsLogger, rh, commandQueue
 ), Pump, Dana, Constraints {
 
     private val disposable = CompositeDisposable()
@@ -86,10 +86,10 @@ class DanaRSPlugin @Inject constructor(
     override fun updatePreferenceSummary(pref: Preference) {
         super.updatePreferenceSummary(pref)
 
-        if (pref.key == resourceHelper.gs(R.string.key_danars_name)) {
+        if (pref.key == rh.gs(R.string.key_danars_name)) {
             val value = sp.getStringOrNull(R.string.key_danars_name, null)
             pref.summary = value
-                ?: resourceHelper.gs(R.string.not_set_short)
+                ?: rh.gs(R.string.not_set_short)
         }
     }
 
@@ -145,7 +145,7 @@ class DanaRSPlugin @Inject constructor(
         aapsLogger.debug(LTag.PUMP, "RS connect from: $reason")
         if (danaRSService != null && mDeviceAddress != "" && mDeviceName != "") {
             val success = danaRSService?.connect(reason, mDeviceAddress) ?: false
-            if (!success) ToastUtils.showToastInUiThread(context, resourceHelper.gs(R.string.ble_not_supported_or_not_paired))
+            if (!success) ToastUtils.showToastInUiThread(context, rh.gs(R.string.ble_not_supported_or_not_paired))
         }
     }
 
@@ -183,18 +183,18 @@ class DanaRSPlugin @Inject constructor(
 
     // Constraints interface
     override fun applyBasalConstraints(absoluteRate: Constraint<Double>, profile: Profile): Constraint<Double> {
-        absoluteRate.setIfSmaller(aapsLogger, danaPump.maxBasal, resourceHelper.gs(R.string.limitingbasalratio, danaPump.maxBasal, resourceHelper.gs(R.string.pumplimit)), this)
+        absoluteRate.setIfSmaller(aapsLogger, danaPump.maxBasal, rh.gs(R.string.limitingbasalratio, danaPump.maxBasal, rh.gs(R.string.pumplimit)), this)
         return absoluteRate
     }
 
     override fun applyBasalPercentConstraints(percentRate: Constraint<Int>, profile: Profile): Constraint<Int> {
-        percentRate.setIfGreater(aapsLogger, 0, resourceHelper.gs(R.string.limitingpercentrate, 0, resourceHelper.gs(R.string.itmustbepositivevalue)), this)
-        percentRate.setIfSmaller(aapsLogger, pumpDescription.maxTempPercent, resourceHelper.gs(R.string.limitingpercentrate, pumpDescription.maxTempPercent, resourceHelper.gs(R.string.pumplimit)), this)
+        percentRate.setIfGreater(aapsLogger, 0, rh.gs(R.string.limitingpercentrate, 0, rh.gs(R.string.itmustbepositivevalue)), this)
+        percentRate.setIfSmaller(aapsLogger, pumpDescription.maxTempPercent, rh.gs(R.string.limitingpercentrate, pumpDescription.maxTempPercent, rh.gs(R.string.pumplimit)), this)
         return percentRate
     }
 
     override fun applyBolusConstraints(insulin: Constraint<Double>): Constraint<Double> {
-        insulin.setIfSmaller(aapsLogger, danaPump.maxBolus, resourceHelper.gs(R.string.limitingbolus, danaPump.maxBolus, resourceHelper.gs(R.string.pumplimit)), this)
+        insulin.setIfSmaller(aapsLogger, danaPump.maxBolus, rh.gs(R.string.limitingbolus, danaPump.maxBolus, rh.gs(R.string.pumplimit)), this)
         return insulin
     }
 
@@ -216,22 +216,22 @@ class DanaRSPlugin @Inject constructor(
         val result = PumpEnactResult(injector)
         if (!isInitialized()) {
             aapsLogger.error("setNewBasalProfile not initialized")
-            val notification = Notification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, resourceHelper.gs(R.string.pumpNotInitializedProfileNotSet), Notification.URGENT)
+            val notification = Notification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, rh.gs(R.string.pumpNotInitializedProfileNotSet), Notification.URGENT)
             rxBus.send(EventNewNotification(notification))
-            result.comment = resourceHelper.gs(R.string.pumpNotInitializedProfileNotSet)
+            result.comment = rh.gs(R.string.pumpNotInitializedProfileNotSet)
             return result
         } else {
             rxBus.send(EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED))
         }
         return if (danaRSService?.updateBasalsInPump(profile) != true) {
-            val notification = Notification(Notification.FAILED_UPDATE_PROFILE, resourceHelper.gs(R.string.failedupdatebasalprofile), Notification.URGENT)
+            val notification = Notification(Notification.FAILED_UPDATE_PROFILE, rh.gs(R.string.failedupdatebasalprofile), Notification.URGENT)
             rxBus.send(EventNewNotification(notification))
-            result.comment = resourceHelper.gs(R.string.failedupdatebasalprofile)
+            result.comment = rh.gs(R.string.failedupdatebasalprofile)
             result
         } else {
             rxBus.send(EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED))
             rxBus.send(EventDismissNotification(Notification.FAILED_UPDATE_PROFILE))
-            val notification = Notification(Notification.PROFILE_SET_OK, resourceHelper.gs(R.string.profile_set_ok), Notification.INFO, 60)
+            val notification = Notification(Notification.PROFILE_SET_OK, rh.gs(R.string.profile_set_ok), Notification.INFO, 60)
             rxBus.send(EventNewNotification(notification))
             result.success = true
             result.enacted = true
@@ -296,13 +296,13 @@ class DanaRSPlugin @Inject constructor(
             if (!result.success) {
                 var error = "" + danaPump.bolusStartErrorCode
                 when (danaPump.bolusStartErrorCode) {
-                    0x10 -> error = resourceHelper.gs(R.string.maxbolusviolation)
-                    0x20 -> error = resourceHelper.gs(R.string.commanderror)
-                    0x40 -> error = resourceHelper.gs(R.string.speederror)
-                    0x80 -> error = resourceHelper.gs(R.string.insulinlimitviolation)
+                    0x10 -> error = rh.gs(R.string.maxbolusviolation)
+                    0x20 -> error = rh.gs(R.string.commanderror)
+                    0x40 -> error = rh.gs(R.string.speederror)
+                    0x80 -> error = rh.gs(R.string.insulinlimitviolation)
                 }
-                result.comment = String.format(resourceHelper.gs(R.string.boluserrorcode), detailedBolusInfo.insulin, t.insulin, error)
-            } else result.comment = resourceHelper.gs(R.string.ok)
+                result.comment = String.format(rh.gs(R.string.boluserrorcode), detailedBolusInfo.insulin, t.insulin, error)
+            } else result.comment = rh.gs(R.string.ok)
             aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
             result
         } else {
@@ -310,7 +310,7 @@ class DanaRSPlugin @Inject constructor(
             result.success = false
             result.bolusDelivered = 0.0
             result.carbsDelivered = 0.0
-            result.comment = resourceHelper.gs(R.string.invalidinput)
+            result.comment = rh.gs(R.string.invalidinput)
             aapsLogger.error("deliverTreatment: Invalid input")
             result
         }
@@ -325,9 +325,23 @@ class DanaRSPlugin @Inject constructor(
     override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         var result = PumpEnactResult(injector)
         val absoluteAfterConstrain = constraintChecker.applyBasalConstraints(Constraint(absoluteRate), profile).value()
-        val doTempOff = baseBasalRate - absoluteAfterConstrain == 0.0
+        var doTempOff = baseBasalRate - absoluteAfterConstrain == 0.0
         val doLowTemp = absoluteAfterConstrain < baseBasalRate
         val doHighTemp = absoluteAfterConstrain > baseBasalRate
+
+        var percentRate = 0
+        // Any basal less than 0.10u/h will be dumped once per hour, not every 4 minutes. So if it's less than .10u/h, set a zero temp.
+        if (absoluteAfterConstrain >= 0.10) {
+            percentRate = java.lang.Double.valueOf(absoluteAfterConstrain / baseBasalRate * 100).toInt()
+        } else {
+            aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Requested basal < 0.10u/h. Setting 0u/h (doLowTemp || doHighTemp)")
+        }
+        percentRate = if (percentRate < 100) Round.ceilTo(percentRate.toDouble(), 10.0).toInt() else Round.floorTo(percentRate.toDouble(), 10.0).toInt()
+        if (percentRate > 500) // Special high temp 500/15min
+            percentRate = 500
+
+        if (percentRate == 100) doTempOff = true
+
         if (doTempOff) {
             // If temp in progress
             if (danaPump.isTempBasalInProgress) {
@@ -343,16 +357,6 @@ class DanaRSPlugin @Inject constructor(
             return result
         }
         if (doLowTemp || doHighTemp) {
-            var percentRate = 0
-            // Any basal less than 0.10u/h will be dumped once per hour, not every 4 minutes. So if it's less than .10u/h, set a zero temp.
-            if (absoluteAfterConstrain >= 0.10) {
-                percentRate = java.lang.Double.valueOf(absoluteAfterConstrain / baseBasalRate * 100).toInt()
-            } else {
-                aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Requested basal < 0.10u/h. Setting 0u/h (doLowTemp || doHighTemp)")
-            }
-            percentRate = if (percentRate < 100) Round.ceilTo(percentRate.toDouble(), 10.0).toInt() else Round.floorTo(percentRate.toDouble(), 10.0).toInt()
-            if (percentRate > 500) // Special high temp 500/15min
-                percentRate = 500
             // Check if some temp is already in progress
             if (danaPump.isTempBasalInProgress) {
                 aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: currently running")
@@ -401,7 +405,7 @@ class DanaRSPlugin @Inject constructor(
             result.isTempCancel = false
             result.enacted = false
             result.success = false
-            result.comment = resourceHelper.gs(R.string.invalidinput)
+            result.comment = rh.gs(R.string.invalidinput)
             aapsLogger.error("setTempBasalPercent: Invalid input")
             return result
         }
@@ -410,7 +414,7 @@ class DanaRSPlugin @Inject constructor(
             result.enacted = false
             result.success = true
             result.isTempCancel = false
-            result.comment = resourceHelper.gs(R.string.ok)
+            result.comment = rh.gs(R.string.ok)
             result.duration = danaPump.tempBasalRemainingMin
             result.percent = danaPump.tempBasalPercent
             result.isPercent = true
@@ -428,7 +432,7 @@ class DanaRSPlugin @Inject constructor(
         if (connectionOK && danaPump.isTempBasalInProgress && danaPump.tempBasalPercent == percentAfterConstraint) {
             result.enacted = true
             result.success = true
-            result.comment = resourceHelper.gs(R.string.ok)
+            result.comment = rh.gs(R.string.ok)
             result.isTempCancel = false
             result.duration = danaPump.tempBasalRemainingMin
             result.percent = danaPump.tempBasalPercent
@@ -438,7 +442,7 @@ class DanaRSPlugin @Inject constructor(
         }
         result.enacted = false
         result.success = false
-        result.comment = resourceHelper.gs(R.string.tempbasaldeliveryerror)
+        result.comment = rh.gs(R.string.tempbasaldeliveryerror)
         aapsLogger.error("setTempBasalPercent: Failed to set temp basal. connectionOK: $connectionOK isTempBasalInProgress: ${danaPump.isTempBasalInProgress} tempBasalPercent: ${danaPump.tempBasalPercent}")
         return result
     }
@@ -449,7 +453,7 @@ class DanaRSPlugin @Inject constructor(
         if (connectionOK && danaPump.isTempBasalInProgress && danaPump.tempBasalPercent == percent) {
             result.enacted = true
             result.success = true
-            result.comment = resourceHelper.gs(R.string.ok)
+            result.comment = rh.gs(R.string.ok)
             result.isTempCancel = false
             result.duration = danaPump.tempBasalRemainingMin
             result.percent = danaPump.tempBasalPercent
@@ -459,7 +463,7 @@ class DanaRSPlugin @Inject constructor(
         }
         result.enacted = false
         result.success = false
-        result.comment = resourceHelper.gs(R.string.danar_valuenotsetproperly)
+        result.comment = rh.gs(R.string.danar_valuenotsetproperly)
         aapsLogger.error("setHighTempBasalPercent: Failed to set temp basal")
         return result
     }
@@ -474,7 +478,7 @@ class DanaRSPlugin @Inject constructor(
         if (danaPump.isExtendedInProgress && abs(danaPump.extendedBolusAmount - insulinAfterConstraint) < pumpDescription.extendedBolusStep) {
             result.enacted = false
             result.success = true
-            result.comment = resourceHelper.gs(R.string.ok)
+            result.comment = rh.gs(R.string.ok)
             result.duration = danaPump.extendedBolusRemainingMinutes
             result.absolute = danaPump.extendedBolusAbsoluteRate
             result.isPercent = false
@@ -487,7 +491,7 @@ class DanaRSPlugin @Inject constructor(
         if (connectionOK && danaPump.isExtendedInProgress && abs(danaPump.extendedBolusAmount - insulinAfterConstraint) < pumpDescription.extendedBolusStep) {
             result.enacted = true
             result.success = true
-            result.comment = resourceHelper.gs(R.string.ok)
+            result.comment = rh.gs(R.string.ok)
             result.isTempCancel = false
             result.duration = danaPump.extendedBolusRemainingMinutes
             result.absolute = danaPump.extendedBolusAbsoluteRate
@@ -498,7 +502,7 @@ class DanaRSPlugin @Inject constructor(
         }
         result.enacted = false
         result.success = false
-        result.comment = resourceHelper.gs(R.string.danar_valuenotsetproperly)
+        result.comment = rh.gs(R.string.danar_valuenotsetproperly)
         aapsLogger.error("setExtendedBolus: Failed to extended bolus")
         return result
     }
@@ -515,7 +519,7 @@ class DanaRSPlugin @Inject constructor(
             result.success = true
             result.enacted = false
             result.isTempCancel = true
-            result.comment = resourceHelper.gs(R.string.ok)
+            result.comment = rh.gs(R.string.ok)
             aapsLogger.debug(LTag.PUMP, "cancelRealTempBasal: OK")
         }
         return result
@@ -530,7 +534,7 @@ class DanaRSPlugin @Inject constructor(
         } else {
             result.success = true
             result.enacted = false
-            result.comment = resourceHelper.gs(R.string.ok)
+            result.comment = rh.gs(R.string.ok)
             aapsLogger.debug(LTag.PUMP, "cancelExtendedBolus: OK")
         }
         return result
@@ -616,9 +620,9 @@ class DanaRSPlugin @Inject constructor(
     override fun loadTDDs(): PumpEnactResult = loadHistory(RecordTypes.RECORD_TYPE_DAILY)
     override fun canHandleDST(): Boolean = false
     override fun clearPairing() {
-        sp.remove(resourceHelper.gs(R.string.key_danars_pairingkey) + mDeviceName)
-        sp.remove(resourceHelper.gs(R.string.key_danars_v3_randompairingkey) + mDeviceName)
-        sp.remove(resourceHelper.gs(R.string.key_danars_v3_pairingkey) + mDeviceName)
-        sp.remove(resourceHelper.gs(R.string.key_danars_v3_randomsynckey) + mDeviceName)
+        sp.remove(rh.gs(R.string.key_danars_pairingkey) + mDeviceName)
+        sp.remove(rh.gs(R.string.key_danars_v3_randompairingkey) + mDeviceName)
+        sp.remove(rh.gs(R.string.key_danars_v3_pairingkey) + mDeviceName)
+        sp.remove(rh.gs(R.string.key_danars_v3_randomsynckey) + mDeviceName)
     }
 }

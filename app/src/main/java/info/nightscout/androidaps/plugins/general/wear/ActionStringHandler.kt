@@ -59,7 +59,7 @@ class ActionStringHandler @Inject constructor(
     private val rxBus: RxBus,
     private val aapsLogger: AAPSLogger,
     private val aapsSchedulers: AapsSchedulers,
-    private val resourceHelper: ResourceHelper,
+    private val rh: ResourceHelper,
     private val injector: HasAndroidInjector,
     private val context: Context,
     private val constraintChecker: ConstraintChecker,
@@ -122,24 +122,24 @@ class ActionStringHandler @Inject constructor(
                 else          -> return
             }
             val insulinAfterConstraints = constraintChecker.applyBolusConstraints(Constraint(amount)).value()
-            rMessage += resourceHelper.gs(R.string.primefill) + ": " + insulinAfterConstraints + "U"
-            if (insulinAfterConstraints - amount != 0.0) rMessage += "\n" + resourceHelper.gs(R.string.constraintapllied)
+            rMessage += rh.gs(R.string.primefill) + ": " + insulinAfterConstraints + "U"
+            if (insulinAfterConstraints - amount != 0.0) rMessage += "\n" + rh.gs(R.string.constraintapllied)
             rAction += "fill $insulinAfterConstraints"
         } else if ("fill" == act[0]) { ////////////////////////////////////////////// PRIME/FILL
             val amount = SafeParse.stringToDouble(act[1])
             val insulinAfterConstraints = constraintChecker.applyBolusConstraints(Constraint(amount)).value()
-            rMessage += resourceHelper.gs(R.string.primefill) + ": " + insulinAfterConstraints + "U"
-            if (insulinAfterConstraints - amount != 0.0) rMessage += "\n" + resourceHelper.gs(R.string.constraintapllied)
+            rMessage += rh.gs(R.string.primefill) + ": " + insulinAfterConstraints + "U"
+            if (insulinAfterConstraints - amount != 0.0) rMessage += "\n" + rh.gs(R.string.constraintapllied)
             rAction += "fill $insulinAfterConstraints"
         } else if ("bolus" == act[0]) { ////////////////////////////////////////////// BOLUS
             val insulin = SafeParse.stringToDouble(act[1])
             val carbs = SafeParse.stringToInt(act[2])
             val insulinAfterConstraints = constraintChecker.applyBolusConstraints(Constraint(insulin)).value()
             val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(carbs)).value()
-            rMessage += resourceHelper.gs(R.string.bolus) + ": " + insulinAfterConstraints + "U\n"
-            rMessage += resourceHelper.gs(R.string.carbs) + ": " + carbsAfterConstraints + "g"
+            rMessage += rh.gs(R.string.bolus) + ": " + insulinAfterConstraints + "U\n"
+            rMessage += rh.gs(R.string.carbs) + ": " + carbsAfterConstraints + "g"
             if (insulinAfterConstraints - insulin != 0.0 || carbsAfterConstraints - carbs != 0) {
-                rMessage += "\n" + resourceHelper.gs(R.string.constraintapllied)
+                rMessage += "\n" + rh.gs(R.string.constraintapllied)
             }
             rAction += "bolus $insulinAfterConstraints $carbsAfterConstraints"
         } else if ("temptarget" == act[0]) { ///////////////////////////////////////////////////////// TEMPTARGET
@@ -280,7 +280,7 @@ class ActionStringHandler @Inject constructor(
                 rMessage = "OLD DATA - "
                 //if pump is not busy: try to fetch data
                 if (activePump.isBusy()) {
-                    rMessage += resourceHelper.gs(R.string.pumpbusy)
+                    rMessage += rh.gs(R.string.pumpbusy)
                 } else {
                     rMessage += "trying to fetch data from pump."
                     commandQueue.loadTDDs(object : Callback() {
@@ -306,11 +306,11 @@ class ActionStringHandler @Inject constructor(
             val duration = SafeParse.stringToInt(act[3])
             val starttimestamp = System.currentTimeMillis() + starttime * 60 * 1000
             val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(carbs)).value()
-            rMessage += resourceHelper.gs(R.string.carbs) + ": " + carbsAfterConstraints + "g"
-            rMessage += "\n" + resourceHelper.gs(R.string.time) + ": " + dateUtil.timeString(starttimestamp)
-            rMessage += "\n" + resourceHelper.gs(R.string.duration) + ": " + duration + "h"
+            rMessage += rh.gs(R.string.carbs) + ": " + carbsAfterConstraints + "g"
+            rMessage += "\n" + rh.gs(R.string.time) + ": " + dateUtil.timeString(starttimestamp)
+            rMessage += "\n" + rh.gs(R.string.duration) + ": " + duration + "h"
             if (carbsAfterConstraints - carbs != 0) {
-                rMessage += "\n" + resourceHelper.gs(R.string.constraintapllied)
+                rMessage += "\n" + rh.gs(R.string.constraintapllied)
             }
             if (carbsAfterConstraints <= 0) {
                 sendError("Carbs = 0! No action taken!")
@@ -318,7 +318,7 @@ class ActionStringHandler @Inject constructor(
             }
             rAction += "ecarbs $carbsAfterConstraints $starttimestamp $duration"
         } else if ("changeRequest" == act[0]) { ////////////////////////////////////////////// CHANGE REQUEST
-            rTitle = resourceHelper.gs(R.string.openloop_newsuggestion)
+            rTitle = rh.gs(R.string.openloop_newsuggestion)
             rAction = "changeRequest"
             loopPlugin.lastRun?.let {
                 rMessage += it.constraintsProcessed
@@ -472,15 +472,15 @@ class ActionStringHandler @Inject constructor(
             val usedAPS = activePlugin.activeAPS
             val result = usedAPS.lastAPSResult ?: return "Last result not available!"
             ret += if (!result.isChangeRequested) {
-                resourceHelper.gs(R.string.nochangerequested) + "\n"
+                rh.gs(R.string.nochangerequested) + "\n"
             } else if (result.rate == 0.0 && result.duration == 0) {
-                resourceHelper.gs(R.string.canceltemp) + "\n"
+                rh.gs(R.string.canceltemp) + "\n"
             } else {
-                resourceHelper.gs(R.string.rate) + ": " + DecimalFormatter.to2Decimal(result.rate) + " U/h " +
+                rh.gs(R.string.rate) + ": " + DecimalFormatter.to2Decimal(result.rate) + " U/h " +
                     "(" + DecimalFormatter.to2Decimal(result.rate / activePlugin.activePump.baseBasalRate * 100) + "%)\n" +
-                    resourceHelper.gs(R.string.duration) + ": " + DecimalFormatter.to0Decimal(result.duration.toDouble()) + " min\n"
+                    rh.gs(R.string.duration) + ": " + DecimalFormatter.to0Decimal(result.duration.toDouble()) + " min\n"
             }
-            ret += "\n" + resourceHelper.gs(R.string.reason) + ": " + result.reason
+            ret += "\n" + rh.gs(R.string.reason) + ": " + result.reason
             return ret
         }
 
@@ -540,17 +540,17 @@ class ActionStringHandler @Inject constructor(
         var msg = ""
         //check for validity
         if (percentage < Constants.CPP_MIN_PERCENTAGE || percentage > Constants.CPP_MAX_PERCENTAGE) {
-            msg += String.format(resourceHelper.gs(R.string.valueoutofrange), "Profile-Percentage") + "\n"
+            msg += String.format(rh.gs(R.string.valueoutofrange), "Profile-Percentage") + "\n"
         }
         if (timeshift < 0 || timeshift > 23) {
-            msg += String.format(resourceHelper.gs(R.string.valueoutofrange), "Profile-Timeshift") + "\n"
+            msg += String.format(rh.gs(R.string.valueoutofrange), "Profile-Timeshift") + "\n"
         }
         val profile = profileFunction.getProfile()
         if (profile == null) {
-            msg += resourceHelper.gs(R.string.notloadedplugins) + "\n"
+            msg += rh.gs(R.string.notloadedplugins) + "\n"
         }
         if ("" != msg) {
-            msg += resourceHelper.gs(R.string.valuesnotstored)
+            msg += rh.gs(R.string.valuesnotstored)
             val rTitle = "STATUS"
             val rAction = "statusmessage"
             wearPlugin.requestActionConfirmation(rTitle, msg, rAction)
@@ -605,7 +605,7 @@ class ActionStringHandler @Inject constructor(
         commandQueue.bolus(detailedBolusInfo, object : Callback() {
             override fun run() {
                 if (!result.success) {
-                    sendError(resourceHelper.gs(R.string.treatmentdeliveryerror) +
+                    sendError(rh.gs(R.string.treatmentdeliveryerror) +
                         "\n" +
                         result.comment)
                 }
@@ -642,7 +642,7 @@ class ActionStringHandler @Inject constructor(
             commandQueue.bolus(detailedBolusInfo, object : Callback() {
                 override fun run() {
                     if (!result.success) {
-                        sendError(resourceHelper.gs(R.string.treatmentdeliveryerror) +
+                        sendError(rh.gs(R.string.treatmentdeliveryerror) +
                             "\n" +
                             result.comment)
                     }

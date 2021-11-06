@@ -34,7 +34,7 @@ import javax.inject.Singleton
 @Singleton
 class NSClientSourcePlugin @Inject constructor(
     injector: HasAndroidInjector,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     aapsLogger: AAPSLogger,
     config: Config
 ) : PluginBase(PluginDescription()
@@ -44,7 +44,7 @@ class NSClientSourcePlugin @Inject constructor(
     .pluginName(R.string.nsclientbg)
     .shortName(R.string.nsclientbgshort)
     .description(R.string.description_source_ns_client),
-    aapsLogger, resourceHelper, injector
+    aapsLogger, rh, injector
 ), BgSource {
 
     private var lastBGTimeStamp: Long = 0

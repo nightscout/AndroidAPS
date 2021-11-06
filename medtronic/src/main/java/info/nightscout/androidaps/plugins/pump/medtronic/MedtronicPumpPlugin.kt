@@ -72,7 +72,7 @@ class MedtronicPumpPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rxBus: RxBus,
     context: Context,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     activePlugin: ActivePlugin,
     sp: SP,
     commandQueue: CommandQueueProvider,
@@ -95,7 +95,7 @@ class MedtronicPumpPlugin @Inject constructor(
     .preferencesId(R.xml.pref_medtronic)
     .description(R.string.description_pump_medtronic),  //
     PumpType.MEDTRONIC_522_722,  // we default to most basic model, correct model from config is loaded later
-    injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy, dateUtil, aapsSchedulers, pumpSync, pumpSyncStorage
+    injector, rh, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy, dateUtil, aapsSchedulers, pumpSync, pumpSyncStorage
 ), Pump, RileyLinkPumpDevice, info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncEntriesCreator {
 
     private lateinit var rileyLinkMedtronicService: RileyLinkMedtronicService
@@ -140,9 +140,9 @@ class MedtronicPumpPlugin @Inject constructor(
 
     override fun updatePreferenceSummary(pref: Preference) {
         super.updatePreferenceSummary(pref)
-        if (pref.key == resourceHelper.gs(R.string.key_rileylink_mac_address)) {
+        if (pref.key == rh.gs(R.string.key_rileylink_mac_address)) {
             val value = sp.getStringOrNull(R.string.key_rileylink_mac_address, null)
-            pref.summary = value ?: resourceHelper.gs(R.string.not_set_short)
+            pref.summary = value ?: rh.gs(R.string.not_set_short)
         }
     }
 
@@ -177,14 +177,14 @@ class MedtronicPumpPlugin @Inject constructor(
 
     private fun migrateSettings() {
         if ("US (916 MHz)" == sp.getString(MedtronicConst.Prefs.PumpFrequency, "US (916 MHz)")) {
-            sp.putString(MedtronicConst.Prefs.PumpFrequency, resourceHelper.gs(R.string.key_medtronic_pump_frequency_us_ca))
+            sp.putString(MedtronicConst.Prefs.PumpFrequency, rh.gs(R.string.key_medtronic_pump_frequency_us_ca))
         }
         val encoding = sp.getString(MedtronicConst.Prefs.Encoding, "RileyLink 4b6b Encoding")
         if ("RileyLink 4b6b Encoding" == encoding) {
-            sp.putString(MedtronicConst.Prefs.Encoding, resourceHelper.gs(R.string.key_medtronic_pump_encoding_4b6b_rileylink))
+            sp.putString(MedtronicConst.Prefs.Encoding, rh.gs(R.string.key_medtronic_pump_encoding_4b6b_rileylink))
         }
         if ("Local 4b6b Encoding" == encoding) {
-            sp.putString(MedtronicConst.Prefs.Encoding, resourceHelper.gs(R.string.key_medtronic_pump_encoding_4b6b_local))
+            sp.putString(MedtronicConst.Prefs.Encoding, rh.gs(R.string.key_medtronic_pump_encoding_4b6b_local))
         }
     }
 
@@ -233,7 +233,7 @@ class MedtronicPumpPlugin @Inject constructor(
     }
 
     override fun getPumpInfo(): RileyLinkPumpInfo {
-        val frequency = resourceHelper.gs(if (medtronicPumpStatus.pumpFrequency == "medtronic_pump_frequency_us_ca") R.string.medtronic_pump_frequency_us_ca else R.string.medtronic_pump_frequency_worldwide)
+        val frequency = rh.gs(if (medtronicPumpStatus.pumpFrequency == "medtronic_pump_frequency_us_ca") R.string.medtronic_pump_frequency_us_ca else R.string.medtronic_pump_frequency_worldwide)
         val model = if (!medtronicUtil.isModelSet) "???" else "Medtronic " + medtronicPumpStatus.medtronicDeviceType.pumpModel
         val serialNumber = medtronicPumpStatus.serialNumber
         return RileyLinkPumpInfo(frequency, model, serialNumber)
@@ -338,7 +338,7 @@ class MedtronicPumpPlugin @Inject constructor(
         var resetTime = false
         if (isPumpNotReachable) {
             aapsLogger.error("Pump unreachable.")
-            medtronicUtil.sendNotification(MedtronicNotificationType.PumpUnreachable, resourceHelper, rxBus)
+            medtronicUtil.sendNotification(MedtronicNotificationType.PumpUnreachable, rh, rxBus)
             return
         }
         medtronicUtil.dismissNotification(MedtronicNotificationType.PumpUnreachable, rxBus)
@@ -407,7 +407,7 @@ class MedtronicPumpPlugin @Inject constructor(
         if (isRefresh) {
             if (isPumpNotReachable) {
                 aapsLogger.error(logPrefix + "initializePump::Pump unreachable.")
-                medtronicUtil.sendNotification(MedtronicNotificationType.PumpUnreachable, resourceHelper, rxBus)
+                medtronicUtil.sendNotification(MedtronicNotificationType.PumpUnreachable, rh, rxBus)
                 setRefreshButtonEnabled(true)
                 return true
             }
@@ -420,7 +420,7 @@ class MedtronicPumpPlugin @Inject constructor(
         } else {
             if (medtronicPumpStatus.medtronicDeviceType !== medtronicUtil.medtronicPumpModel) {
                 aapsLogger.warn(LTag.PUMP, logPrefix + "Configured pump is not the same as one detected.")
-                medtronicUtil.sendNotification(MedtronicNotificationType.PumpTypeNotSame, resourceHelper, rxBus)
+                medtronicUtil.sendNotification(MedtronicNotificationType.PumpTypeNotSame, rh, rxBus)
             }
         }
         pumpState = PumpDriverState.Connected
@@ -565,13 +565,13 @@ class MedtronicPumpPlugin @Inject constructor(
                 aapsLogger.info(LTag.PUMP, String.format(Locale.ENGLISH, "MedtronicPumpPlugin::checkTimeAndOptionallySetTime - Time difference is %d s. Set time on pump.", timeDiff))
                 rileyLinkMedtronicService.medtronicUIComm.executeCommand(MedtronicCommandType.SetRealTimeClock)
                 if (clock.timeDifference == 0) {
-                    val notification = Notification(Notification.INSIGHT_DATE_TIME_UPDATED, resourceHelper.gs(R.string.pump_time_updated), Notification.INFO, 60)
+                    val notification = Notification(Notification.INSIGHT_DATE_TIME_UPDATED, rh.gs(R.string.pump_time_updated), Notification.INFO, 60)
                     rxBus.send(EventNewNotification(notification))
                 }
             } else {
                 if (clock.localDeviceTime.year > 2015) {
                     aapsLogger.error(String.format(Locale.ENGLISH, "MedtronicPumpPlugin::checkTimeAndOptionallySetTime - Time difference over 24h requested [diff=%d s]. Doing nothing.", timeDiff))
-                    medtronicUtil.sendNotification(MedtronicNotificationType.TimeChangeOver24h, resourceHelper, rxBus)
+                    medtronicUtil.sendNotification(MedtronicNotificationType.TimeChangeOver24h, rh, rxBus)
                 }
             }
         } else {
@@ -587,9 +587,9 @@ class MedtronicPumpPlugin @Inject constructor(
             return PumpEnactResult(injector) //
                 .success(false) //
                 .enacted(false) //
-                .comment(resourceHelper.gs(R.string.medtronic_cmd_bolus_could_not_be_delivered_no_insulin,
-                    medtronicPumpStatus.reservoirRemainingUnits,
-                    detailedBolusInfo.insulin))
+                .comment(rh.gs(R.string.medtronic_cmd_bolus_could_not_be_delivered_no_insulin,
+                               medtronicPumpStatus.reservoirRemainingUnits,
+                               detailedBolusInfo.insulin))
         }
         bolusDeliveryType = BolusDeliveryType.DeliveryPrepared
         if (isPumpNotReachable) {
@@ -628,7 +628,7 @@ class MedtronicPumpPlugin @Inject constructor(
                     // LOG.debug("MedtronicPumpPlugin::deliverBolus - Delivery Canceled after Bolus started.");
                     Thread(Runnable {
                         SystemClock.sleep(2000)
-                        runAlarm(context, resourceHelper.gs(R.string.medtronic_cmd_cancel_bolus_not_supported), resourceHelper.gs(R.string.medtronic_warning), R.raw.boluserror)
+                        runAlarm(context, rh.gs(R.string.medtronic_cmd_cancel_bolus_not_supported), rh.gs(R.string.medtronic_warning), R.raw.boluserror)
                     }).start()
                 }
                 val now = System.currentTimeMillis()
@@ -1069,7 +1069,7 @@ class MedtronicPumpPlugin @Inject constructor(
             return PumpEnactResult(injector) //
                 .success(false) //
                 .enacted(false) //
-                .comment(resourceHelper.gs(R.string.medtronic_cmd_set_profile_pattern_overflow, profileInvalid))
+                .comment(rh.gs(R.string.medtronic_cmd_set_profile_pattern_overflow, profileInvalid))
         }
         val responseTask = rileyLinkMedtronicService.medtronicUIComm.executeCommand(MedtronicCommandType.SetBasalProfileSTD,
             arrayListOf(basalProfile))
@@ -1133,7 +1133,7 @@ class MedtronicPumpPlugin @Inject constructor(
                 if (rileyLinkMedtronicService.verifyConfiguration()) {
                     serviceTaskExecutor.startTask(WakeAndTuneTask(injector))
                 } else {
-                    runAlarm(context, resourceHelper.gs(R.string.medtronic_error_operation_not_possible_no_configuration), resourceHelper.gs(R.string.medtronic_warning), R.raw.boluserror)
+                    runAlarm(context, rh.gs(R.string.medtronic_error_operation_not_possible_no_configuration), rh.gs(R.string.medtronic_warning), R.raw.boluserror)
                 }
             }
 

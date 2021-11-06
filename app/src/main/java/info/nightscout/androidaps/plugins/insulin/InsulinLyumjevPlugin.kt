@@ -14,18 +14,18 @@ import javax.inject.Singleton
 @Singleton
 class InsulinLyumjevPlugin @Inject constructor(
     injector: HasAndroidInjector,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     profileFunction: ProfileFunction,
     rxBus: RxBus, aapsLogger: AAPSLogger
-) : InsulinOrefBasePlugin(injector, resourceHelper, profileFunction, rxBus, aapsLogger) {
+) : InsulinOrefBasePlugin(injector, rh, profileFunction, rxBus, aapsLogger) {
 
     override val id get(): Insulin.InsulinType = Insulin.InsulinType.OREF_LYUMJEV
-    override val friendlyName get(): String = resourceHelper.gs(R.string.lyumjev)
+    override val friendlyName get(): String = rh.gs(R.string.lyumjev)
 
     override fun configuration(): JSONObject = JSONObject()
     override fun applyConfiguration(configuration: JSONObject) {}
 
-    override fun commentStandardText(): String = resourceHelper.gs(R.string.lyumjev)
+    override fun commentStandardText(): String = rh.gs(R.string.lyumjev)
 
     override val peak = 45
 

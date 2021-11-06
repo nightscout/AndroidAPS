@@ -21,7 +21,7 @@ import kotlin.math.roundToInt
 class VersionCheckerPlugin @Inject constructor(
     injector: HasAndroidInjector,
     private val sp: SP,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     private val versionCheckerUtils: VersionCheckerUtils,
     val rxBus: RxBus,
     aapsLogger: AAPSLogger,
@@ -34,7 +34,7 @@ class VersionCheckerPlugin @Inject constructor(
         .alwaysEnabled(true)
         .showInList(false)
         .pluginName(R.string.versionChecker),
-    aapsLogger, resourceHelper, injector
+    aapsLogger, rh, injector
 ), Constraints {
 
     enum class GracePeriod(val warning: Long, val old: Long, val veryOld: Long) {
@@ -59,10 +59,10 @@ class VersionCheckerPlugin @Inject constructor(
         checkWarning()
         versionCheckerUtils.triggerCheckVersion()
         if (isOldVersion(gracePeriod.veryOld.daysToMillis()))
-            value[aapsLogger, false, resourceHelper.gs(R.string.very_old_version)] = this
-        val endDate = sp.getLong(resourceHelper.gs(info.nightscout.androidaps.core.R.string.key_app_expiration) + "_" + config.VERSION_NAME, 0)
+            value[aapsLogger, false, rh.gs(R.string.very_old_version)] = this
+        val endDate = sp.getLong(rh.gs(info.nightscout.androidaps.core.R.string.key_app_expiration) + "_" + config.VERSION_NAME, 0)
         if (endDate != 0L && dateUtil.now() > endDate)
-            value[aapsLogger, false, resourceHelper.gs(R.string.application_expired)] = this
+            value[aapsLogger, false, rh.gs(R.string.application_expired)] = this
         return value
     }
 
@@ -80,7 +80,7 @@ class VersionCheckerPlugin @Inject constructor(
             sp.putLong(R.string.key_last_versionchecker_plugin_warning, now)
 
             //notify
-            val message = resourceHelper.gs(
+            val message = rh.gs(
                 R.string.new_version_warning,
                 ((now - sp.getLong(R.string.key_last_time_this_version_detected, now)) / 1L.daysToMillis().toDouble()).roundToInt(),
                 gracePeriod.old,
@@ -90,13 +90,13 @@ class VersionCheckerPlugin @Inject constructor(
             rxBus.send(EventNewNotification(notification))
         }
 
-        val endDate = sp.getLong(resourceHelper.gs(info.nightscout.androidaps.core.R.string.key_app_expiration) + "_" + config.VERSION_NAME, 0)
+        val endDate = sp.getLong(rh.gs(info.nightscout.androidaps.core.R.string.key_app_expiration) + "_" + config.VERSION_NAME, 0)
         if (endDate != 0L && dateUtil.now() > endDate && shouldWarnAgain(now)) {
             // store last notification time
             sp.putLong(R.string.key_last_versionchecker_plugin_warning, now)
 
             //notify
-            val notification = Notification(Notification.VERSION_EXPIRE, resourceHelper.gs(R.string.application_expired), Notification.URGENT)
+            val notification = Notification(Notification.VERSION_EXPIRE, rh.gs(R.string.application_expired), Notification.URGENT)
             rxBus.send(EventNewNotification(notification))
         }
     }
@@ -106,7 +106,7 @@ class VersionCheckerPlugin @Inject constructor(
 
     override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> =
         if (isOldVersion(gracePeriod.old.daysToMillis()))
-            maxIob.set(aapsLogger, 0.0, resourceHelper.gs(R.string.old_version), this)
+            maxIob.set(aapsLogger, 0.0, rh.gs(R.string.old_version), this)
         else
             maxIob
 

@@ -50,7 +50,7 @@ class DiaconnG8Plugin @Inject constructor(
     aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val context: Context,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     private val constraintChecker: ConstraintChecker,
     private val profileFunction: ProfileFunction,
     private val sp: SP,
@@ -69,7 +69,7 @@ class DiaconnG8Plugin @Inject constructor(
     .shortName(R.string.diaconn_g8_pump_shortname)
     .preferencesId(R.xml.pref_diaconn)
     .description(R.string.description_pump_diaconn_g8),
-    injector, aapsLogger, resourceHelper, commandQueue
+    injector, aapsLogger, rh, commandQueue
 ), Pump, Diaconn, Constraints {
 
     private val disposable = CompositeDisposable()
@@ -130,7 +130,7 @@ class DiaconnG8Plugin @Inject constructor(
         aapsLogger.debug(LTag.PUMP, "Diaconn G8 connect from: $reason")
         if(diaconnG8Service != null && mDeviceAddress != "" && mDeviceName != "") {
             val success = diaconnG8Service?.connect(reason, mDeviceAddress) ?: false
-            if(!success) ToastUtils.showToastInUiThread(context, resourceHelper.gs(R.string.ble_not_supported))
+            if(!success) ToastUtils.showToastInUiThread(context, rh.gs(R.string.ble_not_supported))
         }
     }
 
@@ -166,18 +166,18 @@ class DiaconnG8Plugin @Inject constructor(
 
     // Constraints interface
     override fun applyBasalConstraints(absoluteRate: Constraint<Double>, profile: Profile): Constraint<Double> {
-        absoluteRate.setIfSmaller(aapsLogger, diaconnG8Pump.maxBasal, resourceHelper.gs(R.string.limitingbasalratio, diaconnG8Pump.maxBasal, resourceHelper.gs(R.string.pumplimit)), this)
+        absoluteRate.setIfSmaller(aapsLogger, diaconnG8Pump.maxBasal, rh.gs(R.string.limitingbasalratio, diaconnG8Pump.maxBasal, rh.gs(R.string.pumplimit)), this)
         return absoluteRate
     }
 
     override fun applyBasalPercentConstraints(percentRate: Constraint<Int>, profile: Profile): Constraint<Int> {
-        percentRate.setIfGreater(aapsLogger, 0, resourceHelper.gs(R.string.limitingpercentrate, 0, resourceHelper.gs(R.string.itmustbepositivevalue)), this)
-        percentRate.setIfSmaller(aapsLogger, pumpDescription.maxTempPercent, resourceHelper.gs(R.string.limitingpercentrate, pumpDescription.maxTempPercent, resourceHelper.gs(R.string.pumplimit)), this)
+        percentRate.setIfGreater(aapsLogger, 0, rh.gs(R.string.limitingpercentrate, 0, rh.gs(R.string.itmustbepositivevalue)), this)
+        percentRate.setIfSmaller(aapsLogger, pumpDescription.maxTempPercent, rh.gs(R.string.limitingpercentrate, pumpDescription.maxTempPercent, rh.gs(R.string.pumplimit)), this)
         return percentRate
     }
 
     override fun applyBolusConstraints(insulin: Constraint<Double>): Constraint<Double> {
-        insulin.setIfSmaller(aapsLogger, diaconnG8Pump.maxBolus, resourceHelper.gs(R.string.limitingbolus, diaconnG8Pump.maxBolus, resourceHelper.gs(R.string.pumplimit)), this)
+        insulin.setIfSmaller(aapsLogger, diaconnG8Pump.maxBolus, rh.gs(R.string.limitingbolus, diaconnG8Pump.maxBolus, rh.gs(R.string.pumplimit)), this)
         return insulin
     }
 
@@ -198,22 +198,22 @@ class DiaconnG8Plugin @Inject constructor(
     override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
         val result = PumpEnactResult(injector)
         if (!isInitialized()) {
-            val notification = Notification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, resourceHelper.gs(R.string.pumpNotInitializedProfileNotSet), Notification.URGENT)
+            val notification = Notification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, rh.gs(R.string.pumpNotInitializedProfileNotSet), Notification.URGENT)
             rxBus.send(EventNewNotification(notification))
-            result.comment = resourceHelper.gs(R.string.pumpNotInitializedProfileNotSet)
+            result.comment = rh.gs(R.string.pumpNotInitializedProfileNotSet)
             return result
         } else {
             rxBus.send(EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED))
         }
         return if (diaconnG8Service?.updateBasalsInPump(profile) != true) {
-            val notification = Notification(Notification.FAILED_UPDATE_PROFILE, resourceHelper.gs(R.string.failedupdatebasalprofile), Notification.URGENT)
+            val notification = Notification(Notification.FAILED_UPDATE_PROFILE, rh.gs(R.string.failedupdatebasalprofile), Notification.URGENT)
             rxBus.send(EventNewNotification(notification))
-            result.comment = resourceHelper.gs(R.string.failedupdatebasalprofile)
+            result.comment = rh.gs(R.string.failedupdatebasalprofile)
             result
         } else {
             rxBus.send(EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED))
             rxBus.send(EventDismissNotification(Notification.FAILED_UPDATE_PROFILE))
-            val notification = Notification(Notification.PROFILE_SET_OK, resourceHelper.gs(R.string.profile_set_ok), Notification.INFO, 60)
+            val notification = Notification(Notification.PROFILE_SET_OK, rh.gs(R.string.profile_set_ok), Notification.INFO, 60)
             rxBus.send(EventNewNotification(notification))
             result.success = true
             result.enacted = true
@@ -269,7 +269,7 @@ class DiaconnG8Plugin @Inject constructor(
             if(result.success) result.enacted = true
             if (!result.success) {
                 setErrorMsg(diaconnG8Pump.resultErrorCode, result)
-            } else result.comment = resourceHelper.gs(R.string.ok)
+            } else result.comment = rh.gs(R.string.ok)
             aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
             result
         } else {
@@ -277,7 +277,7 @@ class DiaconnG8Plugin @Inject constructor(
             result.success = false
             result.bolusDelivered = 0.0
             result.carbsDelivered = 0.0
-            result.comment = resourceHelper.gs(R.string.invalidinput)
+            result.comment = rh.gs(R.string.invalidinput)
             aapsLogger.error("deliverTreatment: Invalid input")
             result
         }
@@ -343,7 +343,7 @@ class DiaconnG8Plugin @Inject constructor(
             if (connectionOK && diaconnG8Pump.isTempBasalInProgress && diaconnG8Pump.tempBasalAbsoluteRate == absoluteAfterConstrain) {
                 result.enacted = true
                 result.success = true
-                result.comment = resourceHelper.gs(R.string.ok)
+                result.comment = rh.gs(R.string.ok)
                 result.isTempCancel = false
                 result.duration = diaconnG8Pump.tempBasalRemainingMin
                 result.absolute = diaconnG8Pump.tempBasalAbsoluteRate
@@ -355,7 +355,7 @@ class DiaconnG8Plugin @Inject constructor(
 
         result.enacted = false
         result.success = false
-        result.comment = resourceHelper.gs(R.string.tempbasaldeliveryerror)
+        result.comment = rh.gs(R.string.tempbasaldeliveryerror)
         aapsLogger.error("setTempBasalAbsolute: Failed to set temp basal")
         return result
     }
@@ -383,7 +383,7 @@ class DiaconnG8Plugin @Inject constructor(
         if (diaconnG8Pump.isExtendedInProgress && abs(diaconnG8Pump.extendedBolusAmount - insulinAfterConstraint) < pumpDescription.extendedBolusStep) {
             result.enacted = false
             result.success = true
-            result.comment = resourceHelper.gs(R.string.ok)
+            result.comment = rh.gs(R.string.ok)
             result.duration = diaconnG8Pump.extendedBolusRemainingMinutes
             result.absolute = diaconnG8Pump.extendedBolusAbsoluteRate
             result.isPercent = false
@@ -397,7 +397,7 @@ class DiaconnG8Plugin @Inject constructor(
         if (connectionOK) {
             result.enacted = true
             result.success = true
-            result.comment = resourceHelper.gs(R.string.ok)
+            result.comment = rh.gs(R.string.ok)
             result.isTempCancel = false
             result.duration = diaconnG8Pump.extendedBolusRemainingMinutes
             result.absolute = diaconnG8Pump.extendedBolusAbsoluteRate
@@ -427,7 +427,7 @@ class DiaconnG8Plugin @Inject constructor(
             result.success = true
             result.enacted = false
             result.isTempCancel = true
-            result.comment = resourceHelper.gs(R.string.ok)
+            result.comment = rh.gs(R.string.ok)
             aapsLogger.debug(LTag.PUMP, "cancelRealTempBasal: OK")
         }
         return result
@@ -447,7 +447,7 @@ class DiaconnG8Plugin @Inject constructor(
        } else {
             result.success = true
             result.enacted = false
-            result.comment = resourceHelper.gs(R.string.ok)
+            result.comment = rh.gs(R.string.ok)
             aapsLogger.debug(LTag.PUMP, "cancelExtendedBolus: OK")
         }
         return result
@@ -552,32 +552,32 @@ class DiaconnG8Plugin @Inject constructor(
     @Synchronized
     fun setErrorMsg(errorCode: Int, result: PumpEnactResult) {
         when (errorCode) {
-            1 -> result.comment = resourceHelper.gs(R.string.diaconn_g8_errorcode_1)
-            2 -> result.comment = resourceHelper.gs(R.string.diaconn_g8_errorcode_2)
-            3 -> result.comment = resourceHelper.gs(R.string.diaconn_g8_errorcode_3)
-            4 -> result.comment = resourceHelper.gs(R.string.diaconn_g8_errorcode_4)
-            6 -> result.comment = resourceHelper.gs(R.string.diaconn_g8_errorcode_6)
-            7 -> result.comment = resourceHelper.gs(R.string.diaconn_g8_errorcode_7)
-            8 -> result.comment = resourceHelper.gs(R.string.diaconn_g8_errorcode_8)
-            9 -> result.comment = resourceHelper.gs(R.string.diaconn_g8_errorcode_9)
-            10 -> result.comment = resourceHelper.gs(R.string.diaconn_g8_errorcode_10)
-            11 -> result.comment = resourceHelper.gs(R.string.diaconn_g8_errorcode_11)
-            12 -> result.comment = resourceHelper.gs(R.string.diaconn_g8_errorcode_12)
-            13 -> result.comment = resourceHelper.gs(R.string.diaconn_g8_errorcode_13)
-            14 -> result.comment = resourceHelper.gs(R.string.diaconn_g8_errorcode_14)
-            15 -> result.comment = resourceHelper.gs(R.string.diaconn_g8_errorcode_15)
-            32 -> result.comment = resourceHelper.gs(R.string.diaconn_g8_errorcode_32)
-            33 -> result.comment = resourceHelper.gs(R.string.diaconn_g8_errorcode_33)
-            34 -> result.comment = resourceHelper.gs(R.string.diaconn_g8_errorcode_34)
-            35 -> result.comment = resourceHelper.gs(R.string.diaconn_g8_errorcode_35)
-            36 -> result.comment = resourceHelper.gs(R.string.diaconn_g8_errorcode_36)
+            1 -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_1)
+            2 -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_2)
+            3 -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_3)
+            4 -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_4)
+            6 -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_6)
+            7 -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_7)
+            8 -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_8)
+            9 -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_9)
+            10 -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_10)
+            11 -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_11)
+            12 -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_12)
+            13 -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_13)
+            14 -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_14)
+            15 -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_15)
+            32 -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_32)
+            33 -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_33)
+            34 -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_34)
+            35 -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_35)
+            36 -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_36)
             else -> result.comment = "not defined Error code: $errorCode"
         }
     }
 
     override fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {
 
-        val bolusSpeedPreference: Preference? = preferenceFragment.findPreference(resourceHelper.gs(R.string.key_diaconn_g8_bolusspeed))
+        val bolusSpeedPreference: Preference? = preferenceFragment.findPreference(rh.gs(R.string.key_diaconn_g8_bolusspeed))
         bolusSpeedPreference?.setOnPreferenceChangeListener { _, newValue ->
             val intBolusSpeed = newValue.toString().toInt()
 

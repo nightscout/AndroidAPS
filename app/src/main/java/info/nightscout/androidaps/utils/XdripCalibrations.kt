@@ -17,7 +17,7 @@ import javax.inject.Singleton
 @Singleton
 class XdripCalibrations @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val resourceHelper: ResourceHelper,
+    private val rh: ResourceHelper,
     private val context: Context,
     private val profileFunction: ProfileFunction
 ) {
@@ -33,12 +33,12 @@ class XdripCalibrations @Inject constructor(
         context.sendBroadcast(intent)
         val q = context.packageManager.queryBroadcastReceivers(intent, 0)
         return if (q.size < 1) {
-            ToastUtils.showToastInUiThread(context, resourceHelper.gs(R.string.xdripnotinstalled))
-            aapsLogger.debug(resourceHelper.gs(R.string.xdripnotinstalled))
+            ToastUtils.showToastInUiThread(context, rh.gs(R.string.xdripnotinstalled))
+            aapsLogger.debug(rh.gs(R.string.xdripnotinstalled))
             false
         } else {
-            ToastUtils.showToastInUiThread(context, resourceHelper.gs(R.string.calibrationsent))
-            aapsLogger.debug(resourceHelper.gs(R.string.calibrationsent))
+            ToastUtils.showToastInUiThread(context, rh.gs(R.string.calibrationsent))
+            aapsLogger.debug(rh.gs(R.string.calibrationsent))
             true
         }
     }

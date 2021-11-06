@@ -51,7 +51,7 @@ class IobCobCalculatorPlugin @Inject constructor(
     private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
     private val sp: SP,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,
     private val sensitivityOref1Plugin: SensitivityOref1Plugin,
@@ -67,7 +67,7 @@ class IobCobCalculatorPlugin @Inject constructor(
         .showInList(false)
         .neverVisible(true)
         .alwaysEnabled(true),
-    aapsLogger, resourceHelper, injector
+    aapsLogger, rh, injector
 ), IobCobCalculator {
 
     private val disposable = CompositeDisposable()
@@ -102,14 +102,14 @@ class IobCobCalculatorPlugin @Inject constructor(
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event ->
-                           if (event.isChanged(resourceHelper, R.string.key_openapsama_autosens_period) ||
-                               event.isChanged(resourceHelper, R.string.key_age) ||
-                               event.isChanged(resourceHelper, R.string.key_absorption_maxtime) ||
-                               event.isChanged(resourceHelper, R.string.key_openapsama_min_5m_carbimpact) ||
-                               event.isChanged(resourceHelper, R.string.key_absorption_cutoff) ||
-                               event.isChanged(resourceHelper, R.string.key_openapsama_autosens_max) ||
-                               event.isChanged(resourceHelper, R.string.key_openapsama_autosens_min) ||
-                               event.isChanged(resourceHelper, R.string.key_insulin_oref_peak)
+                           if (event.isChanged(rh, R.string.key_openapsama_autosens_period) ||
+                               event.isChanged(rh, R.string.key_age) ||
+                               event.isChanged(rh, R.string.key_absorption_maxtime) ||
+                               event.isChanged(rh, R.string.key_openapsama_min_5m_carbimpact) ||
+                               event.isChanged(rh, R.string.key_absorption_cutoff) ||
+                               event.isChanged(rh, R.string.key_openapsama_autosens_max) ||
+                               event.isChanged(rh, R.string.key_openapsama_autosens_min) ||
+                               event.isChanged(rh, R.string.key_insulin_oref_peak)
                            ) {
                                resetDataAndRunCalculation("onEventPreferenceChange", event)
                            }
