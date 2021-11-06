@@ -58,16 +58,11 @@ class ConfigBuilderPlugin @Inject constructor(
     }
 
     override fun startGlunovoService(context: Context) {
-        var matchIndex : Int
-        var plugin = activePlugin.getPluginsList()
-
-        //for (plugin in activePlugin.getPluginsList()) {
-        //    Log.d("PLUGINTYPE", plugin.getType().toString())
-        //    matchIndex = plugin.toString().indexOf("Glunovo", 0)
-        //    if ((matchIndex>=0) && (plugin.isEnabled(PluginType.BGSOURCE))) {
+        for (plugin in activePlugin.getPluginsList()) {
+            if ((plugin.name == "Glunovo") && (plugin.isEnabled(PluginType.BGSOURCE))) {
                 context.startService(Intent(context, GlunovoPluginService::class.java))
-        //    }
-        //}
+            }
+        }
     }
 
     private fun setAlwaysEnabledPluginsEnabled() {
