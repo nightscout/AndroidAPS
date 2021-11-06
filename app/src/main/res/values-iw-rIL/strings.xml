@@ -897,4 +897,7 @@
     <string name="view">תצוגה</string>
     <string name="errors">שגיאות</string>
     <string name="ns_sync_slow">האט העלאות</string>
+    <string name="data_status">מצב נתוני הסוכר</string>
+    <string name="recalculated_data_used">משתמש בנתונים מחושבים מחדש</string>
+    <string name="bg_too_close">רמת הסוכר קרובה מדי:\n%1$s\n%2$s</string>
 </resources>
