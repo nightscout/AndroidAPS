@@ -2,15 +2,9 @@
 <resources>
     <!--    Keys-->
     <!--    General-->
-    <string name="refresh">Yenile</string>
     <string name="error">Hata</string>
     <string name="not_set_short">Ayarlanmadı</string>
-    <string name="failedupdatebasalprofile">Bazal profiliniz güncellenemedi</string>
-    <string name="profile_set_ok">Pompadaki Bazal profil güncellendi</string>
-    <string name="invalidinput">Geçersiz bilgi girişi</string>
-    <string name="tempbasaldeliveryerror">Geçici Bazal teslimat hatası</string>
     <string name="goingtodeliver">%1$.2f Ü gönderilecek</string>
-    <string name="waitingforpump">Pompa bekleniyor</string>
     <string name="connectingfor">%1$d bağlanıyor</string>
     <string name="bolusdelivering">%1$.2f Ü gönderiliyor</string>
     <string name="handshaking">El Sıkışma</string>
@@ -25,7 +19,6 @@
     <string name="formatsignedinsulinunits">%1$+.2f Ü</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d Ü</string>
-    <string name="pump_basebasalrate">%1$.2f U/h</string>
     <string name="format_hours">%1$.2f sa</string>
     <string name="format_mins">%1$d dakika</string>
     <string name="pumpbusy">Pompa meşgul</string>
@@ -70,25 +63,13 @@
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Pompa ile herhangi bir bağlantı sorunu yaşanıyorsa, Akıllı telefonunuzda Bluetooth bağlantısını kapatıp açın. Bu bluetooth bağlantı sorununu giderecektir.</string>
     <string name="pairing">Eşleştirme</string>
-    <string name="yes">Evet</string>
-    <string name="no">Hayır</string>
     <string name="loopdisabled">DÖNGÜ KISITLAMALARDAN DEVREDIŞI BIRAKILDI</string>
     <string name="bolusdelivered">%1$.2f Ü bolus başarıyla gönderildi</string>
     <string name="virtualpump_resultok">Tamam</string>
-    <string name="novalidbasalrate">Pompadan okunan geçerli bir bazal oranı yok</string>
-    <string name="limitingmaxiob">%2$s\'den dolayı max IOB\'yi (Aktif İnsülin) %1$.1f U ile sınırlandırılıyor</string>
-    <string name="unsafeusage">güvenli olmayan kullanım</string>
-    <string name="pump_unreachable">Pompa ulaşılamıyor</string>
     <string name="extended_bolus">Yayma Bolus</string>
-    <string name="pump_time_updated">Pompa zamanı güncellendi</string>
     <string name="exit">Çıkış</string>
-    <string name="removerecord">Kaydı kaldır</string>
     <string name="loopisdisabled">Döngü devre dışı</string>
-    <string name="alarm">Alarm</string>
-    <string name="disableloop">Döngü devre dışı bırak</string>
-    <string name="enableloop">Döngü etkinleştir</string>
     <string name="resumeloop">Döngüyü devam ettir</string>
-    <string name="suspendloop">Döngüyü duraklat</string>
     <string name="duration_min_label">Süre [min]</string>
     <string name="notification">Bildirim</string>
     <string name="noprofile">Henüz NS\'tan profil yüklenmedi</string>
@@ -114,10 +95,7 @@
     <string name="limitingbolus">%2$s\'den dolayı bolus %1$.1f Ü ile sınırlandırılıyor</string>
     <string name="pumpNotInitializedProfileNotSet">Pompa başlatılamadı, profil oluşturulmamış!</string>
     <!--    Dialogs-->
-    <string name="confirmation">Onaylama</string>
     <string name="message">İleti</string>
-    <string name="ok">Tamam</string>
-    <string name="cancel">İptal</string>
     <string name="dismiss">REDDET</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Düşük Enerji Bluetooth desteklenmez.</string>
@@ -128,41 +106,21 @@
     <!--    DateUtil-->
     <string name="minago">%1$d dak önce</string>
     <string name="hoursago">%1$.1f sa önce</string>
-    <string name="shorthour">sa</string>
-    <string name="days">günler</string>
-    <string name="hours">saatler</string>
-    <string name="unit_second">saniye</string>
-    <string name="unit_minute">dakika</string>
-    <string name="unit_hour">saat</string>
-    <string name="unit_day">gün</string>
-    <string name="unit_week">hafta</string>
     <string name="unit_seconds">saniye</string>
-    <string name="unit_minutes">dakika</string>
-    <string name="unit_hours">saatler</string>
-    <string name="unit_days">günler</string>
     <string name="unit_weeks">hafta</string>
-    <string name="shortminute">dk</string>
     <string name="shortday">gün</string>
     <!--    Protection-->
-    <string name="wrongpassword">Hatalı parola</string>
     <string name="passwords_dont_match">Şifreler eşleşmiyor</string>
     <!--    Profile-->
-    <string name="basalprofilenotaligned">Bazal değerler saatlerle uyumlu değil: %1$s</string>
-    <string name="minimalbasalvaluereplaced">Bazal değeri minimum desteklenen değerle değiştirilir: %1$s</string>
-    <string name="maximumbasalvaluereplaced">Bazal değeri maksimum desteklenen değerle değiştirilir: %1$s</string>
     <string name="profile_per_unit">/Ü</string>
     <string name="profile_ins_units_per_hour">Ü/s</string>
     <string name="profile_carbs_per_unit">g/Ü</string>
     <!--    ProfileFunction-->
-    <string name="noprofileselected">Profil seçilmedi</string>
     <string name="startprofile">%2$d dakika için %1$d%% profilini başlat</string>
     <!--    PumpType-->
-    <string name="def_extended_note">* Sanal pompada yalnızca belirli değerler, aralıklar değil ayrıntı olarak bazal/bolus desteklenmez.</string>
     <!--    APSResult-->
     <string name="canceltemp">Geçici bazali iptal et</string>
     <string name="let_temp_basal_run">Geçici bazala izin ver</string>
-    <string name="rate">Oranı</string>
-    <string name="duration">Süre</string>
     <string name="reason">Sebep</string>
     <string name="nochangerequested">Değişiklik yapılmadı</string>
     <!--    ProfileSwitch-->
@@ -205,11 +163,6 @@
     <string name="careportal_temporarytargetvalue">Geçici hedef değeri</string>
     <string name="careportal_temporarytargetcancel">Geçici hedef iptali</string>
     <string name="boluswizard">Bolus sihirbazı</string>
-    <string name="glucosetype_finger">Parmak</string>
-    <string name="glucosetype_sensor">Sensör</string>
-    <string name="manual">Manuel</string>
-    <string name="unknown">bilinmiyor</string>
-    <string name="eatingsoon">Yakında Öğün</string>
     <string name="hypo">Hipo</string>
     <string name="activity">Aktivite</string>
     <string name="wear">Wear</string>
