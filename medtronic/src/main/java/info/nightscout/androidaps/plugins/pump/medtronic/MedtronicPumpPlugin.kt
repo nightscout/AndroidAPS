@@ -469,6 +469,7 @@ class MedtronicPumpPlugin @Inject constructor(
             }
         }
 
+    @Synchronized
     override fun isThisProfileSet(profile: Profile): Boolean {
         aapsLogger.debug(LTag.PUMP, "isThisProfileSet: basalInitalized=" + medtronicPumpStatus.basalProfileStatus)
         if (!isInitialized) return true
@@ -581,6 +582,7 @@ class MedtronicPumpPlugin @Inject constructor(
         scheduleNextRefresh(MedtronicStatusRefreshType.PumpTime, 0)
     }
 
+    @Synchronized
     override fun deliverBolus(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         aapsLogger.info(LTag.PUMP, "MedtronicPumpPlugin::deliverBolus - " + BolusDeliveryType.DeliveryPrepared)
         setRefreshButtonEnabled(false)
@@ -692,6 +694,7 @@ class MedtronicPumpPlugin @Inject constructor(
 
     // if enforceNew===true current temp basal is canceled and new TBR set (duration is prolonged),
     // if false and the same rate is requested enacted=false and success=true is returned and TBR is not changed
+    @Synchronized
     override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
         setRefreshButtonEnabled(false)
         if (isPumpNotReachable) {
@@ -743,7 +746,7 @@ class MedtronicPumpPlugin @Inject constructor(
                 return PumpEnactResult(injector).success(false).enacted(false)
                     .comment(R.string.medtronic_cmd_cant_cancel_tbr_stop_op)
             } else {
-                cancelTBRWithTemporaryId()
+                //cancelTBRWithTemporaryId()
                 aapsLogger.info(LTag.PUMP, logPrefix + "setTempBasalAbsolute - Current TBR cancelled.")
             }
         }
@@ -774,6 +777,7 @@ class MedtronicPumpPlugin @Inject constructor(
         }
     }
 
+    @Deprecated("Not used, TBRs fixed in history, should be removed.")
     private fun cancelTBRWithTemporaryId() {
         val tbrs : MutableList<PumpDbEntryTBR> = pumpSyncStorage.getTBRs()
         if (tbrs.size > 0 && medtronicPumpStatus.runningTBRWithTemp!=null) {
@@ -829,6 +833,7 @@ class MedtronicPumpPlugin @Inject constructor(
         }
     }
 
+    @Synchronized
     override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
         return if (percent == 0) {
             setTempBasalAbsolute(0.0, durationInMinutes, profile, enforceNew, tbrType)
@@ -1024,6 +1029,7 @@ class MedtronicPumpPlugin @Inject constructor(
         }
     }
 
+    @Synchronized
     override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
         aapsLogger.info(LTag.PUMP, logPrefix + "cancelTempBasal - started")
         if (isPumpNotReachable) {
@@ -1084,7 +1090,7 @@ class MedtronicPumpPlugin @Inject constructor(
                 }
             }
 
-            cancelTBRWithTemporaryId()
+            //cancelTBRWithTemporaryId()
 
             PumpEnactResult(injector).success(true).enacted(true) //
                 .isTempCancel(true)
@@ -1103,6 +1109,7 @@ class MedtronicPumpPlugin @Inject constructor(
         return medtronicPumpStatus.serialNumber
     }
 
+    @Synchronized
     override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
         aapsLogger.info(LTag.PUMP, logPrefix + "setNewBasalProfile")
 

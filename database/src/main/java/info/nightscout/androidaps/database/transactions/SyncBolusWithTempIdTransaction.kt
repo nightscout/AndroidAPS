@@ -7,8 +7,7 @@ import info.nightscout.androidaps.database.entities.Bolus
  */
 class SyncBolusWithTempIdTransaction(
     private val bolus: Bolus,
-    private val newType: Bolus.Type?,
-    private val ignoreBolusTypeOnUpdate: Boolean
+    private val newType: Bolus.Type?
 ) : Transaction<SyncBolusWithTempIdTransaction.TransactionResult>() {
 
     override fun run(): TransactionResult {
@@ -19,9 +18,7 @@ class SyncBolusWithTempIdTransaction(
         if (current != null) {
             current.timestamp = bolus.timestamp
             current.amount = bolus.amount
-            if (!ignoreBolusTypeOnUpdate) {
-                current.type = newType ?: current.type
-            }
+            current.type = newType ?: current.type
             current.interfaceIDs.pumpId = bolus.interfaceIDs.pumpId
             database.bolusDao.updateExistingEntry(current)
             result.updated.add(current)

@@ -137,8 +137,7 @@ class PumpSyncImplementation @Inject constructor(
             }
     }
 
-    override fun syncBolusWithTempId(timestamp: Long, amount: Double, temporaryId: Long, type: DetailedBolusInfo.BolusType?, pumpId: Long?, pumpType: PumpType, pumpSerial: String, ignoreBolusTypeOnUpdate :
-    Boolean): Boolean {
+    override fun syncBolusWithTempId(timestamp: Long, amount: Double, temporaryId: Long, type: DetailedBolusInfo.BolusType?, pumpId: Long?, pumpType: PumpType, pumpSerial: String): Boolean {
         if (!confirmActivePump(timestamp, pumpType, pumpSerial)) return false
         val bolus = Bolus(
             timestamp = timestamp,
@@ -151,7 +150,7 @@ class PumpSyncImplementation @Inject constructor(
                 pumpSerial = pumpSerial
             )
         )
-        repository.runTransactionForResult(SyncBolusWithTempIdTransaction(bolus, type?.toDBbBolusType(), ignoreBolusTypeOnUpdate))
+        repository.runTransactionForResult(SyncBolusWithTempIdTransaction(bolus, type?.toDBbBolusType()))
             .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving Bolus", it) }
             .blockingGet()
             .also { result ->
@@ -161,19 +160,6 @@ class PumpSyncImplementation @Inject constructor(
     }
 
     override fun syncBolusWithPumpId(timestamp: Long, amount: Double, type: DetailedBolusInfo.BolusType?, pumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean {
-        return syncBolusWithPumpId(
-            timestamp = timestamp,
-            amount = amount,
-            type = type,
-            pumpId = pumpId,
-            pumpType = pumpType,
-            pumpSerial = pumpSerial,
-            ignoreBolusTypeOnUpdate = false
-        )
-    }
-
-    override fun syncBolusWithPumpId(timestamp: Long, amount: Double, type: DetailedBolusInfo.BolusType?, pumpId: Long, pumpType: PumpType, pumpSerial: String, ignoreBolusTypeOnUpdate :
-    Boolean): Boolean {
         if (!confirmActivePump(timestamp, pumpType, pumpSerial)) return false
         val bolus = Bolus(
             timestamp = timestamp,
@@ -185,7 +171,7 @@ class PumpSyncImplementation @Inject constructor(
                 pumpSerial = pumpSerial
             )
         )
-        repository.runTransactionForResult(SyncPumpBolusTransaction(bolus, type?.toDBbBolusType(), ignoreBolusTypeOnUpdate))
+        repository.runTransactionForResult(SyncPumpBolusTransaction(bolus, type?.toDBbBolusType()))
             .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving Bolus", it) }
             .blockingGet()
             .also { result ->
