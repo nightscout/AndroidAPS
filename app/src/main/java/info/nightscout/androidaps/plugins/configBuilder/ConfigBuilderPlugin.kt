@@ -59,6 +59,7 @@ class ConfigBuilderPlugin @Inject constructor(
 
     override fun startGlunovoService(context: Context) {
         var matchIndex : Int
+        var plugin = activePlugin.getPluginsList()
         //for (plugin in activePlugin.getPluginsList()) {
         //    Log.d("PLUGINTYPE", plugin.getType().toString())
         //    matchIndex = plugin.toString().indexOf("Glunovo", 0)
