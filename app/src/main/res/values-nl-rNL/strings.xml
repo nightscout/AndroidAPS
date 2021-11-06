@@ -892,4 +892,8 @@
     <string name="error_in_basal_values">Fout in basaal waarden</string>
     <string name="error_in_target_values">Fout in streefdoel</string>
     <string name="error_in_isf_values">Fout in ISF waarden</string>
+    <string name="run_question">%s uitvoeren?</string>
+    <string name="invalid_profile_not_accepted">Ongeldig profiel %1$s niet geaccepteerd door NS</string>
+    <string name="errors">Foutmeldingen</string>
+    <string name="ns_sync_slow">Vertraag uploads</string>
 </resources>
