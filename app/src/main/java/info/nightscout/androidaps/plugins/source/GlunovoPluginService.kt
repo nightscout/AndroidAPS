@@ -35,7 +35,7 @@ class GlunovoPluginService : Service() {
             val crfirst = contentResolver.query(CONTENT_URI, null, null, null, null)
             crfirst!!.moveToFirst()
             var i = 1
-            while ((i<=1) && (cr != crfirst)) { //go to 10th entry berofe the end
+            while ((i<=10) && (cr != crfirst)) { //go to 10th entry berofe the end
                 cr.moveToPrevious()
                 i = i + 1
             }
