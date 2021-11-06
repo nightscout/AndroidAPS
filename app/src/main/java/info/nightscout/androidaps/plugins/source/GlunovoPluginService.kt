@@ -35,13 +35,16 @@ class GlunovoPluginService : Service() {
             cr.moveToLast()
             val crfirst = contentResolver.query(CONTENT_URI, null, null, null, null)
             crfirst!!.moveToFirst()
-            cr.moveToPosition(cr.count-11)
+            var valuestotake = 11
+            if (cr.count < valuestotake) {valuestotake = cr.count} //check if there are less than valuestotake readings and get smaller value
+            cr.moveToPosition(cr.count-valuestotake)
             var time : Long
             var value : Double
             var intent : Intent
             var bundle : Bundle
 
-            while ((cr.position != cr.count) && (cr.getLong(0) != crfirst.getLong(0)))
+            var i = valuestotake
+            while (cr.moveToNext())
             {
                 cr.moveToNext()
                 time = cr.getLong(0)
@@ -56,6 +59,7 @@ class GlunovoPluginService : Service() {
                 bundle.putDouble("BgEstimate",value)
                 intent.putExtra("bundle", bundle)
                 sendBroadcast(intent)
+                i = i - 1
             }
 
             val curtime = System.currentTimeMillis()
