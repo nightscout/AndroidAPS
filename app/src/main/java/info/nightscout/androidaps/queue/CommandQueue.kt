@@ -54,7 +54,7 @@ class CommandQueue @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val aapsSchedulers: AapsSchedulers,
-    private val resourceHelper: ResourceHelper,
+    private val rh: ResourceHelper,
     private val constraintChecker: ConstraintChecker,
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,
@@ -88,9 +88,8 @@ class CommandQueue @Inject constructor(
                     setProfile(ProfileSealed.Pure(nonCustomized), it.interfaceIDs.nightscoutId != null, object : Callback() {
                         override fun run() {
                             if (!result.success) {
-                                ErrorHelperActivity.runAlarm(context, result.comment, resourceHelper.gs(R.string.failedupdatebasalprofile), R.raw.boluserror)
-                            }
-                            if (result.enacted) {
+                                ErrorHelperActivity.runAlarm(context, result.comment, rh.gs(R.string.failedupdatebasalprofile), R.raw.boluserror)
+                            } else {
                                 repository.createEffectiveProfileSwitch(
                                     EffectiveProfileSwitch(
                                         timestamp = dateUtil.now(),
@@ -177,7 +176,7 @@ class CommandQueue @Inject constructor(
     @Synchronized fun notifyAboutNewCommand() {
         waitForFinishedThread()
         if (thread == null || thread!!.state == Thread.State.TERMINATED) {
-            thread = QueueThread(this, context, aapsLogger, rxBus, activePlugin, resourceHelper, sp)
+            thread = QueueThread(this, context, aapsLogger, rxBus, activePlugin, rh, sp)
             thread!!.start()
             aapsLogger.debug(LTag.PUMPQUEUE, "Starting new thread")
         } else {
@@ -196,7 +195,7 @@ class CommandQueue @Inject constructor(
 
     override fun independentConnect(reason: String, callback: Callback?) {
         aapsLogger.debug(LTag.PUMPQUEUE, "Starting new queue")
-        val tempCommandQueue = CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper,
+        val tempCommandQueue = CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, rh,
                                             constraintChecker, profileFunction, activePlugin, context, sp,
                                             buildHelper, dateUtil, repository, fabricPrivacy, config)
         tempCommandQueue.readStatus(reason, callback)
@@ -399,7 +398,7 @@ class CommandQueue @Inject constructor(
         val basalValues = profile.getBasalValues()
         for (basalValue in basalValues) {
             if (basalValue.value < activePlugin.activePump.pumpDescription.basalMinimumRate) {
-                val notification = Notification(Notification.BASAL_VALUE_BELOW_MINIMUM, resourceHelper.gs(R.string.basalvaluebelowminimum), Notification.URGENT)
+                val notification = Notification(Notification.BASAL_VALUE_BELOW_MINIMUM, rh.gs(R.string.basalvaluebelowminimum), Notification.URGENT)
                 rxBus.send(EventNewNotification(notification))
                 callback?.result(PumpEnactResult(injector).success(false).enacted(false).comment(R.string.basalvaluebelowminimum))?.run()
                 return false

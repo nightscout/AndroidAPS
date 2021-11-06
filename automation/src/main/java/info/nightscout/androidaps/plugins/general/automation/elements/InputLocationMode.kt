@@ -10,7 +10,7 @@ import androidx.annotation.StringRes
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 
-class InputLocationMode(private val resourceHelper: ResourceHelper) : Element() {
+class InputLocationMode(private val rh: ResourceHelper) : Element() {
 
     enum class Mode {
         INSIDE, OUTSIDE, GOING_IN, GOING_OUT;
@@ -32,10 +32,10 @@ class InputLocationMode(private val resourceHelper: ResourceHelper) : Element() 
 
         companion object {
 
-            fun labels(resourceHelper: ResourceHelper): List<String> {
+            fun labels(rh: ResourceHelper): List<String> {
                 val list: MutableList<String> = ArrayList()
                 for (c in values()) {
-                    list.add(resourceHelper.gs(c.stringRes))
+                    list.add(rh.gs(c.stringRes))
                 }
                 return list
             }
@@ -44,18 +44,18 @@ class InputLocationMode(private val resourceHelper: ResourceHelper) : Element() 
 
     var value: Mode = Mode.INSIDE
 
-    constructor(resourceHelper: ResourceHelper, value: InputLocationMode.Mode) : this(resourceHelper) {
+    constructor(rh: ResourceHelper, value: InputLocationMode.Mode) : this(rh) {
         this.value = value
     }
 
     override fun addToLayout(root: LinearLayout) {
         root.addView(
             Spinner(root.context).apply {
-                adapter = ArrayAdapter(root.context, R.layout.spinner_centered, Mode.labels(resourceHelper)).apply {
+                adapter = ArrayAdapter(root.context, R.layout.spinner_centered, Mode.labels(rh)).apply {
                     setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 }
                 val spinnerParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
-                    setMargins(0, resourceHelper.dpToPx(4), 0, resourceHelper.dpToPx(4))
+                    setMargins(0, rh.dpToPx(4), 0, rh.dpToPx(4))
                 }
                 layoutParams = spinnerParams
                 onItemSelectedListener = object : AdapterView.OnItemSelectedListener {

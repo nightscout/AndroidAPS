@@ -26,7 +26,7 @@ import org.mockito.Mock
 class MedtronicPumpHistoryDecoderUTest : TestBase() {
 
     @Mock lateinit var injector: HasAndroidInjector
-    @Mock lateinit var resourceHelper: ResourceHelper
+    @Mock lateinit var rh: ResourceHelper
     @Mock(answer = Answers.RETURNS_DEEP_STUBS) lateinit var activePlugin: ActivePlugin
     @Mock lateinit var rileyLinkUtil: RileyLinkUtil
     @Mock lateinit var sp: SP
@@ -37,7 +37,7 @@ class MedtronicPumpHistoryDecoderUTest : TestBase() {
     var rxBusWrapper = RxBus(TestAapsSchedulers(), aapsLogger)
     @Before fun setup() {
         medtronicPumpStatus =
-            MedtronicPumpStatus(resourceHelper, sp, rxBusWrapper, rileyLinkUtil)
+            MedtronicPumpStatus(rh, sp, rxBusWrapper, rileyLinkUtil)
         medtronicUtil =
             MedtronicUtil(aapsLogger, rxBusWrapper, rileyLinkUtil, medtronicPumpStatus!!)
         decoder = MedtronicPumpHistoryDecoder(aapsLogger, medtronicUtil!!, ByteUtil())

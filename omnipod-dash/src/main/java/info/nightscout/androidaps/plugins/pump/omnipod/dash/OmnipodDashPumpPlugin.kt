@@ -85,9 +85,9 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     commandQueue: CommandQueueProvider
-) : PumpPluginBase(pluginDescription, injector, aapsLogger, resourceHelper, commandQueue), Pump {
+) : PumpPluginBase(pluginDescription, injector, aapsLogger, rh, commandQueue), Pump {
     @Volatile var bolusCanceled = false
     @Volatile var bolusDeliveryInProgress = false
 
@@ -457,20 +457,20 @@ class OmnipodDashPumpPlugin @Inject constructor(
             .subscribe(
                 {
                     if (it.isChanged(
-                            resourceHelper,
+                            rh,
                             R.string.key_omnipod_common_expiration_reminder_enabled
                         ) ||
                         it.isChanged(
-                                resourceHelper,
-                                R.string.key_omnipod_common_expiration_reminder_hours_before_shutdown
+                            rh,
+                            R.string.key_omnipod_common_expiration_reminder_hours_before_shutdown
                             ) ||
                         it.isChanged(
-                                resourceHelper,
-                                R.string.key_omnipod_common_low_reservoir_alert_enabled
+                            rh,
+                            R.string.key_omnipod_common_low_reservoir_alert_enabled
                             ) ||
                         it.isChanged(
-                                resourceHelper,
-                                R.string.key_omnipod_common_low_reservoir_alert_units
+                            rh,
+                            R.string.key_omnipod_common_low_reservoir_alert_units
                             )
                     ) {
                         commandQueue.customCommand(CommandUpdateAlertConfiguration(), null)
@@ -689,7 +689,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             }
             val percent = (waited.toFloat() / estimatedDeliveryTimeSeconds) * 100
             updateBolusProgressDialog(
-                resourceHelper.gs(R.string.bolusdelivering, requestedBolusAmount),
+                rh.gs(R.string.bolusdelivering, requestedBolusAmount),
                 percent.toInt()
             )
         }
@@ -715,7 +715,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 val remainingUnits = podStateManager.lastBolus!!.bolusUnitsRemaining
                 val percent = ((requestedBolusAmount - remainingUnits) / requestedBolusAmount) * 100
                 updateBolusProgressDialog(
-                    resourceHelper.gs(R.string.bolusdelivering, requestedBolusAmount),
+                    rh.gs(R.string.bolusdelivering, requestedBolusAmount),
                     percent.toInt()
                 )
 
@@ -1028,28 +1028,28 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     override fun shortStatus(veryShort: Boolean): String {
         if (!podStateManager.isActivationCompleted) {
-            return resourceHelper.gs(R.string.omnipod_common_short_status_no_active_pod)
+            return rh.gs(R.string.omnipod_common_short_status_no_active_pod)
         }
         var ret = ""
         if (podStateManager.lastUpdatedSystem != 0L) {
             val agoMsec: Long = System.currentTimeMillis() - podStateManager.lastUpdatedSystem
             val agoMin = (agoMsec / 60.0 / 1000.0).toInt()
-            ret += resourceHelper.gs(R.string.omnipod_common_short_status_last_connection, agoMin) + "\n"
+            ret += rh.gs(R.string.omnipod_common_short_status_last_connection, agoMin) + "\n"
         }
         podStateManager.lastBolus?.run {
-            ret += resourceHelper.gs(
+            ret += rh.gs(
                 R.string.omnipod_common_short_status_last_bolus, to2Decimal(this.deliveredUnits() ?: this.requestedUnits),
                 DateFormat.format("HH:mm", Date(this.startTime))
             ) + "\n"
         }
         val temporaryBasal = pumpSync.expectedPumpState().temporaryBasal
         temporaryBasal?.run {
-            ret += resourceHelper.gs(
+            ret += rh.gs(
                 R.string.omnipod_common_short_status_temp_basal,
                 this.toStringFull(dateUtil)
             ) + "\n"
         }
-        ret += resourceHelper.gs(
+        ret += rh.gs(
             R.string.omnipod_common_short_status_reservoir,
             podStateManager.pulsesRemaining?.let { reservoirLevel.toString() } ?: "50+"
         )
@@ -1097,7 +1097,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             else -> {
                 aapsLogger.warn(LTag.PUMP, "Unsupported custom command: " + customCommand.javaClass.name)
                 PumpEnactResult(injector).success(false).enacted(false).comment(
-                    resourceHelper.gs(
+                    rh.gs(
                         R.string.omnipod_common_error_unsupported_custom_command,
                         customCommand.javaClass.name
                     )
@@ -1475,7 +1475,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     private fun showErrorDialog(message: String, sound: Int) {
-        runAlarm(context, message, resourceHelper.gs(R.string.error), sound)
+        runAlarm(context, message, rh.gs(R.string.error), sound)
     }
 
     private fun showNotification(id: Int, message: String, urgency: Int, sound: Int?) {

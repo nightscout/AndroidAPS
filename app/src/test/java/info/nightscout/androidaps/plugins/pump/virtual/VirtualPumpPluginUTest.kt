@@ -24,7 +24,7 @@ class VirtualPumpPluginUTest : TestBase() {
 
     private val rxBus = RxBus(aapsSchedulers, aapsLogger)
     @Mock lateinit var fabricPrivacy: FabricPrivacy
-    @Mock lateinit var resourceHelper: ResourceHelper
+    @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var sp: SP
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var iobCobCalculator: IobCobCalculator
@@ -36,7 +36,7 @@ class VirtualPumpPluginUTest : TestBase() {
 
     @Before
     fun prepareMocks() {
-        virtualPumpPlugin = VirtualPumpPlugin({ AndroidInjector { } }, aapsLogger, rxBus, fabricPrivacy, resourceHelper, aapsSchedulers, sp, profileFunction, iobCobCalculator, commandQueue, pumpSync, ConfigImpl(), dateUtil)
+        virtualPumpPlugin = VirtualPumpPlugin({ AndroidInjector { } }, aapsLogger, rxBus, fabricPrivacy, rh, aapsSchedulers, sp, profileFunction, iobCobCalculator, commandQueue, pumpSync, ConfigImpl(), dateUtil)
     }
 
     @Test

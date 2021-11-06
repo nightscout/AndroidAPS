@@ -19,16 +19,16 @@ import org.json.JSONObject
 class TriggerBg(injector: HasAndroidInjector) : Trigger(injector) {
 
     var bg = InputBg(profileFunction)
-    var comparator = Comparator(resourceHelper)
+    var comparator = Comparator(rh)
 
     constructor(injector: HasAndroidInjector, value: Double, units: GlucoseUnit, compare: Comparator.Compare) : this(injector) {
         bg = InputBg(profileFunction, value, units)
-        comparator = Comparator(resourceHelper, compare)
+        comparator = Comparator(rh, compare)
     }
 
     constructor(injector: HasAndroidInjector, triggerBg: TriggerBg) : this(injector) {
         bg = InputBg(profileFunction, triggerBg.bg.value, triggerBg.bg.units)
-        comparator = Comparator(resourceHelper, triggerBg.comparator.value)
+        comparator = Comparator(rh, triggerBg.comparator.value)
     }
 
     fun setUnits(units: GlucoseUnit): TriggerBg {
@@ -82,9 +82,9 @@ class TriggerBg(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun friendlyDescription(): String {
         return if (comparator.value == Comparator.Compare.IS_NOT_AVAILABLE)
-            resourceHelper.gs(R.string.glucoseisnotavailable)
+            rh.gs(R.string.glucoseisnotavailable)
         else
-            resourceHelper.gs(if (bg.units == GlucoseUnit.MGDL) R.string.glucosecomparedmgdl else R.string.glucosecomparedmmol, resourceHelper.gs(comparator.value.stringRes), bg.value, bg.units)
+            rh.gs(if (bg.units == GlucoseUnit.MGDL) R.string.glucosecomparedmgdl else R.string.glucosecomparedmmol, rh.gs(comparator.value.stringRes), bg.value, bg.units)
     }
 
     override fun icon(): Optional<Int?> = Optional.of(R.drawable.ic_cp_bgcheck)
@@ -93,9 +93,9 @@ class TriggerBg(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(resourceHelper, R.string.glucose, this))
+            .add(StaticLabel(rh, R.string.glucose, this))
             .add(comparator)
-            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.glucose_u, bg.units), "", bg))
+            .add(LabelWithElement(rh, rh.gs(R.string.glucose_u, bg.units), "", bg))
             .build(root)
     }
 }

@@ -13,7 +13,7 @@ class DanaRsPacketBolusGetBolusOptionTest : DanaRSTestBase() {
             if (it is DanaRSPacketBolusGetBolusOption) {
                 it.aapsLogger = aapsLogger
                 it.rxBus = rxBus
-                it.resourceHelper = resourceHelper
+                it.rh = rh
                 it.danaPump = danaPump
             }
         }

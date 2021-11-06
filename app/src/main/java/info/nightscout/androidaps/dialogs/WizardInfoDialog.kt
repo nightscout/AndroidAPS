@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 class WizardInfoDialog : DaggerDialogFragment() {
 
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
 
     private lateinit var data: BolusCalculatorResult
@@ -51,40 +51,40 @@ class WizardInfoDialog : DaggerDialogFragment() {
         val units = profileFunction.getUnits()
         val bgString = Profile.toUnitsString(data.glucoseValue, data.glucoseValue * Constants.MGDL_TO_MMOLL, units)
         // BG
-        binding.bg.text = resourceHelper.gs(R.string.format_bg_isf, bgString, data.isf)
-        binding.bginsulin.text = resourceHelper.gs(R.string.formatinsulinunits, data.glucoseInsulin)
+        binding.bg.text = rh.gs(R.string.format_bg_isf, bgString, data.isf)
+        binding.bginsulin.text = rh.gs(R.string.formatinsulinunits, data.glucoseInsulin)
         binding.bgcheckbox.isChecked = data.wasGlucoseUsed
         binding.ttcheckbox.isChecked = data.wasTempTargetUsed
         // Trend
         binding.bgtrend.text = DecimalFormatter.to1Decimal(data.glucoseTrend)
-        binding.bgtrendinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, data.trendInsulin)
+        binding.bgtrendinsulin.text = rh.gs(R.string.formatinsulinunits, data.trendInsulin)
         binding.bgtrendcheckbox.isChecked = data.wasTrendUsed
         // COB
-        binding.cob.text = resourceHelper.gs(R.string.format_cob_ic, data.cob, data.ic)
-        binding.cobinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, data.cobInsulin)
+        binding.cob.text = rh.gs(R.string.format_cob_ic, data.cob, data.ic)
+        binding.cobinsulin.text = rh.gs(R.string.formatinsulinunits, data.cobInsulin)
         binding.cobcheckbox.isChecked = data.wasCOBUsed
         // Bolus IOB
-        binding.bolusiobinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, data.bolusIOB)
+        binding.bolusiobinsulin.text = rh.gs(R.string.formatinsulinunits, data.bolusIOB)
         binding.bolusiobcheckbox.isChecked = data.wasBolusIOBUsed
         // Basal IOB
-        binding.basaliobinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, data.basalIOB)
+        binding.basaliobinsulin.text = rh.gs(R.string.formatinsulinunits, data.basalIOB)
         binding.basaliobcheckbox.isChecked = data.wasBasalIOBUsed
         // Superbolus
-        binding.sbinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, data.superbolusInsulin)
+        binding.sbinsulin.text = rh.gs(R.string.formatinsulinunits, data.superbolusInsulin)
         binding.sbcheckbox.isChecked = data.wasSuperbolusUsed
         // Carbs
-        binding.carbs.text = resourceHelper.gs(R.string.format_carbs_ic, data.carbs, data.ic)
-        binding.carbsinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, data.carbsInsulin)
+        binding.carbs.text = rh.gs(R.string.format_carbs_ic, data.carbs, data.ic)
+        binding.carbsinsulin.text = rh.gs(R.string.formatinsulinunits, data.carbsInsulin)
         // Correction
-        binding.correctioninsulin.text = resourceHelper.gs(R.string.formatinsulinunits, data.otherCorrection)
+        binding.correctioninsulin.text = rh.gs(R.string.formatinsulinunits, data.otherCorrection)
         // Profile
         binding.profile.text = data.profileName
         // Notes
         binding.notes.text = data.note
         // Percentage
-        binding.percentUsed.text = resourceHelper.gs(R.string.format_percent, data.percentageCorrection)
+        binding.percentUsed.text = rh.gs(R.string.format_percent, data.percentageCorrection)
         // Total
-        binding.totalinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, data.totalInsulin)
+        binding.totalinsulin.text = rh.gs(R.string.formatinsulinunits, data.totalInsulin)
     }
 
     override fun onStart() {

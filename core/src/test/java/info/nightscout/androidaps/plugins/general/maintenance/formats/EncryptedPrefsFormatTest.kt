@@ -17,7 +17,7 @@ import java.io.File
 @Suppress("SpellCheckingInspection")
 class EncryptedPrefsFormatTest : TestBase() {
 
-    @Mock lateinit var resourceHelper: ResourceHelper
+    @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var sp: SP
     @Mock lateinit var file: MockedFile
 
@@ -35,7 +35,7 @@ class EncryptedPrefsFormatTest : TestBase() {
 
     @Before
     fun mock() {
-        Mockito.`when`(resourceHelper.gs(ArgumentMatchers.anyInt())).thenReturn("mock translation")
+        Mockito.`when`(rh.gs(ArgumentMatchers.anyInt())).thenReturn("mock translation")
     }
 
     @Test
@@ -53,7 +53,7 @@ class EncryptedPrefsFormatTest : TestBase() {
             "}"
 
         val storage = SingleStringStorage(frozenPrefs)
-        val encryptedFormat = EncryptedPrefsFormat(resourceHelper, cryptoUtil, storage)
+        val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage)
         val prefs = encryptedFormat.loadPreferences(getMockedFile(), "sikret")
 
         assumeAES256isSupported(cryptoUtil)
@@ -70,7 +70,7 @@ class EncryptedPrefsFormatTest : TestBase() {
     @Test
     fun preferenceSavingTest() {
         val storage = SingleStringStorage("")
-        val encryptedFormat = EncryptedPrefsFormat(resourceHelper, cryptoUtil, storage)
+        val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage)
         val prefs = Prefs(
             mapOf(
                 "key1" to "A",
@@ -87,7 +87,7 @@ class EncryptedPrefsFormatTest : TestBase() {
     @Test
     fun importExportStabilityTest() {
         val storage = SingleStringStorage("")
-        val encryptedFormat = EncryptedPrefsFormat(resourceHelper, cryptoUtil, storage)
+        val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage)
         val prefsIn = Prefs(
             mapOf(
                 "testpref1" to "--1--",
@@ -126,7 +126,7 @@ class EncryptedPrefsFormatTest : TestBase() {
             "}"
 
         val storage = SingleStringStorage(frozenPrefs)
-        val encryptedFormat = EncryptedPrefsFormat(resourceHelper, cryptoUtil, storage)
+        val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage)
         val prefs = encryptedFormat.loadPreferences(getMockedFile(), "it-is-NOT-right-secret")
 
         Assert.assertEquals(prefs.values.size, 0)
@@ -153,7 +153,7 @@ class EncryptedPrefsFormatTest : TestBase() {
             "}"
 
         val storage = SingleStringStorage(frozenPrefs)
-        val encryptedFormat = EncryptedPrefsFormat(resourceHelper, cryptoUtil, storage)
+        val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage)
         val prefs = encryptedFormat.loadPreferences(getMockedFile(), "sikret")
 
         assumeAES256isSupported(cryptoUtil)
@@ -180,7 +180,7 @@ class EncryptedPrefsFormatTest : TestBase() {
             "}"
 
         val storage = SingleStringStorage(frozenPrefs)
-        val encryptedFormat = EncryptedPrefsFormat(resourceHelper, cryptoUtil, storage)
+        val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage)
         val prefs = encryptedFormat.loadPreferences(getMockedFile(), "sikret")
 
         Assert.assertEquals(prefs.values.size, 0)
@@ -195,7 +195,7 @@ class EncryptedPrefsFormatTest : TestBase() {
             "}"
 
         val storage = SingleStringStorage(frozenPrefs)
-        val encryptedFormat = EncryptedPrefsFormat(resourceHelper, cryptoUtil, storage)
+        val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage)
         val prefs = encryptedFormat.loadPreferences(getMockedFile(), "sikret")
 
         Assert.assertEquals(prefs.values.size, 0)
@@ -207,7 +207,7 @@ class EncryptedPrefsFormatTest : TestBase() {
         val frozenPrefs = "whatever man, i duno care"
 
         val storage = SingleStringStorage(frozenPrefs)
-        val encryptedFormat = EncryptedPrefsFormat(resourceHelper, cryptoUtil, storage)
+        val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage)
         encryptedFormat.loadPreferences(getMockedFile(), "sikret")
     }
 
@@ -226,7 +226,7 @@ class EncryptedPrefsFormatTest : TestBase() {
             "}"
 
         val storage = SingleStringStorage(frozenPrefs)
-        val encryptedFormat = EncryptedPrefsFormat(resourceHelper, cryptoUtil, storage)
+        val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage)
         encryptedFormat.loadPreferences(getMockedFile(), "sikret")
     }
 

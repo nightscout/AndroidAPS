@@ -42,7 +42,7 @@ import kotlin.collections.ArrayList
 
 class ProfileSwitchDialog : DialogFragmentWithDate() {
 
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var repository: AppRepository
@@ -118,7 +118,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
             val profileList = ArrayList<CharSequence>()
             for (profileName in profileListToCheck) {
                 val profileToCheck = activePlugin.activeProfileSource.profile?.getSpecificProfile(profileName.toString())
-                if (profileToCheck != null && ProfileSealed.Pure(profileToCheck).isValid("ProfileSwitch", activePlugin.activePump, config, resourceHelper, rxBus, hardLimits, false).isValid)
+                if (profileToCheck != null && ProfileSealed.Pure(profileToCheck).isValid("ProfileSwitch", activePlugin.activePump, config, rh, rxBus, hardLimits, false).isValid)
                     profileList.add(profileName)
             }
             if (profileList.isEmpty()) {
@@ -140,15 +140,12 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
             if (profile is ProfileSealed.EPS)
                 if (profile.value.originalPercentage != 100 || profile.value.originalTimeshift != 0L) {
                     binding.reuselayout.visibility = View.VISIBLE
-                    binding.reusebutton.text = resourceHelper.gs(R.string.reuse_profile_pct_hours, profile.value.originalPercentage, T.msecs(profile.value.originalTimeshift).hours().toInt())
+                    binding.reusebutton.text = rh.gs(R.string.reuse_profile_pct_hours, profile.value.originalPercentage, T.msecs(profile.value.originalTimeshift).hours().toInt())
                     binding.reusebutton.setOnClickListener {
                         binding.percentage.value = profile.value.originalPercentage.toDouble()
                         binding.timeshift.value = profile.value.originalTimeshift.toDouble()
                     }
-                } else {
-                    binding.reuselayout.visibility = View.GONE
                 }
-            else binding.reuselayout.visibility = View.GONE
         }
         binding.ttLayout.visibility = View.GONE
     }
@@ -167,32 +164,32 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
         val actions: LinkedList<String> = LinkedList()
         val duration = binding.duration.value?.toInt() ?: return false
         if (duration > 0L)
-            actions.add(resourceHelper.gs(R.string.duration) + ": " + resourceHelper.gs(R.string.format_mins, duration))
+            actions.add(rh.gs(R.string.duration) + ": " + rh.gs(R.string.format_mins, duration))
         val profileName = binding.profile.selectedItem.toString()
-        actions.add(resourceHelper.gs(R.string.profile) + ": " + profileName)
+        actions.add(rh.gs(R.string.profile) + ": " + profileName)
         val percent = binding.percentage.value.toInt()
         if (percent != 100)
-            actions.add(resourceHelper.gs(R.string.percent) + ": " + percent + "%")
+            actions.add(rh.gs(R.string.percent) + ": " + percent + "%")
         val timeShift = binding.timeshift.value.toInt()
         if (timeShift != 0)
-            actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_timeshift_label) + ": " + resourceHelper.gs(R.string.format_hours, timeShift.toDouble()))
+            actions.add(rh.gs(R.string.careportal_newnstreatment_timeshift_label) + ": " + rh.gs(R.string.format_hours, timeShift.toDouble()))
         val notes = binding.notesLayout.notes.text.toString()
         if (notes.isNotEmpty())
-            actions.add(resourceHelper.gs(R.string.notes_label) + ": " + notes)
+            actions.add(rh.gs(R.string.notes_label) + ": " + notes)
         if (eventTimeChanged)
-            actions.add(resourceHelper.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
+            actions.add(rh.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
 
         val isTT = binding.duration.value > 0 && binding.percentage.value < 100 && binding.tt.isChecked
         val target = defaultValueHelper.determineActivityTT()
         val units = profileFunction.getUnits()
         if (isTT)
-            actions.add(resourceHelper.gs(R.string.careportal_temporarytarget) + ": " + resourceHelper.gs(R.string.activity))
+            actions.add(rh.gs(R.string.careportal_temporarytarget) + ": " + rh.gs(R.string.activity))
 
         activity?.let { activity ->
             val ps = profileFunction.buildProfileSwitch(profileStore, profileName, duration, percent, timeShift, eventTime) ?: return@let
-            val validity = ProfileSealed.PS(ps).isValid(resourceHelper.gs(R.string.careportal_profileswitch), activePlugin.activePump, config, resourceHelper, rxBus, hardLimits, false)
+            val validity = ProfileSealed.PS(ps).isValid(rh.gs(R.string.careportal_profileswitch), activePlugin.activePump, config, rh, rxBus, hardLimits, false)
             if (validity.isValid)
-                OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal_profileswitch), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
+                OKDialog.showConfirmation(activity, rh.gs(R.string.careportal_profileswitch), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     if (profileFunction.createProfileSwitch(
                             profileStore,
                             profileName = profileName,
@@ -237,7 +234,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
             else {
                 OKDialog.show(
                     activity,
-                    resourceHelper.gs(R.string.careportal_profileswitch),
+                    rh.gs(R.string.careportal_profileswitch),
                     HtmlHelper.fromHtml(Joiner.on("<br/>").join(validity.reasons))
                 )
                 return false

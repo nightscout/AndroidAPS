@@ -16,7 +16,7 @@ import org.mockito.Mock
 class ConfigBuilderPluginTest : TestBase() {
 
     @Mock lateinit var sp: SP
-    @Mock lateinit var resourceHelper: ResourceHelper
+    @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var uel: UserEntryLogger
     @Mock lateinit var pumpSync: PumpSync
@@ -32,6 +32,6 @@ class ConfigBuilderPluginTest : TestBase() {
 
     @Before
     fun prepareMock() {
-        configBuilderPlugin = ConfigBuilderPlugin(injector, aapsLogger, resourceHelper, sp, RxBus(aapsSchedulers, aapsLogger), activePlugin, uel, pumpSync)
+        configBuilderPlugin = ConfigBuilderPlugin(injector, aapsLogger, rh, sp, RxBus(aapsSchedulers, aapsLogger), activePlugin, uel, pumpSync)
     }
 }

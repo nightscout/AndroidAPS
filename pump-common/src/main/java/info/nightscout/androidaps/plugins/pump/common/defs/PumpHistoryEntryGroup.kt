@@ -35,16 +35,16 @@ enum class PumpHistoryEntryGroup(val resourceId: Int) {
 
         private var translatedList: MutableList<PumpHistoryEntryGroup>? = null
 
-        private fun doTranslation(resourceHelper: ResourceHelper) {
+        private fun doTranslation(rh: ResourceHelper) {
             translatedList = ArrayList()
             for (pumpHistoryEntryGroup in values()) {
-                pumpHistoryEntryGroup.translated = resourceHelper.gs(pumpHistoryEntryGroup.resourceId)
+                pumpHistoryEntryGroup.translated = rh.gs(pumpHistoryEntryGroup.resourceId)
                 (translatedList as ArrayList<PumpHistoryEntryGroup>).add(pumpHistoryEntryGroup)
             }
         }
 
-        fun getTranslatedList(resourceHelper: ResourceHelper): List<PumpHistoryEntryGroup> {
-            if (translatedList == null) doTranslation(resourceHelper)
+        fun getTranslatedList(rh: ResourceHelper): List<PumpHistoryEntryGroup> {
+            if (translatedList == null) doTranslation(rh)
             return translatedList!!
         }
     }

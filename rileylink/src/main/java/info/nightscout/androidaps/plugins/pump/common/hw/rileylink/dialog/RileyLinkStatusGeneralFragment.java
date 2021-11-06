@@ -36,7 +36,7 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
     private static final String PLACEHOLDER = "-";
 
     @Inject ActivePlugin activePlugin;
-    @Inject ResourceHelper resourceHelper;
+    @Inject ResourceHelper rh;
     @Inject AAPSLogger aapsLogger;
     @Inject RileyLinkServiceData rileyLinkServiceData;
     @Inject DateUtil dateUtil;
@@ -89,29 +89,29 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
     @Override public void refreshData() {
         RileyLinkTargetDevice targetDevice = rileyLinkServiceData.targetDevice;
 
-        this.connectionStatus.setText(resourceHelper.gs(rileyLinkServiceData.rileyLinkServiceState.getResourceId()));
+        this.connectionStatus.setText(rh.gs(rileyLinkServiceData.rileyLinkServiceState.getResourceId()));
 
         this.configuredRileyLinkAddress.setText(Optional.ofNullable(rileyLinkServiceData.rileyLinkAddress).orElse(PLACEHOLDER));
         this.configuredRileyLinkName.setText(Optional.ofNullable(rileyLinkServiceData.rileyLinkName).orElse(PLACEHOLDER));
 
-        if (sp.getBoolean(resourceHelper.gs(R.string.key_riley_link_show_battery_level), false)) {
+        if (sp.getBoolean(rh.gs(R.string.key_riley_link_show_battery_level), false)) {
             batteryLevelRow.setVisibility(View.VISIBLE);
             Integer batteryLevel = rileyLinkServiceData.batteryLevel;
-            this.batteryLevel.setText(batteryLevel == null ? PLACEHOLDER : resourceHelper.gs(R.string.rileylink_battery_level_value, batteryLevel));
+            this.batteryLevel.setText(batteryLevel == null ? PLACEHOLDER : rh.gs(R.string.rileylink_battery_level_value, batteryLevel));
         } else {
             batteryLevelRow.setVisibility(View.GONE);
         }
 
         RileyLinkError rileyLinkError = rileyLinkServiceData.rileyLinkError;
-        this.connectionError.setText(rileyLinkError == null ? PLACEHOLDER : resourceHelper.gs(rileyLinkError.getResourceId(targetDevice)));
+        this.connectionError.setText(rileyLinkError == null ? PLACEHOLDER : rh.gs(rileyLinkError.getResourceId(targetDevice)));
 
 
         if (rileyLinkServiceData.isOrange && rileyLinkServiceData.versionOrangeFirmware!=null) {
-            this.firmwareVersion.setText(resourceHelper.gs(R.string.rileylink_firmware_version_value_orange,
+            this.firmwareVersion.setText(rh.gs(R.string.rileylink_firmware_version_value_orange,
                             rileyLinkServiceData.versionOrangeFirmware,
                             Optional.ofNullable(rileyLinkServiceData.versionOrangeHardware).orElse(PLACEHOLDER)));
         } else {
-            this.firmwareVersion.setText(resourceHelper.gs(R.string.rileylink_firmware_version_value,
+            this.firmwareVersion.setText(rh.gs(R.string.rileylink_firmware_version_value,
                     Optional.ofNullable(rileyLinkServiceData.versionBLE113).orElse(PLACEHOLDER),
                     Optional.ofNullable(rileyLinkServiceData.versionCC110).orElse(PLACEHOLDER)));
         }
@@ -130,12 +130,12 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
         this.pumpFrequency.setText(rileyLinkPumpInfo.getPumpFrequency());
 
         if (rileyLinkServiceData.lastGoodFrequency != null) {
-            this.lastUsedFrequency.setText(resourceHelper.gs(R.string.rileylink_pump_frequency_value, rileyLinkServiceData.lastGoodFrequency));
+            this.lastUsedFrequency.setText(rh.gs(R.string.rileylink_pump_frequency_value, rileyLinkServiceData.lastGoodFrequency));
         }
 
         long lastConnectionTimeMillis = rileyLinkPumpDevice.getLastConnectionTimeMillis();
         if (lastConnectionTimeMillis == 0) {
-            this.lastDeviceContact.setText(resourceHelper.gs(R.string.riley_link_ble_config_connected_never));
+            this.lastDeviceContact.setText(rh.gs(R.string.riley_link_ble_config_connected_never));
         } else {
             this.lastDeviceContact.setText(StringUtil.toDateTimeString(dateUtil, new LocalDateTime(lastConnectionTimeMillis)));
         }

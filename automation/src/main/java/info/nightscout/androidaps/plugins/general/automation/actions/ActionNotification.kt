@@ -16,7 +16,6 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotifi
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationUserMessage
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.JsonHelper
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import org.json.JSONObject
@@ -24,7 +23,6 @@ import javax.inject.Inject
 
 class ActionNotification(injector: HasAndroidInjector) : Action(injector) {
 
-    @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var repository: AppRepository
 
@@ -33,7 +31,7 @@ class ActionNotification(injector: HasAndroidInjector) : Action(injector) {
     var text = InputString()
 
     override fun friendlyName(): Int = R.string.notification
-    override fun shortDescription(): String = resourceHelper.gs(R.string.notification_message, text.value)
+    override fun shortDescription(): String = rh.gs(R.string.notification_message, text.value)
     @DrawableRes override fun icon(): Int = R.drawable.ic_notifications
 
     override fun doAction(callback: Callback) {
@@ -62,7 +60,7 @@ class ActionNotification(injector: HasAndroidInjector) : Action(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.message_short), "", text))
+            .add(LabelWithElement(rh, rh.gs(R.string.message_short), "", text))
             .build(root)
     }
 

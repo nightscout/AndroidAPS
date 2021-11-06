@@ -17,16 +17,16 @@ import org.json.JSONObject
 class TriggerProfilePercent(injector: HasAndroidInjector) : Trigger(injector) {
 
     var pct = InputPercent()
-    var comparator = Comparator(resourceHelper)
+    var comparator = Comparator(rh)
 
     constructor(injector: HasAndroidInjector, value: Double, compare: Comparator.Compare) : this(injector) {
         pct = InputPercent(value)
-        comparator = Comparator(resourceHelper, compare)
+        comparator = Comparator(rh, compare)
     }
 
     constructor(injector: HasAndroidInjector, triggerProfilePercent: TriggerProfilePercent) : this(injector) {
         pct = InputPercent(triggerProfilePercent.pct.value)
-        comparator = Comparator(resourceHelper, triggerProfilePercent.comparator.value)
+        comparator = Comparator(rh, triggerProfilePercent.comparator.value)
     }
 
     fun setValue(value: Double): TriggerProfilePercent {
@@ -80,7 +80,7 @@ class TriggerProfilePercent(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyName(): Int = R.string.profilepercentage
 
     override fun friendlyDescription(): String =
-        resourceHelper.gs(R.string.percentagecompared, resourceHelper.gs(comparator.value.stringRes), pct.value.toInt())
+        rh.gs(R.string.percentagecompared, rh.gs(comparator.value.stringRes), pct.value.toInt())
 
     override fun icon(): Optional<Int?> = Optional.of(R.drawable.ic_actions_profileswitch)
 
@@ -88,9 +88,9 @@ class TriggerProfilePercent(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(resourceHelper, R.string.profilepercentage, this))
+            .add(StaticLabel(rh, R.string.profilepercentage, this))
             .add(comparator)
-            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.percent_u), "", pct))
+            .add(LabelWithElement(rh, rh.gs(R.string.percent_u), "", pct))
             .build(root)
     }
 }

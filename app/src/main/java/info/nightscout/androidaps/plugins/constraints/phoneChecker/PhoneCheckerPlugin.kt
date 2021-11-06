@@ -18,7 +18,7 @@ import javax.inject.Singleton
 class PhoneCheckerPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     private val context: Context
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.CONSTRAINTS)
@@ -26,7 +26,7 @@ class PhoneCheckerPlugin @Inject constructor(
     .alwaysEnabled(true)
     .showInList(false)
     .pluginName(R.string.phonechecker),
-    aapsLogger, resourceHelper, injector
+    aapsLogger, rh, injector
 ), Constraints {
 
     var phoneRooted: Boolean = false

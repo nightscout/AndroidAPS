@@ -20,7 +20,7 @@ import org.mockito.Mockito.`when`
 
 class ObjectivesPluginTest : TestBase() {
 
-    @Mock lateinit var resourceHelper: ResourceHelper
+    @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var sp: SP
     @Mock lateinit var dateUtil: DateUtil
@@ -32,19 +32,19 @@ class ObjectivesPluginTest : TestBase() {
         AndroidInjector {
             if (it is Objective) {
                 it.sp = sp
-                it.resourceHelper = resourceHelper
+                it.rh = rh
                 it.dateUtil = dateUtil
             }
         }
     }
 
     @Before fun prepareMock() {
-        objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, resourceHelper, activePlugin, sp, ConfigImpl(), dateUtil, uel)
+        objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, rh, activePlugin, sp, ConfigImpl(), dateUtil, uel)
         objectivesPlugin.onStart()
-        `when`(resourceHelper.gs(R.string.objectivenotstarted, 9)).thenReturn("Objective 9 not started")
-        `when`(resourceHelper.gs(R.string.objectivenotstarted, 8)).thenReturn("Objective 8 not started")
-        `when`(resourceHelper.gs(R.string.objectivenotstarted, 6)).thenReturn("Objective 6 not started")
-        `when`(resourceHelper.gs(R.string.objectivenotstarted, 1)).thenReturn("Objective 1 not started")
+        `when`(rh.gs(R.string.objectivenotstarted, 9)).thenReturn("Objective 9 not started")
+        `when`(rh.gs(R.string.objectivenotstarted, 8)).thenReturn("Objective 8 not started")
+        `when`(rh.gs(R.string.objectivenotstarted, 6)).thenReturn("Objective 6 not started")
+        `when`(rh.gs(R.string.objectivenotstarted, 1)).thenReturn("Objective 1 not started")
     }
 
     @Test fun notStartedObjectivesShouldLimitLoopInvocation() {

@@ -6,6 +6,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger
 import info.nightscout.androidaps.queue.Callback
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject
@@ -13,6 +14,7 @@ import javax.inject.Inject
 abstract class Action(val injector: HasAndroidInjector) {
 
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var rh: ResourceHelper
 
     var precondition: Trigger? = null
 

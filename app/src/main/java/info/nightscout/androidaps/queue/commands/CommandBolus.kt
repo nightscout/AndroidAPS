@@ -30,7 +30,7 @@ class CommandBolus(
     }
 
     override fun status(): String {
-        return (if (detailedBolusInfo.insulin > 0) "BOLUS " + resourceHelper.gs(R.string.formatinsulinunits, detailedBolusInfo.insulin) else "") +
-            if (detailedBolusInfo.carbs > 0) "CARBS " + resourceHelper.gs(R.string.format_carbs, detailedBolusInfo.carbs.toInt()) else ""
+        return (if (detailedBolusInfo.insulin > 0) "BOLUS " + rh.gs(R.string.formatinsulinunits, detailedBolusInfo.insulin) else "") +
+            if (detailedBolusInfo.carbs > 0) "CARBS " + rh.gs(R.string.format_carbs, detailedBolusInfo.carbs.toInt()) else ""
     }
 }

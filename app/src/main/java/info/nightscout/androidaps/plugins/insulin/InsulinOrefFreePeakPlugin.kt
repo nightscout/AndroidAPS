@@ -21,22 +21,22 @@ import javax.inject.Singleton
 class InsulinOrefFreePeakPlugin @Inject constructor(
     injector: HasAndroidInjector,
     private val sp: SP,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     profileFunction: ProfileFunction,
     rxBus: RxBus, aapsLogger: AAPSLogger
-) : InsulinOrefBasePlugin(injector, resourceHelper, profileFunction, rxBus, aapsLogger) {
+) : InsulinOrefBasePlugin(injector, rh, profileFunction, rxBus, aapsLogger) {
 
     override val id get(): Insulin.InsulinType = Insulin.InsulinType.OREF_FREE_PEAK
 
-    override val friendlyName get(): String = resourceHelper.gs(R.string.free_peak_oref)
+    override val friendlyName get(): String = rh.gs(R.string.free_peak_oref)
 
-    override fun configuration(): JSONObject = JSONObject().putInt(R.string.key_insulin_oref_peak, sp, resourceHelper)
+    override fun configuration(): JSONObject = JSONObject().putInt(R.string.key_insulin_oref_peak, sp, rh)
     override fun applyConfiguration(configuration: JSONObject) {
-            configuration.storeInt(R.string.key_insulin_oref_peak, sp, resourceHelper)
+            configuration.storeInt(R.string.key_insulin_oref_peak, sp, rh)
     }
 
     override fun commentStandardText(): String {
-        return resourceHelper.gs(R.string.insulin_peak_time) + ": " + peak
+        return rh.gs(R.string.insulin_peak_time) + ": " + peak
     }
 
     override val peak: Int

@@ -20,7 +20,7 @@ import kotlin.math.floor
 abstract class Objective(injector: HasAndroidInjector, spName: String, @StringRes objective: Int, @StringRes gate: Int) {
 
     @Inject lateinit var sp: SP
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var dateUtil: DateUtil
 
     private val spName: String
@@ -89,7 +89,7 @@ abstract class Objective(injector: HasAndroidInjector, spName: String, @StringRe
         open fun isCompleted(trueTime: Long): Boolean = isCompleted()
 
         open val progress: String
-            get() = resourceHelper.gs(if (isCompleted()) R.string.completed_well_done else R.string.not_completed_yet)
+            get() = rh.gs(if (isCompleted()) R.string.completed_well_done else R.string.not_completed_yet)
 
         fun hint(hint: Hint): Task {
             hints.add(hint)
@@ -117,9 +117,9 @@ abstract class Objective(injector: HasAndroidInjector, spName: String, @StringRe
             val hours = floor(duration.toDouble() / T.hours(1).msecs()).toInt()
             val minutes = floor(duration.toDouble() / T.mins(1).msecs()).toInt()
             return when {
-                days > 0  -> resourceHelper.gq(R.plurals.days, days, days)
-                hours > 0 -> resourceHelper.gq(R.plurals.hours, hours, hours)
-                else      -> resourceHelper.gq(R.plurals.minutes, minutes, minutes)
+                days > 0  -> rh.gq(R.plurals.days, days, days)
+                hours > 0 -> rh.gq(R.plurals.hours, hours, hours)
+                else      -> rh.gq(R.plurals.minutes, minutes, minutes)
             }
         }
     }

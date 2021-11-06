@@ -32,7 +32,7 @@ abstract class Trigger(val injector: HasAndroidInjector) {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var sp: SP
     @Inject lateinit var locationDataContainer: LastLocationDataContainer
@@ -132,7 +132,7 @@ abstract class Trigger(val injector: HasAndroidInjector) {
                 gravity = Gravity.CENTER
             }
             setImageResource(R.drawable.ic_add)
-            contentDescription = resourceHelper.gs(R.string.add_short)
+            contentDescription = rh.gs(R.string.add_short)
             setOnClickListener {
                 scanForActivity(context)?.supportFragmentManager?.let {
                     val dialog = ChooseTriggerDialog()
@@ -154,7 +154,7 @@ abstract class Trigger(val injector: HasAndroidInjector) {
                 gravity = Gravity.CENTER
             }
             setImageResource(R.drawable.ic_remove)
-            contentDescription = resourceHelper.gs(R.string.delete_short)
+            contentDescription = rh.gs(R.string.delete_short)
             setOnClickListener {
                 rxBus.send(EventTriggerRemove(trigger))
             }
@@ -168,7 +168,7 @@ abstract class Trigger(val injector: HasAndroidInjector) {
             }
             layoutParams = params
             setImageResource(R.drawable.ic_clone)
-            contentDescription = resourceHelper.gs(R.string.copy_short)
+            contentDescription = rh.gs(R.string.copy_short)
             setOnClickListener {
                 rxBus.send(EventTriggerClone(trigger))
             }

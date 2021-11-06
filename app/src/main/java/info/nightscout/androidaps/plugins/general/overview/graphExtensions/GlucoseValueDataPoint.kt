@@ -13,7 +13,7 @@ class GlucoseValueDataPoint @Inject constructor(
     val data: GlucoseValue,
     private val defaultValueHelper: DefaultValueHelper,
     private val profileFunction: ProfileFunction,
-    private val resourceHelper: ResourceHelper
+    private val rh: ResourceHelper
 ) : DataPointWithLabelInterface {
 
     fun valueToUnits(units: GlucoseUnit): Double =
@@ -42,20 +42,20 @@ class GlucoseValueDataPoint @Inject constructor(
         val highLine = defaultValueHelper.determineHighLine()
         return when {
             isPrediction                   -> predictionColor
-            valueToUnits(units) < lowLine  -> resourceHelper.gc(R.color.low)
-            valueToUnits(units) > highLine -> resourceHelper.gc(R.color.high)
-            else                           -> resourceHelper.gc(R.color.inrange)
+            valueToUnits(units) < lowLine  -> rh.gc(R.color.low)
+            valueToUnits(units) > highLine -> rh.gc(R.color.high)
+            else                           -> rh.gc(R.color.inrange)
         }
     }
 
     val predictionColor: Int
         get() {
             return when (data.sourceSensor) {
-                GlucoseValue.SourceSensor.IOB_PREDICTION  -> resourceHelper.gc(R.color.iob)
-                GlucoseValue.SourceSensor.COB_PREDICTION   -> resourceHelper.gc(R.color.cob)
-                GlucoseValue.SourceSensor.A_COB_PREDICTION -> -0x7f000001 and resourceHelper.gc(R.color.cob)
-                GlucoseValue.SourceSensor.UAM_PREDICTION   -> resourceHelper.gc(R.color.uam)
-                GlucoseValue.SourceSensor.ZT_PREDICTION   -> resourceHelper.gc(R.color.zt)
+                GlucoseValue.SourceSensor.IOB_PREDICTION  -> rh.gc(R.color.iob)
+                GlucoseValue.SourceSensor.COB_PREDICTION   -> rh.gc(R.color.cob)
+                GlucoseValue.SourceSensor.A_COB_PREDICTION -> -0x7f000001 and rh.gc(R.color.cob)
+                GlucoseValue.SourceSensor.UAM_PREDICTION   -> rh.gc(R.color.uam)
+                GlucoseValue.SourceSensor.ZT_PREDICTION   -> rh.gc(R.color.zt)
                 else                                      -> R.color.white
             }
         }

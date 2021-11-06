@@ -50,7 +50,7 @@ class ObjectivesFragment : DaggerFragment() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var sp: SP
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var objectivesPlugin: ObjectivesPlugin
     @Inject lateinit var receiverStatusStore: ReceiverStatusStore
@@ -155,15 +155,15 @@ class ObjectivesFragment : DaggerFragment() {
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val objective = objectivesPlugin.objectives[position]
-            holder.binding.title.text = resourceHelper.gs(R.string.nth_objective, position + 1)
+            holder.binding.title.text = rh.gs(R.string.nth_objective, position + 1)
             if (objective.objective != 0) {
                 holder.binding.objective.visibility = View.VISIBLE
-                holder.binding.objective.text = resourceHelper.gs(objective.objective)
+                holder.binding.objective.text = rh.gs(objective.objective)
             } else
                 holder.binding.objective.visibility = View.GONE
             if (objective.gate != 0) {
                 holder.binding.gate.visibility = View.VISIBLE
-                holder.binding.gate.text = resourceHelper.gs(objective.gate)
+                holder.binding.gate.text = rh.gs(objective.gate)
             } else
                 holder.binding.gate.visibility = View.GONE
             if (!objective.isStarted) {
@@ -199,7 +199,7 @@ class ObjectivesFragment : DaggerFragment() {
                     if (task.shouldBeIgnored()) continue
                     // name
                     val name = TextView(holder.binding.progress.context)
-                    name.text = "${resourceHelper.gs(task.task)}:"
+                    name.text = "${rh.gs(task.task)}:"
                     name.setTextColor(-0x1)
                     holder.binding.progress.addView(name, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                     // hint
@@ -232,7 +232,7 @@ class ObjectivesFragment : DaggerFragment() {
                     holder.binding.progress.addView(separator, LinearLayout.LayoutParams.MATCH_PARENT, 2)
                 }
             }
-            holder.binding.accomplished.text = resourceHelper.gs(R.string.accomplished, dateUtil.dateAndTimeString(objective.accomplishedOn))
+            holder.binding.accomplished.text = rh.gs(R.string.accomplished, dateUtil.dateAndTimeString(objective.accomplishedOn))
             holder.binding.accomplished.setTextColor(-0x3e3e3f)
             holder.binding.verify.setOnClickListener {
                 receiverStatusStore.updateNetworkStatus()
@@ -246,27 +246,27 @@ class ObjectivesFragment : DaggerFragment() {
                     // move out of UI thread
                     Thread {
                         NtpProgressDialog().show((context as AppCompatActivity).supportFragmentManager, "NtpCheck")
-                        rxBus.send(EventNtpStatus(resourceHelper.gs(R.string.timedetection), 0))
+                        rxBus.send(EventNtpStatus(rh.gs(R.string.timedetection), 0))
                         sntpClient.ntpTime(object : SntpClient.Callback() {
                             override fun run() {
                                 aapsLogger.debug("NTP time: $time System time: ${dateUtil.now()}")
                                 SystemClock.sleep(300)
                                 if (!networkConnected) {
-                                    rxBus.send(EventNtpStatus(resourceHelper.gs(R.string.notconnected), 99))
+                                    rxBus.send(EventNtpStatus(rh.gs(R.string.notconnected), 99))
                                 } else if (success) {
                                     if (objective.isCompleted(time)) {
                                         objective.accomplishedOn = time
-                                        rxBus.send(EventNtpStatus(resourceHelper.gs(R.string.success), 100))
+                                        rxBus.send(EventNtpStatus(rh.gs(R.string.success), 100))
                                         SystemClock.sleep(1000)
                                         rxBus.send(EventObjectivesUpdateGui())
                                         rxBus.send(EventSWUpdate(false))
                                         SystemClock.sleep(100)
                                         scrollToCurrentObjective()
                                     } else {
-                                        rxBus.send(EventNtpStatus(resourceHelper.gs(R.string.requirementnotmet), 99))
+                                        rxBus.send(EventNtpStatus(rh.gs(R.string.requirementnotmet), 99))
                                     }
                                 } else {
-                                    rxBus.send(EventNtpStatus(resourceHelper.gs(R.string.failedretrievetime), 99))
+                                    rxBus.send(EventNtpStatus(rh.gs(R.string.failedretrievetime), 99))
                                 }
                             }
                         }, receiverStatusStore.isConnected)
@@ -285,23 +285,23 @@ class ObjectivesFragment : DaggerFragment() {
                 // move out of UI thread
                     Thread {
                         NtpProgressDialog().show((context as AppCompatActivity).supportFragmentManager, "NtpCheck")
-                        rxBus.send(EventNtpStatus(resourceHelper.gs(R.string.timedetection), 0))
+                        rxBus.send(EventNtpStatus(rh.gs(R.string.timedetection), 0))
                         sntpClient.ntpTime(object : SntpClient.Callback() {
                             override fun run() {
                                 aapsLogger.debug("NTP time: $time System time: ${dateUtil.now()}")
                                 SystemClock.sleep(300)
                                 if (!networkConnected) {
-                                    rxBus.send(EventNtpStatus(resourceHelper.gs(R.string.notconnected), 99))
+                                    rxBus.send(EventNtpStatus(rh.gs(R.string.notconnected), 99))
                                 } else if (success) {
                                     objective.startedOn = time
-                                    rxBus.send(EventNtpStatus(resourceHelper.gs(R.string.success), 100))
+                                    rxBus.send(EventNtpStatus(rh.gs(R.string.success), 100))
                                     SystemClock.sleep(1000)
                                     rxBus.send(EventObjectivesUpdateGui())
                                     rxBus.send(EventSWUpdate(false))
                                     SystemClock.sleep(100)
                                     scrollToCurrentObjective()
                                 } else {
-                                    rxBus.send(EventNtpStatus(resourceHelper.gs(R.string.failedretrievetime), 99))
+                                    rxBus.send(EventNtpStatus(rh.gs(R.string.failedretrievetime), 99))
                                 }
                             }
                         }, receiverStatusStore.isConnected)
@@ -309,7 +309,7 @@ class ObjectivesFragment : DaggerFragment() {
             }
             holder.binding.unstart.setOnClickListener {
                 activity?.let { activity ->
-                    OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.objectives), resourceHelper.gs(R.string.doyouwantresetstart), Runnable {
+                    OKDialog.showConfirmation(activity, rh.gs(R.string.objectives), rh.gs(R.string.doyouwantresetstart), Runnable {
                         uel.log(Action.OBJECTIVE_UNSTARTED, Sources.Objectives,
                             ValueWithUnit.SimpleInt(position + 1))
                         objective.startedOn = 0
@@ -329,7 +329,7 @@ class ObjectivesFragment : DaggerFragment() {
                 // generate random request code if none exists
                 val request = sp.getString(R.string.key_objectives_request_code, String.format("%1$05d", (Math.random() * 99999).toInt()))
                 sp.putString(R.string.key_objectives_request_code, request)
-                holder.binding.requestcode.text = resourceHelper.gs(R.string.requestcode, request)
+                holder.binding.requestcode.text = rh.gs(R.string.requestcode, request)
                 holder.binding.requestcode.visibility = View.VISIBLE
                 holder.binding.enterbutton.visibility = View.VISIBLE
                 holder.binding.input.visibility = View.VISIBLE

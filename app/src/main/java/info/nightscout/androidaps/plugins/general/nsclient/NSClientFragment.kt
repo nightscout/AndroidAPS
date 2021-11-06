@@ -28,7 +28,7 @@ class NSClientFragment : DaggerFragment() {
 
     @Inject lateinit var nsClientPlugin: NSClientPlugin
     @Inject lateinit var sp: SP
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var aapsSchedulers: AapsSchedulers
@@ -70,8 +70,8 @@ class NSClientFragment : DaggerFragment() {
         binding.deliverNow.paintFlags = binding.deliverNow.paintFlags or Paint.UNDERLINE_TEXT_FLAG
         binding.fullSync.setOnClickListener {
             context?.let { context ->
-                OKDialog.showConfirmation(context, resourceHelper.gs(R.string.nsclientinternal),
-                                          resourceHelper.gs(R.string.full_sync_comment), Runnable {
+                OKDialog.showConfirmation(context, rh.gs(R.string.nsclientinternal),
+                                          rh.gs(R.string.full_sync_comment), Runnable {
                     dataSyncSelector.resetToNextFullSync()
                 })
             }

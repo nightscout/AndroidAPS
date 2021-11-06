@@ -17,7 +17,7 @@ import javax.inject.Singleton
 
 @Singleton
 class TirCalculator @Inject constructor(
-    private val resourceHelper: ResourceHelper,
+    private val rh: ResourceHelper,
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
     private val repository: AppRepository
@@ -78,21 +78,21 @@ class TirCalculator @Inject constructor(
         val tit30 = calculate(30, lowTitMgdl, highTitMgdl)
         val averageTit30 = averageTIR(tit30)
         return HtmlHelper.fromHtml(
-            "<br><b>" + resourceHelper.gs(R.string.tir) + " (" + Profile.toCurrentUnitsString(profileFunction, lowTirMgdl) + "-" + Profile.toCurrentUnitsString(profileFunction, highTirMgdl) + "):</b><br>" +
-                toText(resourceHelper, tir7) +
-                "<br><b>" + resourceHelper.gs(R.string.average) + " (" + Profile.toCurrentUnitsString(profileFunction, lowTirMgdl) + "-" + Profile.toCurrentUnitsString(profileFunction, highTirMgdl) + "):</b><br>" +
-                averageTir7.toText(resourceHelper, tir7.size()) + "<br>" +
-                averageTir30.toText(resourceHelper, tir30.size()) +
-                "<br><b>" + resourceHelper.gs(R.string.average) + " (" + Profile.toCurrentUnitsString(profileFunction, lowTitMgdl) + "-" + Profile.toCurrentUnitsString(profileFunction, highTitMgdl) + "):</b><br>" +
-                averageTit7.toText(resourceHelper, tit7.size()) + "<br>" +
-                averageTit30.toText(resourceHelper, tit30.size())
+            "<br><b>" + rh.gs(R.string.tir) + " (" + Profile.toCurrentUnitsString(profileFunction, lowTirMgdl) + "-" + Profile.toCurrentUnitsString(profileFunction, highTirMgdl) + "):</b><br>" +
+                toText(rh, tir7) +
+                "<br><b>" + rh.gs(R.string.average) + " (" + Profile.toCurrentUnitsString(profileFunction, lowTirMgdl) + "-" + Profile.toCurrentUnitsString(profileFunction, highTirMgdl) + "):</b><br>" +
+                averageTir7.toText(rh, tir7.size()) + "<br>" +
+                averageTir30.toText(rh, tir30.size()) +
+                "<br><b>" + rh.gs(R.string.average) + " (" + Profile.toCurrentUnitsString(profileFunction, lowTitMgdl) + "-" + Profile.toCurrentUnitsString(profileFunction, highTitMgdl) + "):</b><br>" +
+                averageTit7.toText(rh, tit7.size()) + "<br>" +
+                averageTit30.toText(rh, tit30.size())
         )
     }
 
-    fun toText(resourceHelper: ResourceHelper, tirs: LongSparseArray<TIR>): String {
+    fun toText(rh: ResourceHelper, tirs: LongSparseArray<TIR>): String {
         var t = ""
         for (i in 0 until tirs.size()) {
-            t += "${tirs.valueAt(i).toText(resourceHelper, dateUtil)}<br>"
+            t += "${tirs.valueAt(i).toText(rh, dateUtil)}<br>"
         }
         return t
     }

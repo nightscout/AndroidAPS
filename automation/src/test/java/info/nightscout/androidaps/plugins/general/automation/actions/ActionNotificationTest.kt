@@ -23,7 +23,7 @@ import org.mockito.Mockito.`when`
 
 class ActionNotificationTest : TestBase() {
 
-    @Mock lateinit var resourceHelper: ResourceHelper
+    @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var rxBus: RxBus
     @Mock lateinit var repository: AppRepository
 
@@ -31,22 +31,22 @@ class ActionNotificationTest : TestBase() {
     var injector: HasAndroidInjector = HasAndroidInjector {
         AndroidInjector {
             if (it is ActionNotification) {
-                it.resourceHelper = resourceHelper
+                it.rh = rh
                 it.rxBus = rxBus
                 it.repository = repository
             }
             if (it is PumpEnactResult) {
-                it.resourceHelper = resourceHelper
+                it.rh = rh
             }
         }
     }
 
     @Before
     fun setup() {
-        `when`(resourceHelper.gs(R.string.ok)).thenReturn("OK")
-        `when`(resourceHelper.gs(R.string.notification)).thenReturn("Notification")
+        `when`(rh.gs(R.string.ok)).thenReturn("OK")
+        `when`(rh.gs(R.string.notification)).thenReturn("Notification")
         `when`(
-            resourceHelper.gs(
+            rh.gs(
                 ArgumentMatchers.eq(R.string.notification_message),
                 ArgumentMatchers.anyString()
             )

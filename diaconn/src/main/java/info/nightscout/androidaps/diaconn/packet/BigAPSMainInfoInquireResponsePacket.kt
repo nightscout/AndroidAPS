@@ -22,7 +22,7 @@ class BigAPSMainInfoInquireResponsePacket(
 
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump
     @Inject lateinit var sp: SP
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     private var pumpDesc = PumpDescription(PumpType.DIACONN_G8)
 
     init {
@@ -77,7 +77,7 @@ class BigAPSMainInfoInquireResponsePacket(
         diaconnG8Pump.minorVersion = getByteToInt(bufferData)
 
         // save current pump firmware version
-        sp.putString(resourceHelper.gs(R.string.pumpversion), diaconnG8Pump.majorVersion.toString() + "." + diaconnG8Pump.minorVersion.toString())
+        sp.putString(rh.gs(R.string.pumpversion), diaconnG8Pump.majorVersion.toString() + "." + diaconnG8Pump.minorVersion.toString())
 
         // 5. pump log status
         diaconnG8Pump.pumpLastLogNum = getShortToInt(bufferData) // last saved log no
@@ -216,7 +216,7 @@ class BigAPSMainInfoInquireResponsePacket(
         diaconnG8Pump.pumpProfiles!![diaconnG8Pump.activeProfile][23] = diaconnG8Pump.baseAmount24
 
         //incarnation no 처리
-        diaconnG8Pump.isPumpVersionGe2_63 = PumplogUtil.isPumpVersionGe(sp.getString(resourceHelper.gs(R.string.pumpversion), ""),2, 63)
+        diaconnG8Pump.isPumpVersionGe2_63 = PumplogUtil.isPumpVersionGe(sp.getString(rh.gs(R.string.pumpversion), ""),2, 63)
 
         aapsLogger.debug(LTag.PUMPCOMM, "result > " + diaconnG8Pump.result)
         aapsLogger.debug(LTag.PUMPCOMM, "systemRemainInsulin > " + diaconnG8Pump.systemRemainInsulin)

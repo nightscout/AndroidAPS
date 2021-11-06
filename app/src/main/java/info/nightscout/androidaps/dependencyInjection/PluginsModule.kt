@@ -15,6 +15,7 @@ import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
+import info.nightscout.androidaps.plugins.constraints.bgQualityCheck.BgQualityCheckPlugin
 import info.nightscout.androidaps.plugins.constraints.dstHelper.DstHelperPlugin
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin
 import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin
@@ -293,6 +294,12 @@ abstract class PluginsModule {
     @IntoMap
     @IntKey(380)
     abstract fun bindDstHelperPlugin(plugin: DstHelperPlugin): PluginBase
+
+    @Binds
+    @AllConfigs
+    @IntoMap
+    @IntKey(381)
+    abstract fun bindBgQualityCheckPlugin(plugin: BgQualityCheckPlugin): PluginBase
 
     @Binds
     @AllConfigs

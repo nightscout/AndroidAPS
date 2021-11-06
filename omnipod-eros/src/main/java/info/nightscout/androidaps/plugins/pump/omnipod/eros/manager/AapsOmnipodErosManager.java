@@ -92,7 +92,7 @@ public class AapsOmnipodErosManager {
     private final AapsOmnipodUtil aapsOmnipodUtil;
     private final AAPSLogger aapsLogger;
     private final RxBus rxBus;
-    private final ResourceHelper resourceHelper;
+    private final ResourceHelper rh;
     private final HasAndroidInjector injector;
     private final SP sp;
     private final OmnipodManager delegate;
@@ -124,7 +124,7 @@ public class AapsOmnipodErosManager {
                                   AapsSchedulers aapsSchedulers,
                                   RxBus rxBus,
                                   SP sp,
-                                  ResourceHelper resourceHelper,
+                                  ResourceHelper rh,
                                   HasAndroidInjector injector,
                                   OmnipodAlertUtil omnipodAlertUtil,
                                   Context context,
@@ -136,7 +136,7 @@ public class AapsOmnipodErosManager {
         this.aapsLogger = aapsLogger;
         this.rxBus = rxBus;
         this.sp = sp;
-        this.resourceHelper = resourceHelper;
+        this.rh = rh;
         this.injector = injector;
         this.omnipodAlertUtil = omnipodAlertUtil;
         this.context = context;
@@ -334,7 +334,7 @@ public class AapsOmnipodErosManager {
         addSuccessToHistory(historyEntryType, profile.getBasalValues());
 
         if (showNotifications) {
-            showNotification(Notification.PROFILE_SET_OK, resourceHelper.gs(R.string.profile_set_ok), Notification.INFO, null);
+            showNotification(Notification.PROFILE_SET_OK, rh.gs(R.string.profile_set_ok), Notification.INFO, null);
         }
 
         dismissNotification(Notification.FAILED_UPDATE_PROFILE);
@@ -954,7 +954,7 @@ public class AapsOmnipodErosManager {
     }
 
     private void showErrorDialog(String message, Integer sound) {
-        ErrorHelperActivity.Companion.runAlarm(context, message, resourceHelper.gs(R.string.error), sound);
+        ErrorHelperActivity.Companion.runAlarm(context, message, rh.gs(R.string.error), sound);
     }
 
     private void showPodFaultNotification(FaultEventCode faultEventCode) {
@@ -981,7 +981,7 @@ public class AapsOmnipodErosManager {
     }
 
     private String getStringResource(int id, Object... args) {
-        return resourceHelper.gs(id, args);
+        return rh.gs(id, args);
     }
 
     public static BasalSchedule mapProfileToBasalSchedule(Profile profile) {

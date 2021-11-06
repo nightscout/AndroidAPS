@@ -27,7 +27,7 @@ import kotlin.math.pow
  */
 abstract class InsulinOrefBasePlugin(
     injector: HasAndroidInjector,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     val profileFunction: ProfileFunction,
     val rxBus: RxBus, aapsLogger: AAPSLogger
 ) : PluginBase(PluginDescription()
@@ -36,7 +36,7 @@ abstract class InsulinOrefBasePlugin(
     .pluginIcon(R.drawable.ic_insulin)
     .shortName(R.string.insulin_shortname)
     .visibleByDefault(false),
-    aapsLogger, resourceHelper, injector
+    aapsLogger, rh, injector
 ), Insulin {
 
     private var lastWarned: Long = 0
@@ -60,7 +60,7 @@ abstract class InsulinOrefBasePlugin(
     }
 
     private val notificationPattern: String
-        get() = resourceHelper.gs(R.string.dia_too_short)
+        get() = rh.gs(R.string.dia_too_short)
 
     open val userDefinedDia: Double
         get() {
@@ -96,7 +96,7 @@ abstract class InsulinOrefBasePlugin(
             var comment = commentStandardText()
             val userDia = userDefinedDia
             if (userDia < MIN_DIA) {
-                comment += "\n" + resourceHelper.gs(R.string.dia_too_short, userDia, MIN_DIA)
+                comment += "\n" + rh.gs(R.string.dia_too_short, userDia, MIN_DIA)
             }
             return comment
         }

@@ -28,7 +28,7 @@ import javax.inject.Singleton
 @Singleton
 class MM640gPlugin @Inject constructor(
     injector: HasAndroidInjector,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     aapsLogger: AAPSLogger,
     private val sp: SP
 ) : PluginBase(PluginDescription()
@@ -37,7 +37,7 @@ class MM640gPlugin @Inject constructor(
     .pluginIcon(R.drawable.ic_generic_cgm)
     .pluginName(R.string.MM640g)
     .description(R.string.description_source_mm640g),
-    aapsLogger, resourceHelper, injector
+    aapsLogger, rh, injector
 ), BgSource {
 
     // cannot be inner class because of needed injection

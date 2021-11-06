@@ -35,13 +35,13 @@ class MsgSettingMeal(
             danaPump.basalStep = 0.01
         }
         if (danaPump.basalStep != 0.01) {
-            val notification = Notification(Notification.WRONG_BASAL_STEP, resourceHelper.gs(R.string.danar_setbasalstep001), Notification.URGENT)
+            val notification = Notification(Notification.WRONG_BASAL_STEP, rh.gs(R.string.danar_setbasalstep001), Notification.URGENT)
             rxBus.send(EventNewNotification(notification))
         } else {
             rxBus.send(EventDismissNotification(Notification.WRONG_BASAL_STEP))
         }
         if (danaPump.isConfigUD) {
-            val notification = Notification(Notification.UD_MODE_ENABLED, resourceHelper.gs(R.string.danar_switchtouhmode), Notification.URGENT)
+            val notification = Notification(Notification.UD_MODE_ENABLED, rh.gs(R.string.danar_switchtouhmode), Notification.URGENT)
             rxBus.send(EventNewNotification(notification))
         } else {
             rxBus.send(EventDismissNotification(Notification.UD_MODE_ENABLED))

@@ -44,7 +44,7 @@ import kotlin.math.max
 class CarbsDialog : DialogFragmentWithDate() {
 
     @Inject lateinit var ctx: Context
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var profileFunction: ProfileFunction
@@ -79,15 +79,15 @@ class CarbsDialog : DialogFragmentWithDate() {
         val time = binding.time.value.toInt()
         if (time > 12 * 60 || time < -12 * 60) {
             binding.time.value = 0.0
-            ToastUtils.showToastInUiThread(ctx, resourceHelper.gs(R.string.constraintapllied))
+            ToastUtils.showToastInUiThread(ctx, rh.gs(R.string.constraintapllied))
         }
         if (binding.duration.value > 10) {
             binding.duration.value = 0.0
-            ToastUtils.showToastInUiThread(ctx, resourceHelper.gs(R.string.constraintapllied))
+            ToastUtils.showToastInUiThread(ctx, rh.gs(R.string.constraintapllied))
         }
         if (binding.carbs.value.toInt() > maxCarbs) {
             binding.carbs.value = 0.0
-            ToastUtils.showToastInUiThread(ctx, resourceHelper.gs(R.string.carbsconstraintapplied))
+            ToastUtils.showToastInUiThread(ctx, rh.gs(R.string.carbsconstraintapplied))
         }
     }
 
@@ -190,45 +190,45 @@ class CarbsDialog : DialogFragmentWithDate() {
         val hypoTTDuration = defaultValueHelper.determineHypoTTDuration()
         val hypoTT = defaultValueHelper.determineHypoTT()
         val actions: LinkedList<String?> = LinkedList()
-        val unitLabel = if (units == GlucoseUnit.MMOL) resourceHelper.gs(R.string.mmol) else resourceHelper.gs(R.string.mgdl)
+        val unitLabel = if (units == GlucoseUnit.MMOL) rh.gs(R.string.mmol) else rh.gs(R.string.mgdl)
         val useAlarm = binding.alarmCheckBox.isChecked
         val remindBolus = binding.bolusReminderCheckBox.isChecked
 
         val activitySelected = binding.activityTt.isChecked
         if (activitySelected)
-            actions.add(resourceHelper.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(activityTT) + " " + unitLabel + " (" + resourceHelper.gs(R.string.format_mins, activityTTDuration) + ")").formatColor(resourceHelper, R.color.tempTargetConfirmation))
+            actions.add(rh.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(activityTT) + " " + unitLabel + " (" + rh.gs(R.string.format_mins, activityTTDuration) + ")").formatColor(rh, R.color.tempTargetConfirmation))
         val eatingSoonSelected = binding.eatingSoonTt.isChecked
         if (eatingSoonSelected)
-            actions.add(resourceHelper.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(eatingSoonTT) + " " + unitLabel + " (" + resourceHelper.gs(R.string.format_mins, eatingSoonTTDuration) + ")").formatColor(resourceHelper, R.color.tempTargetConfirmation))
+            actions.add(rh.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(eatingSoonTT) + " " + unitLabel + " (" + rh.gs(R.string.format_mins, eatingSoonTTDuration) + ")").formatColor(rh, R.color.tempTargetConfirmation))
         val hypoSelected = binding.hypoTt.isChecked
         if (hypoSelected)
-            actions.add(resourceHelper.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(hypoTT) + " " + unitLabel + " (" + resourceHelper.gs(R.string.format_mins, hypoTTDuration) + ")").formatColor(resourceHelper, R.color.tempTargetConfirmation))
+            actions.add(rh.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(hypoTT) + " " + unitLabel + " (" + rh.gs(R.string.format_mins, hypoTTDuration) + ")").formatColor(rh, R.color.tempTargetConfirmation))
 
         val timeOffset = binding.time.value.toInt()
         eventTime -= eventTime % 1000
         val time = eventTime + timeOffset * 1000 * 60
         if (timeOffset != 0)
-            actions.add(resourceHelper.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(time))
+            actions.add(rh.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(time))
         if (useAlarm && carbs > 0 && timeOffset > 0)
-            actions.add(resourceHelper.gs(R.string.alarminxmin, timeOffset).formatColor(resourceHelper, R.color.info))
+            actions.add(rh.gs(R.string.alarminxmin, timeOffset).formatColor(rh, R.color.info))
         val duration = binding.duration.value.toInt()
         if (duration > 0)
-            actions.add(resourceHelper.gs(R.string.duration) + ": " + duration + resourceHelper.gs(R.string.shorthour))
+            actions.add(rh.gs(R.string.duration) + ": " + duration + rh.gs(R.string.shorthour))
         if (carbsAfterConstraints > 0) {
-            actions.add(resourceHelper.gs(R.string.carbs) + ": " + "<font color='" + resourceHelper.gc(R.color.carbs) + "'>" + resourceHelper.gs(R.string.format_carbs, carbsAfterConstraints) + "</font>")
+            actions.add(rh.gs(R.string.carbs) + ": " + "<font color='" + rh.gc(R.color.carbs) + "'>" + rh.gs(R.string.format_carbs, carbsAfterConstraints) + "</font>")
             if (carbsAfterConstraints != carbs)
-                actions.add("<font color='" + resourceHelper.gc(R.color.warning) + "'>" + resourceHelper.gs(R.string.carbsconstraintapplied) + "</font>")
+                actions.add("<font color='" + rh.gc(R.color.warning) + "'>" + rh.gs(R.string.carbsconstraintapplied) + "</font>")
         }
         val notes = binding.notesLayout.notes.text.toString()
         if (notes.isNotEmpty())
-            actions.add(resourceHelper.gs(R.string.notes_label) + ": " + notes)
+            actions.add(rh.gs(R.string.notes_label) + ": " + notes)
 
         if (eventTimeChanged)
-            actions.add(resourceHelper.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
+            actions.add(rh.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
 
         if (carbsAfterConstraints > 0 || activitySelected || eatingSoonSelected || hypoSelected) {
             activity?.let { activity ->
-                OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.carbs), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
+                OKDialog.showConfirmation(activity, rh.gs(R.string.carbs), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     when {
                         activitySelected   -> {
                             uel.log(Action.TT, Sources.CarbDialog,
@@ -305,7 +305,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                             override fun run() {
                                 carbTimer.removeEatReminder()
                                 if (!result.success) {
-                                    ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
+                                    ErrorHelperActivity.runAlarm(ctx, result.comment, rh.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
                                 } else  if (sp.getBoolean(R.string.key_usebolusreminder, false) && remindBolus)
                                     bolusTimer.scheduleBolusReminder()
                             }
@@ -318,7 +318,7 @@ class CarbsDialog : DialogFragmentWithDate() {
             }
         } else
             activity?.let { activity ->
-                OKDialog.show(activity, resourceHelper.gs(R.string.carbs), resourceHelper.gs(R.string.no_action_selected))
+                OKDialog.show(activity, rh.gs(R.string.carbs), rh.gs(R.string.no_action_selected))
             }
         return true
     }

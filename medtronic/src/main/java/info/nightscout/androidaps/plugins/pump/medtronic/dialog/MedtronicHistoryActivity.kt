@@ -23,7 +23,7 @@ import javax.inject.Inject
 class MedtronicHistoryActivity : DaggerActivity() {
 
     @Inject lateinit var medtronicHistoryData: MedtronicHistoryData
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
 
     lateinit var historyTypeSpinner: Spinner
     lateinit var statusView: TextView
@@ -96,7 +96,7 @@ class MedtronicHistoryActivity : DaggerActivity() {
         recyclerViewAdapter = RecyclerViewAdapter(filteredHistoryList)
         recyclerView.adapter = recyclerViewAdapter
         statusView.visibility = View.GONE
-        typeListFull = getTypeList(PumpHistoryEntryGroup.getTranslatedList(resourceHelper))
+        typeListFull = getTypeList(PumpHistoryEntryGroup.getTranslatedList(rh))
         val spinnerAdapter = ArrayAdapter(this, R.layout.spinner_centered, typeListFull)
         historyTypeSpinner.adapter = spinnerAdapter
         historyTypeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {

@@ -21,7 +21,7 @@ import javax.inject.Singleton
 class MDIPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     commandQueue: CommandQueueProvider,
     private val dateUtil: DateUtil,
     private val pumpSync: PumpSync
@@ -30,7 +30,7 @@ class MDIPlugin @Inject constructor(
     .pluginIcon(R.drawable.ic_ict)
     .pluginName(R.string.mdi)
     .description(R.string.description_pump_mdi),
-    injector, aapsLogger, resourceHelper, commandQueue
+    injector, aapsLogger, rh, commandQueue
 ), Pump {
 
     override val pumpDescription = PumpDescription()
@@ -71,7 +71,7 @@ class MDIPlugin @Inject constructor(
         result.success = true
         result.bolusDelivered = detailedBolusInfo.insulin
         result.carbsDelivered = detailedBolusInfo.carbs
-        result.comment = resourceHelper.gs(R.string.virtualpump_resultok)
+        result.comment = rh.gs(R.string.virtualpump_resultok)
         if (detailedBolusInfo.insulin > 0)
             pumpSync.syncBolusWithPumpId(
                 timestamp = detailedBolusInfo.timestamp,
@@ -94,7 +94,7 @@ class MDIPlugin @Inject constructor(
     override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         val result = PumpEnactResult(injector)
         result.success = false
-        result.comment = resourceHelper.gs(R.string.pumperror)
+        result.comment = rh.gs(R.string.pumperror)
         aapsLogger.debug(LTag.PUMPBTCOMM, "Setting temp basal absolute: $result")
         return result
     }
@@ -102,7 +102,7 @@ class MDIPlugin @Inject constructor(
     override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         val result = PumpEnactResult(injector)
         result.success = false
-        result.comment = resourceHelper.gs(R.string.pumperror)
+        result.comment = rh.gs(R.string.pumperror)
         aapsLogger.debug(LTag.PUMPBTCOMM, "Settings temp basal percent: $result")
         return result
     }
@@ -110,7 +110,7 @@ class MDIPlugin @Inject constructor(
     override fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
         val result = PumpEnactResult(injector)
         result.success = false
-        result.comment = resourceHelper.gs(R.string.pumperror)
+        result.comment = rh.gs(R.string.pumperror)
         aapsLogger.debug(LTag.PUMPBTCOMM, "Setting extended bolus: $result")
         return result
     }
@@ -118,7 +118,7 @@ class MDIPlugin @Inject constructor(
     override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
         val result = PumpEnactResult(injector)
         result.success = false
-        result.comment = resourceHelper.gs(R.string.pumperror)
+        result.comment = rh.gs(R.string.pumperror)
         aapsLogger.debug(LTag.PUMPBTCOMM, "Cancel temp basal: $result")
         return result
     }
@@ -126,7 +126,7 @@ class MDIPlugin @Inject constructor(
     override fun cancelExtendedBolus(): PumpEnactResult {
         val result = PumpEnactResult(injector)
         result.success = false
-        result.comment = resourceHelper.gs(R.string.pumperror)
+        result.comment = rh.gs(R.string.pumperror)
         aapsLogger.debug(LTag.PUMPBTCOMM, "Canceling extended bolus: $result")
         return result
     }

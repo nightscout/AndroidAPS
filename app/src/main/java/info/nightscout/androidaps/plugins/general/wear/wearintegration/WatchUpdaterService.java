@@ -67,7 +67,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
     @Inject public GlucoseStatusProvider glucoseStatusProvider;
     @Inject public AAPSLogger aapsLogger;
     @Inject public WearPlugin wearPlugin;
-    @Inject public ResourceHelper resourceHelper;
+    @Inject public ResourceHelper rh;
     @Inject public SP sp;
     @Inject public RxBus rxBus;
     @Inject public ProfileFunction profileFunction;
@@ -514,7 +514,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         if (sp.getBoolean("wear_predictions", true) && finalLastRun != null && finalLastRun.getRequest().getHasPredictions() && finalLastRun.getConstraintsProcessed() != null) {
             List<GlucoseValueDataPoint> predArray =
                     finalLastRun.getConstraintsProcessed().getPredictions()
-                            .stream().map(bg -> new GlucoseValueDataPoint(bg, defaultValueHelper, profileFunction, resourceHelper))
+                            .stream().map(bg -> new GlucoseValueDataPoint(bg, defaultValueHelper, profileFunction, rh))
                             .collect(Collectors.toList());
 
             if (!predArray.isEmpty()) {
@@ -658,7 +658,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
 
         if (googleApiClient != null && googleApiClient.isConnected()) {
             Profile profile = profileFunction.getProfile();
-            String status = resourceHelper.gs(R.string.noprofile);
+            String status = rh.gs(R.string.noprofile);
             String iobSum, iobDetail, cobString, currentBasal, bgiString;
             iobSum = iobDetail = cobString = currentBasal = bgiString = "";
             if (profile != null) {
@@ -722,7 +722,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             PutDataMapRequest dataMapRequest = PutDataMapRequest.create(NEW_PREFERENCES_PATH);
             //unique content
             dataMapRequest.getDataMap().putLong("timestamp", System.currentTimeMillis());
-            dataMapRequest.getDataMap().putBoolean(resourceHelper.gs(R.string.key_wear_control), wearcontrol);
+            dataMapRequest.getDataMap().putBoolean(rh.gs(R.string.key_wear_control), wearcontrol);
             PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
             Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
         } else {
@@ -736,12 +736,12 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         String status = "";
 
         if (profile == null) {
-            status = resourceHelper.gs(R.string.noprofile);
+            status = rh.gs(R.string.noprofile);
             return status;
         }
 
         if (!loopPlugin.isEnabled(PluginType.LOOP)) {
-            status += resourceHelper.gs(R.string.disabledloop) + "\n";
+            status += rh.gs(R.string.disabledloop) + "\n";
             lastLoopStatus = false;
         } else {
             lastLoopStatus = true;

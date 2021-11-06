@@ -679,6 +679,7 @@ Eversense-appen.</string>
     <string name="resettodefaults">Återställ standardinställningar</string>
     <string name="nsmalfunction">Fel på NSClient. Överväg att starta om NSClient och Nightscout-webbplatsen.</string>
     <string name="time_offset">KH-tid</string>
+    <string name="bolus_reminder">Påminn om bolus senare</string>
     <string name="setupwizard_preferred_aps_mode">Föredraget APS-läge</string>
     <string name="treatments_wizard_total_label">Total</string>
     <string name="calculation_short">Kalkyl</string>
@@ -845,6 +846,11 @@ Eversense-appen.</string>
     <string name="enablebolusadvisor_summary">Få en påminnelse om att börja äta senare (istället för kalkylatorns resultat) om du ligger högt i BG</string>
     <string name="time_to_eat">Dags att äta!\nKör bolusguiden igen för ny beräkning.</string>
     <string name="timetoeat">Dags att äta</string>
+    <string name="bolusreminder">Boluspåminnelse</string>
+    <string name="enablebolusreminder">Aktivera boluspåminnelse</string>
+    <string name="enablebolusreminder_summary">Använd påminnelse för att ge bolus senare
+        (\"post-bolus\")</string>
+    <string name="time_to_bolus">Dags för bolus!\nKör Bolusguiden och gör beräkningar igen.</string>
     <string name="fabric_upload_disabled">Uppladdning av kraschloggar inaktiverad!</string>
     <string name="graph_menu_divider_header">Graf</string>
     <string name="chart_menu">Diagrammeny</string>
@@ -882,4 +888,14 @@ Eversense-appen.</string>
     <string name="sms_timeout_while_wating">Föregående pumpkommunikation har inte bekräftats/avslutats i tid</string>
     <string name="smscommunicator_another_bolus_in_queue">Det finns en annan bolus i kö. Försök igen senare.</string>
     <string name="calculation_in_progress">Beräkning pågår</string>
+    <string name="missing_profile_name">Profilnamn saknas</string>
+    <string name="error_in_ic_values">Fel i KH-kvoter</string>
+    <string name="error_in_basal_values">Fel i basaldoser</string>
+    <string name="error_in_target_values">Fel i målvärden</string>
+    <string name="error_in_isf_values">Fel i korrektionskvoter</string>
+    <string name="run_question">Kör %s?</string>
+    <string name="invalid_profile_not_accepted">Ogiltig profil %1$s från NS accepteras inte</string>
+    <string name="view">Visa</string>
+    <string name="errors">Fel</string>
+    <string name="ns_sync_slow">Långsamma uppladdningar</string>
 </resources>

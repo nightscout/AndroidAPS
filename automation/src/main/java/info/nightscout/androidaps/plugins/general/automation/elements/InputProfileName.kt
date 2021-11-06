@@ -10,7 +10,7 @@ import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 
-class InputProfileName(private val resourceHelper: ResourceHelper, private val activePlugin: ActivePlugin, val name: String = "") : Element() {
+class InputProfileName(private val rh: ResourceHelper, private val activePlugin: ActivePlugin, val name: String = "") : Element() {
 
     var value: String = name
 
@@ -24,7 +24,7 @@ class InputProfileName(private val resourceHelper: ResourceHelper, private val a
                     setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 }
                 layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
-                    setMargins(0, resourceHelper.dpToPx(4), 0, resourceHelper.dpToPx(4))
+                    setMargins(0, rh.dpToPx(4), 0, rh.dpToPx(4))
                 }
                 onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {

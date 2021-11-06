@@ -24,7 +24,7 @@ import javax.inject.Singleton
 @Singleton
 class OverviewMenus @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val resourceHelper: ResourceHelper,
+    private val rh: ResourceHelper,
     private val sp: SP,
     private val rxBus: RxBus,
     private val buildHelper: BuildHelper,
@@ -53,7 +53,7 @@ class OverviewMenus @Inject constructor(
     fun enabledTypes(graph: Int): String {
         val r = StringBuilder()
         for (type in CharType.values()) if (_setting[graph][type.ordinal]) {
-            r.append(resourceHelper.gs(type.shortnameId))
+            r.append(rh.gs(type.shortnameId))
             r.append(" ")
         }
         return r.toString()
@@ -102,7 +102,7 @@ class OverviewMenus @Inject constructor(
 
             for (g in 0 until numOfGraphs) {
                 if (g != 0 && g < numOfGraphs) {
-                    val dividerItem = popup.menu.add(Menu.NONE, g, Menu.NONE, "------- ${resourceHelper.gs(R.string.graph_menu_divider_header)} $g -------")
+                    val dividerItem = popup.menu.add(Menu.NONE, g, Menu.NONE, "------- ${rh.gs(R.string.graph_menu_divider_header)} $g -------")
                     dividerItem.isCheckable = true
                     dividerItem.isChecked = true
                 }
@@ -117,10 +117,10 @@ class OverviewMenus @Inject constructor(
                         if (settingsCopy[g2][m.ordinal]) insert = false
                     }
                     if (insert) {
-                        val item = popup.menu.add(Menu.NONE, m.ordinal + 100 * (g + 1), Menu.NONE, resourceHelper.gs(m.nameId))
+                        val item = popup.menu.add(Menu.NONE, m.ordinal + 100 * (g + 1), Menu.NONE, rh.gs(m.nameId))
                         val title = item.title
                         val s = SpannableString(title)
-                        s.setSpan(ForegroundColorSpan(resourceHelper.gc(m.colorId)), 0, s.length, 0)
+                        s.setSpan(ForegroundColorSpan(rh.gc(m.colorId)), 0, s.length, 0)
                         item.title = s
                         item.isCheckable = true
                         item.isChecked = settingsCopy[g][m.ordinal]
@@ -129,7 +129,7 @@ class OverviewMenus @Inject constructor(
                 }
             }
             if (numOfGraphs < MAX_GRAPHS) {
-                val dividerItem = popup.menu.add(Menu.NONE, numOfGraphs, Menu.NONE, "------- ${resourceHelper.gs(R.string.graph_menu_divider_header)} $numOfGraphs -------")
+                val dividerItem = popup.menu.add(Menu.NONE, numOfGraphs, Menu.NONE, "------- ${rh.gs(R.string.graph_menu_divider_header)} $numOfGraphs -------")
                 dividerItem.isCheckable = true
                 dividerItem.isChecked = false
             }

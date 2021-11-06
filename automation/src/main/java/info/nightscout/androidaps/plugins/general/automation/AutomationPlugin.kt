@@ -43,7 +43,7 @@ import kotlin.collections.ArrayList
 @Singleton
 class AutomationPlugin @Inject constructor(
     injector: HasAndroidInjector,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     private val context: Context,
     private val sp: SP,
     private val fabricPrivacy: FabricPrivacy,
@@ -67,7 +67,7 @@ class AutomationPlugin @Inject constructor(
         .alwaysEnabled(!config.APS)
         .preferencesId(R.xml.pref_automation)
         .description(R.string.automation_description),
-    aapsLogger, resourceHelper, injector
+    aapsLogger, rh, injector
 ) {
 
     private var disposable: CompositeDisposable = CompositeDisposable()
@@ -105,7 +105,7 @@ class AutomationPlugin @Inject constructor(
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ e ->
-                           if (e.isChanged(resourceHelper, R.string.key_location)) {
+                           if (e.isChanged(rh, R.string.key_location)) {
                                locationServiceHelper.stopService(context)
                                locationServiceHelper.startService(context)
                            }
@@ -189,7 +189,7 @@ class AutomationPlugin @Inject constructor(
         if (config.APS) {
             if (loopPlugin.isSuspended || !(loopPlugin as PluginBase).isEnabled()) {
                 aapsLogger.debug(LTag.AUTOMATION, "Loop deactivated")
-                executionLog.add(resourceHelper.gs(R.string.loopisdisabled))
+                executionLog.add(rh.gs(R.string.loopisdisabled))
                 userEventsEnabled = false
             }
             val enabled = constraintChecker.isAutomationEnabled()

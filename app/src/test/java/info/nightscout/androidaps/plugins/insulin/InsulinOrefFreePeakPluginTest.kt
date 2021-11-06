@@ -26,7 +26,7 @@ class InsulinOrefFreePeakPluginTest : TestBase() {
     lateinit var sut: InsulinOrefFreePeakPlugin
 
     @Mock lateinit var sp: SP
-    @Mock lateinit var resourceHelper: ResourceHelper
+    @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var rxBus: RxBus
     @Mock lateinit var profileFunction: ProfileFunction
 
@@ -40,7 +40,7 @@ class InsulinOrefFreePeakPluginTest : TestBase() {
         sut = InsulinOrefFreePeakPlugin(
             injector,
             sp,
-            resourceHelper,
+            rh,
             profileFunction,
             rxBus,
             aapsLogger)
@@ -60,13 +60,13 @@ class InsulinOrefFreePeakPluginTest : TestBase() {
     @Test
     fun commentStandardTextTest() {
         `when`(sp.getInt(eq(R.string.key_insulin_oref_peak), anyInt())).thenReturn(90)
-        `when`(resourceHelper.gs(eq(R.string.insulin_peak_time))).thenReturn("Peak Time [min]")
+        `when`(rh.gs(eq(R.string.insulin_peak_time))).thenReturn("Peak Time [min]")
         assertEquals("Peak Time [min]: 90", sut.commentStandardText())
     }
 
     @Test
     fun getFriendlyNameTest() {
-        `when`(resourceHelper.gs(eq(R.string.free_peak_oref))).thenReturn("Free-Peak Oref")
+        `when`(rh.gs(eq(R.string.free_peak_oref))).thenReturn("Free-Peak Oref")
         assertEquals("Free-Peak Oref", sut.friendlyName)
     }
 }
