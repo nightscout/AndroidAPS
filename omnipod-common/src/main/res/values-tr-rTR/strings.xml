@@ -3,7 +3,6 @@
     <!-- Omnipod - Keys -->
     <!-- Omnipod - Pod Management -->
     <string name="omnipod_common_pod_management_title">Pod Yönetimi</string>
-    <string name="omnipod_common_pod_management_heading_actions">Eylemler</string>
     <string name="omnipod_common_pod_management_heading_tools">Araçlar</string>
     <string name="omnipod_common_pod_management_button_activate_pod">Pod Etkinleştir</string>
     <string name="omnipod_common_pod_management_button_deactivate_pod">Pod\'u Devre Dışı Bırak</string>
@@ -34,7 +33,6 @@
     <string name="omnipod_common_error_time_out_of_sync">Pod\'daki saat senkronize değil. Lütfen Omnipod sekmesindeki saati güncelleyin.</string>
     <string name="omnipod_common_error_unexpected_exception">Beklenmedik bir hata oluştu. Lütfen raporlayın! (%1$s: %2$s).</string>
     <!-- Omnipod - Confirmation -->
-    <string name="omnipod_common_confirmation">Onaylama</string>
     <string name="omnipod_common_confirmation_time_or_timezone_change">Pod saat ve/veya saat dilimi değişti.</string>
     <string name="omnipod_common_confirmation_expiration_alerts_updated">Pod alarm yapılandırması güncellendi.</string>
     <string name="omnipod_common_confirmation_time_on_pod_updated">Pod saati güncellendi.</string>
@@ -43,13 +41,11 @@
     <string name="omnipod_common_confirmation_delivery_resumed">İnsülin iletimi yeniden başlatıldı.</string>
     <!-- Omnipod - Overview -->
     <string name="omnipod_common_overview_button_set_time">Saati ayarla</string>
-    <string name="omnipod_common_overview_button_suspend_delivery">Askıya alınan</string>
     <string name="omnipod_common_overview_button_resume_delivery">İletime devam et</string>
     <string name="omnipod_common_overview_button_pod_management">Pod Yntm</string>
     <string name="omnipod_common_overview_button_silence_alerts">Alarmları Sustur</string>
     <string name="omnipod_common_overview_pod_status">Pod Durumu</string>
     <string name="omnipod_common_overview_total_delivered">Toplam İletilen</string>
-    <string name="omnipod_common_overview_total_delivered_value">%1$.2f U</string>
     <string name="omnipod_common_overview_pod_unique_id">Özgün kimlik</string>
     <string name="omnipod_common_overview_lot_number">Parti Numarası</string>
     <string name="omnipod_common_overview_pod_sequence_number">Sıra Numarası</string>
@@ -58,7 +54,6 @@
     <string name="omnipod_common_overview_last_bolus">Son Bolus</string>
     <string name="omnipod_common_overview_temp_basal_rate">Geçici Bazal Oranı</string>
     <string name="omnipod_common_overview_base_basal_rate">Bazal Oranı</string>
-    <string name="omnipod_common_overview_reservoir">Rezervuar</string>
     <string name="omnipod_common_overview_pod_active_alerts">Etkin Pod Alarmları</string>
     <string name="omnipod_common_overview_firmware_version">Firmware versiyonu</string>
     <string name="omnipod_common_overview_time_on_pod">Pod üzerindeki zaman</string>
@@ -108,7 +103,6 @@
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Düşük rezervuar uyarısı etkinleştirildi</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_units">Ünite</string>
     <string name="omnipod_common_preferences_automatically_silence_alerts">Pod uyarılarını otomatik olarak sustur</string>
-    <string name="omnipod_common_preferences_category_other">Diğer</string>
     <string name="omnipod_common_preferences_category_alerts">Alarmlar</string>
     <string name="omnipod_common_preferences_category_confirmation_beeps">Onay Bipleri</string>
     <string name="omnipod_common_preferences_category_notifications">Bildirimler</string>
@@ -119,7 +113,6 @@
     <string name="omnipod_common_pod_status_no_active_pod">Aktif Pod Yok</string>
     <string name="omnipod_common_pod_status_waiting_for_activation">Kurulum devam ediyor (Pod aktivasyonu bekleniyor)</string>
     <string name="omnipod_common_pod_status_waiting_for_cannula_insertion">Kurulum devam ediyor (kanül yerleştirme bekleniyor)</string>
-    <string name="omnipod_common_pod_status_running">Çalışıyor</string>
     <string name="omnipod_common_pod_status_suspended">Askıya Alındı</string>
     <string name="omnipod_common_pod_status_pod_fault">Pod Hatası</string>
     <string name="omnipod_common_pod_status_activation_time_exceeded">Aktivasyon süresi aşıldı</string>
@@ -166,28 +159,11 @@
     <string name="omnipod_common_short_status_extended_bolus">Yayma: %1$s</string>
     <string name="omnipod_common_short_status_reservoir">Rezerv: %1$sU</string>
     <!-- Omnipod - Other -->
-    <string name="omnipod_common_yes">Evet</string>
-    <string name="omnipod_common_no">Hayır</string>
-    <string name="omnipod_common_ok">Tamam</string>
-    <string name="omnipod_common_cancel">İptal</string>
-    <string name="omnipod_common_warning">Uyarı</string>
     <!-- Omnipod - Times -->
     <string name="omnipod_common_moments_ago">Dakika önce</string>
     <string name="omnipod_common_less_than_a_minute_ago">Bir dakikadan az bir süre önce</string>
     <string name="omnipod_common_composite_time">%1$s ve %2$s</string>
     <string name="omnipod_common_time_ago">%1$s dak önce</string>
-    <plurals name="omnipod_common_minutes">
-        <item quantity="one">%1$d dakika</item>
-        <item quantity="other">%1$d dakika</item>
-    </plurals>
-    <plurals name="omnipod_common_hours">
-        <item quantity="one">%1$d saat</item>
-        <item quantity="other">%1$d saat</item>
-    </plurals>
-    <plurals name="omnipod_common_days">
-        <item quantity="one">%1$d gün</item>
-        <item quantity="other">%1$d gün</item>
-    </plurals>
     <plurals name="omnipod_common_pod_alerts">
         <item quantity="one">Pod Alarmı: %1$s</item>
         <item quantity="other">Pod Alarmları: %1$s</item>
