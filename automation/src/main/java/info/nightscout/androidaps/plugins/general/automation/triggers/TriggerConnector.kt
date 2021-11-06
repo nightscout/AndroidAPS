@@ -43,10 +43,10 @@ class TriggerConnector(injector: HasAndroidInjector) : Trigger(injector) {
 
         companion object {
 
-            fun labels(resourceHelper: ResourceHelper): List<String> {
+            fun labels(rh: ResourceHelper): List<String> {
                 val list: MutableList<String> = ArrayList()
                 for (t in values()) {
-                    list.add(resourceHelper.gs(t.stringRes))
+                    list.add(rh.gs(t.stringRes))
                 }
                 return list
             }
@@ -109,7 +109,7 @@ class TriggerConnector(injector: HasAndroidInjector) : Trigger(injector) {
         val result = StringBuilder()
         for ((counter, t) in list.withIndex()) {
             if (counter > 0)
-                result.append("\n").append(resourceHelper.gs(friendlyName())).append("\n")
+                result.append("\n").append(rh.gs(friendlyName())).append("\n")
             result.append(t.friendlyDescription())
         }
         return result.toString()
@@ -124,7 +124,7 @@ class TriggerConnector(injector: HasAndroidInjector) : Trigger(injector) {
             it.orientation = LinearLayout.HORIZONTAL
             it.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         }
-        val padding = resourceHelper.dpToPx(3)
+        val padding = rh.dpToPx(3)
         mainLayout.setPadding(padding, padding, padding, padding)
         mainLayout.setBackgroundResource(R.drawable.border_automation_unit)
 
@@ -146,7 +146,7 @@ class TriggerConnector(injector: HasAndroidInjector) : Trigger(injector) {
         val listLayout = LinearLayout(root.context).also {
             it.orientation = LinearLayout.VERTICAL
             it.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).also { params ->
-                params.setMargins(resourceHelper.dpToPx(1), 0, resourceHelper.dpToPx(1), resourceHelper.dpToPx(2))
+                params.setMargins(rh.dpToPx(1), 0, rh.dpToPx(1), rh.dpToPx(2))
             }
         }
         for (t in list) {
@@ -154,7 +154,7 @@ class TriggerConnector(injector: HasAndroidInjector) : Trigger(injector) {
             listLayout.addView(
                 TextView(root.context).also {
                     it.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-                    it.setPadding(0, resourceHelper.dpToPx(0.3f), 0, 0)
+                    it.setPadding(0, rh.dpToPx(0.3f), 0, 0)
                 })
         }
         rightSideLayout.addView(listLayout)
@@ -167,12 +167,12 @@ class TriggerConnector(injector: HasAndroidInjector) : Trigger(injector) {
 
     private fun createVerticalView(context: Context): VerticalTextView =
         VerticalTextView(context).apply {
-            text = resourceHelper.gs(connectorType.stringRes)
+            text = rh.gs(connectorType.stringRes)
             gravity = gravity or Gravity.CENTER_VERTICAL
             setTypeface(typeface, Typeface.BOLD)
-            setBackgroundColor(resourceHelper.gc(R.color.black_overlay))
+            setBackgroundColor(rh.gc(R.color.black_overlay))
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT).also { ll ->
-                ll.setMargins(resourceHelper.dpToPx(3), resourceHelper.dpToPx(3), resourceHelper.dpToPx(3), resourceHelper.dpToPx(3))
+                ll.setMargins(rh.dpToPx(3), rh.dpToPx(3), rh.dpToPx(3), rh.dpToPx(3))
             }
             setOnClickListener {
                 scanForActivity(context)?.supportFragmentManager?.let {
@@ -181,7 +181,7 @@ class TriggerConnector(injector: HasAndroidInjector) : Trigger(injector) {
                             override fun run() {
                                 result?.let { result ->
                                     setType(Type.values()[result])
-                                    text = resourceHelper.gs(connectorType.stringRes)
+                                    text = rh.gs(connectorType.stringRes)
                                 }
                             }
                         })

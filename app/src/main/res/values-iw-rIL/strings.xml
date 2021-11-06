@@ -86,22 +86,22 @@
     <string name="configbuilder_aps_description">איזה אלגוריתם של APS יבצע התאמות טיפול?</string>
     <string name="configbuilder_general">כללי</string>
     <string name="configbuilder_general_description">מס\' תוספים כלליים שעשויים להיות יעילים.</string>
-    <string name="configbuilder_constraints_description">אילו הגבלות פעילות?</string>
+    <string name="configbuilder_constraints_description">אילו מגבלות פעילות?</string>
     <string name="constraints">מגבלות</string>
     <string name="configbuilder_loop">לולאה</string>
     <string name="configbuilder_loop_description">השתמשו באפשרות זו כדי להפעיל את לולאת AndroidAPS.</string>
     <string name="loop_aps_label">אלגוריתם APS</string>
-    <string name="loop_constraintsprocessed_label">הגבלות לאחר עיבוד</string>
+    <string name="loop_constraintsprocessed_label">מגבלות לאחר עיבוד</string>
     <string name="loop_tbrsetbypump_label">מינון בזאלי זמני שהוגדר במשאבה</string>
     <string name="noapsselected">לא נבחרה או סופקה תוצאה ע\"י APS</string>
     <string name="safety">בטיחות</string>
     <string name="openapsma_disabled">התוסף אינו זמין</string>
-    <string name="constraints_violation">הפרת הגבלות</string>
+    <string name="constraints_violation">הפרת מגבלות</string>
     <string name="treatmentdeliveryerror">שגיאה במתן בולוס</string>
     <string name="setbasalquestion">אשר בזאלי זמני חדש:</string>
     <string name="overview_treatment_label">טיפול</string>
     <string name="overview_calculator_label">מחשבון</string>
-    <string name="constraintapllied">ההגבלה הוחלה!</string>
+    <string name="constraintapllied">מגבלה הוחלה!</string>
     <string name="sms_bolus">בולוס:</string>
     <string name="basal">אינסולין בזאלי</string>
     <string name="sms_basal">אינסולין בזאלי:</string>
@@ -893,4 +893,8 @@
     <string name="error_in_target_values">שגיאה בערכי המטרה</string>
     <string name="error_in_isf_values">שגיאה בערכי יחס התיקון</string>
     <string name="run_question">להפעיל %s?</string>
+    <string name="invalid_profile_not_accepted">הפרופיל הבלתי חוקי %1$s מ-Nightscout לא מאושר</string>
+    <string name="view">תצוגה</string>
+    <string name="errors">שגיאות</string>
+    <string name="ns_sync_slow">האט העלאות</string>
 </resources>

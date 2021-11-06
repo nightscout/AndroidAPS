@@ -18,8 +18,8 @@ class ActionProfileSwitchPercentTest : ActionsTestBase() {
     @Before
     fun setup() {
 
-        `when`(resourceHelper.gs(R.string.startprofileforever)).thenReturn("Start profile %d%%")
-        `when`(resourceHelper.gs(R.string.startprofile)).thenReturn("Start profile %d%% for %d min")
+        `when`(rh.gs(R.string.startprofileforever)).thenReturn("Start profile %d%%")
+        `when`(rh.gs(R.string.startprofile)).thenReturn("Start profile %d%% for %d min")
 
         sut = ActionProfileSwitchPercent(injector)
     }

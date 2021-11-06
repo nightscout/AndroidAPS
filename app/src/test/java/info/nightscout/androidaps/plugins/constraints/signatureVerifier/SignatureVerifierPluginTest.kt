@@ -13,7 +13,7 @@ import org.mockito.Mock
 
 class SignatureVerifierPluginTest : TestBase() {
 
-    @Mock lateinit var resourceHelper: ResourceHelper
+    @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var sp: SP
     @Mock lateinit var context: Context
     private val rxBus = RxBus(aapsSchedulers, aapsLogger)
@@ -22,7 +22,7 @@ class SignatureVerifierPluginTest : TestBase() {
 
     @Test
     fun singleCharUnMapTest() {
-        val plugin = SignatureVerifierPlugin(injector, aapsLogger, resourceHelper, sp, rxBus, context)
+        val plugin = SignatureVerifierPlugin(injector, aapsLogger, rh, sp, rxBus, context)
         val key = "2ΙšÄΠΒϨÒÇeЄtЄЗž-*Ж*ZcHijЊÄœ<|x\"Ε"
         val unmapped = plugin.singleCharUnMap(key)
         Assert.assertEquals("32:99:61:C4:A0:92:E8:D2:C7:65:04:74:04:17:7E:2D:2A:16:2A:5A:63:48:69:6A:0A:C4:53:3C:7C:78:22:95", unmapped)

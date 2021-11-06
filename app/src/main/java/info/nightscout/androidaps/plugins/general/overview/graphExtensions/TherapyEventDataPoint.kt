@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 class TherapyEventDataPoint @Inject constructor(
     val data: TherapyEvent,
-    private val resourceHelper: ResourceHelper,
+    private val rh: ResourceHelper,
     private val profileFunction: ProfileFunction,
     private val translator: Translator
 ) : DataPointWithLabelInterface {
@@ -62,10 +62,10 @@ class TherapyEventDataPoint @Inject constructor(
             else                                                 -> PointsWithLabelGraphSeries.Shape.GENERAL
         }
 
-    override fun getSize(): Float = if (resourceHelper.gb(R.bool.isTablet)) 12.0f else 10.0f
+    override fun getSize(): Float = if (rh.gb(R.bool.isTablet)) 12.0f else 10.0f
     override fun getColor(): Int =
         when (data.type) {
-            TherapyEvent.Type.ANNOUNCEMENT          -> resourceHelper.gc(R.color.notificationAnnouncement)
+            TherapyEvent.Type.ANNOUNCEMENT          -> rh.gc(R.color.notificationAnnouncement)
             TherapyEvent.Type.NS_MBG                -> Color.RED
             TherapyEvent.Type.FINGER_STICK_BG_VALUE -> Color.RED
             TherapyEvent.Type.EXERCISE              -> Color.BLUE

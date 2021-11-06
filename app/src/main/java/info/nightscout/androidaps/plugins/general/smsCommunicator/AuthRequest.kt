@@ -23,7 +23,7 @@ class AuthRequest internal constructor(
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var otp: OneTimePassword
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var commandQueue: CommandQueueProvider
@@ -48,7 +48,7 @@ class AuthRequest internal constructor(
         if (!codeIsValid(codeReceived)) {
             processed = true
             aapsLogger.debug(LTag.SMS, "Wrong code")
-            smsCommunicatorPlugin.sendSMS(Sms(requester.phoneNumber, resourceHelper.gs(R.string.sms_wrongcode)))
+            smsCommunicatorPlugin.sendSMS(Sms(requester.phoneNumber, rh.gs(R.string.sms_wrongcode)))
             return
         }
         if (dateUtil.now() - date < Constants.SMS_CONFIRM_TIMEOUT) {
@@ -62,7 +62,7 @@ class AuthRequest internal constructor(
                 }
                 if (commandQueue.size() != 0) {
                     aapsLogger.debug(LTag.SMS, "Command timed out: " + requester.text)
-                    smsCommunicatorPlugin.sendSMS(Sms(requester.phoneNumber, resourceHelper.gs(R.string.sms_timeout_while_wating)))
+                    smsCommunicatorPlugin.sendSMS(Sms(requester.phoneNumber, rh.gs(R.string.sms_timeout_while_wating)))
                     return
                 }
             }

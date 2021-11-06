@@ -79,45 +79,45 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
                 it.dateUtil = dateUtil
             }
             if (it is PumpEnactResult) {
-                it.resourceHelper = resourceHelper
+                it.rh = rh
             }
         }
     }
 
     @Before
     fun prepare() {
-        `when`(resourceHelper.gs(R.string.closed_loop_disabled_on_dev_branch)).thenReturn("Running dev version. Closed loop is disabled.")
-        `when`(resourceHelper.gs(R.string.closedmodedisabledinpreferences)).thenReturn("Closed loop mode disabled in preferences")
-        `when`(resourceHelper.gs(R.string.novalidbasalrate)).thenReturn("No valid basal rate read from pump")
-        `when`(resourceHelper.gs(R.string.autosensdisabledinpreferences)).thenReturn("Autosens disabled in preferences")
-        `when`(resourceHelper.gs(R.string.smbdisabledinpreferences)).thenReturn("SMB disabled in preferences")
-        `when`(resourceHelper.gs(R.string.pumplimit)).thenReturn("pump limit")
-        `when`(resourceHelper.gs(R.string.itmustbepositivevalue)).thenReturn("it must be positive value")
-        `when`(resourceHelper.gs(R.string.maxvalueinpreferences)).thenReturn("max value in preferences")
-        `when`(resourceHelper.gs(R.string.maxbasalmultiplier)).thenReturn("max basal multiplier")
-        `when`(resourceHelper.gs(R.string.maxdailybasalmultiplier)).thenReturn("max daily basal multiplier")
-        `when`(resourceHelper.gs(R.string.pumplimit)).thenReturn("pump limit")
-        `when`(resourceHelper.gs(R.string.limitingbolus)).thenReturn("Limiting bolus to %.1f U because of %s")
-        `when`(resourceHelper.gs(R.string.hardlimit)).thenReturn("hard limit")
-        `when`(resourceHelper.gs(R.string.key_child)).thenReturn("child")
-        `when`(resourceHelper.gs(R.string.limitingcarbs)).thenReturn("Limiting carbs to %d g because of %s")
-        `when`(resourceHelper.gs(R.string.limitingiob)).thenReturn("Limiting IOB to %.1f U because of %s")
-        `when`(resourceHelper.gs(R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
-        `when`(resourceHelper.gs(R.string.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
-        `when`(resourceHelper.gs(R.string.itmustbepositivevalue)).thenReturn("it must be positive value")
-        `when`(resourceHelper.gs(R.string.smbnotallowedinopenloopmode)).thenReturn("SMB not allowed in open loop mode")
-        `when`(resourceHelper.gs(R.string.pumplimit)).thenReturn("pump limit")
-        `when`(resourceHelper.gs(R.string.smbalwaysdisabled)).thenReturn("SMB always and after carbs disabled because active BG source doesn\\'t support advanced filtering")
-        `when`(resourceHelper.gs(R.string.limitingpercentrate, 0, "it must be positive value")).thenReturn("")
-        `when`(resourceHelper.gs(R.string.limitingbolus, 3.0, "pump limit")).thenReturn("")
-        `when`(resourceHelper.gs(R.string.limitingbolus, 6.0, "pump limit")).thenReturn("")
-        `when`(resourceHelper.gs(R.string.limitingbasalratio, 0.8, "pump limit")).thenReturn("")
-        `when`(resourceHelper.gs(R.string.limitingpercentrate, 200, "pump limit")).thenReturn("")
-        `when`(resourceHelper.gs(R.string.combo_pump_unsupported_operation)).thenReturn("Requested operation not supported by pump")
-        `when`(resourceHelper.gs(R.string.objectivenotstarted, 9)).thenReturn("Objective 9 not started")
-        `when`(resourceHelper.gs(R.string.objectivenotstarted, 8)).thenReturn("Objective 8 not started")
-        `when`(resourceHelper.gs(R.string.objectivenotstarted, 6)).thenReturn("Objective 6 not started")
-        `when`(resourceHelper.gs(R.string.objectivenotstarted, 1)).thenReturn("Objective 1 not started")
+        `when`(rh.gs(R.string.closed_loop_disabled_on_dev_branch)).thenReturn("Running dev version. Closed loop is disabled.")
+        `when`(rh.gs(R.string.closedmodedisabledinpreferences)).thenReturn("Closed loop mode disabled in preferences")
+        `when`(rh.gs(R.string.novalidbasalrate)).thenReturn("No valid basal rate read from pump")
+        `when`(rh.gs(R.string.autosensdisabledinpreferences)).thenReturn("Autosens disabled in preferences")
+        `when`(rh.gs(R.string.smbdisabledinpreferences)).thenReturn("SMB disabled in preferences")
+        `when`(rh.gs(R.string.pumplimit)).thenReturn("pump limit")
+        `when`(rh.gs(R.string.itmustbepositivevalue)).thenReturn("it must be positive value")
+        `when`(rh.gs(R.string.maxvalueinpreferences)).thenReturn("max value in preferences")
+        `when`(rh.gs(R.string.maxbasalmultiplier)).thenReturn("max basal multiplier")
+        `when`(rh.gs(R.string.maxdailybasalmultiplier)).thenReturn("max daily basal multiplier")
+        `when`(rh.gs(R.string.pumplimit)).thenReturn("pump limit")
+        `when`(rh.gs(R.string.limitingbolus)).thenReturn("Limiting bolus to %.1f U because of %s")
+        `when`(rh.gs(R.string.hardlimit)).thenReturn("hard limit")
+        `when`(rh.gs(R.string.key_child)).thenReturn("child")
+        `when`(rh.gs(R.string.limitingcarbs)).thenReturn("Limiting carbs to %d g because of %s")
+        `when`(rh.gs(R.string.limitingiob)).thenReturn("Limiting IOB to %.1f U because of %s")
+        `when`(rh.gs(R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
+        `when`(rh.gs(R.string.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
+        `when`(rh.gs(R.string.itmustbepositivevalue)).thenReturn("it must be positive value")
+        `when`(rh.gs(R.string.smbnotallowedinopenloopmode)).thenReturn("SMB not allowed in open loop mode")
+        `when`(rh.gs(R.string.pumplimit)).thenReturn("pump limit")
+        `when`(rh.gs(R.string.smbalwaysdisabled)).thenReturn("SMB always and after carbs disabled because active BG source doesn\\'t support advanced filtering")
+        `when`(rh.gs(R.string.limitingpercentrate, 0, "it must be positive value")).thenReturn("")
+        `when`(rh.gs(R.string.limitingbolus, 3.0, "pump limit")).thenReturn("")
+        `when`(rh.gs(R.string.limitingbolus, 6.0, "pump limit")).thenReturn("")
+        `when`(rh.gs(R.string.limitingbasalratio, 0.8, "pump limit")).thenReturn("")
+        `when`(rh.gs(R.string.limitingpercentrate, 200, "pump limit")).thenReturn("")
+        `when`(rh.gs(R.string.combo_pump_unsupported_operation)).thenReturn("Requested operation not supported by pump")
+        `when`(rh.gs(R.string.objectivenotstarted, 9)).thenReturn("Objective 9 not started")
+        `when`(rh.gs(R.string.objectivenotstarted, 8)).thenReturn("Objective 8 not started")
+        `when`(rh.gs(R.string.objectivenotstarted, 6)).thenReturn("Objective 6 not started")
+        `when`(rh.gs(R.string.objectivenotstarted, 1)).thenReturn("Objective 1 not started")
 
         // RS constructor
         `when`(sp.getString(R.string.key_danars_address, "")).thenReturn("")
@@ -130,15 +130,15 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
 
         insightDbHelper = InsightDbHelper(insightDatabaseDao)
         danaPump = DanaPump(aapsLogger, sp, dateUtil, injector)
-        hardLimits = HardLimits(aapsLogger, rxBus, sp, resourceHelper, context, repository)
-        objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, resourceHelper, activePlugin, sp, ConfigImpl(), dateUtil, uel)
-        comboPlugin = ComboPlugin(injector, aapsLogger, rxBus, resourceHelper, profileFunction, sp, commandQueue, context, pumpSync, dateUtil)
-        danaRPlugin = DanaRPlugin(injector, aapsLogger, aapsSchedulers, rxBus, context, resourceHelper, constraintChecker, activePlugin, sp, commandQueue, danaPump, dateUtil, fabricPrivacy, pumpSync)
-        danaRSPlugin = DanaRSPlugin(injector, aapsLogger, aapsSchedulers, rxBus, context, resourceHelper, constraintChecker, profileFunction, sp, commandQueue, danaPump, pumpSync, detailedBolusInfoStorage, temporaryBasalStorage, fabricPrivacy, dateUtil)
-        insightPlugin = LocalInsightPlugin(injector, aapsLogger, rxBus, resourceHelper, sp, commandQueue, profileFunction, context, ConfigImpl(), dateUtil, insightDbHelper, pumpSync)
-        openAPSSMBPlugin = OpenAPSSMBPlugin(injector, aapsLogger, rxBus, constraintChecker, resourceHelper, profileFunction, context, activePlugin, iobCobCalculator, hardLimits, profiler, sp, dateUtil, repository, glucoseStatusProvider)
-        openAPSAMAPlugin = OpenAPSAMAPlugin(injector, aapsLogger, rxBus, constraintChecker, resourceHelper, profileFunction, context, activePlugin, iobCobCalculator, hardLimits, profiler, fabricPrivacy, dateUtil, repository, glucoseStatusProvider)
-        safetyPlugin = SafetyPlugin(injector, aapsLogger, resourceHelper, sp, rxBus, constraintChecker,
+        hardLimits = HardLimits(aapsLogger, rxBus, sp, rh, context, repository)
+        objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, rh, activePlugin, sp, ConfigImpl(), dateUtil, uel)
+        comboPlugin = ComboPlugin(injector, aapsLogger, rxBus, rh, profileFunction, sp, commandQueue, context, pumpSync, dateUtil)
+        danaRPlugin = DanaRPlugin(injector, aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, activePlugin, sp, commandQueue, danaPump, dateUtil, fabricPrivacy, pumpSync)
+        danaRSPlugin = DanaRSPlugin(injector, aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, profileFunction, sp, commandQueue, danaPump, pumpSync, detailedBolusInfoStorage, temporaryBasalStorage, fabricPrivacy, dateUtil)
+        insightPlugin = LocalInsightPlugin(injector, aapsLogger, rxBus, rh, sp, commandQueue, profileFunction, context, ConfigImpl(), dateUtil, insightDbHelper, pumpSync)
+        openAPSSMBPlugin = OpenAPSSMBPlugin(injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, context, activePlugin, iobCobCalculator, hardLimits, profiler, sp, dateUtil, repository, glucoseStatusProvider)
+        openAPSAMAPlugin = OpenAPSAMAPlugin(injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, context, activePlugin, iobCobCalculator, hardLimits, profiler, fabricPrivacy, dateUtil, repository, glucoseStatusProvider)
+        safetyPlugin = SafetyPlugin(injector, aapsLogger, rh, sp, rxBus, constraintChecker,
                                     openAPSAMAPlugin, openAPSSMBPlugin, sensitivityOref1Plugin, activePlugin,
                                     hardLimits, BuildHelperImpl(ConfigImpl(), fileListProvider), iobCobCalculator,
                                     ConfigImpl(), dateUtil)

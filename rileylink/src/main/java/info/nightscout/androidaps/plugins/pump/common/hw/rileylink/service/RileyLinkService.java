@@ -41,7 +41,7 @@ public abstract class RileyLinkService extends DaggerService {
     @Inject protected RxBus rxBus;
     @Inject protected RileyLinkUtil rileyLinkUtil;
     @Inject protected HasAndroidInjector injector;
-    @Inject protected ResourceHelper resourceHelper;
+    @Inject protected ResourceHelper rh;
     @Inject protected RileyLinkServiceData rileyLinkServiceData;
     @Inject protected ActivePlugin activePlugin;
     @Inject protected RileyLinkBLE rileyLinkBLE; // android-bluetooth management

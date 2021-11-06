@@ -44,7 +44,7 @@ class DiaconnG8Fragment : DaggerFragment() {
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var sp: SP
     @Inject lateinit var warnColors: WarnColors
     @Inject lateinit var dateUtil: DateUtil
@@ -126,8 +126,8 @@ class DiaconnG8Fragment : DaggerFragment() {
                         binding.btconnection.text = "{fa-bluetooth-b}"
                     else                                       -> {}
                 }
-                if (it.getStatus(resourceHelper) != "") {
-                    binding.diaconnG8Pumpstatus.text = it.getStatus(resourceHelper)
+                if (it.getStatus(rh) != "") {
+                    binding.diaconnG8Pumpstatus.text = it.getStatus(rh)
                     binding.diaconnG8Pumpstatuslayout.visibility = View.VISIBLE
                 } else {
                     binding.diaconnG8Pumpstatuslayout.visibility = View.GONE
@@ -158,7 +158,7 @@ class DiaconnG8Fragment : DaggerFragment() {
         if (pump.lastConnection != 0L) {
             val agoMsec = System.currentTimeMillis() - pump.lastConnection
             val agoMin = (agoMsec.toDouble() / 60.0 / 1000.0).toInt()
-            binding.lastconnection.text = dateUtil.timeString(pump.lastConnection) + " (" + resourceHelper.gs(R.string.minago, agoMin) + ")"
+            binding.lastconnection.text = dateUtil.timeString(pump.lastConnection) + " (" + rh.gs(R.string.minago, agoMin) + ")"
             warnColors.setColor(binding.lastconnection, agoMin.toDouble(), 16.0, 31.0)
         }
         if (pump.lastBolusTime != 0L) {
@@ -166,24 +166,24 @@ class DiaconnG8Fragment : DaggerFragment() {
             val agoHours = agoMsec.toDouble() / 60.0 / 60.0 / 1000.0
             if (agoHours < 6)
             // max 6h back
-                binding.lastbolus.text = dateUtil.timeString(pump.lastBolusTime) + " " + dateUtil.sinceString(pump.lastBolusTime, resourceHelper) + " " + resourceHelper.gs(R.string.formatinsulinunits, pump.lastBolusAmount)
+                binding.lastbolus.text = dateUtil.timeString(pump.lastBolusTime) + " " + dateUtil.sinceString(pump.lastBolusTime, rh) + " " + rh.gs(R.string.formatinsulinunits, pump.lastBolusAmount)
             else
                 binding.lastbolus.text = ""
         }
 
         val todayInsulinAmount = (pump.todayBaseAmount + pump.todaySnackAmount + pump.todayMealAmount)
         val todayInsulinLimitAmount = (pump.maxBasal.toInt() * 24) + pump.maxBolusePerDay.toInt()
-        binding.dailyunits.text = resourceHelper.gs(R.string.reservoirvalue, todayInsulinAmount, todayInsulinLimitAmount)
+        binding.dailyunits.text = rh.gs(R.string.reservoirvalue, todayInsulinAmount, todayInsulinLimitAmount)
         warnColors.setColor(binding.dailyunits, todayInsulinAmount, todayInsulinLimitAmount * 0.75, todayInsulinLimitAmount * 0.9)
-        binding.basabasalrate.text = pump.baseInjAmount.toString() +" / "+ resourceHelper.gs(R.string.pump_basebasalrate, plugin.baseBasalRate)
+        binding.basabasalrate.text = pump.baseInjAmount.toString() +" / "+ rh.gs(R.string.pump_basebasalrate, plugin.baseBasalRate)
 
         binding.tempbasal.text = diaconnG8Pump.temporaryBasalToString()
         binding.extendedbolus.text = diaconnG8Pump.extendedBolusToString()
-        binding.reservoir.text = resourceHelper.gs(R.string.reservoirvalue, pump.systemRemainInsulin, 307)
+        binding.reservoir.text = rh.gs(R.string.reservoirvalue, pump.systemRemainInsulin, 307)
         warnColors.setColorInverse(binding.reservoir, pump.systemRemainInsulin , 50.0, 20.0)
         binding.battery.text = "{fa-battery-" + pump.systemRemainBattery / 25  + "}" + " ("+ pump.systemRemainBattery + " %)"
         warnColors.setColorInverse(binding.battery, pump.systemRemainBattery.toDouble(), 51.0, 26.0)
-        binding.firmware.text = resourceHelper.gs(R.string.diaconn_g8_pump) + "\nVersion: " + pump.majorVersion.toString() + "." +  pump.minorVersion.toString() + "\nCountry: "+pump.country.toString() + "\nProductType: "+ pump.productType.toString() + "\nManufacture: " + pump.makeYear + "." + pump.makeMonth + "." + pump.makeDay
+        binding.firmware.text = rh.gs(R.string.diaconn_g8_pump) + "\nVersion: " + pump.majorVersion.toString() + "." +  pump.minorVersion.toString() + "\nCountry: "+pump.country.toString() + "\nProductType: "+ pump.productType.toString() + "\nManufacture: " + pump.makeYear + "." + pump.makeMonth + "." + pump.makeDay
         binding.basalstep.text = pump.basalStep.toString()
         binding.bolusstep.text = pump.bolusStep.toString()
         binding.serialNumber.text = pump.serialNo.toString()

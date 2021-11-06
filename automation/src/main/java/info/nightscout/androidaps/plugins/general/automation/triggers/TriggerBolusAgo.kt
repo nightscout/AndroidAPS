@@ -19,11 +19,11 @@ import org.json.JSONObject
 class TriggerBolusAgo(injector: HasAndroidInjector) : Trigger(injector) {
 
     var minutesAgo: InputDuration = InputDuration(30, InputDuration.TimeUnit.MINUTES)
-    var comparator: Comparator = Comparator(resourceHelper)
+    var comparator: Comparator = Comparator(rh)
 
     private constructor(injector: HasAndroidInjector, triggerBolusAgo: TriggerBolusAgo) : this(injector) {
         minutesAgo = InputDuration(triggerBolusAgo.minutesAgo.value, InputDuration.TimeUnit.MINUTES)
-        comparator = Comparator(resourceHelper, triggerBolusAgo.comparator.value)
+        comparator = Comparator(rh, triggerBolusAgo.comparator.value)
     }
 
     fun setValue(value: Int): TriggerBolusAgo {
@@ -73,7 +73,7 @@ class TriggerBolusAgo(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyName(): Int = R.string.lastboluslabel
 
     override fun friendlyDescription(): String =
-        resourceHelper.gs(R.string.lastboluscompared, resourceHelper.gs(comparator.value.stringRes), minutesAgo.getMinutes())
+        rh.gs(R.string.lastboluscompared, rh.gs(comparator.value.stringRes), minutesAgo.getMinutes())
 
     override fun icon(): Optional<Int?> = Optional.of(R.drawable.ic_bolus)
 
@@ -81,9 +81,9 @@ class TriggerBolusAgo(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(resourceHelper, R.string.lastboluslabel, this))
+            .add(StaticLabel(rh, R.string.lastboluslabel, this))
             .add(comparator)
-            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.lastboluslabel) + ": ", resourceHelper.gs(R.string.unit_minutes), minutesAgo))
+            .add(LabelWithElement(rh, rh.gs(R.string.lastboluslabel) + ": ", rh.gs(R.string.unit_minutes), minutesAgo))
             .build(root)
     }
 }

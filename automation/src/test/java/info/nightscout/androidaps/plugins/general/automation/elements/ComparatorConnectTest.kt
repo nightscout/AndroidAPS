@@ -7,11 +7,11 @@ import org.junit.Test
 class ComparatorConnectTest : TriggerTestBase() {
 
     @Test fun labelsTest() {
-        Assert.assertEquals(2, ComparatorConnect.Compare.labels(resourceHelper).size)
+        Assert.assertEquals(2, ComparatorConnect.Compare.labels(rh).size)
     }
 
     @Test fun setValueTest() {
-        val c = ComparatorConnect(resourceHelper)
+        val c = ComparatorConnect(rh)
         c.value = ComparatorConnect.Compare.ON_DISCONNECT
         Assert.assertEquals(ComparatorConnect.Compare.ON_DISCONNECT, c.value)
     }

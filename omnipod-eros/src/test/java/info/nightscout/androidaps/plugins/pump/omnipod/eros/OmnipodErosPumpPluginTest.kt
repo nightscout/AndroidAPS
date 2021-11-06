@@ -32,7 +32,7 @@ import java.util.*
 class OmnipodErosPumpPluginTest : TestBase() {
 
     @Mock lateinit var injector: HasAndroidInjector
-    @Mock lateinit var resourceHelper: ResourceHelper
+    @Mock lateinit var rh: ResourceHelper
     @Mock(answer = Answers.RETURNS_DEEP_STUBS) lateinit var activePlugin: ActivePlugin
     @Mock lateinit var aapsOmnipodErosManager: AapsOmnipodErosManager
     @Mock lateinit var erosHistory: ErosHistory
@@ -43,7 +43,7 @@ class OmnipodErosPumpPluginTest : TestBase() {
     var rxBusWrapper = RxBus(TestAapsSchedulers(), aapsLogger)
 
     @Before fun prepare() {
-        `when`(resourceHelper.gs(ArgumentMatchers.anyInt(), ArgumentMatchers.anyLong()))
+        `when`(rh.gs(ArgumentMatchers.anyInt(), ArgumentMatchers.anyLong()))
             .thenReturn("")
     }
 
@@ -53,7 +53,7 @@ class OmnipodErosPumpPluginTest : TestBase() {
         // mock all the things
         val plugin = OmnipodErosPumpPlugin(
             injector, aapsLogger, TestAapsSchedulers(), rxBusWrapper, null,
-            resourceHelper, activePlugin, null, null, erosHistory, aapsOmnipodErosManager, commandQueueProvider,
+            rh, activePlugin, null, null, erosHistory, aapsOmnipodErosManager, commandQueueProvider,
             null, null, null, null,
             rileyLinkUtil, null, null, pumpSync
         )

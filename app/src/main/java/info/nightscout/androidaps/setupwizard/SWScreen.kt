@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class SWScreen(val injector: HasAndroidInjector, private var header: Int) {
 
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
 
     var items: MutableList<SWItem> = ArrayList()
     var validator: SWValidator? = null
@@ -20,7 +20,7 @@ class SWScreen(val injector: HasAndroidInjector, private var header: Int) {
     }
 
     fun getHeader(): String {
-        return resourceHelper.gs(header)
+        return rh.gs(header)
     }
 
     fun skippable(skippable: Boolean): SWScreen {

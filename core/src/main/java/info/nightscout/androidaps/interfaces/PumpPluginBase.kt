@@ -9,9 +9,9 @@ abstract class PumpPluginBase(
     pluginDescription: PluginDescription,
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     val commandQueue: CommandQueueProvider
-) : PluginBase(pluginDescription, aapsLogger, resourceHelper, injector) {
+) : PluginBase(pluginDescription, aapsLogger, rh, injector) {
 
     override fun onStart() {
         super.onStart()

@@ -20,7 +20,7 @@ import org.mockito.Mock
 class AutomationEventTest : TestBase() {
 
     @Mock lateinit var loopPlugin: Loop
-    @Mock lateinit var resourceHelper: ResourceHelper
+    @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var configBuilder: ConfigBuilder
 
     var injector: HasAndroidInjector = HasAndroidInjector {
@@ -33,7 +33,7 @@ class AutomationEventTest : TestBase() {
             }
             if (it is ActionLoopEnable) {
                 it.loopPlugin = loopPlugin
-                it.resourceHelper = resourceHelper
+                it.rh = rh
                 it.configBuilder = configBuilder
                 it.rxBus = RxBus(aapsSchedulers, aapsLogger)
             }

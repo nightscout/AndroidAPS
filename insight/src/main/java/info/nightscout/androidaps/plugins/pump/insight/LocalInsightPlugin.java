@@ -138,7 +138,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
 
     private final AAPSLogger aapsLogger;
     private final RxBus rxBus;
-    private final ResourceHelper resourceHelper;
+    private final ResourceHelper rh;
     private final SP sp;
     private final CommandQueueProvider commandQueue;
     private final ProfileFunction profileFunction;
@@ -198,7 +198,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             HasAndroidInjector injector,
             AAPSLogger aapsLogger,
             RxBus rxBus,
-            ResourceHelper resourceHelper,
+            ResourceHelper rh,
             SP sp,
             CommandQueueProvider commandQueue,
             ProfileFunction profileFunction,
@@ -216,12 +216,12 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                         .description(R.string.description_pump_insight_local)
                         .fragmentClass(LocalInsightFragment.class.getName())
                         .preferencesId(config.getAPS() ? R.xml.pref_insight_local_full : R.xml.pref_insight_local_pumpcontrol),
-                injector, aapsLogger, resourceHelper, commandQueue
+                injector, aapsLogger, rh, commandQueue
 
         );
         this.aapsLogger = aapsLogger;
         this.rxBus = rxBus;
-        this.resourceHelper = resourceHelper;
+        this.rh = rh;
         this.sp = sp;
         this.commandQueue = commandQueue;
         this.profileFunction = profileFunction;
@@ -280,7 +280,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
 
     private void createNotificationChannel() {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        NotificationChannel channel = new NotificationChannel(ALERT_CHANNEL_ID, resourceHelper.gs(R.string.insight_alert_notification_channel), NotificationManager.IMPORTANCE_HIGH);
+        NotificationChannel channel = new NotificationChannel(ALERT_CHANNEL_ID, rh.gs(R.string.insight_alert_notification_channel), NotificationManager.IMPORTANCE_HIGH);
         channel.setSound(null, null);
         notificationManager.createNotificationChannel(channel);
     }
@@ -385,7 +385,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             SetDateTimeMessage setDateTimeMessage = new SetDateTimeMessage();
             setDateTimeMessage.setPumpTime(pumpTime);
             connectionService.requestMessage(setDateTimeMessage).await();
-            Notification notification = new Notification(Notification.INSIGHT_DATE_TIME_UPDATED, resourceHelper.gs(R.string.pump_time_updated), Notification.INFO, 60);
+            Notification notification = new Notification(Notification.INSIGHT_DATE_TIME_UPDATED, rh.gs(R.string.pump_time_updated), Notification.INFO, 60);
             rxBus.send(new EventNewNotification(notification));
         }
     }
@@ -492,7 +492,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             profileBlock.setProfileBlocks(profileBlocks);
             ParameterBlockUtil.writeConfigurationBlock(connectionService, profileBlock);
             rxBus.send(new EventDismissNotification(Notification.FAILED_UPDATE_PROFILE));
-            Notification notification = new Notification(Notification.PROFILE_SET_OK, resourceHelper.gs(R.string.profile_set_ok), Notification.INFO, 60);
+            Notification notification = new Notification(Notification.PROFILE_SET_OK, rh.gs(R.string.profile_set_ok), Notification.INFO, 60);
             rxBus.send(new EventNewNotification(notification));
             result.success(true)
                     .enacted(true)
@@ -504,17 +504,17 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             }
         } catch (AppLayerErrorException e) {
             aapsLogger.info(LTag.PUMP, "Exception while setting profile: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
-            Notification notification = new Notification(Notification.FAILED_UPDATE_PROFILE, resourceHelper.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
+            Notification notification = new Notification(Notification.FAILED_UPDATE_PROFILE, rh.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
             rxBus.send(new EventNewNotification(notification));
             result.comment(ExceptionTranslator.getString(context, e));
         } catch (InsightException e) {
             aapsLogger.info(LTag.PUMP, "Exception while setting profile: " + e.getClass().getCanonicalName());
-            Notification notification = new Notification(Notification.FAILED_UPDATE_PROFILE, resourceHelper.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
+            Notification notification = new Notification(Notification.FAILED_UPDATE_PROFILE, rh.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
             rxBus.send(new EventNewNotification(notification));
             result.comment(ExceptionTranslator.getString(context, e));
         } catch (Exception e) {
             aapsLogger.error("Exception while setting profile", e);
-            Notification notification = new Notification(Notification.FAILED_UPDATE_PROFILE, resourceHelper.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
+            Notification notification = new Notification(Notification.FAILED_UPDATE_PROFILE, rh.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
             rxBus.send(new EventNewNotification(notification));
             result.comment(ExceptionTranslator.getString(context, e));
         }
@@ -588,7 +588,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 EventOverviewBolusProgress.Treatment t = new EventOverviewBolusProgress.Treatment(0, 0, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB);
                 final EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.INSTANCE;
                 bolusingEvent.setT(t);
-                bolusingEvent.setStatus(resourceHelper.gs(R.string.insight_delivered, 0d, insulin));
+                bolusingEvent.setStatus(rh.gs(R.string.insight_delivered, 0d, insulin));
                 bolusingEvent.setPercent(0);
                 rxBus.send(bolusingEvent);
                 int trials = 0;
@@ -627,14 +627,14 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                         trials = -1;
                         int percentBefore = bolusingEvent.getPercent();
                         bolusingEvent.setPercent((int) (100D / activeBolus.getInitialAmount() * (activeBolus.getInitialAmount() - activeBolus.getRemainingAmount())));
-                        bolusingEvent.setStatus(resourceHelper.gs(R.string.insight_delivered, activeBolus.getInitialAmount() - activeBolus.getRemainingAmount(), activeBolus.getInitialAmount()));
+                        bolusingEvent.setStatus(rh.gs(R.string.insight_delivered, activeBolus.getInitialAmount() - activeBolus.getRemainingAmount(), activeBolus.getInitialAmount()));
                         if (percentBefore != bolusingEvent.getPercent())
                             rxBus.send(bolusingEvent);
                     } else {
                         synchronized ($bolusLock) {
                             if (bolusCancelled || trials == -1 || trials++ >= 5) {
                                 if (!bolusCancelled) {
-                                    bolusingEvent.setStatus(resourceHelper.gs(R.string.insight_delivered, insulin, insulin));
+                                    bolusingEvent.setStatus(rh.gs(R.string.insight_delivered, insulin, insulin));
                                     bolusingEvent.setPercent(100);
                                     rxBus.send(bolusingEvent);
                                 }
@@ -1084,25 +1084,25 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         if (connectionService != null && connectionService.getLastConnected() != 0) {
             long agoMsec = dateUtil.now() - connectionService.getLastConnected();
             int agoMin = (int) (agoMsec / 60d / 1000d);
-            ret.append(resourceHelper.gs(R.string.short_status_last_connected, agoMin)).append("\n");
+            ret.append(rh.gs(R.string.short_status_last_connected, agoMin)).append("\n");
         }
         if (activeTBR != null) {
-            ret.append(resourceHelper.gs(R.string.short_status_tbr, activeTBR.getPercentage(),
+            ret.append(rh.gs(R.string.short_status_tbr, activeTBR.getPercentage(),
                     activeTBR.getInitialDuration() - activeTBR.getRemainingDuration(), activeTBR.getInitialDuration())).append("\n");
         }
         if (activeBoluses != null) for (ActiveBolus activeBolus : activeBoluses) {
             if (activeBolus.getBolusType() == BolusType.STANDARD) continue;
-            ret.append(resourceHelper.gs(activeBolus.getBolusType() == BolusType.MULTIWAVE ? R.string.short_status_multiwave : R.string.short_status_extended,
+            ret.append(rh.gs(activeBolus.getBolusType() == BolusType.MULTIWAVE ? R.string.short_status_multiwave : R.string.short_status_extended,
                     activeBolus.getRemainingAmount(), activeBolus.getInitialAmount(), activeBolus.getRemainingDuration())).append("\n");
         }
         if (!veryShort && totalDailyDose != null) {
-            ret.append(resourceHelper.gs(R.string.short_status_tdd, totalDailyDose.getBolusAndBasal())).append("\n");
+            ret.append(rh.gs(R.string.short_status_tdd, totalDailyDose.getBolusAndBasal())).append("\n");
         }
         if (cartridgeStatus != null) {
-            ret.append(resourceHelper.gs(R.string.short_status_reservoir, cartridgeStatus.getRemainingAmount())).append("\n");
+            ret.append(rh.gs(R.string.short_status_reservoir, cartridgeStatus.getRemainingAmount())).append("\n");
         }
         if (batteryStatus != null) {
-            ret.append(resourceHelper.gs(R.string.short_status_battery, batteryStatus.getBatteryAmount())).append("\n");
+            ret.append(rh.gs(R.string.short_status_battery, batteryStatus.getBatteryAmount())).append("\n");
         }
         return ret.toString();
     }
@@ -1289,7 +1289,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
         if (event.getAmount() > 0.0)               // Don't record event if amount is null
-            logNote(timestamp, resourceHelper.gs(R.string.tube_changed));
+            logNote(timestamp, rh.gs(R.string.tube_changed));
     }
 
     private void processSniffingDoneEvent(String serial, SniffingDoneEvent event) {
@@ -1319,17 +1319,17 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 pumpID.setEventType(EventType.PumpStarted);
                 pumpStartedEvents.add(pumpID);
                 if (sp.getBoolean("insight_log_operating_mode_changes", false))
-                    logNote(timestamp, resourceHelper.gs(R.string.pump_started));
+                    logNote(timestamp, rh.gs(R.string.pump_started));
                 break;
             case STOPPED:
                 pumpID.setEventType(EventType.PumpStopped);
                 if (sp.getBoolean("insight_log_operating_mode_changes", false))
-                    logNote(timestamp, resourceHelper.gs(R.string.pump_stopped));
+                    logNote(timestamp, rh.gs(R.string.pump_stopped));
                 break;
             case PAUSED:
                 pumpID.setEventType(EventType.PumpPaused);
                 if (sp.getBoolean("insight_log_operating_mode_changes", false))
-                    logNote(timestamp, resourceHelper.gs(R.string.pump_paused));
+                    logNote(timestamp, rh.gs(R.string.pump_paused));
                 break;
         }
         insightDbHelper.createOrUpdate(pumpID);
@@ -1542,7 +1542,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 break;
         }
         if (code != null)
-            logNote(timestamp, resourceHelper.gs(R.string.insight_alert_formatter, resourceHelper.gs(code), resourceHelper.gs(title)));
+            logNote(timestamp, rh.gs(R.string.insight_alert_formatter, rh.gs(code), rh.gs(title)));
     }
 
     private long parseDate(int year, int month, int day, int hour, int minute, int second) {
@@ -1579,22 +1579,22 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
 
     @NonNull @Override
     public Constraint<Integer> applyBasalPercentConstraints(Constraint<Integer> percentRate, @NonNull Profile profile) {
-        percentRate.setIfGreater(getAapsLogger(), 0, String.format(resourceHelper.gs(R.string.limitingpercentrate), 0, resourceHelper.gs(R.string.itmustbepositivevalue)), this);
-        percentRate.setIfSmaller(getAapsLogger(), getPumpDescription().getMaxTempPercent(), String.format(resourceHelper.gs(R.string.limitingpercentrate), getPumpDescription().getMaxTempPercent(), resourceHelper.gs(R.string.pumplimit)), this);
+        percentRate.setIfGreater(getAapsLogger(), 0, String.format(rh.gs(R.string.limitingpercentrate), 0, rh.gs(R.string.itmustbepositivevalue)), this);
+        percentRate.setIfSmaller(getAapsLogger(), getPumpDescription().getMaxTempPercent(), String.format(rh.gs(R.string.limitingpercentrate), getPumpDescription().getMaxTempPercent(), rh.gs(R.string.pumplimit)), this);
         return percentRate;
     }
 
     @NonNull @Override
     public Constraint<Double> applyBolusConstraints(@NonNull Constraint<Double> insulin) {
         if (!limitsFetched) return insulin;
-        insulin.setIfSmaller(getAapsLogger(), maximumBolusAmount, String.format(resourceHelper.gs(R.string.limitingbolus), maximumBolusAmount, resourceHelper.gs(R.string.pumplimit)), this);
+        insulin.setIfSmaller(getAapsLogger(), maximumBolusAmount, String.format(rh.gs(R.string.limitingbolus), maximumBolusAmount, rh.gs(R.string.pumplimit)), this);
         if (insulin.value() < minimumBolusAmount) {
 
             //TODO: Add function to Constraints or use different approach
             // This only works if the interface of the InsightPlugin is called last.
             // If not, another constraint could theoretically set the value between 0 and minimumBolusAmount
 
-            insulin.set(getAapsLogger(), 0d, String.format(resourceHelper.gs(R.string.limitingbolus), minimumBolusAmount, resourceHelper.gs(R.string.pumplimit)), this);
+            insulin.set(getAapsLogger(), 0d, String.format(rh.gs(R.string.limitingbolus), minimumBolusAmount, rh.gs(R.string.pumplimit)), this);
         }
         return insulin;
     }
@@ -1633,7 +1633,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
 
     @Override
     public void onTimeoutDuringHandshake() {
-        Notification notification = new Notification(Notification.INSIGHT_TIMEOUT_DURING_HANDSHAKE, resourceHelper.gs(R.string.timeout_during_handshake), Notification.URGENT);
+        Notification notification = new Notification(Notification.INSIGHT_TIMEOUT_DURING_HANDSHAKE, rh.gs(R.string.timeout_during_handshake), Notification.URGENT);
         new Handler(Looper.getMainLooper()).post(() -> rxBus.send(new EventNewNotification(notification)));
     }
 

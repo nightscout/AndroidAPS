@@ -21,7 +21,7 @@ import org.mockito.Mockito.`when`
 
 class ActionAlarmTest : TestBase() {
 
-    @Mock lateinit var resourceHelper: ResourceHelper
+    @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var rxBus: RxBus
     @Mock lateinit var context: Context
     @Mock lateinit var timerUtil: TimerUtil
@@ -31,23 +31,23 @@ class ActionAlarmTest : TestBase() {
     var injector: HasAndroidInjector = HasAndroidInjector {
         AndroidInjector {
             if (it is ActionAlarm) {
-                it.resourceHelper = resourceHelper
+                it.rh = rh
                 it.rxBus = rxBus
                 it.context = context
                 it.timerUtil = timerUtil
                 it.dateUtil = dateUtil
             }
             if (it is PumpEnactResult) {
-                it.resourceHelper = resourceHelper
+                it.rh = rh
             }
         }
     }
 
     @Before
     fun setup() {
-        `when`(resourceHelper.gs(R.string.ok)).thenReturn("OK")
-        `when`(resourceHelper.gs(R.string.alarm)).thenReturn("Alarm")
-        `when`(resourceHelper.gs(ArgumentMatchers.eq(R.string.alarm_message), ArgumentMatchers.anyString())).thenReturn("Alarm: %s")
+        `when`(rh.gs(R.string.ok)).thenReturn("OK")
+        `when`(rh.gs(R.string.alarm)).thenReturn("Alarm")
+        `when`(rh.gs(ArgumentMatchers.eq(R.string.alarm_message), ArgumentMatchers.anyString())).thenReturn("Alarm: %s")
 
         sut = ActionAlarm(injector)
     }

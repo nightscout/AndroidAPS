@@ -95,7 +95,7 @@ sealed class ProfileSealed(
         value.timeZone.rawOffset.toLong()
     )
 
-    override fun isValid(from: String, pump: Pump, config: Config, resourceHelper: ResourceHelper, rxBus: RxBus, hardLimits: HardLimits, sendNotifications: Boolean): Profile.ValidityCheck {
+    override fun isValid(from: String, pump: Pump, config: Config, rh: ResourceHelper, rxBus: RxBus, hardLimits: HardLimits, sendNotifications: Boolean): Profile.ValidityCheck {
         val validityCheck = Profile.ValidityCheck()
         val description = pump.pumpDescription
         for (basal in basalBlocks) {
@@ -107,14 +107,14 @@ sealed class ProfileSealed(
                     if (sendNotifications && config.APS) {
                         val notification = Notification(
                             Notification.BASAL_PROFILE_NOT_ALIGNED_TO_HOURS,
-                            resourceHelper.gs(R.string.basalprofilenotaligned, from),
+                            rh.gs(R.string.basalprofilenotaligned, from),
                             Notification.NORMAL
                         )
                         rxBus.send(EventNewNotification(notification))
                     }
                     validityCheck.isValid = false
                     validityCheck.reasons.add(
-                        resourceHelper.gs(
+                        rh.gs(
                             R.string.basalprofilenotaligned,
                             from
                         )
@@ -124,38 +124,38 @@ sealed class ProfileSealed(
             }
             if (!hardLimits.isInRange(basalAmount, 0.01, hardLimits.maxBasal())) {
                 validityCheck.isValid = false
-                validityCheck.reasons.add(resourceHelper.gs(R.string.value_out_of_hard_limits, resourceHelper.gs(R.string.basal_value), basalAmount))
+                validityCheck.reasons.add(rh.gs(R.string.value_out_of_hard_limits, rh.gs(R.string.basal_value), basalAmount))
                 break
             }
             // Check for minimal basal value
             if (basalAmount < description.basalMinimumRate) {
                 basal.amount = description.basalMinimumRate
-                if (sendNotifications) sendBelowMinimumNotification(from, rxBus, resourceHelper)
+                if (sendNotifications) sendBelowMinimumNotification(from, rxBus, rh)
                 validityCheck.isValid = false
-                validityCheck.reasons.add(resourceHelper.gs(R.string.minimalbasalvaluereplaced, from))
+                validityCheck.reasons.add(rh.gs(R.string.minimalbasalvaluereplaced, from))
                 break
             } else if (basalAmount > description.basalMaximumRate) {
                 basal.amount = description.basalMaximumRate
-                if (sendNotifications) sendAboveMaximumNotification(from, rxBus, resourceHelper)
+                if (sendNotifications) sendAboveMaximumNotification(from, rxBus, rh)
                 validityCheck.isValid = false
-                validityCheck.reasons.add(resourceHelper.gs(R.string.maximumbasalvaluereplaced, from))
+                validityCheck.reasons.add(rh.gs(R.string.maximumbasalvaluereplaced, from))
                 break
             }
         }
         if (!hardLimits.isInRange(dia, hardLimits.minDia(), hardLimits.maxDia())) {
             validityCheck.isValid = false
-            validityCheck.reasons.add(resourceHelper.gs(R.string.value_out_of_hard_limits, resourceHelper.gs(R.string.profile_dia), dia))
+            validityCheck.reasons.add(rh.gs(R.string.value_out_of_hard_limits, rh.gs(R.string.profile_dia), dia))
         }
         for (ic in icBlocks)
             if (!hardLimits.isInRange(ic.amount * 100.0 / percentage, hardLimits.minIC(), hardLimits.maxIC())) {
                 validityCheck.isValid = false
-                validityCheck.reasons.add(resourceHelper.gs(R.string.value_out_of_hard_limits, resourceHelper.gs(R.string.profile_carbs_ratio_value), ic.amount * 100.0 / percentage))
+                validityCheck.reasons.add(rh.gs(R.string.value_out_of_hard_limits, rh.gs(R.string.profile_carbs_ratio_value), ic.amount * 100.0 / percentage))
                 break
             }
         for (isf in isfBlocks)
             if (!hardLimits.isInRange(toMgdl(isf.amount * 100.0 / percentage, units), HardLimits.MIN_ISF, HardLimits.MAX_ISF)) {
                 validityCheck.isValid = false
-                validityCheck.reasons.add(resourceHelper.gs(R.string.value_out_of_hard_limits, resourceHelper.gs(R.string.profile_sensitivity_value), isf.amount * 100.0 / percentage))
+                validityCheck.reasons.add(rh.gs(R.string.value_out_of_hard_limits, rh.gs(R.string.profile_sensitivity_value), isf.amount * 100.0 / percentage))
                 break
             }
         for (target in targetBlocks) {
@@ -166,7 +166,7 @@ sealed class ProfileSealed(
                 )
             ) {
                 validityCheck.isValid = false
-                validityCheck.reasons.add(resourceHelper.gs(R.string.value_out_of_hard_limits, resourceHelper.gs(R.string.profile_low_target), target.lowTarget))
+                validityCheck.reasons.add(rh.gs(R.string.value_out_of_hard_limits, rh.gs(R.string.profile_low_target), target.lowTarget))
                 break
             }
             if (!hardLimits.isInRange(
@@ -176,19 +176,19 @@ sealed class ProfileSealed(
                 )
             ) {
                 validityCheck.isValid = false
-                validityCheck.reasons.add(resourceHelper.gs(R.string.value_out_of_hard_limits, resourceHelper.gs(R.string.profile_high_target), target.highTarget))
+                validityCheck.reasons.add(rh.gs(R.string.value_out_of_hard_limits, rh.gs(R.string.profile_high_target), target.highTarget))
                 break
             }
         }
         return validityCheck
     }
 
-    protected open fun sendBelowMinimumNotification(from: String, rxBus: RxBus, resourceHelper: ResourceHelper) {
-        rxBus.send(EventNewNotification(Notification(Notification.MINIMAL_BASAL_VALUE_REPLACED, resourceHelper.gs(R.string.minimalbasalvaluereplaced, from), Notification.NORMAL)))
+    protected open fun sendBelowMinimumNotification(from: String, rxBus: RxBus, rh: ResourceHelper) {
+        rxBus.send(EventNewNotification(Notification(Notification.MINIMAL_BASAL_VALUE_REPLACED, rh.gs(R.string.minimalbasalvaluereplaced, from), Notification.NORMAL)))
     }
 
-    protected open fun sendAboveMaximumNotification(from: String, rxBus: RxBus, resourceHelper: ResourceHelper) {
-        rxBus.send(EventNewNotification(Notification(Notification.MAXIMUM_BASAL_VALUE_REPLACED, resourceHelper.gs(R.string.maximumbasalvaluereplaced, from), Notification.NORMAL)))
+    protected open fun sendAboveMaximumNotification(from: String, rxBus: RxBus, rh: ResourceHelper) {
+        rxBus.send(EventNewNotification(Notification(Notification.MAXIMUM_BASAL_VALUE_REPLACED, rh.gs(R.string.maximumbasalvaluereplaced, from), Notification.NORMAL)))
     }
 
     override val units: GlucoseUnit
@@ -240,10 +240,10 @@ sealed class ProfileSealed(
     private fun getTargetHighTimeFromMidnight(timeAsSeconds: Int): Double = targetBlocks.highTargetBlockValueBySeconds(timeAsSeconds, timeshift)
     override fun getTargetHighMgdlTimeFromMidnight(timeAsSeconds: Int): Double = toMgdl(targetBlocks.highTargetBlockValueBySeconds(timeAsSeconds, timeshift), units)
 
-    override fun getIcList(resourceHelper: ResourceHelper, dateUtil: DateUtil): String = getValuesList(icBlocks, 100.0 / percentage, DecimalFormat("0.0"), resourceHelper.gs(R.string.profile_carbs_per_unit), dateUtil)
-    override fun getIsfList(resourceHelper: ResourceHelper, dateUtil: DateUtil): String = getValuesList(isfBlocks, 100.0 / percentage, DecimalFormat("0.0"), units.asText + resourceHelper.gs(R.string.profile_per_unit), dateUtil)
-    override fun getBasalList(resourceHelper: ResourceHelper, dateUtil: DateUtil): String = getValuesList(basalBlocks, percentage / 100.0, DecimalFormat("0.00"), resourceHelper.gs(R.string.profile_ins_units_per_hour), dateUtil)
-    override fun getTargetList(resourceHelper: ResourceHelper, dateUtil: DateUtil): String = getTargetValuesList(targetBlocks, DecimalFormat("0.0"), units.asText, dateUtil)
+    override fun getIcList(rh: ResourceHelper, dateUtil: DateUtil): String = getValuesList(icBlocks, 100.0 / percentage, DecimalFormat("0.0"), rh.gs(R.string.profile_carbs_per_unit), dateUtil)
+    override fun getIsfList(rh: ResourceHelper, dateUtil: DateUtil): String = getValuesList(isfBlocks, 100.0 / percentage, DecimalFormat("0.0"), units.asText + rh.gs(R.string.profile_per_unit), dateUtil)
+    override fun getBasalList(rh: ResourceHelper, dateUtil: DateUtil): String = getValuesList(basalBlocks, percentage / 100.0, DecimalFormat("0.00"), rh.gs(R.string.profile_ins_units_per_hour), dateUtil)
+    override fun getTargetList(rh: ResourceHelper, dateUtil: DateUtil): String = getTargetValuesList(targetBlocks, DecimalFormat("0.0"), units.asText, dateUtil)
 
     override fun convertToNonCustomizedProfile(dateUtil: DateUtil): PureProfile =
         PureProfile(

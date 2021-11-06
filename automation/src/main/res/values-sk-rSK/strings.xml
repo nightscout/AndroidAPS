@@ -105,9 +105,11 @@
     <string name="edit_short">EDIT</string>
     <string name="please_choose_an_action_type">Vyberte akciu</string>
     <string name="please_choose_a_trigger_type">Vyberte typ podmienky</string>
+    <string name="please_choose_a_operation_type">Vyberte typ operácie</string>
     <string name="triggers">Podmienky:</string>
     <string name="remove_label">VYMAZAŤ</string>
     <string name="preconditions">Predpoklady:</string>
     <string name="automation_event">Udalosť automatiky</string>
     <string name="reorder_label">Zmena poradia</string>
+    <string name="user_action">Akcia užívateľa</string>
 </resources>

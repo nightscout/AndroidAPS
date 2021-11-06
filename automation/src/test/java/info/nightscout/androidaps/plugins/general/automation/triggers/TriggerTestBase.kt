@@ -36,7 +36,7 @@ open class TriggerTestBase : TestBaseWithProfile() {
     @Before
     fun prepareMock1() {
         receiverStatusStore = ReceiverStatusStore(context, rxBus)
-        testPumpPlugin = TestPumpPlugin(pluginDescription, aapsLogger, resourceHelper, injector)
+        testPumpPlugin = TestPumpPlugin(pluginDescription, aapsLogger, rh, injector)
         `when`(activePlugin.activePump).thenReturn(testPumpPlugin)
         `when`(iobCobCalculator.ads).thenReturn(autosensDataStore)
     }
@@ -46,7 +46,7 @@ open class TriggerTestBase : TestBaseWithProfile() {
             if (it is Trigger) {
                 it.aapsLogger = aapsLogger
                 it.rxBus = RxBus(aapsSchedulers, aapsLogger)
-                it.resourceHelper = resourceHelper
+                it.rh = rh
                 it.profileFunction = profileFunction
                 it.sp = sp
                 it.locationDataContainer = locationDataContainer

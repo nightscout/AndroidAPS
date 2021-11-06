@@ -18,7 +18,7 @@ import javax.inject.Singleton
 
 @Singleton
 class BlePreCheck @Inject constructor(
-    val resourceHelper: ResourceHelper
+    val rh: ResourceHelper
 ) {
 
     companion object {
@@ -27,7 +27,7 @@ class BlePreCheck @Inject constructor(
 
     fun prerequisitesCheck(activity: AppCompatActivity): Boolean {
         if (!activity.packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-            OKDialog.show(activity, resourceHelper.gs(R.string.message), resourceHelper.gs(R.string.ble_not_supported))
+            OKDialog.show(activity, rh.gs(R.string.message), rh.gs(R.string.ble_not_supported))
             return false
         } else {
             // Use this check to determine whether BLE is supported on the device. Then
@@ -41,7 +41,7 @@ class BlePreCheck @Inject constructor(
             // Ensures Bluetooth is available on the device and it is enabled. If not,
             // displays a dialog requesting user permission to enable Bluetooth.
             if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled) {
-                OKDialog.show(activity, resourceHelper.gs(R.string.message), resourceHelper.gs(R.string.ble_not_enabled))
+                OKDialog.show(activity, rh.gs(R.string.message), rh.gs(R.string.ble_not_enabled))
                 return false
             } else {
                 // Will request that GPS be enabled for devices running Marshmallow or newer.
@@ -80,7 +80,7 @@ class BlePreCheck @Inject constructor(
         }
 
         // Shamelessly borrowed from http://stackoverflow.com/a/10311877/868533
-        OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.location_not_found_title), resourceHelper.gs(R.string.location_not_found_message), Runnable {
+        OKDialog.showConfirmation(activity, rh.gs(R.string.location_not_found_title), rh.gs(R.string.location_not_found_message), Runnable {
             activity.startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
         })
     }

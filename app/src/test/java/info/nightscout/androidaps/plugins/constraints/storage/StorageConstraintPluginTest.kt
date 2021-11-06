@@ -17,29 +17,29 @@ import org.mockito.Mockito.anyLong
 
 class StorageConstraintPluginTest : TestBase() {
 
-    @Mock lateinit var resourceHelper: ResourceHelper
+    @Mock lateinit var rh: ResourceHelper
     private val rxBusWrapper = RxBus(aapsSchedulers, aapsLogger)
 
     private lateinit var storageConstraintPlugin: StorageConstraintPlugin
 
     @Before fun prepareMock() {
-        storageConstraintPlugin = StorageConstraintPlugin({ AndroidInjector { } }, aapsLogger, resourceHelper, rxBusWrapper)
-        `when`(resourceHelper.gs(anyInt(), anyLong())).thenReturn("")
+        storageConstraintPlugin = StorageConstraintPlugin({ AndroidInjector { } }, aapsLogger, rh, rxBusWrapper)
+        `when`(rh.gs(anyInt(), anyLong())).thenReturn("")
     }
 
     class MockedStorageConstraintPlugin constructor(
         injector: HasAndroidInjector,
         aapsLogger: AAPSLogger,
-        resourceHelper: ResourceHelper,
+        rh: ResourceHelper,
         rxBus: RxBus
-    ) : StorageConstraintPlugin(injector, aapsLogger, resourceHelper, rxBus) {
+    ) : StorageConstraintPlugin(injector, aapsLogger, rh, rxBus) {
 
         var memSize = 150L
         override fun availableInternalMemorySize(): Long = memSize
     }
 
     @Test fun isLoopInvocationAllowedTest() {
-        val mocked = MockedStorageConstraintPlugin({ AndroidInjector { } }, aapsLogger, resourceHelper, rxBusWrapper)
+        val mocked = MockedStorageConstraintPlugin({ AndroidInjector { } }, aapsLogger, rh, rxBusWrapper)
         // Set free space under 200(Mb) to disable loop
         mocked.memSize = 150L
         Assert.assertEquals(false, mocked.isClosedLoopAllowed(Constraint(true)).value())

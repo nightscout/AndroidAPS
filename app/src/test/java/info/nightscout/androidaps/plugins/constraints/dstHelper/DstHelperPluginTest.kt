@@ -18,7 +18,7 @@ import java.util.*
 
 class DstHelperPluginTest : TestBase() {
 
-    @Mock lateinit var resourceHelper: ResourceHelper
+    @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var sp: SP
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var loopPlugin: LoopPlugin
@@ -29,7 +29,7 @@ class DstHelperPluginTest : TestBase() {
 
     @Before
     fun mock() {
-        plugin = DstHelperPlugin(injector, aapsLogger, RxBus(aapsSchedulers, aapsLogger), resourceHelper,
+        plugin = DstHelperPlugin(injector, aapsLogger, RxBus(aapsSchedulers, aapsLogger), rh,
                                  sp, activePlugin, loopPlugin)
     }
 

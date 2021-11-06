@@ -74,13 +74,13 @@ open class AppModule {
     @Provides
     @Singleton
     fun provideProfileFunction(
-        aapsLogger: AAPSLogger, sp: SP, rxBus: RxBus, resourceHelper:
+        aapsLogger: AAPSLogger, sp: SP, rxBus: RxBus, rh:
         ResourceHelper, activePlugin:
         ActivePlugin, repository: AppRepository, dateUtil: DateUtil, config: Config, hardLimits: HardLimits,
         aapsSchedulers: AapsSchedulers, fabricPrivacy: FabricPrivacy, deviceStatusData: DeviceStatusData
     ): ProfileFunction =
         ProfileFunctionImplementation(
-            aapsLogger, sp, rxBus, resourceHelper, activePlugin, repository, dateUtil,
+            aapsLogger, sp, rxBus, rh, activePlugin, repository, dateUtil,
             config, hardLimits, aapsSchedulers, fabricPrivacy, deviceStatusData
         )
 

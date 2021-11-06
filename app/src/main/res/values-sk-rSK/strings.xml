@@ -892,4 +892,9 @@
     <string name="error_in_basal_values">Chyba v hodnotách bazálu</string>
     <string name="error_in_target_values">Chyba v cieľových hodnotách</string>
     <string name="error_in_isf_values">Chyba v hodnotách citlivosti</string>
+    <string name="run_question">Spustiť %s?</string>
+    <string name="invalid_profile_not_accepted">Neplatný profil %1$s nebol akceptovaný z NS</string>
+    <string name="view">Zobraziť</string>
+    <string name="errors">Chyby</string>
+    <string name="ns_sync_slow">Spomaliť nahrávanie</string>
 </resources>

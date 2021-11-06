@@ -27,7 +27,7 @@ open class CoreModule {
 
     @Provides
     @Singleton
-    fun provideSharedPreferences(context: Context, resourceHelper: ResourceHelper): SP = SPImplementation(PreferenceManager.getDefaultSharedPreferences(context), resourceHelper)
+    fun provideSharedPreferences(context: Context, rh: ResourceHelper): SP = SPImplementation(PreferenceManager.getDefaultSharedPreferences(context), rh)
 
     @Provides
     @Singleton

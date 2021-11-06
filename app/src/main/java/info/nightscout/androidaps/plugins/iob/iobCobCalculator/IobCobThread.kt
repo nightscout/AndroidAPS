@@ -50,7 +50,7 @@ class IobCobThread @Inject internal constructor(
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var sp: SP
     @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var context: Context
     @Inject lateinit var sensitivityAAPSPlugin: SensitivityAAPSPlugin
@@ -66,7 +66,7 @@ class IobCobThread @Inject internal constructor(
 
     init {
         injector.androidInjector().inject(this)
-        mWakeLock = (context.applicationContext.getSystemService(Context.POWER_SERVICE) as PowerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, resourceHelper.gs(R.string.app_name) + ":iobCobThread")
+        mWakeLock = (context.applicationContext.getSystemService(Context.POWER_SERVICE) as PowerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, rh.gs(R.string.app_name) + ":iobCobThread")
     }
 
     override fun run() {
@@ -160,7 +160,7 @@ class IobCobThread @Inject internal constructor(
                                     aapsLogger.debug(LTag.AUTOSENS, autosensDataTable.toString())
                                     aapsLogger.debug(LTag.AUTOSENS, bucketedData.toString())
                                     //aapsLogger.debug(LTag.AUTOSENS, iobCobCalculatorPlugin.getBgReadingsDataTable().toString())
-                                    val notification = Notification(Notification.SEND_LOGFILES, resourceHelper.gs(R.string.sendlogfiles), Notification.LOW)
+                                    val notification = Notification(Notification.SEND_LOGFILES, rh.gs(R.string.sendlogfiles), Notification.LOW)
                                     rxBus.send(EventNewNotification(notification))
                                     sp.putBoolean("log_AUTOSENS", true)
                                     break
@@ -183,7 +183,7 @@ class IobCobThread @Inject internal constructor(
                             aapsLogger.debug(autosensDataTable.toString())
                             aapsLogger.debug(bucketedData.toString())
                             //aapsLogger.debug(iobCobCalculatorPlugin.getBgReadingsDataTable().toString())
-                            val notification = Notification(Notification.SEND_LOGFILES, resourceHelper.gs(R.string.sendlogfiles), Notification.LOW)
+                            val notification = Notification(Notification.SEND_LOGFILES, rh.gs(R.string.sendlogfiles), Notification.LOW)
                             rxBus.send(EventNewNotification(notification))
                             sp.putBoolean("log_AUTOSENS", true)
                             break

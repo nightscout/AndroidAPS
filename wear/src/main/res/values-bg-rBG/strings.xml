@@ -69,6 +69,7 @@
     <string name="menu_ecarb">уд. въгл.</string>
     <string name="menu_settings">Настройки</string>
     <string name="menu_status">Статус</string>
+    <string name="menu_resync">Ре-синхр.</string>
     <string name="menu_prime_fill">Пълнене на сет</string>
     <string name="menu_none">Без</string>
     <string name="menu_default">Стандартен</string>
@@ -131,4 +132,8 @@
     <string name="digitalstyle_pref_your_color">Вашият цвят:</string>
     <string name="digitalstyle_pref_your_color_saturation">Насищане на цвета:</string>
     <string name="digitalstyle_pref_your_color_opacity">Вашата цветна прозрачност:</string>
+    <string name="bolus_progress_channel_name">AAPS Прогрес на болуса</string>
+    <string name="bolus_progress_silent_channel_name">AAPS Прогрес на болуса Безшумно</string>
+    <string name="bolus_progress_channel_description">Прогрес на болуса и отказ</string>
+    <string name="bolus_progress_silent_channel_description">Прогрес на болуса и отказ с по-малко вибрации</string>
 </resources>

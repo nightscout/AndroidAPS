@@ -41,7 +41,7 @@ class DanaRKoreanPlugin @Inject constructor(
     aapsSchedulers: AapsSchedulers,
     rxBus: RxBus,
     private val context: Context,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     constraintChecker: ConstraintChecker,
     activePlugin: ActivePlugin,
     sp: SP,
@@ -50,7 +50,7 @@ class DanaRKoreanPlugin @Inject constructor(
     dateUtil: DateUtil,
     private val fabricPrivacy: FabricPrivacy,
     pumpSync: PumpSync
-) : AbstractDanaRPlugin(injector, danaPump, resourceHelper, constraintChecker, aapsLogger, aapsSchedulers, commandQueue, rxBus, activePlugin, sp, dateUtil, pumpSync) {
+) : AbstractDanaRPlugin(injector, danaPump, rh, constraintChecker, aapsLogger, aapsSchedulers, commandQueue, rxBus, activePlugin, sp, dateUtil, pumpSync) {
 
     init {
         pluginDescription.description(R.string.description_pump_dana_r_korean)
@@ -100,7 +100,7 @@ class DanaRKoreanPlugin @Inject constructor(
 
     // Plugin base interface
     override val name: String
-        get() = resourceHelper.gs(R.string.danarkoreanpump)
+        get() = rh.gs(R.string.danarkoreanpump)
     override val preferencesId: Int
         get() = R.xml.pref_danarkorean
 
@@ -130,7 +130,7 @@ class DanaRKoreanPlugin @Inject constructor(
             val result = PumpEnactResult(injector)
             result.success(connectionOK && abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.bolusStep)
                 .bolusDelivered(t.insulin)
-            if (!result.success) result.comment(resourceHelper.gs(R.string.boluserrorcode, detailedBolusInfo.insulin, t.insulin, danaPump.bolusStartErrorCode)) else result.comment(R.string.ok)
+            if (!result.success) result.comment(rh.gs(R.string.boluserrorcode, detailedBolusInfo.insulin, t.insulin, danaPump.bolusStartErrorCode)) else result.comment(R.string.ok)
             aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
             detailedBolusInfo.insulin = t.insulin
             detailedBolusInfo.timestamp = dateUtil.now()
@@ -157,10 +157,22 @@ class DanaRKoreanPlugin @Inject constructor(
         //This should not be needed while using queue because connection should be done before calling this
         var result = PumpEnactResult(injector)
         val absoluteRateAfterConstraint = constraintChecker.applyBasalConstraints(Constraint(absoluteRate), profile).value()
-        val doTempOff = baseBasalRate - absoluteRateAfterConstraint == 0.0 && absoluteRateAfterConstraint >= 0.10
+        var doTempOff = baseBasalRate - absoluteRateAfterConstraint == 0.0 && absoluteRateAfterConstraint >= 0.10
         val doLowTemp = absoluteRateAfterConstraint < baseBasalRate || absoluteRateAfterConstraint < 0.10
         val doHighTemp = absoluteRateAfterConstraint > baseBasalRate && !useExtendedBoluses
         val doExtendedTemp = absoluteRateAfterConstraint > baseBasalRate && useExtendedBoluses
+
+        var percentRate: Int = java.lang.Double.valueOf(absoluteRateAfterConstraint / baseBasalRate * 100).toInt()
+        // Any basal less than 0.10u/h will be dumped once per hour, not every 4 minutes. So if it's less than .10u/h, set a zero temp.
+        if (absoluteRateAfterConstraint < 0.10) percentRate = 0
+        percentRate = if (percentRate < 100) Round.ceilTo(percentRate.toDouble(), 10.0).toInt() else Round.floorTo(percentRate.toDouble(), 10.0).toInt()
+        if (percentRate > pumpDescription.maxTempPercent) {
+            percentRate = pumpDescription.maxTempPercent
+        }
+        aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Calculated percent rate: $percentRate")
+
+        if (percentRate == 100) doTempOff = true
+
         if (doTempOff) {
             // If extended in progress
             if (danaPump.isExtendedInProgress && useExtendedBoluses) {
@@ -177,15 +189,6 @@ class DanaRKoreanPlugin @Inject constructor(
             return result
         }
         if (doLowTemp || doHighTemp) {
-            var percentRate: Int = java.lang.Double.valueOf(absoluteRateAfterConstraint / baseBasalRate * 100).toInt()
-            // Any basal less than 0.10u/h will be dumped once per hour, not every 4 minutes. So if it's less than .10u/h, set a zero temp.
-            if (absoluteRateAfterConstraint < 0.10) percentRate = 0
-            percentRate = if (percentRate < 100) Round.ceilTo(percentRate.toDouble(), 10.0).toInt() else Round.floorTo(percentRate.toDouble(), 10.0).toInt()
-            if (percentRate > pumpDescription.maxTempPercent) {
-                percentRate = pumpDescription.maxTempPercent
-            }
-            aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Calculated percent rate: $percentRate")
-
             // If extended in progress
             if (danaPump.isExtendedInProgress && useExtendedBoluses) {
                 aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Stopping extended bolus (doLowTemp || doHighTemp)")

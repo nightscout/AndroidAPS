@@ -26,7 +26,7 @@ class BolusWizardTest : TestBase() {
 
     private val pumpBolusStep = 0.1
 
-    @Mock lateinit var resourceHelper: ResourceHelper
+    @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var constraintChecker: ConstraintChecker
     @Mock lateinit var context: Context
@@ -42,7 +42,7 @@ class BolusWizardTest : TestBase() {
         AndroidInjector {
             if (it is BolusWizard) {
                 it.aapsLogger = aapsLogger
-                it.resourceHelper = resourceHelper
+                it.rh = rh
                 it.rxBus = RxBus(aapsSchedulers, aapsLogger)
                 it.profileFunction = profileFunction
                 it.constraintChecker = constraintChecker

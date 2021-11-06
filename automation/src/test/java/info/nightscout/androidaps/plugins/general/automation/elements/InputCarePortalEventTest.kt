@@ -8,12 +8,12 @@ class InputCarePortalEventTest : TriggerTestBase() {
 
     @Test
     fun labelsTest() {
-        Assert.assertEquals(4, InputCarePortalMenu.EventType.labels(resourceHelper).size)
+        Assert.assertEquals(4, InputCarePortalMenu.EventType.labels(rh).size)
     }
 
     @Test
     fun setValueTest() {
-        val cp = InputCarePortalMenu(resourceHelper, InputCarePortalMenu.EventType.EXERCISE)
+        val cp = InputCarePortalMenu(rh, InputCarePortalMenu.EventType.EXERCISE)
         Assert.assertEquals(InputCarePortalMenu.EventType.EXERCISE, cp.value)
     }
 }

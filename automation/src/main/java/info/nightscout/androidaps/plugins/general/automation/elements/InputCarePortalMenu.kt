@@ -12,7 +12,7 @@ import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 
-class InputCarePortalMenu(private val resourceHelper: ResourceHelper) : Element() {
+class InputCarePortalMenu(private val rh: ResourceHelper) : Element() {
 
     enum class EventType(val therapyEventType: TherapyEvent.Type) {
         NOTE(TherapyEvent.Type.NOTE),
@@ -45,17 +45,17 @@ class InputCarePortalMenu(private val resourceHelper: ResourceHelper) : Element(
 
         companion object {
 
-            fun labels(resourceHelper: ResourceHelper): List<String> {
+            fun labels(rh: ResourceHelper): List<String> {
                 val list: MutableList<String> = ArrayList()
                 for (e in values()) {
-                    list.add(resourceHelper.gs(e.stringRes))
+                    list.add(rh.gs(e.stringRes))
                 }
                 return list
             }
         }
     }
 
-    constructor(resourceHelper: ResourceHelper, value: EventType) : this(resourceHelper) {
+    constructor(rh: ResourceHelper, value: EventType) : this(rh) {
         this.value = value
     }
 
@@ -64,11 +64,11 @@ class InputCarePortalMenu(private val resourceHelper: ResourceHelper) : Element(
     override fun addToLayout(root: LinearLayout) {
         root.addView(
             Spinner(root.context).apply {
-                adapter = ArrayAdapter(root.context, R.layout.spinner_centered, EventType.labels(resourceHelper)).apply {
+                adapter = ArrayAdapter(root.context, R.layout.spinner_centered, EventType.labels(rh)).apply {
                     setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 }
                 layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
-                    setMargins(0, resourceHelper.dpToPx(4), 0, resourceHelper.dpToPx(4))
+                    setMargins(0, rh.dpToPx(4), 0, rh.dpToPx(4))
                 }
 
                 onItemSelectedListener = object : AdapterView.OnItemSelectedListener {

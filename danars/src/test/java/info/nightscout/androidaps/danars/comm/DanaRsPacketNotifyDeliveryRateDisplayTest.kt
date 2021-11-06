@@ -36,14 +36,14 @@ class DanaRsPacketNotifyDeliveryRateDisplayTest : DanaRSTestBase() {
             if (it is DanaRSPacketNotifyDeliveryRateDisplay) {
                 it.aapsLogger = aapsLogger
                 it.rxBus = rxBus
-                it.resourceHelper = resourceHelper
+                it.rh = rh
                 it.danaPump = danaPump
             }
         }
     }
 
     @Test fun runTest() {
-        `when`(resourceHelper.gs(ArgumentMatchers.anyInt(), anyObject())).thenReturn("SomeString")
+        `when`(rh.gs(ArgumentMatchers.anyInt(), anyObject())).thenReturn("SomeString")
         // val packet = DanaRS_Packet_Notify_Delivery_Rate_Display(1.0, Treatment(treatmentInjector))
         val packet = DanaRSPacketNotifyDeliveryRateDisplay(packetInjector)
         // test params
@@ -60,7 +60,7 @@ class DanaRsPacketNotifyDeliveryRateDisplayTest : DanaRSTestBase() {
 
     @Before
     fun mock() {
-        danaRSPlugin = DanaRSPlugin(packetInjector, aapsLogger, aapsSchedulers, rxBus, context, resourceHelper, constraintChecker, profileFunction, sp, commandQueue, danaPump, pumpSync, detailedBolusInfoStorage, temporaryBasalStorage, fabricPrivacy, dateUtil)
+        danaRSPlugin = DanaRSPlugin(packetInjector, aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, profileFunction, sp, commandQueue, danaPump, pumpSync, detailedBolusInfoStorage, temporaryBasalStorage, fabricPrivacy, dateUtil)
         danaPump.bolusingTreatment = EventOverviewBolusProgress.Treatment(0.0, 0, true)
     }
 }

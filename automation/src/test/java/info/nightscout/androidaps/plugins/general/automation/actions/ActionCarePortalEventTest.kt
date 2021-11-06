@@ -23,7 +23,7 @@ class ActionCarePortalEventTest : ActionsTestBase() {
     fun setup() {
         `when`(sp.getString(ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn("AndroidAPS")
         `when`(
-            resourceHelper.gs(
+            rh.gs(
                 ArgumentMatchers.eq(R.string.careportal_note_message),
                 ArgumentMatchers.anyString()
             )
@@ -34,7 +34,7 @@ class ActionCarePortalEventTest : ActionsTestBase() {
             .thenReturn(Single.just(InsertIfNewByTimestampTherapyEventTransaction.TransactionResult().apply {
             }))
         sut = ActionCarePortalEvent(injector)
-        sut.cpEvent = InputCarePortalMenu(resourceHelper)
+        sut.cpEvent = InputCarePortalMenu(rh)
         sut.cpEvent.value = InputCarePortalMenu.EventType.NOTE
         sut.note = InputString("Asd")
         sut.duration = InputDuration(5, InputDuration.TimeUnit.MINUTES)

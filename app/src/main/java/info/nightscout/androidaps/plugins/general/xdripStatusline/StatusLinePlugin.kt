@@ -26,7 +26,7 @@ class StatusLinePlugin @Inject constructor(
     injector: HasAndroidInjector,
     private val sp: SP,
     private val profileFunction: ProfileFunction,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     private val aapsSchedulers: AapsSchedulers,
     private val context: Context,
     private val fabricPrivacy: FabricPrivacy,
@@ -43,7 +43,7 @@ class StatusLinePlugin @Inject constructor(
         .neverVisible(true)
         .preferencesId(R.xml.pref_xdripstatus)
         .description(R.string.description_xdrip_status_line),
-    aapsLogger, resourceHelper, injector
+    aapsLogger, rh, injector
 ) {
 
     private val disposable = CompositeDisposable()
@@ -114,7 +114,7 @@ class StatusLinePlugin @Inject constructor(
     private fun buildStatusString(profile: Profile): String {
         var status = ""
         if (!loopPlugin.isEnabled(PluginType.LOOP)) {
-            status += resourceHelper.gs(R.string.disabledloop) + "\n"
+            status += rh.gs(R.string.disabledloop) + "\n"
             lastLoopStatus = false
         } else if (loopPlugin.isEnabled(PluginType.LOOP)) {
             lastLoopStatus = true

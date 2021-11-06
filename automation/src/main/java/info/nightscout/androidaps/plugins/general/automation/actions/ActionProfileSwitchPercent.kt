@@ -19,13 +19,11 @@ import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuil
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerProfilePercent
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.JsonHelper
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.json.JSONObject
 import javax.inject.Inject
 
 class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector) {
 
-    @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var uel: UserEntryLogger
 
@@ -34,8 +32,8 @@ class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector
 
     override fun friendlyName(): Int = R.string.profilepercentage
     override fun shortDescription(): String =
-        if (duration.value == 0) resourceHelper.gs(R.string.startprofileforever, pct.value.toInt())
-        else resourceHelper.gs(R.string.startprofile, pct.value.toInt(), duration.value)
+        if (duration.value == 0) rh.gs(R.string.startprofileforever, pct.value.toInt())
+        else rh.gs(R.string.startprofile, pct.value.toInt(), duration.value)
 
     @DrawableRes override fun icon(): Int = R.drawable.ic_actions_profileswitch
 
@@ -48,7 +46,7 @@ class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector
             uel.log(
                 UserEntry.Action.PROFILE_SWITCH,
                 Sources.Automation,
-                title + ": " + resourceHelper.gs(R.string.startprofile, pct.value.toInt(), duration.value),
+                title + ": " + rh.gs(R.string.startprofile, pct.value.toInt(), duration.value),
                 ValueWithUnit.Percent(pct.value.toInt()),
                 ValueWithUnit.Minute(duration.value)
             )
@@ -61,8 +59,8 @@ class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.percent_u), "", pct))
-            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.duration_min_label), "", duration))
+            .add(LabelWithElement(rh, rh.gs(R.string.percent_u), "", pct))
+            .add(LabelWithElement(rh, rh.gs(R.string.duration_min_label), "", duration))
             .build(root)
     }
 

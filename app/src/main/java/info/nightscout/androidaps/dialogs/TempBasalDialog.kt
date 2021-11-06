@@ -29,7 +29,7 @@ import kotlin.math.abs
 class TempBasalDialog : DialogFragmentWithDate() {
 
     @Inject lateinit var constraintChecker: ConstraintChecker
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var commandQueue: CommandQueueProvider
@@ -103,23 +103,23 @@ class TempBasalDialog : DialogFragmentWithDate() {
         if (isPercentPump) {
             val basalPercentInput = SafeParse.stringToInt(binding.basalpercentinput.text)
             percent = constraintChecker.applyBasalPercentConstraints(Constraint(basalPercentInput), profile).value()
-            actions.add(resourceHelper.gs(R.string.tempbasal_label) + ": $percent%")
-            actions.add(resourceHelper.gs(R.string.duration) + ": " + resourceHelper.gs(R.string.format_mins, durationInMinutes))
-            if (percent != basalPercentInput) actions.add(resourceHelper.gs(R.string.constraintapllied))
+            actions.add(rh.gs(R.string.tempbasal_label) + ": $percent%")
+            actions.add(rh.gs(R.string.duration) + ": " + rh.gs(R.string.format_mins, durationInMinutes))
+            if (percent != basalPercentInput) actions.add(rh.gs(R.string.constraintapllied))
         } else {
             val basalAbsoluteInput = SafeParse.stringToDouble(binding.basalabsoluteinput.text)
             absolute = constraintChecker.applyBasalConstraints(Constraint(basalAbsoluteInput), profile).value()
-            actions.add(resourceHelper.gs(R.string.tempbasal_label) + ": " + resourceHelper.gs(R.string.pump_basebasalrate, absolute))
-            actions.add(resourceHelper.gs(R.string.duration) + ": " + resourceHelper.gs(R.string.format_mins, durationInMinutes))
+            actions.add(rh.gs(R.string.tempbasal_label) + ": " + rh.gs(R.string.pump_basebasalrate, absolute))
+            actions.add(rh.gs(R.string.duration) + ": " + rh.gs(R.string.format_mins, durationInMinutes))
             if (abs(absolute - basalAbsoluteInput) > 0.01)
-                actions.add(resourceHelper.gs(R.string.constraintapllied).formatColor(resourceHelper, R.color.warning))
+                actions.add(rh.gs(R.string.constraintapllied).formatColor(rh, R.color.warning))
         }
         activity?.let { activity ->
-            OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.tempbasal_label), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
+            OKDialog.showConfirmation(activity, rh.gs(R.string.tempbasal_label), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                 val callback: Callback = object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
+                            ErrorHelperActivity.runAlarm(ctx, result.comment, rh.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
                         }
                     }
                 }

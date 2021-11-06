@@ -41,7 +41,7 @@ class BGSourceFragment : DaggerFragment() {
 
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var repository: AppRepository
@@ -131,7 +131,7 @@ class BGSourceFragment : DaggerFragment() {
                     val glucoseValue = v.tag as GlucoseValue
                     activity?.let { activity ->
                         val text = dateUtil.dateAndTimeString(glucoseValue.timestamp) + "\n" + glucoseValue.valueToUnitsString(profileFunction.getUnits())
-                        OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord), text, Runnable {
+                        OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord), text, Runnable {
                             val source = when((activePlugin.activeBgSource as PluginBase).pluginDescription.pluginName) {
                                 R.string.dexcom_app_patched -> Sources.Dexcom
                                 R.string.eversense          -> Sources.Eversense

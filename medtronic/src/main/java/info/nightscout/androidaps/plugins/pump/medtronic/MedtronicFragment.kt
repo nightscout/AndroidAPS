@@ -52,7 +52,7 @@ class MedtronicFragment : DaggerFragment() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var commandQueue: CommandQueueProvider
@@ -90,7 +90,7 @@ class MedtronicFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.rlStatus.text = resourceHelper.gs(RileyLinkServiceState.NotStarted.resourceId)
+        binding.rlStatus.text = rh.gs(RileyLinkServiceState.NotStarted.resourceId)
 
         binding.pumpStatusIcon.setTextColor(Color.WHITE)
         @SuppressLint("SetTextI18n")
@@ -194,17 +194,17 @@ class MedtronicFragment : DaggerFragment() {
         val rileyLinkError = medtronicPumpPlugin.rileyLinkService.error
         binding.rlStatus.text =
             when {
-                rileyLinkServiceData.rileyLinkServiceState == RileyLinkServiceState.NotStarted -> resourceHelper.gs(resourceId)
-                rileyLinkServiceData.rileyLinkServiceState.isConnecting                        -> "{fa-bluetooth-b spin}   " + resourceHelper.gs(resourceId)
-                rileyLinkServiceData.rileyLinkServiceState.isError && rileyLinkError == null   -> "{fa-bluetooth-b}   " + resourceHelper.gs(resourceId)
-                rileyLinkServiceData.rileyLinkServiceState.isError && rileyLinkError != null   -> "{fa-bluetooth-b}   " + resourceHelper.gs(rileyLinkError.getResourceId(RileyLinkTargetDevice.MedtronicPump))
-                else                                                                           -> "{fa-bluetooth-b}   " + resourceHelper.gs(resourceId)
+                rileyLinkServiceData.rileyLinkServiceState == RileyLinkServiceState.NotStarted -> rh.gs(resourceId)
+                rileyLinkServiceData.rileyLinkServiceState.isConnecting                        -> "{fa-bluetooth-b spin}   " + rh.gs(resourceId)
+                rileyLinkServiceData.rileyLinkServiceState.isError && rileyLinkError == null   -> "{fa-bluetooth-b}   " + rh.gs(resourceId)
+                rileyLinkServiceData.rileyLinkServiceState.isError && rileyLinkError != null   -> "{fa-bluetooth-b}   " + rh.gs(rileyLinkError.getResourceId(RileyLinkTargetDevice.MedtronicPump))
+                else                                                                           -> "{fa-bluetooth-b}   " + rh.gs(resourceId)
             }
         binding.rlStatus.setTextColor(if (rileyLinkError != null) Color.RED else Color.WHITE)
 
         binding.errors.text =
             rileyLinkServiceData.rileyLinkError?.let {
-                resourceHelper.gs(it.getResourceId(RileyLinkTargetDevice.MedtronicPump))
+                rh.gs(it.getResourceId(RileyLinkTargetDevice.MedtronicPump))
             } ?: "-"
 
         when (medtronicPumpStatus.pumpDeviceState) {
@@ -217,22 +217,22 @@ class MedtronicFragment : DaggerFragment() {
             PumpDeviceState.ErrorWhenCommunicating,
             PumpDeviceState.TimeoutWhenCommunicating,
             PumpDeviceState.InvalidConfiguration ->
-                binding.pumpStatusIcon.text = " " + resourceHelper.gs(medtronicPumpStatus.pumpDeviceState.resourceId)
+                binding.pumpStatusIcon.text = " " + rh.gs(medtronicPumpStatus.pumpDeviceState.resourceId)
 
             PumpDeviceState.Active               -> {
                 val cmd = medtronicUtil.getCurrentCommand()
                 if (cmd == null)
-                    binding.pumpStatusIcon.text = " " + resourceHelper.gs(medtronicPumpStatus.pumpDeviceState.resourceId)
+                    binding.pumpStatusIcon.text = " " + rh.gs(medtronicPumpStatus.pumpDeviceState.resourceId)
                 else {
                     aapsLogger.debug(LTag.PUMP, "Command: $cmd")
                     val cmdResourceId = cmd.resourceId //!!
                     if (cmd == MedtronicCommandType.GetHistoryData) {
                         binding.pumpStatusIcon.text = medtronicUtil.frameNumber?.let {
-                            resourceHelper.gs(cmdResourceId!!, medtronicUtil.pageNumber, medtronicUtil.frameNumber)
+                            rh.gs(cmdResourceId!!, medtronicUtil.pageNumber, medtronicUtil.frameNumber)
                         }
-                            ?: resourceHelper.gs(R.string.medtronic_cmd_desc_get_history_request, medtronicUtil.pageNumber)
+                            ?: rh.gs(R.string.medtronic_cmd_desc_get_history_request, medtronicUtil.pageNumber)
                     } else {
-                        binding.pumpStatusIcon.text = " " + (cmdResourceId?.let { resourceHelper.gs(it) }
+                        binding.pumpStatusIcon.text = " " + (cmdResourceId?.let { rh.gs(it) }
                             ?: cmd.commandDescription)
                     }
                 }
@@ -253,8 +253,8 @@ class MedtronicFragment : DaggerFragment() {
 
     private fun displayNotConfiguredDialog() {
         context?.let {
-            OKDialog.show(it, resourceHelper.gs(R.string.medtronic_warning),
-                resourceHelper.gs(R.string.medtronic_error_operation_not_possible_no_configuration), null)
+            OKDialog.show(it, rh.gs(R.string.medtronic_warning),
+                rh.gs(R.string.medtronic_error_operation_not_possible_no_configuration), null)
         }
     }
 
@@ -268,7 +268,7 @@ class MedtronicFragment : DaggerFragment() {
 
         // last connection
         if (medtronicPumpStatus.lastConnection != 0L) {
-            val minAgo = dateUtil.minAgo(resourceHelper, medtronicPumpStatus.lastConnection)
+            val minAgo = dateUtil.minAgo(rh, medtronicPumpStatus.lastConnection)
             val min = (System.currentTimeMillis() - medtronicPumpStatus.lastConnection) / 1000 / 60
             if (medtronicPumpStatus.lastConnection + 60 * 1000 > System.currentTimeMillis()) {
                 binding.lastConnection.setText(R.string.medtronic_pump_connected_now)
@@ -276,17 +276,17 @@ class MedtronicFragment : DaggerFragment() {
             } else if (medtronicPumpStatus.lastConnection + 30 * 60 * 1000 < System.currentTimeMillis()) {
 
                 if (min < 60) {
-                    binding.lastConnection.text = resourceHelper.gs(R.string.minago, min)
+                    binding.lastConnection.text = rh.gs(R.string.minago, min)
                 } else if (min < 1440) {
                     val h = (min / 60).toInt()
-                    binding.lastConnection.text = (resourceHelper.gq(R.plurals.duration_hours, h, h) + " "
-                        + resourceHelper.gs(R.string.ago))
+                    binding.lastConnection.text = (rh.gq(R.plurals.duration_hours, h, h) + " "
+                        + rh.gs(R.string.ago))
                 } else {
                     val h = (min / 60).toInt()
                     val d = h / 24
                     // h = h - (d * 24);
-                    binding.lastConnection.text = (resourceHelper.gq(R.plurals.duration_days, d, d) + " "
-                        + resourceHelper.gs(R.string.ago))
+                    binding.lastConnection.text = (rh.gq(R.plurals.duration_days, d, d) + " "
+                        + rh.gs(R.string.ago))
                 }
                 binding.lastConnection.setTextColor(Color.RED)
             } else {
@@ -301,27 +301,27 @@ class MedtronicFragment : DaggerFragment() {
         if (bolus != null && bolusTime != null) {
             val agoMsc = System.currentTimeMillis() - bolusTime.time
             val bolusMinAgo = agoMsc.toDouble() / 60.0 / 1000.0
-            val unit = resourceHelper.gs(R.string.insulin_unit_shortname)
+            val unit = rh.gs(R.string.insulin_unit_shortname)
             val ago = when {
-                agoMsc < 60 * 1000 -> resourceHelper.gs(R.string.medtronic_pump_connected_now)
-                bolusMinAgo < 60   -> dateUtil.minAgo(resourceHelper, bolusTime.time)
-                else               -> dateUtil.hourAgo(bolusTime.time, resourceHelper)
+                agoMsc < 60 * 1000 -> rh.gs(R.string.medtronic_pump_connected_now)
+                bolusMinAgo < 60   -> dateUtil.minAgo(rh, bolusTime.time)
+                else               -> dateUtil.hourAgo(bolusTime.time, rh)
             }
-            binding.lastBolus.text = resourceHelper.gs(R.string.mdt_last_bolus, bolus, unit, ago)
+            binding.lastBolus.text = rh.gs(R.string.mdt_last_bolus, bolus, unit, ago)
         } else {
             binding.lastBolus.text = ""
         }
 
         // base basal rate
         binding.baseBasalRate.text = ("(" + medtronicPumpStatus.activeProfileName + ")  "
-            + resourceHelper.gs(R.string.pump_basebasalrate, medtronicPumpPlugin.baseBasalRate))
+            + rh.gs(R.string.pump_basebasalrate, medtronicPumpPlugin.baseBasalRate))
 
         // TBR
         var tbrStr = ""
         val tbrRemainingTime: Int? = medtronicPumpStatus.tbrRemainingTime
 
         if (tbrRemainingTime != null) {
-            tbrStr = resourceHelper.gs(R.string.mdt_tbr_remaining, medtronicPumpStatus.tempBasalAmount, tbrRemainingTime)
+            tbrStr = rh.gs(R.string.mdt_tbr_remaining, medtronicPumpStatus.tempBasalAmount, tbrRemainingTime)
         }
         binding.tempBasal.text = tbrStr
 
@@ -334,7 +334,7 @@ class MedtronicFragment : DaggerFragment() {
         warnColors.setColorInverse(binding.pumpStateBattery, medtronicPumpStatus.batteryRemaining.toDouble(), 25.0, 10.0)
 
         // reservoir
-        binding.reservoir.text = resourceHelper.gs(R.string.reservoirvalue, medtronicPumpStatus.reservoirRemainingUnits, medtronicPumpStatus.reservoirFullUnits)
+        binding.reservoir.text = rh.gs(R.string.reservoirvalue, medtronicPumpStatus.reservoirRemainingUnits, medtronicPumpStatus.reservoirFullUnits)
         warnColors.setColorInverse(binding.reservoir, medtronicPumpStatus.reservoirRemainingUnits, 50.0, 20.0)
 
         medtronicPumpPlugin.rileyLinkService.verifyConfiguration()

@@ -271,6 +271,6 @@ class MsgHistoryEventsV2 constructor(
             }
         }
         if (datetime > danaPump.lastEventTimeLoaded) danaPump.lastEventTimeLoaded = datetime
-        rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.processinghistory) + ": " + status))
+        rxBus.send(EventPumpStatusChanged(rh.gs(R.string.processinghistory) + ": " + status))
     }
 }

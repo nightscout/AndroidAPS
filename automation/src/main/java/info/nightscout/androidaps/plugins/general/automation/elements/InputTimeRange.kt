@@ -14,17 +14,17 @@ import info.nightscout.androidaps.utils.MidnightTime
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import java.util.*
 
-class InputTimeRange(private val resourceHelper: ResourceHelper, private val dateUtil: DateUtil) : Element() {
+class InputTimeRange(private val rh: ResourceHelper, private val dateUtil: DateUtil) : Element() {
 
     var start: Int = getMinSinceMidnight(dateUtil.now())
     var end: Int = getMinSinceMidnight(dateUtil.now())
 
     override fun addToLayout(root: LinearLayout) {
-        val px = resourceHelper.dpToPx(10)
+        val px = rh.dpToPx(10)
 
         root.addView(
             TextView(root.context).apply {
-                text = resourceHelper.gs(R.string.between)
+                text = rh.gs(R.string.between)
                 setTypeface(typeface, Typeface.BOLD)
                 gravity = Gravity.CENTER_HORIZONTAL
             })
@@ -56,7 +56,7 @@ class InputTimeRange(private val resourceHelper: ResourceHelper, private val dat
                     })
                 addView(TextView(root.context).apply {
                     @Suppress("SetTextI18n")
-                    text = resourceHelper.gs(R.string.and) + "      " + dateUtil.timeString(toMills(end))
+                    text = rh.gs(R.string.and) + "      " + dateUtil.timeString(toMills(end))
                     setPadding(px, px, px, px)
                     setOnClickListener {
                         root.context?.let {

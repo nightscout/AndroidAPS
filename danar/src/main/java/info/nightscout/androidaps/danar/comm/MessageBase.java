@@ -46,7 +46,7 @@ public class MessageBase {
     @Inject public DanaRKoreanPlugin danaRKoreanPlugin;
     @Inject public DanaRv2Plugin danaRv2Plugin;
     @Inject public RxBus rxBus;
-    @Inject public ResourceHelper resourceHelper;
+    @Inject public ResourceHelper rh;
     @Inject public ActivePlugin activePlugin;
     @Inject public ConfigBuilder configBuilder;
     @Inject public CommandQueueProvider commandQueue;

@@ -47,6 +47,7 @@ class AutomationEvent(private val injector: HasAndroidInjector) {
     fun areActionsValid(): Boolean {
         var result = true
         for (action in actions) result = result && action.isValid()
+        if (!result) isEnabled = false
         return result
     }
 
