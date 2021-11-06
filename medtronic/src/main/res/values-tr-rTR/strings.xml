@@ -27,7 +27,6 @@
     <!-- MDT Fragment -->
     <string name="rl_battery_label">RileyLink Pili</string>
     <!-- MDT Errors -->
-    <string name="medtronic_errors">Hatalar</string>
     <string name="medtronic_error_serial_not_set">Seri no # ayarlanmadı.</string>
     <string name="medtronic_error_serial_invalid">Seri no # geçersiz.</string>
     <string name="medtronic_error_pump_type_not_set">Pompa Tipi ayarlanmadı.</string>
@@ -77,16 +76,9 @@
     <string name="medtronic_cmd_desc_set_bolus">Bolusu Ayarla</string>
     <string name="medtronic_cmd_desc_get_remaining_insulin">Kalan İnsülin alınıyor</string>
     <string name="medtronic_pump_status_pump_unreachable">Pompa\'ya ulaşılamıyor</string>
-    <string name="medtronic_warning">Uyarı</string>
     <!-- medtronic_warning -->
-    <string name="medtronic_pump_connected_now">Şimdi</string>
     <!-- combo_pump_connected_now -->
-    <string name="ago">önce</string>
-    <string name="medtronic_notification_check_time_date">Pompa saati güncellemesi gerekli</string>
     <!-- combo_notification_check_time_date -->
-    <string name="common_on">Aç</string>
-    <string name="common_off">Kapa</string>
-    <string name="pump_time_updated">Pompa zamanı güncellendi</string>
     <string name="set_neutral_temps_title">Sık kullanılan Geçici Bazalları ayarla</string>
     <string name="set_neutral_temps_summary">Etkinleştirilirse, her saatin sonunda geçici bazali iptal eder. Bu yöntem, bazı pompaların saatte bip sesini/titremesini durdurmaya yardımcı olabilir.</string>
     <string name="mdt_tbr_remaining">%1$.1f U/sa (%2$d dk. kaldı)</string>
