@@ -213,11 +213,13 @@ class ConfigBuilderFragment : DaggerFragment() {
             pluginVisibility.isEnabled = !(plugin.pluginDescription.neverVisible || plugin.pluginDescription.alwaysVisible) && plugin.isEnabled(pluginType)
             pluginVisibility.isChecked = plugin.isFragmentVisible()
 
-            if ((plugin.name == "Glunovo") && (plugin.isEnabled(PluginType.BGSOURCE))) {
-                context!!.startService(Intent(context, GlunovoPluginService::class.java))
-            }
-            if ((plugin.name != "Glunovo") && (plugin.isEnabled(PluginType.BGSOURCE))) {
-                context!!.stopService(Intent(context, GlunovoPluginService::class.java))
+            if (plugin.isEnabled(PluginType.BGSOURCE)) {
+                if (plugin.name == "Glunovo") {
+                    context!!.startService(Intent(context, GlunovoPluginService::class.java))
+                }
+                else {
+                    context!!.stopService(Intent(context, GlunovoPluginService::class.java))
+                }
             }
         }
 
