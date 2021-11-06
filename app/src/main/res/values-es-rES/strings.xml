@@ -231,9 +231,9 @@
     <string name="ns_upload_only">(PELIGROSO INHABILITAR) Sólo carga NS</string>
     <string name="ns_upload_only_summary">Sólo subir a NS (sincronización desactivada). No es efectivo en SGV a menos que se seleccione una fuente local como xDrip+. No es efectivo en perfiles mientras se utiliza perfiles NS.\n!!! ¡¡ADVERTENCIA!!! Desactivar esta opción puede causar mal funcionamiento y sobredosis de insulina si cualquiera de sus componentes (AAPS, NS, xDrip+) está mal configurado. ¡Vigile cuidadosamente si los datos mostrados por AAPS coinciden con el estado de la bomba!</string>
     <string name="pumpNotInitialized">¡Bomba no iniciada!</string>
-    <string name="primefill">Rellenar/Llenar</string>
-    <string name="fillwarning">¡Por favor asegurar que la cantidad coincide con la especificación del set de infusión!</string>
-    <string name="fillbolus_title">Llenar/Rellenar cantidad de insulina estándar</string>
+    <string name="primefill">Cebar/Llenar</string>
+    <string name="fillwarning">¡Por favor, asegúrate de que la cantidad coincide con la especificación del set de infusión!</string>
+    <string name="fillbolus_title">Cebar/Llenar la cantidad de insulina estándar</string>
     <string name="button1">Botón 1</string>
     <string name="button2">Botón 2</string>
     <string name="button3">Botón 3</string>
@@ -424,8 +424,8 @@
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
     <string name="basal_short">BAS</string>
-    <string name="keep_screen_on_title">Mantener pantalla activa</string>
-    <string name="keep_screen_on_summary">Evitar que Android apague la pantalla. Consume mucha energía cuando no esta enchufado.</string>
+    <string name="keep_screen_on_title">Mantener la pantalla activa</string>
+    <string name="keep_screen_on_summary">Evitar que Android apague la pantalla. Consume mucha batería cuando no está conectado al cargador.</string>
     <string name="sensitivity_warning">Al activar Autosens recuerda introducir todos carbohidratos comidos. Sino las desviaciones de carbohidratos serán identificadas incorrectamente como un cambio de sensibilidad !!</string>
     <string name="sensitivityweightedaverage">Sensibilidad promedio ponderada</string>
     <string name="mdtp_ok">Ok</string>
@@ -843,6 +843,9 @@
     <string name="time_to_eat">¡Hora de comer!\nEjecutar el asistente de bolo y cálcular de nuevo.</string>
     <string name="timetoeat">Hora de comer</string>
     <string name="bolusreminder">Recordatorio de bolo</string>
+    <string name="enablebolusreminder">Habilitar recordatorio de bolo</string>
+    <string name="enablebolusreminder_summary">Usa recordatorio de bolo más tarde con el asistente
+        (\"post-bolus\")</string>
     <string name="fabric_upload_disabled">¡Carga de registros de errores desactivada!</string>
     <string name="graph_menu_divider_header">Gráfico</string>
     <string name="chart_menu">Menú gráfico</string>
@@ -857,7 +860,7 @@
     <string name="privacy_summary">Puedes proporcionar una dirección de correo electrónico opcional si quieres ser notificado sobre fallos de la aplicación. Este no es un servicio automatizado. Los desarrolladores se comunicarán contigo en situaciones peligrosas.</string>
     <string name="full_sync">Sincronización completa</string>
     <string name="full_sync_comment">¿Sincronización completa? Puede tardar muchas horas y hasta que termine no verás nuevos datos en NS.</string>
-    <string name="prime">Llenado</string>
+    <string name="prime">Cebar</string>
     <string name="ns_sync_options">Sincronización</string>
     <string name="ns_upload_summary">Perfiles, bolos, carbohidratos, basales temporales se suben a NS</string>
     <string name="ns_upload">Subir datos a NS</string>
