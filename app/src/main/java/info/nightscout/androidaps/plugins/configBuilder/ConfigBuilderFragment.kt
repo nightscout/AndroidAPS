@@ -217,7 +217,7 @@ class ConfigBuilderFragment : DaggerFragment() {
                 context!!.startService(Intent(context, GlunovoPluginService::class.java))
             }
             if ((plugin.name != "Glunovo") && (plugin.isEnabled(PluginType.BGSOURCE))) {
-                context!!.startService(Intent(context, GlunovoPluginService::class.java))
+                context!!.stopService(Intent(context, GlunovoPluginService::class.java))
             }
         }
 
