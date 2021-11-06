@@ -896,4 +896,5 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="invalid_profile_not_accepted">Profil %1$s non valide, refusé par NS</string>
     <string name="view">Vue</string>
     <string name="errors">Erreurs</string>
+    <string name="ns_sync_slow">Ralentir les téléchargements</string>
 </resources>
