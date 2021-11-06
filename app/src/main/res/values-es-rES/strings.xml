@@ -103,7 +103,7 @@
     <string name="overview_calculator_label">Calculadora</string>
     <string name="constraintapllied">Restricción aplicada!</string>
     <string name="sms_bolus">Bolo:</string>
-    <string name="basal">Dosis Basal</string>
+    <string name="basal">Dosis basal</string>
     <string name="sms_basal">Dosis Basal:</string>
     <string name="changeyourinput">¡Cambiar datos!</string>
     <string name="configbuilder_bgsource">Origen BG</string>
@@ -127,7 +127,7 @@
     <string name="careportal_newnstreatment_duration_label">Duración</string>
     <string name="careportal_newnstreatment_profile_label">Perfil</string>
     <string name="careportal_newnstreatment_glucosetype">Tipo de glucosa</string>
-    <string name="overview_tempbasal_button">Basal Temporal</string>
+    <string name="overview_tempbasal_button">Basal temporal</string>
     <string name="overview_extendedbolus_button">Bolo extendido</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout versión:</string>
     <string name="missing_carbs">Falta %1$d g</string>
@@ -268,7 +268,7 @@
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">LAZO</string>
     <string name="oaps_shortname">OAPS</string>
-    <string name="localprofile_shortname">PERFLOC</string>
+    <string name="localprofile_shortname">PERFIL</string>
     <string name="overview_shortname">INICIO</string>
     <string name="virtualpump_shortname">BOMBAV</string>
     <string name="treatments_shortname">TRAT</string>
@@ -780,8 +780,8 @@
     <string name="chartmenu">Menú gráfico</string>
     <string name="loop_smbrequest_time_label">Tiempo requerido de SMB</string>
     <string name="loop_smbexecution_time_label">Tiempo de ejecución de SMB</string>
-    <string name="loop_tbrrequest_time_label">Tiempo requerido para Basal temporal</string>
-    <string name="loop_tbrexecution_time_label">Tiempo de ejecución para Temp Basal</string>
+    <string name="loop_tbrrequest_time_label">Tiempo requerido para basal temporal</string>
+    <string name="loop_tbrexecution_time_label">Tiempo de ejecución para basal temporal</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">desde la aplicación de autenticación para: %1$s seguido de PIN</string>
     <string name="smscommunicator_otp_pin">PIN obligatorio adicional al final del token</string>
@@ -840,7 +840,7 @@
     <string name="bolusadvisormessage">Usted tiene alta glicemia. En lugar de comer ahora se recomienda esperar a una mejor glicemia. ¿Quieres hacer un bolo de corrección ahora y recibir una nota cuándo es el momento de comer? En este caso no se grabarán carbohidratos y se debe volver a utilizar el asistente cuando lo recordamos.</string>
     <string name="enablebolusadvisor">Habilitar asistente de bolo</string>
     <string name="enablebolusadvisor_summary">Utilice un recordatorio para empezar a comer más tarde en lugar del resultado del asistente durante la glicemia alta (\"pre-bolo\")</string>
-    <string name="time_to_eat">¡Hora de comer!\nEjecutar el asistente de bolo y cálcular de nuevo.</string>
+    <string name="time_to_eat">¡Hora de comer!\nEjecutar el asistente de bolo y calcular de nuevo.</string>
     <string name="timetoeat">Hora de comer</string>
     <string name="bolusreminder">Recordatorio de bolo</string>
     <string name="enablebolusreminder">Habilitar recordatorio de bolo</string>
