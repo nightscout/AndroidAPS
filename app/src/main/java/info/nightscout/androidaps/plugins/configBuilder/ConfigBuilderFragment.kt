@@ -213,11 +213,11 @@ class ConfigBuilderFragment : DaggerFragment() {
             pluginVisibility.isEnabled = !(plugin.pluginDescription.neverVisible || plugin.pluginDescription.alwaysVisible) && plugin.isEnabled(pluginType)
             pluginVisibility.isChecked = plugin.isFragmentVisible()
 
-            for (plugin in activePlugin.getPluginsList()) {
+            //for (plugin in activePlugin.getPluginsList()) {
                 if ((plugin.name == "Glunovo") && (plugin.isEnabled(PluginType.BGSOURCE))) {
                     context!!.startService(Intent(context, GlunovoPluginService::class.java))
                 }
-            }
+            //}
         }
 
         private fun areMultipleSelectionsAllowed(type: PluginType): Boolean {
