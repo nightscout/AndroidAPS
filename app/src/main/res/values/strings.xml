@@ -808,6 +808,8 @@
     <string name="time_elapsed">Time elapsed</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Receive BG values from Poctech app</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Receive values from Glunovo app</string>
     <string name="description_source_tomato">Receive BG values from Tomato app (MiaoMiao device)</string>
     <string name="key_high_temptarget_raises_sensitivity" translatable="false">high_temptarget_raises_sensitivity</string>
     <string name="key_low_temptarget_lowers_sensitivity" translatable="false">low_temptarget_lowers_sensitivity</string>
@@ -1125,8 +1127,6 @@
     <string name="error_in_basal_values">Error in basal values</string>
     <string name="error_in_target_values">Error in target values</string>
     <string name="error_in_isf_values">Error in ISF values</string>
-    <string name="glunovo">Glunovo</string>
-    <string name="description_source_glunovo">Receive values from Glunovo</string>
     <string name="run_question">Run %s?</string>
     <string name="invalid_profile_not_accepted">Invalid profile %1$s not accepted from NS</string>
     <string name="view">View</string>
