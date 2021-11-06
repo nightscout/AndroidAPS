@@ -63,11 +63,11 @@ class GlunovoPluginService : Service() {
             }
 
             val curtime = System.currentTimeMillis()
-            time = cr.getLong(0)
+            time = curtime - cr.getLong(0)
             if (time != curtime) { //wait until next reading to enter
                 cr.close()
                 crfirst.close()
-                handler.postDelayed(this, 180000-(curtime-time))
+                handler.postDelayed(this, 180000)//-(curtime-time))
             }
             else
             {
