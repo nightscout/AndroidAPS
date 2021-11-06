@@ -897,4 +897,5 @@ Context | Edit Context</string>
     <string name="invalid_profile_not_accepted">Неверный профиль %1$s не принят из NS</string>
     <string name="view">Вид</string>
     <string name="errors">Ошибки</string>
+    <string name="ns_sync_slow">Замедлить выгрузку</string>
 </resources>
