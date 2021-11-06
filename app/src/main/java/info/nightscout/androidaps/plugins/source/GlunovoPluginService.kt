@@ -7,6 +7,7 @@ import android.os.IBinder
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
@@ -35,13 +36,14 @@ class GlunovoPluginService : Service() {
             val crfirst = contentResolver.query(CONTENT_URI, null, null, null, null)
             crfirst!!.moveToFirst()
             cr.moveToPosition(cr.count-11)
-            var time : Long = cr.getLong(0)
+            var time : Long
             var value : Double
             var intent : Intent
             var bundle : Bundle
 
-            while ((cr.moveToNext()) && (cr.getLong(0) != crfirst.getLong(0)))
+            while ((cr.position != cr.count) && (cr.getLong(0) != crfirst.getLong(0)))
             {
+                cr.moveToNext()
                 time = cr.getLong(0)
                 value = cr.getDouble(1) * 18.018 //value in mmol/l... transformed in mg/dl if value *18.018
                 intent = Intent()
@@ -57,6 +59,7 @@ class GlunovoPluginService : Service() {
             }
 
             val curtime = System.currentTimeMillis()
+            time = cr.getLong(0)
             if (time != curtime) { //wait until next reading to enter
                 cr.close()
                 crfirst.close()
