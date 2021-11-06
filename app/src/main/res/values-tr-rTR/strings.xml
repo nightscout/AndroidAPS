@@ -4,13 +4,25 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="treatmentssafety_title">Tedavi güvenliği</string>
+    <string name="treatmentssafety_maxbolus_title">Maks izin verilen bolus [U]</string>
+    <string name="treatmentssafety_maxcarbs_title">Maks izin verilen karbonhidrat [g]</string>
     <string name="nav_preferences_plugin">%1$s Tercihler</string>
+    <string name="nav_preferences">Tercihler</string>
+    <string name="nav_refreshtreatments">NS\'tan tedavileri güncelle</string>
     <string name="nav_resetdb">Veritabanlarını sıfırla</string>
     <string name="reset_db_confirm">Veritabanlarını gerçekten sıfırlamak istiyor musunuz?</string>
     <string name="nav_exit">Çıkış</string>
+    <string name="ns_sync_use_absolute_title">Her zaman bazal mutlak değerleri kullan</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Bu cihaz, program için pil optimizasyonunu desteklemiyor gibi görünüyor - performans sorunları yaşayabilirsiniz.</string>
     <string name="description_actions">Ortak özelliklere hızlıca erişmek için bazı düğmeler</string>
+    <string name="description_objectives">Eğitim programı</string>
+    <string name="description_food">Nightscout\'ta tanımlanan gıda ön ayarlarını gösterir</string>
+    <string name="description_insulin_rapid">Humalog ve NovoRapid / NovoLog için İnsülin Profili</string>
     <string name="description_insulin_lyumjev">Lyumjev için insülin ayarı</string>
+    <string name="description_loop">Döngüyü tetikleyen uygulamayı etkinleştirin veya devre dışı bırakın.</string>
+    <string name="description_ns_client">Nightscout ile verilerinizi senkronize eder</string>
+    <string name="description_ama">2017\'da algoritmanın durumu</string>
+    <string name="description_smb">İleri düzey kullanıcılar için en yeni algoritma</string>
     <string name="description_profile_local">Çevrimdışı kullanılabilen bir profil tanımlayın.</string>
     <string name="description_sensitivity_oref1">Duyarlılık, geçmişteki 8 veya 24 saatlik verilerden (hangisi daha hassas ise) hesaplanır. Karbonhidratlar (emilmemişse) tercihlerde belirtilen süreden sonra kesilir. Eklenti ayrıca UAM\'ı da (bildirilmemiş yemekler) hesaplar.</string>
     <string name="description_source_eversense">Yamalı Eversense uygulamasından KŞ değerleri alır.</string>
@@ -20,6 +32,7 @@
     <string name="description_source_xdrip">XDrip+\'ten KŞ değerlerini alır.</string>
     <string name="description_wear">WearOS saatinizi kullanarak AndroidAPS\'yi izleyin ve kontrol edin.</string>
     <string name="description_sms_communicator">SMS komutlarını kullanarak uzaktan AndroidAPS kontrolü.</string>
+    <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">Toplam IOB:</string>
     <string name="treatments_wizard_bg_label">KŞ</string>
     <string name="treatments_wizard_tt_label">TT</string>
@@ -120,6 +133,7 @@
     <string name="smscommunicator_loopresumereplywithcode">Döngüye devam etmek için %1$s koduyla yanıtlayın</string>
     <string name="smscommunicator_loopenablereplywithcode">Döngüyü etkinleştirmek için %1$s koduyla yanıtlayın</string>
     <string name="smscommunicator_loopdisablereplywithcode">Döngüyü iptal etmek için %1$s koduyla yanıtlayın</string>
+    <string name="smscommunicator_tempbasalset">Geçici bazal %1$.2fÜ/s %2$d dakika için başarıyla başlatıldı</string>
     <string name="smscommunicator_extendedset">%1$.2fU yayma bolus %2$d dakika boyunca başarıyla başlatıldı</string>
     <string name="smscommunicator_carbsset">%1$d g karbonhidrat başarıyla sisteme girildi</string>
     <string name="smscommunicator_carbsfailed">%1$d g karbonhidrat girilemedi</string>
@@ -290,8 +304,8 @@
     <string name="default_temptargets">Varsayılan Geçici hedefler</string>
     <string name="eatingsoon_duration">yakında ye süresi</string>
     <string name="eatingsoon_target">yakında ye hedefi</string>
-    <string name="activity_duration">eğzersiz süresi</string>
-    <string name="activity_target">eğzersiz hedefi</string>
+    <string name="activity_duration">aktivite süresi</string>
+    <string name="activity_target">aktivite hedefi</string>
     <string name="hypo_duration">hipo süresi</string>
     <string name="hypo_target">hipo hedefi</string>
     <string name="reuse_profile_pct_hours">%1$d%% %2$dh\'yi yeniden kullan</string>
@@ -383,7 +397,7 @@
     <string name="allow_automated_crash_reporting">Geliştiricilere, fabric.io hizmeti aracılığıyla otomatik kilitlenme raporlaması ve özellik kullanım verilerinin gönderilmesine izin verir.</string>
     <string name="g5appnotdetected">Lütfen Dexcom uygulamanızı desteklenen sürüme güncelleyin</string>
     <string name="dexcom_app_not_installed">Dexcom uygulaması yüklü değil.</string>
-    <string name="start_activity_tt">Eğzersiz başlat TT</string>
+    <string name="start_activity_tt">Etkinliği Başlat TT</string>
     <string name="start_eating_soon_tt">Yakında Yemeğe Başla TT</string>
     <string name="temptargetshort">TT</string>
     <string name="do_not_bolus_record_only">Bolusu sadece kayıt altına al</string>
