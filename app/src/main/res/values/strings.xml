@@ -1132,5 +1132,8 @@
     <string name="view">View</string>
     <string name="errors">Errors</string>
     <string name="ns_sync_slow">Slow down uploads</string>
+    <string name="data_status">BG data status</string>
+    <string name="recalculated_data_used">Recalculated data used</string>
+    <string name="bg_too_close">BG too close:\n%1$s\n%2$s</string>
 
 </resources>

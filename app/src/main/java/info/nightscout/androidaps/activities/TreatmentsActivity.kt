@@ -24,8 +24,8 @@ class TreatmentsActivity : NoSplashAppCompatActivity() {
         binding = TreatmentsFragmentBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.tempBasals.visibility = buildHelper.isEngineeringMode().toVisibility()
-        binding.extendedBoluses.visibility = (buildHelper.isEngineeringMode() && !activePlugin.activePump.isFakingTempsByExtendedBoluses).toVisibility()
+        //binding.tempBasals.visibility = buildHelper.isEngineeringMode().toVisibility()
+        //binding.extendedBoluses.visibility = (buildHelper.isEngineeringMode() && !activePlugin.activePump.isFakingTempsByExtendedBoluses).toVisibility()
 
         binding.treatments.setOnClickListener {
             setFragment(TreatmentsBolusCarbsFragment())

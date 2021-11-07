@@ -4,6 +4,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventBucketedDataCreated
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -58,6 +59,7 @@ class BgQualityCheckPlugin @Inject constructor(
     }
 
     var state: State = State.UNKNOWN
+    var message: String = ""
 
     // Return false if BG values are doubled
     @Suppress("ReplaceGetOrSet")
@@ -73,14 +75,20 @@ class BgQualityCheckPlugin @Inject constructor(
             if (i < readings.size - 2)
                 if (abs(readings[i].timestamp - readings[i + 1].timestamp) <= 1000) {
                     state = State.DOUBLED
+                    aapsLogger.debug(LTag.CORE, "BG similar. Turning on red state.\n${readings[i]}\n${readings[i+1]}")
+                    message = rh.gs(R.string.bg_too_close, readings[i].toString(), readings[i+1].toString())
                     return
                 }
-        if (iobCobCalculator.ads.lastUsed5minCalculation == true)
+        if (iobCobCalculator.ads.lastUsed5minCalculation == true) {
             state = State.FIVE_MIN_DATA
-        else if (iobCobCalculator.ads.lastUsed5minCalculation == false)
+            message = "Data is clean"
+        } else if (iobCobCalculator.ads.lastUsed5minCalculation == false) {
             state = State.RECALCULATED
-        else
+            message = rh.gs(R.string.recalculated_data_used)
+        } else {
             state = State.UNKNOWN
+            message = ""
+        }
     }
 
     fun icon(): Int =

@@ -668,6 +668,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 if (qualityIcon != 0) {
                     binding.infoLayout.bgQuality.visibility = View.VISIBLE
                     binding.infoLayout.bgQuality.setImageResource(qualityIcon)
+                    binding.infoLayout.bgQuality.setOnClickListener {
+                        context?.let { context ->  OKDialog.show(context, rh.gs(R.string.data_status), bgQualityCheckPlugin.message) }
+                    }
                 } else {
                     binding.infoLayout.bgQuality.visibility = View.GONE
                 }
