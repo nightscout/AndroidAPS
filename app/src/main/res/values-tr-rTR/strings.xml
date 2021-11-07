@@ -559,4 +559,7 @@
     <string name="view">Görünüm</string>
     <string name="errors">Hatalar</string>
     <string name="ns_sync_slow">Yüklemeleri yavaşlat</string>
+    <string name="data_status">KŞ veri durumu</string>
+    <string name="recalculated_data_used">Kullanılan veriler yeniden hesaplandı</string>
+    <string name="bg_too_close">KŞ çok yakın:\n%1$s\n%2$s</string>
 </resources>
