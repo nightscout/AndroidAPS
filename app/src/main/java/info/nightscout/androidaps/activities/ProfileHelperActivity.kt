@@ -168,7 +168,11 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
 
         binding.basalpctfromtdd.setParams(32.0, 32.0, 37.0, 1.0, DecimalFormat("0"), false, null)
 
-        binding.tdds.text = tddCalculator.stats()
+        binding.tdds.text = getString(R.string.tdd) + ": " + rh.gs(R.string.calculation_in_progress);
+        Thread {
+            val tdds = tddCalculator.stats()
+            runOnUiThread { binding.tdds.text = tdds }
+        }.start()
 
         // Current profile
         binding.currentProfileText.text = profileFunction.getProfileName()
