@@ -262,7 +262,7 @@ class LocalInsightFragment : DaggerFragment(), View.OnClickListener {
     }
 
     private fun getLastBolusItem(statusItems: MutableList<View>) {
-        if (localInsightPlugin.lastBolusAmount.equals(0) || localInsightPlugin.lastBolusTimestamp.equals(0)) return
+        if (localInsightPlugin.lastBolusAmount.equals(0.0) || localInsightPlugin.lastBolusTimestamp.equals(0L)) return
         val agoMsc = System.currentTimeMillis() - localInsightPlugin.lastBolusTimestamp
         val bolusMinAgo = agoMsc / 60.0 / 1000.0
         val unit = rh.gs(R.string.insulin_unit_shortname)
