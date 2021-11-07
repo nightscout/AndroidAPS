@@ -888,4 +888,7 @@ Unerwartetes Verhalten.</string>
     <string name="error_in_target_values">Fehler in den Zielwerten</string>
     <string name="error_in_isf_values">Fehler in ISF-Werten</string>
     <string name="ns_sync_slow">Hochladen verlangsamen</string>
+    <string name="data_status">Status BZ-Daten</string>
+    <string name="recalculated_data_used">Verwendete Daten neu berechnet</string>
+    <string name="bg_too_close">BZ zu nah:\n%1$s\n%2$s</string>
 </resources>
