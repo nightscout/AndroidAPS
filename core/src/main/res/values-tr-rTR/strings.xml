@@ -67,6 +67,7 @@
     <string name="bolusdelivered">%1$.2f Ü bolus başarıyla gönderildi</string>
     <string name="virtualpump_resultok">Tamam</string>
     <string name="extended_bolus">Yayma Bolus</string>
+    <string name="pump_time_updated">Pompa zamanı güncellendi</string>
     <string name="exit">Çıkış</string>
     <string name="loopisdisabled">Döngü devre dışı</string>
     <string name="resumeloop">Döngüyü devam ettir</string>
@@ -163,7 +164,9 @@
     <string name="careportal_temporarytargetvalue">Geçici hedef değeri</string>
     <string name="careportal_temporarytargetcancel">Geçici hedef iptali</string>
     <string name="boluswizard">Bolus sihirbazı</string>
+    <string name="hypo">Hipo</string>
     <string name="automation">Otomasyon</string>
+    <string name="custom">Özel</string>
     <string name="ns">NS</string>
     <string name="record">Kayıt</string>
     <string name="reading_pump_history">Pompa geçmişi okunuyor</string>
