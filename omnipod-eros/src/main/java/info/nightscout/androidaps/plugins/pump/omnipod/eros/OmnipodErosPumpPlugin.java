@@ -37,7 +37,7 @@ import info.nightscout.androidaps.events.EventAppInitialized;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
-import info.nightscout.androidaps.interfaces.CommandQueueProvider;
+import info.nightscout.androidaps.interfaces.CommandQueue;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.Profile;
@@ -177,7 +177,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
             ErosPodStateManager podStateManager,
             ErosHistory erosHistory,
             AapsOmnipodErosManager aapsOmnipodErosManager,
-            CommandQueueProvider commandQueue,
+            CommandQueue commandQueue,
             FabricPrivacy fabricPrivacy,
             RileyLinkServiceData rileyLinkServiceData,
             DateUtil dateUtil,

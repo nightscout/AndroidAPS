@@ -46,13 +46,13 @@ class QueueThreadTest : TestBaseWithProfile() {
     }
 
     private lateinit var pumpPlugin: TestPumpPlugin
-    private lateinit var commandQueue: CommandQueue
+    private lateinit var commandQueue: CommandQueueImplementation
     private lateinit var sut: QueueThread
 
     @Before
     fun prepare() {
         pumpPlugin = TestPumpPlugin(injector)
-        commandQueue = CommandQueue(
+        commandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, aapsSchedulers, rh, constraintChecker,
             profileFunction, activePlugin, context, sp,
             BuildHelperImpl(ConfigImpl(), fileListProvider), dateUtil, repository, fabricPrivacy, config

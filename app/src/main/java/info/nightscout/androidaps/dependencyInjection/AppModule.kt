@@ -22,7 +22,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.data.DeviceStatusData
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.pump.PumpSyncImplementation
-import info.nightscout.androidaps.queue.CommandQueue
+import info.nightscout.androidaps.queue.CommandQueueImplementation
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HardLimits
@@ -89,8 +89,8 @@ open class AppModule {
 
         @Binds fun bindContext(mainApp: MainApp): Context
         @Binds fun bindInjector(mainApp: MainApp): HasAndroidInjector
-        @Binds fun bindActivePluginProvider(pluginStore: PluginStore): ActivePlugin
-        @Binds fun bindCommandQueueProvider(commandQueue: CommandQueue): CommandQueueProvider
+        @Binds fun bindActivePlugin(pluginStore: PluginStore): ActivePlugin
+        @Binds fun bindCommandQueue(commandQueue: CommandQueueImplementation): CommandQueue
         @Binds fun bindConfigInterface(config: ConfigImpl): Config
 
         @Binds fun bindConfigBuilderInterface(configBuilderPlugin: ConfigBuilderPlugin): ConfigBuilder

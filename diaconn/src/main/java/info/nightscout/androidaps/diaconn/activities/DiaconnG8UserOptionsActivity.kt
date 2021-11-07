@@ -15,7 +15,7 @@ import info.nightscout.androidaps.diaconn.R
 import info.nightscout.androidaps.diaconn.databinding.DiaconnG8UserOptionsActivityBinding
 
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
@@ -35,7 +35,7 @@ class DiaconnG8UserOptionsActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var context: Context
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump
     @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var commandQueue: CommandQueueProvider
+    @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var sp: SP
 
     private val disposable = CompositeDisposable()

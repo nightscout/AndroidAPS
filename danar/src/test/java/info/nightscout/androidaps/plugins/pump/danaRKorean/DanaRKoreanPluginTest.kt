@@ -8,7 +8,7 @@ import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
 import info.nightscout.androidaps.danar.R
-import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.PumpSync
@@ -25,7 +25,7 @@ class DanaRKoreanPluginTest : TestBaseWithProfile() {
     @Mock lateinit var context: Context
     @Mock lateinit var constraintChecker: ConstraintChecker
     @Mock lateinit var sp: SP
-    @Mock lateinit var commandQueue: CommandQueueProvider
+    @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var pumpSync: PumpSync
 
     lateinit var danaPump: DanaPump

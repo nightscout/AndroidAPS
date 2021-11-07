@@ -233,7 +233,7 @@ abstract class DanaRSPacketHistory(
                     basalAmount = danaRHistoryRecord.dailyBasal,
                     totalAmount = 0.0,
                     pumpId = null,
-                    pumpType = PumpType.DANA_RS,
+                    pumpType = danaPump.pumpType(),
                     danaPump.serialNumber
                 )
             }

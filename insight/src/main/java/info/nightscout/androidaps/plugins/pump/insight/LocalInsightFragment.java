@@ -21,7 +21,7 @@ import javax.inject.Inject;
 
 import dagger.android.support.DaggerFragment;
 import info.nightscout.androidaps.insight.R;
-import info.nightscout.androidaps.interfaces.CommandQueueProvider;
+import info.nightscout.androidaps.interfaces.CommandQueue;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.TBROverNotificationBlock;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.ActiveBasalRate;
@@ -41,7 +41,7 @@ import io.reactivex.disposables.CompositeDisposable;
 
 public class LocalInsightFragment extends DaggerFragment implements View.OnClickListener {
     @Inject LocalInsightPlugin localInsightPlugin;
-    @Inject CommandQueueProvider commandQueue;
+    @Inject CommandQueue commandQueue;
     @Inject RxBus rxBus;
     @Inject ResourceHelper rh;
     @Inject FabricPrivacy fabricPrivacy;

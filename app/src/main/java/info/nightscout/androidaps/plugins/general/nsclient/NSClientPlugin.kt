@@ -152,7 +152,7 @@ class NSClientPlugin @Inject constructor(
 
             preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_create_announcements_from_errors))?.isVisible = false
             preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_create_announcements_from_carbs_req))?.isVisible = false
-            preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_sync_use_absolute))?.isVisible = false
+//            preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_sync_use_absolute))?.isVisible = false
         } else {
             // APS or pumpControl mode
             preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_receive_profile_switch))?.isVisible = buildHelper.isEngineeringMode()
@@ -225,7 +225,7 @@ class NSClientPlugin @Inject constructor(
 
     fun handleClearAlarm(originalAlarm: NSAlarm, silenceTimeInMilliseconds: Long) {
         if (!isEnabled(PluginType.GENERAL)) return
-        if (!sp.getBoolean(R.string.key_ns_upload, false)) {
+        if (!sp.getBoolean(R.string.key_ns_upload, true)) {
             aapsLogger.debug(LTag.NSCLIENT, "Upload disabled. Message dropped")
             return
         }

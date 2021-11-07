@@ -62,7 +62,6 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProv
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.source.DexcomPlugin
 import info.nightscout.androidaps.plugins.source.XdripPlugin
-import info.nightscout.androidaps.queue.CommandQueue
 import info.nightscout.androidaps.skins.SkinProvider
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DefaultValueHelper
@@ -668,6 +667,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 if (qualityIcon != 0) {
                     binding.infoLayout.bgQuality.visibility = View.VISIBLE
                     binding.infoLayout.bgQuality.setImageResource(qualityIcon)
+                    binding.infoLayout.bgQuality.setOnClickListener {
+                        context?.let { context ->  OKDialog.show(context, rh.gs(R.string.data_status), bgQualityCheckPlugin.message) }
+                    }
                 } else {
                     binding.infoLayout.bgQuality.visibility = View.GONE
                 }

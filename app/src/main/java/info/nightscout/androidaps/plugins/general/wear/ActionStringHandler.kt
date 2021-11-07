@@ -67,7 +67,7 @@ class ActionStringHandler @Inject constructor(
     private val loopPlugin: LoopPlugin,
     private val wearPlugin: WearPlugin,
     private val fabricPrivacy: FabricPrivacy,
-    private val commandQueue: CommandQueueProvider,
+    private val commandQueue: CommandQueue,
     private val activePlugin: ActivePlugin,
     private val iobCobCalculator: IobCobCalculator,
     private val localInsightPlugin: LocalInsightPlugin,

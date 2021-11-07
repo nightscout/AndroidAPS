@@ -22,7 +22,7 @@ class MDIPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
-    commandQueue: CommandQueueProvider,
+    commandQueue: CommandQueue,
     private val dateUtil: DateUtil,
     private val pumpSync: PumpSync
 ) : PumpPluginBase(PluginDescription()

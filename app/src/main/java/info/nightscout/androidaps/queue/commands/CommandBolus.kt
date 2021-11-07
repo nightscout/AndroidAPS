@@ -15,7 +15,8 @@ class CommandBolus(
     injector: HasAndroidInjector,
     private val detailedBolusInfo: DetailedBolusInfo,
     callback: Callback?,
-    type: CommandType
+    type: CommandType,
+    private val carbsRunnable: Runnable
 ) : Command(injector, type, callback) {
 
     @Inject lateinit var rxBus: RxBus
@@ -23,8 +24,9 @@ class CommandBolus(
 
     override fun execute() {
         val r = activePlugin.activePump.deliverTreatment(detailedBolusInfo)
+        if (r.success) carbsRunnable.run()
         BolusProgressDialog.bolusEnded = true
-        rxBus.send(EventDismissBolusProgressIfRunning(r))
+        rxBus.send(EventDismissBolusProgressIfRunning(r, detailedBolusInfo.timestamp))
         aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${r.success} enacted: ${r.enacted}")
         callback?.result(r)?.run()
     }

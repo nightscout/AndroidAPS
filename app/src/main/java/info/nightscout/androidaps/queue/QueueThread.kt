@@ -18,7 +18,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 
 class QueueThread internal constructor(
-    private val queue: CommandQueue,
+    private val queue: CommandQueueImplementation,
     context: Context,
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
@@ -46,7 +46,7 @@ class QueueThread internal constructor(
                 val secondsElapsed = (System.currentTimeMillis() - connectionStartTime) / 1000
                 val pump = activePlugin.activePump
                 if (!pump.isConnected() && secondsElapsed > Constants.PUMP_MAX_CONNECTION_TIME_IN_SECONDS) {
-                    rxBus.send(EventDismissBolusProgressIfRunning(null))
+                    rxBus.send(EventDismissBolusProgressIfRunning(null, null))
                     rxBus.send(EventPumpStatusChanged(rh.gs(R.string.connectiontimedout)))
                     aapsLogger.debug(LTag.PUMPQUEUE, "timed out")
                     pump.stopConnecting()

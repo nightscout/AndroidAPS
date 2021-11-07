@@ -86,7 +86,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
-    commandQueue: CommandQueueProvider
+    commandQueue: CommandQueue
 ) : PumpPluginBase(pluginDescription, injector, aapsLogger, rh, commandQueue), Pump {
     @Volatile var bolusCanceled = false
     @Volatile var bolusDeliveryInProgress = false

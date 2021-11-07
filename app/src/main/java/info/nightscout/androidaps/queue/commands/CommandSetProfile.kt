@@ -5,7 +5,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.Profile
@@ -25,7 +25,7 @@ class CommandSetProfile constructor(
     @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var commandQueue: CommandQueueProvider
+    @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var config: Config
 
     override fun execute() {

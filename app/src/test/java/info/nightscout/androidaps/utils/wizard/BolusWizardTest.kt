@@ -31,7 +31,7 @@ class BolusWizardTest : TestBase() {
     @Mock lateinit var constraintChecker: ConstraintChecker
     @Mock lateinit var context: Context
     @Mock lateinit var activePlugin: ActivePlugin
-    @Mock lateinit var commandQueue: CommandQueueProvider
+    @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var loopPlugin: LoopPlugin
     @Mock lateinit var iobCobCalculator: IobCobCalculator
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin

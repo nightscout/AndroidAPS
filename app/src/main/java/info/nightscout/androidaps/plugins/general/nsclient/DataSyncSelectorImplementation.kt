@@ -621,7 +621,6 @@ class DataSyncSelectorImplementation @Inject constructor(
     //private var lastTbrId = -1L
     //private var lastTbrTime = -1L
     override fun processChangedTemporaryBasalsCompat(): Boolean {
-        val useAbsolute = sp.getBoolean(R.string.key_ns_sync_use_absolute, false)
         val lastDbIdWrapped = appRepository.getLastTemporaryBasalIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
         var startId = sp.getLong(R.string.key_ns_temporary_basal_last_synced_id, 0)
@@ -658,7 +657,7 @@ class DataSyncSelectorImplementation @Inject constructor(
                     tb.first.interfaceIDs.nightscoutId == null ->
                         nsClientPlugin.nsClientService?.dbAdd(
                             "treatments",
-                            tb.first.toJson(true, profile, dateUtil, useAbsolute),
+                            tb.first.toJson(true, profile, dateUtil),
                             DataSyncSelector.PairTemporaryBasal(tb.first, tb.second.id),
                             "$startId/$lastDbId"
                         )
@@ -667,7 +666,7 @@ class DataSyncSelectorImplementation @Inject constructor(
                         nsClientPlugin.nsClientService?.dbUpdate(
                             "treatments",
                             tb.first.interfaceIDs.nightscoutId,
-                            tb.first.toJson(false, profile, dateUtil, useAbsolute),
+                            tb.first.toJson(false, profile, dateUtil),
                             DataSyncSelector.PairTemporaryBasal(tb.first, tb.second.id),
                             "$startId/$lastDbId"
                         )
@@ -700,7 +699,6 @@ class DataSyncSelectorImplementation @Inject constructor(
     //private var lastEbId = -1L
     //private var lastEbTime = -1L
     override fun processChangedExtendedBolusesCompat(): Boolean {
-        val useAbsolute = sp.getBoolean(R.string.key_ns_sync_use_absolute, false)
         val lastDbIdWrapped = appRepository.getLastExtendedBolusIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
         var startId = sp.getLong(R.string.key_ns_extended_bolus_last_synced_id, 0)
@@ -737,7 +735,7 @@ class DataSyncSelectorImplementation @Inject constructor(
                     eb.first.interfaceIDs.nightscoutId == null ->
                         nsClientPlugin.nsClientService?.dbAdd(
                             "treatments",
-                            eb.first.toJson(true, profile, dateUtil, useAbsolute),
+                            eb.first.toJson(true, profile, dateUtil),
                             DataSyncSelector.PairExtendedBolus(eb.first, eb.second.id),
                             "$startId/$lastDbId"
                         )
@@ -746,7 +744,7 @@ class DataSyncSelectorImplementation @Inject constructor(
                         nsClientPlugin.nsClientService?.dbUpdate(
                             "treatments",
                             eb.first.interfaceIDs.nightscoutId,
-                            eb.first.toJson(false, profile, dateUtil, useAbsolute),
+                            eb.first.toJson(false, profile, dateUtil),
                             DataSyncSelector.PairExtendedBolus(eb.first, eb.second.id),
                             "$startId/$lastDbId"
                         )

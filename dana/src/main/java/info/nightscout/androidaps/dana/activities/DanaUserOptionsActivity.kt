@@ -10,7 +10,7 @@ import info.nightscout.androidaps.dana.R
 import info.nightscout.androidaps.dana.databinding.DanarUserOptionsActivityBinding
 import info.nightscout.androidaps.events.EventInitializationChanged
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
@@ -33,7 +33,7 @@ class DanaUserOptionsActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var context: Context
     @Inject lateinit var danaPump: DanaPump
     @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var commandQueue: CommandQueueProvider
+    @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var aapsSchedulers: AapsSchedulers
 
     private val disposable = CompositeDisposable()

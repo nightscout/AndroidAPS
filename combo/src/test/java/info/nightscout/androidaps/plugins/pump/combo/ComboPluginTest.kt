@@ -23,7 +23,7 @@ class ComboPluginTest : TestBase() {
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var activePlugin: ActivePlugin
-    @Mock lateinit var commandQueue: CommandQueueProvider
+    @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var sp: SP
     @Mock lateinit var context: Context

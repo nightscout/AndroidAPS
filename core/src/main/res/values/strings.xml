@@ -24,7 +24,6 @@
     <string name="key_pump_unreachable_threshold_minutes" translatable="false">pump_unreachable_threshold</string>
     <string name="key_missed_bg_readings_threshold_minutes" translatable="false">missed_bg_readings_threshold</string>
     <string name="key_gradually_increase_notification_volume" translatable="false">gradually_increase_notification_volume</string>
-    <string name="key_ns_sync_use_absolute" translatable="false">ns_sync_use_absolute</string>
     <string name="key_virtualpump_type" translatable="false">virtualpump_type</string>
     <string name="key_quickwizard" translatable="false">QuickWizard</string>
     <string name="key_wear_control" translatable="false">wearcontrol</string>

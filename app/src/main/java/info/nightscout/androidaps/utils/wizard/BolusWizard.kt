@@ -51,7 +51,7 @@ class BolusWizard @Inject constructor(
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var commandQueue: CommandQueueProvider
+    @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var loopPlugin: LoopPlugin
     @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var dateUtil: DateUtil

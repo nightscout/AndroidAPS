@@ -49,7 +49,7 @@ import javax.inject.Singleton
 
 @OpenForTesting
 @Singleton
-class CommandQueue @Inject constructor(
+class CommandQueueImplementation @Inject constructor(
     private val injector: HasAndroidInjector,
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
@@ -65,7 +65,7 @@ class CommandQueue @Inject constructor(
     private val repository: AppRepository,
     private val fabricPrivacy: FabricPrivacy,
     private val config: Config
-) : CommandQueueProvider {
+) : CommandQueue {
 
     private val disposable = CompositeDisposable()
 
@@ -195,9 +195,9 @@ class CommandQueue @Inject constructor(
 
     override fun independentConnect(reason: String, callback: Callback?) {
         aapsLogger.debug(LTag.PUMPQUEUE, "Starting new queue")
-        val tempCommandQueue = CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, rh,
-                                            constraintChecker, profileFunction, activePlugin, context, sp,
-                                            buildHelper, dateUtil, repository, fabricPrivacy, config)
+        val tempCommandQueue = CommandQueueImplementation(injector, aapsLogger, rxBus, aapsSchedulers, rh,
+                                                          constraintChecker, profileFunction, activePlugin, context, sp,
+                                                          buildHelper, dateUtil, repository, fabricPrivacy, config)
         tempCommandQueue.readStatus(reason, callback)
         tempCommandQueue.disposable.clear()
     }
@@ -221,27 +221,34 @@ class CommandQueue @Inject constructor(
         // Check if pump store carbs
         // If not, it's not necessary add command to the queue and initiate connection
         // Assuming carbs in the future and carbs with duration are NOT stores anyway
+
+        var carbsRunnable = Runnable {  }
         if ((detailedBolusInfo.carbs > 0) &&
             (!activePlugin.activePump.pumpDescription.storesCarbInfo ||
                 detailedBolusInfo.carbsDuration != 0L ||
                 (detailedBolusInfo.carbsTimestamp ?: detailedBolusInfo.timestamp) > dateUtil.now())
         ) {
-            disposable += repository.runTransactionForResult(detailedBolusInfo.insertCarbsTransaction())
-                .subscribeBy(
-                    onSuccess = { result ->
-                        result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted carbs $it") }
-                        callback?.result(PumpEnactResult(injector).enacted(false).success(true))?.run()
+            carbsRunnable = Runnable {
+                disposable += repository.runTransactionForResult(detailedBolusInfo.insertCarbsTransaction())
+                    .subscribeBy(
+                        onSuccess = { result ->
+                            result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted carbs $it") }
+                            callback?.result(PumpEnactResult(injector).enacted(false).success(true))?.run()
 
-                    },
-                    onError = {
-                        aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it)
-                        callback?.result(PumpEnactResult(injector).enacted(false).success(false))?.run()
-                    }
-                )
+                        },
+                        onError = {
+                            aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it)
+                            callback?.result(PumpEnactResult(injector).enacted(false).success(false))?.run()
+                        }
+                    )
+            }
             // Do not process carbs anymore
             detailedBolusInfo.carbs = 0.0
             // if no insulin just exit
-            if (detailedBolusInfo.insulin == 0.0) return true
+            if (detailedBolusInfo.insulin == 0.0) {
+                carbsRunnable.run() // store carbs
+                return true
+            }
 
         }
         var type = if (detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB) CommandType.SMB_BOLUS else CommandType.BOLUS
@@ -277,10 +284,10 @@ class CommandQueue @Inject constructor(
         if (detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB) {
             add(CommandSMBBolus(injector, detailedBolusInfo, callback))
         } else {
-            add(CommandBolus(injector, detailedBolusInfo, callback, type))
+            add(CommandBolus(injector, detailedBolusInfo, callback, type, carbsRunnable))
             if (type == CommandType.BOLUS) { // Bring up bolus progress dialog (start here, so the dialog is shown when the bolus is requested,
                 // not when the Bolus command is starting. The command closes the dialog upon completion).
-                showBolusProgressDialog(detailedBolusInfo.insulin, detailedBolusInfo.context)
+                showBolusProgressDialog(detailedBolusInfo)
                 // Notify Wear about upcoming bolus
                 rxBus.send(EventBolusRequested(detailedBolusInfo.insulin))
             }
@@ -307,7 +314,7 @@ class CommandQueue @Inject constructor(
     @Synchronized
     override fun cancelAllBoluses() {
         if (!isRunning(CommandType.BOLUS)) {
-            rxBus.send(EventDismissBolusProgressIfRunning(PumpEnactResult(injector).success(true).enacted(false)))
+            rxBus.send(EventDismissBolusProgressIfRunning(PumpEnactResult(injector).success(true).enacted(false), null))
         }
         removeAll(CommandType.BOLUS)
         removeAll(CommandType.SMB_BOLUS)
@@ -573,14 +580,16 @@ class CommandQueue @Inject constructor(
         return result
     }
 
-    private fun showBolusProgressDialog(insulin: Double, ctx: Context?) {
-        if (ctx != null) {
+    private fun showBolusProgressDialog(detailedBolusInfo: DetailedBolusInfo) {
+        if (detailedBolusInfo.context != null) {
             val bolusProgressDialog = BolusProgressDialog()
-            bolusProgressDialog.setInsulin(insulin)
-            bolusProgressDialog.show((ctx as AppCompatActivity).supportFragmentManager, "BolusProgress")
+            bolusProgressDialog.setInsulin(detailedBolusInfo.insulin)
+            bolusProgressDialog.setTimestamp(detailedBolusInfo.timestamp)
+            bolusProgressDialog.show((detailedBolusInfo.context as AppCompatActivity).supportFragmentManager, "BolusProgress")
         } else {
             val i = Intent()
-            i.putExtra("insulin", insulin)
+            i.putExtra("insulin", detailedBolusInfo.insulin)
+            i.putExtra("timestamp", detailedBolusInfo.timestamp)
             i.setClass(context, BolusProgressHelperActivity::class.java)
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             context.startActivity(i)
