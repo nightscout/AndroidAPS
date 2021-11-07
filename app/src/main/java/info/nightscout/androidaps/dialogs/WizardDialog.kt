@@ -55,7 +55,7 @@ class WizardDialog : DaggerDialogFragment() {
     @Inject lateinit var sp: SP
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var iobCobCalculator: IobCobCalculator
@@ -140,7 +140,7 @@ class WizardDialog : DaggerDialogFragment() {
             ?: 0.0, -60.0, 60.0, 5.0, DecimalFormat("0"), false, binding.ok, timeTextWatcher)
         initDialog()
 
-        binding.percentUsed.text = resourceHelper.gs(R.string.format_percent, sp.getInt(R.string.key_boluswizard_percentage, 100))
+        binding.percentUsed.text = rh.gs(R.string.format_percent, sp.getInt(R.string.key_boluswizard_percentage, 100))
         // ok button
         binding.ok.setOnClickListener {
             if (okClicked) {
@@ -171,7 +171,7 @@ class WizardDialog : DaggerDialogFragment() {
         binding.calculationcheckbox.isChecked = showCalc
         binding.calculationcheckbox.setOnCheckedChangeListener { _, isChecked ->
             run {
-                sp.putBoolean(resourceHelper.gs(R.string.key_wizard_calculation_visible), isChecked)
+                sp.putBoolean(rh.gs(R.string.key_wizard_calculation_visible), isChecked)
                 binding.delimiter.visibility = isChecked.toVisibility()
                 binding.resulttable.visibility = isChecked.toVisibility()
             }
@@ -179,7 +179,7 @@ class WizardDialog : DaggerDialogFragment() {
         // profile spinner
         binding.profile.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                ToastUtils.showToastInUiThread(ctx, resourceHelper.gs(R.string.noprofileselected))
+                ToastUtils.showToastInUiThread(ctx, rh.gs(R.string.noprofileselected))
                 binding.ok.visibility = View.GONE
             }
 
@@ -244,13 +244,13 @@ class WizardDialog : DaggerDialogFragment() {
         val profileStore = activePlugin.activeProfileSource.profile
 
         if (profile == null || profileStore == null) {
-            ToastUtils.showToastInUiThread(ctx, resourceHelper.gs(R.string.noprofile))
+            ToastUtils.showToastInUiThread(ctx, rh.gs(R.string.noprofile))
             dismiss()
             return
         }
 
         val profileList: ArrayList<CharSequence> = profileStore.getProfileList()
-        profileList.add(0, resourceHelper.gs(R.string.active))
+        profileList.add(0, rh.gs(R.string.active))
         context?.let { context ->
             val adapter = ArrayAdapter(context, R.layout.spinner_centered, profileList)
             binding.profile.adapter = adapter
@@ -271,8 +271,8 @@ class WizardDialog : DaggerDialogFragment() {
         val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
         val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
 
-        binding.bolusiobinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, -bolusIob.iob)
-        binding.basaliobinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, -basalIob.basaliob)
+        binding.bolusiobinsulin.text = rh.gs(R.string.formatinsulinunits, -bolusIob.iob)
+        binding.basaliobinsulin.text = rh.gs(R.string.formatinsulinunits, -basalIob.basaliob)
 
         calculateInsulin()
 
@@ -285,7 +285,7 @@ class WizardDialog : DaggerDialogFragment() {
             return  // not initialized yet
         var profileName = binding.profile.selectedItem.toString()
         val specificProfile: Profile?
-        if (profileName == resourceHelper.gs(R.string.active)) {
+        if (profileName == rh.gs(R.string.active)) {
             specificProfile = profileFunction.getProfile()
             profileName = profileFunction.getProfileName()
         } else
@@ -300,7 +300,7 @@ class WizardDialog : DaggerDialogFragment() {
         val carbsAfterConstraint = constraintChecker.applyCarbsConstraints(Constraint(carbs)).value()
         if (abs(carbs - carbsAfterConstraint) > 0.01) {
             binding.carbsInput.value = 0.0
-            ToastUtils.showToastInUiThread(ctx, resourceHelper.gs(R.string.carbsconstraintapplied))
+            ToastUtils.showToastInUiThread(ctx, rh.gs(R.string.carbsconstraintapplied))
             return
         }
 
@@ -330,20 +330,20 @@ class WizardDialog : DaggerDialogFragment() {
             binding.notes.text.toString(), carbTime)
 
         wizard?.let { wizard ->
-            binding.bg.text = String.format(resourceHelper.gs(R.string.format_bg_isf), valueToUnitsToString(Profile.toMgdl(bg, profileFunction.getUnits()), profileFunction.getUnits().asText), wizard.sens)
-            binding.bginsulin.text = resourceHelper.gs(R.string.formatinsulinunits, wizard.insulinFromBG)
+            binding.bg.text = String.format(rh.gs(R.string.format_bg_isf), valueToUnitsToString(Profile.toMgdl(bg, profileFunction.getUnits()), profileFunction.getUnits().asText), wizard.sens)
+            binding.bginsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromBG)
 
-            binding.carbs.text = String.format(resourceHelper.gs(R.string.format_carbs_ic), carbs.toDouble(), wizard.ic)
-            binding.carbsinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, wizard.insulinFromCarbs)
+            binding.carbs.text = String.format(rh.gs(R.string.format_carbs_ic), carbs.toDouble(), wizard.ic)
+            binding.carbsinsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromCarbs)
 
-            binding.bolusiobinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, wizard.insulinFromBolusIOB)
-            binding.basaliobinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, wizard.insulinFromBasalIOB)
+            binding.bolusiobinsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromBolusIOB)
+            binding.basaliobinsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromBasalIOB)
 
-            binding.correctioninsulin.text = resourceHelper.gs(R.string.formatinsulinunits, wizard.insulinFromCorrection)
+            binding.correctioninsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromCorrection)
 
             // Superbolus
-            binding.sb.text = if (binding.sbcheckbox.isChecked) resourceHelper.gs(R.string.twohours) else ""
-            binding.sbinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, wizard.insulinFromSuperBolus)
+            binding.sb.text = if (binding.sbcheckbox.isChecked) rh.gs(R.string.twohours) else ""
+            binding.sbinsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromSuperBolus)
 
             // Trend
             if (binding.bgtrendcheckbox.isChecked && wizard.glucoseStatus != null) {
@@ -353,24 +353,24 @@ class WizardDialog : DaggerDialogFragment() {
             } else {
                 binding.bgtrend.text = ""
             }
-            binding.bgtrendinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, wizard.insulinFromTrend)
+            binding.bgtrendinsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromTrend)
 
             // COB
             if (binding.cobcheckbox.isChecked) {
-                binding.cob.text = String.format(resourceHelper.gs(R.string.format_cob_ic), cob, wizard.ic)
-                binding.cobinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, wizard.insulinFromCOB)
+                binding.cob.text = String.format(rh.gs(R.string.format_cob_ic), cob, wizard.ic)
+                binding.cobinsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromCOB)
             } else {
                 binding.cob.text = ""
                 binding.cobinsulin.text = ""
             }
 
             if (wizard.calculatedTotalInsulin > 0.0 || carbsAfterConstraint > 0.0) {
-                val insulinText = if (wizard.calculatedTotalInsulin > 0.0) resourceHelper.gs(R.string.formatinsulinunits, wizard.calculatedTotalInsulin) else ""
-                val carbsText = if (carbsAfterConstraint > 0.0) resourceHelper.gs(R.string.format_carbs, carbsAfterConstraint) else ""
-                binding.total.text = resourceHelper.gs(R.string.result_insulin_carbs, insulinText, carbsText)
+                val insulinText = if (wizard.calculatedTotalInsulin > 0.0) rh.gs(R.string.formatinsulinunits, wizard.calculatedTotalInsulin) else ""
+                val carbsText = if (carbsAfterConstraint > 0.0) rh.gs(R.string.format_carbs, carbsAfterConstraint) else ""
+                binding.total.text = rh.gs(R.string.result_insulin_carbs, insulinText, carbsText)
                 binding.ok.visibility = View.VISIBLE
             } else {
-                binding.total.text = resourceHelper.gs(R.string.missing_carbs, wizard.carbsEquivalent.toInt())
+                binding.total.text = rh.gs(R.string.missing_carbs, wizard.carbsEquivalent.toInt())
                 binding.ok.visibility = View.INVISIBLE
             }
         }

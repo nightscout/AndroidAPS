@@ -14,7 +14,7 @@ import javax.inject.Singleton
 @Singleton
 class NsClientReceiverDelegate @Inject constructor(
     private val rxBus: RxBus,
-    private val resourceHelper: ResourceHelper,
+    private val rh: ResourceHelper,
     private val sp: SP,
     private val receiverStatusStore: ReceiverStatusStore
 ) {
@@ -28,12 +28,12 @@ class NsClientReceiverDelegate @Inject constructor(
     }
 
     fun onStatusEvent(ev: EventPreferenceChange) {
-        if (ev.isChanged(resourceHelper, R.string.key_ns_wifionly) ||
-            ev.isChanged(resourceHelper, R.string.key_ns_wifi_ssids) ||
-            ev.isChanged(resourceHelper, R.string.key_ns_allowroaming)) {
+        if (ev.isChanged(rh, R.string.key_ns_wifionly) ||
+            ev.isChanged(rh, R.string.key_ns_wifi_ssids) ||
+            ev.isChanged(rh, R.string.key_ns_allowroaming)) {
             receiverStatusStore.updateNetworkStatus()
             onStatusEvent(receiverStatusStore.lastNetworkEvent)
-        } else if (ev.isChanged(resourceHelper, R.string.key_ns_chargingonly)) {
+        } else if (ev.isChanged(rh, R.string.key_ns_chargingonly)) {
             receiverStatusStore.broadcastChargingState()
         }
     }
@@ -58,7 +58,7 @@ class NsClientReceiverDelegate @Inject constructor(
         val newAllowedState = allowedChargingState && allowedNetworkState
         if (newAllowedState != allowed) {
             allowed = newAllowedState
-            rxBus.send(EventPreferenceChange(resourceHelper.gs(R.string.key_nsclientinternal_paused)))
+            rxBus.send(EventPreferenceChange(rh.gs(R.string.key_nsclientinternal_paused)))
         }
     }
 

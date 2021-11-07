@@ -56,7 +56,7 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var translator: Translator
     @Inject lateinit var dateUtil: DateUtil
@@ -83,7 +83,7 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
         binding.recyclerview.layoutManager = LinearLayoutManager(view.context)
         binding.refreshFromNightscout.setOnClickListener {
             context?.let { context ->
-                OKDialog.showConfirmation(context, resourceHelper.gs(R.string.refresheventsfromnightscout) + " ?", {
+                OKDialog.showConfirmation(context, rh.gs(R.string.refresheventsfromnightscout) + " ?", {
                     uel.log(Action.TT_NS_REFRESH, Sources.Treatments)
                     disposable += Completable.fromAction { repository.deleteAllTempTargetEntries() }
                         .subscribeOn(aapsSchedulers.io)
@@ -165,14 +165,14 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
             holder.binding.invalid.visibility = tempTarget.isValid.not().toVisibility()
             holder.binding.remove.visibility = tempTarget.isValid.toVisibility()
             holder.binding.date.text = dateUtil.dateAndTimeString(tempTarget.timestamp) + " - " + dateUtil.timeString(tempTarget.end)
-            holder.binding.duration.text = resourceHelper.gs(R.string.format_mins, T.msecs(tempTarget.duration).mins())
+            holder.binding.duration.text = rh.gs(R.string.format_mins, T.msecs(tempTarget.duration).mins())
             holder.binding.low.text = tempTarget.lowValueToUnitsToString(units)
             holder.binding.high.text = tempTarget.highValueToUnitsToString(units)
             holder.binding.reason.text = translator.translate(tempTarget.reason)
             holder.binding.date.setTextColor(
                 when {
-                    tempTarget.id == currentlyActiveTarget?.id -> resourceHelper.gc(R.color.colorActive)
-                    tempTarget.timestamp > dateUtil.now()      -> resourceHelper.gc(R.color.colorScheduled)
+                    tempTarget.id == currentlyActiveTarget?.id -> rh.gc(R.color.colorActive)
+                    tempTarget.timestamp > dateUtil.now()      -> rh.gc(R.color.colorScheduled)
                     else                                       -> holder.binding.reasonColon.currentTextColor
                 })
             holder.binding.remove.tag = tempTarget
@@ -188,9 +188,9 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
                 binding.remove.setOnClickListener { v: View ->
                     val tempTarget = v.tag as TemporaryTarget
                     context?.let { context ->
-                        OKDialog.showConfirmation(context, resourceHelper.gs(R.string.removerecord),
+                        OKDialog.showConfirmation(context, rh.gs(R.string.removerecord),
                             """
-                        ${resourceHelper.gs(R.string.careportal_temporarytarget)}: ${tempTarget.friendlyDescription(profileFunction.getUnits(), resourceHelper)}
+                        ${rh.gs(R.string.careportal_temporarytarget)}: ${tempTarget.friendlyDescription(profileFunction.getUnits(), rh)}
                         ${dateUtil.dateAndTimeString(tempTarget.timestamp)}
                         """.trimIndent(),
                             { _: DialogInterface?, _: Int ->

@@ -19,6 +19,16 @@
         android:visibility="gone" />
 
     <LinearLayout
+        android:id="@+id/user_buttons_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="0dp"
+        android:paddingEnd="5dp" >
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/buttons_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

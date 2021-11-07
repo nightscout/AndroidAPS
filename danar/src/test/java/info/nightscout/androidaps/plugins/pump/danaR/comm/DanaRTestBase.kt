@@ -11,7 +11,7 @@ import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.danar.comm.MessageBase
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.ConfigBuilder
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpSync
@@ -37,9 +37,9 @@ open class DanaRTestBase : TestBase() {
     @Mock lateinit var danaRPlugin: DanaRPlugin
     @Mock lateinit var danaRKoreanPlugin: DanaRKoreanPlugin
     @Mock lateinit var danaRv2Plugin: DanaRv2Plugin
-    @Mock lateinit var resourceHelper: ResourceHelper
+    @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var configBuilder: ConfigBuilder
-    @Mock lateinit var commandQueue: CommandQueueProvider
+    @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Mock lateinit var constraintChecker: ConstraintChecker
     @Mock lateinit var pumpSync: PumpSync
@@ -54,7 +54,7 @@ open class DanaRTestBase : TestBase() {
         `when`(activePlugin.activePump).thenReturn(testPumpPlugin)
         doNothing().`when`(danaRKoreanPlugin).setPluginEnabled(anyObject(), anyBoolean())
         doNothing().`when`(danaRPlugin).setPluginEnabled(anyObject(), anyBoolean())
-        `when`(resourceHelper.gs(ArgumentMatchers.anyInt())).thenReturn("")
+        `when`(rh.gs(ArgumentMatchers.anyInt())).thenReturn("")
     }
 
     val injector = HasAndroidInjector {
@@ -66,8 +66,8 @@ open class DanaRTestBase : TestBase() {
                 it.danaRPlugin = danaRPlugin
                 it.danaRKoreanPlugin = danaRKoreanPlugin
                 it.danaRv2Plugin = danaRv2Plugin
-                it.rxBus = RxBus(aapsSchedulers)
-                it.resourceHelper = resourceHelper
+                it.rxBus = RxBus(aapsSchedulers, aapsLogger)
+                it.rh = rh
                 it.activePlugin = activePlugin
                 it.configBuilder = configBuilder
                 it.detailedBolusInfoStorage = detailedBolusInfoStorage

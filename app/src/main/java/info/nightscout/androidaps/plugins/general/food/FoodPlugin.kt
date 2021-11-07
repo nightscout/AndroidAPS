@@ -27,7 +27,7 @@ import javax.inject.Singleton
 class FoodPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
-    resourceHelper: ResourceHelper
+    rh: ResourceHelper
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(FoodFragment::class.java.name)
@@ -35,7 +35,7 @@ class FoodPlugin @Inject constructor(
     .pluginName(R.string.food)
     .shortName(R.string.food_short)
     .description(R.string.description_food),
-    aapsLogger, resourceHelper, injector
+    aapsLogger, rh, injector
 ) {
 
     // cannot be inner class because of needed injection

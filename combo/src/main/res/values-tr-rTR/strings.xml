@@ -12,6 +12,7 @@
     <string name="combo_pump_state_running">Çalışıyor</string>
     <string name="combo_pump_action_cancelling_tbr">TBR (Geçici Bazal Oranı) İptal ediliyor</string>
     <string name="combo_pump_action_setting_tbr">TBR(Geçici Bazal Oranı) ayarı (%1$d%% / %2$d dak)</string>
+    <string name="combo_pump_action_bolusing">Bolus (%1$.1f Ü) teslim ediliyor</string>
     <string name="combo_pump_action_refreshing">Yenileniyor...</string>
     <string name="combo_pump_unsupported_operation">İstenen işlem pompası tarafından desteklenmiyor</string>
     <string name="combo_low_suspend_forced_notification">Güvensiz kullanım: yayım veya çoklu dalgalı (kare dalgalı) boluslar aktiftir. Döngü modu 6 saat içinde ekstra insülin vermeyecektir. Döngü modunda sadece normal boluslar desteklenir</string>
@@ -43,6 +44,7 @@
     <string name="combo_error_failure_reading_changed_basal_rate">Bazal oranı pompada değiştirildi, ancak okuma başarısız oldu</string>
     <string name="combo_activity_checking_for_history_changes">Geçmiş değişiklikleri kontrol ediliyor</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">Aynı dakika içinde aynı miktarda birden fazla boluslar eklenildi. Tedavilere sadece bir kayıt eklenebilir. Lütfen pompayı kontrol edin ve Careportal sekmesini kullanarak elle bir bolus kaydı ekleyin. Başka bolus kullanmayan bir zamana sahip bir bolus oluşturduğunuzdan emin olun.</string>
+    <string name="about_link_urls">\n\ndocumentation:\nhttps://androidaps.readthedocs.io\n\nfacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <string name="combo_check_date">Son bolus 24 saatten daha eski veya gelecekte. Lütfen pompadaki tarihin doğru ayarlandığını kontrol edin.</string>
     <string name="combo_suspious_bolus_time">Teslim edilen bolusun pompadaki zamanı/tarihı yanlış görünüyor, IOB (Insulin On Board) muhtemelen yanlıştır. Lütfen pompa zamanını/tarihini kontrol edin.</string>
     <string name="combo_bolus_count">Bolus sayısı</string>

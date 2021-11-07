@@ -43,7 +43,7 @@ import javax.inject.Singleton
 class TidepoolPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
     private val context: Context,
@@ -60,7 +60,7 @@ class TidepoolPlugin @Inject constructor(
     .fragmentClass(TidepoolFragment::class.qualifiedName)
     .preferencesId(R.xml.pref_tidepool)
     .description(R.string.description_tidepool),
-    aapsLogger, resourceHelper, injector
+    aapsLogger, rh, injector
 ) {
 
     private var disposable: CompositeDisposable = CompositeDisposable()
@@ -108,9 +108,9 @@ class TidepoolPlugin @Inject constructor(
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event ->
-                if (event.isChanged(resourceHelper, R.string.key_tidepool_dev_servers)
-                    || event.isChanged(resourceHelper, R.string.key_tidepool_username)
-                    || event.isChanged(resourceHelper, R.string.key_tidepool_password)
+                if (event.isChanged(rh, R.string.key_tidepool_dev_servers)
+                    || event.isChanged(rh, R.string.key_tidepool_username)
+                    || event.isChanged(rh, R.string.key_tidepool_password)
                 )
                     tidepoolUploader.resetInstance()
             }, fabricPrivacy::logException)
@@ -129,7 +129,7 @@ class TidepoolPlugin @Inject constructor(
     override fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {
         super.preprocessPreferences(preferenceFragment)
 
-        val tidepoolTestLogin: Preference? = preferenceFragment.findPreference(resourceHelper.gs(R.string.key_tidepool_test_login))
+        val tidepoolTestLogin: Preference? = preferenceFragment.findPreference(rh.gs(R.string.key_tidepool_test_login))
         tidepoolTestLogin?.setOnPreferenceClickListener {
             preferenceFragment.context?.let {
                 tidepoolUploader.testLogin(it)

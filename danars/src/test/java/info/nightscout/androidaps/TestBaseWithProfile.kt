@@ -22,14 +22,14 @@ import org.mockito.Mock
 open class TestBaseWithProfile : TestBase() {
 
     @Mock lateinit var activePluginProvider: ActivePlugin
-    @Mock lateinit var resourceHelper: ResourceHelper
+    @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var fabricPrivacy: FabricPrivacy
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var defaultValueHelper: DefaultValueHelper
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var config: Config
 
-    val rxBus = RxBus(aapsSchedulers)
+    val rxBus = RxBus(aapsSchedulers, aapsLogger)
 
     val profileInjector = HasAndroidInjector {
         AndroidInjector {

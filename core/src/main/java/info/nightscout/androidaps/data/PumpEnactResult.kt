@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 class PumpEnactResult(injector: HasAndroidInjector) {
 
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
 
     init {
         injector.androidInjector().inject(this)
@@ -36,7 +36,7 @@ class PumpEnactResult(injector: HasAndroidInjector) {
     fun success(success: Boolean): PumpEnactResult = this.also { this.success = success }
     fun enacted(enacted: Boolean): PumpEnactResult = this.also { it.enacted = enacted }
     fun comment(comment: String): PumpEnactResult = this.also { it.comment = comment }
-    fun comment(comment: Int): PumpEnactResult = this.also { it.comment = resourceHelper.gs(comment) }
+    fun comment(comment: Int): PumpEnactResult = this.also { it.comment = rh.gs(comment) }
     fun duration(duration: Int): PumpEnactResult = this.also { it.duration = duration }
     fun absolute(absolute: Double): PumpEnactResult = this.also { it.absolute = absolute }
     fun percent(percent: Int): PumpEnactResult = this.also { it.percent = percent }
@@ -61,75 +61,75 @@ class PumpEnactResult(injector: HasAndroidInjector) {
     }
 
     override fun toString(): String {
-        var ret = resourceHelper.gs(R.string.success) + ": " + success
+        var ret = rh.gs(R.string.success) + ": " + success
         if (enacted) {
             when {
                 bolusDelivered > 0 -> {
-                    ret += "\n${resourceHelper.gs(R.string.enacted)}: $enacted"
-                    ret += "\n${resourceHelper.gs(R.string.comment)}: $comment"
-                    ret += "\n${resourceHelper.gs(R.string.configbuilder_insulin)}: $bolusDelivered ${resourceHelper.gs(R.string.insulin_unit_shortname)}"
+                    ret += "\n${rh.gs(R.string.enacted)}: $enacted"
+                    ret += "\n${rh.gs(R.string.comment)}: $comment"
+                    ret += "\n${rh.gs(R.string.configbuilder_insulin)}: $bolusDelivered ${rh.gs(R.string.insulin_unit_shortname)}"
                 }
 
                 isTempCancel       -> {
-                    ret += "\n${resourceHelper.gs(R.string.enacted)}: $enacted"
-                    if (comment.isNotEmpty()) ret += "\n${resourceHelper.gs(R.string.comment)}: $comment"
-                    ret += "\n${resourceHelper.gs(R.string.canceltemp)}"
+                    ret += "\n${rh.gs(R.string.enacted)}: $enacted"
+                    if (comment.isNotEmpty()) ret += "\n${rh.gs(R.string.comment)}: $comment"
+                    ret += "\n${rh.gs(R.string.canceltemp)}"
                 }
 
                 isPercent          -> {
-                    ret += "\n${resourceHelper.gs(R.string.enacted)}: $enacted"
-                    if (comment.isNotEmpty()) ret += "\n${resourceHelper.gs(R.string.comment)}: $comment"
-                    ret += "\n${resourceHelper.gs(R.string.duration)}: $duration min"
-                    ret += "\n${resourceHelper.gs(R.string.percent)}: $percent%"
+                    ret += "\n${rh.gs(R.string.enacted)}: $enacted"
+                    if (comment.isNotEmpty()) ret += "\n${rh.gs(R.string.comment)}: $comment"
+                    ret += "\n${rh.gs(R.string.duration)}: $duration min"
+                    ret += "\n${rh.gs(R.string.percent)}: $percent%"
                 }
 
                 else               -> {
-                    ret += "\n${resourceHelper.gs(R.string.enacted)}: $enacted"
-                    if (comment.isNotEmpty()) ret += "\n${resourceHelper.gs(R.string.comment)}: $comment"
-                    ret += "\n${resourceHelper.gs(R.string.duration)}: $duration min"
-                    ret += "\n${resourceHelper.gs(R.string.absolute)}: $absolute U/h"
+                    ret += "\n${rh.gs(R.string.enacted)}: $enacted"
+                    if (comment.isNotEmpty()) ret += "\n${rh.gs(R.string.comment)}: $comment"
+                    ret += "\n${rh.gs(R.string.duration)}: $duration min"
+                    ret += "\n${rh.gs(R.string.absolute)}: $absolute U/h"
                 }
             }
         } else {
-            ret += "\n${resourceHelper.gs(R.string.comment)}: $comment"
+            ret += "\n${rh.gs(R.string.comment)}: $comment"
         }
         return ret
     }
 
     fun toHtml(): String {
-        var ret = "<b>" + resourceHelper.gs(R.string.success) + "</b>: " + success
+        var ret = "<b>" + rh.gs(R.string.success) + "</b>: " + success
         if (queued) {
-            ret = resourceHelper.gs(R.string.waitingforpumpresult)
+            ret = rh.gs(R.string.waitingforpumpresult)
         } else if (enacted) {
             when {
                 bolusDelivered > 0         -> {
-                    ret += "<br><b>" + resourceHelper.gs(R.string.enacted) + "</b>: " + enacted
-                    if (comment.isNotEmpty()) ret += "<br><b>" + resourceHelper.gs(R.string.comment) + "</b>: " + comment
-                    ret += "<br><b>" + resourceHelper.gs(R.string.smb_shortname) + "</b>: " + bolusDelivered + " " + resourceHelper.gs(R.string.insulin_unit_shortname)
+                    ret += "<br><b>" + rh.gs(R.string.enacted) + "</b>: " + enacted
+                    if (comment.isNotEmpty()) ret += "<br><b>" + rh.gs(R.string.comment) + "</b>: " + comment
+                    ret += "<br><b>" + rh.gs(R.string.smb_shortname) + "</b>: " + bolusDelivered + " " + rh.gs(R.string.insulin_unit_shortname)
                 }
 
                 isTempCancel               -> {
-                    ret += "<br><b>" + resourceHelper.gs(R.string.enacted) + "</b>: " + enacted
-                    ret += "<br><b>" + resourceHelper.gs(R.string.comment) + "</b>: " + comment +
-                        "<br>" + resourceHelper.gs(R.string.canceltemp)
+                    ret += "<br><b>" + rh.gs(R.string.enacted) + "</b>: " + enacted
+                    ret += "<br><b>" + rh.gs(R.string.comment) + "</b>: " + comment +
+                        "<br>" + rh.gs(R.string.canceltemp)
                 }
 
                 isPercent && percent != -1 -> {
-                    ret += "<br><b>" + resourceHelper.gs(R.string.enacted) + "</b>: " + enacted
-                    if (comment.isNotEmpty()) ret += "<br><b>" + resourceHelper.gs(R.string.comment) + "</b>: " + comment
-                    ret += "<br><b>" + resourceHelper.gs(R.string.duration) + "</b>: " + duration + " min"
-                    ret += "<br><b>" + resourceHelper.gs(R.string.percent) + "</b>: " + percent + "%"
+                    ret += "<br><b>" + rh.gs(R.string.enacted) + "</b>: " + enacted
+                    if (comment.isNotEmpty()) ret += "<br><b>" + rh.gs(R.string.comment) + "</b>: " + comment
+                    ret += "<br><b>" + rh.gs(R.string.duration) + "</b>: " + duration + " min"
+                    ret += "<br><b>" + rh.gs(R.string.percent) + "</b>: " + percent + "%"
                 }
 
                 absolute != -1.0           -> {
-                    ret += "<br><b>" + resourceHelper.gs(R.string.enacted) + "</b>: " + enacted
-                    if (comment.isNotEmpty()) ret += "<br><b>" + resourceHelper.gs(R.string.comment) + "</b>: " + comment
-                    ret += "<br><b>" + resourceHelper.gs(R.string.duration) + "</b>: " + duration + " min"
-                    ret += "<br><b>" + resourceHelper.gs(R.string.absolute) + "</b>: " + DecimalFormatter.to2Decimal(absolute) + " U/h"
+                    ret += "<br><b>" + rh.gs(R.string.enacted) + "</b>: " + enacted
+                    if (comment.isNotEmpty()) ret += "<br><b>" + rh.gs(R.string.comment) + "</b>: " + comment
+                    ret += "<br><b>" + rh.gs(R.string.duration) + "</b>: " + duration + " min"
+                    ret += "<br><b>" + rh.gs(R.string.absolute) + "</b>: " + DecimalFormatter.to2Decimal(absolute) + " U/h"
                 }
             }
         } else {
-            if (comment.isNotEmpty()) ret += "<br><b>" + resourceHelper.gs(R.string.comment) + "</b>: " + comment
+            if (comment.isNotEmpty()) ret += "<br><b>" + rh.gs(R.string.comment) + "</b>: " + comment
         }
         return ret
     }

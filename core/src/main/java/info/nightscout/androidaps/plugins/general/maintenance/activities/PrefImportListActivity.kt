@@ -25,7 +25,7 @@ import javax.inject.Inject
 
 class PrefImportListActivity : DaggerAppCompatActivity() {
 
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var prefFileListProvider: PrefFileListProvider
 
     private lateinit var binding: MaintenanceImportListActivityBinding
@@ -37,7 +37,7 @@ class PrefImportListActivity : DaggerAppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        title = resourceHelper.gs(R.string.preferences_import_list_title)
+        title = rh.gs(R.string.preferences_import_list_title)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(true)
@@ -80,7 +80,7 @@ class PrefImportListActivity : DaggerAppCompatActivity() {
                 filelistName.text = prefFile.file.name
                 filelistName.tag = prefFile
 
-                filelistDir.text = resourceHelper.gs(R.string.in_directory, prefFile.file.parentFile?.absolutePath)
+                filelistDir.text = rh.gs(R.string.in_directory, prefFile.file.parentFile?.absolutePath)
 
                 metalineName.visibility = View.VISIBLE
                 metaDateTimeIcon.visibility = View.VISIBLE
@@ -89,7 +89,7 @@ class PrefImportListActivity : DaggerAppCompatActivity() {
                 prefFile.metadata[PrefsMetadataKey.AAPS_FLAVOUR]?.let {
                     metaVariantFormat.text = it.value
                     val color = if (it.status == PrefsStatus.OK) R.color.metadataOk else R.color.metadataTextWarning
-                    metaVariantFormat.setTextColor(resourceHelper.gc(color))
+                    metaVariantFormat.setTextColor(rh.gc(color))
                 }
 
                 prefFile.metadata[PrefsMetadataKey.CREATED_AT]?.let {
@@ -99,7 +99,7 @@ class PrefImportListActivity : DaggerAppCompatActivity() {
                 prefFile.metadata[PrefsMetadataKey.AAPS_VERSION]?.let {
                     metaAppVersion.text = it.value
                     val color = if (it.status == PrefsStatus.OK) R.color.metadataOk else R.color.metadataTextWarning
-                    metaAppVersion.setTextColor(resourceHelper.gc(color))
+                    metaAppVersion.setTextColor(rh.gc(color))
                 }
 
                 prefFile.metadata[PrefsMetadataKey.DEVICE_NAME]?.let {

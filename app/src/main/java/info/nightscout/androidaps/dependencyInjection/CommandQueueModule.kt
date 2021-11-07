@@ -2,14 +2,14 @@ package info.nightscout.androidaps.dependencyInjection
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import info.nightscout.androidaps.queue.CommandQueue
+import info.nightscout.androidaps.queue.CommandQueueImplementation
 import info.nightscout.androidaps.queue.commands.*
 
 @Module
 @Suppress("unused")
 abstract class CommandQueueModule {
 
-    @ContributesAndroidInjector abstract fun commandQueueInjector(): CommandQueue
+    @ContributesAndroidInjector abstract fun commandQueueInjector(): CommandQueueImplementation
     @ContributesAndroidInjector abstract fun commandBolusInjector(): CommandBolus
     @ContributesAndroidInjector abstract fun commandCancelExtendedBolusInjector(): CommandCancelExtendedBolus
     @ContributesAndroidInjector abstract fun commandCancelTempBasalInjector(): CommandCancelTempBasal

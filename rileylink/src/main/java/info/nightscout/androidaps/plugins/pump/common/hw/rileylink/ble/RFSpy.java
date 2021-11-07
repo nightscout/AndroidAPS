@@ -51,7 +51,7 @@ public class RFSpy {
     private static final int LOW_BATTERY_PERCENTAGE_THRESHOLD = 20;
 
     @Inject AAPSLogger aapsLogger;
-    @Inject ResourceHelper resourceHelper;
+    @Inject ResourceHelper rh;
     @Inject SP sp;
     @Inject RileyLinkServiceData rileyLinkServiceData;
     @Inject RileyLinkUtil rileyLinkUtil;
@@ -367,7 +367,7 @@ public class RFSpy {
         if (rileyLinkServiceData.firmwareVersion != null &&
                 rileyLinkServiceData.firmwareVersion.isSameVersion(RileyLinkFirmwareVersion.Version2AndHigher)) {
             if (sp.getString(RileyLinkConst.Prefs.Encoding, "None")
-                    .equals(resourceHelper.gs(R.string.key_medtronic_pump_encoding_4b6b_rileylink))) {
+                    .equals(rh.gs(R.string.key_medtronic_pump_encoding_4b6b_rileylink))) {
                 encoding = RileyLinkEncodingType.FourByteSixByteRileyLink;
             }
         }

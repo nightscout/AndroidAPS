@@ -5,7 +5,6 @@ import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.automation.R
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TemporaryTarget
@@ -13,7 +12,10 @@ import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
+import info.nightscout.androidaps.extensions.friendlyDescription
 import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.GlucoseUnit
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -27,9 +29,6 @@ import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.JsonHelper.safeGetDouble
-import info.nightscout.androidaps.extensions.friendlyDescription
-import info.nightscout.androidaps.interfaces.GlucoseUnit
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import org.json.JSONObject
@@ -38,7 +37,6 @@ import javax.inject.Inject
 
 class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
 
-    @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var profileFunction: ProfileFunction
@@ -55,7 +53,7 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
     }
 
     override fun friendlyName(): Int = R.string.starttemptarget
-    override fun shortDescription(): String = resourceHelper.gs(R.string.starttemptarget) + ": " + tt().friendlyDescription(value.units, resourceHelper)
+    override fun shortDescription(): String = rh.gs(R.string.starttemptarget) + ": " + tt().friendlyDescription(value.units, rh)
     @DrawableRes override fun icon(): Int = R.drawable.ic_temptarget_high
 
     override fun doAction(callback: Callback) {
@@ -78,8 +76,8 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
     override fun generateDialog(root: LinearLayout) {
         val unitResId = if (value.units == GlucoseUnit.MGDL) R.string.mgdl else R.string.mmol
         LayoutBuilder()
-            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.careportal_temporarytarget) + "\n[" + resourceHelper.gs(unitResId) + "]", "", value))
-            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.duration_min_label), "", duration))
+            .add(LabelWithElement(rh, rh.gs(R.string.careportal_temporarytarget) + "\n[" + rh.gs(unitResId) + "]", "", value))
+            .add(LabelWithElement(rh, rh.gs(R.string.duration_min_label), "", duration))
             .build(root)
     }
 

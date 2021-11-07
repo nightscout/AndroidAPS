@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.pump.virtual
 import dagger.android.AndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpSync
@@ -22,13 +22,13 @@ import org.mockito.Mockito.`when`
 
 class VirtualPumpPluginUTest : TestBase() {
 
-    private val rxBus = RxBus(aapsSchedulers)
+    private val rxBus = RxBus(aapsSchedulers, aapsLogger)
     @Mock lateinit var fabricPrivacy: FabricPrivacy
-    @Mock lateinit var resourceHelper: ResourceHelper
+    @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var sp: SP
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var iobCobCalculator: IobCobCalculator
-    @Mock lateinit var commandQueue: CommandQueueProvider
+    @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var pumpSync: PumpSync
 
@@ -36,7 +36,7 @@ class VirtualPumpPluginUTest : TestBase() {
 
     @Before
     fun prepareMocks() {
-        virtualPumpPlugin = VirtualPumpPlugin({ AndroidInjector { } }, aapsLogger, rxBus, fabricPrivacy, resourceHelper, aapsSchedulers, sp, profileFunction, iobCobCalculator, commandQueue, pumpSync, ConfigImpl(), dateUtil)
+        virtualPumpPlugin = VirtualPumpPlugin({ AndroidInjector { } }, aapsLogger, rxBus, fabricPrivacy, rh, aapsSchedulers, sp, profileFunction, iobCobCalculator, commandQueue, pumpSync, ConfigImpl(), dateUtil)
     }
 
     @Test

@@ -36,6 +36,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.CommandConfirmed
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.DashHistory
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.BasalValuesRecord
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.BolusRecord
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.BolusType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.TempBasalRecord
@@ -84,9 +85,9 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
-    resourceHelper: ResourceHelper,
-    commandQueue: CommandQueueProvider
-) : PumpPluginBase(pluginDescription, injector, aapsLogger, resourceHelper, commandQueue), Pump {
+    rh: ResourceHelper,
+    commandQueue: CommandQueue
+) : PumpPluginBase(pluginDescription, injector, aapsLogger, rh, commandQueue), Pump {
     @Volatile var bolusCanceled = false
     @Volatile var bolusDeliveryInProgress = false
 
@@ -309,8 +310,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
     )
 
     private fun checkPodKaput(): Completable = Completable.defer {
-        val tbr = pumpSync.expectedPumpState().temporaryBasal
         if (podStateManager.isPodKaput) {
+            val tbr = pumpSync.expectedPumpState().temporaryBasal
             if (tbr == null || tbr.rate != 0.0) {
                 pumpSync.syncTemporaryBasalWithPumpId(
                     timestamp = System.currentTimeMillis(),
@@ -339,20 +340,23 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     aapsLogger.info(LTag.PUMP, "syncBolusWithPumpId on CANCEL_BOLUS returned: $sync")
                 }
             }
-            showNotification(
-                Notification.OMNIPOD_POD_FAULT,
-                podStateManager.alarmType.toString(),
-                Notification.URGENT,
-                R.raw.boluserror
-            )
-            if (!podStateManager.alarmSynced) {
-                pumpSync.insertAnnouncement(
-                    error = podStateManager.alarmType?.toString() ?: "Unknown pod failure",
-                    pumpId = Random.Default.nextLong(),
-                    pumpType = PumpType.OMNIPOD_DASH,
-                    pumpSerial = serialNumber()
+
+            podStateManager.alarmType?.let {
+                showNotification(
+                    Notification.OMNIPOD_POD_FAULT,
+                    it.toString(),
+                    Notification.URGENT,
+                    R.raw.boluserror
                 )
-                podStateManager.alarmSynced = true
+                if (!podStateManager.alarmSynced) {
+                    pumpSync.insertAnnouncement(
+                        error = it.toString(),
+                        pumpId = Random.Default.nextLong(),
+                        pumpType = PumpType.OMNIPOD_DASH,
+                        pumpSerial = serialNumber()
+                    )
+                    podStateManager.alarmSynced = true
+                }
             }
         }
         Completable.complete()
@@ -363,8 +367,12 @@ class OmnipodDashPumpPlugin @Inject constructor(
             return PumpEnactResult(injector).success(true).enacted(true)
         }
         aapsLogger.debug(LTag.PUMP, "setNewBasalProfile profile=$profile")
-        val basalProgram = mapProfileToBasalProgram(profile)
+        return setNewBasalProfile(profile, OmnipodCommandType.SET_BASAL_PROFILE)
+    }
+
+    private fun setNewBasalProfile(profile: Profile, historyType: OmnipodCommandType): PumpEnactResult {
         var deliverySuspended = false
+        val basalProgram = mapProfileToBasalProgram(profile)
         return executeProgrammingCommand(
             pre = suspendDeliveryIfActive().doOnComplete {
                 if (podStateManager.activeCommand == null) {
@@ -372,7 +380,10 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     deliverySuspended = true
                 }
             },
-            historyEntry = history.createRecord(commandType = OmnipodCommandType.SET_BASAL_PROFILE),
+            historyEntry = history.createRecord(
+                commandType = historyType,
+                basalProfileRecord = BasalValuesRecord(profile.getBasalValues().toList())
+            ),
             activeCommandEntry = { historyId ->
                 podStateManager.createActiveCommand(historyId, basalProgram = basalProgram)
             },
@@ -446,20 +457,20 @@ class OmnipodDashPumpPlugin @Inject constructor(
             .subscribe(
                 {
                     if (it.isChanged(
-                            resourceHelper,
+                            rh,
                             R.string.key_omnipod_common_expiration_reminder_enabled
                         ) ||
                         it.isChanged(
-                                resourceHelper,
-                                R.string.key_omnipod_common_expiration_reminder_hours_before_shutdown
+                            rh,
+                            R.string.key_omnipod_common_expiration_reminder_hours_before_shutdown
                             ) ||
                         it.isChanged(
-                                resourceHelper,
-                                R.string.key_omnipod_common_low_reservoir_alert_enabled
+                            rh,
+                            R.string.key_omnipod_common_low_reservoir_alert_enabled
                             ) ||
                         it.isChanged(
-                                resourceHelper,
-                                R.string.key_omnipod_common_low_reservoir_alert_units
+                            rh,
+                            R.string.key_omnipod_common_low_reservoir_alert_units
                             )
                     ) {
                         commandQueue.customCommand(CommandUpdateAlertConfiguration(), null)
@@ -519,7 +530,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             // Omnipod only reports reservoir level when there's < 1023 pulses left
             return podStateManager.pulsesRemaining?.let {
                 it * PodConstants.POD_PULSE_BOLUS_UNITS
-            } ?: 75.0
+            } ?: 50.0
         }
 
     override val batteryLevel: Int
@@ -678,7 +689,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             }
             val percent = (waited.toFloat() / estimatedDeliveryTimeSeconds) * 100
             updateBolusProgressDialog(
-                resourceHelper.gs(R.string.bolusdelivering, requestedBolusAmount),
+                rh.gs(R.string.bolusdelivering, requestedBolusAmount),
                 percent.toInt()
             )
         }
@@ -704,7 +715,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 val remainingUnits = podStateManager.lastBolus!!.bolusUnitsRemaining
                 val percent = ((requestedBolusAmount - remainingUnits) / requestedBolusAmount) * 100
                 updateBolusProgressDialog(
-                    resourceHelper.gs(R.string.bolusdelivering, requestedBolusAmount),
+                    rh.gs(R.string.bolusdelivering, requestedBolusAmount),
                     percent.toInt()
                 )
 
@@ -1017,28 +1028,28 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     override fun shortStatus(veryShort: Boolean): String {
         if (!podStateManager.isActivationCompleted) {
-            return resourceHelper.gs(R.string.omnipod_common_short_status_no_active_pod)
+            return rh.gs(R.string.omnipod_common_short_status_no_active_pod)
         }
         var ret = ""
         if (podStateManager.lastUpdatedSystem != 0L) {
             val agoMsec: Long = System.currentTimeMillis() - podStateManager.lastUpdatedSystem
             val agoMin = (agoMsec / 60.0 / 1000.0).toInt()
-            ret += resourceHelper.gs(R.string.omnipod_common_short_status_last_connection, agoMin) + "\n"
+            ret += rh.gs(R.string.omnipod_common_short_status_last_connection, agoMin) + "\n"
         }
         podStateManager.lastBolus?.run {
-            ret += resourceHelper.gs(
+            ret += rh.gs(
                 R.string.omnipod_common_short_status_last_bolus, to2Decimal(this.deliveredUnits() ?: this.requestedUnits),
                 DateFormat.format("HH:mm", Date(this.startTime))
             ) + "\n"
         }
         val temporaryBasal = pumpSync.expectedPumpState().temporaryBasal
         temporaryBasal?.run {
-            ret += resourceHelper.gs(
+            ret += rh.gs(
                 R.string.omnipod_common_short_status_temp_basal,
                 this.toStringFull(dateUtil)
             ) + "\n"
         }
-        ret += resourceHelper.gs(
+        ret += rh.gs(
             R.string.omnipod_common_short_status_reservoir,
             podStateManager.pulsesRemaining?.let { reservoirLevel.toString() } ?: "50+"
         )
@@ -1086,7 +1097,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             else -> {
                 aapsLogger.warn(LTag.PUMP, "Unsupported custom command: " + customCommand.javaClass.name)
                 PumpEnactResult(injector).success(false).enacted(false).comment(
-                    resourceHelper.gs(
+                    rh.gs(
                         R.string.omnipod_common_error_unsupported_custom_command,
                         customCommand.javaClass.name
                     )
@@ -1139,7 +1150,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         return profileFunction.getProfile()?.let {
             executeProgrammingCommand(
                 pre = observeDeliverySuspended(),
-                historyEntry = history.createRecord(OmnipodCommandType.RESUME_DELIVERY),
+                historyEntry = history.createRecord(OmnipodCommandType.RESUME_DELIVERY, basalProfileRecord = BasalValuesRecord(it.getBasalValues().toList())),
                 command = omnipodManager.setBasalProgram(mapProfileToBasalProgram(it), hasBasalBeepEnabled())
                     .ignoreElements()
             ).doFinally {
@@ -1153,16 +1164,20 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     private fun deactivatePod(): PumpEnactResult {
+        var success = true
         val ret = executeProgrammingCommand(
             historyEntry = history.createRecord(OmnipodCommandType.DEACTIVATE_POD),
             command = omnipodManager.deactivatePod().ignoreElements(),
-            checkNoActiveCommand = false,
-            post = createFakeTBRWhenNoActivePod(),
+            checkNoActiveCommand = false
         ).doOnComplete {
-            rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_FAULT))
+            if (podStateManager.activeCommand != null) {
+                success = false
+            } else {
+                podStateManager.reset()
+                rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_FAULT))
+            }
         }.toPumpEnactResult()
-
-        if (podStateManager.activeCommand != null) {
+        if (!success) {
             ret.success(false)
         }
         return ret
@@ -1170,7 +1185,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     private fun handleTimeChange(): PumpEnactResult {
         return profileFunction.getProfile()?.let {
-            setNewBasalProfile(it)
+            setNewBasalProfile(it, OmnipodCommandType.SET_TIME)
         } ?: PumpEnactResult(injector).success(true).enacted(false).comment("No profile active")
     }
 
@@ -1181,7 +1196,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         val lowReservoirAlertEnabled = sp.getBoolean(R.string.key_omnipod_common_low_reservoir_alert_enabled, true)
         val lowReservoirAlertUnits = sp.getInt(R.string.key_omnipod_common_low_reservoir_alert_units, 10)
 
-        if (!podStateManager.differentAlertSettings(
+        if (podStateManager.sameAlertSettings(
                 expirationReminderEnabled,
                 expirationHours,
                 lowReservoirAlertEnabled,
@@ -1460,7 +1475,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     private fun showErrorDialog(message: String, sound: Int) {
-        runAlarm(context, message, resourceHelper.gs(R.string.error), sound)
+        runAlarm(context, message, rh.gs(R.string.error), sound)
     }
 
     private fun showNotification(id: Int, message: String, urgency: Int, sound: Int?) {

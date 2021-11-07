@@ -34,7 +34,7 @@ import javax.inject.Singleton
 @Singleton
 class NSClientSourcePlugin @Inject constructor(
     injector: HasAndroidInjector,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     aapsLogger: AAPSLogger,
     config: Config
 ) : PluginBase(PluginDescription()
@@ -44,7 +44,7 @@ class NSClientSourcePlugin @Inject constructor(
     .pluginName(R.string.nsclientbg)
     .shortName(R.string.nsclientbgshort)
     .description(R.string.description_source_ns_client),
-    aapsLogger, resourceHelper, injector
+    aapsLogger, rh, injector
 ), BgSource {
 
     private var lastBGTimeStamp: Long = 0
@@ -116,7 +116,7 @@ class NSClientSourcePlugin @Inject constructor(
         override fun doWork(): Result {
             var ret = Result.success()
 
-            if (!nsClientSourcePlugin.isEnabled() && !sp.getBoolean(R.string.key_ns_receive_cgm, true) && !dexcomPlugin.isEnabled()) return Result.success(workDataOf("Result" to "Sync not enabled"))
+            if (!nsClientSourcePlugin.isEnabled() && !sp.getBoolean(R.string.key_ns_receive_cgm, false) && !dexcomPlugin.isEnabled()) return Result.success(workDataOf("Result" to "Sync not enabled"))
 
             val sgvs = dataWorker.pickupJSONArray(inputData.getLong(DataWorker.STORE_KEY, -1))
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))

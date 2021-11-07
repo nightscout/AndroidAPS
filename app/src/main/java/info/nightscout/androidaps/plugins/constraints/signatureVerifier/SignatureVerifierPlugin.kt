@@ -35,7 +35,7 @@ import javax.inject.Singleton
 class SignatureVerifierPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     private val sp: SP,
     private val rxBus: RxBus,
     private val context: Context
@@ -45,7 +45,7 @@ class SignatureVerifierPlugin @Inject constructor(
     .alwaysEnabled(true)
     .showInList(false)
     .pluginName(R.string.signature_verifier),
-    aapsLogger, resourceHelper, injector
+    aapsLogger, rh, injector
 ), Constraints {
 
     private val REVOKED_CERTS_URL = "https://raw.githubusercontent.com/nightscout/AndroidAPS/master/app/src/main/assets/revoked_certs.txt"
@@ -88,7 +88,7 @@ class SignatureVerifierPlugin @Inject constructor(
     }
 
     private fun showNotification() {
-        val notification = Notification(Notification.INVALID_VERSION, resourceHelper.gs(R.string.running_invalid_version), Notification.URGENT)
+        val notification = Notification(Notification.INVALID_VERSION, rh.gs(R.string.running_invalid_version), Notification.URGENT)
         rxBus.send(EventNewNotification(notification))
     }
 

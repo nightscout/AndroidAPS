@@ -10,6 +10,7 @@ import info.nightscout.androidaps.plugins.aps.loop.APSResult
 import info.nightscout.androidaps.plugins.configBuilder.RunningConfiguration
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HtmlHelper.fromHtml
+import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -17,7 +18,6 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -76,18 +76,19 @@ import javax.inject.Singleton
 class NSDeviceStatus @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val sp: SP,
-    private val resourceHelper: ResourceHelper,
+    private val rh: ResourceHelper,
     private val nsSettingsStatus: NSSettingsStatus,
     private val config: Config,
     private val dateUtil: DateUtil,
-    private val runningConfiguration: RunningConfiguration
+    private val runningConfiguration: RunningConfiguration,
+    private val deviceStatusData: DeviceStatusData
 ) {
 
     private var data: JSONObject? = null
     fun handleNewData(deviceStatuses: JSONArray) {
-        aapsLogger.debug(LTag.NSCLIENT, "Got NS deviceStatus: \$deviceStatuses}")
+        aapsLogger.debug(LTag.NSCLIENT, "Got NS deviceStatus: \$deviceStatuses")
         try {
-            for (i in 0 until deviceStatuses.length()) {
+            for (i in deviceStatuses.length() -1 downTo 0) {
                 val devicestatusJson = deviceStatuses.getJSONObject(i)
                 if (devicestatusJson != null) {
                     setData(devicestatusJson)
@@ -98,6 +99,7 @@ class NSDeviceStatus @Inject constructor(
                     if (devicestatusJson.has("configuration") && config.NSCLIENT) {
                         // copy configuration of Insulin and Sensitivity from main AAPS
                         runningConfiguration.apply(devicestatusJson.getJSONObject("configuration"))
+                        break
                     }
                 }
             }
@@ -145,21 +147,18 @@ class NSDeviceStatus @Inject constructor(
             }
     }
 
-    // ***** PUMP DATA ******
-    private var deviceStatusPumpData: DeviceStatusPumpData? = null
-
     val extendedPumpStatus: Spanned
-        get() = deviceStatusPumpData?.extended ?: fromHtml("")
+        get() = deviceStatusData.pumpData?.extended ?: fromHtml("")
 
     val pumpStatus: Spanned
         // test warning level // color
         get() {
-            val pumpData = deviceStatusPumpData ?: return fromHtml("")
+            val pumpData = deviceStatusData.pumpData ?: return fromHtml("")
 
             //String[] ALL_STATUS_FIELDS = {"reservoir", "battery", "clock", "status", "device"};
             val string = StringBuilder()
-                .append("<span style=\"color:${resourceHelper.gcs(R.color.defaulttext)}\">")
-                .append(resourceHelper.gs(R.string.pump))
+                .append("<span style=\"color:${rh.gcs(R.color.defaulttext)}\">")
+                .append(rh.gs(R.string.pump))
                 .append(": </span>")
 
             // test warning level
@@ -179,23 +178,12 @@ class NSDeviceStatus @Inject constructor(
             if (fields.contains("reservoir")) string.append(pumpData.reservoir.toInt()).append("U ")
             if (fields.contains("battery") && pumpData.isPercent) string.append(pumpData.percent).append("% ")
             if (fields.contains("battery") && !pumpData.isPercent) string.append(Round.roundTo(pumpData.voltage, 0.001)).append(" ")
-            if (fields.contains("clock")) string.append(dateUtil.minAgo(resourceHelper, pumpData.clock)).append(" ")
+            if (fields.contains("clock")) string.append(dateUtil.minAgo(rh, pumpData.clock)).append(" ")
             if (fields.contains("status")) string.append(pumpData.status).append(" ")
             if (fields.contains("device")) string.append(device).append(" ")
             string.append("</span>") // color
             return fromHtml(string.toString())
         }
-
-    internal class DeviceStatusPumpData {
-
-        var clock = 0L
-        var isPercent = false
-        var percent = 0
-        var voltage = 0.0
-        var status = "N/A"
-        var reservoir = 0.0
-        var extended: Spanned? = null
-    }
 
     private fun updatePumpData() {
         try {
@@ -203,10 +191,10 @@ class NSDeviceStatus @Inject constructor(
             val pump = if (data.has("pump")) data.getJSONObject("pump") else JSONObject()
             val clock = if (pump.has("clock")) dateUtil.fromISODateString(pump.getString("clock")) else 0L
             // check if this is new data
-            if (clock == 0L || deviceStatusPumpData != null && clock < deviceStatusPumpData!!.clock) return
+            if (clock == 0L || deviceStatusData.pumpData != null && clock < deviceStatusData.pumpData!!.clock) return
 
             // create new status and process data
-            val deviceStatusPumpData = DeviceStatusPumpData()
+            val deviceStatusPumpData = DeviceStatusData.PumpData()
             deviceStatusPumpData.clock = clock
             if (pump.has("status") && pump.getJSONObject("status").has("status")) deviceStatusPumpData.status = pump.getJSONObject("status").getString("status")
             if (pump.has("reservoir")) deviceStatusPumpData.reservoir = pump.getDouble("reservoir")
@@ -227,19 +215,12 @@ class NSDeviceStatus @Inject constructor(
                     extended.append("<b>").append(key).append(":</b> ").append(value).append("<br>")
                 }
                 deviceStatusPumpData.extended = fromHtml(extended.toString())
+                deviceStatusPumpData.activeProfileName = JsonHelper.safeGetStringAllowNull(extendedJson, "ActiveProfile", null)
             }
-            this.deviceStatusPumpData = deviceStatusPumpData
+            deviceStatusData.pumpData = deviceStatusPumpData
         } catch (e: Exception) {
             aapsLogger.error("Unhandled exception", e)
         }
-    }
-
-    class DeviceStatusOpenAPSData {
-
-        var clockSuggested = 0L
-        var clockEnacted = 0L
-        var suggested: JSONObject? = null
-        var enacted: JSONObject? = null
     }
 
     private fun updateOpenApsData(jsonObject: JSONObject) {
@@ -249,15 +230,15 @@ class NSDeviceStatus @Inject constructor(
             val enacted = if (openAps.has("enacted")) openAps.getJSONObject("enacted") else JSONObject()
             var clock = if (suggested.has("timestamp")) dateUtil.fromISODateString(suggested.getString("timestamp")) else 0L
             // check if this is new data
-            if (clock != 0L && clock > deviceStatusOpenAPSData.clockSuggested) {
-                deviceStatusOpenAPSData.suggested = suggested
-                deviceStatusOpenAPSData.clockSuggested = clock
+            if (clock != 0L && clock > deviceStatusData.openAPSData.clockSuggested) {
+                deviceStatusData.openAPSData.suggested = suggested
+                deviceStatusData.openAPSData.clockSuggested = clock
             }
             clock = if (enacted.has("timestamp")) dateUtil.fromISODateString(enacted.getString("timestamp")) else 0L
             // check if this is new data
-            if (clock != 0L && clock > deviceStatusOpenAPSData.clockEnacted) {
-                deviceStatusOpenAPSData.enacted = enacted
-                deviceStatusOpenAPSData.clockEnacted = clock
+            if (clock != 0L && clock > deviceStatusData.openAPSData.clockEnacted) {
+                deviceStatusData.openAPSData.enacted = enacted
+                deviceStatusData.openAPSData.clockEnacted = clock
             }
         } catch (e: Exception) {
             aapsLogger.error("Unhandled exception", e)
@@ -267,18 +248,18 @@ class NSDeviceStatus @Inject constructor(
     val openApsStatus: Spanned
         get() {
             val string = StringBuilder()
-                .append("<span style=\"color:${resourceHelper.gcs(R.color.defaulttext)}\">")
-                .append(resourceHelper.gs(R.string.openaps_short))
+                .append("<span style=\"color:${rh.gcs(R.color.defaulttext)}\">")
+                .append(rh.gs(R.string.openaps_short))
                 .append(": </span>")
 
             // test warning level
             val level = when {
-                deviceStatusOpenAPSData.clockSuggested + T.mins(sp.getLong(R.string.key_nsalarm_urgent_staledatavalue, 31)).msecs() < dateUtil.now() -> Levels.URGENT
-                deviceStatusOpenAPSData.clockSuggested + T.mins(sp.getLong(R.string.key_nsalarm_staledatavalue, 16)).msecs() < dateUtil.now()        -> Levels.WARN
+                deviceStatusData.openAPSData.clockSuggested + T.mins(sp.getLong(R.string.key_nsalarm_urgent_staledatavalue, 31)).msecs() < dateUtil.now() -> Levels.URGENT
+                deviceStatusData.openAPSData.clockSuggested + T.mins(sp.getLong(R.string.key_nsalarm_staledatavalue, 16)).msecs() < dateUtil.now()        -> Levels.WARN
                 else                                                                                                                                 -> Levels.INFO
             }
             string.append("<span style=\"color:${level.toColor()}\">")
-            if (deviceStatusOpenAPSData.clockSuggested != 0L) string.append(dateUtil.minAgo(resourceHelper, deviceStatusOpenAPSData.clockSuggested)).append(" ")
+            if (deviceStatusData.openAPSData.clockSuggested != 0L) string.append(dateUtil.minAgo(rh, deviceStatusData.openAPSData.clockSuggested)).append(" ")
             string.append("</span>") // color
             return fromHtml(string.toString())
         }
@@ -287,20 +268,14 @@ class NSDeviceStatus @Inject constructor(
         get() {
             val string = StringBuilder()
             try {
-                if (deviceStatusOpenAPSData.enacted != null && deviceStatusOpenAPSData.clockEnacted != deviceStatusOpenAPSData.clockSuggested) string.append("<b>").append(dateUtil.minAgo(resourceHelper, deviceStatusOpenAPSData.clockEnacted)).append("</b> ").append(deviceStatusOpenAPSData.enacted!!.getString("reason")).append("<br>")
-                if (deviceStatusOpenAPSData.suggested != null) string.append("<b>").append(dateUtil.minAgo(resourceHelper, deviceStatusOpenAPSData.clockSuggested)).append("</b> ").append(deviceStatusOpenAPSData.suggested!!.getString("reason")).append("<br>")
+                if (deviceStatusData.openAPSData.enacted != null && deviceStatusData.openAPSData.clockEnacted != deviceStatusData.openAPSData.clockSuggested) string.append("<b>").append(dateUtil.minAgo(rh, deviceStatusData.openAPSData.clockEnacted)).append("</b> ").append(deviceStatusData.openAPSData.enacted!!.getString("reason")).append("<br>")
+                if (deviceStatusData.openAPSData.suggested != null) string.append("<b>").append(dateUtil.minAgo(rh, deviceStatusData.openAPSData.clockSuggested)).append("</b> ").append(deviceStatusData.openAPSData.suggested!!.getString("reason")).append("<br>")
                 return fromHtml(string.toString())
             } catch (e: JSONException) {
                 aapsLogger.error("Unhandled exception", e)
             }
             return fromHtml("")
         }
-
-    internal class Uploader {
-
-        var clock = 0L
-        var battery = 0
-    }
 
     private fun updateUploaderData(jsonObject: JSONObject) {
         try {
@@ -318,13 +293,13 @@ class NSDeviceStatus @Inject constructor(
                     else                                                                              -> 0
                 }
 
-            var uploader = uploaderMap[device]
+            var uploader = deviceStatusData.uploaderMap[device]
             // check if this is new data
             if (clock != 0L && battery != 0 && (uploader == null || clock > uploader.clock)) {
-                if (uploader == null) uploader = Uploader()
+                if (uploader == null) uploader = DeviceStatusData.Uploader()
                 uploader.battery = battery
                 uploader.clock = clock
-                uploaderMap[device] = uploader
+                deviceStatusData.uploaderMap[device] = uploader
             }
         } catch (e: Exception) {
             aapsLogger.error("Unhandled exception", e)
@@ -333,11 +308,11 @@ class NSDeviceStatus @Inject constructor(
 
     val uploaderStatus: String
         get() {
-            val iterator: Iterator<*> = uploaderMap.entries.iterator()
+            val iterator: Iterator<*> = deviceStatusData.uploaderMap.entries.iterator()
             var minBattery = 100
             while (iterator.hasNext()) {
                 val pair = iterator.next() as Map.Entry<*, *>
-                val uploader = pair.value as Uploader
+                val uploader = pair.value as DeviceStatusData.Uploader
                 if (minBattery > uploader.battery) minBattery = uploader.battery
             }
             return "$minBattery%"
@@ -346,14 +321,14 @@ class NSDeviceStatus @Inject constructor(
     val uploaderStatusSpanned: Spanned
         get() {
             val string = StringBuilder()
-            string.append("<span style=\"color:${resourceHelper.gcs(R.color.defaulttext)}\">")
-            string.append(resourceHelper.gs(R.string.uploader_short))
+            string.append("<span style=\"color:${rh.gcs(R.color.defaulttext)}\">")
+            string.append(rh.gs(R.string.uploader_short))
             string.append(": </span>")
-            val iterator: Iterator<*> = uploaderMap.entries.iterator()
+            val iterator: Iterator<*> = deviceStatusData.uploaderMap.entries.iterator()
             var minBattery = 100
             while (iterator.hasNext()) {
                 val pair = iterator.next() as Map.Entry<*, *>
-                val uploader = pair.value as Uploader
+                val uploader = pair.value as DeviceStatusData.Uploader
                 if (minBattery > uploader.battery) minBattery = uploader.battery
             }
             string.append(minBattery)
@@ -364,33 +339,28 @@ class NSDeviceStatus @Inject constructor(
     val extendedUploaderStatus: Spanned
         get() {
             val string = StringBuilder()
-            val iterator: Iterator<*> = uploaderMap.entries.iterator()
+            val iterator: Iterator<*> = deviceStatusData.uploaderMap.entries.iterator()
             while (iterator.hasNext()) {
                 val pair = iterator.next() as Map.Entry<*, *>
-                val uploader = pair.value as Uploader
+                val uploader = pair.value as DeviceStatusData.Uploader
                 val device = pair.key as String
                 string.append("<b>").append(device).append(":</b> ").append(uploader.battery).append("%<br>")
             }
             return fromHtml(string.toString())
         }
 
-    // ********* OpenAPS data ***********
-    var deviceStatusOpenAPSData = DeviceStatusOpenAPSData()
     val openApsTimestamp: Long
         get() =
-            if (deviceStatusOpenAPSData.clockSuggested != 0L) {
-                deviceStatusOpenAPSData.clockSuggested
+            if (deviceStatusData.openAPSData.clockSuggested != 0L) {
+                deviceStatusData.openAPSData.clockSuggested
             } else {
                 -1
             }
 
-    // ********* Uploader data ***********
-    private val uploaderMap = HashMap<String, Uploader>()
-
     fun getAPSResult(injector: HasAndroidInjector): APSResult {
         val result = APSResult(injector)
-        result.json = deviceStatusOpenAPSData.suggested
-        result.date = deviceStatusOpenAPSData.clockSuggested
+        result.json = deviceStatusData.openAPSData.suggested
+        result.date = deviceStatusData.openAPSData.clockSuggested
         return result
     }
 }

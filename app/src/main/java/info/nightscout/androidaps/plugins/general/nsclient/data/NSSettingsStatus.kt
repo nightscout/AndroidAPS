@@ -118,7 +118,7 @@ import javax.inject.Singleton
 @Singleton
 class NSSettingsStatus @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val resourceHelper: ResourceHelper,
+    private val rh: ResourceHelper,
     private val rxBus: RxBus,
     private val defaultValueHelper: DefaultValueHelper,
     private val sp: SP,
@@ -150,7 +150,7 @@ class NSSettingsStatus @Inject constructor(
         data = status
         aapsLogger.debug(LTag.NSCLIENT, "Got versions: Nightscout: ${getVersion()}")
         if (getVersionNum() < config.SUPPORTEDNSVERSION) {
-            val notification = Notification(Notification.OLD_NS, resourceHelper.gs(R.string.unsupportednsversion), Notification.NORMAL)
+            val notification = Notification(Notification.OLD_NS, rh.gs(R.string.unsupportednsversion), Notification.NORMAL)
             rxBus.send(EventNewNotification(notification))
         } else {
             rxBus.send(EventDismissNotification(Notification.OLD_NS))
@@ -252,7 +252,7 @@ class NSSettingsStatus @Inject constructor(
             uel.log(Action.NS_SETTINGS_COPIED, UserEntry.Sources.NSClient)
         }
 
-        if (context != null) OKDialog.showConfirmation(context, resourceHelper.gs(R.string.statuslights), resourceHelper.gs(R.string.copyexistingvalues), action)
+        if (context != null) OKDialog.showConfirmation(context, rh.gs(R.string.statuslights), rh.gs(R.string.copyexistingvalues), action)
         else action.run()
     }
 }

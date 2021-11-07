@@ -180,7 +180,7 @@
     <string name="careportal_announcement">Оповещение</string>
     <string name="careportal_note">Примечание</string>
     <string name="careportal_question">Вопрос</string>
-    <string name="careportal_exercise">Нгрузка</string>
+    <string name="careportal_exercise">Нагрузка</string>
     <string name="careportal_announcement_message">Оповещение: %1$s</string>
     <string name="careportal_note_message">Примечание: %1$s</string>
     <string name="careportal_question_message">Вопрос: %1$s</string>
@@ -261,7 +261,6 @@
     <string name="metadata_label_device_name">Имя пациента экспортируемого устройства</string>
     <string name="metadata_label_device_model">Модель экспортируемого устройства</string>
     <string name="metadata_label_encryption">Шифрование файла</string>
-    <string name="metadata_format_old">Старый формат экспорта</string>
     <string name="metadata_format_new">Новый зашифрованный формат</string>
     <string name="metadata_format_debug">Новый формат отладки (незашифрованный)</string>
     <string name="metadata_format_other">Неизвестный формат экспорта</string>
@@ -292,6 +291,7 @@
     <string name="signature_verifier">Верификатор подписи</string>
     <string name="running_invalid_version">Мы обнаружили, что вы используете недопустимую версию. Цикл отключен!</string>
     <string name="versionavailable">Доступна версия %1$s</string>
+    <string name="version_expire">Версия: %1$s истекает %2$s</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Перезагрузите телефон или перезапустите AndroidAPS из системных настроек \n иначе AndroidAPS не будет вести лог (важно для отслеживания и проверки алгоритмов)!</string>
     <!-- WeekdayPicker -->
@@ -304,6 +304,7 @@
     <string name="sunday_short">Вс</string>
     <!-- User Entry -->
     <string name="uel_bolus">БОЛЮС</string>
+    <string name="uel_bolus_calculator">КАЛЬКУЛЯТОР БОЛЮСА</string>
     <string name="uel_bolus_advisor">ПОМОЩНИК БОЛЮСА</string>
     <string name="uel_extended_bolus">ПРОЛОНГИРОВАННЫЙ БОЛЮС</string>
     <string name="uel_superbolus_tbr">СУПЕРБОЛЮС ВБС/TBR</string>

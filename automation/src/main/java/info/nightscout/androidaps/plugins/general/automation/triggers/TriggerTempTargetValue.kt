@@ -20,16 +20,16 @@ import org.json.JSONObject
 class TriggerTempTargetValue(injector: HasAndroidInjector) : Trigger(injector) {
 
     var ttValue = InputBg(profileFunction)
-    var comparator = Comparator(resourceHelper)
+    var comparator = Comparator(rh)
 
     constructor(injector: HasAndroidInjector, value: Double, units: GlucoseUnit, compare: Comparator.Compare) : this(injector) {
         ttValue = InputBg(profileFunction, value, units)
-        comparator = Comparator(resourceHelper, compare)
+        comparator = Comparator(rh, compare)
     }
 
     constructor(injector: HasAndroidInjector, triggerTempTarget: TriggerTempTargetValue) : this(injector) {
         ttValue = InputBg(profileFunction, triggerTempTarget.ttValue.value, triggerTempTarget.ttValue.units)
-        comparator = Comparator(resourceHelper, triggerTempTarget.comparator.value)
+        comparator = Comparator(rh, triggerTempTarget.comparator.value)
     }
 
     fun comparator(comparator: Comparator.Compare): TriggerTempTargetValue {
@@ -79,9 +79,9 @@ class TriggerTempTargetValue(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun friendlyDescription(): String  {
         return if (comparator.value == Comparator.Compare.IS_NOT_AVAILABLE)
-            resourceHelper.gs(R.string.notemptarget)
+            rh.gs(R.string.notemptarget)
         else
-            resourceHelper.gs(if (ttValue.units == GlucoseUnit.MGDL) R.string.temptargetcomparedmgdl else R.string.temptargetcomparedmmol, resourceHelper.gs(comparator.value.stringRes), ttValue.value, ttValue.units)
+            rh.gs(if (ttValue.units == GlucoseUnit.MGDL) R.string.temptargetcomparedmgdl else R.string.temptargetcomparedmmol, rh.gs(comparator.value.stringRes), ttValue.value, ttValue.units)
     }
 
     override fun icon(): Optional<Int?> = Optional.of(R.drawable.ic_keyboard_tab)
@@ -90,9 +90,9 @@ class TriggerTempTargetValue(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(resourceHelper, R.string.careportal_temporarytargetvalue, this))
+            .add(StaticLabel(rh, R.string.careportal_temporarytargetvalue, this))
             .add(comparator)
-            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.target_u, ttValue.units), "", ttValue))
+            .add(LabelWithElement(rh, rh.gs(R.string.target_u, ttValue.units), "", ttValue))
             .build(root)
     }
 }

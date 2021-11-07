@@ -34,7 +34,7 @@ import javax.inject.Singleton
 @Singleton
 class DexcomPlugin @Inject constructor(
     injector: HasAndroidInjector,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     aapsLogger: AAPSLogger,
     private val sp: SP,
     private val dexcomMediator: DexcomMediator,
@@ -47,7 +47,7 @@ class DexcomPlugin @Inject constructor(
     .shortName(R.string.dexcom_short)
     .preferencesId(R.xml.pref_bgsourcedexcom)
     .description(R.string.description_source_dexcom),
-    aapsLogger, resourceHelper, injector
+    aapsLogger, rh, injector
 ), BgSource {
 
     init {

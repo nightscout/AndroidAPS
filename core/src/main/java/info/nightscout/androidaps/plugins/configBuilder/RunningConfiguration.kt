@@ -5,6 +5,7 @@ import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientNewLog
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
@@ -23,12 +24,12 @@ class RunningConfiguration @Inject constructor(
     private val sp: SP,
     private val aapsLogger: AAPSLogger,
     private val config: Config,
-    private val resourceHelper: ResourceHelper,
+    private val rh: ResourceHelper,
     private val rxBus: RxBus
 ) {
 
     private var counter = 0
-    private val every = 20 // Send only every 20 device status to save traffic
+    private val every = 12 // Send only every 12 device status to save traffic
 
     // called in AAPS mode only
     fun configuration(): JSONObject {
@@ -58,8 +59,10 @@ class RunningConfiguration @Inject constructor(
     // called in NSClient mode only
     fun apply(configuration: JSONObject) {
         if (configuration.has("version")) {
-            if (config.VERSION_NAME.startsWith(configuration.getString("version")).not())
-                rxBus.send(EventNewNotification(Notification(Notification.NSCLIENT_VERSION_DOES_NOT_MATCH, resourceHelper.gs(R.string.nsclient_version_does_not_match), Notification.NORMAL)))
+            rxBus.send(EventNSClientNewLog("VERSION", "Received AndroidAPS version  ${configuration.getString("version")}"))
+            if (config.VERSION_NAME.startsWith(configuration.getString("version")).not()) {
+                rxBus.send(EventNewNotification(Notification(Notification.NSCLIENT_VERSION_DOES_NOT_MATCH, rh.gs(R.string.nsclient_version_does_not_match), Notification.NORMAL)))
+            }
         }
         if (configuration.has("insulin")) {
             val insulin = Insulin.InsulinType.fromInt(JsonHelper.safeGetInt(configuration, "insulin", Insulin.InsulinType.UNKNOWN.value))

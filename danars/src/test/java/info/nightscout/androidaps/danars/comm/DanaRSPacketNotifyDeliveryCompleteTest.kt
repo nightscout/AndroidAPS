@@ -21,14 +21,14 @@ class DanaRSPacketNotifyDeliveryCompleteTest : DanaRSTestBase() {
             if (it is DanaRSPacketNotifyDeliveryComplete) {
                 it.aapsLogger = aapsLogger
                 it.rxBus = rxBus
-                it.resourceHelper = resourceHelper
+                it.rh = rh
                 it.danaPump = danaPump
             }
         }
     }
 
     @Test fun runTest() {
-        `when`(resourceHelper.gs(anyInt(), anyDouble())).thenReturn("SomeString")
+        `when`(rh.gs(anyInt(), anyDouble())).thenReturn("SomeString")
 
         danaPump.bolusingTreatment = EventOverviewBolusProgress.Treatment(0.0, 0, true)
         val packet = DanaRSPacketNotifyDeliveryComplete(packetInjector)

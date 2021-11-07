@@ -39,7 +39,7 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var dateUtil: DateUtil
 
     var date: Long = 0
@@ -97,56 +97,56 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
     }
 
     val carbsRequiredText: String
-        get() = String.format(resourceHelper.gs(R.string.carbsreq), carbsReq, carbsReqWithin)
+        get() = String.format(rh.gs(R.string.carbsreq), carbsReq, carbsReqWithin)
 
     override fun toString(): String {
         val pump = activePlugin.activePump
         if (isChangeRequested) {
             // rate
-            var ret: String = if (rate == 0.0 && duration == 0) "${resourceHelper.gs(R.string.canceltemp)} "
-            else if (rate == -1.0) "${resourceHelper.gs(R.string.let_temp_basal_run)}\n"
-            else if (usePercent) "${resourceHelper.gs(R.string.rate)}: ${DecimalFormatter.to2Decimal(percent.toDouble())}% (${DecimalFormatter.to2Decimal(percent * pump.baseBasalRate / 100.0)} U/h) " +
-                "${resourceHelper.gs(R.string.duration)}: ${DecimalFormatter.to2Decimal(duration.toDouble())} min "
-            else "${resourceHelper.gs(R.string.rate)}: ${DecimalFormatter.to2Decimal(rate)} U/h (${DecimalFormatter.to2Decimal(rate / pump.baseBasalRate * 100)}%) " +
-                "${resourceHelper.gs(R.string.duration)}: ${DecimalFormatter.to2Decimal(duration.toDouble())} min "
+            var ret: String = if (rate == 0.0 && duration == 0) "${rh.gs(R.string.canceltemp)} "
+            else if (rate == -1.0) "${rh.gs(R.string.let_temp_basal_run)}\n"
+            else if (usePercent) "${rh.gs(R.string.rate)}: ${DecimalFormatter.to2Decimal(percent.toDouble())}% (${DecimalFormatter.to2Decimal(percent * pump.baseBasalRate / 100.0)} U/h) " +
+                "${rh.gs(R.string.duration)}: ${DecimalFormatter.to2Decimal(duration.toDouble())} min "
+            else "${rh.gs(R.string.rate)}: ${DecimalFormatter.to2Decimal(rate)} U/h (${DecimalFormatter.to2Decimal(rate / pump.baseBasalRate * 100)}%) " +
+                "${rh.gs(R.string.duration)}: ${DecimalFormatter.to2Decimal(duration.toDouble())} min "
             // smb
-            if (smb != 0.0) ret += "SMB: ${DecimalFormatter.toPumpSupportedBolus(smb, activePlugin.activePump, resourceHelper)} "
+            if (smb != 0.0) ret += "SMB: ${DecimalFormatter.toPumpSupportedBolus(smb, activePlugin.activePump, rh)} "
             if (isCarbsRequired) {
                 ret += "$carbsRequiredText "
             }
 
             // reason
-            ret += resourceHelper.gs(R.string.reason) + ": " + reason
+            ret += rh.gs(R.string.reason) + ": " + reason
             return ret
         }
         return if (isCarbsRequired) {
             carbsRequiredText
-        } else resourceHelper.gs(R.string.nochangerequested)
+        } else rh.gs(R.string.nochangerequested)
     }
 
     fun toSpanned(): Spanned {
         val pump = activePlugin.activePump
         if (isChangeRequested) {
             // rate
-            var ret: String = if (rate == 0.0 && duration == 0) resourceHelper.gs(R.string.canceltemp) + "<br>" else if (rate == -1.0) resourceHelper.gs(R.string.let_temp_basal_run) + "<br>" else if (usePercent) "<b>" + resourceHelper.gs(R.string.rate) + "</b>: " + DecimalFormatter.to2Decimal(percent.toDouble()) + "% " +
+            var ret: String = if (rate == 0.0 && duration == 0) rh.gs(R.string.canceltemp) + "<br>" else if (rate == -1.0) rh.gs(R.string.let_temp_basal_run) + "<br>" else if (usePercent) "<b>" + rh.gs(R.string.rate) + "</b>: " + DecimalFormatter.to2Decimal(percent.toDouble()) + "% " +
                 "(" + DecimalFormatter.to2Decimal(percent * pump.baseBasalRate / 100.0) + " U/h)<br>" +
-                "<b>" + resourceHelper.gs(R.string.duration) + "</b>: " + DecimalFormatter.to2Decimal(duration.toDouble()) + " min<br>" else "<b>" + resourceHelper.gs(R.string.rate) + "</b>: " + DecimalFormatter.to2Decimal(rate) + " U/h " +
+                "<b>" + rh.gs(R.string.duration) + "</b>: " + DecimalFormatter.to2Decimal(duration.toDouble()) + " min<br>" else "<b>" + rh.gs(R.string.rate) + "</b>: " + DecimalFormatter.to2Decimal(rate) + " U/h " +
                 "(" + DecimalFormatter.to2Decimal(rate / pump.baseBasalRate * 100.0) + "%) <br>" +
-                "<b>" + resourceHelper.gs(R.string.duration) + "</b>: " + DecimalFormatter.to2Decimal(duration.toDouble()) + " min<br>"
+                "<b>" + rh.gs(R.string.duration) + "</b>: " + DecimalFormatter.to2Decimal(duration.toDouble()) + " min<br>"
 
             // smb
-            if (smb != 0.0) ret += "<b>" + "SMB" + "</b>: " + DecimalFormatter.toPumpSupportedBolus(smb, activePlugin.activePump, resourceHelper) + "<br>"
+            if (smb != 0.0) ret += "<b>" + "SMB" + "</b>: " + DecimalFormatter.toPumpSupportedBolus(smb, activePlugin.activePump, rh) + "<br>"
             if (isCarbsRequired) {
                 ret += "$carbsRequiredText<br>"
             }
 
             // reason
-            ret += "<b>" + resourceHelper.gs(R.string.reason) + "</b>: " + reason.replace("<", "&lt;").replace(">", "&gt;")
+            ret += "<b>" + rh.gs(R.string.reason) + "</b>: " + reason.replace("<", "&lt;").replace(">", "&gt;")
             return fromHtml(ret)
         }
         return if (isCarbsRequired) {
             fromHtml(carbsRequiredText)
-        } else fromHtml(resourceHelper.gs(R.string.nochangerequested))
+        } else fromHtml(rh.gs(R.string.nochangerequested))
     }
 
     open fun newAndClone(injector: HasAndroidInjector): APSResult {

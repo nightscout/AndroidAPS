@@ -54,6 +54,7 @@
     <string name="key_ns_offline_event_last_synced_id" translatable="false">ns_offline_event_last_synced_id</string>
     <string name="key_ns_profile_store_last_synced_timestamp" translatable="false">ns_profile_store_last_synced_timestamp</string>
     <string name="key_local_profile_last_change" translatable="false">local_profile_last_change</string>
+    <string name="key_ns_sync_slow" translatable="false">ns_sync_slow</string>
 
     <string name="treatmentssafety_title">Treatments safety</string>
     <string name="treatmentssafety_maxbolus_title">Max allowed bolus [U]</string>
@@ -65,7 +66,6 @@
     <string name="nav_resetdb">Reset Databases</string>
     <string name="reset_db_confirm">Do you really want to reset the databases?</string>
     <string name="nav_exit">Exit</string>
-    <string name="ns_sync_use_absolute_title">Always use basal absolute values</string>
     <string name="alert_dialog_permission_battery_optimization_failed">This device does not appear to support battery optimization whitelisting - you may experience performance issues.</string>
 
     <string name="description_actions">Some buttons to quickly access common features</string>
@@ -844,6 +844,7 @@
     <string name="resettodefaults">Reset to defaults</string>
     <string name="nsmalfunction">NSClient malfunction. Consider NS and NSClient restart.</string>
     <string name="time_offset">Time offset</string>
+    <string name="bolus_reminder">Remind to bolus later</string>
     <string name="key_aps_mode" translatable="false">aps_mode</string>
     <string name="setupwizard_preferred_aps_mode">Preferred APS mode</string>
     <string name="treatments_wizard_total_label">Total</string>
@@ -1066,6 +1067,12 @@
     <string name="enablebolusadvisor_summary">Use reminder to start eating later instead of wizard result during high glycemia ("pre-bolus")</string>
     <string name="time_to_eat">Time to eat!\nRun Bolus wizard and do calculation again.</string>
     <string name="timetoeat">Time to eat</string>
+    <string name="bolusreminder">Bolus reminder</string>
+    <string name="key_usebolusreminder" translatable="false">use_bolus_reminder</string>
+    <string name="enablebolusreminder">Enable bolus reminder</string>
+    <string name="enablebolusreminder_summary">Use reminder to bolus later with wizard
+        ("post-bolus")</string>
+    <string name="time_to_bolus">Time to bolus!\nRun Bolus wizard and do calculation again.</string>
     <string name="fabric_upload_disabled">Crash logs upload disabled!</string>
     <string name="graph_menu_divider_header">Graph</string>
     <string name="chart_menu">Chart menu</string>
@@ -1113,9 +1120,17 @@
     <string name="smscommunicator_another_bolus_in_queue">There is another bolus in queue. Try again later.</string>
     <string name="calculation_in_progress">Calculation in progress</string>
     <string name="missing_profile_name">Missing profile name</string>
-    <string name="error_in_ic_values">Error in IC vaules</string>
+    <string name="error_in_ic_values">Error in IC values</string>
     <string name="error_in_basal_values">Error in basal values</string>
     <string name="error_in_target_values">Error in target values</string>
     <string name="error_in_isf_values">Error in ISF values</string>
+    <string name="run_question">Run %s?</string>
+    <string name="invalid_profile_not_accepted">Invalid profile %1$s not accepted from NS</string>
+    <string name="view">View</string>
+    <string name="errors">Errors</string>
+    <string name="ns_sync_slow">Slow down uploads</string>
+    <string name="data_status">BG data status</string>
+    <string name="recalculated_data_used">Recalculated data used</string>
+    <string name="bg_too_close">BG too close:\n%1$s\n%2$s</string>
 
 </resources>

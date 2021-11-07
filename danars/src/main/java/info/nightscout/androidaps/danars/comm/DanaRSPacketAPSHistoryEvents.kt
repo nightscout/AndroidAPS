@@ -24,7 +24,7 @@ open class DanaRSPacketAPSHistoryEvents(
 ) : DanaRSPacket(injector) {
 
     @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var danaPump: DanaPump
     @Inject lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Inject lateinit var temporaryBasalStorage: TemporaryBasalStorage
@@ -361,7 +361,7 @@ open class DanaRSPacketAPSHistoryEvents(
             }
         }
         if (datetime > danaPump.lastEventTimeLoaded) danaPump.lastEventTimeLoaded = datetime
-        rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.processinghistory) + ": " + status))
+        rxBus.send(EventPumpStatusChanged(rh.gs(R.string.processinghistory) + ": " + status))
     }
 
     override val friendlyName: String = "APS_HISTORY_EVENTS"

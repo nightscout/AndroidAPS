@@ -17,7 +17,7 @@ import javax.inject.Singleton
 
 @Singleton
 class NotificationHolderImpl @Inject constructor(
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     context: Context,
     iconsProvider: IconsProvider
 ) : NotificationHolder {
@@ -29,8 +29,8 @@ class NotificationHolderImpl @Inject constructor(
         .setOnlyAlertOnce(true)
         .setCategory(NotificationCompat.CATEGORY_STATUS)
         .setSmallIcon(iconsProvider.getNotificationIcon())
-        .setLargeIcon(resourceHelper.decodeResource(iconsProvider.getIcon()))
-        .setContentTitle(resourceHelper.gs(R.string.loading))
+        .setLargeIcon(rh.decodeResource(iconsProvider.getIcon()))
+        .setContentTitle(rh.gs(R.string.loading))
         .setContentIntent(openAppIntent(context))
         .build()
         .also {

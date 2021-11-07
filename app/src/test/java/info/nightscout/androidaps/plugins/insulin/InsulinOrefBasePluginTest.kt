@@ -30,12 +30,12 @@ class InsulinOrefBasePluginTest {
 
     inner class InsulinBaseTest(
         injector: HasAndroidInjector,
-        resourceHelper: ResourceHelper,
+        rh: ResourceHelper,
         profileFunction: ProfileFunction,
         rxBus: RxBus,
         aapsLogger: AAPSLogger
     ) : InsulinOrefBasePlugin(
-        injector, resourceHelper, profileFunction, rxBus, aapsLogger
+        injector, rh, profileFunction, rxBus, aapsLogger
     ) {
 
         override fun sendShortDiaNotification(dia: Double) {
@@ -61,7 +61,7 @@ class InsulinOrefBasePluginTest {
     private lateinit var sut: InsulinBaseTest
 
     @Mock lateinit var defaultValueHelper: DefaultValueHelper
-    @Mock lateinit var resourceHelper: ResourceHelper
+    @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var rxBus: RxBus
     @Mock lateinit var aapsLogger: AAPSLogger
@@ -74,7 +74,7 @@ class InsulinOrefBasePluginTest {
 
     @Before
     fun setUp() {
-        sut = InsulinBaseTest(injector, resourceHelper, profileFunction, rxBus, aapsLogger)
+        sut = InsulinBaseTest(injector, rh, profileFunction, rxBus, aapsLogger)
     }
 
     @Test

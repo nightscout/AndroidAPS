@@ -4,6 +4,7 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.BasalValuesRecord
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.BolusRecord
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.InitialResult
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.ResolvedResult
@@ -18,6 +19,7 @@ data class HistoryRecordEntity(
     val initialResult: InitialResult,
     @Embedded(prefix = "tempBasalRecord_") val tempBasalRecord: TempBasalRecord?,
     @Embedded(prefix = "bolusRecord_") val bolusRecord: BolusRecord?,
+    @Embedded(prefix = "basalprofile_") val basalProfileRecord: BasalValuesRecord?,
     val resolvedResult: ResolvedResult?,
     val resolvedAt: Long?
 )

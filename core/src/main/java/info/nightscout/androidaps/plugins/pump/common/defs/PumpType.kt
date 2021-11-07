@@ -403,11 +403,11 @@ enum class PumpType {
         this.source = source
     }
 
-    fun getFullDescription(i18nTemplate: String, hasExtendedBasals: Boolean, resourceHelper: ResourceHelper): String {
+    fun getFullDescription(i18nTemplate: String, hasExtendedBasals: Boolean, rh: ResourceHelper): String {
         val unit = if (pumpTempBasalType == PumpTempBasalType.Percent) "%" else ""
         val eb = extendedBolusSettings ?: return "INVALID"
         val tbr = tbrSettings ?: return "INVALID"
-        val extendedNote = if (hasExtendedBasals) resourceHelper.gs(R.string.def_extended_note) else ""
+        val extendedNote = if (hasExtendedBasals) rh.gs(R.string.def_extended_note) else ""
         return String.format(i18nTemplate,
             getStep("" + bolusSize, specialBolusSize),
             eb.step, eb.durationStep, eb.maxDuration / 60,

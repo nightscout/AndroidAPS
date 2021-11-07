@@ -19,7 +19,7 @@ import kotlin.math.roundToLong
 class AutosensDataStore {
 
     private val dataLock = Any()
-    private var lastUsed5minCalculation: Boolean? = null // true if used 5min bucketed data
+    var lastUsed5minCalculation: Boolean? = null // true if used 5min bucketed data
 
     // we need to make sure that bucketed_data will always have the same timestamp for correct use of cached values
     // once referenceTime != null all bucketed data should be (x * 5min) from referenceTime

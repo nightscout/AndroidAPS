@@ -3,6 +3,15 @@
     <!-- Omnipod Dash - Description -->
     <string name="omnipod_dash_pump_description">Intégration de la pompe Omnipod Dash (le nouveau modèle Bluetooth, avec un bouchon d\'aiguille bleue).</string>
     <!-- Omnipod Dash - Keys -->
+    <!-- Omnipod Dash - History -->
+    <string name="omnipod_dash_history_title">Historique du Pod</string>
+    <string name="omnipod_dash_history_item_description">Description</string>
+    <string name="omnipod_dash_history_item_source">Source</string>
+    <string name="omnipod_dash_history_item_date">Date</string>
+    <string name="omnipod_dash_history_type">Type :</string>
+    <string name="omnipod_dash_history_bolus_value">%1$.2f U</string>
+    <string name="omnipod_dash_history_bolus_value_with_carbs">%1$.2f U, Gluc=%2$.1f g</string>
+    <string name="omnipod_dash_history_tbr_value">Débit : %1$.2f U, durée : %2$d minutes</string>
     <!-- Omnipod Dash - Overview -->
     <string name="omnipod_dash_overview_bluetooth_status">État Bluetooth</string>
     <string name="omnipod_dash_overview_bluetooth_address">Adresse Bluetooth</string>
@@ -18,4 +27,10 @@
     <string name="omnipod_dash_found_too_many_pods">Trop de pods trouvés pour l\'activation</string>
     <string name="omnipod_dash_scan_failed">Impossible de trouver un pod disponible pour l\'activation</string>
     <string name="omnipod_dash_generic_error">Erreur générique : %1$s</string>
+    <string name="omnipod_dash_failed_to_send">Échec d\'envoi de la commande</string>
+    <string name="omnipod_dash_command_not_sent">Commande non envoyée</string>
+    <string name="omnipod_dash_command_not_received_by_the_pod">Commande non reçue par le pod</string>
+    <string name="omnipod_dash_unknown">État inconnu pour la commande</string>
+    <string name="omnipod_common_history_tbr_value">Débit : %1$.2f U, durée : %2$d minutes</string>
+    <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
 </resources>

@@ -57,7 +57,7 @@
     <string name="treatments_wizard_bg_label">BG</string>
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">Węglow</string>
-    <string name="treatments_wizard_correction_label">Korekta</string>
+    <string name="treatments_wizard_correction_label">Poprawka</string>
     <string name="treatments_wizard_bolusiob_label">Bolus IOB</string>
     <string name="openapsma_run">Uruchom teraz</string>
     <string name="vitualpump_label">POMPA WIRTUALNA</string>
@@ -665,7 +665,6 @@
     <string name="error_adding_treatment_title">Niekompletne dane leczenie</string>
     <string name="maintenance_settings">Ustawienia Konserwacji</string>
     <string name="maintenance_email">Odbiorca E-maila</string>
-    <string name="maintenance_encrypt_exported_prefs">Zaszyfruj wyeksportowane ustawienia</string>
     <string name="maintenance_amount">Liczba logów do wysłania</string>
     <string name="maintenance">Konserwacja</string>
     <string name="maintenance_shortname">MAINT</string>

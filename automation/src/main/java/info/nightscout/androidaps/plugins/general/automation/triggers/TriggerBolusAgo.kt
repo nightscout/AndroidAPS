@@ -4,6 +4,7 @@ import android.widget.LinearLayout
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.automation.R
+import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator
@@ -18,11 +19,11 @@ import org.json.JSONObject
 class TriggerBolusAgo(injector: HasAndroidInjector) : Trigger(injector) {
 
     var minutesAgo: InputDuration = InputDuration(30, InputDuration.TimeUnit.MINUTES)
-    var comparator: Comparator = Comparator(resourceHelper)
+    var comparator: Comparator = Comparator(rh)
 
     private constructor(injector: HasAndroidInjector, triggerBolusAgo: TriggerBolusAgo) : this(injector) {
         minutesAgo = InputDuration(triggerBolusAgo.minutesAgo.value, InputDuration.TimeUnit.MINUTES)
-        comparator = Comparator(resourceHelper, triggerBolusAgo.comparator.value)
+        comparator = Comparator(rh, triggerBolusAgo.comparator.value)
     }
 
     fun setValue(value: Int): TriggerBolusAgo {
@@ -36,7 +37,8 @@ class TriggerBolusAgo(injector: HasAndroidInjector) : Trigger(injector) {
     }
 
     override fun shouldRun(): Boolean {
-        val lastBolusTime = repository.getLastBolusRecordOfType(Bolus.Type.NORMAL)?.timestamp ?: 0L
+        val lastBolus = repository.getLastBolusRecordOfTypeWrapped(Bolus.Type.NORMAL).blockingGet()
+        val lastBolusTime = if (lastBolus is ValueWrapper.Existing) lastBolus.value.timestamp else 0L
         if (lastBolusTime == 0L)
             return if (comparator.value == Comparator.Compare.IS_NOT_AVAILABLE) {
                 aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
@@ -71,7 +73,7 @@ class TriggerBolusAgo(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyName(): Int = R.string.lastboluslabel
 
     override fun friendlyDescription(): String =
-        resourceHelper.gs(R.string.lastboluscompared, resourceHelper.gs(comparator.value.stringRes), minutesAgo.getMinutes())
+        rh.gs(R.string.lastboluscompared, rh.gs(comparator.value.stringRes), minutesAgo.getMinutes())
 
     override fun icon(): Optional<Int?> = Optional.of(R.drawable.ic_bolus)
 
@@ -79,9 +81,9 @@ class TriggerBolusAgo(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(resourceHelper, R.string.lastboluslabel, this))
+            .add(StaticLabel(rh, R.string.lastboluslabel, this))
             .add(comparator)
-            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.lastboluslabel) + ": ", "", minutesAgo))
+            .add(LabelWithElement(rh, rh.gs(R.string.lastboluslabel) + ": ", rh.gs(R.string.unit_minutes), minutesAgo))
             .build(root)
     }
 }

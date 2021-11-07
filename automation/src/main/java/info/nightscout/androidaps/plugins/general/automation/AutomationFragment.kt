@@ -46,7 +46,7 @@ import javax.inject.Inject
 class AutomationFragment : DaggerFragment(), OnStartDragListener {
 
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var automationPlugin: AutomationPlugin
@@ -100,14 +100,14 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
             .toObservable(EventAutomationUpdateGui::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({
-                updateGui()
-            }, fabricPrivacy::logException)
+                           updateGui()
+                       }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventAutomationDataChanged::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({
-                eventListAdapter.notifyDataSetChanged()
-            }, fabricPrivacy::logException)
+                           eventListAdapter.notifyDataSetChanged()
+                       }, fabricPrivacy::logException)
         updateGui()
     }
 
@@ -160,29 +160,34 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
         private fun addImage(@DrawableRes res: Int, context: Context, layout: LinearLayout) {
             val iv = ImageView(context)
             iv.setImageResource(res)
-            iv.layoutParams = LinearLayout.LayoutParams(resourceHelper.dpToPx(24), resourceHelper.dpToPx(24))
+            iv.layoutParams = LinearLayout.LayoutParams(rh.dpToPx(24), rh.dpToPx(24))
             layout.addView(iv)
         }
 
         @SuppressLint("ClickableViewAccessibility")
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val event = automationPlugin.at(position)
-            holder.binding.rootLayout.setBackgroundColor(resourceHelper.gc(if (event.areActionsValid()) R.color.ribbonDefault else R.color.errorAlertBackground))
+            holder.binding.rootLayout.setBackgroundColor(rh.gc(
+                if (event.userAction) R.color.mdtp_line_dark
+                else if (event.areActionsValid()) R.color.ribbonDefault
+                else R.color.errorAlertBackground)
+            )
             holder.binding.eventTitle.text = event.title
             holder.binding.enabled.isChecked = event.isEnabled
             holder.binding.enabled.isEnabled = !event.readOnly
             holder.binding.iconLayout.removeAllViews()
             // trigger icons
             val triggerIcons = HashSet<Int>()
-            fillIconSet(event.trigger as TriggerConnector, triggerIcons)
+            if (event.userAction) triggerIcons.add(R.drawable.ic_danar_useropt)
+            fillIconSet(event.trigger, triggerIcons)
             for (res in triggerIcons) {
                 addImage(res, holder.context, holder.binding.iconLayout)
             }
             // arrow icon
             val iv = ImageView(holder.context)
             iv.setImageResource(R.drawable.ic_arrow_forward_white_24dp)
-            iv.layoutParams = LinearLayout.LayoutParams(resourceHelper.dpToPx(24), resourceHelper.dpToPx(24))
-            iv.setPadding(resourceHelper.dpToPx(4), 0, resourceHelper.dpToPx(4), 0)
+            iv.layoutParams = LinearLayout.LayoutParams(rh.dpToPx(24), rh.dpToPx(24))
+            iv.setPadding(rh.dpToPx(4), 0, rh.dpToPx(4), 0)
             holder.binding.iconLayout.addView(iv)
             // action icons
             val actionIcons = HashSet<Int>()
@@ -216,14 +221,14 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
             }
             // remove event
             holder.binding.iconTrash.setOnClickListener {
-                OKDialog.showConfirmation(requireContext(), resourceHelper.gs(R.string.removerecord) + " " + automationPlugin.at(position).title,
-                    {
-                        uel.log(Action.AUTOMATION_REMOVED, Sources.Automation, automationPlugin.at(position).title)
-                        automationPlugin.removeAt(position)
-                        notifyItemRemoved(position)
-                    }, {
-                    rxBus.send(EventAutomationUpdateGui())
-                })
+                OKDialog.showConfirmation(requireContext(), rh.gs(R.string.removerecord) + " " + automationPlugin.at(position).title,
+                                          {
+                                              uel.log(Action.AUTOMATION_REMOVED, Sources.Automation, automationPlugin.at(position).title)
+                                              automationPlugin.removeAt(position)
+                                              notifyItemRemoved(position)
+                                          }, {
+                                              rxBus.send(EventAutomationUpdateGui())
+                                          })
             }
             holder.binding.iconTrash.visibility = (!event.readOnly).toVisibility()
             holder.binding.aapsLogo.visibility = (event.systemAction).toVisibility()
@@ -239,13 +244,15 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
 
         override fun onItemDismiss(position: Int) {
             activity?.let { activity ->
-                OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord) + " " + automationPlugin.at(position).title,
-                    Runnable {
+                OKDialog.showConfirmation(
+                    activity,
+                    rh.gs(R.string.removerecord) + " " + automationPlugin.at(position).title,
+                    {
                         uel.log(Action.AUTOMATION_REMOVED, Sources.Automation, automationPlugin.at(position).title)
                         automationPlugin.removeAt(position)
                         notifyItemRemoved(position)
                         rxBus.send(EventAutomationDataChanged())
-                    }, Runnable { rxBus.send(EventAutomationUpdateGui()) })
+                    }, { rxBus.send(EventAutomationUpdateGui()) })
             }
         }
 
@@ -255,7 +262,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
 
             override fun onItemSelected() = itemView.setBackgroundColor(Color.LTGRAY)
 
-            override fun onItemClear() = itemView.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
+            override fun onItemClear() = itemView.setBackgroundColor(rh.gc(R.color.ribbonDefault))
         }
     }
 }

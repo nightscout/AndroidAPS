@@ -5,7 +5,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.plugins.bus.RxBus
@@ -32,18 +32,18 @@ import java.util.*
 class OmnipodErosPumpPluginTest : TestBase() {
 
     @Mock lateinit var injector: HasAndroidInjector
-    @Mock lateinit var resourceHelper: ResourceHelper
+    @Mock lateinit var rh: ResourceHelper
     @Mock(answer = Answers.RETURNS_DEEP_STUBS) lateinit var activePlugin: ActivePlugin
     @Mock lateinit var aapsOmnipodErosManager: AapsOmnipodErosManager
     @Mock lateinit var erosHistory: ErosHistory
-    @Mock lateinit var commandQueueProvider: CommandQueueProvider
+    @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var rileyLinkUtil: RileyLinkUtil
     @Mock lateinit var pumpSync: PumpSync
 
-    var rxBusWrapper = RxBus(TestAapsSchedulers())
+    var rxBusWrapper = RxBus(TestAapsSchedulers(), aapsLogger)
 
     @Before fun prepare() {
-        `when`(resourceHelper.gs(ArgumentMatchers.anyInt(), ArgumentMatchers.anyLong()))
+        `when`(rh.gs(ArgumentMatchers.anyInt(), ArgumentMatchers.anyLong()))
             .thenReturn("")
     }
 
@@ -53,7 +53,7 @@ class OmnipodErosPumpPluginTest : TestBase() {
         // mock all the things
         val plugin = OmnipodErosPumpPlugin(
             injector, aapsLogger, TestAapsSchedulers(), rxBusWrapper, null,
-            resourceHelper, activePlugin, null, null, erosHistory, aapsOmnipodErosManager, commandQueueProvider,
+            rh, activePlugin, null, null, erosHistory, aapsOmnipodErosManager, commandQueue,
             null, null, null, null,
             rileyLinkUtil, null, null, pumpSync
         )

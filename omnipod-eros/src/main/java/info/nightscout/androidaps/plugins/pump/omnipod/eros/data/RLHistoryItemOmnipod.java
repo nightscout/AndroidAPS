@@ -12,7 +12,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 public class RLHistoryItemOmnipod extends RLHistoryItem {
 
-    @Inject ResourceHelper resourceHelper;
+    @Inject ResourceHelper rh;
     private final OmnipodCommandType omnipodCommandType;
 
     public RLHistoryItemOmnipod(HasAndroidInjector injector, OmnipodCommandType omnipodCommandType) {
@@ -22,11 +22,11 @@ public class RLHistoryItemOmnipod extends RLHistoryItem {
     }
 
     @Override
-    public String getDescription(ResourceHelper resourceHelper) {
+    public String getDescription(ResourceHelper rh) {
         if (RLHistoryItemSource.OmnipodCommand.equals(source)) {
-            return resourceHelper.gs(omnipodCommandType.getResourceId());
+            return rh.gs(omnipodCommandType.getResourceId());
         }
-        return super.getDescription(resourceHelper);
+        return super.getDescription(rh);
     }
 
 }

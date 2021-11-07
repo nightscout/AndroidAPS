@@ -1,10 +1,12 @@
 package info.nightscout.androidaps.plugins.general.nsclient
 
 import android.content.Context
+import android.os.SystemClock
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.DeviceStatus
 import info.nightscout.androidaps.database.transactions.*
@@ -17,6 +19,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.acks.NSAddAck
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientNewLog
 import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
 
 class NSClientAddAckWorker(
@@ -30,12 +33,15 @@ class NSClientAddAckWorker(
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var dataSyncSelector: DataSyncSelector
     @Inject lateinit var aapsSchedulers: AapsSchedulers
+    @Inject lateinit var sp: SP
 
     override fun doWork(): Result {
         var ret = Result.success()
 
         val ack = dataWorker.pickupObject(inputData.getLong(DataWorker.STORE_KEY, -1)) as NSAddAck?
             ?: return Result.failure(workDataOf("Error" to "missing input data"))
+
+        if (sp.getBoolean(R.string.key_ns_sync_slow, false)) SystemClock.sleep(1000)
 
         when (ack.originalObject) {
             is PairTemporaryTarget       -> {

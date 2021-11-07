@@ -105,9 +105,11 @@
     <string name="edit_short">ÄNDRA</string>
     <string name="please_choose_an_action_type">Välj en åtgärd</string>
     <string name="please_choose_a_trigger_type">Vänligen välj typ av utlösare</string>
+    <string name="please_choose_a_operation_type">Välj en åtgärdstyp</string>
     <string name="triggers">Utlösare:</string>
     <string name="remove_label">TA BORT</string>
     <string name="preconditions">Förutsättningar:</string>
     <string name="automation_event">Automationshändelse</string>
     <string name="reorder_label">Ändra ordning</string>
+    <string name="user_action">Användaråtgärd</string>
 </resources>

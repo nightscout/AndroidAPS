@@ -38,7 +38,7 @@ import javax.inject.Inject
 class TempTargetDialog : DialogFragmentWithDate() {
 
     @Inject lateinit var constraintChecker: ConstraintChecker
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var uel: UserEntryLogger
@@ -85,7 +85,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
                 Constants.MIN_TT_MGDL, Constants.MAX_TT_MGDL, 1.0, DecimalFormat("0"), false, binding.okcancel.ok)
 
         val units = profileFunction.getUnits()
-        binding.units.text = if (units == GlucoseUnit.MMOL) resourceHelper.gs(R.string.mmol) else resourceHelper.gs(R.string.mgdl)
+        binding.units.text = if (units == GlucoseUnit.MMOL) rh.gs(R.string.mmol) else rh.gs(R.string.mgdl)
 
         // temp target
         context?.let { context ->
@@ -95,10 +95,10 @@ class TempTargetDialog : DialogFragmentWithDate() {
                 binding.targetCancel.visibility = View.GONE
 
             reasonList = Lists.newArrayList(
-                resourceHelper.gs(R.string.manual),
-                resourceHelper.gs(R.string.eatingsoon),
-                resourceHelper.gs(R.string.activity),
-                resourceHelper.gs(R.string.hypo)
+                rh.gs(R.string.manual),
+                rh.gs(R.string.eatingsoon),
+                rh.gs(R.string.activity),
+                rh.gs(R.string.hypo)
             )
             val adapterReason = ArrayAdapter(context, R.layout.spinner_centered, reasonList)
             binding.reason.adapter = adapterReason
@@ -133,19 +133,19 @@ class TempTargetDialog : DialogFragmentWithDate() {
             R.id.eating_soon -> {
                 binding.temptarget.value = defaultValueHelper.determineEatingSoonTT()
                 binding.duration.value = defaultValueHelper.determineEatingSoonTTDuration().toDouble()
-                binding.reason.setSelection(reasonList.indexOf(resourceHelper.gs(R.string.eatingsoon)))
+                binding.reason.setSelection(reasonList.indexOf(rh.gs(R.string.eatingsoon)))
             }
 
             R.id.activity    -> {
                 binding.temptarget.value = defaultValueHelper.determineActivityTT()
                 binding.duration.value = defaultValueHelper.determineActivityTTDuration().toDouble()
-                binding.reason.setSelection(reasonList.indexOf(resourceHelper.gs(R.string.activity)))
+                binding.reason.setSelection(reasonList.indexOf(rh.gs(R.string.activity)))
             }
 
             R.id.hypo        -> {
                 binding.temptarget.value = defaultValueHelper.determineHypoTT()
                 binding.duration.value = defaultValueHelper.determineHypoTTDuration().toDouble()
-                binding.reason.setSelection(reasonList.indexOf(resourceHelper.gs(R.string.hypo)))
+                binding.reason.setSelection(reasonList.indexOf(rh.gs(R.string.hypo)))
             }
 
             R.id.cancel      -> {
@@ -168,25 +168,25 @@ class TempTargetDialog : DialogFragmentWithDate() {
         val target = binding.temptarget.value
         val duration = binding.duration.value.toInt()
         if (target != 0.0 && duration != 0) {
-            actions.add(resourceHelper.gs(R.string.reason) + ": " + reason)
-            actions.add(resourceHelper.gs(R.string.target_label) + ": " + Profile.toCurrentUnitsString(profileFunction, target) + " " + resourceHelper.gs(unitResId))
-            actions.add(resourceHelper.gs(R.string.duration) + ": " + resourceHelper.gs(R.string.format_mins, duration))
+            actions.add(rh.gs(R.string.reason) + ": " + reason)
+            actions.add(rh.gs(R.string.target_label) + ": " + Profile.toCurrentUnitsString(profileFunction, target) + " " + rh.gs(unitResId))
+            actions.add(rh.gs(R.string.duration) + ": " + rh.gs(R.string.format_mins, duration))
         } else {
-            actions.add(resourceHelper.gs(R.string.stoptemptarget))
-            reason = resourceHelper.gs(R.string.stoptemptarget)
+            actions.add(rh.gs(R.string.stoptemptarget))
+            reason = rh.gs(R.string.stoptemptarget)
         }
         if (eventTimeChanged)
-            actions.add(resourceHelper.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
+            actions.add(rh.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
 
         activity?.let { activity ->
-            OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal_temporarytarget), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
+            OKDialog.showConfirmation(activity, rh.gs(R.string.careportal_temporarytarget), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                 val units = profileFunction.getUnits()
                 when(reason) {
-                    resourceHelper.gs(R.string.eatingsoon)      -> uel.log(Action.TT, Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.EATING_SOON), ValueWithUnit.fromGlucoseUnit(target, units.asText), ValueWithUnit.Minute(duration))
-                    resourceHelper.gs(R.string.activity)        -> uel.log(Action.TT, Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.ACTIVITY), ValueWithUnit.fromGlucoseUnit(target, units.asText), ValueWithUnit.Minute(duration))
-                    resourceHelper.gs(R.string.hypo)            -> uel.log(Action.TT, Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.HYPOGLYCEMIA), ValueWithUnit.fromGlucoseUnit(target, units.asText), ValueWithUnit.Minute(duration))
-                    resourceHelper.gs(R.string.manual)          -> uel.log(Action.TT, Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.CUSTOM), ValueWithUnit.fromGlucoseUnit(target, units.asText), ValueWithUnit.Minute(duration))
-                    resourceHelper.gs(R.string.stoptemptarget) -> uel.log(Action.CANCEL_TT, Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged })
+                    rh.gs(R.string.eatingsoon)      -> uel.log(Action.TT, Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.EATING_SOON), ValueWithUnit.fromGlucoseUnit(target, units.asText), ValueWithUnit.Minute(duration))
+                    rh.gs(R.string.activity)        -> uel.log(Action.TT, Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.ACTIVITY), ValueWithUnit.fromGlucoseUnit(target, units.asText), ValueWithUnit.Minute(duration))
+                    rh.gs(R.string.hypo)            -> uel.log(Action.TT, Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.HYPOGLYCEMIA), ValueWithUnit.fromGlucoseUnit(target, units.asText), ValueWithUnit.Minute(duration))
+                    rh.gs(R.string.manual)          -> uel.log(Action.TT, Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.CUSTOM), ValueWithUnit.fromGlucoseUnit(target, units.asText), ValueWithUnit.Minute(duration))
+                    rh.gs(R.string.stoptemptarget) -> uel.log(Action.CANCEL_TT, Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged })
                 }
                 if (target == 0.0 || duration == 0) {
                     disposable += repository.runTransactionForResult(CancelCurrentTemporaryTargetIfAnyTransaction(eventTime))
@@ -200,9 +200,9 @@ class TempTargetDialog : DialogFragmentWithDate() {
                         timestamp = eventTime,
                         duration = TimeUnit.MINUTES.toMillis(duration.toLong()),
                         reason = when (reason) {
-                            resourceHelper.gs(R.string.eatingsoon) -> TemporaryTarget.Reason.EATING_SOON
-                            resourceHelper.gs(R.string.activity)   -> TemporaryTarget.Reason.ACTIVITY
-                            resourceHelper.gs(R.string.hypo)       -> TemporaryTarget.Reason.HYPOGLYCEMIA
+                            rh.gs(R.string.eatingsoon) -> TemporaryTarget.Reason.EATING_SOON
+                            rh.gs(R.string.activity)   -> TemporaryTarget.Reason.ACTIVITY
+                            rh.gs(R.string.hypo)       -> TemporaryTarget.Reason.HYPOGLYCEMIA
                             else                            -> TemporaryTarget.Reason.CUSTOM
                         },
                         lowTarget = Profile.toMgdl(target, profileFunction.getUnits()),

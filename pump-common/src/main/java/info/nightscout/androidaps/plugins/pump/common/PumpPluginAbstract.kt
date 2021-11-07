@@ -43,9 +43,9 @@ abstract class PumpPluginAbstract protected constructor(
     pluginDescription: PluginDescription?,
     pumpType: PumpType,
     injector: HasAndroidInjector?,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     aapsLogger: AAPSLogger,
-    commandQueue: CommandQueueProvider,
+    commandQueue: CommandQueue,
     var rxBus: RxBus,
     var activePlugin: ActivePlugin,
     var sp: SP,
@@ -55,7 +55,7 @@ abstract class PumpPluginAbstract protected constructor(
     var aapsSchedulers: AapsSchedulers,
     var pumpSync: PumpSync,
     var pumpSyncStorage: info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncStorage
-) : PumpPluginBase(pluginDescription!!, injector!!, aapsLogger, resourceHelper, commandQueue), Pump, Constraints, info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncEntriesCreator {
+) : PumpPluginBase(pluginDescription!!, injector!!, aapsLogger, rh, commandQueue), Pump, Constraints, info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncEntriesCreator {
 
     private val disposable = CompositeDisposable()
 

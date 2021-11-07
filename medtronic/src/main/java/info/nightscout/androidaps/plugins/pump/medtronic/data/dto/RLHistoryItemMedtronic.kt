@@ -9,10 +9,10 @@ import org.joda.time.LocalDateTime
 class RLHistoryItemMedtronic(private val medtronicCommandType: MedtronicCommandType) :
     RLHistoryItem(LocalDateTime(), RLHistoryItemSource.MedtronicCommand, RileyLinkTargetDevice.MedtronicPump) {
 
-    override fun getDescription(resourceHelper: ResourceHelper): String {
+    override fun getDescription(rh: ResourceHelper): String {
         return if (RLHistoryItemSource.MedtronicCommand == source) {
             medtronicCommandType.name
-        } else super.getDescription(resourceHelper)
+        } else super.getDescription(rh)
     }
 
 }

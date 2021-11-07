@@ -34,7 +34,7 @@ import kotlin.math.roundToInt
 class SensitivityOref1Plugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     sp: SP,
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
@@ -48,7 +48,7 @@ class SensitivityOref1Plugin @Inject constructor(
     .preferencesId(R.xml.pref_absorption_oref1)
     .description(R.string.description_sensitivity_oref1)
     .setDefault(),
-    injector, aapsLogger, resourceHelper, sp
+    injector, aapsLogger, rh, sp
 ) {
 
     override fun detectSensitivity(ads: AutosensDataStore, fromTime: Long, toTime: Long): AutosensResult {
@@ -206,10 +206,10 @@ class SensitivityOref1Plugin @Inject constructor(
     override fun configuration(): JSONObject {
         val c = JSONObject()
         try {
-            c.put(resourceHelper.gs(R.string.key_openapsama_min_5m_carbimpact), sp.getDouble(R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact))
-            c.put(resourceHelper.gs(R.string.key_absorption_cutoff), sp.getDouble(R.string.key_absorption_cutoff, Constants.DEFAULT_MAX_ABSORPTION_TIME))
-            c.put(resourceHelper.gs(R.string.key_openapsama_autosens_max), sp.getDouble(R.string.key_openapsama_autosens_max, 1.2))
-            c.put(resourceHelper.gs(R.string.key_openapsama_autosens_min), sp.getDouble(R.string.key_openapsama_autosens_min, 0.7))
+            c.put(rh.gs(R.string.key_openapsama_min_5m_carbimpact), sp.getDouble(R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact))
+            c.put(rh.gs(R.string.key_absorption_cutoff), sp.getDouble(R.string.key_absorption_cutoff, Constants.DEFAULT_MAX_ABSORPTION_TIME))
+            c.put(rh.gs(R.string.key_openapsama_autosens_max), sp.getDouble(R.string.key_openapsama_autosens_max, 1.2))
+            c.put(rh.gs(R.string.key_openapsama_autosens_min), sp.getDouble(R.string.key_openapsama_autosens_min, 0.7))
         } catch (e: JSONException) {
             e.printStackTrace()
         }
@@ -218,10 +218,10 @@ class SensitivityOref1Plugin @Inject constructor(
 
     override fun applyConfiguration(configuration: JSONObject) {
         try {
-            if (configuration.has(resourceHelper.gs(R.string.key_openapsama_min_5m_carbimpact))) sp.putDouble(R.string.key_openapsama_min_5m_carbimpact, configuration.getDouble(resourceHelper.gs(R.string.key_openapsama_min_5m_carbimpact)))
-            if (configuration.has(resourceHelper.gs(R.string.key_absorption_cutoff))) sp.putDouble(R.string.key_absorption_cutoff, configuration.getDouble(resourceHelper.gs(R.string.key_absorption_cutoff)))
-            if (configuration.has(resourceHelper.gs(R.string.key_openapsama_autosens_max))) sp.getDouble(R.string.key_openapsama_autosens_max, configuration.getDouble(resourceHelper.gs(R.string.key_openapsama_autosens_max)))
-            if (configuration.has(resourceHelper.gs(R.string.key_openapsama_autosens_min))) sp.getDouble(R.string.key_openapsama_autosens_min, configuration.getDouble(resourceHelper.gs(R.string.key_openapsama_autosens_min)))
+            if (configuration.has(rh.gs(R.string.key_openapsama_min_5m_carbimpact))) sp.putDouble(R.string.key_openapsama_min_5m_carbimpact, configuration.getDouble(rh.gs(R.string.key_openapsama_min_5m_carbimpact)))
+            if (configuration.has(rh.gs(R.string.key_absorption_cutoff))) sp.putDouble(R.string.key_absorption_cutoff, configuration.getDouble(rh.gs(R.string.key_absorption_cutoff)))
+            if (configuration.has(rh.gs(R.string.key_openapsama_autosens_max))) sp.getDouble(R.string.key_openapsama_autosens_max, configuration.getDouble(rh.gs(R.string.key_openapsama_autosens_max)))
+            if (configuration.has(rh.gs(R.string.key_openapsama_autosens_min))) sp.getDouble(R.string.key_openapsama_autosens_min, configuration.getDouble(rh.gs(R.string.key_openapsama_autosens_min)))
         } catch (e: JSONException) {
             e.printStackTrace()
         }

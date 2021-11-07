@@ -2,8 +2,10 @@ package info.nightscout.androidaps.plugins.general.automation.triggers
 
 import com.google.common.base.Optional
 import info.nightscout.androidaps.automation.R
+import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator
+import io.reactivex.Single
 import org.json.JSONException
 import org.json.JSONObject
 import org.junit.Assert
@@ -22,13 +24,18 @@ class TriggerBolusAgoTest : TriggerTestBase() {
 
     @Test
     fun shouldRunTest() {
-        `when`(repository.getLastBolusRecordOfType(Bolus.Type.NORMAL)).thenReturn(
-            Bolus(
-                timestamp = now,
-                amount = 0.0,
-                type = Bolus.Type.NORMAL
+        // Set last bolus time to now
+        `when`(repository.getLastBolusRecordOfTypeWrapped(Bolus.Type.NORMAL)).thenReturn(
+            Single.just(
+                ValueWrapper.Existing(
+                    Bolus(
+                        timestamp = now,
+                        amount = 0.0,
+                        type = Bolus.Type.NORMAL
+                    )
+                )
             )
-        ) // Set last bolus time to now
+        )
         `when`(dateUtil.now()).thenReturn(now + 10 * 60 * 1000) // set current time to now + 10 min
         var t = TriggerBolusAgo(injector).setValue(110).comparator(Comparator.Compare.IS_EQUAL)
         Assert.assertEquals(110, t.minutesAgo.value)
@@ -51,13 +58,18 @@ class TriggerBolusAgoTest : TriggerTestBase() {
         Assert.assertTrue(t.shouldRun())
         t = TriggerBolusAgo(injector).setValue(390).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         Assert.assertTrue(t.shouldRun())
-        `when`(repository.getLastBolusRecordOfType(Bolus.Type.NORMAL)).thenReturn(
-            Bolus(
-                timestamp = 0L,
-                amount = 0.0,
-                type = Bolus.Type.NORMAL
+        // Set last bolus time to 0
+        `when`(repository.getLastBolusRecordOfTypeWrapped(Bolus.Type.NORMAL)).thenReturn(
+            Single.just(
+                ValueWrapper.Existing(
+                    Bolus(
+                        timestamp = 0,
+                        amount = 0.0,
+                        type = Bolus.Type.NORMAL
+                    )
+                )
             )
-        ) // Set last bolus time to 0
+        )
         t = TriggerBolusAgo(injector).comparator(Comparator.Compare.IS_NOT_AVAILABLE)
         Assert.assertTrue(t.shouldRun())
     }

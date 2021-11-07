@@ -7,7 +7,7 @@ import info.nightscout.androidaps.queue.commands.CustomCommand
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.queue.commands.Command
 
-interface CommandQueueProvider {
+interface CommandQueue {
 
     fun isRunning(type: Command.CommandType): Boolean
     fun pickup()

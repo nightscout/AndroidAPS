@@ -28,7 +28,7 @@ import javax.inject.Singleton
 @Singleton
 class PoctechPlugin @Inject constructor(
     injector: HasAndroidInjector,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     aapsLogger: AAPSLogger,
     private val sp: SP
 ) : PluginBase(PluginDescription()
@@ -38,7 +38,7 @@ class PoctechPlugin @Inject constructor(
     .pluginName(R.string.poctech)
     .preferencesId(R.xml.pref_bgsource)
     .description(R.string.description_source_poctech),
-    aapsLogger, resourceHelper, injector
+    aapsLogger, rh, injector
 ), BgSource {
 
     // cannot be inner class because of needed injection

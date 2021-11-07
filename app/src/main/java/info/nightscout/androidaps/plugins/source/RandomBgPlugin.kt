@@ -13,11 +13,8 @@ import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
-import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.XDripBroadcast
-import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
@@ -31,23 +28,21 @@ import kotlin.math.sin
 @Singleton
 class RandomBgPlugin @Inject constructor(
     injector: HasAndroidInjector,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     aapsLogger: AAPSLogger,
-    private val virtualPumpPlugin: VirtualPumpPlugin,
-    private val buildHelper: BuildHelper,
     private val sp: SP,
-    private val dateUtil: DateUtil,
     private val repository: AppRepository,
     private val xDripBroadcast: XDripBroadcast
-) : PluginBase(PluginDescription()
-    .mainType(PluginType.BGSOURCE)
-    .fragmentClass(BGSourceFragment::class.java.name)
-    .pluginIcon(R.drawable.ic_dice)
-    .pluginName(R.string.randombg)
-    .shortName(R.string.randombg_short)
-    .preferencesId(R.xml.pref_bgsource)
-    .description(R.string.description_source_randombg),
-    aapsLogger, resourceHelper, injector
+) : PluginBase(
+    PluginDescription()
+        .mainType(PluginType.BGSOURCE)
+        .fragmentClass(BGSourceFragment::class.java.name)
+        .pluginIcon(R.drawable.ic_dice)
+        .pluginName(R.string.randombg)
+        .shortName(R.string.randombg_short)
+        .preferencesId(R.xml.pref_bgsource)
+        .description(R.string.description_source_randombg),
+    aapsLogger, rh, injector
 ), BgSource {
 
     private val loopHandler: Handler = Handler(HandlerThread(RandomBgPlugin::class.java.simpleName + "Handler").also { it.start() }.looper)
@@ -58,7 +53,7 @@ class RandomBgPlugin @Inject constructor(
         const val interval = 5L // minutes
         const val min = 70 // mgdl
         const val max = 190 // mgdl
-        const val period = 90.0 // minutes
+        const val period = 120.0 // minutes
     }
 
     init {
@@ -94,15 +89,18 @@ class RandomBgPlugin @Inject constructor(
     }
 
     private fun handleNewData() {
-        if (!isEnabled(PluginType.BGSOURCE)) return
+        if (!isEnabled()) return
 
         val cal = GregorianCalendar()
-        val currentMinute = cal.get(Calendar.MINUTE) + (cal.get(Calendar.HOUR_OF_DAY) % 2) * 60
+        val currentMinute = cal[Calendar.MINUTE] + (cal[Calendar.HOUR_OF_DAY] % 2) * 60
         val bgMgdl = min + ((max - min) + (max - min) * sin(currentMinute / period * 2 * PI)) / 2
 
+        cal[Calendar.MILLISECOND] = 0
+        cal[Calendar.SECOND] = 0
+        cal[Calendar.MINUTE] -= cal[Calendar.MINUTE] % 5
         val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
         glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
-            timestamp = dateUtil.now(),
+            timestamp = cal.timeInMillis,
             value = bgMgdl,
             raw = 0.0,
             noise = null,
@@ -111,11 +109,11 @@ class RandomBgPlugin @Inject constructor(
         )
         disposable += repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
             .subscribe({ savedValues ->
-                savedValues.inserted.forEach {
-                    xDripBroadcast(it)
-                    aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
-                }
-            }, { aapsLogger.error(LTag.DATABASE, "Error while saving values from Random plugin", it) }
+                           savedValues.inserted.forEach {
+                               xDripBroadcast(it)
+                               aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
+                           }
+                       }, { aapsLogger.error(LTag.DATABASE, "Error while saving values from Random plugin", it) }
             )
     }
 }
