@@ -297,9 +297,9 @@ enum class PumpType {
         source = Sources.MDI),
 
     //Diaconn Pump
-    DIACONN_G8(description = "DiaconnG8",
+    DIACONN_G8(description = "Diaconn G8",
         manufacturer = ManufacturerType.G2e,
-        model = "Diaconn G8",
+        model = "DiaconnG8",
         bolusSize = 0.01,
         specialBolusSize = null,
         extendedBolusSettings = DoseSettings(0.05, 10, 5 * 60, 0.05),

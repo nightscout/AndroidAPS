@@ -34,11 +34,13 @@ class RunningConfiguration @Inject constructor(
     // called in AAPS mode only
     fun configuration(): JSONObject {
         val json = JSONObject()
+        val pumpInterface = activePlugin.activePump
+
+        if (!pumpInterface.isInitialized()) return json
         if (counter++ % every == 0)
             try {
                 val insulinInterface = activePlugin.activeInsulin
                 val sensitivityInterface = activePlugin.activeSensitivity
-                val pumpInterface = activePlugin.activePump
                 val overviewInterface = activePlugin.activeOverview
                 val safetyInterface = activePlugin.activeSafety
 
