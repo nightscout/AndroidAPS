@@ -92,14 +92,6 @@ class OverviewPlugin @Inject constructor(
                 .observeOn(aapsSchedulers.io)
                 .subscribe({ overviewData.calcProgress = it.progress; overviewBus.send(EventUpdateOverview("EventIobCalculationProgress", OverviewData.Property.CALC_PROGRESS)) }, fabricPrivacy::logException)
         disposable += rxBus
-                .toObservable(EventTempBasalChange::class.java)
-                .observeOn(aapsSchedulers.io)
-                .subscribe({ loadTemporaryBasal("EventTempBasalChange") }, fabricPrivacy::logException)
-        disposable += rxBus
-                .toObservable(EventExtendedBolusChange::class.java)
-                .observeOn(aapsSchedulers.io)
-                .subscribe({ loadExtendedBolus("EventExtendedBolusChange") }, fabricPrivacy::logException)
-        disposable += rxBus
                 .toObservable(EventNewBG::class.java)
                 .observeOn(aapsSchedulers.io)
                 .subscribe({ loadBg("EventNewBG") }, fabricPrivacy::logException)
@@ -272,8 +264,6 @@ class OverviewPlugin @Inject constructor(
     private fun loadAll(from: String) {
         loadBg(from)
         loadProfile(from)
-        loadTemporaryBasal(from)
-        loadExtendedBolus(from)
         loadTemporaryTarget(from)
         loadIobCobResults(from)
         loadAsData(from)
@@ -288,16 +278,6 @@ class OverviewPlugin @Inject constructor(
 
     private fun loadProfile(from: String) {
         overviewBus.send(EventUpdateOverview(from, OverviewData.Property.PROFILE))
-    }
-
-    private fun loadTemporaryBasal(from: String) {
-        overviewData.temporaryBasal = iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil.now())
-        overviewBus.send(EventUpdateOverview(from, OverviewData.Property.TEMPORARY_BASAL))
-    }
-
-    private fun loadExtendedBolus(from: String) {
-        overviewData.extendedBolus = iobCobCalculator.getExtendedBolus(dateUtil.now())
-        overviewBus.send(EventUpdateOverview(from, OverviewData.Property.EXTENDED_BOLUS))
     }
 
     private fun loadTemporaryTarget(from: String) {
