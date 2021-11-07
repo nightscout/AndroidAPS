@@ -898,4 +898,7 @@ Context | Edit Context</string>
     <string name="view">Вид</string>
     <string name="errors">Ошибки</string>
     <string name="ns_sync_slow">Замедлить выгрузку</string>
+    <string name="data_status">Состояние данных ГК</string>
+    <string name="recalculated_data_used">Используются пересчитанные данные</string>
+    <string name="bg_too_close">ГК слишком близко к \n%1$s\n%2$s</string>
 </resources>
