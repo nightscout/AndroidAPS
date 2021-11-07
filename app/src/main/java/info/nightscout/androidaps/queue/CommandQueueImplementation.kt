@@ -49,7 +49,7 @@ import javax.inject.Singleton
 
 @OpenForTesting
 @Singleton
-class CommandQueue @Inject constructor(
+class CommandQueueImplementation @Inject constructor(
     private val injector: HasAndroidInjector,
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
@@ -65,7 +65,7 @@ class CommandQueue @Inject constructor(
     private val repository: AppRepository,
     private val fabricPrivacy: FabricPrivacy,
     private val config: Config
-) : CommandQueueProvider {
+) : CommandQueue {
 
     private val disposable = CompositeDisposable()
 
@@ -195,9 +195,9 @@ class CommandQueue @Inject constructor(
 
     override fun independentConnect(reason: String, callback: Callback?) {
         aapsLogger.debug(LTag.PUMPQUEUE, "Starting new queue")
-        val tempCommandQueue = CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, rh,
-                                            constraintChecker, profileFunction, activePlugin, context, sp,
-                                            buildHelper, dateUtil, repository, fabricPrivacy, config)
+        val tempCommandQueue = CommandQueueImplementation(injector, aapsLogger, rxBus, aapsSchedulers, rh,
+                                                          constraintChecker, profileFunction, activePlugin, context, sp,
+                                                          buildHelper, dateUtil, repository, fabricPrivacy, config)
         tempCommandQueue.readStatus(reason, callback)
         tempCommandQueue.disposable.clear()
     }

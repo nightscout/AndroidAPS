@@ -62,7 +62,6 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProv
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.source.DexcomPlugin
 import info.nightscout.androidaps.plugins.source.XdripPlugin
-import info.nightscout.androidaps.queue.CommandQueue
 import info.nightscout.androidaps.skins.SkinProvider
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DefaultValueHelper

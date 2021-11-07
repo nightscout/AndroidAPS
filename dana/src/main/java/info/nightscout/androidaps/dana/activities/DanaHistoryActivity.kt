@@ -19,7 +19,7 @@ import info.nightscout.androidaps.dana.databinding.DanarHistoryItemBinding
 import info.nightscout.androidaps.events.EventDanaRSyncStatus
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -44,7 +44,7 @@ class DanaHistoryActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var commandQueue: CommandQueueProvider
+    @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var danaHistoryRecordDao: DanaHistoryRecordDao
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var aapsSchedulers: AapsSchedulers

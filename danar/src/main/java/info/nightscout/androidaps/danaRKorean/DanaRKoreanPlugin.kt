@@ -45,7 +45,7 @@ class DanaRKoreanPlugin @Inject constructor(
     constraintChecker: ConstraintChecker,
     activePlugin: ActivePlugin,
     sp: SP,
-    commandQueue: CommandQueueProvider,
+    commandQueue: CommandQueue,
     danaPump: DanaPump,
     dateUtil: DateUtil,
     private val fabricPrivacy: FabricPrivacy,

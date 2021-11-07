@@ -16,7 +16,7 @@ import info.nightscout.androidaps.events.EventConfigBuilderChange;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.extensions.PumpStateExtensionKt;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
-import info.nightscout.androidaps.interfaces.CommandQueueProvider;
+import info.nightscout.androidaps.interfaces.CommandQueue;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.Constraints;
 import info.nightscout.androidaps.interfaces.Dana;
@@ -70,7 +70,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
             ConstraintChecker constraintChecker,
             AAPSLogger aapsLogger,
             AapsSchedulers aapsSchedulers,
-            CommandQueueProvider commandQueue,
+            CommandQueue commandQueue,
             RxBus rxBus,
             ActivePlugin activePlugin,
             SP sp,

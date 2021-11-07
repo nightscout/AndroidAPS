@@ -78,7 +78,7 @@ class LoopPlugin @Inject constructor(
     rh: ResourceHelper,
     private val profileFunction: ProfileFunction,
     private val context: Context,
-    private val commandQueue: CommandQueueProvider,
+    private val commandQueue: CommandQueue,
     private val activePlugin: ActivePlugin,
     private val virtualPumpPlugin: VirtualPumpPlugin,
     private val iobCobCalculator: IobCobCalculator,

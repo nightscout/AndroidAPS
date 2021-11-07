@@ -74,7 +74,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val fabricPrivacy: FabricPrivacy,
     private val activePlugin: ActivePlugin,
-    private val commandQueue: CommandQueueProvider,
+    private val commandQueue: CommandQueue,
     private val loop: Loop,
     private val iobCobCalculator: IobCobCalculator,
     private val xdripCalibrations: XdripCalibrations,

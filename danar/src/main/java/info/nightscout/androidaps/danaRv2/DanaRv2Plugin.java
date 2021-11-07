@@ -21,7 +21,7 @@ import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
-import info.nightscout.androidaps.interfaces.CommandQueueProvider;
+import info.nightscout.androidaps.interfaces.CommandQueue;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
@@ -66,7 +66,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             ConstraintChecker constraintChecker,
             ActivePlugin activePlugin,
             SP sp,
-            CommandQueueProvider commandQueue,
+            CommandQueue commandQueue,
             DanaPump danaPump,
             DetailedBolusInfoStorage detailedBolusInfoStorage,
             TemporaryBasalStorage temporaryBasalStorage,

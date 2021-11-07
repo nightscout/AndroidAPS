@@ -8,7 +8,7 @@ import android.os.HandlerThread
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
-import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity
@@ -45,7 +45,7 @@ class ErosPodManagementActivity : NoSplashAppCompatActivity() {
 
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var commandQueue: CommandQueueProvider
+    @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var podStateManager: ErosPodStateManager
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var rileyLinkServiceData: RileyLinkServiceData

@@ -54,7 +54,7 @@ class DiaconnG8Plugin @Inject constructor(
     private val constraintChecker: ConstraintChecker,
     private val profileFunction: ProfileFunction,
     private val sp: SP,
-    commandQueue: CommandQueueProvider,
+    commandQueue: CommandQueue,
     private val diaconnG8Pump: DiaconnG8Pump,
     private val pumpSync: PumpSync,
     private val detailedBolusInfoStorage: DetailedBolusInfoStorage,

@@ -57,7 +57,7 @@ class DanaRSPlugin @Inject constructor(
     private val constraintChecker: ConstraintChecker,
     private val profileFunction: ProfileFunction,
     private val sp: SP,
-    commandQueue: CommandQueueProvider,
+    commandQueue: CommandQueue,
     private val danaPump: DanaPump,
     private val pumpSync: PumpSync,
     private val detailedBolusInfoStorage: DetailedBolusInfoStorage,

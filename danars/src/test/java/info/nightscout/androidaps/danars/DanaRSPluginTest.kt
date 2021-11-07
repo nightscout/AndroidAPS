@@ -3,7 +3,7 @@ package info.nightscout.androidaps.danars
 import android.content.Context
 import dagger.android.AndroidInjector
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.PumpSync
@@ -22,7 +22,7 @@ class DanaRSPluginTest : DanaRSTestBase() {
 
     @Mock lateinit var context: Context
     @Mock lateinit var constraintChecker: ConstraintChecker
-    @Mock lateinit var commandQueue: CommandQueueProvider
+    @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Mock lateinit var temporaryBasalStorage: TemporaryBasalStorage
     @Mock lateinit var pumpSync: PumpSync

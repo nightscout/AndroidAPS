@@ -18,7 +18,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 
 class QueueThread internal constructor(
-    private val queue: CommandQueue,
+    private val queue: CommandQueueImplementation,
     context: Context,
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBus,

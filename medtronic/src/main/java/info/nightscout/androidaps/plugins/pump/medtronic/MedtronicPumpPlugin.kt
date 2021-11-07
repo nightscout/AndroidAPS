@@ -75,7 +75,7 @@ class MedtronicPumpPlugin @Inject constructor(
     rh: ResourceHelper,
     activePlugin: ActivePlugin,
     sp: SP,
-    commandQueue: CommandQueueProvider,
+    commandQueue: CommandQueue,
     fabricPrivacy: FabricPrivacy,
     private val medtronicUtil: MedtronicUtil,
     private val medtronicPumpStatus: MedtronicPumpStatus,

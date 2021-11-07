@@ -41,7 +41,7 @@ import info.nightscout.androidaps.insight.database.InsightHistoryOffset;
 import info.nightscout.androidaps.insight.database.InsightPumpID;
 import info.nightscout.androidaps.insight.database.InsightPumpID.EventType;
 import info.nightscout.androidaps.insight.R;
-import info.nightscout.androidaps.interfaces.CommandQueueProvider;
+import info.nightscout.androidaps.interfaces.CommandQueue;
 import info.nightscout.androidaps.interfaces.Config;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.Constraints;
@@ -140,7 +140,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     private final RxBus rxBus;
     private final ResourceHelper rh;
     private final SP sp;
-    private final CommandQueueProvider commandQueue;
+    private final CommandQueue commandQueue;
     private final ProfileFunction profileFunction;
     private final Context context;
     private final DateUtil dateUtil;
@@ -200,7 +200,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             RxBus rxBus,
             ResourceHelper rh,
             SP sp,
-            CommandQueueProvider commandQueue,
+            CommandQueue commandQueue,
             ProfileFunction profileFunction,
             Context context,
             Config config,

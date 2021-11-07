@@ -45,7 +45,7 @@ abstract class PumpPluginAbstract protected constructor(
     injector: HasAndroidInjector?,
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
-    commandQueue: CommandQueueProvider,
+    commandQueue: CommandQueue,
     var rxBus: RxBus,
     var activePlugin: ActivePlugin,
     var sp: SP,

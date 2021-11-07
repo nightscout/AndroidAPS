@@ -46,7 +46,7 @@ class SWDefinition @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val localProfilePlugin: LocalProfilePlugin,
     private val activePlugin: ActivePlugin,
-    private val commandQueue: CommandQueueProvider,
+    private val commandQueue: CommandQueue,
     private val objectivesPlugin: ObjectivesPlugin,
     private val configBuilder: ConfigBuilder,
     private val loopPlugin: LoopPlugin,

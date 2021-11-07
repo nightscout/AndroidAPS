@@ -19,7 +19,7 @@ import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.danaRv2.DanaRv2Plugin;
 import info.nightscout.androidaps.danar.DanaRPlugin;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
-import info.nightscout.androidaps.interfaces.CommandQueueProvider;
+import info.nightscout.androidaps.interfaces.CommandQueue;
 import info.nightscout.androidaps.interfaces.ConfigBuilder;
 import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
@@ -49,7 +49,7 @@ public class MessageBase {
     @Inject public ResourceHelper rh;
     @Inject public ActivePlugin activePlugin;
     @Inject public ConfigBuilder configBuilder;
-    @Inject public CommandQueueProvider commandQueue;
+    @Inject public CommandQueue commandQueue;
     @Inject public DetailedBolusInfoStorage detailedBolusInfoStorage;
     @Inject public TemporaryBasalStorage temporaryBasalStorage;
     @Inject public ConstraintChecker constraintChecker;

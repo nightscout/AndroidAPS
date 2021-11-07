@@ -14,7 +14,7 @@ import info.nightscout.androidaps.core.databinding.DialogBolusprogressBinding
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.events.EventPumpStatusChanged
-import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -32,7 +32,7 @@ class BolusProgressDialog : DaggerDialogFragment() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var commandQueue: CommandQueueProvider
+    @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var uel: UserEntryLogger

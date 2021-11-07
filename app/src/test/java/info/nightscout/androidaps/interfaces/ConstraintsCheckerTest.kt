@@ -47,7 +47,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Mock lateinit var sp: SP
-    @Mock lateinit var commandQueue: CommandQueueProvider
+    @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Mock lateinit var temporaryBasalStorage: TemporaryBasalStorage
     @Mock lateinit var glimpPlugin: GlimpPlugin

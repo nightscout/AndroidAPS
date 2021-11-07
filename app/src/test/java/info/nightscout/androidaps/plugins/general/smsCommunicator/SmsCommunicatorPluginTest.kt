@@ -50,7 +50,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     @Mock lateinit var sp: SP
     @Mock lateinit var constraintChecker: ConstraintChecker
     @Mock lateinit var activePlugin: ActivePlugin
-    @Mock lateinit var commandQueue: CommandQueueProvider
+    @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var loopPlugin: LoopPlugin
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Mock lateinit var localProfilePlugin: LocalProfilePlugin

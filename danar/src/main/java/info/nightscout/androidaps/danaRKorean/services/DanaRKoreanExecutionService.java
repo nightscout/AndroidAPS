@@ -43,7 +43,7 @@ import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventProfileSwitchChanged;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
-import info.nightscout.androidaps.interfaces.CommandQueueProvider;
+import info.nightscout.androidaps.interfaces.CommandQueue;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
@@ -67,7 +67,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
     @Inject DanaPump danaPump;
     @Inject DanaRPlugin danaRPlugin;
     @Inject DanaRKoreanPlugin danaRKoreanPlugin;
-    @Inject CommandQueueProvider commandQueue;
+    @Inject CommandQueue commandQueue;
     @Inject MessageHashTableRKorean messageHashTableRKorean;
     @Inject ActivePlugin activePlugin;
     @Inject ProfileFunction profileFunction;

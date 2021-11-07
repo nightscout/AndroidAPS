@@ -8,7 +8,7 @@ import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.danar.R
-import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.PumpSync
@@ -26,7 +26,7 @@ class DanaRv2PluginTest : TestBaseWithProfile() {
     @Mock lateinit var context: Context
     @Mock lateinit var constraintChecker: ConstraintChecker
     @Mock lateinit var sp: SP
-    @Mock lateinit var commandQueue: CommandQueueProvider
+    @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Mock lateinit var temporaryBasalStorage: TemporaryBasalStorage
     @Mock lateinit var pumpSync: PumpSync

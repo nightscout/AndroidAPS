@@ -6,7 +6,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.danars.DanaRSTestBase
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
@@ -23,7 +23,7 @@ class DanaRsPacketNotifyDeliveryRateDisplayTest : DanaRSTestBase() {
 
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var constraintChecker: ConstraintChecker
-    @Mock lateinit var commandQueue: CommandQueueProvider
+    @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var context: Context
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Mock lateinit var temporaryBasalStorage: TemporaryBasalStorage
