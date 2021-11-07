@@ -152,7 +152,7 @@ class NSClientPlugin @Inject constructor(
 
             preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_create_announcements_from_errors))?.isVisible = false
             preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_create_announcements_from_carbs_req))?.isVisible = false
-            preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_sync_use_absolute))?.isVisible = false
+//            preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_sync_use_absolute))?.isVisible = false
         } else {
             // APS or pumpControl mode
             preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_receive_profile_switch))?.isVisible = buildHelper.isEngineeringMode()
