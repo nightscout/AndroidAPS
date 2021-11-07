@@ -12,7 +12,6 @@
     <string name="nav_resetdb">Réinitialiser les Bases de Données </string>
     <string name="reset_db_confirm">Voulez-vous vraiment réinitialiser les bases de données ?</string>
     <string name="nav_exit">Quitter</string>
-    <string name="ns_sync_use_absolute_title">Utiliser toujours les valeurs absolues du basal</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Ce périphérique ne semble pas permettre l\'optimisation de la batterie par une liste blanche - vous pourriez rencontrer des problèmes de performance.</string>
     <string name="description_actions">Quelques boutons pour accéder rapidement aux fonctions communes</string>
     <string name="description_config_builder">Utilisé pour configurer les plugins actifs</string>
