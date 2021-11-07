@@ -12,7 +12,6 @@
     <string name="nav_resetdb">Zresetuj bazy danych</string>
     <string name="reset_db_confirm">Na pewno chcesz zresetować bazy danych?</string>
     <string name="nav_exit">Wyjście</string>
-    <string name="ns_sync_use_absolute_title">Zawsze używaj wartości bezwzględnych bazy</string>
     <string name="alert_dialog_permission_battery_optimization_failed">To urządzenie nie obsługuje białej listy optymalizacji baterii - mogą wystąpić problemy z wydajnością.</string>
     <string name="description_actions">Niektóre przyciski umożliwiające szybki dostęp do typowych funkcji</string>
     <string name="description_config_builder">Konfiguracja aktywnych modułów systemu</string>
@@ -58,14 +57,14 @@
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">Węglow</string>
     <string name="treatments_wizard_correction_label">Poprawka</string>
-    <string name="treatments_wizard_bolusiob_label">Bolus IOB</string>
+    <string name="treatments_wizard_bolusiob_label">IOB z bolusów</string>
     <string name="openapsma_run">Uruchom teraz</string>
     <string name="vitualpump_label">POMPA WIRTUALNA</string>
     <string name="openapsma_lastrun_label">Ostatnie działanie</string>
     <string name="openapsma_inputparameters_label">Parametry wejściowe</string>
     <string name="openapsma_glucosestatus_label">Stan glukozy</string>
     <string name="openapsma_currenttemp_label">Obecna tymczasowa</string>
-    <string name="openapsma_iobdata_label">IOB data</string>
+    <string name="openapsma_iobdata_label">Dane IOB</string>
     <string name="openapsma_profile_label">Profil</string>
     <string name="openapsma_mealdata_label">Dane posiłku</string>
     <string name="result">Rezultat</string>
@@ -117,7 +116,7 @@
     <string name="openloop_newsuggestion">Dostępna nowa sugestia</string>
     <string name="carbssuggestion">Sugestia węglowodanów</string>
     <string name="unsupportednsversion">Niewspierana wersja Nightscout</string>
-    <string name="treatments_wizard_basaliob_label">Bazowa IOB</string>
+    <string name="treatments_wizard_basaliob_label">IOB z bazy</string>
     <string name="bolusconstraintapplied">Ograniczenia bolusa wprowadzone</string>
     <string name="carbsconstraintapplied">Ograniczenie stosowania węglowodanów</string>
     <string name="careportal_newnstreatment_other">Inne</string>
