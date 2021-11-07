@@ -12,7 +12,6 @@
     <string name="nav_resetdb">Resetează bazele de date</string>
     <string name="reset_db_confirm">Sigur resetați bazele de date?</string>
     <string name="nav_exit">Ieșire</string>
-    <string name="ns_sync_use_absolute_title">Folosește întotdeauna valori absolute ale bazalei</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Acest dispozitiv nu permite folosirea excluderii din lista de optimizare a bateriei - se poate să întâmpinați probleme de performanță.</string>
     <string name="description_actions">Butoane pentru accesarea celor mai comune facilităţi</string>
     <string name="description_config_builder">Folosit pentru configurarea facilităţilor active</string>
