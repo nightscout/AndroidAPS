@@ -897,4 +897,7 @@
     <string name="view">Zobraziť</string>
     <string name="errors">Chyby</string>
     <string name="ns_sync_slow">Spomaliť nahrávanie</string>
+    <string name="data_status">Stav dát glykémie</string>
+    <string name="recalculated_data_used">Použité prepočítané dáta</string>
+    <string name="bg_too_close">Glykémia je príliš blízko:\n%1$s\n%2$s</string>
 </resources>
