@@ -92,6 +92,14 @@ class OverviewPlugin @Inject constructor(
                 .observeOn(aapsSchedulers.io)
                 .subscribe({ overviewData.calcProgress = it.progress; overviewBus.send(EventUpdateOverview("EventIobCalculationProgress", OverviewData.Property.CALC_PROGRESS)) }, fabricPrivacy::logException)
         disposable += rxBus
+                .toObservable(EventTempBasalChange::class.java)
+                .observeOn(aapsSchedulers.io)
+                .subscribe({ overviewBus.send(EventUpdateOverview("EventTempBasalChange", OverviewData.Property.TEMPORARY_BASAL)) }, fabricPrivacy::logException)
+        disposable += rxBus
+                .toObservable(EventExtendedBolusChange::class.java)
+                .observeOn(aapsSchedulers.io)
+                .subscribe({ overviewBus.send(EventUpdateOverview("EventExtendedBolusChange", OverviewData.Property.EXTENDED_BOLUS)) }, fabricPrivacy::logException)
+        disposable += rxBus
                 .toObservable(EventNewBG::class.java)
                 .observeOn(aapsSchedulers.io)
                 .subscribe({ loadBg("EventNewBG") }, fabricPrivacy::logException)
