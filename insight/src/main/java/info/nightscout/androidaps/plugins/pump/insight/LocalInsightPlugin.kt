@@ -71,9 +71,9 @@ class LocalInsightPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     private val sp: SP,
-    commandQueue: CommandQueueProvider,
+    commandQueue: CommandQueue,
     private val profileFunction: ProfileFunction,
     private val context: Context,
     config: Config,
@@ -88,7 +88,7 @@ class LocalInsightPlugin @Inject constructor(
     .description(R.string.description_pump_insight_local)
     .fragmentClass(LocalInsightFragment::class.java.name)
     .preferencesId(if (config.APS) R.xml.pref_insight_local_full else R.xml.pref_insight_local_pumpcontrol),
-    injector, aapsLogger, resourceHelper, commandQueue
+    injector, aapsLogger, rh, commandQueue
 ), Pump, Constraints, InsightConnectionService.StateCallback {
 
     override val pumpDescription: PumpDescription = PumpDescription().also { it.fillFor(PumpType.ACCU_CHEK_INSIGHT) }
@@ -153,7 +153,7 @@ class LocalInsightPlugin @Inject constructor(
 
     private fun createNotificationChannel() {
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val channel = NotificationChannel(ALERT_CHANNEL_ID, resourceHelper.gs(R.string.insight_alert_notification_channel), NotificationManager.IMPORTANCE_HIGH)
+        val channel = NotificationChannel(ALERT_CHANNEL_ID, rh.gs(R.string.insight_alert_notification_channel), NotificationManager.IMPORTANCE_HIGH)
         channel.setSound(null, null)
         notificationManager.createNotificationChannel(channel)
     }
@@ -240,7 +240,7 @@ class LocalInsightPlugin @Inject constructor(
                 val setDateTimeMessage = SetDateTimeMessage()
                 setDateTimeMessage.pumpTime = pumpTime
                 connectionService?.run { requestMessage(setDateTimeMessage).await() }
-                val notification = Notification(Notification.INSIGHT_DATE_TIME_UPDATED, resourceHelper.gs(R.string.pump_time_updated), Notification.INFO, 60)
+                val notification = Notification(Notification.INSIGHT_DATE_TIME_UPDATED, rh.gs(R.string.pump_time_updated), Notification.INFO, 60)
                 rxBus.send(EventNewNotification(notification))
             }
         }
@@ -349,7 +349,7 @@ class LocalInsightPlugin @Inject constructor(
             profileBlock.profileBlocks = profileBlocks
             ParameterBlockUtil.writeConfigurationBlock(connectionService!!, profileBlock) // TODO resolve !!
             rxBus.send(EventDismissNotification(Notification.FAILED_UPDATE_PROFILE))
-            val notification = Notification(Notification.PROFILE_SET_OK, resourceHelper.gs(R.string.profile_set_ok), Notification.INFO, 60)
+            val notification = Notification(Notification.PROFILE_SET_OK, rh.gs(R.string.profile_set_ok), Notification.INFO, 60)
             rxBus.send(EventNewNotification(notification))
             result.success(true)
                 .enacted(true)
@@ -361,17 +361,17 @@ class LocalInsightPlugin @Inject constructor(
             }
         } catch (e: AppLayerErrorException) {
             aapsLogger.info(LTag.PUMP, "Exception while setting profile: " + e.javaClass.canonicalName + " (" + e.errorCode + ")")
-            val notification = Notification(Notification.FAILED_UPDATE_PROFILE, resourceHelper.gs(R.string.failedupdatebasalprofile), Notification.URGENT)
+            val notification = Notification(Notification.FAILED_UPDATE_PROFILE, rh.gs(R.string.failedupdatebasalprofile), Notification.URGENT)
             rxBus.send(EventNewNotification(notification))
             result.comment(ExceptionTranslator.getString(context, e))
         } catch (e: InsightException) {
             aapsLogger.info(LTag.PUMP, "Exception while setting profile: " + e.javaClass.canonicalName)
-            val notification = Notification(Notification.FAILED_UPDATE_PROFILE, resourceHelper.gs(R.string.failedupdatebasalprofile), Notification.URGENT)
+            val notification = Notification(Notification.FAILED_UPDATE_PROFILE, rh.gs(R.string.failedupdatebasalprofile), Notification.URGENT)
             rxBus.send(EventNewNotification(notification))
             result.comment(ExceptionTranslator.getString(context, e))
         } catch (e: Exception) {
             aapsLogger.error("Exception while setting profile", e)
-            val notification = Notification(Notification.FAILED_UPDATE_PROFILE, resourceHelper.gs(R.string.failedupdatebasalprofile), Notification.URGENT)
+            val notification = Notification(Notification.FAILED_UPDATE_PROFILE, rh.gs(R.string.failedupdatebasalprofile), Notification.URGENT)
             rxBus.send(EventNewNotification(notification))
             result.comment(ExceptionTranslator.getString(context, e))
         }
@@ -432,7 +432,7 @@ class LocalInsightPlugin @Inject constructor(
                 val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType === DetailedBolusInfo.BolusType.SMB)
                 val bolusingEvent = EventOverviewBolusProgress
                 bolusingEvent.t = t
-                bolusingEvent.status = resourceHelper.gs(R.string.insight_delivered, 0.0, insulin)
+                bolusingEvent.status = rh.gs(R.string.insight_delivered, 0.0, insulin)
                 bolusingEvent.percent = 0
                 rxBus.send(bolusingEvent)
                 var trials = 0
@@ -470,13 +470,13 @@ class LocalInsightPlugin @Inject constructor(
                         trials = -1
                         val percentBefore = bolusingEvent.percent
                         bolusingEvent.percent = (100.0 / activeBolus.initialAmount * (activeBolus.initialAmount - activeBolus.remainingAmount)).toInt()
-                        bolusingEvent.status = resourceHelper.gs(R.string.insight_delivered, activeBolus.initialAmount - activeBolus.remainingAmount, activeBolus.initialAmount)
+                        bolusingEvent.status = rh.gs(R.string.insight_delivered, activeBolus.initialAmount - activeBolus.remainingAmount, activeBolus.initialAmount)
                         if (percentBefore != bolusingEvent.percent) rxBus.send(bolusingEvent)
                     } else {
                         synchronized(_bolusLock) {
                             if (bolusCancelled || trials == -1 || trials++ >= 5) {
                                 if (!bolusCancelled) {
-                                    bolusingEvent.status = resourceHelper.gs(R.string.insight_delivered, insulin, insulin)
+                                    bolusingEvent.status = rh.gs(R.string.insight_delivered, insulin, insulin)
                                     bolusingEvent.percent = 100
                                     rxBus.send(bolusingEvent)
                                 }
@@ -909,18 +909,18 @@ class LocalInsightPlugin @Inject constructor(
             if (lastConnected != 0L) {
                 val agoMsec = dateUtil.now() - lastConnected
                 val agoMin = (agoMsec / 60.0 / 1000.0).toInt()
-                ret.append(resourceHelper.gs(R.string.short_status_last_connected, agoMin)).append("\n")
+                ret.append(rh.gs(R.string.short_status_last_connected, agoMin)).append("\n")
             }
-            activeTBR?.let { ret.append(resourceHelper.gs(R.string.short_status_tbr, it.percentage, it.initialDuration - it.remainingDuration, it.initialDuration)).append("\n") }
+            activeTBR?.let { ret.append(rh.gs(R.string.short_status_tbr, it.percentage, it.initialDuration - it.remainingDuration, it.initialDuration)).append("\n") }
             activeBoluses?.forEach {
                 if (it.bolusType != BolusType.STANDARD)
-                    ret.append(resourceHelper.gs(if (it.bolusType == BolusType.MULTIWAVE) R.string.short_status_multiwave else R.string.short_status_extended,
+                    ret.append(rh.gs(if (it.bolusType == BolusType.MULTIWAVE) R.string.short_status_multiwave else R.string.short_status_extended,
                         it.remainingAmount, it.initialAmount, it.remainingDuration)).append("\n")
             }
             if (!veryShort)
-                totalDailyDose?.let { ret.append(resourceHelper.gs(R.string.short_status_tdd, it.bolusAndBasal)).append("\n") }
-            cartridgeStatus?.let { ret.append(resourceHelper.gs(R.string.short_status_reservoir, it.remainingAmount)).append("\n") }
-            batteryStatus?.let { ret.append(resourceHelper.gs(R.string.short_status_battery, it.batteryAmount)).append("\n") }
+                totalDailyDose?.let { ret.append(rh.gs(R.string.short_status_tdd, it.bolusAndBasal)).append("\n") }
+            cartridgeStatus?.let { ret.append(rh.gs(R.string.short_status_reservoir, it.remainingAmount)).append("\n") }
+            batteryStatus?.let { ret.append(rh.gs(R.string.short_status_battery, it.batteryAmount)).append("\n") }
         }
         return ret.toString()
     }
@@ -1091,7 +1091,7 @@ class LocalInsightPlugin @Inject constructor(
         val timestamp = parseDate(event.eventYear, event.eventMonth, event.eventDay,
             event.eventHour, event.eventMinute, event.eventSecond) + timeOffset
         if (event.amount > 0.0) // Don't record event if amount is null
-            logNote(timestamp, resourceHelper.gs(R.string.tube_changed))
+            logNote(timestamp, rh.gs(R.string.tube_changed))
     }
 
     private fun processSniffingDoneEvent(event: SniffingDoneEvent) {
@@ -1120,17 +1120,17 @@ class LocalInsightPlugin @Inject constructor(
             OperatingMode.STARTED -> {
                 pumpID.eventType = InsightPumpID.EventType.PumpStarted
                 pumpStartedEvents.add(pumpID)
-                if (sp.getBoolean("insight_log_operating_mode_changes", false)) logNote(timestamp, resourceHelper.gs(R.string.pump_started))
+                if (sp.getBoolean("insight_log_operating_mode_changes", false)) logNote(timestamp, rh.gs(R.string.pump_started))
             }
 
             OperatingMode.STOPPED -> {
                 pumpID.eventType = InsightPumpID.EventType.PumpStopped
-                if (sp.getBoolean("insight_log_operating_mode_changes", false)) logNote(timestamp, resourceHelper.gs(R.string.pump_stopped))
+                if (sp.getBoolean("insight_log_operating_mode_changes", false)) logNote(timestamp, rh.gs(R.string.pump_stopped))
             }
 
             OperatingMode.PAUSED  -> {
                 pumpID.eventType = InsightPumpID.EventType.PumpPaused
-                if (sp.getBoolean("insight_log_operating_mode_changes", false)) logNote(timestamp, resourceHelper.gs(R.string.pump_paused))
+                if (sp.getBoolean("insight_log_operating_mode_changes", false)) logNote(timestamp, rh.gs(R.string.pump_paused))
             }
 
             else                  -> Unit
@@ -1358,7 +1358,7 @@ class LocalInsightPlugin @Inject constructor(
 
             else                     -> Unit
         }
-        if (code != null) logNote(timestamp, resourceHelper.gs(R.string.insight_alert_formatter, resourceHelper.gs(code), resourceHelper.gs(title!!)))
+        if (code != null) logNote(timestamp, rh.gs(R.string.insight_alert_formatter, rh.gs(code), rh.gs(title!!)))
     }
 
     private fun parseDate(year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Int): Long {
@@ -1392,20 +1392,21 @@ class LocalInsightPlugin @Inject constructor(
     }
 
     override fun applyBasalPercentConstraints(percentRate: Constraint<Int>, profile: Profile): Constraint<Int> {
-        percentRate.setIfGreater(aapsLogger, 0, String.format(resourceHelper.gs(R.string.limitingpercentrate), 0, resourceHelper.gs(R.string.itmustbepositivevalue)), this)
-        percentRate.setIfSmaller(aapsLogger, pumpDescription.maxTempPercent, String.format(resourceHelper.gs(R.string.limitingpercentrate), pumpDescription.maxTempPercent, resourceHelper.gs(R.string.pumplimit)), this)
+        percentRate.setIfGreater(aapsLogger, 0, String.format(rh.gs(R.string.limitingpercentrate), 0, rh.gs(R.string.itmustbepositivevalue)), this)
+        percentRate.setIfSmaller(aapsLogger, pumpDescription.maxTempPercent, String.format(rh.gs(R.string.limitingpercentrate), pumpDescription.maxTempPercent, rh.gs(R.string.pumplimit))
+                                 , this)
         return percentRate
     }
 
     override fun applyBolusConstraints(insulin: Constraint<Double>): Constraint<Double> {
         if (!limitsFetched) return insulin
-        insulin.setIfSmaller(aapsLogger, maximumBolusAmount, String.format(resourceHelper.gs(R.string.limitingbolus), maximumBolusAmount, resourceHelper.gs(R.string.pumplimit)), this)
+        insulin.setIfSmaller(aapsLogger, maximumBolusAmount, String.format(rh.gs(R.string.limitingbolus), maximumBolusAmount, rh.gs(R.string.pumplimit)), this)
         if (insulin.value() < minimumBolusAmount) {
 
             //TODO: Add function to Constraints or use different approach
             // This only works if the interface of the InsightPlugin is called last.
             // If not, another constraint could theoretically set the value between 0 and minimumBolusAmount
-            insulin[aapsLogger, 0.0, String.format(resourceHelper.gs(R.string.limitingbolus), minimumBolusAmount, resourceHelper.gs(R.string.pumplimit))] = this
+            insulin[aapsLogger, 0.0, String.format(rh.gs(R.string.limitingbolus), minimumBolusAmount, rh.gs(R.string.pumplimit))] = this
         }
         return insulin
     }
@@ -1440,7 +1441,7 @@ class LocalInsightPlugin @Inject constructor(
     }
 
     override fun onTimeoutDuringHandshake() {
-        val notification = Notification(Notification.INSIGHT_TIMEOUT_DURING_HANDSHAKE, resourceHelper.gs(R.string.timeout_during_handshake), Notification.URGENT)
+        val notification = Notification(Notification.INSIGHT_TIMEOUT_DURING_HANDSHAKE, rh.gs(R.string.timeout_during_handshake), Notification.URGENT)
         Handler(Looper.getMainLooper()).post { rxBus.send(EventNewNotification(notification)) }
     }
 

@@ -242,8 +242,8 @@ class InsightAlertService : DaggerService(), InsightConnectionService.StateCallb
         notificationBuilder.setOngoing(true)
         notificationBuilder.setOnlyAlertOnce(true)
         notificationBuilder.setAutoCancel(false)
-        notificationBuilder.setSmallIcon(alertUtils.getAlertIcon(alert.alertCategory))
-        notificationBuilder.setContentTitle(alertUtils.getAlertCode(alert.alertType) + " – " + alertUtils.getAlertTitle(alert.alertType))
+        alert.alertCategory?.let { notificationBuilder.setSmallIcon(alertUtils.getAlertIcon(it)) }
+        alert.alertType?.let { notificationBuilder.setContentTitle(alertUtils.getAlertCode(it) + " – " + alertUtils.getAlertTitle(it)) }
         val description = alertUtils.getAlertDescription(alert)
         if (description != null) notificationBuilder.setContentText(fromHtml(description).toString())
         val fullScreenIntent = Intent(this, InsightAlertActivity::class.java)

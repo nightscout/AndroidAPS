@@ -11,7 +11,7 @@ import android.widget.TextView
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.insight.R
 import info.nightscout.androidaps.insight.databinding.LocalInsightFragmentBinding
-import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.*
 import info.nightscout.androidaps.plugins.pump.insight.events.EventLocalInsightUpdateGUI
@@ -28,9 +28,9 @@ import javax.inject.Inject
 class LocalInsightFragment : DaggerFragment(), View.OnClickListener {
 
     @Inject lateinit var localInsightPlugin: LocalInsightPlugin
-    @Inject lateinit var  commandQueue: CommandQueueProvider
+    @Inject lateinit var  commandQueue: CommandQueue
     @Inject lateinit var  rxBus: RxBus
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var aapsSchedulers: AapsSchedulers
@@ -181,9 +181,9 @@ class LocalInsightFragment : DaggerFragment(), View.OnClickListener {
             InsightState.CONNECTED                      -> R.string.connected
             InsightState.RECOVERING                     -> R.string.recovering
         }
-        statusItems.add(getStatusItem(resourceHelper.gs(R.string.insight_status), resourceHelper.gs(string)))
+        statusItems.add(getStatusItem(rh.gs(R.string.insight_status), rh.gs(string)))
         if (state == InsightState.RECOVERING) {
-            statusItems.add(getStatusItem(resourceHelper.gs(R.string.recovery_duration), (localInsightPlugin.connectionService!!.recoveryDuration / 1000).toString() + "s"))
+            statusItems.add(getStatusItem(rh.gs(R.string.recovery_duration), (localInsightPlugin.connectionService!!.recoveryDuration / 1000).toString() + "s"))
         }
     }
 
@@ -197,11 +197,11 @@ class LocalInsightFragment : DaggerFragment(), View.OnClickListener {
                 val agoMsc = System.currentTimeMillis() - lastConnection
                 val lastConnectionMinAgo = agoMsc / 60.0 / 1000.0
                 val ago: String = if (lastConnectionMinAgo < 60) {
-                        dateUtil.minAgo(resourceHelper, lastConnection)
+                        dateUtil.minAgo(rh, lastConnection)
                     } else {
-                        dateUtil.hourAgo(lastConnection, resourceHelper)
+                        dateUtil.hourAgo(lastConnection, rh)
                     }
-                statusItems.add(getStatusItem(resourceHelper.gs(R.string.last_connected),dateUtil.timeString(lastConnection) + " (" + ago + ")")
+                statusItems.add(getStatusItem(rh.gs(R.string.last_connected), dateUtil.timeString(lastConnection) + " (" + ago + ")")
                 )
             }
         }
@@ -229,58 +229,53 @@ class LocalInsightFragment : DaggerFragment(), View.OnClickListener {
                     string = R.string.paused
                 }
         }
-        statusItems.add(getStatusItem(resourceHelper.gs(R.string.operating_mode), resourceHelper.gs(string)))
+        statusItems.add(getStatusItem(rh.gs(R.string.operating_mode), rh.gs(string)))
     }
 
     private fun getBatteryStatusItem(statusItems: MutableList<View>) {
-        if (localInsightPlugin.batteryStatus == null) return
-        statusItems.add(getStatusItem(resourceHelper.gs(R.string.battery_label), localInsightPlugin.batteryStatus!!.batteryAmount.toString() + "%"))
+        val batteryStatus = localInsightPlugin.batteryStatus ?: return
+        statusItems.add(getStatusItem(rh.gs(R.string.battery_label), batteryStatus.batteryAmount.toString() + "%"))
     }
 
     private fun getCartridgeStatusItem(statusItems: MutableList<View>) {
         val cartridgeStatus = localInsightPlugin.cartridgeStatus ?: return
         val status: String
-        status = if (cartridgeStatus.isInserted) to2Decimal(localInsightPlugin.cartridgeStatus!!.remainingAmount) + "U" else resourceHelper.gs(R.string.not_inserted)
-        statusItems.add(getStatusItem(resourceHelper.gs(R.string.reservoir_label), status))
+        status = if (cartridgeStatus.isInserted) to2Decimal(cartridgeStatus.remainingAmount) + "U" else rh.gs(R.string.not_inserted)
+        statusItems.add(getStatusItem(rh.gs(R.string.reservoir_label), status))
     }
 
     private fun getTDDItems(statusItems: MutableList<View>) {
-        if (localInsightPlugin.totalDailyDose == null) return
-        val tdd = localInsightPlugin.totalDailyDose
-        statusItems.add(getStatusItem(resourceHelper.gs(R.string.tdd_bolus), to2Decimal(tdd!!.bolus)))
-        statusItems.add(getStatusItem(resourceHelper.gs(R.string.tdd_basal), to2Decimal(tdd.basal)))
-        statusItems.add(getStatusItem(resourceHelper.gs(R.string.tdd_total), to2Decimal(tdd.bolusAndBasal)))
+        val tdd = localInsightPlugin.totalDailyDose ?: return
+        statusItems.add(getStatusItem(rh.gs(R.string.tdd_bolus), to2Decimal(tdd.bolus)))
+        statusItems.add(getStatusItem(rh.gs(R.string.tdd_basal), to2Decimal(tdd.basal)))
+        statusItems.add(getStatusItem(rh.gs(R.string.tdd_total), to2Decimal(tdd.bolusAndBasal)))
     }
 
     private fun getBaseBasalRateItem(statusItems: MutableList<View>) {
-        if (localInsightPlugin.activeBasalRate == null) return
-        val activeBasalRate = localInsightPlugin.activeBasalRate
-        statusItems.add(getStatusItem(resourceHelper.gs(R.string.basebasalrate_label),
-            to2Decimal(activeBasalRate!!.activeBasalRate) + " U/h (" + activeBasalRate.activeBasalProfileName + ")"))
+        val activeBasalRate = localInsightPlugin.activeBasalRate ?: return
+        statusItems.add(getStatusItem(rh.gs(R.string.basebasalrate_label),to2Decimal(activeBasalRate.activeBasalRate) + " U/h (" + activeBasalRate.activeBasalProfileName + ")"))
     }
 
     private fun getTBRItem(statusItems: MutableList<View>) {
-        if (localInsightPlugin.activeTBR == null) return
-        val activeTBR = localInsightPlugin.activeTBR
-        statusItems.add(getStatusItem(resourceHelper.gs(R.string.tempbasal_label),
-            resourceHelper.gs(R.string.tbr_formatter, activeTBR!!.percentage, activeTBR.initialDuration - activeTBR.remainingDuration, activeTBR.initialDuration)))
+        val activeTBR = localInsightPlugin.activeTBR ?: return
+        statusItems.add(getStatusItem(rh.gs(R.string.tempbasal_label), rh.gs(R.string.tbr_formatter, activeTBR.percentage, activeTBR.initialDuration - activeTBR.remainingDuration, activeTBR.initialDuration)))
     }
 
     private fun getLastBolusItem(statusItems: MutableList<View>) {
         if (localInsightPlugin.lastBolusAmount.equals(0) || localInsightPlugin.lastBolusTimestamp.equals(0)) return
         val agoMsc = System.currentTimeMillis() - localInsightPlugin.lastBolusTimestamp
         val bolusMinAgo = agoMsc / 60.0 / 1000.0
-        val unit = resourceHelper.gs(R.string.insulin_unit_shortname)
+        val unit = rh.gs(R.string.insulin_unit_shortname)
         val ago: String
         ago = if (bolusMinAgo < 60) {
-            dateUtil.minAgo(resourceHelper, localInsightPlugin.lastBolusTimestamp)
+            dateUtil.minAgo(rh, localInsightPlugin.lastBolusTimestamp)
         } else {
-            dateUtil.hourAgo(localInsightPlugin.lastBolusTimestamp, resourceHelper)
+            dateUtil.hourAgo(localInsightPlugin.lastBolusTimestamp, rh)
         }
         statusItems.add(
             getStatusItem(
-                resourceHelper.gs(R.string.insight_last_bolus),
-                resourceHelper.gs(R.string.insight_last_bolus_formater, localInsightPlugin.lastBolusAmount, unit, ago)
+                rh.gs(R.string.insight_last_bolus),
+                rh.gs(R.string.insight_last_bolus_formater, localInsightPlugin.lastBolusAmount, unit, ago)
             )
         )
     }
@@ -290,11 +285,11 @@ class LocalInsightFragment : DaggerFragment(), View.OnClickListener {
         for (activeBolus in localInsightPlugin.activeBoluses!!) {
             var label: String
             label = when (activeBolus.bolusType) {
-                BolusType.MULTIWAVE -> resourceHelper.gs(R.string.multiwave_bolus)
-                BolusType.EXTENDED  -> resourceHelper.gs(R.string.extended_bolus)
+                BolusType.MULTIWAVE -> rh.gs(R.string.multiwave_bolus)
+                BolusType.EXTENDED  -> rh.gs(R.string.extended_bolus)
                 else                -> continue
             }
-            statusItems.add(getStatusItem(label, resourceHelper.gs(R.string.eb_formatter, activeBolus.remainingAmount, activeBolus.initialAmount, activeBolus.remainingDuration)))
+            statusItems.add(getStatusItem(label, rh.gs(R.string.eb_formatter, activeBolus.remainingAmount, activeBolus.initialAmount, activeBolus.remainingDuration)))
         }
     }
 

@@ -58,9 +58,9 @@ class InsightAlertActivity : DaggerAppCompatActivity() {
         binding.mute.isEnabled = true
         binding.mute.visibility = if (alert.alertStatus === AlertStatus.SNOOZED) View.GONE else View.VISIBLE
         binding.confirm.isEnabled = true
-        binding.icon.setImageDrawable(ContextCompat.getDrawable(this, alertUtils.getAlertIcon(alert.alertCategory)))
-        binding.errorCode.text = alertUtils.getAlertCode(alert.alertType)
-        binding.errorTitle.text = alertUtils.getAlertTitle(alert.alertType)
+        alert.alertCategory?.let {binding.icon.setImageDrawable(ContextCompat.getDrawable(this, alertUtils.getAlertIcon(it)))}
+        alert.alertType?.let {binding.errorCode.text = alertUtils.getAlertCode(it)}
+        alert.alertType?.let {binding.errorTitle.text = alertUtils.getAlertTitle(it)}
         val description = alertUtils.getAlertDescription(alert)
         if (description == null) binding.errorDescription.visibility = View.GONE else {
             binding.errorDescription.visibility = View.VISIBLE
