@@ -74,7 +74,6 @@ fun TemporaryBasal.toJson(isAdd: Boolean, profile: Profile, dateUtil: DateUtil):
         .put("type", type.name)
         .put("isAbsolute", isAbsolute)
         .put("absolute", convertedToAbsolute(timestamp, profile))
-        .put("percent", convertedToPercent(timestamp, profile) - 100)
         .also {
             if (interfaceIDs.pumpId != null) it.put("pumpId", interfaceIDs.pumpId)
             if (interfaceIDs.endId != null) it.put("endId", interfaceIDs.endId)
@@ -83,19 +82,7 @@ fun TemporaryBasal.toJson(isAdd: Boolean, profile: Profile, dateUtil: DateUtil):
             if (isAdd && interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId)
         }
 
-/*
-        create fake object with nsID and isValid == false
- */
-fun temporaryBasalFromNsIdForInvalidating(nsId: String): TemporaryBasal =
-    temporaryBasalFromJson(
-        JSONObject()
-            .put("mills", 1)
-            .put("absolute", 1.0)
-            .put("duration", 1.0)
-            .put("_id", nsId)
-            .put("isValid", false)
-    )!!
-
+@Suppress("IfThenToElvis")
 fun temporaryBasalFromJson(jsonObject: JSONObject): TemporaryBasal? {
     val timestamp = JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null) ?: return null
     var rate = JsonHelper.safeGetDoubleAllowNull(jsonObject, "rate")
@@ -112,8 +99,16 @@ fun temporaryBasalFromJson(jsonObject: JSONObject): TemporaryBasal? {
     val pumpType = InterfaceIDs.PumpType.fromString(JsonHelper.safeGetStringAllowNull(jsonObject, "pumpType", null))
     val pumpSerial = JsonHelper.safeGetStringAllowNull(jsonObject, "pumpSerial", null)
 
-    rate = rate ?: if (percent != null) percent + 100 else absolute ?: return null
-    isAbsolute = isAbsolute ?: percent == null
+    if (rate == null) {
+        if (absolute != null)  {
+            rate = absolute
+            isAbsolute = true
+        } else if (percent != null) {
+            rate = percent + 100
+            isAbsolute = false
+        } else return null
+    }
+    if (isAbsolute == null) return null
     if (duration == 0L) return null
     if (timestamp == 0L) return null
 
