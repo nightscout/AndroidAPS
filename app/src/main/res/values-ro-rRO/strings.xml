@@ -896,4 +896,7 @@
     <string name="view">Vizualizare</string>
     <string name="errors">Erori</string>
     <string name="ns_sync_slow">Încarcă mai lent</string>
+    <string name="data_status">Stare date glicemie</string>
+    <string name="recalculated_data_used">Date recalculate utilizate</string>
+    <string name="bg_too_close">BG prea aproape:\n%1$s\n%2$s</string>
 </resources>
