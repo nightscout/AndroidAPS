@@ -3,7 +3,6 @@ package info.nightscout.androidaps.receivers
 import android.content.Context
 import android.content.Intent
 import android.provider.Telephony
-import android.util.Log
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequest
 import dagger.android.DaggerBroadcastReceiver
