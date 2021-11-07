@@ -35,7 +35,7 @@ class GlunovoPluginService : Service() {
             cr.moveToLast()
             val crfirst = contentResolver.query(CONTENT_URI, null, null, null, null)
             crfirst!!.moveToFirst()
-            var valuestotake = 11
+            var valuestotake = 2
             if (cr.count < valuestotake) {valuestotake = cr.count} //check if there are less than valuestotake readings and get smaller value
             cr.moveToPosition(cr.count-valuestotake)
             var time : Long
