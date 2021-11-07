@@ -11,9 +11,9 @@
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">הצג לחצן \"סטטיסטיקת ריילילינק\" בתפריט ניהול פוד</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">אפשר רישום החלפת סוללה בפעולות</string>
     <string name="omnipod_eros_preferences_category_riley_link">ריילילינק</string>
-    <string name="omnipod_eros_preferences_notification_uncertain_tbr_sound_enabled">צליל של התראת בזאלי זמני לא ברור מאופשר</string>
-    <string name="omnipod_eros_preferences_notification_uncertain_smb_sound_enabled">צליל של התראת SMB לא ברור מאופשר</string>
-    <string name="omnipod_eros_preferences_notification_uncertain_bolus_sound_enabled">צליל של התראת בולוס לא ברור מאופשר</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_tbr_sound_enabled">התראת צליל של בזאלי זמני לא ברור מאופשרת</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_smb_sound_enabled">התראת צליל של SMB לא ברור מאופשרת</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_bolus_sound_enabled">התראת צליל של בולוס לא ברור מאופשרת</string>
     <!-- Omnipod Eros - History -->
     <string name="omnipod_eros_history_title">היסטוריית הפוד</string>
     <string name="omnipod_eros_history_item_description">תיאור</string>
