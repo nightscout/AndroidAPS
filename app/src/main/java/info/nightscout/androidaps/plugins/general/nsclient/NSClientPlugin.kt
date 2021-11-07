@@ -225,7 +225,7 @@ class NSClientPlugin @Inject constructor(
 
     fun handleClearAlarm(originalAlarm: NSAlarm, silenceTimeInMilliseconds: Long) {
         if (!isEnabled(PluginType.GENERAL)) return
-        if (!sp.getBoolean(R.string.key_ns_upload, false)) {
+        if (!sp.getBoolean(R.string.key_ns_upload, true)) {
             aapsLogger.debug(LTag.NSCLIENT, "Upload disabled. Message dropped")
             return
         }
