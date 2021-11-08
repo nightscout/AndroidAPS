@@ -115,4 +115,9 @@
     <string name="insulin_novorapid">NovoRapid®/Novolog®</string>
     <string name="insulin_humalog">Humalog®</string>
     <string name="insulin_actrapid">Actrapid®/Humalin R®/insulina humana \"estàndard\".</string>
+    <string name="insulin_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html#insulin</string>
+    <string name="sensitivity_label">Plugins de sensibilitat</string>
+    <string name="sensitivity_which">Marqueu totes les respostes correctes.</string>
+    <string name="sensitivity_adjust">Els plugins de sensibilitat permeten AndroidAPS ajustar-se davant de canvis temporals o breus de sensibilitat a l\'insulina (per exemple canvis hormonals o problemes d\'absorció al lloc d\'infusió).</string>
+    <string name="sensitivity_edit">Els plugins de sensibilitat ofereixen l\'usuari suggeriments de canvi de les basals, ràtios I:C (insulina:carbohidrats) i ISF (factor de sensibilitat a l\'insulina) que poden ser utilitzats per editar el perfil.</string>
 </resources>
