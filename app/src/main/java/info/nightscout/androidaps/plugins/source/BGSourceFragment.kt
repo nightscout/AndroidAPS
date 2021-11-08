@@ -50,7 +50,7 @@ class BGSourceFragment : DaggerFragment() {
     @Inject lateinit var activePlugin: ActivePlugin
 
     private val disposable = CompositeDisposable()
-    private val millsToThePast = T.hours(12).msecs()
+    private val millsToThePast = T.hours(36).msecs()
 
     private var _binding: BgsourceFragmentBinding? = null
 
