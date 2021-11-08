@@ -223,12 +223,14 @@ class CommandQueueImplementation @Inject constructor(
         // Assuming carbs in the future and carbs with duration are NOT stores anyway
 
         var carbsRunnable = Runnable {  }
+        val originalCarbs = detailedBolusInfo.carbs
         if ((detailedBolusInfo.carbs > 0) &&
             (!activePlugin.activePump.pumpDescription.storesCarbInfo ||
                 detailedBolusInfo.carbsDuration != 0L ||
                 (detailedBolusInfo.carbsTimestamp ?: detailedBolusInfo.timestamp) > dateUtil.now())
         ) {
             carbsRunnable = Runnable {
+                detailedBolusInfo.carbs = originalCarbs
                 disposable += repository.runTransactionForResult(detailedBolusInfo.insertCarbsTransaction())
                     .subscribeBy(
                         onSuccess = { result ->
