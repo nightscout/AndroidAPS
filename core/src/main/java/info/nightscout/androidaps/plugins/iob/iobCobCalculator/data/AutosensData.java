@@ -51,9 +51,9 @@ public class AutosensData implements DataPointWithLabelInterface {
             time = t.getTimestamp();
             carbs = t.getAmount();
             remaining = t.getAmount();
-            if (isAAPSOrWeighted) {
+            Profile profile = profileFunction.getProfile(t.getTimestamp());
+            if (isAAPSOrWeighted && profile != null) {
                 double maxAbsorptionHours = sp.getDouble(R.string.key_absorption_maxtime, Constants.DEFAULT_MAX_ABSORPTION_TIME);
-                Profile profile = profileFunction.getProfile(t.getTimestamp());
                 double sens = profile.getIsfMgdl(t.getTimestamp());
                 double ic = profile.getIc(t.getTimestamp());
                 min5minCarbImpact = t.getAmount() / (maxAbsorptionHours * 60 / 5) * sens / ic;
