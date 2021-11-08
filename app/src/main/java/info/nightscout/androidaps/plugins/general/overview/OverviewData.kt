@@ -76,8 +76,6 @@ class OverviewData @Inject constructor(
         pumpStatus = ""
         calcProgress = ""
         lastBg = null
-        temporaryBasal = null
-        extendedBolus = null
         bolusIob = null
         basalIob = null
         cobInfo = null
@@ -161,11 +159,10 @@ class OverviewData @Inject constructor(
      * TEMPORARY BASAL
      */
 
-    var temporaryBasal: TemporaryBasal? = null
-
     val temporaryBasalText: String
         get() =
             profileFunction.getProfile()?.let { profile ->
+                var temporaryBasal = iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil.now())
                 if (temporaryBasal?.isInProgress == false) temporaryBasal = null
                 temporaryBasal?.let { "T:" + it.toStringShort() }
                     ?: rh.gs(R.string.pump_basebasalrate, profile.getBasal())
@@ -173,7 +170,7 @@ class OverviewData @Inject constructor(
 
     val temporaryBasalDialogText: String
         get() = profileFunction.getProfile()?.let { profile ->
-            temporaryBasal?.let { temporaryBasal ->
+            iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil.now())?.let { temporaryBasal ->
                 "${rh.gs(R.string.basebasalrate_label)}: ${rh.gs(R.string.pump_basebasalrate, profile.getBasal())}" +
                     "\n" + rh.gs(R.string.tempbasal_label) + ": " + temporaryBasal.toStringFull(profile, dateUtil)
             }
@@ -183,7 +180,7 @@ class OverviewData @Inject constructor(
     val temporaryBasalIcon: Int
         get() =
             profileFunction.getProfile()?.let { profile ->
-                temporaryBasal?.let { temporaryBasal ->
+                iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil.now())?.let { temporaryBasal ->
                     val percentRate = temporaryBasal.convertedToPercent(dateUtil.now(), profile)
                     when {
                         percentRate > 100 -> R.drawable.ic_cp_basal_tbr_high
@@ -194,27 +191,23 @@ class OverviewData @Inject constructor(
             } ?: R.drawable.ic_cp_basal_no_tbr
 
     val temporaryBasalColor: Int
-        get() = temporaryBasal?.let { rh.gc(R.color.basal) }
+        get() = iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil.now())?.let { rh.gc(R.color.basal) }
             ?: rh.gc(R.color.defaulttextcolor)
 
     /*
      * EXTENDED BOLUS
     */
 
-    var extendedBolus: ExtendedBolus? = null
-
     val extendedBolusText: String
         get() =
-            extendedBolus?.let { extendedBolus ->
-                if (!extendedBolus.isInProgress(dateUtil)) {
-                    this@OverviewData.extendedBolus = null
-                    ""
-                } else if (!activePlugin.activePump.isFakingTempsByExtendedBoluses) rh.gs(R.string.pump_basebasalrate, extendedBolus.rate)
+            iobCobCalculator.getExtendedBolus(dateUtil.now())?.let { extendedBolus ->
+                if (!extendedBolus.isInProgress(dateUtil)) ""
+                else if (!activePlugin.activePump.isFakingTempsByExtendedBoluses) rh.gs(R.string.pump_basebasalrate, extendedBolus.rate)
                 else ""
             } ?: ""
 
     val extendedBolusDialogText: String
-        get() = extendedBolus?.toStringFull(dateUtil) ?: ""
+        get() = iobCobCalculator.getExtendedBolus(dateUtil.now())?.toStringFull(dateUtil) ?: ""
 
     /*
      * IOB, COB
@@ -555,7 +548,14 @@ class OverviewData @Inject constructor(
 
         // OfflineEvent
         repository.getOfflineEventDataFromTimeToTime(fromTime, endTime, true).blockingGet()
-            .map { TherapyEventDataPoint(TherapyEvent(timestamp = it.timestamp, duration = it.duration, type = TherapyEvent.Type.APS_OFFLINE, glucoseUnit = TherapyEvent.GlucoseUnit.MMOL), rh, profileFunction, translator) }
+            .map {
+                TherapyEventDataPoint(
+                    TherapyEvent(timestamp = it.timestamp, duration = it.duration, type = TherapyEvent.Type.APS_OFFLINE, glucoseUnit = TherapyEvent.GlucoseUnit.MMOL),
+                    rh,
+                    profileFunction,
+                    translator
+                )
+            }
             .forEach(filteredTreatments::add)
 
         // Extended bolus

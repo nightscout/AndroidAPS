@@ -92,9 +92,10 @@
 
     <string-array name="virtualPumpTypes">
         <item>Generic AAPS</item>
-        <item>Accu-Chek Spirit</item>
         <item>Accu-Chek Combo</item>
+        <item>Accu-Chek Spirit</item>
         <item>Accu-Chek Insight</item>
+        <item>Accu-Chek Solo</item>
         <item>Animas Ping</item>
         <item>Animas Vibe</item>
         <item>Cellnovo</item>
@@ -102,13 +103,16 @@
         <item>DanaR Korean</item>
         <item>DanaRS</item>
         <item>DanaRv2</item>
-        <item>Insulet Omnipod</item>
+        <item>DanaI</item>
+        <item>Diaconn G8</item>
         <item>Medtronic 512/712</item>
         <item>Medtronic 515/715</item>
         <item>Medtronic 522/722</item>
         <item>Medtronic 523/723 (Revel)</item>
         <item>Medtronic 554/754 (Veo)</item>
         <item>Medtronic 640G</item>
+        <item>Omnipod Dash</item>
+        <item>Omnipod Eros</item>
         <item>Tandem t:slim</item>
         <item>Tandem t:flex</item>
         <item>Tandem t:slim G4</item>

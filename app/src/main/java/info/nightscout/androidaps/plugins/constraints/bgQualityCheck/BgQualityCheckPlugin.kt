@@ -8,6 +8,7 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventBucketedDataCreated
 import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -73,7 +74,7 @@ class BgQualityCheckPlugin @Inject constructor(
         val readings = iobCobCalculator.ads.getBgReadingsDataTableCopy()
         for (i in readings.indices)
             if (i < readings.size - 2)
-                if (abs(readings[i].timestamp - readings[i + 1].timestamp) <= 1000) {
+                if (abs(readings[i].timestamp - readings[i + 1].timestamp) <= T.secs(20).msecs()) {
                     state = State.DOUBLED
                     aapsLogger.debug(LTag.CORE, "BG similar. Turning on red state.\n${readings[i]}\n${readings[i+1]}")
                     message = rh.gs(R.string.bg_too_close, readings[i].toString(), readings[i+1].toString())

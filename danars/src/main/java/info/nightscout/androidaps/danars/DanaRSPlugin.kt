@@ -81,7 +81,8 @@ class DanaRSPlugin @Inject constructor(
     private var danaRSService: DanaRSService? = null
     private var mDeviceAddress = ""
     var mDeviceName = ""
-    override val pumpDescription = PumpDescription(PumpType.DANA_RS)
+    override val pumpDescription
+        get() = PumpDescription(danaPump.pumpType())
 
     override fun updatePreferenceSummary(pref: Preference) {
         super.updatePreferenceSummary(pref)
