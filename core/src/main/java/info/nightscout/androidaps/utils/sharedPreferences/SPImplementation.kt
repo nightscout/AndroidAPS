@@ -82,7 +82,11 @@ class SPImplementation @Inject constructor(
         return try {
             sharedPreferences.getLong(rh.gs(resourceID), defaultValue)
         } catch (e: Exception) {
-            SafeParse.stringToLong(sharedPreferences.getString(rh.gs(resourceID), defaultValue.toString()))
+            try {
+                SafeParse.stringToLong(sharedPreferences.getString(rh.gs(resourceID), defaultValue.toString()))
+            } catch (e: Exception) {
+                defaultValue
+            }
         }
     }
 
@@ -96,6 +100,11 @@ class SPImplementation @Inject constructor(
                 defaultValue
             }
         }
+    }
+
+    override fun incLong(resourceID: Int) {
+        val value = getLong(resourceID, 0) + 1L
+        sharedPreferences.edit().putLong(rh.gs(resourceID), value).apply()
     }
 
     override fun putBoolean(key: String, value: Boolean) = sharedPreferences.edit().putBoolean(key, value).apply()

@@ -650,11 +650,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
     }
 
     private void incrementBolusCount() {
-        try {
-            sp.putLong(R.string.combo_boluses_delivered, sp.getLong(R.string.combo_boluses_delivered, 0L) + 1);
-        } catch (Exception e) {
-            // ignore
-        }
+        sp.incLong(R.string.combo_boluses_delivered);
     }
 
     public Long getTbrsSet() {
