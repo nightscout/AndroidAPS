@@ -154,7 +154,6 @@
     <string name="profile_ins_units_per_hour">IE/h</string>
     <string name="profile_carbs_per_unit">g/IE</string>
     <!--    ProfileFunction-->
-    <string name="noprofileselected">Kein Profil ausgewählt</string>
     <string name="startprofile">Profil %1$d%% für %2$d Min. starten</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Bei der virtuellen Pumpe können nur einzelne Werte und keine Bereiche zur Festlegung der Basal/Bolus-Granularität gewählt werden.</string>
