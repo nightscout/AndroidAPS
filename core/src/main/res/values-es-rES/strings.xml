@@ -68,7 +68,7 @@
     <string name="advancedsettings_title">Ajustes avanzados</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">Vigilante de BT</string>
-    <string name="btwatchdog_summary">Apaga el bluetooth del móvil por un segundo si no hay conexión con la bomba. Esto ayuda con algunos móviles con problemas para establecer conexión bluetooth estable.</string>
+    <string name="btwatchdog_summary">Desconecta el bluetooth del teléfono móvil durante un instante, si no hay conexión con la bomba. Esto ayuda con algunos teléfonos móviles que tienen problemas para establecer una conexión bluetooth estable.</string>
     <string name="pairing">Emparejando</string>
     <string name="yes">Si</string>
     <string name="no">No</string>
@@ -154,7 +154,6 @@
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
-    <string name="noprofileselected">Ningun perfil seleccionado</string>
     <string name="startprofile">Iniciar perfil %1$d%% durante %2$d min</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Sólo se soportan valores discretos, no rangos, como entrada de datos para basal/bolo en la bomba virtual.</string>
@@ -310,13 +309,13 @@
     <string name="uel_superbolus_tbr">SUPERBOLO TBR</string>
     <string name="uel_carbs">CARBOHIDRATOS</string>
     <string name="uel_extended_carbs">CARBOHIDRATOS EXTENDIDOS</string>
-    <string name="uel_temp_basal">BASAL TEMP</string>
+    <string name="uel_temp_basal">BASAL TEMPORAL</string>
     <string name="uel_tt">OBJETIVO TEMPORAL</string>
-    <string name="uel_new_profile">Perfil NUEVO</string>
-    <string name="uel_clone_profile">COPIAR PERFIL</string>
+    <string name="uel_new_profile">NUEVO PERFIL</string>
+    <string name="uel_clone_profile">CLONAR PERFIL</string>
     <string name="uel_store_profile">GUARDAR PERFIL</string>
-    <string name="uel_profile_switch">CAMBIO PERFIL</string>
-    <string name="uel_profile_switch_cloned">CAMBIO PERFIL COPIADO</string>
+    <string name="uel_profile_switch">CAMBIO DE PERFIL</string>
+    <string name="uel_profile_switch_cloned">CAMBIO DE PERFIL CLONADO</string>
     <string name="uel_closed_loop_mode">MODO LAZO CERRADO</string>
     <string name="uel_lgs_loop_mode">MODO LAZO LGS</string>
     <string name="uel_open_loop_mode">MODO LAZO ABIERTO</string>
@@ -328,8 +327,8 @@
     <string name="uel_suspend">SUSPENDER</string>
     <string name="uel_hw_pump_allowed">SISTEMA DE BOMBA SOPORTADA</string>
     <string name="uel_clear_pairing_keys">BORRAR CLAVES DE EMPAREJAMIENTO</string>
-    <string name="uel_accepts_temp_basal">ACEPTA TEMP BASAL</string>
-    <string name="uel_cancel_temp_basal">CANCELAR TEMP BASAL</string>
+    <string name="uel_accepts_temp_basal">ACEPTAR BASAL TEMPORAL</string>
+    <string name="uel_cancel_temp_basal">CANCELAR BASAL TEMPORAL</string>
     <string name="uel_cancel_bolus">CANCELAR BOLO</string>
     <string name="uel_cancel_extended_bolus">CANCELAR BOLO EXTENDIDO</string>
     <string name="uel_cancel_tt">CANCELAR OBJETIVO TEMPORAL</string>
@@ -337,12 +336,12 @@
     <string name="uel_site_change">CAMBIAR SITIO</string>
     <string name="uel_reservoir_change">CAMBIAR RESERVORIO</string>
     <string name="uel_calibration">CALIBRACIÓN</string>
-    <string name="uel_prime_bolus">CEBAR BOLO</string>
+    <string name="uel_prime_bolus">BOLO DE CEBADO</string>
     <string name="uel_treatment">TRATAMIENTO</string>
     <string name="uel_careportal_ns_refresh">ACTUALIZAR PORTAL DEL CUIDADOR NS</string>
-    <string name="uel_profile_switch_ns_refresh">ACTUALIZAR CAMBIO DE PERFIL NS</string>
+    <string name="uel_profile_switch_ns_refresh">ACTUALIZAR CAMBIO DE PERFIL EN NS</string>
     <string name="uel_treatments_ns_refresh">ACTUALIZAR TRATAMIENTOS NS</string>
-    <string name="uel_tt_ns_refresh">ACTUALIZAR OBJETIVO TEMPORAL NS</string>
+    <string name="uel_tt_ns_refresh">ACTUALIZAR OBJETIVO TEMPORAL EN NS</string>
     <string name="uel_automation_removed">AUTOMACIÓN ELIMINADA</string>
     <string name="uel_bg_removed">BG ELIMINADO</string>
     <string name="uel_careportal_removed">PORTAL DEL CUIDADOR ELIMINADO</string>
@@ -353,7 +352,7 @@
     <string name="uel_food">ALIMENTOS</string>
     <string name="uel_food_removed">ALIMENTO ELIMINADO</string>
     <string name="uel_profile_removed">PERFIL ELIMINADO</string>
-    <string name="uel_profile_switch_removed">CAMBIO PERFIL ELIMINADO</string>
+    <string name="uel_profile_switch_removed">CAMBIO DE PERFIL ELIMINADO</string>
     <string name="uel_restart_events_removed">REINICIO DE EVENTOS ELIMINADO</string>
     <string name="uel_treatment_removed">TRATAMIENTO ELIMINADO</string>
     <string name="uel_tt_removed">OBJETIVO TEMPORAL ELIMINADO</string>
