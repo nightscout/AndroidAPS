@@ -242,8 +242,8 @@ class LoopPlugin @Inject constructor(
             if (!isEnabled(PluginType.LOOP)) return
             val profile = profileFunction.getProfile()
             if (profile == null || !profileFunction.isProfileValid("Loop")) {
-                aapsLogger.debug(LTag.APS, rh.gs(R.string.noprofileselected))
-                rxBus.send(EventLoopSetLastRunGui(rh.gs(R.string.noprofileselected)))
+                aapsLogger.debug(LTag.APS, rh.gs(R.string.noprofileset))
+                rxBus.send(EventLoopSetLastRunGui(rh.gs(R.string.noprofileset)))
                 return
             }
 

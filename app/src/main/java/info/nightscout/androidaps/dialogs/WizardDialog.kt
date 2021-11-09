@@ -179,7 +179,7 @@ class WizardDialog : DaggerDialogFragment() {
         // profile spinner
         binding.profile.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                ToastUtils.showToastInUiThread(ctx, rh.gs(R.string.noprofileselected))
+                ToastUtils.showToastInUiThread(ctx, rh.gs(R.string.noprofileset))
                 binding.ok.visibility = View.GONE
             }
 

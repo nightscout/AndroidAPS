@@ -37,6 +37,9 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import org.json.JSONArray
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledFuture
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.floor
@@ -126,12 +129,7 @@ class IobCobCalculatorPlugin @Inject constructor(
         disposable += rxBus
             .toObservable(EventNewHistoryData::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe(
-                { event ->
-                    newHistoryData(event.oldDataTimestamp, event.reloadBgData, if (event.newestGlucoseValue != null) EventNewBG(event.newestGlucoseValue) else event)
-                },
-                fabricPrivacy::logException
-            )
+            .subscribe({ event -> scheduleHistoryDataChange(event) }, fabricPrivacy::logException)
     }
 
     override fun onStop() {
@@ -386,6 +384,44 @@ class IobCobCalculatorPlugin @Inject constructor(
                 if (sensitivityOref1Plugin.isEnabled()) IobCobOref1Thread(injector, this, from, end, bgDataReload, limitDataToOldestAvailable, cause)
                 else IobCobThread(injector, this, from, end, bgDataReload, limitDataToOldestAvailable, cause)
             thread?.start()
+        }
+    }
+
+    // Limit rate of EventNewHistoryData
+    private val historyWorker = Executors.newSingleThreadScheduledExecutor()
+    private var scheduledHistoryPost: ScheduledFuture<*>? = null
+    private var scheduledEvent: EventNewHistoryData? = null
+
+    @Synchronized
+    private fun scheduleHistoryDataChange(event: EventNewHistoryData) {
+        // if there is nothing scheduled or asking reload deeper to the past
+        if (scheduledEvent == null || event.oldDataTimestamp < (scheduledEvent?.oldDataTimestamp) ?: 0L) {
+            // cancel waiting task to prevent sending multiple posts
+            scheduledHistoryPost?.cancel(false)
+            // prepare task for execution in 1 sec
+            scheduledEvent = event
+            scheduledHistoryPost = historyWorker.schedule({
+                                                              synchronized(this) {
+                                                                  aapsLogger.debug(LTag.DATABASE, "Running newHistoryData")
+                                                                  newHistoryData(
+                                                                      event.oldDataTimestamp,
+                                                                      event.reloadBgData,
+                                                                      if (event.newestGlucoseValue != null) EventNewBG(event.newestGlucoseValue) else event
+                                                                  )
+                                                                  scheduledEvent = null
+                                                                  scheduledHistoryPost = null
+                                                              }
+                                                          }, 1L, TimeUnit.SECONDS)
+        } else {
+            // asked reload is newer -> adjust params only
+            scheduledEvent?.let {
+                // set reload bg data if was not set
+                if (!it.reloadBgData) it.reloadBgData = event.reloadBgData
+                // set Glucose value if newer
+                event.newestGlucoseValue?.let { gv ->
+                    if (gv.timestamp > (it.newestGlucoseValue?.timestamp ?: 0L)) it.newestGlucoseValue = gv
+                }
+            }
         }
     }
 

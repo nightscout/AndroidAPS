@@ -53,20 +53,6 @@ class OverviewData @Inject constructor(
     private val translator: Translator
 ) {
 
-    enum class Property {
-        TIME,
-        CALC_PROGRESS,
-        PROFILE,
-        TEMPORARY_BASAL,
-        EXTENDED_BOLUS,
-        TEMPORARY_TARGET,
-        BG,
-        IOB_COB,
-        SENSITIVITY,
-        GRAPH,
-        PUMPSTATUS
-    }
-
     var rangeToDisplay = 6 // for graph
     var toTime: Long = 0
     var fromTime: Long = 0
