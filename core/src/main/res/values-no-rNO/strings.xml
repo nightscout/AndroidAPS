@@ -154,7 +154,6 @@
     <string name="profile_ins_units_per_hour">E/t</string>
     <string name="profile_carbs_per_unit">g/E</string>
     <!--    ProfileFunction-->
-    <string name="noprofileselected">Ingen profil valgt</string>
     <string name="startprofile">Start profil %1$d%% i %2$d min</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Bare konkrete verdier støttes som granularitet for basal/bolus i virtuell pumpe, ingen verdiområder.</string>
