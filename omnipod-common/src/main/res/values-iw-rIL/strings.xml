@@ -112,9 +112,9 @@
     <string name="omnipod_common_preferences_category_alerts">התראות</string>
     <string name="omnipod_common_preferences_category_confirmation_beeps">צפצופי אימות</string>
     <string name="omnipod_common_preferences_category_notifications">התראות</string>
-    <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">צליל של התראת בזאלי זמני לא ברור מאופשר</string>
-    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">צליל של התראת SMB לא ברור מאופשר</string>
-    <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">צליל של התראת בולוס לא ברור מאופשר</string>
+    <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">התראת צליל של בזאלי זמני לא ברור מאופשרת</string>
+    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">התראת צליל של SMB לא ברור מאופשרת</string>
+    <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">התראת צליל של בולוס לא ברור מאופשרת</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">אין פוד פעיל</string>
     <string name="omnipod_common_pod_status_waiting_for_activation">התקנה בביצוע (ממתין להפעלת הפוד)</string>
