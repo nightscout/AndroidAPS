@@ -140,6 +140,7 @@ class BGSourceFragment : DaggerFragment() {
                                 R.string.nsclientbg         -> Sources.NSClientSource
                                 R.string.poctech            -> Sources.PocTech
                                 R.string.tomato             -> Sources.Tomato
+                                R.string.glunovo            -> Sources.Glunovo
                                 R.string.xdrip              -> Sources.Xdrip
                                 else                        -> Sources.Unknown
                             }
