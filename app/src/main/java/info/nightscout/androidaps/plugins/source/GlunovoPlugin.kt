@@ -2,13 +2,11 @@ package info.nightscout.androidaps.plugins.source
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
-import android.os.Bundle
-import android.util.Log
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
@@ -17,8 +15,10 @@ import info.nightscout.androidaps.interfaces.BgSource
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.plugins.source.GlunovoPluginService
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.XDripBroadcast
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -42,8 +42,20 @@ class GlunovoPlugin @Inject constructor(
                aapsLogger, resourceHelper, injector
 ), BgSource {
 
+    override fun onStart() {
+        super.onStart()
+        val context : Context = MainApp.applicationContext()
+        context.startService(Intent(context, GlunovoPluginService::class.java))
+    }
+
+    override fun onStop() {
+        super.onStop()
+        val context : Context = MainApp.applicationContext()
+        context.stopService(Intent(context, GlunovoPluginService::class.java))
+    }
+
     // cannot be inner class because of needed injection
-    public class GlunovoWorker(
+    class GlunovoWorker(
         context: Context,
         params: WorkerParameters
     ) : Worker(context, params) {
@@ -63,7 +75,6 @@ class GlunovoPlugin @Inject constructor(
         override fun doWork(): Result {
             var ret = Result.success()
 
-            Log.d("GlunovoPlugin","GlunovoPlugin")
             if (!glunovoPlugin.isEnabled(PluginType.BGSOURCE)) return Result.success(workDataOf("Result" to "Plugin not enabled"))
             val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
             glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(

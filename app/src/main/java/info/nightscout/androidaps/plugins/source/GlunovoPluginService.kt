@@ -7,10 +7,8 @@ import android.os.IBinder
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
-import java.util.concurrent.Executors
-import java.util.concurrent.ScheduledExecutorService
-import java.util.concurrent.TimeUnit
+import info.nightscout.androidaps.services.Intents
+import java.util.*
 
 class GlunovoPluginService : Service() {
     private val handler = Handler(Looper.getMainLooper())
@@ -21,6 +19,10 @@ class GlunovoPluginService : Service() {
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         handler.postDelayed(mgetValue, 3000)
         return super.onStartCommand(intent, flags, startId)
+    }
+    fun start()
+    {
+        handler.postDelayed(mgetValue, 3000)
     }
 
     //180000
@@ -50,10 +52,10 @@ class GlunovoPluginService : Service() {
                 time = cr.getLong(0)
                 value = cr.getDouble(1) * 18.018 //value in mmol/l... transformed in mg/dl if value *18.018
                 intent = Intent()
-                intent.action = "com.glunovoservice.BgEstimate"
-                intent.putExtra("Time", time)
-                intent.putExtra("BgEstimate", value)
-                intent.setPackage("info.nightscout.androidaps")
+                intent.action = Intents.GLUNOVO_BG
+                //intent.putExtra("Time", time)
+                //intent.putExtra("BgEstimate", value)
+                //intent.setPackage("info.nightscout.androidaps")
                 bundle = Bundle()
                 bundle.putLong("Time",time)
                 bundle.putDouble("BgEstimate",value)
@@ -61,20 +63,12 @@ class GlunovoPluginService : Service() {
                 sendBroadcast(intent)
                 i = i - 1
             }
-
-            val curtime = System.currentTimeMillis()
-            time = (curtime - cr.getLong(0))/1000
-            if (time != curtime) { //wait until next reading to enter
-                cr.close()
-                crfirst.close()
-                handler.postDelayed(this, 180000)//-(curtime-time))
-            }
-            else
-            {
-                cr.close()
-                crfirst.close()
-                handler.postDelayed(this, 180000)
-            }
+            cr.moveToLast()
+            time = cr.getLong(0)
+            val curtime = Calendar.getInstance().time
+            cr.close()
+            crfirst.close()
+            handler.postDelayed(this, 180000)//-(curtime-time))
         }
     }
 

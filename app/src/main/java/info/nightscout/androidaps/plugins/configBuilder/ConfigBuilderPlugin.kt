@@ -57,14 +57,6 @@ class ConfigBuilderPlugin @Inject constructor(
         rxBus.send(EventAppInitialized())
     }
 
-    override fun startGlunovoService(context: Context) {
-        for (plugin in activePlugin.getPluginsList()) {
-            if ((plugin.name == "Glunovo") && (plugin.isEnabled(PluginType.BGSOURCE))) {
-                context.startService(Intent(context, GlunovoPluginService::class.java))
-            }
-        }
-    }
-
     private fun setAlwaysEnabledPluginsEnabled() {
         for (plugin in activePlugin.getPluginsList()) {
             if (plugin.pluginDescription.alwaysEnabled) plugin.setPluginEnabled(plugin.getType(), true)

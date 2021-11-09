@@ -22,7 +22,6 @@ import info.nightscout.androidaps.plugins.configBuilder.events.EventConfigBuilde
 import info.nightscout.androidaps.utils.FabricPrivacy
 import io.reactivex.rxkotlin.plusAssign
 import info.nightscout.androidaps.extensions.toVisibility
-import info.nightscout.androidaps.plugins.source.GlunovoPluginService
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -212,15 +211,6 @@ class ConfigBuilderFragment : DaggerFragment() {
             pluginVisibility.visibility = plugin.hasFragment().toVisibility()
             pluginVisibility.isEnabled = !(plugin.pluginDescription.neverVisible || plugin.pluginDescription.alwaysVisible) && plugin.isEnabled(pluginType)
             pluginVisibility.isChecked = plugin.isFragmentVisible()
-
-            if (plugin.isEnabled(PluginType.BGSOURCE)) {
-                if (plugin.name == "Glunovo") {
-                    context!!.startService(Intent(context, GlunovoPluginService::class.java))
-                }
-                else {
-                    context!!.stopService(Intent(context, GlunovoPluginService::class.java))
-                }
-            }
         }
 
         private fun areMultipleSelectionsAllowed(type: PluginType): Boolean {

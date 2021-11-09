@@ -1,6 +1,7 @@
 package info.nightscout.androidaps
 
 import android.bluetooth.BluetoothDevice
+import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
@@ -66,6 +67,16 @@ class MainApp : DaggerApplication() {
     @Inject lateinit var passwordCheck: PasswordCheck
     @Inject lateinit var alarmSoundServiceHelper: AlarmSoundServiceHelper
 
+    init {instance = this}
+    companion object {
+
+        fun applicationContext(): Context {
+            return instance!!.applicationContext
+        }
+
+        private var instance: MainApp? = null
+    }
+
     override fun onCreate() {
         super.onCreate()
         aapsLogger.debug("onCreate")
@@ -105,7 +116,6 @@ class MainApp : DaggerApplication() {
         // Register all tabs in app here
         pluginStore.plugins = plugins
         configBuilder.initialize()
-        configBuilder.startGlunovoService(this)
         keepAliveManager.setAlarm(this)
         doMigrations()
         uel.log(UserEntry.Action.START_AAPS, UserEntry.Sources.Aaps)
