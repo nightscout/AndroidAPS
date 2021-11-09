@@ -154,7 +154,6 @@
     <string name="profile_ins_units_per_hour">JI/h</string>
     <string name="profile_carbs_per_unit">g/JI</string>
     <!--    ProfileFunction-->
-    <string name="noprofileselected">Nebol vybraný žiadny profil</string>
     <string name="startprofile">Spustiť profil %1$d%% na %2$d min</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Iba diskrétne hodnoty a nie rozsahy sú podporované pre bazál/bolus vo virtuálnej pumpe.</string>
