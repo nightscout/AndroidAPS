@@ -33,7 +33,7 @@
     <string name="basalmax">Max. bazál</string>
     <string name="dailymax">Max. denní</string>
     <string name="bloodsugarmeasurementalert">Výstraha měření glykémie</string>
-    <string name="remaininsulinalert">Zbývající inzulín</string>
+    <string name="remaininsulinalert">Výstraha: Dochází inzulín</string>
     <string name="missedbolus">Chybějící bolus</string>
     <string name="invalidpairing">Neplatné informace o párování. Požadavek na nové párování</string>
     <string name="gettingpumpstatus">Nahrávám stav pumpy</string>
