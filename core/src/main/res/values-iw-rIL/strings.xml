@@ -154,7 +154,6 @@
     <string name="profile_ins_units_per_hour">יח\'\\שעה</string>
     <string name="profile_carbs_per_unit">גר\'\\יח\'</string>
     <!--    ProfileFunction-->
-    <string name="noprofileselected">לא נבחר פרופיל</string>
     <string name="startprofile">הפעלת פרופיל %1$d%% במשך %2$d דק\'</string>
     <!--    PumpType-->
     <string name="def_extended_note">* רק ערכים בדידים, טווחים אינם נתמכים עבור ערכי בזאלי ובולוס במשאבה וירטואלית.</string>
