@@ -896,6 +896,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="view">Vue</string>
     <string name="errors">Erreurs</string>
     <string name="ns_sync_slow">Ralentir les téléchargements</string>
+    <string name="data_status">État des données Gly</string>
     <string name="recalculated_data_used">Données recalculées utilisées</string>
     <string name="bg_too_close">Gly trop proche :\n%1$s\n%2$s</string>
 </resources>
