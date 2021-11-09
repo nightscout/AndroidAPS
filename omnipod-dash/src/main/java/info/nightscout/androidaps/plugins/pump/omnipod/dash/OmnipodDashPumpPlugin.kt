@@ -461,16 +461,16 @@ class OmnipodDashPumpPlugin @Inject constructor(
                             R.string.key_omnipod_common_expiration_reminder_enabled
                         ) ||
                         it.isChanged(
-                            rh,
-                            R.string.key_omnipod_common_expiration_reminder_hours_before_shutdown
+                                rh,
+                                R.string.key_omnipod_common_expiration_reminder_hours_before_shutdown
                             ) ||
                         it.isChanged(
-                            rh,
-                            R.string.key_omnipod_common_low_reservoir_alert_enabled
+                                rh,
+                                R.string.key_omnipod_common_low_reservoir_alert_enabled
                             ) ||
                         it.isChanged(
-                            rh,
-                            R.string.key_omnipod_common_low_reservoir_alert_units
+                                rh,
+                                R.string.key_omnipod_common_low_reservoir_alert_units
                             )
                     ) {
                         commandQueue.customCommand(CommandUpdateAlertConfiguration(), null)
