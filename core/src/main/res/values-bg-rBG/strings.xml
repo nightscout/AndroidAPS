@@ -154,7 +154,6 @@
     <string name="profile_ins_units_per_hour">Е/ч</string>
     <string name="profile_carbs_per_unit">гр/Е</string>
     <!--    ProfileFunction-->
-    <string name="noprofileselected">Няма избран профил</string>
     <string name="startprofile">Стартирай профил %1$d%% за %2$d мин</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Само конкретни стойности! Диапазони не се поддържат за базал/болус при виртуална помпа.</string>
