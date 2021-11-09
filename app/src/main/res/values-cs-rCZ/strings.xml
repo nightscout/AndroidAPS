@@ -12,7 +12,6 @@
     <string name="nav_resetdb">Inicializovat databáze</string>
     <string name="reset_db_confirm">Opravdu resetovat všechny databáze?</string>
     <string name="nav_exit">Konec</string>
-    <string name="ns_sync_use_absolute_title">Vždy použít absolutní hodnoty bazálu</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Toto zařízení zřejmě neumožňuje vypnout optimalizaci baterie - může docházet k problémům s výkonem.</string>
     <string name="description_actions">Tlačítka k běžně používaným úkonům</string>
     <string name="description_config_builder">Nastavení konfigurace (povolování součástí systému)</string>
@@ -897,4 +896,7 @@
     <string name="view">Zobrazit</string>
     <string name="errors">Chyby</string>
     <string name="ns_sync_slow">Zpomalit odesílání</string>
+    <string name="data_status">Stav glykémie</string>
+    <string name="recalculated_data_used">Použita přepočítaná data</string>
+    <string name="bg_too_close">Glykémie je příliš blízko:\n%1$s\n%2$s</string>
 </resources>
