@@ -625,15 +625,20 @@ class OmnipodDashPumpPlugin @Inject constructor(
                         )
                     }
                 }
-            }.toSingleDefault(
+            }.toSingle {
                 PumpEnactResult(injector).success(true).enacted(true).bolusDelivered(deliveredBolusAmount)
+            }.onErrorReturnItem(
+                // success if canceled
+                PumpEnactResult(injector).success(bolusCanceled).enacted(false)
             )
-                .onErrorReturnItem(
-                    // success if canceled
-                    PumpEnactResult(injector).success(bolusCanceled).enacted(false)
-                )
                 .blockingGet()
-            aapsLogger.info(LTag.PUMP, "deliverTreatment result: $ret")
+            aapsLogger.info(
+                LTag.PUMP,
+                "deliverTreatment result: $ret. " +
+                    "deliveredBolusAmount=$deliveredBolusAmount. " +
+                    "ret bolus=${ret.bolusDelivered}" +
+                    "bolusCanceled=$bolusCanceled"
+            )
             return ret
         } finally {
             bolusCanceled = false
