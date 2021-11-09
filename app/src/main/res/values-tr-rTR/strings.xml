@@ -30,7 +30,9 @@
     <string name="description_profile_local">Çevrimdışı kullanılabilen bir profil tanımlayın.</string>
     <string name="description_pump_mdi">Diyabet tedavisi için günde birden fazla enjeksiyon yapan kişiler için pompa entegrasyonu</string>
     <string name="description_pump_virtual">Henüz herhangi bir sürücüye sahip olmayan pompalar için pompa entegrasyonu (Açık Döngü)</string>
+    <string name="description_sensitivity_aaps">Duyarlılık, Oref0 ile aynı şekilde hesaplanır, ancak geçmişe yönelik zaman aralığı belirleyebilirsiniz. Minimum karbonhidrat emilimi, tercihlerden maksimum karbonhidrat emilim süresinden hesaplanır.</string>
     <string name="description_sensitivity_oref1">Duyarlılık, geçmişteki 8 veya 24 saatlik verilerden (hangisi daha hassas ise) hesaplanır. Karbonhidratlar (emilmemişse) tercihlerde belirtilen süreden sonra kesilir. Eklenti ayrıca UAM\'ı da (bildirilmemiş yemekler) hesaplar.</string>
+    <string name="description_sensitivity_weighted_average">Duyarlılık, sapmalardan ağırlıklı bir ortalama olarak hesaplanır. Daha yeni sapmalar daha yüksek ağırlığa sahiptir. Minimum karbonhidrat emilimi, tercihlerden maksimum karbonhidrat emilim süresinden hesaplanır. Bu algoritma, hassasiyet değişikliklerini takip etmede en hızlı olanıdır.</string>
     <string name="description_source_eversense">Yamalı Eversense uygulamasından KŞ değerleri alır.</string>
     <string name="description_source_glimp">Glimp\'ten KŞ değerleri alır.</string>
     <string name="description_source_mm640g">600SeriesAndroidUploader\'dan KŞ değerleri alır.</string>
@@ -38,6 +40,7 @@
     <string name="description_source_xdrip">XDrip+\'ten KŞ değerlerini alır.</string>
     <string name="description_treatments">Yapılan tüm tedavileri kaydeder</string>
     <string name="description_wear">WearOS saatinizi kullanarak AndroidAPS\'yi izleyin ve kontrol edin.</string>
+    <string name="description_xdrip_status_line">Döngü\'yle ilgili bilgileri xDrip+ saat arayüzünde gösterin.</string>
     <string name="description_sms_communicator">SMS komutlarını kullanarak uzaktan AndroidAPS kontrolü.</string>
     <string name="treatments_insulin_label_string">İnsülin:</string>
     <string name="treatments_carbs_label_string">Karbonhidrat:</string>
@@ -72,6 +75,7 @@
     <string name="careportal_newnstreatment_other">Diğer</string>
     <string name="careportal_newnstreatment_meter">Metre</string>
     <string name="careportal_newnstreatment_sensor">Sensör</string>
+    <string name="careportal_newnstreatment_carbtime_label">Karb. zamanı</string>
     <string name="careportal_newnstreatment_duration_label">Süre</string>
     <string name="careportal_newnstreatment_profile_label">Profil</string>
     <string name="careportal_newnstreatment_glucosetype">Glikoz türü</string>
