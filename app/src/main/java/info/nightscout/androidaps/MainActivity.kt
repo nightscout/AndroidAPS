@@ -124,7 +124,7 @@ class MainActivity : NoSplashAppCompatActivity() {
         })
 
         //Check here if loop plugin is disabled. Else check via constraints
-        if (!loopPlugin.isEnabled(PluginType.LOOP)) versionCheckerUtils.triggerCheckVersion()
+        if (!loopPlugin.isEnabled()) versionCheckerUtils.triggerCheckVersion()
         setUserStats()
         setupViews()
         disposable += rxBus

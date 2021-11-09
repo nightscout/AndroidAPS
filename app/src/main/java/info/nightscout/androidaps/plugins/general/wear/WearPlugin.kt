@@ -88,7 +88,7 @@ class WearPlugin @Inject constructor(
             .toObservable(EventRefreshOverview::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({
-                if (WatchUpdaterService.shouldReportLoopStatus(loopPlugin.get().isEnabled(PluginType.LOOP)))
+                if (WatchUpdaterService.shouldReportLoopStatus(loopPlugin.get().isEnabled()))
                     sendDataToWatch(status = true, basals = false, bgValue = false)
             }, fabricPrivacy::logException))
         disposable.add(rxBus

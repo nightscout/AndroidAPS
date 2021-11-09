@@ -300,9 +300,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 }
 
                 R.id.cgm_button          -> {
-                    if (xdripPlugin.isEnabled(PluginType.BGSOURCE))
+                    if (xdripPlugin.isEnabled())
                         openCgmApp("com.eveningoutpost.dexdrip")
-                    else if (dexcomPlugin.isEnabled(PluginType.BGSOURCE)) {
+                    else if (dexcomPlugin.isEnabled()) {
                         dexcomMediator.findDexcomPackageName()?.let {
                             openCgmApp(it)
                         }
@@ -311,9 +311,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 }
 
                 R.id.calibration_button  -> {
-                    if (xdripPlugin.isEnabled(PluginType.BGSOURCE)) {
+                    if (xdripPlugin.isEnabled()) {
                         CalibrationDialog().show(childFragmentManager, "CalibrationDialog")
-                    } else if (dexcomPlugin.isEnabled(PluginType.BGSOURCE)) {
+                    } else if (dexcomPlugin.isEnabled()) {
                         try {
                             dexcomMediator.findDexcomPackageName()?.let {
                                 startActivity(Intent("com.dexcom.cgm.activities.MeterEntryActivity").setPackage(it))
@@ -327,7 +327,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
                 R.id.accept_temp_button  -> {
                     profileFunction.getProfile() ?: return
-                    if (loopPlugin.isEnabled(PluginType.LOOP)) {
+                    if (loopPlugin.isEnabled()) {
                         handler.post {
                             val lastRun = loopPlugin.lastRun
                             loopPlugin.invoke("Accept temp button", false)
@@ -445,7 +445,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             (lastRun.lastOpenModeAccept == 0L || lastRun.lastOpenModeAccept < lastRun.lastAPSRun) &&// never accepted or before last result
             lastRun.constraintsProcessed?.isChangeRequested == true // change is requested
 
-        if (showAcceptButton && pump.isInitialized() && !pump.isSuspended() && loopPlugin.isEnabled(PluginType.LOOP)) {
+        if (showAcceptButton && pump.isInitialized() && !pump.isSuspended() && loopPlugin.isEnabled()) {
             binding.buttonsLayout.acceptTempButton.visibility = View.VISIBLE
             binding.buttonsLayout.acceptTempButton.text = "${rh.gs(R.string.setbasalquestion)}\n${lastRun!!.constraintsProcessed}"
         } else {
@@ -459,8 +459,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         binding.buttonsLayout.insulinButton.visibility = (pump.isInitialized() && !pump.isSuspended() && profile != null && sp.getBoolean(R.string.key_show_insulin_button, true)).toVisibility()
 
         // **** Calibration & CGM buttons ****
-        val xDripIsBgSource = xdripPlugin.isEnabled(PluginType.BGSOURCE)
-        val dexcomIsSource = dexcomPlugin.isEnabled(PluginType.BGSOURCE)
+        val xDripIsBgSource = xdripPlugin.isEnabled()
+        val dexcomIsSource = dexcomPlugin.isEnabled()
         binding.buttonsLayout.calibrationButton.visibility = ((xDripIsBgSource || dexcomIsSource) && actualBG != null && sp.getBoolean(R.string.key_show_calibration_button, true)).toVisibility()
         binding.buttonsLayout.cgmButton.visibility = (sp.getBoolean(R.string.key_show_cgm_button, false) && (xDripIsBgSource || dexcomIsSource)).toVisibility()
 

@@ -59,7 +59,7 @@ class TomatoPlugin @Inject constructor(
         override fun doWork(): Result {
             var ret = Result.success()
 
-            if (!tomatoPlugin.isEnabled(PluginType.BGSOURCE)) return Result.success(workDataOf("Result" to "Plugin not enabled"))
+            if (!tomatoPlugin.isEnabled()) return Result.success(workDataOf("Result" to "Plugin not enabled"))
             val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
             glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
                 timestamp = inputData.getLong("com.fanqies.tomatofn.Extras.Time", 0),

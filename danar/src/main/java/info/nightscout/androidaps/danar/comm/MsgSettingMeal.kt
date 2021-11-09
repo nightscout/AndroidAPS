@@ -31,7 +31,7 @@ class MsgSettingMeal(
         aapsLogger.debug(LTag.PUMPCOMM, "Block time: $blockTime")
         aapsLogger.debug(LTag.PUMPCOMM, "Is Config U/d: " + danaPump.isConfigUD)
         // DanaRKorean is not possible to set to 0.01 but it works when controlled from AAPS
-        if (danaRKoreanPlugin.isEnabled(PluginType.PUMP)) {
+        if (danaRKoreanPlugin.isEnabled()) {
             danaPump.basalStep = 0.01
         }
         if (danaPump.basalStep != 0.01) {

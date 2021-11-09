@@ -170,7 +170,7 @@ class SWDefinition @Inject constructor(
                 configBuilder.performPluginSwitch(nsClientPlugin, true, PluginType.GENERAL)
                 rxBus.send(EventSWUpdate(true))
             }
-            .visibility { !nsClientPlugin.isEnabled(PluginType.GENERAL) })
+            .visibility { !nsClientPlugin.isEnabled() })
         .add(SWEditUrl(injector)
             .preferenceId(R.string.key_nsclientinternal_url)
             .updateDelay(5)
@@ -343,9 +343,9 @@ class SWDefinition @Inject constructor(
                 configBuilder.performPluginSwitch(loopPlugin, true, PluginType.LOOP)
                 rxBus.send(EventSWUpdate(true))
             }
-            .visibility { !loopPlugin.isEnabled(PluginType.LOOP) })
-        .validator { loopPlugin.isEnabled(PluginType.LOOP) }
-        .visibility { !loopPlugin.isEnabled(PluginType.LOOP) && config.APS }
+            .visibility { !loopPlugin.isEnabled() })
+        .validator { loopPlugin.isEnabled() }
+        .visibility { !loopPlugin.isEnabled() && config.APS }
     private val screenSensitivity = SWScreen(injector, R.string.configbuilder_sensitivity)
         .skippable(false)
         .add(SWInfoText(injector)

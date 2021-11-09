@@ -71,13 +71,13 @@ class LoopPluginTest : TestBase() {
         Assert.assertEquals(R.xml.pref_loop.toLong(), loopPlugin.preferencesId.toLong())
 
         // Plugin is disabled by default
-        Assert.assertEquals(false, loopPlugin.isEnabled(PluginType.LOOP))
+        Assert.assertEquals(false, loopPlugin.isEnabled())
         loopPlugin.setPluginEnabled(PluginType.LOOP, true)
-        Assert.assertEquals(true, loopPlugin.isEnabled(PluginType.LOOP))
+        Assert.assertEquals(true, loopPlugin.isEnabled())
 
         // No temp basal capable pump should disable plugin
         virtualPumpPlugin.pumpDescription.isTempBasalCapable = false
-        Assert.assertEquals(false, loopPlugin.isEnabled(PluginType.LOOP))
+        Assert.assertEquals(false, loopPlugin.isEnabled())
         virtualPumpPlugin.pumpDescription.isTempBasalCapable = true
 
         // Fragment is hidden by default
