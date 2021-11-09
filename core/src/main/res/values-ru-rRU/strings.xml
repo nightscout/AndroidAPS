@@ -154,7 +154,6 @@
     <string name="profile_ins_units_per_hour">ед/ч</string>
     <string name="profile_carbs_per_unit">г/ед</string>
     <!--    ProfileFunction-->
-    <string name="noprofileselected">профиль не выбран</string>
     <string name="startprofile">Начать профиль %1$d%% на %2$d мин</string>
     <!--    PumpType-->
     <string name="def_extended_note">* В виртуальной помпе поддерживаются только дискретные величины для обработки базала/болюса.</string>
