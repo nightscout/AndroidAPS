@@ -35,39 +35,20 @@ class GlunovoPluginService : Service() {
                 return
             }
             cr.moveToLast()
-            val crfirst = contentResolver.query(CONTENT_URI, null, null, null, null)
-            crfirst!!.moveToFirst()
-            var valuestotake = 2
-            if (cr.count < valuestotake) {valuestotake = cr.count} //check if there are less than valuestotake readings and get smaller value
-            cr.moveToPosition(cr.count-valuestotake)
-            var time : Long
-            var value : Double
-            var intent : Intent
-            var bundle : Bundle
+            val time : Long = cr.getLong(0)
+            val value : Double = cr.getDouble(1) * 18.018 //value in mmol/l... transformed in mg/dl if value *18.018
+            val intent = Intent()
+            val bundle = Bundle()
 
-            var i = valuestotake
-            while (i > 1)
-            {
-                cr.moveToNext()
-                time = cr.getLong(0)
-                value = cr.getDouble(1) * 18.018 //value in mmol/l... transformed in mg/dl if value *18.018
-                intent = Intent()
-                intent.action = Intents.GLUNOVO_BG
-                //intent.putExtra("Time", time)
-                //intent.putExtra("BgEstimate", value)
-                //intent.setPackage("info.nightscout.androidaps")
-                bundle = Bundle()
-                bundle.putLong("Time",time)
-                bundle.putDouble("BgEstimate",value)
-                intent.putExtra("bundle", bundle)
-                sendBroadcast(intent)
-                i = i - 1
-            }
-            cr.moveToLast()
-            time = cr.getLong(0)
+            intent.action = Intents.GLUNOVO_BG
+            intent.setPackage("info.nightscout.androidaps")
+            bundle.putLong("Time",time)
+            bundle.putDouble("BgEstimate",value)
+            intent.putExtra("bundle", bundle)
+            sendBroadcast(intent)
+
             val curtime = Calendar.getInstance().time
             cr.close()
-            crfirst.close()
             handler.postDelayed(this, 180000)//-(curtime-time))
         }
     }
