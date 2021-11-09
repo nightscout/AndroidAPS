@@ -17,13 +17,4 @@
     <string name="alert_m22_title">Pil bitti</string>
     <string name="alert_m23_title">Otomatik kapatma - pompa durdu</string>
     <string name="alert_m24_title">Tıkanma</string>
-    <string name="alert_m25_title">Kiralama süresi doldu - kullanım sonu</string>
-    <string name="alert_m26_title">Rezervuar değişimi tamamlanmadı</string>
-    <string name="alert_m27_title">Veri yükleme başarısız oldu</string>
-    <string name="alert_m28_title">Duraklat modunda zaman aşımı</string>
-    <string name="alert_m29_title">Pil türü ayarlı değil</string>
-    <string name="alert_m30_title">Rezervuar türü ayarlı değil</string>
-    <string name="alert_e6_title">Mekanik hata</string>
-    <string name="alert_e10_title">Geri sarma hatası</string>
-    <string name="alert_e13_title">Dil hatası</string>
 </resources>
