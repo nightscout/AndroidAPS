@@ -154,7 +154,6 @@
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
-    <string name="noprofileselected">Není vybrán žádný profil</string>
     <string name="startprofile">Spustit profil %1$d%% na %2$d min</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Pouze diskrétní hodnoty a ne rozsahy jsou podporovány pro bazál/bolus ve virtuální pumpě.</string>
