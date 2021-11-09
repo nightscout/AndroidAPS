@@ -1134,5 +1134,6 @@
     <string name="data_status">BG data status</string>
     <string name="recalculated_data_used">Recalculated data used</string>
     <string name="bg_too_close">BG too close:\n%1$s\n%2$s</string>
+    <string name="key_last_processed_glunovo_timestamp">last_processed_glunovo_timestamp</string>
 
 </resources>
