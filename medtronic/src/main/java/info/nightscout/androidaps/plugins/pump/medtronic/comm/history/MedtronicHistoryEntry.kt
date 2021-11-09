@@ -14,13 +14,13 @@ import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil
  */
 abstract class MedtronicHistoryEntry : MedtronicHistoryEntryInterface {
 
-    lateinit var rawData: List<Byte>
+    var rawData: List<Byte> = listOf()
 
     protected var sizes = IntArray(3)
 
-    lateinit var head: ByteArray
-    lateinit var datetime: ByteArray
-    lateinit var body: ByteArray
+    var head: ByteArray = byteArrayOf()
+    var datetime: ByteArray = byteArrayOf()
+    var body: ByteArray = byteArrayOf()
 
     var id: Long = 0
 
@@ -164,7 +164,7 @@ abstract class MedtronicHistoryEntry : MedtronicHistoryEntryInterface {
             sb.append("]")
             return sb.toString()
         }
-        if (head.size != 0) {
+        if (head!=null && head.size != 0) {
             sb.append(", head=")
             sb.append(ByteUtil.shortHexString(head))
         }
