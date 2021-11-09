@@ -516,6 +516,7 @@
     <string name="enablesmbwithcob">Habilitar SMB con COB</string>
     <string name="enablesmbwithcob_summary">Habilitar SMB cuando hay Carbohidratos Activo COB.</string>
     <string name="enablesmbwithtemptarget">Habilitar SMB con Objetivos Temporales</string>
+    <string name="enablesmbwithtemptarget_summary">Habilitar SMB cuando hay un Objetivo Temporal (TT) activo (ComiendoPronto, Actividad)</string>
     <string name="enablesmbwithhightemptarget">Habilitar SMB con Objetivo Temporal Alto</string>
     <string name="enablesmbwithhightemptarget_summary">Habilitar SMB cuando hay activo un objetivo temporal alto (ejercicio, superior a 100 mg/dl o 5.5 mmol/l)</string>
     <string name="overview_insulin_label">Insulina</string>
@@ -544,12 +545,13 @@
     <string name="allow_automated_crash_reporting">Permita que los informes automáticos de errores y los datos de uso de funciones se envíen a los desarrolladores a través del servicio fabric.io.</string>
     <string name="g5appnotdetected">Actualice su aplicación Dexcom a una versión compatible</string>
     <string name="dexcom_app_not_installed">La aplicación Dexcom no está instalada.</string>
-    <string name="start_activity_tt">Inicio OT Actividad</string>
+    <string name="start_activity_tt">Iniciar OT Actividad</string>
+    <string name="start_eating_soon_tt">Iniciar OT Comiendo Pronto</string>
     <string name="temptargetshort">OT</string>
-    <string name="do_not_bolus_record_only">No administrar Bolo, solo anotar</string>
+    <string name="do_not_bolus_record_only">No administrar bolo, sólo anotarlo</string>
     <string name="category">Categoría</string>
     <string name="subcategory">Subcategoría</string>
-    <string name="bolusrecordedonly">Bolo sólo se registrará (no será entregado por la bomba)</string>
+    <string name="bolusrecordedonly">El bolo sólo se anotará (no será entregado por la bomba)</string>
     <string name="loop_smbsetbypump_label">SMB administrado por bomba</string>
     <string name="overview_show_activity">Actividad</string>
     <string name="overview_show_bgi">Impacto de glucosa en sangre</string>
@@ -559,7 +561,7 @@
     <string name="overview_show_iob">Insulina activa</string>
     <string name="overview_show_basals">Basales</string>
     <string name="no_action_selected">Ninguna acción seleccionada, nada sucederá</string>
-    <string name="start_hypo_tt">Inicio OT Hipo</string>
+    <string name="start_hypo_tt">Iniciar OT Hipo</string>
     <string name="closed_loop_disabled_on_dev_branch">Ejecutando versión dev. Lazo cerrado no disponible.</string>
     <string name="engineering_mode_enabled">Modo de ingeniería activado</string>
     <string name="profileswitch_ismissing">Falta Cambio de Perfil. Haga un Cambio de Perfil o presione \"Activar perfil\" en PerfilLocal.</string>
@@ -601,7 +603,7 @@
     <string name="secondcarbsincrement">Segundo incremento carbohidratos</string>
     <string name="thirdcarbsincrement">Tercer incremento carbohidratos</string>
     <string name="cgm">CGM</string>
-    <string name="ns_wifionly">Usar solo WiFi</string>
+    <string name="ns_wifionly">Usar sólo WiFi</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
     <string name="ns_chargingonly">Sólo si cargando</string>
     <string name="connectionsettings_title">Ajustes conexión</string>
@@ -882,6 +884,8 @@
     <string name="sms_timeout_while_wating">Tiempo de espera agotado mientras finalizaba la comunicación anterior con la bomba</string>
     <string name="smscommunicator_another_bolus_in_queue">Hay otro bolo en cola. Inténtalo de nuevo más tarde.</string>
     <string name="calculation_in_progress">Cálculo en curso</string>
+    <string name="missing_profile_name">Falta el nombre de perfil</string>
     <string name="error_in_ic_values">Error en valores IC</string>
+    <string name="invalid_profile_not_accepted">Perfil no válido %1$s no aceptado por NS</string>
     <string name="ns_sync_slow">Ralentizar subidas</string>
 </resources>
