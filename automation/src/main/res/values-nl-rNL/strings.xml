@@ -105,9 +105,11 @@
     <string name="edit_short">EDIT</string>
     <string name="please_choose_an_action_type">Kies een actie</string>
     <string name="please_choose_a_trigger_type">Kies een type trigger</string>
+    <string name="please_choose_a_operation_type">Kies een type bewerking</string>
     <string name="triggers">Triggers:</string>
     <string name="remove_label">VERWIJDER</string>
     <string name="preconditions">Voorwaarden:</string>
     <string name="automation_event">Automation gebeurtenis</string>
     <string name="reorder_label">Sorteren</string>
+    <string name="user_action">Gebruikersactie</string>
 </resources>
