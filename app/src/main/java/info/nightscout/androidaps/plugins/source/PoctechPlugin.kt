@@ -60,7 +60,7 @@ class PoctechPlugin @Inject constructor(
         override fun doWork(): Result {
             var ret = Result.success()
 
-            if (!poctechPlugin.isEnabled(PluginType.BGSOURCE)) return Result.success(workDataOf("Result" to "Plugin not enabled"))
+            if (!poctechPlugin.isEnabled()) return Result.success(workDataOf("Result" to "Plugin not enabled"))
             aapsLogger.debug(LTag.BGSOURCE, "Received Poctech Data $inputData")
             try {
                 val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()

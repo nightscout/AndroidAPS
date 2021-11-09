@@ -25,7 +25,8 @@ class RunningConfiguration @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val config: Config,
     private val rh: ResourceHelper,
-    private val rxBus: RxBus
+    private val rxBus: RxBus,
+    private val pumpSync: PumpSync
 ) {
 
     private var counter = 0
@@ -96,9 +97,12 @@ class RunningConfiguration @Inject constructor(
 
         if (configuration.has("pump")) {
             val pumpType = JsonHelper.safeGetString(configuration, "pump", PumpType.GENERIC_AAPS.description)
-            sp.putString(R.string.key_virtualpump_type, pumpType)
-            activePlugin.activePump.pumpDescription.fillFor(PumpType.getByDescription(pumpType))
-            aapsLogger.debug(LTag.CORE, "Changing pump type to $pumpType")
+            if (sp.getString(R.string.key_virtualpump_type, "fake") != pumpType) {
+                sp.putString(R.string.key_virtualpump_type, pumpType)
+                activePlugin.activePump.pumpDescription.fillFor(PumpType.getByDescription(pumpType))
+                pumpSync.connectNewPump()
+                aapsLogger.debug(LTag.CORE, "Changing pump type to $pumpType")
+            }
         }
 
         if (configuration.has("overviewConfiguration"))

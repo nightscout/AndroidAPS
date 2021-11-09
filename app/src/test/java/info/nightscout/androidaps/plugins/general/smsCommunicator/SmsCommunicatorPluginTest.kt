@@ -465,7 +465,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
 
         //NSCLIENT RESTART
-        `when`(loopPlugin.isEnabled(PluginType.LOOP)).thenReturn(true)
+        `when`(loopPlugin.isEnabled()).thenReturn(true)
         `when`(loopPlugin.isSuspended).thenReturn(false)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "NSCLIENT RESTART")
@@ -475,7 +475,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         Assert.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("NSCLIENT RESTART"))
 
         //NSCLIENT BLA BLA
-        `when`(loopPlugin.isEnabled(PluginType.LOOP)).thenReturn(true)
+        `when`(loopPlugin.isEnabled()).thenReturn(true)
         `when`(loopPlugin.isSuspended).thenReturn(false)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "NSCLIENT BLA BLA")
@@ -485,7 +485,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
 
         //NSCLIENT BLABLA
-        `when`(loopPlugin.isEnabled(PluginType.LOOP)).thenReturn(true)
+        `when`(loopPlugin.isEnabled()).thenReturn(true)
         `when`(loopPlugin.isSuspended).thenReturn(false)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "NSCLIENT BLABLA")

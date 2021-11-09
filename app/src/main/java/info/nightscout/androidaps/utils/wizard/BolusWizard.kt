@@ -373,7 +373,7 @@ class BolusWizard @Inject constructor(
             if (insulinAfterConstraints > 0 || carbs > 0) {
                 if (useSuperBolus) {
                     uel.log(Action.SUPERBOLUS_TBR, Sources.WizardDialog)
-                    if (loopPlugin.isEnabled(PluginType.LOOP)) {
+                    if (loopPlugin.isEnabled()) {
                         loopPlugin.goToZeroTemp(2 * 60, profile, OfflineEvent.Reason.SUPER_BOLUS)
                         rxBus.send(EventRefreshOverview("WizardDialog"))
                     }

@@ -204,7 +204,7 @@ class IobCobThread @Inject internal constructor(
                 if (previous != null && previous.cob > 0) {
                     // calculate sum of min carb impact from all active treatments
                     var totalMinCarbsImpact = 0.0
-                    if (sensitivityAAPSPlugin.isEnabled(PluginType.SENSITIVITY) || sensitivityWeightedAveragePlugin.isEnabled(PluginType.SENSITIVITY)) {
+                    if (sensitivityAAPSPlugin.isEnabled() || sensitivityWeightedAveragePlugin.isEnabled()) {
                         //when the impact depends on a max time, sum them up as smaller carb sizes make them smaller
                         for (ii in autosensData.activeCarbsList.indices) {
                             val c = autosensData.activeCarbsList[ii]

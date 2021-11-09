@@ -119,7 +119,7 @@ class NSClientService : DaggerService() {
             .toObservable(EventConfigBuilderChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({
-                if (nsEnabled != nsClientPlugin.isEnabled(PluginType.GENERAL)) {
+                if (nsEnabled != nsClientPlugin.isEnabled()) {
                     latestDateInReceivedData = 0
                     destroy()
                     initialize()
@@ -356,7 +356,7 @@ class NSClientService : DaggerService() {
     }
 
     fun readPreferences() {
-        nsEnabled = nsClientPlugin.isEnabled(PluginType.GENERAL)
+        nsEnabled = nsClientPlugin.isEnabled()
         nsURL = sp.getString(R.string.key_nsclientinternal_url, "")
         nsAPISecret = sp.getString(R.string.key_nsclientinternal_api_secret, "")
         nsDevice = sp.getString("careportal_enteredby", "")

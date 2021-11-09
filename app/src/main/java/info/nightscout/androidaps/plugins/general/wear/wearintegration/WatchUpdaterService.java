@@ -133,7 +133,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
     }
 
     private boolean wearIntegration() {
-        return wearPlugin.isEnabled(PluginType.GENERAL);
+        return wearPlugin.isEnabled();
     }
 
     private void googleApiConnect() {
@@ -740,7 +740,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             return status;
         }
 
-        if (!loopPlugin.isEnabled(PluginType.LOOP)) {
+        if (!loopPlugin.isEnabled()) {
             status += rh.gs(R.string.disabledloop) + "\n";
             lastLoopStatus = false;
         } else {
