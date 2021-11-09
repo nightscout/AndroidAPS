@@ -7,6 +7,8 @@ import android.os.IBinder
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.services.Intents
 import java.util.*
 
@@ -35,11 +37,22 @@ class GlunovoPluginService : Service() {
                 return
             }
             cr.moveToLast()
+            val curtime = Calendar.getInstance().timeInMillis
             val time : Long = cr.getLong(0)
-            val value : Double = cr.getDouble(1) * 18.018 //value in mmol/l... transformed in mg/dl if value *18.018
+            val value : Double = cr.getDouble(1) //value in mmol/l...
+            val aapsLogger : AAPSLogger? = null
+            if (time > curtime) {
+                aapsLogger?.error(LTag.BGSOURCE, "Error in received data date/time "+ time.toString())
+                return
+            }
+
+            if ((value < 2) || (value > 25)){
+                aapsLogger?.error(LTag.BGSOURCE, "Error in received data value (value out of bounds) "+ value)
+                return
+            }
+
             val intent = Intent()
             val bundle = Bundle()
-
             intent.action = Intents.GLUNOVO_BG
             intent.setPackage("info.nightscout.androidaps")
             bundle.putLong("Time",time)
@@ -47,7 +60,6 @@ class GlunovoPluginService : Service() {
             intent.putExtra("bundle", bundle)
             sendBroadcast(intent)
 
-            val curtime = Calendar.getInstance().time
             cr.close()
             handler.postDelayed(this, 180000)//-(curtime-time))
         }
