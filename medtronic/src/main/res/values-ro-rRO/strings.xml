@@ -24,6 +24,8 @@
     <string name="medtronic_pump_battery_nizn">NiZn (Afișare extinsă)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (Afișare extinsă)</string>
     <string name="medtronic_bolus_debugging">Depanare Bolus/Tratamente</string>
+    <!-- MDT Fragment -->
+    <string name="rl_battery_label">Baterie RileyLink</string>
     <!-- MDT Errors -->
     <string name="medtronic_errors">Erori</string>
     <string name="medtronic_error_serial_not_set">Număr serial nesetat.</string>
@@ -63,13 +65,17 @@
     <string name="medtronic_cmd_desc_get_history">Preia istoricul - Pagina %1$d (%2$d/16)</string>
     <string name="medtronic_cmd_desc_get_history_request">Preia istoricul - Pagina %1$d</string>
     <string name="medtronic_cmd_desc_get_time">Preia timpul din pompă</string>
+    <string name="medtronic_cmd_desc_set_time">Setează timpul pe pompa</string>
+    <string name="medtronic_cmd_desc_get_battery_status">Obține starea bateriei</string>
     <string name="medtronic_cmd_desc_get_settings">Preia setările</string>
     <string name="medtronic_cmd_desc_get_model">Preia modelul de pompă</string>
     <string name="medtronic_cmd_desc_get_basal_profile">Preia profilul bazalelor</string>
     <string name="medtronic_cmd_desc_set_basal_profile">Setează profilul bazalelor</string>
     <string name="medtronic_cmd_desc_get_tbr">Preia bazala temporară</string>
     <string name="medtronic_cmd_desc_set_tbr">Setează bazala temporară</string>
+    <string name="medtronic_cmd_desc_cancel_tbr">Anulează Bazala Temporară</string>
     <string name="medtronic_cmd_desc_set_bolus">Setează bolusul</string>
+    <string name="medtronic_cmd_desc_get_remaining_insulin">Obţine insulina rămasă</string>
     <string name="medtronic_pump_status_pump_unreachable">Pompă indisponibilă</string>
     <string name="medtronic_warning">Atenție</string>
     <!-- medtronic_warning -->
@@ -83,4 +89,5 @@
     <string name="pump_time_updated">Timpul din pompă a fost actualizat</string>
     <string name="set_neutral_temps_title">Setați bazale temporare neutre</string>
     <string name="set_neutral_temps_summary">Dacă este activată, va anula o bazală temporară înainte de sfârșitul fiecărei ore. Aceasta metoda poate ajuta la oprirea vibrațiilor/bipurilor orare pe anumite pompe.</string>
+    <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d min ramase)</string>
 </resources>

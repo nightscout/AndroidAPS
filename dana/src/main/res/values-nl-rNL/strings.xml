@@ -5,9 +5,9 @@
     <string name="danars_pairingok">Koppeling geslaagd</string>
     <string name="danars_pairingtimedout">Koppeling verlopen</string>
     <string name="danars_waitingforpairing">Wachten op koppelen van de pomp</string>
-    <string name="danarspump">DanaRS</string>
+    <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
-    <string name="description_pump_dana_rs">Pomp integratie voor DANA Diabecare RS pompen</string>
+    <string name="description_pump_dana_rs">Pomp integratie voor DANA RS en Dana-i pompen</string>
     <string name="maxbolusviolation">Max bolus overschrijding</string>
     <string name="commanderror">Opdracht fout</string>
     <string name="speederror">Snelheid fout</string>
@@ -94,8 +94,6 @@
     <string name="profile_set_failed">Instellen van basaal profiel mislukt</string>
     <string name="danar_bluetooth_status">Bluetooth status</string>
     <string name="danar_iob_label">Pomp IOB</string>
-    <string name="basal_step">Basaal Stap</string>
-    <string name="bolus_step">Bolus Stap</string>
     <string name="virtualpump_firmware_label">Firmware</string>
     <string name="danar_pump_settings">Dana pomp instellingen</string>
     <string name="timeformat12h">12u</string>
@@ -106,7 +104,6 @@
     <string name="danars_password_title">Pomp wachtwoord (alleen v1)</string>
     <string name="danar_password_title">Pomp wachtwoord</string>
     <string name="danar_useextended_title">Gebruik vertraagde bolussen voor &gt;200%%</string>
-    <string name="danar_visualizeextendedaspercentage_title">Geef vertraagde bolus weer in %%</string>
     <string name="bolusspeed">Bolus snelheid</string>
     <string name="selectedpump">Geselecteerde pomp</string>
     <string name="rs_loginsulinchange_title">Reservoir wissel noteren</string>
@@ -118,4 +115,5 @@
     <string name="press_ok_on_the_pump">Druk op OK op de pomp\nen voer 2 weergegeven nummers in.\nHoud het scherm vd pomp actief door de min-knop op de pomp ingedrukt te houden totdat je klaar bent met het invoeren van de codes.</string>
     <string name="num1pin">1: (12 cijfers)</string>
     <string name="num2pin">2: (8 cijfers)</string>
+    <string name="basal_bolus_step">Basaal/bolus stap</string>
 </resources>

@@ -5,9 +5,9 @@
     <string name="danars_pairingok">Appairage OK</string>
     <string name="danars_pairingtimedout">Délai d\'appairage expiré</string>
     <string name="danars_waitingforpairing">Attente appairage pompe</string>
-    <string name="danarspump">DanaRS</string>
+    <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
-    <string name="description_pump_dana_rs">Intégration des pompes Diabecare DANA RS</string>
+    <string name="description_pump_dana_rs">Intégration des pompes DANA Diabecare RS et Dana-i</string>
     <string name="maxbolusviolation">Violation bolus Max</string>
     <string name="commanderror">Erreur de commande</string>
     <string name="speederror">Erreur de vitesse</string>
@@ -43,7 +43,7 @@
     <string name="gettingpumpsettings">Obtenir les paramètres pompe</string>
     <string name="gettingpumptime">Obtenir l\'heure de la pompe</string>
     <string name="largetimedifftitle">Différence horaire importante</string>
-    <string name="largetimediff">Différence horaire importante:\nL\'heure de la pompe est en écart de plus d\'une heure et demi.\nMerci d\'ajuster manuellement l\'heure de la pompe et assurez-vous que la lecture de l\'historique de la pompe ne cause pas de dysfonctionnements.\nSi possible, effacez l\'historique de la pompe avant de modifier l\'heure ou désactivez la Boucle Fermée pour une DAI après la dernière entrée erronée de l\'historique et au minimum une DAI à partir de maintenant.</string>
+    <string name="largetimediff">Différence horaire importante:\nL\'heure de la pompe est en écart de plus d\'une heure et demi.\nVeuillez ajuster manuellement l\'heure de la pompe et assurez-vous que la lecture de l\'historique de la pompe ne cause pas de dysfonctionnements.\nSi possible, effacez l\'historique de la pompe avant de modifier l\'heure ou désactivez la Boucle Fermée pour une DAI après la dernière entrée erronée de l\'historique et au minimum une DAI à partir de maintenant.</string>
     <string name="pairfirst">Veuillez appairer votre pompe avec votre téléphone !</string>
     <string name="approachingdailylimit">Limite quotidienne d\'insuline proche</string>
     <string name="startingbolus">Injection du bolus démarrée</string>
@@ -94,8 +94,6 @@
     <string name="profile_set_failed">Echec Paramétrage Profil Basal</string>
     <string name="danar_bluetooth_status">État Bluetooth</string>
     <string name="danar_iob_label">IA pompe</string>
-    <string name="basal_step">Incrément Basal</string>
-    <string name="bolus_step">Incrément Bolus</string>
     <string name="virtualpump_firmware_label">Firmware</string>
     <string name="danar_pump_settings">Paramètres pompe Dana</string>
     <string name="timeformat12h">12h</string>
@@ -106,7 +104,6 @@
     <string name="danars_password_title">Mot de passe pompe (v1 uniquement)</string>
     <string name="danar_password_title">Mot de passe pompe</string>
     <string name="danar_useextended_title">Utiliser les bolus étendus pour &gt; 200%%</string>
-    <string name="danar_visualizeextendedaspercentage_title">Afficher le bolus étendu en %%</string>
     <string name="bolusspeed">Vitesse bolus</string>
     <string name="selectedpump">Pompe sélectionnée</string>
     <string name="rs_loginsulinchange_title">Enreg. changement de réservoir</string>
@@ -118,4 +115,5 @@
     <string name="press_ok_on_the_pump">Appuyez sur OK sur la pompe\net entrez les 2 numéros affichés\nConserver l\'affichage ACTIF sur la pompe en appuyant sur le bouton &lt;b&gt;moins&lt;b&gt; jusqu\'à ce que le code soit entré.</string>
     <string name="num1pin">1: (12 chiffres)</string>
     <string name="num2pin">2: (8 chiffres)</string>
+    <string name="basal_bolus_step">Étape Basal/Bolus</string>
 </resources>

@@ -8,11 +8,14 @@ import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
 import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.danars.DanaRSPlugin
+import info.nightscout.androidaps.diaconn.DiaconnG8Plugin
 import info.nightscout.androidaps.interfaces.PluginBase
+import info.nightscout.androidaps.plugin.general.openhumans.OpenHumansUploader
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
+import info.nightscout.androidaps.plugins.constraints.bgQualityCheck.BgQualityCheckPlugin
 import info.nightscout.androidaps.plugins.constraints.dstHelper.DstHelperPlugin
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin
 import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin
@@ -25,7 +28,6 @@ import info.nightscout.androidaps.plugins.general.dataBroadcaster.DataBroadcastP
 import info.nightscout.androidaps.plugins.general.food.FoodPlugin
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenancePlugin
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin
-import info.nightscout.androidaps.plugins.general.openhumans.OpenHumansUploader
 import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin
 import info.nightscout.androidaps.plugins.general.persistentNotification.PersistentNotificationPlugin
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
@@ -37,18 +39,17 @@ import info.nightscout.androidaps.plugins.insulin.InsulinOrefRapidActingPlugin
 import info.nightscout.androidaps.plugins.insulin.InsulinOrefUltraRapidActingPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
-import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin
 import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.pump.mdi.MDIPlugin
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
-import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.OmnipodDashPumpPlugin
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
 import info.nightscout.androidaps.plugins.source.*
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import javax.inject.Qualifier
 
 @Module
@@ -159,8 +160,20 @@ abstract class PluginsModule {
     @Binds
     @PumpDriver
     @IntoMap
+    @IntKey(156)
+    abstract fun bindOmnipodDashPumpPlugin(plugin: OmnipodDashPumpPlugin): PluginBase
+
+    @Binds
+    @PumpDriver
+    @IntoMap
+    @IntKey(135)
+    abstract fun bindOmnipodErosPumpPlugin(plugin: OmnipodErosPumpPlugin): PluginBase
+
+    @Binds
+    @PumpDriver
+    @IntoMap
     @IntKey(155)
-    abstract fun bindOmnipodPumpPlugin(plugin: OmnipodPumpPlugin): PluginBase
+    abstract fun bindDiaconnG8Plugin(plugin: DiaconnG8Plugin): PluginBase
 
     @Binds
     @NotNSClient
@@ -195,12 +208,6 @@ abstract class PluginsModule {
     @Binds
     @AllConfigs
     @IntoMap
-    @IntKey(230)
-    abstract fun bindNSProfilePlugin(plugin: NSProfilePlugin): PluginBase
-
-    @Binds
-    @NotNSClient
-    @IntoMap
     @IntKey(240)
     abstract fun bindLocalProfilePlugin(plugin: LocalProfilePlugin): PluginBase
 
@@ -209,12 +216,6 @@ abstract class PluginsModule {
     @IntoMap
     @IntKey(250)
     abstract fun bindAutomationPlugin(plugin: AutomationPlugin): PluginBase
-
-    @Binds
-    @AllConfigs
-    @IntoMap
-    @IntKey(260)
-    abstract fun bindTreatmentsPlugin(plugin: TreatmentsPlugin): PluginBase
 
     @Binds
     @AllConfigs
@@ -297,6 +298,12 @@ abstract class PluginsModule {
     @Binds
     @AllConfigs
     @IntoMap
+    @IntKey(381)
+    abstract fun bindBgQualityCheckPlugin(plugin: BgQualityCheckPlugin): PluginBase
+
+    @Binds
+    @AllConfigs
+    @IntoMap
     @IntKey(390)
     abstract fun bindDataBroadcastPlugin(plugin: DataBroadcastPlugin): PluginBase
 
@@ -348,11 +355,17 @@ abstract class PluginsModule {
     @IntKey(470)
     abstract fun bindRandomBgPlugin(plugin: RandomBgPlugin): PluginBase
 
+    // @Binds
+    // @NotNSClient
+    // @IntoMap
+    // @IntKey(480)
+    // abstract fun bindOpenHumansPlugin(plugin: OpenHumansUploader): PluginBase
+
     @Binds
     @NotNSClient
     @IntoMap
     @IntKey(480)
-    abstract fun bindOpenHumansPlugin(plugin: OpenHumansUploader): PluginBase
+    abstract fun bindsOpenHumansPlugin(plugin: OpenHumansUploader): PluginBase
 
     @Binds
     @AllConfigs

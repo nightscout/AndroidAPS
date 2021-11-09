@@ -1,13 +1,14 @@
 package info.nightscout.androidaps;
 
+import info.nightscout.androidaps.database.entities.ValueWithUnit;
 import info.nightscout.androidaps.utils.T;
 
 /**
  * Created by mike on 07.06.2016.
  */
 public class Constants {
-    public static final String MGDL = "mg/dl"; // This is Nightscout's representation
-    public static final String MMOL = "mmol";
+    public static final String MGDL = ValueWithUnit.MGDL; // This is Nightscout's representation
+    public static final String MMOL = ValueWithUnit.MMOL;
 
     public static final double MMOLL_TO_MGDL = 18; // 18.0182;
     public static final double MGDL_TO_MMOLL = 1 / MMOLL_TO_MGDL;
@@ -21,9 +22,6 @@ public class Constants {
     public static final double REALLYHIGHIOB = 1111111d;
 
     public static final Integer notificationID = 556677;
-
-    public static final int hoursToKeepInDatabase = 72;
-    public static final int daysToKeepHistoryInDatabase = 30;
 
     // SMS COMMUNICATOR
     public static final long remoteBolusMinDistance = 15 * 60 * 1000L;
@@ -46,9 +44,9 @@ public class Constants {
     public static final int defaultEatingSoonTTDuration = 45; // min
     public static final double defaultEatingSoonTTmgdl = 90d;
     public static final double defaultEatingSoonTTmmol = 5d;
-    public static final int defaultHypoTTDuration = 30; // min
-    public static final double defaultHypoTTmgdl = 120d;
-    public static final double defaultHypoTTmmol = 6.5d;
+    public static final int defaultHypoTTDuration = 60; // min
+    public static final double defaultHypoTTmgdl = 160d;
+    public static final double defaultHypoTTmmol = 8d;
 
     public static final double MIN_TT_MGDL = 72d;
     public static final double MAX_TT_MGDL = 180d;
@@ -56,7 +54,7 @@ public class Constants {
     public static final double MAX_TT_MMOL = 10d;
 
     //NSClientInternal
-    public static final int MAX_LOG_LINES = 100;
+    public static final int MAX_LOG_LINES = 30;
 
     //Screen: Threshold for width/height to go into small width/height layout
     public static final int SMALL_WIDTH = 320;
@@ -71,7 +69,7 @@ public class Constants {
     public static final int MIN_WATCHDOG_INTERVAL_IN_SECONDS = 12 * 60;
 
     //SMS Communicator
-    public static final long SMS_CONFIRM_TIMEOUT = T.mins(5).msecs();
+    public static final long SMS_CONFIRM_TIMEOUT = T.Companion.mins(5L).msecs();
 
     //Storage [MB]
     public static final long MINIMUM_FREE_SPACE = 200;
@@ -105,7 +103,7 @@ public class Constants {
 
     /**
      * How many old TOTP tokens still accept.
-     * Each token is 30s valid, but copying and SMS transmision of it can take additional seconds,
+     * Each token is 30s valid, but copying and SMS transmission of it can take additional seconds,
      * so we add leeway to still accept given amount of older tokens
      */
     public static final int OTP_ACCEPT_OLD_TOKENS_COUNT = 1;

@@ -36,6 +36,7 @@
     <string name="rileylink_last_device_contact">Poslední spojení se zařízením:</string>
     <string name="rileylink_firmware_version">Verze firmwaru:</string>
     <string name="rileylink_firmware_version_value">BLE113: %1$s\nCC110: %2$s</string>
+    <string name="rileylink_firmware_version_value_orange">Fw: %1$s\nHw: %2$s</string>
     <string name="rileylink_pump_serial_number">Sériové číslo pumpy:</string>
     <string name="rileylink_pump_frequency">Frekvence pumpy:</string>
     <string name="rileylink_pump_frequency_value">%1$.2f MHz</string>
@@ -64,7 +65,7 @@
     <string name="riley_link_common_yes">Ano</string>
     <string name="riley_link_common_no">Ne</string>
     <!-- RileyLink - Preferences -->
-    <string name="riley_link_show_battery_level">Ukázat úroveň baterie hlášenou OrangeLinkem/RileyLinkem</string>
+    <string name="riley_link_show_battery_level">Zobrazit úroveň baterie reportovanou OrangeLinkem/EmaLinkem/DiaLinkem</string>
     <string name="riley_link_show_battery_level_summary">NEPRACUJE s původním RileyLinkem. Nemusí pracovat s jinými alternativami RileyLinky.</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d den</item>
@@ -78,4 +79,6 @@
         <item quantity="many">%1$d hodin</item>
         <item quantity="other">%1$d hodin</item>
     </plurals>
+    <string name="orange_use_scanning_level">Použít vyhledávání</string>
+    <string name="orange_use_scanning_level_summary">Vyhledat před připojením k OrangeLink. Mělo by to zlepšit spojení (může být také použito s ostatními klony RileyLink, pokud je to nutné)</string>
 </resources>

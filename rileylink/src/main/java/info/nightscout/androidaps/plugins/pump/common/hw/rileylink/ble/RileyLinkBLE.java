@@ -14,6 +14,7 @@ import android.os.SystemClock;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.Semaphore;
 
@@ -25,6 +26,7 @@ import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.GattAttributes;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.device.OrangeLinkImpl;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.operations.BLECommOperation;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.operations.BLECommOperationResult;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.operations.CharacteristicReadOperation;
@@ -48,6 +50,7 @@ public class RileyLinkBLE {
     @Inject RileyLinkServiceData rileyLinkServiceData;
     @Inject RileyLinkUtil rileyLinkUtil;
     @Inject SP sp;
+    @Inject OrangeLinkImpl orangeLink;
 
     private final Context context;
     private final boolean gattDebugEnabled = true;
@@ -66,6 +69,8 @@ public class RileyLinkBLE {
         this.context = context;
         this.bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
+        //orangeLink.rileyLinkBLE = this;
+
         bluetoothGattCallback = new BluetoothGattCallback() {
 
             @Override
@@ -83,6 +88,8 @@ public class RileyLinkBLE {
                 if (radioResponseCountNotified != null) {
                     radioResponseCountNotified.run();
                 }
+
+                orangeLink.onCharacteristicChanged(characteristic);
             }
 
 
@@ -148,20 +155,20 @@ public class RileyLinkBLE {
                     if (status == BluetoothGatt.GATT_SUCCESS) {
                         rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.BluetoothConnected, context);
                     } else {
-                        aapsLogger.debug(LTag.PUMPBTCOMM, "BT State connected, GATT status {} ({})", status, getGattStatusMessage(status));
+                        aapsLogger.debug(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "BT State connected, GATT status %d (%s)", status, getGattStatusMessage(status)));
                     }
 
                 } else if ((newState == BluetoothProfile.STATE_CONNECTING) || //
                         (newState == BluetoothProfile.STATE_DISCONNECTING)) {
-                    aapsLogger.debug(LTag.PUMPBTCOMM, "We are in {} state.", status == BluetoothProfile.STATE_CONNECTING ? "Connecting" :
-                            "Disconnecting");
+                    aapsLogger.debug(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "We are in %s state.", status == BluetoothProfile.STATE_CONNECTING ? "Connecting" :
+                            "Disconnecting"));
                 } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                     rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkDisconnected, context);
                     if (manualDisconnect)
                         close();
                     aapsLogger.warn(LTag.PUMPBTCOMM, "RileyLink Disconnected.");
                 } else {
-                    aapsLogger.warn(LTag.PUMPBTCOMM, "Some other state: (status={},newState={})", status, newState);
+                    aapsLogger.warn(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "Some other state: (status=%d, newState=%d)", status, newState));
                 }
             }
 
@@ -222,6 +229,9 @@ public class RileyLinkBLE {
                     final List<BluetoothGattService> services = gatt.getServices();
 
                     boolean rileyLinkFound = false;
+                    orangeLink.resetOrangeLinkData();
+
+                    StringBuilder stringBuilder = new StringBuilder("RileyLink Device Debug\n");
 
                     for (BluetoothGattService service : services) {
                         final UUID uuidService = service.getUuid();
@@ -231,11 +241,14 @@ public class RileyLinkBLE {
                         }
 
                         if (gattDebugEnabled) {
-                            debugService(service, 0);
+                            debugService(service, 0, stringBuilder);
                         }
+
+                        orangeLink.checkIsOrange(uuidService);
                     }
 
                     if (gattDebugEnabled) {
+                        aapsLogger.warn(LTag.PUMPBTCOMM, stringBuilder.toString());
                         aapsLogger.warn(LTag.PUMPBTCOMM, "onServicesDiscovered " + getGattStatusMessage(status));
                     }
 
@@ -260,7 +273,8 @@ public class RileyLinkBLE {
 
     @Inject
     public void onInit() {
-        aapsLogger.debug(LTag.PUMPBTCOMM, "BT Adapter: " + this.bluetoothAdapter);
+        //aapsLogger.debug(LTag.PUMPBTCOMM, "BT Adapter: " + this.bluetoothAdapter);
+        this.orangeLink.rileyLinkBLE = this;
     }
 
 
@@ -277,6 +291,7 @@ public class RileyLinkBLE {
                 if (isAnyRileyLinkServiceFound(serviceI)) {
                     return true;
                 }
+                orangeLink.checkIsOrange(serviceI.getUuid());
             }
         }
 
@@ -289,7 +304,7 @@ public class RileyLinkBLE {
     }
 
 
-    public void debugService(BluetoothGattService service, int indentCount) {
+    public void debugService(BluetoothGattService service, int indentCount, StringBuilder stringBuilder) {
 
         String indentString = StringUtils.repeat(' ', indentCount);
 
@@ -298,7 +313,7 @@ public class RileyLinkBLE {
         if (gattDebugEnabled) {
             final String uuidServiceString = uuidService.toString();
 
-            StringBuilder stringBuilder = new StringBuilder();
+            //StringBuilder stringBuilder = new StringBuilder();
 
             stringBuilder.append(indentString);
             stringBuilder.append(GattAttributes.lookup(uuidServiceString, "Unknown service"));
@@ -315,12 +330,12 @@ public class RileyLinkBLE {
 
             stringBuilder.append("\n\n");
 
-            aapsLogger.warn(LTag.PUMPBTCOMM, stringBuilder.toString());
+            //aapsLogger.warn(LTag.PUMPBTCOMM, stringBuilder.toString());
 
             List<BluetoothGattService> includedServices = service.getIncludedServices();
 
             for (BluetoothGattService serviceI : includedServices) {
-                debugService(serviceI, indentCount + 4);
+                debugService(serviceI, indentCount + 4, stringBuilder);
             }
         }
     }
@@ -360,27 +375,46 @@ public class RileyLinkBLE {
             aapsLogger.error(LTag.PUMPBTCOMM, "Error setting response count notification");
             return false;
         }
+
+        if (rileyLinkServiceData.isOrange) {
+            return orangeLink.enableNotifications();
+        }
         return true;
     }
 
 
-    public void findRileyLink(String RileyLinkAddress) {
-        aapsLogger.debug(LTag.PUMPBTCOMM, "RileyLink address: " + RileyLinkAddress);
+    public void findRileyLink(String rileyLinkAddress) {
+        aapsLogger.debug(LTag.PUMPBTCOMM, "RileyLink address: " + rileyLinkAddress);
         // Must verify that this is a valid MAC, or crash.
-
-        rileyLinkDevice = bluetoothAdapter.getRemoteDevice(RileyLinkAddress);
-        // if this succeeds, we get a connection state change callback?
-
-        if (rileyLinkDevice != null) {
-            connectGatt();
+        //macAddress = RileyLinkAddress;
+        boolean useScanning = sp.getBoolean(RileyLinkConst.Prefs.OrangeUseScanning, false);
+        if (useScanning) {
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Start scan for OrangeLink device.");
+            orangeLink.startScan();
         } else {
-            aapsLogger.error(LTag.PUMPBTCOMM, "RileyLink device not found with address: " + RileyLinkAddress);
+            rileyLinkDevice = bluetoothAdapter.getRemoteDevice(rileyLinkAddress);
+            // if this succeeds, we get a connection state change callback?
+            if (rileyLinkDevice != null) {
+                connectGattInternal();
+            } else {
+                aapsLogger.error(LTag.PUMPBTCOMM, "RileyLink device not found with address: " + rileyLinkAddress);
+            }
+        }
+    }
+
+    public void connectGatt() {
+        boolean useScanning = sp.getBoolean(RileyLinkConst.Prefs.OrangeUseScanning, false);
+        if (useScanning) {
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Start scan for OrangeLink device.");
+            orangeLink.startScan();
+        } else {
+            connectGattInternal();
         }
     }
 
 
     // This function must be run on UI thread.
-    public void connectGatt() {
+    public void connectGattInternal() {
         if (this.rileyLinkDevice == null) {
             aapsLogger.error(LTag.PUMPBTCOMM, "RileyLink device is null, can't do connectGatt.");
             return;
@@ -429,7 +463,7 @@ public class RileyLinkBLE {
     }
 
 
-    private BLECommOperationResult setNotification_blocking(UUID serviceUUID, UUID charaUUID) {
+    public BLECommOperationResult setNotification_blocking(UUID serviceUUID, UUID charaUUID) {
         BLECommOperationResult rval = new BLECommOperationResult();
         if (bluetoothConnectionGatt != null) {
 
@@ -592,5 +626,13 @@ public class RileyLinkBLE {
         }
 
         return statusMessage;
+    }
+
+    public void setRileyLinkDevice(BluetoothDevice device) {
+        this.rileyLinkDevice = device;
+    }
+
+    public BluetoothAdapter getBluetoothAdapter() {
+        return bluetoothAdapter;
     }
 }

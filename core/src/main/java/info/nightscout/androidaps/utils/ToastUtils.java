@@ -15,12 +15,14 @@ import androidx.annotation.DrawableRes;
 import androidx.appcompat.view.ContextThemeWrapper;
 
 import info.nightscout.androidaps.core.R;
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 
 
 public class ToastUtils {
+
+    private static Toast lastToast = null;
 
     public static class Long {
 
@@ -76,10 +78,11 @@ public class ToastUtils {
             ImageView toastIcon = toastRoot.findViewById(android.R.id.icon);
             toastIcon.setImageResource(iconId);
 
-            Toast toast = new Toast(ctx);
-            toast.setDuration(isShort ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG);
-            toast.setView(toastRoot);
-            toast.show();
+            if (lastToast != null) lastToast.cancel();
+            lastToast = new Toast(ctx);
+            lastToast.setDuration(isShort ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG);
+            lastToast.setView(toastRoot);
+            lastToast.show();
         });
     }
 
@@ -88,7 +91,7 @@ public class ToastUtils {
         mainThread.post(() -> Toast.makeText(ctx, string, Toast.LENGTH_SHORT).show());
     }
 
-    public static void showToastInUiThread(final Context ctx, final RxBusWrapper rxBus,
+    public static void showToastInUiThread(final Context ctx, final RxBus rxBus,
                                            final String string, int soundID) {
 
         showToastInUiThread(ctx, string);

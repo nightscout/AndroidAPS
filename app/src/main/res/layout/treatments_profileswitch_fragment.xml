@@ -1,28 +1,47 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsProfileSwitchFragment">
+    android:orientation="vertical"
+    tools:context="info.nightscout.androidaps.activities.fragments.TreatmentsProfileSwitchFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/profileswitch_refreshfromnightscout"
+        <info.nightscout.androidaps.utils.ui.SingleClickButton
+            android:id="@+id/refresh_from_nightscout"
             style="?android:attr/buttonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:drawableStart="@drawable/ic_refresh"
             android:text="@string/refresheventsfromnightscout" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/profileswitch_recyclerview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <CheckBox
+            android:id="@+id/show_invalidated"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:checked="false"
+            android:paddingEnd="5dp"
+            tools:ignore="RtlSymmetry" />
 
-        </androidx.recyclerview.widget.RecyclerView>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:contentDescription="@string/show_removed"
+            app:srcCompat="@drawable/ic_visibility" />
+
     </LinearLayout>
 
-</FrameLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

@@ -4,8 +4,8 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interfaces.InsulinInterface
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.interfaces.Insulin
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -26,8 +26,8 @@ class InsulinOrefFreePeakPluginTest : TestBase() {
     lateinit var sut: InsulinOrefFreePeakPlugin
 
     @Mock lateinit var sp: SP
-    @Mock lateinit var resourceHelper: ResourceHelper
-    @Mock lateinit var rxBus: RxBusWrapper
+    @Mock lateinit var rh: ResourceHelper
+    @Mock lateinit var rxBus: RxBus
     @Mock lateinit var profileFunction: ProfileFunction
 
     private var injector: HasAndroidInjector = HasAndroidInjector {
@@ -40,7 +40,7 @@ class InsulinOrefFreePeakPluginTest : TestBase() {
         sut = InsulinOrefFreePeakPlugin(
             injector,
             sp,
-            resourceHelper,
+            rh,
             profileFunction,
             rxBus,
             aapsLogger)
@@ -54,19 +54,19 @@ class InsulinOrefFreePeakPluginTest : TestBase() {
 
     @Test
     fun getIdTest() {
-        assertEquals(InsulinInterface.InsulinType.OREF_FREE_PEAK, sut.id)
+        assertEquals(Insulin.InsulinType.OREF_FREE_PEAK, sut.id)
     }
 
     @Test
     fun commentStandardTextTest() {
         `when`(sp.getInt(eq(R.string.key_insulin_oref_peak), anyInt())).thenReturn(90)
-        `when`(resourceHelper.gs(eq(R.string.insulin_peak_time))).thenReturn("Peak Time [min]")
+        `when`(rh.gs(eq(R.string.insulin_peak_time))).thenReturn("Peak Time [min]")
         assertEquals("Peak Time [min]: 90", sut.commentStandardText())
     }
 
     @Test
     fun getFriendlyNameTest() {
-        `when`(resourceHelper.gs(eq(R.string.free_peak_oref))).thenReturn("Free-Peak Oref")
+        `when`(rh.gs(eq(R.string.free_peak_oref))).thenReturn("Free-Peak Oref")
         assertEquals("Free-Peak Oref", sut.friendlyName)
     }
 }

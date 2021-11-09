@@ -32,11 +32,11 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.pump.common.R;
 import info.nightscout.androidaps.plugins.pump.common.ble.BlePreCheck;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.R;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.GattAttributes;
@@ -49,10 +49,10 @@ public class RileyLinkBLEConfigActivity extends NoSplashAppCompatActivity {
 
     @Inject AAPSLogger aapsLogger;
     @Inject SP sp;
-    @Inject ResourceHelper resourceHelper;
+    @Inject ResourceHelper rh;
     @Inject BlePreCheck blePrecheck;
     @Inject RileyLinkUtil rileyLinkUtil;
-    @Inject ActivePluginProvider activePlugin;
+    @Inject ActivePlugin activePlugin;
 
     private static final String TAG = "RileyLinkBLEConfigActivity";
     private static final long SCAN_PERIOD_MILLIS = 15_000;
@@ -233,7 +233,7 @@ public class RileyLinkBLEConfigActivity extends NoSplashAppCompatActivity {
         @Override
         public void onScanFailed(int errorCode) {
             Log.e("Scan Failed", "Error Code: " + errorCode);
-            Toast.makeText(RileyLinkBLEConfigActivity.this, resourceHelper.gs(R.string.riley_link_ble_config_scan_error, errorCode),
+            Toast.makeText(RileyLinkBLEConfigActivity.this, rh.gs(R.string.riley_link_ble_config_scan_error, errorCode),
                     Toast.LENGTH_LONG).show();
         }
 

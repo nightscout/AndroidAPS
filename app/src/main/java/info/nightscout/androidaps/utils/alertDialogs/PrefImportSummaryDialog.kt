@@ -17,10 +17,10 @@ import androidx.annotation.StringRes
 import androidx.annotation.StyleRes
 import androidx.appcompat.view.ContextThemeWrapper
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.extensions.runOnUiThread
 import info.nightscout.androidaps.plugins.general.maintenance.formats.Prefs
 import info.nightscout.androidaps.plugins.general.maintenance.formats.PrefsStatus
 import info.nightscout.androidaps.utils.ToastUtils
-import info.nightscout.androidaps.utils.extensions.runOnUiThread
 import java.util.*
 
 object PrefImportSummaryDialog {
@@ -66,7 +66,7 @@ object PrefImportSummaryDialog {
                 rowLayout.setOnClickListener {
                     val msg = "[${context.getString(metaKey.label)}] ${metaEntry.info}"
                     when (metaEntry.status) {
-                        PrefsStatus.WARN -> ToastUtils.Long.warnToast(context, msg)
+                        PrefsStatus.WARN  -> ToastUtils.Long.warnToast(context, msg)
                         PrefsStatus.ERROR -> ToastUtils.Long.errorToast(context, msg)
                         else              -> ToastUtils.Long.infoToast(context, msg)
                     }
@@ -83,17 +83,24 @@ object PrefImportSummaryDialog {
             detailsBtn.visibility = View.VISIBLE
             detailsBtn.setOnClickListener {
                 val detailsLayout = LayoutInflater.from(context).inflate(R.layout.import_summary_details, null)
-                val wview = detailsLayout.findViewById<View>(R.id.details_webview) as WebView
-                wview.loadData("<!doctype html><html><head><meta charset=\"utf-8\"><style>body { color: white; }</style></head><body>" + details.joinToString("<hr>"), "text/html; charset=utf-8", "utf-8")
-                wview.setBackgroundColor(Color.TRANSPARENT)
-                wview.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null)
+                val webView = detailsLayout.findViewById<View>(R.id.details_webview) as WebView
+                webView.loadData(
+                    "<!doctype html><html><head><meta charset=\"utf-8\"><style>body { color: white; }</style></head><body>" + details.joinToString("<hr>"),
+                    "text/html; charset=utf-8",
+                    "utf-8"
+                )
+                webView.setBackgroundColor(Color.TRANSPARENT)
+                webView.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null)
 
                 AlertDialogHelper.Builder(context, R.style.AppTheme)
-                    .setCustomTitle(AlertDialogHelper.buildCustomTitle(
-                        context,
-                        context.getString(R.string.check_preferences_details_title),
-                        R.drawable.ic_header_log,
-                        R.style.AppTheme))
+                    .setCustomTitle(
+                        AlertDialogHelper.buildCustomTitle(
+                            context,
+                            context.getString(R.string.check_preferences_details_title),
+                            R.drawable.ic_header_log,
+                            R.style.AppTheme
+                        )
+                    )
                     .setView(detailsLayout)
                     .setPositiveButton(android.R.string.ok) { dialogInner: DialogInterface, _: Int ->
                         dialogInner.dismiss()
@@ -110,11 +117,7 @@ object PrefImportSummaryDialog {
             .setNegativeButton(android.R.string.cancel) { dialog: DialogInterface, _: Int ->
                 dialog.dismiss()
                 SystemClock.sleep(100)
-                if (cancel != null) {
-                    runOnUiThread(Runnable {
-                        cancel()
-                    })
-                }
+                if (cancel != null) runOnUiThread { cancel() }
             }
 
         if (importPossible) {
@@ -123,18 +126,14 @@ object PrefImportSummaryDialog {
             ) { dialog: DialogInterface, _: Int ->
                 dialog.dismiss()
                 SystemClock.sleep(100)
-                if (ok != null) {
-                    runOnUiThread(Runnable {
-                        ok()
-                    })
-                }
+                if (ok != null) runOnUiThread { ok() }
             }
         }
 
         val dialog = builder.show()
         val textView = dialog.findViewById<View>(android.R.id.message) as TextView?
         textView?.textSize = 12f
-        textView?.setPadding(10,0,0,0)
+        textView?.setPadding(10, 0, 0, 0)
         dialog.setCanceledOnTouchOutside(false)
     }
 

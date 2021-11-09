@@ -36,6 +36,7 @@
     <string name="rileylink_last_device_contact">Ultimo contatto dispositivo:</string>
     <string name="rileylink_firmware_version">Versione firmware:</string>
     <string name="rileylink_firmware_version_value">BLE113: %1$s\nCC110: %2$s</string>
+    <string name="rileylink_firmware_version_value_orange">Fw: %1$s\nHw: %2$s</string>
     <string name="rileylink_pump_serial_number">Numero seriale micro:</string>
     <string name="rileylink_pump_frequency">Frequenza micro:</string>
     <string name="rileylink_pump_frequency_value">%1$.2f MHz</string>
@@ -64,7 +65,7 @@
     <string name="riley_link_common_yes">Sì</string>
     <string name="riley_link_common_no">No</string>
     <!-- RileyLink - Preferences -->
-    <string name="riley_link_show_battery_level">Mostra livello batteria riportato da OrangeLink/EmaLink</string>
+    <string name="riley_link_show_battery_level">Mostra livello batteria riportato da OrangeLink/EmaLink/DiaLink</string>
     <string name="riley_link_show_battery_level_summary">NON funziona con il RileyLink originale. Potrebbe non funzionare con altre alternative al RileyLink.</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d giorno</item>
@@ -74,4 +75,6 @@
         <item quantity="one">%1$d ora</item>
         <item quantity="other">%1$d ore</item>
     </plurals>
+    <string name="orange_use_scanning_level">Usa scansione</string>
+    <string name="orange_use_scanning_level_summary">Scansiona prima della connessione a OrangeLink, dovrebbe migliorare le connessioni (può essere usato anche con altri cloni di RileyLink, se necessario)</string>
 </resources>

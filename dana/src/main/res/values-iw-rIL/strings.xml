@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="danars_pairing">מצומד</string>
+    <string name="danars_pairing">מצמד</string>
     <string name="danars_nodeviceavailable">לא נמצאו מכשירים עד כה</string>
     <string name="danars_pairingok">הצימוד הצליח</string>
     <string name="danars_pairingtimedout">הצימוד חרג ממגבלת הזמן</string>
     <string name="danars_waitingforpairing">מחכה לצימוד עם משאבה</string>
-    <string name="danarspump">DanaRS</string>
+    <string name="danarspump">Dana-i / RS</string>
     <string name="danarspump_shortname">Dana</string>
-    <string name="description_pump_dana_rs">חיבור משאבת DANA Diabecare RS</string>
+    <string name="description_pump_dana_rs">חיבור משאבות DANA RS/i</string>
     <string name="maxbolusviolation">בולוס גבוה מדי</string>
     <string name="commanderror">שגיאת פקודה</string>
     <string name="speederror">שגיאת מהירות</string>
@@ -51,7 +51,7 @@
     <string name="stoppingtempbasal">הפסקת בזאלי זמני</string>
     <string name="settingextendedbolus">מגדיר בולוס ממושך</string>
     <string name="stoppingextendedbolus">מפסיק בולוס ממושך</string>
-    <string name="updatingbasalrates">מעדכן את הקצב הבזאלי</string>
+    <string name="updatingbasalrates">מעדכן את המינון הבזאלי</string>
     <string name="settingtempbasal">הגדרת בזאלי זמני</string>
     <string name="waitingfortimesynchronization">ממתין לסינכרון השעון (%1$d שנ\')</string>
     <string name="wrongpumppassword">סיסמת משאבה שגויה!</string>
@@ -94,8 +94,6 @@
     <string name="profile_set_failed">הגדרת פרופיל הבזאלי נכשל</string>
     <string name="danar_bluetooth_status">מצב בלוטות\'</string>
     <string name="danar_iob_label">אינסולין פעיל מהמשאבה</string>
-    <string name="basal_step">צעד במינון בזאלי</string>
-    <string name="bolus_step">צעד במינון בולוס</string>
     <string name="virtualpump_firmware_label">קושחה</string>
     <string name="danar_pump_settings">הגדרות משאבת Dana</string>
     <string name="timeformat12h">12 שעות</string>
@@ -106,7 +104,6 @@
     <string name="danars_password_title">סיסמת משאבה (v1 בלבד)</string>
     <string name="danar_password_title">סיסמת משאבה</string>
     <string name="danar_useextended_title">השתמש בבולוס ממושך של &gt;200%%</string>
-    <string name="danar_visualizeextendedaspercentage_title">הצגת בולוס ממושך כ-%%</string>
     <string name="bolusspeed">מהירות בולוס</string>
     <string name="selectedpump">בחרו משאבה</string>
     <string name="rs_loginsulinchange_title">רשום החלפת מכל</string>
@@ -118,4 +115,5 @@
     <string name="press_ok_on_the_pump">לחצו OK במשאבה\nוהכניסו את שני המספרים המוצגים\nהשאירו את מסך המשאבה מופעל ע\"י לחיצה על לחצן מינוס עד סיום הכנסת הקוד.</string>
     <string name="num1pin">1: (12 ספרות)</string>
     <string name="num2pin">2: (8 ספרות)</string>
+    <string name="basal_bolus_step">צעד בזאלי\\בולוס</string>
 </resources>

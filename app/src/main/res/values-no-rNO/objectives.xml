@@ -17,7 +17,6 @@
     <string name="objectives_maxiob_gate">Kjør i noen dager og opplev minst en natt uten lavt BS alarmer før du begynner å redusere målverdi for BS</string>
     <string name="objectives_autosens_objective">Juster om nødvendig basal og forholdstall, og deretter aktiverer du autosens</string>
     <string name="objectives_autosens_gate">1 uke vellykket looping på dagtid hvor alle måltider (KH) angis</string>
-    <string name="objectives_ama_objective">Aktiver ekstra funksjoner for bruk på dagtid, slik som avansert måltidsassistent (AMA)</string>
     <string name="objectives_smb_objective">Aktiver ekstra funksjoner for bruk på dagtid, slik som SMB (Super Micro Bolus)</string>
     <string name="objectives_auto_objective">Aktiver Automatisering</string>
     <string name="objectives_smb_gate">Du må lese wiki og øke din maxIOB for å få SMB til å fungere. Et godt utgangspunkt er maxIOB = gjennomsnittlig måltidsbolus + 3*max daglig basal</string>

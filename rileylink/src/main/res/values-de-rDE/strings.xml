@@ -36,6 +36,7 @@
     <string name="rileylink_last_device_contact">Letzter Gerätekontakt:</string>
     <string name="rileylink_firmware_version">Firmware-Version:</string>
     <string name="rileylink_firmware_version_value">BLE113: %1$s\nCC110: %2$s</string>
+    <string name="rileylink_firmware_version_value_orange">Fw: %1$s\nHw: %2$s</string>
     <string name="rileylink_pump_serial_number">Seriennummer der Pumpe:</string>
     <string name="rileylink_pump_frequency">Pumpenfrequenz:</string>
     <string name="rileylink_pump_frequency_value">%1$.2f MHz</string>
@@ -64,7 +65,7 @@
     <string name="riley_link_common_yes">Ja</string>
     <string name="riley_link_common_no">Nein</string>
     <!-- RileyLink - Preferences -->
-    <string name="riley_link_show_battery_level">Akkustand von OrangeLink/EmaLink anzeigen</string>
+    <string name="riley_link_show_battery_level">Akkustand von OrangeLink/EmaLink/DiaLink anzeigen</string>
     <string name="riley_link_show_battery_level_summary">FUNKTIONIERT NICHT mit dem original RileyLink. Funktioniert vielleicht nicht mit anderen RileyLink Alternativen.</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d Tag</item>
@@ -74,4 +75,6 @@
         <item quantity="one">%1$d Stunde</item>
         <item quantity="other">%1$d Stunden</item>
     </plurals>
+    <string name="orange_use_scanning_level">Verwende Scannen</string>
+    <string name="orange_use_scanning_level_summary">Scanne, bevor Du mit dem OrangeLink verbindest. Das sollte die Stabilität der Verbindung verbessern und kann auch mit anderen RileyLink-Nachbauten probiert werden.</string>
 </resources>

@@ -8,7 +8,7 @@
     <string name="dia_meaningisequaltodiapump">Jeśli jesteś zadowolony z wartości dla DIA, która była użyta w twojej pompie przed wykorzystaniem AndroidAPS, nie ma potrzeby jej zmiany, gdy zaczniesz używać pętli.</string>
     <string name="dia_valuemustbedetermined">Powinieneś określić dla siebie odpowiednią wartość DIA.</string>
     <string name="hypott_label">Cel tymczasowy dla Hipo</string>
-    <string name="hypott_whenhypott">Jaki jest główny powód do ustawienia celu tymczasowego Hipo?</string>
+    <string name="hypott_whenhypott">Jaki jest główny powód ustawienia celu tymczasowego Hipo?</string>
     <string name="hypott_wrongbasal">Aby skorygować hipoglikemię spowodowaną nieprawidłowymi ustawieniami dawki podstawowej.</string>
     <string name="hypott_preventoversmb">Aby zapobiec nadmiernemu korygowaniu przez AndroidAPS wzrostu poziomu glukozy we krwi spowodowanego przez szybko działające węglowodany stosowane w leczeniu hipoglikemii.</string>
     <string name="hypott_exercise">Korekta hipoglikemii wywołanej wysiłkiem fizycznym.</string>
@@ -48,7 +48,7 @@
     <string name="exerciseprofile_label">Ćwiczenia fizyczne i profile</string>
     <string name="exerciseprofile_whattodo">Jak wykorzystać profile, aby najlepiej pomóc systemowi radzić sobie z ćwiczeniami aerobowymi?</string>
     <string name="exerciseprofile_switchprofilebelow100">Wykonaj zmianę profilu na poniżej 100%.</string>
-    <string name="exerciseprofile_switchprofileabove100">Wykonaj zmianę profilu na powyżej 100%</string>
+    <string name="exerciseprofile_switchprofileabove100">Wykonaj zmianę profilu na powyżej 100%.</string>
     <string name="exerciseprofile_leaveat100">Pozostaw profil ustawiony na 100%.</string>
     <string name="exerciseprofile_suspendloop">Wstrzymaj pętle.</string>
     <string name="exerciseprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
@@ -132,7 +132,7 @@
     <string name="wronginsulin_label">Błędy w dostarczaniu/wpisywaniu insuliny</string>
     <string name="wronginsulin_whattodo">Co należy zrobić, jeśli otrzymano mniej insuliny niż sugeruje historia pompy, np. z powodu niedrożności, uszkodzonej kaniuli lub zapomnienia o ponownym podłączeniu pompy po prysznicu? </string>
     <string name="wronginsulin_careportal">Usuń dane insuliny z portalu Nightscout aby usunąć je z historii pompy.</string>
-    <string name="wronginsulin_compare">Porównaj wartości w AndroidAPS i historii pompy.</string>
+    <string name="wronginsulin_compare">Porównaj wartości w AndroidAPS i historii pompy (jeśli pompa ją ma).</string>
     <string name="wronginsulin_prime">Podaj obliczoną dawkę „pominiętej” insuliny za pomocą strzykawki / wstrzykiwacza lub za pomocą pompy funkcji wypełnienia.</string>
     <string name="wronginsulin_donothing">Nie rób nic i pozwól AndroidAPS na skorygowanie każdego uzyskanego wysokiego stężenia glukozy we krwi.</string>
     <string name="iob_label">Aktywna insulina (IOB)</string>

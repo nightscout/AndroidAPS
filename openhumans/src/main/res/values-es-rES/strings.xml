@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="open_humans">Open Humans</string>
+    <string name="open_humans_short">OH</string>
+    <string name="open_humans_description">Open Humans te permite subir tus datos de diabetes y donarlos a proyectos científicos.</string>
+    <string name="logout">Cerrar sesión</string>
+    <string name="setup">Configuración</string>
+    <string name="setup_completed_info">Open Humans ha sido configurado. En caso de que quiera dejar de subir datos, haga clic en \'Cerrar sesión\'.</string>
+    <string name="not_setup_info">Open Humans está actualmente inactivo. Para empezar a subir datos, haga clic en \'Configurar\'.</string>
+    <string name="project_member_id">ID de miembro del proyecto: %1$s</string>
+    <string name="only_upload_if_connected_to_wifi">Subir datos solo si está conectado a WiFi</string>
+    <string name="only_upload_if_charging">Sólo subir datos si se está cargando</string>
+    <string name="open_humans_uploading">Subiendo a Open Humans…</string>
+    <string name="open_humans_notifications">Notificaciones de Open Humans</string>
+    <string name="uploading_to_open_humans">AndroidAPS está subiendo los datos a Open Humans. Esto puede tardar un tiempo.</string>
+    <string name="you_have_been_signed_out_of_open_humans">Has cerrado la sesión de Open Humans</string>
+    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Haga clic aquí para iniciar sesión de nuevo si no tenía esa intención.</string>
+    <string name="upload_now">Subir ahora</string>
+</resources>

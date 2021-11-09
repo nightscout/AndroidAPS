@@ -17,11 +17,11 @@ class TIR(val date: Long, val lowThreshold: Double, val highThreshold: Double) {
     fun inRange() = run { inRange++; count++ }
     fun above() = run { above++; count++ }
 
-    fun belowPct() = if (count > 0) (below.toDouble() / count * 100.0).roundToInt() else 0
-    fun inRangePct() = if (count > 0) (inRange.toDouble() / count * 100.0).roundToInt() else 0
-    fun abovePct() = if (count > 0) (above.toDouble() / count * 100.0).roundToInt() else 0
+    private fun belowPct() = if (count > 0) (below.toDouble() / count * 100.0).roundToInt() else 0
+    private fun inRangePct() = if (count > 0) 100 - belowPct() - abovePct() else 0
+    private fun abovePct() = if (count > 0) (above.toDouble() / count * 100.0).roundToInt() else 0
 
-    fun toText(resourceHelper: ResourceHelper, dateUtil: DateUtil): String = resourceHelper.gs(R.string.tirformat, dateUtil.dateStringShort(date), belowPct(), inRangePct(), abovePct())
+    fun toText(rh: ResourceHelper, dateUtil: DateUtil): String = rh.gs(R.string.tirformat, dateUtil.dateStringShort(date), belowPct(), inRangePct(), abovePct())
 
-    fun toText(resourceHelper: ResourceHelper, days: Int): String = resourceHelper.gs(R.string.tirformat, "%02d".format(days) + " " + resourceHelper.gs(R.string.days), belowPct(), inRangePct(), abovePct())
+    fun toText(rh: ResourceHelper, days: Int): String = rh.gs(R.string.tirformat, "%02d".format(days) + " " + rh.gs(R.string.days), belowPct(), inRangePct(), abovePct())
 }

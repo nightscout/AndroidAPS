@@ -6,10 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,9 +17,9 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.android.support.DaggerFragment;
-import info.nightscout.androidaps.plugins.pump.common.R;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.pump.common.dialog.RefreshableInterface;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.R;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -33,7 +32,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 public class RileyLinkStatusHistoryFragment extends DaggerFragment implements RefreshableInterface {
 
     @Inject RileyLinkUtil rileyLinkUtil;
-    @Inject ResourceHelper resourceHelper;
+    @Inject ResourceHelper rh;
     @Inject DateUtil dateUtil;
 
     RecyclerView recyclerView;
@@ -120,7 +119,7 @@ public class RileyLinkStatusHistoryFragment extends DaggerFragment implements Re
         }
 
 
-        @NotNull
+        @NonNull
         @Override
         public RecyclerViewAdapter.HistoryViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.rileylink_status_history_item, //
@@ -136,7 +135,7 @@ public class RileyLinkStatusHistoryFragment extends DaggerFragment implements Re
             if (item != null) {
                 holder.timeView.setText(dateUtil.dateAndTimeAndSecondsString(item.getDateTime().toDateTime().getMillis()));
                 holder.typeView.setText(item.getSource().getDesc());
-                holder.valueView.setText(item.getDescription(resourceHelper));
+                holder.valueView.setText(item.getDescription(rh));
             }
         }
 

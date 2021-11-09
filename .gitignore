@@ -2,15 +2,15 @@
 .gradle
 /local.properties
 .DS_Store
+*/jacoco.exec
 /build
 /captures
 *.apk
 build/
+!.idea/dictionaries/project-dictionary.xml
 .idea/*
 !.idea/codeStyles/
 full/
-debug/
-release/
 app/com.crashlytics.settings.json
 app/session_analytics.tap
 .project

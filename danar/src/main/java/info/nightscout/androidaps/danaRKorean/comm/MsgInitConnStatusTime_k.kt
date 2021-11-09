@@ -20,7 +20,7 @@ class MsgInitConnStatusTime_k(
 
     override fun handleMessage(bytes: ByteArray) {
         if (bytes.size - 10 < 10) {
-            val notification = Notification(Notification.WRONG_DRIVER, resourceHelper.gs(R.string.pumpdrivercorrected), Notification.NORMAL)
+            val notification = Notification(Notification.WRONG_DRIVER, rh.gs(R.string.pumpdrivercorrected), Notification.NORMAL)
             rxBus.send(EventNewNotification(notification))
             danaRKoreanPlugin.disconnect("Wrong Model")
             aapsLogger.debug(LTag.PUMPCOMM, "Wrong model selected. Switching to export DanaR")
@@ -29,6 +29,7 @@ class MsgInitConnStatusTime_k(
             danaRPlugin.setPluginEnabled(PluginType.PUMP, true)
             danaRPlugin.setFragmentVisible(PluginType.PUMP, true)
             danaPump.reset() // mark not initialized
+            pumpSync.connectNewPump()
             //If profile coming from pump, switch it as well
             configBuilder.storeSettings("ChangingKoreanDanaDriver")
             rxBus.send(EventRebuildTabs())

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_only_numeric_digits_allowed">Galimi tik skaičiai.</string>
+    <string name="error_only_numeric_digits_range_allowed">Galimi tik skaičiai intervale %1$s - %2$s.</string>
+    <string name="error_this_field_cannot_contain_special_character">Šiame laukelyje negali būti specialių simbolių</string>
+    <string name="error_only_standard_letters_are_allowed">Galimos tik standartinės raidės</string>
+    <string name="error_field_must_not_be_empty">Laukas negali būti tuščias</string>
+    <string name="error_email_address_not_valid">El. pašto adresas netinkamas</string>
+    <string name="error_creditcard_number_not_valid">Kredito kortelės Nr. netinkamas</string>
+    <string name="error_phone_not_valid">Telefono numeris negalioja</string>
+    <string name="error_domain_not_valid">Netinkamas domeno vardas</string>
+    <string name="error_ip_not_valid">Netinkamas IP adresas</string>
+    <string name="error_url_not_valid">Netinkamas interneto adresas</string>
+    <string name="error_notvalid_personname">Netinkamas vardas ar pavardė.</string>
+    <string name="error_notvalid_personfullname">Netinkamas pilnas vardas.</string>
+    <string name="error_date_not_valid">Netinkamas formatas</string>
+    <string name="error_mustbe4digitnumber">Turi būti 4 skaitmenys</string>
+    <string name="error_mustbe6digitnumber">Turi būti 6 skaitmenys</string>
+    <string name="error_mustbe12hexadidits">Turi būti 12 simbolių iš ABCDEF0123456789</string>
+    <string name="error_mustbe8hexadidits">Turi būti 8 simboliai iš ABCDEF0123456789</string>
+    <string name="error_mustbe4hexadidits">Turi būti 4 simboliai iš ABCDEF0123456789</string>
+    <string name="error_not_a_minimum_length">Neatitinka minimalaus ilgio</string>
+    <string name="error_pin_not_valid">Pin turi būti 3-6 skaitmenų, ne tokių pačių ir ne iš eilės</string>
+</resources>

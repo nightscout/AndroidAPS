@@ -5,9 +5,9 @@
     <string name="danars_pairingok">Parkopplingen klar</string>
     <string name="danars_pairingtimedout">Parkopplingen tog för lång tid</string>
     <string name="danars_waitingforpairing">Väntar på parkoppling med pump</string>
-    <string name="danarspump">Dana RS</string>
+    <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
-    <string name="description_pump_dana_rs">Pumpintegration för DANA Diabecare RS</string>
+    <string name="description_pump_dana_rs">Pumpintegration för DANA Diabecare RS och Dana-i-pumpar</string>
     <string name="maxbolusviolation">Max bolus nådd</string>
     <string name="commanderror">Kommandofel</string>
     <string name="speederror">Felaktig hastighet</string>
@@ -94,8 +94,6 @@
     <string name="profile_set_failed">Lyckades inte sätta basalprofilen</string>
     <string name="danar_bluetooth_status">Bluetoothstatus</string>
     <string name="danar_iob_label">Pumpens IOB</string>
-    <string name="basal_step">Basalsteg</string>
-    <string name="bolus_step">Bolussteg</string>
     <string name="virtualpump_firmware_label">Firmwareversion</string>
     <string name="danar_pump_settings">Dana R pumpinställningar</string>
     <string name="timeformat12h">12 tim</string>
@@ -106,7 +104,6 @@
     <string name="danars_password_title">Pumplösenord (endast v1)</string>
     <string name="danar_password_title">Pumplösenord</string>
     <string name="danar_useextended_title">Använd förlängd bolus för &gt;200%% temp basal</string>
-    <string name="danar_visualizeextendedaspercentage_title">Visa förlängd bolus som %%</string>
     <string name="bolusspeed">Bolushastighet</string>
     <string name="selectedpump">Vald pump</string>
     <string name="rs_loginsulinchange_title">Logga reservoarbyten</string>
@@ -118,4 +115,5 @@
     <string name="press_ok_on_the_pump">Tryck på OK på pumpen och skriv in nycklarna som visas på skärmen. För att förhindra att pumpskärmen släcks, tryck på minus (-) ibland.</string>
     <string name="num1pin">1: (12 tecken)</string>
     <string name="num2pin">2: (8 tecken)</string>
+    <string name="basal_bolus_step">Basal/bolus steg</string>
 </resources>

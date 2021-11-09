@@ -5,9 +5,9 @@
     <string name="danars_pairingok">Associazione OK</string>
     <string name="danars_pairingtimedout">Time out associazione</string>
     <string name="danars_waitingforpairing">In attesa di associare il micro</string>
-    <string name="danarspump">DanaRS</string>
+    <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
-    <string name="description_pump_dana_rs">Integrazione del microinfusore DANA Diabecare RS</string>
+    <string name="description_pump_dana_rs">Integrazione del microinfusore DANA Diabecare RS / Dana-i</string>
     <string name="maxbolusviolation">Violazione bolo massimo</string>
     <string name="commanderror">Errore comando</string>
     <string name="speederror">Errore velocità</string>
@@ -94,8 +94,6 @@
     <string name="profile_set_failed">Impostazione profilo basale fallita</string>
     <string name="danar_bluetooth_status">Stato bluetooth</string>
     <string name="danar_iob_label">IOB micro</string>
-    <string name="basal_step">Incremento basale</string>
-    <string name="bolus_step">Incremento bolo</string>
     <string name="virtualpump_firmware_label">Firmware</string>
     <string name="danar_pump_settings">Impostazioni micro Dana</string>
     <string name="timeformat12h">12h</string>
@@ -106,7 +104,6 @@
     <string name="danars_password_title">Password micro (solo v1)</string>
     <string name="danar_password_title">Password micro</string>
     <string name="danar_useextended_title">Usa boli estesi per &gt;200%%</string>
-    <string name="danar_visualizeextendedaspercentage_title">Visualizza bolo esteso come %%</string>
     <string name="bolusspeed">Velocità bolo</string>
     <string name="selectedpump">Micro selezionato</string>
     <string name="rs_loginsulinchange_title">Registra cambio serbatorio</string>
@@ -118,4 +115,5 @@
     <string name="press_ok_on_the_pump">Premi OK sul micro\ne inserisci i 2 numeri visualizzati\nMantieni acceso il display del micro premendo il tasto col simbolo del meno sino a che non hai finito di inserire il codice.</string>
     <string name="num1pin">1: (12 cifre)</string>
     <string name="num2pin">2: (8 cifre)</string>
+    <string name="basal_bolus_step">Incremento basale/bolo</string>
 </resources>

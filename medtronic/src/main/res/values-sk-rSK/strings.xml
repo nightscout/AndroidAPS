@@ -24,6 +24,8 @@
     <string name="medtronic_pump_battery_nizn">NiZn (Rozšírené)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (Rozšírené zobrazenie)</string>
     <string name="medtronic_bolus_debugging">Bolus/Ošetrenia ladenie</string>
+    <!-- MDT Fragment -->
+    <string name="rl_battery_label">Batéria RileyLinku</string>
     <!-- MDT Errors -->
     <string name="medtronic_errors">Chyby</string>
     <string name="medtronic_error_serial_not_set">Sériové číslo nenastavené.</string>
@@ -63,13 +65,17 @@
     <string name="medtronic_cmd_desc_get_history">Načítanie histórie - Strana %1$d (%2$d/16)</string>
     <string name="medtronic_cmd_desc_get_history_request">Načítanie histórie - Strana %1$d</string>
     <string name="medtronic_cmd_desc_get_time">Načítanie času pumpy</string>
+    <string name="medtronic_cmd_desc_set_time">Nastaviť čas pumpy</string>
+    <string name="medtronic_cmd_desc_get_battery_status">Stav batérie</string>
     <string name="medtronic_cmd_desc_get_settings">Načítanie nastavení</string>
     <string name="medtronic_cmd_desc_get_model">Načítanie modelu pumpy</string>
     <string name="medtronic_cmd_desc_get_basal_profile">Načítanie bazálneho profilu</string>
     <string name="medtronic_cmd_desc_set_basal_profile">Nastavovanie bazálneho profilu</string>
     <string name="medtronic_cmd_desc_get_tbr">Načítanie dočasného bazálu</string>
     <string name="medtronic_cmd_desc_set_tbr">Nastavovanie dočasného bazálu</string>
+    <string name="medtronic_cmd_desc_cancel_tbr">Zrušiť dočasný bazál</string>
     <string name="medtronic_cmd_desc_set_bolus">Nastavovanie bolusu</string>
+    <string name="medtronic_cmd_desc_get_remaining_insulin">Zostávajúci inzulín</string>
     <string name="medtronic_pump_status_pump_unreachable">Pumpa nedostupná</string>
     <string name="medtronic_warning">Upozornenie</string>
     <!-- medtronic_warning -->
@@ -83,4 +89,5 @@
     <string name="pump_time_updated">Čas v pumpe bol aktualizovaný</string>
     <string name="set_neutral_temps_title">Nastaviť neutrálny dočasný bazál</string>
     <string name="set_neutral_temps_summary">Ak je povolená táto možnosť, zastaví sa dočasný bazál pred koncom každej hodiny. To môže u niektorých púmp pomôcť zastaviť pípanie/vibrácie na celú hodinu.</string>
+    <string name="mdt_tbr_remaining">%1$.1f JI/h (%2$d min zostáva)</string>
 </resources>

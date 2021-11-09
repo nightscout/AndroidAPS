@@ -63,7 +63,7 @@
     <string name="pref_version">Version:</string>
     <string name="pref_moreWatchfaceSettings">Plus de paramètres</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Veuillez regardez dans la configuration du cadran.</string>
-    <string name="menu_tempt">Cible Temp.</string>
+    <string name="menu_tempt">Cible Temp</string>
     <string name="menu_wizard">Assistant</string>
     <string name="menu_bolus">Bolus</string>
     <string name="menu_ecarb">eGlucides</string>
@@ -132,4 +132,8 @@
     <string name="digitalstyle_pref_your_color">Couleur :</string>
     <string name="digitalstyle_pref_your_color_saturation">Saturation :</string>
     <string name="digitalstyle_pref_your_color_opacity">Opacité :</string>
+    <string name="bolus_progress_channel_name">Progression Bolus AAPS</string>
+    <string name="bolus_progress_silent_channel_name">Progression Bolus silencieuse</string>
+    <string name="bolus_progress_channel_description">Progression et annulation Bolus</string>
+    <string name="bolus_progress_silent_channel_description">Progression et annulation Bolus avec moins de vibrations</string>
 </resources>

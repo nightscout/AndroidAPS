@@ -1,14 +1,16 @@
 package info.nightscout.androidaps.plugins.general.tidepool.elements
 
 import com.google.gson.annotations.Expose
-import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.db.ProfileSwitch
+import info.nightscout.androidaps.data.ProfileSealed
+import info.nightscout.androidaps.database.entities.EffectiveProfileSwitch
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.plugins.general.tidepool.comm.TidepoolUploader
+import info.nightscout.androidaps.utils.DateUtil
 import java.util.*
 import kotlin.collections.ArrayList
 
-class ProfileElement(ps: ProfileSwitch, serialNumber: String)
-    : BaseElement(ps.date, UUID.nameUUIDFromBytes(("AAPS-profile" + ps.date).toByteArray()).toString()) {
+class ProfileElement(ps: EffectiveProfileSwitch, serialNumber: String, dateUtil: DateUtil)
+    : BaseElement(ps.timestamp, UUID.nameUUIDFromBytes(("AAPS-profile" + ps.timestamp).toByteArray()).toString(), dateUtil) {
 
     @Expose
     internal var activeSchedule = "Normal"
@@ -33,15 +35,15 @@ class ProfileElement(ps: ProfileSwitch, serialNumber: String)
 
     init {
         type = "pumpSettings"
-        val profile: Profile? = ps.profileObject
+        val profile: Profile? = ProfileSealed.EPS(ps)
         checkNotNull(profile)
-        for (br in profile.basalValues)
+        for (br in profile.getBasalValues())
             basalSchedules.Normal.add(BasalRate(br.timeAsSeconds * 1000, br.value))
-        for (target in profile.singleTargetsMgdl)
+        for (target in profile.getSingleTargetsMgdl())
             bgTargets.Normal.add(Target(target.timeAsSeconds * 1000, target.value))
-        for (ic in profile.ics)
+        for (ic in profile.getIcsValues())
             carbRatios.Normal.add(Ratio(ic.timeAsSeconds * 1000, ic.value))
-        for (isf in profile.isfsMgdl)
+        for (isf in profile.getIsfsMgdlValues())
             insulinSensitivities.Normal.add(Ratio(isf.timeAsSeconds * 1000, isf.value))
     }
 

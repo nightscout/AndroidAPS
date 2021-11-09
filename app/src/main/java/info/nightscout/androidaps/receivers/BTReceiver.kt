@@ -5,15 +5,15 @@ import android.content.Context
 import android.content.Intent
 import dagger.android.DaggerBroadcastReceiver
 import info.nightscout.androidaps.events.EventBTChange
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import javax.inject.Inject
 
 class BTReceiver : DaggerBroadcastReceiver() {
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
 
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
-        val device: BluetoothDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
+        val device: BluetoothDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE) ?: return
 
         when (intent.action) {
             BluetoothDevice.ACTION_ACL_CONNECTED    ->

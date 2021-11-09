@@ -5,38 +5,35 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.general.smsCommunicator.otp.OneTimePassword
+import info.nightscout.androidaps.plugins.general.smsCommunicator.otp.OneTimePasswordValidationResult
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
+import org.mockito.Mockito.doAnswer
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
-import org.powermock.api.mockito.PowerMockito
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
 
-@RunWith(PowerMockRunner::class)
-@PrepareForTest(SmsCommunicatorPlugin::class, DateUtil::class, OneTimePassword::class)
 class AuthRequestTest : TestBase() {
 
     @Mock lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
-    @Mock lateinit var resourceHelper: ResourceHelper
+    @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var otp: OneTimePassword
+    @Mock lateinit var dateUtil: DateUtil
 
     var injector: HasAndroidInjector = HasAndroidInjector {
         AndroidInjector {
             if (it is AuthRequest) {
                 it.aapsLogger = aapsLogger
-                it.resourceHelper = resourceHelper
+                it.rh = rh
                 it.smsCommunicatorPlugin = smsCommunicatorPlugin
                 it.otp = otp
+                it.dateUtil = dateUtil
             }
         }
     }
@@ -45,8 +42,8 @@ class AuthRequestTest : TestBase() {
     private var actionCalled = false
 
     @Before fun prepareTests() {
-        `when`(resourceHelper.gs(R.string.sms_wrongcode)).thenReturn("Wrong code. Command cancelled.")
-        PowerMockito.doAnswer(Answer { invocation: InvocationOnMock ->
+        `when`(rh.gs(R.string.sms_wrongcode)).thenReturn("Wrong code. Command cancelled.")
+        doAnswer(Answer { invocation: InvocationOnMock ->
             sentSms = invocation.getArgument(0)
             null
         } as Answer<*>).`when`(smsCommunicatorPlugin).sendSMS(anyObject())
@@ -54,7 +51,7 @@ class AuthRequestTest : TestBase() {
 
     @Test fun doTests() {
         val requester = Sms("aNumber", "aText")
-        val action: SmsAction = object : SmsAction() {
+        val action: SmsAction = object : SmsAction(false) {
             override fun run() {
                 actionCalled = true
             }
@@ -75,6 +72,7 @@ class AuthRequestTest : TestBase() {
         // correct reply
         authRequest = AuthRequest(injector, requester, "Request text", "ABC", action)
         actionCalled = false
+        `when`(otp.checkOTP(anyObject())).thenReturn(OneTimePasswordValidationResult.OK)
         authRequest.action("ABC")
         Assert.assertTrue(actionCalled)
         // second time action should not be called
@@ -84,11 +82,10 @@ class AuthRequestTest : TestBase() {
 
         // test timed out message
         val now: Long = 10000
-        PowerMockito.mockStatic(DateUtil::class.java)
-        PowerMockito.`when`(DateUtil.now()).thenReturn(now)
+        `when`(dateUtil.now()).thenReturn(now)
         authRequest = AuthRequest(injector, requester, "Request text", "ABC", action)
         actionCalled = false
-        PowerMockito.`when`(DateUtil.now()).thenReturn(now + T.mins(Constants.SMS_CONFIRM_TIMEOUT).msecs() + 1)
+        `when`(dateUtil.now()).thenReturn(now + T.mins(Constants.SMS_CONFIRM_TIMEOUT).msecs() + 1)
         authRequest.action("ABC")
         Assert.assertFalse(actionCalled)
     }

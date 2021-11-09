@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="open_humans">Проект Open Humans</string>
+    <string name="open_humans_short">OH</string>
+    <string name="open_humans_description">Open Humans позволяет загружать данные о диабете и вносить их в научные проекты.</string>
+    <string name="logout">Выход</string>
+    <string name="setup">Настройки</string>
+    <string name="setup_completed_info">Open Humans настроен. Чтобы прекратить передачу данных, нажмите \'Выйти\'.</string>
+    <string name="not_setup_info">Open Humans неактивна. Чтобы начать загрузку данных, нажмите \'Setup\'.</string>
+    <string name="project_member_id">Идентификатор участника проекта: %1$s</string>
+    <string name="only_upload_if_connected_to_wifi">Загружать только при подключении к WiFi</string>
+    <string name="only_upload_if_charging">Загружать только при зарядке</string>
+    <string name="open_humans_uploading">Идет передача данных в Open Humans…</string>
+    <string name="open_humans_notifications">Уведомления Open Humans</string>
+    <string name="uploading_to_open_humans">AndroidAPS передает данные в Open Humans. Это может занять некоторое время.</string>
+    <string name="you_have_been_signed_out_of_open_humans">Вы вышли из Open Humans</string>
+    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Нажмите здесь, чтобы снова войти в систему, если выход произошел случайно.</string>
+    <string name="upload_now">Начать передачу данных</string>
+</resources>

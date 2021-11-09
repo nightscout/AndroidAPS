@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="open_humans_orange">#ff9161</color>
+    <color name="open_humans_orange_variant">#fe6315</color>
+    <color name="open_humans_blue">#009fa8</color>
+    <color name="open_humans_blue_variant">#036866</color>
+    <color name="open_humans_text">@android:color/white</color>
+</resources>

@@ -17,7 +17,6 @@
     <string name="objectives_maxiob_gate">Provozovat smyčku několik dní s alespoň jednou nocí bez alarmů na nízkou glykémii</string>
     <string name="objectives_autosens_objective">Upravit bazály a poměry, bude-li to potřeba, a povolit automatickou detekci citlivosti na inzulín</string>
     <string name="objectives_autosens_gate">Jeden týden úspěšného používání s běžným příjmem sacharidů</string>
-    <string name="objectives_ama_objective">Povolení doplňkový funkcí pro každodenní použití, jako např. pokročilý jídelní asistent (AMA)</string>
     <string name="objectives_smb_objective">Povolit další funkce pro běžné používání jako SMB</string>
     <string name="objectives_auto_objective">Povolení automatizace</string>
     <string name="objectives_smb_gate">Přečíst si dokumentaci a zvýšit maximální IOB, aby mohlo SMB fungovat. Pro začátek se dá použít velikost běžného bolusu + 3x maximální denní bazál</string>

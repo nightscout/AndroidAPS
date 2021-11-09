@@ -3,8 +3,8 @@ package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.task
 import javax.inject.Inject;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
+import info.nightscout.androidaps.interfaces.ActivePlugin;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.pump.common.events.EventRefreshButtonState;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RFSpy;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpDevice;
@@ -14,8 +14,8 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLin
  */
 public class ResetRileyLinkConfigurationTask extends PumpTask {
 
-    @Inject ActivePluginProvider activePlugin;
-    @Inject RxBusWrapper rxBus;
+    @Inject ActivePlugin activePlugin;
+    @Inject RxBus rxBus;
     @Inject RFSpy rfSpy;
 
     public ResetRileyLinkConfigurationTask(HasAndroidInjector injector) {

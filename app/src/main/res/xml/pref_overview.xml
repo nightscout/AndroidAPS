@@ -4,6 +4,7 @@
     xmlns:validate="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
+        android:key="@string/key_overview_settings"
         android:title="@string/overview"
         app:initialExpandedChildrenCount="0">
 
@@ -179,7 +180,7 @@
                 android:inputType="numberDecimal"
                 android:key="@string/key_activity_target"
                 android:title="@string/activity_target"
-                validate:floatmaxNumber="220.0"
+                validate:floatmaxNumber="180.0"
                 validate:floatminNumber="6.0"
                 validate:testType="floatNumericRange" />
 
@@ -197,7 +198,7 @@
                 android:inputType="numberDecimal"
                 android:key="@string/key_hypo_target"
                 android:title="@string/hypo_target"
-                validate:floatmaxNumber="220.0"
+                validate:floatmaxNumber="180.0"
                 validate:floatminNumber="6.0"
                 validate:testType="floatNumericRange" />
 
@@ -500,6 +501,12 @@
                 android:key="@string/key_usesuperbolus"
                 android:summary="@string/enablesuperbolus_summary"
                 android:title="@string/enablesuperbolus" />
+
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/key_usebolusreminder"
+                android:summary="@string/enablebolusreminder_summary"
+                android:title="@string/enablebolusreminder" />
 
         </androidx.preference.PreferenceScreen>
 

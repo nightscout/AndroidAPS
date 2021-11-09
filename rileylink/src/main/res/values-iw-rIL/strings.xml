@@ -32,10 +32,11 @@
     <string name="rileylink_device_type">סוג מכשיר:</string>
     <string name="rileylink_configured_device_model">דגם המכשיר המוגדר:</string>
     <string name="rileylink_connected_device_model">דגם המכשיר המחובר:</string>
-    <string name="rileylink_last_used_frequency">תדירות השימוש לאחרונה:</string>
+    <string name="rileylink_last_used_frequency">תדר בשימוש האחרון:</string>
     <string name="rileylink_last_device_contact">קשר אחרון עם המכשיר:</string>
     <string name="rileylink_firmware_version">גרסת קושחה:</string>
     <string name="rileylink_firmware_version_value">BLE113: %1$s\nCC110: %2$s</string>
+    <string name="rileylink_firmware_version_value_orange">קושחה: %1$s\n חומרה: %2$s</string>
     <string name="rileylink_pump_serial_number">מספר סידורי של המשאבה:</string>
     <string name="rileylink_pump_frequency">תדר המשאבה:</string>
     <string name="rileylink_pump_frequency_value">%1$.2f MHz</string>
@@ -52,7 +53,7 @@
     <string name="rileylink_state_rl_ready">ריילילינק מוכן</string>
     <!-- RL Errors -->
     <string name="rileylink_error_not_rl">ההתקן אינו ריילילינק</string>
-    <string name="rileylink_error_unreachable">ריילילינק לא נגיש</string>
+    <string name="rileylink_error_unreachable">ריילילינק בלתי נגיש</string>
     <string name="rileylink_error_bt_disabled">בלוטות\' כבוי</string>
     <string name="rileylink_error_no_bt_adapter">אין מתאם בלוטות\'</string>
     <string name="rileylink_error_tuneup_failed">כוונון נכשל</string>
@@ -78,4 +79,6 @@
         <item quantity="many">%1$d שעות</item>
         <item quantity="other">%1$d שעות</item>
     </plurals>
+    <string name="orange_use_scanning_level">השתמש בסריקה</string>
+    <string name="orange_use_scanning_level_summary">סריקה לפני החיבור ל-OrangeLink, נועד לשפר את החיבורים (ניתן להשתמש בו גם עם מכשירים תואמי RileyLink אחרים, במידת הצורך)</string>
 </resources>
