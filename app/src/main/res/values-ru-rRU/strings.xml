@@ -12,7 +12,6 @@
     <string name="nav_resetdb">обнулить базы</string>
     <string name="reset_db_confirm">Вы действительно хотите обнулить базы данных?</string>
     <string name="nav_exit">Выход</string>
-    <string name="ns_sync_use_absolute_title">Всегда пользуйтесь абсолютными величинами для базала</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Это устройство не поддерживает меню оптимизации батареи - могут быть проблемы с производительностью.</string>
     <string name="description_actions">Кнопки быстрого доступа к некоторым распространенным настройкам</string>
     <string name="description_config_builder">Применяется для настройки активных плагинов</string>
@@ -898,4 +897,7 @@ Context | Edit Context</string>
     <string name="view">Вид</string>
     <string name="errors">Ошибки</string>
     <string name="ns_sync_slow">Замедлить выгрузку</string>
+    <string name="data_status">Состояние данных ГК</string>
+    <string name="recalculated_data_used">Используются пересчитанные данные</string>
+    <string name="bg_too_close">ГК слишком близко к \n%1$s\n%2$s</string>
 </resources>
