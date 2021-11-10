@@ -59,6 +59,11 @@
     <string name="time_range">Zaman aralığı</string>
     <string name="timerange_value">%1$s ile %2$s arasında</string>
     <string name="between">Arasında </string>
+    <string name="weekday_sunday_short">Pzr</string>
+    <string name="weekday_saturday_short">Cts</string>
+    <string name="weekday_friday_short">Cum</string>
+    <string name="weekday_thursday_short">Prş</string>
+    <string name="weekday_wednesday_short">Çrş</string>
     <string name="weekday_tuesday_short">Salı</string>
     <string name="weekday_monday_short">Pzt</string>
     <string name="delete_short">SİL</string>
