@@ -2,6 +2,14 @@
 <resources>
     <!-- Omnipod - Keys -->
     <!-- Omnipod - Pod Management -->
+    <string name="omnipod_common_pod_management_title">Управление на Pod</string>
+    <string name="omnipod_common_pod_management_heading_actions">Действия</string>
+    <string name="omnipod_common_pod_management_heading_tools">Инструменти</string>
+    <string name="omnipod_common_pod_management_button_activate_pod">Активирай Pod</string>
+    <string name="omnipod_common_pod_management_button_deactivate_pod">Деактивирай под</string>
+    <string name="omnipod_common_pod_management_button_discard_pod">Премахни Pod</string>
+    <string name="omnipod_common_pod_management_discard_pod_confirmation">Ако натиснете OK, състоянието на Pod ще бъде нулирано и няма да можете да общувате с него повече. Правете това, само ако вече не можете да се свързвате с него. Ако все още можете да общувате с Pod, моля, използвайте опцията <b>Деактивирай Pod</b>!</string>
+    <string name="omnipod_common_pod_management_button_play_test_beep">Възпроизвеждане на тестов звук</string>
     <!-- Omnipod - Error -->
     <!-- Omnipod - Confirmation -->
     <!-- Omnipod - Overview -->

@@ -36,7 +36,7 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
 
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var fabricPrivacy: FabricPrivacy
@@ -66,7 +66,7 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
         binding.recyclerview.layoutManager = LinearLayoutManager(view.context)
         binding.ueExportToXml.setOnClickListener {
             activity?.let { activity ->
-                OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.ue_export_to_csv) + "?") {
+                OKDialog.showConfirmation(activity, rh.gs(R.string.ue_export_to_csv) + "?") {
                     uel.log(Action.EXPORT_CSV, Sources.Treatments)
                     importExportPrefs.exportUserEntriesCsv(activity)
                 }

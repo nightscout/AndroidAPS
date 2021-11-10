@@ -33,7 +33,7 @@ class ProfileFunctionImplementation @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val sp: SP,
     private val rxBus: RxBus,
-    private val resourceHelper: ResourceHelper,
+    private val rh: ResourceHelper,
     private val activePlugin: ActivePlugin,
     private val repository: AppRepository,
     private val dateUtil: DateUtil,
@@ -78,13 +78,13 @@ class ProfileFunctionImplementation @Inject constructor(
         getProfileName(System.currentTimeMillis(), customized = true, showRemainingTime = true)
 
     fun getProfileName(time: Long, customized: Boolean, showRemainingTime: Boolean): String {
-        var profileName = resourceHelper.gs(R.string.noprofileselected)
+        var profileName = rh.gs(R.string.noprofileset)
 
         val profileSwitch = repository.getEffectiveProfileSwitchActiveAt(time).blockingGet()
         if (profileSwitch is ValueWrapper.Existing) {
             profileName = if (customized) profileSwitch.value.originalCustomizedName else profileSwitch.value.originalProfileName
             if (showRemainingTime && profileSwitch.value.originalDuration != 0L) {
-                profileName += dateUtil.untilString(profileSwitch.value.originalEnd, resourceHelper)
+                profileName += dateUtil.untilString(profileSwitch.value.originalEnd, rh)
             }
         }
         return profileName
@@ -141,9 +141,8 @@ class ProfileFunctionImplementation @Inject constructor(
         if (sp.getString(R.string.key_units, Constants.MGDL) == Constants.MGDL) GlucoseUnit.MGDL
         else GlucoseUnit.MMOL
 
-    override fun buildProfileSwitch(profileStore: ProfileStore, profileName: String, durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long): ProfileSwitch {
-        val pureProfile = profileStore.getSpecificProfile(profileName)
-            ?: throw InvalidParameterSpecException(profileName)
+    override fun buildProfileSwitch(profileStore: ProfileStore, profileName: String, durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long): ProfileSwitch? {
+        val pureProfile = profileStore.getSpecificProfile(profileName) ?: return null
         return ProfileSwitch(
             timestamp = timestamp,
             basalBlocks = pureProfile.basalBlocks,
@@ -161,8 +160,8 @@ class ProfileFunctionImplementation @Inject constructor(
         )
     }
 
-    override fun createProfileSwitch(profileStore: ProfileStore, profileName: String, durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long) {
-        val ps = buildProfileSwitch(profileStore, profileName, durationInMinutes, percentage, timeShiftInHours, timestamp)
+    override fun createProfileSwitch(profileStore: ProfileStore, profileName: String, durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long): Boolean {
+        val ps = buildProfileSwitch(profileStore, profileName, durationInMinutes, percentage, timeShiftInHours, timestamp)  ?: return false
         disposable += repository.runTransactionForResult(InsertOrUpdateProfileSwitch(ps))
             .subscribe({ result ->
                            result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted ProfileSwitch $it") }
@@ -170,17 +169,18 @@ class ProfileFunctionImplementation @Inject constructor(
                        }, {
                            aapsLogger.error(LTag.DATABASE, "Error while saving ProfileSwitch", it)
                        })
+        return true
     }
 
     override fun createProfileSwitch(durationInMinutes: Int, percentage: Int, timeShiftInHours: Int): Boolean {
         val profile = repository.getPermanentProfileSwitch(dateUtil.now()) ?: return false
         val profileStore = activePlugin.activeProfileSource.profile ?: return false
-        val ps = buildProfileSwitch(profileStore, profile.profileName, durationInMinutes, percentage, 0, dateUtil.now())
+        val ps = buildProfileSwitch(profileStore, profile.profileName, durationInMinutes, percentage, 0, dateUtil.now()) ?: return false
         val validity = ProfileSealed.PS(ps).isValid(
-            resourceHelper.gs(info.nightscout.androidaps.automation.R.string.careportal_profileswitch),
+            rh.gs(info.nightscout.androidaps.automation.R.string.careportal_profileswitch),
             activePlugin.activePump,
             config,
-            resourceHelper,
+            rh,
             rxBus,
             hardLimits,
             false

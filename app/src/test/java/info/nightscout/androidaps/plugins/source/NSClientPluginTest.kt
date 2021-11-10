@@ -14,12 +14,12 @@ class NSClientPluginTest : TestBase() {
 
     private lateinit var nsClientSourcePlugin: NSClientSourcePlugin
 
-    @Mock lateinit var resourceHelper: ResourceHelper
+    @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var sp: SP
 
     @Before
     fun setup() {
-        nsClientSourcePlugin = NSClientSourcePlugin({ AndroidInjector { } }, resourceHelper, aapsLogger, ConfigImpl())
+        nsClientSourcePlugin = NSClientSourcePlugin({ AndroidInjector { } }, rh, aapsLogger, ConfigImpl())
     }
 
     @Test fun advancedFilteringSupported() {

@@ -20,9 +20,9 @@ abstract class AbstractSensitivityPlugin(
     pluginDescription: PluginDescription,
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     val sp: SP
-) : PluginBase(pluginDescription, aapsLogger, resourceHelper, injector), Sensitivity {
+) : PluginBase(pluginDescription, aapsLogger, rh, injector), Sensitivity {
 
     abstract override fun detectSensitivity(ads: AutosensDataStore, fromTime: Long, toTime: Long): AutosensResult
 

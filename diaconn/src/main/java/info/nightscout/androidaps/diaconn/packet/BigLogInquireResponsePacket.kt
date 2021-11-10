@@ -32,7 +32,7 @@ class BigLogInquireResponsePacket(
 ) : DiaconnG8Packet(injector) {
 
     @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump
     @Inject lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
@@ -89,8 +89,8 @@ class BigLogInquireResponsePacket(
 
             diaconnG8Pump.apsWrappingCount = wrapingCount
             diaconnG8Pump.apslastLogNum  = logNum
-            sp.putInt(resourceHelper.gs(R.string.apslastLogNum), logNum)
-            sp.putInt(resourceHelper.gs(R.string.apsWrappingCount), wrapingCount)
+            sp.putInt(rh.gs(R.string.apslastLogNum), logNum)
+            sp.putInt(rh.gs(R.string.apsWrappingCount), wrapingCount)
 
             // process Log to DB
             val logDataToHexString = toNarrowHex(logdata)
@@ -118,7 +118,7 @@ class BigLogInquireResponsePacket(
                     diaconnG8HistoryRecord.value = logItem.injectAmount / 100.0
                     diaconnG8HistoryRecord.duration =  logItem.getInjectTime()
                     diaconnG8HistoryRecord.bolusType = "M" // meal bolus
-                    diaconnG8HistoryRecord.stringValue = resourceHelper.gs(R.string.diaconn_g8_logmealsuccess)
+                    diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logmealsuccess)
                     diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
                     status = "MEALBOLUSSUCCESS" + dateUtil.timeString(logDateTime)
                 }
@@ -142,7 +142,7 @@ class BigLogInquireResponsePacket(
                     diaconnG8HistoryRecord.value = if ((logItem.injectAmount / 100.0) < 0) 0.0 else (logItem.injectAmount / 100.0)
                     diaconnG8HistoryRecord.duration = logItem.getInjectTime()
                     diaconnG8HistoryRecord.bolusType = "M" // Meal bolus
-                    diaconnG8HistoryRecord.stringValue = resourceHelper.gs(R.string.diaconn_g8_logmealfail)
+                    diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logmealfail)
                     diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
                     status = "MEALBOLUSFAIL " + dateUtil.timeString(logDateTime)
                 }
@@ -167,7 +167,7 @@ class BigLogInquireResponsePacket(
                     diaconnG8HistoryRecord.value = logItem.injectAmount / 100.0
                     diaconnG8HistoryRecord.duration = logItem.getInjectTime()
                     diaconnG8HistoryRecord.bolusType = "B" // bolus
-                    diaconnG8HistoryRecord.stringValue = resourceHelper.gs(R.string.diaconn_g8_logsuccess)
+                    diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logsuccess)
                     diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
                     status = "BOLUSSUCCESS" + dateUtil.timeString(logDateTime)
                 }
@@ -217,7 +217,7 @@ class BigLogInquireResponsePacket(
                     diaconnG8HistoryRecord.timestamp = logDateTime
                     diaconnG8HistoryRecord.value = logItem.setAmount / 100.0
                     diaconnG8HistoryRecord.duration = logItem.getInjectTime()
-                    diaconnG8HistoryRecord.stringValue = resourceHelper.gs(R.string.diaconn_g8_logsquarestart)
+                    diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logsquarestart)
                     diaconnG8HistoryRecord.bolusType = "E" // Extended
                     diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
                     status = "EXTENDEDBOLUSSTART " + dateUtil.timeString(logDateTime)
@@ -231,7 +231,7 @@ class BigLogInquireResponsePacket(
                     diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_BOLUS
                     diaconnG8HistoryRecord.timestamp = logDateTime
                     diaconnG8HistoryRecord.duration = logItem.getInjectTime()
-                    diaconnG8HistoryRecord.stringValue = resourceHelper.gs(R.string.diaconn_g8_logsquaresuccess)
+                    diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logsquaresuccess)
                     diaconnG8HistoryRecord.bolusType = "E" // Extended
                     diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
                     status = "EXTENDEDBOLUSEND " + dateUtil.timeString(logDateTime)
@@ -278,7 +278,7 @@ class BigLogInquireResponsePacket(
                     diaconnG8HistoryRecord.timestamp = logDateTime
                     diaconnG8HistoryRecord.value = logItem.setSquareAmount / 100.0
                     diaconnG8HistoryRecord.duration = logItem.getInjectTime() * 10 // (1~30) 1:10min 30:300min
-                    diaconnG8HistoryRecord.stringValue = resourceHelper.gs(R.string.diaconn_g8_logdualsquarestart)
+                    diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logdualsquarestart)
                     diaconnG8HistoryRecord.bolusType = "D" // Extended
                     diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
 
@@ -309,7 +309,7 @@ class BigLogInquireResponsePacket(
                     diaconnG8HistoryRecord.value = logItem.injectAmount / 100.0
                     diaconnG8HistoryRecord.duration = logItem.getInjectTime()
                     diaconnG8HistoryRecord.bolusType = "D" // bolus
-                    diaconnG8HistoryRecord.stringValue = resourceHelper.gs(R.string.diaconn_g8_logdualnormalsuccess)
+                    diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logdualnormalsuccess)
                     diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
                     status = "DUALBOLUS" + dateUtil.timeString(logDateTime)
                 }
@@ -325,7 +325,7 @@ class BigLogInquireResponsePacket(
                     diaconnG8HistoryRecord.value = logItem.injectSquareAmount / 100.0
                     diaconnG8HistoryRecord.duration = logItem.getInjectTime()
                     diaconnG8HistoryRecord.bolusType = "D"
-                    diaconnG8HistoryRecord.stringValue = resourceHelper.gs(R.string.diaconn_g8_logdualsquaresuccess)
+                    diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logdualsquaresuccess)
                     diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
                     status = "DUALBOLUS SQUARESUCCESS " + dateUtil.timeString(logDateTime)
                 }
@@ -372,7 +372,7 @@ class BigLogInquireResponsePacket(
                     val logDateTime = logStartDate.time
                     diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_SUSPEND
                     diaconnG8HistoryRecord.timestamp = logDateTime
-                    diaconnG8HistoryRecord.stringValue = resourceHelper.gs(R.string.diaconn_g8_lgosuspend, logItem.getBasalPattern())
+                    diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_lgosuspend, logItem.getBasalPattern())
                     diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
                     status = "SUSPEND " + dateUtil.timeString(logDateTime)
                 }
@@ -384,7 +384,7 @@ class BigLogInquireResponsePacket(
                     val logDateTime = logStartDate.time
                     diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_SUSPEND
                     diaconnG8HistoryRecord.timestamp = logDateTime
-                    diaconnG8HistoryRecord.stringValue = resourceHelper.gs(R.string.diaconn_g8_lgorelease, logItem.getBasalPattern())
+                    diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_lgorelease, logItem.getBasalPattern())
                     diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
                     status = "SUSPENDRELEASE " + dateUtil.timeString(logDateTime)
                 }
@@ -407,7 +407,7 @@ class BigLogInquireResponsePacket(
                     diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_REFILL
                     diaconnG8HistoryRecord.timestamp = logDateTime
                     diaconnG8HistoryRecord.value = logItem.remainAmount / 100.0
-                    diaconnG8HistoryRecord.stringValue = resourceHelper.gs(R.string.diaconn_g8_loginjectorprime, logItem.primeAmount / 100.0)
+                    diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_loginjectorprime, logItem.primeAmount / 100.0)
                     diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
                     status = "INSULINCHANGE " + dateUtil.timeString(logDateTime)
                 }
@@ -421,7 +421,7 @@ class BigLogInquireResponsePacket(
                         val newRecord = pumpSync.insertTherapyEventIfNewWithTimestamp(
                             timestamp = logDateTime,
                             type = DetailedBolusInfo.EventType.NOTE,
-                            note = resourceHelper.gs(R.string.diaconn_g8_logtubeprime, logItem.primeAmount / 100.0),
+                            note = rh.gs(R.string.diaconn_g8_logtubeprime, logItem.primeAmount / 100.0),
                             pumpId = logDateTime,
                             pumpType = PumpType.DIACONN_G8,
                             pumpSerial = diaconnG8Pump.serialNo.toString()
@@ -433,7 +433,7 @@ class BigLogInquireResponsePacket(
                     diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_REFILL
                     diaconnG8HistoryRecord.timestamp = logDateTime
                     diaconnG8HistoryRecord.value = logItem.remainAmount / 100.0
-                    diaconnG8HistoryRecord.stringValue = resourceHelper.gs(R.string.diaconn_g8_logtubeprime, logItem.primeAmount / 100.0)
+                    diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logtubeprime, logItem.primeAmount / 100.0)
                     diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
                     status = "TUBECHANGE " + dateUtil.timeString(logDateTime)
                 }
@@ -552,7 +552,7 @@ class BigLogInquireResponsePacket(
                     diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_REFILL
                     diaconnG8HistoryRecord.timestamp = logDateTime
                     diaconnG8HistoryRecord.value = logItem.remainAmount / 100.0
-                    diaconnG8HistoryRecord.stringValue = resourceHelper.gs(R.string.diaconn_g8_logneedleprime, logItem.primeAmount / 100.0)
+                    diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logneedleprime, logItem.primeAmount / 100.0)
                     diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
                     status = "NEEDLECHANGE " + dateUtil.timeString(logDateTime)
                 }
@@ -589,7 +589,7 @@ class BigLogInquireResponsePacket(
                     diaconnG8HistoryRecord.timestamp = logDateTime
                     diaconnG8HistoryRecord.duration = logItem.tbTime * 15
                     diaconnG8HistoryRecord.value = absoluteRate
-                    diaconnG8HistoryRecord.stringValue =  resourceHelper.gs(R.string.diaconn_g8_logtempstart)
+                    diaconnG8HistoryRecord.stringValue =  rh.gs(R.string.diaconn_g8_logtempstart)
                     diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
                     status = "TEMPSTART " + dateUtil.timeString(logDateTime)
                 }
@@ -632,7 +632,7 @@ class BigLogInquireResponsePacket(
 
                     diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_ALARM
                     diaconnG8HistoryRecord.timestamp = logDateTime
-                    diaconnG8HistoryRecord.stringValue = resourceHelper.gs(R.string.diaconn_g8_logbatteryshorage)
+                    diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logbatteryshorage)
                     diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
                     status = "BATTERYALARM " + dateUtil.timeString(logDateTime)
                 }
@@ -647,7 +647,7 @@ class BigLogInquireResponsePacket(
                     diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_ALARM
                     diaconnG8HistoryRecord.timestamp = logDateTime
                     diaconnG8HistoryRecord.value = logItem.amount / 100.0
-                    diaconnG8HistoryRecord.stringValue = resourceHelper.gs(R.string.diaconn_g8_logalarmblock, getReasonName(pumplogKind, logItem.reason))
+                    diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logalarmblock, getReasonName(pumplogKind, logItem.reason))
                     diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
                     status = "BLOCKALARM " + dateUtil.timeString(logDateTime)
                 }
@@ -662,7 +662,7 @@ class BigLogInquireResponsePacket(
                     diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_ALARM
                     diaconnG8HistoryRecord.timestamp = logDateTime
                     diaconnG8HistoryRecord.value = logItem.remain.toDouble()
-                    diaconnG8HistoryRecord.stringValue = resourceHelper.gs(R.string.diaconn_g8_loginsulinshorage)
+                    diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_loginsulinshorage)
                     diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
                     status = "SHORTAGEALARM " + dateUtil.timeString(logDateTime)
                 }
@@ -694,12 +694,12 @@ class BigLogInquireResponsePacket(
                 }
 
                 else       -> {
-                    status = resourceHelper.gs(R.string.diaconn_g8_logsyncinprogress)
+                    status = rh.gs(R.string.diaconn_g8_logsyncinprogress)
                     rxBus.send(EventPumpStatusChanged(status))
                     continue
                 }
             }
-            rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.processinghistory) + ": " + status))
+            rxBus.send(EventPumpStatusChanged(rh.gs(R.string.processinghistory) + ": " + status))
         }
     }
 
@@ -726,40 +726,40 @@ class BigLogInquireResponsePacket(
     private fun failLog(reason: Byte): String {
         return when (reason) {
             //1=Injection blockage, 2=Battery shortage, 3=Drug shortage, 4=User shutdown, 5=System reset, 6=Other, 7=Emergency shutdown
-            0.toByte() -> resourceHelper.gs(R.string.diaconn_g8_reasoncomplete)
-            1.toByte() -> resourceHelper.gs(R.string.diaconn_g8_reasoninjectonblock)
-            2.toByte() -> resourceHelper.gs(R.string.diaconn_g8_reasonbatteryshortage)
-            3.toByte() -> resourceHelper.gs(R.string.diaconn_g8_reasoninsulinshortage)
-            4.toByte() -> resourceHelper.gs(R.string.diaconn_g8_reasonuserstop)
-            5.toByte() -> resourceHelper.gs(R.string.diaconn_g8_reasonsystemreset)
-            6.toByte() -> resourceHelper.gs(R.string.diaconn_g8_reasonother)
-            7.toByte() -> resourceHelper.gs(R.string.diaconn_g8_reasonemergencystop)
+            0.toByte() -> rh.gs(R.string.diaconn_g8_reasoncomplete)
+            1.toByte() -> rh.gs(R.string.diaconn_g8_reasoninjectonblock)
+            2.toByte() -> rh.gs(R.string.diaconn_g8_reasonbatteryshortage)
+            3.toByte() -> rh.gs(R.string.diaconn_g8_reasoninsulinshortage)
+            4.toByte() -> rh.gs(R.string.diaconn_g8_reasonuserstop)
+            5.toByte() -> rh.gs(R.string.diaconn_g8_reasonsystemreset)
+            6.toByte() -> rh.gs(R.string.diaconn_g8_reasonother)
+            7.toByte() -> rh.gs(R.string.diaconn_g8_reasonemergencystop)
             else       -> "No Reason"
         }
     }
 
     private fun resetLog(reason: Byte): String {
         return when (reason.toInt()) {
-            1 -> resourceHelper.gs(R.string.diaconn_g8_resetfactoryreset)
-            2 -> resourceHelper.gs(R.string.diaconn_g8_resetemergencyoff)
-            3 -> resourceHelper.gs(R.string.diaconn_g8_resetbatteryreplacement)
-            4 -> resourceHelper.gs(R.string.diaconn_g8_resetaftercalibration)
-            5 -> resourceHelper.gs(R.string.diaconn_g8_resetpreshipment)
-            9 -> resourceHelper.gs(R.string.diaconn_g8_resetunexpected)
+            1 -> rh.gs(R.string.diaconn_g8_resetfactoryreset)
+            2 -> rh.gs(R.string.diaconn_g8_resetemergencyoff)
+            3 -> rh.gs(R.string.diaconn_g8_resetbatteryreplacement)
+            4 -> rh.gs(R.string.diaconn_g8_resetaftercalibration)
+            5 -> rh.gs(R.string.diaconn_g8_resetpreshipment)
+            9 -> rh.gs(R.string.diaconn_g8_resetunexpected)
             else -> ""
         }
     }
 
     private fun blockLog(reason: Byte): String {
         return when (reason.toInt()) {
-            1 -> resourceHelper.gs(R.string.diacon_g8_blockbasal)
-            2 -> resourceHelper.gs(R.string.diacon_g8_blockmealbolus)
-            3 -> resourceHelper.gs(R.string.diacon_g8_blocknormalbolus)
-            4 -> resourceHelper.gs(R.string.diacon_g8_blocksquarebolus)
-            5 -> resourceHelper.gs(R.string.diacon_g8_blockdualbolus)
-            6 -> resourceHelper.gs(R.string.diacon_g8_blockreplacetube)
-            7 -> resourceHelper.gs(R.string.diacon_g8_blockreplaceneedle)
-            8 -> resourceHelper.gs(R.string.diacon_g8_blockreplacesyringe)
+            1 -> rh.gs(R.string.diacon_g8_blockbasal)
+            2 -> rh.gs(R.string.diacon_g8_blockmealbolus)
+            3 -> rh.gs(R.string.diacon_g8_blocknormalbolus)
+            4 -> rh.gs(R.string.diacon_g8_blocksquarebolus)
+            5 -> rh.gs(R.string.diacon_g8_blockdualbolus)
+            6 -> rh.gs(R.string.diacon_g8_blockreplacetube)
+            7 -> rh.gs(R.string.diacon_g8_blockreplaceneedle)
+            8 -> rh.gs(R.string.diacon_g8_blockreplacesyringe)
             else -> ""
         }
     }

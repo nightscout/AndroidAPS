@@ -70,7 +70,7 @@ class NSClientService : DaggerService() {
     @Inject lateinit var nsSettingsStatus: NSSettingsStatus
     @Inject lateinit var nsDeviceStatus: NSDeviceStatus
     @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var sp: SP
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var nsClientPlugin: NSClientPlugin
@@ -119,7 +119,7 @@ class NSClientService : DaggerService() {
             .toObservable(EventConfigBuilderChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({
-                if (nsEnabled != nsClientPlugin.isEnabled(PluginType.GENERAL)) {
+                if (nsEnabled != nsClientPlugin.isEnabled()) {
                     latestDateInReceivedData = 0
                     destroy()
                     initialize()
@@ -130,9 +130,9 @@ class NSClientService : DaggerService() {
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event: EventPreferenceChange ->
-                if (event.isChanged(resourceHelper, R.string.key_nsclientinternal_url) ||
-                    event.isChanged(resourceHelper, R.string.key_nsclientinternal_api_secret) ||
-                    event.isChanged(resourceHelper, R.string.key_nsclientinternal_paused)) {
+                if (event.isChanged(rh, R.string.key_nsclientinternal_url) ||
+                    event.isChanged(rh, R.string.key_nsclientinternal_api_secret) ||
+                    event.isChanged(rh, R.string.key_nsclientinternal_paused)) {
                     latestDateInReceivedData = 0
                     destroy()
                     initialize()
@@ -199,20 +199,20 @@ class NSClientService : DaggerService() {
         var connectionStatus = "Authenticated ("
         if (ack.read) connectionStatus += "R"
         if (ack.write) connectionStatus += "W"
-        if (ack.write_treatment) connectionStatus += "T"
+        if (ack.writeTreatment) connectionStatus += "T"
         connectionStatus += ')'
         isConnected = true
-        hasWriteAuth = ack.write && ack.write_treatment
+        hasWriteAuth = ack.write && ack.writeTreatment
         rxBus.send(EventNSClientStatus(connectionStatus))
         rxBus.send(EventNSClientNewLog("AUTH", connectionStatus))
         if (!ack.write) {
             rxBus.send(EventNSClientNewLog("ERROR", "Write permission not granted "))
         }
-        if (!ack.write_treatment) {
+        if (!ack.writeTreatment) {
             rxBus.send(EventNSClientNewLog("ERROR", "Write treatment permission not granted "))
         }
         if (!hasWriteAuth) {
-            val noWritePerm = Notification(Notification.NSCLIENT_NO_WRITE_PERMISSION, resourceHelper.gs(R.string.nowritepermission), Notification.URGENT)
+            val noWritePerm = Notification(Notification.NSCLIENT_NO_WRITE_PERMISSION, rh.gs(R.string.nowritepermission), Notification.URGENT)
             rxBus.send(EventNewNotification(noWritePerm))
         } else {
             rxBus.send(EventDismissNotification(Notification.NSCLIENT_NO_WRITE_PERMISSION))
@@ -304,7 +304,7 @@ class NSClientService : DaggerService() {
             }
             rxBus.send(EventNSClientNewLog("WATCHDOG", "connections in last " + WATCHDOG_INTERVAL_MINUTES + " minutes: " + reconnections.size + "/" + WATCHDOG_MAX_CONNECTIONS))
             if (reconnections.size >= WATCHDOG_MAX_CONNECTIONS) {
-                val n = Notification(Notification.NS_MALFUNCTION, resourceHelper.gs(R.string.nsmalfunction), Notification.URGENT)
+                val n = Notification(Notification.NS_MALFUNCTION, rh.gs(R.string.nsmalfunction), Notification.URGENT)
                 rxBus.send(EventNewNotification(n))
                 rxBus.send(EventNSClientNewLog("WATCHDOG", "pausing for $WATCHDOG_RECONNECT_IN minutes"))
                 nsClientPlugin.pause(true)
@@ -356,7 +356,7 @@ class NSClientService : DaggerService() {
     }
 
     fun readPreferences() {
-        nsEnabled = nsClientPlugin.isEnabled(PluginType.GENERAL)
+        nsEnabled = nsClientPlugin.isEnabled()
         nsURL = sp.getString(R.string.key_nsclientinternal_url, "")
         nsAPISecret = sp.getString(R.string.key_nsclientinternal_api_secret, "")
         nsDevice = sp.getString("careportal_enteredby", "")

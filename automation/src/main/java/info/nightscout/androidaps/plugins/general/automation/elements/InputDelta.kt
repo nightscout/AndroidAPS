@@ -12,7 +12,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.ui.NumberPicker
 import java.text.DecimalFormat
 
-class InputDelta(private val resourceHelper: ResourceHelper) : Element() {
+class InputDelta(private val rh: ResourceHelper) : Element() {
 
     enum class DeltaType {
         DELTA, SHORT_AVERAGE, LONG_AVERAGE;
@@ -26,10 +26,10 @@ class InputDelta(private val resourceHelper: ResourceHelper) : Element() {
 
         companion object {
 
-            fun labels(resourceHelper: ResourceHelper): List<String> {
+            fun labels(rh: ResourceHelper): List<String> {
                 val list: MutableList<String> = ArrayList()
                 for (d in values()) {
-                    list.add(resourceHelper.gs(d.stringRes))
+                    list.add(rh.gs(d.stringRes))
                 }
                 return list
             }
@@ -43,7 +43,7 @@ class InputDelta(private val resourceHelper: ResourceHelper) : Element() {
     private var decimalFormat: DecimalFormat? = null
     var deltaType: DeltaType = DeltaType.DELTA
 
-    constructor(resourceHelper: ResourceHelper, value: Double, minValue: Double, maxValue: Double, step: Double, decimalFormat: DecimalFormat, deltaType: DeltaType) : this(resourceHelper) {
+    constructor(rh: ResourceHelper, value: Double, minValue: Double, maxValue: Double, step: Double, decimalFormat: DecimalFormat, deltaType: DeltaType) : this(rh) {
         this.value = value
         this.minValue = minValue
         this.maxValue = maxValue
@@ -52,7 +52,7 @@ class InputDelta(private val resourceHelper: ResourceHelper) : Element() {
         this.deltaType = deltaType
     }
 
-    constructor(resourceHelper: ResourceHelper, inputDelta: InputDelta) : this(resourceHelper) {
+    constructor(rh: ResourceHelper, inputDelta: InputDelta) : this(rh) {
         value = inputDelta.value
         minValue = inputDelta.minValue
         maxValue = inputDelta.maxValue
@@ -64,11 +64,11 @@ class InputDelta(private val resourceHelper: ResourceHelper) : Element() {
     override fun addToLayout(root: LinearLayout) {
         root.addView(
             Spinner(root.context).apply {
-                adapter = ArrayAdapter(root.context, R.layout.spinner_centered, DeltaType.labels(resourceHelper)).apply {
+                adapter = ArrayAdapter(root.context, R.layout.spinner_centered, DeltaType.labels(rh)).apply {
                     setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 }
                 layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
-                    setMargins(0, resourceHelper.dpToPx(4), 0, resourceHelper.dpToPx(4))
+                    setMargins(0, rh.dpToPx(4), 0, rh.dpToPx(4))
                 }
                 onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {

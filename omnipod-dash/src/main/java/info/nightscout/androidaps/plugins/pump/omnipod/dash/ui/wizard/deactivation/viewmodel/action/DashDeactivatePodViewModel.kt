@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.wizard.deactivat
 import androidx.annotation.StringRes
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.PumpEnactResult
-import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 class DashDeactivatePodViewModel @Inject constructor(
     private val podStateManager: OmnipodDashPodStateManager,
-    private val commandQueueProvider: CommandQueueProvider,
+    private val commandQueue: CommandQueue,
     private val rxBus: RxBus,
     injector: HasAndroidInjector,
     logger: AAPSLogger,
@@ -27,7 +27,7 @@ class DashDeactivatePodViewModel @Inject constructor(
 ) : DeactivatePodViewModel(injector, logger, aapsSchedulers) {
 
     override fun doExecuteAction(): Single<PumpEnactResult> = Single.create { source ->
-        commandQueueProvider.customCommand(
+        commandQueue.customCommand(
             CommandDeactivatePod(),
             object : Callback() {
                 override fun run() {

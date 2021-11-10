@@ -37,6 +37,9 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import org.json.JSONArray
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledFuture
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.floor
@@ -51,7 +54,7 @@ class IobCobCalculatorPlugin @Inject constructor(
     private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
     private val sp: SP,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,
     private val sensitivityOref1Plugin: SensitivityOref1Plugin,
@@ -67,7 +70,7 @@ class IobCobCalculatorPlugin @Inject constructor(
         .showInList(false)
         .neverVisible(true)
         .alwaysEnabled(true),
-    aapsLogger, resourceHelper, injector
+    aapsLogger, rh, injector
 ), IobCobCalculator {
 
     private val disposable = CompositeDisposable()
@@ -102,14 +105,14 @@ class IobCobCalculatorPlugin @Inject constructor(
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event ->
-                           if (event.isChanged(resourceHelper, R.string.key_openapsama_autosens_period) ||
-                               event.isChanged(resourceHelper, R.string.key_age) ||
-                               event.isChanged(resourceHelper, R.string.key_absorption_maxtime) ||
-                               event.isChanged(resourceHelper, R.string.key_openapsama_min_5m_carbimpact) ||
-                               event.isChanged(resourceHelper, R.string.key_absorption_cutoff) ||
-                               event.isChanged(resourceHelper, R.string.key_openapsama_autosens_max) ||
-                               event.isChanged(resourceHelper, R.string.key_openapsama_autosens_min) ||
-                               event.isChanged(resourceHelper, R.string.key_insulin_oref_peak)
+                           if (event.isChanged(rh, R.string.key_openapsama_autosens_period) ||
+                               event.isChanged(rh, R.string.key_age) ||
+                               event.isChanged(rh, R.string.key_absorption_maxtime) ||
+                               event.isChanged(rh, R.string.key_openapsama_min_5m_carbimpact) ||
+                               event.isChanged(rh, R.string.key_absorption_cutoff) ||
+                               event.isChanged(rh, R.string.key_openapsama_autosens_max) ||
+                               event.isChanged(rh, R.string.key_openapsama_autosens_min) ||
+                               event.isChanged(rh, R.string.key_insulin_oref_peak)
                            ) {
                                resetDataAndRunCalculation("onEventPreferenceChange", event)
                            }
@@ -126,12 +129,7 @@ class IobCobCalculatorPlugin @Inject constructor(
         disposable += rxBus
             .toObservable(EventNewHistoryData::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe(
-                { event ->
-                    newHistoryData(event.oldDataTimestamp, event.reloadBgData, if (event.newestGlucoseValue != null) EventNewBG(event.newestGlucoseValue) else event)
-                },
-                fabricPrivacy::logException
-            )
+            .subscribe({ event -> scheduleHistoryDataChange(event) }, fabricPrivacy::logException)
     }
 
     override fun onStop() {
@@ -389,6 +387,44 @@ class IobCobCalculatorPlugin @Inject constructor(
         }
     }
 
+    // Limit rate of EventNewHistoryData
+    private val historyWorker = Executors.newSingleThreadScheduledExecutor()
+    private var scheduledHistoryPost: ScheduledFuture<*>? = null
+    private var scheduledEvent: EventNewHistoryData? = null
+
+    @Synchronized
+    private fun scheduleHistoryDataChange(event: EventNewHistoryData) {
+        // if there is nothing scheduled or asking reload deeper to the past
+        if (scheduledEvent == null || event.oldDataTimestamp < (scheduledEvent?.oldDataTimestamp) ?: 0L) {
+            // cancel waiting task to prevent sending multiple posts
+            scheduledHistoryPost?.cancel(false)
+            // prepare task for execution in 1 sec
+            scheduledEvent = event
+            scheduledHistoryPost = historyWorker.schedule({
+                                                              synchronized(this) {
+                                                                  aapsLogger.debug(LTag.DATABASE, "Running newHistoryData")
+                                                                  newHistoryData(
+                                                                      event.oldDataTimestamp,
+                                                                      event.reloadBgData,
+                                                                      if (event.newestGlucoseValue != null) EventNewBG(event.newestGlucoseValue) else event
+                                                                  )
+                                                                  scheduledEvent = null
+                                                                  scheduledHistoryPost = null
+                                                              }
+                                                          }, 1L, TimeUnit.SECONDS)
+        } else {
+            // asked reload is newer -> adjust params only
+            scheduledEvent?.let {
+                // set reload bg data if was not set
+                if (!it.reloadBgData) it.reloadBgData = event.reloadBgData
+                // set Glucose value if newer
+                event.newestGlucoseValue?.let { gv ->
+                    if (gv.timestamp > (it.newestGlucoseValue?.timestamp ?: 0L)) it.newestGlucoseValue = gv
+                }
+            }
+        }
+    }
+
     // When historical data is changed (coming from NS etc) finished calculations after this date must be invalidated
     private fun newHistoryData(oldDataTimestamp: Long, bgDataReload: Boolean, event: Event) {
         //log.debug("Locking onNewHistoryData");
@@ -522,16 +558,29 @@ class IobCobCalculatorPlugin @Inject constructor(
         return null
     }
 
-    override fun getTempBasalIncludingConvertedExtended(timestamp: Long): TemporaryBasal? {
-
-        val tb = repository.getTemporaryBasalActiveAt(timestamp).blockingGet()
-        if (tb is ValueWrapper.Existing) return tb.value
+    private fun getConvertedExtended(timestamp: Long): TemporaryBasal? {
         if (activePlugin.activePump.isFakingTempsByExtendedBoluses) {
             val eb = repository.getExtendedBolusActiveAt(timestamp).blockingGet()
             val profile = profileFunction.getProfile(timestamp) ?: return null
             if (eb is ValueWrapper.Existing) return eb.value.toTemporaryBasal(profile)
         }
         return null
+    }
+
+    override fun getTempBasalIncludingConvertedExtended(timestamp: Long): TemporaryBasal? {
+        val tb = repository.getTemporaryBasalActiveAt(timestamp).blockingGet()
+        if (tb is ValueWrapper.Existing) return tb.value
+        return getConvertedExtended(timestamp);
+    }
+
+    override fun getTempBasalIncludingConvertedExtendedForRange(startTime: Long, endTime: Long, calculationStep: Long): Map<Long, TemporaryBasal?> {
+        val tempBasals = HashMap<Long, TemporaryBasal?>();
+        val tbs = repository.getTemporaryBasalsDataActiveBetweenTimeAndTime(startTime, endTime).blockingGet()
+        for (t in startTime until endTime step calculationStep) {
+            val tb = tbs.firstOrNull { basal -> basal.timestamp <= t && (basal.timestamp + basal.duration) > t }
+            tempBasals[t] = tb ?: getConvertedExtended(t)
+        }
+        return tempBasals;
     }
 
     override fun calculateAbsoluteIobFromBaseBasals(toTime: Long): IobTotal {

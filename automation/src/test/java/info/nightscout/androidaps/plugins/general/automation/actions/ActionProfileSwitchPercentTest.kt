@@ -7,6 +7,7 @@ import info.nightscout.androidaps.queue.Callback
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
+import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 
@@ -17,8 +18,8 @@ class ActionProfileSwitchPercentTest : ActionsTestBase() {
     @Before
     fun setup() {
 
-        `when`(resourceHelper.gs(R.string.startprofileforever)).thenReturn("Start profile %d%%")
-        `when`(resourceHelper.gs(R.string.startprofile)).thenReturn("Start profile %d%% for %d min")
+        `when`(rh.gs(R.string.startprofileforever)).thenReturn("Start profile %d%%")
+        `when`(rh.gs(R.string.startprofile)).thenReturn("Start profile %d%% for %d min")
 
         sut = ActionProfileSwitchPercent(injector)
     }
@@ -38,6 +39,7 @@ class ActionProfileSwitchPercentTest : ActionsTestBase() {
     }
 
     @Test fun doActionTest() {
+        `when`(profileFunction.createProfileSwitch(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt())).thenReturn(true)
         sut.pct = InputPercent(110.0)
         sut.duration = InputDuration(30, InputDuration.TimeUnit.MINUTES)
         sut.doAction(object : Callback() {

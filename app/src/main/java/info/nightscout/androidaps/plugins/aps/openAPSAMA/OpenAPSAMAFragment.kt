@@ -31,7 +31,7 @@ class OpenAPSAMAFragment : DaggerFragment() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var openAPSAMAPlugin: OpenAPSAMAPlugin
     @Inject lateinit var dateUtil: DateUtil
@@ -101,7 +101,7 @@ class OpenAPSAMAFragment : DaggerFragment() {
             binding.currenttemp.text = jsonFormatter.format(determineBasalAdapterAMAJS.currentTempParam)
             try {
                 val iobArray = JSONArray(determineBasalAdapterAMAJS.iobDataParam)
-                binding.iobdata.text = TextUtils.concat(resourceHelper.gs(R.string.array_of_elements, iobArray.length()) + "\n", jsonFormatter.format(iobArray.getString(0)))
+                binding.iobdata.text = TextUtils.concat(rh.gs(R.string.array_of_elements, iobArray.length()) + "\n", jsonFormatter.format(iobArray.getString(0)))
             } catch (e: JSONException) {
                 aapsLogger.error(LTag.APS, "Unhandled exception", e)
                 @Suppress("SetTextI18n")

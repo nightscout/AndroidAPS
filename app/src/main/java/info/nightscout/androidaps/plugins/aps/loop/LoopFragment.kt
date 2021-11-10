@@ -28,7 +28,7 @@ class LoopFragment : DaggerFragment() {
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var sp: SP
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var loopPlugin: LoopPlugin
     @Inject lateinit var dateUtil: DateUtil
@@ -51,7 +51,7 @@ class LoopFragment : DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.run.setOnClickListener {
-            binding.lastrun.text = resourceHelper.gs(R.string.executing)
+            binding.lastrun.text = rh.gs(R.string.executing)
             Thread { loopPlugin.invoke("Loop button", true) }.start()
         }
     }

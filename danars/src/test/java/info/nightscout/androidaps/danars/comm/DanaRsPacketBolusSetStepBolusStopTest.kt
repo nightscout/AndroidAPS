@@ -20,14 +20,14 @@ class DanaRsPacketBolusSetStepBolusStopTest : DanaRSTestBase() {
             if (it is DanaRSPacketBolusSetStepBolusStop) {
                 it.aapsLogger = aapsLogger
                 it.rxBus = rxBus
-                it.resourceHelper = resourceHelper
+                it.rh = rh
                 it.danaPump = danaPump
             }
         }
     }
 
     @Test fun runTest() {
-        `when`(resourceHelper.gs(Mockito.anyInt())).thenReturn("SomeString")
+        `when`(rh.gs(Mockito.anyInt())).thenReturn("SomeString")
 
         danaPump.bolusingTreatment = EventOverviewBolusProgress.Treatment(0.0, 0, true)
         val testPacket = DanaRSPacketBolusSetStepBolusStop(packetInjector)

@@ -51,7 +51,7 @@
     <string name="stoppingtempbasal">הפסקת בזאלי זמני</string>
     <string name="settingextendedbolus">מגדיר בולוס ממושך</string>
     <string name="stoppingextendedbolus">מפסיק בולוס ממושך</string>
-    <string name="updatingbasalrates">מעדכן את הקצב הבזאלי</string>
+    <string name="updatingbasalrates">מעדכן את המינון הבזאלי</string>
     <string name="settingtempbasal">הגדרת בזאלי זמני</string>
     <string name="waitingfortimesynchronization">ממתין לסינכרון השעון (%1$d שנ\')</string>
     <string name="wrongpumppassword">סיסמת משאבה שגויה!</string>

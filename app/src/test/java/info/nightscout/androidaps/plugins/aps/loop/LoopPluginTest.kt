@@ -30,10 +30,10 @@ class LoopPluginTest : TestBase() {
     @Mock lateinit var sp: SP
     private val rxBus: RxBus = RxBus(aapsSchedulers, aapsLogger)
     @Mock lateinit var constraintChecker: ConstraintChecker
-    @Mock lateinit var resourceHelper: ResourceHelper
+    @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var context: Context
-    @Mock lateinit var commandQueue: CommandQueueProvider
+    @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Mock lateinit var iobCobCalculator: IobCobCalculator
@@ -50,15 +50,15 @@ class LoopPluginTest : TestBase() {
     val injector = HasAndroidInjector { AndroidInjector { } }
     @Before fun prepareMock() {
 
-        loopPlugin = LoopPlugin(injector, aapsLogger, aapsSchedulers, rxBus, sp, ConfigImpl(), constraintChecker, resourceHelper, profileFunction, context, commandQueue, activePlugin, virtualPumpPlugin, iobCobCalculator, receiverStatusStore, fabricPrivacy, dateUtil, uel, repository, runningConfiguration)
+        loopPlugin = LoopPlugin(injector, aapsLogger, aapsSchedulers, rxBus, sp, ConfigImpl(), constraintChecker, rh, profileFunction, context, commandQueue, activePlugin, virtualPumpPlugin, iobCobCalculator, receiverStatusStore, fabricPrivacy, dateUtil, uel, repository, runningConfiguration)
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         `when`(context.getSystemService(Context.NOTIFICATION_SERVICE)).thenReturn(notificationManager)
     }
 
     @Test
     fun testPluginInterface() {
-        `when`(resourceHelper.gs(R.string.loop)).thenReturn("Loop")
-        `when`(resourceHelper.gs(R.string.loop_shortname)).thenReturn("LOOP")
+        `when`(rh.gs(R.string.loop)).thenReturn("Loop")
+        `when`(rh.gs(R.string.loop_shortname)).thenReturn("LOOP")
         `when`(sp.getString(R.string.key_aps_mode, "open")).thenReturn("closed")
         val pumpDescription = PumpDescription()
         `when`(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)
@@ -71,13 +71,13 @@ class LoopPluginTest : TestBase() {
         Assert.assertEquals(R.xml.pref_loop.toLong(), loopPlugin.preferencesId.toLong())
 
         // Plugin is disabled by default
-        Assert.assertEquals(false, loopPlugin.isEnabled(PluginType.LOOP))
+        Assert.assertEquals(false, loopPlugin.isEnabled())
         loopPlugin.setPluginEnabled(PluginType.LOOP, true)
-        Assert.assertEquals(true, loopPlugin.isEnabled(PluginType.LOOP))
+        Assert.assertEquals(true, loopPlugin.isEnabled())
 
         // No temp basal capable pump should disable plugin
         virtualPumpPlugin.pumpDescription.isTempBasalCapable = false
-        Assert.assertEquals(false, loopPlugin.isEnabled(PluginType.LOOP))
+        Assert.assertEquals(false, loopPlugin.isEnabled())
         virtualPumpPlugin.pumpDescription.isTempBasalCapable = true
 
         // Fragment is hidden by default

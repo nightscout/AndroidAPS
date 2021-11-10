@@ -893,4 +893,8 @@
     <string name="error_in_target_values">Chyba v hodnotách cílové gl.</string>
     <string name="error_in_isf_values">Chyba v hodnotách inz. citlivosti</string>
     <string name="run_question">Spustit %s?</string>
+    <string name="invalid_profile_not_accepted">Neplatný profil %1$s nebyl přijat z NS</string>
+    <string name="view">Zobrazit</string>
+    <string name="errors">Chyby</string>
+    <string name="ns_sync_slow">Zpomalit odesílání</string>
 </resources>

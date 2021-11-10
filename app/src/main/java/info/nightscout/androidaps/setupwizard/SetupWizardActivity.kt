@@ -145,13 +145,13 @@ class SetupWizardActivity : NoSplashAppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (currentWizardPage == 0) OKDialog.showConfirmation(this, resourceHelper.gs(R.string.exitwizard)) { finish() } else showPreviousPage(null)
+        if (currentWizardPage == 0) OKDialog.showConfirmation(this, rh.gs(R.string.exitwizard)) { finish() } else showPreviousPage(null)
     }
 
     @Suppress("UNUSED_PARAMETER")
     fun exitPressed(view: View?) {
         sp.putBoolean(R.string.key_setupwizard_processed, true)
-        OKDialog.showConfirmation(this, resourceHelper.gs(R.string.exitwizard)) { finish() }
+        OKDialog.showConfirmation(this, rh.gs(R.string.exitwizard)) { finish() }
     }
 
     @Suppress("UNUSED_PARAMETER")

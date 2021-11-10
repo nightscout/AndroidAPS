@@ -677,6 +677,7 @@
     <string name="resettodefaults">Възстанови настройките по подразбиране</string>
     <string name="nsmalfunction">Грешка в NSClient. Рестартирайте Nightscout и NSClient</string>
     <string name="time_offset">времево отместване</string>
+    <string name="bolus_reminder">Напомни за болус по-късно</string>
     <string name="setupwizard_preferred_aps_mode">Предпочитаният режим на APS</string>
     <string name="treatments_wizard_total_label">Общо</string>
     <string name="calculation_short">Калк</string>
@@ -715,6 +716,7 @@
     <string name="versionChecker">Проверка на версията</string>
     <string name="old_version">стара версия</string>
     <string name="very_old_version">много стара версия</string>
+    <string name="application_expired">Прилагането изтече</string>
     <string name="new_version_warning">Има нова версия от най-малко %1$d дни! Ще спре подаването на инсулин след %2$d дни, цикълът ще бъде изключен след %3$d дни</string>
     <string name="twohours">2ч</string>
     <string name="dexcom_app_patched">Dexcom приложение (модифицирано)</string>
@@ -842,6 +844,10 @@
     <string name="enablebolusadvisor_summary">Използвай напомняне за старт на хранене вместо съветника по време на висока гликемия (\"пре-болус\")</string>
     <string name="time_to_eat">Време за ядене!\nИзпълнете болус съветника и направете изчисления отново.</string>
     <string name="timetoeat">Време е за ядене</string>
+    <string name="bolusreminder">Болус подсещане</string>
+    <string name="enablebolusreminder">Включи подсещането за болус</string>
+    <string name="enablebolusreminder_summary">Използвай подсещане за болус по-късно със съветник (\"след-болус\")</string>
+    <string name="time_to_bolus">Време е за болус!\nВключи болус съветника и направи изчисление отново.</string>
     <string name="fabric_upload_disabled">Качването на данни за проблеми е забранено!(Fabric)</string>
     <string name="graph_menu_divider_header">Графика</string>
     <string name="chart_menu">Меню на графиката</string>
@@ -849,6 +855,7 @@
     <string name="trend_arrow">Стрелка тенденция</string>
     <string name="cannula">Канюла</string>
     <string name="userentry">Потербителска настройка</string>
+    <string name="common_values">Използвай стойностите от вашето най-голямо хранен, с което обикновено се храните</string>
     <string name="summary_email_for_crash_report">Тази електронна поща ще бъде добавена към репорта за да можем да се свържем с вас в случай на нужда. Не е задължително.</string>
     <string name="email_address">Електронна поща</string>
     <string name="privacy_settings">Настройки за поверителност</string>
@@ -876,6 +883,7 @@
     <string name="ns_receive_cgm_summary">Приемай постояни данни от сензора идващи от NS</string>
     <string name="sms_timeout_while_wating">Изтичане на времето на предишна комуникация с помпата</string>
     <string name="smscommunicator_another_bolus_in_queue">В момента се обработва друг болус. Моля опитай по-късни.</string>
+    <string name="calculation_in_progress">Калкулация в прогресс</string>
     <string name="missing_profile_name">Липсва име на профила</string>
     <string name="error_in_ic_values">Грешка в стойността на ВЧ (IC)</string>
     <string name="error_in_basal_values">Грешка в базалните стойности</string>

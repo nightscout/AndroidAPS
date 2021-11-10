@@ -97,6 +97,7 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
                 PumpHistoryEntryGroup.Unknown
         }
     }
+
     private fun filterHistory(group: PumpHistoryEntryGroup) {
         filteredHistoryList.clear()
         aapsLogger.debug(LTag.PUMP, "Items on full list: {}", fullHistoryList.size)
@@ -152,12 +153,12 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
         statusView?.run { visibility = View.GONE }
 
         historyTypeSpinner = findViewById(R.id.omnipod_historytype)
-        typeListFull = getTypeList(PumpHistoryEntryGroup.Companion.getTranslatedList(resourceHelper))
+        typeListFull = getTypeList(PumpHistoryEntryGroup.Companion.getTranslatedList(rh))
         val spinnerAdapter: ArrayAdapter<TypeList> = ArrayAdapter<TypeList>(this, R.layout.spinner_centered, typeListFull!!)
         historyTypeSpinner?.run {
             adapter = spinnerAdapter
             onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                     if (manualChange) return
                     val selected = selectedItem as TypeList
                     selectedGroup = selected.entryGroup
@@ -208,30 +209,72 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
             }
         }
 
+        private fun setTextViewColor(check_result: Boolean, textview: TextView, record: HistoryRecord) {
+            if (check_result && !record.isSuccess()) {
+                // Record says not success
+                textview.setTextColor(android.graphics.Color.YELLOW)
+                return
+            }
+            // On success set color
+            val textColor = when (record.commandType) {
+                // Operational
+                OmnipodCommandType.INITIALIZE_POD,
+                OmnipodCommandType.CONFIGURE_ALERTS,
+                OmnipodCommandType.INSERT_CANNULA,
+                OmnipodCommandType.DEACTIVATE_POD,
+                OmnipodCommandType.DISCARD_POD,
+                OmnipodCommandType.SUSPEND_DELIVERY,
+                OmnipodCommandType.RESUME_DELIVERY,
+                OmnipodCommandType.SET_BASAL_PROFILE -> {
+                    android.graphics.Color.CYAN
+                }
+                // User action
+                OmnipodCommandType.PLAY_TEST_BEEP,
+                OmnipodCommandType.ACKNOWLEDGE_ALERTS,
+                OmnipodCommandType.CANCEL_BOLUS -> {
+                    android.graphics.Color.GREEN
+                }
+                // Insulin treatment
+                OmnipodCommandType.SET_BOLUS,
+                OmnipodCommandType.SET_TEMPORARY_BASAL -> {
+                    android.graphics.Color.WHITE
+                }
+
+                else ->
+                    // Other
+                    android.graphics.Color.LTGRAY
+            }
+            textview.setTextColor(textColor)
+        }
+
         private fun setType(record: HistoryRecord, typeView: TextView) {
-            typeView.text = resourceHelper.gs(record.commandType.resourceId)
+            typeView.text = rh.gs(record.commandType.resourceId)
+            // Set some color, include result
+            setTextViewColor(check_result = true, typeView, record)
         }
 
         private fun setValue(historyEntry: HistoryRecord, valueView: TextView) {
             valueView.text = historyEntry.toString()
             // val entryType = historyEntry.commandType
             if (!historyEntry.isSuccess()) {
-                valueView.text = resourceHelper.gs(translatedFailure(historyEntry))
+                valueView.text = rh.gs(translatedFailure(historyEntry))
                 return
             }
             valueView.text = when (historyEntry.commandType) {
                 OmnipodCommandType.SET_TEMPORARY_BASAL -> {
                     val tbr = historyEntry.record as TempBasalRecord
                     tbr.let {
-                        resourceHelper.gs(R.string.omnipod_common_history_tbr_value, it.rate, it.duration)
+                        rh.gs(R.string.omnipod_common_history_tbr_value, it.rate, it.duration)
                     }
                 }
+
                 OmnipodCommandType.SET_BOLUS -> {
                     val bolus = historyEntry.record as BolusRecord
                     bolus.let {
-                        resourceHelper.gs(R.string.omnipod_common_history_bolus_value, it.amout)
+                        rh.gs(R.string.omnipod_common_history_bolus_value, it.amout)
                     }
                 }
+
                 OmnipodCommandType.SET_BASAL_PROFILE,
                 OmnipodCommandType.SET_TIME,
                 OmnipodCommandType.INSERT_CANNULA,
@@ -239,9 +282,12 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
                     val basal = historyEntry.record as BasalValuesRecord
                     ProfileUtil.getBasalProfilesDisplayable(basal.segments.toTypedArray(), PumpType.OMNIPOD_DASH)
                 }
+
                 else ->
                     ""
             }
+            // Set some color
+            setTextViewColor(check_result = false, valueView, historyEntry)
         }
 
         override fun getItemCount(): Int {
@@ -249,6 +295,7 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
         }
 
         inner class HistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
             val timeView: TextView = itemView.findViewById(R.id.omnipod_history_time)
             val typeView: TextView = itemView.findViewById(R.id.omnipod_history_source)
             val valueView: TextView = itemView.findViewById(R.id.omnipod_history_description)
@@ -270,6 +317,7 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
     }
 
     companion object {
+
         private var selectedGroup: PumpHistoryEntryGroup = PumpHistoryEntryGroup.All
         const val DAYS_TO_DISPLAY = 5
     }

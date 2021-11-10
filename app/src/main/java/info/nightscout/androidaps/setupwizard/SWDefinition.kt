@@ -41,12 +41,12 @@ class SWDefinition @Inject constructor(
     injector: HasAndroidInjector,
     private val rxBus: RxBus,
     private val context: Context,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     private val sp: SP,
     private val profileFunction: ProfileFunction,
     private val localProfilePlugin: LocalProfilePlugin,
     private val activePlugin: ActivePlugin,
-    private val commandQueue: CommandQueueProvider,
+    private val commandQueue: CommandQueue,
     private val objectivesPlugin: ObjectivesPlugin,
     private val configBuilder: ConfigBuilder,
     private val loopPlugin: LoopPlugin,
@@ -110,7 +110,7 @@ class SWDefinition @Inject constructor(
     private val screenPermissionWindow = SWScreen(injector, R.string.permission)
         .skippable(false)
         .add(SWInfoText(injector)
-            .label(resourceHelper.gs(R.string.needsystemwindowpermission)))
+            .label(rh.gs(R.string.needsystemwindowpermission)))
         .add(SWBreak(injector))
         .add(SWButton(injector)
             .text(R.string.askforpermission)
@@ -121,7 +121,7 @@ class SWDefinition @Inject constructor(
     private val screenPermissionBattery = SWScreen(injector, R.string.permission)
         .skippable(false)
         .add(SWInfoText(injector)
-            .label(resourceHelper.gs(R.string.needwhitelisting, resourceHelper.gs(R.string.app_name))))
+            .label(rh.gs(R.string.needwhitelisting, rh.gs(R.string.app_name))))
         .add(SWBreak(injector))
         .add(SWButton(injector)
             .text(R.string.askforpermission)
@@ -132,7 +132,7 @@ class SWDefinition @Inject constructor(
     private val screenPermissionBt = SWScreen(injector, R.string.permission)
         .skippable(false)
         .add(SWInfoText(injector)
-            .label(resourceHelper.gs(R.string.needlocationpermission)))
+            .label(rh.gs(R.string.needlocationpermission)))
         .add(SWBreak(injector))
         .add(SWButton(injector)
             .text(R.string.askforpermission)
@@ -143,7 +143,7 @@ class SWDefinition @Inject constructor(
     private val screenPermissionStore = SWScreen(injector, R.string.permission)
         .skippable(false)
         .add(SWInfoText(injector)
-            .label(resourceHelper.gs(R.string.needstoragepermission)))
+            .label(rh.gs(R.string.needstoragepermission)))
         .add(SWBreak(injector))
         .add(SWButton(injector)
             .text(R.string.askforpermission)
@@ -170,7 +170,7 @@ class SWDefinition @Inject constructor(
                 configBuilder.performPluginSwitch(nsClientPlugin, true, PluginType.GENERAL)
                 rxBus.send(EventSWUpdate(true))
             }
-            .visibility { !nsClientPlugin.isEnabled(PluginType.GENERAL) })
+            .visibility { !nsClientPlugin.isEnabled() })
         .add(SWEditUrl(injector)
             .preferenceId(R.string.key_nsclientinternal_url)
             .updateDelay(5)
@@ -257,7 +257,7 @@ class SWDefinition @Inject constructor(
         .add(SWFragment(injector, this)
             .add(LocalProfileFragment()))
         .validator {
-            localProfilePlugin.profile?.getDefaultProfile()?.let { ProfileSealed.Pure(it).isValid("StartupWizard", activePlugin.activePump, config, resourceHelper, rxBus, hardLimits, false).isValid }
+            localProfilePlugin.profile?.getDefaultProfile()?.let { ProfileSealed.Pure(it).isValid("StartupWizard", activePlugin.activePump, config, rh, rxBus, hardLimits, false).isValid }
                 ?: false
         }
         .visibility { localProfilePlugin.isEnabled() }
@@ -343,9 +343,9 @@ class SWDefinition @Inject constructor(
                 configBuilder.performPluginSwitch(loopPlugin, true, PluginType.LOOP)
                 rxBus.send(EventSWUpdate(true))
             }
-            .visibility { !loopPlugin.isEnabled(PluginType.LOOP) })
-        .validator { loopPlugin.isEnabled(PluginType.LOOP) }
-        .visibility { !loopPlugin.isEnabled(PluginType.LOOP) && config.APS }
+            .visibility { !loopPlugin.isEnabled() })
+        .validator { loopPlugin.isEnabled() }
+        .visibility { !loopPlugin.isEnabled() && config.APS }
     private val screenSensitivity = SWScreen(injector, R.string.configbuilder_sensitivity)
         .skippable(false)
         .add(SWInfoText(injector)

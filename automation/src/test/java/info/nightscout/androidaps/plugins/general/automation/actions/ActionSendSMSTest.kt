@@ -17,8 +17,8 @@ class ActionSendSMSTest : ActionsTestBase() {
     @Before
     fun setup() {
 
-        `when`(resourceHelper.gs(eq(R.string.sendsmsactionlabel), anyString())).thenReturn("Send SMS: %s")
-        `when`(resourceHelper.gs(R.string.sendsmsactiondescription)).thenReturn("Send SMS to all numbers")
+        `when`(rh.gs(eq(R.string.sendsmsactionlabel), anyString())).thenReturn("Send SMS: %s")
+        `when`(rh.gs(R.string.sendsmsactiondescription)).thenReturn("Send SMS to all numbers")
 
         sut = ActionSendSMS(injector)
     }

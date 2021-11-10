@@ -297,9 +297,9 @@ enum class PumpType {
         source = Sources.MDI),
 
     //Diaconn Pump
-    DIACONN_G8(description = "DiaconnG8",
+    DIACONN_G8(description = "Diaconn G8",
         manufacturer = ManufacturerType.G2e,
-        model = "Diaconn G8",
+        model = "DiaconnG8",
         bolusSize = 0.01,
         specialBolusSize = null,
         extendedBolusSettings = DoseSettings(0.05, 10, 5 * 60, 0.05),
@@ -403,11 +403,11 @@ enum class PumpType {
         this.source = source
     }
 
-    fun getFullDescription(i18nTemplate: String, hasExtendedBasals: Boolean, resourceHelper: ResourceHelper): String {
+    fun getFullDescription(i18nTemplate: String, hasExtendedBasals: Boolean, rh: ResourceHelper): String {
         val unit = if (pumpTempBasalType == PumpTempBasalType.Percent) "%" else ""
         val eb = extendedBolusSettings ?: return "INVALID"
         val tbr = tbrSettings ?: return "INVALID"
-        val extendedNote = if (hasExtendedBasals) resourceHelper.gs(R.string.def_extended_note) else ""
+        val extendedNote = if (hasExtendedBasals) rh.gs(R.string.def_extended_note) else ""
         return String.format(i18nTemplate,
             getStep("" + bolusSize, specialBolusSize),
             eb.step, eb.durationStep, eb.maxDuration / 60,

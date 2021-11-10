@@ -55,7 +55,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var profileFunction: ProfileFunction
@@ -167,24 +167,24 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
             holder.binding.ph.visibility = (tempBasal.interfaceIDs.pumpId != null).toVisibility()
             if (tempBasal.isInProgress) {
                 holder.binding.date.text = dateUtil.dateAndTimeString(tempBasal.timestamp)
-                holder.binding.date.setTextColor(resourceHelper.gc(R.color.colorActive))
+                holder.binding.date.setTextColor(rh.gc(R.color.colorActive))
             } else {
                 holder.binding.date.text = dateUtil.dateAndTimeRangeString(tempBasal.timestamp, tempBasal.end)
                 holder.binding.date.setTextColor(holder.binding.duration.currentTextColor)
             }
-            holder.binding.duration.text = resourceHelper.gs(R.string.format_mins, T.msecs(tempBasal.duration).mins())
-            if (tempBasal.isAbsolute) holder.binding.rate.text = resourceHelper.gs(R.string.pump_basebasalrate, tempBasal.rate)
-            else holder.binding.rate.text = resourceHelper.gs(R.string.format_percent, tempBasal.rate.toInt())
+            holder.binding.duration.text = rh.gs(R.string.format_mins, T.msecs(tempBasal.duration).mins())
+            if (tempBasal.isAbsolute) holder.binding.rate.text = rh.gs(R.string.pump_basebasalrate, tempBasal.rate)
+            else holder.binding.rate.text = rh.gs(R.string.format_percent, tempBasal.rate.toInt())
             val now = dateUtil.now()
             var iob = IobTotal(now)
             val profile = profileFunction.getProfile(now)
             if (profile != null) iob = tempBasal.iobCalc(now, profile, activePlugin.activeInsulin)
-            holder.binding.iob.text = resourceHelper.gs(R.string.formatinsulinunits, iob.basaliob)
+            holder.binding.iob.text = rh.gs(R.string.formatinsulinunits, iob.basaliob)
             holder.binding.extendedFlag.visibility = (tempBasal.type == TemporaryBasal.Type.FAKE_EXTENDED).toVisibility()
             holder.binding.suspendFlag.visibility = (tempBasal.type == TemporaryBasal.Type.PUMP_SUSPEND).toVisibility()
             holder.binding.emulatedSuspendFlag.visibility = (tempBasal.type == TemporaryBasal.Type.EMULATED_PUMP_SUSPEND).toVisibility()
             holder.binding.superBolusFlag.visibility = (tempBasal.type == TemporaryBasal.Type.SUPERBOLUS).toVisibility()
-            if (abs(iob.basaliob) > 0.01) holder.binding.iob.setTextColor(resourceHelper.gc(R.color.colorActive)) else holder.binding.iob.setTextColor(holder.binding.duration.currentTextColor)
+            if (abs(iob.basaliob) > 0.01) holder.binding.iob.setTextColor(rh.gc(R.color.colorActive)) else holder.binding.iob.setTextColor(holder.binding.duration.currentTextColor)
             holder.binding.remove.tag = tempBasal
         }
 
@@ -206,10 +206,10 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
                     val profile = profileFunction.getProfile(dateUtil.now())
                         ?: return@setOnClickListener
                     context?.let {
-                        OKDialog.showConfirmation(it, resourceHelper.gs(R.string.removerecord),
+                        OKDialog.showConfirmation(it, rh.gs(R.string.removerecord),
                             """
-                ${if (isFakeExtended) resourceHelper.gs(R.string.extended_bolus) else resourceHelper.gs(R.string.tempbasal_label)}: ${tempBasal.toStringFull(profile, dateUtil)}
-                ${resourceHelper.gs(R.string.date)}: ${dateUtil.dateAndTimeString(tempBasal.timestamp)}
+                ${if (isFakeExtended) rh.gs(R.string.extended_bolus) else rh.gs(R.string.tempbasal_label)}: ${tempBasal.toStringFull(profile, dateUtil)}
+                ${rh.gs(R.string.date)}: ${dateUtil.dateAndTimeString(tempBasal.timestamp)}
                 """.trimIndent(),
                             { _: DialogInterface?, _: Int ->
                                 if (isFakeExtended && extendedBolus != null) {

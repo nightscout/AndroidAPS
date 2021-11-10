@@ -27,7 +27,7 @@ import javax.inject.Singleton
 class MaintenancePlugin @Inject constructor(
     injector: HasAndroidInjector,
     private val context: Context,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     private val sp: SP,
     private val nsSettingsStatus: NSSettingsStatus,
     aapsLogger: AAPSLogger,
@@ -46,7 +46,7 @@ class MaintenancePlugin @Inject constructor(
         .shortName(R.string.maintenance_shortname)
         .preferencesId(R.xml.pref_maintenance)
         .description(R.string.description_maintenance),
-    aapsLogger, resourceHelper, injector
+    aapsLogger, rh, injector
 ) {
 
     fun sendLogs() {
@@ -169,13 +169,13 @@ class MaintenancePlugin @Inject constructor(
         builder.append("If you want to provide logs for event older than a few hours," + System.lineSeparator())
         builder.append("you have to do it manually)" + System.lineSeparator())
         builder.append("-------------------------------------------------------" + System.lineSeparator())
-        builder.append(resourceHelper.gs(R.string.app_name) + " " + BuildConfig.VERSION + System.lineSeparator())
+        builder.append(rh.gs(R.string.app_name) + " " + BuildConfig.VERSION + System.lineSeparator())
         if (config.NSCLIENT) builder.append("NSCLIENT" + System.lineSeparator())
         builder.append("Build: " + BuildConfig.BUILDVERSION + System.lineSeparator())
         builder.append("Remote: " + BuildConfig.REMOTE + System.lineSeparator())
         builder.append("Flavor: " + BuildConfig.FLAVOR + BuildConfig.BUILD_TYPE + System.lineSeparator())
-        builder.append(resourceHelper.gs(R.string.configbuilder_nightscoutversion_label) + " " + nsSettingsStatus.getVersion() + System.lineSeparator())
-        if (buildHelper.isEngineeringMode()) builder.append(resourceHelper.gs(R.string.engineering_mode_enabled))
+        builder.append(rh.gs(R.string.configbuilder_nightscoutversion_label) + " " + nsSettingsStatus.getVersion() + System.lineSeparator())
+        if (buildHelper.isEngineeringMode()) builder.append(rh.gs(R.string.engineering_mode_enabled))
         return sendMail(attachmentUri, recipient, subject, builder.toString())
     }
 

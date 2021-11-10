@@ -16,7 +16,7 @@ interface Profile {
 
     class ValidityCheck(var isValid: Boolean = true, val reasons: ArrayList<String> = arrayListOf())
 
-    fun isValid(from: String, pump: Pump, config: Config, resourceHelper: ResourceHelper, rxBus: RxBus, hardLimits: HardLimits, sendNotifications: Boolean): ValidityCheck
+    fun isValid(from: String, pump: Pump, config: Config, rh: ResourceHelper, rxBus: RxBus, hardLimits: HardLimits, sendNotifications: Boolean): ValidityCheck
 
     /**
      * Units used for ISF & target
@@ -101,10 +101,10 @@ interface Profile {
      */
     fun getTargetHighMgdlTimeFromMidnight(timeAsSeconds: Int): Double
 
-    fun getIcList(resourceHelper: ResourceHelper, dateUtil: DateUtil): String
-    fun getIsfList(resourceHelper: ResourceHelper, dateUtil: DateUtil): String
-    fun getBasalList(resourceHelper: ResourceHelper, dateUtil: DateUtil): String
-    fun getTargetList(resourceHelper: ResourceHelper, dateUtil: DateUtil): String
+    fun getIcList(rh: ResourceHelper, dateUtil: DateUtil): String
+    fun getIsfList(rh: ResourceHelper, dateUtil: DateUtil): String
+    fun getBasalList(rh: ResourceHelper, dateUtil: DateUtil): String
+    fun getTargetList(rh: ResourceHelper, dateUtil: DateUtil): String
 
     fun convertToNonCustomizedProfile(dateUtil: DateUtil): PureProfile
     fun toPureNsJson(dateUtil: DateUtil): JSONObject

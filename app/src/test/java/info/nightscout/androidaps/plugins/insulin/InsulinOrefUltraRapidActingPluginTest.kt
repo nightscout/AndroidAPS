@@ -25,7 +25,7 @@ class InsulinOrefUltraRapidActingPluginTest {
 
     private lateinit var sut: InsulinOrefUltraRapidActingPlugin
 
-    @Mock lateinit var resourceHelper: ResourceHelper
+    @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var rxBus: RxBus
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var aapsLogger: AAPSLogger
@@ -37,7 +37,7 @@ class InsulinOrefUltraRapidActingPluginTest {
 
     @Before
     fun setup() {
-        sut = InsulinOrefUltraRapidActingPlugin(injector, resourceHelper, profileFunction, rxBus, aapsLogger)
+        sut = InsulinOrefUltraRapidActingPlugin(injector, rh, profileFunction, rxBus, aapsLogger)
     }
 
     @Test
@@ -52,13 +52,13 @@ class InsulinOrefUltraRapidActingPluginTest {
 
     @Test
     fun commentStandardTextTest() {
-        `when`(resourceHelper.gs(eq(R.string.ultrafastactinginsulincomment))).thenReturn("Fiasp")
+        `when`(rh.gs(eq(R.string.ultrafastactinginsulincomment))).thenReturn("Fiasp")
         assertEquals("Fiasp", sut.commentStandardText())
     }
 
     @Test
     fun getFriendlyNameTest() {
-        `when`(resourceHelper.gs(eq(R.string.ultrarapid_oref))).thenReturn("Ultra-Rapid Oref")
+        `when`(rh.gs(eq(R.string.ultrarapid_oref))).thenReturn("Ultra-Rapid Oref")
         assertEquals("Ultra-Rapid Oref", sut.friendlyName)
     }
 

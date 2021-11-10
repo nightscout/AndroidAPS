@@ -2,9 +2,79 @@
 <resources>
     <!-- RL keys -->
     <!-- RL BLE Config -->
+    <string name="riley_link_ble_config_button_scan_start">Tarama</string>
+    <string name="riley_link_ble_config_scan_stop">Dur</string>
+    <string name="riley_link_ble_config_scan_selected">Seçili</string>
+    <string name="riley_link_ble_config_scan_title">RileyLink Tarama</string>
+    <string name="riley_link_ble_config_scan_scanning">Taranıyor</string>
+    <string name="riley_link_ble_config_scan_finished">Tarama tamamlandı</string>
+    <string name="riley_link_ble_config_scan_error">Tarama Hatası:%1$d</string>
+    <string name="riley_link_ble_config_connected_never">Hiçbir zaman</string>
+    <string name="riley_link_ble_config_scan_currently_selected_riley_link">Şu Anda Seçili RileyLink</string>
+    <string name="riley_link_ble_config_remove_riley_link">Kaldır</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation">RileyLink\'inizi kaldırmak istediğinizden emin misiniz?</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation_title">RileyLink\'i Kaldır</string>
+    <string name="riley_link_ble_config_no_riley_link_selected">RileyLink seçilmedi</string>
     <!-- RL Status Page -->
+    <string name="rileylink_settings_tab1">Ayarlar</string>
+    <string name="rileylink_settings_tab2">Geçmiş</string>
+    <string name="rileylink_status">RileyLink Durumu</string>
+    <string name="medtronic_pump_status">Pompa Durumu</string>
+    <string name="title_activity_rileylink_settings">RileyLink Ayarları</string>
+    <string name="rileylink_title">RileyLink</string>
+    <string name="rileylink_address">Adres:</string>
+    <string name="rileylink_name">Ad:</string>
+    <string name="rileylink_battery_level">Pil seviyesi:</string>
+    <string name="rileylink_battery_level_value">%1$d%%</string>
+    <string name="rileylink_connection_status">Bağlantı durumu:</string>
+    <string name="rileylink_connection_error">Bağlantı Hatası:</string>
+    <string name="rileylink_device">Cihaz</string>
+    <string name="rileylink_device_type">Cihaz Tipi:</string>
+    <string name="rileylink_configured_device_model">Yapılandırılan Cihaz Modeli:</string>
+    <string name="rileylink_connected_device_model">Bağlı Cihaz Modeli:</string>
+    <string name="rileylink_last_used_frequency">Son Kullanılan Frekans:</string>
+    <string name="rileylink_last_device_contact">Son Cihaz İletişimi:</string>
+    <string name="rileylink_firmware_version">Firmware versiyonu:</string>
+    <string name="rileylink_firmware_version_value">BLE113: %1$s\nCC110: %2$s</string>
+    <string name="rileylink_firmware_version_value_orange">Fw: %1$s\nHw: %2$s</string>
+    <string name="rileylink_pump_serial_number">Pompa Seri Numarası:</string>
+    <string name="rileylink_pump_frequency">Pompa Frekansı:</string>
+    <string name="rileylink_pump_frequency_value">%1$.2f MHz</string>
     <!-- RL State -->
+    <string name="rileylink_state_bt_init">Bluetooth Başlatılıyor…</string>
+    <string name="rileylink_state_bt_error">Bluetooth Hatası</string>
+    <string name="rileylink_state_bt_ready">Bluetooth Hazır</string>
+    <string name="rileylink_state_not_started">Başlatılmadı</string>
+    <string name="rileylink_state_rl_init">RileyLink Başlatılıyor…</string>
+    <string name="rileylink_state_rl_error">RileyLink Hatası</string>
+    <string name="rileylink_state_pc_tune_up">RileyLink ve Pompa Ayarlanıyor</string>
+    <string name="rileylink_state_pc_error">Pompaya bağlanma sorunu</string>
+    <string name="rileylink_state_connected">Bağlandı</string>
+    <string name="rileylink_state_rl_ready">RileyLink hazır</string>
     <!-- RL Errors -->
+    <string name="rileylink_error_not_rl">Cihaz RileyLink değil</string>
+    <string name="rileylink_error_unreachable">RileyLink\'e erişilemiyor</string>
+    <string name="rileylink_error_bt_disabled">Bluetooth devre dışı</string>
+    <string name="rileylink_error_no_bt_adapter">Bluetooth Adaptörü Yok</string>
+    <string name="rileylink_error_tuneup_failed">Ayarlama Başarısız</string>
+    <string name="rileylink_error_pump_unreachable">Pompaya ulaşılamıyor</string>
+    <string name="rileylink_error_pod_unreachable">Pod\'a erişilemiyor</string>
     <!-- RileyLink - Common -->
+    <string name="rileylink_target_device_medtronic">Medtronic Pompa</string>
+    <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
+    <string name="riley_link_common_yes">Evet</string>
+    <string name="riley_link_common_no">Hayır</string>
     <!-- RileyLink - Preferences -->
+    <string name="riley_link_show_battery_level">OrangeLink/EmaLink/DiaLink tarafından bildirilen pil seviyesini göster</string>
+    <string name="riley_link_show_battery_level_summary">Orijinal RileyLink ile ÇALIŞMAZ. Diğer RileyLink alternatifleriyle de çalışmayabilir.</string>
+    <plurals name="duration_days">
+        <item quantity="one">%1$d gün</item>
+        <item quantity="other">%1$d gün</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%1$d saat</item>
+        <item quantity="other">%1$d saat</item>
+    </plurals>
+    <string name="orange_use_scanning_level">Taramayı Kullan</string>
+    <string name="orange_use_scanning_level_summary">OrangeLink\'e bağlanmadan önce tarayın, bağlantıları iyileştirebilir (gerekirse diğer RileyLink klonlarıyla da kullanılabilir)</string>
 </resources>

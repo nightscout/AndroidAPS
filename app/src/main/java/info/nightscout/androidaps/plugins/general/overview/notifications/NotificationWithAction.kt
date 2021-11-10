@@ -18,7 +18,7 @@ class NotificationWithAction constructor(
 ) : Notification() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var sp: SP
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var nsClientPlugin: NSClientPlugin

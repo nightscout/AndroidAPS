@@ -29,18 +29,18 @@ public enum RileyLinkEncodingType {
         this.resourceId = resourceId;
     }
 
-    private static void doTranslation(ResourceHelper resourceHelper) {
+    private static void doTranslation(ResourceHelper rh) {
         encodingTypeMap = new HashMap<>();
 
         for (RileyLinkEncodingType encType : values()) {
             if (encType.resourceId != null) {
-                encodingTypeMap.put(resourceHelper.gs(encType.resourceId), encType);
+                encodingTypeMap.put(rh.gs(encType.resourceId), encType);
             }
         }
     }
 
-    public static RileyLinkEncodingType getByDescription(String description, ResourceHelper resourceHelper) {
-        if (encodingTypeMap == null) doTranslation(resourceHelper);
+    public static RileyLinkEncodingType getByDescription(String description, ResourceHelper rh) {
+        if (encodingTypeMap == null) doTranslation(rh);
         if (encodingTypeMap.containsKey(description)) {
             return encodingTypeMap.get(description);
         }

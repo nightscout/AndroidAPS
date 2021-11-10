@@ -17,7 +17,7 @@ import info.nightscout.androidaps.diaconn.database.DiaconnHistoryRecordDao
 import info.nightscout.androidaps.diaconn.databinding.DiaconnG8HistoryActivityBinding
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
@@ -41,7 +41,7 @@ class DiaconnG8HistoryActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var commandQueue: CommandQueueProvider
+    @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var diaconnHistoryRecordDao: DiaconnHistoryRecordDao
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var aapsSchedulers: AapsSchedulers
@@ -63,7 +63,7 @@ class DiaconnG8HistoryActivity : NoSplashAppCompatActivity() {
         disposable += rxBus
             .toObservable(EventPumpStatusChanged::class.java)
             .observeOn(aapsSchedulers.main)
-            .subscribe({ binding.status.text = it.getStatus(resourceHelper) }) { fabricPrivacy.logException(it) }
+            .subscribe({ binding.status.text = it.getStatus(rh) }) { fabricPrivacy.logException(it) }
         swapAdapter(showingType)
     }
 
@@ -84,13 +84,13 @@ class DiaconnG8HistoryActivity : NoSplashAppCompatActivity() {
 
         // Types
         val typeList = ArrayList<TypeList>()
-        typeList.add(TypeList(RecordTypes.RECORD_TYPE_ALARM, resourceHelper.gs(R.string.diaconn_g8_history_alarm)))
-        typeList.add(TypeList(RecordTypes.RECORD_TYPE_BASALHOUR, resourceHelper.gs(R.string.diaconn_g8_history_basalhours)))
-        typeList.add(TypeList(RecordTypes.RECORD_TYPE_BOLUS, resourceHelper.gs(R.string.diaconn_g8_history_bolus)))
-        typeList.add(TypeList(RecordTypes.RECORD_TYPE_TB, resourceHelper.gs(R.string.diaconn_g8_history_tempbasal)))
-        typeList.add(TypeList(RecordTypes.RECORD_TYPE_DAILY, resourceHelper.gs(R.string.diaconn_g8_history_dailyinsulin)))
-        typeList.add(TypeList(RecordTypes.RECORD_TYPE_REFILL, resourceHelper.gs(R.string.diaconn_g8_history_refill)))
-        typeList.add(TypeList(RecordTypes.RECORD_TYPE_SUSPEND, resourceHelper.gs(R.string.diaconn_g8_history_suspend)))
+        typeList.add(TypeList(RecordTypes.RECORD_TYPE_ALARM, rh.gs(R.string.diaconn_g8_history_alarm)))
+        typeList.add(TypeList(RecordTypes.RECORD_TYPE_BASALHOUR, rh.gs(R.string.diaconn_g8_history_basalhours)))
+        typeList.add(TypeList(RecordTypes.RECORD_TYPE_BOLUS, rh.gs(R.string.diaconn_g8_history_bolus)))
+        typeList.add(TypeList(RecordTypes.RECORD_TYPE_TB, rh.gs(R.string.diaconn_g8_history_tempbasal)))
+        typeList.add(TypeList(RecordTypes.RECORD_TYPE_DAILY, rh.gs(R.string.diaconn_g8_history_dailyinsulin)))
+        typeList.add(TypeList(RecordTypes.RECORD_TYPE_REFILL, rh.gs(R.string.diaconn_g8_history_refill)))
+        typeList.add(TypeList(RecordTypes.RECORD_TYPE_SUSPEND, rh.gs(R.string.diaconn_g8_history_suspend)))
         binding.spinner.adapter = ArrayAdapter(this, R.layout.spinner_centered, typeList)
 
         binding.reload.setOnClickListener {
@@ -163,9 +163,9 @@ class DiaconnG8HistoryActivity : NoSplashAppCompatActivity() {
                 }
 
                 RecordTypes.RECORD_TYPE_DAILY -> {
-                    holder.dailyBasal.text = resourceHelper.gs(R.string.formatinsulinunits, record.dailyBasal)
-                    holder.dailyBolus.text = resourceHelper.gs(R.string.formatinsulinunits, record.dailyBolus)
-                    holder.dailyTotal.text = resourceHelper.gs(R.string.formatinsulinunits, record.dailyBolus + record.dailyBasal)
+                    holder.dailyBasal.text = rh.gs(R.string.formatinsulinunits, record.dailyBasal)
+                    holder.dailyBolus.text = rh.gs(R.string.formatinsulinunits, record.dailyBolus)
+                    holder.dailyTotal.text = rh.gs(R.string.formatinsulinunits, record.dailyBolus + record.dailyBasal)
                     holder.time.text = dateUtil.dateString(record.timestamp)
                     holder.time.visibility = View.VISIBLE
                     holder.value.visibility = View.GONE

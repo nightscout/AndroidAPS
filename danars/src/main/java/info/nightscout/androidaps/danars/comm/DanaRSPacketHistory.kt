@@ -9,7 +9,6 @@ import info.nightscout.androidaps.events.EventDanaRSyncStatus
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.utils.T
 import org.joda.time.DateTime
 import java.util.*
@@ -77,7 +76,7 @@ abstract class DanaRSPacketHistory(
             dataIndex += dataSize
             dataSize = 2
             totalCount = byteArrayToInt(getBytes(data, dataIndex, dataSize))
-            aapsLogger.debug(LTag.PUMPCOMM, "History end. Code: " + error + " Success: " + (error == 0x00) + " Toatal count: " + totalCount)
+            aapsLogger.debug(LTag.PUMPCOMM, "History end. Code: " + error + " Success: " + (error == 0x00) + " Total count: " + totalCount)
         } else {
             val recordCode = byteArrayToInt(getBytes(data, DATA_START, 1))
             val historyYear = byteArrayToInt(getBytes(data, DATA_START + 1, 1))
@@ -233,7 +232,7 @@ abstract class DanaRSPacketHistory(
                     basalAmount = danaRHistoryRecord.dailyBasal,
                     totalAmount = 0.0,
                     pumpId = null,
-                    pumpType = PumpType.DANA_RS,
+                    pumpType = danaPump.pumpType(),
                     danaPump.serialNumber
                 )
             }

@@ -18,7 +18,6 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -77,7 +76,7 @@ import javax.inject.Singleton
 class NSDeviceStatus @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val sp: SP,
-    private val resourceHelper: ResourceHelper,
+    private val rh: ResourceHelper,
     private val nsSettingsStatus: NSSettingsStatus,
     private val config: Config,
     private val dateUtil: DateUtil,
@@ -158,8 +157,8 @@ class NSDeviceStatus @Inject constructor(
 
             //String[] ALL_STATUS_FIELDS = {"reservoir", "battery", "clock", "status", "device"};
             val string = StringBuilder()
-                .append("<span style=\"color:${resourceHelper.gcs(R.color.defaulttext)}\">")
-                .append(resourceHelper.gs(R.string.pump))
+                .append("<span style=\"color:${rh.gcs(R.color.defaulttext)}\">")
+                .append(rh.gs(R.string.pump))
                 .append(": </span>")
 
             // test warning level
@@ -179,7 +178,7 @@ class NSDeviceStatus @Inject constructor(
             if (fields.contains("reservoir")) string.append(pumpData.reservoir.toInt()).append("U ")
             if (fields.contains("battery") && pumpData.isPercent) string.append(pumpData.percent).append("% ")
             if (fields.contains("battery") && !pumpData.isPercent) string.append(Round.roundTo(pumpData.voltage, 0.001)).append(" ")
-            if (fields.contains("clock")) string.append(dateUtil.minAgo(resourceHelper, pumpData.clock)).append(" ")
+            if (fields.contains("clock")) string.append(dateUtil.minAgo(rh, pumpData.clock)).append(" ")
             if (fields.contains("status")) string.append(pumpData.status).append(" ")
             if (fields.contains("device")) string.append(device).append(" ")
             string.append("</span>") // color
@@ -195,7 +194,7 @@ class NSDeviceStatus @Inject constructor(
             if (clock == 0L || deviceStatusData.pumpData != null && clock < deviceStatusData.pumpData!!.clock) return
 
             // create new status and process data
-            var deviceStatusPumpData = DeviceStatusData.PumpData()
+            val deviceStatusPumpData = DeviceStatusData.PumpData()
             deviceStatusPumpData.clock = clock
             if (pump.has("status") && pump.getJSONObject("status").has("status")) deviceStatusPumpData.status = pump.getJSONObject("status").getString("status")
             if (pump.has("reservoir")) deviceStatusPumpData.reservoir = pump.getDouble("reservoir")
@@ -249,8 +248,8 @@ class NSDeviceStatus @Inject constructor(
     val openApsStatus: Spanned
         get() {
             val string = StringBuilder()
-                .append("<span style=\"color:${resourceHelper.gcs(R.color.defaulttext)}\">")
-                .append(resourceHelper.gs(R.string.openaps_short))
+                .append("<span style=\"color:${rh.gcs(R.color.defaulttext)}\">")
+                .append(rh.gs(R.string.openaps_short))
                 .append(": </span>")
 
             // test warning level
@@ -260,7 +259,7 @@ class NSDeviceStatus @Inject constructor(
                 else                                                                                                                                 -> Levels.INFO
             }
             string.append("<span style=\"color:${level.toColor()}\">")
-            if (deviceStatusData.openAPSData.clockSuggested != 0L) string.append(dateUtil.minAgo(resourceHelper, deviceStatusData.openAPSData.clockSuggested)).append(" ")
+            if (deviceStatusData.openAPSData.clockSuggested != 0L) string.append(dateUtil.minAgo(rh, deviceStatusData.openAPSData.clockSuggested)).append(" ")
             string.append("</span>") // color
             return fromHtml(string.toString())
         }
@@ -269,8 +268,8 @@ class NSDeviceStatus @Inject constructor(
         get() {
             val string = StringBuilder()
             try {
-                if (deviceStatusData.openAPSData.enacted != null && deviceStatusData.openAPSData.clockEnacted != deviceStatusData.openAPSData.clockSuggested) string.append("<b>").append(dateUtil.minAgo(resourceHelper, deviceStatusData.openAPSData.clockEnacted)).append("</b> ").append(deviceStatusData.openAPSData.enacted!!.getString("reason")).append("<br>")
-                if (deviceStatusData.openAPSData.suggested != null) string.append("<b>").append(dateUtil.minAgo(resourceHelper, deviceStatusData.openAPSData.clockSuggested)).append("</b> ").append(deviceStatusData.openAPSData.suggested!!.getString("reason")).append("<br>")
+                if (deviceStatusData.openAPSData.enacted != null && deviceStatusData.openAPSData.clockEnacted != deviceStatusData.openAPSData.clockSuggested) string.append("<b>").append(dateUtil.minAgo(rh, deviceStatusData.openAPSData.clockEnacted)).append("</b> ").append(deviceStatusData.openAPSData.enacted!!.getString("reason")).append("<br>")
+                if (deviceStatusData.openAPSData.suggested != null) string.append("<b>").append(dateUtil.minAgo(rh, deviceStatusData.openAPSData.clockSuggested)).append("</b> ").append(deviceStatusData.openAPSData.suggested!!.getString("reason")).append("<br>")
                 return fromHtml(string.toString())
             } catch (e: JSONException) {
                 aapsLogger.error("Unhandled exception", e)
@@ -322,8 +321,8 @@ class NSDeviceStatus @Inject constructor(
     val uploaderStatusSpanned: Spanned
         get() {
             val string = StringBuilder()
-            string.append("<span style=\"color:${resourceHelper.gcs(R.color.defaulttext)}\">")
-            string.append(resourceHelper.gs(R.string.uploader_short))
+            string.append("<span style=\"color:${rh.gcs(R.color.defaulttext)}\">")
+            string.append(rh.gs(R.string.uploader_short))
             string.append(": </span>")
             val iterator: Iterator<*> = deviceStatusData.uploaderMap.entries.iterator()
             var minBattery = 100

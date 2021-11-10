@@ -16,7 +16,7 @@ class TriggerLocation(injector: HasAndroidInjector) : Trigger(injector) {
     var latitude = InputDouble(0.0, -90.0, +90.0, 0.000001, DecimalFormat("0.000000"))
     var longitude = InputDouble(0.0, -180.0, +180.0, 0.000001, DecimalFormat("0.000000"))
     var distance = InputDouble(200.0, 0.0, 100000.0, 10.0, DecimalFormat("0"))
-    var modeSelected = InputLocationMode(resourceHelper)
+    var modeSelected = InputLocationMode(rh)
     var name: InputString = InputString()
 
     var lastMode = InputLocationMode.Mode.INSIDE
@@ -32,7 +32,7 @@ class TriggerLocation(injector: HasAndroidInjector) : Trigger(injector) {
         latitude = InputDouble(triggerLocation.latitude)
         longitude = InputDouble(triggerLocation.longitude)
         distance = InputDouble(triggerLocation.distance)
-        modeSelected = InputLocationMode(resourceHelper, triggerLocation.modeSelected.value)
+        modeSelected = InputLocationMode(rh, triggerLocation.modeSelected.value)
         if (modeSelected.value == InputLocationMode.Mode.GOING_OUT)
             lastMode = InputLocationMode.Mode.OUTSIDE
         name = triggerLocation.name
@@ -79,7 +79,7 @@ class TriggerLocation(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyName(): Int = R.string.location
 
     override fun friendlyDescription(): String =
-        resourceHelper.gs(R.string.locationis, resourceHelper.gs(modeSelected.value.stringRes), " " + name.value)
+        rh.gs(R.string.locationis, rh.gs(modeSelected.value.stringRes), " " + name.value)
 
     override fun icon(): Optional<Int?> = Optional.of(R.drawable.ic_location_on)
 
@@ -87,13 +87,13 @@ class TriggerLocation(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(resourceHelper, R.string.location, this))
-            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.name_short), "", name))
-            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.latitude_short), "", latitude))
-            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.longitude_short), "", longitude))
-            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.distance_short), "", distance))
-            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.location_mode), "", modeSelected))
-            .maybeAdd(InputButton(resourceHelper.gs(R.string.currentlocation), buttonAction), locationDataContainer.lastLocation != null)
+            .add(StaticLabel(rh, R.string.location, this))
+            .add(LabelWithElement(rh, rh.gs(R.string.name_short), "", name))
+            .add(LabelWithElement(rh, rh.gs(R.string.latitude_short), "", latitude))
+            .add(LabelWithElement(rh, rh.gs(R.string.longitude_short), "", longitude))
+            .add(LabelWithElement(rh, rh.gs(R.string.distance_short), "", distance))
+            .add(LabelWithElement(rh, rh.gs(R.string.location_mode), "", modeSelected))
+            .maybeAdd(InputButton(rh.gs(R.string.currentlocation), buttonAction), locationDataContainer.lastLocation != null)
             .build(root)
     }
 

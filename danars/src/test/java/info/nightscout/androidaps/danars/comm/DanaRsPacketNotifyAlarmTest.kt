@@ -17,7 +17,7 @@ class DanaRsPacketNotifyAlarmTest : DanaRSTestBase() {
             if (it is DanaRSPacketNotifyAlarm) {
                 it.aapsLogger = aapsLogger
                 it.rxBus = rxBus
-                it.resourceHelper = resourceHelper
+                it.rh = rh
                 it.pumpSync = pumpSync
                 it.danaPump = danaPump
             }

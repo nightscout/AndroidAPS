@@ -105,9 +105,11 @@
     <string name="edit_short">ÉDITER</string>
     <string name="please_choose_an_action_type">Choisir un type d\'action</string>
     <string name="please_choose_a_trigger_type">Choisir un type de déclencheur</string>
+    <string name="please_choose_a_operation_type">Choisissez un type d\'opération</string>
     <string name="triggers">Déclencheurs :</string>
     <string name="remove_label">SUPPRIMER</string>
     <string name="preconditions">Conditions préalables :</string>
     <string name="automation_event">Evénement auto.</string>
     <string name="reorder_label">Réordonner</string>
+    <string name="user_action">Actions utilisateur</string>
 </resources>

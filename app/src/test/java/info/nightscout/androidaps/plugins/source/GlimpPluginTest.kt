@@ -14,12 +14,12 @@ class GlimpPluginTest : TestBase() {
 
     private lateinit var glimpPlugin: GlimpPlugin
 
-    @Mock lateinit var resourceHelper: ResourceHelper
+    @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var sp: SP
 
     @Before
     fun setup() {
-        glimpPlugin = GlimpPlugin(HasAndroidInjector { AndroidInjector { } }, resourceHelper, aapsLogger, sp)
+        glimpPlugin = GlimpPlugin(HasAndroidInjector { AndroidInjector { } }, rh, aapsLogger, sp)
     }
 
     @Test fun advancedFilteringSupported() {

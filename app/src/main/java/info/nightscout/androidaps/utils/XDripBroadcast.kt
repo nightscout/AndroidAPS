@@ -14,14 +14,17 @@ import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
+import javax.inject.Singleton
 
-@Suppress("SpellCheckingInspection") class XDripBroadcast @Inject constructor(
+@Suppress("SpellCheckingInspection")
+@Singleton
+class XDripBroadcast @Inject constructor(
     private val context: Context,
     private val aapsLogger: AAPSLogger,
     private val sp: SP
 ) {
 
-    operator fun invoke(glucoseValue: GlucoseValue) {
+    fun send(glucoseValue: GlucoseValue) {
         if (sp.getBoolean(R.string.key_dexcomg5_xdripupload, false)) {
             val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.US)
             try {

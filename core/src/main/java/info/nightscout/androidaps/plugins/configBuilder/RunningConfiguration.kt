@@ -24,8 +24,9 @@ class RunningConfiguration @Inject constructor(
     private val sp: SP,
     private val aapsLogger: AAPSLogger,
     private val config: Config,
-    private val resourceHelper: ResourceHelper,
-    private val rxBus: RxBus
+    private val rh: ResourceHelper,
+    private val rxBus: RxBus,
+    private val pumpSync: PumpSync
 ) {
 
     private var counter = 0
@@ -34,11 +35,13 @@ class RunningConfiguration @Inject constructor(
     // called in AAPS mode only
     fun configuration(): JSONObject {
         val json = JSONObject()
+        val pumpInterface = activePlugin.activePump
+
+        if (!pumpInterface.isInitialized()) return json
         if (counter++ % every == 0)
             try {
                 val insulinInterface = activePlugin.activeInsulin
                 val sensitivityInterface = activePlugin.activeSensitivity
-                val pumpInterface = activePlugin.activePump
                 val overviewInterface = activePlugin.activeOverview
                 val safetyInterface = activePlugin.activeSafety
 
@@ -61,7 +64,7 @@ class RunningConfiguration @Inject constructor(
         if (configuration.has("version")) {
             rxBus.send(EventNSClientNewLog("VERSION", "Received AndroidAPS version  ${configuration.getString("version")}"))
             if (config.VERSION_NAME.startsWith(configuration.getString("version")).not()) {
-                rxBus.send(EventNewNotification(Notification(Notification.NSCLIENT_VERSION_DOES_NOT_MATCH, resourceHelper.gs(R.string.nsclient_version_does_not_match), Notification.NORMAL)))
+                rxBus.send(EventNewNotification(Notification(Notification.NSCLIENT_VERSION_DOES_NOT_MATCH, rh.gs(R.string.nsclient_version_does_not_match), Notification.NORMAL)))
             }
         }
         if (configuration.has("insulin")) {
@@ -94,9 +97,12 @@ class RunningConfiguration @Inject constructor(
 
         if (configuration.has("pump")) {
             val pumpType = JsonHelper.safeGetString(configuration, "pump", PumpType.GENERIC_AAPS.description)
-            sp.putString(R.string.key_virtualpump_type, pumpType)
-            activePlugin.activePump.pumpDescription.fillFor(PumpType.getByDescription(pumpType))
-            aapsLogger.debug(LTag.CORE, "Changing pump type to $pumpType")
+            if (sp.getString(R.string.key_virtualpump_type, "fake") != pumpType) {
+                sp.putString(R.string.key_virtualpump_type, pumpType)
+                activePlugin.activePump.pumpDescription.fillFor(PumpType.getByDescription(pumpType))
+                pumpSync.connectNewPump()
+                aapsLogger.debug(LTag.CORE, "Changing pump type to $pumpType")
+            }
         }
 
         if (configuration.has("overviewConfiguration"))

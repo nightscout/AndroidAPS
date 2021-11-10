@@ -24,8 +24,8 @@ class TreatmentsActivity : NoSplashAppCompatActivity() {
         binding = TreatmentsFragmentBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.tempBasals.visibility = buildHelper.isEngineeringMode().toVisibility()
-        binding.extendedBoluses.visibility = (buildHelper.isEngineeringMode() && !activePlugin.activePump.isFakingTempsByExtendedBoluses).toVisibility()
+        //binding.tempBasals.visibility = buildHelper.isEngineeringMode().toVisibility()
+        //binding.extendedBoluses.visibility = (buildHelper.isEngineeringMode() && !activePlugin.activePump.isFakingTempsByExtendedBoluses).toVisibility()
 
         binding.treatments.setOnClickListener {
             setFragment(TreatmentsBolusCarbsFragment())
@@ -67,14 +67,14 @@ class TreatmentsActivity : NoSplashAppCompatActivity() {
     }
 
     private fun setBackgroundColorOnSelected(selected: View) {
-        binding.treatments.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        binding.extendedBoluses.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        binding.tempBasals.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        binding.tempTargets.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        binding.profileSwitches.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        binding.careportal.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        binding.userentry.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        selected.setBackgroundColor(resourceHelper.gc(R.color.tabBgColorSelected))
+        binding.treatments.setBackgroundColor(rh.gc(R.color.defaultbackground))
+        binding.extendedBoluses.setBackgroundColor(rh.gc(R.color.defaultbackground))
+        binding.tempBasals.setBackgroundColor(rh.gc(R.color.defaultbackground))
+        binding.tempTargets.setBackgroundColor(rh.gc(R.color.defaultbackground))
+        binding.profileSwitches.setBackgroundColor(rh.gc(R.color.defaultbackground))
+        binding.careportal.setBackgroundColor(rh.gc(R.color.defaultbackground))
+        binding.userentry.setBackgroundColor(rh.gc(R.color.defaultbackground))
+        selected.setBackgroundColor(rh.gc(R.color.tabBgColorSelected))
     }
 
 }

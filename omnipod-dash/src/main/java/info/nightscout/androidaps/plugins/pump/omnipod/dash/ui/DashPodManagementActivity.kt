@@ -7,7 +7,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.extensions.toVisibility
-import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandPlayTestBeep
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.PodActivationWizardActivity
@@ -30,7 +30,7 @@ class DashPodManagementActivity : NoSplashAppCompatActivity() {
 
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var commandQueue: CommandQueueProvider
+    @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var context: Context
     @Inject lateinit var aapsSchedulers: AapsSchedulers
@@ -66,7 +66,7 @@ class DashPodManagementActivity : NoSplashAppCompatActivity() {
         binding.buttonDiscardPod.setOnClickListener {
             OKDialog.showConfirmation(
                 this,
-                resourceHelper.gs(R.string.omnipod_common_pod_management_discard_pod_confirmation),
+                rh.gs(R.string.omnipod_common_pod_management_discard_pod_confirmation),
                 Thread {
                     podStateManager.reset()
                 }
@@ -83,10 +83,10 @@ class DashPodManagementActivity : NoSplashAppCompatActivity() {
                     override fun run() {
                         if (!result.success) {
                             displayErrorDialog(
-                                resourceHelper.gs(R.string.omnipod_common_warning),
-                                resourceHelper.gs(
+                                rh.gs(R.string.omnipod_common_warning),
+                                rh.gs(
                                     R.string.omnipod_common_two_strings_concatenated_by_colon,
-                                    resourceHelper.gs(R.string.omnipod_common_error_failed_to_play_test_beep),
+                                    rh.gs(R.string.omnipod_common_error_failed_to_play_test_beep),
                                     result.comment
                                 ),
                                 false

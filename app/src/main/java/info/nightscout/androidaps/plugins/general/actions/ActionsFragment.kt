@@ -31,7 +31,7 @@ import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.activities.HistoryBrowseActivity
 import info.nightscout.androidaps.diaconn.DiaconnG8Plugin
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -67,12 +67,12 @@ class ActionsFragment : DaggerFragment() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var ctx: Context
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var statusLightHandler: StatusLightHandler
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var iobCobCalculator: IobCobCalculator
-    @Inject lateinit var commandQueue: CommandQueueProvider
+    @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var buildHelper: BuildHelper
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var skinProvider: SkinProvider
@@ -164,7 +164,7 @@ class ActionsFragment : DaggerFragment() {
         extendedBolus?.setOnClickListener {
             activity?.let { activity ->
                 protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable {
-                    OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.extended_bolus), resourceHelper.gs(R.string.ebstopsloop),
+                    OKDialog.showConfirmation(activity, rh.gs(R.string.extended_bolus), rh.gs(R.string.ebstopsloop),
                         Runnable {
                             ExtendedBolusDialog().show(childFragmentManager, "Actions")
                         }, null)
@@ -177,7 +177,7 @@ class ActionsFragment : DaggerFragment() {
                 commandQueue.cancelExtended(object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.extendedbolusdeliveryerror), R.raw.boluserror)
+                            ErrorHelperActivity.runAlarm(ctx, result.comment, rh.gs(R.string.extendedbolusdeliveryerror), R.raw.boluserror)
                         }
                     }
                 })
@@ -192,7 +192,7 @@ class ActionsFragment : DaggerFragment() {
                 commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
+                            ErrorHelperActivity.runAlarm(ctx, result.comment, rh.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
                         }
                     }
                 })
@@ -274,7 +274,7 @@ class ActionsFragment : DaggerFragment() {
                 pump.isInitialized() &&
                 !pump.isSuspended()).toVisibility()
 
-        if (!pump.pumpDescription.isExtendedBolusCapable || !pump.isInitialized() || pump.isSuspended() || pump.isFakingTempsByExtendedBoluses) {
+        if (!pump.pumpDescription.isExtendedBolusCapable || !pump.isInitialized() || pump.isSuspended() || pump.isFakingTempsByExtendedBoluses || config.NSCLIENT) {
             extendedBolus?.visibility = View.GONE
             extendedBolusCancel?.visibility = View.GONE
         } else {
@@ -283,14 +283,14 @@ class ActionsFragment : DaggerFragment() {
                 extendedBolus?.visibility = View.GONE
                 extendedBolusCancel?.visibility = View.VISIBLE
                 @Suppress("SetTextI18n")
-                extendedBolusCancel?.text = resourceHelper.gs(R.string.cancel) + " " + activeExtendedBolus.value.toStringMedium(dateUtil)
+                extendedBolusCancel?.text = rh.gs(R.string.cancel) + " " + activeExtendedBolus.value.toStringMedium(dateUtil)
             } else {
                 extendedBolus?.visibility = View.VISIBLE
                 extendedBolusCancel?.visibility = View.GONE
             }
         }
 
-        if (!pump.pumpDescription.isTempBasalCapable || !pump.isInitialized() || pump.isSuspended()) {
+        if (!pump.pumpDescription.isTempBasalCapable || !pump.isInitialized() || pump.isSuspended() || config.NSCLIENT) {
             setTempBasal?.visibility = View.GONE
             cancelTempBasal?.visibility = View.GONE
         } else {
@@ -299,7 +299,7 @@ class ActionsFragment : DaggerFragment() {
                 setTempBasal?.visibility = View.GONE
                 cancelTempBasal?.visibility = View.VISIBLE
                 @Suppress("SetTextI18n")
-                cancelTempBasal?.text = resourceHelper.gs(R.string.cancel) + " " + activeTemp.toStringShort()
+                cancelTempBasal?.text = rh.gs(R.string.cancel) + " " + activeTemp.toStringShort()
             } else {
                 setTempBasal?.visibility = View.VISIBLE
                 cancelTempBasal?.visibility = View.GONE
@@ -318,7 +318,7 @@ class ActionsFragment : DaggerFragment() {
 
         if (!config.NSCLIENT) {
             statusLightHandler.updateStatusLights(cannulaAge, insulinAge, reservoirLevel, sensorAge, sensorLevel, pbAge, batteryLevel)
-            sensorLevelLabel?.text = if (activeBgSource.sensorBatteryLevel == -1) "" else resourceHelper.gs(R.string.careportal_level_label)
+            sensorLevelLabel?.text = if (activeBgSource.sensorBatteryLevel == -1) "" else rh.gs(R.string.careportal_level_label)
         } else {
             statusLightHandler.updateStatusLights(cannulaAge, insulinAge, null, sensorAge, null, pbAge, null)
             sensorLevelLabel?.text = ""
@@ -339,7 +339,7 @@ class ActionsFragment : DaggerFragment() {
             if (!customAction.isEnabled) continue
 
             val btn = SingleClickButton(currentContext, null, android.R.attr.buttonStyle)
-            btn.text = resourceHelper.gs(customAction.name)
+            btn.text = rh.gs(customAction.name)
 
             val layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 0.5f)
@@ -357,7 +357,7 @@ class ActionsFragment : DaggerFragment() {
 
             buttonsLayout?.addView(btn)
 
-            this.pumpCustomActions[resourceHelper.gs(customAction.name)] = customAction
+            this.pumpCustomActions[rh.gs(customAction.name)] = customAction
             this.pumpCustomButtons.add(btn)
         }
     }
