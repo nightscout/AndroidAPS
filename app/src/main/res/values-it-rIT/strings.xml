@@ -898,4 +898,5 @@
     <string name="ns_sync_slow">Rallenta caricamenti</string>
     <string name="data_status">Stato dati BG</string>
     <string name="recalculated_data_used">Dati ricalcolati usati</string>
+    <string name="bg_too_close">BG troppo vicino:\n%1$s\n%2$s</string>
 </resources>
