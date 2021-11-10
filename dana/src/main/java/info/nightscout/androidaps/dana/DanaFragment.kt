@@ -80,8 +80,10 @@ class DanaFragment : DaggerFragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = DanarFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -112,7 +114,9 @@ class DanaFragment : DaggerFragment() {
             danaPump.reset()
             commandQueue.readStatus("Clicked connect to pump", null)
         }
-        if (activePlugin.activePump.pumpDescription.pumpType == PumpType.DANA_RS)
+        if (activePlugin.activePump.pumpDescription.pumpType == PumpType.DANA_RS ||
+            activePlugin.activePump.pumpDescription.pumpType == PumpType.DANA_I
+        )
             binding.btconnection.setOnLongClickListener {
                 activity?.let {
                     OKDialog.showConfirmation(it, rh.gs(R.string.resetpairing)) {
@@ -152,22 +156,22 @@ class DanaFragment : DaggerFragment() {
             .toObservable(EventPumpStatusChanged::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({
-                pumpStatusIcon = when (it.status) {
-                    EventPumpStatusChanged.Status.CONNECTING   ->
-                        "{fa-bluetooth-b spin} ${it.secondsElapsed}s"
-                    EventPumpStatusChanged.Status.CONNECTED    ->
-                        "{fa-bluetooth}"
-                    EventPumpStatusChanged.Status.DISCONNECTED ->
-                        "{fa-bluetooth-b}"
+                           pumpStatusIcon = when (it.status) {
+                               EventPumpStatusChanged.Status.CONNECTING   ->
+                                   "{fa-bluetooth-b spin} ${it.secondsElapsed}s"
+                               EventPumpStatusChanged.Status.CONNECTED    ->
+                                   "{fa-bluetooth}"
+                               EventPumpStatusChanged.Status.DISCONNECTED ->
+                                   "{fa-bluetooth-b}"
 
-                    else                                       ->
-                        "{fa-bluetooth-b}"
-                }
-                binding.btconnection.text = pumpStatusIcon
-                pumpStatus = it.getStatus(rh)
-                binding.pumpStatus.text = pumpStatus
-                binding.pumpStatusLayout.visibility = (pumpStatus != "").toVisibility()
-            }, fabricPrivacy::logException)
+                               else                                       ->
+                                   "{fa-bluetooth-b}"
+                           }
+                           binding.btconnection.text = pumpStatusIcon
+                           pumpStatus = it.getStatus(rh)
+                           binding.pumpStatus.text = pumpStatus
+                           binding.pumpStatusLayout.visibility = (pumpStatus != "").toVisibility()
+                       }, fabricPrivacy::logException)
 
         pumpStatus = ""
         pumpStatusIcon = "{fa-bluetooth-b}"
