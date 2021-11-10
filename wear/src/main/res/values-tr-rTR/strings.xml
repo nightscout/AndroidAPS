@@ -79,6 +79,7 @@
     <string name="action_low" comment="In temp target menu, lower value from range">düşük</string>
     <string name="action_high" comment="In temp target menu, higher value from range">yüksek</string>
     <string name="action_carbs">karbonhidrat</string>
+    <string name="action_percentage">yüzde</string>
     <string name="action_start_min">başlat [min]</string>
     <string name="action_duration_h">süre [h]</string>
     <string name="action_insulin">insülin</string>
