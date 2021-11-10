@@ -25,7 +25,6 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.math.min
 
 @Singleton
 class GlunovoPlugin @Inject constructor(
@@ -64,7 +63,7 @@ class GlunovoPlugin @Inject constructor(
                 aapsLogger.error("Error while processing data", e)
             }
             val lastReadTimestamp = sp.getLong(R.string.key_last_processed_glunovo_timestamp, 0L)
-            val differenceToNow = min(INTERVAL, dateUtil.now() - lastReadTimestamp + INTERVAL + T.secs(10).msecs())
+            val differenceToNow = INTERVAL - (dateUtil.now() - lastReadTimestamp) % INTERVAL + T.secs(10).msecs()
             loopHandler.postDelayed(refreshLoop, differenceToNow)
         }
     }
