@@ -18,6 +18,7 @@
     <string name="omnipod_eros_history_title">Pod Geçmişi</string>
     <string name="omnipod_eros_history_item_description">Açıklama</string>
     <string name="omnipod_eros_history_item_source">Kaynak</string>
+    <string name="omnipod_eros_history_item_date">Tarih</string>
     <string name="omnipod_eros_history_type">Tip:</string>
     <string name="omnipod_eros_history_bolus_value">%1$.2f Ü</string>
     <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f Ü, CH=%2$.1f g</string>
