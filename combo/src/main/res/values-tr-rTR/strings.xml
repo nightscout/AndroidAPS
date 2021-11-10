@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="description_pump_combo">Accu-Chek Combo pompalar için pompa entegrasyonu, ruffy yüklü olması gerektirir</string>
+    <string name="combo_pump_state_label">Durum</string>
+    <string name="combo_pump_activity_label">Aktivite</string>
+    <string name="combo_no_pump_connection">%1$d dk için bağlantı yok</string>
+    <string name="combo_tbr_remaining">%1$d%% (%2$d dak. kaldı)</string>
+    <string name="combo_pump_state_initializing">Başlatılıyor</string>
     <string name="combo_pump_action_bolusing">Bolus (%1$.1f Ü) teslim ediliyor</string>
+    <string name="combo_activity_checking_pump_state">Pompa durumu güncelleniyor</string>
+    <string name="combo_warning_pump_basal_rate_changed">Pompadaki bazal oran değişti ve yakında güncellenecek</string>
+    <string name="combo_error_failure_reading_changed_basal_rate">Bazal oranı pompada değiştirildi, ancak okuma başarısız oldu</string>
+    <string name="combo_activity_checking_for_history_changes">Geçmiş değişiklikleri kontrol ediliyor</string>
     <string name="about_link_urls">\n\ndocumentation:\nhttps://androidaps.readthedocs.io\n\nfacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
+    <string name="combo_bolus_count">Bolus sayısı</string>
+    <string name="combo_tbr_count">TBR (GBO) Geçici Bazal Oranı sayısı</string>
+    <string name="bolusstopped">Bolus durdu</string>
+    <string name="bolusstopping">Bolus durdurma</string>
 </resources>
