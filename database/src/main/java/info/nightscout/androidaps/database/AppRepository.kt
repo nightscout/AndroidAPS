@@ -685,6 +685,10 @@ import kotlin.math.roundToInt
             .subscribeOn(Schedulers.io())
             .toWrappedSingle()
 
+    fun getTemporaryBasalsDataActiveBetweenTimeAndTime(from: Long, to: Long): Single<List<TemporaryBasal>> =
+        database.temporaryBasalDao.getTemporaryBasalActiveBetweenTimeAndTime(from, to)
+            .subscribeOn(Schedulers.io())
+
     fun getTemporaryBasalsDataFromTime(timestamp: Long, ascending: Boolean): Single<List<TemporaryBasal>> =
         database.temporaryBasalDao.getTemporaryBasalDataFromTime(timestamp)
             .map { if (!ascending) it.reversed() else it }

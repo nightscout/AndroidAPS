@@ -50,10 +50,12 @@ class TddCalculator @Inject constructor(
             result.put(midnight, tdd)
         }
 
-        for (t in startTime until endTime step T.mins(5).msecs()) {
+        val calculationStep = T.mins(5).msecs()
+        val tempBasals = iobCobCalculator.getTempBasalIncludingConvertedExtendedForRange(startTime, endTime, calculationStep)
+        for (t in startTime until endTime step calculationStep) {
             val midnight = MidnightTime.calc(t)
             val tdd = result[midnight] ?: TotalDailyDose(timestamp = midnight)
-            val tbr = iobCobCalculator.getTempBasalIncludingConvertedExtended(t)
+            val tbr = tempBasals[t]
             val profile = profileFunction.getProfile(t) ?: continue
             val absoluteRate = tbr?.convertedToAbsolute(t, profile) ?: profile.getBasal(t)
             tdd.basalAmount += absoluteRate / 60.0 * 5.0

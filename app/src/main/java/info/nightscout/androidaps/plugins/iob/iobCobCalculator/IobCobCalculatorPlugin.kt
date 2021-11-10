@@ -558,16 +558,29 @@ class IobCobCalculatorPlugin @Inject constructor(
         return null
     }
 
-    override fun getTempBasalIncludingConvertedExtended(timestamp: Long): TemporaryBasal? {
-
-        val tb = repository.getTemporaryBasalActiveAt(timestamp).blockingGet()
-        if (tb is ValueWrapper.Existing) return tb.value
+    private fun getConvertedExtended(timestamp: Long): TemporaryBasal? {
         if (activePlugin.activePump.isFakingTempsByExtendedBoluses) {
             val eb = repository.getExtendedBolusActiveAt(timestamp).blockingGet()
             val profile = profileFunction.getProfile(timestamp) ?: return null
             if (eb is ValueWrapper.Existing) return eb.value.toTemporaryBasal(profile)
         }
         return null
+    }
+
+    override fun getTempBasalIncludingConvertedExtended(timestamp: Long): TemporaryBasal? {
+        val tb = repository.getTemporaryBasalActiveAt(timestamp).blockingGet()
+        if (tb is ValueWrapper.Existing) return tb.value
+        return getConvertedExtended(timestamp);
+    }
+
+    override fun getTempBasalIncludingConvertedExtendedForRange(startTime: Long, endTime: Long, calculationStep: Long): Map<Long, TemporaryBasal?> {
+        val tempBasals = HashMap<Long, TemporaryBasal?>();
+        val tbs = repository.getTemporaryBasalsDataActiveBetweenTimeAndTime(startTime, endTime).blockingGet()
+        for (t in startTime until endTime step calculationStep) {
+            val tb = tbs.firstOrNull { basal -> basal.timestamp <= t && (basal.timestamp + basal.duration) > t }
+            tempBasals[t] = tb ?: getConvertedExtended(t)
+        }
+        return tempBasals;
     }
 
     override fun calculateAbsoluteIobFromBaseBasals(toTime: Long): IobTotal {
