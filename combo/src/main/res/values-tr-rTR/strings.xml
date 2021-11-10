@@ -1,17 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="description_pump_combo">Accu-Chek Combo pompalar için pompa entegrasyonu, ruffy yüklü olması gerektirir</string>
+    <string name="combo_programming_bolus">Pompa bolus vermek için programlanıyor</string>
     <string name="combo_pump_state_label">Durum</string>
     <string name="combo_pump_activity_label">Aktivite</string>
     <string name="combo_no_pump_connection">%1$d dk için bağlantı yok</string>
     <string name="combo_tbr_remaining">%1$d%% (%2$d dak. kaldı)</string>
     <string name="combo_pump_state_initializing">Başlatılıyor</string>
+    <string name="combo_pump_state_suspended_due_to_error">Hatadan dolayı durduruldu</string>
+    <string name="combo_pump_state_suspended_by_user">Kullanıcı tarafından durduruldu</string>
+    <string name="combo_pump_state_running">Çalışıyor</string>
+    <string name="combo_pump_action_cancelling_tbr">TBR (Geçici Bazal Oranı) İptal ediliyor</string>
+    <string name="combo_pump_action_setting_tbr">TBR(Geçici Bazal Oranı) ayarı (%1$d%% / %2$d dak)</string>
     <string name="combo_pump_action_bolusing">Bolus (%1$.1f Ü) teslim ediliyor</string>
+    <string name="combo_pump_action_refreshing">Yenileniyor...</string>
+    <string name="combo_pump_unsupported_operation">İstenen işlem pompa tarafından desteklenmiyor</string>
     <string name="combo_activity_checking_pump_state">Pompa durumu güncelleniyor</string>
     <string name="combo_warning_pump_basal_rate_changed">Pompadaki bazal oran değişti ve yakında güncellenecek</string>
     <string name="combo_error_failure_reading_changed_basal_rate">Bazal oranı pompada değiştirildi, ancak okuma başarısız oldu</string>
     <string name="combo_activity_checking_for_history_changes">Geçmiş değişiklikleri kontrol ediliyor</string>
+    <string name="combo_error_multiple_boluses_with_identical_timestamp">Aynı dakika içinde aynı miktarda birden fazla bolus içe aktarıldı. Tedavilere sadece bir kayıt eklenebildi. Lütfen pompayı kontrol edin ve Careportal sekmesini kullanarak manuel olarak bir bolus kaydı ekleyin. Diğer boluslardan farklı zamana sahip bir bolus kaydı eklediğinizden emin olun.</string>
     <string name="about_link_urls">\n\ndocumentation:\nhttps://androidaps.readthedocs.io\n\nfacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
+    <string name="combo_check_date">Son bolus 24 saatten eski veya ileri tarihli. Lütfen pompa üzerindeki tarihin doğru ayarlandığını kontrol edin.</string>
+    <string name="combo_suspious_bolus_time">Pompada iletilen bolusun saati/tarihi yanlış görünüyor, IOB büyük olasılıkla yanlış. Lütfen pompa saatini/tarihini kontrol edin.</string>
     <string name="combo_bolus_count">Bolus sayısı</string>
     <string name="combo_tbr_count">TBR (GBO) Geçici Bazal Oranı sayısı</string>
     <string name="bolusstopped">Bolus durdu</string>
