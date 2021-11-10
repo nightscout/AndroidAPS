@@ -8,7 +8,6 @@
     <string name="objectives_0_objective">Nightscout üzerinden izlemeyi ve görselleştirmeyi yapılandırın, bazalları ve oranlarını analiz edin</string>
     <string name="objectives_0_gate">Nightscout\'ta KŞ\'nin bulunduğunu ve pompadaki insülin verilerinin yüklenmekte olduğunu doğrulayın</string>
     <string name="objectives_openloop_objective">Açık Döngü modu başlatılıyor</string>
-    <string name="objectives_openloop_gate">Birkaç gün boyunca Açık Döngü modunda çalıştırın ve birçok geçici bazalı el yordamı ile girin. Geçici ve varsayılan geçici hedefleri düzenleyin ve kullanın (örn. egzersiz ve hipo-tedaviyi desteklemek için)</string>
     <string name="objectives_maxbasal_objective">Geçici bazal tavsiyeleri de dahil olmak üzere Açık Döngüyü anlamak</string>
     <string name="objectives_maxbasal_gate">Bu deneyime dayanarak, max bazalın ne olması gerektiğine karar vermeli ve bunu pompa ve tercihlere koymalısınız</string>
     <string name="objectives_maxiobzero_objective">Kapalı Döngü, (LGS) Düşük Kan Şekerinde Duraklatma modunda başlatılıyor</string>
