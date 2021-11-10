@@ -60,7 +60,6 @@ class QueueThread internal constructor(
                         //write time
                         sp.putLong(R.string.key_btwatchdog_lastbark, System.currentTimeMillis())
                         //toggle BT
-                        pump.stopConnecting()
                         pump.disconnect("watchdog")
                         SystemClock.sleep(1000)
                         val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
