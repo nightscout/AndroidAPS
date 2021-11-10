@@ -46,7 +46,9 @@
     <string name="pref_quick_lefty">Hızlı Sol</string>
     <string name="pref_modern_sparse">Modern Seyrek</string>
     <string name="pref_delta_granularity">Delta Tanecikliliği (Steampunk)</string>
+    <string name="pref_low">Düşük</string>
     <string name="pref_medium">Orta</string>
+    <string name="pref_high">Yüksek</string>
     <string name="pref_auto">Otomatik</string>
     <string name="pref_big_numbers">Büyük Sayılar</string>
     <string name="pref_ring_history">Zil Geçmişi</string>
@@ -63,25 +65,39 @@
     <string name="pref_lookInYourWatchfaceConfiguration">Lütfen, Saatarayüzü yapılandırmasına bakın.</string>
     <string name="menu_tempt">GeçiciH</string>
     <string name="menu_wizard">Sihirbaz</string>
+    <string name="menu_bolus">Bolus</string>
     <string name="menu_ecarb">eCarb</string>
     <string name="menu_settings">Ayarlar</string>
+    <string name="menu_status">Durum</string>
     <string name="menu_resync">Yen-Senkr</string>
+    <string name="menu_prime_fill">Hazırla/doldur</string>
     <string name="menu_none">Hiçbiri</string>
     <string name="menu_default">Varsayılan</string>
     <string name="menu_menu">Menü</string>
+    <string name="action_duration">süre</string>
+    <string name="action_target" comment="In temp target menu, single target value">hedef</string>
+    <string name="action_low" comment="In temp target menu, lower value from range">düşük</string>
+    <string name="action_high" comment="In temp target menu, higher value from range">yüksek</string>
+    <string name="action_carbs">karbonhidrat</string>
     <string name="action_start_min">başlat [min]</string>
+    <string name="action_duration_h">süre [h]</string>
+    <string name="action_insulin">insülin</string>
     <string name="action_preset_1">Ön ayar 1</string>
     <string name="action_preset_2">Ön ayar 2</string>
     <string name="action_preset_3">Ön ayar 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Serbest miktar</string>
     <string name="action_confirm">ONAYLA</string>
     <string name="action_timeshift">vardiya</string>
+    <string name="action_bolus">bolus</string>
     <string name="bolus_progress">Bolus İlerlemesi</string>
     <string name="press_to_cancel">iptal etmek için basın</string>
     <string name="cancel_bolus">BOLUS İPTAL ET</string>
+    <string name="status_pump">Pompa</string>
     <string name="status_loop">Döngü</string>
     <string name="status_cpp">CPP</string>
+    <string name="status_tdd">TDD</string>
     <string name="activity_carb">Karb</string>
+    <string name="activity_IOB">IOB</string>
     <string name="activity_no_status">durum yok</string>
     <string name="color_name_red">kırmızı</string>
     <string name="color_name_pink">pembe</string>
