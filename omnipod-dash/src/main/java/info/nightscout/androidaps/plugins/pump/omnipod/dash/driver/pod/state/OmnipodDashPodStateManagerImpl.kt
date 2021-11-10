@@ -114,6 +114,23 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             podState.successfulConnections = value
         }
 
+    override val connectionAttemptsWithRetries: Int
+        @Synchronized
+        get() = podState.connectionAttemptsWithRetries
+
+    @Synchronized
+    override fun incrementConnectionAttemptsWithRetries() {
+        podState.connectionAttemptsWithRetries++
+    }
+
+    override val failedConnectionsAfterRetries: Int
+        @Synchronized
+        get() = podState.failedConnectionsAfterRetries
+
+    override fun incrementFailedConnectionsAfterRetries() {
+        podState.failedConnectionsAfterRetries++
+    }
+
     override var timeZone: TimeZone
         get() = TimeZone.getTimeZone(podState.timeZone)
         set(tz) {
@@ -129,10 +146,12 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             val podOffset = timeZone.getOffset(now)
             logger.debug(
                 LTag.PUMPCOMM,
-                "sameTimeZone currentTimezone=${currentTimezone.getDisplayName(
+                "sameTimeZone currentTimezone=${
+                currentTimezone.getDisplayName(
                     true,
                     TimeZone.SHORT
-                )} " +
+                )
+                } " +
                     "currentOffset=$currentOffset " +
                     "podOffset=$podOffset"
             )
@@ -627,13 +646,10 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     }
 
     override fun connectionSuccessRatio(): Float {
-        if (connectionAttempts == 0) {
+        if (connectionAttemptsWithRetries == 0) {
             return 0.0F
-        } else if (connectionAttempts <= successfulConnections) {
-            // Prevent bogus quality > 1 during initialisation
-            return 1.0F
         }
-        return successfulConnections.toFloat() / connectionAttempts.toFloat()
+        return 1 - (failedConnectionsAfterRetries.toFloat() / connectionAttemptsWithRetries)
     }
 
     override fun reset() {
@@ -675,6 +691,8 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             OmnipodDashPodStateManager.BluetoothConnectionState.DISCONNECTED
         var connectionAttempts = 0
         var successfulConnections = 0
+        var connectionAttemptsWithRetries = 0
+        var failedConnectionsAfterRetries = 0
         var messageSequenceNumber: Short = 0
         var sequenceNumberOfLastProgrammingCommand: Short? = null
         var activationTime: Long? = null
@@ -682,7 +700,6 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         var bluetoothAddress: String? = null
         var ltk: ByteArray? = null
         var eapAkaSequenceNumber: Long = 1
-        var bolusPulsesRemaining: Short = 0
         var timeZone: String = "" // TimeZone ID (e.g. "Europe/Amsterdam")
         var alarmSynced: Boolean = false
 

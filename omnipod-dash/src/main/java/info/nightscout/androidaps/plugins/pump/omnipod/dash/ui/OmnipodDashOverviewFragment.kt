@@ -256,15 +256,15 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
         val connectionSuccessPercentage = podStateManager.connectionSuccessRatio() * 100
         val successPercentageString = String.format("%.2f %%", connectionSuccessPercentage)
         val quality =
-            "${podStateManager.successfulConnections}/${podStateManager.connectionAttempts} :: $successPercentageString"
+            "${podStateManager.connectionAttemptsWithRetries - podStateManager.failedConnectionsAfterRetries}/${podStateManager.connectionAttemptsWithRetries} :: $successPercentageString"
         bluetoothStatusBinding.omnipodDashBluetoothConnectionQuality.text = quality
         val connectionStatsColor = when {
-            connectionSuccessPercentage > 90 ->
-                Color.WHITE
-            connectionSuccessPercentage > 60 ->
+            connectionSuccessPercentage < 70 && podStateManager.connectionAttemptsWithRetries > 50 ->
+                Color.RED
+            connectionSuccessPercentage < 90 && podStateManager.connectionAttemptsWithRetries > 50 ->
                 Color.YELLOW
             else ->
-                Color.RED
+                Color.WHITE
         }
         bluetoothStatusBinding.omnipodDashBluetoothConnectionQuality.setTextColor(connectionStatsColor)
         bluetoothStatusBinding.omnipodDashDeliveryStatus.text = podStateManager.deliveryStatus?.let {
