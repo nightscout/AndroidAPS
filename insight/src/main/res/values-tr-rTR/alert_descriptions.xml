@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="alert_r7_description"><![CDATA[Miktar: <b>%1$d%%</b>\nSüre: </b>%2$s st.</b>]]></string>
+    <string name="alert_w31_description"><![CDATA[Rezervuar içeriği: <b>%1$s Ü</b>]]></string>
     <string name="alert_w32_description">Pili değiştirin.</string>
     <string name="alert_w33_description">Tarihi/saati ayarlayın.</string>
     <string name="alert_w34_description">Accu-Chek desteğine başvurun.</string>
     <string name="alert_w36_description"><![CDATA[Miktar: <b>%1$d%%</b><br/>Süre: <b>%2$s st.</b>]]></string>
+    <string name="alert_w38_description"><![CDATA[Programlandı: <b>%1$s Ü</b><br/>gönderildi: <b>%2$s Ü</b>]]></string>
     <string name="alert_m20_description">Rezervuar yerleştirin.</string>
     <string name="alert_m21_description">Rezervuar değiştir.</string>
     <string name="alert_m22_description">Pili değiştirin.</string>
