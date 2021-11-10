@@ -62,9 +62,19 @@
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Medtronic Pompa</string>
     <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
+    <string name="riley_link_common_yes">Evet</string>
+    <string name="riley_link_common_no">Hayır</string>
     <!-- RileyLink - Preferences -->
     <string name="riley_link_show_battery_level">OrangeLink/EmaLink/DiaLink tarafından bildirilen pil seviyesini göster</string>
     <string name="riley_link_show_battery_level_summary">Orijinal RileyLink ile ÇALIŞMAZ. Diğer RileyLink alternatifleriyle de çalışmayabilir.</string>
+    <plurals name="duration_days">
+        <item quantity="one">%1$d gün</item>
+        <item quantity="other">%1$d gün</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%1$d saat</item>
+        <item quantity="other">%1$d saat</item>
+    </plurals>
     <string name="orange_use_scanning_level">Taramayı Kullan</string>
     <string name="orange_use_scanning_level_summary">OrangeLink\'e bağlanmadan önce tarayın, bağlantıları iyileştirebilir (gerekirse diğer RileyLink klonlarıyla da kullanılabilir)</string>
 </resources>
