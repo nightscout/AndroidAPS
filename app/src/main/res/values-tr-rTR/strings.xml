@@ -455,6 +455,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="hasbgdata">Seçili kaynaktan KŞ kullanılabilir</string>
     <string name="enablesmbalways">SMB\'yi her zaman etkinleştir</string>
     <string name="enablesmbalways_summary">SMB\'yi her zaman bağımsız olarak boluslarla etkinleştirin. G5 gibi verilerin yalnızca filtrelenmesiyle yalnızca KŞ kaynağıyla mümkündür</string>
+    <string name="enablesmbaftercarbs">Yemeklerden sonra SMB\'yi etkinleştir</string>
     <string name="enablesmbaftercarbs_summary">Karbonhidrat alındıktan sonra 6 saat süreyle SMB\'yi (Super Micro Bolus) etkinleştirin.0 COB (Aktif Karbonhidrat) ile de çalışır, Şayet KŞ kaynağıyla kullanılacaksa verilerin iyice filtrelenmesiyle mümkündür.örn. Dexcom G5 gibi</string>
     <string name="enablesmbwithcob_summary">COB (Aktif Karbonhidrat) aktif olduğunda SMB\'yi (Super Micro Bolus) etkinleştirin.</string>
     <string name="enablesmbwithtemptarget_summary">Geçici hedef aktif olduğunda SMB\'yi etkinleştir (yakında yeme, egzersiz)</string>
