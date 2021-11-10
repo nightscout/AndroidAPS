@@ -461,16 +461,16 @@ class OmnipodDashPumpPlugin @Inject constructor(
                             R.string.key_omnipod_common_expiration_reminder_enabled
                         ) ||
                         it.isChanged(
-                            rh,
-                            R.string.key_omnipod_common_expiration_reminder_hours_before_shutdown
+                                rh,
+                                R.string.key_omnipod_common_expiration_reminder_hours_before_shutdown
                             ) ||
                         it.isChanged(
-                            rh,
-                            R.string.key_omnipod_common_low_reservoir_alert_enabled
+                                rh,
+                                R.string.key_omnipod_common_low_reservoir_alert_enabled
                             ) ||
                         it.isChanged(
-                            rh,
-                            R.string.key_omnipod_common_low_reservoir_alert_units
+                                rh,
+                                R.string.key_omnipod_common_low_reservoir_alert_units
                             )
                     ) {
                         commandQueue.customCommand(CommandUpdateAlertConfiguration(), null)
@@ -625,15 +625,20 @@ class OmnipodDashPumpPlugin @Inject constructor(
                         )
                     }
                 }
-            }.toSingleDefault(
+            }.toSingle {
                 PumpEnactResult(injector).success(true).enacted(true).bolusDelivered(deliveredBolusAmount)
+            }.onErrorReturnItem(
+                // success if canceled
+                PumpEnactResult(injector).success(bolusCanceled).enacted(false)
             )
-                .onErrorReturnItem(
-                    // success if canceled
-                    PumpEnactResult(injector).success(bolusCanceled).enacted(false)
-                )
                 .blockingGet()
-            aapsLogger.info(LTag.PUMP, "deliverTreatment result: $ret")
+            aapsLogger.info(
+                LTag.PUMP,
+                "deliverTreatment result: $ret. " +
+                    "deliveredBolusAmount=$deliveredBolusAmount. " +
+                    "ret bolus=${ret.bolusDelivered}" +
+                    "bolusCanceled=$bolusCanceled"
+            )
             return ret
         } finally {
             bolusCanceled = false
@@ -1196,14 +1201,20 @@ class OmnipodDashPumpPlugin @Inject constructor(
         val lowReservoirAlertEnabled = sp.getBoolean(R.string.key_omnipod_common_low_reservoir_alert_enabled, true)
         val lowReservoirAlertUnits = sp.getInt(R.string.key_omnipod_common_low_reservoir_alert_units, 10)
 
-        if (podStateManager.sameAlertSettings(
+        when {
+            podStateManager.sameAlertSettings(
                 expirationReminderEnabled,
                 expirationHours,
                 lowReservoirAlertEnabled,
                 lowReservoirAlertUnits
-            )
-        ) {
-            return PumpEnactResult(injector).success(true).enacted(false)
+            ) -> {
+                aapsLogger.debug(LTag.PUMP, "Ignoring updateAlertConfiguration because the settings did not change")
+                return PumpEnactResult(injector).success(true).enacted(false)
+            }
+            !podStateManager.isPodRunning -> {
+                aapsLogger.debug(LTag.PUMP, "Ignoring updateAlertConfiguration because there is no active pod")
+                return PumpEnactResult(injector).success(true).enacted(false)
+            }
         }
 
         val podLifeLeft = Duration.between(ZonedDateTime.now(), podStateManager.expiry)

@@ -242,15 +242,15 @@ class LoopPlugin @Inject constructor(
             if (!isEnabled(PluginType.LOOP)) return
             val profile = profileFunction.getProfile()
             if (profile == null || !profileFunction.isProfileValid("Loop")) {
-                aapsLogger.debug(LTag.APS, rh.gs(R.string.noprofileselected))
-                rxBus.send(EventLoopSetLastRunGui(rh.gs(R.string.noprofileselected)))
+                aapsLogger.debug(LTag.APS, rh.gs(R.string.noprofileset))
+                rxBus.send(EventLoopSetLastRunGui(rh.gs(R.string.noprofileset)))
                 return
             }
 
             // Check if pump info is loaded
             if (pump.baseBasalRate < 0.01) return
             val usedAPS = activePlugin.activeAPS
-            if ((usedAPS as PluginBase).isEnabled(PluginType.APS)) {
+            if ((usedAPS as PluginBase).isEnabled()) {
                 usedAPS.invoke(initiator, tempBasalFallback)
                 apsResult = usedAPS.lastAPSResult
             }
@@ -616,7 +616,7 @@ class LoopPlugin @Inject constructor(
     }
 
     private fun allowPercentage(): Boolean {
-        return virtualPumpPlugin.isEnabled(PluginType.PUMP)
+        return virtualPumpPlugin.isEnabled()
     }
 
     override fun goToZeroTemp(durationInMinutes: Int, profile: Profile, reason: OfflineEvent.Reason) {

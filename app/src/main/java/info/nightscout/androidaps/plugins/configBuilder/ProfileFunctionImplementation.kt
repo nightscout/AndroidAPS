@@ -78,7 +78,7 @@ class ProfileFunctionImplementation @Inject constructor(
         getProfileName(System.currentTimeMillis(), customized = true, showRemainingTime = true)
 
     fun getProfileName(time: Long, customized: Boolean, showRemainingTime: Boolean): String {
-        var profileName = rh.gs(R.string.noprofileselected)
+        var profileName = rh.gs(R.string.noprofileset)
 
         val profileSwitch = repository.getEffectiveProfileSwitchActiveAt(time).blockingGet()
         if (profileSwitch is ValueWrapper.Existing) {

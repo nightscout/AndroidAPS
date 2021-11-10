@@ -73,7 +73,7 @@ class XdripPlugin @Inject constructor(
         override fun doWork(): Result {
             var ret = Result.success()
 
-            if (!xdripPlugin.isEnabled(PluginType.BGSOURCE)) return Result.success(workDataOf("Result" to "Plugin not enabled"))
+            if (!xdripPlugin.isEnabled()) return Result.success(workDataOf("Result" to "Plugin not enabled"))
             val bundle = dataWorker.pickupBundle(inputData.getLong(DataWorker.STORE_KEY, -1))
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))
 

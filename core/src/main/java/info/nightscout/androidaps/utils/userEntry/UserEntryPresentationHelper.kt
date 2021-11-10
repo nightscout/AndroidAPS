@@ -131,12 +131,12 @@ class UserEntryPresentationHelper @Inject constructor(
 
         is ValueWithUnit.Mgdl                  -> {
             if (profileFunction.getUnits() == GlucoseUnit.MGDL) DecimalFormatter.to0Decimal(valueWithUnit.value) + translator.translate(valueWithUnit)
-            else DecimalFormatter.to1Decimal(valueWithUnit.value / Constants.MMOLL_TO_MGDL) + translator.translate(valueWithUnit)
+            else DecimalFormatter.to1Decimal(valueWithUnit.value * Constants.MGDL_TO_MMOLL) + translator.translate(valueWithUnit)
         }
 
         is ValueWithUnit.Mmoll                 -> {
-            if (profileFunction.getUnits() == GlucoseUnit.MGDL) DecimalFormatter.to0Decimal(valueWithUnit.value) + translator.translate(valueWithUnit)
-            else DecimalFormatter.to1Decimal(valueWithUnit.value * Constants.MMOLL_TO_MGDL) + translator.translate(valueWithUnit)
+            if (profileFunction.getUnits() == GlucoseUnit.MMOL) DecimalFormatter.to1Decimal(valueWithUnit.value) + translator.translate(valueWithUnit)
+            else DecimalFormatter.to0Decimal(valueWithUnit.value * Constants.MMOLL_TO_MGDL) + translator.translate(valueWithUnit)
         }
 
         ValueWithUnit.UNKNOWN                  -> ""

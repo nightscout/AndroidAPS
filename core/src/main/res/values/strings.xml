@@ -224,7 +224,6 @@
     <string name="profile_carbs_per_unit">g/U</string>
 
     <!--    ProfileFunction-->
-    <string name="noprofileselected">No profile selected</string>
     <string name="startprofile">Start profile %1$d%% for %2$d min</string>
 
     <!--    PumpType-->

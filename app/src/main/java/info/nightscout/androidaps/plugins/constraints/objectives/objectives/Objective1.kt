@@ -33,7 +33,7 @@ class Objective1 @Inject constructor(injector: HasAndroidInjector) : Objective(i
         }.hint(Hint(R.string.usetemptarget_hint)))
         tasks.add(object : Task(this, R.string.objectives_useactions) {
             override fun isCompleted(): Boolean {
-                return sp.getBoolean(R.string.key_objectiveuseactions, false) && actionsPlugin.isEnabled(PluginType.GENERAL) && actionsPlugin.isFragmentVisible()
+                return sp.getBoolean(R.string.key_objectiveuseactions, false) && actionsPlugin.isEnabled() && actionsPlugin.isFragmentVisible()
             }
         }.hint(Hint(R.string.useaction_hint)))
         tasks.add(object : Task(this, R.string.objectives_useloop) {

@@ -86,8 +86,8 @@ class OpenAPSAMAPlugin @Inject constructor(
         val profile = profileFunction.getProfile()
         val pump = activePlugin.activePump
         if (profile == null) {
-            rxBus.send(EventOpenAPSUpdateResultGui(rh.gs(R.string.noprofileselected)))
-            aapsLogger.debug(LTag.APS, rh.gs(R.string.noprofileselected))
+            rxBus.send(EventOpenAPSUpdateResultGui(rh.gs(R.string.noprofileset)))
+            aapsLogger.debug(LTag.APS, rh.gs(R.string.noprofileset))
             return
         }
         if (!isEnabled(PluginType.APS)) {

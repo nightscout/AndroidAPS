@@ -84,7 +84,7 @@ class RandomBgPlugin @Inject constructor(
     }
 
     override fun specialEnableCondition(): Boolean {
-//        return isRunningTest() || virtualPumpPlugin.isEnabled(PluginType.PUMP) && buildHelper.isEngineeringMode()
+//        return isRunningTest() || virtualPumpPlugin.isEnabled() && buildHelper.isEngineeringMode()
         return true
     }
 

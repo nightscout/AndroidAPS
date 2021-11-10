@@ -119,7 +119,7 @@ class NSClientService : DaggerService() {
             .toObservable(EventConfigBuilderChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({
-                if (nsEnabled != nsClientPlugin.isEnabled(PluginType.GENERAL)) {
+                if (nsEnabled != nsClientPlugin.isEnabled()) {
                     latestDateInReceivedData = 0
                     destroy()
                     initialize()
@@ -199,16 +199,16 @@ class NSClientService : DaggerService() {
         var connectionStatus = "Authenticated ("
         if (ack.read) connectionStatus += "R"
         if (ack.write) connectionStatus += "W"
-        if (ack.write_treatment) connectionStatus += "T"
+        if (ack.writeTreatment) connectionStatus += "T"
         connectionStatus += ')'
         isConnected = true
-        hasWriteAuth = ack.write && ack.write_treatment
+        hasWriteAuth = ack.write && ack.writeTreatment
         rxBus.send(EventNSClientStatus(connectionStatus))
         rxBus.send(EventNSClientNewLog("AUTH", connectionStatus))
         if (!ack.write) {
             rxBus.send(EventNSClientNewLog("ERROR", "Write permission not granted "))
         }
-        if (!ack.write_treatment) {
+        if (!ack.writeTreatment) {
             rxBus.send(EventNSClientNewLog("ERROR", "Write treatment permission not granted "))
         }
         if (!hasWriteAuth) {
@@ -356,7 +356,7 @@ class NSClientService : DaggerService() {
     }
 
     fun readPreferences() {
-        nsEnabled = nsClientPlugin.isEnabled(PluginType.GENERAL)
+        nsEnabled = nsClientPlugin.isEnabled()
         nsURL = sp.getString(R.string.key_nsclientinternal_url, "")
         nsAPISecret = sp.getString(R.string.key_nsclientinternal_api_secret, "")
         nsDevice = sp.getString("careportal_enteredby", "")

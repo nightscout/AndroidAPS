@@ -61,7 +61,7 @@ class MM640gPlugin @Inject constructor(
         override fun doWork(): Result {
             var ret = Result.success()
 
-            if (!mM640gPlugin.isEnabled(PluginType.BGSOURCE)) return Result.success()
+            if (!mM640gPlugin.isEnabled()) return Result.success()
             val collection = inputData.getString("collection") ?: return Result.failure(workDataOf("Error" to "missing collection"))
             if (collection == "entries") {
                 val data = inputData.getString("data")

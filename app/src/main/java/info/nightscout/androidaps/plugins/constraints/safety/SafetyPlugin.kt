@@ -95,7 +95,7 @@ class SafetyPlugin @Inject constructor(
     override fun isUAMEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         val enabled = sp.getBoolean(R.string.key_use_uam, false)
         if (!enabled) value[aapsLogger, false, rh.gs(R.string.uamdisabledinpreferences)] = this
-        val oref1Enabled = sensitivityOref1Plugin.isEnabled(PluginType.SENSITIVITY)
+        val oref1Enabled = sensitivityOref1Plugin.isEnabled()
         if (!oref1Enabled) value[aapsLogger, false, rh.gs(R.string.uamdisabledoref1notselected)] = this
         return value
     }

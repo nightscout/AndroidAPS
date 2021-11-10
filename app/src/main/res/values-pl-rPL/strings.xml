@@ -12,7 +12,6 @@
     <string name="nav_resetdb">Zresetuj bazy danych</string>
     <string name="reset_db_confirm">Na pewno chcesz zresetować bazy danych?</string>
     <string name="nav_exit">Wyjście</string>
-    <string name="ns_sync_use_absolute_title">Zawsze używaj wartości bezwzględnych bazy</string>
     <string name="alert_dialog_permission_battery_optimization_failed">To urządzenie nie obsługuje białej listy optymalizacji baterii - mogą wystąpić problemy z wydajnością.</string>
     <string name="description_actions">Niektóre przyciski umożliwiające szybki dostęp do typowych funkcji</string>
     <string name="description_config_builder">Konfiguracja aktywnych modułów systemu</string>
@@ -58,14 +57,14 @@
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">Węglow</string>
     <string name="treatments_wizard_correction_label">Poprawka</string>
-    <string name="treatments_wizard_bolusiob_label">Bolus IOB</string>
+    <string name="treatments_wizard_bolusiob_label">IOB z bolusów</string>
     <string name="openapsma_run">Uruchom teraz</string>
     <string name="vitualpump_label">POMPA WIRTUALNA</string>
     <string name="openapsma_lastrun_label">Ostatnie działanie</string>
     <string name="openapsma_inputparameters_label">Parametry wejściowe</string>
     <string name="openapsma_glucosestatus_label">Stan glukozy</string>
     <string name="openapsma_currenttemp_label">Obecna tymczasowa</string>
-    <string name="openapsma_iobdata_label">IOB data</string>
+    <string name="openapsma_iobdata_label">Dane IOB</string>
     <string name="openapsma_profile_label">Profil</string>
     <string name="openapsma_mealdata_label">Dane posiłku</string>
     <string name="result">Rezultat</string>
@@ -117,7 +116,7 @@
     <string name="openloop_newsuggestion">Dostępna nowa sugestia</string>
     <string name="carbssuggestion">Sugestia węglowodanów</string>
     <string name="unsupportednsversion">Niewspierana wersja Nightscout</string>
-    <string name="treatments_wizard_basaliob_label">Bazowa IOB</string>
+    <string name="treatments_wizard_basaliob_label">IOB z bazy</string>
     <string name="bolusconstraintapplied">Ograniczenia bolusa wprowadzone</string>
     <string name="carbsconstraintapplied">Ograniczenie stosowania węglowodanów</string>
     <string name="careportal_newnstreatment_other">Inne</string>
@@ -678,6 +677,7 @@
     <string name="resettodefaults">Przywróć ustawienia domyślne</string>
     <string name="nsmalfunction">Usterka NSClient. Spróbuj zrestartować NS i NSClient.</string>
     <string name="time_offset">Przesunięcie czasu</string>
+    <string name="bolus_reminder">Przypomnij o bolusie</string>
     <string name="setupwizard_preferred_aps_mode">Preferowany tryb APS</string>
     <string name="treatments_wizard_total_label">Razem</string>
     <string name="calculation_short">Kalk</string>
@@ -716,6 +716,7 @@
     <string name="versionChecker">Kontroler wersji</string>
     <string name="old_version">stara wersja</string>
     <string name="very_old_version">bardzo stara wersja</string>
+    <string name="application_expired">Aplikacja wygasła</string>
     <string name="new_version_warning">Nowa wersja dostępna co najmniej %1$d dni! Powrót do LGS (zawieszania podawania bazy przy niskim poziomie) po %2$d dniach, pętla zostanie wyłączona po %3$d dniach</string>
     <string name="twohours">2 h</string>
     <string name="dexcom_app_patched">Apka Dexcom (spatchowana)</string>
@@ -843,6 +844,10 @@
     <string name="enablebolusadvisor_summary">Użyj przypomnienia, aby rozpocząć jedzenie później podczas wysokiej glikemii (\"pre-bolus\")</string>
     <string name="time_to_eat">Czas jeść!\nUruchom kreatora bolusa i zrób obliczenia ponownie.</string>
     <string name="timetoeat">Czas na jedzenie</string>
+    <string name="bolusreminder">Przypomnienie bolusa</string>
+    <string name="enablebolusreminder">Włącz przypomnienie bolusa</string>
+    <string name="enablebolusreminder_summary">Użyj przypomnienia o potrzebie obliczenia i podania bolusa kalkulatorem (\"opóźniony bolus\")</string>
+    <string name="time_to_bolus">Czas na bolus!\nUruchom Kalkulator bolusa aby ponownie wykonać obliczenia.</string>
     <string name="fabric_upload_disabled">Przesyłanie dzienników awarii jest wyłączone!</string>
     <string name="graph_menu_divider_header">Wykres</string>
     <string name="chart_menu">Menu wykresu</string>
@@ -855,6 +860,8 @@
     <string name="email_address">Adres e-mail</string>
     <string name="privacy_settings">Ustawienia prywatności</string>
     <string name="privacy_summary">Możesz opcjonalnie podać adres e-mail, jeśli chcesz otrzymywać powiadomienia o awariach aplikacji. To nie jest usługa zautomatyzowana. W niebezpiecznych sytuacjach deweloperzy skontaktują się z Tobą.</string>
+    <string name="full_sync">Pełna synchronizacja</string>
+    <string name="full_sync_comment">Wykonać pełną synchronizację? Może ona potrwać wiele godzin i aż do jej zakończenia nie zobaczysz nowych danych w NS.</string>
     <string name="prime">Wypełnianie</string>
     <string name="ns_sync_options">Synchronizacja</string>
     <string name="ns_upload_summary">Profile, bolusy, węglowodany, tymczasowe bazy są przesyłane do NS</string>
@@ -878,4 +885,17 @@
     <string name="sms_timeout_while_wating">Przekroczono limit czasu oczekiwania na zakończenie poprzedniej komunikacji z pompą</string>
     <string name="smscommunicator_another_bolus_in_queue">W kolejce oczekuje inny bolus. Spróbuj ponownie później.</string>
     <string name="calculation_in_progress">Trwa obliczanie</string>
+    <string name="missing_profile_name">Brak nazwy profilu</string>
+    <string name="error_in_ic_values">Błąd w przelicznikach IC</string>
+    <string name="error_in_basal_values">Błąd w wartościach bazy</string>
+    <string name="error_in_target_values">Błąd w wartościach docelowych</string>
+    <string name="error_in_isf_values">Błąd w wartościach ISF</string>
+    <string name="run_question">Uruchomić %s?</string>
+    <string name="invalid_profile_not_accepted">Błędny profil %1$s nie został zaakceptowany z NS</string>
+    <string name="view">Podgląd</string>
+    <string name="errors">Błędy</string>
+    <string name="ns_sync_slow">Wysyłaj dane wolniej</string>
+    <string name="data_status">Stan danych glikemii</string>
+    <string name="recalculated_data_used">Użyto przeliczonych wartości</string>
+    <string name="bg_too_close">Zbyt bliskie pomiary glikemii:\n%1$s\n%2$s</string>
 </resources>
