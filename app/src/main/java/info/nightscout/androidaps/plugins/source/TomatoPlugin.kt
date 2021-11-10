@@ -49,7 +49,7 @@ class TomatoPlugin @Inject constructor(
         @Inject lateinit var aapsLogger: AAPSLogger
         @Inject lateinit var sp: SP
         @Inject lateinit var repository: AppRepository
-        @Inject lateinit var broadcastToXDrip: XDripBroadcast
+        @Inject lateinit var xDripBroadcast: XDripBroadcast
 
         init {
             (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
@@ -77,7 +77,7 @@ class TomatoPlugin @Inject constructor(
                 .blockingGet()
                 .also { savedValues ->
                     savedValues.inserted.forEach {
-                        broadcastToXDrip(it)
+                        xDripBroadcast.send(it)
                         aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
                     }
                 }

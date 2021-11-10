@@ -91,7 +91,7 @@ class NSClientSourcePlugin @Inject constructor(
         @Inject lateinit var dateUtil: DateUtil
         @Inject lateinit var dataWorker: DataWorker
         @Inject lateinit var repository: AppRepository
-        @Inject lateinit var broadcastToXDrip: XDripBroadcast
+        @Inject lateinit var xDripBroadcast: XDripBroadcast
         @Inject lateinit var dexcomPlugin: DexcomPlugin
         @Inject lateinit var nsClientPlugin: NSClientPlugin
 
@@ -148,12 +148,12 @@ class NSClientSourcePlugin @Inject constructor(
                     .blockingGet()
                     .also { result ->
                         result.updated.forEach {
-                            broadcastToXDrip(it)
+                            xDripBroadcast.send(it)
                             nsClientSourcePlugin.detectSource(it)
                             aapsLogger.debug(LTag.DATABASE, "Updated bg $it")
                         }
                         result.inserted.forEach {
-                            broadcastToXDrip(it)
+                            xDripBroadcast.send(it)
                             nsClientSourcePlugin.detectSource(it)
                             aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
                         }
