@@ -1,19 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="combo_pump_action_bolusing">Bolus (%1$.1f Ü) teslim ediliyor</string>
-    <string name="combo_bolus_rejected_due_to_pump_history_change">Bolus hesaplaması yapıldıktan sonra pompa geçmişi değişti. Bolus teslim edilmedi. Bir bolus hala gerekli ise lütfen yeniden hesaplayın.</string>
-    <string name="combo_error_updating_treatment_record">Bolus başarıyla gönderildi, ancak tedavi girişinin eklenmesi başarısız oldu. Son iki dakika içinde aynı boyutta iki küçük bolüs verilirse bu durum meydana gelebilir. Lütfen pompa geçmişini ve tedavi girişlerini kontrol edin ve eksik girişler eklemek için Careportal\'ı kullanın. Aynı dakika ve aynı tutar için herhangi bir giriş eklemediğinizden emin olun.</string>
-    <string name="combo_high_temp_rejected_due_to_pump_history_changes">Hesaplamadan sonra pompa geçmişinde yeni bolus girişleri bulunduğundan yüksek geçici Bazal oranı ayarlanmadı</string>
-    <string name="combo_activity_checking_pump_state">Pompa durumu güncelleniyor</string>
-    <string name="combo_warning_pump_basal_rate_changed">Pompadaki bazal oran değişti ve yakında güncellenecek</string>
-    <string name="combo_error_failure_reading_changed_basal_rate">Bazal oranı pompada değiştirildi, ancak okuma başarısız oldu</string>
-    <string name="combo_activity_checking_for_history_changes">Geçmiş değişiklikleri kontrol ediliyor</string>
-    <string name="combo_error_multiple_boluses_with_identical_timestamp">Aynı dakika içinde aynı miktarda birden fazla boluslar eklenildi. Tedavilere sadece bir kayıt eklenebilir. Lütfen pompayı kontrol edin ve Careportal sekmesini kullanarak elle bir bolus kaydı ekleyin. Başka bolus kullanmayan bir zamana sahip bir bolus oluşturduğunuzdan emin olun.</string>
     <string name="about_link_urls">\n\ndocumentation:\nhttps://androidaps.readthedocs.io\n\nfacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
-    <string name="combo_check_date">Son bolus 24 saatten daha eski veya gelecekte. Lütfen pompadaki tarihin doğru ayarlandığını kontrol edin.</string>
-    <string name="combo_suspious_bolus_time">Teslim edilen bolusun pompadaki zamanı/tarihı yanlış görünüyor, IOB (Insulin On Board) muhtemelen yanlıştır. Lütfen pompa zamanını/tarihini kontrol edin.</string>
-    <string name="combo_bolus_count">Bolus sayısı</string>
-    <string name="combo_tbr_count">TBR (GBO) Geçici Bazal Oranı sayısı</string>
-    <string name="bolusstopped">Bolus durdu</string>
-    <string name="bolusstopping">Bolus durdurma</string>
 </resources>
