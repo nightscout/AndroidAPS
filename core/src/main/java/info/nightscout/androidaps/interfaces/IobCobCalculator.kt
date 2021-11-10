@@ -65,6 +65,17 @@ interface IobCobCalculator {
     fun getTempBasalIncludingConvertedExtended(timestamp: Long): TemporaryBasal?
 
     /**
+     * Get running temporary basals for given time range, sliced by calculationStep.
+     * For each step between given range it calculates equivalent of getTempBasalIncludingConvertedExtended
+     *
+     *  @param startTime start of calculated period, timestamp
+     *  @param endTime end of calculated period, timestamp
+     *  @param calculationStep calculation step, in millisecond
+     *  @return map where for each step, its timestamp is a key and calculated optional temporary basal is a value
+     */
+    fun getTempBasalIncludingConvertedExtendedForRange(startTime: Long, endTime: Long, calculationStep: Long): Map<Long, TemporaryBasal?>
+
+    /**
      * Get running extended bolus at time
      *
      *  @return     running extended bolus or null if no eb is running
