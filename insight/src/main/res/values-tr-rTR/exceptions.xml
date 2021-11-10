@@ -9,5 +9,6 @@
     <string name="no_active_tbr_to_cancel">İptal edilebilecek aktif TBR Geçici Bazal Oranı yok</string>
     <string name="no_active_tbr_to_change">Değiştirilebilecek aktif TBR Geçici Bazal Oranı yok</string>
     <string name="no_such_bolus_to_cancel">İptal edilecek böyle bir bolus yok</string>
+    <string name="pump_already_in_that_state_exception">Pompa zaten bu durumda</string>
     <string name="run_mode_not_allowed">Çalıştır moduna izin yok</string>
 </resources>
