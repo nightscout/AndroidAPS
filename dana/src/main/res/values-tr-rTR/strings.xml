@@ -5,7 +5,11 @@
     <string name="danars_pairingok">Eşleştirme tamam</string>
     <string name="danars_pairingtimedout">Eşleştirme zaman aşımı</string>
     <string name="danarspump">Dana-i/RS</string>
+    <string name="danarspump_shortname">Dana</string>
     <string name="description_pump_dana_rs">DANA Diabecare RS ve Dana-i pompaları için pompa entegrasyonu</string>
+    <string name="commanderror">Komut hatası</string>
+    <string name="speederror">Hız hatası</string>
+    <string name="insulinlimitviolation">İnsülin sınırı ihlali</string>
     <string name="resetpairing">Eşleştirme bilgileri sıfırlansın mı?</string>
     <string name="dana_model">%1$s\nModel: %2$02X\nProtokol: %3$02X\nKod: %4$02X</string>
     <string name="basalcompare">Önceden ayarlanmış bazal orandan daha az teslimat</string>
