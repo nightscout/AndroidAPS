@@ -100,7 +100,7 @@ class RunningConfiguration @Inject constructor(
             if (sp.getString(R.string.key_virtualpump_type, "fake") != pumpType) {
                 sp.putString(R.string.key_virtualpump_type, pumpType)
                 activePlugin.activePump.pumpDescription.fillFor(PumpType.getByDescription(pumpType))
-                pumpSync.connectNewPump()
+                pumpSync.connectNewPump(endRunning = false) // do not end running TBRs, we call this only to accept data properly
                 aapsLogger.debug(LTag.CORE, "Changing pump type to $pumpType")
             }
         }

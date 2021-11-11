@@ -27,8 +27,13 @@ interface PumpSync {
      *
      *  Call this function when new pump is paired to accept data from new pump
      *  to prevent overlapping pump histories
+     * @param endRunning    if true end previous running TBR and EB
      */
-    fun connectNewPump()
+
+    // @JvmOverloads and default value impossible on interface
+    // replace by `fun connectNewPump(endRunning: Boolean = true)` after full conversion to kotlin
+    fun connectNewPump(endRunning: Boolean)
+    fun connectNewPump() = connectNewPump(true)
 
     /*
      *   GENERAL STATUS
@@ -55,8 +60,29 @@ interface PumpSync {
      */
     data class PumpState(val temporaryBasal: TemporaryBasal?, val extendedBolus: ExtendedBolus?, val bolus: Bolus?, val profile: Profile?) {
 
-        data class TemporaryBasal(val timestamp: Long, val duration: Long, val rate: Double, val isAbsolute: Boolean, val type: TemporaryBasalType, val id: Long, val pumpId: Long?)
-        data class ExtendedBolus(val timestamp: Long, val duration: Long, val amount: Double, val rate: Double)
+        data class TemporaryBasal @JvmOverloads constructor(
+            val timestamp: Long,
+            val duration: Long,
+            val rate: Double,
+            val isAbsolute: Boolean,
+            val type: TemporaryBasalType,
+            val id: Long,
+            val pumpId: Long?,
+            // used only to cancel TBR on pump change
+            val pumpType: PumpType = PumpType.USER,
+            val pumpSerial: String = ""
+        )
+
+        data class ExtendedBolus @JvmOverloads constructor(
+            val timestamp: Long,
+            val duration: Long,
+            val amount: Double,
+            val rate: Double,
+            // used only to cancel EB on pump change
+            val pumpType: PumpType = PumpType.USER,
+            val pumpSerial: String = ""
+        )
+
         data class Bolus(val timestamp: Long, val amount: Double)
     }
 
