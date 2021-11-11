@@ -355,9 +355,11 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="reconnect">Pompayı tekrar bağla</string>
     <string name="smscommunicator_wrongduration">Yanlış süre</string>
     <string name="smscommunicator_loopsuspended">Döngü duraklatıldı</string>
+    <string name="smscommunicator_loopresumed">Döngü devam ettirildi</string>
     <string name="treatments_wizard_bgtrend_label">15 dk eğilim</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="superbolus">Superbolus</string>
+    <string name="ns_logappstartedevent">NS\'a uygulama başlangıcını kaydet</string>
     <string name="restartingapp">Ayarları uygulamak için uygulamadan çıkılıyor.</string>
     <string name="configbuilder_insulin_description">Hangi tür insülin kullanıyorsunuz?</string>
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
@@ -671,6 +673,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="delete_logs">Kayıtları Sil</string>
     <string name="error_adding_treatment_message">Tedavilere (insülin: %1$.2f, karbonhidrat: %2$d, %3$s) şeklinde bir tedavi eklenemedi. Lütfen kontrol edin ve uygun şekilde elle bir kayıt ekleyin.</string>
     <string name="generated_ecarbs_note">yKarb: %1$d g (%2$d sa), gecikme: %3$d dk</string>
+    <string name="openaps_noasdata">Otoduyarlılık verileri mevcut değil</string>
     <string name="nav_logsettings">Günlük ayarları</string>
     <string name="resettodefaults">Varsayılanlara sıfırla</string>
     <string name="nsmalfunction">NSClient arızası. NS ve NSClient yeniden başlatmayı düşünün.</string>
