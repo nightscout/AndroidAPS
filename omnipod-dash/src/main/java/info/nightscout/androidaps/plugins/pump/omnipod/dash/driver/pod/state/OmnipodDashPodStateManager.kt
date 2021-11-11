@@ -33,7 +33,7 @@ interface OmnipodDashPodStateManager {
     var bluetoothConnectionState: BluetoothConnectionState
     var connectionAttempts: Int
     var successfulConnections: Int
-    val connectionAttemptsWithRetries: Int
+    val successfulConnectionAttemptsAfterRetries: Int
     val failedConnectionsAfterRetries: Int
 
     var timeZone: TimeZone
@@ -87,7 +87,7 @@ interface OmnipodDashPodStateManager {
     fun updateFromPairing(uniqueId: Id, pairResult: PairResult)
     fun reset()
     fun connectionSuccessRatio(): Float
-    fun incrementConnectionAttemptsWithRetries()
+    fun incrementSuccessfulConnectionAttemptsAfterRetries()
     fun incrementFailedConnectionsAfterRetries()
 
     fun createActiveCommand(

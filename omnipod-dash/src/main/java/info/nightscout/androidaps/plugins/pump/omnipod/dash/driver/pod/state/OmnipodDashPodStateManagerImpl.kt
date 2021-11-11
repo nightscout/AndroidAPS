@@ -114,13 +114,13 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             podState.successfulConnections = value
         }
 
-    override val connectionAttemptsWithRetries: Int
+    override val successfulConnectionAttemptsAfterRetries: Int
         @Synchronized
-        get() = podState.connectionAttemptsWithRetries
+        get() = podState.successfulConnectionAttemptsAfterRetries
 
     @Synchronized
-    override fun incrementConnectionAttemptsWithRetries() {
-        podState.connectionAttemptsWithRetries++
+    override fun incrementSuccessfulConnectionAttemptsAfterRetries() {
+        podState.successfulConnectionAttemptsAfterRetries++
     }
 
     override val failedConnectionsAfterRetries: Int
@@ -646,10 +646,10 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     }
 
     override fun connectionSuccessRatio(): Float {
-        if (connectionAttemptsWithRetries == 0) {
+        if (failedConnectionsAfterRetries + successfulConnectionAttemptsAfterRetries == 0) {
             return 0.0F
         }
-        return 1 - (failedConnectionsAfterRetries.toFloat() / connectionAttemptsWithRetries)
+        return successfulConnectionAttemptsAfterRetries.toFloat() / (successfulConnectionAttemptsAfterRetries + failedConnectionsAfterRetries)
     }
 
     override fun reset() {
@@ -691,7 +691,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             OmnipodDashPodStateManager.BluetoothConnectionState.DISCONNECTED
         var connectionAttempts = 0
         var successfulConnections = 0
-        var connectionAttemptsWithRetries = 0
+        var successfulConnectionAttemptsAfterRetries = 0
         var failedConnectionsAfterRetries = 0
         var messageSequenceNumber: Short = 0
         var sequenceNumberOfLastProgrammingCommand: Short? = null
