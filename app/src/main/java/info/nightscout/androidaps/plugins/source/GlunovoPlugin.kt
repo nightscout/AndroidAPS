@@ -94,6 +94,13 @@ class GlunovoPlugin @Inject constructor(
                 val timestamp = cr.getLong(0)
                 val value = cr.getDouble(1) //value in mmol/l...
                 val curr = cr.getDouble(2)
+
+                // bypass already processed
+                if (timestamp < sp.getLong(R.string.key_last_processed_glunovo_timestamp, 0L)) {
+                    cr.moveToNext()
+                    continue
+                }
+
                 if (timestamp > dateUtil.now() || timestamp == 0L) {
                     aapsLogger.error(LTag.BGSOURCE, "Error in received data date/time $timestamp")
                     cr.moveToNext()
@@ -102,12 +109,6 @@ class GlunovoPlugin @Inject constructor(
 
                 if (value < 2 || value > 25) {
                     aapsLogger.error(LTag.BGSOURCE, "Error in received data value (value out of bounds) $value")
-                    cr.moveToNext()
-                    continue
-                }
-
-                // bypass already processed
-                if (timestamp < sp.getLong(R.string.key_last_processed_glunovo_timestamp, 0L)) {
                     cr.moveToNext()
                     continue
                 }
@@ -134,7 +135,7 @@ class GlunovoPlugin @Inject constructor(
             }
             cr.close()
 
-            if (glucoseValues.isNotEmpty())
+            if (glucoseValues.isNotEmpty() || calibrations.isNotEmpty())
                 repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, calibrations, null))
                     .doOnError {
                         aapsLogger.error(LTag.DATABASE, "Error while saving values from Glunovo App", it)
