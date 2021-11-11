@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="not_paired">Eşleştirilemedi</string>
+    <string name="recovering">Kurtarılıyor</string>
+    <string name="insight_status">Durum</string>
+    <string name="recovery_duration">Kurtarma süresi</string>
+    <string name="start_pump">Pompayı başlat</string>
+    <string name="stop_pump">Pompayı durdur</string>
+    <string name="started">Başlatıldı</string>
+    <string name="stopped">Durduruldu</string>
+    <string name="operating_mode">Çalışma Modu</string>
+    <string name="description_pump_insight_local">Accu-Chek Insight pompaları için pompa entegrasyonu</string>
+    <string name="not_inserted">Takılmamış</string>
     <string name="insight_last_bolus">Son Bolus</string>
     <string name="searching_for_devices">Cihazlar aranıyor…</string>
     <string name="pairing_completed">Eşleştirme tamamlandı</string>
