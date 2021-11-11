@@ -9,6 +9,7 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
+import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
 import info.nightscout.androidaps.interfaces.BgSource
 import info.nightscout.androidaps.interfaces.PluginBase
@@ -86,11 +87,13 @@ class GlunovoPlugin @Inject constructor(
 
         context.contentResolver.query(contentUri, null, null, null, null)?.let { cr ->
             val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
+            val calibrations = mutableListOf<CgmSourceTransaction.Calibration>()
             cr.moveToFirst()
 
             while (!cr.isAfterLast) {
                 val timestamp = cr.getLong(0)
                 val value = cr.getDouble(1) //value in mmol/l...
+                val curr = cr.getDouble(2)
                 if (timestamp > dateUtil.now() || timestamp == 0L) {
                     aapsLogger.error(LTag.BGSOURCE, "Error in received data date/time $timestamp")
                     cr.moveToNext()
@@ -109,21 +112,30 @@ class GlunovoPlugin @Inject constructor(
                     continue
                 }
 
-                glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
-                    timestamp = timestamp,
-                    value = value * Constants.MMOLL_TO_MGDL,
-                    raw = 0.0,
-                    noise = null,
-                    trendArrow = GlucoseValue.TrendArrow.NONE,
-                    sourceSensor = GlucoseValue.SourceSensor.GLUNOVO_NATIVE
-                )
+                if (curr != 0.0)
+                    glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
+                        timestamp = timestamp,
+                        value = value * Constants.MMOLL_TO_MGDL,
+                        raw = 0.0,
+                        noise = null,
+                        trendArrow = GlucoseValue.TrendArrow.NONE,
+                        sourceSensor = GlucoseValue.SourceSensor.GLUNOVO_NATIVE
+                    )
+                else
+                    calibrations.add(
+                        CgmSourceTransaction.Calibration(
+                            timestamp = timestamp,
+                            value = value,
+                            glucoseUnit = TherapyEvent.GlucoseUnit.MMOL
+                        )
+                    )
                 sp.putLong(R.string.key_last_processed_glunovo_timestamp, timestamp)
                 cr.moveToNext()
             }
             cr.close()
 
             if (glucoseValues.isNotEmpty())
-                repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
+                repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, calibrations, null))
                     .doOnError {
                         aapsLogger.error(LTag.DATABASE, "Error while saving values from Glunovo App", it)
                     }
