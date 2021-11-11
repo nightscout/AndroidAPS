@@ -89,8 +89,27 @@
     <string name="latitude_short">Enlem:</string>
     <string name="longitude_short">Boylam:</string>
     <string name="glucose_u">Glukoz [%1$s]:</string>
+    <string name="target_u">Hedef [%1$s]:</string>
+    <string name="lastboluslabel">Son bolus önce</string>
+    <string name="lastboluscompared">Son bolus zamanı %1$s %2$s dakika önce</string>
     <string name="triggercoblabel">COB</string>
     <string name="cobcompared">AK (COB) %1$s %2$.0f</string>
+    <string name="iob_u">IOB [U]:</string>
+    <string name="distance_short">Mesafe [m]:</string>
+    <string name="recurringTime">Yinelenen zaman</string>
+    <string name="every">Her</string>
+    <string name="never">Asla</string>
+    <string name="condition">Koşul:</string>
+    <string name="action">Eylem:</string>
+    <string name="taskname">Görev adı</string>
+    <string name="edit_short">DÜZENLE</string>
+    <string name="please_choose_an_action_type">Eylem tipini seçin</string>
+    <string name="please_choose_a_trigger_type">Tetikleyici tipini seçin</string>
     <string name="please_choose_a_operation_type">İşlem tipini seçin</string>
+    <string name="triggers">Tetikleyiciler:</string>
+    <string name="remove_label">KALDIR</string>
+    <string name="preconditions">Ön koşullar:</string>
+    <string name="automation_event">Otomasyon durumu</string>
+    <string name="reorder_label">Yeniden sırala</string>
     <string name="user_action">Kullanıcı Hareketleri</string>
 </resources>
