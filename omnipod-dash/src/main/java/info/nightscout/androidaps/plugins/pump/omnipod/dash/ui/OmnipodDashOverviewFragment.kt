@@ -50,6 +50,7 @@ import org.apache.commons.lang3.StringUtils
 import java.time.Duration
 import java.time.ZonedDateTime
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 
@@ -213,6 +214,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
         disposables += rxBus
             .toObservable(EventPumpStatusChanged::class.java)
             .observeOn(aapsSchedulers.main)
+            .delay(30, TimeUnit.MILLISECONDS, aapsSchedulers.main)
             .subscribe(
                 {
                     updateBluetoothConnectionStatus(it)
