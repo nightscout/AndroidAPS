@@ -625,5 +625,6 @@ class DanaRSPlugin @Inject constructor(
         sp.remove(rh.gs(R.string.key_danars_v3_randompairingkey) + mDeviceName)
         sp.remove(rh.gs(R.string.key_danars_v3_pairingkey) + mDeviceName)
         sp.remove(rh.gs(R.string.key_danars_v3_randomsynckey) + mDeviceName)
+        sp.remove(rh.gs(R.string.key_dana_ble5_pairingkey) + mDeviceName)
     }
 }

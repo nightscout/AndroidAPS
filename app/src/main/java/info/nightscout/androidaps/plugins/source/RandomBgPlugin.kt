@@ -110,7 +110,7 @@ class RandomBgPlugin @Inject constructor(
         disposable += repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
             .subscribe({ savedValues ->
                            savedValues.inserted.forEach {
-                               xDripBroadcast(it)
+                               xDripBroadcast.send(it)
                                aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
                            }
                        }, { aapsLogger.error(LTag.DATABASE, "Error while saving values from Random plugin", it) }

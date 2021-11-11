@@ -60,7 +60,7 @@ class EversensePlugin @Inject constructor(
         @Inject lateinit var dateUtil: DateUtil
         @Inject lateinit var dataWorker: DataWorker
         @Inject lateinit var repository: AppRepository
-        @Inject lateinit var broadcastToXDrip: XDripBroadcast
+        @Inject lateinit var xDripBroadcast: XDripBroadcast
 
         init {
             (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
@@ -117,7 +117,7 @@ class EversensePlugin @Inject constructor(
                         .blockingGet()
                         .also { savedValues ->
                             savedValues.inserted.forEach {
-                                broadcastToXDrip(it)
+                                xDripBroadcast.send(it)
                                 aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
                             }
                         }

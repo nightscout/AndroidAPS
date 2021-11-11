@@ -83,7 +83,7 @@ class DexcomPlugin @Inject constructor(
         @Inject lateinit var sp: SP
         @Inject lateinit var dateUtil: DateUtil
         @Inject lateinit var dataWorker: DataWorker
-        @Inject lateinit var broadcastToXDrip: XDripBroadcast
+        @Inject lateinit var xDripBroadcast: XDripBroadcast
         @Inject lateinit var repository: AppRepository
         @Inject lateinit var uel: UserEntryLogger
 
@@ -147,11 +147,11 @@ class DexcomPlugin @Inject constructor(
                     .blockingGet()
                     .also { result ->
                         result.inserted.forEach {
-                            broadcastToXDrip(it)
+                            xDripBroadcast.send(it)
                             aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
                         }
                         result.updated.forEach {
-                            broadcastToXDrip(it)
+                            xDripBroadcast.send(it)
                             aapsLogger.debug(LTag.DATABASE, "Updated bg $it")
                         }
                         result.sensorInsertionsInserted.forEach {

@@ -149,15 +149,7 @@ class BLEComm @Inject internal constructor(
             if (lastClearRequest != 0L && dateUtil.isOlderThan(lastClearRequest, 5)) {
                 ToastUtils.showToastInUiThread(context, R.string.invalidpairing)
                 danaRSPlugin.changePump()
-                sp.getStringOrNull(R.string.key_danars_address, null)?.let { address ->
-                    bluetoothAdapter?.getRemoteDevice(address)?.let { device ->
-                        try {
-                            device::class.java.getMethod("removeBond").invoke(device)
-                        } catch (e: Exception) {
-                            aapsLogger.error("Removing bond has been failed. ${e.message}")
-                        }
-                    }
-                }
+                removeBond()
             } else if (lastClearRequest == 0L) {
                 aapsLogger.error("Clearing pairing keys postponed")
                 sp.putLong(R.string.key_rs_last_clear_key_request, dateUtil.now())
@@ -194,6 +186,18 @@ class BLEComm @Inject internal constructor(
         encryptedDataRead = false
         encryptedCommandSent = false
         SystemClock.sleep(2000)
+    }
+
+    private fun removeBond() {
+        sp.getStringOrNull(R.string.key_danars_address, null)?.let { address ->
+            bluetoothAdapter?.getRemoteDevice(address)?.let { device ->
+                try {
+                    device::class.java.getMethod("removeBond").invoke(device)
+                } catch (e: Exception) {
+                    aapsLogger.error("Removing bond has been failed. ${e.message}")
+                }
+            }
+        }
     }
 
     @Synchronized fun close() {
@@ -558,9 +562,17 @@ class BLEComm @Inject internal constructor(
             danaPump.hwModel = decryptedBuffer[5].toInt()
             danaPump.protocol = decryptedBuffer[7].toInt()
             val pairingKey = DanaRSPacket.asciiStringFromBuff(decryptedBuffer, 8, 6) // used while bonding
+            if (decryptedBuffer[8] != 0.toByte())
+                sp.putString(rh.gs(R.string.key_dana_ble5_pairingkey) + danaRSPlugin.mDeviceName, pairingKey)
+
+            val storedPairingKey = sp.getString(rh.gs(R.string.key_dana_ble5_pairingkey) + danaRSPlugin.mDeviceName, "")
+            if (storedPairingKey.isNullOrBlank()) {
+                removeBond()
+                disconnect("Non existing pairing key")
+            }
 
             if (danaPump.hwModel == 0x09) {
-                bleEncryption.setBle5Key(pairingKey.encodeToByteArray())
+                bleEncryption.setBle5Key(storedPairingKey.encodeToByteArray())
                 aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK BLE5 (OK)" + " " + DanaRSPacket.toHexString(decryptedBuffer))
                 // Dana-i BLE5 Pump
                 sendBLE5PairingInformation()
