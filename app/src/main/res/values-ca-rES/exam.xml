@@ -175,4 +175,18 @@
     <string name="ic_different">La ràtio I:C serà diferent si compteu una unitat de carbohidrats com 10g o 12g.</string>
     <string name="ic_meaning">Significat d\'I:C: Quantes unitats d\'hidrats de carboni estan cobertes amb 1U d\'insulina.</string>
     <string name="ic_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#carbohydrate-to-insulin-ratio-cr-g-u</string>
+    <string name="profileswitch_label">Canvis de perfil</string>
+    <string name="profileswitch_pctwillchange">Quan s\'especifica un canvi de perfil del 90%, quines respostes son correctes?</string>
+    <string name="profileswitch_basallower">Les basals seran un 10% menors.</string>
+    <string name="profileswitch_isfhigher">L\'ISF (factor de sensibilitat a la insulina) serà un 10% més alt.</string>
+    <string name="profileswitch_iclower">El valor de la ràtio I:C serà un 10% més baix.</string>
+    <string name="profileswitch_unchanged">Les ràtios d\'ISF i I:C no canviaran.</string>
+    <string name="profileswitch_hint1" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#profile-switch</string>
+    <string name="profileswitch2_label">Canvis de perfil</string>
+    <string name="profileswitch2_pctwillchange">Quan s\'especifica un canvi de perfil del 120%, quines respostes son correctes?</string>
+    <string name="profileswitch2_bghigher">L\'objectiu de glucèmia serà un 20% més alt.</string>
+    <string name="profileswitch2_basalhigher">Les basals seran un 20% més elevades.</string>
+    <string name="profileswitch2_bgunchanged">L\'objectiu de glucèmia no canviarà.</string>
+    <string name="profileswitch2_isfhigher">L\'ISF serà un 20% més alt.</string>
+    <string name="profileswitchtime_label">Canvis de perfil</string>
 </resources>
