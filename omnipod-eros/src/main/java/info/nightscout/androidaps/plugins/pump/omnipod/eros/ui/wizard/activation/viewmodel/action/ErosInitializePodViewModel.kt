@@ -27,7 +27,7 @@ class ErosInitializePodViewModel @Inject constructor(
 
     override fun isPodDeactivatable(): Boolean = podStateManager.activationProgress.isAtLeast(ActivationProgress.PAIRING_COMPLETED)
 
-    override fun doExecuteAction(): Single<PumpEnactResult> = Single.just(aapsOmnipodManager.initializePod())
+    override fun doExecuteAction(): Single<PumpEnactResult> = Single.fromCallable { aapsOmnipodManager.initializePod() }
 
     @StringRes
     override fun getTitleId(): Int = R.string.omnipod_common_pod_activation_wizard_initialize_pod_title
