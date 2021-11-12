@@ -70,6 +70,7 @@ class UserEntryPresentationHelper @Inject constructor(
         Sources.NSClientSource      -> R.drawable.ic_nsclient_bg
         Sources.PocTech             -> R.drawable.ic_poctech
         Sources.Tomato              -> R.drawable.ic_sensor
+        Sources.Glunovo             -> R.drawable.ic_glunovo
         Sources.Xdrip               -> R.drawable.ic_blooddrop_48
         Sources.LocalProfile        -> R.drawable.ic_local_profile
         Sources.Loop                -> R.drawable.ic_loop_closed_white
