@@ -35,7 +35,7 @@ class GlunovoPlugin @Inject constructor(
     private val sp: SP,
     private val context: Context,
     private val repository: AppRepository,
-    private val broadcastToXDrip: XDripBroadcast,
+    private val xDripBroadcast: XDripBroadcast,
     private val dateUtil: DateUtil,
     private val fabricPrivacy: FabricPrivacy
 ) : PluginBase(
@@ -143,7 +143,7 @@ class GlunovoPlugin @Inject constructor(
                     .blockingGet()
                     .also { savedValues ->
                         savedValues.inserted.forEach {
-                            broadcastToXDrip(it)
+                            xDripBroadcast.send(it)
                             aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
                         }
                     }
