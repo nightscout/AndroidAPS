@@ -359,6 +359,41 @@ enum class PumpType {
 
         fun getByDescription(desc: String): PumpType =
             values().firstOrNull { it.description == desc } ?: GENERIC_AAPS
+
+        fun fromDbPumpType(pt: InterfaceIDs.PumpType): PumpType =
+            when (pt) {
+                InterfaceIDs.PumpType.GENERIC_AAPS                -> GENERIC_AAPS
+                InterfaceIDs.PumpType.CELLNOVO                    -> CELLNOVO
+                InterfaceIDs.PumpType.ACCU_CHEK_COMBO             -> ACCU_CHEK_COMBO
+                InterfaceIDs.PumpType.ACCU_CHEK_SPIRIT            -> ACCU_CHEK_SPIRIT
+                InterfaceIDs.PumpType.ACCU_CHEK_INSIGHT           -> ACCU_CHEK_INSIGHT_VIRTUAL
+                InterfaceIDs.PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH -> ACCU_CHEK_INSIGHT
+                InterfaceIDs.PumpType.ACCU_CHEK_SOLO              -> ACCU_CHEK_SOLO
+                InterfaceIDs.PumpType.ANIMAS_VIBE                 -> ANIMAS_VIBE
+                InterfaceIDs.PumpType.ANIMAS_PING                 -> ANIMAS_PING
+                InterfaceIDs.PumpType.DANA_R                      -> DANA_R
+                InterfaceIDs.PumpType.DANA_R_KOREAN               -> DANA_R_KOREAN
+                InterfaceIDs.PumpType.DANA_RS                     -> DANA_RS
+                InterfaceIDs.PumpType.DANA_RS_KOREAN              -> DANA_RS_KOREAN
+                InterfaceIDs.PumpType.DANA_RV2                    -> DANA_RV2
+                InterfaceIDs.PumpType.DANA_I                      -> DANA_I
+                InterfaceIDs.PumpType.OMNIPOD_EROS                -> OMNIPOD_EROS
+                InterfaceIDs.PumpType.OMNIPOD_DASH                -> OMNIPOD_DASH
+                InterfaceIDs.PumpType.MEDTRONIC_512_517           -> MEDTRONIC_512_712
+                InterfaceIDs.PumpType.MEDTRONIC_515_715           -> MEDTRONIC_515_715
+                InterfaceIDs.PumpType.MEDTRONIC_522_722           -> MEDTRONIC_522_722
+                InterfaceIDs.PumpType.MEDTRONIC_523_723_REVEL     -> MEDTRONIC_523_723_REVEL
+                InterfaceIDs.PumpType.MEDTRONIC_554_754_VEO       -> MEDTRONIC_554_754_VEO
+                InterfaceIDs.PumpType.MEDTRONIC_640G              -> MEDTRONIC_640G
+                InterfaceIDs.PumpType.TANDEM_T_SLIM               -> TANDEM_T_SLIM
+                InterfaceIDs.PumpType.TANDEM_T_SLIM_G4            -> TANDEM_T_SLIM_G4
+                InterfaceIDs.PumpType.TANDEM_T_FLEX               -> TANDEM_T_FLEX
+                InterfaceIDs.PumpType.TANDEM_T_SLIM_X2            -> TANDEM_T_SLIM_X2
+                InterfaceIDs.PumpType.YPSOPUMP                    -> YPSOPUMP
+                InterfaceIDs.PumpType.MDI                         -> MDI
+                InterfaceIDs.PumpType.USER                        -> USER
+                InterfaceIDs.PumpType.DIACONN_G8                  -> DIACONN_G8
+            }
     }
 
     constructor(description: String, model: String, parent: PumpType, pumpCapability: PumpCapability? = null, source: Sources? = null) {

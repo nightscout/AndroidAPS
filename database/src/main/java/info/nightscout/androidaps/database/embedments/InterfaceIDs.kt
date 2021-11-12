@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.database.embedments
 
-import info.nightscout.androidaps.database.entities.TherapyEvent
-
 data class InterfaceIDs(
     var nightscoutSystemId: String? = null,
     var nightscoutId: String? = null,

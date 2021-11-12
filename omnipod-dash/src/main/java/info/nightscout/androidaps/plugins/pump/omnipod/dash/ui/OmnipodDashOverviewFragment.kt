@@ -50,6 +50,7 @@ import org.apache.commons.lang3.StringUtils
 import java.time.Duration
 import java.time.ZonedDateTime
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 
@@ -213,6 +214,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
         disposables += rxBus
             .toObservable(EventPumpStatusChanged::class.java)
             .observeOn(aapsSchedulers.main)
+            .delay(30, TimeUnit.MILLISECONDS, aapsSchedulers.main)
             .subscribe(
                 {
                     updateBluetoothConnectionStatus(it)
@@ -254,17 +256,18 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             ?: PLACEHOLDER
 
         val connectionSuccessPercentage = podStateManager.connectionSuccessRatio() * 100
+        val connectionAttempts = podStateManager.failedConnectionsAfterRetries + podStateManager.successfulConnectionAttemptsAfterRetries
         val successPercentageString = String.format("%.2f %%", connectionSuccessPercentage)
         val quality =
-            "${podStateManager.successfulConnections}/${podStateManager.connectionAttempts} :: $successPercentageString"
+            "${podStateManager.successfulConnectionAttemptsAfterRetries}/$connectionAttempts :: $successPercentageString"
         bluetoothStatusBinding.omnipodDashBluetoothConnectionQuality.text = quality
         val connectionStatsColor = when {
-            connectionSuccessPercentage > 90 ->
-                Color.WHITE
-            connectionSuccessPercentage > 60 ->
+            connectionSuccessPercentage < 70 && podStateManager.successfulConnectionAttemptsAfterRetries > 50 ->
+                Color.RED
+            connectionSuccessPercentage < 90 && podStateManager.successfulConnectionAttemptsAfterRetries > 50 ->
                 Color.YELLOW
             else ->
-                Color.RED
+                Color.WHITE
         }
         bluetoothStatusBinding.omnipodDashBluetoothConnectionQuality.setTextColor(connectionStatsColor)
         bluetoothStatusBinding.omnipodDashDeliveryStatus.text = podStateManager.deliveryStatus?.let {
