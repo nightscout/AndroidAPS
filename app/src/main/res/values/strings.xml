@@ -807,6 +807,8 @@
     <string name="time_elapsed">Time elapsed</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Receive BG values from Poctech app</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Receive values from Glunovo app</string>
     <string name="description_source_tomato">Receive BG values from Tomato app (MiaoMiao device)</string>
     <string name="key_high_temptarget_raises_sensitivity" translatable="false">high_temptarget_raises_sensitivity</string>
     <string name="key_low_temptarget_lowers_sensitivity" translatable="false">low_temptarget_lowers_sensitivity</string>
@@ -1132,5 +1134,6 @@
     <string name="data_status">BG data status</string>
     <string name="recalculated_data_used">Recalculated data used</string>
     <string name="bg_too_close">BG too close:\n%1$s\n%2$s</string>
+    <string name="key_last_processed_glunovo_timestamp" translatable="false">last_processed_glunovo_timestamp</string>
 
 </resources>
