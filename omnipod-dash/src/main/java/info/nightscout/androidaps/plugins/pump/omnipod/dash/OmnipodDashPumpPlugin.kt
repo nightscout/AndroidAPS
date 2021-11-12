@@ -235,7 +235,6 @@ class OmnipodDashPumpPlugin @Inject constructor(
     override fun connect(reason: String) {
         aapsLogger.info(LTag.PUMP, "connect reason=$reason")
         podStateManager.bluetoothConnectionState = OmnipodDashPodStateManager.BluetoothConnectionState.CONNECTING
-
         synchronized(this) {
             stopConnecting?.let {
                 aapsLogger.warn(LTag.PUMP, "Already connecting: $stopConnecting")
@@ -244,7 +243,6 @@ class OmnipodDashPumpPlugin @Inject constructor(
             val stop = CountDownLatch(1)
             stopConnecting = stop
         }
-
         thread(
             start = true,
             name = "ConnectionThread",
@@ -253,6 +251,9 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 stopConnecting?.let {
                     val error = omnipodManager.connect(it).ignoreElements().blockingGet()
                     aapsLogger.info(LTag.PUMPCOMM, "connect error=$error")
+                    if (error == null) {
+                        podStateManager.incrementSuccessfulConnectionAttemptsAfterRetries()
+                    }
                 }
             } finally {
                 synchronized(this) {
@@ -270,6 +271,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     override fun stopConnecting() {
         aapsLogger.info(LTag.PUMP, "stopConnecting")
+        podStateManager.incrementFailedConnectionsAfterRetries()
         stopConnecting?.countDown()
         omnipodManager.disconnect(true)
     }
