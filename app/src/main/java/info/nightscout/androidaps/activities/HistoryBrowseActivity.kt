@@ -26,9 +26,9 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus
-import info.nightscout.androidaps.plugins.general.overview.OverviewData
+import info.nightscout.androidaps.plugins.general.overview.HistoryBrowserData
 import info.nightscout.androidaps.plugins.general.overview.OverviewMenus
-import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData
+import info.nightscout.androidaps.plugins.general.overview.graphData.HistoryBrowserGraphData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventBucketedDataCreated
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
@@ -78,7 +78,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
 //    private var start: Long = 0
 
     private lateinit var iobCobCalculator: IobCobCalculatorPlugin
-    private lateinit var overviewData: OverviewData
+    private lateinit var overviewData: HistoryBrowserData
 
     private lateinit var binding: ActivityHistorybrowseBinding
     private var destroyed = false
@@ -90,7 +90,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
 
         // We don't want to use injected singletons but own instance working on top of different data
         iobCobCalculator = IobCobCalculatorPlugin(injector, aapsLogger, aapsSchedulers, rxBus, sp, rh, profileFunction, activePlugin, sensitivityOref1Plugin, sensitivityAAPSPlugin, sensitivityWeightedAveragePlugin, fabricPrivacy, dateUtil, repository)
-        overviewData = OverviewData(injector, aapsLogger, rh, dateUtil, sp, activePlugin, defaultValueHelper, profileFunction, config, loopPlugin, nsDeviceStatus, repository, overviewMenus, iobCobCalculator, translator)
+        overviewData = HistoryBrowserData(injector, aapsLogger, rh, dateUtil, sp, activePlugin, defaultValueHelper, profileFunction, config, loopPlugin, nsDeviceStatus, repository, overviewMenus, iobCobCalculator, translator)
 
         binding.left.setOnClickListener {
             adjustTimeRange(overviewData.fromTime - T.hours(rangeToDisplay.toLong()).msecs())
@@ -329,7 +329,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         updateDate()
 
         val pump = activePlugin.activePump
-        val graphData = GraphData(injector, binding.bgGraph, overviewData)
+        val graphData = HistoryBrowserGraphData(injector, binding.bgGraph, overviewData)
         val menuChartSettings = overviewMenus.setting
         graphData.addInRangeArea(overviewData.fromTime, overviewData.endTime, defaultValueHelper.determineLowLine(), defaultValueHelper.determineHighLine())
         graphData.addBgReadings(menuChartSettings[0][OverviewMenus.CharType.PRE.ordinal])
@@ -350,11 +350,11 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
 
         // 2nd graphs
         prepareGraphsIfNeeded(menuChartSettings.size)
-        val secondaryGraphsData: ArrayList<GraphData> = ArrayList()
+        val secondaryGraphsData: ArrayList<HistoryBrowserGraphData> = ArrayList()
 
         val now = System.currentTimeMillis()
         for (g in 0 until min(secondaryGraphs.size, menuChartSettings.size + 1)) {
-            val secondGraphData = GraphData(injector, secondaryGraphs[g], overviewData)
+            val secondGraphData = HistoryBrowserGraphData(injector, secondaryGraphs[g], overviewData)
             var useABSForScale = false
             var useIobForScale = false
             var useCobForScale = false
