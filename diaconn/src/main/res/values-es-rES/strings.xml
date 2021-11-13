@@ -1,2 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="description_pump_diaconn_g8">Integración de bombas de Insulina Diaconn G8</string>
+</resources>
