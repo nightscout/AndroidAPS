@@ -40,7 +40,7 @@
     <string name="codeinvalid">Niepoprawny kod</string>
     <string name="objectives_exam_objective">Potwierdź swoje umiejętności</string>
     <string name="objectives_exam_gate">Przestudiuj pytania.  Na każde pytanie masz cztery możliwe odpowiedzi. Może być więcej niż jedna poprawna odpowiedź. Zaznacz wszystkie poprawne i wybierz WERYFIKUJ.</string>
-    <string name="answerdisabledto">Odpowiadanie wyłączone na: %1$s</string>
+    <string name="answerdisabledto">Odpowiadanie wyłączone do: %1$s</string>
     <string name="wronganswer">Odpowiedź nieprawidłowa!</string>
     <string name="unfinshed_button">Następny niedokończony</string>
     <string name="requestcode">Kod zapytania: %1$s</string>
