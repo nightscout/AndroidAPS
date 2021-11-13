@@ -105,9 +105,11 @@
     <string name="edit_short">Editar</string>
     <string name="please_choose_an_action_type">Seleccionar un tipo de acción</string>
     <string name="please_choose_a_trigger_type">Seleccione tipo de activador</string>
+    <string name="please_choose_a_operation_type">Elija un tipo de operación</string>
     <string name="triggers">Activadores:</string>
     <string name="remove_label">ELIMINAR</string>
     <string name="preconditions">Precondiciones:</string>
     <string name="automation_event">Automatización de eventos</string>
     <string name="reorder_label">Repetir</string>
+    <string name="user_action">Acción del usuario</string>
 </resources>
