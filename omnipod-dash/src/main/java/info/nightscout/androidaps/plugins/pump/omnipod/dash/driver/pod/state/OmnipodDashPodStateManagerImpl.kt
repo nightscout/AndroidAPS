@@ -23,6 +23,8 @@ import io.reactivex.Single
 import java.io.Serializable
 import java.time.Duration
 import java.time.Instant
+import java.time.ZoneId
+import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.util.*
 import javax.inject.Inject
@@ -131,27 +133,18 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         podState.failedConnectionsAfterRetries++
     }
 
-    override var timeZone: TimeZone
-        get() = TimeZone.getTimeZone(podState.timeZone)
-        set(tz) {
-            podState.timeZone = tz.toZoneId().normalized().id
-            store()
-        }
+    override val timeZoneId: String?
+        get() = podState.timeZone
 
     override val sameTimeZone: Boolean
         get() {
             val now = System.currentTimeMillis()
             val currentTimezone = TimeZone.getDefault()
             val currentOffset = currentTimezone.getOffset(now)
-            val podOffset = timeZone.getOffset(now)
+            val podOffset = podState.timeZoneOffset
             logger.debug(
                 LTag.PUMPCOMM,
-                "sameTimeZone currentTimezone=${
-                currentTimezone.getDisplayName(
-                    true,
-                    TimeZone.SHORT
-                )
-                } " +
+                "sameTimeZone " +
                     "currentOffset=$currentOffset " +
                     "podOffset=$podOffset"
             )
@@ -238,8 +231,9 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         get() {
             val minutesSinceActivation = podState.minutesSinceActivation
             val activationTime = podState.activationTime
-            if ((activationTime != null) && (minutesSinceActivation != null)) {
-                return ZonedDateTime.ofInstant(Instant.ofEpochMilli(activationTime), timeZone.toZoneId())
+            val timeZoneOffset = podState.timeZoneOffset
+            if ((activationTime != null) && (minutesSinceActivation != null) && (timeZoneOffset != null)) {
+                return ZonedDateTime.ofInstant(Instant.ofEpochMilli(activationTime), ZoneId.ofOffset("", ZoneOffset.ofTotalSeconds(timeZoneOffset / 1000)))
                     .plusMinutes(minutesSinceActivation.toLong())
                     .plus(Duration.ofMillis(System.currentTimeMillis() - lastUpdatedSystem))
             }
@@ -248,8 +242,24 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
 
     override val timeDrift: Duration?
         get() {
-            return Duration.between(ZonedDateTime.now(), time)
+            return time?.let {
+                return Duration.between(ZonedDateTime.now(), it)
+            } ?: null
         }
+
+    override val timeZoneUpdated: Long?
+        get() {
+            return podState.timeZoneUpdated
+        }
+
+    override fun updateTimeZone() {
+        val timeZone = TimeZone.getDefault()
+        val now = System.currentTimeMillis()
+
+        podState.timeZoneOffset = timeZone.getOffset(now)
+        podState.timeZone = timeZone.id
+        podState.timeZoneUpdated = now
+    }
 
     override val expiry: ZonedDateTime?
         get() {
@@ -700,7 +710,9 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         var bluetoothAddress: String? = null
         var ltk: ByteArray? = null
         var eapAkaSequenceNumber: Long = 1
-        var timeZone: String = "" // TimeZone ID (e.g. "Europe/Amsterdam")
+        var timeZone: String? = null // TimeZone ID (e.g. "Europe/Amsterdam")
+        var timeZoneOffset: Int? = null
+        var timeZoneUpdated: Long? = null
         var alarmSynced: Boolean = false
 
         var bleVersion: SoftwareVersion? = null
