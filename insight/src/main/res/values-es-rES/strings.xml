@@ -45,7 +45,7 @@
     <string name="short_status_extended">Multionda: %1$.2f / %2$.2f U durante %3$d min</string>
     <string name="short_status_multiwave">Multionda: %1$.2f / %2$.2f U durante %3$d min</string>
     <string name="short_status_tdd">TDD: %1$.2f</string>
-    <string name="short_status_reservoir">Reser.: %1$.2f U</string>
+    <string name="short_status_reservoir">Reservorio.: %1$.2f U</string>
     <string name="short_status_battery">Batería.: %1$d%%</string>
     <string name="confirm">Confirmar</string>
     <string name="mute_alert">Silenciar</string>
@@ -60,7 +60,7 @@
     <string name="manufacturing_date">Fecha de fabricación</string>
     <string name="delete_pairing">Eliminar emparejamiento</string>
     <string name="log_site_changes">Registrar cambios de cánulas</string>
-    <string name="log_reservoir_changes">Registrar cambios de reservorio</string>
+    <string name="log_reservoir_changes">Registrar cambios de cartucho</string>
     <string name="log_tube_changes">Registrar cambios de tubo</string>
     <string name="log_battery_changes">Registrar cambios de batería</string>
     <string name="log_operating_mode_changes">Registrar cambios del modo de funcionamiento</string>
