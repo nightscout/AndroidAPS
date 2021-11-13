@@ -3,8 +3,8 @@
     <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <string name="treatmentssafety_title">Seguridad tratamientos</string>
-    <string name="treatmentssafety_maxbolus_title">Máximo Bolo permitido [U]</string>
+    <string name="treatmentssafety_title">Seguridad de tratamientos</string>
+    <string name="treatmentssafety_maxbolus_title">Máximo bolo permitido [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Máximos carbohidratos permitidos [g]</string>
     <string name="nav_preferences_plugin">%1$s preferencias</string>
     <string name="nav_preferences">Preferencias</string>
@@ -49,7 +49,7 @@
     <string name="treatments_iobtotal_label_string">IOB total:</string>
     <string name="treatments_iobactivitytotal_label_string">Actividad total IOB:</string>
     <string name="tempbasals_realduration_label_string">Dur:</string>
-    <string name="tempbasals_netratio_label_string">Relación:</string>
+    <string name="tempbasals_netratio_label_string">Ratio:</string>
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">IOB Total:</string>
@@ -899,4 +899,6 @@
     <string name="errors">Errores</string>
     <string name="ns_sync_slow">Ralentizar subidas</string>
     <string name="data_status">Estado de datos BG</string>
+    <string name="recalculated_data_used">Datos recalculados utilizados</string>
+    <string name="bg_too_close">Datos de BG demasiado cercanos:\n%1$s\n%2$s</string>
 </resources>
