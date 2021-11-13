@@ -3,6 +3,59 @@
     <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
+    <string name="treatmentssafety_title">Seguretat tractaments</string>
+    <string name="treatmentssafety_maxbolus_title">Max bolus permès [U]</string>
+    <string name="treatmentssafety_maxcarbs_title">Max carbs permesos [g]</string>
+    <string name="nav_preferences_plugin">%1$s configuració</string>
+    <string name="nav_preferences">Configuració</string>
+    <string name="nav_refreshtreatments">Actualitzar tractaments des de NS</string>
+    <string name="nav_resetdb">Restablir bases de dades</string>
+    <string name="reset_db_confirm">Esteu segurs que voleu restablir les bases de dades?</string>
+    <string name="nav_exit">Sortir</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Sembla que aquest dispositiu no permet optimitzar la bateria amb llistes blanques, això pot provocar problemes de rendiment.</string>
+    <string name="description_actions">Alguns botons per accedir ràpid a funcions habituals</string>
+    <string name="description_config_builder">Utilitzat per configurar plugins actius</string>
+    <string name="description_objectives">Programa d\'aprenentatge</string>
+    <string name="description_food">Mostra els valors preestablerts per alimentació definits a Nightscout</string>
+    <string name="description_insulin_rapid">Configuració preestablerta per insulina Humalog i NovoRapid/NovoLog</string>
+    <string name="description_insulin_ultra_rapid">Configuració preestablerta per insulina Fiasp</string>
+    <string name="description_insulin_lyumjev">Configuració preestablerta per insulina Lyumjev</string>
+    <string name="description_insulin_free_peak">Permet definir el pic d\'activitat de la insulina. A utilitzar només per usuaris avançats</string>
+    <string name="description_ns_client">Sincronitza les vostres dades amb Nightscout</string>
+    <string name="description_ama">Estat de l\'algoritme el 2017</string>
+    <string name="description_smb">Algoritme més nou per usuaris avançats</string>
+    <string name="description_overview">Mostra l\'estat actual del llaç i botons per les accions més habituals</string>
+    <string name="description_persistent_notification">Va mostrant avisos amb un petit resum del que el llaç està fent</string>
+    <string name="description_profile_local">Definir un perfil disponible fora de línia.</string>
+    <string name="description_pump_mdi">Integració de bomba d\'insulina per persones que fan servir teràpia amb múltiples injeccions</string>
+    <string name="description_pump_virtual">Integració de bombes d\'insulina per les quals encara no existeix driver/controlador (Llaç obert)</string>
+    <string name="description_sensitivity_aaps">Sensibilitat calculada com amb Oref0, però podent especificar un rang de temps en el passat. L\'absorció mínima dels carbohidrats es calcula a partir del temps màxim d\'absorció de carbohidrats indicat a la configuració.</string>
+    <string name="description_sensitivity_weighted_average">Sensibilitat calculada com una mitja ponderada a partir de les desviacions. Les noves desviacions tenen un pes més gran. L\'absorció mínima dels carbohidrats es calcula a partir del temps màxim d\'absorció de carbohidrats indicat a la configuració. Aquest algoritme és el més ràpid en seguir els canvis de sensibilitat.</string>
+    <string name="description_source_eversense">Rebre valors de glucèmia de l\'app Eversense \"parxejada\".</string>
+    <string name="description_source_glimp">Rebre valors de glucèmia de Glimp.</string>
+    <string name="description_source_mm640g">Rebre valors de glucèmia del 600SeriesAndroidUploader.</string>
+    <string name="description_source_ns_client">Descarrega dades de glucèmia des de Nightscout</string>
+    <string name="description_source_xdrip">Rebre valors de glucèmia de xDrip+.</string>
+    <string name="description_treatments">Desa tots els tractaments realitzats</string>
+    <string name="description_wear">Monitoritzar i controlar AndroidAPS des del vostre rellotge WearOS.</string>
+    <string name="description_xdrip_status_line">Mostrar informació del llaç a la vostra esfera xDrip+.</string>
+    <string name="description_sms_communicator">Controlar remotament AndroidAPS amb ordres SMS.</string>
+    <string name="treatments_insulin_label_string">Insulina:</string>
+    <string name="treatments_carbs_label_string">Carbs:</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="sms_iob">IOB:</string>
+    <string name="treatments_iobtotal_label_string">IOB total:</string>
+    <string name="treatments_iobactivitytotal_label_string">Activitat total IOB:</string>
+    <string name="tempbasals_realduration_label_string">Durada:</string>
+    <string name="tempbasals_netratio_label_string">Ràtio:</string>
+    <string name="tempbasals_netinsulin_label_string">Ins:</string>
+    <string name="tempbasals_iob_label_string">IOB:</string>
+    <string name="tempbasals_iobtotal_label_string">IOB total:</string>
+    <string name="treatments_wizard_bg_label">Glucèmia</string>
+    <string name="treatments_wizard_carbs_label">Carbs</string>
+    <string name="treatments_wizard_correction_label">Corr</string>
+    <string name="treatments_wizard_bolusiob_label">IOB Bolus</string>
+    <string name="openapsma_run">Executar ara</string>
     <string name="overview">Inici</string>
     <!-- SMS Communicator & OTP Authenticator -->
 </resources>
