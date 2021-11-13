@@ -113,5 +113,36 @@
     <string name="disabledloop">Llaç desactivat</string>
     <string name="openloop_newsuggestion">Nova proposta disponible</string>
     <string name="carbssuggestion">Proposta de carbs</string>
+    <string name="unsupportednsversion">Versió no compatible de Nightscout</string>
+    <string name="treatments_wizard_basaliob_label">IOB Basal</string>
+    <string name="bolusconstraintapplied">Restricció de bolus aplicada</string>
+    <string name="carbsconstraintapplied">Restricció de carbs. aplicada</string>
+    <string name="careportal_newnstreatment_other">Altres</string>
+    <string name="careportal_newnstreatment_meter">Glucòmetre</string>
+    <string name="careportal_newnstreatment_sensor">Sensor</string>
+    <string name="careportal_newnstreatment_carbtime_label">Temps d\'absorció</string>
+    <string name="careportal_newnstreatment_duration_label">Durada</string>
+    <string name="careportal_newnstreatment_profile_label">Perfil</string>
+    <string name="careportal_newnstreatment_glucosetype">Tipus de glucèmia</string>
+    <string name="overview_tempbasal_button">BasalTemp</string>
+    <string name="overview_extendedbolus_button">Bolus estès</string>
+    <string name="configbuilder_nightscoutversion_label">Versió de Nightscout:</string>
+    <string name="missing_carbs">Falten %1$d g</string>
+    <string name="exported">Configuració exportada</string>
+    <string name="ue_exported">Entrades d\'usuari exportades</string>
+    <string name="export_to">Exportar configuració a</string>
+    <string name="import_from">Importar configuració de</string>
+    <string name="setting_imported">Configuració importada</string>
+    <string name="filenotfound">Arxiu no trobat</string>
+    <string name="nav_export">Exportar configuració</string>
+    <string name="nav_import">Importar configuració</string>
+    <string name="openapsma_maxbasal_title">Max U/h per una basal temporal</string>
+    <string name="openapsma_maxbasal_summary">A OpenAPS d\'aquest valor se\'n diu basal màxima</string>
+    <string name="openapsma_maxiob_title">Màxima basal IOB que OpenAPS pot suministrar [U]</string>
+    <string name="openapsma_maxiob_summary">A OpenAPS d\'aquest valor se\'n diu Màx IOB\nÉs la màxima quantitat d\'insulina en [U] que APS pot suministrar d\'una vegada.</string>
+    <string name="password_preferences_encrypt_prompt">Se us demanarà una clau mestra, es farà servir per encriptar la configuració exportada.</string>
+    <string name="password_preferences_decrypt_prompt">Se us demanarà una clau mestra, es necessita per desencriptar la configuració importada.</string>
+    <string name="smscommunicator_remotecommandnotallowed">Ordre remota no permesa</string>
+    <string name="smscommunicator_remotebolusnotallowed">Bolus remot no disponible. Torneu-ho a intentar més tard.</string>
     <!-- SMS Communicator & OTP Authenticator -->
 </resources>
