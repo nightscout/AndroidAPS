@@ -32,6 +32,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.Riley
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ResetRileyLinkConfigurationTask
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.WakeAndTuneTask
+import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryTBR
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
 import info.nightscout.androidaps.plugins.pump.common.utils.ProfileUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry
@@ -111,7 +112,7 @@ class MedtronicPumpPlugin @Inject constructor(
     private var isBusy = false
 
     override fun onStart() {
-        aapsLogger.debug(LTag.PUMP, deviceID() + " started.")
+        aapsLogger.debug(LTag.PUMP, deviceID() + " started. (V2.0005)")
         serviceConnection = object : ServiceConnection {
             override fun onServiceDisconnected(name: ComponentName) {
                 aapsLogger.debug(LTag.PUMP, "RileyLinkMedtronicService is disconnected")
@@ -468,6 +469,7 @@ class MedtronicPumpPlugin @Inject constructor(
             }
         }
 
+    @Synchronized
     override fun isThisProfileSet(profile: Profile): Boolean {
         aapsLogger.debug(LTag.PUMP, "isThisProfileSet: basalInitalized=" + medtronicPumpStatus.basalProfileStatus)
         if (!isInitialized) return true
@@ -580,6 +582,7 @@ class MedtronicPumpPlugin @Inject constructor(
         scheduleNextRefresh(MedtronicStatusRefreshType.PumpTime, 0)
     }
 
+    @Synchronized
     override fun deliverBolus(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         aapsLogger.info(LTag.PUMP, "MedtronicPumpPlugin::deliverBolus - " + BolusDeliveryType.DeliveryPrepared)
         setRefreshButtonEnabled(false)
@@ -691,6 +694,7 @@ class MedtronicPumpPlugin @Inject constructor(
 
     // if enforceNew===true current temp basal is canceled and new TBR set (duration is prolonged),
     // if false and the same rate is requested enacted=false and success=true is returned and TBR is not changed
+    @Synchronized
     override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
         setRefreshButtonEnabled(false)
         if (isPumpNotReachable) {
@@ -742,6 +746,7 @@ class MedtronicPumpPlugin @Inject constructor(
                 return PumpEnactResult(injector).success(false).enacted(false)
                     .comment(R.string.medtronic_cmd_cant_cancel_tbr_stop_op)
             } else {
+                //cancelTBRWithTemporaryId()
                 aapsLogger.info(LTag.PUMP, logPrefix + "setTempBasalAbsolute - Current TBR cancelled.")
             }
         }
@@ -760,8 +765,9 @@ class MedtronicPumpPlugin @Inject constructor(
             medtronicPumpStatus.tempBasalAmount = absoluteRate
             medtronicPumpStatus.tempBasalLength = durationInMinutes
 
-            val tempData = info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryTBR(absoluteRate, true, durationInMinutes, tbrType)
+            val tempData = PumpDbEntryTBR(absoluteRate, true, durationInMinutes, tbrType)
 
+            medtronicPumpStatus.runningTBRWithTemp = tempData
             pumpSyncStorage.addTemporaryBasalRateWithTempId(tempData, true, this)
 
             incrementStatistics(MedtronicConst.Statistics.TBRsSet)
@@ -771,6 +777,63 @@ class MedtronicPumpPlugin @Inject constructor(
         }
     }
 
+    @Deprecated("Not used, TBRs fixed in history, should be removed.")
+    private fun cancelTBRWithTemporaryId() {
+        val tbrs : MutableList<PumpDbEntryTBR> = pumpSyncStorage.getTBRs()
+        if (tbrs.size > 0 && medtronicPumpStatus.runningTBRWithTemp!=null) {
+            aapsLogger.info(LTag.PUMP, logPrefix + "cancelTBRWithTemporaryId - TBR items: ${tbrs.size}")
+
+            var item : PumpDbEntryTBR? = null
+
+            if (tbrs.size==1) {
+                item = tbrs.get(0);
+            } else {
+                for (tbr in tbrs) {
+                    if (tbr.date == medtronicPumpStatus.runningTBRWithTemp!!.date) {
+                        item = tbr
+                        break;
+                    }
+                }
+            }
+
+            if (item!=null) {
+
+                aapsLogger.debug(LTag.PUMP, "DD: cancelTBRWithTemporaryId: tempIdEntry=${item}")
+
+                val differenceS = (System.currentTimeMillis() - item.date) / 1000
+
+                aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithTempId " +
+                    "[date=${item.date}, " +
+                    "rate=${item.rate}, " +
+                    "duration=${differenceS} s, " +
+                    "isAbsolute=${!item.isAbsolute}, temporaryId=${item.temporaryId}, " +
+                    "pumpId=NO, pumpType=${medtronicPumpStatus.pumpType}, " +
+                    "pumpSerial=${medtronicPumpStatus.serialNumber}]")
+
+                val result = pumpSync.syncTemporaryBasalWithTempId(
+                    timestamp = item.date,
+                    rate = item.rate,
+                    duration= differenceS * 1000L,
+                    isAbsolute = item.isAbsolute,
+                    temporaryId = item.temporaryId,
+                    type = item.tbrType,
+                    pumpId = null,
+                    pumpType = medtronicPumpStatus.pumpType,
+                    pumpSerial = medtronicPumpStatus.serialNumber)
+
+                aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithTempId - Result: $result")
+            }
+
+        } else {
+            aapsLogger.info(LTag.PUMP, logPrefix + "cancelTBRWithTemporaryId - TBR items: ${tbrs.size}, runningTBRWithTemp=${medtronicPumpStatus.runningTBRWithTemp}")
+        }
+
+        if (medtronicPumpStatus.runningTBRWithTemp!=null) {
+            medtronicPumpStatus.runningTBRWithTemp = null
+        }
+    }
+
+    @Synchronized
     override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
         return if (percent == 0) {
             setTempBasalAbsolute(0.0, durationInMinutes, profile, enforceNew, tbrType)
@@ -966,6 +1029,7 @@ class MedtronicPumpPlugin @Inject constructor(
         }
     }
 
+    @Synchronized
     override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
         aapsLogger.info(LTag.PUMP, logPrefix + "cancelTempBasal - started")
         if (isPumpNotReachable) {
@@ -1001,7 +1065,7 @@ class MedtronicPumpPlugin @Inject constructor(
             aapsLogger.info(LTag.PUMP, logPrefix + "cancelTempBasal - Cancel TBR successful.")
 
             val runningTBR = medtronicPumpStatus.runningTBR
-
+            // TODO
             if (runningTBR != null) {
                 if (medtronicHistoryData.isTBRActive(runningTBR)) {
 
@@ -1026,6 +1090,8 @@ class MedtronicPumpPlugin @Inject constructor(
                 }
             }
 
+            //cancelTBRWithTemporaryId()
+
             PumpEnactResult(injector).success(true).enacted(true) //
                 .isTempCancel(true)
         }
@@ -1043,6 +1109,7 @@ class MedtronicPumpPlugin @Inject constructor(
         return medtronicPumpStatus.serialNumber
     }
 
+    @Synchronized
     override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
         aapsLogger.info(LTag.PUMP, logPrefix + "setNewBasalProfile")
 
