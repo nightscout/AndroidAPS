@@ -246,26 +246,28 @@ class OverviewPlugin @Inject constructor(
     var runningRefresh = false
     override fun refreshLoop(from: String) {
         if (runningRefresh) return
-        runningRefresh = true
-        overviewBus.send(EventUpdateOverviewNotification(from))
-        loadIobCobResults(from)
-        overviewBus.send(EventUpdateOverviewProfile(from))
-        overviewBus.send(EventUpdateOverviewBg(from))
-        overviewBus.send(EventUpdateOverviewTime(from))
-        overviewBus.send(EventUpdateOverviewTemporaryBasal(from))
-        overviewBus.send(EventUpdateOverviewExtendedBolus(from))
-        overviewBus.send(EventUpdateOverviewTemporaryTarget(from))
-        overviewBus.send(EventUpdateOverviewSensitivity(from))
-        loadAsData(from)
-        overviewData.preparePredictions(from)
-        overviewData.prepareBasalData(from)
-        overviewData.prepareTemporaryTargetData(from)
-        overviewData.prepareTreatmentsData(from)
-        overviewData.prepareIobAutosensData(from)
-        overviewBus.send(EventUpdateOverviewGraph(from))
-        overviewBus.send(EventUpdateOverviewIobCob(from))
-        aapsLogger.debug(LTag.UI, "refreshLoop finished")
-        runningRefresh = false
+        Thread {
+            runningRefresh = true
+            overviewBus.send(EventUpdateOverviewNotification(from))
+            loadIobCobResults(from)
+            overviewBus.send(EventUpdateOverviewProfile(from))
+            overviewBus.send(EventUpdateOverviewBg(from))
+            overviewBus.send(EventUpdateOverviewTime(from))
+            overviewBus.send(EventUpdateOverviewTemporaryBasal(from))
+            overviewBus.send(EventUpdateOverviewExtendedBolus(from))
+            overviewBus.send(EventUpdateOverviewTemporaryTarget(from))
+            overviewBus.send(EventUpdateOverviewSensitivity(from))
+            loadAsData(from)
+            overviewData.preparePredictions(from)
+            overviewData.prepareBasalData(from)
+            overviewData.prepareTemporaryTargetData(from)
+            overviewData.prepareTreatmentsData(from)
+            overviewData.prepareIobAutosensData(from)
+            overviewBus.send(EventUpdateOverviewGraph(from))
+            overviewBus.send(EventUpdateOverviewIobCob(from))
+            aapsLogger.debug(LTag.UI, "refreshLoop finished")
+            runningRefresh = false
+        }.start()
     }
 
     @Suppress("SameParameterValue")
