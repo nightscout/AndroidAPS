@@ -21,6 +21,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.DashHistory
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.BasalValuesRecord
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.InitialResult
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.ResolvedResult
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.Constants
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.I8n
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.mapProfileToBasalProgram
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -94,6 +95,15 @@ class DashInsertCannulaViewModel @Inject constructor(
                     onComplete = {
                         logger.debug("Pod activation part 2 completed")
                         podStateManager.basalProgram = basalProgram
+
+                        pumpSync.syncStopTemporaryBasalWithPumpId(
+                            timestamp = System.currentTimeMillis(),
+                            endPumpId = System.currentTimeMillis(),
+                            pumpType = PumpType.OMNIPOD_DASH,
+                            pumpSerial = Constants.PUMP_SERIAL_FOR_FAKE_TBR // cancel the fake TBR with the same pump
+                            // serial that it was created with
+                        )
+
                         pumpSync.connectNewPump()
 
                         pumpSync.insertTherapyEventIfNewWithTimestamp(

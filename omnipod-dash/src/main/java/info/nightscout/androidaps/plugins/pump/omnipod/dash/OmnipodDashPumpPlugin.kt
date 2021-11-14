@@ -697,7 +697,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             }
             val percent = (waited.toFloat() / estimatedDeliveryTimeSeconds) * 100
             updateBolusProgressDialog(
-                rh.gs(R.string.bolusdelivering, requestedBolusAmount),
+                rh.gs(R.string.dash_bolusdelivering, requestedBolusAmount),
                 percent.toInt()
             )
         }
