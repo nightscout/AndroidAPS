@@ -8,6 +8,7 @@
     <string name="omnipod_common_pod_management_button_activate_pod">Activar Pod</string>
     <string name="omnipod_common_pod_management_button_deactivate_pod">Desactivar Pod</string>
     <string name="omnipod_common_pod_management_button_discard_pod">Descartar Pod</string>
+    <string name="omnipod_common_pod_management_discard_pod_confirmation">Si descartas el Pod, ya no podrás comunicarte con él. Sólo deberías hacer esto cuando toda la comunicación con el Pod falla continuamente. Si todavía puede comunicarse con el Pod, utilice la opción <b>Desactivar Pod</b>.\n\nSi desea continuar, por favor asegúrese de quitar el Pod de su cuerpo!</string>
     <string name="omnipod_common_pod_management_button_play_test_beep">Reproducir pitido de prueba</string>
     <string name="omnipod_common_pod_management_button_playing_test_beep">Reproduciendo pitido de prueba…</string>
     <string name="omnipod_common_pod_management_button_pod_history">Historial de Pod</string>
@@ -15,17 +16,53 @@
     <string name="omnipod_common_error_pod_not_attached">Ningún pod activo</string>
     <string name="omnipod_common_error_set_basal_failed">Error al establecer el perfil basal.</string>
     <string name="omnipod_common_error_bolus_did_not_succeed">Bolo no entregado.</string>
+    <string name="omnipod_common_error_failed_to_set_profile_empty_profile">No se ha podido establecer el perfil basal: se ha recibido un perfil vacío. Asegúrese de activar su perfil basal.</string>
     <string name="omnipod_common_error_set_initial_basal_schedule_no_profile">Ningún perfil basal está activo. Asegúrese de activar su perfil basal.</string>
+    <string name="omnipod_common_error_unsupported_custom_command">Comando personalizado no soportado: %1$s</string>
     <string name="omnipod_common_error_failed_to_refresh_status">Error al actualizar el estado</string>
     <string name="omnipod_common_error_failed_to_refresh_status_on_startup">Error al actualizar el estado al iniciar</string>
+    <string name="omnipod_common_error_failed_to_silence_alerts">Error al silenciar las alertas</string>
     <string name="omnipod_common_error_failed_to_suspend_delivery">Error al suspender la entrega</string>
     <string name="omnipod_common_error_failed_to_set_time">Error al establecer la hora</string>
     <string name="omnipod_common_error_failed_to_resume_delivery">Error al aceptar la entrega</string>
     <string name="omnipod_common_error_failed_to_initialize_pod">Error al iniciar el Pod</string>
+    <string name="omnipod_common_error_failed_to_insert_cannula">Fallo al insertar cánula</string>
+    <string name="omnipod_common_error_pod_fault_activation_time_exceeded">Se ha excedido el tiempo de activación del Pod. Este Pod ya no se puede activar.</string>
+    <string name="omnipod_common_error_failed_to_verify_activation_progress">Error al verificar el progreso de activación. Vuelva a intentarlo.</string>
     <string name="omnipod_common_error_pod_suspended">Pod suspendido</string>
     <string name="omnipod_common_error_failed_to_play_test_beep">Error al reproducir el pitido de prueba</string>
+    <string name="omnipod_common_error_time_out_of_sync">La hora en el Pod está desincronizada. Actualice la hora en la pestaña Omnipod.</string>
+    <string name="omnipod_common_error_unexpected_exception">Error inesperado. Por favor, informe! (tipo: %1$s:%2$s).</string>
     <!-- Omnipod - Confirmation -->
+    <string name="omnipod_common_confirmation">Confirmación</string>
+    <string name="omnipod_common_confirmation_time_or_timezone_change">Tiempo y/o zona horaria cambiados en el Pod.</string>
+    <string name="omnipod_common_confirmation_expiration_alerts_updated">La configuración de alerta ha sido actualizada en el Pod.</string>
+    <string name="omnipod_common_confirmation_time_on_pod_updated">La hora del Pod se ha actualizado.</string>
+    <string name="omnipod_common_confirmation_suspended_delivery">Se han suspendido todas las entregas de insulina.</string>
+    <string name="omnipod_common_confirmation_silenced_alerts">Las alertas activas han sido silenciadas.</string>
+    <string name="omnipod_common_confirmation_delivery_resumed">La entrega de insulina se ha reanudado.</string>
     <!-- Omnipod - Overview -->
+    <string name="omnipod_common_overview_button_set_time">Ajustar la hora</string>
+    <string name="omnipod_common_overview_button_suspend_delivery">Suspender</string>
+    <string name="omnipod_common_overview_button_resume_delivery">Reanudar la entrega</string>
+    <string name="omnipod_common_overview_button_pod_management">Admin Pod</string>
+    <string name="omnipod_common_overview_button_silence_alerts">Silenciar Alertas</string>
+    <string name="omnipod_common_overview_pod_status">Estado del Pod</string>
+    <string name="omnipod_common_overview_total_delivered_value">%1$.2f U</string>
+    <string name="omnipod_common_overview_pod_unique_id">ID Único</string>
+    <string name="omnipod_common_overview_lot_number">Número de Lote</string>
+    <string name="omnipod_common_overview_pod_sequence_number">Número de secuencia</string>
+    <string name="omnipod_common_overview_pod_expiry_date">Pod Caduca</string>
+    <string name="omnipod_common_overview_last_connection">Última conexión</string>
+    <string name="omnipod_common_overview_last_bolus">Último bolo</string>
+    <string name="omnipod_common_overview_temp_basal_rate">Tasa basal temporal</string>
+    <string name="omnipod_common_overview_base_basal_rate">Tasa basal base</string>
+    <string name="omnipod_common_overview_reservoir">Reservorio</string>
+    <string name="omnipod_common_overview_pod_active_alerts">Alertas de Pod activas</string>
+    <string name="omnipod_common_overview_firmware_version">Versión de Firmware</string>
+    <string name="omnipod_common_overview_time_on_pod">Hora en el Pod</string>
+    <string name="omnipod_common_overview_temp_basal_value">%1$.2fU/h @%2$s (%3$d/%4$d minutos)</string>
+    <string name="omnipod_common_overview_reservoir_value">%1$.2f U restantes</string>
     <!-- Omnipod - Wizard Base -->
     <!-- Omnipod - Pod Activation Wizard -->
     <!-- Omnipod - Pod Deactivation Wizard -->
