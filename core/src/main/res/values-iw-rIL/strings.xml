@@ -12,7 +12,7 @@
     <string name="goingtodeliver">עומד להזריק %1$.2f יח\'</string>
     <string name="waitingforpump">ממתין למשאבה</string>
     <string name="connectingfor">מתחבר במשך %1$d שניות</string>
-    <string name="bolusdelivering">מזריק כעת %1$.2f יח\'</string>
+    <string name="bolusdelivering">מזריק %1$.2f יח\'</string>
     <string name="handshaking">לוחץ יד</string>
     <string name="connecting">מתחבר</string>
     <string name="connected">מחובר</string>
