@@ -22,6 +22,7 @@
     <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">Rellena un nuevo Pod
         con suficiente insulina para 3 días.\n\nEscucha dos pitidos del Pod durante el proceso de llenado. Esto indica que se ha insertado la cantidad mínima de 85U. Asegúrate de vaciar completamente la jeringa, incluso después de escuchar los dos pitidos.\n\nDespués de llenar el Pod, por favor, pulse <b>Siguiente</b>.\n\n<b>Nota:</b> No retires el capuchón de la aguja del Pod en este momento.</string>
     <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Intentando emparejar el nuevo Pod y prepararlo.\n\nCuando el proceso de inicialización se haya completado con éxito, puedes pulsar <b>Siguiente</b>.</string>
+    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Sonido cuando la notificación suspendida de entrega está activada</string>
     <!-- Exceptions -->
     <string name="omnipod_dash_failed_to_connect">Error al conectar con el pod</string>
     <string name="omnipod_dash_found_too_many_pods">Se han encontrado demasiados pods para su activación</string>
@@ -33,4 +34,5 @@
     <string name="omnipod_dash_unknown">Estado desconocido para el comando</string>
     <string name="omnipod_common_history_tbr_value">Tasa: %1$.2f U, duración: %2$d minutos</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
+    <string name="dash_bolusdelivering">Entregando %1$.2f U</string>
 </resources>
