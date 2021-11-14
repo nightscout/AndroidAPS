@@ -4,6 +4,14 @@
     <string name="omnipod_dash_pump_description">Pomp integratie voor Omnipod Dash (het nieuwe, Bluetooth-enabled model met een blauwe naalddop).</string>
     <!-- Omnipod Dash - Keys -->
     <!-- Omnipod Dash - History -->
+    <string name="omnipod_dash_history_title">Pod Historie</string>
+    <string name="omnipod_dash_history_item_description">Beschrijving</string>
+    <string name="omnipod_dash_history_item_source">Bron</string>
+    <string name="omnipod_dash_history_item_date">Datum</string>
+    <string name="omnipod_dash_history_type">Type:</string>
+    <string name="omnipod_dash_history_bolus_value">%1$.2f E</string>
+    <string name="omnipod_dash_history_bolus_value_with_carbs">%1$.2f E, KH=%2$.1f g</string>
+    <string name="omnipod_dash_history_tbr_value">Basaal: %1$.2f E, duur: %2$d minuten</string>
     <!-- Omnipod Dash - Overview -->
     <string name="omnipod_dash_overview_bluetooth_status">Bluetooth status</string>
     <string name="omnipod_dash_overview_bluetooth_address">Bluetooth adres</string>
@@ -19,4 +27,10 @@
     <string name="omnipod_dash_found_too_many_pods">Te veel pods gevonden voor activering</string>
     <string name="omnipod_dash_scan_failed">Kan geen beschikbare pod vinden voor activering</string>
     <string name="omnipod_dash_generic_error">Algemene fout: %1$s</string>
+    <string name="omnipod_dash_failed_to_send">Fout bij verzenden van de opdracht</string>
+    <string name="omnipod_dash_command_not_sent">Opdracht niet verzonden</string>
+    <string name="omnipod_dash_command_not_received_by_the_pod">Opdracht niet ontvangen door de pod</string>
+    <string name="omnipod_dash_unknown">Onbekende status voor de opdracht</string>
+    <string name="omnipod_common_history_tbr_value">Basaal: %1$.2f E, Duur: %2$d min</string>
+    <string name="omnipod_common_history_bolus_value">%1$.2f E</string>
 </resources>
