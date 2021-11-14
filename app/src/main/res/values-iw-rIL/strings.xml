@@ -58,7 +58,7 @@
     <string name="treatments_wizard_carbs_label">פחמימות</string>
     <string name="treatments_wizard_correction_label">תיקון</string>
     <string name="treatments_wizard_bolusiob_label">בולוס פעיל</string>
-    <string name="openapsma_run">בצע כעת</string>
+    <string name="openapsma_run">בצע</string>
     <string name="vitualpump_label">משאבה וירטואלית</string>
     <string name="openapsma_lastrun_label">ההפעלה האחרונה</string>
     <string name="openapsma_inputparameters_label">טוען פרמטרים</string>
@@ -562,7 +562,7 @@
     <string name="overview_show_basals">בזאלי</string>
     <string name="no_action_selected">לא נבחרה פעולה, דבר לא יתבצע.</string>
     <string name="start_hypo_tt">הפעלת היפו TT</string>
-    <string name="closed_loop_disabled_on_dev_branch">רץ כעת במצב מפתחים. לולאה סגורה אינה מורשת.</string>
+    <string name="closed_loop_disabled_on_dev_branch">זוהי גרסת פיתוח. לולאה סגורה אינה מורשת.</string>
     <string name="engineering_mode_enabled">מצב הנדסה מופעל</string>
     <string name="profileswitch_ismissing">שינוי פרופיל חסר. אנא החליפו פרופיל או לחצו על \"הפעל פרופיל\" בפרופיל המקומי.</string>
     <string name="pumpisnottempbasalcapable">המשאבה אינה מסוגלת לבצע בזאלי זמני</string>
