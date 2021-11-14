@@ -342,15 +342,16 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     aapsLogger.info(LTag.PUMP, "syncBolusWithPumpId on CANCEL_BOLUS returned: $sync")
                 }
             }
-
-            podStateManager.alarmType?.let {
-                showNotification(
-                    Notification.OMNIPOD_POD_FAULT,
-                    it.toString(),
-                    Notification.URGENT,
-                    R.raw.boluserror
-                )
-                if (!podStateManager.alarmSynced) {
+            if (!podStateManager.alarmSynced) {
+                podStateManager.alarmType?.let {
+                    if (!commandQueue.isCustomCommandInQueue(CommandDeactivatePod::class.java)) {
+                        showNotification(
+                            Notification.OMNIPOD_POD_FAULT,
+                            it.toString(),
+                            Notification.URGENT,
+                            R.raw.boluserror
+                        )
+                    }
                     pumpSync.insertAnnouncement(
                         error = it.toString(),
                         pumpId = Random.Default.nextLong(),
