@@ -2,7 +2,6 @@
 <resources>
     <string name="objectives_button_start">Başlat</string>
     <string name="objectives_button_verify">Doğrulayın</string>
-    <string name="nth_objective">Görev %1$d.</string>
     <string name="objectivenotstarted">Görev %1$d başlanmadı</string>
     <string name="objectivenotfinished">Görev %1$d tamamlanmadı</string>
     <string name="objectives_0_objective">Nightscout üzerinden izlemeyi ve görselleştirmeyi yapılandırın, bazalları ve oranlarını analiz edin</string>
