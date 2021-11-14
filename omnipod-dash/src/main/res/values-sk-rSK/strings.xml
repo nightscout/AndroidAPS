@@ -33,4 +33,5 @@
     <string name="omnipod_dash_unknown">Neznámy stav príkazu</string>
     <string name="omnipod_common_history_tbr_value">Rýchlosť: %1$.2f JI, Doba trvania: %2$d minút</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f JI</string>
+    <string name="dash_bolusdelivering">Podávanie %1$.2f JI</string>
 </resources>
