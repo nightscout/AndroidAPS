@@ -197,7 +197,7 @@ class DanaFragment : DaggerFragment() {
     @Synchronized
     fun updateGUI() {
         if (_binding == null) return
-        binding.btconnection.text = pumpStatusIcon
+        binding.btConnection.text = pumpStatusIcon
         binding.pumpStatus.text = pumpStatus
         binding.pumpStatusLayout.visibility = (pumpStatus != "").toVisibility()
         binding.queue.text = commandQueue.spannedStatus()
