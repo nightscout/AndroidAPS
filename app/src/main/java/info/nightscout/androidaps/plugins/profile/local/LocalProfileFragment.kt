@@ -156,6 +156,7 @@ class LocalProfileFragment : DaggerFragment() {
                     activity?.let { activity ->
                         OKDialog.showConfirmation(activity, rh.gs(R.string.doyouwantswitchprofile), {
                             localProfilePlugin.currentProfileIndex = position
+                            localProfilePlugin.isEdited = false
                             build()
                         }, {
                             spinner?.setSelection(localProfilePlugin.currentProfileIndex)
