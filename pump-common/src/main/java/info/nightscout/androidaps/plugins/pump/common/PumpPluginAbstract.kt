@@ -323,6 +323,7 @@ abstract class PumpPluginAbstract protected constructor(
         return ret
     }
 
+    @Synchronized
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         return try {
             if (detailedBolusInfo.insulin == 0.0 && detailedBolusInfo.carbs == 0.0) {
