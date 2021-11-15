@@ -1,2 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="diaconn_nodeviceavailable">Ningún dispositivo disponible</string>
+    <string name="diaconn_pairing">Emparejamiento de Bomba Diaconn</string>
+    <string name="pumperror">Error de bomba</string>
+    <string name="diaconn_g8_history_basalhours">Horas Basales</string>
+    <string name="diaconn_g8_history_bolus">Bolos</string>
+    <string name="diaconn_g8_history_dailyinsulin">Insulina diaria</string>
+    <string name="diaconn_g8_history_prime">Cebar</string>
+    <string name="diaconn_g8_history_refill">Llenar</string>
+    <string name="diaconn_g8_history_suspend">Suspender</string>
+    <string name="diaconn_g8_waitingforpairing">Esperando Emparejamiento</string>
+    <string name="invalidpairing">Información de emparejamiento inválida. Solicitando un nuevo emparejamiento</string>
+    <string name="gettingpumpsettings">Recibiendo configuración de la bomba</string>
+    <string name="gettingpumptime">Recibiendo hora de la bomba</string>
+    <string name="approachingdailylimit">Alcanzando el limite de insulina diario</string>
+    <string name="startingbolus">Iniciando entrega del bolo</string>
+    <string name="description_pump_diaconn_g8">Integración de bombas de Insulina Diaconn G8</string>
+</resources>

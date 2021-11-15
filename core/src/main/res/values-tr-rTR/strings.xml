@@ -25,7 +25,7 @@
     <string name="formatsignedinsulinunits">%1$+.2f Ü</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d Ü</string>
-    <string name="pump_basebasalrate">%1$.2f U/h</string>
+    <string name="pump_basebasalrate">%1$.2f Ü/s</string>
     <string name="format_hours">%1$.2f sa</string>
     <string name="format_mins">%1$d dakika</string>
     <string name="pumpbusy">Pompa meşgul</string>
@@ -42,7 +42,6 @@
     <string name="invalidprofile">Geçersiz profil!!!</string>
     <string name="noprofileset">PROFİL AYARLANMADI</string>
     <string name="date">Tarih</string>
-    <string name="units_label">Ünite</string>
     <string name="dia_label">İES</string>
     <string name="ic_label">IC Karbonhidrat İnsülin Oranı</string>
     <string name="isf_label">İDF</string>
@@ -76,7 +75,7 @@
     <string name="bolusdelivered">%1$.2f Ü bolus başarıyla gönderildi</string>
     <string name="virtualpump_resultok">Tamam</string>
     <string name="novalidbasalrate">Pompadan okunan geçerli bir bazal oranı yok</string>
-    <string name="limitingmaxiob">%2$s\'den dolayı max IOB\'yi (Aktif İnsülin) %1$.1f U ile sınırlandırılıyor</string>
+    <string name="limitingmaxiob">%2$s\'den dolayı max IOB (Aktif İnsülin) %1$.1f Ü ile sınırlandırılıyor</string>
     <string name="unsafeusage">güvenli olmayan kullanım</string>
     <string name="pump_unreachable">Pompa ulaşılamıyor</string>
     <string name="extended_bolus">Yayma Bolus</string>
@@ -85,8 +84,8 @@
     <string name="removerecord">Kaydı kaldır</string>
     <string name="loopisdisabled">Döngü devre dışı</string>
     <string name="alarm">Alarm</string>
-    <string name="disableloop">Döngü devre dışı bırak</string>
-    <string name="enableloop">Döngü etkinleştir</string>
+    <string name="disableloop">Döngüyü devre dışı bırak</string>
+    <string name="enableloop">Döngüyü etkinleştir</string>
     <string name="resumeloop">Döngüyü devam ettir</string>
     <string name="suspendloop">Döngüyü duraklat</string>
     <string name="duration_min_label">Süre [min]</string>
@@ -114,7 +113,7 @@
     <string name="limitingbolus">%2$s\'den dolayı bolus %1$.1f Ü ile sınırlandırılıyor</string>
     <string name="pumpNotInitializedProfileNotSet">Pompa başlatılamadı, profil oluşturulmamış!</string>
     <!--    Dialogs-->
-    <string name="confirmation">Onaylama</string>
+    <string name="confirmation">Onay</string>
     <string name="message">İleti</string>
     <string name="ok">Tamam</string>
     <string name="cancel">İptal</string>
@@ -129,8 +128,8 @@
     <string name="minago">%1$d dak önce</string>
     <string name="hoursago">%1$.1f sa önce</string>
     <string name="shorthour">sa</string>
-    <string name="days">günler</string>
-    <string name="hours">saatler</string>
+    <string name="days">gün</string>
+    <string name="hours">saat</string>
     <string name="unit_second">saniye</string>
     <string name="unit_minute">dakika</string>
     <string name="unit_hour">saat</string>
@@ -138,8 +137,8 @@
     <string name="unit_week">hafta</string>
     <string name="unit_seconds">saniye</string>
     <string name="unit_minutes">dakika</string>
-    <string name="unit_hours">saatler</string>
-    <string name="unit_days">günler</string>
+    <string name="unit_hours">saat</string>
+    <string name="unit_days">gün</string>
     <string name="unit_weeks">hafta</string>
     <string name="shortminute">dk</string>
     <string name="shortday">gün</string>
@@ -154,14 +153,13 @@
     <string name="profile_ins_units_per_hour">Ü/s</string>
     <string name="profile_carbs_per_unit">g/Ü</string>
     <!--    ProfileFunction-->
-    <string name="noprofileselected">Profil seçilmedi</string>
     <string name="startprofile">%2$d dakika için %1$d%% profilini başlat</string>
     <!--    PumpType-->
-    <string name="def_extended_note">* Sanal pompada yalnızca belirli değerler, aralıklar değil ayrıntı olarak bazal/bolus desteklenmez.</string>
+    <string name="def_extended_note">* Sanal pompada bazal/bolus ayrıntı düzeyi için yalnızca ayrık değerler desteklenir. Aralıklar değil.</string>
     <!--    APSResult-->
     <string name="canceltemp">Geçici bazali iptal et</string>
     <string name="let_temp_basal_run">Geçici bazala izin ver</string>
-    <string name="rate">Oranı</string>
+    <string name="rate">Oran</string>
     <string name="duration">Süre</string>
     <string name="reason">Sebep</string>
     <string name="nochangerequested">Değişiklik yapılmadı</string>

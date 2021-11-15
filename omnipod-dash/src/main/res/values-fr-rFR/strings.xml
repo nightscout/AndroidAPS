@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Omnipod Dash - Description -->
-    <string name="omnipod_dash_pump_description">Intégration de la pompe Omnipod Dash (le nouveau modèle Bluetooth, avec un bouchon d\'aiguille bleue).</string>
+    <string name="omnipod_dash_pump_description">Intégration de la pompe Omnipod Dash (le nouveau modèle Bluetooth, avec un bouchon d\'aiguille bleu).</string>
     <!-- Omnipod Dash - Keys -->
     <!-- Omnipod Dash - History -->
     <string name="omnipod_dash_history_title">Historique du Pod</string>
@@ -20,7 +20,7 @@
     <string name="omnipod_dash_overview_delivery_status">État de l\'injection</string>
     <!-- Omnipod Dash - Pod Activation Wizard -->
     <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">Remplissez avec suffisamment d\'insuline pour 3 jours.\n\nVous devez entendre deux bips lors du remplissage du Pod. Ils indiquent que la quantité minimale de 85u a été ajouté. Assurez-vous de vider complètement la seringue de remplissage après avoir entendu les deux bips.\n\nAprès le remplissage du Pod, vous pouvez presser<b>Suivant</b>\n\n<b>Remarque :</b>N\'enlever pas la protection  de l\'aiguille du Pod à cette étape.</string>
-    <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Tentative d\'appairage de d\'amorçage du nouveau Pod.\n\nUne fois le processus d\'initialisation terminé avec succès, vous pouvez appuyer sur <b>Suivant</b>.</string>
+    <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Tentative d\'appairage et d\'amorçage du nouveau Pod.\n\nUne fois le processus d\'initialisation terminé avec succès, vous pouvez appuyer sur <b>Suivant</b>.</string>
     <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Son activé en cas de notification de pause d\'injection</string>
     <!-- Exceptions -->
     <string name="omnipod_dash_failed_to_connect">Echec de connexion au pod</string>
