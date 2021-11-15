@@ -60,7 +60,6 @@ class QueueThread internal constructor(
                         //write time
                         sp.putLong(R.string.key_btwatchdog_lastbark, System.currentTimeMillis())
                         //toggle BT
-                        pump.stopConnecting()
                         pump.disconnect("watchdog")
                         SystemClock.sleep(1000)
                         val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
@@ -112,14 +111,18 @@ class QueueThread internal constructor(
                     // Pickup 1st command and set performing variable
                     if (queue.size() > 0) {
                         queue.pickup()
-                        if (queue.performing() != null) {
-                            aapsLogger.debug(LTag.PUMPQUEUE, "performing " + queue.performing()?.status())
+                        val cont = queue.performing()?.let {
+                            aapsLogger.debug(LTag.PUMPQUEUE, "performing " + it.status())
                             rxBus.send(EventQueueChanged())
-                            queue.performing()?.execute()
+                            rxBus.send(EventPumpStatusChanged(it.status()))
+                            it.execute()
                             queue.resetPerforming()
                             rxBus.send(EventQueueChanged())
                             lastCommandTime = System.currentTimeMillis()
                             SystemClock.sleep(100)
+                            true
+                        } ?: false
+                        if (cont) {
                             continue
                         }
                     }

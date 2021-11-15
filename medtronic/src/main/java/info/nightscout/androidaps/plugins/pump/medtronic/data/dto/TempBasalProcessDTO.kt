@@ -4,9 +4,9 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry
+import java.lang.StringBuilder
 
 class TempBasalProcessDTO constructor(var itemOne: PumpHistoryEntry,
-                                      var processOperation: Operation = Operation.None,
                                       var aapsLogger: AAPSLogger,
                                       var objectType: ObjectType = ObjectType.TemporaryBasal) {
 
@@ -21,8 +21,6 @@ class TempBasalProcessDTO constructor(var itemOne: PumpHistoryEntry,
     var itemOneTbr: TempBasalPair? = null
     var itemTwoTbr: TempBasalPair? = null
 
-    var cancelPresent: Boolean = false
-
     val atechDateTime: Long
         get() = itemOne.atechDateTime
 
@@ -31,26 +29,26 @@ class TempBasalProcessDTO constructor(var itemOne: PumpHistoryEntry,
 
     val durationAsSeconds: Int
         get() {
-            aapsLogger.debug(LTag.PUMP, "durationAsSeconds: [objectType=$objectType]")
+            //aapsLogger.debug(LTag.PUMP, "durationAsSeconds: [objectType=$objectType]")
             if (objectType == ObjectType.TemporaryBasal) {
                 if (itemTwo == null) {
                     if (itemOneTbr != null) {
-                        aapsLogger.debug("TemporaryBasalPair - itemOneSingle: $itemOneTbr")
+                        //aapsLogger.debug("TemporaryBasalPair - itemOneSingle: $itemOneTbr")
                         return itemOneTbr!!.durationMinutes * 60
                     } else {
-                        aapsLogger.error("Couldn't find TempBasalPair in entry: $itemOne")
+                        //aapsLogger.error("Couldn't find TempBasalPair in entry: $itemOne")
                         return 0
                     }
                 } else {
-                    aapsLogger.debug(LTag.PUMP, "Found 2 items for duration: itemOne=$itemOne, itemTwo=$itemTwo")
+                    //aapsLogger.debug(LTag.PUMP, "Found 2 items for duration: itemOne=$itemOne, itemTwo=$itemTwo")
                     val secondsDiff = DateTimeUtil.getATechDateDiferenceAsSeconds(itemOne.atechDateTime, itemTwo!!.atechDateTime)
-                    aapsLogger.debug(LTag.PUMP, "Difference in seconds: $secondsDiff")
+                    //aapsLogger.debug(LTag.PUMP, "Difference in seconds: $secondsDiff")
                     return secondsDiff
                 }
             } else {
-                aapsLogger.debug(LTag.PUMP, "Found 2 items for duration (in SuspendMode): itemOne=$itemOne, itemTwo=$itemTwo")
+                //aapsLogger.debug(LTag.PUMP, "Found 2 items for duration (in SuspendMode): itemOne=$itemOne, itemTwo=$itemTwo")
                 val secondsDiff = DateTimeUtil.getATechDateDiferenceAsSeconds(itemOne.atechDateTime, itemTwo!!.atechDateTime)
-                aapsLogger.debug(LTag.PUMP, "Difference in seconds: $secondsDiff")
+                //aapsLogger.debug(LTag.PUMP, "Difference in seconds: $secondsDiff")
                 return secondsDiff
             }
         }
@@ -61,8 +59,31 @@ class TempBasalProcessDTO constructor(var itemOne: PumpHistoryEntry,
         }
     }
 
+    fun toTreatmentString(): String {
+        val stringBuilder = StringBuilder()
+
+        stringBuilder.append(itemOne.DT)
+
+        if (itemTwo!=null) {
+            stringBuilder.append(" - ")
+            stringBuilder.append(itemTwo!!.DT)
+        }
+
+        var dur = durationAsSeconds
+
+        stringBuilder.append("  " + durationAsSeconds + " s (" + durationAsSeconds/60 + ")")
+
+        if (itemTwoTbr!=null) {
+            stringBuilder.append("  " + itemOneTbr!!.insulinRate + " / " + itemTwoTbr!!.insulinRate)
+        } else {
+            stringBuilder.append("  " + itemOneTbr!!.insulinRate)
+        }
+
+        return stringBuilder.toString()
+    }
+
     override fun toString(): String {
-        return "ItemOne: $itemOne, ItemTwo: $itemTwo, Duration: $durationAsSeconds, Operation: $processOperation, ObjectType: $objectType"
+        return "ItemOne: $itemOne, ItemTwo: $itemTwo, Duration: $durationAsSeconds, ObjectType: $objectType"
     }
 
     enum class Operation {

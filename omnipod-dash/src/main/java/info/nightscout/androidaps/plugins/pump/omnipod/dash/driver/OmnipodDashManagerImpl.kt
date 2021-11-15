@@ -196,7 +196,7 @@ class OmnipodDashManagerImpl @Inject constructor(
                 DefaultStatusResponse::class
             )
         }.doOnComplete {
-            podStateManager.timeZone = TimeZone.getDefault()
+            podStateManager.updateTimeZone()
         }
     }
 
@@ -504,12 +504,6 @@ class OmnipodDashManagerImpl @Inject constructor(
             observeConnectToPod,
             observeSendStopDeliveryCommand(StopDeliveryCommand.DeliveryType.ALL, hasBasalBeepEnabled)
         ).interceptPodEvents()
-    }
-
-    override fun setTime(): Observable<PodEvent> {
-        // TODO
-        logger.error(LTag.PUMPCOMM, "NOT IMPLEMENTED: setTime()")
-        return Observable.empty()
     }
 
     private fun observeSendProgramTempBasalCommand(rate: Double, durationInMinutes: Short, tempBasalBeeps: Boolean): Observable<PodEvent> {

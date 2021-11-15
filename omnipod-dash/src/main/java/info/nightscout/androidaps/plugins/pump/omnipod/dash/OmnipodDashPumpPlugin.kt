@@ -235,7 +235,6 @@ class OmnipodDashPumpPlugin @Inject constructor(
     override fun connect(reason: String) {
         aapsLogger.info(LTag.PUMP, "connect reason=$reason")
         podStateManager.bluetoothConnectionState = OmnipodDashPodStateManager.BluetoothConnectionState.CONNECTING
-
         synchronized(this) {
             stopConnecting?.let {
                 aapsLogger.warn(LTag.PUMP, "Already connecting: $stopConnecting")
@@ -244,7 +243,6 @@ class OmnipodDashPumpPlugin @Inject constructor(
             val stop = CountDownLatch(1)
             stopConnecting = stop
         }
-
         thread(
             start = true,
             name = "ConnectionThread",
@@ -253,6 +251,9 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 stopConnecting?.let {
                     val error = omnipodManager.connect(it).ignoreElements().blockingGet()
                     aapsLogger.info(LTag.PUMPCOMM, "connect error=$error")
+                    if (error == null) {
+                        podStateManager.incrementSuccessfulConnectionAttemptsAfterRetries()
+                    }
                 }
             } finally {
                 synchronized(this) {
@@ -270,6 +271,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     override fun stopConnecting() {
         aapsLogger.info(LTag.PUMP, "stopConnecting")
+        podStateManager.incrementFailedConnectionsAfterRetries()
         stopConnecting?.countDown()
         omnipodManager.disconnect(true)
     }
@@ -340,15 +342,16 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     aapsLogger.info(LTag.PUMP, "syncBolusWithPumpId on CANCEL_BOLUS returned: $sync")
                 }
             }
-
-            podStateManager.alarmType?.let {
-                showNotification(
-                    Notification.OMNIPOD_POD_FAULT,
-                    it.toString(),
-                    Notification.URGENT,
-                    R.raw.boluserror
-                )
-                if (!podStateManager.alarmSynced) {
+            if (!podStateManager.alarmSynced) {
+                podStateManager.alarmType?.let {
+                    if (!commandQueue.isCustomCommandInQueue(CommandDeactivatePod::class.java)) {
+                        showNotification(
+                            Notification.OMNIPOD_POD_FAULT,
+                            it.toString(),
+                            Notification.URGENT,
+                            R.raw.boluserror
+                        )
+                    }
                     pumpSync.insertAnnouncement(
                         error = it.toString(),
                         pumpId = Random.Default.nextLong(),
@@ -694,7 +697,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             }
             val percent = (waited.toFloat() / estimatedDeliveryTimeSeconds) * 100
             updateBolusProgressDialog(
-                rh.gs(R.string.bolusdelivering, requestedBolusAmount),
+                rh.gs(R.string.dash_bolusdelivering, requestedBolusAmount),
                 percent.toInt()
             )
         }
@@ -1191,7 +1194,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     private fun handleTimeChange(): PumpEnactResult {
         return profileFunction.getProfile()?.let {
             setNewBasalProfile(it, OmnipodCommandType.SET_TIME)
-        } ?: PumpEnactResult(injector).success(true).enacted(false).comment("No profile active")
+        } ?: PumpEnactResult(injector).success(false).enacted(false).comment("No profile active")
     }
 
     private fun updateAlertConfiguration(): PumpEnactResult {

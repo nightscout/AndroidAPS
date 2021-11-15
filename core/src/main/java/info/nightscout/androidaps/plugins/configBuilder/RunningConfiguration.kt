@@ -61,6 +61,8 @@ class RunningConfiguration @Inject constructor(
 
     // called in NSClient mode only
     fun apply(configuration: JSONObject) {
+        assert(config.NSCLIENT)
+
         if (configuration.has("version")) {
             rxBus.send(EventNSClientNewLog("VERSION", "Received AndroidAPS version  ${configuration.getString("version")}"))
             if (config.VERSION_NAME.startsWith(configuration.getString("version")).not()) {
@@ -100,7 +102,7 @@ class RunningConfiguration @Inject constructor(
             if (sp.getString(R.string.key_virtualpump_type, "fake") != pumpType) {
                 sp.putString(R.string.key_virtualpump_type, pumpType)
                 activePlugin.activePump.pumpDescription.fillFor(PumpType.getByDescription(pumpType))
-                pumpSync.connectNewPump()
+                pumpSync.connectNewPump(endRunning = false) // do not end running TBRs, we call this only to accept data properly
                 aapsLogger.debug(LTag.CORE, "Changing pump type to $pumpType")
             }
         }

@@ -110,7 +110,7 @@ fun extendedBolusFromJson(jsonObject: JSONObject): ExtendedBolus? {
     val pumpSerial = JsonHelper.safeGetStringAllowNull(jsonObject, "pumpSerial", null)
 
     if (timestamp == 0L) return null
-    if (duration == 0L) return null
+    if (duration == 0L && durationInMilliseconds == 0L) return null
     if (amount == 0.0) return null
 
     return ExtendedBolus(
@@ -135,7 +135,7 @@ fun ExtendedBolus.iobCalc(time: Long, profile: Profile, insulinInterface: Insuli
         val dia = profile.dia
         val diaAgo = time - dia * 60 * 60 * 1000
         val aboutFiveMinIntervals = ceil(realDuration / 5.0).toInt()
-        val spacing = realDuration / aboutFiveMinIntervals
+        val spacing = realDuration / aboutFiveMinIntervals.toDouble()
         for (j in 0L until aboutFiveMinIntervals) {
             // find middle of the interval
             val calcDate = (timestamp + j * spacing * 60 * 1000 + 0.5 * spacing * 60 * 1000).toLong()

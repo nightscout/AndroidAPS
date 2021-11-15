@@ -134,14 +134,14 @@ fun TemporaryBasal.toStringShort(): String =
 
 fun TemporaryBasal.iobCalc(time: Long, profile: Profile, insulinInterface: Insulin): IobTotal {
     val result = IobTotal(time)
-    val realDuration: Int = getPassedDurationToTimeInMinutes(time)
+    val realDuration = getPassedDurationToTimeInMinutes(time)
     var netBasalAmount = 0.0
     if (realDuration > 0) {
         var netBasalRate: Double
         val dia = profile.dia
         val diaAgo = time - dia * 60 * 60 * 1000
         val aboutFiveMinIntervals = ceil(realDuration / 5.0).toInt()
-        val tempBolusSpacing = (realDuration / aboutFiveMinIntervals).toDouble()
+        val tempBolusSpacing = realDuration / aboutFiveMinIntervals.toDouble()
         for (j in 0L until aboutFiveMinIntervals) {
             // find middle of the interval
             val calcDate = (timestamp + j * tempBolusSpacing * 60 * 1000 + 0.5 * tempBolusSpacing * 60 * 1000).toLong()
@@ -175,7 +175,7 @@ fun TemporaryBasal.iobCalc(time: Long, profile: Profile, insulinInterface: Insul
 
 fun TemporaryBasal.iobCalc(time: Long, profile: Profile, lastAutosensResult: AutosensResult, exercise_mode: Boolean, half_basal_exercise_target: Int, isTempTarget: Boolean, insulinInterface: Insulin): IobTotal {
     val result = IobTotal(time)
-    val realDuration: Double = getPassedDurationToTimeInMinutes(time).toDouble()
+    val realDuration = getPassedDurationToTimeInMinutes(time)
     var netBasalAmount = 0.0
     var sensitivityRatio = lastAutosensResult.ratio
     val normalTarget = 100.0
@@ -190,7 +190,7 @@ fun TemporaryBasal.iobCalc(time: Long, profile: Profile, lastAutosensResult: Aut
         val dia = profile.dia
         val diaAgo = time - dia * 60 * 60 * 1000
         val aboutFiveMinIntervals = ceil(realDuration / 5.0).toInt()
-        val tempBolusSpacing = realDuration / aboutFiveMinIntervals
+        val tempBolusSpacing = realDuration / aboutFiveMinIntervals.toDouble()
         for (j in 0L until aboutFiveMinIntervals) {
             // find middle of the interval
             val calcDate = (timestamp + j * tempBolusSpacing * 60 * 1000 + 0.5 * tempBolusSpacing * 60 * 1000).toLong()
