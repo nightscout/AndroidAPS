@@ -1,13 +1,10 @@
 package info.nightscout.androidaps.diaconn.packet
 
-import android.util.Log
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.diaconn.DiaconnG8Pump
 import info.nightscout.androidaps.diaconn.R
 import info.nightscout.androidaps.diaconn.pumplog.PumplogUtil
-import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.joda.time.DateTime
@@ -24,7 +21,6 @@ class BigAPSMainInfoInquireResponsePacket(
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump
     @Inject lateinit var sp: SP
     @Inject lateinit var rh: ResourceHelper
-    private var pumpDesc = PumpDescription(PumpType.DIACONN_G8)
 
     init {
         msgType = 0x94.toByte()
