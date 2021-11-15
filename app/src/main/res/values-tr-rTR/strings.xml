@@ -235,8 +235,7 @@
     <string name="button1">Buton 1</string>
     <string name="button2">Buton 2</string>
     <string name="button3">Buton 3</string>
-    <string name="units_colon">Ünite:</string>
-    <string name="units">Ünite</string>
+    <string name="units_colon">Birim:</string>
     <string name="dia">İES</string>
     <string name="prefs_range_title">Görselleştirme Aralığı</string>
     <string name="prefs_range_summary">Genel bakış ve akıllı saat göstergesi için yüksek ve düşük değerler</string>
@@ -738,7 +737,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="unit_minute_short">dk.</string>
     <string name="profile_name">Profil adı:</string>
     <string name="selected_profile">Seçildi:</string>
-    <string name="unitsnosemicolon">Ünite</string>
     <string name="doyouwantswitchprofile">Profili değiştirmek ve mevcut profilde yapılan değişiklikleri gözardı etmek istiyor musunuz?</string>
     <string name="objectives_button_unfinish">Silme tamamlandı</string>
     <string name="doyouwantresetstart">Görevleri sıfırlamak istiyor musunuz? Tüm yaptıklarınızı kaybedeceksiniz.</string>
@@ -833,7 +831,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="setupwizard_pump_riley_link_status">RileyLink durumu:</string>
     <string name="filter">Filtre</string>
     <string name="copytolocalprofile_invalid">Profil oluşturulamıyor. Profil geçersiz.</string>
-    <string name="cta_dont_kill_my_app_info">Uygulamamı öldürme?</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Pompa ulaşılamazsa SMS gönder</string>
     <string name="smscommunicator_pump_ureachable">Pompaya ulaşılamadığını bildir</string>
     <string name="advisoralarm">Yemek zamanı alarmı çalıştır</string>
