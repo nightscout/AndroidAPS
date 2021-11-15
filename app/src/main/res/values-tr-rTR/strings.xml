@@ -127,6 +127,7 @@
     <string name="careportal_newnstreatment_profile_label">Profil</string>
     <string name="careportal_newnstreatment_glucosetype">Glikoz türü</string>
     <string name="overview_tempbasal_button">Geçici Bazal</string>
+    <string name="overview_extendedbolus_button">Yayma Bolus</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout sürümü:</string>
     <string name="missing_carbs">%1$d g eksik</string>
     <string name="exported">Tercihler dışa aktarıldı</string>
@@ -236,6 +237,7 @@
     <string name="button2">Buton 2</string>
     <string name="button3">Buton 3</string>
     <string name="units_colon">Birim:</string>
+    <string name="units">Birim</string>
     <string name="dia">İES</string>
     <string name="prefs_range_title">Görselleştirme Aralığı</string>
     <string name="prefs_range_summary">Genel bakış ve akıllı saat göstergesi için yüksek ve düşük değerler</string>
@@ -544,6 +546,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="allow_automated_crash_reporting">Geliştiricilere, fabric.io hizmeti aracılığıyla otomatik kilitlenme raporlaması ve özellik kullanım verilerinin gönderilmesine izin verir.</string>
     <string name="g5appnotdetected">Lütfen Dexcom uygulamanızı desteklenen sürüme güncelleyin</string>
     <string name="dexcom_app_not_installed">Dexcom uygulaması yüklü değil.</string>
+    <string name="start_activity_tt">Egzersiz Başlat TT</string>
     <string name="start_eating_soon_tt">Yakında Yemeğe Başla TT</string>
     <string name="temptargetshort">TT</string>
     <string name="do_not_bolus_record_only">Bolusu sadece kayıt altına al</string>
@@ -737,8 +740,10 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="unit_minute_short">dk.</string>
     <string name="profile_name">Profil adı:</string>
     <string name="selected_profile">Seçildi:</string>
+    <string name="unitsnosemicolon">Birim</string>
     <string name="doyouwantswitchprofile">Profili değiştirmek ve mevcut profilde yapılan değişiklikleri gözardı etmek istiyor musunuz?</string>
     <string name="objectives_button_unfinish">Silme tamamlandı</string>
+    <string name="objectives_button_unstart">Yeniden Başla</string>
     <string name="doyouwantresetstart">Görevleri sıfırlamak istiyor musunuz? Tüm yaptıklarınızı kaybedeceksiniz.</string>
     <string name="setupwizard_units_prompt">Değerleri görüntülemek istediğiniz birimleri seçin</string>
     <string name="dia_short">İES İnsülin Etki Süresi</string>
@@ -831,6 +836,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="setupwizard_pump_riley_link_status">RileyLink durumu:</string>
     <string name="filter">Filtre</string>
     <string name="copytolocalprofile_invalid">Profil oluşturulamıyor. Profil geçersiz.</string>
+    <string name="cta_dont_kill_my_app_info">Uygulamamı devre dışı bırakma?</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Pompa ulaşılamazsa SMS gönder</string>
     <string name="smscommunicator_pump_ureachable">Pompaya ulaşılamadığını bildir</string>
     <string name="advisoralarm">Yemek zamanı alarmı çalıştır</string>
