@@ -127,7 +127,6 @@
     <string name="careportal_newnstreatment_profile_label">Profil</string>
     <string name="careportal_newnstreatment_glucosetype">Glikoz türü</string>
     <string name="overview_tempbasal_button">Geçici Bazal</string>
-    <string name="overview_extendedbolus_button">Yayım Bolus</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout sürümü:</string>
     <string name="missing_carbs">%1$d g eksik</string>
     <string name="exported">Tercihler dışa aktarıldı</string>
@@ -546,7 +545,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="allow_automated_crash_reporting">Geliştiricilere, fabric.io hizmeti aracılığıyla otomatik kilitlenme raporlaması ve özellik kullanım verilerinin gönderilmesine izin verir.</string>
     <string name="g5appnotdetected">Lütfen Dexcom uygulamanızı desteklenen sürüme güncelleyin</string>
     <string name="dexcom_app_not_installed">Dexcom uygulaması yüklü değil.</string>
-    <string name="start_activity_tt">Etkinliği Başlat TT</string>
     <string name="start_eating_soon_tt">Yakında Yemeğe Başla TT</string>
     <string name="temptargetshort">TT</string>
     <string name="do_not_bolus_record_only">Bolusu sadece kayıt altına al</string>
@@ -743,7 +741,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="unitsnosemicolon">Ünite</string>
     <string name="doyouwantswitchprofile">Profili değiştirmek ve mevcut profilde yapılan değişiklikleri gözardı etmek istiyor musunuz?</string>
     <string name="objectives_button_unfinish">Silme tamamlandı</string>
-    <string name="objectives_button_unstart">Silme başladı</string>
     <string name="doyouwantresetstart">Görevleri sıfırlamak istiyor musunuz? Tüm yaptıklarınızı kaybedeceksiniz.</string>
     <string name="setupwizard_units_prompt">Değerleri görüntülemek istediğiniz birimleri seçin</string>
     <string name="dia_short">İES İnsülin Etki Süresi</string>
