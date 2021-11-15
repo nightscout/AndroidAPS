@@ -12,7 +12,6 @@
     <string name="nav_resetdb">Datenbanken zurücksetzen</string>
     <string name="reset_db_confirm">Möchtest du die Datenbank wirklich zurücksetzen?</string>
     <string name="nav_exit">Schließen</string>
-    <string name="ns_sync_use_absolute_title">Verwende absolute statt prozentuale Basalwerte beim Upload zu NightScout.</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Dieses Gerät scheint keine Deaktivierung der Energieoptimierung zu unterstützen - das könnte zu Leistungsproblemen führen.</string>
     <string name="description_actions">Einige Schaltflächen, um auf häufig verwendete Funktionen zugreifen zu können.</string>
     <string name="description_config_builder">Dient zum Konfigurieren der aktiven Plugins</string>
@@ -650,6 +649,8 @@
     <string name="time_elapsed">Verstrichene Zeit</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Empfange Blutzucker-Werte von der Poctech-App.</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Werte von der Glunovo App erhalten</string>
     <string name="description_source_tomato">Empfange Blutzucker-Werte von der Tomato-App (MiaoMiao-Geräte)</string>
     <string name="high_temptarget_raises_sensitivity_title">Hohe temporäre Ziele erhöhen die Sensitivität</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Erhöhe die Sensitivität für temporäre Ziele >= 100.]]></string>
@@ -888,4 +889,7 @@ Unerwartetes Verhalten.</string>
     <string name="error_in_target_values">Fehler in den Zielwerten</string>
     <string name="error_in_isf_values">Fehler in ISF-Werten</string>
     <string name="ns_sync_slow">Hochladen verlangsamen</string>
+    <string name="data_status">Status BZ-Daten</string>
+    <string name="recalculated_data_used">Verwendete Daten neu berechnet</string>
+    <string name="bg_too_close">BZ zu nah:\n%1$s\n%2$s</string>
 </resources>
