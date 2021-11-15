@@ -21,7 +21,6 @@ class DiaconnG8Pump @Inject constructor(
     private val dateUtil: DateUtil
 ) {
 
-
     var maxBolusePerDay: Double = 0.0
     var pumpIncarnationNum: Int = 65536
     var isPumpVersionGe2_63: Boolean = false // is pumpVersion higher then 2.63
@@ -37,6 +36,7 @@ class DiaconnG8Pump @Inject constructor(
     var injectionBlockGrade: Int = 0
     var lastConnection: Long = 0
     var lastSettingsRead: Long = 0
+    var mealLimitTime: Int = 0
 
     // time
     private var pumpTime: Long = 0

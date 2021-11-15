@@ -246,8 +246,8 @@ class DiaconnG8Service : DaggerService() {
         val apsIncarnationNum = sp.getInt(rh.gs(R.string.apsIncarnationNo), 65536)
         // aps last log num
         val pumpSerialNo      = sp.getInt(rh.gs(R.string.pumpserialno), 0)
-        val apsWrappingCount  = sp.getInt(rh.gs(R.string.apsWrappingCount), 0)
-        val apsLastLogNum     = sp.getInt(rh.gs(R.string.apslastLogNum), 0)
+        var apsWrappingCount  = sp.getInt(rh.gs(R.string.apsWrappingCount), 0)
+        var apsLastLogNum     = sp.getInt(rh.gs(R.string.apslastLogNum), 0)
 
         // if first install app
         if(apsWrappingCount == 0 && apsLastLogNum == 0 ) {
@@ -265,6 +265,9 @@ class DiaconnG8Service : DaggerService() {
             pumpLogDefaultSetting()
             sp.putInt(rh.gs(R.string.pumpserialno), diaconnG8Pump.serialNo)
         }
+
+        apsWrappingCount  = sp.getInt(rh.gs(R.string.apsWrappingCount), 0)
+        apsLastLogNum     = sp.getInt(rh.gs(R.string.apslastLogNum), 0)
 
         val apsLastNum = apsWrappingCount * 10000 + apsLastLogNum
         if((pumpWrappingCount * 10000 + pumpLastNum) < apsLastLogNum ) {
