@@ -2,8 +2,6 @@ package info.nightscout.androidaps.db
 
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.*
-import info.nightscout.androidaps.database.entities.ExtendedBolus
-import info.nightscout.androidaps.database.entities.TemporaryBasal
 import info.nightscout.androidaps.events.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -34,56 +32,56 @@ class CompatDBHelper @Inject constructor(
              */
             var newestGlucoseValue: GlucoseValue? = null
             it.filterIsInstance<GlucoseValue>().lastOrNull()?.let { gv ->
-                aapsLogger.debug(LTag.DATABASE, "Firing EventNewBg")
+                aapsLogger.debug(LTag.DATABASE, "Firing EventNewBg $gv")
                 rxBus.send(EventNewBG(gv))
                 newestGlucoseValue = gv
             }
             it.filterIsInstance<GlucoseValue>().map { gv -> gv.timestamp }.minOrNull()?.let { timestamp ->
-                aapsLogger.debug(LTag.DATABASE, "Firing EventNewHistoryData")
+                aapsLogger.debug(LTag.DATABASE, "Firing EventNewHistoryData $newestGlucoseValue")
                 rxBus.send(EventNewHistoryData(timestamp, true, newestGlucoseValue))
             }
             it.filterIsInstance<Carbs>().map { t -> t.timestamp }.minOrNull()?.let { timestamp ->
-                aapsLogger.debug(LTag.DATABASE, "Firing EventTreatmentChange")
+                aapsLogger.debug(LTag.DATABASE, "Firing EventTreatmentChange $timestamp")
                 rxBus.send(EventTreatmentChange())
                 rxBus.send(EventNewHistoryData(timestamp, false))
             }
             it.filterIsInstance<Bolus>().map { t -> t.timestamp }.minOrNull()?.let { timestamp ->
-                aapsLogger.debug(LTag.DATABASE, "Firing EventTreatmentChange")
+                aapsLogger.debug(LTag.DATABASE, "Firing EventTreatmentChange $timestamp")
                 rxBus.send(EventTreatmentChange())
                 rxBus.send(EventNewHistoryData(timestamp, false))
             }
             it.filterIsInstance<TemporaryBasal>().map { t -> t.timestamp }.minOrNull()?.let { timestamp ->
-                aapsLogger.debug(LTag.DATABASE, "Firing EventTempBasalChange")
+                aapsLogger.debug(LTag.DATABASE, "Firing EventTempBasalChange $timestamp")
                 rxBus.send(EventTempBasalChange())
                 rxBus.send(EventNewHistoryData(timestamp, false))
             }
             it.filterIsInstance<ExtendedBolus>().map { t -> t.timestamp }.minOrNull()?.let { timestamp ->
-                aapsLogger.debug(LTag.DATABASE, "Firing EventExtendedBolusChange")
+                aapsLogger.debug(LTag.DATABASE, "Firing EventExtendedBolusChange $timestamp")
                 rxBus.send(EventExtendedBolusChange())
                 rxBus.send(EventNewHistoryData(timestamp, false))
             }
-            it.filterIsInstance<TemporaryTarget>().firstOrNull()?.let {
-                aapsLogger.debug(LTag.DATABASE, "Firing EventTempTargetChange")
+            it.filterIsInstance<TemporaryTarget>().firstOrNull()?.let { tt ->
+                aapsLogger.debug(LTag.DATABASE, "Firing EventTempTargetChange $tt")
                 rxBus.send(EventTempTargetChange())
             }
-            it.filterIsInstance<TherapyEvent>().firstOrNull()?.let {
-                aapsLogger.debug(LTag.DATABASE, "Firing EventTherapyEventChange")
+            it.filterIsInstance<TherapyEvent>().firstOrNull()?.let { te ->
+                aapsLogger.debug(LTag.DATABASE, "Firing EventTherapyEventChange $te")
                 rxBus.send(EventTherapyEventChange())
             }
-            it.filterIsInstance<Food>().firstOrNull()?.let {
-                aapsLogger.debug(LTag.DATABASE, "Firing EventFoodDatabaseChanged")
+            it.filterIsInstance<Food>().firstOrNull()?.let { food ->
+                aapsLogger.debug(LTag.DATABASE, "Firing EventFoodDatabaseChanged $food")
                 rxBus.send(EventFoodDatabaseChanged())
             }
-            it.filterIsInstance<ProfileSwitch>().firstOrNull()?.let {
-                aapsLogger.debug(LTag.DATABASE, "Firing EventProfileSwitchChanged")
+            it.filterIsInstance<ProfileSwitch>().firstOrNull()?.let { ps ->
+                aapsLogger.debug(LTag.DATABASE, "Firing EventProfileSwitchChanged $ps")
                 rxBus.send(EventProfileSwitchChanged())
             }
             it.filterIsInstance<EffectiveProfileSwitch>().firstOrNull()?.let { eps ->
-                aapsLogger.debug(LTag.DATABASE, "Firing EventProfileSwitchChanged")
+                aapsLogger.debug(LTag.DATABASE, "Firing EventEffectiveProfileSwitchChanged $eps")
                 rxBus.send(EventEffectiveProfileSwitchChanged(eps))
             }
-            it.filterIsInstance<OfflineEvent>().firstOrNull()?.let {
-                aapsLogger.debug(LTag.DATABASE, "Firing EventOfflineChange")
+            it.filterIsInstance<OfflineEvent>().firstOrNull()?.let { oe ->
+                aapsLogger.debug(LTag.DATABASE, "Firing EventOfflineChange $oe")
                 rxBus.send(EventOfflineChange())
             }
         }
