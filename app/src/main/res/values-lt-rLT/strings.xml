@@ -12,7 +12,6 @@
     <string name="nav_resetdb">Iš naujo nustatyti duomenų bazę</string>
     <string name="reset_db_confirm">Ar tikrai norite iš naujo nustatyti duomenų bazę?</string>
     <string name="nav_exit">Išeiti</string>
-    <string name="ns_sync_use_absolute_title">Visada naudoti bazės absoliučias vertes</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Šis įrenginys nepalaiko baterijos optimizavimo išimčių - galite patirti veikimo nesklandumų.</string>
     <string name="description_actions">Mygtukai greitesniam pagrindinių funkcijų paleidimui</string>
     <string name="description_config_builder">Naudojama aktyvių įskiepių konfigūravimui</string>
@@ -97,7 +96,6 @@
     <string name="safety">Saugumas</string>
     <string name="openapsma_disabled">Įskiepis išjungtas</string>
     <string name="constraints_violation">Apribojimų pažeidimas</string>
-    <string name="treatmentdeliveryerror">Boluso suleidimo klaida</string>
     <string name="setbasalquestion">Patvirtinti naują laikiną bazę:</string>
     <string name="overview_treatment_label">Terapija</string>
     <string name="overview_calculator_label">Skaičiuotuvas</string>
