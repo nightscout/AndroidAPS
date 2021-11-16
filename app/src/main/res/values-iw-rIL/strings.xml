@@ -96,6 +96,7 @@
     <string name="safety">בטיחות</string>
     <string name="openapsma_disabled">התוסף אינו זמין</string>
     <string name="constraints_violation">הפרת מגבלות</string>
+    <string name="treatmentdeliveryerror">דווחה שגיאה בבולוס. נא לבדוק את הכמות שהוזרקה באופן ידני</string>
     <string name="setbasalquestion">אשר בזאלי זמני חדש:</string>
     <string name="overview_treatment_label">טיפול</string>
     <string name="overview_calculator_label">מחשבון</string>
