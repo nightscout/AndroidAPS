@@ -569,7 +569,7 @@ class BigLogInquireResponsePacket(
                         absoluteRate = pumpDesc.pumpType.determineCorrectBasalSize(diaconnG8Pump.baseAmount * (tempBasalPercent / 100.0))
                     }
 
-                    if (logItem.getTbInjectRateRatio() in 1000..1600) {
+                    if (logItem.getTbInjectRateRatio() in 1000..2500) {
                         absoluteRate = (logItem.getTbInjectRateRatio() - 1000) / 100.0
                     }
 
@@ -604,7 +604,7 @@ class BigLogInquireResponsePacket(
                         val tempBasalPercent = logItem.getTbInjectRateRatio() - 50000
                         absoluteRate = diaconnG8Pump.baseAmount * (tempBasalPercent / 100.0)
                     }
-                    if (logItem.getTbInjectRateRatio() in 1000..1600) {
+                    if (logItem.getTbInjectRateRatio() in 1000..2500) {
                         absoluteRate = (logItem.getTbInjectRateRatio() - 1000) / 100.0
                     }
 
