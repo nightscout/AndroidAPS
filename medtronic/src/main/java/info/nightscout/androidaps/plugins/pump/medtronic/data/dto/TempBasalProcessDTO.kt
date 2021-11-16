@@ -1,10 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data.dto
 
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry
-import java.lang.StringBuilder
 
 class TempBasalProcessDTO constructor(var itemOne: PumpHistoryEntry,
                                       var aapsLogger: AAPSLogger,
@@ -66,17 +64,15 @@ class TempBasalProcessDTO constructor(var itemOne: PumpHistoryEntry,
 
         if (itemTwo!=null) {
             stringBuilder.append(" - ")
-            stringBuilder.append(itemTwo!!.DT)
+            stringBuilder.append(itemTwo?.DT)
         }
-
-        var dur = durationAsSeconds
 
         stringBuilder.append("  " + durationAsSeconds + " s (" + durationAsSeconds/60 + ")")
 
         if (itemTwoTbr!=null) {
-            stringBuilder.append("  " + itemOneTbr!!.insulinRate + " / " + itemTwoTbr!!.insulinRate)
+            stringBuilder.append("  " + itemOneTbr?.insulinRate + " / " + itemTwoTbr?.insulinRate)
         } else {
-            stringBuilder.append("  " + itemOneTbr!!.insulinRate)
+            stringBuilder.append("  " + itemOneTbr?.insulinRate)
         }
 
         return stringBuilder.toString()
@@ -84,12 +80,6 @@ class TempBasalProcessDTO constructor(var itemOne: PumpHistoryEntry,
 
     override fun toString(): String {
         return "ItemOne: $itemOne, ItemTwo: $itemTwo, Duration: $durationAsSeconds, ObjectType: $objectType"
-    }
-
-    enum class Operation {
-        None,
-        Add,
-        Edit
     }
 
     enum class ObjectType {

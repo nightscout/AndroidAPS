@@ -244,7 +244,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         get() {
             return time?.let {
                 return Duration.between(ZonedDateTime.now(), it)
-            } ?: null
+            }
         }
 
     override val timeZoneUpdated: Long?

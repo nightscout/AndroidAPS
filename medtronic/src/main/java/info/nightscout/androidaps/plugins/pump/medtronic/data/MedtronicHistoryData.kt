@@ -474,7 +474,7 @@ class MedtronicHistoryData @Inject constructor(
         for (bolus in entryList) {
 
             val bolusDTO = bolus.decodedData["Object"] as BolusDTO
-            var type: DetailedBolusInfo.BolusType = DetailedBolusInfo.BolusType.NORMAL
+            //var type: DetailedBolusInfo.BolusType = DetailedBolusInfo.BolusType.NORMAL
             var multiwave = false
 
             if (bolusDTO.bolusType == PumpBolusType.Extended) {
@@ -502,7 +502,7 @@ class MedtronicHistoryData @Inject constructor(
                     temporaryId = entryWithTempId.temporaryId
                     pumpSyncStorage.removeBolusWithTemporaryId(temporaryId)
                     boluses.remove(entryWithTempId)
-                    type = entryWithTempId.bolusType
+                    //type = entryWithTempId.bolusType
                 }
             }
 
@@ -584,7 +584,7 @@ class MedtronicHistoryData @Inject constructor(
         } else {
             if (oneMoreEntryFromHistory != null) {
                 val tbrPrev = oneMoreEntryFromHistory.getDecodedDataEntry("Object") as TempBasalPair
-                if (tbrPrev.isZeroTBR) {  // if we had Zere TBR in last previous TBR, then we need to limit it, so we need to process it too
+                if (tbrPrev.isZeroTBR) {  // if we had Zero TBR in last previous TBR, then we need to limit it, so we need to process it too
                     entryList.add(0, oneMoreEntryFromHistory)
                 }
             }
@@ -592,7 +592,7 @@ class MedtronicHistoryData @Inject constructor(
 
         val tbrRecords = pumpSyncStorage.getTBRs()
 
-        val processList: MutableList<TempBasalProcessDTO> = createTBRProcessList(entryList);
+        val processList: MutableList<TempBasalProcessDTO> = createTBRProcessList(entryList)
 
         if (processList.isNotEmpty()) {
             for (tempBasalProcessDTO in processList) {
@@ -735,7 +735,7 @@ class MedtronicHistoryData @Inject constructor(
         for (tempBasalProcessDTO in processList) {
             if (previousItem!=null) {
 
-                var pheEnd = PumpHistoryEntry()
+                val pheEnd = PumpHistoryEntry()
                 pheEnd.atechDateTime = DateTimeUtil.getATDWithAddedSeconds(tempBasalProcessDTO.itemOne.atechDateTime, -2)
                 pheEnd.addDecodedData("Object", TempBasalPair(0.0, false, 0))
 

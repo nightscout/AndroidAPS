@@ -164,7 +164,7 @@ abstract class MedtronicHistoryEntry : MedtronicHistoryEntryInterface {
             sb.append("]")
             return sb.toString()
         }
-        if (head!=null && head.size != 0) {
+        if (head.isNotEmpty()) {
             sb.append(", head=")
             sb.append(ByteUtil.shortHexString(head))
         }
