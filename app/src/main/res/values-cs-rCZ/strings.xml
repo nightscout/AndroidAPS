@@ -96,6 +96,7 @@
     <string name="safety">Bezpečnost</string>
     <string name="openapsma_disabled">Modul zakázán</string>
     <string name="constraints_violation">Mimo povolený rozsah</string>
+    <string name="treatmentdeliveryerror">Podání bolusu skončilo chybou. Ručně zkontrolujte, kolik inzulinu se skutečně vydalo.</string>
     <string name="setbasalquestion">Spustit nový dočasný bazál:</string>
     <string name="overview_treatment_label">Bolus</string>
     <string name="overview_calculator_label">Kalkulačka</string>
