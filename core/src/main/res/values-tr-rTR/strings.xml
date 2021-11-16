@@ -42,6 +42,7 @@
     <string name="invalidprofile">Geçersiz profil!!!</string>
     <string name="noprofileset">PROFİL AYARLANMADI</string>
     <string name="date">Tarih</string>
+    <string name="units_label">Birim</string>
     <string name="dia_label">İES</string>
     <string name="ic_label">IC Karbonhidrat İnsülin Oranı</string>
     <string name="isf_label">İDF</string>
