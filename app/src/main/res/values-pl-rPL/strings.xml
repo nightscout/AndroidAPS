@@ -96,6 +96,7 @@
     <string name="safety">Zabezpieczenia</string>
     <string name="openapsma_disabled">Wtyczka jest wyłączona</string>
     <string name="constraints_violation">Naruszenie ograniczeń</string>
+    <string name="treatmentdeliveryerror">Błąd podczas podawania bolusa. Sprawdź ręcznie rzeczywiście dostarczoną ilość</string>
     <string name="setbasalquestion">Akceptuj nową bazę tymczasową:</string>
     <string name="overview_treatment_label">Terapia</string>
     <string name="overview_calculator_label">Kalkulator</string>
