@@ -156,7 +156,7 @@
     <string name="safety">Safety</string>
     <string name="openapsma_disabled">Plugin is disabled</string>
     <string name="constraints_violation">Constraints violation</string>
-    <string name="treatmentdeliveryerror">Bolus delivery error</string>
+    <string name="treatmentdeliveryerror">Bolus reported an error. Manually check real delivered amount</string>
     <string name="setbasalquestion">Accept new temp basal:</string>
     <string name="overview_treatment_label">Treatment</string>
     <string name="overview_calculator_label">Calculator</string>
