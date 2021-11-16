@@ -11,7 +11,6 @@
     <string name="nav_resetdb">Herstel databasis</string>
     <string name="reset_db_confirm">Wil jy regtig die databasis herstel?</string>
     <string name="nav_exit">Gaan uit</string>
-    <string name="ns_sync_use_absolute_title">Gebruik altyd absolute basale aardes</string>
     <string name="description_actions">\'n Paar knoppies vir vinnige algemene nutsfunskies</string>
     <string name="description_config_builder">Gebruik vir die aktiewe plugins te konfigureer</string>
     <string name="description_objectives">Onderrig program</string>
@@ -91,7 +90,6 @@
     <string name="safety">Veiligheid</string>
     <string name="openapsma_disabled">Plugin is gedeaktiveer</string>
     <string name="constraints_violation">Beperkings skending</string>
-    <string name="treatmentdeliveryerror">Bolus aflewering fout</string>
     <string name="setbasalquestion">Aanvaar nuwe tydelike basale:</string>
     <string name="overview_treatment_label">Behandeling</string>
     <string name="overview_calculator_label">Rekenaar</string>
