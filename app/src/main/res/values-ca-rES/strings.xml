@@ -95,7 +95,6 @@
     <string name="safety">Seguretat</string>
     <string name="openapsma_disabled">Plugin desactivat</string>
     <string name="constraints_violation">Violació de restriccions</string>
-    <string name="treatmentdeliveryerror">Error en lliurar el bolus</string>
     <string name="setbasalquestion">Acceptar nova basal temporal:</string>
     <string name="overview_treatment_label">Tractament</string>
     <string name="overview_calculator_label">Calculadora</string>
