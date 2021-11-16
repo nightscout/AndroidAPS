@@ -11,7 +11,6 @@
     <string name="nav_resetdb">重置数据库</string>
     <string name="reset_db_confirm">你真的想重置数据库吗?</string>
     <string name="nav_exit">退出</string>
-    <string name="ns_sync_use_absolute_title">总是使用基础率的绝对值</string>
     <string name="description_actions">一些快速访问常用功能的按钮</string>
     <string name="description_config_builder">用于配置活动插件</string>
     <string name="description_objectives">学习计划</string>
@@ -90,7 +89,6 @@
     <string name="safety">安全性</string>
     <string name="openapsma_disabled">插件已禁用</string>
     <string name="constraints_violation">违反约束条件</string>
-    <string name="treatmentdeliveryerror">大剂量输注错误</string>
     <string name="setbasalquestion">接受新的临时基础率</string>
     <string name="overview_treatment_label">治疗</string>
     <string name="overview_calculator_label">计算器</string>
