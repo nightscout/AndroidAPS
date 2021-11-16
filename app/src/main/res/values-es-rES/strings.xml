@@ -96,6 +96,7 @@
     <string name="safety">Seguridad</string>
     <string name="openapsma_disabled">Complemento desactivado</string>
     <string name="constraints_violation">Violación restricciones</string>
+    <string name="treatmentdeliveryerror">El bolo reportó un error. Comprueba manualmente la cantidad real de insulina entregada</string>
     <string name="setbasalquestion">Aceptar nueva basal temporal:</string>
     <string name="overview_treatment_label">Tratamiento</string>
     <string name="overview_calculator_label">Calculadora</string>
