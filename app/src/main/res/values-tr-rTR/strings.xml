@@ -96,7 +96,6 @@
     <string name="safety">Güvenlik</string>
     <string name="openapsma_disabled">Eklenti devre dışı</string>
     <string name="constraints_violation">Kısıtlamalar ihlali</string>
-    <string name="treatmentdeliveryerror">Bolus teslimat hatası</string>
     <string name="setbasalquestion">Yeni geçici bazal oranını kabul et:</string>
     <string name="overview_treatment_label">Tedavi</string>
     <string name="overview_calculator_label">Hesap makinesi</string>
