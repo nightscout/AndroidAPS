@@ -33,4 +33,5 @@
     <string name="omnipod_dash_unknown">Состояние команды неясно</string>
     <string name="omnipod_common_history_tbr_value">Баз Скорость: %1$.2f ед, Продолжительность: %2$d мин</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f ед</string>
+    <string name="dash_bolusdelivering">Подается болюс %1$.2f ед</string>
 </resources>
