@@ -12,7 +12,6 @@
     <string name="nav_resetdb">Resetează bazele de date</string>
     <string name="reset_db_confirm">Sigur resetați bazele de date?</string>
     <string name="nav_exit">Ieșire</string>
-    <string name="ns_sync_use_absolute_title">Folosește întotdeauna valori absolute ale bazalei</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Acest dispozitiv nu permite folosirea excluderii din lista de optimizare a bateriei - se poate să întâmpinați probleme de performanță.</string>
     <string name="description_actions">Butoane pentru accesarea celor mai comune facilităţi</string>
     <string name="description_config_builder">Folosit pentru configurarea facilităţilor active</string>
@@ -97,7 +96,6 @@
     <string name="safety">Siguranță</string>
     <string name="openapsma_disabled">Modul inactiv</string>
     <string name="constraints_violation">Încălcare a unei limite</string>
-    <string name="treatmentdeliveryerror">Eroare la livrarea bolusului</string>
     <string name="setbasalquestion">Acceptă noua bazală temporară:</string>
     <string name="overview_treatment_label">Tratament</string>
     <string name="overview_calculator_label">Calculator</string>
@@ -650,6 +648,8 @@
     <string name="time_elapsed">Timp scurs</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Citire a valorii glicemiei din aplicația Poctech</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Primiți glicemii de la aplicația Glunovo</string>
     <string name="description_source_tomato">Înregistrează valorile glicemiei din aplicația Tomato (dispozitiv MiaoMIao)</string>
     <string name="high_temptarget_raises_sensitivity_title">Ținte temporare mai mari cresc sensibilitatea</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Creșterea sensibilității pentru ținte temporare >= 100]]></string>
@@ -897,4 +897,7 @@
     <string name="view">Vizualizare</string>
     <string name="errors">Erori</string>
     <string name="ns_sync_slow">Încarcă mai lent</string>
+    <string name="data_status">Stare date glicemie</string>
+    <string name="recalculated_data_used">Date recalculate utilizate</string>
+    <string name="bg_too_close">BG prea aproape:\n%1$s\n%2$s</string>
 </resources>

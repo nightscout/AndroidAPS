@@ -12,7 +12,6 @@
     <string name="nav_resetdb">Reset database</string>
     <string name="reset_db_confirm">Wil je echt de database wissen?</string>
     <string name="nav_exit">Afsluiten</string>
-    <string name="ns_sync_use_absolute_title">Gebruik altijd absolute basale waarden</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Dit apparaat lijkt geen ondersteuning te bieden voor whitelisten voor batterijoptimalisatie - u kunt prestatieproblemen ervaren.</string>
     <string name="description_actions">Een aantal knoppen voor snelle toegang tot algemene functies</string>
     <string name="description_config_builder">Gebruikt om actieve plugins te configureren</string>
@@ -97,7 +96,6 @@
     <string name="safety">Veiligheid</string>
     <string name="openapsma_disabled">Plugin is gedeactiveerd</string>
     <string name="constraints_violation">In strijd met beperkingen</string>
-    <string name="treatmentdeliveryerror">Bolus toedien storing</string>
     <string name="setbasalquestion">Accepteer nieuw tijdelijk basaal:</string>
     <string name="overview_treatment_label">Bolus</string>
     <string name="overview_calculator_label">Bolus wizard</string>
@@ -892,4 +890,8 @@
     <string name="error_in_basal_values">Fout in basaal waarden</string>
     <string name="error_in_target_values">Fout in streefdoel</string>
     <string name="error_in_isf_values">Fout in ISF waarden</string>
+    <string name="run_question">%s uitvoeren?</string>
+    <string name="invalid_profile_not_accepted">Ongeldig profiel %1$s niet geaccepteerd door NS</string>
+    <string name="errors">Foutmeldingen</string>
+    <string name="ns_sync_slow">Vertraag uploads</string>
 </resources>

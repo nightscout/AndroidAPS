@@ -12,7 +12,6 @@
     <string name="nav_resetdb">Réinitialiser les Bases de Données </string>
     <string name="reset_db_confirm">Voulez-vous vraiment réinitialiser les bases de données ?</string>
     <string name="nav_exit">Quitter</string>
-    <string name="ns_sync_use_absolute_title">Utiliser toujours les valeurs absolues du basal</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Ce périphérique ne semble pas permettre l\'optimisation de la batterie par une liste blanche - vous pourriez rencontrer des problèmes de performance.</string>
     <string name="description_actions">Quelques boutons pour accéder rapidement aux fonctions communes</string>
     <string name="description_config_builder">Utilisé pour configurer les plugins actifs</string>
@@ -97,7 +96,7 @@
     <string name="safety">Sécurité</string>
     <string name="openapsma_disabled">Plugin désactivé</string>
     <string name="constraints_violation">Violation des restrictions</string>
-    <string name="treatmentdeliveryerror">Erreur injection bolus</string>
+    <string name="treatmentdeliveryerror">Erreur lors du Bolus. Vérifiez manuellement la quantité réellement injectée</string>
     <string name="setbasalquestion">Accepter nouveau basal temporaire :</string>
     <string name="overview_treatment_label">Traitement</string>
     <string name="overview_calculator_label">Assistant</string>
@@ -651,6 +650,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="time_elapsed">Temps écoulé</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Recevoir les glycémies depuis l\'app Poctech</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Recevoir des valeurs de l\'application Glunovo</string>
     <string name="description_source_tomato">Recevoir les valeurs de glycémie de l\'application Tomato (appareil MiaoMiao)</string>
     <string name="high_temptarget_raises_sensitivity_title">Cible temp. haute élève la sensibilité</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Augmente la Sensibilité pour les cibles temporaires >= 100]]></string>
@@ -896,4 +897,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="invalid_profile_not_accepted">Profil %1$s non valide, refusé par NS</string>
     <string name="view">Vue</string>
     <string name="errors">Erreurs</string>
+    <string name="ns_sync_slow">Ralentir les téléchargements</string>
+    <string name="data_status">État des données Gly</string>
+    <string name="recalculated_data_used">Données recalculées utilisées</string>
+    <string name="bg_too_close">Gly trop proche :\n%1$s\n%2$s</string>
 </resources>

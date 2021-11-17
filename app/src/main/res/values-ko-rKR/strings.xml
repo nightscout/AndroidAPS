@@ -12,7 +12,6 @@
     <string name="nav_resetdb">데이터베이스 초기화</string>
     <string name="reset_db_confirm">데이터 베이스를 정말 초기화하시겠습니까?</string>
     <string name="nav_exit">종료</string>
-    <string name="ns_sync_use_absolute_title">Basal 절대값 사용하기</string>
     <string name="alert_dialog_permission_battery_optimization_failed">이 장치는 배터리 최적화 화이트리스트를 지원하지 않습니다 - 성능 문제가 발생할 수 있습니다.</string>
     <string name="description_actions">일반 기능을 빠르게 실행시킬 버튼</string>
     <string name="description_config_builder">활성화된 플러그인을 구성하는 데 사용됩니다.</string>
@@ -97,7 +96,6 @@
     <string name="safety">안전성</string>
     <string name="openapsma_disabled">플러그인이 사용불가능 합니다</string>
     <string name="constraints_violation">제한 위반</string>
-    <string name="treatmentdeliveryerror">Bolus 주입 에러</string>
     <string name="setbasalquestion">새 임시Basal 적용:</string>
     <string name="overview_treatment_label">관리</string>
     <string name="overview_calculator_label">계산기</string>
