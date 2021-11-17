@@ -96,6 +96,7 @@
     <string name="safety">безопасность</string>
     <string name="openapsma_disabled">модуль не активен</string>
     <string name="constraints_violation">ограничение нарушено</string>
+    <string name="treatmentdeliveryerror">Возможна ошибка в подаче болюса. Проверьте реальное количество поданного инсулина</string>
     <string name="setbasalquestion">принять новый врем базал:</string>
     <string name="overview_treatment_label">болюс</string>
     <string name="overview_calculator_label">калькулятор</string>
@@ -357,7 +358,7 @@
     <string name="treatments_wizard_bgtrend_label">15 мин тренд</string>
     <string name="treatments_wizard_cob_label">активн углеводы</string>
     <string name="superbolus">суперболюс</string>
-    <string name="ns_logappstartedevent">начать работу с NS</string>
+    <string name="ns_logappstartedevent">Передать в NS запись о начале работы приложения</string>
     <string name="restartingapp">выход из приложения для применения настроек</string>
     <string name="configbuilder_insulin_description">Какой тип инсулина вы используете?</string>
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
