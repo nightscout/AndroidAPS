@@ -887,4 +887,12 @@
     <string name="error_in_basal_values">Грешка в базалните стойности</string>
     <string name="error_in_target_values">Грешка в стойностите за цел</string>
     <string name="error_in_isf_values">Грешка в стойностите за чувствителност (ISF)</string>
+    <string name="run_question">Пусни %s?</string>
+    <string name="invalid_profile_not_accepted">Невалиден профил %1$s не приет от NS</string>
+    <string name="view">Изглед</string>
+    <string name="errors">Грешки</string>
+    <string name="ns_sync_slow">Забавени качвания на данни</string>
+    <string name="data_status">Статус на данни за КЗ</string>
+    <string name="recalculated_data_used">Рекалкулирани използвани данни</string>
+    <string name="bg_too_close">КЗ близо до:\n%1$s\n%2$s</string>
 </resources>
