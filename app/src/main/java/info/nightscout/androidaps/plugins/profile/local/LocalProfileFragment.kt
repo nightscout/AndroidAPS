@@ -266,6 +266,7 @@ class LocalProfileFragment : DaggerFragment() {
         val isEdited = localProfilePlugin.isEdited
         if (isValid) {
             this.view?.setBackgroundColor(rh.gc(R.color.ok_background))
+            binding.spinner.isEnabled = true
 
             if (isEdited) {
                 //edited profile -> save first
@@ -277,6 +278,7 @@ class LocalProfileFragment : DaggerFragment() {
             }
         } else {
             this.view?.setBackgroundColor(rh.gc(R.color.error_background))
+            binding.spinner.isEnabled = false
             binding.profileswitch.visibility = View.GONE
             binding.save.visibility = View.GONE //don't save an invalid profile
         }

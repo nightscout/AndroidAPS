@@ -104,9 +104,7 @@ class ConfigBuilderFragment : DaggerFragment() {
     @Synchronized
     private fun updateGUI() {
         binding.categories.removeAllViews()
-        if (!config.NSCLIENT) {
-            createViewsForPlugins(R.string.configbuilder_profile, R.string.configbuilder_profile_description, PluginType.PROFILE, activePlugin.getSpecificPluginsVisibleInList(PluginType.PROFILE))
-        }
+        createViewsForPlugins(R.string.configbuilder_profile, R.string.configbuilder_profile_description, PluginType.PROFILE, activePlugin.getSpecificPluginsVisibleInList(PluginType.PROFILE))
         if (config.APS || config.PUMPCONTROL || buildHelper.isEngineeringMode())
             createViewsForPlugins(R.string.configbuilder_insulin, R.string.configbuilder_insulin_description, PluginType.INSULIN, activePlugin.getSpecificPluginsVisibleInList(PluginType.INSULIN))
         if (!config.NSCLIENT) {
