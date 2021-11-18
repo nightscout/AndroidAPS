@@ -11,7 +11,6 @@
     <string name="nav_resetdb">Redefinir banco de dados</string>
     <string name="reset_db_confirm">Você realmente quer redefinir os bancos de dados?</string>
     <string name="nav_exit">Sair</string>
-    <string name="ns_sync_use_absolute_title">Sempre usar valores absolutos basais</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Este dispositivo não parece suportar a optimização de bateria na lista de permissões - pode ter problemas de desempenho.</string>
     <string name="description_actions">Alguns botões para acessar rapidamente a funções comuns</string>
     <string name="description_config_builder">Usado para configurar os plugins ativos</string>
@@ -94,7 +93,6 @@
     <string name="safety">Segurança</string>
     <string name="openapsma_disabled">Plugin está desativado</string>
     <string name="constraints_violation">Violação das restrições</string>
-    <string name="treatmentdeliveryerror">Erro na entrega do bolus</string>
     <string name="setbasalquestion">Aceitar nova basal temporária:</string>
     <string name="overview_treatment_label">Tratamento</string>
     <string name="overview_calculator_label">Calculadora</string>

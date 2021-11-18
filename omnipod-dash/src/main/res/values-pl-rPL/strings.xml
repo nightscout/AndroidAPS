@@ -33,4 +33,5 @@
     <string name="omnipod_dash_unknown">Nieznany stan polecenia</string>
     <string name="omnipod_common_history_tbr_value">Dawka: %1$.2f U, Czas trwania: %2$d min</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
+    <string name="dash_bolusdelivering">Dostarczanie %1$.2f U</string>
 </resources>

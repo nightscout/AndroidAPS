@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util
 
 import com.google.crypto.tink.subtle.X25519
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.annotations.OpenForTesting
+import info.nightscout.androidaps.annotations.OpenForTesting
 
 @OpenForTesting
 class X25519KeyGenerator {

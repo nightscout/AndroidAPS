@@ -12,7 +12,6 @@
     <string name="nav_resetdb">Återställ databaserna</string>
     <string name="reset_db_confirm">Vill du verkligen återställa databaserna?</string>
     <string name="nav_exit">Avsluta</string>
-    <string name="ns_sync_use_absolute_title">Använd alltid absoluta värden i basal</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Denna enhet verkar inte ha stöd för vitlistning från batterioptimering. Du eventuellt råka ut för problem pga detta.</string>
     <string name="description_actions">Knappar för att snabbt komma åt vanliga funktioner</string>
     <string name="description_config_builder">Används för att konfigurera de aktiva insticksprogrammen</string>
@@ -98,7 +97,6 @@ Eversense-appen.</string>
     <string name="safety">Säkerhet</string>
     <string name="openapsma_disabled">Insticksprogram inaktiverat</string>
     <string name="constraints_violation">Begränsning nådd</string>
-    <string name="treatmentdeliveryerror">Fel vid bolusleverans</string>
     <string name="setbasalquestion">Acceptera ny temp basal:</string>
     <string name="overview_treatment_label">Behandling</string>
     <string name="overview_calculator_label">Kalkylator</string>

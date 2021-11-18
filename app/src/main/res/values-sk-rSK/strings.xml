@@ -12,7 +12,6 @@
     <string name="nav_resetdb">Vymaž databázu</string>
     <string name="reset_db_confirm">Naozaj chcete vymazať databázu?</string>
     <string name="nav_exit">Ukončiť</string>
-    <string name="ns_sync_use_absolute_title">Vždy používaj absolútne hodnoty bazálov</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Toto zariadenie zrejme neumožňuje vypnúť optimalizáciu batérie - môže dochádzať k problémom s výkonom.</string>
     <string name="description_actions">Niektoré tlačidlá na rýchly prístup do spoločných funkcií</string>
     <string name="description_config_builder">Používané na konfiguráciu aktívnych pluginov</string>
@@ -97,7 +96,7 @@
     <string name="safety">Bezpečnosť</string>
     <string name="openapsma_disabled">Modul je deaktivovaný</string>
     <string name="constraints_violation">Mimo povolený rozsah</string>
-    <string name="treatmentdeliveryerror">Chyba podania bolusu</string>
+    <string name="treatmentdeliveryerror">Bolus zaznamenal chybu. Overte prosím manuálne reálne podané množstvo</string>
     <string name="setbasalquestion">Povoliť nový dočasný bazál:</string>
     <string name="overview_treatment_label">Bolus</string>
     <string name="overview_calculator_label">Kalkulačka</string>
@@ -650,6 +649,8 @@
     <string name="time_elapsed">Uplynutý čas</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Získavať glykémie z aplikácie Poctech</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Získavať glykémie z aplikácie Glunovo</string>
     <string name="description_source_tomato">Prijímať glykémie z aplikácie Tomato (zariadenie MiaoMiao)</string>
     <string name="high_temptarget_raises_sensitivity_title">Vysoký dočasný cieľ zvýši citlivosť</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Zvýšenie citlivosti pre dočasné ciele >= 5.5]]></string>
@@ -897,4 +898,7 @@
     <string name="view">Zobraziť</string>
     <string name="errors">Chyby</string>
     <string name="ns_sync_slow">Spomaliť nahrávanie</string>
+    <string name="data_status">Stav dát glykémie</string>
+    <string name="recalculated_data_used">Použité prepočítané dáta</string>
+    <string name="bg_too_close">Glykémia je príliš blízko:\n%1$s\n%2$s</string>
 </resources>

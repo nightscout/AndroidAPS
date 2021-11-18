@@ -96,7 +96,7 @@
     <string name="safety">Sicherheit</string>
     <string name="openapsma_disabled">Plugin ist deaktiviert</string>
     <string name="constraints_violation">Beschränkungen wurden verletzt oder Limit erreicht.</string>
-    <string name="treatmentdeliveryerror">Bolus-Abgabefehler</string>
+    <string name="treatmentdeliveryerror">Fehlermeldung Bolusabgabe. Prüfe manuell die tatsächlich abgegebene Menge.</string>
     <string name="setbasalquestion">Akzeptiere neue TBR:</string>
     <string name="overview_treatment_label">Bolus</string>
     <string name="overview_calculator_label">Rechner</string>

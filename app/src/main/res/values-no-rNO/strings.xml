@@ -96,7 +96,7 @@
     <string name="safety">Sikkerhet</string>
     <string name="openapsma_disabled">Plugin er deaktivert</string>
     <string name="constraints_violation">Brudd på begrensninger</string>
-    <string name="treatmentdeliveryerror">Mislykket bolus levering</string>
+    <string name="treatmentdeliveryerror">Er registrert en feil med bolus leveransen. Sjekk manuelt om den er levert og hvor mye!</string>
     <string name="setbasalquestion">Aksepter ny temp basal:</string>
     <string name="overview_treatment_label">Behandling</string>
     <string name="overview_calculator_label">Kalkulator</string>
