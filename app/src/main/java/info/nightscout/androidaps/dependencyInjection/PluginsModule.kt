@@ -59,6 +59,12 @@ abstract class PluginsModule {
     @AllConfigs
     @IntoMap
     @IntKey(0)
+    abstract fun bindPersistentNotificationPlugin(plugin: PersistentNotificationPlugin): PluginBase
+
+    @Binds
+    @AllConfigs
+    @IntoMap
+    @IntKey(5)
     abstract fun bindOverviewPlugin(plugin: OverviewPlugin): PluginBase
 
     @Binds
@@ -270,12 +276,6 @@ abstract class PluginsModule {
     @IntoMap
     @IntKey(340)
     abstract fun bindStatusLinePlugin(plugin: StatusLinePlugin): PluginBase
-
-    @Binds
-    @AllConfigs
-    @IntoMap
-    @IntKey(350)
-    abstract fun bindPersistentNotificationPlugin(plugin: PersistentNotificationPlugin): PluginBase
 
     @Binds
     @AllConfigs
