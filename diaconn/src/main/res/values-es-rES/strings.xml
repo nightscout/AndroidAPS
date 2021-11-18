@@ -36,4 +36,20 @@
     <string name="pairfirst">Por favor, ¡empareja tu bomba con el teléfono!</string>
     <string name="processinghistory">"Procesando evento "</string>
     <string name="diaconn_g8_history_tempbasal">Basal Temporal</string>
+    <string name="diaconng8_pump_settings">Ajustes de la bomba Diaconn</string>
+    <string name="diaconn_g8_pumpalarm_intensity_middle">medio</string>
+    <string name="diaconn_g8_pumpalarm_intensity_high">alto</string>
+    <string name="diaconn_g8_screentimeout">Tiempo de encendido LCD [segundos]</string>
+    <string name="diaconn_g8_saveuseroptions">GUARDAR OPCIÓN EN BOMBA</string>
+    <string name="diaconn_g8_language">Idioma</string>
+    <string name="diaconn_g8_bolus_speed">Velocidad del bolo</string>
+    <string name="diaconn_g8_pumplang_chiness">Chino</string>
+    <string name="injectionblocked">Inyección bloqueada</string>
+    <string name="batterywarning">Advertencia de batería</string>
+    <string name="insulinlackwarning">Advertencia de falta de insulina</string>
+    <string name="needbatteryreplace">Es necesario reemplazar la batería</string>
+    <string name="needinsullinreplace">Es necesario reemplazar la insulina</string>
+    <string name="pumpversion">version_bomba</string>
+    <string name="pumpserialno">número_serie_bomba</string>
+    <string name="diaconn_g8_loginsulinchange_title">Registrar cambios de reservorio</string>
 </resources>
