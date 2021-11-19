@@ -96,6 +96,7 @@
     <string name="safety">Sicurezza</string>
     <string name="openapsma_disabled">Il plugin è disabilitato</string>
     <string name="constraints_violation">Violazione dei vincoli</string>
+    <string name="treatmentdeliveryerror">Segnalato errore sul bolo. Controlla manualmente la reale quantità erogata</string>
     <string name="setbasalquestion">Accetta nuova basale temporanea:</string>
     <string name="overview_treatment_label">Trattamento</string>
     <string name="overview_calculator_label">Calcolatore</string>
