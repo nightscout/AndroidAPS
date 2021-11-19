@@ -109,7 +109,7 @@ class DanaFragment : DaggerFragment() {
         }
         binding.stats.setOnClickListener { startActivity(Intent(context, TDDStatsActivity::class.java)) }
         binding.userOptions.setOnClickListener { startActivity(Intent(context, DanaUserOptionsActivity::class.java)) }
-        binding.btconnection.setOnClickListener {
+        binding.btConnectionLayout.setOnClickListener {
             aapsLogger.debug(LTag.PUMP, "Clicked connect to pump")
             danaPump.reset()
             commandQueue.readStatus("Clicked connect to pump", null)
@@ -117,7 +117,7 @@ class DanaFragment : DaggerFragment() {
         if (activePlugin.activePump.pumpDescription.pumpType == PumpType.DANA_RS ||
             activePlugin.activePump.pumpDescription.pumpType == PumpType.DANA_I
         )
-            binding.btconnection.setOnLongClickListener {
+            binding.btConnectionLayout.setOnLongClickListener {
                 activity?.let {
                     OKDialog.showConfirmation(it, rh.gs(R.string.resetpairing)) {
                         uel.log(Action.CLEAR_PAIRING_KEYS, Sources.Dana)
@@ -167,7 +167,7 @@ class DanaFragment : DaggerFragment() {
                                else                                       ->
                                    "{fa-bluetooth-b}"
                            }
-                           binding.btconnection.text = pumpStatusIcon
+                           binding.btConnection.text = pumpStatusIcon
                            pumpStatus = it.getStatus(rh)
                            binding.pumpStatus.text = pumpStatus
                            binding.pumpStatusLayout.visibility = (pumpStatus != "").toVisibility()
@@ -197,7 +197,7 @@ class DanaFragment : DaggerFragment() {
     @Synchronized
     fun updateGUI() {
         if (_binding == null) return
-        binding.btconnection.text = pumpStatusIcon
+        binding.btConnection.text = pumpStatusIcon
         binding.pumpStatus.text = pumpStatus
         binding.pumpStatusLayout.visibility = (pumpStatus != "").toVisibility()
         binding.queue.text = commandQueue.spannedStatus()

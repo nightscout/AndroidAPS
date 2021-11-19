@@ -156,14 +156,14 @@ class DataSyncSelectorImplementation @Inject constructor(
         //lastBolusTime = dateUtil.now()
         queueCounter.bolusesRemaining = lastDbId - startId
         appRepository.getNextSyncElementBolus(startId).blockingGet()?.let { bolus ->
-            aapsLogger.info(LTag.DATABASE, "Loading Bolus data Start: $startId ID: ${bolus.first.id} HistoryID: ${bolus.second.id} ")
+            aapsLogger.info(LTag.NSCLIENT, "Loading Bolus data Start: $startId ID: ${bolus.first.id} HistoryID: ${bolus.second.id} ")
             when {
                 // only NsId changed, no need to upload
                 bolus.first.onlyNsIdAdded(bolus.second)       -> {
                     confirmLastBolusIdIfGreater(bolus.second.id)
                     //lastBolusId = -1
                     processChangedBolusesCompat()
-                    aapsLogger.info(LTag.DATABASE, "Ignoring Bolus. Only NS id changed ID: ${bolus.first.id} HistoryID: ${bolus.second.id} ")
+                    aapsLogger.info(LTag.NSCLIENT, "Ignoring Bolus. Only NS id changed ID: ${bolus.first.id} HistoryID: ${bolus.second.id} ")
                     return false
                 }
                 // without nsId = create new
@@ -214,14 +214,14 @@ class DataSyncSelectorImplementation @Inject constructor(
         //lastCarbsTime = dateUtil.now()
         queueCounter.carbsRemaining = lastDbId - startId
         appRepository.getNextSyncElementCarbs(startId).blockingGet()?.let { carb ->
-            aapsLogger.info(LTag.DATABASE, "Loading Carbs data Start: $startId ID: ${carb.first.id} HistoryID: ${carb.second.id} ")
+            aapsLogger.info(LTag.NSCLIENT, "Loading Carbs data Start: $startId ID: ${carb.first.id} HistoryID: ${carb.second.id} ")
             when {
                 // only NsId changed, no need to upload
                 carb.first.onlyNsIdAdded(carb.second)        -> {
                     confirmLastCarbsIdIfGreater(carb.second.id)
                     //lastCarbsId = -1
                     processChangedCarbsCompat()
-                    aapsLogger.info(LTag.DATABASE, "Ignoring Carbs. Only NS id changed ID: ${carb.first.id} HistoryID: ${carb.second.id} ")
+                    aapsLogger.info(LTag.NSCLIENT, "Ignoring Carbs. Only NS id changed ID: ${carb.first.id} HistoryID: ${carb.second.id} ")
                     return false
                 }
                 // without nsId = create new
@@ -272,14 +272,14 @@ class DataSyncSelectorImplementation @Inject constructor(
         //lastBcrTime = dateUtil.now()
         queueCounter.bcrRemaining = lastDbId - startId
         appRepository.getNextSyncElementBolusCalculatorResult(startId).blockingGet()?.let { bolusCalculatorResult ->
-            aapsLogger.info(LTag.DATABASE, "Loading BolusCalculatorResult data Start: $startId ID: ${bolusCalculatorResult.first.id} HistoryID: ${bolusCalculatorResult.second.id} ")
+            aapsLogger.info(LTag.NSCLIENT, "Loading BolusCalculatorResult data Start: $startId ID: ${bolusCalculatorResult.first.id} HistoryID: ${bolusCalculatorResult.second.id} ")
             when {
                 // only NsId changed, no need to upload
                 bolusCalculatorResult.first.onlyNsIdAdded(bolusCalculatorResult.second) -> {
                     confirmLastBolusCalculatorResultsIdIfGreater(bolusCalculatorResult.second.id)
                     //lastBcrId = -1
                     processChangedBolusCalculatorResultsCompat()
-                    aapsLogger.info(LTag.DATABASE, "Ignoring BolusCalculatorResult. Only NS id changed ID: ${bolusCalculatorResult.first.id} HistoryID: ${bolusCalculatorResult.second.id} ")
+                    aapsLogger.info(LTag.NSCLIENT, "Ignoring BolusCalculatorResult. Only NS id changed ID: ${bolusCalculatorResult.first.id} HistoryID: ${bolusCalculatorResult.second.id} ")
                     return false
                 }
                 // without nsId = create new
@@ -332,14 +332,14 @@ class DataSyncSelectorImplementation @Inject constructor(
         //lastTtTime = dateUtil.now()
         queueCounter.ttsRemaining = lastDbId - startId
         appRepository.getNextSyncElementTemporaryTarget(startId).blockingGet()?.let { tt ->
-            aapsLogger.info(LTag.DATABASE, "Loading TemporaryTarget data Start: $startId ID: ${tt.first.id} HistoryID: ${tt.second.id} ")
+            aapsLogger.info(LTag.NSCLIENT, "Loading TemporaryTarget data Start: $startId ID: ${tt.first.id} HistoryID: ${tt.second.id} ")
             when {
                 // record is not valid record and we are within first sync, no need to upload
                 tt.first.id != tt.second.id && tt.second.id <= sp.getLong(R.string.key_ns_temporary_target_new_data_id, 0) -> {
                     confirmLastTempTargetsIdIfGreater(tt.second.id)
                     //lastTbrId = -1
                     processChangedTempTargetsCompat()
-                    aapsLogger.info(LTag.DATABASE, "Ignoring TemporaryTarget. Change within first sync ID: ${tt.first.id} HistoryID: ${tt.second.id} ")
+                    aapsLogger.info(LTag.NSCLIENT, "Ignoring TemporaryTarget. Change within first sync ID: ${tt.first.id} HistoryID: ${tt.second.id} ")
                     return false
                 }
                 // only NsId changed, no need to upload
@@ -347,7 +347,7 @@ class DataSyncSelectorImplementation @Inject constructor(
                     confirmLastTempTargetsIdIfGreater(tt.second.id)
                     //lastTtId = -1
                     processChangedTempTargetsCompat()
-                    aapsLogger.info(LTag.DATABASE, "Ignoring TemporaryTarget. Only NS id changed ID: ${tt.first.id} HistoryID: ${tt.second.id} ")
+                    aapsLogger.info(LTag.NSCLIENT, "Ignoring TemporaryTarget. Only NS id changed ID: ${tt.first.id} HistoryID: ${tt.second.id} ")
                     return false
                 }
                 // without nsId = create new
@@ -403,14 +403,14 @@ class DataSyncSelectorImplementation @Inject constructor(
         //lastFoodTime = dateUtil.now()
         queueCounter.foodsRemaining = lastDbId - startId
         appRepository.getNextSyncElementFood(startId).blockingGet()?.let { food ->
-            aapsLogger.info(LTag.DATABASE, "Loading Food data Start: $startId ID: ${food.first.id} HistoryID: ${food.second} ")
+            aapsLogger.info(LTag.NSCLIENT, "Loading Food data Start: $startId ID: ${food.first.id} HistoryID: ${food.second} ")
             when {
                 // only NsId changed, no need to upload
                 food.first.onlyNsIdAdded(food.second)        -> {
                     confirmLastFoodIdIfGreater(food.second.id)
                     //lastFoodId = -1
                     processChangedFoodsCompat()
-                    aapsLogger.info(LTag.DATABASE, "Ignoring Food. Only NS id changed ID: ${food.first.id} HistoryID: ${food.second.id} ")
+                    aapsLogger.info(LTag.NSCLIENT, "Ignoring Food. Only NS id changed ID: ${food.first.id} HistoryID: ${food.second.id} ")
                     return false
                 }
                 // without nsId = create new
@@ -462,21 +462,21 @@ class DataSyncSelectorImplementation @Inject constructor(
         queueCounter.gvsRemaining = lastDbId - startId
         var tailCall = false
         appRepository.getNextSyncElementGlucoseValue(startId).blockingGet()?.let { gv ->
-            aapsLogger.info(LTag.DATABASE, "Loading GlucoseValue data ID: ${gv.first.id} HistoryID: ${gv.second.id} ")
+            aapsLogger.info(LTag.NSCLIENT, "Loading GlucoseValue data ID: ${gv.first.id} HistoryID: ${gv.second.id} ")
             if (activePlugin.activeBgSource.shouldUploadToNs(gv.first)) {
                 when {
                     // record is not valid record and we are within first sync, no need to upload
                     gv.first.id != gv.second.id && gv.second.id <= sp.getLong(R.string.key_ns_glucose_value_new_data_id, 0) -> {
                         confirmLastGlucoseValueIdIfGreater(gv.second.id)
                         //lastGvId = -1
-                        aapsLogger.info(LTag.DATABASE, "Ignoring GlucoseValue. Change within first sync ID: ${gv.first.id} HistoryID: ${gv.second.id} ")
+                        aapsLogger.info(LTag.NSCLIENT, "Ignoring GlucoseValue. Change within first sync ID: ${gv.first.id} HistoryID: ${gv.second.id} ")
                         tailCall = true
                     }
                     // only NsId changed, no need to upload
                     gv.first.onlyNsIdAdded(gv.second)          -> {
                         confirmLastGlucoseValueIdIfGreater(gv.second.id)
                         //lastGvId = -1
-                        aapsLogger.info(LTag.DATABASE, "Ignoring GlucoseValue. Only NS id changed ID: ${gv.first.id} HistoryID: ${gv.second.id} ")
+                        aapsLogger.info(LTag.NSCLIENT, "Ignoring GlucoseValue. Only NS id changed ID: ${gv.first.id} HistoryID: ${gv.second.id} ")
                         tailCall = true
                     }
                     // without nsId = create new
@@ -533,14 +533,14 @@ class DataSyncSelectorImplementation @Inject constructor(
         //lastTeTime = dateUtil.now()
         queueCounter.tesRemaining = lastDbId - startId
         appRepository.getNextSyncElementTherapyEvent(startId).blockingGet()?.let { te ->
-            aapsLogger.info(LTag.DATABASE, "Loading TherapyEvents data Start: $startId ID: ${te.first.id} HistoryID: ${te.second} ")
+            aapsLogger.info(LTag.NSCLIENT, "Loading TherapyEvents data Start: $startId ID: ${te.first.id} HistoryID: ${te.second} ")
             when {
                 // only NsId changed, no need to upload
                 te.first.onlyNsIdAdded(te.second)          -> {
                     confirmLastTherapyEventIdIfGreater(te.second.id)
                     //lastTeId = -1
                     processChangedTherapyEventsCompat()
-                    aapsLogger.info(LTag.DATABASE, "Ignoring TherapyEvents. Only NS id changed ID: ${te.first.id} HistoryID: ${te.second.id} ")
+                    aapsLogger.info(LTag.NSCLIENT, "Ignoring TherapyEvents. Only NS id changed ID: ${te.first.id} HistoryID: ${te.second.id} ")
                     return false
                 }
                 // without nsId = create new
@@ -590,7 +590,7 @@ class DataSyncSelectorImplementation @Inject constructor(
         //lastDsTime = dateUtil.now()
         queueCounter.dssRemaining = lastDbId - startId
         appRepository.getNextSyncElementDeviceStatus(startId).blockingGet()?.let { deviceStatus ->
-            aapsLogger.info(LTag.DATABASE, "Loading DeviceStatus data Start: $startId ID: ${deviceStatus.id}")
+            aapsLogger.info(LTag.NSCLIENT, "Loading DeviceStatus data Start: $startId ID: ${deviceStatus.id}")
             when {
                 // without nsId = create new
                 deviceStatus.interfaceIDs.nightscoutId == null ->
@@ -633,7 +633,7 @@ class DataSyncSelectorImplementation @Inject constructor(
         //lastTbrTime = dateUtil.now()
         queueCounter.tbrsRemaining = lastDbId - startId
         appRepository.getNextSyncElementTemporaryBasal(startId).blockingGet()?.let { tb ->
-            aapsLogger.info(LTag.DATABASE, "Loading TemporaryBasal data Start: $startId ID: ${tb.first.id} HistoryID: ${tb.second} ")
+            aapsLogger.info(LTag.NSCLIENT, "Loading TemporaryBasal data Start: $startId ID: ${tb.first.id} HistoryID: ${tb.second} ")
             val profile = profileFunction.getProfile(tb.first.timestamp)
             if (profile != null) {
                 when {
@@ -642,7 +642,7 @@ class DataSyncSelectorImplementation @Inject constructor(
                         confirmLastTemporaryBasalIdIfGreater(tb.second.id)
                         //lastTbrId = -1
                         processChangedTemporaryBasalsCompat()
-                        aapsLogger.info(LTag.DATABASE, "Ignoring TemporaryBasal. Change within first sync ID: ${tb.first.id} HistoryID: ${tb.second.id} ")
+                        aapsLogger.info(LTag.NSCLIENT, "Ignoring TemporaryBasal. Change within first sync ID: ${tb.first.id} HistoryID: ${tb.second.id} ")
                         return false
                     }
                     // only NsId changed, no need to upload
@@ -650,7 +650,7 @@ class DataSyncSelectorImplementation @Inject constructor(
                         confirmLastTemporaryBasalIdIfGreater(tb.second.id)
                         //lastTbrId = -1
                         processChangedTemporaryBasalsCompat()
-                        aapsLogger.info(LTag.DATABASE, "Ignoring TemporaryBasal. Only NS id changed ID: ${tb.first.id} HistoryID: ${tb.second.id} ")
+                        aapsLogger.info(LTag.NSCLIENT, "Ignoring TemporaryBasal. Only NS id changed ID: ${tb.first.id} HistoryID: ${tb.second.id} ")
                         return false
                     }
                     // without nsId = create new
@@ -711,7 +711,7 @@ class DataSyncSelectorImplementation @Inject constructor(
         //lastEbTime = dateUtil.now()
         queueCounter.ebsRemaining = lastDbId - startId
         appRepository.getNextSyncElementExtendedBolus(startId).blockingGet()?.let { eb ->
-            aapsLogger.info(LTag.DATABASE, "Loading ExtendedBolus data Start: $startId ID: ${eb.first.id} HistoryID: ${eb.second} ")
+            aapsLogger.info(LTag.NSCLIENT, "Loading ExtendedBolus data Start: $startId ID: ${eb.first.id} HistoryID: ${eb.second} ")
             val profile = profileFunction.getProfile(eb.first.timestamp)
             if (profile != null) {
                 when {
@@ -720,7 +720,7 @@ class DataSyncSelectorImplementation @Inject constructor(
                         confirmLastExtendedBolusIdIfGreater(eb.second.id)
                         //lastTbrId = -1
                         processChangedExtendedBolusesCompat()
-                        aapsLogger.info(LTag.DATABASE, "Ignoring ExtendedBolus. Change within first sync ID: ${eb.first.id} HistoryID: ${eb.second.id} ")
+                        aapsLogger.info(LTag.NSCLIENT, "Ignoring ExtendedBolus. Change within first sync ID: ${eb.first.id} HistoryID: ${eb.second.id} ")
                         return false
                     }
                     // only NsId changed, no need to upload
@@ -728,7 +728,7 @@ class DataSyncSelectorImplementation @Inject constructor(
                         confirmLastExtendedBolusIdIfGreater(eb.second.id)
                         //lastEbId = -1
                         processChangedExtendedBolusesCompat()
-                        aapsLogger.info(LTag.DATABASE, "Ignoring ExtendedBolus. Only NS id changed ID: ${eb.first.id} HistoryID: ${eb.second.id} ")
+                        aapsLogger.info(LTag.NSCLIENT, "Ignoring ExtendedBolus. Only NS id changed ID: ${eb.first.id} HistoryID: ${eb.second.id} ")
                         return false
                     }
                     // without nsId = create new
@@ -788,14 +788,14 @@ class DataSyncSelectorImplementation @Inject constructor(
         //lastPsTime = dateUtil.now()
         queueCounter.pssRemaining = lastDbId - startId
         appRepository.getNextSyncElementProfileSwitch(startId).blockingGet()?.let { ps ->
-            aapsLogger.info(LTag.DATABASE, "Loading ProfileSwitch data Start: $startId ID: ${ps.first.id} HistoryID: ${ps.second} ")
+            aapsLogger.info(LTag.NSCLIENT, "Loading ProfileSwitch data Start: $startId ID: ${ps.first.id} HistoryID: ${ps.second} ")
             when {
                 // only NsId changed, no need to upload
                 ps.first.onlyNsIdAdded(ps.second)          -> {
                     confirmLastProfileSwitchIdIfGreater(ps.second.id)
                     //lastPsId = -1
                     processChangedProfileSwitchesCompat()
-                    aapsLogger.info(LTag.DATABASE, "Ignoring ProfileSwitch. Only NS id changed ID: ${ps.first.id} HistoryID: ${ps.second.id} ")
+                    aapsLogger.info(LTag.NSCLIENT, "Ignoring ProfileSwitch. Only NS id changed ID: ${ps.first.id} HistoryID: ${ps.second.id} ")
                     return false
                 }
                 // without nsId = create new
@@ -845,14 +845,14 @@ class DataSyncSelectorImplementation @Inject constructor(
         //lastEpsTime = dateUtil.now()
         queueCounter.epssRemaining = lastDbId - startId
         appRepository.getNextSyncElementEffectiveProfileSwitch(startId).blockingGet()?.let { ps ->
-            aapsLogger.info(LTag.DATABASE, "Loading EffectiveProfileSwitch data Start: $startId ID: ${ps.first.id} HistoryID: ${ps.second} ")
+            aapsLogger.info(LTag.NSCLIENT, "Loading EffectiveProfileSwitch data Start: $startId ID: ${ps.first.id} HistoryID: ${ps.second} ")
             when {
                 // only NsId changed, no need to upload
                 ps.first.onlyNsIdAdded(ps.second)          -> {
                     confirmLastEffectiveProfileSwitchIdIfGreater(ps.second.id)
                     //lastEpsId = -1
                     processChangedEffectiveProfileSwitchesCompat()
-                    aapsLogger.info(LTag.DATABASE, "Ignoring EffectiveProfileSwitch. Only NS id changed ID: ${ps.first.id} HistoryID: ${ps.second.id} ")
+                    aapsLogger.info(LTag.NSCLIENT, "Ignoring EffectiveProfileSwitch. Only NS id changed ID: ${ps.first.id} HistoryID: ${ps.second.id} ")
                     return false
                 }
                 // without nsId = create new
@@ -903,14 +903,14 @@ class DataSyncSelectorImplementation @Inject constructor(
         //lastOeTime = dateUtil.now()
         queueCounter.oesRemaining = lastDbId - startId
         appRepository.getNextSyncElementOfflineEvent(startId).blockingGet()?.let { oe ->
-            aapsLogger.info(LTag.DATABASE, "Loading OfflineEvent data Start: $startId ID: ${oe.first.id} HistoryID: ${oe.second} ")
+            aapsLogger.info(LTag.NSCLIENT, "Loading OfflineEvent data Start: $startId ID: ${oe.first.id} HistoryID: ${oe.second} ")
             when {
                 // only NsId changed, no need to upload
                 oe.first.onlyNsIdAdded(oe.second)          -> {
                     confirmLastOfflineEventIdIfGreater(oe.second.id)
                     //lastOeId = -1
                     processChangedOfflineEventsCompat()
-                    aapsLogger.info(LTag.DATABASE, "Ignoring OfflineEvent. Only NS id changed ID: ${oe.first.id} HistoryID: ${oe.second.id} ")
+                    aapsLogger.info(LTag.NSCLIENT, "Ignoring OfflineEvent. Only NS id changed ID: ${oe.first.id} HistoryID: ${oe.second.id} ")
                     return false
                 }
                 // without nsId = create new

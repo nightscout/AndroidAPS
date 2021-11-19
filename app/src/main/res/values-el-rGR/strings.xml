@@ -11,7 +11,6 @@
     <string name="nav_resetdb">Επαναφορά Βάσεων Δεδομένων</string>
     <string name="reset_db_confirm">Θέλετε πραγματικά να επαναφέρετε την βάση δεδομένων;</string>
     <string name="nav_exit">Έξοδος</string>
-    <string name="ns_sync_use_absolute_title">Χρησιμοποιείτε πάντα απόλυτες τιμές βασικού</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Αυτή η συσκευή δεν φαίνεται να υποστηρίζει τη λίστα κατάτμησης βελτιστοποίησης μπαταρίας - ενδέχεται να αντιμετωπίσετε προβλήματα απόδοσης.</string>
     <string name="description_actions">Ορισμένα πλήκτρα για γρήγορη πρόσβαση σε κοινά χαρακτηριστικά</string>
     <string name="description_config_builder">Χρησιμοποιείται για ρύθμιση ενεργών συνδέσεων</string>
@@ -93,7 +92,6 @@
     <string name="safety">Ασφάλεια</string>
     <string name="openapsma_disabled">Προσθήκη απενεργοποιημένη</string>
     <string name="constraints_violation">Παραβίαση Περιορισμών</string>
-    <string name="treatmentdeliveryerror">Σφάλμα παράδοσης Bolus</string>
     <string name="setbasalquestion">Αποδοχή νέου Προσ Ρυθμού:</string>
     <string name="overview_treatment_label">Θεραπεία</string>
     <string name="overview_calculator_label">Υπολογιστής</string>

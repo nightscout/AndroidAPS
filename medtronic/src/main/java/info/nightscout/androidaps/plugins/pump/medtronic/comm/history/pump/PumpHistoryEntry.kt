@@ -92,14 +92,6 @@ class PumpHistoryEntry : MedtronicHistoryEntry() {
         }
     }
 
-    override var pumpId: Long = 0L
-        get() {
-            if (field == 0L) {
-                field = generatePumpId()
-            }
-            return field
-        }
-
     fun hasBolusChanged(entry: PumpHistoryEntry): Boolean {
         if (entryType == PumpHistoryEntryType.Bolus) {
             val thisOne: BolusDTO = this.decodedData["Object"] as BolusDTO

@@ -154,7 +154,6 @@
     <string name="profile_ins_units_per_hour">Е/ч</string>
     <string name="profile_carbs_per_unit">гр/Е</string>
     <!--    ProfileFunction-->
-    <string name="noprofileselected">Няма избран профил</string>
     <string name="startprofile">Стартирай профил %1$d%% за %2$d мин</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Само конкретни стойности! Диапазони не се поддържат за базал/болус при виртуална помпа.</string>
@@ -181,9 +180,14 @@
     <string name="careportal_note">Бележка</string>
     <string name="careportal_question">Въпрос</string>
     <string name="careportal_exercise">Физ. активност</string>
+    <string name="careportal_announcement_message">Съобщение: %1$s</string>
+    <string name="careportal_note_message">Бележка: %1$s</string>
+    <string name="careportal_question_message">Въпрос: %1$s</string>
+    <string name="careportal_exercise_message">Упражнение: %1$s</string>
     <string name="careportal_pumpsitechange">Смяна на сет</string>
     <string name="careportal_cgmsensorinsert">Смяна на сензор</string>
     <string name="careportal_cgmsensorstart">Старт на сензор</string>
+    <string name="careportal_cgm_sensor_stop">CGM Спри сензора</string>
     <string name="careportal_insulincartridgechange">Смяна на резервоар</string>
     <string name="careportal_profileswitch">Смяна на профил</string>
     <string name="careportal_snackbolus">Болус за закуска</string>
@@ -196,6 +200,7 @@
     <string name="careportal_openapsoffline">OpenAPS спрян</string>
     <string name="careportal_pumpbatterychange">Смяна на батерия</string>
     <string name="careportal_temporarytarget">Временна цел</string>
+    <string name="careportal_temporarytargetvalue">Стойност временна цел</string>
     <string name="careportal_temporarytargetcancel">Откажи временна цел</string>
     <string name="boluswizard">Болус калкулатор</string>
     <string name="glucosetype_finger">Пръст</string>
@@ -210,6 +215,7 @@
     <string name="custom">По избор</string>
     <string name="pump">Помпа</string>
     <string name="loop">Кръг - Loop</string>
+    <string name="ns">Найтскаут</string>
     <!--    Command-->
     <string name="connectiontimedout">Времето за връзка изтече</string>
     <!--    PumpEnactResult-->

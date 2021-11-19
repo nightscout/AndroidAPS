@@ -56,7 +56,6 @@ class ConfigBuilderPlugin @Inject constructor(
         for (plugin in activePlugin.getPluginsList()) {
             if (plugin.pluginDescription.alwaysEnabled) plugin.setPluginEnabled(plugin.getType(), true)
         }
-        storeSettings("setAlwaysEnabledPluginsEnabled")
     }
 
     override fun storeSettings(from: String) {
@@ -68,18 +67,13 @@ class ConfigBuilderPlugin @Inject constructor(
             if (p.pluginDescription.alwaysEnabled && p.pluginDescription.alwaysVisible) continue
             if (p.pluginDescription.alwaysEnabled && p.pluginDescription.neverVisible) continue
             savePref(p, type, true)
-            if (type == PluginType.PUMP) {
-                if (p is ProfileSource) { // Store state of optional Profile interface
-                    savePref(p, PluginType.PROFILE, false)
-                }
-            }
         }
     }
 
     private fun savePref(p: PluginBase, type: PluginType, storeVisible: Boolean) {
         val settingEnabled = "ConfigBuilder_" + type.name + "_" + p.javaClass.simpleName + "_Enabled"
-        sp.putBoolean(settingEnabled, p.isEnabled(type))
-        aapsLogger.debug(LTag.CONFIGBUILDER, "Storing: " + settingEnabled + ":" + p.isEnabled(type))
+        sp.putBoolean(settingEnabled, p.isEnabled())
+        aapsLogger.debug(LTag.CONFIGBUILDER, "Storing: " + settingEnabled + ":" + p.isEnabled())
         if (storeVisible) {
             val settingVisible = "ConfigBuilder_" + type.name + "_" + p.javaClass.simpleName + "_Visible"
             sp.putBoolean(settingVisible, p.isFragmentVisible())
@@ -92,11 +86,6 @@ class ConfigBuilderPlugin @Inject constructor(
         for (p in activePlugin.getPluginsList()) {
             val type = p.getType()
             loadPref(p, type, true)
-            if (p.getType() == PluginType.PUMP) {
-                if (p is ProfileSource) {
-                    loadPref(p, PluginType.PROFILE, false)
-                }
-            }
         }
         activePlugin.verifySelectionInCategories()
     }

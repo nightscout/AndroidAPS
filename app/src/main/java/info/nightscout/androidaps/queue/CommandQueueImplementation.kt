@@ -79,39 +79,40 @@ class CommandQueueImplementation @Inject constructor(
             .toObservable(EventProfileSwitchChanged::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({
-                if (config.NSCLIENT) { // Effective profileswitch should be synced over NS, do not create EffectiveProfileSwitch here
-                    return@subscribe
-                }
-                aapsLogger.debug(LTag.PROFILE, "onProfileSwitch")
-                profileFunction.getRequestedProfile()?.let {
-                    val nonCustomized = ProfileSealed.PS(it).convertToNonCustomizedProfile(dateUtil)
-                    setProfile(ProfileSealed.Pure(nonCustomized), it.interfaceIDs.nightscoutId != null, object : Callback() {
-                        override fun run() {
-                            if (!result.success) {
-                                ErrorHelperActivity.runAlarm(context, result.comment, rh.gs(R.string.failedupdatebasalprofile), R.raw.boluserror)
-                            } else {
-                                repository.createEffectiveProfileSwitch(
-                                    EffectiveProfileSwitch(
-                                        timestamp = dateUtil.now(),
-                                        basalBlocks = nonCustomized.basalBlocks,
-                                        isfBlocks = nonCustomized.isfBlocks,
-                                        icBlocks = nonCustomized.icBlocks,
-                                        targetBlocks = nonCustomized.targetBlocks,
-                                        glucoseUnit = if (it.glucoseUnit == ProfileSwitch.GlucoseUnit.MGDL) EffectiveProfileSwitch.GlucoseUnit.MGDL else EffectiveProfileSwitch.GlucoseUnit.MMOL,
-                                        originalProfileName = it.profileName,
-                                        originalCustomizedName = it.getCustomizedName(),
-                                        originalTimeshift = it.timeshift,
-                                        originalPercentage = it.percentage,
-                                        originalDuration = it.duration,
-                                        originalEnd = it.end,
-                                        insulinConfiguration = it.insulinConfiguration
-                                    )
-                                )
-                            }
-                        }
-                    })
-                }
-            }, fabricPrivacy::logException)
+                           if (config.NSCLIENT) { // Effective profileswitch should be synced over NS, do not create EffectiveProfileSwitch here
+                               return@subscribe
+                           }
+                           aapsLogger.debug(LTag.PROFILE, "onEventProfileSwitchChanged")
+                           profileFunction.getRequestedProfile()?.let {
+                               setProfile(ProfileSealed.PS(it), it.interfaceIDs.nightscoutId != null, object : Callback() {
+                                   override fun run() {
+                                       if (!result.success) {
+                                           ErrorHelperActivity.runAlarm(context, result.comment, rh.gs(R.string.failedupdatebasalprofile), R.raw.boluserror)
+                                       } else if (result.enacted) {
+                                           val nonCustomized = ProfileSealed.PS(it).convertToNonCustomizedProfile(dateUtil)
+                                           EffectiveProfileSwitch(
+                                               timestamp = dateUtil.now(),
+                                               basalBlocks = nonCustomized.basalBlocks,
+                                               isfBlocks = nonCustomized.isfBlocks,
+                                               icBlocks = nonCustomized.icBlocks,
+                                               targetBlocks = nonCustomized.targetBlocks,
+                                               glucoseUnit = if (it.glucoseUnit == ProfileSwitch.GlucoseUnit.MGDL) EffectiveProfileSwitch.GlucoseUnit.MGDL else EffectiveProfileSwitch.GlucoseUnit.MMOL,
+                                               originalProfileName = it.profileName,
+                                               originalCustomizedName = it.getCustomizedName(),
+                                               originalTimeshift = it.timeshift,
+                                               originalPercentage = it.percentage,
+                                               originalDuration = it.duration,
+                                               originalEnd = it.end,
+                                               insulinConfiguration = it.insulinConfiguration
+                                           ).also { eps ->
+                                               repository.createEffectiveProfileSwitch(eps)
+                                               aapsLogger.debug(LTag.DATABASE, "Inserted EffectiveProfileSwitch $eps")
+                                           }
+                                       }
+                                   }
+                               })
+                           }
+                       }, fabricPrivacy::logException)
     }
 
     private fun executingNowError(): PumpEnactResult =
@@ -195,9 +196,11 @@ class CommandQueueImplementation @Inject constructor(
 
     override fun independentConnect(reason: String, callback: Callback?) {
         aapsLogger.debug(LTag.PUMPQUEUE, "Starting new queue")
-        val tempCommandQueue = CommandQueueImplementation(injector, aapsLogger, rxBus, aapsSchedulers, rh,
-                                                          constraintChecker, profileFunction, activePlugin, context, sp,
-                                                          buildHelper, dateUtil, repository, fabricPrivacy, config)
+        val tempCommandQueue = CommandQueueImplementation(
+            injector, aapsLogger, rxBus, aapsSchedulers, rh,
+            constraintChecker, profileFunction, activePlugin, context, sp,
+            buildHelper, dateUtil, repository, fabricPrivacy, config
+        )
         tempCommandQueue.readStatus(reason, callback)
         tempCommandQueue.disposable.clear()
     }
@@ -222,7 +225,7 @@ class CommandQueueImplementation @Inject constructor(
         // If not, it's not necessary add command to the queue and initiate connection
         // Assuming carbs in the future and carbs with duration are NOT stores anyway
 
-        var carbsRunnable = Runnable {  }
+        var carbsRunnable = Runnable { }
         val originalCarbs = detailedBolusInfo.carbs
         if ((detailedBolusInfo.carbs > 0) &&
             (!activePlugin.activePump.pumpDescription.storesCarbInfo ||
@@ -398,6 +401,11 @@ class CommandQueueImplementation @Inject constructor(
 
     // returns true if command is queued
     override fun setProfile(profile: Profile, hasNsId: Boolean, callback: Callback?): Boolean {
+        if (isRunning(CommandType.BASAL_PROFILE)) {
+            aapsLogger.debug(LTag.PUMPQUEUE, "Command is already executed")
+            callback?.result(PumpEnactResult(injector).success(true).enacted(false))?.run()
+            return false
+        }
         if (isThisProfileSet(profile) && repository.getEffectiveProfileSwitchActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing) {
             aapsLogger.debug(LTag.PUMPQUEUE, "Correct profile already set")
             callback?.result(PumpEnactResult(injector).success(true).enacted(false))?.run()

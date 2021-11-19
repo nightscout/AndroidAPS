@@ -129,7 +129,7 @@ class OverviewData @Inject constructor(
         iobSeries = FixedLineGraphSeries()
         absIobSeries = FixedLineGraphSeries()
         iobPredictions1Series = PointsWithLabelGraphSeries()
-        iobPredictions2Series = PointsWithLabelGraphSeries()
+        //iobPredictions2Series = PointsWithLabelGraphSeries()
         minusBgiSeries = FixedLineGraphSeries()
         minusBgiHistSeries = FixedLineGraphSeries()
         cobSeries = FixedLineGraphSeries()
@@ -352,7 +352,7 @@ class OverviewData @Inject constructor(
     var iobSeries: FixedLineGraphSeries<ScaledDataPoint> = FixedLineGraphSeries()
     var absIobSeries: FixedLineGraphSeries<ScaledDataPoint> = FixedLineGraphSeries()
     var iobPredictions1Series: PointsWithLabelGraphSeries<DataPointWithLabelInterface> = PointsWithLabelGraphSeries()
-    var iobPredictions2Series: PointsWithLabelGraphSeries<DataPointWithLabelInterface> = PointsWithLabelGraphSeries()
+    //var iobPredictions2Series: PointsWithLabelGraphSeries<DataPointWithLabelInterface> = PointsWithLabelGraphSeries()
 
     var maxBGIArray = doubleArrayOf(Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE)
     var maxBGIValue = Double.MIN_VALUE
@@ -839,18 +839,19 @@ class OverviewData @Inject constructor(
                     maxTime(tempMaxIobArray, i.time, abs(i.iob))
                 }
                 iobPredictions1Series = PointsWithLabelGraphSeries(Array(iobPrediction.size) { i -> iobPrediction[i] })
-                val iobPrediction2: MutableList<DataPointWithLabelInterface> = java.util.ArrayList()
+                aapsLogger.debug(LTag.AUTOSENS, "IOB prediction for AS=" + DecimalFormatter.to2Decimal(lastAutosensResult.ratio) + ": " + iobCobCalculator.iobArrayToString(iobPredictionArray))
+            /*val iobPrediction2: MutableList<DataPointWithLabelInterface> = java.util.ArrayList()
                 val iobPredictionArray2 = iobCobCalculator.calculateIobArrayForSMB(AutosensResult(), SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
                 for (i in iobPredictionArray2) {
                     iobPrediction2.add(i.setColor(rh.gc(R.color.iobPred)))
                     maxTime(tempMaxIobArray, i.time, abs(i.iob))
                 }
                 iobPredictions2Series = PointsWithLabelGraphSeries(Array(iobPrediction2.size) { i -> iobPrediction2[i] })
-                aapsLogger.debug(LTag.AUTOSENS, "IOB prediction for AS=" + DecimalFormatter.to2Decimal(lastAutosensResult.ratio) + ": " + iobCobCalculator.iobArrayToString(iobPredictionArray))
                 aapsLogger.debug(LTag.AUTOSENS, "IOB prediction for AS=" + DecimalFormatter.to2Decimal(1.0) + ": " + iobCobCalculator.iobArrayToString(iobPredictionArray2))
+            */
             } else {
                 iobPredictions1Series = PointsWithLabelGraphSeries()
-                iobPredictions2Series = PointsWithLabelGraphSeries()
+                //iobPredictions2Series = PointsWithLabelGraphSeries()
             }
 
             // COB

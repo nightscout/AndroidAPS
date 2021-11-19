@@ -306,12 +306,20 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 podStateManager.bluetoothVersion.toString()
             )
 
-            // Update time on Pod
+            val timeZone = podStateManager.timeZoneId?.let { timeZoneId ->
+                podStateManager.timeZoneUpdated?.let { timeZoneUpdated ->
+                    val tz = TimeZone.getTimeZone(timeZoneId)
+                    val inDST = tz.inDaylightTime(Date(timeZoneUpdated))
+                    val locale = resources.configuration.locales.get(0)
+                    tz.getDisplayName(inDST, TimeZone.SHORT, locale)
+                } ?: PLACEHOLDER
+            } ?: PLACEHOLDER
+
             podInfoBinding.timeOnPod.text = podStateManager.time?.let {
                 rh.gs(
                     R.string.omnipod_common_time_with_timezone,
                     dateUtil.dateAndTimeString(it.toEpochSecond() * 1000),
-                    podStateManager.timeZone.getDisplayName(true, TimeZone.SHORT)
+                    timeZone
                 )
             } ?: PLACEHOLDER
 

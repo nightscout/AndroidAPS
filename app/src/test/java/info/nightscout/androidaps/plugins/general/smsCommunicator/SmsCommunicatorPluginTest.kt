@@ -29,7 +29,7 @@ import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.XdripCalibrations
+import info.nightscout.androidaps.utils.XDripBroadcast
 import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.Single
@@ -55,7 +55,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Mock lateinit var localProfilePlugin: LocalProfilePlugin
     @Mock lateinit var otp: OneTimePassword
-    @Mock lateinit var xdripCalibrations: XdripCalibrations
+    @Mock lateinit var xDripBroadcast: XDripBroadcast
     @Mock lateinit var uel: UserEntryLogger
     @Mock lateinit var repository: AppRepository
     @Mock lateinit var dateUtilMocked: DateUtil
@@ -98,7 +98,8 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         }))
         val glucoseStatusProvider = GlucoseStatusProvider(aapsLogger = aapsLogger, iobCobCalculator = iobCobCalculator, dateUtil = dateUtilMocked)
 
-        smsCommunicatorPlugin = SmsCommunicatorPlugin(injector, aapsLogger, rh, smsManager, aapsSchedulers, sp, constraintChecker, rxBus, profileFunction, fabricPrivacy, activePlugin, commandQueue, loopPlugin, iobCobCalculator, xdripCalibrations, otp, ConfigImpl(), dateUtilMocked, uel, glucoseStatusProvider, repository)
+        smsCommunicatorPlugin = SmsCommunicatorPlugin(injector, aapsLogger, rh, smsManager, aapsSchedulers, sp, constraintChecker, rxBus, profileFunction, fabricPrivacy, activePlugin, commandQueue,
+                                                      loopPlugin, iobCobCalculator, xDripBroadcast, otp, ConfigImpl(), dateUtilMocked, uel, glucoseStatusProvider, repository)
         smsCommunicatorPlugin.setPluginEnabled(PluginType.GENERAL, true)
         Mockito.doAnswer { invocation: InvocationOnMock ->
             val callback = invocation.getArgument<Callback>(1)
@@ -980,7 +981,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(sms)
         Assert.assertEquals("CAL 0", smsCommunicatorPlugin.messages[0].text)
         Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
-        `when`(xdripCalibrations.sendIntent(ArgumentMatchers.anyDouble())).thenReturn(true)
+        `when`(xDripBroadcast.sendCalibration(ArgumentMatchers.anyDouble())).thenReturn(true)
         //CAL 1
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "CAL 1")

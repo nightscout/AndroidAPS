@@ -9,18 +9,23 @@ import android.view.WindowManager
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.database.entities.BolusCalculatorResult
 import info.nightscout.androidaps.databinding.DialogWizardinfoBinding
+import info.nightscout.androidaps.extensions.bolusCalculatorResultFromJson
+import info.nightscout.androidaps.extensions.toJson
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import org.json.JSONObject
 import javax.inject.Inject
 
 class WizardInfoDialog : DaggerDialogFragment() {
 
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var dateUtil: DateUtil
 
     private lateinit var data: BolusCalculatorResult
 
@@ -34,14 +39,28 @@ class WizardInfoDialog : DaggerDialogFragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
         isCancelable = true
         dialog?.setCanceledOnTouchOutside(false)
         _binding = DialogWizardinfoBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        savedInstanceState?.getString("data")?.let { str ->
+            val json = JSONObject(str).apply {
+                put("mills", dateUtil.now()) // fake NS response
+            }
+            data = bolusCalculatorResultFromJson(json) ?: return
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("data", data.toJson(true, dateUtil).toString())
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

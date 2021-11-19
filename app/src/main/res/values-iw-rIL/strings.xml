@@ -12,7 +12,6 @@
     <string name="nav_resetdb">איפוס מסדי נתונים</string>
     <string name="reset_db_confirm">אתם בטוחים שאתם רוצים לאפס את מסדי הנתונים?</string>
     <string name="nav_exit">יציאה</string>
-    <string name="ns_sync_use_absolute_title">השתמש תמיד בערכים בזאלים מוחלטים</string>
     <string name="alert_dialog_permission_battery_optimization_failed">נראה שמכשיר זה אינו תומך ברשימת היתרים למיטוב הסוללה - ייתכן שתיתקל בבעיות ביצועים.</string>
     <string name="description_actions">לחצנים לגישה מהירה לפונקציות שימושיות</string>
     <string name="description_config_builder">משמש לקביעת תצורה של תוספים פעילים</string>
@@ -59,7 +58,7 @@
     <string name="treatments_wizard_carbs_label">פחמימות</string>
     <string name="treatments_wizard_correction_label">תיקון</string>
     <string name="treatments_wizard_bolusiob_label">בולוס פעיל</string>
-    <string name="openapsma_run">בצע כעת</string>
+    <string name="openapsma_run">בצע</string>
     <string name="vitualpump_label">משאבה וירטואלית</string>
     <string name="openapsma_lastrun_label">ההפעלה האחרונה</string>
     <string name="openapsma_inputparameters_label">טוען פרמטרים</string>
@@ -97,7 +96,7 @@
     <string name="safety">בטיחות</string>
     <string name="openapsma_disabled">התוסף אינו זמין</string>
     <string name="constraints_violation">הפרת מגבלות</string>
-    <string name="treatmentdeliveryerror">שגיאה במתן בולוס</string>
+    <string name="treatmentdeliveryerror">דווחה שגיאה בבולוס. נא לבדוק את הכמות שהוזרקה באופן ידני</string>
     <string name="setbasalquestion">אשר בזאלי זמני חדש:</string>
     <string name="overview_treatment_label">טיפול</string>
     <string name="overview_calculator_label">מחשבון</string>
@@ -563,7 +562,7 @@
     <string name="overview_show_basals">בזאלי</string>
     <string name="no_action_selected">לא נבחרה פעולה, דבר לא יתבצע.</string>
     <string name="start_hypo_tt">הפעלת היפו TT</string>
-    <string name="closed_loop_disabled_on_dev_branch">רץ כעת במצב מפתחים. לולאה סגורה אינה מורשת.</string>
+    <string name="closed_loop_disabled_on_dev_branch">זוהי גרסת פיתוח. לולאה סגורה אינה מורשת.</string>
     <string name="engineering_mode_enabled">מצב הנדסה מופעל</string>
     <string name="profileswitch_ismissing">שינוי פרופיל חסר. אנא החליפו פרופיל או לחצו על \"הפעל פרופיל\" בפרופיל המקומי.</string>
     <string name="pumpisnottempbasalcapable">המשאבה אינה מסוגלת לבצע בזאלי זמני</string>
@@ -650,6 +649,8 @@
     <string name="time_elapsed">זמן שחלף</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">קבלת ערכי סוכר מיישום Poctech</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">קבלת ערכי סוכר מיישום Glunovo</string>
     <string name="description_source_tomato">קבלת ערכי סוכר מאפליקציית Tomato (התקן MiaoMiao)</string>
     <string name="high_temptarget_raises_sensitivity_title">ערך מטרה זמני גבוה מעלה את הרגישות</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[הגבר רגישות עבור ערך מטרה זמני >= 100]]></string>
@@ -897,4 +898,7 @@
     <string name="view">תצוגה</string>
     <string name="errors">שגיאות</string>
     <string name="ns_sync_slow">האט העלאות</string>
+    <string name="data_status">מצב נתוני הסוכר</string>
+    <string name="recalculated_data_used">משתמש בנתונים מחושבים מחדש</string>
+    <string name="bg_too_close">רמת הסוכר קרובה מדי:\n%1$s\n%2$s</string>
 </resources>

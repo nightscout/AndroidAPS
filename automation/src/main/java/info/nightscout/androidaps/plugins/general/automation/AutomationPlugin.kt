@@ -64,7 +64,6 @@ class AutomationPlugin @Inject constructor(
         .shortName(R.string.automation_short)
         .showInList(config.APS)
         .neverVisible(!config.APS)
-        .alwaysEnabled(!config.APS)
         .preferencesId(R.xml.pref_automation)
         .description(R.string.automation_description),
     aapsLogger, rh, injector
@@ -93,6 +92,8 @@ class AutomationPlugin @Inject constructor(
             loopHandler.postDelayed(refreshLoop, T.mins(1).msecs())
         }
     }
+
+    override fun specialEnableCondition(): Boolean = !config.NSCLIENT
 
     override fun onStart() {
         locationServiceHelper.startService(context)

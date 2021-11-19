@@ -394,7 +394,11 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     } else if (dexcomPlugin.isEnabled()) {
                         try {
                             dexcomMediator.findDexcomPackageName()?.let {
-                                startActivity(Intent("com.dexcom.cgm.activities.MeterEntryActivity").setPackage(it))
+                                startActivity(
+                                    Intent("com.dexcom.cgm.activities.MeterEntryActivity")
+                                        .setPackage(it)
+                                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                                )
                             }
                                 ?: ToastUtils.showToastInUiThread(activity, rh.gs(R.string.dexcom_app_not_installed))
                         } catch (e: ActivityNotFoundException) {

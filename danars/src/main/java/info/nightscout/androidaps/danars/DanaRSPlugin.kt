@@ -465,7 +465,7 @@ class DanaRSPlugin @Inject constructor(
         result.enacted = false
         result.success = false
         result.comment = rh.gs(R.string.danar_valuenotsetproperly)
-        aapsLogger.error("setHighTempBasalPercent: Failed to set temp basal")
+        aapsLogger.error("setHighTempBasalPercent: Failed to set temp basal. connectionOK: $connectionOK isTempBasalInProgress: ${danaPump.isTempBasalInProgress} tempBasalPercent: ${danaPump.tempBasalPercent}")
         return result
     }
 
