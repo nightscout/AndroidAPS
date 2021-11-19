@@ -12,7 +12,6 @@
     <string name="nav_resetdb">Нулирай базата данни</string>
     <string name="reset_db_confirm">Сигурни ли сте че искате да изтриете всички данни?</string>
     <string name="nav_exit">Изход</string>
-    <string name="ns_sync_use_absolute_title">Използване на абсолютни стойности за базал</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Вашият телефон не поддържа оптимизация на батерията - може да се появят проблеми!</string>
     <string name="description_actions">Бутони за бърз достъп до основни функции</string>
     <string name="description_config_builder">За конфигурация на активните плъгини</string>
@@ -97,7 +96,6 @@
     <string name="safety">Сигурност</string>
     <string name="openapsma_disabled">Модула е изключен</string>
     <string name="constraints_violation">Нарушено ограничение</string>
-    <string name="treatmentdeliveryerror">Грешка при подаване на болус</string>
     <string name="setbasalquestion">Приложи нов временен базал:</string>
     <string name="overview_treatment_label">Болус</string>
     <string name="overview_calculator_label">Калкулатор</string>
@@ -889,4 +887,12 @@
     <string name="error_in_basal_values">Грешка в базалните стойности</string>
     <string name="error_in_target_values">Грешка в стойностите за цел</string>
     <string name="error_in_isf_values">Грешка в стойностите за чувствителност (ISF)</string>
+    <string name="run_question">Пусни %s?</string>
+    <string name="invalid_profile_not_accepted">Невалиден профил %1$s не приет от NS</string>
+    <string name="view">Изглед</string>
+    <string name="errors">Грешки</string>
+    <string name="ns_sync_slow">Забавени качвания на данни</string>
+    <string name="data_status">Статус на данни за КЗ</string>
+    <string name="recalculated_data_used">Рекалкулирани използвани данни</string>
+    <string name="bg_too_close">КЗ близо до:\n%1$s\n%2$s</string>
 </resources>

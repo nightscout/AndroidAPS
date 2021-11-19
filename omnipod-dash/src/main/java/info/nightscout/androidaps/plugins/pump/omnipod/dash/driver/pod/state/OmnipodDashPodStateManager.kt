@@ -36,7 +36,8 @@ interface OmnipodDashPodStateManager {
     val successfulConnectionAttemptsAfterRetries: Int
     val failedConnectionsAfterRetries: Int
 
-    var timeZone: TimeZone
+    val timeZoneId: String?
+    val timeZoneUpdated: Long?
     val sameTimeZone: Boolean // The TimeZone is the same on the phone and on the pod
     val lastUpdatedSystem: Long // System.currentTimeMillis()
     val lastStatusResponseReceived: Long
@@ -89,6 +90,7 @@ interface OmnipodDashPodStateManager {
     fun connectionSuccessRatio(): Float
     fun incrementSuccessfulConnectionAttemptsAfterRetries()
     fun incrementFailedConnectionsAfterRetries()
+    fun updateTimeZone()
 
     fun createActiveCommand(
         historyId: String,

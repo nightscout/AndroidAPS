@@ -6,7 +6,7 @@
     <string name="automation_missing_task_name">Zadejte prosím název úlohy.</string>
     <string name="automation_missing_trigger">Prosím zadejte alespoň jednu podmínku.</string>
     <string name="automation_missing_action">Prosím zadejte alespoň jednu akci.</string>
-    <string name="alarm_message">Poplach: %1$s</string>
+    <string name="alarm_message">Alarm: %1$s</string>
     <string name="alarm_short">Alarm:</string>
     <string name="message_short">Zpráva:</string>
     <string name="alreadyenabled">Aktuálně povoleno</string>

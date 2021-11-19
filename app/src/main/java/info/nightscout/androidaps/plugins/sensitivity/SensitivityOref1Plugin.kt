@@ -105,7 +105,6 @@ class SensitivityOref1Plugin @Inject constructor(
                 if (siteChanges.isTherapyEventEvent5minBack(autosensData.time)) {
                     deviationsArray.clear()
                     pastSensitivity += "(SITECHANGE)"
-                    pastSensitivity += "(SITECHANGE)"
                 }
 
                 // reset deviations after profile switch

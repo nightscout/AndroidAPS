@@ -4,9 +4,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.diaconn.DiaconnG8Pump
 import info.nightscout.androidaps.diaconn.R
 import info.nightscout.androidaps.diaconn.pumplog.PumplogUtil
-import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.joda.time.DateTime
@@ -23,7 +21,6 @@ class BigAPSMainInfoInquireResponsePacket(
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump
     @Inject lateinit var sp: SP
     @Inject lateinit var rh: ResourceHelper
-    private var pumpDesc = PumpDescription(PumpType.DIACONN_G8)
 
     init {
         msgType = 0x94.toByte()
@@ -167,9 +164,10 @@ class BigAPSMainInfoInquireResponsePacket(
 
         // 16. 1hour basal limit
         diaconnG8Pump.maxBasalPerHours = getShortToInt(bufferData).toDouble() / 100.0  // not include tempbasal limit
-        diaconnG8Pump.maxBasal =  diaconnG8Pump.maxBasalPerHours * 2 // include tempbasal
+        diaconnG8Pump.maxBasal =  diaconnG8Pump.maxBasalPerHours * 2.5 // include tempbasal
 
         // 17. snack limit
+        diaconnG8Pump.mealLimitTime = getByteToInt(bufferData) // mealLimittime
         diaconnG8Pump.maxBolus =  getShortToInt(bufferData).toDouble() / 100
         diaconnG8Pump.maxBolusePerDay =  getShortToInt(bufferData).toDouble() / 100
 
@@ -323,6 +321,7 @@ class BigAPSMainInfoInquireResponsePacket(
         aapsLogger.debug(LTag.PUMPCOMM, "maxBasal > " + diaconnG8Pump.maxBasal)
         aapsLogger.debug(LTag.PUMPCOMM, "maxBolus > " + diaconnG8Pump.maxBolus)
         aapsLogger.debug(LTag.PUMPCOMM, "maxBolusePerDay > " + diaconnG8Pump.maxBolusePerDay)
+        aapsLogger.debug(LTag.PUMPCOMM, "mealLimitTime > " + diaconnG8Pump.mealLimitTime)
         aapsLogger.debug(LTag.PUMPCOMM, "beepAndAlarm > " + diaconnG8Pump.beepAndAlarm)
         aapsLogger.debug(LTag.PUMPCOMM, "alarmIntesity > " + diaconnG8Pump.alarmIntesity)
         aapsLogger.debug(LTag.PUMPCOMM, "lcdOnTimeSec > " + diaconnG8Pump.lcdOnTimeSec)

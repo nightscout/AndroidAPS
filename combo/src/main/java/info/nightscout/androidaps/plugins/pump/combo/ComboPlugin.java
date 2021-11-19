@@ -1178,7 +1178,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
             if (pumpSync.syncBolusWithPumpId(
                     pumpBolus.timestamp,
                     pumpBolus.amount,
-                    DetailedBolusInfo.BolusType.NORMAL,
+                    null,
                     generatePumpBolusId(pumpBolus),
                     PumpType.ACCU_CHEK_COMBO,
                     serialNumber()

@@ -33,4 +33,5 @@
     <string name="omnipod_dash_unknown">Stato sconosciuto per il comando</string>
     <string name="omnipod_common_history_tbr_value">Tasso: %1$.2f U, durata: %2$d minuti</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
+    <string name="dash_bolusdelivering">Erogazione di %1$.2f U</string>
 </resources>

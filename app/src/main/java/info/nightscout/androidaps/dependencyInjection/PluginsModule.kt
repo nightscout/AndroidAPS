@@ -59,6 +59,12 @@ abstract class PluginsModule {
     @AllConfigs
     @IntoMap
     @IntKey(0)
+    abstract fun bindPersistentNotificationPlugin(plugin: PersistentNotificationPlugin): PluginBase
+
+    @Binds
+    @AllConfigs
+    @IntoMap
+    @IntKey(5)
     abstract fun bindOverviewPlugin(plugin: OverviewPlugin): PluginBase
 
     @Binds
@@ -274,12 +280,6 @@ abstract class PluginsModule {
     @Binds
     @AllConfigs
     @IntoMap
-    @IntKey(350)
-    abstract fun bindPersistentNotificationPlugin(plugin: PersistentNotificationPlugin): PluginBase
-
-    @Binds
-    @AllConfigs
-    @IntoMap
     @IntKey(360)
     abstract fun bindNSClientPlugin(plugin: NSClientPlugin): PluginBase
 
@@ -353,6 +353,12 @@ abstract class PluginsModule {
     @AllConfigs
     @IntoMap
     @IntKey(470)
+    abstract fun bindGlunovoPlugin(plugin: GlunovoPlugin): PluginBase
+
+    @Binds
+    @AllConfigs
+    @IntoMap
+    @IntKey(475)
     abstract fun bindRandomBgPlugin(plugin: RandomBgPlugin): PluginBase
 
     // @Binds

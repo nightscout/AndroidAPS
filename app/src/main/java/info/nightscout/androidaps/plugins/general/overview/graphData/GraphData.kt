@@ -114,7 +114,7 @@ class GraphData(
         overviewData.iobScale.multiplier = maxY * scale / overviewData.maxIobValueFound
         addSeries(overviewData.iobSeries)
         addSeries(overviewData.iobPredictions1Series)
-        addSeries(overviewData.iobPredictions2Series)
+        //addSeries(overviewData.iobPredictions2Series)
     }
 
     // scale in % of vertical size (like 0.3)

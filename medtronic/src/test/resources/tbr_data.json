@@ -1,0 +1,1761 @@
+[{
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 01:35:08",
+	"atechDateTime": 20211031013508,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 1.1,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 01:39:47",
+	"atechDateTime": 20211031013947,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 01:39:49",
+	"atechDateTime": 20211031013949,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 1.1500000000000001,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 01:49:41",
+	"atechDateTime": 20211031014941,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 01:49:43",
+	"atechDateTime": 20211031014943,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 0.8,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 01:54:59",
+	"atechDateTime": 20211031015459,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 01:55:05",
+	"atechDateTime": 20211031015505,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 01:59:43",
+	"atechDateTime": 20211031015943,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 02:04:45",
+	"atechDateTime": 20211031020445,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 0.55,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 02:09:47",
+	"atechDateTime": 20211031020947,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 02:09:48",
+	"atechDateTime": 20211031020948,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 0.35000000000000003,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 02:14:56",
+	"atechDateTime": 20211031021456,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 02:14:57",
+	"atechDateTime": 20211031021457,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 2.3000000000000003,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 02:25:16",
+	"atechDateTime": 20211031022516,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 02:25:18",
+	"atechDateTime": 20211031022518,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 1.85,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 02:29:50",
+	"atechDateTime": 20211031022950,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 02:29:51",
+	"atechDateTime": 20211031022951,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 0.25,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 02:34:45",
+	"atechDateTime": 20211031023445,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 02:34:47",
+	"atechDateTime": 20211031023447,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 2.0500000000000003,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 02:45:16",
+	"atechDateTime": 20211031024516,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 02:45:18",
+	"atechDateTime": 20211031024518,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 2.75,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 02:50:16",
+	"atechDateTime": 20211031025016,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 02:50:18",
+	"atechDateTime": 20211031025018,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 0.1,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 02:54:45",
+	"atechDateTime": 20211031025445,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 02:54:46",
+	"atechDateTime": 20211031025446,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 2.75,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 02:59:47",
+	"atechDateTime": 20211031025947,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 03:05:16",
+	"atechDateTime": 20211031030516,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 2.85,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 03:10:07",
+	"atechDateTime": 20211031031007,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 03:10:08",
+	"atechDateTime": 20211031031008,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 0.05,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 03:15:11",
+	"atechDateTime": 20211031031511,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 03:15:13",
+	"atechDateTime": 20211031031513,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 2.1,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 03:35:16",
+	"atechDateTime": 20211031033516,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 03:35:18",
+	"atechDateTime": 20211031033518,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 3.1,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 03:49:50",
+	"atechDateTime": 20211031034950,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 03:49:52",
+	"atechDateTime": 20211031034952,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 0.35000000000000003,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 03:55:07",
+	"atechDateTime": 20211031035507,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 03:55:08",
+	"atechDateTime": 20211031035508,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 2.9000000000000004,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 04:00:16",
+	"atechDateTime": 20211031040016,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 04:04:45",
+	"atechDateTime": 20211031040445,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 0.2,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 04:09:47",
+	"atechDateTime": 20211031040947,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 04:09:49",
+	"atechDateTime": 20211031040949,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 04:14:44",
+	"atechDateTime": 20211031041444,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 1.7000000000000002,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 04:24:42",
+	"atechDateTime": 20211031042442,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 04:24:43",
+	"atechDateTime": 20211031042443,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 0.05,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 04:30:16",
+	"atechDateTime": 20211031043016,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 04:30:18",
+	"atechDateTime": 20211031043018,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 2.2,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 04:34:45",
+	"atechDateTime": 20211031043445,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 04:34:47",
+	"atechDateTime": 20211031043447,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 1.35,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 04:44:43",
+	"atechDateTime": 20211031044443,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 04:44:44",
+	"atechDateTime": 20211031044444,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 1.85,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 04:49:41",
+	"atechDateTime": 20211031044941,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 04:49:43",
+	"atechDateTime": 20211031044943,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 1.35,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 04:54:44",
+	"atechDateTime": 20211031045444,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 04:54:45",
+	"atechDateTime": 20211031045445,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 0.8,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 04:59:51",
+	"atechDateTime": 20211031045951,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 05:04:44",
+	"atechDateTime": 20211031050444,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 2.35,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 05:09:46",
+	"atechDateTime": 20211031050946,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 05:09:47",
+	"atechDateTime": 20211031050947,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 3.1,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 05:15:16",
+	"atechDateTime": 20211031051516,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 05:15:18",
+	"atechDateTime": 20211031051518,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 0.5,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 05:20:07",
+	"atechDateTime": 20211031052007,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 05:20:08",
+	"atechDateTime": 20211031052008,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 05:34:44",
+	"atechDateTime": 20211031053444,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 1.6,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 05:39:46",
+	"atechDateTime": 20211031053946,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 05:39:47",
+	"atechDateTime": 20211031053947,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 2.1,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 05:49:48",
+	"atechDateTime": 20211031054948,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 05:49:49",
+	"atechDateTime": 20211031054949,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 2.4000000000000004,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 05:59:45",
+	"atechDateTime": 20211031055945,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 06:05:43",
+	"atechDateTime": 20211031060543,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 1.1,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 06:10:14",
+	"atechDateTime": 20211031061014,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 06:10:15",
+	"atechDateTime": 20211031061015,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 0.25,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 06:35:13",
+	"atechDateTime": 20211031063513,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 06:35:15",
+	"atechDateTime": 20211031063515,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 2.35,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 06:50:13",
+	"atechDateTime": 20211031065013,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 06:50:14",
+	"atechDateTime": 20211031065014,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 0.15000000000000002,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 06:51:08",
+	"atechDateTime": 20211031065108,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 06:51:10",
+	"atechDateTime": 20211031065110,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 1.9000000000000001,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 06:54:45",
+	"atechDateTime": 20211031065445,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 06:54:47",
+	"atechDateTime": 20211031065447,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 0.1,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 07:00:15",
+	"atechDateTime": 20211031070015,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 07:04:46",
+	"atechDateTime": 20211031070446,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 1.35,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 07:14:56",
+	"atechDateTime": 20211031071456,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 07:14:58",
+	"atechDateTime": 20211031071458,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 0.35000000000000003,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 07:19:53",
+	"atechDateTime": 20211031071953,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 07:19:55",
+	"atechDateTime": 20211031071955,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 0.1,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 07:25:20",
+	"atechDateTime": 20211031072520,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 07:25:22",
+	"atechDateTime": 20211031072522,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 07:39:46",
+	"atechDateTime": 20211031073946,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 2.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 07:44:44",
+	"atechDateTime": 20211031074444,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 07:44:46",
+	"atechDateTime": 20211031074446,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 3.1,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 07:55:14",
+	"atechDateTime": 20211031075514,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 07:55:16",
+	"atechDateTime": 20211031075516,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 0.1,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 08:00:17",
+	"atechDateTime": 20211031080017,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 08:04:46",
+	"atechDateTime": 20211031080446,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 0.1,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 08:14:48",
+	"atechDateTime": 20211031081448,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 08:14:50",
+	"atechDateTime": 20211031081450,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 0.55,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 08:29:46",
+	"atechDateTime": 20211031082946,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 08:29:48",
+	"atechDateTime": 20211031082948,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 2.4000000000000004,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 08:40:27",
+	"atechDateTime": 20211031084027,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 08:40:28",
+	"atechDateTime": 20211031084028,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 0.8,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 08:49:46",
+	"atechDateTime": 20211031084946,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 08:49:48",
+	"atechDateTime": 20211031084948,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 1.85,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 08:56:11",
+	"atechDateTime": 20211031085611,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 08:56:13",
+	"atechDateTime": 20211031085613,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 2.35,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 08:56:26",
+	"atechDateTime": 20211031085626,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 09:00:49",
+	"atechDateTime": 20211031090049,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 3.6,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 09:04:43",
+	"atechDateTime": 20211031090443,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 09:04:44",
+	"atechDateTime": 20211031090444,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 2.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 09:15:16",
+	"atechDateTime": 20211031091516,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 09:15:18",
+	"atechDateTime": 20211031091518,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 1.05,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 09:19:47",
+	"atechDateTime": 20211031091947,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 09:19:49",
+	"atechDateTime": 20211031091949,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 2.25,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 09:30:02",
+	"atechDateTime": 20211031093002,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 09:30:04",
+	"atechDateTime": 20211031093004,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 60,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 09:54:44",
+	"atechDateTime": 20211031095444,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 2.0500000000000003,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 09:59:51",
+	"atechDateTime": 20211031095951,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 10:05:22",
+	"atechDateTime": 20211031100522,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 1.8,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 10:09:45",
+	"atechDateTime": 20211031100945,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 10:09:47",
+	"atechDateTime": 20211031100947,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 1.2000000000000002,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 10:24:48",
+	"atechDateTime": 20211031102448,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 10:24:49",
+	"atechDateTime": 20211031102449,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 1.5,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 10:30:19",
+	"atechDateTime": 20211031103019,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 10:30:20",
+	"atechDateTime": 20211031103020,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 0.6000000000000001,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 10:35:16",
+	"atechDateTime": 20211031103516,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 10:35:17",
+	"atechDateTime": 20211031103517,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 3.4000000000000004,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 10:41:00",
+	"atechDateTime": 20211031104100,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 10:41:02",
+	"atechDateTime": 20211031104102,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 5.3500000000000005,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 10:49:48",
+	"atechDateTime": 20211031104948,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 10:49:49",
+	"atechDateTime": 20211031104949,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 1.2000000000000002,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 10:59:44",
+	"atechDateTime": 20211031105944,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 11:05:18",
+	"atechDateTime": 20211031110518,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 1.9000000000000001,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 11:10:34",
+	"atechDateTime": 20211031111034,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 11:10:35",
+	"atechDateTime": 20211031111035,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 1.4500000000000002,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 11:14:48",
+	"atechDateTime": 20211031111448,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 11:14:50",
+	"atechDateTime": 20211031111450,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 11:30:15",
+	"atechDateTime": 20211031113015,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 2.5,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 11:45:43",
+	"atechDateTime": 20211031114543,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 11:45:44",
+	"atechDateTime": 20211031114544,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 0.25,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 11:50:12",
+	"atechDateTime": 20211031115012,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 11:50:13",
+	"atechDateTime": 20211031115013,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 0.05,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 11:54:45",
+	"atechDateTime": 20211031115445,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 11:54:46",
+	"atechDateTime": 20211031115446,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 2.8000000000000003,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 11:59:49",
+	"atechDateTime": 20211031115949,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 12:04:47",
+	"atechDateTime": 20211031120447,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 3.25,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 12:14:46",
+	"atechDateTime": 20211031121446,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 12:14:48",
+	"atechDateTime": 20211031121448,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 3.5500000000000003,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 12:19:45",
+	"atechDateTime": 20211031121945,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 12:19:47",
+	"atechDateTime": 20211031121947,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 0.2,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 12:20:24",
+	"atechDateTime": 20211031122024,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 12:20:26",
+	"atechDateTime": 20211031122026,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 2.15,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 12:24:52",
+	"atechDateTime": 20211031122452,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 12:24:53",
+	"atechDateTime": 20211031122453,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 0.05,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 12:25:01",
+	"atechDateTime": 20211031122501,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 12:25:03",
+	"atechDateTime": 20211031122503,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 2.15,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 12:34:45",
+	"atechDateTime": 20211031123445,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 12:34:47",
+	"atechDateTime": 20211031123447,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 2.95,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 12:39:47",
+	"atechDateTime": 20211031123947,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 12:39:49",
+	"atechDateTime": 20211031123949,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 30,
+			"insulinRate": 3.6,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 12:41:18",
+	"atechDateTime": 20211031124118,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 0,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}, {
+	"entryType": "TempBasalCombined",
+	"DT": "31.10.2021 12:41:19",
+	"atechDateTime": 20211031124119,
+	"decodedData": {
+		"Object": {
+			"durationMinutes": 60,
+			"insulinRate": 0.0,
+			"isPercent": false
+		}
+	}
+}]
