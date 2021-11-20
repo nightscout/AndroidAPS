@@ -471,7 +471,7 @@
     <string name="missed_bg_readings">Faltan lecturas BG</string>
     <string name="raise_notifications_as_android_notifications">Usa avisos del sistema para alarmas y avisos</string>
     <string name="gradually_increase_notification_volume">Aumentar gradualmente el volumen de alertas y notificaciones</string>
-    <string name="localalertsettings_title">Alarma local</string>
+    <string name="localalertsettings_title">Alarmas locales</string>
     <string name="enable_missed_bg_readings_alert">Alarma si no llegan datos BG</string>
     <string name="enable_pump_unreachable_alert">Alarma si bomba no es alcanzable</string>
     <string name="pump_unreachable_threshold">Bomba no alcanzable durante [min]</string>
@@ -490,7 +490,7 @@
     <string name="carbsReqThreshold">Carbohidratos mínimos necesarios para la sugerencia</string>
     <string name="carbsReqThreshold_summary">Gramos mínimos de carbohidratos para mostrar una alerta de sugerencia de carbohitratos: las sugerencias de carbohidratos debajo de este número no iniciarán una notificación.</string>
     <string name="dexcomg5_xdripupload_title">Mandar datos BG a xDrip+</string>
-    <string name="dexcomg5_xdripupload_summary">En xDrip+ elige 640g/Eversense como fuente de datos</string>
+    <string name="dexcomg5_xdripupload_summary">En xDrip+, selecciona 640G/EverSense como fuente de datos</string>
     <string name="nsclientbg">NSClient BG</string>
     <string name="nsclientbgshort">NS BG</string>
     <string name="overview_editquickwizard_usebg">Cálculo BG</string>
@@ -662,7 +662,7 @@
     <string name="sensitivity_raises_target_summary">Cuando se detecta sensibilidad a la insulina, aumenta el objetivo de glucosa</string>
     <string name="careportal_removestartedevents">Limpiar eventos AndroidAPS iniciado</string>
     <string name="storedsettingsfound">Encontrados ajustes de configuración</string>
-    <string name="allow_hardware_pump_text">Atención: si activas y conectas al hardware de la bomba, AndroidAPS copiará los ajustes basales del perfil de la bomba, sobrescribiendo el actual perfil basal de la bomba. Comprueba que tengas el perfil basal correcto en AndroidAPS. Si no estás seguro o no quieres sobrescribir los ajustes basales en la bomba, presiona cancelar y repite cambio de la bomba más tarde.</string>
+    <string name="allow_hardware_pump_text">Atención: si activas y conectas la bomba con AndroidAPS, AndroidAPS sobrescribirá los ajustes de basales del perfil de la bomba, con los establecidos en el perfil de AndroidAPS. Comprueba que tengas el perfil basal correcto en AndroidAPS. Si no estás seguro, o no quieres sobrescribir los ajustes basales en la bomba, presiona cancelar y repite la vinculación con más adelante.</string>
     <string name="error_adding_treatment_title">Datos de tratamiento incompletos</string>
     <string name="maintenance_settings">Ajustes de mantenimiento</string>
     <string name="maintenance_email">Correo</string>
