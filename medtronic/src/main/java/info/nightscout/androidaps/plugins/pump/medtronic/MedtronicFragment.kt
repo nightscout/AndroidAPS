@@ -110,7 +110,7 @@ class MedtronicFragment : DaggerFragment() {
             } else {
                 binding.refresh.isEnabled = false
                 medtronicPumpPlugin.resetStatusState()
-                commandQueue.readStatus("Clicked refresh", object : Callback() {
+                commandQueue.readStatus(rh.gs(R.string.clicked_refresh), object : Callback() {
                     override fun run() {
                         activity?.runOnUiThread { if (_binding != null) binding.refresh.isEnabled = true }
                     }

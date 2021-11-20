@@ -12,6 +12,7 @@ import com.google.common.util.concurrent.ListenableFuture
 import dagger.android.DaggerBroadcastReceiver
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
+import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.database.AppRepository
@@ -32,6 +33,7 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.LocalAlertUtils
 import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
 import kotlin.math.abs
 
@@ -72,6 +74,7 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
         @Inject lateinit var commandQueue: CommandQueue
         @Inject lateinit var fabricPrivacy: FabricPrivacy
         @Inject lateinit var maintenancePlugin: MaintenancePlugin
+        @Inject lateinit var rh: ResourceHelper
 
         init {
             (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
@@ -152,10 +155,10 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
                 rxBus.send(EventProfileSwitchChanged())
             } else if (isStatusOutdated && !pump.isBusy()) {
                 lastReadStatus = System.currentTimeMillis()
-                commandQueue.readStatus("KeepAlive. Status outdated.", null)
+                commandQueue.readStatus(rh.gs(R.string.keepalive_status_outdated), null)
             } else if (isBasalOutdated && !pump.isBusy()) {
                 lastReadStatus = System.currentTimeMillis()
-                commandQueue.readStatus("KeepAlive. Basal outdated.", null)
+                commandQueue.readStatus(rh.gs(R.string.keepalive_basal_outdated), null)
             }
             if (lastRun != 0L && System.currentTimeMillis() - lastRun > T.mins(10).msecs()) {
                 aapsLogger.error(LTag.CORE, "KeepAlive fail")

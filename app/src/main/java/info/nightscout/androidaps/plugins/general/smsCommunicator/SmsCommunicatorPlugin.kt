@@ -499,7 +499,7 @@ class SmsCommunicatorPlugin @Inject constructor(
 
     private fun processPUMP(divided: Array<String>, receivedSms: Sms) {
         if (divided.size == 1) {
-            commandQueue.readStatus("SMS", object : Callback() {
+            commandQueue.readStatus(rh.gs(R.string.sms), object : Callback() {
                 override fun run() {
                     val pump = activePlugin.activePump
                     if (result.success) {
@@ -828,7 +828,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                         override fun run() {
                             val resultSuccess = result.success
                             val resultBolusDelivered = result.bolusDelivered
-                            commandQueue.readStatus("SMS", object : Callback() {
+                            commandQueue.readStatus(rh.gs(R.string.sms), object : Callback() {
                                 override fun run() {
                                     if (resultSuccess) {
                                         var replyText = if (isMeal)

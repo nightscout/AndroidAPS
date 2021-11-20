@@ -203,7 +203,7 @@ class MedtronicPumpPlugin @Inject constructor(
                     )!!
                     if (doWeHaveAnyStatusNeededRefreshing(statusRefresh)) {
                         if (!commandQueue.statusInQueue()) {
-                            commandQueue.readStatus("Scheduled Status Refresh", null)
+                            commandQueue.readStatus(rh.gs(R.string.scheduled_status_refresh), null)
                         }
                     }
                     clearBusyQueue()

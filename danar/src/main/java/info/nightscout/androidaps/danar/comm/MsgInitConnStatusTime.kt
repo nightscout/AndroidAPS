@@ -32,7 +32,7 @@ class MsgInitConnStatusTime(
             //If profile coming from pump, switch it as well
             configBuilder.storeSettings("ChangingDanaDriver")
             rxBus.send(EventRebuildTabs())
-            commandQueue.readStatus("PumpDriverChange", null) // force new connection
+            commandQueue.readStatus(rh.gs(R.string.pump_driver_change), null) // force new connection
             failed = false
             return
         } else {

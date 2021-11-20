@@ -74,7 +74,7 @@ public class ComboFragment extends DaggerFragment {
         refreshButton = view.findViewById(R.id.combo_refresh_button);
         refreshButton.setOnClickListener(v -> {
             refreshButton.setEnabled(false);
-            commandQueue.readStatus("User request", new Callback() {
+            commandQueue.readStatus(rh.gs(R.string.user_request), new Callback() {
                 @Override
                 public void run() {
                     runOnUiThread(() -> refreshButton.setEnabled(true));

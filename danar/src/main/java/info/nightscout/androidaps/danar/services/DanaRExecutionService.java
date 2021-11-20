@@ -356,7 +356,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
                     }
                 }
             } else {
-                commandQueue.readStatus("bolusOK", null);
+                commandQueue.readStatus(rh.gs(R.string.bolus_ok), null);
             }
         }
         return !start.failed;

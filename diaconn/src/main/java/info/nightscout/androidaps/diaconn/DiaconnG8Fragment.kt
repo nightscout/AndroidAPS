@@ -82,7 +82,7 @@ class DiaconnG8Fragment : DaggerFragment() {
         binding.btconnection.setOnClickListener {
             aapsLogger.debug(LTag.PUMP, "Clicked connect to pump")
             diaconnG8Pump.lastConnection = 0
-            commandQueue.readStatus("Clicked connect to pump", null)
+            commandQueue.readStatus(rh.gs(R.string.clicked_connect_to_pump), null)
         }
     }
 
