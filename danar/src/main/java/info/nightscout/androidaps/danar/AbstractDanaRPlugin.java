@@ -62,7 +62,6 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     protected DateUtil dateUtil;
     protected AapsSchedulers aapsSchedulers;
     protected PumpSync pumpSync;
-    protected ResourceHelper rh;
 
     protected AbstractDanaRPlugin(
             HasAndroidInjector injector,
@@ -112,7 +111,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
                     if (event.isChanged(getRh(), R.string.key_danar_bt_name)) {
                         danaPump.reset();
                         pumpSync.connectNewPump();
-                        getCommandQueue().readStatus(rh.gs(R.string.device_changed), null);
+                        getCommandQueue().readStatus(getRh().gs(R.string.device_changed), null);
                     }
                 })
         );

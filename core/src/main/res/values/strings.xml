@@ -519,7 +519,7 @@
     <string name="user_request" comment="26 characters max for translation">User request</string>
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="pump_paired" comment="26 characters max for translation">Pump paired</string>
-    <string name="InsightRefreshButton" comment="26 characters max for translation">Insight Refresh Button</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Insight Refresh Button</string>
     <string name="read_status" comment="10 characters max for READSTATUS translation">READSTATUS %1$s</string>
 
     <plurals name="days">
