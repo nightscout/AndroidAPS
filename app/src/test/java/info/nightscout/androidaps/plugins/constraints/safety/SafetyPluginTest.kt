@@ -237,7 +237,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
         var d = Constraint(Constants.REALLYHIGHIOB)
         d = safetyPlugin.applyMaxIOBConstraints(d)
         Assert.assertEquals(3.0, d.value(), 0.01)
-        Assert.assertEquals("Safety: Limiting IOB to 3.0 U because of max value in preferences\nSafety: Limiting IOB to 12.0 U because of hard limit", d.getReasons(aapsLogger))
+        Assert.assertEquals("Safety: Limiting IOB to 3.0 U because of max value in preferences\nSafety: Limiting IOB to 22.0 U because of hard limit", d.getReasons(aapsLogger))
         Assert.assertEquals("Safety: Limiting IOB to 3.0 U because of max value in preferences", d.getMostLimitedReasons(aapsLogger))
     }
 }
