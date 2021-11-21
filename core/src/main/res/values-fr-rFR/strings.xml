@@ -154,7 +154,6 @@
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
-    <string name="noprofileselected">Aucun profil séléctionné</string>
     <string name="startprofile">Démarrer le profil %1$d%% pour %2$d min</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Uniquement les valeurs unitaires sont acceptées. Les plages pour les basal/bolus ne sont pas supportées par les pompes virtuelles.</string>
@@ -410,6 +409,7 @@
     <string name="value_out_of_hard_limits">\"%1$s\" %2$.2f est en dehors des limites</string>
     <string name="basal_value">Valeur de Basal</string>
     <string name="nsclient_version_does_not_match">La version NSClient ne correspond pas à AndroidAPS. Faites une mise à jour.</string>
+    <!-- readStatus reasons -->
     <plurals name="days">
         <item quantity="one">%1$d jour</item>
         <item quantity="other">%1$d jours</item>
