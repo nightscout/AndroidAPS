@@ -154,7 +154,6 @@
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
-    <string name="noprofileselected">Nessun profilo selezionato</string>
     <string name="startprofile">Avvia profilo %1$d%% per %2$d min</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Sono supportati solo valori discreti, non intervalli di valori, come incrementi per basale/bolo nel micro virtuale.</string>
@@ -410,6 +409,7 @@
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f è fuori dai limiti consentiti</string>
     <string name="basal_value">Valore basale</string>
     <string name="nsclient_version_does_not_match">La versione di NSClient non corrisponde ad AndroidAPS. Aggiorna.</string>
+    <!-- readStatus reasons -->
     <plurals name="days">
         <item quantity="one">%1$d giorno</item>
         <item quantity="other">%1$d giorni</item>
