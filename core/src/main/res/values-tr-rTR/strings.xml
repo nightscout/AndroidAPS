@@ -409,6 +409,23 @@
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f sınırların dışında</string>
     <string name="basal_value">Bazal değer</string>
     <string name="nsclient_version_does_not_match">NSClient sürümü AndroidAPS ile eşleşmiyor. Lütfen güncelle.</string>
+    <!-- readStatus reasons -->
+    <string name="keepalive_status_outdated" comment="26 characters max for translation">KA.. Durum güncel değil.</string>
+    <string name="keepalive_basal_outdated" comment="26 characters max for translation">KA.. Bazal güncel değil.</string>
+    <string name="sms" comment="26 characters max for translation">SMS</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Pompaya bağlan tıklandı</string>
+    <string name="pump_driver_changed" comment="26 characters max for translation">Pompa sürücüsü değişti.</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Pompa sürücüsü değişimi.</string>
+    <string name="device_changed" comment="26 characters max for translation">Cihaz değişti</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Yenileme tıklandı</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Zamanlanmış Durum Yenileme</string>
+    <string name="unconfirmed_command" comment="26 characters max for translation">Onaylanmamış komut</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Kullanıcı talebi</string>
+    <string name="user_request" comment="26 characters max for translation">Kullanıcı talebi</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
+    <string name="pump_paired" comment="26 characters max for translation">Pompa eşleştirildi</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Insight Yenileme Düğmesi</string>
+    <string name="read_status" comment="10 characters max for READSTATUS translation">OKUMADURUMU %1$s</string>
     <plurals name="days">
         <item quantity="one">%1$d gün</item>
         <item quantity="other">%1$d gün</item>
