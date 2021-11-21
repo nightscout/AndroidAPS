@@ -154,7 +154,6 @@
     <string name="profile_ins_units_per_hour">E/t</string>
     <string name="profile_carbs_per_unit">g/E</string>
     <!--    ProfileFunction-->
-    <string name="noprofileselected">Ingen profil valgt</string>
     <string name="startprofile">Start profil %1$d%% i %2$d min</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Bare konkrete verdier støttes som granularitet for basal/bolus i virtuell pumpe, ingen verdiområder.</string>
@@ -410,6 +409,7 @@
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f er utenfor lovlige grenseverdier</string>
     <string name="basal_value">Basal verdi</string>
     <string name="nsclient_version_does_not_match">NSKlient versjonen samsvarer ikke med AndroidAPS. Vennligst oppdater.</string>
+    <!-- readStatus reasons -->
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dager</item>
