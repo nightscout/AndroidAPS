@@ -3,12 +3,14 @@
  ,{"minAndroid":24,"maxAndroid":25,"supported":"2.6.2"}
  ,{"minAndroid":26,"maxAndroid":27,"supported":"2.8.2"}
  ,{"minAndroid":28,"maxAndroid":99,"supported":"2.8.2"}
- ,{"endDate":"2021-11-30","version":"2.8.2.5-dev"}
- ,{"endDate":"2021-11-30","version":"2.8.2.6-dev"}
- ,{"endDate":"2021-11-30","version":"2.8.2.7-dev"}
- ,{"endDate":"2021-11-30","version":"2.8.2.8-dev"}
- ,{"endDate":"2021-11-30","version":"2.8.2.9-dev"}
- ,{"endDate":"2021-11-30","version":"2.8.2.10-dev"}
+ ,{"endDate":"2021-11-24","version":"2.8.2.5-dev"}
+ ,{"endDate":"2021-11-24","version":"2.8.2.6-dev"}
+ ,{"endDate":"2021-11-24","version":"2.8.2.7-dev"}
+ ,{"endDate":"2021-11-42","version":"2.8.2.8-dev"}
+ ,{"endDate":"2021-11-24","version":"2.8.2.9-dev"}
+ ,{"endDate":"2021-11-24","version":"2.8.2.10-dev"}
+ ,{"endDate":"2021-11-24","version":"2.8.2.11-dev"}
+ ,{"endDate":"2021-11-24","version":"2.8.2.12-dev"}
  ,{"endDate":"2021-11-04","version":"3.0-beta1"}
  ,{"endDate":"2021-11-04","version":"3.0-beta2"}
  ,{"endDate":"2021-11-10","version":"3.0-beta3"}
