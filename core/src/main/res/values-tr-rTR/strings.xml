@@ -409,6 +409,7 @@
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f sınırların dışında</string>
     <string name="basal_value">Bazal değer</string>
     <string name="nsclient_version_does_not_match">NSClient sürümü AndroidAPS ile eşleşmiyor. Lütfen güncelle.</string>
+    <!-- readStatus reasons -->
     <plurals name="days">
         <item quantity="one">%1$d gün</item>
         <item quantity="other">%1$d gün</item>
