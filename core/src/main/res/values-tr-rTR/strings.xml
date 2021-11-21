@@ -410,6 +410,8 @@
     <string name="basal_value">Bazal değer</string>
     <string name="nsclient_version_does_not_match">NSClient sürümü AndroidAPS ile eşleşmiyor. Lütfen güncelle.</string>
     <!-- readStatus reasons -->
+    <string name="sms" comment="26 characters max for translation">SMS</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <plurals name="days">
         <item quantity="one">%1$d gün</item>
         <item quantity="other">%1$d gün</item>
