@@ -410,6 +410,22 @@
     <string name="basal_value">Valor basal</string>
     <string name="nsclient_version_does_not_match">La versión de NSClient no coincide con AndroidAPS. Actualízala.</string>
     <!-- readStatus reasons -->
+    <string name="keepalive_status_outdated" comment="26 characters max for translation">KeepAlive. Estado desactualizado.</string>
+    <string name="keepalive_basal_outdated" comment="26 characters max for translation">KeepAlive. Basal desactualizada.</string>
+    <string name="sms" comment="26 characters max for translation">SMS</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Pulsa sobre conectar a la bomba</string>
+    <string name="pump_driver_changed" comment="26 characters max for translation">Controlador de bomba cambiado.</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Cambio del controlador de la bomba.</string>
+    <string name="device_changed" comment="26 characters max for translation">Dispositivo cambiado</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Refresco pulsado</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Refrescar estado programado</string>
+    <string name="unconfirmed_command" comment="26 characters max for translation">Comando no confirmado</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Solicitado por el usuario</string>
+    <string name="user_request" comment="26 characters max for translation">Solicitud de usuario</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolo OK</string>
+    <string name="pump_paired" comment="26 characters max for translation">Bomba emparejada</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Botón de refresco de Insight</string>
+    <string name="read_status" comment="10 characters max for READSTATUS translation">LEERESTADO %1$s</string>
     <plurals name="days">
         <item quantity="one">%1$d día</item>
         <item quantity="other">%1$d días</item>
