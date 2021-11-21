@@ -410,6 +410,22 @@
     <string name="basal_value">Hodnota bazálu</string>
     <string name="nsclient_version_does_not_match">Verze NSClient se neshoduje s AndroidAPS. Aktualizujte prosím.</string>
     <!-- readStatus reasons -->
+    <string name="keepalive_status_outdated" comment="26 characters max for translation">KeepAlive. Zastaralý status.</string>
+    <string name="keepalive_basal_outdated" comment="26 characters max for translation">KeepAlive. Zastaralý bazál.</string>
+    <string name="sms" comment="26 characters max for translation">SMS</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Kliknuto připojit k pumpě</string>
+    <string name="pump_driver_changed" comment="26 characters max for translation">Změněn ovladač pumpy.</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Změna ovladače pumpy.</string>
+    <string name="device_changed" comment="26 characters max for translation">Zařízení změněno</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Kliknuto na tlačítko obnovit</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Naplánovaná aktualizace stavu</string>
+    <string name="unconfirmed_command" comment="26 characters max for translation">Nepotvrzený příkaz</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Vyžádáno uživatelem</string>
+    <string name="user_request" comment="26 characters max for translation">Požadavek uživatele</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
+    <string name="pump_paired" comment="26 characters max for translation">Pumpa spárována</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Insight Tlačítko Obnovit</string>
+    <string name="read_status" comment="10 characters max for READSTATUS translation">NAČÍSTSTAV %1$s</string>
     <plurals name="days">
         <item quantity="one">%1$d den</item>
         <item quantity="few">%1$d dnů</item>
