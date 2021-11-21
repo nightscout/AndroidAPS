@@ -154,7 +154,6 @@
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
-    <string name="noprofileselected">Není vybrán žádný profil</string>
     <string name="startprofile">Spustit profil %1$d%% na %2$d min</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Pouze diskrétní hodnoty a ne rozsahy jsou podporovány pro bazál/bolus ve virtuální pumpě.</string>
@@ -410,6 +409,7 @@
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f je mimo pevně nastavené limity</string>
     <string name="basal_value">Hodnota bazálu</string>
     <string name="nsclient_version_does_not_match">Verze NSClient se neshoduje s AndroidAPS. Aktualizujte prosím.</string>
+    <!-- readStatus reasons -->
     <plurals name="days">
         <item quantity="one">%1$d den</item>
         <item quantity="few">%1$d dnů</item>
