@@ -12,7 +12,7 @@
     <string name="goingtodeliver">עומד להזריק %1$.2f יח\'</string>
     <string name="waitingforpump">ממתין למשאבה</string>
     <string name="connectingfor">מתחבר במשך %1$d שניות</string>
-    <string name="bolusdelivering">מזריק כעת %1$.2f יח\'</string>
+    <string name="bolusdelivering">מזריק %1$.2f יח\'</string>
     <string name="handshaking">לוחץ יד</string>
     <string name="connecting">מתחבר</string>
     <string name="connected">מחובר</string>
@@ -154,7 +154,6 @@
     <string name="profile_ins_units_per_hour">יח\'\\שעה</string>
     <string name="profile_carbs_per_unit">גר\'\\יח\'</string>
     <!--    ProfileFunction-->
-    <string name="noprofileselected">לא נבחר פרופיל</string>
     <string name="startprofile">הפעלת פרופיל %1$d%% במשך %2$d דק\'</string>
     <!--    PumpType-->
     <string name="def_extended_note">* רק ערכים בדידים, טווחים אינם נתמכים עבור ערכי בזאלי ובולוס במשאבה וירטואלית.</string>
@@ -410,6 +409,7 @@
     <string name="value_out_of_hard_limits">»הערך %1$s« %2$.2f מחוץ לתחום הקשיח</string>
     <string name="basal_value">ערך בזאלי</string>
     <string name="nsclient_version_does_not_match">גרסת NSClient לא תואמת את גרסת AndroidAPS. נא לעדכן.</string>
+    <!-- readStatus reasons -->
     <plurals name="days">
         <item quantity="one">%1$d יום</item>
         <item quantity="two">%1$d ימים</item>
