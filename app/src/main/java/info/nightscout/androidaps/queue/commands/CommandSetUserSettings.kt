@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.queue.commands
 
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Dana
 import info.nightscout.androidaps.interfaces.Diaconn
@@ -30,5 +31,5 @@ class CommandSetUserSettings(
         }
     }
 
-    override fun status(): String = "SET USER SETTINGS"
+    override fun status(): String = rh.gs(R.string.set_user_settings)
 }
