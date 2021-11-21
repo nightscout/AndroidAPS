@@ -291,7 +291,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
             SystemClock.sleep(300);
 
             danaPump.setBolusingTreatment(null);
-            commandQueue.readStatus("bolusOK", null);
+            commandQueue.readStatus(rh.gs(R.string.bolus_ok), null);
         }
 
         return !start.failed;

@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.queue.commands
 
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.queue.Callback
@@ -20,5 +21,5 @@ class CommandCancelTempBasal(
         callback?.result(r)?.run()
     }
 
-    override fun status(): String = "CANCEL TEMPBASAL"
+    override fun status(): String = rh.gs(R.string.uel_accepts_temp_basal)
 }

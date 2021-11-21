@@ -129,7 +129,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
         buttonBinding.buttonRefreshStatus.setOnClickListener {
             disablePodActionButtons()
             commandQueue.readStatus(
-                "REQUESTED BY USER",
+                rh.gs(R.string.requested_by_user),
                 DisplayResultDialogCallback(
                     rh.gs(R.string.omnipod_common_error_failed_to_refresh_status),
                     false

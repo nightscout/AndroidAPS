@@ -197,7 +197,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             commandQueue.size() == 0 &&
             commandQueue.performing() == null
         ) {
-            commandQueue.readStatus("Unconfirmed command", null)
+            commandQueue.readStatus(rh.gs(R.string.unconfirmed_command), null)
         }
     }
 

@@ -688,7 +688,6 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
                 logger.error(LTag.PUMP, "Failed to deserialize Pod state", ex)
             }
         }
-        logger.debug(LTag.PUMP, "Creating new Pod state")
         return PodState()
     }
 
