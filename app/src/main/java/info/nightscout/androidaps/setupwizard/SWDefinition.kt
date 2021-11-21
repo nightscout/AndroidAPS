@@ -292,7 +292,7 @@ class SWDefinition @Inject constructor(
                 .visibility { activePlugin.activePump is OmnipodErosPumpPlugin })
         .add(SWButton(injector)
             .text(R.string.readstatus)
-            .action { commandQueue.readStatus("Clicked connect to pump", null) }
+            .action { commandQueue.readStatus(rh.gs(R.string.clicked_connect_to_pump), null) }
             .visibility {
                 // Hide for Omnipod, because as we don't require a Pod to be paired in the setup wizard,
                 // Getting the status might not be possible

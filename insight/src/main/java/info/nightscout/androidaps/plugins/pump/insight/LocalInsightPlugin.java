@@ -1628,7 +1628,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
 
     @Override
     public void onPumpPaired() {
-        commandQueue.readStatus("Pump paired", null);
+        commandQueue.readStatus(rh.gs(R.string.pump_paired), null);
     }
 
     @Override

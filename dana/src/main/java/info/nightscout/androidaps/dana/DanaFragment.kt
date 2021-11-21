@@ -112,7 +112,7 @@ class DanaFragment : DaggerFragment() {
         binding.btConnectionLayout.setOnClickListener {
             aapsLogger.debug(LTag.PUMP, "Clicked connect to pump")
             danaPump.reset()
-            commandQueue.readStatus("Clicked connect to pump", null)
+            commandQueue.readStatus(rh.gs(R.string.clicked_connect_to_pump), null)
         }
         if (activePlugin.activePump.pumpDescription.pumpType == PumpType.DANA_RS ||
             activePlugin.activePump.pumpDescription.pumpType == PumpType.DANA_I

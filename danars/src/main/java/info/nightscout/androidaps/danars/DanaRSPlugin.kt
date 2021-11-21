@@ -139,7 +139,7 @@ class DanaRSPlugin @Inject constructor(
         mDeviceAddress = sp.getString(R.string.key_danars_address, "")
         mDeviceName = sp.getString(R.string.key_danars_name, "")
         danaPump.reset()
-        commandQueue.readStatus("DeviceChanged", null)
+        commandQueue.readStatus(rh.gs(R.string.device_changed), null)
     }
 
     override fun connect(reason: String) {

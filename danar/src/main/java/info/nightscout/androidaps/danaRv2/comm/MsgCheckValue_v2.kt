@@ -40,7 +40,7 @@ class MsgCheckValue_v2(
             //If profile coming from pump, switch it as well
             configBuilder.storeSettings("ChangingDanaRv2Driver")
             rxBus.send(EventRebuildTabs())
-            commandQueue.readStatus("PumpDriverChange", null) // force new connection
+            commandQueue.readStatus(rh.gs(R.string.pump_driver_change), null) // force new connection
             return
         }
         if (danaPump.protocol != 2) {
@@ -57,7 +57,7 @@ class MsgCheckValue_v2(
             //If profile coming from pump, switch it as well
             configBuilder.storeSettings("ChangingDanaRv2Driver")
             rxBus.send(EventRebuildTabs())
-            commandQueue.readStatus("PumpDriverChange", null) // force new connection
+            commandQueue.readStatus(rh.gs(R.string.pump_driver_change), null) // force new connection
             return
         }
         aapsLogger.debug(LTag.PUMPCOMM, "Model: " + String.format("%02X ", danaPump.hwModel))

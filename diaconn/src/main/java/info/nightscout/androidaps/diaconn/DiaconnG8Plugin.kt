@@ -123,7 +123,7 @@ class DiaconnG8Plugin @Inject constructor(
         mDeviceAddress = sp.getString(R.string.key_diaconn_g8_address, "")
         mDeviceName = sp.getString(R.string.key_diaconn_g8_name, "")
         diaconnG8Pump.reset()
-        commandQueue.readStatus("DeviceChanged", null)
+        commandQueue.readStatus(rh.gs(R.string.device_changed), null)
     }
 
     override fun connect(reason: String) {
