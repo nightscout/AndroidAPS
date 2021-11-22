@@ -228,7 +228,6 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         `when`(rh.gs(R.string.patient_name_default)).thenReturn("User")
         `when`(rh.gs(R.string.invalidprofile)).thenReturn("Invalid profile !!!")
         `when`(rh.gs(R.string.sms)).thenReturn("SMS")
-        `when`(rh.gs(ArgumentMatchers.eq(R.string.bolus_u_min), ArgumentMatchers.any())).thenAnswer { i: InvocationOnMock -> "BOLUS " + i.arguments[1] + " U" }
         `when`(rh.gsNotLocalised(R.string.loopsuspended)).thenReturn("Loop suspended")
         `when`(rh.gsNotLocalised(R.string.smscommunicator_stoppedsms)).thenReturn("SMS Remote Service stopped. To reactivate it, use AAPS on master smartphone.")
         `when`(rh.gsNotLocalised(R.string.profileswitchcreated)).thenReturn("Profile switch created")
