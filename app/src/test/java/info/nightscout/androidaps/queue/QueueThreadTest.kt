@@ -79,8 +79,7 @@ class QueueThreadTest : TestBaseWithProfile() {
         val percentageConstraint = Constraint(0)
         Mockito.`when`(constraintChecker.applyBasalPercentConstraints(anyObject(), anyObject()))
             .thenReturn(percentageConstraint)
-        Mockito.`when`(rh.gs(ArgumentMatchers.eq(R.string.temp_basal_absolute), ArgumentMatchers.anyDouble(), ArgumentMatchers.anyInt())).thenReturn("TEMP BASAL %1\$.2f U/h %2\$d min").thenAnswer {
-                i: InvocationOnMock -> "TEMP BASAL " + i.arguments[1] + " U/h " + i.arguments[2] + "min" }
+        Mockito.`when`(rh.gs(ArgumentMatchers.eq(R.string.temp_basal_absolute), ArgumentMatchers.anyDouble(), ArgumentMatchers.anyInt())).thenReturn("TEMP BASAL %1\$.2f U/h %2\$d min")
 
         sut = QueueThread(commandQueue, context, aapsLogger, rxBus, activePlugin, rh, sp)
     }
