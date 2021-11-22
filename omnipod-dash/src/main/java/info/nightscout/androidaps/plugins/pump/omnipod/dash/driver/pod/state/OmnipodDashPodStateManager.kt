@@ -77,6 +77,7 @@ interface OmnipodDashPodStateManager {
     var basalProgram: BasalProgram?
     val activeCommand: ActiveCommand?
     val lastBolus: LastBolus?
+    var suspendAlertsEnabled: Boolean
 
     fun increaseMessageSequenceNumber()
     fun increaseEapAkaSequenceNumber(): ByteArray

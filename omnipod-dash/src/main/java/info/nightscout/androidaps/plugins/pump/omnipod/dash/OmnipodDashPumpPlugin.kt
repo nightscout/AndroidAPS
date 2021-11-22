@@ -502,7 +502,10 @@ class OmnipodDashPumpPlugin @Inject constructor(
             // prevent setBasal requests
             return true
         }
-        // TODO: what do we have to answer here if delivery is suspended?
+        if (podStateManager.isSuspended) {
+            // set new basal profile failed midway
+            return false
+        }
         val running = podStateManager.basalProgram
         val equal = (mapProfileToBasalProgram(profile) == running)
         aapsLogger.info(LTag.PUMP, "set: $equal. profile=$profile, running=$running")
@@ -1101,7 +1104,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 updateAlertConfiguration()
             is CommandPlayTestBeep ->
                 playTestBeep()
-
+            is CommandDisableSuspendAlerts ->
+                disableSuspendAlerts()
             else -> {
                 aapsLogger.warn(LTag.PUMP, "Unsupported custom command: " + customCommand.javaClass.name)
                 PumpEnactResult(injector).success(false).enacted(false).comment(
@@ -1114,6 +1118,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         }
     }
 
+
     private fun silenceAlerts(): PumpEnactResult {
         // TODO filter alert types
         return podStateManager.activeAlerts?.let {
@@ -1122,6 +1127,41 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 command = omnipodManager.silenceAlerts(it).ignoreElements(),
             ).toPumpEnactResult()
         } ?: PumpEnactResult(injector).success(false).enacted(false).comment("No active alerts") // TODO i18n
+    }
+
+    private fun disableSuspendAlerts(): PumpEnactResult {
+        val alerts = listOf(
+            AlertConfiguration(
+                AlertType.SUSPEND_IN_PROGRESS,
+                enabled = false,
+                durationInMinutes = 0,
+                autoOff = false,
+                AlertTrigger.TimerTrigger(
+                    0
+                ),
+                BeepType.XXX,
+                BeepRepetitionType.XXX4
+            ),
+            AlertConfiguration(
+                AlertType.SUSPEND_ENDED,
+                enabled = false,
+                durationInMinutes = 0,
+                autoOff = false,
+                AlertTrigger.TimerTrigger(
+                    0
+                ),
+                BeepType.FOUR_TIMES_BIP_BEEP,
+                BeepRepetitionType.EVERY_MINUTE
+            ),
+        )
+        val ret =  executeProgrammingCommand(
+            historyEntry = history.createRecord(OmnipodCommandType.CONFIGURE_ALERTS),
+            command = omnipodManager.programAlerts(alerts).ignoreElements(),
+        ).toPumpEnactResult()
+        if (ret.success && ret.enacted) {
+            podStateManager.suspendAlertsEnabled = false
+        }
+        return ret
     }
 
     private fun suspendDelivery(): PumpEnactResult {
@@ -1249,7 +1289,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     expiryAlertDelay.toMinutes().toShort()
                 ),
                 BeepType.FOUR_TIMES_BIP_BEEP,
-                BeepRepetitionType.XXX2
+                BeepRepetitionType.EVERY_MINUTE
             )
         )
         return executeProgrammingCommand(
@@ -1369,9 +1409,11 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     )
                     podStateManager.tempBasal = null
                     rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_SUSPENDED))
+                    rxBus.send(EventDismissNotification(Notification.FAILED_UPDATE_PROFILE))
+                    rxBus.send(EventDismissNotification(Notification.OMNIPOD_TBR_ALERTS))
+                    rxBus.send(EventDismissNotification(Notification.OMNIPOD_TIME_OUT_OF_SYNC))
+                    commandQueue.customCommand(CommandDisableSuspendAlerts(), null)
                 }
-                rxBus.send(EventDismissNotification(Notification.OMNIPOD_TBR_ALERTS))
-                rxBus.send(EventDismissNotification(Notification.OMNIPOD_TIME_OUT_OF_SYNC))
             }
 
             OmnipodCommandType.SET_BASAL_PROFILE -> {
@@ -1394,6 +1436,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     rxBus.send(EventDismissNotification(Notification.FAILED_UPDATE_PROFILE))
                     rxBus.send(EventDismissNotification(Notification.OMNIPOD_TBR_ALERTS))
                     rxBus.send(EventDismissNotification(Notification.OMNIPOD_TIME_OUT_OF_SYNC))
+                    commandQueue.customCommand(CommandDisableSuspendAlerts(), null)
                 }
             }
 

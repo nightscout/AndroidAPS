@@ -437,7 +437,7 @@ class OmnipodDashManagerImpl @Inject constructor(
                             userExpiryAlertDelay.toMinutes().toShort()
                         ),
                         BeepType.FOUR_TIMES_BIP_BEEP,
-                        BeepRepetitionType.XXX2
+                        BeepRepetitionType.EVERY_MINUTE
                     )
                 )
             }
@@ -498,12 +498,34 @@ class OmnipodDashManagerImpl @Inject constructor(
         }
     }
 
+
     override fun suspendDelivery(hasBasalBeepEnabled: Boolean): Observable<PodEvent> {
         return Observable.concat(
             observePodRunning,
             observeConnectToPod,
-            observeSendStopDeliveryCommand(StopDeliveryCommand.DeliveryType.ALL, hasBasalBeepEnabled)
-        ).interceptPodEvents()
+            observeSuspendDeliveryCommand(hasBasalBeepEnabled)
+        ).doOnComplete {
+            podStateManager.suspendAlertsEnabled = true
+        }.interceptPodEvents()
+    }
+
+    private fun observeSuspendDeliveryCommand(hasBasalBeepEnabled: Boolean): Observable<PodEvent> {
+        return Observable.defer {
+            val beepType = if (!hasBasalBeepEnabled)
+                BeepType.SILENT
+            else
+                BeepType.LONG_SINGLE_BEEP
+
+            bleManager.sendCommand(
+                SuspendDeliveryCommand.Builder()
+                    .setSequenceNumber(podStateManager.messageSequenceNumber)
+                    .setUniqueId(podStateManager.uniqueId!!.toInt())
+                    .setNonce(NONCE)
+                    .setBeepType(beepType)
+                    .build(),
+                DefaultStatusResponse::class
+            )
+        }
     }
 
     private fun observeSendProgramTempBasalCommand(rate: Double, durationInMinutes: Short, tempBasalBeeps: Boolean): Observable<PodEvent> {

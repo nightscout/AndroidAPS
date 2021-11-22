@@ -47,4 +47,6 @@
     <string name="omnipod_common_history_tbr_value">Rate: %1$.2f U, duration: %2$d minutes</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
     <string name="dash_bolusdelivering">Delivering %1$.2f U</string>
+    <string name="omnipod_common_alert_delivery_suspended">Insulin delivery is suspended</string>
+    <string name="omnipod_common_alert_delivery_suspended2">Insulin delivery is suspended 2</string>
 </resources>

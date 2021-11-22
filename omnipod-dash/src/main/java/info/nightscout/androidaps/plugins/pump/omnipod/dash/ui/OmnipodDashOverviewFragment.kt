@@ -439,6 +439,10 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 R.string.omnipod_common_alert_expiration_advisory
             AlertType.AUTO_OFF ->
                 R.string.omnipod_common_alert_shutdown_imminent
+            AlertType.SUSPEND_IN_PROGRESS ->
+                R.string.omnipod_common_alert_delivery_suspended
+            AlertType.SUSPEND_ENDED ->
+                R.string.omnipod_common_alert_delivery_suspended2
             else ->
                 R.string.omnipod_common_alert_unknown_alert
         }
