@@ -409,7 +409,8 @@
     <string name="value_out_of_hard_limits">»הערך %1$s« %2$.2f מחוץ לתחום הקשיח</string>
     <string name="basal_value">ערך בזאלי</string>
     <string name="nsclient_version_does_not_match">גרסת NSClient לא תואמת את גרסת AndroidAPS. נא לעדכן.</string>
-    <!-- readStatus reasons -->
+    <!-- Command Queue + readStatus reasons -->
+    <string name="read_status" comment="10 characters max for READSTATUS translation">קריאת סטטוס %1$s</string>
     <string name="keepalive_status_outdated" comment="26 characters max for translation">השאר בחיים. הסטטוס התיישן.</string>
     <string name="keepalive_basal_outdated" comment="26 characters max for translation">השאר בחיים. הבזאלי התיישן.</string>
     <string name="sms" comment="26 characters max for translation">SMS</string>
@@ -425,7 +426,6 @@
     <string name="bolus_ok" comment="26 characters max for translation">בולוס OK</string>
     <string name="pump_paired" comment="26 characters max for translation">המשאבה צומדה</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">לחצן ריענון Insight</string>
-    <string name="read_status" comment="10 characters max for READSTATUS translation">קריאת סטטוס %1$s</string>
     <plurals name="days">
         <item quantity="one">%1$d יום</item>
         <item quantity="two">%1$d ימים</item>
