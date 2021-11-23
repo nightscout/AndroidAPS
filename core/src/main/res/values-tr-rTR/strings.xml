@@ -409,7 +409,8 @@
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f sınırların dışında</string>
     <string name="basal_value">Bazal değer</string>
     <string name="nsclient_version_does_not_match">NSClient sürümü AndroidAPS ile eşleşmiyor. Lütfen güncelle.</string>
-    <!-- readStatus reasons -->
+    <!-- Command Queue + readStatus reasons -->
+    <string name="read_status" comment="10 characters max for READSTATUS translation">OKUMADURUMU %1$s</string>
     <string name="keepalive_status_outdated" comment="26 characters max for translation">KA.. Durum güncel değil.</string>
     <string name="keepalive_basal_outdated" comment="26 characters max for translation">KA.. Bazal güncel değil.</string>
     <string name="sms" comment="26 characters max for translation">SMS</string>
@@ -425,7 +426,6 @@
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="pump_paired" comment="26 characters max for translation">Pompa eşleştirildi</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight Yenileme Düğmesi</string>
-    <string name="read_status" comment="10 characters max for READSTATUS translation">OKUMADURUMU %1$s</string>
     <plurals name="days">
         <item quantity="one">%1$d gün</item>
         <item quantity="other">%1$d gün</item>
