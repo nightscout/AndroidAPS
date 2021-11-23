@@ -153,7 +153,6 @@
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
-    <string name="noprofileselected">프로파일이 선택되지 않았습니다</string>
     <string name="startprofile">프로파일 %1$d%%을 %2$d 분 동안 시작</string>
     <!--    PumpType-->
     <string name="def_extended_note">* 가상 펌프에서는 Basal/Bolus에 대해 범위로 지정이 될 수 없고, 이산값(discrete values)만 지원 됩니다.</string>
@@ -398,6 +397,7 @@
     <string name="valueoutofrange">»%1$s«이 \'고정된 한계값\'을 벗어났습니다.</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f이 \'고정된 한계값\'을 벗어났습니다.</string>
     <string name="basal_value">Basal 값</string>
+    <!-- Command Queue + readStatus reasons -->
     <plurals name="days">
         <item quantity="other">%1$d 일</item>
     </plurals>
