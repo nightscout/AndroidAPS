@@ -409,7 +409,8 @@
     <string name="value_out_of_hard_limits">Wartość »%1$s« %2$.2f jest poza dopuszczalną granicą</string>
     <string name="basal_value">Wartość bazy</string>
     <string name="nsclient_version_does_not_match">Wersja NSClient nie jest zgodna z AndroidAPS. Proszę zaktualizować.</string>
-    <!-- readStatus reasons -->
+    <!-- Command Queue + readStatus reasons -->
+    <string name="read_status" comment="10 characters max for READSTATUS translation">CZYTAMSTAN %1$s</string>
     <string name="keepalive_status_outdated" comment="26 characters max for translation">Podtrzym. Stan nieaktualny.</string>
     <string name="keepalive_basal_outdated" comment="26 characters max for translation">Podtrzym. Baza nieaktualna</string>
     <string name="sms" comment="26 characters max for translation">SMS</string>
@@ -425,7 +426,6 @@
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="pump_paired" comment="26 characters max for translation">Pompa sparowana</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Przycisk Odświeżania Insight</string>
-    <string name="read_status" comment="10 characters max for READSTATUS translation">CZYTAMSTAN %1$s</string>
     <plurals name="days">
         <item quantity="one">%1$d dzień</item>
         <item quantity="few">%1$d dni</item>
