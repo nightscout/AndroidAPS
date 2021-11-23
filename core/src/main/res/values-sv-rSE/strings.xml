@@ -154,7 +154,6 @@
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
-    <string name="noprofileselected">Ingen profil vald</string>
     <string name="startprofile">Byt till profil %1$d%% i %2$d min</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Inga spann stöds som granularitet för basal/bolus i den virtuella pumpen. Endast enkla värden.</string>
@@ -410,6 +409,7 @@
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f är utanför hårda gränser</string>
     <string name="basal_value">Basaldos</string>
     <string name="nsclient_version_does_not_match">NS Client-versionen matchar inte Android APS. Vänligen uppdatera.</string>
+    <!-- Command Queue + readStatus reasons -->
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagar</item>
