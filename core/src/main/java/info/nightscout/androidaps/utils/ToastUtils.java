@@ -34,6 +34,7 @@ public class ToastUtils {
             graphicalToast(ctx, string, R.drawable.ic_toast_info, false);
         }
 
+        @SuppressWarnings("unused")
         public static void okToast(final Context ctx, final String string) {
             graphicalToast(ctx, string, R.drawable.ic_toast_check, false);
         }
