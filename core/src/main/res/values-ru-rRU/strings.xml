@@ -154,7 +154,6 @@
     <string name="profile_ins_units_per_hour">ед/ч</string>
     <string name="profile_carbs_per_unit">г/ед</string>
     <!--    ProfileFunction-->
-    <string name="noprofileselected">профиль не выбран</string>
     <string name="startprofile">Начать профиль %1$d%% на %2$d мин</string>
     <!--    PumpType-->
     <string name="def_extended_note">* В виртуальной помпе поддерживаются только дискретные величины для обработки базала/болюса.</string>
@@ -410,6 +409,7 @@
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f за пределами жестких ограничений</string>
     <string name="basal_value">Величина базала</string>
     <string name="nsclient_version_does_not_match">Версия NSClient не совпадает с версией AndroidAPS. Пожалуйста, обновите.</string>
+    <!-- Command Queue + readStatus reasons -->
     <plurals name="days">
         <item quantity="one">%1$d день</item>
         <item quantity="few">%1$d дня</item>
