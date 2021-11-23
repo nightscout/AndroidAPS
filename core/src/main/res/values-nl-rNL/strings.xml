@@ -154,7 +154,6 @@
     <string name="profile_ins_units_per_hour">E/u</string>
     <string name="profile_carbs_per_unit">g/E</string>
     <!--    ProfileFunction-->
-    <string name="noprofileselected">Geen profiel geselecteerd</string>
     <string name="startprofile">Start profiel %1$d%% voor %2$d min</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Alleen absolute waardes (geen van-tot bereik) worden ondersteund voor basaal / bolus in virtuele pomp.</string>
@@ -410,6 +409,7 @@
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f is buiten de harde limiet</string>
     <string name="basal_value">Basaal waarde</string>
     <string name="nsclient_version_does_not_match">NSClient versie werkt niet samen met AndroidAPS. Update gewenst.</string>
+    <!-- Command Queue + readStatus reasons -->
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagen</item>
