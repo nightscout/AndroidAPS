@@ -504,7 +504,22 @@
     <string name="basal_value">Basal value</string>
     <string name="nsclient_version_does_not_match">NSClient version doesn\'t match to AndroidAPS. Please update.</string>
 
-    <!-- readStatus reasons -->
+    <!-- Command Queue + readStatus reasons -->
+    <string name="bolus_u_min">BOLUS %1$.2f U</string>
+    <string name="carbs_g">CARBS %1$d g</string>
+    <string name="extended_bolus_u_min">EXTENDED BOLUS %1$.2f U %2$d min</string>
+    <string name="load_events">LOAD EVENTS</string>
+    <string name="load_history">LOAD HISTORY %1$d</string>
+    <string name="load_tdds">LOAD TDDs</string>
+    <string name="set_profile">SET PROFILE</string>
+    <string name="set_user_settings">SET USER SETTINGS</string>
+    <string name="smb_bolus_u">SMB BOLUS %1$.2f U</string>
+    <string name="start_pump">START PUMP</string>
+    <string name="stop_pump">STOP PUMP</string>
+    <string name="temp_basal_absolute">TEMP BASAL %1$.2f U/h %2$d min</string>
+    <string name="temp_basal_percent">TEMP BASAL %1$d%% %2$d min</string>
+    <string name="insight_set_tbr_over_notification">INSIGHT SET TBR OVER NOTIFICATION</string>
+    <string name="read_status" comment="10 characters max for READSTATUS translation">READSTATUS %1$s</string>
     <string name="keepalive_status_outdated" comment="26 characters max for translation">KeepAlive. Status outdated.</string>
     <string name="keepalive_basal_outdated" comment="26 characters max for translation">KeepAlive. Basal outdated.</string>
     <string name="sms" comment="26 characters max for translation">SMS</string>
@@ -520,7 +535,6 @@
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="pump_paired" comment="26 characters max for translation">Pump paired</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight Refresh Button</string>
-    <string name="read_status" comment="10 characters max for READSTATUS translation">READSTATUS %1$s</string>
 
     <plurals name="days">
         <item quantity="one">%1$d day</item>
