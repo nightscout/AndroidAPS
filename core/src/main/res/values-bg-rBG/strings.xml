@@ -302,6 +302,7 @@
     <string name="ue_source">Източник</string>
     <string name="ue_action">Действие</string>
     <!-- HardLimits -->
+    <!-- Command Queue + readStatus reasons -->
     <plurals name="days">
         <item quantity="one">%1$d дeн</item>
         <item quantity="other">%1$d дни</item>
