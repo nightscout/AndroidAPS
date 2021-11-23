@@ -409,7 +409,8 @@
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f je mimo pevně nastavené limity</string>
     <string name="basal_value">Hodnota bazálu</string>
     <string name="nsclient_version_does_not_match">Verze NSClient se neshoduje s AndroidAPS. Aktualizujte prosím.</string>
-    <!-- readStatus reasons -->
+    <!-- Command Queue + readStatus reasons -->
+    <string name="read_status" comment="10 characters max for READSTATUS translation">NAČÍSTSTAV %1$s</string>
     <string name="keepalive_status_outdated" comment="26 characters max for translation">KeepAlive. Zastaralý status.</string>
     <string name="keepalive_basal_outdated" comment="26 characters max for translation">KeepAlive. Zastaralý bazál.</string>
     <string name="sms" comment="26 characters max for translation">SMS</string>
@@ -425,7 +426,6 @@
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="pump_paired" comment="26 characters max for translation">Pumpa spárována</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight Tlačítko Obnovit</string>
-    <string name="read_status" comment="10 characters max for READSTATUS translation">NAČÍSTSTAV %1$s</string>
     <plurals name="days">
         <item quantity="one">%1$d den</item>
         <item quantity="few">%1$d dnů</item>
