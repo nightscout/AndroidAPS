@@ -113,9 +113,7 @@ open class NumberPicker(context: Context, attrs: AttributeSet? = null) : LinearL
             override fun afterTextChanged(s: Editable) {
                 if (focused) currentValue = SafeParse.stringToDouble(editText?.text.toString())
                 callValueChangedListener()
-                if (okButton != null) {
-                    if (currentValue > maxValue || currentValue < minValue) okButton!!.visibility = INVISIBLE else okButton!!.visibility = VISIBLE
-                }
+                okButton?.visibility = if (currentValue > maxValue || currentValue < minValue) INVISIBLE else VISIBLE
             }
         })
         editText?.setOnFocusChangeListener { _: View?, hasFocus: Boolean ->
@@ -143,13 +141,13 @@ open class NumberPicker(context: Context, attrs: AttributeSet? = null) : LinearL
                     currentValue = maxValue
                     ToastUtils.showToastInUiThread(context, context.getString(R.string.youareonallowedlimit))
                     updateEditText()
-                    if (okButton != null) okButton?.visibility = VISIBLE
+                    okButton?.visibility = VISIBLE
                 }
                 if (currentValue < minValue) {
                     currentValue = minValue
                     ToastUtils.showToastInUiThread(context, context.getString(R.string.youareonallowedlimit))
                     updateEditText()
-                    if (okButton != null) okButton?.visibility = VISIBLE
+                    okButton?.visibility = VISIBLE
                 }
             }
         }
@@ -229,7 +227,7 @@ open class NumberPicker(context: Context, attrs: AttributeSet? = null) : LinearL
     }
 
     private fun callValueChangedListener() {
-        if (mOnValueChangedListener != null) mOnValueChangedListener?.onValueChanged(currentValue)
+        mOnValueChangedListener?.onValueChanged(currentValue)
     }
 
     private fun startUpdating(inc: Boolean) {
@@ -245,10 +243,8 @@ open class NumberPicker(context: Context, attrs: AttributeSet? = null) : LinearL
     }
 
     private fun stopUpdating() {
-        if (mUpdater != null) {
-            mUpdater?.shutdownNow()
-            mUpdater = null
-        }
+        mUpdater?.shutdownNow()
+        mUpdater = null
     }
 
     override fun onClick(v: View) {
