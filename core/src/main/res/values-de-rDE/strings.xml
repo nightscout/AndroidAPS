@@ -154,7 +154,6 @@
     <string name="profile_ins_units_per_hour">IE/h</string>
     <string name="profile_carbs_per_unit">g/IE</string>
     <!--    ProfileFunction-->
-    <string name="noprofileselected">Kein Profil ausgewählt</string>
     <string name="startprofile">Profil %1$d%% für %2$d Min. starten</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Bei der virtuellen Pumpe können nur einzelne Werte und keine Bereiche zur Festlegung der Basal/Bolus-Granularität gewählt werden.</string>
@@ -410,6 +409,8 @@
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f ist außerhalb der fest programmierten Grenzen</string>
     <string name="basal_value">Basal-Wert</string>
     <string name="nsclient_version_does_not_match">Die Versionen von NSClient und AndroidAPS passen nicht zueinander. Führe bitte ein Update durch.</string>
+    <!-- Command Queue + readStatus reasons -->
+    <string name="sms" comment="26 characters max for translation">SMS</string>
     <plurals name="days">
         <item quantity="one">%1$d Tag</item>
         <item quantity="other">%1$d Tage</item>
