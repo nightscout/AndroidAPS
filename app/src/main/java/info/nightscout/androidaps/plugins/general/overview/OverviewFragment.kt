@@ -574,7 +574,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                             OKDialog.showConfirmation(
                                 context,
                                 rh.gs(R.string.run_question, event.title),
-                                { handler.post { automationPlugin.processEvent(event, true) } }
+                                { handler.post { automationPlugin.processEvent(event) } }
                             )
                         }
                         binding.buttonsLayout.userButtonsLayout.addView(it)
