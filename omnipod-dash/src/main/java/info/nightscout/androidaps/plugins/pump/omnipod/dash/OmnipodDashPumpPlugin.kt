@@ -1092,8 +1092,6 @@ class OmnipodDashPumpPlugin @Inject constructor(
         return when (customCommand) {
             is CommandSilenceAlerts ->
                 silenceAlerts()
-            is CommandSuspendDelivery ->
-                suspendDelivery()
             is CommandResumeDelivery ->
                 resumeDelivery()
             is CommandDeactivatePod ->
@@ -1132,17 +1130,6 @@ class OmnipodDashPumpPlugin @Inject constructor(
     private fun disableSuspendAlerts(): PumpEnactResult {
         val alerts = listOf(
             AlertConfiguration(
-                AlertType.SUSPEND_IN_PROGRESS,
-                enabled = false,
-                durationInMinutes = 0,
-                autoOff = false,
-                AlertTrigger.TimerTrigger(
-                    0
-                ),
-                BeepType.XXX,
-                BeepRepetitionType.XXX4
-            ),
-            AlertConfiguration(
                 AlertType.SUSPEND_ENDED,
                 enabled = false,
                 durationInMinutes = 0,
@@ -1151,7 +1138,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     0
                 ),
                 BeepType.FOUR_TIMES_BIP_BEEP,
-                BeepRepetitionType.EVERY_MINUTE
+                BeepRepetitionType.EVERY_MINUTE_AND_EVERY_15_MIN
             ),
         )
         val ret =  executeProgrammingCommand(
@@ -1162,29 +1149,6 @@ class OmnipodDashPumpPlugin @Inject constructor(
             podStateManager.suspendAlertsEnabled = false
         }
         return ret
-    }
-
-    private fun suspendDelivery(): PumpEnactResult {
-        return executeProgrammingCommand(
-            historyEntry = history.createRecord(OmnipodCommandType.SUSPEND_DELIVERY),
-            command = omnipodManager.suspendDelivery(hasBasalBeepEnabled())
-                .filter { podEvent -> podEvent.isCommandSent() }
-                .map {
-                    pumpSyncTempBasal(
-                        0.0,
-                        PodConstants.MAX_POD_LIFETIME.toMinutes(),
-                        PumpSync.TemporaryBasalType.PUMP_SUSPEND
-                    )
-                }
-                .ignoreElements(),
-            pre = observeDeliveryActive(),
-        ).doFinally {
-            notifyOnUnconfirmed(
-                Notification.PUMP_ERROR,
-                "Unconfirmed suspendDelivery command. Please refresh pod status",
-                R.raw.boluserror
-            )
-        }.toPumpEnactResult()
     }
 
     private fun observeDeliveryActive(): Completable = Completable.defer {
@@ -1289,7 +1253,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     expiryAlertDelay.toMinutes().toShort()
                 ),
                 BeepType.FOUR_TIMES_BIP_BEEP,
-                BeepRepetitionType.EVERY_MINUTE
+                BeepRepetitionType.EVERY_MINUTE_AND_EVERY_15_MIN
             )
         )
         return executeProgrammingCommand(

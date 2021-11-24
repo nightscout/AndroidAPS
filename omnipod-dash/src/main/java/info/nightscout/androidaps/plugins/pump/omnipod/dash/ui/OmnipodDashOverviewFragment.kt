@@ -442,7 +442,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             AlertType.SUSPEND_IN_PROGRESS ->
                 R.string.omnipod_common_alert_delivery_suspended
             AlertType.SUSPEND_ENDED ->
-                R.string.omnipod_common_alert_delivery_suspended2
+                R.string.omnipod_common_alert_delivery_suspended
             else ->
                 R.string.omnipod_common_alert_unknown_alert
         }
@@ -633,16 +633,8 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
     private fun updateSuspendDeliveryButton() {
         // If the Pod is currently suspended, we show the Resume delivery button instead.
-        if (isSuspendDeliveryButtonEnabled() &&
-            podStateManager.isPodRunning &&
-            (!podStateManager.isSuspended || commandQueue.isCustomCommandInQueue(CommandSuspendDelivery::class.java))
-        ) {
-            buttonBinding.buttonSuspendDelivery.visibility = View.VISIBLE
-            buttonBinding.buttonSuspendDelivery.isEnabled =
-                podStateManager.isPodRunning && !podStateManager.isSuspended && isQueueEmpty()
-        } else {
-            buttonBinding.buttonSuspendDelivery.visibility = View.GONE
-        }
+        // disable the 'suspendDelivery' button.
+        buttonBinding.buttonSuspendDelivery.visibility = View.GONE
     }
 
     private fun updateSetTimeButton() {

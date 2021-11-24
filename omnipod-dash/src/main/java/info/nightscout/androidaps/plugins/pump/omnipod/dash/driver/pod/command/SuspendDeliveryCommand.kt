@@ -20,26 +20,15 @@ class SuspendDeliveryCommand private constructor(
         get() {
             val alerts = listOf(
                 AlertConfiguration(
-                    AlertType.SUSPEND_IN_PROGRESS,
-                    enabled = true,
-                    durationInMinutes = 10,
-                    autoOff = false,
-                    AlertTrigger.TimerTrigger(
-                        1
-                    ),
-                    BeepType.XXX,
-                    BeepRepetitionType.XXX4
-                ),
-                AlertConfiguration(
                     AlertType.SUSPEND_ENDED,
                     enabled = true,
                     durationInMinutes = 0,
                     autoOff = false,
                     AlertTrigger.TimerTrigger(
-                        10
+                        20
                     ),
                     BeepType.FOUR_TIMES_BIP_BEEP,
-                    BeepRepetitionType.EVERY_MINUTE
+                    BeepRepetitionType.EVERY_MINUTE_AND_EVERY_15_MIN
                 ),
             )
             val programAlerts = ProgramAlertsCommand.Builder()
