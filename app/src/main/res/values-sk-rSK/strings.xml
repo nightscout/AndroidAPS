@@ -778,8 +778,8 @@
     <string name="show_calculation">Zobraziť kalkuláciu</string>
     <string name="show_removed">Zobraziť odstránené</string>
     <string name="clearqueueconfirm">Vymazať frontu? Všetky dáta vo fronte budú stratené!</string>
-    <string name="ebstopsloop">Použitie funkcie rozloženého bolusu zastaví uzavretý okruh na dobu trvania rozloženého bolusu. Naozaj to chcete?</string>
-    <string name="closed_loop_disabled_with_eb">Uzavretý okruh je zastavený kvôli prebiehajúcemu rozloženému bolusu</string>
+    <string name="ebstopsloop">Použitie funkcie predĺženého bolusu zastaví uzavretý okruh na dobu trvania predĺženého bolusu. Naozaj to chcete?</string>
+    <string name="closed_loop_disabled_with_eb">Uzavretý okruh je zastavený kvôli prebiehajúcemu predĺženému bolusu</string>
     <string name="phonechecker">PhoneChecker</string>
     <string name="chartmenu">Grafové menu</string>
     <string name="loop_smbrequest_time_label">Čas požiadavky SMB</string>
