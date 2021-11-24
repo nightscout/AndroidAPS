@@ -156,6 +156,8 @@ class BolusWizard @Inject constructor(
                useAlarm: Boolean,
                notes: String = "",
                carbTime: Int = 0,
+               usePercentage: Boolean = false,
+               defaultPercentage: Int = 100,
                quickWizard: Boolean = false
     ): BolusWizard {
 
@@ -221,7 +223,7 @@ class BolusWizard @Inject constructor(
         insulinFromBasalIOB = if (includeBasalIOB) -basalIob.basaliob else 0.0
 
         // Insulin from correction
-        insulinFromCorrection = correction
+        insulinFromCorrection = if (usePercentage) 0.0 else correction
 
         // Insulin from superbolus for 2h. Get basal rate now and after 1h
         if (useSuperBolus) {

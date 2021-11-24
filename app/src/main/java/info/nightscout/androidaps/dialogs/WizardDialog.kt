@@ -186,6 +186,21 @@ class WizardDialog : DaggerDialogFragment() {
                 binding.resulttable.visibility = isChecked.toVisibility()
             }
         }
+
+        binding.correctionPercent.setOnCheckedChangeListener {_, isChecked ->
+            run {
+                sp.putBoolean(rh.gs(R.string.key_wizard_correction_percent), isChecked)
+                binding.correctionUnit.text = if (isChecked) "%" else rh.gs(R.string.insulin_unit_shortname)
+                correctionPercent = binding.correctionPercent.isChecked
+                if (correctionPercent)
+                    binding.correctionInput.setParams(calculatedPercentage.toDouble(), 10.0, 200.0, 1.0, DecimalFormat("0"), false, binding.ok, textWatcher)
+                else
+                    binding.correctionInput.setParams(savedInstanceState?.getDouble("correction_input")
+                                                      ?: 0.0, -maxCorrection, maxCorrection, bolusStep, DecimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump), false, binding.ok, textWatcher)
+                binding.correctionInput.value = if (correctionPercent) calculatedPercentage.toDouble() else calculatedCorrection
+            }
+
+        }
         // profile spinner
         binding.profile.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -238,11 +253,14 @@ class WizardDialog : DaggerDialogFragment() {
     private fun saveCheckedStates() {
         sp.putBoolean(R.string.key_wizard_include_cob, binding.cobcheckbox.isChecked)
         sp.putBoolean(R.string.key_wizard_include_trend_bg, binding.bgtrendcheckbox.isChecked)
+        sp.putBoolean(R.string.key_wizard_correction_percent, binding.correctionPercent.isChecked)
     }
 
     private fun loadCheckedStates() {
         binding.bgtrendcheckbox.isChecked = sp.getBoolean(R.string.key_wizard_include_trend_bg, false)
         binding.cobcheckbox.isChecked = sp.getBoolean(R.string.key_wizard_include_cob, false)
+        correctionPercent = sp.getBoolean(R.string.key_wizard_correction_percent,false)
+        binding.correctionPercent.isChecked = correctionPercent
     }
 
     private fun valueToUnitsToString(value: Double, units: String): String =
