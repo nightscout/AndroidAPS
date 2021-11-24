@@ -498,7 +498,6 @@ class OmnipodDashManagerImpl @Inject constructor(
         }
     }
 
-
     override fun suspendDelivery(hasBasalBeepEnabled: Boolean): Observable<PodEvent> {
         return Observable.concat(
             observePodRunning,

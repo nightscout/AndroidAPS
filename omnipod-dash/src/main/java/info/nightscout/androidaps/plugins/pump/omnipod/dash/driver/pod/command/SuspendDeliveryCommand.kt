@@ -110,5 +110,4 @@ class SuspendDeliveryCommand private constructor(
         private const val LENGTH: Short = 7
         private const val BODY_LENGTH: Byte = 5
     }
-
 }

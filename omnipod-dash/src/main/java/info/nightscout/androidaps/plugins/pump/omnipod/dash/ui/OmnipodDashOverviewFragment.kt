@@ -650,10 +650,6 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
         return sp.getBoolean(R.string.omnipod_common_preferences_automatically_silence_alerts, false)
     }
 
-    private fun isSuspendDeliveryButtonEnabled(): Boolean {
-        return sp.getBoolean(R.string.key_omnipod_common_suspend_delivery_button_enabled, false)
-    }
-
     private fun displayErrorDialog(title: String, message: String, withSound: Boolean) {
         context?.let {
             ErrorHelperActivity.runAlarm(it, message, title, if (withSound) R.raw.boluserror else 0)

@@ -1116,7 +1116,6 @@ class OmnipodDashPumpPlugin @Inject constructor(
         }
     }
 
-
     private fun silenceAlerts(): PumpEnactResult {
         // TODO filter alert types
         return podStateManager.activeAlerts?.let {
@@ -1141,7 +1140,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 BeepRepetitionType.EVERY_MINUTE_AND_EVERY_15_MIN
             ),
         )
-        val ret =  executeProgrammingCommand(
+        val ret = executeProgrammingCommand(
             historyEntry = history.createRecord(OmnipodCommandType.CONFIGURE_ALERTS),
             command = omnipodManager.programAlerts(alerts).ignoreElements(),
         ).toPumpEnactResult()
