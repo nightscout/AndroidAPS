@@ -39,6 +39,8 @@ import io.reactivex.rxkotlin.plusAssign
 import java.util.*
 import javax.inject.Inject
 import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 
 class BolusWizard @Inject constructor(
     val injector: HasAndroidInjector
@@ -108,6 +110,10 @@ class BolusWizard @Inject constructor(
         private set
     var insulinAfterConstraints: Double = 0.0
         private set
+    var calculatedPercentage: Int = 100
+        private set
+    var calculatedCorrection: Double = 0.0
+        private set
 
     // Input
     lateinit var profile: Profile
@@ -117,7 +123,8 @@ class BolusWizard @Inject constructor(
     var cob: Double = 0.0
     var bg: Double = 0.0
     private var correction: Double = 0.0
-    private var percentageCorrection: Int = 0
+    var percentageCorrection: Int = 100
+    private var defaultPercentage: Int = 100
     private var useBg: Boolean = false
     private var useCob: Boolean = false
     private var includeBolusIOB: Boolean = false
@@ -129,6 +136,7 @@ class BolusWizard @Inject constructor(
     var notes: String = ""
     private var carbTime: Int = 0
     private var quickWizard: Boolean = true
+    var usePercentage: Boolean = false
 
     fun doCalc(profile: Profile,
                profileName: String,
@@ -170,6 +178,8 @@ class BolusWizard @Inject constructor(
         this.notes = notes
         this.carbTime = carbTime
         this.quickWizard = quickWizard
+        this.usePercentage = usePercentage
+        this.defaultPercentage = defaultPercentage
 
         // Insulin from BG
         sens = Profile.fromMgdlToUnits(profile.getIsfMgdl(), profileFunction.getUnits())
@@ -228,6 +238,10 @@ class BolusWizard @Inject constructor(
         totalBeforePercentageAdjustment = calculatedTotalInsulin
         if (calculatedTotalInsulin > 0) {
             calculatedTotalInsulin = calculatedTotalInsulin * percentageCorrection / 100.0
+            if (usePercentage)
+                calcCorrectionWithConstraints()
+            else
+                calcPercentageWithConstraints()
         }
 
         if (calculatedTotalInsulin < 0) {
@@ -444,4 +458,21 @@ class BolusWizard @Inject constructor(
             }
         })
     }
+
+    private fun calcPercentageWithConstraints() {
+        calculatedPercentage = 100
+        if (totalBeforePercentageAdjustment != insulinFromCorrection)
+            calculatedPercentage = Round.roundTo(calculatedTotalInsulin/(totalBeforePercentageAdjustment-insulinFromCorrection)*100,1.0).toInt()
+        calculatedPercentage = max(calculatedPercentage, 10)
+        calculatedPercentage = min(calculatedPercentage,250)
+    }
+
+    private fun calcCorrectionWithConstraints() {
+        val bolusStep = activePlugin.activePump.pumpDescription.bolusStep
+        calculatedCorrection = Round.roundTo(totalBeforePercentageAdjustment * percentageCorrection / defaultPercentage - totalBeforePercentageAdjustment, bolusStep)
+        //Apply constraints
+        calculatedCorrection = min(constraintChecker.getMaxBolusAllowed().value(), calculatedCorrection)
+        calculatedCorrection = max(-constraintChecker.getMaxBolusAllowed().value(), calculatedCorrection)
+    }
+
 }
