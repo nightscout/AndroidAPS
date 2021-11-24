@@ -237,10 +237,8 @@
     <!--    TDDStatsActivity-->
     <string name="stats">İstatistikler</string>
     <string name="cumulative_tdd">Kümülatif GTD (Günlük Toplam Doz)</string>
-    <string name="expweight">Üstel Ağırlıklı TDD</string>
     <string name="basalrate">Bazal</string>
     <string name="bolus">Bolus</string>
-    <string name="tdd">TGD</string>
     <string name="ratio">Oran</string>
     <string name="amount_days"># Gün</string>
     <string name="weight">Ağırlık</string>
