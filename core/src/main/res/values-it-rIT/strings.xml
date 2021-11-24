@@ -410,6 +410,12 @@
     <string name="basal_value">Valore basale</string>
     <string name="nsclient_version_does_not_match">La versione di NSClient non corrisponde ad AndroidAPS. Aggiorna.</string>
     <!-- Command Queue + readStatus reasons -->
+    <string name="bolus_u_min">BOLO %1$.2f U</string>
+    <string name="carbs_g">CHO %1$d g</string>
+    <string name="extended_bolus_u_min">BOLO ESTESO %1$.2f U %2$d min</string>
+    <string name="load_events">CARICA EVENTI</string>
+    <string name="load_history">CARICA STORICO %1$d</string>
+    <string name="load_tdds">CARICA TDD</string>
     <string name="read_status" comment="10 characters max for READSTATUS translation">READSTATUS %1$s</string>
     <string name="keepalive_status_outdated" comment="26 characters max for translation">KeepAlive. Stato obsoleto.</string>
     <string name="keepalive_basal_outdated" comment="26 characters max for translation">KeepAlive. Basale obsoleta.</string>
