@@ -828,8 +828,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="currentprofile">Mevcut profil</string>
     <string name="availableprofile">Kullanılabilir profil</string>
     <string name="profiletype">Profil tipi</string>
-    <string name="formatwithtdd">Yaş: %1$.0f Top.Gün.Doz: %2$.0f Ü</string>
-    <string name="formatwittddandpct">Yaş: %1$.0f Top.Gün.Doz: %2$.0f Ü %3$d%%</string>
     <string name="formatwithweight">Yaş: %1$.0f Ağırlık: %2$.0f kg</string>
     <string name="basalpctfromtdd_label">% bazalın</string>
     <string name="dpvdefaultprofile">DPV Varsayılan profil</string>
