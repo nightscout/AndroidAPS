@@ -35,4 +35,5 @@
     <string name="omnipod_common_history_tbr_value">Tasa: %1$.2f U, duración: %2$d minutos</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
     <string name="dash_bolusdelivering">Entregando %1$.2f U</string>
+    <string name="omnipod_common_alert_delivery_suspended">Suspendida la entrega de insulina</string>
 </resources>
