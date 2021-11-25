@@ -127,6 +127,7 @@ open class Notification {
         const val NSCLIENT_VERSION_DOES_NOT_MATCH = 73
         const val VERSION_EXPIRE = 74
         const val INVALID_PROFILE_NOT_ACCEPTED = 75
+        const val MDT_INVALID_HISTORY_DATA = 76
 
         const val USER_MESSAGE = 1000
 

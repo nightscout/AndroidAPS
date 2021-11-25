@@ -8,12 +8,16 @@ import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
+import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntry
 import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryBolus
 import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryTBR
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil
+import info.nightscout.androidaps.plugins.pump.medtronic.R
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.MedtronicPumpHistoryDecoder
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntryType
@@ -24,6 +28,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpBolusType
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.LocalDateTime
@@ -40,12 +45,13 @@ import javax.inject.Singleton
 //  all times that time changed (TZ, DST, etc.). Data needs to be returned in batches (time_changed batches, so that we can
 //  handle it. It would help to assign sort_ids to items (from oldest (1) to newest (x)
 //
-@Suppress("DEPRECATION")
 @Singleton
 class MedtronicHistoryData @Inject constructor(
     val injector: HasAndroidInjector,
     val aapsLogger: AAPSLogger,
     val sp: SP,
+    val rh: ResourceHelper,
+    val rxBus: RxBus,
     val activePlugin: ActivePlugin,
     val medtronicUtil: MedtronicUtil,
     val medtronicPumpHistoryDecoder: MedtronicPumpHistoryDecoder,
@@ -207,7 +213,7 @@ class MedtronicHistoryData @Inject constructor(
                     allPumpIds.remove(pumpHistoryEntry.pumpId)
                 }
             }
-            allHistory.removeAll(removeList)
+            allHistory.removeAll(removeList.toSet())
             this.sort(allHistory)
             aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "All History records [afterFilterCount=%d, removedItemsCount=%d, newItemsCount=%d]",
                 allHistory.size, removeList.size, newHistory.size))
@@ -659,17 +665,23 @@ class MedtronicHistoryData @Inject constructor(
                             "pumpId=${tempBasalProcessDTO.pumpId}, rate=${tbrEntry.insulinRate} U, " +
                             "duration=${tempBasalProcessDTO.durationAsSeconds} s, pumpSerial=${medtronicPumpStatus.serialNumber}]")
 
-                        val result = pumpSync.syncTemporaryBasalWithPumpId(
-                            tryToGetByLocalTime(tempBasalProcessDTO.atechDateTime),
-                            tbrEntry.insulinRate,
-                            tempBasalProcessDTO.durationAsSeconds * 1000L,
-                            !tbrEntry.isPercent,
-                            PumpSync.TemporaryBasalType.NORMAL,
-                            tempBasalProcessDTO.pumpId,
-                            medtronicPumpStatus.pumpType,
-                            medtronicPumpStatus.serialNumber)
+                        if (tempBasalProcessDTO.durationAsSeconds == 0) {
+                            rxBus.send(EventNewNotification(Notification(Notification.MDT_INVALID_HISTORY_DATA, rh.gs(R.string.invalid_history_data), Notification.URGENT)))
+                            aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithPumpId - Skipped")
+                        } else {
+                            val result = pumpSync.syncTemporaryBasalWithPumpId(
+                                tryToGetByLocalTime(tempBasalProcessDTO.atechDateTime),
+                                tbrEntry.insulinRate,
+                                tempBasalProcessDTO.durationAsSeconds * 1000L,
+                                !tbrEntry.isPercent,
+                                PumpSync.TemporaryBasalType.NORMAL,
+                                tempBasalProcessDTO.pumpId,
+                                medtronicPumpStatus.pumpType,
+                                medtronicPumpStatus.serialNumber
+                            )
 
-                        aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithPumpId - Result: $result")
+                            aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithPumpId - Result: $result")
+                        }
 
                         if (medtronicPumpStatus.runningTBR != null) {
                             if (!isTBRActive(medtronicPumpStatus.runningTBR!!)) {

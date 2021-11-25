@@ -579,7 +579,11 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
 
     fun getTemporaryBasal(): TempBasalPair? {
         return sendAndGetResponseWithCheck(MedtronicCommandType.ReadTemporaryBasal) { _, _, rawContent ->
-            TempBasalPair(aapsLogger, rawContent)
+            if (rawContent.size >= 5) TempBasalPair(aapsLogger, rawContent)
+            else {
+                aapsLogger.debug(LTag.PUMPBTCOMM, "Received invalid TempBasal response" + ByteUtil.getHex(rawContent))
+                null
+            }
         }
     }
 
