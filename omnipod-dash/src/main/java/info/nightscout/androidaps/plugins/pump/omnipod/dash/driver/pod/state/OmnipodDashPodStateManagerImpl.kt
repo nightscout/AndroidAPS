@@ -225,6 +225,13 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             store()
         }
 
+    override var suspendAlertsEnabled: Boolean
+        get() = podState.suspendAlertsEnabled
+        set(enabled) {
+            podState.suspendAlertsEnabled = enabled
+            store()
+        }
+
     override val lastStatusResponseReceived: Long
         get() = podState.lastStatusResponseReceived
 
@@ -714,6 +721,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         var timeZoneOffset: Int? = null
         var timeZoneUpdated: Long? = null
         var alarmSynced: Boolean = false
+        var suspendAlertsEnabled: Boolean = false
 
         var bleVersion: SoftwareVersion? = null
         var firmwareVersion: SoftwareVersion? = null
