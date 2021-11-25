@@ -90,4 +90,5 @@
     <string name="set_neutral_temps_title">Установить нейтральные временные базалы</string>
     <string name="set_neutral_temps_summary">Если эта опция включена, то она отменяет временный базал до конца каждого часа. Такой метод помогает прекратить почасовую вибрацию некоторых помп.</string>
     <string name="mdt_tbr_remaining">%1$.1fед/ч(%2$d мин осталось)</string>
+    <string name="invalid_history_data">Обнаружены недопустимые данные истории помпы. Создайте запись о новой проблеме и предоставьте журналы.</string>
 </resources>
