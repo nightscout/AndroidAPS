@@ -27,14 +27,10 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.SafeParse
-import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.extensions.valueToUnits
 import info.nightscout.androidaps.interfaces.*
+import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -63,6 +59,9 @@ class WizardDialog : DaggerDialogFragment() {
     @Inject lateinit var dateUtil: DateUtil
 
     private var wizard: BolusWizard? = null
+    private var calculatedPercentage = 100.0
+    private var calculatedCorrection = 0.0
+    private var correctionPercent = false
 
     //one shot guards
     private var okClicked: Boolean = false
@@ -134,12 +133,22 @@ class WizardDialog : DaggerDialogFragment() {
         binding.carbsInput.setParams(savedInstanceState?.getDouble("carbs_input")
             ?: 0.0, 0.0, maxCarbs.toDouble(), 1.0, DecimalFormat("0"), false, binding.ok, textWatcher)
         val bolusStep = activePlugin.activePump.pumpDescription.bolusStep
-        binding.correctionInput.setParams(savedInstanceState?.getDouble("correction_input")
-            ?: 0.0, -maxCorrection, maxCorrection, bolusStep, DecimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump), false, binding.ok, textWatcher)
+
+        if (correctionPercent) {
+            calculatedPercentage = sp.getInt(R.string.key_boluswizard_percentage, 100).toDouble()
+            binding.correctionInput.setParams(calculatedPercentage, 10.0, 200.0, 1.0, DecimalFormat("0"), false, binding.ok, textWatcher)
+            binding.correctionInput.value = calculatedPercentage
+            binding.correctionUnit.text = "%"
+        } else {
+            binding.correctionInput.setParams(
+                savedInstanceState?.getDouble("correction_input")
+                    ?: 0.0, -maxCorrection, maxCorrection, bolusStep, DecimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump), false, binding.ok, textWatcher)
+            binding.correctionUnit.text = rh.gs(R.string.insulin_unit_shortname)
+        }
         binding.carbTimeInput.setParams(savedInstanceState?.getDouble("carb_time_input")
             ?: 0.0, -60.0, 60.0, 5.0, DecimalFormat("0"), false, binding.ok, timeTextWatcher)
         initDialog()
-
+        calculatedPercentage = sp.getInt(R.string.key_boluswizard_percentage, 100).toDouble()
         binding.percentUsed.text = rh.gs(R.string.format_percent, sp.getInt(R.string.key_boluswizard_percentage, 100))
         // ok button
         binding.ok.setOnClickListener {
@@ -175,6 +184,21 @@ class WizardDialog : DaggerDialogFragment() {
                 binding.delimiter.visibility = isChecked.toVisibility()
                 binding.resulttable.visibility = isChecked.toVisibility()
             }
+        }
+
+        binding.correctionPercent.setOnCheckedChangeListener {_, isChecked ->
+            run {
+                sp.putBoolean(rh.gs(R.string.key_wizard_correction_percent), isChecked)
+                binding.correctionUnit.text = if (isChecked) "%" else rh.gs(R.string.insulin_unit_shortname)
+                correctionPercent = binding.correctionPercent.isChecked
+                if (correctionPercent)
+                    binding.correctionInput.setParams(calculatedPercentage.toDouble(), 10.0, 200.0, 1.0, DecimalFormat("0"), false, binding.ok, textWatcher)
+                else
+                    binding.correctionInput.setParams(savedInstanceState?.getDouble("correction_input")
+                                                      ?: 0.0, -maxCorrection, maxCorrection, bolusStep, DecimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump), false, binding.ok, textWatcher)
+                binding.correctionInput.value = if (correctionPercent) calculatedPercentage.toDouble() else calculatedCorrection
+            }
+
         }
         // profile spinner
         binding.profile.onItemSelectedListener = object : OnItemSelectedListener {
@@ -228,11 +252,14 @@ class WizardDialog : DaggerDialogFragment() {
     private fun saveCheckedStates() {
         sp.putBoolean(R.string.key_wizard_include_cob, binding.cobcheckbox.isChecked)
         sp.putBoolean(R.string.key_wizard_include_trend_bg, binding.bgtrendcheckbox.isChecked)
+        sp.putBoolean(R.string.key_wizard_correction_percent, binding.correctionPercent.isChecked)
     }
 
     private fun loadCheckedStates() {
         binding.bgtrendcheckbox.isChecked = sp.getBoolean(R.string.key_wizard_include_trend_bg, false)
         binding.cobcheckbox.isChecked = sp.getBoolean(R.string.key_wizard_include_cob, false)
+        correctionPercent = sp.getBoolean(R.string.key_wizard_correction_percent,false)
+        binding.correctionPercent.isChecked = correctionPercent
     }
 
     private fun valueToUnitsToString(value: Double, units: String): String =
@@ -291,9 +318,16 @@ class WizardDialog : DaggerDialogFragment() {
         if (specificProfile == null) return
 
         // Entered values
+        val usePercentage = binding.correctionPercent.isChecked
         var bg = SafeParse.stringToDouble(binding.bgInput.text)
         val carbs = SafeParse.stringToInt(binding.carbsInput.text)
-        val correction = SafeParse.stringToDouble(binding.correctionInput.text)
+        val correction = if (usePercentage) 0.0 else SafeParse.stringToDouble(binding.correctionInput.text)
+        val percentageCorrection = if (usePercentage) {
+            if (Round.roundTo(calculatedPercentage,1.0) == SafeParse.stringToDouble(binding.correctionInput.text))
+                calculatedPercentage
+            else
+                SafeParse.stringToDouble(binding.correctionInput.text)
+        } else sp.getInt(R.string.key_boluswizard_percentage, 100).toDouble()
         val carbsAfterConstraint = constraintChecker.applyCarbsConstraints(Constraint(carbs)).value()
         if (abs(carbs - carbsAfterConstraint) > 0.01) {
             binding.carbsInput.value = 0.0
@@ -324,7 +358,11 @@ class WizardDialog : DaggerDialogFragment() {
             binding.ttcheckbox.isChecked,
             binding.bgtrendcheckbox.isChecked,
             binding.alarm.isChecked,
-            binding.notes.text.toString(), carbTime)
+            binding.notes.text.toString(),
+            carbTime,
+            usePercentage = usePercentage,
+            totalPercentage = percentageCorrection
+        )
 
         wizard?.let { wizard ->
             binding.bg.text = String.format(rh.gs(R.string.format_bg_isf), valueToUnitsToString(Profile.toMgdl(bg, profileFunction.getUnits()), profileFunction.getUnits().asText), wizard.sens)
@@ -370,6 +408,9 @@ class WizardDialog : DaggerDialogFragment() {
                 binding.total.text = rh.gs(R.string.missing_carbs, wizard.carbsEquivalent.toInt())
                 binding.ok.visibility = View.INVISIBLE
             }
+            binding.percentUsed.text = rh.gs(R.string.format_percent, wizard.percentageCorrection)
+            calculatedPercentage = wizard.calculatedPercentage
+            calculatedCorrection = wizard.calculatedCorrection
         }
 
     }
