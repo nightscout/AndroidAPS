@@ -77,7 +77,7 @@ class AutomationPlugin @Inject constructor(
     var executionLog: MutableList<String> = ArrayList()
     var btConnects: MutableList<EventBTChange> = ArrayList()
 
-    private val loopHandler: Handler = Handler(HandlerThread(AutomationPlugin::class.java.simpleName + "Handler").also { it.start() }.looper)
+    private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private lateinit var refreshLoop: Runnable
 
     companion object {
@@ -89,7 +89,7 @@ class AutomationPlugin @Inject constructor(
     init {
         refreshLoop = Runnable {
             processActions()
-            loopHandler.postDelayed(refreshLoop, T.mins(1).msecs())
+            handler.postDelayed(refreshLoop, T.mins(1).msecs())
         }
     }
 
@@ -100,7 +100,7 @@ class AutomationPlugin @Inject constructor(
 
         super.onStart()
         loadFromSP()
-        loopHandler.postDelayed(refreshLoop, T.mins(1).msecs())
+        handler.postDelayed(refreshLoop, T.mins(1).msecs())
 
         disposable += rxBus
             .toObservable(EventPreferenceChange::class.java)
@@ -148,7 +148,7 @@ class AutomationPlugin @Inject constructor(
 
     override fun onStop() {
         disposable.clear()
-        loopHandler.removeCallbacks(refreshLoop)
+        handler.removeCallbacks(refreshLoop)
         locationServiceHelper.stopService(context)
         super.onStop()
     }

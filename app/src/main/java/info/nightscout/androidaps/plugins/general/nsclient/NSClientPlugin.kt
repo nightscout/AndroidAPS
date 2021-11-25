@@ -56,19 +56,22 @@ class NSClientPlugin @Inject constructor(
     private val nsClientReceiverDelegate: NsClientReceiverDelegate,
     private val config: Config,
     private val buildHelper: BuildHelper
-) : PluginBase(PluginDescription()
-    .mainType(PluginType.GENERAL)
-    .fragmentClass(NSClientFragment::class.java.name)
-    .pluginIcon(R.drawable.ic_nightscout_syncs)
-    .pluginName(R.string.nsclientinternal)
-    .shortName(R.string.nsclientinternal_shortname)
-    .preferencesId(R.xml.pref_nsclientinternal)
-    .description(R.string.description_ns_client),
+) : PluginBase(
+    PluginDescription()
+        .mainType(PluginType.GENERAL)
+        .fragmentClass(NSClientFragment::class.java.name)
+        .pluginIcon(R.drawable.ic_nightscout_syncs)
+        .pluginName(R.string.nsclientinternal)
+        .shortName(R.string.nsclientinternal_shortname)
+        .preferencesId(R.xml.pref_nsclientinternal)
+        .alwaysEnabled(config.NSCLIENT)
+        .visibleByDefault(config.NSCLIENT)
+        .description(R.string.description_ns_client),
     aapsLogger, rh, injector
 ) {
 
     private val disposable = CompositeDisposable()
-    var handler: Handler? = null
+    private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private val listLog: MutableList<EventNSClientNewLog> = ArrayList()
     var textLog = fromHtml("")
     var paused = false
@@ -78,17 +81,6 @@ class NSClientPlugin @Inject constructor(
     val isAllowed: Boolean
         get() = nsClientReceiverDelegate.allowed
 
-    init {
-        if (config.NSCLIENT) {
-            pluginDescription.alwaysEnabled(true).visibleByDefault(true)
-        }
-        if (handler == null) {
-            val handlerThread = HandlerThread(NSClientPlugin::class.java.simpleName + "Handler")
-            handlerThread.start()
-            handler = Handler(handlerThread.looper)
-        }
-    }
-
     override fun onStart() {
         paused = sp.getBoolean(R.string.key_nsclientinternal_paused, false)
         autoscroll = sp.getBoolean(R.string.key_nsclientinternal_autoscroll, true)
@@ -96,46 +88,53 @@ class NSClientPlugin @Inject constructor(
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
         super.onStart()
         nsClientReceiverDelegate.grabReceiversState()
-        disposable.add(rxBus
-            .toObservable(EventNSClientStatus::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ event: EventNSClientStatus ->
-                status = event.getStatus(rh)
-                rxBus.send(EventNSClientUpdateGUI())
-            }, fabricPrivacy::logException)
+        disposable.add(
+            rxBus
+                .toObservable(EventNSClientStatus::class.java)
+                .observeOn(aapsSchedulers.io)
+                .subscribe({ event: EventNSClientStatus ->
+                               status = event.getStatus(rh)
+                               rxBus.send(EventNSClientUpdateGUI())
+                           }, fabricPrivacy::logException)
         )
-        disposable.add(rxBus
-            .toObservable(EventNetworkChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ ev -> nsClientReceiverDelegate.onStatusEvent(ev) }, fabricPrivacy::logException)
+        disposable.add(
+            rxBus
+                .toObservable(EventNetworkChange::class.java)
+                .observeOn(aapsSchedulers.io)
+                .subscribe({ ev -> nsClientReceiverDelegate.onStatusEvent(ev) }, fabricPrivacy::logException)
         )
-        disposable.add(rxBus
-            .toObservable(EventPreferenceChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ ev -> nsClientReceiverDelegate.onStatusEvent(ev) }, fabricPrivacy::logException)
+        disposable.add(
+            rxBus
+                .toObservable(EventPreferenceChange::class.java)
+                .observeOn(aapsSchedulers.io)
+                .subscribe({ ev -> nsClientReceiverDelegate.onStatusEvent(ev) }, fabricPrivacy::logException)
         )
-        disposable.add(rxBus
-            .toObservable(EventAppExit::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ if (nsClientService != null) context.unbindService(mConnection) }, fabricPrivacy::logException)
+        disposable.add(
+            rxBus
+                .toObservable(EventAppExit::class.java)
+                .observeOn(aapsSchedulers.io)
+                .subscribe({ if (nsClientService != null) context.unbindService(mConnection) }, fabricPrivacy::logException)
         )
-        disposable.add(rxBus
-            .toObservable(EventNSClientNewLog::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ event: EventNSClientNewLog ->
-                addToLog(event)
-                aapsLogger.debug(LTag.NSCLIENT, event.action + " " + event.logText)
-            }, fabricPrivacy::logException)
+        disposable.add(
+            rxBus
+                .toObservable(EventNSClientNewLog::class.java)
+                .observeOn(aapsSchedulers.io)
+                .subscribe({ event: EventNSClientNewLog ->
+                               addToLog(event)
+                               aapsLogger.debug(LTag.NSCLIENT, event.action + " " + event.logText)
+                           }, fabricPrivacy::logException)
         )
-        disposable.add(rxBus
-            .toObservable(EventChargingState::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ ev -> nsClientReceiverDelegate.onStatusEvent(ev) }, fabricPrivacy::logException)
+        disposable.add(
+            rxBus
+                .toObservable(EventChargingState::class.java)
+                .observeOn(aapsSchedulers.io)
+                .subscribe({ ev -> nsClientReceiverDelegate.onStatusEvent(ev) }, fabricPrivacy::logException)
         )
-        disposable.add(rxBus
-            .toObservable(EventNSClientResend::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ event -> resend(event.reason) }, fabricPrivacy::logException)
+        disposable.add(
+            rxBus
+                .toObservable(EventNSClientResend::class.java)
+                .observeOn(aapsSchedulers.io)
+                .subscribe({ event -> resend(event.reason) }, fabricPrivacy::logException)
         )
     }
 
@@ -177,14 +176,14 @@ class NSClientPlugin @Inject constructor(
     }
 
     @Synchronized fun clearLog() {
-        handler?.post {
+        handler.post {
             synchronized(listLog) { listLog.clear() }
             rxBus.send(EventNSClientUpdateGUI())
         }
     }
 
     @Synchronized private fun addToLog(ev: EventNSClientNewLog) {
-        handler?.post {
+        handler.post {
             synchronized(listLog) {
                 listLog.add(ev)
                 // remove the first line if log is too large

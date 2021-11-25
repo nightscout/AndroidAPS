@@ -45,7 +45,7 @@ class RandomBgPlugin @Inject constructor(
     aapsLogger, rh, injector
 ), BgSource {
 
-    private val loopHandler: Handler = Handler(HandlerThread(RandomBgPlugin::class.java.simpleName + "Handler").also { it.start() }.looper)
+    private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private lateinit var refreshLoop: Runnable
 
     companion object {
@@ -58,7 +58,7 @@ class RandomBgPlugin @Inject constructor(
 
     init {
         refreshLoop = Runnable {
-            loopHandler.postDelayed(refreshLoop, T.mins(interval).msecs())
+            handler.postDelayed(refreshLoop, T.mins(interval).msecs())
             handleNewData()
         }
     }
@@ -74,13 +74,13 @@ class RandomBgPlugin @Inject constructor(
 
     override fun onStart() {
         super.onStart()
-        loopHandler.postDelayed(refreshLoop, T.mins(interval).msecs())
+        handler.postDelayed(refreshLoop, T.mins(interval).msecs())
         disposable.clear()
     }
 
     override fun onStop() {
         super.onStop()
-        loopHandler.removeCallbacks(refreshLoop)
+        handler.removeCallbacks(refreshLoop)
     }
 
     override fun specialEnableCondition(): Boolean {

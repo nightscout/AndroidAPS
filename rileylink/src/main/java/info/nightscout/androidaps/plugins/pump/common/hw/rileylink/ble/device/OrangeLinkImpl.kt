@@ -28,7 +28,8 @@ class OrangeLinkImpl @Inject constructor(
     var aapsLogger: AAPSLogger,
     var rileyLinkServiceData: RileyLinkServiceData,
     var rileyLinkUtil: RileyLinkUtil,
-    var sp: SP) {
+    var sp: SP
+) {
 
     lateinit var rileyLinkBLE: RileyLinkBLE
 
@@ -36,8 +37,10 @@ class OrangeLinkImpl @Inject constructor(
         if (characteristic.uuid.toString() == GattAttributes.CHARA_NOTIFICATION_ORANGE) {
             val data = characteristic.value
             val first = 0xff and data[0].toInt()
-            aapsLogger.info(LTag.PUMPBTCOMM,
-                "OrangeLinkImpl: onCharacteristicChanged " + ByteUtil.shortHexString(characteristic.value) + "=====" + first)
+            aapsLogger.info(
+                LTag.PUMPBTCOMM,
+                "OrangeLinkImpl: onCharacteristicChanged " + ByteUtil.shortHexString(characteristic.value) + "=====" + first
+            )
             val fv = data[3].toString() + "." + data[4]
             val hv = data[5].toString() + "." + data[6]
             rileyLinkServiceData.versionOrangeFirmware = fv
@@ -46,7 +49,6 @@ class OrangeLinkImpl @Inject constructor(
             aapsLogger.info(LTag.PUMPBTCOMM, "OrangeLink: Firmware: ${fv}, Hardware: $hv")
         }
     }
-
 
     fun resetOrangeLinkData() {
         rileyLinkServiceData.isOrange = false
@@ -63,7 +65,6 @@ class OrangeLinkImpl @Inject constructor(
         }
     }
 
-
     fun enableNotifications(): Boolean {
         aapsLogger.info(LTag.PUMPBTCOMM, "OrangeLinkImpl::enableNotifications")
         val result: BLECommOperationResult = rileyLinkBLE.setNotification_blocking(
@@ -77,7 +78,6 @@ class OrangeLinkImpl @Inject constructor(
         }
         return true
     }
-
 
     private fun buildScanFilters(): List<ScanFilter> {
         val scanFilterList: MutableList<ScanFilter> = mutableListOf() //ArrayList<*> = ArrayList<Any>()
@@ -135,16 +135,16 @@ class OrangeLinkImpl @Inject constructor(
         }
     }
 
-/*
-    private val mLeScanCallback = LeScanCallback { device, _, _ ->
-        if (rileyLinkServiceData.rileyLinkAddress.equals(device.address)) {
-            stopScan()
-            rileyLinkBLE.rileyLinkDevice = device
-            rileyLinkBLE.connectGattInternal()
+    /*
+        private val mLeScanCallback = LeScanCallback { device, _, _ ->
+            if (rileyLinkServiceData.rileyLinkAddress.equals(device.address)) {
+                stopScan()
+                rileyLinkBLE.rileyLinkDevice = device
+                rileyLinkBLE.connectGattInternal()
+            }
         }
-    }
-*/
-    private val handler: Handler = object : Handler(HandlerThread(OrangeLinkImpl::class.java.simpleName + "Handler").also { it.start() }.looper) {
+    */
+    private val handler: Handler = object : Handler(HandlerThread(this::class.java.simpleName + "Handler").also { it.start() }.looper) {
         override fun handleMessage(msg: Message) {
             super.handleMessage(msg)
             when (msg.what) {
@@ -189,6 +189,7 @@ class OrangeLinkImpl @Inject constructor(
     }
 
     companion object {
+
         const val TIME_OUT = 90 * 1000
         const val TIME_OUT_WHAT = 0x12
     }

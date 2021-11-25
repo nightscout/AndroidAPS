@@ -39,7 +39,7 @@ class VirtualPumpFragment : DaggerFragment() {
     private val disposable = CompositeDisposable()
 
     private lateinit var refreshLoop: Runnable
-    private lateinit var handler: Handler
+    private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
     private var _binding: VirtualpumpFragmentBinding? = null
 
@@ -54,9 +54,9 @@ class VirtualPumpFragment : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     }
-        @Synchronized
+
+    @Synchronized
     override fun onResume() {
         super.onResume()
         disposable += rxBus

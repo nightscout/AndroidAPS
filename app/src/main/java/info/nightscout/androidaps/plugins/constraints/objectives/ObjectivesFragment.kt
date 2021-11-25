@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.constraints.objectives
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
+import android.os.HandlerThread
 import android.os.Looper
 import android.os.SystemClock
 import android.view.Gravity
@@ -59,7 +60,7 @@ class ObjectivesFragment : DaggerFragment() {
     @Inject lateinit var uel: UserEntryLogger
 
     private val objectivesAdapter = ObjectivesAdapter()
-    private val handler = Handler(Looper.getMainLooper())
+    private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 

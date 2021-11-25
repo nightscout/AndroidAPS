@@ -50,7 +50,7 @@ class GlunovoPlugin @Inject constructor(
     aapsLogger, resourceHelper, injector
 ), BgSource {
 
-    private val loopHandler: Handler = Handler(HandlerThread(this::class.java.simpleName + "Handler").also { it.start() }.looper)
+    private val handler = Handler(HandlerThread(this::class.java.simpleName + "Handler").also { it.start() }.looper)
     private lateinit var refreshLoop: Runnable
 
     private val contentUri: Uri = Uri.parse("content://$AUTHORITY/$TABLE_NAME")
@@ -65,7 +65,7 @@ class GlunovoPlugin @Inject constructor(
             }
             val lastReadTimestamp = sp.getLong(R.string.key_last_processed_glunovo_timestamp, 0L)
             val differenceToNow = INTERVAL - (dateUtil.now() - lastReadTimestamp) % INTERVAL + T.secs(10).msecs()
-            loopHandler.postDelayed(refreshLoop, differenceToNow)
+            handler.postDelayed(refreshLoop, differenceToNow)
         }
     }
 
@@ -73,12 +73,12 @@ class GlunovoPlugin @Inject constructor(
 
     override fun onStart() {
         super.onStart()
-        loopHandler.postDelayed(refreshLoop, T.secs(30).msecs()) // do not start immediately, app may be still starting
+        handler.postDelayed(refreshLoop, T.secs(30).msecs()) // do not start immediately, app may be still starting
     }
 
     override fun onStop() {
         super.onStop()
-        loopHandler.removeCallbacks(refreshLoop)
+        handler.removeCallbacks(refreshLoop)
         disposable.clear()
     }
 

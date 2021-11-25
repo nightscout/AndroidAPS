@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.interaction.utils;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -82,7 +83,7 @@ public class PlusMinusEditText implements View.OnKeyListener,
         this.allowZero = allowZero;
         this.roundRobin = roundRobin;
 
-        mHandler = new Handler() {
+        mHandler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
                 switch (msg.what) {
