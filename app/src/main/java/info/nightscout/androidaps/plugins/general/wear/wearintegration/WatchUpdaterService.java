@@ -664,13 +664,15 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
                 IobTotal bolusIob = iobCobCalculator.calculateIobFromBolus().round();
                 IobTotal basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round();
 
-                iobSum = DecimalFormatter.INSTANCE.to2Decimal(bolusIob.iob + basalIob.basaliob);
-                iobDetail = "(" + DecimalFormatter.INSTANCE.to2Decimal(bolusIob.iob) + "|" + DecimalFormatter.INSTANCE.to2Decimal(basalIob.basaliob) + ")";
+                iobSum = DecimalFormatter.INSTANCE.to2Decimal(bolusIob.getIob() + basalIob.getBasaliob());
+                iobDetail =
+                        "(" + DecimalFormatter.INSTANCE.to2Decimal(bolusIob.getIob()) + "|" + DecimalFormatter.INSTANCE.to2Decimal(basalIob.getBasaliob()) + ")";
                 cobString = iobCobCalculator.getCobInfo(false, "WatcherUpdaterService").generateCOBString();
                 currentBasal = generateBasalString();
 
                 //bgi
-                double bgi = -(bolusIob.activity + basalIob.activity) * 5 * Profile.Companion.fromMgdlToUnits(profile.getIsfMgdl(), profileFunction.getUnits());
+                double bgi =
+                        -(bolusIob.getActivity() + basalIob.getActivity()) * 5 * Profile.Companion.fromMgdlToUnits(profile.getIsfMgdl(), profileFunction.getUnits());
                 bgiString = "" + ((bgi >= 0) ? "+" : "") + DecimalFormatter.INSTANCE.to1Decimal(bgi);
 
                 status = generateStatusString(profile, currentBasal, iobSum, iobDetail, bgiString);

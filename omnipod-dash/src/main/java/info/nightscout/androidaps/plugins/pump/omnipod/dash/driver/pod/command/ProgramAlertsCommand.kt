@@ -38,6 +38,18 @@ class ProgramAlertsCommand private constructor(
             return appendCrc(byteBuffer.array())
         }
 
+    val encodedWithoutHeaderAndCRC32: ByteArray
+        get() {
+            val byteBuffer: ByteBuffer = ByteBuffer.allocate(getLength().toInt())
+                .put(commandType.value)
+                .put(getBodyLength())
+                .putInt(nonce)
+            for (configuration in alertConfigurations) {
+                byteBuffer.put(configuration.encoded)
+            }
+            return byteBuffer.array()
+        }
+
     override fun toString(): String {
         return "ProgramAlertsCommand{" +
             "alertConfigurations=" + alertConfigurations +

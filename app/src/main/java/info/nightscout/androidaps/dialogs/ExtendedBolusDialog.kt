@@ -79,7 +79,7 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
 
     override fun submit(): Boolean {
         if (_binding == null) return false
-        val insulin = SafeParse.stringToDouble(binding.insulin.text ?: return false)
+        val insulin = SafeParse.stringToDouble(binding.insulin.text)
         val durationInMinutes = binding.duration.value.toInt()
         val actions: LinkedList<String> = LinkedList()
         val insulinAfterConstraint = constraintChecker.applyExtendedBolusConstraints(Constraint(insulin)).value()

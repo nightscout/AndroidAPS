@@ -258,10 +258,7 @@ class WizardDialog : DaggerDialogFragment() {
 
         val units = profileFunction.getUnits()
         binding.bgunits.text = units.asText
-        if (units == GlucoseUnit.MGDL)
-            binding.bgInput.setStep(1.0)
-        else
-            binding.bgInput.setStep(0.1)
+        binding.bgInput.step = if (units == GlucoseUnit.MGDL) 1.0 else 0.1
 
         // Set BG if not old
         binding.bgInput.value = iobCobCalculator.ads.actualBg()?.valueToUnits(units) ?: 0.0

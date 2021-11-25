@@ -189,7 +189,7 @@ class CarbsDialog : DialogFragmentWithDate() {
 
     override fun submit(): Boolean {
         if (_binding == null) return false
-        val carbs = binding.carbs.value?.toInt() ?: return false
+        val carbs = binding.carbs.value.toInt()
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(carbs)).value()
         val units = profileFunction.getUnits()
         val activityTTDuration = defaultValueHelper.determineActivityTTDuration()

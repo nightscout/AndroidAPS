@@ -65,7 +65,7 @@ class LocalProfileFragment : DaggerFragment() {
         override fun afterTextChanged(s: Editable) {}
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            localProfilePlugin.currentProfile()?.dia = SafeParse.stringToDouble(binding.dia.text.toString())
+            localProfilePlugin.currentProfile()?.dia = SafeParse.stringToDouble(binding.dia.text)
             localProfilePlugin.currentProfile()?.name = binding.name.text.toString()
             doEdit()
         }

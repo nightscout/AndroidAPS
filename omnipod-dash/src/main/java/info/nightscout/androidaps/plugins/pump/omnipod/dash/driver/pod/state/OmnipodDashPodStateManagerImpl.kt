@@ -16,6 +16,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.DefaultStatusResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.SetUniqueIdResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.VersionResponse
+import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.Completable
 import io.reactivex.Maybe
@@ -224,6 +225,13 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             store()
         }
 
+    override var suspendAlertsEnabled: Boolean
+        get() = podState.suspendAlertsEnabled
+        set(enabled) {
+            podState.suspendAlertsEnabled = enabled
+            store()
+        }
+
     override val lastStatusResponseReceived: Long
         get() = podState.lastStatusResponseReceived
 
@@ -340,7 +348,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
 
     private fun updateLastBolusFromResponse(bolusPulsesRemaining: Short) {
         podState.lastBolus?.run {
-            val remainingUnits = bolusPulsesRemaining.toDouble() * PodConstants.POD_PULSE_BOLUS_UNITS
+            val remainingUnits = Round.roundTo(bolusPulsesRemaining * PodConstants.POD_PULSE_BOLUS_UNITS, PodConstants.POD_PULSE_BOLUS_UNITS)
             this.bolusUnitsRemaining = remainingUnits
             if (remainingUnits == 0.0) {
                 this.deliveryComplete = true
@@ -713,6 +721,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         var timeZoneOffset: Int? = null
         var timeZoneUpdated: Long? = null
         var alarmSynced: Boolean = false
+        var suspendAlertsEnabled: Boolean = false
 
         var bleVersion: SoftwareVersion? = null
         var firmwareVersion: SoftwareVersion? = null

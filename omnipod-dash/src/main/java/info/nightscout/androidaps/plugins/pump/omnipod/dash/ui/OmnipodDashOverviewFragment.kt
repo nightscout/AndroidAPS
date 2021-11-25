@@ -439,6 +439,10 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 R.string.omnipod_common_alert_expiration_advisory
             AlertType.AUTO_OFF ->
                 R.string.omnipod_common_alert_shutdown_imminent
+            AlertType.SUSPEND_IN_PROGRESS ->
+                R.string.omnipod_common_alert_delivery_suspended
+            AlertType.SUSPEND_ENDED ->
+                R.string.omnipod_common_alert_delivery_suspended
             else ->
                 R.string.omnipod_common_alert_unknown_alert
         }
@@ -629,16 +633,8 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
     private fun updateSuspendDeliveryButton() {
         // If the Pod is currently suspended, we show the Resume delivery button instead.
-        if (isSuspendDeliveryButtonEnabled() &&
-            podStateManager.isPodRunning &&
-            (!podStateManager.isSuspended || commandQueue.isCustomCommandInQueue(CommandSuspendDelivery::class.java))
-        ) {
-            buttonBinding.buttonSuspendDelivery.visibility = View.VISIBLE
-            buttonBinding.buttonSuspendDelivery.isEnabled =
-                podStateManager.isPodRunning && !podStateManager.isSuspended && isQueueEmpty()
-        } else {
-            buttonBinding.buttonSuspendDelivery.visibility = View.GONE
-        }
+        // disable the 'suspendDelivery' button.
+        buttonBinding.buttonSuspendDelivery.visibility = View.GONE
     }
 
     private fun updateSetTimeButton() {
@@ -652,10 +648,6 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
     private fun isAutomaticallySilenceAlertsEnabled(): Boolean {
         return sp.getBoolean(R.string.omnipod_common_preferences_automatically_silence_alerts, false)
-    }
-
-    private fun isSuspendDeliveryButtonEnabled(): Boolean {
-        return sp.getBoolean(R.string.key_omnipod_common_suspend_delivery_button_enabled, false)
     }
 
     private fun displayErrorDialog(title: String, message: String, withSound: Boolean) {

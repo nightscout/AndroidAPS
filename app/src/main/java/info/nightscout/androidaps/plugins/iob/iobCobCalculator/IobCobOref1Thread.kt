@@ -209,12 +209,12 @@ class IobCobOref1Thread internal constructor(
                     // figure out how many carbs that represents
                     // but always assume at least 3mg/dL/5m (default) absorption per active treatment
                     val ci = max(deviation, totalMinCarbsImpact)
-                    if (ci != deviation) autosensData.failoverToMinAbsorbtionRate = true
+                    if (ci != deviation) autosensData.failOverToMinAbsorptionRate = true
                     autosensData.absorbed = ci * profile.getIc(bgTime) / sens
                     // and add that to the running total carbsAbsorbed
                     autosensData.cob = max(previous.cob - autosensData.absorbed, 0.0)
                     autosensData.mealCarbs = previous.mealCarbs
-                    autosensData.substractAbosorbedCarbs()
+                    autosensData.deductAbsorbedCarbs()
                     autosensData.usedMinCarbsImpact = totalMinCarbsImpact
                     autosensData.absorbing = previous.absorbing
                     autosensData.mealStartCounter = previous.mealStartCounter

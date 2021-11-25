@@ -12,8 +12,10 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definitio
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants.Companion.POD_EXPIRATION_ALERT_HOURS
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants.Companion.POD_EXPIRATION_ALERT_HOURS_DURATION
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants.Companion.POD_EXPIRATION_IMMINENT_ALERT_HOURS
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants.Companion.POD_PULSE_BOLUS_UNITS
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
+import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.Observable
 import io.reactivex.functions.Action
@@ -281,7 +283,7 @@ class OmnipodDashManagerImpl @Inject constructor(
                             .setUniqueId(podStateManager.uniqueId!!.toInt())
                             .setSequenceNumber(podStateManager.messageSequenceNumber)
                             .setNonce(NONCE)
-                            .setNumberOfUnits(podStateManager.firstPrimeBolusVolume!! * PodConstants.POD_PULSE_BOLUS_UNITS)
+                            .setNumberOfUnits(Round.roundTo(podStateManager.firstPrimeBolusVolume!! * PodConstants.POD_PULSE_BOLUS_UNITS, POD_PULSE_BOLUS_UNITS))
                             .setDelayBetweenPulsesInEighthSeconds(podStateManager.primePulseRate!!.toByte())
                             .setProgramReminder(ProgramReminder(atStart = false, atEnd = false, atInterval = 0))
                             .build(),
@@ -383,7 +385,7 @@ class OmnipodDashManagerImpl @Inject constructor(
             )
             observables.add(
                 observeSendProgramBolusCommand(
-                    podStateManager.secondPrimeBolusVolume!! * PodConstants.POD_PULSE_BOLUS_UNITS,
+                    Round.roundTo(podStateManager.secondPrimeBolusVolume!! * PodConstants.POD_PULSE_BOLUS_UNITS, PodConstants.POD_PULSE_BOLUS_UNITS),
                     podStateManager.primePulseRate!!.toByte(),
                     confirmationBeeps = false,
                     completionBeeps = false
@@ -437,7 +439,7 @@ class OmnipodDashManagerImpl @Inject constructor(
                             userExpiryAlertDelay.toMinutes().toShort()
                         ),
                         BeepType.FOUR_TIMES_BIP_BEEP,
-                        BeepRepetitionType.XXX2
+                        BeepRepetitionType.EVERY_MINUTE_AND_EVERY_15_MIN
                     )
                 )
             }
@@ -502,8 +504,29 @@ class OmnipodDashManagerImpl @Inject constructor(
         return Observable.concat(
             observePodRunning,
             observeConnectToPod,
-            observeSendStopDeliveryCommand(StopDeliveryCommand.DeliveryType.ALL, hasBasalBeepEnabled)
-        ).interceptPodEvents()
+            observeSuspendDeliveryCommand(hasBasalBeepEnabled)
+        ).doOnComplete {
+            podStateManager.suspendAlertsEnabled = true
+        }.interceptPodEvents()
+    }
+
+    private fun observeSuspendDeliveryCommand(hasBasalBeepEnabled: Boolean): Observable<PodEvent> {
+        return Observable.defer {
+            val beepType = if (!hasBasalBeepEnabled)
+                BeepType.SILENT
+            else
+                BeepType.LONG_SINGLE_BEEP
+
+            bleManager.sendCommand(
+                SuspendDeliveryCommand.Builder()
+                    .setSequenceNumber(podStateManager.messageSequenceNumber)
+                    .setUniqueId(podStateManager.uniqueId!!.toInt())
+                    .setNonce(NONCE)
+                    .setBeepType(beepType)
+                    .build(),
+                DefaultStatusResponse::class
+            )
+        }
     }
 
     private fun observeSendProgramTempBasalCommand(rate: Double, durationInMinutes: Short, tempBasalBeeps: Boolean): Observable<PodEvent> {
