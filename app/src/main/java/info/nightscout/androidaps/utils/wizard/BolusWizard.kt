@@ -468,7 +468,7 @@ class BolusWizard @Inject constructor(
     private fun calcPercentageWithConstraints() {
         calculatedPercentage = 100.0
         if (totalBeforePercentageAdjustment != insulinFromCorrection)
-            calculatedPercentage = Round.roundTo(calculatedTotalInsulin/(totalBeforePercentageAdjustment-insulinFromCorrection)*100,1.0)
+            calculatedPercentage = calculatedTotalInsulin/(totalBeforePercentageAdjustment-insulinFromCorrection)*100
         calculatedPercentage = max(calculatedPercentage, 10.0)
         calculatedPercentage = min(calculatedPercentage,250.0)
     }
