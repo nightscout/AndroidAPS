@@ -115,7 +115,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
     override fun submit(): Boolean {
         if (_binding == null) return false
         val pumpDescription = activePlugin.activePump.pumpDescription
-        val insulin = SafeParse.stringToDouble(binding.insulin.text ?: return false)
+        val insulin = SafeParse.stringToDouble(binding.insulin.text)
         val carbs = SafeParse.stringToInt(binding.carbs.text)
         val recordOnlyChecked = binding.recordOnly.isChecked
         val actions: LinkedList<String?> = LinkedList()
@@ -139,7 +139,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
                 OKDialog.showConfirmation(activity, rh.gs(R.string.overview_treatment_label), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     val action = when {
                         insulinAfterConstraints.equals(0.0) -> Action.CARBS
-                        carbsAfterConstraints.equals(0)     -> Action.BOLUS
+                        carbsAfterConstraints == 0          -> Action.BOLUS
                         else                                -> Action.TREATMENT
                     }
                     val detailedBolusInfo = DetailedBolusInfo()

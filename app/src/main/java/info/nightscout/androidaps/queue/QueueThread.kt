@@ -8,6 +8,7 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
@@ -18,7 +19,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 
 class QueueThread internal constructor(
-    private val queue: CommandQueueImplementation,
+    private val queue: CommandQueue,
     context: Context,
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBus,

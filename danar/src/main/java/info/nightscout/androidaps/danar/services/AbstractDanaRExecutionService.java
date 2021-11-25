@@ -207,10 +207,12 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
                 }
             }
         } else {
-            ToastUtils.showToastInUiThread(context.getApplicationContext(), rh.gs(R.string.nobtadapter));
+            ToastUtils.INSTANCE.showToastInUiThread(context.getApplicationContext(),
+                    rh.gs(R.string.nobtadapter));
         }
         if (mBTDevice == null) {
-            ToastUtils.showToastInUiThread(context.getApplicationContext(), rh.gs(R.string.devicenotfound));
+            ToastUtils.INSTANCE.showToastInUiThread(context.getApplicationContext(),
+                    rh.gs(R.string.devicenotfound));
         }
     }
 

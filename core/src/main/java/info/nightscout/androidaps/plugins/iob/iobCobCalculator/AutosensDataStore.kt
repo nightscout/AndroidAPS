@@ -347,7 +347,7 @@ class AutosensDataStore {
         synchronized(dataLock) {
             var i = autosensDataTable.size() - 1
             while (i >= 0 && count < valuesToProcess) {
-                if (autosensDataTable.valueAt(i).failoverToMinAbsorbtionRate) sum++
+                if (autosensDataTable.valueAt(i).failOverToMinAbsorptionRate) sum++
                 count++
                 i--
             }
