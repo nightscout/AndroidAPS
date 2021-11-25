@@ -34,4 +34,5 @@
     <string name="omnipod_common_history_tbr_value">Rychlost: %1$.2f U, doba trvání: %2$d minut</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
     <string name="dash_bolusdelivering">Podávání %1$.2f U</string>
+    <string name="omnipod_common_alert_delivery_suspended">Výdej inzulínu je pozastaven</string>
 </resources>
