@@ -34,4 +34,5 @@
     <string name="omnipod_dash_unknown">Stare necunoscută pentru comandă</string>
     <string name="omnipod_common_history_tbr_value">Rata: %1$.2f U, durata: %2$d minute</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
+    <string name="dash_bolusdelivering">Se livrează %1$.2f U</string>
 </resources>
