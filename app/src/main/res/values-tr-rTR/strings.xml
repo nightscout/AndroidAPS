@@ -645,7 +645,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="open_navigation">Navigasyonu aç</string>
     <string name="close_navigation">Navigasyonu kapat</string>
     <string name="nav_plugin_preferences">Eklenti tercihleri</string>
-    <string name="completed_well_done">Tamamlandı, aferin!</string>
     <string name="not_completed_yet">Henüz tamamlanmadı</string>
     <string name="time_elapsed">Geçen süre</string>
     <string name="poctech">Poctech</string>
