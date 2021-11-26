@@ -402,7 +402,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="careportal_sensor_label">Sensör</string>
     <string name="careportal_insulin_label">İnsülin</string>
     <string name="careportal_pb_label">Pompa pili</string>
-    <string name="careportal_age_label">ömür:</string>
     <string name="careportal_level_label">seviye:</string>
     <string name="ns_alarmoptions">Alarm türleri</string>
     <string name="ns_alarms">NS alarmlarından bildirimler oluşturun</string>
