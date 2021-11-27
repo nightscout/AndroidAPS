@@ -742,6 +742,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="selected_profile">Seçildi:</string>
     <string name="unitsnosemicolon">Birim</string>
     <string name="doyouwantswitchprofile">Profili değiştirmek ve mevcut profilde yapılan değişiklikleri gözardı etmek istiyor musunuz?</string>
+    <string name="objectives_button_unfinish">Komple tamamlandı</string>
     <string name="objectives_button_unstart">Yeniden Başla</string>
     <string name="doyouwantresetstart">Görevleri sıfırlamak istiyor musunuz? Tüm yaptıklarınızı kaybedeceksiniz.</string>
     <string name="setupwizard_units_prompt">Değerleri görüntülemek istediğiniz birimleri seçin</string>
