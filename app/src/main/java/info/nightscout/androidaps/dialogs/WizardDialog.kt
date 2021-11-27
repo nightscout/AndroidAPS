@@ -300,7 +300,7 @@ class WizardDialog : DaggerDialogFragment() {
 
         calculateInsulin()
 
-        binding.percentUsed.visibility = (sp.getInt(R.string.key_boluswizard_percentage, 100) != 100).toVisibility()
+        binding.percentUsed.visibility = (sp.getInt(R.string.key_boluswizard_percentage, 100) != 100 || correctionPercent).toVisibility()
     }
 
     private fun calculateInsulin() {
