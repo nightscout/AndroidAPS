@@ -34,4 +34,5 @@
     <string name="omnipod_common_history_tbr_value">Débit : %1$.2f U, durée : %2$d minutes</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
     <string name="dash_bolusdelivering">Injection de %1$.2fU en cours</string>
+    <string name="omnipod_common_alert_delivery_suspended">Injection d\'insuline suspendue</string>
 </resources>
