@@ -859,6 +859,7 @@
     <string name="cannula">Cánula</string>
     <string name="userentry">Entrada usuario</string>
     <string name="common_values">Usa los valores de tu comida más grande que comes normalmente\n</string>
+    <string name="summary_email_for_crash_report">Esta identificación se adjuntará a los informes de errores, para que podamos contactarte en casos urgentes. Es opcional.</string>
     <string name="email_address">Dirección de Correo Electrónico</string>
     <string name="privacy_settings">Ajustes de privacidad</string>
     <string name="privacy_summary">Puedes proporcionar una dirección de correo electrónico opcional si quieres ser notificado sobre fallos de la aplicación. Este no es un servicio automatizado. Los desarrolladores se comunicarán contigo en situaciones peligrosas.</string>
@@ -900,4 +901,6 @@
     <string name="data_status">Estado de datos BG</string>
     <string name="recalculated_data_used">Datos recalculados utilizados</string>
     <string name="bg_too_close">Datos de BG demasiado cercanos:\n%1$s\n%2$s</string>
+    <string name="identification">Identificación (correo electrónico, FB o nick de Discord, etc.)</string>
+    <string name="identification_not_set">Identificación no establecida en modo dev</string>
 </resources>
