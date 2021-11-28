@@ -859,6 +859,7 @@
     <string name="cannula">צינורית</string>
     <string name="userentry">קלט המשתמש</string>
     <string name="common_values">השתמשו בערכים הגבוהים ביותר של מזונות שאתם אוכלים בדרך כלל\n</string>
+    <string name="summary_email_for_crash_report">אמצעי הזיהוי יצורף לדיווחי קריסה על מנת שנוכל ליצור קשר במקרים דחופים. אין זו חובה.</string>
     <string name="email_address">כתובת דוא\"ל</string>
     <string name="privacy_settings">הגדרות פרטיות</string>
     <string name="privacy_summary">אם תרצו, תוכלו לספק כתובת דוא\"ל כדי לקבל דיווח על קריסות יישום. שירות זה אינו אוטומטי. המפתחים יצרו איתכם קשר במצבים מסוכנים.</string>
@@ -900,4 +901,6 @@
     <string name="data_status">מצב נתוני הסוכר</string>
     <string name="recalculated_data_used">משתמש בנתונים מחושבים מחדש</string>
     <string name="bg_too_close">רמת הסוכר קרובה מדי:\n%1$s\n%2$s</string>
+    <string name="identification">אמצעי זיהוי (מייל, פייסבוק או דיסקורד וכו\')</string>
+    <string name="identification_not_set">אמצעי הזיהוי אינו מוגדר במצב מפתחים</string>
 </resources>
