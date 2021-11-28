@@ -858,7 +858,6 @@
     <string name="cannula">Canula</string>
     <string name="userentry">Înregistrare utilizator</string>
     <string name="common_values">Folosește valorile corespunzătoarea celor mai mari mese pe care le ai de obicei\n</string>
-    <string name="summary_email_for_crash_report">Această adresă de e-mail va fi atașată rapoartelor de eroare, astfel încât să vă putem contacta în cazuri urgente. Este opțională.</string>
     <string name="email_address">Adresă de e-mail</string>
     <string name="privacy_settings">Setări de confidenţialitate</string>
     <string name="privacy_summary">Puteți furniza o adresă de e-mail opțională dacă doriți să fiți notificat despre erorile aplicației. Acesta nu este un serviciu automat. Veți fi contactat de dezvoltatori în situații periculoase.</string>
