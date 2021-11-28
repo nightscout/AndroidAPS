@@ -677,7 +677,8 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
 
     private fun store() {
         try {
-            val serialized = Gson().toJson(podState)
+            val cleanPodState = podState.copy(ltk = byteArrayOf()) // do not log ltk
+            val serialized = Gson().toJson(cleanPodState)
             logger.debug(LTag.PUMP, "Storing Pod state: $serialized")
             sharedPreferences.putString(R.string.key_omnipod_dash_pod_state, serialized)
         } catch (ex: Exception) {
@@ -699,56 +700,55 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         return PodState()
     }
 
-    class PodState : Serializable {
-
-        var activationProgress: ActivationProgress = ActivationProgress.NOT_STARTED
-        var lastUpdatedSystem: Long = 0
-        var lastStatusResponseReceived: Long = 0
+    data class PodState(
+        var activationProgress: ActivationProgress = ActivationProgress.NOT_STARTED,
+        var lastUpdatedSystem: Long = 0,
+        var lastStatusResponseReceived: Long = 0,
         var bluetoothConnectionState: OmnipodDashPodStateManager.BluetoothConnectionState =
-            OmnipodDashPodStateManager.BluetoothConnectionState.DISCONNECTED
-        var connectionAttempts = 0
-        var successfulConnections = 0
-        var successfulConnectionAttemptsAfterRetries = 0
-        var failedConnectionsAfterRetries = 0
-        var messageSequenceNumber: Short = 0
-        var sequenceNumberOfLastProgrammingCommand: Short? = null
-        var activationTime: Long? = null
-        var uniqueId: Long? = null
-        var bluetoothAddress: String? = null
-        var ltk: ByteArray? = null
-        var eapAkaSequenceNumber: Long = 1
-        var timeZone: String? = null // TimeZone ID (e.g. "Europe/Amsterdam")
-        var timeZoneOffset: Int? = null
-        var timeZoneUpdated: Long? = null
-        var alarmSynced: Boolean = false
-        var suspendAlertsEnabled: Boolean = false
+            OmnipodDashPodStateManager.BluetoothConnectionState.DISCONNECTED,
+        var connectionAttempts: Int = 0,
+        var successfulConnections: Int = 0,
+        var successfulConnectionAttemptsAfterRetries: Int = 0,
+        var failedConnectionsAfterRetries: Int = 0,
+        var messageSequenceNumber: Short = 0,
+        var sequenceNumberOfLastProgrammingCommand: Short? = null,
+        var activationTime: Long? = null,
+        var uniqueId: Long? = null,
+        var bluetoothAddress: String? = null,
+        var ltk: ByteArray? = null,
+        var eapAkaSequenceNumber: Long = 1,
+        var timeZone: String? = null, // TimeZone ID (e.g. "Europe/Amsterdam")
+        var timeZoneOffset: Int? = null,
+        var timeZoneUpdated: Long? = null,
+        var alarmSynced: Boolean = false,
+        var suspendAlertsEnabled: Boolean = false,
 
-        var bleVersion: SoftwareVersion? = null
-        var firmwareVersion: SoftwareVersion? = null
-        var lotNumber: Long? = null
-        var podSequenceNumber: Long? = null
-        var pulseRate: Short? = null
-        var primePulseRate: Short? = null
-        var podLifeInHours: Short? = null
-        var firstPrimeBolusVolume: Short? = null
-        var secondPrimeBolusVolume: Short? = null
+        var bleVersion: SoftwareVersion? = null,
+        var firmwareVersion: SoftwareVersion? = null,
+        var lotNumber: Long? = null,
+        var podSequenceNumber: Long? = null,
+        var pulseRate: Short? = null,
+        var primePulseRate: Short? = null,
+        var podLifeInHours: Short? = null,
+        var firstPrimeBolusVolume: Short? = null,
+        var secondPrimeBolusVolume: Short? = null,
 
-        var expirationReminderEnabled: Boolean? = null
-        var expirationHours: Int? = null
-        var lowReservoirAlertEnabled: Boolean? = null
-        var lowReservoirAlertUnits: Int? = null
+        var expirationReminderEnabled: Boolean? = null,
+        var expirationHours: Int? = null,
+        var lowReservoirAlertEnabled: Boolean? = null,
+        var lowReservoirAlertUnits: Int? = null,
 
-        var pulsesDelivered: Short? = null
-        var pulsesRemaining: Short? = null
-        var podStatus: PodStatus? = null
-        var deliveryStatus: DeliveryStatus? = null
-        var minutesSinceActivation: Short? = null
-        var activeAlerts: EnumSet<AlertType>? = null
-        var alarmType: AlarmType? = null
+        var pulsesDelivered: Short? = null,
+        var pulsesRemaining: Short? = null,
+        var podStatus: PodStatus? = null,
+        var deliveryStatus: DeliveryStatus? = null,
+        var minutesSinceActivation: Short? = null,
+        var activeAlerts: EnumSet<AlertType>? = null,
+        var alarmType: AlarmType? = null,
 
-        var basalProgram: BasalProgram? = null
-        var tempBasal: OmnipodDashPodStateManager.TempBasal? = null
-        var activeCommand: OmnipodDashPodStateManager.ActiveCommand? = null
+        var basalProgram: BasalProgram? = null,
+        var tempBasal: OmnipodDashPodStateManager.TempBasal? = null,
+        var activeCommand: OmnipodDashPodStateManager.ActiveCommand? = null,
         var lastBolus: OmnipodDashPodStateManager.LastBolus? = null
-    }
+    ) : Serializable
 }

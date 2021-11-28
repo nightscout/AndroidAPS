@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session
 import info.nightscout.androidaps.extensions.toHex
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.BuildConfig
 import org.spongycastle.util.encoders.Hex
 import java.security.SecureRandom
 import javax.crypto.Cipher
@@ -102,21 +103,23 @@ class Milenage(
     val receivedMacS = auts.copyOfRange(6, 14)
 
     init {
-        aapsLogger.debug(LTag.PUMPBTCOMM, "Milenage K: ${k.toHex()}")
-        aapsLogger.debug(LTag.PUMPBTCOMM, "Milenage RAND: ${rand.toHex()}")
-        aapsLogger.debug(LTag.PUMPBTCOMM, "Milenage SQN: ${sqn.toHex()}")
-        aapsLogger.debug(LTag.PUMPBTCOMM, "Milenage CK: ${ck.toHex()}")
-        aapsLogger.debug(LTag.PUMPBTCOMM, "Milenage AUTN: ${autn.toHex()}")
-        aapsLogger.debug(LTag.PUMPBTCOMM, "Milenage RES: ${res.toHex()}")
-        aapsLogger.debug(LTag.PUMPBTCOMM, "Milenage AK: ${ak.toHex()}")
-        aapsLogger.debug(LTag.PUMPBTCOMM, "Milenage AK STAR: ${akStar.toHex()}")
-        aapsLogger.debug(LTag.PUMPBTCOMM, "Milenage OPC: ${opc.toHex()}")
-        aapsLogger.debug(LTag.PUMPBTCOMM, "Milenage FullMAC: ${macAFull.toHex()}")
-        aapsLogger.debug(LTag.PUMPBTCOMM, "Milenage MacA: ${macA.toHex()}")
-        aapsLogger.debug(LTag.PUMPBTCOMM, "Milenage MacS: ${macS.toHex()}")
-        aapsLogger.debug(LTag.PUMPBTCOMM, "Milenage AUTS: ${auts.toHex()}")
-        aapsLogger.debug(LTag.PUMPBTCOMM, "Milenage synchronizationSqn: ${synchronizationSqn.toHex()}")
-        aapsLogger.debug(LTag.PUMPBTCOMM, "Milenage receivedMacS: ${receivedMacS.toHex()}")
+        if (BuildConfig.DEBUG) {
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Milenage K: ${k.toHex()}")
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Milenage RAND: ${rand.toHex()}")
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Milenage SQN: ${sqn.toHex()}")
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Milenage CK: ${ck.toHex()}")
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Milenage AUTN: ${autn.toHex()}")
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Milenage RES: ${res.toHex()}")
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Milenage AK: ${ak.toHex()}")
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Milenage AK STAR: ${akStar.toHex()}")
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Milenage OPC: ${opc.toHex()}")
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Milenage FullMAC: ${macAFull.toHex()}")
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Milenage MacA: ${macA.toHex()}")
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Milenage MacS: ${macS.toHex()}")
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Milenage AUTS: ${auts.toHex()}")
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Milenage synchronizationSqn: ${synchronizationSqn.toHex()}")
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Milenage receivedMacS: ${receivedMacS.toHex()}")
+        }
     }
 
     companion object {
