@@ -7,6 +7,45 @@ import androidx.annotation.StringRes
  */
 
 interface SP {
+    // Using a helper Editor interface to distinguish its
+    // methods from SP's. The latter always run apply().
+    // The whole point of the edit() function below is to
+    // _avoid_ unnecessary apply() / commit() calls, so
+    // we cannot use SP's put* methods in edit().
+    interface Editor {
+        fun clear()
+
+        fun remove(@StringRes resourceID: Int)
+        fun remove(key: String)
+
+        fun putBoolean(key: String, value: Boolean)
+        fun putBoolean(@StringRes resourceID: Int, value: Boolean)
+        fun putDouble(key: String, value: Double)
+        fun putDouble(@StringRes resourceID: Int, value: Double)
+        fun putLong(key: String, value: Long)
+        fun putLong(@StringRes resourceID: Int, value: Long)
+        fun putInt(key: String, value: Int)
+        fun putInt(@StringRes resourceID: Int, value: Int)
+        fun putString(key: String, value: String)
+        fun putString(@StringRes resourceID: Int, value: String)
+    }
+
+    /**
+     * Allows for editing shared preferences in a scoped manner.
+     *
+     * This works just the same way as the androidx.core.content.edit
+     * extension does. An [Editor] instance is created and used as
+     * the receiver of [block]. When the block is done, either
+     * the shared preferences commit or apply functions are called,
+     * depending on the value of [commit].
+     *
+     * Example:
+     *
+     *     sp.edit(commit = false) {
+     *         putString("my-key", "abc123")
+     *     }
+     */
+    fun edit(commit: Boolean = false, block: Editor.() -> Unit)
 
     fun getAll(): Map<String, *>
     fun clear()
