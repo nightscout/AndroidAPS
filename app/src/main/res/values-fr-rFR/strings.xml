@@ -859,7 +859,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="cannula">Canule</string>
     <string name="userentry">Entrées utilisateur</string>
     <string name="common_values">Utilisez les valeurs qui correspondent à vos plus gros repas\n</string>
-    <string name="summary_email_for_crash_report">Cette adresse e-mail sera jointe aux rapports de plantage afin que nous puissions vous contacter dans les cas urgents. C\'est facultatif.</string>
     <string name="email_address">Adresse e-mail</string>
     <string name="privacy_settings">Paramètres de confidentialité</string>
     <string name="privacy_summary">Vous pouvez fournir une adresse e-mail facultative si vous voulez être informé des plantages de l\'application. Ce n\'est pas un service automatisé. Vous serez contacté par les développeurs dans des situations dangereuses.</string>
