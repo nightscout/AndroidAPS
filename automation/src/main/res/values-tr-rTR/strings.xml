@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="automation_short">Oto</string>
     <string name="automation">Otomasyon</string>
     <string name="automation_description">Kullanıcı tanımlı otomasyon görevleri</string>
     <string name="automation_missing_task_name">Lütfen bir görev adı girin.</string>
