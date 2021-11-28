@@ -26,6 +26,7 @@
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d Ü</string>
     <string name="pump_basebasalrate">%1$.2f Ü/s</string>
+    <string name="format_hours">%1$.2f s</string>
     <string name="format_mins">%1$d dakika</string>
     <string name="pumpbusy">Pompa meşgul</string>
     <string name="connectionerror">Pompa bağlantı hatası</string>
@@ -126,6 +127,7 @@
     <string name="location_not_found_message">Bluetooth cihaz bulmanın daha yeni cihazlarda çalışması için konum etkinleştirilmelidir. AAPS konumunuzu izlemez ve eşleştirme başarılı olduktan sonra devre dışı bırakılabilir.</string>
     <!--    DateUtil-->
     <string name="minago">%1$d dak önce</string>
+    <string name="hoursago">%1$.1f s önce</string>
     <string name="shorthour">s</string>
     <string name="days">gün</string>
     <string name="hours">saat</string>
