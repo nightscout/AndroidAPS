@@ -858,7 +858,6 @@
     <string name="cannula">Kaniula</string>
     <string name="userentry">Wpis użytkownika</string>
     <string name="common_values">Użyj wartości największego jedzenia, które zazwyczaj zjadasz\n</string>
-    <string name="summary_email_for_crash_report">Ten adres e-mail zostanie dołączony do raportów o awariach, abyśmy mogli skontaktować się z Tobą w pilnych przypadkach. Jego podanie jest opcjonalne.</string>
     <string name="email_address">Adres e-mail</string>
     <string name="privacy_settings">Ustawienia prywatności</string>
     <string name="privacy_summary">Możesz opcjonalnie podać adres e-mail, jeśli chcesz otrzymywać powiadomienia o awariach aplikacji. To nie jest usługa zautomatyzowana. W niebezpiecznych sytuacjach deweloperzy skontaktują się z Tobą.</string>
