@@ -438,7 +438,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="enableuam">UAM etkinleştir</string>
     <string name="enablesmb">SMB (Super Micro Bolus) etkinleştir</string>
     <string name="enablesmb_summary">Daha hızlı bir etki için geçici bazal yerine Super Micro Bolus kullanın</string>
-    <string name="enableuam_summary">(Uam) Habersiz yemeklerin tespiti</string>
     <string name="insulin_oref_peak">IOB Eğrisi Tepe Zamanı</string>
     <string name="insulin_peak_time">Tepe zamanı [min]</string>
     <string name="free_peak_oref">Serbest tepe Oref</string>
