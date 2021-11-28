@@ -859,6 +859,7 @@
     <string name="cannula">Kanyla</string>
     <string name="userentry">Vstup používateľa</string>
     <string name="common_values">Použite hodnoty pre najväčšie jedlo, aké obvykle jete\n</string>
+    <string name="summary_email_for_crash_report">Táto identifikácia bude priložená ku správam o zlyhaniach, aby sme Vás mohli v naliehavých prípadoch kontaktovať. Je to voliteľné.</string>
     <string name="email_address">Emailová adresa</string>
     <string name="privacy_settings">Nastavenia súkromia</string>
     <string name="privacy_summary">Pokiaľ chcete byť upozornení na zlyhanie aplikácie, môžete zadať voliteľne e-mailovú adresu. Toto nie je automatizovaná služba. Vývojári vás budú kontaktovať v nebezpečných situáciách.</string>
@@ -900,4 +901,6 @@
     <string name="data_status">Stav dát glykémie</string>
     <string name="recalculated_data_used">Použité prepočítané dáta</string>
     <string name="bg_too_close">Glykémia je príliš blízko:\n%1$s\n%2$s</string>
+    <string name="identification">Identifikácia (E-mail, prezývka FB, alebo Discord atď.)</string>
+    <string name="identification_not_set">Identifikácia nie je nastavená vo vývojárskom móde</string>
 </resources>
