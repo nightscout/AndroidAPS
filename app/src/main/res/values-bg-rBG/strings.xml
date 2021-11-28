@@ -854,7 +854,6 @@
     <string name="cannula">Канюла</string>
     <string name="userentry">Потербителска настройка</string>
     <string name="common_values">Използвай стойностите от вашето най-голямо хранен, с което обикновено се храните</string>
-    <string name="summary_email_for_crash_report">Тази електронна поща ще бъде добавена към репорта за да можем да се свържем с вас в случай на нужда. Не е задължително.</string>
     <string name="email_address">Електронна поща</string>
     <string name="privacy_settings">Настройки за поверителност</string>
     <string name="privacy_summary">Можете да посочите електронна поща, ако искате да бъдете уведомени за системни проблеми. Това не е автоматичен процес. Разработчиците ще се свържат с вас в случай на опасна ситуация.</string>
