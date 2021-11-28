@@ -860,7 +860,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="cannula">Kanül</string>
     <string name="userentry">Kullanıcı girişi</string>
     <string name="common_values">Genellikle yediğiniz en büyük yiyeceğin değerlerini kullanın\n</string>
-    <string name="summary_email_for_crash_report">Bu e-posta adresi, acil durumlarda sizinle iletişim kurabilmemiz için çökme raporlarına eklenecektir. (İsteğe bağlı.)</string>
     <string name="email_address">E-posta adresi</string>
     <string name="privacy_settings">Gizlilik ayarı</string>
     <string name="privacy_summary">Uygulama çökmeleri hakkında bilgilendirilmek istiyorsanız isteğe bağlı e-posta adresi sağlayabilirsiniz. Bu otomatik bir hizmet değildir. Tehlikeli durumlarda geliştiriciler sizinle iletişime geçecektir.</string>
