@@ -859,7 +859,6 @@
     <string name="cannula">Cannula</string>
     <string name="userentry">Inserimento utente</string>
     <string name="common_values">Usa i valori del cibo più abbondante che mangi di solito\n</string>
-    <string name="summary_email_for_crash_report">Questo indirizzo email verrà allegato ai rapporti sugli arresti anomali in modo che possiamo contattarti in casi urgenti. È opzionale.</string>
     <string name="email_address">Indirizzo email</string>
     <string name="privacy_settings">Impostazioni privacy</string>
     <string name="privacy_summary">Puoi fornire un indirizzo e-mail opzionale se desideri essere avvisato in caso di arresti anomali dell\'app. Questo non è un servizio automatizzato. Sarai contattato dagli sviluppatori in situazioni pericolose.</string>
