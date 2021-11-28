@@ -25,6 +25,8 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
+import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
+import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationStore
 import info.nightscout.androidaps.receivers.BTReceiver
 import info.nightscout.androidaps.receivers.ChargingStateReceiver
 import info.nightscout.androidaps.receivers.KeepAliveReceiver.KeepAliveManager
@@ -33,6 +35,7 @@ import info.nightscout.androidaps.receivers.TimeDateOrTZChangeReceiver
 import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.androidaps.utils.ActivityMonitor
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.locale.LocaleHelper
 import info.nightscout.androidaps.utils.protection.PasswordCheck
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -55,6 +58,7 @@ class MainApp : DaggerApplication() {
     @Inject lateinit var versionCheckersUtils: VersionCheckerUtils
     @Inject lateinit var sp: SP
     @Inject lateinit var config: Config
+    @Inject lateinit var buildHelper: BuildHelper
     @Inject lateinit var configBuilder: ConfigBuilder
     @Inject lateinit var keepAliveManager: KeepAliveManager
     @Inject lateinit var plugins: List<@JvmSuppressWildcards PluginBase>
@@ -65,6 +69,7 @@ class MainApp : DaggerApplication() {
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var passwordCheck: PasswordCheck
     @Inject lateinit var alarmSoundServiceHelper: AlarmSoundServiceHelper
+    @Inject lateinit var notificationStore: NotificationStore
 
     override fun onCreate() {
         super.onCreate()
@@ -99,8 +104,11 @@ class MainApp : DaggerApplication() {
         aapsLogger.debug("Remote: " + BuildConfig.REMOTE)
         registerLocalBroadcastReceiver()
 
-        //trigger here to see the new version on app start after an update
+        // trigger here to see the new version on app start after an update
         versionCheckersUtils.triggerCheckVersion()
+        // check if identification is set
+        if (buildHelper.isDev() && sp.getStringOrNull(R.string.key_email_for_crash_report, null).isNullOrBlank())
+            notificationStore.add(Notification(Notification.IDENTIFICATION_NOT_SET, getString(R.string.identification_not_set), Notification.INFO))
 
         // Register all tabs in app here
         pluginStore.plugins = plugins

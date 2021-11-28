@@ -331,6 +331,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         updateSensitivity("onResume")
         updateGraph("onResume")
         updatePumpStatus("onResume")
+        updateNotification("onResume")
     }
 
     @Synchronized
