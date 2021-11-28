@@ -679,6 +679,7 @@
     <string name="resettodefaults">Auf Standardwerte zurücksetzen</string>
     <string name="nsmalfunction">NSClient Störung. Ziehe einen Neustart von NS und NSClient in Betracht.</string>
     <string name="time_offset">Zeitversatz</string>
+    <string name="bolus_reminder">Später an Bolus erinnern</string>
     <string name="setupwizard_preferred_aps_mode">Bevorzugter APS-Modus</string>
     <string name="treatments_wizard_total_label">Gesamt</string>
     <string name="calculation_short">Berech.</string>
@@ -846,6 +847,11 @@ Unerwartetes Verhalten.</string>
     <string name="enablebolusadvisor_summary">Option zur Erinnerung an späteres Essen (z.B. bei hohen BZ-Werten) im Bolus-Rechner (\"Spritz-Ess-Abstand\")</string>
     <string name="time_to_eat">Zeit zum Essen!\nStarte den Bolus-Rechner und gib die KH ein. </string>
     <string name="timetoeat">Zeit zum Essen</string>
+    <string name="bolusreminder">Bolus-Erinnerung</string>
+    <string name="enablebolusreminder">Bolus-Erinnerung aktivieren</string>
+    <string name="enablebolusreminder_summary">Erinnerung an späteren Bolus mit dem Assistenten verwenden
+        (\"Post-Bolus\")</string>
+    <string name="time_to_bolus">Zeit für den nächsten Bolus!\nFühre den Bolus-Assistenten aus, um die Berechnung erneut durchzuführen.</string>
     <string name="fabric_upload_disabled">Hochladen von Crash-Protokollen deaktiviert!</string>
     <string name="graph_menu_divider_header">Diagramm</string>
     <string name="chart_menu">Diagrammmenü</string>
@@ -888,6 +894,9 @@ Unerwartetes Verhalten.</string>
     <string name="error_in_basal_values">Fehler in den Basalwerten</string>
     <string name="error_in_target_values">Fehler in den Zielwerten</string>
     <string name="error_in_isf_values">Fehler in ISF-Werten</string>
+    <string name="run_question">%s ausführen?</string>
+    <string name="invalid_profile_not_accepted">Ungültiges Profil %1$s wurde von NS nicht akzeptiert</string>
+    <string name="errors">Fehler</string>
     <string name="ns_sync_slow">Hochladen verlangsamen</string>
     <string name="data_status">Status BZ-Daten</string>
     <string name="recalculated_data_used">Verwendete Daten neu berechnet</string>
