@@ -31,6 +31,7 @@
     <string name="description_pump_mdi">Diyabet tedavisi için günde birden fazla enjeksiyon yapan kişiler için pompa entegrasyonu</string>
     <string name="description_pump_virtual">Henüz herhangi bir sürücüye sahip olmayan pompalar için pompa entegrasyonu (Açık Döngü)</string>
     <string name="description_sensitivity_aaps">Duyarlılık, Oref0 ile aynı şekilde hesaplanır, ancak geçmişe yönelik zaman aralığı belirleyebilirsiniz. Minimum karbonhidrat emilimi, tercihlerden maksimum karbonhidrat emilim süresinden hesaplanır.</string>
+    <string name="description_sensitivity_oref1">Duyarlılık, geçmişteki 8 veya 24 saatlik verilerden (hangisi daha hassas ise) hesaplanır. Karbonhidratlar (emilmemişse) tercihlerde belirtilen süreden sonra kesilir. Eklenti ayrıca UAM\'ı da (bildirilmemiş öğünler) hesaplar.</string>
     <string name="description_sensitivity_weighted_average">Duyarlılık, sapmalardan ağırlıklı bir ortalama olarak hesaplanır. Daha yeni sapmalar daha yüksek ağırlığa sahiptir. Minimum karbonhidrat emilimi, tercihlerden maksimum karbonhidrat emilim süresinden hesaplanır. Bu algoritma, hassasiyet değişikliklerini takip etmede en hızlı olanıdır.</string>
     <string name="description_source_eversense">Yamalı Eversense uygulamasından KŞ değerleri alır.</string>
     <string name="description_source_glimp">Glimp\'ten KŞ değerleri alır.</string>
@@ -437,6 +438,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="enableuam">UAM etkinleştir</string>
     <string name="enablesmb">SMB (Super Micro Bolus) etkinleştir</string>
     <string name="enablesmb_summary">Daha hızlı bir etki için geçici bazal yerine Super Micro Bolus kullanın</string>
+    <string name="enableuam_summary">(Uam) Bildirilmemiş öğünlerin tespiti</string>
     <string name="insulin_oref_peak">IOB Eğrisi Tepe Zamanı</string>
     <string name="insulin_peak_time">Tepe zamanı [min]</string>
     <string name="free_peak_oref">Serbest tepe Oref</string>
