@@ -45,7 +45,7 @@
     <string name="diaconn_g8_useextended_title">&gt;%%200 için yayma bolus kullanın</string>
     <string name="diaconn_g8_visualizeextendedaspercentage_title">Yayma bolusu %% olarak görselleştir</string>
     <string name="diaconn_g8_bluetooth_status">Bluetooth Durumu</string>
-    <string name="diagonn_g8_tdd_label">TDD</string>
+    <string name="diagonn_g8_tdd_label">GTD</string>
     <string name="bolus_step">Bolus Adımı</string>
     <string name="basal_step">Bazal Adımı</string>
     <string name="pump_firmware_label">Yazılım</string>
