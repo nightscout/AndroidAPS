@@ -90,4 +90,5 @@
     <string name="set_neutral_temps_title">Establecer basales temporales neutras</string>
     <string name="set_neutral_temps_summary">Si está activado, cancelará un basal temporal antes del final de cada hora. Este método puede ayudar a evitar que algunas bombas pitan/vibran al final de la hora.</string>
     <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d min restantes)</string>
+    <string name="invalid_history_data">Se han detectado datos inválidos en el historial de la bomba. Abre una nueva incidencia y proporciona los archivos de registros.</string>
 </resources>

@@ -105,9 +105,11 @@
     <string name="edit_short">BEARBEITEN</string>
     <string name="please_choose_an_action_type">Aktion wählen</string>
     <string name="please_choose_a_trigger_type">Auslöser wählen</string>
+    <string name="please_choose_a_operation_type">Operationstyp auswählen</string>
     <string name="triggers">Auslöser:</string>
     <string name="remove_label">ENTFERNEN</string>
     <string name="preconditions">Voraussetzung:</string>
     <string name="automation_event">Automatisierungs-Ereignis</string>
     <string name="reorder_label">Umsortieren</string>
+    <string name="user_action">Benutzeraktion</string>
 </resources>

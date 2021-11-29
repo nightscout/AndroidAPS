@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="automation_short">Otomatik</string>
+    <string name="automation_short">Oto</string>
     <string name="automation">Otomasyon</string>
     <string name="automation_description">Kullanıcı tanımlı otomasyon görevleri</string>
     <string name="automation_missing_task_name">Lütfen bir görev adı girin.</string>
@@ -100,7 +100,7 @@
     <string name="every">Her</string>
     <string name="never">Asla</string>
     <string name="condition">Koşul:</string>
-    <string name="action">Aksiyon:</string>
+    <string name="action">Eylem:</string>
     <string name="taskname">Görev adı</string>
     <string name="edit_short">DÜZENLE</string>
     <string name="please_choose_an_action_type">Eylem tipini seçin</string>

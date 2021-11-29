@@ -721,9 +721,6 @@
     <string name="application_expired">Applikasjon utløpt - oppdater</string>
     <string name="new_version_warning">Ny versjon tilgjengelig i minst %1$d dager! Systemet vil bytte til \"stopp innen lavt (LGS)\" etter %2$d dager og loop vil deaktiveres etter %3$d dager</string>
     <string name="twohours">2t</string>
-    <string name="dexcom_app_patched">Dexcom App (patchet)</string>
-    <string name="dexcom_short">DXCM</string>
-    <string name="description_source_dexcom">Motta BS verdier fra den patchede Dexcom appen.</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="bolusconstraintappliedwarn">Bolus begrensning brukt: %1$.2f E til %2$.2f E</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Advarsel: Treg KH absorpsjon oppdaget: %2$d%% av tiden. Dobbeltsjekk din beregning. COB can være misvisende og du risikerer å få for mye insulin !!!!!</font>]]></string>
@@ -859,7 +856,6 @@
     <string name="cannula">Kanyle</string>
     <string name="userentry">Bruker registrering</string>
     <string name="common_values">Bruk verdiene for det største måltidet du normalt spiser\n</string>
-    <string name="summary_email_for_crash_report">Denne e-postadressen vedlegges krasjrapporter slik at vi kan kontakte deg i akutte tilfeller. Det er valgfritt.</string>
     <string name="email_address">E-postadresse</string>
     <string name="privacy_settings">Personverninnstillinger</string>
     <string name="privacy_summary">Du kan oppgi valgfri e-postadresse hvis du ønsker å bli varslet om krasj. Dette er ikke en automatisert tjeneste. Du vil bli kontaktet av utviklere ved farlige hendelser.</string>

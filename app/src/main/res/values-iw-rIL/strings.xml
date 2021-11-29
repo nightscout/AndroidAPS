@@ -260,7 +260,7 @@
     <string name="array_of_elements">מערך של %1$d אלמנטים. \n ערך נוכחי:</string>
     <string name="openapsma_autosensdata_label">נתוני חישוב רגישות אוטו\'</string>
     <string name="openapsma_scriptdebugdata_label">תיקון באגים בסקריפט</string>
-    <string name="openapsama_useautosens">שימוש בפונקציית חישוב רגישות אוטומטית (Autosens)</string>
+    <string name="openapsama_useautosens">אפשר חישוב רגישות אוטומטית (Autosens)</string>
     <string name="refresheventsfromnightscout">רענון אירועים מנייטסקאוט</string>
     <string name="deletefuturetreatments">מחיקת טיפולים עתידיים</string>
     <string name="actions_shortname">ACT</string>
@@ -721,9 +721,9 @@
     <string name="application_expired">תוקף האפליקציה פג</string>
     <string name="new_version_warning">גרסה חדשה זמינה כבר %1$d ימים! הגבלה להשהיה עקב סוכר נמוך תחל אחרי %2$d ימים, הלולאה תושבת אחרי %3$d ימים</string>
     <string name="twohours">שעתיים</string>
-    <string name="dexcom_app_patched">אפליקציית Dexcom עם פאץ\'</string>
-    <string name="dexcom_short">דקס\'</string>
-    <string name="description_source_dexcom">קבלת ערכי רמת סוכר מאפליקציית Dexcom עם פאץ\'.</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">השתמש בנתוני הסוכר מאפליקציית \"בנה לעצמך דקסקום\" (BYODA).</string>
     <string name="cobvsiob">פחמ\' פעילות לעומת אינ\' פעיל</string>
     <string name="bolusconstraintappliedwarn">מגבלת בולוס יושמה: %1$.2f עד %2$.2f יח\'</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!!! זוהתה ספיגת פחמימות איטית: %2$d%% מהזמן הצפוי. הערכת כמות הפחמימות הפעילות עלולה להיות ביתר ולכן תיתכן הזרקת אינסולין עודפת !!!!!!</font>]]></string>
@@ -859,7 +859,7 @@
     <string name="cannula">צינורית</string>
     <string name="userentry">קלט המשתמש</string>
     <string name="common_values">השתמשו בערכים הגבוהים ביותר של מזונות שאתם אוכלים בדרך כלל\n</string>
-    <string name="summary_email_for_crash_report">כתובת דוא\"ל זו תצורף לדוחות קריסה כדי שנוכל ליצור קשר במקרים דחופים. לא חובה.</string>
+    <string name="summary_email_for_crash_report">אמצעי הזיהוי יצורף לדיווחי קריסה על מנת שנוכל ליצור קשר במקרים דחופים. אין זו חובה.</string>
     <string name="email_address">כתובת דוא\"ל</string>
     <string name="privacy_settings">הגדרות פרטיות</string>
     <string name="privacy_summary">אם תרצו, תוכלו לספק כתובת דוא\"ל כדי לקבל דיווח על קריסות יישום. שירות זה אינו אוטומטי. המפתחים יצרו איתכם קשר במצבים מסוכנים.</string>
@@ -901,4 +901,6 @@
     <string name="data_status">מצב נתוני הסוכר</string>
     <string name="recalculated_data_used">משתמש בנתונים מחושבים מחדש</string>
     <string name="bg_too_close">רמת הסוכר קרובה מדי:\n%1$s\n%2$s</string>
+    <string name="identification">אמצעי זיהוי (מייל, פייסבוק או דיסקורד וכו\')</string>
+    <string name="identification_not_set">אמצעי הזיהוי אינו מוגדר במצב מפתחים</string>
 </resources>

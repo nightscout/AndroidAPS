@@ -714,9 +714,6 @@
     <string name="very_old_version">아주 오래된 버전</string>
     <string name="new_version_warning">최소 %1$d일 새버전이 가능합니다! %2$d일 후엔 LGS(저혈당주입중지)으로 복귀되며, %3$d일이후엔 Loop가 비활성화 될 것입니다</string>
     <string name="twohours">2h</string>
-    <string name="dexcom_app_patched">Dexcom 앱(패치버전)</string>
-    <string name="dexcom_short">DXCM</string>
-    <string name="description_source_dexcom">패치된 Dexcom 앱에서 혈당값 받기</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="bolusconstraintappliedwarn">Bolus 제한이 적용됨: %1$.2f U에서 %2$.2f U으로</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! 느린 탄수화물 흡수 감지: %2$d%% of time. 계산을 다시 확인하십시오. COB를 과대하게 측정하여 더 많은 인슐린이 주입될 수 있습니다 !!!!!</font>]]></string>
@@ -845,7 +842,6 @@
     <string name="cannula">캐뉼라</string>
     <string name="userentry">사용자 항목</string>
     <string name="common_values">평소 섭취하는 가장 많은 양의 탄수화물 값을 사용하세요.\n</string>
-    <string name="summary_email_for_crash_report">긴급 상황에서 사용자에게 연락을 취하기 위해 이 이메일 주소를 충돌 보고에 첨부합니다. 이는 선택사항입니다.</string>
     <string name="email_address">이메일 주소</string>
     <string name="privacy_settings">개인정보 설정</string>
     <string name="privacy_summary">어플의 충돌에 대해 통지를 받기 원하는 경우 선택적으로 이메일 주소를 제공할 수 있습니다. 이는 자동 지원 서비스는 아닙니다. 위험 상황에서 개발자들에게 연락이 올 것입니다.</string>

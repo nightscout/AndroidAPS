@@ -679,6 +679,7 @@
     <string name="resettodefaults">Auf Standardwerte zurücksetzen</string>
     <string name="nsmalfunction">NSClient Störung. Ziehe einen Neustart von NS und NSClient in Betracht.</string>
     <string name="time_offset">Zeitversatz</string>
+    <string name="bolus_reminder">Später an Bolus erinnern</string>
     <string name="setupwizard_preferred_aps_mode">Bevorzugter APS-Modus</string>
     <string name="treatments_wizard_total_label">Gesamt</string>
     <string name="calculation_short">Berech.</string>
@@ -721,9 +722,6 @@ Unerwartetes Verhalten.</string>
     <string name="application_expired">Anwendung abgelaufen</string>
     <string name="new_version_warning">Neue Version seit mindestens %1$d Tagen verfügbar! Rückfall zur sensorunterstützten Pumpentherapie nach %2$d Tagen, Loop wird nach  %3$d Tagen deaktiviert.</string>
     <string name="twohours">2h</string>
-    <string name="dexcom_app_patched">gepatchte Dexcom App</string>
-    <string name="dexcom_short">DXCM</string>
-    <string name="description_source_dexcom">Empfange Blutzucker-Werte von der gepatchten Dexcom App.</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="bolusconstraintappliedwarn">Bolus Einschränkung angewandt: %2$.2f U statt %1$.2f U</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Langsamer Kohlenhydrat-Abbau erkannt: %2$d%% der Zeit. Überprüfe Deine Berechnung. COB könnte zu hoch sein und deswegen zu viel Insulin abgegeben werden!!!!!</font>]]></string>
@@ -846,6 +844,11 @@ Unerwartetes Verhalten.</string>
     <string name="enablebolusadvisor_summary">Option zur Erinnerung an späteres Essen (z.B. bei hohen BZ-Werten) im Bolus-Rechner (\"Spritz-Ess-Abstand\")</string>
     <string name="time_to_eat">Zeit zum Essen!\nStarte den Bolus-Rechner und gib die KH ein. </string>
     <string name="timetoeat">Zeit zum Essen</string>
+    <string name="bolusreminder">Bolus-Erinnerung</string>
+    <string name="enablebolusreminder">Bolus-Erinnerung aktivieren</string>
+    <string name="enablebolusreminder_summary">Erinnerung an späteren Bolus mit dem Assistenten verwenden
+        (\"Post-Bolus\")</string>
+    <string name="time_to_bolus">Zeit für den nächsten Bolus!\nFühre den Bolus-Assistenten aus, um die Berechnung erneut durchzuführen.</string>
     <string name="fabric_upload_disabled">Hochladen von Crash-Protokollen deaktiviert!</string>
     <string name="graph_menu_divider_header">Diagramm</string>
     <string name="chart_menu">Diagrammmenü</string>
@@ -854,7 +857,7 @@ Unerwartetes Verhalten.</string>
     <string name="cannula">Kanüle</string>
     <string name="userentry">Benutzereingabe</string>
     <string name="common_values">Verwende die Werte der größten Mahlzeit, die Du normalerweise zu Dir nimmst\n</string>
-    <string name="summary_email_for_crash_report">Diese E-Mail-Adresse wird an Absturzberichte angehängt, so dass wir Dich in dringenden Fällen kontaktieren können. Angabe ist optional.</string>
+    <string name="summary_email_for_crash_report">Diese Identifikation wird an Absturzberichte angehängt, so dass wir Dich in dringenden Fällen kontaktieren können. Angabe ist optional.</string>
     <string name="email_address">E‐Mail‐Adresse</string>
     <string name="privacy_settings">Privatsphäre-Einstellungen</string>
     <string name="privacy_summary">Du kannst optional eine E-Mail-Adresse angeben, wenn Du bei Absturzberichten kontaktiert werden möchtest. Dies ist keine Automatik, Du wirst von den Entwicklern in gefährlichen Situationen kontaktiert. </string>
@@ -888,8 +891,13 @@ Unerwartetes Verhalten.</string>
     <string name="error_in_basal_values">Fehler in den Basalwerten</string>
     <string name="error_in_target_values">Fehler in den Zielwerten</string>
     <string name="error_in_isf_values">Fehler in ISF-Werten</string>
+    <string name="run_question">%s ausführen?</string>
+    <string name="invalid_profile_not_accepted">Ungültiges Profil %1$s wurde von NS nicht akzeptiert</string>
+    <string name="errors">Fehler</string>
     <string name="ns_sync_slow">Hochladen verlangsamen</string>
     <string name="data_status">Status BZ-Daten</string>
     <string name="recalculated_data_used">Verwendete Daten neu berechnet</string>
     <string name="bg_too_close">BZ zu nah:\n%1$s\n%2$s</string>
+    <string name="identification">Identifikation (E-Mail, Facebook oder Discord Nickname)</string>
+    <string name="identification_not_set">Identifikation im Dev-Modus nicht gesetzt</string>
 </resources>

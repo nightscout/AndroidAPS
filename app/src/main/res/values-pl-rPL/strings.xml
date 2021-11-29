@@ -721,9 +721,6 @@
     <string name="application_expired">Aplikacja wygasła</string>
     <string name="new_version_warning">Nowa wersja dostępna co najmniej %1$d dni! Powrót do LGS (zawieszania podawania bazy przy niskim poziomie) po %2$d dniach, pętla zostanie wyłączona po %3$d dniach</string>
     <string name="twohours">2 h</string>
-    <string name="dexcom_app_patched">Apka Dexcom (spatchowana)</string>
-    <string name="dexcom_short">DXCM</string>
-    <string name="description_source_dexcom">Pobieraj wartości BG ze spatchowanej aplikacji Dexcom.</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="bolusconstraintappliedwarn">Zastosowano ograniczenie bolusa: %1$.2f U do %2$.2f U</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Wykryto powolne wchłanianie węglowodanów: %2$d%% czasu. Sprawdź ponownie swoje obliczenia. COB mogły być przeszacowane przez co mogło być podane zbyt dużo insuliny !!!!!</font>]]></string>
@@ -858,7 +855,6 @@
     <string name="cannula">Kaniula</string>
     <string name="userentry">Wpis użytkownika</string>
     <string name="common_values">Użyj wartości największego jedzenia, które zazwyczaj zjadasz\n</string>
-    <string name="summary_email_for_crash_report">Ten adres e-mail zostanie dołączony do raportów o awariach, abyśmy mogli skontaktować się z Tobą w pilnych przypadkach. Jego podanie jest opcjonalne.</string>
     <string name="email_address">Adres e-mail</string>
     <string name="privacy_settings">Ustawienia prywatności</string>
     <string name="privacy_summary">Możesz opcjonalnie podać adres e-mail, jeśli chcesz otrzymywać powiadomienia o awariach aplikacji. To nie jest usługa zautomatyzowana. W niebezpiecznych sytuacjach deweloperzy skontaktują się z Tobą.</string>

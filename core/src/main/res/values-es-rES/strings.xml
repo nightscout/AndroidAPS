@@ -68,7 +68,7 @@
     <string name="advancedsettings_title">Ajustes avanzados</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">Vigilante de BT</string>
-    <string name="btwatchdog_summary">Apaga el bluetooth del móvil por un segundo si no hay conexión con la bomba. Esto ayuda con algunos móviles con problemas para establecer conexión bluetooth estable.</string>
+    <string name="btwatchdog_summary">Desconecta el bluetooth del teléfono móvil durante un instante, si no hay conexión con la bomba. Esto ayuda con algunos teléfonos móviles que tienen problemas para establecer una conexión bluetooth estable.</string>
     <string name="pairing">Emparejando</string>
     <string name="yes">Si</string>
     <string name="no">No</string>
@@ -154,7 +154,6 @@
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
-    <string name="noprofileselected">Ningun perfil seleccionado</string>
     <string name="startprofile">Iniciar perfil %1$d%% durante %2$d min</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Sólo se soportan valores discretos, no rangos, como entrada de datos para basal/bolo en la bomba virtual.</string>
@@ -170,8 +169,8 @@
     <!--    Temptarget-->
     <string name="mins">%1$d min</string>
     <!--    TDD-->
-    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fU</b> Bol: <b>%3$.2fU</b> Bas: <b>%4$.2fU(%5$.0f%%)</b>]]></string>
-    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fU</b> Bol: <b>%3$.2fU</b> Bas: <b>%4$.2fU(%5$.0f%%)</b> Carbs: <b>%6$.0fg</b>]]></string>
+    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fU</b> Bolo: <b>%3$.2fU</b> Basal: <b>%4$.2fU(%5$.0f%%)</b>]]></string>
+    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fU</b> Bolo: <b>%3$.2fU</b> Basal: <b>%4$.2fU(%5$.0f%%)</b> Carbohidratos: <b>%6$.0fg</b>]]></string>
     <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> en <b>%3$d</b> días<br>]]></string>
     <!--    Translator-->
     <string name="careportal">Portal de Tratamientos</string>
@@ -237,7 +236,7 @@
     <string name="carbsreq">%1$dg Carbohidratos adicionales necesarios dentro de %2$d minutos</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Estadísticas</string>
-    <string name="cumulative_tdd">TDD acumulativa</string>
+    <string name="cumulative_tdd">TDD acumulada</string>
     <string name="expweight">TDD ampliada exponencialmente</string>
     <string name="basalrate">Dosis Basal</string>
     <string name="bolus">Bolo</string>
@@ -310,13 +309,13 @@
     <string name="uel_superbolus_tbr">SUPERBOLO TBR</string>
     <string name="uel_carbs">CARBOHIDRATOS</string>
     <string name="uel_extended_carbs">CARBOHIDRATOS EXTENDIDOS</string>
-    <string name="uel_temp_basal">BASAL TEMP</string>
+    <string name="uel_temp_basal">BASAL TEMPORAL</string>
     <string name="uel_tt">OBJETIVO TEMPORAL</string>
-    <string name="uel_new_profile">Perfil NUEVO</string>
-    <string name="uel_clone_profile">COPIAR PERFIL</string>
+    <string name="uel_new_profile">NUEVO PERFIL</string>
+    <string name="uel_clone_profile">CLONAR PERFIL</string>
     <string name="uel_store_profile">GUARDAR PERFIL</string>
-    <string name="uel_profile_switch">CAMBIO PERFIL</string>
-    <string name="uel_profile_switch_cloned">CAMBIO PERFIL COPIADO</string>
+    <string name="uel_profile_switch">CAMBIO DE PERFIL</string>
+    <string name="uel_profile_switch_cloned">CAMBIO DE PERFIL CLONADO</string>
     <string name="uel_closed_loop_mode">MODO LAZO CERRADO</string>
     <string name="uel_lgs_loop_mode">MODO LAZO LGS</string>
     <string name="uel_open_loop_mode">MODO LAZO ABIERTO</string>
@@ -328,8 +327,8 @@
     <string name="uel_suspend">SUSPENDER</string>
     <string name="uel_hw_pump_allowed">SISTEMA DE BOMBA SOPORTADA</string>
     <string name="uel_clear_pairing_keys">BORRAR CLAVES DE EMPAREJAMIENTO</string>
-    <string name="uel_accepts_temp_basal">ACEPTA TEMP BASAL</string>
-    <string name="uel_cancel_temp_basal">CANCELAR TEMP BASAL</string>
+    <string name="uel_accepts_temp_basal">ACEPTAR BASAL TEMPORAL</string>
+    <string name="uel_cancel_temp_basal">CANCELAR BASAL TEMPORAL</string>
     <string name="uel_cancel_bolus">CANCELAR BOLO</string>
     <string name="uel_cancel_extended_bolus">CANCELAR BOLO EXTENDIDO</string>
     <string name="uel_cancel_tt">CANCELAR OBJETIVO TEMPORAL</string>
@@ -337,12 +336,12 @@
     <string name="uel_site_change">CAMBIAR SITIO</string>
     <string name="uel_reservoir_change">CAMBIAR RESERVORIO</string>
     <string name="uel_calibration">CALIBRACIÓN</string>
-    <string name="uel_prime_bolus">CEBAR BOLO</string>
+    <string name="uel_prime_bolus">BOLO DE CEBADO</string>
     <string name="uel_treatment">TRATAMIENTO</string>
     <string name="uel_careportal_ns_refresh">ACTUALIZAR PORTAL DEL CUIDADOR NS</string>
-    <string name="uel_profile_switch_ns_refresh">ACTUALIZAR CAMBIO DE PERFIL NS</string>
+    <string name="uel_profile_switch_ns_refresh">ACTUALIZAR CAMBIO DE PERFIL EN NS</string>
     <string name="uel_treatments_ns_refresh">ACTUALIZAR TRATAMIENTOS NS</string>
-    <string name="uel_tt_ns_refresh">ACTUALIZAR OBJETIVO TEMPORAL NS</string>
+    <string name="uel_tt_ns_refresh">ACTUALIZAR OBJETIVO TEMPORAL EN NS</string>
     <string name="uel_automation_removed">AUTOMACIÓN ELIMINADA</string>
     <string name="uel_bg_removed">BG ELIMINADO</string>
     <string name="uel_careportal_removed">PORTAL DEL CUIDADOR ELIMINADO</string>
@@ -353,7 +352,7 @@
     <string name="uel_food">ALIMENTOS</string>
     <string name="uel_food_removed">ALIMENTO ELIMINADO</string>
     <string name="uel_profile_removed">PERFIL ELIMINADO</string>
-    <string name="uel_profile_switch_removed">CAMBIO PERFIL ELIMINADO</string>
+    <string name="uel_profile_switch_removed">CAMBIO DE PERFIL ELIMINADO</string>
     <string name="uel_restart_events_removed">REINICIO DE EVENTOS ELIMINADO</string>
     <string name="uel_treatment_removed">TRATAMIENTO ELIMINADO</string>
     <string name="uel_tt_removed">OBJETIVO TEMPORAL ELIMINADO</string>
@@ -410,6 +409,37 @@
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f está fuera de límites duros</string>
     <string name="basal_value">Valor basal</string>
     <string name="nsclient_version_does_not_match">La versión de NSClient no coincide con AndroidAPS. Actualízala.</string>
+    <!-- Command Queue + readStatus reasons -->
+    <string name="bolus_u_min">BOLO %1$.2f U</string>
+    <string name="carbs_g">CARBOS %1$d g</string>
+    <string name="extended_bolus_u_min">BOLO EXTENDIDO %1$.2f U %2$d min</string>
+    <string name="load_events">CARGAR EVENTOS</string>
+    <string name="load_history">CARGAR HISTORIAL %1$d</string>
+    <string name="load_tdds">CARGAR TDDs</string>
+    <string name="set_profile">ESTABLECER PERFIL</string>
+    <string name="set_user_settings">ESTABLECER CONFIGURACIÓN DEL USUARIO</string>
+    <string name="smb_bolus_u">BOLO SMB %1$.2f U</string>
+    <string name="start_pump">INICIAR BOMBA</string>
+    <string name="stop_pump">PARAR BOMBA</string>
+    <string name="temp_basal_absolute">BASAL TEMPORAL %1$.2f U/h %2$d min</string>
+    <string name="temp_basal_percent">BASAL TEMPORAL %1$d%% %2$d min</string>
+    <string name="insight_set_tbr_over_notification">INSIGHT ESTABLECER TBR SOBRE NOTIFICACIÓN</string>
+    <string name="read_status" comment="10 characters max for READSTATUS translation">LEERESTADO %1$s</string>
+    <string name="keepalive_status_outdated" comment="26 characters max for translation">KeepAlive. Estado desactualizado.</string>
+    <string name="keepalive_basal_outdated" comment="26 characters max for translation">KeepAlive. Basal desactualizada.</string>
+    <string name="sms" comment="26 characters max for translation">SMS</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Pulsa sobre conectar a la bomba</string>
+    <string name="pump_driver_changed" comment="26 characters max for translation">Controlador de bomba cambiado.</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Cambio del controlador de la bomba.</string>
+    <string name="device_changed" comment="26 characters max for translation">Dispositivo cambiado</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Refresco pulsado</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Refrescar estado programado</string>
+    <string name="unconfirmed_command" comment="26 characters max for translation">Comando no confirmado</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Solicitado por el usuario</string>
+    <string name="user_request" comment="26 characters max for translation">Solicitud de usuario</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolo OK</string>
+    <string name="pump_paired" comment="26 characters max for translation">Bomba emparejada</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Botón de refresco de Insight</string>
     <plurals name="days">
         <item quantity="one">%1$d día</item>
         <item quantity="other">%1$d días</item>

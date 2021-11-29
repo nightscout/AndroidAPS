@@ -245,7 +245,7 @@
     <string name="high_mark">Marca ALTA</string>
     <string name="wear">Reloj</string>
     <string name="resend_all_data">Reenviar todos los datos</string>
-    <string name="open_settings_on_wear">Abrir ajustes en reloj</string>
+    <string name="open_settings_on_wear">Abrir ajustes en el reloj</string>
     <string name="basal_rate">Ratio Basal:</string>
     <string name="basalvaluebelowminimum">Valor Basal por debajo del mínimo. Perfil NO aplicado!</string>
     <string name="sms_actualbg">BG:</string>
@@ -295,7 +295,7 @@
     <string name="smscommunicator_calibrationfailed">xDrip + no está recibiendo calibraciones</string>
     <string name="pumpsuspended">Bomba parada</string>
     <string name="executing">Ejecutando</string>
-    <string name="virtualpump_settings">Ajustes bomba virtual</string>
+    <string name="virtualpump_settings">Ajustes de bomba virtual</string>
     <string name="virtualpump_uploadstatus_title">Subir estado a NS</string>
     <string name="nsclientinternal">NSClient</string>
     <string name="nsclientinternal_shortname">NSCI</string>
@@ -315,7 +315,7 @@
     <string name="status">Estado:</string>
     <string name="clearlog">Borrar log</string>
     <string name="nowritepermission">NSCLIENT no tiene permiso de escritura. ¿API Secret incorrecta?</string>
-    <string name="wear_settings">Ajustes reloj</string>
+    <string name="wear_settings">Ajustes de reloj</string>
     <string name="wear_detailedIOB_title">Mostrar detalles IOB</string>
     <string name="wear_detailedIOB_summary">Separar IOB en bolo y base en el reloj</string>
     <string name="nosuccess">sin efecto - por favor verificar en móvil</string>
@@ -417,7 +417,7 @@
     <string name="sensitivity_shortname">SENS</string>
     <string name="sensitivityoref1">Sensibilidad Oref1</string>
     <string name="sensitivityaaps">Sensibilidad AAPS</string>
-    <string name="absorptionsettings_title">Ajustes absorción</string>
+    <string name="absorptionsettings_title">Ajustes de absorción</string>
     <string name="absorption_maxtime_title">Tiempo max absorción comida [h]</string>
     <string name="absorption_maxtime_summary">Tiempo en horas en el que se espera que todos los carbohidratos hayan sido absorbidos</string>
     <string name="openaps_short">OAPS</string>
@@ -471,7 +471,7 @@
     <string name="missed_bg_readings">Faltan lecturas BG</string>
     <string name="raise_notifications_as_android_notifications">Usa avisos del sistema para alarmas y avisos</string>
     <string name="gradually_increase_notification_volume">Aumentar gradualmente el volumen de alertas y notificaciones</string>
-    <string name="localalertsettings_title">Alarma local</string>
+    <string name="localalertsettings_title">Alarmas locales</string>
     <string name="enable_missed_bg_readings_alert">Alarma si no llegan datos BG</string>
     <string name="enable_pump_unreachable_alert">Alarma si bomba no es alcanzable</string>
     <string name="pump_unreachable_threshold">Bomba no alcanzable durante [min]</string>
@@ -490,7 +490,7 @@
     <string name="carbsReqThreshold">Carbohidratos mínimos necesarios para la sugerencia</string>
     <string name="carbsReqThreshold_summary">Gramos mínimos de carbohidratos para mostrar una alerta de sugerencia de carbohitratos: las sugerencias de carbohidratos debajo de este número no iniciarán una notificación.</string>
     <string name="dexcomg5_xdripupload_title">Mandar datos BG a xDrip+</string>
-    <string name="dexcomg5_xdripupload_summary">En xDrip+ elige 640g/Eversense como fuente de datos</string>
+    <string name="dexcomg5_xdripupload_summary">En xDrip+, selecciona 640G/EverSense como fuente de datos</string>
     <string name="nsclientbg">NSClient BG</string>
     <string name="nsclientbgshort">NS BG</string>
     <string name="overview_editquickwizard_usebg">Cálculo BG</string>
@@ -606,7 +606,7 @@
     <string name="ns_wifionly">Usar sólo WiFi</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
     <string name="ns_chargingonly">Sólo si cargando</string>
-    <string name="connectionsettings_title">Ajustes conexión</string>
+    <string name="connectionsettings_title">Ajustes de conexión</string>
     <string name="ns_wifi_allowedssids">SSID\'s permitidos (separados por punto y coma)</string>
     <string name="ns_allowroaming">Permitir conexión en roaming</string>
     <string name="openapsama_autosens_max">Ratio máximo de autosens</string>
@@ -620,7 +620,7 @@
     <string name="virtualpump_pump_def">Bolo: Paso =%1$s\nBolo Extendido: [paso =%2$s, duración =%3$smin -%4$sh] \nBasal: paso =%5$s\nTBR: %6$s ( %7$s), duración =%8$smin -%9$sh\n%10$s</string>
     <string name="wear_wizard_settings">Configuración del Asistente</string>
     <string name="wear_wizard_settings_summary">Cálculos incluidos en el resultado del asistente:</string>
-    <string name="wear_display_settings">Ajustes pantalla</string>
+    <string name="wear_display_settings">Ajustes de pantalla</string>
     <string name="wear_general_settings">Configuración general</string>
     <string name="enable_nsclient">Activar NSClient</string>
     <string name="welcometosetupwizard">Bienvenido al asistente de instalación. Le guiará a través del proceso de configuración\n</string>
@@ -661,8 +661,8 @@
     <string name="sensitivity_raises_target_title">Sensibilidad aumenta objetivo</string>
     <string name="sensitivity_raises_target_summary">Cuando se detecta sensibilidad a la insulina, aumenta el objetivo de glucosa</string>
     <string name="careportal_removestartedevents">Limpiar eventos AndroidAPS iniciado</string>
-    <string name="storedsettingsfound">Ajustes guardados encontrados</string>
-    <string name="allow_hardware_pump_text">Atención: si activas y conectas al hardware de la bomba, AndroidAPS copiará los ajustes basales del perfil de la bomba, sobrescribiendo el actual perfil basal de la bomba. Comprueba que tengas el perfil basal correcto en AndroidAPS. Si no estás seguro o no quieres sobrescribir los ajustes basales en la bomba, presiona cancelar y repite cambio de la bomba más tarde.</string>
+    <string name="storedsettingsfound">Encontrados ajustes de configuración</string>
+    <string name="allow_hardware_pump_text">Atención: si activas y conectas la bomba con AndroidAPS, AndroidAPS sobrescribirá los ajustes de basales del perfil de la bomba, con los establecidos en el perfil de AndroidAPS. Comprueba que tengas el perfil basal correcto en AndroidAPS. Si no estás seguro, o no quieres sobrescribir los ajustes basales en la bomba, presiona cancelar y repite la vinculación con más adelante.</string>
     <string name="error_adding_treatment_title">Datos de tratamiento incompletos</string>
     <string name="maintenance_settings">Ajustes de mantenimiento</string>
     <string name="maintenance_email">Correo</string>
@@ -721,9 +721,6 @@
     <string name="application_expired">Aplicación caducada</string>
     <string name="new_version_warning">Nueva versión desde al menos %1$d dias disponible! Respaldo a LGS después de %2$d días, se deshabilitará el lazo después de %3$d días</string>
     <string name="twohours">2h</string>
-    <string name="dexcom_app_patched">Dexcom (parcheada)</string>
-    <string name="dexcom_short">DXCM</string>
-    <string name="description_source_dexcom">Recibir los valores de glucosa de la aplicación parcheada de Dexcom.</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="bolusconstraintappliedwarn">Restricción de bolo aplicada: %1$.2f U a %2$.2f U</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>! Se ha detectado una absorción lenta de carbohidratos: %2$d%% de tiempo. Compruebe de nuevo su cálculo. Los COB se pueden sobrestimar, por lo que se podría administrar más insulina de la cuenta</font>]]></string>
@@ -859,7 +856,7 @@
     <string name="cannula">Cánula</string>
     <string name="userentry">Entrada usuario</string>
     <string name="common_values">Usa los valores de tu comida más grande que comes normalmente\n</string>
-    <string name="summary_email_for_crash_report">Esta dirección de correo electrónico se adjuntará a los informes de errores para que podamos contactarte en casos urgentes. Es opcional.</string>
+    <string name="summary_email_for_crash_report">Esta identificación se adjuntará a los informes de errores, para que podamos contactarte en casos urgentes. Es opcional.</string>
     <string name="email_address">Dirección de Correo Electrónico</string>
     <string name="privacy_settings">Ajustes de privacidad</string>
     <string name="privacy_summary">Puedes proporcionar una dirección de correo electrónico opcional si quieres ser notificado sobre fallos de la aplicación. Este no es un servicio automatizado. Los desarrolladores se comunicarán contigo en situaciones peligrosas.</string>
@@ -901,4 +898,6 @@
     <string name="data_status">Estado de datos BG</string>
     <string name="recalculated_data_used">Datos recalculados utilizados</string>
     <string name="bg_too_close">Datos de BG demasiado cercanos:\n%1$s\n%2$s</string>
+    <string name="identification">Identificación (correo electrónico, FB o nick de Discord, etc.)</string>
+    <string name="identification_not_set">Identificación no establecida en modo dev</string>
 </resources>

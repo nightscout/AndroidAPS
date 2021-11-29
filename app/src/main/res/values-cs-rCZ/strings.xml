@@ -721,9 +721,9 @@
     <string name="application_expired">Platnost aplikace vypršela</string>
     <string name="new_version_warning">Nová verze je dostupná minimálně %1$d dní! Přepnutí na ochranu před nízkou glykémií po %2$d dnech, vypnutí smyčky po %3$d dnech</string>
     <string name="twohours">2h</string>
-    <string name="dexcom_app_patched">Aplikace Dexcom (upravená)</string>
-    <string name="dexcom_short">DXCM</string>
-    <string name="description_source_dexcom">Příjem hodnot glykémií z upravené aplikace Dexcom.</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Příjem hodnot glykémií z upravené aplikace Dexcom (BYODA).</string>
     <string name="cobvsiob">COB vs. IOB</string>
     <string name="bolusconstraintappliedwarn">Použito omezení bolusu: %1$.2f U na %2$.2f U</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Detekována pomalá absorbce sacharidů: %2$d%% času. Překontrolujte kalkulaci. COB může být nadhodnocené, a proto může být započítáno více inzulínu !!!!!</font>]]></string>
@@ -859,7 +859,7 @@
     <string name="cannula">Kanyla</string>
     <string name="userentry">Vstup uživatele</string>
     <string name="common_values">Použijte hodnoty pro největší jídlo, jaké obvykle jíte\n</string>
-    <string name="summary_email_for_crash_report">Tato e-mailová adresa bude připojena ke zprávám o haváriích, abychom vás mohli kontaktovat v naléhavých případech. Je to dobrovolné.</string>
+    <string name="summary_email_for_crash_report">Tato e-identifikace bude připojena ke zprávám o pádech aplikace, abychom vás mohli kontaktovat v naléhavých případech. Je to dobrovolné.</string>
     <string name="email_address">E-mailová adresa</string>
     <string name="privacy_settings">Nastavení soukromí</string>
     <string name="privacy_summary">Pokud chcete být upozorněni na selhání aplikace, můžete zadat volitelně e-mailovou adresu. Toto není automatizovaná služba. Vývojáři vás budou kontaktovat v nebezpečných situacích.</string>
@@ -901,4 +901,6 @@
     <string name="data_status">Stav glykémie</string>
     <string name="recalculated_data_used">Použita přepočítaná data</string>
     <string name="bg_too_close">Glykémie je příliš blízko:\n%1$s\n%2$s</string>
+    <string name="identification">Identifikace (e-mail, jméno na FB nebo Discord atd.)</string>
+    <string name="identification_not_set">Identifikace není nastavena ve vývojářském režimu</string>
 </resources>

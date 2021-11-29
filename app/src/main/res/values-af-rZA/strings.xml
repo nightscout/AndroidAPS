@@ -570,9 +570,6 @@
     <string name="old_version">ou weergawe</string>
     <string name="very_old_version">baie ou weergawe</string>
     <string name="twohours">2h</string>
-    <string name="dexcom_app_patched">DexcomG App (opgedateerde)</string>
-    <string name="dexcom_short">DXCM</string>
-    <string name="description_source_dexcom">Ontvang BG waardes vanaf die opgedateerde Dexcom app.</string>
     <string name="snooze">Sluimer</string>
     <string name="smscommunicator_messagebody">Ongeldig boodskap teks</string>
     <string name="format_bg_isf">%1$s ISF: %2$.1f</string>

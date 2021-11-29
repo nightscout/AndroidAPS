@@ -31,7 +31,7 @@
     <string name="description_pump_mdi">Diyabet tedavisi için günde birden fazla enjeksiyon yapan kişiler için pompa entegrasyonu</string>
     <string name="description_pump_virtual">Henüz herhangi bir sürücüye sahip olmayan pompalar için pompa entegrasyonu (Açık Döngü)</string>
     <string name="description_sensitivity_aaps">Duyarlılık, Oref0 ile aynı şekilde hesaplanır, ancak geçmişe yönelik zaman aralığı belirleyebilirsiniz. Minimum karbonhidrat emilimi, tercihlerden maksimum karbonhidrat emilim süresinden hesaplanır.</string>
-    <string name="description_sensitivity_oref1">Duyarlılık, geçmişteki 8 veya 24 saatlik verilerden (hangisi daha hassas ise) hesaplanır. Karbonhidratlar (emilmemişse) tercihlerde belirtilen süreden sonra kesilir. Eklenti ayrıca UAM\'ı da (bildirilmemiş yemekler) hesaplar.</string>
+    <string name="description_sensitivity_oref1">Duyarlılık, geçmişteki 8 veya 24 saatlik verilerden (hangisi daha hassas ise) hesaplanır. Karbonhidratlar (emilmemişse) tercihlerde belirtilen süreden sonra kesilir. Eklenti ayrıca UAM\'ı da (bildirilmemiş öğünler) hesaplar.</string>
     <string name="description_sensitivity_weighted_average">Duyarlılık, sapmalardan ağırlıklı bir ortalama olarak hesaplanır. Daha yeni sapmalar daha yüksek ağırlığa sahiptir. Minimum karbonhidrat emilimi, tercihlerden maksimum karbonhidrat emilim süresinden hesaplanır. Bu algoritma, hassasiyet değişikliklerini takip etmede en hızlı olanıdır.</string>
     <string name="description_source_eversense">Yamalı Eversense uygulamasından KŞ değerleri alır.</string>
     <string name="description_source_glimp">Glimp\'ten KŞ değerleri alır.</string>
@@ -402,7 +402,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="careportal_sensor_label">Sensör</string>
     <string name="careportal_insulin_label">İnsülin</string>
     <string name="careportal_pb_label">Pompa pili</string>
-    <string name="careportal_age_label">ömür:</string>
+    <string name="careportal_age_label">yaş:</string>
     <string name="careportal_level_label">seviye:</string>
     <string name="ns_alarmoptions">Alarm türleri</string>
     <string name="ns_alarms">NS alarmlarından bildirimler oluşturun</string>
@@ -438,7 +438,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="enableuam">UAM etkinleştir</string>
     <string name="enablesmb">SMB (Super Micro Bolus) etkinleştir</string>
     <string name="enablesmb_summary">Daha hızlı bir etki için geçici bazal yerine Super Micro Bolus kullanın</string>
-    <string name="enableuam_summary">(Uam) Habersiz yemeklerin tespiti</string>
+    <string name="enableuam_summary">(Uam) Bildirilmemiş öğünlerin tespiti</string>
     <string name="insulin_oref_peak">IOB Eğrisi Tepe Zamanı</string>
     <string name="insulin_peak_time">Tepe zamanı [min]</string>
     <string name="free_peak_oref">Serbest tepe Oref</string>
@@ -645,7 +645,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="open_navigation">Navigasyonu aç</string>
     <string name="close_navigation">Navigasyonu kapat</string>
     <string name="nav_plugin_preferences">Eklenti tercihleri</string>
-    <string name="completed_well_done">Tamamlandı, aferin!</string>
+    <string name="completed_well_done">Tamamlandı, tebrikler!</string>
     <string name="not_completed_yet">Henüz tamamlanmadı</string>
     <string name="time_elapsed">Geçen süre</string>
     <string name="poctech">Poctech</string>
@@ -722,9 +722,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="application_expired">Uygulamanın süresi doldu</string>
     <string name="new_version_warning">En az %1$d gündür yeni sürüm mevcut! %2$d gün sonra LGS\'ye (Düşük Glukoz gönderimine) dönülecek, %3$d gün sonra da döngü devre dışı bırakılacaktır</string>
     <string name="twohours">2sa</string>
-    <string name="dexcom_app_patched">Dexcom Uygulaması (yamalı)</string>
-    <string name="dexcom_short">DXCM</string>
-    <string name="description_source_dexcom">Yamalı Dexcom uygulamasından KŞ değerleri alır.</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="bolusconstraintappliedwarn">Bolus kısıtlaması uygulandı: %1$.2f Ü ile %2$.2f Ü</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Yavaş karbonhidrat emilimi tespit edildi: zamanın %2$d%% si. Hesaplamanızı iki kez kontrol edin. Aktif Karbonhidrat (COB) olduğundan fazla tahmin edilebilir, bu nedenle daha fazla insülin verilebilir !!!!!</font>]]></string>
@@ -742,7 +739,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="selected_profile">Seçildi:</string>
     <string name="unitsnosemicolon">Birim</string>
     <string name="doyouwantswitchprofile">Profili değiştirmek ve mevcut profilde yapılan değişiklikleri gözardı etmek istiyor musunuz?</string>
-    <string name="objectives_button_unfinish">Silme tamamlandı</string>
+    <string name="objectives_button_unfinish">Komple tamamlandı</string>
     <string name="objectives_button_unstart">Yeniden Başla</string>
     <string name="doyouwantresetstart">Görevleri sıfırlamak istiyor musunuz? Tüm yaptıklarınızı kaybedeceksiniz.</string>
     <string name="setupwizard_units_prompt">Değerleri görüntülemek istediğiniz birimleri seçin</string>
@@ -828,8 +825,8 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="currentprofile">Mevcut profil</string>
     <string name="availableprofile">Kullanılabilir profil</string>
     <string name="profiletype">Profil tipi</string>
-    <string name="formatwithtdd">Yaş: %1$.0f Top.Gün.Doz: %2$.0f Ü</string>
-    <string name="formatwittddandpct">Yaş: %1$.0f Top.Gün.Doz: %2$.0f Ü %3$d%%</string>
+    <string name="formatwithtdd">Yaş: %1$.0f GTD: %2$.0f Ü</string>
+    <string name="formatwittddandpct">Yaş: %1$.0f GTD: %2$.0f Ü %3$d%%</string>
     <string name="formatwithweight">Yaş: %1$.0f Ağırlık: %2$.0f kg</string>
     <string name="basalpctfromtdd_label">% bazalın</string>
     <string name="dpvdefaultprofile">DPV Varsayılan profil</string>
@@ -860,7 +857,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="cannula">Kanül</string>
     <string name="userentry">Kullanıcı girişi</string>
     <string name="common_values">Genellikle yediğiniz en büyük yiyeceğin değerlerini kullanın\n</string>
-    <string name="summary_email_for_crash_report">Bu e-posta adresi, acil durumlarda sizinle iletişim kurabilmemiz için çökme raporlarına eklenecektir. (İsteğe bağlı.)</string>
+    <string name="summary_email_for_crash_report">Bu kimlik acil durumlarda sizinle iletişim kurabilmemiz için kilitlenme raporlarına eklenecektir. İsteğe bağlıdır.</string>
     <string name="email_address">E-posta adresi</string>
     <string name="privacy_settings">Gizlilik ayarı</string>
     <string name="privacy_summary">Uygulama çökmeleri hakkında bilgilendirilmek istiyorsanız isteğe bağlı e-posta adresi sağlayabilirsiniz. Bu otomatik bir hizmet değildir. Tehlikeli durumlarda geliştiriciler sizinle iletişime geçecektir.</string>
@@ -902,4 +899,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="data_status">KŞ veri durumu</string>
     <string name="recalculated_data_used">Kullanılan veriler yeniden hesaplandı</string>
     <string name="bg_too_close">KŞ çok yakın:\n%1$s\n%2$s</string>
+    <string name="identification">Tanımlama (E-posta, FB veya Discord rumuz vs.)</string>
+    <string name="identification_not_set">Tanımlama geliştirme modunda ayarlanmadı</string>
 </resources>
