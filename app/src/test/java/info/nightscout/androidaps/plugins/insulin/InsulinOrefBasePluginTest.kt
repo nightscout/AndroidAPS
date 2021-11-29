@@ -12,6 +12,7 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.insulin.InsulinOrefBasePlugin.Companion.MIN_DIA
 import info.nightscout.androidaps.utils.DefaultValueHelper
+import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.json.JSONObject
 import org.junit.Assert
@@ -35,7 +36,7 @@ class InsulinOrefBasePluginTest {
         rxBus: RxBus,
         aapsLogger: AAPSLogger
     ) : InsulinOrefBasePlugin(
-        injector, rh, profileFunction, rxBus, aapsLogger
+        injector, rh, profileFunction, rxBus, aapsLogger, ConfigImpl()
     ) {
 
         override fun sendShortDiaNotification(dia: Double) {

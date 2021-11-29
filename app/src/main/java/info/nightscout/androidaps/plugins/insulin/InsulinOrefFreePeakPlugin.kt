@@ -2,12 +2,13 @@ package info.nightscout.androidaps.plugins.insulin
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.extensions.putInt
+import info.nightscout.androidaps.extensions.storeInt
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.Insulin
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.extensions.storeInt
-import info.nightscout.androidaps.extensions.putInt
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.json.JSONObject
@@ -23,8 +24,10 @@ class InsulinOrefFreePeakPlugin @Inject constructor(
     private val sp: SP,
     rh: ResourceHelper,
     profileFunction: ProfileFunction,
-    rxBus: RxBus, aapsLogger: AAPSLogger
-) : InsulinOrefBasePlugin(injector, rh, profileFunction, rxBus, aapsLogger) {
+    rxBus: RxBus,
+    aapsLogger: AAPSLogger,
+    config: Config
+) : InsulinOrefBasePlugin(injector, rh, profileFunction, rxBus, aapsLogger, config) {
 
     override val id get(): Insulin.InsulinType = Insulin.InsulinType.OREF_FREE_PEAK
 
@@ -32,7 +35,7 @@ class InsulinOrefFreePeakPlugin @Inject constructor(
 
     override fun configuration(): JSONObject = JSONObject().putInt(R.string.key_insulin_oref_peak, sp, rh)
     override fun applyConfiguration(configuration: JSONObject) {
-            configuration.storeInt(R.string.key_insulin_oref_peak, sp, rh)
+        configuration.storeInt(R.string.key_insulin_oref_peak, sp, rh)
     }
 
     override fun commentStandardText(): String {

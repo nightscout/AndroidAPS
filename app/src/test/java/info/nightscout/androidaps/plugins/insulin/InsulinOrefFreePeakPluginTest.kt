@@ -2,11 +2,12 @@ package info.nightscout.androidaps.plugins.insulin
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.interfaces.Insulin
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Assert.assertEquals
@@ -43,7 +44,9 @@ class InsulinOrefFreePeakPluginTest : TestBase() {
             rh,
             profileFunction,
             rxBus,
-            aapsLogger)
+            aapsLogger,
+            ConfigImpl()
+        )
     }
 
     @Test
