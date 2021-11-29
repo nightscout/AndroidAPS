@@ -719,9 +719,6 @@ Eversense-appen.</string>
     <string name="application_expired">Applikationen inte giltig längre</string>
     <string name="new_version_warning">Ny version tillgänglig för %1$d dagar sedan. Systemet kommer att byta läge till \"stopp innan lågt\" efter %2$d dagar och sluta loopa helt efter %3$d dagar</string>
     <string name="twohours">2 tim</string>
-    <string name="dexcom_app_patched">Dexcoms app (modifierad)</string>
-    <string name="dexcom_short">DXCM</string>
-    <string name="description_source_dexcom">Ta emot BG-data från den modifierade Dexcom-appen.</string>
     <string name="cobvsiob">COB kontra IOB</string>
     <string name="bolusconstraintappliedwarn">Bolusbegränsning tillämpad: %1$.2f U till %2$.2f U</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>Varning! Långsam KH-absorption upptäckt %2$d%% av tiden. Dubbelkolla din beräkning. COB kan vara väldigt missvisande och du riskerar få för mycket insulin!</font>]]></string>
@@ -857,7 +854,6 @@ Eversense-appen.</string>
     <string name="cannula">Kanyl</string>
     <string name="userentry">Angivet av användare</string>
     <string name="common_values">Använd värden för den största måltiden som du vanligen äter\n</string>
-    <string name="summary_email_for_crash_report">Den här mejladressen kommer att bifogas till kraschrapporter så att vi kan kontakta dig i brådskande fall. Det är frivilligt.</string>
     <string name="email_address">E-postadress</string>
     <string name="privacy_settings">Sekretessinställningar</string>
     <string name="privacy_summary">Du kan ange valfri e-postadress om du vill få meddelanden om appkrascher. Det här är ingen automatiserad tjänst. Du kommer att kontaktas av utvecklare i farliga situationer.</string>
