@@ -45,7 +45,7 @@
     <string name="short_status_extended">Multionda: %1$.2f / %2$.2f U durante %3$d min</string>
     <string name="short_status_multiwave">Multionda: %1$.2f / %2$.2f U durante %3$d min</string>
     <string name="short_status_tdd">TDD: %1$.2f</string>
-    <string name="short_status_reservoir">Reser.: %1$.2f U</string>
+    <string name="short_status_reservoir">Reservorio.: %1$.2f U</string>
     <string name="short_status_battery">Batería.: %1$d%%</string>
     <string name="confirm">Confirmar</string>
     <string name="mute_alert">Silenciar</string>
@@ -59,17 +59,17 @@
     <string name="system_id_appendix">Apéndice ID del sistema</string>
     <string name="manufacturing_date">Fecha de fabricación</string>
     <string name="delete_pairing">Eliminar emparejamiento</string>
-    <string name="log_site_changes">Registro de cambios de cánulas</string>
-    <string name="log_reservoir_changes">Registrar cambios de reservorio</string>
-    <string name="log_tube_changes">Registro de cambio de tubo</string>
-    <string name="log_battery_changes">Registro de cambio de bateria</string>
-    <string name="log_operating_mode_changes">Registro de cambio de modo de funcionamiento</string>
+    <string name="log_site_changes">Registrar cambios de cánulas</string>
+    <string name="log_reservoir_changes">Registrar cambios de cartucho</string>
+    <string name="log_tube_changes">Registrar cambios de tubo</string>
+    <string name="log_battery_changes">Registrar cambios de batería</string>
+    <string name="log_operating_mode_changes">Registrar cambios del modo de funcionamiento</string>
     <string name="log_alerts">Registro de alarmas</string>
     <string name="enable_tbr_emulation">Activar emulación de dosis basal temporal</string>
-    <string name="enable_tbr_emulation_summary">Usa bolos extendidos en lugar de TBRs para pasar por alto el límite de 250%%</string>
+    <string name="enable_tbr_emulation_summary">Usa bolos extendidos en lugar de TBRs para pasar por alto el límite de 250%</string>
     <string name="disconnect_delay">Desconectar el retraso [s]</string>
-    <string name="max_recovery_duration">Max. duración de recuperación [s]</string>
-    <string name="min_recovery_duration">Min. duración de recuperación [s]</string>
+    <string name="max_recovery_duration">Máxima duración de la recuperación [s]</string>
+    <string name="min_recovery_duration">Mínima duración de la recuperación [s]</string>
     <string name="pump_alert">Alerta de infusor</string>
     <string name="pairing_information">Información de emparejamiento</string>
 </resources>
