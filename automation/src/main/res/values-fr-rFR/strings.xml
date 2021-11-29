@@ -38,10 +38,10 @@
     <string name="glucoseisnotavailable">La glycémie n\'est pas disponible</string>
     <string name="glucosecomparedmgdl">Glycémie %1$s %2$.0f %3$s</string>
     <string name="glucosecomparedmmol">Glycémie %1$s %2$.1f %3$s</string>
-    <string name="notemptarget">La Cible Temp. n\'existe pas</string>
+    <string name="notemptarget">Il n\'y a pas de Cible Temp.</string>
     <string name="temptargetcomparedmgdl">Cible Temp. %1$s %2$.0f %3$s</string>
     <string name="temptargetcomparedmmol">Cible Temp. %1$s %2$.1f %3$s</string>
-    <string name="percentagecompared">Profil %% %1$s %2$d</string>
+    <string name="percentagecompared">Pourcentage profil %1$s %2$d%%</string>
     <string name="iobcompared">IA %1$s %2$.1f</string>
     <string name="and">Et</string>
     <string name="or">Ou</string>
