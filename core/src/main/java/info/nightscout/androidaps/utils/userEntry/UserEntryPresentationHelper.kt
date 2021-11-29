@@ -205,10 +205,10 @@ class UserEntryPresentationHelper @Inject constructor(
                 is ValueWithUnit.Timestamp             -> timestamp = dateUtil.dateAndTimeAndSecondsString(valueWithUnit.value)
 
                 is ValueWithUnit.Mgdl                  ->
-                    bg = Profile.toUnitsString(valueWithUnit.value, valueWithUnit.value * Constants.MMOLL_TO_MGDL, profileFunction.getUnits())
+                    bg = Profile.toUnitsString(valueWithUnit.value, valueWithUnit.value * Constants.MGDL_TO_MMOLL, profileFunction.getUnits())
 
                 is ValueWithUnit.Mmoll                 ->
-                    bg = Profile.toUnitsString(valueWithUnit.value, valueWithUnit.value * Constants.MMOLL_TO_MGDL, profileFunction.getUnits())
+                    bg = Profile.toUnitsString(valueWithUnit.value * Constants.MMOLL_TO_MGDL, valueWithUnit.value , profileFunction.getUnits())
 
                 ValueWithUnit.UNKNOWN                  -> Unit
             }
