@@ -717,9 +717,6 @@
     <string name="application_expired">Прилагането изтече</string>
     <string name="new_version_warning">Има нова версия от най-малко %1$d дни! Ще спре подаването на инсулин след %2$d дни, цикълът ще бъде изключен след %3$d дни</string>
     <string name="twohours">2ч</string>
-    <string name="dexcom_app_patched">Dexcom приложение (модифицирано)</string>
-    <string name="dexcom_short">DXCM</string>
-    <string name="description_source_dexcom">Да получава данни за КЗ от модифицираното приложение на Dexcom.</string>
     <string name="cobvsiob">COB срещу IOB</string>
     <string name="bolusconstraintappliedwarn">Ограничение на болус: от %1$.2f Е на %2$.2f Е</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Бавна абсорбция на въглехидрати: %2$d%% от времето. Проверете въведените данни. Може да има голяма грешка !!!!!</font>]]></string>
@@ -854,7 +851,6 @@
     <string name="cannula">Канюла</string>
     <string name="userentry">Потербителска настройка</string>
     <string name="common_values">Използвай стойностите от вашето най-голямо хранен, с което обикновено се храните</string>
-    <string name="summary_email_for_crash_report">Тази електронна поща ще бъде добавена към репорта за да можем да се свържем с вас в случай на нужда. Не е задължително.</string>
     <string name="email_address">Електронна поща</string>
     <string name="privacy_settings">Настройки за поверителност</string>
     <string name="privacy_summary">Можете да посочите електронна поща, ако искате да бъдете уведомени за системни проблеми. Това не е автоматичен процес. Разработчиците ще се свържат с вас в случай на опасна ситуация.</string>
