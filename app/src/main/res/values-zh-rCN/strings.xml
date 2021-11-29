@@ -568,8 +568,5 @@
     <string name="old_version">旧版本</string>
     <string name="very_old_version">非常旧版本</string>
     <string name="twohours">2小时</string>
-    <string name="dexcom_app_patched">德康app（补丁版）</string>
-    <string name="dexcom_short">DXCM</string>
-    <string name="description_source_dexcom">从补丁版的德康APP收到血糖值</string>
     <!-- SMS Communicator & OTP Authenticator -->
 </resources>
