@@ -98,7 +98,10 @@ class NSClientAddUpdateWorker(
                                     aapsLogger.debug(LTag.DATABASE, "Invalidated bolus $it")
                                 }
                                 result.updatedNsId.forEach {
-                                    aapsLogger.debug(LTag.DATABASE, "Updated nsId bolus $it")
+                                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of bolus $it")
+                                }
+                                result.updated.forEach {
+                                    aapsLogger.debug(LTag.DATABASE, "Updated amount of bolus $it")
                                 }
                             }
                     } ?: aapsLogger.error("Error parsing bolus json $json")
