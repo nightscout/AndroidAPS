@@ -722,9 +722,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="application_expired">Application expirée</string>
     <string name="new_version_warning">Nouvelle version disponible depuis %1$d jours ! Retour à Arrêt Glycémie Basse (AGB) dans %2$d jours, la boucle sera désactivée dans %3$d jours</string>
     <string name="twohours">2 h</string>
-    <string name="dexcom_app_patched">App Dexcom (patchée)</string>
-    <string name="dexcom_short">Dexcom</string>
-    <string name="description_source_dexcom">Recevoir les valeurs de glycémie de l’application Dexcom patchée.</string>
     <string name="cobvsiob">GA vs IA</string>
     <string name="bolusconstraintappliedwarn">Contrainte de Bolus appliquée : %1$.2f U vers %2$.2f U</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Absorption lente des glucides détectée : %2$d%% du temps. Vérifiez de nouveau votre calcul. Les GA (Glucides Actifs) peuvent être surestimés et alors plus d\'insuline pourrait être délivré !!!!!</font>]]></string>
@@ -859,7 +856,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="cannula">Canule</string>
     <string name="userentry">Entrées utilisateur</string>
     <string name="common_values">Utilisez les valeurs qui correspondent à vos plus gros repas\n</string>
-    <string name="summary_email_for_crash_report">Cette adresse e-mail sera jointe aux rapports de plantage afin que nous puissions vous contacter dans les cas urgents. C\'est facultatif.</string>
+    <string name="summary_email_for_crash_report">Cette identification sera jointe aux rapports de plantage afin que nous puissions vous contacter en cas d\'urgence. Elle est facultative.</string>
     <string name="email_address">Adresse e-mail</string>
     <string name="privacy_settings">Paramètres de confidentialité</string>
     <string name="privacy_summary">Vous pouvez fournir une adresse e-mail facultative si vous voulez être informé des plantages de l\'application. Ce n\'est pas un service automatisé. Vous serez contacté par les développeurs dans des situations dangereuses.</string>
@@ -901,4 +898,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="data_status">État des données Gly</string>
     <string name="recalculated_data_used">Données recalculées utilisées</string>
     <string name="bg_too_close">Gly trop proche :\n%1$s\n%2$s</string>
+    <string name="identification">Identification (email, FB ou pseudo dans Discord, etc)</string>
+    <string name="identification_not_set">Identification non définie en mode dev</string>
 </resources>
