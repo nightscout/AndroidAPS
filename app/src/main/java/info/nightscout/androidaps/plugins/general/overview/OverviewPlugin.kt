@@ -77,14 +77,14 @@ class OverviewPlugin @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe({ n ->
                            if (notificationStore.add(n.notification))
-                               rxBus.send(EventUpdateOverviewNotification("EventNewNotification"))
+                               overviewBus.send(EventUpdateOverviewNotification("EventNewNotification"))
                        }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventDismissNotification::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ n ->
                            if (notificationStore.remove(n.id))
-                               rxBus.send(EventUpdateOverviewNotification("EventDismissNotification"))
+                               overviewBus.send(EventUpdateOverviewNotification("EventDismissNotification"))
                        }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventIobCalculationProgress::class.java)

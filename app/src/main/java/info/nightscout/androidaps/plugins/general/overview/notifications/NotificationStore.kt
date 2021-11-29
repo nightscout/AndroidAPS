@@ -14,13 +14,12 @@ import androidx.core.app.NotificationCompat
 import androidx.recyclerview.widget.RecyclerView
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.OverviewNotificationItemBinding
-import info.nightscout.androidaps.events.EventRefreshOverview
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.IconsProvider
 import info.nightscout.androidaps.interfaces.NotificationHolder
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
+import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewNotification
 import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -33,13 +32,13 @@ import javax.inject.Singleton
 class NotificationStore @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val sp: SP,
-    private val rxBus: RxBus,
     private val rh: ResourceHelper,
     private val context: Context,
     private val iconsProvider: IconsProvider,
     private val alarmSoundServiceHelper: AlarmSoundServiceHelper,
     private val dateUtil: DateUtil,
-    private val notificationHolder: NotificationHolder
+    private val notificationHolder: NotificationHolder,
+    private val activePlugin: ActivePlugin
 ) {
 
     private var store: MutableList<Notification> = ArrayList()
@@ -186,7 +185,7 @@ class NotificationStore @Inject constructor(
                     val notification = it.tag as Notification
                     notification.contextForAction = itemView.context
                     notification.action?.run()
-                    if (remove(notification.id)) rxBus.send(EventRefreshOverview("NotificationCleared"))
+                    if (remove(notification.id)) activePlugin.activeOverview.overviewBus.send(EventUpdateOverviewNotification("NotificationCleared"))
                 }
             }
         }
