@@ -723,9 +723,6 @@ Context | Edit Context</string>
     <string name="application_expired">Истек срок действия приложения</string>
     <string name="new_version_warning">Новая версия доступна уже %1$d дней! По истечении %2$d дн алгоритм переходит в режим работы только с остановкой при низкой гликемии LGS, замкнутый цикл будет отключен через %3$d дн</string>
     <string name="twohours">2ч</string>
-    <string name="dexcom_app_patched">Приложение Dexcom (модифицированное)</string>
-    <string name="dexcom_short">DXCM</string>
-    <string name="description_source_dexcom">Получать данные ГК от модифицированного приложения Dexcom.</string>
     <string name="cobvsiob">угл COB к инс IOB</string>
     <string name="bolusconstraintappliedwarn">Применено ограничение болюса: %1$.2f ед до %2$.2f ед</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Обнаружено медленное всасывание углеводов: %2$d%% времени. Еще раз проверьте свои расчеты. Возможно акт углеводы COB вне диапазона и может быть подано больше инсулина!!!!!</font>]]></string>
@@ -860,7 +857,6 @@ Context | Edit Context</string>
     <string name="cannula">Катетер помпы</string>
     <string name="userentry">Запись пользователя</string>
     <string name="common_values">Введите максимальные значения вашего приема пищи \n</string>
-    <string name="summary_email_for_crash_report">Этот адрес электронной почты будет привязан к отчетам о сбоях, чтобы мы могли связаться с вами в экстренных случаях. Это опция.</string>
     <string name="email_address">Адрес электронной почты</string>
     <string name="privacy_settings">Настройки конфиденцальности</string>
     <string name="privacy_summary">Вы можете указать дополнительно адрес электронной почты, если хотите получать уведомления о сбоях приложения; что является не автоматизированной рассылкой, а способом связи с разработчиками в опасных ситуациях.</string>
