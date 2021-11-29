@@ -721,6 +721,9 @@
     <string name="application_expired">Aplicación caducada</string>
     <string name="new_version_warning">Nueva versión desde al menos %1$d dias disponible! Respaldo a LGS después de %2$d días, se deshabilitará el lazo después de %3$d días</string>
     <string name="twohours">2h</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Recibir los valores de glucosa de la aplicación \'Build Your Own Device\'.</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="bolusconstraintappliedwarn">Restricción de bolo aplicada: %1$.2f U a %2$.2f U</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>! Se ha detectado una absorción lenta de carbohidratos: %2$d%% de tiempo. Compruebe de nuevo su cálculo. Los COB se pueden sobrestimar, por lo que se podría administrar más insulina de la cuenta</font>]]></string>
