@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.source
 
 import android.os.Handler
 import android.os.HandlerThread
+import android.os.SystemClock
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
@@ -74,7 +75,11 @@ class RandomBgPlugin @Inject constructor(
 
     override fun onStart() {
         super.onStart()
-        handler.postDelayed(refreshLoop, T.mins(interval).msecs())
+        val cal = GregorianCalendar()
+        cal[Calendar.MILLISECOND] = 0
+        cal[Calendar.SECOND] = 0
+        cal[Calendar.MINUTE] -= cal[Calendar.MINUTE] % 5
+        handler.postAtTime(refreshLoop, SystemClock.uptimeMillis() + cal.timeInMillis + T.mins(5).msecs() + 1000 - System.currentTimeMillis())
         disposable.clear()
     }
 
