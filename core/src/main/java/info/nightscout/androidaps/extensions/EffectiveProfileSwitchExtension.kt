@@ -7,20 +7,7 @@ import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
-import info.nightscout.androidaps.utils.T.Companion.mins
 import org.json.JSONObject
-
-fun List<EffectiveProfileSwitch>.isEPSEvent5minBack(time: Long): Boolean {
-    for (event in this) {
-        if (event.timestamp <= time && event.timestamp > time - mins(5).msecs()) {
-            if (event.originalDuration == 0L) {
-                //aapsLogger.debug(LTag.DATABASE, "Found ProfileSwitch event for time: " + dateUtil.dateAndTimeString(time) + " " + event.toString())
-                return true
-            }
-        }
-    }
-    return false
-}
 
 fun EffectiveProfileSwitch.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
     JSONObject()
