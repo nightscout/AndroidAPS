@@ -154,7 +154,6 @@
     <string name="profile_ins_units_per_hour">JI/h</string>
     <string name="profile_carbs_per_unit">g/JI</string>
     <!--    ProfileFunction-->
-    <string name="noprofileselected">Nebol vybraný žiadny profil</string>
     <string name="startprofile">Spustiť profil %1$d%% na %2$d min</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Iba diskrétne hodnoty a nie rozsahy sú podporované pre bazál/bolus vo virtuálnej pumpe.</string>
@@ -410,6 +409,37 @@
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f je mimo pevne nastavených limitov</string>
     <string name="basal_value">Hodnota bazálu</string>
     <string name="nsclient_version_does_not_match">Verzia NSClienta nesúhlasí z verziou AndroidAPS. Prosím aktualizujte si ju.</string>
+    <!-- Command Queue + readStatus reasons -->
+    <string name="bolus_u_min">BOLUS %1$.2f JI</string>
+    <string name="carbs_g">SACHARIDY %1$d g</string>
+    <string name="extended_bolus_u_min">PREDĹŽENÝ BOLUS %1$.2f U %2$d min</string>
+    <string name="load_events">NAČÍTAVANIE UDALOSTÍ</string>
+    <string name="load_history">NAČÍTAŤ HISTÓRIU %1$d</string>
+    <string name="load_tdds">NAČÍTAŤ CDD</string>
+    <string name="set_profile">NASTAVIŤ PROFIL</string>
+    <string name="set_user_settings">NASTAVIŤ POUŽ. NASTAVENIA</string>
+    <string name="smb_bolus_u">SMB BOLUS %1$.2f JI</string>
+    <string name="start_pump">SPUSTIŤ PUMPU</string>
+    <string name="stop_pump">ZASTAVIŤ PUMPU</string>
+    <string name="temp_basal_absolute">DOČAS. BAZÁL %1$.2f JI/h %2$d min</string>
+    <string name="temp_basal_percent">DOČAS. BAZÁL %1$d%% %2$d min</string>
+    <string name="insight_set_tbr_over_notification">INSIGHT NASTAVIŤ TBR CEZ OZNÁMENIE</string>
+    <string name="read_status" comment="10 characters max for READSTATUS translation">NAČÍTASTAV %1$s</string>
+    <string name="keepalive_status_outdated" comment="26 characters max for translation">Udržiavam pripojené. Zastaralý stav.</string>
+    <string name="keepalive_basal_outdated" comment="26 characters max for translation">Udržiavam pripojené. Zastaralý bazál.</string>
+    <string name="sms" comment="26 characters max for translation">SMS</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Kliknuté pripojiť k pumpe</string>
+    <string name="pump_driver_changed" comment="26 characters max for translation">Ovládač pumpy zmenený.</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Zmena ovládača pumpy.</string>
+    <string name="device_changed" comment="26 characters max for translation">Zariadenie zmenené</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Kliknuté na tlačítko obnoviť</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Naplánovaná aktualizácia stavu</string>
+    <string name="unconfirmed_command" comment="26 characters max for translation">Nepotvrdený príkaz</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Požadované používateľom</string>
+    <string name="user_request" comment="26 characters max for translation">Požiadavka používateľa</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
+    <string name="pump_paired" comment="26 characters max for translation">Pumpa spárovaná</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Insight Tlačítko Obnoviť</string>
     <plurals name="days">
         <item quantity="one">%1$d deň</item>
         <item quantity="few">%1$d dní</item>
