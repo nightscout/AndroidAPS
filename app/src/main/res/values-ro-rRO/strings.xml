@@ -720,9 +720,6 @@
     <string name="application_expired">Aplicația a expirat</string>
     <string name="new_version_warning">O versiune nouă este disponibilă de cel puțin %1$d zile! Reveniți la LGS după %2$d zile, bucla închisă va fi dezactivată după %3$d zile</string>
     <string name="twohours">2h</string>
-    <string name="dexcom_app_patched">Aplicația Dexcom (modificată)</string>
-    <string name="dexcom_short">DXCM</string>
-    <string name="description_source_dexcom">Primește valori glicemie de la aplicația Dexcom modificată.</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="bolusconstraintappliedwarn">Este aplicatâ limitarea bolusului %1$.2f U la %2$.2f U</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! A fost detectată o absorbție lentă a carbohidraților: %2$d%% din timp. Reverificați calculele. COB poate fi supraestimat, astfel că este posibilă administrarea de mai multă insulină !!!!!</font>]]></string>
@@ -858,7 +855,6 @@
     <string name="cannula">Canula</string>
     <string name="userentry">Înregistrare utilizator</string>
     <string name="common_values">Folosește valorile corespunzătoarea celor mai mari mese pe care le ai de obicei\n</string>
-    <string name="summary_email_for_crash_report">Această adresă de e-mail va fi atașată rapoartelor de eroare, astfel încât să vă putem contacta în cazuri urgente. Este opțională.</string>
     <string name="email_address">Adresă de e-mail</string>
     <string name="privacy_settings">Setări de confidenţialitate</string>
     <string name="privacy_summary">Puteți furniza o adresă de e-mail opțională dacă doriți să fiți notificat despre erorile aplicației. Acesta nu este un serviciu automat. Veți fi contactat de dezvoltatori în situații periculoase.</string>
