@@ -124,7 +124,6 @@
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
-    <string name="noprofileselected">Nenhum perfil selecionado</string>
     <string name="startprofile">Iniciar perfil %1$d%% para %2$d min</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Somente valores discretos nos intervalos são suportados como granularidade para basal/bolus na bomba virtual.</string>
@@ -236,4 +235,5 @@
     <!-- WeekdayPicker -->
     <!-- User Entry -->
     <!-- HardLimits -->
+    <!-- Command Queue + readStatus reasons -->
 </resources>
