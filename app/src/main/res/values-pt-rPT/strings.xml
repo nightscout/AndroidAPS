@@ -714,9 +714,6 @@
     <string name="very_old_version">versão muito antiga</string>
     <string name="new_version_warning">Nova versão para pelo menos %1$d dias disponíveis! Retorno a SGB após %2$d dias, o loop será desactivado após %3$d dias</string>
     <string name="twohours">2h</string>
-    <string name="dexcom_app_patched">App Dexcom (com patch)</string>
-    <string name="dexcom_short">DXCM</string>
-    <string name="description_source_dexcom">Receber valores da Glicose da app Dexcom com patch.</string>
     <string name="cobvsiob">HCA vs IA</string>
     <string name="bolusconstraintappliedwarn">Restrição de bólus aplicada: %1$.2f U a %2$.2f U</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Absorção lenta de hidratos detetada: %2$d%% do tempo. Verifique o seu cálculo. HCA podem estar sobrestimados, assim mais insulina pode ser dada !!!</font>]]></string>
@@ -844,7 +841,6 @@
     <string name="cannula">Cânula</string>
     <string name="userentry">Entrada de Utilizador</string>
     <string name="common_values">Utilize valores da sua maior refeição que normalmente come\n</string>
-    <string name="summary_email_for_crash_report">Este endereço de email irá anexado aos relatórios de erros para que possamos entrar em contato consigo em casos urgentes. É opcional.</string>
     <string name="email_address">Endereço de email</string>
     <string name="privacy_settings">Definições de privacidade</string>
     <string name="privacy_summary">Opcionalmente pode fornecer um endereço de e-mail se quiser ser notificado sobre os erros da app. Este não é um serviço automatizado. Será contactado por desenvolvedores em situações perigosas.</string>
