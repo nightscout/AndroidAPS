@@ -718,9 +718,6 @@
     <string name="application_expired">Applicatie is verlopen</string>
     <string name="new_version_warning">Nieuwe versie al zeker %1$d dagen beschikbaar! Terugval LGS na %2$d dagen, loop zal worden uitgeschakeld na %3$d dagen</string>
     <string name="twohours">2u</string>
-    <string name="dexcom_app_patched">Dexcom App (patched)</string>
-    <string name="dexcom_short">DXCM</string>
-    <string name="description_source_dexcom">Ontvang BG waardes van de aangepaste Dexcom app.</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="bolusconstraintappliedwarn">Bolusbeperking toegepast: %1$.2f E naar %2$.2f E</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!! Trage koolhydraat absorptie gedetecteerd: %2$d%% van de tijd. Controleer je berekening nogmaals. COB kan zijn overschat waardoor er misschien meer insuline wordt afgegeven!!!</font> zijn]]></string>
@@ -856,7 +853,6 @@
     <string name="cannula">Canule</string>
     <string name="userentry">Gebruikersinvoer</string>
     <string name="common_values">Gebruik de waarden van je grootste maaltijd die je gewoonlijk eet\n</string>
-    <string name="summary_email_for_crash_report">Dit e-mailadres zal gekoppeld worden aan crashrapporten, zodat we in dringende gevallen contact met u kunnen opnemen. Het is optioneel.</string>
     <string name="email_address">E-mailadres</string>
     <string name="privacy_settings">Privacyinstellingen</string>
     <string name="privacy_summary">U kunt optioneel een e-mailadres opgeven als u op de hoogte wilt worden gebracht van applicatie crashes. Dit is geen geautomatiseerde service. De ontwikkelaars zullen contact met u opnemen bij gevaarlijke situaties.</string>
