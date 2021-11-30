@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Omnipod Eros - Description -->
-    <string name="omnipod_eros_pump_description">Integración de bombas de insulina Omnipod Eros (modelo viejo, con tapa transparente). Requiere un dispositivo RileyLink con una versión de firmware 2.0 o superior.</string>
+    <string name="omnipod_eros_pump_description">Integración de bombas de insulina Omnipod Eros (modelo viejo, con tapa transparente). Requiere un dispositivo RileyLink con una versión de firmware 2.0 o superior</string>
     <!-- Omnipod Eros - Keys -->
     <!-- Omnipod Eros - Overview -->
     <!-- Omnipod Eros - Preferences -->
