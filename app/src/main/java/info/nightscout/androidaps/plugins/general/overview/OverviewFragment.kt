@@ -132,7 +132,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     private lateinit var refreshLoop: Runnable
     private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
-
     private val secondaryGraphs = ArrayList<GraphView>()
     private val secondaryGraphsLabel = ArrayList<TextView>()
 
@@ -362,10 +361,13 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     activity,
                     ProtectionCheck.Protection.BOLUS,
                     UIRunnable { if (isAdded) CarbsDialog().show(childFragmentManager, "Overview") })
-                R.id.temp_target         -> protectionCheck.queryProtection(
-                    activity,
-                    ProtectionCheck.Protection.BOLUS,
-                    UIRunnable { if (isAdded) TempTargetDialog().show(childFragmentManager, "Overview") })
+                R.id.temp_target         ->
+                    if (loop.isDisconnected) OKDialog.show(activity, rh.gs(R.string.not_available_full), rh.gs(R.string.smscommunicator_pumpdisconnected))
+                    else
+                        protectionCheck.queryProtection(
+                            activity,
+                            ProtectionCheck.Protection.BOLUS,
+                            UIRunnable { if (isAdded) TempTargetDialog().show(childFragmentManager, "Overview") })
 
                 R.id.active_profile      -> {
                     ProfileViewerDialog().also { pvd ->
@@ -472,10 +474,12 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
             R.id.temp_target         -> v.performClick()
             R.id.active_profile      -> activity?.let { activity ->
-                protectionCheck.queryProtection(
-                    activity,
-                    ProtectionCheck.Protection.BOLUS,
-                    UIRunnable { ProfileSwitchDialog().show(childFragmentManager, "ProfileSwitchDialog") })
+                if (loop.isDisconnected) OKDialog.show(activity, rh.gs(R.string.not_available_full), rh.gs(R.string.smscommunicator_pumpdisconnected))
+                else
+                    protectionCheck.queryProtection(
+                        activity,
+                        ProtectionCheck.Protection.BOLUS,
+                        UIRunnable { ProfileSwitchDialog().show(childFragmentManager, "ProfileSwitchDialog") })
             }
 
         }
@@ -514,7 +518,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
         // QuickWizard button
         val quickWizardEntry = quickWizard.getActive()
-        if (quickWizardEntry != null && lastBG != null && profile != null && pump.isInitialized() && !pump.isSuspended()) {
+        if (quickWizardEntry != null && lastBG != null && profile != null && pump.isInitialized() && !pump.isSuspended() && !loop.isDisconnected) {
             binding.buttonsLayout.quickWizardButton.visibility = View.VISIBLE
             val wizard = quickWizardEntry.doCalc(profile, profileName, lastBG, false)
             binding.buttonsLayout.quickWizardButton.text = quickWizardEntry.buttonText() + "\n" + rh.gs(R.string.format_carbs, quickWizardEntry.carbs()) +
@@ -540,13 +544,14 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
         // **** Various treatment buttons ****
         binding.buttonsLayout.carbsButton.visibility =
-            ((!activePlugin.activePump.pumpDescription.storesCarbInfo || pump.isInitialized() && !pump.isSuspended()) && profile != null && sp.getBoolean(
-                R.string.key_show_carbs_button,
-                true
-            )).toVisibility()
-        binding.buttonsLayout.treatmentButton.visibility = (pump.isInitialized() && !pump.isSuspended() && profile != null && sp.getBoolean(R.string.key_show_treatment_button, false)).toVisibility()
-        binding.buttonsLayout.wizardButton.visibility = (pump.isInitialized() && !pump.isSuspended() && profile != null && sp.getBoolean(R.string.key_show_wizard_button, true)).toVisibility()
-        binding.buttonsLayout.insulinButton.visibility = (pump.isInitialized() && !pump.isSuspended() && profile != null && sp.getBoolean(R.string.key_show_insulin_button, true)).toVisibility()
+            ((!activePlugin.activePump.pumpDescription.storesCarbInfo || pump.isInitialized() && !pump.isSuspended()) && profile != null
+                && sp.getBoolean(R.string.key_show_carbs_button, true)).toVisibility()
+        binding.buttonsLayout.treatmentButton.visibility = (!loop.isDisconnected && pump.isInitialized() && !pump.isSuspended() && profile != null
+            && sp.getBoolean(R.string.key_show_treatment_button, false)).toVisibility()
+        binding.buttonsLayout.wizardButton.visibility = (!loop.isDisconnected && pump.isInitialized() && !pump.isSuspended() && profile != null
+            && sp.getBoolean(R.string.key_show_wizard_button, true)).toVisibility()
+        binding.buttonsLayout.insulinButton.visibility = (!loop.isDisconnected && pump.isInitialized() && !pump.isSuspended() && profile != null
+            && sp.getBoolean(R.string.key_show_insulin_button, true)).toVisibility()
 
         // **** Calibration & CGM buttons ****
         val xDripIsBgSource = xdripPlugin.isEnabled()
@@ -557,28 +562,29 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         // Automation buttons
         binding.buttonsLayout.userButtonsLayout.removeAllViews()
         val events = automationPlugin.userEvents()
-        for (event in events)
-            if (event.isEnabled && event.trigger.shouldRun())
-                context?.let { context ->
-                    SingleClickButton(context).also {
-                        it.setTextColor(rh.gc(R.color.colorTreatmentButton))
-                        it.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10f)
-                        it.layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 0.5f).also { l ->
-                            l.setMargins(0, 0, rh.dpToPx(-4), 0)
-                        }
-                        it.setCompoundDrawablesWithIntrinsicBounds(null, rh.gd(R.drawable.ic_danar_useropt), null, null)
-                        it.text = event.title
+        if (!loop.isDisconnected && pump.isInitialized() && !pump.isSuspended() && profile != null)
+            for (event in events)
+                if (event.isEnabled && event.trigger.shouldRun())
+                    context?.let { context ->
+                        SingleClickButton(context).also {
+                            it.setTextColor(rh.gc(R.color.colorTreatmentButton))
+                            it.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10f)
+                            it.layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 0.5f).also { l ->
+                                l.setMargins(0, 0, rh.dpToPx(-4), 0)
+                            }
+                            it.setCompoundDrawablesWithIntrinsicBounds(null, rh.gd(R.drawable.ic_danar_useropt), null, null)
+                            it.text = event.title
 
-                        it.setOnClickListener {
-                            OKDialog.showConfirmation(
-                                context,
-                                rh.gs(R.string.run_question, event.title),
-                                { handler.post { automationPlugin.processEvent(event) } }
-                            )
+                            it.setOnClickListener {
+                                OKDialog.showConfirmation(
+                                    context,
+                                    rh.gs(R.string.run_question, event.title),
+                                    { handler.post { automationPlugin.processEvent(event) } }
+                                )
+                            }
+                            binding.buttonsLayout.userButtonsLayout.addView(it)
                         }
-                        binding.buttonsLayout.userButtonsLayout.addView(it)
                     }
-                }
         binding.buttonsLayout.userButtonsLayout.visibility = events.isNotEmpty().toVisibility()
     }
 
@@ -597,7 +603,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     binding.infoLayout.apsModeText.visibility = View.VISIBLE
                 }
 
-                loop.isDisconnected                                               -> {
+                loop.isDisconnected                                                         -> {
                     binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_disconnected)
                     binding.infoLayout.apsModeText.text = dateUtil.age(loop.minutesToEndOfSuspend() * 60000L, true, rh)
                     binding.infoLayout.apsModeText.visibility = View.VISIBLE
@@ -609,7 +615,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     binding.infoLayout.apsModeText.visibility = View.VISIBLE
                 }
 
-                pump.isSuspended()                                                      -> {
+                pump.isSuspended()                                                          -> {
                     binding.infoLayout.apsMode.setImageResource(
                         if (pump.model() == PumpType.OMNIPOD_EROS || pump.model() == PumpType.OMNIPOD_DASH) {
                             // For Omnipod, indicate the pump as disconnected when it's suspended.
@@ -627,17 +633,17 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     binding.infoLayout.apsModeText.visibility = View.GONE
                 }
 
-                (loop as PluginBase).isEnabled() && closedLoopEnabled.value()                     -> {
+                (loop as PluginBase).isEnabled() && closedLoopEnabled.value()               -> {
                     binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_closed)
                     binding.infoLayout.apsModeText.visibility = View.GONE
                 }
 
-                (loop as PluginBase).isEnabled() && !closedLoopEnabled.value()                    -> {
+                (loop as PluginBase).isEnabled() && !closedLoopEnabled.value()              -> {
                     binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_open)
                     binding.infoLayout.apsModeText.visibility = View.GONE
                 }
 
-                else                                                                    -> {
+                else                                                                        -> {
                     binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_disabled)
                     binding.infoLayout.apsModeText.visibility = View.GONE
                 }
