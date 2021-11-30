@@ -132,7 +132,7 @@
     <string name="wronginsulin_label">Chyby v podání inzulínu</string>
     <string name="wronginsulin_whattodo">Co byste měli udělat, pokud jste dostali méně inzulínu, než ukazuje historie pumpy, např. v důsledku okluze, vadné kanyly nebo zapomenutí na opětovné připojení pumpy po sprše? </string>
     <string name="wronginsulin_careportal">Odstraňte data z Nightscoutu pro odstranění z historie pumpy.</string>
-    <string name="wronginsulin_compare">Porovnejte hodnoty v AndroidAPS a historii pumpy.</string>
+    <string name="wronginsulin_compare">Porovnat hodnoty v AndroidAPS s hodnotami v historii pumpy (pokud to pumpa podporuje).</string>
     <string name="wronginsulin_prime">Pošlete bolus na vypočtený „chybějící“ inzulín buď injekční stříkačkou nebo perem nebo pomocí plnění na pumpě.</string>
     <string name="wronginsulin_donothing">Neudělejte nic a dovolte AndroidAPS opravit jakoukoliv výslednou vysokou hladinu glukózy v krvi.</string>
     <string name="iob_label">Aktivní inzulín (IOB)</string>

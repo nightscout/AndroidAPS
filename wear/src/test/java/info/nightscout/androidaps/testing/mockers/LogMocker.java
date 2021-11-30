@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.testing.mockers;
 
-import android.util.Log;
-
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
+
+import android.util.Log;
 
 public class LogMocker {
     public static void prepareMock() {

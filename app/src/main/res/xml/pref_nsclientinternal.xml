@@ -43,7 +43,7 @@
                 android:title="@string/ns_receive_cgm" />
 
             <SwitchPreference
-                android:defaultValue="false"
+                android:defaultValue="true"
                 android:key="@string/key_ns_receive_profile_store"
                 android:summary="@string/ns_receive_profile_store_summary"
                 android:title="@string/ns_receive_profile_store" />

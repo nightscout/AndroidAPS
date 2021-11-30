@@ -1,34 +1,25 @@
 package info.nightscout.androidaps.plugins.general.automation.triggers
 
 import com.google.common.base.Optional
-import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.interfaces.GlucoseUnit
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDelta.DeltaType
-import info.nightscout.androidaps.utils.DateUtil
 import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mockito.`when`
-import org.powermock.api.mockito.PowerMockito
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
 import java.util.*
 
-@RunWith(PowerMockRunner::class)
-@PrepareForTest(DateUtil::class, ProfileFunction::class)
 class TriggerDeltaTest : TriggerTestBase() {
 
     var now = 1514766900000L
 
     @Before
     fun mock() {
-        PowerMockito.`when`(dateUtil.now()).thenReturn(now)
+        `when`(dateUtil.now()).thenReturn(now)
         `when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
     }
 

@@ -20,8 +20,8 @@ class ActivityMonitor @Inject constructor(
     private val dateUtil: DateUtil
 ) : Application.ActivityLifecycleCallbacks {
 
-    override fun onActivityPaused(activity: Activity?) {
-        val name = activity?.javaClass?.simpleName ?: return
+    override fun onActivityPaused(activity: Activity) {
+        val name = activity.javaClass.simpleName
         val resumed = sp.getLong("Monitor_" + name + "_" + "resumed", 0)
         if (resumed == 0L) {
             aapsLogger.debug(LTag.UI, "onActivityPaused: $name resumed == 0")
@@ -36,25 +36,25 @@ class ActivityMonitor @Inject constructor(
         aapsLogger.debug(LTag.UI, "onActivityPaused: $name elapsed=$elapsed total=${total + elapsed}")
     }
 
-    override fun onActivityResumed(activity: Activity?) {
-        val name = activity?.javaClass?.simpleName ?: return
+    override fun onActivityResumed(activity: Activity) {
+        val name = activity.javaClass.simpleName
         aapsLogger.debug(LTag.UI, "onActivityResumed: $name")
         sp.putLong("Monitor_" + name + "_" + "resumed", dateUtil.now())
     }
 
-    override fun onActivityStarted(activity: Activity?) {
+    override fun onActivityStarted(activity: Activity) {
     }
 
-    override fun onActivityDestroyed(activity: Activity?) {
+    override fun onActivityDestroyed(activity: Activity) {
     }
 
-    override fun onActivitySaveInstanceState(activity: Activity?, outState: Bundle?) {
+    override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
     }
 
-    override fun onActivityStopped(activity: Activity?) {
+    override fun onActivityStopped(activity: Activity) {
     }
 
-    override fun onActivityCreated(activity: Activity?, savedInstanceState: Bundle?) {
+    override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
     }
 
     private fun toText(): String {

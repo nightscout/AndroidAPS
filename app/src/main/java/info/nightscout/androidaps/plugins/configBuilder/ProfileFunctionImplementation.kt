@@ -91,10 +91,10 @@ class ProfileFunctionImplementation @Inject constructor(
         if (sp.getString(R.string.key_units, Constants.MGDL) == Constants.MGDL) GlucoseUnit.MGDL
         else GlucoseUnit.MMOL
 
-    override fun createProfileSwitch(profileStore: ProfileStore, profileName: String, durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long) {
+    override fun buildProfileSwitch(profileStore: ProfileStore, profileName: String, durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long) : ProfileSwitch {
         val pureProfile = profileStore.getSpecificProfile(profileName)
             ?: throw InvalidParameterSpecException(profileName)
-        val ps = ProfileSwitch(
+        return ProfileSwitch(
             timestamp = timestamp,
             basalBlocks = pureProfile.basalBlocks,
             isfBlocks = pureProfile.isfBlocks,
@@ -105,8 +105,14 @@ class ProfileFunctionImplementation @Inject constructor(
             timeshift = T.hours(timeShiftInHours.toLong()).msecs(),
             percentage = percentage,
             duration = T.mins(durationInMinutes.toLong()).msecs(),
-            insulinConfiguration = activePlugin.activeInsulin.insulinConfiguration.also { it.insulinEndTime = (pureProfile.dia * 3600 * 1000).toLong() }
+            insulinConfiguration = activePlugin.activeInsulin.insulinConfiguration.also {
+                it.insulinEndTime = (pureProfile.dia * 3600 * 1000).toLong()
+            }
         )
+    }
+
+    override fun createProfileSwitch(profileStore: ProfileStore, profileName: String, durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long) {
+        val ps = buildProfileSwitch(profileStore, profileName, durationInMinutes, percentage, timeShiftInHours, timestamp)
         disposable += repository.runTransactionForResult(InsertOrUpdateProfileSwitch(ps))
             .subscribe({ result ->
                 result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted ProfileSwitch $it") }

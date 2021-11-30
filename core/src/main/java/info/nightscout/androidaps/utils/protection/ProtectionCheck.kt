@@ -49,7 +49,6 @@ class ProtectionCheck @Inject constructor(
         }
     }
 
-    @JvmOverloads
     fun queryProtection(activity: FragmentActivity, protection: Protection,
                         ok: Runnable?, cancel: Runnable? = null, fail: Runnable? = null) {
         when (ProtectionType.values()[sp.getInt(protectionTypeResourceIDs[protection.ordinal], ProtectionType.NONE.ordinal)]) {

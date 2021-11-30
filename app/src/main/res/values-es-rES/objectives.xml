@@ -17,7 +17,6 @@
     <string name="objectives_maxiob_gate">Usar unos cuantos días, y al menos una noche sin alarmas de glucosa baja, antes de bajar valor de glucosa</string>
     <string name="objectives_autosens_objective">Ajustar las basales y ratios, si es necesario, y luego activar auto-sens</string>
     <string name="objectives_autosens_gate">Una semana con éxito en lazo cerrado durante el día con entrada regular de carbohidratos</string>
-    <string name="objectives_ama_objective">Habilitar funciones adicionales para su uso durante el día, como el asistente de comida avanzado</string>
     <string name="objectives_smb_objective">Habilitar funciones adicionales para uso durante el día como SMB</string>
     <string name="objectives_auto_objective">Activar automatización</string>
     <string name="objectives_smb_gate">¡Debes leer el wiki y subir maxIOB para que SMB funcione bien! Para comenzar un buen valor sería maxIOB = bolo de comida medio + 3 x máximo basal diario</string>

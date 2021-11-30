@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.common.bolusInfo
 
+import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -9,6 +10,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
 
+@OpenForTesting
 @Singleton
 class TemporaryBasalStorage @Inject constructor(
     val aapsLogger: AAPSLogger

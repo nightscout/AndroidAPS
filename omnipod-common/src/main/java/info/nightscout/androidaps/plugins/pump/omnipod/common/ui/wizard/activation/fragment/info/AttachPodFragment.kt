@@ -41,7 +41,11 @@ class AttachPodFragment : InfoFragmentBase() {
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setTitle(getString(getTitleId()))
                     .setMessage(getString(R.string.omnipod_common_pod_activation_wizard_attach_pod_confirm_insert_cannula_text))
-                    .setPositiveButton(getString(R.string.omnipod_common_ok)) { _, _ -> findNavController().navigate(getNextPageActionId()) }
+                    .setPositiveButton(getString(R.string.omnipod_common_ok)) { _, _ ->
+                        findNavController().navigate(
+                            getNextPageActionId()
+                        )
+                    }
                     .setNegativeButton(getString(R.string.omnipod_common_cancel), null)
                     .show()
             }

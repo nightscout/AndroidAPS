@@ -81,7 +81,6 @@
     <string name="extended_bolus">Predĺžený bolus</string>
     <string name="pump_time_updated">Čas v pumpe bol aktualizovaný</string>
     <string name="exit">Koniec</string>
-    <string name="serial_number">Sériové číslo</string>
     <string name="removerecord">Odstrániť záznam</string>
     <string name="loopisdisabled">Uzavretý okruh je deaktivovaný</string>
     <string name="alarm">Alarm</string>
@@ -385,6 +384,7 @@
     <string name="uel_loop_change">UZAVRETÝ OKRUH ZMENENÝ</string>
     <string name="uel_loop_removed">UZAVRETÝ OKRUH ODSTRÁNENÝ</string>
     <string name="uel_other">INÉ</string>
+    <!-- HardLimits -->
     <plurals name="days">
         <item quantity="one">%1$d deň</item>
         <item quantity="few">%1$d dní</item>

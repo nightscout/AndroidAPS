@@ -132,7 +132,7 @@
     <string name="wronginsulin_label">Fehler bei Insulinabgabe/Eintrag</string>
     <string name="wronginsulin_whattodo">Wie solltest Du vorgehen, wenn Du weniger Insulin im Körper hast als in der Pumpenhistorie vermerkt - z.B. durch eine Verstopfung, Kanülenfehler oder eine nach dem Duschen nicht wieder angekoppelte Pumpe?</string>
     <string name="wronginsulin_careportal">Lösche Insulindaten im Nightscout careportal, um sie aus der Pumpenhistorie zu entfernen.</string>
-    <string name="wronginsulin_compare">Vergleiche die Werte in AndroidAPS und der Pumpenhistorie.</string>
+    <string name="wronginsulin_compare">Vergleiche die Werte der Historie in AAPS und Deiner Pumpe (wenn die Pumpe diese Funktion bietet).</string>
     <string name="wronginsulin_prime">Gib einen Teil-Bolus des \'nicht erhaltenen\' Insulins mit Spritze / Pen oder durch Befüllen der Kanüle.</string>
     <string name="wronginsulin_donothing">Unternimm nichts und lass AndroidAPS die entstehenden hohen Glukosewerte korrigieren.</string>
     <string name="iob_label">Aktives Insulin (IOB)</string>

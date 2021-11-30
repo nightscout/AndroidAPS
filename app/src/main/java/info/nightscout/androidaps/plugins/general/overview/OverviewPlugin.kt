@@ -23,7 +23,6 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventBucke
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.Translator
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -45,8 +44,6 @@ class OverviewPlugin @Inject constructor(
         resourceHelper: ResourceHelper,
         private val config: Config,
         private val dateUtil: DateUtil,
-        private val translator: Translator,
-//    private val profiler: Profiler,
         private val profileFunction: ProfileFunction,
         private val iobCobCalculator: IobCobCalculator,
         private val repository: AppRepository,
@@ -234,7 +231,6 @@ class OverviewPlugin @Inject constructor(
         overviewBus.send(EventUpdateOverview(from, OverviewData.Property.TIME))
         overviewBus.send(EventUpdateOverview(from, OverviewData.Property.TEMPORARY_BASAL))
         overviewBus.send(EventUpdateOverview(from, OverviewData.Property.EXTENDED_BOLUS))
-        overviewBus.send(EventUpdateOverview(from, OverviewData.Property.IOB_COB))
         overviewBus.send(EventUpdateOverview(from, OverviewData.Property.TEMPORARY_TARGET))
         overviewBus.send(EventUpdateOverview(from, OverviewData.Property.SENSITIVITY))
         loadAsData(from)
@@ -244,6 +240,7 @@ class OverviewPlugin @Inject constructor(
         overviewData.prepareTreatmentsData(from)
         overviewData.prepareIobAutosensData(from)
         overviewBus.send(EventUpdateOverview(from, OverviewData.Property.GRAPH))
+        overviewBus.send(EventUpdateOverview(from, OverviewData.Property.IOB_COB))
         aapsLogger.debug(LTag.UI, "refreshLoop finished")
         runningRefresh = false
     }
@@ -305,7 +302,7 @@ class OverviewPlugin @Inject constructor(
     private fun loadIobCobResults(from: String) {
         overviewData.bolusIob = iobCobCalculator.calculateIobFromBolus().round()
         overviewData.basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
-        overviewData.cobInfo = iobCobCalculator.getCobInfo(false, "Overview COB")
+        overviewData.cobInfo = iobCobCalculator.getCobInfo(true, "Overview COB")
         val lastCarbs = repository.getLastCarbsRecordWrapped().blockingGet()
         overviewData.lastCarbsTime = if (lastCarbs is ValueWrapper.Existing) lastCarbs.value.timestamp else 0L
 

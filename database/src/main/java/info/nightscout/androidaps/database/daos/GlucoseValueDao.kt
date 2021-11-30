@@ -2,7 +2,9 @@ package info.nightscout.androidaps.database.daos
 
 import androidx.room.Dao
 import androidx.room.Query
+import info.nightscout.androidaps.database.TABLE_CARBS
 import info.nightscout.androidaps.database.TABLE_GLUCOSE_VALUES
+import info.nightscout.androidaps.database.entities.Carbs
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import io.reactivex.Maybe
 import io.reactivex.Single
@@ -53,4 +55,7 @@ internal interface GlucoseValueDao : TraceableDao<GlucoseValue> {
 
     @Query("SELECT * FROM $TABLE_GLUCOSE_VALUES WHERE id = :referenceId")
     fun getCurrentFromHistoric(referenceId: Long): Maybe<GlucoseValue>
+
+    @Query("SELECT * FROM $TABLE_GLUCOSE_VALUES WHERE dateCreated > :since AND dateCreated <= :until LIMIT :limit OFFSET :offset")
+    suspend fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<GlucoseValue>
 }

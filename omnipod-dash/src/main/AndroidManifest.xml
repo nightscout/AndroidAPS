@@ -6,4 +6,10 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <application>
+        <activity android:name=".ui.wizard.activation.DashPodActivationWizardActivity" />
+        <activity android:name=".ui.wizard.deactivation.DashPodDeactivationWizardActivity" />
+        <activity android:name=".ui.DashPodManagementActivity" />
+    </application>
 </manifest>

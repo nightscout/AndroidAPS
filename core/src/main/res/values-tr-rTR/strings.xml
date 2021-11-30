@@ -11,7 +11,6 @@
     <string name="unsafeusage">güvenli olmayan kullanım</string>
     <string name="pump_unreachable">Pompa ulaşılamıyor</string>
     <string name="pump_time_updated">Pompa zamanı güncellendi</string>
-    <string name="serial_number">Seri numarası</string>
     <string name="disableloop">Döngü devre dışı bırak</string>
     <string name="enableloop">Döngü etkinleştir</string>
     <string name="resumeloop">Döngüyü başlat</string>
@@ -48,4 +47,5 @@
     <!-- Permissions -->
     <!-- WeekdayPicker -->
     <!-- User Entry -->
+    <!-- HardLimits -->
 </resources>

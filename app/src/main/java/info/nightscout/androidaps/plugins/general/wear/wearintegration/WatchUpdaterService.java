@@ -29,12 +29,9 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
-import info.nightscout.androidaps.interfaces.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
-import info.nightscout.androidaps.interfaces.GlucoseUnit;
-import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.database.AppRepository;
 import info.nightscout.androidaps.database.entities.Bolus;
 import info.nightscout.androidaps.database.entities.GlucoseValue;
@@ -42,8 +39,11 @@ import info.nightscout.androidaps.database.entities.TemporaryBasal;
 import info.nightscout.androidaps.extensions.GlucoseValueExtensionKt;
 import info.nightscout.androidaps.extensions.TemporaryBasalExtensionKt;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
+import info.nightscout.androidaps.interfaces.Config;
+import info.nightscout.androidaps.interfaces.GlucoseUnit;
 import info.nightscout.androidaps.interfaces.IobCobCalculator;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
@@ -59,7 +59,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProv
 import info.nightscout.androidaps.receivers.ReceiverStatusStore;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.DefaultValueHelper;
-import info.nightscout.androidaps.utils.ToastUtils;
+import info.nightscout.androidaps.utils.TrendCalculator;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
@@ -79,6 +79,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
     @Inject public AppRepository repository;
     @Inject ReceiverStatusStore receiverStatusStore;
     @Inject Config config;
+    @Inject public TrendCalculator trendCalculator;
 
     public static final String ACTION_RESEND = WatchUpdaterService.class.getName().concat(".Resend");
     public static final String ACTION_OPEN_SETTINGS = WatchUpdaterService.class.getName().concat(".OpenSettings");
@@ -322,7 +323,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             dataMap.putString("delta", "--");
             dataMap.putString("avgDelta", "--");
         } else {
-            dataMap.putString("slopeArrow", slopeArrow(glucoseStatus.getDelta()));
+            dataMap.putString("slopeArrow", trendCalculator.getTrendArrow(lastBG).getSymbol());
             dataMap.putString("delta", deltastring(glucoseStatus.getDelta(), glucoseStatus.getDelta() * Constants.MGDL_TO_MMOLL, units));
             dataMap.putString("avgDelta", deltastring(glucoseStatus.getShortAvgDelta(), glucoseStatus.getShortAvgDelta() * Constants.MGDL_TO_MMOLL, units));
         }
@@ -358,25 +359,6 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         return deltastring;
     }
 
-    private String slopeArrow(double delta) {
-        if (delta <= (-3.5 * 5)) {
-            return "\u21ca";
-        } else if (delta <= (-2 * 5)) {
-            return "\u2193";
-        } else if (delta <= (-1 * 5)) {
-            return "\u2198";
-        } else if (delta <= (1 * 5)) {
-            return "\u2192";
-        } else if (delta <= (2 * 5)) {
-            return "\u2197";
-        } else if (delta <= (3.5 * 5)) {
-            return "\u2191";
-        } else {
-            return "\u21c8";
-        }
-    }
-
-
     private void resendData() {
         if (googleApiClient != null && !googleApiClient.isConnected() && !googleApiClient.isConnecting()) {
             googleApiConnect();
@@ -391,16 +373,10 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
 
         if (!graph_bgs.isEmpty()) {
             DataMap entries = dataMapSingleBG(last_bg, glucoseStatus);
-            if (entries == null) {
-                ToastUtils.showToastInUiThread(this, resourceHelper.gs(R.string.noprofile));
-                return;
-            }
             final ArrayList<DataMap> dataMaps = new ArrayList<>(graph_bgs.size());
             for (GlucoseValue bg : graph_bgs) {
                 DataMap dataMap = dataMapSingleBG(bg, glucoseStatus);
-                if (dataMap != null) {
-                    dataMaps.add(dataMap);
-                }
+                dataMaps.add(dataMap);
             }
             entries.putDataMapArrayList("entries", dataMaps);
             (new SendToDataLayerThread(WEARABLE_DATA_PATH, googleApiClient)).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, entries);
@@ -505,7 +481,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             tb2 = iobCobCalculator.getTempBasalIncludingConvertedExtended(now); //use "now" to express current situation
             if (tb2 == null) {
                 //express the cancelled temp by painting it down one minute early
-                temps.add(tempDatamap(tb_start, tb_before, now - 1 * 60 * 1000, endBasalValue, tb_amount));
+                temps.add(tempDatamap(tb_start, tb_before, now - 60 * 1000, endBasalValue, tb_amount));
             } else {
                 //express currently running temp by painting it a bit into the future
                 Profile profileNow = profileFunction.getProfile(now);
@@ -523,7 +499,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
                 //onset at the end
                 Profile profileTB = profileFunction.getProfile(runningTime);
                 double currentAmount = TemporaryBasalExtensionKt.convertedToAbsolute(tb2, runningTime, profileTB);
-                temps.add(tempDatamap(now - 1 * 60 * 1000, endBasalValue, runningTime + 5 * 60 * 1000, currentAmount, currentAmount));
+                temps.add(tempDatamap(now - 60 * 1000, endBasalValue, runningTime + 5 * 60 * 1000, currentAmount, currentAmount));
             }
         }
 

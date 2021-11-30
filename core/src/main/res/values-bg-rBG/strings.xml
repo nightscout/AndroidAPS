@@ -80,7 +80,6 @@
     <string name="extended_bolus">Удължен болус</string>
     <string name="pump_time_updated">Актуализирано време на помпата</string>
     <string name="exit">Изход</string>
-    <string name="serial_number">Сериен номер</string>
     <string name="removerecord">Премахни</string>
     <string name="loopisdisabled">APS е изключен</string>
     <string name="alarm">Аларма</string>
@@ -290,6 +289,7 @@
     <string name="uel_cancel_bolus">СПРИ БОЛУС</string>
     <string name="ue_source">Източник</string>
     <string name="ue_action">Действие</string>
+    <!-- HardLimits -->
     <plurals name="hours">
         <item quantity="one">%1$d час</item>
         <item quantity="other">%1$d часа</item>

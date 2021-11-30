@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.activities
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.entities.UserEntry.Action
@@ -21,14 +22,28 @@ class StatsActivity : NoSplashAppCompatActivity() {
 
     private lateinit var binding: ActivityStatsBinding
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityStatsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.tdds.text = tddCalculator.stats()
-        binding.tir.text = tirCalculator.stats()
-        binding.activity.text = activityMonitor.stats()
+        binding.tdds.text = getString(R.string.tdd) + ": " + getString(R.string.calculation_in_progress)
+        binding.tir.text = getString(R.string.tir) + ": " + getString(R.string.calculation_in_progress)
+        binding.activity.text = getString(R.string.activitymonitor) + ": " + getString(R.string.calculation_in_progress)
+
+        Thread {
+            val tdds = tddCalculator.stats()
+            runOnUiThread { binding.tdds.text = tdds }
+        }.start()
+        Thread {
+            val tir = tirCalculator.stats()
+            runOnUiThread { binding.tir.text = tir }
+        }.start()
+        Thread {
+            val activity = activityMonitor.stats()
+            runOnUiThread { binding.activity.text = activity }
+        }.start()
 
         binding.ok.setOnClickListener { finish() }
         binding.reset.setOnClickListener {

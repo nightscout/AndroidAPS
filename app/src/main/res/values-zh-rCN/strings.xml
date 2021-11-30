@@ -146,7 +146,6 @@
     <string name="smscommunicator_loophasbeendisabled">闭环已经被禁用</string>
     <string name="smscommunicator_loophasbeenenabled">闭环已经被启用</string>
     <string name="smscommunicator_loopisenabled">闭环被启用</string>
-    <string name="valuelimitedto">%1$.2f 超过 %2$.2f的限制</string>
     <string name="smscommunicator_remotecommandnotallowed">远程命令没有被允许</string>
     <string name="smscommunicator_remotebolusnotallowed">远程大剂量不可用。请稍后再试。</string>
     <string name="smscommunicator_profilereplywithcode">要切换配置文件到 %1$s %2$d%% 请回复代码 %3$s</string>

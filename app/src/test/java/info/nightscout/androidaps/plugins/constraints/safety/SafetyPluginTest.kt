@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.constraints.safety
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBaseWithProfile
@@ -18,18 +17,14 @@ import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
 import info.nightscout.androidaps.plugins.source.GlimpPlugin
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
+import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
 
-@RunWith(PowerMockRunner::class)
-@PrepareForTest(ConstraintChecker::class, BuildHelper::class, VirtualPumpPlugin::class, GlimpPlugin::class)
 class SafetyPluginTest : TestBaseWithProfile() {
 
     @Mock lateinit var sp: SP
@@ -231,17 +226,18 @@ class SafetyPluginTest : TestBaseWithProfile() {
     }
 
     @Test fun iobShouldBeLimited() {
+        `when`(openAPSSMBPlugin.isEnabled()).thenReturn(true)
+        `when`(openAPSAMAPlugin.isEnabled()).thenReturn(false)
         `when`(sp.getString(R.string.key_aps_mode, "open")).thenReturn("closed")
         `when`(sp.getDouble(R.string.key_openapsma_max_iob, 1.5)).thenReturn(1.5)
+        `when`(sp.getDouble(R.string.key_openapssmb_max_iob, 3.0)).thenReturn(3.0)
         `when`(sp.getString(R.string.key_age, "")).thenReturn("teenage")
 
         // Apply all limits
         var d = Constraint(Constants.REALLYHIGHIOB)
         d = safetyPlugin.applyMaxIOBConstraints(d)
-        Assert.assertEquals(1.5, d.value(), 0.01)
-        Assert.assertEquals("""
-    Safety: Limiting IOB to 1.5 U because of max value in preferences
-    """.trimIndent(), d.getReasons(aapsLogger))
-        Assert.assertEquals("Safety: Limiting IOB to 1.5 U because of max value in preferences", d.getMostLimitedReasons(aapsLogger))
+        Assert.assertEquals(3.0, d.value(), 0.01)
+        Assert.assertEquals("Safety: Limiting IOB to 3.0 U because of max value in preferences\nSafety: Limiting IOB to 12.0 U because of hard limit", d.getReasons(aapsLogger))
+        Assert.assertEquals("Safety: Limiting IOB to 3.0 U because of max value in preferences", d.getMostLimitedReasons(aapsLogger))
     }
 }

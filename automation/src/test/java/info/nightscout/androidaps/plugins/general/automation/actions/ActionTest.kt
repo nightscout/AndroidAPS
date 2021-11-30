@@ -3,12 +3,7 @@ package info.nightscout.androidaps.plugins.general.automation.actions
 import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
 
-@RunWith(PowerMockRunner::class)
-@PrepareForTest
 class ActionTest : ActionsTestBase() {
 
     @Test

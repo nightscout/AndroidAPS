@@ -1,19 +1,13 @@
 package info.nightscout.androidaps.plugins.pump.danaRv2.comm
 
 import info.nightscout.androidaps.danaRv2.comm.MsgHistoryEvents_v2
-import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.plugins.pump.danaR.comm.DanaRTestBase
 import org.junit.Assert
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
 
-@RunWith(PowerMockRunner::class)
-@PrepareForTest(DetailedBolusInfoStorage::class)
 class MsgHistoryEventsRv2Test : DanaRTestBase() {
 
-    @Test @Throws(Exception::class) fun runTest() {
+    @Test fun runTest() {
         val packet = MsgHistoryEvents_v2(injector, 0)
 
         // test message decoding

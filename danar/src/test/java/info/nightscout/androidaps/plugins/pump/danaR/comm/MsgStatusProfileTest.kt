@@ -4,10 +4,7 @@ import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danar.comm.MsgStatusProfile
 import org.junit.Assert
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.powermock.modules.junit4.PowerMockRunner
 
-@RunWith(PowerMockRunner::class)
 class MsgStatusProfileTest : DanaRTestBase() {
 
     @Test fun runTest() {

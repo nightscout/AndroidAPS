@@ -17,7 +17,6 @@ interface Constraints {
     fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> = value
     fun isLgsAllowed(value: Constraint<Boolean>): Constraint<Boolean> = value
     fun isAutosensModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> = value
-    fun isAMAModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> = value
     fun isSMBModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> = value
     fun isUAMEnabled(value: Constraint<Boolean>): Constraint<Boolean> = value
     fun isAdvancedFilteringEnabled(value: Constraint<Boolean>): Constraint<Boolean> = value

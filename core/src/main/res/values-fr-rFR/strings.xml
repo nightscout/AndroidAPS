@@ -81,7 +81,6 @@
     <string name="extended_bolus">Bolus étendu</string>
     <string name="pump_time_updated">Mise à jour de l\'heure de la pompe</string>
     <string name="exit">Quitter</string>
-    <string name="serial_number">Numéro de série</string>
     <string name="removerecord">Supprimer l\'enregistrement</string>
     <string name="loopisdisabled">La Boucle est désactivée</string>
     <string name="alarm">Alarme</string>
@@ -385,6 +384,7 @@
     <string name="uel_loop_change">BOUCLE CHANGÉE</string>
     <string name="uel_loop_removed">BOUCLE SUPPRIMÉE</string>
     <string name="uel_other">AUTRE</string>
+    <!-- HardLimits -->
     <plurals name="days">
         <item quantity="one">%1$d jour</item>
         <item quantity="other">%1$d jours</item>

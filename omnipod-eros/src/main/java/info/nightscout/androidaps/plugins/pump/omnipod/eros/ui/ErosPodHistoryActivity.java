@@ -146,7 +146,7 @@ public class ErosPodHistoryActivity extends NoSplashAppCompatActivity {
 
         statusView.setVisibility(View.GONE);
 
-        typeListFull = getTypeList(PumpHistoryEntryGroup.getTranslatedList(resourceHelper));
+        typeListFull = getTypeList(PumpHistoryEntryGroup.Companion.getTranslatedList(resourceHelper));
 
         ArrayAdapter<TypeList> spinnerAdapter = new ArrayAdapter<>(this, R.layout.spinner_centered, typeListFull);
         historyTypeSpinner.setAdapter(spinnerAdapter);
@@ -306,7 +306,7 @@ public class ErosPodHistoryActivity extends NoSplashAppCompatActivity {
 
             try {
                 Profile.ProfileValue[] profileValuesArray = aapsOmnipodUtil.getGsonInstance().fromJson(data, Profile.ProfileValue[].class);
-                valueView.setText(ProfileUtil.getBasalProfilesDisplayable(profileValuesArray, PumpType.OMNIPOD_EROS));
+                valueView.setText(ProfileUtil.INSTANCE.getBasalProfilesDisplayable(profileValuesArray, PumpType.OMNIPOD_EROS));
             } catch (Exception e) {
                 aapsLogger.error(LTag.PUMP, "Problem parsing Profile json. Ex: {}, Data:\n{}", e.getMessage(), data);
                 valueView.setText("");
@@ -321,7 +321,7 @@ public class ErosPodHistoryActivity extends NoSplashAppCompatActivity {
 
 
         @Override
-        public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
             super.onAttachedToRecyclerView(recyclerView);
         }
 

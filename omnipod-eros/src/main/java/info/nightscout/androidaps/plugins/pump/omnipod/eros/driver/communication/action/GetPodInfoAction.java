@@ -3,14 +3,14 @@ package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communicatio
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.command.GetStatusCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.response.podinfo.PodInfoResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.PodInfoType;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.PodStateManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.ErosPodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 
 public class GetPodInfoAction implements OmnipodAction<PodInfoResponse> {
-    private final PodStateManager podStateManager;
+    private final ErosPodStateManager podStateManager;
     private final PodInfoType podInfoType;
 
-    public GetPodInfoAction(PodStateManager podStateManager, PodInfoType podInfoType) {
+    public GetPodInfoAction(ErosPodStateManager podStateManager, PodInfoType podInfoType) {
         if (podStateManager == null) {
             throw new IllegalArgumentException("Pod state manager cannot be null");
         }

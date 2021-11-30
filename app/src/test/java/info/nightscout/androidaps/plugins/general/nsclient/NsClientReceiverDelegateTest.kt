@@ -12,19 +12,13 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
-import org.powermock.api.mockito.PowerMockito
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
 
-@RunWith(PowerMockRunner::class)
-@PrepareForTest(SP::class, Context::class)
 class NsClientReceiverDelegateTest : TestBase() {
 
     @Mock lateinit var context: Context
@@ -47,7 +41,6 @@ class NsClientReceiverDelegateTest : TestBase() {
     }
 
     @Test fun testCalculateStatusChargingState() {
-        PowerMockito.mockStatic(SP::class.java)
         `when`(sp.getBoolean(anyInt(), anyBoolean())).thenReturn(false)
         var ev = EventChargingState(true, 0)
         Assert.assertTrue(sut!!.calculateStatus(ev))
@@ -61,7 +54,6 @@ class NsClientReceiverDelegateTest : TestBase() {
     }
 
     @Test fun testCalculateStatusNetworkState() {
-        PowerMockito.mockStatic(SP::class.java)
         // wifiOnly = false
         // allowRoaming = false as well
         `when`(sp.getBoolean(anyInt(), anyBoolean())).thenReturn(false)

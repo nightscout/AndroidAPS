@@ -1,10 +1,12 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import org.joda.time.Duration;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.powermock.api.mockito.PowerMockito;
 
 import java.util.List;
 
@@ -13,33 +15,16 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.sc
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule.BasalScheduleEntry;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodErosManager;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-
 public class AapsOmnipodErosManagerTest {
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void validProfile() {
         Profile profile = mock(Profile.class);
 
-        Profile.ProfileValue value1 = mock(Profile.ProfileValue.class);
-        value1.setTimeAsSeconds(0);
-        value1.setValue(0.5D);
-
-        Profile.ProfileValue value2 = mock(Profile.ProfileValue.class);
-        value2.setTimeAsSeconds(18000);
-        value2.setValue(1.0D);
-
-        Profile.ProfileValue value3 = mock(Profile.ProfileValue.class);
-        value3.setTimeAsSeconds(50400);
-        value3.setValue(3.05D);
-
-        PowerMockito.when(profile.getBasalValues()).thenReturn(new Profile.ProfileValue[]{
-                value1,
-                value2,
-                value3
+        when(profile.getBasalValues()).thenReturn(new Profile.ProfileValue[]{
+                new Profile.ProfileValue(0, 0.5),
+                new Profile.ProfileValue(18000, 1.0),
+                new Profile.ProfileValue(50400, 3.05)
         });
 
         BasalSchedule basalSchedule = AapsOmnipodErosManager.mapProfileToBasalSchedule(profile);
@@ -62,98 +47,63 @@ public class AapsOmnipodErosManagerTest {
 
     @Test
     public void invalidProfileNullProfile() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Profile can not be null");
-        AapsOmnipodErosManager.mapProfileToBasalSchedule(null);
+        assertThrows("Profile can not be null", IllegalArgumentException.class, () -> AapsOmnipodErosManager.mapProfileToBasalSchedule(null));
     }
 
     @Test
     public void invalidProfileNullEntries() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Basal values can not be null");
-        AapsOmnipodErosManager.mapProfileToBasalSchedule(mock(Profile.class));
+        assertThrows("Basal values can not be null", IllegalArgumentException.class, () -> AapsOmnipodErosManager.mapProfileToBasalSchedule(mock(Profile.class)));
     }
 
     @Test
     public void invalidProfileZeroEntries() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Entries can not be empty");
         Profile profile = mock(Profile.class);
 
-        PowerMockito.when(profile.getBasalValues()).thenReturn(new Profile.ProfileValue[0]);
+        when(profile.getBasalValues()).thenReturn(new Profile.ProfileValue[0]);
 
-        AapsOmnipodErosManager.mapProfileToBasalSchedule(profile);
+        assertThrows("Entries can not be empty", IllegalArgumentException.class, () -> AapsOmnipodErosManager.mapProfileToBasalSchedule(profile));
     }
 
     @Test
     public void invalidProfileNonZeroOffset() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("First basal schedule entry should have 0 offset");
-
         Profile profile = mock(Profile.class);
 
-        Profile.ProfileValue value = mock(Profile.ProfileValue.class);
-        value.setTimeAsSeconds(1800);
-        value.setValue(0.5D);
-
-        PowerMockito.when(profile.getBasalValues()).thenReturn(new Profile.ProfileValue[]{
-                value,
+        when(profile.getBasalValues()).thenReturn(new Profile.ProfileValue[]{
+                new Profile.ProfileValue(1800, 0.5)
         });
 
-        AapsOmnipodErosManager.mapProfileToBasalSchedule(profile);
+        assertThrows("First basal schedule entry should have 0 offset", IllegalArgumentException.class, () -> AapsOmnipodErosManager.mapProfileToBasalSchedule(profile));
     }
 
     @Test
     public void invalidProfileMoreThan24Hours() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Invalid start time");
-
         Profile profile = mock(Profile.class);
 
-        Profile.ProfileValue value1 = mock(Profile.ProfileValue.class);
-        value1.setTimeAsSeconds(0);
-        value1.setValue(0.5D);
-
-        Profile.ProfileValue value2 = mock(Profile.ProfileValue.class);
-        value2.setTimeAsSeconds(86400);
-        value2.setValue(0.5D);
-
-        PowerMockito.when(profile.getBasalValues()).thenReturn(new Profile.ProfileValue[]{
-                value1,
-                value2
+        when(profile.getBasalValues()).thenReturn(new Profile.ProfileValue[]{
+                new Profile.ProfileValue(0, 0.5),
+                new Profile.ProfileValue(86400, 0.5)
         });
 
-        AapsOmnipodErosManager.mapProfileToBasalSchedule(profile);
+        assertThrows("Invalid start time", IllegalArgumentException.class, () -> AapsOmnipodErosManager.mapProfileToBasalSchedule(profile));
     }
 
     @Test
     public void invalidProfileNegativeOffset() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Invalid start time");
-
         Profile profile = mock(Profile.class);
 
-        Profile.ProfileValue value = mock(Profile.ProfileValue.class);
-        value.setTimeAsSeconds(-1);
-        value.setValue(0.5D);
-
-        PowerMockito.when(profile.getBasalValues()).thenReturn(new Profile.ProfileValue[]{
-                value,
+        when(profile.getBasalValues()).thenReturn(new Profile.ProfileValue[]{
+                new Profile.ProfileValue(-1, 0.5)
         });
 
-        AapsOmnipodErosManager.mapProfileToBasalSchedule(profile);
+        assertThrows("Invalid start time", IllegalArgumentException.class, () -> AapsOmnipodErosManager.mapProfileToBasalSchedule(profile));
     }
 
     @Test
     public void roundsToSupportedPrecision() {
         Profile profile = mock(Profile.class);
 
-        Profile.ProfileValue value = mock(Profile.ProfileValue.class);
-        value.setTimeAsSeconds(0);
-        value.setValue(0.04D);
-
-        PowerMockito.when(profile.getBasalValues()).thenReturn(new Profile.ProfileValue[]{
-                value,
+        when(profile.getBasalValues()).thenReturn(new Profile.ProfileValue[]{
+                new Profile.ProfileValue(0, 0.04),
         });
 
         BasalSchedule basalSchedule = AapsOmnipodErosManager.mapProfileToBasalSchedule(profile);

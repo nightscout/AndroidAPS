@@ -5,9 +5,7 @@
     <string name="danars_pairingok">Emparelhamento OK</string>
     <string name="danars_pairingtimedout">Tempo emparelhamento excedido</string>
     <string name="danars_waitingforpairing">Aguardando emparelhamento na bomba</string>
-    <string name="danarspump">DanaRS</string>
     <string name="danarspump_shortname">Dana</string>
-    <string name="description_pump_dana_rs">Integração para bombas DANA Diabecare RS</string>
     <string name="maxbolusviolation">Transgressão Bólus máx</string>
     <string name="commanderror">Erro no comando</string>
     <string name="speederror">Erro velocidade</string>

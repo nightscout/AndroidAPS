@@ -58,7 +58,6 @@ class OpenAPSAMAFragment : DaggerFragment() {
     }
 
     @Synchronized
-    @kotlin.ExperimentalStdlibApi
     override fun onResume() {
         super.onResume()
 
@@ -91,7 +90,6 @@ class OpenAPSAMAFragment : DaggerFragment() {
     }
 
     @Synchronized
-    @kotlin.ExperimentalStdlibApi
     private fun updateGUI() {
         if (_binding == null) return
         openAPSAMAPlugin.lastAPSResult?.let { lastAPSResult ->

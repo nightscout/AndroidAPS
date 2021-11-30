@@ -11,6 +11,7 @@ import org.json.JSONObject
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.abs
 
 @Singleton
 class DefaultProfile @Inject constructor(val dateUtil: DateUtil) {
@@ -120,12 +121,12 @@ class DefaultProfile @Inject constructor(val dateUtil: DateUtil) {
         val high = map.ceilingEntry(key)
         var res: Array<Double>? = null
         if (low != null && high != null) {
-            res = if (Math.abs(key - low.key) < Math.abs(key - high.key))
+            res = if (abs(key - low.key) < abs(key - high.key))
                 low.value
             else
                 high.value
         } else if (low != null || high != null) {
-            res = if (low != null) low.value else high.value
+            res = if (low != null) low.value else high!!.value
         }
         return res
     }

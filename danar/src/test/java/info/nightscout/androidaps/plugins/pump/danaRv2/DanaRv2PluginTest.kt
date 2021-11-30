@@ -18,14 +18,9 @@ import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalSt
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
 
-@RunWith(PowerMockRunner::class)
-@PrepareForTest(ConstraintChecker::class, DetailedBolusInfoStorage::class, TemporaryBasalStorage::class)
 class DanaRv2PluginTest : TestBaseWithProfile() {
 
     @Mock lateinit var context: Context

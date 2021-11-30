@@ -134,7 +134,7 @@ Context | Edit Context</string>
     <string name="wronginsulin_label">Ошибки подачи/поступления инсулина</string>
     <string name="wronginsulin_whattodo">Что делать, если вы получили меньше инсулина, чем указано в истории помпы, например, из-за окклюзии, проблем с канюлей или из-за того, что вы забыли подключить помпу обратно после душа?</string>
     <string name="wronginsulin_careportal">Удалить данные об инсулине в Портале терапии Nightscout, чтобы удалить их из истории помпы.</string>
-    <string name="wronginsulin_compare">Сравнить значения в AndroidAPS и истории помпы.</string>
+    <string name="wronginsulin_compare">Сравните значения в истории AndroidAPS и помпы (если помпа это поддерживает).</string>
     <string name="wronginsulin_prime">Рассчитать и ввести «пропущенный» вами инсулин шприцем/ручкой или через кнопку заполнения канюли.</string>
     <string name="wronginsulin_donothing">Ничего не делать и позволить AndroidAPS исправить возможный высокий уровень ГК.</string>
     <string name="iob_label">Активный инсулин (IOB)</string>

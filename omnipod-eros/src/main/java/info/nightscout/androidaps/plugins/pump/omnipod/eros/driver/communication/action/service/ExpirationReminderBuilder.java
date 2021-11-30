@@ -11,14 +11,14 @@ import java.util.Map;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.AlertConfiguration;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.AlertSlot;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.OmnipodConstants;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.PodStateManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.ErosPodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.util.AlertConfigurationUtil;
 
 public final class ExpirationReminderBuilder {
     private final Map<AlertSlot, AlertConfiguration> alerts = new HashMap<>();
     private final DateTime endOfServiceTime;
 
-    public ExpirationReminderBuilder(PodStateManager podStateManager) {
+    public ExpirationReminderBuilder(ErosPodStateManager podStateManager) {
         this.endOfServiceTime = podStateManager.getActivatedAt().plus(OmnipodConstants.SERVICE_DURATION);
     }
 

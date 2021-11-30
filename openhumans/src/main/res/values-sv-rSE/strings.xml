@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="open_humans">Open Humans</string>
+    <string name="open_humans_short">OH</string>
+    <string name="logout">Logga ut</string>
+    <string name="only_upload_if_connected_to_wifi">Ladda bara upp om ansluten till WiFi</string>
+    <string name="only_upload_if_charging">Ladda bara upp vid laddning</string>
+    <string name="you_have_been_signed_out_of_open_humans">Du har loggats ut från Open Humans</string>
+    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Klicka här om du vill logga in igen.</string>
+</resources>

@@ -97,7 +97,6 @@ class DanaRSService : DaggerService() {
     val isConnecting: Boolean
         get() = bleComm.isConnecting
 
-    @kotlin.ExperimentalStdlibApi
     fun connect(from: String, address: String): Boolean {
         return bleComm.connect(from, address)
     }
@@ -377,6 +376,7 @@ class DanaRSService : DaggerService() {
         sendMessage(msgTBR)
         loadEvents()
         val tbr = pumpSync.expectedPumpState().temporaryBasal
+        aapsLogger.debug(LTag.PUMPCOMM, "Expected TBR found: $tbr")
         danaPump.fromTemporaryBasal(tbr)
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
         return msgTBR.success()

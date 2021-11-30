@@ -27,7 +27,6 @@ object JsonHelper {
         return result
     }
 
-    @JvmStatic
     fun safeGetString(json: JSONObject?, fieldName: String): String? {
         var result: String? = null
         if (json != null && json.has(fieldName)) {
@@ -39,7 +38,6 @@ object JsonHelper {
         return result
     }
 
-    @JvmStatic
     fun safeGetString(json: JSONObject?, fieldName: String, defaultValue: String): String {
         var result = defaultValue
         if (json != null && json.has(fieldName)) {
@@ -51,7 +49,6 @@ object JsonHelper {
         return result
     }
 
-    @JvmStatic
     fun safeGetStringAllowNull(json: JSONObject?, fieldName: String, defaultValue: String?): String? {
         var result = defaultValue
         if (json != null && json.has(fieldName)) {
@@ -63,7 +60,6 @@ object JsonHelper {
         return result
     }
 
-    @JvmStatic
     fun safeGetDouble(json: JSONObject?, fieldName: String): Double {
         var result = 0.0
         if (json != null && json.has(fieldName)) {
@@ -97,7 +93,6 @@ object JsonHelper {
         return result
     }
 
-    @JvmStatic
     fun safeGetInt(json: JSONObject?, fieldName: String): Int =
         safeGetInt(json, fieldName, 0)
 
@@ -123,7 +118,6 @@ object JsonHelper {
         return result
     }
 
-    @JvmStatic
     fun safeGetLong(json: JSONObject?, fieldName: String): Long {
         var result: Long = 0
         if (json != null && json.has(fieldName)) {
@@ -146,8 +140,6 @@ object JsonHelper {
         return result
     }
 
-    @JvmStatic
-    @JvmOverloads
     fun safeGetBoolean(json: JSONObject?, fieldName: String, defaultValue: Boolean = false): Boolean {
         var result = defaultValue
         if (json != null && json.has(fieldName)) {

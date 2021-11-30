@@ -14,12 +14,12 @@ class T(val time: Long = 0L) {
 
     companion object {
 
-        @JvmStatic fun now(): T = T(System.currentTimeMillis())
-        @JvmStatic fun msecs(msec: Long): T = T(msec)
-        @JvmStatic fun secs(sec: Long): T = T(sec * 1000L)
-        @JvmStatic fun mins(min: Long): T = T(min * 60 * 1000L)
-        @JvmStatic fun hours(hour: Long): T = T(hour * 60 * 60 * 1000L)
-        @JvmStatic fun days(day: Long): T = T(day * 24 * 60 * 60 * 1000L)
-        @JvmStatic fun months(month: Long): T = T(month * 31 * 24 * 60 * 60 * 1000L)
+        fun now(): T = T(System.currentTimeMillis())
+        fun msecs(msec: Long): T = T(msec)
+        fun secs(sec: Long): T = T(sec * 1000L)
+        fun mins(min: Long): T = T(min * 60 * 1000L)
+        fun hours(hour: Long): T = T(hour * 60 * 60 * 1000L)
+        fun days(day: Long): T = T(day * 24 * 60 * 60 * 1000L)
+        fun months(month: Long): T = T(month * 31 * 24 * 60 * 60 * 1000L)
     }
 }

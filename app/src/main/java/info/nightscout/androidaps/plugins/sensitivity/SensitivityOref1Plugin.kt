@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.sensitivity
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.extensions.isEPSEvent5minBack
@@ -28,8 +29,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.roundToInt
 
+@OpenForTesting
 @Singleton
-open class SensitivityOref1Plugin @Inject constructor(
+class SensitivityOref1Plugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     resourceHelper: ResourceHelper,

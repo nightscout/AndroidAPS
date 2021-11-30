@@ -5,10 +5,7 @@ import info.nightscout.androidaps.danar.comm.MessageBase
 import info.nightscout.androidaps.danar.comm.MsgSettingShippingInfo
 import org.junit.Assert
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.powermock.modules.junit4.PowerMockRunner
 
-@RunWith(PowerMockRunner::class)
 class MsgSettingShippingInfoTest : DanaRTestBase() {
 
     @Test fun runTest() {

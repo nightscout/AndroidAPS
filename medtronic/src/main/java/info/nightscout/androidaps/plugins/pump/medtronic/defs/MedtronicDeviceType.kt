@@ -39,7 +39,6 @@ enum class MedtronicDeviceType {
     companion object {
         var mapByDescription: MutableMap<String, MedtronicDeviceType> = mutableMapOf()
 
-        @JvmStatic
         fun isSameDevice(deviceWeCheck: MedtronicDeviceType, deviceSources: MedtronicDeviceType): Boolean {
             if (deviceSources.isFamily) {
                 for (mdt in deviceSources.familyMembers!!) {

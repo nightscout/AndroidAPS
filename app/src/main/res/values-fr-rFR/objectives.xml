@@ -17,7 +17,6 @@
     <string name="objectives_maxiob_gate">Utilisez pendant plusieurs jours, et au moins une nuit sans alarme d’hypoglycémie, avant d\'abaisser les cibles glycémiques</string>
     <string name="objectives_autosens_objective">Ajustement des débits Basal et des ratios si nécessaire, puis activation de la fonction auto-sens</string>
     <string name="objectives_autosens_gate">1 semaine de Boucle Fermée en journée en saisissant régulièrement les glucides</string>
-    <string name="objectives_ama_objective">Activation de fonctionnalités supplémentaires en journée, comme l\'Aide au Repas Améliorée ARA (AMA)</string>
     <string name="objectives_smb_objective">Activation de fonctionnalités supplémentaires pour l\'utilisation en journée, telles que la fonction SMB</string>
     <string name="objectives_auto_objective">Activation de l\'automatisation</string>
     <string name="objectives_smb_gate">Lisez le wiki et augmentez le maxIA pour que les SMBs fonctionnent correctement ! Un bon début est maxIA = moyenne des Bolus Repas + 3 x maximum débit Basal quotidien</string>

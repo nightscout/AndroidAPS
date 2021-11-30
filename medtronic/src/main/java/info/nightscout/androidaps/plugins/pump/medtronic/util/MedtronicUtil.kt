@@ -257,7 +257,6 @@ class MedtronicUtil @Inject constructor(
             return b2 and 0xff shl 8 or b1 and 0xff
         }
 
-        @JvmStatic
         fun getByteArrayFromUnsignedShort(shortValue: Int, returnFixedSize: Boolean): ByteArray {
             val highByte = (shortValue shr 8 and 0xFF).toByte()
             val lowByte = (shortValue and 0xFF).toByte()
@@ -272,7 +271,6 @@ class MedtronicUtil @Inject constructor(
             return data
         }
 
-        @JvmStatic
         fun createByteArray(data: List<Byte>): ByteArray {
             val array = ByteArray(data.size)
             for (i in data.indices) {
@@ -304,7 +302,6 @@ class MedtronicUtil @Inject constructor(
             return strokes
         }
 
-        @JvmStatic
         fun isSame(d1: Double, d2: Double): Boolean {
             val diff = d1 - d2
             return Math.abs(diff) <= 0.000001

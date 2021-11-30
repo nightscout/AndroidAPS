@@ -19,7 +19,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLin
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkService;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.R;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.PodStateManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.ErosPodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodErosManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil;
@@ -35,8 +35,6 @@ public class RileyLinkOmnipodService extends RileyLinkService {
 
     @Inject OmnipodErosPumpPlugin omnipodErosPumpPlugin;
     @Inject AapsOmnipodUtil aapsOmnipodUtil;
-    @Inject PodStateManager podStateManager;
-    @Inject AapsOmnipodErosManager aapsOmnipodErosManager;
     @Inject OmnipodRileyLinkCommunicationManager omnipodRileyLinkCommunicationManager;
 
     private final IBinder mBinder = new LocalBinder();

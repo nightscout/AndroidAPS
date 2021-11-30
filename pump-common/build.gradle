@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-allopen'
 apply plugin: 'com.hiya.jacoco-android'
 
 apply from: "${project.rootDir}/gradle/android_dependencies.gradle"
@@ -12,7 +13,7 @@ dependencies {
     implementation project(':core')
     //implementation project(':database')
 
-    implementation('com.thoughtworks.xstream:xstream:1.4.17') {
+    implementation('com.thoughtworks.xstream:xstream:1.4.18') {
         exclude group: 'xmlpull', module: 'xmlpull'
     }
 }

@@ -25,13 +25,13 @@ class ErrorHelperActivity : DialogAppCompatActivity() {
         super.onCreate(savedInstanceState)
         val errorDialog = ErrorDialog()
         errorDialog.helperActivity = this
-        errorDialog.status = intent.getStringExtra(STATUS)
+        errorDialog.status = intent.getStringExtra(STATUS) ?: ""
         errorDialog.sound = intent.getIntExtra(SOUND_ID, R.raw.error)
-        errorDialog.title = intent.getStringExtra(TITLE)
+        errorDialog.title = intent.getStringExtra(TITLE)?: ""
         errorDialog.show(supportFragmentManager, "Error")
 
         if (sp.getBoolean(R.string.key_ns_create_announcements_from_errors, true))
-            disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(intent.getStringExtra(STATUS))).subscribe()
+            disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(intent.getStringExtra(STATUS) ?: "")).subscribe()
     }
 
     companion object {

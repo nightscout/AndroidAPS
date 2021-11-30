@@ -17,7 +17,6 @@ class JSONFormatter @Inject constructor(
     private val aapsLogger: AAPSLogger
 ) {
 
-    @kotlin.ExperimentalStdlibApi
     fun format(jsonString: String?): Spanned {
         jsonString ?: return fromHtml("")
         val visitor = JsonVisitor(1, '\t')

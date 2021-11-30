@@ -27,7 +27,6 @@ enum class CGMSHistoryEntryType(val code: Int, val description: String, val head
 
         private val opCodeMap: MutableMap<Int, CGMSHistoryEntryType> = mutableMapOf()
 
-        @JvmStatic
         fun getByCode(opCode: Int): CGMSHistoryEntryType {
             return if (opCodeMap.containsKey(opCode))
                 opCodeMap[opCode]!!
@@ -42,7 +41,7 @@ enum class CGMSHistoryEntryType(val code: Int, val description: String, val head
         }
     }
 
-    @JvmField var schemaSet: Boolean
+    var schemaSet: Boolean
     val totalLength: Int
     val dateType: DateType
 

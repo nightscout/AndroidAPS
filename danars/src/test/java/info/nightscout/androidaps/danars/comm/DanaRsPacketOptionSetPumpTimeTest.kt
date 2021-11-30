@@ -6,10 +6,7 @@ import info.nightscout.androidaps.danars.DanaRSTestBase
 import org.joda.time.DateTime
 import org.junit.Assert
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.powermock.modules.junit4.PowerMockRunner
 
-@RunWith(PowerMockRunner::class)
 class DanaRsPacketOptionSetPumpTimeTest : DanaRSTestBase() {
 
     private val packetInjector = HasAndroidInjector {

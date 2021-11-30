@@ -9,7 +9,6 @@ import info.nightscout.androidaps.database.entities.OfflineEvent
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.automation.TestBaseWithProfile
 import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -17,9 +16,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Before
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
-import org.powermock.core.classloader.annotations.PrepareForTest
 
-@PrepareForTest(RxBusWrapper::class, ActionsTestBase.TestLoopPlugin::class, UserEntryLogger::class)
 open class ActionsTestBase : TestBaseWithProfile() {
 
     open class TestLoopPlugin(
@@ -36,7 +33,7 @@ open class ActionsTestBase : TestBaseWithProfile() {
         override val isSuspended: Boolean = suspended
         override var enabled: Boolean
             get() = true
-            set(value) {}
+            set(_) {}
 
         override fun minutesToEndOfSuspend(): Int = 0
 
@@ -90,21 +87,25 @@ open class ActionsTestBase : TestBaseWithProfile() {
                 it.dateUtil = dateUtil
             }
             if (it is ActionProfileSwitchPercent) {
+                it.aapsLogger = aapsLogger
                 it.resourceHelper = resourceHelper
                 it.profileFunction = profileFunction
                 it.uel = uel
             }
             if (it is ActionNotification) {
+                it.aapsLogger = aapsLogger
                 it.resourceHelper = resourceHelper
                 it.rxBus = rxBus
             }
             if (it is ActionLoopSuspend) {
+                it.aapsLogger = aapsLogger
                 it.loopPlugin = loopPlugin
                 it.resourceHelper = resourceHelper
                 it.rxBus = rxBus
                 it.uel = uel
             }
             if (it is ActionLoopResume) {
+                it.aapsLogger = aapsLogger
                 it.loopPlugin = loopPlugin
                 it.resourceHelper = resourceHelper
                 it.configBuilder = configBuilder
@@ -114,6 +115,7 @@ open class ActionsTestBase : TestBaseWithProfile() {
                 it.uel = uel
             }
             if (it is ActionLoopEnable) {
+                it.aapsLogger = aapsLogger
                 it.loopPlugin = loopPlugin
                 it.resourceHelper = resourceHelper
                 it.configBuilder = configBuilder
@@ -121,6 +123,7 @@ open class ActionsTestBase : TestBaseWithProfile() {
                 it.uel = uel
             }
             if (it is ActionLoopDisable) {
+                it.aapsLogger = aapsLogger
                 it.loopPlugin = loopPlugin
                 it.resourceHelper = resourceHelper
                 it.configBuilder = configBuilder

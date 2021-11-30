@@ -145,7 +145,6 @@
     <string name="smscommunicator_loophasbeendisabled">Döngü devre dışı bırakıldı</string>
     <string name="smscommunicator_loophasbeenenabled">Döngü etkinleştirildi</string>
     <string name="smscommunicator_loopisenabled">Döngü etkin</string>
-    <string name="valuelimitedto">%1$.2f dan %2$.2f olarak sınırlı</string>
     <string name="smscommunicator_remotecommandnotallowed">Uzaktan komuta izin verilmez</string>
     <string name="smscommunicator_suspendreplywithcode">%1$d dakika için Döngü\'yü askıya almak için %2$s kodunu yanıtla</string>
     <string name="smscommunicator_tempbasalset">Geçici bazal %1$.2fÜ/s %2$d dakika için başarıyla başlatıldı</string>

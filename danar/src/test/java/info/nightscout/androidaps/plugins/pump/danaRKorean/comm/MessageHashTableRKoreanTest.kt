@@ -5,11 +5,8 @@ import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.plugins.pump.danaR.comm.DanaRTestBase
 import org.junit.Assert
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mockito
-import org.powermock.modules.junit4.PowerMockRunner
 
-@RunWith(PowerMockRunner::class)
 class MessageHashTableRKoreanTest : DanaRTestBase() {
 
     @Test fun runTest() {

@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.pump.common.defs
 
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.plugins.common.ManufacturerType
 import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -50,7 +51,8 @@ enum class PumpType {
         baseBasalMinValue = 0.01,
         baseBasalStep = 0.01,
         baseBasalSpecialSteps = DoseStepSize.ComboBasal,
-        pumpCapability = PumpCapability.ComboCapabilities),
+        pumpCapability = PumpCapability.ComboCapabilities,
+        source = Sources.Combo),
     ACCU_CHEK_SPIRIT(description = "Accu-Chek Spirit",
         manufacturer = ManufacturerType.Roche,
         model = "Spirit",
@@ -90,7 +92,8 @@ enum class PumpType {
         baseBasalMaxValue = null,
         baseBasalStep = 0.01,
         baseBasalSpecialSteps = DoseStepSize.InsightBasal,
-        pumpCapability = PumpCapability.InsightCapabilities),
+        pumpCapability = PumpCapability.InsightCapabilities,
+        source = Sources.Insight),
     ACCU_CHEK_SOLO(description = "Accu-Chek Solo",
         manufacturer = ManufacturerType.Roche,
         model = "Solo",
@@ -133,7 +136,8 @@ enum class PumpType {
         baseBasalMinValue = 0.04,
         baseBasalStep = 0.01,
         baseBasalSpecialSteps = null,
-        pumpCapability = PumpCapability.DanaCapabilities),
+        pumpCapability = PumpCapability.DanaCapabilities,
+        source = Sources.DanaR),
     DANA_R_KOREAN(description = "DanaR Korean",
         manufacturer = ManufacturerType.Sooil,
         model = "DanaRKorean",
@@ -146,7 +150,8 @@ enum class PumpType {
         baseBasalMinValue = 0.1,
         baseBasalStep = 0.01,
         baseBasalSpecialSteps = null,
-        pumpCapability = PumpCapability.DanaCapabilities),
+        pumpCapability = PumpCapability.DanaCapabilities,
+        source = Sources.DanaRC),
     DANA_RS(description = "DanaRS",
         manufacturer = ManufacturerType.Sooil,
         model = "DanaRS",
@@ -159,10 +164,11 @@ enum class PumpType {
         baseBasalMinValue = 0.04,
         baseBasalStep = 0.01,
         baseBasalSpecialSteps = null,
-        pumpCapability = PumpCapability.DanaWithHistoryCapabilities),
+        pumpCapability = PumpCapability.DanaWithHistoryCapabilities,
+        source = Sources.DanaRS),
     DANA_RS_KOREAN(description = "DanaRSKorean", model = "DanaRSKorean", parent = DANA_RS),
-    DANA_I(description = "DanaI", model = "DanaI", parent = DANA_RS),
-    DANA_RV2(description = "DanaRv2", model = "DanaRv2", parent = DANA_RS),
+    DANA_I(description = "DanaI", model = "DanaI", parent = DANA_RS, source = Sources.DanaI),
+    DANA_RV2(description = "DanaRv2", model = "DanaRv2", parent = DANA_RS, source = Sources.DanaRv2),
     OMNIPOD_EROS(description = "Omnipod Eros",
         manufacturer = ManufacturerType.Insulet,
         model = "Eros",
@@ -177,7 +183,8 @@ enum class PumpType {
         baseBasalStep = 0.05,
         baseBasalSpecialSteps = null,
         pumpCapability = PumpCapability.OmnipodCapabilities,
-        hasCustomUnreachableAlertCheck = true),
+        hasCustomUnreachableAlertCheck = true,
+        source = Sources.OmnipodEros),
     OMNIPOD_DASH(description = "Omnipod Dash",
         manufacturer = ManufacturerType.Insulet,
         model = "Dash",
@@ -205,7 +212,8 @@ enum class PumpType {
         baseBasalMinValue = 0.05,
         baseBasalStep = 0.05,
         baseBasalSpecialSteps = null,
-        pumpCapability = PumpCapability.MedtronicCapabilities),
+        pumpCapability = PumpCapability.MedtronicCapabilities,
+        source = Sources.Medtronic),
     MEDTRONIC_515_715(description = "Medtronic 515/715",
         model = "515/715",
         parent = MEDTRONIC_512_712),
@@ -224,7 +232,8 @@ enum class PumpType {
         baseBasalMinValue = 0.025,
         baseBasalStep = 0.025,
         baseBasalSpecialSteps = DoseStepSize.MedtronicVeoBasal,
-        pumpCapability = PumpCapability.MedtronicCapabilities),
+        pumpCapability = PumpCapability.MedtronicCapabilities,
+        source = Sources.Medtronic),
     MEDTRONIC_554_754_VEO(description = "Medtronic 554/754 (Veo)", model = "554/754 (Veo)", parent = MEDTRONIC_523_723_REVEL),
     MEDTRONIC_640G(description = "Medtronic 640G",
         manufacturer = ManufacturerType.Medtronic,
@@ -284,7 +293,8 @@ enum class PumpType {
         model = "USER",
         tbrSettings = DoseSettings(1.0, 15, 24 * 60, 0.0, 500.0),
         extendedBolusSettings = DoseSettings(0.1, 15, 12 * 60, 0.1),
-        pumpCapability = PumpCapability.MDI),
+        pumpCapability = PumpCapability.MDI,
+        source = Sources.MDI),
 
     //Diaconn Pump
     DIACONN_G8(description = "DiaconnG8",
@@ -300,7 +310,8 @@ enum class PumpType {
         baseBasalMaxValue = 3.0,
         baseBasalStep = 0.01,
         baseBasalSpecialSteps = null,
-        pumpCapability = PumpCapability.DanaWithHistoryCapabilities);
+        pumpCapability = PumpCapability.DanaWithHistoryCapabilities,
+        source = Sources.DiaconnG8);
 
     val description: String
     var manufacturer: ManufacturerType? = null
@@ -342,6 +353,7 @@ enum class PumpType {
     var hasCustomUnreachableAlertCheck = false
         private set
     private var parent: PumpType? = null
+    val source: Sources
 
     companion object {
 
@@ -349,9 +361,10 @@ enum class PumpType {
             values().firstOrNull { it.description == desc } ?: GENERIC_AAPS
     }
 
-    constructor(description: String, model: String, parent: PumpType, pumpCapability: PumpCapability? = null) {
+    constructor(description: String, model: String, parent: PumpType, pumpCapability: PumpCapability? = null, source: Sources? = null) {
         this.description = description
         this.parent = parent
+        this.source = source ?: parent.source
         this.pumpCapability = pumpCapability
         parent.model = model
     }
@@ -370,7 +383,8 @@ enum class PumpType {
                 baseBasalStep: Double = 1.0,
                 baseBasalSpecialSteps: DoseStepSize? = null,
                 pumpCapability: PumpCapability,
-                hasCustomUnreachableAlertCheck: Boolean = false) {
+                hasCustomUnreachableAlertCheck: Boolean = false,
+                source: Sources = Sources.VirtualPump) {
         this.description = description
         this.manufacturer = manufacturer
         this.model = model
@@ -386,6 +400,7 @@ enum class PumpType {
         this.baseBasalSpecialSteps = baseBasalSpecialSteps
         this.pumpCapability = pumpCapability
         this.hasCustomUnreachableAlertCheck = hasCustomUnreachableAlertCheck
+        this.source = source
     }
 
     fun getFullDescription(i18nTemplate: String, hasExtendedBasals: Boolean, resourceHelper: ResourceHelper): String {

@@ -132,7 +132,6 @@
     <string name="wronginsulin_label">Insulinetoediening/-invoerfouten</string>
     <string name="wronginsulin_whattodo">Wat moet je doen wanneer je minder insuline toegediend hebt gekregen dan de geschiedenis van de pomp suggereert, bijvoorbeeld vanwege een verstopping, een lekkende canule of door het vergeten de pomp opnieuw aan te koppelen na een douche? </string>
     <string name="wronginsulin_careportal">Verwijder de insulinegegevens uit het Nightscout Careportal om deze uit de pompgeschiedenis te verwijderen.</string>
-    <string name="wronginsulin_compare">Vergelijk de waarden in AndroidAPS met de pompgeschiedenis.</string>
     <string name="wronginsulin_prime">Bolus een deel van je berekende \'gemiste\' insuline door een injectiespuit/pen of door de uitvulfunctie te gebruiken.</string>
     <string name="wronginsulin_donothing">Doe niets en laat AndroidAPS de resulterende hoge bloedglucosespiegel corrigeren.</string>
     <string name="iob_label">Insuline aan boord (IOB)</string>

@@ -5,9 +5,9 @@
     <string name="danars_pairingok">Associazione OK</string>
     <string name="danars_pairingtimedout">Time out associazione</string>
     <string name="danars_waitingforpairing">In attesa di associare il micro</string>
-    <string name="danarspump">DanaRS</string>
+    <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
-    <string name="description_pump_dana_rs">Integrazione del microinfusore DANA Diabecare RS</string>
+    <string name="description_pump_dana_rs">Integrazione del microinfusore DANA Diabecare RS / Dana-i</string>
     <string name="maxbolusviolation">Violazione bolo massimo</string>
     <string name="commanderror">Errore comando</string>
     <string name="speederror">Errore velocità</string>

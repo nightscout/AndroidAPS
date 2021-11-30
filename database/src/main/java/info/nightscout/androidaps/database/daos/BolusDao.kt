@@ -3,8 +3,10 @@ package info.nightscout.androidaps.database.daos
 import androidx.room.Dao
 import androidx.room.Query
 import info.nightscout.androidaps.database.TABLE_BOLUSES
+import info.nightscout.androidaps.database.TABLE_BOLUS_CALCULATOR_RESULTS
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.Bolus
+import info.nightscout.androidaps.database.entities.BolusCalculatorResult
 import io.reactivex.Maybe
 import io.reactivex.Single
 
@@ -67,4 +69,7 @@ internal interface BolusDao : TraceableDao<Bolus> {
 
     @Query("SELECT * FROM $TABLE_BOLUSES WHERE id = :referenceId")
     fun getCurrentFromHistoric(referenceId: Long): Maybe<Bolus>
+
+    @Query("SELECT * FROM $TABLE_BOLUSES WHERE dateCreated > :since AND dateCreated <= :until LIMIT :limit OFFSET :offset")
+    suspend fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<Bolus>
 }

@@ -63,10 +63,10 @@ abstract class PumpPluginAbstract protected constructor(
     final override var pumpDescription = PumpDescription()
     //protected set
 
-    @JvmField protected var serviceConnection: ServiceConnection? = null
-    @JvmField protected var serviceRunning = false
-    @JvmField protected var pumpState = PumpDriverState.NotInitialized
-    @JvmField protected var displayConnectionMessages = false
+    protected var serviceConnection: ServiceConnection? = null
+    protected var serviceRunning = false
+    protected var pumpState = PumpDriverState.NotInitialized
+    protected var displayConnectionMessages = false
 
     var pumpType: PumpType = PumpType.GENERIC_AAPS
         get() = field

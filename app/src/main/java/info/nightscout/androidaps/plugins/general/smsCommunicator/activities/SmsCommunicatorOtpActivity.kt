@@ -88,7 +88,7 @@ class SmsCommunicatorOtpActivity : NoSplashAppCompatActivity() {
                 Runnable {
                     val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                     val clip = ClipData.newPlainText("OTP Secret", otp.provisioningSecret())
-                    clipboard.primaryClip = clip
+                    clipboard.setPrimaryClip(clip)
                     ToastUtils.Long.infoToast(this, resourceHelper.gs(R.string.smscommunicator_otp_export_successful))
                     uel.log(Action.OTP_EXPORT, Sources.SMS)
                 })

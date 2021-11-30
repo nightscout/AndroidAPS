@@ -132,7 +132,6 @@
     <string name="wronginsulin_label">인슐린 주입/입력 오류</string>
     <string name="wronginsulin_whattodo">만약 펌프 기록에서 보여지는 것보다 인슐린이 적게 주입되었을 때 어떻게 해야 할까요? (예를 들어, 주입 막힘, 캐뉼라 문제, 샤워 후 펌프 재부착을 잊어버렸을 때)</string>
     <string name="wronginsulin_careportal">Nightscout 케어포탈에서 인슐린 데이터를 삭제하여 펌프 기록에서 이를 제거합니다.</string>
-    <string name="wronginsulin_compare">AndroidAPS와 펌프 기록을 비교합니다.</string>
     <string name="wronginsulin_prime">\"주입되지 않은\" 인슐린양을 계산하여 시린지/펜 또는 prime 기능을 사용하여 인슐린을 주입합니다.</string>
     <string name="wronginsulin_donothing">특별한 조치를 취하지 않고, AndroidAPS가 결과적으로 높은 혈당 정도를 조정할 수 있도록 합니다.</string>
     <string name="iob_label">활성 인슐린 (IOB)</string>

@@ -4,13 +4,8 @@ import info.nightscout.androidaps.danar.comm.MsgSettingBasal
 import info.nightscout.androidaps.interfaces.PumpDescription
 import org.junit.Assert
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mockito.`when`
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
 
-@RunWith(PowerMockRunner::class)
-@PrepareForTest(info.nightscout.androidaps.danar.DanaRPlugin::class)
 class MsgSettingBasalTest : DanaRTestBase() {
 
     @Test fun runTest() {

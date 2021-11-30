@@ -64,12 +64,12 @@ class QuickWizardListActivity : NoSplashAppCompatActivity() {
                     val manager = fragmentManager
                     val editQuickWizardDialog = EditQuickWizardDialog()
                     val bundle = Bundle()
-                    bundle.putInt("position", adapterPosition)
+                    bundle.putInt("position", bindingAdapterPosition)
                     editQuickWizardDialog.arguments = bundle
                     editQuickWizardDialog.show(manager, "EditQuickWizardDialog")
                 }
                 removeButton.setOnClickListener {
-                    quickWizard.remove(adapterPosition)
+                    quickWizard.remove(bindingAdapterPosition)
                     rxBus.send(EventQuickWizardChange())
                 }
             }

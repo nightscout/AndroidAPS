@@ -41,12 +41,12 @@ class SimpleItemTouchHelperCallback(private val mAdapter: ItemTouchHelperAdapter
             return false
         }
         // Notify the adapter of the move
-        mAdapter.onItemMove(source.adapterPosition, target.adapterPosition)
+        mAdapter.onItemMove(source.absoluteAdapterPosition, target.absoluteAdapterPosition)
         return true
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, i: Int) { // Notify the adapter of the dismissal
-        mAdapter.onItemDismiss(viewHolder.adapterPosition)
+        mAdapter.onItemDismiss(viewHolder.absoluteAdapterPosition)
     }
 
     override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {

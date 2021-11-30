@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.utils
 
 import info.nightscout.androidaps.Constants
+import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Profile
@@ -9,8 +10,9 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
 import javax.inject.Singleton
 
+@OpenForTesting
 @Singleton
-open class DefaultValueHelper @Inject constructor(
+class DefaultValueHelper @Inject constructor(
     private val sp: SP,
     private val profileFunction: ProfileFunction
 ) {

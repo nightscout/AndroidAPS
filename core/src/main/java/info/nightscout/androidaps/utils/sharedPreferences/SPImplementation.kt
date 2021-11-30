@@ -90,7 +90,11 @@ class SPImplementation @Inject constructor(
         return try {
             sharedPreferences.getLong(key, defaultValue)
         } catch (e: Exception) {
-            SafeParse.stringToLong(sharedPreferences.getString(key, defaultValue.toString()))
+            try {
+                SafeParse.stringToLong(sharedPreferences.getString(key, defaultValue.toString()))
+            } catch (e: Exception) {
+                defaultValue
+            }
         }
     }
 

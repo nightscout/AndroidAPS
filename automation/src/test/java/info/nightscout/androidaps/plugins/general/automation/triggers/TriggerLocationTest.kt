@@ -4,29 +4,19 @@ import android.location.Location
 import com.google.common.base.Optional
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.plugins.general.automation.elements.InputLocationMode
-import info.nightscout.androidaps.services.LocationService
-import info.nightscout.androidaps.utils.DateUtil
 import org.json.JSONException
 import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mockito.`when`
-import org.powermock.api.mockito.PowerMockito
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
 
-@RunWith(PowerMockRunner::class)
-@PrepareForTest(DateUtil::class, LocationService::class)
 class TriggerLocationTest : TriggerTestBase() {
 
     var now = 1514766900000L
 
     @Before fun mock() {
-        PowerMockito.mockStatic(LocationService::class.java)
         `when`(dateUtil.now()).thenReturn(now)
-        PowerMockito.spy(LocationService::class.java)
         `when`(locationDataContainer.lastLocation).thenReturn(mockedLocation())
     }
 

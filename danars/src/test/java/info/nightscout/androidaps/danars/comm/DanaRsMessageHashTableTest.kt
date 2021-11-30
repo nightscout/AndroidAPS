@@ -11,19 +11,13 @@ import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import org.junit.Assert
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
 
-@RunWith(PowerMockRunner::class)
-@PrepareForTest(ConstraintChecker::class, DetailedBolusInfoStorage::class)
 class DanaRsMessageHashTableTest : DanaRSTestBase() {
 
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var constraintChecker: ConstraintChecker
-    @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {

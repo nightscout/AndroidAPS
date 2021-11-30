@@ -127,7 +127,7 @@ class SetupWizardActivity : NoSplashAppCompatActivity() {
     override fun updateButtons() {
         runOnUiThread {
             val currentScreen = screens[currentWizardPage]
-            if (currentScreen.validator == null || currentScreen.validator!!.isValid || currentScreen.skippable) {
+            if (currentScreen.validator == null || currentScreen.validator?.isValid == true || currentScreen.skippable) {
                 if (currentWizardPage == nextPage(null)) {
                     findViewById<View>(R.id.finish_button).visibility = View.VISIBLE
                     findViewById<View>(R.id.next_button).visibility = View.GONE
@@ -184,7 +184,7 @@ class SetupWizardActivity : NoSplashAppCompatActivity() {
     private fun nextPage(view: View?): Int {
         var page = currentWizardPage + 1
         while (page < screens.size) {
-            if (screens[page].visibility == null || screens[page].visibility!!.isValid) return page
+            if (screens[page].visibility == null || screens[page].visibility?.isValid == true) return page
             page++
         }
         return min(currentWizardPage, screens.size - 1)
@@ -194,7 +194,7 @@ class SetupWizardActivity : NoSplashAppCompatActivity() {
     private fun previousPage(view: View?): Int {
         var page = currentWizardPage - 1
         while (page >= 0) {
-            if (screens[page].visibility == null || screens[page].visibility!!.isValid) return page
+            if (screens[page].visibility == null || screens[page].visibility?.isValid == true) return page
             page--
         }
         return max(currentWizardPage, 0)

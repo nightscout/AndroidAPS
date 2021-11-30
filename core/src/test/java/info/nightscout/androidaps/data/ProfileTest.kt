@@ -2,11 +2,10 @@ package info.nightscout.androidaps.data
 
 import android.content.Context
 import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.TestPumpPlugin
 import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.events.Event
+import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.extensions.pureProfileFromJson
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Config
@@ -14,18 +13,18 @@ import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.TestAapsSchedulers
+import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
-import org.mockito.Mockito.any
 import org.mockito.Mockito.anyInt
 import org.mockito.Mockito.anyString
-import org.mockito.Mockito.doNothing
 import java.util.*
 
 /**
@@ -38,25 +37,29 @@ class ProfileTest : TestBase() {
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var context: Context
     @Mock lateinit var config: Config
+    @Mock lateinit var sp: SP
+    @Mock lateinit var repository: AppRepository
 
     private lateinit var rxBus: RxBusWrapper
     private lateinit var dateUtil: DateUtil
     private lateinit var testPumpPlugin: TestPumpPlugin
+    private lateinit var hardLimits: HardLimits
 
-    private var okProfile = "{\"dia\":\"3\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"},{\"time\":\"2:00\",\"value\":\"110\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
-    private var belowLimitValidProfile = "{\"dia\":\"3\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.001\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
-    private var notAlignedBasalValidProfile = "{\"dia\":\"3\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:30\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
-    private var notStartingAtZeroValidProfile = "{\"dia\":\"3\",\"carbratio\":[{\"time\":\"00:30\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
-    private var noUnitsValidProfile = "{\"dia\":\"3\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\"}"
-    private var wrongProfile = "{\"dia\":\"3\",\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
+    private var okProfile = "{\"dia\":\"5\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"sens\":[{\"time\":\"00:00\",\"value\":\"6\"},{\"time\":\"2:00\",\"value\":\"6.2\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
+    private var belowLimitValidProfile = "{\"dia\":\"5\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.001\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
+    private var notAlignedBasalValidProfile = "{\"dia\":\"5\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:30\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
+    private var notStartingAtZeroValidProfile = "{\"dia\":\"5\",\"carbratio\":[{\"time\":\"00:30\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
+    private var noUnitsValidProfile = "{\"dia\":\"5\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\"}"
+    private var wrongProfile = "{\"dia\":\"5\",\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
 
     //String profileStore = "{\"defaultProfile\":\"Default\",\"store\":{\"Default\":" + validProfile + "}}";
 
     @Before
     fun prepare() {
-        testPumpPlugin = TestPumpPlugin(HasAndroidInjector { AndroidInjector { } })
+        testPumpPlugin = TestPumpPlugin { AndroidInjector { } }
         dateUtil = DateUtil(context)
         rxBus = RxBusWrapper(TestAapsSchedulers())
+        hardLimits = HardLimits(aapsLogger, rxBus, sp, resourceHelper, context, repository)
         `when`(activePluginProvider.activePump).thenReturn(testPumpPlugin)
         `when`(resourceHelper.gs(R.string.profile_per_unit)).thenReturn("/U")
         `when`(resourceHelper.gs(R.string.profile_carbs_per_unit)).thenReturn("g/U")
@@ -69,10 +72,10 @@ class ProfileTest : TestBase() {
 
         // Test valid profile
         var p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(okProfile), dateUtil)!!)
-        Assert.assertEquals(true, p.isValid("Test", testPumpPlugin, config, resourceHelper, rxBus))
+        Assert.assertEquals(true, p.isValid("Test", testPumpPlugin, config, resourceHelper, rxBus, hardLimits).isValid)
 //        Assert.assertEquals(true, p.log().contains("NS units: mmol"))
 //        JSONAssert.assertEquals(JSONObject(okProfile), p.toPureNsJson(dateUtil), false)
-        Assert.assertEquals(3.0, p.dia, 0.01)
+        Assert.assertEquals(5.0, p.dia, 0.01)
 //        Assert.assertEquals(TimeZone.getTimeZone("UTC"), p.timeZone)
         Assert.assertEquals("00:30", dateUtil.format_HH_MM(30 * 60))
         val c = Calendar.getInstance()
@@ -80,13 +83,13 @@ class ProfileTest : TestBase() {
         c[Calendar.MINUTE] = 0
         c[Calendar.SECOND] = 0
         c[Calendar.MILLISECOND] = 0
-        Assert.assertEquals(1800.0, p.getIsfMgdl(c.timeInMillis), 0.01)
+        Assert.assertEquals(108.0, p.getIsfMgdl(c.timeInMillis), 0.01)
         c[Calendar.HOUR_OF_DAY] = 2
-        Assert.assertEquals(1980.0, p.getIsfMgdl(c.timeInMillis), 0.01)
+        Assert.assertEquals(111.6, p.getIsfMgdl(c.timeInMillis), 0.01)
 //        Assert.assertEquals(110.0, p.getIsfTimeFromMidnight(2 * 60 * 60), 0.01)
         Assert.assertEquals("""
-    00:00    100,0 mmol/U
-    02:00    110,0 mmol/U
+    00:00    6,0 mmol/U
+    02:00    6,2 mmol/U
     """.trimIndent(), p.getIsfList(resourceHelper, dateUtil).replace(".", ","))
         Assert.assertEquals(30.0, p.getIc(c.timeInMillis), 0.01)
         Assert.assertEquals(30.0, p.getIcTimeFromMidnight(2 * 60 * 60), 0.01)
@@ -121,7 +124,7 @@ class ProfileTest : TestBase() {
 
         //Test basal profile below limit
         p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(belowLimitValidProfile), dateUtil)!!)
-        p.isValid("Test", testPumpPlugin, config, resourceHelper, rxBus)
+        p.isValid("Test", testPumpPlugin, config, resourceHelper, rxBus, hardLimits)
 
         // Test profile w/o units
         Assert.assertNull(pureProfileFromJson(JSONObject(noUnitsValidProfile), dateUtil))
@@ -139,21 +142,21 @@ class ProfileTest : TestBase() {
         Assert.assertEquals(0.05, p.getBasal(c.timeInMillis), 0.01)
         Assert.assertEquals(1.2, p.percentageBasalSum(), 0.01)
         Assert.assertEquals(60.0, p.getIc(c.timeInMillis), 0.01)
-        Assert.assertEquals(3960.0, p.getIsfMgdl(c.timeInMillis), 0.01)
+        Assert.assertEquals(223.2, p.getIsfMgdl(c.timeInMillis), 0.01)
 
         // Test timeshift functionality
         p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(okProfile), dateUtil)!!)
         p.ts = 1
         Assert.assertEquals(
             """
-                00:00    110.0 mmol/U
-                01:00    100.0 mmol/U
-                03:00    110.0 mmol/U
+                00:00    6.2 mmol/U
+                01:00    6.0 mmol/U
+                03:00    6.2 mmol/U
                 """.trimIndent(), p.getIsfList(resourceHelper, dateUtil))
 
         // Test hour alignment
         testPumpPlugin.pumpDescription.is30minBasalRatesCapable = false
         p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(notAlignedBasalValidProfile), dateUtil)!!)
-        p.isValid("Test", testPumpPlugin, config, resourceHelper, rxBus)
+        p.isValid("Test", testPumpPlugin, config, resourceHelper, rxBus, hardLimits)
     }
 }

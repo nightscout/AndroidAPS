@@ -33,7 +33,6 @@ class EnterPinActivity : NoSplashAppCompatActivity() {
 
     private lateinit var binding: DanarsEnterPinActivityBinding
 
-    @kotlin.ExperimentalStdlibApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DanarsEnterPinActivityBinding.inflate(layoutInflater)

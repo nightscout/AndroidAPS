@@ -19,6 +19,8 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.HardLimits
+import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.json.JSONArray
@@ -94,34 +96,93 @@ sealed class ProfileSealed(
         value.timeZone.rawOffset.toLong()
     )
 
-    override fun isValid(from: String, pump: Pump, config: Config, resourceHelper: ResourceHelper, rxBus: RxBusWrapper): Boolean {
+    override fun isValid(from: String, pump: Pump, config: Config, resourceHelper: ResourceHelper, rxBus: RxBusWrapper, hardLimits: HardLimits): Profile.ValidityCheck {
         val notify = true
-        var valid = true
+        val validityCheck = Profile.ValidityCheck()
         val description = pump.pumpDescription
-        if (!description.is30minBasalRatesCapable) {
-            for (basal in basalBlocks) {
+        for (basal in basalBlocks) {
+            val basalAmount = basal.amount * percentage / 100.0
+            if (!description.is30minBasalRatesCapable) {
                 // Check for hours alignment
                 val duration: Long = basal.duration
                 if (duration % 3600000 != 0L) {
                     if (notify && config.APS) {
-                        val notification = Notification(Notification.BASAL_PROFILE_NOT_ALIGNED_TO_HOURS, resourceHelper.gs(R.string.basalprofilenotaligned, from), Notification.NORMAL)
+                        val notification = Notification(
+                            Notification.BASAL_PROFILE_NOT_ALIGNED_TO_HOURS,
+                            resourceHelper.gs(R.string.basalprofilenotaligned, from),
+                            Notification.NORMAL
+                        )
                         rxBus.send(EventNewNotification(notification))
                     }
-                    valid = false
-                }
-                // Check for minimal basal value
-                if (basal.amount < description.basalMinimumRate) {
-                    basal.amount = description.basalMinimumRate
-                    if (notify) sendBelowMinimumNotification(from, rxBus, resourceHelper)
-                    valid = false
-                } else if (basal.amount > description.basalMaximumRate) {
-                    basal.amount = description.basalMaximumRate
-                    if (notify) sendAboveMaximumNotification(from, rxBus, resourceHelper)
-                    valid = false
+                    validityCheck.isValid = false
+                    validityCheck.reasons.add(
+                        resourceHelper.gs(
+                            R.string.basalprofilenotaligned,
+                            from
+                        )
+                    )
+                    break
                 }
             }
+            // Check for minimal basal value
+            if (basalAmount < description.basalMinimumRate) {
+                basal.amount = description.basalMinimumRate
+                if (notify) sendBelowMinimumNotification(from, rxBus, resourceHelper)
+                validityCheck.isValid = false
+                validityCheck.reasons.add(resourceHelper.gs(R.string.minimalbasalvaluereplaced, from))
+                break
+            } else if (basalAmount > description.basalMaximumRate) {
+                basal.amount = description.basalMaximumRate
+                if (notify) sendAboveMaximumNotification(from, rxBus, resourceHelper)
+                validityCheck.isValid = false
+                validityCheck.reasons.add(resourceHelper.gs(R.string.maximumbasalvaluereplaced, from))
+                break
+            }
+            if (!hardLimits.isInRange(basalAmount, 0.01, hardLimits.maxBasal())) {
+                validityCheck.isValid = false
+                validityCheck.reasons.add(resourceHelper.gs(R.string.value_out_of_hard_limits, resourceHelper.gs(R.string.basal_value), basalAmount))
+                break
+            }
         }
-        return valid
+        if (!hardLimits.isInRange(dia, hardLimits.minDia(), hardLimits.maxDia())) {
+            validityCheck.isValid = false
+            validityCheck.reasons.add(resourceHelper.gs(R.string.value_out_of_hard_limits, resourceHelper.gs(R.string.profile_dia), dia))
+        }
+        for (ic in icBlocks)
+            if (!hardLimits.isInRange(ic.amount * 100.0 / percentage, hardLimits.minIC(), hardLimits.maxIC())) {
+                validityCheck.isValid = false
+                validityCheck.reasons.add(resourceHelper.gs(R.string.value_out_of_hard_limits, resourceHelper.gs(R.string.profile_carbs_ratio_value), ic.amount * 100.0 / percentage))
+                break
+            }
+        for (isf in isfBlocks)
+            if (!hardLimits.isInRange(toMgdl(isf.amount * 100.0 / percentage, units), HardLimits.MIN_ISF, HardLimits.MAX_ISF)) {
+                validityCheck.isValid = false
+                validityCheck.reasons.add(resourceHelper.gs(R.string.value_out_of_hard_limits, resourceHelper.gs(R.string.profile_sensitivity_value), isf.amount * 100.0 / percentage))
+                break
+            }
+        for (target in targetBlocks) {
+            if (!hardLimits.isInRange(
+                    Profile.toMgdl(target.lowTarget, units),
+                    HardLimits.VERY_HARD_LIMIT_MIN_BG[0].toDouble(),
+                    HardLimits.VERY_HARD_LIMIT_MIN_BG[1].toDouble()
+                )
+            ) {
+                validityCheck.isValid = false
+                validityCheck.reasons.add(resourceHelper.gs(R.string.value_out_of_hard_limits, resourceHelper.gs(R.string.profile_low_target), target.lowTarget))
+                break
+            }
+            if (!hardLimits.isInRange(
+                    Profile.toMgdl(target.highTarget, units),
+                    HardLimits.VERY_HARD_LIMIT_MAX_BG[0].toDouble(),
+                    HardLimits.VERY_HARD_LIMIT_MAX_BG[1].toDouble()
+                )
+            ) {
+                validityCheck.isValid = false
+                validityCheck.reasons.add(resourceHelper.gs(R.string.value_out_of_hard_limits, resourceHelper.gs(R.string.profile_high_target), target.highTarget))
+                break
+            }
+        }
+        return validityCheck
     }
 
     protected open fun sendBelowMinimumNotification(from: String, rxBus: RxBusWrapper, resourceHelper: ResourceHelper) {

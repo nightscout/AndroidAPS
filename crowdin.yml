@@ -41,3 +41,6 @@ files:
     translation: /automation/src/main/res/values-%android_code%/strings.xml
   - source: /diaconn/src/main/res/values/strings.xml
     translation: /diaconn/src/main/res/values-%android_code%/strings.xml
+  - source: /openhumans/src/main/res/values/strings.xml
+    translation: /openhumans/src/main/res/values-%android_code%/strings.xml
+    translate_attributes: 0

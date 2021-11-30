@@ -253,6 +253,7 @@
     <string name="alert_dialog_storage_permission_text">Por favor reinicia el teléfono o AndroidAPS desde ajustes de sistema, sino AndroidAPS no guardará registros (importante para trazar y verificar que el algoritmo funcione correctamente)!</string>
     <!-- WeekdayPicker -->
     <!-- User Entry -->
+    <!-- HardLimits -->
     <plurals name="days">
         <item quantity="one">%1$d día</item>
         <item quantity="other">%1$d días</item>

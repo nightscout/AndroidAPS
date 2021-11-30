@@ -11,7 +11,6 @@ import org.junit.Assert
 import org.junit.Test
 import org.mockito.Mock
 
-@kotlin.ExperimentalStdlibApi
 class SignatureVerifierPluginTest : TestBase() {
 
     @Mock lateinit var resourceHelper: ResourceHelper

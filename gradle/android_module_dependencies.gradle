@@ -23,3 +23,8 @@ dependencies {
     kapt "com.google.dagger:dagger-android-processor:$dagger_version"
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
 }
+
+allOpen {
+    // allows mocking for classes w/o directly opening them for release builds
+    annotation 'info.nightscout.androidaps.annotations.OpenForTesting'
+}

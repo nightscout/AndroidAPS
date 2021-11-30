@@ -6,14 +6,14 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.AlertSet;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.AlertSlot;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.PodStateManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.ErosPodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 
 public class AcknowledgeAlertsAction implements OmnipodAction<StatusResponse> {
-    private final PodStateManager podStateManager;
+    private final ErosPodStateManager podStateManager;
     private final AlertSet alerts;
 
-    public AcknowledgeAlertsAction(PodStateManager podStateManager, AlertSet alerts) {
+    public AcknowledgeAlertsAction(ErosPodStateManager podStateManager, AlertSet alerts) {
         if (podStateManager == null) {
             throw new IllegalArgumentException("Pod state manager cannot be null");
         }
@@ -26,7 +26,7 @@ public class AcknowledgeAlertsAction implements OmnipodAction<StatusResponse> {
         this.alerts = alerts;
     }
 
-    public AcknowledgeAlertsAction(PodStateManager podStateManager, AlertSlot alertSlot) {
+    public AcknowledgeAlertsAction(ErosPodStateManager podStateManager, AlertSlot alertSlot) {
         this(podStateManager, new AlertSet(Collections.singletonList(alertSlot)));
     }
 

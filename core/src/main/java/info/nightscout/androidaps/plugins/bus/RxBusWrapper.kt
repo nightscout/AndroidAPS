@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.bus
 
+import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.events.Event
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.Observable
@@ -7,8 +8,9 @@ import io.reactivex.subjects.PublishSubject
 import javax.inject.Inject
 import javax.inject.Singleton
 
+@OpenForTesting
 @Singleton
-open class RxBusWrapper @Inject constructor(
+class RxBusWrapper @Inject constructor(
     val aapsSchedulers: AapsSchedulers
 ) {
 

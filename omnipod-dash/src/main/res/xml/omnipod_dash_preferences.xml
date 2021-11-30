@@ -65,11 +65,38 @@
             validate:maxNumber="50"
             validate:minNumber="5"
             validate:testType="numericRange" />
+        <!--
+                <SwitchPreference
+                    android:defaultValue="false"
+                    android:key="@string/key_omnipod_common_automatically_silence_alerts_enabled"
+                    android:title="@string/omnipod_common_preferences_automatically_silence_alerts" />
+        -->
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="@string/key_omnipod_common_preferences_category_notifications_settings"
+        android:title="@string/omnipod_common_preferences_category_notifications"
+        app:initialExpandedChildrenCount="0">
 
         <SwitchPreference
             android:defaultValue="false"
-            android:key="@string/key_omnipod_common_automatically_silence_alerts_enabled"
-            android:title="@string/omnipod_common_preferences_automatically_silence_alerts" />
+            android:key="@string/key_omnipod_common_notification_uncertain_tbr_sound_enabled"
+            android:title="@string/omnipod_common_preferences_notification_uncertain_tbr_sound_enabled" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_omnipod_common_notification_uncertain_smb_sound_enabled"
+            android:title="@string/omnipod_common_preferences_notification_uncertain_smb_sound_enabled" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_omnipod_common_notification_uncertain_bolus_sound_enabled"
+            android:title="@string/omnipod_common_preferences_notification_uncertain_bolus_sound_enabled" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_omnipod_common_notification_delivery_suspended_sound_enabled"
+            android:title="@string/omnipod_common_preferences_notification_delivery_suspended_sound_enabled" />
 
     </PreferenceCategory>
 
@@ -82,12 +109,12 @@
             android:defaultValue="false"
             android:key="@string/key_omnipod_common_suspend_delivery_button_enabled"
             android:title="@string/omnipod_common_preferences_suspend_delivery_button_enabled" />
-
+<!--
         <SwitchPreference
             android:defaultValue="true"
             android:key="@string/key_omnipod_common_time_change_event_enabled"
             android:title="@string/omnipod_common_preferences_time_change_enabled" />
-
+-->
     </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>

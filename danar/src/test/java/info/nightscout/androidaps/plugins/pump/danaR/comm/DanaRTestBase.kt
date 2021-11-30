@@ -27,9 +27,7 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.anyBoolean
 import org.mockito.Mockito.doNothing
-import org.powermock.core.classloader.annotations.PrepareForTest
 
-@PrepareForTest(DetailedBolusInfoStorage::class, ConstraintChecker::class, DanaRKoreanPlugin::class, DanaRPlugin::class)
 open class DanaRTestBase : TestBase() {
 
     @Mock lateinit var sp: SP

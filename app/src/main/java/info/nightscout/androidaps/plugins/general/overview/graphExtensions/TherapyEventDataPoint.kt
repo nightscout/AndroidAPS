@@ -48,7 +48,7 @@ class TherapyEventDataPoint @Inject constructor(
     }
 
     override fun getLabel(): String? =
-        if (data.note != null) data.note
+        if (data.note.isNullOrBlank().not()) data.note
         else translator.translate(data.type)
 
     override fun getDuration(): Long = data.duration

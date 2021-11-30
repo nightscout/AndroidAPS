@@ -129,7 +129,6 @@
     <string name="wronginsulin_label">Błędy w dostarczaniu/wpisywaniu insuliny</string>
     <string name="wronginsulin_whattodo">Co należy zrobić, jeśli otrzymano mniej insuliny niż sugeruje historia pompy, np. z powodu niedrożności, uszkodzonej kaniuli lub zapomnienia o ponownym podłączeniu pompy po prysznicu? </string>
     <string name="wronginsulin_careportal">Usuń dane insuliny z portalu Nightscout aby usunąć je z historii pompy.</string>
-    <string name="wronginsulin_compare">Porównaj wartości w AndroidAPS i historii pompy.</string>
     <string name="wronginsulin_prime">Podaj obliczoną dawkę „pominiętej” insuliny za pomocą strzykawki / wstrzykiwacza lub za pomocą pompy funkcji wypełnienia.</string>
     <string name="wronginsulin_donothing">Nie rób nic i pozwól AndroidAPS na skorygowanie każdego uzyskanego wysokiego stężenia glukozy we krwi.</string>
     <string name="iob_label">Aktywna insulina (IOB)</string>

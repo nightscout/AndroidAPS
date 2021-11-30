@@ -15,6 +15,6 @@ object PercentageSplitter {
      */
     fun pureName(name: String): String {
         val percentageMatch = splitPattern.matcher(name)
-        return if (percentageMatch.find()) percentageMatch.group(1).trim { it <= ' ' } else name
+        return if (percentageMatch.find()) (percentageMatch.group(1) as String).trim { it <= ' ' } else name
     }
 }

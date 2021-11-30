@@ -264,6 +264,8 @@ class Translator @Inject internal constructor(
         Sources.DanaRC                             -> TODO()
         Sources.DanaRv2                            -> TODO()
         Sources.DanaRS                             -> TODO()
+        Sources.DanaI                              -> TODO()
+        Sources.DiaconnG8                          -> TODO()
         Sources.Insight                            -> TODO()
         Sources.Combo                              -> TODO()
         Sources.Medtronic                          -> TODO()

@@ -15,7 +15,7 @@ private fun getShiftedTimeSecs(originalSeconds: Int, timeShiftHours: Int): Int {
 
 fun List<Block>.shiftBlock(multiplier: Double, timeShiftHours: Int): List<Block> {
     val newList = arrayListOf<Block>()
-    for (hour in 0..23) newList.add(Block(1000 * 60 * 60, blockValueBySeconds(hour * 3600, multiplier, timeShiftHours)))
+    for (hour in 0..23) newList.add(Block(1000L * 60 * 60, blockValueBySeconds(hour * 3600, multiplier, timeShiftHours)))
     for (i in newList.indices.reversed()) {
         if (i > 0)
             if (newList[i].amount == newList[i - 1].amount) {
@@ -29,7 +29,7 @@ fun List<Block>.shiftBlock(multiplier: Double, timeShiftHours: Int): List<Block>
 fun List<TargetBlock>.shiftTargetBlock(timeShiftHours: Int): List<TargetBlock> {
     val newList = arrayListOf<TargetBlock>()
     for (hour in 0..23)
-        newList.add(TargetBlock(1000 * 60 * 60, lowTargetBlockValueBySeconds(hour * 3600, timeShiftHours), highTargetBlockValueBySeconds(hour * 3600, timeShiftHours)))
+        newList.add(TargetBlock(1000L * 60 * 60, lowTargetBlockValueBySeconds(hour * 3600, timeShiftHours), highTargetBlockValueBySeconds(hour * 3600, timeShiftHours)))
     for (i in newList.indices.reversed()) {
         if (i > 0)
             if (newList[i].lowTarget == newList[i - 1].lowTarget && newList[i].highTarget == newList[i - 1].highTarget) {

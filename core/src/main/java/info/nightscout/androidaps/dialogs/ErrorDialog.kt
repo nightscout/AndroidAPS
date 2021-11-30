@@ -1,7 +1,9 @@
 package info.nightscout.androidaps.dialogs
 
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,13 +26,14 @@ class ErrorDialog : DaggerDialogFragment() {
     @Inject lateinit var alarmSoundServiceHelper: AlarmSoundServiceHelper
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var ctx: Context
 
     var helperActivity: ErrorHelperActivity? = null
     var status: String = ""
     var title: String = ""
     var sound: Int = 0
 
-    private var loopHandler = Handler()
+    private var loopHandler = Handler(Looper.getMainLooper())
 
     private var _binding: DialogErrorBinding? = null
 
@@ -106,9 +109,9 @@ class ErrorDialog : DaggerDialogFragment() {
 
     private fun startAlarm() {
         if (sound != 0)
-            context?.let { context -> alarmSoundServiceHelper.startAlarm(context, sound) }
+            alarmSoundServiceHelper.startAlarm(ctx, sound)
     }
 
     private fun stopAlarm() =
-        context?.let { context -> alarmSoundServiceHelper.stopService(context) }
+        alarmSoundServiceHelper.stopService(ctx)
 }

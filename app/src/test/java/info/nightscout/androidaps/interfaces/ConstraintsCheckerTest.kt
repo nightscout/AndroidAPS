@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.interfaces
 
-import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
@@ -19,7 +18,6 @@ import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective
 import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin
-import info.nightscout.androidaps.plugins.general.maintenance.LoggerUtils
 import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin
@@ -31,28 +29,19 @@ import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
 import info.nightscout.androidaps.plugins.source.GlimpPlugin
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.Profiler
-import info.nightscout.androidaps.utils.buildHelper.BuildHelper
+import info.nightscout.androidaps.utils.buildHelper.BuildHelperImpl
 import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
 import java.util.*
 
 /**
  * Created by mike on 18.03.2018.
  */
-@RunWith(PowerMockRunner::class)
-@PrepareForTest(
-    ConstraintChecker::class, SP::class, Context::class,
-    OpenAPSAMAPlugin::class, OpenAPSSMBPlugin::class,
-    VirtualPumpPlugin::class, DetailedBolusInfoStorage::class, TemporaryBasalStorage::class, GlimpPlugin::class, Profiler::class,
-    UserEntryLogger::class, PrefFileListProvider::class, AppRepository::class, InsightDatabaseDao::class)
 class ConstraintsCheckerTest : TestBaseWithProfile() {
 
     @Mock lateinit var activePlugin: ActivePlugin
@@ -99,7 +88,6 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     fun prepare() {
         `when`(resourceHelper.gs(R.string.closed_loop_disabled_on_dev_branch)).thenReturn("Running dev version. Closed loop is disabled.")
         `when`(resourceHelper.gs(R.string.closedmodedisabledinpreferences)).thenReturn("Closed loop mode disabled in preferences")
-        `when`(resourceHelper.gs(R.string.objectivenotstarted)).thenReturn("Objective %d not started")
         `when`(resourceHelper.gs(R.string.novalidbasalrate)).thenReturn("No valid basal rate read from pump")
         `when`(resourceHelper.gs(R.string.autosensdisabledinpreferences)).thenReturn("Autosens disabled in preferences")
         `when`(resourceHelper.gs(R.string.smbdisabledinpreferences)).thenReturn("SMB disabled in preferences")
@@ -126,6 +114,10 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         `when`(resourceHelper.gs(R.string.limitingbasalratio, 0.8, "pump limit")).thenReturn("")
         `when`(resourceHelper.gs(R.string.limitingpercentrate, 200, "pump limit")).thenReturn("")
         `when`(resourceHelper.gs(R.string.combo_pump_unsupported_operation)).thenReturn("Requested operation not supported by pump")
+        `when`(resourceHelper.gs(R.string.objectivenotstarted, 9)).thenReturn("Objective 9 not started")
+        `when`(resourceHelper.gs(R.string.objectivenotstarted, 8)).thenReturn("Objective 8 not started")
+        `when`(resourceHelper.gs(R.string.objectivenotstarted, 6)).thenReturn("Objective 6 not started")
+        `when`(resourceHelper.gs(R.string.objectivenotstarted, 1)).thenReturn("Objective 1 not started")
 
         // RS constructor
         `when`(sp.getString(R.string.key_danars_address, "")).thenReturn("")
@@ -146,7 +138,10 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         insightPlugin = LocalInsightPlugin(injector, aapsLogger, rxBus, resourceHelper, sp, commandQueue, profileFunction, context, ConfigImpl(), dateUtil, insightDbHelper, pumpSync)
         openAPSSMBPlugin = OpenAPSSMBPlugin(injector, aapsLogger, rxBus, constraintChecker, resourceHelper, profileFunction, context, activePlugin, iobCobCalculator, hardLimits, profiler, sp, dateUtil, repository, glucoseStatusProvider)
         openAPSAMAPlugin = OpenAPSAMAPlugin(injector, aapsLogger, rxBus, constraintChecker, resourceHelper, profileFunction, context, activePlugin, iobCobCalculator, hardLimits, profiler, fabricPrivacy, dateUtil, repository, glucoseStatusProvider)
-        safetyPlugin = SafetyPlugin(injector, aapsLogger, resourceHelper, sp, rxBus, constraintChecker, openAPSAMAPlugin, openAPSSMBPlugin, sensitivityOref1Plugin, activePlugin, hardLimits, BuildHelper(ConfigImpl(), fileListProvider), iobCobCalculator, ConfigImpl(), dateUtil)
+        safetyPlugin = SafetyPlugin(injector, aapsLogger, resourceHelper, sp, rxBus, constraintChecker,
+                                    openAPSAMAPlugin, openAPSSMBPlugin, sensitivityOref1Plugin, activePlugin,
+                                    hardLimits, BuildHelperImpl(ConfigImpl(), fileListProvider), iobCobCalculator,
+                                    ConfigImpl(), dateUtil)
         val constraintsPluginsList = ArrayList<PluginBase>()
         constraintsPluginsList.add(safetyPlugin)
         constraintsPluginsList.add(objectivesPlugin)
@@ -196,16 +191,6 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         val c = constraintChecker.isAutosensModeEnabled()
         Assert.assertEquals(true, c.reasonList.size == 2) // Safety & Objectives
         Assert.assertEquals(true, c.mostLimitedReasonList.size == 2) // Safety & Objectives
-        Assert.assertEquals(java.lang.Boolean.FALSE, c.value())
-    }
-
-    // Objectives
-    @Test
-    fun isAMAModeEnabledTest() {
-        objectivesPlugin.objectives[ObjectivesPlugin.AMA_OBJECTIVE].startedOn = 0
-        val c = constraintChecker.isAMAModeEnabled()
-        Assert.assertEquals(true, c.reasonList.size == 1) // Objectives
-        Assert.assertEquals(true, c.mostLimitedReasonList.size == 1) // Objectives
         Assert.assertEquals(java.lang.Boolean.FALSE, c.value())
     }
 

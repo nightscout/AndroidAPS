@@ -1,6 +1,8 @@
 package info.nightscout.androidaps.plugins.general.maintenance
 
+import android.content.Context
 import android.os.Environment
+import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
@@ -18,6 +20,7 @@ import javax.inject.Singleton
 import kotlin.math.abs
 
 @Suppress("SpellCheckingInspection")
+@OpenForTesting
 @Singleton
 class PrefFileListProvider @Inject constructor(
     private val resourceHelper: ResourceHelper,

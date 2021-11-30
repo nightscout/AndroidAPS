@@ -81,7 +81,6 @@
     <string name="extended_bolus">בולוס ממושך</string>
     <string name="pump_time_updated">שעון המשאבה עודכן</string>
     <string name="exit">יציאה</string>
-    <string name="serial_number">מספר סידורי</string>
     <string name="removerecord">מחיקת רשומה</string>
     <string name="loopisdisabled">הלולאה מושבתת</string>
     <string name="alarm">התראה</string>
@@ -385,6 +384,21 @@
     <string name="uel_loop_change">הלולאה שונתה</string>
     <string name="uel_loop_removed">הלולאה הוסרה</string>
     <string name="uel_other">אחר</string>
+    <!-- HardLimits -->
+    <string name="profile_low_target">ערך המטרה הנמוך של הפרופיל</string>
+    <string name="profile_high_target">ערך המטרה הגבוה של הפרופיל</string>
+    <string name="temp_target_low_target">ערך תחתון של המטרה הזמנית</string>
+    <string name="temp_target_high_target">ערך עליון של המטרה הזמנית</string>
+    <string name="temp_target_value">ערך המטרה הזמני</string>
+    <string name="profile_dia">ערך DIA של הפרופיל</string>
+    <string name="profile_sensitivity_value">ערך הרגישות של הפרופיל</string>
+    <string name="profile_max_daily_basal_value">מינון בזאלי מרבי של הפרופיל</string>
+    <string name="current_basal_value">מינון בזאלי נוכחי</string>
+    <string name="profile_carbs_ratio_value">יחס הפחמימות של הפרופיל</string>
+    <string name="valuelimitedto">%1$.2f מוגבל ל- %2$.2f</string>
+    <string name="valueoutofrange">»הערך %1$s« מחוץ לתחום הקשיח</string>
+    <string name="value_out_of_hard_limits">»הערך %1$s« %2$.2f מחוץ לתחום הקשיח</string>
+    <string name="basal_value">ערך בזאלי</string>
     <plurals name="days">
         <item quantity="one">%1$d יום</item>
         <item quantity="two">%1$d ימים</item>

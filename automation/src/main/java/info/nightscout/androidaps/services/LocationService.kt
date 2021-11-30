@@ -148,15 +148,13 @@ class LocationService : DaggerService() {
 
     override fun onDestroy() {
         super.onDestroy()
-        if (locationManager != null) {
-            try {
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    return
-                }
-                locationManager!!.removeUpdates(locationListener)
-            } catch (ex: Exception) {
-                aapsLogger.error(LTag.LOCATION, "fail to remove location listener, ignore", ex)
+        try {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return
             }
+            locationListener?.let { locationManager?.removeUpdates(it) }
+        } catch (ex: Exception) {
+            aapsLogger.error(LTag.LOCATION, "fail to remove location listener, ignore", ex)
         }
         disposable.clear()
     }

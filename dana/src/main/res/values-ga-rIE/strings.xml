@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="danarspump">DanaRS</string>
     <string name="danarspump_shortname">Dana</string>
     <string name="overview_bolusprogress_delivered">Seachadta</string>
     <string name="overview_bolusprogress_stoped">Stopadh</string>

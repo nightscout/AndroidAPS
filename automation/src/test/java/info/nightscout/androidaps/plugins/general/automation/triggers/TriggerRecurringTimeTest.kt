@@ -1,26 +1,20 @@
 package info.nightscout.androidaps.plugins.general.automation.triggers
 
-import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.MidnightTime
 import info.nightscout.androidaps.utils.T
 import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.powermock.api.mockito.PowerMockito
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
+import org.mockito.Mockito.`when`
 
-@RunWith(PowerMockRunner::class)
-@PrepareForTest(DateUtil::class)
 class TriggerRecurringTimeTest : TriggerTestBase() {
 
     var now : Long = 0L
 
     @Before fun mock() {
         now = MidnightTime.calc() + T.mins(95).msecs() // 95 min from midnight
-        PowerMockito.`when`(dateUtil.now()).thenReturn(now)
+        `when`(dateUtil.now()).thenReturn(now)
     }
 
     @Test fun shouldRunTest() {

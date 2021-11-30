@@ -5,14 +5,14 @@ import java.util.List;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.command.ConfigureAlertsCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.AlertConfiguration;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.PodStateManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.ErosPodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 
 public class ConfigureAlertsAction implements OmnipodAction<StatusResponse> {
-    private final PodStateManager podStateManager;
+    private final ErosPodStateManager podStateManager;
     private final List<AlertConfiguration> alertConfigurations;
 
-    public ConfigureAlertsAction(PodStateManager podStateManager, List<AlertConfiguration> alertConfigurations) {
+    public ConfigureAlertsAction(ErosPodStateManager podStateManager, List<AlertConfiguration> alertConfigurations) {
         if (podStateManager == null) {
             throw new IllegalArgumentException("Pod state manager cannot be null");
         }
@@ -31,7 +31,7 @@ public class ConfigureAlertsAction implements OmnipodAction<StatusResponse> {
         return statusResponse;
     }
 
-    public static void updateConfiguredAlerts(PodStateManager podStateManager, List<AlertConfiguration> alertConfigurations) {
+    public static void updateConfiguredAlerts(ErosPodStateManager podStateManager, List<AlertConfiguration> alertConfigurations) {
         for (AlertConfiguration alertConfiguration : alertConfigurations) {
             if (alertConfiguration.isActive()) {
                 podStateManager.putConfiguredAlert(alertConfiguration.getAlertSlot(), alertConfiguration.getAlertType());

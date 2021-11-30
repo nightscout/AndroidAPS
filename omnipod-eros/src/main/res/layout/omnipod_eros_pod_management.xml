@@ -14,7 +14,6 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/omnipod_eros_pod_management_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -129,7 +128,7 @@
                 android:orientation="horizontal"
                 app:layout_constraintGuide_percent="0" />
 
-            <info.nightscout.androidaps.utils.ui.SingleClickButton
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button_play_test_beep"
                 style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="0dp"
@@ -270,7 +269,7 @@
                 android:orientation="vertical"
                 app:layout_constraintGuide_percent="0.5" />
 
-            <info.nightscout.androidaps.utils.ui.SingleClickButton
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button_pulse_log"
                 style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="0dp"

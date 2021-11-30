@@ -1,14 +1,13 @@
 package info.nightscout.androidaps.testing.mockers;
 
-import org.junit.Assert;
-import org.powermock.api.mockito.PowerMockito;
-
-import java.util.Base64;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
+
+import org.powermock.api.mockito.PowerMockito;
+
+import java.util.Base64;
 
 public class AndroidMocker {
 

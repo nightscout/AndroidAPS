@@ -1,6 +1,9 @@
 package info.nightscout.androidaps.interfaces
 
-open class PluginDescription {
+import info.nightscout.androidaps.annotations.OpenForTesting
+
+@OpenForTesting
+class PluginDescription {
 
     var mainType = PluginType.GENERAL
     var fragmentClass: String? = null

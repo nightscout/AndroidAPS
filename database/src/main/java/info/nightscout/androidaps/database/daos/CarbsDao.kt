@@ -2,6 +2,7 @@ package info.nightscout.androidaps.database.daos
 
 import androidx.room.Dao
 import androidx.room.Query
+import info.nightscout.androidaps.database.TABLE_BOLUSES
 import info.nightscout.androidaps.database.TABLE_CARBS
 import info.nightscout.androidaps.database.entities.Carbs
 import io.reactivex.Maybe
@@ -69,4 +70,7 @@ internal interface CarbsDao : TraceableDao<Carbs> {
 
     @Query("SELECT * FROM $TABLE_CARBS WHERE id = :referenceId")
     fun getCurrentFromHistoric(referenceId: Long): Maybe<Carbs>
+
+    @Query("SELECT * FROM $TABLE_CARBS WHERE dateCreated > :since AND dateCreated <= :until LIMIT :limit OFFSET :offset")
+    suspend fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<Carbs>
 }

@@ -6,7 +6,7 @@ import dagger.android.ContributesAndroidInjector
 import info.nightscout.androidaps.plugins.pump.omnipod.common.dagger.ActivityScope
 import info.nightscout.androidaps.plugins.pump.omnipod.common.dagger.OmnipodWizardModule
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.data.RLHistoryItemOmnipod
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.PodStateManager
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.ErosPodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsErosPodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.OmnipodRileyLinkCommunicationManager
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.service.RileyLinkOmnipodService
@@ -23,36 +23,36 @@ abstract class OmnipodErosModule {
     // ACTIVITIES
 
     @ContributesAndroidInjector
-    abstract fun contributesPodManagementActivity(): ErosPodManagementActivity
-    @ContributesAndroidInjector abstract fun contributesPodHistoryActivity(): ErosPodHistoryActivity
+    abstract fun contributesErosPodManagementActivity(): ErosPodManagementActivity
+    @ContributesAndroidInjector abstract fun contributesErosPodHistoryActivity(): ErosPodHistoryActivity
 
     @ActivityScope
     @ContributesAndroidInjector(modules = [OmnipodWizardModule::class, OmnipodErosWizardViewModelsModule::class])
-    abstract fun contributesActivationWizardActivity(): ErosPodActivationWizardActivity
+    abstract fun contributesErosActivationWizardActivity(): ErosPodActivationWizardActivity
 
     @ActivityScope
     @ContributesAndroidInjector(modules = [OmnipodWizardModule::class, OmnipodErosWizardViewModelsModule::class])
-    abstract fun contributesDeactivationWizardActivity(): ErosPodDeactivationWizardActivity
+    abstract fun contributesErosDeactivationWizardActivity(): ErosPodDeactivationWizardActivity
 
     // FRAGMENTS
 
     @ContributesAndroidInjector
-    abstract fun contributesOmnipodFragment(): OmnipodErosOverviewFragment
+    abstract fun contributesOmnipodErosOverviewFragment(): OmnipodErosOverviewFragment
 
     // SERVICES
 
     @ContributesAndroidInjector
-    abstract fun omnipodCommunicationManagerProvider(): OmnipodRileyLinkCommunicationManager
+    abstract fun contributesOmnipodRileyLinkCommunicationManagerProvider(): OmnipodRileyLinkCommunicationManager
     @ContributesAndroidInjector
     abstract fun contributesRileyLinkOmnipodService(): RileyLinkOmnipodService
 
     // DATA
 
-    @ContributesAndroidInjector abstract fun rlHistoryItemOmnipod(): RLHistoryItemOmnipod
+    @ContributesAndroidInjector abstract fun contributesRlHistoryItemOmnipod(): RLHistoryItemOmnipod
 
     companion object {
 
         @Provides
-        fun podStateManagerProvider(aapsErosPodStateManager: AapsErosPodStateManager): PodStateManager = aapsErosPodStateManager
+        fun erosPodStateManagerProvider(aapsErosPodStateManager: AapsErosPodStateManager): ErosPodStateManager = aapsErosPodStateManager
     }
 }

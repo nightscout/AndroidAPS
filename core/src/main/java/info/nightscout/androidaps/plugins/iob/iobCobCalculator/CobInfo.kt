@@ -1,9 +1,12 @@
 package info.nightscout.androidaps.plugins.iob.iobCobCalculator
 
+import info.nightscout.androidaps.core.R
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 
 /** All COB up to now, including carbs not yet processed by IobCob calculation.  */
-class CobInfo(val displayCob: Double?, val futureCarbs: Double) {
+class CobInfo(val timestamp: Long, val displayCob: Double?, val futureCarbs: Double) {
 
     fun generateCOBString(): String {
         var cobStringResult = "--g"
@@ -15,4 +18,13 @@ class CobInfo(val displayCob: Double?, val futureCarbs: Double) {
         }
         return cobStringResult
     }
+
+    fun displayText(resourceHelper: ResourceHelper, dateUtil: DateUtil, isDev: Boolean): String? =
+        if (displayCob != null) {
+            var cobText = resourceHelper.gs(R.string.format_carbs, displayCob.toInt())
+            if (futureCarbs > 0) cobText += "(" + DecimalFormatter.to0Decimal(futureCarbs) + ")"
+            // This is only temporary for debugging
+            if (isDev) cobText += "\n" + dateUtil.timeStringWithSeconds(timestamp)
+            cobText
+        } else null
 }

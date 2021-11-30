@@ -2,7 +2,9 @@ package info.nightscout.androidaps.database.daos
 
 import androidx.room.Dao
 import androidx.room.Query
+import info.nightscout.androidaps.database.TABLE_GLUCOSE_VALUES
 import info.nightscout.androidaps.database.TABLE_TEMPORARY_TARGETS
+import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import io.reactivex.Maybe
 import io.reactivex.Single
@@ -45,4 +47,7 @@ internal interface TemporaryTargetDao : TraceableDao<TemporaryTarget> {
 
     @Query("SELECT * FROM $TABLE_TEMPORARY_TARGETS WHERE id = :referenceId")
     fun getCurrentFromHistoric(referenceId: Long): Maybe<TemporaryTarget>
+
+    @Query("SELECT * FROM $TABLE_TEMPORARY_TARGETS WHERE dateCreated > :since AND dateCreated <= :until LIMIT :limit OFFSET :offset")
+    suspend fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<TemporaryTarget>
 }

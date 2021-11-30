@@ -1,18 +1,14 @@
 package info.nightscout.androidaps.plugins.general.automation.actions
 
 import info.nightscout.androidaps.automation.R
-import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.queue.Callback
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
-import org.powermock.modules.junit4.PowerMockRunner
 
-@RunWith(PowerMockRunner::class)
 class ActionLoopEnableTest : ActionsTestBase() {
 
     lateinit var sut: ActionLoopEnable

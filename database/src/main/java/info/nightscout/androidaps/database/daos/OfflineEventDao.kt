@@ -2,7 +2,9 @@ package info.nightscout.androidaps.database.daos
 
 import androidx.room.Dao
 import androidx.room.Query
+import info.nightscout.androidaps.database.TABLE_GLUCOSE_VALUES
 import info.nightscout.androidaps.database.TABLE_OFFLINE_EVENTS
+import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.entities.OfflineEvent
 import io.reactivex.Maybe
 import io.reactivex.Single
@@ -48,4 +50,7 @@ internal interface OfflineEventDao : TraceableDao<OfflineEvent> {
 
     @Query("SELECT * FROM $TABLE_OFFLINE_EVENTS WHERE id = :referenceId")
     fun getCurrentFromHistoric(referenceId: Long): Maybe<OfflineEvent>
+
+    @Query("SELECT * FROM $TABLE_OFFLINE_EVENTS WHERE dateCreated > :since AND dateCreated <= :until LIMIT :limit OFFSET :offset")
+    suspend fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<OfflineEvent>
 }
