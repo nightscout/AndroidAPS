@@ -12,7 +12,7 @@ import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.aps.events.EventOpenAPSUpdateGui
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.plugins.general.wear.wearintegration.WatchUpdaterService
@@ -28,13 +28,13 @@ import javax.inject.Singleton
 class WearPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     private val aapsSchedulers: AapsSchedulers,
     private val sp: SP,
     private val ctx: Context,
     private val fabricPrivacy: FabricPrivacy,
     private val loopPlugin: Lazy<LoopPlugin>,
-    private val rxBus: RxBusWrapper,
+    private val rxBus: RxBus,
     private val actionStringHandler: Lazy<ActionStringHandler>
 
 ) : PluginBase(PluginDescription()
@@ -45,7 +45,7 @@ class WearPlugin @Inject constructor(
     .shortName(R.string.wear_shortname)
     .preferencesId(R.xml.pref_wear)
     .description(R.string.description_wear),
-    aapsLogger, resourceHelper, injector
+    aapsLogger, rh, injector
 ) {
 
     private val disposable = CompositeDisposable()
@@ -68,7 +68,7 @@ class WearPlugin @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe({ sendDataToWatch(status = true, basals = true, bgValue = false) }, fabricPrivacy::logException))
         disposable.add(rxBus
-            .toObservable(EventNewBasalProfile::class.java)
+            .toObservable(EventEffectiveProfileSwitchChanged::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ sendDataToWatch(status = false, basals = true, bgValue = false) }, fabricPrivacy::logException))
         disposable.add(rxBus
@@ -88,14 +88,14 @@ class WearPlugin @Inject constructor(
             .toObservable(EventRefreshOverview::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({
-                if (WatchUpdaterService.shouldReportLoopStatus(loopPlugin.get().isEnabled(PluginType.LOOP)))
+                if (WatchUpdaterService.shouldReportLoopStatus(loopPlugin.get().isEnabled()))
                     sendDataToWatch(status = true, basals = false, bgValue = false)
             }, fabricPrivacy::logException))
         disposable.add(rxBus
             .toObservable(EventBolusRequested::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event: EventBolusRequested ->
-                val status = String.format(resourceHelper.gs(R.string.bolusrequested), event.amount)
+                val status = String.format(rh.gs(R.string.bolusrequested), event.amount)
                 val intent = Intent(ctx, WatchUpdaterService::class.java).setAction(WatchUpdaterService.ACTION_SEND_BOLUSPROGRESS)
                 intent.putExtra("progresspercent", 0)
                 intent.putExtra("progressstatus", status)
@@ -107,9 +107,9 @@ class WearPlugin @Inject constructor(
             .subscribe({ event: EventDismissBolusProgressIfRunning ->
                 if (event.result == null) return@subscribe
                 val status: String = if (event.result!!.success) {
-                    resourceHelper.gs(R.string.success)
+                    rh.gs(R.string.success)
                 } else {
-                    resourceHelper.gs(R.string.nosuccess)
+                    rh.gs(R.string.nosuccess)
                 }
                 val intent = Intent(ctx, WatchUpdaterService::class.java).setAction(WatchUpdaterService.ACTION_SEND_BOLUSPROGRESS)
                 intent.putExtra("progresspercent", 100)

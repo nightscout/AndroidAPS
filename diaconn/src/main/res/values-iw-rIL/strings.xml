@@ -119,7 +119,6 @@
     <string name="diaconn_g8_logmealfail">רישום המזון נכשל</string>
     <string name="diaconn_g8_logsuccess">הצלחה</string>
     <string name="diaconn_g8_logmealsuccess">רישום המזון הצליח</string>
-    <string name="key_diaconn_g8_logtubechange">רישום החלפת צינורית</string>
     <string name="diaconn_g8_errorcode_3">לא ניתן להגדיר שגיאת פרוטוקול ספציפי.</string>
     <string name="diaconn_g8_errorcode_4">הארוחה נרשמה, לא ניתן להזריק.</string>
     <string name="diaconn_g8_errorcode_6">בוטל על ידי המשאבה</string>

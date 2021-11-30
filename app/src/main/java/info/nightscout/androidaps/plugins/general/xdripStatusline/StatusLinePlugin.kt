@@ -10,7 +10,7 @@ import info.nightscout.androidaps.extensions.toStringShort
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -26,13 +26,13 @@ class StatusLinePlugin @Inject constructor(
     injector: HasAndroidInjector,
     private val sp: SP,
     private val profileFunction: ProfileFunction,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     private val aapsSchedulers: AapsSchedulers,
     private val context: Context,
     private val fabricPrivacy: FabricPrivacy,
     private val loopPlugin: LoopPlugin,
     private val iobCobCalculator: IobCobCalculator,
-    private val rxBus: RxBusWrapper,
+    private val rxBus: RxBus,
     aapsLogger: AAPSLogger
 ) : PluginBase(
     PluginDescription()
@@ -43,7 +43,7 @@ class StatusLinePlugin @Inject constructor(
         .neverVisible(true)
         .preferencesId(R.xml.pref_xdripstatus)
         .description(R.string.description_xdrip_status_line),
-    aapsLogger, resourceHelper, injector
+    aapsLogger, rh, injector
 ) {
 
     private val disposable = CompositeDisposable()
@@ -66,7 +66,7 @@ class StatusLinePlugin @Inject constructor(
         super.onStart()
         disposable += rxBus.toObservable(EventRefreshOverview::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ if (lastLoopStatus != loopPlugin.isEnabled(PluginType.LOOP)) sendStatus() }, fabricPrivacy::logException)
+            .subscribe({ if (lastLoopStatus != loopPlugin.isEnabled()) sendStatus() }, fabricPrivacy::logException)
         disposable += rxBus.toObservable(EventExtendedBolusChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ sendStatus() }, fabricPrivacy::logException)
@@ -113,10 +113,10 @@ class StatusLinePlugin @Inject constructor(
 
     private fun buildStatusString(profile: Profile): String {
         var status = ""
-        if (!loopPlugin.isEnabled(PluginType.LOOP)) {
-            status += resourceHelper.gs(R.string.disabledloop) + "\n"
+        if (!loopPlugin.isEnabled()) {
+            status += rh.gs(R.string.disabledloop) + "\n"
             lastLoopStatus = false
-        } else if (loopPlugin.isEnabled(PluginType.LOOP)) {
+        } else if (loopPlugin.isEnabled()) {
             lastLoopStatus = true
         }
         //Temp basal

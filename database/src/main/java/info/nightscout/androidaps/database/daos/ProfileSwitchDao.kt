@@ -2,11 +2,9 @@ package info.nightscout.androidaps.database.daos
 
 import androidx.room.Dao
 import androidx.room.Query
-import info.nightscout.androidaps.database.TABLE_GLUCOSE_VALUES
 import info.nightscout.androidaps.database.TABLE_PROFILE_SWITCHES
 import info.nightscout.androidaps.database.daos.workaround.ProfileSwitchDaoWorkaround
 import info.nightscout.androidaps.database.data.checkSanity
-import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.entities.ProfileSwitch
 import io.reactivex.Maybe
 import io.reactivex.Single

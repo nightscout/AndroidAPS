@@ -25,7 +25,7 @@ import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
@@ -39,9 +39,9 @@ import javax.inject.Inject
 
 class BGSourceFragment : DaggerFragment() {
 
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var repository: AppRepository
@@ -50,7 +50,7 @@ class BGSourceFragment : DaggerFragment() {
     @Inject lateinit var activePlugin: ActivePlugin
 
     private val disposable = CompositeDisposable()
-    private val millsToThePast = T.hours(12).msecs()
+    private val millsToThePast = T.hours(36).msecs()
 
     private var _binding: BgsourceFragmentBinding? = null
 
@@ -131,7 +131,7 @@ class BGSourceFragment : DaggerFragment() {
                     val glucoseValue = v.tag as GlucoseValue
                     activity?.let { activity ->
                         val text = dateUtil.dateAndTimeString(glucoseValue.timestamp) + "\n" + glucoseValue.valueToUnitsString(profileFunction.getUnits())
-                        OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord), text, Runnable {
+                        OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord), text, Runnable {
                             val source = when((activePlugin.activeBgSource as PluginBase).pluginDescription.pluginName) {
                                 R.string.dexcom_app_patched -> Sources.Dexcom
                                 R.string.eversense          -> Sources.Eversense
@@ -140,6 +140,7 @@ class BGSourceFragment : DaggerFragment() {
                                 R.string.nsclientbg         -> Sources.NSClientSource
                                 R.string.poctech            -> Sources.PocTech
                                 R.string.tomato             -> Sources.Tomato
+                                R.string.glunovo            -> Sources.Glunovo
                                 R.string.xdrip              -> Sources.Xdrip
                                 else                        -> Sources.Unknown
                             }

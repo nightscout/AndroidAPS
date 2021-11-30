@@ -54,7 +54,7 @@ public class Constants {
     public static final double MAX_TT_MMOL = 10d;
 
     //NSClientInternal
-    public static final int MAX_LOG_LINES = 100;
+    public static final int MAX_LOG_LINES = 30;
 
     //Screen: Threshold for width/height to go into small width/height layout
     public static final int SMALL_WIDTH = 320;

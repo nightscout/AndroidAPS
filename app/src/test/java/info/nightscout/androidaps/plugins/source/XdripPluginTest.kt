@@ -13,11 +13,11 @@ class XdripPluginTest : TestBase() {
 
     private lateinit var xdripPlugin: XdripPlugin
 
-    @Mock lateinit var resourceHelper: ResourceHelper
+    @Mock lateinit var rh: ResourceHelper
 
     @Before
     fun setup() {
-        xdripPlugin = XdripPlugin(HasAndroidInjector { AndroidInjector { } }, resourceHelper, aapsLogger)
+        xdripPlugin = XdripPlugin(HasAndroidInjector { AndroidInjector { } }, rh, aapsLogger)
     }
 
     @Test fun advancedFilteringSupported() {

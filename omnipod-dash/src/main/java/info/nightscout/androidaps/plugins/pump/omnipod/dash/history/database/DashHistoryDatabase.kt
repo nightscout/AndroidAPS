@@ -18,13 +18,13 @@ abstract class DashHistoryDatabase : RoomDatabase() {
 
     companion object {
 
-        const val VERSION = 1
+        const val VERSION = 2
 
         fun build(context: Context) =
             Room.databaseBuilder(
                 context.applicationContext,
                 DashHistoryDatabase::class.java,
-                "omnipod_dash_history_database.db"
+                "omnipod_dash_history_database.db",
             )
                 .fallbackToDestructiveMigration()
                 .build()

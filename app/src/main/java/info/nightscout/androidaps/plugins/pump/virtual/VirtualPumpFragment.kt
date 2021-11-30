@@ -14,7 +14,7 @@ import info.nightscout.androidaps.events.EventTempBasalChange
 import info.nightscout.androidaps.extensions.toStringFull
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.virtual.events.EventVirtualPumpUpdateGui
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -27,8 +27,8 @@ import javax.inject.Inject
 
 class VirtualPumpFragment : DaggerFragment() {
 
-    @Inject lateinit var rxBus: RxBusWrapper
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var virtualPumpPlugin: VirtualPumpPlugin
@@ -39,7 +39,7 @@ class VirtualPumpFragment : DaggerFragment() {
     private val disposable = CompositeDisposable()
 
     private lateinit var refreshLoop: Runnable
-    private lateinit var handler: Handler
+    private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
     private var _binding: VirtualpumpFragmentBinding? = null
 
@@ -54,9 +54,9 @@ class VirtualPumpFragment : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     }
-        @Synchronized
+
+    @Synchronized
     override fun onResume() {
         super.onResume()
         disposable += rxBus
@@ -96,19 +96,19 @@ class VirtualPumpFragment : DaggerFragment() {
     private fun updateGui() {
         if (_binding == null) return
         val profile = profileFunction.getProfile() ?: return
-        binding.basabasalrate.text = resourceHelper.gs(R.string.pump_basebasalrate, virtualPumpPlugin.baseBasalRate)
+        binding.basabasalrate.text = rh.gs(R.string.pump_basebasalrate, virtualPumpPlugin.baseBasalRate)
         binding.tempbasal.text = iobCobCalculator.getTempBasal(dateUtil.now())?.toStringFull(profile, dateUtil)
             ?: ""
         binding.extendedbolus.text = iobCobCalculator.getExtendedBolus(dateUtil.now())?.toStringFull(dateUtil)
             ?: ""
-        binding.battery.text = resourceHelper.gs(R.string.format_percent, virtualPumpPlugin.batteryPercent)
-        binding.reservoir.text = resourceHelper.gs(R.string.formatinsulinunits, virtualPumpPlugin.reservoirInUnits.toDouble())
+        binding.battery.text = rh.gs(R.string.format_percent, virtualPumpPlugin.batteryPercent)
+        binding.reservoir.text = rh.gs(R.string.formatinsulinunits, virtualPumpPlugin.reservoirInUnits.toDouble())
 
         virtualPumpPlugin.refreshConfiguration()
         val pumpType = virtualPumpPlugin.pumpType
 
         binding.type.text = pumpType?.description
-        binding.typeDef.text = pumpType?.getFullDescription(resourceHelper.gs(R.string.virtualpump_pump_def), pumpType.hasExtendedBasals(), resourceHelper)
+        binding.typeDef.text = pumpType?.getFullDescription(rh.gs(R.string.virtualpump_pump_def), pumpType.hasExtendedBasals(), rh)
         binding.serialNumber.text = virtualPumpPlugin.serialNumber()
     }
 }

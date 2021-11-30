@@ -22,26 +22,25 @@ import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.json.JSONObject
-import java.io.File.separator
 import java.text.DecimalFormat
 import javax.inject.Inject
 
 class ProfileViewerDialog : DaggerDialogFragment() {
 
     @Inject lateinit var injector: HasAndroidInjector
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var config: Config
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var hardLimits: HardLimits
 
     private var time: Long = 0
@@ -141,7 +140,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             profile?.let { profile1 ->
                 profile2?.let { profile2 ->
                     binding.units.text = profileFunction.getUnits().asText
-                    binding.dia.text = HtmlHelper.fromHtml(formatColors("", profile1.dia, profile2.dia, DecimalFormat("0.00"), resourceHelper.gs(R.string.shorthour)))
+                    binding.dia.text = HtmlHelper.fromHtml(formatColors("", profile1.dia, profile2.dia, DecimalFormat("0.00"), rh.gs(R.string.shorthour)))
                     val profileNames = profileName!!.split("\n").toTypedArray()
                     binding.activeprofile.text = HtmlHelper.fromHtml(formatColors(profileNames[0], profileNames[1]))
                     binding.date.text = date
@@ -153,25 +152,25 @@ class ProfileViewerDialog : DaggerDialogFragment() {
                 }
 
                 binding.noprofile.visibility = View.GONE
-                val validity = profile1.isValid("ProfileViewDialog", activePlugin.activePump, config, resourceHelper, rxBus, hardLimits)
-                binding.invalidprofile.text = resourceHelper.gs(R.string.invalidprofile) + "\n" + validity.reasons.joinToString(separator = "\n")
+                val validity = profile1.isValid("ProfileViewDialog", activePlugin.activePump, config, rh, rxBus, hardLimits, false)
+                binding.invalidprofile.text = rh.gs(R.string.invalidprofile) + "\n" + validity.reasons.joinToString(separator = "\n")
                 binding.invalidprofile.visibility = validity.isValid.not().toVisibility()
             }
         else
             profile?.let {
                 binding.units.text = it.units.asText
-                binding.dia.text = resourceHelper.gs(R.string.format_hours, it.dia)
+                binding.dia.text = rh.gs(R.string.format_hours, it.dia)
                 binding.activeprofile.text = profileName
                 binding.date.text = date
-                binding.ic.text = it.getIcList(resourceHelper, dateUtil)
-                binding.isf.text = it.getIsfList(resourceHelper, dateUtil)
-                binding.basal.text = it.getBasalList(resourceHelper, dateUtil)
-                binding.target.text = it.getTargetList(resourceHelper, dateUtil)
+                binding.ic.text = it.getIcList(rh, dateUtil)
+                binding.isf.text = it.getIsfList(rh, dateUtil)
+                binding.basal.text = "∑ " + rh.gs(R.string.formatinsulinunits, it.baseBasalSum()) + "\n" + it.getBasalList(rh, dateUtil)
+                binding.target.text = it.getTargetList(rh, dateUtil)
                 binding.basalGraph.show(it)
 
                 binding.noprofile.visibility = View.GONE
-                val validity = it.isValid("ProfileViewDialog", activePlugin.activePump, config, resourceHelper, rxBus, hardLimits)
-                binding.invalidprofile.text = resourceHelper.gs(R.string.invalidprofile) + "\n" + validity.reasons.joinToString(separator = "\n")
+                val validity = it.isValid("ProfileViewDialog", activePlugin.activePump, config, rh, rxBus, hardLimits, false)
+                binding.invalidprofile.text = rh.gs(R.string.invalidprofile) + "\n" + validity.reasons.joinToString(separator = "\n")
                 binding.invalidprofile.visibility = validity.isValid.not().toVisibility()
             }
     }
@@ -201,20 +200,20 @@ class ProfileViewerDialog : DaggerDialogFragment() {
     }
 
     private fun formatColors(label: String, text1: String, text2: String, units: String): String {
-        var s = "<font color='${resourceHelper.gc(R.color.white)}'>$label</font>"
+        var s = "<font color='${rh.gc(R.color.white)}'>$label</font>"
         s += "    "
-        s += "<font color='${resourceHelper.gc(R.color.tempbasal)}'>$text1</font>"
+        s += "<font color='${rh.gc(R.color.tempbasal)}'>$text1</font>"
         s += "    "
-        s += "<font color='${resourceHelper.gc(R.color.examinedProfile)}'>$text2</font>"
+        s += "<font color='${rh.gc(R.color.examinedProfile)}'>$text2</font>"
         s += "    "
-        s += "<font color='${resourceHelper.gc(R.color.white)}'>$units</font>"
+        s += "<font color='${rh.gc(R.color.white)}'>$units</font>"
         return s
     }
 
     private fun formatColors(text1: String, text2: String): String {
-        var s = "<font color='${resourceHelper.gc(R.color.tempbasal)}'>$text1</font>"
+        var s = "<font color='${rh.gc(R.color.tempbasal)}'>$text1</font>"
         s += "<BR/>"
-        s += "<font color='${resourceHelper.gc(R.color.examinedProfile)}'>$text2</font>"
+        s += "<font color='${rh.gc(R.color.examinedProfile)}'>$text2</font>"
         return s
     }
 
@@ -226,7 +225,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             val val1 = profile1.getBasalTimeFromMidnight(hour * 60 * 60)
             val val2 = profile2.getBasalTimeFromMidnight(hour * 60 * 60)
             if (val1 != prev1 || val2 != prev2) {
-                s.append(formatColors(dateUtil.format_HH_MM(hour * 60 * 60), val1, val2, DecimalFormat("0.00"), " " + resourceHelper.gs(R.string.profile_ins_units_per_hour)))
+                s.append(formatColors(dateUtil.format_HH_MM(hour * 60 * 60), val1, val2, DecimalFormat("0.00"), " " + rh.gs(R.string.profile_ins_units_per_hour)))
                 s.append("<br>")
             }
             prev1 = val1
@@ -237,7 +236,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             profile1.baseBasalSum(),
             profile2.baseBasalSum(),
             DecimalFormat("0.00"),
-            resourceHelper.gs(R.string.insulin_unit_shortname)))
+            rh.gs(R.string.insulin_unit_shortname)))
         return HtmlHelper.fromHtml(s.toString())
     }
 
@@ -249,7 +248,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             val val1 = profile1.getIcTimeFromMidnight(hour * 60 * 60)
             val val2 = profile2.getIcTimeFromMidnight(hour * 60 * 60)
             if (val1 != prev1 || val2 != prev2) {
-                s.append(formatColors(dateUtil.format_HH_MM(hour * 60 * 60), val1, val2, DecimalFormat("0.0"), " " + resourceHelper.gs(R.string.profile_carbs_per_unit)))
+                s.append(formatColors(dateUtil.format_HH_MM(hour * 60 * 60), val1, val2, DecimalFormat("0.0"), " " + rh.gs(R.string.profile_carbs_per_unit)))
                 s.append("<br>")
             }
             prev1 = val1
@@ -267,7 +266,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             val val1 = Profile.fromMgdlToUnits(profile1.getIsfMgdlTimeFromMidnight(hour * 60 * 60), units)
             val val2 = Profile.fromMgdlToUnits(profile2.getIsfMgdlTimeFromMidnight(hour * 60 * 60), units)
             if (val1 != prev1 || val2 != prev2) {
-                s.append(formatColors(dateUtil.format_HH_MM(hour * 60 * 60), val1, val2, DecimalFormat("0.0"), units.asText + " " + resourceHelper.gs(R.string.profile_per_unit)))
+                s.append(formatColors(dateUtil.format_HH_MM(hour * 60 * 60), val1, val2, DecimalFormat("0.0"), units.asText + " " + rh.gs(R.string.profile_per_unit)))
                 s.append("<br>")
             }
             prev1 = val1

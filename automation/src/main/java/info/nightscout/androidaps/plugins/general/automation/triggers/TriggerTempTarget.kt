@@ -14,14 +14,14 @@ import org.json.JSONObject
 
 class TriggerTempTarget(injector: HasAndroidInjector) : Trigger(injector) {
 
-    var comparator = ComparatorExists(resourceHelper)
+    var comparator = ComparatorExists(rh)
 
     constructor(injector: HasAndroidInjector, compare: ComparatorExists.Compare) : this(injector) {
-        comparator = ComparatorExists(resourceHelper, compare)
+        comparator = ComparatorExists(rh, compare)
     }
 
     constructor(injector: HasAndroidInjector, triggerTempTarget: TriggerTempTarget) : this(injector) {
-        comparator = ComparatorExists(resourceHelper, triggerTempTarget.comparator.value)
+        comparator = ComparatorExists(rh, triggerTempTarget.comparator.value)
     }
 
     fun comparator(comparator: ComparatorExists.Compare): TriggerTempTarget {
@@ -56,7 +56,7 @@ class TriggerTempTarget(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyName(): Int = R.string.careportal_temporarytarget
 
     override fun friendlyDescription(): String =
-        resourceHelper.gs(R.string.temptargetcompared, resourceHelper.gs(comparator.value.stringRes))
+        rh.gs(R.string.temptargetcompared, rh.gs(comparator.value.stringRes))
 
     override fun icon(): Optional<Int?> = Optional.of(R.drawable.ic_keyboard_tab)
 
@@ -64,7 +64,7 @@ class TriggerTempTarget(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(resourceHelper, R.string.careportal_temporarytarget, this))
+            .add(StaticLabel(rh, R.string.careportal_temporarytarget, this))
             .add(comparator)
             .build(root)
     }

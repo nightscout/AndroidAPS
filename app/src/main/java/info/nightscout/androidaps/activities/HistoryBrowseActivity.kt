@@ -24,7 +24,7 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus
 import info.nightscout.androidaps.plugins.general.overview.OverviewData
 import info.nightscout.androidaps.plugins.general.overview.OverviewMenus
@@ -50,7 +50,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var sp: SP
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
@@ -89,8 +89,8 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         setContentView(binding.root)
 
         // We don't want to use injected singletons but own instance working on top of different data
-        iobCobCalculator = IobCobCalculatorPlugin(injector, aapsLogger, aapsSchedulers, rxBus, sp, resourceHelper, profileFunction, activePlugin, sensitivityOref1Plugin, sensitivityAAPSPlugin, sensitivityWeightedAveragePlugin, fabricPrivacy, dateUtil, repository)
-        overviewData = OverviewData(injector, aapsLogger, resourceHelper, dateUtil, sp, activePlugin, defaultValueHelper, profileFunction, config, loopPlugin, nsDeviceStatus, repository, overviewMenus, iobCobCalculator, translator)
+        iobCobCalculator = IobCobCalculatorPlugin(injector, aapsLogger, aapsSchedulers, rxBus, sp, rh, profileFunction, activePlugin, sensitivityOref1Plugin, sensitivityAAPSPlugin, sensitivityWeightedAveragePlugin, fabricPrivacy, dateUtil, repository)
+        overviewData = OverviewData(injector, aapsLogger, rh, dateUtil, sp, activePlugin, defaultValueHelper, profileFunction, config, loopPlugin, nsDeviceStatus, repository, overviewMenus, iobCobCalculator, translator)
 
         binding.left.setOnClickListener {
             adjustTimeRange(overviewData.fromTime - T.hours(rangeToDisplay.toLong()).msecs())
@@ -158,7 +158,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
 
 
         axisWidth = if (dm.densityDpi <= 120) 3 else if (dm.densityDpi <= 160) 10 else if (dm.densityDpi <= 320) 35 else if (dm.densityDpi <= 420) 50 else if (dm.densityDpi <= 560) 70 else 80
-        binding.bgGraph.gridLabelRenderer?.gridColor = resourceHelper.gc(R.color.graphgrid)
+        binding.bgGraph.gridLabelRenderer?.gridColor = rh.gc(R.color.graphgrid)
         binding.bgGraph.gridLabelRenderer?.reloadStyles()
         binding.bgGraph.gridLabelRenderer?.labelVerticalWidth = axisWidth
 
@@ -171,7 +171,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         }
     }
 
-    public override fun onPause() {
+    override fun onPause() {
         super.onPause()
         disposable.clear()
         iobCobCalculator.stopCalculation("onPause")
@@ -183,38 +183,35 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         super.onDestroy()
     }
 
-    public override fun onResume() {
+    override fun onResume() {
         super.onResume()
-        disposable.add(rxBus
-                .toObservable(EventAutosensCalculationFinished::class.java)
-                .observeOn(aapsSchedulers.io)
-                .subscribe({
-                    // catch only events from iobCobCalculator
-                    if (it.cause is EventCustomCalculationFinished)
-                        refreshLoop("EventAutosensCalculationFinished")
-                }, fabricPrivacy::logException)
-        )
-        disposable.add(rxBus
-                .toObservable(EventIobCalculationProgress::class.java)
-                .observeOn(aapsSchedulers.main)
-                .subscribe({
-                    if (it.cause is EventCustomCalculationFinished)
-                        binding.overviewIobcalculationprogess.text = it.progress
-                }, fabricPrivacy::logException)
-        )
-        disposable.add(rxBus
-                .toObservable(EventRefreshOverview::class.java)
-                .observeOn(aapsSchedulers.main)
-                .subscribe({ updateGUI("EventRefreshOverview") }, fabricPrivacy::logException)
-        )
         disposable += rxBus
-                .toObservable(EventBucketedDataCreated::class.java)
-                .observeOn(aapsSchedulers.io)
-                .subscribe({
-                    overviewData.prepareBucketedData("EventBucketedDataCreated")
-                    overviewData.prepareBgData("EventBucketedDataCreated")
-                    rxBus.send(EventRefreshOverview("EventBucketedDataCreated"))
-                }, fabricPrivacy::logException)
+            .toObservable(EventAutosensCalculationFinished::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({
+                           // catch only events from iobCobCalculator
+                           if (it.cause is EventCustomCalculationFinished)
+                               refreshLoop("EventAutosensCalculationFinished")
+                       }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventIobCalculationProgress::class.java)
+            .observeOn(aapsSchedulers.main)
+            .subscribe({
+                           if (it.cause is EventCustomCalculationFinished)
+                               binding.overviewIobcalculationprogess.text = it.progress
+                       }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventRefreshOverview::class.java)
+            .observeOn(aapsSchedulers.main)
+            .subscribe({ updateGUI("EventRefreshOverview") }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventBucketedDataCreated::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({
+                           overviewData.prepareBucketedData("EventBucketedDataCreated")
+                           overviewData.prepareBgData("EventBucketedDataCreated")
+                           rxBus.send(EventRefreshOverview("EventBucketedDataCreated"))
+                       }, fabricPrivacy::logException)
 
         if (overviewData.fromTime == 0L) {
             // set start of current day
@@ -244,8 +241,8 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
                 relativeLayout.layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
 
                 val graph = GraphView(this)
-                graph.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, resourceHelper.dpToPx(100)).also { it.setMargins(0, resourceHelper.dpToPx(15), 0, resourceHelper.dpToPx(10)) }
-                graph.gridLabelRenderer?.gridColor = resourceHelper.gc(R.color.graphgrid)
+                graph.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, rh.dpToPx(100)).also { it.setMargins(0, rh.dpToPx(15), 0, rh.dpToPx(10)) }
+                graph.gridLabelRenderer?.gridColor = rh.gc(R.color.graphgrid)
                 graph.gridLabelRenderer?.reloadStyles()
                 graph.gridLabelRenderer?.isHorizontalLabelsVisible = false
                 graph.gridLabelRenderer?.labelVerticalWidth = axisWidth
@@ -254,7 +251,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
                 relativeLayout.addView(graph)
 
                 val label = TextView(this)
-                val layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).also { it.setMargins(resourceHelper.dpToPx(30), resourceHelper.dpToPx(25), 0, 0) }
+                val layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).also { it.setMargins(rh.dpToPx(30), rh.dpToPx(25), 0, 0) }
                 layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP)
                 layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
                 label.layoutParams = layoutParams
@@ -271,9 +268,12 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
     private fun loadAll(from: String) {
         updateDate()
         Thread {
-            overviewData.prepareBasalData(from)
-            overviewData.prepareTemporaryTargetData(from)
+            overviewData.prepareBgData("$from")
             overviewData.prepareTreatmentsData(from)
+            rxBus.send(EventRefreshOverview("loadAll_$from"))
+            overviewData.prepareTemporaryTargetData(from)
+            rxBus.send(EventRefreshOverview("loadAll_$from"))
+            overviewData.prepareBasalData(from)
             rxBus.send(EventRefreshOverview(from))
             aapsLogger.debug(LTag.UI, "loadAll $from finished")
             runCalculation(from)

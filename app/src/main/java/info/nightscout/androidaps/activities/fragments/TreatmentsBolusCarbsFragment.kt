@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.activities.fragments
 
+import android.annotation.SuppressLint
 import android.graphics.Paint
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -24,22 +25,22 @@ import info.nightscout.androidaps.databinding.TreatmentsBolusCarbsItemBinding
 import info.nightscout.androidaps.dialogs.WizardInfoDialog
 import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.events.EventTreatmentChange
+import info.nightscout.androidaps.events.EventTreatmentUpdateGui
+import info.nightscout.androidaps.extensions.iobCalc
+import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
-import info.nightscout.androidaps.events.EventTreatmentUpdateGui
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
-import info.nightscout.androidaps.extensions.iobCalc
-import info.nightscout.androidaps.extensions.toVisibility
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -49,13 +50,14 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlin.math.abs
 
 class TreatmentsBolusCarbsFragment : DaggerFragment() {
 
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var sp: SP
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var dateUtil: DateUtil
@@ -84,6 +86,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         TreatmentsBolusCarbsFragmentBinding.inflate(inflater, container, false).also { _binding = it }.root
 
+    @SuppressLint("CheckResult")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.recyclerview.setHasFixedSize(true)
@@ -91,7 +94,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
 
         binding.refreshFromNightscout.setOnClickListener {
             activity?.let { activity ->
-                OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.refresheventsfromnightscout) + "?") {
+                OKDialog.showConfirmation(activity, rh.gs(R.string.refresheventsfromnightscout) + "?") {
                     uel.log(Action.TREATMENTS_NS_REFRESH, Sources.Treatments)
                     disposable +=
                         Completable.fromAction {
@@ -114,7 +117,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
         }
         binding.deleteFutureTreatments.setOnClickListener {
             activity?.let { activity ->
-                OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.overview_treatment_label), resourceHelper.gs(R.string.deletefuturetreatments) + "?", Runnable {
+                OKDialog.showConfirmation(activity, rh.gs(R.string.overview_treatment_label), rh.gs(R.string.deletefuturetreatments) + "?", Runnable {
                     uel.log(Action.DELETE_FUTURE_TREATMENTS, Sources.Treatments)
                     repository
                         .getBolusesDataFromTime(dateUtil.now(), false)
@@ -276,28 +279,36 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
             holder.binding.bolusLayout.visibility = (ml.bolus != null && (ml.bolus.isValid || binding.showInvalidated.isChecked)).toVisibility()
             ml.bolus?.let { bolus ->
                 holder.binding.bolusDate.text = dateUtil.timeString(bolus.timestamp)
-                holder.binding.insulin.text = resourceHelper.gs(R.string.formatinsulinunits, bolus.amount)
+                holder.binding.insulin.text = rh.gs(R.string.formatinsulinunits, bolus.amount)
                 holder.binding.bolusNs.visibility = (bolus.interfaceIDs.nightscoutId != null).toVisibility()
                 holder.binding.bolusPump.visibility = (bolus.interfaceIDs.pumpId != null).toVisibility()
                 holder.binding.bolusInvalid.visibility = bolus.isValid.not().toVisibility()
                 val iob = bolus.iobCalc(activePlugin, System.currentTimeMillis(), profile.dia)
-                holder.binding.iob.text = resourceHelper.gs(R.string.formatinsulinunits, iob.iobContrib)
-                holder.binding.iobLabel.visibility = (iob.iobContrib != 0.0).toVisibility()
-                holder.binding.iob.visibility = (iob.iobContrib != 0.0).toVisibility()
-                if (bolus.timestamp > dateUtil.now()) holder.binding.date.setTextColor(resourceHelper.gc(R.color.colorScheduled)) else holder.binding.date.setTextColor(holder.binding.carbs.currentTextColor)
+                if (iob.iobContrib > 0.01) {
+                    holder.binding.iob.setTextColor(rh.gc(R.color.colorActive))
+                    holder.binding.iob.text = rh.gs(R.string.formatinsulinunits, iob.iobContrib)
+                    holder.binding.iobLabel.visibility = View.VISIBLE
+                    holder.binding.iob.visibility = View.VISIBLE
+                } else {
+                    holder.binding.iob.text = rh.gs(R.string.formatinsulinunits, 0.0)
+                    holder.binding.iob.setTextColor(holder.binding.insulin.currentTextColor)
+                    holder.binding.iobLabel.visibility = View.GONE
+                    holder.binding.iob.visibility = View.GONE
+                }
+                if (bolus.timestamp > dateUtil.now()) holder.binding.date.setTextColor(rh.gc(R.color.colorScheduled)) else holder.binding.date.setTextColor(holder.binding.carbs.currentTextColor)
                 holder.binding.mealOrCorrection.text =
                     when (ml.bolus.type) {
                         Bolus.Type.SMB     -> "SMB"
-                        Bolus.Type.NORMAL  -> resourceHelper.gs(R.string.mealbolus)
-                        Bolus.Type.PRIMING -> resourceHelper.gs(R.string.prime)
+                        Bolus.Type.NORMAL  -> rh.gs(R.string.mealbolus)
+                        Bolus.Type.PRIMING -> rh.gs(R.string.prime)
                     }
             }
             // Carbs
             holder.binding.carbsLayout.visibility = (ml.carbs != null && (ml.carbs.isValid || binding.showInvalidated.isChecked)).toVisibility()
             ml.carbs?.let { carbs ->
                 holder.binding.carbsDate.text = dateUtil.timeString(carbs.timestamp)
-                holder.binding.carbs.text = resourceHelper.gs(R.string.format_carbs, carbs.amount.toInt())
-                holder.binding.carbsDuration.text = if (carbs.duration > 0) resourceHelper.gs(R.string.format_mins, T.msecs(carbs.duration).mins().toInt()) else ""
+                holder.binding.carbs.text = rh.gs(R.string.format_carbs, carbs.amount.toInt())
+                holder.binding.carbsDuration.text = if (carbs.duration > 0) rh.gs(R.string.format_mins, T.msecs(carbs.duration).mins().toInt()) else ""
                 holder.binding.carbsNs.visibility = (carbs.interfaceIDs.nightscoutId != null).toVisibility()
                 holder.binding.carbsPump.visibility = (carbs.interfaceIDs.pumpId != null).toVisibility()
                 holder.binding.carbsInvalid.visibility = carbs.isValid.not().toVisibility()
@@ -320,7 +331,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
 
             init {
                 binding.calculation.setOnClickListener {
-                    val mealLinkLoaded = it.tag as MealLink
+                    val mealLinkLoaded = it.tag as MealLink? ?: return@setOnClickListener
                     mealLinkLoaded.bolusCalculatorResult?.let { bolusCalculatorResult ->
                         WizardInfoDialog().also { wizardDialog ->
                             wizardDialog.setData(bolusCalculatorResult)
@@ -332,10 +343,10 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                 binding.bolusRemove.setOnClickListener { ml ->
                     val bolus = (ml.tag as MealLink?)?.bolus ?: return@setOnClickListener
                     activity?.let { activity ->
-                        val text = resourceHelper.gs(R.string.configbuilder_insulin) + ": " +
-                            resourceHelper.gs(R.string.formatinsulinunits, bolus.amount) + "\n" +
-                            resourceHelper.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(bolus.timestamp)
-                        OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord), text, Runnable {
+                        val text = rh.gs(R.string.configbuilder_insulin) + ": " +
+                            rh.gs(R.string.formatinsulinunits, bolus.amount) + "\n" +
+                            rh.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(bolus.timestamp)
+                        OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord), text, Runnable {
                             uel.log(
                                 Action.BOLUS_REMOVED, Sources.Treatments,
                                 ValueWithUnit.Timestamp(bolus.timestamp),
@@ -354,14 +365,15 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                 binding.carbsRemove.setOnClickListener { ml ->
                     val carb = (ml.tag as MealLink?)?.carbs ?: return@setOnClickListener
                     activity?.let { activity ->
-                        val text = resourceHelper.gs(R.string.carbs) + ": " +
-                            resourceHelper.gs(R.string.carbs) + ": " + resourceHelper.gs(R.string.format_carbs, carb.amount.toInt()) + "\n" +
-                            resourceHelper.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(carb.timestamp)
-                        OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord), text, Runnable {
+                        val text = rh.gs(R.string.carbs) + ": " +
+                            rh.gs(R.string.carbs) + ": " + rh.gs(R.string.format_carbs, carb.amount.toInt()) + "\n" +
+                            rh.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(carb.timestamp)
+                        OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord), text, Runnable {
                             uel.log(
                                 Action.CARBS_REMOVED, Sources.Treatments,
                                 ValueWithUnit.Timestamp(carb.timestamp),
-                                ValueWithUnit.Gram(carb.amount.toInt()))
+                                ValueWithUnit.Gram(carb.amount.toInt())
+                            )
                             disposable += repository.runTransactionForResult(InvalidateCarbsTransaction(carb.id))
                                 .subscribe(
                                     { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated carbs $it") } },

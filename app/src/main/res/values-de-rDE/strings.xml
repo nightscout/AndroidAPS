@@ -12,7 +12,6 @@
     <string name="nav_resetdb">Datenbanken zurücksetzen</string>
     <string name="reset_db_confirm">Möchtest du die Datenbank wirklich zurücksetzen?</string>
     <string name="nav_exit">Schließen</string>
-    <string name="ns_sync_use_absolute_title">Verwende absolute statt prozentuale Basalwerte beim Upload zu NightScout.</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Dieses Gerät scheint keine Deaktivierung der Energieoptimierung zu unterstützen - das könnte zu Leistungsproblemen führen.</string>
     <string name="description_actions">Einige Schaltflächen, um auf häufig verwendete Funktionen zugreifen zu können.</string>
     <string name="description_config_builder">Dient zum Konfigurieren der aktiven Plugins</string>
@@ -78,7 +77,6 @@
     <string name="overview">Übersicht</string>
     <string name="treatments">Behandlungen</string>
     <string name="virtualpump">Virtuelle Pumpe</string>
-    <string name="careportal">Careportal</string>
     <string name="configbuilder_pump">Pumpe</string>
     <string name="configbuilder_pump_description">Welche Pumpe möchtest Du mit AndroidAPS nutzen?</string>
     <string name="configbuilder_profile">Profil</string>
@@ -98,7 +96,7 @@
     <string name="safety">Sicherheit</string>
     <string name="openapsma_disabled">Plugin ist deaktiviert</string>
     <string name="constraints_violation">Beschränkungen wurden verletzt oder Limit erreicht.</string>
-    <string name="treatmentdeliveryerror">Bolus-Abgabefehler</string>
+    <string name="treatmentdeliveryerror">Fehlermeldung Bolusabgabe. Prüfe manuell die tatsächlich abgegebene Menge.</string>
     <string name="setbasalquestion">Akzeptiere neue TBR:</string>
     <string name="overview_treatment_label">Bolus</string>
     <string name="overview_calculator_label">Rechner</string>
@@ -257,7 +255,7 @@
     <string name="ongoingnotificaction">Anhaltende Benachrichtigung</string>
     <string name="old_data">VERALTETE DATEN</string>
     <string name="sms_minago">%1$d\' her</string>
-    <string name="localprofile">Lokales Profil</string>
+    <string name="localprofile">Profil</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Array mit %1$d Elementen.\nWert:</string>
     <string name="openapsma_autosensdata_label">Autosens-Daten</string>
@@ -494,6 +492,7 @@
     <string name="dexcomg5_xdripupload_title">Sende BZ-Werte zu xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">Wähle in xDrip+ 640g/Eversense als Daten-Quelle.</string>
     <string name="nsclientbg">Nightscout-Client BZ</string>
+    <string name="nsclientbgshort">NS BZ</string>
     <string name="overview_editquickwizard_usebg">BZ Berechnung</string>
     <string name="overview_editquickwizard_usebolusiob">Bolus-IOB Berechnung</string>
     <string name="overview_editquickwizard_usebasaliob">Basal-IOB Berechnung</string>
@@ -650,6 +649,8 @@
     <string name="time_elapsed">Verstrichene Zeit</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Empfange Blutzucker-Werte von der Poctech-App.</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Werte von der Glunovo App erhalten</string>
     <string name="description_source_tomato">Empfange Blutzucker-Werte von der Tomato-App (MiaoMiao-Geräte)</string>
     <string name="high_temptarget_raises_sensitivity_title">Hohe temporäre Ziele erhöhen die Sensitivität</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Erhöhe die Sensitivität für temporäre Ziele >= 100.]]></string>
@@ -665,7 +666,6 @@
     <string name="error_adding_treatment_title">Behandlungsdaten unvollständig</string>
     <string name="maintenance_settings">Wartungseinstellungen</string>
     <string name="maintenance_email">E-Mail</string>
-    <string name="maintenance_encrypt_exported_prefs">Exportierte Einstellungen verschlüsseln</string>
     <string name="maintenance_amount">Anzahl der zu sendenden Logs</string>
     <string name="maintenance">Wartung</string>
     <string name="maintenance_shortname">WRTNG</string>
@@ -679,6 +679,7 @@
     <string name="resettodefaults">Auf Standardwerte zurücksetzen</string>
     <string name="nsmalfunction">NSClient Störung. Ziehe einen Neustart von NS und NSClient in Betracht.</string>
     <string name="time_offset">Zeitversatz</string>
+    <string name="bolus_reminder">Später an Bolus erinnern</string>
     <string name="setupwizard_preferred_aps_mode">Bevorzugter APS-Modus</string>
     <string name="treatments_wizard_total_label">Gesamt</string>
     <string name="calculation_short">Berech.</string>
@@ -718,11 +719,12 @@ Unerwartetes Verhalten.</string>
     <string name="versionChecker">Versionsprüfer</string>
     <string name="old_version">Vorherige Version</string>
     <string name="very_old_version">sehr alte Version</string>
+    <string name="application_expired">Anwendung abgelaufen</string>
     <string name="new_version_warning">Neue Version seit mindestens %1$d Tagen verfügbar! Rückfall zur sensorunterstützten Pumpentherapie nach %2$d Tagen, Loop wird nach  %3$d Tagen deaktiviert.</string>
     <string name="twohours">2h</string>
-    <string name="dexcom_app_patched">gepatchte Dexcom App</string>
-    <string name="dexcom_short">DXCM</string>
-    <string name="description_source_dexcom">Empfange Blutzucker-Werte von der gepatchten Dexcom App.</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Erhalte BZ-Werte von der \'Build Your Own Dexcom App\'.</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="bolusconstraintappliedwarn">Bolus Einschränkung angewandt: %2$.2f U statt %1$.2f U</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Langsamer Kohlenhydrat-Abbau erkannt: %2$d%% der Zeit. Überprüfe Deine Berechnung. COB könnte zu hoch sein und deswegen zu viel Insulin abgegeben werden!!!!!</font>]]></string>
@@ -751,7 +753,7 @@ Unerwartetes Verhalten.</string>
     <string name="clone_label">Klonen</string>
     <string name="saveorresetchangesfirst">Speichere oder verwerfe die aktuellen Änderungen zuerst</string>
     <string name="deletecurrentprofile">Aktuelles Profil löschen?</string>
-    <string name="copytolocalprofile">Neues lokales Profil auf Basis dieses Profils erstellen?</string>
+    <string name="copytolocalprofile">Neues Profil auf Basis dieses Profils erstellen?</string>
     <string name="profilenamecontainsdot">Profilname enthält Punkte.\nDies wird von NS nicht unterstützt.\nProfil wird nicht zu NS hochgeladen.</string>
     <string name="low_mark_comment">Unterer Wert des Zielbereichs (nur Anzeige)</string>
     <string name="high_mark_comment">Oberer Wert des Zielbereichs (nur Anzeige)</string>
@@ -833,7 +835,7 @@ Unerwartetes Verhalten.</string>
     <string name="dpvdefaultprofile">DPV-Standard-Profil</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink Status:</string>
     <string name="filter">Filter</string>
-    <string name="copytolocalprofile_invalid">Lokales Profil kann nicht erstellt werden. Profil ist ungültig.</string>
+    <string name="copytolocalprofile_invalid">Profil kann nicht erstellt werden. Profil ist ungültig.</string>
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
     <string name="smscommunicator_report_pump_ureachable_summary">SMS senden, wenn Pumpe nicht erreichbar</string>
     <string name="smscommunicator_pump_ureachable">Hinweis Pumpe nicht erreichbar</string>
@@ -845,6 +847,11 @@ Unerwartetes Verhalten.</string>
     <string name="enablebolusadvisor_summary">Option zur Erinnerung an späteres Essen (z.B. bei hohen BZ-Werten) im Bolus-Rechner (\"Spritz-Ess-Abstand\")</string>
     <string name="time_to_eat">Zeit zum Essen!\nStarte den Bolus-Rechner und gib die KH ein. </string>
     <string name="timetoeat">Zeit zum Essen</string>
+    <string name="bolusreminder">Bolus-Erinnerung</string>
+    <string name="enablebolusreminder">Bolus-Erinnerung aktivieren</string>
+    <string name="enablebolusreminder_summary">Erinnerung an späteren Bolus mit dem Assistenten verwenden
+        (\"Post-Bolus\")</string>
+    <string name="time_to_bolus">Zeit für den nächsten Bolus!\nFühre den Bolus-Assistenten aus, um die Berechnung erneut durchzuführen.</string>
     <string name="fabric_upload_disabled">Hochladen von Crash-Protokollen deaktiviert!</string>
     <string name="graph_menu_divider_header">Diagramm</string>
     <string name="chart_menu">Diagrammmenü</string>
@@ -853,21 +860,24 @@ Unerwartetes Verhalten.</string>
     <string name="cannula">Kanüle</string>
     <string name="userentry">Benutzereingabe</string>
     <string name="common_values">Verwende die Werte der größten Mahlzeit, die Du normalerweise zu Dir nimmst\n</string>
-    <string name="summary_email_for_crash_report">Diese E-Mail-Adresse wird an Absturzberichte angehängt, so dass wir Dich in dringenden Fällen kontaktieren können. Angabe ist optional.</string>
+    <string name="summary_email_for_crash_report">Diese Identifikation wird an Absturzberichte angehängt, so dass wir Dich in dringenden Fällen kontaktieren können. Angabe ist optional.</string>
     <string name="email_address">E‐Mail‐Adresse</string>
     <string name="privacy_settings">Privatsphäre-Einstellungen</string>
     <string name="privacy_summary">Du kannst optional eine E-Mail-Adresse angeben, wenn Du bei Absturzberichten kontaktiert werden möchtest. Dies ist keine Automatik, Du wirst von den Entwicklern in gefährlichen Situationen kontaktiert. </string>
-    <string name="full_sync">Vollständige Sync</string>
+    <string name="full_sync">Vollständige Synchronisierung</string>
+    <string name="full_sync_comment">Vollständige Synchronisierung? Es kann viele Stunden dauern und bis zur Fertigstellung wirst du keine neuen Daten in NS sehen.</string>
     <string name="prime">Füllen</string>
     <string name="ns_sync_options">Synchronisierung</string>
     <string name="ns_upload_summary">Profile, Boli, Kohlenhydrate und temporäre Basalraten werden zu NS hochgeladen</string>
     <string name="ns_upload">Daten zu NS hochladen</string>
     <string name="ns_receive_profile_store">Gespeicherte Profile abrufen</string>
-    <string name="ns_receive_profile_store_summary">Profile vom NS-Profil-Editors zu lokalen Profil synchronisieren</string>
+    <string name="ns_receive_profile_store_summary">Profile mit NS Profil-Editor synchronisieren</string>
     <string name="ns_receive_temp_target">Temporäre Ziele abrufen</string>
     <string name="ns_receive_temp_target_summary">Temp. Ziele akzeptieren, die in NS oder NSClient eingegeben wurden</string>
     <string name="ns_receive_profile_switch">Profilwechsel abrufen</string>
     <string name="ns_receive_profile_switch_summary">Profilwechsel akzeptieren, die in NS oder NSClient eingegeben wurden</string>
+    <string name="ns_receive_offline_event">APS Offline-Ereignisse empfangen</string>
+    <string name="ns_receive_offline_event_summary">APS Offline-Ereignisse akzeptieren, die über NS oder NSClient eingegeben wurden</string>
     <string name="ns_receive_insulin">Insulin abrufen</string>
     <string name="ns_receive_insulin_summary">Insulin akzeptieren, das in NS oder NSClient eingegeben wurden</string>
     <string name="ns_receive_carbs">Kohlenhydrate abrufen</string>
@@ -878,4 +888,19 @@ Unerwartetes Verhalten.</string>
     <string name="ns_receive_cgm_summary">CGM Daten von NS akzeptieren</string>
     <string name="sms_timeout_while_wating">Zeitüberschreitung beim Warten auf das Ende der vorherigen Kommunikation mit der Pumpe</string>
     <string name="smscommunicator_another_bolus_in_queue">In der Warteschlange befindet sich ein weiterer Bolus. Bitte später erneut versuchen.</string>
+    <string name="calculation_in_progress">Kalkulation wird gerade durchgeführt</string>
+    <string name="missing_profile_name">Fehlender Profilname</string>
+    <string name="error_in_ic_values">Fehler in IC-Werten</string>
+    <string name="error_in_basal_values">Fehler in den Basalwerten</string>
+    <string name="error_in_target_values">Fehler in den Zielwerten</string>
+    <string name="error_in_isf_values">Fehler in ISF-Werten</string>
+    <string name="run_question">%s ausführen?</string>
+    <string name="invalid_profile_not_accepted">Ungültiges Profil %1$s wurde von NS nicht akzeptiert</string>
+    <string name="errors">Fehler</string>
+    <string name="ns_sync_slow">Hochladen verlangsamen</string>
+    <string name="data_status">Status BZ-Daten</string>
+    <string name="recalculated_data_used">Verwendete Daten neu berechnet</string>
+    <string name="bg_too_close">BZ zu nah:\n%1$s\n%2$s</string>
+    <string name="identification">Identifikation (E-Mail, Facebook oder Discord Nickname)</string>
+    <string name="identification_not_set">Identifikation im Dev-Modus nicht gesetzt</string>
 </resources>

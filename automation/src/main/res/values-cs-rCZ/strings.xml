@@ -6,7 +6,7 @@
     <string name="automation_missing_task_name">Zadejte prosím název úlohy.</string>
     <string name="automation_missing_trigger">Prosím zadejte alespoň jednu podmínku.</string>
     <string name="automation_missing_action">Prosím zadejte alespoň jednu akci.</string>
-    <string name="alarm_message">Poplach: %1$s</string>
+    <string name="alarm_message">Alarm: %1$s</string>
     <string name="alarm_short">Alarm:</string>
     <string name="message_short">Zpráva:</string>
     <string name="alreadyenabled">Aktuálně povoleno</string>
@@ -38,6 +38,9 @@
     <string name="glucoseisnotavailable">Glykémie není k dispozici</string>
     <string name="glucosecomparedmgdl">Glykémie %1$s %2$.0f %3$s</string>
     <string name="glucosecomparedmmol">Glykémie %1$s %2$.1f %3$s</string>
+    <string name="notemptarget">Dočasný cíl neexistuje</string>
+    <string name="temptargetcomparedmgdl">Dočasný cíl %1$s %2$.0f %3$s</string>
+    <string name="temptargetcomparedmmol">Dočasný cíl %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">Profil pct %1$s %2$d</string>
     <string name="iobcompared">IOB %1$s %2$.1f</string>
     <string name="and">A</string>
@@ -86,6 +89,7 @@
     <string name="latitude_short">Zem. šířka:</string>
     <string name="longitude_short">Zem. délka:</string>
     <string name="glucose_u">Glykémie [%1$s]:</string>
+    <string name="target_u">Cíl [%1$s]:</string>
     <string name="lastboluslabel">Poslední bolus</string>
     <string name="lastboluscompared">Poslední bolus %1$s před %2$s min</string>
     <string name="triggercoblabel">COB</string>
@@ -101,9 +105,11 @@
     <string name="edit_short">EDIT</string>
     <string name="please_choose_an_action_type">Vyberte akci</string>
     <string name="please_choose_a_trigger_type">Vyberte podmínku</string>
+    <string name="please_choose_a_operation_type">Vyberte typ operace</string>
     <string name="triggers">Podmínky:</string>
     <string name="remove_label">ODSTRANIT</string>
     <string name="preconditions">Nutné podmínky:</string>
     <string name="automation_event">Událost automatizace</string>
     <string name="reorder_label">Změna pořadí</string>
+    <string name="user_action">Uživatelská akce</string>
 </resources>

@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.queue.commands
 
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.queue.Callback
@@ -21,5 +22,5 @@ class CommandExtendedBolus constructor(
         callback?.result(r)?.run()
     }
 
-    override fun status(): String = "EXTENDEDBOLUS $insulin U $durationInMinutes min"
+    override fun status(): String = rh.gs(R.string.extended_bolus_u_min, insulin, durationInMinutes)
 }

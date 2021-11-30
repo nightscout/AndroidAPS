@@ -9,6 +9,7 @@ import info.nightscout.androidaps.databinding.ActivityStatsBinding
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.utils.ActivityMonitor
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.stats.TddCalculator
 import info.nightscout.androidaps.utils.stats.TirCalculator
 import javax.inject.Inject
@@ -28,9 +29,9 @@ class StatsActivity : NoSplashAppCompatActivity() {
         binding = ActivityStatsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.tdds.text = getString(R.string.tdd) + ": " + getString(R.string.calculation_in_progress)
-        binding.tir.text = getString(R.string.tir) + ": " + getString(R.string.calculation_in_progress)
-        binding.activity.text = getString(R.string.activitymonitor) + ": " + getString(R.string.calculation_in_progress)
+        binding.tdds.text = getString(R.string.tdd) + ": " + rh.gs(R.string.calculation_in_progress)
+        binding.tir.text = getString(R.string.tir) + ": " + rh.gs(R.string.calculation_in_progress)
+        binding.activity.text = rh.gs(R.string.activitymonitor) + ": " + rh.gs(R.string.calculation_in_progress)
 
         Thread {
             val tdds = tddCalculator.stats()
@@ -47,7 +48,7 @@ class StatsActivity : NoSplashAppCompatActivity() {
 
         binding.ok.setOnClickListener { finish() }
         binding.reset.setOnClickListener {
-            OKDialog.showConfirmation(this, resourceHelper.gs(R.string.doyouwantresetstats)) {
+            OKDialog.showConfirmation(this, rh.gs(R.string.doyouwantresetstats)) {
                 uel.log(Action.STAT_RESET, Sources.Stats)
                 activityMonitor.reset()
                 recreate()

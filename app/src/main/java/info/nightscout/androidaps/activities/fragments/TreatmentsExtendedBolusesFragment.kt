@@ -29,7 +29,7 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.activities.fragments.TreatmentsExtendedBolusesFragment.RecyclerViewAdapter.ExtendedBolusesViewHolder
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -49,8 +49,8 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
     private val millsToThePast = T.days(30).msecs()
 
     @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var rxBus: RxBusWrapper
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var profileFunction: ProfileFunction
@@ -128,18 +128,18 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
             @SuppressLint("SetTextI18n")
             if (extendedBolus.isInProgress(dateUtil)) {
                 holder.binding.date.text = dateUtil.dateAndTimeString(extendedBolus.timestamp)
-                holder.binding.date.setTextColor(resourceHelper.gc(R.color.colorActive))
+                holder.binding.date.setTextColor(rh.gc(R.color.colorActive))
             } else {
                 holder.binding.date.text = dateUtil.dateAndTimeString(extendedBolus.timestamp) + " - " + dateUtil.timeString(extendedBolus.end)
                 holder.binding.date.setTextColor(holder.binding.insulin.currentTextColor)
             }
             val profile = profileFunction.getProfile(extendedBolus.timestamp) ?: return
-            holder.binding.duration.text = resourceHelper.gs(R.string.format_mins, T.msecs(extendedBolus.duration).mins())
-            holder.binding.insulin.text = resourceHelper.gs(R.string.formatinsulinunits, extendedBolus.amount)
+            holder.binding.duration.text = rh.gs(R.string.format_mins, T.msecs(extendedBolus.duration).mins())
+            holder.binding.insulin.text = rh.gs(R.string.formatinsulinunits, extendedBolus.amount)
             val iob = extendedBolus.iobCalc(System.currentTimeMillis(), profile, activePlugin.activeInsulin)
-            holder.binding.iob.text = resourceHelper.gs(R.string.formatinsulinunits, iob.iob)
-            holder.binding.ratio.text = resourceHelper.gs(R.string.pump_basebasalrate, extendedBolus.rate)
-            if (iob.iob != 0.0) holder.binding.iob.setTextColor(resourceHelper.gc(R.color.colorActive)) else holder.binding.iob.setTextColor(holder.binding.insulin.currentTextColor)
+            holder.binding.iob.text = rh.gs(R.string.formatinsulinunits, iob.iob)
+            holder.binding.ratio.text = rh.gs(R.string.pump_basebasalrate, extendedBolus.rate)
+            if (iob.iob != 0.0) holder.binding.iob.setTextColor(rh.gc(R.color.colorActive)) else holder.binding.iob.setTextColor(holder.binding.insulin.currentTextColor)
             holder.binding.remove.tag = extendedBolus
         }
 
@@ -153,10 +153,10 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
                 binding.remove.setOnClickListener { v: View ->
                     val extendedBolus = v.tag as ExtendedBolus
                     context?.let { context ->
-                        OKDialog.showConfirmation(context, resourceHelper.gs(R.string.removerecord),
+                        OKDialog.showConfirmation(context, rh.gs(R.string.removerecord),
                             """
-                ${resourceHelper.gs(R.string.extended_bolus)}
-                ${resourceHelper.gs(R.string.date)}: ${dateUtil.dateAndTimeString(extendedBolus.timestamp)}
+                ${rh.gs(R.string.extended_bolus)}
+                ${rh.gs(R.string.date)}: ${dateUtil.dateAndTimeString(extendedBolus.timestamp)}
                 """.trimIndent(), { _: DialogInterface, _: Int ->
                             uel.log(Action.EXTENDED_BOLUS_REMOVED, Sources.Treatments,
                                 ValueWithUnit.Timestamp(extendedBolus.timestamp),

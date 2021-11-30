@@ -10,12 +10,11 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.events.Event
 import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData
@@ -49,8 +48,8 @@ class IobCobThread @Inject internal constructor(
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var sp: SP
-    @Inject lateinit var rxBus: RxBusWrapper
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var context: Context
     @Inject lateinit var sensitivityAAPSPlugin: SensitivityAAPSPlugin
@@ -66,7 +65,7 @@ class IobCobThread @Inject internal constructor(
 
     init {
         injector.androidInjector().inject(this)
-        mWakeLock = (context.applicationContext.getSystemService(Context.POWER_SERVICE) as PowerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, resourceHelper.gs(R.string.app_name) + ":iobCobThread")
+        mWakeLock = (context.applicationContext.getSystemService(Context.POWER_SERVICE) as PowerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, rh.gs(R.string.app_name) + ":iobCobThread")
     }
 
     override fun run() {
@@ -160,7 +159,7 @@ class IobCobThread @Inject internal constructor(
                                     aapsLogger.debug(LTag.AUTOSENS, autosensDataTable.toString())
                                     aapsLogger.debug(LTag.AUTOSENS, bucketedData.toString())
                                     //aapsLogger.debug(LTag.AUTOSENS, iobCobCalculatorPlugin.getBgReadingsDataTable().toString())
-                                    val notification = Notification(Notification.SEND_LOGFILES, resourceHelper.gs(R.string.sendlogfiles), Notification.LOW)
+                                    val notification = Notification(Notification.SEND_LOGFILES, rh.gs(R.string.sendlogfiles), Notification.LOW)
                                     rxBus.send(EventNewNotification(notification))
                                     sp.putBoolean("log_AUTOSENS", true)
                                     break
@@ -183,7 +182,7 @@ class IobCobThread @Inject internal constructor(
                             aapsLogger.debug(autosensDataTable.toString())
                             aapsLogger.debug(bucketedData.toString())
                             //aapsLogger.debug(iobCobCalculatorPlugin.getBgReadingsDataTable().toString())
-                            val notification = Notification(Notification.SEND_LOGFILES, resourceHelper.gs(R.string.sendlogfiles), Notification.LOW)
+                            val notification = Notification(Notification.SEND_LOGFILES, rh.gs(R.string.sendlogfiles), Notification.LOW)
                             rxBus.send(EventNewNotification(notification))
                             sp.putBoolean("log_AUTOSENS", true)
                             break
@@ -204,7 +203,7 @@ class IobCobThread @Inject internal constructor(
                 if (previous != null && previous.cob > 0) {
                     // calculate sum of min carb impact from all active treatments
                     var totalMinCarbsImpact = 0.0
-                    if (sensitivityAAPSPlugin.isEnabled(PluginType.SENSITIVITY) || sensitivityWeightedAveragePlugin.isEnabled(PluginType.SENSITIVITY)) {
+                    if (sensitivityAAPSPlugin.isEnabled() || sensitivityWeightedAveragePlugin.isEnabled()) {
                         //when the impact depends on a max time, sum them up as smaller carb sizes make them smaller
                         for (ii in autosensData.activeCarbsList.indices) {
                             val c = autosensData.activeCarbsList[ii]
@@ -218,11 +217,11 @@ class IobCobThread @Inject internal constructor(
                     // figure out how many carbs that represents
                     // but always assume at least 3mg/dL/5m (default) absorption per active treatment
                     val ci = max(deviation, totalMinCarbsImpact)
-                    if (ci != deviation) autosensData.failoverToMinAbsorbtionRate = true
+                    if (ci != deviation) autosensData.failOverToMinAbsorptionRate = true
                     autosensData.absorbed = ci * profile.getIc(bgTime) / sens
                     // and add that to the running total carbsAbsorbed
                     autosensData.cob = max(previous.cob - autosensData.absorbed, 0.0)
-                    autosensData.substractAbosorbedCarbs()
+                    autosensData.deductAbsorbedCarbs()
                     autosensData.usedMinCarbsImpact = totalMinCarbsImpact
                 }
                 val isAAPSOrWeighted = sensitivityAAPSPlugin.isEnabled() || sensitivityWeightedAveragePlugin.isEnabled()

@@ -124,7 +124,6 @@
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
-    <string name="noprofileselected">Nenhum perfil selecionado</string>
     <string name="startprofile">Iniciar perfil %1$d%% para %2$d min</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Somente valores discretos nos intervalos são suportados como granularidade para basal/bolus na bomba virtual.</string>
@@ -206,7 +205,6 @@
     <string name="metadata_label_device_name">Exportando nome do paciente do dispositivo</string>
     <string name="metadata_label_device_model">Exportando modelo do dispositivo</string>
     <string name="metadata_label_encryption">Criptografia do arquivo</string>
-    <string name="metadata_format_old">Antigo Formato de Exportação</string>
     <string name="metadata_format_new">Novo formato de encriptação</string>
     <string name="metadata_format_debug">Novo formato de depuração (não encriptado)</string>
     <string name="metadata_format_other">Formato de exportação desconhecido</string>
@@ -237,4 +235,5 @@
     <!-- WeekdayPicker -->
     <!-- User Entry -->
     <!-- HardLimits -->
+    <!-- Command Queue + readStatus reasons -->
 </resources>

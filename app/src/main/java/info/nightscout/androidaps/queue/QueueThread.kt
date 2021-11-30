@@ -8,9 +8,10 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
 import info.nightscout.androidaps.queue.events.EventQueueChanged
 import info.nightscout.androidaps.utils.T
@@ -21,9 +22,9 @@ class QueueThread internal constructor(
     private val queue: CommandQueue,
     context: Context,
     private val aapsLogger: AAPSLogger,
-    private val rxBus: RxBusWrapper,
+    private val rxBus: RxBus,
     private val activePlugin: ActivePlugin,
-    private val resourceHelper: ResourceHelper,
+    private val rh: ResourceHelper,
     private val sp: SP
 ) : Thread() {
 
@@ -32,7 +33,7 @@ class QueueThread internal constructor(
     private var mWakeLock: PowerManager.WakeLock? = null
 
     init {
-        mWakeLock = (context.getSystemService(Context.POWER_SERVICE) as PowerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, resourceHelper.gs(R.string.app_name) + ":QueueThread")
+        mWakeLock = (context.getSystemService(Context.POWER_SERVICE) as PowerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, rh.gs(R.string.app_name) + ":QueueThread")
     }
 
     override fun run() {
@@ -46,8 +47,8 @@ class QueueThread internal constructor(
                 val secondsElapsed = (System.currentTimeMillis() - connectionStartTime) / 1000
                 val pump = activePlugin.activePump
                 if (!pump.isConnected() && secondsElapsed > Constants.PUMP_MAX_CONNECTION_TIME_IN_SECONDS) {
-                    rxBus.send(EventDismissBolusProgressIfRunning(null))
-                    rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.connectiontimedout)))
+                    rxBus.send(EventDismissBolusProgressIfRunning(null, null))
+                    rxBus.send(EventPumpStatusChanged(rh.gs(R.string.connectiontimedout)))
                     aapsLogger.debug(LTag.PUMPQUEUE, "timed out")
                     pump.stopConnecting()
 
@@ -60,7 +61,6 @@ class QueueThread internal constructor(
                         //write time
                         sp.putLong(R.string.key_btwatchdog_lastbark, System.currentTimeMillis())
                         //toggle BT
-                        pump.stopConnecting()
                         pump.disconnect("watchdog")
                         SystemClock.sleep(1000)
                         val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
@@ -112,14 +112,18 @@ class QueueThread internal constructor(
                     // Pickup 1st command and set performing variable
                     if (queue.size() > 0) {
                         queue.pickup()
-                        if (queue.performing() != null) {
-                            aapsLogger.debug(LTag.PUMPQUEUE, "performing " + queue.performing()?.status())
+                        val cont = queue.performing()?.let {
+                            aapsLogger.debug(LTag.PUMPQUEUE, "performing " + it.status())
                             rxBus.send(EventQueueChanged())
-                            queue.performing()?.execute()
+                            rxBus.send(EventPumpStatusChanged(it.status()))
+                            it.execute()
                             queue.resetPerforming()
                             rxBus.send(EventQueueChanged())
                             lastCommandTime = System.currentTimeMillis()
                             SystemClock.sleep(100)
+                            true
+                        } ?: false
+                        if (cont) {
                             continue
                         }
                     }
@@ -135,6 +139,7 @@ class QueueThread internal constructor(
                         aapsLogger.debug(LTag.PUMPQUEUE, "disconnected")
                         return
                     } else {
+                        rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.WAITING_FOR_DISCONNECTION))
                         aapsLogger.debug(LTag.PUMPQUEUE, "waiting for disconnect")
                         SystemClock.sleep(1000)
                     }

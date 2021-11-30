@@ -22,7 +22,7 @@ import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
@@ -38,8 +38,8 @@ import javax.inject.Inject
 class LocalProfileFragment : DaggerFragment() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var rxBus: RxBusWrapper
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var localProfilePlugin: LocalProfilePlugin
@@ -55,7 +55,7 @@ class LocalProfileFragment : DaggerFragment() {
 
     private val save = Runnable {
         doEdit()
-        basalView?.updateLabel(resourceHelper.gs(R.string.basal_label) + ": " + sumLabel())
+        basalView?.updateLabel(rh.gs(R.string.basal_label) + ": " + sumLabel())
         localProfilePlugin.profile?.getSpecificProfile(spinner?.selectedItem.toString())?.let {
             binding.basalGraph.show(ProfileSealed.Pure(it))
         }
@@ -65,7 +65,7 @@ class LocalProfileFragment : DaggerFragment() {
         override fun afterTextChanged(s: Editable) {}
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            localProfilePlugin.currentProfile()?.dia = SafeParse.stringToDouble(binding.dia.text.toString())
+            localProfilePlugin.currentProfile()?.dia = SafeParse.stringToDouble(binding.dia.text)
             localProfilePlugin.currentProfile()?.name = binding.name.text.toString()
             doEdit()
         }
@@ -74,7 +74,7 @@ class LocalProfileFragment : DaggerFragment() {
     private fun sumLabel(): String {
         val profile = localProfilePlugin.getEditProfile()
         val sum = profile?.let { ProfileSealed.Pure(profile).baseBasalSum() } ?: 0.0
-        return " ∑" + DecimalFormatter.to2Decimal(sum) + resourceHelper.gs(R.string.insulin_unit_shortname)
+        return " ∑" + DecimalFormatter.to2Decimal(sum) + rh.gs(R.string.insulin_unit_shortname)
     }
 
     private var _binding: LocalprofileFragmentBinding? = null
@@ -126,16 +126,16 @@ class LocalProfileFragment : DaggerFragment() {
         binding.name.removeTextChangedListener(textWatch)
         binding.name.setText(currentProfile.name)
         binding.name.addTextChangedListener(textWatch)
-        binding.dia.setParams(currentProfile.dia, hardLimits.minDia(), hardLimits.maxDia(), 0.1, DecimalFormat("0.0"), false, binding.save, textWatch)
+        binding.dia.setParams(currentProfile.dia, hardLimits.minDia(), hardLimits.maxDia(), 0.1, DecimalFormat("0.0"), false, null, textWatch)
         binding.dia.tag = "LP_DIA"
-        TimeListEdit(context, aapsLogger, dateUtil, view, R.id.ic, "IC", resourceHelper.gs(R.string.ic_label), currentProfile.ic, null, hardLimits.minIC(), hardLimits.maxIC(), 0.1, DecimalFormat("0.0"), save)
-        basalView = TimeListEdit(context, aapsLogger, dateUtil, view, R.id.basal_holder, "BASAL", resourceHelper.gs(R.string.basal_label) + ": " + sumLabel(), currentProfile.basal, null, pumpDescription.basalMinimumRate, pumpDescription.basalMaximumRate, 0.01, DecimalFormat("0.00"), save)
+        TimeListEdit(context, aapsLogger, dateUtil, view, R.id.ic, "IC", rh.gs(R.string.ic_label), currentProfile.ic, null, hardLimits.minIC(), hardLimits.maxIC(), 0.1, DecimalFormat("0.0"), save)
+        basalView = TimeListEdit(context, aapsLogger, dateUtil, view, R.id.basal_holder, "BASAL", rh.gs(R.string.basal_label) + ": " + sumLabel(), currentProfile.basal, null, pumpDescription.basalMinimumRate, pumpDescription.basalMaximumRate, 0.01, DecimalFormat("0.00"), save)
         if (units == Constants.MGDL) {
-            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.isf, "ISF", resourceHelper.gs(R.string.isf_label), currentProfile.isf, null, HardLimits.MIN_ISF, HardLimits.MAX_ISF, 1.0, DecimalFormat("0"), save)
-            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.target, "TARGET", resourceHelper.gs(R.string.target_label), currentProfile.targetLow, currentProfile.targetHigh, HardLimits.VERY_HARD_LIMIT_TARGET_BG[0].toDouble(), HardLimits.VERY_HARD_LIMIT_TARGET_BG[1].toDouble(), 1.0, DecimalFormat("0"), save)
+            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.isf, "ISF", rh.gs(R.string.isf_label), currentProfile.isf, null, HardLimits.MIN_ISF, HardLimits.MAX_ISF, 1.0, DecimalFormat("0"), save)
+            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.target, "TARGET", rh.gs(R.string.target_label), currentProfile.targetLow, currentProfile.targetHigh, HardLimits.VERY_HARD_LIMIT_TARGET_BG[0], HardLimits.VERY_HARD_LIMIT_TARGET_BG[1], 1.0, DecimalFormat("0"), save)
         } else {
-            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.isf, "ISF", resourceHelper.gs(R.string.isf_label), currentProfile.isf, null, Profile.fromMgdlToUnits(HardLimits.MIN_ISF, GlucoseUnit.MMOL), Profile.fromMgdlToUnits(HardLimits.MAX_ISF, GlucoseUnit.MMOL), 0.1, DecimalFormat("0.0"), save)
-            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.target, "TARGET", resourceHelper.gs(R.string.target_label), currentProfile.targetLow, currentProfile.targetHigh, Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_TARGET_BG[0].toDouble(), GlucoseUnit.MMOL), Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_TARGET_BG[1].toDouble(), GlucoseUnit.MMOL), 0.1, DecimalFormat("0.0"), save)
+            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.isf, "ISF", rh.gs(R.string.isf_label), currentProfile.isf, null, Profile.fromMgdlToUnits(HardLimits.MIN_ISF, GlucoseUnit.MMOL), Profile.fromMgdlToUnits(HardLimits.MAX_ISF, GlucoseUnit.MMOL), 0.1, DecimalFormat("0.0"), save)
+            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.target, "TARGET", rh.gs(R.string.target_label), currentProfile.targetLow, currentProfile.targetHigh, Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_TARGET_BG[0], GlucoseUnit.MMOL), Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_TARGET_BG[1], GlucoseUnit.MMOL), 0.1, DecimalFormat("0.0"), save)
         }
 
         // Spinner
@@ -154,8 +154,9 @@ class LocalProfileFragment : DaggerFragment() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (localProfilePlugin.isEdited) {
                     activity?.let { activity ->
-                        OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.doyouwantswitchprofile), {
+                        OKDialog.showConfirmation(activity, rh.gs(R.string.doyouwantswitchprofile), {
                             localProfilePlugin.currentProfileIndex = position
+                            localProfilePlugin.isEdited = false
                             build()
                         }, {
                             spinner?.setSelection(localProfilePlugin.currentProfileIndex)
@@ -173,7 +174,7 @@ class LocalProfileFragment : DaggerFragment() {
 
         binding.profileAdd.setOnClickListener {
             if (localProfilePlugin.isEdited) {
-                activity?.let { OKDialog.show(it, "", resourceHelper.gs(R.string.saveorresetchangesfirst)) }
+                activity?.let { OKDialog.show(it, "", rh.gs(R.string.saveorresetchangesfirst)) }
             } else {
                 uel.log(Action.NEW_PROFILE, Sources.LocalProfile)
                 localProfilePlugin.addNewProfile()
@@ -183,7 +184,7 @@ class LocalProfileFragment : DaggerFragment() {
 
         binding.profileClone.setOnClickListener {
             if (localProfilePlugin.isEdited) {
-                activity?.let { OKDialog.show(it, "", resourceHelper.gs(R.string.saveorresetchangesfirst)) }
+                activity?.let { OKDialog.show(it, "", rh.gs(R.string.saveorresetchangesfirst)) }
             } else {
                 uel.log(Action.CLONE_PROFILE, Sources.LocalProfile, ValueWithUnit.SimpleString(localProfilePlugin.currentProfile()?.name
                     ?: ""))
@@ -194,7 +195,7 @@ class LocalProfileFragment : DaggerFragment() {
 
         binding.profileRemove.setOnClickListener {
             activity?.let { activity ->
-                OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.deletecurrentprofile), {
+                OKDialog.showConfirmation(activity, rh.gs(R.string.deletecurrentprofile), {
                     uel.log(Action.PROFILE_REMOVED, Sources.LocalProfile, ValueWithUnit.SimpleString(localProfilePlugin.currentProfile()?.name
                         ?: ""))
                     localProfilePlugin.removeCurrentProfile()
@@ -207,7 +208,7 @@ class LocalProfileFragment : DaggerFragment() {
         // if (!pumpDescription.isTempBasalCapable) binding.basal.visibility = View.GONE
 
         @Suppress("SetTextI18n")
-        binding.units.text = resourceHelper.gs(R.string.units_colon) + " " + (if (currentProfile.mgdl) resourceHelper.gs(R.string.mgdl) else resourceHelper.gs(R.string.mmol))
+        binding.units.text = rh.gs(R.string.units_colon) + " " + (if (currentProfile.mgdl) rh.gs(R.string.mgdl) else rh.gs(R.string.mmol))
 
         binding.profileswitch.setOnClickListener {
             ProfileSwitchDialog()
@@ -221,7 +222,7 @@ class LocalProfileFragment : DaggerFragment() {
         }
 
         binding.save.setOnClickListener {
-            if (!localProfilePlugin.isValidEditState()) {
+            if (!localProfilePlugin.isValidEditState(activity)) {
                 return@setOnClickListener  //Should not happen as saveButton should not be visible if not valid
             }
             uel.log(Action.STORE_PROFILE, Sources.LocalProfile, ValueWithUnit.SimpleString(localProfilePlugin.currentProfile()?.name
@@ -261,10 +262,11 @@ class LocalProfileFragment : DaggerFragment() {
 
     private fun updateGUI() {
         if (_binding == null) return
-        val isValid = localProfilePlugin.isValidEditState()
+        val isValid = localProfilePlugin.isValidEditState(activity)
         val isEdited = localProfilePlugin.isEdited
         if (isValid) {
-            this.view?.setBackgroundColor(resourceHelper.gc(R.color.ok_background))
+            this.view?.setBackgroundColor(rh.gc(R.color.ok_background))
+            binding.spinner.isEnabled = true
 
             if (isEdited) {
                 //edited profile -> save first
@@ -275,7 +277,8 @@ class LocalProfileFragment : DaggerFragment() {
                 binding.save.visibility = View.GONE
             }
         } else {
-            this.view?.setBackgroundColor(resourceHelper.gc(R.color.error_background))
+            this.view?.setBackgroundColor(rh.gc(R.color.error_background))
+            binding.spinner.isEnabled = false
             binding.profileswitch.visibility = View.GONE
             binding.save.visibility = View.GONE //don't save an invalid profile
         }
@@ -289,12 +292,12 @@ class LocalProfileFragment : DaggerFragment() {
     }
 
     private fun processVisibilityOnClick(selected: View) {
-        binding.diaTab.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        binding.icTab.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        binding.isfTab.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        binding.basalTab.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        binding.targetTab.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        selected.setBackgroundColor(resourceHelper.gc(R.color.tabBgColorSelected))
+        binding.diaTab.setBackgroundColor(rh.gc(R.color.defaultbackground))
+        binding.icTab.setBackgroundColor(rh.gc(R.color.defaultbackground))
+        binding.isfTab.setBackgroundColor(rh.gc(R.color.defaultbackground))
+        binding.basalTab.setBackgroundColor(rh.gc(R.color.defaultbackground))
+        binding.targetTab.setBackgroundColor(rh.gc(R.color.defaultbackground))
+        selected.setBackgroundColor(rh.gc(R.color.tabBgColorSelected))
         binding.diaPlaceholder.visibility = View.GONE
         binding.ic.visibility = View.GONE
         binding.isf.visibility = View.GONE

@@ -4,5 +4,5 @@ import info.nightscout.androidaps.extensions.toHex
 
 class IncorrectPacketException(
     val payload: ByteArray,
-    val expectedIndex: Byte? = null
+    private val expectedIndex: Byte? = null
 ) : Exception("Invalid payload: ${payload.toHex()}. Expected index: $expectedIndex")

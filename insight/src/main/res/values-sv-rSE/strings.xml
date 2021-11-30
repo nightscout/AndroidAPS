@@ -21,6 +21,7 @@
     <string name="tbr_formatter">%1$d%% i %2$d / %3$d min</string>
     <string name="multiwave_bolus">Kombi-bolus</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U i %3$d min</string>
+    <string name="insight_last_bolus">Senaste bolus</string>
     <string name="searching_for_devices">Söker enheter…</string>
     <string name="pairing_completed">Parkoppling lyckades</string>
     <string name="code_compare">Stämmer koderna överens mellan denna enhet och din pump?</string>

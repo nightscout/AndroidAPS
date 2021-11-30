@@ -129,7 +129,6 @@
     <string name="diaconn_g8_logmealfail">Прием пищи не записан</string>
     <string name="diaconn_g8_logsuccess">Успешно</string>
     <string name="diaconn_g8_logmealsuccess">Прием пиши записан</string>
-    <string name="key_diaconn_g8_logtubechange">diaconn_g8_logtubechange</string>
     <string name="diaconn_g8_errorcode_1">Не удается найти из-за ошибки пакета CRC.</string>
     <string name="diaconn_g8_errorcode_2">Не удается установить ошибку входного параметра.</string>
     <string name="diaconn_g8_errorcode_3">Не удается установить ошибку спецификации протокола.</string>

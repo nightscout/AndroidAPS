@@ -11,7 +11,6 @@
     <string name="nav_resetdb">Επαναφορά Βάσεων Δεδομένων</string>
     <string name="reset_db_confirm">Θέλετε πραγματικά να επαναφέρετε την βάση δεδομένων;</string>
     <string name="nav_exit">Έξοδος</string>
-    <string name="ns_sync_use_absolute_title">Χρησιμοποιείτε πάντα απόλυτες τιμές βασικού</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Αυτή η συσκευή δεν φαίνεται να υποστηρίζει τη λίστα κατάτμησης βελτιστοποίησης μπαταρίας - ενδέχεται να αντιμετωπίσετε προβλήματα απόδοσης.</string>
     <string name="description_actions">Ορισμένα πλήκτρα για γρήγορη πρόσβαση σε κοινά χαρακτηριστικά</string>
     <string name="description_config_builder">Χρησιμοποιείται για ρύθμιση ενεργών συνδέσεων</string>
@@ -74,7 +73,6 @@
     <string name="overview">Επισκόπηση</string>
     <string name="treatments">Θεραπείες</string>
     <string name="virtualpump">Εικονική Αντλία</string>
-    <string name="careportal">Φροντίδα</string>
     <string name="configbuilder_pump">Αντλία</string>
     <string name="configbuilder_pump_description">Ποια αντλία θα θέλατε να χρησιμοποιήσετε με το AndroidAPS;</string>
     <string name="configbuilder_profile">Προφίλ</string>
@@ -94,7 +92,6 @@
     <string name="safety">Ασφάλεια</string>
     <string name="openapsma_disabled">Προσθήκη απενεργοποιημένη</string>
     <string name="constraints_violation">Παραβίαση Περιορισμών</string>
-    <string name="treatmentdeliveryerror">Σφάλμα παράδοσης Bolus</string>
     <string name="setbasalquestion">Αποδοχή νέου Προσ Ρυθμού:</string>
     <string name="overview_treatment_label">Θεραπεία</string>
     <string name="overview_calculator_label">Υπολογιστής</string>
@@ -198,7 +195,6 @@
     <string name="ongoingnotificaction">Συνεχής Ειδοποίηση</string>
     <string name="old_data">Παλιά Δεδομένα</string>
     <string name="sms_minago">πριν από %1$d λεπτά</string>
-    <string name="localprofile">Τοπικό Προφίλ</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Πεδίο %1$d Στοιχεία.\nΤρέχουσα τιμή:</string>
     <string name="openapsma_autosensdata_label">Δεδομένα Autosens</string>
@@ -577,9 +573,6 @@
     <string name="old_version">παλιά έκδοση</string>
     <string name="very_old_version">πολύ παλιά έκδοση</string>
     <string name="twohours">2ώρες</string>
-    <string name="dexcom_app_patched">Εφαρμογή Dexcom (τροποποιημένη)</string>
-    <string name="dexcom_short">DXCM</string>
-    <string name="description_source_dexcom">Λάβετε τις τιμές BG από την εφαρμογή του Dexcom.</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Μικρή απορρόφηση υδατανθράκων ανιχνεύτηκε: %2$d%% της ώρας. Τσεκάρετε τους υπολογισμούς σας. COB μπορεί να υπερεκτιμήθηκε και να δόθηκε περισσότερη ινσουλίνη!!!!!</font>]]></string>
     <string name="partialboluswizard">Χορήγηση του αποτελέσματος αυτού του μέρους του υπολογισμού bolus [%]</string>
     <string name="deliverpartofboluswizard">Ο Υπολογισμός Bolus κάνει υπολογισμούς αλλά μόνο αυτό το μέρος της υπολογίσημης ινσουλίνης χορηγείται. Χρήσιμο με τον αλγόριθμο SMB.</string>

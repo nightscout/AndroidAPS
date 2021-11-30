@@ -15,7 +15,7 @@ import javax.inject.Singleton
 class ActionsPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     config: Config
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
@@ -26,5 +26,5 @@ class ActionsPlugin @Inject constructor(
     .pluginName(R.string.actions)
     .shortName(R.string.actions_shortname)
     .description(R.string.description_actions),
-    aapsLogger, resourceHelper, injector
+    aapsLogger, rh, injector
 )

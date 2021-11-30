@@ -47,6 +47,12 @@ interface ActivePlugin {
     val activeOverview: Overview
 
     /**
+     *  Currently selected Safety plugin
+     *  Always SafetyPlugin
+     */
+    val activeSafety: Safety
+
+    /**
      *  List of all registered plugins
      */
     fun getPluginsList(): ArrayList<PluginBase>

@@ -11,18 +11,21 @@ import info.nightscout.androidaps.database.interfaces.DBEntryWithTimeAndDuration
 import info.nightscout.androidaps.database.interfaces.TraceableDBEntry
 import java.util.*
 
-@Entity(tableName = TABLE_OFFLINE_EVENTS,
+@Entity(
+    tableName = TABLE_OFFLINE_EVENTS,
     foreignKeys = [ForeignKey(
         entity = OfflineEvent::class,
         parentColumns = ["id"],
-        childColumns = ["referenceId"])],
+        childColumns = ["referenceId"]
+    )],
     indices = [
         Index("id"),
         Index("isValid"),
         Index("nightscoutId"),
         Index("referenceId"),
         Index("timestamp")
-    ])
+    ]
+)
 data class OfflineEvent(
     @PrimaryKey(autoGenerate = true)
     override var id: Long = 0,
@@ -44,6 +47,12 @@ data class OfflineEvent(
             reason == other.reason &&
             duration == other.duration &&
             isValid == other.isValid
+
+    fun onlyNsIdAdded(previous: OfflineEvent): Boolean =
+        previous.id != id &&
+            contentEqualsTo(previous) &&
+            previous.interfaceIDs.nightscoutId == null &&
+            interfaceIDs.nightscoutId != null
 
     fun isRecordDeleted(other: OfflineEvent): Boolean =
         isValid && !other.isValid

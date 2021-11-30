@@ -18,6 +18,7 @@
     <string name="connected">Connectée</string>
     <string name="disconnected">Déconnectée</string>
     <string name="disconnecting">Déconnexion en cours</string>
+    <string name="waiting_for_disconnection">Attente de déconnexion</string>
     <string name="androidaps_start">AndroidAPS est lancé</string>
     <string name="formatinsulinunits1">%1$.1f U</string>
     <string name="formatinsulinunits">%1$.2f U</string>
@@ -153,7 +154,6 @@
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
-    <string name="noprofileselected">Aucun profil séléctionné</string>
     <string name="startprofile">Démarrer le profil %1$d%% pour %2$d min</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Uniquement les valeurs unitaires sont acceptées. Les plages pour les basal/bolus ne sont pas supportées par les pompes virtuelles.</string>
@@ -173,12 +173,17 @@
     <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fU</b> Bol: <b>%3$.2fU</b> Bas: <b>%4$.2fU (%5$.0f%%)</b> Gluc: <b>%6$.0fg</b>]]></string>
     <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> en <b>%3$d</b> jours<br>]]></string>
     <!--    Translator-->
+    <string name="careportal">Careportal</string>
     <string name="careportal_bgcheck">Contrôle Glycémie</string>
     <string name="careportal_mbg">Gly manuelle/Calib.</string>
     <string name="careportal_announcement">Notification</string>
     <string name="careportal_note">Remarque</string>
     <string name="careportal_question">Question</string>
     <string name="careportal_exercise">Activité Physique</string>
+    <string name="careportal_announcement_message">Annonce : %1$s</string>
+    <string name="careportal_note_message">Note : %1$s</string>
+    <string name="careportal_question_message">Question : %1$s</string>
+    <string name="careportal_exercise_message">Exercice : %1$s</string>
     <string name="careportal_pumpsitechange">Changement de site</string>
     <string name="careportal_cgmsensorinsert">Insertion Capteur MGC</string>
     <string name="careportal_cgmsensorstart">Démarrage Capteur MGC</string>
@@ -196,6 +201,7 @@
     <string name="careportal_openapsoffline">OpenAPS hors ligne</string>
     <string name="careportal_pumpbatterychange">Changement pile pompe</string>
     <string name="careportal_temporarytarget">Cible Temp</string>
+    <string name="careportal_temporarytargetvalue">Valeur de Cible Temporaire</string>
     <string name="careportal_temporarytargetcancel">Annuler Cible Temporaire</string>
     <string name="boluswizard">Assistant Bolus</string>
     <string name="glucosetype_finger">Doigt</string>
@@ -212,6 +218,8 @@
     <string name="loop">Boucle</string>
     <string name="ns">NS</string>
     <string name="record">Enregistrement</string>
+    <string name="reading_pump_history">Lecture historique pompe</string>
+    <string name="pump_icon">Icône Pompe</string>
     <!--    Command-->
     <string name="connectiontimedout">Connexion expirée</string>
     <!--    PumpEnactResult-->
@@ -252,7 +260,6 @@
     <string name="metadata_label_device_name">Export du nom du patient de l\'appareil</string>
     <string name="metadata_label_device_model">Export du modèle de l\'appareil</string>
     <string name="metadata_label_encryption">Cryptage du fichier</string>
-    <string name="metadata_format_old">Ancien format d\'export</string>
     <string name="metadata_format_new">Nouveau format crypté</string>
     <string name="metadata_format_debug">Nouveau format de débug (non crypté)</string>
     <string name="metadata_format_other">Format d\'export inconnu</string>
@@ -283,6 +290,7 @@
     <string name="signature_verifier">Vérificateur de signature</string>
     <string name="running_invalid_version">Nous avons détecté que vous utilisez une version invalide. Boucle désactivée !</string>
     <string name="versionavailable">Version %1$s disponible</string>
+    <string name="version_expire">La version %1$s expire le %2$s</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Redémarrez votre smartphone ou redémarrez AndroidAPS depuis les paramètres système\nsinon AndroidAPS n\'aura pas de fichiers log (il est important de suivre et vérifier que les algorithmes fonctionnent correctement)!</string>
     <!-- WeekdayPicker -->
@@ -295,6 +303,7 @@
     <string name="sunday_short">D</string>
     <!-- User Entry -->
     <string name="uel_bolus">BOLUS</string>
+    <string name="uel_bolus_calculator">ASSISTANT BOLUS</string>
     <string name="uel_bolus_advisor">ASSISTANT BOLUS</string>
     <string name="uel_extended_bolus">BOLUS ÉTENDU</string>
     <string name="uel_superbolus_tbr">DBT SUPERBOLUS</string>
@@ -385,6 +394,52 @@
     <string name="uel_loop_removed">BOUCLE SUPPRIMÉE</string>
     <string name="uel_other">AUTRE</string>
     <!-- HardLimits -->
+    <string name="profile_low_target">Cible basse du profil</string>
+    <string name="profile_high_target">Cible haute du profil</string>
+    <string name="temp_target_low_target">Valeur basse de Cible Temp.</string>
+    <string name="temp_target_high_target">Valeur haute de Cible Temp.</string>
+    <string name="temp_target_value">Valeur de Cible Temporaire</string>
+    <string name="profile_dia">Valeur DAI du profil</string>
+    <string name="profile_sensitivity_value">Valeur de sensibilité du profil</string>
+    <string name="profile_max_daily_basal_value">Basale maximale du profil</string>
+    <string name="current_basal_value">Basale actuelle</string>
+    <string name="profile_carbs_ratio_value">Rapport glucides/insuline de profil</string>
+    <string name="valuelimitedto">%1$.2f limité à %2$.2f</string>
+    <string name="valueoutofrange">\"%1$s\" est en dehors des limites</string>
+    <string name="value_out_of_hard_limits">\"%1$s\" %2$.2f est en dehors des limites</string>
+    <string name="basal_value">Valeur de Basal</string>
+    <string name="nsclient_version_does_not_match">La version NSClient ne correspond pas à AndroidAPS. Faites une mise à jour.</string>
+    <!-- Command Queue + readStatus reasons -->
+    <string name="bolus_u_min">BOLUS %1$.2f U</string>
+    <string name="carbs_g">GLUCIDES %1$d g</string>
+    <string name="extended_bolus_u_min">BOLUS ÉTENDU %1$.2f U %2$d min</string>
+    <string name="load_events">CHARGER LES ÉVÉNEMENTS</string>
+    <string name="load_history">CHARGER L\'HISTORIQUE %1$d</string>
+    <string name="load_tdds">CHARGER les DTI</string>
+    <string name="set_profile">DÉFINIR LE PROFIL</string>
+    <string name="set_user_settings">DÉFINIR LES PARAMÈTRES UTILISATEUR</string>
+    <string name="smb_bolus_u">BOLUS SMB %1$.2f U</string>
+    <string name="start_pump">DÉMARRER LA POMPE</string>
+    <string name="stop_pump">ARRÊTER LA POMPE</string>
+    <string name="temp_basal_absolute">BASAL TEMP %1$.2f U/h %2$d min</string>
+    <string name="temp_basal_percent">BASAL TEMP %1$d%% %2$d min</string>
+    <string name="insight_set_tbr_over_notification">INSIGHT DEFINIR NOTIFICATION FIN DE DBT</string>
+    <string name="read_status" comment="10 characters max for READSTATUS translation">ÉTAT POMPE %1$s</string>
+    <string name="keepalive_status_outdated" comment="26 characters max for translation">Cnx Active. État obsolète.</string>
+    <string name="keepalive_basal_outdated" comment="26 characters max for translation">Cnx Active. Basale obsolète</string>
+    <string name="sms" comment="26 characters max for translation">SMS</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Cnx à la pompe demandée</string>
+    <string name="pump_driver_changed" comment="26 characters max for translation">Pilote pompe changé.</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Changement pilote pompe.</string>
+    <string name="device_changed" comment="26 characters max for translation">Appareil changé</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Actualisation demandée</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Actualisation état programmé</string>
+    <string name="unconfirmed_command" comment="26 characters max for translation">Commande non confirmée</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Demandé par l\'utilisateur</string>
+    <string name="user_request" comment="26 characters max for translation">Demande utilisateur</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
+    <string name="pump_paired" comment="26 characters max for translation">Pompe appairée</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Actualisation état Insight</string>
     <plurals name="days">
         <item quantity="one">%1$d jour</item>
         <item quantity="other">%1$d jours</item>

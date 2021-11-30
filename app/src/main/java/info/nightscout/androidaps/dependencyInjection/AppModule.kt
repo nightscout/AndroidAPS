@@ -11,17 +11,21 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctionImplementation
 import info.nightscout.androidaps.plugins.general.maintenance.ImportExportPrefsImpl
 import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
 import info.nightscout.androidaps.plugins.general.nsclient.DataSyncSelectorImplementation
+import info.nightscout.androidaps.plugins.general.nsclient.data.DeviceStatusData
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.pump.PumpSyncImplementation
-import info.nightscout.androidaps.queue.CommandQueue
+import info.nightscout.androidaps.queue.CommandQueueImplementation
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.androidNotification.NotificationHolderImpl
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.buildHelper.BuildHelperImpl
@@ -69,16 +73,24 @@ open class AppModule {
 
     @Provides
     @Singleton
-    fun provideProfileFunction(aapsLogger: AAPSLogger, sp: SP, resourceHelper: ResourceHelper, activePlugin: ActivePlugin, repository: AppRepository, dateUtil: DateUtil): ProfileFunction =
-        ProfileFunctionImplementation(aapsLogger, sp, resourceHelper, activePlugin, repository, dateUtil)
+    fun provideProfileFunction(
+        aapsLogger: AAPSLogger, sp: SP, rxBus: RxBus, rh:
+        ResourceHelper, activePlugin:
+        ActivePlugin, repository: AppRepository, dateUtil: DateUtil, config: Config, hardLimits: HardLimits,
+        aapsSchedulers: AapsSchedulers, fabricPrivacy: FabricPrivacy, deviceStatusData: DeviceStatusData
+    ): ProfileFunction =
+        ProfileFunctionImplementation(
+            aapsLogger, sp, rxBus, rh, activePlugin, repository, dateUtil,
+            config, hardLimits, aapsSchedulers, fabricPrivacy, deviceStatusData
+        )
 
     @Module
     interface AppBindings {
 
         @Binds fun bindContext(mainApp: MainApp): Context
         @Binds fun bindInjector(mainApp: MainApp): HasAndroidInjector
-        @Binds fun bindActivePluginProvider(pluginStore: PluginStore): ActivePlugin
-        @Binds fun bindCommandQueueProvider(commandQueue: CommandQueue): CommandQueueProvider
+        @Binds fun bindActivePlugin(pluginStore: PluginStore): ActivePlugin
+        @Binds fun bindCommandQueue(commandQueue: CommandQueueImplementation): CommandQueue
         @Binds fun bindConfigInterface(config: ConfigImpl): Config
 
         @Binds fun bindConfigBuilderInterface(configBuilderPlugin: ConfigBuilderPlugin): ConfigBuilder

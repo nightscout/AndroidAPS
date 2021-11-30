@@ -23,7 +23,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 public class RileyLinkStatusActivity extends NoSplashAppCompatActivity {
 
-    @Inject ResourceHelper resourceHelper;
+    @Inject ResourceHelper rh;
 
     private SectionsPagerAdapter sectionsPagerAdapter;
     private TabLayout tabLayout;
@@ -60,8 +60,8 @@ public class RileyLinkStatusActivity extends NoSplashAppCompatActivity {
     public void setupViewPager() {
         sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        sectionsPagerAdapter.addFragment(new RileyLinkStatusGeneralFragment(), resourceHelper.gs(R.string.rileylink_settings_tab1));
-        sectionsPagerAdapter.addFragment(new RileyLinkStatusHistoryFragment(), resourceHelper.gs(R.string.rileylink_settings_tab2));
+        sectionsPagerAdapter.addFragment(new RileyLinkStatusGeneralFragment(), rh.gs(R.string.rileylink_settings_tab1));
+        sectionsPagerAdapter.addFragment(new RileyLinkStatusHistoryFragment(), rh.gs(R.string.rileylink_settings_tab2));
         viewPager.setAdapter(sectionsPagerAdapter);
     }
 

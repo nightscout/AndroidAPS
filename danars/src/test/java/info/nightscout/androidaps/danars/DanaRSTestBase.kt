@@ -21,7 +21,7 @@ open class DanaRSTestBase : TestBaseWithProfile() {
 
     @Before
     fun prepare() {
-        Mockito.`when`(resourceHelper.gs(ArgumentMatchers.anyInt())).thenReturn("AnyString")
+        Mockito.`when`(rh.gs(ArgumentMatchers.anyInt())).thenReturn("AnyString")
     }
 
     fun createArray(length: Int, fillWith: Byte): ByteArray {

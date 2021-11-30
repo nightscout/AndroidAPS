@@ -11,7 +11,7 @@ import javax.inject.Inject
 class InMemoryGlucoseValueDataPoint @Inject constructor(
     val data: InMemoryGlucoseValue,
     private val profileFunction: ProfileFunction,
-    private val resourceHelper: ResourceHelper
+    private val rh: ResourceHelper
 ) : DataPointWithLabelInterface {
 
     fun valueToUnits(units: GlucoseUnit): Double =
@@ -20,9 +20,9 @@ class InMemoryGlucoseValueDataPoint @Inject constructor(
     override fun getX(): Double = data.timestamp.toDouble()
     override fun getY(): Double = valueToUnits(profileFunction.getUnits())
     override fun setY(y: Double) {}
-    override fun getLabel(): String? = null
-    override fun getDuration(): Long = 0
-    override fun getShape(): PointsWithLabelGraphSeries.Shape = PointsWithLabelGraphSeries.Shape.BUCKETED_BG
-    override fun getSize(): Float = 0.3f
-    override fun getColor(): Int = resourceHelper.gc(R.color.white)
+    override val label: String? = null
+    override val duration = 0L
+    override val shape = PointsWithLabelGraphSeries.Shape.BUCKETED_BG
+    override val size = 0.3f
+    override val color get() = rh.gc(R.color.white)
 }

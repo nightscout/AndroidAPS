@@ -30,8 +30,9 @@ class SyncPumpExtendedBolusTransaction(private val extendedBolus: ExtendedBolus)
             val running = database.extendedBolusDao.getExtendedBolusActiveAt(extendedBolus.timestamp, extendedBolus.interfaceIDs.pumpType!!, extendedBolus.interfaceIDs.pumpSerial!!).blockingGet()
             if (running != null) {
                 val pctRun = (extendedBolus.timestamp - running.timestamp) / running.duration.toDouble()
-                running.amount /= pctRun
+                running.amount *= pctRun
                 running.end = extendedBolus.timestamp
+                running.interfaceIDs.endId = extendedBolus.interfaceIDs.pumpId
                 database.extendedBolusDao.updateExistingEntry(running)
                 result.updated.add(running)
             }

@@ -27,7 +27,7 @@ import javax.inject.Singleton
 class FoodPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
-    resourceHelper: ResourceHelper
+    rh: ResourceHelper
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(FoodFragment::class.java.name)
@@ -35,7 +35,7 @@ class FoodPlugin @Inject constructor(
     .pluginName(R.string.food)
     .shortName(R.string.food_short)
     .description(R.string.description_food),
-    aapsLogger, resourceHelper, injector
+    aapsLogger, rh, injector
 ) {
 
     // cannot be inner class because of needed injection
@@ -75,7 +75,7 @@ class FoodPlugin @Inject constructor(
                             isValid = false
                         ).also { it.interfaceIDs.nightscoutId = JsonHelper.safeGetString(jsonFood, "_id") }
 
-                        repository.runTransactionForResult(SyncNsFoodTransaction(delFood, true))
+                        repository.runTransactionForResult(SyncNsFoodTransaction(delFood))
                             .doOnError {
                                 aapsLogger.error(LTag.DATABASE, "Error while removing food", it)
                                 ret = Result.failure(workDataOf("Error" to it.toString()))
@@ -89,7 +89,7 @@ class FoodPlugin @Inject constructor(
                     else     -> {
                         val food = foodFromJson(jsonFood)
                         if (food != null) {
-                            repository.runTransactionForResult(SyncNsFoodTransaction(food, false))
+                            repository.runTransactionForResult(SyncNsFoodTransaction(food))
                                 .doOnError {
                                     aapsLogger.error(LTag.DATABASE, "Error while adding/updating food", it)
                                     ret = Result.failure(workDataOf("Error" to it.toString()))

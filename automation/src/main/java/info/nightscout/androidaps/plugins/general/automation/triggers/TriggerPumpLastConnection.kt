@@ -17,17 +17,17 @@ import org.json.JSONObject
 class TriggerPumpLastConnection(injector: HasAndroidInjector) : Trigger(injector) {
 
     var minutesAgo = InputDuration()
-    var comparator = Comparator(resourceHelper)
+    var comparator = Comparator(rh)
 
     @Suppress("unused")
     constructor(injector: HasAndroidInjector, value: Int, unit: InputDuration.TimeUnit, compare: Comparator.Compare) : this(injector) {
         minutesAgo = InputDuration(value, unit)
-        comparator = Comparator(resourceHelper, compare)
+        comparator = Comparator(rh, compare)
     }
 
     constructor(injector: HasAndroidInjector, triggerPumpLastConnection: TriggerPumpLastConnection) : this(injector) {
         minutesAgo = InputDuration(triggerPumpLastConnection.minutesAgo.value, triggerPumpLastConnection.minutesAgo.unit)
-        comparator = Comparator(resourceHelper, triggerPumpLastConnection.comparator.value)
+        comparator = Comparator(rh, triggerPumpLastConnection.comparator.value)
     }
 
     fun setValue(value: Int): TriggerPumpLastConnection {
@@ -71,7 +71,7 @@ class TriggerPumpLastConnection(injector: HasAndroidInjector) : Trigger(injector
     override fun friendlyName(): Int = R.string.automation_trigger_pump_last_connection_label
 
     override fun friendlyDescription(): String =
-        resourceHelper.gs(R.string.automation_trigger_pump_last_connection_compared, resourceHelper.gs(comparator.value.stringRes), minutesAgo.value)
+        rh.gs(R.string.automation_trigger_pump_last_connection_compared, rh.gs(comparator.value.stringRes), minutesAgo.value)
 
     override fun icon(): Optional<Int?> = Optional.of(R.drawable.ic_remove)
 
@@ -79,9 +79,9 @@ class TriggerPumpLastConnection(injector: HasAndroidInjector) : Trigger(injector
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(resourceHelper, R.string.automation_trigger_pump_last_connection_label, this))
+            .add(StaticLabel(rh, R.string.automation_trigger_pump_last_connection_label, this))
             .add(comparator)
-            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.automation_trigger_pump_last_connection_description) + ": ", "", minutesAgo))
+            .add(LabelWithElement(rh, rh.gs(R.string.automation_trigger_pump_last_connection_description) + ": ", "", minutesAgo))
             .build(root)
     }
 }

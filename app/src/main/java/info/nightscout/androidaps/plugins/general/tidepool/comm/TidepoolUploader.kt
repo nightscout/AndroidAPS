@@ -8,7 +8,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolStatus
 import info.nightscout.androidaps.plugins.general.tidepool.messages.AuthReplyMessage
 import info.nightscout.androidaps.plugins.general.tidepool.messages.AuthRequestMessage
@@ -32,9 +32,9 @@ import javax.inject.Singleton
 @Singleton
 class TidepoolUploader @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val rxBus: RxBusWrapper,
+    private val rxBus: RxBus,
     private val ctx: Context,
-    private val resourceHelper: ResourceHelper,
+    private val rh: ResourceHelper,
     private val sp: SP,
     private val uploadChunk: UploadChunk,
     private val activePlugin: ActivePlugin,
@@ -130,13 +130,13 @@ class TidepoolUploader @Inject constructor(
             val call = session.service?.getLogin(it)
 
             call?.enqueue(TidepoolCallback<AuthReplyMessage>(aapsLogger, rxBus, session, "Login", {
-                OKDialog.show(rootContext, resourceHelper.gs(R.string.tidepool), "Successfully logged into Tidepool.")
+                OKDialog.show(rootContext, rh.gs(R.string.tidepool), "Successfully logged into Tidepool.")
             }, {
-                OKDialog.show(rootContext, resourceHelper.gs(R.string.tidepool), "Failed to log into Tidepool.\nCheck that your user name and password are correct.")
+                OKDialog.show(rootContext, rh.gs(R.string.tidepool), "Failed to log into Tidepool.\nCheck that your user name and password are correct.")
             }))
 
         }
-            ?: OKDialog.show(rootContext, resourceHelper.gs(R.string.tidepool), "Cannot do login as user credentials have not been set correctly")
+            ?: OKDialog.show(rootContext, rh.gs(R.string.tidepool), "Cannot do login as user credentials have not been set correctly")
 
     }
 

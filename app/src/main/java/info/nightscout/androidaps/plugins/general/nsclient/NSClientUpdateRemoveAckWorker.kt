@@ -9,7 +9,7 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.interfaces.DataSyncSelector
 import info.nightscout.androidaps.interfaces.DataSyncSelector.*
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.nsclient.acks.NSUpdateAck
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientNewLog
 import info.nightscout.androidaps.receivers.DataWorker
@@ -24,7 +24,7 @@ class NSClientUpdateRemoveAckWorker(
     @Inject lateinit var dataWorker: DataWorker
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var repository: AppRepository
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var dataSyncSelector: DataSyncSelector
     @Inject lateinit var aapsSchedulers: AapsSchedulers
 
@@ -123,6 +123,15 @@ class NSClientUpdateRemoveAckWorker(
                 rxBus.send(EventNSClientNewLog("DBUPDATE", "Acked ProfileSwitch " + ack._id))
                 // Send new if waiting
                 dataSyncSelector.processChangedProfileSwitchesCompat()
+                ret = Result.success(workDataOf("ProcessedData" to pair.toString()))
+            }
+
+            is PairEffectiveProfileSwitch         -> {
+                val pair = ack.originalObject
+                dataSyncSelector.confirmLastEffectiveProfileSwitchIdIfGreater(pair.updateRecordId)
+                rxBus.send(EventNSClientNewLog("DBUPDATE", "Acked EffectiveProfileSwitch " + ack._id))
+                // Send new if waiting
+                dataSyncSelector.processChangedEffectiveProfileSwitchesCompat()
                 ret = Result.success(workDataOf("ProcessedData" to pair.toString()))
             }
 

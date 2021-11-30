@@ -6,6 +6,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger
 import info.nightscout.androidaps.queue.Callback
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject
@@ -13,6 +14,7 @@ import javax.inject.Inject
 abstract class Action(val injector: HasAndroidInjector) {
 
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var rh: ResourceHelper
 
     var precondition: Trigger? = null
 
@@ -51,6 +53,8 @@ abstract class Action(val injector: HasAndroidInjector) {
             return when (type) {
                 ActionAlarm::class.java.name,              // backward compatibility
                 ActionAlarm::class.java.simpleName                -> ActionAlarm(injector).fromJSON(data.toString())
+                ActionCarePortalEvent::class.java.name,
+                ActionCarePortalEvent::class.java.simpleName      -> ActionCarePortalEvent(injector).fromJSON(data.toString())
                 ActionDummy::class.java.name,
                 ActionDummy::class.java.simpleName                -> ActionDummy(injector).fromJSON(data.toString())
                 ActionLoopDisable::class.java.name,

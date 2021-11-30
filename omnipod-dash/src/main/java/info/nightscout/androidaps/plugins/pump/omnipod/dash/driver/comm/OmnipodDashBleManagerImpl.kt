@@ -30,9 +30,8 @@ class OmnipodDashBleManagerImpl @Inject constructor(
 ) : OmnipodDashBleManager {
 
     private val busy = AtomicBoolean(false)
-    private val bluetoothManager: BluetoothManager =
-        context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-    private val bluetoothAdapter: BluetoothAdapter = bluetoothManager.adapter
+    private val bluetoothAdapter: BluetoothAdapter?
+        get() = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
     private var connection: Connection? = null
     private val ids = Ids(podState)
 
@@ -98,7 +97,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
     }
 
     override fun getStatus(): ConnectionState {
-        return connection?.let { it.connectionState() }
+        return connection?.connectionState()
             ?: NotConnected
     }
     // used for sync connections
@@ -123,7 +122,8 @@ class OmnipodDashBleManagerImpl @Inject constructor(
                 val podAddress =
                     podState.bluetoothAddress
                         ?: throw FailedToConnectException("Missing bluetoothAddress, activate the pod first")
-                val podDevice = bluetoothAdapter.getRemoteDevice(podAddress)
+                val podDevice = bluetoothAdapter?.getRemoteDevice(podAddress)
+                    ?: throw ConnectException("Bluetooth not available")
                 val conn = connection
                     ?: Connection(podDevice, aapsLogger, context, podState)
                 connection = conn
@@ -154,7 +154,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
 
         val ltk = assertPaired()
 
-        var eapSqn = podState.increaseEapAkaSequenceNumber()
+        val eapSqn = podState.increaseEapAkaSequenceNumber()
 
         var newSqn = conn.establishSession(ltk, msgSeq, ids, eapSqn)
 
@@ -180,7 +180,6 @@ class OmnipodDashBleManagerImpl @Inject constructor(
             ?: throw FailedToConnectException("connection lost")
     }
 
-    @kotlin.ExperimentalStdlibApi
     override fun pairNewPod(): Observable<PodEvent> = Observable.create { emitter ->
         if (!busy.compareAndSet(false, true)) {
             throw BusyException()
@@ -194,7 +193,9 @@ class OmnipodDashBleManagerImpl @Inject constructor(
             aapsLogger.info(LTag.PUMPBTCOMM, "Starting new pod activation")
 
             emitter.onNext(PodEvent.Scanning)
-            val podScanner = PodScanner(aapsLogger, bluetoothAdapter)
+            val adapter = bluetoothAdapter
+                ?: throw ConnectException("Bluetooth not available")
+            val podScanner = PodScanner(aapsLogger, adapter)
             val podAddress = podScanner.scanForPod(
                 PodScanner.SCAN_FOR_SERVICE_UUID,
                 PodScanner.POD_ID_NOT_ACTIVATED
@@ -202,7 +203,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
             podState.bluetoothAddress = podAddress
 
             emitter.onNext(PodEvent.BluetoothConnecting)
-            val podDevice = bluetoothAdapter.getRemoteDevice(podAddress)
+            val podDevice = adapter.getRemoteDevice(podAddress)
             val conn = Connection(podDevice, aapsLogger, context, podState)
             connection = conn
             conn.connect(ConnectionWaitCondition(timeoutMs = 3 * Connection.BASE_CONNECT_TIMEOUT_MS))

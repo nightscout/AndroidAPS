@@ -22,7 +22,7 @@ import info.nightscout.androidaps.events.EventTherapyEventChange
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.events.EventTreatmentUpdateGui
 import info.nightscout.androidaps.activities.fragments.TreatmentsCareportalFragment.RecyclerViewAdapter.TherapyEventsViewHolder
@@ -46,9 +46,9 @@ import javax.inject.Inject
 class TreatmentsCareportalFragment : DaggerFragment() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var sp: SP
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var translator: Translator
     @Inject lateinit var dateUtil: DateUtil
@@ -76,11 +76,10 @@ class TreatmentsCareportalFragment : DaggerFragment() {
         binding.recyclerview.layoutManager = LinearLayoutManager(view.context)
         binding.refreshFromNightscout.setOnClickListener {
             activity?.let { activity ->
-                OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal), resourceHelper.gs(R.string.refresheventsfromnightscout) + " ?", Runnable {
+                OKDialog.showConfirmation(activity, rh.gs(R.string.careportal), rh.gs(R.string.refresheventsfromnightscout) + " ?", Runnable {
                     uel.log(Action.CAREPORTAL_NS_REFRESH, Sources.Treatments)
                     disposable += Completable.fromAction { repository.deleteAllTherapyEventsEntries() }
                         .subscribeOn(aapsSchedulers.io)
-                        .observeOn(aapsSchedulers.main)
                         .subscribeBy(
                             onError = { aapsLogger.error("Error removing entries", it) },
                             onComplete = { rxBus.send(EventTherapyEventChange()) }
@@ -91,9 +90,9 @@ class TreatmentsCareportalFragment : DaggerFragment() {
         }
         binding.removeAndroidapsStartedEvents.setOnClickListener {
             activity?.let { activity ->
-                OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal), resourceHelper.gs(R.string.careportal_removestartedevents), Runnable {
+                OKDialog.showConfirmation(activity, rh.gs(R.string.careportal), rh.gs(R.string.careportal_removestartedevents), Runnable {
                     uel.log(Action.RESTART_EVENTS_REMOVED, Sources.Treatments)
-                    repository.runTransactionForResult(InvalidateAAPSStartedTherapyEventTransaction(resourceHelper.gs(R.string.androidaps_start)))
+                    repository.runTransactionForResult(InvalidateAAPSStartedTherapyEventTransaction(rh.gs(R.string.androidaps_start)))
                         .subscribe(
                             { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated therapy event $it") } },
                             { aapsLogger.error(LTag.DATABASE, "Error while invalidating therapy event", it) }
@@ -165,7 +164,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
             holder.binding.ns.visibility = (therapyEvent.interfaceIDs.nightscoutId != null).toVisibility()
             holder.binding.invalid.visibility = therapyEvent.isValid.not().toVisibility()
             holder.binding.date.text = dateUtil.dateAndTimeString(therapyEvent.timestamp)
-            holder.binding.duration.text = if (therapyEvent.duration == 0L) "" else dateUtil.niceTimeScalar(therapyEvent.duration, resourceHelper)
+            holder.binding.duration.text = if (therapyEvent.duration == 0L) "" else dateUtil.niceTimeScalar(therapyEvent.duration, rh)
             holder.binding.note.text = therapyEvent.note
             holder.binding.type.text = translator.translate(therapyEvent.type)
             holder.binding.remove.tag = therapyEvent
@@ -183,11 +182,11 @@ class TreatmentsCareportalFragment : DaggerFragment() {
                 binding.remove.setOnClickListener { v: View ->
                     val therapyEvent = v.tag as TherapyEvent
                     activity?.let { activity ->
-                        val text = resourceHelper.gs(R.string.eventtype) + ": " + translator.translate(therapyEvent.type) + "\n" +
-                            resourceHelper.gs(R.string.notes_label) + ": " + (therapyEvent.note
+                        val text = rh.gs(R.string.eventtype) + ": " + translator.translate(therapyEvent.type) + "\n" +
+                            rh.gs(R.string.notes_label) + ": " + (therapyEvent.note
                             ?: "") + "\n" +
-                            resourceHelper.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(therapyEvent.timestamp)
-                        OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord), text, Runnable {
+                            rh.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(therapyEvent.timestamp)
+                        OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord), text, Runnable {
                             uel.log(Action.CAREPORTAL_REMOVED, Sources.Treatments, therapyEvent.note ,
                                 ValueWithUnit.Timestamp(therapyEvent.timestamp),
                                 ValueWithUnit.TherapyEventType(therapyEvent.type))

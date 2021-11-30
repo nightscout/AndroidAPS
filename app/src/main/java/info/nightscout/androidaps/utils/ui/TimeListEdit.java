@@ -28,8 +28,6 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.SafeParse;
-import info.nightscout.androidaps.utils.ui.NumberPicker;
-import info.nightscout.androidaps.utils.ui.SpinnerHelper;
 
 /**
  * Created by mike on 29.12.2016.

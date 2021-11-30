@@ -20,11 +20,11 @@ class SWRadioButton(injector: HasAndroidInjector) : SWItem(injector, Type.RADIOB
     }
 
     private fun labels(): Array<String> {
-        return resourceHelper.gsa(labelsArray)
+        return rh.gsa(labelsArray)
     }
 
     fun values(): Array<String> {
-        return resourceHelper.gsa(valuesArray)
+        return rh.gsa(valuesArray)
     }
 
     override fun generateDialog(layout: LinearLayout) {

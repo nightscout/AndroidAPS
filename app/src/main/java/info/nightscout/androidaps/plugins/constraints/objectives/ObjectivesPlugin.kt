@@ -24,7 +24,7 @@ import javax.inject.Singleton
 class ObjectivesPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     private val activePlugin: ActivePlugin,
     private val sp: SP,
     config: Config,
@@ -39,7 +39,7 @@ class ObjectivesPlugin @Inject constructor(
     .pluginName(R.string.objectives)
     .shortName(R.string.objectives_shortname)
     .description(R.string.description_objectives),
-    aapsLogger, resourceHelper, injector
+    aapsLogger, rh, injector
 ), Constraints {
 
     var objectives: MutableList<Objective> = ArrayList()
@@ -119,10 +119,10 @@ class ObjectivesPlugin @Inject constructor(
             sp.putLong("Objectives_" + "auto" + "_started", dateUtil.now())
             sp.putLong("Objectives_" + "auto" + "_accomplished", dateUtil.now())
             setupObjectives()
-            OKDialog.show(activity, resourceHelper.gs(R.string.objectives), resourceHelper.gs(R.string.codeaccepted))
+            OKDialog.show(activity, rh.gs(R.string.objectives), rh.gs(R.string.codeaccepted))
             uel.log(Action.OBJECTIVES_SKIPPED, Sources.Objectives)
         } else {
-            OKDialog.show(activity, resourceHelper.gs(R.string.objectives), resourceHelper.gs(R.string.codeinvalid))
+            OKDialog.show(activity, rh.gs(R.string.objectives), rh.gs(R.string.codeinvalid))
         }
     }
 
@@ -139,43 +139,43 @@ class ObjectivesPlugin @Inject constructor(
      */
     override fun isLoopInvocationAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         if (!objectives[FIRST_OBJECTIVE].isStarted)
-            value.set(aapsLogger, false, resourceHelper.gs(R.string.objectivenotstarted, FIRST_OBJECTIVE + 1), this)
+            value.set(aapsLogger, false, rh.gs(R.string.objectivenotstarted, FIRST_OBJECTIVE + 1), this)
         return value
     }
 
     override fun isLgsAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         if (!objectives[MAXBASAL_OBJECTIVE].isStarted)
-            value.set(aapsLogger, false, resourceHelper.gs(R.string.objectivenotstarted, MAXBASAL_OBJECTIVE + 1), this)
+            value.set(aapsLogger, false, rh.gs(R.string.objectivenotstarted, MAXBASAL_OBJECTIVE + 1), this)
         return value
     }
 
     override fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         if (!objectives[MAXIOB_ZERO_CL_OBJECTIVE].isStarted)
-            value.set(aapsLogger, false, resourceHelper.gs(R.string.objectivenotstarted, MAXIOB_ZERO_CL_OBJECTIVE + 1), this)
+            value.set(aapsLogger, false, rh.gs(R.string.objectivenotstarted, MAXIOB_ZERO_CL_OBJECTIVE + 1), this)
         return value
     }
 
     override fun isAutosensModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         if (!objectives[AUTOSENS_OBJECTIVE].isStarted)
-            value.set(aapsLogger, false, resourceHelper.gs(R.string.objectivenotstarted, AUTOSENS_OBJECTIVE + 1), this)
+            value.set(aapsLogger, false, rh.gs(R.string.objectivenotstarted, AUTOSENS_OBJECTIVE + 1), this)
         return value
     }
 
     override fun isSMBModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         if (!objectives[SMB_OBJECTIVE].isStarted)
-            value.set(aapsLogger, false, resourceHelper.gs(R.string.objectivenotstarted, SMB_OBJECTIVE + 1), this)
+            value.set(aapsLogger, false, rh.gs(R.string.objectivenotstarted, SMB_OBJECTIVE + 1), this)
         return value
     }
 
     override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> {
         if (objectives[MAXIOB_ZERO_CL_OBJECTIVE].isStarted && !objectives[MAXIOB_ZERO_CL_OBJECTIVE].isAccomplished)
-            maxIob.set(aapsLogger, 0.0, resourceHelper.gs(R.string.objectivenotfinished, MAXIOB_ZERO_CL_OBJECTIVE + 1), this)
+            maxIob.set(aapsLogger, 0.0, rh.gs(R.string.objectivenotfinished, MAXIOB_ZERO_CL_OBJECTIVE + 1), this)
         return maxIob
     }
 
     override fun isAutomationEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         if (!objectives[AUTO_OBJECTIVE].isStarted)
-            value.set(aapsLogger, false, resourceHelper.gs(R.string.objectivenotstarted, AUTO_OBJECTIVE + 1), this)
+            value.set(aapsLogger, false, rh.gs(R.string.objectivenotstarted, AUTO_OBJECTIVE + 1), this)
         return value
     }
 }

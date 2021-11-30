@@ -18,11 +18,11 @@ class MsgError(
         val errorCode = intFromBuff(bytes, 0, 1)
         var errorString = ""
         when (errorCode) {
-            1, 2, 3 -> errorString = resourceHelper.gs(R.string.pumperror) + " " + errorCode
-            4       -> errorString = resourceHelper.gs(R.string.pumpshutdown)
-            5       -> errorString = resourceHelper.gs(R.string.occlusion)
-            7       -> errorString = resourceHelper.gs(R.string.lowbattery)
-            8       -> errorString = resourceHelper.gs(R.string.batterydischarged)
+            1, 2, 3 -> errorString = rh.gs(R.string.pumperror) + " " + errorCode
+            4       -> errorString = rh.gs(R.string.pumpshutdown)
+            5       -> errorString = rh.gs(R.string.occlusion)
+            7       -> errorString = rh.gs(R.string.lowbattery)
+            8       -> errorString = rh.gs(R.string.batterydischarged)
         }
         if (errorCode < 8) { // bolus delivering stopped
             val bolusingEvent = EventOverviewBolusProgress

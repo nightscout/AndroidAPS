@@ -132,7 +132,7 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
 
     fun validFrom(): Int = safeGetInt(storage, "validFrom")
 
-    private fun validTo(): Int = safeGetInt(storage, "validTo")
+    fun validTo(): Int = safeGetInt(storage, "validTo")
 
     fun useBG(): Int = safeGetInt(storage, "useBG", YES)
 

@@ -11,6 +11,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.OmnipodD
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.OmnipodDashBleManagerImpl
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManagerImpl
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.DashPodHistoryActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.DashPodManagementActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.OmnipodDashOverviewFragment
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.wizard.activation.DashPodActivationWizardActivity
@@ -20,6 +21,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.wizard.deactivati
 @Suppress("unused")
 abstract class OmnipodDashModule {
     // ACTIVITIES
+
+    @ContributesAndroidInjector
+    abstract fun contributesDashPodHistoryActivity(): DashPodHistoryActivity
 
     @ContributesAndroidInjector
     abstract fun contributesDashPodManagementActivity(): DashPodManagementActivity

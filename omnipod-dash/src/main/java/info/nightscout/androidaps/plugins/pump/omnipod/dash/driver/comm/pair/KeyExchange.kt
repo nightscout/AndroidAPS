@@ -80,13 +80,11 @@ class KeyExchange(
             pdmNonce +
             podNonce
         aesCmac(confKey, pdmConfData, pdmConf)
-        aapsLogger.debug(LTag.PUMPBTCOMM, "pdmConf: ${pdmConf.toHex()}")
 
         val podConfData = POD_CONF_MAGIC_PREFIX +
             podNonce +
             pdmNonce
         aesCmac(confKey, podConfData, podConf)
-        aapsLogger.debug(LTag.PUMPBTCOMM, "podConf: ${podConf.toHex()}")
 
         if (BuildConfig.DEBUG) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "pdmPrivate: ${pdmPrivate.toHex()}")
@@ -94,6 +92,8 @@ class KeyExchange(
             aapsLogger.debug(LTag.PUMPBTCOMM, "podPublic: ${podPublic.toHex()}")
             aapsLogger.debug(LTag.PUMPBTCOMM, "pdmNonce: ${pdmNonce.toHex()}")
             aapsLogger.debug(LTag.PUMPBTCOMM, "podNonce: ${podNonce.toHex()}")
+            aapsLogger.debug(LTag.PUMPBTCOMM, "podConf: ${podConf.toHex()}")
+            aapsLogger.debug(LTag.PUMPBTCOMM, "pdmConf: ${pdmConf.toHex()}")
 
             aapsLogger.debug(LTag.PUMPBTCOMM, "LTK, donna key: ${curveLTK.toHex()}")
             aapsLogger.debug(LTag.PUMPBTCOMM, "Intermediate key: ${intermediateKey.toHex()}")

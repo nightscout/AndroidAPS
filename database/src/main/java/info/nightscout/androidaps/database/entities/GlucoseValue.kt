@@ -45,14 +45,20 @@ data class GlucoseValue(
 ) : TraceableDBEntry, DBEntryWithTime {
 
     fun contentEqualsTo(other: GlucoseValue): Boolean =
-        timestamp == other.timestamp &&
+        isValid == other.isValid &&
+            timestamp == other.timestamp &&
             utcOffset == other.utcOffset &&
             raw == other.raw &&
             value == other.value &&
             trendArrow == other.trendArrow &&
             noise == other.noise &&
-            sourceSensor == other.sourceSensor &&
-            isValid == other.isValid
+            sourceSensor == other.sourceSensor
+
+    fun onlyNsIdAdded(previous: GlucoseValue): Boolean =
+        previous.id != id &&
+            contentEqualsTo(previous) &&
+            previous.interfaceIDs.nightscoutId == null &&
+            interfaceIDs.nightscoutId != null
 
     fun isRecordDeleted(other: GlucoseValue): Boolean =
         isValid && !other.isValid
@@ -102,6 +108,7 @@ data class GlucoseValue(
         GLIMP("Glimp"),
         LIBRE_2_NATIVE("Libre2"),
         POCTECH_NATIVE("Poctech"),
+        GLUNOVO_NATIVE("Glunovo"),
         MM_600_SERIES("MM600Series"),
         EVERSENSE("Eversense"),
         RANDOM("Random"),

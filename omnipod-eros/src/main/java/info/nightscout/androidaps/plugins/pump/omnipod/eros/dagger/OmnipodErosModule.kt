@@ -16,7 +16,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.OmnipodErosOvervi
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.activation.ErosPodActivationWizardActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.deactivation.ErosPodDeactivationWizardActivity
 
-@Module
+@Module(includes = [OmnipodErosHistoryModule::class])
 @Suppress("unused")
 abstract class OmnipodErosModule {
 

@@ -10,6 +10,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.R
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.ActivationProgress
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsErosPodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodErosManager
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -18,8 +19,9 @@ class ErosInsertCannulaViewModel @Inject constructor(
     private val podStateManager: AapsErosPodStateManager,
     private val profileFunction: ProfileFunction,
     injector: HasAndroidInjector,
-    logger: AAPSLogger
-) : InsertCannulaViewModel(injector, logger) {
+    logger: AAPSLogger,
+    aapsSchedulers: AapsSchedulers
+) : InsertCannulaViewModel(injector, logger, aapsSchedulers) {
 
     override fun isPodInAlarm(): Boolean = podStateManager.isPodFaulted
 
@@ -27,7 +29,7 @@ class ErosInsertCannulaViewModel @Inject constructor(
 
     override fun isPodDeactivatable(): Boolean = podStateManager.activationProgress.isAtLeast(ActivationProgress.PAIRING_COMPLETED)
 
-    override fun doExecuteAction(): Single<PumpEnactResult> = Single.just(aapsOmnipodManager.insertCannula(profileFunction.getProfile()))
+    override fun doExecuteAction(): Single<PumpEnactResult> = Single.fromCallable { aapsOmnipodManager.insertCannula(profileFunction.getProfile()) }
 
     @StringRes
     override fun getTitleId(): Int = R.string.omnipod_common_pod_activation_wizard_insert_cannula_title

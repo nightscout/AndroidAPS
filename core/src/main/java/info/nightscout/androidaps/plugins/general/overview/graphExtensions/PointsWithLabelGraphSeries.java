@@ -370,22 +370,12 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
      * @param paint paint object
      */
     private void drawArrows(Point[] point, Canvas canvas, Paint paint) {
-        float[] points = new float[8];
-        points[0] = point[0].x;
-        points[1] = point[0].y;
-        points[2] = point[1].x;
-        points[3] = point[1].y;
-        points[4] = point[2].x;
-        points[5] = point[2].y;
-        points[6] = point[0].x;
-        points[7] = point[0].y;
-
         canvas.save();
-        canvas.drawVertices(Canvas.VertexMode.TRIANGLES, 8, points, 0, null, 0, null, 0, null, 0, 0, paint);
         Path path = new Path();
         path.moveTo(point[0].x, point[0].y);
         path.lineTo(point[1].x, point[1].y);
         path.lineTo(point[2].x, point[2].y);
+        path.close();
         canvas.drawPath(path, paint);
         canvas.restore();
     }

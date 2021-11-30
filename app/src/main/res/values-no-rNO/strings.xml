@@ -12,7 +12,6 @@
     <string name="nav_resetdb">Nullstill databasene</string>
     <string name="reset_db_confirm">Vil du virkelig nullstille databasene?</string>
     <string name="nav_exit">Avslutt</string>
-    <string name="ns_sync_use_absolute_title">Bruk alltid absolutte verdier for basal</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Det ser ikke ut som mobilen støtter registrering av apper som unntas fra batterioptimalisering - du kan oppleve ytelsesproblemer.</string>
     <string name="description_actions">Knapper for rask tilgang til ofte brukte funksjoner</string>
     <string name="description_config_builder">Brukt for innstilling av aktive plugin</string>
@@ -78,7 +77,6 @@
     <string name="overview">Oversikt</string>
     <string name="treatments">Behandlinger</string>
     <string name="virtualpump">Virtuell pumpe</string>
-    <string name="careportal">Careportal</string>
     <string name="configbuilder_pump">Pumpe</string>
     <string name="configbuilder_pump_description">Hvilken pumpe ønsker du å bruke sammen med AndroidAPS?</string>
     <string name="configbuilder_profile">Profil</string>
@@ -98,7 +96,7 @@
     <string name="safety">Sikkerhet</string>
     <string name="openapsma_disabled">Plugin er deaktivert</string>
     <string name="constraints_violation">Brudd på begrensninger</string>
-    <string name="treatmentdeliveryerror">Mislykket bolus levering</string>
+    <string name="treatmentdeliveryerror">Er registrert en feil med bolus leveransen. Sjekk manuelt om den er levert og hvor mye!</string>
     <string name="setbasalquestion">Aksepter ny temp basal:</string>
     <string name="overview_treatment_label">Behandling</string>
     <string name="overview_calculator_label">Kalkulator</string>
@@ -257,7 +255,7 @@
     <string name="ongoingnotificaction">Pågående varslinger</string>
     <string name="old_data">GAMLE DATA</string>
     <string name="sms_minago">%1$d min siden</string>
-    <string name="localprofile">Lokal profil</string>
+    <string name="localprofile">Profil</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Liste med %1$d elementer.\nFaktisk verdi:</string>
     <string name="openapsma_autosensdata_label">Autosens data</string>
@@ -494,6 +492,7 @@
     <string name="dexcomg5_xdripupload_title">Send BS data til xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">I xDrip+ velg 640G/Eversens som datakilde</string>
     <string name="nsclientbg">NSClient BS</string>
+    <string name="nsclientbgshort">NS BS</string>
     <string name="overview_editquickwizard_usebg">BS beregning</string>
     <string name="overview_editquickwizard_usebolusiob">Bolus IOB beregning</string>
     <string name="overview_editquickwizard_usebasaliob">Basal IOB beregning</string>
@@ -650,6 +649,8 @@
     <string name="time_elapsed">Tid brukt</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Motta BS verdier fra Poctech app</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Motta BS verdier fra Glunovo app</string>
     <string name="description_source_tomato">Motta BS verdier fra Tomato app (MiaoMiao enhet)</string>
     <string name="high_temptarget_raises_sensitivity_title">Høy temp target øker sensitiviteten</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Øk sensitiviteten for temp target >= 100]]></string>
@@ -665,7 +666,6 @@
     <string name="error_adding_treatment_title">Behandlingsdata er ufullstendige</string>
     <string name="maintenance_settings">Vedlikeholds innstillinger</string>
     <string name="maintenance_email">E-post mottaker</string>
-    <string name="maintenance_encrypt_exported_prefs">Krypter eksporterte innstillinger</string>
     <string name="maintenance_amount">Antall logger du vil sende</string>
     <string name="maintenance">Vedlikehold</string>
     <string name="maintenance_shortname">VEDL</string>
@@ -679,6 +679,7 @@
     <string name="resettodefaults">Gjenopprett standardinnstillinger</string>
     <string name="nsmalfunction">NSClient feil. Vurder omstart av NS og NSClient.</string>
     <string name="time_offset">Tidsforskyvning</string>
+    <string name="bolus_reminder">Påminnelse til å gi bolus senere</string>
     <string name="setupwizard_preferred_aps_mode">Foretrukket APS modus</string>
     <string name="treatments_wizard_total_label">Total</string>
     <string name="calculation_short">Kalkyle</string>
@@ -717,11 +718,9 @@
     <string name="versionChecker">Versjonskontroll</string>
     <string name="old_version">gammel versjon</string>
     <string name="very_old_version">veldig gammel versjon</string>
+    <string name="application_expired">Applikasjon utløpt - oppdater</string>
     <string name="new_version_warning">Ny versjon tilgjengelig i minst %1$d dager! Systemet vil bytte til \"stopp innen lavt (LGS)\" etter %2$d dager og loop vil deaktiveres etter %3$d dager</string>
     <string name="twohours">2t</string>
-    <string name="dexcom_app_patched">Dexcom App (patchet)</string>
-    <string name="dexcom_short">DXCM</string>
-    <string name="description_source_dexcom">Motta BS verdier fra den patchede Dexcom appen.</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="bolusconstraintappliedwarn">Bolus begrensning brukt: %1$.2f E til %2$.2f E</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Advarsel: Treg KH absorpsjon oppdaget: %2$d%% av tiden. Dobbeltsjekk din beregning. COB can være misvisende og du risikerer å få for mye insulin !!!!!</font>]]></string>
@@ -750,7 +749,7 @@
     <string name="clone_label">Klon</string>
     <string name="saveorresetchangesfirst">Lagre eller nullstill gjeldende endringer først</string>
     <string name="deletecurrentprofile">Slette gjeldende profil?</string>
-    <string name="copytolocalprofile">Opprette ny lokal profil fra denne profilen?</string>
+    <string name="copytolocalprofile">Opprett ny profil fra denne profilen?</string>
     <string name="profilenamecontainsdot">Profilnavnet inneholder prikker.\nDette støttes ikke av NS.\nProfilen er ikke lastet opp til NS.</string>
     <string name="low_mark_comment">Nedre verdi for målområdet (kun visning)</string>
     <string name="high_mark_comment">Øvre verdi for målområdet (kun visning)</string>
@@ -832,7 +831,7 @@
     <string name="dpvdefaultprofile">DPV standardprofil</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink status:</string>
     <string name="filter">Filter</string>
-    <string name="copytolocalprofile_invalid">Klarte ikke å opprette lokal profil. Profilen er ikke gyldig.</string>
+    <string name="copytolocalprofile_invalid">Klarte ikke å opprette profil. Profilen er ikke gyldig.</string>
     <string name="cta_dont_kill_my_app_info">Avslutte app?</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Send SMS hvis det ikke oppnås kontakt med pumpa</string>
     <string name="smscommunicator_pump_ureachable">Rapporter når kontakt med pumpe ikke oppnås</string>
@@ -844,6 +843,11 @@
     <string name="enablebolusadvisor_summary">Bruk en påminnelse om å spise senere enn kalkulator resultatet fra wizard ved høyt blodsukker (\"pre-bolus\")</string>
     <string name="time_to_eat">Nå må du spise!\Bruk bolus veiviseren og beregn på nytt.</string>
     <string name="timetoeat">Nå må du spise</string>
+    <string name="bolusreminder">Bolus påminnelse</string>
+    <string name="enablebolusreminder">Aktiver bolus påminnelse</string>
+    <string name="enablebolusreminder_summary">Bruk påminnelse for å sette bolus dosen senere med veiviseren
+        («post bolus»)</string>
+    <string name="time_to_bolus">Tid for bolus!\nStart bolus-veiviser og gjør beregning på nytt.</string>
     <string name="fabric_upload_disabled">Opplast av krasj logger er deaktivert!</string>
     <string name="graph_menu_divider_header">Graf</string>
     <string name="chart_menu">Diagram meny</string>
@@ -852,17 +856,17 @@
     <string name="cannula">Kanyle</string>
     <string name="userentry">Bruker registrering</string>
     <string name="common_values">Bruk verdiene for det største måltidet du normalt spiser\n</string>
-    <string name="summary_email_for_crash_report">Denne e-postadressen vedlegges krasjrapporter slik at vi kan kontakte deg i akutte tilfeller. Det er valgfritt.</string>
     <string name="email_address">E-postadresse</string>
     <string name="privacy_settings">Personverninnstillinger</string>
     <string name="privacy_summary">Du kan oppgi valgfri e-postadresse hvis du ønsker å bli varslet om krasj. Dette er ikke en automatisert tjeneste. Du vil bli kontaktet av utviklere ved farlige hendelser.</string>
     <string name="full_sync">Full synkronisering</string>
+    <string name="full_sync_comment">Full synkronisering? Dette kan ta mange timer og du ser ikke nye data i NS før dette er ferdig.</string>
     <string name="prime">Prime</string>
     <string name="ns_sync_options">Synkronisering</string>
     <string name="ns_upload_summary">Profiler, boluser, karbohydrater, midlertidige basaler lastes opp til NS</string>
     <string name="ns_upload">Last opp data til NS</string>
     <string name="ns_receive_profile_store">Hent lagrede profiler</string>
-    <string name="ns_receive_profile_store_summary">Synkroniser profiler fra NS til lokal profil</string>
+    <string name="ns_receive_profile_store_summary">Synkroniser profiler fra NS profileditor</string>
     <string name="ns_receive_temp_target">Motta midlertidige BS mål</string>
     <string name="ns_receive_temp_target_summary">Aksepter midlertidige mål angitt med NS eller NSClient</string>
     <string name="ns_receive_profile_switch">Motta profilbytter</string>
@@ -880,4 +884,17 @@
     <string name="sms_timeout_while_wating">Tidsavbrudd fordi vi ventet på avslutning av forrige pumpekommunikasjon</string>
     <string name="smscommunicator_another_bolus_in_queue">Det ligger en annen bolus i køen. Prøv igjen senere.</string>
     <string name="calculation_in_progress">Beregning pågår</string>
+    <string name="missing_profile_name">Mangler profilnavn</string>
+    <string name="error_in_ic_values">Feil i IK faktoren</string>
+    <string name="error_in_basal_values">Feil i basalverdiene</string>
+    <string name="error_in_target_values">Feil i BS mål verdiene</string>
+    <string name="error_in_isf_values">Feil i IF verdien</string>
+    <string name="run_question">Kjør %s?</string>
+    <string name="invalid_profile_not_accepted">Ugyldig profil %1$s ikke akseptert fra NS</string>
+    <string name="view">Visning</string>
+    <string name="errors">Feil</string>
+    <string name="ns_sync_slow">Reduser opplastingshastighet</string>
+    <string name="data_status">BS data status</string>
+    <string name="recalculated_data_used">Rekalkulerte siste data</string>
+    <string name="bg_too_close">BS for nær:\n%1$s\n%2$s</string>
 </resources>

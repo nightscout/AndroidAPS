@@ -22,11 +22,11 @@ class TriggerBTDevice(injector: HasAndroidInjector) : Trigger(injector) {
     @Inject lateinit var context: Context
     @Inject lateinit var automationPlugin: AutomationPlugin
 
-    var btDevice = InputDropdownMenu(resourceHelper, "")
-    var comparator: ComparatorConnect = ComparatorConnect(resourceHelper)
+    var btDevice = InputDropdownMenu(rh, "")
+    var comparator: ComparatorConnect = ComparatorConnect(rh)
 
     private constructor(injector: HasAndroidInjector, triggerBTDevice: TriggerBTDevice) : this(injector) {
-        comparator = ComparatorConnect(resourceHelper, triggerBTDevice.comparator.value)
+        comparator = ComparatorConnect(rh, triggerBTDevice.comparator.value)
         btDevice.value = triggerBTDevice.btDevice.value
     }
 
@@ -54,7 +54,7 @@ class TriggerBTDevice(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyName(): Int = R.string.btdevice
 
     override fun friendlyDescription(): String =
-        resourceHelper.gs(R.string.btdevicecompared, btDevice.value, resourceHelper.gs(comparator.value.stringRes))
+        rh.gs(R.string.btdevicecompared, btDevice.value, rh.gs(comparator.value.stringRes))
 
     override fun icon(): Optional<Int?> = Optional.of(R.drawable.ic_bluetooth_white_48dp)
 
@@ -64,7 +64,7 @@ class TriggerBTDevice(injector: HasAndroidInjector) : Trigger(injector) {
         val pairedDevices = devicesPaired()
         btDevice.setList(pairedDevices)
         LayoutBuilder()
-            .add(StaticLabel(resourceHelper, R.string.btdevice, this))
+            .add(StaticLabel(rh, R.string.btdevice, this))
             .add(btDevice)
             .add(comparator)
             .build(root)

@@ -8,7 +8,7 @@ import android.widget.ScrollView
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.TidepoolFragmentBinding
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.tidepool.comm.TidepoolUploader
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolDoUpload
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolResetData
@@ -22,7 +22,7 @@ import javax.inject.Inject
 
 class TidepoolFragment : DaggerFragment() {
 
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var tidepoolPlugin: TidepoolPlugin
     @Inject lateinit var tidepoolUploader: TidepoolUploader
     @Inject lateinit var sp: SP

@@ -16,8 +16,11 @@ interface DataSyncSelector {
     data class PairTemporaryBasal(val value: TemporaryBasal, val updateRecordId: Long)
     data class PairExtendedBolus(val value: ExtendedBolus, val updateRecordId: Long)
     data class PairProfileSwitch(val value: ProfileSwitch, val updateRecordId: Long)
+    data class PairEffectiveProfileSwitch(val value: EffectiveProfileSwitch, val updateRecordId: Long)
     data class PairOfflineEvent(val value: OfflineEvent, val updateRecordId: Long)
     data class PairProfileStore(val value: JSONObject, val timestampSync: Long)
+
+    fun queueSize(): Long
 
     fun doUpload()
 
@@ -46,7 +49,7 @@ interface DataSyncSelector {
     fun confirmLastGlucoseValueIdIfGreater(lastSynced: Long)
     fun changedGlucoseValues() : List<GlucoseValue>
     // Until NS v3
-    fun processChangedGlucoseValuesCompat(): Boolean
+    fun processChangedGlucoseValuesCompat()
 
     fun confirmLastTherapyEventIdIfGreater(lastSynced: Long)
     fun changedTherapyEvents() : List<TherapyEvent>
@@ -77,6 +80,11 @@ interface DataSyncSelector {
     fun changedProfileSwitch() : List<ProfileSwitch>
     // Until NS v3
     fun processChangedProfileSwitchesCompat(): Boolean
+
+    fun confirmLastEffectiveProfileSwitchIdIfGreater(lastSynced: Long)
+    fun changedEffectiveProfileSwitch() : List<EffectiveProfileSwitch>
+    // Until NS v3
+    fun processChangedEffectiveProfileSwitchesCompat(): Boolean
 
     fun confirmLastOfflineEventIdIfGreater(lastSynced: Long)
     fun changedOfflineEvents() : List<OfflineEvent>

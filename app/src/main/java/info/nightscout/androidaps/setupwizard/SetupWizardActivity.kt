@@ -13,7 +13,7 @@ import info.nightscout.androidaps.events.EventProfileSwitchChanged
 import info.nightscout.androidaps.events.EventProfileStoreChanged
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientStatus
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
@@ -34,7 +34,7 @@ class SetupWizardActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var localProfilePlugin: LocalProfilePlugin
     @Inject lateinit var swDefinition: SWDefinition
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var sp: SP
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var aapsSchedulers: AapsSchedulers
@@ -70,7 +70,7 @@ class SetupWizardActivity : NoSplashAppCompatActivity() {
         }
     }
 
-    public override fun onPause() {
+    override fun onPause() {
         super.onPause()
         disposable.clear()
     }
@@ -145,13 +145,13 @@ class SetupWizardActivity : NoSplashAppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (currentWizardPage == 0) OKDialog.showConfirmation(this, resourceHelper.gs(R.string.exitwizard)) { finish() } else showPreviousPage(null)
+        if (currentWizardPage == 0) OKDialog.showConfirmation(this, rh.gs(R.string.exitwizard)) { finish() } else showPreviousPage(null)
     }
 
     @Suppress("UNUSED_PARAMETER")
     fun exitPressed(view: View?) {
         sp.putBoolean(R.string.key_setupwizard_processed, true)
-        OKDialog.showConfirmation(this, resourceHelper.gs(R.string.exitwizard)) { finish() }
+        OKDialog.showConfirmation(this, rh.gs(R.string.exitwizard)) { finish() }
     }
 
     @Suppress("UNUSED_PARAMETER")

@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 class BolusDataPoint @Inject constructor(
     val data: Bolus,
-    private val resourceHelper: ResourceHelper,
+    private val rh: ResourceHelper,
     private val activePlugin: ActivePlugin,
     private val defaultValueHelper: DefaultValueHelper
 ) : DataPointWithLabelInterface {
@@ -20,18 +20,21 @@ class BolusDataPoint @Inject constructor(
 
     override fun getX(): Double = data.timestamp.toDouble()
     override fun getY(): Double = if (data.type == Bolus.Type.SMB) defaultValueHelper.determineLowLine() else yValue
-    override fun getLabel(): String = DecimalFormatter.toPumpSupportedBolus(data.amount, activePlugin.activePump, resourceHelper)
-    override fun getDuration(): Long = 0
-    override fun getSize(): Float = 2f
+    override val label
+        get() = DecimalFormatter.toPumpSupportedBolus(data.amount, activePlugin.activePump, rh)
+    override val duration = 0L
+    override val size = 2f
 
-    override fun getShape(): PointsWithLabelGraphSeries.Shape =
-        if (data.type == Bolus.Type.SMB) PointsWithLabelGraphSeries.Shape.SMB
-        else PointsWithLabelGraphSeries.Shape.BOLUS
+    override val shape
+        get() = if (data.type == Bolus.Type.SMB) PointsWithLabelGraphSeries.Shape.SMB else PointsWithLabelGraphSeries.Shape.BOLUS
 
-    override fun getColor(): Int =
-        if (data.type == Bolus.Type.SMB) resourceHelper.gc(R.color.tempbasal)
-        else if (data.isValid) Color.CYAN
-        else resourceHelper.gc(android.R.color.holo_red_light)
+    override val color
+        get() =
+            when {
+                data.type == Bolus.Type.SMB -> rh.gc(R.color.tempbasal)
+                data.isValid                -> Color.CYAN
+                else                        -> rh.gc(android.R.color.holo_red_light)
+            }
 
     override fun setY(y: Double) {
         yValue = y

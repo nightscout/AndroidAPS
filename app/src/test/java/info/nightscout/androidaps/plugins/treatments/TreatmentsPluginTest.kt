@@ -26,12 +26,12 @@ class TreatmentsPluginTest : TestBaseWithProfile() {
 
     @Before
     fun prepare() {
-        insulinOrefRapidActingPlugin = InsulinOrefRapidActingPlugin(profileInjector, resourceHelper, profileFunction, rxBus, aapsLogger)
+        insulinOrefRapidActingPlugin = InsulinOrefRapidActingPlugin(profileInjector, rh, profileFunction, rxBus, aapsLogger)
 
         `when`(profileFunction.getProfile(ArgumentMatchers.anyLong())).thenReturn(validProfile)
         `when`(activePluginProvider.activeInsulin).thenReturn(insulinOrefRapidActingPlugin)
 
-        sot = TreatmentsPlugin(profileInjector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, context, sp, profileFunction, activePluginProvider, nsUpload, fabricPrivacy, dateUtil, databaseHelper, repository)
+        sot = TreatmentsPlugin(profileInjector, aapsLogger, rxBus, aapsSchedulers, rh, context, sp, profileFunction, activePluginProvider, nsUpload, fabricPrivacy, dateUtil, databaseHelper, repository)
         sot.service = treatmentService
     }
 

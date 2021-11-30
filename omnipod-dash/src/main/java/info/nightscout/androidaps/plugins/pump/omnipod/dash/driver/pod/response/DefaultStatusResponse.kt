@@ -5,6 +5,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definitio
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.AlertUtil
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.byValue
+import java.nio.ByteBuffer
 import java.util.*
 import kotlin.experimental.and
 
@@ -13,18 +14,21 @@ class DefaultStatusResponse(
 ) : ResponseBase(ResponseType.DEFAULT_STATUS_RESPONSE, encoded) {
 
     val messageType: Byte = encoded[0]
-    val deliveryStatus: DeliveryStatus = byValue((encoded[1].toInt() shr 4 and 0x0f).toByte(), DeliveryStatus.UNKNOWN)
-    val podStatus: PodStatus = byValue((encoded[1] and 0x0f), PodStatus.UNKNOWN)
-    val totalPulsesDelivered: Short =
-        (encoded[2] and 0x0f shl 9 or (encoded[3].toInt() and 0xff shl 1) or (encoded[4].toInt() and 0xff ushr 7)).toShort()
 
-    val sequenceNumberOfLastProgrammingCommand: Short = (encoded[4] ushr 3 and 0x0f).toShort()
-    val bolusPulsesRemaining: Short = ((encoded[4] and 0x07 shl 10 or (encoded[5].toInt() and 0xff) and 2047).toShort())
+    private var first4bytes = ByteBuffer.wrap(byteArrayOf(encoded[2], encoded[3], encoded[4], encoded[5])).int
+    private var last4bytes = ByteBuffer.wrap(byteArrayOf(encoded[6], encoded[7], encoded[8], encoded[9])).int
+
+    val podStatus: PodStatus = byValue((encoded[1] and 0x0f), PodStatus.UNKNOWN)
+    val deliveryStatus: DeliveryStatus = byValue(((encoded[1].toInt() and 0xff) shr 4 and 0x0f).toByte(), DeliveryStatus.UNKNOWN)
+
+    val totalPulsesDelivered: Short = (first4bytes ushr 11 ushr 4 and 0x1FFF).toShort()
+    val sequenceNumberOfLastProgrammingCommand: Short = (first4bytes ushr 11 and 0X0F).toShort()
+    val bolusPulsesRemaining: Short = (first4bytes and 0X7FF).toShort()
+
     val activeAlerts: EnumSet<AlertType> =
-        AlertUtil.decodeAlertSet((encoded[6].toInt() and 0xff shl 1 or (encoded[7] ushr 7)).toByte())
-    val minutesSinceActivation: Short =
-        (encoded[7] and 0x7f shl 6 or (encoded[8].toInt() and 0xff ushr 2 and 0x3f)).toShort()
-    val reservoirPulsesRemaining: Short = (encoded[8] shl 8 or encoded[9].toInt() and 0x3ff).toShort()
+        AlertUtil.decodeAlertSet((last4bytes ushr 10 ushr 13 and 0xFF).toByte())
+    val minutesSinceActivation: Short = ((last4bytes ushr 10 and 0x1FFF)).toShort()
+    val reservoirPulsesRemaining: Short = (last4bytes and 0X3FF).toShort()
 
     override fun toString(): String {
         return "DefaultStatusResponse(" +

@@ -16,6 +16,14 @@ data class HistoryRecord(
 ) {
     fun pumpId(): Long {
         val entropy = ULID.getEntropy(id)
-        return ByteBuffer.wrap(entropy).getLong()
+        return ByteBuffer.wrap(entropy).long
+    }
+
+    fun displayTimestamp(): Long {
+        return date
+    }
+
+    fun isSuccess(): Boolean {
+        return initialResult == InitialResult.SENT && resolvedResult == ResolvedResult.SUCCESS
     }
 }

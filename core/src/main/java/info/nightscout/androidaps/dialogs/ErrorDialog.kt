@@ -3,7 +3,7 @@ package info.nightscout.androidaps.dialogs
 import android.content.Context
 import android.os.Bundle
 import android.os.Handler
-import android.os.Looper
+import android.os.HandlerThread
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,7 +33,7 @@ class ErrorDialog : DaggerDialogFragment() {
     var title: String = ""
     var sound: Int = 0
 
-    private var loopHandler = Handler(Looper.getMainLooper())
+    private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
     private var _binding: DialogErrorBinding? = null
 
@@ -73,7 +73,7 @@ class ErrorDialog : DaggerDialogFragment() {
         binding.mute5min.setOnClickListener {
             uel.log(Action.ERROR_DIALOG_MUTE_5MIN, Sources.Unknown)
             stopAlarm()
-            loopHandler.postDelayed(this::startAlarm, T.mins(5).msecs())
+            handler.postDelayed(this::startAlarm, T.mins(5).msecs())
         }
         startAlarm()
     }
@@ -103,7 +103,7 @@ class ErrorDialog : DaggerDialogFragment() {
     override fun dismiss() {
         super.dismissAllowingStateLoss()
         helperActivity?.finish()
-        loopHandler.removeCallbacksAndMessages(null)
+        handler.removeCallbacksAndMessages(null)
         stopAlarm()
     }
 

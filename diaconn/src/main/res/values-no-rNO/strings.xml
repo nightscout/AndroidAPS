@@ -129,7 +129,6 @@
     <string name="diaconn_g8_logmealfail">Måltidsbolus feilet</string>
     <string name="diaconn_g8_logsuccess">Suksess</string>
     <string name="diaconn_g8_logmealsuccess">Måltidsbolus vellykket</string>
-    <string name="key_diaconn_g8_logtubechange">diaconn_g8_logtubechange</string>
     <string name="diaconn_g8_errorcode_1">Kan ikke lese på grunn av feil med kommunikasjonen</string>
     <string name="diaconn_g8_errorcode_2">Kan ikke settes på grunn av feil i parameterverdi.</string>
     <string name="diaconn_g8_errorcode_3">Kan ikke settes på grunn av feil i kommunikasjonsprotokollen.</string>

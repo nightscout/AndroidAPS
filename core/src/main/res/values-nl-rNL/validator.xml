@@ -11,7 +11,9 @@
     <string name="error_domain_not_valid">Domeinnaam is niet geldig</string>
     <string name="error_ip_not_valid">IP-adres is niet geldig</string>
     <string name="error_url_not_valid">Website-URL is niet geldig</string>
+    <string name="error_notvalid_personname">Geen geldige voor of achternaam.</string>
     <string name="error_notvalid_personfullname">Geen geldige volledige naam.</string>
+    <string name="error_date_not_valid">Formaat niet geldig</string>
     <string name="error_mustbe4digitnumber">Moet uit 4 cijfers bestaan</string>
     <string name="error_mustbe6digitnumber">Moet uit 6 cijfers bestaan</string>
     <string name="error_mustbe12hexadidits">Moet 12 tekens bevatten uit ABCDEF0123456789</string>

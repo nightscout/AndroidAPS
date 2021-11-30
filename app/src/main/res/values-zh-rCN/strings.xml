@@ -11,7 +11,6 @@
     <string name="nav_resetdb">重置数据库</string>
     <string name="reset_db_confirm">你真的想重置数据库吗?</string>
     <string name="nav_exit">退出</string>
-    <string name="ns_sync_use_absolute_title">总是使用基础率的绝对值</string>
     <string name="description_actions">一些快速访问常用功能的按钮</string>
     <string name="description_config_builder">用于配置活动插件</string>
     <string name="description_objectives">学习计划</string>
@@ -71,7 +70,6 @@
     <string name="overview">首页概览</string>
     <string name="treatments">治疗</string>
     <string name="virtualpump">虚拟泵</string>
-    <string name="careportal">护理记录</string>
     <string name="configbuilder_pump">胰岛素泵</string>
     <string name="configbuilder_pump_description">你想用 AndroidAPS连接哪个胰岛素泵？</string>
     <string name="configbuilder_profile">配置文件</string>
@@ -91,7 +89,6 @@
     <string name="safety">安全性</string>
     <string name="openapsma_disabled">插件已禁用</string>
     <string name="constraints_violation">违反约束条件</string>
-    <string name="treatmentdeliveryerror">大剂量输注错误</string>
     <string name="setbasalquestion">接受新的临时基础率</string>
     <string name="overview_treatment_label">治疗</string>
     <string name="overview_calculator_label">计算器</string>
@@ -195,7 +192,6 @@
     <string name="ongoingnotificaction">持续的的通知</string>
     <string name="old_data">旧数据</string>
     <string name="sms_minago">%1$d分钟前</string>
-    <string name="localprofile">本地配置文件</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">%1$d 元素的数组. \n 实际值:</string>
     <string name="openapsma_autosensdata_label">Autosens 数据</string>
@@ -572,8 +568,5 @@
     <string name="old_version">旧版本</string>
     <string name="very_old_version">非常旧版本</string>
     <string name="twohours">2小时</string>
-    <string name="dexcom_app_patched">德康app（补丁版）</string>
-    <string name="dexcom_short">DXCM</string>
-    <string name="description_source_dexcom">从补丁版的德康APP收到血糖值</string>
     <!-- SMS Communicator & OTP Authenticator -->
 </resources>

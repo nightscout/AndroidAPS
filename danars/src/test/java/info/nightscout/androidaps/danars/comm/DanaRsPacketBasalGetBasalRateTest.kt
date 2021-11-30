@@ -13,7 +13,7 @@ class DanaRsPacketBasalGetBasalRateTest : DanaRSTestBase() {
             if (it is DanaRSPacketBasalGetBasalRate) {
                 it.aapsLogger = aapsLogger
                 it.rxBus = rxBus
-                it.resourceHelper = resourceHelper
+                it.rh = rh
                 it.danaPump = danaPump
             }
         }

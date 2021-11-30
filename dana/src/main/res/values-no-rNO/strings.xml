@@ -94,8 +94,6 @@
     <string name="profile_set_failed">Innstilling av basalprofil mislyktes</string>
     <string name="danar_bluetooth_status">Status for Bluetooth</string>
     <string name="danar_iob_label">Pumpens IOB</string>
-    <string name="basal_step">Basal trinn</string>
-    <string name="bolus_step">Bolus trinn</string>
     <string name="virtualpump_firmware_label">Firmware</string>
     <string name="danar_pump_settings">Innstillinger for Dana pumpe</string>
     <string name="timeformat12h">12t</string>
@@ -117,4 +115,5 @@
     <string name="press_ok_on_the_pump">Trykk OK på pumpen\nog skriv inn de 2 viste tallene\nHold skjermen på pumpen PÅ ved å trykke minus knappen til du fullfører inntastingen.</string>
     <string name="num1pin">1: (12 tall)</string>
     <string name="num2pin">2: (8 tall)</string>
+    <string name="basal_bolus_step">Basal/bolus trinn</string>
 </resources>

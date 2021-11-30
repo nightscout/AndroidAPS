@@ -6,7 +6,7 @@ import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.transactions.InsertTherapyEventAnnouncementTransaction
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
@@ -20,9 +20,9 @@ import kotlin.math.min
 @Singleton
 class HardLimits @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val rxBus: RxBusWrapper,
+    private val rxBus: RxBus,
     private val sp: SP,
-    private val resourceHelper: ResourceHelper,
+    private val rh: ResourceHelper,
     private val context: Context,
     private val repository: AppRepository
 ) {
@@ -40,22 +40,22 @@ class HardLimits @Inject constructor(
 
         // Very Hard Limits Ranges
         // First value is the Lowest and second value is the Highest a Limit can define
-        val VERY_HARD_LIMIT_MIN_BG = intArrayOf(72, 180)
-        val VERY_HARD_LIMIT_MAX_BG = intArrayOf(90, 270)
-        val VERY_HARD_LIMIT_TARGET_BG = intArrayOf(80, 200)
+        val VERY_HARD_LIMIT_MIN_BG = doubleArrayOf(80.0, 180.0)
+        val VERY_HARD_LIMIT_MAX_BG = doubleArrayOf(90.0, 200.0)
+        val VERY_HARD_LIMIT_TARGET_BG = doubleArrayOf(80.0, 200.0)
 
         // Very Hard Limits Ranges for Temp Targets
         val VERY_HARD_LIMIT_TEMP_MIN_BG = intArrayOf(72, 180)
         val VERY_HARD_LIMIT_TEMP_MAX_BG = intArrayOf(72, 270)
         val VERY_HARD_LIMIT_TEMP_TARGET_BG = intArrayOf(72, 200)
         val MIN_DIA = doubleArrayOf(5.0, 5.0, 5.0, 5.0, 5.0)
-        val MAX_DIA = doubleArrayOf(7.0, 7.0, 7.0, 7.0, 10.0)
+        val MAX_DIA = doubleArrayOf(9.0, 9.0, 9.0, 9.0, 10.0)
         val MIN_IC = doubleArrayOf(2.0, 2.0, 2.0, 2.0, 0.3)
         val MAX_IC = doubleArrayOf(100.0, 100.0, 100.0, 100.0, 100.0)
         const val MIN_ISF = 2.0 // mgdl
         const val MAX_ISF = 720.0 // mgdl
         val MAX_IOB_AMA = doubleArrayOf(3.0, 5.0, 7.0, 12.0, 25.0)
-        val MAX_IOB_SMB = doubleArrayOf(3.0, 7.0, 12.0, 25.0, 40.0)
+        val MAX_IOB_SMB = doubleArrayOf(7.0, 13.0, 22.0, 30.0, 70.0)
         val MAX_BASAL = doubleArrayOf(2.0, 5.0, 10.0, 12.0, 25.0)
 
         //LGS Hard limits
@@ -65,11 +65,11 @@ class HardLimits @Inject constructor(
     }
 
     private fun loadAge(): Int = when (sp.getString(R.string.key_age, "")) {
-        resourceHelper.gs(R.string.key_child)          -> CHILD
-        resourceHelper.gs(R.string.key_teenage)        -> TEENAGE
-        resourceHelper.gs(R.string.key_adult)          -> ADULT
-        resourceHelper.gs(R.string.key_resistantadult) -> RESISTANT_ADULT
-        resourceHelper.gs(R.string.key_pregnant)       -> PREGNANT
+        rh.gs(R.string.key_child)          -> CHILD
+        rh.gs(R.string.key_teenage)        -> TEENAGE
+        rh.gs(R.string.key_adult)          -> ADULT
+        rh.gs(R.string.key_resistantadult) -> RESISTANT_ADULT
+        rh.gs(R.string.key_pregnant)       -> PREGNANT
         else                                           -> ADULT
     }
 
@@ -94,9 +94,9 @@ class HardLimits @Inject constructor(
         if (newValue < lowLimit || newValue > highLimit) {
             newValue = max(newValue, lowLimit)
             newValue = min(newValue, highLimit)
-            var msg = String.format(resourceHelper.gs(R.string.valueoutofrange), resourceHelper.gs(valueName))
+            var msg = String.format(rh.gs(R.string.valueoutofrange), rh.gs(valueName))
             msg += ".\n"
-            msg += String.format(resourceHelper.gs(R.string.valuelimitedto), value, newValue)
+            msg += String.format(rh.gs(R.string.valuelimitedto), value, newValue)
             aapsLogger.error(msg)
             disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(msg)).subscribe()
             ToastUtils.showToastInUiThread(context, rxBus, msg, R.raw.error)

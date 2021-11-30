@@ -14,12 +14,12 @@ import androidx.core.app.NotificationCompat
 import androidx.recyclerview.widget.RecyclerView
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.OverviewNotificationItemBinding
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.IconsProvider
 import info.nightscout.androidaps.interfaces.NotificationHolder
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
+import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewNotification
 import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -32,13 +32,13 @@ import javax.inject.Singleton
 class NotificationStore @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val sp: SP,
-    private val rxBus: RxBusWrapper,
-    private val resourceHelper: ResourceHelper,
+    private val rh: ResourceHelper,
     private val context: Context,
     private val iconsProvider: IconsProvider,
     private val alarmSoundServiceHelper: AlarmSoundServiceHelper,
     private val dateUtil: DateUtil,
-    private val notificationHolder: NotificationHolder
+    private val notificationHolder: NotificationHolder,
+    private val activePlugin: ActivePlugin
 ) {
 
     private var store: MutableList<Notification> = ArrayList()
@@ -103,7 +103,7 @@ class NotificationStore @Inject constructor(
 
     private fun raiseSystemNotification(n: Notification) {
         val mgr = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val largeIcon = resourceHelper.decodeResource(iconsProvider.getIcon())
+        val largeIcon = rh.decodeResource(iconsProvider.getIcon())
         val smallIcon = iconsProvider.getNotificationIcon()
         val sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
         val notificationBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
@@ -116,11 +116,11 @@ class NotificationStore @Inject constructor(
             .setContentIntent(notificationHolder.openAppIntent(context))
         if (n.level == Notification.URGENT) {
             notificationBuilder.setVibrate(longArrayOf(1000, 1000, 1000, 1000))
-                .setContentTitle(resourceHelper.gs(R.string.urgent_alarm))
+                .setContentTitle(rh.gs(R.string.urgent_alarm))
                 .setSound(sound, AudioManager.STREAM_ALARM)
         } else {
             notificationBuilder.setVibrate(longArrayOf(0, 100, 50, 100, 50))
-                .setContentTitle(resourceHelper.gs(R.string.info))
+                .setContentTitle(rh.gs(R.string.info))
         }
         mgr.notify(n.id, notificationBuilder.build())
     }
@@ -150,7 +150,8 @@ class NotificationStore @Inject constructor(
         }
     }
 
-    inner class NotificationRecyclerViewAdapter internal constructor(private val notificationsList: List<Notification>) : RecyclerView.Adapter<NotificationRecyclerViewAdapter.NotificationsViewHolder>() {
+    inner class NotificationRecyclerViewAdapter internal constructor(private val notificationsList: List<Notification>) :
+        RecyclerView.Adapter<NotificationRecyclerViewAdapter.NotificationsViewHolder>() {
 
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): NotificationsViewHolder =
             NotificationsViewHolder(LayoutInflater.from(viewGroup.context).inflate(R.layout.overview_notification_item, viewGroup, false))
@@ -163,11 +164,11 @@ class NotificationStore @Inject constructor(
             @Suppress("SetTextI18n")
             holder.binding.text.text = dateUtil.timeString(notification.date) + " " + notification.text
             when (notification.level) {
-                Notification.URGENT       -> holder.binding.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationUrgent))
-                Notification.NORMAL       -> holder.binding.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationNormal))
-                Notification.LOW          -> holder.binding.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationLow))
-                Notification.INFO         -> holder.binding.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationInfo))
-                Notification.ANNOUNCEMENT -> holder.binding.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationAnnouncement))
+                Notification.URGENT       -> holder.binding.cv.setBackgroundColor(rh.gc(R.color.notificationUrgent))
+                Notification.NORMAL       -> holder.binding.cv.setBackgroundColor(rh.gc(R.color.notificationNormal))
+                Notification.LOW          -> holder.binding.cv.setBackgroundColor(rh.gc(R.color.notificationLow))
+                Notification.INFO         -> holder.binding.cv.setBackgroundColor(rh.gc(R.color.notificationInfo))
+                Notification.ANNOUNCEMENT -> holder.binding.cv.setBackgroundColor(rh.gc(R.color.notificationAnnouncement))
             }
         }
 
@@ -182,8 +183,9 @@ class NotificationStore @Inject constructor(
             init {
                 binding.dismiss.setOnClickListener {
                     val notification = it.tag as Notification
-                    rxBus.send(EventDismissNotification(notification.id))
+                    notification.contextForAction = itemView.context
                     notification.action?.run()
+                    if (remove(notification.id)) activePlugin.activeOverview.overviewBus.send(EventUpdateOverviewNotification("NotificationCleared"))
                 }
             }
         }

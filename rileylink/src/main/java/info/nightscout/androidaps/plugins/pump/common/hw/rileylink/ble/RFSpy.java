@@ -15,7 +15,7 @@ import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.R;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
@@ -51,11 +51,11 @@ public class RFSpy {
     private static final int LOW_BATTERY_PERCENTAGE_THRESHOLD = 20;
 
     @Inject AAPSLogger aapsLogger;
-    @Inject ResourceHelper resourceHelper;
+    @Inject ResourceHelper rh;
     @Inject SP sp;
     @Inject RileyLinkServiceData rileyLinkServiceData;
     @Inject RileyLinkUtil rileyLinkUtil;
-    @Inject RxBusWrapper rxBus;
+    @Inject RxBus rxBus;
 
     private final HasAndroidInjector injector;
 
@@ -68,7 +68,7 @@ public class RFSpy {
     private final UUID radioDataUUID = UUID.fromString(GattAttributes.CHARA_RADIO_DATA);
     private final UUID radioVersionUUID = UUID.fromString(GattAttributes.CHARA_RADIO_VERSION);
     private final UUID batteryServiceUUID = UUID.fromString(GattAttributes.SERVICE_BATTERY);
-    private final UUID batteryLevelUUID = UUID.fromString(GattAttributes.CHARA_BATTERY_UNK);
+    private final UUID batteryLevelUUID = UUID.fromString(GattAttributes.CHARA_BATTERY_LEVEL);
     private String bleVersion; // We don't use it so no need of sofisticated logic
     private Double currentFrequencyMHz;
     private long nextBatteryCheck = 0;
@@ -81,7 +81,7 @@ public class RFSpy {
 
     @Inject
     public void onInit() {
-        aapsLogger.debug("RileyLinkServiceData:" + rileyLinkServiceData);
+        //aapsLogger.debug("RileyLinkServiceData:" + rileyLinkServiceData);
         reader = new RFSpyReader(aapsLogger, rileyLinkBle);
     }
 
@@ -103,6 +103,10 @@ public class RFSpy {
         String cc1110Version = getCC1110Version();
         rileyLinkServiceData.versionCC110 = cc1110Version;
         rileyLinkServiceData.firmwareVersion = getFirmwareVersion(aapsLogger, bleVersion, cc1110Version);
+
+        aapsLogger.debug(LTag.PUMPBTCOMM,
+                String.format("RileyLink - BLE Version: %s, CC1110 Version: %s, Firmware Version: %s",
+                        bleVersion, cc1110Version, rileyLinkServiceData.firmwareVersion));
     }
 
     // Call this from the "response count" notification handler.
@@ -363,7 +367,7 @@ public class RFSpy {
         if (rileyLinkServiceData.firmwareVersion != null &&
                 rileyLinkServiceData.firmwareVersion.isSameVersion(RileyLinkFirmwareVersion.Version2AndHigher)) {
             if (sp.getString(RileyLinkConst.Prefs.Encoding, "None")
-                    .equals(resourceHelper.gs(R.string.key_medtronic_pump_encoding_4b6b_rileylink))) {
+                    .equals(rh.gs(R.string.key_medtronic_pump_encoding_4b6b_rileylink))) {
                 encoding = RileyLinkEncodingType.FourByteSixByteRileyLink;
             }
         }

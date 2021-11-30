@@ -12,13 +12,13 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 
-fun TherapyEvent.age(useShortText: Boolean, resourceHelper: ResourceHelper, dateUtil: DateUtil): String {
+fun TherapyEvent.age(useShortText: Boolean, rh: ResourceHelper, dateUtil: DateUtil): String {
     val diff = dateUtil.computeDiff(timestamp, System.currentTimeMillis())
-    var days = " " + resourceHelper.gs(R.string.days) + " "
-    var hours = " " + resourceHelper.gs(R.string.hours) + " "
+    var days = " " + rh.gs(R.string.days) + " "
+    var hours = " " + rh.gs(R.string.hours) + " "
     if (useShortText) {
-        days = resourceHelper.gs(R.string.shortday)
-        hours = resourceHelper.gs(R.string.shorthour)
+        days = rh.gs(R.string.shortday)
+        hours = rh.gs(R.string.shorthour)
     }
     return diff[TimeUnit.DAYS].toString() + days + diff[TimeUnit.HOURS] + hours
 }
@@ -73,6 +73,7 @@ fun therapyEventFromJson(jsonObject: JSONObject): TherapyEvent? {
     val timestamp = JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null) ?: return null
     val type = TherapyEvent.Type.fromString(JsonHelper.safeGetString(jsonObject, "eventType", TherapyEvent.Type.NONE.text))
     val duration = JsonHelper.safeGetLong(jsonObject, "duration")
+    val durationInMilliseconds = JsonHelper.safeGetLongAllowNull(jsonObject, "durationInMilliseconds")
     val glucose = JsonHelper.safeGetDoubleAllowNull(jsonObject, "glucose")
     val glucoseType = TherapyEvent.MeterType.fromString(JsonHelper.safeGetString(jsonObject, "glucoseType"))
     val enteredBy = JsonHelper.safeGetStringAllowNull(jsonObject, "enteredBy", null)
@@ -84,7 +85,7 @@ fun therapyEventFromJson(jsonObject: JSONObject): TherapyEvent? {
 
     val te = TherapyEvent(
         timestamp = timestamp,
-        duration = TimeUnit.MINUTES.toMillis(duration),
+        duration = durationInMilliseconds ?: T.mins(duration).msecs(),
         glucoseUnit = glucoseUnit,
         type = type,
         glucose = glucose,
@@ -106,6 +107,7 @@ fun TherapyEvent.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
         .put("units", if (glucoseUnit == TherapyEvent.GlucoseUnit.MGDL) Constants.MGDL else Constants.MMOL)
         .also {
             if (duration != 0L) it.put("duration", T.msecs(duration).mins())
+            if (duration != 0L) it.put("durationInMilliseconds", duration)
             if (note != null) it.put("notes", note)
             if (glucose != null) it.put("glucose", glucose)
             if (glucoseType != null) it.put("glucoseType", glucoseType!!.text)

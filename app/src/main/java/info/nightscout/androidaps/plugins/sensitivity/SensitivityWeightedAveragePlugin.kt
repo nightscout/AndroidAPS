@@ -7,7 +7,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.androidaps.extensions.isEPSEvent5minBack
+import info.nightscout.androidaps.extensions.isPSEvent5minBack
 import info.nightscout.androidaps.extensions.isTherapyEventEvent5minBack
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
@@ -32,27 +32,28 @@ import kotlin.math.roundToInt
 class SensitivityWeightedAveragePlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     sp: SP,
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
     private val repository: AppRepository
-) : AbstractSensitivityPlugin(PluginDescription()
-    .mainType(PluginType.SENSITIVITY)
-    .pluginIcon(R.drawable.ic_generic_icon)
-    .pluginName(R.string.sensitivityweightedaverage)
-    .shortName(R.string.sensitivity_shortname)
-    .preferencesId(R.xml.pref_absorption_aaps)
-    .description(R.string.description_sensitivity_weighted_average),
-    injector, aapsLogger, resourceHelper, sp
+) : AbstractSensitivityPlugin(
+    PluginDescription()
+        .mainType(PluginType.SENSITIVITY)
+        .pluginIcon(R.drawable.ic_generic_icon)
+        .pluginName(R.string.sensitivityweightedaverage)
+        .shortName(R.string.sensitivity_shortname)
+        .preferencesId(R.xml.pref_absorption_aaps)
+        .description(R.string.description_sensitivity_weighted_average),
+    injector, aapsLogger, rh, sp
 ) {
 
     override fun detectSensitivity(ads: AutosensDataStore, fromTime: Long, toTime: Long): AutosensResult {
         val age = sp.getString(R.string.key_age, "")
         var defaultHours = 24
-        if (age == resourceHelper.gs(R.string.key_adult)) defaultHours = 24
-        if (age == resourceHelper.gs(R.string.key_teenage)) defaultHours = 4
-        if (age == resourceHelper.gs(R.string.key_child)) defaultHours = 4
+        if (age == rh.gs(R.string.key_adult)) defaultHours = 24
+        if (age == rh.gs(R.string.key_teenage)) defaultHours = 4
+        if (age == rh.gs(R.string.key_child)) defaultHours = 4
         val hoursForDetection = sp.getInt(R.string.key_openapsama_autosens_period, defaultHours)
         if (ads.autosensDataTable.size() < 4) {
             aapsLogger.debug(LTag.AUTOSENS, "No autosens data available. lastDataTime=" + ads.lastDataTime(dateUtil))
@@ -69,7 +70,7 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
             return AutosensResult()
         }
         val siteChanges = repository.getTherapyEventDataFromTime(fromTime, TherapyEvent.Type.CANNULA_CHANGE, true).blockingGet()
-        val profileSwitches = repository.getEffectiveProfileSwitchDataFromTime(fromTime, true).blockingGet()
+        val profileSwitches = repository.getProfileSwitchDataFromTime(fromTime, true).blockingGet()
         var pastSensitivity = ""
         var index = 0
         val data = LongSparseArray<Double>()
@@ -95,7 +96,7 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
             }
 
             // reset deviations after profile switch
-            if (profileSwitches.isEPSEvent5minBack(autosensData.time)) {
+            if (profileSwitches.isPSEvent5minBack(autosensData.time)) {
                 data.clear()
                 pastSensitivity += "(PROFILESWITCH)"
             }
@@ -161,10 +162,10 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
     override fun configuration(): JSONObject {
         val c = JSONObject()
         try {
-            c.put(resourceHelper.gs(R.string.key_absorption_maxtime), sp.getDouble(R.string.key_absorption_maxtime, Constants.DEFAULT_MAX_ABSORPTION_TIME))
-            c.put(resourceHelper.gs(R.string.key_openapsama_autosens_period), sp.getInt(R.string.key_openapsama_autosens_period, 24))
-            c.put(resourceHelper.gs(R.string.key_openapsama_autosens_max), sp.getDouble(R.string.key_openapsama_autosens_max, 1.2))
-            c.put(resourceHelper.gs(R.string.key_openapsama_autosens_min), sp.getDouble(R.string.key_openapsama_autosens_min, 0.7))
+            c.put(rh.gs(R.string.key_absorption_maxtime), sp.getDouble(R.string.key_absorption_maxtime, Constants.DEFAULT_MAX_ABSORPTION_TIME))
+            c.put(rh.gs(R.string.key_openapsama_autosens_period), sp.getInt(R.string.key_openapsama_autosens_period, 24))
+            c.put(rh.gs(R.string.key_openapsama_autosens_max), sp.getDouble(R.string.key_openapsama_autosens_max, 1.2))
+            c.put(rh.gs(R.string.key_openapsama_autosens_min), sp.getDouble(R.string.key_openapsama_autosens_min, 0.7))
         } catch (e: JSONException) {
             e.printStackTrace()
         }
@@ -173,10 +174,10 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
 
     override fun applyConfiguration(configuration: JSONObject) {
         try {
-            if (configuration.has(resourceHelper.gs(R.string.key_absorption_maxtime))) sp.putDouble(R.string.key_absorption_maxtime, configuration.getDouble(resourceHelper.gs(R.string.key_absorption_maxtime)))
-            if (configuration.has(resourceHelper.gs(R.string.key_openapsama_autosens_period))) sp.putDouble(R.string.key_openapsama_autosens_period, configuration.getDouble(resourceHelper.gs(R.string.key_openapsama_autosens_period)))
-            if (configuration.has(resourceHelper.gs(R.string.key_openapsama_autosens_max))) sp.getDouble(R.string.key_openapsama_autosens_max, configuration.getDouble(resourceHelper.gs(R.string.key_openapsama_autosens_max)))
-            if (configuration.has(resourceHelper.gs(R.string.key_openapsama_autosens_min))) sp.getDouble(R.string.key_openapsama_autosens_min, configuration.getDouble(resourceHelper.gs(R.string.key_openapsama_autosens_min)))
+            if (configuration.has(rh.gs(R.string.key_absorption_maxtime))) sp.putDouble(R.string.key_absorption_maxtime, configuration.getDouble(rh.gs(R.string.key_absorption_maxtime)))
+            if (configuration.has(rh.gs(R.string.key_openapsama_autosens_period))) sp.putDouble(R.string.key_openapsama_autosens_period, configuration.getDouble(rh.gs(R.string.key_openapsama_autosens_period)))
+            if (configuration.has(rh.gs(R.string.key_openapsama_autosens_max))) sp.getDouble(R.string.key_openapsama_autosens_max, configuration.getDouble(rh.gs(R.string.key_openapsama_autosens_max)))
+            if (configuration.has(rh.gs(R.string.key_openapsama_autosens_min))) sp.getDouble(R.string.key_openapsama_autosens_min, configuration.getDouble(rh.gs(R.string.key_openapsama_autosens_min)))
         } catch (e: JSONException) {
             e.printStackTrace()
         }

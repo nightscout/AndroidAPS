@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message
 
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.CouldNotParseMessageException
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.Flag
 import java.nio.ByteBuffer
 
 /***
@@ -80,13 +81,13 @@ data class MessagePacket(
             if (payload.copyOfRange(0, 2).decodeToString() != MAGIC_PATTERN) {
                 throw CouldNotParseMessageException(payload)
             }
-            val f1 = Flag(payload[2].toInt())
+            val f1 = Flag(payload[2].toInt() and 0xff)
             val sas = f1.get(3) != 0
             val tfs = f1.get(4) != 0
             val version = ((f1.get(0) shl 2) or (f1.get(1) shl 1) or (f1.get(2) shl 0)).toShort()
             val eqos = (f1.get(7) or (f1.get(6) shl 1) or (f1.get(5) shl 2)).toShort()
 
-            val f2 = Flag(payload[3].toInt())
+            val f2 = Flag(payload[3].toInt() and 0xff)
             val ack = f2.get(0) != 0
             val priority = f2.get(1) != 0
             val lastMessage = f2.get(2) != 0
@@ -122,24 +123,6 @@ data class MessagePacket(
                 payload = payload.copyOfRange(16, payloadEnd)
             )
         }
-    }
-}
-
-private class Flag(var value: Int = 0) {
-
-    fun set(idx: Byte, set: Boolean) {
-        val mask = 1 shl (7 - idx)
-        if (!set)
-            return
-        value = value or mask
-    }
-
-    fun get(idx: Byte): Int {
-        val mask = 1 shl (7 - idx)
-        if (value and mask == 0) {
-            return 0
-        }
-        return 1
     }
 }
 

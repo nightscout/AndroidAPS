@@ -254,7 +254,7 @@ interface Pump {
 
     /**
      * Executes a custom queued command
-     * See [CommandQueueProvider.customCommand] for queuing a custom command.
+     * See [CommandQueue.customCommand] for queuing a custom command.
      *
      * @param customCommand the custom command to be executed
      * @return PumpEnactResult that represents the command execution result

@@ -21,6 +21,7 @@
     <string name="tbr_formatter">%1$d%% за %2$d / %3$d мин</string>
     <string name="multiwave_bolus">Мульти-болюс</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U за %3$d мин</string>
+    <string name="insight_last_bolus">Предыдущий болюс</string>
     <string name="searching_for_devices">Поиск устройств…</string>
     <string name="pairing_completed">Сопряжение выполнено</string>
     <string name="code_compare">Коды на этом устройстве и на вашей помпе совпадают?</string>

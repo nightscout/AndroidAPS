@@ -297,14 +297,14 @@ enum class PumpType {
         source = Sources.MDI),
 
     //Diaconn Pump
-    DIACONN_G8(description = "DiaconnG8",
+    DIACONN_G8(description = "Diaconn G8",
         manufacturer = ManufacturerType.G2e,
-        model = "Diaconn G8",
+        model = "DiaconnG8",
         bolusSize = 0.01,
         specialBolusSize = null,
         extendedBolusSettings = DoseSettings(0.05, 10, 5 * 60, 0.05),
         pumpTempBasalType = PumpTempBasalType.Absolute,
-        tbrSettings = DoseSettings(0.01, 30, 24 * 60, 0.0, 6.0),
+        tbrSettings = DoseSettings(0.01, 30, 24 * 60, 0.0, 15.0),
         specialBasalDurations = PumpCapability.BasalRate_Duration30minAllowed,
         baseBasalMinValue = 0.05,
         baseBasalMaxValue = 3.0,
@@ -359,6 +359,41 @@ enum class PumpType {
 
         fun getByDescription(desc: String): PumpType =
             values().firstOrNull { it.description == desc } ?: GENERIC_AAPS
+
+        fun fromDbPumpType(pt: InterfaceIDs.PumpType): PumpType =
+            when (pt) {
+                InterfaceIDs.PumpType.GENERIC_AAPS                -> GENERIC_AAPS
+                InterfaceIDs.PumpType.CELLNOVO                    -> CELLNOVO
+                InterfaceIDs.PumpType.ACCU_CHEK_COMBO             -> ACCU_CHEK_COMBO
+                InterfaceIDs.PumpType.ACCU_CHEK_SPIRIT            -> ACCU_CHEK_SPIRIT
+                InterfaceIDs.PumpType.ACCU_CHEK_INSIGHT           -> ACCU_CHEK_INSIGHT_VIRTUAL
+                InterfaceIDs.PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH -> ACCU_CHEK_INSIGHT
+                InterfaceIDs.PumpType.ACCU_CHEK_SOLO              -> ACCU_CHEK_SOLO
+                InterfaceIDs.PumpType.ANIMAS_VIBE                 -> ANIMAS_VIBE
+                InterfaceIDs.PumpType.ANIMAS_PING                 -> ANIMAS_PING
+                InterfaceIDs.PumpType.DANA_R                      -> DANA_R
+                InterfaceIDs.PumpType.DANA_R_KOREAN               -> DANA_R_KOREAN
+                InterfaceIDs.PumpType.DANA_RS                     -> DANA_RS
+                InterfaceIDs.PumpType.DANA_RS_KOREAN              -> DANA_RS_KOREAN
+                InterfaceIDs.PumpType.DANA_RV2                    -> DANA_RV2
+                InterfaceIDs.PumpType.DANA_I                      -> DANA_I
+                InterfaceIDs.PumpType.OMNIPOD_EROS                -> OMNIPOD_EROS
+                InterfaceIDs.PumpType.OMNIPOD_DASH                -> OMNIPOD_DASH
+                InterfaceIDs.PumpType.MEDTRONIC_512_517           -> MEDTRONIC_512_712
+                InterfaceIDs.PumpType.MEDTRONIC_515_715           -> MEDTRONIC_515_715
+                InterfaceIDs.PumpType.MEDTRONIC_522_722           -> MEDTRONIC_522_722
+                InterfaceIDs.PumpType.MEDTRONIC_523_723_REVEL     -> MEDTRONIC_523_723_REVEL
+                InterfaceIDs.PumpType.MEDTRONIC_554_754_VEO       -> MEDTRONIC_554_754_VEO
+                InterfaceIDs.PumpType.MEDTRONIC_640G              -> MEDTRONIC_640G
+                InterfaceIDs.PumpType.TANDEM_T_SLIM               -> TANDEM_T_SLIM
+                InterfaceIDs.PumpType.TANDEM_T_SLIM_G4            -> TANDEM_T_SLIM_G4
+                InterfaceIDs.PumpType.TANDEM_T_FLEX               -> TANDEM_T_FLEX
+                InterfaceIDs.PumpType.TANDEM_T_SLIM_X2            -> TANDEM_T_SLIM_X2
+                InterfaceIDs.PumpType.YPSOPUMP                    -> YPSOPUMP
+                InterfaceIDs.PumpType.MDI                         -> MDI
+                InterfaceIDs.PumpType.USER                        -> USER
+                InterfaceIDs.PumpType.DIACONN_G8                  -> DIACONN_G8
+            }
     }
 
     constructor(description: String, model: String, parent: PumpType, pumpCapability: PumpCapability? = null, source: Sources? = null) {
@@ -403,11 +438,11 @@ enum class PumpType {
         this.source = source
     }
 
-    fun getFullDescription(i18nTemplate: String, hasExtendedBasals: Boolean, resourceHelper: ResourceHelper): String {
+    fun getFullDescription(i18nTemplate: String, hasExtendedBasals: Boolean, rh: ResourceHelper): String {
         val unit = if (pumpTempBasalType == PumpTempBasalType.Percent) "%" else ""
         val eb = extendedBolusSettings ?: return "INVALID"
         val tbr = tbrSettings ?: return "INVALID"
-        val extendedNote = if (hasExtendedBasals) resourceHelper.gs(R.string.def_extended_note) else ""
+        val extendedNote = if (hasExtendedBasals) rh.gs(R.string.def_extended_note) else ""
         return String.format(i18nTemplate,
             getStep("" + bolusSize, specialBolusSize),
             eb.step, eb.durationStep, eb.maxDuration / 60,

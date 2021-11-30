@@ -36,6 +36,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
+                        android:background="@color/pumpStatusBackground"
                         android:gravity="center_vertical|center_horizontal"
                         android:text="@string/initializing"
                         android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -678,7 +679,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_danarhistory"
+                    android:drawableTop="@drawable/ic_pump_history"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
                     android:text="@string/pumphistory" />

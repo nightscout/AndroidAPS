@@ -3,6 +3,7 @@
     <string name="alert_r1_title">Bolus toedienen</string>
     <string name="alert_r2_title">Gemiste Bolus</string>
     <string name="alert_r3_title">Wekkerfunctie</string>
+    <string name="alert_r4_title">Vervang infuusset</string>
     <string name="alert_r7_title">TBR einde</string>
     <string name="alert_w31_title">Ampul bijna leeg</string>
     <string name="alert_w32_title">Batterij bijna leeg</string>

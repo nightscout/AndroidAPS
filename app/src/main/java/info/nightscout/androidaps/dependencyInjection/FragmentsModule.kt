@@ -12,11 +12,6 @@ import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesFragm
 import info.nightscout.androidaps.plugins.constraints.objectives.activities.ObjectivesExamDialog
 import info.nightscout.androidaps.plugins.general.actions.ActionsFragment
 import info.nightscout.androidaps.plugins.general.automation.AutomationFragment
-import info.nightscout.androidaps.plugins.general.automation.dialogs.ChooseActionDialog
-import info.nightscout.androidaps.plugins.general.automation.dialogs.ChooseTriggerDialog
-import info.nightscout.androidaps.plugins.general.automation.dialogs.EditActionDialog
-import info.nightscout.androidaps.plugins.general.automation.dialogs.EditEventDialog
-import info.nightscout.androidaps.plugins.general.automation.dialogs.EditTriggerDialog
 import info.nightscout.androidaps.plugins.general.food.FoodFragment
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenanceFragment
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientFragment
@@ -30,6 +25,7 @@ import info.nightscout.androidaps.plugins.profile.local.LocalProfileFragment
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpFragment
 import info.nightscout.androidaps.plugins.source.BGSourceFragment
 import info.nightscout.androidaps.activities.fragments.*
+import info.nightscout.androidaps.plugins.general.automation.dialogs.*
 import info.nightscout.androidaps.utils.protection.PasswordCheck
 
 @Module
@@ -81,6 +77,7 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesFillDialog(): FillDialog
     @ContributesAndroidInjector abstract fun contributesChooseActionDialog(): ChooseActionDialog
     @ContributesAndroidInjector abstract fun contributesChooseTriggerDialog(): ChooseTriggerDialog
+    @ContributesAndroidInjector abstract fun contributesChooseOperationDialog(): ChooseOperationDialog
     @ContributesAndroidInjector abstract fun contributesInsulinDialog(): InsulinDialog
     @ContributesAndroidInjector abstract fun contributesLoopDialog(): LoopDialog
     @ContributesAndroidInjector abstract fun contributesObjectivesExamDialog(): ObjectivesExamDialog

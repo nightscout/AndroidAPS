@@ -12,7 +12,6 @@
     <string name="nav_resetdb">Reset database</string>
     <string name="reset_db_confirm">Wil je echt de database wissen?</string>
     <string name="nav_exit">Afsluiten</string>
-    <string name="ns_sync_use_absolute_title">Gebruik altijd absolute basale waarden</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Dit apparaat lijkt geen ondersteuning te bieden voor whitelisten voor batterijoptimalisatie - u kunt prestatieproblemen ervaren.</string>
     <string name="description_actions">Een aantal knoppen voor snelle toegang tot algemene functies</string>
     <string name="description_config_builder">Gebruikt om actieve plugins te configureren</string>
@@ -78,7 +77,6 @@
     <string name="overview">Overzicht</string>
     <string name="treatments">Behandelingen</string>
     <string name="virtualpump">Virtuele Pomp</string>
-    <string name="careportal">Careportal</string>
     <string name="configbuilder_pump">Pomp</string>
     <string name="configbuilder_pump_description">Welke pomp wil je gaan gebruiken met AndroidAPS?</string>
     <string name="configbuilder_profile">Profiel</string>
@@ -98,7 +96,6 @@
     <string name="safety">Veiligheid</string>
     <string name="openapsma_disabled">Plugin is gedeactiveerd</string>
     <string name="constraints_violation">In strijd met beperkingen</string>
-    <string name="treatmentdeliveryerror">Bolus toedien storing</string>
     <string name="setbasalquestion">Accepteer nieuw tijdelijk basaal:</string>
     <string name="overview_treatment_label">Bolus</string>
     <string name="overview_calculator_label">Bolus wizard</string>
@@ -257,7 +254,7 @@
     <string name="ongoingnotificaction">Permanent bericht</string>
     <string name="old_data">Oude gegevens</string>
     <string name="sms_minago">%1$dmin geleden</string>
-    <string name="localprofile">Lokaal profiel</string>
+    <string name="localprofile">Profiel</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Array van %1$d elementen. \nActuele waarde:</string>
     <string name="openapsma_autosensdata_label">Autosens gegevens</string>
@@ -433,7 +430,7 @@
     <string name="mdtp_cancel">Afbreken</string>
     <string name="notloadedplugins">Niet alle profielen zijn geladen!</string>
     <string name="valuesnotstored">Waarden niet opgeslagen!</string>
-    <string name="ns_localbroadcasts">Schakel lokaal data delen naar andere apps (zoals xDrip) in. Schakel dit niet in als je NSClient of meer dan één installatie van AAPS op je telefoon hebt staan!</string>
+    <string name="ns_localbroadcasts">Schakel lokaal data delen met andere apps (zoals xDrip) in. Schakel dit niet in als er meer dan één installatie van AAPS of NSClient zijn geinstalleerd!</string>
     <string name="ns_localbroadcasts_title">Activeer locaal delen.</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="enableuam">Activeer UAM</string>
@@ -494,6 +491,7 @@
     <string name="dexcomg5_xdripupload_title">Stuur BG data naar xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">In xDrip+ kies 640g/Eversense data bron</string>
     <string name="nsclientbg">NSClient BG</string>
+    <string name="nsclientbgshort">NS BG</string>
     <string name="overview_editquickwizard_usebg">BG berekening</string>
     <string name="overview_editquickwizard_usebolusiob">Bolus IOB berekening</string>
     <string name="overview_editquickwizard_usebasaliob">Basaal IOB berekening</string>
@@ -665,7 +663,6 @@
     <string name="error_adding_treatment_title">Behandelingen data incompleet</string>
     <string name="maintenance_settings">Onderhoudsinstellingen</string>
     <string name="maintenance_email">E-mail</string>
-    <string name="maintenance_encrypt_exported_prefs">Geëxporteerde instellingen versleutelen</string>
     <string name="maintenance_amount">Aantal Logs om te verzenden</string>
     <string name="maintenance">Onderhoud</string>
     <string name="maintenance_shortname">ONDH</string>
@@ -679,6 +676,7 @@
     <string name="resettodefaults">Terug naar standaardinstellingen</string>
     <string name="nsmalfunction">NSClient werkt niet goed. Overweg een herstart van NS en NSClient.</string>
     <string name="time_offset">Tijdverschuiving</string>
+    <string name="bolus_reminder">Herinner later te bolussen</string>
     <string name="setupwizard_preferred_aps_mode">Voorkeur APS-modus</string>
     <string name="treatments_wizard_total_label">Totaal</string>
     <string name="calculation_short">Calc</string>
@@ -717,11 +715,9 @@
     <string name="versionChecker">Versie Checker</string>
     <string name="old_version">oude versie</string>
     <string name="very_old_version">zeer oude versie</string>
+    <string name="application_expired">Applicatie is verlopen</string>
     <string name="new_version_warning">Nieuwe versie al zeker %1$d dagen beschikbaar! Terugval LGS na %2$d dagen, loop zal worden uitgeschakeld na %3$d dagen</string>
     <string name="twohours">2u</string>
-    <string name="dexcom_app_patched">Dexcom App (patched)</string>
-    <string name="dexcom_short">DXCM</string>
-    <string name="description_source_dexcom">Ontvang BG waardes van de aangepaste Dexcom app.</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="bolusconstraintappliedwarn">Bolusbeperking toegepast: %1$.2f E naar %2$.2f E</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!! Trage koolhydraat absorptie gedetecteerd: %2$d%% van de tijd. Controleer je berekening nogmaals. COB kan zijn overschat waardoor er misschien meer insuline wordt afgegeven!!!</font> zijn]]></string>
@@ -750,7 +746,7 @@
     <string name="clone_label">Dupliceren</string>
     <string name="saveorresetchangesfirst">Huidige wijzigingen eerst opslaan of ongedaan maken</string>
     <string name="deletecurrentprofile">Huidige profiel verwijderen?</string>
-    <string name="copytolocalprofile">Nieuw lokaal profiel aanmaken van dit profiel?</string>
+    <string name="copytolocalprofile">Nieuw profiel van dit profiel maken?</string>
     <string name="profilenamecontainsdot">Profielnaam bevat punten.\nDit wordt niet ondersteund door NS.\nProfiel is niet geüpload naar NS.</string>
     <string name="low_mark_comment">Laagste waarde in bereik (alleen weergave)</string>
     <string name="high_mark_comment">Hoogste waarde in bereik (alleen weergave)</string>
@@ -804,10 +800,10 @@
     <string name="smscommunicator_otp_step3_test_header">3. Test eenmalig wachtwoord (One Time Password)</string>
     <string name="smscommunicator_otp_reset_header">Reset Authentificatie</string>
     <string name="smscommunicator_otp_install_info">Installeer de Authenticator-app op elke volger telefoon die RFC 6238 TOTP tokens ondersteunt. Populaire gratis apps zijn:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">Door de Athentificator te resetten, maak je alle Authentificatie-instellingen van reeds verbonden telefoons ongeldig! Je zult ze opnieuw moeten instellen!</string>
+    <string name="smscommunicator_otp_reset_warning">Door de Authentificator te resetten, maak je alle Authentificatie-instellingen van reeds verbonden telefoons ongeldig! Je zult ze opnieuw moeten instellen!</string>
     <string name="overview_show_predictions">Voorspellingen</string>
     <string name="overview_show_deviationslope">Richtingscoëfficiënt afwijking</string>
-    <string name="authorizationfailed">Authorisatie mislukt</string>
+    <string name="authorizationfailed">Autorisatie mislukt</string>
     <string name="overview_show_absinsulin">Absolute insuline</string>
     <string name="master_password_summary">Het masterwachtwoord wordt gebruikt voor het versleutelen van backups en om de app-beveiligingen te kunnen overschrijven. Onthoud het goed of bewaar het op een veilige plaats.</string>
     <string name="current_master_password">Huidig masterwachtwoord</string>
@@ -832,7 +828,7 @@
     <string name="dpvdefaultprofile">DPV Basis profiel</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink Status:</string>
     <string name="filter">Filter</string>
-    <string name="copytolocalprofile_invalid">Lokaal profiel kan niet worden gemaakt. Profiel is ongeldig.</string>
+    <string name="copytolocalprofile_invalid">Kan profiel niet aanmaken. Profiel is ongeldig.</string>
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Stuur SMS wanneer de pomp onbereikbaar is</string>
     <string name="smscommunicator_pump_ureachable">Melding pomp onbereikbaar</string>
@@ -844,6 +840,11 @@
     <string name="enablebolusadvisor_summary">Gebruik bij een hoge bloedglucose niet het resultaat van de wizard, maar een herinnering om later met eten te beginnen (\"pre-bolus\")</string>
     <string name="time_to_eat">Tijd om te eten!\nVoer de boluswizard opnieuw uit.</string>
     <string name="timetoeat">Tijd om te eten</string>
+    <string name="bolusreminder">Bolus herinnering</string>
+    <string name="enablebolusreminder">Bolus herinnering inschakelen</string>
+    <string name="enablebolusreminder_summary">Gebruik herinnering om later te bolussen met de wizard
+        (\"post-bolus\")</string>
+    <string name="time_to_bolus">Tijd om te bolussen!\nVoer de boluswizard uit en maak de berekening opnieuw.</string>
     <string name="fabric_upload_disabled">Upload van crashrapporten is uitgeschakeld!</string>
     <string name="graph_menu_divider_header">Grafiek</string>
     <string name="chart_menu">Grafiek menu</string>
@@ -852,17 +853,41 @@
     <string name="cannula">Canule</string>
     <string name="userentry">Gebruikersinvoer</string>
     <string name="common_values">Gebruik de waarden van je grootste maaltijd die je gewoonlijk eet\n</string>
-    <string name="summary_email_for_crash_report">Dit e-mailadres zal gekoppeld worden aan crashrapporten, zodat we in dringende gevallen contact met u kunnen opnemen. Het is optioneel.</string>
     <string name="email_address">E-mailadres</string>
     <string name="privacy_settings">Privacyinstellingen</string>
     <string name="privacy_summary">U kunt optioneel een e-mailadres opgeven als u op de hoogte wilt worden gebracht van applicatie crashes. Dit is geen geautomatiseerde service. De ontwikkelaars zullen contact met u opnemen bij gevaarlijke situaties.</string>
     <string name="full_sync">Volledige synchronisatie</string>
+    <string name="full_sync_comment">Volledige synchronisatie? Dit kan een aantal uren duren. Je ziet dan geen nieuwe gegevens in Nightscout.</string>
     <string name="prime">Vullen</string>
     <string name="ns_sync_options">Synchronisatie</string>
     <string name="ns_upload_summary">Profielen, bolussen, koolhydraten, tijdelijke basaal standen worden geupload naar NS</string>
     <string name="ns_upload">Upload data naar NS</string>
+    <string name="ns_receive_profile_store">Ontvang profiel opslag</string>
+    <string name="ns_receive_profile_store_summary">Synchroniseer profielen van NS profiel editor</string>
     <string name="ns_receive_temp_target">Ontvang tijdelijke doelen</string>
     <string name="ns_receive_temp_target_summary">Accepteer tijdelijke doelen ingevoerd in NS of NSClient</string>
     <string name="ns_receive_profile_switch">Ontvang profielwissels</string>
     <string name="ns_receive_profile_switch_summary">Accepteer profielwissels zoals ingevoerd in NS of NSClient</string>
+    <string name="ns_receive_offline_event">Ontvang APS offline gebeurtenissen</string>
+    <string name="ns_receive_offline_event_summary">Accepteer APS offline gebeurtenissen die zijn ingevoerd via NS of NSClient</string>
+    <string name="ns_receive_insulin">Ontvang insuline</string>
+    <string name="ns_receive_insulin_summary">Accepteer insuline zoals ingevoerd in NS of NSClient (insuline wordt niet toegediend, het wordt alleen in IOB calculatie meegenomen)</string>
+    <string name="ns_receive_carbs">Ontvang koolhydraten</string>
+    <string name="ns_receive_carbs_summary">Accepteer koolhydraten ingevoerd in NS of NSClient</string>
+    <string name="ns_receive_therapy_events">Accepteer behandelingen</string>
+    <string name="ns_receive_therapy_events_summary">Accepteer behandelingen (cannule, insuline, batterijwissel etc) ingevoerd via NS of NSClient</string>
+    <string name="ns_receive_cgm">Ontvang / backfill CGM gegevens</string>
+    <string name="ns_receive_cgm_summary">Accepteer CGM data van NS</string>
+    <string name="sms_timeout_while_wating">Time-out tijdens het wachten op het voltooien van de vorige pomp communicatie</string>
+    <string name="smscommunicator_another_bolus_in_queue">Er staat een andere bolus in de wachtrij. Probeer het later opnieuw.</string>
+    <string name="calculation_in_progress">Berekening wordt uitgevoerd</string>
+    <string name="missing_profile_name">Profielnaam ontbreekt</string>
+    <string name="error_in_ic_values">Fout in IC waarden</string>
+    <string name="error_in_basal_values">Fout in basaal waarden</string>
+    <string name="error_in_target_values">Fout in streefdoel</string>
+    <string name="error_in_isf_values">Fout in ISF waarden</string>
+    <string name="run_question">%s uitvoeren?</string>
+    <string name="invalid_profile_not_accepted">Ongeldig profiel %1$s niet geaccepteerd door NS</string>
+    <string name="errors">Foutmeldingen</string>
+    <string name="ns_sync_slow">Vertraag uploads</string>
 </resources>

@@ -9,17 +9,20 @@ import info.nightscout.androidaps.database.TABLE_FOODS
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.interfaces.TraceableDBEntry
 
-@Entity(tableName = TABLE_FOODS,
+@Entity(
+    tableName = TABLE_FOODS,
     foreignKeys = [ForeignKey(
         entity = Food::class,
         parentColumns = ["id"],
-        childColumns = ["referenceId"])],
+        childColumns = ["referenceId"]
+    )],
     indices = [
         Index("id"),
         Index("nightscoutId"),
         Index("referenceId"),
         Index("isValid")
-    ])
+    ]
+)
 data class Food(
     @PrimaryKey(autoGenerate = true)
     override var id: Long = 0,
@@ -46,7 +49,7 @@ data class Food(
 
 ) : TraceableDBEntry {
 
-    fun isEqual(other: Food): Boolean {
+    fun contentEqualsTo(other: Food): Boolean {
         if (isValid != other.isValid) return false
         if (portion != other.portion) return false
         if (carbs != other.carbs) return false
@@ -59,6 +62,12 @@ data class Food(
         if (subCategory != other.subCategory) return false
         return unit == other.unit
     }
+
+    fun onlyNsIdAdded(previous: Food): Boolean =
+        previous.id != id &&
+            contentEqualsTo(previous) &&
+            previous.interfaceIDs.nightscoutId == null &&
+            interfaceIDs.nightscoutId != null
 
     fun copyFrom(other: Food) {
         isValid = other.isValid

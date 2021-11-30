@@ -35,6 +35,7 @@ class SyncPumpTemporaryBasalTransaction(
             val running = database.temporaryBasalDao.getTemporaryBasalActiveAt(temporaryBasal.timestamp, temporaryBasal.interfaceIDs.pumpType!!, temporaryBasal.interfaceIDs.pumpSerial!!).blockingGet()
             if (running != null) {
                 running.end = temporaryBasal.timestamp
+                running.interfaceIDs.endId = temporaryBasal.interfaceIDs.pumpId
                 database.temporaryBasalDao.updateExistingEntry(running)
                 result.updated.add(running)
             }

@@ -24,7 +24,7 @@ import info.nightscout.androidaps.plugin.general.openhumans.delegates.OHCounterD
 import info.nightscout.androidaps.plugin.general.openhumans.delegates.OHStateDelegate
 import info.nightscout.androidaps.plugin.general.openhumans.ui.OHFragment
 import info.nightscout.androidaps.plugin.general.openhumans.ui.OHLoginActivity
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
@@ -47,7 +47,7 @@ import javax.inject.Singleton
 @Singleton
 class OpenHumansUploader @Inject internal constructor(
     injector: HasAndroidInjector,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     aapsLogger: AAPSLogger,
     private val sp: SP,
     private val context: Context,
@@ -56,7 +56,7 @@ class OpenHumansUploader @Inject internal constructor(
     stateDelegate: OHStateDelegate,
     counterDelegate: OHCounterDelegate,
     appIdDelegate: OHAppIDDelegate,
-    private val rxBus: RxBusWrapper
+    private val rxBus: RxBus
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
@@ -66,7 +66,7 @@ class OpenHumansUploader @Inject internal constructor(
         .description(R.string.open_humans_description)
         .preferencesId(R.xml.pref_openhumans)
         .fragmentClass(OHFragment::class.qualifiedName),
-    aapsLogger, resourceHelper, injector
+    aapsLogger, rh, injector
 ) {
 
     private var openHumansState by stateDelegate
@@ -267,7 +267,7 @@ class OpenHumansUploader @Inject internal constructor(
                 put("currentTemp", JSONObject(it.currentTempJson))
                 put("iobData", JSONObject(it.iobDataJson))
                 put("profile", JSONObject(it.profileJson))
-                put("autosensData", JSONObject(it.autosensDataJson))
+                put("autosensData", JSONObject(it.autosensDataJson ?: ""))
                 put("mealData", JSONObject(it.mealDataJson))
                 put("isMicroBolusAllowed", it.isMicroBolusAllowed)
                 put("result", JSONObject(it.resultJson))
@@ -591,14 +591,14 @@ class OpenHumansUploader @Inject internal constructor(
         notificationManagerCompat.createNotificationChannel(
             NotificationChannel(
                 NOTIFICATION_CHANNEL_WORKER,
-                resourceHelper.gs(R.string.open_humans_uploading),
+                rh.gs(R.string.open_humans_uploading),
                 NotificationManager.IMPORTANCE_MIN
             )
         )
         notificationManagerCompat.createNotificationChannel(
             NotificationChannel(
                 NOTIFICATION_CHANNEL_MESSAGES,
-                resourceHelper.gs(R.string.open_humans_notifications),
+                rh.gs(R.string.open_humans_notifications),
                 NotificationManager.IMPORTANCE_DEFAULT
             )
         )
@@ -606,8 +606,8 @@ class OpenHumansUploader @Inject internal constructor(
 
     private suspend fun handleSignOut() {
         val notification = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_MESSAGES)
-            .setContentTitle(resourceHelper.gs(R.string.you_have_been_signed_out_of_open_humans))
-            .setContentText(resourceHelper.gs(R.string.click_here_to_sign_in_again_if_this_wasnt_on_purpose))
+            .setContentTitle(rh.gs(R.string.you_have_been_signed_out_of_open_humans))
+            .setContentText(rh.gs(R.string.click_here_to_sign_in_again_if_this_wasnt_on_purpose))
             .setStyle(NotificationCompat.BigTextStyle())
             .setSmallIcon(R.drawable.open_humans_notification)
             .setAutoCancel(true)

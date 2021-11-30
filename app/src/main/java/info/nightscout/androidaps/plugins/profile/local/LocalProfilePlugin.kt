@@ -17,13 +17,13 @@ import info.nightscout.androidaps.extensions.pureProfileFromJson
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
+import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
+import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
 import info.nightscout.androidaps.receivers.DataWorker
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.androidaps.utils.HardLimits
-import info.nightscout.androidaps.utils.JsonHelper
+import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -41,13 +41,14 @@ import kotlin.collections.ArrayList
 class LocalProfilePlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
-    private val rxBus: RxBusWrapper,
-    resourceHelper: ResourceHelper,
+    private val rxBus: RxBus,
+    rh: ResourceHelper,
     private val sp: SP,
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,
     private val hardLimits: HardLimits,
-    private val dateUtil: DateUtil
+    private val dateUtil: DateUtil,
+    private val config: Config
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.PROFILE)
     .fragmentClass(LocalProfileFragment::class.java.name)
@@ -57,7 +58,7 @@ class LocalProfilePlugin @Inject constructor(
     .shortName(R.string.localprofile_shortname)
     .description(R.string.description_profile_local)
     .setDefault(),
-    aapsLogger, resourceHelper, injector
+    aapsLogger, rh, injector
 ), ProfileSource {
 
     private var rawProfile: ProfileStore? = null
@@ -104,25 +105,66 @@ class LocalProfilePlugin @Inject constructor(
     fun currentProfile(): SingleProfile? = if (numOfProfiles > 0 && currentProfileIndex < numOfProfiles) profiles[currentProfileIndex] else null
 
     @Synchronized
-    fun isValidEditState(): Boolean {
+    fun isValidEditState(activity: FragmentActivity?): Boolean {
         val pumpDescription = activePlugin.activePump.pumpDescription
         with(profiles[currentProfileIndex]) {
-            if (dia < hardLimits.minDia() || dia > hardLimits.maxDia()) return false
-            if (name.isNullOrEmpty()) return false
-            if (blockFromJsonArray(ic, dateUtil)?.any { it.amount < hardLimits.minIC() || it.amount > hardLimits.maxIC() } != false) return false
-            if (blockFromJsonArray(basal, dateUtil)?.any { it.amount < pumpDescription.basalMinimumRate || it.amount > 10.0 } != false) return false
+            if (dia < hardLimits.minDia() || dia > hardLimits.maxDia()) {
+                ToastUtils.errorToast(activity, rh.gs(R.string.value_out_of_hard_limits, rh.gs(info.nightscout.androidaps.core.R.string.profile_dia), dia))
+                return false
+            }
+            if (name.isNullOrEmpty()){
+                ToastUtils.errorToast(activity, rh.gs(R.string.missing_profile_name))
+                return false
+            }
+            if (blockFromJsonArray(ic, dateUtil)?.any { it.amount < hardLimits.minIC() || it.amount > hardLimits.maxIC() } != false) {
+                ToastUtils.errorToast(activity, rh.gs(R.string.error_in_ic_values))
+                return false
+            }
             val low = blockFromJsonArray(targetLow, dateUtil)
             val high = blockFromJsonArray(targetHigh, dateUtil)
-            if (profileFunction.getUnits() == GlucoseUnit.MGDL) {
-                if (low?.any { it.amount < HardLimits.VERY_HARD_LIMIT_TARGET_BG[0].toDouble() || it.amount > HardLimits.VERY_HARD_LIMIT_TARGET_BG[1].toDouble() } != false) return false
-                if (high?.any { it.amount < HardLimits.VERY_HARD_LIMIT_TARGET_BG[0].toDouble() || it.amount > HardLimits.VERY_HARD_LIMIT_TARGET_BG[1].toDouble() } != false) return false
-                if (blockFromJsonArray(isf, dateUtil)?.any { it.amount < HardLimits.MIN_ISF || it.amount > HardLimits.MAX_ISF } != false) return false
+            if (mgdl) {
+                if (blockFromJsonArray(isf, dateUtil)?.any {  hardLimits.isInRange(it.amount, HardLimits.MIN_ISF, HardLimits.MAX_ISF) } == false) {
+                    ToastUtils.errorToast(activity, rh.gs(R.string.error_in_isf_values))
+                    return false
+                }
+                if (blockFromJsonArray(basal, dateUtil)?.any { it.amount < pumpDescription.basalMinimumRate || it.amount > 10.0 } != false)  {
+                    ToastUtils.errorToast(activity, rh.gs(R.string.error_in_basal_values))
+                    return false
+                }
+                if (low?.any { hardLimits.isInRange(it.amount, HardLimits.VERY_HARD_LIMIT_MIN_BG[0], HardLimits.VERY_HARD_LIMIT_MIN_BG[1]) } == false) {
+                    ToastUtils.errorToast(activity, rh.gs(R.string.error_in_target_values))
+                    return false
+                }
+                if (high?.any { hardLimits.isInRange(it.amount, HardLimits.VERY_HARD_LIMIT_MAX_BG[0], HardLimits.VERY_HARD_LIMIT_MAX_BG[1]) } == false) {
+                    ToastUtils.errorToast(activity, rh.gs(R.string.error_in_target_values))
+                    return false
+                }
             } else {
-                if (low?.any { it.amount < Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_TARGET_BG[0].toDouble(), GlucoseUnit.MMOL) || it.amount > Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_TARGET_BG[1].toDouble(), GlucoseUnit.MMOL) } != false) return false
-                if (high?.any { it.amount < Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_TARGET_BG[0].toDouble(), GlucoseUnit.MMOL) || it.amount > Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_TARGET_BG[1].toDouble(), GlucoseUnit.MMOL) } != false) return false
-                if (blockFromJsonArray(isf, dateUtil)?.any { it.amount < Profile.fromMgdlToUnits(HardLimits.MIN_ISF, GlucoseUnit.MMOL) || it.amount > Profile.fromMgdlToUnits(HardLimits.MAX_ISF, GlucoseUnit.MMOL) } != false) return false
+                if (blockFromJsonArray(isf, dateUtil)?.any { hardLimits.isInRange(Profile.toMgdl(it.amount, GlucoseUnit.MMOL), HardLimits.MIN_ISF, HardLimits.MAX_ISF) } == false) {
+                    ToastUtils.errorToast(activity, rh.gs(R.string.error_in_isf_values))
+                    return false
+                }
+                if (blockFromJsonArray(basal, dateUtil)?.any { it.amount < pumpDescription.basalMinimumRate || it.amount > 10.0 } != false)  {
+                    ToastUtils.errorToast(activity, rh.gs(R.string.error_in_basal_values))
+                    return false
+                }
+                if (low?.any { hardLimits.isInRange(Profile.toMgdl(it.amount, GlucoseUnit.MMOL), HardLimits.VERY_HARD_LIMIT_MIN_BG[0], HardLimits.VERY_HARD_LIMIT_MIN_BG[1]) } == false) {
+                    ToastUtils.errorToast(activity, rh.gs(R.string.error_in_target_values))
+                    return false
+                }
+                if (high?.any {  hardLimits.isInRange(Profile.toMgdl(it.amount, GlucoseUnit.MMOL), HardLimits.VERY_HARD_LIMIT_MAX_BG[0], HardLimits.VERY_HARD_LIMIT_MAX_BG[1]) } == false) {
+                    ToastUtils.errorToast(activity, rh.gs(R.string.error_in_target_values))
+                    return false
+                }
             }
-            for (i in low.indices) if (low[i].amount > high[i].amount) return false
+            low?.let {
+                high?.let {
+                    for (i in low.indices) if (low[i].amount > high[i].amount) {
+                        ToastUtils.errorToast(activity, rh.gs(R.string.error_in_target_values))
+                        return false
+                    }
+                }
+            }
         }
         return true
     }
@@ -148,15 +190,17 @@ class LocalProfilePlugin @Inject constructor(
     fun storeSettings(activity: FragmentActivity? = null) {
         for (i in 0 until numOfProfiles) {
             profiles[i].run {
-                val localProfileNumbered = Constants.LOCAL_PROFILE + "_" + i + "_"
-                sp.putString(localProfileNumbered + "name", name!!)
-                sp.putBoolean(localProfileNumbered + "mgdl", mgdl)
-                sp.putDouble(localProfileNumbered + "dia", dia)
-                sp.putString(localProfileNumbered + "ic", ic.toString())
-                sp.putString(localProfileNumbered + "isf", isf.toString())
-                sp.putString(localProfileNumbered + "basal", basal.toString())
-                sp.putString(localProfileNumbered + "targetlow", targetLow.toString())
-                sp.putString(localProfileNumbered + "targethigh", targetHigh.toString())
+                name?.let { name ->
+                    val localProfileNumbered = Constants.LOCAL_PROFILE + "_" + i + "_"
+                    sp.putString(localProfileNumbered + "name", name)
+                    sp.putBoolean(localProfileNumbered + "mgdl", mgdl)
+                    sp.putDouble(localProfileNumbered + "dia", dia)
+                    sp.putString(localProfileNumbered + "ic", ic.toString())
+                    sp.putString(localProfileNumbered + "isf", isf.toString())
+                    sp.putString(localProfileNumbered + "basal", basal.toString())
+                    sp.putString(localProfileNumbered + "targetlow", targetLow.toString())
+                    sp.putString(localProfileNumbered + "targethigh", targetHigh.toString())
+                }
             }
         }
         sp.putInt(Constants.LOCAL_PROFILE + "_profiles", numOfProfiles)
@@ -172,7 +216,7 @@ class LocalProfilePlugin @Inject constructor(
             if (name.contains(".")) namesOK = false
         }
         if (!namesOK) activity?.let {
-            OKDialog.show(it, "", resourceHelper.gs(R.string.profilenamecontainsdot))
+            OKDialog.show(it, "", rh.gs(R.string.profilenamecontainsdot))
         }
     }
 
@@ -201,8 +245,6 @@ class LocalProfilePlugin @Inject constructor(
                 aapsLogger.error("Exception", e)
             }
         }
-        // create at least one profile if doesn't exist
-        if (profiles.size < 1) profiles.add(defaultProfile())
         isEdited = false
         numOfProfiles = profiles.size
         createAndStoreConvertedProfile()
@@ -213,10 +255,25 @@ class LocalProfilePlugin @Inject constructor(
         try {
             val newProfiles: ArrayList<SingleProfile> = ArrayList()
             for (p in store.getProfileList()) {
-                store.getSpecificProfile(p.toString())?.let {
-                    val sp = copyFrom(it, p.toString())
+                val profile = store.getSpecificProfile(p.toString())
+                val validityCheck = profile?.let { ProfileSealed.Pure(profile).isValid("NS", activePlugin.activePump, config, rh, rxBus, hardLimits, false) } ?: Profile.ValidityCheck()
+                if (profile != null && validityCheck.isValid) {
+                    val sp = copyFrom(profile, p.toString())
                     sp.name = p.toString()
                     newProfiles.add(sp)
+                } else {
+                    val n = NotificationWithAction(
+                        injector,
+                        Notification.INVALID_PROFILE_NOT_ACCEPTED,
+                        rh.gs(R.string.invalid_profile_not_accepted, p.toString()),
+                        Notification.NORMAL
+                    )
+                    n.action(R.string.view) {
+                        n.contextForAction?.let {
+                            OKDialog.show(it, rh.gs(R.string.errors), validityCheck.reasons.joinToString(separator = "\n"), null)
+                        }
+                    }
+                    rxBus.send(EventNewNotification(n))
                 }
             }
             if (newProfiles.size > 0) {
@@ -233,22 +290,6 @@ class LocalProfilePlugin @Inject constructor(
             aapsLogger.error("Error loading ProfileStore", e)
         }
     }
-
-    private fun defaultProfile(): SingleProfile =
-        SingleProfile().also { p ->
-            p.name = Constants.LOCAL_PROFILE
-            p.mgdl = profileFunction.getUnits() == GlucoseUnit.MGDL
-            p.dia = Constants.defaultDIA
-            try {
-                p.ic = JSONArray(defaultArray)
-                p.isf = JSONArray(defaultArray)
-                p.basal = JSONArray(defaultArray)
-                p.targetLow = JSONArray(defaultArray)
-                p.targetHigh = JSONArray(defaultArray)
-            } catch (e: JSONException) {
-                aapsLogger.error("Exception", e)
-            }
-        }
 
     fun copyFrom(pureProfile: PureProfile, newName: String): SingleProfile {
         var verifiedName = newName
@@ -420,7 +461,7 @@ class LocalProfilePlugin @Inject constructor(
 
         @Inject lateinit var injector: HasAndroidInjector
         @Inject lateinit var aapsLogger: AAPSLogger
-        @Inject lateinit var rxBus: RxBusWrapper
+        @Inject lateinit var rxBus: RxBus
         @Inject lateinit var dateUtil: DateUtil
         @Inject lateinit var dataWorker: DataWorker
         @Inject lateinit var sp: SP
@@ -436,11 +477,11 @@ class LocalProfilePlugin @Inject constructor(
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))
             if (sp.getBoolean(R.string.key_ns_receive_profile_store, true) || config.NSCLIENT) {
                 val store = ProfileStore(injector, profileJson, dateUtil)
-                val startDate = store.getStartDate()
+                val createdAt = store.getStartDate()
                 val lastLocalChange = sp.getLong(R.string.key_local_profile_last_change, 0)
-                aapsLogger.debug(LTag.PROFILE, "Received profileStore: StartDate: $startDate Local last modification: $lastLocalChange")
+                aapsLogger.debug(LTag.PROFILE, "Received profileStore: createdAt: $createdAt Local last modification: $lastLocalChange")
                 @Suppress("LiftReturnOrAssignment")
-                if (startDate > lastLocalChange || startDate % 1000 == 0L) {// whole second means edited in NS
+                if (createdAt > lastLocalChange || createdAt % 1000 == 0L) {// whole second means edited in NS
                     localProfilePlugin.loadFromStore(store)
                     aapsLogger.debug(LTag.PROFILE, "Received profileStore: $profileJson")
                     return Result.success(workDataOf("Data" to profileJson.toString().substring(0..min(5000, profileJson.length()))))
