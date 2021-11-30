@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="description_pump_combo">Integración de bombas de insulina Accu-Check Combo, necesita tener ruffy instalado</string>
+    <string name="description_pump_combo">Integración de bombas de insulina Accu-Check Combo. Necesita tener Ruffy instalado</string>
     <string name="combo_programming_bolus">Programando bomba para emitir bolo</string>
     <string name="combo_pump_state_label">Estado</string>
     <string name="combo_pump_activity_label">Actividad</string>
