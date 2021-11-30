@@ -3,21 +3,28 @@
     android:gravity="center_vertical"
     android:layout_width="match_parent"
     android:layout_height="80dp">
+    <ImageView
+        android:id="@+id/actionicon"
+        android:layout_height="20dp"
+        android:layout_margin="5dp"
+        android:layout_width="20dp"
+        android:src="@drawable/circle"/>
     <TextView
         android:id="@+id/actionitem"
         android:gravity="center_vertical|center_horizontal"
         android:layout_width="match_parent"
-        android:layout_marginRight="16dp"
-        android:layout_marginLeft="16dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="0dp"
         android:layout_height="match_parent"
         android:fontFamily="sans-serif-condensed-light"
         android:lineSpacingExtra="-4sp"
         android:textColor="@color/dark_statusView"
-        android:textSize="32sp"
+        android:textSize="30sp"
         android:autoSizeTextType="uniform"
         android:autoSizeMinTextSize="12sp"
         android:autoSizeMaxTextSize="32sp"
         android:autoSizeStepGranularity="2sp"
+        android:text="list item"
         />
 </info.nightscout.androidaps.interaction.utils.WearableListItemLayout>
 

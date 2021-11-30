@@ -7,7 +7,11 @@ import android.support.wearable.view.WearableListView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.util.List;
 
 import info.nightscout.androidaps.R;
 
@@ -18,9 +22,9 @@ import info.nightscout.androidaps.R;
 public abstract class MenuListActivity extends Activity
         implements WearableListView.ClickListener {
 
-    String[] elements;
+    List<MenuElement> elements;
 
-    protected abstract String[] getElements();
+    protected abstract List<MenuElement> getElements();
 
     protected abstract void doAction(String position);
 
@@ -41,7 +45,7 @@ public abstract class MenuListActivity extends Activity
                 findViewById(R.id.wearable_list);
 
         // Assign an adapter to the list
-        listView.setAdapter(new Adapter(this, elements));
+        listView.setAdapter(new MenuAdapter(this, elements));
 
         // Set a click listener
         listView.setClickListener(this);
@@ -61,20 +65,20 @@ public abstract class MenuListActivity extends Activity
     }
 
 
-    private static final class Adapter extends WearableListView.Adapter {
-        private final String[] mDataset;
+    private class MenuAdapter extends WearableListView.Adapter {
+        private final List<MenuElement> mDataset;
         private final Context mContext;
         private final LayoutInflater mInflater;
 
         // Provide a suitable constructor (depends on the kind of dataset)
-        public Adapter(Context context, String[] dataset) {
+        public MenuAdapter(Context context, List<MenuElement> dataset) {
             mContext = context;
             mInflater = LayoutInflater.from(context);
             mDataset = dataset;
         }
 
         // Provide a reference to the type of views you're using
-        public static class ItemViewHolder extends WearableListView.ViewHolder {
+        public class ItemViewHolder extends WearableListView.ViewHolder {
             private final TextView textView;
 
             public ItemViewHolder(View itemView) {
@@ -90,7 +94,8 @@ public abstract class MenuListActivity extends Activity
         public WearableListView.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                               int viewType) {
             // Inflate our custom layout for list items
-            return new ItemViewHolder(mInflater.inflate(R.layout.list_item, null));
+            WearableListView.ViewHolder viewHolder = new WearableListView.ViewHolder(new MenuItemView(mContext));
+            return viewHolder;
         }
 
         // Replace the contents of a list item
@@ -100,21 +105,68 @@ public abstract class MenuListActivity extends Activity
         public void onBindViewHolder(WearableListView.ViewHolder holder,
                                      int position) {
             // retrieve the text view
-            ItemViewHolder itemHolder = (ItemViewHolder) holder;
-            TextView view = itemHolder.textView;
-            // replace text contents
-            view.setText(mDataset[position]);
+            MenuItemView menuItemView = (MenuItemView) holder.itemView;
+            final MenuElement item = mDataset.get(position);
+            TextView textView = menuItemView.findViewById(R.id.actionitem);
+            textView.setText(item.actionitem);
+
+            final ImageView imageView = menuItemView.findViewById(R.id.actionicon);
+            imageView.setImageResource(item.actionicon);
+
             // replace list item's metadata
-            holder.itemView.setTag(mDataset[position]);
+            holder.itemView.setTag(item.actionitem);
         }
 
         // Return the size of your dataset
         // (invoked by the WearableListView's layout manager)
         @Override
         public int getItemCount() {
-            return mDataset.length;
+            return mDataset.size();
         }
     }
 
+    public final class MenuItemView extends FrameLayout implements WearableListView.OnCenterProximityListener {
+
+        final ImageView image;
+        final TextView text;
+        final float scale = 0.8f;
+        final float alpha = 0.8f;
+
+        public MenuItemView(Context context) {
+            super(context);
+            View.inflate(context, R.layout.list_item, this);
+            image = findViewById(R.id.actionicon);
+            text = findViewById(R.id.actionitem);
+            image.setScaleX(scale);
+            image.setScaleX(scale);
+            image.setAlpha(alpha);
+            text.setScaleX(scale);
+            text.setScaleX(scale);
+            text.setAlpha(alpha);
+        }
+
+        @Override
+        public void onCenterPosition(boolean b) {
+            // Animation  to be ran when the view becomes the centered one
+            image.animate().scaleX(1f).scaleY(1f).alpha(1);
+            text.animate().scaleX(1f).scaleY(1f).alpha(1);
+        }
+
+        @Override
+        public void onNonCenterPosition(boolean b) {
+            //Animation to be ran when the view is not the centered one anymore
+            image.animate().scaleX(scale).scaleY(scale).alpha(alpha);
+            text.animate().scaleX(scale).scaleY(scale).alpha(alpha);
+        }
+    }
+
+    protected class MenuElement {
+        public MenuElement(int actionicon, String actionitem) {
+            this.actionicon = actionicon;
+            this.actionitem = actionitem;
+        }
+        public int actionicon;
+        public String actionitem;
+    }
 
 }

@@ -1,5 +1,8 @@
 package info.nightscout.androidaps.interaction.menus;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.interaction.utils.MenuListActivity;
@@ -11,14 +14,14 @@ import info.nightscout.androidaps.interaction.utils.MenuListActivity;
 public class StatusMenuActivity extends MenuListActivity {
 
     @Override
-    protected String[] getElements() {
-        return new String[] {
-                getString(R.string.status_pump),
-                getString(R.string.status_loop),
-                getString(R.string.status_cpp),
-                getString(R.string.status_tdd)};
+    protected List<MenuElement> getElements() {
+        List<MenuElement> menuitems = new ArrayList<>();
+        menuitems.add(new MenuElement(R.drawable.ic_status, getString(R.string.status_pump)));
+        menuitems.add(new MenuElement(R.drawable.ic_loop_closed_white, getString(R.string.status_loop)));
+        menuitems.add(new MenuElement(R.drawable.ic_status, getString(R.string.status_cpp)));
+        menuitems.add(new MenuElement(R.drawable.ic_iob_detailed, getString(R.string.status_tdd)));
 
-
+        return menuitems;
     }
 
     @Override
