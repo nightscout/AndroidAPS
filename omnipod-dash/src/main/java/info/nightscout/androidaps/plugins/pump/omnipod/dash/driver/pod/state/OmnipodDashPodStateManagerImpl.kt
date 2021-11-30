@@ -678,8 +678,9 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     private fun store() {
         try {
             val cleanPodState = podState.copy(ltk = byteArrayOf()) // do not log ltk
-            val serialized = Gson().toJson(cleanPodState)
-            logger.debug(LTag.PUMP, "Storing Pod state: $serialized")
+            logger.debug(LTag.PUMP, "Storing Pod state: ${Gson().toJson(cleanPodState)}")
+
+            val serialized = Gson().toJson(podState)
             sharedPreferences.putString(R.string.key_omnipod_dash_pod_state, serialized)
         } catch (ex: Exception) {
             logger.error(LTag.PUMP, "Failed to store Pod state", ex)
