@@ -3,9 +3,9 @@ package info.nightscout.androidaps.plugins.general.maintenance
 import android.content.Context
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
-import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Assert
@@ -25,12 +25,13 @@ class MaintenancePluginTest : TestBase() {
     @Mock lateinit var buildHelper: BuildHelper
     @Mock lateinit var loggerUtils: LoggerUtils
     @Mock lateinit var fileListProvider: PrefFileListProvider
+    @Mock lateinit var config: Config
 
     lateinit var sut: MaintenancePlugin
 
     @Before
     fun mock() {
-        sut = MaintenancePlugin(injector, context, rh, sp, nsSettingsStatus, aapsLogger, buildHelper, ConfigImpl(), fileListProvider, loggerUtils)
+        sut = MaintenancePlugin(injector, context, rh, sp, nsSettingsStatus, aapsLogger, buildHelper, config, fileListProvider, loggerUtils)
         `when`(loggerUtils.suffix).thenReturn(".log.zip")
         `when`(loggerUtils.logDirectory).thenReturn("src/test/res/logger")
         `when`(fileListProvider.ensureTempDirExists()).thenReturn(File("src/test/res/logger"))

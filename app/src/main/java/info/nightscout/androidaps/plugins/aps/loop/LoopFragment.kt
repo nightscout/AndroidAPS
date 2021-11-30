@@ -8,6 +8,7 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.LoopFragmentBinding
 import info.nightscout.androidaps.interfaces.Constraint
+import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopSetLastRunGui
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopUpdateGui
@@ -30,7 +31,7 @@ class LoopFragment : DaggerFragment() {
     @Inject lateinit var sp: SP
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var loopPlugin: LoopPlugin
+    @Inject lateinit var loop: Loop
     @Inject lateinit var dateUtil: DateUtil
 
     private var disposable: CompositeDisposable = CompositeDisposable()
@@ -52,7 +53,7 @@ class LoopFragment : DaggerFragment() {
 
         binding.run.setOnClickListener {
             binding.lastrun.text = rh.gs(R.string.executing)
-            Thread { loopPlugin.invoke("Loop button", true) }.start()
+            Thread { loop.invoke("Loop button", true) }.start()
         }
     }
 
@@ -93,7 +94,7 @@ class LoopFragment : DaggerFragment() {
     @Synchronized
     fun updateGUI() {
         if (_binding == null) return
-        loopPlugin.lastRun?.let {
+        loop.lastRun?.let {
             binding.request.text = it.request?.toSpanned() ?: ""
             binding.constraintsprocessed.text = it.constraintsProcessed?.toSpanned() ?: ""
             binding.source.text = it.source ?: ""

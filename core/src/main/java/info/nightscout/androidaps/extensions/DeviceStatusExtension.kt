@@ -28,7 +28,7 @@ fun DeviceStatus.toJson(dateUtil: DateUtil): JSONObject =
 
 fun buildDeviceStatus(
     dateUtil: DateUtil,
-    loopPlugin: Loop,
+    loop: Loop,
     iobCobCalculatorPlugin: IobCobCalculator,
     profileFunction: ProfileFunction,
     pump: Pump,
@@ -39,7 +39,7 @@ fun buildDeviceStatus(
     val profile = profileFunction.getProfile() ?: return null
     val profileName = profileFunction.getProfileName()
 
-    val lastRun = loopPlugin.lastRun
+    val lastRun = loop.lastRun
     var apsResult: JSONObject? = null
     var iob: JSONObject? = null
     var enacted: JSONObject? = null

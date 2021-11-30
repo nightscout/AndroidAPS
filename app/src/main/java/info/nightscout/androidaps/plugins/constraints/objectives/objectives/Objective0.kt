@@ -6,9 +6,8 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.IobCobCalculator
+import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import javax.inject.Inject
@@ -18,7 +17,7 @@ class Objective0(injector: HasAndroidInjector) : Objective(injector, "config", R
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Inject lateinit var repository: AppRepository
-    @Inject lateinit var loopPlugin: LoopPlugin
+    @Inject lateinit var loop: Loop
     @Inject lateinit var nsClientPlugin: NSClientPlugin
     @Inject lateinit var iobCobCalculator: IobCobCalculator
 
@@ -54,7 +53,7 @@ class Objective0(injector: HasAndroidInjector) : Objective(injector, "config", R
         })
         tasks.add(object : Task(this, R.string.loopenabled) {
             override fun isCompleted(): Boolean {
-                return loopPlugin.isEnabled()
+                return (loop as PluginBase).isEnabled()
             }
         })
         tasks.add(object : Task(this, R.string.apsselected) {

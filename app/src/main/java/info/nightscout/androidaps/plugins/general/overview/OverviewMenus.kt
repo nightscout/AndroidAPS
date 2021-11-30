@@ -9,11 +9,11 @@ import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.PopupMenu
 import com.google.gson.Gson
-import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventRefreshOverview
+import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -28,7 +28,7 @@ class OverviewMenus @Inject constructor(
     private val sp: SP,
     private val rxBus: RxBus,
     private val buildHelper: BuildHelper,
-    private val loopPlugin: LoopPlugin,
+    private val loop: Loop,
     private val config: Config
 ) {
 
@@ -92,7 +92,7 @@ class OverviewMenus @Inject constructor(
 
         chartButton.setOnClickListener { v: View ->
             val predictionsAvailable: Boolean = when {
-                config.APS      -> loopPlugin.lastRun?.request?.hasPredictions ?: false
+                config.APS      -> loop.lastRun?.request?.hasPredictions ?: false
                 config.NSCLIENT -> true
                 else            -> false
             }

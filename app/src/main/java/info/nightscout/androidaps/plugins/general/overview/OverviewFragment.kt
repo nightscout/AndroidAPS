@@ -46,7 +46,6 @@ import info.nightscout.androidaps.extensions.valueToUnitsString
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.aps.loop.events.EventNewOpenLoopNotification
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
@@ -99,7 +98,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var statusLightHandler: StatusLightHandler
     @Inject lateinit var nsDeviceStatus: NSDeviceStatus
-    @Inject lateinit var loopPlugin: LoopPlugin
+    @Inject lateinit var loop: Loop
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var dexcomPlugin: DexcomPlugin
@@ -409,10 +408,10 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
                 R.id.accept_temp_button  -> {
                     profileFunction.getProfile() ?: return
-                    if (loopPlugin.isEnabled()) {
+                    if ((loop as PluginBase).isEnabled()) {
                         handler.post {
-                            val lastRun = loopPlugin.lastRun
-                            loopPlugin.invoke("Accept temp button", false)
+                            val lastRun = loop.lastRun
+                            loop.invoke("Accept temp button", false)
                             if (lastRun?.lastAPSRun != null && lastRun.constraintsProcessed?.isChangeRequested == true) {
                                 protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable {
                                     OKDialog.showConfirmation(activity, rh.gs(R.string.tempbasal_label), lastRun.constraintsProcessed?.toSpanned()
@@ -421,7 +420,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                                                                   binding.buttonsLayout.acceptTempButton.visibility = View.GONE
                                                                   (context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(Constants.notificationID)
                                                                   rxBus.send(EventWearInitiateAction("cancelChangeRequest"))
-                                                                  Thread { loopPlugin.acceptChangeRequest() }.run()
+                                                                  Thread { loop.acceptChangeRequest() }.run()
                                                               })
                                 })
                             }
@@ -524,7 +523,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         } else binding.buttonsLayout.quickWizardButton.visibility = View.GONE
 
         // **** Temp button ****
-        val lastRun = loopPlugin.lastRun
+        val lastRun = loop.lastRun
         val closedLoopEnabled = constraintChecker.isClosedLoopAllowed()
 
         val showAcceptButton = !closedLoopEnabled.value() && // Open mode needed
@@ -532,7 +531,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             (lastRun.lastOpenModeAccept == 0L || lastRun.lastOpenModeAccept < lastRun.lastAPSRun) &&// never accepted or before last result
             lastRun.constraintsProcessed?.isChangeRequested == true // change is requested
 
-        if (showAcceptButton && pump.isInitialized() && !pump.isSuspended() && loopPlugin.isEnabled()) {
+        if (showAcceptButton && pump.isInitialized() && !pump.isSuspended() && (loop as PluginBase).isEnabled()) {
             binding.buttonsLayout.acceptTempButton.visibility = View.VISIBLE
             binding.buttonsLayout.acceptTempButton.text = "${rh.gs(R.string.setbasalquestion)}\n${lastRun!!.constraintsProcessed}"
         } else {
@@ -592,21 +591,21 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             binding.infoLayout.apsMode.visibility = View.VISIBLE
             binding.infoLayout.timeLayout.visibility = View.GONE
             when {
-                loopPlugin.isEnabled() && loopPlugin.isSuperBolus                       -> {
+                (loop as PluginBase).isEnabled() && loop.isSuperBolus                       -> {
                     binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_superbolus)
-                    binding.infoLayout.apsModeText.text = dateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, rh)
+                    binding.infoLayout.apsModeText.text = dateUtil.age(loop.minutesToEndOfSuspend() * 60000L, true, rh)
                     binding.infoLayout.apsModeText.visibility = View.VISIBLE
                 }
 
-                loopPlugin.isDisconnected                                               -> {
+                loop.isDisconnected                                               -> {
                     binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_disconnected)
-                    binding.infoLayout.apsModeText.text = dateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, rh)
+                    binding.infoLayout.apsModeText.text = dateUtil.age(loop.minutesToEndOfSuspend() * 60000L, true, rh)
                     binding.infoLayout.apsModeText.visibility = View.VISIBLE
                 }
 
-                loopPlugin.isEnabled() && loopPlugin.isSuspended                        -> {
+                (loop as PluginBase).isEnabled() && loop.isSuspended                        -> {
                     binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_paused)
-                    binding.infoLayout.apsModeText.text = dateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, rh)
+                    binding.infoLayout.apsModeText.text = dateUtil.age(loop.minutesToEndOfSuspend() * 60000L, true, rh)
                     binding.infoLayout.apsModeText.visibility = View.VISIBLE
                 }
 
@@ -623,17 +622,17 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     binding.infoLayout.apsModeText.visibility = View.GONE
                 }
 
-                loopPlugin.isEnabled() && closedLoopEnabled.value() && loopPlugin.isLGS -> {
+                (loop as PluginBase).isEnabled() && closedLoopEnabled.value() && loop.isLGS -> {
                     binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_lgs)
                     binding.infoLayout.apsModeText.visibility = View.GONE
                 }
 
-                loopPlugin.isEnabled() && closedLoopEnabled.value()                     -> {
+                (loop as PluginBase).isEnabled() && closedLoopEnabled.value()                     -> {
                     binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_closed)
                     binding.infoLayout.apsModeText.visibility = View.GONE
                 }
 
-                loopPlugin.isEnabled() && !closedLoopEnabled.value()                    -> {
+                (loop as PluginBase).isEnabled() && !closedLoopEnabled.value()                    -> {
                     binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_open)
                     binding.infoLayout.apsModeText.visibility = View.GONE
                 }
@@ -837,8 +836,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         // cob
         var cobText = overviewData.cobInfo?.displayText(rh, dateUtil, buildHelper.isEngineeringMode()) ?: rh.gs(R.string.value_unavailable_short)
 
-        val constraintsProcessed = loopPlugin.lastRun?.constraintsProcessed
-        val lastRun = loopPlugin.lastRun
+        val constraintsProcessed = loop.lastRun?.constraintsProcessed
+        val lastRun = loop.lastRun
         if (config.APS && constraintsProcessed != null && lastRun != null) {
             if (constraintsProcessed.carbsReq > 0) {
                 //only display carbsreq when carbs have not been entered recently
@@ -868,7 +867,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         } else {
             // If the target is not the same as set in the profile then oref has overridden it
             profileFunction.getProfile()?.let { profile ->
-                val targetUsed = loopPlugin.lastRun?.constraintsProcessed?.targetBG ?: 0.0
+                val targetUsed = loop.lastRun?.constraintsProcessed?.targetBG ?: 0.0
 
                 if (targetUsed != 0.0 && abs(profile.getTargetMgdl() - targetUsed) > 0.01) {
                     aapsLogger.debug("Adjusted target. Profile: ${profile.getTargetMgdl()} APS: $targetUsed")

@@ -175,7 +175,7 @@ class LoopPlugin @Inject constructor(
             setPluginEnabled(PluginType.LOOP, value)
         }
 
-    val isLGS: Boolean
+    override val isLGS: Boolean
         get() {
             val closedLoopEnabled = constraintChecker.isClosedLoopAllowed()
             val maxIobAllowed = constraintChecker.getMaxIOBAllowed().value()
@@ -186,13 +186,13 @@ class LoopPlugin @Inject constructor(
             return isLGS
         }
 
-    val isSuperBolus: Boolean
+    override val isSuperBolus: Boolean
         get() {
             val offlineEventWrapped = repository.getOfflineEventActiveAt(dateUtil.now()).blockingGet()
             return offlineEventWrapped is ValueWrapper.Existing && offlineEventWrapped.value.reason == OfflineEvent.Reason.SUPER_BOLUS
         }
 
-    val isDisconnected: Boolean
+    override val isDisconnected: Boolean
         get() {
             val offlineEventWrapped = repository.getOfflineEventActiveAt(dateUtil.now()).blockingGet()
             return offlineEventWrapped is ValueWrapper.Existing && offlineEventWrapped.value.reason == OfflineEvent.Reason.DISCONNECT_PUMP
@@ -208,10 +208,6 @@ class LoopPlugin @Inject constructor(
         return bool
     }
 
-    @Synchronized operator fun invoke(initiator: String, allowNotification: Boolean) {
-        invoke(initiator, allowNotification, false)
-    }
-
     @Synchronized
     fun isEmptyQueue(): Boolean {
         val maxMinutes = 2L
@@ -224,7 +220,7 @@ class LoopPlugin @Inject constructor(
     }
 
     @Synchronized
-    operator fun invoke(initiator: String, allowNotification: Boolean, tempBasalFallback: Boolean) {
+    override fun invoke(initiator: String, allowNotification: Boolean, tempBasalFallback: Boolean) {
         try {
             aapsLogger.debug(LTag.APS, "invoke from $initiator")
             val loopEnabled = constraintChecker.isLoopInvocationAllowed()
@@ -443,7 +439,7 @@ class LoopPlugin @Inject constructor(
         }
     }
 
-    fun disableCarbSuggestions(durationMinutes: Int) {
+    override fun disableCarbSuggestions(durationMinutes: Int) {
         carbsSuggestionsSuspendedUntil = System.currentTimeMillis() + durationMinutes * 60 * 1000
         dismissSuggestion()
     }
@@ -479,7 +475,7 @@ class LoopPlugin @Inject constructor(
         rxBus.send(EventWearConfirmAction("cancelChangeRequest"))
     }
 
-    fun acceptChangeRequest() {
+    override fun acceptChangeRequest() {
         val profile = profileFunction.getProfile() ?: return
         lastRun?.let { lastRun ->
             lastRun.constraintsProcessed?.let { constraintsProcessed ->
