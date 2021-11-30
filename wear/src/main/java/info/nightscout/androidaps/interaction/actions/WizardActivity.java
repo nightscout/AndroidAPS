@@ -45,6 +45,21 @@ public class WizardActivity extends ViewSelectorActivity {
         dotsPageIndicator.setPager(pager);
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         hasPercentage = sp.getBoolean("wizardpercentage", false);
+        pager.setOnPageChangeListener(new GridViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int row, int column, float rowOffset, float columnOffset, int rowOffsetPixels, int columnOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int row, int column) {
+                View view = pager.getChildAt(column);
+                view.requestFocus();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
     }
 
 
@@ -80,6 +95,7 @@ public class WizardActivity extends ViewSelectorActivity {
                 }
                 setLabelToPlusMinusView(view, getString(R.string.action_carbs));
                 container.addView(view);
+                view.requestFocus();
                 return view;
             } else if (col == 1 && hasPercentage) {
                 final View view = getInflatedPlusMinusView(container);

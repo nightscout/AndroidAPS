@@ -22,6 +22,7 @@ public class ConfigurationActivity extends WearPreferenceActivity {
         ViewGroup view = (ViewGroup) getWindow().getDecorView();
         removeBackgroundRecursively(view);
         view.setBackground(getResources().getDrawable(R.drawable.settings_background));
+        view.requestFocus();
     }
 
     @Override

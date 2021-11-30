@@ -2,6 +2,9 @@ package info.nightscout.androidaps.interaction.menus;
 
 import android.content.Intent;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.interaction.actions.FillActivity;
@@ -14,13 +17,14 @@ import info.nightscout.androidaps.interaction.utils.MenuListActivity;
 public class FillMenuActivity extends MenuListActivity {
 
     @Override
-    protected String[] getElements() {
-        return new String[]{
-                getString(R.string.action_preset_1),
-                getString(R.string.action_preset_2),
-                getString(R.string.action_preset_3),
-                getString(R.string.action_free_amount)
-        };
+    protected List<MenuElement> getElements() {
+        List<MenuElement> menuitems = new ArrayList<>();
+        menuitems.add(new MenuElement(R.drawable.ic_canula, getString(R.string.action_preset_1)));
+        menuitems.add(new MenuElement(R.drawable.ic_canula, getString(R.string.action_preset_2)));
+        menuitems.add(new MenuElement(R.drawable.ic_canula, getString(R.string.action_preset_3)));
+        menuitems.add(new MenuElement(R.drawable.ic_canula, getString(R.string.action_free_amount)));
+
+        return menuitems;
     }
 
     @Override

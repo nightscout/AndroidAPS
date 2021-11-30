@@ -48,6 +48,21 @@ public class TempTargetActivity extends ViewSelectorActivity {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         isMGDL = sp.getBoolean("units_mgdl", true);
         isSingleTarget = sp.getBoolean("singletarget", true);
+        pager.setOnPageChangeListener(new GridViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int row, int column, float rowOffset, float columnOffset, int rowOffsetPixels, int columnOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int row, int column) {
+                View view = pager.getChildAt(column);
+                view.requestFocus();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
     }
 
 
@@ -84,6 +99,7 @@ public class TempTargetActivity extends ViewSelectorActivity {
                 }
                 setLabelToPlusMinusView(view, getString(R.string.action_duration));
                 container.addView(view);
+                view.requestFocus();
                 return view;
 
             } else if (col == 1) {

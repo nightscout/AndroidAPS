@@ -53,6 +53,21 @@ public class CPPActivity extends ViewSelectorActivity {
         pager.setAdapter(new MyGridViewPagerAdapter());
         DotsPageIndicator dotsPageIndicator = findViewById(R.id.page_indicator);
         dotsPageIndicator.setPager(pager);
+        pager.setOnPageChangeListener(new GridViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int row, int column, float rowOffset, float columnOffset, int rowOffsetPixels, int columnOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int row, int column) {
+                View view = pager.getChildAt(column);
+                view.requestFocus();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
     }
 
 
@@ -86,6 +101,7 @@ public class CPPActivity extends ViewSelectorActivity {
                 editTimeshift = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 23d, 1d, new DecimalFormat("0"), true, true);
                 setLabelToPlusMinusView(view, getString(R.string.action_timeshift));
                 container.addView(view);
+                view.requestFocus();
                 return view;
             } else if (col == 1) {
                 final View view = getInflatedPlusMinusView(container);
