@@ -1136,5 +1136,6 @@
     <string name="key_last_processed_glunovo_timestamp" translatable="false">last_processed_glunovo_timestamp</string>
     <string name="identification">Identification (email, FB or Discord nick etc)</string>
     <string name="identification_not_set">Identification not set in dev mode</string>
+    <string name="not_available_full">Not available</string>
 
 </resources>
