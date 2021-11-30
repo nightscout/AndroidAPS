@@ -277,6 +277,7 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
                         float py = (float) (graphHeight * ratY + bounds.width() + 10);
                         canvas.save();
                         canvas.rotate(-90, px, py);
+                        mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
                         canvas.drawText(value.getLabel(), px, py, mPaint);
                         mPaint.setStyle(Paint.Style.STROKE);
                         canvas.drawRect(px - 3, bounds.top + py - 3, bounds.right + px + 3, bounds.bottom + py + 3, mPaint);
