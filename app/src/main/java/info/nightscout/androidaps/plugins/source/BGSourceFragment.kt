@@ -82,11 +82,11 @@ class BGSourceFragment : DaggerFragment() {
             .observeOn(aapsSchedulers.io)
             .debounce(1L, TimeUnit.SECONDS)
             .subscribe({
-                disposable += repository
-                    .compatGetBgReadingsDataFromTime(now - millsToThePast, false)
-                    .observeOn(aapsSchedulers.main)
-                    .subscribe { list -> binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true) }
-            }, fabricPrivacy::logException)
+                           disposable += repository
+                               .compatGetBgReadingsDataFromTime(now - millsToThePast, false)
+                               .observeOn(aapsSchedulers.main)
+                               .subscribe { list -> binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true) }
+                       }, fabricPrivacy::logException)
     }
 
     @Synchronized
@@ -117,6 +117,12 @@ class BGSourceFragment : DaggerFragment() {
             holder.binding.value.text = glucoseValue.valueToUnitsString(profileFunction.getUnits())
             holder.binding.direction.setImageResource(glucoseValue.trendArrow.directionToIcon())
             holder.binding.remove.tag = glucoseValue
+            if (position > 0) {
+                val previous = glucoseValues[position - 1]
+                val diff = previous.timestamp - glucoseValue.timestamp
+                if (diff < T.secs(20).msecs())
+                    holder.binding.root.setBackgroundColor(rh.gc(R.color.errorAlertBackground))
+            }
         }
 
         override fun getItemCount(): Int = glucoseValues.size
@@ -132,7 +138,7 @@ class BGSourceFragment : DaggerFragment() {
                     activity?.let { activity ->
                         val text = dateUtil.dateAndTimeString(glucoseValue.timestamp) + "\n" + glucoseValue.valueToUnitsString(profileFunction.getUnits())
                         OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord), text, Runnable {
-                            val source = when((activePlugin.activeBgSource as PluginBase).pluginDescription.pluginName) {
+                            val source = when ((activePlugin.activeBgSource as PluginBase).pluginDescription.pluginName) {
                                 R.string.dexcom_app_patched -> Sources.Dexcom
                                 R.string.eversense          -> Sources.Eversense
                                 R.string.Glimp              -> Sources.Glimp
@@ -144,8 +150,10 @@ class BGSourceFragment : DaggerFragment() {
                                 R.string.xdrip              -> Sources.Xdrip
                                 else                        -> Sources.Unknown
                             }
-                            uel.log(Action.BG_REMOVED, source,
-                                ValueWithUnit.Timestamp(glucoseValue.timestamp))
+                            uel.log(
+                                Action.BG_REMOVED, source,
+                                ValueWithUnit.Timestamp(glucoseValue.timestamp)
+                            )
                             disposable += repository.runTransaction(InvalidateGlucoseValueTransaction(glucoseValue.id)).subscribe()
                         })
                     }
