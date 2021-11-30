@@ -71,7 +71,7 @@ class ActionCarePortalEvent(injector: HasAndroidInjector) : Action(injector) {
             if (glucoseStatus != null) {
                 therapyEvent.glucose = glucoseStatus.glucose
                 therapyEvent.glucoseType = TherapyEvent.MeterType.SENSOR
-                valuesWithUnit.add(ValueWithUnit.fromGlucoseUnit(glucoseStatus.glucose, profileFunction.getUnits().asText))
+                valuesWithUnit.add(ValueWithUnit.Mgdl(glucoseStatus.glucose))
                 valuesWithUnit.add(ValueWithUnit.TherapyEventMeterType(TherapyEvent.MeterType.SENSOR))
             }
         } else {

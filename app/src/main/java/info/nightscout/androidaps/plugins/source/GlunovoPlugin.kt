@@ -10,6 +10,8 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.androidaps.database.entities.UserEntry
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
 import info.nightscout.androidaps.interfaces.BgSource
 import info.nightscout.androidaps.interfaces.PluginBase
@@ -17,6 +19,7 @@ import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
@@ -37,6 +40,7 @@ class GlunovoPlugin @Inject constructor(
     private val repository: AppRepository,
     private val xDripBroadcast: XDripBroadcast,
     private val dateUtil: DateUtil,
+    private val uel: UserEntryLogger,
     private val fabricPrivacy: FabricPrivacy
 ) : PluginBase(
     PluginDescription()
@@ -145,6 +149,18 @@ class GlunovoPlugin @Inject constructor(
                         savedValues.inserted.forEach {
                             xDripBroadcast.send(it)
                             aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
+                        }
+                        savedValues.calibrationsInserted.forEach {  calibration ->
+                            calibration.glucose?.let { glucosevalue ->
+                                uel.log(
+                                    UserEntry.Action.CALIBRATION,
+                                    UserEntry.Sources.Dexcom,
+                                    ValueWithUnit.Timestamp(calibration.timestamp),
+                                    ValueWithUnit.TherapyEventType(calibration.type),
+                                    ValueWithUnit.fromGlucoseUnit(glucosevalue, calibration.glucoseUnit.toString)
+                                )
+                            }
+                            aapsLogger.debug(LTag.DATABASE, "Inserted calibration $calibration")
                         }
                     }
         }
