@@ -721,6 +721,9 @@
     <string name="application_expired">Aplikácia expirovala</string>
     <string name="new_version_warning">Nová verzia je dostupná minimálne %1$d dní! Prepnutie na ochranu pred nízkou glykémiou po %2$d dňoch, vypnutie uzavretého okruhu po %3$d dňoch</string>
     <string name="twohours">2h</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Prijímať hodnoty glykémií z upravenej aplikácie Dexcom (BYODA).</string>
     <string name="cobvsiob">COB vs. IOB</string>
     <string name="bolusconstraintappliedwarn">Použité obmedzenie bolusu: %1$.2f J na %2$.2f J</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Detekovaná pomalá absorbcia sacharidov: %2$d%% času. Prekontrolujte kalkuláciu. COB môže byť úplne iné, môže byť podaného viac inzulínu!!!!!</font>]]></string>
