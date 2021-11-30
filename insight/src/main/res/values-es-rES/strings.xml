@@ -13,7 +13,7 @@
     <string name="stopped">Detenido</string>
     <string name="paused">Pausado</string>
     <string name="operating_mode">Modo de funcionamiento</string>
-    <string name="description_pump_insight_local">Integración de bomba para bombas Insight de Accu-Chek</string>
+    <string name="description_pump_insight_local">Integración de bomba de insulina Accu-Chek Insight</string>
     <string name="not_inserted">No insertado</string>
     <string name="tdd_bolus">Bolus TDD</string>
     <string name="tdd_basal">Basal TDD</string>
