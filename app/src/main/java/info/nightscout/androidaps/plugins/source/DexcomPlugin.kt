@@ -164,11 +164,11 @@ class DexcomPlugin @Inject constructor(
                         result.calibrationsInserted.forEach {   calibration ->
                             calibration.glucose?.let {  glucosevalue ->
                                 uel.log(
-                                    Action.CAREPORTAL,
+                                    Action.CALIBRATION,
                                     Sources.Dexcom,
                                     ValueWithUnit.Timestamp(calibration.timestamp),
                                     ValueWithUnit.TherapyEventType(calibration.type),
-                                    ValueWithUnit.fromGlucoseUnit(glucosevalue, calibration.glucoseUnit.toString())
+                                    ValueWithUnit.fromGlucoseUnit(glucosevalue, calibration.glucoseUnit.toString)
                                 )
                             }
                             aapsLogger.debug(LTag.DATABASE, "Inserted calibration $calibration")

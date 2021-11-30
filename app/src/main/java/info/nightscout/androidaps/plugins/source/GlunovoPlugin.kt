@@ -153,11 +153,11 @@ class GlunovoPlugin @Inject constructor(
                         savedValues.calibrationsInserted.forEach {  calibration ->
                             calibration.glucose?.let { glucosevalue ->
                                 uel.log(
-                                    UserEntry.Action.CAREPORTAL,
+                                    UserEntry.Action.CALIBRATION,
                                     UserEntry.Sources.Dexcom,
                                     ValueWithUnit.Timestamp(calibration.timestamp),
                                     ValueWithUnit.TherapyEventType(calibration.type),
-                                    ValueWithUnit.fromGlucoseUnit(glucosevalue, calibration.glucoseUnit.toString())
+                                    ValueWithUnit.fromGlucoseUnit(glucosevalue, calibration.glucoseUnit.toString)
                                 )
                             }
                             aapsLogger.debug(LTag.DATABASE, "Inserted calibration $calibration")
