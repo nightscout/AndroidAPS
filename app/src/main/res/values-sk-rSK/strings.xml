@@ -903,4 +903,5 @@
     <string name="bg_too_close">Glykémia je príliš blízko:\n%1$s\n%2$s</string>
     <string name="identification">Identifikácia (E-mail, prezývka FB, alebo Discord atď.)</string>
     <string name="identification_not_set">Identifikácia nie je nastavená vo vývojárskom móde</string>
+    <string name="not_available_full">Nedostupný</string>
 </resources>
