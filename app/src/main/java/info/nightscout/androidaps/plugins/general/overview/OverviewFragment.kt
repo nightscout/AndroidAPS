@@ -772,12 +772,12 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             profileFunction.getProfile()?.let {
                 if (it is ProfileSealed.EPS) {
                     if (it.value.originalPercentage != 100 || it.value.originalTimeshift != 0L || it.value.originalDuration != 0L)
-                        rh.gc(R.color.ribbonWarning)
-                    else rh.gc(R.color.ribbonDefault)
+                        rh.getAttributeColor(context, R.attr.ribbonWarning)
+                    else rh.getAttributeColor(context, R.attr.ribbonDefault)
                 } else if (it is ProfileSealed.PS) {
-                    rh.gc(R.color.ribbonDefault)
+                    rh.getAttributeColor(context, R.attr.ribbonDefault)
                 } else {
-                    rh.gc(R.color.ribbonDefault)
+                    rh.getAttributeColor(context, R.attr.ribbonDefault)
                 }
             } ?: rh.getAttributeColor(context, R.attr.ribbonWarning)
 
