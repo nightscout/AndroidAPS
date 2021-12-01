@@ -904,4 +904,5 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="bg_too_close">KŞ çok yakın:\n%1$s\n%2$s</string>
     <string name="identification">Tanımlama (E-posta, FB veya Discord rumuz vs.)</string>
     <string name="identification_not_set">Tanımlama geliştirme modunda ayarlanmadı</string>
+    <string name="not_available_full">Mevcut değil</string>
 </resources>
