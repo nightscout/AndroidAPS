@@ -32,9 +32,9 @@
     <string name="tube_changed">Tubo cambiado</string>
     <string name="insightpump_shortname">Sight</string>
     <string name="insight_alert_notification_channel">Alertas de bomba Insight</string>
-    <string name="disable_vibration">Desactivar vibraciones en la administración manual del bolo</string>
+    <string name="disable_vibration">Desactivar las vibraciones en la administración de bolos manuales</string>
     <string name="disable_vibration_summary">Para bolo y bolo extendido (sólo disponible con el firmware de Insight 3.x)</string>
-    <string name="disable_vibration_auto">Desactivar vibraciones en la administración automática del bolo</string>
+    <string name="disable_vibration_auto">Desactivar las vibraciones en la administración de bolos automáticos</string>
     <string name="disable_vibration_auto_summary">Para SMB y basal temp. con la emulación TBR (sólo disponible con el firmware de Insight 3.x)</string>
     <string name="timeout_during_handshake">Tiempo excedido durante el sacudido de mano - reiniciar bluetooth</string>
     <string name="pump_stopped">Bomba parada</string>
