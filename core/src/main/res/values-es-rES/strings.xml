@@ -184,12 +184,12 @@
     <string name="careportal_note_message">Nota : %1$s</string>
     <string name="careportal_question_message">Pregunta : %1$s</string>
     <string name="careportal_exercise_message">Ejercicio : %1$s</string>
-    <string name="careportal_pumpsitechange">Cambio Cánula de Bomba</string>
+    <string name="careportal_pumpsitechange">Cambio de cánula de bomba</string>
     <string name="careportal_cgmsensorinsert">Inserción de sensor</string>
     <string name="careportal_cgmsensorstart">Inicio de Sensor</string>
     <string name="careportal_cgm_sensor_stop">Detener sensor MCG</string>
     <string name="careportal_dad_alert">D.A.D Alerta</string>
-    <string name="careportal_insulincartridgechange">Cambio Cartucho insulina</string>
+    <string name="careportal_insulincartridgechange">Cambio de cartucho de insulina</string>
     <string name="careportal_profileswitch">Cambio de perfil</string>
     <string name="careportal_snackbolus">Bolo de aperitivo</string>
     <string name="careportal_mealbolus">Bolo de comida</string>

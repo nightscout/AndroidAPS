@@ -903,4 +903,5 @@ Unerwartetes Verhalten.</string>
     <string name="bg_too_close">BZ zu nah:\n%1$s\n%2$s</string>
     <string name="identification">Identifikation (E-Mail, Facebook oder Discord Nickname)</string>
     <string name="identification_not_set">Identifikation im Dev-Modus nicht gesetzt</string>
+    <string name="not_available_full">Nicht verfügbar</string>
 </resources>
