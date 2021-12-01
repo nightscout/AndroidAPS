@@ -551,7 +551,9 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             }
             podInfoBinding.lastBolus.text = text
             podInfoBinding.lastBolus.setTextColor(textColor)
+            return
         }
+        podInfoBinding.lastBolus.text = PLACEHOLDER
     }
 
     private fun updateTempBasal() {

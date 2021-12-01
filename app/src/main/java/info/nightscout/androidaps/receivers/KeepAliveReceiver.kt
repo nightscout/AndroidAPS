@@ -14,17 +14,12 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.events.EventProfileSwitchChanged
 import info.nightscout.androidaps.extensions.buildDeviceStatus
-import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.androidaps.interfaces.IobCobCalculator
-import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.RunningConfiguration
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenancePlugin
@@ -64,7 +59,7 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
         @Inject lateinit var repository: AppRepository
         @Inject lateinit var config: Config
         @Inject lateinit var iobCobCalculator: IobCobCalculator
-        @Inject lateinit var loopPlugin: LoopPlugin
+        @Inject lateinit var loop: Loop
         @Inject lateinit var dateUtil: DateUtil
         @Inject lateinit var activePlugin: ActivePlugin
         @Inject lateinit var profileFunction: ProfileFunction
@@ -124,12 +119,12 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
             var shouldUploadStatus = false
             if (config.NSCLIENT) return
             if (config.PUMPCONTROL) shouldUploadStatus = true
-            else if (!loopPlugin.isEnabled() || iobCobCalculator.ads.actualBg() == null)
+            else if (!(loop as PluginBase).isEnabled() || iobCobCalculator.ads.actualBg() == null)
                 shouldUploadStatus = true
             else if (dateUtil.isOlderThan(activePlugin.activeAPS.lastAPSRun, 5)) shouldUploadStatus = true
             if (dateUtil.isOlderThan(lastIobUpload, IOB_UPDATE_FREQUENCY_IN_MINUTES) && shouldUploadStatus) {
                 lastIobUpload = dateUtil.now()
-                buildDeviceStatus(dateUtil, loopPlugin, iobCobCalculator, profileFunction,
+                buildDeviceStatus(dateUtil, loop, iobCobCalculator, profileFunction,
                     activePlugin.activePump, receiverStatusStore, runningConfiguration,
                     BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION)?.also {
                     repository.insert(it)
@@ -149,9 +144,11 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
             // sometimes keep alive broadcast stops
             // as as workaround test if readStatus was requested before an alarm is generated
             if (lastReadStatus != 0L && lastReadStatus > System.currentTimeMillis() - T.mins(5).msecs()) {
-                localAlertUtils.checkPumpUnreachableAlarm(lastConnection, isStatusOutdated, loopPlugin.isDisconnected)
+                localAlertUtils.checkPumpUnreachableAlarm(lastConnection, isStatusOutdated, loop.isDisconnected)
             }
-            if (runningProfile == null || ((!pump.isThisProfileSet(requestedProfile) || !requestedProfile.isEqual(runningProfile)) && !commandQueue.isRunning(Command.CommandType.BASAL_PROFILE))) {
+            if (loop.isDisconnected) {
+                // do nothing if pump is disconnected
+            } else if (runningProfile == null || ((!pump.isThisProfileSet(requestedProfile) || !requestedProfile.isEqual(runningProfile)) && !commandQueue.isRunning(Command.CommandType.BASAL_PROFILE))) {
                 rxBus.send(EventProfileSwitchChanged())
             } else if (isStatusOutdated && !pump.isBusy()) {
                 lastReadStatus = System.currentTimeMillis()

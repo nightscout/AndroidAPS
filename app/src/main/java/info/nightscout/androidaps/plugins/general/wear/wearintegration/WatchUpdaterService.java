@@ -42,6 +42,8 @@ import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.Config;
 import info.nightscout.androidaps.interfaces.GlucoseUnit;
 import info.nightscout.androidaps.interfaces.IobCobCalculator;
+import info.nightscout.androidaps.interfaces.Loop;
+import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.logging.AAPSLogger;
@@ -73,7 +75,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
     @Inject public DefaultValueHelper defaultValueHelper;
     @Inject public NSDeviceStatus nsDeviceStatus;
     @Inject public ActivePlugin activePlugin;
-    @Inject public LoopPlugin loopPlugin;
+    @Inject public Loop loop;
     @Inject public IobCobCalculator iobCobCalculator;
     @Inject public AppRepository repository;
     @Inject ReceiverStatusStore receiverStatusStore;
@@ -509,7 +511,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         repository.getCarbsDataFromTimeExpanded(startTimeWindow, true).blockingGet()
                 .forEach(carb -> boluses.add(treatmentMap(carb.getTimestamp(), 0, carb.getAmount(), false, carb.isValid())));
 
-        final LoopPlugin.LastRun finalLastRun = loopPlugin.getLastRun();
+        final LoopPlugin.LastRun finalLastRun = loop.getLastRun();
         if (sp.getBoolean("wear_predictions", true) && finalLastRun != null && finalLastRun.getRequest().getHasPredictions() && finalLastRun.getConstraintsProcessed() != null) {
             List<GlucoseValueDataPoint> predArray =
                     finalLastRun.getConstraintsProcessed().getPredictions()
@@ -688,7 +690,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             //OpenAPS status
             if (config.getAPS()) {
                 //we are AndroidAPS
-                openApsStatus = loopPlugin.getLastRun() != null && loopPlugin.getLastRun().getLastTBREnact() != 0 ? loopPlugin.getLastRun().getLastTBREnact() : -1;
+                openApsStatus = loop.getLastRun() != null && loop.getLastRun().getLastTBREnact() != 0 ? loop.getLastRun().getLastTBREnact() : -1;
             } else {
                 //NSClient or remote
                 openApsStatus = nsDeviceStatus.getOpenApsTimestamp();
@@ -741,7 +743,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             return status;
         }
 
-        if (!loopPlugin.isEnabled()) {
+        if (!((PluginBase)loop).isEnabled()) {
             status += rh.gs(R.string.disabledloop) + "\n";
             lastLoopStatus = false;
         } else {

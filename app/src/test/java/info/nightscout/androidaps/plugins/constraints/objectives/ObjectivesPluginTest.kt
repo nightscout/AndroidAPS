@@ -5,11 +5,11 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Assert
@@ -25,6 +25,7 @@ class ObjectivesPluginTest : TestBase() {
     @Mock lateinit var sp: SP
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var uel: UserEntryLogger
+    @Mock lateinit var config: Config
 
     private lateinit var objectivesPlugin: ObjectivesPlugin
 
@@ -39,7 +40,7 @@ class ObjectivesPluginTest : TestBase() {
     }
 
     @Before fun prepareMock() {
-        objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, rh, activePlugin, sp, ConfigImpl(), dateUtil, uel)
+        objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, rh, activePlugin, sp, config, dateUtil, uel)
         objectivesPlugin.onStart()
         `when`(rh.gs(R.string.objectivenotstarted, 9)).thenReturn("Objective 9 not started")
         `when`(rh.gs(R.string.objectivenotstarted, 8)).thenReturn("Objective 8 not started")

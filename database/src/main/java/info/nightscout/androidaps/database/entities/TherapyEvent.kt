@@ -66,9 +66,9 @@ data class TherapyEvent(
             previous.interfaceIDs.nightscoutId == null &&
             interfaceIDs.nightscoutId != null
 
-    enum class GlucoseUnit {
-        MGDL,
-        MMOL;
+    enum class GlucoseUnit (val toString: String) {
+        MGDL (ValueWithUnit.MGDL),
+        MMOL (ValueWithUnit.MMOL);
 
         companion object
     }

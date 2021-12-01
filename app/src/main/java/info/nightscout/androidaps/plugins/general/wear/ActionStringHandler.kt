@@ -27,7 +27,6 @@ import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
@@ -64,7 +63,7 @@ class ActionStringHandler @Inject constructor(
     private val context: Context,
     private val constraintChecker: ConstraintChecker,
     private val profileFunction: ProfileFunction,
-    private val loopPlugin: LoopPlugin,
+    private val loop: Loop,
     private val wearPlugin: WearPlugin,
     private val fabricPrivacy: FabricPrivacy,
     private val commandQueue: CommandQueue,
@@ -320,7 +319,7 @@ class ActionStringHandler @Inject constructor(
         } else if ("changeRequest" == act[0]) { ////////////////////////////////////////////// CHANGE REQUEST
             rTitle = rh.gs(R.string.openloop_newsuggestion)
             rAction = "changeRequest"
-            loopPlugin.lastRun?.let {
+            loop.lastRun?.let {
                 rMessage += it.constraintsProcessed
                 wearPlugin.requestChangeConfirmation(rTitle, rMessage, rAction)
                 lastSentTimestamp = System.currentTimeMillis()
@@ -424,7 +423,7 @@ class ActionStringHandler @Inject constructor(
         get() {
             var ret = ""
             // decide if enabled/disabled closed/open; what Plugin as APS?
-            if (loopPlugin.isEnabled(loopPlugin.getType())) {
+            if ((loop as PluginBase).isEnabled()) {
                 ret += if (constraintChecker.isClosedLoopAllowed().value()) {
                     "CLOSED LOOP\n"
                 } else {
@@ -432,7 +431,7 @@ class ActionStringHandler @Inject constructor(
                 }
                 val aps = activePlugin.activeAPS
                 ret += "APS: " + (aps as PluginBase).name
-                val lastRun = loopPlugin.lastRun
+                val lastRun = loop.lastRun
                 if (lastRun != null) {
                     ret += "\nLast Run: " + dateUtil.timeString(lastRun.lastAPSRun)
                     if (lastRun.lastTBREnact != 0L) ret += "\nLast Enact: " + dateUtil.timeString(lastRun.lastTBREnact)
@@ -505,8 +504,8 @@ class ActionStringHandler @Inject constructor(
             doFillBolus(amount)
         } else if ("temptarget" == act[0]) {
             val duration = SafeParse.stringToInt(act[2])
-            var low = SafeParse.stringToDouble(act[3])
-            var high = SafeParse.stringToDouble(act[4])
+            val low = SafeParse.stringToDouble(act[3])
+            val high = SafeParse.stringToDouble(act[4])
             generateTempTarget(duration, low, high)
         } else if ("wizard2" == act[0]) {
             if (lastBolusWizard != null) { //use last calculation as confirmed string matches
@@ -529,7 +528,7 @@ class ActionStringHandler @Inject constructor(
         } else if ("dismissoverviewnotification" == act[0]) {
             rxBus.send(EventDismissNotification(SafeParse.stringToInt(act[1])))
         } else if ("changeRequest" == act[0]) {
-            loopPlugin.acceptChangeRequest()
+            loop.acceptChangeRequest()
             val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.cancel(Constants.notificationID)
         }

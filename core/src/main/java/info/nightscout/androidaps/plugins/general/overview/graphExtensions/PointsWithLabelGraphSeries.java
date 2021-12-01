@@ -273,12 +273,13 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
                         mPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
                         Rect bounds = new Rect();
                         mPaint.getTextBounds(value.getLabel(), 0, value.getLabel().length(), bounds);
-                        mPaint.setStyle(Paint.Style.STROKE);
                         float px = endX + bounds.height() / 2.0f;
                         float py = (float) (graphHeight * ratY + bounds.width() + 10);
                         canvas.save();
                         canvas.rotate(-90, px, py);
+                        mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
                         canvas.drawText(value.getLabel(), px, py, mPaint);
+                        mPaint.setStyle(Paint.Style.STROKE);
                         canvas.drawRect(px - 3, bounds.top + py - 3, bounds.right + px + 3, bounds.bottom + py + 3, mPaint);
                         canvas.restore();
                     }

@@ -20,10 +20,10 @@ import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus
 import info.nightscout.androidaps.plugins.general.overview.OverviewData
@@ -64,7 +64,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var overviewMenus: OverviewMenus
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var config: Config
-    @Inject lateinit var loopPlugin: LoopPlugin
+    @Inject lateinit var loop: Loop
     @Inject lateinit var nsDeviceStatus: NSDeviceStatus
     @Inject lateinit var translator: Translator
 
@@ -90,7 +90,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
 
         // We don't want to use injected singletons but own instance working on top of different data
         iobCobCalculator = IobCobCalculatorPlugin(injector, aapsLogger, aapsSchedulers, rxBus, sp, rh, profileFunction, activePlugin, sensitivityOref1Plugin, sensitivityAAPSPlugin, sensitivityWeightedAveragePlugin, fabricPrivacy, dateUtil, repository)
-        overviewData = OverviewData(injector, aapsLogger, rh, dateUtil, sp, activePlugin, defaultValueHelper, profileFunction, config, loopPlugin, nsDeviceStatus, repository, overviewMenus, iobCobCalculator, translator)
+        overviewData = OverviewData(injector, aapsLogger, rh, dateUtil, sp, activePlugin, defaultValueHelper, profileFunction, config, loop, nsDeviceStatus, repository, overviewMenus, iobCobCalculator, translator)
 
         binding.left.setOnClickListener {
             adjustTimeRange(overviewData.fromTime - T.hours(rangeToDisplay.toLong()).msecs())
