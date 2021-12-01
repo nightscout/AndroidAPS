@@ -145,7 +145,7 @@ class TriggerConnector(injector: HasAndroidInjector) : Trigger(injector) {
         // Child triggers
         val listLayout = LinearLayout(root.context).also {
             it.orientation = LinearLayout.VERTICAL
-            it.setBackgroundColor(resourceHelper.getAttributeColor(null, R.attr.triggerConnectorBackground))
+            it.setBackgroundColor(rh.getAttributeColor(null, R.attr.triggerConnectorBackground))
             it.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).also { params ->
                 params.setMargins(rh.dpToPx(1), 0, rh.dpToPx(1), rh.dpToPx(2))
             }

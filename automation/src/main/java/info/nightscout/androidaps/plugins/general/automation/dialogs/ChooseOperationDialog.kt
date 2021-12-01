@@ -13,8 +13,6 @@ import javax.inject.Inject
 
 class ChooseOperationDialog : DialogFragmentWithDate() {
 
-    @Inject lateinit var rh: ResourceHelper
-
     private var checkedIndex = -1
 
     private var _binding: AutomationDialogChooseOperationBinding? = null

@@ -14,7 +14,7 @@ import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
@@ -26,7 +26,7 @@ class ThemeSwitcherPlugin @Inject constructor(
     injector: HasAndroidInjector,
     resourceHelper: ResourceHelper,
     aapsLogger: AAPSLogger,
-    private val rxBusWrapper: RxBusWrapper,
+    private val rxBus: RxBus,
     private val sp: SP
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
@@ -39,8 +39,8 @@ class ThemeSwitcherPlugin @Inject constructor(
     private val compositeDisposable = CompositeDisposable()
 
     override fun onStart() {
-        compositeDisposable.add(rxBusWrapper.toObservable(EventPreferenceChange::class.java).subscribe {
-            if (it.isChanged(resourceHelper, id = R.string.key_use_dark_mode)) switchTheme()
+        compositeDisposable.add(rxBus.toObservable(EventPreferenceChange::class.java).subscribe {
+            if (it.isChanged(rh, id = R.string.key_use_dark_mode)) switchTheme()
         })
     }
 
@@ -50,7 +50,7 @@ class ThemeSwitcherPlugin @Inject constructor(
             sp.getString(R.string.value_light_theme, "light") -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
         }
-        rxBusWrapper.send(EventThemeSwitch())
+        rxBus.send(EventThemeSwitch())
     }
 
     override fun onStop() {

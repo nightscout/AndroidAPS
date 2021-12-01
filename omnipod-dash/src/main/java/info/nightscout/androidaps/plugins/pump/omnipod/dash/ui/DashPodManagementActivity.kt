@@ -28,7 +28,6 @@ import javax.inject.Inject
 
 class DashPodManagementActivity : NoSplashAppCompatActivity() {
 
-    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var injector: HasAndroidInjector

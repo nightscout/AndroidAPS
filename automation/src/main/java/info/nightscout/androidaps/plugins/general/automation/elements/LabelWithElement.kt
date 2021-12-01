@@ -24,7 +24,7 @@ class LabelWithElement(
                 text = textPre
                 setPadding(px, px, px, px)
                 setTypeface(typeface, Typeface.BOLD)
-                setTextColor(resourceHelper.getAttributeColor(null, R.attr.TitleAndLabelTextColor))
+                setTextColor(rh.getAttributeColor(null, R.attr.TitleAndLabelTextColor))
                 gravity = Gravity.CENTER
             }
         )

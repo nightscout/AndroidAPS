@@ -39,7 +39,6 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var defaultProfile: DefaultProfile
     @Inject lateinit var defaultProfileDPV: DefaultProfileDPV
     @Inject lateinit var localProfilePlugin: LocalProfilePlugin
-    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var repository: AppRepository
@@ -269,7 +268,9 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
 
         tabSelected = tab
         typeSelected[tabSelected] = newContent
-        binding.profiletypeTitle.defaultHintTextColor =  ColorStateList.valueOf(rh.gc(if (tab == 0)  resourceHelper.getAttributeColor(null, R.attr.tabBgColorSelected)  else resourceHelper.getAttributeColor(null, R.attr.examinedProfile))
+        binding.profiletypeTitle.defaultHintTextColor = ColorStateList.valueOf(if (tab == 0)  rh.getAttributeColor(null, R.attr.tabBgColorSelected)  else rh.getAttributeColor(null, R
+            .attr.examinedProfile))
+
 
         // show new content
         binding.profiletype.setText(
@@ -299,7 +300,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
     }
 
     private fun setBackgroundColorOnSelected(tab: Int) {
-        binding.menu1.setBackgroundColor(rh.gc(if (tab == 1)  resourceHelper.getAttributeColor(null, R.attr.defaultBackground) else  resourceHelper.getAttributeColor(null, R.attr.tabBgColorSelected))
-        binding.menu2.setBackgroundColor(rh.gc(if (tab == 0) resourceHelper.getAttributeColor(null, R.attr.defaultBackground) else resourceHelper.getAttributeColor(null, R.attr.dialogUrgent))
+        binding.menu1.setBackgroundColor(if (tab == 1)  rh.getAttributeColor(null, R.attr.defaultBackground) else  rh.getAttributeColor(null, R.attr.tabBgColorSelected))
+        binding.menu2.setBackgroundColor(if (tab == 0) rh.getAttributeColor(null, R.attr.defaultBackground) else rh.getAttributeColor(null, R.attr.dialogUrgent))
     }
 }

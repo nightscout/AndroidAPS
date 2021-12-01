@@ -28,7 +28,6 @@ import javax.inject.Inject
 class BLEScanActivity : NoSplashAppCompatActivity() {
 
     @Inject lateinit var sp: SP
-    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var blePreCheck: BlePreCheck
 
     private var listAdapter: ListAdapter? = null

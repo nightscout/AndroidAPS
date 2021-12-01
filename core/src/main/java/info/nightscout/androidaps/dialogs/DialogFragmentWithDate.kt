@@ -30,7 +30,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 
 abstract class DialogFragmentWithDate : DaggerDialogFragment() {
 
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var sp: SP
     @Inject lateinit var dateUtil: DateUtil
@@ -68,7 +68,7 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
 
         val drawable: Drawable? = context?.let { ContextCompat.getDrawable(it, R.drawable.dialog) }
         if (drawable != null) {
-            drawable.setColorFilter( resourceHelper.getAttributeColor(context, R.attr.windowBackground ), PorterDuff.Mode.SRC_IN)
+            drawable.setColorFilter( rh.getAttributeColor(context, R.attr.windowBackground ), PorterDuff.Mode.SRC_IN)
         }
         dialog?.window?.setBackgroundDrawable(drawable)
     }

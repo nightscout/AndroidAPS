@@ -22,7 +22,6 @@ import kotlin.experimental.xor
 
 class EnterPinActivity : NoSplashAppCompatActivity() {
 
-    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var danaRSPlugin: DanaRSPlugin
     @Inject lateinit var sp: SP

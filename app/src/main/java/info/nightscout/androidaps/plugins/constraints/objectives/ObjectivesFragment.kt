@@ -229,7 +229,7 @@ class ObjectivesFragment : DaggerFragment() {
                     }
                     // horizontal line
                     val separator = View(holder.binding.progress.context)
-                    separator.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.objectivesBackground))
+                    separator.setBackgroundColor(rh.getAttributeColor(context, R.attr.objectivesBackground))
                     holder.binding.progress.addView(separator, LinearLayout.LayoutParams.MATCH_PARENT, 2)
                 }
             }

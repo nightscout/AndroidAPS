@@ -30,26 +30,26 @@ class GlucoseValueDataPoint @Inject constructor(
     override val shape get() = if (isPrediction) PointsWithLabelGraphSeries.Shape.PREDICTION else PointsWithLabelGraphSeries.Shape.BG
     override val size = 1f
 
-    override fun getColor(context: Context): Int {
+    override fun getColor(context: Context?): Int {
         val units = profileFunction.getUnits()
         val lowLine = defaultValueHelper.determineLowLine()
         val highLine = defaultValueHelper.determineHighLine()
         return when {
             isPrediction                   -> predictionColor
-            valueToUnits(units) < lowLine  -> resourceHelper.getAttributeColor(context, R.attr.bgLow)
-            valueToUnits(units) > highLine -> resourceHelper.getAttributeColor(context, R.attr.bgHigh)
-            else                           -> resourceHelper.getAttributeColor(context, R.attr.bgInRange)
+            valueToUnits(units) < lowLine  -> rh.getAttributeColor(context, R.attr.bgLow)
+            valueToUnits(units) > highLine -> rh.getAttributeColor(context, R.attr.bgHigh)
+            else                           -> rh.getAttributeColor(context, R.attr.bgInRange)
         }
     }
 
     val predictionColor: Int
         get() {
             return when (data.sourceSensor) {
-                GlucoseValue.SourceSensor.IOB_PREDICTION -> resourceHelper.getAttributeColor(null, R.attr.iobColor)
-                GlucoseValue.SourceSensor.COB_PREDICTION -> -0x7f000001 and resourceHelper.getAttributeColor(null, R.attr.cobColor)
-                GlucoseValue.SourceSensor.UAM_PREDICTION ->  resourceHelper.getAttributeColor(null, R.attr.uamColor)
-                GlucoseValue.SourceSensor.ZT_PREDICTION -> resourceHelper.getAttributeColor(null, R.attr.ztColor)
-                else                                      -> resourceHelper.getAttributeColor(null, R.attr.defaultColor)
+                GlucoseValue.SourceSensor.IOB_PREDICTION -> rh.getAttributeColor(null, R.attr.iobColor)
+                GlucoseValue.SourceSensor.COB_PREDICTION -> -0x7f000001 and rh.getAttributeColor(null, R.attr.cobColor)
+                GlucoseValue.SourceSensor.UAM_PREDICTION ->  rh.getAttributeColor(null, R.attr.uamColor)
+                GlucoseValue.SourceSensor.ZT_PREDICTION -> rh.getAttributeColor(null, R.attr.ztColor)
+                else                                      -> rh.getAttributeColor(null, R.attr.defaultColor)
             }
         }
 

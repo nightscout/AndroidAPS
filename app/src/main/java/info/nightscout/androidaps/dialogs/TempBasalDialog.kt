@@ -29,7 +29,6 @@ import kotlin.math.abs
 class TempBasalDialog : DialogFragmentWithDate() {
 
     @Inject lateinit var constraintChecker: ConstraintChecker
-    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var commandQueue: CommandQueue
@@ -112,7 +111,7 @@ class TempBasalDialog : DialogFragmentWithDate() {
             actions.add(rh.gs(R.string.tempbasal_label) + ": " + rh.gs(R.string.pump_basebasalrate, absolute))
             actions.add(rh.gs(R.string.duration) + ": " + rh.gs(R.string.format_mins, durationInMinutes))
             if (abs(absolute - basalAbsoluteInput) > 0.01)
-                actions.add(rh.gs(R.string.constraintapllied).formatColorFromAttribute( resourceHelper.getAttributeColor(context, R.attr.dialogUrgent )))
+                actions.add(rh.gs(R.string.constraintapllied).formatColorFromAttribute( rh.getAttributeColor(context, R.attr.dialogUrgent )))
         }
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, rh.gs(R.string.tempbasal_label), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {

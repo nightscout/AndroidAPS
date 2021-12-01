@@ -50,7 +50,7 @@ class LoopFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.run.setOnClickListener {
+        binding.runLoop.setOnClickListener {
             binding.lastrun.text = rh.gs(R.string.executing)
             Thread { loopPlugin.invoke("Loop button", true) }.start()
         }
@@ -63,16 +63,16 @@ class LoopFragment : DaggerFragment() {
             .toObservable(EventLoopUpdateGui::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({
-                updateGUI()
-            }, fabricPrivacy::logException)
+                           updateGUI()
+                       }, fabricPrivacy::logException)
 
         disposable += rxBus
             .toObservable(EventLoopSetLastRunGui::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({
-                clearGUI()
-                binding.lastrun.text = it.text
-            }, fabricPrivacy::logException)
+                           clearGUI()
+                           binding.lastrun.text = it.text
+                       }, fabricPrivacy::logException)
 
         updateGUI()
         sp.putBoolean(R.string.key_objectiveuseloop, true)

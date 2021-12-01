@@ -30,7 +30,6 @@ import javax.inject.Inject
 class DiaconnG8BLEScanActivity : NoSplashAppCompatActivity() {
 
     @Inject lateinit var sp: SP
-    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var blePreCheck: BlePreCheck
 
     private var listAdapter: ListAdapter? = null

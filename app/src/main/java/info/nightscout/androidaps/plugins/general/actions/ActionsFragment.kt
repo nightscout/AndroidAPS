@@ -318,14 +318,14 @@ class ActionsFragment : DaggerFragment() {
         tddStats?.visibility = pump.pumpDescription.supportsTDDs.toVisibility()
 
         if (!config.NSCLIENT) {
-            statusLightHandler.updateStatusLights(cannulaAge, insulinAge, reservoirLevel, sensorAge, sensorLevel, pbAge, batteryLevel,resourceHelper.getAttributeColor(context, R.attr.statuslightNormal),
-                resourceHelper.getAttributeColor(context, R.attr.statuslightWarning),
-                resourceHelper.getAttributeColor(context, R.attr.statuslightAlarm))
+            statusLightHandler.updateStatusLights(cannulaAge, insulinAge, reservoirLevel, sensorAge, sensorLevel, pbAge, batteryLevel,rh.getAttributeColor(context, R.attr.statuslightNormal),
+                rh.getAttributeColor(context, R.attr.statuslightWarning),
+                rh.getAttributeColor(context, R.attr.statuslightAlarm))
             sensorLevelLabel?.text = if (activeBgSource.sensorBatteryLevel == -1) "" else rh.gs(R.string.careportal_level_label)
         } else {
-            statusLightHandler.updateStatusLights(cannulaAge, insulinAge, null, sensorAge, null, pbAge, null, resourceHelper.getAttributeColor(context, R.attr.statuslightNormal),
-                resourceHelper.getAttributeColor(context, R.attr.statuslightWarning),
-                resourceHelper.getAttributeColor(context, R.attr.statuslightAlarm))
+            statusLightHandler.updateStatusLights(cannulaAge, insulinAge, null, sensorAge, null, pbAge, null, rh.getAttributeColor(context, R.attr.statuslightNormal),
+                rh.getAttributeColor(context, R.attr.statuslightWarning),
+                rh.getAttributeColor(context, R.attr.statuslightAlarm))
             sensorLevelLabel?.text = ""
             insulinLevelLabel?.text = ""
             pbLevelLabel?.text = ""
@@ -344,8 +344,8 @@ class ActionsFragment : DaggerFragment() {
             if (!customAction.isEnabled) continue
 
             val btn = SingleClickButton(currentContext, null, info.nightscout.androidaps.core.R.style.Widget_MaterialComponents_Button_UnelevatedButton)
-            btn.text = resourceHelper.gs(customAction.name)
-            btn.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.colorPrimary))
+            btn.text = rh.gs(customAction.name)
+            btn.setBackgroundColor(rh.getAttributeColor(context, R.attr.colorPrimary))
 
             val layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 0.5f)

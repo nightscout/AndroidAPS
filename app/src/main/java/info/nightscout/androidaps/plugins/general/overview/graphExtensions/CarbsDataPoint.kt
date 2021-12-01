@@ -15,15 +15,13 @@ class CarbsDataPoint @Inject constructor(
 
     override fun getX(): Double = data.timestamp.toDouble()
     override fun getY(): Double = yValue
-    override fun getLabel(): String = resourceHelper.gs(R.string.format_carbs, data.amount.toInt())
-    override fun getDuration(): Long = 0
-    override fun getSize(): Float = 2f
-
-    override fun getShape(): PointsWithLabelGraphSeries.Shape = PointsWithLabelGraphSeries.Shape.CARBS
-
-    override fun getColor(context: Context): Int =
-        if (data.isValid) resourceHelper.getAttributeColor(context,R.attr.carbsColor)
-        else resourceHelper.getAttributeColor(context,R.attr.statuslightAlarm)
+    override val label get() = rh.gs(R.string.format_carbs, data.amount.toInt())
+    override val duration = 0L
+    override val size = 2f
+    override val shape = PointsWithLabelGraphSeries.Shape.CARBS
+    override fun getColor(context: Context?): Int =
+        if (data.isValid) rh.getAttributeColor(context,R.attr.carbsColor)
+        else rh.getAttributeColor(context,R.attr.statuslightAlarm)
 
     override fun setY(y: Double) {
         yValue = y

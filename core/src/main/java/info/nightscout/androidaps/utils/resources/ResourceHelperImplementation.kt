@@ -60,15 +60,14 @@ class ResourceHelperImplementation @Inject constructor(private val context: Cont
         return (dp * scale + 0.5f).toInt()
     }
 
-    override fun shortTextMode() : Boolean = !gb(R.bool.isTablet)
-
-    override fun getAttributeColor(context: Context?, attributeId: Int): Int =
-        (context ?: ContextThemeWrapper(this.context, R.style.AppTheme)).getThemeColor(attributeId)
-}
     override fun dpToPx(dp: Float): Int {
         val scale = context.resources.displayMetrics.density
         return (dp * scale + 0.5f).toInt()
     }
 
-    override fun shortTextMode(): Boolean = !gb(R.bool.isTablet)
+    override fun shortTextMode() : Boolean = !gb(R.bool.isTablet)
+
+    override fun getAttributeColor(context: Context?, attributeId: Int): Int =
+        (context ?: ContextThemeWrapper(this.context, R.style.AppTheme)).getThemeColor(attributeId)
 }
+

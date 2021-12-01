@@ -86,30 +86,28 @@ class PrefImportListActivity : DaggerAppCompatActivity() {
                 metaDateTimeIcon.visibility = View.VISIBLE
                 metaAppVersion.visibility = View.VISIBLE
 
-                if (prefFile.handler == PrefsFormatsHandler.CLASSIC) {
-                    metaVariantFormat.text = resourceHelper.gs(R.string.metadata_format_old)
-                    metaVariantFormat.setTextColor(resourceHelper.getAttributeColor(null,R.attr.metadataTextWarning))
-                    metaDateTime.text = " "
-                } else {
+                prefFile.metadata[PrefsMetadataKey.AAPS_FLAVOUR]?.let {
+                    metaVariantFormat.text = it.value
+                    metaVariantFormat.setTextColor(
+                        if (it.status == PrefsStatus.OK) rh.getAttributeColor(null, R.attr.metadataOk) else rh.getAttributeColor(
+                            null,
+                            R.attr.metadataTextWarning
+                        )
+                    )
+                }
 
-                    prefFile.metadata[PrefsMetadataKey.AAPS_FLAVOUR]?.let {
-                        metaVariantFormat.text = it.value
-                        metaVariantFormat.setTextColor(if (it.status == PrefsStatus.OK) resourceHelper.getAttributeColor(null,R.attr.metadataOk) else resourceHelper.getAttributeColor(null,R.attr.metadataTextWarning ))
-                    }
+                prefFile.metadata[PrefsMetadataKey.CREATED_AT]?.let {
+                    metaDateTime.text = prefFileListProvider.formatExportedAgo(it.value)
+                }
 
-                    prefFile.metadata[PrefsMetadataKey.CREATED_AT]?.let {
-                        metaDateTime.text = prefFileListProvider.formatExportedAgo(it.value)
-                    }
-
-                    prefFile.metadata[PrefsMetadataKey.AAPS_VERSION]?.let {
-                        metaAppVersion.text = it.value
-                        metaAppVersion.setTextColor(if (it.status == PrefsStatus.OK) resourceHelper.getAttributeColor(null,R.attr.metadataOk) else resourceHelper.getAttributeColor(null,R.attr.metadataTextWarning ))
-                    }
-
-                prefFile.metadata[PrefsMetadataKey.AAPS_VERSION]?.let {
-                    metaAppVersion.text = it.value
-                    val color = if (it.status == PrefsStatus.OK) R.color.metadataOk else R.color.metadataTextWarning
-                    metaAppVersion.setTextColor(rh.gc(color))
+                prefFile.metadata[PrefsMetadataKey.AAPS_FLAVOUR]?.let {
+                    metaVariantFormat.text = it.value
+                    metaVariantFormat.setTextColor(
+                        if (it.status == PrefsStatus.OK) rh.getAttributeColor(null, R.attr.metadataOk) else rh.getAttributeColor(
+                            null,
+                            R.attr.metadataTextWarning
+                        )
+                    )
                 }
 
                 prefFile.metadata[PrefsMetadataKey.DEVICE_NAME]?.let {
@@ -120,15 +118,15 @@ class PrefImportListActivity : DaggerAppCompatActivity() {
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            finish()
-            return true
+        override fun onOptionsItemSelected(item: MenuItem): Boolean {
+            if (item.itemId == android.R.id.home) {
+                finish()
+                return true
+            }
+            return false
         }
-        return false
-    }
 
-    override fun attachBaseContext(newBase: Context) {
-        super.attachBaseContext(LocaleHelper.wrap(newBase))
+        override fun attachBaseContext(newBase: Context) {
+            super.attachBaseContext(LocaleHelper.wrap(newBase))
+        }
     }
-}

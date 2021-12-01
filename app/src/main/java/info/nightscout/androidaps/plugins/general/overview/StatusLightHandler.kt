@@ -58,8 +58,8 @@ class StatusLightHandler @Inject constructor(
         if (!config.NSCLIENT) {
             if (pump.model() == PumpType.OMNIPOD_DASH) {
                 // Omnipod Dash does not report its battery level
-                careportal_battery_level?.text = resourceHelper.gs(R.string.notavailable)
-                careportal_battery_level?.setTextColor(resourceHelper.getAttributeColor( null, R.attr.statuslightNormal ))
+                careportal_battery_level?.text = rh.gs(R.string.notavailable)
+                careportal_battery_level?.setTextColor(rh.getAttributeColor( null, R.attr.statuslightNormal ))
             } else if (pump.model() == PumpType.OMNIPOD_EROS && pump is OmnipodErosPumpPlugin) { // instance of check is needed because at startup, pump can still be VirtualPumpPlugin and that will cause a crash because of the class cast below
                 // The Omnipod Eros does not report its battery level. However, some RileyLink alternatives do.
                 // Depending on the user's configuration, we will either show the battery level reported by the RileyLink or "n/a"
@@ -76,7 +76,7 @@ class StatusLightHandler @Inject constructor(
         val therapyEvent = repository.getLastTherapyRecordUpToNow(type).blockingGet()
         if (therapyEvent is ValueWrapper.Existing) {
             warnColors.setColorByAge(view,  therapyEvent.value, warn, urgent, colorNormal, colorWarning, colorAlarm)
-            view?.text =  therapyEvent.value.age(resourceHelper.shortTextMode(), resourceHelper, dateUtil)
+            view?.text =  therapyEvent.value.age(rh.shortTextMode(), rh, dateUtil)
         } else {
             view?.text = if (rh.shortTextMode()) "-" else rh.gs(R.string.notavailable)
         }

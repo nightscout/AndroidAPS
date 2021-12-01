@@ -31,7 +31,6 @@ import kotlin.math.abs
 class ExtendedBolusDialog : DialogFragmentWithDate() {
 
     @Inject lateinit var ctx: Context
-    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var activePlugin: ActivePlugin
@@ -86,7 +85,7 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
         actions.add(rh.gs(R.string.formatinsulinunits, insulinAfterConstraint))
         actions.add(rh.gs(R.string.duration) + ": " + rh.gs(R.string.format_mins, durationInMinutes))
         if (abs(insulinAfterConstraint - insulin) > 0.01)
-            actions.add(rh.gs(R.string.constraintapllied).formatColorFromAttribute( resourceHelper.getAttributeColor(context, R.attr.dialogUrgent )))
+            actions.add(rh.gs(R.string.constraintapllied).formatColorFromAttribute( rh.getAttributeColor(context, R.attr.dialogUrgent )))
 
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, rh.gs(R.string.extended_bolus), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {

@@ -91,11 +91,11 @@ class DanaFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.danaPumpstatus.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.informationBackground))
-        binding.danaPumpstatus.setTextColor(resourceHelper.getAttributeColor(context, R.attr.informationText))
+        binding.danaPumpstatus.setBackgroundColor(rh.getAttributeColor(context, R.attr.informationBackground))
+        binding.danaPumpstatus.setTextColor(rh.getAttributeColor(context, R.attr.informationText))
 
         binding.history.setOnClickListener { startActivity(Intent(context, DanaHistoryActivity::class.java)) }
-        binding.viewProfile.setOnClickListener {
+        binding.viewprofile.setOnClickListener {
             val profile = danaPump.createConvertedProfile()?.getDefaultProfileJson()
                 ?: return@setOnClickListener
             val profileName = danaPump.createConvertedProfile()?.getDefaultProfileName()
@@ -172,8 +172,8 @@ class DanaFragment : DaggerFragment() {
                            }
                            binding.btConnection.text = pumpStatusIcon
                            pumpStatus = it.getStatus(rh)
-                           binding.pumpStatus.text = pumpStatus
-                           binding.pumpStatusLayout.visibility = (pumpStatus != "").toVisibility()
+                           binding.danaPumpstatus.text = pumpStatus
+                           binding.danaPumpstatuslayout.visibility = (pumpStatus != "").toVisibility()
                        }, fabricPrivacy::logException)
 
         pumpStatus = ""
@@ -201,19 +201,19 @@ class DanaFragment : DaggerFragment() {
     fun updateGUI() {
         if (_binding == null) return
         binding.btConnection.text = pumpStatusIcon
-        binding.pumpStatus.text = pumpStatus
-        binding.pumpStatusLayout.visibility = (pumpStatus != "").toVisibility()
+        binding.danaPumpstatus.text = pumpStatus
+        binding.danaPumpstatuslayout.visibility = (pumpStatus != "").toVisibility()
         binding.queue.text = commandQueue.spannedStatus()
-        binding.queueStatusLayout.visibility = (commandQueue.spannedStatus().toString() != "").toVisibility()
+        binding.queue.visibility = (commandQueue.spannedStatus().toString() != "").toVisibility()
         val pump = danaPump
         val plugin: Pump = activePlugin.activePump
         if (pump.lastConnection != 0L) {
             val agoMilliseconds = System.currentTimeMillis() - pump.lastConnection
             val agoMin = (agoMilliseconds.toDouble() / 60.0 / 1000.0).toInt()
             binding.lastconnection.text = dateUtil.timeString(pump.lastConnection) + " (" + rh.gs(R.string.minago, agoMin) + ")"
-            warnColors.setColor(binding.lastconnection, agoMin.toDouble(), 16.0, 31.0, resourceHelper.getAttributeColor(context, R.attr.statuslightNormal),
-                resourceHelper.getAttributeColor(context, R.attr.statuslightWarning),
-                resourceHelper.getAttributeColor(context, R.attr.statuslightAlarm))
+            warnColors.setColor(binding.lastconnection, agoMin.toDouble(), 16.0, 31.0, rh.getAttributeColor(context, R.attr.statuslightNormal),
+                rh.getAttributeColor(context, R.attr.statuslightWarning),
+                rh.getAttributeColor(context, R.attr.statuslightAlarm))
         }
         if (pump.lastBolusTime != 0L) {
             val agoMilliseconds = System.currentTimeMillis() - pump.lastBolusTime
@@ -226,26 +226,23 @@ class DanaFragment : DaggerFragment() {
         }
 
         binding.dailyunits.text = rh.gs(R.string.reservoirvalue, pump.dailyTotalUnits, pump.maxDailyTotalUnits)
-        warnColors.setColor(binding.dailyunits, pump.dailyTotalUnits, pump.maxDailyTotalUnits * 0.75, pump.maxDailyTotalUnits * 0.9 , resourceHelper.getAttributeColor(context, R.attr.statuslightNormal),
-            resourceHelper.getAttributeColor(context, R.attr.statuslightWarning),
-            resourceHelper.getAttributeColor(context, R.attr.statuslightAlarm))
+        warnColors.setColor(binding.dailyunits, pump.dailyTotalUnits, pump.maxDailyTotalUnits * 0.75, pump.maxDailyTotalUnits * 0.9 , rh.getAttributeColor(context, R.attr.statuslightNormal),
+            rh.getAttributeColor(context, R.attr.statuslightWarning),
+            rh.getAttributeColor(context, R.attr.statuslightAlarm))
         binding.basabasalrate.text = "( " + (pump.activeProfile + 1) + " )  " + rh.gs(R.string.pump_basebasalrate, plugin.baseBasalRate)
         // DanaRPlugin, DanaRKoreanPlugin
         binding.tempbasal.text = danaPump.temporaryBasalToString()
         binding.extendedbolus.text = danaPump.extendedBolusToString()
         binding.reservoir.text = rh.gs(R.string.reservoirvalue, pump.reservoirRemainingUnits, 300)
-        warnColors.setColorInverse(binding.reservoir, pump.reservoirRemainingUnits, 50.0, 20.0 , resourceHelper.getAttributeColor(context, R.attr.statuslightNormal),
-            resourceHelper.getAttributeColor(context, R.attr.statuslightWarning),
-            resourceHelper.getAttributeColor(context, R.attr.statuslightAlarm))
+        warnColors.setColorInverse(binding.reservoir, pump.reservoirRemainingUnits, 50.0, 20.0 , rh.getAttributeColor(context, R.attr.statuslightNormal),
+            rh.getAttributeColor(context, R.attr.statuslightWarning),
+            rh.getAttributeColor(context, R.attr.statuslightAlarm))
         binding.battery.text = "{fa-battery-" + pump.batteryRemaining / 25 + "}"
-        warnColors.setColorInverse(binding.battery, pump.batteryRemaining.toDouble(), 51.0, 26.0 , resourceHelper.getAttributeColor(context, R.attr.statuslightNormal),
-            resourceHelper.getAttributeColor(context, R.attr.statuslightWarning),
-            resourceHelper.getAttributeColor(context, R.attr.statuslightAlarm))
-        binding.iob.text = rh.gs(R.string.formatinsulinunits, pump.iob)
+        warnColors.setColorInverse(binding.battery, pump.batteryRemaining.toDouble(), 51.0, 26.0 , rh.getAttributeColor(context, R.attr.statuslightNormal),
+            rh.getAttributeColor(context, R.attr.statuslightWarning),
+            rh.getAttributeColor(context, R.attr.statuslightAlarm))
         binding.firmware.text = rh.gs(R.string.dana_model, pump.modelFriendlyName(), pump.hwModel, pump.protocol, pump.productCode)
-        binding.basalstep.text = pump.basalStep.toString()
-        binding.bolusstep.text = pump.bolusStep.toString()
-        binding.basalBolusStep.text = pump.basalStep.toString() + "/" + pump.bolusStep.toString()
+        binding.basalBolusStep .text = pump.basalStep.toString() + "/" + pump.bolusStep.toString()
         binding.serialNumber.text = pump.serialNumber
         val icon = if (danaPump.pumpType() == PumpType.DANA_I) R.drawable.ic_dana_i else R.drawable.ic_dana_rs
         binding.danaIcon.setImageDrawable(context?.let { ContextCompat.getDrawable(it, icon) })

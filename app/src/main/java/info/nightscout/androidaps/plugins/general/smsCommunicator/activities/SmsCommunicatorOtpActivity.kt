@@ -31,7 +31,6 @@ import javax.inject.Inject
 class SmsCommunicatorOtpActivity : NoSplashAppCompatActivity() {
 
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
     @Inject lateinit var otp: OneTimePassword
     @Inject lateinit var uel: UserEntryLogger
@@ -57,10 +56,10 @@ class SmsCommunicatorOtpActivity : NoSplashAppCompatActivity() {
                 }
 
                 binding.otpVerifyLabel.setTextColor(when (checkResult) {
-                    OneTimePasswordValidationResult.OK                 -> resourceHelper.getAttributeColor(null, R.attr.smsCommunicatorOK )
-                    OneTimePasswordValidationResult.ERROR_WRONG_LENGTH -> resourceHelper.getAttributeColor(null, R.attr.smsCommunicatorWrongLength )
-                    OneTimePasswordValidationResult.ERROR_WRONG_PIN    -> resourceHelper.getAttributeColor(null, R.attr.smsCommunicatorWrongPin )
-                    OneTimePasswordValidationResult.ERROR_WRONG_OTP    -> resourceHelper.getAttributeColor(null, R.attr.smsCommunicatorOtp )
+                    OneTimePasswordValidationResult.OK                 -> rh.getAttributeColor(null, R.attr.smsCommunicatorOK )
+                    OneTimePasswordValidationResult.ERROR_WRONG_LENGTH -> rh.getAttributeColor(null, R.attr.smsCommunicatorWrongLength )
+                    OneTimePasswordValidationResult.ERROR_WRONG_PIN    -> rh.getAttributeColor(null, R.attr.smsCommunicatorWrongPin )
+                    OneTimePasswordValidationResult.ERROR_WRONG_OTP    -> rh.getAttributeColor(null, R.attr.smsCommunicatorOtp )
                 })
             }
 

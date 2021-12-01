@@ -130,11 +130,11 @@ public class ComboFragment extends DaggerFragment {
         PumpState ps = comboPlugin.getPump().state;
         if (ps.insulinState == PumpState.EMPTY || ps.batteryState == PumpState.EMPTY
                 || ps.activeAlert != null && ps.activeAlert.errorCode != null) {
-            stateView.setTextColor(resourceHelper.getAttributeColor(getContext(), R.attr.statuslightAlarm));
+            stateView.setTextColor(rh.getAttributeColor(getContext(), R.attr.statuslightAlarm));
             stateView.setTypeface(null, Typeface.BOLD);
         } else if (comboPlugin.getPump().state.suspended
                 || ps.activeAlert != null && ps.activeAlert.warningCode != null) {
-            stateView.setTextColor(resourceHelper.getAttributeColor(getContext(), R.attr.statuslightAlarm));
+            stateView.setTextColor(rh.getAttributeColor(getContext(), R.attr.statuslightAlarm));
             stateView.setTypeface(null, Typeface.BOLD);
         } else {
             stateView.setTextColor(this.defaultStateTextColors);
@@ -159,7 +159,7 @@ public class ComboFragment extends DaggerFragment {
             activityView.setTextSize(20);
             activityView.setText("{fa-bed}");
         } else {
-            activityView.setTextColor(resourceHelper.getAttributeColor(getContext(), R.attr.statuslightAlarm));
+            activityView.setTextColor(rh.getAttributeColor(getContext(), R.attr.statuslightAlarm));
             activityView.setTextSize(14);
             activityView.setText(rh.gs(R.string.pump_unreachable));
         }
@@ -172,10 +172,10 @@ public class ComboFragment extends DaggerFragment {
             batteryView.setTextSize(20);
             if (ps.batteryState == PumpState.EMPTY) {
                 batteryView.setText("{fa-battery-empty}");
-                batteryView.setTextColor(resourceHelper.getAttributeColor(getContext(), R.attr.statuslightAlarm));
+                batteryView.setTextColor(rh.getAttributeColor(getContext(), R.attr.statuslightAlarm));
             } else if (ps.batteryState == PumpState.LOW) {
                 batteryView.setText("{fa-battery-quarter}");
-                batteryView.setTextColor(resourceHelper.getAttributeColor(getContext(), R.attr.statuslightWarning));
+                batteryView.setTextColor(rh.getAttributeColor(getContext(), R.attr.statuslightWarning));
             } else {
                 batteryView.setText("{fa-battery-full}");
                 batteryView.setTextColor(this.defaultBatteryColors);
@@ -200,10 +200,10 @@ public class ComboFragment extends DaggerFragment {
                 reservoirView.setTextColor(this.defaultReservoirColors);
                 reservoirView.setTypeface(null, Typeface.NORMAL);
             } else if (ps.insulinState == PumpState.LOW) {
-                reservoirView.setTextColor(resourceHelper.getAttributeColor(getContext(), R.attr.statuslightWarning));
+                reservoirView.setTextColor(rh.getAttributeColor(getContext(), R.attr.statuslightWarning));
                 reservoirView.setTypeface(null, Typeface.BOLD);
             } else if (ps.insulinState == PumpState.EMPTY) {
-                reservoirView.setTextColor(resourceHelper.getAttributeColor(getContext(), R.attr.statuslightAlarm));
+                reservoirView.setTextColor(rh.getAttributeColor(getContext(), R.attr.statuslightAlarm));
                 reservoirView.setTypeface(null, Typeface.BOLD);
             } else {
                 reservoirView.setTextColor(this.defaultReservoirColors);
@@ -221,7 +221,7 @@ public class ComboFragment extends DaggerFragment {
                 lastConnectionView.setTextColor(this.defaultConnectionColors);
             } else if (comboPlugin.getPump().lastSuccessfulCmdTime + 30 * 60 * 1000 < System.currentTimeMillis()) {
                 lastConnectionView.setText(rh.gs(R.string.combo_no_pump_connection, min));
-                lastConnectionView.setTextColor(resourceHelper.getAttributeColor(getContext(), R.attr.statuslightAlarm));
+                lastConnectionView.setTextColor(rh.getAttributeColor(getContext(), R.attr.statuslightAlarm));
             } else {
                 lastConnectionView.setText(minAgo);
                 lastConnectionView.setTextColor(this.defaultConnectionColors);

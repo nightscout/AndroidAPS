@@ -38,7 +38,6 @@ import kotlin.math.abs
 class FillDialog : DialogFragmentWithDate() {
 
     @Inject lateinit var constraintChecker: ConstraintChecker
-    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var ctx: Context
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var activePlugin: ActivePlugin
@@ -113,16 +112,17 @@ class FillDialog : DialogFragmentWithDate() {
         if (insulinAfterConstraints > 0) {
             actions.add(rh.gs(R.string.fillwarning))
             actions.add("")
-            actions.add(rh.gs(R.string.bolus) + ": " + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump, resourceHelper).formatColorFromAttribute( resourceHelper.getAttributeColor(context, R.attr.colorInsulinButton )))
+            actions.add(rh.gs(R.string.bolus) + ": " + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump, rh).formatColorFromAttribute( rh.getAttributeColor
+                (context, R.attr.colorInsulinButton )))
             if (abs(insulinAfterConstraints - insulin) > 0.01)
-                actions.add(rh.gs(R.string.bolusconstraintappliedwarn, insulin, insulinAfterConstraints).formatColorFromAttribute( resourceHelper.getAttributeColor(context, R.attr.dialogUrgent )))
+                actions.add(rh.gs(R.string.bolusconstraintappliedwarn, insulin, insulinAfterConstraints).formatColorFromAttribute( rh.getAttributeColor(context, R.attr.dialogUrgent )))
         }
         val siteChange = binding.fillCatheterChange.isChecked
         if (siteChange)
-            actions.add(rh.gs(R.string.record_pump_site_change).formatColorFromAttribute(resourceHelper.getAttributeColor(context, R.attr.actionsConfirm)))
+            actions.add(rh.gs(R.string.record_pump_site_change).formatColorFromAttribute(rh.getAttributeColor(context, R.attr.actionsConfirm)))
         val insulinChange = binding.fillCartridgeChange.isChecked
         if (insulinChange)
-            actions.add(rh.gs(R.string.record_insulin_cartridge_change).formatColorFromAttribute(resourceHelper.getAttributeColor(context, R.attr.actionsConfirm)))
+            actions.add(rh.gs(R.string.record_insulin_cartridge_change).formatColorFromAttribute(rh.getAttributeColor(context, R.attr.actionsConfirm)))
         val notes = binding.notesLayout.notes.text.toString()
         if (notes.isNotEmpty())
             actions.add(rh.gs(R.string.notes_label) + ": " + notes)
