@@ -127,7 +127,7 @@ public class ECarbActivity extends ViewSelectorActivity {
                                 + " " + SafeParse.stringToInt(editStartTime.editText.getText().toString())
                                 + " " + SafeParse.stringToInt(editDuration.editText.getText().toString());
                         ListenerService.initiateAction(ECarbActivity.this, actionstring);
-                        finish();
+                        finishAffinity();
                     }
                 });
                 container.addView(view);

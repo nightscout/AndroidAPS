@@ -129,7 +129,7 @@ public class CPPActivity extends ViewSelectorActivity {
                         String actionstring = "cppset " + SafeParse.stringToInt(editTimeshift.editText.getText().toString())
                                 + " " + SafeParse.stringToInt(editPercentage.editText.getText().toString());
                         ListenerService.initiateAction(CPPActivity.this, actionstring);
-                        finish();
+                        finishAffinity();
                     }
                 });
                 container.addView(view);

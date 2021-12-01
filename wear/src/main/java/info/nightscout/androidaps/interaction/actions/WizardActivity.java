@@ -129,7 +129,7 @@ public class WizardActivity extends ViewSelectorActivity {
                         String actionstring = "wizard2 " + SafeParse.stringToInt(editCarbs.editText.getText().toString())
                                 + " " + percentage;
                         ListenerService.initiateAction(WizardActivity.this, actionstring);
-                        finish();
+                        finishAffinity();
                     }
                 });
                 container.addView(view);

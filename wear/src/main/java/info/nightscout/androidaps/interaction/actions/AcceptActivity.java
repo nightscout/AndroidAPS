@@ -99,7 +99,7 @@ public class AcceptActivity extends ViewSelectorActivity {
                     @Override
                     public void onClick(View v) {
                         ListenerService.confirmAction(AcceptActivity.this, actionstring);
-                        finish();
+                        finishAffinity();
                     }
                 });
                 container.addView(view);

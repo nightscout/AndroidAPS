@@ -29,12 +29,6 @@ public abstract class MenuListActivity extends Activity
     protected abstract void doAction(String position);
 
     @Override
-    protected void onPause(){
-        super.onPause();
-        finish();
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         elements = getElements();
@@ -56,8 +50,7 @@ public abstract class MenuListActivity extends Activity
     public void onClick(WearableListView.ViewHolder v) {
         String tag = (String) v.itemView.getTag();
         doAction(tag);
-        //ActionsDefinitions.doAction(v.getAdapterPosition(), this);
-        finish();
+
     }
 
     @Override

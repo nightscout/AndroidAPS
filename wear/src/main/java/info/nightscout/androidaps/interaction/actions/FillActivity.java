@@ -85,7 +85,7 @@ public class FillActivity extends ViewSelectorActivity {
 
                         String actionstring = "fill " + SafeParse.stringToDouble(editInsulin.editText.getText().toString());
                         ListenerService.initiateAction(FillActivity.this, actionstring);
-                        finish();
+                        finishAffinity();
                     }
                 });
                 container.addView(view);

@@ -162,7 +162,7 @@ public class TempTargetActivity extends ViewSelectorActivity {
                                 + " " + (isSingleTarget ? SafeParse.stringToDouble(lowRange.editText.getText().toString()) : SafeParse.stringToDouble(highRange.editText.getText().toString()));
 
                         ListenerService.initiateAction(TempTargetActivity.this, actionstring);
-                        finish();
+                        finishAffinity();
                     }
                 });
                 container.addView(view);

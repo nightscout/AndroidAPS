@@ -113,7 +113,7 @@ public class BolusActivity extends ViewSelectorActivity {
                         String actionstring = "bolus " + SafeParse.stringToDouble(editInsulin.editText.getText().toString())
                                 + " " + SafeParse.stringToInt(editCarbs.editText.getText().toString());
                         ListenerService.initiateAction(BolusActivity.this, actionstring);
-                        finish();
+                        finishAffinity();
                     }
                 });
                 container.addView(view);
