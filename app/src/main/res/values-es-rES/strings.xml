@@ -53,7 +53,7 @@
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">IOB Total:</string>
-    <string name="treatments_wizard_bg_label">Glucosa</string>
+    <string name="treatments_wizard_bg_label">BG</string>
     <string name="treatments_wizard_tt_label">OT</string>
     <string name="treatments_wizard_carbs_label">Carbohidratos</string>
     <string name="treatments_wizard_correction_label">Corrección</string>
@@ -748,7 +748,7 @@
     <string name="dia_short">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
-    <string name="target_short">OBJETIVO</string>
+    <string name="target_short">OBJ</string>
     <string name="clone_label">Clonar</string>
     <string name="saveorresetchangesfirst">Guardar o restablecer los cambios actuales primero</string>
     <string name="deletecurrentprofile">¿Eliminar el perfil actual?</string>
