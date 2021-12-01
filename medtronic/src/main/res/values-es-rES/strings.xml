@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Medtronic (MDT) - Base -->
-    <string name="description_pump_medtronic">Integración de Bomba para Medtronic, requiere dispositivo RileyLink y modelo específico de Bomba</string>
+    <string name="description_pump_medtronic">Integración de bomba de insulina Medtronic. Requiere dispositivo RileyLink y modelo específico de bomba</string>
     <!-- MDT Configuration -->
     <string name="medtronic_serial_number">Número de serie de la Infusora</string>
     <string name="medtronic_pump_type">Tipo de Infusora</string>

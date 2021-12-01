@@ -13,7 +13,6 @@ import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.events.EventOpenAPSUpdateGui
-import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.nsclient.data.DeviceStatusData
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus
@@ -45,18 +44,19 @@ class DataBroadcastPlugin @Inject constructor(
     private val defaultValueHelper: DefaultValueHelper,
     private val nsDeviceStatus: NSDeviceStatus,
     private val deviceStatusData: DeviceStatusData,
-    private val loopPlugin: LoopPlugin,
+    private val loop: Loop,
     private val activePlugin: ActivePlugin,
     private var receiverStatusStore: ReceiverStatusStore,
     private val config: Config,
     private val glucoseStatusProvider: GlucoseStatusProvider
 
-) : PluginBase(PluginDescription()
-    .mainType(PluginType.GENERAL)
-    .pluginName(R.string.databroadcaster)
-    .alwaysEnabled(true)
-    .neverVisible(true)
-    .showInList(false),
+) : PluginBase(
+    PluginDescription()
+        .mainType(PluginType.GENERAL)
+        .pluginName(R.string.databroadcaster)
+        .alwaysEnabled(true)
+        .neverVisible(true)
+        .showInList(false),
     aapsLogger, rh, injector
 ) {
 
@@ -64,33 +64,40 @@ class DataBroadcastPlugin @Inject constructor(
     override fun onStart() {
         super.onStart()
         disposable.add(rxBus
-            .toObservable(EventOpenAPSUpdateGui::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ sendData(it) }, fabricPrivacy::logException))
+                           .toObservable(EventOpenAPSUpdateGui::class.java)
+                           .observeOn(aapsSchedulers.io)
+                           .subscribe({ sendData(it) }, fabricPrivacy::logException)
+        )
         disposable.add(rxBus
-            .toObservable(EventExtendedBolusChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ sendData(it) }, fabricPrivacy::logException))
+                           .toObservable(EventExtendedBolusChange::class.java)
+                           .observeOn(aapsSchedulers.io)
+                           .subscribe({ sendData(it) }, fabricPrivacy::logException)
+        )
         disposable.add(rxBus
-            .toObservable(EventTempBasalChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ sendData(it) }, fabricPrivacy::logException))
+                           .toObservable(EventTempBasalChange::class.java)
+                           .observeOn(aapsSchedulers.io)
+                           .subscribe({ sendData(it) }, fabricPrivacy::logException)
+        )
         disposable.add(rxBus
-            .toObservable(EventTreatmentChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ sendData(it) }, fabricPrivacy::logException))
+                           .toObservable(EventTreatmentChange::class.java)
+                           .observeOn(aapsSchedulers.io)
+                           .subscribe({ sendData(it) }, fabricPrivacy::logException)
+        )
         disposable.add(rxBus
-            .toObservable(EventEffectiveProfileSwitchChanged::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ sendData(it) }, fabricPrivacy::logException))
+                           .toObservable(EventEffectiveProfileSwitchChanged::class.java)
+                           .observeOn(aapsSchedulers.io)
+                           .subscribe({ sendData(it) }, fabricPrivacy::logException)
+        )
         disposable.add(rxBus
-            .toObservable(EventAutosensCalculationFinished::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ sendData(it) }, fabricPrivacy::logException))
+                           .toObservable(EventAutosensCalculationFinished::class.java)
+                           .observeOn(aapsSchedulers.io)
+                           .subscribe({ sendData(it) }, fabricPrivacy::logException)
+        )
         disposable.add(rxBus
-            .toObservable(EventOverviewBolusProgress::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ sendData(it) }, fabricPrivacy::logException))
+                           .toObservable(EventOverviewBolusProgress::class.java)
+                           .observeOn(aapsSchedulers.io)
+                           .subscribe({ sendData(it) }, fabricPrivacy::logException)
+        )
     }
 
     override fun onStop() {
@@ -151,13 +158,15 @@ class DataBroadcastPlugin @Inject constructor(
         bundle.putInt("phoneBattery", receiverStatusStore.batteryLevel)
         bundle.putInt("rigBattery", nsDeviceStatus.uploaderStatus.replace("%", "").trim { it <= ' ' }.toInt())
 
-        if (config.APS && loopPlugin.lastRun?.lastTBREnact != 0L) { //we are AndroidAPS
-            bundle.putLong("suggestedTimeStamp", loopPlugin.lastRun?.lastAPSRun ?: -1L)
-            bundle.putString("suggested", loopPlugin.lastRun?.request?.json().toString())
-            if (loopPlugin.lastRun?.tbrSetByPump != null && loopPlugin.lastRun?.tbrSetByPump?.enacted == true) {
-                bundle.putLong("enactedTimeStamp", loopPlugin.lastRun?.lastTBREnact
-                    ?: -1L)
-                bundle.putString("enacted", loopPlugin.lastRun?.request?.json().toString())
+        if (config.APS && loop.lastRun?.lastTBREnact != 0L) { //we are AndroidAPS
+            bundle.putLong("suggestedTimeStamp", loop.lastRun?.lastAPSRun ?: -1L)
+            bundle.putString("suggested", loop.lastRun?.request?.json().toString())
+            if (loop.lastRun?.tbrSetByPump != null && loop.lastRun?.tbrSetByPump?.enacted == true) {
+                bundle.putLong(
+                    "enactedTimeStamp", loop.lastRun?.lastTBREnact
+                        ?: -1L
+                )
+                bundle.putString("enacted", loop.lastRun?.request?.json().toString())
             }
         } else { //NSClient or remote
             val data = deviceStatusData.openAPSData

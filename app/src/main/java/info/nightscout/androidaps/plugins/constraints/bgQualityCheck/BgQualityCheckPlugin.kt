@@ -7,13 +7,13 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventBucketedDataCreated
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
@@ -26,7 +26,8 @@ class BgQualityCheckPlugin @Inject constructor(
     private val rxBus: RxBus,
     private val iobCobCalculator: IobCobCalculator,
     private val aapsSchedulers: AapsSchedulers,
-    private val fabricPrivacy: FabricPrivacy
+    private val fabricPrivacy: FabricPrivacy,
+    private val dateUtil: DateUtil
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
@@ -70,6 +71,7 @@ class BgQualityCheckPlugin @Inject constructor(
         return value
     }
 
+    @Suppress("CascadeIf")
     fun processBgData() {
         val readings = iobCobCalculator.ads.getBgReadingsDataTableCopy()
         for (i in readings.indices)
@@ -77,7 +79,7 @@ class BgQualityCheckPlugin @Inject constructor(
                 if (abs(readings[i].timestamp - readings[i + 1].timestamp) <= T.secs(20).msecs()) {
                     state = State.DOUBLED
                     aapsLogger.debug(LTag.CORE, "BG similar. Turning on red state.\n${readings[i]}\n${readings[i+1]}")
-                    message = rh.gs(R.string.bg_too_close, readings[i].toString(), readings[i+1].toString())
+                    message = rh.gs(R.string.bg_too_close, dateUtil.dateAndTimeAndSecondsString(readings[i].timestamp), dateUtil.dateAndTimeAndSecondsString(readings[i+1].timestamp))
                     return
                 }
         if (iobCobCalculator.ads.lastUsed5minCalculation == true) {

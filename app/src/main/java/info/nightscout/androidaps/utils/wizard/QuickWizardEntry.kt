@@ -7,10 +7,11 @@ import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.extensions.valueToUnits
 import info.nightscout.androidaps.interfaces.IobCobCalculator
+import info.nightscout.androidaps.interfaces.Loop
+import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper.safeGetInt
@@ -25,7 +26,7 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var sp: SP
     @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var loopPlugin: LoopPlugin
+    @Inject lateinit var loop: Loop
     @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var dateUtil: DateUtil
@@ -107,7 +108,7 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
         if (useSuperBolus() == YES && sp.getBoolean(R.string.key_usesuperbolus, false)) {
             superBolus = true
         }
-        if (loopPlugin.isEnabled(loopPlugin.getType()) && loopPlugin.isSuperBolus) superBolus = false
+        if ((loop as PluginBase).isEnabled() && loop.isSuperBolus) superBolus = false
         // Trend
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData
         var trend = false

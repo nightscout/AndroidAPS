@@ -4,8 +4,8 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBase
+import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.wizard.QuickWizard
 import info.nightscout.androidaps.utils.wizard.QuickWizardEntry
@@ -20,7 +20,7 @@ class QuickWizardTest : TestBase() {
 
     @Mock lateinit var sp: SP
     @Mock lateinit var profileFunction: ProfileFunction
-    @Mock lateinit var loopPlugin: LoopPlugin
+    @Mock lateinit var loop: Loop
 
     private val data1 = "{\"buttonText\":\"Meal\",\"carbs\":36,\"validFrom\":0,\"validTo\":18000," +
         "\"useBG\":0,\"useCOB\":0,\"useBolusIOB\":0,\"useBasalIOB\":0,\"useTrend\":0,\"useSuperBolus\":0,\"useTemptarget\":0}"
@@ -34,7 +34,7 @@ class QuickWizardTest : TestBase() {
                 it.aapsLogger = aapsLogger
                 it.sp = sp
                 it.profileFunction = profileFunction
-                it.loopPlugin = loopPlugin
+                it.loop = loop
             }
         }
     }

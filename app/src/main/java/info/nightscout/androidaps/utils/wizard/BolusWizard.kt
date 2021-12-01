@@ -5,25 +5,23 @@ import android.content.Intent
 import android.text.Spanned
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.BolusCalculatorResult
 import info.nightscout.androidaps.database.entities.OfflineEvent
-import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.InsertOrUpdateBolusCalculatorResultTransaction
 import info.nightscout.androidaps.events.EventRefreshOverview
+import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
@@ -34,6 +32,7 @@ import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.formatColorFromAttribute
 import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.utils.*
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
@@ -54,8 +53,8 @@ class BolusWizard @Inject constructor(
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var commandQueue: CommandQueue
-    @Inject lateinit var loopPlugin: LoopPlugin
-    @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
+    @Inject lateinit var loop: Loop
+    @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var config: Config
     @Inject lateinit var uel: UserEntryLogger
@@ -374,8 +373,8 @@ class BolusWizard @Inject constructor(
             if (insulinAfterConstraints > 0 || carbs > 0) {
                 if (useSuperBolus) {
                     uel.log(Action.SUPERBOLUS_TBR, Sources.WizardDialog)
-                    if (loopPlugin.isEnabled()) {
-                        loopPlugin.goToZeroTemp(2 * 60, profile, OfflineEvent.Reason.SUPER_BOLUS)
+                    if ((loop as PluginBase).isEnabled()) {
+                        loop.goToZeroTemp(2 * 60, profile, OfflineEvent.Reason.SUPER_BOLUS)
                         rxBus.send(EventRefreshOverview("WizardDialog"))
                     }
 

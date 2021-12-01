@@ -161,12 +161,17 @@ class DexcomPlugin @Inject constructor(
                                 ValueWithUnit.TherapyEventType(it.type))
                             aapsLogger.debug(LTag.DATABASE, "Inserted sensor insertion $it")
                         }
-                        result.calibrationsInserted.forEach {
-                            uel.log(Action.CAREPORTAL,
-                                Sources.Dexcom,
-                                ValueWithUnit.Timestamp(it.timestamp),
-                                ValueWithUnit.TherapyEventType(it.type))
-                            aapsLogger.debug(LTag.DATABASE, "Inserted calibration $it")
+                        result.calibrationsInserted.forEach {   calibration ->
+                            calibration.glucose?.let {  glucosevalue ->
+                                uel.log(
+                                    Action.CALIBRATION,
+                                    Sources.Dexcom,
+                                    ValueWithUnit.Timestamp(calibration.timestamp),
+                                    ValueWithUnit.TherapyEventType(calibration.type),
+                                    ValueWithUnit.fromGlucoseUnit(glucosevalue, calibration.glucoseUnit.toString)
+                                )
+                            }
+                            aapsLogger.debug(LTag.DATABASE, "Inserted calibration $calibration")
                         }
                     }
             } catch (e: Exception) {
