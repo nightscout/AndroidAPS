@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.text.DecimalFormat;
 
@@ -31,9 +32,11 @@ public class FillActivity extends ViewSelectorActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.grid_layout);
-        final Resources res = getResources();
-        final GridViewPager pager = findViewById(R.id.pager);
 
+        final TextView title = findViewById(R.id.title);
+        title.setText(getString(R.string.menu_prime_fill));
+
+        final GridViewPager pager = findViewById(R.id.pager);
         pager.setAdapter(new MyGridViewPagerAdapter());
         DotsPageIndicator dotsPageIndicator = findViewById(R.id.page_indicator);
         dotsPageIndicator.setPager(pager);
