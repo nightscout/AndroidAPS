@@ -201,6 +201,8 @@
         <!-- Icon specific colors end -->
         <!---Therapy Event Announcement-->
         <item name="therapyeventAnnouncement" >@color/notificationAnnouncement</item>
+        <!-- bgsource dialog -->
+        <item name="errorAlertBackground" >@color/metadataTextError</item>
         <!---NS MBG Event-->
         <item name="therapyeventNsmbg" >@color/red</item>
         <!---Finger Stick Event-->

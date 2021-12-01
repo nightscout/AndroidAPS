@@ -566,24 +566,27 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         // Automation buttons
         binding.buttonsLayout.userButtonsLayout.removeAllViews()
         val events = automationPlugin.userEvents()
-        for (event in events)
-            if (event.isEnabled && event.trigger.shouldRun())
-                context?.let { context ->
-                    SingleClickButton(context).also {
-                        it.setTextColor( rh.getAttributeColor(context, R.attr.defaultPillTextColor))
-                        it.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10f)
-                        it.layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 0.5f).also { l ->
-                            l.setMargins(0, 0, rh.dpToPx(-4), 0)
-                        }
-                        it.setCompoundDrawablesWithIntrinsicBounds(null, rh.gd(R.drawable.ic_danar_useropt), null, null)
-                        it.text = event.title
+        if (!loop.isDisconnected && pump.isInitialized() && !pump.isSuspended() && profile != null)
+            for (event in events)
+                if (event.isEnabled && event.trigger.shouldRun())
+                    context?.let { context ->
+                        SingleClickButton(context).also {
+                            it.setTextColor(rh.getAttributeColor(context, R.attr.defaultPillTextColor))
+                            it.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10f)
+                            it.layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 0.5f).also { l ->
+                                l.setMargins(0, 0, rh.dpToPx(-4), 0)
+                            }
+                            it.setCompoundDrawablesWithIntrinsicBounds(null, rh.gd(R.drawable.ic_danar_useropt), null, null)
+                            it.text = event.title
 
-                        it.setOnClickListener {
-                            OKDialog.showConfirmation(
-                                context,
-                                rh.gs(R.string.run_question, event.title),
-                                { handler.post { automationPlugin.processEvent(event) } }
-                            )
+                            it.setOnClickListener {
+                                OKDialog.showConfirmation(
+                                    context,
+                                    rh.gs(R.string.run_question, event.title),
+                                    { handler.post { automationPlugin.processEvent(event) } }
+                                )
+                            }
+                            binding.buttonsLayout.userButtonsLayout.addView(it)
                         }
                     }
         binding.buttonsLayout.userButtonsLayout.visibility = events.isNotEmpty().toVisibility()

@@ -17,7 +17,6 @@ import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.InsertOrUpdateBolusCalculatorResultTransaction
 import info.nightscout.androidaps.events.EventRefreshOverview
-import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -26,13 +25,10 @@ import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.formatColorFromAttribute
-import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.utils.*
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
@@ -205,8 +201,8 @@ class BolusWizard @Inject constructor(
 
         // Insulin from IOB
         // IOB calculation
-        val bolusIob = iobCobCalculatorPlugin.calculateIobFromBolus().round()
-        val basalIob = iobCobCalculatorPlugin.calculateIobFromTempBasalsIncludingConvertedExtended().round()
+        val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
+        val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
 
         insulinFromBolusIOB = if (includeBolusIOB) -bolusIob.iob else 0.0
         insulinFromBasalIOB = if (includeBasalIOB) -basalIob.basaliob else 0.0
@@ -297,7 +293,7 @@ class BolusWizard @Inject constructor(
         }
         if (insulinFromCOB > 0) {
             actions.add(rh.gs(R.string.cobvsiob) + ": " + rh.gs(R.string.formatsignedinsulinunits, insulinFromBolusIOB + insulinFromBasalIOB + insulinFromCOB + insulinFromBG).formatColorFromAttribute( rh.getAttributeColor(null, R.attr.cobAlert )))
-            val absorptionRate = iobCobCalculatorPlugin.ads.slowAbsorptionPercentage(60)
+            val absorptionRate = iobCobCalculator.ads.slowAbsorptionPercentage(60)
             if (absorptionRate > .25)
                 actions.add(rh.gs(R.string.slowabsorptiondetected, rh.getAttributeColor(null, R.attr.cobAlert), (absorptionRate * 100).toInt()))
         }

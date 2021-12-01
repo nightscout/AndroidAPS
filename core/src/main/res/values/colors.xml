@@ -72,7 +72,7 @@
     <color name="calibrationRed">#E83258</color>
     <color name="notificationNormal">#ff5e55</color>
     <color name="notificationLow">#ff827c</color>
-    <color name="metadataTextError">#FF5555</color>
+    <color name="metadataTextError">#FFFF5555</color>
 
     <!-- Yellow Colors -->
     <color name="lightyellow">#FFFF00</color>
@@ -91,6 +91,7 @@
     <color name="cob">#f0a30a</color>
     <color name="carbsOrange">#C98301</color>
     <color name="midorange">#f0a30a</color>
+
 
     <!-- Green Colors -->
     <color name="emerald">#25912e</color>

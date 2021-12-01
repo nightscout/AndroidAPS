@@ -38,7 +38,7 @@
     <color name="calibrationRed">#E83258</color>
     <color name="notificationNormal">#ff5e55</color>
     <color name="notificationLow">#ff827c</color>
-    <color name="metadataTextError">#FF5555</color>
+    <color name="metadataTextError">#FFFF5555</color>
 
     <!-- Yellow Colors -->
     <color name="lightyellow">#FFFF00</color>
