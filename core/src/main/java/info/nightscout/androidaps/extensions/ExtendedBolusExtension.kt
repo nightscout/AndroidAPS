@@ -50,10 +50,10 @@ fun ExtendedBolus.toTemporaryBasal(profile: Profile): TemporaryBasal =
         type = TemporaryBasal.Type.FAKE_EXTENDED
     )
 
-fun ExtendedBolus.toJson(isAdd: Boolean, profile: Profile, dateUtil: DateUtil, useAbsolute: Boolean): JSONObject =
+fun ExtendedBolus.toJson(isAdd: Boolean, profile: Profile, dateUtil: DateUtil): JSONObject =
     if (isEmulatingTempBasal)
         toTemporaryBasal(profile)
-            .toJson(isAdd, profile, dateUtil, useAbsolute)
+            .toJson(isAdd, profile, dateUtil)
             .put("extendedEmulated", toRealJson(isAdd, dateUtil))
     else toRealJson(isAdd, dateUtil)
 
@@ -63,6 +63,7 @@ fun ExtendedBolus.toRealJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
         .put("enteredBy", "openaps://" + "AndroidAPS")
         .put("eventType", TherapyEvent.Type.COMBO_BOLUS.text)
         .put("duration", T.msecs(duration).mins())
+        .put("durationInMilliseconds", duration)
         .put("splitNow", 0)
         .put("splitExt", 100)
         .put("enteredinsulin", amount)
@@ -99,6 +100,7 @@ fun extendedBolusFromJson(jsonObject: JSONObject): ExtendedBolus? {
     if (JsonHelper.safeGetIntAllowNull(jsonObject, "splitExt") != 100) return null
     val amount = JsonHelper.safeGetDoubleAllowNull(jsonObject, "enteredinsulin") ?: return null
     val duration = JsonHelper.safeGetLongAllowNull(jsonObject, "duration") ?: return null
+    val durationInMilliseconds = JsonHelper.safeGetLongAllowNull(jsonObject, "durationInMilliseconds")
     val isValid = JsonHelper.safeGetBoolean(jsonObject, "isValid", true)
     val isEmulatingTempBasal = JsonHelper.safeGetBoolean(jsonObject, "isEmulatingTempBasal", false)
     val id = JsonHelper.safeGetStringAllowNull(jsonObject, "_id", null) ?: return null
@@ -108,13 +110,13 @@ fun extendedBolusFromJson(jsonObject: JSONObject): ExtendedBolus? {
     val pumpSerial = JsonHelper.safeGetStringAllowNull(jsonObject, "pumpSerial", null)
 
     if (timestamp == 0L) return null
-    if (duration == 0L) return null
+    if (duration == 0L && durationInMilliseconds == 0L) return null
     if (amount == 0.0) return null
 
     return ExtendedBolus(
         timestamp = timestamp,
         amount = amount,
-        duration = T.mins(duration).msecs(),
+        duration = durationInMilliseconds ?: T.mins(duration).msecs(),
         isEmulatingTempBasal = isEmulatingTempBasal,
         isValid = isValid
     ).also {
@@ -133,7 +135,7 @@ fun ExtendedBolus.iobCalc(time: Long, profile: Profile, insulinInterface: Insuli
         val dia = profile.dia
         val diaAgo = time - dia * 60 * 60 * 1000
         val aboutFiveMinIntervals = ceil(realDuration / 5.0).toInt()
-        val spacing = realDuration / aboutFiveMinIntervals
+        val spacing = realDuration / aboutFiveMinIntervals.toDouble()
         for (j in 0L until aboutFiveMinIntervals) {
             // find middle of the interval
             val calcDate = (timestamp + j * spacing * 60 * 1000 + 0.5 * spacing * 60 * 1000).toLong()

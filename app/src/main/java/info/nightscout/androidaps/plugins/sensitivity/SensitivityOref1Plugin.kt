@@ -6,7 +6,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.androidaps.extensions.isEPSEvent5minBack
+import info.nightscout.androidaps.extensions.isPSEvent5minBack
 import info.nightscout.androidaps.extensions.isTherapyEventEvent5minBack
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
@@ -34,21 +34,22 @@ import kotlin.math.roundToInt
 class SensitivityOref1Plugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     sp: SP,
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
     private val repository: AppRepository
-) : AbstractSensitivityPlugin(PluginDescription()
-    .mainType(PluginType.SENSITIVITY)
-    .pluginIcon(R.drawable.ic_generic_icon)
-    .pluginName(R.string.sensitivityoref1)
-    .shortName(R.string.sensitivity_shortname)
-    .enableByDefault(true)
-    .preferencesId(R.xml.pref_absorption_oref1)
-    .description(R.string.description_sensitivity_oref1)
-    .setDefault(),
-    injector, aapsLogger, resourceHelper, sp
+) : AbstractSensitivityPlugin(
+    PluginDescription()
+        .mainType(PluginType.SENSITIVITY)
+        .pluginIcon(R.drawable.ic_generic_icon)
+        .pluginName(R.string.sensitivityoref1)
+        .shortName(R.string.sensitivity_shortname)
+        .enableByDefault(true)
+        .preferencesId(R.xml.pref_absorption_oref1)
+        .description(R.string.description_sensitivity_oref1)
+        .setDefault(),
+    injector, aapsLogger, rh, sp
 ) {
 
     override fun detectSensitivity(ads: AutosensDataStore, fromTime: Long, toTime: Long): AutosensResult {
@@ -71,7 +72,7 @@ class SensitivityOref1Plugin @Inject constructor(
             return AutosensResult()
         }
         val siteChanges = repository.getTherapyEventDataFromTime(fromTime, TherapyEvent.Type.CANNULA_CHANGE, true).blockingGet()
-        val profileSwitches = repository.getEffectiveProfileSwitchDataFromTime(fromTime, true).blockingGet()
+        val profileSwitches = repository.getProfileSwitchDataFromTime(fromTime, true).blockingGet()
 
         //[0] = 8 hour
         //[1] = 24 hour
@@ -105,11 +106,10 @@ class SensitivityOref1Plugin @Inject constructor(
                 if (siteChanges.isTherapyEventEvent5minBack(autosensData.time)) {
                     deviationsArray.clear()
                     pastSensitivity += "(SITECHANGE)"
-                    pastSensitivity += "(SITECHANGE)"
                 }
 
                 // reset deviations after profile switch
-                if (profileSwitches.isEPSEvent5minBack(autosensData.time)) {
+                if (profileSwitches.isPSEvent5minBack(autosensData.time)) {
                     deviationsArray.clear()
                     pastSensitivity += "(PROFILESWITCH)"
                 }
@@ -206,10 +206,10 @@ class SensitivityOref1Plugin @Inject constructor(
     override fun configuration(): JSONObject {
         val c = JSONObject()
         try {
-            c.put(resourceHelper.gs(R.string.key_openapsama_min_5m_carbimpact), sp.getDouble(R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact))
-            c.put(resourceHelper.gs(R.string.key_absorption_cutoff), sp.getDouble(R.string.key_absorption_cutoff, Constants.DEFAULT_MAX_ABSORPTION_TIME))
-            c.put(resourceHelper.gs(R.string.key_openapsama_autosens_max), sp.getDouble(R.string.key_openapsama_autosens_max, 1.2))
-            c.put(resourceHelper.gs(R.string.key_openapsama_autosens_min), sp.getDouble(R.string.key_openapsama_autosens_min, 0.7))
+            c.put(rh.gs(R.string.key_openapsama_min_5m_carbimpact), sp.getDouble(R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact))
+            c.put(rh.gs(R.string.key_absorption_cutoff), sp.getDouble(R.string.key_absorption_cutoff, Constants.DEFAULT_MAX_ABSORPTION_TIME))
+            c.put(rh.gs(R.string.key_openapsama_autosens_max), sp.getDouble(R.string.key_openapsama_autosens_max, 1.2))
+            c.put(rh.gs(R.string.key_openapsama_autosens_min), sp.getDouble(R.string.key_openapsama_autosens_min, 0.7))
         } catch (e: JSONException) {
             e.printStackTrace()
         }
@@ -218,10 +218,10 @@ class SensitivityOref1Plugin @Inject constructor(
 
     override fun applyConfiguration(configuration: JSONObject) {
         try {
-            if (configuration.has(resourceHelper.gs(R.string.key_openapsama_min_5m_carbimpact))) sp.putDouble(R.string.key_openapsama_min_5m_carbimpact, configuration.getDouble(resourceHelper.gs(R.string.key_openapsama_min_5m_carbimpact)))
-            if (configuration.has(resourceHelper.gs(R.string.key_absorption_cutoff))) sp.putDouble(R.string.key_absorption_cutoff, configuration.getDouble(resourceHelper.gs(R.string.key_absorption_cutoff)))
-            if (configuration.has(resourceHelper.gs(R.string.key_openapsama_autosens_max))) sp.getDouble(R.string.key_openapsama_autosens_max, configuration.getDouble(resourceHelper.gs(R.string.key_openapsama_autosens_max)))
-            if (configuration.has(resourceHelper.gs(R.string.key_openapsama_autosens_min))) sp.getDouble(R.string.key_openapsama_autosens_min, configuration.getDouble(resourceHelper.gs(R.string.key_openapsama_autosens_min)))
+            if (configuration.has(rh.gs(R.string.key_openapsama_min_5m_carbimpact))) sp.putDouble(R.string.key_openapsama_min_5m_carbimpact, configuration.getDouble(rh.gs(R.string.key_openapsama_min_5m_carbimpact)))
+            if (configuration.has(rh.gs(R.string.key_absorption_cutoff))) sp.putDouble(R.string.key_absorption_cutoff, configuration.getDouble(rh.gs(R.string.key_absorption_cutoff)))
+            if (configuration.has(rh.gs(R.string.key_openapsama_autosens_max))) sp.getDouble(R.string.key_openapsama_autosens_max, configuration.getDouble(rh.gs(R.string.key_openapsama_autosens_max)))
+            if (configuration.has(rh.gs(R.string.key_openapsama_autosens_min))) sp.getDouble(R.string.key_openapsama_autosens_min, configuration.getDouble(rh.gs(R.string.key_openapsama_autosens_min)))
         } catch (e: JSONException) {
             e.printStackTrace()
         }

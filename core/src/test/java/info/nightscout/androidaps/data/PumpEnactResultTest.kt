@@ -16,23 +16,23 @@ class PumpEnactResultTest : TestBaseWithProfile() {
     val injector = HasAndroidInjector {
         AndroidInjector {
             if (it is PumpEnactResult) {
-                it.resourceHelper = resourceHelper
+                it.rh = rh
             }
         }
     }
 
     @Before
     fun mock() {
-        `when`(resourceHelper.gs(R.string.success)).thenReturn("Success")
-        `when`(resourceHelper.gs(R.string.enacted)).thenReturn("Enacted")
-        `when`(resourceHelper.gs(R.string.comment)).thenReturn("Comment")
-        `when`(resourceHelper.gs(R.string.configbuilder_insulin)).thenReturn("Insulin")
-        `when`(resourceHelper.gs(R.string.smb_shortname)).thenReturn("SMB")
-        `when`(resourceHelper.gs(R.string.insulin_unit_shortname)).thenReturn("U")
-        `when`(resourceHelper.gs(R.string.canceltemp)).thenReturn("Cancel temp basal")
-        `when`(resourceHelper.gs(R.string.duration)).thenReturn("Duration")
-        `when`(resourceHelper.gs(R.string.percent)).thenReturn("Percent")
-        `when`(resourceHelper.gs(R.string.absolute)).thenReturn("Absolute")
+        `when`(rh.gs(R.string.success)).thenReturn("Success")
+        `when`(rh.gs(R.string.enacted)).thenReturn("Enacted")
+        `when`(rh.gs(R.string.comment)).thenReturn("Comment")
+        `when`(rh.gs(R.string.configbuilder_insulin)).thenReturn("Insulin")
+        `when`(rh.gs(R.string.smb_shortname)).thenReturn("SMB")
+        `when`(rh.gs(R.string.insulin_unit_shortname)).thenReturn("U")
+        `when`(rh.gs(R.string.canceltemp)).thenReturn("Cancel temp basal")
+        `when`(rh.gs(R.string.duration)).thenReturn("Duration")
+        `when`(rh.gs(R.string.percent)).thenReturn("Percent")
+        `when`(rh.gs(R.string.absolute)).thenReturn("Absolute")
     }
 
     @Test fun successTest() {

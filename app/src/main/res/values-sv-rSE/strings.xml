@@ -12,7 +12,6 @@
     <string name="nav_resetdb">Återställ databaserna</string>
     <string name="reset_db_confirm">Vill du verkligen återställa databaserna?</string>
     <string name="nav_exit">Avsluta</string>
-    <string name="ns_sync_use_absolute_title">Använd alltid absoluta värden i basal</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Denna enhet verkar inte ha stöd för vitlistning från batterioptimering. Du eventuellt råka ut för problem pga detta.</string>
     <string name="description_actions">Knappar för att snabbt komma åt vanliga funktioner</string>
     <string name="description_config_builder">Används för att konfigurera de aktiva insticksprogrammen</string>
@@ -79,7 +78,6 @@ Eversense-appen.</string>
     <string name="overview">Översikt</string>
     <string name="treatments">Behandlingar</string>
     <string name="virtualpump">Virtuell pump</string>
-    <string name="careportal">Careportal</string>
     <string name="configbuilder_pump">Pump</string>
     <string name="configbuilder_pump_description">Vilken pump vill du använda med AndroidAPS?</string>
     <string name="configbuilder_profile">Profil</string>
@@ -99,7 +97,6 @@ Eversense-appen.</string>
     <string name="safety">Säkerhet</string>
     <string name="openapsma_disabled">Insticksprogram inaktiverat</string>
     <string name="constraints_violation">Begränsning nådd</string>
-    <string name="treatmentdeliveryerror">Fel vid bolusleverans</string>
     <string name="setbasalquestion">Acceptera ny temp basal:</string>
     <string name="overview_treatment_label">Behandling</string>
     <string name="overview_calculator_label">Kalkylator</string>
@@ -258,7 +255,7 @@ Eversense-appen.</string>
     <string name="ongoingnotificaction">Konstant avisering i telefonen</string>
     <string name="old_data">Aktuellt BG saknas!</string>
     <string name="sms_minago">%1$d min sedan</string>
-    <string name="localprofile">Lokal profil</string>
+    <string name="localprofile">Profil</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">En serie med %1$d tal.\nVärde:</string>
     <string name="openapsma_autosensdata_label">Autosensdata</string>
@@ -495,6 +492,7 @@ Eversense-appen.</string>
     <string name="dexcomg5_xdripupload_title">Skicka BG-data till xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">Välj \"640G/Eversense\" som datakälla i xDrip+</string>
     <string name="nsclientbg">NSClient BG</string>
+    <string name="nsclientbgshort">NS BG</string>
     <string name="overview_editquickwizard_usebg">Använd BG</string>
     <string name="overview_editquickwizard_usebolusiob">Använd bolus-IOB</string>
     <string name="overview_editquickwizard_usebasaliob">Använd basal-IOB</string>
@@ -666,7 +664,6 @@ Eversense-appen.</string>
     <string name="error_adding_treatment_title">Behandlingsdata ofullständigt</string>
     <string name="maintenance_settings">Underhållsinställningar</string>
     <string name="maintenance_email">e-postmottagare</string>
-    <string name="maintenance_encrypt_exported_prefs">Kryptera exporterade inställningar</string>
     <string name="maintenance_amount">Antal loggar att skicka</string>
     <string name="maintenance">Underhåll</string>
     <string name="maintenance_shortname">UH</string>
@@ -680,6 +677,7 @@ Eversense-appen.</string>
     <string name="resettodefaults">Återställ standardinställningar</string>
     <string name="nsmalfunction">Fel på NSClient. Överväg att starta om NSClient och Nightscout-webbplatsen.</string>
     <string name="time_offset">KH-tid</string>
+    <string name="bolus_reminder">Påminn om bolus senare</string>
     <string name="setupwizard_preferred_aps_mode">Föredraget APS-läge</string>
     <string name="treatments_wizard_total_label">Total</string>
     <string name="calculation_short">Kalkyl</string>
@@ -718,11 +716,9 @@ Eversense-appen.</string>
     <string name="versionChecker">Versionskontroll</string>
     <string name="old_version">gammal version</string>
     <string name="very_old_version">väldigt gammal version</string>
+    <string name="application_expired">Applikationen inte giltig längre</string>
     <string name="new_version_warning">Ny version tillgänglig för %1$d dagar sedan. Systemet kommer att byta läge till \"stopp innan lågt\" efter %2$d dagar och sluta loopa helt efter %3$d dagar</string>
     <string name="twohours">2 tim</string>
-    <string name="dexcom_app_patched">Dexcoms app (modifierad)</string>
-    <string name="dexcom_short">DXCM</string>
-    <string name="description_source_dexcom">Ta emot BG-data från den modifierade Dexcom-appen.</string>
     <string name="cobvsiob">COB kontra IOB</string>
     <string name="bolusconstraintappliedwarn">Bolusbegränsning tillämpad: %1$.2f U till %2$.2f U</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>Varning! Långsam KH-absorption upptäckt %2$d%% av tiden. Dubbelkolla din beräkning. COB kan vara väldigt missvisande och du riskerar få för mycket insulin!</font>]]></string>
@@ -751,7 +747,7 @@ Eversense-appen.</string>
     <string name="clone_label">Kopiera</string>
     <string name="saveorresetchangesfirst">Spara eller återställa aktuella ändringar först</string>
     <string name="deletecurrentprofile">Ta bort aktuell profil?</string>
-    <string name="copytolocalprofile">Skapa ny lokal profil av denna?</string>
+    <string name="copytolocalprofile">Skapa kopia av denna profil?</string>
     <string name="profilenamecontainsdot">Profilnamnet innehåller punkter.\nDetta stöds inte av NS.\nProfil överförs inte till NS.</string>
     <string name="low_mark_comment">Nedre värdet för målområde (endast visning)</string>
     <string name="high_mark_comment">Övre värdet för målområde (endast visning)</string>
@@ -833,7 +829,7 @@ Eversense-appen.</string>
     <string name="dpvdefaultprofile">DPV-standardprofil</string>
     <string name="setupwizard_pump_riley_link_status">Riley Link-status:</string>
     <string name="filter">Filter</string>
-    <string name="copytolocalprofile_invalid">Kan inte att skapa den lokala profilen. Profilen är ogiltig.</string>
+    <string name="copytolocalprofile_invalid">Kan inte att skapa profilen. Profilen är felaktig.</string>
     <string name="cta_dont_kill_my_app_info">Döda inte min app?</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Skicka SMS om pumpen inte kan nås</string>
     <string name="smscommunicator_pump_ureachable">Rapportera om pump inte kan nås</string>
@@ -845,6 +841,11 @@ Eversense-appen.</string>
     <string name="enablebolusadvisor_summary">Få en påminnelse om att börja äta senare (istället för kalkylatorns resultat) om du ligger högt i BG</string>
     <string name="time_to_eat">Dags att äta!\nKör bolusguiden igen för ny beräkning.</string>
     <string name="timetoeat">Dags att äta</string>
+    <string name="bolusreminder">Boluspåminnelse</string>
+    <string name="enablebolusreminder">Aktivera boluspåminnelse</string>
+    <string name="enablebolusreminder_summary">Använd påminnelse för att ge bolus senare
+        (\"post-bolus\")</string>
+    <string name="time_to_bolus">Dags för bolus!\nKör Bolusguiden och gör beräkningar igen.</string>
     <string name="fabric_upload_disabled">Uppladdning av kraschloggar inaktiverad!</string>
     <string name="graph_menu_divider_header">Graf</string>
     <string name="chart_menu">Diagrammeny</string>
@@ -853,17 +854,17 @@ Eversense-appen.</string>
     <string name="cannula">Kanyl</string>
     <string name="userentry">Angivet av användare</string>
     <string name="common_values">Använd värden för den största måltiden som du vanligen äter\n</string>
-    <string name="summary_email_for_crash_report">Den här mejladressen kommer att bifogas till kraschrapporter så att vi kan kontakta dig i brådskande fall. Det är frivilligt.</string>
     <string name="email_address">E-postadress</string>
     <string name="privacy_settings">Sekretessinställningar</string>
     <string name="privacy_summary">Du kan ange valfri e-postadress om du vill få meddelanden om appkrascher. Det här är ingen automatiserad tjänst. Du kommer att kontaktas av utvecklare i farliga situationer.</string>
     <string name="full_sync">Full synkronisering</string>
+    <string name="full_sync_comment">Full synkronisering? Det kan ta flera timmar du kommer inte att se nya data i NS förrän den är klar.</string>
     <string name="prime">Förfyllning</string>
     <string name="ns_sync_options">Synkronisering</string>
     <string name="ns_upload_summary">Profiler, bolus, kolhydrater och temp basaler laddas upp till NS</string>
     <string name="ns_upload">Ladda upp data till NS</string>
     <string name="ns_receive_profile_store">Ladda ner profiler</string>
-    <string name="ns_receive_profile_store_summary">Skapa/synka lokala profiler från NS</string>
+    <string name="ns_receive_profile_store_summary">Synkronisera profiler från NS</string>
     <string name="ns_receive_temp_target">Ladda ner temporära mål</string>
     <string name="ns_receive_temp_target_summary">Godkänn temp mål som anges genom NS eller NSClient</string>
     <string name="ns_receive_profile_switch">Ladda ner profilbyten</string>
@@ -881,4 +882,14 @@ Eversense-appen.</string>
     <string name="sms_timeout_while_wating">Föregående pumpkommunikation har inte bekräftats/avslutats i tid</string>
     <string name="smscommunicator_another_bolus_in_queue">Det finns en annan bolus i kö. Försök igen senare.</string>
     <string name="calculation_in_progress">Beräkning pågår</string>
+    <string name="missing_profile_name">Profilnamn saknas</string>
+    <string name="error_in_ic_values">Fel i KH-kvoter</string>
+    <string name="error_in_basal_values">Fel i basaldoser</string>
+    <string name="error_in_target_values">Fel i målvärden</string>
+    <string name="error_in_isf_values">Fel i korrektionskvoter</string>
+    <string name="run_question">Kör %s?</string>
+    <string name="invalid_profile_not_accepted">Ogiltig profil %1$s från NS accepteras inte</string>
+    <string name="view">Visa</string>
+    <string name="errors">Fel</string>
+    <string name="ns_sync_slow">Långsamma uppladdningar</string>
 </resources>

@@ -13,7 +13,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 abstract class PluginBase(
     val pluginDescription: PluginDescription,
     val aapsLogger: AAPSLogger,
-    val resourceHelper: ResourceHelper,
+    val rh: ResourceHelper,
     val injector: HasAndroidInjector
 ) {
 
@@ -30,20 +30,20 @@ abstract class PluginBase(
         get() = pluginDescription.pluginIcon2
 
     open val name: String
-        get() = if (pluginDescription.pluginName == -1) "UNKNOWN" else resourceHelper.gs(pluginDescription.pluginName)
+        get() = if (pluginDescription.pluginName == -1) "UNKNOWN" else rh.gs(pluginDescription.pluginName)
 
     //only if translation exists
     // use long name as fallback
     val nameShort: String
         get() {
             if (pluginDescription.shortName == -1) return name
-            val translatedName = resourceHelper.gs(pluginDescription.shortName)
+            val translatedName = rh.gs(pluginDescription.shortName)
             return if (translatedName.trim { it <= ' ' }.isNotEmpty()) translatedName else name
             // use long name as fallback
         }
 
     val description: String?
-        get() = if (pluginDescription.description == -1) null else resourceHelper.gs(pluginDescription.description)
+        get() = if (pluginDescription.description == -1) null else rh.gs(pluginDescription.description)
 
     fun getType(): PluginType = pluginDescription.mainType
 

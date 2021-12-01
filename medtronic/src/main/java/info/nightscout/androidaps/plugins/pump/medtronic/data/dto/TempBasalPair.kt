@@ -91,6 +91,9 @@ class TempBasalPair : TempBasalPair {
     val isCancelTBR: Boolean
         get() = MedtronicUtil.isSame(insulinRate, 0.0) && durationMinutes == 0
 
+    val isZeroTBR: Boolean
+        get() = MedtronicUtil.isSame(insulinRate, 0.0) && durationMinutes != 0
+
     val description: String
         get() {
             if (isCancelTBR) {

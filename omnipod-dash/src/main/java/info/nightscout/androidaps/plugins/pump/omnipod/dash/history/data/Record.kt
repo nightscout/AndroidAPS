@@ -1,12 +1,15 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data
 
 import info.nightscout.androidaps.data.DetailedBolusInfo
+import info.nightscout.androidaps.interfaces.Profile
 
 sealed class Record
 
 data class BolusRecord(val amout: Double, val bolusType: BolusType) : Record()
 
 data class TempBasalRecord(val duration: Int, val rate: Double) : Record()
+
+data class BasalValuesRecord(val segments: List<Profile.ProfileValue>) : Record()
 
 enum class BolusType {
     DEFAULT, SMB;

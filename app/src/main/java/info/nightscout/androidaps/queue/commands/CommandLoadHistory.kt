@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.queue.commands
 
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Dana
 import info.nightscout.androidaps.interfaces.Diaconn
@@ -33,5 +34,5 @@ class CommandLoadHistory(
         }
     }
 
-    override fun status(): String = "LOAD HISTORY $type"
+    override fun status(): String = rh.gs(R.string.load_history, type.toInt())
 }

@@ -27,7 +27,7 @@ class ResourceHelperImplementation @Inject constructor(private val context: Cont
     override fun gq(@PluralsRes id: Int, quantity: Int, vararg args: Any?): String =
         context.resources.getQuantityString(id, quantity, *args)
 
-    override fun gsNotLocalised(@StringRes id: Int, vararg args: Any?) : String =
+    override fun gsNotLocalised(@StringRes id: Int, vararg args: Any?): String =
         with(Configuration(context.resources.configuration)) {
             setLocale(Locale.ENGLISH)
             context.createConfigurationContext(this).getString(id, args)
@@ -52,7 +52,7 @@ class ResourceHelperImplementation @Inject constructor(private val context: Cont
     override fun decodeResource(id: Int): Bitmap =
         BitmapFactory.decodeResource(context.resources, id)
 
-    override fun getDisplayMetrics():DisplayMetrics =
+    override fun getDisplayMetrics(): DisplayMetrics =
         context.resources.displayMetrics
 
     override fun dpToPx(dp: Int): Int {
@@ -64,4 +64,11 @@ class ResourceHelperImplementation @Inject constructor(private val context: Cont
 
     override fun getAttributeColor(context: Context?, attributeId: Int): Int =
         (context ?: ContextThemeWrapper(this.context, R.style.AppTheme)).getThemeColor(attributeId)
+}
+    override fun dpToPx(dp: Float): Int {
+        val scale = context.resources.displayMetrics.density
+        return (dp * scale + 0.5f).toInt()
+    }
+
+    override fun shortTextMode(): Boolean = !gb(R.bool.isTablet)
 }

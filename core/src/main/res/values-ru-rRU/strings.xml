@@ -18,6 +18,7 @@
     <string name="connected">соединение установлено</string>
     <string name="disconnected">Разъединено</string>
     <string name="disconnecting">разъединение</string>
+    <string name="waiting_for_disconnection">Ожидание разъединения</string>
     <string name="androidaps_start">AndroidAPS запущен</string>
     <string name="formatinsulinunits1">%1$.1f ед</string>
     <string name="formatinsulinunits">%1$.2f ед</string>
@@ -153,7 +154,6 @@
     <string name="profile_ins_units_per_hour">ед/ч</string>
     <string name="profile_carbs_per_unit">г/ед</string>
     <!--    ProfileFunction-->
-    <string name="noprofileselected">профиль не выбран</string>
     <string name="startprofile">Начать профиль %1$d%% на %2$d мин</string>
     <!--    PumpType-->
     <string name="def_extended_note">* В виртуальной помпе поддерживаются только дискретные величины для обработки базала/болюса.</string>
@@ -173,12 +173,17 @@
     <string name="tddwithcarbsformat"><![CDATA[<b>%1$s</b>∑: <b>%2$.2fед</b> Бол: <b>%3$.2fед</b> Баз: <b>%4$.2fед(%5$.0f%%)</b> Угл: <b>%6$.0fг</b>]]></string>
     <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s</span></b> <b>%2$s</b>через<b>%3$d</b> дней<br>]]></string>
     <!--    Translator-->
+    <string name="careportal">Портал терапии</string>
     <string name="careportal_bgcheck">Проверка ГК</string>
     <string name="careportal_mbg">Ввести значение ГК или калибровку</string>
     <string name="careportal_announcement">Оповещение</string>
     <string name="careportal_note">Примечание</string>
     <string name="careportal_question">Вопрос</string>
-    <string name="careportal_exercise">Нгрузка</string>
+    <string name="careportal_exercise">Нагрузка</string>
+    <string name="careportal_announcement_message">Оповещение: %1$s</string>
+    <string name="careportal_note_message">Примечание: %1$s</string>
+    <string name="careportal_question_message">Вопрос: %1$s</string>
+    <string name="careportal_exercise_message">Нагрузка: %1$s</string>
     <string name="careportal_pumpsitechange">Смена места катетера помпы</string>
     <string name="careportal_cgmsensorinsert">Установка сенсора мониторинга глюкозы</string>
     <string name="careportal_cgmsensorstart">Сарт сенсора</string>
@@ -196,6 +201,7 @@
     <string name="careportal_openapsoffline">OpenAPS в автономном режиме</string>
     <string name="careportal_pumpbatterychange">Замена батареи помпы</string>
     <string name="careportal_temporarytarget">Временная цель</string>
+    <string name="careportal_temporarytargetvalue">Временное целевое значение</string>
     <string name="careportal_temporarytargetcancel">Отмена временной цели</string>
     <string name="boluswizard">Мастер Болюса</string>
     <string name="glucosetype_finger">Палец</string>
@@ -212,6 +218,8 @@
     <string name="loop">Замкнутый цикл</string>
     <string name="ns">NS</string>
     <string name="record">Запись</string>
+    <string name="reading_pump_history">Чтение истории помпы</string>
+    <string name="pump_icon">Пиктограмма помпы</string>
     <!--    Command-->
     <string name="connectiontimedout">Истекло время ожидания соединения</string>
     <!--    PumpEnactResult-->
@@ -252,7 +260,6 @@
     <string name="metadata_label_device_name">Имя пациента экспортируемого устройства</string>
     <string name="metadata_label_device_model">Модель экспортируемого устройства</string>
     <string name="metadata_label_encryption">Шифрование файла</string>
-    <string name="metadata_format_old">Старый формат экспорта</string>
     <string name="metadata_format_new">Новый зашифрованный формат</string>
     <string name="metadata_format_debug">Новый формат отладки (незашифрованный)</string>
     <string name="metadata_format_other">Неизвестный формат экспорта</string>
@@ -283,6 +290,7 @@
     <string name="signature_verifier">Верификатор подписи</string>
     <string name="running_invalid_version">Мы обнаружили, что вы используете недопустимую версию. Цикл отключен!</string>
     <string name="versionavailable">Доступна версия %1$s</string>
+    <string name="version_expire">Версия: %1$s истекает %2$s</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Перезагрузите телефон или перезапустите AndroidAPS из системных настроек \n иначе AndroidAPS не будет вести лог (важно для отслеживания и проверки алгоритмов)!</string>
     <!-- WeekdayPicker -->
@@ -295,6 +303,7 @@
     <string name="sunday_short">Вс</string>
     <!-- User Entry -->
     <string name="uel_bolus">БОЛЮС</string>
+    <string name="uel_bolus_calculator">КАЛЬКУЛЯТОР БОЛЮСА</string>
     <string name="uel_bolus_advisor">ПОМОЩНИК БОЛЮСА</string>
     <string name="uel_extended_bolus">ПРОЛОНГИРОВАННЫЙ БОЛЮС</string>
     <string name="uel_superbolus_tbr">СУПЕРБОЛЮС ВБС/TBR</string>
@@ -399,6 +408,38 @@
     <string name="valueoutofrange">»%1$s« за пределами жестких ограничений</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f за пределами жестких ограничений</string>
     <string name="basal_value">Величина базала</string>
+    <string name="nsclient_version_does_not_match">Версия NSClient не совпадает с версией AndroidAPS. Пожалуйста, обновите.</string>
+    <!-- Command Queue + readStatus reasons -->
+    <string name="bolus_u_min">БОЛЮС %1$.2f ЕД</string>
+    <string name="carbs_g">УГЛ %1$d г</string>
+    <string name="extended_bolus_u_min">Пролонгированный болюс %1$.2f ед %2$d мин</string>
+    <string name="load_events">ЗАГРУЗИТЬ СОБЫТИЯ</string>
+    <string name="load_history">ЗАГРУЗИТЬ ИСТОРИЮ %1$d</string>
+    <string name="load_tdds">ЗАГРУЗИТЬ СУТ ДОЗЫ</string>
+    <string name="set_profile">ЗАДАТЬ ПРОФИЛЬ</string>
+    <string name="set_user_settings">ВЫБРАТЬ НАСТРОЙКИ ПОЛЬЗОВАТЕЛЯ</string>
+    <string name="smb_bolus_u">БОЛЮС SMB %1$.2f ЕД</string>
+    <string name="start_pump">ЗАПУСТИТЬ ПОМПУ</string>
+    <string name="stop_pump">ОСТАНОВИТЬ ПОМПУ</string>
+    <string name="temp_basal_absolute">ВРЕМ БАЗА %1$.2f ЕД/ч %2$d мин</string>
+    <string name="temp_basal_percent">ВРЕМ БАЗА %1$d%% %2$d мин</string>
+    <string name="insight_set_tbr_over_notification">ВРЕМ БАЗА TBR INSIGHT ЧЕРЕЗ УВЕДОМЛЕНИЕ</string>
+    <string name="read_status" comment="10 characters max for READSTATUS translation">ЧИТСТАТУС %1$s</string>
+    <string name="keepalive_status_outdated" comment="26 characters max for translation">Статус KeepAlive устарел.</string>
+    <string name="keepalive_basal_outdated" comment="26 characters max for translation">KeepAlive Базал устарел.</string>
+    <string name="sms" comment="26 characters max for translation">SMS</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Нажато подключ к помпе</string>
+    <string name="pump_driver_changed" comment="26 characters max for translation">Драйвер помпы изменен.</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Замена драйвера помпы.</string>
+    <string name="device_changed" comment="26 characters max for translation">Устройство изменено</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Нажато обновление</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Запланированное обновление статуса</string>
+    <string name="unconfirmed_command" comment="26 characters max for translation">Неподтвержденная команда</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Запрошено пользователем</string>
+    <string name="user_request" comment="26 characters max for translation">Запрос пользователя</string>
+    <string name="bolus_ok" comment="26 characters max for translation">болюс ОК</string>
+    <string name="pump_paired" comment="26 characters max for translation">Помпа сопряжена</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Кнопка \"Обновить Insight\"</string>
     <plurals name="days">
         <item quantity="one">%1$d день</item>
         <item quantity="few">%1$d дня</item>

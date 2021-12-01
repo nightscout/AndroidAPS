@@ -26,9 +26,15 @@
     <string name="code_compare">이 장치에서 보여지는 코드와 펌프에서 보여지는 코드가 동일한가요?</string>
     <string name="insight_pairing">Insight와 동기화</string>
     <string name="insight_local">아큐-첵 Insight</string>
+    <string name="insight_delivered">%1$.2f U / %2$.2f U 주입됨</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">튜브 변경</string>
     <string name="insightpump_shortname">Sight</string>
+    <string name="insight_alert_notification_channel">인사이트 펌프 경고</string>
+    <string name="disable_vibration">수동 bolus 주입 시 진동 비활성화</string>
+    <string name="disable_vibration_summary">Bolus와 확장 bolus의 경우 (인사이트 펌웨어 3.x에서만 가능함)</string>
+    <string name="disable_vibration_auto">자동 bolus 주입 시 진동 비활성화</string>
+    <string name="disable_vibration_auto_summary">SMB와 TBR 기능을 통한 임시 basal의 경우 (인사이트 펌웨어 3.x에서만 가능함)</string>
     <string name="timeout_during_handshake">연결 시간 초과 - 블루투스 재설정</string>
     <string name="pump_stopped">펌프 중지</string>
     <string name="pump_started">펌프 시작</string>
@@ -38,6 +44,7 @@
     <string name="short_status_extended">확장: %3$d분 동안 %1$.2f / %2$.2f U</string>
     <string name="short_status_multiwave">Multiwave: %3$d 분 동안 %1$.2f / %2$.2f U</string>
     <string name="short_status_tdd">TDD: %1$.2f</string>
+    <string name="short_status_reservoir">잔여 인슐린 양 : %1$.2f U</string>
     <string name="short_status_battery">Batt.: %1$d%%</string>
     <string name="confirm">확인</string>
     <string name="mute_alert">음소거</string>

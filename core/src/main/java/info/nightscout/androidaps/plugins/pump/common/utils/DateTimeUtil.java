@@ -265,11 +265,11 @@ public class DateTimeUtil {
     }
 
 
-    public static long getATDWithAddedMinutes(long atd, int minutesDiff) {
+    public static long getATDWithAddedSeconds(Long atd, int addedSeconds) {
         GregorianCalendar oldestEntryTime = DateTimeUtil.toGregorianCalendar(atd);
-        oldestEntryTime.add(Calendar.MINUTE, minutesDiff);
+        oldestEntryTime.add(Calendar.SECOND, addedSeconds);
 
-        return oldestEntryTime.getTimeInMillis();
+        return toATechDate(oldestEntryTime.getTimeInMillis());
     }
 
 
@@ -278,7 +278,6 @@ public class DateTimeUtil {
 
         return toATechDate(oldestEntryTime);
     }
-
 
     public static long getTimeInFutureFromMinutes(long startTime, int minutes) {
         return startTime + getTimeInMs(minutes);

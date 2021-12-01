@@ -39,7 +39,7 @@ class Objective0(injector: HasAndroidInjector) : Objective(injector, "config", R
             }
 
             override fun shouldBeIgnored(): Boolean {
-                return !virtualPumpPlugin.isEnabled(PluginType.PUMP)
+                return !virtualPumpPlugin.isEnabled()
             }
         })
         tasks.add(object : Task(this, R.string.objectives_pumpstatusavailableinns) {
@@ -54,13 +54,13 @@ class Objective0(injector: HasAndroidInjector) : Objective(injector, "config", R
         })
         tasks.add(object : Task(this, R.string.loopenabled) {
             override fun isCompleted(): Boolean {
-                return loopPlugin.isEnabled(PluginType.LOOP)
+                return loopPlugin.isEnabled()
             }
         })
         tasks.add(object : Task(this, R.string.apsselected) {
             override fun isCompleted(): Boolean {
                 val usedAPS = activePlugin.activeAPS
-                return (usedAPS as PluginBase).isEnabled(PluginType.APS)
+                return (usedAPS as PluginBase).isEnabled()
             }
         })
         tasks.add(object : Task(this, R.string.activate_profile) {

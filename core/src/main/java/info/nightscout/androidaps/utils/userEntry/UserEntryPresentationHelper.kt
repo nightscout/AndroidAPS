@@ -24,7 +24,7 @@ import javax.inject.Inject
 class UserEntryPresentationHelper @Inject constructor(
     private val translator: Translator,
     private val profileFunction: ProfileFunction,
-    private val resourceHelper: ResourceHelper,
+    private val rh: ResourceHelper,
     private val dateUtil: DateUtil
 ) {
 
@@ -71,6 +71,7 @@ class UserEntryPresentationHelper @Inject constructor(
         Sources.NSClientSource      -> R.drawable.ic_nsclient_bg
         Sources.PocTech             -> R.drawable.ic_poctech
         Sources.Tomato              -> R.drawable.ic_sensor
+        Sources.Glunovo             -> R.drawable.ic_glunovo
         Sources.Xdrip               -> R.drawable.ic_blooddrop_48
         Sources.LocalProfile        -> R.drawable.ic_local_profile
         Sources.Loop                -> R.drawable.ic_loop_closed_white
@@ -132,12 +133,12 @@ class UserEntryPresentationHelper @Inject constructor(
 
         is ValueWithUnit.Mgdl                  -> {
             if (profileFunction.getUnits() == GlucoseUnit.MGDL) DecimalFormatter.to0Decimal(valueWithUnit.value) + translator.translate(valueWithUnit)
-            else DecimalFormatter.to1Decimal(valueWithUnit.value / Constants.MMOLL_TO_MGDL) + translator.translate(valueWithUnit)
+            else DecimalFormatter.to1Decimal(valueWithUnit.value * Constants.MGDL_TO_MMOLL) + translator.translate(valueWithUnit)
         }
 
         is ValueWithUnit.Mmoll                 -> {
-            if (profileFunction.getUnits() == GlucoseUnit.MGDL) DecimalFormatter.to0Decimal(valueWithUnit.value) + translator.translate(valueWithUnit)
-            else DecimalFormatter.to1Decimal(valueWithUnit.value * Constants.MMOLL_TO_MGDL) + translator.translate(valueWithUnit)
+            if (profileFunction.getUnits() == GlucoseUnit.MMOL) DecimalFormatter.to1Decimal(valueWithUnit.value) + translator.translate(valueWithUnit)
+            else DecimalFormatter.to0Decimal(valueWithUnit.value * Constants.MMOLL_TO_MGDL) + translator.translate(valueWithUnit)
         }
 
         ValueWithUnit.UNKNOWN                  -> ""
@@ -148,7 +149,7 @@ class UserEntryPresentationHelper @Inject constructor(
         return getCsvHeader() + userEntries.joinToString("\n") { entry -> getCsvEntry(entry) }
     }
 
-    private fun getCsvHeader() = resourceHelper.gs(R.string.ue_csv_header,
+    private fun getCsvHeader() = rh.gs(R.string.ue_csv_header,
         csvString(R.string.ue_timestamp),
         csvString(R.string.date),
         csvString(R.string.ue_utc_offset),
@@ -221,7 +222,7 @@ class UserEntryPresentationHelper @Inject constructor(
     }
 
     private fun csvString(action: Action): String = "\"" + translator.translate(action).replace("\"", "\"\"").replace("\n", " / ") + "\""
-    private fun csvString(id: Int): String = if (id != 0) "\"" + resourceHelper.gs(id).replace("\"", "\"\"").replace("\n", " / ") + "\"" else ""
+    private fun csvString(id: Int): String = if (id != 0) "\"" + rh.gs(id).replace("\"", "\"\"").replace("\n", " / ") + "\"" else ""
     private fun csvString(s: String): String = if (s != "") "\"" + s.replace("\"", "\"\"").replace("\n", " / ") + "\"" else ""
 
     private fun String.addWithSeparator(add: Any) =

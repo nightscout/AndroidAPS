@@ -2,7 +2,7 @@ package info.nightscout.androidaps.interfaces
 
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.data.PureProfile
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter.to0Decimal
 import info.nightscout.androidaps.utils.DecimalFormatter.to1Decimal
@@ -16,7 +16,7 @@ interface Profile {
 
     class ValidityCheck(var isValid: Boolean = true, val reasons: ArrayList<String> = arrayListOf())
 
-    fun isValid(from: String, pump: Pump, config: Config, resourceHelper: ResourceHelper, rxBus: RxBusWrapper, hardLimits: HardLimits): ValidityCheck
+    fun isValid(from: String, pump: Pump, config: Config, rh: ResourceHelper, rxBus: RxBus, hardLimits: HardLimits, sendNotifications: Boolean): ValidityCheck
 
     /**
      * Units used for ISF & target
@@ -101,10 +101,10 @@ interface Profile {
      */
     fun getTargetHighMgdlTimeFromMidnight(timeAsSeconds: Int): Double
 
-    fun getIcList(resourceHelper: ResourceHelper, dateUtil: DateUtil): String
-    fun getIsfList(resourceHelper: ResourceHelper, dateUtil: DateUtil): String
-    fun getBasalList(resourceHelper: ResourceHelper, dateUtil: DateUtil): String
-    fun getTargetList(resourceHelper: ResourceHelper, dateUtil: DateUtil): String
+    fun getIcList(rh: ResourceHelper, dateUtil: DateUtil): String
+    fun getIsfList(rh: ResourceHelper, dateUtil: DateUtil): String
+    fun getBasalList(rh: ResourceHelper, dateUtil: DateUtil): String
+    fun getTargetList(rh: ResourceHelper, dateUtil: DateUtil): String
 
     fun convertToNonCustomizedProfile(dateUtil: DateUtil): PureProfile
     fun toPureNsJson(dateUtil: DateUtil): JSONObject

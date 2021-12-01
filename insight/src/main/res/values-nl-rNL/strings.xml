@@ -21,6 +21,7 @@
     <string name="tbr_formatter">%1$d%% gedurende %2$d / %3$d min</string>
     <string name="multiwave_bolus">Multiwave-Bolus</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U gedurende %3$d min</string>
+    <string name="insight_last_bolus">Laatste bolus</string>
     <string name="searching_for_devices">Bezig met zoeken naar apparaten…</string>
     <string name="pairing_completed">Koppeling voltooid</string>
     <string name="code_compare">Worden dezelfde codes weergegeven op dit apparaat als op je pomp?</string>

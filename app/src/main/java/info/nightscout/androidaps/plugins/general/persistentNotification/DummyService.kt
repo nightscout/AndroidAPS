@@ -10,7 +10,7 @@ import info.nightscout.androidaps.events.EventAppExit
 import info.nightscout.androidaps.interfaces.NotificationHolder
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -22,7 +22,7 @@ import javax.inject.Inject
 class DummyService : DaggerService() {
 
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var notificationHolder: NotificationHolder
@@ -42,6 +42,7 @@ class DummyService : DaggerService() {
         // TODO: I guess this was moved here in order to adhere to the 5 seconds rule to call "startForeground" after a Service was called as Foreground service?
         // As onCreate() is not called every time a service is started, copied to onStartCommand().
         try {
+            aapsLogger.debug("Starting DummyService with ID ${notificationHolder.notificationID} notification ${notificationHolder.notification}")
             startForeground(notificationHolder.notificationID, notificationHolder.notification)
         } catch (e: Exception) {
             startForeground(4711, Notification())
@@ -66,6 +67,7 @@ class DummyService : DaggerService() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         try {
+            aapsLogger.debug("Starting DummyService with ID ${notificationHolder.notificationID} notification ${notificationHolder.notification}")
             startForeground(notificationHolder.notificationID, notificationHolder.notification)
         } catch (e: Exception) {
             startForeground(4711, Notification())

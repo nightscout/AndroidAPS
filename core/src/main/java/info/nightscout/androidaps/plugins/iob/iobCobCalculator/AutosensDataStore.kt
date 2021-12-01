@@ -7,7 +7,7 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventBucketedDataCreated
 import info.nightscout.androidaps.utils.DateUtil
@@ -19,7 +19,7 @@ import kotlin.math.roundToLong
 class AutosensDataStore {
 
     private val dataLock = Any()
-    private var lastUsed5minCalculation: Boolean? = null // true if used 5min bucketed data
+    var lastUsed5minCalculation: Boolean? = null // true if used 5min bucketed data
 
     // we need to make sure that bucketed_data will always have the same timestamp for correct use of cached values
     // once referenceTime != null all bucketed data should be (x * 5min) from referenceTime
@@ -155,7 +155,7 @@ class AutosensDataStore {
         return someTime + diff
     }
 
-    fun loadBgData(to: Long, repository: AppRepository, aapsLogger: AAPSLogger, dateUtil: DateUtil, rxBus: RxBusWrapper) {
+    fun loadBgData(to: Long, repository: AppRepository, aapsLogger: AAPSLogger, dateUtil: DateUtil, rxBus: RxBus) {
         synchronized(dataLock) {
             val start = to - T.hours((24 + 10 /* max dia */).toLong()).msecs()
             // there can be some readings with time in close future (caused by wrong time setting on sensor)
@@ -237,7 +237,10 @@ class AutosensDataStore {
         }
         val newBucketedData = ArrayList<InMemoryGlucoseValue>()
         var currentTime = bgReadings[0].timestamp - bgReadings[0].timestamp % T.mins(5).msecs()
-        currentTime = adjustToReferenceTime(currentTime)
+        val adjustedTime = adjustToReferenceTime(currentTime)
+        // after adjusting time may be newer. In this case use T-5min
+        if (adjustedTime > currentTime) currentTime = adjustedTime - T.mins(5).msecs()
+        else currentTime = adjustedTime
         aapsLogger.debug("Adjusted time " + dateUtil.dateAndTimeAndSecondsString(currentTime))
         //log.debug("First reading: " + new Date(currentTime).toLocaleString());
         while (true) {
@@ -344,7 +347,7 @@ class AutosensDataStore {
         synchronized(dataLock) {
             var i = autosensDataTable.size() - 1
             while (i >= 0 && count < valuesToProcess) {
-                if (autosensDataTable.valueAt(i).failoverToMinAbsorbtionRate) sum++
+                if (autosensDataTable.valueAt(i).failOverToMinAbsorptionRate) sum++
                 count++
                 i--
             }

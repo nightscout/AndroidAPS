@@ -13,7 +13,7 @@ class DanaRsPacketGeneralGetPumpCheckTest : DanaRSTestBase() {
             if (it is DanaRSPacketGeneralGetPumpCheck) {
                 it.aapsLogger = aapsLogger
                 it.rxBus = rxBus
-                it.resourceHelper = resourceHelper
+                it.rh = rh
                 it.danaPump = danaPump
             }
         }

@@ -29,7 +29,7 @@ class DanaRsPacketApsHistoryEventsTest : DanaRSTestBase() {
             }
             if (it is DanaRSPacketAPSHistoryEvents) {
                 it.rxBus = rxBus
-                it.resourceHelper = resourceHelper
+                it.rh = rh
                 it.pumpSync = pumpSync
                 it.danaPump = danaPump
                 it.detailedBolusInfoStorage = detailedBolusInfoStorage

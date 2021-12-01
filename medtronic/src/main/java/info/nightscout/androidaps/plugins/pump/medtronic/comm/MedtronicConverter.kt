@@ -94,6 +94,10 @@ class MedtronicConverter @Inject constructor(
     }
 
     fun decodeTime(rawContent: ByteArray): LocalDateTime? {
+        if (rawContent.size < 7) {
+            aapsLogger.error(LTag.PUMPCOMM, "decodeTime: Byte array too short")
+            return null
+        }
         val hours = ByteUtil.asUINT8(rawContent[0])
         val minutes = ByteUtil.asUINT8(rawContent[1])
         val seconds = ByteUtil.asUINT8(rawContent[2])

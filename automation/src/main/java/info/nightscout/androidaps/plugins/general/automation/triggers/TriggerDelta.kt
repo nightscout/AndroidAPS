@@ -21,8 +21,8 @@ import java.text.DecimalFormat
 class TriggerDelta(injector: HasAndroidInjector) : Trigger(injector) {
 
     var units: GlucoseUnit = GlucoseUnit.MGDL
-    var delta: InputDelta = InputDelta(resourceHelper)
-    var comparator: Comparator = Comparator(resourceHelper)
+    var delta: InputDelta = InputDelta(rh)
+    var comparator: Comparator = Comparator(rh)
 
     companion object {
 
@@ -32,8 +32,8 @@ class TriggerDelta(injector: HasAndroidInjector) : Trigger(injector) {
 
     init {
         units = profileFunction.getUnits()
-        delta = if (units == GlucoseUnit.MMOL) InputDelta(resourceHelper, 0.0, (-MMOL_MAX), MMOL_MAX, 0.1, DecimalFormat("0.1"), DeltaType.DELTA)
-        else InputDelta(resourceHelper, 0.0, (-MGDL_MAX), MGDL_MAX, 1.0, DecimalFormat("1"), DeltaType.DELTA)
+        delta = if (units == GlucoseUnit.MMOL) InputDelta(rh, 0.0, (-MMOL_MAX), MMOL_MAX, 0.1, DecimalFormat("0.1"), DeltaType.DELTA)
+        else InputDelta(rh, 0.0, (-MGDL_MAX), MGDL_MAX, 1.0, DecimalFormat("1"), DeltaType.DELTA)
     }
 
     constructor(injector: HasAndroidInjector, inputDelta: InputDelta, units: GlucoseUnit, comparator: Comparator.Compare) : this(injector) {
@@ -44,8 +44,8 @@ class TriggerDelta(injector: HasAndroidInjector) : Trigger(injector) {
 
     private constructor(injector: HasAndroidInjector, triggerDelta: TriggerDelta) : this(injector) {
         units = triggerDelta.units
-        delta = InputDelta(resourceHelper, triggerDelta.delta)
-        comparator = Comparator(resourceHelper, triggerDelta.comparator.value)
+        delta = InputDelta(rh, triggerDelta.delta)
+        comparator = Comparator(rh, triggerDelta.comparator.value)
     }
 
     fun units(units: GlucoseUnit): TriggerDelta {
@@ -99,8 +99,8 @@ class TriggerDelta(injector: HasAndroidInjector) : Trigger(injector) {
         val type = DeltaType.valueOf(JsonHelper.safeGetString(d, "deltaType", ""))
         val value = JsonHelper.safeGetDouble(d, "value")
         delta =
-            if (units == GlucoseUnit.MMOL) InputDelta(resourceHelper, value, (-MMOL_MAX), MMOL_MAX, 0.1, DecimalFormat("0.1"), type)
-            else InputDelta(resourceHelper, value, (-MGDL_MAX), MGDL_MAX, 1.0, DecimalFormat("1"), type)
+            if (units == GlucoseUnit.MMOL) InputDelta(rh, value, (-MMOL_MAX), MMOL_MAX, 0.1, DecimalFormat("0.1"), type)
+            else InputDelta(rh, value, (-MGDL_MAX), MGDL_MAX, 1.0, DecimalFormat("1"), type)
         comparator.setValue(Comparator.Compare.valueOf(JsonHelper.safeGetString(d, "comparator")!!))
         return this
     }
@@ -108,7 +108,7 @@ class TriggerDelta(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyName(): Int = R.string.deltalabel
 
     override fun friendlyDescription(): String =
-        resourceHelper.gs(R.string.deltacompared, resourceHelper.gs(comparator.value.stringRes), delta.value, resourceHelper.gs(delta.deltaType.stringRes))
+        rh.gs(R.string.deltacompared, rh.gs(comparator.value.stringRes), delta.value, rh.gs(delta.deltaType.stringRes))
 
     override fun icon(): Optional<Int?> = Optional.of(R.drawable.ic_auto_delta)
 
@@ -116,9 +116,9 @@ class TriggerDelta(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(resourceHelper, R.string.deltalabel, this))
+            .add(StaticLabel(rh, R.string.deltalabel, this))
             .add(comparator)
-            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.deltalabel_u, units) + ": ", "", delta))
+            .add(LabelWithElement(rh, rh.gs(R.string.deltalabel_u, units) + ": ", "", delta))
             .build(root)
     }
 }

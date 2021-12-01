@@ -26,6 +26,7 @@ interface SP {
     fun getInt(key: String, defaultValue: Int): Int
     fun getLong(@StringRes resourceID: Int, defaultValue: Long): Long
     fun getLong(key: String, defaultValue: Long): Long
+    fun incLong(@StringRes resourceID: Int)
     fun putBoolean(key: String, value: Boolean)
     fun putBoolean(@StringRes resourceID: Int, value: Boolean)
     fun putDouble(key: String, value: Double)

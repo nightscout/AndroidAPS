@@ -12,7 +12,6 @@
     <string name="nav_resetdb">Resetta database</string>
     <string name="reset_db_confirm">Vuoi davvero resettare i database?</string>
     <string name="nav_exit">Esci</string>
-    <string name="ns_sync_use_absolute_title">Usa sempre valori basali assoluti</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Questo dispositivo non sembra supportare la whitelist dell\'ottimizzazione batteria: potrebbero verificarsi problemi di prestazioni.</string>
     <string name="description_actions">Alcuni tasti per accedere rapidamente alle funzioni comuni</string>
     <string name="description_config_builder">Usato per configurare i plugin attivi</string>
@@ -78,7 +77,6 @@
     <string name="overview">Panoramica</string>
     <string name="treatments">Trattamenti</string>
     <string name="virtualpump">Micro virtuale</string>
-    <string name="careportal">Portale</string>
     <string name="configbuilder_pump">Micro</string>
     <string name="configbuilder_pump_description">Quale microinfusore desideri usare con AndroidAPS?</string>
     <string name="configbuilder_profile">Profilo</string>
@@ -98,7 +96,7 @@
     <string name="safety">Sicurezza</string>
     <string name="openapsma_disabled">Il plugin è disabilitato</string>
     <string name="constraints_violation">Violazione dei vincoli</string>
-    <string name="treatmentdeliveryerror">Errore erogazione bolo</string>
+    <string name="treatmentdeliveryerror">Segnalato errore sul bolo. Controlla manualmente la reale quantità erogata</string>
     <string name="setbasalquestion">Accetta nuova basale temporanea:</string>
     <string name="overview_treatment_label">Trattamento</string>
     <string name="overview_calculator_label">Calcolatore</string>
@@ -257,7 +255,7 @@
     <string name="ongoingnotificaction">Notifica persistente</string>
     <string name="old_data">DATI VECCHI</string>
     <string name="sms_minago">%1$dmin fa</string>
-    <string name="localprofile">Profilo locale</string>
+    <string name="localprofile">Profilo</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Matrice di %1$d elementi.\nValore attuale:</string>
     <string name="openapsma_autosensdata_label">Dati autosens</string>
@@ -494,6 +492,7 @@
     <string name="dexcomg5_xdripupload_title">Invia dati BG a xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">In xDrip+ seleziona origine dati 640g/Eversense</string>
     <string name="nsclientbg">BG NSClient</string>
+    <string name="nsclientbgshort">BG NS</string>
     <string name="overview_editquickwizard_usebg">Calcolo BG</string>
     <string name="overview_editquickwizard_usebolusiob">Calcolo IOB da bolo</string>
     <string name="overview_editquickwizard_usebasaliob">Calcolo IOB da basale</string>
@@ -650,6 +649,8 @@
     <string name="time_elapsed">Tempo trascorso</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Ricevi valori glicemia da app Poctech</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Ricevi valori glicemia da app Glunovo</string>
     <string name="description_source_tomato">Ricevi valori glicemia da app Tomato (dispositivo MiaoMiao)</string>
     <string name="high_temptarget_raises_sensitivity_title">Temp-Target \"alto\" aumenta la sensibilità</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Aumenta la sensibilità per temp-target >= 100]]></string>
@@ -665,7 +666,6 @@
     <string name="error_adding_treatment_title">Dati trattamento incompleti</string>
     <string name="maintenance_settings">Impostazioni manutenzione</string>
     <string name="maintenance_email">Destinatario email</string>
-    <string name="maintenance_encrypt_exported_prefs">Crittografa impostazioni esportate</string>
     <string name="maintenance_amount">Numero di log da inviare</string>
     <string name="maintenance">Manutenzione</string>
     <string name="maintenance_shortname">MANUT</string>
@@ -679,6 +679,7 @@
     <string name="resettodefaults">Ripristina valori predefiniti</string>
     <string name="nsmalfunction">Malfunzionamento NSClient. Considera il riavvio di NS e NSClient.</string>
     <string name="time_offset">Offset</string>
+    <string name="bolus_reminder">Ricorda di fare il bolo</string>
     <string name="setupwizard_preferred_aps_mode">Modalità APS preferita</string>
     <string name="treatments_wizard_total_label">Totale</string>
     <string name="calculation_short">Calc</string>
@@ -717,11 +718,9 @@
     <string name="versionChecker">Controllo versione</string>
     <string name="old_version">versione datata</string>
     <string name="very_old_version">versione molto datata</string>
+    <string name="application_expired">Applicazione scaduta</string>
     <string name="new_version_warning">Nuova versione disponibile da almeno %1$d giorni! Ritorno a LGS dopo %2$d giorni, disattivazione del loop dopo %3$d giorni</string>
     <string name="twohours">2h</string>
-    <string name="dexcom_app_patched">Dexcom app (modificata)</string>
-    <string name="dexcom_short">DXCM</string>
-    <string name="description_source_dexcom">Ricevi valori glicemia dall\'app Dexcom modificata.</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="bolusconstraintappliedwarn">Vincolo bolo applicato: %1$.2f U a %2$.2f U</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Rilevato assorbimento lento dei carboidrati: %2$d%% del tempo. Ricontrolla il tuo calcolo. COB potrebbero essere sovrastimati e potrebbe essere somministrata più insulina !!!!!</font>]]></string>
@@ -750,7 +749,7 @@
     <string name="clone_label">Clona</string>
     <string name="saveorresetchangesfirst">Salva o resetta prima le modifiche correnti</string>
     <string name="deletecurrentprofile">Rimuovere il profilo corrente?</string>
-    <string name="copytolocalprofile">Creare un nuovo profilo locale da questo profilo?</string>
+    <string name="copytolocalprofile">Creare un nuovo profilo da questo profilo?</string>
     <string name="profilenamecontainsdot">Il nome profilo contiene dei punti.\nQuesto non è supportato da NS.\nIl profilo non viene caricato in NS.</string>
     <string name="low_mark_comment">Valore più basso per l\'intervallo di visualizzazione dell\'area \"in range\"</string>
     <string name="high_mark_comment">Valore più alto per l\'intervallo di visualizzazione dell\'area \"in range\"</string>
@@ -832,7 +831,7 @@
     <string name="dpvdefaultprofile">Profilo DPV predefinito</string>
     <string name="setupwizard_pump_riley_link_status">Stato RileyLink:</string>
     <string name="filter">Filtro</string>
-    <string name="copytolocalprofile_invalid">Impossibile creare il profilo locale. Il profilo non è valido.</string>
+    <string name="copytolocalprofile_invalid">Impossibile creare il profilo. Il profilo non è valido.</string>
     <string name="cta_dont_kill_my_app_info">Non terminare l\'app?</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Invia SMS se si verifica l\'evento \"micro irraggiungibile\"</string>
     <string name="smscommunicator_pump_ureachable">Segnala micro irraggiungibile</string>
@@ -844,6 +843,11 @@
     <string name="enablebolusadvisor_summary">Usa un promemoria per iniziare a mangiare invece del risultato del calcolatore durante la glicemia alta (\"pre-bolo\")</string>
     <string name="time_to_eat">Tempo di mangiare!\nEsegui il calcolatore e fai di nuovi i calcoli.</string>
     <string name="timetoeat">Tempo di mangiare</string>
+    <string name="bolusreminder">Promemoria bolo</string>
+    <string name="enablebolusreminder">Abilita promemoria bolo</string>
+    <string name="enablebolusreminder_summary">Usa promemoria bolo con calcolatore
+        (\"post-bolo\")</string>
+    <string name="time_to_bolus">Tempo di fare un bolo!\nEsegui il calcolatore e fai di nuovi i calcoli.</string>
     <string name="fabric_upload_disabled">Caricamento log dei crash disabilitato!</string>
     <string name="graph_menu_divider_header">Grafico</string>
     <string name="chart_menu">Menu grafico</string>
@@ -852,17 +856,17 @@
     <string name="cannula">Cannula</string>
     <string name="userentry">Inserimento utente</string>
     <string name="common_values">Usa i valori del cibo più abbondante che mangi di solito\n</string>
-    <string name="summary_email_for_crash_report">Questo indirizzo email verrà allegato ai rapporti sugli arresti anomali in modo che possiamo contattarti in casi urgenti. È opzionale.</string>
     <string name="email_address">Indirizzo email</string>
     <string name="privacy_settings">Impostazioni privacy</string>
     <string name="privacy_summary">Puoi fornire un indirizzo e-mail opzionale se desideri essere avvisato in caso di arresti anomali dell\'app. Questo non è un servizio automatizzato. Sarai contattato dagli sviluppatori in situazioni pericolose.</string>
     <string name="full_sync">Sincronizzazione completa</string>
+    <string name="full_sync_comment">Sincronizzazione completa? Potrebbe richiedere molte ore e fino alla fine del processo non vedrai nuovi dati in NS.</string>
     <string name="prime">Caricamento</string>
     <string name="ns_sync_options">Sincronizzazione</string>
     <string name="ns_upload_summary">Profili, boli, CHO, basali temporanee vengono caricati su NS</string>
     <string name="ns_upload">Carica dati su NS</string>
     <string name="ns_receive_profile_store">Ricevi \"store\" profilo</string>
-    <string name="ns_receive_profile_store_summary">Sincronizza i profili da NS al profilo locale</string>
+    <string name="ns_receive_profile_store_summary">Sincronizza i profili dall\'editor profilo di NS</string>
     <string name="ns_receive_temp_target">Ricevi target temporanei</string>
     <string name="ns_receive_temp_target_summary">Accetta target temporanei inseriti tramite NS o NSClient</string>
     <string name="ns_receive_profile_switch">Ricevi cambi profilo</string>
@@ -880,4 +884,17 @@
     <string name="sms_timeout_while_wating">Timeout nell\'attesa della fine della precedente comunicazione col micro.</string>
     <string name="smscommunicator_another_bolus_in_queue">C\'è un altro bolo in coda. Riprova più tardi.</string>
     <string name="calculation_in_progress">Calcolo in corso</string>
+    <string name="missing_profile_name">Nome profilo mancante</string>
+    <string name="error_in_ic_values">Errore nei valori IC</string>
+    <string name="error_in_basal_values">Errore nei valori della basale</string>
+    <string name="error_in_target_values">Errore nei valori del target</string>
+    <string name="error_in_isf_values">Errore nei valori ISF</string>
+    <string name="run_question">Eseguire %s?</string>
+    <string name="invalid_profile_not_accepted">Profilo %1$s non valido - non accettato da NS</string>
+    <string name="view">Vista</string>
+    <string name="errors">Errori</string>
+    <string name="ns_sync_slow">Rallenta caricamenti</string>
+    <string name="data_status">Stato dati BG</string>
+    <string name="recalculated_data_used">Dati ricalcolati usati</string>
+    <string name="bg_too_close">BG troppo vicino:\n%1$s\n%2$s</string>
 </resources>

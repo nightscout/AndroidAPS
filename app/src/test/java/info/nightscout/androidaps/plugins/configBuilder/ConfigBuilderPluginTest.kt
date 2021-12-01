@@ -6,7 +6,7 @@ import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Before
@@ -16,7 +16,7 @@ import org.mockito.Mock
 class ConfigBuilderPluginTest : TestBase() {
 
     @Mock lateinit var sp: SP
-    @Mock lateinit var resourceHelper: ResourceHelper
+    @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var uel: UserEntryLogger
     @Mock lateinit var pumpSync: PumpSync
@@ -32,6 +32,6 @@ class ConfigBuilderPluginTest : TestBase() {
 
     @Before
     fun prepareMock() {
-        configBuilderPlugin = ConfigBuilderPlugin(injector, aapsLogger, resourceHelper, sp, RxBusWrapper(aapsSchedulers), activePlugin, uel, pumpSync)
+        configBuilderPlugin = ConfigBuilderPlugin(injector, aapsLogger, rh, sp, RxBus(aapsSchedulers, aapsLogger), activePlugin, uel, pumpSync)
     }
 }

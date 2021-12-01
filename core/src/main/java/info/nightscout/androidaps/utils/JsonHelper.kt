@@ -150,4 +150,15 @@ object JsonHelper {
         }
         return result
     }
+
+    fun safeGetBooleanAllowNull(json: JSONObject?, fieldName: String, defaultValue: Boolean? = null): Boolean? {
+        var result = defaultValue
+        if (json != null && json.has(fieldName)) {
+            try {
+                result = json.getBoolean(fieldName)
+            } catch (ignored: JSONException) {
+            }
+        }
+        return result
+    }
 }

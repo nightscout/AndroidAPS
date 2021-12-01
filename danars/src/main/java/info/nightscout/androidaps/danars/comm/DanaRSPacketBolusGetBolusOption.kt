@@ -3,7 +3,7 @@ package info.nightscout.androidaps.danars.comm
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.R
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
@@ -16,8 +16,8 @@ class DanaRSPacketBolusGetBolusOption(
     injector: HasAndroidInjector
 ) : DanaRSPacket(injector) {
 
-    @Inject lateinit var rxBus: RxBusWrapper
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var danaPump: DanaPump
 
     init {
@@ -84,7 +84,7 @@ class DanaRSPacketBolusGetBolusOption(
         dataSize = 1
         val missedBolus04EndMin = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         if (!danaPump.isExtendedBolusEnabled) {
-            val notification = Notification(Notification.EXTENDED_BOLUS_DISABLED, resourceHelper.gs(R.string.danar_enableextendedbolus), Notification.URGENT)
+            val notification = Notification(Notification.EXTENDED_BOLUS_DISABLED, rh.gs(R.string.danar_enableextendedbolus), Notification.URGENT)
             rxBus.send(EventNewNotification(notification))
             failed = true
         } else {

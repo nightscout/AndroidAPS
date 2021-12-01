@@ -19,7 +19,7 @@ class MaintenancePluginTest : TestBase() {
 
     @Mock lateinit var injector: HasAndroidInjector
     @Mock lateinit var context: Context
-    @Mock lateinit var resourceHelper: ResourceHelper
+    @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var sp: SP
     @Mock lateinit var nsSettingsStatus: NSSettingsStatus
     @Mock lateinit var buildHelper: BuildHelper
@@ -30,7 +30,7 @@ class MaintenancePluginTest : TestBase() {
 
     @Before
     fun mock() {
-        sut = MaintenancePlugin(injector, context, resourceHelper, sp, nsSettingsStatus, aapsLogger, buildHelper, ConfigImpl(), fileListProvider, loggerUtils)
+        sut = MaintenancePlugin(injector, context, rh, sp, nsSettingsStatus, aapsLogger, buildHelper, ConfigImpl(), fileListProvider, loggerUtils)
         `when`(loggerUtils.suffix).thenReturn(".log.zip")
         `when`(loggerUtils.logDirectory).thenReturn("src/test/res/logger")
         `when`(fileListProvider.ensureTempDirExists()).thenReturn(File("src/test/res/logger"))

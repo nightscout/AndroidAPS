@@ -10,19 +10,17 @@ import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithE
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.JsonHelper
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.json.JSONObject
 import javax.inject.Inject
 
 class ActionSendSMS(injector: HasAndroidInjector) : Action(injector) {
 
-    @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var smsCommunicatorPlugin: SmsCommunicator
 
     var text = InputString()
 
     override fun friendlyName(): Int = R.string.sendsmsactiondescription
-    override fun shortDescription(): String = resourceHelper.gs(R.string.sendsmsactionlabel, text.value)
+    override fun shortDescription(): String = rh.gs(R.string.sendsmsactionlabel, text.value)
     override fun icon(): Int = R.drawable.ic_notifications
 
     override fun doAction(callback: Callback) {
@@ -50,7 +48,7 @@ class ActionSendSMS(injector: HasAndroidInjector) : Action(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.sendsmsactiontext), "", text))
+            .add(LabelWithElement(rh, rh.gs(R.string.sendsmsactiontext), "", text))
             .build(root)
     }
 }

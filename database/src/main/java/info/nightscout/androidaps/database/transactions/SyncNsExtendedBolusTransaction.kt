@@ -7,7 +7,8 @@ import kotlin.math.abs
 /**
  * Sync the Extended bolus from NS
  */
-class SyncNsExtendedBolusTransaction(private val extendedBolus: ExtendedBolus, private val invalidateByNsOnly: Boolean) : Transaction<SyncNsExtendedBolusTransaction.TransactionResult>() {
+class SyncNsExtendedBolusTransaction(private val extendedBolus: ExtendedBolus) :
+    Transaction<SyncNsExtendedBolusTransaction.TransactionResult>() {
 
     override fun run(): TransactionResult {
         val result = TransactionResult()
@@ -26,10 +27,14 @@ class SyncNsExtendedBolusTransaction(private val extendedBolus: ExtendedBolus, p
                     database.extendedBolusDao.updateExistingEntry(current)
                     result.invalidated.add(current)
                 }
+                if (current.duration != extendedBolus.duration) {
+                    current.duration = extendedBolus.duration
+                    current.amount = extendedBolus.amount
+                    database.extendedBolusDao.updateExistingEntry(current)
+                    result.updatedDuration.add(current)
+                }
                 return result
             }
-
-            if (invalidateByNsOnly) return result
 
             // not known nsId
             val running = database.extendedBolusDao.getExtendedBolusActiveAt(extendedBolus.timestamp).blockingGet()
@@ -40,6 +45,8 @@ class SyncNsExtendedBolusTransaction(private val extendedBolus: ExtendedBolus, p
                 result.updatedNsId.add(running)
             } else if (running != null) {
                 // another running record. end current and insert new
+                val pctRun = (extendedBolus.timestamp - running.timestamp) / running.duration.toDouble()
+                running.amount *= pctRun
                 running.end = extendedBolus.timestamp
                 database.extendedBolusDao.updateExistingEntry(running)
                 database.extendedBolusDao.insertNewEntry(extendedBolus)
@@ -55,6 +62,8 @@ class SyncNsExtendedBolusTransaction(private val extendedBolus: ExtendedBolus, p
             // ending event
             val running = database.extendedBolusDao.getExtendedBolusActiveAt(extendedBolus.timestamp).blockingGet()
             if (running != null) {
+                val pctRun = (extendedBolus.timestamp - running.timestamp) / running.duration.toDouble()
+                running.amount *= pctRun
                 running.end = extendedBolus.timestamp
                 database.extendedBolusDao.updateExistingEntry(running)
                 result.ended.add(running)
@@ -66,6 +75,7 @@ class SyncNsExtendedBolusTransaction(private val extendedBolus: ExtendedBolus, p
     class TransactionResult {
 
         val updatedNsId = mutableListOf<ExtendedBolus>()
+        val updatedDuration = mutableListOf<ExtendedBolus>()
         val inserted = mutableListOf<ExtendedBolus>()
         val invalidated = mutableListOf<ExtendedBolus>()
         val ended = mutableListOf<ExtendedBolus>()

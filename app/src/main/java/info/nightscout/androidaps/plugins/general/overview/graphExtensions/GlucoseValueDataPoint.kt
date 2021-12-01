@@ -15,28 +15,20 @@ class GlucoseValueDataPoint @Inject constructor(
     val data: GlucoseValue,
     private val defaultValueHelper: DefaultValueHelper,
     private val profileFunction: ProfileFunction,
-    private val resourceHelper: ResourceHelper
+    private val rh: ResourceHelper
 ) : DataPointWithLabelInterface {
 
     fun valueToUnits(units: GlucoseUnit): Double =
         if (units == GlucoseUnit.MGDL) data.value else data.value * Constants.MGDL_TO_MMOLL
 
-    override fun getX(): Double {
-        return data.timestamp.toDouble()
-    }
-
-    override fun getY(): Double {
-        return valueToUnits(profileFunction.getUnits())
-    }
+    override fun getX(): Double = data.timestamp.toDouble()
+    override fun getY(): Double = valueToUnits(profileFunction.getUnits())
 
     override fun setY(y: Double) {}
-    override fun getLabel(): String? = null
-    override fun getDuration(): Long = 0
-    override fun getShape(): PointsWithLabelGraphSeries.Shape =
-        if (isPrediction) PointsWithLabelGraphSeries.Shape.PREDICTION
-        else PointsWithLabelGraphSeries.Shape.BG
-
-    override fun getSize(): Float = 1f
+    override val label: String? = null
+    override val duration = 0L
+    override val shape get() = if (isPrediction) PointsWithLabelGraphSeries.Shape.PREDICTION else PointsWithLabelGraphSeries.Shape.BG
+    override val size = 1f
 
     override fun getColor(context: Context): Int {
         val units = profileFunction.getUnits()

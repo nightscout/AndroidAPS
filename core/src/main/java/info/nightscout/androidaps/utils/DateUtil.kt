@@ -138,10 +138,10 @@ class DateUtil @Inject constructor(private val context: Context) {
         return if (mills == 0L) "" else dateString(mills) + " " + timeStringWithSeconds(mills)
     }
 
-    fun minAgo(resourceHelper: ResourceHelper, time: Long?): String {
+    fun minAgo(rh: ResourceHelper, time: Long?): String {
         if (time == null) return ""
         val mins = ((now() - time) / 1000 / 60).toInt()
-        return resourceHelper.gs(R.string.minago, mins)
+        return rh.gs(R.string.minago, mins)
     }
 
     fun minAgoShort(time: Long?): String {
@@ -150,9 +150,9 @@ class DateUtil @Inject constructor(private val context: Context) {
         return (if (mins > 0) "+" else "") + mins
     }
 
-    fun hourAgo(time: Long, resourceHelper: ResourceHelper): String {
+    fun hourAgo(time: Long, rh: ResourceHelper): String {
         val hours = (now() - time) / 1000.0 / 60 / 60
-        return resourceHelper.gs(R.string.hoursago, hours)
+        return rh.gs(R.string.hoursago, hours)
     }
 
     fun timeStringFromSeconds(seconds: Int): String {
@@ -163,19 +163,19 @@ class DateUtil @Inject constructor(private val context: Context) {
         return t
     }
 
-    fun timeFrameString(timeInMillis: Long, resourceHelper: ResourceHelper): String {
+    fun timeFrameString(timeInMillis: Long, rh: ResourceHelper): String {
         var remainingTimeMinutes = timeInMillis / (1000 * 60)
         val remainingTimeHours = remainingTimeMinutes / 60
         remainingTimeMinutes %= 60
-        return "(" + (if (remainingTimeHours > 0) remainingTimeHours.toString() + resourceHelper.gs(R.string.shorthour) + " " else "") + remainingTimeMinutes + "')"
+        return "(" + (if (remainingTimeHours > 0) remainingTimeHours.toString() + rh.gs(R.string.shorthour) + " " else "") + remainingTimeMinutes + "')"
     }
 
-    fun sinceString(timestamp: Long, resourceHelper: ResourceHelper): String {
-        return timeFrameString(System.currentTimeMillis() - timestamp, resourceHelper)
+    fun sinceString(timestamp: Long, rh: ResourceHelper): String {
+        return timeFrameString(System.currentTimeMillis() - timestamp, rh)
     }
 
-    fun untilString(timestamp: Long, resourceHelper: ResourceHelper): String {
-        return timeFrameString(timestamp - System.currentTimeMillis(), resourceHelper)
+    fun untilString(timestamp: Long, rh: ResourceHelper): String {
+        return timeFrameString(timestamp - System.currentTimeMillis(), rh)
     }
 
     fun now(): Long {
@@ -221,15 +221,15 @@ class DateUtil @Inject constructor(private val context: Context) {
         return result
     }
 
-    fun age(milliseconds: Long, useShortText: Boolean, resourceHelper: ResourceHelper): String {
+    fun age(milliseconds: Long, useShortText: Boolean, rh: ResourceHelper): String {
         val diff = computeDiff(0L, milliseconds)
-        var days = " " + resourceHelper.gs(R.string.days) + " "
-        var hours = " " + resourceHelper.gs(R.string.hours) + " "
-        var minutes = " " + resourceHelper.gs(R.string.unit_minutes) + " "
+        var days = " " + rh.gs(R.string.days) + " "
+        var hours = " " + rh.gs(R.string.hours) + " "
+        var minutes = " " + rh.gs(R.string.unit_minutes) + " "
         if (useShortText) {
-            days = resourceHelper.gs(R.string.shortday)
-            hours = resourceHelper.gs(R.string.shorthour)
-            minutes = resourceHelper.gs(R.string.shortminute)
+            days = rh.gs(R.string.shortday)
+            hours = rh.gs(R.string.shorthour)
+            minutes = rh.gs(R.string.shortminute)
         }
         var result = ""
         if (diff[TimeUnit.DAYS]!! > 0) result += diff[TimeUnit.DAYS].toString() + days
@@ -238,27 +238,27 @@ class DateUtil @Inject constructor(private val context: Context) {
         return result
     }
 
-    fun niceTimeScalar(time: Long, resourceHelper: ResourceHelper): String {
+    fun niceTimeScalar(time: Long, rh: ResourceHelper): String {
         var t = time
-        var unit = resourceHelper.gs(R.string.unit_second)
+        var unit = rh.gs(R.string.unit_second)
         t /= 1000
-        if (t != 1L) unit = resourceHelper.gs(R.string.unit_seconds)
+        if (t != 1L) unit = rh.gs(R.string.unit_seconds)
         if (t > 59) {
-            unit = resourceHelper.gs(R.string.unit_minute)
+            unit = rh.gs(R.string.unit_minute)
             t /= 60
-            if (t != 1L) unit = resourceHelper.gs(R.string.unit_minutes)
+            if (t != 1L) unit = rh.gs(R.string.unit_minutes)
             if (t > 59) {
-                unit = resourceHelper.gs(R.string.unit_hour)
+                unit = rh.gs(R.string.unit_hour)
                 t /= 60
-                if (t != 1L) unit = resourceHelper.gs(R.string.unit_hours)
+                if (t != 1L) unit = rh.gs(R.string.unit_hours)
                 if (t > 24) {
-                    unit = resourceHelper.gs(R.string.unit_day)
+                    unit = rh.gs(R.string.unit_day)
                     t /= 24
-                    if (t != 1L) unit = resourceHelper.gs(R.string.unit_days)
+                    if (t != 1L) unit = rh.gs(R.string.unit_days)
                     if (t > 28) {
-                        unit = resourceHelper.gs(R.string.unit_week)
+                        unit = rh.gs(R.string.unit_week)
                         t /= 7
-                        if (t != 1L) unit = resourceHelper.gs(R.string.unit_weeks)
+                        if (t != 1L) unit = rh.gs(R.string.unit_weeks)
                     }
                 }
             }

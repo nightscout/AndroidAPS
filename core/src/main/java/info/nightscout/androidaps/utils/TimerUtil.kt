@@ -11,7 +11,7 @@ import javax.inject.Singleton
 @Singleton
 class TimerUtil @Inject constructor(
     private val context: Context,
-    private val resourceHelper: ResourceHelper,
+    private val rh: ResourceHelper,
     private val dateUtil: DateUtil
 ) {
 
@@ -21,7 +21,7 @@ class TimerUtil @Inject constructor(
             flags = flags or Intent.FLAG_ACTIVITY_NEW_TASK
             putExtra(AlarmClock.EXTRA_LENGTH, length)
             putExtra(AlarmClock.EXTRA_SKIP_UI, true)
-            putExtra(AlarmClock.EXTRA_MESSAGE, text ?: resourceHelper.gs(R.string.app_name))
+            putExtra(AlarmClock.EXTRA_MESSAGE, text ?: rh.gs(R.string.app_name))
             context.startActivity(this)
         }
     }

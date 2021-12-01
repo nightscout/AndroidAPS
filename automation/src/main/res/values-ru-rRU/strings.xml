@@ -38,6 +38,9 @@
     <string name="glucoseisnotavailable">ГК недоступна</string>
     <string name="glucosecomparedmgdl">Гк %1$s %2$.0f %3$s</string>
     <string name="glucosecomparedmmol">Гк %1$s %2$.1f %3$s</string>
+    <string name="notemptarget">Временная цель не существует</string>
+    <string name="temptargetcomparedmgdl">Временная цель %1$s %2$.0f %3$s</string>
+    <string name="temptargetcomparedmmol">Временная цель %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">Профиль %1$s%2$d</string>
     <string name="iobcompared">Акт инс IOB %1$s %2$.1f</string>
     <string name="and">И</string>
@@ -86,6 +89,7 @@
     <string name="latitude_short">Широта:</string>
     <string name="longitude_short">Долгота:</string>
     <string name="glucose_u">Гк %1$s]:</string>
+    <string name="target_u">Цель %1$d м</string>
     <string name="lastboluslabel">Предыдущий болюс</string>
     <string name="lastboluscompared">Время болюса %1$s %2$s мин назад</string>
     <string name="triggercoblabel">Активн углеводы</string>
@@ -101,9 +105,11 @@
     <string name="edit_short">РЕДАКТ</string>
     <string name="please_choose_an_action_type">Выберите тип действия</string>
     <string name="please_choose_a_trigger_type">Выберите тип триггера</string>
+    <string name="please_choose_a_operation_type">Выберите тип действия</string>
     <string name="triggers">Триггеры:</string>
     <string name="remove_label">УДАЛИТЬ</string>
     <string name="preconditions">Предусловия:</string>
     <string name="automation_event">Автоматизированное событие</string>
     <string name="reorder_label">Повторный заказ</string>
+    <string name="user_action">Действия пользователя</string>
 </resources>

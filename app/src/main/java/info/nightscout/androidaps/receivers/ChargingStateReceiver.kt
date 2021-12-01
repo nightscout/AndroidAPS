@@ -8,12 +8,12 @@ import dagger.android.DaggerBroadcastReceiver
 import info.nightscout.androidaps.events.EventChargingState
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import javax.inject.Inject
 
 class ChargingStateReceiver : DaggerBroadcastReceiver() {
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var receiverStatusStore: ReceiverStatusStore
 
     override fun onReceive(context: Context, intent: Intent) {

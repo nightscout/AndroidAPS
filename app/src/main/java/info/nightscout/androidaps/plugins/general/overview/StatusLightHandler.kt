@@ -22,7 +22,7 @@ import javax.inject.Singleton
 
 @Singleton
 class StatusLightHandler @Inject constructor(
-    private val resourceHelper: ResourceHelper,
+    private val rh: ResourceHelper,
     private val sp: SP,
     private val dateUtil: DateUtil,
     private val activePlugin: ActivePlugin,
@@ -78,7 +78,7 @@ class StatusLightHandler @Inject constructor(
             warnColors.setColorByAge(view,  therapyEvent.value, warn, urgent, colorNormal, colorWarning, colorAlarm)
             view?.text =  therapyEvent.value.age(resourceHelper.shortTextMode(), resourceHelper, dateUtil)
         } else {
-            view?.text = if (resourceHelper.shortTextMode()) "-" else resourceHelper.gs(R.string.notavailable)
+            view?.text = if (rh.shortTextMode()) "-" else rh.gs(R.string.notavailable)
         }
     }
 
@@ -107,7 +107,7 @@ class StatusLightHandler @Inject constructor(
         if (useRileyLinkBatteryLevel) {
             handleLevel(view, criticalSetting, criticalDefaultValue, warnSetting, warnDefaultValue, level, units , colorNormal, colorWarning, colorAlarm)
         } else {
-            view?.text = resourceHelper.gs(R.string.notavailable)
+            view?.text = rh.gs(R.string.notavailable)
             view?.setTextColor(colorNormal)
         }
     }

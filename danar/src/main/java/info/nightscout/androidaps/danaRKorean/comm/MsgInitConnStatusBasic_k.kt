@@ -32,13 +32,13 @@ class MsgInitConnStatusBasic_k(
         aapsLogger.debug(LTag.PUMPCOMM, "easyUIMode: $easyUIMode")
         aapsLogger.debug(LTag.PUMPCOMM, "Pump password: " + danaPump.password)
         if (danaPump.isEasyModeEnabled) {
-            val notification = Notification(Notification.EASY_MODE_ENABLED, resourceHelper.gs(R.string.danar_disableeasymode), Notification.URGENT)
+            val notification = Notification(Notification.EASY_MODE_ENABLED, rh.gs(R.string.danar_disableeasymode), Notification.URGENT)
             rxBus.send(EventNewNotification(notification))
         } else {
             rxBus.send(EventDismissNotification(Notification.EASY_MODE_ENABLED))
         }
         if (!danaPump.isPasswordOK) {
-            val notification = Notification(Notification.WRONG_PUMP_PASSWORD, resourceHelper.gs(R.string.wrongpumppassword), Notification.URGENT)
+            val notification = Notification(Notification.WRONG_PUMP_PASSWORD, rh.gs(R.string.wrongpumppassword), Notification.URGENT)
             rxBus.send(EventNewNotification(notification))
         } else {
             rxBus.send(EventDismissNotification(Notification.WRONG_PUMP_PASSWORD))

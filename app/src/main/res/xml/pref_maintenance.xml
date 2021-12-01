@@ -26,11 +26,6 @@
             validate:minNumber="1"
             validate:testType="numericRange"/>
 
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="@string/key_maintenance_encrypt_exported_prefs"
-            android:title="@string/maintenance_encrypt_exported_prefs" />
-
     </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>

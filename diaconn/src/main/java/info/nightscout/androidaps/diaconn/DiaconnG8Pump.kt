@@ -21,7 +21,6 @@ class DiaconnG8Pump @Inject constructor(
     private val dateUtil: DateUtil
 ) {
 
-
     var maxBolusePerDay: Double = 0.0
     var pumpIncarnationNum: Int = 65536
     var isPumpVersionGe2_63: Boolean = false // is pumpVersion higher then 2.63
@@ -37,6 +36,7 @@ class DiaconnG8Pump @Inject constructor(
     var injectionBlockGrade: Int = 0
     var lastConnection: Long = 0
     var lastSettingsRead: Long = 0
+    var mealLimitTime: Int = 0
 
     // time
     private var pumpTime: Long = 0
@@ -259,9 +259,9 @@ class DiaconnG8Pump @Inject constructor(
     // 7. Tempbasal status
     var tbStatus = 0 // 임시기저 상태 (1 : running, 2:not  running )
     var tbTime = 0 // 임시기저 시간
-    var tbInjectRateRatio = 0 // 임시기저 주입량/률  1000(0.00U)~1600(6.00U), 50000(0%)~50200(200%), 50000이상이면 주입률로 판정
+    var tbInjectRateRatio = 0 // 임시기저 주입량/률  1000(0.00U)~1600(6.00U), 50000(0%)~50250(250%), 50000이상이면 주입률로 판정
     var tbElapsedTime = 0 // 임시기저 경과 시간(0~1425분)
-    var tbInjectAbsoluteValue = 0.0 // 임시기저 주입량/률  1000(0.00U)~1600(6.00U)
+    var tbInjectAbsoluteValue = 0.0 // 임시기저 주입량/률  1000(0.00U)~2500(15.00U)
 
     // 8. Basal status
     var baseStatus = 0 // 주입상태

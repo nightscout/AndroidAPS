@@ -11,7 +11,6 @@
     <string name="nav_resetdb">Redefinir banco de dados</string>
     <string name="reset_db_confirm">Você realmente quer redefinir os bancos de dados?</string>
     <string name="nav_exit">Sair</string>
-    <string name="ns_sync_use_absolute_title">Sempre usar valores absolutos basais</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Este dispositivo não parece suportar a optimização de bateria na lista de permissões - pode ter problemas de desempenho.</string>
     <string name="description_actions">Alguns botões para acessar rapidamente a funções comuns</string>
     <string name="description_config_builder">Usado para configurar os plugins ativos</string>
@@ -75,7 +74,6 @@
     <string name="overview">Visão geral</string>
     <string name="treatments">Tratamentos</string>
     <string name="virtualpump">Bomba virtual</string>
-    <string name="careportal">Careportal</string>
     <string name="configbuilder_pump">Bomba</string>
     <string name="configbuilder_pump_description">Qual a bomba que gostaria de usar com AndroidAPS?</string>
     <string name="configbuilder_profile">Perfil</string>
@@ -95,7 +93,6 @@
     <string name="safety">Segurança</string>
     <string name="openapsma_disabled">Plugin está desativado</string>
     <string name="constraints_violation">Violação das restrições</string>
-    <string name="treatmentdeliveryerror">Erro na entrega do bolus</string>
     <string name="setbasalquestion">Aceitar nova basal temporária:</string>
     <string name="overview_treatment_label">Tratamento</string>
     <string name="overview_calculator_label">Calculadora</string>
@@ -232,7 +229,6 @@
     <string name="ongoingnotificaction">Notificação em curso</string>
     <string name="old_data">DADOS ANTIGOS</string>
     <string name="sms_minago">%1$dmin atrás</string>
-    <string name="localprofile">Perfil local</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Array de %1$d elementos.\nValor atual:</string>
     <string name="openapsma_autosensdata_label">Dados Autosens</string>
@@ -581,7 +577,6 @@
     <string name="error_adding_treatment_title">Dados tratamento incompletos</string>
     <string name="maintenance_settings">Configurações de manutenção</string>
     <string name="maintenance_email">Email destinatário</string>
-    <string name="maintenance_encrypt_exported_prefs">Encriptar configurações exportadas</string>
     <string name="maintenance_amount">Nr. de registos a enviar</string>
     <string name="maintenance">Manutenção</string>
     <string name="maintenance_shortname">MANU</string>
@@ -634,9 +629,6 @@
     <string name="very_old_version">versão muito antiga</string>
     <string name="new_version_warning">Nova versão para pelo menos %1$d dias disponíveis! Retorno a LGS após %2$d dias, o loop será desativado após %3$d dias</string>
     <string name="twohours">2h</string>
-    <string name="dexcom_app_patched">App Dexcom (com patch)</string>
-    <string name="dexcom_short">DXCM</string>
-    <string name="description_source_dexcom">Receber valores da Glicemia da app Dexcom (com patch).</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Absorção lenta de hidratos detectada: %2$d%% do tempo. Verifique o seu cálculo. COB pode estar sobreestimado, assim mais insulina pode ser dada !!!</font>]]></string>
     <string name="partialboluswizard">Entregue esta parte do resultado do assistente de bólus [%]</string>
     <string name="deliverpartofboluswizard">Assistente de bólus executa o cálculo, mas apenas esta parte da insulina calculada é entregue. Útil com o algoritmo SMB.</string>

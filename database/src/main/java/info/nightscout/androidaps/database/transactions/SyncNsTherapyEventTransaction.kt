@@ -5,7 +5,8 @@ import info.nightscout.androidaps.database.entities.TherapyEvent
 /**
  * Sync the TherapyEvents from NS
  */
-class SyncNsTherapyEventTransaction(private val therapyEvent: TherapyEvent, private val invalidateByNsOnly: Boolean) : Transaction<SyncNsTherapyEventTransaction.TransactionResult>() {
+class SyncNsTherapyEventTransaction(private val therapyEvent: TherapyEvent) :
+    Transaction<SyncNsTherapyEventTransaction.TransactionResult>() {
 
     override fun run(): TransactionResult {
         val result = TransactionResult()
@@ -22,10 +23,13 @@ class SyncNsTherapyEventTransaction(private val therapyEvent: TherapyEvent, priv
                 database.therapyEventDao.updateExistingEntry(current)
                 result.invalidated.add(current)
             }
+            if (current.duration != therapyEvent.duration) {
+                current.duration = therapyEvent.duration
+                database.therapyEventDao.updateExistingEntry(current)
+                result.updatedDuration.add(current)
+            }
             return result
         }
-
-        if (invalidateByNsOnly) return result
 
         // not known nsId
         val existing = database.therapyEventDao.findByTimestamp(therapyEvent.type, therapyEvent.timestamp)
@@ -46,6 +50,7 @@ class SyncNsTherapyEventTransaction(private val therapyEvent: TherapyEvent, priv
     class TransactionResult {
 
         val updatedNsId = mutableListOf<TherapyEvent>()
+        val updatedDuration = mutableListOf<TherapyEvent>()
         val inserted = mutableListOf<TherapyEvent>()
         val invalidated = mutableListOf<TherapyEvent>()
     }

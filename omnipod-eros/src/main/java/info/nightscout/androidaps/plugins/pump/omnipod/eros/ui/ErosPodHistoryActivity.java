@@ -23,7 +23,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
-import info.nightscout.androidaps.db.OmnipodHistoryRecord;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.ErosHistory;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.database.ErosHistoryRecordEntity;
 import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
@@ -40,7 +41,8 @@ public class ErosPodHistoryActivity extends NoSplashAppCompatActivity {
 
     @Inject AAPSLogger aapsLogger;
     @Inject AapsOmnipodUtil aapsOmnipodUtil;
-    @Inject ResourceHelper resourceHelper;
+    @Inject ResourceHelper rh;
+    @Inject ErosHistory erosHistory;
 
     private Spinner historyTypeSpinner;
     private TextView statusView;
@@ -48,8 +50,8 @@ public class ErosPodHistoryActivity extends NoSplashAppCompatActivity {
     private LinearLayoutManager linearLayoutManager;
 
     private static PumpHistoryEntryGroup selectedGroup = PumpHistoryEntryGroup.All;
-    private final List<OmnipodHistoryRecord> fullHistoryList = new ArrayList<>();
-    private final List<OmnipodHistoryRecord> filteredHistoryList = new ArrayList<>();
+    private final List<ErosHistoryRecordEntity> fullHistoryList = new ArrayList<>();
+    private final List<ErosHistoryRecordEntity> filteredHistoryList = new ArrayList<>();
 
     private RecyclerViewAdapter recyclerViewAdapter;
     private boolean manualChange = false;
@@ -66,9 +68,7 @@ public class ErosPodHistoryActivity extends NoSplashAppCompatActivity {
         GregorianCalendar gc = new GregorianCalendar();
         gc.add(Calendar.HOUR_OF_DAY, -24);
 
-//        databaseHelper.getAllOmnipodHistoryRecordsFromTimestamp(gc.getTimeInMillis(), false);
-//        fullHistoryList.addAll(databaseHelper.getAllOmnipodHistoryRecordsFromTimestamp(gc.getTimeInMillis(), true));
-        throw new IllegalStateException("Not implemented");
+        fullHistoryList.addAll(erosHistory.getAllErosHistoryRecordsFromTimestamp(gc.getTimeInMillis()));
     }
 
 
@@ -81,7 +81,7 @@ public class ErosPodHistoryActivity extends NoSplashAppCompatActivity {
         if (group == PumpHistoryEntryGroup.All) {
             this.filteredHistoryList.addAll(fullHistoryList);
         } else {
-            for (OmnipodHistoryRecord pumpHistoryEntry : fullHistoryList) {
+            for (ErosHistoryRecordEntity pumpHistoryEntry : fullHistoryList) {
                 if (PodHistoryEntryType.getByCode(pumpHistoryEntry.getPodEntryTypeCode()).getGroup() == group) {
                     this.filteredHistoryList.add(pumpHistoryEntry);
                 }
@@ -146,7 +146,7 @@ public class ErosPodHistoryActivity extends NoSplashAppCompatActivity {
 
         statusView.setVisibility(View.GONE);
 
-        typeListFull = getTypeList(PumpHistoryEntryGroup.Companion.getTranslatedList(resourceHelper));
+        typeListFull = getTypeList(PumpHistoryEntryGroup.Companion.getTranslatedList(rh));
 
         ArrayAdapter<TypeList> spinnerAdapter = new ArrayAdapter<>(this, R.layout.spinner_centered, typeListFull);
         historyTypeSpinner.setAdapter(spinnerAdapter);
@@ -204,14 +204,14 @@ public class ErosPodHistoryActivity extends NoSplashAppCompatActivity {
 
     public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.HistoryViewHolder> {
 
-        List<OmnipodHistoryRecord> historyList;
+        List<ErosHistoryRecordEntity> historyList;
 
-        RecyclerViewAdapter(List<OmnipodHistoryRecord> historyList) {
+        RecyclerViewAdapter(List<ErosHistoryRecordEntity> historyList) {
             this.historyList = historyList;
         }
 
 
-        void setHistoryList(List<OmnipodHistoryRecord> historyList) {
+        void setHistoryList(List<ErosHistoryRecordEntity> historyList) {
             this.historyList = historyList;
             Collections.sort(this.historyList);
         }
@@ -228,7 +228,7 @@ public class ErosPodHistoryActivity extends NoSplashAppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull HistoryViewHolder holder, int position) {
-            OmnipodHistoryRecord record = historyList.get(position);
+            ErosHistoryRecordEntity record = historyList.get(position);
 
             if (record != null) {
                 holder.timeView.setText(record.getDateTimeString());
@@ -238,7 +238,7 @@ public class ErosPodHistoryActivity extends NoSplashAppCompatActivity {
         }
 
 
-        private void setValue(OmnipodHistoryRecord historyEntry, TextView valueView) {
+        private void setValue(ErosHistoryRecordEntity historyEntry, TextView valueView) {
             //valueView.setText("");
 
             if (historyEntry.isSuccess()) {
@@ -248,7 +248,7 @@ public class ErosPodHistoryActivity extends NoSplashAppCompatActivity {
                     case SET_TEMPORARY_BASAL:
                     case SPLIT_TEMPORARY_BASAL: {
                         TempBasalPair tempBasalPair = aapsOmnipodUtil.getGsonInstance().fromJson(historyEntry.getData(), TempBasalPair.class);
-                        valueView.setText(resourceHelper.gs(R.string.omnipod_eros_history_tbr_value, tempBasalPair.getInsulinRate(), tempBasalPair.getDurationMinutes()));
+                        valueView.setText(rh.gs(R.string.omnipod_eros_history_tbr_value, tempBasalPair.getInsulinRate(), tempBasalPair.getDurationMinutes()));
                     }
                     break;
 
@@ -263,9 +263,9 @@ public class ErosPodHistoryActivity extends NoSplashAppCompatActivity {
                     case SET_BOLUS: {
                         if (historyEntry.getData().contains(";")) {
                             String[] splitVal = historyEntry.getData().split(";");
-                            valueView.setText(resourceHelper.gs(R.string.omnipod_eros_history_bolus_value_with_carbs, Double.valueOf(splitVal[0]), Double.valueOf(splitVal[1])));
+                            valueView.setText(rh.gs(R.string.omnipod_eros_history_bolus_value_with_carbs, Double.valueOf(splitVal[0]), Double.valueOf(splitVal[1])));
                         } else {
-                            valueView.setText(resourceHelper.gs(R.string.omnipod_eros_history_bolus_value, Double.valueOf(historyEntry.getData())));
+                            valueView.setText(rh.gs(R.string.omnipod_eros_history_bolus_value, Double.valueOf(historyEntry.getData())));
                         }
                     }
                     break;

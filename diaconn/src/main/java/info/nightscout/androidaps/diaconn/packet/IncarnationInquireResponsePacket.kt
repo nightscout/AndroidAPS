@@ -16,7 +16,7 @@ open class IncarnationInquireResponsePacket(
 
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump
     @Inject lateinit var sp: SP
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
 
     var result = 0
     init {

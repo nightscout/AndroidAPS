@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.queue.commands
 
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.logging.LTag
@@ -29,5 +30,5 @@ class CommandReadStatus(
         callback?.result(result)?.run()
     }
 
-    override fun status(): String = "READSTATUS $reason"
+    override fun status(): String = rh.gs(R.string.read_status, reason)
 }

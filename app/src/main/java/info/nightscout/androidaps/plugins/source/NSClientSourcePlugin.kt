@@ -16,7 +16,7 @@ import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSgv
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
@@ -34,7 +34,7 @@ import javax.inject.Singleton
 @Singleton
 class NSClientSourcePlugin @Inject constructor(
     injector: HasAndroidInjector,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     aapsLogger: AAPSLogger,
     config: Config
 ) : PluginBase(PluginDescription()
@@ -42,8 +42,9 @@ class NSClientSourcePlugin @Inject constructor(
     .fragmentClass(BGSourceFragment::class.java.name)
     .pluginIcon(R.drawable.ic_nsclient_bg)
     .pluginName(R.string.nsclientbg)
+    .shortName(R.string.nsclientbgshort)
     .description(R.string.description_source_ns_client),
-    aapsLogger, resourceHelper, injector
+    aapsLogger, rh, injector
 ), BgSource {
 
     private var lastBGTimeStamp: Long = 0
@@ -86,11 +87,11 @@ class NSClientSourcePlugin @Inject constructor(
         @Inject lateinit var injector: HasAndroidInjector
         @Inject lateinit var aapsLogger: AAPSLogger
         @Inject lateinit var sp: SP
-        @Inject lateinit var rxBus: RxBusWrapper
+        @Inject lateinit var rxBus: RxBus
         @Inject lateinit var dateUtil: DateUtil
         @Inject lateinit var dataWorker: DataWorker
         @Inject lateinit var repository: AppRepository
-        @Inject lateinit var broadcastToXDrip: XDripBroadcast
+        @Inject lateinit var xDripBroadcast: XDripBroadcast
         @Inject lateinit var dexcomPlugin: DexcomPlugin
         @Inject lateinit var nsClientPlugin: NSClientPlugin
 
@@ -115,7 +116,7 @@ class NSClientSourcePlugin @Inject constructor(
         override fun doWork(): Result {
             var ret = Result.success()
 
-            if (!nsClientSourcePlugin.isEnabled() && !sp.getBoolean(R.string.key_ns_receive_cgm, true) && !dexcomPlugin.isEnabled()) return Result.success(workDataOf("Result" to "Sync not enabled"))
+            if (!nsClientSourcePlugin.isEnabled() && !sp.getBoolean(R.string.key_ns_receive_cgm, false)) return Result.success(workDataOf("Result" to "Sync not enabled"))
 
             val sgvs = dataWorker.pickupJSONArray(inputData.getLong(DataWorker.STORE_KEY, -1))
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))
@@ -147,12 +148,12 @@ class NSClientSourcePlugin @Inject constructor(
                     .blockingGet()
                     .also { result ->
                         result.updated.forEach {
-                            broadcastToXDrip(it)
+                            xDripBroadcast.send(it)
                             nsClientSourcePlugin.detectSource(it)
                             aapsLogger.debug(LTag.DATABASE, "Updated bg $it")
                         }
                         result.inserted.forEach {
-                            broadcastToXDrip(it)
+                            xDripBroadcast.send(it)
                             nsClientSourcePlugin.detectSource(it)
                             aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
                         }

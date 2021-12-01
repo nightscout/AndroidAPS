@@ -7,11 +7,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.Omnipod
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType.SET_BOLUS
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType.SET_TEMPORARY_BASAL
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.*
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.BolusRecord
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.HistoryRecord
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.InitialResult
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.ResolvedResult
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.TempBasalRecord
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.database.HistoryRecordDao
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.database.HistoryRecordEntity
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.mapper.HistoryMapper
@@ -40,19 +36,18 @@ class DashHistory @Inject constructor(
 
     fun getById(id: String): HistoryRecord {
         val entry = dao.byIdBlocking(id)
-        if (entry == null) {
-            throw java.lang.IllegalArgumentException("history entry [$id] not found")
-        }
+            ?: throw java.lang.IllegalArgumentException("history entry [$id] not found")
         return historyMapper.entityToDomain(entry)
     }
 
     @Suppress("ReturnCount")
     fun createRecord(
         commandType: OmnipodCommandType,
-        date: Long = System.currentTimeMillis(),
+        date: Long = currentTimeMillis(),
         initialResult: InitialResult = InitialResult.NOT_SENT,
         tempBasalRecord: TempBasalRecord? = null,
         bolusRecord: BolusRecord? = null,
+        basalProfileRecord: BasalValuesRecord? = null,
         resolveResult: ResolvedResult? = null,
         resolvedAt: Long? = null
     ): Single<String> = Single.defer {
@@ -72,6 +67,7 @@ class DashHistory @Inject constructor(
                         commandType = commandType,
                         tempBasalRecord = tempBasalRecord,
                         bolusRecord = bolusRecord,
+                        basalProfileRecord = basalProfileRecord,
                         initialResult = initialResult,
                         resolvedResult = resolveResult,
                         resolvedAt = resolvedAt
@@ -83,7 +79,8 @@ class DashHistory @Inject constructor(
     fun getRecords(): Single<List<HistoryRecord>> =
         dao.all().map { list -> list.map(historyMapper::entityToDomain) }
 
-    fun getRecordsAfter(time: Long): Single<List<HistoryRecordEntity>> = dao.allSince(time)
+    fun getRecordsAfter(time: Long): Single<List<HistoryRecord>> =
+        dao.allSince(time).map { list -> list.map(historyMapper::entityToDomain) }
 
     fun updateFromState(podState: OmnipodDashPodStateManager) = Completable.defer {
         val historyId = podState.activeCommand?.historyId

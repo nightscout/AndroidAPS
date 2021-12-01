@@ -32,13 +32,13 @@ import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.activities.HistoryBrowseActivity
 import info.nightscout.androidaps.diaconn.DiaconnG8Plugin
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
 import info.nightscout.androidaps.plugins.general.overview.StatusLightHandler
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin
@@ -63,17 +63,17 @@ class ActionsFragment : DaggerFragment() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var sp: SP
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var ctx: Context
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var statusLightHandler: StatusLightHandler
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var iobCobCalculator: IobCobCalculator
-    @Inject lateinit var commandQueue: CommandQueueProvider
+    @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var buildHelper: BuildHelper
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var skinProvider: SkinProvider
@@ -165,7 +165,7 @@ class ActionsFragment : DaggerFragment() {
         extendedBolus?.setOnClickListener {
             activity?.let { activity ->
                 protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable {
-                    OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.extended_bolus), resourceHelper.gs(R.string.ebstopsloop),
+                    OKDialog.showConfirmation(activity, rh.gs(R.string.extended_bolus), rh.gs(R.string.ebstopsloop),
                         Runnable {
                             ExtendedBolusDialog().show(childFragmentManager, "Actions")
                         }, null)
@@ -178,7 +178,7 @@ class ActionsFragment : DaggerFragment() {
                 commandQueue.cancelExtended(object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.extendedbolusdeliveryerror), R.raw.boluserror)
+                            ErrorHelperActivity.runAlarm(ctx, result.comment, rh.gs(R.string.extendedbolusdeliveryerror), R.raw.boluserror)
                         }
                     }
                 })
@@ -193,7 +193,7 @@ class ActionsFragment : DaggerFragment() {
                 commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
+                            ErrorHelperActivity.runAlarm(ctx, result.comment, rh.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
                         }
                     }
                 })
@@ -275,7 +275,7 @@ class ActionsFragment : DaggerFragment() {
                 pump.isInitialized() &&
                 !pump.isSuspended()).toVisibility()
 
-        if (!pump.pumpDescription.isExtendedBolusCapable || !pump.isInitialized() || pump.isSuspended() || pump.isFakingTempsByExtendedBoluses) {
+        if (!pump.pumpDescription.isExtendedBolusCapable || !pump.isInitialized() || pump.isSuspended() || pump.isFakingTempsByExtendedBoluses || config.NSCLIENT) {
             extendedBolus?.visibility = View.GONE
             extendedBolusCancel?.visibility = View.GONE
         } else {
@@ -284,14 +284,14 @@ class ActionsFragment : DaggerFragment() {
                 extendedBolus?.visibility = View.GONE
                 extendedBolusCancel?.visibility = View.VISIBLE
                 @Suppress("SetTextI18n")
-                extendedBolusCancel?.text = resourceHelper.gs(R.string.cancel) + " " + activeExtendedBolus.value.toStringMedium(dateUtil)
+                extendedBolusCancel?.text = rh.gs(R.string.cancel) + " " + activeExtendedBolus.value.toStringMedium(dateUtil)
             } else {
                 extendedBolus?.visibility = View.VISIBLE
                 extendedBolusCancel?.visibility = View.GONE
             }
         }
 
-        if (!pump.pumpDescription.isTempBasalCapable || !pump.isInitialized() || pump.isSuspended()) {
+        if (!pump.pumpDescription.isTempBasalCapable || !pump.isInitialized() || pump.isSuspended() || config.NSCLIENT) {
             setTempBasal?.visibility = View.GONE
             cancelTempBasal?.visibility = View.GONE
         } else {
@@ -300,7 +300,7 @@ class ActionsFragment : DaggerFragment() {
                 setTempBasal?.visibility = View.GONE
                 cancelTempBasal?.visibility = View.VISIBLE
                 @Suppress("SetTextI18n")
-                cancelTempBasal?.text = resourceHelper.gs(R.string.cancel) + " " + activeTemp.toStringShort()
+                cancelTempBasal?.text = rh.gs(R.string.cancel) + " " + activeTemp.toStringShort()
             } else {
                 setTempBasal?.visibility = View.VISIBLE
                 cancelTempBasal?.visibility = View.GONE
@@ -321,7 +321,7 @@ class ActionsFragment : DaggerFragment() {
             statusLightHandler.updateStatusLights(cannulaAge, insulinAge, reservoirLevel, sensorAge, sensorLevel, pbAge, batteryLevel,resourceHelper.getAttributeColor(context, R.attr.statuslightNormal),
                 resourceHelper.getAttributeColor(context, R.attr.statuslightWarning),
                 resourceHelper.getAttributeColor(context, R.attr.statuslightAlarm))
-            sensorLevelLabel?.text = if (activeBgSource.sensorBatteryLevel == -1) "" else resourceHelper.gs(R.string.careportal_level_label)
+            sensorLevelLabel?.text = if (activeBgSource.sensorBatteryLevel == -1) "" else rh.gs(R.string.careportal_level_label)
         } else {
             statusLightHandler.updateStatusLights(cannulaAge, insulinAge, null, sensorAge, null, pbAge, null, resourceHelper.getAttributeColor(context, R.attr.statuslightNormal),
                 resourceHelper.getAttributeColor(context, R.attr.statuslightWarning),
@@ -364,7 +364,7 @@ class ActionsFragment : DaggerFragment() {
 
             buttonsLayout?.addView(btn)
 
-            this.pumpCustomActions[resourceHelper.gs(customAction.name)] = customAction
+            this.pumpCustomActions[rh.gs(customAction.name)] = customAction
             this.pumpCustomButtons.add(btn)
         }
     }

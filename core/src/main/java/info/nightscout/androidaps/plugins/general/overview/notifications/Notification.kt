@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.overview.notifications
 
+import android.content.Context
 import androidx.annotation.RawRes
 import info.nightscout.androidaps.utils.T
 
@@ -13,6 +14,8 @@ open class Notification {
     @RawRes var soundId: Int? = null
     var action: Runnable? = null
     var buttonText = 0
+
+    var contextForAction: Context? = null
 
     constructor()
     constructor(id: Int, date: Long, text: String, level: Int, validTo: Long) {
@@ -55,6 +58,7 @@ open class Notification {
         const val LOW = 2
         const val INFO = 3
         const val ANNOUNCEMENT = 4
+
         const val PROFILE_SET_FAILED = 0
         const val PROFILE_SET_OK = 1
         const val EASY_MODE_ENABLED = 2
@@ -84,9 +88,6 @@ open class Notification {
         const val UNSUPPORTED_FIRMWARE = 28
         const val MINIMAL_BASAL_VALUE_REPLACED = 29
         const val BASAL_PROFILE_NOT_ALIGNED_TO_HOURS = 30
-        const val ZERO_VALUE_IN_PROFILE = 31
-        const val PROFILE_SWITCH_MISSING = 32
-        @Suppress("unused") const val NOT_ENG_MODE_OR_RELEASE = 33
         const val WRONG_PUMP_PASSWORD = 34
         const val PERMISSION_STORAGE = 35
         const val PERMISSION_LOCATION = 36
@@ -122,7 +123,12 @@ open class Notification {
         const val OMNIPOD_STARTUP_STATUS_REFRESH_FAILED = 69
         const val OMNIPOD_TIME_OUT_OF_SYNC = 70
         const val UNSUPPORTED_ACTION_IN_PUMP = 71
-        const val WRONG_PUMP_DATA = 71
+        const val WRONG_PUMP_DATA = 72
+        const val NSCLIENT_VERSION_DOES_NOT_MATCH = 73
+        const val VERSION_EXPIRE = 74
+        const val INVALID_PROFILE_NOT_ACCEPTED = 75
+        const val MDT_INVALID_HISTORY_DATA = 76
+        const val IDENTIFICATION_NOT_SET = 77
 
         const val USER_MESSAGE = 1000
 

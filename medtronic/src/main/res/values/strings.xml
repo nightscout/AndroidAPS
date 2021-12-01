@@ -122,5 +122,6 @@
     <string name="set_neutral_temps_summary">If enabled, it will cancel a temporary basal before the end of each hour. This method can help stop some pumps beeping/vibrating on the hour.</string>
     <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d min remaining)</string>
     <string name="sixdigitnumber" translatable="false">^\\d{6}</string>
+    <string name="invalid_history_data">Invalid pump history data detected. Open new issue and provide logs.</string>
 
 </resources>

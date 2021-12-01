@@ -21,6 +21,7 @@
     <string name="tbr_formatter">%1$d%% per %2$d / %3$d min</string>
     <string name="multiwave_bolus">Bolo multiwave</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U per %3$d min</string>
+    <string name="insight_last_bolus">Ultimo bolo</string>
     <string name="searching_for_devices">Ricerca dispositivi…</string>
     <string name="pairing_completed">Associazione completata</string>
     <string name="code_compare">I codici mostrati su questo dispositivo e sul micro combaciano?</string>

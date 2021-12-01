@@ -27,11 +27,14 @@ class CgmSourceTransaction(
                 noise = it.noise,
                 trendArrow = it.trendArrow,
                 sourceSensor = it.sourceSensor
-            )
-            glucoseValue.interfaceIDs.nightscoutId = it.nightscoutId
+            ).also { gv ->
+                gv.interfaceIDs.nightscoutId = it.nightscoutId
+            }
             // if nsId is not provided in new record, copy from current if exists
             if (glucoseValue.interfaceIDs.nightscoutId == null)
                 current?.let { existing -> glucoseValue.interfaceIDs.nightscoutId = existing.interfaceIDs.nightscoutId }
+            // preserve invalidated status (user may delete record in UI)
+            current?.let { existing -> glucoseValue.isValid = existing.isValid }
             when {
                 // new record, create new
                 current == null                                                                -> {

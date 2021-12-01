@@ -34,7 +34,7 @@ class GraphData(
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
 
     private var maxY = Double.MIN_VALUE
@@ -116,7 +116,7 @@ class GraphData(
         overviewData.iobScale.multiplier = maxY * scale / overviewData.maxIobValueFound
         addSeries(overviewData.iobSeries)
         addSeries(overviewData.iobPredictions1Series)
-        addSeries(overviewData.iobPredictions2Series)
+        //addSeries(overviewData.iobPredictions2Series)
     }
 
     // scale in % of vertical size (like 0.3)
@@ -204,7 +204,7 @@ class GraphData(
     }
 
     fun setNumVerticalLabels() {
-        graph.gridLabelRenderer.numVerticalLabels = if (units == GlucoseUnit.MGDL) (maxY / 40 + 1).toInt() else (maxY / 2 + 1).toInt()
+        graph.gridLabelRenderer.numVerticalLabels = max(3, if (units == GlucoseUnit.MGDL) (maxY / 40 + 1).toInt() else (maxY / 2 + 1).toInt())
     }
 
     fun formatAxis(fromTime: Long, endTime: Long) {

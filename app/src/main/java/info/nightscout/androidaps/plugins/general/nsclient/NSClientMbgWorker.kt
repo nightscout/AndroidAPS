@@ -41,7 +41,7 @@ class NSClientMbgWorker(
         for (i in 0 until mbgArray.length()) {
             val nsMbg = NSMbg(mbgArray.getJSONObject(i))
             if (!nsMbg.isValid()) continue
-            repository.runTransactionForResult(SyncNsTherapyEventTransaction(therapyEventFromNsMbg(nsMbg), false))
+            repository.runTransactionForResult(SyncNsTherapyEventTransaction(therapyEventFromNsMbg(nsMbg)))
                 .doOnError {
                     aapsLogger.error("Error while saving therapy event", it)
                     ret = Result.failure(workDataOf("Error" to it.toString()))

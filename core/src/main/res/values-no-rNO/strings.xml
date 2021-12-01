@@ -18,6 +18,7 @@
     <string name="connected">Tilkoblet</string>
     <string name="disconnected">Frakoblet</string>
     <string name="disconnecting">Frakobler</string>
+    <string name="waiting_for_disconnection">Venter på frakobling</string>
     <string name="androidaps_start">AndroidAPS startet</string>
     <string name="formatinsulinunits1">%1$.1f E</string>
     <string name="formatinsulinunits">%1$.2f E</string>
@@ -153,7 +154,6 @@
     <string name="profile_ins_units_per_hour">E/t</string>
     <string name="profile_carbs_per_unit">g/E</string>
     <!--    ProfileFunction-->
-    <string name="noprofileselected">Ingen profil valgt</string>
     <string name="startprofile">Start profil %1$d%% i %2$d min</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Bare konkrete verdier støttes som granularitet for basal/bolus i virtuell pumpe, ingen verdiområder.</string>
@@ -173,12 +173,17 @@
     <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f E</b> Bol: <b>%3$.2f E</b> Bas: <b>%4$.2f E(%5$.0f%%)</b> Karbo: <b>%6$.0f g</b>]]></string>
     <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> i <b>%3$d</b> dager<br>]]></string>
     <!--    Translator-->
+    <string name="careportal">Careportal</string>
     <string name="careportal_bgcheck">BS kontroll</string>
     <string name="careportal_mbg">Manuelt BS eller kalibrering</string>
     <string name="careportal_announcement">Melding</string>
     <string name="careportal_note">Merknad</string>
     <string name="careportal_question">Spørsmål</string>
     <string name="careportal_exercise">Trening</string>
+    <string name="careportal_announcement_message">Kunngjøring: %1$s</string>
+    <string name="careportal_note_message">Notat: %1$s</string>
+    <string name="careportal_question_message">Spørsmål: %1$s</string>
+    <string name="careportal_exercise_message">Aktivitet: %1$s</string>
     <string name="careportal_pumpsitechange">Bytte av pumpens kanyle</string>
     <string name="careportal_cgmsensorinsert">Bytte av CGM sensor</string>
     <string name="careportal_cgmsensorstart">CGM sensor start</string>
@@ -196,6 +201,7 @@
     <string name="careportal_openapsoffline">OpenAPS offline</string>
     <string name="careportal_pumpbatterychange">Bytte pumpebatteri</string>
     <string name="careportal_temporarytarget">Temp mål</string>
+    <string name="careportal_temporarytargetvalue">Temp target verdi</string>
     <string name="careportal_temporarytargetcancel">Avbryt temp mål</string>
     <string name="boluswizard">Bolus assistent</string>
     <string name="glucosetype_finger">Finger</string>
@@ -212,6 +218,8 @@
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
     <string name="record">Registrer</string>
+    <string name="reading_pump_history">Leser pumpehistorikk</string>
+    <string name="pump_icon">Pumpe ikon</string>
     <!--    Command-->
     <string name="connectiontimedout">Tilkoblingen ble tidsavbrutt</string>
     <!--    PumpEnactResult-->
@@ -252,7 +260,6 @@
     <string name="metadata_label_device_name">Eksporterer enhetens pasientnavn</string>
     <string name="metadata_label_device_model">Eksportere enhetsmodell</string>
     <string name="metadata_label_encryption">Fil kryptering</string>
-    <string name="metadata_format_old">Gammelt eksportformat</string>
     <string name="metadata_format_new">Nytt krypteringsformat</string>
     <string name="metadata_format_debug">Nytt feilsøkingsformat (ukryptert)</string>
     <string name="metadata_format_other">Ukjent eksportformat</string>
@@ -283,6 +290,7 @@
     <string name="signature_verifier">Verifisering av signatur</string>
     <string name="running_invalid_version">Vi har oppdaget at du kjører en ugyldig versjon. Loop deaktivert!</string>
     <string name="versionavailable">Versjon %1$s er tilgjengelig</string>
+    <string name="version_expire">Versjon %1$s utløper den %2$s</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Vennligst start mobilen på nytt eller restart AndroidAPS fra Innstillinger \nellers vil ikke AndroidAPS ha aktivert loggføring (viktig for å spore og kontrollere at algoritmene fungerer riktig!)</string>
     <!-- WeekdayPicker -->
@@ -295,6 +303,7 @@
     <string name="sunday_short">S</string>
     <!-- User Entry -->
     <string name="uel_bolus">BOLUS</string>
+    <string name="uel_bolus_calculator">BOLUS KALKULATOR</string>
     <string name="uel_bolus_advisor">BOLUS ASSISTENT</string>
     <string name="uel_extended_bolus">FORLENGET BOLUS</string>
     <string name="uel_superbolus_tbr">SUPERBOLUS TBR</string>
@@ -385,6 +394,38 @@
     <string name="uel_loop_removed">LOOP FJERNET</string>
     <string name="uel_other">ANNET</string>
     <!-- HardLimits -->
+    <string name="profile_low_target">Profil lavt blodsukkermål</string>
+    <string name="profile_high_target">Profil høyt blodsukkermål</string>
+    <string name="temp_target_low_target">Midlertidig mål nedre grense</string>
+    <string name="temp_target_high_target">Midlertidig mål øvre grense</string>
+    <string name="temp_target_value">Midlertidig målverdi</string>
+    <string name="profile_dia">Profil DIA verdi</string>
+    <string name="profile_sensitivity_value">Profil insulin følsomhet (IF)</string>
+    <string name="profile_max_daily_basal_value">Maksimal profil basalverdi</string>
+    <string name="current_basal_value">Nåværende basalverdi</string>
+    <string name="profile_carbs_ratio_value">Profil karbohydratfaktor (IK)</string>
+    <string name="valuelimitedto">%1$.2f begrenset til %2$.2f</string>
+    <string name="valueoutofrange">»%1$s« er utenfor lovlige grenseverdier</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f er utenfor lovlige grenseverdier</string>
+    <string name="basal_value">Basal verdi</string>
+    <string name="nsclient_version_does_not_match">NSKlient versjonen samsvarer ikke med AndroidAPS. Vennligst oppdater.</string>
+    <!-- Command Queue + readStatus reasons -->
+    <string name="read_status" comment="10 characters max for READSTATUS translation">READSTATUS %1$s</string>
+    <string name="keepalive_status_outdated" comment="26 characters max for translation">Oppretthold tilkobling. Status er ikke oppdatert.</string>
+    <string name="keepalive_basal_outdated" comment="26 characters max for translation">Oppretthold tilkobling. Basal er ikke oppdatert.</string>
+    <string name="sms" comment="26 characters max for translation">SMS</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Trykket på koble til pumpen</string>
+    <string name="pump_driver_changed" comment="26 characters max for translation">Pumpedriver er endret.</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Endre pumpedriver.</string>
+    <string name="device_changed" comment="26 characters max for translation">Enheten er endret</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Trykket på oppdater</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Planlagt statusoppdatering</string>
+    <string name="unconfirmed_command" comment="26 characters max for translation">Kommando er ikke bekreftet</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Forespurt av bruker</string>
+    <string name="user_request" comment="26 characters max for translation">Bruker forespørsel</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
+    <string name="pump_paired" comment="26 characters max for translation">Pumpe sammenkoblet</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Insight oppdateringsknapp</string>
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dager</item>

@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.automation.databinding.AutomationDialogActionBinding
 import info.nightscout.androidaps.dialogs.DialogFragmentWithDate
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.automation.actions.Action
 import info.nightscout.androidaps.plugins.general.automation.actions.ActionDummy
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateAction
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 class EditActionDialog : DialogFragmentWithDate() {
 
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var injector: HasAndroidInjector
 
     private var action: Action? = null

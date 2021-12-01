@@ -12,7 +12,6 @@
     <string name="nav_resetdb">Reiniciar Base de Dados</string>
     <string name="reset_db_confirm">Quer realmente reiniciar a base de dados?</string>
     <string name="nav_exit">Sair</string>
-    <string name="ns_sync_use_absolute_title">Utilizar sempre valores absolutos de basal</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Este dispositivo parece não suportar a otimização de bateria na lista de permissões - pode ter problemas de desempenho.</string>
     <string name="description_actions">Alguns botões para aceder rapidamente a funções comuns</string>
     <string name="description_config_builder">Usado para configurar os plugins ativos</string>
@@ -78,7 +77,6 @@
     <string name="overview">Visão Geral</string>
     <string name="treatments">Tratamentos</string>
     <string name="virtualpump">Bomba virtual</string>
-    <string name="careportal">Careportal</string>
     <string name="configbuilder_pump">Bomba</string>
     <string name="configbuilder_pump_description">Qual a bomba que gostaria de utilizar com AndroidAPS?</string>
     <string name="configbuilder_profile">Perfil</string>
@@ -98,7 +96,6 @@
     <string name="safety">Segurança</string>
     <string name="openapsma_disabled">Plugin está desativado</string>
     <string name="constraints_violation">Violação das restrições</string>
-    <string name="treatmentdeliveryerror">Erro na administração do bólus</string>
     <string name="setbasalquestion">Aceitar nova basal temporária:</string>
     <string name="overview_treatment_label">Tratamento</string>
     <string name="overview_calculator_label">Calculadora</string>
@@ -257,7 +254,6 @@
     <string name="ongoingnotificaction">Notificação em curso</string>
     <string name="old_data">DADOS ANTIGOS</string>
     <string name="sms_minago">%1$dmin atrás</string>
-    <string name="localprofile">Perfil local</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Array de %1$d elementos.\nValor actual:</string>
     <string name="openapsma_autosensdata_label">Dados Autosens</string>
@@ -665,7 +661,6 @@
     <string name="error_adding_treatment_title">Dados tratamento incompletos</string>
     <string name="maintenance_settings">Definições de manutenção</string>
     <string name="maintenance_email">Email destinatário</string>
-    <string name="maintenance_encrypt_exported_prefs">Encriptar definições exportadas</string>
     <string name="maintenance_amount">Nr. de registos a enviar</string>
     <string name="maintenance">Manutenção</string>
     <string name="maintenance_shortname">MANU</string>
@@ -719,9 +714,6 @@
     <string name="very_old_version">versão muito antiga</string>
     <string name="new_version_warning">Nova versão para pelo menos %1$d dias disponíveis! Retorno a SGB após %2$d dias, o loop será desactivado após %3$d dias</string>
     <string name="twohours">2h</string>
-    <string name="dexcom_app_patched">App Dexcom (com patch)</string>
-    <string name="dexcom_short">DXCM</string>
-    <string name="description_source_dexcom">Receber valores da Glicose da app Dexcom com patch.</string>
     <string name="cobvsiob">HCA vs IA</string>
     <string name="bolusconstraintappliedwarn">Restrição de bólus aplicada: %1$.2f U a %2$.2f U</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Absorção lenta de hidratos detetada: %2$d%% do tempo. Verifique o seu cálculo. HCA podem estar sobrestimados, assim mais insulina pode ser dada !!!</font>]]></string>
@@ -750,7 +742,6 @@
     <string name="clone_label">Clone</string>
     <string name="saveorresetchangesfirst">Guardar ou repor as alterações actuais primeiro</string>
     <string name="deletecurrentprofile">Eliminar perfil actual?</string>
-    <string name="copytolocalprofile">Criar novo perfil local a partir deste perfil?</string>
     <string name="profilenamecontainsdot">Nome do perfil contém pontos.\nIsso não é suportado pelo NS.\nPerfil não é enviado para o NS.</string>
     <string name="low_mark_comment">Valor mais baixo da área de intervalo (apenas exibição)</string>
     <string name="high_mark_comment">Valor mais alto da área de intervalo (apenas exibição)</string>
@@ -831,7 +822,6 @@
     <string name="dpvdefaultprofile">Perfil Padrão DPV</string>
     <string name="setupwizard_pump_riley_link_status">Estado RileyLink:</string>
     <string name="filter">Filtro</string>
-    <string name="copytolocalprofile_invalid">Não é possível criar perfil local. Perfil é inválido.</string>
     <string name="cta_dont_kill_my_app_info">Não encerre minha app?</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Enviar SMS se evento de bomba inacessível for acionado</string>
     <string name="smscommunicator_pump_ureachable">Reportar bomba inacessível</string>
@@ -851,7 +841,6 @@
     <string name="cannula">Cânula</string>
     <string name="userentry">Entrada de Utilizador</string>
     <string name="common_values">Utilize valores da sua maior refeição que normalmente come\n</string>
-    <string name="summary_email_for_crash_report">Este endereço de email irá anexado aos relatórios de erros para que possamos entrar em contato consigo em casos urgentes. É opcional.</string>
     <string name="email_address">Endereço de email</string>
     <string name="privacy_settings">Definições de privacidade</string>
     <string name="privacy_summary">Opcionalmente pode fornecer um endereço de e-mail se quiser ser notificado sobre os erros da app. Este não é um serviço automatizado. Será contactado por desenvolvedores em situações perigosas.</string>

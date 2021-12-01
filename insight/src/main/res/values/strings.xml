@@ -21,6 +21,8 @@
     <string name="tbr_formatter">%1$d%% for %2$d / %3$d min</string>
     <string name="multiwave_bolus">Multiwave bolus</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U for %3$d min</string>
+    <string name="insight_last_bolus" >Last Bolus</string>
+    <string name="insight_last_bolus_formater" translatable="false">%1$.1f %2$s (%3$s)</string>
     <string name="searching_for_devices">Searching for devices…</string>
     <string name="pairing_completed">Pairing completed</string>
     <string name="code_compare">Do the codes displayed on this device and on your pump match?</string>

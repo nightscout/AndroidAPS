@@ -12,7 +12,6 @@
     <string name="nav_resetdb">обнулить базы</string>
     <string name="reset_db_confirm">Вы действительно хотите обнулить базы данных?</string>
     <string name="nav_exit">Выход</string>
-    <string name="ns_sync_use_absolute_title">Всегда пользуйтесь абсолютными величинами для базала</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Это устройство не поддерживает меню оптимизации батареи - могут быть проблемы с производительностью.</string>
     <string name="description_actions">Кнопки быстрого доступа к некоторым распространенным настройкам</string>
     <string name="description_config_builder">Применяется для настройки активных плагинов</string>
@@ -78,7 +77,6 @@
     <string name="overview">Начало</string>
     <string name="treatments">Терапия</string>
     <string name="virtualpump">Виртуальная помпа</string>
-    <string name="careportal">Портал лечения / назначений</string>
     <string name="configbuilder_pump">помпа</string>
     <string name="configbuilder_pump_description">Какой помпой вы хотели бы пользоваться с AndroidAPS?</string>
     <string name="configbuilder_profile">профиль</string>
@@ -98,7 +96,7 @@
     <string name="safety">безопасность</string>
     <string name="openapsma_disabled">модуль не активен</string>
     <string name="constraints_violation">ограничение нарушено</string>
-    <string name="treatmentdeliveryerror">Ошибка подачи болюса</string>
+    <string name="treatmentdeliveryerror">Возможна ошибка в подаче болюса. Проверьте реальное количество поданного инсулина</string>
     <string name="setbasalquestion">принять новый врем базал:</string>
     <string name="overview_treatment_label">болюс</string>
     <string name="overview_calculator_label">калькулятор</string>
@@ -257,7 +255,7 @@
     <string name="ongoingnotificaction">текущие уведомления</string>
     <string name="old_data">старые данные</string>
     <string name="sms_minago">%1$d мин. назад</string>
-    <string name="localprofile">локальный профиль</string>
+    <string name="localprofile">Профиль</string>
     <string name="openapsama">Помощник болюса OpenAPS AMA</string>
     <string name="array_of_elements">Массив %1$d элементов. \nActual актуальная величина:</string>
     <string name="openapsma_autosensdata_label">данные autosens</string>
@@ -360,7 +358,7 @@
     <string name="treatments_wizard_bgtrend_label">15 мин тренд</string>
     <string name="treatments_wizard_cob_label">активн углеводы</string>
     <string name="superbolus">суперболюс</string>
-    <string name="ns_logappstartedevent">начать работу с NS</string>
+    <string name="ns_logappstartedevent">Передать в NS запись о начале работы приложения</string>
     <string name="restartingapp">выход из приложения для применения настроек</string>
     <string name="configbuilder_insulin_description">Какой тип инсулина вы используете?</string>
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
@@ -494,6 +492,7 @@
     <string name="dexcomg5_xdripupload_title">Отправить данные СК на xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">В xDrip + выберите источник данных 640g/Eversense</string>
     <string name="nsclientbg">СК с клиента Nightscout</string>
+    <string name="nsclientbgshort">ГК с NS </string>
     <string name="overview_editquickwizard_usebg">Вычисление СК</string>
     <string name="overview_editquickwizard_usebolusiob">Расчет болюсного активного инсулина IOB</string>
     <string name="overview_editquickwizard_usebasaliob">Расчет базального активного инсулина IOB</string>
@@ -652,6 +651,8 @@ Context | Edit Context</string>
     <string name="time_elapsed">Прошло времени</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Получать данные гликемии от приложения Poctech</string>
+    <string name="glunovo">Приложение Glunovo</string>
+    <string name="description_source_glunovo">Получать данные гликемии от приложения Glunovo</string>
     <string name="description_source_tomato">Получать значения ГК от приложения Tomato (устройство MiaoMiao)</string>
     <string name="high_temptarget_raises_sensitivity_title">Высокая врем. цель temptarget повышает чувствительность</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Повысить чувствительность для temptargets > = 100]]></string>
@@ -667,7 +668,6 @@ Context | Edit Context</string>
     <string name="error_adding_treatment_title">Данные терапии неполные</string>
     <string name="maintenance_settings">Параметры обслуживания</string>
     <string name="maintenance_email">Адрес электронной почты</string>
-    <string name="maintenance_encrypt_exported_prefs">Зашифровать экспортируемые параметры</string>
     <string name="maintenance_amount">Количество логов для отправки</string>
     <string name="maintenance">Обслуживание</string>
     <string name="maintenance_shortname">ОБСЛУЖ</string>
@@ -681,6 +681,7 @@ Context | Edit Context</string>
     <string name="resettodefaults">Восстановить значения по умолчанию</string>
     <string name="nsmalfunction">Некорректная работа NSClient. Возможно следует перезапустить NS и NSClient.</string>
     <string name="time_offset">Смещение по времени</string>
+    <string name="bolus_reminder">Напомнить о болюсе позже</string>
     <string name="setupwizard_preferred_aps_mode">Предпочитаемый режим APS</string>
     <string name="treatments_wizard_total_label">Итого</string>
     <string name="calculation_short">Кальк</string>
@@ -719,11 +720,9 @@ Context | Edit Context</string>
     <string name="versionChecker">Проверка версии</string>
     <string name="old_version">старая версия</string>
     <string name="very_old_version">очень старая версия</string>
+    <string name="application_expired">Истек срок действия приложения</string>
     <string name="new_version_warning">Новая версия доступна уже %1$d дней! По истечении %2$d дн алгоритм переходит в режим работы только с остановкой при низкой гликемии LGS, замкнутый цикл будет отключен через %3$d дн</string>
     <string name="twohours">2ч</string>
-    <string name="dexcom_app_patched">Приложение Dexcom (модифицированное)</string>
-    <string name="dexcom_short">DXCM</string>
-    <string name="description_source_dexcom">Получать данные ГК от модифицированного приложения Dexcom.</string>
     <string name="cobvsiob">угл COB к инс IOB</string>
     <string name="bolusconstraintappliedwarn">Применено ограничение болюса: %1$.2f ед до %2$.2f ед</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Обнаружено медленное всасывание углеводов: %2$d%% времени. Еще раз проверьте свои расчеты. Возможно акт углеводы COB вне диапазона и может быть подано больше инсулина!!!!!</font>]]></string>
@@ -746,7 +745,7 @@ Context | Edit Context</string>
     <string name="doyouwantresetstart">Хотите сбросить начатую цель? Можете потерять уже достигнутое.</string>
     <string name="setupwizard_units_prompt">Выберите единицы, в которых вы хотите отображать значения</string>
     <string name="dia_short">Время действия инсулина DIA</string>
-    <string name="ic_short">IC (инсулин/углеводы)</string>
+    <string name="ic_short">IC углкоэф ГУ/инс</string>
     <string name="isf_short">ISF (чувствительность к инсулину)</string>
     <string name="target_short">ЦЕЛЬ</string>
     <string name="clone_label">Клонировать</string>
@@ -846,6 +845,10 @@ Context | Edit Context</string>
     <string name="enablebolusadvisor_summary">Используйте напоминание для того, чтобы начать есть позже, вместо того, чтобы воспользоваться помощником болюса на высоких значениях ГК (\"пре-болюс\")</string>
     <string name="time_to_eat">Пора есть!\nЗапустите помощник болюса снова для подсчета.</string>
     <string name="timetoeat">Пора есть</string>
+    <string name="bolusreminder">Напоминание о болюсе</string>
+    <string name="enablebolusreminder">Включить напоминание о болюсе</string>
+    <string name="enablebolusreminder_summary">Применить напоминание о болюсе с помощью мастера (постболюс)</string>
+    <string name="time_to_bolus">Пора дать болюс!\nЗапустите помощник болюса и повторите расчет.</string>
     <string name="fabric_upload_disabled">Загрузка журналов сбоя на сервер отключена!</string>
     <string name="graph_menu_divider_header">График</string>
     <string name="chart_menu">Меню графика</string>
@@ -854,11 +857,11 @@ Context | Edit Context</string>
     <string name="cannula">Катетер помпы</string>
     <string name="userentry">Запись пользователя</string>
     <string name="common_values">Введите максимальные значения вашего приема пищи \n</string>
-    <string name="summary_email_for_crash_report">Этот адрес электронной почты будет привязан к отчетам о сбоях, чтобы мы могли связаться с вами в экстренных случаях. Это опция.</string>
     <string name="email_address">Адрес электронной почты</string>
     <string name="privacy_settings">Настройки конфиденцальности</string>
     <string name="privacy_summary">Вы можете указать дополнительно адрес электронной почты, если хотите получать уведомления о сбоях приложения; что является не автоматизированной рассылкой, а способом связи с разработчиками в опасных ситуациях.</string>
     <string name="full_sync">Полная синхронизация</string>
+    <string name="full_sync_comment">Полная синхронизация? Это может занять много часов и до завершения вы не увидите новые данные в NS.</string>
     <string name="prime">Заполнение инфузионной системы</string>
     <string name="ns_sync_options">Синхронизация</string>
     <string name="ns_upload_summary">Профили, болюсы, углеводы, временные базалы закачиваются в NS</string>
@@ -882,4 +885,17 @@ Context | Edit Context</string>
     <string name="sms_timeout_while_wating">Таймаут во время ожидания окончания предыдущего соединения с помпой</string>
     <string name="smscommunicator_another_bolus_in_queue">В очереди есть еще один болюс. Повторите попытку позже.</string>
     <string name="calculation_in_progress">Идет подсчет</string>
+    <string name="missing_profile_name">Отсутствует название профиля</string>
+    <string name="error_in_ic_values">Ошибка в значении углеводного коэффициента IC</string>
+    <string name="error_in_basal_values">Ошибка в величине базала</string>
+    <string name="error_in_target_values">Ошибка в целевых значениях</string>
+    <string name="error_in_isf_values">Ошибка в значении фактора чувствительности к инсулину ISF</string>
+    <string name="run_question">Запустить %s?</string>
+    <string name="invalid_profile_not_accepted">Неверный профиль %1$s не принят из NS</string>
+    <string name="view">Вид</string>
+    <string name="errors">Ошибки</string>
+    <string name="ns_sync_slow">Замедлить выгрузку</string>
+    <string name="data_status">Состояние данных ГК</string>
+    <string name="recalculated_data_used">Используются пересчитанные данные</string>
+    <string name="bg_too_close">ГК слишком близко к \n%1$s\n%2$s</string>
 </resources>

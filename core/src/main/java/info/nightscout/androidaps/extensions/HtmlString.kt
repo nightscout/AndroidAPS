@@ -7,5 +7,6 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 fun String.formatBold(): String =
     "<b>$this</b>"
 
-fun String.formatColorFromAttribute (@ColorInt colorId: Int): String =
-    "<font color='" + colorId + "'>" + this + "</font>"
+fun String.formatColor(rh: ResourceHelper, @ColorRes colorId: Int): String =
+    "<font color='" + rh.gc(colorId) + "'>" + this + "</font>"
+

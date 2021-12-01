@@ -18,8 +18,8 @@ import javax.inject.Inject;
 
 import dagger.android.support.DaggerFragment;
 import info.nightscout.androidaps.combo.R;
-import info.nightscout.androidaps.interfaces.CommandQueueProvider;
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
+import info.nightscout.androidaps.interfaces.CommandQueue;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.pump.combo.events.EventComboPumpUpdateGUI;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.PumpState;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.Bolus;
@@ -34,9 +34,9 @@ import io.reactivex.disposables.CompositeDisposable;
 
 public class ComboFragment extends DaggerFragment {
     @Inject ComboPlugin comboPlugin;
-    @Inject CommandQueueProvider commandQueue;
-    @Inject ResourceHelper resourceHelper;
-    @Inject RxBusWrapper rxBus;
+    @Inject CommandQueue commandQueue;
+    @Inject ResourceHelper rh;
+    @Inject RxBus rxBus;
     @Inject SP sp;
     @Inject DateUtil dateUtil;
     @Inject FabricPrivacy fabricPrivacy;
@@ -80,7 +80,7 @@ public class ComboFragment extends DaggerFragment {
         refreshButton = view.findViewById(R.id.combo_refresh_button);
         refreshButton.setOnClickListener(v -> {
             refreshButton.setEnabled(false);
-            commandQueue.readStatus("User request", new Callback() {
+            commandQueue.readStatus(rh.gs(R.string.user_request), new Callback() {
                 @Override
                 public void run() {
                     runOnUiThread(() -> refreshButton.setEnabled(true));
@@ -161,7 +161,7 @@ public class ComboFragment extends DaggerFragment {
         } else {
             activityView.setTextColor(resourceHelper.getAttributeColor(getContext(), R.attr.statuslightAlarm));
             activityView.setTextSize(14);
-            activityView.setText(resourceHelper.gs(R.string.pump_unreachable));
+            activityView.setText(rh.gs(R.string.pump_unreachable));
         }
 
         if (comboPlugin.isInitialized()) {
@@ -184,13 +184,13 @@ public class ComboFragment extends DaggerFragment {
             // reservoir
             int reservoirLevel = comboPlugin.getPump().reservoirLevel;
             if (reservoirLevel != -1) {
-                reservoirView.setText(reservoirLevel + " " + resourceHelper.gs(R.string.insulin_unit_shortname));
+                reservoirView.setText(reservoirLevel + " " + rh.gs(R.string.insulin_unit_shortname));
             } else if (ps.insulinState == PumpState.LOW) {
-                reservoirView.setText(resourceHelper.gs(R.string.combo_reservoir_low));
+                reservoirView.setText(rh.gs(R.string.combo_reservoir_low));
             } else if (ps.insulinState == PumpState.EMPTY) {
-                reservoirView.setText(resourceHelper.gs(R.string.combo_reservoir_empty));
+                reservoirView.setText(rh.gs(R.string.combo_reservoir_empty));
             } else {
-                reservoirView.setText(resourceHelper.gs(R.string.combo_reservoir_normal));
+                reservoirView.setText(rh.gs(R.string.combo_reservoir_normal));
             }
 
             if (this.defaultReservoirColors == null) {
@@ -214,13 +214,13 @@ public class ComboFragment extends DaggerFragment {
                 this.defaultConnectionColors = lastConnectionView.getTextColors();
             }
             // last connection
-            String minAgo = dateUtil.minAgo(resourceHelper, comboPlugin.getPump().lastSuccessfulCmdTime);
+            String minAgo = dateUtil.minAgo(rh, comboPlugin.getPump().lastSuccessfulCmdTime);
             long min = (System.currentTimeMillis() - comboPlugin.getPump().lastSuccessfulCmdTime) / 1000 / 60;
             if (comboPlugin.getPump().lastSuccessfulCmdTime + 60 * 1000 > System.currentTimeMillis()) {
                 lastConnectionView.setText(R.string.combo_pump_connected_now);
                 lastConnectionView.setTextColor(this.defaultConnectionColors);
             } else if (comboPlugin.getPump().lastSuccessfulCmdTime + 30 * 60 * 1000 < System.currentTimeMillis()) {
-                lastConnectionView.setText(resourceHelper.gs(R.string.combo_no_pump_connection, min));
+                lastConnectionView.setText(rh.gs(R.string.combo_no_pump_connection, min));
                 lastConnectionView.setTextColor(resourceHelper.getAttributeColor(getContext(), R.attr.statuslightAlarm));
             } else {
                 lastConnectionView.setText(minAgo);
@@ -232,22 +232,22 @@ public class ComboFragment extends DaggerFragment {
             if (bolus != null) {
                 long agoMsc = System.currentTimeMillis() - bolus.timestamp;
                 double bolusMinAgo = agoMsc / 60d / 1000d;
-                String unit = resourceHelper.gs(R.string.insulin_unit_shortname);
+                String unit = rh.gs(R.string.insulin_unit_shortname);
                 String ago;
                 if ((agoMsc < 60 * 1000)) {
-                    ago = resourceHelper.gs(R.string.combo_pump_connected_now);
+                    ago = rh.gs(R.string.combo_pump_connected_now);
                 } else if (bolusMinAgo < 60) {
-                    ago = dateUtil.minAgo(resourceHelper, bolus.timestamp);
+                    ago = dateUtil.minAgo(rh, bolus.timestamp);
                 } else {
-                    ago = dateUtil.hourAgo(bolus.timestamp, resourceHelper);
+                    ago = dateUtil.hourAgo(bolus.timestamp, rh);
                 }
-                lastBolusView.setText(resourceHelper.gs(R.string.combo_last_bolus, bolus.amount, unit, ago));
+                lastBolusView.setText(rh.gs(R.string.combo_last_bolus, bolus.amount, unit, ago));
             } else {
                 lastBolusView.setText("");
             }
 
             // base basal rate
-            baseBasalRate.setText(resourceHelper.gs(R.string.pump_basebasalrate, comboPlugin.getBaseBasalRate()));
+            baseBasalRate.setText(rh.gs(R.string.pump_basebasalrate, comboPlugin.getBaseBasalRate()));
 
             // TBR
             String tbrStr = "";
@@ -255,7 +255,7 @@ public class ComboFragment extends DaggerFragment {
                 long minSinceRead = (System.currentTimeMillis() - comboPlugin.getPump().state.timestamp) / 1000 / 60;
                 long remaining = ps.tbrRemainingDuration - minSinceRead;
                 if (remaining >= 0) {
-                    tbrStr = resourceHelper.gs(R.string.combo_tbr_remaining, ps.tbrPercent, remaining);
+                    tbrStr = rh.gs(R.string.combo_tbr_remaining, ps.tbrPercent, remaining);
                 }
             }
             tempBasalText.setText(tbrStr);

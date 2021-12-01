@@ -15,7 +15,7 @@ import javax.inject.Singleton
 @Singleton
 class ActivityMonitor @Inject constructor(
     private var aapsLogger: AAPSLogger,
-    private val resourceHelper: ResourceHelper,
+    private val rh: ResourceHelper,
     private val sp: SP,
     private val dateUtil: DateUtil
 ) : Application.ActivityLifecycleCallbacks {
@@ -64,16 +64,16 @@ class ActivityMonitor @Inject constructor(
             if (key.startsWith("Monitor") && key.endsWith("total")) {
                 val v = if (value is Long) value else SafeParse.stringToLong(value as String)
                 val activity = key.split("_")[1].replace("Activity", "")
-                val duration = dateUtil.niceTimeScalar(v as Long, resourceHelper)
+                val duration = dateUtil.niceTimeScalar(v as Long, rh)
                 val start = sp.getLong(key.replace("total", "start"), 0)
                 val days = T.msecs(dateUtil.now() - start).days()
-                result += resourceHelper.gs(R.string.activitymonitorformat, activity, duration, days)
+                result += rh.gs(R.string.activitymonitorformat, activity, duration, days)
             }
         return result
     }
 
     fun stats(): Spanned {
-        return HtmlHelper.fromHtml("<br><b>" + resourceHelper.gs(R.string.activitymonitor) + ":</b><br>" + toText())
+        return HtmlHelper.fromHtml("<br><b>" + rh.gs(R.string.activitymonitor) + ":</b><br>" + toText())
     }
 
     fun reset() {

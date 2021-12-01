@@ -49,7 +49,7 @@ public class RileyLinkBLEConfigActivity extends NoSplashAppCompatActivity {
 
     @Inject AAPSLogger aapsLogger;
     @Inject SP sp;
-    @Inject ResourceHelper resourceHelper;
+    @Inject ResourceHelper rh;
     @Inject BlePreCheck blePrecheck;
     @Inject RileyLinkUtil rileyLinkUtil;
     @Inject ActivePlugin activePlugin;
@@ -233,7 +233,7 @@ public class RileyLinkBLEConfigActivity extends NoSplashAppCompatActivity {
         @Override
         public void onScanFailed(int errorCode) {
             Log.e("Scan Failed", "Error Code: " + errorCode);
-            Toast.makeText(RileyLinkBLEConfigActivity.this, resourceHelper.gs(R.string.riley_link_ble_config_scan_error, errorCode),
+            Toast.makeText(RileyLinkBLEConfigActivity.this, rh.gs(R.string.riley_link_ble_config_scan_error, errorCode),
                     Toast.LENGTH_LONG).show();
         }
 

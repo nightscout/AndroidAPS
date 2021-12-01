@@ -25,6 +25,7 @@
     <string name="medtronic_pump_battery_nimh">NiMH (батерия)</string>
     <string name="medtronic_bolus_debugging">Болус/Корекция подробно</string>
     <!-- MDT Fragment -->
+    <string name="rl_battery_label">Батерия на RileyLink</string>
     <!-- MDT Errors -->
     <string name="medtronic_errors">Грешки</string>
     <string name="medtronic_error_serial_not_set">Сериен номер не е зададен.</string>

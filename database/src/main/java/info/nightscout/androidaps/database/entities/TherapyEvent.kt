@@ -12,11 +12,13 @@ import info.nightscout.androidaps.database.interfaces.DBEntryWithTimeAndDuration
 import info.nightscout.androidaps.database.interfaces.TraceableDBEntry
 import java.util.*
 
-@Entity(tableName = TABLE_THERAPY_EVENTS,
+@Entity(
+    tableName = TABLE_THERAPY_EVENTS,
     foreignKeys = [ForeignKey(
         entity = TherapyEvent::class,
         parentColumns = ["id"],
-        childColumns = ["referenceId"])],
+        childColumns = ["referenceId"]
+    )],
     indices = [
         Index("id"),
         Index("type"),
@@ -24,7 +26,8 @@ import java.util.*
         Index("isValid"),
         Index("referenceId"),
         Index("timestamp")
-    ])
+    ]
+)
 data class TherapyEvent(
     @PrimaryKey(autoGenerate = true)
     override var id: Long = 0,
@@ -45,9 +48,28 @@ data class TherapyEvent(
     var glucoseUnit: GlucoseUnit,
 ) : TraceableDBEntry, DBEntryWithTimeAndDuration {
 
+    private fun contentEqualsTo(other: TherapyEvent): Boolean =
+        isValid == other.isValid &&
+            timestamp == other.timestamp &&
+            utcOffset == other.utcOffset &&
+            duration == other.duration &&
+            type == other.type &&
+            note == other.note &&
+            enteredBy == other.enteredBy &&
+            glucose == other.glucose &&
+            glucoseType == other.glucoseType &&
+            glucoseUnit == other.glucoseUnit
+
+    fun onlyNsIdAdded(previous: TherapyEvent): Boolean =
+        previous.id != id &&
+            contentEqualsTo(previous) &&
+            previous.interfaceIDs.nightscoutId == null &&
+            interfaceIDs.nightscoutId != null
+
     enum class GlucoseUnit {
         MGDL,
         MMOL;
+
         companion object
     }
 

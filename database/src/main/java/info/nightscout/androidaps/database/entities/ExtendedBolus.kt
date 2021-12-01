@@ -11,11 +11,13 @@ import info.nightscout.androidaps.database.interfaces.DBEntryWithTimeAndDuration
 import info.nightscout.androidaps.database.interfaces.TraceableDBEntry
 import java.util.*
 
-@Entity(tableName = TABLE_EXTENDED_BOLUSES,
+@Entity(
+    tableName = TABLE_EXTENDED_BOLUSES,
     foreignKeys = [ForeignKey(
         entity = ExtendedBolus::class,
         parentColumns = ["id"],
-        childColumns = ["referenceId"])],
+        childColumns = ["referenceId"]
+    )],
     indices = [
         Index("id"),
         Index("isValid"),
@@ -25,7 +27,8 @@ import java.util.*
         Index("pumpType"),
         Index("referenceId"),
         Index("timestamp")
-    ])
+    ]
+)
 data class ExtendedBolus(
     @PrimaryKey(autoGenerate = true)
     override var id: Long = 0,
@@ -45,6 +48,20 @@ data class ExtendedBolus(
     init {
         require(duration > 0)
     }
+
+    private fun contentEqualsTo(other: ExtendedBolus): Boolean =
+        isValid == other.isValid &&
+            timestamp == other.timestamp &&
+            utcOffset == other.utcOffset &&
+            isEmulatingTempBasal == other.isEmulatingTempBasal &&
+            duration == other.duration &&
+            rate == other.rate
+
+    fun onlyNsIdAdded(previous: ExtendedBolus): Boolean =
+        previous.id != id &&
+            contentEqualsTo(previous) &&
+            previous.interfaceIDs.nightscoutId == null &&
+            interfaceIDs.nightscoutId != null
 
     val rate: Double // in U/h
         get() = amount * (60 * 60 * 1000.0) / duration

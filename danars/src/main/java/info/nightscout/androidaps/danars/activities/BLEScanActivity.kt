@@ -18,7 +18,7 @@ import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.danars.R
 import info.nightscout.androidaps.danars.databinding.DanarsBlescannerActivityBinding
 import info.nightscout.androidaps.danars.events.EventDanaRSDeviceChange
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.common.ble.BlePreCheck
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.util.*
@@ -28,7 +28,7 @@ import javax.inject.Inject
 class BLEScanActivity : NoSplashAppCompatActivity() {
 
     @Inject lateinit var sp: SP
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var blePreCheck: BlePreCheck
 
     private var listAdapter: ListAdapter? = null

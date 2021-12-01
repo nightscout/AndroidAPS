@@ -7,26 +7,25 @@ import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.content.Context
 import android.content.Intent
 import android.os.SystemClock
-import androidx.work.OneTimeWorkRequest
-import androidx.work.WorkManager
-import androidx.work.Worker
-import androidx.work.WorkerParameters
+import androidx.work.*
+import com.google.common.util.concurrent.ListenableFuture
 import dagger.android.DaggerBroadcastReceiver
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
+import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.events.EventProfileSwitchChanged
 import info.nightscout.androidaps.extensions.buildDeviceStatus
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.RunningConfiguration
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenancePlugin
 import info.nightscout.androidaps.queue.commands.Command
@@ -34,6 +33,7 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.LocalAlertUtils
 import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
 import kotlin.math.abs
 
@@ -55,7 +55,7 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
     }
 
     class KeepAliveWorker(
-        context: Context,
+        private val context: Context,
         params: WorkerParameters
     ) : Worker(context, params) {
 
@@ -70,10 +70,11 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
         @Inject lateinit var profileFunction: ProfileFunction
         @Inject lateinit var runningConfiguration: RunningConfiguration
         @Inject lateinit var receiverStatusStore: ReceiverStatusStore
-        @Inject lateinit var rxBus: RxBusWrapper
-        @Inject lateinit var commandQueue: CommandQueueProvider
+        @Inject lateinit var rxBus: RxBus
+        @Inject lateinit var commandQueue: CommandQueue
         @Inject lateinit var fabricPrivacy: FabricPrivacy
         @Inject lateinit var maintenancePlugin: MaintenancePlugin
+        @Inject lateinit var rh: ResourceHelper
 
         init {
             (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
@@ -96,8 +97,24 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
             checkPump()
             checkAPS()
             maintenancePlugin.deleteLogs(30)
+            workerDbStatus()
 
             return Result.success()
+        }
+
+        // When Worker DB grows too much, work operations become slow
+        // Library is cleaning DB every 7 days which may not be sufficient for NSClient full sync
+        private fun workerDbStatus() {
+            val workQuery = WorkQuery.Builder
+                .fromStates(listOf(WorkInfo.State.FAILED, WorkInfo.State.SUCCEEDED))
+                .build()
+
+            val workInfo: ListenableFuture<List<WorkInfo>> = WorkManager.getInstance(context).getWorkInfos(workQuery)
+            aapsLogger.debug(LTag.CORE, "WorkManager size is ${workInfo.get().size}")
+            if (workInfo.get().size > 1000) {
+                WorkManager.getInstance(context).pruneWork()
+                aapsLogger.debug(LTag.CORE, "WorkManager pruning ....")
+            }
         }
 
         // Usually deviceStatus is uploaded through LoopPlugin after every loop cycle.
@@ -138,10 +155,10 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
                 rxBus.send(EventProfileSwitchChanged())
             } else if (isStatusOutdated && !pump.isBusy()) {
                 lastReadStatus = System.currentTimeMillis()
-                commandQueue.readStatus("KeepAlive. Status outdated.", null)
+                commandQueue.readStatus(rh.gs(R.string.keepalive_status_outdated), null)
             } else if (isBasalOutdated && !pump.isBusy()) {
                 lastReadStatus = System.currentTimeMillis()
-                commandQueue.readStatus("KeepAlive. Basal outdated.", null)
+                commandQueue.readStatus(rh.gs(R.string.keepalive_basal_outdated), null)
             }
             if (lastRun != 0L && System.currentTimeMillis() - lastRun > T.mins(10).msecs()) {
                 aapsLogger.error(LTag.CORE, "KeepAlive fail")

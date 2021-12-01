@@ -53,7 +53,7 @@ class TriggerProfilePercentTest : TriggerTestBase() {
         Assert.assertEquals(bgJson, t.toJSON())
     }
 
-    @Test @Throws(JSONException::class) fun fromJSONTest() {
+    @Test fun fromJSONTest() {
         val t: TriggerProfilePercent = TriggerProfilePercent(injector).setValue(120.0).comparator(Comparator.Compare.IS_EQUAL)
         val t2 = TriggerDummy(injector).instantiate(JSONObject(t.toJSON())) as TriggerProfilePercent
         Assert.assertEquals(Comparator.Compare.IS_EQUAL, t2.comparator.value)

@@ -21,7 +21,7 @@ class InjectionMealSettingPacket(
     }
 
     override fun encode(msgSeq:Int): ByteArray {
-        val buffer = prefixEncode(msgType, msgSeq, MSG_CON_END);
+        val buffer = prefixEncode(msgType, msgSeq, MSG_CON_END)
         buffer.putShort(amount.toShort())
         buffer.putLong(bcDttm)
         return suffixEncode(buffer)

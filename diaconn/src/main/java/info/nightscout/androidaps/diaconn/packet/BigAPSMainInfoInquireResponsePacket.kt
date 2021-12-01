@@ -4,9 +4,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.diaconn.DiaconnG8Pump
 import info.nightscout.androidaps.diaconn.R
 import info.nightscout.androidaps.diaconn.pumplog.PumplogUtil
-import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.joda.time.DateTime
@@ -22,8 +20,7 @@ class BigAPSMainInfoInquireResponsePacket(
 
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump
     @Inject lateinit var sp: SP
-    @Inject lateinit var resourceHelper: ResourceHelper
-    private var pumpDesc = PumpDescription(PumpType.DIACONN_G8)
+    @Inject lateinit var rh: ResourceHelper
 
     init {
         msgType = 0x94.toByte()
@@ -77,7 +74,7 @@ class BigAPSMainInfoInquireResponsePacket(
         diaconnG8Pump.minorVersion = getByteToInt(bufferData)
 
         // save current pump firmware version
-        sp.putString(resourceHelper.gs(R.string.pumpversion), diaconnG8Pump.majorVersion.toString() + "." + diaconnG8Pump.minorVersion.toString())
+        sp.putString(rh.gs(R.string.pumpversion), diaconnG8Pump.majorVersion.toString() + "." + diaconnG8Pump.minorVersion.toString())
 
         // 5. pump log status
         diaconnG8Pump.pumpLastLogNum = getShortToInt(bufferData) // last saved log no
@@ -167,9 +164,10 @@ class BigAPSMainInfoInquireResponsePacket(
 
         // 16. 1hour basal limit
         diaconnG8Pump.maxBasalPerHours = getShortToInt(bufferData).toDouble() / 100.0  // not include tempbasal limit
-        diaconnG8Pump.maxBasal =  diaconnG8Pump.maxBasalPerHours * 2 // include tempbasal
+        diaconnG8Pump.maxBasal =  diaconnG8Pump.maxBasalPerHours * 2.5 // include tempbasal
 
         // 17. snack limit
+        diaconnG8Pump.mealLimitTime = getByteToInt(bufferData) // mealLimittime
         diaconnG8Pump.maxBolus =  getShortToInt(bufferData).toDouble() / 100
         diaconnG8Pump.maxBolusePerDay =  getShortToInt(bufferData).toDouble() / 100
 
@@ -216,7 +214,7 @@ class BigAPSMainInfoInquireResponsePacket(
         diaconnG8Pump.pumpProfiles!![diaconnG8Pump.activeProfile][23] = diaconnG8Pump.baseAmount24
 
         //incarnation no 처리
-        diaconnG8Pump.isPumpVersionGe2_63 = PumplogUtil.isPumpVersionGe(sp.getString(resourceHelper.gs(R.string.pumpversion), ""),2, 63)
+        diaconnG8Pump.isPumpVersionGe2_63 = PumplogUtil.isPumpVersionGe(sp.getString(rh.gs(R.string.pumpversion), ""),2, 63)
 
         aapsLogger.debug(LTag.PUMPCOMM, "result > " + diaconnG8Pump.result)
         aapsLogger.debug(LTag.PUMPCOMM, "systemRemainInsulin > " + diaconnG8Pump.systemRemainInsulin)
@@ -323,6 +321,7 @@ class BigAPSMainInfoInquireResponsePacket(
         aapsLogger.debug(LTag.PUMPCOMM, "maxBasal > " + diaconnG8Pump.maxBasal)
         aapsLogger.debug(LTag.PUMPCOMM, "maxBolus > " + diaconnG8Pump.maxBolus)
         aapsLogger.debug(LTag.PUMPCOMM, "maxBolusePerDay > " + diaconnG8Pump.maxBolusePerDay)
+        aapsLogger.debug(LTag.PUMPCOMM, "mealLimitTime > " + diaconnG8Pump.mealLimitTime)
         aapsLogger.debug(LTag.PUMPCOMM, "beepAndAlarm > " + diaconnG8Pump.beepAndAlarm)
         aapsLogger.debug(LTag.PUMPCOMM, "alarmIntesity > " + diaconnG8Pump.alarmIntesity)
         aapsLogger.debug(LTag.PUMPCOMM, "lcdOnTimeSec > " + diaconnG8Pump.lcdOnTimeSec)

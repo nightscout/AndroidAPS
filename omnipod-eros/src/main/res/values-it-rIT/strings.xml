@@ -17,7 +17,7 @@
     <!-- Omnipod Eros - History -->
     <string name="omnipod_eros_history_title">Storico pod</string>
     <string name="omnipod_eros_history_item_description">Descrizione</string>
-    <string name="omnipod_eros_history_item_source">Fonte</string>
+    <string name="omnipod_eros_history_item_source">Origine</string>
     <string name="omnipod_eros_history_item_date">Data</string>
     <string name="omnipod_eros_history_type">Tipo:</string>
     <string name="omnipod_eros_history_bolus_value">%1$.2f U</string>

@@ -3,6 +3,7 @@
     <string name="description_pump_combo">Integracja z pompą Accu-Chek Combo, wymaga zainstalowania sterownika ruffy</string>
     <string name="combo_programming_bolus">Programowanie pompy do podawania bolusa</string>
     <string name="combo_pump_state_label">Stan</string>
+    <string name="combo_pump_activity_label">Aktywność</string>
     <string name="combo_no_pump_connection">Brak połączenia przez %1$d min</string>
     <string name="combo_tbr_remaining">%1$d%% (%2$d min pozostało)</string>
     <string name="combo_pump_state_initializing">Rozpoczynanie</string>

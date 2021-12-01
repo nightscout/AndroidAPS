@@ -22,7 +22,7 @@ import org.mockito.stubbing.Answer
 class AuthRequestTest : TestBase() {
 
     @Mock lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
-    @Mock lateinit var resourceHelper: ResourceHelper
+    @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var otp: OneTimePassword
     @Mock lateinit var dateUtil: DateUtil
 
@@ -30,7 +30,7 @@ class AuthRequestTest : TestBase() {
         AndroidInjector {
             if (it is AuthRequest) {
                 it.aapsLogger = aapsLogger
-                it.resourceHelper = resourceHelper
+                it.rh = rh
                 it.smsCommunicatorPlugin = smsCommunicatorPlugin
                 it.otp = otp
                 it.dateUtil = dateUtil
@@ -42,7 +42,7 @@ class AuthRequestTest : TestBase() {
     private var actionCalled = false
 
     @Before fun prepareTests() {
-        `when`(resourceHelper.gs(R.string.sms_wrongcode)).thenReturn("Wrong code. Command cancelled.")
+        `when`(rh.gs(R.string.sms_wrongcode)).thenReturn("Wrong code. Command cancelled.")
         doAnswer(Answer { invocation: InvocationOnMock ->
             sentSms = invocation.getArgument(0)
             null

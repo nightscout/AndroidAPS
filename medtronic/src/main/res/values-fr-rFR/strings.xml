@@ -90,4 +90,5 @@
     <string name="set_neutral_temps_title">Définir des basals temp neutres</string>
     <string name="set_neutral_temps_summary">Si activé, cela annulera une basal temp avant la fin de chaque heure. Cela peut aider à supprimer les bips/vibrations à chaque heure.</string>
     <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d min restantes)</string>
+    <string name="invalid_history_data">Données invalides dans l\'historique de la pompe. Déclarez le problème (\"Issue\") sur Github avec vos fichiers logs.</string>
 </resources>

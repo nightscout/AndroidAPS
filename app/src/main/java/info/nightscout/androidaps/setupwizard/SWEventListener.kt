@@ -30,9 +30,9 @@ class SWEventListener constructor(
             .toObservable(clazz)
             .observeOn(aapsSchedulers.main)
             .subscribe { event: Any ->
-                status = (event as EventStatus).getStatus(resourceHelper)
+                status = (event as EventStatus).getStatus(rh)
                 @SuppressLint("SetTextI18n")
-                textView?.text = (if (textLabel != 0) resourceHelper.gs(textLabel) else "") + " " + status
+                textView?.text = (if (textLabel != 0) rh.gs(textLabel) else "") + " " + status
             }
         )
     }
@@ -57,7 +57,7 @@ class SWEventListener constructor(
         val context = layout.context
         textView = TextView(context)
         textView?.id = View.generateViewId()
-        textView?.text = (if (textLabel != 0) resourceHelper.gs(textLabel) else "") + " " + status
+        textView?.text = (if (textLabel != 0) rh.gs(textLabel) else "") + " " + status
         layout.addView(textView)
     }
 

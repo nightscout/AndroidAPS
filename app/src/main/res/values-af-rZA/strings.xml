@@ -11,7 +11,6 @@
     <string name="nav_resetdb">Herstel databasis</string>
     <string name="reset_db_confirm">Wil jy regtig die databasis herstel?</string>
     <string name="nav_exit">Gaan uit</string>
-    <string name="ns_sync_use_absolute_title">Gebruik altyd absolute basale aardes</string>
     <string name="description_actions">\'n Paar knoppies vir vinnige algemene nutsfunskies</string>
     <string name="description_config_builder">Gebruik vir die aktiewe plugins te konfigureer</string>
     <string name="description_objectives">Onderrig program</string>
@@ -72,7 +71,6 @@
     <string name="overview">Oorsig</string>
     <string name="treatments">Behandelings</string>
     <string name="virtualpump">Virtuele Pomp</string>
-    <string name="careportal">Careportal</string>
     <string name="configbuilder_pump">Pomp</string>
     <string name="configbuilder_pump_description">Watter pomp wil jy gebruik met AndroidAPS?</string>
     <string name="configbuilder_profile">Profiel</string>
@@ -92,7 +90,6 @@
     <string name="safety">Veiligheid</string>
     <string name="openapsma_disabled">Plugin is gedeaktiveer</string>
     <string name="constraints_violation">Beperkings skending</string>
-    <string name="treatmentdeliveryerror">Bolus aflewering fout</string>
     <string name="setbasalquestion">Aanvaar nuwe tydelike basale:</string>
     <string name="overview_treatment_label">Behandeling</string>
     <string name="overview_calculator_label">Rekenaar</string>
@@ -196,7 +193,6 @@
     <string name="ongoingnotificaction">Voortgesette kennisgewing</string>
     <string name="old_data">OU DATA</string>
     <string name="sms_minago">%1$d min terug</string>
-    <string name="localprofile">Plaaslike profiel</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Matriks van %1$d elemente. \nWerklike waarde:</string>
     <string name="openapsma_autosensdata_label">Autosens data</string>
@@ -574,9 +570,6 @@
     <string name="old_version">ou weergawe</string>
     <string name="very_old_version">baie ou weergawe</string>
     <string name="twohours">2h</string>
-    <string name="dexcom_app_patched">DexcomG App (opgedateerde)</string>
-    <string name="dexcom_short">DXCM</string>
-    <string name="description_source_dexcom">Ontvang BG waardes vanaf die opgedateerde Dexcom app.</string>
     <string name="snooze">Sluimer</string>
     <string name="smscommunicator_messagebody">Ongeldig boodskap teks</string>
     <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
@@ -585,4 +578,6 @@
     <string name="format_percent">%1$d%%</string>
     <string name="unit_minute_short">min</string>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="overview_show_predictions">Projeksies</string>
+    <string name="prime">Prima</string>
 </resources>

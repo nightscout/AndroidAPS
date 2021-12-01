@@ -8,7 +8,7 @@ import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
@@ -26,12 +26,12 @@ class BolusWizardTest : TestBase() {
 
     private val pumpBolusStep = 0.1
 
-    @Mock lateinit var resourceHelper: ResourceHelper
+    @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var constraintChecker: ConstraintChecker
     @Mock lateinit var context: Context
     @Mock lateinit var activePlugin: ActivePlugin
-    @Mock lateinit var commandQueue: CommandQueueProvider
+    @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var loopPlugin: LoopPlugin
     @Mock lateinit var iobCobCalculator: IobCobCalculator
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
@@ -42,8 +42,8 @@ class BolusWizardTest : TestBase() {
         AndroidInjector {
             if (it is BolusWizard) {
                 it.aapsLogger = aapsLogger
-                it.resourceHelper = resourceHelper
-                it.rxBus = RxBusWrapper(aapsSchedulers)
+                it.rh = rh
+                it.rxBus = RxBus(aapsSchedulers, aapsLogger)
                 it.profileFunction = profileFunction
                 it.constraintChecker = constraintChecker
                 it.activePlugin = activePlugin

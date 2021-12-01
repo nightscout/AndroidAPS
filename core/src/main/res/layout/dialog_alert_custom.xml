@@ -19,7 +19,8 @@
         <ImageView
             android:id="@+id/alertdialog_icon"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            app:tint="?dialogTitleIconTint" />
 
         <TextView
             android:id="@+id/alertdialog_title"

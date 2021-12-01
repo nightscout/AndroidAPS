@@ -1,34 +1,35 @@
 package info.nightscout.androidaps.plugins.general.automation.elements
 
+import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.Spinner
 import androidx.annotation.StringRes
 import info.nightscout.androidaps.automation.R
-import info.nightscout.androidaps.utils.ui.NumberPicker
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.ui.NumberPicker
 import java.text.DecimalFormat
 
-class InputDelta(private val resourceHelper: ResourceHelper) : Element() {
+class InputDelta(private val rh: ResourceHelper) : Element() {
 
     enum class DeltaType {
         DELTA, SHORT_AVERAGE, LONG_AVERAGE;
 
         @get:StringRes val stringRes: Int
             get() = when (this) {
-                DELTA         -> R.string.delta
+                DELTA -> R.string.delta
                 SHORT_AVERAGE -> R.string.short_avgdelta
-                LONG_AVERAGE  -> R.string.long_avgdelta
+                LONG_AVERAGE -> R.string.long_avgdelta
             }
 
         companion object {
-            fun labels(resourceHelper: ResourceHelper): List<String> {
+
+            fun labels(rh: ResourceHelper): List<String> {
                 val list: MutableList<String> = ArrayList()
                 for (d in values()) {
-                    list.add(resourceHelper.gs(d.stringRes))
+                    list.add(rh.gs(d.stringRes))
                 }
                 return list
             }
@@ -42,7 +43,7 @@ class InputDelta(private val resourceHelper: ResourceHelper) : Element() {
     private var decimalFormat: DecimalFormat? = null
     var deltaType: DeltaType = DeltaType.DELTA
 
-    constructor(resourceHelper: ResourceHelper, value: Double, minValue: Double, maxValue: Double, step: Double, decimalFormat: DecimalFormat, deltaType: DeltaType) : this(resourceHelper) {
+    constructor(rh: ResourceHelper, value: Double, minValue: Double, maxValue: Double, step: Double, decimalFormat: DecimalFormat, deltaType: DeltaType) : this(rh) {
         this.value = value
         this.minValue = minValue
         this.maxValue = maxValue
@@ -51,7 +52,7 @@ class InputDelta(private val resourceHelper: ResourceHelper) : Element() {
         this.deltaType = deltaType
     }
 
-    constructor(resourceHelper: ResourceHelper, inputDelta: InputDelta) : this(resourceHelper) {
+    constructor(rh: ResourceHelper, inputDelta: InputDelta) : this(rh) {
         value = inputDelta.value
         minValue = inputDelta.minValue
         maxValue = inputDelta.maxValue
@@ -61,32 +62,29 @@ class InputDelta(private val resourceHelper: ResourceHelper) : Element() {
     }
 
     override fun addToLayout(root: LinearLayout) {
-        val spinner = Spinner(root.context)
-        val spinnerArrayAdapter = ArrayAdapter(root.context, R.layout.spinner_centered, DeltaType.labels(resourceHelper))
-        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinner.adapter = spinnerArrayAdapter
-        val spinnerParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
-        spinnerParams.setMargins(0, resourceHelper.dpToPx(4), 0, resourceHelper.dpToPx(4))
-        spinner.layoutParams = spinnerParams
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                deltaType = DeltaType.values()[position]
-            }
+        root.addView(
+            Spinner(root.context).apply {
+                adapter = ArrayAdapter(root.context, R.layout.spinner_centered, DeltaType.labels(rh)).apply {
+                    setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                }
+                layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
+                    setMargins(0, rh.dpToPx(4), 0, rh.dpToPx(4))
+                }
+                onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                        deltaType = DeltaType.values()[position]
+                    }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-        }
-        spinner.setSelection(deltaType.ordinal)
-        val numberPicker = NumberPicker(root.context, null)
-        numberPicker.setParams(value, minValue, maxValue, step, decimalFormat, true, null, null)
-        numberPicker.setOnValueChangedListener { value: Double -> this.value = value }
-        val l = LinearLayout(root.context)
-        l.orientation = LinearLayout.VERTICAL
-        l.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        l.addView(spinner)
-        l.addView(numberPicker)
-        root.addView(l)
+                    override fun onNothingSelected(parent: AdapterView<*>?) {}
+                }
+                setSelection(deltaType.ordinal)
+                gravity = Gravity.CENTER_HORIZONTAL
+            })
+        root.addView(
+            NumberPicker(root.context, null).also {
+                it.setParams(value, minValue, maxValue, step, decimalFormat, true, null, null)
+                it.setOnValueChangedListener { v: Double -> value = v }
+                it.gravity = Gravity.CENTER_HORIZONTAL
+            })
     }
 }

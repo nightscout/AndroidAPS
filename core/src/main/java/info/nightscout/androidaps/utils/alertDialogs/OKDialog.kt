@@ -14,11 +14,11 @@ object OKDialog {
     @SuppressLint("InflateParams")
     fun show(context: Context, title: String, message: String, runnable: Runnable? = null) {
         var okClicked = false
-        var notEmptytitle = title
-        if (notEmptytitle.isEmpty()) notEmptytitle = context.getString(R.string.message)
+        var notEmptyTitle = title
+        if (notEmptyTitle.isEmpty()) notEmptyTitle = context.getString(R.string.message)
 
         AlertDialogHelper.Builder(context)
-            .setCustomTitle(AlertDialogHelper.buildCustomTitle(context, notEmptytitle))
+            .setCustomTitle(AlertDialogHelper.buildCustomTitle(context, notEmptyTitle))
             .setMessage(message)
             .setPositiveButton(context.getString(R.string.ok)) { dialog: DialogInterface, _: Int ->
                 if (okClicked) return@setPositiveButton
@@ -36,11 +36,11 @@ object OKDialog {
     @SuppressLint("InflateParams")
     fun show(activity: FragmentActivity, title: String, message: Spanned, runnable: Runnable? = null) {
         var okClicked = false
-        var notEmptytitle = title
-        if (notEmptytitle.isEmpty()) notEmptytitle = activity.getString(R.string.message)
+        var notEmptyTitle = title
+        if (notEmptyTitle.isEmpty()) notEmptyTitle = activity.getString(R.string.message)
 
         AlertDialogHelper.Builder(activity)
-            .setCustomTitle(AlertDialogHelper.buildCustomTitle(activity, notEmptytitle))
+            .setCustomTitle(AlertDialogHelper.buildCustomTitle(activity, notEmptyTitle))
             .setMessage(message)
             .setPositiveButton(activity.getString(R.string.ok)) { dialog: DialogInterface, _: Int ->
                 if (okClicked) return@setPositiveButton

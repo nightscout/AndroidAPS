@@ -18,7 +18,7 @@ import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.interfaces.PumpSync.TemporaryBasalType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.common.ManufacturerType
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus
@@ -43,10 +43,10 @@ abstract class PumpPluginAbstract protected constructor(
     pluginDescription: PluginDescription?,
     pumpType: PumpType,
     injector: HasAndroidInjector?,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     aapsLogger: AAPSLogger,
-    commandQueue: CommandQueueProvider,
-    var rxBus: RxBusWrapper,
+    commandQueue: CommandQueue,
+    var rxBus: RxBus,
     var activePlugin: ActivePlugin,
     var sp: SP,
     var context: Context,
@@ -55,7 +55,7 @@ abstract class PumpPluginAbstract protected constructor(
     var aapsSchedulers: AapsSchedulers,
     var pumpSync: PumpSync,
     var pumpSyncStorage: info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncStorage
-) : PumpPluginBase(pluginDescription!!, injector!!, aapsLogger, resourceHelper, commandQueue), Pump, Constraints, info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncEntriesCreator {
+) : PumpPluginBase(pluginDescription!!, injector!!, aapsLogger, rh, commandQueue), Pump, Constraints, info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncEntriesCreator {
 
     private val disposable = CompositeDisposable()
 
@@ -69,7 +69,6 @@ abstract class PumpPluginAbstract protected constructor(
     protected var displayConnectionMessages = false
 
     var pumpType: PumpType = PumpType.GENERIC_AAPS
-        get() = field
         set(value) {
             field = value
             pumpDescription.fillFor(value)
@@ -324,6 +323,7 @@ abstract class PumpPluginAbstract protected constructor(
         return ret
     }
 
+    @Synchronized
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         return try {
             if (detailedBolusInfo.insulin == 0.0 && detailedBolusInfo.carbs == 0.0) {

@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class CarbsDataPoint @Inject constructor(
     val data: Carbs,
-    private val resourceHelper: ResourceHelper
+    private val rh: ResourceHelper
 ) : DataPointWithLabelInterface {
 
     private var yValue = 0.0

@@ -5,13 +5,9 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Iob
 import info.nightscout.androidaps.database.embedments.InsulinConfiguration
 import info.nightscout.androidaps.database.entities.Bolus
-import info.nightscout.androidaps.interfaces.Insulin
-import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginDescription
-import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.utils.T
@@ -27,16 +23,20 @@ import kotlin.math.pow
  */
 abstract class InsulinOrefBasePlugin(
     injector: HasAndroidInjector,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     val profileFunction: ProfileFunction,
-    val rxBus: RxBusWrapper, aapsLogger: AAPSLogger
-) : PluginBase(PluginDescription()
-    .mainType(PluginType.INSULIN)
-    .fragmentClass(InsulinFragment::class.java.name)
-    .pluginIcon(R.drawable.ic_insulin)
-    .shortName(R.string.insulin_shortname)
-    .visibleByDefault(false),
-    aapsLogger, resourceHelper, injector
+    val rxBus: RxBus,
+    aapsLogger: AAPSLogger,
+    config: Config
+) : PluginBase(
+    PluginDescription()
+        .mainType(PluginType.INSULIN)
+        .fragmentClass(InsulinFragment::class.java.name)
+        .pluginIcon(R.drawable.ic_insulin)
+        .shortName(R.string.insulin_shortname)
+        .visibleByDefault(false)
+        .neverVisible(config.NSCLIENT),
+    aapsLogger, rh, injector
 ), Insulin {
 
     private var lastWarned: Long = 0
@@ -60,7 +60,7 @@ abstract class InsulinOrefBasePlugin(
     }
 
     private val notificationPattern: String
-        get() = resourceHelper.gs(R.string.dia_too_short)
+        get() = rh.gs(R.string.dia_too_short)
 
     open val userDefinedDia: Double
         get() {
@@ -96,7 +96,7 @@ abstract class InsulinOrefBasePlugin(
             var comment = commentStandardText()
             val userDia = userDefinedDia
             if (userDia < MIN_DIA) {
-                comment += "\n" + resourceHelper.gs(R.string.dia_too_short, userDia, MIN_DIA)
+                comment += "\n" + rh.gs(R.string.dia_too_short, userDia, MIN_DIA)
             }
             return comment
         }

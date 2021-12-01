@@ -9,8 +9,13 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.GetVersionCommand.Companion.DEFAULT_UNIQUE_ID
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants.Companion.MAX_POD_LIFETIME
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants.Companion.POD_EXPIRATION_ALERT_HOURS
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants.Companion.POD_EXPIRATION_ALERT_HOURS_DURATION
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants.Companion.POD_EXPIRATION_IMMINENT_ALERT_HOURS
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants.Companion.POD_PULSE_BOLUS_UNITS
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
+import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.Observable
 import io.reactivex.functions.Action
@@ -193,7 +198,7 @@ class OmnipodDashManagerImpl @Inject constructor(
                 DefaultStatusResponse::class
             )
         }.doOnComplete {
-            podStateManager.timeZone = TimeZone.getDefault()
+            podStateManager.updateTimeZone()
         }
     }
 
@@ -278,7 +283,7 @@ class OmnipodDashManagerImpl @Inject constructor(
                             .setUniqueId(podStateManager.uniqueId!!.toInt())
                             .setSequenceNumber(podStateManager.messageSequenceNumber)
                             .setNonce(NONCE)
-                            .setNumberOfUnits(podStateManager.firstPrimeBolusVolume!! * 0.05)
+                            .setNumberOfUnits(Round.roundTo(podStateManager.firstPrimeBolusVolume!! * PodConstants.POD_PULSE_BOLUS_UNITS, POD_PULSE_BOLUS_UNITS))
                             .setDelayBetweenPulsesInEighthSeconds(podStateManager.primePulseRate!!.toByte())
                             .setProgramReminder(ProgramReminder(atStart = false, atEnd = false, atInterval = 0))
                             .build(),
@@ -380,7 +385,7 @@ class OmnipodDashManagerImpl @Inject constructor(
             )
             observables.add(
                 observeSendProgramBolusCommand(
-                    podStateManager.secondPrimeBolusVolume!! * 0.05,
+                    Round.roundTo(podStateManager.secondPrimeBolusVolume!! * PodConstants.POD_PULSE_BOLUS_UNITS, PodConstants.POD_PULSE_BOLUS_UNITS),
                     podStateManager.primePulseRate!!.toByte(),
                     confirmationBeeps = false,
                     completionBeeps = false
@@ -394,10 +399,10 @@ class OmnipodDashManagerImpl @Inject constructor(
                 AlertConfiguration(
                     AlertType.EXPIRATION,
                     enabled = true,
-                    durationInMinutes = TimeUnit.HOURS.toMinutes(7).toShort(),
+                    durationInMinutes = TimeUnit.HOURS.toMinutes(POD_EXPIRATION_ALERT_HOURS_DURATION).toShort(),
                     autoOff = false,
                     AlertTrigger.TimerTrigger(
-                        TimeUnit.HOURS.toMinutes(72).toShort()
+                        TimeUnit.HOURS.toMinutes(POD_EXPIRATION_ALERT_HOURS).toShort()
                     ), // FIXME use activation time
                     BeepType.FOUR_TIMES_BIP_BEEP,
                     BeepRepetitionType.XXX3
@@ -408,7 +413,7 @@ class OmnipodDashManagerImpl @Inject constructor(
                     durationInMinutes = 0,
                     autoOff = false,
                     AlertTrigger.TimerTrigger(
-                        TimeUnit.HOURS.toMinutes(79).toShort()
+                        TimeUnit.HOURS.toMinutes(POD_EXPIRATION_IMMINENT_ALERT_HOURS).toShort()
                     ), // FIXME use activation time
                     BeepType.FOUR_TIMES_BIP_BEEP,
                     BeepRepetitionType.XXX4
@@ -434,7 +439,7 @@ class OmnipodDashManagerImpl @Inject constructor(
                             userExpiryAlertDelay.toMinutes().toShort()
                         ),
                         BeepType.FOUR_TIMES_BIP_BEEP,
-                        BeepRepetitionType.XXX2
+                        BeepRepetitionType.EVERY_MINUTE_AND_EVERY_15_MIN
                     )
                 )
             }
@@ -499,14 +504,29 @@ class OmnipodDashManagerImpl @Inject constructor(
         return Observable.concat(
             observePodRunning,
             observeConnectToPod,
-            observeSendStopDeliveryCommand(StopDeliveryCommand.DeliveryType.ALL, hasBasalBeepEnabled)
-        ).interceptPodEvents()
+            observeSuspendDeliveryCommand(hasBasalBeepEnabled)
+        ).doOnComplete {
+            podStateManager.suspendAlertsEnabled = true
+        }.interceptPodEvents()
     }
 
-    override fun setTime(): Observable<PodEvent> {
-        // TODO
-        logger.error(LTag.PUMPCOMM, "NOT IMPLEMENTED: setTime()")
-        return Observable.empty()
+    private fun observeSuspendDeliveryCommand(hasBasalBeepEnabled: Boolean): Observable<PodEvent> {
+        return Observable.defer {
+            val beepType = if (!hasBasalBeepEnabled)
+                BeepType.SILENT
+            else
+                BeepType.LONG_SINGLE_BEEP
+
+            bleManager.sendCommand(
+                SuspendDeliveryCommand.Builder()
+                    .setSequenceNumber(podStateManager.messageSequenceNumber)
+                    .setUniqueId(podStateManager.uniqueId!!.toInt())
+                    .setNonce(NONCE)
+                    .setBeepType(beepType)
+                    .build(),
+                DefaultStatusResponse::class
+            )
+        }
     }
 
     private fun observeSendProgramTempBasalCommand(rate: Double, durationInMinutes: Short, tempBasalBeeps: Boolean): Observable<PodEvent> {
@@ -638,7 +658,6 @@ class OmnipodDashManagerImpl @Inject constructor(
             observeConnectToPod,
             observeSendDeactivateCommand
         ).interceptPodEvents()
-            .doOnComplete(podStateManager::reset)
     }
 
     inner class PodEventInterceptor : Consumer<PodEvent> {

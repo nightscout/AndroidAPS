@@ -18,10 +18,10 @@ import org.mockito.Mock
 class AbstractSensitivityPluginTest : TestBase() {
 
     @Mock lateinit var pluginDescription: PluginDescription
-    @Mock lateinit var resourceHelper: ResourceHelper
+    @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var sp: SP
 
-    private inner class SensitivityTestClass(pluginDescription: PluginDescription, aapsLogger: AAPSLogger, resourceHelper: ResourceHelper, sp: SP) : AbstractSensitivityPlugin(pluginDescription, HasAndroidInjector { AndroidInjector { } }, aapsLogger, resourceHelper, sp) {
+    private inner class SensitivityTestClass(pluginDescription: PluginDescription, aapsLogger: AAPSLogger, rh: ResourceHelper, sp: SP) : AbstractSensitivityPlugin(pluginDescription, HasAndroidInjector { AndroidInjector { } }, aapsLogger, rh, sp) {
 
         override fun detectSensitivity(ads: AutosensDataStore, fromTime: Long, toTime: Long): AutosensResult {
             return AutosensResult()
@@ -37,7 +37,7 @@ class AbstractSensitivityPluginTest : TestBase() {
 
     @Test
     fun fillResultTest() {
-        val sut = SensitivityTestClass(pluginDescription, aapsLogger, resourceHelper, sp)
+        val sut = SensitivityTestClass(pluginDescription, aapsLogger, rh, sp)
         var ar = sut.fillResult(1.0, 1.0, "1",
             "1.2", "1", 12, 0.7, 1.2)
         Assert.assertEquals(1.0, ar.ratio, 0.01)

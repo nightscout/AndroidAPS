@@ -10,7 +10,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class WarnColors @Inject constructor(val resourceHelper: ResourceHelper) {
+class WarnColors @Inject constructor(val rh: ResourceHelper) {
 
     fun setColor(view: TextView?, value: Double, warnLevel: Double, urgentLevel: Double, colorNormal: Int, colorWarning: Int, colorAlarm: Int) =
         view?.setTextColor(when {

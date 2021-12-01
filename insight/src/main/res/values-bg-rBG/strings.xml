@@ -21,6 +21,7 @@
     <string name="tbr_formatter">%1$d%% за %2$d / %3$d мин</string>
     <string name="multiwave_bolus">Двувълнов болус</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U за %3$d мин</string>
+    <string name="insight_last_bolus">Последен болус</string>
     <string name="searching_for_devices">Търсене на устройства...</string>
     <string name="pairing_completed">Сдвояване завършено</string>
     <string name="code_compare">Съвпадат ли кодовете, показани на това устройство и на Вашата помпа?</string>
@@ -41,6 +42,7 @@
     <string name="pump_paused">Помпата е на пауза</string>
     <string name="short_status_last_connected">Последно свързване: преди %1$d минути </string>
     <string name="short_status_tbr">TBR: %1$d%% за %2$d / %3$d мин</string>
+    <string name="short_status_extended">Удължен: %1$.2f / %2$.2f U за %3$d мин</string>
     <string name="short_status_multiwave">Удължен: %1$.2f / %2$.2f U за %3$d мин</string>
     <string name="short_status_tdd">ТДД: %1$.2f</string>
     <string name="short_status_reservoir">Рез.: %1$.2fE</string>

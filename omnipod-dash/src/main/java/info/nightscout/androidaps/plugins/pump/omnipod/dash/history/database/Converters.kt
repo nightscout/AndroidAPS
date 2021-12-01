@@ -1,6 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.history.database
 
 import androidx.room.TypeConverter
+import com.google.gson.GsonBuilder
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.BolusType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.InitialResult
@@ -31,4 +33,17 @@ class Converters {
 
     @TypeConverter
     fun fromOmnipodCommandType(omnipodCommandType: OmnipodCommandType) = omnipodCommandType.name
+
+    @TypeConverter
+    fun toSegments(s: String?): List<Profile.ProfileValue> {
+        s ?: return emptyList()
+        val gson = GsonBuilder().create()
+        return gson.fromJson(s, Array<Profile.ProfileValue>::class.java).toList()
+    }
+
+    @TypeConverter
+    fun fromBasalValues(segments: List<Profile.ProfileValue>): String {
+        val gson = GsonBuilder().create()
+        return gson.toJson(segments)
+    }
 }

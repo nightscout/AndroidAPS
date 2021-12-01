@@ -20,17 +20,17 @@ class TriggerWifiSsid(injector: HasAndroidInjector) : Trigger(injector) {
     @Inject lateinit var receiverStatusStore: ReceiverStatusStore
 
     var ssid = InputString()
-    var comparator = Comparator(resourceHelper)
+    var comparator = Comparator(rh)
 
     @Suppress("unused")
     constructor(injector: HasAndroidInjector, ssid: String, compare: Comparator.Compare) : this(injector) {
         this.ssid = InputString(ssid)
-        comparator = Comparator(resourceHelper, compare)
+        comparator = Comparator(rh, compare)
     }
 
     constructor(injector: HasAndroidInjector, triggerWifiSsid: TriggerWifiSsid) : this(injector) {
         this.ssid = InputString(triggerWifiSsid.ssid.value)
-        comparator = Comparator(resourceHelper, triggerWifiSsid.comparator.value)
+        comparator = Comparator(rh, triggerWifiSsid.comparator.value)
     }
 
     fun setValue(ssid: String): TriggerWifiSsid {
@@ -72,7 +72,7 @@ class TriggerWifiSsid(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyName(): Int = R.string.ns_wifi_ssids
 
     override fun friendlyDescription(): String =
-        resourceHelper.gs(R.string.wifissidcompared, resourceHelper.gs(comparator.value.stringRes), ssid.value)
+        rh.gs(R.string.wifissidcompared, rh.gs(comparator.value.stringRes), ssid.value)
 
     override fun icon(): Optional<Int?> = Optional.of(R.drawable.ic_network_wifi)
 
@@ -80,9 +80,9 @@ class TriggerWifiSsid(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(resourceHelper, R.string.ns_wifi_ssids, this))
+            .add(StaticLabel(rh, R.string.ns_wifi_ssids, this))
             .add(comparator)
-            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.ns_wifi_ssids) + ": ", "", ssid))
+            .add(LabelWithElement(rh, rh.gs(R.string.ns_wifi_ssids) + ": ", "", ssid))
             .build(root)
     }
 }

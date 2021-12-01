@@ -30,7 +30,7 @@ open class NoSplashAppCompatActivity : DaggerAppCompatActivityWithResult() {
         super.onDestroy()
     }
 
-    public override fun attachBaseContext(newBase: Context) {
+    override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.wrap(newBase))
     }
 }

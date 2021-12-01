@@ -21,6 +21,7 @@
     <string name="tbr_formatter">%1$d%% pour %2$d / %3$d min</string>
     <string name="multiwave_bolus">Bolus mixte</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U pour %3$d min</string>
+    <string name="insight_last_bolus">Dernier bolus</string>
     <string name="searching_for_devices">Recherche d\'appareils en cours…</string>
     <string name="pairing_completed">Appairage terminé</string>
     <string name="code_compare">Les codes affichés sur cet appareil et sur la pompe sont-ils identiques ?</string>

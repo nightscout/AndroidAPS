@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.automation.elements
 
+import android.view.Gravity
 import android.widget.LinearLayout
 import androidx.core.view.marginBottom
 import dagger.android.HasAndroidInjector
@@ -8,6 +9,7 @@ import info.nightscout.androidaps.utils.ui.NumberPicker
 import java.text.DecimalFormat
 
 class InputInsulin() : Element() {
+
     var value = 0.0
 
     constructor(another: InputInsulin) : this() {
@@ -15,10 +17,11 @@ class InputInsulin() : Element() {
     }
 
     override fun addToLayout(root: LinearLayout) {
-        val numberPicker = NumberPicker(root.context, null)
-        numberPicker.setParams(0.0, -20.0, 20.0, 0.1, DecimalFormat("0.0"), true, root.findViewById(R.id.ok))
-        numberPicker.value = value
-        numberPicker.setOnValueChangedListener { value: Double -> this.value = value }
-        root.addView(numberPicker)
+        root.addView(
+            NumberPicker(root.context, null).also {
+                it.setParams(value, -20.0, 20.0, 0.1, DecimalFormat("0.0"), true, root.findViewById(R.id.ok))
+                it.setOnValueChangedListener { v: Double -> value = v }
+                it.gravity = Gravity.CENTER_HORIZONTAL
+            })
     }
 }
