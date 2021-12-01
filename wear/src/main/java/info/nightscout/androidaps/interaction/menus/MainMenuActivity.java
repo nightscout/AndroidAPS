@@ -50,9 +50,9 @@ public class MainMenuActivity extends MenuListActivity {
         boolean showWizard = sp.getBoolean("showWizard", true);
 
         menuitems.add(new MenuElement(R.drawable.ic_temptarget, getString(R.string.menu_tempt)));
-        if (showWizard) menuitems.add(new MenuElement(R.drawable.ic_cob_iob, getString(R.string.menu_wizard)));
+        if (showWizard) menuitems.add(new MenuElement(R.drawable.ic_calculator, getString(R.string.menu_wizard)));
         menuitems.add(new MenuElement(R.drawable.ic_carbs, getString(R.string.menu_ecarb)));
-        menuitems.add(new MenuElement(R.drawable.ic_ins, getString(R.string.menu_bolus)));
+        menuitems.add(new MenuElement(R.drawable.ic_cob_iob, getString(R.string.menu_bolus)));
         menuitems.add(new MenuElement(R.drawable.ic_settings, getString(R.string.menu_settings)));
         menuitems.add(new MenuElement(R.drawable.ic_status, getString(R.string.menu_status)));
         if (showPrimeFill) menuitems.add(new MenuElement(R.drawable.ic_canula, getString(R.string.menu_prime_fill)));
