@@ -56,16 +56,18 @@ public class CPPActivity extends ViewSelectorActivity {
         pager.setOnPageChangeListener(new GridViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int row, int column, float rowOffset, float columnOffset, int rowOffsetPixels, int columnOffsetPixels) {
+                dotsPageIndicator.onPageScrolled(row, column, rowOffset, columnOffset, rowOffsetPixels,
+                        columnOffsetPixels);
             }
-
             @Override
             public void onPageSelected(int row, int column) {
+                dotsPageIndicator.onPageSelected(row, column);
                 View view = pager.getChildAt(column);
                 view.requestFocus();
             }
-
             @Override
             public void onPageScrollStateChanged(int state) {
+                dotsPageIndicator.onPageScrollStateChanged(state);
             }
         });
     }
