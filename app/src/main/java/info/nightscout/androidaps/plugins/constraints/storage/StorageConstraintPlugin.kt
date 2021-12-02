@@ -42,7 +42,7 @@ class StorageConstraintPlugin @Inject constructor(
     override fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         val diskFree = availableInternalMemorySize()
         if (diskFree < Constants.MINIMUM_FREE_SPACE) {
-            aapsLogger.debug(LTag.CONSTRAINTS, "Internal storage free (Mb):$diskFree")
+            aapsLogger.debug(LTag.CONSTRAINTS, "Closed loop disabled. Internal storage free (Mb):$diskFree")
             value.set(aapsLogger, false, rh.gs(R.string.diskfull, Constants.MINIMUM_FREE_SPACE), this)
             val notification = Notification(Notification.DISK_FULL, rh.gs(R.string.diskfull, Constants.MINIMUM_FREE_SPACE), Notification.NORMAL)
             rxBus.send(EventNewNotification(notification))
