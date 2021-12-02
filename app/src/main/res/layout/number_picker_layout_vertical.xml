@@ -12,7 +12,6 @@
         android:background="@null"
         android:padding="0dp"
         android:text="+"
-        android:textColor="@color/white"
         android:textSize="25sp" />
 
     <EditText
@@ -23,8 +22,7 @@
         android:gravity="center"
         android:imeOptions="actionDone"
         android:inputType="number"
-        android:text="1"
-        android:textColor="@android:color/black" />
+        android:text="1" />
 
     <Button
         android:id="@+id/decrement"
@@ -33,7 +31,6 @@
         android:background="@null"
         android:padding="0dp"
         android:text="—"
-        android:textColor="@color/white"
         android:textStyle="bold" />
 
 </LinearLayout>

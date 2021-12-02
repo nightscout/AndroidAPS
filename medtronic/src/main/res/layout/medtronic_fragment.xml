@@ -133,7 +133,6 @@
                     android:gravity="start"
                     android:paddingLeft="5dp"
                     android:text=""
-                    android:textColor="@android:color/white"
                     android:textSize="14sp" />
 
 

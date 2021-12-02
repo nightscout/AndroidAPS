@@ -50,7 +50,6 @@
                     android:layout_weight="1"
                     android:gravity="start"
                     android:paddingStart="5dp"
-                    android:textColor="@android:color/white"
                     android:textSize="14sp"
                     tools:ignore="RtlSymmetry" />
 
@@ -101,7 +100,6 @@
                     android:gravity="start"
                     android:paddingStart="5dp"
                     android:text="{fa-bluetooth-b}"
-                    android:textColor="@android:color/white"
                     android:textSize="14sp"
                     tools:ignore="HardcodedText,RtlSymmetry" />
 
@@ -198,7 +196,6 @@
                     android:layout_weight="1"
                     android:gravity="start"
                     android:paddingStart="5dp"
-                    android:textColor="@android:color/white"
                     android:textSize="14sp"
                     tools:ignore="RtlSymmetry" />
 
@@ -246,7 +243,6 @@
                     android:layout_weight="1"
                     android:gravity="start"
                     android:paddingStart="5dp"
-                    android:textColor="@android:color/white"
                     android:textSize="14sp"
                     tools:ignore="RtlSymmetry" />
 
@@ -294,7 +290,6 @@
                     android:layout_weight="1"
                     android:gravity="start"
                     android:paddingStart="5dp"
-                    android:textColor="@android:color/white"
                     android:textSize="14sp"
                     tools:ignore="RtlSymmetry" />
 
@@ -342,7 +337,6 @@
                     android:layout_weight="1"
                     android:gravity="start"
                     android:paddingStart="5dp"
-                    android:textColor="@android:color/white"
                     android:textSize="14sp"
                     tools:ignore="RtlSymmetry" />
 
@@ -390,7 +384,6 @@
                     android:layout_weight="1"
                     android:gravity="start"
                     android:paddingStart="5dp"
-                    android:textColor="@android:color/white"
                     android:textSize="14sp"
                     tools:ignore="RtlSymmetry" />
 
@@ -438,7 +431,6 @@
                     android:layout_weight="1"
                     android:gravity="start"
                     android:paddingStart="5dp"
-                    android:textColor="@android:color/white"
                     android:textSize="14sp"
                     tools:ignore="RtlSymmetry" />
 
@@ -486,7 +478,6 @@
                     android:layout_weight="1"
                     android:gravity="start"
                     android:paddingStart="5dp"
-                    android:textColor="@android:color/white"
                     android:textSize="14sp"
                     tools:ignore="RtlSymmetry" />
 
@@ -534,7 +525,6 @@
                     android:layout_weight="1"
                     android:gravity="start"
                     android:paddingStart="5dp"
-                    android:textColor="@android:color/white"
                     android:textSize="14sp"
                     tools:ignore="RtlSymmetry" />
 
