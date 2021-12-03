@@ -904,4 +904,5 @@ Context | Edit Context</string>
     <string name="bg_too_close">ГК слишком близко к \n%1$s\n%2$s</string>
     <string name="identification">Идентификация (электронная почта, ник в Facebook или Discord и т. п)</string>
     <string name="identification_not_set">Идентификация не задана в режиме разработчика</string>
+    <string name="not_available_full">Недоступно</string>
 </resources>
