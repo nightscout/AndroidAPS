@@ -903,4 +903,5 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="bg_too_close">Gly trop proche :\n%1$s\n%2$s</string>
     <string name="identification">Identification (email, FB ou pseudo dans Discord, etc)</string>
     <string name="identification_not_set">Identification non définie en mode dev</string>
+    <string name="not_available_full">Non disponible</string>
 </resources>
