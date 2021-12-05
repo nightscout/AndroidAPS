@@ -361,13 +361,10 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     activity,
                     ProtectionCheck.Protection.BOLUS,
                     UIRunnable { if (isAdded) CarbsDialog().show(childFragmentManager, "Overview") })
-                R.id.temp_target         ->
-                    if (loop.isDisconnected) OKDialog.show(activity, rh.gs(R.string.not_available_full), rh.gs(R.string.smscommunicator_pumpdisconnected))
-                    else
-                        protectionCheck.queryProtection(
-                            activity,
-                            ProtectionCheck.Protection.BOLUS,
-                            UIRunnable { if (isAdded) TempTargetDialog().show(childFragmentManager, "Overview") })
+                R.id.temp_target         -> protectionCheck.queryProtection(
+                    activity,
+                    ProtectionCheck.Protection.BOLUS,
+                    UIRunnable { if (isAdded) TempTargetDialog().show(childFragmentManager, "Overview") })
 
                 R.id.active_profile      -> {
                     ProfileViewerDialog().also { pvd ->
