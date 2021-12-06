@@ -35,6 +35,8 @@
     <string name="diaconn_g8_visualizeextendedaspercentage_title">Visualizar bolos extendidos como %%</string>
     <string name="pairfirst">Por favor, ¡empareja tu bomba con el teléfono!</string>
     <string name="processinghistory">"Procesando evento "</string>
+    <string name="apslastLogNum">aps_last_log_num</string>
+    <string name="apsWrappingCount">aps_wrapping_count</string>
     <string name="diaconn_g8_history_tempbasal">Basal Temporal</string>
     <string name="diaconng8_pump_settings">Ajustes de la bomba Diaconn</string>
     <string name="diaconn_g8_pumpalarm_intensity_middle">medio</string>
@@ -50,6 +52,11 @@
     <string name="needbatteryreplace">Es necesario reemplazar la batería</string>
     <string name="needinsullinreplace">Es necesario reemplazar la insulina</string>
     <string name="pumpversion">version_bomba</string>
+    <string name="apsIncarnationNo">aps_incarnation_no</string>
     <string name="pumpserialno">número_serie_bomba</string>
     <string name="diaconn_g8_loginsulinchange_title">Registrar cambios de reservorio</string>
+    <string name="diaconn_g8_logsyncinprogress">Sincronización de registro en progreso</string>
+    <string name="diaconn_g8_loginsulinshorage">Falta de insulina</string>
+    <string name="diaconn_g8_logbatteryshorage">Falta de batería</string>
+    <string name="diaconn_g8_logneedleprime">Cebado de aguja :%1$.2fU</string>
 </resources>
