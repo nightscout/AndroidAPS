@@ -50,9 +50,8 @@ public class AcceptActivity extends ViewSelectorActivity {
         }
 
         setContentView(R.layout.grid_layout);
-        final Resources res = getResources();
-        final GridViewPager pager = findViewById(R.id.pager);
 
+        final GridViewPager pager = findViewById(R.id.pager);
         pager.setAdapter(new MyGridViewPagerAdapter());
         DotsPageIndicator dotsPageIndicator = findViewById(R.id.page_indicator);
         dotsPageIndicator.setPager(pager);
@@ -99,7 +98,7 @@ public class AcceptActivity extends ViewSelectorActivity {
                     @Override
                     public void onClick(View v) {
                         ListenerService.confirmAction(AcceptActivity.this, actionstring);
-                        finish();
+                        finishAffinity();
                     }
                 });
                 container.addView(view);

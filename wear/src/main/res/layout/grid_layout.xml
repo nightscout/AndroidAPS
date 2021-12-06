@@ -3,6 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="26dp"
+        android:gravity="center"
+        android:textSize="18sp"/>
+
     <android.support.wearable.view.GridViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
