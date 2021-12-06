@@ -631,18 +631,25 @@ class MedtronicHistoryData @Inject constructor(
                             "pumpId=${tempBasalProcessDTO.pumpId}, pumpType=${medtronicPumpStatus.pumpType}, " +
                             "pumpSerial=${medtronicPumpStatus.serialNumber}]")
 
-                        val result = pumpSync.syncTemporaryBasalWithTempId(
-                            tryToGetByLocalTime(tempBasalProcessDTO.atechDateTime),
-                            tbrEntry.insulinRate,
-                            tempBasalProcessDTO.durationAsSeconds * 1000L,
-                            isAbsolute = !tbrEntry.isPercent,
-                            entryWithTempId.temporaryId,
-                            PumpSync.TemporaryBasalType.NORMAL,
-                            tempBasalProcessDTO.pumpId,
-                            medtronicPumpStatus.pumpType,
-                            medtronicPumpStatus.serialNumber)
 
-                        aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithTempId - Result: $result")
+                        if (tempBasalProcessDTO.durationAsSeconds == 0) {
+                            rxBus.send(EventNewNotification(Notification(Notification.MDT_INVALID_HISTORY_DATA, rh.gs(R.string.invalid_history_data), Notification.URGENT)))
+                            aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithPumpId - Skipped")
+                        } else {
+                            val result = pumpSync.syncTemporaryBasalWithTempId(
+                                tryToGetByLocalTime(tempBasalProcessDTO.atechDateTime),
+                                tbrEntry.insulinRate,
+                                tempBasalProcessDTO.durationAsSeconds * 1000L,
+                                isAbsolute = !tbrEntry.isPercent,
+                                entryWithTempId.temporaryId,
+                                PumpSync.TemporaryBasalType.NORMAL,
+                                tempBasalProcessDTO.pumpId,
+                                medtronicPumpStatus.pumpType,
+                                medtronicPumpStatus.serialNumber
+                            )
+
+                            aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithTempId - Result: $result")
+                        }
 
                         pumpSyncStorage.removeTemporaryBasalWithTemporaryId(entryWithTempId.temporaryId)
                         tbrRecords.remove(entryWithTempId)
