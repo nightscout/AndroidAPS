@@ -45,6 +45,7 @@ abstract class Command(
 
     abstract fun execute()
     abstract fun status(): String
+    abstract fun log(): String
 
     fun cancel() {
         val result = PumpEnactResult(injector)

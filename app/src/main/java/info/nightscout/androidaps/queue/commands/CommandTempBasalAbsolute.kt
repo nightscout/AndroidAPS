@@ -28,4 +28,6 @@ class CommandTempBasalAbsolute(
     }
 
     override fun status(): String = rh.gs(R.string.temp_basal_absolute, absoluteRate, durationInMinutes)
+
+    override fun log(): String = "TEMP BASAL $absoluteRate U/h $durationInMinutes min"
 }
