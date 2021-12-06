@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.interaction.menus;
 
 import android.content.Intent;
+import android.os.Bundle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,14 +18,20 @@ import info.nightscout.androidaps.interaction.utils.MenuListActivity;
 public class FillMenuActivity extends MenuListActivity {
 
     @Override
-    protected List<MenuElement> getElements() {
-        List<MenuElement> menuitems = new ArrayList<>();
-        menuitems.add(new MenuElement(R.drawable.ic_canula, getString(R.string.action_preset_1)));
-        menuitems.add(new MenuElement(R.drawable.ic_canula, getString(R.string.action_preset_2)));
-        menuitems.add(new MenuElement(R.drawable.ic_canula, getString(R.string.action_preset_3)));
-        menuitems.add(new MenuElement(R.drawable.ic_canula, getString(R.string.action_free_amount)));
+    protected void onCreate(Bundle savedInstanceState) {
+        setTitle(R.string.menu_prime_fill);
+        super.onCreate(savedInstanceState);
+    }
 
-        return menuitems;
+    @Override
+    protected List<MenuItem> getElements() {
+        List<MenuItem> menuItems = new ArrayList<>();
+        menuItems.add(new MenuItem(R.drawable.ic_canula, getString(R.string.action_preset_1)));
+        menuItems.add(new MenuItem(R.drawable.ic_canula, getString(R.string.action_preset_2)));
+        menuItems.add(new MenuItem(R.drawable.ic_canula, getString(R.string.action_preset_3)));
+        menuItems.add(new MenuItem(R.drawable.ic_canula, getString(R.string.action_free_amount)));
+
+        return menuItems;
     }
 
     @Override
