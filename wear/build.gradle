@@ -136,7 +136,7 @@ dependencies {
     implementation('com.github.lecho:hellocharts-library:1.5.8@aar')
 
     testImplementation "junit:junit:$junit_version"
-    testImplementation 'org.json:json:20210307'
+    testImplementation 'org.json:json:20211205'
     testImplementation("org.mockito:mockito-core:${mockitoVersion}") {
         exclude group: 'net.bytebuddy', module: 'byte-buddy'
         exclude group: 'net.bytebuddy', module: 'byte-buddy-android'
