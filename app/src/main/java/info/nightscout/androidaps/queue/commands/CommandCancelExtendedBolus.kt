@@ -21,4 +21,6 @@ class CommandCancelExtendedBolus constructor(
     }
 
     override fun status(): String = rh.gs(R.string.uel_cancel_extended_bolus)
+
+    override fun log(): String = "CANCEL EXTENDEDBOLUS"
 }

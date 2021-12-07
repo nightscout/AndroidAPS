@@ -31,4 +31,6 @@ class CommandReadStatus(
     }
 
     override fun status(): String = rh.gs(R.string.read_status, reason)
+
+    override fun log(): String = "READSTATUS $reason"
 }

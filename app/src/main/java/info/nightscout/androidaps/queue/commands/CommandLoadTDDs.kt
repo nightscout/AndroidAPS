@@ -22,4 +22,6 @@ class CommandLoadTDDs(
     }
 
     override fun status(): String = rh.gs(R.string.load_tdds)
+
+    override fun log(): String = "LOAD TDDs"
 }

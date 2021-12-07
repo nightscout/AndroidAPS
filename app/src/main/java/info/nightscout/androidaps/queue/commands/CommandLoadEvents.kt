@@ -34,4 +34,6 @@ class CommandLoadEvents(
     }
 
     override fun status(): String = rh.gs(R.string.load_events)
+
+    override fun log(): String = "LOAD EVENTS"
 }

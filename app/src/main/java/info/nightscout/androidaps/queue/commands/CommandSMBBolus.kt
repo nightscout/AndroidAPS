@@ -38,4 +38,6 @@ class CommandSMBBolus(
     }
 
     override fun status(): String = rh.gs(R.string.smb_bolus_u, detailedBolusInfo.insulin)
+
+    override fun log(): String = "SMB BOLUS ${rh.gs(R.string.formatinsulinunits, detailedBolusInfo.insulin)}"
 }

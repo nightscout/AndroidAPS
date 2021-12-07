@@ -23,4 +23,6 @@ class CommandExtendedBolus constructor(
     }
 
     override fun status(): String = rh.gs(R.string.extended_bolus_u_min, insulin, durationInMinutes)
+
+    override fun log(): String = "EXTENDEDBOLUS $insulin U $durationInMinutes min"
 }

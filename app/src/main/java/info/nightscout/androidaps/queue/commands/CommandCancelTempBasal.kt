@@ -22,4 +22,6 @@ class CommandCancelTempBasal(
     }
 
     override fun status(): String = rh.gs(R.string.uel_accepts_temp_basal)
+
+    override fun log(): String = "CANCEL TEMPBASAL"
 }

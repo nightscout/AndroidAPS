@@ -20,7 +20,7 @@ class CommandCustomCommand(
         callback?.result(result)?.run()
     }
 
-    override fun status(): String {
-        return customCommand.statusDescription
-    }
+    override fun status(): String = customCommand.statusDescription
+
+    override fun log(): String = customCommand.statusDescription
 }

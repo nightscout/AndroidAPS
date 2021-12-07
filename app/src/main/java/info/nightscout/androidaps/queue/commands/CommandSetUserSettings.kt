@@ -32,4 +32,6 @@ class CommandSetUserSettings(
     }
 
     override fun status(): String = rh.gs(R.string.set_user_settings)
+
+    override fun log(): String = "SET USER SETTINGS"
 }

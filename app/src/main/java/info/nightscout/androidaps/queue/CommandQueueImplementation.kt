@@ -144,7 +144,7 @@ class CommandQueueImplementation @Inject constructor(
 
     @Synchronized
     private fun add(command: Command) {
-        aapsLogger.debug(LTag.PUMPQUEUE, "Adding: " + command.javaClass.simpleName + " - " + command.status())
+        aapsLogger.debug(LTag.PUMPQUEUE, "Adding: " + command.javaClass.simpleName + " - " + command.log())
         synchronized(queue) { queue.add(command) }
     }
 
