@@ -648,8 +648,8 @@
     <string name="key_show_wizard_button" translatable="false">show_wizard_button</string>
     <string name="key_show_insulin_button" translatable="false">show_insulin_button</string>
     <string name="key_show_treatment_button" translatable="false">show_treatment_button</string>
-    <string name="show_calibration_button_summary">Sends a calibration to xDrip+ or open G5 calibration dialog</string>
-    <string name="show_cgm_button_summary">Opens xDrip+, back buttons returns to AAPS</string>
+    <string name="show_calibration_button_summary">Sends a calibration to xDrip+ or open BYODA calibration dialog</string>
+    <string name="show_cgm_button_summary">Opens xDrip+ or BYODA, back buttons returns to AAPS</string>
     <string name="key_insulin_button_increment_1" translatable="false">insulin_button_increment_1</string>
     <string name="key_insulin_button_increment_2" translatable="false">insulin_button_increment_2</string>
     <string name="key_insulin_button_increment_3" translatable="false">insulin_button_increment_3</string>
