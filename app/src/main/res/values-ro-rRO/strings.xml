@@ -520,8 +520,6 @@
     <string name="enablesmbwithhightemptarget_summary">Activați SMB atunci când există o țintă temporară activă (exerciții fizice, peste 100mg/dl sau 5.5mmol/l)</string>
     <string name="overview_insulin_label">Insulină</string>
     <string name="overview_buttons_selection">Butoane</string>
-    <string name="show_calibration_button_summary">Trimite calibrarea către xDrip+ sau deschide calibrarea pentru G5</string>
-    <string name="show_cgm_button_summary">Deschide xDrip+, butonul de înapoi returnează la AAPS</string>
     <string name="carb_increment_button_message">Cantitate de carbohidrați de adăugat când se apasă butonul</string>
     <string name="insulin_increment_button_message">Cantitatea de insulină de adăugat când se apasă butonul</string>
     <string name="error_starting_cgm">Nu s-a putut deschide aplicația CGM. Asigurați-vă că este instalată.</string>
