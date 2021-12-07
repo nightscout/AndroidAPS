@@ -396,8 +396,6 @@
     <string name="enablesmbwithhightemptarget">启用具有高临时目标的 SMB</string>
     <string name="overview_insulin_label">胰岛素</string>
     <string name="overview_buttons_selection">按钮</string>
-    <string name="show_calibration_button_summary">向 xDrip + 发送校准请求或打开 G5 校准对话框</string>
-    <string name="show_cgm_button_summary">打开 xDrip +, 后退按钮返回到 AAPS</string>
     <string name="carb_increment_button_message">按下按钮时添加的碳水化合物数量</string>
     <string name="insulin_increment_button_message">按下按钮时添加的胰岛素量</string>
     <string name="error_starting_cgm">无法启动 CGM 应用程序。 请确保已安装。</string>
