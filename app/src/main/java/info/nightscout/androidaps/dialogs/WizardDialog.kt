@@ -407,7 +407,6 @@ class WizardDialog : DaggerDialogFragment() {
                 binding.total.text = rh.gs(R.string.missing_carbs, wizard.carbsEquivalent.toInt())
                 binding.ok.visibility = View.INVISIBLE
             }
-
             binding.percentUsed.text = rh.gs(R.string.format_percent, wizard.percentageCorrection)
             calculatedPercentage = wizard.calculatedPercentage
             calculatedCorrection = wizard.calculatedCorrection
