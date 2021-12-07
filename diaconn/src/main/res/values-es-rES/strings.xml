@@ -97,4 +97,11 @@
     <string name="diacon_g8_blockreplaceneedle">NECESITA REEMPLAZO</string>
     <string name="diacon_g8_blockreplacesyringe">REEMPLAZO DE AGUJA</string>
     <string name="diaconn_g8_logalarmblock">Inyección Bloqueada (%s)</string>
+    <string name="diaconn_g8_errorcode_1">No se puede buscar debido a un error CRC en el paquete.</string>
+    <string name="diaconn_g8_errorcode_2">No se puede establecer por un error en el parámetro de entrada.</string>
+    <string name="diaconn_g8_errorcode_3">No se puede establecer por un error de especificación de protocolo.</string>
+    <string name="diaconn_g8_errorcode_6">Cancelado por la bomba</string>
+    <string name="diaconn_g8_logtubechange_title">Registrar cambios de tubo</string>
+    <string name="diaconn_g8_logtubechange_summary">Añadir evento \"Cambio de tubo\" al portal del cuidador, cuando se detecte en el historial</string>
+    <string name="diaconn_g8_logtempstart">Inicio de basal temporal</string>
 </resources>
