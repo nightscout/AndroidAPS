@@ -733,7 +733,7 @@ public class AapsOmnipodErosManager {
                     PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND,
                     pumpId,
                     PumpType.OMNIPOD_EROS,
-                    serialNumber()
+                    pumpSync.expectedPumpState().getSerialNumber()
             );
         }
     }

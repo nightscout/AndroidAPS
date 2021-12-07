@@ -32,4 +32,6 @@ class CommandTempBasalPercent(
     }
 
     override fun status(): String = rh.gs(R.string.temp_basal_percent, percent, durationInMinutes)
+
+    override fun log(): String = "TEMP BASAL $percent% $durationInMinutes min"
 }

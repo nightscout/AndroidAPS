@@ -721,9 +721,9 @@
     <string name="application_expired">Aplikácia expirovala</string>
     <string name="new_version_warning">Nová verzia je dostupná minimálne %1$d dní! Prepnutie na ochranu pred nízkou glykémiou po %2$d dňoch, vypnutie uzavretého okruhu po %3$d dňoch</string>
     <string name="twohours">2h</string>
-    <string name="dexcom_app_patched">Dexcom aplikácia (upravená)</string>
-    <string name="dexcom_short">DXCM</string>
-    <string name="description_source_dexcom">Prijímaj hodnoty glykémie z upravenej Dexcom aplikácie.</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Prijímať hodnoty glykémií z upravenej aplikácie Dexcom (BYODA).</string>
     <string name="cobvsiob">COB vs. IOB</string>
     <string name="bolusconstraintappliedwarn">Použité obmedzenie bolusu: %1$.2f J na %2$.2f J</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Detekovaná pomalá absorbcia sacharidov: %2$d%% času. Prekontrolujte kalkuláciu. COB môže byť úplne iné, môže byť podaného viac inzulínu!!!!!</font>]]></string>
@@ -778,8 +778,8 @@
     <string name="show_calculation">Zobraziť kalkuláciu</string>
     <string name="show_removed">Zobraziť odstránené</string>
     <string name="clearqueueconfirm">Vymazať frontu? Všetky dáta vo fronte budú stratené!</string>
-    <string name="ebstopsloop">Použitie funkcie rozloženého bolusu zastaví uzavretý okruh na dobu trvania rozloženého bolusu. Naozaj to chcete?</string>
-    <string name="closed_loop_disabled_with_eb">Uzavretý okruh je zastavený kvôli prebiehajúcemu rozloženému bolusu</string>
+    <string name="ebstopsloop">Použitie funkcie predĺženého bolusu zastaví uzavretý okruh na dobu trvania predĺženého bolusu. Naozaj to chcete?</string>
+    <string name="closed_loop_disabled_with_eb">Uzavretý okruh je zastavený kvôli prebiehajúcemu predĺženému bolusu</string>
     <string name="phonechecker">PhoneChecker</string>
     <string name="chartmenu">Grafové menu</string>
     <string name="loop_smbrequest_time_label">Čas požiadavky SMB</string>
@@ -859,7 +859,7 @@
     <string name="cannula">Kanyla</string>
     <string name="userentry">Vstup používateľa</string>
     <string name="common_values">Použite hodnoty pre najväčšie jedlo, aké obvykle jete\n</string>
-    <string name="summary_email_for_crash_report">Táto e-mailová adresa bude pripojená ku správam o zlyhaniach, aby sme vás mohli kontaktovať v naliehavých prípadoch. Je to dobrovoľné.</string>
+    <string name="summary_email_for_crash_report">Táto identifikácia bude priložená ku správam o zlyhaniach, aby sme Vás mohli v naliehavých prípadoch kontaktovať. Je to voliteľné.</string>
     <string name="email_address">Emailová adresa</string>
     <string name="privacy_settings">Nastavenia súkromia</string>
     <string name="privacy_summary">Pokiaľ chcete byť upozornení na zlyhanie aplikácie, môžete zadať voliteľne e-mailovú adresu. Toto nie je automatizovaná služba. Vývojári vás budú kontaktovať v nebezpečných situáciách.</string>
@@ -901,4 +901,6 @@
     <string name="data_status">Stav dát glykémie</string>
     <string name="recalculated_data_used">Použité prepočítané dáta</string>
     <string name="bg_too_close">Glykémia je príliš blízko:\n%1$s\n%2$s</string>
+    <string name="identification">Identifikácia (E-mail, prezývka FB, alebo Discord atď.)</string>
+    <string name="identification_not_set">Identifikácia nie je nastavená vo vývojárskom móde</string>
 </resources>

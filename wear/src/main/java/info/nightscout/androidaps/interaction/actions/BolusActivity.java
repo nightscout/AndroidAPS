@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.text.DecimalFormat;
 
@@ -32,14 +33,32 @@ public class BolusActivity extends ViewSelectorActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.grid_layout);
-        final Resources res = getResources();
-        final GridViewPager pager = findViewById(R.id.pager);
 
+        final TextView title = findViewById(R.id.title);
+        title.setText(getString(R.string.menu_bolus));
+
+        final GridViewPager pager = findViewById(R.id.pager);
         pager.setAdapter(new MyGridViewPagerAdapter());
         DotsPageIndicator dotsPageIndicator = findViewById(R.id.page_indicator);
         dotsPageIndicator.setPager(pager);
+        pager.setOnPageChangeListener(new GridViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int row, int column, float rowOffset, float columnOffset, int rowOffsetPixels, int columnOffsetPixels) {
+                dotsPageIndicator.onPageScrolled(row, column, rowOffset, columnOffset, rowOffsetPixels,
+                        columnOffsetPixels);
+            }
+            @Override
+            public void onPageSelected(int row, int column) {
+                dotsPageIndicator.onPageSelected(row, column);
+                View view = pager.getChildAt(column);
+                view.requestFocus();
+            }
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                dotsPageIndicator.onPageScrollStateChanged(state);
+            }
+        });
     }
-
 
     @Override
     protected void onPause() {
@@ -71,6 +90,7 @@ public class BolusActivity extends ViewSelectorActivity {
                 editInsulin = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 30d, 0.1d, new DecimalFormat("#0.0"), false);
                 setLabelToPlusMinusView(view, getString(R.string.action_insulin));
                 container.addView(view);
+                view.requestFocus();
                 return view;
             } else if (col == 1) {
                 final View view = getInflatedPlusMinusView(container);
@@ -96,7 +116,7 @@ public class BolusActivity extends ViewSelectorActivity {
                         String actionstring = "bolus " + SafeParse.stringToDouble(editInsulin.editText.getText().toString())
                                 + " " + SafeParse.stringToInt(editCarbs.editText.getText().toString());
                         ListenerService.initiateAction(BolusActivity.this, actionstring);
-                        finish();
+                        finishAffinity();
                     }
                 });
                 container.addView(view);

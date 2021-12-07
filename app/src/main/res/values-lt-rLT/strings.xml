@@ -717,9 +717,6 @@
     <string name="application_expired">Aplikacijos laikas baigėsi</string>
     <string name="new_version_warning">Nauja versija pasiekiama mažiausiai %1$d d.! Po %2$d grįšite prie stabdymo prie žemo, po %3$d ciklas bus išjungtas</string>
     <string name="twohours">2 val</string>
-    <string name="dexcom_app_patched">Dexcom programėlė (modifikuota)</string>
-    <string name="dexcom_short">DXCM</string>
-    <string name="description_source_dexcom">Gauti kraujo gliukozės reikšmes iš modifikuotos Dexcom programėlės.</string>
     <string name="cobvsiob">AAO prieš AIO</string>
     <string name="bolusconstraintappliedwarn">Pritaikytas boluso apribojimas: %1$.2f vv iki %2$.2f vv</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Nustatytas lėtas angliavandenių įsisavinimas: %2$d%% laiko. Dar karą patikrinkite savo skaičiavimus. AAO gali būti pervertinti, todėl gali būti suleista per daug insulino!!!!!</font>]]></string>
@@ -850,7 +847,6 @@
     <string name="cannula">Kaniulė</string>
     <string name="userentry">Naudotojo įrašas</string>
     <string name="common_values">Naudokite gausiausio patiekalo, kurį paprastai valgote, reikšmes\n</string>
-    <string name="summary_email_for_crash_report">Šis el. pašto adresas bus pridėtas prie gedimų ataskaitų, kad skubiais atvejais galėtume su jumis susisiekti. Jis neprivalomas.</string>
     <string name="email_address">El. pašto adresas</string>
     <string name="privacy_settings">Privatumo nuostatos</string>
     <string name="privacy_summary">Nurodykite el. pašto adresą (neprivaloma), jei norite gauti informaciją apie programos strigimus. Tai nėra automatizuota paslauga. Kūrėjai susisieks esant pavojingoms situacijoms.</string>

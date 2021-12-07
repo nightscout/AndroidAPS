@@ -63,8 +63,8 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
                 result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
                 uel.log(UserEntry.Action.TT, Sources.Automation, title,
                     ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.AUTOMATION),
-                    ValueWithUnit.fromGlucoseUnit(tt().lowTarget, value.units.asText),
-                    ValueWithUnit.fromGlucoseUnit(tt().highTarget, value.units.asText).takeIf { tt().lowTarget != tt().highTarget },
+                    ValueWithUnit.Mgdl(tt().lowTarget),
+                    ValueWithUnit.Mgdl(tt().highTarget).takeIf { tt().lowTarget != tt().highTarget },
                     ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt().duration).toInt()))
                 callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok))?.run()
             }, {

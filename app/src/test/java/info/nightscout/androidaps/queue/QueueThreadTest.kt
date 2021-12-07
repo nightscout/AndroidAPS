@@ -17,7 +17,6 @@ import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvid
 import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.androidaps.queue.commands.CommandTempBasalAbsolute
 import info.nightscout.androidaps.utils.buildHelper.BuildHelperImpl
-import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
@@ -58,7 +57,7 @@ class QueueThreadTest : TestBaseWithProfile() {
         commandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, aapsSchedulers, rh, constraintChecker,
             profileFunction, activePlugin, context, sp,
-            BuildHelperImpl(ConfigImpl(), fileListProvider), dateUtil, repository, fabricPrivacy, config
+            BuildHelperImpl(config, fileListProvider), dateUtil, repository, fabricPrivacy, config
         )
 
         val pumpDescription = PumpDescription()

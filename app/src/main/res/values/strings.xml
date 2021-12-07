@@ -648,8 +648,8 @@
     <string name="key_show_wizard_button" translatable="false">show_wizard_button</string>
     <string name="key_show_insulin_button" translatable="false">show_insulin_button</string>
     <string name="key_show_treatment_button" translatable="false">show_treatment_button</string>
-    <string name="show_calibration_button_summary">Sends a calibration to xDrip+ or open G5 calibration dialog</string>
-    <string name="show_cgm_button_summary">Opens xDrip+, back buttons returns to AAPS</string>
+    <string name="show_calibration_button_summary">Sends a calibration to xDrip+ or open BYODA calibration dialog</string>
+    <string name="show_cgm_button_summary">Opens xDrip+ or BYODA, back buttons returns to AAPS</string>
     <string name="key_insulin_button_increment_1" translatable="false">insulin_button_increment_1</string>
     <string name="key_insulin_button_increment_2" translatable="false">insulin_button_increment_2</string>
     <string name="key_insulin_button_increment_3" translatable="false">insulin_button_increment_3</string>
@@ -698,7 +698,6 @@
     <string name="no_action_selected">No action selected, nothing will happen</string>
     <string name="start_hypo_tt">Start Hypo TT</string>
     <string name="closed_loop_disabled_on_dev_branch">Running dev version. Closed loop is disabled.</string>
-    <string name="key_fromNSAreCommingFakedExtendedBoluses" translatable="false">fromNSAreCommingFakedExtendedBoluses</string>
     <string name="engineering_mode_enabled">Engineering mode enabled</string>
     <string name="profileswitch_ismissing">ProfileSwitch missing. Please do a profile switch or press \"Activate Profile\" in the LocalProfile.</string>
     <string name="pumpisnottempbasalcapable">Pump is not temp basal capable</string>
@@ -911,9 +910,9 @@
     <string name="new_version_warning">New version for at least %1$d days available! Fallback to LGS after %2$d days, loop will be disabled after %3$d days</string>
     <string name="twohours">2h</string>
 
-    <string name="dexcom_app_patched">Dexcom App (patched)</string>
-    <string name="dexcom_short">DXCM</string>
-    <string name="description_source_dexcom">Receive BG values from the patched Dexcom app.</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Receive BG values from the \'Build Your Own Dexcom App\'.</string>
 
     <string name="cobvsiob">COB vs IOB</string>
     <string name="bolusconstraintappliedwarn">Bolus constraint applied: %1$.2f U to %2$.2f U</string>
@@ -1084,7 +1083,7 @@
     <string name="cannula">Cannula</string>
     <string name="userentry">User entry</string>
     <string name="common_values">Use values of your largest food you usually eat\n</string>
-    <string name="summary_email_for_crash_report">This email address will attached to crash reports so we can contact you in urgent cases. It\'s optional.</string>
+    <string name="summary_email_for_crash_report">This identification will attached to crash reports so we can contact you in urgent cases. It\'s optional.</string>
     <string name="email_address">Email address</string>
     <string name="privacy_settings">Privacy setting</string>
     <string name="privacy_summary">You can provide optional email address if you want to be notified about app crashes. This is not an automated service. You will be contacted by developers in dangerous situations.</string>
@@ -1136,5 +1135,8 @@
     <string name="recalculated_data_used">Recalculated data used</string>
     <string name="bg_too_close">BG too close:\n%1$s\n%2$s</string>
     <string name="key_last_processed_glunovo_timestamp" translatable="false">last_processed_glunovo_timestamp</string>
+    <string name="identification">Identification (email, FB or Discord nick etc)</string>
+    <string name="identification_not_set">Identification not set in dev mode</string>
+    <string name="not_available_full">Not available</string>
 
 </resources>

@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.insulin
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.Insulin
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -19,8 +20,10 @@ class InsulinOrefRapidActingPlugin @Inject constructor(
     injector: HasAndroidInjector,
     rh: ResourceHelper,
     profileFunction: ProfileFunction,
-    rxBus: RxBus, aapsLogger: AAPSLogger
-) : InsulinOrefBasePlugin(injector, rh, profileFunction, rxBus, aapsLogger) {
+    rxBus: RxBus,
+    aapsLogger: AAPSLogger,
+    config: Config
+) : InsulinOrefBasePlugin(injector, rh, profileFunction, rxBus, aapsLogger, config) {
 
     override val id get(): Insulin.InsulinType = Insulin.InsulinType.OREF_RAPID_ACTING
     override val friendlyName get(): String = rh.gs(R.string.rapid_acting_oref)

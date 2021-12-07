@@ -17,7 +17,8 @@ import org.junit.Before
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 
-open class ActionsTestBase : TestBaseWithProfile() {
+open class
+ActionsTestBase : TestBaseWithProfile() {
 
     open class TestLoopPlugin(
         aapsLogger: AAPSLogger,
@@ -31,16 +32,19 @@ open class ActionsTestBase : TestBaseWithProfile() {
         private var suspended = false
         override var lastRun: Loop.LastRun? = Loop.LastRun()
         override val isSuspended: Boolean = suspended
+        override val isLGS: Boolean = false
+        override val isSuperBolus: Boolean = false
+        override val isDisconnected: Boolean = false
         override var enabled: Boolean
             get() = true
             set(_) {}
 
+        override fun invoke(initiator: String, allowNotification: Boolean, tempBasalFallback: Boolean) {}
+        override fun acceptChangeRequest() {}
         override fun minutesToEndOfSuspend(): Int = 0
-
-        override fun goToZeroTemp(durationInMinutes: Int, profile: Profile, reason: OfflineEvent.Reason) {
-        }
-
+        override fun goToZeroTemp(durationInMinutes: Int, profile: Profile, reason: OfflineEvent.Reason) {}
         override fun suspendLoop(durationInMinutes: Int) {}
+        override fun disableCarbSuggestions(durationMinutes: Int) {}
     }
 
     @Mock lateinit var sp: SP
@@ -99,7 +103,7 @@ open class ActionsTestBase : TestBaseWithProfile() {
             }
             if (it is ActionLoopSuspend) {
                 it.aapsLogger = aapsLogger
-                it.loopPlugin = loopPlugin
+                it.loop = loopPlugin
                 it.rh = rh
                 it.rxBus = rxBus
                 it.uel = uel

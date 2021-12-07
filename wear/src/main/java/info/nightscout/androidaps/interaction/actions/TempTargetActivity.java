@@ -38,9 +38,11 @@ public class TempTargetActivity extends ViewSelectorActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.grid_layout);
-        final Resources res = getResources();
-        final GridViewPager pager = findViewById(R.id.pager);
 
+        final TextView title = findViewById(R.id.title);
+        title.setText(getString(R.string.menu_tempt));
+
+        final GridViewPager pager = findViewById(R.id.pager);
         pager.setAdapter(new MyGridViewPagerAdapter());
         DotsPageIndicator dotsPageIndicator = findViewById(R.id.page_indicator);
         dotsPageIndicator.setPager(pager);
@@ -48,6 +50,23 @@ public class TempTargetActivity extends ViewSelectorActivity {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         isMGDL = sp.getBoolean("units_mgdl", true);
         isSingleTarget = sp.getBoolean("singletarget", true);
+        pager.setOnPageChangeListener(new GridViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int row, int column, float rowOffset, float columnOffset, int rowOffsetPixels, int columnOffsetPixels) {
+                dotsPageIndicator.onPageScrolled(row, column, rowOffset, columnOffset, rowOffsetPixels,
+                        columnOffsetPixels);
+            }
+            @Override
+            public void onPageSelected(int row, int column) {
+                dotsPageIndicator.onPageSelected(row, column);
+                View view = pager.getChildAt(column);
+                view.requestFocus();
+            }
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                dotsPageIndicator.onPageScrollStateChanged(state);
+            }
+        });
     }
 
 
@@ -84,6 +103,7 @@ public class TempTargetActivity extends ViewSelectorActivity {
                 }
                 setLabelToPlusMinusView(view, getString(R.string.action_duration));
                 container.addView(view);
+                view.requestFocus();
                 return view;
 
             } else if (col == 1) {
@@ -144,7 +164,7 @@ public class TempTargetActivity extends ViewSelectorActivity {
                                 + " " + (isSingleTarget ? SafeParse.stringToDouble(lowRange.editText.getText().toString()) : SafeParse.stringToDouble(highRange.editText.getText().toString()));
 
                         ListenerService.initiateAction(TempTargetActivity.this, actionstring);
-                        finish();
+                        finishAffinity();
                     }
                 });
                 container.addView(view);

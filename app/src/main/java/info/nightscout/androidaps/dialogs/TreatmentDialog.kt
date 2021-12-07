@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.dialogs
 
 import android.content.Context
+import android.opengl.Visibility
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -105,6 +106,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
             ?: 0.0, 0.0, maxCarbs, 1.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher)
         binding.insulin.setParams(savedInstanceState?.getDouble("insulin")
             ?: 0.0, 0.0, maxInsulin, pumpDescription.bolusStep, DecimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump), false, binding.okcancel.ok, textWatcher)
+        binding.recordOnlyLayout.visibility = View.GONE
     }
 
     override fun onDestroyView() {

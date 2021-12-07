@@ -5,17 +5,27 @@ import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.data.PureProfile
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.ProfileSwitch
-import info.nightscout.androidaps.database.entities.TemporaryBasal
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.GlucoseUnit
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter.to2Decimal
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.T
 import org.json.JSONObject
 import java.util.*
+
+fun List<ProfileSwitch>.isPSEvent5minBack(time: Long): Boolean {
+    for (event in this) {
+        if (event.timestamp <= time && event.timestamp > time - T.mins(5).msecs()) {
+            if (event.duration == 0L) {
+                //aapsLogger.debug(LTag.DATABASE, "Found ProfileSwitch event for time: " + dateUtil.dateAndTimeString(time) + " " + event.toString())
+                return true
+            }
+        }
+    }
+    return false
+}
 
 fun ProfileSwitch.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
     JSONObject()

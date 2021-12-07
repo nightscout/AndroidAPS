@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.text.DecimalFormat;
 
@@ -34,12 +35,31 @@ public class ECarbActivity extends ViewSelectorActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.grid_layout);
-        final Resources res = getResources();
-        final GridViewPager pager = findViewById(R.id.pager);
 
+        final TextView title = findViewById(R.id.title);
+        title.setText(getString(R.string.menu_ecarb));
+
+        final GridViewPager pager = findViewById(R.id.pager);
         pager.setAdapter(new MyGridViewPagerAdapter());
         DotsPageIndicator dotsPageIndicator = findViewById(R.id.page_indicator);
         dotsPageIndicator.setPager(pager);
+        pager.setOnPageChangeListener(new GridViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int row, int column, float rowOffset, float columnOffset, int rowOffsetPixels, int columnOffsetPixels) {
+                dotsPageIndicator.onPageScrolled(row, column, rowOffset, columnOffset, rowOffsetPixels,
+                        columnOffsetPixels);
+            }
+            @Override
+            public void onPageSelected(int row, int column) {
+                dotsPageIndicator.onPageSelected(row, column);
+                View view = pager.getChildAt(column);
+                view.requestFocus();
+            }
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                dotsPageIndicator.onPageScrollStateChanged(state);
+            }
+        });
     }
 
 
@@ -73,6 +93,7 @@ public class ECarbActivity extends ViewSelectorActivity {
                 editCarbs = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 150d, 1d, new DecimalFormat("0"), true);
                 setLabelToPlusMinusView(view, getString(R.string.action_carbs));
                 container.addView(view);
+                view.requestFocus();
                 return view;
             } else if(col == 1){
                 final View view = getInflatedPlusMinusView(container);
@@ -109,7 +130,7 @@ public class ECarbActivity extends ViewSelectorActivity {
                                 + " " + SafeParse.stringToInt(editStartTime.editText.getText().toString())
                                 + " " + SafeParse.stringToInt(editDuration.editText.getText().toString());
                         ListenerService.initiateAction(ECarbActivity.this, actionstring);
-                        finish();
+                        finishAffinity();
                     }
                 });
                 container.addView(view);

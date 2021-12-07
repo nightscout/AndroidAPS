@@ -9,6 +9,7 @@ import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -24,6 +25,7 @@ class BgQualityCheckPluginTest : TestBase() {
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var iobCobCalculator: IobCobCalculator
     @Mock lateinit var fabricPrivacy: FabricPrivacy
+    @Mock lateinit var dateUtil: DateUtil
 
     private lateinit var plugin: BgQualityCheckPlugin
 
@@ -32,7 +34,7 @@ class BgQualityCheckPluginTest : TestBase() {
 
     @Before
     fun mock() {
-        plugin = BgQualityCheckPlugin(injector, aapsLogger, rh, RxBus(aapsSchedulers, aapsLogger), iobCobCalculator, aapsSchedulers, fabricPrivacy)
+        plugin = BgQualityCheckPlugin(injector, aapsLogger, rh, RxBus(aapsSchedulers, aapsLogger), iobCobCalculator, aapsSchedulers, fabricPrivacy, dateUtil)
         Mockito.`when`(iobCobCalculator.ads).thenReturn(autosensDataStore)
     }
 

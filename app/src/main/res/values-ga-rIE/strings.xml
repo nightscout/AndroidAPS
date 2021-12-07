@@ -178,8 +178,6 @@
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="twohours">2u</string>
-    <string name="dexcom_app_patched">Dexcom App (patched)</string>
-    <string name="dexcom_short">DXCM</string>
     <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>

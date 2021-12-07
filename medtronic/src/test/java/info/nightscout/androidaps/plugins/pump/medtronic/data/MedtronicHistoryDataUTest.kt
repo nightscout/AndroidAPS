@@ -11,12 +11,14 @@ import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncStorage
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.MedtronicPumpHistoryDecoder
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.TempBasalPair
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.hamcrest.Matchers.notNullValue
 import org.junit.Assert.*
@@ -35,6 +37,8 @@ class MedtronicHistoryDataUTest : TestBase() {
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var pumpSyncStorage: PumpSyncStorage
     @Mock lateinit var sp: SP
+    @Mock lateinit var rh: ResourceHelper
+    @Mock lateinit var rxBus: RxBus
 
 
     private val packetInjector = HasAndroidInjector {
@@ -48,7 +52,7 @@ class MedtronicHistoryDataUTest : TestBase() {
     @Test
     fun createTBRProcessList() {
 
-        var unitToTest = MedtronicHistoryData(packetInjector, aapsLogger, sp, activePlugin,
+        var unitToTest = MedtronicHistoryData(packetInjector, aapsLogger, sp, rh, rxBus, activePlugin,
         medtronicUtil,   medtronicPumpHistoryDecoder,
         medtronicPumpStatus,
         pumpSync,

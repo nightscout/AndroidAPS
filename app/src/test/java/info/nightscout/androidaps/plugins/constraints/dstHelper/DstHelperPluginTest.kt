@@ -4,7 +4,7 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
+import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -21,7 +21,7 @@ class DstHelperPluginTest : TestBase() {
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var sp: SP
     @Mock lateinit var activePlugin: ActivePlugin
-    @Mock lateinit var loopPlugin: LoopPlugin
+    @Mock lateinit var loop: Loop
 
     private lateinit var plugin: DstHelperPlugin
 
@@ -30,7 +30,7 @@ class DstHelperPluginTest : TestBase() {
     @Before
     fun mock() {
         plugin = DstHelperPlugin(injector, aapsLogger, RxBus(aapsSchedulers, aapsLogger), rh,
-                                 sp, activePlugin, loopPlugin)
+                                 sp, activePlugin, loop)
     }
 
     @Test

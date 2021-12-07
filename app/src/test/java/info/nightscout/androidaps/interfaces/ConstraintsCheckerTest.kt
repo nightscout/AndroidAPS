@@ -30,7 +30,6 @@ import info.nightscout.androidaps.plugins.source.GlimpPlugin
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.Profiler
 import info.nightscout.androidaps.utils.buildHelper.BuildHelperImpl
-import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
@@ -131,17 +130,14 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         insightDbHelper = InsightDbHelper(insightDatabaseDao)
         danaPump = DanaPump(aapsLogger, sp, dateUtil, injector)
         hardLimits = HardLimits(aapsLogger, rxBus, sp, rh, context, repository)
-        objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, rh, activePlugin, sp, ConfigImpl(), dateUtil, uel)
+        objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, rh, activePlugin, sp, config, dateUtil, uel)
         comboPlugin = ComboPlugin(injector, aapsLogger, rxBus, rh, profileFunction, sp, commandQueue, context, pumpSync, dateUtil)
         danaRPlugin = DanaRPlugin(injector, aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, activePlugin, sp, commandQueue, danaPump, dateUtil, fabricPrivacy, pumpSync)
         danaRSPlugin = DanaRSPlugin(injector, aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, profileFunction, sp, commandQueue, danaPump, pumpSync, detailedBolusInfoStorage, temporaryBasalStorage, fabricPrivacy, dateUtil)
-        insightPlugin = LocalInsightPlugin(injector, aapsLogger, rxBus, rh, sp, commandQueue, profileFunction, context, ConfigImpl(), dateUtil, insightDbHelper, pumpSync)
+        insightPlugin = LocalInsightPlugin(injector, aapsLogger, rxBus, rh, sp, commandQueue, profileFunction, context, config, dateUtil, insightDbHelper, pumpSync)
         openAPSSMBPlugin = OpenAPSSMBPlugin(injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, context, activePlugin, iobCobCalculator, hardLimits, profiler, sp, dateUtil, repository, glucoseStatusProvider)
         openAPSAMAPlugin = OpenAPSAMAPlugin(injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, context, activePlugin, iobCobCalculator, hardLimits, profiler, fabricPrivacy, dateUtil, repository, glucoseStatusProvider)
-        safetyPlugin = SafetyPlugin(injector, aapsLogger, rh, sp, rxBus, constraintChecker,
-                                    openAPSAMAPlugin, openAPSSMBPlugin, sensitivityOref1Plugin, activePlugin,
-                                    hardLimits, BuildHelperImpl(ConfigImpl(), fileListProvider), iobCobCalculator,
-                                    ConfigImpl(), dateUtil)
+        safetyPlugin = SafetyPlugin(injector, aapsLogger, rh, sp, rxBus, constraintChecker, openAPSAMAPlugin, openAPSSMBPlugin, sensitivityOref1Plugin, activePlugin, hardLimits, BuildHelperImpl(config, fileListProvider), iobCobCalculator, config, dateUtil)
         val constraintsPluginsList = ArrayList<PluginBase>()
         constraintsPluginsList.add(safetyPlugin)
         constraintsPluginsList.add(objectivesPlugin)
@@ -249,7 +245,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         // Apply all limits
         val d = constraintChecker.getMaxBasalAllowed(validProfile)
         Assert.assertEquals(0.8, d.value(), 0.01)
-        Assert.assertEquals(6, d.reasonList.size)
+        Assert.assertEquals(3, d.reasonList.size)
         Assert.assertEquals("DanaR: Limiting max basal rate to 0.80 U/h because of pump limit", d.getMostLimitedReasons(aapsLogger))
     }
 
@@ -275,9 +271,9 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
 
         // Apply all limits
         val i = constraintChecker.getMaxBasalPercentAllowed(validProfile)
-        Assert.assertEquals(100, i.value())
-        Assert.assertEquals(9, i.reasonList.size) // 7x Safety & RS & R
-        Assert.assertEquals("Safety: Limiting max percent rate to 100% because of pump limit", i.getMostLimitedReasons(aapsLogger))
+        Assert.assertEquals(200, i.value())
+        Assert.assertEquals(6, i.reasonList.size)
+        Assert.assertEquals("Safety: Limiting max percent rate to 200% because of pump limit", i.getMostLimitedReasons(aapsLogger))
     }
 
     // applyBolusConstraints tests

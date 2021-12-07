@@ -1,21 +1,27 @@
-<android.support.wearable.view.BoxInsetLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/nslogo_background"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
 
-    <FrameLayout
-        android:id="@+id/frame_layout"
-        android:layout_height="match_parent"
+    <androidx.wear.widget.WearableRecyclerView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/action_list"
         android:layout_width="match_parent"
-        app:layout_box="left|bottom|right">
+        android:layout_height="match_parent"
+        android:scrollbars="vertical" >
+        <requestFocus />
+    </androidx.wear.widget.WearableRecyclerView>
 
-        <android.support.wearable.view.WearableListView
-            android:id="@+id/wearable_list"
-            android:layout_height="match_parent"
-            android:layout_width="match_parent">
-        </android.support.wearable.view.WearableListView>
-    </FrameLayout>
-</android.support.wearable.view.BoxInsetLayout>
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="26dp"
+        android:gravity="center"
+        android:text="Title"
+        android:textSize="18sp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeMaxTextSize="18sp"
+        android:background="#D9000000"/>
 
+</FrameLayout>

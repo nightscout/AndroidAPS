@@ -10,6 +10,8 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.androidaps.database.entities.UserEntry
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
 import info.nightscout.androidaps.interfaces.BgSource
 import info.nightscout.androidaps.interfaces.PluginBase
@@ -17,6 +19,7 @@ import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
@@ -37,6 +40,7 @@ class GlunovoPlugin @Inject constructor(
     private val repository: AppRepository,
     private val xDripBroadcast: XDripBroadcast,
     private val dateUtil: DateUtil,
+    private val uel: UserEntryLogger,
     private val fabricPrivacy: FabricPrivacy
 ) : PluginBase(
     PluginDescription()
@@ -50,7 +54,7 @@ class GlunovoPlugin @Inject constructor(
     aapsLogger, resourceHelper, injector
 ), BgSource {
 
-    private val loopHandler: Handler = Handler(HandlerThread(this::class.java.simpleName + "Handler").also { it.start() }.looper)
+    private val handler = Handler(HandlerThread(this::class.java.simpleName + "Handler").also { it.start() }.looper)
     private lateinit var refreshLoop: Runnable
 
     private val contentUri: Uri = Uri.parse("content://$AUTHORITY/$TABLE_NAME")
@@ -65,7 +69,7 @@ class GlunovoPlugin @Inject constructor(
             }
             val lastReadTimestamp = sp.getLong(R.string.key_last_processed_glunovo_timestamp, 0L)
             val differenceToNow = INTERVAL - (dateUtil.now() - lastReadTimestamp) % INTERVAL + T.secs(10).msecs()
-            loopHandler.postDelayed(refreshLoop, differenceToNow)
+            handler.postDelayed(refreshLoop, differenceToNow)
         }
     }
 
@@ -73,12 +77,12 @@ class GlunovoPlugin @Inject constructor(
 
     override fun onStart() {
         super.onStart()
-        loopHandler.postDelayed(refreshLoop, T.secs(30).msecs()) // do not start immediately, app may be still starting
+        handler.postDelayed(refreshLoop, T.secs(30).msecs()) // do not start immediately, app may be still starting
     }
 
     override fun onStop() {
         super.onStop()
-        loopHandler.removeCallbacks(refreshLoop)
+        handler.removeCallbacks(refreshLoop)
         disposable.clear()
     }
 
@@ -145,6 +149,18 @@ class GlunovoPlugin @Inject constructor(
                         savedValues.inserted.forEach {
                             xDripBroadcast.send(it)
                             aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
+                        }
+                        savedValues.calibrationsInserted.forEach {  calibration ->
+                            calibration.glucose?.let { glucosevalue ->
+                                uel.log(
+                                    UserEntry.Action.CALIBRATION,
+                                    UserEntry.Sources.Dexcom,
+                                    ValueWithUnit.Timestamp(calibration.timestamp),
+                                    ValueWithUnit.TherapyEventType(calibration.type),
+                                    ValueWithUnit.fromGlucoseUnit(glucosevalue, calibration.glucoseUnit.toString)
+                                )
+                            }
+                            aapsLogger.debug(LTag.DATABASE, "Inserted calibration $calibration")
                         }
                     }
         }

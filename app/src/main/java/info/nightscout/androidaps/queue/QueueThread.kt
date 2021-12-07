@@ -113,7 +113,7 @@ class QueueThread internal constructor(
                     if (queue.size() > 0) {
                         queue.pickup()
                         val cont = queue.performing()?.let {
-                            aapsLogger.debug(LTag.PUMPQUEUE, "performing " + it.status())
+                            aapsLogger.debug(LTag.PUMPQUEUE, "performing " + it.log())
                             rxBus.send(EventQueueChanged())
                             rxBus.send(EventPumpStatusChanged(it.status()))
                             it.execute()

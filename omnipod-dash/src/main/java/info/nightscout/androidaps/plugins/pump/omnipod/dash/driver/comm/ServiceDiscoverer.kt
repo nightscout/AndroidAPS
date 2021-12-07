@@ -43,7 +43,12 @@ class ServiceDiscoverer(
         }
         logger.debug(LTag.PUMPBTCOMM, "Services discovered")
         val service = gatt.getService(SERVICE_UUID.toUuid())
-            ?: throw ConnectException("Service not found: $SERVICE_UUID")
+            ?: run {
+                for (service in gatt.services) {
+                    logger.debug(LTag.PUMPBTCOMM, "Found service: ${service.uuid}")
+                }
+                throw ConnectException("Service not found: $SERVICE_UUID")
+            }
         val cmdChar = service.getCharacteristic(CharacteristicType.CMD.uuid)
             ?: throw ConnectException("Characteristic not found: ${CharacteristicType.CMD.value}")
         val dataChar = service.getCharacteristic(CharacteristicType.DATA.uuid)

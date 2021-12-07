@@ -4,7 +4,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
-import android.os.Looper
+import android.os.HandlerThread
 import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
@@ -70,6 +70,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     @Inject lateinit var buildHelper: BuildHelper
 
     companion object {
+
         private const val REFRESH_INTERVAL_MILLIS = 15 * 1000L // 15 seconds
         private const val PLACEHOLDER = "-"
         private const val MAX_TIME_DEVIATION_MINUTES = 10L
@@ -77,13 +78,13 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
     private var disposables: CompositeDisposable = CompositeDisposable()
 
-    private val loopHandler = Handler(Looper.getMainLooper())
+    private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private lateinit var refreshLoop: Runnable
 
     init {
         refreshLoop = Runnable {
             activity?.runOnUiThread { updateUi() }
-            loopHandler.postDelayed(refreshLoop, REFRESH_INTERVAL_MILLIS)
+            handler.postDelayed(refreshLoop, REFRESH_INTERVAL_MILLIS)
         }
     }
 
@@ -180,7 +181,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
     override fun onResume() {
         super.onResume()
-        loopHandler.postDelayed(refreshLoop, REFRESH_INTERVAL_MILLIS)
+        handler.postDelayed(refreshLoop, REFRESH_INTERVAL_MILLIS)
         disposables += rxBus
             .toObservable(EventOmnipodDashPumpValuesChanged::class.java)
             .observeOn(aapsSchedulers.main)
@@ -227,7 +228,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     override fun onPause() {
         super.onPause()
         disposables.clear()
-        loopHandler.removeCallbacks(refreshLoop)
+        handler.removeCallbacks(refreshLoop)
     }
 
     @Synchronized
@@ -247,7 +248,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     }
 
     private fun updateBluetoothConnectionStatus(event: EventPumpStatusChanged) {
-        var status = event.getStatus(rh)
+        val status = event.getStatus(rh)
         bluetoothStatusBinding.omnipodDashBluetoothStatus.text = status
     }
 
@@ -550,7 +551,9 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             }
             podInfoBinding.lastBolus.text = text
             podInfoBinding.lastBolus.setTextColor(textColor)
+            return
         }
+        podInfoBinding.lastBolus.text = PLACEHOLDER
     }
 
     private fun updateTempBasal() {

@@ -46,4 +46,6 @@ class CommandSetProfile constructor(
     }
 
     override fun status(): String = rh.gs(R.string.set_profile)
+
+    override fun log(): String = "SET PROFILE"
 }

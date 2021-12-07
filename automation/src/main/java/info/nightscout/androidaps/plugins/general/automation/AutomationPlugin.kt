@@ -8,11 +8,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.events.*
-import info.nightscout.androidaps.interfaces.Config
-import info.nightscout.androidaps.interfaces.Loop
-import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginDescription
-import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
@@ -47,14 +43,15 @@ class AutomationPlugin @Inject constructor(
     private val context: Context,
     private val sp: SP,
     private val fabricPrivacy: FabricPrivacy,
-    private val loopPlugin: Loop,
+    private val loop: Loop,
     private val rxBus: RxBus,
     private val constraintChecker: ConstraintChecker,
     aapsLogger: AAPSLogger,
     private val aapsSchedulers: AapsSchedulers,
     private val config: Config,
     private val locationServiceHelper: LocationServiceHelper,
-    private val dateUtil: DateUtil
+    private val dateUtil: DateUtil,
+    private val activePlugin: ActivePlugin
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
@@ -77,7 +74,7 @@ class AutomationPlugin @Inject constructor(
     var executionLog: MutableList<String> = ArrayList()
     var btConnects: MutableList<EventBTChange> = ArrayList()
 
-    private val loopHandler: Handler = Handler(HandlerThread(AutomationPlugin::class.java.simpleName + "Handler").also { it.start() }.looper)
+    private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private lateinit var refreshLoop: Runnable
 
     companion object {
@@ -89,7 +86,7 @@ class AutomationPlugin @Inject constructor(
     init {
         refreshLoop = Runnable {
             processActions()
-            loopHandler.postDelayed(refreshLoop, T.mins(1).msecs())
+            handler.postDelayed(refreshLoop, T.mins(1).msecs())
         }
     }
 
@@ -100,7 +97,7 @@ class AutomationPlugin @Inject constructor(
 
         super.onStart()
         loadFromSP()
-        loopHandler.postDelayed(refreshLoop, T.mins(1).msecs())
+        handler.postDelayed(refreshLoop, T.mins(1).msecs())
 
         disposable += rxBus
             .toObservable(EventPreferenceChange::class.java)
@@ -148,7 +145,7 @@ class AutomationPlugin @Inject constructor(
 
     override fun onStop() {
         disposable.clear()
-        loopHandler.removeCallbacks(refreshLoop)
+        handler.removeCallbacks(refreshLoop)
         locationServiceHelper.stopService(context)
         super.onStop()
     }
@@ -187,9 +184,21 @@ class AutomationPlugin @Inject constructor(
     @Synchronized
     private fun processActions() {
         var commonEventsEnabled = true
-        if (loopPlugin.isSuspended || !(loopPlugin as PluginBase).isEnabled()) {
+        if (loop.isSuspended || !(loop as PluginBase).isEnabled()) {
             aapsLogger.debug(LTag.AUTOMATION, "Loop deactivated")
             executionLog.add(rh.gs(R.string.loopisdisabled))
+            rxBus.send(EventAutomationUpdateGui())
+            commonEventsEnabled = false
+        }
+        if (loop.isDisconnected || !(loop as PluginBase).isEnabled()) {
+            aapsLogger.debug(LTag.AUTOMATION, "Loop disconnected")
+            executionLog.add(rh.gs(R.string.disconnected))
+            rxBus.send(EventAutomationUpdateGui())
+            commonEventsEnabled = false
+        }
+        if (activePlugin.activePump.isSuspended()) {
+            aapsLogger.debug(LTag.AUTOMATION, "Pump suspended")
+            executionLog.add(rh.gs(R.string.waitingforpump))
             rxBus.send(EventAutomationUpdateGui())
             commonEventsEnabled = false
         }

@@ -35,4 +35,6 @@ class CommandLoadHistory(
     }
 
     override fun status(): String = rh.gs(R.string.load_history, type.toInt())
+
+    override fun log(): String = "LOAD HISTORY $type"
 }

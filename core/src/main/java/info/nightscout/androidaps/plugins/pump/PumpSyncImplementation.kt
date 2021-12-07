@@ -124,7 +124,8 @@ class PumpSyncImplementation @Inject constructor(
                     )
                 }
             else null,
-            profile = profileFunction.getProfile()
+            profile = profileFunction.getProfile(),
+            serialNumber = sp.getString(R.string.key_active_pump_serial_number, "")
         )
     }
 

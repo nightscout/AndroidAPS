@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash
 
 import android.content.Context
 import android.os.Handler
-import android.os.Looper
+import android.os.HandlerThread
 import android.text.format.DateFormat
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.activities.ErrorHelperActivity.Companion.runAlarm
@@ -58,7 +58,6 @@ import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import org.json.JSONObject
-import java.lang.Exception
 import java.time.Duration
 import java.time.ZonedDateTime
 import java.util.*
@@ -91,7 +90,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     @Volatile var bolusCanceled = false
     @Volatile var bolusDeliveryInProgress = false
 
-    private val handler: Handler = Handler(Looper.getMainLooper())
+    private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private lateinit var statusChecker: Runnable
     private var nextPodWarningCheck: Long = 0
     @Volatile var stopConnecting: CountDownLatch? = null

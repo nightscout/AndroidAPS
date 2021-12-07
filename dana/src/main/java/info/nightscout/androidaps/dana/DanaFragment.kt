@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.os.Looper
+import android.os.HandlerThread
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -62,7 +62,7 @@ class DanaFragment : DaggerFragment() {
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
-    private val loopHandler = Handler(Looper.getMainLooper())
+    private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private lateinit var refreshLoop: Runnable
     private var pumpStatus = ""
     private var pumpStatusIcon = "{fa-bluetooth-b}"
@@ -76,7 +76,7 @@ class DanaFragment : DaggerFragment() {
     init {
         refreshLoop = Runnable {
             activity?.runOnUiThread { updateGUI() }
-            loopHandler.postDelayed(refreshLoop, T.mins(1).msecs())
+            handler.postDelayed(refreshLoop, T.mins(1).msecs())
         }
     }
 
@@ -131,7 +131,7 @@ class DanaFragment : DaggerFragment() {
     @Synchronized
     override fun onResume() {
         super.onResume()
-        loopHandler.postDelayed(refreshLoop, T.mins(1).msecs())
+        handler.postDelayed(refreshLoop, T.mins(1).msecs())
         disposable += rxBus
             .toObservable(EventInitializationChanged::class.java)
             .observeOn(aapsSchedulers.main)
@@ -182,7 +182,7 @@ class DanaFragment : DaggerFragment() {
     override fun onPause() {
         super.onPause()
         disposable.clear()
-        loopHandler.removeCallbacks(refreshLoop)
+        handler.removeCallbacks(refreshLoop)
         pumpStatus = ""
         pumpStatusIcon = "{fa-bluetooth-b}"
     }

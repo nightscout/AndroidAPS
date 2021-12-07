@@ -23,9 +23,16 @@ interface Loop {
 
     var lastRun: LastRun?
     val isSuspended: Boolean
+    val isLGS: Boolean
+    val isSuperBolus: Boolean
+    val isDisconnected: Boolean
     var enabled: Boolean
 
+    fun invoke(initiator: String, allowNotification: Boolean, tempBasalFallback: Boolean = false)
+
+    fun acceptChangeRequest()
     fun minutesToEndOfSuspend(): Int
     fun goToZeroTemp(durationInMinutes: Int, profile: Profile, reason: OfflineEvent.Reason)
     fun suspendLoop(durationInMinutes: Int)
+    fun disableCarbSuggestions(durationMinutes: Int)
 }

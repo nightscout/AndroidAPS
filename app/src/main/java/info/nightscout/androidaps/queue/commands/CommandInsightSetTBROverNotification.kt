@@ -25,4 +25,6 @@ class CommandInsightSetTBROverNotification constructor(
 
     @Suppress("SpellCheckingInspection")
     override fun status(): String = rh.gs(R.string.insight_set_tbr_over_notification)
+
+    override fun log(): String = "INSIGHTSETTBROVERNOTIFICATION"
 }

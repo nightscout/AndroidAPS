@@ -154,7 +154,6 @@
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
-    <string name="noprofileselected">Nie wybrano profilu</string>
     <string name="startprofile">Uruchom profil %1$d%% na %2$d min</string>
     <!--    PumpType-->
     <string name="def_extended_note">*Tylko wartości dyskretne, nie zakresy są wspierane jako dawki bazowe/bolusy w pompie wirtualnej.</string>
@@ -291,6 +290,7 @@
     <string name="signature_verifier">Weryfikator podpisu</string>
     <string name="running_invalid_version">Wykryliśmy, że używasz nieprawidlowej wersji. Pętla wyłączona!</string>
     <string name="versionavailable">Wersja %1$s dostępna</string>
+    <string name="version_expire">Wersja %1$s wygasa %2$s</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Proszę uruchomić ponownie telefon lub zrestartować AndroidAPS w ustawieniach systemu telefonu \ninaczej AndroidAPS nie będzie otrzymywał logowań (ważne ze względu na śledzenie i sprawdzanie poprawności działania algorytmów)!</string>
     <!-- WeekdayPicker -->
@@ -303,6 +303,7 @@
     <string name="sunday_short">N</string>
     <!-- User Entry -->
     <string name="uel_bolus">BOLUS</string>
+    <string name="uel_bolus_calculator">KALKULATOR BOLUSA</string>
     <string name="uel_bolus_advisor">KALKULATOR BOLUSA</string>
     <string name="uel_extended_bolus">BOLUS PRZEDŁUŻONY</string>
     <string name="uel_superbolus_tbr">SUPERBOLUS TBR</string>
@@ -408,6 +409,23 @@
     <string name="value_out_of_hard_limits">Wartość »%1$s« %2$.2f jest poza dopuszczalną granicą</string>
     <string name="basal_value">Wartość bazy</string>
     <string name="nsclient_version_does_not_match">Wersja NSClient nie jest zgodna z AndroidAPS. Proszę zaktualizować.</string>
+    <!-- Command Queue + readStatus reasons -->
+    <string name="read_status" comment="10 characters max for READSTATUS translation">CZYTAMSTAN %1$s</string>
+    <string name="keepalive_status_outdated" comment="26 characters max for translation">Podtrzym. Stan nieaktualny.</string>
+    <string name="keepalive_basal_outdated" comment="26 characters max for translation">Podtrzym. Baza nieaktualna</string>
+    <string name="sms" comment="26 characters max for translation">SMS</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Kliknięto połącz z pompą</string>
+    <string name="pump_driver_changed" comment="26 characters max for translation">Zmieniono ster. pompy.</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Zmiana ster. pompy.</string>
+    <string name="device_changed" comment="26 characters max for translation">Urządzenie zmieniono</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Naciśnięto odśwież</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Planowe odświeżenie statusu</string>
+    <string name="unconfirmed_command" comment="26 characters max for translation">Niepotwierdzone polecenie</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Na życzenie użytkownika</string>
+    <string name="user_request" comment="26 characters max for translation">Żądanie użytkownika</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
+    <string name="pump_paired" comment="26 characters max for translation">Pompa sparowana</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Przycisk Odświeżania Insight</string>
     <plurals name="days">
         <item quantity="one">%1$d dzień</item>
         <item quantity="few">%1$d dni</item>

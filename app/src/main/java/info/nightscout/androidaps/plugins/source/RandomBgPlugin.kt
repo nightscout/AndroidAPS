@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.source
 
 import android.os.Handler
 import android.os.HandlerThread
+import android.os.SystemClock
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
@@ -45,7 +46,7 @@ class RandomBgPlugin @Inject constructor(
     aapsLogger, rh, injector
 ), BgSource {
 
-    private val loopHandler: Handler = Handler(HandlerThread(RandomBgPlugin::class.java.simpleName + "Handler").also { it.start() }.looper)
+    private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private lateinit var refreshLoop: Runnable
 
     companion object {
@@ -58,7 +59,7 @@ class RandomBgPlugin @Inject constructor(
 
     init {
         refreshLoop = Runnable {
-            loopHandler.postDelayed(refreshLoop, T.mins(interval).msecs())
+            handler.postDelayed(refreshLoop, T.mins(interval).msecs())
             handleNewData()
         }
     }
@@ -74,13 +75,17 @@ class RandomBgPlugin @Inject constructor(
 
     override fun onStart() {
         super.onStart()
-        loopHandler.postDelayed(refreshLoop, T.mins(interval).msecs())
+        val cal = GregorianCalendar()
+        cal[Calendar.MILLISECOND] = 0
+        cal[Calendar.SECOND] = 0
+        cal[Calendar.MINUTE] -= cal[Calendar.MINUTE] % 5
+        handler.postAtTime(refreshLoop, SystemClock.uptimeMillis() + cal.timeInMillis + T.mins(5).msecs() + 1000 - System.currentTimeMillis())
         disposable.clear()
     }
 
     override fun onStop() {
         super.onStop()
-        loopHandler.removeCallbacks(refreshLoop)
+        handler.removeCallbacks(refreshLoop)
     }
 
     override fun specialEnableCondition(): Boolean {

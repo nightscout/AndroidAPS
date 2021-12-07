@@ -2,11 +2,12 @@ package info.nightscout.androidaps.plugins.insulin
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.TestBase
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.Insulin
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Assert.assertEquals
@@ -29,6 +30,7 @@ class InsulinOrefFreePeakPluginTest : TestBase() {
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var rxBus: RxBus
     @Mock lateinit var profileFunction: ProfileFunction
+    @Mock lateinit var config: Config
 
     private var injector: HasAndroidInjector = HasAndroidInjector {
         AndroidInjector {
@@ -37,13 +39,7 @@ class InsulinOrefFreePeakPluginTest : TestBase() {
 
     @Before
     fun setup() {
-        sut = InsulinOrefFreePeakPlugin(
-            injector,
-            sp,
-            rh,
-            profileFunction,
-            rxBus,
-            aapsLogger)
+        sut = InsulinOrefFreePeakPlugin( injector, sp, rh, profileFunction, rxBus, aapsLogger, config)
     }
 
     @Test

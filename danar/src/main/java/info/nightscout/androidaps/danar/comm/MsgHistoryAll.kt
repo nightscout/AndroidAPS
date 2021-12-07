@@ -32,7 +32,7 @@ open class MsgHistoryAll(
         )
         var messageType = ""
         when (recordCode) {
-            info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_BOLUS     -> {
+            RecordTypes.RECORD_TYPE_BOLUS     -> {
                 val datetime = dateTimeFromBuff(bytes, 1) // 5 bytes
                 danaHistoryRecord.timestamp = datetime
                 when (0xF0 and paramByte8.toInt()) {
@@ -62,63 +62,63 @@ open class MsgHistoryAll(
                 danaHistoryRecord.value = value * 0.01
             }
 
-            info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_DAILY     -> {
+            RecordTypes.RECORD_TYPE_DAILY     -> {
                 messageType += "dailyinsulin"
                 danaHistoryRecord.timestamp = date
                 danaHistoryRecord.dailyBasal = dailyBasal
                 danaHistoryRecord.dailyBolus = dailyBolus
             }
 
-            info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_PRIME     -> {
+            RecordTypes.RECORD_TYPE_PRIME     -> {
                 messageType += "prime"
                 val datetimewihtsec = dateTimeSecFromBuff(bytes, 1) // 6 bytes
                 danaHistoryRecord.timestamp = datetimewihtsec
                 danaHistoryRecord.value = value * 0.01
             }
 
-            info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_ERROR     -> {
+            RecordTypes.RECORD_TYPE_ERROR     -> {
                 messageType += "error"
                 val datetimewihtsec = dateTimeSecFromBuff(bytes, 1) // 6 bytes
                 danaHistoryRecord.timestamp = datetimewihtsec
                 danaHistoryRecord.value = value * 0.01
             }
 
-            info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_REFILL    -> {
+            RecordTypes.RECORD_TYPE_REFILL    -> {
                 messageType += "refill"
                 val datetimewihtsec = dateTimeSecFromBuff(bytes, 1) // 6 bytes
                 danaHistoryRecord.timestamp = datetimewihtsec
                 danaHistoryRecord.value = value * 0.01
             }
 
-            info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_BASALHOUR -> {
+            RecordTypes.RECORD_TYPE_BASALHOUR -> {
                 messageType += "basal hour"
                 val datetimewihtsec = dateTimeSecFromBuff(bytes, 1) // 6 bytes
                 danaHistoryRecord.timestamp = datetimewihtsec
                 danaHistoryRecord.value = value * 0.01
             }
 
-            info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_TB        -> {
+            RecordTypes.RECORD_TYPE_TB        -> {
                 messageType += "tb"
                 val datetimewihtsec = dateTimeSecFromBuff(bytes, 1) // 6 bytes
                 danaHistoryRecord.timestamp = datetimewihtsec
                 danaHistoryRecord.value = value * 0.01
             }
 
-            info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_GLUCOSE   -> {
+            RecordTypes.RECORD_TYPE_GLUCOSE   -> {
                 messageType += "glucose"
                 val datetimewihtsec = dateTimeSecFromBuff(bytes, 1) // 6 bytes
                 danaHistoryRecord.timestamp = datetimewihtsec
                 danaHistoryRecord.value = value
             }
 
-            info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_CARBO     -> {
+            RecordTypes.RECORD_TYPE_CARBO     -> {
                 messageType += "carbo"
                 val datetimewihtsec = dateTimeSecFromBuff(bytes, 1) // 6 bytes
                 danaHistoryRecord.timestamp = datetimewihtsec
                 danaHistoryRecord.value = value
             }
 
-            info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_ALARM     -> {
+            RecordTypes.RECORD_TYPE_ALARM     -> {
                 messageType += "alarm"
                 val datetimewihtsec = dateTimeSecFromBuff(bytes, 1) // 6 bytes
                 danaHistoryRecord.timestamp = datetimewihtsec
@@ -133,7 +133,7 @@ open class MsgHistoryAll(
                 danaHistoryRecord.value = value * 0.01
             }
 
-            RecordTypes.RECORD_TYPE_SUSPEND -> {
+            RecordTypes.RECORD_TYPE_SUSPEND   -> {
                 messageType += "suspend"
                 val datetimewihtsec = dateTimeSecFromBuff(bytes, 1) // 6 bytes
                 danaHistoryRecord.timestamp = datetimewihtsec
@@ -142,9 +142,11 @@ open class MsgHistoryAll(
                 danaHistoryRecord.stringValue = strRecordValue
             }
 
-            17.toByte()                                                            -> failed = true
+            17.toByte()                       -> failed = true
         }
         danaHistoryRecordDao.createOrUpdate(danaHistoryRecord)
+        if (recordCode == RecordTypes.RECORD_TYPE_DAILY)
+            pumpSync.createOrUpdateTotalDailyDose(date, dailyBolus, dailyBasal, dailyBolus + dailyBasal, date, activePlugin.activePump.model(), danaPump.serialNumber)
         rxBus.send(EventDanaRSyncStatus(dateUtil.dateAndTimeString(danaHistoryRecord.timestamp) + " " + messageType))
     }
 }

@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.text.DecimalFormat;
 
@@ -31,9 +32,11 @@ public class FillActivity extends ViewSelectorActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.grid_layout);
-        final Resources res = getResources();
-        final GridViewPager pager = findViewById(R.id.pager);
 
+        final TextView title = findViewById(R.id.title);
+        title.setText(getString(R.string.menu_prime_fill));
+
+        final GridViewPager pager = findViewById(R.id.pager);
         pager.setAdapter(new MyGridViewPagerAdapter());
         DotsPageIndicator dotsPageIndicator = findViewById(R.id.page_indicator);
         dotsPageIndicator.setPager(pager);
@@ -70,6 +73,7 @@ public class FillActivity extends ViewSelectorActivity {
                 editInsulin = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 30d, 0.1d, new DecimalFormat("#0.0"), false);
                 setLabelToPlusMinusView(view, getString(R.string.action_insulin));
                 container.addView(view);
+                view.requestFocus();
                 return view;
             } else {
 
@@ -84,7 +88,7 @@ public class FillActivity extends ViewSelectorActivity {
 
                         String actionstring = "fill " + SafeParse.stringToDouble(editInsulin.editText.getText().toString());
                         ListenerService.initiateAction(FillActivity.this, actionstring);
-                        finish();
+                        finishAffinity();
                     }
                 });
                 container.addView(view);

@@ -12,7 +12,7 @@
     <string name="goingtodeliver">עומד להזריק %1$.2f יח\'</string>
     <string name="waitingforpump">ממתין למשאבה</string>
     <string name="connectingfor">מתחבר במשך %1$d שניות</string>
-    <string name="bolusdelivering">מזריק כעת %1$.2f יח\'</string>
+    <string name="bolusdelivering">מזריק %1$.2f יח\'</string>
     <string name="handshaking">לוחץ יד</string>
     <string name="connecting">מתחבר</string>
     <string name="connected">מחובר</string>
@@ -154,7 +154,6 @@
     <string name="profile_ins_units_per_hour">יח\'\\שעה</string>
     <string name="profile_carbs_per_unit">גר\'\\יח\'</string>
     <!--    ProfileFunction-->
-    <string name="noprofileselected">לא נבחר פרופיל</string>
     <string name="startprofile">הפעלת פרופיל %1$d%% במשך %2$d דק\'</string>
     <!--    PumpType-->
     <string name="def_extended_note">* רק ערכים בדידים, טווחים אינם נתמכים עבור ערכי בזאלי ובולוס במשאבה וירטואלית.</string>
@@ -410,6 +409,37 @@
     <string name="value_out_of_hard_limits">»הערך %1$s« %2$.2f מחוץ לתחום הקשיח</string>
     <string name="basal_value">ערך בזאלי</string>
     <string name="nsclient_version_does_not_match">גרסת NSClient לא תואמת את גרסת AndroidAPS. נא לעדכן.</string>
+    <!-- Command Queue + readStatus reasons -->
+    <string name="bolus_u_min">בולוס %1$.2f יח\'</string>
+    <string name="carbs_g">פחמימות %1$d גרם</string>
+    <string name="extended_bolus_u_min">בולוס מושהה %1$.2f יח\' %2$d דק\'</string>
+    <string name="load_events">טען אירועים</string>
+    <string name="load_history">טען היסטוריה %1$d</string>
+    <string name="load_tdds">טען מינונים יומיים כוללים</string>
+    <string name="set_profile">הגדר פרופיל</string>
+    <string name="set_user_settings">הגדר הגדרות משתמש</string>
+    <string name="smb_bolus_u">בולוס SMB %1$.2f יח\'</string>
+    <string name="start_pump">הפעל משאבה</string>
+    <string name="stop_pump">עצור משאבה</string>
+    <string name="temp_basal_absolute">בזאלי זמני %1$.2f יח\' לשעה %2$d דק\'</string>
+    <string name="temp_basal_percent">בזאלי זמני %1$d% %2$d דק\'</string>
+    <string name="insight_set_tbr_over_notification">אינסייט הגדר התראת הבזאלי הזמני הסתיים</string>
+    <string name="read_status" comment="10 characters max for READSTATUS translation">קריאת סטטוס %1$s</string>
+    <string name="keepalive_status_outdated" comment="26 characters max for translation">השאר בחיים. הסטטוס התיישן.</string>
+    <string name="keepalive_basal_outdated" comment="26 characters max for translation">השאר בחיים. הבזאלי התיישן.</string>
+    <string name="sms" comment="26 characters max for translation">SMS</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">התחבר למשאבה נלחץ</string>
+    <string name="pump_driver_changed" comment="26 characters max for translation">מנהל התקן המשאבה שונה.</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">שינוי במנהל התקן המשאבה.</string>
+    <string name="device_changed" comment="26 characters max for translation">התקן שונה</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">נלחץ ריענון</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">רענון סטטוס מתוכנן</string>
+    <string name="unconfirmed_command" comment="26 characters max for translation">פקודה לא מאושרת</string>
+    <string name="requested_by_user" comment="26 characters max for translation">התבקש ע\"י המשתמש</string>
+    <string name="user_request" comment="26 characters max for translation">בקשת משתמש</string>
+    <string name="bolus_ok" comment="26 characters max for translation">בולוס OK</string>
+    <string name="pump_paired" comment="26 characters max for translation">המשאבה צומדה</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">לחצן ריענון Insight</string>
     <plurals name="days">
         <item quantity="one">%1$d יום</item>
         <item quantity="two">%1$d ימים</item>

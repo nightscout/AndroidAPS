@@ -6,7 +6,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.androidaps.extensions.isEPSEvent5minBack
+import info.nightscout.androidaps.extensions.isPSEvent5minBack
 import info.nightscout.androidaps.extensions.isTherapyEventEvent5minBack
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
@@ -38,13 +38,14 @@ class SensitivityAAPSPlugin @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
     private val repository: AppRepository
-) : AbstractSensitivityPlugin(PluginDescription()
-    .mainType(PluginType.SENSITIVITY)
-    .pluginIcon(R.drawable.ic_generic_icon)
-    .pluginName(R.string.sensitivityaaps)
-    .shortName(R.string.sensitivity_shortname)
-    .preferencesId(R.xml.pref_absorption_aaps)
-    .description(R.string.description_sensitivity_aaps),
+) : AbstractSensitivityPlugin(
+    PluginDescription()
+        .mainType(PluginType.SENSITIVITY)
+        .pluginIcon(R.drawable.ic_generic_icon)
+        .pluginName(R.string.sensitivityaaps)
+        .shortName(R.string.sensitivity_shortname)
+        .preferencesId(R.xml.pref_absorption_aaps)
+        .description(R.string.description_sensitivity_aaps),
     injector, aapsLogger, rh, sp
 ) {
 
@@ -70,7 +71,7 @@ class SensitivityAAPSPlugin @Inject constructor(
             return AutosensResult()
         }
         val siteChanges = repository.getTherapyEventDataFromTime(fromTime, TherapyEvent.Type.CANNULA_CHANGE, true).blockingGet()
-        val profileSwitches = repository.getEffectiveProfileSwitchDataFromTime(fromTime, true).blockingGet()
+        val profileSwitches = repository.getProfileSwitchDataFromTime(fromTime, true).blockingGet()
         val deviationsArray: MutableList<Double> = ArrayList()
         var pastSensitivity = ""
         var index = 0
@@ -92,7 +93,7 @@ class SensitivityAAPSPlugin @Inject constructor(
             }
 
             // reset deviations after profile switch
-            if (profileSwitches.isEPSEvent5minBack(autosensData.time)) {
+            if (profileSwitches.isPSEvent5minBack(autosensData.time)) {
                 deviationsArray.clear()
                 pastSensitivity += "(PROFILESWITCH)"
             }

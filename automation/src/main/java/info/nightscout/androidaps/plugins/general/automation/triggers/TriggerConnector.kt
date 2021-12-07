@@ -120,49 +120,44 @@ class TriggerConnector(injector: HasAndroidInjector) : Trigger(injector) {
     override fun duplicate(): Trigger = TriggerConnector(injector, connectorType)
 
     override fun generateDialog(root: LinearLayout) {
-        val mainLayout = LinearLayout(root.context).also {
-            it.orientation = LinearLayout.HORIZONTAL
-            it.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        }
-        val padding = rh.dpToPx(3)
-        mainLayout.setPadding(padding, padding, padding, padding)
-        mainLayout.setBackgroundResource(R.drawable.border_automation_unit)
-
-        val buttonLayout = LinearLayout(root.context).also {
-            it.orientation = LinearLayout.HORIZONTAL
-            it.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        }
-        buttonLayout.addView(createAddButton(root.context, this))
-        buttonLayout.addView(createDeleteButton(root.context, this))
-
-        val rightSideLayout = LinearLayout(root.context).also {
-            it.orientation = LinearLayout.VERTICAL
-            it.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
-        }
-
-        rightSideLayout.addView(buttonLayout)
-
-        // Child triggers
-        val listLayout = LinearLayout(root.context).also {
-            it.orientation = LinearLayout.VERTICAL
-            it.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).also { params ->
-                params.setMargins(rh.dpToPx(1), 0, rh.dpToPx(1), rh.dpToPx(2))
-            }
-        }
-        for (t in list) {
-            t.generateDialog(listLayout)
-            listLayout.addView(
-                TextView(root.context).also {
-                    it.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-                    it.setPadding(0, rh.dpToPx(0.3f), 0, 0)
-                })
-        }
-        rightSideLayout.addView(listLayout)
-
-        // Header with spinner
-        mainLayout.addView(createVerticalView(root.context))
-        mainLayout.addView(rightSideLayout)
-        root.addView(mainLayout)
+        root.addView(
+            LinearLayout(root.context).also { mainLayout ->
+                mainLayout.orientation = LinearLayout.HORIZONTAL
+                mainLayout.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                val padding = rh.dpToPx(3)
+                mainLayout.setPadding(padding, padding, padding, padding)
+                mainLayout.setBackgroundResource(R.drawable.border_automation_unit)
+                // Header with spinner
+                mainLayout.addView(createVerticalView(root.context))
+                mainLayout.addView(
+                    LinearLayout(root.context).also { rightSide ->
+                        rightSide.orientation = LinearLayout.VERTICAL
+                        rightSide.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
+                        rightSide.addView(
+                            LinearLayout(root.context).also {
+                                it.orientation = LinearLayout.HORIZONTAL
+                                it.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                                it.addView(createAddButton(root.context, this))
+                                it.addView(createDeleteButton(root.context, this))
+                            })
+                        // Child triggers
+                        rightSide.addView(
+                            LinearLayout(root.context).also {
+                                it.orientation = LinearLayout.VERTICAL
+                                it.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).also { params ->
+                                    params.setMargins(rh.dpToPx(1), 0, rh.dpToPx(1), rh.dpToPx(2))
+                                }
+                                for (t in list) {
+                                    t.generateDialog(it)
+                                    it.addView(
+                                        TextView(root.context).also { spacer ->
+                                            spacer.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                                            spacer.setPadding(0, rh.dpToPx(0.3f), 0, 0)
+                                        })
+                                }
+                            })
+                    })
+            })
     }
 
     private fun createVerticalView(context: Context): VerticalTextView =

@@ -91,7 +91,7 @@ class NSClientService : DaggerService() {
 
     private var wakeLock: PowerManager.WakeLock? = null
     private val binder: IBinder = LocalBinder()
-    private var handler: Handler? = null
+    private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private var socket: Socket? = null
     private var dataCounter = 0
     private var connectCounter = 0
@@ -114,61 +114,69 @@ class NSClientService : DaggerService() {
         wakeLock = (getSystemService(Context.POWER_SERVICE) as PowerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:NSClientService")
         wakeLock?.acquire()
         initialize()
-        disposable.add(rxBus
-            .toObservable(EventConfigBuilderChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                if (nsEnabled != nsClientPlugin.isEnabled()) {
-                    latestDateInReceivedData = 0
-                    destroy()
-                    initialize()
-                }
-            }, fabricPrivacy::logException)
+        disposable.add(
+            rxBus
+                .toObservable(EventConfigBuilderChange::class.java)
+                .observeOn(aapsSchedulers.io)
+                .subscribe({
+                               if (nsEnabled != nsClientPlugin.isEnabled()) {
+                                   latestDateInReceivedData = 0
+                                   destroy()
+                                   initialize()
+                               }
+                           }, fabricPrivacy::logException)
         )
-        disposable.add(rxBus
-            .toObservable(EventPreferenceChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ event: EventPreferenceChange ->
-                if (event.isChanged(rh, R.string.key_nsclientinternal_url) ||
-                    event.isChanged(rh, R.string.key_nsclientinternal_api_secret) ||
-                    event.isChanged(rh, R.string.key_nsclientinternal_paused)) {
-                    latestDateInReceivedData = 0
-                    destroy()
-                    initialize()
-                }
-            }, fabricPrivacy::logException)
+        disposable.add(
+            rxBus
+                .toObservable(EventPreferenceChange::class.java)
+                .observeOn(aapsSchedulers.io)
+                .subscribe({ event: EventPreferenceChange ->
+                               if (event.isChanged(rh, R.string.key_nsclientinternal_url) ||
+                                   event.isChanged(rh, R.string.key_nsclientinternal_api_secret) ||
+                                   event.isChanged(rh, R.string.key_nsclientinternal_paused)
+                               ) {
+                                   latestDateInReceivedData = 0
+                                   destroy()
+                                   initialize()
+                               }
+                           }, fabricPrivacy::logException)
         )
-        disposable.add(rxBus
-            .toObservable(EventAppExit::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                aapsLogger.debug(LTag.NSCLIENT, "EventAppExit received")
-                destroy()
-                stopSelf()
-            }, fabricPrivacy::logException)
+        disposable.add(
+            rxBus
+                .toObservable(EventAppExit::class.java)
+                .observeOn(aapsSchedulers.io)
+                .subscribe({
+                               aapsLogger.debug(LTag.NSCLIENT, "EventAppExit received")
+                               destroy()
+                               stopSelf()
+                           }, fabricPrivacy::logException)
         )
-        disposable.add(rxBus
-            .toObservable(EventNSClientRestart::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                latestDateInReceivedData = 0
-                restart()
-            }, fabricPrivacy::logException)
+        disposable.add(
+            rxBus
+                .toObservable(EventNSClientRestart::class.java)
+                .observeOn(aapsSchedulers.io)
+                .subscribe({
+                               latestDateInReceivedData = 0
+                               restart()
+                           }, fabricPrivacy::logException)
         )
-        disposable.add(rxBus
-            .toObservable(NSAuthAck::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ ack -> processAuthAck(ack) }, fabricPrivacy::logException)
+        disposable.add(
+            rxBus
+                .toObservable(NSAuthAck::class.java)
+                .observeOn(aapsSchedulers.io)
+                .subscribe({ ack -> processAuthAck(ack) }, fabricPrivacy::logException)
         )
-        disposable.add(rxBus
-            .toObservable(NSUpdateAck::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ ack -> processUpdateAck(ack) }, fabricPrivacy::logException)
+        disposable.add(
+            rxBus
+                .toObservable(NSUpdateAck::class.java)
+                .observeOn(aapsSchedulers.io)
+                .subscribe({ ack -> processUpdateAck(ack) }, fabricPrivacy::logException)
         )
-        disposable.add(rxBus
-            .toObservable(NSAddAck::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ ack -> processAddAck(ack) }, fabricPrivacy::logException)
+        disposable.add(
+            rxBus
+                .toObservable(NSAddAck::class.java)
+                .observeOn(aapsSchedulers.io)
+                .subscribe({ ack -> processAddAck(ack) }, fabricPrivacy::logException)
         )
     }
 
@@ -183,7 +191,8 @@ class NSClientService : DaggerService() {
         dataWorker.enqueue(
             OneTimeWorkRequest.Builder(NSClientAddAckWorker::class.java)
                 .setInputData(dataWorker.storeInputData(ack, null))
-                .build())
+                .build()
+        )
     }
 
     private fun processUpdateAck(ack: NSUpdateAck) {
@@ -191,7 +200,8 @@ class NSClientService : DaggerService() {
         dataWorker.enqueue(
             OneTimeWorkRequest.Builder(NSClientUpdateRemoveAckWorker::class.java)
                 .setInputData(dataWorker.storeInputData(ack, null))
-                .build())
+                .build()
+        )
     }
 
     private fun processAuthAck(ack: NSAuthAck) {
@@ -448,7 +458,7 @@ class NSClientService : DaggerService() {
         }
     }
     private val onDataUpdate = Emitter.Listener { args ->
-        handler?.post {
+        handler.post {
             // val powerManager = getSystemService(POWER_SERVICE) as PowerManager
             // val wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
             //     "AndroidAPS:NSClientService_onDataUpdate")
@@ -474,7 +484,8 @@ class NSClientService : DaggerService() {
                             dataWorker.enqueue(
                                 OneTimeWorkRequest.Builder(LocalProfilePlugin.NSProfileWorker::class.java)
                                     .setInputData(dataWorker.storeInputData(profileStoreJson, null))
-                                    .build())
+                                    .build()
+                            )
                             xDripBroadcast.sendProfile(profileStoreJson)
                         }
                     }
@@ -492,7 +503,8 @@ class NSClientService : DaggerService() {
                             dataWorker.enqueue(
                                 OneTimeWorkRequest.Builder(NSClientAddUpdateWorker::class.java)
                                     .setInputData(dataWorker.storeInputData(addedOrUpdatedTreatments, null))
-                                    .build())
+                                    .build()
+                            )
                             xDripBroadcast.sendTreatments(addedOrUpdatedTreatments)
                         }
                     }
@@ -509,7 +521,8 @@ class NSClientService : DaggerService() {
                         dataWorker.enqueue(
                             OneTimeWorkRequest.Builder(FoodWorker::class.java)
                                 .setInputData(dataWorker.storeInputData(foods, null))
-                                .build())
+                                .build()
+                        )
                     }
                     if (data.has("mbgs")) {
                         val mbgArray = data.getJSONArray("mbgs")
@@ -517,7 +530,8 @@ class NSClientService : DaggerService() {
                         dataWorker.enqueue(
                             OneTimeWorkRequest.Builder(NSClientMbgWorker::class.java)
                                 .setInputData(dataWorker.storeInputData(mbgArray, null))
-                                .build())
+                                .build()
+                        )
                     }
                     if (data.has("cals")) {
                         val cals = data.getJSONArray("cals")
@@ -527,9 +541,11 @@ class NSClientService : DaggerService() {
                     if (data.has("sgvs")) {
                         val sgvs = data.getJSONArray("sgvs")
                         if (sgvs.length() > 0) rxBus.send(EventNSClientNewLog("DATA", "received " + sgvs.length() + " sgvs"))
-                        dataWorker.enqueue(OneTimeWorkRequest.Builder(NSClientSourceWorker::class.java)
-                            .setInputData(dataWorker.storeInputData(sgvs, null))
-                            .build())
+                        dataWorker.enqueue(
+                            OneTimeWorkRequest.Builder(NSClientSourceWorker::class.java)
+                                .setInputData(dataWorker.storeInputData(sgvs, null))
+                                .build()
+                        )
                         xDripBroadcast.sendSgvs(sgvs)
                     }
                     rxBus.send(EventNSClientNewLog("LAST", dateUtil.dateAndTimeString(latestDateInReceivedData)))
@@ -552,8 +568,12 @@ class NSClientService : DaggerService() {
             message.put("_id", _id)
             message.put("data", data)
             socket?.emit("dbUpdate", message, NSUpdateAck("dbUpdate", _id, aapsLogger, rxBus, originalObject))
-            rxBus.send(EventNSClientNewLog("DBUPDATE $collection", "Sent " + originalObject.javaClass.simpleName + " " +
-                "" + _id + " " + data + progress))
+            rxBus.send(
+                EventNSClientNewLog(
+                    "DBUPDATE $collection", "Sent " + originalObject.javaClass.simpleName + " " +
+                        "" + _id + " " + data + progress
+                )
+            )
         } catch (e: JSONException) {
             aapsLogger.error("Unhandled exception", e)
         }
@@ -580,7 +600,7 @@ class NSClientService : DaggerService() {
 
     fun resend(reason: String) {
         if (!isConnected || !hasWriteAuth) return
-        handler?.post {
+        handler.post {
             if (socket?.connected() != true) return@post
             if (lastAckTime > System.currentTimeMillis() - 10 * 1000L) {
                 aapsLogger.debug(LTag.NSCLIENT, "Skipping resend by lastAckTime: " + (System.currentTimeMillis() - lastAckTime) / 1000L + " sec")
@@ -641,14 +661,6 @@ class NSClientService : DaggerService() {
             }
             rxBus.send(EventNSClientNewLog("URGENTALARM", safeGetString(alarm, "message", "received")))
             aapsLogger.debug(LTag.NSCLIENT, alarm.toString())
-        }
-    }
-
-    init {
-        if (handler == null) {
-            val handlerThread = HandlerThread(NSClientService::class.java.simpleName + "Handler")
-            handlerThread.start()
-            handler = Handler(handlerThread.looper)
         }
     }
 }

@@ -154,7 +154,6 @@
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
-    <string name="noprofileselected">Nessun profilo selezionato</string>
     <string name="startprofile">Avvia profilo %1$d%% per %2$d min</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Sono supportati solo valori discreti, non intervalli di valori, come incrementi per basale/bolo nel micro virtuale.</string>
@@ -410,6 +409,36 @@
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f è fuori dai limiti consentiti</string>
     <string name="basal_value">Valore basale</string>
     <string name="nsclient_version_does_not_match">La versione di NSClient non corrisponde ad AndroidAPS. Aggiorna.</string>
+    <!-- Command Queue + readStatus reasons -->
+    <string name="bolus_u_min">BOLO %1$.2f U</string>
+    <string name="carbs_g">CHO %1$d g</string>
+    <string name="extended_bolus_u_min">BOLO ESTESO %1$.2f U %2$d min</string>
+    <string name="load_events">CARICA EVENTI</string>
+    <string name="load_history">CARICA STORICO %1$d</string>
+    <string name="load_tdds">CARICA TDD</string>
+    <string name="set_profile">IMPOSTA PROFILO</string>
+    <string name="set_user_settings">CONFIGURA IMPOSTAZIONI UTENTE</string>
+    <string name="smb_bolus_u">BOLO SMS %1$.2f U</string>
+    <string name="start_pump">AVVIA MICRO</string>
+    <string name="stop_pump">STOPPA MICRO</string>
+    <string name="temp_basal_absolute">BASALE TEMPORANEA %1$.2f U/h %2$d min</string>
+    <string name="temp_basal_percent">BASALE TEMPORANEA %1$d%% %2$d min</string>
+    <string name="read_status" comment="10 characters max for READSTATUS translation">READSTATUS %1$s</string>
+    <string name="keepalive_status_outdated" comment="26 characters max for translation">KeepAlive. Stato obsoleto.</string>
+    <string name="keepalive_basal_outdated" comment="26 characters max for translation">KeepAlive. Basale obsoleta.</string>
+    <string name="sms" comment="26 characters max for translation">SMS</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Connetti al micro: cliccato</string>
+    <string name="pump_driver_changed" comment="26 characters max for translation">Driver micro cambiato.</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Cambio driver micro.</string>
+    <string name="device_changed" comment="26 characters max for translation">Dispositivo cambiato</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Aggiorna: cliccato</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Aggiornamento stato pianificato</string>
+    <string name="unconfirmed_command" comment="26 characters max for translation">Comando non confermato</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Richiesto da utente</string>
+    <string name="user_request" comment="26 characters max for translation">Richiesta utente</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolo OK</string>
+    <string name="pump_paired" comment="26 characters max for translation">Micro associato</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Tasto aggiornamento Insight</string>
     <plurals name="days">
         <item quantity="one">%1$d giorno</item>
         <item quantity="other">%1$d giorni</item>

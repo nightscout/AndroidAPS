@@ -721,9 +721,6 @@
     <string name="application_expired">Applicazione scaduta</string>
     <string name="new_version_warning">Nuova versione disponibile da almeno %1$d giorni! Ritorno a LGS dopo %2$d giorni, disattivazione del loop dopo %3$d giorni</string>
     <string name="twohours">2h</string>
-    <string name="dexcom_app_patched">Dexcom app (modificata)</string>
-    <string name="dexcom_short">DXCM</string>
-    <string name="description_source_dexcom">Ricevi valori glicemia dall\'app Dexcom modificata.</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="bolusconstraintappliedwarn">Vincolo bolo applicato: %1$.2f U a %2$.2f U</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Rilevato assorbimento lento dei carboidrati: %2$d%% del tempo. Ricontrolla il tuo calcolo. COB potrebbero essere sovrastimati e potrebbe essere somministrata più insulina !!!!!</font>]]></string>
@@ -859,7 +856,6 @@
     <string name="cannula">Cannula</string>
     <string name="userentry">Inserimento utente</string>
     <string name="common_values">Usa i valori del cibo più abbondante che mangi di solito\n</string>
-    <string name="summary_email_for_crash_report">Questo indirizzo email verrà allegato ai rapporti sugli arresti anomali in modo che possiamo contattarti in casi urgenti. È opzionale.</string>
     <string name="email_address">Indirizzo email</string>
     <string name="privacy_settings">Impostazioni privacy</string>
     <string name="privacy_summary">Puoi fornire un indirizzo e-mail opzionale se desideri essere avvisato in caso di arresti anomali dell\'app. Questo non è un servizio automatizzato. Sarai contattato dagli sviluppatori in situazioni pericolose.</string>

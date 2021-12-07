@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.text.DecimalFormat;
 
@@ -37,14 +38,33 @@ public class WizardActivity extends ViewSelectorActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.grid_layout);
-        final Resources res = getResources();
-        final GridViewPager pager = findViewById(R.id.pager);
 
+        final TextView title = findViewById(R.id.title);
+        title.setText(getString(R.string.menu_wizard));
+
+        final GridViewPager pager = findViewById(R.id.pager);
         pager.setAdapter(new MyGridViewPagerAdapter());
         DotsPageIndicator dotsPageIndicator = findViewById(R.id.page_indicator);
         dotsPageIndicator.setPager(pager);
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         hasPercentage = sp.getBoolean("wizardpercentage", false);
+        pager.setOnPageChangeListener(new GridViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int row, int column, float rowOffset, float columnOffset, int rowOffsetPixels, int columnOffsetPixels) {
+                dotsPageIndicator.onPageScrolled(row, column, rowOffset, columnOffset, rowOffsetPixels,
+                        columnOffsetPixels);
+            }
+            @Override
+            public void onPageSelected(int row, int column) {
+                dotsPageIndicator.onPageSelected(row, column);
+                View view = pager.getChildAt(column);
+                view.requestFocus();
+            }
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                dotsPageIndicator.onPageScrollStateChanged(state);
+            }
+        });
     }
 
 
@@ -80,6 +100,7 @@ public class WizardActivity extends ViewSelectorActivity {
                 }
                 setLabelToPlusMinusView(view, getString(R.string.action_carbs));
                 container.addView(view);
+                view.requestFocus();
                 return view;
             } else if (col == 1 && hasPercentage) {
                 final View view = getInflatedPlusMinusView(container);
@@ -111,7 +132,7 @@ public class WizardActivity extends ViewSelectorActivity {
                         String actionstring = "wizard2 " + SafeParse.stringToInt(editCarbs.editText.getText().toString())
                                 + " " + percentage;
                         ListenerService.initiateAction(WizardActivity.this, actionstring);
-                        finish();
+                        finishAffinity();
                     }
                 });
                 container.addView(view);

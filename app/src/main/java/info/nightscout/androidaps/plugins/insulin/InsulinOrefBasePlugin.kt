@@ -5,11 +5,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Iob
 import info.nightscout.androidaps.database.embedments.InsulinConfiguration
 import info.nightscout.androidaps.database.entities.Bolus
-import info.nightscout.androidaps.interfaces.Insulin
-import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginDescription
-import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
@@ -29,13 +25,17 @@ abstract class InsulinOrefBasePlugin(
     injector: HasAndroidInjector,
     rh: ResourceHelper,
     val profileFunction: ProfileFunction,
-    val rxBus: RxBus, aapsLogger: AAPSLogger
-) : PluginBase(PluginDescription()
-    .mainType(PluginType.INSULIN)
-    .fragmentClass(InsulinFragment::class.java.name)
-    .pluginIcon(R.drawable.ic_insulin)
-    .shortName(R.string.insulin_shortname)
-    .visibleByDefault(false),
+    val rxBus: RxBus,
+    aapsLogger: AAPSLogger,
+    config: Config
+) : PluginBase(
+    PluginDescription()
+        .mainType(PluginType.INSULIN)
+        .fragmentClass(InsulinFragment::class.java.name)
+        .pluginIcon(R.drawable.ic_insulin)
+        .shortName(R.string.insulin_shortname)
+        .visibleByDefault(false)
+        .neverVisible(config.NSCLIENT),
     aapsLogger, rh, injector
 ), Insulin {
 

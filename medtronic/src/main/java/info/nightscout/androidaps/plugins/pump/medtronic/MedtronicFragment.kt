@@ -5,7 +5,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
-import android.os.Looper
+import android.os.HandlerThread
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -68,13 +68,13 @@ class MedtronicFragment : DaggerFragment() {
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
-    private val loopHandler = Handler(Looper.getMainLooper())
+    private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private lateinit var refreshLoop: Runnable
 
     init {
         refreshLoop = Runnable {
             activity?.runOnUiThread { updateGUI() }
-            loopHandler.postDelayed(refreshLoop, T.mins(1).msecs())
+            handler.postDelayed(refreshLoop, T.mins(1).msecs())
         }
     }
 
@@ -130,7 +130,7 @@ class MedtronicFragment : DaggerFragment() {
     @Synchronized
     override fun onResume() {
         super.onResume()
-        loopHandler.postDelayed(refreshLoop, T.mins(1).msecs())
+        handler.postDelayed(refreshLoop, T.mins(1).msecs())
         disposable += rxBus
             .toObservable(EventRefreshButtonState::class.java)
             .observeOn(aapsSchedulers.main)
@@ -178,7 +178,7 @@ class MedtronicFragment : DaggerFragment() {
     override fun onPause() {
         super.onPause()
         disposable.clear()
-        loopHandler.removeCallbacks(refreshLoop)
+        handler.removeCallbacks(refreshLoop)
     }
 
     @Synchronized
