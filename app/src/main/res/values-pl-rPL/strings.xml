@@ -521,8 +521,6 @@
     <string name="enablesmbwithhightemptarget_summary">Włącz SMB, gdy aktywowano wysoki cel tymczasowy (Ćwiczenia, powyżej 100 mg/dl lub 5, 5 mmol/l)</string>
     <string name="overview_insulin_label">Insulina</string>
     <string name="overview_buttons_selection">Przyciski</string>
-    <string name="show_calibration_button_summary">Wysyła kalibrację do xDrip+ lub otwartego okna kalibracji G5</string>
-    <string name="show_cgm_button_summary">Otwiera xDrip+, przycisk \"cofnij\" przywraca do AAPS</string>
     <string name="carb_increment_button_message">Liczba węglowodanów do dodania po wciśnięciu przycisku</string>
     <string name="insulin_increment_button_message">Ilość insuliny do dodania po wciśnięciu przycisku</string>
     <string name="error_starting_cgm">Nie można uruchomić aplikacji CGM. Upewnij się, że została zainstalowana.</string>
