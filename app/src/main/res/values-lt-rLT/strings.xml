@@ -520,8 +520,6 @@
     <string name="enablesmbwithhightemptarget_summary">Įjungti SMB, kai yra aktyvus aukštas tikslas (aktyvumas, daugiau nei 100 mg/dl arba 5,5 mmol/l)</string>
     <string name="overview_insulin_label">Insulinas</string>
     <string name="overview_buttons_selection">Mygtukai</string>
-    <string name="show_calibration_button_summary">Siunčia kalibravimą į xDrip+ arba atidaro G5 kalibravimo dialogą</string>
-    <string name="show_cgm_button_summary">Atidaro xDrip+, o mygtukas ATGAL gražina į AAPS</string>
     <string name="carb_increment_button_message">Paspaudus mygtuką įvedamas nustatytas angliavandenių kiekis</string>
     <string name="insulin_increment_button_message">Paspaudus mygtuką įvedamas nustatytas insulino kiekis</string>
     <string name="error_starting_cgm">Nepavyko paleisti NGJ programos.  Įsitikinkite, kad ji įdiegta.</string>
