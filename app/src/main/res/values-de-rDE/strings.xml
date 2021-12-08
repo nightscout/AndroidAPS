@@ -521,8 +521,6 @@
     <string name="enablesmbwithhightemptarget_summary">Aktiviere SMB bei hohen temporären Zielen (Sport, über 100 mg/dl bzw. 5,5 mmol/L)</string>
     <string name="overview_insulin_label">Insulin</string>
     <string name="overview_buttons_selection">Schaltflächen</string>
-    <string name="show_calibration_button_summary">Sendet eine Kalibierung an xDrip+ oder öffnet den G5 Kalibrierungs-Dialog.</string>
-    <string name="show_cgm_button_summary">Öffnet xDrip+, mit der Zurück-Schaltfläche gelangst du zurück zu AndroidAPS.</string>
     <string name="carb_increment_button_message">Menge der Kohlenhydrate, die hinzugefügt werden soll, wenn die Schaltfläche gedrückt wird.</string>
     <string name="insulin_increment_button_message">Menge an Insulin, die hinzugefügt werden soll, wenn die Schaltfläche gedrückt wird</string>
     <string name="error_starting_cgm">CGM-Anwendung konnte nicht geöffnet werden. Stelle sicher, dass diese installiert ist.</string>

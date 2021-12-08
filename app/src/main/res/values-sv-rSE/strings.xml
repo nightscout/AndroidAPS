@@ -521,8 +521,6 @@ Eversense-appen.</string>
     <string name="enablesmbwithhightemptarget_summary">Aktivera SMB när det finns högt temp mål aktivt (träning, över 100 mg/dl eller 5,5 mmol/l)</string>
     <string name="overview_insulin_label">Insulin</string>
     <string name="overview_buttons_selection">Knappar</string>
-    <string name="show_calibration_button_summary">Skicka kalibrering till xDrip+ eller öppna kalibreringsrutan i G5-appen</string>
-    <string name="show_cgm_button_summary">Öppnar xDrip+. Tillbaka-knappen återgår till AndroidAPS</string>
     <string name="carb_increment_button_message">Mängd kolhydrater att lägga till när man trycker på knappen</string>
     <string name="insulin_increment_button_message">Mängd insulin att lägga till när man trycker på knappen</string>
     <string name="error_starting_cgm">Kunde inte starta CGM-appen. Kontrollera att den är installerad.</string>

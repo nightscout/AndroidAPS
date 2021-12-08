@@ -4,7 +4,7 @@
     <string name="label_actions_activity">AAPS</string>
     <string name="label_xdrip">AAPS</string>
     <string name="label_xdrip_large">AAPS (Grande)</string>
-    <string name="label_xdrip_big_chart">AAPS(BigChart)</string>
+    <string name="label_xdrip_big_chart">AAPS (Gráfico grande)</string>
     <string name="label_xdrip_no_chart">AAPS (NoChart)</string>
     <string name="label_xdrip_circle">AAPS (Círculo)</string>
     <string name="label_xdrip_v2">AAPSv2</string>
@@ -12,7 +12,7 @@
     <string name="label_xdrip_steampunk">AAPS(Steampunk)</string>
     <string name="label_digitalstyle">AAPS(DigitalStyle)</string>
     <string name="label_warning_sync">¡Sin datos!</string>
-    <string name="label_warning_old">¡Viejos datos!</string>
+    <string name="label_warning_old">¡Datos viejos!</string>
     <string name="label_warning_since">Desde %1$s</string>
     <string name="label_warning_sync_aaps">¡Sincronización con AAPS!</string>
     <string name="msg_warning_sync">No se han recibido datos desde %1$s. Comprobar si AAPS en el teléfono envía los datos al reloj</string>

@@ -522,8 +522,8 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="enablesmbwithhightemptarget_summary">Yüksek geçici hedef aktif olduğunda SMB\'yi etkinleştirin (egzersiz, 100 mg/dl veya 5.5 mmol/l\'nin üzerinde)</string>
     <string name="overview_insulin_label">İnsülin</string>
     <string name="overview_buttons_selection">Tuşlar</string>
-    <string name="show_calibration_button_summary">xDrip+ \'ya bir kalibrasyon gönderir veya G5 kalibrasyon iletişim kutusunu açar</string>
-    <string name="show_cgm_button_summary">xDrip+\'i açar, geri düğmeleri AAPS\'e döner</string>
+    <string name="show_calibration_button_summary">xDrip+\'a bir kalibrasyon gönderir veya BYODA kalibrasyon iletişim kutusunu açar</string>
+    <string name="show_cgm_button_summary">xDrip+ veya BYODA\'yı açar, geri dönme düğmesi AAPS\'ye döndürür</string>
     <string name="carb_increment_button_message">Düğmeye basıldığında eklenecek karbonhidrat sayısı</string>
     <string name="insulin_increment_button_message">Düğmeye basıldığında eklenecek insülin miktarı</string>
     <string name="error_starting_cgm">CGM uygulaması başlatılamadı. Yüklendiğinden emin olun.</string>

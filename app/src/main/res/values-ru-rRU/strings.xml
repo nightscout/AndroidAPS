@@ -521,8 +521,6 @@
     <string name="enablesmbwithhightemptarget_summary">Включить микроболюс SMB, когда активна высока временная цель (нагрузка, выше 100 мг/дл или 5,5 ммоль/л)</string>
     <string name="overview_insulin_label">Инсулин</string>
     <string name="overview_buttons_selection">Кнопки</string>
-    <string name="show_calibration_button_summary">Отправить калибровки на xDrip+ или открыть диалоговое окно калибровки G5</string>
-    <string name="show_cgm_button_summary">Открывает xDrip +, кнопка назад возвращает в AAPS</string>
     <string name="carb_increment_button_message">Количество вводимых углеводов при нажатии кнопки</string>
     <string name="insulin_increment_button_message">Количество инсулина, вводимого при нажатии кнопки</string>
     <string name="error_starting_cgm">Не удалось запустить приложения мониторинга СК. Убедитесь, что оно установлено.</string>
@@ -904,4 +902,5 @@ Context | Edit Context</string>
     <string name="bg_too_close">ГК слишком близко к \n%1$s\n%2$s</string>
     <string name="identification">Идентификация (электронная почта, ник в Facebook или Discord и т. п)</string>
     <string name="identification_not_set">Идентификация не задана в режиме разработчика</string>
+    <string name="not_available_full">Недоступно</string>
 </resources>

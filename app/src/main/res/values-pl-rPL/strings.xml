@@ -521,8 +521,8 @@
     <string name="enablesmbwithhightemptarget_summary">Włącz SMB, gdy aktywowano wysoki cel tymczasowy (Ćwiczenia, powyżej 100 mg/dl lub 5, 5 mmol/l)</string>
     <string name="overview_insulin_label">Insulina</string>
     <string name="overview_buttons_selection">Przyciski</string>
-    <string name="show_calibration_button_summary">Wysyła kalibrację do xDrip+ lub otwartego okna kalibracji G5</string>
-    <string name="show_cgm_button_summary">Otwiera xDrip+, przycisk \"cofnij\" przywraca do AAPS</string>
+    <string name="show_calibration_button_summary">Wysyła kalibrację do xDrip+ lub otwiera dialog kalibracji w Dexcom Patched</string>
+    <string name="show_cgm_button_summary">Otwiera xDrip+ lub Dexcom Patched, przycisk \"cofnij\" wraca do AAPS</string>
     <string name="carb_increment_button_message">Liczba węglowodanów do dodania po wciśnięciu przycisku</string>
     <string name="insulin_increment_button_message">Ilość insuliny do dodania po wciśnięciu przycisku</string>
     <string name="error_starting_cgm">Nie można uruchomić aplikacji CGM. Upewnij się, że została zainstalowana.</string>
@@ -721,6 +721,9 @@
     <string name="application_expired">Aplikacja wygasła</string>
     <string name="new_version_warning">Nowa wersja dostępna co najmniej %1$d dni! Powrót do LGS (zawieszania podawania bazy przy niskim poziomie) po %2$d dniach, pętla zostanie wyłączona po %3$d dniach</string>
     <string name="twohours">2 h</string>
+    <string name="dexcom_app_patched">Dexcom Patched</string>
+    <string name="dexcom_short">DEX.PATCH.</string>
+    <string name="description_source_dexcom">Pobieraj glikemię ze spatchowanej aplikacji Dexcom.</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="bolusconstraintappliedwarn">Zastosowano ograniczenie bolusa: %1$.2f U do %2$.2f U</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Wykryto powolne wchłanianie węglowodanów: %2$d%% czasu. Sprawdź ponownie swoje obliczenia. COB mogły być przeszacowane przez co mogło być podane zbyt dużo insuliny !!!!!</font>]]></string>
@@ -855,6 +858,7 @@
     <string name="cannula">Kaniula</string>
     <string name="userentry">Wpis użytkownika</string>
     <string name="common_values">Użyj wartości największego jedzenia, które zazwyczaj zjadasz\n</string>
+    <string name="summary_email_for_crash_report">Ten identyfikator zostanie dołączony do raportu o błędzie aby umożliwić kontakt z tobą, w przypadku gdyby zaszła pilna konieczność. Jego podanie jest opcjonalne.</string>
     <string name="email_address">Adres e-mail</string>
     <string name="privacy_settings">Ustawienia prywatności</string>
     <string name="privacy_summary">Możesz opcjonalnie podać adres e-mail, jeśli chcesz otrzymywać powiadomienia o awariach aplikacji. To nie jest usługa zautomatyzowana. W niebezpiecznych sytuacjach deweloperzy skontaktują się z Tobą.</string>
@@ -896,4 +900,7 @@
     <string name="data_status">Stan danych glikemii</string>
     <string name="recalculated_data_used">Użyto przeliczonych wartości</string>
     <string name="bg_too_close">Zbyt bliskie pomiary glikemii:\n%1$s\n%2$s</string>
+    <string name="identification">Identyfikator (email, nick na FB lub Discordzie itp.)</string>
+    <string name="identification_not_set">Identyfikator nie jest ustawiony w trybie dev</string>
+    <string name="not_available_full">Niedostępne</string>
 </resources>
