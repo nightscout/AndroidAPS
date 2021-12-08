@@ -10,13 +10,13 @@
     <string name="label_xdrip_v2">AAPSv2</string>
     <string name="label_xdrip_cockpit">AAPS(Cockpit)</string>
     <string name="label_xdrip_steampunk">AAPS(Steampunk)</string>
-    <string name="label_digitalstyle">AAPS(DigitalStyle)</string>
-    <string name="label_warning_sync">¡Sin datos!</string>
-    <string name="label_warning_old">¡Datos viejos!</string>
+    <string name="label_digitalstyle">AAPS(Digital)</string>
+    <string name="label_warning_sync">Sin datos</string>
+    <string name="label_warning_old">Datos antiguos</string>
     <string name="label_warning_since">Desde %1$s</string>
-    <string name="label_warning_sync_aaps">¡Sincronización con AAPS!</string>
-    <string name="msg_warning_sync">No se han recibido datos desde %1$s. Comprobar si AAPS en el teléfono envía los datos al reloj</string>
-    <string name="msg_warning_old">¡Los datos de AAPS son %1$s antiguos! ¡Compruebe su sensor, xDrip+, NS, configuración AAPS u otro!</string>
+    <string name="label_warning_sync_aaps">Sincronizar con AAPS</string>
+    <string name="msg_warning_sync">No se han recibido datos desde %1$s. Comprobar si AAPS, (en el teléfono) envía los datos al reloj</string>
+    <string name="msg_warning_old">Los datos de AAPS son %1$s antiguos. Comprueba el sensor, xDrip+, NS, configuración de AAPS y otros</string>
     <string name="pref_vibrate_on_bolus">Vibrar en bolos</string>
     <string name="pref_units_for_actions">Unidades para Acciones</string>
     <string name="pref_show_date">Mostrar fecha</string>
@@ -83,9 +83,9 @@
     <string name="action_start_min">Inicio [min]</string>
     <string name="action_duration_h">Duración [h]</string>
     <string name="action_insulin">Insulina</string>
-    <string name="action_preset_1">Predefinido 1</string>
-    <string name="action_preset_2">Predefinido 2</string>
-    <string name="action_preset_3">Predefinido 3</string>
+    <string name="action_preset_1">Botón 1</string>
+    <string name="action_preset_2">Botón 2</string>
+    <string name="action_preset_3">Botón 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Cantidad libre</string>
     <string name="action_confirm">CONFIRMAR</string>
     <string name="action_timeshift">Intervalo de tiempo</string>
