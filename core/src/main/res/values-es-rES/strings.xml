@@ -283,7 +283,7 @@
     <string name="prefdecrypt_issue_missing_file_hash">Falta el archivo de la suma de comprobación (hash), ¡no se puede verificar la autenticidad de configuración!</string>
     <string name="prefdecrypt_issue_modified">¡El archivo se ha modificado tras la exportación!</string>
     <string name="prefdecrypt_issue_parsing">Error de descifrado, ¡el análisis de las preferencias ha fallado!</string>
-    <string name="prefdecrypt_issue_wrong_pass">Error de descifrado, ¡la contraseña proporcionada no es válida o se ha modificado el archivo de ajustes! Puede suceder que el archivo importado se haya exportado con una contraseña maestra distinta.</string>
+    <string name="prefdecrypt_issue_wrong_pass">Error de descifrado. La contraseña proporcionada no es válida o se ha modificado el archivo de ajustes. Puede suceder que el archivo importado se haya exportado con una contraseña maestra diferente.</string>
     <string name="prefdecrypt_issue_wrong_format">Falta la configuración de cifrado, ¡el formato configuración no es válido!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">¡Algoritmo de cifrado no soportado o no especificado!</string>
     <!-- VersionChecker -->
@@ -304,7 +304,7 @@
     <!-- User Entry -->
     <string name="uel_bolus">BOLO</string>
     <string name="uel_bolus_calculator">CALCULADOR DE BOLO</string>
-    <string name="uel_bolus_advisor">RECOMENDADOR BOLO</string>
+    <string name="uel_bolus_advisor">ASISTENTE DE BOLO</string>
     <string name="uel_extended_bolus">BOLO EXTENDIDO</string>
     <string name="uel_superbolus_tbr">SUPERBOLO TBR</string>
     <string name="uel_carbs">CARBOHIDRATOS</string>
