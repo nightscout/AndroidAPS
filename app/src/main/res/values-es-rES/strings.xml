@@ -278,7 +278,7 @@
     <string name="always_use_shortavg">Usar siempre el delta medio corto, en lugar del delta simple</string>
     <string name="always_use_shortavg_summary">Útil cuando los datos de fuentes sin filtrar como los de xDrip+ son inestables</string>
     <string name="profile">Perfiles</string>
-    <string name="openapsama_max_daily_safety_multiplier_summary">Valor predeterminado: 3. Éste valor es una protección de seguridad clave de OpenAPS. Limita la basal máxima que puede usar AAPS a un máximo de tres veces tu basal. Probablemente nunca necesites modificar este valor. Antes de modificarlo deberías tener en cuenta las discusiones sobre \"3x máx diaria; 4x actual\" por motivos de seguridad</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Valor predeterminado: 3. Este valor es una protección de seguridad clave de OpenAPS. Limita la basal máxima que puede usar AAPS a un máximo de tres veces tu basal. Probablemente nunca necesites modificar este valor. Antes de modificarlo deberías tener en cuenta las discusiones sobre \"3x máx diaria; 4x actual\" por motivos de segurida</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Valor predeterminado: 4. Esta es la otra mitad de los ajustes de seguridad de OpenAPS y de \"3x máx diaria, 4x actual\". Esto significa que tu basal, independientemente del valor de basal máxima que tengas configurado en la bomba, nunca podrá superar este valor multiplicado por tu basal actual. Esto se usa para evitar que las personas se encuentren en situaciones peligrosas por aumentar excesivamente la basal, sin entender como funciona el algoritmo. La mayoría de las personas nunca tendrán que cambiar estos valores. Si estás cerca de alcanzar éstos límites, deberías de ajustar otras configuraciones</string>
     <string name="openapsama_autosens_max_summary">Valor predeterminado: 1.2\nEste parámetro establece un límite de seguridad máximo por defecto del 20% en autosens (y pronto en Autotune), que limita los valores máximos que puede: aumentar las basales, disminuir el factor de sensibilidad (ISF) y disminuir el objetivo de glucosa</string>
     <string name="openapsama_autosens_min_summary">Valor predeterminado: 0.7\nEste parámetro establece un límite de seguridad mínimo por defecto del 30% en autosens, que limita los valores que puede: disminuir las basales, aumentar el factor de sensibilidad (ISF) y aumentar el objetivo de glucosa</string>
@@ -723,7 +723,7 @@
     <string name="twohours">2h</string>
     <string name="dexcom_app_patched">Dexcom (BYODA)</string>
     <string name="dexcom_short">BYODA</string>
-    <string name="description_source_dexcom">Recibir los valores de glucosa de la aplicación \'Build Your Own Device\'.</string>
+    <string name="description_source_dexcom">Recibir los valores de glucosa de la aplicación Dexcom \'Build Your Own Device\'.</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="bolusconstraintappliedwarn">Restricción de bolo aplicada: %1$.2f U a %2$.2f U</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>! Se ha detectado una absorción lenta de carbohidratos: %2$d%% de tiempo. Compruebe de nuevo su cálculo. Los COB se pueden sobrestimar, por lo que se podría administrar más insulina de la cuenta</font>]]></string>
