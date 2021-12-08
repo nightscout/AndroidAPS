@@ -321,7 +321,7 @@
     <string name="uel_open_loop_mode">MODO LAZO ABIERTO</string>
     <string name="uel_loop_disabled">LAZO DESACTIVADO</string>
     <string name="uel_loop_enabled">LAZO ACTIVADO</string>
-    <string name="uel_reconnect">RECONEXIÓN</string>
+    <string name="uel_reconnect">RECONECTAR</string>
     <string name="uel_disconnect">DESCONECTAR</string>
     <string name="uel_resume">REANUDAR</string>
     <string name="uel_suspend">SUSPENDER</string>
