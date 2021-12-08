@@ -240,9 +240,9 @@
     <string name="units">Unidades</string>
     <string name="dia">Duración de la insulina activa</string>
     <string name="prefs_range_title">Rango de visualización</string>
-    <string name="prefs_range_summary">Establece los rangos de glucosa objetivos (altos y bajos) en la pantalla inicio de AAPS y en la esfera del reloj</string>
-    <string name="low_mark">Marca BAJA</string>
-    <string name="high_mark">Marca ALTA</string>
+    <string name="prefs_range_summary">Establece los rangos de glucosa objetivos (hiper e hipo) en la pantalla inicio de AAPS y en la esfera del reloj</string>
+    <string name="low_mark">Valor de hipoglucemia</string>
+    <string name="high_mark">Valor de hiperglucemia</string>
     <string name="wear">Reloj</string>
     <string name="resend_all_data">Reenviar todos los datos</string>
     <string name="open_settings_on_wear">Abrir ajustes en el reloj</string>
@@ -754,8 +754,8 @@
     <string name="deletecurrentprofile">¿Eliminar el perfil actual?</string>
     <string name="copytolocalprofile">¿Crear nuevo perfil a partir de este perfil?</string>
     <string name="profilenamecontainsdot">El nombre de perfil contiene puntos.\nEsto no está soportado por NS.\nEl perfil no se carga en NS.</string>
-    <string name="low_mark_comment">Valor inferior del área de rango (sólo visualización)</string>
-    <string name="high_mark_comment">Valor superior al área de rango (sólo visualización)</string>
+    <string name="low_mark_comment">Valor de glucosa baja (sólo visualización)</string>
+    <string name="high_mark_comment">Valor de glucosa alta (sólo visualización)</string>
     <string name="age">Edad:</string>
     <string name="weight_label">Peso:</string>
     <string name="id">ID:</string>
@@ -767,7 +767,7 @@
     <string name="invalidpct">Entrada % invalida</string>
     <string name="tirformat"><![CDATA[<b>%1$s:</b> Low: <b>%2$02d%%</b> In: <b>%3$02d%%</b> High: <b>%4$02d%%</b>]]></string>
     <string name="average">Promedio</string>
-    <string name="tir">TIR</string>
+    <string name="tir">Tiempo en rango</string>
     <string name="activitymonitor">Monitor de actividad</string>
     <string name="doyouwantresetstats">¿Desea restablecer las estadísticas de actividad?</string>
     <string name="statistics">Estadísticas</string>
