@@ -75,7 +75,7 @@
     <string name="loopdisabled">LAZO DESACTIVADO POR RESTRICCIONES</string>
     <string name="bolusdelivered">Bolo %1$.2fU enviado correctamente</string>
     <string name="virtualpump_resultok">OK</string>
-    <string name="novalidbasalrate">Tasa Basal no valida en la bomba</string>
+    <string name="novalidbasalrate">Tasa basal no válida leída en la bomba</string>
     <string name="limitingmaxiob">Limitando max IOB a %1$.1f U debido a %2$s</string>
     <string name="unsafeusage">uso no seguro</string>
     <string name="pump_unreachable">Bomba no alcanzable</string>
@@ -218,7 +218,7 @@
     <string name="loop">Lazo</string>
     <string name="ns">NS</string>
     <string name="record">Registro</string>
-    <string name="reading_pump_history">Leyendo historia bomba</string>
+    <string name="reading_pump_history">Leyendo historial de la bomba</string>
     <string name="pump_icon">Icono de bomba</string>
     <!--    Command-->
     <string name="connectiontimedout">Tiempo de conexión agotado</string>
@@ -268,10 +268,10 @@
     <string name="exported_less_than_hour_ago">exportado hace menos de una hora</string>
     <string name="in_directory" comment="placeholder is for exported file path">en el directorio: %1$s</string>
     <string name="preferences_import_list_title">Seleccionar fichero para importar</string>
-    <string name="metadata_warning_different_flavour">Las preferencias se han creado con distinta versión de AAPS (%1$s), la versión instalada es: %2$s.\n\nAlgunos valores pueden faltar o no ser válidos después de importar, por favor, compruebe y actualice sus preferencias.</string>
-    <string name="metadata_warning_different_device">Las preferencias se han creado en un dispositivo distinto. Está bien si va a importar desde un teléfono más antiguo/diferente, pero ¡asegúrese de que las preferencias importadas son correctas!</string>
+    <string name="metadata_warning_different_flavour">Las preferencias se han creado con una versión distinta de AAPS (%1$s). La versión instalada es: %2$s.\n\nAlgunos valores pueden faltar o no ser válidos después de importar, por favor, compruebe y actualice sus preferencias.</string>
+    <string name="metadata_warning_different_device">Las preferencias se han creado en un dispositivo distinto. Esto es correcto si vas a importar tu configuración desde otro teléfono más antiguo o diferente, pero asegúrate de que las preferencias importadas son correctas</string>
     <string name="metadata_warning_outdated_format">¡Estás usando el obsoleto formato heredado de versiones antiguas de AAPS, que no es seguro! Únicamente utilizarlo como último recurso, si no tiene una exportación en formato JSON actual.</string>
-    <string name="metadata_warning_old_export">Las preferencias importadas ya tienen %1$s días! ¿Tal vez tengas preferencias más actualizadas o eligiste el archivo equivocado? ¡Recuerda exportar las preferencias regularmente!</string>
+    <string name="metadata_warning_old_export">Las preferencias importadas tienen %1$s días! ¿Es posible que tengas preferencias más recientes o eligieras un archivo equivocado? ¡Recuerda exportar las preferencias regularmente!</string>
     <string name="metadata_warning_date_format">¡Formato de fecha no válido!</string>
     <string name="metadata_warning_different_version">Preferencias de una versión menor de la aplicación. Está bien si va a importar después de la actualización, pero ¡compruebe después de la importación si las preferencias siguen siendo correctas!</string>
     <string name="metadata_urgent_different_version">Preferencias de la versión principal distinta de la aplicación. ¡Las versiones principales difieren significativamente y pueden tener preferencias incompatibles! ¡Asegúrese de que, después de importar, las preferencias siguen siendo correctas!</string>
@@ -424,7 +424,7 @@
     <string name="temp_basal_absolute">BASAL TEMPORAL %1$.2f U/h %2$d min</string>
     <string name="temp_basal_percent">BASAL TEMPORAL %1$d%% %2$d min</string>
     <string name="insight_set_tbr_over_notification">INSIGHT ESTABLECER TBR SOBRE NOTIFICACIÓN</string>
-    <string name="read_status" comment="10 characters max for READSTATUS translation">LEERESTADO %1$s</string>
+    <string name="read_status" comment="10 characters max for READSTATUS translation">LEER ESTADO %1$s</string>
     <string name="keepalive_status_outdated" comment="26 characters max for translation">KeepAlive. Estado desactualizado.</string>
     <string name="keepalive_basal_outdated" comment="26 characters max for translation">KeepAlive. Basal desactualizada.</string>
     <string name="sms" comment="26 characters max for translation">SMS</string>
