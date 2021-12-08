@@ -394,7 +394,7 @@
     <string name="xdripstatus_settings">Estado de xDrip+ (reloj)</string>
     <string name="xdripstatus">Línea de estado de xDrip+ (reloj)</string>
     <string name="xdripstatus_shortname">xds</string>
-    <string name="wear_showbgi_title">Mostrar BGI</string>
+    <string name="wear_showbgi_title">Mostrar BGI (Índice de glucosa en sangre)</string>
     <string name="wear_showbgi_summary">Agregar BGI a la línea de estado</string>
     <string name="overview_extendedbolus_cancel_button">Cancelar bolo extendido</string>
     <string name="doprofileswitch">Cambio de perfil</string>
@@ -425,7 +425,7 @@
     <string name="basal_short">BAS</string>
     <string name="keep_screen_on_title">Mantener la pantalla activa</string>
     <string name="keep_screen_on_summary">Evita que Android apague la pantalla. Consume mucha batería cuando el teléfono no está conectado al cargador</string>
-    <string name="sensitivity_warning">Al activar Autosens recuerda introducir todos carbohidratos comidos. Sino las desviaciones de carbohidratos serán identificadas incorrectamente como un cambio de sensibilidad !!</string>
+    <string name="sensitivity_warning">Al activar Autosens, recuerda introducir todos carbohidratos que has comido, sino, las desviaciones de carbohidratos serán identificados incorrectamente, como un cambio de sensibilidad</string>
     <string name="sensitivityweightedaverage">Sensibilidad promedio ponderada</string>
     <string name="mdtp_ok">Ok</string>
     <string name="mdtp_cancel">Cancelar</string>
@@ -470,12 +470,12 @@
     <string name="executingrightnow">Orden se esta efectuando en este momento</string>
     <string name="missed_bg_readings">Faltan lecturas de glucosa</string>
     <string name="raise_notifications_as_android_notifications">Usa las notificaciones del sistema para las alarmas y las notificaciones</string>
-    <string name="gradually_increase_notification_volume">Aumentar gradualmente el volumen de las alertas y de las notificaciones</string>
+    <string name="gradually_increase_notification_volume">Aumentar gradualmente el volumen de las alarmas y de las notificaciones</string>
     <string name="localalertsettings_title">Alarmas locales</string>
     <string name="enable_missed_bg_readings_alert">Alarma si no llegan datos de glucosa</string>
     <string name="enable_pump_unreachable_alert">Alarma si la bomba no es alcanzable</string>
     <string name="pump_unreachable_threshold">Bomba no alcanzable durante [min]</string>
-    <string name="enable_carbs_req_alert">Alerta si se necesitan carbohidratos</string>
+    <string name="enable_carbs_req_alert">Alarma si se necesitan carbohidratos</string>
     <string name="urgent_alarm">Alarma urgente</string>
     <string name="info">INFO</string>
     <string name="eversense">Eversense App (parcheada)</string>
@@ -535,14 +535,14 @@
     <string name="wear_notifysmb_title">Notificar SMB</string>
     <string name="wear_notifysmb_summary">Mostrar SMB en el reloj como un bolo estándar</string>
     <string name="ns_create_announcements_from_errors_title">Crear notificaciones de los errores</string>
-    <string name="ns_create_announcements_from_carbs_req_title">Crear mensajes de alertas de carbohidratos necesarios</string>
+    <string name="ns_create_announcements_from_carbs_req_title">Crear notificaciones de alertas de carbohidratos necesarios</string>
     <string name="ns_create_announcements_from_errors_summary">Crear notificaciones en Nightscout para diálogos de error y alertas locales (también visibles en el portal del cuidador, en los tratamientos)</string>
-    <string name="ns_create_announcements_from_carbs_req_summary">Crear mensajes de Nightscout para las alertas de carbohidratos necesarios</string>
+    <string name="ns_create_announcements_from_carbs_req_summary">Crear notificaciones de Nightscout para las alertas de carbohidratos necesarios</string>
     <string name="wear_predictions_summary">Mostrar predicciones en el reloj</string>
     <string name="wear_predictions_title">Predicciones</string>
     <string name="data_choices">Opciones de datos</string>
     <string name="fabric_upload">Reporte fallos a Fabric.io</string>
-    <string name="allow_automated_crash_reporting">Permite que los informes de errores automáticos y los datos de uso de las funciones se envíen a los desarrolladores mediante el servicio fabric.io</string>
+    <string name="allow_automated_crash_reporting">Permite que los informes de errores automáticos y los datos de uso de las funciones, se envíen a los desarrolladores mediante el servicio fabric.io</string>
     <string name="g5appnotdetected">Actualice su aplicación Dexcom a una versión compatible</string>
     <string name="dexcom_app_not_installed">La aplicación Dexcom no está instalada.</string>
     <string name="start_activity_tt">Iniciar OT Actividad</string>
@@ -665,7 +665,7 @@
     <string name="allow_hardware_pump_text">Atención: si activas y conectas la bomba con AndroidAPS, AndroidAPS sobrescribirá los ajustes de basales del perfil de la bomba, con los establecidos en el perfil de AndroidAPS. Comprueba que tengas el perfil basal correcto en AndroidAPS. Si no estás seguro, o no quieres sobrescribir los ajustes basales en la bomba, presiona cancelar y repite la vinculación más adelante.</string>
     <string name="error_adding_treatment_title">Datos de tratamiento incompletos</string>
     <string name="maintenance_settings">Ajustes de mantenimiento</string>
-    <string name="maintenance_email">Correo</string>
+    <string name="maintenance_email">Correo electrónico</string>
     <string name="maintenance_amount">Número de registros para enviar</string>
     <string name="maintenance">Mantenimiento</string>
     <string name="maintenance_shortname">MANT</string>
@@ -901,7 +901,7 @@
     <string name="data_status">Estado de datos de glucosa</string>
     <string name="recalculated_data_used">Datos recalculados utilizados</string>
     <string name="bg_too_close">Datos de glucosa demasiado cercanos:\n%1$s\n%2$s</string>
-    <string name="identification">Identificación (correo electrónico, FB o nick de Discord, etc.)</string>
+    <string name="identification">Identificación (correo electrónico, FB, nick de Discord, etc.)</string>
     <string name="identification_not_set">Identificación no establecida en modo dev</string>
     <string name="not_available_full">No disponible</string>
 </resources>
