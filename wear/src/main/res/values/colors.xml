@@ -2,6 +2,7 @@
 <resources>
 
     <color name="cardObjectiveText">#779ECB</color>
+    <color name="titleHeader">#D9000000</color>
 
 
     <!-- light colors -->
