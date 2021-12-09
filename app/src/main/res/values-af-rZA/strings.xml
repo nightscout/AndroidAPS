@@ -494,7 +494,6 @@
     <string name="exitwizard">Slaan opstelling-Ghoeroe oor</string>
     <string name="setupwizard_loop_description">Druk die knoppie hieronder om AndroidAPS te aktiveer om voorstelle/of veranderings te maak aan basale</string>
     <string name="setupwizard_sensitivity_description">Sensitiwiteit plugin vir sensitiwiteit opsporing en KAB berekening. Vir meer inligting besoek:</string>
-    <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
     <string name="diawarning">Onthou asseblief: dat nuwe insulien profiele vereis DIA van minstens 5h. DIA 5 – 6h op nuwe profiel is gelyk aan DIA 3h op ou insulien profiele.</string>
     <string name="setupwizard_aps_description">Kies een van beskikbare algoritmes. Hulle is gesorteer vanaf oudste tot jongste. Nuwer algoritmes is gewoonlik kragtiger en meer aggressief. Dus as jy nuut is met jou lus, sal jy waarskynlik begin met AMA en nie met jongste een. Moenie vergeet om die OpenAPS dokumentasie te lees en te konfigureer voor gebruik.</string>
     <string name="startobjective">Begin jou eerste doelwit</string>

@@ -628,7 +628,6 @@
     <string name="exitwizard">דלג על אשף ההתקנה</string>
     <string name="setupwizard_loop_description">לחצו על הלחצן למטה כדי לאפשר ל-AndroidAPS להציע\\לבצע שינויים במינון הבזאלי</string>
     <string name="setupwizard_sensitivity_description">תוסף רגישות משמש לזיהוי רגישות וחישוב הפחמ\' הפעילות. לקבלת מידע נוסף, בקרו בכתובת:</string>
-    <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
     <string name="nsclientinfotext">NSClient מטפל בחיבור ל-Nightscout. אפשר לדלג על החלק הזה עכשיו, אך לא תוכלו לעבור את המשימות מבלי להגדיר אותו.</string>
     <string name="diawarning">חשוב לזכור: פרופילי אינסולין חדשים דורשים משך פעילות אינסולין (DIA) של 5 ש\' לפחות. ערך של 5-6 ש\' בפרופיל חדש שווה לערך של 3 ש\' בפרופילים ישנים.</string>
     <string name="setupwizard_aps_description">בחרו באחד מהאלגוריתמים הזמינים. הם ממוינים מהישן לחדש. אלגוריתם חדש יותר הוא בדרך כלל חזק ואגרסיבי יותר. לפיכך, אם אתם משתמשים חדשים רצוי שתתחילו עם AMA ולא עם האלגוריתם האחרון. נא לא לשכוח לקרוא את תיעוד OpenAPS ולהגדיר אותו כראוי לפני השימוש.</string>

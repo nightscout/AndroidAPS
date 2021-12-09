@@ -493,7 +493,6 @@
     <string name="exitwizard">跳过设置向导</string>
     <string name="setupwizard_loop_description">按下下面的按钮, 以使 AndroidAPS 建议或者更改基础率</string>
     <string name="setupwizard_sensitivity_description">灵敏度插件用于灵敏度检测和碳水化合物计算。有关详细信息, 请访问:</string>
-    <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
     <string name="diawarning">请记住：新的胰岛素分布需要DIA至少5小时。 对于新的配置文件，DIA 5-6小时相当于旧胰岛素配置文件中的DIA 3小时</string>
     <string name="setupwizard_aps_description">从可用算法中选择一个。 他们从最旧到最新排序。 较新的算法通常更强大，更冒险。 因此，如果你是新的闭环使用者，你可能会从AMA算法开始，而不是最新的。 不要忘记在使用之前阅读OpenAPS文档并对其进行配置。</string>
     <string name="startobjective">开始你的第一个目标</string>
