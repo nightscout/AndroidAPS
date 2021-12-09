@@ -465,14 +465,13 @@ class BolusWizard @Inject constructor(
     private fun calcPercentageWithConstraints() {
         calculatedPercentage = 100.0
         if (totalBeforePercentageAdjustment != insulinFromCorrection)
-            calculatedPercentage = calculatedTotalInsulin/(totalBeforePercentageAdjustment-insulinFromCorrection)*100
+            calculatedPercentage = calculatedTotalInsulin/(totalBeforePercentageAdjustment-insulinFromCorrection) * 100
         calculatedPercentage = max(calculatedPercentage, 10.0)
         calculatedPercentage = min(calculatedPercentage,250.0)
     }
 
     private fun calcCorrectionWithConstraints() {
-        val bolusStep = activePlugin.activePump.pumpDescription.bolusStep
-        calculatedCorrection = Round.roundTo(totalBeforePercentageAdjustment * totalPercentage / percentageCorrection - totalBeforePercentageAdjustment, bolusStep)
+        calculatedCorrection = totalBeforePercentageAdjustment * totalPercentage / percentageCorrection - totalBeforePercentageAdjustment
         //Apply constraints
         calculatedCorrection = min(constraintChecker.getMaxBolusAllowed().value(), calculatedCorrection)
         calculatedCorrection = max(-constraintChecker.getMaxBolusAllowed().value(), calculatedCorrection)
