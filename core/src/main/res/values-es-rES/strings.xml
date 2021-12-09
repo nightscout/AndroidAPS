@@ -199,7 +199,7 @@
     <string name="careportal_tempbasalend">Fin Basal Temp</string>
     <string name="careportal_carbscorrection">Corrección Carbohidratos</string>
     <string name="careportal_openapsoffline">OpenAPS sin conexión</string>
-    <string name="careportal_pumpbatterychange">Cambio batería bomba</string>
+    <string name="careportal_pumpbatterychange">Cambio de batería en la bomba</string>
     <string name="careportal_temporarytarget">Objetivo temporal</string>
     <string name="careportal_temporarytargetvalue">Valor objetivo temporal</string>
     <string name="careportal_temporarytargetcancel">Cancelar Objetivo temporal</string>
