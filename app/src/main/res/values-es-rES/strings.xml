@@ -128,7 +128,7 @@
     <string name="careportal_newnstreatment_glucosetype">Tipo de glucosa</string>
     <string name="overview_tempbasal_button">Basal temporal</string>
     <string name="overview_extendedbolus_button">Bolo extendido</string>
-    <string name="configbuilder_nightscoutversion_label">Nightscout versión:</string>
+    <string name="configbuilder_nightscoutversion_label">Versión de Nightscout:</string>
     <string name="missing_carbs">Falta %1$d g</string>
     <string name="exported">Preferencias exportadas</string>
     <string name="ue_exported">Entradas de usuario exportadas</string>
@@ -477,7 +477,7 @@
     <string name="pump_unreachable_threshold">Bomba no alcanzable durante [min]</string>
     <string name="enable_carbs_req_alert">Alarma si se necesitan carbohidratos</string>
     <string name="urgent_alarm">Alarma urgente</string>
-    <string name="info">INFO</string>
+    <string name="info">INFORMACIÓN</string>
     <string name="eversense">Eversense App (parcheada)</string>
     <string name="dexcomg5_nsupload_title">Subir datos de glucosa a NS</string>
     <string name="bgsource_upload">Ajuste de subida de datos de glucosa</string>
