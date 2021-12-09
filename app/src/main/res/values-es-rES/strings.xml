@@ -298,7 +298,7 @@
     <string name="virtualpump_settings">Ajustes de bomba virtual</string>
     <string name="virtualpump_uploadstatus_title">Subir estado a NS</string>
     <string name="nsclientinternal">NSClient</string>
-    <string name="nsclientinternal_shortname">NSCI</string>
+    <string name="nsclientinternal_shortname">NSCLI</string>
     <string name="nsclientinternal_url">URL:</string>
     <string name="nsclientinternal_autoscroll">Desplazamiento automático</string>
     <string name="restart">Reiniciar</string>
@@ -317,7 +317,7 @@
     <string name="nowritepermission">NSCLIENT no tiene permisos de escritura. ¿API Secret incorrecta?</string>
     <string name="wear_settings">Ajustes de reloj</string>
     <string name="wear_detailedIOB_title">Mostrar detalles IOB</string>
-    <string name="wear_detailedIOB_summary">Separar IOB en bolo y base en el reloj</string>
+    <string name="wear_detailedIOB_summary">Separar la insulina activa en bolo y basal en el reloj</string>
     <string name="nosuccess">sin efecto - por favor verificar en móvil</string>
     <string name="notavailable">n/a</string>
     <string name="patientage">Tipo de paciente</string>
@@ -538,7 +538,7 @@
     <string name="ns_create_announcements_from_carbs_req_title">Crear notificaciones de alertas de carbohidratos necesarios</string>
     <string name="ns_create_announcements_from_errors_summary">Crear notificaciones en Nightscout para diálogos de error y alertas locales (también visibles en el portal del cuidador, en los tratamientos)</string>
     <string name="ns_create_announcements_from_carbs_req_summary">Crear notificaciones de Nightscout para las alertas de carbohidratos necesarios</string>
-    <string name="wear_predictions_summary">Mostrar predicciones en el reloj</string>
+    <string name="wear_predictions_summary">Mostrar las predicciones en el reloj</string>
     <string name="wear_predictions_title">Predicciones</string>
     <string name="data_choices">Opciones de datos</string>
     <string name="fabric_upload">Reporte fallos a Fabric.io</string>
@@ -617,7 +617,7 @@
     <string name="value_unavailable_short">n/a</string>
     <string name="virtualpump_type">Bomba virtual</string>
     <string name="virtualpump_definition">Definición de la bomba</string>
-    <string name="virtualpump_pump_def">Bolo: Paso =%1$s\nBolo Extendido: [paso =%2$s, duración =%3$smin -%4$sh] \nBasal: paso =%5$s\nTBR: %6$s ( %7$s), duración =%8$smin -%9$sh\n%10$s</string>
+    <string name="virtualpump_pump_def">Bolo: Paso =%1$s\nBolo Extendido: [paso =%2$s, Duración =%3$smin -%4$sh] \nBasal: Paso =%5$s\nTBR: %6$s ( %7$s), Duración =%8$sMin -%9$sh\n%10$s</string>
     <string name="wear_wizard_settings">Configuración del Asistente</string>
     <string name="wear_wizard_settings_summary">Cálculos incluidos en el resultado del asistente:</string>
     <string name="wear_display_settings">Ajustes de pantalla</string>
@@ -626,7 +626,7 @@
     <string name="welcometosetupwizard">Bienvenido al asistente de instalación. Le guiará a través del proceso de configuración\n</string>
     <string name="readstatus">Leer estado</string>
     <string name="exitwizard">Saltar asistente de configuración</string>
-    <string name="setupwizard_loop_description">Presiona el botón de abajo para permitir a AndroidAPS sugerir/hacer cambios en basales</string>
+    <string name="setupwizard_loop_description">Presiona el botón de abajo para permitir que AndroidAPS pueda sugerir/realizar cambios en las basales</string>
     <string name="setupwizard_sensitivity_description">El complemento de sensibilidad es usado para detectar la sensibilidad y cálculo de COB. Para más info ver:</string>
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
     <string name="nsclientinfotext">NSCliente controla la conexión con Nightscout. Puedes saltar este paso ahora pero no podrás completar los objetivos hasta que lo configures.</string>
@@ -867,7 +867,7 @@
     <string name="full_sync_comment">¿Sincronización completa? Puede tardar muchas horas y hasta que termine no verás nuevos datos en NS.</string>
     <string name="prime">Cebar</string>
     <string name="ns_sync_options">Sincronización</string>
-    <string name="ns_upload_summary">Perfiles, bolos, carbohidratos, basales temporales se suben a NS</string>
+    <string name="ns_upload_summary">Perfiles, bolos, carbohidratos y basales temporales se suben a NS</string>
     <string name="ns_upload">Subir datos a NS</string>
     <string name="ns_receive_profile_store">Recibir perfil almacenado</string>
     <string name="ns_receive_profile_store_summary">Sincronizar perfiles del editor de perfiles de NS</string>
