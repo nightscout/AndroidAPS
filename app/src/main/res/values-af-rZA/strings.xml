@@ -397,8 +397,6 @@
     <string name="enablesmbwithhightemptarget">Aktiveer SMB met hoë tydelike doelwitte</string>
     <string name="overview_insulin_label">Insulien</string>
     <string name="overview_buttons_selection">Knoppies</string>
-    <string name="show_calibration_button_summary">Stuur \'n kalibrasie na xDrip+ of open G5 kalibrasie dialoog</string>
-    <string name="show_cgm_button_summary">Open xDrip +, terug knoppies keer terug na AAPS</string>
     <string name="carb_increment_button_message">Hoeveelheid karbs om by te voeg op druk van knoppie</string>
     <string name="insulin_increment_button_message">Hoeveelheid Insulien om by te voeg op druk van knoppie</string>
     <string name="error_starting_cgm">Kon nie CGM toepassing laat hardloop nie.  Maak seker dat dit geïnstalleer is.</string>

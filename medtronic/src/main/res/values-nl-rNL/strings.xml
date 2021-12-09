@@ -90,4 +90,5 @@
     <string name="set_neutral_temps_title">Stel neutraal tijdelijk basaal in</string>
     <string name="set_neutral_temps_summary">Als deze optie is ingeschakeld, wordt een tijdelijk basaal geannuleerd vlak voor het einde van elk uur. Handige optie voor sommige pompen die elk uur piepen/vibreren zolang een tijdelijk basaal actief is.</string>
     <string name="mdt_tbr_remaining">%1$.1f E/u (%2$d min resterend)</string>
+    <string name="invalid_history_data">Ongeldige pompgeschiedenis gegevens gedetecteerd. Open een nieuw issue inclusief de logbestanden.</string>
 </resources>

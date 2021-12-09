@@ -96,6 +96,7 @@
     <string name="safety">Veiligheid</string>
     <string name="openapsma_disabled">Plugin is gedeactiveerd</string>
     <string name="constraints_violation">In strijd met beperkingen</string>
+    <string name="treatmentdeliveryerror">Bolus fout geconstateerd. Controleer de daadwerkelijk toegediende hoeveelheid</string>
     <string name="setbasalquestion">Accepteer nieuw tijdelijk basaal:</string>
     <string name="overview_treatment_label">Bolus</string>
     <string name="overview_calculator_label">Bolus wizard</string>
@@ -520,8 +521,6 @@
     <string name="enablesmbwithhightemptarget_summary">Schakel SMB in wanneer er een hoog tijdelijk doel actief is (uitvoeren boven 100 mg/dl of 5,5 mmol/l)</string>
     <string name="overview_insulin_label">Insuline</string>
     <string name="overview_buttons_selection">Knoppen</string>
-    <string name="show_calibration_button_summary">Stuurt een kalibratie naar xDrip+ of opent het G5 calibratie venster</string>
-    <string name="show_cgm_button_summary">Opent xDrip+, terug knop voor terug naar AAPS te gaan</string>
     <string name="carb_increment_button_message">Aantal koolhydraten toevoegen wanneer de knop wordt ingedrukt</string>
     <string name="insulin_increment_button_message">Hoeveelheid insuline dat wordt toegevoegd wanneer er op de knop gedrukt wordt</string>
     <string name="error_starting_cgm">Kon de CGM applicatie niet starten. Zorg dat deze geïnstalleerd is.</string>
@@ -648,6 +647,8 @@
     <string name="time_elapsed">Verstreken tijd</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Ontvang BG waardes van Poctech app</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Ontvang waardes van Glunovo app</string>
     <string name="description_source_tomato">Ontvang BG waardes van Tomato app (MiaoMiao apparaatje)</string>
     <string name="high_temptarget_raises_sensitivity_title">Hoog tijdelijk streefdoel verhoogt gevoeligheid</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Verhogen van de gevoeligheid voor temptargets > = 100]]></string>
@@ -718,6 +719,9 @@
     <string name="application_expired">Applicatie is verlopen</string>
     <string name="new_version_warning">Nieuwe versie al zeker %1$d dagen beschikbaar! Terugval LGS na %2$d dagen, loop zal worden uitgeschakeld na %3$d dagen</string>
     <string name="twohours">2u</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Ontvang BG waarden van de \'Build Your Own Dexcom App\' (BYODA).</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="bolusconstraintappliedwarn">Bolusbeperking toegepast: %1$.2f E naar %2$.2f E</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!! Trage koolhydraat absorptie gedetecteerd: %2$d%% van de tijd. Controleer je berekening nogmaals. COB kan zijn overschat waardoor er misschien meer insuline wordt afgegeven!!!</font> zijn]]></string>
@@ -853,6 +857,7 @@
     <string name="cannula">Canule</string>
     <string name="userentry">Gebruikersinvoer</string>
     <string name="common_values">Gebruik de waarden van je grootste maaltijd die je gewoonlijk eet\n</string>
+    <string name="summary_email_for_crash_report">Deze identificatie wordt gekoppeld aan crashrapporten, zodat we contact met je kunnen opnemen in urgente gevallen. Het is optioneel.</string>
     <string name="email_address">E-mailadres</string>
     <string name="privacy_settings">Privacyinstellingen</string>
     <string name="privacy_summary">U kunt optioneel een e-mailadres opgeven als u op de hoogte wilt worden gebracht van applicatie crashes. Dit is geen geautomatiseerde service. De ontwikkelaars zullen contact met u opnemen bij gevaarlijke situaties.</string>
@@ -890,4 +895,10 @@
     <string name="invalid_profile_not_accepted">Ongeldig profiel %1$s niet geaccepteerd door NS</string>
     <string name="errors">Foutmeldingen</string>
     <string name="ns_sync_slow">Vertraag uploads</string>
+    <string name="data_status">BG data status</string>
+    <string name="recalculated_data_used">Herberekende data gebruikt</string>
+    <string name="bg_too_close">BG data interval to kort:\n%1$s\n%2$s</string>
+    <string name="identification">Identificatie (e-mail, FB, Discord e. d.)</string>
+    <string name="identification_not_set">Identificatie niet ingesteld in dev modus</string>
+    <string name="not_available_full">Niet beschikbaar</string>
 </resources>

@@ -518,8 +518,6 @@
     <string name="enablesmbwithhightemptarget_summary">높은 임시 목표 (운동, 100mg/dl 또는 5.5 mmol/l 초과)가 활성되어 있을 때 SMB 사용하기</string>
     <string name="overview_insulin_label">인슐린</string>
     <string name="overview_buttons_selection">버튼</string>
-    <string name="show_calibration_button_summary">xDrip+에 보정값을 전송하거나 G5 보정창을 엽니다.</string>
-    <string name="show_cgm_button_summary">xDrip+를 열고, 뒤로 버튼을 누르면 AAPS로 돌아갑니다.</string>
     <string name="carb_increment_button_message">버튼을 누를 때 추가되는 탄수화물 양</string>
     <string name="insulin_increment_button_message">버튼을 누를때 추가될 인슐린 양</string>
     <string name="error_starting_cgm">CGM앱을 실행할 수 없습니다. 앱이 설치되어 있는지 확인하세요.</string>

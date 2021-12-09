@@ -399,8 +399,6 @@
     <string name="enablesmbwithhightemptarget">Ενεργοποίηση SMB με υψηλούς προσωρινούς στόχους</string>
     <string name="overview_insulin_label">Ινσουλίνη</string>
     <string name="overview_buttons_selection">Πλήκτρα</string>
-    <string name="show_calibration_button_summary">Στέλνει καλιμπράρισμα στο xDrip + ή ανοίγει το παράθυρο διαλόγου καλιμπραρίσματος του G5</string>
-    <string name="show_cgm_button_summary">Ανοίγει το xDrip +, το πλήκτρο πίσω επιστρέφει στο AndroidAPS</string>
     <string name="carb_increment_button_message">Αριθμός υδατανθράκων να προστεθεί όταν πατήσετε το πλήκτρο</string>
     <string name="insulin_increment_button_message">Ποσότητα ινσουλίνης να προστεθεί όταν πατήσετε το πλήκτρο</string>
     <string name="error_starting_cgm">Δεν είναι δυνατή η εκκίνηση της εφαρμογής CGM. Βεβαιωθείτε ότι έχει εγκατασταθεί.</string>

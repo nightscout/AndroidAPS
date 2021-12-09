@@ -521,8 +521,6 @@
     <string name="enablesmbwithhightemptarget_summary">Aktiver SMB når det er aktive temp målverdier (trening, over 100 mg/dl eller 5,5 mmol/l)</string>
     <string name="overview_insulin_label">Insulin</string>
     <string name="overview_buttons_selection">Knapper</string>
-    <string name="show_calibration_button_summary">Sender en kalibrering til xDrip+ eller åpner en G5 kalibreringsdialog</string>
-    <string name="show_cgm_button_summary">Åpner xDrip+, tilbake knappen returnerer til AAPS</string>
     <string name="carb_increment_button_message">Antall karbohydrater som skal legges til når knappen trykkes</string>
     <string name="insulin_increment_button_message">Mengde insulin som skal legges til når knappen trykkes inn</string>
     <string name="error_starting_cgm">Kunne ikke starte CGM-programmet. Kontroller at det er installert.</string>

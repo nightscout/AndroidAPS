@@ -518,8 +518,6 @@
     <string name="enablesmbwithhightemptarget_summary">Activar SMB quando há alvo temporário elevado activo (exercício, acima de 100 mg/dl ou 5,5 mmol/l)</string>
     <string name="overview_insulin_label">Bólus</string>
     <string name="overview_buttons_selection">Botões</string>
-    <string name="show_calibration_button_summary">Enviar calibrações para o xDrip+ ou abrir sistema de calibração do G5</string>
-    <string name="show_cgm_button_summary">Abre xDrip+, botão retorcer volta ao AAPS</string>
     <string name="carb_increment_button_message">Número de hidratos de carbono a adicionar quando o botão é premido</string>
     <string name="insulin_increment_button_message">Unidades de insulina a adicionar quando o botão é premido</string>
     <string name="error_starting_cgm">Não foi possível lançar aplicação de monitorização contínua. Por favor verifique que está instalada.</string>

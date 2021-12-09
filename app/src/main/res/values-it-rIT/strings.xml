@@ -521,8 +521,8 @@
     <string name="enablesmbwithhightemptarget_summary">Abilita SMB quando è attivo un target temporaneo \"alto\" (attività fisica, sopra 100 mg/dl o 5.5 mmol/l)</string>
     <string name="overview_insulin_label">Insulina</string>
     <string name="overview_buttons_selection">Tasti</string>
-    <string name="show_calibration_button_summary">Invia una calibrazione a xDrip+ o apre la finestra di calibrazione del G5</string>
-    <string name="show_cgm_button_summary">Apre xDrip+, il tasto indietro torna ad AAPS</string>
+    <string name="show_calibration_button_summary">Invia una calibrazione a xDrip+ o apre la finestra di calibrazione di BYODA</string>
+    <string name="show_cgm_button_summary">Apre xDrip+ o BYODA, il tasto indietro torna ad AAPS</string>
     <string name="carb_increment_button_message">Numero di carboidrati da aggiungere quando si preme il tasto</string>
     <string name="insulin_increment_button_message">Quantità di insulina da aggiungere quando si preme il tasto</string>
     <string name="error_starting_cgm">Impossibile avviare l\'applicazione CGM. Assicurati che sia installata.</string>
@@ -721,6 +721,9 @@
     <string name="application_expired">Applicazione scaduta</string>
     <string name="new_version_warning">Nuova versione disponibile da almeno %1$d giorni! Ritorno a LGS dopo %2$d giorni, disattivazione del loop dopo %3$d giorni</string>
     <string name="twohours">2h</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Ricevi valori glicemia dall\'app Dexcom ottenuta con \'Build Your Own Dexcom App\'.</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="bolusconstraintappliedwarn">Vincolo bolo applicato: %1$.2f U a %2$.2f U</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Rilevato assorbimento lento dei carboidrati: %2$d%% del tempo. Ricontrolla il tuo calcolo. COB potrebbero essere sovrastimati e potrebbe essere somministrata più insulina !!!!!</font>]]></string>
@@ -856,6 +859,7 @@
     <string name="cannula">Cannula</string>
     <string name="userentry">Inserimento utente</string>
     <string name="common_values">Usa i valori del cibo più abbondante che mangi di solito\n</string>
+    <string name="summary_email_for_crash_report">Questa identificazione verrà allegata ai rapporti sugli arresti anomali in modo che possiamo contattarti in casi urgenti. È facoltativo.</string>
     <string name="email_address">Indirizzo email</string>
     <string name="privacy_settings">Impostazioni privacy</string>
     <string name="privacy_summary">Puoi fornire un indirizzo e-mail opzionale se desideri essere avvisato in caso di arresti anomali dell\'app. Questo non è un servizio automatizzato. Sarai contattato dagli sviluppatori in situazioni pericolose.</string>
@@ -897,4 +901,7 @@
     <string name="data_status">Stato dati BG</string>
     <string name="recalculated_data_used">Dati ricalcolati usati</string>
     <string name="bg_too_close">BG troppo vicino:\n%1$s\n%2$s</string>
+    <string name="identification">Identificazione (email, nick Discord o FB, etc)</string>
+    <string name="identification_not_set">Identificazione non impostata in modalità dev</string>
+    <string name="not_available_full">Non disponibile</string>
 </resources>
