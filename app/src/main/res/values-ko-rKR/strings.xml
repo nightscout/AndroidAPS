@@ -623,7 +623,6 @@
     <string name="exitwizard">설정 마법사 건너뛰기</string>
     <string name="setupwizard_loop_description">AndroidAPS가 Basal 변화를 제안 혹은 실행하게 하려면 아래 버튼을 누르세요.</string>
     <string name="setupwizard_sensitivity_description">민감도 플러그인은 민감도감지와 COB 계산을 위해 사용됩니다. 더 많은 정보는 다름 링크를 방문하세요.</string>
-    <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
     <string name="nsclientinfotext">NSClient는 Nightscout와의 연결을 처리합니다. 이 부분을 건너뛸 수 있지만 설정하기 전엔 목적을 수행할 수 없습니다.</string>
     <string name="diawarning">새로운 인슐린 프로파일은 최소 5시간의 DIA가 요구됩니다. 새로운 프로파일의 DIA 5-6시간은 구식 인슐린 프로파일의 DIA 3시간과 동일합니다.</string>
     <string name="setupwizard_aps_description">사용 가능한 알고리즘 중 하나를 선택하세요. 과거부터 최신의 순으로 정렬이 되어 있습니다. 일반적으로 새로운 알고리즘은 보다 강력하고 공격적입니다. 따라서 당신이 신규 사용자라면 최신의 알고리즘보단 AMA로 시작하는것이 나을 수 있습니다. 사용 전에 OpenAPS 문서를 읽어보고 설정하는 것을 잊지마세요.</string>
