@@ -83,8 +83,7 @@ class LocalProfileFragment : DaggerFragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = LocalprofileFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -140,12 +139,11 @@ class LocalProfileFragment : DaggerFragment() {
 
         // Spinner
         spinner = SpinnerHelper(binding.spinner)
-        val profileList: ArrayList<CharSequence> = localProfilePlugin.profile?.getProfileList()
-            ?: ArrayList()
         context?.let { context ->
-            val adapter = ArrayAdapter(context, R.layout.spinner_centered, profileList)
-            spinner?.adapter = adapter
-            spinner?.setSelection(localProfilePlugin.currentProfileIndex)
+            val profileList: ArrayList<CharSequence> = localProfilePlugin.profile?.getProfileList() ?: ArrayList()
+            spinner?.adapter = ArrayAdapter(context, R.layout.spinner_centered, profileList)
+            val selection = localProfilePlugin.currentProfileIndex
+            if (selection in 0 until profileList.size) spinner?.setSelection(selection)
         } ?: return
         spinner?.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -159,8 +157,10 @@ class LocalProfileFragment : DaggerFragment() {
                             localProfilePlugin.isEdited = false
                             build()
                         }, {
-                            spinner?.setSelection(localProfilePlugin.currentProfileIndex)
-                        })
+                            val selection = localProfilePlugin.currentProfileIndex
+                            if (selection in 0 until (spinner?.adapter?.count ?: -1)) spinner?.setSelection(selection)
+                            }
+                        )
                     }
                 } else {
                     localProfilePlugin.currentProfileIndex = position

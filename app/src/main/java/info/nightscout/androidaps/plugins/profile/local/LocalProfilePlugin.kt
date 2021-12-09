@@ -99,7 +99,7 @@ class LocalProfilePlugin @Inject constructor(
     var isEdited: Boolean = false
     var profiles: ArrayList<SingleProfile> = ArrayList()
 
-    var numOfProfiles = 0
+    val numOfProfiles get() = profiles.size
     internal var currentProfileIndex = 0
 
     fun currentProfile(): SingleProfile? = if (numOfProfiles > 0 && currentProfileIndex < numOfProfiles) profiles[currentProfileIndex] else null
@@ -222,7 +222,7 @@ class LocalProfilePlugin @Inject constructor(
 
     @Synchronized
     fun loadSettings() {
-        numOfProfiles = sp.getInt(Constants.LOCAL_PROFILE + "_profiles", 0)
+        val numOfProfiles = sp.getInt(Constants.LOCAL_PROFILE + "_profiles", 0)
         profiles.clear()
 //        numOfProfiles = max(numOfProfiles, 1) // create at least one default profile if none exists
 
@@ -246,7 +246,6 @@ class LocalProfilePlugin @Inject constructor(
             }
         }
         isEdited = false
-        numOfProfiles = profiles.size
         createAndStoreConvertedProfile()
     }
 
@@ -278,7 +277,6 @@ class LocalProfilePlugin @Inject constructor(
             }
             if (newProfiles.size > 0) {
                 profiles = newProfiles
-                numOfProfiles = profiles.size
                 currentProfileIndex = 0
                 isEdited = false
                 createAndStoreConvertedProfile()
@@ -378,7 +376,6 @@ class LocalProfilePlugin @Inject constructor(
         p.targetHigh = JSONArray(defaultArray)
         profiles.add(p)
         currentProfileIndex = profiles.size - 1
-        numOfProfiles++
         createAndStoreConvertedProfile()
         storeSettings()
     }
@@ -388,7 +385,6 @@ class LocalProfilePlugin @Inject constructor(
         p.name = p.name + " copy"
         profiles.add(p)
         currentProfileIndex = profiles.size - 1
-        numOfProfiles++
         createAndStoreConvertedProfile()
         storeSettings()
         isEdited = false
@@ -397,7 +393,6 @@ class LocalProfilePlugin @Inject constructor(
     fun addProfile(p: SingleProfile) {
         profiles.add(p)
         currentProfileIndex = profiles.size - 1
-        numOfProfiles++
         createAndStoreConvertedProfile()
         storeSettings()
         isEdited = false
@@ -405,7 +400,6 @@ class LocalProfilePlugin @Inject constructor(
 
     fun removeCurrentProfile() {
         profiles.removeAt(currentProfileIndex)
-        numOfProfiles--
         if (profiles.size == 0) addNewProfile()
         currentProfileIndex = 0
         createAndStoreConvertedProfile()
