@@ -628,6 +628,7 @@
     <string name="exitwizard">Saltar asistente de configuración</string>
     <string name="setupwizard_loop_description">Presiona el botón de abajo para permitir que AndroidAPS pueda sugerir/realizar cambios en las basales</string>
     <string name="setupwizard_sensitivity_description">El complemento de sensibilidad es usado para detectar la sensibilidad y cálculo de COB. Para más info ver:</string>
+    <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/es/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="nsclientinfotext">NSCliente controla la conexión con Nightscout. Puedes saltar este paso ahora pero no podrás completar los objetivos hasta que lo configures.</string>
     <string name="diawarning">Por favor, recuerde: nuevos perfiles de insulina requieren DIA de al menos 5h. DIA de 5-6h en nuevos perfiles es lo mismo que DIA de 3h en perfiles antiguos.</string>
     <string name="setupwizard_aps_description">Selecciona uno de los algoritmos disponibles. Están ordenados de más antiguos a más recientes. Los nuevos son más potentes y agresivos. Por ello, si eres usuario nuevo, se recomienda empezar con AMA y no con el último. No olvides leer la documentación de OpenAPS y configurarlo antes de usarlo.</string>
