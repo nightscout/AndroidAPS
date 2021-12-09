@@ -15,12 +15,14 @@ import java.util.Map;
 import java.util.Set;
 
 import info.nightscout.androidaps.Aaps;
+import javax.inject.Singleton;
 
 /**
  * Created by andy on 3/5/19.
  * Adapted by dlvoy on 2019-11-06 using code from jamorham JoH class
  */
 
+@Singleton
 public class WearUtil {
 
     private final static boolean debug_wakelocks = false;
