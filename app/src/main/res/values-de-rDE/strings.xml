@@ -628,7 +628,6 @@
     <string name="exitwizard">Einrichtungsassistenten überspringen</string>
     <string name="setupwizard_loop_description">Drücke die Schaltfläche unten, um AndroidAPS zu erlauben, Basal-Änderungen vorzuschlagen/vorzunehmen</string>
     <string name="setupwizard_sensitivity_description">Das Sensitivitäts-Plugin wird für die Sensitivitäts- und COB-Berechnung verwendet. Für weitere Informationen siehe:</string>
-    <string name="setupwizard_sensitivity_url">http://androidaps.readthedocs.io/en/latest/DE/konfigurations-generator.html#empfindlichkeitserkennung</string>
     <string name="nsclientinfotext">Nightscout-Client ist für die Verbindung zu Nightscout zuständig. Du kannst diesen Teil jetzt überspringen, aber Du wirst nicht in der Lage sein, Zielsetzungen zu erfüllen, bis Du diesen eingerichtet hast.</string>
     <string name="diawarning">Bitte beachte: Neue Insulin-Profile benötigen einen DIA von mind. 5 Stunden. Eine DIA von 5-6 Stunden im neuen Insulin-Profil entspricht einem DIA von 3 Stunden bei alten Insulin-Profilen.</string>
     <string name="setupwizard_aps_description">Wähle einen der verfügbaren Algorithmen aus. Sie sind vom Ältesten zum Neuesten sortiert. Neuere Algorithmen sind meist stärker und aggressiver. Wenn du ein Anfänger bist, solltest du nicht mit dem Neuesten sondern mit AMA starten. Vergiss nicht, die OpenAPS-Dokumentation zu lesen und die entsprechenden Einstellungen vor der Benutzung vorzunehmen.</string>
