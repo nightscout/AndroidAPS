@@ -521,8 +521,8 @@
     <string name="enablesmbwithhightemptarget_summary">Povoliť SMB, ak je aktívny vysoký cieľ (cvičenie, vyšší ako 5,5 mmol/l)</string>
     <string name="overview_insulin_label">Inzulín</string>
     <string name="overview_buttons_selection">Tlačidlá</string>
-    <string name="show_calibration_button_summary">Odošle kalibráciu do xDripu+, alebo otvorenie kalibračného dialógu na G5</string>
-    <string name="show_cgm_button_summary">Otvorí xDrip+, tlačidlom späť sa vrátiš do AndroidAPS</string>
+    <string name="show_calibration_button_summary">Odošle kalibráciu do xDripu+, alebo otvorenie kalibračného dialógu BYODA</string>
+    <string name="show_cgm_button_summary">Otvorí xDrip+, alebo BYODA, tlačidlom späť sa vrátiš do AndroidAPS</string>
     <string name="carb_increment_button_message">Množstvo sacharidov, ktoré má byť pridané po stlačení tlačidla</string>
     <string name="insulin_increment_button_message">Množstvo inzulínu, ktoré má byť pridané po stlačení tlačidla</string>
     <string name="error_starting_cgm">Nie je možné spustiť aplikáciu CGM. Uistite sa, že je nainštalovaná.</string>
@@ -628,7 +628,7 @@
     <string name="exitwizard">Preskočiť sprievodcu</string>
     <string name="setupwizard_loop_description">Stlačte tlačidlo nižšie, pre povolenie, aby mohlo AndroidAPS navrhovať, alebo robiť zmeny bazálu</string>
     <string name="setupwizard_sensitivity_description">Modul citlivosť slúži k detekcii zmien v citlivosti a k počítaniu COB. Viac informácií tu:</string>
-    <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
+    <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/cs/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="nsclientinfotext">NSClient slúži na spojenie s Nightscoutom. Nastavenia môžete teraz preskočiť, ale nebudete schopný dokončiť ciele, pokiaľ neurobíte nastavenia.</string>
     <string name="diawarning">Prosím, zapamätajte si: Nové inzulínové profily vyžadujú DIA minimálne 5h. DIA 5-6 hodín zodpovedá zhruba nastaveniam 3h na starších typoch profilu.</string>
     <string name="setupwizard_aps_description">Vyberte jeden z algoritmov. Sú zoradené od najstaršieho po najnovší. Novší je obvykle lepší a agresívnejší, ale vyžaduje presnejšie nastavenie. Preto pokiaľ s uzavretým okruhom začínate, mali by ste najskôr vybrať jen AMA a nie ten posledný. Nezabudnite si prečítať dokumentáciu k OpenAPS a prejsť nastavenia, kým ho začnete používať.</string>
@@ -903,4 +903,5 @@
     <string name="bg_too_close">Glykémia je príliš blízko:\n%1$s\n%2$s</string>
     <string name="identification">Identifikácia (E-mail, prezývka FB, alebo Discord atď.)</string>
     <string name="identification_not_set">Identifikácia nie je nastavená vo vývojárskom móde</string>
+    <string name="not_available_full">Nedostupný</string>
 </resources>

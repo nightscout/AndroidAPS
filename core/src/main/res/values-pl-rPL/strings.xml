@@ -410,6 +410,20 @@
     <string name="basal_value">Wartość bazy</string>
     <string name="nsclient_version_does_not_match">Wersja NSClient nie jest zgodna z AndroidAPS. Proszę zaktualizować.</string>
     <!-- Command Queue + readStatus reasons -->
+    <string name="bolus_u_min">BOLUS %1$.2f U</string>
+    <string name="carbs_g">WĘGLOW. %1$d g</string>
+    <string name="extended_bolus_u_min">BOLUS PRZEDŁ. %1$.2f U %2$d min</string>
+    <string name="load_events">WCZYTYWANIE ZDARZEŃ</string>
+    <string name="load_history">WCZYTYWANIE HISTORII %1$d</string>
+    <string name="load_tdds">WCZYTYWANIE DDI</string>
+    <string name="set_profile">USTAW PROFIL</string>
+    <string name="set_user_settings">WPROWADŹ USTAWIENIA UŻYTKOWNIKA</string>
+    <string name="smb_bolus_u">BOLUS SMB %1$.2f U</string>
+    <string name="start_pump">START POMPY</string>
+    <string name="stop_pump">STOP POMPY</string>
+    <string name="temp_basal_absolute">BAZA TYMCZ. %1$.2f U/h %2$d min</string>
+    <string name="temp_basal_percent">BAZA TYMCZ. %1$d%% %2$d min</string>
+    <string name="insight_set_tbr_over_notification">INSIGHT USTAW POWIADOMIENIE O KOŃCU TBR</string>
     <string name="read_status" comment="10 characters max for READSTATUS translation">CZYTAMSTAN %1$s</string>
     <string name="keepalive_status_outdated" comment="26 characters max for translation">Podtrzym. Stan nieaktualny.</string>
     <string name="keepalive_basal_outdated" comment="26 characters max for translation">Podtrzym. Baza nieaktualna</string>

@@ -9,12 +9,16 @@ import android.preference.PreferenceManager;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import dagger.android.AndroidInjector;
+import dagger.android.DaggerApplication;
+import info.nightscout.androidaps.di.DaggerAppComponent;
+
 /**
  * Created for xDrip+ by Emma Black on 3/21/15.
  * Adapted for AAPS by dlvoy 2019-11-06.
  */
 
-public class Aaps extends Application implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class Aaps extends DaggerApplication implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     @SuppressLint("StaticFieldLeak")
     private static Context context;
@@ -28,6 +32,14 @@ public class Aaps extends Application implements SharedPreferences.OnSharedPrefe
         sharedPrefs.registerOnSharedPreferenceChangeListener(this);
         updatePrefs(sharedPrefs);
         super.onCreate();
+    }
+
+    @Override
+    protected AndroidInjector<? extends DaggerApplication> applicationInjector() {
+        return DaggerAppComponent
+                .builder()
+                .application(this)
+                .build();
     }
 
     private void updatePrefs(SharedPreferences sharedPrefs) {
