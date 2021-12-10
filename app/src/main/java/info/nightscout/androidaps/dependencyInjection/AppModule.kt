@@ -34,9 +34,9 @@ import info.nightscout.androidaps.utils.resources.IconsProviderImplementation
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.rx.DefaultAapsSchedulers
-import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.storage.FileStorage
 import info.nightscout.androidaps.utils.storage.Storage
+import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Singleton
 
 @Suppress("unused")

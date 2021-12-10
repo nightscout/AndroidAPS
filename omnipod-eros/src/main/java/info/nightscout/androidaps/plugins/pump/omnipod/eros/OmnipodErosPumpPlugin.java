@@ -105,7 +105,7 @@ import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.TimeChangeType;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.rx.AapsSchedulers;
-import info.nightscout.androidaps.utils.sharedPreferences.SP;
+import info.nightscout.shared.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
 
 import static info.nightscout.androidaps.extensions.PumpStateExtensionKt.convertedToAbsolute;

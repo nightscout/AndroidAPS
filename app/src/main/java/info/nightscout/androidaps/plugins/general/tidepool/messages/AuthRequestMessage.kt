@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.general.tidepool.messages
 
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.utils.StringUtils
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import okhttp3.Credentials
 
 class AuthRequestMessage : BaseMessage() {

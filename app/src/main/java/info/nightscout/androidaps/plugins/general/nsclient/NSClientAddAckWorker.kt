@@ -19,7 +19,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.acks.NSAddAck
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientNewLog
 import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 
 class NSClientAddAckWorker(

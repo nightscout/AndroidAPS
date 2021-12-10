@@ -20,7 +20,7 @@ import info.nightscout.androidaps.danars.databinding.DanarsBlescannerActivityBin
 import info.nightscout.androidaps.danars.events.EventDanaRSDeviceChange
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.common.ble.BlePreCheck
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import java.util.*
 import java.util.regex.Pattern
 import javax.inject.Inject

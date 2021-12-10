@@ -10,8 +10,8 @@ import info.nightscout.androidaps.logging.AAPSLoggerProduction
 import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelperImplementation
-import info.nightscout.androidaps.utils.sharedPreferences.SP
-import info.nightscout.androidaps.utils.sharedPreferences.SPImplementation
+import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SPImplementation
 import javax.inject.Singleton
 
 @Module(includes = [
@@ -27,7 +27,7 @@ open class CoreModule {
 
     @Provides
     @Singleton
-    fun provideSharedPreferences(context: Context, rh: ResourceHelper): SP = SPImplementation(PreferenceManager.getDefaultSharedPreferences(context), rh)
+    fun provideSharedPreferences(context: Context): SP = SPImplementation(PreferenceManager.getDefaultSharedPreferences(context), context)
 
     @Provides
     @Singleton
