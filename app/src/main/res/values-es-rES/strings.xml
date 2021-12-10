@@ -82,7 +82,7 @@
     <string name="configbuilder_profile">Perfil</string>
     <string name="configbuilder_profile_description">¿Qué perfil debe usar AndroidAPS?</string>
     <string name="configbuilder_aps">APS</string>
-    <string name="configbuilder_aps_description">¿Que algoritmo debe usar APS en los ajustes de su tratamiento?</string>
+    <string name="configbuilder_aps_description">¿Qué algoritmo APS quieres usar para ajustar tu tratamiento?</string>
     <string name="configbuilder_general">Ajustes generales</string>
     <string name="configbuilder_general_description">Algunos ajustes generales que pueden ser de utilidad</string>
     <string name="configbuilder_constraints_description">¿Qué restricciones se aplican?</string>
@@ -360,7 +360,7 @@
     <string name="superbolus">Superbolo</string>
     <string name="ns_logappstartedevent">Registrar el inicio de la aplicación en NS</string>
     <string name="restartingapp">Saliendo de la aplicación para aplicar ajustes.</string>
-    <string name="configbuilder_insulin_description">¿Qué tipo de insulina está utilizando?</string>
+    <string name="configbuilder_insulin_description">¿Qué tipo de insulina estás utilizando?</string>
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
     <string name="ultrafastactinginsulincomment">Fiasp</string>
     <string name="insulin_shortname">INS</string>
