@@ -1,27 +1,41 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
-    <androidx.wear.widget.WearableRecyclerView
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.wear.widget.WearableRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/action_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical" >
+        android:scrollbars="vertical">
+
         <requestFocus />
+
     </androidx.wear.widget.WearableRecyclerView>
 
-    <TextView
-        android:id="@+id/title"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="26dp"
-        android:gravity="center"
+        android:layout_height="28dp"
+        android:background="@color/titleHeader">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="26dp"
+            android:autoSizeMaxTextSize="18sp"
+            android:autoSizeMinTextSize="12sp"
+            android:autoSizeTextType="uniform"
+            android:gravity="center"
+            android:text="Title"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <androidx.wear.widget.CurvedTextView
+        android:id="@+id/title_curved"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="Title"
         android:textSize="18sp"
-        android:autoSizeTextType="uniform"
-        android:autoSizeMinTextSize="12sp"
-        android:autoSizeMaxTextSize="18sp"
-        android:background="#D9000000"/>
+        android:visibility="gone" />
 
 </FrameLayout>
