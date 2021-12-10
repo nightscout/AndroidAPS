@@ -1,10 +1,7 @@
-package info.nightscout.androidaps.interaction.utils
+package info.nightscout.shared
 
 import org.junit.Assert.assertEquals
-import org.junit.Before
 import org.junit.Test
-import java.lang.NullPointerException
-
 
 @Suppress("SpellCheckingInspection")
 class SafeParseTest {
@@ -98,17 +95,18 @@ class SafeParseTest {
         assertEquals(0L, SafeParse.stringToLong("\n\r"))
     }
 
-    @Test(expected = NullPointerException::class) fun stringToDoubleNullTest() {
-        SafeParse.stringToDouble(null)
+    @Test
+    fun stringToDoubleNullTest() {
+        assertEquals(0.0, SafeParse.stringToDouble(null), 0.001)
     }
 
-    @Test(expected = NullPointerException::class) fun stringToIntNullTest() {
-        SafeParse.stringToInt(null)
+    @Test
+    fun stringToIntNullTest() {
+        assertEquals(0, SafeParse.stringToInt(null))
     }
 
-    @Test(expected = NullPointerException::class) fun stringToLongNullTest() {
-        SafeParse.stringToLong(null)
+    @Test
+    fun stringToLongNullTest() {
+        assertEquals(0L, SafeParse.stringToLong(null))
     }
-
-    @Before fun prepareMock() {}
 }

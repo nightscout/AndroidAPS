@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.logging
+package info.nightscout.shared.logging
 
 import org.slf4j.LoggerFactory
 

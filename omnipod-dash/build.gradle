@@ -32,6 +32,7 @@ dependencies {
     implementation project(':pump-common')
     implementation project(':omnipod-common')
     implementation project(':database')
+    implementation project(':shared')
 
     api "androidx.room:room-ktx:$room_version"
     api "androidx.room:room-runtime:$room_version"

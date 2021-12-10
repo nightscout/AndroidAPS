@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.ui
 
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BasalProfile
@@ -135,7 +135,8 @@ class MedtronicUIPostprocessor @Inject constructor(
                 clockDTO.localDeviceTime.toDateTime(DateTimeZone.UTC))
             clockDTO.timeDifference = dur.standardSeconds.toInt()
             medtronicUtil.pumpTime = clockDTO
-            aapsLogger.debug(LTag.PUMP, "Pump Time: " + clockDTO.localDeviceTime + ", DeviceTime=" + clockDTO.pumpTime +  //
+            aapsLogger.debug(
+                LTag.PUMP, "Pump Time: " + clockDTO.localDeviceTime + ", DeviceTime=" + clockDTO.pumpTime +  //
                 ", diff: " + dur.standardSeconds + " s")
         } else {
             aapsLogger.debug(LTag.PUMP, "Problem with returned data: " + medtronicUtil.gsonInstance.toJson(uiTask.result))

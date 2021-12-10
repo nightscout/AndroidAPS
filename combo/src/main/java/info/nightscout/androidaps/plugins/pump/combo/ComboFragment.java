@@ -28,7 +28,6 @@ import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.rx.AapsSchedulers;
-import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
 
 public class ComboFragment extends DaggerFragment {
@@ -36,7 +35,6 @@ public class ComboFragment extends DaggerFragment {
     @Inject CommandQueue commandQueue;
     @Inject ResourceHelper rh;
     @Inject RxBus rxBus;
-    @Inject SP sp;
     @Inject DateUtil dateUtil;
     @Inject FabricPrivacy fabricPrivacy;
     @Inject AapsSchedulers aapsSchedulers;

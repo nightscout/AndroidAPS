@@ -114,10 +114,14 @@ allprojects {
 
 
 dependencies {
+    implementation project(':shared')
+
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     implementation "androidx.appcompat:appcompat:$appcompat_version"
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
+    implementation "androidx.preference:preference-ktx:$preferencektx_version"
+
 
     compileOnly "com.google.android.wearable:wearable:${wearableVersion}"
     implementation "com.google.android.support:wearable:${wearableVersion}"

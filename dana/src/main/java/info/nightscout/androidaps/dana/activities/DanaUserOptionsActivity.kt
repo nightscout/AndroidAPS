@@ -11,8 +11,8 @@ import info.nightscout.androidaps.dana.databinding.DanarUserOptionsActivityBindi
 import info.nightscout.androidaps.events.EventInitializationChanged
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.queue.Callback
@@ -71,7 +71,8 @@ class DanaUserOptionsActivity : NoSplashAppCompatActivity() {
 
         minBacklight = if (danaPump.hwModel < 7) 1 else 0 // Dana-i allows zero
 
-        aapsLogger.debug(LTag.PUMP,
+        aapsLogger.debug(
+            LTag.PUMP,
             "UserOptionsLoaded:" + (System.currentTimeMillis() - danaPump.lastConnection) / 1000 + " s ago"
                 + "\ntimeDisplayType24:" + danaPump.timeDisplayType24
                 + "\nbuttonScroll:" + danaPump.buttonScrollOnOff

@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.plugins.aps.logger
 
 import info.nightscout.androidaps.di.StaticInjector
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import org.mozilla.javascript.ScriptableObject
 import javax.inject.Inject
 

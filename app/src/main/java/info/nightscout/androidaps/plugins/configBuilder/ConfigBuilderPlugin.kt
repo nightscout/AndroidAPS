@@ -10,14 +10,14 @@ import info.nightscout.androidaps.events.EventAppInitialized
 import info.nightscout.androidaps.events.EventConfigBuilderChange
 import info.nightscout.androidaps.events.EventRebuildTabs
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.events.EventConfigBuilderUpdateGui
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -107,7 +107,8 @@ class ConfigBuilderPlugin @Inject constructor(
 
     fun logPluginStatus() {
         for (p in activePlugin.getPluginsList()) {
-            aapsLogger.debug(LTag.CONFIGBUILDER, p.name + ":" +
+            aapsLogger.debug(
+                LTag.CONFIGBUILDER, p.name + ":" +
                 (if (p.isEnabled(PluginType.GENERAL)) " GENERAL" else "") +
                 (if (p.isEnabled(PluginType.SENSITIVITY)) " SENSITIVITY" else "") +
                 (if (p.isEnabled(PluginType.PROFILE)) " PROFILE" else "") +

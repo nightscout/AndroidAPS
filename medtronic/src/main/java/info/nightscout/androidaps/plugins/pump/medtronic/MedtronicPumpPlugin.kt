@@ -13,8 +13,8 @@ import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.interfaces.PumpSync.TemporaryBasalType
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.common.ManufacturerType
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
@@ -56,7 +56,7 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.TimeChangeType
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import org.joda.time.LocalDateTime
 import java.util.*
 import javax.inject.Inject
@@ -489,7 +489,8 @@ class MedtronicPumpPlugin @Inject constructor(
     private fun isProfileSame(profile: Profile): Boolean {
         var invalid = false
         val basalsByHour: DoubleArray? = medtronicPumpStatus.basalsByHour
-        aapsLogger.debug(LTag.PUMP, "Current Basals (h):   "
+        aapsLogger.debug(
+            LTag.PUMP, "Current Basals (h):   "
             + (basalsByHour?.let { getProfilesByHourToString(it) } ?: "null"))
 
         // int index = 0;
@@ -806,7 +807,8 @@ class MedtronicPumpPlugin @Inject constructor(
 
                 val differenceS = (System.currentTimeMillis() - item.date) / 1000
 
-                aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithTempId " +
+                aapsLogger.debug(
+                    LTag.PUMP, "syncTemporaryBasalWithTempId " +
                     "[date=${item.date}, " +
                     "rate=${item.rate}, " +
                     "duration=${differenceS} s, " +
@@ -896,7 +898,8 @@ class MedtronicPumpPlugin @Inject constructor(
             timeMinus36h = timeMinus36h.minusHours(36)
             medtronicHistoryData.setIsInInit(true)
             if (lastPumpHistoryEntryTime == 0L) {
-                if (debugHistory) aapsLogger.debug(LTag.PUMP, logPrefix + "readPumpHistoryLogic(): lastPumpHistoryEntryTime: 0L - targetDate: "
+                if (debugHistory) aapsLogger.debug(
+                    LTag.PUMP, logPrefix + "readPumpHistoryLogic(): lastPumpHistoryEntryTime: 0L - targetDate: "
                     + targetDate)
                 targetDate = timeMinus36h
             } else {
@@ -1087,7 +1090,8 @@ class MedtronicPumpPlugin @Inject constructor(
 
                     val differenceTimeMin = floor(differenceTime / (60.0 * 1000.0))
 
-                    aapsLogger.debug(LTag.PUMP, "canceling running TBR - syncTemporaryBasalWithPumpId [date=${runningTBR.date}, " +
+                    aapsLogger.debug(
+                        LTag.PUMP, "canceling running TBR - syncTemporaryBasalWithPumpId [date=${runningTBR.date}, " +
                         "pumpId=${runningTBR.pumpId}, rate=${runningTBR.rate} U, duration=${differenceTimeMin.toInt()}, " +
                         "pumpSerial=${medtronicPumpStatus.serialNumber}] - Result: $result")
                 }
