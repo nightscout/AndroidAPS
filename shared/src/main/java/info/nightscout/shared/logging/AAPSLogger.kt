@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.logging
+package info.nightscout.shared.logging
 
 /**
  * Created by adrian on 2019-12-27.

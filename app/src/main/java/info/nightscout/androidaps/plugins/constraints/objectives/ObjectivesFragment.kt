@@ -24,7 +24,7 @@ import info.nightscout.androidaps.databinding.ObjectivesFragmentBinding
 import info.nightscout.androidaps.databinding.ObjectivesItemBinding
 import info.nightscout.androidaps.dialogs.NtpProgressDialog
 import info.nightscout.androidaps.events.EventNtpStatus
-import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.constraints.objectives.activities.ObjectivesExamDialog

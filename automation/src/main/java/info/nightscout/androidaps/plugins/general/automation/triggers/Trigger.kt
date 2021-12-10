@@ -14,7 +14,7 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.automation.dialogs.ChooseTriggerDialog
 import info.nightscout.androidaps.plugins.general.automation.events.EventTriggerChanged

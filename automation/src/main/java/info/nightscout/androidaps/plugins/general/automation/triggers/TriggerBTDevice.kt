@@ -7,7 +7,7 @@ import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.events.EventBTChange
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin
 import info.nightscout.androidaps.plugins.general.automation.elements.ComparatorConnect
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDropdownMenu

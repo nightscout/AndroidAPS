@@ -3,13 +3,12 @@ package info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.commands;
 import org.monkey.d.ruffy.ruffy.driver.display.MenuAttribute;
 import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
+import info.nightscout.shared.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.Bolus;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.PumpHistory;
 

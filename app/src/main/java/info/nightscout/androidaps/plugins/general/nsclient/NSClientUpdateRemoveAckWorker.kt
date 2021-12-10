@@ -8,7 +8,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.interfaces.DataSyncSelector
 import info.nightscout.androidaps.interfaces.DataSyncSelector.*
-import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.nsclient.acks.NSUpdateAck
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientNewLog

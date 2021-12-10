@@ -24,8 +24,8 @@ import info.nightscout.androidaps.database.transactions.InsertAndCancelCurrentTe
 import info.nightscout.androidaps.extensions.total
 import info.nightscout.androidaps.extensions.valueToUnits
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker

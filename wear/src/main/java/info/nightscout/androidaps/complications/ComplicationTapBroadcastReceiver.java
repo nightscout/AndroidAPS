@@ -14,7 +14,6 @@ import androidx.annotation.StringRes;
 import javax.inject.Inject;
 
 import dagger.android.DaggerBroadcastReceiver;
-import info.nightscout.androidaps.Aaps;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interaction.actions.BolusActivity;
 import info.nightscout.androidaps.interaction.actions.ECarbActivity;
@@ -24,6 +23,7 @@ import info.nightscout.androidaps.interaction.menus.StatusMenuActivity;
 import info.nightscout.androidaps.interaction.utils.Constants;
 import info.nightscout.androidaps.interaction.utils.DisplayFormat;
 import info.nightscout.androidaps.interaction.utils.WearUtil;
+import info.nightscout.shared.sharedPreferences.SP;
 
 /*
  * Created by dlvoy on 2019-11-12
@@ -31,6 +31,8 @@ import info.nightscout.androidaps.interaction.utils.WearUtil;
 public class ComplicationTapBroadcastReceiver extends DaggerBroadcastReceiver {
 
     @Inject WearUtil wearUtil;
+    @Inject DisplayFormat displayFormat;
+    @Inject SP sp;
 
     private static final String TAG = ComplicationTapBroadcastReceiver.class.getSimpleName();
 
@@ -90,7 +92,7 @@ public class ComplicationTapBroadcastReceiver extends DaggerBroadcastReceiver {
                 long since = extras.getLong(EXTRA_COMPLICATION_SINCE, oneAndHalfMinuteAgo);
                 @StringRes int labelId = (action == ComplicationAction.WARNING_SYNC) ?
                         R.string.msg_warning_sync : R.string.msg_warning_old;
-                String msg = String.format(context.getString(labelId), DisplayFormat.shortTimeSince(since));
+                String msg = String.format(context.getString(labelId), displayFormat.shortTimeSince(since));
                 Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
                 break;
             case MENU:
@@ -105,8 +107,12 @@ public class ComplicationTapBroadcastReceiver extends DaggerBroadcastReceiver {
         }
     }
 
+    private String getComplicationTapAction() {
+        return sp.getString("complication_tap_action", "default");
+    }
+
     private ComplicationAction remapActionWithUserPreferences(ComplicationAction originalAction) {
-        final String userPrefAction = Aaps.getComplicationTapAction();
+        final String userPrefAction = getComplicationTapAction();
         switch (originalAction) {
             case WARNING_OLD:
             case WARNING_SYNC:

@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.eros.manager;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.shared.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;

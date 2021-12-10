@@ -31,7 +31,7 @@ import info.nightscout.androidaps.extensions.toStringMedium
 import info.nightscout.androidaps.extensions.toStringShort
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction

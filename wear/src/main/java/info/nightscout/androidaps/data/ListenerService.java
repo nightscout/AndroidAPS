@@ -57,6 +57,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
         GoogleApiClient.OnConnectionFailedListener, ChannelApi.ChannelListener {
 
     @Inject WearUtil wearUtil;
+    @Inject Persistence persistence;
 
     private static final String WEARABLE_DATA_PATH = "/nightscout_watch_data";
     private static final String WEARABLE_RESEND_PATH = "/nightscout_watch_data_resend";
@@ -529,14 +530,14 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                     Intent messageIntent = new Intent();
                     messageIntent.setAction(Intent.ACTION_SEND);
                     messageIntent.putExtra("status", dataMap.toBundle());
-                    Persistence.storeDataMap(RawDisplayData.STATUS_PERSISTENCE_KEY, dataMap);
+                    persistence.storeDataMap(RawDisplayData.STATUS_PERSISTENCE_KEY, dataMap);
                     LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);
                 } else if (path.equals(BASAL_DATA_PATH)) {
                     dataMap = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
                     Intent messageIntent = new Intent();
                     messageIntent.setAction(Intent.ACTION_SEND);
                     messageIntent.putExtra("basals", dataMap.toBundle());
-                    Persistence.storeDataMap(RawDisplayData.BASALS_PERSISTENCE_KEY, dataMap);
+                    persistence.storeDataMap(RawDisplayData.BASALS_PERSISTENCE_KEY, dataMap);
                     LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);
                 } else if (path.equals(NEW_PREFERENCES_PATH)) {
                     dataMap = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
@@ -560,7 +561,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                     Intent messageIntent = new Intent();
                     messageIntent.setAction(Intent.ACTION_SEND);
                     messageIntent.putExtra("data", dataMap.toBundle());
-                    Persistence.storeDataMap(RawDisplayData.DATA_PERSISTENCE_KEY, dataMap);
+                    persistence.storeDataMap(RawDisplayData.DATA_PERSISTENCE_KEY, dataMap);
                     LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);
                 }
             }

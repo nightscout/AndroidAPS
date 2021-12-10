@@ -10,8 +10,8 @@ import android.bluetooth.le.ScanSettings
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Message
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkBLE
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.GattAttributes

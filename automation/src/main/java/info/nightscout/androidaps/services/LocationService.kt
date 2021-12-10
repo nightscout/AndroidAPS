@@ -20,8 +20,8 @@ import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.events.EventAppExit
 import info.nightscout.androidaps.events.EventLocationChange
 import info.nightscout.androidaps.interfaces.NotificationHolder
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T

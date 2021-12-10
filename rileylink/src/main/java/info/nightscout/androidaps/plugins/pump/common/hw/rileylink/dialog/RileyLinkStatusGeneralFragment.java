@@ -14,7 +14,7 @@ import javax.inject.Inject;
 
 import dagger.android.support.DaggerFragment;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
-import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.shared.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.pump.common.dialog.RefreshableInterface;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.R;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkError;

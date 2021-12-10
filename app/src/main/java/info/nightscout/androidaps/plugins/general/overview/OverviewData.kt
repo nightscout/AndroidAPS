@@ -16,8 +16,8 @@ import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.extensions.*
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.*

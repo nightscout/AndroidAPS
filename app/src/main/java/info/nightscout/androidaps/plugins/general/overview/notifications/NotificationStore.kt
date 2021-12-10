@@ -17,8 +17,8 @@ import info.nightscout.androidaps.databinding.OverviewNotificationItemBinding
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.IconsProvider
 import info.nightscout.androidaps.interfaces.NotificationHolder
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewNotification
 import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.androidaps.utils.DateUtil

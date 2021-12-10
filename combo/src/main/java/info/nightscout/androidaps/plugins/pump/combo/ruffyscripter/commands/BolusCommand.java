@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
+import info.nightscout.shared.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.BolusProgressReporter;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.PumpWarningCodes;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.RuffyScripter;

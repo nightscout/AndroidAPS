@@ -5,8 +5,8 @@ import android.app.Application
 import android.os.Bundle
 import android.text.Spanned
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.SafeParse

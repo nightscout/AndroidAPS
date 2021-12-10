@@ -19,17 +19,10 @@ import info.nightscout.androidaps.di.DaggerAppComponent;
 
 public class Aaps extends DaggerApplication implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-    @SuppressLint("StaticFieldLeak")
-    private static Context context;
-    private static Boolean unicodeComplications = true;
-    private static String complicationTapAction = "default";
-
     @Override
     public void onCreate() {
-        Aaps.context = getApplicationContext();
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPrefs.registerOnSharedPreferenceChangeListener(this);
-        updatePrefs(sharedPrefs);
         super.onCreate();
     }
 
@@ -41,28 +34,8 @@ public class Aaps extends DaggerApplication implements SharedPreferences.OnShare
                 .build();
     }
 
-    private void updatePrefs(SharedPreferences sharedPrefs) {
-        unicodeComplications = sharedPrefs.getBoolean("complication_unicode", true);
-        complicationTapAction = sharedPrefs.getString("complication_tap_action", "default");
-    }
-
-    public static Context getAppContext() {
-        return Aaps.context;
-    }
-
-    public static Boolean areComplicationsUnicode() {
-        return unicodeComplications;
-    }
-
-    public static String getComplicationTapAction() {
-        return complicationTapAction;
-    }
-
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        updatePrefs(sharedPrefs);
-
         // we trigger update on Complications
         Intent messageIntent = new Intent();
         messageIntent.setAction(Intent.ACTION_SEND);

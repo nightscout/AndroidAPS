@@ -22,7 +22,7 @@ public class IobDetailedComplication extends BaseComplicationProviderService {
 
         if (dataType == ComplicationData.TYPE_SHORT_TEXT) {
 
-            Pair<String, String> iob = DisplayFormat.detailedIob(raw);
+            Pair<String, String> iob = displayFormat.detailedIob(raw);
             final ComplicationData.Builder builder = new ComplicationData.Builder(ComplicationData.TYPE_SHORT_TEXT)
                     .setShortText(ComplicationText.plainText(iob.first))
                     .setTapAction(complicationPendingIntent);

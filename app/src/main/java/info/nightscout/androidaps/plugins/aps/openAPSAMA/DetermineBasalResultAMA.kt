@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.aps.openAPSAMA
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.aps.loop.APSResult
 import org.json.JSONException
 import org.json.JSONObject

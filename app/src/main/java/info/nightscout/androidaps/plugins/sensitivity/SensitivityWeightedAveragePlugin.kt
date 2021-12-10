@@ -14,8 +14,8 @@ import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.Sensitivity.SensitivityType
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 import info.nightscout.androidaps.utils.DateUtil
@@ -149,7 +149,8 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
         aapsLogger.debug(LTag.AUTOSENS, sensResult)
         val output = fillResult(ratio, current.cob, pastSensitivity, ratioLimit,
             sensResult, data.size())
-        aapsLogger.debug(LTag.AUTOSENS, "Sensitivity to: "
+        aapsLogger.debug(
+            LTag.AUTOSENS, "Sensitivity to: "
             + dateUtil.dateAndTimeString(toTime) +
             " ratio: " + output.ratio
             + " mealCOB: " + current.cob)

@@ -8,7 +8,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.*
 import info.nightscout.androidaps.extensions.toStringShort
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy

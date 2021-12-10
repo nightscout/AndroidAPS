@@ -4,7 +4,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification

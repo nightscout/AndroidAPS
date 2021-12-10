@@ -7,7 +7,7 @@ import info.nightscout.androidaps.extensions.storeInt
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.Insulin
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP

@@ -11,7 +11,7 @@ import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import info.nightscout.androidaps.extensions.fromConstant
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.automation.elements.InputCarePortalMenu
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDuration

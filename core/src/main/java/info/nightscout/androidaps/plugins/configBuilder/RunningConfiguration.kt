@@ -2,8 +2,8 @@ package info.nightscout.androidaps.plugins.configBuilder
 
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientNewLog
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification

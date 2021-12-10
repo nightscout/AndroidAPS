@@ -13,8 +13,8 @@ import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.Sensitivity.SensitivityType
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
@@ -196,7 +196,8 @@ class SensitivityOref1Plugin @Inject constructor(
         }
         //String message = hoursDetection.get(key) + " of sensitivity used";
         val output = fillResult(ratioArray[key], current.cob, pastSensitivityArray[key], ratioLimitArray[key], sensResultArray[key] + comparison, deviationsHour[key].size)
-        aapsLogger.debug(LTag.AUTOSENS, "Sensitivity to: "
+        aapsLogger.debug(
+            LTag.AUTOSENS, "Sensitivity to: "
             + dateUtil.dateAndTimeString(toTime) +
             " ratio: " + output.ratio
             + " mealCOB: " + current.cob)

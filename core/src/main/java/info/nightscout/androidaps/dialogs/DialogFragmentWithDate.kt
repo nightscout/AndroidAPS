@@ -13,8 +13,8 @@ import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.shared.sharedPreferences.SP
