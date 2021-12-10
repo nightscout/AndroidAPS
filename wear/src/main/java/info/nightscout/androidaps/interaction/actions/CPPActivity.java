@@ -1,15 +1,11 @@
 package info.nightscout.androidaps.interaction.actions;
 
-
 import android.os.Bundle;
-import android.support.wearable.view.DotsPageIndicator;
 import android.support.wearable.view.GridPagerAdapter;
-import android.support.wearable.view.GridViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.text.DecimalFormat;
 
@@ -21,7 +17,6 @@ import info.nightscout.shared.SafeParse;
 /**
  * Created by adrian on 09/02/17.
  */
-
 
 public class CPPActivity extends ViewSelectorActivity {
 
@@ -46,41 +41,14 @@ public class CPPActivity extends ViewSelectorActivity {
 
         if (timeshift < 0) timeshift += 24;
 
-        setContentView(R.layout.grid_layout);
-        
-        final TextView title = findViewById(R.id.title);
-        title.setText(getString(R.string.status_cpp));
-
-        final GridViewPager pager = findViewById(R.id.pager);
-        pager.setAdapter(new MyGridViewPagerAdapter());
-        DotsPageIndicator dotsPageIndicator = findViewById(R.id.page_indicator);
-        dotsPageIndicator.setPager(pager);
-        pager.setOnPageChangeListener(new GridViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int row, int column, float rowOffset, float columnOffset, int rowOffsetPixels, int columnOffsetPixels) {
-                dotsPageIndicator.onPageScrolled(row, column, rowOffset, columnOffset, rowOffsetPixels,
-                        columnOffsetPixels);
-            }
-            @Override
-            public void onPageSelected(int row, int column) {
-                dotsPageIndicator.onPageSelected(row, column);
-                View view = pager.getChildAt(column);
-                view.requestFocus();
-            }
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                dotsPageIndicator.onPageScrollStateChanged(state);
-            }
-        });
+        setAdapter(new MyGridViewPagerAdapter());
     }
-
 
     @Override
     protected void onPause() {
         super.onPause();
         finish();
     }
-
 
     private class MyGridViewPagerAdapter extends GridPagerAdapter {
         @Override
@@ -150,7 +118,6 @@ public class CPPActivity extends ViewSelectorActivity {
         public boolean isViewFromObject(View view, Object object) {
             return view == object;
         }
-
 
     }
 }

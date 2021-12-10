@@ -5,7 +5,7 @@
     android:viewportWidth="30">
     <path
         android:pathData="M 15 0 c -8 0 -15 7 -15 15 c 0 8 7 15 15 15 s 15 -7 15 -15 C 30 7 23 0 15 0"
-        android:fillColor="@color/green"/>
+        android:fillColor="@color/colorCalculatorButton"/>
     <path android:fillColor="@android:color/white" android:pathData="M 20.625 18.345 h -4.083 c -0.063 0 -0.113 0.051 -0.113 0.113 v 1.292 c 0 0.063 0.051 0.113 0.113 0.113 h 4.083 c 0.063 0 0.113 -0.051 0.113 -0.113 v -1.292 C 20.738 18.396 20.688 18.345 20.625 18.345 z"/>
     <path android:fillColor="@android:color/white" android:pathData="M 19.343 17.036 c 0 -0.063 -0.051 -0.113 -0.113 -0.113 h -1.292 c -0.063 0 -0.113 0.051 -0.113 0.113 v 1.016 h 1.519 V 17.036 z"/>
     <path android:fillColor="@android:color/white" android:pathData="M 17.824 21.119 c 0 0.063 0.051 0.113 0.113 0.113 h 1.292 c 0.063 0 0.113 -0.051 0.113 -0.113 v -1.017 h -1.519 V 21.119 z"/>

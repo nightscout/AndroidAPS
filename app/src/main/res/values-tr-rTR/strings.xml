@@ -629,6 +629,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="exitwizard">Kurulum sihirbazını atla</string>
     <string name="setupwizard_loop_description">AndroidAPS\'ın bazal değişiklikleri önerme/yapmasını sağlamak için aşağıdaki düğmeye basın</string>
     <string name="setupwizard_sensitivity_description">Duyarlılık eklentisi, duyarlılık tespiti ve COB hesaplaması için kullanılır. Daha fazla bilgi için ziyaret edin:</string>
+    <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="nsclientinfotext">NSClient, Nightscout\'a bağlantıyı sağlar. Şimdi bu kısmı atlayabilirsiniz, ancak ayarlamadan görevleri geçemezsiniz.</string>
     <string name="diawarning">Lütfen unutmayın: yeni insülin profilleri en az 5 saat DIA gerektirir. Yeni profildeki DIA 5–6 saat, eski insülin profillerinde DIA 3saat\'e eşittir.</string>
     <string name="setupwizard_aps_description">Mevcut algoritmalardan birini seçin. En eskiden en yeniye doğru sıralanırlar. Yeni algoritma genellikle daha güçlü ve daha agresiftir. Bu nedenle, yeni bir kullanıcı iseniz, muhtemelen en sonuncusu ile değil, AMA ile başlayabilirsiniz. OpenAPS belgelerini okumayı ve kullanmadan önce yapılandırmayı unutmayın.</string>

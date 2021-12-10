@@ -44,7 +44,6 @@ public class MainMenuActivity extends MenuListActivity {
             return menuItems;
         }
 
-
         boolean showPrimeFill = sp.getBoolean("primefill", false);
         boolean showWizard = sp.getBoolean("showWizard", true);
 

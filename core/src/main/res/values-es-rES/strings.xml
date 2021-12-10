@@ -199,7 +199,7 @@
     <string name="careportal_tempbasalend">Fin Basal Temp</string>
     <string name="careportal_carbscorrection">Corrección Carbohidratos</string>
     <string name="careportal_openapsoffline">OpenAPS sin conexión</string>
-    <string name="careportal_pumpbatterychange">Cambio de batería en la bomba</string>
+    <string name="careportal_pumpbatterychange">Cambio batería de bomba</string>
     <string name="careportal_temporarytarget">Objetivo temporal</string>
     <string name="careportal_temporarytargetvalue">Valor objetivo temporal</string>
     <string name="careportal_temporarytargetcancel">Cancelar Objetivo temporal</string>
@@ -338,13 +338,13 @@
     <string name="uel_calibration">CALIBRACIÓN</string>
     <string name="uel_prime_bolus">BOLO DE CEBADO</string>
     <string name="uel_treatment">TRATAMIENTO</string>
-    <string name="uel_careportal_ns_refresh">ACTUALIZAR PORTAL DEL CUIDADOR NS</string>
+    <string name="uel_careportal_ns_refresh">ACTUALIZAR PORTAL DE CUIDADOS NS</string>
     <string name="uel_profile_switch_ns_refresh">ACTUALIZAR CAMBIO DE PERFIL EN NS</string>
     <string name="uel_treatments_ns_refresh">ACTUALIZAR TRATAMIENTOS NS</string>
     <string name="uel_tt_ns_refresh">ACTUALIZAR OBJETIVO TEMPORAL EN NS</string>
     <string name="uel_automation_removed">AUTOMACIÓN ELIMINADA</string>
     <string name="uel_bg_removed">BG ELIMINADO</string>
-    <string name="uel_careportal_removed">PORTAL DEL CUIDADOR ELIMINADO</string>
+    <string name="uel_careportal_removed">PORTAL DE CUIDADOS ELIMINADO</string>
     <string name="uel_bolus_removed">BOLO ELIMINADO</string>
     <string name="uel_carbs_removed">CARBOHIDRATOS ELIMINADOS</string>
     <string name="uel_temp_basal_removed">BASAL TEMPORAL ELIMINADA</string>
