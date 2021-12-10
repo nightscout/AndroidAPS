@@ -11,7 +11,8 @@ import javax.inject.Singleton
 @Component(
     modules = [
         AndroidInjectionModule::class,
-        WearModule::class
+        WearModule::class,
+        ServicesModule::class
     ]
 )
 interface AppComponent : AndroidInjector<Aaps> {

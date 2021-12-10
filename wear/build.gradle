@@ -114,6 +114,8 @@ allprojects {
 
 
 dependencies {
+    implementation project(':shared')
+
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     //implementation files("libs/hellocharts-library-1.5.5.jar")
     //compile "com.ustwo.android:clockwise-wearable:1.0.2"

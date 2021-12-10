@@ -18,6 +18,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+import javax.inject.Inject;
+
+import dagger.android.AndroidInjection;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Aaps;
 import info.nightscout.androidaps.data.RawDisplayData;
@@ -34,6 +38,15 @@ import info.nightscout.androidaps.interaction.utils.WearUtil;
  * Created by dlvoy on 2019-11-12
  */
 public abstract class BaseComplicationProviderService extends ComplicationProviderService {
+
+    @Inject Inevitable inevitable;
+
+    // Not derived from DaggerService, do injection here
+    @Override
+    public void onCreate() {
+        AndroidInjection.inject(this);
+        super.onCreate();
+    }
 
     private static final String TAG = BaseComplicationProviderService.class.getSimpleName();
 
@@ -286,13 +299,13 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
     /*
      * Schedule check for field update
      */
-    public static void checkIfUpdateNeeded() {
+    public void checkIfUpdateNeeded() {
 
         Persistence p = new Persistence();
 
         Log.d(TAG, "Pending check if update needed - "+p.getString(KEY_COMPLICATIONS, ""));
 
-        Inevitable.task(TASK_ID_REFRESH_COMPLICATION, 15 * Constants.SECOND_IN_MS, () -> {
+        inevitable.task(TASK_ID_REFRESH_COMPLICATION, 15 * Constants.SECOND_IN_MS, () -> {
             if (WearUtil.isBelowRateLimit("complication-checkIfUpdateNeeded", 5)) {
                 Log.d(TAG, "Checking if update needed");
                 requestUpdateIfSinceChanged();
@@ -307,7 +320,7 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
      * Check if displayed since field (field that shows how old, in minutes, is reading)
      * is up-to-date or need to be changed (a minute or more elapsed)
      */
-    private static void requestUpdateIfSinceChanged() {
+    private void requestUpdateIfSinceChanged() {
         final Persistence persistence = new Persistence();
 
         final RawDisplayData raw = new RawDisplayData();
@@ -342,11 +355,11 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
     /*
      * Request update for specified list of providers
      */
-    private static void requestUpdate(Set<String> providers) {
+    private void requestUpdate(Set<String> providers) {
         for (String provider: providers) {
             Log.d(TAG, "Pending update of "+provider);
             // We wait with updating allowing all request, from various sources, to arrive
-            Inevitable.task("update-req-"+provider, 700, () -> {
+            inevitable.task("update-req-"+provider, 700, () -> {
                 if (WearUtil.isBelowRateLimit("update-req-"+provider, 2)) {
                     Log.d(TAG, "Requesting update of "+provider);
                     final ComponentName componentName = new ComponentName(Aaps.getAppContext(), provider);
@@ -395,7 +408,7 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
     /*
      * Listen to broadcast --> new data was stored by ListenerService to Persistence
      */
-    public static class MessageReceiver extends BroadcastReceiver {
+    public class MessageReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             Set<String> complications = Persistence.setOf(KEY_COMPLICATIONS);

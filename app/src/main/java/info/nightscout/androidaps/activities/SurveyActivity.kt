@@ -15,7 +15,7 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.utils.ActivityMonitor
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.InstanceId
-import info.nightscout.androidaps.utils.SafeParse
+import info.nightscout.shared.SafeParse
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.stats.TddCalculator
 import info.nightscout.androidaps.utils.stats.TirCalculator

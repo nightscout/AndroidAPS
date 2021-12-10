@@ -30,10 +30,10 @@ import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.SafeParse
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.SafeParse
 import io.reactivex.disposables.CompositeDisposable
 import java.text.DateFormat
 import java.text.DecimalFormat

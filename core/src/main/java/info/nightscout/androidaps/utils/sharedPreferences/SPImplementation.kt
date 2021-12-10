@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.utils.sharedPreferences
 
 import android.content.SharedPreferences
-import info.nightscout.androidaps.utils.SafeParse
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.shared.SafeParse
 import javax.inject.Inject
 import javax.inject.Singleton
 

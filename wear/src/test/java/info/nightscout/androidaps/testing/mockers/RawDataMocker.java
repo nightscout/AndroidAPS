@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.testing.mockers;
 
 import info.nightscout.androidaps.data.RawDisplayData;
-import info.nightscout.androidaps.interaction.utils.SafeParse;
+import info.nightscout.shared.SafeParse;
 
 import static info.nightscout.androidaps.testing.mockers.WearUtilMocker.backInTime;
 

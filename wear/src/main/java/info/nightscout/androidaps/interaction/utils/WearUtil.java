@@ -15,6 +15,8 @@ import java.util.Map;
 import java.util.Set;
 
 import info.nightscout.androidaps.Aaps;
+
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
@@ -25,6 +27,10 @@ import javax.inject.Singleton;
 @Singleton
 public class WearUtil {
 
+    @Inject Context context;
+
+    @Inject WearUtil() {}
+
     private final static boolean debug_wakelocks = false;
     private static final Map<String, Long> rateLimits = new HashMap<String, Long>();
     private static final String TAG = WearUtil.class.getName();
@@ -33,7 +39,7 @@ public class WearUtil {
     // Time related util methods
     //==============================================================================================
 
-    public static String dateTimeText(long timeInMs) {
+    public String dateTimeText(long timeInMs) {
         Date d = new Date(timeInMs);
         return "" + d.getDay() + "." + d.getMonth() + "." + d.getYear() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
     }

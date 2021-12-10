@@ -30,7 +30,7 @@ import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.SafeParse
+import info.nightscout.shared.SafeParse
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.extensions.valueToUnits

@@ -10,7 +10,7 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 import info.nightscout.androidaps.utils.Round
-import info.nightscout.androidaps.utils.SafeParse
+import info.nightscout.shared.SafeParse
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import kotlin.math.max

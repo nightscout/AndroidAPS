@@ -2,7 +2,6 @@ package info.nightscout.androidaps.interaction.actions;
 
 
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.wearable.view.DotsPageIndicator;
@@ -19,7 +18,7 @@ import java.text.DecimalFormat;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.interaction.utils.PlusMinusEditText;
-import info.nightscout.androidaps.interaction.utils.SafeParse;
+import info.nightscout.shared.SafeParse;
 
 /**
  * Created by adrian on 09/02/17.

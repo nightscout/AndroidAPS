@@ -5,6 +5,9 @@ import android.util.Log;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import info.nightscout.androidaps.BuildConfig;
 
 /**
@@ -16,7 +19,12 @@ import info.nightscout.androidaps.BuildConfig;
  *
  */
 
+@Singleton
 public class Inevitable {
+
+    @Inject WearUtil wearUtil;
+
+    @Inject Inevitable() {}
 
     private static final String TAG = Inevitable.class.getSimpleName();
     private static final int MAX_QUEUE_TIME = (int) Constants.MINUTE_IN_MS * 6;
@@ -24,7 +32,7 @@ public class Inevitable {
 
     private static final ConcurrentHashMap<String, Task> tasks = new ConcurrentHashMap<>();
 
-    public static synchronized void task(final String id, long idle_for, Runnable runnable) {
+    public void task(final String id, long idle_for, Runnable runnable) {
         if (idle_for > MAX_QUEUE_TIME) {
             throw new RuntimeException(id + " Requested time: " + idle_for + " beyond max queue time");
         }
@@ -34,14 +42,15 @@ public class Inevitable {
             task.extendTime(idle_for);
 
             if (debug)
-                Log.d(TAG, "Extending time for: " + id + " to " + WearUtil.dateTimeText(task.when));
+                Log.d(TAG, "Extending time for: " + id + " to " + wearUtil.dateTimeText(task.when));
         } else {
             // otherwise create new task
             if (runnable == null) return; // extension only if already exists
             tasks.put(id, new Task(id, idle_for, runnable));
 
             if (debug) {
-                Log.d(TAG, "Creating task: " + id + " due: " + WearUtil.dateTimeText(tasks.get(id).when));
+                Log.d(TAG,
+                        "Creating task: " + id + " due: " + wearUtil.dateTimeText(tasks.get(id).when));
             }
 
             // create a thread to wait and execute in background
@@ -64,7 +73,7 @@ public class Inevitable {
         }
     }
 
-    public static synchronized void stackableTask(String id, long idle_for, Runnable runnable) {
+    public void stackableTask(String id, long idle_for, Runnable runnable) {
         int stack = 0;
         while (tasks.get(id = id + "-" + stack) != null) {
             stack++;

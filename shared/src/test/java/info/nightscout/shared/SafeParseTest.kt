@@ -1,10 +1,8 @@
-package info.nightscout.androidaps.interaction.utils
+package info.nightscout.shared
 
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import java.lang.NullPointerException
-
 
 @Suppress("SpellCheckingInspection")
 class SafeParseTest {

@@ -18,7 +18,7 @@ import info.nightscout.androidaps.plugins.aps.logger.LoggerCallback
 import info.nightscout.androidaps.plugins.aps.loop.ScriptReader
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
-import info.nightscout.androidaps.utils.SafeParse
+import info.nightscout.shared.SafeParse
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.json.JSONArray
