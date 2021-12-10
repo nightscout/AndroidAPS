@@ -1,7 +1,7 @@
 package info.nightscout.shared.di
 
 import android.content.Context
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import dagger.Module
 import dagger.Provides
 import info.nightscout.shared.logging.AAPSLogger

@@ -118,9 +118,12 @@ dependencies {
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
+    implementation "androidx.core:core-ktx:$coreVersion"
     implementation "androidx.appcompat:appcompat:$appcompat_version"
-    implementation 'androidx.legacy:legacy-support-v13:1.0.0'
     implementation "androidx.preference:preference-ktx:$preferencektx_version"
+    implementation 'androidx.legacy:legacy-support-v13:1.0.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.wear:wear:1.2.0'
 
 
     compileOnly "com.google.android.wearable:wearable:${wearableVersion}"
@@ -128,11 +131,8 @@ dependencies {
     implementation "com.google.android.gms:play-services-wearable:${playServicesWearable}"
     implementation(name: 'ustwo-clockwise-debug', ext: 'aar')
     implementation(name: 'wearpreferenceactivity-0.5.0', ext: 'aar')
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.wear:wear:1.2.0'
     implementation('com.github.lecho:hellocharts-library:1.5.8@aar')
 
-    implementation "androidx.core:core-ktx:$coreVersion"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
     testImplementation "junit:junit:$junit_version"
