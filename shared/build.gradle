@@ -29,4 +29,8 @@ dependencies {
         exclude group: "com.google.android", module: "android"
     }
 
+    //RxBus
+    api "io.reactivex.rxjava2:rxjava:$rxjava_version"
+    api "io.reactivex.rxjava2:rxkotlin:$rxkotlin_version"
+    api "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
 }

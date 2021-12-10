@@ -3,7 +3,6 @@ package info.nightscout.androidaps.interaction.utils;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.PowerManager;
-import android.util.Log;
 
 import com.google.android.gms.wearable.DataMap;
 
@@ -14,6 +13,9 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import info.nightscout.shared.logging.AAPSLogger;
+import info.nightscout.shared.logging.LTag;
+
 /**
  * Created by andy on 3/5/19.
  * Adapted by dlvoy on 2019-11-06 using code from jamorham JoH class
@@ -22,9 +24,11 @@ import javax.inject.Singleton;
 @Singleton
 public class WearUtil {
 
-    @Inject Context context;
+    @Inject public Context context;
+    @Inject public AAPSLogger aapsLogger;
 
-    @Inject WearUtil() {}
+    @Inject public WearUtil() {
+    }
 
     private final boolean debug_wakelocks = false;
     private final Map<String, Long> rateLimits = new HashMap<>();
@@ -59,7 +63,7 @@ public class WearUtil {
     public synchronized boolean isBelowRateLimit(String named, int onceForSeconds) {
         // check if over limit
         if ((rateLimits.containsKey(named)) && (timestamp() - rateLimits.get(named) < (onceForSeconds * 1000))) {
-            Log.d(TAG, named + " rate limited to one for " + onceForSeconds + " seconds");
+            aapsLogger.debug(LTag.WEAR, named + " rate limited to one for " + onceForSeconds + " seconds");
             return false;
         }
         // not over limit
@@ -69,14 +73,15 @@ public class WearUtil {
 
     public PowerManager.WakeLock getWakeLock(final String name, int millis) {
         final PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AAPS::"+name);
+        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AAPS::" + name);
         wl.acquire(millis);
-        if (debug_wakelocks) Log.d(TAG, "getWakeLock: " + name + " " + wl.toString());
+        if (debug_wakelocks)
+            aapsLogger.debug(LTag.WEAR, "getWakeLock: " + name + " " + wl.toString());
         return wl;
     }
 
     public void releaseWakeLock(PowerManager.WakeLock wl) {
-        if (debug_wakelocks) Log.d(TAG, "releaseWakeLock: " + wl.toString());
+        if (debug_wakelocks) aapsLogger.debug(LTag.WEAR, "releaseWakeLock: " + wl.toString());
         if (wl == null) return;
         if (wl.isHeld()) wl.release();
     }

@@ -28,22 +28,34 @@ public class Persistence {
 
     private Context context;
     private AAPSLogger aapsLogger;
+    private WearUtil wearUtil;
     private SharedPreferences preferences;
     private final String COMPLICATION_PROVIDER_PREFERENCES_FILE_KEY =
             "info.nightscout.androidaps.complications.COMPLICATION_PROVIDER_PREFERENCES_FILE_KEY";
 
     @Inject
-    public Persistence(Context context, AAPSLogger aapsLogger) {
+    public Persistence(Context context, AAPSLogger aapsLogger, WearUtil wearUtil) {
         this.context = context;
         this.aapsLogger = aapsLogger;
+        this.wearUtil = wearUtil;
         preferences = context.getSharedPreferences(COMPLICATION_PROVIDER_PREFERENCES_FILE_KEY, 0);
+    }
+
+    // For mocking only
+    public byte[] base64decode(String str, int flags) {
+        return Base64.decode(str, flags);
+    }
+
+    // For mocking only
+    public String base64encodeToString(byte[] input, int flags) {
+        return Base64.encodeToString(input, flags);
     }
 
     @Nullable
     public DataMap getDataMap(String key) {
         if (preferences.contains(key)) {
             final String rawB64Data = preferences.getString(key, null);
-            byte[] rawData = Base64.decode(rawB64Data, Base64.DEFAULT);
+            byte[] rawData = base64decode(rawB64Data, Base64.DEFAULT);
             try {
                 return DataMap.fromByteArray(rawData);
             } catch (IllegalArgumentException ex) {
@@ -54,7 +66,7 @@ public class Persistence {
     }
 
     public void putDataMap(String key, DataMap dataMap) {
-        preferences.edit().putString(key, Base64.encodeToString(dataMap.toByteArray(), Base64.DEFAULT)).apply();
+        preferences.edit().putString(key, base64encodeToString(dataMap.toByteArray(), Base64.DEFAULT)).apply();
     }
 
     public String getString(String key, String defaultValue) {
@@ -78,7 +90,7 @@ public class Persistence {
     }
 
     private void markDataUpdated() {
-        preferences.edit().putLong("data_updated_at", System.currentTimeMillis()).apply();
+        preferences.edit().putLong("data_updated_at", wearUtil.timestamp()).apply();
     }
 
     public Set<String> getSetOf(String key) {
