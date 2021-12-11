@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.common.ble
 
 import android.Manifest
-import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -18,6 +18,7 @@ import javax.inject.Singleton
 
 @Singleton
 class BlePreCheck @Inject constructor(
+    val context: Context,
     val rh: ResourceHelper
 ) {
 
@@ -37,7 +38,7 @@ class BlePreCheck @Inject constructor(
                 ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), PERMISSION_REQUEST_COARSE_LOCATION)
             }
 
-            val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+            val bluetoothAdapter = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager).adapter
             // Ensures Bluetooth is available on the device and it is enabled. If not,
             // displays a dialog requesting user permission to enable Bluetooth.
             if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled) {
