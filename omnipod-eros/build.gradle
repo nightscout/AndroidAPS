@@ -26,6 +26,7 @@ dependencies {
     implementation project(':omnipod-common')
     implementation project(':rileylink')
     implementation project(':database')
+    implementation project(':shared')
 
 
     api "androidx.room:room-ktx:$room_version"

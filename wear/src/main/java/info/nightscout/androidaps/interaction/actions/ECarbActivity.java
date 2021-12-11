@@ -1,28 +1,22 @@
 package info.nightscout.androidaps.interaction.actions;
 
-
-import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.wearable.view.DotsPageIndicator;
 import android.support.wearable.view.GridPagerAdapter;
-import android.support.wearable.view.GridViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.interaction.utils.PlusMinusEditText;
-import info.nightscout.androidaps.interaction.utils.SafeParse;
+import info.nightscout.shared.SafeParse;
 
 /**
  * Created by adrian on 04/08/18.
  */
-
 
 public class ECarbActivity extends ViewSelectorActivity {
 
@@ -30,45 +24,17 @@ public class ECarbActivity extends ViewSelectorActivity {
     PlusMinusEditText editStartTime;
     PlusMinusEditText editDuration;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.grid_layout);
-
-        final TextView title = findViewById(R.id.title);
-        title.setText(getString(R.string.menu_ecarb));
-
-        final GridViewPager pager = findViewById(R.id.pager);
-        pager.setAdapter(new MyGridViewPagerAdapter());
-        DotsPageIndicator dotsPageIndicator = findViewById(R.id.page_indicator);
-        dotsPageIndicator.setPager(pager);
-        pager.setOnPageChangeListener(new GridViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int row, int column, float rowOffset, float columnOffset, int rowOffsetPixels, int columnOffsetPixels) {
-                dotsPageIndicator.onPageScrolled(row, column, rowOffset, columnOffset, rowOffsetPixels,
-                        columnOffsetPixels);
-            }
-            @Override
-            public void onPageSelected(int row, int column) {
-                dotsPageIndicator.onPageSelected(row, column);
-                View view = pager.getChildAt(column);
-                view.requestFocus();
-            }
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                dotsPageIndicator.onPageScrollStateChanged(state);
-            }
-        });
+        setAdapter(new MyGridViewPagerAdapter());
     }
-
 
     @Override
     protected void onPause() {
         super.onPause();
         finish();
     }
-
 
     private class MyGridViewPagerAdapter extends GridPagerAdapter {
         @Override
@@ -84,10 +50,10 @@ public class ECarbActivity extends ViewSelectorActivity {
         @Override
         public Object instantiateItem(ViewGroup container, int row, int col) {
 
-            if(col == 0){
+            if (col == 0) {
                 final View view = getInflatedPlusMinusView(container);
                 double def = 0;
-                if (editCarbs != null){
+                if (editCarbs != null) {
                     def = SafeParse.stringToDouble(editCarbs.editText.getText().toString());
                 }
                 editCarbs = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 150d, 1d, new DecimalFormat("0"), true);
@@ -95,20 +61,20 @@ public class ECarbActivity extends ViewSelectorActivity {
                 container.addView(view);
                 view.requestFocus();
                 return view;
-            } else if(col == 1){
+            } else if (col == 1) {
                 final View view = getInflatedPlusMinusView(container);
                 double def = 0;
-                if (editStartTime != null){
+                if (editStartTime != null) {
                     def = SafeParse.stringToDouble(editStartTime.editText.getText().toString());
                 }
                 editStartTime = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 300d, 15d, new DecimalFormat("0"), false);
                 setLabelToPlusMinusView(view, getString(R.string.action_start_min));
                 container.addView(view);
                 return view;
-            } else if(col == 2){
+            } else if (col == 2) {
                 final View view = getInflatedPlusMinusView(container);
                 double def = 0;
-                if (editDuration != null){
+                if (editDuration != null) {
                     def = SafeParse.stringToDouble(editDuration.editText.getText().toString());
                 }
                 editDuration = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 8d, 1d, new DecimalFormat("0"), false);
@@ -126,7 +92,7 @@ public class ECarbActivity extends ViewSelectorActivity {
                         //check if it can happen that the fagment is never created that hold data?
                         // (you have to swipe past them anyways - but still)
 
-                        String actionstring = "ecarbs " +SafeParse.stringToInt(editCarbs.editText.getText().toString())
+                        String actionstring = "ecarbs " + SafeParse.stringToInt(editCarbs.editText.getText().toString())
                                 + " " + SafeParse.stringToInt(editStartTime.editText.getText().toString())
                                 + " " + SafeParse.stringToInt(editDuration.editText.getText().toString());
                         ListenerService.initiateAction(ECarbActivity.this, actionstring);
@@ -142,14 +108,13 @@ public class ECarbActivity extends ViewSelectorActivity {
         public void destroyItem(ViewGroup container, int row, int col, Object view) {
             // Handle this to get the data before the view is destroyed?
             // Object should still be kept by this, just setup for reinit?
-            container.removeView((View)view);
+            container.removeView((View) view);
         }
 
         @Override
         public boolean isViewFromObject(View view, Object object) {
-            return view==object;
+            return view == object;
         }
-
 
     }
 }

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils.sharedPreferences
+package info.nightscout.shared.sharedPreferences
 
 import androidx.annotation.StringRes
 

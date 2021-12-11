@@ -1,6 +1,6 @@
-package info.nightscout.androidaps.logging
+package info.nightscout.shared.logging
 
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton

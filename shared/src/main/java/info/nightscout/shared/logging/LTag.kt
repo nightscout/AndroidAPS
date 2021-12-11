@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.logging
+package info.nightscout.shared.logging
 
 enum class LTag(val tag: String, val defaultValue : Boolean = true, val requiresRestart: Boolean = false) {
     CORE("CORE"),
@@ -24,5 +24,5 @@ enum class LTag(val tag: String, val defaultValue : Boolean = true, val requires
     SMS("SMS"),
     TIDEPOOL("TIDEPOOL"),
     UI("UI", defaultValue = false),
-    WEAR("WEAR", defaultValue = false)
+    WEAR("WEAR")
 }

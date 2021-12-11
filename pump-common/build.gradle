@@ -11,6 +11,7 @@ apply from: "${project.rootDir}/gradle/jacoco_global.gradle"
 
 dependencies {
     implementation project(':core')
+    implementation project(':shared')
     //implementation project(':database')
 
     implementation('com.thoughtworks.xstream:xstream:1.4.18') {

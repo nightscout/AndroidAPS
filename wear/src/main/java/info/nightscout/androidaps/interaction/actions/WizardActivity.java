@@ -1,30 +1,24 @@
 package info.nightscout.androidaps.interaction.actions;
 
-
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.wearable.view.DotsPageIndicator;
 import android.support.wearable.view.GridPagerAdapter;
-import android.support.wearable.view.GridViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.interaction.utils.PlusMinusEditText;
-import info.nightscout.androidaps.interaction.utils.SafeParse;
+import info.nightscout.shared.SafeParse;
 
 /**
  * Created by adrian on 09/02/17.
  */
-
 
 public class WizardActivity extends ViewSelectorActivity {
 
@@ -33,47 +27,19 @@ public class WizardActivity extends ViewSelectorActivity {
 
     boolean hasPercentage;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.grid_layout);
-
-        final TextView title = findViewById(R.id.title);
-        title.setText(getString(R.string.menu_wizard));
-
-        final GridViewPager pager = findViewById(R.id.pager);
-        pager.setAdapter(new MyGridViewPagerAdapter());
-        DotsPageIndicator dotsPageIndicator = findViewById(R.id.page_indicator);
-        dotsPageIndicator.setPager(pager);
+        setAdapter(new MyGridViewPagerAdapter());
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         hasPercentage = sp.getBoolean("wizardpercentage", false);
-        pager.setOnPageChangeListener(new GridViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int row, int column, float rowOffset, float columnOffset, int rowOffsetPixels, int columnOffsetPixels) {
-                dotsPageIndicator.onPageScrolled(row, column, rowOffset, columnOffset, rowOffsetPixels,
-                        columnOffsetPixels);
-            }
-            @Override
-            public void onPageSelected(int row, int column) {
-                dotsPageIndicator.onPageSelected(row, column);
-                View view = pager.getChildAt(column);
-                view.requestFocus();
-            }
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                dotsPageIndicator.onPageScrollStateChanged(state);
-            }
-        });
     }
-
 
     @Override
     protected void onPause() {
         super.onPause();
         finish();
     }
-
 
     private class MyGridViewPagerAdapter extends GridPagerAdapter {
         @Override
@@ -96,7 +62,6 @@ public class WizardActivity extends ViewSelectorActivity {
                 } else {
                     double def = SafeParse.stringToDouble(editCarbs.editText.getText().toString());
                     editCarbs = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 150d, 1d, new DecimalFormat("0"), false);
-
                 }
                 setLabelToPlusMinusView(view, getString(R.string.action_carbs));
                 container.addView(view);
@@ -151,7 +116,6 @@ public class WizardActivity extends ViewSelectorActivity {
         public boolean isViewFromObject(View view, Object object) {
             return view == object;
         }
-
 
     }
 }

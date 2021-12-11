@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message
 
 import info.nightscout.androidaps.extensions.toHex
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.command.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet.BlePacket

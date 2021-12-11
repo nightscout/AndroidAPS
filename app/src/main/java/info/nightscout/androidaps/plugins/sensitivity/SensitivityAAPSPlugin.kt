@@ -13,14 +13,14 @@ import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.Sensitivity.SensitivityType
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.*
@@ -128,7 +128,8 @@ class SensitivityAAPSPlugin @Inject constructor(
         aapsLogger.debug(LTag.AUTOSENS, sensResult)
         val output = fillResult(ratio, current.cob, pastSensitivity, ratioLimit,
             sensResult, deviationsArray.size)
-        aapsLogger.debug(LTag.AUTOSENS, "Sensitivity to: "
+        aapsLogger.debug(
+            LTag.AUTOSENS, "Sensitivity to: "
             + dateUtil.dateAndTimeString(toTime) +
             " ratio: " + output.ratio
             + " mealCOB: " + current.cob)

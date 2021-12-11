@@ -7,8 +7,8 @@ import android.content.ServiceConnection
 import android.os.IBinder
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.interfaces.NotificationHolder
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import javax.inject.Inject
 import javax.inject.Singleton
 

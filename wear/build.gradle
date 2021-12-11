@@ -12,23 +12,18 @@ buildscript {
 }
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-allopen'
 apply plugin: 'com.hiya.jacoco-android'
 
-jacoco {
-    toolVersion = "0.8.7"
-}
+apply from: "${project.rootDir}/gradle/android_dependencies.gradle"
+apply from: "${project.rootDir}/gradle/jacoco_global.gradle"
 
-tasks.withType(Test) {
-    jacoco.includeNoLocationClasses = true
-    jacoco.excludes = ['jdk.internal.*']
-}
 
 ext {
     wearableVersion = "2.8.1"
     // playServicesWearable 17.1.0 breaks test
     playServicesWearable = "17.0.0"
-    powermockVersion = '2.0.9'
 }
 
 def generateGitBuild = { ->
@@ -53,7 +48,7 @@ def generateGitBuild = { ->
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
 
     defaultConfig {
         applicationId "info.nightscout.androidaps"
@@ -118,22 +113,26 @@ allprojects {
 
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    //implementation files("libs/hellocharts-library-1.5.5.jar")
-    //compile "com.ustwo.android:clockwise-wearable:1.0.2"
+    implementation project(':shared')
 
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    implementation "androidx.core:core-ktx:$coreVersion"
     implementation "androidx.appcompat:appcompat:$appcompat_version"
+    implementation "androidx.preference:preference-ktx:$preferencektx_version"
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.wear:wear:1.2.0'
+
 
     compileOnly "com.google.android.wearable:wearable:${wearableVersion}"
     implementation "com.google.android.support:wearable:${wearableVersion}"
     implementation "com.google.android.gms:play-services-wearable:${playServicesWearable}"
     implementation(name: 'ustwo-clockwise-debug', ext: 'aar')
     implementation(name: 'wearpreferenceactivity-0.5.0', ext: 'aar')
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.percentlayout:percentlayout:1.0.0'
-    implementation 'androidx.wear:wear:1.1.0'
     implementation('com.github.lecho:hellocharts-library:1.5.8@aar')
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
     testImplementation "junit:junit:$junit_version"
     testImplementation 'org.json:json:20211205'
@@ -147,18 +146,22 @@ dependencies {
     testImplementation "net.bytebuddy:byte-buddy-android:$byteBuddyVersion"
     testImplementation "net.bytebuddy:byte-buddy-agent:$byteBuddyVersion"
 
-    testImplementation "org.powermock:powermock-api-mockito2:${powermockVersion}"
-    testImplementation "org.powermock:powermock-module-junit4-rule-agent:${powermockVersion}"
-    testImplementation "org.powermock:powermock-module-junit4-rule:${powermockVersion}"
-    testImplementation "org.powermock:powermock-module-junit4:${powermockVersion}"
     testImplementation "joda-time:joda-time:$jodatime_version"
     testImplementation('com.google.truth:truth:1.1.3') {
         exclude group: "com.google.guava", module: "guava"
     }
     testImplementation "org.skyscreamer:jsonassert:1.5.0"
     testImplementation "org.hamcrest:hamcrest-all:1.3"
-    implementation "androidx.core:core-ktx:$coreVersion"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+
+    // for old fashioned support-app version
+    implementation "com.google.dagger:dagger:$dagger_version"
+    implementation "com.google.dagger:dagger-android:$dagger_version"
+    implementation "com.google.dagger:dagger-android-support:$dagger_version"
+
+    annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
+    annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
+    kapt "com.google.dagger:dagger-android-processor:$dagger_version"
+    kapt "com.google.dagger:dagger-compiler:$dagger_version"
 }
 repositories {
     mavenCentral()

@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.general.automation
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.general.automation.actions.Action
 import info.nightscout.androidaps.plugins.general.automation.actions.ActionDummy
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector

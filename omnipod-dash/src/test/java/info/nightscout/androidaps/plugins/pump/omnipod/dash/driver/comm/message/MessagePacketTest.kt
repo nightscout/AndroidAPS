@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message
 
 import com.google.crypto.tink.subtle.Hex
 import info.nightscout.androidaps.extensions.toHex
-import info.nightscout.androidaps.logging.AAPSLoggerTest
+import info.nightscout.shared.logging.AAPSLoggerTest
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
 import org.junit.Assert.assertEquals
 import org.junit.Test

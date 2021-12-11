@@ -13,7 +13,7 @@ import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvid
 import info.nightscout.androidaps.utils.CryptoUtil
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.AlertDialogHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton

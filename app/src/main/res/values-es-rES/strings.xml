@@ -106,7 +106,7 @@
     <string name="sms_basal">Dosis Basal:</string>
     <string name="changeyourinput">¡Cambiar datos!</string>
     <string name="configbuilder_bgsource">Origen de Glucosa</string>
-    <string name="configbuilder_bgsource_description">¿De donde debe AndroidAPS obtener sus datos?</string>
+    <string name="configbuilder_bgsource_description">¿De dónde debe AndroidAPS obtener sus datos?</string>
     <string name="xdrip">xDrip+</string>
     <string name="apsmode_title">Modo APS</string>
     <string name="closedloop">Lazo cerrado</string>
@@ -536,7 +536,7 @@
     <string name="wear_notifysmb_summary">Mostrar SMB en el reloj como un bolo estándar</string>
     <string name="ns_create_announcements_from_errors_title">Crear notificaciones de los errores</string>
     <string name="ns_create_announcements_from_carbs_req_title">Crear notificaciones de alertas de carbohidratos necesarios</string>
-    <string name="ns_create_announcements_from_errors_summary">Crear notificaciones en Nightscout para diálogos de error y alertas locales (también visibles en el portal del cuidador, en los tratamientos)</string>
+    <string name="ns_create_announcements_from_errors_summary">Crear notificaciones en Nightscout para diálogos de error y alertas locales (también visibles en el portal de cuidados, en los tratamientos)</string>
     <string name="ns_create_announcements_from_carbs_req_summary">Crear notificaciones de Nightscout para las alertas de carbohidratos necesarios</string>
     <string name="wear_predictions_summary">Mostrar las predicciones en el reloj</string>
     <string name="wear_predictions_title">Predicciones</string>

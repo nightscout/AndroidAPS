@@ -16,13 +16,13 @@ import info.nightscout.androidaps.diaconn.databinding.DiaconnG8UserOptionsActivi
 
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.ToastUtils
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
 import java.text.DecimalFormat
 import javax.inject.Inject
@@ -68,7 +68,8 @@ class DiaconnG8UserOptionsActivity : NoSplashAppCompatActivity() {
 
         binding.bolusSpeed.setParams(spBolusSpeed.toDouble(), 1.0, 8.0, 1.0, DecimalFormat("1"), true, binding.saveBolusSpeed)
 
-        aapsLogger.debug(LTag.PUMP,
+        aapsLogger.debug(
+            LTag.PUMP,
             "UserOptionsLoaded:" + (System.currentTimeMillis() - diaconnG8Pump.lastConnection) / 1000 + " s ago"
                 + "\nbeepAndAlarm:" + diaconnG8Pump.beepAndAlarm
                 + "\nalarmIntesity:" + diaconnG8Pump.alarmIntesity

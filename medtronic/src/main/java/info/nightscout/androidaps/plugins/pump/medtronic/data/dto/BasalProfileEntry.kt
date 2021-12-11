@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data.dto
 
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
 import org.joda.time.LocalTime
 import java.util.*
@@ -48,8 +48,9 @@ class BasalProfileEntry {
         startTime = try {
             LocalTime(startTimeInterval / 2, startTimeInterval % 2 * 30)
         } catch (ex: Exception) {
-            aapsLogger.error(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "Error creating BasalProfileEntry: startTimeInterval=%d, startTime_raw=%d, hours=%d, rateStrokes=%d",
-                startTimeInterval, startTime_raw, startTimeInterval / 2, rateStrokes))
+            aapsLogger.error(
+                LTag.PUMPCOMM, String.format(Locale.ENGLISH, "Error creating BasalProfileEntry: startTimeInterval=%d, startTime_raw=%d, hours=%d, rateStrokes=%d",
+                                             startTimeInterval, startTime_raw, startTimeInterval / 2, rateStrokes))
             throw ex
         }
     }

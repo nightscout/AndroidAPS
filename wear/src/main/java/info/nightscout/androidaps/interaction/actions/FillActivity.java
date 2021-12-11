@@ -1,28 +1,22 @@
 package info.nightscout.androidaps.interaction.actions;
 
-
-import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.wearable.view.DotsPageIndicator;
 import android.support.wearable.view.GridPagerAdapter;
-import android.support.wearable.view.GridViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.interaction.utils.PlusMinusEditText;
-import info.nightscout.androidaps.interaction.utils.SafeParse;
+import info.nightscout.shared.SafeParse;
 
 /**
  * Created by adrian on 09/02/17.
  */
-
 
 public class FillActivity extends ViewSelectorActivity {
 
@@ -31,24 +25,14 @@ public class FillActivity extends ViewSelectorActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.grid_layout);
-
-        final TextView title = findViewById(R.id.title);
-        title.setText(getString(R.string.menu_prime_fill));
-
-        final GridViewPager pager = findViewById(R.id.pager);
-        pager.setAdapter(new MyGridViewPagerAdapter());
-        DotsPageIndicator dotsPageIndicator = findViewById(R.id.page_indicator);
-        dotsPageIndicator.setPager(pager);
+        setAdapter(new MyGridViewPagerAdapter());
     }
-
 
     @Override
     protected void onPause() {
         super.onPause();
         finish();
     }
-
 
     private class MyGridViewPagerAdapter extends GridPagerAdapter {
         @Override
@@ -107,7 +91,6 @@ public class FillActivity extends ViewSelectorActivity {
         public boolean isViewFromObject(View view, Object object) {
             return view == object;
         }
-
 
     }
 }
