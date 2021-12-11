@@ -5,7 +5,7 @@
     <string name="label_xdrip">AAPS</string>
     <string name="label_xdrip_large">AAPS (Grande)</string>
     <string name="label_xdrip_big_chart">AAPS (GráficoGrande)</string>
-    <string name="label_xdrip_no_chart">AAPS (SinGrafico)</string>
+    <string name="label_xdrip_no_chart">AAPS (SinGráfico)</string>
     <string name="label_xdrip_circle">AAPS (Círculo)</string>
     <string name="label_xdrip_v2">AAPSv2</string>
     <string name="label_xdrip_cockpit">AAPS(Cockpit)</string>
