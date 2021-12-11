@@ -443,8 +443,6 @@
     <string name="enablesmbwithhightemptarget">SMB activo com alvos temporários elevados</string>
     <string name="overview_insulin_label">Insulina</string>
     <string name="overview_buttons_selection">Botões</string>
-    <string name="show_calibration_button_summary">Enviar calibrações para o xDrip+ ou abrir sistema de calibração do G5</string>
-    <string name="show_cgm_button_summary">Abre xDrip+, botão retorcer volta ao AAPS</string>
     <string name="carb_increment_button_message">Número de carboidratos a adicionar quando o botão é premido</string>
     <string name="insulin_increment_button_message">Unidades de insulina a adicionar quando o botão é premido</string>
     <string name="error_starting_cgm">Não foi possível lançar aplicação de monitorização contínua. Por favor verifique que está instalada.</string>
@@ -545,7 +543,6 @@
     <string name="exitwizard">Saltar assistente de configuração</string>
     <string name="setupwizard_loop_description">Pressione o botão abaixo para ativar o AndroidAPS para sugerir/fazer alterações basais</string>
     <string name="setupwizard_sensitivity_description">Plugin de Sensibilidade é usado para detecção de sensibilidade e cálculos COB. Para mais info visite:</string>
-    <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
     <string name="nsclientinfotext">NSCliente gere a ligação ao Nightscout. Pode saltar esta parte mas não será possível passar os objetivos até que o configure.</string>
     <string name="diawarning">Lembre-se: novos perfis de insulina requerem diâmetro de pelo menos 5h. DIA 5–6h no novo perfil é igual ao diâmetro 3h nos antigos perfis de insulina.</string>
     <string name="setupwizard_aps_description">Seleccione um dos algoritmos disponíveis. Eles são classificados do mais antigo para o mais recente. Algoritmo mais recente é geralmente mais forte e mais agressivo. Assim, se você é novo looper, poderá provavelmente começar com AMA e não com a versão mais recente. Não se esqueça de ler a documentação de OpenAPS e configurá-lo antes de usar.</string>

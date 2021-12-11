@@ -521,8 +521,6 @@
     <string name="enablesmbwithhightemptarget_summary">Включить микроболюс SMB, когда активна высока временная цель (нагрузка, выше 100 мг/дл или 5,5 ммоль/л)</string>
     <string name="overview_insulin_label">Инсулин</string>
     <string name="overview_buttons_selection">Кнопки</string>
-    <string name="show_calibration_button_summary">Отправить калибровки на xDrip+ или открыть диалоговое окно калибровки G5</string>
-    <string name="show_cgm_button_summary">Открывает xDrip +, кнопка назад возвращает в AAPS</string>
     <string name="carb_increment_button_message">Количество вводимых углеводов при нажатии кнопки</string>
     <string name="insulin_increment_button_message">Количество инсулина, вводимого при нажатии кнопки</string>
     <string name="error_starting_cgm">Не удалось запустить приложения мониторинга СК. Убедитесь, что оно установлено.</string>
@@ -628,9 +626,6 @@
     <string name="exitwizard">Пропустить Мастер установки</string>
     <string name="setupwizard_loop_description">Нажмите на кнопку ниже, чтобы AndroidAPS мог предложить/внести изменения в базал</string>
     <string name="setupwizard_sensitivity_description">Плагин чувствительности Sensitivity применяется для определения чувствительности к инсулину и вычисления активных углеводов COB. Дополнительная информация:</string>
-    <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB
- 
-Context | Edit Context</string>
     <string name="nsclientinfotext">NSClient обрабатывает подключения к Nightscout. Вы можете пропустить этот этап сейчас, но не преодолеете все Цели пока не настроите его.</string>
     <string name="diawarning">Напоминание: новые профили инсулина требуют как минимум 5 часов длительности действия DIA. 5-6 часовая DIA эквивалентна трехчасовой на старых профилях.</string>
     <string name="setupwizard_aps_description">Выберите один из доступных алгоритмов. Они расположены от самых старых к самым новым. Более новый алгоритм обычно мощнее и агрессивнее. Если вы новый пользователь возможно вам лучше начать с помощника болюса AMA а не с новейшего алгоритма. Читайте документацию OpenAPS и определите свою конфигурацию.</string>
@@ -904,4 +899,5 @@ Context | Edit Context</string>
     <string name="bg_too_close">ГК слишком близко к \n%1$s\n%2$s</string>
     <string name="identification">Идентификация (электронная почта, ник в Facebook или Discord и т. п)</string>
     <string name="identification_not_set">Идентификация не задана в режиме разработчика</string>
+    <string name="not_available_full">Недоступно</string>
 </resources>

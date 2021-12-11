@@ -422,7 +422,7 @@
     <string name="start_pump">הפעל משאבה</string>
     <string name="stop_pump">עצור משאבה</string>
     <string name="temp_basal_absolute">בזאלי זמני %1$.2f יח\' לשעה %2$d דק\'</string>
-    <string name="temp_basal_percent">בזאלי זמני %1$d% %2$d דק\'</string>
+    <string name="temp_basal_percent">בזאלי זמני %1$d%% %2$d דק\'</string>
     <string name="insight_set_tbr_over_notification">אינסייט הגדר התראת הבזאלי הזמני הסתיים</string>
     <string name="read_status" comment="10 characters max for READSTATUS translation">קריאת סטטוס %1$s</string>
     <string name="keepalive_status_outdated" comment="26 characters max for translation">השאר בחיים. הסטטוס התיישן.</string>

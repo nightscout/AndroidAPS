@@ -399,8 +399,6 @@
     <string name="enablesmbwithhightemptarget">Ενεργοποίηση SMB με υψηλούς προσωρινούς στόχους</string>
     <string name="overview_insulin_label">Ινσουλίνη</string>
     <string name="overview_buttons_selection">Πλήκτρα</string>
-    <string name="show_calibration_button_summary">Στέλνει καλιμπράρισμα στο xDrip + ή ανοίγει το παράθυρο διαλόγου καλιμπραρίσματος του G5</string>
-    <string name="show_cgm_button_summary">Ανοίγει το xDrip +, το πλήκτρο πίσω επιστρέφει στο AndroidAPS</string>
     <string name="carb_increment_button_message">Αριθμός υδατανθράκων να προστεθεί όταν πατήσετε το πλήκτρο</string>
     <string name="insulin_increment_button_message">Ποσότητα ινσουλίνης να προστεθεί όταν πατήσετε το πλήκτρο</string>
     <string name="error_starting_cgm">Δεν είναι δυνατή η εκκίνηση της εφαρμογής CGM. Βεβαιωθείτε ότι έχει εγκατασταθεί.</string>
@@ -498,7 +496,6 @@
     <string name="exitwizard">Παράλειψη του \"Οδηγού εγκατάστασης\"</string>
     <string name="setupwizard_loop_description">Πατήστε το παρακάτω πλήκτρο για να ενεργοποιήσετε το AndroidAPS για να προτείνει/κάνει αλλαγές στον βασικό ρυθμό</string>
     <string name="setupwizard_sensitivity_description">Η προσθήκη Ευαισθησία χρησιμοποιείται για την ανίχνευση αλλαγών στην ευαισθησία και τον υπολογισμό του COB. Για περισσότερες πληροφορίες εδώ:</string>
-    <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
     <string name="nsclientinfotext">Το NSClient χειρίζεται τη σύνδεση με το Nightscout. Μπορείτε να παραλείψετε αυτό τώρα αλλά δεν θα μπορείτε να ολοκληρώσετε τους Στόχους μέχρι να κάνετε τις ρυθμίσεις του.</string>
     <string name="diawarning">Προσοχή: Τα νέα προφίλ ινσουλίνης απαιτούν DIA τουλάχιστον 5 ωρών. Η DIA 5-6 ώρες στα νέα προφίλ είναι ισοδύναμα με DIA των 3 ωρών στα παλιά προφίλ ινσουλινών.</string>
     <string name="setupwizard_aps_description">Επιλέξτε έναν από τους διαθέσιμους αλγόριθμους. Ταξινομούνται από το παλαιότερο στον νεότερο. Ένας νεότερος είναι συνήθως καλύτερος και πιο επιθετικός. Επομένως, αν είστε καινούριος στο κλειστό κύκλωμα, θα πρέπει πρώτα να επιλέξετε μόνο το AMA και όχι το τελευταίο. Μην ξεχάσετε να διαβάσετε το εγχειρίδιο του OpenAPS και να κάνετε τις ρυθμίσεις προτού αρχίσετε να το χρησιμοποιείτε.</string>

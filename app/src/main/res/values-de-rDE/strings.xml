@@ -521,8 +521,8 @@
     <string name="enablesmbwithhightemptarget_summary">Aktiviere SMB bei hohen temporären Zielen (Sport, über 100 mg/dl bzw. 5,5 mmol/L)</string>
     <string name="overview_insulin_label">Insulin</string>
     <string name="overview_buttons_selection">Schaltflächen</string>
-    <string name="show_calibration_button_summary">Sendet eine Kalibierung an xDrip+ oder öffnet den G5 Kalibrierungs-Dialog.</string>
-    <string name="show_cgm_button_summary">Öffnet xDrip+, mit der Zurück-Schaltfläche gelangst du zurück zu AndroidAPS.</string>
+    <string name="show_calibration_button_summary">Sendet eine Kalibierung an xDrip+ oder öffnet den BYODA Kalibrierungs-Dialog.</string>
+    <string name="show_cgm_button_summary">Öffnet xDrip+ oder BOYDA, mit der Zurück-Schaltfläche gelangst Du zurück zu AndroidAPS.</string>
     <string name="carb_increment_button_message">Menge der Kohlenhydrate, die hinzugefügt werden soll, wenn die Schaltfläche gedrückt wird.</string>
     <string name="insulin_increment_button_message">Menge an Insulin, die hinzugefügt werden soll, wenn die Schaltfläche gedrückt wird</string>
     <string name="error_starting_cgm">CGM-Anwendung konnte nicht geöffnet werden. Stelle sicher, dass diese installiert ist.</string>
@@ -628,7 +628,7 @@
     <string name="exitwizard">Einrichtungsassistenten überspringen</string>
     <string name="setupwizard_loop_description">Drücke die Schaltfläche unten, um AndroidAPS zu erlauben, Basal-Änderungen vorzuschlagen/vorzunehmen</string>
     <string name="setupwizard_sensitivity_description">Das Sensitivitäts-Plugin wird für die Sensitivitäts- und COB-Berechnung verwendet. Für weitere Informationen siehe:</string>
-    <string name="setupwizard_sensitivity_url">http://androidaps.readthedocs.io/en/latest/DE/konfigurations-generator.html#empfindlichkeitserkennung</string>
+    <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/de/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="nsclientinfotext">Nightscout-Client ist für die Verbindung zu Nightscout zuständig. Du kannst diesen Teil jetzt überspringen, aber Du wirst nicht in der Lage sein, Zielsetzungen zu erfüllen, bis Du diesen eingerichtet hast.</string>
     <string name="diawarning">Bitte beachte: Neue Insulin-Profile benötigen einen DIA von mind. 5 Stunden. Eine DIA von 5-6 Stunden im neuen Insulin-Profil entspricht einem DIA von 3 Stunden bei alten Insulin-Profilen.</string>
     <string name="setupwizard_aps_description">Wähle einen der verfügbaren Algorithmen aus. Sie sind vom Ältesten zum Neuesten sortiert. Neuere Algorithmen sind meist stärker und aggressiver. Wenn du ein Anfänger bist, solltest du nicht mit dem Neuesten sondern mit AMA starten. Vergiss nicht, die OpenAPS-Dokumentation zu lesen und die entsprechenden Einstellungen vor der Benutzung vorzunehmen.</string>

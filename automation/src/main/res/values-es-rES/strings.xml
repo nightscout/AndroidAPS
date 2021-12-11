@@ -82,8 +82,8 @@
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
     <string name="deltacompared">%3$s %1$s %2$s</string>
-    <string name="deltalabel">Diferencia BG</string>
-    <string name="deltalabel_u">Diferencia de BG %1$s</string>
+    <string name="deltalabel">Diferencia de glucosa</string>
+    <string name="deltalabel_u">Diferencia de glucosa %1$s</string>
     <string name="currentlocation">Ubicación actual</string>
     <string name="location">Ubicación</string>
     <string name="latitude_short">Lat:</string>

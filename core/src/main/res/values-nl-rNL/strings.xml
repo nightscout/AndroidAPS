@@ -410,6 +410,36 @@
     <string name="basal_value">Basaal waarde</string>
     <string name="nsclient_version_does_not_match">NSClient versie werkt niet samen met AndroidAPS. Update gewenst.</string>
     <!-- Command Queue + readStatus reasons -->
+    <string name="bolus_u_min">BOLUS %1$.2f E</string>
+    <string name="carbs_g">KOOLHYDRATEN %1$d gr</string>
+    <string name="extended_bolus_u_min">VERLENDE BOLUS %1$.2f E %2$d min</string>
+    <string name="load_events">Laden van gebeurtenissen</string>
+    <string name="load_history">LAAD GESCHIEDENIS %1$d</string>
+    <string name="load_tdds">LAAD TDD\'s</string>
+    <string name="set_profile">PROFIEL INSTELLEN</string>
+    <string name="set_user_settings">GEBRUIKERSINSTELLINGEN</string>
+    <string name="smb_bolus_u">SMB BOLUS %1$.2f E</string>
+    <string name="start_pump">START POMP</string>
+    <string name="stop_pump">STOP POMP</string>
+    <string name="temp_basal_absolute">TIJDELIJK BASAAL %1$.2f E/u %2$d min</string>
+    <string name="temp_basal_percent">TIJDELIJK BASAAL %1$d%% %2$d min</string>
+    <string name="insight_set_tbr_over_notification">INSIGHT MELDING EINDE TBR</string>
+    <string name="read_status" comment="10 characters max for READSTATUS translation">LEES STATUS %1$s</string>
+    <string name="keepalive_status_outdated" comment="26 characters max for translation">KeepAlive. Status verouderd.</string>
+    <string name="keepalive_basal_outdated" comment="26 characters max for translation">KeepAlive. Basaal verouderd.</string>
+    <string name="sms" comment="26 characters max for translation">SMS</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Verbinden met pomp geklikt</string>
+    <string name="pump_driver_changed" comment="26 characters max for translation">Pomp stuurprogramma gewijzigd.</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Pomp stuurprogramma wijzigen.</string>
+    <string name="device_changed" comment="26 characters max for translation">Apparaat gewijzigd</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Vernieuwen geklikt</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Status gepland actualiseren</string>
+    <string name="unconfirmed_command" comment="26 characters max for translation">Onbevestigde opdracht</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Aangevraagd door gebruiker</string>
+    <string name="user_request" comment="26 characters max for translation">Gebruikers verzoek</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
+    <string name="pump_paired" comment="26 characters max for translation">Pomp gekoppeld</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Insight actualiseren knop</string>
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagen</item>
