@@ -82,7 +82,7 @@
     <string name="configbuilder_profile">Perfil</string>
     <string name="configbuilder_profile_description">¿Qué perfil debe usar AndroidAPS?</string>
     <string name="configbuilder_aps">APS</string>
-    <string name="configbuilder_aps_description">¿Que algoritmo debe usar APS en los ajustes de su tratamiento?</string>
+    <string name="configbuilder_aps_description">¿Qué algoritmo APS quieres usar para ajustar tu tratamiento?</string>
     <string name="configbuilder_general">Ajustes generales</string>
     <string name="configbuilder_general_description">Algunos ajustes generales que pueden ser de utilidad</string>
     <string name="configbuilder_constraints_description">¿Qué restricciones se aplican?</string>
@@ -112,7 +112,7 @@
     <string name="closedloop">Lazo cerrado</string>
     <string name="openloop">Lazo abierto</string>
     <string name="lowglucosesuspend">Suspensión por glucosa baja</string>
-    <string name="disabledloop">Lazo Inactivo</string>
+    <string name="disabledloop">Lazo desactivado</string>
     <string name="openloop_newsuggestion">Nueva propuesta disponible</string>
     <string name="carbssuggestion">Sugerencia de carbohidratos</string>
     <string name="unsupportednsversion">Versión no aceptada de Nightscout</string>
@@ -151,7 +151,7 @@
     <string name="old_master_password">Contraseña Maestra antigua</string>
     <string name="different_password_used">Este archivo se ha exportado y cifrado con una contraseña maestra diferente. Insertar contraseña maestra antigua para descifrar el archivo.</string>
     <string name="master_password_will_be_replaced">Como resultado de la importación correcta, la contraseña maestra actual SE SUSTITUIRÁ por la contraseña maestra antigua!</string>
-    <string name="check_preferences_before_import">Por favor, compruebe las preferencias antes de importar:</string>
+    <string name="check_preferences_before_import">Por favor, comprueba los ajustes antes de importar:</string>
     <string name="check_preferences_cannot_import">¡Las preferencias no se pueden importar!</string>
     <string name="check_preferences_dangerous_import">¡Las preferencias no se deben importar!</string>
     <string name="check_preferences_details_btn">Explicar problemas de importación…</string>
@@ -159,8 +159,8 @@
     <string name="check_preferences_import_btn">Importar</string>
     <string name="check_preferences_import_anyway_btn">Importar de todos modos (¡PELIGROSO!)</string>
     <string name="end_user_license_agreement">Acuerdo de licencia de usuario final</string>
-    <string name="end_user_license_agreement_text">NO DEBE UTILIZARSE PARA TOMAR DECISIONES MÉDICAS. NO HAY NINGUNA GARANTÍA PARA EL PROGRAMA, EN LA MEDIDA PERMITIDA POR LA LEY APLICABLE. EXCEPTO CUANDO SE INDIQUE LO CONTRARIO POR ESCRITO, LOS TITULARES DE LOS DERECHOS DE AUTOR Y/O OTRAS PARTES PROPORCIONAN EL PROGRAMA \"TAL CUAL\" SIN GARANTÍA DE NINGÚN TIPO, YA SEA EXPRESA O IMPLÍCITA, INCLUIDAS, ENTRE OTRAS, LAS GARANTÍAS IMPLÍCITAS DE COMERCIABILIDAD Y ADECUACIÓN PARA UN PROPÓSITO EN PARTICULAR. TODO EL RIESGO EN CUANTO A LA CALIDAD Y EL RENDIMIENTO DEL PROGRAMA ES SUYA. SI EL PROGRAMA TUVIERA UN ERROR, USTED ASUME EL COSTE DE TODO SERVICIO, REPARACIÓN O CORRECCIÓN NECESARIOS.</string>
-    <string name="end_user_license_agreement_i_understand">ENTIENDO Y ACEPTO</string>
+    <string name="end_user_license_agreement_text">NO DEBE UTILIZARSE PARA TOMAR DECISIONES MÉDICAS. NO HAY NINGUNA GARANTÍA EN EL PROGRAMA, EN LA MEDIDA PERMITIDA POR LA LEY APLICABLE. EXCEPTO CUANDO SE INDIQUE LO CONTRARIO POR ESCRITO, LOS TITULARES DE LOS DERECHOS DE AUTOR Y/O OTRAS PARTES, PROPORCIONAN EL PROGRAMA \"TAL CUAL\", SIN GARANTÍA DE NINGÚN TIPO, YA SEA EXPRESA O IMPLÍCITA, INCLUIDAS, ENTRE OTRAS, LAS GARANTÍAS IMPLÍCITAS DE COMERCIABILIDAD Y ADECUACIÓN PARA UN PROPÓSITO EN PARTICULAR. TODO EL RIESGO EN CUANTO A LA CALIDAD Y EL RENDIMIENTO DEL PROGRAMA ES SUYA. SI EL PROGRAMA TUVIERA UN ERROR, USTED ASUME EL COSTE DE TODOS LOS SERVICIOS, REPARACIONES O CORRECCIONES NECESARIAS.</string>
+    <string name="end_user_license_agreement_i_understand">LO ENTIENDO Y ACEPTO</string>
     <string name="save">Guardar</string>
     <string name="reloadprofile">Recargar Perfil</string>
     <string name="smscommunicator">Comunicador SMS</string>
@@ -200,9 +200,9 @@
     <string name="smscommunicator_carbsreplywithcode">Para introducir %1$dg en %2$s responder con código %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">Para iniciar una basal de %1$d%% durante %2$d min, responder con el código %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">Para cancelar lazo por %1$d minutos responde con código %2$s</string>
-    <string name="smscommunicator_loopresumereplywithcode">Para retomar el lazo responder con código %1$s</string>
-    <string name="smscommunicator_loopenablereplywithcode">Para activar el lazo responder con código %1$s</string>
-    <string name="smscommunicator_loopdisablereplywithcode">Para desactivar el lazo responder con código %1$s</string>
+    <string name="smscommunicator_loopresumereplywithcode">Para reanudar el lazo, responder con código %1$s</string>
+    <string name="smscommunicator_loopenablereplywithcode">Para activar el lazo, responder con código %1$s</string>
+    <string name="smscommunicator_loopdisablereplywithcode">Para desactivar el lazo, responder con código %1$s</string>
     <string name="smscommunicator_tempbasalset">Basal temporal %1$.2fU/h para %2$d min iniciada correctamente</string>
     <string name="smscommunicator_extendedset">Bolo ampliado de %1$.2fU durante %2$d min se inició correctamente</string>
     <string name="smscommunicator_carbsset">Carbohidratos %1$d  g ingresados correctamente</string>
@@ -332,12 +332,12 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Usuario</string>
     <string name="Glimp">Glimp</string>
     <string name="needwhitelisting">%1$s necesita una optimización de la batería para funcionar óptimamente</string>
-    <string name="loopsuspended">Loop desactivado</string>
+    <string name="loopsuspended">Lazo suspendido</string>
     <string name="loopsuspendedfor">Desactivado (%1$d m)</string>
-    <string name="suspendloopfor1h">Desactivar lazo por 1h</string>
-    <string name="suspendloopfor2h">Desactivar lazo por 2h</string>
-    <string name="suspendloopfor3h">Desactivar lazo por 3h</string>
-    <string name="suspendloopfor10h">Desactivar lazo por 10 h</string>
+    <string name="suspendloopfor1h">Suspender lazo durante 1 hora</string>
+    <string name="suspendloopfor2h">Suspender lazo durante 2 horas</string>
+    <string name="suspendloopfor3h">Suspender lazo durante 3 horas</string>
+    <string name="suspendloopfor10h">Suspender lazo durante 10 horas</string>
     <string name="disconnectpump">Desconectar bomba</string>
     <string name="disconnectpumpfor15m">Desconectar bomba por 15 min</string>
     <string name="disconnectpumpfor30m">Desconectar bomba por 30 min</string>
@@ -353,14 +353,14 @@
     <string name="resume">Reanudar</string>
     <string name="reconnect">Vuelva a conectar la bomba</string>
     <string name="smscommunicator_wrongduration">Duración incorrecta</string>
-    <string name="smscommunicator_loopsuspended">Lazo desactivado</string>
-    <string name="smscommunicator_loopresumed">Lazo reiniciado</string>
+    <string name="smscommunicator_loopsuspended">Lazo suspendido</string>
+    <string name="smscommunicator_loopresumed">Lazo reanudado</string>
     <string name="treatments_wizard_bgtrend_label">Tend. 15 min</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="superbolus">Superbolo</string>
     <string name="ns_logappstartedevent">Registrar el inicio de la aplicación en NS</string>
-    <string name="restartingapp">Saliendo de la aplicación para aplicar ajustes.</string>
-    <string name="configbuilder_insulin_description">¿Qué tipo de insulina está utilizando?</string>
+    <string name="restartingapp">Saliendo de la aplicación para aplicar los ajustes.</string>
+    <string name="configbuilder_insulin_description">¿Qué tipo de insulina estás utilizando?</string>
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
     <string name="ultrafastactinginsulincomment">Fiasp</string>
     <string name="insulin_shortname">INS</string>
@@ -562,7 +562,7 @@
     <string name="overview_show_basals">Basales</string>
     <string name="no_action_selected">Ninguna acción seleccionada, nada sucederá</string>
     <string name="start_hypo_tt">Iniciar OT Hipo</string>
-    <string name="closed_loop_disabled_on_dev_branch">Ejecutando versión dev. Lazo cerrado no disponible.</string>
+    <string name="closed_loop_disabled_on_dev_branch">Ejecutando la versión dev. Lazo cerrado no disponible.</string>
     <string name="engineering_mode_enabled">Modo de ingeniería activado</string>
     <string name="profileswitch_ismissing">Falta Cambio de Perfil. Haga un Cambio de Perfil o presione \"Activar perfil\" en PerfilLocal.</string>
     <string name="pumpisnottempbasalcapable">La bomba no tiene capacidad basal temporal</string>
@@ -593,7 +593,7 @@
     <string name="absorption_cutoff_summary">Tiempo en el que cualquier comida se considera absorbida. Los carbohidratos restantes serán cortados. </string>
     <string name="overview_show_notes_field_in_dialogs_title">Mostrar el campo notas en diálogos de tratamientos</string>
     <string name="next_button">Siguiente</string>
-    <string name="previous_button">Ant</string>
+    <string name="previous_button">Anterior</string>
     <string name="nav_setupwizard">Asistente de configuración</string>
     <string name="setupwizard_finish">FINALIZAR</string>
     <string name="firstinsulinincrement">Primer incremento de insulina</string>
@@ -623,7 +623,7 @@
     <string name="wear_display_settings">Ajustes de pantalla</string>
     <string name="wear_general_settings">Configuración general</string>
     <string name="enable_nsclient">Activar NSClient</string>
-    <string name="welcometosetupwizard">Bienvenido al asistente de instalación. Le guiará a través del proceso de configuración\n</string>
+    <string name="welcometosetupwizard">Bienvenido al asistente de instalación, que te guiará en el proceso de configuración\n</string>
     <string name="readstatus">Leer estado</string>
     <string name="exitwizard">Saltar asistente de configuración</string>
     <string name="setupwizard_loop_description">Presiona el botón de abajo para permitir que AndroidAPS pueda sugerir/realizar cambios en las basales</string>
@@ -637,7 +637,7 @@
     <string name="startobjective">Comienza tu primer objetivo</string>
     <string name="permission">Permiso</string>
     <string name="askforpermission">Pedir permiso</string>
-    <string name="needsystemwindowpermission">La aplicación necesita permiso de ventana del sistema para las notificaciones</string>
+    <string name="needsystemwindowpermission">La aplicación necesita permisos del sistema para poder mostrarse sobre otras aplicaciones, para las notificaciones</string>
     <string name="needlocationpermission">La aplicación necesita permiso de ubicación para poder buscar dispositivos Bluetooth y redes WiFi</string>
     <string name="needstoragepermission">La aplicación necesita permiso de almacenamiento para poder almacenar archivos de registro y valores de exportación</string>
     <string name="request">Solicitar</string>
@@ -660,7 +660,7 @@
     <string name="resistance_lowers_target_summary">Cuando se detecta resistencia a la insulina, disminuye el objetivo de glucosa</string>
     <string name="sensitivity_raises_target_title">Sensibilidad aumenta el objetivo</string>
     <string name="sensitivity_raises_target_summary">Cuando se detecta sensibilidad a la insulina, aumenta el objetivo de glucosa</string>
-    <string name="careportal_removestartedevents">Limpiar eventos AndroidAPS iniciado</string>
+    <string name="careportal_removestartedevents">Comenzó la limpieza de AndroidAPS</string>
     <string name="storedsettingsfound">Encontrados ajustes de configuración</string>
     <string name="allow_hardware_pump_text">Atención: si activas y conectas la bomba con AndroidAPS, AndroidAPS sobrescribirá los ajustes de basales del perfil de la bomba, con los establecidos en el perfil de AndroidAPS. Comprueba que tengas el perfil basal correcto en AndroidAPS. Si no estás seguro, o no quieres sobrescribir los ajustes basales en la bomba, presiona cancelar y repite la vinculación más adelante.</string>
     <string name="error_adding_treatment_title">Datos de tratamiento incompletos</string>
@@ -719,7 +719,7 @@
     <string name="old_version">versión antigua</string>
     <string name="very_old_version">versión muy antigua</string>
     <string name="application_expired">Aplicación caducada</string>
-    <string name="new_version_warning">Nueva versión desde al menos %1$d dias disponible! Respaldo a LGS después de %2$d días, se deshabilitará el lazo después de %3$d días</string>
+    <string name="new_version_warning">Nueva versión disponible de al menos %1$d días. Soporte a función de suspensión por glucosa baja (LGS) durante %2$d días. Después se deshabilitará el lazo en %3$d días</string>
     <string name="twohours">2h</string>
     <string name="dexcom_app_patched">Dexcom (BYODA)</string>
     <string name="dexcom_short">BYODA</string>
@@ -902,6 +902,6 @@
     <string name="recalculated_data_used">Datos recalculados utilizados</string>
     <string name="bg_too_close">Datos de glucosa demasiado cercanos:\n%1$s\n%2$s</string>
     <string name="identification">Identificación (correo electrónico, FB, nick de Discord, etc.)</string>
-    <string name="identification_not_set">Identificación no establecida en modo dev</string>
+    <string name="identification_not_set">Identificación no establecida en el modo dev</string>
     <string name="not_available_full">No disponible</string>
 </resources>
