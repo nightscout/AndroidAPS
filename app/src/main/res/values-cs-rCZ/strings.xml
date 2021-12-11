@@ -57,7 +57,7 @@
     <string name="treatments_wizard_tt_label">DC</string>
     <string name="treatments_wizard_carbs_label">Sacharidy</string>
     <string name="treatments_wizard_correction_label">Korekce</string>
-    <string name="treatments_wizard_bolusiob_label">Bolusové IOB</string>
+    <string name="bolus_iob_label">Bolusové IOB</string>
     <string name="openapsma_run">Spustit teď</string>
     <string name="vitualpump_label">VIRTUÁLNÍ PUMPA</string>
     <string name="openapsma_lastrun_label">Poslední spuštění</string>
@@ -122,9 +122,9 @@
     <string name="careportal_newnstreatment_other">Jiné</string>
     <string name="careportal_newnstreatment_meter">Glukoměr</string>
     <string name="careportal_newnstreatment_sensor">Senzor</string>
-    <string name="careportal_newnstreatment_carbtime_label">Čas jídla</string>
+    <string name="carb_time_label">Čas jídla</string>
     <string name="careportal_newnstreatment_duration_label">Trvání</string>
-    <string name="careportal_newnstreatment_profile_label">Profil</string>
+    <string name="profile_label">Profil</string>
     <string name="careportal_newnstreatment_glucosetype">Zadání glykémie</string>
     <string name="overview_tempbasal_button">Dočasný bazál</string>
     <string name="overview_extendedbolus_button">Prodloužený bolus</string>
@@ -355,7 +355,7 @@
     <string name="smscommunicator_wrongduration">Chybná doba trvání</string>
     <string name="smscommunicator_loopsuspended">Smyčka pozastavena</string>
     <string name="smscommunicator_loopresumed">Smyčka obnovena</string>
-    <string name="treatments_wizard_bgtrend_label">15min trend</string>
+    <string name="bg_trend_label">15min trend</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Zaznamenávat spuštění aplikace do NS</string>

@@ -153,11 +153,11 @@ class CareDialog : DialogFragmentWithDate() {
         }
 
         if (profileFunction.getUnits() == GlucoseUnit.MMOL) {
-            binding.bgunits.text = rh.gs(R.string.mmol)
+            binding.bgUnits.text = rh.gs(R.string.mmol)
             binding.bg.setParams(savedInstanceState?.getDouble("bg")
                 ?: bg, 2.0, 30.0, 0.1, DecimalFormat("0.0"), false, binding.okcancel.ok, bgTextWatcher)
         } else {
-            binding.bgunits.text = rh.gs(R.string.mgdl)
+            binding.bgUnits.text = rh.gs(R.string.mgdl)
             binding.bg.setParams(savedInstanceState?.getDouble("bg")
                 ?: bg, 36.0, 500.0, 1.0, DecimalFormat("0"), false, binding.okcancel.ok, bgTextWatcher)
         }
@@ -204,7 +204,7 @@ class CareDialog : DialogFragmentWithDate() {
             actions.add(rh.gs(R.string.treatments_wizard_bg_label) + ": " + Profile.toCurrentUnitsString(profileFunction, binding.bg.value) + " " + rh.gs(unitResId))
             therapyEvent.glucoseType = meterType
             therapyEvent.glucose = binding.bg.value
-            valuesWithUnit.add(ValueWithUnit.fromGlucoseUnit(binding.bg.value.toDouble(), profileFunction.getUnits().asText))
+            valuesWithUnit.add(ValueWithUnit.fromGlucoseUnit(binding.bg.value, profileFunction.getUnits().asText))
             valuesWithUnit.add(ValueWithUnit.TherapyEventMeterType(meterType))
         }
         if (options == EventType.NOTE || options == EventType.EXERCISE) {
@@ -222,7 +222,7 @@ class CareDialog : DialogFragmentWithDate() {
 
         therapyEvent.enteredBy = enteredBy
 
-        var source = when  (options) {
+        val source = when  (options) {
             EventType.BGCHECK        -> Sources.BgCheck
             EventType.SENSOR_INSERT  -> Sources.SensorInsert
             EventType.BATTERY_CHANGE -> Sources.BatteryChange

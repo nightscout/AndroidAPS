@@ -57,7 +57,7 @@
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">פחמימות</string>
     <string name="treatments_wizard_correction_label">תיקון</string>
-    <string name="treatments_wizard_bolusiob_label">בולוס פעיל</string>
+    <string name="bolus_iob_label">בולוס פעיל</string>
     <string name="openapsma_run">בצע</string>
     <string name="vitualpump_label">משאבה וירטואלית</string>
     <string name="openapsma_lastrun_label">ההפעלה האחרונה</string>
@@ -122,9 +122,9 @@
     <string name="careportal_newnstreatment_other">אחר</string>
     <string name="careportal_newnstreatment_meter">מד</string>
     <string name="careportal_newnstreatment_sensor">חיישן</string>
-    <string name="careportal_newnstreatment_carbtime_label">זמן פחמימות</string>
+    <string name="carb_time_label">זמן פחמימות</string>
     <string name="careportal_newnstreatment_duration_label">משך</string>
-    <string name="careportal_newnstreatment_profile_label">פרופיל</string>
+    <string name="profile_label">פרופיל</string>
     <string name="careportal_newnstreatment_glucosetype">סוג גלוקוז</string>
     <string name="overview_tempbasal_button">בזאלי זמני</string>
     <string name="overview_extendedbolus_button">בולוס ממושך</string>
@@ -355,7 +355,7 @@
     <string name="smscommunicator_wrongduration">משך שגוי</string>
     <string name="smscommunicator_loopsuspended">לולאה מושהית</string>
     <string name="smscommunicator_loopresumed">לולאה חודשה</string>
-    <string name="treatments_wizard_bgtrend_label">מגמת 15 דקות</string>
+    <string name="bg_trend_label">מגמת 15 דקות</string>
     <string name="treatments_wizard_cob_label">פחמ\' פעילות</string>
     <string name="superbolus">סופר בולוס</string>
     <string name="ns_logappstartedevent">רשום הפעלת AAPS ב-Nightscout</string>

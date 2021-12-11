@@ -58,7 +58,7 @@ Eversense-appen.</string>
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">Kolhydrater</string>
     <string name="treatments_wizard_correction_label">Korrektion</string>
-    <string name="treatments_wizard_bolusiob_label">Bolus IOB</string>
+    <string name="bolus_iob_label">Bolus IOB</string>
     <string name="openapsma_run">Utför nu</string>
     <string name="vitualpump_label">Virtuell pump</string>
     <string name="openapsma_lastrun_label">Senaste beräkning</string>
@@ -122,9 +122,9 @@ Eversense-appen.</string>
     <string name="careportal_newnstreatment_other">Annat</string>
     <string name="careportal_newnstreatment_meter">Mätare</string>
     <string name="careportal_newnstreatment_sensor">Sensor</string>
-    <string name="careportal_newnstreatment_carbtime_label">KH-tid</string>
+    <string name="carb_time_label">KH-tid</string>
     <string name="careportal_newnstreatment_duration_label">Duration</string>
-    <string name="careportal_newnstreatment_profile_label">Profil</string>
+    <string name="profile_label">Profil</string>
     <string name="careportal_newnstreatment_glucosetype">Glukostyp</string>
     <string name="overview_tempbasal_button">Temp basal</string>
     <string name="overview_extendedbolus_button">Förlängd bolus</string>
@@ -355,7 +355,7 @@ Eversense-appen.</string>
     <string name="smscommunicator_wrongduration">Fel duration</string>
     <string name="smscommunicator_loopsuspended">Loop pausad</string>
     <string name="smscommunicator_loopresumed">Loop återupptagen</string>
-    <string name="treatments_wizard_bgtrend_label">15 min trend</string>
+    <string name="bg_trend_label">15 min trend</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Rapportera appstart till Nightscout</string>

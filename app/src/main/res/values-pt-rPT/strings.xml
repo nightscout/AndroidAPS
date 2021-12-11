@@ -57,7 +57,7 @@
     <string name="treatments_wizard_tt_label">AT</string>
     <string name="treatments_wizard_carbs_label">Hidratos</string>
     <string name="treatments_wizard_correction_label">Corr</string>
-    <string name="treatments_wizard_bolusiob_label">Bólus - IA</string>
+    <string name="bolus_iob_label">Bólus - IA</string>
     <string name="openapsma_run">Executar agora</string>
     <string name="vitualpump_label">BOMBA VIRTUAL</string>
     <string name="openapsma_lastrun_label">Última execução</string>
@@ -121,9 +121,9 @@
     <string name="careportal_newnstreatment_other">Outro</string>
     <string name="careportal_newnstreatment_meter">Medidor</string>
     <string name="careportal_newnstreatment_sensor">Sensor</string>
-    <string name="careportal_newnstreatment_carbtime_label">Hora Hidratos</string>
+    <string name="carb_time_label">Hora Hidratos</string>
     <string name="careportal_newnstreatment_duration_label">Duração</string>
-    <string name="careportal_newnstreatment_profile_label">Perfil</string>
+    <string name="profile_label">Perfil</string>
     <string name="careportal_newnstreatment_glucosetype">Tipo de Glicose</string>
     <string name="overview_tempbasal_button">Basal Temporária</string>
     <string name="overview_extendedbolus_button">Bólus Prolongado</string>
@@ -353,7 +353,7 @@
     <string name="smscommunicator_wrongduration">Duração errada</string>
     <string name="smscommunicator_loopsuspended">Loop suspenso</string>
     <string name="smscommunicator_loopresumed">Loop retomado</string>
-    <string name="treatments_wizard_bgtrend_label">Tendência 15 min</string>
+    <string name="bg_trend_label">Tendência 15 min</string>
     <string name="treatments_wizard_cob_label">HCA</string>
     <string name="superbolus">Superbólus</string>
     <string name="ns_logappstartedevent">Registar inicio da app no NS</string>

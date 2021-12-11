@@ -57,7 +57,7 @@
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">Karbo</string>
     <string name="treatments_wizard_correction_label">Korr</string>
-    <string name="treatments_wizard_bolusiob_label">Bolus IOB</string>
+    <string name="bolus_iob_label">Bolus IOB</string>
     <string name="openapsma_run">Utfør nå</string>
     <string name="vitualpump_label">VIRTUELL PUMPE</string>
     <string name="openapsma_lastrun_label">Siste beregning</string>
@@ -122,9 +122,9 @@
     <string name="careportal_newnstreatment_other">Annet</string>
     <string name="careportal_newnstreatment_meter">Meter</string>
     <string name="careportal_newnstreatment_sensor">Sensor</string>
-    <string name="careportal_newnstreatment_carbtime_label">Karbo tid</string>
+    <string name="carb_time_label">Karbo tid</string>
     <string name="careportal_newnstreatment_duration_label">Varighet</string>
-    <string name="careportal_newnstreatment_profile_label">Profil</string>
+    <string name="profile_label">Profil</string>
     <string name="careportal_newnstreatment_glucosetype">Glukosetype</string>
     <string name="overview_tempbasal_button">Temp basal</string>
     <string name="overview_extendedbolus_button">Forlenget bolus</string>
@@ -355,7 +355,7 @@
     <string name="smscommunicator_wrongduration">Feil varighet</string>
     <string name="smscommunicator_loopsuspended">Loop er pauset</string>
     <string name="smscommunicator_loopresumed">Loop gjenopptatt</string>
-    <string name="treatments_wizard_bgtrend_label">15 min trend</string>
+    <string name="bg_trend_label">15 min trend</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Logg app start til NS</string>

@@ -57,7 +57,7 @@
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">Carbohidrați</string>
     <string name="treatments_wizard_correction_label">Corecție</string>
-    <string name="treatments_wizard_bolusiob_label">IOB bolus</string>
+    <string name="bolus_iob_label">IOB bolus</string>
     <string name="openapsma_run">Execută</string>
     <string name="vitualpump_label">POMPĂ VIRTUALĂ</string>
     <string name="openapsma_lastrun_label">Ultima execuție</string>
@@ -121,9 +121,9 @@
     <string name="careportal_newnstreatment_other">Altul</string>
     <string name="careportal_newnstreatment_meter">Glucometru</string>
     <string name="careportal_newnstreatment_sensor">Senzor</string>
-    <string name="careportal_newnstreatment_carbtime_label">Ora carbohidrați</string>
+    <string name="carb_time_label">Ora carbohidrați</string>
     <string name="careportal_newnstreatment_duration_label">Durată</string>
-    <string name="careportal_newnstreatment_profile_label">Profil</string>
+    <string name="profile_label">Profil</string>
     <string name="careportal_newnstreatment_glucosetype">Tip glicemie</string>
     <string name="overview_tempbasal_button">Bazală temporară</string>
     <string name="overview_extendedbolus_button">Bolus extins</string>
@@ -354,7 +354,7 @@
     <string name="smscommunicator_wrongduration">Durată greșită</string>
     <string name="smscommunicator_loopsuspended">Buclă suspendată</string>
     <string name="smscommunicator_loopresumed">Buclă restabilită</string>
-    <string name="treatments_wizard_bgtrend_label">Tendință 15min</string>
+    <string name="bg_trend_label">Tendință 15min</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Înregistrează pornirea aplicației în NS</string>

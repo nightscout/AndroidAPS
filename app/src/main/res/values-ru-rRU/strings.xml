@@ -57,7 +57,7 @@
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">углеводы</string>
     <string name="treatments_wizard_correction_label">коррекция</string>
-    <string name="treatments_wizard_bolusiob_label">болюс IOB</string>
+    <string name="bolus_iob_label">болюс IOB</string>
     <string name="openapsma_run">выполнить сейчас</string>
     <string name="vitualpump_label">ВИРТУАЛЬНАЯ ПОМПА</string>
     <string name="openapsma_lastrun_label">последнее выполненное</string>
@@ -122,9 +122,9 @@
     <string name="careportal_newnstreatment_other">другое</string>
     <string name="careportal_newnstreatment_meter">глюкометр</string>
     <string name="careportal_newnstreatment_sensor">сенсор</string>
-    <string name="careportal_newnstreatment_carbtime_label">Подождать до еды</string>
+    <string name="carb_time_label">Подождать до еды</string>
     <string name="careportal_newnstreatment_duration_label">Длительность действия</string>
-    <string name="careportal_newnstreatment_profile_label">профиль</string>
+    <string name="profile_label">профиль</string>
     <string name="careportal_newnstreatment_glucosetype">тип глюкозы</string>
     <string name="overview_tempbasal_button">ВремБазал</string>
     <string name="overview_extendedbolus_button">Пролонгированный болюс</string>
@@ -355,7 +355,7 @@
     <string name="smscommunicator_wrongduration">неверное значение длительности</string>
     <string name="smscommunicator_loopsuspended">ЗЦ остановлен</string>
     <string name="smscommunicator_loopresumed">ЗЦикл возобновлен</string>
-    <string name="treatments_wizard_bgtrend_label">15 мин тренд</string>
+    <string name="bg_trend_label">15 мин тренд</string>
     <string name="treatments_wizard_cob_label">активн углеводы</string>
     <string name="superbolus">суперболюс</string>
     <string name="ns_logappstartedevent">Передать в NS запись о начале работы приложения</string>

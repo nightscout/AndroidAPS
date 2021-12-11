@@ -57,7 +57,7 @@
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">Koolhydraten</string>
     <string name="treatments_wizard_correction_label">Correctie</string>
-    <string name="treatments_wizard_bolusiob_label">Bolus IOB</string>
+    <string name="bolus_iob_label">Bolus IOB</string>
     <string name="openapsma_run">Nu uitvoeren</string>
     <string name="vitualpump_label">VIRTUELE POMP</string>
     <string name="openapsma_lastrun_label">Laatste berekening</string>
@@ -122,9 +122,9 @@
     <string name="careportal_newnstreatment_other">Andere</string>
     <string name="careportal_newnstreatment_meter">Meter</string>
     <string name="careportal_newnstreatment_sensor">Sensor</string>
-    <string name="careportal_newnstreatment_carbtime_label">KH tijdsduur</string>
+    <string name="carb_time_label">KH tijdsduur</string>
     <string name="careportal_newnstreatment_duration_label">Tijdsduur</string>
-    <string name="careportal_newnstreatment_profile_label">Profiel</string>
+    <string name="profile_label">Profiel</string>
     <string name="careportal_newnstreatment_glucosetype">Glucose type</string>
     <string name="overview_tempbasal_button">Tijdelijk basaal</string>
     <string name="overview_extendedbolus_button">Vertraagde bolus</string>
@@ -355,7 +355,7 @@
     <string name="smscommunicator_wrongduration">Verkeerde tijdsduur</string>
     <string name="smscommunicator_loopsuspended">Loop onderbroken</string>
     <string name="smscommunicator_loopresumed">Loop hervat</string>
-    <string name="treatments_wizard_bgtrend_label">15min trend</string>
+    <string name="bg_trend_label">15min trend</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Log app start naar NS</string>

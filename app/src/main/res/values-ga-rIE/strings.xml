@@ -24,7 +24,7 @@
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">Carbí</string>
     <string name="treatments_wizard_correction_label">Cear</string>
-    <string name="treatments_wizard_bolusiob_label">Bólas IOB</string>
+    <string name="bolus_iob_label">Bólas IOB</string>
     <string name="openapsma_run">Reáchtáil anois</string>
     <string name="openapsma_lastrun_label">Reáchtáil deiridh</string>
     <string name="openapsma_glucosestatus_label">Glúcóis stádas</string>
@@ -55,7 +55,7 @@
     <string name="careportal_newnstreatment_other">Eile</string>
     <string name="careportal_newnstreatment_sensor">Braiteoir</string>
     <string name="careportal_newnstreatment_duration_label">Fad</string>
-    <string name="careportal_newnstreatment_profile_label">Próifíl</string>
+    <string name="profile_label">Próifíl</string>
     <string name="careportal_newnstreatment_glucosetype">Glúcóis cineál</string>
     <string name="exported">Easpórtáil Socruithe</string>
     <string name="export_to">Socruithe Easpórtáil chun</string>

@@ -57,7 +57,7 @@
     <string name="treatments_wizard_tt_label">Вр.цел</string>
     <string name="treatments_wizard_carbs_label">ВХ</string>
     <string name="treatments_wizard_correction_label">Корекция</string>
-    <string name="treatments_wizard_bolusiob_label">IOB от болуси</string>
+    <string name="bolus_iob_label">IOB от болуси</string>
     <string name="openapsma_run">Старт сега</string>
     <string name="vitualpump_label">ВИРТУАЛНА ПОМПА</string>
     <string name="openapsma_lastrun_label">Последно изпълнение</string>
@@ -121,9 +121,9 @@
     <string name="careportal_newnstreatment_other">Друго</string>
     <string name="careportal_newnstreatment_meter">Глюкомер</string>
     <string name="careportal_newnstreatment_sensor">Сензор</string>
-    <string name="careportal_newnstreatment_carbtime_label">ВХ след</string>
+    <string name="carb_time_label">ВХ след</string>
     <string name="careportal_newnstreatment_duration_label">Продължителност</string>
-    <string name="careportal_newnstreatment_profile_label">Профил</string>
+    <string name="profile_label">Профил</string>
     <string name="careportal_newnstreatment_glucosetype">Тип КЗ</string>
     <string name="overview_tempbasal_button">Временен базал</string>
     <string name="overview_extendedbolus_button">Удължен болус</string>
@@ -354,7 +354,7 @@
     <string name="smscommunicator_wrongduration">Грешна продължителност</string>
     <string name="smscommunicator_loopsuspended">APS забранен</string>
     <string name="smscommunicator_loopresumed">APS възобновен</string>
-    <string name="treatments_wizard_bgtrend_label">Δ за 15мин</string>
+    <string name="bg_trend_label">Δ за 15мин</string>
     <string name="treatments_wizard_cob_label">СОВ</string>
     <string name="superbolus">Суперболус</string>
     <string name="ns_logappstartedevent">Записвай всяко стартиране на AndroidAPS в NS</string>

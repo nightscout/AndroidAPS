@@ -51,7 +51,7 @@
     <string name="treatments_wizard_tt_label">临时目标</string>
     <string name="treatments_wizard_carbs_label">碳水化合物</string>
     <string name="treatments_wizard_correction_label">矫正值</string>
-    <string name="treatments_wizard_bolusiob_label">大剂量活性胰岛素IOB</string>
+    <string name="bolus_iob_label">大剂量活性胰岛素IOB</string>
     <string name="openapsma_run">现在运行</string>
     <string name="vitualpump_label">虚拟泵</string>
     <string name="openapsma_lastrun_label">上一次运行</string>
@@ -111,9 +111,9 @@
     <string name="careportal_newnstreatment_other">其他</string>
     <string name="careportal_newnstreatment_meter">血糖仪</string>
     <string name="careportal_newnstreatment_sensor">传感器</string>
-    <string name="careportal_newnstreatment_carbtime_label">碳水化合物时间</string>
+    <string name="carb_time_label">碳水化合物时间</string>
     <string name="careportal_newnstreatment_duration_label">持续时间</string>
-    <string name="careportal_newnstreatment_profile_label">配置文件</string>
+    <string name="profile_label">配置文件</string>
     <string name="careportal_newnstreatment_glucosetype">血糖类型</string>
     <string name="overview_tempbasal_button">临时基础</string>
     <string name="overview_extendedbolus_button">扩展大剂量</string>
@@ -271,7 +271,7 @@
     <string name="smscommunicator_wrongduration">错误的持续时间</string>
     <string name="smscommunicator_loopsuspended">闭环暂停了</string>
     <string name="smscommunicator_loopresumed">闭环恢复了</string>
-    <string name="treatments_wizard_bgtrend_label">15分钟 趋势</string>
+    <string name="bg_trend_label">15分钟 趋势</string>
     <string name="treatments_wizard_cob_label">碳水</string>
     <string name="superbolus">超级大剂量Superbolus</string>
     <string name="ns_logappstartedevent">记录app启动事件到NS服务器</string>

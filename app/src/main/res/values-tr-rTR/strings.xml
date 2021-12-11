@@ -57,7 +57,7 @@
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">Karbonhidrat</string>
     <string name="treatments_wizard_correction_label">Düzeltme</string>
-    <string name="treatments_wizard_bolusiob_label">Bolus IOB</string>
+    <string name="bolus_iob_label">Bolus IOB</string>
     <string name="openapsma_run">Şimdi Çalıştır</string>
     <string name="vitualpump_label">SANAL POMPA</string>
     <string name="openapsma_lastrun_label">Son Çalıştırma</string>
@@ -122,9 +122,9 @@
     <string name="careportal_newnstreatment_other">Diğer</string>
     <string name="careportal_newnstreatment_meter">Metre</string>
     <string name="careportal_newnstreatment_sensor">Sensör</string>
-    <string name="careportal_newnstreatment_carbtime_label">Karb. zamanı</string>
+    <string name="carb_time_label">Karb. zamanı</string>
     <string name="careportal_newnstreatment_duration_label">Süre</string>
-    <string name="careportal_newnstreatment_profile_label">Profil</string>
+    <string name="profile_label">Profil</string>
     <string name="careportal_newnstreatment_glucosetype">Glikoz türü</string>
     <string name="overview_tempbasal_button">Geçici Bazal</string>
     <string name="overview_extendedbolus_button">Yayma Bolus</string>
@@ -356,7 +356,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="smscommunicator_wrongduration">Yanlış süre</string>
     <string name="smscommunicator_loopsuspended">Döngü duraklatıldı</string>
     <string name="smscommunicator_loopresumed">Döngü devam ettirildi</string>
-    <string name="treatments_wizard_bgtrend_label">15 dk eğilim</string>
+    <string name="bg_trend_label">15 dk eğilim</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">NS\'a uygulama başlangıcını kaydet</string>
