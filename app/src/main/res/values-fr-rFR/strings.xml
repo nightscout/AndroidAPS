@@ -57,7 +57,6 @@
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">Glucides</string>
     <string name="treatments_wizard_correction_label">Correction</string>
-    <string name="bolus_iob_label">Bolus IA</string>
     <string name="openapsma_run">Exécuter maintenant</string>
     <string name="vitualpump_label">POMPE VIRTUELLE</string>
     <string name="openapsma_lastrun_label">Dernière exécution</string>
@@ -122,9 +121,7 @@
     <string name="careportal_newnstreatment_other">Autre</string>
     <string name="careportal_newnstreatment_meter">Lecteur</string>
     <string name="careportal_newnstreatment_sensor">Capteur</string>
-    <string name="carb_time_label">Décalage horaire</string>
     <string name="careportal_newnstreatment_duration_label">Durée</string>
-    <string name="profile_label">Profil</string>
     <string name="careportal_newnstreatment_glucosetype">Source de Glycémie</string>
     <string name="overview_tempbasal_button">Basal Temporaire</string>
     <string name="overview_extendedbolus_button">Bolus étendu</string>
@@ -356,7 +353,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="smscommunicator_wrongduration">Durée incorrecte</string>
     <string name="smscommunicator_loopsuspended">Boucle suspendue</string>
     <string name="smscommunicator_loopresumed">Boucle relancée</string>
-    <string name="bg_trend_label">Delta 15 min</string>
     <string name="treatments_wizard_cob_label">GA</string>
     <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Démarrage AAPS entré dans NS</string>
