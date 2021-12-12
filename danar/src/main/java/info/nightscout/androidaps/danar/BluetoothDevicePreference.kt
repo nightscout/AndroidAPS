@@ -1,35 +1,22 @@
-package info.nightscout.androidaps.danar;
+package info.nightscout.androidaps.danar
 
-import android.bluetooth.*;
-import android.content.Context;
-import androidx.preference.ListPreference;
-import android.util.AttributeSet;
+import kotlin.jvm.JvmOverloads
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothManager
+import android.content.Context
+import android.util.AttributeSet
+import androidx.preference.ListPreference
+import java.util.*
 
-import java.util.Set;
-import java.util.Vector;
-
-public class BluetoothDevicePreference extends ListPreference {
-
-    public BluetoothDevicePreference(Context context, AttributeSet attrs) {
-        super(context, attrs);
-
-        BluetoothAdapter bta = BluetoothAdapter.getDefaultAdapter();
-        Vector<CharSequence> entries = new Vector<CharSequence>();
-        if (bta != null) {
-            Set<BluetoothDevice> pairedDevices = bta.getBondedDevices();
-            for (BluetoothDevice dev : pairedDevices) {
-                String name = dev.getName();
-                if(name != null) {
-                    entries.add(name);
-                }
-            }
+class BluetoothDevicePreference @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : ListPreference(context, attrs) {
+    init {
+        val entries = Vector<CharSequence>()
+        (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter?.let { bta ->
+            for (dev in bta.bondedDevices)
+                dev.name?.let { name -> entries.add(name) }
         }
-        setEntries(entries.toArray(new CharSequence[0]));
-        setEntryValues(entries.toArray(new CharSequence[0]));
+        setEntries(entries.toTypedArray())
+        entryValues = entries.toTypedArray()
     }
-
-    public BluetoothDevicePreference(Context context) {
-        this(context, null);
-    }
-
 }
