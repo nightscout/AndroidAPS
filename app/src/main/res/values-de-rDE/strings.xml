@@ -57,6 +57,7 @@
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">Kohlenhydrate</string>
     <string name="treatments_wizard_correction_label">Korr</string>
+    <string name="bolus_iob_label">Bolus-IOB</string>
     <string name="openapsma_run">Ausführen</string>
     <string name="vitualpump_label">VIRTUELLE PUMPE</string>
     <string name="openapsma_lastrun_label">Letzte Ausführung</string>
@@ -121,7 +122,9 @@
     <string name="careportal_newnstreatment_other">Anderes</string>
     <string name="careportal_newnstreatment_meter">Messgerät</string>
     <string name="careportal_newnstreatment_sensor">Sensor</string>
+    <string name="carb_time_label">KH-Zeit</string>
     <string name="careportal_newnstreatment_duration_label">Dauer</string>
+    <string name="profile_label">Profil</string>
     <string name="careportal_newnstreatment_glucosetype">Glukoseart</string>
     <string name="overview_tempbasal_button">TBR</string>
     <string name="overview_extendedbolus_button">Verzögerter Bolus</string>
@@ -352,6 +355,7 @@
     <string name="smscommunicator_wrongduration">Falsche Dauer</string>
     <string name="smscommunicator_loopsuspended">Loop pausiert</string>
     <string name="smscommunicator_loopresumed">Loop wurde fortgesetzt</string>
+    <string name="bg_trend_label">15 min Trend</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Logge App-Start in Nightscout</string>
