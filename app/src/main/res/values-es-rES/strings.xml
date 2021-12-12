@@ -247,7 +247,7 @@
     <string name="resend_all_data">Reenviar todos los datos</string>
     <string name="open_settings_on_wear">Abrir ajustes en el reloj</string>
     <string name="basal_rate">Ratio Basal:</string>
-    <string name="basalvaluebelowminimum">Valor Basal por debajo del mínimo. Perfil NO aplicado!</string>
+    <string name="basalvaluebelowminimum">Valor basal por debajo del mínimo. Perfil no establecido.</string>
     <string name="sms_actualbg">Glucosa:</string>
     <string name="sms_lastbg">Última Glucosa:</string>
     <string name="mdi">MDI</string>
@@ -404,8 +404,8 @@
     <string name="careportal_age_label">Edad:</string>
     <string name="careportal_level_label">Nivel:</string>
     <string name="ns_alarmoptions">Opciones de alarmas</string>
-    <string name="ns_alarms">Crear notificaciones de alarmas NS</string>
-    <string name="ns_announcements">Crear notificaciones de avisos de NS</string>
+    <string name="ns_alarms">Crear notificaciones de alarmas desde Nightscout</string>
+    <string name="ns_announcements">Crear notificaciones desde Nightscout</string>
     <string name="nsalarm_staledatavalue_label">Datos antiguos limite [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Datos antiguos urgentes limite [min]</string>
     <string name="openapsama_autosens_period">Intervalo para autosens [h]</string>
