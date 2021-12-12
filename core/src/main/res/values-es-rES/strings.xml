@@ -6,7 +6,7 @@
     <string name="error">Error</string>
     <string name="not_set_short">No configurado</string>
     <string name="failedupdatebasalprofile">Error al actualizar el perfil basal</string>
-    <string name="profile_set_ok">Perfil basal actualizado en bomba</string>
+    <string name="profile_set_ok">Perfil basal actualizado en la bomba</string>
     <string name="invalidinput">Datos inválidos</string>
     <string name="tempbasaldeliveryerror">Basal Temporal no emitida</string>
     <string name="goingtodeliver">Entregando %1$.2f U</string>
@@ -401,7 +401,7 @@
     <string name="temp_target_value">Valor objetivo temporal</string>
     <string name="profile_dia">Valor DIA del perfil</string>
     <string name="profile_sensitivity_value">Valor de sensibilidad del perfil</string>
-    <string name="profile_max_daily_basal_value">Valor basal máximo del perfil</string>
+    <string name="profile_max_daily_basal_value">Máximo valor basal del perfil</string>
     <string name="current_basal_value">Valor basal actual</string>
     <string name="profile_carbs_ratio_value">Valor del ratio de carbohidratos de perfil</string>
     <string name="valuelimitedto">%1$.2f limitado a %2$.2f</string>
