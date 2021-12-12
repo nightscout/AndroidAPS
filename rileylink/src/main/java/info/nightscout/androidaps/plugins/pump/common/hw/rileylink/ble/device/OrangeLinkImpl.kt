@@ -67,7 +67,7 @@ class OrangeLinkImpl @Inject constructor(
 
     fun enableNotifications(): Boolean {
         aapsLogger.info(LTag.PUMPBTCOMM, "OrangeLinkImpl::enableNotifications")
-        val result: BLECommOperationResult = rileyLinkBLE.setNotification_blocking(
+        val result: BLECommOperationResult = rileyLinkBLE.setNotificationBlocking(
             UUID.fromString(GattAttributes.SERVICE_RADIO_ORANGE),  //
             UUID.fromString(GattAttributes.CHARA_NOTIFICATION_ORANGE)
         )
@@ -156,7 +156,7 @@ class OrangeLinkImpl @Inject constructor(
     fun stopScan() {
         handler.removeMessages(TIME_OUT_WHAT)
 
-        val bluetoothAdapter = rileyLinkBLE.bluetoothAdapter ?: return
+        val bluetoothAdapter = rileyLinkBLE.bluetoothAdapter
 
         try {
             val bluetoothLeScanner: BluetoothLeScanner = bluetoothAdapter.bluetoothLeScanner
@@ -183,9 +183,7 @@ class OrangeLinkImpl @Inject constructor(
 
     private fun isBluetoothAvailable(): Boolean {
         val bluetoothAdapter = rileyLinkBLE.bluetoothAdapter
-        return bluetoothAdapter != null &&
-            bluetoothAdapter.isEnabled &&
-            bluetoothAdapter.state == BluetoothAdapter.STATE_ON
+        return bluetoothAdapter.isEnabled && bluetoothAdapter.state == BluetoothAdapter.STATE_ON
     }
 
     companion object {

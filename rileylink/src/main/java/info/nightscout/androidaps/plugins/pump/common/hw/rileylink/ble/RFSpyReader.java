@@ -107,7 +107,7 @@ public class RFSpyReader {
                                 + SystemClock.uptimeMillis());
                         SystemClock.sleep(100);
                         SystemClock.sleep(1);
-                        result = rileyLinkBle.readCharacteristic_blocking(serviceUUID, radioDataUUID);
+                        result = rileyLinkBle.readCharacteristicBlocking(serviceUUID, radioDataUUID);
                         SystemClock.sleep(100);
 
                         if (result.resultCode == BLECommOperationResult.RESULT_SUCCESS) {

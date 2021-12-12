@@ -116,7 +116,7 @@ public class RFSpy {
     }
 
     public Integer retrieveBatteryLevel() {
-        BLECommOperationResult result = rileyLinkBle.readCharacteristic_blocking(batteryServiceUUID, batteryLevelUUID);
+        BLECommOperationResult result = rileyLinkBle.readCharacteristicBlocking(batteryServiceUUID, batteryLevelUUID);
         if (result.resultCode == BLECommOperationResult.RESULT_SUCCESS) {
             if (ArrayUtils.isNotEmpty(result.value)) {
                 int value = result.value[0];
@@ -134,7 +134,7 @@ public class RFSpy {
     // This gets the version from the BLE113, not from the CC1110.
     // I.e., this gets the version from the BLE interface, not from the radio.
     public String getVersion() {
-        BLECommOperationResult result = rileyLinkBle.readCharacteristic_blocking(radioServiceUUID, radioVersionUUID);
+        BLECommOperationResult result = rileyLinkBle.readCharacteristicBlocking(radioServiceUUID, radioVersionUUID);
         if (result.resultCode == BLECommOperationResult.RESULT_SUCCESS) {
             String version = StringUtil.fromBytes(result.value);
             aapsLogger.debug(LTag.PUMPBTCOMM, "BLE Version: " + version);
@@ -208,7 +208,7 @@ public class RFSpy {
 
         aapsLogger.debug(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "writeToData (raw=%s)", ByteUtil.shortHexString(prepended)));
 
-        BLECommOperationResult writeCheck = rileyLinkBle.writeCharacteristic_blocking(radioServiceUUID, radioDataUUID,
+        BLECommOperationResult writeCheck = rileyLinkBle.writeCharacteristicBlocking(radioServiceUUID, radioDataUUID,
                 prepended);
         if (writeCheck.resultCode != BLECommOperationResult.RESULT_SUCCESS) {
             aapsLogger.error(LTag.PUMPBTCOMM, "BLE Write operation failed, code=" + writeCheck.resultCode);
