@@ -227,8 +227,8 @@
     <string name="mealbolus">Bolo Comida</string>
     <string name="correctionbous">Corrección</string>
     <string name="actions">Acciones</string>
-    <string name="ns_upload_only">(PELIGROSO INHABILITAR) Sólo carga NS</string>
-    <string name="ns_upload_only_summary">Sólo subir a NS (sincronización desactivada). No es efectivo en SGV a menos que se seleccione una fuente local como xDrip+. No es efectivo en perfiles mientras se utiliza perfiles NS.\n!!! ¡¡ADVERTENCIA!!! Desactivar esta opción puede causar mal funcionamiento y sobredosis de insulina si cualquiera de sus componentes (AAPS, NS, xDrip+) está mal configurado. ¡Vigile cuidadosamente si los datos mostrados por AAPS coinciden con el estado de la bomba!</string>
+    <string name="ns_upload_only">(PELIGROSO DESHABILITAR) Sólo subida a Nightscout</string>
+    <string name="ns_upload_only_summary">Sólo subir a Nightscout (sincronización desactivada). No es efectivo en SGV, a menos que se seleccione una fuente local como xDrip+. No es efectivo en perfiles, si se usan perfiles Nightscout.\n!!! ¡¡ADVERTENCIA!!! Desactivar esta opción puede causar mal funcionamiento y sobredosis de insulina, si cualquiera de sus componentes (AAPS, NS, xDrip+) está mal configurado. ¡Vigile cuidadosamente si los datos mostrados por AAPS coinciden con el estado de la bomba!</string>
     <string name="pumpNotInitialized">¡Bomba no iniciada!</string>
     <string name="primefill">Cebar/Llenar</string>
     <string name="fillwarning">¡Por favor, asegúrate de que la cantidad coincide con la especificación del set de infusión!</string>
@@ -305,9 +305,9 @@
     <string name="nsclientinternal_title">NSClient</string>
     <string name="nsclientinternal_url_title">Página de Nightscout</string>
     <string name="nsclientinternal_url_dialogmessage">Introduce tu página de Nightscout</string>
-    <string name="nsclientinternal_secret_title">API Secret de NS</string>
-    <string name="nsclientinternal_secret_dialogtitle">API Secret de NS</string>
-    <string name="nsclientinternal_secret_dialogmessage">Introduce la contraseña API Secret de NS (mínimo de 12 caracteres)</string>
+    <string name="nsclientinternal_secret_title">API Secret de Nightscout</string>
+    <string name="nsclientinternal_secret_dialogtitle">API Secret de Nightscout</string>
+    <string name="nsclientinternal_secret_dialogmessage">Introduce la contraseña API Secret de Nightscout (mínimo de 12 caracteres)</string>
     <string name="deliver_now">Entregar ahora</string>
     <string name="clear_queue">Borrar cola</string>
     <string name="show_queue">Mostrar cola</string>
@@ -358,7 +358,7 @@
     <string name="bg_trend_label">Tendencia 15min</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="superbolus">Superbolo</string>
-    <string name="ns_logappstartedevent">Registrar el inicio de la aplicación en NS</string>
+    <string name="ns_logappstartedevent">Registrar el inicio de la aplicación en Nightscout</string>
     <string name="restartingapp">Saliendo de la aplicación para aplicar los ajustes.</string>
     <string name="configbuilder_insulin_description">¿Qué tipo de insulina estás utilizando?</string>
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
@@ -479,7 +479,7 @@
     <string name="urgent_alarm">Alarma urgente</string>
     <string name="info">INFORMACIÓN</string>
     <string name="eversense">Eversense App (parcheada)</string>
-    <string name="dexcomg5_nsupload_title">Subir datos de glucosa a NS</string>
+    <string name="dexcomg5_nsupload_title">Subir datos de glucosa a Nightscout</string>
     <string name="bgsource_upload">Ajuste de subida de datos de glucosa</string>
     <string name="wear_detailed_delta_title">Mostrar detalles del delta</string>
     <string name="wear_detailed_delta_summary">Mostrar el delta con un decimal más</string>
