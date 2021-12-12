@@ -57,7 +57,6 @@
     <string name="treatments_wizard_tt_label">OT</string>
     <string name="treatments_wizard_carbs_label">Carbs</string>
     <string name="treatments_wizard_correction_label">Corr</string>
-    <string name="bolus_iob_label">IOB Bolus</string>
     <string name="openapsma_run">Executar ara</string>
     <string name="vitualpump_label">BOMBA VIRTUAL</string>
     <string name="openapsma_lastrun_label">Última execució</string>
@@ -120,9 +119,7 @@
     <string name="careportal_newnstreatment_other">Altres</string>
     <string name="careportal_newnstreatment_meter">Glucòmetre</string>
     <string name="careportal_newnstreatment_sensor">Sensor</string>
-    <string name="carb_time_label">Temps d\'absorció</string>
     <string name="careportal_newnstreatment_duration_label">Durada</string>
-    <string name="profile_label">Perfil</string>
     <string name="careportal_newnstreatment_glucosetype">Tipus de glucèmia</string>
     <string name="overview_tempbasal_button">BasalTemp</string>
     <string name="overview_extendedbolus_button">Bolus estès</string>
@@ -275,7 +272,6 @@
     <string name="smscommunicator_wrongduration">Durada errònia</string>
     <string name="smscommunicator_loopsuspended">Llaç aturat</string>
     <string name="smscommunicator_loopresumed">Llaç reprès</string>
-    <string name="bg_trend_label">Tendència 15 min</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Enregistrar l\'inici de l\'app a NS</string>
