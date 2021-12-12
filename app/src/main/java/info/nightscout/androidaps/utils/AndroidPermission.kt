@@ -2,6 +2,7 @@ package info.nightscout.androidaps.utils
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.annotation.TargetApi
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -89,11 +90,11 @@ class AndroidPermission @Inject constructor(
                 rxBus.send(EventNewNotification(notification))
             } else rxBus.send(EventDismissNotification(Notification.PERMISSION_SMS))
             // Following is a bug in Android 8
-            if (permissionNotGranted(activity, Manifest.permission.READ_PHONE_STATE)) {
-                val notification = NotificationWithAction(injector, Notification.PERMISSION_PHONE_STATE, rh.gs(R.string.smscommunicator_missingphonestatepermission), Notification.URGENT)
-                notification.action(R.string.request) { askForPermission(activity, arrayOf(Manifest.permission.READ_PHONE_STATE)) }
-                rxBus.send(EventNewNotification(notification))
-            } else rxBus.send(EventDismissNotification(Notification.PERMISSION_PHONE_STATE))
+//            if (permissionNotGranted(activity, Manifest.permission.READ_PHONE_STATE)) {
+//                val notification = NotificationWithAction(injector, Notification.PERMISSION_PHONE_STATE, rh.gs(R.string.smscommunicator_missingphonestatepermission), Notification.URGENT)
+//                notification.action(R.string.request) { askForPermission(activity, arrayOf(Manifest.permission.READ_PHONE_STATE)) }
+//                rxBus.send(EventNewNotification(notification))
+//            } else rxBus.send(EventDismissNotification(Notification.PERMISSION_PHONE_STATE))
         }
     }
 
