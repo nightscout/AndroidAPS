@@ -355,7 +355,7 @@
     <string name="smscommunicator_wrongduration">Falsche Dauer</string>
     <string name="smscommunicator_loopsuspended">Loop pausiert</string>
     <string name="smscommunicator_loopresumed">Loop wurde fortgesetzt</string>
-    <string name="bg_trend_label">15\'-Trend</string>
+    <string name="bg_trend_label">15 min Trend</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Logge App-Start in Nightscout</string>
