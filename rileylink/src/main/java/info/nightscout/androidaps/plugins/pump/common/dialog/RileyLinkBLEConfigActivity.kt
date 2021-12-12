@@ -1,359 +1,288 @@
-package info.nightscout.androidaps.plugins.pump.common.dialog;
+package info.nightscout.androidaps.plugins.pump.common.dialog
 
-import android.app.AlertDialog;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.le.BluetoothLeScanner;
-import android.bluetooth.le.ScanCallback;
-import android.bluetooth.le.ScanFilter;
-import android.bluetooth.le.ScanResult;
-import android.bluetooth.le.ScanSettings;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.ParcelUuid;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.inject.Inject;
-
-import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
-import info.nightscout.androidaps.interfaces.ActivePlugin;
-import info.nightscout.shared.logging.AAPSLogger;
-import info.nightscout.shared.logging.LTag;
-import info.nightscout.androidaps.plugins.pump.common.ble.BlePreCheck;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.R;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.GattAttributes;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpDevice;
-import info.nightscout.androidaps.utils.resources.ResourceHelper;
-import info.nightscout.shared.sharedPreferences.SP;
+import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothManager
+import android.bluetooth.le.BluetoothLeScanner
+import android.bluetooth.le.ScanCallback
+import android.bluetooth.le.ScanFilter
+import android.bluetooth.le.ScanResult
+import android.bluetooth.le.ScanSettings
+import android.content.Context
+import android.content.DialogInterface
+import android.os.Bundle
+import android.os.Handler
+import android.os.HandlerThread
+import android.os.ParcelUuid
+import android.view.View
+import android.view.ViewGroup
+import android.widget.*
+import android.widget.AdapterView.OnItemClickListener
+import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.plugins.pump.common.ble.BlePreCheck
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.R
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.GattAttributes
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.databinding.RileyLinkBleConfigActivityBinding
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpDevice
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
+import info.nightscout.shared.sharedPreferences.SP
+import org.apache.commons.lang3.StringUtils
+import java.util.*
+import javax.inject.Inject
 
 // IMPORTANT: This activity needs to be called from RileyLinkSelectPreference (see pref_medtronic.xml as example)
-public class RileyLinkBLEConfigActivity extends NoSplashAppCompatActivity {
+class RileyLinkBLEConfigActivity : NoSplashAppCompatActivity() {
 
-    @Inject AAPSLogger aapsLogger;
-    @Inject SP sp;
-    @Inject ResourceHelper rh;
-    @Inject BlePreCheck blePrecheck;
-    @Inject RileyLinkUtil rileyLinkUtil;
-    @Inject ActivePlugin activePlugin;
+    @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var sp: SP
+    @Inject lateinit var blePreCheck: BlePreCheck
+    @Inject lateinit var rileyLinkUtil: RileyLinkUtil
+    @Inject lateinit var activePlugin: ActivePlugin
+    @Inject lateinit var context: Context
 
-    private static final String TAG = "RileyLinkBLEConfigActivity";
-    private static final long SCAN_PERIOD_MILLIS = 15_000;
+    private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
+    private val bluetoothAdapter: BluetoothAdapter? get() = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
+    private var deviceListAdapter = LeDeviceListAdapter()
+    private var settings: ScanSettings? = null
+    private var filters: List<ScanFilter>? = null
+    private var bleScanner: BluetoothLeScanner? = null
+    private var scanning = false
 
-    private ScanSettings settings;
-    private List<ScanFilter> filters;
-    private TextView currentlySelectedRileyLinkName;
-    private TextView currentlySelectedRileyLinkAddress;
-    private Button buttonRemoveRileyLink;
-    private Button buttonStartScan;
-    private Button buttonStopScan;
-    private BluetoothAdapter bluetoothAdapter;
-    private BluetoothLeScanner bleScanner;
-    private LeDeviceListAdapter deviceListAdapter;
-    private Handler handler;
-    public boolean scanning;
-
-    private final Runnable stopScanAfterTimeoutRunnable = () -> {
+    private lateinit var binding: RileyLinkBleConfigActivityBinding
+    private val stopScanAfterTimeoutRunnable = Runnable {
         if (scanning) {
-            stopLeDeviceScan();
-            rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkNewAddressSet, this); // Reconnect current RL
+            stopLeDeviceScan()
+            rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkNewAddressSet, this) // Reconnect current RL
         }
-    };
+    }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.riley_link_ble_config_activity);
+    public override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = RileyLinkBleConfigActivityBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         // Initializes Bluetooth adapter.
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        deviceListAdapter = new LeDeviceListAdapter();
-        handler = new Handler();
-        currentlySelectedRileyLinkName = findViewById(R.id.riley_link_ble_config_currently_selected_riley_link_name);
-        currentlySelectedRileyLinkAddress = findViewById(R.id.riley_link_ble_config_currently_selected_riley_link_address);
-        buttonRemoveRileyLink = findViewById(R.id.riley_link_ble_config_button_remove_riley_link);
-        buttonStartScan = findViewById(R.id.riley_link_ble_config_scan_start);
-        buttonStopScan = findViewById(R.id.riley_link_ble_config_button_scan_stop);
-        ListView deviceList = findViewById(R.id.riley_link_ble_config_scan_device_list);
-        deviceList.setAdapter(deviceListAdapter);
-        deviceList.setOnItemClickListener((parent, view, position, id) -> {
+        binding.rileyLinkBleConfigScanDeviceList.adapter = deviceListAdapter
+        binding.rileyLinkBleConfigScanDeviceList.onItemClickListener = OnItemClickListener { _: AdapterView<*>?, view: View, _: Int, _: Long ->
             // stop scanning if still active
-            if (scanning) {
-                stopLeDeviceScan();
-            }
+            if (scanning) stopLeDeviceScan()
 
-            String bleAddress = ((TextView) view.findViewById(R.id.riley_link_ble_config_scan_item_device_address)).getText().toString();
-            String deviceName = ((TextView) view.findViewById(R.id.riley_link_ble_config_scan_item_device_name)).getText().toString();
-
-            sp.putString(RileyLinkConst.Prefs.RileyLinkAddress, bleAddress);
-            sp.putString(RileyLinkConst.Prefs.RileyLinkName, deviceName);
-
-            RileyLinkPumpDevice rileyLinkPump = (RileyLinkPumpDevice) activePlugin.getActivePump();
-            rileyLinkPump.getRileyLinkService().verifyConfiguration(true); // force reloading of address to assure that the RL gets reconnected (even if the address didn't change)
-            rileyLinkPump.triggerPumpConfigurationChangedEvent();
-
-            finish();
-        });
-
-        buttonStartScan.setOnClickListener(view -> {
+            val bleAddress = (view.findViewById(R.id.riley_link_ble_config_scan_item_device_address) as TextView).text.toString()
+            val deviceName = (view.findViewById(R.id.riley_link_ble_config_scan_item_device_name) as TextView).text.toString()
+            sp.putString(RileyLinkConst.Prefs.RileyLinkAddress, bleAddress)
+            sp.putString(RileyLinkConst.Prefs.RileyLinkName, deviceName)
+            val rileyLinkPump = activePlugin.activePump as RileyLinkPumpDevice
+            rileyLinkPump.rileyLinkService.verifyConfiguration(true) // force reloading of address to assure that the RL gets reconnected (even if the address didn't change)
+            rileyLinkPump.triggerPumpConfigurationChangedEvent()
+            finish()
+        }
+        binding.rileyLinkBleConfigScanStart.setOnClickListener {
             // disable currently selected RL, so that we can discover it
-            rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkDisconnect, this);
-            startLeDeviceScan();
-        });
-
-        buttonStopScan.setOnClickListener(view -> {
+            rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkDisconnect, this)
+            startLeDeviceScan()
+        }
+        binding.rileyLinkBleConfigButtonScanStop.setOnClickListener {
             if (scanning) {
-                stopLeDeviceScan();
-                rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkNewAddressSet, this); // Reconnect current RL
+                stopLeDeviceScan()
+                rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkNewAddressSet, this) // Reconnect current RL
             }
-        });
-
-        buttonRemoveRileyLink.setOnClickListener(view -> new AlertDialog.Builder(this)
+        }
+        binding.rileyLinkBleConfigButtonRemoveRileyLink.setOnClickListener {
+            AlertDialog.Builder(this)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle(getString(R.string.riley_link_ble_config_remove_riley_link_confirmation_title))
                 .setMessage(getString(R.string.riley_link_ble_config_remove_riley_link_confirmation))
-                .setPositiveButton(getString(R.string.riley_link_common_yes), (dialog, which) -> {
-                    rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkDisconnect, RileyLinkBLEConfigActivity.this);
-                    sp.remove(RileyLinkConst.Prefs.RileyLinkAddress);
-                    sp.remove(RileyLinkConst.Prefs.RileyLinkName);
-                    updateCurrentlySelectedRileyLink();
-                })
+                .setPositiveButton(getString(R.string.riley_link_common_yes)) { _: DialogInterface?, _: Int ->
+                    rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkDisconnect, this@RileyLinkBLEConfigActivity)
+                    sp.remove(RileyLinkConst.Prefs.RileyLinkAddress)
+                    sp.remove(RileyLinkConst.Prefs.RileyLinkName)
+                    updateCurrentlySelectedRileyLink()
+                }
                 .setNegativeButton(getString(R.string.riley_link_common_no), null)
-                .show());
+                .show()
+        }
     }
 
-    private void updateCurrentlySelectedRileyLink() {
-        String address = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "");
+    private fun updateCurrentlySelectedRileyLink() {
+        val address = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "")
         if (StringUtils.isEmpty(address)) {
-            currentlySelectedRileyLinkName.setText(R.string.riley_link_ble_config_no_riley_link_selected);
-            currentlySelectedRileyLinkAddress.setVisibility(View.GONE);
-            buttonRemoveRileyLink.setVisibility(View.GONE);
+            binding.rileyLinkBleConfigCurrentlySelectedRileyLinkName.setText(R.string.riley_link_ble_config_no_riley_link_selected)
+            binding.rileyLinkBleConfigCurrentlySelectedRileyLinkAddress.visibility = View.GONE
+            binding.rileyLinkBleConfigButtonRemoveRileyLink.visibility = View.GONE
         } else {
-            currentlySelectedRileyLinkAddress.setVisibility(View.VISIBLE);
-            buttonRemoveRileyLink.setVisibility(View.VISIBLE);
-
-            currentlySelectedRileyLinkName.setText(sp.getString(RileyLinkConst.Prefs.RileyLinkName, "RileyLink (?)"));
-            currentlySelectedRileyLinkAddress.setText(address);
+            binding.rileyLinkBleConfigCurrentlySelectedRileyLinkAddress.visibility = View.VISIBLE
+            binding.rileyLinkBleConfigButtonRemoveRileyLink.visibility = View.VISIBLE
+            binding.rileyLinkBleConfigCurrentlySelectedRileyLinkName.text = sp.getString(RileyLinkConst.Prefs.RileyLinkName, "RileyLink (?)")
+            binding.rileyLinkBleConfigCurrentlySelectedRileyLinkAddress.text = address
         }
     }
 
-    @Override protected void onResume() {
-        super.onResume();
-        prepareForScanning();
-
-        updateCurrentlySelectedRileyLink();
+    override fun onResume() {
+        super.onResume()
+        prepareForScanning()
+        updateCurrentlySelectedRileyLink()
     }
 
-    @Override protected void onDestroy() {
-        super.onDestroy();
+    override fun onDestroy() {
+        super.onDestroy()
         if (scanning) {
-            stopLeDeviceScan();
-            rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkNewAddressSet, this); // Reconnect current RL
+            stopLeDeviceScan()
+            rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkNewAddressSet, this) // Reconnect current RL
         }
     }
 
-    private void prepareForScanning() {
-        boolean checkOK = blePrecheck.prerequisitesCheck(this);
-
+    private fun prepareForScanning() {
+        val checkOK = blePreCheck.prerequisitesCheck(this)
         if (checkOK) {
-            bleScanner = bluetoothAdapter.getBluetoothLeScanner();
-            settings = new ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build();
-            filters = Collections.singletonList(new ScanFilter.Builder().setServiceUuid(
-                    ParcelUuid.fromString(GattAttributes.SERVICE_RADIO)).build());
+            bleScanner = bluetoothAdapter?.bluetoothLeScanner
+            settings = ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build()
+            filters = listOf(
+                ScanFilter.Builder().setServiceUuid(
+                    ParcelUuid.fromString(GattAttributes.SERVICE_RADIO)
+                ).build()
+            )
         }
     }
 
-    private final ScanCallback bleScanCallback = new ScanCallback() {
-        @Override
-        public void onScanResult(int callbackType, final ScanResult scanRecord) {
-            Log.d(TAG, scanRecord.toString());
-
-            runOnUiThread(() -> {
-                if (addDevice(scanRecord))
-                    deviceListAdapter.notifyDataSetChanged();
-            });
+    private val bleScanCallback: ScanCallback = object : ScanCallback() {
+        override fun onScanResult(callbackType: Int, scanRecord: ScanResult) {
+            aapsLogger.debug(LTag.PUMPBTCOMM, scanRecord.toString())
+            runOnUiThread { if (addDevice(scanRecord)) deviceListAdapter.notifyDataSetChanged() }
         }
 
-        @Override
-        public void onBatchScanResults(final List<ScanResult> results) {
-            runOnUiThread(() -> {
-                boolean added = false;
-
-                for (ScanResult result : results) {
-                    if (addDevice(result))
-                        added = true;
+        override fun onBatchScanResults(results: List<ScanResult>) {
+            runOnUiThread {
+                var added = false
+                for (result in results) {
+                    if (addDevice(result)) added = true
                 }
-
-                if (added)
-                    deviceListAdapter.notifyDataSetChanged();
-            });
+                if (added) deviceListAdapter.notifyDataSetChanged()
+            }
         }
 
-        private boolean addDevice(ScanResult result) {
-            BluetoothDevice device = result.getDevice();
-
-            List<ParcelUuid> serviceUuids = result.getScanRecord().getServiceUuids();
-
-            if (serviceUuids == null || serviceUuids.size() == 0) {
-                Log.v(TAG, "Device " + device.getAddress() + " has no serviceUuids (Not RileyLink).");
-            } else if (serviceUuids.size() > 1) {
-                Log.v(TAG, "Device " + device.getAddress() + " has too many serviceUuids (Not RileyLink).");
+        private fun addDevice(result: ScanResult): Boolean {
+            val device = result.device
+            val serviceUuids = result.scanRecord?.serviceUuids
+            if (serviceUuids == null || serviceUuids.size == 0) {
+                aapsLogger.debug(LTag.PUMPBTCOMM, "Device " + device.address + " has no serviceUuids (Not RileyLink).")
+            } else if (serviceUuids.size > 1) {
+                aapsLogger.debug(LTag.PUMPBTCOMM, "Device " + device.address + " has too many serviceUuids (Not RileyLink).")
             } else {
-                String uuid = serviceUuids.get(0).getUuid().toString().toLowerCase();
-
-                if (uuid.equals(GattAttributes.SERVICE_RADIO)) {
-                    Log.i(TAG, "Found RileyLink with address: " + device.getAddress());
-                    deviceListAdapter.addDevice(result);
-                    return true;
+                val uuid = serviceUuids[0].uuid.toString().lowercase(Locale.getDefault())
+                if (uuid == GattAttributes.SERVICE_RADIO) {
+                    aapsLogger.debug(LTag.PUMPBTCOMM, "Found RileyLink with address: " + device.address)
+                    deviceListAdapter.addDevice(result)
+                    return true
                 } else {
-                    Log.v(TAG, "Device " + device.getAddress() + " has incorrect uuid (Not RileyLink).");
+                    aapsLogger.debug(LTag.PUMPBTCOMM, "Device " + device.address + " has incorrect uuid (Not RileyLink).")
                 }
             }
-
-            return false;
+            return false
         }
 
-        @Override
-        public void onScanFailed(int errorCode) {
-            Log.e("Scan Failed", "Error Code: " + errorCode);
-            Toast.makeText(RileyLinkBLEConfigActivity.this, rh.gs(R.string.riley_link_ble_config_scan_error, errorCode),
-                    Toast.LENGTH_LONG).show();
+        override fun onScanFailed(errorCode: Int) {
+            aapsLogger.error(LTag.PUMPBTCOMM, "Scan Failed", "Error Code: $errorCode")
+            Toast.makeText(
+                this@RileyLinkBLEConfigActivity, rh.gs(R.string.riley_link_ble_config_scan_error, errorCode),
+                Toast.LENGTH_LONG
+            ).show()
         }
+    }
 
-    };
-
-    private void startLeDeviceScan() {
+    private fun startLeDeviceScan() {
         if (bleScanner == null) {
-            aapsLogger.error(LTag.PUMPBTCOMM, "startLeDeviceScan failed: bleScanner is null");
-            return;
+            aapsLogger.error(LTag.PUMPBTCOMM, "startLeDeviceScan failed: bleScanner is null")
+            return
         }
-
-        deviceListAdapter.clear();
-        deviceListAdapter.notifyDataSetChanged();
-
-        handler.postDelayed(stopScanAfterTimeoutRunnable, SCAN_PERIOD_MILLIS);
-
-        buttonStartScan.setEnabled(false);
-        buttonStopScan.setVisibility(View.VISIBLE);
-
-        scanning = true;
-        bleScanner.startScan(filters, settings, bleScanCallback);
-        aapsLogger.debug(LTag.PUMPBTCOMM, "startLeDeviceScan: Scanning Start");
-        Toast.makeText(RileyLinkBLEConfigActivity.this, R.string.riley_link_ble_config_scan_scanning, Toast.LENGTH_SHORT).show();
+        deviceListAdapter.clear()
+        deviceListAdapter.notifyDataSetChanged()
+        handler.postDelayed(stopScanAfterTimeoutRunnable, SCAN_PERIOD_MILLIS)
+        runOnUiThread {
+            binding.rileyLinkBleConfigScanStart.isEnabled = false
+            binding.rileyLinkBleConfigButtonScanStop.visibility = View.VISIBLE
+        }
+        scanning = true
+        bleScanner?.startScan(filters, settings, bleScanCallback)
+        aapsLogger.debug(LTag.PUMPBTCOMM, "startLeDeviceScan: Scanning Start")
+        Toast.makeText(this@RileyLinkBLEConfigActivity, R.string.riley_link_ble_config_scan_scanning, Toast.LENGTH_SHORT).show()
     }
 
-    private void stopLeDeviceScan() {
+    private fun stopLeDeviceScan() {
         if (scanning) {
-            scanning = false;
-
-            bleScanner.stopScan(bleScanCallback);
-
-            aapsLogger.debug(LTag.PUMPBTCOMM, "stopLeDeviceScan: Scanning Stop");
-            Toast.makeText(this, R.string.riley_link_ble_config_scan_finished, Toast.LENGTH_SHORT).show();
-            handler.removeCallbacks(stopScanAfterTimeoutRunnable);
+            scanning = false
+            bleScanner?.stopScan(bleScanCallback)
+            aapsLogger.debug(LTag.PUMPBTCOMM, "stopLeDeviceScan: Scanning Stop")
+            Toast.makeText(this, R.string.riley_link_ble_config_scan_finished, Toast.LENGTH_SHORT).show()
+            handler.removeCallbacks(stopScanAfterTimeoutRunnable)
         }
-
-        buttonStartScan.setEnabled(true);
-        buttonStopScan.setVisibility(View.GONE);
+        runOnUiThread {
+            binding.rileyLinkBleConfigScanStart.isEnabled = true
+            binding.rileyLinkBleConfigButtonScanStop.visibility = View.GONE
+        }
     }
 
-    private class LeDeviceListAdapter extends BaseAdapter {
-        private final ArrayList<BluetoothDevice> mLeDevices;
-        private final Map<BluetoothDevice, Integer> rileyLinkDevices;
-        private final LayoutInflater mInflator;
+    private inner class LeDeviceListAdapter : BaseAdapter() {
 
-        public LeDeviceListAdapter() {
-            super();
-            mLeDevices = new ArrayList<>();
-            rileyLinkDevices = new HashMap<>();
-            mInflator = RileyLinkBLEConfigActivity.this.getLayoutInflater();
-        }
+        private val leDevices: ArrayList<BluetoothDevice> = ArrayList()
+        private val rileyLinkDevices: MutableMap<BluetoothDevice, Int> = HashMap()
 
-        public void addDevice(ScanResult result) {
-            if (!mLeDevices.contains(result.getDevice())) {
-                mLeDevices.add(result.getDevice());
+        fun addDevice(result: ScanResult) {
+            if (!leDevices.contains(result.device)) {
+                leDevices.add(result.device)
             }
-            rileyLinkDevices.put(result.getDevice(), result.getRssi());
-            notifyDataSetChanged();
+            rileyLinkDevices[result.device] = result.rssi
+            notifyDataSetChanged()
         }
 
-        public void clear() {
-            mLeDevices.clear();
-            rileyLinkDevices.clear();
-            notifyDataSetChanged();
+        fun clear() {
+            leDevices.clear()
+            rileyLinkDevices.clear()
+            notifyDataSetChanged()
         }
 
-        @Override
-        public int getCount() {
-            return mLeDevices.size();
-        }
+        override fun getCount(): Int = leDevices.size
+        override fun getItem(i: Int): Any = leDevices[i]
+        override fun getItemId(i: Int): Long = i.toLong()
 
-        @Override
-        public Object getItem(int i) {
-            return mLeDevices.get(i);
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return i;
-        }
-
-        @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
-            ViewHolder viewHolder;
+        @SuppressLint("InflateParams")
+        override fun getView(i: Int, v: View?, viewGroup: ViewGroup): View {
+            var view = v
+            val viewHolder: ViewHolder
             // General ListView optimization code.
             if (view == null) {
-                view = mInflator.inflate(R.layout.riley_link_ble_config_scan_item, null);
-                viewHolder = new ViewHolder();
-                viewHolder.deviceAddress = view.findViewById(R.id.riley_link_ble_config_scan_item_device_address);
-                viewHolder.deviceName = view.findViewById(R.id.riley_link_ble_config_scan_item_device_name);
-                view.setTag(viewHolder);
-            } else {
-                viewHolder = (ViewHolder) view.getTag();
+                view = View.inflate(applicationContext, R.layout.riley_link_ble_config_scan_item, null)
+                viewHolder = ViewHolder(view)
+                view.tag = viewHolder
+            } else viewHolder = view.tag as ViewHolder
+
+            val device = leDevices[i]
+            var deviceName = device.name
+            if (StringUtils.isBlank(deviceName)) deviceName = "RileyLink (?)"
+            deviceName += " [" + rileyLinkDevices[device] + "]"
+            val currentlySelectedAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "")
+            if (currentlySelectedAddress == device.address) {
+                deviceName += " (" + resources.getString(R.string.riley_link_ble_config_scan_selected) + ")"
             }
-
-            BluetoothDevice device = mLeDevices.get(i);
-            String deviceName = device.getName();
-
-            if (StringUtils.isBlank(deviceName)) {
-                deviceName = "RileyLink (?)";
-            }
-
-            deviceName += " [" + rileyLinkDevices.get(device) + "]";
-
-            String currentlySelectedAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "");
-
-            if (currentlySelectedAddress.equals(device.getAddress())) {
-                deviceName += " (" + getResources().getString(R.string.riley_link_ble_config_scan_selected) + ")";
-            }
-
-            viewHolder.deviceName.setText(deviceName);
-            viewHolder.deviceAddress.setText(device.getAddress());
-
-            return view;
+            viewHolder.deviceName.text = deviceName
+            viewHolder.deviceAddress.text = device.address
+            return view!!
         }
     }
 
-    static class ViewHolder {
-        TextView deviceName;
-        TextView deviceAddress;
+    internal class ViewHolder(view: View) {
+
+        val deviceName: TextView = view.findViewById(R.id.riley_link_ble_config_scan_item_device_name)
+        val deviceAddress: TextView = view.findViewById(R.id.riley_link_ble_config_scan_item_device_address)
     }
 
+    companion object {
+
+        private const val SCAN_PERIOD_MILLIS: Long = 15000
+    }
 }
