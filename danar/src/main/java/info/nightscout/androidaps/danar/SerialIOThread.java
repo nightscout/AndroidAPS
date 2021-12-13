@@ -113,7 +113,7 @@ public class SerialIOThread extends Thread {
                 return null;
             }
 
-            short crc = CRC.getCrc16(mReadBuff, 3, length - 7);
+            short crc = CRC.INSTANCE.getCrc16(mReadBuff, 3, length - 7);
             byte crcByte0 = (byte) (crc >> 8 & 0xFF);
             byte crcByte1 = (byte) (crc & 0xFF);
 

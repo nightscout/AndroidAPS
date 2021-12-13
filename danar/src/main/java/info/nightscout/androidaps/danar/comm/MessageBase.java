@@ -119,7 +119,7 @@ public class MessageBase {
         this.buffer[2] = (byte) length;
         this.buffer[3] = (byte) 0xF1;
 
-        this.AddParamInt(CRC.getCrc16(this.buffer, 3, length));
+        this.AddParamInt(CRC.INSTANCE.getCrc16(this.buffer, 3, length));
 
         this.buffer[length + 5] = (byte) 0x2E;
         this.buffer[length + 6] = (byte) 0x2E;
