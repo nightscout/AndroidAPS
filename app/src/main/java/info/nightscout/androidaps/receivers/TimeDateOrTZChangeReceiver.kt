@@ -60,10 +60,10 @@ class TimeDateOrTZChangeReceiver : DaggerBroadcastReceiver() {
                 } else {
                     if (currentDst) {
                         aapsLogger.info(LTag.PUMP, "TimeDateOrTZChangeReceiver::DST started. Notifying pump driver.")
-                        activePump.timezoneOrDSTChanged(TimeChangeType.DST_Started)
+                        activePump.timezoneOrDSTChanged(TimeChangeType.DSTStarted)
                     } else {
                         aapsLogger.info(LTag.PUMP, "TimeDateOrTZChangeReceiver::DST ended. Notifying pump driver.")
-                        activePump.timezoneOrDSTChanged(TimeChangeType.DST_Ended)
+                        activePump.timezoneOrDSTChanged(TimeChangeType.DSTEnded)
                     }
                 }
                 isDST = currentDst
