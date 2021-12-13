@@ -4,9 +4,8 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.diaconn.DiaconnG8Pump
 import info.nightscout.androidaps.diaconn.R
 import info.nightscout.androidaps.diaconn.pumplog.PumplogUtil
-import info.nightscout.shared.logging.LTag
-import info.nightscout.androidaps.utils.StringUtils
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 
@@ -40,7 +39,7 @@ class BasalLimitInquireResponsePacket(injector: HasAndroidInjector) : DiaconnG8P
         }
         diaconnG8Pump.maxBasalPerHours = getShortToInt(bufferData).toDouble() / 100.0  // not include tempbasal limit
         val pumpFirmwareVersion = sp.getString(rh.gs(R.string.pumpversion), "")
-        if(!StringUtils.emptyString(pumpFirmwareVersion) && PumplogUtil.isPumpVersionGe(pumpFirmwareVersion, 3, 0)) {
+        if(pumpFirmwareVersion.isNotEmpty() && PumplogUtil.isPumpVersionGe(pumpFirmwareVersion, 3, 0)) {
             diaconnG8Pump.maxBasal =  diaconnG8Pump.maxBasalPerHours * 2.5 // include tempbasal
         } else {
             diaconnG8Pump.maxBasal =  diaconnG8Pump.maxBasalPerHours * 2.0 // include tempbasal
