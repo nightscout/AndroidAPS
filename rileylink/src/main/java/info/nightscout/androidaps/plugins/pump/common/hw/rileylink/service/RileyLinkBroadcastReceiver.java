@@ -5,6 +5,7 @@ package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service;
  */
 
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -134,7 +135,7 @@ public class RileyLinkBroadcastReceiver extends DaggerBroadcastReceiver {
         RileyLinkService rileyLinkService = getServiceInstance();
 
         if (action.equals(RileyLinkConst.Intents.RileyLinkDisconnected)) {
-            if (BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+            if (((BluetoothManager)context.getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter().isEnabled()) {
                 rileyLinkServiceData.setServiceState(RileyLinkServiceState.BluetoothError, RileyLinkError.RileyLinkUnreachable);
             } else {
                 rileyLinkServiceData.setServiceState(RileyLinkServiceState.BluetoothError, RileyLinkError.BluetoothDisabled);

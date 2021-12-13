@@ -148,7 +148,7 @@ class MedtronicUIPostprocessor @Inject constructor(
 
         medtronicUtil.settings = settings
         var checkValue: PumpSettingDTO
-        medtronicPumpPlugin.rileyLinkService.verifyConfiguration()
+        medtronicPumpPlugin.rileyLinkService?.verifyConfiguration()
 
         // check profile
         if (settings.containsKey("PCFG_BASAL_PROFILES_ENABLED") && settings.containsKey("PCFG_ACTIVE_BASAL_PROFILE")) {

@@ -130,6 +130,7 @@ class BolusProgressDialog : DaggerDialogFragment() {
             .toObservable(EventDismissBolusProgressIfRunning::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({
+                aapsLogger.debug(LTag.PUMP, "Running timestamp $timestamp. Close request timestamp  ${it.bolusTimestamp}")
                            if (it.bolusTimestamp == null || it.bolusTimestamp == timestamp)
                                if (running) dismiss()
                        }, fabricPrivacy::logException)

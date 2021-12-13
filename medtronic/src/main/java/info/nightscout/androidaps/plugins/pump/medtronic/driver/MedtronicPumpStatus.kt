@@ -58,7 +58,7 @@ class MedtronicPumpStatus @Inject constructor(private val rh: ResourceHelper,
         if (medtronicDeviceTypeMap.isEmpty()) createMedtronicDeviceTypeMap()
         lastConnection = sp.getLong(MedtronicConst.Statistics.LastGoodPumpCommunicationTime, 0L)
         lastDataTime = lastConnection
-        var serial = sp.getStringOrNull(MedtronicConst.Prefs.PumpSerial, null)
+        val serial = sp.getStringOrNull(MedtronicConst.Prefs.PumpSerial, null)
         if (serial != null) {
             serialNumber = serial
         }
@@ -105,7 +105,7 @@ class MedtronicPumpStatus @Inject constructor(private val rh: ResourceHelper,
     private var batteryTypeByDescMap: MutableMap<String, BatteryType?> = HashMap()
 
     fun getBatteryTypeByDescription(batteryTypeStr: String?): BatteryType? {
-        if (batteryTypeByDescMap.size == 0) {
+        if (batteryTypeByDescMap.isEmpty()) {
             for (value in BatteryType.values()) {
                 batteryTypeByDescMap[rh.gs(value.description)] = value
             }

@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.queue
 
-import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.os.PowerManager
 import android.os.SystemClock
@@ -9,18 +9,18 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
 import info.nightscout.androidaps.queue.events.EventQueueChanged
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 
 class QueueThread internal constructor(
     private val queue: CommandQueue,
-    context: Context,
+    private val context: Context,
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val activePlugin: ActivePlugin,
@@ -63,8 +63,7 @@ class QueueThread internal constructor(
                         //toggle BT
                         pump.disconnect("watchdog")
                         SystemClock.sleep(1000)
-                        val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-                        if (bluetoothAdapter != null) {
+                        (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter?.let { bluetoothAdapter ->
                             bluetoothAdapter.disable()
                             SystemClock.sleep(1000)
                             bluetoothAdapter.enable()

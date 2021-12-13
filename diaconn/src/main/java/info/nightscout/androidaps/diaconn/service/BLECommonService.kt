@@ -44,8 +44,7 @@ class BLECommonService @Inject internal constructor(
     private var processedMessage: DiaconnG8Packet? = null
     private var processedMessageByte: ByteArray? = null
     private val mSendQueue = ArrayList<ByteArray>()
-    private var bluetoothManager: BluetoothManager? = null
-    private var bluetoothAdapter: BluetoothAdapter? = null
+    private val bluetoothAdapter: BluetoothAdapter? get() = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
     private var connectDeviceName: String? = null
     private var bluetoothGatt: BluetoothGatt? = null
 
@@ -69,14 +68,6 @@ class BLECommonService @Inject internal constructor(
     @Synchronized
     fun connect(from: String, address: String?): Boolean {
         aapsLogger.debug(LTag.PUMPBTCOMM, "Initializing Bluetooth ")
-        if (bluetoothManager == null) {
-            bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-            if (bluetoothManager == null) {
-                aapsLogger.error("Unable to initialize BluetoothManager.")
-                return false
-            }
-        }
-        bluetoothAdapter = bluetoothManager?.adapter
         if (bluetoothAdapter == null) {
             aapsLogger.error("Unable to obtain a BluetoothAdapter.")
             return false

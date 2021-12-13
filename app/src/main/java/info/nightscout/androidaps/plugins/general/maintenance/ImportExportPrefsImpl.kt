@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.general.maintenance
 
 import android.Manifest
-import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -24,8 +24,6 @@ import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.events.EventAppExit
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.ImportExportPrefs
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.maintenance.formats.*
@@ -41,9 +39,11 @@ import info.nightscout.androidaps.utils.alertDialogs.WarningDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.protection.PasswordCheck
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.androidaps.utils.storage.Storage
 import info.nightscout.androidaps.utils.userEntry.UserEntryPresentationHelper
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
+import info.nightscout.shared.sharedPreferences.SP
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -81,17 +81,13 @@ class ImportExportPrefsImpl @Inject constructor(
 
     override fun verifyStoragePermissions(fragment: Fragment, onGranted: Runnable) {
         fragment.context?.let { ctx ->
-            val permission = ContextCompat.checkSelfPermission(ctx,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            val permission = ContextCompat.checkSelfPermission(ctx, Manifest.permission.WRITE_EXTERNAL_STORAGE)
             if (permission != PackageManager.PERMISSION_GRANTED) {
                 // We don't have permission so prompt the user
                 fragment.activity?.let {
-                    androidPermission.askForPermission(it,
-                        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                    androidPermission.askForPermission(it, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE))
                 }
-            } else {
-                onGranted.run()
-            }
+            } else onGranted.run()
         }
     }
 
@@ -114,7 +110,7 @@ class ImportExportPrefsImpl @Inject constructor(
         // based on https://medium.com/@pribble88/how-to-get-an-android-device-nickname-4b4700b3068c
         val n1 = Settings.System.getString(context.contentResolver, "bluetooth_name")
         val n2 = Settings.Secure.getString(context.contentResolver, "bluetooth_name")
-        val n3 = BluetoothAdapter.getDefaultAdapter()?.name
+        val n3 = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter?.name
         val n4 = Settings.System.getString(context.contentResolver, "device_name")
         val n5 = Settings.Secure.getString(context.contentResolver, "lock_screen_owner_info")
         val n6 = Settings.Global.getString(context.contentResolver, "device_name")
@@ -132,36 +128,38 @@ class ImportExportPrefsImpl @Inject constructor(
         passwordCheck.queryPassword(activity, R.string.master_password, R.string.key_master_password, { password ->
             then(password)
         }, {
-            ToastUtils.warnToast(activity, rh.gs(canceledMsg))
-        })
+                                        ToastUtils.warnToast(activity, rh.gs(canceledMsg))
+                                    })
     }
 
     @Suppress("SameParameterValue")
-    private fun askForEncryptionPass(activity: FragmentActivity, @StringRes canceledMsg: Int, @StringRes passwordName: Int, @StringRes passwordExplanation: Int?,
-                                     @StringRes passwordWarning: Int?, then: ((password: String) -> Unit)) {
+    private fun askForEncryptionPass(
+        activity: FragmentActivity, @StringRes canceledMsg: Int, @StringRes passwordName: Int, @StringRes passwordExplanation: Int?,
+        @StringRes passwordWarning: Int?, then: ((password: String) -> Unit)
+    ) {
         passwordCheck.queryAnyPassword(activity, passwordName, R.string.key_master_password, passwordExplanation, passwordWarning, { password ->
             then(password)
         }, {
-            ToastUtils.warnToast(activity, rh.gs(canceledMsg))
-        })
+                                           ToastUtils.warnToast(activity, rh.gs(canceledMsg))
+                                       })
     }
 
     @Suppress("SameParameterValue")
     private fun askForMasterPassIfNeeded(activity: FragmentActivity, @StringRes canceledMsg: Int, then: ((password: String) -> Unit)) {
-            askForMasterPass(activity, canceledMsg, then)
+        askForMasterPass(activity, canceledMsg, then)
     }
 
     private fun assureMasterPasswordSet(activity: FragmentActivity, @StringRes wrongPwdTitle: Int): Boolean {
         if (!sp.contains(R.string.key_master_password) || (sp.getString(R.string.key_master_password, "") == "")) {
             WarningDialog.showWarning(activity,
-                rh.gs(wrongPwdTitle),
-                rh.gs(R.string.master_password_missing, rh.gs(R.string.configbuilder_general), rh.gs(R.string.protection)),
-                R.string.nav_preferences, {
-                val intent = Intent(activity, PreferencesActivity::class.java).apply {
-                    putExtra("id", R.xml.pref_general)
-                }
-                activity.startActivity(intent)
-            })
+                                      rh.gs(wrongPwdTitle),
+                                      rh.gs(R.string.master_password_missing, rh.gs(R.string.configbuilder_general), rh.gs(R.string.protection)),
+                                      R.string.nav_preferences, {
+                                          val intent = Intent(activity, PreferencesActivity::class.java).apply {
+                                              putExtra("id", R.xml.pref_general)
+                                          }
+                                          activity.startActivity(intent)
+                                      })
             return false
         }
         return true
@@ -170,29 +168,37 @@ class ImportExportPrefsImpl @Inject constructor(
     private fun askToConfirmExport(activity: FragmentActivity, fileToExport: File, then: ((password: String) -> Unit)) {
         if (!assureMasterPasswordSet(activity, R.string.nav_export)) return
 
-        TwoMessagesAlertDialog.showAlert(activity, rh.gs(R.string.nav_export),
+        TwoMessagesAlertDialog.showAlert(
+            activity, rh.gs(R.string.nav_export),
             rh.gs(R.string.export_to) + " " + fileToExport.name + " ?",
             rh.gs(R.string.password_preferences_encrypt_prompt), {
-            askForMasterPassIfNeeded(activity, R.string.preferences_export_canceled, then)
-        }, null, R.drawable.ic_header_export)
+                askForMasterPassIfNeeded(activity, R.string.preferences_export_canceled, then)
+            }, null, R.drawable.ic_header_export
+        )
     }
 
     private fun askToConfirmImport(activity: FragmentActivity, fileToImport: PrefsFile, then: ((password: String) -> Unit)) {
         if (!assureMasterPasswordSet(activity, R.string.nav_import)) return
-        TwoMessagesAlertDialog.showAlert(activity, rh.gs(R.string.nav_import),
+        TwoMessagesAlertDialog.showAlert(
+            activity, rh.gs(R.string.nav_import),
             rh.gs(R.string.import_from) + " " + fileToImport.name + " ?",
             rh.gs(R.string.password_preferences_decrypt_prompt), {
-            askForMasterPass(activity, R.string.preferences_import_canceled, then)
-        }, null, R.drawable.ic_header_import)
+                askForMasterPass(activity, R.string.preferences_import_canceled, then)
+            }, null, R.drawable.ic_header_import
+        )
     }
 
-    private fun promptForDecryptionPasswordIfNeeded(activity: FragmentActivity, prefs: Prefs, importOk: Boolean,
-                                                    format: PrefsFormat, importFile: PrefsFile, then: ((prefs: Prefs, importOk: Boolean) -> Unit)) {
+    private fun promptForDecryptionPasswordIfNeeded(
+        activity: FragmentActivity, prefs: Prefs, importOk: Boolean,
+        format: PrefsFormat, importFile: PrefsFile, then: ((prefs: Prefs, importOk: Boolean) -> Unit)
+    ) {
 
         // current master password was not the one used for decryption, so we prompt for old password...
         if (!importOk && (prefs.metadata[PrefsMetadataKey.ENCRYPTION]?.status == PrefsStatus.ERROR)) {
-            askForEncryptionPass(activity, R.string.preferences_import_canceled, R.string.old_master_password,
-                R.string.different_password_used, R.string.master_password_will_be_replaced) { password ->
+            askForEncryptionPass(
+                activity, R.string.preferences_import_canceled, R.string.old_master_password,
+                R.string.different_password_used, R.string.master_password_will_be_replaced
+            ) { password ->
 
                 // ...and use it to load & decrypt file again
                 val prefsReloaded = format.loadPreferences(importFile.file, password)
@@ -232,15 +238,19 @@ class ImportExportPrefsImpl @Inject constructor(
                 ToastUtils.errorToast(activity, e.message)
                 log.error(LTag.CORE, "Unhandled exception", e)
             } catch (e: PrefFileNotFoundError) {
-                ToastUtils.Long.errorToast(activity, rh.gs(R.string.preferences_export_canceled)
-                    + "\n\n" + rh.gs(R.string.filenotfound)
-                    + ": " + e.message
-                    + "\n\n" + rh.gs(R.string.needstoragepermission))
+                ToastUtils.Long.errorToast(
+                    activity, rh.gs(R.string.preferences_export_canceled)
+                        + "\n\n" + rh.gs(R.string.filenotfound)
+                        + ": " + e.message
+                        + "\n\n" + rh.gs(R.string.needstoragepermission)
+                )
                 log.error(LTag.CORE, "File system exception", e)
             } catch (e: PrefIOError) {
-                ToastUtils.Long.errorToast(activity, rh.gs(R.string.preferences_export_canceled)
-                    + "\n\n" + rh.gs(R.string.needstoragepermission)
-                    + ": " + e.message)
+                ToastUtils.Long.errorToast(
+                    activity, rh.gs(R.string.preferences_export_canceled)
+                        + "\n\n" + rh.gs(R.string.needstoragepermission)
+                        + ": " + e.message
+                )
                 log.error(LTag.CORE, "File system exception", e)
             }
         }
@@ -269,7 +279,7 @@ class ImportExportPrefsImpl @Inject constructor(
 
         askToConfirmImport(activity, importFile) { password ->
 
-            val format: PrefsFormat =  encryptedPrefsFormat
+            val format: PrefsFormat = encryptedPrefsFormat
 
             try {
 

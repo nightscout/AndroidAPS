@@ -21,8 +21,6 @@ import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.extensions.notify
 import info.nightscout.androidaps.extensions.waitMillis
 import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
@@ -31,6 +29,8 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import java.util.*
 import java.util.concurrent.ScheduledFuture
@@ -69,8 +69,7 @@ class BLEComm @Inject internal constructor(
     private var scheduledDisconnection: ScheduledFuture<*>? = null
     private var processedMessage: DanaRSPacket? = null
     private val mSendQueue = ArrayList<ByteArray>()
-    private var bluetoothManager: BluetoothManager? = null
-    private var bluetoothAdapter: BluetoothAdapter? = null
+    private val bluetoothAdapter: BluetoothAdapter? get() = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
     private var connectDeviceName: String? = null
     private var bluetoothGatt: BluetoothGatt? = null
 
@@ -92,14 +91,6 @@ class BLEComm @Inject internal constructor(
     @Synchronized
     fun connect(from: String, address: String?): Boolean {
         aapsLogger.debug(LTag.PUMPBTCOMM, "Initializing BLEComm.")
-        if (bluetoothManager == null) {
-            bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-            if (bluetoothManager == null) {
-                aapsLogger.error("Unable to initialize BluetoothManager.")
-                return false
-            }
-        }
-        bluetoothAdapter = bluetoothManager?.adapter
         if (bluetoothAdapter == null) {
             aapsLogger.error("Unable to obtain a BluetoothAdapter.")
             return false
@@ -411,7 +402,8 @@ class BLEComm @Inject internal constructor(
                 if (bufferLength >= 6) {
                     for (idxStartByte in 0 until bufferLength - 2) {
                         if (readBuffer[idxStartByte] == PACKET_START_BYTE && readBuffer[idxStartByte + 1] == PACKET_START_BYTE ||
-                            readBuffer[idxStartByte] == BLE5_PACKET_START_BYTE && readBuffer[idxStartByte + 1] == BLE5_PACKET_START_BYTE) {
+                            readBuffer[idxStartByte] == BLE5_PACKET_START_BYTE && readBuffer[idxStartByte + 1] == BLE5_PACKET_START_BYTE
+                        ) {
                             if (idxStartByte > 0) {
                                 // if buffer doesn't start with signature remove the leading trash
                                 aapsLogger.debug(LTag.PUMPBTCOMM, "Shifting the input buffer by $idxStartByte bytes")
@@ -429,7 +421,8 @@ class BLEComm @Inject internal constructor(
                                 return
                             // Verify packed end [5A 5A]
                             if (readBuffer[length + 5] == PACKET_END_BYTE && readBuffer[length + 6] == PACKET_END_BYTE ||
-                                readBuffer[length + 5] == BLE5_PACKET_END_BYTE && readBuffer[length + 6] == BLE5_PACKET_END_BYTE) {
+                                readBuffer[length + 5] == BLE5_PACKET_END_BYTE && readBuffer[length + 6] == BLE5_PACKET_END_BYTE
+                            ) {
                                 packetIsValid = true
                             } else {
                                 aapsLogger.error(LTag.PUMPBTCOMM, "Error in input data. Resetting buffer.")

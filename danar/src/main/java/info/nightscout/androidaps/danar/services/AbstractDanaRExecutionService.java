@@ -2,6 +2,7 @@ package info.nightscout.androidaps.danar.services;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
@@ -190,7 +191,7 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
 
     protected void getBTSocketForSelectedPump() {
         mDevName = sp.getString(R.string.key_danar_bt_name, "");
-        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        BluetoothAdapter bluetoothAdapter = ((BluetoothManager)context.getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
 
         if (bluetoothAdapter != null) {
             Set<BluetoothDevice> bondedDevices = bluetoothAdapter.getBondedDevices();

@@ -42,7 +42,8 @@ class RileyLinkBLE @Inject constructor(private val context: Context) {
 
     private val gattDebugEnabled = true
     private var manualDisconnect = false
-    val bluetoothAdapter: BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+
+    val bluetoothAdapter: BluetoothAdapter? get() = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
     private val bluetoothGattCallback: BluetoothGattCallback
     var rileyLinkDevice: BluetoothDevice? = null
     private var bluetoothConnectionGatt: BluetoothGatt? = null
@@ -128,7 +129,7 @@ class RileyLinkBLE @Inject constructor(private val context: Context) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "Start scan for OrangeLink device.")
             orangeLink.startScan()
         } else {
-            rileyLinkDevice = bluetoothAdapter.getRemoteDevice(rileyLinkAddress)
+            rileyLinkDevice = bluetoothAdapter?.getRemoteDevice(rileyLinkAddress)
             // if this succeeds, we get a connection state change callback?
             if (rileyLinkDevice != null) connectGattInternal()
             else aapsLogger.error(LTag.PUMPBTCOMM, "RileyLink device not found with address: $rileyLinkAddress")
@@ -155,7 +156,7 @@ class RileyLinkBLE @Inject constructor(private val context: Context) {
         bluetoothConnectionGatt = rileyLinkDevice?.connectGatt(context, true, bluetoothGattCallback)
         // , BluetoothDevice.TRANSPORT_LE
         if (bluetoothConnectionGatt == null)
-            aapsLogger.error(LTag.PUMPBTCOMM, "Failed to connect to Bluetooth Low Energy device at " + bluetoothAdapter.address)
+            aapsLogger.error(LTag.PUMPBTCOMM, "Failed to connect to Bluetooth Low Energy device at " + bluetoothAdapter?.address)
         else {
             if (gattDebugEnabled) aapsLogger.debug(LTag.PUMPBTCOMM, "Gatt Connected.")
             val deviceName = bluetoothConnectionGatt?.device?.name
@@ -361,7 +362,7 @@ class RileyLinkBLE @Inject constructor(private val context: Context) {
                 }
                 if (newState == BluetoothProfile.STATE_CONNECTED) {
                     if (status == BluetoothGatt.GATT_SUCCESS) rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.BluetoothConnected, context)
-                    else aapsLogger.debug(LTag.PUMPBTCOMM, "BT State connected, GATT status ${status} (${getGattStatusMessage(status)})")
+                    else aapsLogger.debug(LTag.PUMPBTCOMM, "BT State connected, GATT status $status (${getGattStatusMessage(status)})")
                 } else if (newState == BluetoothProfile.STATE_CONNECTING || newState == BluetoothProfile.STATE_DISCONNECTING) {
                     aapsLogger.debug(LTag.PUMPBTCOMM, "We are in ${if (status == BluetoothProfile.STATE_CONNECTING) "Connecting" else "Disconnecting"} state.")
                 } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {

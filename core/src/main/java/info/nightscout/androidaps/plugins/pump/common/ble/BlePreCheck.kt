@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.LocationManager
+import android.os.Build
+import android.os.SystemClock
 import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -23,7 +25,9 @@ class BlePreCheck @Inject constructor(
 ) {
 
     companion object {
+
         private const val PERMISSION_REQUEST_COARSE_LOCATION = 30241 // arbitrary.
+        private const val PERMISSION_REQUEST_BLUETOOTH = 30242 // arbitrary.
     }
 
     fun prerequisitesCheck(activity: AppCompatActivity): Boolean {
@@ -37,11 +41,20 @@ class BlePreCheck @Inject constructor(
                 // your code that requires permission
                 ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), PERMISSION_REQUEST_COARSE_LOCATION)
             }
+            // change after SDK = 31+
+            if (Build.VERSION.SDK_INT >= /*Build.VERSION_CODES.S*/31) {
+                //ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT), PERMISSION_REQUEST_BLUETOOTH)
+                ActivityCompat.requestPermissions(activity, arrayOf("android.permission.BLUETOOTH_SCAN", "android.permission.BLUETOOTH_CONNECT"), PERMISSION_REQUEST_BLUETOOTH)
+            }
 
-            val bluetoothAdapter = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager).adapter
+            val bluetoothAdapter = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
             // Ensures Bluetooth is available on the device and it is enabled. If not,
             // displays a dialog requesting user permission to enable Bluetooth.
-            if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled) {
+            if (bluetoothAdapter?.isEnabled != true) {
+                bluetoothAdapter?.enable()
+                SystemClock.sleep(3000)
+            }
+            if (bluetoothAdapter?.isEnabled != true) {
                 OKDialog.show(activity, rh.gs(R.string.message), rh.gs(R.string.ble_not_enabled))
                 return false
             } else {

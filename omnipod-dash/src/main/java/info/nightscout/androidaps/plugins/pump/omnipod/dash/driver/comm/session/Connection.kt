@@ -53,8 +53,7 @@ class Connection(
     private val bleCommCallbacks = BleCommCallbacks(aapsLogger, incomingPackets, this)
     private var gattConnection: BluetoothGatt? = null
 
-    private val bluetoothManager: BluetoothManager =
-        context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+    private val bluetoothManager: BluetoothManager? = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?
 
     @Volatile
     var session: Session? = null
@@ -67,8 +66,7 @@ class Connection(
         podState.connectionAttempts++
         podState.bluetoothConnectionState = OmnipodDashPodStateManager.BluetoothConnectionState.CONNECTING
         val autoConnect = false
-        val gatt = gattConnection
-            ?: podDevice.connectGatt(context, autoConnect, bleCommCallbacks, BluetoothDevice.TRANSPORT_LE)
+        val gatt = gattConnection ?: podDevice.connectGatt(context, autoConnect, bleCommCallbacks, BluetoothDevice.TRANSPORT_LE)
         gattConnection = gatt
         if (!gatt.connect()) {
             throw FailedToConnectException("connect() returned false")
@@ -150,7 +148,7 @@ class Connection(
     }
 
     fun connectionState(): ConnectionState {
-        val connectionState = bluetoothManager.getConnectionState(podDevice, BluetoothProfile.GATT)
+        val connectionState = bluetoothManager?.getConnectionState(podDevice, BluetoothProfile.GATT)
         aapsLogger.debug(LTag.PUMPBTCOMM, "GATT connection state: $connectionState")
         if (connectionState != BluetoothProfile.STATE_CONNECTED) {
             return NotConnected

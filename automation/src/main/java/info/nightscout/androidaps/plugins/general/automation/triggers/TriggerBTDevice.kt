@@ -74,7 +74,7 @@ class TriggerBTDevice(injector: HasAndroidInjector) : Trigger(injector) {
     // Get the list of paired BT devices to use in dropdown menu
     private fun devicesPaired(): ArrayList<CharSequence> {
         val s = ArrayList<CharSequence>()
-        (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager).adapter?.bondedDevices?.forEach { s.add(it.name) }
+        (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter?.bondedDevices?.forEach { s.add(it.name) }
         return s
     }
 

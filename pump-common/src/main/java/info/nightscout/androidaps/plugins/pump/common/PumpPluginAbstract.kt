@@ -4,9 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.text.format.DateFormat
-import com.google.gson.GsonBuilder
 import dagger.android.HasAndroidInjector
-
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.events.EventAppExit
@@ -16,20 +14,21 @@ import info.nightscout.androidaps.extensions.plannedRemainingMinutes
 import info.nightscout.androidaps.extensions.toStringFull
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.interfaces.PumpSync.TemporaryBasalType
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.common.ManufacturerType
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
+import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryCarbs
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter.to0Decimal
 import info.nightscout.androidaps.utils.DecimalFormatter.to2Decimal
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
 import org.json.JSONException
@@ -74,8 +73,6 @@ abstract class PumpPluginAbstract protected constructor(
             pumpDescription.fillFor(value)
         }
 
-    protected var gson = GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()
-
     abstract fun initPumpStatusData()
 
     override fun onStart() {
@@ -85,9 +82,9 @@ abstract class PumpPluginAbstract protected constructor(
         context.bindService(intent, serviceConnection!!, Context.BIND_AUTO_CREATE)
         serviceRunning = true
         disposable.add(rxBus
-            .toObservable(EventAppExit::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ _ -> context.unbindService(serviceConnection!!) }) { throwable: Throwable? -> fabricPrivacy.logException(throwable!!) }
+                           .toObservable(EventAppExit::class.java)
+                           .observeOn(aapsSchedulers.io)
+                           .subscribe({ _ -> context.unbindService(serviceConnection!!) }) { throwable: Throwable? -> fabricPrivacy.logException(throwable!!) }
         )
         onStartCustomActions()
     }
@@ -113,17 +110,9 @@ abstract class PumpPluginAbstract protected constructor(
     abstract val serviceClass: Class<*>?
     abstract val pumpStatusData: PumpStatus
 
-    override fun isInitialized(): Boolean {
-        return pumpState.isInitialized()
-    }
-
-    override fun isSuspended(): Boolean {
-        return pumpState === PumpDriverState.Suspended
-    }
-
-    override fun isBusy(): Boolean {
-        return pumpState === PumpDriverState.Busy
-    }
+    override fun isInitialized(): Boolean = pumpState.isInitialized()
+    override fun isSuspended(): Boolean = pumpState == PumpDriverState.Suspended
+    override fun isBusy(): Boolean = pumpState == PumpDriverState.Busy
 
     override fun isConnected(): Boolean {
         if (displayConnectionMessages) aapsLogger.debug(LTag.PUMP, "isConnected [PumpPluginAbstract].")
@@ -335,10 +324,9 @@ abstract class PumpPluginAbstract protected constructor(
                 // bolus needed, ask pump to deliver it
                 deliverBolus(detailedBolusInfo)
             } else {
-                detailedBolusInfo.timestamp = System.currentTimeMillis()
 
                 // no bolus required, carb only treatment
-                pumpSyncStorage.addCarbs(info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryCarbs(detailedBolusInfo, this))
+                pumpSyncStorage.addCarbs(PumpDbEntryCarbs(detailedBolusInfo, this))
 
                 val bolusingEvent = EventOverviewBolusProgress
                 bolusingEvent.t = EventOverviewBolusProgress.Treatment(0.0, detailedBolusInfo.carbs.toInt(), detailedBolusInfo.bolusType === DetailedBolusInfo.BolusType.SMB)
@@ -357,25 +345,16 @@ abstract class PumpPluginAbstract protected constructor(
         rxBus.send(EventCustomActionsChanged())
     }
 
-    override fun manufacturer(): ManufacturerType {
-        return pumpType.manufacturer!!
-    }
-
-    override fun model(): PumpType {
-        return pumpType
-    }
-
-    override fun canHandleDST(): Boolean {
-        return false
-    }
+    override fun manufacturer(): ManufacturerType = pumpType.manufacturer!!
+    override fun model(): PumpType = pumpType
+    override fun canHandleDST(): Boolean = false
 
     protected abstract fun deliverBolus(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult
 
     protected abstract fun triggerUIChange()
 
-    private fun getOperationNotSupportedWithCustomText(resourceId: Int): PumpEnactResult {
-        return PumpEnactResult(injector).success(false).enacted(false).comment(resourceId)
-    }
+    private fun getOperationNotSupportedWithCustomText(resourceId: Int): PumpEnactResult =
+        PumpEnactResult(injector).success(false).enacted(false).comment(resourceId)
 
     init {
         pumpDescription.fillFor(pumpType)

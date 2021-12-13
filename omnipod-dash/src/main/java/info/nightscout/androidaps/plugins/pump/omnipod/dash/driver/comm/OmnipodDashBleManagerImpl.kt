@@ -30,8 +30,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
 ) : OmnipodDashBleManager {
 
     private val busy = AtomicBoolean(false)
-    private val bluetoothAdapter: BluetoothAdapter?
-        get() = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
+    private val bluetoothAdapter: BluetoothAdapter? get() = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
     private var connection: Connection? = null
     private val ids = Ids(podState)
 
