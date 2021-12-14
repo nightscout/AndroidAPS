@@ -131,6 +131,13 @@ class NSClientAddUpdateWorker(
                                     )
                                     aapsLogger.debug(LTag.DATABASE, "Invalidated carbs $it")
                                 }
+                                result.updated.forEach {
+                                    uel.log(Action.CARBS, Sources.NSClient,
+                                        ValueWithUnit.Timestamp(it.timestamp),
+                                        ValueWithUnit.Gram(it.amount.toInt())
+                                    )
+                                    aapsLogger.debug(LTag.DATABASE, "Updated carbs $it")
+                                }
                                 result.updatedNsId.forEach {
                                     aapsLogger.debug(LTag.DATABASE, "Updated nsId carbs $it")
                                 }

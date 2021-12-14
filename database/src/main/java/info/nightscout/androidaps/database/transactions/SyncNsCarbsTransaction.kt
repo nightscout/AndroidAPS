@@ -22,6 +22,13 @@ class SyncNsCarbsTransaction(private val carbs: Carbs) : Transaction<SyncNsCarbs
                 database.carbsDao.updateExistingEntry(current)
                 result.invalidated.add(current)
             }
+            // and change duration
+            if (current.duration != carbs.duration) {
+                current.amount = carbs.amount
+                current.duration = carbs.duration
+                database.carbsDao.updateExistingEntry(current)
+                result.updated.add(current)
+            }
             return result
         }
 
@@ -43,6 +50,7 @@ class SyncNsCarbsTransaction(private val carbs: Carbs) : Transaction<SyncNsCarbs
 
     class TransactionResult {
 
+        val updated = mutableListOf<Carbs>()
         val updatedNsId = mutableListOf<Carbs>()
         val inserted = mutableListOf<Carbs>()
         val invalidated = mutableListOf<Carbs>()
