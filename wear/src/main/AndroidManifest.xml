@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="info.nightscout.androidaps">
 
     <uses-feature android:name="android.hardware.type.watch" />
@@ -8,6 +9,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
+    <uses-sdk tools:overrideLibrary="androidx.wear.tiles" />
 
     <application
         android:name=".Aaps"
@@ -508,6 +510,19 @@
                 android:value="0" />
         </service>
 
+        <service
+            android:name=".tile.ActionsTileService"
+            android:label="Pump Actions"
+            android:permission="com.google.android.wearable.permission.BIND_TILE_PROVIDER">
+            <intent-filter>
+                <action android:name="androidx.wear.tiles.action.BIND_TILE_PROVIDER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="androidx.wear.tiles.PREVIEW"
+                android:resource="@drawable/action_tile_preview" />
+        </service>
+
         <receiver android:name=".complications.ComplicationTapBroadcastReceiver" />
 
         <activity
@@ -523,6 +538,7 @@
             android:label="@string/menu_settings" />
         <activity
             android:name=".interaction.actions.WizardActivity"
+            android:exported="true"
             android:label="@string/menu_wizard" />
         <activity
             android:name=".interaction.menus.FillMenuActivity"
@@ -532,6 +548,7 @@
             android:label="@string/menu_status" />
         <activity
             android:name=".interaction.actions.BolusActivity"
+            android:exported="true"
             android:label="@string/action_bolus" />
         <activity
             android:name=".interaction.actions.CPPActivity"
@@ -542,12 +559,15 @@
             android:launchMode="singleInstance" />
         <activity
             android:name=".interaction.actions.FillActivity"
+            android:exported="true"
             android:label="@string/menu_prime_fill" />
         <activity
             android:name=".interaction.actions.ECarbActivity"
+            android:exported="true"
             android:label="@string/action_carbs" />
         <activity
             android:name=".interaction.actions.TempTargetActivity"
+            android:exported="true"
             android:label="@string/menu_tempt" />
 
         <activity android:name=".interaction.ConfigurationActivity">
