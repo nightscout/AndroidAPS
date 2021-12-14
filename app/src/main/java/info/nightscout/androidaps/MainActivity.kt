@@ -35,8 +35,6 @@ import info.nightscout.androidaps.events.EventAppExit
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.events.EventRebuildTabs
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
@@ -53,9 +51,10 @@ import info.nightscout.androidaps.utils.extensions.isRunningRealPumpTest
 import info.nightscout.androidaps.utils.locale.LocaleHelper
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.androidaps.utils.tabs.TabPageAdapter
 import info.nightscout.androidaps.utils.ui.UIRunnable
+import info.nightscout.shared.logging.LTag
+import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import java.util.*
@@ -66,7 +65,6 @@ class MainActivity : NoSplashAppCompatActivity() {
 
     private val disposable = CompositeDisposable()
 
-    @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var androidPermission: AndroidPermission
@@ -145,6 +143,7 @@ class MainActivity : NoSplashAppCompatActivity() {
         if (config.PUMPDRIVERS) {
             androidPermission.notifyForSMSPermissions(this, smsCommunicatorPlugin)
             androidPermission.notifyForSystemWindowPermissions(this)
+            androidPermission.notifyForBtConnectPermission(this)
         }
     }
 

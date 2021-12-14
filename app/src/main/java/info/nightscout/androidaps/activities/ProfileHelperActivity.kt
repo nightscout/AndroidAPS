@@ -10,8 +10,6 @@ import android.widget.PopupMenu
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.data.PureProfile
-import info.nightscout.androidaps.utils.defaultProfile.DefaultProfile
-import info.nightscout.androidaps.utils.defaultProfile.DefaultProfileDPV
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.EffectiveProfileSwitch
 import info.nightscout.androidaps.databinding.ActivityProfilehelperBinding
@@ -19,7 +17,6 @@ import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
@@ -27,13 +24,14 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.androidaps.utils.defaultProfile.DefaultProfile
+import info.nightscout.androidaps.utils.defaultProfile.DefaultProfileDPV
 import info.nightscout.androidaps.utils.stats.TddCalculator
 import java.text.DecimalFormat
 import javax.inject.Inject
 
 class ProfileHelperActivity : NoSplashAppCompatActivity() {
 
-    @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var tddCalculator: TddCalculator
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var defaultProfile: DefaultProfile
@@ -142,10 +140,13 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
             else defaultProfileDPV.profile(age, tdd, pct / 100.0, profileFunction.getUnits())
             profile?.let {
                 OKDialog.showConfirmation(this, rh.gs(R.string.careportal_profileswitch), rh.gs(R.string.copytolocalprofile), Runnable {
-                    localProfilePlugin.addProfile(localProfilePlugin.copyFrom(it, "DefaultProfile " +
-                        dateUtil.dateAndTimeAndSecondsString(dateUtil.now())
-                            .replace(".", "/")
-                    ))
+                    localProfilePlugin.addProfile(
+                        localProfilePlugin.copyFrom(
+                            it, "DefaultProfile " +
+                                dateUtil.dateAndTimeAndSecondsString(dateUtil.now())
+                                    .replace(".", "/")
+                        )
+                    )
                     rxBus.send(EventLocalProfileChanged())
                 })
             }
@@ -221,7 +222,16 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
                             it.putInt("mode", ProfileViewerDialog.Mode.PROFILE_COMPARE.ordinal)
                             it.putString("customProfile", profile0.jsonObject.toString())
                             it.putString("customProfile2", profile1.jsonObject.toString())
-                            it.putString("customProfileName", getProfileName(ageUsed[0], tddUsed[0], weightUsed[0], pctUsed[0] / 100.0, 0) + "\n" + getProfileName(ageUsed[1], tddUsed[1], weightUsed[1], pctUsed[1] / 100.0, 1))
+                            it.putString(
+                                "customProfileName",
+                                getProfileName(ageUsed[0], tddUsed[0], weightUsed[0], pctUsed[0] / 100.0, 0) + "\n" + getProfileName(
+                                    ageUsed[1],
+                                    tddUsed[1],
+                                    weightUsed[1],
+                                    pctUsed[1] / 100.0,
+                                    1
+                                )
+                            )
                         }
                     }.show(supportFragmentManager, "ProfileViewDialog")
                     return@setOnClickListener
@@ -279,7 +289,8 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
                 ProfileType.CURRENT           -> rh.gs(R.string.currentprofile)
                 ProfileType.AVAILABLE_PROFILE -> rh.gs(R.string.availableprofile)
                 ProfileType.PROFILE_SWITCH    -> rh.gs(R.string.careportal_profileswitch)
-            })
+            }
+        )
         binding.defaultProfile.visibility = (newContent == ProfileType.MOTOL_DEFAULT || newContent == ProfileType.DPV_DEFAULT).toVisibility()
         binding.currentProfile.visibility = (newContent == ProfileType.CURRENT).toVisibility()
         binding.availableProfile.visibility = (newContent == ProfileType.AVAILABLE_PROFILE).toVisibility()

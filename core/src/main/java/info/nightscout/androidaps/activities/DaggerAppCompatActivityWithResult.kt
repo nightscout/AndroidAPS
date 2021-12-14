@@ -11,12 +11,15 @@ import info.nightscout.androidaps.plugins.general.maintenance.PrefsFileContract
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.permissions.OptimizationPermissionContract
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import javax.inject.Inject
 
 open class DaggerAppCompatActivityWithResult : DaggerAppCompatActivity() {
 
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var importExportPrefs: ImportExportPrefs
+    @Inject lateinit var aapsLogger: AAPSLogger
 
     val callForPrefFile = registerForActivityResult(PrefsFileContract()) {
         it?.let {
@@ -30,6 +33,7 @@ open class DaggerAppCompatActivityWithResult : DaggerAppCompatActivity() {
 
     val requestMultiplePermissions = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
         permissions.entries.forEach {
+            aapsLogger.info(LTag.CORE, "Permission ${it.key} ${it.value}")
             if (it.value)
                 if (ActivityCompat.checkSelfPermission(this, it.key) == PackageManager.PERMISSION_GRANTED) {
                     when (it.key) {

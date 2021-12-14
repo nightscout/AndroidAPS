@@ -22,8 +22,6 @@ import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus
 import info.nightscout.androidaps.plugins.general.overview.OverviewData
@@ -35,9 +33,14 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCa
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
-import info.nightscout.androidaps.utils.*
+import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.DefaultValueHelper
+import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.Translator
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
@@ -48,7 +51,6 @@ import kotlin.math.min
 class HistoryBrowseActivity : NoSplashAppCompatActivity() {
 
     @Inject lateinit var injector: HasAndroidInjector
-    @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var sp: SP
@@ -89,8 +91,41 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         setContentView(binding.root)
 
         // We don't want to use injected singletons but own instance working on top of different data
-        iobCobCalculator = IobCobCalculatorPlugin(injector, aapsLogger, aapsSchedulers, rxBus, sp, rh, profileFunction, activePlugin, sensitivityOref1Plugin, sensitivityAAPSPlugin, sensitivityWeightedAveragePlugin, fabricPrivacy, dateUtil, repository)
-        overviewData = OverviewData(injector, aapsLogger, rh, dateUtil, sp, activePlugin, defaultValueHelper, profileFunction, config, loop, nsDeviceStatus, repository, overviewMenus, iobCobCalculator, translator)
+        iobCobCalculator =
+            IobCobCalculatorPlugin(
+                injector,
+                aapsLogger,
+                aapsSchedulers,
+                rxBus,
+                sp,
+                rh,
+                profileFunction,
+                activePlugin,
+                sensitivityOref1Plugin,
+                sensitivityAAPSPlugin,
+                sensitivityWeightedAveragePlugin,
+                fabricPrivacy,
+                dateUtil,
+                repository
+            )
+        overviewData =
+            OverviewData(
+                injector,
+                aapsLogger,
+                rh,
+                dateUtil,
+                sp,
+                activePlugin,
+                defaultValueHelper,
+                profileFunction,
+                config,
+                loop,
+                nsDeviceStatus,
+                repository,
+                overviewMenus,
+                iobCobCalculator,
+                translator
+            )
 
         binding.left.setOnClickListener {
             adjustTimeRange(overviewData.fromTime - T.hours(rangeToDisplay.toLong()).msecs())
@@ -143,10 +178,11 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         binding.date.setOnClickListener {
             val cal = Calendar.getInstance()
             cal.timeInMillis = overviewData.fromTime
-            DatePickerDialog(this, dateSetListener,
-                    cal.get(Calendar.YEAR),
-                    cal.get(Calendar.MONTH),
-                    cal.get(Calendar.DAY_OF_MONTH)
+            DatePickerDialog(
+                this, dateSetListener,
+                cal.get(Calendar.YEAR),
+                cal.get(Calendar.MONTH),
+                cal.get(Calendar.DAY_OF_MONTH)
             ).show()
         }
 
@@ -389,14 +425,14 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         for (g in 0 until min(secondaryGraphs.size, menuChartSettings.size + 1)) {
             secondaryGraphsLabel[g].text = overviewMenus.enabledTypes(g + 1)
             secondaryGraphs[g].visibility = (
-                    menuChartSettings[g + 1][OverviewMenus.CharType.ABS.ordinal] ||
-                            menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal] ||
-                            menuChartSettings[g + 1][OverviewMenus.CharType.COB.ordinal] ||
-                            menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal] ||
-                            menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal] ||
-                            menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal] ||
-                            menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal]
-                    ).toVisibility()
+                menuChartSettings[g + 1][OverviewMenus.CharType.ABS.ordinal] ||
+                    menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal] ||
+                    menuChartSettings[g + 1][OverviewMenus.CharType.COB.ordinal] ||
+                    menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal] ||
+                    menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal] ||
+                    menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal] ||
+                    menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal]
+                ).toVisibility()
             secondaryGraphsData[g].performUpdate()
         }
     }

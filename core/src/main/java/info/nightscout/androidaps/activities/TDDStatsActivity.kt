@@ -25,15 +25,14 @@ import info.nightscout.androidaps.extensions.total
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.SafeParse
+import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
 import java.text.DateFormat
 import java.text.DecimalFormat
@@ -45,7 +44,6 @@ import kotlin.math.roundToInt
 
 class TDDStatsActivity : NoSplashAppCompatActivity() {
 
-    @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var sp: SP
     @Inject lateinit var profileFunction: ProfileFunction

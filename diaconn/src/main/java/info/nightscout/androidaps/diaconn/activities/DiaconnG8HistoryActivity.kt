@@ -19,7 +19,6 @@ import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
@@ -27,8 +26,6 @@ import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-
-
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import java.util.*
@@ -37,7 +34,6 @@ import javax.inject.Inject
 class DiaconnG8HistoryActivity : NoSplashAppCompatActivity() {
 
     @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var activePlugin: ActivePlugin
@@ -138,7 +134,7 @@ class DiaconnG8HistoryActivity : NoSplashAppCompatActivity() {
             holder.duration.text = DecimalFormatter.to0Decimal(record.duration.toDouble())
             holder.alarm.text = record.alarm
             when (showingType) {
-                RecordTypes.RECORD_TYPE_ALARM -> {
+                RecordTypes.RECORD_TYPE_ALARM     -> {
                     holder.time.visibility = View.VISIBLE
                     holder.value.visibility = View.VISIBLE
                     holder.stringValue.visibility = View.VISIBLE
@@ -150,7 +146,7 @@ class DiaconnG8HistoryActivity : NoSplashAppCompatActivity() {
                     holder.alarm.visibility = View.VISIBLE
                 }
 
-                RecordTypes.RECORD_TYPE_BOLUS -> {
+                RecordTypes.RECORD_TYPE_BOLUS     -> {
                     holder.time.visibility = View.VISIBLE
                     holder.value.visibility = View.VISIBLE
                     holder.stringValue.visibility = View.VISIBLE
@@ -162,7 +158,7 @@ class DiaconnG8HistoryActivity : NoSplashAppCompatActivity() {
                     holder.alarm.visibility = View.GONE
                 }
 
-                RecordTypes.RECORD_TYPE_DAILY -> {
+                RecordTypes.RECORD_TYPE_DAILY     -> {
                     holder.dailyBasal.text = rh.gs(R.string.formatinsulinunits, record.dailyBasal)
                     holder.dailyBolus.text = rh.gs(R.string.formatinsulinunits, record.dailyBolus)
                     holder.dailyTotal.text = rh.gs(R.string.formatinsulinunits, record.dailyBolus + record.dailyBasal)
@@ -189,7 +185,8 @@ class DiaconnG8HistoryActivity : NoSplashAppCompatActivity() {
                     holder.dailyTotal.visibility = View.GONE
                     holder.alarm.visibility = View.GONE
                 }
-                RecordTypes.RECORD_TYPE_REFILL -> {
+
+                RecordTypes.RECORD_TYPE_REFILL    -> {
                     holder.time.visibility = View.VISIBLE
                     holder.value.visibility = View.VISIBLE
                     holder.stringValue.visibility = View.VISIBLE
@@ -201,7 +198,7 @@ class DiaconnG8HistoryActivity : NoSplashAppCompatActivity() {
                     holder.alarm.visibility = View.GONE
                 }
 
-                RecordTypes.RECORD_TYPE_TB -> {
+                RecordTypes.RECORD_TYPE_TB        -> {
                     holder.time.visibility = View.VISIBLE
                     holder.value.visibility = View.VISIBLE
                     holder.stringValue.visibility = View.VISIBLE
@@ -213,7 +210,7 @@ class DiaconnG8HistoryActivity : NoSplashAppCompatActivity() {
                     holder.alarm.visibility = View.GONE
                 }
 
-                RecordTypes.RECORD_TYPE_SUSPEND -> {
+                RecordTypes.RECORD_TYPE_SUSPEND   -> {
                     holder.time.visibility = View.VISIBLE
                     holder.value.visibility = View.GONE
                     holder.stringValue.visibility = View.VISIBLE

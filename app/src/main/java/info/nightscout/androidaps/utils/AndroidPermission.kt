@@ -3,6 +3,7 @@ package info.nightscout.androidaps.utils
 import android.Manifest
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
+import android.bluetooth.BluetoothAdapter
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -82,11 +83,7 @@ class AndroidPermission @Inject constructor(
         if (smsCommunicatorPlugin.isEnabled()) {
             if (permissionNotGranted(activity, Manifest.permission.RECEIVE_SMS)) {
                 val notification = NotificationWithAction(injector, Notification.PERMISSION_SMS, rh.gs(R.string.smscommunicator_missingsmspermission), Notification.URGENT)
-                notification.action(R.string.request) {
-                    askForPermission(activity, arrayOf(Manifest.permission.RECEIVE_SMS,
-                        Manifest.permission.SEND_SMS,
-                        Manifest.permission.RECEIVE_MMS))
-                }
+                notification.action(R.string.request) { askForPermission(activity, arrayOf(Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS, Manifest.permission.RECEIVE_MMS)) }
                 rxBus.send(EventNewNotification(notification))
             } else rxBus.send(EventDismissNotification(Notification.PERMISSION_SMS))
             // Following is a bug in Android 8
@@ -95,6 +92,19 @@ class AndroidPermission @Inject constructor(
 //                notification.action(R.string.request) { askForPermission(activity, arrayOf(Manifest.permission.READ_PHONE_STATE)) }
 //                rxBus.send(EventNewNotification(notification))
 //            } else rxBus.send(EventDismissNotification(Notification.PERMISSION_PHONE_STATE))
+        }
+    }
+
+    @Synchronized
+    fun notifyForBtConnectPermission(activity: FragmentActivity) {
+        activity.startActivity(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
+        if (Build.VERSION.SDK_INT >= /*Build.VERSION_CODES.S*/31) {
+            //  Manifest.permission.BLUETOOTH_CONNECT
+            if (permissionNotGranted(activity, "android.permission.BLUETOOTH_CONNECT") || permissionNotGranted(activity, "android.permission.BLUETOOTH_SCAN")) {
+                val notification = NotificationWithAction(injector, Notification.PERMISSION_BT, rh.gs(R.string.needconnectpermission), Notification.URGENT)
+                notification.action(R.string.request) { askForPermission(activity, arrayOf("android.permission.BLUETOOTH_SCAN", "android.permission.BLUETOOTH_CONNECT")) }
+                rxBus.send(EventNewNotification(notification))
+            } else rxBus.send(EventDismissNotification(Notification.PERMISSION_BT))
         }
     }
 
@@ -110,10 +120,7 @@ class AndroidPermission @Inject constructor(
     @Synchronized fun notifyForStoragePermission(activity: FragmentActivity) {
         if (permissionNotGranted(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             val notification = NotificationWithAction(injector, Notification.PERMISSION_STORAGE, rh.gs(R.string.needstoragepermission), Notification.URGENT)
-            notification.action(R.string.request) {
-                askForPermission(activity, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE))
-            }
+            notification.action(R.string.request) { askForPermission(activity, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) }
             rxBus.send(EventNewNotification(notification))
         } else rxBus.send(EventDismissNotification(Notification.PERMISSION_STORAGE))
     }

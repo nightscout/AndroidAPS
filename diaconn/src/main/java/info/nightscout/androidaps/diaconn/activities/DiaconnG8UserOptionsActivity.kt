@@ -8,20 +8,16 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
-
-
 import info.nightscout.androidaps.diaconn.DiaconnG8Pump
 import info.nightscout.androidaps.diaconn.R
 import info.nightscout.androidaps.diaconn.databinding.DiaconnG8UserOptionsActivityBinding
-
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
 import java.text.DecimalFormat
@@ -29,7 +25,6 @@ import javax.inject.Inject
 
 class DiaconnG8UserOptionsActivity : NoSplashAppCompatActivity() {
 
-    @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var context: Context
@@ -74,7 +69,8 @@ class DiaconnG8UserOptionsActivity : NoSplashAppCompatActivity() {
                 + "\nbeepAndAlarm:" + diaconnG8Pump.beepAndAlarm
                 + "\nalarmIntesity:" + diaconnG8Pump.alarmIntesity
                 + "\nlanguage:" + diaconnG8Pump.selectedLanguage
-                + "\nlcdOnTimeSec:" + diaconnG8Pump.lcdOnTimeSec)
+                + "\nlcdOnTimeSec:" + diaconnG8Pump.lcdOnTimeSec
+        )
 
         fillSoundCategory()
         fillSoundSubCategory()
@@ -84,8 +80,9 @@ class DiaconnG8UserOptionsActivity : NoSplashAppCompatActivity() {
 
         binding.beepAndAlarm.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                binding.alarmIntesity.visibility = if("silent" == binding.beepAndAlarm.getItemAtPosition(position).toString()) View.GONE else View.VISIBLE
+                binding.alarmIntesity.visibility = if ("silent" == binding.beepAndAlarm.getItemAtPosition(position).toString()) View.GONE else View.VISIBLE
             }
+
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
@@ -117,10 +114,10 @@ class DiaconnG8UserOptionsActivity : NoSplashAppCompatActivity() {
         diaconnG8Pump.setUserOptionType = DiaconnG8Pump.LCD
 
         diaconnG8Pump.lcdOnTimeSec = when {
-            binding.pumpscreentimeout10.isChecked   -> 1
-            binding.pumpscreentimeout20.isChecked   -> 2
-            binding.pumpscreentimeout30.isChecked   -> 3
-            else                                    -> 1
+            binding.pumpscreentimeout10.isChecked -> 1
+            binding.pumpscreentimeout20.isChecked -> 2
+            binding.pumpscreentimeout30.isChecked -> 3
+            else                                  -> 1
         }
 
         onSaveClick()
@@ -131,10 +128,10 @@ class DiaconnG8UserOptionsActivity : NoSplashAppCompatActivity() {
         diaconnG8Pump.setUserOptionType = DiaconnG8Pump.LANG
 
         diaconnG8Pump.selectedLanguage = when {
-            binding.pumplangChiness.isChecked   -> 1
-            binding.pumplangKorean.isChecked    -> 2
-            binding.pumplangEnglish.isChecked   -> 3
-            else                                -> 2
+            binding.pumplangChiness.isChecked -> 1
+            binding.pumplangKorean.isChecked  -> 2
+            binding.pumplangEnglish.isChecked -> 3
+            else                              -> 2
         }
 
         onSaveClick()
