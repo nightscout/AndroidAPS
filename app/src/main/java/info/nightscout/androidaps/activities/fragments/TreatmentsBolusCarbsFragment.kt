@@ -17,6 +17,7 @@ import info.nightscout.androidaps.database.entities.Carbs
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
+import info.nightscout.androidaps.database.transactions.CutCarbsTransaction
 import info.nightscout.androidaps.database.transactions.InvalidateBolusCalculatorResultTransaction
 import info.nightscout.androidaps.database.transactions.InvalidateBolusTransaction
 import info.nightscout.androidaps.database.transactions.InvalidateCarbsTransaction
@@ -30,8 +31,6 @@ import info.nightscout.androidaps.extensions.iobCalc
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
@@ -43,6 +42,8 @@ import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.Completable
 import io.reactivex.disposables.CompositeDisposable
@@ -131,15 +132,26 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                             }
                         }
                     repository
-                        .getCarbsDataFromTime(dateUtil.now(), false)
+                        .getCarbsDataFromTimeNotExpanded(dateUtil.now(), false)
                         .observeOn(aapsSchedulers.main)
                         .subscribe { list ->
                             list.forEach { carb ->
-                                disposable += repository.runTransactionForResult(InvalidateCarbsTransaction(carb.id))
-                                    .subscribe(
-                                        { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated carbs $it") } },
-                                        { aapsLogger.error(LTag.DATABASE, "Error while invalidating carbs", it) }
-                                    )
+                                if (carb.duration == 0L)
+                                    disposable += repository.runTransactionForResult(InvalidateCarbsTransaction(carb.id))
+                                        .subscribe(
+                                            { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated carbs $it") } },
+                                            { aapsLogger.error(LTag.DATABASE, "Error while invalidating carbs", it) }
+                                        )
+                                else {
+                                    disposable += repository.runTransactionForResult(CutCarbsTransaction(carb.id, dateUtil.now()))
+                                        .subscribe(
+                                            { result ->
+                                                result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated carbs $it") }
+                                                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated (cut end) carbs $it") }
+                                            },
+                                            { aapsLogger.error(LTag.DATABASE, "Error while invalidating carbs", it) }
+                                        )
+                                }
                             }
                         }
                     repository

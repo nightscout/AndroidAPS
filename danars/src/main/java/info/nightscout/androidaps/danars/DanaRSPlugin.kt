@@ -621,6 +621,7 @@ class DanaRSPlugin @Inject constructor(
     override fun loadTDDs(): PumpEnactResult = loadHistory(RecordTypes.RECORD_TYPE_DAILY)
     override fun canHandleDST(): Boolean = false
     override fun clearPairing() {
+        aapsLogger.debug(LTag.PUMPCOMM, "Pairing keys cleared")
         sp.remove(rh.gs(R.string.key_danars_pairingkey) + mDeviceName)
         sp.remove(rh.gs(R.string.key_danars_v3_randompairingkey) + mDeviceName)
         sp.remove(rh.gs(R.string.key_danars_v3_pairingkey) + mDeviceName)
