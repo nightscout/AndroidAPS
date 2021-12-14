@@ -797,6 +797,7 @@
     <string name="needsystemwindowpermission">Application needs system window permission for notifications</string>
     <string name="needlocationpermission">Application needs location permission for BT scan and WiFi identification</string>
     <string name="needstoragepermission">Application needs storage permission to be able store log files and export settings</string>
+    <string name="needconnectpermission">Application needs bluetooth permission</string>
     <string name="request">Request</string>
     <string name="open_navigation">Open navigation</string>
     <string name="close_navigation">Close navigation</string>
