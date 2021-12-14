@@ -53,7 +53,7 @@ android {
     defaultConfig {
         applicationId "info.nightscout.androidaps"
         minSdkVersion 23
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 2
         versionName "1.0.3"
         buildConfigField "String", "BUILDVERSION", generateGitBuild()
@@ -132,6 +132,12 @@ dependencies {
     implementation(name: 'wearpreferenceactivity-0.5.0', ext: 'aar')
     implementation('com.github.lecho:hellocharts-library:1.5.8@aar')
 
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0-RC'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.6.0-Rc'
+    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation "androidx.wear.tiles:tiles:1.0.0"
+
+    implementation "androidx.core:core-ktx:$coreVersion"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
     testImplementation "junit:junit:$junit_version"
