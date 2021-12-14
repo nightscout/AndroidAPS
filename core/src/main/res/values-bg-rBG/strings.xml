@@ -216,6 +216,7 @@
     <string name="pump">Помпа</string>
     <string name="loop">Кръг - Loop</string>
     <string name="ns">Найтскаут</string>
+    <string name="reading_pump_history">Чете историята на помпата</string>
     <!--    Command-->
     <string name="connectiontimedout">Времето за връзка изтече</string>
     <!--    PumpEnactResult-->
@@ -302,7 +303,10 @@
     <string name="ue_source">Източник</string>
     <string name="ue_action">Действие</string>
     <!-- HardLimits -->
+    <string name="temp_target_value">Стойност временна цел</string>
+    <string name="valuelimitedto">%1$.2f ограничен до %2$.2f</string>
     <!-- Command Queue + readStatus reasons -->
+    <string name="sms" comment="26 characters max for translation">SMS</string>
     <plurals name="days">
         <item quantity="one">%1$d дeн</item>
         <item quantity="other">%1$d дни</item>

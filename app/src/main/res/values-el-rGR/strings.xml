@@ -53,7 +53,6 @@
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">Υδατάνθρακες</string>
     <string name="treatments_wizard_correction_label">Διόρθωση</string>
-    <string name="bolus_iob_label">Bolus IOB</string>
     <string name="openapsma_run">Έναρξη τώρα</string>
     <string name="vitualpump_label">ΕΙΚΟΝΙΚΗ ΑΝΤΛΙΑ</string>
     <string name="openapsma_lastrun_label">Τελευταίος Υπολογισμός</string>
@@ -114,9 +113,7 @@
     <string name="careportal_newnstreatment_other">Άλλο</string>
     <string name="careportal_newnstreatment_meter">Μετρητής</string>
     <string name="careportal_newnstreatment_sensor">Αισθητήρας</string>
-    <string name="carb_time_label">Ώρα γεύματος</string>
     <string name="careportal_newnstreatment_duration_label">Διάρκεια</string>
-    <string name="profile_label">Προφίλ</string>
     <string name="careportal_newnstreatment_glucosetype">Τύπος Γλυκόζης</string>
     <string name="overview_tempbasal_button">Προσ Ρυθμός</string>
     <string name="overview_extendedbolus_button">Εκτεταμμένο Bolus</string>
@@ -274,7 +271,6 @@
     <string name="smscommunicator_wrongduration">Λάθος διάρκεια</string>
     <string name="smscommunicator_loopsuspended">Κύκλωμα σε αναστολή</string>
     <string name="smscommunicator_loopresumed">Επαναφορά κυκλώματος</string>
-    <string name="bg_trend_label">Γραφική 15min</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Η εφαρμογή καταγραφής ξεκινά από το NS</string>

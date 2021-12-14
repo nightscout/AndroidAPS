@@ -57,7 +57,6 @@
     <string name="treatments_wizard_tt_label">임시목표</string>
     <string name="treatments_wizard_carbs_label">탄수화물</string>
     <string name="treatments_wizard_correction_label">교정</string>
-    <string name="bolus_iob_label">Bolus IOB</string>
     <string name="openapsma_run">지금 실행</string>
     <string name="vitualpump_label">가상 펌프</string>
     <string name="openapsma_lastrun_label">최근 실행</string>
@@ -121,9 +120,7 @@
     <string name="careportal_newnstreatment_other">기타</string>
     <string name="careportal_newnstreatment_meter">측정기</string>
     <string name="careportal_newnstreatment_sensor">센서</string>
-    <string name="carb_time_label">탄수화물 시간</string>
     <string name="careportal_newnstreatment_duration_label">기간</string>
-    <string name="profile_label">프로파일</string>
     <string name="careportal_newnstreatment_glucosetype">혈당 종류</string>
     <string name="overview_tempbasal_button">임시Basal</string>
     <string name="overview_extendedbolus_button">확장 Bolus</string>
@@ -353,7 +350,6 @@
     <string name="smscommunicator_wrongduration">기간이 잘못되었습니다.</string>
     <string name="smscommunicator_loopsuspended">Loop가 일시중지 되었습니다.</string>
     <string name="smscommunicator_loopresumed">Loop가 재실행 되었습니다.</string>
-    <string name="bg_trend_label">15분 추이</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">앱시작을 NS에 기록하기</string>

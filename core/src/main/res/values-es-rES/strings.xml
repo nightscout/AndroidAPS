@@ -6,7 +6,7 @@
     <string name="error">Error</string>
     <string name="not_set_short">No configurado</string>
     <string name="failedupdatebasalprofile">Error al actualizar el perfil basal</string>
-    <string name="profile_set_ok">Perfil basal actualizado en bomba</string>
+    <string name="profile_set_ok">Perfil basal actualizado en la bomba</string>
     <string name="invalidinput">Datos inválidos</string>
     <string name="tempbasaldeliveryerror">Basal Temporal no emitida</string>
     <string name="goingtodeliver">Entregando %1$.2f U</string>
@@ -197,13 +197,13 @@
     <string name="careportal_combobolus">Bolo combo</string>
     <string name="careportal_tempbasalstart">Inicio Basal Temp</string>
     <string name="careportal_tempbasalend">Fin Basal Temp</string>
-    <string name="careportal_carbscorrection">Corrección Carbohidratos</string>
+    <string name="careportal_carbscorrection">Carbohidratos de corrección</string>
     <string name="careportal_openapsoffline">OpenAPS sin conexión</string>
     <string name="careportal_pumpbatterychange">Cambio batería de bomba</string>
     <string name="careportal_temporarytarget">Objetivo temporal</string>
     <string name="careportal_temporarytargetvalue">Valor objetivo temporal</string>
     <string name="careportal_temporarytargetcancel">Cancelar Objetivo temporal</string>
-    <string name="boluswizard">Asistente Bolo</string>
+    <string name="boluswizard">Asistente de bolo</string>
     <string name="glucosetype_finger">Dedo</string>
     <string name="glucosetype_sensor">Sensor</string>
     <string name="manual">Manualmente</string>
@@ -290,7 +290,7 @@
     <string name="signature_verifier">Verificador de firma</string>
     <string name="running_invalid_version">Hemos detectado que está ejecutando una versión no válida. ¡Lazo desactivado!</string>
     <string name="versionavailable">Versión %1$s disponible</string>
-    <string name="version_expire">Versión %1$s expira en %2$s</string>
+    <string name="version_expire">Versión %1$s expira el %2$s</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Por favor, reinicia el teléfono o AndroidAPS desde los ajustes del sistema, sino, AndroidAPS no guardará los registros. Esto es importante para trazar y verificar que el algoritmo funciona correctamente.</string>
     <!-- WeekdayPicker -->
@@ -401,7 +401,7 @@
     <string name="temp_target_value">Valor objetivo temporal</string>
     <string name="profile_dia">Valor DIA del perfil</string>
     <string name="profile_sensitivity_value">Valor de sensibilidad del perfil</string>
-    <string name="profile_max_daily_basal_value">Valor basal máximo del perfil</string>
+    <string name="profile_max_daily_basal_value">Máximo valor basal del perfil</string>
     <string name="current_basal_value">Valor basal actual</string>
     <string name="profile_carbs_ratio_value">Valor del ratio de carbohidratos de perfil</string>
     <string name="valuelimitedto">%1$.2f limitado a %2$.2f</string>

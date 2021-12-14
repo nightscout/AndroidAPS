@@ -624,6 +624,7 @@
     <string name="exitwizard">Пропусни съветника за настройка</string>
     <string name="setupwizard_loop_description">Натиснете бутона по-долу за да позволите AndroidAPS да предлага/прави промени в базалните стойности</string>
     <string name="setupwizard_sensitivity_description">Модула за чувствителност се използва за определяне на чувствителността и COB изчисления. За повече информация посетете:</string>
+    <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="nsclientinfotext">NSClient поддържа връзка с Nightscout. Можете да пропуснете тази настройка сега, но вие няма можете да преминете целите, докато не го настроите.</string>
     <string name="diawarning">Моля, не забравяйте: нови инсулин профили изискват време на действие на инсулиина - DIA от поне 5ч. DIA 5-6ч на нов профил е равно на DIA 3ч при стари инсулин профили.</string>
     <string name="setupwizard_aps_description">Изберете един от наличните алгоритми. Те са подредени от най-стария до най-новия. По-новите алгоритми са обикновено по-мощни и по-агресивни. Така ако сте новак в APS системите може да започнете с AMA. Не забравяйте да прочетете документацията на OpenAPS и да го конфигурирате преди употреба.</string>
@@ -888,4 +889,5 @@
     <string name="data_status">Статус на данни за КЗ</string>
     <string name="recalculated_data_used">Рекалкулирани използвани данни</string>
     <string name="bg_too_close">КЗ близо до:\n%1$s\n%2$s</string>
+    <string name="not_available_full">Недостъпно</string>
 </resources>

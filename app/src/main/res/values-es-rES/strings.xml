@@ -68,7 +68,7 @@
     <string name="openapsma_profile_label">Perfil</string>
     <string name="openapsma_mealdata_label">Datos de comidas</string>
     <string name="result">Resultado</string>
-    <string name="result_insulin_carbs">Resultado: %1$s %2$ss</string>
+    <string name="result_insulin_carbs">Resultado: %1$s %2$s</string>
     <string name="openapsma_noglucosedata">No hay disponibles datos de glucosa</string>
     <string name="openapsma_request_label">Solicitud</string>
     <string name="delta">Delta</string>
@@ -122,7 +122,7 @@
     <string name="careportal_newnstreatment_other">Otro</string>
     <string name="careportal_newnstreatment_meter">Medidor</string>
     <string name="careportal_newnstreatment_sensor">Sensor</string>
-    <string name="carb_time_label">Tiempo absorción</string>
+    <string name="carb_time_label">Tiempo de absorción</string>
     <string name="careportal_newnstreatment_duration_label">Duración</string>
     <string name="profile_label">Perfil</string>
     <string name="careportal_newnstreatment_glucosetype">Tipo de glucosa</string>
@@ -189,7 +189,7 @@
     <string name="smscommunicator_loopisenabled">Lazo activo</string>
     <string name="smscommunicator_pumpconnectwithcode">Para conectar la infusora responder con el código %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Error al conectar a la bomba</string>
-    <string name="smscommunicator_pumpdisconnectwithcode">Para desconectar la bomba durante %1$dminutos responde con el código %2$s</string>
+    <string name="smscommunicator_pumpdisconnectwithcode">Para desconectar la bomba durante %1$dminutos, responde con el código %2$s</string>
     <string name="smscommunicator_pumpdisconnected">Bomba desconectada</string>
     <string name="smscommunicator_reconnect">Bomba reconectada</string>
     <string name="smscommunicator_remotecommandnotallowed">Comando remoto no permitido</string>
@@ -227,8 +227,8 @@
     <string name="mealbolus">Bolo Comida</string>
     <string name="correctionbous">Corrección</string>
     <string name="actions">Acciones</string>
-    <string name="ns_upload_only">(PELIGROSO INHABILITAR) Sólo carga NS</string>
-    <string name="ns_upload_only_summary">Sólo subir a NS (sincronización desactivada). No es efectivo en SGV a menos que se seleccione una fuente local como xDrip+. No es efectivo en perfiles mientras se utiliza perfiles NS.\n!!! ¡¡ADVERTENCIA!!! Desactivar esta opción puede causar mal funcionamiento y sobredosis de insulina si cualquiera de sus componentes (AAPS, NS, xDrip+) está mal configurado. ¡Vigile cuidadosamente si los datos mostrados por AAPS coinciden con el estado de la bomba!</string>
+    <string name="ns_upload_only">(PELIGROSO DESHABILITAR) Sólo subida a Nightscout</string>
+    <string name="ns_upload_only_summary">Sólo subir a Nightscout (sincronización desactivada). No es efectivo en SGV, a menos que se seleccione una fuente local como xDrip+. No es efectivo en perfiles, si se usan perfiles Nightscout.\n!!! ¡¡ADVERTENCIA!!! Desactivar esta opción puede causar mal funcionamiento y sobredosis de insulina, si cualquiera de sus componentes (AAPS, NS, xDrip+) está mal configurado. ¡Vigile cuidadosamente si los datos mostrados por AAPS coinciden con el estado de la bomba!</string>
     <string name="pumpNotInitialized">¡Bomba no iniciada!</string>
     <string name="primefill">Cebar/Llenar</string>
     <string name="fillwarning">¡Por favor, asegúrate de que la cantidad coincide con la especificación del set de infusión!</string>
@@ -247,7 +247,7 @@
     <string name="resend_all_data">Reenviar todos los datos</string>
     <string name="open_settings_on_wear">Abrir ajustes en el reloj</string>
     <string name="basal_rate">Ratio Basal:</string>
-    <string name="basalvaluebelowminimum">Valor Basal por debajo del mínimo. Perfil NO aplicado!</string>
+    <string name="basalvaluebelowminimum">Valor basal por debajo del mínimo. Perfil no establecido.</string>
     <string name="sms_actualbg">Glucosa:</string>
     <string name="sms_lastbg">Última Glucosa:</string>
     <string name="mdi">MDI</string>
@@ -305,9 +305,9 @@
     <string name="nsclientinternal_title">NSClient</string>
     <string name="nsclientinternal_url_title">Página de Nightscout</string>
     <string name="nsclientinternal_url_dialogmessage">Introduce tu página de Nightscout</string>
-    <string name="nsclientinternal_secret_title">API Secret de NS</string>
-    <string name="nsclientinternal_secret_dialogtitle">API Secret de NS</string>
-    <string name="nsclientinternal_secret_dialogmessage">Introduce la contraseña API Secret de NS (mínimo de 12 caracteres)</string>
+    <string name="nsclientinternal_secret_title">API Secret de Nightscout</string>
+    <string name="nsclientinternal_secret_dialogtitle">API Secret de Nightscout</string>
+    <string name="nsclientinternal_secret_dialogmessage">Introduce la contraseña API Secret de Nightscout (mínimo de 12 caracteres)</string>
     <string name="deliver_now">Entregar ahora</string>
     <string name="clear_queue">Borrar cola</string>
     <string name="show_queue">Mostrar cola</string>
@@ -339,11 +339,11 @@
     <string name="suspendloopfor3h">Suspender lazo durante 3 horas</string>
     <string name="suspendloopfor10h">Suspender lazo durante 10 horas</string>
     <string name="disconnectpump">Desconectar bomba</string>
-    <string name="disconnectpumpfor15m">Desconectar bomba por 15 min</string>
-    <string name="disconnectpumpfor30m">Desconectar bomba por 30 min</string>
-    <string name="disconnectpumpfor1h">Desconectar bomba por 1 h</string>
-    <string name="disconnectpumpfor2h">Desconectar bomba por 2 h</string>
-    <string name="disconnectpumpfor3h">Desconectar bomba por 3 h</string>
+    <string name="disconnectpumpfor15m">Desconectar bomba durante 15 minutos</string>
+    <string name="disconnectpumpfor30m">Desconectar bomba durante 30 minutos</string>
+    <string name="disconnectpumpfor1h">Desconectar bomba durante 1 hora</string>
+    <string name="disconnectpumpfor2h">Desconectar bomba durante 2 horas</string>
+    <string name="disconnectpumpfor3h">Desconectar bomba durante 3 horas</string>
     <string name="duration15m">15 min</string>
     <string name="duration30m">30 min</string>
     <string name="duration1h">1 hora</string>
@@ -355,10 +355,10 @@
     <string name="smscommunicator_wrongduration">Duración incorrecta</string>
     <string name="smscommunicator_loopsuspended">Lazo suspendido</string>
     <string name="smscommunicator_loopresumed">Lazo reanudado</string>
-    <string name="bg_trend_label">Tend. 15 min</string>
+    <string name="bg_trend_label">Tendencia 15min</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="superbolus">Superbolo</string>
-    <string name="ns_logappstartedevent">Registrar el inicio de la aplicación en NS</string>
+    <string name="ns_logappstartedevent">Registrar el inicio de la aplicación en Nightscout</string>
     <string name="restartingapp">Saliendo de la aplicación para aplicar los ajustes.</string>
     <string name="configbuilder_insulin_description">¿Qué tipo de insulina estás utilizando?</string>
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
@@ -404,8 +404,8 @@
     <string name="careportal_age_label">Edad:</string>
     <string name="careportal_level_label">Nivel:</string>
     <string name="ns_alarmoptions">Opciones de alarmas</string>
-    <string name="ns_alarms">Crear notificaciones de alarmas NS</string>
-    <string name="ns_announcements">Crear notificaciones de avisos de NS</string>
+    <string name="ns_alarms">Crear notificaciones de alarmas desde Nightscout</string>
+    <string name="ns_announcements">Crear notificaciones desde Nightscout</string>
     <string name="nsalarm_staledatavalue_label">Datos antiguos limite [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Datos antiguos urgentes limite [min]</string>
     <string name="openapsama_autosens_period">Intervalo para autosens [h]</string>
@@ -479,7 +479,7 @@
     <string name="urgent_alarm">Alarma urgente</string>
     <string name="info">INFORMACIÓN</string>
     <string name="eversense">Eversense App (parcheada)</string>
-    <string name="dexcomg5_nsupload_title">Subir datos de glucosa a NS</string>
+    <string name="dexcomg5_nsupload_title">Subir datos de glucosa a Nightscout</string>
     <string name="bgsource_upload">Ajuste de subida de datos de glucosa</string>
     <string name="wear_detailed_delta_title">Mostrar detalles del delta</string>
     <string name="wear_detailed_delta_summary">Mostrar el delta con un decimal más</string>
@@ -640,6 +640,7 @@
     <string name="needsystemwindowpermission">La aplicación necesita permisos del sistema para poder mostrarse sobre otras aplicaciones, para las notificaciones</string>
     <string name="needlocationpermission">La aplicación necesita permiso de ubicación para poder buscar dispositivos Bluetooth y redes WiFi</string>
     <string name="needstoragepermission">La aplicación necesita permiso de almacenamiento para poder almacenar archivos de registro y valores de exportación</string>
+    <string name="needconnectpermission">La aplicación necesita permiso de bluetooth</string>
     <string name="request">Solicitar</string>
     <string name="open_navigation">Abrir navegación</string>
     <string name="close_navigation">Cerrar navegación</string>
@@ -843,7 +844,7 @@
     <string name="bolusadvisor">Asistente de bolo</string>
     <string name="bolusadvisormessage">Usted tiene alta glicemia. En lugar de comer ahora se recomienda esperar a una mejor glicemia. ¿Quieres hacer un bolo de corrección ahora y recibir una nota cuándo es el momento de comer? En este caso no se grabarán carbohidratos y se debe volver a utilizar el asistente cuando lo recordamos.</string>
     <string name="enablebolusadvisor">Habilitar asistente de bolo</string>
-    <string name="enablebolusadvisor_summary">Utiliza un recordatorio para empezar a comer más tarde, en lugar del resultado del asistente durante una hiperglucemia (\"pre-bolo\")</string>
+    <string name="enablebolusadvisor_summary">Utiliza un recordatorio para empezar a comer más tarde, en lugar del resultado del asistente durante una glucemia alta (\"pre-bolo\")</string>
     <string name="time_to_eat">¡Hora de comer!\nEjecutar el asistente de bolo y calcular de nuevo.</string>
     <string name="timetoeat">Hora de comer</string>
     <string name="bolusreminder">Recordatorio de bolo</string>

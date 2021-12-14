@@ -355,7 +355,7 @@
     <string name="smscommunicator_wrongduration">Zły czas trwania</string>
     <string name="smscommunicator_loopsuspended">Pętla wstrzymana</string>
     <string name="smscommunicator_loopresumed">Pętla wznowiona</string>
-    <string name="bg_trend_label">15min trend</string>
+    <string name="bg_trend_label">Trend 15 minutowy</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Wyślij start app do NS</string>
@@ -640,6 +640,7 @@
     <string name="needsystemwindowpermission">Aplikacja wymaga uprawnienia systemowego okna dla powiadomień</string>
     <string name="needlocationpermission">Aplikacja wymaga dostępu do lokalizacji dla zarządzania bluetoothem i identyfikacją Wi-Fi</string>
     <string name="needstoragepermission">Aplikacja wymaga zgody na zapis do pamięci, aby móc przechować pliki logów i eksportować ustawienia</string>
+    <string name="needconnectpermission">Aplikacja wymaga uprawnienia Bluetooth</string>
     <string name="request">Żądanie</string>
     <string name="open_navigation">Otwórz menu</string>
     <string name="close_navigation">Zamknij menu</string>

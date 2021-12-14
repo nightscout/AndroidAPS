@@ -57,7 +57,6 @@
     <string name="treatments_wizard_tt_label">LT</string>
     <string name="treatments_wizard_carbs_label">AV</string>
     <string name="treatments_wizard_correction_label">Korekcija</string>
-    <string name="bolus_iob_label">Bolusų AIO</string>
     <string name="openapsma_run">Paleisti dabar</string>
     <string name="vitualpump_label">Virtuali pompa</string>
     <string name="openapsma_lastrun_label">Paskutinis veiksmas</string>
@@ -121,9 +120,7 @@
     <string name="careportal_newnstreatment_other">Kiti</string>
     <string name="careportal_newnstreatment_meter">Matuoklis</string>
     <string name="careportal_newnstreatment_sensor">Sensorius</string>
-    <string name="carb_time_label">AV laikas</string>
     <string name="careportal_newnstreatment_duration_label">Trukmė</string>
-    <string name="profile_label">Profilis</string>
     <string name="careportal_newnstreatment_glucosetype">Gliukozės tipas</string>
     <string name="overview_tempbasal_button">Laikina bazė</string>
     <string name="overview_extendedbolus_button">Ištęstas bolusas</string>
@@ -354,7 +351,6 @@
     <string name="smscommunicator_wrongduration">Neteisinga trukmė</string>
     <string name="smscommunicator_loopsuspended">Ciklas sustabdytas</string>
     <string name="smscommunicator_loopresumed">Ciklas atnaujintas</string>
-    <string name="bg_trend_label">15 min tendencija</string>
     <string name="treatments_wizard_cob_label">AAO</string>
     <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Siųsti programos paleidimo žymę į NS</string>

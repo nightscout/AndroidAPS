@@ -57,7 +57,6 @@
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">Karbonhidrat</string>
     <string name="treatments_wizard_correction_label">Düzeltme</string>
-    <string name="bolus_iob_label">Bolus IOB</string>
     <string name="openapsma_run">Şimdi Çalıştır</string>
     <string name="vitualpump_label">SANAL POMPA</string>
     <string name="openapsma_lastrun_label">Son Çalıştırma</string>
@@ -122,9 +121,7 @@
     <string name="careportal_newnstreatment_other">Diğer</string>
     <string name="careportal_newnstreatment_meter">Metre</string>
     <string name="careportal_newnstreatment_sensor">Sensör</string>
-    <string name="carb_time_label">Karb. zamanı</string>
     <string name="careportal_newnstreatment_duration_label">Süre</string>
-    <string name="profile_label">Profil</string>
     <string name="careportal_newnstreatment_glucosetype">Glikoz türü</string>
     <string name="overview_tempbasal_button">Geçici Bazal</string>
     <string name="overview_extendedbolus_button">Yayma Bolus</string>
@@ -194,7 +191,6 @@
     <string name="smscommunicator_reconnect">Pompa yeniden bağlandı</string>
     <string name="smscommunicator_remotecommandnotallowed">Uzaktan komuta izin verilmez</string>
     <string name="smscommunicator_remotebolusnotallowed">Uzaktan bolus mevcut değil. Daha sonra tekrar deneyin.</string>
-    <string name="smscommunicator_basalreplywithcode">%2$d dk boyunca bazalı %1$.2f U/h yapmak için %3$s koduyla yanıtlayın</string>
     <string name="smscommunicator_profilereplywithcode">Profili %1$s %2$d%% olarak değiştirmek için %3$s koduyla yanıtlayın</string>
     <string name="smscommunicator_extendedreplywithcode">%2$d dakika boyunca %1$.2f U yayma bolus başlatmak için %3$s koduyla yanıtlayın</string>
     <string name="smscommunicator_carbsreplywithcode">%2$s\'de %1$dg girmek için %3$s koduyla yanıtlayın</string>
@@ -268,7 +264,6 @@
     <string name="loop_shortname">DÖNGÜ</string>
     <string name="oaps_shortname">OAPS</string>
     <string name="localprofile_shortname">LP</string>
-    <string name="overview_shortname">HOME</string>
     <string name="virtualpump_shortname">VPOMP</string>
     <string name="treatments_shortname">TEDAVİ</string>
     <string name="objectives_shortname">GRV</string>
@@ -356,7 +351,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="smscommunicator_wrongduration">Yanlış süre</string>
     <string name="smscommunicator_loopsuspended">Döngü duraklatıldı</string>
     <string name="smscommunicator_loopresumed">Döngü devam ettirildi</string>
-    <string name="bg_trend_label">15 dk eğilim</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">NS\'a uygulama başlangıcını kaydet</string>
