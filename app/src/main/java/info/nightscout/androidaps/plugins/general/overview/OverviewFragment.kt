@@ -888,7 +888,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     aapsLogger.debug("Adjusted target. Profile: ${profile.getTargetMgdl()} APS: $targetUsed")
                     binding.tempTarget.text = Profile.toTargetRangeString(targetUsed, targetUsed, GlucoseUnit.MGDL, units)
                     binding.tempTarget.setTextColor(rh.getAttributeColor(context, R.attr.ribbonTextWarning))
-                    binding.tempTarget.setBackgroundColor(rh.getAttributeColor(context, R.attr.ribbonTextWarning))
+                    binding.tempTarget.setBackgroundColor(rh.getAttributeColor(context, R.attr.ribbonWarning))
                     val drawableLeft: Array<Drawable?> = binding.tempTarget.compoundDrawables
                     if (drawableLeft[0] != null) rh.getAttributeColor(context, R.attr.ribbonTextWarning).let { drawableLeft[0]!!.setTint(it) }
                 } else {
