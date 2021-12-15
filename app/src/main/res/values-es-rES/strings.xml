@@ -413,7 +413,7 @@
     <string name="openaps">OpenAPS</string>
     <string name="uploader">Cargador datos</string>
     <string name="configbuilder_sensitivity">Detección sensibilidad</string>
-    <string name="configbuilder_sensitivity_description">¿Que algoritmo de sensibilidad se debe usar?</string>
+    <string name="configbuilder_sensitivity_description">¿Qué algoritmo de sensibilidad debería usar?</string>
     <string name="sensitivity_shortname">SENS</string>
     <string name="sensitivityoref1">Sensibilidad Oref1</string>
     <string name="sensitivityaaps">Sensibilidad AAPS</string>
@@ -688,7 +688,7 @@
     <string name="loop_openmode_min_change">Valor mínimo de cambio [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">Valor predeterminado 20%. El lazo abierto realizará una petición de cambio, sólo cuando se supere este valor</string>
     <string name="profile_total">== ∑%1$s U</string>
-    <string name="dexcom_lognssensorchange_title">Registro de cambio de sensor en NS</string>
+    <string name="dexcom_lognssensorchange_title">Registro de cambio de sensor en Nightscout</string>
     <string name="dexcom_lognssensorchange_summary">Crear evento \"Cambio de sensor\" en Nightscout automáticamente al iniciar el sensor</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
@@ -869,15 +869,15 @@
     <string name="prime">Cebar</string>
     <string name="ns_sync_options">Sincronización</string>
     <string name="ns_upload_summary">Perfiles, bolos, carbohidratos y basales temporales se suben a NS</string>
-    <string name="ns_upload">Subir datos a NS</string>
+    <string name="ns_upload">Subir datos a Nightscout</string>
     <string name="ns_receive_profile_store">Recibir perfil almacenado</string>
-    <string name="ns_receive_profile_store_summary">Sincronizar perfiles del editor de perfiles de NS</string>
+    <string name="ns_receive_profile_store_summary">Sincronizar perfiles desde el editor de perfiles de Nightscout</string>
     <string name="ns_receive_temp_target">Recibir objetivos temporales</string>
-    <string name="ns_receive_temp_target_summary">Aceptar objetivos temporales registrados mediante NS o NSClient</string>
+    <string name="ns_receive_temp_target_summary">Aceptar objetivos temporales registrados mediante Nightscout o NSClient</string>
     <string name="ns_receive_profile_switch">Recibir cambios de perfil</string>
-    <string name="ns_receive_profile_switch_summary">Aceptar cambios de perfil registrados mediante NS o NSClient</string>
+    <string name="ns_receive_profile_switch_summary">Aceptar cambios de perfil registrados mediante Nightscout o NSClient</string>
     <string name="ns_receive_offline_event">Recibir eventos de desconexión de APS</string>
-    <string name="ns_receive_offline_event_summary">Aceptar eventos de desconexión de APS registrados mediante NS o NSClient</string>
+    <string name="ns_receive_offline_event_summary">Aceptar eventos de desconexión de APS registrados mediante Nightscout o NSClient</string>
     <string name="ns_receive_insulin">Recibir insulina</string>
     <string name="ns_receive_insulin_summary">Aceptar insulina registrada mediante NS o NSClient (no se entrega, sólo se calcula para IOB)</string>
     <string name="ns_receive_carbs">Recibir carbohidratos</string>
