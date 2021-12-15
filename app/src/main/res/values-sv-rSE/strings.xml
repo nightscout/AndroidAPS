@@ -58,6 +58,7 @@ Eversense-appen.</string>
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">Kolhydrater</string>
     <string name="treatments_wizard_correction_label">Korrektion</string>
+    <string name="bolus_iob_label">Bolus IOB</string>
     <string name="openapsma_run">Utför nu</string>
     <string name="vitualpump_label">Virtuell pump</string>
     <string name="openapsma_lastrun_label">Senaste beräkning</string>
@@ -96,6 +97,7 @@ Eversense-appen.</string>
     <string name="safety">Säkerhet</string>
     <string name="openapsma_disabled">Insticksprogram inaktiverat</string>
     <string name="constraints_violation">Begränsning nådd</string>
+    <string name="treatmentdeliveryerror">Ett fel rapporterades under bolus. Vänligen kontrollera pumpen manuellt</string>
     <string name="setbasalquestion">Acceptera ny temp basal:</string>
     <string name="overview_treatment_label">Behandling</string>
     <string name="overview_calculator_label">Kalkylator</string>
@@ -121,7 +123,9 @@ Eversense-appen.</string>
     <string name="careportal_newnstreatment_other">Annat</string>
     <string name="careportal_newnstreatment_meter">Mätare</string>
     <string name="careportal_newnstreatment_sensor">Sensor</string>
+    <string name="carb_time_label">KH-tid</string>
     <string name="careportal_newnstreatment_duration_label">Duration</string>
+    <string name="profile_label">Profil</string>
     <string name="careportal_newnstreatment_glucosetype">Glukostyp</string>
     <string name="overview_tempbasal_button">Temp basal</string>
     <string name="overview_extendedbolus_button">Förlängd bolus</string>
@@ -352,6 +356,7 @@ Eversense-appen.</string>
     <string name="smscommunicator_wrongduration">Fel duration</string>
     <string name="smscommunicator_loopsuspended">Loop pausad</string>
     <string name="smscommunicator_loopresumed">Loop återupptagen</string>
+    <string name="bg_trend_label">15 min trend</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Rapportera appstart till Nightscout</string>
@@ -517,6 +522,8 @@ Eversense-appen.</string>
     <string name="enablesmbwithhightemptarget_summary">Aktivera SMB när det finns högt temp mål aktivt (träning, över 100 mg/dl eller 5,5 mmol/l)</string>
     <string name="overview_insulin_label">Insulin</string>
     <string name="overview_buttons_selection">Knappar</string>
+    <string name="show_calibration_button_summary">Sänder kalibrering till xDrip eller öppnar kalibreringsrutan i Dexcom-appen</string>
+    <string name="show_cgm_button_summary">Öppnar xDrip+ eller Dexcom-appen. Bakåtknappen återgår till AAPS</string>
     <string name="carb_increment_button_message">Mängd kolhydrater att lägga till när man trycker på knappen</string>
     <string name="insulin_increment_button_message">Mängd insulin att lägga till när man trycker på knappen</string>
     <string name="error_starting_cgm">Kunde inte starta CGM-appen. Kontrollera att den är installerad.</string>
@@ -622,6 +629,7 @@ Eversense-appen.</string>
     <string name="exitwizard">Hoppa över installationsguiden</string>
     <string name="setupwizard_loop_description">Tryck på knappen nedan för att låta AndroidAPS föreslå/göra basalförändringar</string>
     <string name="setupwizard_sensitivity_description">Insticksprogrammet för känslighet används för att detektera insulinkänslighet och för att beräkning av aktiva kolhydrater, COB. För mer information, besök:</string>
+    <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="nsclientinfotext">NSClient hanterar anslutningen till Nightscout. Du kan hoppa över denna del nu, men du kommer inte att kunna passera vissa mål tills du har satt upp det.</string>
     <string name="diawarning">Kom ihåg: De nya insulinprofilerna kräver en duration (DIA) på minst 5 timmar. En DIA på 5-6 timmar enligt de nya profilerna är ungefär lika med DIA 3 timmar enligt de gamla insulinprofilerna.</string>
     <string name="setupwizard_aps_description">Välj en av dessa algoritmer. De sorteras från den äldsta till nyaste. Nyare algoritm är oftast mer kraftfull och mer aggressiv. Om du är ny som loopanvändare vill du förmodligen börja med AMA och inte med senaste. Glöm inte att läsa dokumentationen om OpenAPS och konfigurera algoritmen innan användning.</string>
@@ -633,6 +641,7 @@ Eversense-appen.</string>
     <string name="needsystemwindowpermission">Applikationen behöver förhöjd behörighet för aviseringar</string>
     <string name="needlocationpermission">Appen behöver platsåtkomst för bluetooth- och WiFi-identifiering</string>
     <string name="needstoragepermission">Applikationen behöver lagringsbehörighet för att kunna lagra loggfiler och exportinställningar</string>
+    <string name="needconnectpermission">Applikationen behöver bluetooth-behörighet</string>
     <string name="request">Begäran</string>
     <string name="open_navigation">Öppna menyn</string>
     <string name="close_navigation">Stäng menyn</string>
@@ -642,6 +651,8 @@ Eversense-appen.</string>
     <string name="time_elapsed">Förfluten tid</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Ta emot BG-data från Poctechappen</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Ta emot värden från Glunovo-appen</string>
     <string name="description_source_tomato">Ta emot BG-data från tomato app (MiaoMiao-enhet)</string>
     <string name="high_temptarget_raises_sensitivity_title">Högt målvärde höjer känsligheten</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Höj känsligheten om temp målvärde är 100 mg/dl (5.5 mmol/l) eller högre]]></string>
@@ -712,6 +723,9 @@ Eversense-appen.</string>
     <string name="application_expired">Applikationen inte giltig längre</string>
     <string name="new_version_warning">Ny version tillgänglig för %1$d dagar sedan. Systemet kommer att byta läge till \"stopp innan lågt\" efter %2$d dagar och sluta loopa helt efter %3$d dagar</string>
     <string name="twohours">2 tim</string>
+    <string name="dexcom_app_patched">Patchad Dexcom-app</string>
+    <string name="dexcom_short">Dex</string>
+    <string name="description_source_dexcom">Ta emot BG-värden från \"Bygg din egen Dexcom-app\".</string>
     <string name="cobvsiob">COB kontra IOB</string>
     <string name="bolusconstraintappliedwarn">Bolusbegränsning tillämpad: %1$.2f U till %2$.2f U</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>Varning! Långsam KH-absorption upptäckt %2$d%% av tiden. Dubbelkolla din beräkning. COB kan vara väldigt missvisande och du riskerar få för mycket insulin!</font>]]></string>
@@ -847,6 +861,7 @@ Eversense-appen.</string>
     <string name="cannula">Kanyl</string>
     <string name="userentry">Angivet av användare</string>
     <string name="common_values">Använd värden för den största måltiden som du vanligen äter\n</string>
+    <string name="summary_email_for_crash_report">Den här mejladressen kommer att bifogas till kraschrapporter så att vi kan kontakta dig i brådskande fall. Det är frivilligt.</string>
     <string name="email_address">E-postadress</string>
     <string name="privacy_settings">Sekretessinställningar</string>
     <string name="privacy_summary">Du kan ange valfri e-postadress om du vill få meddelanden om appkrascher. Det här är ingen automatiserad tjänst. Du kommer att kontaktas av utvecklare i farliga situationer.</string>
@@ -885,4 +900,10 @@ Eversense-appen.</string>
     <string name="view">Visa</string>
     <string name="errors">Fel</string>
     <string name="ns_sync_slow">Långsamma uppladdningar</string>
+    <string name="data_status">BG datastatus</string>
+    <string name="recalculated_data_used">Omräknad data används</string>
+    <string name="bg_too_close">BG för nära:\n%1$s\n%2$s</string>
+    <string name="identification">Identifiering (e-post, FB, Discord-namn etc)</string>
+    <string name="identification_not_set">Identifiering inte angiven i dev-läge</string>
+    <string name="not_available_full">Ej tillgängligt</string>
 </resources>
