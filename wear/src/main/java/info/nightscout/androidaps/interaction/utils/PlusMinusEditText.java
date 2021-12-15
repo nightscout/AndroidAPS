@@ -1,7 +1,9 @@
 package info.nightscout.androidaps.interaction.utils;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
+import android.support.wearable.input.RotaryEncoder;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,7 +20,7 @@ import java.util.concurrent.TimeUnit;
  * Created by mike on 28.06.2016.
  */
 public class PlusMinusEditText implements View.OnKeyListener,
-        View.OnTouchListener, View.OnClickListener {
+        View.OnTouchListener, View.OnClickListener, View.OnGenericMotionListener {
 
     Integer editTextID;
     public TextView editText;
@@ -82,7 +84,7 @@ public class PlusMinusEditText implements View.OnKeyListener,
         this.allowZero = allowZero;
         this.roundRobin = roundRobin;
 
-        mHandler = new Handler() {
+        mHandler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
                 switch (msg.what) {
@@ -103,6 +105,7 @@ public class PlusMinusEditText implements View.OnKeyListener,
         plusImage.setOnTouchListener(this);
         plusImage.setOnKeyListener(this);
         plusImage.setOnClickListener(this);
+        editText.setOnGenericMotionListener(this);
         updateEditText();
     }
 
@@ -202,6 +205,20 @@ public class PlusMinusEditText implements View.OnKeyListener,
             stopUpdating();
         } else if (isPressed) {
             startUpdating(v == plusImage);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onGenericMotion(View v, MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_SCROLL && RotaryEncoder.isFromRotaryEncoder(ev)) {
+            float delta = -RotaryEncoder.getRotaryAxisValue(ev);
+            if (delta > 0) {
+                inc(1);
+            } else {
+                dec(1);
+            }
+            return true;
         }
         return false;
     }

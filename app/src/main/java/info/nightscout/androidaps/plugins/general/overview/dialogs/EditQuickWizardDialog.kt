@@ -10,11 +10,11 @@ import android.view.Window
 import android.view.WindowManager
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.databinding.OverviewEditquickwizardDialogBinding
-import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventQuickWizardChange
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.SafeParse
+import info.nightscout.shared.SafeParse
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.extensions.selectedItemPosition
 import info.nightscout.androidaps.utils.extensions.setEnableForChildren
@@ -100,19 +100,19 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
 
         val toTimeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
             toSeconds = (T.hours(hour.toLong()).secs() + T.mins(minute.toLong()).secs()).toInt()
-            binding.from.text = dateUtil.timeString(dateUtil.secondsOfTheDayToMilliseconds(toSeconds))
+            binding.to.text = dateUtil.timeString(dateUtil.secondsOfTheDayToMilliseconds(toSeconds))
         }
 
         binding.to.setOnClickListener {
             context?.let {
                 TimePickerDialog(it, toTimeSetListener,
-                    T.secs(fromSeconds.toLong()).hours().toInt(),
-                    T.secs((fromSeconds % 3600).toLong()).mins().toInt(),
+                    T.secs(toSeconds.toLong()).hours().toInt(),
+                    T.secs((toSeconds % 3600).toLong()).mins().toInt(),
                     DateFormat.is24HourFormat(context)
                 ).show()
             }
         }
-        toSeconds = entry.validFrom()
+        toSeconds = entry.validTo()
         binding.to.text = dateUtil.timeString(dateUtil.secondsOfTheDayToMilliseconds(toSeconds))
 
         binding.buttonEdit.setText(entry.buttonText())

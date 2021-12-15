@@ -34,7 +34,7 @@
     <string name="omnipod_common_error_time_out_of_sync">Pod\'daki saat senkronize değil. Lütfen Omnipod sekmesindeki saati güncelleyin.</string>
     <string name="omnipod_common_error_unexpected_exception">Beklenmedik bir hata oluştu. Lütfen raporlayın! (%1$s: %2$s).</string>
     <!-- Omnipod - Confirmation -->
-    <string name="omnipod_common_confirmation">Onaylama</string>
+    <string name="omnipod_common_confirmation">Onay</string>
     <string name="omnipod_common_confirmation_time_or_timezone_change">Pod saat ve/veya saat dilimi değişti.</string>
     <string name="omnipod_common_confirmation_expiration_alerts_updated">Pod alarm yapılandırması güncellendi.</string>
     <string name="omnipod_common_confirmation_time_on_pod_updated">Pod saati güncellendi.</string>
@@ -43,13 +43,13 @@
     <string name="omnipod_common_confirmation_delivery_resumed">İnsülin iletimi yeniden başlatıldı.</string>
     <!-- Omnipod - Overview -->
     <string name="omnipod_common_overview_button_set_time">Saati ayarla</string>
-    <string name="omnipod_common_overview_button_suspend_delivery">Askıya alınan</string>
+    <string name="omnipod_common_overview_button_suspend_delivery">Duraklat</string>
     <string name="omnipod_common_overview_button_resume_delivery">İletime devam et</string>
     <string name="omnipod_common_overview_button_pod_management">Pod Yntm</string>
     <string name="omnipod_common_overview_button_silence_alerts">Alarmları Sustur</string>
     <string name="omnipod_common_overview_pod_status">Pod Durumu</string>
     <string name="omnipod_common_overview_total_delivered">Toplam İletilen</string>
-    <string name="omnipod_common_overview_total_delivered_value">%1$.2f U</string>
+    <string name="omnipod_common_overview_total_delivered_value">%1$.2f Ü</string>
     <string name="omnipod_common_overview_pod_unique_id">Özgün kimlik</string>
     <string name="omnipod_common_overview_lot_number">Parti Numarası</string>
     <string name="omnipod_common_overview_pod_sequence_number">Sıra Numarası</string>

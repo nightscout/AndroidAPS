@@ -12,14 +12,14 @@ import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalStorage
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import org.apache.commons.lang3.time.DateUtils
 import org.joda.time.DateTime
 import javax.inject.Inject
@@ -546,7 +546,7 @@ class BigLogInquireResponsePacket(
                             pumpType = PumpType.DIACONN_G8,
                             pumpSerial = diaconnG8Pump.serialNo.toString()
                         )
-                        aapsLogger.debug(LTag.PUMPCOMM,  (if (newRecord) "**NEW** " else "") + "EVENT NEEDLECHANGE(" + pumplogKind + ") " + dateUtil.dateAndTimeString(logDateTime) + " (" + logDateTime + ")" + " Amount: " + logItem.remainAmount / 100.0 + "U")
+                        aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT NEEDLECHANGE(" + pumplogKind + ") " + dateUtil.dateAndTimeString(logDateTime) + " (" + logDateTime + ")" + " Amount: " + logItem.remainAmount / 100.0 + "U")
                     }
 
                     diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_REFILL
@@ -569,7 +569,7 @@ class BigLogInquireResponsePacket(
                         absoluteRate = pumpDesc.pumpType.determineCorrectBasalSize(diaconnG8Pump.baseAmount * (tempBasalPercent / 100.0))
                     }
 
-                    if (logItem.getTbInjectRateRatio() in 1000..1600) {
+                    if (logItem.getTbInjectRateRatio() in 1000..2500) {
                         absoluteRate = (logItem.getTbInjectRateRatio() - 1000) / 100.0
                     }
 
@@ -604,7 +604,7 @@ class BigLogInquireResponsePacket(
                         val tempBasalPercent = logItem.getTbInjectRateRatio() - 50000
                         absoluteRate = diaconnG8Pump.baseAmount * (tempBasalPercent / 100.0)
                     }
-                    if (logItem.getTbInjectRateRatio() in 1000..1600) {
+                    if (logItem.getTbInjectRateRatio() in 1000..2500) {
                         absoluteRate = (logItem.getTbInjectRateRatio() - 1000) / 100.0
                     }
 
@@ -687,7 +687,7 @@ class BigLogInquireResponsePacket(
                                 pumpType = PumpType.DIACONN_G8,
                                 pumpSerial = diaconnG8Pump.serialNo.toString()
                             )
-                            aapsLogger.debug(LTag.PUMPCOMM,  (if (newRecord) "**NEW** " else "") + "EVENT BATTERYCHANGE(" + pumplogKind + ") " + dateUtil.dateAndTimeString(logDateTime) + " (" + logDateTime + ")" + " remainAmount: " + logItem.batteryRemain.toInt() + "%")
+                            aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT BATTERYCHANGE(" + pumplogKind + ") " + dateUtil.dateAndTimeString(logDateTime) + " (" + logDateTime + ")" + " remainAmount: " + logItem.batteryRemain.toInt() + "%")
                         }
                     }
                     status = "RESET " + dateUtil.timeString(logDateTime)

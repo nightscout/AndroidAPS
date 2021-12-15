@@ -154,7 +154,6 @@
     <string name="profile_ins_units_per_hour">E/t</string>
     <string name="profile_carbs_per_unit">g/E</string>
     <!--    ProfileFunction-->
-    <string name="noprofileselected">Ingen profil valgt</string>
     <string name="startprofile">Start profil %1$d%% i %2$d min</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Bare konkrete verdier støttes som granularitet for basal/bolus i virtuell pumpe, ingen verdiområder.</string>
@@ -410,6 +409,23 @@
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f er utenfor lovlige grenseverdier</string>
     <string name="basal_value">Basal verdi</string>
     <string name="nsclient_version_does_not_match">NSKlient versjonen samsvarer ikke med AndroidAPS. Vennligst oppdater.</string>
+    <!-- Command Queue + readStatus reasons -->
+    <string name="read_status" comment="10 characters max for READSTATUS translation">READSTATUS %1$s</string>
+    <string name="keepalive_status_outdated" comment="26 characters max for translation">Oppretthold tilkobling. Status er ikke oppdatert.</string>
+    <string name="keepalive_basal_outdated" comment="26 characters max for translation">Oppretthold tilkobling. Basal er ikke oppdatert.</string>
+    <string name="sms" comment="26 characters max for translation">SMS</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Trykket på koble til pumpen</string>
+    <string name="pump_driver_changed" comment="26 characters max for translation">Pumpedriver er endret.</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Endre pumpedriver.</string>
+    <string name="device_changed" comment="26 characters max for translation">Enheten er endret</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Trykket på oppdater</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Planlagt statusoppdatering</string>
+    <string name="unconfirmed_command" comment="26 characters max for translation">Kommando er ikke bekreftet</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Forespurt av bruker</string>
+    <string name="user_request" comment="26 characters max for translation">Bruker forespørsel</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
+    <string name="pump_paired" comment="26 characters max for translation">Pumpe sammenkoblet</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Insight oppdateringsknapp</string>
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dager</item>

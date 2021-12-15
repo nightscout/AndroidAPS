@@ -1,13 +1,9 @@
 package info.nightscout.androidaps.interaction.actions;
 
-
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.wearable.view.DotsPageIndicator;
 import android.support.wearable.view.GridPagerAdapter;
-import android.support.wearable.view.GridViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +15,11 @@ import java.text.DecimalFormat;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.interaction.utils.PlusMinusEditText;
-import info.nightscout.androidaps.interaction.utils.SafeParse;
+import info.nightscout.shared.SafeParse;
 
 /**
  * Created by adrian on 09/02/17.
  */
-
 
 public class TempTargetActivity extends ViewSelectorActivity {
 
@@ -37,26 +32,18 @@ public class TempTargetActivity extends ViewSelectorActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.grid_layout);
-        final Resources res = getResources();
-        final GridViewPager pager = findViewById(R.id.pager);
-
-        pager.setAdapter(new MyGridViewPagerAdapter());
-        DotsPageIndicator dotsPageIndicator = findViewById(R.id.page_indicator);
-        dotsPageIndicator.setPager(pager);
+        setAdapter(new MyGridViewPagerAdapter());
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         isMGDL = sp.getBoolean("units_mgdl", true);
         isSingleTarget = sp.getBoolean("singletarget", true);
     }
 
-
     @Override
     protected void onPause() {
         super.onPause();
         finish();
     }
-
 
     private class MyGridViewPagerAdapter extends GridPagerAdapter {
         @Override
@@ -84,6 +71,7 @@ public class TempTargetActivity extends ViewSelectorActivity {
                 }
                 setLabelToPlusMinusView(view, getString(R.string.action_duration));
                 container.addView(view);
+                view.requestFocus();
                 return view;
 
             } else if (col == 1) {
@@ -144,7 +132,7 @@ public class TempTargetActivity extends ViewSelectorActivity {
                                 + " " + (isSingleTarget ? SafeParse.stringToDouble(lowRange.editText.getText().toString()) : SafeParse.stringToDouble(highRange.editText.getText().toString()));
 
                         ListenerService.initiateAction(TempTargetActivity.this, actionstring);
-                        finish();
+                        finishAffinity();
                     }
                 });
                 container.addView(view);
@@ -163,7 +151,6 @@ public class TempTargetActivity extends ViewSelectorActivity {
         public boolean isViewFromObject(View view, Object object) {
             return view == object;
         }
-
 
     }
 }

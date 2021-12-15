@@ -6,7 +6,7 @@ import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import java.text.DateFormat
 
-class EventNewHistoryData(val oldDataTimestamp: Long, val reloadBgData: Boolean, val newestGlucoseValue : GlucoseValue? = null) : Event() {
+class EventNewHistoryData(val oldDataTimestamp: Long, var reloadBgData: Boolean, var newestGlucoseValue : GlucoseValue? = null) : Event() {
 
     override fun toString(): String {
         return super.toString() +

@@ -10,18 +10,18 @@ import org.json.JSONObject
 @Suppress("SpellCheckingInspection")
 class IobTotal(val time: Long) : DataPointWithLabelInterface {
 
-    @JvmField var iob = 0.0
-    @JvmField var activity = 0.0
-    @JvmField var bolussnooze = 0.0
-    @JvmField var basaliob = 0.0
-    @JvmField var netbasalinsulin = 0.0
-    @JvmField var hightempinsulin = 0.0
+    var iob = 0.0
+    var activity = 0.0
+    var bolussnooze = 0.0
+    var basaliob = 0.0
+    var netbasalinsulin = 0.0
+    var hightempinsulin = 0.0
 
     // oref1
-    @JvmField var lastBolusTime: Long = 0
+    var lastBolusTime: Long = 0
     var iobWithZeroTemp: IobTotal? = null
-    @JvmField var netInsulin = 0.0 // for calculations from temp basals only
-    @JvmField var extendedBolusInsulin = 0.0 // total insulin for extended bolus
+    var netInsulin = 0.0 // for calculations from temp basals only
+    var extendedBolusInsulin = 0.0 // total insulin for extended bolus
     fun copy(): IobTotal {
         val i = IobTotal(time)
         i.iob = iob
@@ -104,36 +104,14 @@ class IobTotal(val time: Long) : DataPointWithLabelInterface {
     }
 
     // DataPoint interface
-    private var color = 0
-    override fun getX(): Double {
-        return time.toDouble()
-    }
-
-    override fun getY(): Double {
-        return iob
-    }
-
+    override var color = 0
+    override fun getX(): Double = time.toDouble()
+    override fun getY(): Double = iob
     override fun setY(y: Double) {}
-
-    override fun getLabel(): String {
-        return ""
-    }
-
-    override fun getDuration(): Long {
-        return 0
-    }
-
-    override fun getShape(): PointsWithLabelGraphSeries.Shape {
-        return PointsWithLabelGraphSeries.Shape.IOBPREDICTION
-    }
-
-    override fun getSize(): Float {
-        return 0.5f
-    }
-
-    override fun getColor(): Int {
-        return color
-    }
+    override val label = ""
+    override val duration = 0L
+    override val shape = PointsWithLabelGraphSeries.Shape.IOBPREDICTION
+    override val size = 0.5f
 
     fun setColor(color: Int): IobTotal {
         this.color = color

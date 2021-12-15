@@ -38,12 +38,15 @@ import com.google.android.gms.wearable.WearableListenerService;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
+import dagger.android.AndroidInjection;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interaction.AAPSPreferences;
 import info.nightscout.androidaps.interaction.actions.AcceptActivity;
 import info.nightscout.androidaps.interaction.actions.CPPActivity;
 import info.nightscout.androidaps.interaction.utils.Persistence;
-import info.nightscout.androidaps.interaction.utils.SafeParse;
+import info.nightscout.shared.SafeParse;
 import info.nightscout.androidaps.interaction.utils.WearUtil;
 
 
@@ -52,6 +55,9 @@ import info.nightscout.androidaps.interaction.utils.WearUtil;
  */
 public class ListenerService extends WearableListenerService implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, ChannelApi.ChannelListener {
+
+    @Inject WearUtil wearUtil;
+    @Inject Persistence persistence;
 
     private static final String WEARABLE_DATA_PATH = "/nightscout_watch_data";
     private static final String WEARABLE_RESEND_PATH = "/nightscout_watch_data_resend";
@@ -69,8 +75,8 @@ public class ListenerService extends WearableListenerService implements GoogleAp
     public static final String ACTION_CANCELNOTIFICATION_REQUEST_PATH = "/nightscout_watch_cancelnotificationrequest";
 
 
-    public static final int BOLUS_PROGRESS_NOTIF_ID = 001;
-    public static final int CONFIRM_NOTIF_ID = 002;
+    public static final int BOLUS_PROGRESS_NOTIF_ID = 1;
+    public static final int CONFIRM_NOTIF_ID = 2;
     public static final int CHANGE_NOTIF_ID = 556677;
 
     private static final String ACTION_RESEND = "com.dexdrip.stephenblack.nightwatch.RESEND_DATA";
@@ -103,6 +109,13 @@ public class ListenerService extends WearableListenerService implements GoogleAp
     private final String mPhoneNodeId = null;
     private String localnode = null;
     private final String logPrefix = ""; // "WR: "
+
+    // Not derived from DaggerService, do injection here
+    @Override
+    public void onCreate() {
+        AndroidInjection.inject(this);
+        super.onCreate();
+    }
 
     public class DataRequester extends AsyncTask<Void, Void, Void> {
         Context mContext;
@@ -364,7 +377,8 @@ public class ListenerService extends WearableListenerService implements GoogleAp
             }
         }
 
-        Log.d(TAG, logPrefix + "sendData: execute lastRequest:" + WearUtil.dateTimeText(lastRequest));
+        Log.d(TAG,
+                logPrefix + "sendData: execute lastRequest:" + wearUtil.dateTimeText(lastRequest));
         mDataRequester = (DataRequester) new DataRequester(this, path, payload).execute();
         // executeTask(mDataRequester);
 
@@ -516,14 +530,14 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                     Intent messageIntent = new Intent();
                     messageIntent.setAction(Intent.ACTION_SEND);
                     messageIntent.putExtra("status", dataMap.toBundle());
-                    Persistence.storeDataMap(RawDisplayData.STATUS_PERSISTENCE_KEY, dataMap);
+                    persistence.storeDataMap(RawDisplayData.STATUS_PERSISTENCE_KEY, dataMap);
                     LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);
                 } else if (path.equals(BASAL_DATA_PATH)) {
                     dataMap = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
                     Intent messageIntent = new Intent();
                     messageIntent.setAction(Intent.ACTION_SEND);
                     messageIntent.putExtra("basals", dataMap.toBundle());
-                    Persistence.storeDataMap(RawDisplayData.BASALS_PERSISTENCE_KEY, dataMap);
+                    persistence.storeDataMap(RawDisplayData.BASALS_PERSISTENCE_KEY, dataMap);
                     LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);
                 } else if (path.equals(NEW_PREFERENCES_PATH)) {
                     dataMap = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
@@ -547,7 +561,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                     Intent messageIntent = new Intent();
                     messageIntent.setAction(Intent.ACTION_SEND);
                     messageIntent.putExtra("data", dataMap.toBundle());
-                    Persistence.storeDataMap(RawDisplayData.DATA_PERSISTENCE_KEY, dataMap);
+                    persistence.storeDataMap(RawDisplayData.DATA_PERSISTENCE_KEY, dataMap);
                     LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);
                 }
             }

@@ -1,5 +1,10 @@
 package info.nightscout.androidaps.testing.mocks;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.when;
+
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -8,21 +13,17 @@ import org.mockito.stubbing.Answer;
 
 import java.util.HashMap;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.when;
-
+@SuppressWarnings({"SuspiciousMethodCalls", "rawtypes"})
 public final class IntentMock {
 
     public static Intent mock() {
-        return mock(new HashMap<String, Object>());
+        return mock(new HashMap<>());
     }
 
     public static Intent mock(final HashMap<String, Object> map) {
 
         Answer put = invocation -> {
-            map.put((String)invocation.getArguments()[0], invocation.getArguments()[1]);
+            map.put((String) invocation.getArguments()[0], invocation.getArguments()[1]);
             return null;
         };
         Answer<Object> get = invocation -> map.get(invocation.getArguments()[0]);

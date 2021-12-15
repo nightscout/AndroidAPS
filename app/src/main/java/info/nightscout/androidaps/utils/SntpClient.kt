@@ -3,7 +3,7 @@ package info.nightscout.androidaps.utils
 import android.os.SystemClock
 import javax.inject.Singleton
 import javax.inject.Inject
-import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.shared.logging.AAPSLogger
 import java.lang.Exception
 import java.net.DatagramPacket
 import java.net.DatagramSocket

@@ -4,7 +4,7 @@ import androidx.annotation.StringRes
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.viewmodel.action.InsertCannulaViewModel
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.R
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.ActivationProgress
@@ -29,7 +29,7 @@ class ErosInsertCannulaViewModel @Inject constructor(
 
     override fun isPodDeactivatable(): Boolean = podStateManager.activationProgress.isAtLeast(ActivationProgress.PAIRING_COMPLETED)
 
-    override fun doExecuteAction(): Single<PumpEnactResult> = Single.just(aapsOmnipodManager.insertCannula(profileFunction.getProfile()))
+    override fun doExecuteAction(): Single<PumpEnactResult> = Single.fromCallable { aapsOmnipodManager.insertCannula(profileFunction.getProfile()) }
 
     @StringRes
     override fun getTitleId(): Int = R.string.omnipod_common_pod_activation_wizard_insert_cannula_title

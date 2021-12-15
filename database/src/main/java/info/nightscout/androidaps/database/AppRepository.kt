@@ -543,6 +543,11 @@ import kotlin.math.roundToInt
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
 
+    fun getCarbsDataFromTimeNotExpanded(timestamp: Long, ascending: Boolean): Single<List<Carbs>> =
+        database.carbsDao.getCarbsFromTimeExpandable(timestamp)
+            .map { if (!ascending) it.reversed() else it }
+            .subscribeOn(Schedulers.io())
+
     fun getCarbsDataFromTimeToTime(from: Long, to: Long, ascending: Boolean): Single<List<Carbs>> =
         database.carbsDao.getCarbsFromTimeToTime(from, to)
             .map { if (!ascending) it.reversed() else it }
@@ -684,6 +689,10 @@ import kotlin.math.roundToInt
         database.temporaryBasalDao.getTemporaryBasalActiveAt(timestamp)
             .subscribeOn(Schedulers.io())
             .toWrappedSingle()
+
+    fun getTemporaryBasalsDataActiveBetweenTimeAndTime(from: Long, to: Long): Single<List<TemporaryBasal>> =
+        database.temporaryBasalDao.getTemporaryBasalActiveBetweenTimeAndTime(from, to)
+            .subscribeOn(Schedulers.io())
 
     fun getTemporaryBasalsDataFromTime(timestamp: Long, ascending: Boolean): Single<List<TemporaryBasal>> =
         database.temporaryBasalDao.getTemporaryBasalDataFromTime(timestamp)

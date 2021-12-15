@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.danars.comm
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danars.encryption.BleEncryption
 import javax.inject.Inject
@@ -18,7 +18,8 @@ class DanaRSPacketOptionSetUserOption(
     }
 
     override fun getRequestParams(): ByteArray {
-        aapsLogger.debug(LTag.PUMPCOMM,
+        aapsLogger.debug(
+            LTag.PUMPCOMM,
             "UserOptions:" + (System.currentTimeMillis() - danaPump.lastConnection) / 1000 + " s ago"
                 + "\ntimeDisplayType24:" + danaPump.timeDisplayType24
                 + "\nbuttonScroll:" + danaPump.buttonScrollOnOff

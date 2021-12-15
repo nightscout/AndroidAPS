@@ -79,7 +79,7 @@
     <string name="action_low" comment="In temp target menu, lower value from range">düşük</string>
     <string name="action_high" comment="In temp target menu, higher value from range">yüksek</string>
     <string name="action_carbs">karbonhidrat</string>
-    <string name="action_percentage">yüzdesi</string>
+    <string name="action_percentage">yüzde</string>
     <string name="action_start_min">başlat [min]</string>
     <string name="action_duration_h">süre [h]</string>
     <string name="action_insulin">insülin</string>
@@ -96,7 +96,7 @@
     <string name="status_pump">Pompa</string>
     <string name="status_loop">Döngü</string>
     <string name="status_cpp">CPP</string>
-    <string name="status_tdd">TDD</string>
+    <string name="status_tdd">GTD</string>
     <string name="activity_carb">Karb</string>
     <string name="activity_IOB">IOB</string>
     <string name="activity_no_status">durum yok</string>

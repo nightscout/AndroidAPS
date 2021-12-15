@@ -12,7 +12,6 @@
     <string name="nav_resetdb">Réinitialiser les Bases de Données </string>
     <string name="reset_db_confirm">Voulez-vous vraiment réinitialiser les bases de données ?</string>
     <string name="nav_exit">Quitter</string>
-    <string name="ns_sync_use_absolute_title">Utiliser toujours les valeurs absolues du basal</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Ce périphérique ne semble pas permettre l\'optimisation de la batterie par une liste blanche - vous pourriez rencontrer des problèmes de performance.</string>
     <string name="description_actions">Quelques boutons pour accéder rapidement aux fonctions communes</string>
     <string name="description_config_builder">Utilisé pour configurer les plugins actifs</string>
@@ -58,7 +57,6 @@
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">Glucides</string>
     <string name="treatments_wizard_correction_label">Correction</string>
-    <string name="treatments_wizard_bolusiob_label">Bolus IA</string>
     <string name="openapsma_run">Exécuter maintenant</string>
     <string name="vitualpump_label">POMPE VIRTUELLE</string>
     <string name="openapsma_lastrun_label">Dernière exécution</string>
@@ -97,7 +95,7 @@
     <string name="safety">Sécurité</string>
     <string name="openapsma_disabled">Plugin désactivé</string>
     <string name="constraints_violation">Violation des restrictions</string>
-    <string name="treatmentdeliveryerror">Erreur injection bolus</string>
+    <string name="treatmentdeliveryerror">Erreur lors du Bolus. Vérifiez manuellement la quantité réellement injectée</string>
     <string name="setbasalquestion">Accepter nouveau basal temporaire :</string>
     <string name="overview_treatment_label">Traitement</string>
     <string name="overview_calculator_label">Assistant</string>
@@ -123,9 +121,7 @@
     <string name="careportal_newnstreatment_other">Autre</string>
     <string name="careportal_newnstreatment_meter">Lecteur</string>
     <string name="careportal_newnstreatment_sensor">Capteur</string>
-    <string name="careportal_newnstreatment_carbtime_label">Décalage horaire</string>
     <string name="careportal_newnstreatment_duration_label">Durée</string>
-    <string name="careportal_newnstreatment_profile_label">Profil</string>
     <string name="careportal_newnstreatment_glucosetype">Source de Glycémie</string>
     <string name="overview_tempbasal_button">Basal Temporaire</string>
     <string name="overview_extendedbolus_button">Bolus étendu</string>
@@ -357,7 +353,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="smscommunicator_wrongduration">Durée incorrecte</string>
     <string name="smscommunicator_loopsuspended">Boucle suspendue</string>
     <string name="smscommunicator_loopresumed">Boucle relancée</string>
-    <string name="treatments_wizard_bgtrend_label">Delta 15 min</string>
     <string name="treatments_wizard_cob_label">GA</string>
     <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Démarrage AAPS entré dans NS</string>
@@ -523,8 +518,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="enablesmbwithhightemptarget_summary">Activer les SMB quand il y a une cible temp haute active (exercise, au dessus de 100 mg/dl ou 5.5 mmol/l)</string>
     <string name="overview_insulin_label">Insuline</string>
     <string name="overview_buttons_selection">Boutons</string>
-    <string name="show_calibration_button_summary">Envoie un étalonnage à xDrip+ ou ouvre la boîte de dialogue de calibration du G5</string>
-    <string name="show_cgm_button_summary">Ouvre xDrip+, le bouton de retour renverra vers AAPS</string>
+    <string name="show_calibration_button_summary">Envoie un étalonnage à xDrip+ ou ouvre la boîte de dialogue de calibration de BYODA</string>
+    <string name="show_cgm_button_summary">Ouvre xDrip+ ou BYODA, le bouton de retour renverra vers AAPS</string>
     <string name="carb_increment_button_message">Nombre de glucides à ajouter lorsque vous appuyez sur le bouton</string>
     <string name="insulin_increment_button_message">Quantité d’insuline à ajouter lorsque vous appuyez sur le bouton</string>
     <string name="error_starting_cgm">Impossible d’exécuter l’application de MGC. Assurez-vous de que celle-ci est installée.</string>
@@ -630,7 +625,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="exitwizard">Ignorer l\'assistant de configuration</string>
     <string name="setupwizard_loop_description">Appuyez sur le bouton ci-dessous pour autoriser AndroidAPS à suggérer/faire des changements de basal</string>
     <string name="setupwizard_sensitivity_description">Le plugin de Sensibilité est utilisé pour la détection de la Sensibilité et de calcul de glucides actifs. Pour plus d’informations visitez :</string>
-    <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
+    <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/fr/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="nsclientinfotext">Le NSClient gère la connexion avec Nightscout. Vous pouvez sauter cette étape maintenant mais vous ne pourrez pas terminer les objectifs sans cette configuration.</string>
     <string name="diawarning">Rappel : les nouveaux profils d\'insuline requièrent une DIA d\'au moins 5h. Une DIA 5-6h dans les nouveaux profils d\'insuline équivaut à une DIA 3h dans les anciens profils d\'insuline.</string>
     <string name="setupwizard_aps_description">Sélectionnez un des algorithmes disponibles. Ils sont organisés du plus ancien au plus récent. Les algorithmes les plus récents sont habituellement plus puissants et plus agressifs. De ce fait, si vous êtes un nouvel utilisateur, vous devriez probablement démarrer avec AMA au lieu de choisir un algorithme plus récent. N\'oubliez pas de lire la documentation OpenAPS et en faire la configuration avant utilisation.</string>
@@ -651,6 +646,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="time_elapsed">Temps écoulé</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Recevoir les glycémies depuis l\'app Poctech</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Recevoir des valeurs de l\'application Glunovo</string>
     <string name="description_source_tomato">Recevoir les valeurs de glycémie de l\'application Tomato (appareil MiaoMiao)</string>
     <string name="high_temptarget_raises_sensitivity_title">Cible temp. haute élève la sensibilité</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Augmente la Sensibilité pour les cibles temporaires >= 100]]></string>
@@ -721,9 +718,9 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="application_expired">Application expirée</string>
     <string name="new_version_warning">Nouvelle version disponible depuis %1$d jours ! Retour à Arrêt Glycémie Basse (AGB) dans %2$d jours, la boucle sera désactivée dans %3$d jours</string>
     <string name="twohours">2 h</string>
-    <string name="dexcom_app_patched">App Dexcom (patchée)</string>
-    <string name="dexcom_short">Dexcom</string>
-    <string name="description_source_dexcom">Recevoir les valeurs de glycémie de l’application Dexcom patchée.</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Recevoir les valeurs de glycémie de l’application Dexcom patchée (BYODA).</string>
     <string name="cobvsiob">GA vs IA</string>
     <string name="bolusconstraintappliedwarn">Contrainte de Bolus appliquée : %1$.2f U vers %2$.2f U</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Absorption lente des glucides détectée : %2$d%% du temps. Vérifiez de nouveau votre calcul. Les GA (Glucides Actifs) peuvent être surestimés et alors plus d\'insuline pourrait être délivré !!!!!</font>]]></string>
@@ -858,7 +855,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="cannula">Canule</string>
     <string name="userentry">Entrées utilisateur</string>
     <string name="common_values">Utilisez les valeurs qui correspondent à vos plus gros repas\n</string>
-    <string name="summary_email_for_crash_report">Cette adresse e-mail sera jointe aux rapports de plantage afin que nous puissions vous contacter dans les cas urgents. C\'est facultatif.</string>
+    <string name="summary_email_for_crash_report">Cette identification sera jointe aux rapports de plantage afin que nous puissions vous contacter en cas d\'urgence. Elle est facultative.</string>
     <string name="email_address">Adresse e-mail</string>
     <string name="privacy_settings">Paramètres de confidentialité</string>
     <string name="privacy_summary">Vous pouvez fournir une adresse e-mail facultative si vous voulez être informé des plantages de l\'application. Ce n\'est pas un service automatisé. Vous serez contacté par les développeurs dans des situations dangereuses.</string>
@@ -896,4 +893,11 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="invalid_profile_not_accepted">Profil %1$s non valide, refusé par NS</string>
     <string name="view">Vue</string>
     <string name="errors">Erreurs</string>
+    <string name="ns_sync_slow">Ralentir les téléchargements</string>
+    <string name="data_status">État des données Gly</string>
+    <string name="recalculated_data_used">Données recalculées utilisées</string>
+    <string name="bg_too_close">Gly trop proche :\n%1$s\n%2$s</string>
+    <string name="identification">Identification (email, FB ou pseudo dans Discord, etc)</string>
+    <string name="identification_not_set">Identification non définie en mode dev</string>
+    <string name="not_available_full">Non disponible</string>
 </resources>

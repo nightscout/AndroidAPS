@@ -9,7 +9,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
@@ -34,9 +34,9 @@ import info.nightscout.androidaps.utils.resources.IconsProviderImplementation
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.rx.DefaultAapsSchedulers
-import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.storage.FileStorage
 import info.nightscout.androidaps.utils.storage.Storage
+import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Singleton
 
 @Suppress("unused")

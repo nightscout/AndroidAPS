@@ -10,12 +10,12 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.transactions.SyncNsTherapyEventTransaction
 import info.nightscout.androidaps.extensions.therapyEventFromNsMbg
 import info.nightscout.androidaps.interfaces.Config
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSMbg
 import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 
 class NSClientMbgWorker(

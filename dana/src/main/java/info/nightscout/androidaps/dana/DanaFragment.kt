@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.os.Looper
+import android.os.HandlerThread
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,8 +23,8 @@ import info.nightscout.androidaps.events.EventTempBasalChange
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Pump
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
@@ -40,7 +40,7 @@ import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.Dana
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import javax.inject.Inject
@@ -62,7 +62,7 @@ class DanaFragment : DaggerFragment() {
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
-    private val loopHandler = Handler(Looper.getMainLooper())
+    private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private lateinit var refreshLoop: Runnable
     private var pumpStatus = ""
     private var pumpStatusIcon = "{fa-bluetooth-b}"
@@ -76,12 +76,14 @@ class DanaFragment : DaggerFragment() {
     init {
         refreshLoop = Runnable {
             activity?.runOnUiThread { updateGUI() }
-            loopHandler.postDelayed(refreshLoop, T.mins(1).msecs())
+            handler.postDelayed(refreshLoop, T.mins(1).msecs())
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = DanarFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -107,13 +109,15 @@ class DanaFragment : DaggerFragment() {
         }
         binding.stats.setOnClickListener { startActivity(Intent(context, TDDStatsActivity::class.java)) }
         binding.userOptions.setOnClickListener { startActivity(Intent(context, DanaUserOptionsActivity::class.java)) }
-        binding.btconnection.setOnClickListener {
+        binding.btConnectionLayout.setOnClickListener {
             aapsLogger.debug(LTag.PUMP, "Clicked connect to pump")
             danaPump.reset()
-            commandQueue.readStatus("Clicked connect to pump", null)
+            commandQueue.readStatus(rh.gs(R.string.clicked_connect_to_pump), null)
         }
-        if (activePlugin.activePump.pumpDescription.pumpType == PumpType.DANA_RS)
-            binding.btconnection.setOnLongClickListener {
+        if (activePlugin.activePump.pumpDescription.pumpType == PumpType.DANA_RS ||
+            activePlugin.activePump.pumpDescription.pumpType == PumpType.DANA_I
+        )
+            binding.btConnectionLayout.setOnLongClickListener {
                 activity?.let {
                     OKDialog.showConfirmation(it, rh.gs(R.string.resetpairing)) {
                         uel.log(Action.CLEAR_PAIRING_KEYS, Sources.Dana)
@@ -127,7 +131,7 @@ class DanaFragment : DaggerFragment() {
     @Synchronized
     override fun onResume() {
         super.onResume()
-        loopHandler.postDelayed(refreshLoop, T.mins(1).msecs())
+        handler.postDelayed(refreshLoop, T.mins(1).msecs())
         disposable += rxBus
             .toObservable(EventInitializationChanged::class.java)
             .observeOn(aapsSchedulers.main)
@@ -152,22 +156,22 @@ class DanaFragment : DaggerFragment() {
             .toObservable(EventPumpStatusChanged::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({
-                pumpStatusIcon = when (it.status) {
-                    EventPumpStatusChanged.Status.CONNECTING   ->
-                        "{fa-bluetooth-b spin} ${it.secondsElapsed}s"
-                    EventPumpStatusChanged.Status.CONNECTED    ->
-                        "{fa-bluetooth}"
-                    EventPumpStatusChanged.Status.DISCONNECTED ->
-                        "{fa-bluetooth-b}"
+                           pumpStatusIcon = when (it.status) {
+                               EventPumpStatusChanged.Status.CONNECTING   ->
+                                   "{fa-bluetooth-b spin} ${it.secondsElapsed}s"
+                               EventPumpStatusChanged.Status.CONNECTED    ->
+                                   "{fa-bluetooth}"
+                               EventPumpStatusChanged.Status.DISCONNECTED ->
+                                   "{fa-bluetooth-b}"
 
-                    else                                       ->
-                        "{fa-bluetooth-b}"
-                }
-                binding.btconnection.text = pumpStatusIcon
-                pumpStatus = it.getStatus(rh)
-                binding.pumpStatus.text = pumpStatus
-                binding.pumpStatusLayout.visibility = (pumpStatus != "").toVisibility()
-            }, fabricPrivacy::logException)
+                               else                                       ->
+                                   "{fa-bluetooth-b}"
+                           }
+                           binding.btConnection.text = pumpStatusIcon
+                           pumpStatus = it.getStatus(rh)
+                           binding.pumpStatus.text = pumpStatus
+                           binding.pumpStatusLayout.visibility = (pumpStatus != "").toVisibility()
+                       }, fabricPrivacy::logException)
 
         pumpStatus = ""
         pumpStatusIcon = "{fa-bluetooth-b}"
@@ -178,7 +182,7 @@ class DanaFragment : DaggerFragment() {
     override fun onPause() {
         super.onPause()
         disposable.clear()
-        loopHandler.removeCallbacks(refreshLoop)
+        handler.removeCallbacks(refreshLoop)
         pumpStatus = ""
         pumpStatusIcon = "{fa-bluetooth-b}"
     }
@@ -193,7 +197,7 @@ class DanaFragment : DaggerFragment() {
     @Synchronized
     fun updateGUI() {
         if (_binding == null) return
-        binding.btconnection.text = pumpStatusIcon
+        binding.btConnection.text = pumpStatusIcon
         binding.pumpStatus.text = pumpStatus
         binding.pumpStatusLayout.visibility = (pumpStatus != "").toVisibility()
         binding.queue.text = commandQueue.spannedStatus()

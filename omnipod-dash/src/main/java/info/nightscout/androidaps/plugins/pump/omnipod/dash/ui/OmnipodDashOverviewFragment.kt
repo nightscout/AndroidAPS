@@ -4,7 +4,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
-import android.os.Looper
+import android.os.HandlerThread
 import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
@@ -42,7 +42,7 @@ import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.androidaps.utils.ui.UIRunnable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
@@ -50,6 +50,7 @@ import org.apache.commons.lang3.StringUtils
 import java.time.Duration
 import java.time.ZonedDateTime
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 
@@ -69,6 +70,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     @Inject lateinit var buildHelper: BuildHelper
 
     companion object {
+
         private const val REFRESH_INTERVAL_MILLIS = 15 * 1000L // 15 seconds
         private const val PLACEHOLDER = "-"
         private const val MAX_TIME_DEVIATION_MINUTES = 10L
@@ -76,13 +78,13 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
     private var disposables: CompositeDisposable = CompositeDisposable()
 
-    private val loopHandler = Handler(Looper.getMainLooper())
+    private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private lateinit var refreshLoop: Runnable
 
     init {
         refreshLoop = Runnable {
             activity?.runOnUiThread { updateUi() }
-            loopHandler.postDelayed(refreshLoop, REFRESH_INTERVAL_MILLIS)
+            handler.postDelayed(refreshLoop, REFRESH_INTERVAL_MILLIS)
         }
     }
 
@@ -128,7 +130,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
         buttonBinding.buttonRefreshStatus.setOnClickListener {
             disablePodActionButtons()
             commandQueue.readStatus(
-                "REQUESTED BY USER",
+                rh.gs(R.string.requested_by_user),
                 DisplayResultDialogCallback(
                     rh.gs(R.string.omnipod_common_error_failed_to_refresh_status),
                     false
@@ -179,7 +181,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
     override fun onResume() {
         super.onResume()
-        loopHandler.postDelayed(refreshLoop, REFRESH_INTERVAL_MILLIS)
+        handler.postDelayed(refreshLoop, REFRESH_INTERVAL_MILLIS)
         disposables += rxBus
             .toObservable(EventOmnipodDashPumpValuesChanged::class.java)
             .observeOn(aapsSchedulers.main)
@@ -213,6 +215,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
         disposables += rxBus
             .toObservable(EventPumpStatusChanged::class.java)
             .observeOn(aapsSchedulers.main)
+            .delay(30, TimeUnit.MILLISECONDS, aapsSchedulers.main)
             .subscribe(
                 {
                     updateBluetoothConnectionStatus(it)
@@ -225,7 +228,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     override fun onPause() {
         super.onPause()
         disposables.clear()
-        loopHandler.removeCallbacks(refreshLoop)
+        handler.removeCallbacks(refreshLoop)
     }
 
     @Synchronized
@@ -245,7 +248,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     }
 
     private fun updateBluetoothConnectionStatus(event: EventPumpStatusChanged) {
-        var status = event.getStatus(rh)
+        val status = event.getStatus(rh)
         bluetoothStatusBinding.omnipodDashBluetoothStatus.text = status
     }
 
@@ -254,17 +257,18 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             ?: PLACEHOLDER
 
         val connectionSuccessPercentage = podStateManager.connectionSuccessRatio() * 100
+        val connectionAttempts = podStateManager.failedConnectionsAfterRetries + podStateManager.successfulConnectionAttemptsAfterRetries
         val successPercentageString = String.format("%.2f %%", connectionSuccessPercentage)
         val quality =
-            "${podStateManager.successfulConnections}/${podStateManager.connectionAttempts} :: $successPercentageString"
+            "${podStateManager.successfulConnectionAttemptsAfterRetries}/$connectionAttempts :: $successPercentageString"
         bluetoothStatusBinding.omnipodDashBluetoothConnectionQuality.text = quality
         val connectionStatsColor = when {
-            connectionSuccessPercentage > 90 ->
-                Color.WHITE
-            connectionSuccessPercentage > 60 ->
+            connectionSuccessPercentage < 70 && podStateManager.successfulConnectionAttemptsAfterRetries > 50 ->
+                Color.RED
+            connectionSuccessPercentage < 90 && podStateManager.successfulConnectionAttemptsAfterRetries > 50 ->
                 Color.YELLOW
             else ->
-                Color.RED
+                Color.WHITE
         }
         bluetoothStatusBinding.omnipodDashBluetoothConnectionQuality.setTextColor(connectionStatsColor)
         bluetoothStatusBinding.omnipodDashDeliveryStatus.text = podStateManager.deliveryStatus?.let {
@@ -303,12 +307,20 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 podStateManager.bluetoothVersion.toString()
             )
 
-            // Update time on Pod
+            val timeZone = podStateManager.timeZoneId?.let { timeZoneId ->
+                podStateManager.timeZoneUpdated?.let { timeZoneUpdated ->
+                    val tz = TimeZone.getTimeZone(timeZoneId)
+                    val inDST = tz.inDaylightTime(Date(timeZoneUpdated))
+                    val locale = resources.configuration.locales.get(0)
+                    tz.getDisplayName(inDST, TimeZone.SHORT, locale)
+                } ?: PLACEHOLDER
+            } ?: PLACEHOLDER
+
             podInfoBinding.timeOnPod.text = podStateManager.time?.let {
                 rh.gs(
                     R.string.omnipod_common_time_with_timezone,
                     dateUtil.dateAndTimeString(it.toEpochSecond() * 1000),
-                    podStateManager.timeZone.getDisplayName(true, TimeZone.SHORT)
+                    timeZone
                 )
             } ?: PLACEHOLDER
 
@@ -428,6 +440,10 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 R.string.omnipod_common_alert_expiration_advisory
             AlertType.AUTO_OFF ->
                 R.string.omnipod_common_alert_shutdown_imminent
+            AlertType.SUSPEND_IN_PROGRESS ->
+                R.string.omnipod_common_alert_delivery_suspended
+            AlertType.SUSPEND_ENDED ->
+                R.string.omnipod_common_alert_delivery_suspended
             else ->
                 R.string.omnipod_common_alert_unknown_alert
         }
@@ -535,7 +551,9 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             }
             podInfoBinding.lastBolus.text = text
             podInfoBinding.lastBolus.setTextColor(textColor)
+            return
         }
+        podInfoBinding.lastBolus.text = PLACEHOLDER
     }
 
     private fun updateTempBasal() {
@@ -618,16 +636,8 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
     private fun updateSuspendDeliveryButton() {
         // If the Pod is currently suspended, we show the Resume delivery button instead.
-        if (isSuspendDeliveryButtonEnabled() &&
-            podStateManager.isPodRunning &&
-            (!podStateManager.isSuspended || commandQueue.isCustomCommandInQueue(CommandSuspendDelivery::class.java))
-        ) {
-            buttonBinding.buttonSuspendDelivery.visibility = View.VISIBLE
-            buttonBinding.buttonSuspendDelivery.isEnabled =
-                podStateManager.isPodRunning && !podStateManager.isSuspended && isQueueEmpty()
-        } else {
-            buttonBinding.buttonSuspendDelivery.visibility = View.GONE
-        }
+        // disable the 'suspendDelivery' button.
+        buttonBinding.buttonSuspendDelivery.visibility = View.GONE
     }
 
     private fun updateSetTimeButton() {
@@ -641,10 +651,6 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
     private fun isAutomaticallySilenceAlertsEnabled(): Boolean {
         return sp.getBoolean(R.string.omnipod_common_preferences_automatically_silence_alerts, false)
-    }
-
-    private fun isSuspendDeliveryButtonEnabled(): Boolean {
-        return sp.getBoolean(R.string.key_omnipod_common_suspend_delivery_button_enabled, false)
     }
 
     private fun displayErrorDialog(title: String, message: String, withSound: Boolean) {

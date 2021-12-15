@@ -206,6 +206,10 @@
                 android:textSize="11sp" />
 
         </LinearLayout>
+        
+        <include
+            android:id="@+id/datetime"
+            layout="@layout/datetime" />
 
         <include
             android:id="@+id/okcancel"

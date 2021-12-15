@@ -17,7 +17,7 @@ import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.automation.elements.ComparatorExists
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDuration
@@ -63,8 +63,8 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
                 result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
                 uel.log(UserEntry.Action.TT, Sources.Automation, title,
                     ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.AUTOMATION),
-                    ValueWithUnit.fromGlucoseUnit(tt().lowTarget, Constants.MGDL),
-                    ValueWithUnit.fromGlucoseUnit(tt().highTarget, Constants.MGDL).takeIf { tt().lowTarget != tt().highTarget },
+                    ValueWithUnit.Mgdl(tt().lowTarget),
+                    ValueWithUnit.Mgdl(tt().highTarget).takeIf { tt().lowTarget != tt().highTarget },
                     ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt().duration).toInt()))
                 callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok))?.run()
             }, {

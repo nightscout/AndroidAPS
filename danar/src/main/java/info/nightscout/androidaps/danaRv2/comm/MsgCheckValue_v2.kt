@@ -6,7 +6,7 @@ import info.nightscout.androidaps.danar.R
 import info.nightscout.androidaps.danar.comm.MessageBase
 import info.nightscout.androidaps.events.EventRebuildTabs
 import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 
@@ -40,7 +40,7 @@ class MsgCheckValue_v2(
             //If profile coming from pump, switch it as well
             configBuilder.storeSettings("ChangingDanaRv2Driver")
             rxBus.send(EventRebuildTabs())
-            commandQueue.readStatus("PumpDriverChange", null) // force new connection
+            commandQueue.readStatus(rh.gs(R.string.pump_driver_change), null) // force new connection
             return
         }
         if (danaPump.protocol != 2) {
@@ -57,7 +57,7 @@ class MsgCheckValue_v2(
             //If profile coming from pump, switch it as well
             configBuilder.storeSettings("ChangingDanaRv2Driver")
             rxBus.send(EventRebuildTabs())
-            commandQueue.readStatus("PumpDriverChange", null) // force new connection
+            commandQueue.readStatus(rh.gs(R.string.pump_driver_change), null) // force new connection
             return
         }
         aapsLogger.debug(LTag.PUMPCOMM, "Model: " + String.format("%02X ", danaPump.hwModel))

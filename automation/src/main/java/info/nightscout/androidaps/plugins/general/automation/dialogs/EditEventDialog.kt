@@ -128,7 +128,7 @@ class EditEventDialog : DialogFragmentWithDate() {
         // check for title
         val title = binding.inputEventTitle.text?.toString() ?: return false
         if (title.isEmpty()) {
-            ToastUtils.showToastInUiThread(context, R.string.automation_missing_task_name)
+            context?.let { ToastUtils.showToastInUiThread(it, R.string.automation_missing_task_name) }
             return false
         }
         event.title = title
@@ -137,12 +137,12 @@ class EditEventDialog : DialogFragmentWithDate() {
         // check for at least one trigger
         val con = event.trigger
         if (con.size() == 0 && !event.userAction) {
-            ToastUtils.showToastInUiThread(context, R.string.automation_missing_trigger)
+            context?.let { ToastUtils.showToastInUiThread(it, R.string.automation_missing_trigger) }
             return false
         }
         // check for at least one action
         if (event.actions.isEmpty()) {
-            ToastUtils.showToastInUiThread(context, R.string.automation_missing_action)
+            context?.let { ToastUtils.showToastInUiThread(it, R.string.automation_missing_action) }
             return false
         }
         // store

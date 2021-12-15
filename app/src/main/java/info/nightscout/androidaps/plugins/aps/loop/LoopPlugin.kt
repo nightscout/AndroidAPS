@@ -30,8 +30,8 @@ import info.nightscout.androidaps.events.EventNewBG
 import info.nightscout.androidaps.events.EventTempTargetChange
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.interfaces.Loop.LastRun
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopSetLastRunGui
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopUpdateGui
@@ -58,7 +58,7 @@ import info.nightscout.androidaps.extensions.plannedRemainingMinutes
 import info.nightscout.androidaps.plugins.aps.events.EventLoopInvoked
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import javax.inject.Inject
@@ -175,7 +175,7 @@ class LoopPlugin @Inject constructor(
             setPluginEnabled(PluginType.LOOP, value)
         }
 
-    val isLGS: Boolean
+    override val isLGS: Boolean
         get() {
             val closedLoopEnabled = constraintChecker.isClosedLoopAllowed()
             val maxIobAllowed = constraintChecker.getMaxIOBAllowed().value()
@@ -186,13 +186,13 @@ class LoopPlugin @Inject constructor(
             return isLGS
         }
 
-    val isSuperBolus: Boolean
+    override val isSuperBolus: Boolean
         get() {
             val offlineEventWrapped = repository.getOfflineEventActiveAt(dateUtil.now()).blockingGet()
             return offlineEventWrapped is ValueWrapper.Existing && offlineEventWrapped.value.reason == OfflineEvent.Reason.SUPER_BOLUS
         }
 
-    val isDisconnected: Boolean
+    override val isDisconnected: Boolean
         get() {
             val offlineEventWrapped = repository.getOfflineEventActiveAt(dateUtil.now()).blockingGet()
             return offlineEventWrapped is ValueWrapper.Existing && offlineEventWrapped.value.reason == OfflineEvent.Reason.DISCONNECT_PUMP
@@ -208,10 +208,6 @@ class LoopPlugin @Inject constructor(
         return bool
     }
 
-    @Synchronized operator fun invoke(initiator: String, allowNotification: Boolean) {
-        invoke(initiator, allowNotification, false)
-    }
-
     @Synchronized
     fun isEmptyQueue(): Boolean {
         val maxMinutes = 2L
@@ -224,7 +220,7 @@ class LoopPlugin @Inject constructor(
     }
 
     @Synchronized
-    operator fun invoke(initiator: String, allowNotification: Boolean, tempBasalFallback: Boolean) {
+    override fun invoke(initiator: String, allowNotification: Boolean, tempBasalFallback: Boolean) {
         try {
             aapsLogger.debug(LTag.APS, "invoke from $initiator")
             val loopEnabled = constraintChecker.isLoopInvocationAllowed()
@@ -242,15 +238,15 @@ class LoopPlugin @Inject constructor(
             if (!isEnabled(PluginType.LOOP)) return
             val profile = profileFunction.getProfile()
             if (profile == null || !profileFunction.isProfileValid("Loop")) {
-                aapsLogger.debug(LTag.APS, rh.gs(R.string.noprofileselected))
-                rxBus.send(EventLoopSetLastRunGui(rh.gs(R.string.noprofileselected)))
+                aapsLogger.debug(LTag.APS, rh.gs(R.string.noprofileset))
+                rxBus.send(EventLoopSetLastRunGui(rh.gs(R.string.noprofileset)))
                 return
             }
 
             // Check if pump info is loaded
             if (pump.baseBasalRate < 0.01) return
             val usedAPS = activePlugin.activeAPS
-            if ((usedAPS as PluginBase).isEnabled(PluginType.APS)) {
+            if ((usedAPS as PluginBase).isEnabled()) {
                 usedAPS.invoke(initiator, tempBasalFallback)
                 apsResult = usedAPS.lastAPSResult
             }
@@ -443,7 +439,7 @@ class LoopPlugin @Inject constructor(
         }
     }
 
-    fun disableCarbSuggestions(durationMinutes: Int) {
+    override fun disableCarbSuggestions(durationMinutes: Int) {
         carbsSuggestionsSuspendedUntil = System.currentTimeMillis() + durationMinutes * 60 * 1000
         dismissSuggestion()
     }
@@ -479,7 +475,7 @@ class LoopPlugin @Inject constructor(
         rxBus.send(EventWearConfirmAction("cancelChangeRequest"))
     }
 
-    fun acceptChangeRequest() {
+    override fun acceptChangeRequest() {
         val profile = profileFunction.getProfile() ?: return
         lastRun?.let { lastRun ->
             lastRun.constraintsProcessed?.let { constraintsProcessed ->
@@ -616,7 +612,7 @@ class LoopPlugin @Inject constructor(
     }
 
     private fun allowPercentage(): Boolean {
-        return virtualPumpPlugin.isEnabled(PluginType.PUMP)
+        return virtualPumpPlugin.isEnabled()
     }
 
     override fun goToZeroTemp(durationInMinutes: Int, profile: Profile, reason: OfflineEvent.Reason) {

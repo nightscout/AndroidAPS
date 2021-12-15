@@ -46,4 +46,6 @@ class InputDuration(
             this.value = value / 60
         return this
     }
+
+    override fun toString(): String = "InputDuration: $value $unit"
 }

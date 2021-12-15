@@ -8,7 +8,7 @@ import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator
 import info.nightscout.androidaps.plugins.general.automation.elements.InputBg
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement

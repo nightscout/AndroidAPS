@@ -12,7 +12,6 @@
     <string name="nav_resetdb">Vymaž databázu</string>
     <string name="reset_db_confirm">Naozaj chcete vymazať databázu?</string>
     <string name="nav_exit">Ukončiť</string>
-    <string name="ns_sync_use_absolute_title">Vždy používaj absolútne hodnoty bazálov</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Toto zariadenie zrejme neumožňuje vypnúť optimalizáciu batérie - môže dochádzať k problémom s výkonom.</string>
     <string name="description_actions">Niektoré tlačidlá na rýchly prístup do spoločných funkcií</string>
     <string name="description_config_builder">Používané na konfiguráciu aktívnych pluginov</string>
@@ -58,7 +57,7 @@
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">Sacharidy</string>
     <string name="treatments_wizard_correction_label">Korekcia</string>
-    <string name="treatments_wizard_bolusiob_label">Bolusový IOB</string>
+    <string name="bolus_iob_label">Bolusový IOB</string>
     <string name="openapsma_run">Spustiť teraz</string>
     <string name="vitualpump_label">Virtuálna pumpa</string>
     <string name="openapsma_lastrun_label">Posledné spustenie</string>
@@ -97,7 +96,7 @@
     <string name="safety">Bezpečnosť</string>
     <string name="openapsma_disabled">Modul je deaktivovaný</string>
     <string name="constraints_violation">Mimo povolený rozsah</string>
-    <string name="treatmentdeliveryerror">Chyba podania bolusu</string>
+    <string name="treatmentdeliveryerror">Bolus zaznamenal chybu. Overte prosím manuálne reálne podané množstvo</string>
     <string name="setbasalquestion">Povoliť nový dočasný bazál:</string>
     <string name="overview_treatment_label">Bolus</string>
     <string name="overview_calculator_label">Kalkulačka</string>
@@ -123,9 +122,9 @@
     <string name="careportal_newnstreatment_other">Iné</string>
     <string name="careportal_newnstreatment_meter">Glukomer</string>
     <string name="careportal_newnstreatment_sensor">Senzor</string>
-    <string name="careportal_newnstreatment_carbtime_label">Čas jedla</string>
+    <string name="carb_time_label">Čas jedla</string>
     <string name="careportal_newnstreatment_duration_label">Trvanie</string>
-    <string name="careportal_newnstreatment_profile_label">Profil</string>
+    <string name="profile_label">Profil</string>
     <string name="careportal_newnstreatment_glucosetype">Zadanie glykémie</string>
     <string name="overview_tempbasal_button">Dočasný bazál</string>
     <string name="overview_extendedbolus_button">Predĺžený bolus</string>
@@ -356,7 +355,7 @@
     <string name="smscommunicator_wrongduration">Nesprávna doba trvania</string>
     <string name="smscommunicator_loopsuspended">Uzavretý okruh pozastavený</string>
     <string name="smscommunicator_loopresumed">Uzavretý okruh obnovený</string>
-    <string name="treatments_wizard_bgtrend_label">15min trend</string>
+    <string name="bg_trend_label">15min trend</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Zaznamenávať spustenie aplikácie do NS</string>
@@ -522,8 +521,8 @@
     <string name="enablesmbwithhightemptarget_summary">Povoliť SMB, ak je aktívny vysoký cieľ (cvičenie, vyšší ako 5,5 mmol/l)</string>
     <string name="overview_insulin_label">Inzulín</string>
     <string name="overview_buttons_selection">Tlačidlá</string>
-    <string name="show_calibration_button_summary">Odošle kalibráciu do xDripu+, alebo otvorenie kalibračného dialógu na G5</string>
-    <string name="show_cgm_button_summary">Otvorí xDrip+, tlačidlom späť sa vrátiš do AndroidAPS</string>
+    <string name="show_calibration_button_summary">Odošle kalibráciu do xDripu+, alebo otvorenie kalibračného dialógu BYODA</string>
+    <string name="show_cgm_button_summary">Otvorí xDrip+, alebo BYODA, tlačidlom späť sa vrátiš do AndroidAPS</string>
     <string name="carb_increment_button_message">Množstvo sacharidov, ktoré má byť pridané po stlačení tlačidla</string>
     <string name="insulin_increment_button_message">Množstvo inzulínu, ktoré má byť pridané po stlačení tlačidla</string>
     <string name="error_starting_cgm">Nie je možné spustiť aplikáciu CGM. Uistite sa, že je nainštalovaná.</string>
@@ -629,7 +628,7 @@
     <string name="exitwizard">Preskočiť sprievodcu</string>
     <string name="setupwizard_loop_description">Stlačte tlačidlo nižšie, pre povolenie, aby mohlo AndroidAPS navrhovať, alebo robiť zmeny bazálu</string>
     <string name="setupwizard_sensitivity_description">Modul citlivosť slúži k detekcii zmien v citlivosti a k počítaniu COB. Viac informácií tu:</string>
-    <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
+    <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/cs/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="nsclientinfotext">NSClient slúži na spojenie s Nightscoutom. Nastavenia môžete teraz preskočiť, ale nebudete schopný dokončiť ciele, pokiaľ neurobíte nastavenia.</string>
     <string name="diawarning">Prosím, zapamätajte si: Nové inzulínové profily vyžadujú DIA minimálne 5h. DIA 5-6 hodín zodpovedá zhruba nastaveniam 3h na starších typoch profilu.</string>
     <string name="setupwizard_aps_description">Vyberte jeden z algoritmov. Sú zoradené od najstaršieho po najnovší. Novší je obvykle lepší a agresívnejší, ale vyžaduje presnejšie nastavenie. Preto pokiaľ s uzavretým okruhom začínate, mali by ste najskôr vybrať jen AMA a nie ten posledný. Nezabudnite si prečítať dokumentáciu k OpenAPS a prejsť nastavenia, kým ho začnete používať.</string>
@@ -641,6 +640,7 @@
     <string name="needsystemwindowpermission">Aplikácia vyžaduje pre oznámenia systémové oprávnenie</string>
     <string name="needlocationpermission">Aplikácia vyžaduje oprávnenie polohy, pre vyhľadávanie BT a identifikáciu WiFi</string>
     <string name="needstoragepermission">Aby bolo možné nahrávať logy a exportovať nastavenia, je nutné pre aplikáciu povoliť oprávnenie prístupu k úložisku</string>
+    <string name="needconnectpermission">Aplikácia vyžaduje povolenie bluetooth</string>
     <string name="request">Požiadavka</string>
     <string name="open_navigation">Otvoriť Menu</string>
     <string name="close_navigation">Zavrieť Menu</string>
@@ -650,6 +650,8 @@
     <string name="time_elapsed">Uplynutý čas</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Získavať glykémie z aplikácie Poctech</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Získavať glykémie z aplikácie Glunovo</string>
     <string name="description_source_tomato">Prijímať glykémie z aplikácie Tomato (zariadenie MiaoMiao)</string>
     <string name="high_temptarget_raises_sensitivity_title">Vysoký dočasný cieľ zvýši citlivosť</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Zvýšenie citlivosti pre dočasné ciele >= 5.5]]></string>
@@ -720,9 +722,9 @@
     <string name="application_expired">Aplikácia expirovala</string>
     <string name="new_version_warning">Nová verzia je dostupná minimálne %1$d dní! Prepnutie na ochranu pred nízkou glykémiou po %2$d dňoch, vypnutie uzavretého okruhu po %3$d dňoch</string>
     <string name="twohours">2h</string>
-    <string name="dexcom_app_patched">Dexcom aplikácia (upravená)</string>
-    <string name="dexcom_short">DXCM</string>
-    <string name="description_source_dexcom">Prijímaj hodnoty glykémie z upravenej Dexcom aplikácie.</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Prijímať hodnoty glykémií z upravenej aplikácie Dexcom (BYODA).</string>
     <string name="cobvsiob">COB vs. IOB</string>
     <string name="bolusconstraintappliedwarn">Použité obmedzenie bolusu: %1$.2f J na %2$.2f J</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Detekovaná pomalá absorbcia sacharidov: %2$d%% času. Prekontrolujte kalkuláciu. COB môže byť úplne iné, môže byť podaného viac inzulínu!!!!!</font>]]></string>
@@ -777,8 +779,8 @@
     <string name="show_calculation">Zobraziť kalkuláciu</string>
     <string name="show_removed">Zobraziť odstránené</string>
     <string name="clearqueueconfirm">Vymazať frontu? Všetky dáta vo fronte budú stratené!</string>
-    <string name="ebstopsloop">Použitie funkcie rozloženého bolusu zastaví uzavretý okruh na dobu trvania rozloženého bolusu. Naozaj to chcete?</string>
-    <string name="closed_loop_disabled_with_eb">Uzavretý okruh je zastavený kvôli prebiehajúcemu rozloženému bolusu</string>
+    <string name="ebstopsloop">Použitie funkcie predĺženého bolusu zastaví uzavretý okruh na dobu trvania predĺženého bolusu. Naozaj to chcete?</string>
+    <string name="closed_loop_disabled_with_eb">Uzavretý okruh je zastavený kvôli prebiehajúcemu predĺženému bolusu</string>
     <string name="phonechecker">PhoneChecker</string>
     <string name="chartmenu">Grafové menu</string>
     <string name="loop_smbrequest_time_label">Čas požiadavky SMB</string>
@@ -858,7 +860,7 @@
     <string name="cannula">Kanyla</string>
     <string name="userentry">Vstup používateľa</string>
     <string name="common_values">Použite hodnoty pre najväčšie jedlo, aké obvykle jete\n</string>
-    <string name="summary_email_for_crash_report">Táto e-mailová adresa bude pripojená ku správam o zlyhaniach, aby sme vás mohli kontaktovať v naliehavých prípadoch. Je to dobrovoľné.</string>
+    <string name="summary_email_for_crash_report">Táto identifikácia bude priložená ku správam o zlyhaniach, aby sme Vás mohli v naliehavých prípadoch kontaktovať. Je to voliteľné.</string>
     <string name="email_address">Emailová adresa</string>
     <string name="privacy_settings">Nastavenia súkromia</string>
     <string name="privacy_summary">Pokiaľ chcete byť upozornení na zlyhanie aplikácie, môžete zadať voliteľne e-mailovú adresu. Toto nie je automatizovaná služba. Vývojári vás budú kontaktovať v nebezpečných situáciách.</string>
@@ -897,4 +899,10 @@
     <string name="view">Zobraziť</string>
     <string name="errors">Chyby</string>
     <string name="ns_sync_slow">Spomaliť nahrávanie</string>
+    <string name="data_status">Stav dát glykémie</string>
+    <string name="recalculated_data_used">Použité prepočítané dáta</string>
+    <string name="bg_too_close">Glykémia je príliš blízko:\n%1$s\n%2$s</string>
+    <string name="identification">Identifikácia (E-mail, prezývka FB, alebo Discord atď.)</string>
+    <string name="identification_not_set">Identifikácia nie je nastavená vo vývojárskom móde</string>
+    <string name="not_available_full">Nedostupný</string>
 </resources>

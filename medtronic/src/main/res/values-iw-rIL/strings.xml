@@ -90,4 +90,5 @@
     <string name="set_neutral_temps_title">הגדרת מינון בזאלי ניטרלי</string>
     <string name="set_neutral_temps_summary">אם תופעל, היא תבטל בזאלי זמני לפני תום כל שעה. שיטה זו יכולה לעזור לבטל ציפצופים ורטט רבים בחלק מהמשאבות.</string>
     <string name="mdt_tbr_remaining">%1$.1f יחידות\\שעה (נותרו %2$d דקות) </string>
+    <string name="invalid_history_data">זוהתה היסטוריית משאבה פסולה. נא לפתוח תלונה ולספק רישומים (לוג).</string>
 </resources>

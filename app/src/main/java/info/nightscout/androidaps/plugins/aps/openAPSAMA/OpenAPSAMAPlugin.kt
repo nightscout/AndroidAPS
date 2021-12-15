@@ -8,8 +8,8 @@ import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.aps.events.EventOpenAPSUpdateGui
 import info.nightscout.androidaps.plugins.aps.events.EventOpenAPSUpdateResultGui
 import info.nightscout.androidaps.plugins.aps.loop.ScriptReader
@@ -86,8 +86,8 @@ class OpenAPSAMAPlugin @Inject constructor(
         val profile = profileFunction.getProfile()
         val pump = activePlugin.activePump
         if (profile == null) {
-            rxBus.send(EventOpenAPSUpdateResultGui(rh.gs(R.string.noprofileselected)))
-            aapsLogger.debug(LTag.APS, rh.gs(R.string.noprofileselected))
+            rxBus.send(EventOpenAPSUpdateResultGui(rh.gs(R.string.noprofileset)))
+            aapsLogger.debug(LTag.APS, rh.gs(R.string.noprofileset))
             return
         }
         if (!isEnabled(PluginType.APS)) {

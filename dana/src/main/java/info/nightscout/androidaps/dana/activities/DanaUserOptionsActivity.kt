@@ -11,13 +11,12 @@ import info.nightscout.androidaps.dana.databinding.DanarUserOptionsActivityBindi
 import info.nightscout.androidaps.events.EventInitializationChanged
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.logging.LTag
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import java.text.DecimalFormat
@@ -27,7 +26,6 @@ import kotlin.math.min
 
 class DanaUserOptionsActivity : NoSplashAppCompatActivity() {
 
-    @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var context: Context
@@ -71,7 +69,8 @@ class DanaUserOptionsActivity : NoSplashAppCompatActivity() {
 
         minBacklight = if (danaPump.hwModel < 7) 1 else 0 // Dana-i allows zero
 
-        aapsLogger.debug(LTag.PUMP,
+        aapsLogger.debug(
+            LTag.PUMP,
             "UserOptionsLoaded:" + (System.currentTimeMillis() - danaPump.lastConnection) / 1000 + " s ago"
                 + "\ntimeDisplayType24:" + danaPump.timeDisplayType24
                 + "\nbuttonScroll:" + danaPump.buttonScrollOnOff
@@ -79,16 +78,17 @@ class DanaUserOptionsActivity : NoSplashAppCompatActivity() {
                 + "\nlcdOnTimeSec:" + danaPump.lcdOnTimeSec
                 + "\nbackLight:" + danaPump.backlightOnTimeSec
                 + "\npumpUnits:" + danaPump.units
-                + "\nlowReservoir:" + danaPump.lowReservoirRate)
+                + "\nlowReservoir:" + danaPump.lowReservoirRate
+        )
 
         binding.screentimeout.setParams(danaPump.lcdOnTimeSec.toDouble(), 5.0, 240.0, 5.0, DecimalFormat("1"), false, binding.saveUserOptions)
         binding.backlight.setParams(danaPump.backlightOnTimeSec.toDouble(), minBacklight.toDouble(), 60.0, 1.0, DecimalFormat("1"), false, binding.saveUserOptions)
         binding.shutdown.setParams(danaPump.shutdownHour.toDouble(), 0.0, 24.0, 1.0, DecimalFormat("1"), true, binding.saveUserOptions)
         binding.lowreservoir.setParams(danaPump.lowReservoirRate.toDouble(), 10.0, 50.0, 10.0, DecimalFormat("10"), false, binding.saveUserOptions)
         when (danaPump.beepAndAlarm) {
-            0b01 -> binding.pumpalarmSound.isChecked = true
-            0b10 -> binding.pumpalarmVibrate.isChecked = true
-            0b11 -> binding.pumpalarmBoth.isChecked = true
+            0b01  -> binding.pumpalarmSound.isChecked = true
+            0b10  -> binding.pumpalarmVibrate.isChecked = true
+            0b11  -> binding.pumpalarmBoth.isChecked = true
 
             0b101 -> {
                 binding.pumpalarmSound.isChecked = true

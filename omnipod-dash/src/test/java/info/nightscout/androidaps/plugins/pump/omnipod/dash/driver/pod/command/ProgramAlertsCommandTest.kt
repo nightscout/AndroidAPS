@@ -85,7 +85,7 @@ class ProgramAlertsCommandTest {
                 false,
                 AlertTrigger.TimerTrigger(4079.toShort()),
                 BeepType.FOUR_TIMES_BIP_BEEP,
-                BeepRepetitionType.XXX2
+                BeepRepetitionType.EVERY_MINUTE_AND_EVERY_15_MIN
             )
         )
 

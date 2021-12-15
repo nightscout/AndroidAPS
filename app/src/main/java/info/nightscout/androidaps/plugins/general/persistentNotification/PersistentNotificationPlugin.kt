@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.general.persistentNotification
 
-import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
@@ -14,7 +13,7 @@ import info.nightscout.androidaps.events.*
 import info.nightscout.androidaps.extensions.toStringShort
 import info.nightscout.androidaps.extensions.valueToUnitsString
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.utils.DecimalFormatter
@@ -65,10 +64,10 @@ class PersistentNotificationPlugin @Inject constructor(
     // End Android auto
 
     private val disposable = CompositeDisposable()
-    private var channel: NotificationChannel? = null
 
     override fun onStart() {
         super.onStart()
+        notificationHolder.createNotificationChannel()
         disposable += rxBus
             .toObservable(EventRefreshOverview::class.java)
             .observeOn(aapsSchedulers.io)
@@ -103,12 +102,6 @@ class PersistentNotificationPlugin @Inject constructor(
             .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException)
     }
 
-    private fun createNotificationChannel() {
-        val mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        channel = NotificationChannel(notificationHolder.channelID, notificationHolder.channelID as CharSequence, NotificationManager.IMPORTANCE_HIGH)
-        channel?.let { mNotificationManager.createNotificationChannel(it) }
-    }
-
     override fun onStop() {
         disposable.clear()
         dummyServiceHelper.stopService(context)
@@ -116,8 +109,6 @@ class PersistentNotificationPlugin @Inject constructor(
     }
 
     private fun triggerNotificationUpdate() {
-        if (channel == null)
-            createNotificationChannel() // make sure channels exist before triggering updates through the bus
         updateNotification()
         dummyServiceHelper.startService(context)
     }

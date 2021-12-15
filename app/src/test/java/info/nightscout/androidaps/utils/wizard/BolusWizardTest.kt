@@ -7,7 +7,6 @@ import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
@@ -32,7 +31,7 @@ class BolusWizardTest : TestBase() {
     @Mock lateinit var context: Context
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var commandQueue: CommandQueue
-    @Mock lateinit var loopPlugin: LoopPlugin
+    @Mock lateinit var loop: Loop
     @Mock lateinit var iobCobCalculator: IobCobCalculator
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Mock lateinit var dateUtil: DateUtil
@@ -48,7 +47,7 @@ class BolusWizardTest : TestBase() {
                 it.constraintChecker = constraintChecker
                 it.activePlugin = activePlugin
                 it.commandQueue = commandQueue
-                it.loopPlugin = loopPlugin
+                it.loop = loop
                 it.iobCobCalculator = iobCobCalculator
                 it.glucoseStatusProvider = GlucoseStatusProvider(aapsLogger = aapsLogger, iobCobCalculator = iobCobCalculator, dateUtil = dateUtil)
             }

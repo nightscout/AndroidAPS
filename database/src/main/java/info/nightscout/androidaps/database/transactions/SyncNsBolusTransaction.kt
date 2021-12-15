@@ -16,11 +16,16 @@ class SyncNsBolusTransaction(private val bolus: Bolus) : Transaction<SyncNsBolus
             }
 
         if (current != null) {
-            // nsId exists, allow only invalidation
+            // nsId exists, allow only invalidation or amount update (for drivers setting full amount upfront)
             if (current.isValid && !bolus.isValid) {
                 current.isValid = false
                 database.bolusDao.updateExistingEntry(current)
                 result.invalidated.add(current)
+            }
+            if (current.amount != bolus.amount) {
+                current.amount = bolus.amount
+                database.bolusDao.updateExistingEntry(current)
+                result.updated.add(current)
             }
             return result
         }
@@ -28,9 +33,10 @@ class SyncNsBolusTransaction(private val bolus: Bolus) : Transaction<SyncNsBolus
         // not known nsId
         val existing = database.bolusDao.findByTimestamp(bolus.timestamp)
         if (existing != null && existing.interfaceIDs.nightscoutId == null) {
-            // the same record, update nsId only
+            // the same record, update nsId only and amount
             existing.interfaceIDs.nightscoutId = bolus.interfaceIDs.nightscoutId
             existing.isValid = bolus.isValid
+            existing.amount = bolus.amount
             database.bolusDao.updateExistingEntry(existing)
             result.updatedNsId.add(existing)
         } else {
@@ -46,5 +52,6 @@ class SyncNsBolusTransaction(private val bolus: Bolus) : Transaction<SyncNsBolus
         val updatedNsId = mutableListOf<Bolus>()
         val inserted = mutableListOf<Bolus>()
         val invalidated = mutableListOf<Bolus>()
+        val updated = mutableListOf<Bolus>()
     }
 }

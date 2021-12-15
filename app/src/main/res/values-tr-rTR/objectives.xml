@@ -2,27 +2,27 @@
 <resources>
     <string name="objectives_button_start">Başlat</string>
     <string name="objectives_button_verify">Doğrulayın</string>
-    <string name="nth_objective">%1$d. Görev</string>
+    <string name="nth_objective">Görev %1$d.</string>
     <string name="objectivenotstarted">Görev %1$d başlanmadı</string>
     <string name="objectivenotfinished">Görev %1$d tamamlanmadı</string>
     <string name="objectives_0_objective">Nightscout üzerinden izlemeyi ve görselleştirmeyi yapılandırın, bazalları ve oranlarını analiz edin</string>
-    <string name="objectives_0_gate">Nightscout\'ta KŞ\'nin bulunduğunu ve insülin verilerinin yüklenmekte olduğunu doğrulayın</string>
+    <string name="objectives_0_gate">Nightscout\'ta KŞ\'nin bulunduğunu ve pompadaki insülin verilerinin yüklenmekte olduğunu doğrulayın</string>
     <string name="objectives_openloop_objective">Açık Döngü modu başlatılıyor</string>
     <string name="objectives_openloop_gate">Birkaç gün boyunca Açık Döngü modunda çalıştırın ve birçok geçici bazalı el yordamı ile girin. Geçici ve varsayılan geçici hedefleri düzenleyin ve kullanın (örn. egzersiz ve hipo-tedaviyi desteklemek için)</string>
     <string name="objectives_maxbasal_objective">Geçici bazal tavsiyeleri de dahil olmak üzere Açık Döngüyü anlamak</string>
     <string name="objectives_maxbasal_gate">Bu deneyime dayanarak, max bazalın ne olması gerektiğine karar vermeli ve bunu pompa ve tercihlere koymalısınız</string>
     <string name="objectives_maxiobzero_objective">Kapalı Döngü, (LGS) Düşük Kan Şekerinde Duraklatma modunda başlatılıyor</string>
-    <string name="objectives_maxiobzero_gate">Çok sayıda LGS (düşük KŞ) olmadan birkaç gün boyunca maksimum IOB = 0 (Aktif insülin) Kapalı Döngü\'de deneyin</string>
-    <string name="objectives_maxiob_objective">Kapalı Döngü\'de ince ayarlar, maksimum (IOB) Aktif İnsülinin 0\'ın üzerine yükseltme ve yavaş yavaş KŞ hedeflerini aşağıya çekme</string>
+    <string name="objectives_maxiobzero_gate">Kapalı Döngüyü, maks IOB = 0 olacak şekilde çok sayıda LGS (düşük KŞ) olmadan birkaç gün boyunca deneyin</string>
+    <string name="objectives_maxiob_objective">Kapalı Döngü\'de ince ayarlar, maks (IOB) Aktif İnsülini 0\'ın üzerine yükseltme ve yavaş yavaş KŞ hedeflerini aşağıya çekme</string>
     <string name="objectives_maxiob_gate">KŞ hedefini azaltmadan önce birkaç gün ve en az bir gece düşük KŞ (Hipo) alarmı olmadan deneyin</string>
-    <string name="objectives_autosens_objective">Gerekirse, bazal ve oranları ayarlayın ve sonra auto-sens\'i etkinleştirin</string>
-    <string name="objectives_autosens_gate">Bir hafta boyunca düzenli Karbonhidrad girdileri yaparak gün boyunca Kapalı Döngüyü çalıştırın</string>
+    <string name="objectives_autosens_objective">Gerekirse, bazal ve oranları ayarlayın ve sonra auto-sens\'i (otoduyarlılık) etkinleştirin</string>
+    <string name="objectives_autosens_gate">Bir hafta boyunca düzenli karbonhidrat girdileri yaparak gün boyunca Kapalı Döngüyü çalıştırın</string>
     <string name="objectives_smb_objective">SMB (Super Micro Bolus) gibi gündüz kullanımı için ek özelliklerin etkinleştirilmesi</string>
     <string name="objectives_auto_objective">Otomasyonu etkinleştirme</string>
     <string name="objectives_smb_gate">(Super Micro Bolus) SMB\'lerın iyi çalışabilmesi için wiki\'yi okumalısınız ve maxIOB\'u yükseltmelisiniz! İyi bir başlangıç için maxIOB = ortalama yemek bolusu + 3 x max günlük bazaldır</string>
     <string name="objectives_auto_gate">Otomasyonun nasıl çalıştığına dair dokümanları okuyun. İlk basit kurallarınızı belirleyin. Eylem yerine AAPS\'in yalnızca bildirim göndermesine izin verin. Otomasyonun doğru zamanda tetiklendiğinden emin olduğunuzda, bildirimi gerçek eylemle değiştirin. (https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">KŞ NS\'ta mevcut</string>
-    <string name="objectives_pumpstatusavailableinns">Pompa durumu NS mevcut</string>
+    <string name="objectives_pumpstatusavailableinns">Pompa durumu NS\'ta mevcut</string>
     <string name="objectives_manualenacts">Manuel eylemler</string>
     <string name="accomplished">Başarıldı: %1$s</string>
     <string name="objectives_usage_objective">AndroidAPS\'i nasıl kontrol edeceğinizi öğrenin</string>

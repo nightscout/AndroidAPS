@@ -17,7 +17,7 @@ import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
@@ -26,10 +26,9 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.buildHelper.BuildHelperImpl
-import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.Single
 import org.junit.Assert
 import org.junit.Before
@@ -106,7 +105,8 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     fun prepare() {
         commandQueue = CommandQueueMocked(injector, aapsLogger, rxBus, aapsSchedulers, rh,
                                           constraintChecker, profileFunction, activePlugin, context, sp,
-                                         BuildHelperImpl(ConfigImpl(), fileListProvider), dateUtil, repository,
+                                         BuildHelperImpl(config, fileListProvider), dateUtil,
+                                          repository,
                                           fabricPrivacy, config)
         testPumpPlugin = TestPumpPlugin(injector)
 
@@ -140,7 +140,8 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     fun commandIsPickedUp() {
         val commandQueue = CommandQueueImplementation(injector, aapsLogger, rxBus, aapsSchedulers, rh,
                                                       constraintChecker, profileFunction, activePlugin, context, sp,
-                                                      BuildHelperImpl(ConfigImpl(), fileListProvider), dateUtil, repository,
+                                                      BuildHelperImpl(config, fileListProvider),
+                                                      dateUtil, repository,
                                                       fabricPrivacy, config)
         // start with empty queue
         Assert.assertEquals(0, commandQueue.size())

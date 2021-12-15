@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.testing.utils;
 
+import static info.nightscout.androidaps.testing.utils.ExtUtil.assertClassHaveSameFields;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -7,8 +9,7 @@ import java.util.Objects;
 
 import info.nightscout.androidaps.data.BgWatchData;
 
-import static info.nightscout.androidaps.testing.utils.ExtUtil.assertClassHaveSameFields;
-
+@SuppressWarnings("unused")
 public class BgWatchDataExt extends BgWatchData {
 
     private BgWatchDataExt() {
@@ -56,7 +57,7 @@ public class BgWatchDataExt extends BgWatchData {
 
     @Override @NonNull
     public String toString() {
-        return sgv+", "+high+", "+low+", "+timestamp+", "+color;
+        return sgv + ", " + high + ", " + low + ", " + timestamp + ", " + color;
     }
 
     @Override
