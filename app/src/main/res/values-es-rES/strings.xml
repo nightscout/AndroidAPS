@@ -111,7 +111,7 @@
     <string name="apsmode_title">Modo APS</string>
     <string name="closedloop">Lazo cerrado</string>
     <string name="openloop">Lazo abierto</string>
-    <string name="lowglucosesuspend">Suspensión por glucosa baja</string>
+    <string name="lowglucosesuspend">Suspensión por glucosa baja (LGS)</string>
     <string name="disabledloop">Lazo desactivado</string>
     <string name="openloop_newsuggestion">Nueva propuesta disponible</string>
     <string name="carbssuggestion">Sugerencia de carbohidratos</string>
@@ -339,11 +339,11 @@
     <string name="suspendloopfor3h">Suspender lazo durante 3 horas</string>
     <string name="suspendloopfor10h">Suspender lazo durante 10 horas</string>
     <string name="disconnectpump">Desconectar bomba</string>
-    <string name="disconnectpumpfor15m">Desconectar bomba durante 15 minutos</string>
-    <string name="disconnectpumpfor30m">Desconectar bomba durante 30 minutos</string>
-    <string name="disconnectpumpfor1h">Desconectar bomba durante 1 hora</string>
-    <string name="disconnectpumpfor2h">Desconectar bomba durante 2 horas</string>
-    <string name="disconnectpumpfor3h">Desconectar bomba durante 3 horas</string>
+    <string name="disconnectpumpfor15m">Desconectar la bomba durante 15 minutos</string>
+    <string name="disconnectpumpfor30m">Desconectar la bomba durante 30 minutos</string>
+    <string name="disconnectpumpfor1h">Desconectar la bomba durante 1 hora</string>
+    <string name="disconnectpumpfor2h">Desconectar la bomba durante 2 horas</string>
+    <string name="disconnectpumpfor3h">Desconectar la bomba durante 3 horas</string>
     <string name="duration15m">15 min</string>
     <string name="duration30m">30 min</string>
     <string name="duration1h">1 hora</string>
