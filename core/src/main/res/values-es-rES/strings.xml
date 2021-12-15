@@ -91,7 +91,7 @@
     <string name="suspendloop">Suspender lazo</string>
     <string name="duration_min_label">Duración [min]</string>
     <string name="notification">Notificación</string>
-    <string name="noprofile">Pendiente carga perfil NS</string>
+    <string name="noprofile">Ningún perfil cargado desde Nightscout</string>
     <string name="exists">existe</string>
     <string name="notexists">no existe</string>
     <string name="glucose">Glucosa</string>
