@@ -28,7 +28,7 @@
     <string name="description_overview">Muestra el estado actual de tu lazo y los botones para las acciones más usadas</string>
     <string name="description_persistent_notification">Muestra una notificación en curso con un breve resumen de lo que está haciendo tu lazo</string>
     <string name="description_profile_local">Definir un perfil disponible fuera de linea.</string>
-    <string name="description_pump_mdi">Integración de bomba de insulina para personas que usan varias inyecciones diarias en su terapia de diabetes</string>
+    <string name="description_pump_mdi">Integración de bomba de insulina para personas que usan múltiples dosis de insulina diarias, en su terapia de diabetes</string>
     <string name="description_pump_virtual">Integración de bombas de insulina que aún no tienen ningún controlador disponible (lazo abierto)</string>
     <string name="description_sensitivity_aaps">La sensibilidad se calcula de la misma manera que en Oref0, pero puede especificarse el rango de tiempo. La absorción de carbohidratos mínima se calcula con el máximo tiempo de absorción de carbohidratos en preferencias</string>
     <string name="description_sensitivity_oref1">La sensibilidad se calcula con las últimas 8h y los carbohidratos (si no son absorbidos) se anulan después del tiempo indicado en preferencias. Este complemento también calcula UAM</string>
@@ -111,7 +111,7 @@
     <string name="apsmode_title">Modo APS</string>
     <string name="closedloop">Lazo cerrado</string>
     <string name="openloop">Lazo abierto</string>
-    <string name="lowglucosesuspend">Suspensión por glucosa baja</string>
+    <string name="lowglucosesuspend">Suspensión por glucosa baja (LGS)</string>
     <string name="disabledloop">Lazo desactivado</string>
     <string name="openloop_newsuggestion">Nueva propuesta disponible</string>
     <string name="carbssuggestion">Sugerencia de carbohidratos</string>
@@ -130,7 +130,7 @@
     <string name="overview_extendedbolus_button">Bolo extendido</string>
     <string name="configbuilder_nightscoutversion_label">Versión de Nightscout:</string>
     <string name="missing_carbs">Falta %1$d g</string>
-    <string name="exported">Preferencias exportadas</string>
+    <string name="exported">Ajustes exportados correctamente</string>
     <string name="ue_exported">Entradas de usuario exportadas</string>
     <string name="export_to">Exportar ajustes a</string>
     <string name="import_from">Importar configuración de</string>
@@ -142,7 +142,7 @@
     <string name="openapsma_maxbasal_summary">Este valor es llamado max basal en OpenAPS</string>
     <string name="openapsma_maxiob_title">Max IOB basal que OpenAPs puede emitir [U]</string>
     <string name="openapsma_maxiob_summary">Este valor es llamado \"Max IOB\" en OpenAPS\nEsta es la cantidad máxima de insulina en [U] que APS puede entregar a la vez.</string>
-    <string name="password_preferences_encrypt_prompt">Se le solicitará la contraseña maestra, que se utilizará para cifrar las preferencias exportadas.</string>
+    <string name="password_preferences_encrypt_prompt">Se le solicitará la contraseña maestra, que se utilizará para cifrar los ajustes exportados</string>
     <string name="password_preferences_decrypt_prompt">Se le solicitará la contraseña maestra, que es necesaria para descifrar las preferencias importadas.</string>
     <string name="preferences_export_canceled">¡Exportación cancelada! ¡Las preferencias NO se han exportado!</string>
     <string name="preferences_import_canceled">¡Importación cancelada! ¡Las preferencias NO se han importado!</string>
@@ -250,7 +250,7 @@
     <string name="basalvaluebelowminimum">Valor basal por debajo del mínimo. Perfil no establecido.</string>
     <string name="sms_actualbg">Glucosa:</string>
     <string name="sms_lastbg">Última Glucosa:</string>
-    <string name="mdi">MDI</string>
+    <string name="mdi">Múltiples dosis de insulina (MDI)</string>
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Avisos permanentes</string>
     <string name="old_data">DATOS CADUCADOS</string>
@@ -308,7 +308,7 @@
     <string name="nsclientinternal_secret_title">API Secret de Nightscout</string>
     <string name="nsclientinternal_secret_dialogtitle">API Secret de Nightscout</string>
     <string name="nsclientinternal_secret_dialogmessage">Introduce la contraseña API Secret de Nightscout (mínimo de 12 caracteres)</string>
-    <string name="deliver_now">Entregar ahora</string>
+    <string name="deliver_now">Lanzar ahora</string>
     <string name="clear_queue">Borrar cola</string>
     <string name="show_queue">Mostrar cola</string>
     <string name="queue">Cola:</string>
@@ -339,11 +339,11 @@
     <string name="suspendloopfor3h">Suspender lazo durante 3 horas</string>
     <string name="suspendloopfor10h">Suspender lazo durante 10 horas</string>
     <string name="disconnectpump">Desconectar bomba</string>
-    <string name="disconnectpumpfor15m">Desconectar bomba durante 15 minutos</string>
-    <string name="disconnectpumpfor30m">Desconectar bomba durante 30 minutos</string>
-    <string name="disconnectpumpfor1h">Desconectar bomba durante 1 hora</string>
-    <string name="disconnectpumpfor2h">Desconectar bomba durante 2 horas</string>
-    <string name="disconnectpumpfor3h">Desconectar bomba durante 3 horas</string>
+    <string name="disconnectpumpfor15m">Desconectar la bomba durante 15 minutos</string>
+    <string name="disconnectpumpfor30m">Desconectar la bomba durante 30 minutos</string>
+    <string name="disconnectpumpfor1h">Desconectar la bomba durante 1 hora</string>
+    <string name="disconnectpumpfor2h">Desconectar la bomba durante 2 horas</string>
+    <string name="disconnectpumpfor3h">Desconectar la bomba durante 3 horas</string>
     <string name="duration15m">15 min</string>
     <string name="duration30m">30 min</string>
     <string name="duration1h">1 hora</string>
@@ -438,11 +438,11 @@
     <string name="enablesmb">Activar SMB</string>
     <string name="enablesmb_summary">Usar microbolos en lugar de basales temporales, para corregir más rápidamente</string>
     <string name="enableuam_summary">Detectar comidas no anunciadas (UAM)</string>
-    <string name="insulin_oref_peak">Pico máximo de la curva de IOB</string>
+    <string name="insulin_oref_peak">Tiempo del pico máximo de la curva de IOB</string>
     <string name="insulin_peak_time">Tiempo del pico máximo de acción de la insulina [min]</string>
-    <string name="free_peak_oref">Personalizar Pico Oref</string>
-    <string name="rapid_acting_oref">Acción Rápida Oref</string>
-    <string name="ultrarapid_oref">Acción Ultra Rápida Oref</string>
+    <string name="free_peak_oref">Personalizar Pico</string>
+    <string name="rapid_acting_oref">Acción Rápida</string>
+    <string name="ultrarapid_oref">Acción Ultra Rápida</string>
     <string name="lyumjev">Lyumjev</string>
     <string name="dia_too_short">DIA de %1$f demasiado corto - usando %2$f!</string>
     <string name="activate_profile">ACTIVAR PERFIL</string>
@@ -569,7 +569,7 @@
     <string name="closedmodedisabledinpreferences">Lazo cerrado deshabilitado en preferencias</string>
     <string name="autosensdisabledinpreferences">Autosens deshabilitado en preferencias</string>
     <string name="smbdisabledinpreferences">SMB deshabilitado en preferencias</string>
-    <string name="uamdisabledinpreferences">UAM, comidas no previstas, no habilitadas en las preferencias</string>
+    <string name="uamdisabledinpreferences">UAM deshabilitado en las preferencias</string>
     <string name="uamdisabledoref1notselected">UAM deshabilitado al usar el plugin de sensibilidad Oref1</string>
     <string name="maxbasalmultiplier">Multiplicador basal máximo</string>
     <string name="maxdailybasalmultiplier">Multiplicador diario basal máximo</string>
@@ -661,7 +661,7 @@
     <string name="resistance_lowers_target_summary">Cuando se detecta resistencia a la insulina, disminuye el objetivo de glucosa</string>
     <string name="sensitivity_raises_target_title">Sensibilidad aumenta el objetivo</string>
     <string name="sensitivity_raises_target_summary">Cuando se detecta sensibilidad a la insulina, aumenta el objetivo de glucosa</string>
-    <string name="careportal_removestartedevents">Comenzó la limpieza de AndroidAPS</string>
+    <string name="careportal_removestartedevents">Comenzar la limpieza de AndroidAPS</string>
     <string name="storedsettingsfound">Encontrados ajustes de configuración</string>
     <string name="allow_hardware_pump_text">Atención: si activas y conectas la bomba con AndroidAPS, AndroidAPS sobrescribirá los ajustes de basales del perfil de la bomba, con los establecidos en el perfil de AndroidAPS. Comprueba que tengas el perfil basal correcto en AndroidAPS. Si no estás seguro, o no quieres sobrescribir los ajustes basales en la bomba, presiona cancelar y repite la vinculación más adelante.</string>
     <string name="error_adding_treatment_title">Datos de tratamiento incompletos</string>

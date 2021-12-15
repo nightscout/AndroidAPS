@@ -44,7 +44,7 @@
     <string name="date">Fecha</string>
     <string name="units_label">Unidades</string>
     <string name="dia_label">DIA (Duración Insulina Activa)</string>
-    <string name="ic_label">IC (Ratio Insulina/Carbohidratos)</string>
+    <string name="ic_label">IC (Gramos/Unidad)</string>
     <string name="isf_label">ISF (Factor Sensibilidad Insulina)</string>
     <string name="basal_label">Dosis Basal</string>
     <string name="target_label">Objetivo</string>
