@@ -308,7 +308,7 @@
     <string name="nsclientinternal_secret_title">API Secret de Nightscout</string>
     <string name="nsclientinternal_secret_dialogtitle">API Secret de Nightscout</string>
     <string name="nsclientinternal_secret_dialogmessage">Introduce la contraseña API Secret de Nightscout (mínimo de 12 caracteres)</string>
-    <string name="deliver_now">Entregar ahora</string>
+    <string name="deliver_now">Lanzar ahora</string>
     <string name="clear_queue">Borrar cola</string>
     <string name="show_queue">Mostrar cola</string>
     <string name="queue">Cola:</string>
@@ -661,7 +661,7 @@
     <string name="resistance_lowers_target_summary">Cuando se detecta resistencia a la insulina, disminuye el objetivo de glucosa</string>
     <string name="sensitivity_raises_target_title">Sensibilidad aumenta el objetivo</string>
     <string name="sensitivity_raises_target_summary">Cuando se detecta sensibilidad a la insulina, aumenta el objetivo de glucosa</string>
-    <string name="careportal_removestartedevents">Comenzó la limpieza de AndroidAPS</string>
+    <string name="careportal_removestartedevents">Comenzar la limpieza de AndroidAPS</string>
     <string name="storedsettingsfound">Encontrados ajustes de configuración</string>
     <string name="allow_hardware_pump_text">Atención: si activas y conectas la bomba con AndroidAPS, AndroidAPS sobrescribirá los ajustes de basales del perfil de la bomba, con los establecidos en el perfil de AndroidAPS. Comprueba que tengas el perfil basal correcto en AndroidAPS. Si no estás seguro, o no quieres sobrescribir los ajustes basales en la bomba, presiona cancelar y repite la vinculación más adelante.</string>
     <string name="error_adding_treatment_title">Datos de tratamiento incompletos</string>
