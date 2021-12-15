@@ -6,9 +6,9 @@ import com.google.gson.Gson
 import dagger.android.DaggerBroadcastReceiver
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Pump
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.BundleLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.BundleLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.utils.TimeChangeType
 import java.util.*
 import javax.inject.Inject
@@ -60,10 +60,10 @@ class TimeDateOrTZChangeReceiver : DaggerBroadcastReceiver() {
                 } else {
                     if (currentDst) {
                         aapsLogger.info(LTag.PUMP, "TimeDateOrTZChangeReceiver::DST started. Notifying pump driver.")
-                        activePump.timezoneOrDSTChanged(TimeChangeType.DST_Started)
+                        activePump.timezoneOrDSTChanged(TimeChangeType.DSTStarted)
                     } else {
                         aapsLogger.info(LTag.PUMP, "TimeDateOrTZChangeReceiver::DST ended. Notifying pump driver.")
-                        activePump.timezoneOrDSTChanged(TimeChangeType.DST_Ended)
+                        activePump.timezoneOrDSTChanged(TimeChangeType.DSTEnded)
                     }
                 }
                 isDST = currentDst

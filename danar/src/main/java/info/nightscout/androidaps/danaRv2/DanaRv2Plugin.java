@@ -24,8 +24,8 @@ import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.CommandQueue;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PumpSync;
-import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.shared.logging.AAPSLogger;
+import info.nightscout.shared.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
@@ -38,7 +38,7 @@ import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.rx.AapsSchedulers;
-import info.nightscout.androidaps.utils.sharedPreferences.SP;
+import info.nightscout.shared.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
 
 @Singleton
@@ -232,8 +232,8 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         int percentRate = Double.valueOf(absoluteRate / getBaseBasalRate() * 100).intValue();
         // Any basal less than 0.10u/h will be dumped once per hour, not every 4 minutes. So if it's less than .10u/h, set a zero temp.
         if (absoluteRate < 0.10d) percentRate = 0;
-        if (percentRate < 100) percentRate = Round.ceilTo((double) percentRate, 10d).intValue();
-        else percentRate = Round.floorTo((double) percentRate, 10d).intValue();
+        if (percentRate < 100) percentRate = (int) Round.ceilTo((double) percentRate, 10d);
+        else percentRate = (int) Round.floorTo((double) percentRate, 10d);
         if (percentRate > 500) // Special high temp 500/15min
             percentRate = 500;
         aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Calculated percent rate: " + percentRate);

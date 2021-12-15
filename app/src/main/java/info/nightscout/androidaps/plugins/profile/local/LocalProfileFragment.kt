@@ -20,7 +20,7 @@ import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
@@ -30,6 +30,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.ui.SpinnerHelper
 import info.nightscout.androidaps.utils.ui.TimeListEdit
+import info.nightscout.shared.SafeParse
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import java.text.DecimalFormat
@@ -83,8 +84,7 @@ class LocalProfileFragment : DaggerFragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = LocalprofileFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -140,12 +140,11 @@ class LocalProfileFragment : DaggerFragment() {
 
         // Spinner
         spinner = SpinnerHelper(binding.spinner)
-        val profileList: ArrayList<CharSequence> = localProfilePlugin.profile?.getProfileList()
-            ?: ArrayList()
         context?.let { context ->
-            val adapter = ArrayAdapter(context, R.layout.spinner_centered, profileList)
-            spinner?.adapter = adapter
-            spinner?.setSelection(localProfilePlugin.currentProfileIndex)
+            val profileList: ArrayList<CharSequence> = localProfilePlugin.profile?.getProfileList() ?: ArrayList()
+            spinner?.adapter = ArrayAdapter(context, R.layout.spinner_centered, profileList)
+            val selection = localProfilePlugin.currentProfileIndex
+            if (selection in 0 until profileList.size) spinner?.setSelection(selection)
         } ?: return
         spinner?.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -159,8 +158,10 @@ class LocalProfileFragment : DaggerFragment() {
                             localProfilePlugin.isEdited = false
                             build()
                         }, {
-                            spinner?.setSelection(localProfilePlugin.currentProfileIndex)
-                        })
+                            val selection = localProfilePlugin.currentProfileIndex
+                            if (selection in 0 until (spinner?.adapter?.count ?: -1)) spinner?.setSelection(selection)
+                            }
+                        )
                     }
                 } else {
                     localProfilePlugin.currentProfileIndex = position

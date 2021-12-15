@@ -33,7 +33,7 @@ public abstract class WallpaperComplication extends BaseComplicationProviderServ
         if (dataType == ComplicationData.TYPE_LARGE_IMAGE) {
 
             DisplayMetrics metrics = new DisplayMetrics();
-            WindowManager windowManager = (WindowManager) Aaps.getAppContext()
+            WindowManager windowManager = (WindowManager) getApplicationContext()
                     .getSystemService(Context.WINDOW_SERVICE);
             windowManager.getDefaultDisplay().getMetrics(metrics);
             int width = metrics.widthPixels;

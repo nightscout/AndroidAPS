@@ -23,4 +23,6 @@ class CommandStartPump(
     }
 
     override fun status(): String = rh.gs(R.string.start_pump)
+
+    override fun log(): String = "START PUMP"
 }

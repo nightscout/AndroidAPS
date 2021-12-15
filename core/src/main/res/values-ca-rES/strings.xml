@@ -56,5 +56,16 @@
     <!-- WeekdayPicker -->
     <!-- User Entry -->
     <!-- HardLimits -->
+    <string name="profile_high_target">Objectiu alt del perfil</string>
+    <string name="temp_target_low_target">Valor mínim d\'objectiu temporal</string>
+    <string name="temp_target_high_target">Valor màxim d\'objectiu temporal</string>
+    <string name="temp_target_value">Valor objectiu temporal</string>
+    <string name="profile_dia">Valor DIA del perfil</string>
+    <string name="profile_sensitivity_value">Valor sensibilitat del perfil</string>
+    <string name="profile_max_daily_basal_value">Valor basal màxima del perfil</string>
+    <string name="current_basal_value">Valor basal actual</string>
+    <string name="profile_carbs_ratio_value">Valor ràtio de carbohidrats del perfil</string>
+    <string name="valuelimitedto">%1$.2f limitat a %2$.2f</string>
+    <string name="valueoutofrange">»%1$s« supera els límits</string>
     <!-- Command Queue + readStatus reasons -->
 </resources>

@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.utils
 
 import android.text.Spanned
-import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.utils.HtmlHelper.fromHtml
 import org.json.JSONArray
 import org.json.JSONException

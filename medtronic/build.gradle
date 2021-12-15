@@ -13,4 +13,5 @@ dependencies {
     implementation project(':core')
     implementation project(':pump-common')
     implementation project(':rileylink')
+    implementation project(':shared')
 }

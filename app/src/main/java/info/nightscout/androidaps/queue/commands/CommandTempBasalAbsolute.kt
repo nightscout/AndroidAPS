@@ -5,7 +5,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.queue.Callback
 import javax.inject.Inject
 
@@ -28,4 +28,6 @@ class CommandTempBasalAbsolute(
     }
 
     override fun status(): String = rh.gs(R.string.temp_basal_absolute, absoluteRate, durationInMinutes)
+
+    override fun log(): String = "TEMP BASAL $absoluteRate U/h $durationInMinutes min"
 }

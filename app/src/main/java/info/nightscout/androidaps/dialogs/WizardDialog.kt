@@ -23,21 +23,19 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.databinding.DialogWizardBinding
 import info.nightscout.androidaps.events.EventAutosensCalculationFinished
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.extensions.formatColor
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.SafeParse
-import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.shared.SafeParse
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.extensions.valueToUnits
 import info.nightscout.androidaps.interfaces.*
+import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.androidaps.utils.wizard.BolusWizard
 import io.reactivex.disposables.CompositeDisposable
 import java.text.DecimalFormat
@@ -63,6 +61,9 @@ class WizardDialog : DaggerDialogFragment() {
     @Inject lateinit var dateUtil: DateUtil
 
     private var wizard: BolusWizard? = null
+    private var calculatedPercentage = 100.0
+    private var calculatedCorrection = 0.0
+    private var correctionPercent = false
 
     //one shot guards
     private var okClicked: Boolean = false
@@ -85,6 +86,7 @@ class WizardDialog : DaggerDialogFragment() {
     }
 
     private var disposable: CompositeDisposable = CompositeDisposable()
+    private var bolusStep = 0.0
 
     private var _binding: DialogWizardBinding? = null
 
@@ -119,11 +121,12 @@ class WizardDialog : DaggerDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         loadCheckedStates()
         processCobCheckBox()
-        binding.sbcheckbox.visibility = sp.getBoolean(R.string.key_usesuperbolus, false).toVisibility()
+        binding.sbCheckbox.visibility = sp.getBoolean(R.string.key_usesuperbolus, false).toVisibility()
         binding.notesLayout.visibility = sp.getBoolean(R.string.key_show_notes_entry_dialogs, false).toVisibility()
 
         val maxCarbs = constraintChecker.getMaxCarbsAllowed().value()
         val maxCorrection = constraintChecker.getMaxBolusAllowed().value()
+        bolusStep = activePlugin.activePump.pumpDescription.bolusStep
 
         if (profileFunction.getUnits() == GlucoseUnit.MGDL)
             binding.bgInput.setParams(savedInstanceState?.getDouble("bg_input")
@@ -133,13 +136,22 @@ class WizardDialog : DaggerDialogFragment() {
                 ?: 0.0, 0.0, 30.0, 0.1, DecimalFormat("0.0"), false, binding.ok, textWatcher)
         binding.carbsInput.setParams(savedInstanceState?.getDouble("carbs_input")
             ?: 0.0, 0.0, maxCarbs.toDouble(), 1.0, DecimalFormat("0"), false, binding.ok, textWatcher)
-        val bolusStep = activePlugin.activePump.pumpDescription.bolusStep
-        binding.correctionInput.setParams(savedInstanceState?.getDouble("correction_input")
-            ?: 0.0, -maxCorrection, maxCorrection, bolusStep, DecimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump), false, binding.ok, textWatcher)
+
+        if (correctionPercent) {
+            calculatedPercentage = sp.getInt(R.string.key_boluswizard_percentage, 100).toDouble()
+            binding.correctionInput.setParams(calculatedPercentage, 10.0, 200.0, 1.0, DecimalFormat("0"), false, binding.ok, textWatcher)
+            binding.correctionInput.value = calculatedPercentage
+            binding.correctionUnit.text = "%"
+        } else {
+            binding.correctionInput.setParams(
+                savedInstanceState?.getDouble("correction_input")
+                    ?: 0.0, -maxCorrection, maxCorrection, bolusStep, DecimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump), false, binding.ok, textWatcher)
+            binding.correctionUnit.text = rh.gs(R.string.insulin_unit_shortname)
+        }
         binding.carbTimeInput.setParams(savedInstanceState?.getDouble("carb_time_input")
             ?: 0.0, -60.0, 60.0, 5.0, DecimalFormat("0"), false, binding.ok, timeTextWatcher)
         initDialog()
-
+        calculatedPercentage = sp.getInt(R.string.key_boluswizard_percentage, 100).toDouble()
         binding.percentUsed.text = rh.gs(R.string.format_percent, sp.getInt(R.string.key_boluswizard_percentage, 100))
         // ok button
         binding.ok.setOnClickListener {
@@ -157,23 +169,37 @@ class WizardDialog : DaggerDialogFragment() {
         // cancel button
         binding.cancel.setOnClickListener { dismiss() }
         // checkboxes
-        binding.bgcheckbox.setOnCheckedChangeListener(::onCheckedChanged)
-        binding.ttcheckbox.setOnCheckedChangeListener(::onCheckedChanged)
-        binding.cobcheckbox.setOnCheckedChangeListener(::onCheckedChanged)
-        binding.basaliobcheckbox.setOnCheckedChangeListener(::onCheckedChanged)
-        binding.bolusiobcheckbox.setOnCheckedChangeListener(::onCheckedChanged)
-        binding.bgtrendcheckbox.setOnCheckedChangeListener(::onCheckedChanged)
-        binding.sbcheckbox.setOnCheckedChangeListener(::onCheckedChanged)
+        binding.bgCheckbox.setOnCheckedChangeListener(::onCheckedChanged)
+        binding.ttCheckbox.setOnCheckedChangeListener(::onCheckedChanged)
+        binding.cobCheckbox.setOnCheckedChangeListener(::onCheckedChanged)
+        binding.basalIobCheckbox.setOnCheckedChangeListener(::onCheckedChanged)
+        binding.bolusIobCheckbox.setOnCheckedChangeListener(::onCheckedChanged)
+        binding.bgTrendCheckbox.setOnCheckedChangeListener(::onCheckedChanged)
+        binding.sbCheckbox.setOnCheckedChangeListener(::onCheckedChanged)
 
         val showCalc = sp.getBoolean(R.string.key_wizard_calculation_visible, false)
         binding.delimiter.visibility = showCalc.toVisibility()
-        binding.resulttable.visibility = showCalc.toVisibility()
-        binding.calculationcheckbox.isChecked = showCalc
-        binding.calculationcheckbox.setOnCheckedChangeListener { _, isChecked ->
+        binding.result.visibility = showCalc.toVisibility()
+        binding.calculationCheckbox.isChecked = showCalc
+        binding.calculationCheckbox.setOnCheckedChangeListener { _, isChecked ->
             run {
                 sp.putBoolean(rh.gs(R.string.key_wizard_calculation_visible), isChecked)
                 binding.delimiter.visibility = isChecked.toVisibility()
-                binding.resulttable.visibility = isChecked.toVisibility()
+                binding.result.visibility = isChecked.toVisibility()
+            }
+        }
+
+        binding.correctionPercent.setOnCheckedChangeListener {_, isChecked ->
+            run {
+                sp.putBoolean(rh.gs(R.string.key_wizard_correction_percent), isChecked)
+                binding.correctionUnit.text = if (isChecked) "%" else rh.gs(R.string.insulin_unit_shortname)
+                correctionPercent = binding.correctionPercent.isChecked
+                if (correctionPercent)
+                    binding.correctionInput.setParams(calculatedPercentage, 10.0, 200.0, 1.0, DecimalFormat("0"), false, binding.ok, textWatcher)
+                else
+                    binding.correctionInput.setParams(savedInstanceState?.getDouble("correction_input")
+                                                      ?: 0.0, -maxCorrection, maxCorrection, bolusStep, DecimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump), false, binding.ok, textWatcher)
+                binding.correctionInput.value = if (correctionPercent) calculatedPercentage else Round.roundTo(calculatedCorrection, bolusStep)
             }
         }
         // profile spinner
@@ -207,32 +233,35 @@ class WizardDialog : DaggerDialogFragment() {
 
     private fun onCheckedChanged(buttonView: CompoundButton, @Suppress("UNUSED_PARAMETER") state: Boolean) {
         saveCheckedStates()
-        binding.ttcheckbox.isEnabled = binding.bgcheckbox.isChecked && repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing
-        if (buttonView.id == binding.cobcheckbox.id)
+        binding.ttCheckbox.isEnabled = binding.bgCheckbox.isChecked && repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing
+        if (buttonView.id == binding.cobCheckbox.id)
             processCobCheckBox()
         calculateInsulin()
     }
 
     private fun processCobCheckBox() {
-        if (binding.cobcheckbox.isChecked) {
-            binding.bolusiobcheckbox.isEnabled = false
-            binding.basaliobcheckbox.isEnabled = false
-            binding.bolusiobcheckbox.isChecked = true
-            binding.basaliobcheckbox.isChecked = true
+        if (binding.cobCheckbox.isChecked) {
+            binding.bolusIobCheckbox.isEnabled = false
+            binding.basalIobCheckbox.isEnabled = false
+            binding.bolusIobCheckbox.isChecked = true
+            binding.basalIobCheckbox.isChecked = true
         } else {
-            binding.bolusiobcheckbox.isEnabled = true
-            binding.basaliobcheckbox.isEnabled = true
+            binding.bolusIobCheckbox.isEnabled = true
+            binding.basalIobCheckbox.isEnabled = true
         }
     }
 
     private fun saveCheckedStates() {
-        sp.putBoolean(R.string.key_wizard_include_cob, binding.cobcheckbox.isChecked)
-        sp.putBoolean(R.string.key_wizard_include_trend_bg, binding.bgtrendcheckbox.isChecked)
+        sp.putBoolean(R.string.key_wizard_include_cob, binding.cobCheckbox.isChecked)
+        sp.putBoolean(R.string.key_wizard_include_trend_bg, binding.bgTrendCheckbox.isChecked)
+        sp.putBoolean(R.string.key_wizard_correction_percent, binding.correctionPercent.isChecked)
     }
 
     private fun loadCheckedStates() {
-        binding.bgtrendcheckbox.isChecked = sp.getBoolean(R.string.key_wizard_include_trend_bg, false)
-        binding.cobcheckbox.isChecked = sp.getBoolean(R.string.key_wizard_include_cob, false)
+        binding.bgTrendCheckbox.isChecked = sp.getBoolean(R.string.key_wizard_include_trend_bg, false)
+        binding.cobCheckbox.isChecked = sp.getBoolean(R.string.key_wizard_include_cob, false)
+        correctionPercent = sp.getBoolean(R.string.key_wizard_correction_percent,false)
+        binding.correctionPercent.isChecked = correctionPercent
     }
 
     private fun valueToUnitsToString(value: Double, units: String): String =
@@ -257,23 +286,23 @@ class WizardDialog : DaggerDialogFragment() {
         } ?: return
 
         val units = profileFunction.getUnits()
-        binding.bgunits.text = units.asText
+        binding.bgUnits.text = units.asText
         binding.bgInput.step = if (units == GlucoseUnit.MGDL) 1.0 else 0.1
 
         // Set BG if not old
         binding.bgInput.value = iobCobCalculator.ads.actualBg()?.valueToUnits(units) ?: 0.0
-        binding.ttcheckbox.isEnabled = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing
+        binding.ttCheckbox.isEnabled = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing
 
         // IOB calculation
         val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
         val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
 
-        binding.bolusiobinsulin.text = rh.gs(R.string.formatinsulinunits, -bolusIob.iob)
-        binding.basaliobinsulin.text = rh.gs(R.string.formatinsulinunits, -basalIob.basaliob)
+        binding.bolusIobInsulin.text = rh.gs(R.string.formatinsulinunits, -bolusIob.iob)
+        binding.basalIobInsulin.text = rh.gs(R.string.formatinsulinunits, -basalIob.basaliob)
 
         calculateInsulin()
 
-        binding.percentUsed.visibility = (sp.getInt(R.string.key_boluswizard_percentage, 100) != 100).toVisibility()
+        binding.percentUsed.visibility = (sp.getInt(R.string.key_boluswizard_percentage, 100) != 100 || correctionPercent).toVisibility()
     }
 
     private fun calculateInsulin() {
@@ -291,9 +320,23 @@ class WizardDialog : DaggerDialogFragment() {
         if (specificProfile == null) return
 
         // Entered values
+        val usePercentage = binding.correctionPercent.isChecked
         var bg = SafeParse.stringToDouble(binding.bgInput.text)
         val carbs = SafeParse.stringToInt(binding.carbsInput.text)
-        val correction = SafeParse.stringToDouble(binding.correctionInput.text)
+        val correction = if (!usePercentage) {
+            if (Round.roundTo(calculatedCorrection, bolusStep) == SafeParse.stringToDouble(binding.correctionInput.text))
+                calculatedCorrection
+            else
+                SafeParse.stringToDouble(binding.correctionInput.text)
+        } else
+            0.0
+        val percentageCorrection = if (usePercentage) {
+            if (Round.roundTo(calculatedPercentage,1.0) == SafeParse.stringToDouble(binding.correctionInput.text))
+                calculatedPercentage
+            else
+                SafeParse.stringToDouble(binding.correctionInput.text)
+        } else
+            sp.getInt(R.string.key_boluswizard_percentage, 100).toDouble()
         val carbsAfterConstraint = constraintChecker.applyCarbsConstraints(Constraint(carbs)).value()
         if (abs(carbs - carbsAfterConstraint) > 0.01) {
             binding.carbsInput.value = 0.0
@@ -301,75 +344,81 @@ class WizardDialog : DaggerDialogFragment() {
             return
         }
 
-        bg = if (binding.bgcheckbox.isChecked) bg else 0.0
+        bg = if (binding.bgCheckbox.isChecked) bg else 0.0
         val dbRecord = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
-        val tempTarget = if (binding.ttcheckbox.isChecked && dbRecord is ValueWrapper.Existing) dbRecord.value else null
+        val tempTarget = if (binding.ttCheckbox.isChecked && dbRecord is ValueWrapper.Existing) dbRecord.value else null
 
         // COB
         var cob = 0.0
-        if (binding.cobcheckbox.isChecked) {
+        if (binding.cobCheckbox.isChecked) {
             val cobInfo = iobCobCalculator.getCobInfo(false, "Wizard COB")
             cobInfo.displayCob?.let { cob = it }
         }
 
         val carbTime = SafeParse.stringToInt(binding.carbTimeInput.text)
 
-        wizard = BolusWizard(injector).doCalc(specificProfile, profileName, tempTarget, carbsAfterConstraint, cob, bg, correction,
-            sp.getInt(R.string.key_boluswizard_percentage, 100),
-            binding.bgcheckbox.isChecked,
-            binding.cobcheckbox.isChecked,
-            binding.bolusiobcheckbox.isChecked,
-            binding.basaliobcheckbox.isChecked,
-            binding.sbcheckbox.isChecked,
-            binding.ttcheckbox.isChecked,
-            binding.bgtrendcheckbox.isChecked,
+        wizard = BolusWizard(injector).doCalc(specificProfile, profileName, tempTarget, carbsAfterConstraint, cob, bg, correction, sp.getInt(R.string.key_boluswizard_percentage, 100),
+            binding.bgCheckbox.isChecked,
+            binding.cobCheckbox.isChecked,
+            binding.bolusIobCheckbox.isChecked,
+            binding.basalIobCheckbox.isChecked,
+            binding.sbCheckbox.isChecked,
+            binding.ttCheckbox.isChecked,
+            binding.bgTrendCheckbox.isChecked,
             binding.alarm.isChecked,
-            binding.notes.text.toString(), carbTime)
+            binding.notes.text.toString(),
+            carbTime,
+            usePercentage = usePercentage,
+            totalPercentage = percentageCorrection
+        )
 
         wizard?.let { wizard ->
             binding.bg.text = String.format(rh.gs(R.string.format_bg_isf), valueToUnitsToString(Profile.toMgdl(bg, profileFunction.getUnits()), profileFunction.getUnits().asText), wizard.sens)
-            binding.bginsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromBG)
+            binding.bgInsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromBG)
 
             binding.carbs.text = String.format(rh.gs(R.string.format_carbs_ic), carbs.toDouble(), wizard.ic)
-            binding.carbsinsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromCarbs)
+            binding.carbsInsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromCarbs)
 
-            binding.bolusiobinsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromBolusIOB)
-            binding.basaliobinsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromBasalIOB)
+            binding.bolusIobInsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromBolusIOB)
+            binding.basalIobInsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromBasalIOB)
 
-            binding.correctioninsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromCorrection)
+            binding.correctionInsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromCorrection)
 
             // Superbolus
-            binding.sb.text = if (binding.sbcheckbox.isChecked) rh.gs(R.string.twohours) else ""
-            binding.sbinsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromSuperBolus)
+            binding.sb.text = if (binding.sbCheckbox.isChecked) rh.gs(R.string.twohours) else ""
+            binding.sbInsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromSuperBolus)
 
             // Trend
-            if (binding.bgtrendcheckbox.isChecked && wizard.glucoseStatus != null) {
-                binding.bgtrend.text = ((if (wizard.trend > 0) "+" else "")
+            if (binding.bgTrendCheckbox.isChecked && wizard.glucoseStatus != null) {
+                binding.bgTrend.text = ((if (wizard.trend > 0) "+" else "")
                     + Profile.toUnitsString(wizard.trend * 3, wizard.trend * 3 / Constants.MMOLL_TO_MGDL, profileFunction.getUnits())
                     + " " + profileFunction.getUnits())
             } else {
-                binding.bgtrend.text = ""
+                binding.bgTrend.text = ""
             }
-            binding.bgtrendinsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromTrend)
+            binding.bgTrendInsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromTrend)
 
             // COB
-            if (binding.cobcheckbox.isChecked) {
+            if (binding.cobCheckbox.isChecked) {
                 binding.cob.text = String.format(rh.gs(R.string.format_cob_ic), cob, wizard.ic)
-                binding.cobinsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromCOB)
+                binding.cobInsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromCOB)
             } else {
                 binding.cob.text = ""
-                binding.cobinsulin.text = ""
+                binding.cobInsulin.text = ""
             }
 
             if (wizard.calculatedTotalInsulin > 0.0 || carbsAfterConstraint > 0.0) {
-                val insulinText = if (wizard.calculatedTotalInsulin > 0.0) rh.gs(R.string.formatinsulinunits, wizard.calculatedTotalInsulin) else ""
-                val carbsText = if (carbsAfterConstraint > 0.0) rh.gs(R.string.format_carbs, carbsAfterConstraint) else ""
-                binding.total.text = rh.gs(R.string.result_insulin_carbs, insulinText, carbsText)
+                val insulinText = if (wizard.calculatedTotalInsulin > 0.0) rh.gs(R.string.formatinsulinunits, wizard.calculatedTotalInsulin).formatColor(rh, R.color.bolus) else ""
+                val carbsText = if (carbsAfterConstraint > 0.0) rh.gs(R.string.format_carbs, carbsAfterConstraint).formatColor(rh, R.color.carbs) else ""
+                binding.total.text = HtmlHelper.fromHtml(rh.gs(R.string.result_insulin_carbs, insulinText, carbsText))
                 binding.ok.visibility = View.VISIBLE
             } else {
-                binding.total.text = rh.gs(R.string.missing_carbs, wizard.carbsEquivalent.toInt())
+                binding.total.text = HtmlHelper.fromHtml(rh.gs(R.string.missing_carbs, wizard.carbsEquivalent.toInt()).formatColor(rh, R.color.carbs))
                 binding.ok.visibility = View.INVISIBLE
             }
+            binding.percentUsed.text = rh.gs(R.string.format_percent, wizard.percentageCorrection)
+            calculatedPercentage = wizard.calculatedPercentage
+            calculatedCorrection = wizard.calculatedCorrection
         }
 
     }

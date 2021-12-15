@@ -16,8 +16,8 @@ import info.nightscout.androidaps.database.transactions.*
 import info.nightscout.androidaps.extensions.*
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Config
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
@@ -28,7 +28,7 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.JsonHelper.safeGetLong
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -130,6 +130,13 @@ class NSClientAddUpdateWorker(
                                         ValueWithUnit.Gram(it.amount.toInt())
                                     )
                                     aapsLogger.debug(LTag.DATABASE, "Invalidated carbs $it")
+                                }
+                                result.updated.forEach {
+                                    uel.log(Action.CARBS, Sources.NSClient,
+                                        ValueWithUnit.Timestamp(it.timestamp),
+                                        ValueWithUnit.Gram(it.amount.toInt())
+                                    )
+                                    aapsLogger.debug(LTag.DATABASE, "Updated carbs $it")
                                 }
                                 result.updatedNsId.forEach {
                                     aapsLogger.debug(LTag.DATABASE, "Updated nsId carbs $it")
@@ -274,21 +281,23 @@ class NSClientAddUpdateWorker(
                                         TherapyEvent.Type.INSULIN_CHANGE.text -> Action.RESERVOIR_CHANGE
                                         else                                  -> Action.CAREPORTAL
                                     }
-                                    result.inserted.forEach {
+                                    result.inserted.forEach { therapyEvent ->
                                         uel.log(action, Sources.NSClient,
-                                            it.note ?: "",
-                                            ValueWithUnit.Timestamp(it.timestamp),
-                                            ValueWithUnit.TherapyEventType(it.type)
+                                                therapyEvent.note ?: "",
+                                            ValueWithUnit.Timestamp(therapyEvent.timestamp),
+                                            ValueWithUnit.TherapyEventType(therapyEvent.type),
+                                            ValueWithUnit.fromGlucoseUnit(therapyEvent.glucose ?:0.0,therapyEvent.glucoseUnit.toString).takeIf { therapyEvent.glucose != null }
                                         )
-                                        aapsLogger.debug(LTag.DATABASE, "Inserted TherapyEvent $it")
+                                        aapsLogger.debug(LTag.DATABASE, "Inserted TherapyEvent $therapyEvent")
                                     }
-                                    result.invalidated.forEach {
+                                    result.invalidated.forEach { therapyEvent ->
                                         uel.log(Action.CAREPORTAL_REMOVED, Sources.NSClient,
-                                            it.note ?: "",
-                                            ValueWithUnit.Timestamp(it.timestamp),
-                                            ValueWithUnit.TherapyEventType(it.type)
+                                                therapyEvent.note ?: "",
+                                            ValueWithUnit.Timestamp(therapyEvent.timestamp),
+                                            ValueWithUnit.TherapyEventType(therapyEvent.type),
+                                            ValueWithUnit.fromGlucoseUnit(therapyEvent.glucose ?:0.0, therapyEvent.glucoseUnit.toString).takeIf { therapyEvent.glucose != null }
                                         )
-                                        aapsLogger.debug(LTag.DATABASE, "Invalidated TherapyEvent $it")
+                                        aapsLogger.debug(LTag.DATABASE, "Invalidated TherapyEvent $therapyEvent")
                                     }
                                     result.updatedNsId.forEach {
                                         aapsLogger.debug(LTag.DATABASE, "Updated nsId TherapyEvent $it")

@@ -1,12 +1,13 @@
 package info.nightscout.androidaps.testing.utils;
 
+import static info.nightscout.androidaps.testing.utils.ExtUtil.assertClassHaveSameFields;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.Objects;
 
 import info.nightscout.androidaps.data.TempWatchData;
-
-import static info.nightscout.androidaps.testing.utils.ExtUtil.assertClassHaveSameFields;
 
 
 public class TempWatchDataExt extends TempWatchData {
@@ -42,20 +43,20 @@ public class TempWatchDataExt extends TempWatchData {
 
     @Override
     public boolean equals(@Nullable Object obj) {
-        if ((obj instanceof TempWatchData)||(obj instanceof TempWatchDataExt)) {
+        if (obj instanceof TempWatchData) {
             return (this.startTime == ((TempWatchData) obj).startTime)
-                && (this.startBasal == ((TempWatchData) obj).startBasal)
-                && (this.endTime == ((TempWatchData) obj).endTime)
-                && (this.endBasal == ((TempWatchData) obj).endBasal)
-                && (this.amount == ((TempWatchData) obj).amount);
+                    && (this.startBasal == ((TempWatchData) obj).startBasal)
+                    && (this.endTime == ((TempWatchData) obj).endTime)
+                    && (this.endBasal == ((TempWatchData) obj).endBasal)
+                    && (this.amount == ((TempWatchData) obj).amount);
         } else {
             return false;
         }
     }
 
-    @Override
+    @NonNull @Override
     public String toString() {
-        return startTime+", "+startBasal+", "+endTime+", "+endBasal+", "+amount;
+        return startTime + ", " + startBasal + ", " + endTime + ", " + endBasal + ", " + amount;
     }
 
     @Override

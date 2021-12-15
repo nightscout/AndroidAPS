@@ -113,7 +113,7 @@
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">Carbs</string>
     <string name="treatments_wizard_correction_label">Corr</string>
-    <string name="treatments_wizard_bolusiob_label">Bolus IOB</string>
+    <string name="bolus_iob_label">Bolus IOB</string>
     <string name="openapsma_run">Run now</string>
     <string name="vitualpump_label">VIRTUAL PUMP</string>
     <string name="openapsma_lastrun_label">Last run</string>
@@ -185,9 +185,9 @@
     <string name="careportal_newnstreatment_other">Other</string>
     <string name="careportal_newnstreatment_meter">Meter</string>
     <string name="careportal_newnstreatment_sensor">Sensor</string>
-    <string name="careportal_newnstreatment_carbtime_label">Carb time</string>
+    <string name="carb_time_label">Carb time</string>
     <string name="careportal_newnstreatment_duration_label">Duration</string>
-    <string name="careportal_newnstreatment_profile_label">Profile</string>
+    <string name="profile_label">Profile</string>
     <string name="careportal_newnstreatment_glucosetype">Glucose type</string>
     <string name="overview_tempbasal_button">TempBasal</string>
     <string name="overview_extendedbolus_button">Extended Bolus</string>
@@ -433,7 +433,7 @@
     <string name="smscommunicator_wrongduration">Wrong duration</string>
     <string name="smscommunicator_loopsuspended">Loop suspended</string>
     <string name="smscommunicator_loopresumed">Loop resumed</string>
-    <string name="treatments_wizard_bgtrend_label">15min trend</string>
+    <string name="bg_trend_label">15min trend</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Log app start to NS</string>
@@ -648,8 +648,8 @@
     <string name="key_show_wizard_button" translatable="false">show_wizard_button</string>
     <string name="key_show_insulin_button" translatable="false">show_insulin_button</string>
     <string name="key_show_treatment_button" translatable="false">show_treatment_button</string>
-    <string name="show_calibration_button_summary">Sends a calibration to xDrip+ or open G5 calibration dialog</string>
-    <string name="show_cgm_button_summary">Opens xDrip+, back buttons returns to AAPS</string>
+    <string name="show_calibration_button_summary">Sends a calibration to xDrip+ or open BYODA calibration dialog</string>
+    <string name="show_cgm_button_summary">Opens xDrip+ or BYODA, back buttons returns to AAPS</string>
     <string name="key_insulin_button_increment_1" translatable="false">insulin_button_increment_1</string>
     <string name="key_insulin_button_increment_2" translatable="false">insulin_button_increment_2</string>
     <string name="key_insulin_button_increment_3" translatable="false">insulin_button_increment_3</string>
@@ -785,7 +785,7 @@
     <string name="setupwizard_loop_description">Press the button below to enable AndroidAPS to suggest/make basal changes</string>
     <string name="key_setupwizard_processed" translatable="false">startupwizard_processed</string>
     <string name="setupwizard_sensitivity_description">Sensitivity plugin is used for sensitivity detection and COB calculation. For more info visit:</string>
-    <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
+    <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="nsclientinfotext">NSClient handles connection to Nightscout. You can skip this part now but you will not be able to pass objectives until you set it up.</string>
     <string name="diawarning">Please remember: new insulin profiles require DIA at least 5h. DIA 5–6h on new profile is equal to DIA 3h on old insulin profiles.</string>
     <string name="setupwizard_aps_description">Select one from availables algorithms. They are sorted from oldest to newest. Newer algorithm is usually more powerful and more aggressive. Thus if you are new looper you may probably start with AMA and not with latest one. Do not forget to read the OpenAPS documentation and configure it before use.</string>
@@ -797,6 +797,7 @@
     <string name="needsystemwindowpermission">Application needs system window permission for notifications</string>
     <string name="needlocationpermission">Application needs location permission for BT scan and WiFi identification</string>
     <string name="needstoragepermission">Application needs storage permission to be able store log files and export settings</string>
+    <string name="needconnectpermission">Application needs bluetooth permission</string>
     <string name="request">Request</string>
     <string name="open_navigation">Open navigation</string>
     <string name="close_navigation">Close navigation</string>
@@ -934,6 +935,7 @@
     <string name="unitsnosemicolon">Units</string>
     <string name="doyouwantswitchprofile">Do you want to switch profile and discard changes made to current profile?</string>
     <string name="key_wizard_calculation_visible" translatable="false">wizard_calculation_visible</string>
+    <string name="key_wizard_correction_percent" translatable="false">wizard_correction_percent</string>
     <string name="objectives_button_unfinish">Clear finished</string>
     <string name="objectives_button_unstart">Clear started</string>
     <string name="doyouwantresetstart">Do you want reset objective start? You may lose your progress.</string>

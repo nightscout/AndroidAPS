@@ -2,8 +2,8 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.scan
 
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.ScanException
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap

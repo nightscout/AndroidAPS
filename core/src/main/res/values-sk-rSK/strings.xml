@@ -413,7 +413,7 @@
     <string name="bolus_u_min">BOLUS %1$.2f JI</string>
     <string name="carbs_g">SACHARIDY %1$d g</string>
     <string name="extended_bolus_u_min">PREDĹŽENÝ BOLUS %1$.2f U %2$d min</string>
-    <string name="load_events">NAČÍTAVANIE UDALOSTÍ</string>
+    <string name="load_events">Načítavanie udalostí</string>
     <string name="load_history">NAČÍTAŤ HISTÓRIU %1$d</string>
     <string name="load_tdds">NAČÍTAŤ CDD</string>
     <string name="set_profile">NASTAVIŤ PROFIL</string>

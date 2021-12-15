@@ -5,6 +5,9 @@ import android.util.Log;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import info.nightscout.androidaps.BuildConfig;
 
 /**
@@ -16,15 +19,20 @@ import info.nightscout.androidaps.BuildConfig;
  *
  */
 
+@Singleton
 public class Inevitable {
+
+    @Inject WearUtil wearUtil;
+
+    @Inject Inevitable() {}
 
     private static final String TAG = Inevitable.class.getSimpleName();
     private static final int MAX_QUEUE_TIME = (int) Constants.MINUTE_IN_MS * 6;
     private static final boolean debug = BuildConfig.DEBUG;
 
-    private static final ConcurrentHashMap<String, Task> tasks = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, Task> tasks = new ConcurrentHashMap<>();
 
-    public static synchronized void task(final String id, long idle_for, Runnable runnable) {
+    public void task(final String id, long idle_for, Runnable runnable) {
         if (idle_for > MAX_QUEUE_TIME) {
             throw new RuntimeException(id + " Requested time: " + idle_for + " beyond max queue time");
         }
@@ -34,29 +42,30 @@ public class Inevitable {
             task.extendTime(idle_for);
 
             if (debug)
-                Log.d(TAG, "Extending time for: " + id + " to " + WearUtil.dateTimeText(task.when));
+                Log.d(TAG, "Extending time for: " + id + " to " + wearUtil.dateTimeText(task.when));
         } else {
             // otherwise create new task
             if (runnable == null) return; // extension only if already exists
             tasks.put(id, new Task(id, idle_for, runnable));
 
             if (debug) {
-                Log.d(TAG, "Creating task: " + id + " due: " + WearUtil.dateTimeText(tasks.get(id).when));
+                Log.d(TAG,
+                        "Creating task: " + id + " due: " + wearUtil.dateTimeText(tasks.get(id).when));
             }
 
             // create a thread to wait and execute in background
             final Thread t = new Thread(() -> {
-                final PowerManager.WakeLock wl = WearUtil.getWakeLock(id, MAX_QUEUE_TIME + 5000);
+                final PowerManager.WakeLock wl = wearUtil.getWakeLock(id, MAX_QUEUE_TIME + 5000);
                 try {
                     boolean running = true;
                     // wait for task to be due or killed
                     while (running) {
-                        WearUtil.threadSleep(500);
+                        wearUtil.threadSleep(500);
                         final Task thisTask = tasks.get(id);
                         running = thisTask != null && !thisTask.poll();
                     }
                 } finally {
-                    WearUtil.releaseWakeLock(wl);
+                    wearUtil.releaseWakeLock(wl);
                 }
             });
             t.setPriority(Thread.MIN_PRIORITY);
@@ -64,7 +73,7 @@ public class Inevitable {
         }
     }
 
-    public static synchronized void stackableTask(String id, long idle_for, Runnable runnable) {
+    public void stackableTask(String id, long idle_for, Runnable runnable) {
         int stack = 0;
         while (tasks.get(id = id + "-" + stack) != null) {
             stack++;
@@ -75,15 +84,15 @@ public class Inevitable {
         task(id, idle_for, runnable);
     }
 
-    public static void kill(final String id) {
+    public void kill(final String id) {
         tasks.remove(id);
     }
 
-    public static boolean waiting(final String id) {
+    public boolean waiting(final String id) {
         return tasks.containsKey(id);
     }
 
-    private static class Task {
+    private class Task {
         private long when;
         private final Runnable what;
         private final String id;
@@ -95,11 +104,11 @@ public class Inevitable {
         }
 
         public void extendTime(long offset) {
-            this.when = WearUtil.timestamp() + offset;
+            this.when = wearUtil.timestamp() + offset;
         }
 
         public boolean poll() {
-            final long till = WearUtil.msTill(when);
+            final long till = wearUtil.msTill(when);
             if (till < 1) {
                 if (debug) Log.d(TAG, "Executing task! " + this.id);
                 tasks.remove(this.id); // early remove to allow overlapping scheduling

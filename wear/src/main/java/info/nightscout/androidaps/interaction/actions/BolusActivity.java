@@ -1,11 +1,7 @@
 package info.nightscout.androidaps.interaction.actions;
 
-
-import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.wearable.view.DotsPageIndicator;
 import android.support.wearable.view.GridPagerAdapter;
-import android.support.wearable.view.GridViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +12,11 @@ import java.text.DecimalFormat;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.interaction.utils.PlusMinusEditText;
-import info.nightscout.androidaps.interaction.utils.SafeParse;
+import info.nightscout.shared.SafeParse;
 
 /**
  * Created by adrian on 09/02/17.
  */
-
 
 public class BolusActivity extends ViewSelectorActivity {
 
@@ -31,15 +26,8 @@ public class BolusActivity extends ViewSelectorActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.grid_layout);
-        final Resources res = getResources();
-        final GridViewPager pager = findViewById(R.id.pager);
-
-        pager.setAdapter(new MyGridViewPagerAdapter());
-        DotsPageIndicator dotsPageIndicator = findViewById(R.id.page_indicator);
-        dotsPageIndicator.setPager(pager);
+        setAdapter(new MyGridViewPagerAdapter());
     }
-
 
     @Override
     protected void onPause() {
@@ -71,6 +59,7 @@ public class BolusActivity extends ViewSelectorActivity {
                 editInsulin = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 30d, 0.1d, new DecimalFormat("#0.0"), false);
                 setLabelToPlusMinusView(view, getString(R.string.action_insulin));
                 container.addView(view);
+                view.requestFocus();
                 return view;
             } else if (col == 1) {
                 final View view = getInflatedPlusMinusView(container);
@@ -89,14 +78,12 @@ public class BolusActivity extends ViewSelectorActivity {
                 confirmbutton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
                         //check if it can happen that the fagment is never created that hold data?
                         // (you have to swipe past them anyways - but still)
-
                         String actionstring = "bolus " + SafeParse.stringToDouble(editInsulin.editText.getText().toString())
                                 + " " + SafeParse.stringToInt(editCarbs.editText.getText().toString());
                         ListenerService.initiateAction(BolusActivity.this, actionstring);
-                        finish();
+                        finishAffinity();
                     }
                 });
                 container.addView(view);
@@ -115,7 +102,6 @@ public class BolusActivity extends ViewSelectorActivity {
         public boolean isViewFromObject(View view, Object object) {
             return view == object;
         }
-
 
     }
 }

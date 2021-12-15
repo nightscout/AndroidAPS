@@ -2,8 +2,8 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm
 
 import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCharacteristic
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.callbacks.BleCommCallbacks
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.ConnectException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.CharacteristicType
@@ -43,7 +43,12 @@ class ServiceDiscoverer(
         }
         logger.debug(LTag.PUMPBTCOMM, "Services discovered")
         val service = gatt.getService(SERVICE_UUID.toUuid())
-            ?: throw ConnectException("Service not found: $SERVICE_UUID")
+            ?: run {
+                for (service in gatt.services) {
+                    logger.debug(LTag.PUMPBTCOMM, "Found service: ${service.uuid}")
+                }
+                throw ConnectException("Service not found: $SERVICE_UUID")
+            }
         val cmdChar = service.getCharacteristic(CharacteristicType.CMD.uuid)
             ?: throw ConnectException("Characteristic not found: ${CharacteristicType.CMD.value}")
         val dataChar = service.getCharacteristic(CharacteristicType.DATA.uuid)

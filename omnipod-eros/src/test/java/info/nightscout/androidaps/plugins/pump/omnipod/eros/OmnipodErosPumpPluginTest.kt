@@ -40,7 +40,7 @@ class OmnipodErosPumpPluginTest : TestBase() {
     @Mock lateinit var rileyLinkUtil: RileyLinkUtil
     @Mock lateinit var pumpSync: PumpSync
 
-    var rxBusWrapper = RxBus(TestAapsSchedulers(), aapsLogger)
+    private var rxBusWrapper = RxBus(TestAapsSchedulers(), aapsLogger)
 
     @Before fun prepare() {
         `when`(rh.gs(ArgumentMatchers.anyInt(), ArgumentMatchers.anyLong()))
@@ -57,7 +57,7 @@ class OmnipodErosPumpPluginTest : TestBase() {
             null, null, null, null,
             rileyLinkUtil, null, null, pumpSync
         )
-        val pumpState = PumpSync.PumpState(null, null, null, null)
+        val pumpState = PumpSync.PumpState(null, null, null, null, "")
         `when`(pumpSync.expectedPumpState()).thenReturn(pumpState)
         `when`(rileyLinkUtil.rileyLinkHistory).thenReturn(ArrayList())
         `when`(injector.androidInjector()).thenReturn(

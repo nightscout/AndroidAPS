@@ -21,7 +21,7 @@ import info.nightscout.androidaps.database.transactions.InsertAndCancelCurrentTe
 import info.nightscout.androidaps.databinding.DialogTemptargetBinding
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.utils.DefaultValueHelper
