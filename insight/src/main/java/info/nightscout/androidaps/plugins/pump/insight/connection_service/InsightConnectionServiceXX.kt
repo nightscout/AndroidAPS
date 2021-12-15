@@ -9,8 +9,8 @@ import android.os.IBinder
 import android.os.PowerManager
 import dagger.android.DaggerService
 import info.nightscout.androidaps.insight.R
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage.Companion.unwrap
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage.Companion.wrap
@@ -35,7 +35,7 @@ import info.nightscout.androidaps.plugins.pump.insight.satl.*
 import info.nightscout.androidaps.plugins.pump.insight.utils.*
 import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.Cryptograph
 import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.KeyPair
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import org.spongycastle.crypto.InvalidCipherTextException
 import java.io.IOException
 import java.security.SecureRandom

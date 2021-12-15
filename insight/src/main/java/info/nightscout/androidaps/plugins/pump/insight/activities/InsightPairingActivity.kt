@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.pump.insight.activities
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothManager
 import android.content.*
 import android.os.Bundle
 import android.os.IBinder
@@ -14,13 +15,18 @@ import androidx.recyclerview.widget.RecyclerView
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.insight.R
 import info.nightscout.androidaps.insight.databinding.ActivityInsightPairingBinding
+import info.nightscout.androidaps.plugins.pump.common.ble.BlePreCheck
 import info.nightscout.androidaps.plugins.pump.insight.connection_service.InsightConnectionService
 import info.nightscout.androidaps.plugins.pump.insight.connection_service.InsightConnectionService.ExceptionCallback
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.InsightState
 import info.nightscout.androidaps.plugins.pump.insight.utils.ExceptionTranslator
 import java.util.*
+import javax.inject.Inject
 
 class InsightPairingActivity : NoSplashAppCompatActivity(), InsightConnectionService.StateCallback, View.OnClickListener, ExceptionCallback {
+
+    @Inject lateinit var blePreCheck: BlePreCheck
+    @Inject lateinit var context: Context
 
     private lateinit var binding: ActivityInsightPairingBinding
     private var scanning = false
@@ -48,7 +54,7 @@ class InsightPairingActivity : NoSplashAppCompatActivity(), InsightConnectionSer
         super.onCreate(savedInstanceState)
         binding = ActivityInsightPairingBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        blePreCheck.prerequisitesCheck(this)
         binding.yes.setOnClickListener(this)
         binding.no.setOnClickListener(this)
         binding.exit.setOnClickListener(this)
@@ -125,7 +131,7 @@ class InsightPairingActivity : NoSplashAppCompatActivity(), InsightConnectionSer
 
     private fun startBLScan() {
         if (!scanning) {
-            val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+            val bluetoothAdapter = (context.getSystemService(BLUETOOTH_SERVICE) as BluetoothManager).adapter
             if (bluetoothAdapter != null) {
                 if (!bluetoothAdapter.isEnabled) bluetoothAdapter.enable()
                 val intentFilter = IntentFilter()
@@ -141,7 +147,7 @@ class InsightPairingActivity : NoSplashAppCompatActivity(), InsightConnectionSer
     private fun stopBLScan() {
         if (scanning) {
             unregisterReceiver(broadcastReceiver)
-            val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+            val bluetoothAdapter = (context.getSystemService(BLUETOOTH_SERVICE) as BluetoothManager).adapter
             bluetoothAdapter?.cancelDiscovery()
             scanning = false
         }
@@ -162,7 +168,9 @@ class InsightPairingActivity : NoSplashAppCompatActivity(), InsightConnectionSer
     private val broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val action = intent.action
-            if (action == BluetoothAdapter.ACTION_DISCOVERY_FINISHED) BluetoothAdapter.getDefaultAdapter().startDiscovery() else if (action == BluetoothDevice.ACTION_FOUND) {
+            if (action == BluetoothAdapter.ACTION_DISCOVERY_FINISHED)
+                (context.getSystemService(BLUETOOTH_SERVICE) as BluetoothManager).adapter.startDiscovery()
+            else if (action == BluetoothDevice.ACTION_FOUND) {
                 val bluetoothDevice = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
                 bluetoothDevice?.let { deviceAdapter.addDevice(it) }
             }
