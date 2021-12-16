@@ -287,7 +287,7 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
 
         if (mDirection != null) {
             if (sharedPrefs.getBoolean("show_direction", true)) {
-                mDirection.setText(rawData.sDirection);
+                mDirection.setText(rawData.sDirection+"\uFE0E");
                 mDirection.setVisibility(View.VISIBLE);
             } else {
                 mDirection.setVisibility(View.GONE);
